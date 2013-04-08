@@ -19,13 +19,6 @@
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
 
-require_once('mvc/PluginController.class.php');
-require_once('GitViews.class.php');
-require_once('GitActions.class.php');
-require_once('GitRepository.class.php');
-require_once('GitLog.class.php');
-require_once 'Git_LastPushesGraph.class.php';
-
 require_once('common/valid/ValidFactory.class.php');
 
 /**

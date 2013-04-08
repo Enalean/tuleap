@@ -22,6 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once 'pre.php';
+
 //
 // front-end to plugin Git//
 
@@ -30,8 +32,6 @@ if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-z
     $_REQUEST['group_id'] = $_GET['group_id'] = $matches[1][0];
 }
 
-require_once('pre.php');
-require_once('common/plugin/PluginManager.class.php');
 
 $plugin_manager =& PluginManager::instance();
 $p =& $plugin_manager->getPluginByName('git');

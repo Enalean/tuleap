@@ -19,14 +19,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once dirname(__FILE__).'/../include/Git_PostReceiveMailManager.class.php';
+require_once 'bootstrap.php';
+
 Mock::generatePartial('Git_PostReceiveMailManager', 'PostReceiveMailManagerTestVersion', array('addMail', '_getDao','removeMailByRepository','_getGitDao', '_getGitRepository'));
 Mock::generatePartial('Git_PostReceiveMailManager', 'PostReceiveMailManagerTestRemoveRepository', array('addMail', '_getDao','_getGitDao', '_getGitRepository'));
 Mock::generate('Git_PostReceiveMailDao');
 
-require_once dirname(__FILE__).'/../include/GitDao.class.php';
-require_once dirname(__FILE__).'/../include/GitRepository.class.php';
 require_once('common/user/User.class.php');
 Mock::generate('GitRepository');
 Mock::generate('PFUser');

@@ -19,17 +19,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once 'PathJoinUtil.php';
 require_once 'common/project/Project.class.php';
 require_once 'common/user/User.class.php';
 require_once 'common/project/UGroupManager.class.php';
 require_once 'common/project/UGroupLiteralizer.class.php';
-require_once 'Git_Gitolite_SSHKeyDumper.class.php';
-require_once 'GitDao.class.php';
-require_once 'Git_PostReceiveMailManager.class.php';
-require_once 'PathJoinUtil.php';
-require_once 'Git_Exec.class.php';
-require_once dirname(__FILE__).'/exceptions/GitAuthorizedKeysFileException.class.php';
-
 
 /**
  * This class manage the interaction between Tuleap and Gitolite

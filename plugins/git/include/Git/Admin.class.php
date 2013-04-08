@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
 
 /**
  * This handles site admin part of Git

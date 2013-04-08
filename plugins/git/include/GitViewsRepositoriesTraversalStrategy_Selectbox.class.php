@@ -18,10 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'GitViewsRepositoriesTraversalStrategy.class.php';
-require_once 'GitDao.class.php';
-require_once 'GitRepository.class.php';
-require_once 'GitViews.class.php';
 
 /**
  * Traverse a list of repositories and furnish a ul/li tree representation

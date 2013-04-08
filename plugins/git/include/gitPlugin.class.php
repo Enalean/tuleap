@@ -20,9 +20,9 @@
  */
 
 require_once 'constants.php';
+require_once 'autoload.php';
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
-require_once 'Git_GitoliteDriver.class.php';
 
 /**
  * GitPlugin
@@ -99,7 +99,6 @@ class GitPlugin extends Plugin {
 
     public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'GitPluginInfo')) {
-            require_once('GitPluginInfo.class.php');
             $this->pluginInfo = new GitPluginInfo($this);
         }
         return $this->pluginInfo;
@@ -144,19 +143,15 @@ class GitPlugin extends Plugin {
     public function getSystemEventClass($params) {
         switch($params['type']) {
             case 'GIT_REPO_CREATE' :
-                require_once(dirname(__FILE__).'/events/SystemEvent_GIT_REPO_CREATE.class.php');
                 $params['class'] = 'SystemEvent_GIT_REPO_CREATE';
                 break;
             case 'GIT_REPO_DELETE' :
-                require_once(dirname(__FILE__).'/events/SystemEvent_GIT_REPO_DELETE.class.php');
                 $params['class'] = 'SystemEvent_GIT_REPO_DELETE';
                 break;
             case 'GIT_REPO_ACCESS':
-                require_once(dirname(__FILE__).'/events/SystemEvent_GIT_REPO_ACCESS.class.php');
                 $params['class'] = 'SystemEvent_GIT_REPO_ACCESS';
                 break;
             case 'GIT_GERRIT_MIGRATION':
-                require_once(dirname(__FILE__).'/events/SystemEvent_GIT_GERRIT_MIGRATION.class.php');
                 $params['class'] = 'SystemEvent_GIT_GERRIT_MIGRATION';
                 $params['dependencies'] = array(
                     $this->getGitDao(),
@@ -181,7 +176,6 @@ class GitPlugin extends Plugin {
     }
 
     public function changeProjectRepositoriesAccess($params) {
-        require_once('GitActions.class.php');
         $groupId   = $params[0];
         $isPrivate = $params[1];
         $dao       = new GitDao();
@@ -190,17 +184,14 @@ class GitPlugin extends Plugin {
     }
 
     public function systemEventProjectRename($params) {
-        require_once('GitActions.class.php');
         GitActions::renameProject($params['project'], $params['new_name']);
     }
 
     public function file_exists_in_data_dir($params) {
-        require_once('GitActions.class.php');
         $params['result'] = GitActions::isNameAvailable($params['new_name'], $params['error']);
     }
 
     public function process() {
-        require_once('Git.class.php');
         $controler = new Git($this, $this->getGerritServerFactory(), $this->getGerritDriver());
         $controler->process();
     }
@@ -209,7 +200,6 @@ class GitPlugin extends Plugin {
      * We expect that the check fo access right to this method has already been done by the caller
      */
     public function processAdmin(Codendi_Request $request) {
-        require_once GIT_BASE_DIR .'/Git/Admin.class.php';
         $admin = new Git_Admin($this->getGerritServerFactory(), new CSRFSynchronizerToken('/plugin/git/admin/'));
         $admin->process($request);
         $admin->display();
@@ -271,7 +261,6 @@ class GitPlugin extends Plugin {
         $userManager = UserManager::instance();
         $user = $userManager->getUserById($userId);
 
-        require_once('Git_PostReceiveMailManager.class.php');
         $notificationsManager = new Git_PostReceiveMailManager();
         $notificationsManager->removeMailByProjectPrivateRepository($groupId, $user);
 
@@ -329,7 +318,6 @@ class GitPlugin extends Plugin {
     function permission_get_object_name($params) {
         if (!$params['object_name']) {
             if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
-                require_once('GitRepository.class.php');
                 $repository = new GitRepository();
                 $repository->setId($params['object_id']);
                 try {
@@ -344,7 +332,6 @@ class GitPlugin extends Plugin {
     function permission_get_object_fullname($params) {
         if (!$params['object_fullname']) {
             if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
-                require_once('GitRepository.class.php');
                 $repository = new GitRepository();
                 $repository->setId($params['object_id']);
                 try {
@@ -359,7 +346,6 @@ class GitPlugin extends Plugin {
     function permissions_for_ugroup($params) {
         if (!$params['results']) {
             if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
-                require_once('GitRepository.class.php');
                 $repository = new GitRepository();
                 $repository->setId($params['object_id']);
                 try {
@@ -376,7 +362,6 @@ class GitPlugin extends Plugin {
         if (!$params['allowed']) {
             if (!$this->_cached_permission_user_allowed_to_change) {
                 if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
-                    require_once('GitRepository.class.php');
                     $repository = new GitRepository();
                     $repository->setId($params['object_id']);
                     try {
@@ -424,22 +409,18 @@ class GitPlugin extends Plugin {
     }
 
     private function getRepositoryManager() {
-        require_once 'GitRepositoryManager.class.php';
         return new GitRepositoryManager($this->getRepositoryFactory(), SystemEventManager::instance());
     }
 
     private function getRepositoryFactory() {
-        require_once 'GitRepositoryFactory.class.php';
         return new GitRepositoryFactory($this->getGitDao(), ProjectManager::instance());
     }
 
     private function getGitDao() {
-        require_once 'GitDao.class.php';
         return new GitDao();
     }
 
     private function getGerritDriver() {
-        require_once 'Git/Driver/Gerrit.class.php';
         return new Git_Driver_Gerrit(
             new Git_Driver_Gerrit_RemoteSSHCommand(new BackendLogger()),
             new BackendLogger()
@@ -447,7 +428,6 @@ class GitPlugin extends Plugin {
     }
 
     private function getGerritServerFactory() {
-        require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
 
         $gitolite_admin_path = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
         $gitExec = new Git_Exec($gitolite_admin_path);
@@ -481,7 +461,6 @@ class GitPlugin extends Plugin {
      * @return Void
      */
     public function collect_ci_triggers($params) {
-        require_once('Git_Ci.class.php');
         $ci = new Git_Ci();
         $triggers = $ci->retrieveTriggers($params);
         $params['services'][] = $triggers;
@@ -501,7 +480,6 @@ class GitPlugin extends Plugin {
                 $vRepoId = new Valid_Uint('hudson_use_plugin_git_trigger');
                 $vRepoId->required();
                 if($params['request']->valid($vRepoId)) {
-                    require_once('Git_Ci.class.php');
                     $ci = new Git_Ci();
                     if (!$ci->saveTrigger($params['job_id'], $repositoryId)) {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_saved'));
@@ -528,7 +506,6 @@ class GitPlugin extends Plugin {
                 $vJobId = new Valid_Uint('job_id');
                 $vJobId->required();
                 if($params['request']->valid($vJobId)) {
-                    require_once('Git_Ci.class.php');
                     $ci = new Git_Ci();
                     $vRepoId = new Valid_Uint('hudson_use_plugin_git_trigger');
                     $vRepoId->required();
@@ -557,7 +534,6 @@ class GitPlugin extends Plugin {
      */
     public function delete_ci_triggers($params) {
         if (isset($params['job_id']) && !empty($params['job_id'])) {
-            require_once('Git_Ci.class.php');
             $ci = new Git_Ci();
             if (!$ci->deleteTrigger($params['job_id'])) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_deleted'));
@@ -576,7 +552,6 @@ class GitPlugin extends Plugin {
         $pm      = ProjectManager::instance();
         $project = $pm->getProject($params['group_id']);
         if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
-            require_once('Git.class.php');
             $controler = new Git($this, $this->getGerritServerFactory(), $this->getGerritDriver());
             $controler->logsDaily($params);
         }
@@ -592,11 +567,9 @@ class GitPlugin extends Plugin {
     function myPageBox($params) {
         switch ($params['widget']) {
             case 'plugin_git_user_pushes':
-                require_once('Git_Widget_UserPushes.class.php');
                 $params['instance'] = new Git_Widget_UserPushes($this->getPluginPath());
                 break;
             case 'plugin_git_project_pushes':
-                require_once('Git_Widget_ProjectPushes.class.php');
                 $params['instance'] = new Git_Widget_ProjectPushes($this->getPluginPath());
                 break;
             default:
@@ -651,7 +624,6 @@ class GitPlugin extends Plugin {
     }
 
     public function project_admin_ugroup_add_user($params) {
-        require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand/AddUser.class.php';
 
         $command = new Git_Driver_Gerrit_MembershipCommand_AddUser(
             $this->getGerritDriver(),
@@ -661,7 +633,6 @@ class GitPlugin extends Plugin {
     }
 
     public function project_admin_ugroup_remove_user($params) {
-        require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand/RemoveUser.class.php';
 
         $command = new Git_Driver_Gerrit_MembershipCommand_RemoveUser(
             $this->getGerritDriver(),
@@ -684,7 +655,6 @@ class GitPlugin extends Plugin {
     }
 
     private function getGerritMembershipManager() {
-        require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipManager.class.php';
         $repository_factory = $this->getRepositoryFactory();
         $server_factory     = $this->getGerritServerFactory();
         return new Git_Driver_Gerrit_MembershipManager($repository_factory, $server_factory);
@@ -747,7 +717,6 @@ class GitPlugin extends Plugin {
     }
 
     private function getGerritUserFinder() {
-        require_once GIT_BASE_DIR. '/Git/Driver/Gerrit/UserFinder.class.php';
         return new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), new UGroupManager());
     }
 }

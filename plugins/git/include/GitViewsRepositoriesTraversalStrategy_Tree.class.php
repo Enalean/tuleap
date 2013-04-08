@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'GitViewsRepositoriesTraversalStrategy.class.php';
-require_once 'GitRepository.class.php';
-require_once 'GitViews.class.php';
+require_once 'PathJoinUtil.php';
 require_once 'html.php';
 
 /**

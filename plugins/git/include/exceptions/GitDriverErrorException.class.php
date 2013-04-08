@@ -18,7 +18,6 @@
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
 
-require_once('GitDriverException.class.php');
 /**
  * Description of GitDriverErrorException
  *

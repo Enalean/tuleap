@@ -18,8 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../include/constants.php';
-require_once GIT_BASE_DIR .'/GitViews.class.php';
+require_once 'bootstrap.php';
 
 Mock::generate('Project');
 Mock::generate('PFUser');

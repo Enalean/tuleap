@@ -19,9 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../include/constants.php';
-require_once GIT_BASE_DIR.'/Git/RemoteServer/GerritServerFactory.class.php';
-require_once dirname(__FILE__).'/../../builders/aGitRepository.php';
+require_once dirname(__FILE__).'/../../bootstrap.php';
 
 class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
 

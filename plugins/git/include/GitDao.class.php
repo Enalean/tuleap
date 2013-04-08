@@ -18,10 +18,8 @@
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
 require_once('common/dao/include/DataAccessObject.class.php');
-require_once('exceptions/GitDaoException.class.php');
 require_once('common/project/ProjectManager.class.php');
 require_once('common/user/UserManager.class.php');
-require_once('GitRepository.class.php');
 /**
  * Description of GitDaoclass
  * @todo change date format to timestamp instead of mysql date format

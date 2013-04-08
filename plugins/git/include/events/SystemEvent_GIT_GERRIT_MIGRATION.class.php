@@ -19,10 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once GIT_BASE_DIR .'/GitDao.class.php';
-require_once GIT_BASE_DIR .'/Git/Driver/Gerrit.class.php';
-require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/ProjectCreator.class.php';
-require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
 require_once 'common/backend/BackendLogger.class.php';
 
 class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {

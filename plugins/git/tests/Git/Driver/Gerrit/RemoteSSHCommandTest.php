@@ -20,9 +20,7 @@
  */
 
 
-require_once dirname(__FILE__).'/../../../../include/constants.php';
-require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/RemoteSSHCommand.class.php';
-require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
+require_once dirname(__FILE__).'/../../../bootstrap.php';
 
 class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
 

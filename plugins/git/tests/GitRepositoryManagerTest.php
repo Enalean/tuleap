@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once dirname(__FILE__).'/../include/GitRepositoryManager.class.php';
-require_once dirname(__FILE__).'/builders/aGitRepository.php';
+require_once 'bootstrap.php';
 
 class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase {
     private $project;

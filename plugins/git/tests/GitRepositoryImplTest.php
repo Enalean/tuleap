@@ -20,8 +20,8 @@
  */
 
 
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once GIT_BASE_DIR. '/Git_Backend_Gitolite.class.php';
+require_once 'bootstrap.php';
+
 abstract class GitRepositoryImplTest extends TuleapTestCase {
 
 
