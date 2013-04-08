@@ -1,3 +1,6 @@
+Version 2.7.36 - Tuleap 5.13
+    * Autoload git
+
 Version 2.7.35 - Tuleap 5.13
     * A repository can now be disconnected from Gerrit
 
