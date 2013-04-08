@@ -63,6 +63,7 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
 
         $this->original_keys = array(
             'Im a key',
+            'Im a key',
             'Im another key',
             'Im an identical key',
             'Im an additional key',
@@ -71,6 +72,7 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
         $this->new_keys = array(
             'Im a new key',
             'Im another new key',
+            'Im another new key',
             'Im an identical key',
         );
 
@@ -78,7 +80,6 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
         $this->remote_server2 = mock('Git_RemoteServer_GerritServer');
 
         stub($this->remote_gerrit_factory)->getRemoteServersForUser($this->user)->returns(array($this->remote_server1, $this->remote_server2));
-
     }
 
     public function itCallsRemoteServerFactory() {
@@ -107,7 +108,26 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
     }
 
     public function itCallsTheDriverToAddAndRemoveKeysTheRightNumberOfTimes() {
+        $added_keys = array(
+            'Im a new key',
+            'Im another new key',
+        );
+
+        $removed_keys = array(
+            'Im a key',
+            'Im another key',
+            'Im an additional key',
+        );
+        
         expect($this->remote_gerrit_factory)->getRemoteServersForUser($this->user)->once();
+        
+        expect($this->gerrit_driver)->addSSHKeyToAccount($this->remote_server1, $this->user, $added_keys[1]);
+        expect($this->gerrit_driver)->addSSHKeyToAccount($this->remote_server1, $this->user, $added_keys[0]);
+
+        expect($this->gerrit_driver)->removeSSHKeyFromAccount($this->remote_server1, $this->user, $removed_keys[0]);
+        expect($this->gerrit_driver)->removeSSHKeyFromAccount($this->remote_server1, $this->user, $removed_keys[1]);
+        expect($this->gerrit_driver)->removeSSHKeyFromAccount($this->remote_server1, $this->user, $removed_keys[2]);
+        
         expect($this->gerrit_driver)->addSSHKeyToAccount()->count(4);
         expect($this->gerrit_driver)->removeSSHKeyFromAccount()->count(6);
 
