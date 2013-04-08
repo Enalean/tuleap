@@ -326,6 +326,23 @@ class GitPlugin extends Plugin {
         );
     }
 
+    /**
+     *
+     * @param PFUser $user
+     * @return string JSON array of server host names
+     */
+    public function getRemoteServersForUser(PFUser $user) {
+        $servers = array();
+        foreach ($this->getGerritServerFactory()->getRemoteServersForUser($user) as $server) {
+            $servers[] = array(
+                'host_name' => $server->getHost(),
+                'id'        => $server->getId(),
+            );
+        }
+
+        return json_encode($servers);
+    }
+
     function permission_get_name($params) {
         if (!$params['name']) {
             switch($params['permission_type']) {
