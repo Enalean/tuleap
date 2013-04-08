@@ -131,13 +131,7 @@ class GitActions extends PluginActions {
             $repository->setProject(ProjectManager::instance()->getProject($projectId));
             $repository->setName($repositoryName);
 
-            $id = $this->manager->create($repository, $backend);
-            $this->systemEventManager->createEvent(
-                'GIT_REPO_CREATE',
-                $id,
-                SystemEvent::PRIORITY_MEDIUM,
-                'app'
-            );
+            $this->manager->create($repository, $backend);
             $this->redirectToRepo($projectId, $repository->getId());
         } catch (Exception $exception) {
             $controller->addError($exception->getMessage());

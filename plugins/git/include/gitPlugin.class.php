@@ -195,7 +195,7 @@ class GitPlugin extends Plugin {
     }
 
     public function process() {
-        $controler = new Git($this, $this->getGerritServerFactory(), $this->getGerritDriver());
+        $controler = new Git($this, $this->getGerritServerFactory(), $this->getGerritDriver(), $this->getRepositoryManager());
         $controler->process();
     }
 
@@ -412,7 +412,7 @@ class GitPlugin extends Plugin {
     }
 
     private function getRepositoryManager() {
-        return new GitRepositoryManager($this->getRepositoryFactory(), SystemEventManager::instance());
+        return new GitRepositoryManager($this->getRepositoryFactory(), SystemEventManager::instance(), $this->getGitDao());
     }
 
     private function getRepositoryFactory() {
@@ -555,7 +555,7 @@ class GitPlugin extends Plugin {
         $pm      = ProjectManager::instance();
         $project = $pm->getProject($params['group_id']);
         if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
-            $controler = new Git($this, $this->getGerritServerFactory(), $this->getGerritDriver());
+            $controler = new Git($this, $this->getGerritServerFactory(), $this->getGerritDriver(), $this->getRepositoryManager());
             $controler->logsDaily($params);
         }
     }

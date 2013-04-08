@@ -23,6 +23,7 @@ require_once 'bootstrap.php';
 class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase {
     private $project;
     private $git_repository_manager;
+    private $dao;
 
     public function setUp() {
         parent::setUp();
@@ -30,8 +31,9 @@ class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase {
         $this->project              = stub('Project')->getID()->returns($this->project_id);
         $this->repository_factory   = mock('GitRepositoryFactory');
         $this->system_event_manager = mock('SystemEventManager');
+        $this->dao                  = mock('GitDao');
 
-        $this->git_repository_manager = new GitRepositoryManager($this->repository_factory, $this->system_event_manager);
+        $this->git_repository_manager = new GitRepositoryManager($this->repository_factory, $this->system_event_manager, $this->dao);
     }
 
     public function itDeletesNothingWhenThereAreNoRepositories() {
@@ -80,6 +82,7 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
     private $manager;
     private $project_id;
     private $project_name;
+    private $dao;
 
     public function setUp() {
         parent::setUp();
@@ -88,9 +91,10 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
         $this->project      = mock('Project');
         stub($this->project)->getID()->returns($this->project_id);
         stub($this->project)->getUnixName()->returns($this->project_name);
+        $this->dao = mock('GitDao');
 
         $this->factory    = mock('GitRepositoryFactory');
-        $this->manager    = new GitRepositoryManager($this->factory, mock('SystemEventManager'));
+        $this->manager    = new GitRepositoryManager($this->factory, mock('SystemEventManager'), $this->dao);
     }
 
     private function aRepoWithPath($path) {
@@ -154,12 +158,26 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
 class GitRepositoryManager_CreateTest extends TuleapTestCase {
 
     private $creator;
+    private $dao;
+    private $system_event_manager;
+
     public function setUp() {
         parent::setUp();
         $this->creator    = mock('GitRepositoryCreator');
         $this->repository = mock('GitRepository');
 
-        $this->manager = partial_mock('GitRepositoryManager', array('isRepositoryNameAlreadyUsed'));
+        $this->system_event_manager = mock('SystemEventManager');
+        $this->dao                  = mock('GitDao');
+
+        $this->manager = partial_mock(
+            'GitRepositoryManager',
+            array('isRepositoryNameAlreadyUsed'),
+            array(
+                mock('GitRepositoryFactory'),
+                $this->system_event_manager,
+                $this->dao
+            )
+        );
     }
 
     public function itThrowAnExceptionIfRepositoryNameCannotBeUsed() {
@@ -182,7 +200,34 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
         stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(false);
         stub($this->creator)->isNameValid()->returns(true);
 
-        $this->creator->expectOnce('createReference');
+        expect($this->dao)->save($this->repository)->once();
+        $this->manager->create($this->repository, $this->creator);
+    }
+
+    public function itScheduleAnEventToCreateTheRepositoryInGitolite() {
+        stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(false);
+        stub($this->creator)->isNameValid()->returns(true);
+
+        stub($this->dao)->save()->returns(54);
+
+        expect($this->system_event_manager)->createEvent(
+            'GIT_REPO_CREATE',
+            54,
+            SystemEvent::PRIORITY_MEDIUM,
+            SystemEvent::OWNER_APP
+        )->once();
+
+        $this->manager->create($this->repository, $this->creator);
+    }
+
+    public function itSetRepositoryIdOnceSavedInDatabase() {
+        stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(false);
+        stub($this->creator)->isNameValid()->returns(true);
+
+        stub($this->dao)->save()->returns(54);
+
+        expect($this->repository)->setId(54)->once();
+
         $this->manager->create($this->repository, $this->creator);
     }
 }

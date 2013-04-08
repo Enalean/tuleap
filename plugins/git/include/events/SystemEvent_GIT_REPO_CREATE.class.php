@@ -37,7 +37,7 @@ class SystemEvent_GIT_REPO_CREATE extends SystemEvent {
 
     public function process() {
         $repository = $this->getRepositoryFromParameters();
-        $repository->getBackend()->createReference($repository);
+        $repository->getBackend()->updateRepoConf($repository);
         $this->done();
     }
 

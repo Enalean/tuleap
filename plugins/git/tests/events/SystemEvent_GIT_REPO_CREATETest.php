@@ -48,7 +48,7 @@ class SystemEvent_GIT_REPO_CREATETest extends TuleapTestCase {
     }
 
     public function itDelegatesToBackendRepositoryCreation() {
-        expect($this->backend)->createReference()->once();
+        expect($this->backend)->updateRepoConf()->once();
         $this->event->process();
     }
 

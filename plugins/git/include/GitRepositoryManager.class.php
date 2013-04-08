@@ -40,12 +40,18 @@ class GitRepositoryManager {
     private $system_event_manager;
 
     /**
+     * @var GitDao
+     */
+    private $dao;
+
+    /**
      * @param GitRepositoryFactory $repository_factory
      * @param SystemEventManager   $system_event_manager
      */
-    public function __construct(GitRepositoryFactory $repository_factory, SystemEventManager $system_event_manager) {
+    public function __construct(GitRepositoryFactory $repository_factory, SystemEventManager $system_event_manager, GitDao $dao) {
         $this->repository_factory   = $repository_factory;
         $this->system_event_manager = $system_event_manager;
+        $this->dao                  = $dao;
     }
 
     /**
@@ -76,7 +82,14 @@ class GitRepositoryManager {
             throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_input_format_error', array($creator->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
         }
         $this->assertRepositoryNameNotAlreadyUsed($repository);
-        $creator->createReference($repository);
+        $id = $this->dao->save($repository);
+        $this->system_event_manager->createEvent(
+            'GIT_REPO_CREATE',
+            $id,
+            SystemEvent::PRIORITY_MEDIUM,
+            SystemEvent::OWNER_APP
+        );
+        $repository->setId($id);
     }
 
     /**
