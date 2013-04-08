@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once GIT_BASE_DIR.'/Git_Exec.class.php';
 
 /**
  * Manage update of Gitolite repositories by fetching remotes

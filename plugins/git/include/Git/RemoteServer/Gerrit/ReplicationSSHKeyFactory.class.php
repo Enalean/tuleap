@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once 'ReplicationSSHKey.class.php';
-require_once 'ReplicationSSHKeyFactoryException.class.php';
-require_once dirname(__FILE__).'/../../../Git_Gitolite_SSHKeyDumper.class.php';
 
 class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
 

@@ -18,23 +18,8 @@
   * You should have received a copy of the GNU General Public License
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
-require_once('mvc/PluginActions.class.php');
-require_once('events/SystemEvent_GIT_REPO_CREATE.class.php');
-require_once('events/SystemEvent_GIT_REPO_DELETE.class.php');
-require_once('events/SystemEvent_GIT_REPO_ACCESS.class.php');
-require_once('events/SystemEvent_GIT_GERRIT_MIGRATION.class.php');
 require_once('common/system_event/SystemEventManager.class.php');
-require_once('GitBackend.class.php');
-require_once('GitRepository.class.php');
-require_once('GitDao.class.php');
-require_once('Git_GitoliteDriver.class.php');
-require_once('Git_Backend_Gitolite.class.php');
-require_once('GitRepositoryFactory.class.php');
-require_once('GitRepositoryManager.class.php');
 require_once('common/layout/Layout.class.php');
-
-require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
-
 /**
  * GitActions
  * @todo call Event class instead of SystemEvent

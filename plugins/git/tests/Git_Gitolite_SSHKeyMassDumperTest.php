@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 require_once 'Git_Gitolite_SSHKeyDumperTest.php';
-require_once dirname(__FILE__).'/../include/Git_Gitolite_SSHKeyMassDumper.class.php';
+require_once 'bootstrap.php';
 
 class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase {
     protected $mass_dumper;

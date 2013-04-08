@@ -19,10 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'Git_Backend_Interface.php';
-require_once 'GitRepositoryCreatorImpl.class.php';
-require_once 'Git.class.php';
-require_once 'exceptions/GitRepositoryAlreadyExistsException.class.php';
 
 class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backend_Interface {
     /**

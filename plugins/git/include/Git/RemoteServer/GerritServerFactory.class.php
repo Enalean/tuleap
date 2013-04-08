@@ -19,11 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'GerritServer.class.php';
-require_once 'NotFoundException.class.php';
-require_once 'Dao.class.php';
-require_once GIT_BASE_DIR .'/GitRepository.class.php';
-require_once GIT_BASE_DIR .'/Git/RemoteServer/Gerrit/ReplicationSSHKeyFactory.class.php';
 
 class Git_RemoteServer_GerritServerFactory {
 

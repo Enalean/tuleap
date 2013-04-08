@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Git_CiDao.class.php');
-require_once('GitDao.class.php');
 
 /**
  * Continuous integration for Git

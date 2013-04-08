@@ -19,8 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../include/constants.php';
-require_once GIT_BASE_DIR .'/events/SystemEvent_GIT_GERRIT_MIGRATION.class.php';
+require_once dirname(__FILE__).'/../bootstrap.php';
 require_once 'common/log/Logger.class.php';
 
 abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {

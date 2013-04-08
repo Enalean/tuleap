@@ -20,7 +20,6 @@
  */
 
 require_once 'common/user/IHaveAnSSHKey.php';
-require_once 'Git_Exec.class.php';
 
 class Git_Gitolite_SSHKeyDumper {
     const KEYDIR = 'keydir';

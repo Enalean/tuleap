@@ -18,12 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once GIT_BASE_DIR .'/GitRepository.class.php';
-require_once 'Pane/GeneralSettings.class.php';
-require_once 'Pane/AccessControl.class.php';
-require_once 'Pane/Notification.class.php';
-require_once 'Pane/Delete.class.php';
-require_once 'Pane/Gerrit.class.php';
 
 /**
  * Dedicated screen for repo management

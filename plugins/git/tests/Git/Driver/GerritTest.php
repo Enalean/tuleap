@@ -19,9 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../include/constants.php';
-require_once dirname(__FILE__).'/../../builders/aGitRepository.php';
-require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
+require_once dirname(__FILE__).'/../../bootstrap.php';
 require_once 'common/include/Config.class.php';
 
 abstract class Git_Driver_Gerrit_baseTest extends TuleapTestCase {

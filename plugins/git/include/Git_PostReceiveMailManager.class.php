@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Git_PostReceiveMailDao.class.php';
-require_once 'GitDao.class.php';
 
 class Git_PostReceiveMailManager {
 
