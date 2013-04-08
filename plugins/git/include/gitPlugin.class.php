@@ -350,6 +350,9 @@ class GitPlugin extends Plugin {
      * @param PFUser $user
      */
     public function pushSSHKeysToRemoteServers(PFUser $user) {
+        require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
+        require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/UserAccountManager.class.php';
+        
         $gerrit_driver = $this->getGerritDriver();
         try {
             $gerrit_user_account_manager = new Git_Driver_Gerrit_UserAccountManager($user, $gerrit_driver);
