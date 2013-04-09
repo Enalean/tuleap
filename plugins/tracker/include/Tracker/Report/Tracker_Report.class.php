@@ -498,7 +498,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $i;
     }
     
-    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, PFUser $current_user = null) {
+    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, PFUser $current_user) {
         $hp              = Codendi_HTMLPurifier::instance();
         $user_can_update = $this->userCanUpdate($current_user);
 
@@ -902,6 +902,10 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
      * @return boolean
      */
     public function userCanUpdate($user) {
+        if (! $this->isBelongingToATracker()) {
+            return false;
+        }
+
         if ($this->user_id) {
             return $this->user_id == $user->getId();
         } else {
@@ -909,7 +913,11 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             return $user->isSuperUser() || $tracker->userIsAdmin($user);
         }
     }
-    
+
+    private function isBelongingToATracker() {
+        return $this->getTracker() != null;
+    }
+
     protected $tracker;
     public function getTracker() {
         if (!$this->tracker) {

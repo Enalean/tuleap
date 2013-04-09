@@ -76,6 +76,10 @@ MARKUP;
          */
         return $html;
     }
+
+    public function fetchCriteriaWithoutExpandFunctionnality(Tracker_Report_Criteria $criteria) {
+        return $this->fetchCriteria($criteria);
+    }
     
     public function isUsed() {
         return true;
