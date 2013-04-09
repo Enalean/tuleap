@@ -213,3 +213,5 @@ plugin_git	logsdaily_field	Repository name
 plugin_git	logsdaily_title	Git pushes
 
 plugin_git	delegated_to_gerrit	The management of this Git repository has been delegated to the Gerrit platform:
+
+plugin_git	push_ssh_keys_error	Error pushing SSH Keys. Please add them manually.

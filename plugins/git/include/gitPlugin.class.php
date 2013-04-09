@@ -352,18 +352,24 @@ class GitPlugin extends Plugin {
     public function pushSSHKeysToRemoteServers(PFUser $user) {
         require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
         require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/UserAccountManager.class.php';
-        
+        $logger = new BackendLogger();
+
         $gerrit_driver = $this->getGerritDriver();
         try {
             $gerrit_user_account_manager = new Git_Driver_Gerrit_UserAccountManager($user, $gerrit_driver);
+            
+            $logger->info('Trying to push ssh keys for user: '.$user->getUnixName());
+            $gerrit_user_account_manager->pushSSHKeys(
+                $this->getGerritServerFactory()
+            );
+            $logger->info('Successfully pushed ssh keys for user: '.$user->getUnixName());
         } catch (Git_Driver_Gerrit_InvalidLDAPUserException $e) {
-            $logger = new BackendLogger();
             $logger->error('Tried pushSSHKeysToRemoteServer for non-ldap user: ' . $user->getUnixName());
+        } catch (Git_Driver_Gerrit_UserSynchronisationException $e) {
+            $message = $GLOBALS['Language']->getText('plugin_git','push_ssh_keys_error');
+            $GLOBALS['Response']->addFeedback('error', $message);
+            $logger->error('Unable to push ssh keys: ' . $e->getMessage());
         }
-
-        $gerrit_user_account_manager->pushSSHKeys(
-            $this->getGerritServerFactory()
-        );
     }
 
     function permission_get_name($params) {
