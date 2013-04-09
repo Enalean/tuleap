@@ -131,16 +131,9 @@ class Git_GitoliteDriver {
      * @param string $repoPath
      * @return boolean
      */
-    public function isCreated($repoPath) {
-        try {
-            $headsPath = $repoPath.'/refs/heads';
-            if (is_dir($headsPath)) {  
-                return true;
-            }
-        } catch(Exception $e) {
-            // If directory doesn't even exists, return false
-        }
-        return false;
+    public function isRepositoryCreated($repoPath) {
+        $headsPath = $repoPath.'/refs/heads';
+        return is_dir($headsPath);
     }
 
     public function push() {

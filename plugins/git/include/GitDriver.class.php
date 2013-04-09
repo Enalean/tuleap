@@ -156,6 +156,15 @@ class GitDriver implements DVCSDriver {
         return false;
     }
 
+    /**
+     *
+     * @param string $repoPath
+     * @return bool
+     */
+    public function isRepositoryCreated($repoPath) {
+        return is_dir($repoPath.'/refs/heads/master');
+    }
+
     public function setDescription($repoPath, $description) {
         if( ! file_put_contents($repoPath.'/description', $description) ) {
             throw new GitDriverErrorException('Unable to set description');
