@@ -1,3 +1,6 @@
+Version 5.108 - Tuleap 5.13
+    * Fix fatal error when accessing backlog
+
 Version 5.107 - Tuleap 5.13
     * Fix request ##2932: project cross-reference created with artifact link are displayed in parent artifact
 
