@@ -222,7 +222,13 @@ class Git_Driver_Gerrit_UserAccountManager_PushSSHKeysTest extends TuleapTestCas
         expect($this->gerrit_driver)->removeSSHKeyFromAccount()->count(4);
 
         $this->user_account_manager->pushSSHKeys($this->remote_gerrit_factory);
-      
+    }
+
+    public function itThrowsAnExceptionIfGerritDriverFails() {
+        $this->gerrit_driver->throwOn('addSSHKeyToAccount', new Git_Driver_Gerrit_RemoteSSHCommandFailure());
+
+        $this->expectException('Git_Driver_Gerrit_UserSynchronisationException');
+        $this->user_account_manager->pushSSHKeys($this->remote_gerrit_factory);
     }
 }
 ?>

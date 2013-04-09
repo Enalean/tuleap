@@ -20,6 +20,7 @@
 
 require_once GIT_BASE_DIR .'/Git.class.php';
 require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/InvalidLDAPUserException.class.php';
+require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/UserSynchronisationException.class.php';
 
 /**
  * Encapsulate the orchestration between PermissionsManager and UgroupManager
@@ -73,6 +74,7 @@ class Git_Driver_Gerrit_UserAccountManager {
      * 
      * @param Git_RemoteServer_GerritServerFactory $remote_gerrit_factory
      * @return empty
+     * @throws Git_Driver_Gerrit_UserSynchronisationException
      */
     public function pushSSHKeys(Git_RemoteServer_GerritServerFactory $remote_gerrit_factory) {
         $user_keys = array_unique($this->user->getAuthorizedKeysArray());
@@ -83,9 +85,13 @@ class Git_Driver_Gerrit_UserAccountManager {
 
         $remote_servers = $remote_gerrit_factory->getRemoteServersForUser($this->user);
 
-        foreach($remote_servers as $remote_server) {
-            $this->removeKeys($remote_server, $user_keys);
-            $this->addKeys($remote_server, $user_keys);
+        try {
+            foreach($remote_servers as $remote_server) {
+                $this->removeKeys($remote_server, $user_keys);
+                $this->addKeys($remote_server, $user_keys);
+            }
+        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+            throw new Git_Driver_Gerrit_UserSynchronisationException($e->getMessage());
         }
     }
 

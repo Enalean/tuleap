@@ -18,6 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_Driver_Gerrit_InvalidLDAPUserException extends Exception {
+class Git_Driver_Gerrit_UserSynchronisationException extends Exception {
 }
 ?>
