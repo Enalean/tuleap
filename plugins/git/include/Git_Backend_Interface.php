@@ -29,7 +29,7 @@ interface Git_Backend_Interface {
      * @param  GitRepository $repository
      * @return Boolean
      */
-    public function isInitialized($respository);
+    public function isInitialized(GitRepository $respository);
 
     /**
      * Verify if the repository has been created
@@ -38,7 +38,7 @@ interface Git_Backend_Interface {
      * @param  GitRepository $repository
      * @return Boolean
      */
-    public function isCreated($respository);
+    public function isCreated(GitRepository $respository);
 
     /**
      * Return URL to access the respository for remote git commands

@@ -151,7 +151,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         return true;
     }
 
-    public function isInitialized($repository) {
+    public function isInitialized(GitRepository $repository) {
         $masterExists = $this->getDriver()->masterExists( $this->getGitRootPath().'/'.$repository->getPath() );
         if ( $masterExists ) {
             $this->getDao()->initialize( $repository->getId() );
