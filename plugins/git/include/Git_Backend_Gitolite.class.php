@@ -73,7 +73,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @param  GitRepository $repository
      * @return Boolean
      */
-    public function isInitialized($repository) {
+    public function isInitialized(GitRepository $repository) {
         $init = $this->driver->isInitialized($this->getGitRootPath().'/'.$repository->getPath());
         if ($init) {
             $this->getDao()->initialize($repository->getId());
@@ -83,7 +83,13 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         }
     }
 
-    public function isCreated($repository) {
+    /**
+     *
+     * @param GitRepository $repository
+     * @return bool
+     */
+    public function isCreated(GitRepository $repository) {
+        return $this->driver->isRepositoryCreated($this->getGitRootPath().'/'.$repository->getPath());
     }
 
     /**

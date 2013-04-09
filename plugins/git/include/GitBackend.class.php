@@ -161,7 +161,13 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         }
     }
 
-    public function isCreated($respository) {
+    /**
+     *
+     * @param GitRepository $respository
+     * @return bool
+     */
+    public function isCreated(GitRepository $repository) {
+        return $this->getDriver()->isRepositoryCreated($this->getGitRootPath().'/'.$repository->getPath());
     }
 
     public function changeRepositoryAccess($repository) {
