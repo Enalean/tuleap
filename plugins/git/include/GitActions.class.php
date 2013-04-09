@@ -114,7 +114,8 @@ class GitActions extends PluginActions {
         $this->systemEventManager->createEvent(
             'GIT_REPO_DELETE',
             $repository->getProjectId().SystemEvent::PARAMETER_SEPARATOR.$repository->getId(),
-            SystemEvent::PRIORITY_MEDIUM
+            SystemEvent::PRIORITY_MEDIUM,
+            $repository->getBackend() instanceof Git_Backend_Gitolite ? SystemEvent::OWNER_APP : SystemEvent::OWNER_ROOT
         );
     }
 

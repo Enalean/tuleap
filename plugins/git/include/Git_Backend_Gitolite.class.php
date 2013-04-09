@@ -322,11 +322,12 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         $this->deletePermissions($repository);
         $this->getDao()->delete($repository);
 
-        $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
-        $this->updateRepoConf($repository);
+        //$this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
+        //$this->updateRepoConf($repository);
     }
 
     public function delete(GitRepository $repository) {
+        $this->updateRepoConf($repository);
         $path = $this->getGitRootPath().$repository->getPath();
         $this->getDriver()->delete($path);
     }

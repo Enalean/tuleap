@@ -49,25 +49,29 @@ class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase {
         $repository_1->expectOnce('forceMarkAsDeleted');
         stub($repository_1)->getId()->returns($repository_1_id);
         stub($repository_1)->getProjectId()->returns($this->project);
+        stub($repository_1)->getBackend()->returns(mock('Git_Backend_Gitolite'));
 
         $repository_2_id = 2;
         $repository_2    = mock('GitRepository');
         $repository_2->expectOnce('forceMarkAsDeleted');
         stub($repository_2)->getId()->returns($repository_2_id);
         stub($repository_2)->getProjectId()->returns($this->project);
+        stub($repository_2)->getBackend()->returns(mock('Git_Backend_Gitolite'));
 
         $this->system_event_manager->expectCallCount('createEvent', 2);
 
         $this->system_event_manager->expectAt(0, 'createEvent', array(
             'GIT_REPO_DELETE',
             $this->project_id.SystemEvent::PARAMETER_SEPARATOR.$repository_1_id,
-            '*'
+            '*',
+            SystemEvent::OWNER_APP
         ));
 
         $this->system_event_manager->expectAt(1, 'createEvent', array(
             'GIT_REPO_DELETE',
             $this->project_id.SystemEvent::PARAMETER_SEPARATOR.$repository_2_id,
-            '*'
+            '*',
+            SystemEvent::OWNER_APP
         ));
 
         stub($this->repository_factory)->getAllRepositories()->returns(array($repository_1, $repository_2));

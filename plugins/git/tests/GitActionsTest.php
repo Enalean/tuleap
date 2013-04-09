@@ -467,12 +467,15 @@ class GitActions_Delete_Tests extends TuleapTestCase {
     public function itTriggersASystemEventForPhysicalRemove() {
         stub($this->repository)->canBeDeleted()->returns(true);
 
+        stub($this->repository)->getBackend()->returns(mock('Git_Backend_Gitolite'));
+
         $this->system_event_manager->expectOnce(
             'createEvent',
             array(
                 'GIT_REPO_DELETE',
                 $this->project_id.SystemEvent::PARAMETER_SEPARATOR.$this->repository_id,
-                '*'
+                '*',
+                SystemEvent::OWNER_APP
             )
         );
 

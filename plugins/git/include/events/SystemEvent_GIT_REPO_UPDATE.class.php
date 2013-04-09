@@ -29,9 +29,13 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
         $this->repository_factory = $repository_factory;
     }
 
-    private function getRepositoryFromParameters() {
+    private function getRepositoryIdFromParameters() {
         $parameters = $this->getParametersAsArray();
-        return $this->repository_factory->getRepositoryById(intval($parameters[0]));
+        return intval($parameters[0]);
+    }
+
+    private function getRepositoryFromParameters() {
+        return $this->repository_factory->getRepositoryById($this->getRepositoryIdFromParameters());
     }
 
     public function process() {
@@ -42,10 +46,14 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
 
     public function verbalizeParameters($with_link) {
         $repository = $this->getRepositoryFromParameters();
-        if ($with_link) {
-            return '<a href="/plugins/git/?action=repo_management&group_id='.$repository->getProjectId().'&repo_id='.$repository->getId().'">'.$repository->getName().'</a>';
+        if ($repository) {
+            if ($with_link) {
+                return '<a href="/plugins/git/?action=repo_management&group_id='.$repository->getProjectId().'&repo_id='.$repository->getId().'">'.$repository->getName().'</a>';
+            } else {
+                return $repository->getId();
+            }
         } else {
-            return $repository->getId();
+            return $this->getRepositoryIdFromParameters();
         }
     }
 

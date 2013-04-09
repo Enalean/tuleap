@@ -384,7 +384,7 @@ class GitPlugin extends Plugin {
     
     public function system_event_get_types($params) {
         $params['types'][] = 'GIT_REPO_ACCESS';
-        $params['types'][] = 'GIT_REPO_CREATE';
+        $params['types'][] = 'GIT_REPO_UPDATE';
         $params['types'][] = 'GIT_REPO_DELETE';
         $params['types'][] = 'GIT_GERRIT_MIGRATION';
     }

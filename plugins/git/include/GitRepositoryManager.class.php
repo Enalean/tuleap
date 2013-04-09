@@ -64,9 +64,10 @@ class GitRepositoryManager {
         foreach ($repositories as $repository) {
             $repository->forceMarkAsDeleted();
             $this->system_event_manager->createEvent(
-                'GIT_REPO_DELETE',
+                 'GIT_REPO_DELETE',
                  $project->getID().SystemEvent::PARAMETER_SEPARATOR.$repository->getId(),
-                 SystemEvent::PRIORITY_MEDIUM
+                 SystemEvent::PRIORITY_MEDIUM,
+                 $repository->getBackend() instanceof Git_Backend_Gitolite ? SystemEvent::OWNER_APP : SystemEvent::OWNER_ROOT
             );
         }
     }
