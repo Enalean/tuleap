@@ -162,9 +162,9 @@ if ($git_plugin && $plugin_manager->isPluginAvailable($git_plugin)) {
         echo'<br />
             <br />
             <hr />
-            <br />
-            All new keys are automatically pushed to the following Gerrit servers:
-            <ul>';
+            <br />'.
+            $GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_info').
+            '<ul>';
 
         foreach ($remote_servers as $remote_server) {
             echo '<li>'.$remote_server->host_name.'</li>';
@@ -172,8 +172,8 @@ if ($git_plugin && $plugin_manager->isPluginAvailable($git_plugin)) {
         echo '</ul>
             <form action="" method="post">
                 <input type="submit"
-                    title="Push SSH keys to remote servers"
-                    value="Push SSH keys"
+                    title="'.$GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_button_title').'"
+                    value="'.$GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_button_value').'"
                     name="ssh_key_push"/>
             </form>';
     }

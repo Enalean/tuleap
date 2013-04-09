@@ -212,3 +212,6 @@ plugin_git	logsdaily_title	Les Git push
 plugin_git	delegated_to_gerrit	La gestion de ce dépôt Git a été déléguée à la plateforme Gerrit:
 
 plugin_git	push_ssh_keys_error	Impossible de copier les clés SSH. Ajoutez-les de façon manuelle.
+plugin_git	push_ssh_keys_button_value	Pousser les clés SSH
+plugin_git	push_ssh_keys_button_title	Pousser les clés SSH sur les serveurs externes
+plugin_git	push_ssh_keys_info	Vos anciennes clés ne sont pas poussées automatiquement. Toute nouvelle clé sera automatiquement poussée sur les serveurs suivants :

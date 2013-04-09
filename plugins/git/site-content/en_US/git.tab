@@ -215,3 +215,6 @@ plugin_git	logsdaily_title	Git pushes
 plugin_git	delegated_to_gerrit	The management of this Git repository has been delegated to the Gerrit platform:
 
 plugin_git	push_ssh_keys_error	Error pushing SSH Keys. Please add them manually.
+plugin_git	push_ssh_keys_button_value	Manually push SSH keys
+plugin_git	push_ssh_keys_button_title	Push SSH keys to remote servers
+plugin_git	push_ssh_keys_info	Old keys need to be pushed manually. All new keys are automatically pushed to the following Gerrit servers:
