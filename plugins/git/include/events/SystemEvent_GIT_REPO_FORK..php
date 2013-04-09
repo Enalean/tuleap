@@ -69,7 +69,8 @@ class SystemEvent_GIT_REPO_FORK extends SystemEvent {
     }
 
     private function getLinkToRepositoryManagement(GitRepository $repository) {
-        return '<a href="/plugins/git/?action=repo_management&group_id='.$repository->getProjectId().'&repo_id='.$repository->getId().'">'.$repository->getFullName().'</a>';
+        $project = $repository->getProject();
+        return '<a href="/plugins/git/?action=repo_management&group_id='.$project->getId().'&repo_id='.$repository->getId().'">'.$project->getUnixName().'/'.$repository->getFullName().'</a>';
     }
 
 }
