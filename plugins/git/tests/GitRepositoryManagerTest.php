@@ -243,16 +243,29 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
     private $project;
     private $manager;
     private $forkPermissions;
+    private $system_event_manager;
 
     public function setUp() {
         parent::setUp();
         $this->backend    = mock('Git_Backend_Gitolite');
         $this->repository = mock('GitRepository');
+        stub($this->repository)->getId()->returns(554);
         stub($this->repository)->getBackend()->returns($this->backend);
 
         $this->user    = stub('PFUser')->getId()->returns(123);
         $this->project = stub('Project')->getId()->returns(101);
-        $this->manager = partial_mock('GitRepositoryManager', array('isRepositoryNameAlreadyUsed'));
+
+        $this->system_event_manager = mock('SystemEventManager');
+
+        $this->manager = partial_mock(
+            'GitRepositoryManager',
+            array('isRepositoryNameAlreadyUsed'),
+            array(
+                mock('GitRepositoryFactory'),
+                $this->system_event_manager,
+                mock('GitDao')
+            )
+        );
         $this->forkPermissions = array();
     }
 
@@ -264,11 +277,54 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
     }
 
     public function itForkInRepositoryBackendIfEverythingIsClean() {
+        stub($this->backend)->fork()->returns(667);
         stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(false);
 
         $this->backend->expectOnce('fork');
         $this->manager->fork($this->repository, mock('Project'), mock('PFUser'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
     }
+
+    public function itScheduleAndEventToApplyForkOnFilesystem() {
+        stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(false);
+
+        stub($this->backend)->fork()->returns(667);
+
+        expect($this->system_event_manager)->createEvent(
+            'GIT_REPO_FORK',
+            "554".SystemEvent::PARAMETER_SEPARATOR."667",
+            SystemEvent::PRIORITY_MEDIUM,
+            SystemEvent::OWNER_APP
+        )->once();
+
+        $this->manager->fork($this->repository, mock('Project'), mock('PFUser'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
+    }
+
+    public function itDoesntScheduleAnEventIfAnExceptionIsThrownByBackend() {
+        stub($this->backend)->fork()->throws(new Exception('whatever'));
+
+        $this->expectException();
+        expect($this->system_event_manager)->createEvent()->never();
+
+        $this->manager->fork($this->repository, mock('Project'), mock('PFUser'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
+    }
+
+    public function itDoesntScheduleAnEventWhenBackendReturnsNoId() {
+        stub($this->backend)->fork()->returns(false);
+
+        $this->expectException();
+        expect($this->system_event_manager)->createEvent()->never();
+
+        $this->manager->fork($this->repository, mock('Project'), mock('PFUser'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
+    }
+
+    public function itThrowsAnExceptionWhenBackendReturnsNoId() {
+        stub($this->backend)->fork()->returns(false);
+        
+        $this->expectException();
+        
+        $this->manager->fork($this->repository, mock('Project'), mock('PFUser'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
+    }
+
 
     function testForkIndividualRepositories() {
         $path  = 'toto';
@@ -374,6 +430,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
 
     function testForkShouldIgnoreAlreadyExistingRepository() {
         $this->backend->throwAt(0, 'fork', new GitRepositoryAlreadyExistsException(''));
+        $this->backend->setReturnValueAt(1, 'fork', 667);
 
         $errorMessage = 'Repository Xxx already exists';
         $GLOBALS['Language']->setReturnValue('getText', $errorMessage);
@@ -392,6 +449,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         $repo2 = $this->GivenARepository(456);
 
         $GLOBALS['Response']->expectOnce('addFeedback', array('warning', $errorMessage));
+        $this->backend->setReturnValueAt(0, 'fork', 667);
         $this->backend->throwAt(1, 'fork', new GitRepositoryAlreadyExistsException($repo2->getName()));
 
         $repo1 = $this->GivenARepository(123);
@@ -406,6 +464,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         $repo2->setName('megaRepoGit');
 
         $GLOBALS['Response']->expectOnce('addFeedback', array('warning', "Got an unexpected error while forking ".$repo2->getName().": ".$errorMessage));
+        $this->backend->setReturnValueAt(0, 'fork', 667);
         $this->backend->throwAt(1, 'fork', new Exception($errorMessage));
 
         $repo1 = $this->GivenARepository(123);
