@@ -161,6 +161,9 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         }
     }
 
+    public function isCreated($respository) {
+    }
+
     public function changeRepositoryAccess($repository) {
         $access   = $repository->getAccess();
         $repoPath = $repository->getPath();

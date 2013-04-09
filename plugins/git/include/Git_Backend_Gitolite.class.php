@@ -83,6 +83,9 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         }
     }
 
+    public function isCreated($repository) {
+    }
+
     /**
      * Return URL to access the respository for remote git commands
      *
