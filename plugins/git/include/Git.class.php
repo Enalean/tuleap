@@ -20,6 +20,7 @@
   */
 
 require_once('common/valid/ValidFactory.class.php');
+require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 /**
  * Git
