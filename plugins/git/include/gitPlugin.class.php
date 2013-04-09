@@ -136,6 +136,15 @@ class GitPlugin extends Plugin {
         include $GLOBALS['Language']->getContent('script_locale', null, 'git');
     }
 
+    public function system_event_get_types($params) {
+        $params['types'][] = 'GIT_REPO_ACCESS';
+        $params['types'][] = 'GIT_REPO_UPDATE';
+        $params['types'][] = 'GIT_REPO_DELETE';
+        $params['types'][] = 'GIT_GERRIT_MIGRATION';
+        $params['types'][] = SystemEvent_GIT_REPO_FORK::NAME;
+    }
+
+
     /**
      *This callback make SystemEvent manager knows about git plugin System Events
      * @param <type> $params
@@ -162,6 +171,12 @@ class GitPlugin extends Plugin {
                     $this->getGerritServerFactory(),
                     new BackendLogger(),
                     $this->getProjectCreator(),
+                );
+                break;
+            case SystemEvent_GIT_REPO_FORK::NAME:
+                $params['class'] = 'SystemEvent_GIT_REPO_FORK';
+                $params['dependencies'] = array(
+                    $this->getRepositoryFactory()
                 );
                 break;
             default:
@@ -382,13 +397,6 @@ class GitPlugin extends Plugin {
         }
     }
     
-    public function system_event_get_types($params) {
-        $params['types'][] = 'GIT_REPO_ACCESS';
-        $params['types'][] = 'GIT_REPO_UPDATE';
-        $params['types'][] = 'GIT_REPO_DELETE';
-        $params['types'][] = 'GIT_GERRIT_MIGRATION';
-    }
-
     public function proccess_system_check($params) {
         $gitolite_driver = new Git_GitoliteDriver();
         $gitolite_driver->checkAuthorizedKeys();

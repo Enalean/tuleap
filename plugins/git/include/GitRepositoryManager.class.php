@@ -116,7 +116,30 @@ class GitRepositoryManager {
 
         $this->assertRepositoryNameNotAlreadyUsed($clone);
         //TODO use creator
-        $repository->getBackend()->fork($repository, $clone, $forkPermissions);
+        $this->forkImportedFromBackend($repository->getBackend(), $repository, $clone, $forkPermissions);
+        //$repository->getBackend()->fork($repository, $clone, $forkPermissions);
+    }
+
+
+    private function forkImportedFromBackend(Git_Backend_Interface $backend, GitRepository $old, GitRepository $new, array $forkPermissions) {
+        $new_project = $new->getProject();
+        if ($this->dao->isRepositoryExisting($new_project->getId(), $new->getPath())) {
+            throw new GitRepositoryAlreadyExistsException('Respository already exists');
+        } else {
+            $id = $this->dao->save($new);
+            $new->setId($id);
+            if (empty($forkPermissions)) {
+                $backend->clonePermissions($old, $new);
+            } else {
+                $backend->savePermissions($new, $forkPermissions);
+            }
+            $this->system_event_manager->createEvent(
+                'GIT_REPO_FORK',
+                $old->getId() . SystemEvent::PARAMETER_SEPARATOR . $new->getId(),
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
+            );
+        }
     }
 
     private function assertRepositoryNameNotAlreadyUsed(GitRepository $repository) {

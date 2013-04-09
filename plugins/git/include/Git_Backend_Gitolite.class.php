@@ -358,7 +358,20 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
             }
         }
     }
-    
+
+    public function forkOnFilesystem(GitRepository $old, GitRepository $new) {
+        $name = $old->getName();
+        //TODO use $old->getRootPath() (good luck for Unit Tests!)
+        $old_namespace = $old->getProject()->getUnixName() .'/'. $old->getNamespace();
+        $new_namespace = $new->getProject()->getUnixName() .'/'. $new->getNamespace();
+
+        $forkSucceeded = $this->getDriver()->fork($name, $old_namespace, $new_namespace);
+        if ($forkSucceeded) {
+            $this->updateRepoConf($new);
+        }
+    }
+
+
     public function clonePermissions(GitRepository $old, GitRepository $new) {
         $pm = $this->getPermissionsManager();
         
