@@ -226,12 +226,27 @@ class Git_Driver_Gerrit {
         return $escaped_string;
     }
 
+    /**
+     * 
+     * @param Git_RemoteServer_GerritServer $server
+     * @param PFUser $user
+     * @param string $ssh_key
+     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * 
+     */
     public function addSSHKeyToAccount(Git_RemoteServer_GerritServer $server, PFUser $user, $ssh_key) {
         $escaped_ssh_key = escapeshellarg($ssh_key);
         $query = self::COMMAND .' set-account --add-ssh-key "'. $escaped_ssh_key .'" '. $user->getLdapId();
         $this->ssh->execute($server, $query);
     }
 
+    /**
+     * 
+     * @param Git_RemoteServer_GerritServer $server
+     * @param PFUser $user
+     * @param string $ssh_key
+     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     */
     public function removeSSHKeyFromAccount(Git_RemoteServer_GerritServer $server, PFUser $user, $ssh_key) {
         $escaped_ssh_key = escapeshellarg($ssh_key);
         $query = self::COMMAND .' set-account --delete-ssh-key "'. $escaped_ssh_key .'" '. $user->getLdapId();

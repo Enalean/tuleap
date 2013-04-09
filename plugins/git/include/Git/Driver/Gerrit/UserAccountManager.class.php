@@ -89,26 +89,56 @@ class Git_Driver_Gerrit_UserAccountManager {
         }
     }
 
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $remote_server
+     * @param array $keys
+     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     */
     private function addKeys(Git_RemoteServer_GerritServer $remote_server, Array $keys) {
         foreach($keys as $key) {
             $this->gerrit_driver->addSSHKeyToAccount($remote_server, $this->user, $key);
         }
     }
 
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $remote_server
+     * @param array $keys
+     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     */
     private function removeKeys(Git_RemoteServer_GerritServer $remote_server, Array $keys) {
         foreach($keys as $key) {
             $this->gerrit_driver->removeSSHKeyFromAccount($remote_server, $this->user, $key);
         }
     }
 
+    /**
+     *
+     * @param array $original_keys
+     * @param array $new_keys
+     * @return array
+     */
     private function getKeysToAdd(Array $original_keys, Array $new_keys) {
         return array_unique(array_diff($new_keys, $original_keys));
     }
 
+    /**
+     *
+     * @param array $original_keys
+     * @param array $new_keys
+     * @return array
+     */
     private function getKeysToRemove(Array $original_keys, Array $new_keys) {
         return array_unique(array_diff($original_keys, $new_keys));
     }
 
+    /**
+     *
+     * @param array $keys_to_add
+     * @param array $keys_to_remove
+     * @return array
+     */
     private function areThereKeysToUpdate(Array $keys_to_add, Array $keys_to_remove) {
         return $keys_to_add || $keys_to_remove;
     }
