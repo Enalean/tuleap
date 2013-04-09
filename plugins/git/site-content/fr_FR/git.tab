@@ -210,3 +210,4 @@ plugin_git	logsdaily_field	Nom du répertoire
 plugin_git	logsdaily_title	Les Git push
 
 plugin_git	delegated_to_gerrit	La gestion de ce dépôt Git a été déléguée à la plateforme Gerrit:
+plugin_git	waiting_for_repo_creation	Le dépôt est en attente de création. Veuillez revenir dans quelques minutes.

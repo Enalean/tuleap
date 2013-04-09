@@ -213,3 +213,4 @@ plugin_git	logsdaily_field	Repository name
 plugin_git	logsdaily_title	Git pushes
 
 plugin_git	delegated_to_gerrit	The management of this Git repository has been delegated to the Gerrit platform:
+plugin_git	waiting_for_repo_creation	The repository is in queue for creation. Please check back here in a few minutes
