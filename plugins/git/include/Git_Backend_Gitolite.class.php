@@ -238,8 +238,9 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @param GitRepository $repository
      */
     public function changeRepositoryMailingList($repository) {
-        $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
-        return $this->updateRepoConf($repository);
+        //$this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
+        //return $this->updateRepoConf($repository);
+        return true;
     }
 
     /**

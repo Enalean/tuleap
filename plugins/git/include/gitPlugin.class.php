@@ -142,8 +142,8 @@ class GitPlugin extends Plugin {
      */
     public function getSystemEventClass($params) {
         switch($params['type']) {
-            case 'GIT_REPO_CREATE' :
-                $params['class'] = 'SystemEvent_GIT_REPO_CREATE';
+            case 'GIT_REPO_UPDATE' :
+                $params['class'] = 'SystemEvent_GIT_REPO_UPDATE';
                 $params['dependencies'] = array(
                     $this->getRepositoryFactory()
                 );

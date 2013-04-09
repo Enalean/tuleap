@@ -23,7 +23,7 @@
  */
 require_once dirname(__FILE__).'/../bootstrap.php';
 
-class SystemEvent_GIT_REPO_CREATETest extends TuleapTestCase {
+class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase {
     private $repository_id = 115;
 
     public function setUp() {
@@ -37,7 +37,7 @@ class SystemEvent_GIT_REPO_CREATETest extends TuleapTestCase {
         $this->repository_factory = mock('GitRepositoryFactory');
         stub($this->repository_factory)->getRepositoryById()->returns($this->repository);
 
-        $this->event = partial_mock('SystemEvent_GIT_REPO_CREATE', array('done', 'error'));
+        $this->event = partial_mock('SystemEvent_GIT_REPO_UPDATE', array('done', 'error'));
         $this->event->setParameters("$this->repository_id");
         $this->event->injectDependencies($this->repository_factory);
     }

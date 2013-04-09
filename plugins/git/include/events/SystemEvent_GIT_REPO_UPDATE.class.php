@@ -18,10 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/system_event/SystemEvent.class.php');
-require_once('common/user/UserManager.class.php');
+require_once 'common/system_event/SystemEvent.class.php';
 
-class SystemEvent_GIT_REPO_CREATE extends SystemEvent {
+class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
 
     /** @var GitRepositoryFactory */
     private $repository_factory;
@@ -42,11 +41,11 @@ class SystemEvent_GIT_REPO_CREATE extends SystemEvent {
     }
 
     public function verbalizeParameters($with_link) {
+        $repository = $this->getRepositoryFromParameters();
         if ($with_link) {
-            $repository = $this->getRepositoryFromParameters();
             return '<a href="/plugins/git/?action=repo_management&group_id='.$repository->getProjectId().'&repo_id='.$repository->getId().'">'.$repository->getName().'</a>';
         } else {
-            return $parameters;
+            return $repository->getId();
         }
     }
 
