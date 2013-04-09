@@ -319,13 +319,17 @@ class GitPlugin extends Plugin {
         
         try {
             $gerrit_user_account_manager = new Git_Driver_Gerrit_UserAccountManager($user, $gerrit_driver);
-        } catch (Git_Driver_Gerrit_InvalidLDAPUserException $e) {}
         
-        $gerrit_user_account_manager->synchroniseSSHKeys(
-            $original_keys,
-            $new_keys,
-            $this->getGerritServerFactory()
-        );
+            $gerrit_user_account_manager->synchroniseSSHKeys(
+                $original_keys,
+                $new_keys,
+                $this->getGerritServerFactory()
+            );
+        } catch (Git_Driver_Gerrit_InvalidLDAPUserException $e) {
+        } catch (Git_Driver_Gerrit_UserSynchronisationException $e) {
+            $logger = new BackendLogger();
+            $logger->error('Unable to propagate ssh keys for user: ' . $user->getUnixName() . '. Error:' . $e->getTraceAsString());
+        }
     }
 
     /**
