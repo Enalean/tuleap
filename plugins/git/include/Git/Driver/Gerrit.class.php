@@ -18,11 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Gerrit/RemoteSSHCommand.class.php';
-require_once 'Gerrit/Exception.class.php';
-require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServer.class.php';
 require_once 'common/backend/BackendLogger.class.php';
-
 
 /**
  * I know how to speak to a Gerrit remote server

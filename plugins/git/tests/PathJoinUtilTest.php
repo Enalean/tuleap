@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once dirname(__FILE__).'/../include/PathJoinUtil.php';
+require_once 'bootstrap.php';
+require_once GIT_BASE_DIR.'/PathJoinUtil.php';
 
 class PathJoinUtilTest extends UnitTestCase {
 

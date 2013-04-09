@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/constants.php');
+require_once 'bootstrap.php';
 require_once (dirname(__FILE__).'/../include/GitActions.class.php');
 Mock::generatePartial('GitActions', 'GitActionsTestVersion', array('getText', 'addData', 'getGitRepository', 'save'));
 require_once (dirname(__FILE__).'/../include/Git.class.php');
@@ -638,6 +638,26 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
         stub($repo)->getId()->returns($repo_id);
         $this->em->expectOnce('createEvent', array(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, "$repo_id::$server_id", SystemEvent::PRIORITY_HIGH, SystemEvent::OWNER_APP));
         $this->actions->migrateToGerrit($repo, $server_id);
+    }
+}
+
+class GitActions_disconnectFromGerritTest extends TuleapTestCase {
+
+    public function itDelegatesToGitoliteBackend() {
+        $backend = mock('Git_Backend_Gitolite');
+        $repo    = stub('GitRepository')->getBackend()->returns($backend);
+        $actions = new GitActions(
+            mock('Git'),
+            mock('SystemEventManager'),
+            mock('GitRepositoryFactory'),
+            mock('GitRepositoryManager'),
+            mock('Git_RemoteServer_GerritServerFactory'),
+            mock('Git_Driver_Gerrit')
+        );
+
+        expect($backend)->disconnectFromGerrit()->once();
+
+        $actions->disconnectFromGerrit($repo);
     }
 }
 ?>

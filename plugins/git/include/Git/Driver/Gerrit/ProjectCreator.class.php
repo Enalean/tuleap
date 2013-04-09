@@ -19,11 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/RemoteSSHCommand.class.php';
-require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
-require_once GIT_BASE_DIR . '/GitRepository.class.php';
-require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/MembershipManager.class.php';
-require_once 'UserFinder.class.php';
 
 class Git_Driver_Gerrit_ProjectCreator {
 

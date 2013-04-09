@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'GitRepositoryFactory.class.php';
+require_once 'PathJoinUtil.php';
 require_once 'common/system_event/SystemEventManager.class.php';
 require_once 'common/project/ProjectManager.class.php';
 

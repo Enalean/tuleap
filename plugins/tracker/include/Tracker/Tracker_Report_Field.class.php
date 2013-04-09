@@ -21,19 +21,28 @@
 
 
 interface Tracker_Report_Field extends Tracker_FormElement_IHaveAnId, Tracker_FormElement_Usable {
-    
+
     /**
      * Return a label (e.g. usable both in a form or as a column header)
      */
     function getLabel();
-    
+
     /**
      * Display the field as a criteria
      * @param Tracker_Report_Criteria $criteria
      * @return string
      */
     function fetchCriteria(Tracker_Report_Criteria $criteria);
-    
+
+    /**
+     * Display the field as criteria but without been able to be switch to advanced mode
+     *
+     * @param Tracker_Report_Criteria $criteria
+     *
+     * @return string
+     */
+    function fetchCriteriaWithoutExpandFunctionnality(Tracker_Report_Criteria $criteria);
+
     /**
      * Display the field as a Changeset value.
      * Used in report table
@@ -43,6 +52,6 @@ interface Tracker_Report_Field extends Tracker_FormElement_IHaveAnId, Tracker_Fo
      * @return string
      */
     function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null);
-    
+
 }
 ?>

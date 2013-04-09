@@ -19,9 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once dirname(__FILE__).'/../include/Git_Backend_Gitolite.class.php';
-require_once dirname(__FILE__).'/../include/Git_GitoliteDriver.class.php';
+require_once 'bootstrap.php';
 require_once 'common/project/Project.class.php';
 require_once 'common/backend/Backend.class.php';
 
@@ -313,4 +311,28 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
     }
 }
 
+class Git_Backend_Gitolite_disconnectFromGerrit extends TuleapTestCase {
+
+    private $repo_id = 123;
+
+    public function setUp() {
+        parent::setUp();
+        $this->repository = aGitRepository()->withId($this->repo_id)->build();
+        $this->dao        = mock('GitDao');
+        $this->backend    = partial_mock('Git_Backend_Gitolite', array('updateRepoConf'));
+        $this->backend->setDao($this->dao);
+    }
+
+    public function itAsksToDAOToDisconnectFromGerrit() {
+        expect($this->dao)->disconnectFromGerrit($this->repo_id)->once();
+
+        $this->backend->disconnectFromGerrit($this->repository);
+    }
+
+    public function itUpdatesTheRepoConfiguration() {
+        expect($this->backend)->updateRepoConf($this->repository)->once();
+
+        $this->backend->disconnectFromGerrit($this->repository);
+    }
+}
 ?>

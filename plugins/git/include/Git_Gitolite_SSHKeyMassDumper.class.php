@@ -22,7 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Git_Gitolite_SSHKeyMassDumper.class.php';
 
 class Git_Gitolite_SSHKeyMassDumper {
     private $dumper;

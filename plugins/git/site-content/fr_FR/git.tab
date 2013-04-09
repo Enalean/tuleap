@@ -58,6 +58,10 @@ plugin_git	dao_error_remove_notification	L'adresse mail n'a pas été supprimée
 
 plugin_git	dao_child_params	Paramètres invalides
 
+plugin_git	disconnect_gerrit_title	Déconnexion de Gerrit
+plugin_git	disconnect_gerrit_msg	Cette opération est <strong>irréversible</strong>. Ce dépôt ne pourra plus être géré de nouveau par un serveur gerrit. Êtes vous certain de vouloir continuer ?
+plugin_git	disconnect_gerrit_yes	Oui, je veux déconnecter ce dépôt de Gerrit
+
 plugin_git	backend_delete_haschild_error	Impossible de supprimer le dépôt : est parent d'au moins un autre dépôt
 plugin_git	backend_delete_path_error	Impossible de supprimer le dépôt : chemin n'appartient pas au répertoire root du projet
 plugin_git	backend_gitroot_mkdir_error	Erreur à la création du répertoire racine des dépôts Git (Contactez l'administrateur)
@@ -211,7 +215,10 @@ plugin_git	logsdaily_title	Les Git push
 
 plugin_git	delegated_to_gerrit	La gestion de ce dépôt Git a été déléguée à la plateforme Gerrit:
 
+
 plugin_git	push_ssh_keys_error	Impossible de copier les clés SSH. Ajoutez-les de façon manuelle.
 plugin_git	push_ssh_keys_button_value	Pousser les clés SSH
 plugin_git	push_ssh_keys_button_title	Pousser les clés SSH sur les serveurs externes
 plugin_git	push_ssh_keys_info	Vos anciennes clés ne sont pas poussées automatiquement. Toute nouvelle clé sera automatiquement poussée sur les serveurs suivants :
+
+plugin_git	gerrit_cannot_migrate_error_msg	Ce dépôt ne peux pas être migré. Ceci est dû au fait qu'il a déjà été migré par le passé et ne peut plus être migré de nouveau.

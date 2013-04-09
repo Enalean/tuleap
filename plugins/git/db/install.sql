@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `plugin_git` (
   `repository_scope` varchar(1) NOT NULL,
   `repository_namespace` varchar(255),
   `remote_server_id` INT(11) UNSIGNED NULL,
+  remote_server_disconnect_date INT(11) NULL,
   PRIMARY KEY  (`repository_id`),
   KEY `project_id` (`project_id`),
   FOREIGN KEY  remote_server_idx (remote_server_id) REFERENCES plugin_git_remote_servers (id)

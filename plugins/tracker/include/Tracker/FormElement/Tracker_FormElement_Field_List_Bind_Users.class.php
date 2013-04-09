@@ -148,7 +148,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
         $soap_values = array();
         if (! empty($ugroups)) {
-            foreach($this->getAllValues($ugroups) as $value) {
+            foreach($this->getAllValuesByUGroupList($ugroups) as $value) {
                 $soap_values[] = $this->getSoapBindValue($value);
             }
         }
@@ -215,17 +215,17 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
      */
-    
-    private function getAllValuesByUGroupList($ugroups, $keyword = null) {
-        if ($this->values || count($ugroups) == 0 ) {
+    protected function getAllValuesByUGroupList($ugroups, $keyword = null) {
+        if ($this->values) {
             return $this->values;
         }
 
-        $da          = $this->getDefaultValueDao()->getDa();
-        $sql         = array();
-        $tracker     = $this->field->getTracker();
-        $tracker_id  = $da->escapeInt($tracker->id);
-        $user_helper = UserHelper::instance();
+        $this->values = array();
+        $da           = $this->getDefaultValueDao()->getDa();
+        $sql          = array();
+        $tracker      = $this->field->getTracker();
+        $tracker_id   = $da->escapeInt($tracker->id);
+        $user_helper  = UserHelper::instance();
         
         foreach($ugroups as $ugroup) {
             if ($ugroup) {
@@ -286,7 +286,6 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         
         if (! empty($sql)) {
             $dao = $this->getDefaultValueDao();
-            $this->values = array();
             foreach($dao->retrieve(implode(' UNION ', $sql)) as $row) {
                 $this->values[$row['user_id']] = new Tracker_FormElement_Field_List_Bind_UsersValue(
                     $row['user_id'],

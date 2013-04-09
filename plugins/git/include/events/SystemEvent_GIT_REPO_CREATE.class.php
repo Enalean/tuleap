@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/
  */
 require_once('common/system_event/SystemEvent.class.php');
-require_once(dirname(__FILE__).'/../GitRepository.class.php');
 require_once('common/backend/Backend.class.php');
 require_once('common/user/UserManager.class.php');
 

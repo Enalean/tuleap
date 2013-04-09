@@ -19,8 +19,6 @@
  */
 
 require_once 'common/chart/Chart.class.php';
-require_once 'GitDao.class.php';
-require_once 'Git_LogDao.class.php';
 
 class Git_LastPushesGraph {
     const MAX_WEEKSNUMBER  = 25;

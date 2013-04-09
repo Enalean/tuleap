@@ -19,13 +19,6 @@
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
 
-require_once('mvc/PluginController.class.php');
-require_once('GitViews.class.php');
-require_once('GitActions.class.php');
-require_once('GitRepository.class.php');
-require_once('GitLog.class.php');
-require_once 'Git_LastPushesGraph.class.php';
-
 require_once('common/valid/ValidFactory.class.php');
 
 /**
@@ -204,6 +197,7 @@ class Git extends PluginController {
                                             'do_fork_repositories',
                                             'view_last_git_pushes',
                                             'migrate_to_gerrit',
+                                            'disconnect_gerrit',
             );
         } else {
             $this->addPermittedAction('index');
@@ -447,6 +441,16 @@ class Git extends PluginController {
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
                 } else {
                     $this->addAction('migrateToGerrit', array($repo, $remote_server_id));
+                    $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
+                }
+                break;
+            case 'disconnect_gerrit':
+                $repo = $this->factory->getRepositoryById($repoId);
+                if (empty($repo)) {
+                    $this->addError($this->getText('actions_params_error'));
+                    $this->redirect('/plugins/git/?group_id='. $this->groupId);
+                } else {
+                    $this->addAction('disconnectFromGerrit', array($repo));
                     $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
                 }
                 break;

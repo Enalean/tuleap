@@ -70,6 +70,10 @@ plugin_git	dao_error_remove_notification	Mail not removed
 
 plugin_git	dao_child_params	Repository child search failed : missing repository id
 
+plugin_git	disconnect_gerrit_title	Disconnect from Gerrit
+plugin_git	disconnect_gerrit_msg	This operation <strong>cannot</strong> be undone. This repository will never again be managed by a gerrit server. Do you confirm the disconnection?
+plugin_git	disconnect_gerrit_yes	Yes, I want to disconnect from Gerrit
+
 plugin_git	backend_delete_haschild_error	Unable to delete repository: it has child(ren)
 plugin_git	backend_delete_path_error	Unable to delete repository: path outside project repository root
 plugin_git	backend_gitroot_mkdir_error	Error while creating root for Git repositories (Contact the site admin)
@@ -218,3 +222,5 @@ plugin_git	push_ssh_keys_error	Error pushing SSH Keys. Please add them manually.
 plugin_git	push_ssh_keys_button_value	Manually push SSH keys
 plugin_git	push_ssh_keys_button_title	Push SSH keys to remote servers
 plugin_git	push_ssh_keys_info	Old keys need to be pushed manually. All new keys are automatically pushed to the following Gerrit servers:
+
+plugin_git	gerrit_cannot_migrate_error_msg	This repository cannot be migrated. This is because it was alreapy migrated in the past and cannot anymore be migrated again.

@@ -18,12 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../../include/constants.php';
-require_once dirname(__FILE__).'/../../../builders/aGitRepository.php';
-require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipManager.class.php';
-require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand/AddUser.class.php';
-require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand/RemoveUser.class.php';
-require_once GIT_BASE_DIR .'/Git/Driver/Gerrit.class.php';
+require_once dirname(__FILE__).'/../../../bootstrap.php';
 require_once 'common/include/Config.class.php';
 
 abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestCase {
@@ -43,6 +38,8 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
     protected $membership_command_remove;
 
     public function setUp() {
+        Config::store();
+        Config::set('codendi_log', '/tmp/');
         $this->user                                  = stub('PFUser')->getLdapId()->returns('whatever');
         $this->driver                                = mock('Git_Driver_Gerrit');
         $this->user_finder                           = mock('Git_Driver_Gerrit_UserFinder');
@@ -59,6 +56,11 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
 
         stub($this->remote_server_factory)->getServer()->returns($this->remote_server);
         stub($this->project)->getUnixName()->returns($this->project_name);
+    }
+
+    public function tearDown() {
+        Config::restore();
+        parent::tearDown();
     }
 }
 

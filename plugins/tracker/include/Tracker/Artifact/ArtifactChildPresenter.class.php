@@ -39,18 +39,27 @@ class Tracker_ArtifactChildPresenter {
     /** @var string */
     public $status;
 
+    /** @var int */
+    public $parent_id;
+
+    /** @var bool */
+    public $has_children;
+
     /**
      * @param Tracker_Artifact        $artifact The child
+     * @param Tracker_Artifact        $parent   The parent
      * @param Tracker_Semantic_Status $semantic The status semantic used by the corresponding tracker
      */
-    public function __construct(Tracker_Artifact $artifact, Tracker_Semantic_Status $semantic) {
+    public function __construct(Tracker_Artifact $artifact, Tracker_Artifact $parent, Tracker_Semantic_Status $semantic) {
         $base_url = get_server_url();
 
-        $this->xref   = $artifact->getXRef();
-        $this->title  = $artifact->getTitle();
-        $this->id     = $artifact->getId();
-        $this->url    = $base_url . $artifact->getUri();
-        $this->status = $semantic->getStatus($artifact);
+        $this->xref         = $artifact->getXRef();
+        $this->title        = $artifact->getTitle();
+        $this->id           = $artifact->getId();
+        $this->url          = $base_url . $artifact->getUri();
+        $this->status       = $semantic->getStatus($artifact);
+        $this->parent_id    = $parent->getId();
+        $this->has_children = $artifact->hasChildren();
     }
 }
 ?>
