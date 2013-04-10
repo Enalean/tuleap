@@ -53,6 +53,7 @@ class Git_RemoteServer_Dao extends DataAccessObject {
                     INNER JOIN user ON (user_group.user_id = user.user_id)
                 WHERE user_group.user_id = $user_id
                     AND user.ldap_id IS NOT NULL
+                    AND user.ldap_id != ''
                 UNION
                 SELECT DISTINCT pgrs.*
                 FROM plugin_git_remote_servers pgrs
@@ -61,7 +62,8 @@ class Git_RemoteServer_Dao extends DataAccessObject {
                     INNER JOIN ugroup_user ON (ugroup_user.ugroup_id = ugroup.ugroup_id)
                     INNER JOIN user ON (ugroup_user.user_id = user.user_id)
                 WHERE ugroup_user.user_id = $user_id
-                    AND user.ldap_id IS NOT NULL";
+                    AND user.ldap_id IS NOT NULL
+                    AND user.ldap_id != ''";
         return $this->retrieve($sql);
     }
 
