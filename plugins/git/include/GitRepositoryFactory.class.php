@@ -173,31 +173,6 @@ class GitRepositoryFactory {
     }
 
     /**
-     *
-     * @param array $ugroup_ids
-     * @return GitRepositoryWithPermissions[]
-     */
-    public function getAllGerritRepositoriesWithPermissionsForUGroup(array $ugroup_ids) {
-        $gerrit_repositories = array();
-
-        if (empty($ugroup_ids)) {
-            return $gerrit_repositories;
-        }
-
-        $repositories_data = $this->dao->searchGerritRepositoriesIdsWithPermissionsForUGroups($ugroup_ids);
-
-        if (! $repositories_data) {
-            return $gerrit_repositories;
-        }
-
-        foreach ($repositories_data as $row) {
-            $gerrit_repositories[] = new GitRepositoryWithPermissions($this->instanciateFromRow($row));
-        }
-
-        return $gerrit_repositories;
-    }
-
-    /**
      * Attempt to get repository if path match given base directory
      * 
      * @param type $base_dir A top level directory that can contains repo

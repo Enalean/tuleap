@@ -56,7 +56,7 @@ class GitRepositoryFactoryTest extends TuleapTestCase {
     }
 }
 
-class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupAndProjectTest extends TuleapTestCase {
+class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
@@ -298,68 +298,5 @@ class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends Tulea
             )
         );
     }
-}
-
-class GitRepositoryFactory_getAllGerritRepositoriesWithPermissionsForUGroupTest extends TuleapTestCase {
-    private $git_dao;
-    private $project_manager;
-
-    public function setUp() {
-        parent::setUp();
-
-        $this->git_dao          = mock('GitDao');
-        $this->project_manager  = mock('ProjectManager');
-        $this->factory          = new GitRepositoryFactory($this->git_dao, $this->project_manager);
-    }
-
-    public function itReturnsAnEmptyArrayForAnEmptyUGroupIdArray() {
-        $empty_ugroups_list = array();
-
-        $gerrit_repositories = $this->factory->getAllGerritRepositoriesWithPermissionsForUGroup($empty_ugroups_list);
-
-        $this->assertTrue(is_array($gerrit_repositories));
-        $this->assertArrayEmpty($gerrit_repositories);
-    }
-
-    public function itReturnsAnEmptyArrayIfNoGerritRepositoryExistsForAnArrayOfUGroupIds() {
-        $ugroups_list = array(
-            45,
-            '12',
-            7,
-            99996,
-        );
-
-        $gerrit_repositories = $this->factory->getAllGerritRepositoriesWithPermissionsForUGroup($ugroups_list);
-
-        $this->assertTrue(is_array($gerrit_repositories));
-        $this->assertArrayEmpty($gerrit_repositories);
-    }
-
-    public function itReturnsAnArrayOfGerritRepositoriesWithPermissionsForAnArrayOfUGroupIds() {
-        $ugroups_list = array(
-            45,
-            '12',
-            7,
-            99996,
-        );
-        
-        $data_access_result = array(
-            array('a'),
-            array('b'),
-            array('v')
-        );
-
-        stub($this->git_dao)->searchGerritRepositoriesIdsWithPermissionsForUGroups()->returns($data_access_result);
-
-        $gerrit_repositories = $this->factory->getAllGerritRepositoriesWithPermissionsForUGroup($ugroups_list);
-
-        $this->assertTrue(is_array($gerrit_repositories));
-        $this->assertArrayNotEmpty($gerrit_repositories);
-
-        foreach ($gerrit_repositories as $gerrit_repository) {
-            $this->assertIsA($gerrit_repository, 'GitRepositoryWithPermissions');
-        }
-    }
-
 }
 ?>
