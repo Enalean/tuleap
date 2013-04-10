@@ -40,6 +40,7 @@ require_once('common/reference/ReferenceManager.class.php');
 
 require_once('www/project/admin/permissions.php');
 require_once('www/news/news_utils.php');
+require_once('common/include/MIME.class.php');
 
 class Docman_Actions extends Actions {
 
@@ -199,12 +200,9 @@ class Docman_Actions extends Actions {
                     } else {
                         $_filesize = filesize($path);
                     }
-
-                    if ($request->exist('mime_type')) {
-                        $_filetype = $request->get('mime_type');
-                    } else {
-                        $_filetype = mime_content_type($path); //be careful with false detection
-                    }
+                    
+                    $content = base64_decode($request->get('upload_content'));
+                    $_filetype = $this->getMimeType($content, $_filename);
                 }
             } else {
                 $path = $fs->upload($_FILES['file'], $item->getGroupId(), $item->getId(), $number);
@@ -212,7 +210,7 @@ class Docman_Actions extends Actions {
                     $uploadSucceded = true;
                     $_filename = $_FILES['file']['name'];
                     $_filesize = $_FILES['file']['size'];
-                    $_filetype = $_FILES['file']['type']; //TODO detect mime type server side
+                    $_filetype = $this->getMimeType(file_get_contents($path), $_filename);
                 }
             }
             break;
@@ -306,7 +304,22 @@ class Docman_Actions extends Actions {
         }
         return $newVersion;
     }
+    
+    private function getMimeType($content, $filename){
+        //ignore mime type coming from the client, guess it instead
+        //Write the content of the file into a temporary file
+        //The best accurate results are got when the file has the real extension, therefore use the filename
+        $tmp     = tempnam(Config::get('tmp_dir'), 'Mime-detect');
+        $tmpname = $tmp .'-'. basename($filename);
+        file_put_contents($tmpname, $content);
+        $_filetype = MIME::instance()->type($tmpname);
 
+        //remove both files created by tempnam() and file_put_contents()
+        unlink($tmp);
+        unlink($tmpname);
+        return $_filetype;
+    }
+    
     function createFolder() {
         $this->createItem();
     }
