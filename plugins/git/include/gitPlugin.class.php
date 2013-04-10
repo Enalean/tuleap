@@ -421,7 +421,11 @@ class GitPlugin extends Plugin {
     }
 
     private function getRepositoryManager() {
-        return new GitRepositoryManager($this->getRepositoryFactory(), SystemEventManager::instance(), $this->getGitDao());
+        return new GitRepositoryManager(
+            $this->getRepositoryFactory(),
+            new Git_SystemEventManager(SystemEventManager::instance()),
+            $this->getGitDao()
+        );
     }
 
     private function getRepositoryFactory() {
