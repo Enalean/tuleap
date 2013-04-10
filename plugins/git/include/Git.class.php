@@ -20,6 +20,7 @@
   */
 
 require_once('common/valid/ValidFactory.class.php');
+require_once GIT_BASE_DIR.'/mvc/PluginController.class.php';
 
 /**
  * Git
