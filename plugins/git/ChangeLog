@@ -1,3 +1,6 @@
+Version 2.7.37 - Tuleap 5.13
+    * Fix include after autload
+
 Version 2.7.36 - Tuleap 5.13
     * Autoload git
 
