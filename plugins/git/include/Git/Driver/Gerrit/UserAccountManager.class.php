@@ -47,7 +47,7 @@ class Git_Driver_Gerrit_UserAccountManager {
      * @param array $original_keys
      * @param array $new_keys
      * @param Git_RemoteServer_GerritServerFactory $remote_gerrit_factory
-     * @return empty
+     * @return void
      * @throws Git_Driver_Gerrit_UserSynchronisationException
      */
     public function synchroniseSSHKeys(Array $original_keys, Array $new_keys, Git_RemoteServer_GerritServerFactory $remote_gerrit_factory) {
@@ -57,20 +57,30 @@ class Git_Driver_Gerrit_UserAccountManager {
         if (! $this->areThereKeysToUpdate($keys_to_add, $keys_to_remove)) {
             return;
         }
-
+        
+        $errors = array();
         $remote_servers = $remote_gerrit_factory->getRemoteServersForUser($this->user);
 
-        try {
-            foreach($remote_servers as $remote_server) {
+        foreach($remote_servers as $remote_server) {
+            try {
                 $this->removeKeys($remote_server, $keys_to_add);
                 $this->removeKeys($remote_server, $keys_to_remove);
+            } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+                $errors[] = $e->getTraceAsString();
             }
-            //double foreach to workaround gerrit bug
-            foreach($remote_servers as $remote_server) {
-                $this->addKeys($remote_server, $keys_to_add); 
+        }
+        //double foreach to workaround gerrit bug
+        foreach($remote_servers as $remote_server) {
+            try {
+                $this->addKeys($remote_server, $keys_to_add);
+            } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+                $errors[] = $e->getTraceAsString();
             }
-        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
-            throw new Git_Driver_Gerrit_UserSynchronisationException($e->getTraceAsString());
+        }
+        
+        if ($errors) {
+            $message = implode(PHP_EOL, $errors);
+            throw new Git_Driver_Gerrit_UserSynchronisationException($message);
         }
     }
 
@@ -78,7 +88,7 @@ class Git_Driver_Gerrit_UserAccountManager {
      * Makes sure there is one copy of each key on each remote server
      * 
      * @param Git_RemoteServer_GerritServerFactory $remote_gerrit_factory
-     * @return empty
+     * @return void
      * @throws Git_Driver_Gerrit_UserSynchronisationException
      */
     public function pushSSHKeys(Git_RemoteServer_GerritServerFactory $remote_gerrit_factory) {
@@ -88,15 +98,21 @@ class Git_Driver_Gerrit_UserAccountManager {
             return;
         }
 
+        $errors = array();
         $remote_servers = $remote_gerrit_factory->getRemoteServersForUser($this->user);
-
-        try {
-            foreach($remote_servers as $remote_server) {
+        
+        foreach($remote_servers as $remote_server) {
+           try { 
                 $this->removeKeys($remote_server, $user_keys);
                 $this->addKeys($remote_server, $user_keys);
+            } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+                $errors[] = $e->getTraceAsString();
             }
-        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
-            throw new Git_Driver_Gerrit_UserSynchronisationException($e->getTraceAsString());
+        }
+
+        if ($errors) {
+            $message = implode(PHP_EOL, $errors);
+            throw new Git_Driver_Gerrit_UserSynchronisationException($message);
         }
     }
 
