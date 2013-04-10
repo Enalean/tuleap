@@ -18,8 +18,9 @@
   * You should have received a copy of the GNU General Public License
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
-require_once('common/system_event/SystemEventManager.class.php');
+
 require_once('common/layout/Layout.class.php');
+
 /**
  * GitActions
  * @todo call Event class instead of SystemEvent
@@ -28,9 +29,9 @@ require_once('common/layout/Layout.class.php');
 class GitActions extends PluginActions {
 
     /**
-     * @var SystemEventManager
+     * @var Git_SystemEventManager
      */
-    protected $systemEventManager;
+    protected $git_system_event_manager;
     
     /**
      * @var GitRepositoryFactory 
@@ -54,20 +55,20 @@ class GitActions extends PluginActions {
      * Constructor
      *
      * @param Git                  $controller         The controller
-     * @param SystemEventManager   $systemEventManager The system manager
+     * @param Git_SystemEventManager   $system_event_manager The system manager
      * @param GitRepositoryFactory $factory            The factory to manage repositories
      * @param GitRepositoryManager $manager            The manager to create/delete repositories
      */
     public function __construct(
         Git                $controller,
-        SystemEventManager $systemEventManager,
+        Git_SystemEventManager $system_event_manager,
         GitRepositoryFactory $factory,
         GitRepositoryManager $manager,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         Git_Driver_Gerrit $driver
     ) {
         parent::__construct($controller);
-        $this->systemEventManager    = $systemEventManager;
+        $this->git_system_event_manager    = $system_event_manager;
         $this->factory               = $factory;
         $this->manager               = $manager;
         $this->gerrit_server_factory = $gerrit_server_factory;
@@ -111,12 +112,7 @@ class GitActions extends PluginActions {
 
     private function markAsDeleted(GitRepository $repository) {
         $repository->markAsDeleted();
-        $this->systemEventManager->createEvent(
-            'GIT_REPO_DELETE',
-            $repository->getProjectId().SystemEvent::PARAMETER_SEPARATOR.$repository->getId(),
-            SystemEvent::PRIORITY_MEDIUM,
-            $repository->getBackend() instanceof Git_Backend_Gitolite ? SystemEvent::OWNER_APP : SystemEvent::OWNER_ROOT
-        );
+        $this->git_system_event_manager->queueRepositoryDeletion($repository);
     }
 
     public function createReference($projectId, $repositoryName) {
@@ -189,7 +185,7 @@ class GitActions extends PluginActions {
 
     public function repoManagement(GitRepository $repository) {
         $this->addData(array('repository'=>$repository));
-        if ($this->systemEventManager->isThereAnEventAlreadyOnGoing(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, $repository->getId())) {
+        if ($this->git_system_event_manager->isThereAnEventAlreadyOnGoing(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, $repository->getId())) {
             $GLOBALS['Response']->addFeedback(Feedback::INFO, $this->getText('gerrit_migration_ongoing'));
         }
         $this->addData(array(
@@ -310,7 +306,7 @@ class GitActions extends PluginActions {
         foreach ($mailsToDelete as $mail) {
             $repository->notificationRemoveMail($mail);
         }
-        $this->systemEventManager->createEvent('GIT_REPO_ACCESS',
+        $this->git_system_event_manager->createEvent('GIT_REPO_ACCESS',
                                                $repoId.SystemEvent::PARAMETER_SEPARATOR.'private',
                                                SystemEvent::PRIORITY_HIGH);
         $c->addInfo($this->getText('actions_repo_access'));
@@ -361,7 +357,7 @@ class GitActions extends PluginActions {
                     }
                 } else {
                     if ($repository->getAccess() != $repoAccess) {
-                        $this->systemEventManager->createEvent(
+                        $this->git_system_event_manager->createEvent(
                                                       'GIT_REPO_ACCESS',
                                                        $repoId.SystemEvent::PARAMETER_SEPARATOR.$repoAccess,
                                                        SystemEvent::PRIORITY_HIGH
@@ -385,7 +381,7 @@ class GitActions extends PluginActions {
 
     private function scheduleBackendUpdate(GitRepository $repository) {
         if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
-            SystemEvent_GIT_REPO_UPDATE::queueInSystemEventManager($this->systemEventManager, $repository);
+            $this->git_system_event_manager->queueRepositoryUpdate($repository);
         }
     }
 
@@ -507,12 +503,7 @@ class GitActions extends PluginActions {
         if ($repository->canMigrateToGerrit()) {
             try {
                 $this->gerrit_server_factory->getServerById($remote_server_id);
-                $this->systemEventManager->createEvent(
-                    SystemEvent_GIT_GERRIT_MIGRATION::TYPE,
-                    $repository->getId() . SystemEvent::PARAMETER_SEPARATOR . $remote_server_id,
-                    SystemEvent::PRIORITY_HIGH,
-                    SystemEvent::OWNER_APP
-                );
+                $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id);
             } catch (Git_RemoteServer_NotFoundException $e) {
                 // TODO log error to the syslog
             }
@@ -521,7 +512,7 @@ class GitActions extends PluginActions {
 
     public function disconnectFromGerrit(GitRepository $repository) {
         $repository->getBackend()->disconnectFromGerrit($repository);
-        $this->scheduleBackendUpdate($repository);
+        $this->git_system_event_manager->queueRepositoryUpdate($repository);
     }
 
     private function redirectToRepo($projectId, $repoId) {

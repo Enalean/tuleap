@@ -428,7 +428,7 @@ class GitActions_Delete_Tests extends TuleapTestCase {
     protected $project_id;
     protected $repository_id;
     protected $repository;
-    protected $system_event_manager;
+    protected $git_system_event_manager;
 
     public function setUp() {
         parent::setUp();
@@ -440,7 +440,7 @@ class GitActions_Delete_Tests extends TuleapTestCase {
         stub($this->repository)->getId()->returns($this->repository_id);
         stub($this->repository)->getProjectId()->returns($this->project_id);
 
-        $this->system_event_manager = mock('SystemEventManager');
+        $this->git_system_event_manager = mock('Git_SystemEventManager');
         $controler                  = stub('Git')->getPlugin()->returns(mock('gitPlugin'));
         $git_repository_factory     = mock('GitRepositoryFactory');
 
@@ -448,7 +448,7 @@ class GitActions_Delete_Tests extends TuleapTestCase {
 
         $this->git_actions = new GitActions(
             $controler,
-            $this->system_event_manager,
+            $this->git_system_event_manager,
             $git_repository_factory,
             mock('GitRepositoryManager'),
             mock('Git_RemoteServer_GerritServerFactory'),
@@ -469,15 +469,7 @@ class GitActions_Delete_Tests extends TuleapTestCase {
 
         stub($this->repository)->getBackend()->returns(mock('Git_Backend_Gitolite'));
 
-        $this->system_event_manager->expectOnce(
-            'createEvent',
-            array(
-                'GIT_REPO_DELETE',
-                $this->project_id.SystemEvent::PARAMETER_SEPARATOR.$this->repository_id,
-                '*',
-                SystemEvent::OWNER_APP
-            )
-        );
+        expect($this->git_system_event_manager)->queueRepositoryDeletion($this->repository)->once();
 
         $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
     }
@@ -486,7 +478,7 @@ class GitActions_Delete_Tests extends TuleapTestCase {
         stub($this->repository)->canBeDeleted()->returns(false);
 
         $this->repository->expectNever('markAsDeleted');
-        $this->system_event_manager->expectNever('createEvent');
+        expect($this->git_system_event_manager)->queueRepositoryDeletion()->never();
         $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
     }
 }
@@ -499,7 +491,7 @@ class GitActions_ForkTests extends TuleapTestCase {
         $this->manager = mock('GitRepositoryManager');
         $this->actions = new GitActions(
             mock('Git'),
-            mock('SystemEventManager'),
+            mock('Git_SystemEventManager'),
             mock('GitRepositoryFactory'),
             $this->manager,
             mock('Git_RemoteServer_GerritServerFactory'),
@@ -592,8 +584,8 @@ class GitActions_ProjectPrivacyTest extends TuleapTestCase {
 class GitActions_migrateToGerritTest extends TuleapTestCase {
     /** @var GitActions */
     private $actions;
-    /** @var SystemEventManager */
-    private $em;
+    /** @var Git_SystemEventManager */
+    private $git_system_event_manager;
 
     /** @var int */
     private $unexsting_server_id = 666;
@@ -604,7 +596,7 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->manager        = mock('GitRepositoryManager');
-        $this->em             = mock('SystemEventManager');
+        $this->git_system_event_manager             = mock('Git_SystemEventManager');
         $this->gerrit_factory = mock('Git_RemoteServer_GerritServerFactory');
         $server               = mock('Git_RemoteServer_GerritServer');
 
@@ -614,7 +606,7 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
 
         $this->actions = new GitActions(
             mock('Git'),
-            $this->em,
+            $this->git_system_event_manager,
             mock('GitRepositoryFactory'),
             $this->manager,
             $this->gerrit_factory,
@@ -624,13 +616,13 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
 
     public function itDoesNothingWhenGivenServerDoesNotExist() {
         $repo = stub('GitRepository')->canMigrateToGerrit()->returns(true);
-        $this->em->expectNever('createEvent');
+        expect($this->git_system_event_manager)->queueMigrateToGerrit()->never();
         $this->actions->migrateToGerrit($repo, $this->unexsting_server_id);
     }
 
     public function itDoesNothingWhenItIsntMigratable() {
         $repo = stub('GitRepository')->canMigrateToGerrit()->returns(false);
-        $this->em->expectNever('createEvent');
+        expect($this->git_system_event_manager)->queueMigrateToGerrit()->never();
         $this->actions->migrateToGerrit($repo, 0);
     }
 
@@ -639,7 +631,7 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
         $server_id = $this->server_id;
         $repo_id   = 456;
         stub($repo)->getId()->returns($repo_id);
-        $this->em->expectOnce('createEvent', array(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, "$repo_id::$server_id", SystemEvent::PRIORITY_HIGH, SystemEvent::OWNER_APP));
+        expect($this->git_system_event_manager)->queueMigrateToGerrit($repo, $server_id)->once();
         $this->actions->migrateToGerrit($repo, $server_id);
     }
 }
@@ -647,11 +639,12 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
 class GitActions_disconnectFromGerritTest extends TuleapTestCase {
 
     public function itDelegatesToGitoliteBackend() {
+        $system_event_manager = mock('Git_SystemEventManager');
         $backend = mock('Git_Backend_Gitolite');
         $repo    = stub('GitRepository')->getBackend()->returns($backend);
         $actions = new GitActions(
             mock('Git'),
-            mock('SystemEventManager'),
+            $system_event_manager,
             mock('GitRepositoryFactory'),
             mock('GitRepositoryManager'),
             mock('Git_RemoteServer_GerritServerFactory'),
@@ -659,7 +652,7 @@ class GitActions_disconnectFromGerritTest extends TuleapTestCase {
         );
 
         expect($backend)->disconnectFromGerrit()->once();
-
+        expect($system_event_manager)->queueRepositoryUpdate($repo)->once();
         $actions->disconnectFromGerrit($repo);
     }
 }

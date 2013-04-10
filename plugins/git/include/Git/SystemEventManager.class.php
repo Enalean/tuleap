@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/system_event/SystemEventManager.class.php';
+
 /**
  * I'm responsible to create system events with the right parameters
  */
