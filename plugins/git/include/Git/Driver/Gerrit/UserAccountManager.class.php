@@ -66,8 +66,12 @@ class Git_Driver_Gerrit_UserAccountManager {
 
         try {
             foreach($remote_servers as $remote_server) {
-                $this->addKeys($remote_server, $keys_to_add);
+                $this->removeKeys($remote_server, $keys_to_add);
                 $this->removeKeys($remote_server, $keys_to_remove);
+            }
+            //double foreach to workaround gerrit bug
+            foreach($remote_servers as $remote_server) {
+                $this->addKeys($remote_server, $keys_to_add); 
             }
         } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
             throw new Git_Driver_Gerrit_UserSynchronisationException($e->getTraceAsString());
@@ -93,6 +97,9 @@ class Git_Driver_Gerrit_UserAccountManager {
         try {
             foreach($remote_servers as $remote_server) {
                 $this->removeKeys($remote_server, $user_keys);
+            }
+            //double foreach to workaround gerrit bug
+            foreach($remote_servers as $remote_server) {
                 $this->addKeys($remote_server, $user_keys);
             }
         } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
