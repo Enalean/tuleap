@@ -38,12 +38,12 @@ CREATE TABLE IF NOT EXISTS `plugin_git_log` (
   `commits_number` int,
    INDEX `idx_repository_user`(`repository_id`, `user_id`));
 
-CREATE TABLE `plugin_git_ci` (
+CREATE TABLE IF NOT EXISTS `plugin_git_ci` (
 `job_id` INT(11) UNSIGNED NOT NULL,
 `repository_id` INT(10) UNSIGNED NOT NULL,
 PRIMARY KEY (`job_id`));
 
-CREATE TABLE plugin_git_remote_servers (
+CREATE TABLE IF NOT EXISTS plugin_git_remote_servers (
     id INT(11) UNSIGNED NOT NULL auto_increment,
     host VARCHAR(255) NOT NULL,
     http_port INT(11) UNSIGNED NOT NULL,
@@ -52,6 +52,13 @@ CREATE TABLE plugin_git_remote_servers (
     identity_file VARCHAR(255) NOT NULL,
 PRIMARY KEY (id));
 
+CREATE TABLE IF NOT EXISTS plugin_git_remote_ugroups (
+    group_id int(11) NOT NULL,
+    ugroup_id int(11) NOT NULL,
+    remote_server_id INT(11) UNSIGNED NOT NULL,
+    PRIMARY KEY (group_id, ugroup_id, remote_server_id),
+    FOREIGN KEY remote_server_idx (remote_server_id) REFERENCES plugin_git_remote_servers (id)
+);
 
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) 
