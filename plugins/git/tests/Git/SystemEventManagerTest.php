@@ -29,16 +29,28 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
     private $system_event_manager;
     /** @var Git_SystemEventManager */
     private $git_system_event_manager;
+    /** @var GitRepository */
+    private $gitolite_repository;
+    /** @var GitRepository */
+    private $gitshell_repository;
 
     public function setUp() {
         parent::setUp();
         $this->system_event_manager = mock('SystemEventManager');
         $this->git_system_event_manager = new Git_SystemEventManager($this->system_event_manager);
+
+        $this->gitolite_repository = mock('GitRepository');
+        stub($this->gitolite_repository)->getId()->returns(54);
+        stub($this->gitolite_repository)->getProjectId()->returns(116);
+        stub($this->gitolite_repository)->getBackend()->returns(mock('Git_Backend_Gitolite'));
+
+        $this->gitshell_repository = mock('GitRepository');
+        stub($this->gitshell_repository)->getId()->returns(54);
+        stub($this->gitshell_repository)->getProjectId()->returns(116);
+        stub($this->gitshell_repository)->getBackend()->returns(mock('GitBackend'));
     }
 
     public function itCreatesRepositoryUpdateEvent() {
-        $repository = stub('GitRepository')->getId()->returns(54);
-
         expect($this->system_event_manager)->createEvent(
             SystemEvent_GIT_REPO_UPDATE::NAME,
             54,
@@ -46,7 +58,13 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
             SystemEvent::OWNER_APP
         )->once();
 
-        $this->git_system_event_manager->queueRepositoryUpdate($repository);
+        $this->git_system_event_manager->queueRepositoryUpdate($this->gitolite_repository);
+    }
+
+    public function itDoesntCreateRepositoryUpdateEventForGitShellRepositories() {
+        expect($this->system_event_manager)->createEvent()->never();
+
+        $this->git_system_event_manager->queueRepositoryUpdate($this->gitshell_repository);
     }
 
     public function itCreatesRepositoryDeletionEvent() {

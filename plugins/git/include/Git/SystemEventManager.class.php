@@ -36,12 +36,14 @@ class Git_SystemEventManager {
     }
 
     public function queueRepositoryUpdate(GitRepository $repository) {
-        $this->system_event_manager->createEvent(
-            SystemEvent_GIT_REPO_UPDATE::NAME,
-            $repository->getId(),
-            SystemEvent::PRIORITY_HIGH,
-            SystemEvent::OWNER_APP
-        );
+        if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
+            $this->system_event_manager->createEvent(
+                SystemEvent_GIT_REPO_UPDATE::NAME,
+                $repository->getId(),
+                SystemEvent::PRIORITY_HIGH,
+                SystemEvent::OWNER_APP
+            );
+        }
     }
 
     public function queueRepositoryDeletion(GitRepository $repository) {

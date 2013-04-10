@@ -209,7 +209,7 @@ class GitActions extends PluginActions {
             $c->addInfo($this->getText('mail_prefix_updated'));
             $this->addData(array('repository'=>$repository));
         }
-        $this->scheduleBackendUpdate($repository);
+        $this->git_system_event_manager->queueRepositoryUpdate($repository);
         return true;
     }
 
@@ -233,7 +233,7 @@ class GitActions extends PluginActions {
                 }
             }
         }
-        $this->scheduleBackendUpdate($repository);
+        $this->git_system_event_manager->queueRepositoryUpdate($repository);
         //Display this message, just if all the entred mails have been added
         if ($res) {
             $c->addInfo($this->getText('mail_added'));
@@ -257,7 +257,7 @@ class GitActions extends PluginActions {
                 $ret = false;
             }
         }
-        $this->scheduleBackendUpdate($repository);
+        $this->git_system_event_manager->queueRepositoryUpdate($repository);
         return $ret;
     }
 
@@ -366,7 +366,7 @@ class GitActions extends PluginActions {
                     }
                 }
             }
-            $this->scheduleBackendUpdate($repository);
+            $this->git_system_event_manager->queueRepositoryUpdate($repository);
             $repository->getBackend()->commitTransaction($repository);
             
         } catch (GitDaoException $e) {
@@ -377,12 +377,6 @@ class GitActions extends PluginActions {
         $c->addInfo( $this->getText('actions_save_repo_process') );
         $this->redirectToRepoManagement($projectId, $repoId, $pane);
         return;
-    }
-
-    private function scheduleBackendUpdate(GitRepository $repository) {
-        if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
-            $this->git_system_event_manager->queueRepositoryUpdate($repository);
-        }
     }
 
     /**
