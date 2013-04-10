@@ -79,9 +79,8 @@ class GitViews_ShowRepo_Content {
         if ($this->repository->getRemoteServerId()) {
             $html .= $this->getRemoteRepositoryInfo();
         }
-        if ($this->repository->isCreated()) {
-            $html .= $this->getCloneUrl();
-        } 
+        $html .= $this->getCloneUrl();
+
         $html .= '</div>';
         if ($this->repository->isCreated()) {
             $html .= $this->gitphp_viewer->getContent();
