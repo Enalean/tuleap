@@ -218,6 +218,7 @@ class GitPlugin extends Plugin {
      * We expect that the check fo access right to this method has already been done by the caller
      */
     public function processAdmin(Codendi_Request $request) {
+        require_once 'common/include/CSRFSynchronizerToken.class.php';
         $admin = new Git_Admin($this->getGerritServerFactory(), new CSRFSynchronizerToken('/plugin/git/admin/'));
         $admin->process($request);
         $admin->display();
