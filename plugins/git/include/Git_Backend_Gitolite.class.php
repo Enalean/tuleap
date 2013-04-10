@@ -57,8 +57,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @param GitRepository $repository
      */
     public function createReference($repository) {
-        $id = $this->getDao()->save($repository);
-        $this->updateRepoConf($repository);
     }
 
     public function updateRepoConf($repository) {
@@ -231,13 +229,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @return bool
      */
     public function save($repository) {
-        // TODO: Uncomment this when GIT_GitoliteDriver::setDescription() is ready
-        /*$path          = $this->getGitRootPath().$repository->getPath();
-        $fsDescription = $this->getDriver()->getDescription($path);
-        $description   = $repository->getDescription();
-        if ($description != $fsDescription) {
-            $this->getDriver()->setDescription($path, $description);
-        }*/
         return $this->getDao()->save($repository);
     }
 
@@ -247,8 +238,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @param GitRepository $repository
      */
     public function changeRepositoryMailingList($repository) {
-        //$this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
-        //return $this->updateRepoConf($repository);
         return true;
     }
 
@@ -330,9 +319,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     public function markAsDeleted(GitRepository $repository) {
         $this->deletePermissions($repository);
         $this->getDao()->delete($repository);
-
-        //$this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
-        //$this->updateRepoConf($repository);
     }
 
     public function delete(GitRepository $repository) {
