@@ -385,12 +385,7 @@ class GitActions extends PluginActions {
 
     private function scheduleBackendUpdate(GitRepository $repository) {
         if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
-            $this->systemEventManager->createEvent(
-                'GIT_REPO_UPDATE',
-                $repository->getId(),
-                SystemEvent::PRIORITY_HIGH,
-                SystemEvent::OWNER_APP
-            );
+            SystemEvent_GIT_REPO_UPDATE::queueInSystemEventManager($this->systemEventManager, $repository);
         }
     }
 
@@ -526,6 +521,7 @@ class GitActions extends PluginActions {
 
     public function disconnectFromGerrit(GitRepository $repository) {
         $repository->getBackend()->disconnectFromGerrit($repository);
+        $this->scheduleBackendUpdate($repository);
     }
 
     private function redirectToRepo($projectId, $repoId) {

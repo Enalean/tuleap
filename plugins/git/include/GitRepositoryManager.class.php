@@ -84,13 +84,8 @@ class GitRepositoryManager {
         }
         $this->assertRepositoryNameNotAlreadyUsed($repository);
         $id = $this->dao->save($repository);
-        $this->system_event_manager->createEvent(
-            'GIT_REPO_UPDATE',
-            $id,
-            SystemEvent::PRIORITY_MEDIUM,
-            SystemEvent::OWNER_APP
-        );
         $repository->setId($id);
+        SystemEvent_GIT_REPO_UPDATE::queueInSystemEventManager($this->system_event_manager, $repository);
     }
 
     /**

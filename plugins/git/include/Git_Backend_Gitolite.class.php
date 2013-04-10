@@ -453,12 +453,10 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     }
 
     public function commitTransaction(GitRepository $repository) {
-        $this->updateRepoConf($repository);
     }
 
     public function disconnectFromGerrit(GitRepository $repository) {
         $this->getDao()->disconnectFromGerrit($repository->getId());
-        $this->updateRepoConf($repository);
     }
 }
 

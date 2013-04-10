@@ -21,12 +21,22 @@
 require_once 'common/system_event/SystemEvent.class.php';
 
 class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
+    const NAME = 'GIT_REPO_UPDATE';
 
     /** @var GitRepositoryFactory */
     private $repository_factory;
 
     public function injectDependencies(GitRepositoryFactory $repository_factory) {
         $this->repository_factory = $repository_factory;
+    }
+
+    public static function queueInSystemEventManager(SystemEventManager $system_event_manager, GitRepository $repository) {
+        $system_event_manager->createEvent(
+            self::NAME,
+            $repository->getId(),
+            SystemEvent::PRIORITY_MEDIUM,
+            SystemEvent::OWNER_APP
+        );
     }
 
     private function getRepositoryIdFromParameters() {

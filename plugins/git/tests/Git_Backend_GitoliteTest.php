@@ -346,11 +346,5 @@ class Git_Backend_Gitolite_disconnectFromGerrit extends TuleapTestCase {
 
         $this->backend->disconnectFromGerrit($this->repository);
     }
-
-    public function itUpdatesTheRepoConfiguration() {
-        expect($this->backend)->updateRepoConf($this->repository)->once();
-
-        $this->backend->disconnectFromGerrit($this->repository);
-    }
 }
 ?>

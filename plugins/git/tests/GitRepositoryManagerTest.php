@@ -168,7 +168,7 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->creator    = mock('GitRepositoryCreator');
-        $this->repository = mock('GitRepository');
+        $this->repository = new GitRepository();
 
         $this->system_event_manager = mock('SystemEventManager');
         $this->dao                  = mock('GitDao');
@@ -230,9 +230,8 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
 
         stub($this->dao)->save()->returns(54);
 
-        expect($this->repository)->setId(54)->once();
-
         $this->manager->create($this->repository, $this->creator);
+        $this->assertEqual($this->repository->getId(), 54);
     }
 }
 
