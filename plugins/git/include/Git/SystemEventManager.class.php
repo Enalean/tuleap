@@ -59,6 +59,23 @@ class Git_SystemEventManager {
             SystemEvent::OWNER_APP
         );
     }
+
+    public function queueGitShellAccess(GitRepository $repository, $type) {
+        $this->system_event_manager->createEvent(
+            SystemEvent_GIT_REPO_ACCESS::NAME,
+            $repository->getId() . SystemEvent::PARAMETER_SEPARATOR . $type,
+            SystemEvent::PRIORITY_HIGH
+        );
+    }
+
+    public function queueMigrateToGerrit(GitRepository $repository, $remote_server_id) {
+        $this->system_event_manager->createEvent(
+            SystemEvent_GIT_GERRIT_MIGRATION::TYPE,
+            $repository->getId() . SystemEvent::PARAMETER_SEPARATOR . $remote_server_id,
+            SystemEvent::PRIORITY_HIGH,
+            SystemEvent::OWNER_APP
+        );
+    }
 }
 
 ?>

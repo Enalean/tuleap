@@ -92,6 +92,32 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
 
         $this->git_system_event_manager->queueRepositoryFork($old_repository, $new_repository);
     }
+
+    public function itCreatesRepositoryAccessEvent() {
+        $repository = stub('GitRepository')->getId()->returns(54);
+
+        expect($this->system_event_manager)->createEvent(
+            SystemEvent_GIT_REPO_ACCESS::NAME,
+            "54" . SystemEvent::PARAMETER_SEPARATOR . "private",
+            SystemEvent::PRIORITY_HIGH
+        )->once();
+
+        $this->git_system_event_manager->queueGitShellAccess($repository, 'private');
+    }
+
+    public function itCreatesGerritMigrationEvent() {
+        $repository       = stub('GitRepository')->getId()->returns(54);
+        $remote_server_id = 3;
+
+        expect($this->system_event_manager)->createEvent(
+            SystemEvent_GIT_GERRIT_MIGRATION::TYPE,
+            54 . SystemEvent::PARAMETER_SEPARATOR . $remote_server_id,
+            SystemEvent::PRIORITY_HIGH,
+            SystemEvent::OWNER_APP
+        )->once();
+
+        $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id);
+    }
 }
 
 ?>
