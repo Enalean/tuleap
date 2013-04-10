@@ -23,6 +23,7 @@ require_once 'bootstrap.php';
 class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase {
     private $project;
     private $git_repository_manager;
+    private $git_system_event_manager;
     private $dao;
 
     public function setUp() {
@@ -30,10 +31,10 @@ class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase {
         $this->project_id           = 42;
         $this->project              = stub('Project')->getID()->returns($this->project_id);
         $this->repository_factory   = mock('GitRepositoryFactory');
-        $this->system_event_manager = mock('SystemEventManager');
+        $this->git_system_event_manager = mock('Git_SystemEventManager');
         $this->dao                  = mock('GitDao');
 
-        $this->git_repository_manager = new GitRepositoryManager($this->repository_factory, $this->system_event_manager, $this->dao);
+        $this->git_repository_manager = new GitRepositoryManager($this->repository_factory, $this->git_system_event_manager, $this->dao);
     }
 
     public function itDeletesNothingWhenThereAreNoRepositories() {
@@ -58,21 +59,9 @@ class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase {
         stub($repository_2)->getProjectId()->returns($this->project);
         stub($repository_2)->getBackend()->returns(mock('Git_Backend_Gitolite'));
 
-        $this->system_event_manager->expectCallCount('createEvent', 2);
-
-        $this->system_event_manager->expectAt(0, 'createEvent', array(
-            'GIT_REPO_DELETE',
-            $this->project_id.SystemEvent::PARAMETER_SEPARATOR.$repository_1_id,
-            '*',
-            SystemEvent::OWNER_APP
-        ));
-
-        $this->system_event_manager->expectAt(1, 'createEvent', array(
-            'GIT_REPO_DELETE',
-            $this->project_id.SystemEvent::PARAMETER_SEPARATOR.$repository_2_id,
-            '*',
-            SystemEvent::OWNER_APP
-        ));
+        expect($this->git_system_event_manager)->queueRepositoryDeletion()->count(2);
+        expect($this->git_system_event_manager)->queueRepositoryDeletion($repository_1)->at(0);
+        expect($this->git_system_event_manager)->queueRepositoryDeletion($repository_2)->at(1);
 
         stub($this->repository_factory)->getAllRepositories()->returns(array($repository_1, $repository_2));
 
@@ -98,7 +87,7 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
         $this->dao = mock('GitDao');
 
         $this->factory    = mock('GitRepositoryFactory');
-        $this->manager    = new GitRepositoryManager($this->factory, mock('SystemEventManager'), $this->dao);
+        $this->manager    = new GitRepositoryManager($this->factory, mock('Git_SystemEventManager'), $this->dao);
     }
 
     private function aRepoWithPath($path) {
@@ -163,14 +152,14 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
 
     private $creator;
     private $dao;
-    private $system_event_manager;
+    private $git_system_event_manager;
 
     public function setUp() {
         parent::setUp();
         $this->creator    = mock('GitRepositoryCreator');
         $this->repository = new GitRepository();
 
-        $this->system_event_manager = mock('SystemEventManager');
+        $this->git_system_event_manager = mock('Git_SystemEventManager');
         $this->dao                  = mock('GitDao');
 
         $this->manager = partial_mock(
@@ -178,7 +167,7 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
             array('isRepositoryNameAlreadyUsed'),
             array(
                 mock('GitRepositoryFactory'),
-                $this->system_event_manager,
+                $this->git_system_event_manager,
                 $this->dao
             )
         );
@@ -214,12 +203,7 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
 
         stub($this->dao)->save()->returns(54);
 
-        expect($this->system_event_manager)->createEvent(
-            SystemEvent_GIT_REPO_UPDATE::NAME,
-            54,
-            SystemEvent::PRIORITY_HIGH,
-            SystemEvent::OWNER_APP
-        )->once();
+        expect($this->git_system_event_manager)->queueRepositoryUpdate($this->repository)->once();
 
         $this->manager->create($this->repository, $this->creator);
     }
@@ -235,6 +219,23 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
     }
 }
 
+class GitRepositoryIdMatchExpectation extends SimpleExpectation {
+    private $repository_id;
+
+    public function __construct($repository_id) {
+        parent::__construct();
+        $this->repository_id = $repository_id;
+    }
+
+    public function test(GitRepository $compare) {
+        return $compare->getId() === $this->repository_id;
+    }
+
+    public function testMessage($compare) {
+        return "Expected repository id is $this->repository_id, ".$compare->getId()." given";
+    }
+}
+
 class GitRepositoryManager_ForkTest extends TuleapTestCase {
     private $backend;
     private $repository;
@@ -242,26 +243,26 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
     private $project;
     private $manager;
     private $forkPermissions;
-    private $system_event_manager;
+    private $git_system_event_manager;
 
     public function setUp() {
         parent::setUp();
         $this->backend    = mock('Git_Backend_Gitolite');
-        $this->repository = mock('GitRepository');
-        stub($this->repository)->getId()->returns(554);
-        stub($this->repository)->getBackend()->returns($this->backend);
+        $this->repository = partial_mock('GitRepository', array('userCanRead', 'isNameValid'));
+        $this->repository->setId(554);
+        $this->repository->setBackend($this->backend);
 
         $this->user    = stub('PFUser')->getId()->returns(123);
         $this->project = stub('Project')->getId()->returns(101);
 
-        $this->system_event_manager = mock('SystemEventManager');
+        $this->git_system_event_manager = mock('Git_SystemEventManager');
 
         $this->manager = partial_mock(
             'GitRepositoryManager',
             array('isRepositoryNameAlreadyUsed'),
             array(
                 mock('GitRepositoryFactory'),
-                $this->system_event_manager,
+                $this->git_system_event_manager,
                 mock('GitDao')
             )
         );
@@ -288,12 +289,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
 
         stub($this->backend)->fork()->returns(667);
 
-        expect($this->system_event_manager)->createEvent(
-            'GIT_REPO_FORK',
-            "554".SystemEvent::PARAMETER_SEPARATOR."667",
-            SystemEvent::PRIORITY_MEDIUM,
-            SystemEvent::OWNER_APP
-        )->once();
+        expect($this->git_system_event_manager)->queueRepositoryFork($this->repository, new GitRepositoryIdMatchExpectation(667))->once();
 
         $this->manager->fork($this->repository, mock('Project'), mock('PFUser'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
     }
@@ -302,7 +298,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         stub($this->backend)->fork()->throws(new Exception('whatever'));
 
         $this->expectException();
-        expect($this->system_event_manager)->createEvent()->never();
+        expect($this->git_system_event_manager)->queueRepositoryFork()->never();
 
         $this->manager->fork($this->repository, mock('Project'), mock('PFUser'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
     }
@@ -311,7 +307,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         stub($this->backend)->fork()->returns(false);
 
         $this->expectException();
-        expect($this->system_event_manager)->createEvent()->never();
+        expect($this->git_system_event_manager)->queueRepositoryFork()->never();
 
         $this->manager->fork($this->repository, mock('Project'), mock('PFUser'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
     }
@@ -376,7 +372,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
     }
 
     function testClonesOneRepository() {
-        $this->repository->setReturnValue('getId', 1);
+        $this->repository->setId(1);
         $this->repository->setReturnValue('userCanRead', true, array($this->user));
 
         $this->backend->expectOnce('fork');
@@ -411,7 +407,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
 
         $this->backend->expectOnce('fork');
 
-        $this->repository->setReturnValue('getId', $repo_id);
+        $this->repository->setId($repo_id);
         $this->repository->setReturnValue('userCanRead', true, array($this->user));
 
         $repos = array($this->repository);
