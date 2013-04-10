@@ -18,10 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once GIT_BASE_DIR .'/Git.class.php';
-require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/InvalidLDAPUserException.class.php';
-require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/UserSynchronisationException.class.php';
-
 /**
  * Encapsulate the orchestration between PermissionsManager and UgroupManager
  */

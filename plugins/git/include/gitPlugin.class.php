@@ -23,6 +23,7 @@ require_once 'constants.php';
 require_once 'autoload.php';
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
+require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 /**
  * GitPlugin
@@ -200,7 +201,6 @@ class GitPlugin extends Plugin {
      * We expect that the check fo access right to this method has already been done by the caller
      */
     public function processAdmin(Codendi_Request $request) {
-        require_once 'common/include/CSRFSynchronizerToken.class.php';
         $admin = new Git_Admin($this->getGerritServerFactory(), new CSRFSynchronizerToken('/plugin/git/admin/'));
         $admin->process($request);
         $admin->display();
@@ -294,9 +294,6 @@ class GitPlugin extends Plugin {
     }
 
     private function propagateKeysToGerrit($params) {
-        require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
-        require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/UserAccountManager.class.php';
-
         $user          = $params['user'];
         $gerrit_driver = $this->getGerritDriver();
 
@@ -306,10 +303,10 @@ class GitPlugin extends Plugin {
         if (isset($params['original_keys']) && is_string($params['original_keys'])) {
             $original_keys = array_filter(explode(PFUser::SSH_KEY_SEPARATOR, $params['original_keys']));
         }
-        
+
         try {
             $gerrit_user_account_manager = new Git_Driver_Gerrit_UserAccountManager($user, $gerrit_driver);
-        
+
             $gerrit_user_account_manager->synchroniseSSHKeys(
                 $original_keys,
                 $new_keys,
@@ -346,14 +343,12 @@ class GitPlugin extends Plugin {
      * @param PFUser $user
      */
     public function pushSSHKeysToRemoteServers(PFUser $user) {
-        require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
-        require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/UserAccountManager.class.php';
         $logger = new BackendLogger();
 
         $gerrit_driver = $this->getGerritDriver();
         try {
             $gerrit_user_account_manager = new Git_Driver_Gerrit_UserAccountManager($user, $gerrit_driver);
-            
+
             $logger->info('Trying to push ssh keys for user: '.$user->getUnixName());
             $gerrit_user_account_manager->pushSSHKeys(
                 $this->getGerritServerFactory()

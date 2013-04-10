@@ -19,7 +19,6 @@
  */
 
 require_once 'common/include/Config.class.php';
-require_once GIT_BASE_DIR.'/Git/Driver/Gerrit/RemoteSSHCommandFailure.class.php';
 
 class Git_Driver_Gerrit_RemoteSSHCommand {
 
