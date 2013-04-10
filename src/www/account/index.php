@@ -167,7 +167,11 @@ if ($git_plugin && $plugin_manager->isPluginAvailable($git_plugin)) {
             '<ul>';
 
         foreach ($remote_servers as $remote_server) {
-            echo '<li>'.$remote_server->host_name.'</li>';
+            echo '<li>
+                    <a href="'.$remote_server->host.':'.$remote_server->port.'/#/settings/ssh-keys">'.
+                        $remote_server->host_name.'
+                    </a>
+                </li>';
         }
         echo '</ul>
             <form action="" method="post">

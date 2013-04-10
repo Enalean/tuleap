@@ -332,6 +332,8 @@ class GitPlugin extends Plugin {
             $servers[] = array(
                 'host_name' => $server->getHost(),
                 'id'        => $server->getId(),
+                'host'      => $server->getHost(),
+                'port'      => $server->getHTTPPort(),
             );
         }
 
