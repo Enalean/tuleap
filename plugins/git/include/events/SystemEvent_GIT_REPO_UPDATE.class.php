@@ -34,7 +34,7 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
         $system_event_manager->createEvent(
             self::NAME,
             $repository->getId(),
-            SystemEvent::PRIORITY_MEDIUM,
+            SystemEvent::PRIORITY_HIGH,
             SystemEvent::OWNER_APP
         );
     }

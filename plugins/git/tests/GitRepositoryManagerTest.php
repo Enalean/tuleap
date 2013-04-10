@@ -215,9 +215,9 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
         stub($this->dao)->save()->returns(54);
 
         expect($this->system_event_manager)->createEvent(
-            'GIT_REPO_UPDATE',
+            SystemEvent_GIT_REPO_UPDATE::NAME,
             54,
-            SystemEvent::PRIORITY_MEDIUM,
+            SystemEvent::PRIORITY_HIGH,
             SystemEvent::OWNER_APP
         )->once();
 
