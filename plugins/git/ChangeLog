@@ -1,3 +1,12 @@
+Version 2.7.37 - Tuleap 5.13
+    * Fix include after autload
+
+Version 2.7.36 - Tuleap 5.13
+    * Autoload git
+
+Version 2.7.35 - Tuleap 5.13
+    * A repository can now be disconnected from Gerrit
+
 Version 2.7.34 - Tuleap 5.13
     * Tuleap User groups migration into Gerrit
 

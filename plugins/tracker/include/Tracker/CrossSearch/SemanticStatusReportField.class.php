@@ -70,7 +70,11 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
 
         return $html;
     }
-    
+
+    public function fetchCriteriaWithoutExpandFunctionnality(Tracker_Report_Criteria $criteria) {
+        return $this->fetchCriteria($criteria);
+    }
+
     private function getSelected($status) {
         return $this->searched_status === $status ? 'selected="selected"' : '';
     }

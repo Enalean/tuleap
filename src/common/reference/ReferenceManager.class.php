@@ -602,23 +602,49 @@ class ReferenceManager {
                         $user_id=user_getid();
                     }
 
-                    $cross_ref=new CrossReference($source_id,
-                                                  $source_gid,
-                                                  $source_type,
-                                                  $source_key,
-                                                  $target_id,
-                                                  $target_gid,
-                                                  $target_type,
-                                                  $target_key,
-                                                  $user_id);
-
-                    if(!$cross_ref->existInDb()){
-                        $cross_ref->createDbCrossRef();
-                    }
+                    $this->insertCrossReference(
+                        $source_id,
+                        $source_gid,
+                        $source_type,
+                        $source_key,
+                        $target_id,
+                        $target_gid,
+                        $target_type,
+                        $target_key,
+                        $user_id
+                    );
                 }
             }
         }
         return true;
+    }
+
+    public function insertCrossReference(
+        $source_id,
+        $source_gid,
+        $source_type,
+        $source_key,
+        $target_id,
+        $target_gid,
+        $target_type,
+        $target_key,
+        $user_id
+    ){
+        $cross_ref = new CrossReference(
+            $source_id,
+            $source_gid,
+            $source_type,
+            $source_key,
+            $target_id,
+            $target_gid,
+            $target_type,
+            $target_key,
+            $user_id
+        );
+
+        if(!$cross_ref->existInDb()) {
+            $cross_ref->createDbCrossRef();
+        }
     }
 
     /**

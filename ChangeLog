@@ -6,20 +6,11 @@ Version 5.13 (Not Released Yet)
 	* doaprdf: 0.2
 	* foafprofiles: 0.2
 	* graphontrackersv5: 5.0.9
-	* mediawiki: 0.3
 	* pluginsadministration: 1.3
-	* tracker: 5.99
-	* tracker: 5.100
-	* tracker: 5.101
-	* tracker: 5.102
-	* git: 2.7.33
 	* fusionforge_compat: 0.3
-	* mediawiki: 0.4
 	* mediawiki: 0.5
-	* git: 2.7.34
-	* tracker: 5.103
-	* tracker: 5.104
-	* tracker: 5.105
+	* git: 2.7.37
+	* tracker: 5.108
 
 Version 5.12 (Thursday, March 21st 2013)
 	== Plugins ==

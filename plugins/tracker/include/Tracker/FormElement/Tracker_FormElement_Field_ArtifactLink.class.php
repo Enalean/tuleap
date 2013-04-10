@@ -1227,21 +1227,17 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $current_user = $this->getCurrentUser();
         foreach ($added_artifact_ids as $added_artifact_id) {
             $artifact_target = $af->getArtifactById((int)trim($added_artifact_id));
-            $artifactlink = new Tracker_ArtifactLinkInfo(
-                $artifact_target->getId(), 
-                $artifact_target->getTracker()->getItemname(), 
-                $artifact_target->getTracker()->getGroupId(),
-                $artifact_target->getTracker()->getId(),
-                $artifact_target->getLastChangeset()->getId()
-            );
-            $source_tracker = $artifact->getTracker();
-            $rm->extractCrossRef(
-                $artifactlink->getLabel(),
+
+            $rm->insertCrossReference(
                 $artifact->getId(),
+                $artifact->getTracker()->getGroupId(),
                 Tracker_Artifact::REFERENCE_NATURE,
-                $source_tracker->getGroupId(),
-                $current_user->getId(),
-                $source_tracker->getItemName()
+                $artifact->getTracker()->getItemname(),
+                $artifact_target->getId(),
+                $artifact_target->getTracker()->getGroupId(),
+                Tracker_Artifact::REFERENCE_NATURE,
+                $artifact_target->getTracker()->getItemname(),
+                $current_user->getId()
             );
         }
         // TODO : remove the removed elements

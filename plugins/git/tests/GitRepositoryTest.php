@@ -254,6 +254,13 @@ class GitRepositoryTest extends TuleapTestCase {
         $repo->setRemoteServerId(34);
         $this->assertFalse($repo->canMigrateToGerrit());
     }
+
+    public function itIsNotMigratableIfItHasAlreadyBeenAGerritRepoInThePast() {
+        $repo = new GitRepository();
+        $repo->setBackendType(GitDao::BACKEND_GITOLITE);
+        $repo->setRemoteServerDisconnectDate(12345677890);
+        $this->assertFalse($repo->canMigrateToGerrit());
+    }
 }
 
 class GitRepository_CanDeletedTest extends TuleapTestCase {

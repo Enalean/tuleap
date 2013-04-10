@@ -61,7 +61,7 @@ class Tracker_CrossSearch_SearchContentView {
                                 TreeNode                         $tree_of_artifacts, 
                                 Tracker_ArtifactFactory          $artifact_factory, 
                                 Tracker_FormElementFactory       $factory,
-                                PFUser                             $user) {
+                                PFUser                           $user) {
         
         $this->report            = $report;
         $this->criteria          = $criteria;
@@ -78,7 +78,7 @@ class Tracker_CrossSearch_SearchContentView {
         $report_can_be_modified = false;
         
         $html  = '';
-        $html .= $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
+        $html .= $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified, $this->user);
         $html .= $this->fetchResults();
         
         return $html;

@@ -523,7 +523,11 @@ class GitActions extends PluginActions {
             }
         }
     }
-    
+
+    public function disconnectFromGerrit(GitRepository $repository) {
+        $repository->getBackend()->disconnectFromGerrit($repository);
+    }
+
     private function redirectToRepo($projectId, $repoId) {
         $this->getController()->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
     }

@@ -329,4 +329,28 @@ class Git_Backend_GitoliteTest extends TuleapTestCase {
     }
 }
 
+class Git_Backend_Gitolite_disconnectFromGerrit extends TuleapTestCase {
+
+    private $repo_id = 123;
+
+    public function setUp() {
+        parent::setUp();
+        $this->repository = aGitRepository()->withId($this->repo_id)->build();
+        $this->dao        = mock('GitDao');
+        $this->backend    = partial_mock('Git_Backend_Gitolite', array('updateRepoConf'));
+        $this->backend->setDao($this->dao);
+    }
+
+    public function itAsksToDAOToDisconnectFromGerrit() {
+        expect($this->dao)->disconnectFromGerrit($this->repo_id)->once();
+
+        $this->backend->disconnectFromGerrit($this->repository);
+    }
+
+    public function itUpdatesTheRepoConfiguration() {
+        expect($this->backend)->updateRepoConf($this->repository)->once();
+
+        $this->backend->disconnectFromGerrit($this->repository);
+    }
+}
 ?>
