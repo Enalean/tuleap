@@ -306,9 +306,7 @@ class GitActions extends PluginActions {
         foreach ($mailsToDelete as $mail) {
             $repository->notificationRemoveMail($mail);
         }
-        $this->git_system_event_manager->createEvent('GIT_REPO_ACCESS',
-                                               $repoId.SystemEvent::PARAMETER_SEPARATOR.'private',
-                                               SystemEvent::PRIORITY_HIGH);
+        $this->git_system_event_manager->queueGitShellAccess($repository, 'private');
         $c->addInfo($this->getText('actions_repo_access'));
     }
 
@@ -357,11 +355,7 @@ class GitActions extends PluginActions {
                     }
                 } else {
                     if ($repository->getAccess() != $repoAccess) {
-                        $this->git_system_event_manager->createEvent(
-                                                      'GIT_REPO_ACCESS',
-                                                       $repoId.SystemEvent::PARAMETER_SEPARATOR.$repoAccess,
-                                                       SystemEvent::PRIORITY_HIGH
-                                                    );
+                        $this->git_system_event_manager->queueGitShellAccess($repository, $repoAccess);
                         $c->addInfo( $this->getText('actions_repo_access') );
                     }
                 }
