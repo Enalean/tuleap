@@ -74,10 +74,24 @@ class Git_SystemEventManager {
 
     public function queueMigrateToGerrit(GitRepository $repository, $remote_server_id) {
         $this->system_event_manager->createEvent(
-            SystemEvent_GIT_GERRIT_MIGRATION::TYPE,
+            SystemEvent_GIT_GERRIT_MIGRATION::NAME,
             $repository->getId() . SystemEvent::PARAMETER_SEPARATOR . $remote_server_id,
             SystemEvent::PRIORITY_HIGH,
             SystemEvent::OWNER_APP
+        );
+    }
+
+    public function isRepositoryMigrationToGerritOnGoing(GitRepository $repository) {
+        return $this->system_event_manager->isThereAnEventAlreadyOnGoing(SystemEvent_GIT_GERRIT_MIGRATION::NAME, $repository->getId());
+    }
+
+    public function getTypes() {
+        return array(
+            SystemEvent_GIT_REPO_UPDATE::NAME,
+            SystemEvent_GIT_REPO_DELETE::NAME,
+            SystemEvent_GIT_REPO_FORK::NAME,
+            SystemEvent_GIT_REPO_ACCESS::NAME,
+            SystemEvent_GIT_GERRIT_MIGRATION::NAME
         );
     }
 }

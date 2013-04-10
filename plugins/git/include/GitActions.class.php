@@ -185,7 +185,7 @@ class GitActions extends PluginActions {
 
     public function repoManagement(GitRepository $repository) {
         $this->addData(array('repository'=>$repository));
-        if ($this->git_system_event_manager->isThereAnEventAlreadyOnGoing(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, $repository->getId())) {
+        if ($this->git_system_event_manager->isRepositoryMigrationToGerritOnGoing($repository)) {
             $GLOBALS['Response']->addFeedback(Feedback::INFO, $this->getText('gerrit_migration_ongoing'));
         }
         $this->addData(array(

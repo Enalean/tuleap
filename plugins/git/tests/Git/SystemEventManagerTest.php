@@ -128,7 +128,7 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
         $remote_server_id = 3;
 
         expect($this->system_event_manager)->createEvent(
-            SystemEvent_GIT_GERRIT_MIGRATION::TYPE,
+            SystemEvent_GIT_GERRIT_MIGRATION::NAME,
             54 . SystemEvent::PARAMETER_SEPARATOR . $remote_server_id,
             SystemEvent::PRIORITY_HIGH,
             SystemEvent::OWNER_APP
