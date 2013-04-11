@@ -20,7 +20,7 @@
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
-class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase {
+class Git_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase {
     private $user;
     private $gerrit_driver;
     private $remote_gerrit_factory;
