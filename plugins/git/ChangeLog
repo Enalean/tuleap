@@ -1,3 +1,19 @@
+Version 2.7.38 - Tuleap 5.13
+    story #2795 - tuleap binded groups to be replicated on Gerrit
+
+    The Tuleap binded groups are replicated as Gerrit group of groups
+    aka. included groups.
+    This implies that, on gerrit side, we cannot take into account private
+    projects or restricted users settings into account.
+
+    Given a "Developers" user group in Tuleap "Top Level" public project
+    And a "Developers" user group in Tuleap "Product" private project, bound to "Top Level/Developers"
+    And "John", member of "Developers", "Top Level" project member but NOT "Product" project member
+    Then John don't have access to any content in "Product" Tuleap project
+    But he has access to Gerrit project that grant access to "Product/Developers" group
+
+    While this scenario might sounds legit, the behaviours are differents and should probably be documented.
+
 Version 2.7.37 - Tuleap 5.13
     * Fix include after autload
 

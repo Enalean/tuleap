@@ -359,6 +359,29 @@ class Event {
     const  UGROUP_UPDATE_USERS_ALLOWED = 'ugroup_update_users_allowed';
 
     /**
+     * Raised when an ugroup is bound to another one
+     *
+     * Parameters
+     *     'ugroup' => UGroup The modified ugroup
+     *     'source' => UGroup The new ugroup we bind with
+     *
+     * Expected results:
+     *     void
+     */
+    const UGROUP_MANAGER_UPDATE_UGROUP_BINDING_ADD = 'ugroup_manager_update_ugroup_binding_add';
+
+    /**
+     * Raised when an ugroup binding is removed
+     *
+     * Parameters
+     *     'ugroup' => UGroup The modified ugroup (no longer bound)
+     *
+     * Expected results:
+     *     void
+     */
+    const UGROUP_MANAGER_UPDATE_UGROUP_BINDING_REMOVE = 'ugroup_manager_update_ugroup_binding_remove';
+
+    /**
      * Display information about SOAP end points
      *
      * Parameters:
