@@ -89,6 +89,14 @@ class Git_RemoteServer_GerritServerFactory {
         return $servers;
     }
 
+    public function getServersForUGroup(UGroup $ugroup) {
+        $servers = array();
+        foreach ($this->dao->searchAllByUGroupId($ugroup->getProjectId(), $ugroup->getId()) as $row) {
+            $servers[$row['id']] = $this->instantiateFromRow($row);
+        }
+        return $servers;
+    }
+
     /**
      *
      * @param Git_RemoteServer_GerritServer $server

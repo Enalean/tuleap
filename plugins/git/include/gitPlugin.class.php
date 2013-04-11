@@ -99,6 +99,8 @@ class GitPlugin extends Plugin {
         $this->_addHook('project_admin_ugroup_deletion');
         $this->_addHook('project_admin_remove_user_from_project_ugroups');
         $this->_addHook('project_admin_ugroup_creation');
+        $this->_addHook(Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_ADD);
+        $this->_addHook(Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_REMOVE);
     }
 
     public function site_admin_option_hook() {
@@ -752,67 +754,50 @@ class GitPlugin extends Plugin {
     }
 
     public function project_admin_ugroup_add_user($params) {
-
-        $command = new Git_Driver_Gerrit_MembershipCommand_AddUser(
-            $this->getGerritDriver(),
-            $this->getGerritUserFinder()
+        $this->getGerritMembershipManager()->addUserToGroup(
+            $this->getUserFromParams($params),
+            $this->getUGroupFromParams($params)
         );
-        $this->updateUserMembership($command, $params);
     }
 
     public function project_admin_ugroup_remove_user($params) {
-
-        $command = new Git_Driver_Gerrit_MembershipCommand_RemoveUser(
-            $this->getGerritDriver(),
-            $this->getGerritUserFinder()
+        $this->getGerritMembershipManager()->removeUserFromGroup(
+            $this->getUserFromParams($params),
+            $this->getUGroupFromParams($params)
         );
-
-        $this->updateUserMembership($command, $params);
-    }
-
-    private function updateUserMembership(Git_Driver_Gerrit_MembershipCommand $command, $params) {
-        $user    = UserManager::instance()->getUserById($params['user_id']);
-        $project = ProjectManager::instance()->getProject($params['group_id']);
-        if (isset($params['ugroup'])) {
-            $ugroup = $params['ugroup'];
-        } else {
-            $ugroup_manager = new UGroupManager();
-            $ugroup = $ugroup_manager->getUGroup($project, $params['ugroup_id']);
-        }
-        $this->getGerritMembershipManager()->updateUserMembership($user, $ugroup, $project, $command);
-    }
-
-    private function getGerritMembershipManager() {
-        $repository_factory = $this->getRepositoryFactory();
-        $server_factory     = $this->getGerritServerFactory();
-        return new Git_Driver_Gerrit_MembershipManager($repository_factory, $server_factory);
     }
 
     public function project_admin_ugroup_creation($params) {
+        $this->getGerritMembershipManager()->createGroupOnProjectsServers(
+            $this->getUGroupFromParams($params)
+        );
+    }
 
-        $project_manager = ProjectManager::instance();
-        $project         = $project_manager->getProject($params['group_id']);
+    public function ugroup_manager_update_ugroup_binding_add($params) {
+        $this->getGerritMembershipManager()->addUGroupBinding(
+            $params['ugroup'],
+            $params['source']
+        );
+    }
 
-        $ugroup_manager = new UGroupManager();
-        $ugroup         = $ugroup_manager->getUGroup($project, $params['ugroup_id']);
+    public function ugroup_manager_update_ugroup_binding_remove($params) {
+        $this->getGerritMembershipManager()->removeUGroupBinding(
+            $params['ugroup']
+        );
+    }
 
-        $server_factory = $this->getGerritServerFactory();
-        $servers        = $server_factory->getServersForProject($project);
+    private function getUserFromParams(array $params) {
+        return UserManager::instance()->getUserById($params['user_id']);
+    }
 
-        $logger = $this->getLogger();
 
-        foreach ($servers as $server) {
-            try {
-                $this->getGerritDriver()->createGroup($server, $project->getUnixName() .'/'. $ugroup->getNormalizedName(), $ugroup->getLdapMembersIds($project->getID()));
-            } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
-                //continue to the next server
-                $logger->error($e->getMessage());
-            } catch (Git_Driver_Gerrit_Exception $e) {
-                //continue to the next server
-                $logger->error($e->getMessage());
-            } catch (Exception $e) {
-                $logger->error('Unknown error : ' . $e->getMessage());
-            }
+    private function getUGroupFromParams(array $params) {
+        if (isset($params['ugroup'])) {
+            return $params['ugroup'];
+        } else {
+            $project = ProjectManager::instance()->getProject($params['group_id']);
+            $ugroup_manager = new UGroupManager();
+            return $ugroup_manager->getUGroup($project, $params['ugroup_id']);
         }
     }
 
@@ -841,7 +826,13 @@ class GitPlugin extends Plugin {
 
     private function getProjectCreator() {
         $tmp_dir = Config::get('tmp_dir') .'/gerrit_'. uniqid();
-        return new Git_Driver_Gerrit_ProjectCreator($tmp_dir, $this->getGerritDriver(), $this->getGerritUserFinder(), new UGroupManager());
+        return new Git_Driver_Gerrit_ProjectCreator(
+            $tmp_dir,
+            $this->getGerritDriver(),
+            $this->getGerritUserFinder(),
+            new UGroupManager(),
+            $this->getGerritMembershipManager()
+        );
     }
 
     private function getGerritUserFinder() {
@@ -866,6 +857,17 @@ class GitPlugin extends Plugin {
     public function setLogger(BackendLogger $logger) {
         $this->logger = $logger;
     }
+
+    private function getGerritMembershipManager() {
+        require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipManager.class.php';
+        return new Git_Driver_Gerrit_MembershipManager(
+            new Git_Driver_Gerrit_MembershipDao(),
+            $this->getGerritDriver(),
+            $this->getGerritServerFactory(),
+            new BackendLogger()
+        );
+    }
+
 }
 
 ?>

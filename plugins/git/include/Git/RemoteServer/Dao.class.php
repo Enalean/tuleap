@@ -38,6 +38,7 @@ class Git_RemoteServer_Dao extends DataAccessObject {
      * where its git repositories are migrated
      */
     public function searchAllByProjectId($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
         $sql = "SELECT plugin_git_remote_servers.*
                 FROM plugin_git_remote_servers INNER JOIN plugin_git
                     ON (plugin_git_remote_servers.id = plugin_git.remote_server_id
@@ -64,6 +65,17 @@ class Git_RemoteServer_Dao extends DataAccessObject {
                 WHERE ugroup_user.user_id = $user_id
                     AND user.ldap_id IS NOT NULL
                     AND user.ldap_id != ''";
+        return $this->retrieve($sql);
+    }
+
+    public function searchAllByUGroupId($project_id, $ugroup_id) {
+        $project_id = $this->da->escapeInt($project_id);
+        $ugroup_id  = $this->da->escapeInt($ugroup_id);
+        $sql = "SELECT plugin_git_remote_servers.*
+                FROM plugin_git_remote_servers INNER JOIN plugin_git_remote_ugroups
+                    ON (plugin_git_remote_servers.id = plugin_git_remote_ugroups.remote_server_id
+                        AND group_id = $project_id AND ugroup_id = $ugroup_id)";
+
         return $this->retrieve($sql);
     }
 

@@ -18,15 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_Driver_Gerrit_MembershipCommand_AddUser extends Git_Driver_Gerrit_MembershipCommand {
+require_once 'User.class.php';
 
-    protected function propagateToGerrit(Git_RemoteServer_GerritServer $server, PFUser $user, $group_full_name) {
-        $this->driver->addUserToGroup($server, $user, $group_full_name);
+class Git_Driver_Gerrit_MembershipCommand_AddUser extends Git_Driver_Gerrit_MembershipCommand_User {
+
+    protected function executeForLdapUsers(Git_RemoteServer_GerritServer $server) {
+        $this->driver->addUserToGroup(
+            $server,
+            $this->user,
+            $this->membership_manager->getFullyQualifiedUGroupName($this->ugroup)
+        );
     }
-
-    protected function isUserConcernedByPermission(PFUser $user, Project $project, $groups) {
-        return $this->isUserInGroups($user, $project, $groups);
-    }
-
 }
 ?>
