@@ -315,11 +315,10 @@ class GitPlugin extends Plugin {
             return;
         }
 
-        $user = $params['user'];
+        $user                     = $params['user'];
         $git_user_account_manager = $this->getUserAccountManager($user);
-        
-        $new_keys      = $user->getAuthorizedKeysArray();
-        $original_keys = array();
+        $new_keys                 = $user->getAuthorizedKeysArray();
+        $original_keys            = array();
         
         if (isset($params['original_keys']) && is_string($params['original_keys'])) {
             $original_keys = $this->getKeysFromString($params['original_keys']);
@@ -360,10 +359,9 @@ class GitPlugin extends Plugin {
      *     'servers' => array $server_array_to_populate An empty array passed by reference
      */
     public function getRemoteServersForUser(array $params) {
-        if (! isset($params['user']) || ! $params['user'] instanceof PFUser) {
+        if (! $user = $this->getUserFromParameters($params)) {
             return;
         }
-        $user = $params['user'];
 
         if (! isset($params['servers']) || ! is_array($params['servers'])) {
             return;
