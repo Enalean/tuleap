@@ -24,22 +24,18 @@
 class Git_Driver_Gerrit_UserAccountManager {
 
     /**
-     * @var Git_User
-     */
-    private $user;
-
-    /**
      * @var Git_Driver_Gerrit
      */
     private $gerrit_driver;
 
-    public function __construct(PFUser $user, Git_Driver_Gerrit $gerrit_driver) {
-        if (! $user->isLDAP()) {
-            throw new Git_Driver_Gerrit_InvalidLDAPUserException();
-        }
+    /**
+     * @var Git_RemoteServer_GerritServerFactory
+     */
+    private $remote_gerrit_factory;
 
-        $this->user          = $user;
+    public function __construct(Git_Driver_Gerrit $gerrit_driver, Git_RemoteServer_GerritServerFactory $remote_gerrit_factory) {
         $this->gerrit_driver = $gerrit_driver;
+        $this->remote_gerrit_factory = $remote_gerrit_factory;
     }
 
     /**
@@ -50,7 +46,11 @@ class Git_Driver_Gerrit_UserAccountManager {
      * @return void
      * @throws Git_UserSynchronisationException
      */
-    public function synchroniseSSHKeys(Array $original_keys, Array $new_keys, Git_RemoteServer_GerritServerFactory $remote_gerrit_factory) {
+    public function synchroniseSSHKeys(array $original_keys, array $new_keys, PFUser $user) {
+        if (! $user->isLDAP()) {
+            return;
+        }
+
         $keys_to_add    = $this->getKeysToAdd($original_keys, $new_keys);
         $keys_to_remove = $this->getKeysToRemove($original_keys, $new_keys);
 
@@ -59,12 +59,12 @@ class Git_Driver_Gerrit_UserAccountManager {
         }
         
         $errors = array();
-        $remote_servers = $remote_gerrit_factory->getRemoteServersForUser($this->user);
+        $remote_servers = $this->remote_gerrit_factory->getRemoteServersForUser($user);
 
         foreach($remote_servers as $remote_server) {
             try {
-                $this->removeKeys($remote_server, $keys_to_add);
-                $this->removeKeys($remote_server, $keys_to_remove);
+                $this->removeKeys($remote_server, $keys_to_add, $user);
+                $this->removeKeys($remote_server, $keys_to_remove, $user);
             } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
                 $errors[] = $e->getTraceAsString();
             }
@@ -72,7 +72,7 @@ class Git_Driver_Gerrit_UserAccountManager {
         //double foreach to workaround gerrit bug
         foreach($remote_servers as $remote_server) {
             try {
-                $this->addKeys($remote_server, $keys_to_add);
+                $this->addKeys($remote_server, $keys_to_add, $user);
             } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
                 $errors[] = $e->getTraceAsString();
             }
@@ -91,20 +91,24 @@ class Git_Driver_Gerrit_UserAccountManager {
      * @return void
      * @throws Git_UserSynchronisationException
      */
-    public function pushSSHKeys(Git_RemoteServer_GerritServerFactory $remote_gerrit_factory) {
-        $user_keys = array_unique($this->user->getAuthorizedKeysArray());
+    public function pushSSHKeys(PFUser $user) {
+        if (! $user->isLDAP()) {
+            return;
+        }
+        
+        $user_keys = array_unique($user->getAuthorizedKeysArray());
 
         if (! $user_keys) {
             return;
         }
 
         $errors = array();
-        $remote_servers = $remote_gerrit_factory->getRemoteServersForUser($this->user);
+        $remote_servers = $this->remote_gerrit_factory->getRemoteServersForUser($user);
         
         foreach($remote_servers as $remote_server) {
            try { 
-                $this->removeKeys($remote_server, $user_keys);
-                $this->addKeys($remote_server, $user_keys);
+                $this->removeKeys($remote_server, $user_keys, $user);
+                $this->addKeys($remote_server, $user_keys, $user);
             } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
                 $errors[] = $e->getTraceAsString();
             }
@@ -122,9 +126,9 @@ class Git_Driver_Gerrit_UserAccountManager {
      * @param array $keys
      * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
      */
-    private function addKeys(Git_RemoteServer_GerritServer $remote_server, Array $keys) {
+    private function addKeys(Git_RemoteServer_GerritServer $remote_server, Array $keys, PFUser $user) {
         foreach($keys as $key) {
-            $this->gerrit_driver->addSSHKeyToAccount($remote_server, $this->user, $key);
+            $this->gerrit_driver->addSSHKeyToAccount($remote_server, $user, $key);
         }
     }
 
@@ -134,9 +138,9 @@ class Git_Driver_Gerrit_UserAccountManager {
      * @param array $keys
      * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
      */
-    private function removeKeys(Git_RemoteServer_GerritServer $remote_server, Array $keys) {
+    private function removeKeys(Git_RemoteServer_GerritServer $remote_server, Array $keys, PFUser $user) {
         foreach($keys as $key) {
-            $this->gerrit_driver->removeSSHKeyFromAccount($remote_server, $this->user, $key);
+            $this->gerrit_driver->removeSSHKeyFromAccount($remote_server, $user, $key);
         }
     }
 

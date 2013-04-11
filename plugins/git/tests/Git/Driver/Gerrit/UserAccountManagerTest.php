@@ -18,28 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../../../include/constants.php';
 require_once dirname(__FILE__).'/../../../bootstrap.php';
-
-class Git_Driver_Gerrit_UserAccountManagerTest extends TuleapTestCase {
-
-    public function itThrowsAnExceptionIfUserIsNotLDAP() {
-        $user = mock('PFUser');
-        $gerrit_driver = mock('Git_Driver_Gerrit');
-        stub($user)->isLDAP()->returns(false);
-
-        $this->expectException('Git_Driver_Gerrit_InvalidLDAPUserException');
-        new Git_Driver_Gerrit_UserAccountManager($user, $gerrit_driver);
-    }
-
-    public function itInstanciateAUserAccountManager() {
-        $user = aUser()->withLdapId('testUser')->build();
-        $gerrit_driver = mock('Git_Driver_Gerrit');
-
-        $user_account_manager = new Git_Driver_Gerrit_UserAccountManager($user, $gerrit_driver);
-        $this->assertIsA($user_account_manager, 'Git_Driver_Gerrit_UserAccountManager');
-    }
-}
 
 class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase {
     private $user;
@@ -59,7 +38,7 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
         $this->user                  = aUser()->withLdapId("testUser")->build();
         $this->gerrit_driver         = mock('Git_Driver_Gerrit');
         $this->remote_gerrit_factory = mock('Git_RemoteServer_GerritServerFactory');
-        $this->user_account_manager  = new Git_Driver_Gerrit_UserAccountManager($this->user, $this->gerrit_driver);
+        $this->user_account_manager  = new Git_Driver_Gerrit_UserAccountManager($this->gerrit_driver, $this->remote_gerrit_factory);
 
         $this->original_keys = array(
             'Im a key',
@@ -84,7 +63,7 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
 
     public function itCallsRemoteServerFactory() {
         expect($this->remote_gerrit_factory)->getRemoteServersForUser($this->user)->once();
-        $this->user_account_manager->synchroniseSSHKeys($this->original_keys, $this->new_keys, $this->remote_gerrit_factory);
+        $this->user_account_manager->synchroniseSSHKeys($this->original_keys, $this->new_keys, $this->user);
     }
 
     public function itDoesntSynchroniseIfUserHasNoRemoteServers() {
@@ -93,7 +72,9 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
         expect($this->gerrit_driver)->addSSHKeyToAccount()->never();
         expect($this->gerrit_driver)->removeSSHKeyFromAccount()->never();
 
-        $this->user_account_manager->synchroniseSSHKeys($this->original_keys, $this->new_keys, $remote_gerrit_factory);
+        $user_account_manager = new Git_Driver_Gerrit_UserAccountManager($this->gerrit_driver, $remote_gerrit_factory);
+
+        $user_account_manager->synchroniseSSHKeys($this->original_keys, $this->new_keys, $this->user);
     }
 
     public function itDoesntSynchroniseIfKeysAreTheSame() {
@@ -104,7 +85,7 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
         expect($this->gerrit_driver)->addSSHKeyToAccount()->never();
         expect($this->gerrit_driver)->removeSSHKeyFromAccount()->never();
 
-        $this->user_account_manager->synchroniseSSHKeys($original_keys, $new_keys, $this->remote_gerrit_factory);
+        $this->user_account_manager->synchroniseSSHKeys($original_keys, $new_keys, $this->user);
     }
 
     public function itCallsTheDriverToAddAndRemoveKeysTheRightNumberOfTimes() {
@@ -133,14 +114,14 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
         expect($this->gerrit_driver)->removeSSHKeyFromAccount($this->remote_server1, $this->user, $removed_keys[2]);
         expect($this->gerrit_driver)->removeSSHKeyFromAccount($this->remote_server2, $this->user, $removed_keys[2]);
 
-        $this->user_account_manager->synchroniseSSHKeys($this->original_keys, $this->new_keys, $this->remote_gerrit_factory);
+        $this->user_account_manager->synchroniseSSHKeys($this->original_keys, $this->new_keys, $this->user);
     }
 
     public function itThrowsAnExceptionIfGerritDriverFails() {
         $this->gerrit_driver->throwOn('addSSHKeyToAccount', new Git_Driver_Gerrit_RemoteSSHCommandFailure());
 
         $this->expectException('Git_UserSynchronisationException');
-        $this->user_account_manager->synchroniseSSHKeys($this->original_keys, $this->new_keys, $this->remote_gerrit_factory);
+        $this->user_account_manager->synchroniseSSHKeys($this->original_keys, $this->new_keys, $this->user);
     }
 }
 
@@ -167,7 +148,7 @@ class Git_Driver_Gerrit_UserAccountManager_PushSSHKeysTest extends TuleapTestCas
 
         $this->gerrit_driver         = mock('Git_Driver_Gerrit');
         $this->remote_gerrit_factory = mock('Git_RemoteServer_GerritServerFactory');
-        $this->user_account_manager  = new Git_Driver_Gerrit_UserAccountManager($this->user, $this->gerrit_driver);
+        $this->user_account_manager  = new Git_Driver_Gerrit_UserAccountManager($this->gerrit_driver, $this->remote_gerrit_factory);
 
 
         $this->remote_server1 = mock('Git_RemoteServer_GerritServer');
@@ -186,10 +167,11 @@ class Git_Driver_Gerrit_UserAccountManager_PushSSHKeysTest extends TuleapTestCas
     public function itDoesntPushIfUserHasNoRemoteServers() {
         $remote_gerrit_factory = stub('Git_RemoteServer_GerritServerFactory')->getRemoteServersForUser($this->user)->returns(array());
 
+        $user_account_manager = new Git_Driver_Gerrit_UserAccountManager($this->gerrit_driver, $remote_gerrit_factory);
         expect($this->gerrit_driver)->addSSHKeyToAccount()->never();
         expect($this->gerrit_driver)->removeSSHKeyFromAccount()->never();
 
-        $this->user_account_manager->pushSSHKeys($remote_gerrit_factory);
+        $user_account_manager->pushSSHKeys($this->user);
     }
 
     public function itDoesntPushIfUserHasNoKeys() {
@@ -199,7 +181,7 @@ class Git_Driver_Gerrit_UserAccountManager_PushSSHKeysTest extends TuleapTestCas
         expect($this->gerrit_driver)->addSSHKeyToAccount()->never();
         expect($this->gerrit_driver)->removeSSHKeyFromAccount()->never();
 
-        $this->user_account_manager->pushSSHKeys($this->remote_gerrit_factory);
+        $this->user_account_manager->pushSSHKeys($this->user);
     }
 
     public function itCallsTheDriverToAddAndRemoveKeysTheRightNumberOfTimes() {
@@ -224,14 +206,14 @@ class Git_Driver_Gerrit_UserAccountManager_PushSSHKeysTest extends TuleapTestCas
         expect($this->gerrit_driver)->addSSHKeyToAccount()->count(4);
         expect($this->gerrit_driver)->removeSSHKeyFromAccount()->count(4);
 
-        $this->user_account_manager->pushSSHKeys($this->remote_gerrit_factory);
+        $this->user_account_manager->pushSSHKeys($this->user);
     }
 
     public function itThrowsAnExceptionIfGerritDriverFails() {
         $this->gerrit_driver->throwOn('addSSHKeyToAccount', new Git_Driver_Gerrit_RemoteSSHCommandFailure());
 
         $this->expectException('Git_UserSynchronisationException');
-        $this->user_account_manager->pushSSHKeys($this->remote_gerrit_factory);
+        $this->user_account_manager->pushSSHKeys($this->user);
     }
 }
 ?>
