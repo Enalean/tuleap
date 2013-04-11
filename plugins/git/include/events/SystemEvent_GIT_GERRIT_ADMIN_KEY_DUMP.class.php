@@ -23,6 +23,8 @@
  */
 
 class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent {
+    const NAME = 'GIT_GERRIT_ADMIN_KEY_DUMP';
+
     /** @var Git_RemoteServer_GerritServerFactory */
     private $gerrit_server_factory;
     /** @var Git_Gitolite_SSHKeyDumper */
@@ -43,13 +45,24 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent {
         } catch (Git_RemoteServer_NotFoundException $e) {
             $server = new Git_RemoteServer_GerritServer($this->getServerId(), '',  '', '', '',  '', '');
         }
-        $this->ssh_key_dumper->dumpSSHKeys($server);
+        if ($server) {
+            $replication_key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+            $replication_key
+                ->setGerritHostId($server->getId())
+                ->setValue($server->getReplicationKey());
+            if ($this->ssh_key_dumper->dumpSSHKeys($replication_key)) {
+                $this->done();
+            } else {
+                $this->error('Impossible to dump replication ssh key for Gerrit server '.$this->getServerId());
+            }
+        } else {
+            $this->error('No valid Gerrit server found corresponding to id '.$this->getServerId());
+        }
     }
 
     public function verbalizeParameters($with_link) {
 
     }
-
 }
 
 ?>

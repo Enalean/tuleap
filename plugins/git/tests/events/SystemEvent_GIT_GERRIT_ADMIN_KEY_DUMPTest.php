@@ -53,10 +53,22 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
         $gerrit_server_id = 7;
         $this->event->setParameters("$gerrit_server_id");
 
-        $gerrit_server = mock('Git_RemoteServer_GerritServer');
+        $replication_key = 'ssh-rsa blablabla';
+
+        $gerrit_server = new Git_RemoteServer_GerritServer(
+            $gerrit_server_id,
+            '$host',
+            '$ssh_port',
+            '$http_port',
+            '$login',
+            '$identity_file',
+            $replication_key
+        );
         stub($this->gerrit_server_factory)->getServerById()->returns($gerrit_server);
 
-        expect($this->ssh_key_dumper)->dumpSSHKeys($gerrit_server)->once();
+        $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+        $key->setGerritHostId($gerrit_server_id)->setValue($replication_key);
+        expect($this->ssh_key_dumper)->dumpSSHKeys($key)->once();
 
         $this->event->process();
     }
@@ -67,26 +79,41 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
 
         stub($this->gerrit_server_factory)->getServerById()->throws(new Git_RemoteServer_NotFoundException($gerrit_server_id));
 
-        expect($this->ssh_key_dumper)->dumpSSHKeys()->once();
+        $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+        $key->setGerritHostId($gerrit_server_id)->setValue('');
+        expect($this->ssh_key_dumper)->dumpSSHKeys($key)->once();
 
         $this->event->process();
     }
-}
 
-class GerritServerIdExpectation extends SimpleExpectation {
-    private $server_id;
+    public function itMarkAsDoneWhenDumpWorks() {
+        $this->event->setParameters("7");
 
-    public function __construct($server_id) {
-        parent::__construct();
-        $this->server_id = $server_id;
+        stub($this->gerrit_server_factory)->getServerById()->returns(mock('Git_RemoteServer_GerritServer'));
+        stub($this->ssh_key_dumper)->dumpSSHKeys()->returns(true);
+
+        expect($this->event)->done()->once();
+
+        $this->event->process();
     }
 
-    public function test(Git_RemoteServer_GerritServer $compare) {
-        return $this->server_id == $compare->getId();
+    public function itMarkAsErrorWhenDumpDoesntWork() {
+        $this->event->setParameters("7");
+
+        stub($this->gerrit_server_factory)->getServerById()->returns(mock('Git_RemoteServer_GerritServer'));
+        stub($this->ssh_key_dumper)->dumpSSHKeys()->returns(false);
+
+        expect($this->event)->error()->once();
+
+        $this->event->process();
     }
 
-    public function testMessage($compare) {
-        return 'Expected gerrit server id was '.$this->server_id." $compare given";
+    public function itMarkAsErrorWhenNoValidServerIsFound() {
+        $this->event->setParameters("7");
+
+        expect($this->event)->error()->once();
+
+        $this->event->process();
     }
 }
 
