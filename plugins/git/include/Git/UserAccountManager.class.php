@@ -53,12 +53,12 @@ class Git_UserAccountManager {
         } 
     }
 
-    private function synchroniseSSHKeysWithGerrit($original_keys, $new_keys) {
+    private function synchroniseSSHKeysWithGerrit($original_keys, $new_keys, $factory) {
         $this->getGerritUserAccountManager()
             ->synchroniseSSHKeys(
                 $original_keys,
                 $new_keys,
-                $this->gerrit_server_factory
+                $factory
             );
     }
 
