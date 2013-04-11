@@ -28,8 +28,8 @@ class Git_RemoteServer_GerritServerFactory {
     /** @var GitDao */
     private $git_dao;
 
-    /** @var Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory */
-    private $replication_key_factory;
+    /** @var Git_SystemEventManager */
+    private $system_event_manager;
 
     /**
      *
@@ -37,10 +37,10 @@ class Git_RemoteServer_GerritServerFactory {
      * @param GitDao $git_dao
      * @param Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory $replication_key_factory
      */
-    public function __construct(Git_RemoteServer_Dao $dao, GitDao $git_dao, Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory $replication_key_factory) {
+    public function __construct(Git_RemoteServer_Dao $dao, GitDao $git_dao, Git_SystemEventManager $system_event_manager) {
         $this->dao     = $dao;
         $this->git_dao = $git_dao;
-        $this->replication_key_factory = $replication_key_factory;
+        $this->system_event_manager = $system_event_manager;
     }
 
     /**
@@ -102,23 +102,16 @@ class Git_RemoteServer_GerritServerFactory {
      * @param Git_RemoteServer_GerritServer $server
      */
     public function save(Git_RemoteServer_GerritServer $server) {
-        $new_server = ($server->getId() === 0);
-
-        $last_saved_id = $this->dao->save(
+        $this->dao->save(
             $server->getId(),
             $server->getHost(),
             $server->getSSHPort(),
             $server->getHTTPPort(),
             $server->getLogin(),
-            $server->getIdentityFile()
+            $server->getIdentityFile(),
+            $server->getReplicationKey()
         );
-
-        if ($new_server && $last_saved_id) {
-            $server->setId($last_saved_id);
-            $server->getReplicationKey()->setGerritHostId($last_saved_id);
-        }
-
-        $this->replication_key_factory->save($server->getReplicationKey());
+        $this->system_event_manager->queueGerritReplicationKeyUpdate($server);
     }
 
     /**
@@ -128,7 +121,7 @@ class Git_RemoteServer_GerritServerFactory {
     public function delete(Git_RemoteServer_GerritServer $server) {
         if (! $this->isServerUsed($server)) {
             $this->dao->delete($server->getId());
-            $this->replication_key_factory->deleteForGerritServerId($server->getId());
+            $this->system_event_manager->queueGerritReplicationKeyUpdate($server);
         }
     }
 
@@ -147,8 +140,6 @@ class Git_RemoteServer_GerritServerFactory {
      * @return \Git_RemoteServer_GerritServer
      */
     private function instantiateFromRow(array $row) {
-        $replictaion_key_value = $this->replication_key_factory->fetchForGerritServerId($row['id']);
-
         return new Git_RemoteServer_GerritServer(
             $row['id'],
             $row['host'],
@@ -156,7 +147,7 @@ class Git_RemoteServer_GerritServerFactory {
             $row['http_port'],
             $row['login'],
             $row['identity_file'],
-            $replictaion_key_value
+            $row['ssh_key']
         );
     }
 

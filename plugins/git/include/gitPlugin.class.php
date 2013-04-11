@@ -176,6 +176,13 @@ class GitPlugin extends Plugin {
                     $this->getRepositoryFactory()
                 );
                 break;
+            case SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME:
+                $params['class'] = 'SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP';
+                $params['dependencies'] = array(
+                    $this->getGerritServerFactory(),
+                    $this->getGitoliteSSHKeyDumper(),
+                );
+                break;
             default:
                 break;
         }
@@ -735,12 +742,19 @@ class GitPlugin extends Plugin {
     }
 
     private function getGerritServerFactory() {
+        return new Git_RemoteServer_GerritServerFactory(
+            new Git_RemoteServer_Dao(),
+            $this->getGitDao(),
+            $this->getGitSystemEventManager()
+        );
+    }
+
+    private function getGitoliteSSHKeyDumper() {
         $gitolite_admin_path = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
-        $gitExec = new Git_Exec($gitolite_admin_path);
-
-        $replication_key_factory = new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory($gitExec);
-
-        return new Git_RemoteServer_GerritServerFactory(new Git_RemoteServer_Dao(), $this->getGitDao(), $replication_key_factory);
+        return new Git_Gitolite_SSHKeyDumper(
+            $gitolite_admin_path,
+            new Git_Exec($gitolite_admin_path)
+        );
     }
 }
 

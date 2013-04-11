@@ -103,7 +103,7 @@ class Git_Admin {
                 type="checkbox"
                 name="gerrit_servers['. $id .'][replication_key]"
                 cols="30"
-                rows="5">'.$server->getReplicationKey()->getValue().'</textarea>
+                rows="5">'.$server->getReplicationKey().'</textarea>
             </td></tr>';
 
         if ($id && ! $this->gerrit_server_factory->isServerUsed($server)) {
@@ -119,7 +119,7 @@ class Git_Admin {
             $this->servers = $this->gerrit_server_factory->getServers();
         }
  
-        $this->servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', new Git_RemoteServer_Gerrit_ReplicationSSHKey());
+        $this->servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', '');
     }
 
     private function updateServers(array $request_gerrit_servers) {
@@ -147,7 +147,7 @@ class Git_Admin {
                 $http_port != $server->getHTTPPort() ||
                 $login != $server->getLogin() ||
                 $identity_file != $server->getIdentityFile() ||
-                $replication_ssh_key != $server->getReplicationKey()->getGerritHostId()
+                $replication_ssh_key != $server->getReplicationKey()
             ) {
                 $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
                 $key->setGerritHostId($id)
