@@ -349,7 +349,7 @@ class GitPlugin extends Plugin {
      * @param PFUser $user
      * @return \Git_UserAccountManager
      */
-    public function getUserAccountManager(PFUser $user) {
+    private function getUserAccountManager(PFUser $user) {
         return new Git_UserAccountManager($user, $this->getGerritDriver());
     }
 
@@ -410,7 +410,7 @@ class GitPlugin extends Plugin {
 
     private function getUserFromParameters($params) {
         if (! isset($params['user']) || ! $params['user'] instanceof PFUser) {
-            $this->getLogger()->error('Invalid user passed in params of pushUserSSHKeysToRemoteServers: ' . print_r($params, true));
+            $this->getLogger()->error('Invalid user passed in params: ' . print_r($params, true));
             return false;
         }
 
@@ -843,7 +843,7 @@ class GitPlugin extends Plugin {
      *
      * @return BackendLogger
      */
-    public function getLogger() {
+    private function getLogger() {
         if (!$this->logger) {
             $this->logger = new BackendLogger();
         }
