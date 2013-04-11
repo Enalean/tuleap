@@ -108,6 +108,8 @@ class Git_Admin {
 
         if ($id && ! $this->gerrit_server_factory->isServerUsed($server)) {
             $html .= '<td><label>'. 'Delete?' .'<br /><input type="checkbox" name="gerrit_servers['. $id .'][delete]" value="1" /></label></td>';
+        } else {
+            $html .= '<td>This server is already used by some repositories, cannot delete it.</td>';
         }
         $html .= '</tbody></table>';
         $html .= '</dd>';
@@ -149,17 +151,13 @@ class Git_Admin {
                 $identity_file != $server->getIdentityFile() ||
                 $replication_ssh_key != $server->getReplicationKey()
             ) {
-                $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
-                $key->setGerritHostId($id)
-                    ->setValue($replication_ssh_key);
-
                 $server
                     ->setHost($host)
                     ->setSSHPort($ssh_port)
                     ->setHTTPPort($http_port)
                     ->setLogin($login)
                     ->setIdentityFile($identity_file)
-                    ->setReplicationKey($key)  ;
+                    ->setReplicationKey($replication_ssh_key)  ;
                 $this->gerrit_server_factory->save($server);
                 $this->servers[$server->getId()] = $server;
             }

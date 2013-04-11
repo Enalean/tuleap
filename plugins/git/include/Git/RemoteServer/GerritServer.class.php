@@ -118,7 +118,7 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
 
     /**
      *
-     * @return Git_RemoteServer_Gerrit_ReplicationSSHKey
+     * @return String
      */
     public function getReplicationKey() {
         return $this->replication_key;
