@@ -20,7 +20,7 @@
 
 require_once 'bootstrap.php';
 
-class GitPluginPropagateUserKeysToGerritTest extends TuleapTestCase {
+class GitPlugin_PropagateUserKeysToGerritTest extends TuleapTestCase {
     
     private $plugin;
     private $user_account_manager;
@@ -128,5 +128,78 @@ class GitPluginPropagateUserKeysToGerritTest extends TuleapTestCase {
     }
 }
 
+
+class GitPlugin_PushUserSSHKeysToRemoteServersTest extends TuleapTestCase {
+
+    private $plugin;
+    private $user_account_manager;
+    private $gerrit_server_factory;
+    private $logger;
+    private $user;
+
+    public function setUp() {
+        parent::setUp();
+
+        $id = 456;
+        $mocked_methods = array(
+            'getUserAccountManager',
+            'getGerritServerFactory'
+        );
+        $this->plugin = partial_mock('GitPlugin', $mocked_methods, array($id));
+
+        $this->user_account_manager = mock('Git_UserAccountManager');
+        stub($this->plugin)->getUserAccountManager()->returns($this->user_account_manager);
+
+        $this->gerrit_server_factory = mock('Git_RemoteServer_GerritServerFactory');
+        stub($this->plugin)->getGerritServerFactory()->returns($this->gerrit_server_factory);
+
+        $this->logger = mock('BackendLogger');
+        $this->plugin->setLogger($this->logger);
+
+        $this->user = mock('PFUser');
+    }
+
+    public function testItLogsAnErrorIfNoUserIsPassed() {
+        $params = array();
+
+        expect($this->logger)->error()->once();
+        $this->plugin->pushUserSSHKeysToRemoteServers($params);
+    }
+
+    public function testItLogsAnErrorIfUserIsInvalid() {
+        $params = array(
+            'user' => 'me',
+        );
+
+        expect($this->logger)->error()->once();
+        $this->plugin->pushUserSSHKeysToRemoteServers($params);
+    }
+
+    public function itLogsAnErrorIfSSHKeyPushFails() {
+        $params = array(
+            'user' => $this->user,
+        );
+
+        $this->user_account_manager->throwOn('pushSSHKeys', new Git_UserSynchronisationException());
+
+        expect($this->logger)->error()->once();
+
+        $this->plugin->pushUserSSHKeysToRemoteServers($params);
+    }
+
+    public function itAddsResponseFeedbackIfSSHKeyPushFails() {
+        $params = array(
+            'user' => $this->user,
+        );
+
+        $this->user_account_manager->throwOn('pushSSHKeys', new Git_UserSynchronisationException());
+
+        $response = mock('Response');
+        $GLOBALS['Response'] = $response;
+        expect($response)->addFeedback()->once();
+
+        $this->plugin->pushUserSSHKeysToRemoteServers($params);
+    }
+}
 
 ?>

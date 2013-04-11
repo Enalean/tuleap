@@ -65,7 +65,7 @@ class GitPlugin extends Plugin {
 
         $this->_addHook('project_admin_remove_user',                       'projectRemoveUserFromNotification',            false);
 
-        $this->_addHook(Event::PUSH_SSH_KEYS,                              'pushSSHKeysToRemoteServers',                   false);
+        $this->_addHook(Event::PUSH_SSH_KEYS,                              'pushUserSSHKeysToRemoteServers',                   false);
         $this->_addHook(Event::LIST_SSH_KEYS,                              'getRemoteServersForUser',                      false);
         $this->_addHook(Event::DUMP_SSH_KEYS,                              'dump_ssh_keys',                                false);
         $this->_addHook(Event::DUMP_SSH_KEYS,                              'propagateUserKeysToGerrit',                        false);
@@ -311,10 +311,7 @@ class GitPlugin extends Plugin {
      * @return void
      */
     public function propagateUserKeysToGerrit($params) {
-        $logger = $this->getLogger();
-        
-        if (! isset($params['user']) || ! $params['user'] instanceof PFUser) {
-            $logger->error('Invalid user passed in params of propagateUserKeysToGerrit: ' . print_r($params, true));
+        if (! $user = $this->getUserFromParameters($params)) {
             return;
         }
 
@@ -335,7 +332,7 @@ class GitPlugin extends Plugin {
                 $this->getGerritServerFactory()
             );
         } catch (Git_UserSynchronisationException $e) {
-            $logger->error('Unable to propagate ssh keys for user: ' . $user->getUnixName() . '. Error:' . $e->getTraceAsString());
+            $this->getLogger()->error('Unable to propagate ssh keys for user: ' . $user->getUnixName() . '. Error:' . $e->getTraceAsString());
         }
     }
 
@@ -388,30 +385,36 @@ class GitPlugin extends Plugin {
      * Copies all SSH Keys to Remote Git Servers
      * @param array $params Should contain one entry 'user' => PFUser
      */
-    public function pushSSHKeysToRemoteServers(array $params) {
-        if (! isset($params['user']) || ! $params['user'] instanceof PFUser) {
+    public function pushUserSSHKeysToRemoteServers(array $params) {
+        if (! $user = $this->getUserFromParameters($params)) {
             return;
         }
-        $user = $params['user'];
 
-        $logger = $this->getLogger();
+        $this->getLogger()->info('Trying to push ssh keys for user: '.$user->getUnixName());
+        $git_user_account_manager = $this->getUserAccountManager($user);
 
-        $gerrit_driver = $this->getGerritDriver();
         try {
-            $gerrit_user_account_manager = new Git_Driver_Gerrit_UserAccountManager($user, $gerrit_driver);
-
-            $logger->info('Trying to push ssh keys for user: '.$user->getUnixName());
-            $gerrit_user_account_manager->pushSSHKeys(
+            $git_user_account_manager->pushSSHKeys(
                 $this->getGerritServerFactory()
             );
-            $logger->info('Successfully pushed ssh keys for user: '.$user->getUnixName());
-        } catch (Git_Driver_Gerrit_InvalidLDAPUserException $e) {
-            $logger->error('Tried pushSSHKeysToRemoteServer for non-ldap user: ' . $user->getUnixName());
-        } catch (Git_Driver_Gerrit_UserSynchronisationException $e) {
+        } catch (Git_UserSynchronisationException $e) {
             $message = $GLOBALS['Language']->getText('plugin_git','push_ssh_keys_error');
             $GLOBALS['Response']->addFeedback('error', $message);
-            $logger->error('Unable to push ssh keys: ' . $e->getMessage());
+            
+            $this->getLogger()->error('Unable to push ssh keys: ' . $e->getMessage());
+            return;
         }
+
+        $this->getLogger()->info('Successfully pushed ssh keys for user: '.$user->getUnixName());
+    }
+
+    private function getUserFromParameters($params) {
+        if (! isset($params['user']) || ! $params['user'] instanceof PFUser) {
+            $this->getLogger()->error('Invalid user passed in params of pushUserSSHKeysToRemoteServers: ' . print_r($params, true));
+            return false;
+        }
+
+        return $params['user'];
     }
 
     function permission_get_name($params) {
