@@ -137,6 +137,21 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         $this->factory->save($this->main_gerrit_server);
     }
 
+    public function itSetsIdOfNewServerOnSave() {
+        $new_server = new Git_RemoteServer_GerritServer(
+            0,
+            $this->host,
+            $this->ssh_port,
+            $this->http_port,
+            $this->login,
+            $this->identity_file,
+            $this->replication_key
+        );
+        stub($this->dao)->save()->returns(113);
+        $this->factory->save($new_server);
+        $this->assertEqual($new_server->getId(), 113);
+    }
+
     public function itDeletesAnExistingServer() {
         expect($this->dao)->delete($this->alternate_server_id)->once();
         $this->factory->delete($this->alternate_gerrit_server);
@@ -151,6 +166,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         expect($this->dao)->delete($this->server_id)->never();
         $this->factory->delete($this->main_gerrit_server);
     }
+
 }
 
 ?>

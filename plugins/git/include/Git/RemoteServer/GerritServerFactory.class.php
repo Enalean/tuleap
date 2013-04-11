@@ -102,7 +102,7 @@ class Git_RemoteServer_GerritServerFactory {
      * @param Git_RemoteServer_GerritServer $server
      */
     public function save(Git_RemoteServer_GerritServer $server) {
-        $this->dao->save(
+        $id = $this->dao->save(
             $server->getId(),
             $server->getHost(),
             $server->getSSHPort(),
@@ -111,6 +111,9 @@ class Git_RemoteServer_GerritServerFactory {
             $server->getIdentityFile(),
             $server->getReplicationKey()
         );
+        if ($server->getId() == 0) {
+            $server->setId($id);
+        }
         $this->system_event_manager->queueGerritReplicationKeyUpdate($server);
     }
 
