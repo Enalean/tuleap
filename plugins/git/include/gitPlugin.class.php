@@ -316,9 +316,9 @@ class GitPlugin extends Plugin {
         if (! $user = $this->getUserFromParameters($params)) {
             return;
         }
-
+        
         $user                     = $params['user'];
-        $git_user_account_manager = $this->getUserAccountManager($user);
+        $git_user_account_manager = $this->getUserAccountManager();
         $new_keys                 = $user->getAuthorizedKeysArray();
         $original_keys            = array();
         
@@ -330,7 +330,7 @@ class GitPlugin extends Plugin {
             $git_user_account_manager->synchroniseSSHKeys(
                 $original_keys,
                 $new_keys,
-                $this->getGerritServerFactory()
+                $user
             );
         } catch (Git_UserSynchronisationException $e) {
             $this->getLogger()->error('Unable to propagate ssh keys for user: ' . $user->getUnixName() . '. Error:' . $e->getTraceAsString());
@@ -349,8 +349,8 @@ class GitPlugin extends Plugin {
      * @param PFUser $user
      * @return \Git_UserAccountManager
      */
-    private function getUserAccountManager(PFUser $user) {
-        return new Git_UserAccountManager($user, $this->getGerritDriver());
+    public function getUserAccountManager() {
+        return new Git_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory());
     }
 
     /**
@@ -391,11 +391,11 @@ class GitPlugin extends Plugin {
         }
 
         $this->getLogger()->info('Trying to push ssh keys for user: '.$user->getUnixName());
-        $git_user_account_manager = $this->getUserAccountManager($user);
+        $git_user_account_manager = $this->getUserAccountManager();
 
         try {
             $git_user_account_manager->pushSSHKeys(
-                $this->getGerritServerFactory()
+                $user
             );
         } catch (Git_UserSynchronisationException $e) {
             $message = $GLOBALS['Language']->getText('plugin_git','push_ssh_keys_error');

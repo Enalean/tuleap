@@ -84,7 +84,7 @@ class GitPlugin_PropagateUserKeysToGerritTest extends TuleapTestCase {
         expect($this->user_account_manager)->synchroniseSSHKeys(
                 $original_keys,
                 $new_keys,
-                $this->gerrit_server_factory
+                $this->user
             )->once();
 
         $this->plugin->propagateUserKeysToGerrit($params);
@@ -108,7 +108,7 @@ class GitPlugin_PropagateUserKeysToGerritTest extends TuleapTestCase {
         expect($this->user_account_manager)->synchroniseSSHKeys(
                 $original_keys,
                 $new_keys,
-                $this->gerrit_server_factory
+                $this->user
             )->once();
 
         $this->plugin->propagateUserKeysToGerrit($params);

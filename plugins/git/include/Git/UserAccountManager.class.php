@@ -61,7 +61,7 @@ class Git_UserAccountManager {
      * @return void
      * @throws Git_UserSynchronisationException
      */
-    public function pushSSHKeys(Git_RemoteServer_GerritServerFactory $user) {
+    public function pushSSHKeys(PFUser $user) {
         $this->pushSSHKeysToGerrit($user);
     }
 
