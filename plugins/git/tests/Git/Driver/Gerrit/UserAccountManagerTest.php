@@ -139,7 +139,7 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
     public function itThrowsAnExceptionIfGerritDriverFails() {
         $this->gerrit_driver->throwOn('addSSHKeyToAccount', new Git_Driver_Gerrit_RemoteSSHCommandFailure());
 
-        $this->expectException('Git_Driver_Gerrit_UserSynchronisationException');
+        $this->expectException('Git_UserSynchronisationException');
         $this->user_account_manager->synchroniseSSHKeys($this->original_keys, $this->new_keys, $this->remote_gerrit_factory);
     }
 }
@@ -230,7 +230,7 @@ class Git_Driver_Gerrit_UserAccountManager_PushSSHKeysTest extends TuleapTestCas
     public function itThrowsAnExceptionIfGerritDriverFails() {
         $this->gerrit_driver->throwOn('addSSHKeyToAccount', new Git_Driver_Gerrit_RemoteSSHCommandFailure());
 
-        $this->expectException('Git_Driver_Gerrit_UserSynchronisationException');
+        $this->expectException('Git_UserSynchronisationException');
         $this->user_account_manager->pushSSHKeys($this->remote_gerrit_factory);
     }
 }

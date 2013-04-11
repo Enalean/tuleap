@@ -81,7 +81,7 @@ class Git_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase {
     public function itThrowsAnExceptionIfGerritSynchFails() {
         expect($this->gerrit_user_account_manager)->synchroniseSSHKeys()->once();
 
-        $this->gerrit_user_account_manager->throwOn('synchroniseSSHKeys', new Git_Driver_Gerrit_UserSynchronisationException());
+        $this->gerrit_user_account_manager->throwOn('synchroniseSSHKeys', new Git_UserSynchronisationException());
 
         $this->expectException('Git_UserSynchronisationException');
 
@@ -137,7 +137,7 @@ class Git_UserAccountManager_PushSSHKeysTest extends TuleapTestCase {
     public function itThrowsAnExceptionIfGerritPushFails() {
         expect($this->gerrit_user_account_manager)->pushSSHKeys()->once();
 
-        $this->gerrit_user_account_manager->throwOn('pushSSHKeys', new Git_Driver_Gerrit_UserSynchronisationException());
+        $this->gerrit_user_account_manager->throwOn('pushSSHKeys', new Git_UserSynchronisationException());
 
         $this->expectException('Git_UserSynchronisationException');
 
