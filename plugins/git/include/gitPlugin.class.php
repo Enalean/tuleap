@@ -29,6 +29,12 @@ require_once 'common/include/CSRFSynchronizerToken.class.php';
  * GitPlugin
  */
 class GitPlugin extends Plugin {
+
+    /**
+     *
+     * @var BackendLogger
+     */
+    private $logger;
     
     /**
      * Service short_name as it appears in 'service' table
@@ -59,9 +65,10 @@ class GitPlugin extends Plugin {
 
         $this->_addHook('project_admin_remove_user',                       'projectRemoveUserFromNotification',            false);
 
-        $this->_addHook(Event::PUSH_SSH_KEYS,                              'pushSSHKeysToRemoteServers',                      false);
+        $this->_addHook(Event::PUSH_SSH_KEYS,                              'pushSSHKeysToRemoteServers',                   false);
         $this->_addHook(Event::LIST_SSH_KEYS,                              'getRemoteServersForUser',                      false);
         $this->_addHook(Event::DUMP_SSH_KEYS,                              'dump_ssh_keys',                                false);
+        $this->_addHook(Event::DUMP_SSH_KEYS,                              'propagateUserKeysToGerrit',                        false);
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES,                     'system_event_get_types',                       false);
         $this->_addHook(Event::PROCCESS_SYSTEM_CHECK);
 
@@ -160,7 +167,7 @@ class GitPlugin extends Plugin {
                     $this->getGitDao(),
                     $this->getRepositoryFactory(),
                     $this->getGerritServerFactory(),
-                    new BackendLogger(),
+                    $this->getLogger(),
                     $this->getProjectCreator(),
                 );
                 break;
@@ -282,7 +289,6 @@ class GitPlugin extends Plugin {
         $output = array();
         $mvCmd  = $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$GLOBALS['codendi_dir'].'/plugins/git/bin/gl-dump-sshkeys.php';
         if (isset($params['user'])) {
-            $this->propagateKeysToGerrit($params);
             $mvCmd .= ' '.$params['user']->getId();
         }
         $cmd    = 'su -l codendiadm -c "'.$mvCmd.' 2>&1"';
@@ -295,30 +301,58 @@ class GitPlugin extends Plugin {
         }
     }
 
-    private function propagateKeysToGerrit($params) {
-        $user          = $params['user'];
-        $gerrit_driver = $this->getGerritDriver();
+    /**
+     * Method called as a hook.
+     *
+     * @param array $params Should contain two entries:
+     *     'user' => PFUser,
+     *     'original_keys' => string of concatenated ssh keys
+     * 
+     * @return void
+     */
+    public function propagateUserKeysToGerrit($params) {
+        $logger = $this->getLogger();
+        
+        if (! isset($params['user']) || ! $params['user'] instanceof PFUser) {
+            $logger->error('Invalid user passed in params of propagateUserKeysToGerrit: ' . print_r($params, true));
+            return;
+        }
 
+        $user = $params['user'];
+        $git_user_account_manager = $this->getUserAccountManager($user);
+        
         $new_keys      = $user->getAuthorizedKeysArray();
         $original_keys = array();
         
         if (isset($params['original_keys']) && is_string($params['original_keys'])) {
-            $original_keys = array_filter(explode(PFUser::SSH_KEY_SEPARATOR, $params['original_keys']));
+            $original_keys = $this->getKeysFromString($params['original_keys']);
         }
 
         try {
-            $gerrit_user_account_manager = new Git_Driver_Gerrit_UserAccountManager($user, $gerrit_driver);
-
-            $gerrit_user_account_manager->synchroniseSSHKeys(
+            $git_user_account_manager->synchroniseSSHKeys(
                 $original_keys,
                 $new_keys,
                 $this->getGerritServerFactory()
             );
-        } catch (Git_Driver_Gerrit_InvalidLDAPUserException $e) {
-        } catch (Git_Driver_Gerrit_UserSynchronisationException $e) {
-            $logger = new BackendLogger();
+        } catch (Git_UserSynchronisationException $e) {
             $logger->error('Unable to propagate ssh keys for user: ' . $user->getUnixName() . '. Error:' . $e->getTraceAsString());
         }
+    }
+
+    private function getKeysFromString($keys_as_string) {
+        $user = new PFUser();
+        $user->setAuthorizedKeys($keys_as_string);
+
+        return array_filter($user->getAuthorizedKeysArray());
+    }
+
+    /**
+     *
+     * @param PFUser $user
+     * @return \Git_UserAccountManager
+     */
+    public function getUserAccountManager(PFUser $user) {
+        return new Git_UserAccountManager($user, $this->getGerritDriver());
     }
 
     /**
@@ -360,7 +394,7 @@ class GitPlugin extends Plugin {
         }
         $user = $params['user'];
 
-        $logger = new BackendLogger();
+        $logger = $this->getLogger();
 
         $gerrit_driver = $this->getGerritDriver();
         try {
@@ -511,12 +545,16 @@ class GitPlugin extends Plugin {
 
     private function getGerritDriver() {
         return new Git_Driver_Gerrit(
-            new Git_Driver_Gerrit_RemoteSSHCommand(new BackendLogger()),
-            new BackendLogger()
+            new Git_Driver_Gerrit_RemoteSSHCommand($this->getLogger()),
+            $this->getLogger()
         );
     }
 
-    private function getGerritServerFactory() {
+    /**
+     *
+     * @return \Git_RemoteServer_GerritServerFactory
+     */
+    public function getGerritServerFactory() {
 
         $gitolite_admin_path = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
         $gitExec = new Git_Exec($gitolite_admin_path);
@@ -760,7 +798,7 @@ class GitPlugin extends Plugin {
         $server_factory = $this->getGerritServerFactory();
         $servers        = $server_factory->getServersForProject($project);
 
-        $logger = new BackendLogger();
+        $logger = $this->getLogger();
 
         foreach ($servers as $server) {
             try {
@@ -807,6 +845,25 @@ class GitPlugin extends Plugin {
 
     private function getGerritUserFinder() {
         return new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), new UGroupManager());
+    }
+
+    /**
+     *
+     * @return BackendLogger
+     */
+    public function getLogger() {
+        if (!$this->logger) {
+            $this->logger = new BackendLogger();
+        }
+        return $this->logger;
+    }
+
+    /**
+     *
+     * @param BackendLogger $logger
+     */
+    public function setLogger(BackendLogger $logger) {
+        $this->logger = $logger;
     }
 }
 
