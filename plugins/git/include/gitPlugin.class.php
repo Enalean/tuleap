@@ -726,7 +726,6 @@ class GitPlugin extends Plugin {
     }
 
     private function getGerritMembershipManager() {
-        require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipManager.class.php';
         return new Git_Driver_Gerrit_MembershipManager(
             new Git_Driver_Gerrit_MembershipDao(),
             $this->getGerritDriver(),
