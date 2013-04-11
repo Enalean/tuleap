@@ -136,6 +136,19 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
 
         $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id);
     }
+
+    public function itCreatesGerritReplicationKeyUpdateEvent() {
+        $server = stub('Git_RemoteServer_GerritServer')->getId()->returns(9);
+
+        expect($this->system_event_manager)->createEvent(
+            SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME,
+            9,
+            SystemEvent::PRIORITY_HIGH,
+            SystemEvent::OWNER_APP
+        )->once();
+
+        $this->git_system_event_manager->queueGerritReplicationKeyUpdate($server);
+    }
 }
 
 ?>

@@ -81,6 +81,15 @@ class Git_SystemEventManager {
         );
     }
 
+    public function queueGerritReplicationKeyUpdate(Git_RemoteServer_GerritServer $server) {
+        $this->system_event_manager->createEvent(
+            SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME,
+            $server->getId(),
+            SystemEvent::PRIORITY_HIGH,
+            SystemEvent::OWNER_APP
+        );
+    }
+
     public function isRepositoryMigrationToGerritOnGoing(GitRepository $repository) {
         return $this->system_event_manager->isThereAnEventAlreadyOnGoing(SystemEvent_GIT_GERRIT_MIGRATION::NAME, $repository->getId());
     }
@@ -91,7 +100,8 @@ class Git_SystemEventManager {
             SystemEvent_GIT_REPO_DELETE::NAME,
             SystemEvent_GIT_REPO_FORK::NAME,
             SystemEvent_GIT_REPO_ACCESS::NAME,
-            SystemEvent_GIT_GERRIT_MIGRATION::NAME
+            SystemEvent_GIT_GERRIT_MIGRATION::NAME,
+            SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME,
         );
     }
 }
