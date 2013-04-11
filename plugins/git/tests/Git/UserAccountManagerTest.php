@@ -92,4 +92,58 @@ class Git_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase {
         );
     }
 }
+
+class Git_UserAccountManager_PushSSHKeysTest extends TuleapTestCase {
+    /** @var PFUser */
+    private $user;
+    private $gerrit_driver;
+    private $remote_gerrit_factory;
+    /**
+     * @var Git_UserAccountManager
+     */
+    private $user_account_manager;
+    /**
+     * @var Git_Driver_Gerrit_UserAccountManager
+     */
+    private $gerrit_user_account_manager;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->user = aUser()->withLdapId("testUser")->build();
+        $key1 = 'key1';
+        $key2 = 'key2';
+
+        $this->user->setAuthorizedKeys($key1.PFUser::SSH_KEY_SEPARATOR.$key2);
+
+        $this->gerrit_driver                = mock('Git_Driver_Gerrit');
+        $this->remote_gerrit_factory        = mock('Git_RemoteServer_GerritServerFactory');
+        $this->user_account_manager         = new Git_UserAccountManager($this->user, $this->gerrit_driver);
+        $this->gerrit_user_account_manager  = mock('Git_Driver_Gerrit_UserAccountManager');
+
+        $this->user_account_manager->setGerritUserAccountManager($this->gerrit_user_account_manager);
+    }
+
+    public function itDoesNotPushSSHKeysToGerritForNonLdapUser() {
+        $user = mock('PFUser');
+        stub($user)->isLDAP()->returns(false);
+
+        expect($this->gerrit_user_account_manager)->pushSSHKeys()->never();
+
+        $user_account_manager = new Git_UserAccountManager($user, $this->gerrit_driver);
+        $user_account_manager->pushSSHKeys($this->remote_gerrit_factory);
+    }
+
+    public function itThrowsAnExceptionIfGerritPushFails() {
+        expect($this->gerrit_user_account_manager)->pushSSHKeys()->once();
+
+        $this->gerrit_user_account_manager->throwOn('pushSSHKeys', new Git_Driver_Gerrit_UserSynchronisationException());
+
+        $this->expectException('Git_UserSynchronisationException');
+
+        $this->user_account_manager->pushSSHKeys(
+            $this->remote_gerrit_factory
+        );
+    }
+}
 ?>

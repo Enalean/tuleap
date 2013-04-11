@@ -54,13 +54,34 @@ class Git_UserAccountManager {
     }
 
     private function synchroniseSSHKeysWithGerrit($original_keys, $new_keys) {
-        $gerrit_user_account_manager = $this->getGerritUserAccountManager();
+        $this->getGerritUserAccountManager()
+            ->synchroniseSSHKeys(
+                $original_keys,
+                $new_keys,
+                $this->gerrit_server_factory
+            );
+    }
 
-        $gerrit_user_account_manager->synchroniseSSHKeys(
-            $original_keys,
-            $new_keys,
-            $this->gerrit_server_factory
-        );
+    /**
+     *
+     * @param Git_RemoteServer_GerritServerFactory $factory
+     * @return void
+     * @throws Git_UserSynchronisationException
+     */
+    public function pushSSHKeys(Git_RemoteServer_GerritServerFactory $factory) {
+        if (! $this->getGerritUserAccountManager()) {
+            return;
+        }
+
+        try {
+            $this->pushSSHKeysToGerrit($factory);
+        } catch (Git_Driver_Gerrit_UserSynchronisationException $e) {
+            throw new Git_UserSynchronisationException($e->getTraceAsString());
+        }
+    }
+
+    private function pushSSHKeysToGerrit($factory) {
+        $this->getGerritUserAccountManager()->pushSSHKeys($factory);
     }
 
     /**
