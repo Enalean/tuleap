@@ -60,7 +60,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent {
                 $this->error('Impossible to dump replication ssh key for Gerrit server '.$server->getId());
             }
         } else {
-            $this->error('No valid Gerrit server found corresponding to id '.$server->getId());
+            $this->error('No valid Gerrit server found corresponding to id '.$this->getServerId());
         }
     }
 
