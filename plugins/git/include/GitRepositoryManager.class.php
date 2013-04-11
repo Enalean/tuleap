@@ -35,17 +35,23 @@ class GitRepositoryManager {
     private $repository_factory;
 
     /**
-     * @var SystemEventManager
+     * @var Git_SystemEventManager
      */
-    private $system_event_manager;
+    private $git_system_event_manager;
+
+    /**
+     * @var GitDao
+     */
+    private $dao;
 
     /**
      * @param GitRepositoryFactory $repository_factory
-     * @param SystemEventManager   $system_event_manager
+     * @param Git_SystemEventManager   $git_system_event_manager
      */
-    public function __construct(GitRepositoryFactory $repository_factory, SystemEventManager $system_event_manager) {
-        $this->repository_factory   = $repository_factory;
-        $this->system_event_manager = $system_event_manager;
+    public function __construct(GitRepositoryFactory $repository_factory, Git_SystemEventManager $git_system_event_manager, GitDao $dao) {
+        $this->repository_factory       = $repository_factory;
+        $this->git_system_event_manager = $git_system_event_manager;
+        $this->dao                      = $dao;
     }
 
     /**
@@ -57,11 +63,7 @@ class GitRepositoryManager {
         $repositories = $this->repository_factory->getAllRepositories($project);
         foreach ($repositories as $repository) {
             $repository->forceMarkAsDeleted();
-            $this->system_event_manager->createEvent(
-                'GIT_REPO_DELETE',
-                 $project->getID().SystemEvent::PARAMETER_SEPARATOR.$repository->getId(),
-                 SystemEvent::PRIORITY_MEDIUM
-            );
+            $this->git_system_event_manager->queueRepositoryDeletion($repository);
         }
     }
 
@@ -76,7 +78,9 @@ class GitRepositoryManager {
             throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_input_format_error', array($creator->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
         }
         $this->assertRepositoryNameNotAlreadyUsed($repository);
-        $creator->createReference($repository);
+        $id = $this->dao->save($repository);
+        $repository->setId($id);
+        $this->git_system_event_manager->queueRepositoryUpdate($repository);
     }
 
     /**
@@ -101,8 +105,17 @@ class GitRepositoryManager {
         $clone->setScope($scope);
 
         $this->assertRepositoryNameNotAlreadyUsed($clone);
-        //TODO use creator
-        $repository->getBackend()->fork($repository, $clone, $forkPermissions);
+        $this->doForkRepository($repository, $clone, $forkPermissions);
+    }
+
+    private function doForkRepository(GitRepository $repository, GitRepository $clone, array $forkPermissions) {
+        $id = $repository->getBackend()->fork($repository, $clone, $forkPermissions);
+        $clone->setId($id);
+        if ($id) {
+            $this->git_system_event_manager->queueRepositoryFork($repository, $clone);
+        } else {
+            throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_no_repository_forked'));
+        }
     }
 
     private function assertRepositoryNameNotAlreadyUsed(GitRepository $repository) {

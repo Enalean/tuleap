@@ -57,8 +57,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @param GitRepository $repository
      */
     public function createReference($repository) {
-        $id = $this->getDao()->save($repository);
-        $this->updateRepoConf($repository);
     }
 
     public function updateRepoConf($repository) {
@@ -73,7 +71,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @param  GitRepository $repository
      * @return Boolean
      */
-    public function isInitialized($repository) {
+    public function isInitialized(GitRepository $repository) {
         $init = $this->driver->isInitialized($this->getGitRootPath().'/'.$repository->getPath());
         if ($init) {
             $this->getDao()->initialize($repository->getId());
@@ -81,6 +79,15 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         } else {
             return false;
         }
+    }
+
+    /**
+     *
+     * @param GitRepository $repository
+     * @return bool
+     */
+    public function isCreated(GitRepository $repository) {
+        return $this->driver->isRepositoryCreated($this->getGitRootPath().'/'.$repository->getPath());
     }
 
     /**
@@ -222,13 +229,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @return bool
      */
     public function save($repository) {
-        // TODO: Uncomment this when GIT_GitoliteDriver::setDescription() is ready
-        /*$path          = $this->getGitRootPath().$repository->getPath();
-        $fsDescription = $this->getDriver()->getDescription($path);
-        $description   = $repository->getDescription();
-        if ($description != $fsDescription) {
-            $this->getDriver()->setDescription($path, $description);
-        }*/
         return $this->getDao()->save($repository);
     }
 
@@ -238,8 +238,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @param GitRepository $repository
      */
     public function changeRepositoryMailingList($repository) {
-        $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
-        return $this->updateRepoConf($repository);
+        return true;
     }
 
     /**
@@ -320,12 +319,10 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     public function markAsDeleted(GitRepository $repository) {
         $this->deletePermissions($repository);
         $this->getDao()->delete($repository);
-
-        $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
-        $this->updateRepoConf($repository);
     }
 
     public function delete(GitRepository $repository) {
+        $this->updateRepoConf($repository);
         $path = $this->getGitRootPath().$repository->getPath();
         $this->getDriver()->delete($path);
     }
@@ -334,29 +331,34 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @throws GitRepositoryAlreadyExistsException 
      */
     public function fork(GitRepository $old, GitRepository $new, array $forkPermissions) {
-        $name = $old->getName();
-        //TODO use $old->getRootPath() (good luck for Unit Tests!)
-        $old_namespace = $old->getProject()->getUnixName() .'/'. $old->getNamespace();
-        $new_namespace = $new->getProject()->getUnixName() .'/'. $new->getNamespace();
-        
         $new_project = $new->getProject();
         if ($this->getDao()->isRepositoryExisting($new_project->getId(), $new->getPath())) {
             throw new GitRepositoryAlreadyExistsException('Respository already exists');
         } else {
-            $forkSucceeded = $this->getDriver()->fork($name, $old_namespace, $new_namespace);
-            if ($forkSucceeded) {
-                $id = $this->getDao()->save($new);
-                $new->setId($id);
-                if (empty($forkPermissions)) {
-                    $this->clonePermissions($old, $new);
-                } else {
-                    $this->savePermissions($new, $forkPermissions);
-                }
-                $this->updateRepoConf($new);
+            $id = $this->getDao()->save($new);
+            $new->setId($id);
+            if (empty($forkPermissions)) {
+                $this->clonePermissions($old, $new);
+            } else {
+                $this->savePermissions($new, $forkPermissions);
             }
+            return $id;
         }
     }
-    
+
+    public function forkOnFilesystem(GitRepository $old, GitRepository $new) {
+        $name = $old->getName();
+        //TODO use $old->getRootPath() (good luck for Unit Tests!)
+        $old_namespace = $old->getProject()->getUnixName() .'/'. $old->getNamespace();
+        $new_namespace = $new->getProject()->getUnixName() .'/'. $new->getNamespace();
+
+        $forkSucceeded = $this->getDriver()->fork($name, $old_namespace, $new_namespace);
+        if ($forkSucceeded) {
+            $this->updateRepoConf($new);
+        }
+    }
+
+
     public function clonePermissions(GitRepository $old, GitRepository $new) {
         $pm = $this->getPermissionsManager();
         
@@ -436,13 +438,8 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         $this->gitPlugin = $gitPlugin;
     }
 
-    public function commitTransaction(GitRepository $repository) {
-        $this->updateRepoConf($repository);
-    }
-
     public function disconnectFromGerrit(GitRepository $repository) {
         $this->getDao()->disconnectFromGerrit($repository->getId());
-        $this->updateRepoConf($repository);
     }
 }
 

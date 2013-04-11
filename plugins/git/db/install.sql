@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS plugin_git_remote_servers (
     ssh_port INT(11) UNSIGNED NOT NULL,
     login VARCHAR(255) NOT NULL,
     identity_file VARCHAR(255) NOT NULL,
+    ssh_key TEXT NULL,
 PRIMARY KEY (id));
 
 CREATE TABLE IF NOT EXISTS plugin_git_remote_ugroups (

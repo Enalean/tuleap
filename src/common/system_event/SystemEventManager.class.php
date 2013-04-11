@@ -153,7 +153,7 @@ class SystemEventManager {
             break;
         case Event::EDIT_SSH_KEYS:
             $this->createEvent(SystemEvent::TYPE_EDIT_SSH_KEYS,
-                               $params['user_id'],
+                               $this->concatParameters($params, array('user_id', 'original_keys')),
                                SystemEvent::PRIORITY_MEDIUM);
             break;
         case Event::USER_EMAIL_CHANGED:

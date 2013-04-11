@@ -131,7 +131,6 @@ class Git_Driver_Gerrit {
         $this->logger->info("Gerrit: Group $group_name successfully created");
     }
 
-
     public function getGroupUUID(Git_RemoteServer_GerritServer $server, $group_full_name) {
         $json_result = $this->getAccountGroupsInfo($server, $group_full_name);
         if (isset($json_result->columns->group_uuid)) {
@@ -302,16 +301,44 @@ class Git_Driver_Gerrit {
         $this->ssh->execute($server, $query);
     }
 
+    private function escapeSQLQuery($string) {
+        $escaped_string = str_replace(' ', '\ ', $string);
+        $escaped_string = str_replace("'", "\\'", $escaped_string);
+
+        return $escaped_string;
+    }
+
     private function executeQuery(Git_RemoteServer_GerritServer $server, $sql_query) {
         $query = self::GSQL_COMMAND .' '. $this->escapeSQLQuery('"'.$sql_query.'"');
         return $this->ssh->execute($server, $query);
     }
 
-    private function escapeSQLQuery($query) {
-        $escaped_query = str_replace(' ', '\ ', $query);
-        $escaped_query = str_replace("'", "\\'", $escaped_query);
 
-        return $escaped_query;
+    /**
+     * 
+     * @param Git_RemoteServer_GerritServer $server
+     * @param PFUser $user
+     * @param string $ssh_key
+     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * 
+     */
+    public function addSSHKeyToAccount(Git_RemoteServer_GerritServer $server, PFUser $user, $ssh_key) {
+        $escaped_ssh_key = escapeshellarg($ssh_key);
+        $query = self::COMMAND .' set-account --add-ssh-key "'. $escaped_ssh_key .'" '. $user->getLdapId();
+        $this->ssh->execute($server, $query);
+    }
+
+    /**
+     * 
+     * @param Git_RemoteServer_GerritServer $server
+     * @param PFUser $user
+     * @param string $ssh_key
+     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     */
+    public function removeSSHKeyFromAccount(Git_RemoteServer_GerritServer $server, PFUser $user, $ssh_key) {
+        $escaped_ssh_key = escapeshellarg($ssh_key);
+        $query = self::COMMAND .' set-account --delete-ssh-key "'. $escaped_ssh_key .'" '. $user->getLdapId();
+        $this->ssh->execute($server, $query);
     }
 }
 ?>

@@ -149,6 +149,13 @@ foreach ($keys as $key) {
     echo '<li>'.substr($key, 0, 20).'...'.substr($key, -20).'</li>';
 }
 echo '</ol><a href="editsshkeys.php">['.$Language->getText('account_options', 'shell_edit_keys').']</a>';
+
+$key_list_html = '';
+$em->processEvent(Event::LIST_SSH_KEYS, array('user'=>$user, 'html' => &$key_list_html));
+if ($key_list_html !== '') {
+    echo $key_list_html;
+}
+
 echo '</fieldset>';
 
 

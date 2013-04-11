@@ -47,84 +47,92 @@ class GitActionsTest extends TuleapTestCase {
         parent::setUp();
         $GLOBALS['Language']->setReturnValue('getText', 'actions_no_repository_forked', array('plugin_git', 'actions_no_repository_forked', '*'));
         $GLOBALS['Language']->setReturnValue('getText', 'successfully_forked', array('plugin_git', 'successfully_forked', '*'));
+
+        $this->gitAction = partial_mock(
+            'GitActions',
+            array('getText', 'addData', 'getGitRepository', 'save'),
+            array(
+                mock('Git'),
+                mock('Git_SystemEventManager'),
+                mock('GitRepositoryFactory'),
+                mock('GitRepositoryManager'),
+                mock('Git_RemoteServer_GerritServerFactory'),
+                mock('Git_Driver_Gerrit')
+            )
+        );
     }
 
     function testNotificationUpdatePrefixFail() {
-        $gitAction = new GitActionsTestVersion();
-        $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
+        $this->gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setController($git);
+        $this->gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
 
         $git->expectOnce('addError', array('actions_params_error'));
         $git->expectNever('addInfo');
         $gitRepository->expectNever('setMailPrefix');
         $gitRepository->expectNever('changeMailPrefix');
-        $gitAction->expectNever('addData');
+        $this->gitAction->expectNever('addData');
 
-        $this->assertFalse($gitAction->notificationUpdatePrefix(1, null, '[new prefix]', 'a_pane'));
+        $this->assertFalse($this->gitAction->notificationUpdatePrefix(1, null, '[new prefix]', 'a_pane'));
     }
 
     function testNotificationUpdatePrefixPass() {
-        $gitAction = new GitActionsTestVersion();
-        $gitAction->setReturnValue('getText', 'mail_prefix_updated', array('mail_prefix_updated'));
+        $this->gitAction->setReturnValue('getText', 'mail_prefix_updated', array('mail_prefix_updated'));
         $git = new MockGit($this);
-        $gitAction->setController($git);
+        $this->gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
 
         $git->expectNever('addError');
         $git->expectOnce('addInfo', array('mail_prefix_updated'));
         $gitRepository->expectOnce('setMailPrefix');
         $gitRepository->expectOnce('changeMailPrefix');
-        $gitAction->expectCallCount('addData', 2);
+        $this->gitAction->expectCallCount('addData', 2);
 
-        $this->assertTrue($gitAction->notificationUpdatePrefix(1, 1, '[new prefix]', 'a_pane'));
+        $this->assertTrue($this->gitAction->notificationUpdatePrefix(1, 1, '[new prefix]', 'a_pane'));
     }
 
     function testNotificationAddMailFailNoRepoId() {
-        $gitAction = new GitActionsTestVersion();
-        $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
+        $this->gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setController($git);
+        $this->gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
 
         $git->expectOnce('addError', array('actions_params_error'));
         $git->expectNever('addInfo');
 
         $mails = array('john.doe@acme.com');
-        $this->assertFalse($gitAction->notificationAddMail(1, null, $mails, 'a_pane'));
+        $this->assertFalse($this->gitAction->notificationAddMail(1, null, $mails, 'a_pane'));
     }
 
     function testNotificationAddMailFailNoMails() {
-        $gitAction = new GitActionsTestVersion();
-        $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
+        $this->gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setController($git);
+        $this->gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
 
         $git->expectOnce('addError', array('actions_params_error'));
         $git->expectNever('addInfo');
 
-        $this->assertFalse($gitAction->notificationAddMail(1, 1, null, 'a_pane'));
+        $this->assertFalse($this->gitAction->notificationAddMail(1, 1, null, 'a_pane'));
     }
 
     function testNotificationAddMailFailAlreadyNotified() {
-        $gitAction = new GitActionsTestVersion();
-        $gitAction->setReturnValue('getText', 'mail_existing john.doe@acme.com', array('mail_existing', array('john.doe@acme.com')));
-        $gitAction->setReturnValue('getText', 'mail_existing jane.doe@acme.com', array('mail_existing', array('jane.doe@acme.com')));
-        $gitAction->setReturnValue('getText', 'mail_existing john.smith@acme.com', array('mail_existing', array('john.smith@acme.com')));
+        $this->gitAction->setReturnValue('getText', 'mail_existing john.doe@acme.com', array('mail_existing', array('john.doe@acme.com')));
+        $this->gitAction->setReturnValue('getText', 'mail_existing jane.doe@acme.com', array('mail_existing', array('jane.doe@acme.com')));
+        $this->gitAction->setReturnValue('getText', 'mail_existing john.smith@acme.com', array('mail_existing', array('john.smith@acme.com')));
         $git = new MockGit($this);
-        $gitAction->setController($git);
+        $this->gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('isAlreadyNotified', true);
         $gitRepository->setReturnValue('notificationAddMail', false, array('john.doe@acme.com'));
         $gitRepository->setReturnValue('notificationAddMail', false, array('jane.doe@acme.com'));
         $gitRepository->setReturnValue('notificationAddMail', false, array('john.smith@acme.com'));
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
 
         $git->expectNever('addError');
         $git->expectAt(0, 'addInfo', array('mail_existing john.doe@acme.com'));
@@ -135,21 +143,20 @@ class GitActionsTest extends TuleapTestCase {
         $mails = array('john.doe@acme.com',
                        'jane.doe@acme.com',
                        'john.smith@acme.com');
-        $this->assertTrue($gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
+        $this->assertTrue($this->gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
     }
 
     function testNotificationAddMailPartialPass() {
-        $gitAction = new GitActionsTestVersion();
-        $gitAction->setReturnValue('getText', 'mail_not_added john.doe@acme.com', array('mail_not_added', array('john.doe@acme.com')));
-        $gitAction->setReturnValue('getText', 'mail_not_added john.smith@acme.com', array('mail_not_added', array('john.smith@acme.com')));
+        $this->gitAction->setReturnValue('getText', 'mail_not_added john.doe@acme.com', array('mail_not_added', array('john.doe@acme.com')));
+        $this->gitAction->setReturnValue('getText', 'mail_not_added john.smith@acme.com', array('mail_not_added', array('john.smith@acme.com')));
         $git = new MockGit($this);
-        $gitAction->setController($git);
+        $this->gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('isAlreadyNotified', false);
         $gitRepository->setReturnValue('notificationAddMail', false, array('john.doe@acme.com'));
         $gitRepository->setReturnValue('notificationAddMail', true, array('jane.doe@acme.com'));
         $gitRepository->setReturnValue('notificationAddMail', false, array('john.smith@acme.com'));
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
 
         $git->expectAt(0, 'addError', array('mail_not_added john.doe@acme.com'));
         $git->expectAt(1, 'addError', array('mail_not_added john.smith@acme.com'));
@@ -159,20 +166,19 @@ class GitActionsTest extends TuleapTestCase {
         $mails = array('john.doe@acme.com',
                        'jane.doe@acme.com',
                        'john.smith@acme.com');
-        $this->assertTrue($gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
+        $this->assertTrue($this->gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
     }
 
     function testNotificationAddMailPass() {
-        $gitAction = new GitActionsTestVersion();
-        $gitAction->setReturnValue('getText', 'mail_added', array('mail_added'));
+        $this->gitAction->setReturnValue('getText', 'mail_added', array('mail_added'));
         $git = new MockGit($this);
-        $gitAction->setController($git);
+        $this->gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('isAlreadyNotified', false);
         $gitRepository->setReturnValue('notificationAddMail', true, array('john.doe@acme.com'));
         $gitRepository->setReturnValue('notificationAddMail', true, array('jane.doe@acme.com'));
         $gitRepository->setReturnValue('notificationAddMail', true, array('john.smith@acme.com'));
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
 
         $git->expectNever('addError');
         $git->expectOnce('addInfo', array('mail_added'));
@@ -180,83 +186,78 @@ class GitActionsTest extends TuleapTestCase {
         $mails = array('john.doe@acme.com',
                        'jane.doe@acme.com',
                        'john.smith@acme.com');
-        $this->assertTrue($gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
+        $this->assertTrue($this->gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
     }
 
     function testNotificationRemoveMailFailNoRepoId() {
-        $gitAction = new GitActionsTestVersion();
-        $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
+        $this->gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setController($git);
+        $this->gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
 
         $git->expectOnce('addError', array('actions_params_error'));
         $git->expectNever('addInfo');
 
-        $this->assertFalse($gitAction->notificationRemoveMail(1, null, 'john.doe@acme.com', 'a_pane'));
+        $this->assertFalse($this->gitAction->notificationRemoveMail(1, null, 'john.doe@acme.com', 'a_pane'));
     }
 
     function testNotificationRemoveMailFailNoMail() {
-        $gitAction = new GitActionsTestVersion();
-        $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
+        $this->gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setController($git);
+        $this->gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
 
         $git->expectOnce('addError', array('actions_params_error'));
         $git->expectNever('addInfo');
 
-        $this->assertFalse($gitAction->notificationRemoveMail(1, 1, null, 'a_pane'));
+        $this->assertFalse($this->gitAction->notificationRemoveMail(1, 1, null, 'a_pane'));
     }
 
     function testNotificationRemoveMailFailMailNotRemoved() {
-        $gitAction = new GitActionsTestVersion();
-        $gitAction->setReturnValue('getText', 'mail_not_removed john.doe@acme.com', array('mail_not_removed', array('john.doe@acme.com')));
+        $this->gitAction->setReturnValue('getText', 'mail_not_removed john.doe@acme.com', array('mail_not_removed', array('john.doe@acme.com')));
         $git = new MockGit($this);
-        $gitAction->setController($git);
+        $this->gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('notificationRemoveMail', false);
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
 
         $git->expectOnce('addError', array('mail_not_removed john.doe@acme.com'));
         $git->expectNever('addInfo');
 
-        $this->assertFalse($gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com'), 'a_pane'));
+        $this->assertFalse($this->gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com'), 'a_pane'));
     }
 
     function testNotificationRemoveMailFailMailPass() {
-        $gitAction = new GitActionsTestVersion();
-        $gitAction->setReturnValue('getText', 'mail_removed john.doe@acme.com', array('mail_removed', array('john.doe@acme.com')));
+        $this->gitAction->setReturnValue('getText', 'mail_removed john.doe@acme.com', array('mail_removed', array('john.doe@acme.com')));
         $git = new MockGit($this);
-        $gitAction->setController($git);
+        $this->gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('notificationRemoveMail', True);
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
 
         $git->expectNever('addError');
         $git->expectOnce('addInfo', array('mail_removed john.doe@acme.com'));
 
-        $this->assertTrue($gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com'), 'a_pane'));
+        $this->assertTrue($this->gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com'), 'a_pane'));
     }
 
     function testConfirmPrivateFailNoRepoId() {
-        $gitAction = new GitActionsTestVersion();
-        $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
+        $this->gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setController($git);
+        $this->gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
 
         $git->expectOnce('addError', array('actions_params_error'));
         $git->expectNever('addWarn');
         $gitRepository->expectNever('getNonMemberMails');
         $gitRepository->expectNever('setDescription');
         $gitRepository->expectNever('save');
-        $gitAction->expectNever('save');
+        $this->gitAction->expectNever('save');
 
-        $this->assertFalse($gitAction->confirmPrivate(1, null, 'private', 'desc'));
+        $this->assertFalse($this->gitAction->confirmPrivate(1, null, 'private', 'desc'));
     }
 
     function testConfirmPrivateFailNoAccess() {
@@ -428,7 +429,7 @@ class GitActions_Delete_Tests extends TuleapTestCase {
     protected $project_id;
     protected $repository_id;
     protected $repository;
-    protected $system_event_manager;
+    protected $git_system_event_manager;
 
     public function setUp() {
         parent::setUp();
@@ -440,7 +441,7 @@ class GitActions_Delete_Tests extends TuleapTestCase {
         stub($this->repository)->getId()->returns($this->repository_id);
         stub($this->repository)->getProjectId()->returns($this->project_id);
 
-        $this->system_event_manager = mock('SystemEventManager');
+        $this->git_system_event_manager = mock('Git_SystemEventManager');
         $controler                  = stub('Git')->getPlugin()->returns(mock('gitPlugin'));
         $git_repository_factory     = mock('GitRepositoryFactory');
 
@@ -448,7 +449,7 @@ class GitActions_Delete_Tests extends TuleapTestCase {
 
         $this->git_actions = new GitActions(
             $controler,
-            $this->system_event_manager,
+            $this->git_system_event_manager,
             $git_repository_factory,
             mock('GitRepositoryManager'),
             mock('Git_RemoteServer_GerritServerFactory'),
@@ -467,14 +468,9 @@ class GitActions_Delete_Tests extends TuleapTestCase {
     public function itTriggersASystemEventForPhysicalRemove() {
         stub($this->repository)->canBeDeleted()->returns(true);
 
-        $this->system_event_manager->expectOnce(
-            'createEvent',
-            array(
-                'GIT_REPO_DELETE',
-                $this->project_id.SystemEvent::PARAMETER_SEPARATOR.$this->repository_id,
-                '*'
-            )
-        );
+        stub($this->repository)->getBackend()->returns(mock('Git_Backend_Gitolite'));
+
+        expect($this->git_system_event_manager)->queueRepositoryDeletion($this->repository)->once();
 
         $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
     }
@@ -483,7 +479,7 @@ class GitActions_Delete_Tests extends TuleapTestCase {
         stub($this->repository)->canBeDeleted()->returns(false);
 
         $this->repository->expectNever('markAsDeleted');
-        $this->system_event_manager->expectNever('createEvent');
+        expect($this->git_system_event_manager)->queueRepositoryDeletion()->never();
         $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
     }
 }
@@ -496,7 +492,7 @@ class GitActions_ForkTests extends TuleapTestCase {
         $this->manager = mock('GitRepositoryManager');
         $this->actions = new GitActions(
             mock('Git'),
-            mock('SystemEventManager'),
+            mock('Git_SystemEventManager'),
             mock('GitRepositoryFactory'),
             $this->manager,
             mock('Git_RemoteServer_GerritServerFactory'),
@@ -589,8 +585,8 @@ class GitActions_ProjectPrivacyTest extends TuleapTestCase {
 class GitActions_migrateToGerritTest extends TuleapTestCase {
     /** @var GitActions */
     private $actions;
-    /** @var SystemEventManager */
-    private $em;
+    /** @var Git_SystemEventManager */
+    private $git_system_event_manager;
 
     /** @var int */
     private $unexsting_server_id = 666;
@@ -601,7 +597,7 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->manager        = mock('GitRepositoryManager');
-        $this->em             = mock('SystemEventManager');
+        $this->git_system_event_manager             = mock('Git_SystemEventManager');
         $this->gerrit_factory = mock('Git_RemoteServer_GerritServerFactory');
         $server               = mock('Git_RemoteServer_GerritServer');
 
@@ -611,7 +607,7 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
 
         $this->actions = new GitActions(
             mock('Git'),
-            $this->em,
+            $this->git_system_event_manager,
             mock('GitRepositoryFactory'),
             $this->manager,
             $this->gerrit_factory,
@@ -621,13 +617,13 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
 
     public function itDoesNothingWhenGivenServerDoesNotExist() {
         $repo = stub('GitRepository')->canMigrateToGerrit()->returns(true);
-        $this->em->expectNever('createEvent');
+        expect($this->git_system_event_manager)->queueMigrateToGerrit()->never();
         $this->actions->migrateToGerrit($repo, $this->unexsting_server_id);
     }
 
     public function itDoesNothingWhenItIsntMigratable() {
         $repo = stub('GitRepository')->canMigrateToGerrit()->returns(false);
-        $this->em->expectNever('createEvent');
+        expect($this->git_system_event_manager)->queueMigrateToGerrit()->never();
         $this->actions->migrateToGerrit($repo, 0);
     }
 
@@ -636,7 +632,7 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
         $server_id = $this->server_id;
         $repo_id   = 456;
         stub($repo)->getId()->returns($repo_id);
-        $this->em->expectOnce('createEvent', array(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, "$repo_id::$server_id", SystemEvent::PRIORITY_HIGH, SystemEvent::OWNER_APP));
+        expect($this->git_system_event_manager)->queueMigrateToGerrit($repo, $server_id)->once();
         $this->actions->migrateToGerrit($repo, $server_id);
     }
 }
@@ -644,11 +640,12 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
 class GitActions_disconnectFromGerritTest extends TuleapTestCase {
 
     public function itDelegatesToGitoliteBackend() {
+        $system_event_manager = mock('Git_SystemEventManager');
         $backend = mock('Git_Backend_Gitolite');
         $repo    = stub('GitRepository')->getBackend()->returns($backend);
         $actions = new GitActions(
             mock('Git'),
-            mock('SystemEventManager'),
+            $system_event_manager,
             mock('GitRepositoryFactory'),
             mock('GitRepositoryManager'),
             mock('Git_RemoteServer_GerritServerFactory'),
@@ -656,7 +653,7 @@ class GitActions_disconnectFromGerritTest extends TuleapTestCase {
         );
 
         expect($backend)->disconnectFromGerrit()->once();
-
+        expect($system_event_manager)->queueRepositoryUpdate($repo)->once();
         $actions->disconnectFromGerrit($repo);
     }
 }

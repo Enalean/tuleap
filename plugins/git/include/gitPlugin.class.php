@@ -28,10 +28,21 @@ require_once('common/system_event/SystemEvent.class.php');
  * GitPlugin
  */
 class GitPlugin extends Plugin {
+
+    /**
+     *
+     * @var BackendLogger
+     */
+    private $logger;
+
+    /**
+     * @var Git_UserAccountManager
+     */
+    private $user_account_manager;
     
     /**
      * Service short_name as it appears in 'service' table
-     * 
+     *
      * Should be transfered in 'ServiceGit' class when we introduce it
      */
     const SERVICE_SHORTNAME = 'plugin_git';
@@ -58,7 +69,9 @@ class GitPlugin extends Plugin {
 
         $this->_addHook('project_admin_remove_user',                       'projectRemoveUserFromNotification',            false);
 
+        $this->_addHook(Event::LIST_SSH_KEYS,                              'getRemoteServersForUser',                      false);
         $this->_addHook(Event::DUMP_SSH_KEYS,                              'dump_ssh_keys',                                false);
+        $this->_addHook(Event::DUMP_SSH_KEYS,                              'propagateUserKeysToGerrit',                        false);
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES,                     'system_event_get_types',                       false);
         $this->_addHook(Event::PROCCESS_SYSTEM_CHECK);
 
@@ -138,29 +151,49 @@ class GitPlugin extends Plugin {
         include $GLOBALS['Language']->getContent('script_locale', null, 'git');
     }
 
+    public function system_event_get_types($params) {
+        $params['types'] = array_merge($params['types'], $this->getGitSystemEventManager()->getTypes());
+    }
+
     /**
      *This callback make SystemEvent manager knows about git plugin System Events
      * @param <type> $params
      */
     public function getSystemEventClass($params) {
         switch($params['type']) {
-            case 'GIT_REPO_CREATE' :
-                $params['class'] = 'SystemEvent_GIT_REPO_CREATE';
+            case SystemEvent_GIT_REPO_UPDATE::NAME:
+                $params['class'] = 'SystemEvent_GIT_REPO_UPDATE';
+                $params['dependencies'] = array(
+                    $this->getRepositoryFactory()
+                );
                 break;
-            case 'GIT_REPO_DELETE' :
+            case SystemEvent_GIT_REPO_DELETE::NAME:
                 $params['class'] = 'SystemEvent_GIT_REPO_DELETE';
                 break;
-            case 'GIT_REPO_ACCESS':
+            case SystemEvent_GIT_REPO_ACCESS::NAME:
                 $params['class'] = 'SystemEvent_GIT_REPO_ACCESS';
                 break;
-            case 'GIT_GERRIT_MIGRATION':
+            case SystemEvent_GIT_GERRIT_MIGRATION::NAME:
                 $params['class'] = 'SystemEvent_GIT_GERRIT_MIGRATION';
                 $params['dependencies'] = array(
                     $this->getGitDao(),
                     $this->getRepositoryFactory(),
                     $this->getGerritServerFactory(),
-                    new BackendLogger(),
+                    $this->getLogger(),
                     $this->getProjectCreator(),
+                );
+                break;
+            case SystemEvent_GIT_REPO_FORK::NAME:
+                $params['class'] = 'SystemEvent_GIT_REPO_FORK';
+                $params['dependencies'] = array(
+                    $this->getRepositoryFactory()
+                );
+                break;
+            case SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME:
+                $params['class'] = 'SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP';
+                $params['dependencies'] = array(
+                    $this->getGerritServerFactory(),
+                    $this->getGitoliteSSHKeyDumper(),
                 );
                 break;
             default:
@@ -194,14 +227,14 @@ class GitPlugin extends Plugin {
     }
 
     public function process() {
-        $controler = new Git($this, $this->getGerritServerFactory(), $this->getGerritDriver());
-        $controler->process();
+        $this->getGitController()->process();
     }
 
     /**
      * We expect that the check fo access right to this method has already been done by the caller
      */
     public function processAdmin(Codendi_Request $request) {
+        require_once 'common/include/CSRFSynchronizerToken.class.php';
         $admin = new Git_Admin($this->getGerritServerFactory(), new CSRFSynchronizerToken('/plugin/git/admin/'));
         $admin->process($request);
         $admin->display();
@@ -292,7 +325,155 @@ class GitPlugin extends Plugin {
             return false;
         }
     }
-    
+
+    /**
+     * Method called as a hook.
+     *
+     * @param array $params Should contain two entries:
+     *     'user' => PFUser,
+     *     'original_keys' => string of concatenated ssh keys
+     * 
+     * @return void
+     */
+    public function propagateUserKeysToGerrit($params) {
+        if (! $user = $this->getUserFromParameters($params)) {
+            return;
+        }
+
+        $user                     = $params['user'];
+        $git_user_account_manager = $this->getUserAccountManager();
+        $new_keys                 = $user->getAuthorizedKeysArray();
+        $original_keys            = array();
+
+        if (isset($params['original_keys']) && is_string($params['original_keys'])) {
+            $original_keys = $this->getKeysFromString($params['original_keys']);
+        }
+
+        try {
+            $git_user_account_manager->synchroniseSSHKeys(
+                $original_keys,
+                $new_keys,
+                $user
+            );
+        } catch (Git_UserSynchronisationException $e) {
+            $this->getLogger()->error('Unable to propagate ssh keys for user: ' . $user->getUnixName() . '. Error:' . $e->getTraceAsString());
+        }
+    }
+
+    private function getKeysFromString($keys_as_string) {
+        $user = new PFUser();
+        $user->setAuthorizedKeys($keys_as_string);
+
+        return array_filter($user->getAuthorizedKeysArray());
+    }
+
+    /**
+     *
+     * @param PFUser $user
+     * @return \Git_UserAccountManager
+     */
+    private function getUserAccountManager() {
+        if (! $this->user_account_manager) {
+            $this->user_account_manager = new Git_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory());
+        }
+
+        return $this->user_account_manager;
+    }
+
+    /**
+     *
+     * @param Git_UserAccountManager $manager
+     */
+    public function setUserAccountManager(Git_UserAccountManager $manager) {
+        $this->user_account_manager = $manager;
+    }
+
+    /**
+     * Method called as a hook.
+     *
+     * @param array $params Should contain two entries:
+     *     'user' => PFUser,
+     *     'html' => string An emty string of html output- passed by reference
+     */
+    public function getRemoteServersForUser(array $params) {
+        if (! $user = $this->getUserFromParameters($params)) {
+            return;
+        }
+
+        if (! isset($params['html']) || ! is_string($params['html'])) {
+            return;
+        }
+        $html = $params['html'];
+
+        $remote_servers = $this->getGerritServerFactory()->getRemoteServersForUser($user);
+
+        if (count($remote_servers) > 0) {
+            $html = '<br />
+                <br />
+                <hr />
+                <br />'.
+                $GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_info').
+                '<ul>';
+
+            foreach ($remote_servers as $server) {
+                $html .= '<li>
+                        <a href="'.$server->getHost().':'.$server->getHTTPPort().'/#/settings/ssh-keys">'.
+                            $server->getHost().'
+                        </a>
+                    </li>';
+            }
+
+            $html .= '</ul>
+                <form action="" method="post">
+                    <input type="submit"
+                        title="'.$GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_button_title').'"
+                        value="'.$GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_button_value').'"
+                        name="ssh_key_push"/>
+                </form>';
+        }
+
+        if (isset($_POST['ssh_key_push'])) {
+            $this->pushUserSSHKeysToRemoteServers($user);
+            $GLOBALS['Response']->displayFeedback();
+        }
+
+        $params['html'] = $html;
+    }
+
+    /**
+     * Method called as a hook.
+
+     * Copies all SSH Keys to Remote Git Servers
+     * @param PFUser $user
+     */
+    private function pushUserSSHKeysToRemoteServers(PFUser $user) {
+        $this->getLogger()->info('Trying to push ssh keys for user: '.$user->getUnixName());
+        $git_user_account_manager = $this->getUserAccountManager();
+
+        try {
+            $git_user_account_manager->pushSSHKeys(
+                $user
+            );
+        } catch (Git_UserSynchronisationException $e) {
+            $message = $GLOBALS['Language']->getText('plugin_git','push_ssh_keys_error');
+            $GLOBALS['Response']->addFeedback('error', $message);
+
+            $this->getLogger()->error('Unable to push ssh keys: ' . $e->getMessage());
+            return;
+        }
+
+        $this->getLogger()->info('Successfully pushed ssh keys for user: '.$user->getUnixName());
+    }
+
+    private function getUserFromParameters($params) {
+        if (! isset($params['user']) || ! $params['user'] instanceof PFUser) {
+            $this->getLogger()->error('Invalid user passed in params: ' . print_r($params, true));
+            return false;
+        }
+
+        return $params['user'];
+    }
+
     function permission_get_name($params) {
         if (!$params['name']) {
             switch($params['permission_type']) {
@@ -381,13 +562,6 @@ class GitPlugin extends Plugin {
         }
     }
     
-    public function system_event_get_types($params) {
-        $params['types'][] = 'GIT_REPO_ACCESS';
-        $params['types'][] = 'GIT_REPO_CREATE';
-        $params['types'][] = 'GIT_REPO_DELETE';
-        $params['types'][] = 'GIT_GERRIT_MIGRATION';
-    }
-
     public function proccess_system_check($params) {
         $gitolite_driver = new Git_GitoliteDriver();
         $gitolite_driver->checkAuthorizedKeys();
@@ -408,35 +582,6 @@ class GitPlugin extends Plugin {
                 $repository_manager->deleteProjectRepositories($project);
             }
         }
-    }
-
-    private function getRepositoryManager() {
-        return new GitRepositoryManager($this->getRepositoryFactory(), SystemEventManager::instance());
-    }
-
-    private function getRepositoryFactory() {
-        return new GitRepositoryFactory($this->getGitDao(), ProjectManager::instance());
-    }
-
-    private function getGitDao() {
-        return new GitDao();
-    }
-
-    private function getGerritDriver() {
-        return new Git_Driver_Gerrit(
-            new Git_Driver_Gerrit_RemoteSSHCommand(new BackendLogger()),
-            new BackendLogger()
-        );
-    }
-
-    private function getGerritServerFactory() {
-
-        $gitolite_admin_path = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
-        $gitExec = new Git_Exec($gitolite_admin_path);
-
-        $replication_key_factory = new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory($gitExec);
-
-        return new Git_RemoteServer_GerritServerFactory(new Git_RemoteServer_Dao(), $this->getGitDao(), $replication_key_factory);
     }
 
     /**
@@ -554,7 +699,7 @@ class GitPlugin extends Plugin {
         $pm      = ProjectManager::instance();
         $project = $pm->getProject($params['group_id']);
         if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
-            $controler = new Git($this, $this->getGerritServerFactory(), $this->getGerritDriver());
+            $controler = $this->getGitController();
             $controler->logsDaily($params);
         }
     }
@@ -662,6 +807,7 @@ class GitPlugin extends Plugin {
         return UserManager::instance()->getUserById($params['user_id']);
     }
 
+
     private function getUGroupFromParams(array $params) {
         if (isset($params['ugroup'])) {
             return $params['ugroup'];
@@ -671,7 +817,6 @@ class GitPlugin extends Plugin {
             return $ugroup_manager->getUGroup($project, $params['ugroup_id']);
         }
     }
-
 
     /**
      * List plugin's widgets in customize menu
@@ -711,8 +856,63 @@ class GitPlugin extends Plugin {
         return new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), new UGroupManager());
     }
 
+    private function getGitController() {
+        return new Git(
+            $this,
+            $this->getGerritServerFactory(),
+            $this->getGerritDriver(),
+            $this->getRepositoryManager(),
+            $this->getGitSystemEventManager()
+        );
+    }
+
+    private function getGitSystemEventManager() {
+        return new Git_SystemEventManager(SystemEventManager::instance());
+    }
+
+    private function getRepositoryManager() {
+        return new GitRepositoryManager(
+            $this->getRepositoryFactory(),
+            $this->getGitSystemEventManager(),
+            $this->getGitDao()
+        );
+    }
+
+    private function getRepositoryFactory() {
+        return new GitRepositoryFactory($this->getGitDao(), ProjectManager::instance());
+    }
+
+    private function getGitDao() {
+        return new GitDao();
+    }
+
+    private function getGerritDriver() {
+        return new Git_Driver_Gerrit(
+            new Git_Driver_Gerrit_RemoteSSHCommand(new BackendLogger()),
+            new BackendLogger()
+        );
+    }
+
+    /**
+     *
+     * @return BackendLogger
+     */
+    private function getLogger() {
+        if (!$this->logger) {
+            $this->logger = new BackendLogger();
+        }
+        return $this->logger;
+    }
+
+    /**
+     *
+     * @param BackendLogger $logger
+     */
+    public function setLogger(BackendLogger $logger) {
+        $this->logger = $logger;
+    }
+
     private function getGerritMembershipManager() {
-        require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipManager.class.php';
         return new Git_Driver_Gerrit_MembershipManager(
             new Git_Driver_Gerrit_MembershipDao(),
             $this->getGerritDriver(),
@@ -721,6 +921,21 @@ class GitPlugin extends Plugin {
         );
     }
 
+    protected function getGerritServerFactory() {
+        return new Git_RemoteServer_GerritServerFactory(
+            new Git_RemoteServer_Dao(),
+            $this->getGitDao(),
+            $this->getGitSystemEventManager()
+        );
+    }
+
+    private function getGitoliteSSHKeyDumper() {
+        $gitolite_admin_path = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
+        return new Git_Gitolite_SSHKeyDumper(
+            $gitolite_admin_path,
+            new Git_Exec($gitolite_admin_path)
+        );
+    }
 }
 
 ?>
