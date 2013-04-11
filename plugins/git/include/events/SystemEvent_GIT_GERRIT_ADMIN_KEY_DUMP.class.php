@@ -39,12 +39,16 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent {
         return intval($this->getParameter(0));
     }
 
-    public function process() {
+    private function getServer() {
         try {
-            $server = $this->gerrit_server_factory->getServerById($this->getServerId());
+            return $this->gerrit_server_factory->getServerById($this->getServerId());
         } catch (Git_RemoteServer_NotFoundException $e) {
-            $server = new Git_RemoteServer_GerritServer($this->getServerId(), '',  '', '', '',  '', '');
+            return new Git_RemoteServer_GerritServer($this->getServerId(), '',  '', '', '',  '', '');
         }
+    }
+
+    public function process() {
+        $server = $this->getServer();
         if ($server) {
             $replication_key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
             $replication_key
@@ -53,15 +57,20 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent {
             if ($this->ssh_key_dumper->dumpSSHKeys($replication_key)) {
                 $this->done();
             } else {
-                $this->error('Impossible to dump replication ssh key for Gerrit server '.$this->getServerId());
+                $this->error('Impossible to dump replication ssh key for Gerrit server '.$server->getId());
             }
         } else {
-            $this->error('No valid Gerrit server found corresponding to id '.$this->getServerId());
+            $this->error('No valid Gerrit server found corresponding to id '.$server->getId());
         }
     }
 
     public function verbalizeParameters($with_link) {
-
+        if ($with_link) {
+            $server = $this->getServer();
+            return 'Update SSH replication key of gerrit server '.$server->getHost().' (Id: '.$server->getId().')';
+        } else {
+            return $this->getServerId();
+        }
     }
 }
 
