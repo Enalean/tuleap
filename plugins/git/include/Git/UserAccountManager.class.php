@@ -23,18 +23,17 @@
  */
 class Git_UserAccountManager {
 
-    /** @var PFUser */
-    private $user;
-
     /** @var Git_Driver_Gerrit */
     private $gerrit_driver;
 
     /** @var Git_Driver_Gerrit_UserAccountManager */
     private $gerrit_user_account_manager;
+    
+    private $gerrit_server_factory;
 
-    public function __construct(PFUser $user, Git_Driver_Gerrit $driver) {
-        $this->user = $user;
+    public function __construct(Git_Driver_Gerrit $driver, Git_RemoteServer_GerritServerFactory $factory) {
         $this->gerrit_driver = $driver;
+        $this->gerrit_server_factory = $factory;
     }
 
     /**
@@ -43,18 +42,16 @@ class Git_UserAccountManager {
      * @param array $new_keys
      * @throws Git_UserSynchronisationException
      */
-    public function synchroniseSSHKeys(array $original_keys, array $new_keys, Git_RemoteServer_GerritServerFactory $factory) {
-        if ($this->getGerritUserAccountManager()) {
-            $this->synchroniseSSHKeysWithGerrit($original_keys, $new_keys, $factory);
-        } 
+    public function synchroniseSSHKeys(array $original_keys, array $new_keys, PFUser $user) {
+        $this->synchroniseSSHKeysWithGerrit($original_keys, $new_keys, $user);
     }
 
-    private function synchroniseSSHKeysWithGerrit($original_keys, $new_keys, $factory) {
+    private function synchroniseSSHKeysWithGerrit($original_keys, $new_keys, $user) {
         $this->getGerritUserAccountManager()
             ->synchroniseSSHKeys(
                 $original_keys,
                 $new_keys,
-                $factory
+                $user
             );
     }
 
@@ -64,30 +61,24 @@ class Git_UserAccountManager {
      * @return void
      * @throws Git_UserSynchronisationException
      */
-    public function pushSSHKeys(Git_RemoteServer_GerritServerFactory $factory) {
-        if (! $this->getGerritUserAccountManager()) {
-            return;
-        }
-
-        $this->pushSSHKeysToGerrit($factory);
+    public function pushSSHKeys(Git_RemoteServer_GerritServerFactory $user) {
+        $this->pushSSHKeysToGerrit($user);
     }
 
-    private function pushSSHKeysToGerrit($factory) {
-        $this->getGerritUserAccountManager()->pushSSHKeys($factory);
+    private function pushSSHKeysToGerrit($user) {
+        $this->getGerritUserAccountManager()->pushSSHKeys($user);
     }
 
     /**
      *
-     * @return Git_Driver_Gerrit_UserAccountManager | false
+     * @return Git_Driver_Gerrit_UserAccountManager
      */
     public function getGerritUserAccountManager() {
         if (! $this->gerrit_user_account_manager) {
-            try {
-                $this->gerrit_user_account_manager = new Git_Driver_Gerrit_UserAccountManager($this->user, $this->gerrit_driver);
-            } catch (Git_Driver_Gerrit_InvalidLDAPUserException $e) {
-                //not a gerrit user
-                return false;
-            }
+            $this->gerrit_user_account_manager = new Git_Driver_Gerrit_UserAccountManager(
+                $this->gerrit_driver,
+                $this->gerrit_server_factory
+            );
         }
 
         return $this->gerrit_user_account_manager;

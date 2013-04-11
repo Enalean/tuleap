@@ -43,7 +43,7 @@ class Git_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase {
         $this->remote_gerrit_factory = mock('Git_RemoteServer_GerritServerFactory');
         $this->gerrit_user_account_manager  = mock('Git_Driver_Gerrit_UserAccountManager');
 
-        $this->user_account_manager = new Git_UserAccountManager($this->user, $this->gerrit_driver);
+        $this->user_account_manager = new Git_UserAccountManager($this->gerrit_driver, $this->remote_gerrit_factory);
         $this->user_account_manager->setGerritUserAccountManager($this->gerrit_user_account_manager);
 
         $this->original_keys = array(
@@ -62,22 +62,6 @@ class Git_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase {
         );
     }
 
-    public function itDoesNotSynchroniseKeysWithGerritIfUserIsNotLDAP() {
-        $user = mock('PFUser');
-        $gerrit_driver = mock('Git_Driver_Gerrit');
-        $user_account_manager = new Git_UserAccountManager($user, $gerrit_driver);
-        
-        stub($user)->isLDAP()->returns(false);
-
-        expect($this->gerrit_user_account_manager)->synchroniseSSHKeys()->never();
-        
-        $user_account_manager->synchroniseSSHKeys(
-            $this->original_keys,
-            $this->new_keys,
-            $this->remote_gerrit_factory
-        );
-    }
-
     public function itThrowsAnExceptionIfGerritSynchFails() {
         expect($this->gerrit_user_account_manager)->synchroniseSSHKeys()->once();
 
@@ -88,7 +72,7 @@ class Git_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase {
         $this->user_account_manager->synchroniseSSHKeys(
             $this->original_keys,
             $this->new_keys,
-            $this->remote_gerrit_factory
+            $this->user
         );
     }
 }
@@ -111,27 +95,13 @@ class Git_UserAccountManager_PushSSHKeysTest extends TuleapTestCase {
         parent::setUp();
 
         $this->user = aUser()->withLdapId("testUser")->build();
-        $key1 = 'key1';
-        $key2 = 'key2';
-
-        $this->user->setAuthorizedKeys($key1.PFUser::SSH_KEY_SEPARATOR.$key2);
 
         $this->gerrit_driver                = mock('Git_Driver_Gerrit');
         $this->remote_gerrit_factory        = mock('Git_RemoteServer_GerritServerFactory');
-        $this->user_account_manager         = new Git_UserAccountManager($this->user, $this->gerrit_driver);
+        $this->user_account_manager         = new Git_UserAccountManager($this->gerrit_driver, $this->remote_gerrit_factory);
         $this->gerrit_user_account_manager  = mock('Git_Driver_Gerrit_UserAccountManager');
 
         $this->user_account_manager->setGerritUserAccountManager($this->gerrit_user_account_manager);
-    }
-
-    public function itDoesNotPushSSHKeysToGerritForNonLdapUser() {
-        $user = mock('PFUser');
-        stub($user)->isLDAP()->returns(false);
-
-        expect($this->gerrit_user_account_manager)->pushSSHKeys()->never();
-
-        $user_account_manager = new Git_UserAccountManager($user, $this->gerrit_driver);
-        $user_account_manager->pushSSHKeys($this->remote_gerrit_factory);
     }
 
     public function itThrowsAnExceptionIfGerritPushFails() {
@@ -142,7 +112,7 @@ class Git_UserAccountManager_PushSSHKeysTest extends TuleapTestCase {
         $this->expectException('Git_UserSynchronisationException');
 
         $this->user_account_manager->pushSSHKeys(
-            $this->remote_gerrit_factory
+            $this->user
         );
     }
 }
