@@ -59,6 +59,8 @@ class GitPlugin extends Plugin {
 
         $this->_addHook('project_admin_remove_user',                       'projectRemoveUserFromNotification',            false);
 
+        $this->_addHook(Event::PUSH_SSH_KEYS,                              'pushSSHKeysToRemoteServers',                      false);
+        $this->_addHook(Event::LIST_SSH_KEYS,                              'getRemoteServersForUser',                      false);
         $this->_addHook(Event::DUMP_SSH_KEYS,                              'dump_ssh_keys',                                false);
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES,                     'system_event_get_types',                       false);
         $this->_addHook(Event::PROCCESS_SYSTEM_CHECK);
@@ -320,29 +322,44 @@ class GitPlugin extends Plugin {
     }
 
     /**
+     * Method called as a hook.
      *
-     * @param PFUser $user
-     * @return string JSON array of server host names
+     * @param array $params Should contain two entries:
+     *     'user' => PFUser,
+     *     'servers' => array $server_array_to_populate An empty array passed by reference
      */
-    public function getRemoteServersForUser(PFUser $user) {
-        $servers = array();
+    public function getRemoteServersForUser(array $params) {
+        if (! isset($params['user']) || ! $params['user'] instanceof PFUser) {
+            return;
+        }
+        $user = $params['user'];
+
+        if (! isset($params['servers']) || ! is_array($params['servers'])) {
+            return;
+        }
+
         foreach ($this->getGerritServerFactory()->getRemoteServersForUser($user) as $server) {
-            $servers[] = array(
+            $params['servers'][] = array(
                 'host_name' => $server->getHost(),
                 'id'        => $server->getId(),
                 'host'      => $server->getHost(),
                 'port'      => $server->getHTTPPort(),
             );
         }
-
-        return json_encode($servers);
     }
 
     /**
+     * Method called as a hook.
+
      * Copies all SSH Keys to Remote Git Servers
-     * @param PFUser $user
+     * @param array $params Should contain one entry 'user' => PFUser
      */
-    public function pushSSHKeysToRemoteServers(PFUser $user) {
+    public function pushSSHKeysToRemoteServers(array $params) {
+        if (! isset($params['user']) || ! $params['user'] instanceof PFUser) {
+            return;
+        }
+        $user = $params['user'];
+
         $logger = new BackendLogger();
 
         $gerrit_driver = $this->getGerritDriver();

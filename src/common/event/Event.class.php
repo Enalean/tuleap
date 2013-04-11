@@ -46,6 +46,25 @@ class Event {
     const DUMP_SSH_KEYS = 'dump_ssh_keys';
 
     /**
+     * The user is accessing a list of their keys
+     *
+     * Parameters:
+     *   'user' => PFUser
+     *   'servers' => array An array of remote servers to be populated- passed by reference
+     */
+    const LIST_SSH_KEYS = 'view_ssh_keys';
+
+    /**
+     * The user is pushing their keys to remote servers by hand
+     *
+     * Parameters:
+     *   'user' => PFUser
+     */
+    const PUSH_SSH_KEYS = 'push_ssh_keys';
+
+
+
+    /**
      * The user has just changed his email address.
      * 
      * Parameters:

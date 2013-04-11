@@ -151,41 +151,35 @@ foreach ($keys as $key) {
 echo '</ol><a href="editsshkeys.php">['.$Language->getText('account_options', 'shell_edit_keys').']</a>';
 
 
-//get plugin manager
-require_once('common/plugin/PluginManager.class.php');
-$plugin_manager =& PluginManager::instance();
-$git_plugin =& $plugin_manager->getPluginByName('git');
+$remote_servers = array();
+$em->processEvent(Event::LIST_SSH_KEYS, array('user'=>$user, 'servers'=>&$remote_servers));
+if ($remote_servers) {
+    echo'<br />
+        <br />
+        <hr />
+        <br />'.
+        $GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_info').
+        '<ul>';
 
-if ($git_plugin && $plugin_manager->isPluginAvailable($git_plugin)) {
-    $remote_servers = json_decode($git_plugin->getRemoteServersForUser($user));
-    if ($remote_servers) {
-        echo'<br />
-            <br />
-            <hr />
-            <br />'.
-            $GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_info').
-            '<ul>';
-
-        foreach ($remote_servers as $remote_server) {
-            echo '<li>
-                    <a href="'.$remote_server->host.':'.$remote_server->port.'/#/settings/ssh-keys">'.
-                        $remote_server->host_name.'
-                    </a>
-                </li>';
-        }
-        echo '</ul>
-            <form action="" method="post">
-                <input type="submit"
-                    title="'.$GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_button_title').'"
-                    value="'.$GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_button_value').'"
-                    name="ssh_key_push"/>
-            </form>';
+    foreach ($remote_servers as $remote_server) {
+        echo '<li>
+                <a href="'.$remote_server['host'].':'.$remote_server['port'].'/#/settings/ssh-keys">'.
+                    $remote_server['host_name'].'
+                </a>
+            </li>';
     }
+    echo '</ul>
+        <form action="" method="post">
+            <input type="submit"
+                title="'.$GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_button_title').'"
+                value="'.$GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_button_value').'"
+                name="ssh_key_push"/>
+        </form>';
+}
 
-    if (isset($_POST['ssh_key_push'])) {
-        $git_plugin->pushSSHKeysToRemoteServers($user);
-        $GLOBALS['Response']->displayFeedback();
-    }
+if (isset($_POST['ssh_key_push'])) {
+    $em->processEvent(Event::PUSH_SSH_KEYS, array('user'=>$user));
+    $GLOBALS['Response']->displayFeedback();
 }
 echo '</fieldset>';
 
