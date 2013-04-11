@@ -20,12 +20,14 @@
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
+require_once 'common/include/CSRFSynchronizerToken.class.php';
+
 class Git_Admin_process_Test extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
         $this->request = aRequest()->build();
-        $this->csrf    = $this->setUpCSRF();
+        $this->csrf    = mock('CSRFSynchronizerToken');
         $this->factory = mock('Git_RemoteServer_GerritServerFactory');
         $this->admin   = new Git_Admin($this->factory, $this->csrf);
 
@@ -53,34 +55,27 @@ class Git_Admin_process_Test extends TuleapTestCase {
         $this->request->set($this->csrf->getTokenName(), $this->csrf->getToken());
     }
 
-    /**
-     * @return CSRFSynchronizerToken
-     */
-    private function setUpCSRF() {
-        $user = mock('PFUser');
-        $csrf = TestHelper::getPartialMock('CSRFSynchronizerToken', array('getUser'));
-        stub($csrf)->getUser()->returns($user);
-        $csrf->__construct('/plugin/git/admin/');
-        return $csrf;
-    }
-
     public function itDoesNotSaveAnythingIfTheRequestIsNotValid() {
         $this->request->set('gerrit_servers', false);
         expect($this->factory)->save()->never();
         $this->admin->process($this->request);
     }
 
-    public function itGivesUpIfTheRequestIsForged() {
+    public function itCheckWithCSRFIfTheRequestIsForged() {
         $this->request->set('gerrit_servers', array(0 => $this->request_new_server));
-        $this->request->set($this->csrf->getTokenName(), 'a-F0rG3d-7ok3N');
-        stub($GLOBALS['Response'])->addFeedback('error', '*')->once();
-        stub($GLOBALS['Response'])->redirect('/plugin/git/admin/')->once();
+        expect($this->csrf)->check()->once();
         $this->admin->process($this->request);
     }
 
     public function itSavesNewGerritServer() {
         $this->request->set('gerrit_servers', array(0 => $this->request_new_server));
         expect($this->factory)->save($this->a_brand_new_server)->once();
+        $this->admin->process($this->request);
+    }
+
+    public function itRedirectsAfterSave() {
+        $this->request->set('gerrit_servers', array(0 => $this->request_new_server));
+        expect($GLOBALS['Response'])->redirect()->once();
         $this->admin->process($this->request);
     }
 

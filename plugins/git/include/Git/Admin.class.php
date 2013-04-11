@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 /**
  * This handles site admin part of Git
@@ -43,6 +44,7 @@ class Git_Admin {
             $this->csrf->check();
             $this->fetchGerritServers();
             $this->updateServers($request_gerrit_servers);
+            $GLOBALS['Response']->redirect('/plugins/git/admin/');
         }
     }
 
