@@ -34,7 +34,10 @@ class Git_Gitolite_SSHKeyMassDumper {
 
     public function dumpSSHKeys() {
         $this->dumpAllKeys();
-        return $this->dumper->commitKeyDir('SystemEvent update all user keys');
+        if ($this->dumper->commitKeyDir('SystemEvent update all user keys')) {
+            return $this->dumper->getGitExec()->push();
+        }
+        return false;
     }
 
     private function dumpAllKeys() {

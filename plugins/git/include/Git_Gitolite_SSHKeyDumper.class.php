@@ -57,7 +57,10 @@ class Git_Gitolite_SSHKeyDumper {
      */
     public function dumpSSHKeys(IHaveAnSSHKey $user) {
         $this->dumpSSHKeysWithoutCommit($user);
-        return $this->commitKeyDir('Update '.$user->getUserName().' SSH keys');
+        if ($this->commitKeyDir('Update '.$user->getUserName().' SSH keys')) {
+            return $this->git_exec->push();
+        }
+        return false;
     }
 
     /**
