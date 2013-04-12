@@ -65,7 +65,6 @@ class GitPlugin extends Plugin {
 
         $this->_addHook('project_admin_remove_user',                       'projectRemoveUserFromNotification',            false);
 
-        $this->_addHook(Event::PUSH_SSH_KEYS,                              'pushUserSSHKeysToRemoteServers',                   false);
         $this->_addHook(Event::LIST_SSH_KEYS,                              'getRemoteServersForUser',                      false);
         $this->_addHook(Event::DUMP_SSH_KEYS,                              'dump_ssh_keys',                                false);
         $this->_addHook(Event::DUMP_SSH_KEYS,                              'propagateUserKeysToGerrit',                        false);
@@ -358,38 +357,60 @@ class GitPlugin extends Plugin {
      *
      * @param array $params Should contain two entries:
      *     'user' => PFUser,
-     *     'servers' => array $server_array_to_populate An empty array passed by reference
+     *     'html' => string An emty string of html output- passed by reference
      */
     public function getRemoteServersForUser(array $params) {
         if (! $user = $this->getUserFromParameters($params)) {
             return;
         }
 
-        if (! isset($params['servers']) || ! is_array($params['servers'])) {
+        if (! isset($params['html']) || ! is_string($params['html'])) {
             return;
         }
+        $html = $params['html'];
 
-        foreach ($this->getGerritServerFactory()->getRemoteServersForUser($user) as $server) {
-            $params['servers'][] = array(
-                'host_name' => $server->getHost(),
-                'id'        => $server->getId(),
-                'host'      => $server->getHost(),
-                'port'      => $server->getHTTPPort(),
-            );
+        $remote_servers = $this->getGerritServerFactory()->getRemoteServersForUser($user);
+
+        if ($remote_servers) {
+            $html = '<br />
+                <br />
+                <hr />
+                <br />'.
+                $GLOBALS['Language']->getText('account_options', 'push_ssh_keys_info').
+                '<ul>';
+
+            foreach ($remote_servers as $server) {
+                $html .= '<li>
+                        <a href="'.$server->getHost().':'.$server->getHTTPPort().'/#/settings/ssh-keys">'.
+                            $server->getHost().'
+                        </a>
+                    </li>';
+            }
+            
+            $html .= '</ul>
+                <form action="" method="post">
+                    <input type="submit"
+                        title="'.$GLOBALS['Language']->getText('account_options', 'push_ssh_keys_button_title').'"
+                        value="'.$GLOBALS['Language']->getText('account_options', 'push_ssh_keys_button_value').'"
+                        name="ssh_key_push"/>
+                </form>';
         }
+        
+        if (isset($_POST['ssh_key_push'])) {
+            $this->pushUserSSHKeysToRemoteServers($user);
+            $GLOBALS['Response']->displayFeedback();
+        }
+        
+        $params['html'] = $html;
     }
 
     /**
      * Method called as a hook.
 
      * Copies all SSH Keys to Remote Git Servers
-     * @param array $params Should contain one entry 'user' => PFUser
+     * @param PFUser $user
      */
-    public function pushUserSSHKeysToRemoteServers(array $params) {
-        if (! $user = $this->getUserFromParameters($params)) {
-            return;
-        }
-
+    private function pushUserSSHKeysToRemoteServers(PFUser $user) {
         $this->getLogger()->info('Trying to push ssh keys for user: '.$user->getUnixName());
         $git_user_account_manager = $this->getUserAccountManager();
 

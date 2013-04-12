@@ -150,37 +150,12 @@ foreach ($keys as $key) {
 }
 echo '</ol><a href="editsshkeys.php">['.$Language->getText('account_options', 'shell_edit_keys').']</a>';
 
-
-$remote_servers = array();
-$em->processEvent(Event::LIST_SSH_KEYS, array('user'=>$user, 'servers'=>&$remote_servers));
-if ($remote_servers) {
-    echo'<br />
-        <br />
-        <hr />
-        <br />'.
-        $GLOBALS['Language']->getText('account_options', 'push_ssh_keys_info').
-        '<ul>';
-
-    foreach ($remote_servers as $remote_server) {
-        echo '<li>
-                <a href="'.$remote_server['host'].':'.$remote_server['port'].'/#/settings/ssh-keys">'.
-                    $remote_server['host_name'].'
-                </a>
-            </li>';
-    }
-    echo '</ul>
-        <form action="" method="post">
-            <input type="submit"
-                title="'.$GLOBALS['Language']->getText('account_options', 'push_ssh_keys_button_title').'"
-                value="'.$GLOBALS['Language']->getText('account_options', 'push_ssh_keys_button_value').'"
-                name="ssh_key_push"/>
-        </form>';
+$key_list_html = '';
+$em->processEvent(Event::LIST_SSH_KEYS, array('user'=>$user, 'html' => &$key_list_html));
+if ($key_list_html !== '') {
+    echo $key_list_html;
 }
 
-if (isset($_POST['ssh_key_push'])) {
-    $em->processEvent(Event::PUSH_SSH_KEYS, array('user'=>$user));
-    $GLOBALS['Response']->displayFeedback();
-}
 echo '</fieldset>';
 
 

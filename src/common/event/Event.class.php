@@ -50,19 +50,9 @@ class Event {
      *
      * Parameters:
      *   'user' => PFUser
-     *   'servers' => array An array of remote servers to be populated- passed by reference
+     *   'html' => string An emty string of html output- passed by reference
      */
     const LIST_SSH_KEYS = 'view_ssh_keys';
-
-    /**
-     * The user is pushing their keys to remote servers by hand
-     *
-     * Parameters:
-     *   'user' => PFUser
-     */
-    const PUSH_SSH_KEYS = 'push_ssh_keys';
-
-
 
     /**
      * The user has just changed his email address.
