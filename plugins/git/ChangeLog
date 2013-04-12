@@ -1,3 +1,6 @@
+Version 2.7.39 - Tuleap 5.13
+    * story #1462: synchronize user ssh keys with gerrit servers
+
 Version 2.7.38 - Tuleap 5.13
     story #2795 - tuleap binded groups to be replicated on Gerrit
 
