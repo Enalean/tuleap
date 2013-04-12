@@ -57,9 +57,6 @@ account_options	auth_attempt_prev_success	Previous successful login:
 account_options	auth_attempt_last_failure	Last login failure:
 account_options	auth_attempt_nb_failure	Number of login failure:
 account_options	auth_attempt_sessions	Open sessions:
-account_options	push_ssh_keys_button_value	Manually push SSH keys
-account_options	push_ssh_keys_button_title	Push SSH keys to remote servers
-account_options	push_ssh_keys_info	Old keys need to be pushed manually. All new keys are automatically pushed to the following Gerrit servers:
 
 #
 #-----------------------------------------------

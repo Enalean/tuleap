@@ -392,7 +392,7 @@ class GitPlugin extends Plugin {
                 <br />
                 <hr />
                 <br />'.
-                $GLOBALS['Language']->getText('account_options', 'push_ssh_keys_info').
+                $GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_info').
                 '<ul>';
 
             foreach ($remote_servers as $server) {
@@ -406,8 +406,8 @@ class GitPlugin extends Plugin {
             $html .= '</ul>
                 <form action="" method="post">
                     <input type="submit"
-                        title="'.$GLOBALS['Language']->getText('account_options', 'push_ssh_keys_button_title').'"
-                        value="'.$GLOBALS['Language']->getText('account_options', 'push_ssh_keys_button_value').'"
+                        title="'.$GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_button_title').'"
+                        value="'.$GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_button_value').'"
                         name="ssh_key_push"/>
                 </form>';
         }
