@@ -1,3 +1,23 @@
+Version 3.0 - Tuleap 5.13
+    * story #2967 - Serialize gitolite events
+
+    Sevral concurrent processes accessing the same gitolite admin repository
+    in the same time seems to lead to race conditions and sometime might
+    crash gitolite authorized_keys.
+
+    Furthermore, as the number of git repositories grow, modifications made on
+    gitolite admin repo takes time to push (compile time in gitolite to generate
+    the permission schema).
+
+    With this change, all gitolite admin operations (ssh keys modifications,
+    creation of repository, deletion, update of description, update of permissions,
+    update of mailing list details, move to gerrit, etc) are done one after
+    another (serialized), in background (system event).
+
+    For end user, it means a UI with better reactivity but a little bit of delay
+    to actually get the things propagated at git/gitolite level (usually a couple
+    of minutes).
+
 Version 2.7.39 - Tuleap 5.13
     * story #1462: synchronize user ssh keys with gerrit servers
 
