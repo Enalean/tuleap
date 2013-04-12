@@ -52,7 +52,7 @@ class Event {
      *   'user' => PFUser
      *   'html' => string An emty string of html output- passed by reference
      */
-    const LIST_SSH_KEYS = 'view_ssh_keys';
+    const LIST_SSH_KEYS = 'list_ssh_keys';
 
     /**
      * The user has just changed his email address.
