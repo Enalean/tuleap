@@ -23,7 +23,6 @@ require_once 'constants.php';
 require_once 'autoload.php';
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
-require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 /**
  * GitPlugin
@@ -35,6 +34,11 @@ class GitPlugin extends Plugin {
      * @var BackendLogger
      */
     private $logger;
+    
+    /**
+     * @var Git_UserAccountManager
+     */
+    private $user_account_manager;
     
     /**
      * Service short_name as it appears in 'service' table
@@ -348,8 +352,20 @@ class GitPlugin extends Plugin {
      * @param PFUser $user
      * @return \Git_UserAccountManager
      */
-    public function getUserAccountManager() {
-        return new Git_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory());
+    private function getUserAccountManager() {
+        if (! $this->user_account_manager) {
+            $this->user_account_manager = new Git_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory());
+        }
+        
+        return $this->user_account_manager;
+    }
+
+    /**
+     *
+     * @param Git_UserAccountManager $manager
+     */
+    public function setUserAccountManager(Git_UserAccountManager $manager) {
+        $this->user_account_manager = $manager;
     }
 
     /**

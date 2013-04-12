@@ -33,13 +33,12 @@ class GitPlugin_PropagateUserKeysToGerritTest extends TuleapTestCase {
 
         $id = 456;
         $mocked_methods = array(
-            'getUserAccountManager',
             'getGerritServerFactory'
         );
         $this->plugin = partial_mock('GitPlugin', $mocked_methods, array($id));
 
         $this->user_account_manager = mock('Git_UserAccountManager');
-        stub($this->plugin)->getUserAccountManager()->returns($this->user_account_manager);
+        $this->plugin->setUserAccountManager($this->user_account_manager);
 
         $this->gerrit_server_factory = mock('Git_RemoteServer_GerritServerFactory');
         stub($this->plugin)->getGerritServerFactory()->returns($this->gerrit_server_factory);
@@ -131,6 +130,10 @@ class GitPlugin_PropagateUserKeysToGerritTest extends TuleapTestCase {
 
 class GitPlugin_GetRemoteServersForUserTest extends TuleapTestCase {
 
+    /**
+     *
+     * @var GitPlugin
+     */
     private $plugin;
     private $user_account_manager;
     private $gerrit_server_factory;
@@ -142,13 +145,12 @@ class GitPlugin_GetRemoteServersForUserTest extends TuleapTestCase {
 
         $id = 456;
         $mocked_methods = array(
-            'getUserAccountManager',
             'getGerritServerFactory'
         );
         $this->plugin = partial_mock('GitPlugin', $mocked_methods, array($id));
 
         $this->user_account_manager = mock('Git_UserAccountManager');
-        stub($this->plugin)->getUserAccountManager()->returns($this->user_account_manager);
+        $this->plugin->setUserAccountManager($this->user_account_manager);
 
         $this->gerrit_server_factory = mock('Git_RemoteServer_GerritServerFactory');
         stub($this->plugin)->getGerritServerFactory()->returns($this->gerrit_server_factory);
