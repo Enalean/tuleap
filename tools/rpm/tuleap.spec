@@ -149,7 +149,7 @@ Summary: CVS component for Tuleap
 Group: Development/Tools
 Version: @@CORE_CVS_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}, xinetd, rcs, cvsgraph, highlight
+Requires: %{PKG_NAME}, xinetd, rcs, cvsgraph, highlight, perl-CGI
 %if %{PKG_NAME} == codendi_st
 Requires: viewvc
 # = 1.0.7-2.codendi
