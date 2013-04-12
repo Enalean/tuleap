@@ -395,7 +395,7 @@ class GitPlugin extends Plugin {
                         name="ssh_key_push"/>
                 </form>';
         }
-        
+
         if (isset($_POST['ssh_key_push'])) {
             $this->pushUserSSHKeysToRemoteServers($user);
             $GLOBALS['Response']->displayFeedback();

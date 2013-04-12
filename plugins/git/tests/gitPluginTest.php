@@ -129,7 +129,7 @@ class GitPlugin_PropagateUserKeysToGerritTest extends TuleapTestCase {
 }
 
 
-class GitPlugin_PushUserSSHKeysToRemoteServersTest extends TuleapTestCase {
+class GitPlugin_GetRemoteServersForUserTest extends TuleapTestCase {
 
     private $plugin;
     private $user_account_manager;
@@ -157,39 +157,46 @@ class GitPlugin_PushUserSSHKeysToRemoteServersTest extends TuleapTestCase {
         $this->plugin->setLogger($this->logger);
 
         $this->user = mock('PFUser');
+
+        $_POST['ssh_key_push'] = true;
     }
 
-    public function testItLogsAnErrorIfNoUserIsPassed() {
-        $params = array();
-
-        expect($this->logger)->error()->once();
-        $this->plugin->pushUserSSHKeysToRemoteServers($params);
-    }
-
-    public function testItLogsAnErrorIfUserIsInvalid() {
+    public function testItDoesNotPushKeysIfNoUserIsPassed() {
         $params = array(
-            'user' => 'me',
+            'html' => '',
         );
 
-        expect($this->logger)->error()->once();
-        $this->plugin->pushUserSSHKeysToRemoteServers($params);
+        expect($this->user_account_manager)->pushSSHKeys()->never();
+        $this->plugin->getRemoteServersForUser($params);
+    }
+
+    public function tesItDoesNotPushKeysIfUserIsInvalid() {
+        $params = array(
+            'user' => 'me',
+            'html' => '',
+        );
+
+        expect($this->user_account_manager)->pushSSHKeys()->never();
+        $this->plugin->getRemoteServersForUser($params);
     }
 
     public function itLogsAnErrorIfSSHKeyPushFails() {
         $params = array(
             'user' => $this->user,
+            'html' => '',
         );
-
+        
         $this->user_account_manager->throwOn('pushSSHKeys', new Git_UserSynchronisationException());
 
         expect($this->logger)->error()->once();
 
-        $this->plugin->pushUserSSHKeysToRemoteServers($params);
+        $this->plugin->getRemoteServersForUser($params);
     }
 
     public function itAddsResponseFeedbackIfSSHKeyPushFails() {
         $params = array(
             'user' => $this->user,
+            'html' => '',
         );
 
         $this->user_account_manager->throwOn('pushSSHKeys', new Git_UserSynchronisationException());
@@ -198,7 +205,7 @@ class GitPlugin_PushUserSSHKeysToRemoteServersTest extends TuleapTestCase {
         $GLOBALS['Response'] = $response;
         expect($response)->addFeedback()->once();
 
-        $this->plugin->pushUserSSHKeysToRemoteServers($params);
+        $this->plugin->getRemoteServersForUser($params);
     }
 }
 
