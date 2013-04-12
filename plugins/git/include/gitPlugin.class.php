@@ -34,7 +34,7 @@ class GitPlugin extends Plugin {
      * @var BackendLogger
      */
     private $logger;
-    
+
     /**
      * @var Git_UserAccountManager
      */
@@ -42,7 +42,7 @@ class GitPlugin extends Plugin {
     
     /**
      * Service short_name as it appears in 'service' table
-     * 
+     *
      * Should be transfered in 'ServiceGit' class when we introduce it
      */
     const SERVICE_SHORTNAME = 'plugin_git';
@@ -319,12 +319,12 @@ class GitPlugin extends Plugin {
         if (! $user = $this->getUserFromParameters($params)) {
             return;
         }
-        
+
         $user                     = $params['user'];
         $git_user_account_manager = $this->getUserAccountManager();
         $new_keys                 = $user->getAuthorizedKeysArray();
         $original_keys            = array();
-        
+
         if (isset($params['original_keys']) && is_string($params['original_keys'])) {
             $original_keys = $this->getKeysFromString($params['original_keys']);
         }
@@ -356,7 +356,7 @@ class GitPlugin extends Plugin {
         if (! $this->user_account_manager) {
             $this->user_account_manager = new Git_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory());
         }
-        
+
         return $this->user_account_manager;
     }
 
@@ -387,7 +387,7 @@ class GitPlugin extends Plugin {
 
         $remote_servers = $this->getGerritServerFactory()->getRemoteServersForUser($user);
 
-        if ($remote_servers) {
+        if (count($remote_servers) > 0) {
             $html = '<br />
                 <br />
                 <hr />
@@ -402,7 +402,7 @@ class GitPlugin extends Plugin {
                         </a>
                     </li>';
             }
-            
+
             $html .= '</ul>
                 <form action="" method="post">
                     <input type="submit"
@@ -416,7 +416,7 @@ class GitPlugin extends Plugin {
             $this->pushUserSSHKeysToRemoteServers($user);
             $GLOBALS['Response']->displayFeedback();
         }
-        
+
         $params['html'] = $html;
     }
 
@@ -437,7 +437,7 @@ class GitPlugin extends Plugin {
         } catch (Git_UserSynchronisationException $e) {
             $message = $GLOBALS['Language']->getText('plugin_git','push_ssh_keys_error');
             $GLOBALS['Response']->addFeedback('error', $message);
-            
+
             $this->getLogger()->error('Unable to push ssh keys: ' . $e->getMessage());
             return;
         }
