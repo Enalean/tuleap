@@ -32,6 +32,7 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
     public function itDumpsSshKeysForOneUser() {
         stub($this->user_manager)->getUsersWithSshKey()->returnsDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do')));
 
+        expect($this->gitExec)->push()->once();
         $this->mass_dumper->dumpSSHKeys();
 
         $this->assertTrue(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
@@ -41,6 +42,8 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
     }
 
     public function itRemovesSshKeyFileWhenUserDeletedAllHisKeys() {
+        expect($this->gitExec)->push()->count(2);
+
         $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do'))));
         $this->mass_dumper->dumpSSHKeys();
 

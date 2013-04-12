@@ -418,7 +418,15 @@ class GitRepository implements DVCSRepository {
                 return false;
             }
         }
-    }    
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function isCreated() {
+        return $this->getBackend()->isCreated($this);
+    }
 
     public function setCreationDate($date) {
         $this->creationDate = $date;

@@ -23,7 +23,7 @@ require_once 'common/backend/BackendLogger.class.php';
 
 class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
 
-    const TYPE = "GIT_GERRIT_MIGRATION";
+    const NAME = "GIT_GERRIT_MIGRATION";
 
     /** @var GitDao */
     private $dao;

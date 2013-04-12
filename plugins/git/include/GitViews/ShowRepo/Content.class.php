@@ -80,8 +80,13 @@ class GitViews_ShowRepo_Content {
             $html .= $this->getRemoteRepositoryInfo();
         }
         $html .= $this->getCloneUrl();
+
         $html .= '</div>';
-        $html .= $this->gitphp_viewer->getContent();
+        if ($this->repository->isCreated()) {
+            $html .= $this->gitphp_viewer->getContent();
+        } else {
+            $html .= $this->getWaitingForRepositoryCreationInfo();
+        }
         echo $html;
     }
 
@@ -203,6 +208,13 @@ class GitViews_ShowRepo_Content {
         $html .= '<div class="alert alert-info gerrit_url">';
         $html .= $GLOBALS['Language']->getText('plugin_git', 'delegated_to_gerrit');
         $html .= ' <a href="'.$link.'">'.$gerrit_project.'</a>';
+        $html .= '</div>';
+        return $html;
+    }
+
+    private function getWaitingForRepositoryCreationInfo() {;
+        $html = '<div class="alert alert-info wait_creation">';
+        $html .= $GLOBALS['Language']->getText('plugin_git', 'waiting_for_repo_creation');
         $html .= '</div>';
         return $html;
     }

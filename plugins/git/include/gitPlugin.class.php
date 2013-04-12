@@ -151,22 +151,29 @@ class GitPlugin extends Plugin {
         include $GLOBALS['Language']->getContent('script_locale', null, 'git');
     }
 
+    public function system_event_get_types($params) {
+        $params['types'] = array_merge($params['types'], $this->getGitSystemEventManager()->getTypes());
+    }
+
     /**
      *This callback make SystemEvent manager knows about git plugin System Events
      * @param <type> $params
      */
     public function getSystemEventClass($params) {
         switch($params['type']) {
-            case 'GIT_REPO_CREATE' :
-                $params['class'] = 'SystemEvent_GIT_REPO_CREATE';
+            case SystemEvent_GIT_REPO_UPDATE::NAME:
+                $params['class'] = 'SystemEvent_GIT_REPO_UPDATE';
+                $params['dependencies'] = array(
+                    $this->getRepositoryFactory()
+                );
                 break;
-            case 'GIT_REPO_DELETE' :
+            case SystemEvent_GIT_REPO_DELETE::NAME:
                 $params['class'] = 'SystemEvent_GIT_REPO_DELETE';
                 break;
-            case 'GIT_REPO_ACCESS':
+            case SystemEvent_GIT_REPO_ACCESS::NAME:
                 $params['class'] = 'SystemEvent_GIT_REPO_ACCESS';
                 break;
-            case 'GIT_GERRIT_MIGRATION':
+            case SystemEvent_GIT_GERRIT_MIGRATION::NAME:
                 $params['class'] = 'SystemEvent_GIT_GERRIT_MIGRATION';
                 $params['dependencies'] = array(
                     $this->getGitDao(),
@@ -174,6 +181,19 @@ class GitPlugin extends Plugin {
                     $this->getGerritServerFactory(),
                     $this->getLogger(),
                     $this->getProjectCreator(),
+                );
+                break;
+            case SystemEvent_GIT_REPO_FORK::NAME:
+                $params['class'] = 'SystemEvent_GIT_REPO_FORK';
+                $params['dependencies'] = array(
+                    $this->getRepositoryFactory()
+                );
+                break;
+            case SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME:
+                $params['class'] = 'SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP';
+                $params['dependencies'] = array(
+                    $this->getGerritServerFactory(),
+                    $this->getGitoliteSSHKeyDumper(),
                 );
                 break;
             default:
@@ -207,14 +227,14 @@ class GitPlugin extends Plugin {
     }
 
     public function process() {
-        $controler = new Git($this, $this->getGerritServerFactory(), $this->getGerritDriver());
-        $controler->process();
+        $this->getGitController()->process();
     }
 
     /**
      * We expect that the check fo access right to this method has already been done by the caller
      */
     public function processAdmin(Codendi_Request $request) {
+        require_once 'common/include/CSRFSynchronizerToken.class.php';
         $admin = new Git_Admin($this->getGerritServerFactory(), new CSRFSynchronizerToken('/plugin/git/admin/'));
         $admin->process($request);
         $admin->display();
@@ -542,13 +562,6 @@ class GitPlugin extends Plugin {
         }
     }
     
-    public function system_event_get_types($params) {
-        $params['types'][] = 'GIT_REPO_ACCESS';
-        $params['types'][] = 'GIT_REPO_CREATE';
-        $params['types'][] = 'GIT_REPO_DELETE';
-        $params['types'][] = 'GIT_GERRIT_MIGRATION';
-    }
-
     public function proccess_system_check($params) {
         $gitolite_driver = new Git_GitoliteDriver();
         $gitolite_driver->checkAuthorizedKeys();
@@ -569,39 +582,6 @@ class GitPlugin extends Plugin {
                 $repository_manager->deleteProjectRepositories($project);
             }
         }
-    }
-
-    private function getRepositoryManager() {
-        return new GitRepositoryManager($this->getRepositoryFactory(), SystemEventManager::instance());
-    }
-
-    private function getRepositoryFactory() {
-        return new GitRepositoryFactory($this->getGitDao(), ProjectManager::instance());
-    }
-
-    private function getGitDao() {
-        return new GitDao();
-    }
-
-    private function getGerritDriver() {
-        return new Git_Driver_Gerrit(
-            new Git_Driver_Gerrit_RemoteSSHCommand($this->getLogger()),
-            $this->getLogger()
-        );
-    }
-
-    /**
-     *
-     * @return \Git_RemoteServer_GerritServerFactory
-     */
-    public function getGerritServerFactory() {
-
-        $gitolite_admin_path = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
-        $gitExec = new Git_Exec($gitolite_admin_path);
-
-        $replication_key_factory = new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory($gitExec);
-
-        return new Git_RemoteServer_GerritServerFactory(new Git_RemoteServer_Dao(), $this->getGitDao(), $replication_key_factory);
     }
 
     /**
@@ -719,7 +699,7 @@ class GitPlugin extends Plugin {
         $pm      = ProjectManager::instance();
         $project = $pm->getProject($params['group_id']);
         if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
-            $controler = new Git($this, $this->getGerritServerFactory(), $this->getGerritDriver());
+            $controler = $this->getGitController();
             $controler->logsDaily($params);
         }
     }
@@ -876,6 +856,43 @@ class GitPlugin extends Plugin {
         return new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), new UGroupManager());
     }
 
+    private function getGitController() {
+        return new Git(
+            $this,
+            $this->getGerritServerFactory(),
+            $this->getGerritDriver(),
+            $this->getRepositoryManager(),
+            $this->getGitSystemEventManager()
+        );
+    }
+
+    private function getGitSystemEventManager() {
+        return new Git_SystemEventManager(SystemEventManager::instance());
+    }
+
+    private function getRepositoryManager() {
+        return new GitRepositoryManager(
+            $this->getRepositoryFactory(),
+            $this->getGitSystemEventManager(),
+            $this->getGitDao()
+        );
+    }
+
+    private function getRepositoryFactory() {
+        return new GitRepositoryFactory($this->getGitDao(), ProjectManager::instance());
+    }
+
+    private function getGitDao() {
+        return new GitDao();
+    }
+
+    private function getGerritDriver() {
+        return new Git_Driver_Gerrit(
+            new Git_Driver_Gerrit_RemoteSSHCommand(new BackendLogger()),
+            new BackendLogger()
+        );
+    }
+
     /**
      *
      * @return BackendLogger
@@ -896,7 +913,6 @@ class GitPlugin extends Plugin {
     }
 
     private function getGerritMembershipManager() {
-        require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipManager.class.php';
         return new Git_Driver_Gerrit_MembershipManager(
             new Git_Driver_Gerrit_MembershipDao(),
             $this->getGerritDriver(),
@@ -905,6 +921,21 @@ class GitPlugin extends Plugin {
         );
     }
 
+    protected function getGerritServerFactory() {
+        return new Git_RemoteServer_GerritServerFactory(
+            new Git_RemoteServer_Dao(),
+            $this->getGitDao(),
+            $this->getGitSystemEventManager()
+        );
+    }
+
+    private function getGitoliteSSHKeyDumper() {
+        $gitolite_admin_path = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
+        return new Git_Gitolite_SSHKeyDumper(
+            $gitolite_admin_path,
+            new Git_Exec($gitolite_admin_path)
+        );
+    }
 }
 
 ?>

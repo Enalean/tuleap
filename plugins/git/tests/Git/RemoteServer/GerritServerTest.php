@@ -29,7 +29,7 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
         $ssh_port           = 'le_ssh_port';
         $login              = 'le_login';
         $identity_file      = 'le_identity_file';
-        $replication_key    = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+        $replication_key    = '';
 
         $server = new Git_RemoteServer_GerritServer($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key);
 
@@ -44,7 +44,7 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
         $ssh_port           = 'le_ssh_port';
         $login              = 'le_login';
         $identity_file      = 'le_identity_file';
-        $replication_key    = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+        $replication_key    = '';
 
         $server = new Git_RemoteServer_GerritServer($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key);
 
@@ -58,7 +58,7 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
         $ssh_port           = 'le_ssh_port';
         $login              = 'le_login';
         $identity_file      = 'le_identity_file';
-        $replication_key    = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+        $replication_key    = '';
 
         $server = new Git_RemoteServer_GerritServer($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key);
 
@@ -72,7 +72,7 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
         $ssh_port           = 'le_ssh_port';
         $login              = 'le_login';
         $identity_file      = 'le_identity_file';
-        $replication_key    = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+        $replication_key    = '';
 
         $server = new Git_RemoteServer_GerritServer($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key);
 
@@ -86,7 +86,7 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
         $ssh_port           = 'le_ssh_port';
         $login              = 'le_login';
         $identity_file      = 'le_identity_file';
-        $replication_key    = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+        $replication_key    = '';
 
         $server = new Git_RemoteServer_GerritServer($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key);
 
@@ -108,7 +108,7 @@ class Git_RemoteServer_GerritServer_EndUserCloneUrlTest extends TuleapTestCase {
         $ssh_port           = '29418';
         $login              = 'le_login';
         $identity_file      = 'le_identity_file';
-        $replication_key    = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+        $replication_key    = '';
 
         $this->server = new Git_RemoteServer_GerritServer($id, $this->host, $ssh_port, $http_port, $login, $identity_file, $replication_key);
 

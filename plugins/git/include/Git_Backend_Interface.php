@@ -29,7 +29,16 @@ interface Git_Backend_Interface {
      * @param  GitRepository $repository
      * @return Boolean
      */
-    public function isInitialized($respository);
+    public function isInitialized(GitRepository $respository);
+
+    /**
+     * Verify if the repository has been created
+     *
+     * @see    plugins/git/include/Git_Backend_Interface::isCreated()
+     * @param  GitRepository $repository
+     * @return Boolean
+     */
+    public function isCreated(GitRepository $respository);
 
     /**
      * Return URL to access the respository for remote git commands
@@ -121,12 +130,5 @@ interface Git_Backend_Interface {
      */
     public function delete(GitRepository $repository);
 
-    /**
-     * Persist the modifications to the $repository
-     * 
-     * @param GitRepository $repository
-     */
-    public function commitTransaction(GitRepository $repository);
-    
 }
 ?>

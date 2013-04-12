@@ -37,6 +37,7 @@ class Git_Gitolite_SSHKeyDumper_OneUserTest extends Git_Gitolite_SshKeyTestCase 
     public function testAddUserKey() {
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1))->build();
 
+        expect($this->gitExec)->push()->once();
         $this->dumper->dumpSSHKeys($user);
 
         $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@0.pub'));
@@ -48,6 +49,7 @@ class Git_Gitolite_SSHKeyDumper_OneUserTest extends Git_Gitolite_SshKeyTestCase 
     public function testAddUserWithSeveralKeys() {
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
 
+        expect($this->gitExec)->push()->once();
         $this->dumper->dumpSSHKeys($user);
 
         $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@0.pub'));
@@ -59,6 +61,8 @@ class Git_Gitolite_SSHKeyDumper_OneUserTest extends Git_Gitolite_SshKeyTestCase 
     }
 
     public function testRemoveUserKey() {
+        expect($this->gitExec)->push()->count(2);
+
         // User has 2 keys
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
         $this->dumper->dumpSSHKeys($user);

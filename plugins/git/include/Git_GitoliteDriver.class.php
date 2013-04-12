@@ -102,7 +102,13 @@ class Git_GitoliteDriver {
 
         $this->confFilePath = 'conf/gitolite.conf';
     }
-    
+
+    /**
+     * A driver is initialized if the repository has branches.
+     *
+     * @param string $repoPath
+     * @return boolean
+     */
     public function isInitialized($repoPath) {
         try {
             $headsPath = $repoPath.'/refs/heads';
@@ -118,6 +124,16 @@ class Git_GitoliteDriver {
             // If directory doesn't even exists, return false
         }
         return false;
+    }
+
+    /**
+     *
+     * @param string $repoPath
+     * @return boolean
+     */
+    public function isRepositoryCreated($repoPath) {
+        $headsPath = $repoPath.'/refs/heads';
+        return is_dir($headsPath);
     }
 
     public function push() {

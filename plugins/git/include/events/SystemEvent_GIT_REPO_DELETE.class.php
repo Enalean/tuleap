@@ -24,7 +24,7 @@ require_once('common/system_event/SystemEvent.class.php');
  * @author gstorchi
  */
 class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
-    //put your code here
+    const NAME = 'GIT_REPO_DELETE';
 
     public function process() {
         $parameters   = $this->getParametersAsArray();
