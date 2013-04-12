@@ -143,10 +143,20 @@ class Git_RemoteServer_GerritServerFactory {
 
     /**
      *
+     * @param PFUser $user
+     * @return \Git_RemoteServer_GerritServer[]
+     */
+    public function getRemoteServersForUser(PFUser $user) {
+        return $this->dao->searchAllRemoteServersForUserId($user->getId())
+            ->instanciateWith(array($this, 'instantiateFromRow'));
+    }
+
+    /**
+     *
      * @param array $row
      * @return \Git_RemoteServer_GerritServer
      */
-    private function instantiateFromRow(array $row) {
+    public function instantiateFromRow(array $row) {
         $replictaion_key_value = $this->replication_key_factory->fetchForGerritServerId($row['id']);
 
         return new Git_RemoteServer_GerritServer(

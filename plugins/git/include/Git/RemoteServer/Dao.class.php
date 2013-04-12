@@ -46,6 +46,28 @@ class Git_RemoteServer_Dao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchAllRemoteServersForUserId($user_id) {
+        $sql = "SELECT DISTINCT pgrs.*
+                FROM plugin_git_remote_servers pgrs
+                    INNER JOIN plugin_git ON (remote_server_id = pgrs.id)
+                    INNER JOIN user_group ON (user_group.group_id = plugin_git.project_id)
+                    INNER JOIN user ON (user_group.user_id = user.user_id)
+                WHERE user_group.user_id = $user_id
+                    AND user.ldap_id IS NOT NULL
+                    AND user.ldap_id != ''
+                UNION
+                SELECT DISTINCT pgrs.*
+                FROM plugin_git_remote_servers pgrs
+                    INNER JOIN plugin_git ON (remote_server_id = pgrs.id)
+                    INNER JOIN ugroup ON (ugroup.group_id = plugin_git.project_id)
+                    INNER JOIN ugroup_user ON (ugroup_user.ugroup_id = ugroup.ugroup_id)
+                    INNER JOIN user ON (ugroup_user.user_id = user.user_id)
+                WHERE ugroup_user.user_id = $user_id
+                    AND user.ldap_id IS NOT NULL
+                    AND user.ldap_id != ''";
+        return $this->retrieve($sql);
+    }
+
     public function searchAllByUGroupId($project_id, $ugroup_id) {
         $project_id = $this->da->escapeInt($project_id);
         $ugroup_id  = $this->da->escapeInt($ugroup_id);
@@ -53,6 +75,7 @@ class Git_RemoteServer_Dao extends DataAccessObject {
                 FROM plugin_git_remote_servers INNER JOIN plugin_git_remote_ugroups
                     ON (plugin_git_remote_servers.id = plugin_git_remote_ugroups.remote_server_id
                         AND group_id = $project_id AND ugroup_id = $ugroup_id)";
+
         return $this->retrieve($sql);
     }
 

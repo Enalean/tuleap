@@ -49,6 +49,7 @@ account_options	auth_attempt_prev_success	Connexion précédente :
 account_options	auth_attempt_last_failure	Dernier echec de connexion :
 account_options	auth_attempt_nb_failure	Nombre de connexions échouées :
 account_options	auth_attempt_sessions	Sessions ouvertes :
+
 #
 #-----------------------------------------------
 # Script: SF/www/account/preferences.php

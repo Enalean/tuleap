@@ -471,13 +471,19 @@ class BackendSystem extends Backend {
      * dumps SSH authorized_keys for a user in its homedir
      * 
      * @param PFUser $user the user we want to dump his key
+     * @param string $original_keys the original keys of the user
      * 
      * @return boolean if the ssh key was written
      */
-    public function dumpSSHKeysForUser(PFUser $user) {
+    public function dumpSSHKeysForUser(PFUser $user, $original_keys) {
         $sshkey_dumper = new User_SSHKeyDumper($this);
         $write_status = $sshkey_dumper->writeSSHKeys($user);
-        EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, array('user' => $user));
+        $event_parameters = array(
+            'user'          => $user,
+            'original_keys' => $original_keys,
+        );
+
+        EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, $event_parameters);
         return $write_status;
     }
 
