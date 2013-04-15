@@ -48,7 +48,8 @@ Mock::generatePartial('Tracker',
                           'getAllFormElements',
                           'getTrackerArtifactFactory',
                           'aidExists',
-                          'getUserManager'
+                          'getUserManager',
+                          'getHierarchyFactory'
                       )
 );
 
@@ -387,6 +388,11 @@ class TrackerTest extends TuleapTestCase {
 
         $this->canned_response_factory = new MockTracker_CannedResponseFactory();
         $this->tracker->setReturnReference('getCannedResponseFactory', $this->canned_response_factory);
+
+        $this->hierarchy = new Tracker_Hierarchy();
+        $hierarchy_factory = mock('Tracker_HierarchyFactory');
+        stub($hierarchy_factory)->getHierarchy()->returns($this->hierarchy);
+        $this->tracker->setReturnValue('getHierarchyFactory', $hierarchy_factory);
 
         $GLOBALS['Response'] = new MockLayout();
 
@@ -1479,6 +1485,43 @@ class TrackerTest extends TuleapTestCase {
         $this->assertEqual((string)$xml->permissions->permission[6]['ugroup'], 'UGROUP_4');
         $this->assertEqual((string)$xml->permissions->permission[6]['type'], 'FIELDPERM_1');
         $this->assertEqual((string)$xml->permissions->permission[6]['REF'], 'F2');
+    }
+
+    public function itExportsTheTrackerID() {
+        $this->tracker->setReturnValue('getAllFormElements', array());
+        $this->tracker->setReturnValue('getRulesManager', mock('Tracker_RulesManager'));
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+                                     <tracker xmlns="http://codendi.org/tracker"/>');
+        $xml = $this->tracker->exportToXML($xml);
+
+        $attributes = $xml->attributes();
+        $this->assertEqual((string)$attributes['id'], 'T110');
+    }
+
+    public function itExportsNoParentIfNotInAHierarchy() {
+        $this->tracker->setReturnValue('getAllFormElements', array());
+        $this->tracker->setReturnValue('getRulesManager', mock('Tracker_RulesManager'));
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+                                     <tracker xmlns="http://codendi.org/tracker"/>');
+        $xml = $this->tracker->exportToXML($xml);
+
+        $attributes = $xml->attributes();
+        $this->assertEqual((string)$attributes['parent_id'], "0");
+    }
+
+    public function itExportsTheParentId() {
+        $this->tracker->setReturnValue('getAllFormElements', array());
+        $this->tracker->setReturnValue('getRulesManager', mock('Tracker_RulesManager'));
+        $this->hierarchy->addRelationship(9001, 110);
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+                                     <tracker xmlns="http://codendi.org/tracker"/>');
+        $xml = $this->tracker->exportToXML($xml);
+
+        $attributes = $xml->attributes();
+        $this->assertEqual((string)$attributes['parent_id'], "T9001");
     }
 
     public function testHasErrorNoError() {
