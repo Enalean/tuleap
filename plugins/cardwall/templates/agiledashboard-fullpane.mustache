@@ -1,7 +1,25 @@
 <p class="cardwall_board-actions">
-    {{#canConfigure}}
-        <a href="{{configure_url}}">Configure</a>
-    {{/canConfigure}}
+    {{#isUserNotAnonymous}}
+        <div class="dropdown">
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <i class="icon-cog"></i>
+                Settings <!-- Todo: i18n -->
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="{{switch_display_username_url}}">
+                    {{#isDisplayUsernameSelected}}
+                        <i class="icon-ok"></i>
+                    {{/isDisplayUsernameSelected}}
+                    display username <!-- Todo: i18n-->
+                </a></li>
+                {{#canConfigure}}
+                    <li class="divider"></li>
+                    <li><a href="{{configure_url}}">Configure</a></li>
+                {{/canConfigure}}
+            </ul>
+        </div>
+    {{/isUserNotAnonymous}}
 </p>
 
 {{> agiledashboard-minimalpane }}

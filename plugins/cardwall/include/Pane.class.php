@@ -117,7 +117,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $backlog_title      = $this->milestone->getPlanning()->getBacklogTracker()->getName();
         $redirect_parameter = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
 
-        return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title, $this->canConfigure());
+        return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title, $this->canConfigure(), $this->userIsNotAnonymous());
     }
     
     private function canConfigure() {        
@@ -137,6 +137,15 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             return new Cardwall_QrCode($_SERVER['REQUEST_URI'] .'&pv=2');
         }
         return false;
+    }
+
+    private function isUserNotAnonymous() {
+        if ($this->user->isAnonymous()) {
+            return false;
+        }
+
+        $switch_display_username_url = "http://google.fr";
+        return $switch_display_username_url;
     }
 }
 ?>
