@@ -20,6 +20,7 @@
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
 require_once 'autoload.php';
+require_once 'common/XmlValidator/XmlValidator.class.php';
 
 /**
  * trackerPlugin
@@ -57,6 +58,8 @@ class trackerPlugin extends Plugin {
         $this->_addHook('codendi_daily_start',                 'codendi_daily_start',               false);
         $this->_addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
         $this->_addHook(Event::SOAP_DESCRIPTION,               'soap_description',                  false);
+        $this->_addHook(Event::EXPORT_XML_PROJECT);
+        $this->_addHook(Event::IMPORT_XML_PROJECT);
     }
     
     public function getHooksAndCallbacks() {
@@ -538,6 +541,33 @@ class trackerPlugin extends Plugin {
             'version'     => file_get_contents(dirname(__FILE__).'/../www/soap/VERSION'),
             'description' => 'Query and modify Trackers.',
         );
+    }
+
+    /**
+     * @see Event::EXPORT_XML_PROJECT
+     * @param array $params
+     */
+    public function export_xml_project($params) {
+        $xml_content     = $params['into_xml']->addChild('trackers');
+        $tracker_manager = new TrackerManager();
+        $tracker_manager->exportToXml($params['project']->getID(), $xml_content);
+    }
+
+    /**
+     *
+     * @param array $params
+     * @see Event::IMPORT_XML_PROJECT
+     */
+    public function import_xml_project($params) {
+        $tracker_xml_import = new TrackerXmlImport(
+            $params['project']->getId(),
+            TrackerFactory::instance(),
+            EventManager::instance(),
+            new Tracker_Hierarchy_Dao(),
+            new XmlValidator()
+        );
+
+        $tracker_xml_import->import($params['xml_content']);
     }
 }
 

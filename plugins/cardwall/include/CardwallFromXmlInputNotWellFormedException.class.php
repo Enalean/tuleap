@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,16 +15,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Planning_ItemPresenterTest extends TuleapTestCase {
-    
-    public function itDelegatesToPlanningItem() {
-        $trackers      = array(mock('Tracker'), mock('Tracker'));
-        $planning_item = stub('Planning_Item')->getAllowedChildrenTypes()->returns($trackers);
-        $presenter     = new Planning_ItemPresenter($planning_item, mock('Tracker_CardFields'), '*');
-        $this->assertEqual($trackers, $presenter->allowedChildrenTypes());
+class CardwallFromXmlInputNotWellFormedException extends Exception {
+    public function __construct() {
+        $message = 'The cardwall XML input is not well formed';
+        parent::__construct($message);
     }
 }
 ?>

@@ -21,6 +21,7 @@
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
 require_once 'autoload.php';
+require_once 'common/XmlValidator/XmlValidator.class.php';
 
 /**
  * CardwallPlugin
@@ -56,6 +57,8 @@ class cardwallPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION);
             $this->addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE);
             $this->_addHook(Event::JAVASCRIPT);
+            $this->addHook(Event::EXPORT_XML_PROJECT);
+            $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -346,6 +349,38 @@ class cardwallPlugin extends Plugin {
     private function appendCardwallParameter(Tracker_Artifact_Redirect $redirect, $cardwall) {
         list($key, $value) = explode('=', urldecode(http_build_query(array('cardwall' => $cardwall))));
         $redirect->query_parameters[$key] = $value;
+    }
+
+    /**
+     * @param array $params parameters send by Event
+     * Parameters:
+     *  'project'  => The given project
+     *  'into_xml' => The SimpleXMLElement to fill in
+     */
+    public function export_xml_project ($params) {
+        $tracker_factory = TrackerFactory::instance();
+
+        $cardwall_xml_export = new CardwallConfigXmlExport(
+            $params['project'],
+            $tracker_factory,
+            new Cardwall_OnTop_ConfigFactory(
+                $tracker_factory,
+                Tracker_FormElementFactory::instance()
+            ),
+            new XmlValidator()
+        );
+
+        $cardwall_xml_export->export($params['into_xml']);
+    }
+
+    /**
+     *
+     * @param array $params
+     * @see Event::IMPORT_XML_PROJECT_TRACKER_DONE
+     */
+    public function import_xml_project_tracker_done($params) {
+        $cardwall_ontop_import = new CardwallConfigXmlImport($params['project_id'], $params['mapping'], new Cardwall_OnTop_Dao, EventManager::instance(), new XmlValidator());
+        $cardwall_ontop_import->import($params['xml_content']);
     }
 
     /**

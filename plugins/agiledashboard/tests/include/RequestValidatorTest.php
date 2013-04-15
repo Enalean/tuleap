@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/Planning/PlanningRequestValidator.class.php';
-require_once dirname(__FILE__).'/../builders/aPlanningCreationRequest.php';
-require_once dirname(__FILE__).'/../builders/aPlanning.php';
+require_once dirname(__FILE__).'/../bootstrap.php';
 
 class RequestValidatorTest extends TuleapTestCase {
     

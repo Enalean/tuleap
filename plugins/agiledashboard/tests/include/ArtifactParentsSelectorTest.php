@@ -19,8 +19,7 @@
  */
 
 
-require_once dirname(__FILE__).'/../../include/autoload.php';
-require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
+require_once dirname(__FILE__).'/../bootstrap.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/all.php';
 
 class ArtifactParentsSelectorTest extends TuleapTestCase {

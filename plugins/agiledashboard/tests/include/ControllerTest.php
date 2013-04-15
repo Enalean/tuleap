@@ -21,11 +21,7 @@
 require_once(dirname(__FILE__).'/../../../tracker/tests/builders/all.php');
 
 require_once TRACKER_BASE_DIR .'/Tracker/TrackerManager.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/PlanningController.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/Planning.class.php';
-require_once dirname(__FILE__).'/../builders/aPlanning.php';
-require_once dirname(__FILE__).'/../builders/aPlanningFactory.php';
-require_once dirname(__FILE__).'/../builders/aPlanningController.php';
+require_once dirname(__FILE__).'/../bootstrap.php';
 
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_Artifact');
@@ -52,6 +48,10 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
         $this->request          = aRequest()->withProjectManager($this->project_manager)->with('group_id', "$this->group_id")->withUser($this->current_user)->build();
         $this->planning_factory = new MockPlanningFactory();
         $this->controller       = new Planning_Controller($this->request, $this->planning_factory, mock('Planning_MilestoneFactory'), '/path/to/theme');
+    
+        if (!defined('IS_SCRIPT')) {
+            define('IS_SCRIPT', false);
+        }  
     }
 
     public function tearDown() {
@@ -60,11 +60,11 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
     }
 
     protected function userIsAdmin() {
-        stub($this->project)->userIsAdmin($this->current_user)->returns(true);
+        stub($this->project)->userIsAdmin()->returns(true);
     }
 
     protected function userIsNotAdmin() {
-        stub($this->project)->userIsAdmin($this->current_user)->returns(false);
+        stub($this->project)->userIsAdmin()->returns(false);
     }
 
     /**

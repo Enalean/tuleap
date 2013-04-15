@@ -18,12 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$current_dir = dirname(__FILE__);
-
-require_once $current_dir.'/../../include/constants.php';
-require_once $current_dir.'/../../../tracker/include/constants.php';
-require_once AGILEDASHBOARD_BASE_DIR .'/Planning/MilestoneSelectorController.class.php';
-require_once $current_dir.'/../builders/aMilestone.php';
+require_once dirname(__FILE__).'/../bootstrap.php';
 
 class Planning_MilestoneSelectorControllerTest extends TuleapTestCase {
 
