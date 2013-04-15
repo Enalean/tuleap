@@ -33,8 +33,10 @@ EOT;
 
 $project = ProjectManager::instance()->getProject($argv[1]);
 if ($project && !$project->isError()) {
-    $xml_exporter = new ProjectXMLExporter();
-    $xml_element = $xml_exporter->export($project);
+    $xml_exporter = new ProjectXMLExporter(EventManager::instance());
+    $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+                                         <project />');
+    $xml_exporter->export($project, $xml_element);
     $dom = dom_import_simplexml($xml_element)->ownerDocument;
     $dom->formatOutput = true;
     echo $dom->saveXML();

@@ -449,5 +449,17 @@ class Event {
      *  The link contains the right project information
      */
     const SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK = 'service_replace_template_name_in_link';
+
+    /**
+     * Event launched while exporting a project into xml format
+     *
+     * Parameters:
+     *   'project'  => The given project
+     *   'into_xml' => The SimpleXMLElement to fill in
+     *
+     * Expected Results:
+     *   The various plugins inject stuff in the given xml element
+     */
+    const EXPORT_XML_PROJECT = 'export_xml_export';
 }
 ?>

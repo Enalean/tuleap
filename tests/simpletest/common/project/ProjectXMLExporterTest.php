@@ -18,29 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Project.class.php';
+require_once 'common/project/ProjectXMLExporter.class.php';
 
-/** This class export a project to xml format */
-class ProjectXMLExporter {
+class ProjectXMLExporterTest extends TuleapTestCase {
 
-    /** @var EventManager */
-    private $event_manager;
+    public function itAsksToPluginToExportStuffForTheGivenProject() {
+        $event_manager = mock('EventManager');
+        $project       = mock('Project');
+        $xml_exporter  = new ProjectXMLExporter($event_manager);
+        $xml_element   = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+                                               <project />');
 
-    public function __construct(EventManager $event_manager) {
-        $this->event_manager = $event_manager;
-    }
+        expect($event_manager)->processEvent(Event::EXPORT_XML_PROJECT, array('project' => $project, 'into_xml' => $xml_element))->once();
 
-    /**
-     * @return SimpleXMLElement
-     */
-    public function export(Project $project, SimpleXMLElement $into_xml) {
-        $this->event_manager->processEvent(
-            Event::EXPORT_XML_PROJECT,
-            array(
-                'project'  => $project,
-                'into_xml' => $into_xml
-            )
-        );
+        $xml_exporter->export($project, $xml_element);
     }
 }
 ?>
