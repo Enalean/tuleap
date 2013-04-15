@@ -61,5 +61,13 @@ class Users {
         }
         return $result;
     }
+
+    /**
+     *
+     * @return Array string : Only the LDAP Ids non empty
+     */
+    public function getNonEmptyLdapIds() {
+        return array_filter($this->getLdapIds());
+    }
 }
 ?>

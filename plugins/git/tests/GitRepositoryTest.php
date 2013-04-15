@@ -18,15 +18,15 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once(dirname(__FILE__).'/../include/GitRepository.class.php');
+require_once 'bootstrap.php';
+
 Mock::generatePartial('GitRepository', 'GitRepositoryTestVersion', array('_getUserManager', 'getRepositoryIDByName', 'getDao'));
 Mock::generatePartial('GitRepository', 'GitRepositorySecondTestVersion', array('_getProjectManager', 'getDao'));
-require_once(dirname(__FILE__).'/../include/Git_Backend_Gitolite.class.php');
+
 Mock::generate('Git_Backend_Gitolite');
-require_once(dirname(__FILE__).'/../include/GitBackend.class.php');
+
 Mock::generate('GitBackend');
-require_once(dirname(__FILE__).'/../include/GitDao.class.php');
+
 Mock::generate('GitDao');
 Mock::generate('UserManager');
 Mock::generate('PFUser');
@@ -252,6 +252,13 @@ class GitRepositoryTest extends TuleapTestCase {
         $repo = new GitRepository();
         $repo->setBackendType(GitDao::BACKEND_GITOLITE);
         $repo->setRemoteServerId(34);
+        $this->assertFalse($repo->canMigrateToGerrit());
+    }
+
+    public function itIsNotMigratableIfItHasAlreadyBeenAGerritRepoInThePast() {
+        $repo = new GitRepository();
+        $repo->setBackendType(GitDao::BACKEND_GITOLITE);
+        $repo->setRemoteServerDisconnectDate(12345677890);
         $this->assertFalse($repo->canMigrateToGerrit());
     }
 }

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
+require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 /**
  * This handles site admin part of Git
@@ -44,6 +44,7 @@ class Git_Admin {
             $this->csrf->check();
             $this->fetchGerritServers();
             $this->updateServers($request_gerrit_servers);
+            $GLOBALS['Response']->redirect('/plugins/git/admin/');
         }
     }
 
@@ -104,11 +105,13 @@ class Git_Admin {
                 type="checkbox"
                 name="gerrit_servers['. $id .'][replication_key]"
                 cols="30"
-                rows="5">'.$server->getReplicationKey()->getValue().'</textarea>
+                rows="5">'.$server->getReplicationKey().'</textarea>
             </td></tr>';
 
         if ($id && ! $this->gerrit_server_factory->isServerUsed($server)) {
             $html .= '<td><label>'. 'Delete?' .'<br /><input type="checkbox" name="gerrit_servers['. $id .'][delete]" value="1" /></label></td>';
+        } else {
+            $html .= '<td>This server is already used by some repositories, cannot delete it.</td>';
         }
         $html .= '</tbody></table>';
         $html .= '</dd>';
@@ -120,7 +123,7 @@ class Git_Admin {
             $this->servers = $this->gerrit_server_factory->getServers();
         }
  
-        $this->servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', new Git_RemoteServer_Gerrit_ReplicationSSHKey());
+        $this->servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', '');
     }
 
     private function updateServers(array $request_gerrit_servers) {
@@ -148,19 +151,15 @@ class Git_Admin {
                 $http_port != $server->getHTTPPort() ||
                 $login != $server->getLogin() ||
                 $identity_file != $server->getIdentityFile() ||
-                $replication_ssh_key != $server->getReplicationKey()->getGerritHostId()
+                $replication_ssh_key != $server->getReplicationKey()
             ) {
-                $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
-                $key->setGerritHostId($id)
-                    ->setValue($replication_ssh_key);
-
                 $server
                     ->setHost($host)
                     ->setSSHPort($ssh_port)
                     ->setHTTPPort($http_port)
                     ->setLogin($login)
                     ->setIdentityFile($identity_file)
-                    ->setReplicationKey($key)  ;
+                    ->setReplicationKey($replication_ssh_key)  ;
                 $this->gerrit_server_factory->save($server);
                 $this->servers[$server->getId()] = $server;
             }

@@ -19,9 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once dirname(__FILE__).'/../include/Git_Backend_Gitolite.class.php';
-require_once dirname(__FILE__).'/../include/Git_GitoliteDriver.class.php';
+require_once 'bootstrap.php';
 require_once 'common/project/Project.class.php';
 require_once 'common/backend/Backend.class.php';
 
@@ -34,7 +32,7 @@ Mock::generate('DataAccessResult');
 Mock::generate('Project');
 Mock::generate('PermissionsManager');
 
-class Git_Backend_GitoliteTest extends UnitTestCase {
+class Git_Backend_GitoliteTest extends TuleapTestCase {
     
     protected $fixturesPath;
 
@@ -105,15 +103,42 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $this->assertTrue(is_dir($this->fixtureRenamePath .'/newone'));
     }
 
-    public function testFork_clonesRepositoryAndPushesConf() {
+    public function itSavesForkInfoIntoDB() {
         $name  = 'tuleap';
         $old_namespace = '';
         $new_namespace = 'u/johanm/ericsson';
         $new_repo_path = "gpig/$new_namespace/$name.git";
         
+        $driver = mock('Git_GitoliteDriver');
+
+        $project = mock('Project');
+
+        $new_repo = $this->_GivenAGitRepoWithNameAndNamespace($name, $new_namespace);
+        $new_repo->setProject($project);
+        $new_repo->setPath($new_repo_path);
+        $old_repo = $this->_GivenAGitRepoWithNameAndNamespace($name, $old_namespace);
+        $old_repo->setProject($project);
+
+        $backend = partial_mock('Git_Backend_Gitolite', array('clonePermissions'), array($driver));
+        $dao = mock('GitDao');
+        $backend->setDao($dao);
+
+        $backend->expectOnce('clonePermissions', array($old_repo, $new_repo));
+        $dao->expectOnce('save', array($new_repo));
+        stub($dao)->save()->returns(667);
+        $dao->setReturnValue('isRepositoryExisting', false, array('*', $new_repo_path));
+
+        $this->assertEqual(667, $backend->fork($old_repo, $new_repo, $this->forkPermissions));
+    }
+
+    public function testFork_clonesRepositoryAndPushesConf() {
+        $name  = 'tuleap';
+        $old_namespace = '';
+        $new_namespace = 'u/johanm/ericsson';
+        $new_repo_path = "gpig/$new_namespace/$name.git";
+
         $driver     = new MockGit_GitoliteDriver();
         $driver->setReturnValue('fork', true);
-        $dao        = new MockGitDao();
         $project    = new MockProject();
         
         $project->setReturnValue('getUnixName', 'gpig');
@@ -126,16 +151,12 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         
         $backend = TestHelper::getPartialMock('Git_Backend_Gitolite', array('clonePermissions'));
         $backend->__construct($driver);
-        $backend->setDao($dao);
         
-        $backend->expectOnce('clonePermissions', array($old_repo, $new_repo));
-        $dao->expectOnce('save', array($new_repo));
-        $dao->setReturnValue('isRepositoryExisting', false, array('*', $new_repo_path));
         $driver->expectOnce('fork', array($name, 'gpig/'. $old_namespace, 'gpig/'. $new_namespace));
         $driver->expectOnce('dumpProjectRepoConf', array($project));
         $driver->expectOnce('push');
 
-        $backend->fork($old_repo, $new_repo, $this->forkPermissions);
+        $backend->forkOnFilesystem($old_repo, $new_repo);
     }
 
     public function testFork_clonesRepositoryFromOneProjectToAnotherSucceedAndPushesConf() {
@@ -147,7 +168,6 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         
         $driver     = new MockGit_GitoliteDriver();
         $driver->setReturnValue('fork', true);
-        $dao        = new MockGitDao();
         
         $new_project    = new MockProject();
         $new_project->setReturnValue('getUnixName', $new_project_name);
@@ -163,16 +183,12 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         
         $backend = TestHelper::getPartialMock('Git_Backend_Gitolite', array('clonePermissions'));
         $backend->__construct($driver);
-        $backend->setDao($dao);
         
-        $backend->expectOnce('clonePermissions', array($old_repo, $new_repo));
-        $dao->expectOnce('save', array($new_repo));
-        $dao->setReturnValue('isRepositoryExisting', false, array('*', $new_repo_path));
         $driver->expectOnce('fork', array($repo_name, $old_project_name.'/'. $namespace, $new_project_name.'/'. $namespace));
         $driver->expectOnce('dumpProjectRepoConf', array($new_project));
         $driver->expectOnce('push');
 
-        $backend->fork($old_repo, $new_repo, $this->forkPermissions);
+        $backend->forkOnFilesystem($old_repo, $new_repo, $this->forkPermissions);
     }
     
     public function testForkWithTargetPathAlreadyExistingShouldNotFork() {
@@ -313,4 +329,22 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
     }
 }
 
+class Git_Backend_Gitolite_disconnectFromGerrit extends TuleapTestCase {
+
+    private $repo_id = 123;
+
+    public function setUp() {
+        parent::setUp();
+        $this->repository = aGitRepository()->withId($this->repo_id)->build();
+        $this->dao        = mock('GitDao');
+        $this->backend    = partial_mock('Git_Backend_Gitolite', array('updateRepoConf'));
+        $this->backend->setDao($this->dao);
+    }
+
+    public function itAsksToDAOToDisconnectFromGerrit() {
+        expect($this->dao)->disconnectFromGerrit($this->repo_id)->once();
+
+        $this->backend->disconnectFromGerrit($this->repository);
+    }
+}
 ?>

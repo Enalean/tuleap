@@ -20,7 +20,6 @@
  */
 
 require_once 'common/user/IHaveAnSSHKey.php';
-require_once 'Git_Exec.class.php';
 
 class Git_Gitolite_SSHKeyDumper {
     const KEYDIR = 'keydir';
@@ -58,7 +57,10 @@ class Git_Gitolite_SSHKeyDumper {
      */
     public function dumpSSHKeys(IHaveAnSSHKey $user) {
         $this->dumpSSHKeysWithoutCommit($user);
-        return $this->commitKeyDir('Update '.$user->getUserName().' SSH keys');
+        if ($this->commitKeyDir('Update '.$user->getUserName().' SSH keys')) {
+            return $this->git_exec->push();
+        }
+        return false;
     }
 
     /**

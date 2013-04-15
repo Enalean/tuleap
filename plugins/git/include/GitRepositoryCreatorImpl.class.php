@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'GitRepositoryCreator.class.php';
 
 abstract class GitRepositoryCreatorImpl implements GitRepositoryCreator {
 

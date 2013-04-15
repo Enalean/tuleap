@@ -18,14 +18,8 @@
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
 
-
-require_once('GitBackend.class.php');
-require_once('Git_Backend_Gitolite.class.php');
-require_once('GitDriver.class.php');
-require_once('GitDao.class.php');
-require_once('PathJoinUtil.php');
 require_once(dirname(__FILE__).'/../DVCS/DVCSRepository.class.php');
-require_once('exceptions/GitRepositoryException.class.php');
+require_once 'PathJoinUtil.php';
 
 /**
  * Description of GitRepositoryclass
@@ -73,7 +67,8 @@ class GitRepository implements DVCSRepository {
     private $namespace;
     private $scope;
     private $remote_server_id;
-    
+    private $remote_server_disconnect_date;
+
     protected $backendType;
 
     public function __construct() {
@@ -423,7 +418,15 @@ class GitRepository implements DVCSRepository {
                 return false;
             }
         }
-    }    
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function isCreated() {
+        return $this->getBackend()->isCreated($this);
+    }
 
     public function setCreationDate($date) {
         $this->creationDate = $date;
@@ -843,7 +846,8 @@ class GitRepository implements DVCSRepository {
     
     public function canMigrateToGerrit() {
         return $this->getBackendType() == GitDao::BACKEND_GITOLITE && 
-               $this->getRemoteServerId() == false;
+               $this->getRemoteServerId() == false &&
+               $this->remote_server_disconnect_date == false;
     }
 
     public function setRemoteServerId($id) {
@@ -860,6 +864,10 @@ class GitRepository implements DVCSRepository {
         }
 
         return false;
+    }
+
+    public function setRemoteServerDisconnectDate($date) {
+        $this->remote_server_disconnect_date = $date;
     }
 
     /**

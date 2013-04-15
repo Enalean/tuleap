@@ -75,6 +75,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * Pref for recent elements
      */
     const PREFERENCE_RECENT_ELEMENTS = 'recent_elements';
+
+    /**
+     * Seperator for ssh key concatenation
+     */
+    const SSH_KEY_SEPARATOR = '###';
     
     /**
      * the id of the user
@@ -557,7 +562,14 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      */
     function getLdapId() {
         return $this->ldap_id;
-    }    
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLDAP() {
+        return $this->getLdapId() != null;
+    }
     /**
      * @return string the registration date of the user (timestamp format)
      */
@@ -658,7 +670,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      */
     function getAuthorizedKeys($split=false) {
         if ($split) {
-            return array_filter(explode('###', $this->authorized_keys));
+            return array_filter(explode(self::SSH_KEY_SEPARATOR, $this->authorized_keys));
         } else {
             return $this->authorized_keys;
         }

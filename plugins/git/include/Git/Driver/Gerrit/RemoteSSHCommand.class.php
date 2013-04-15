@@ -19,8 +19,6 @@
  */
 
 require_once 'common/include/Config.class.php';
-require_once 'RemoteSSHConfig.class.php';
-require_once 'RemoteSSHCommandFailure.class.php';
 
 class Git_Driver_Gerrit_RemoteSSHCommand {
 
@@ -34,7 +32,14 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
     public function __construct(Logger $logger) {
         $this->logger = $logger;
     }
-    
+
+    /**
+     *
+     * @param Git_Driver_Gerrit_RemoteSSHConfig $config
+     * @param string $cmd
+     * @return string
+     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     */
     public function execute(Git_Driver_Gerrit_RemoteSSHConfig $config, $cmd) {
         $port          = $config->getSSHPort();
         $host          = $config->getHost();

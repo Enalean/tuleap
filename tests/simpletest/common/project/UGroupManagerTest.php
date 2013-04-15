@@ -132,4 +132,48 @@ class UGroupManager_getUGroupWithMembers_Test extends TuleapTestCase {
     }
 }
 
+class UGroupManager_UpdateUgroupBindingDaoTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->dao            = mock('UGroupDao');
+        $this->ugroup_manager = new UGroupManager($this->dao);
+    }
+
+    public function itCallsDaoToRemoveABinding() {
+        expect($this->dao)->updateUgroupBinding(12, null)->once();
+        $this->ugroup_manager->updateUgroupBinding(12);
+    }
+
+    public function itCallsDaoToAddABinding() {
+        expect($this->dao)->updateUgroupBinding(12, 24)->once();
+        $this->ugroup_manager->updateUgroupBinding(12, 24);
+    }
+}
+
+class UGroupManager_UpdateUgroupBindingEventTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->dao            = mock('UGroupDao');
+        $this->event_manager  = mock('EventManager');
+        $this->ugroup_manager = partial_mock('UGroupManager', array('getById'), array($this->dao, $this->event_manager));
+
+
+        $this->ugroup_12 = new UGroup(array('ugroup_id' => 12));
+        $this->ugroup_24 = new UGroup(array('ugroup_id' => 24));
+        stub($this->ugroup_manager)->getById(12)->returns($this->ugroup_12);
+        stub($this->ugroup_manager)->getById(24)->returns($this->ugroup_24);
+    }
+
+    public function itRaiseAnEventWithGroupsWhenOneIsAdded() {
+        expect($this->event_manager)->processEvent('ugroup_manager_update_ugroup_binding_add', array('ugroup' => $this->ugroup_12, 'source' => $this->ugroup_24))->once();
+        $this->ugroup_manager->updateUgroupBinding(12, 24);
+    }
+
+    public function itRaiseAnEventWithGroupsWhenOneIsRemoved() {
+        expect($this->event_manager)->processEvent('ugroup_manager_update_ugroup_binding_remove', array('ugroup' => $this->ugroup_12))->once();
+        $this->ugroup_manager->updateUgroupBinding(12);
+    }
+}
 ?>

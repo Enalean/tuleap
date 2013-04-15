@@ -19,11 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/RemoteSSHCommand.class.php';
-require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
-require_once GIT_BASE_DIR . '/GitRepository.class.php';
-require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/MembershipManager.class.php';
-require_once 'UserFinder.class.php';
 
 class Git_Driver_Gerrit_ProjectCreator {
 
@@ -38,38 +33,92 @@ class Git_Driver_Gerrit_ProjectCreator {
     /** @var Git_Driver_Gerrit_UserFinder */
     private $user_finder;
 
-    public function __construct($dir, Git_Driver_Gerrit $driver, Git_Driver_Gerrit_UserFinder $user_finder) {
-        $this->dir           = $dir;
-        $this->driver        = $driver;
-        $this->user_finder   = $user_finder;
+    /** @var UGroupManager */
+    private $ugroup_manager;
+
+    /** @var Git_Driver_Gerrit_MembershipManager */
+    private $membership_manager;
+
+    public function __construct(
+        $dir,
+        Git_Driver_Gerrit $driver,
+        Git_Driver_Gerrit_UserFinder $user_finder,
+        UGroupManager $ugroup_manager,
+        Git_Driver_Gerrit_MembershipManager $membership_manager
+    ) {
+        $this->dir            = $dir;
+        $this->driver         = $driver;
+        $this->user_finder    = $user_finder;
+        $this->ugroup_manager = $ugroup_manager;
+        $this->membership_manager = $membership_manager;
     }
 
-    public function createProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
-        $gerrit_project = $this->driver->createProject($gerrit_server, $repository);
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $gerrit_server
+     * @param GitRepository $repository
+     * @return string Gerrit project name
+     */
+    public function createGerritProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
+        $project          = $repository->getProject();
+        $project_name     = $project->getUnixName();
+        $ugroups          = $this->ugroup_manager->getUGroups($project);
 
-        foreach (Git_Driver_Gerrit_MembershipManager::$GERRIT_GROUPS as $group_name => $permission_level) {
-            try {
-                $user_list = $this->user_finder->getUsersForPermission($permission_level, $repository);
-                $this->driver->createGroup($gerrit_server, $repository, $group_name, $user_list);
-            } catch (Exception $e) {
-                // Continue with the next group
-                // Should we add a warning ?
-            }
+        $migrated_ugroups = $this->migrateUGroups($ugroups, $gerrit_server);
+        $admin_ugroup     = $this->getAdminUGroup($ugroups);
+
+        if (! $this->driver->doesTheParentProjectExist($gerrit_server, $project_name) && $admin_ugroup) {
+            $admin_group_name = $project_name.'/'.$admin_ugroup->getNormalizedName();
+            $project_name = $this->driver->createParentProject($gerrit_server, $repository, $admin_group_name);
         }
-        $this->initiatePermissions(
+
+        $gerrit_project_name = $this->driver->createProject($gerrit_server, $repository, $project_name);
+
+        $this->initiateGerritPermissions(
             $repository,
             $gerrit_server,
-            $gerrit_server->getCloneSSHUrl($gerrit_project),
-            $gerrit_project.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_CONTRIBUTORS,
-            $gerrit_project.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_INTEGRATORS,
-            $gerrit_project.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_SUPERMEN,
-            $gerrit_project.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_OWNERS,
+            $gerrit_server->getCloneSSHUrl($gerrit_project_name),
+            $migrated_ugroups,
             Config::get('sys_default_domain') .'-'. self::GROUP_REPLICATION
         );
-        
-        $this->exportGitBranches($gerrit_server, $gerrit_project, $repository);
 
-        return $gerrit_project;
+        $this->exportGitBranches($gerrit_server, $gerrit_project_name, $repository);
+
+        return $gerrit_project_name;
+    }
+
+    /**
+     *
+     * @param UGroup[] $ugroups
+     * @return null | UGroup
+     */
+    private function getAdminUGroup(array $ugroups) {
+        foreach ($ugroups as $ugroup) {
+            if ($ugroup->getId() == UGroup::PROJECT_ADMIN) {
+                return $ugroup;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     *
+     * @param UGroup[] $ugroups
+     * @param Project $project
+     * @param Git_RemoteServer_GerritServer $gerrit_server
+     * @return UGroup[]
+     */
+    private function migrateUGroups(array $ugroups, Git_RemoteServer_GerritServer $gerrit_server) {
+        $migrated_ugroups = array();
+
+        foreach ($ugroups as $ugroup) {
+            if ($this->membership_manager->createGroupForServer($gerrit_server, $ugroup)) {
+                $migrated_ugroups[] = $ugroup;
+            }
+        }
+
+        return $migrated_ugroups;
     }
 
     private function exportGitBranches(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project, GitRepository $repository) {
@@ -78,16 +127,15 @@ class Git_Driver_Gerrit_ProjectCreator {
         `$cmd`;
     }
 
-    private function initiatePermissions(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, $contributors, $integrators, $supermen, $owners, $replication_group) {
+    private function initiateGerritPermissions(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, array $ugroups, $replication_group) {
         $this->cloneGerritProjectConfig($gerrit_server, $gerrit_project_url);
-        $this->addGroupToGroupFile($gerrit_server, $contributors);
-        $this->addGroupToGroupFile($gerrit_server, $integrators);
-        $this->addGroupToGroupFile($gerrit_server, $supermen);
-        $this->addGroupToGroupFile($gerrit_server, $owners);
+        foreach ($ugroups as $ugroup) {
+            $this->addGroupToGroupFile($gerrit_server, $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName());
+        }
         $this->addGroupToGroupFile($gerrit_server, $replication_group);
         $this->addGroupToGroupFile($gerrit_server, 'Administrators');
         $this->addRegisteredUsersGroupToGroupFile();
-        $this->addPermissionsToProjectConf($repository, $contributors, $integrators, $supermen, $owners, $replication_group);
+        $this->addPermissionsToProjectConf($repository, $ugroups, $replication_group);
         $this->pushToServer();
     }
 
@@ -121,48 +169,91 @@ class Git_Driver_Gerrit_ProjectCreator {
         file_put_contents("$this->dir/groups", "$uuid\t$group_name\n", FILE_APPEND);
     }
 
-    private function addPermissionsToProjectConf(GitRepository $repository, $contributors, $integrators, $supermen, $owners, $replication_group) {
+    private function addPermissionsToProjectConf(GitRepository $repository, array $ugroups, $replication_group) {
         // https://groups.google.com/d/msg/repo-discuss/jTAY2ApcTGU/DPZz8k0ZoUMJ
         // Project owners are those who own refs/* within that project... which
         // means they can modify the permissions for any reference in the
         // project.
-        $this->addToSection('refs', 'owner', "group $owners");
-        $this->addToSection('refs', 'Read', "group $replication_group");
 
-        if ($this->shouldAddRegisteredUsers($repository)) {
-            $this->addToSection('refs/heads', 'Read', "group Registered Users");
+        $ugroup_ids_read = $this->user_finder->getUgroups($repository->getId(), Git::PERM_READ);
+        $ugroup_ids_write = $this->user_finder->getUgroups($repository->getId(), Git::PERM_WRITE);
+        $ugroup_ids_rewind = $this->user_finder->getUgroups($repository->getId(), Git::PERM_WPLUS);
+
+        $ugroups_read   = array();
+        $ugroups_write  = array();
+        $ugroups_rewind = array();
+
+        foreach ($ugroups as $ugroup) {
+            if(in_array($ugroup->getId(), $ugroup_ids_read)) {
+                $ugroups_read[] = $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
+            }
+            if (in_array($ugroup->getId(), $ugroup_ids_write)) {
+                $ugroups_write[] = $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
+            }
+            if (in_array($ugroup->getId(), $ugroup_ids_rewind)) {
+                $ugroups_rewind[] = $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
+            }
         }
-        $this->addToSection('refs/heads', 'Read', "group $contributors");
-        $this->addToSection('refs/heads', 'Read', "group $integrators");
-        $this->addToSection('refs/heads', 'create', "group $integrators");
-        $this->addToSection('refs/heads', 'forgeAuthor', "group $integrators");
-        $this->addToSection('refs/heads', 'label-Code-Review', "-2..+2 group $integrators");
-        $this->addToSection('refs/heads', 'label-Code-Review', "-1..+1 group $contributors");
-        $this->addToSection('refs/heads', 'label-Verified', "-1..+1 group $integrators");
-        $this->addToSection('refs/heads', 'submit', "group $integrators");
-        $this->addToSection('refs/heads', 'push', "group $integrators");
-        $this->addToSection('refs/heads', 'push', "+force group $supermen");
-        $this->addToSection('refs/heads', 'pushMerge', "group $integrators");
+
+        if (in_array(UGroup::REGISTERED, $ugroup_ids_read) && $this->shouldAddRegisteredUsers($repository)) {
+            $ugroups_read[] = 'Registered Users';
+        }
+
+        $this->addToSection('refs', 'read', "group $replication_group");
+
+        /*if ($this->shouldAddRegisteredUsers($repository) && !in_array(UGroup::REGISTERED, $ugroup_ids_read)) {
+            $this->addToSection('refs/heads', 'read', "group Registered Users");
+        }*/
+        foreach ($ugroups_read as $ugroup_read) {
+            $this->addToSection('refs/heads', 'read', "group $ugroup_read");
+            $this->addToSection('refs/heads', 'label-Code-Review', "-1..+1 group $ugroup_read");
+        }
+        foreach ($ugroups_write as $ugroup_write) {
+            $this->addToSection('refs/heads', 'read', "group $ugroup_write");
+            $this->addToSection('refs/heads', 'create', "group $ugroup_write");
+            $this->addToSection('refs/heads', 'forgeAuthor', "group $ugroup_write");
+            $this->addToSection('refs/heads', 'label-Code-Review', "-2..+2 group $ugroup_write");
+            $this->addToSection('refs/heads', 'label-Verified', "-1..+1 group $ugroup_write");
+            $this->addToSection('refs/heads', 'submit', "group $ugroup_write");
+            $this->addToSection('refs/heads', 'push', "group $ugroup_write");
+            $this->addToSection('refs/heads', 'pushMerge', "group $ugroup_write");
+        }
+        foreach ($ugroups_rewind as $ugroup_rewind) {
+            $this->addToSection('refs/heads', 'push', "+force group $ugroup_rewind");
+        }
 
         $this->addToSection('refs/heads', 'create', "group Administrators");  // push initial ref
         $this->addToSection('refs/heads', 'forgeCommitter', "group Administrators"); // push initial ref
 
-        $this->addToSection('refs/changes', 'push', "group $contributors");
-        $this->addToSection('refs/changes', 'push', "group $integrators");
-        $this->addToSection('refs/changes', 'push', "+force group $supermen");
-        $this->addToSection('refs/changes', 'pushMerge', "group $integrators");
+        foreach ($ugroups_read as $ugroup_read) {
+            $this->addToSection('refs/changes', 'push', "group $ugroup_read");
+        }
+        foreach ($ugroups_write as $ugroup_write) {
+            $this->addToSection('refs/changes', 'push', "group $ugroup_write");
+            $this->addToSection('refs/changes', 'pushMerge', "group $ugroup_write");
+        }
+        foreach ($ugroups_rewind as $ugroup_rewind) {
+            $this->addToSection('refs/changes', 'push', "+force group $ugroup_rewind");
+        }
 
-        $this->addToSection('refs/for/refs/heads', 'push', "group $contributors");
-        $this->addToSection('refs/for/refs/heads', 'push', "group $integrators");
-        $this->addToSection('refs/for/refs/heads', 'pushMerge', "group $integrators");
-
+        foreach ($ugroups_read as $ugroup_read) {
+            $this->addToSection('refs/for/refs/heads', 'push', "group $ugroup_read");
+        }
+        foreach ($ugroups_write as $ugroup_write) {
+            $this->addToSection('refs/for/refs/heads', 'push', "group $ugroup_write");
+            $this->addToSection('refs/for/refs/heads', 'pushMerge', "group $ugroup_write");
+        }
         // To be able to push merge commit on master, we need pushMerge on refs/for/*
         // http://code.google.com/p/gerrit/issues/detail?id=1072
         $this->addToSection('refs/for', 'pushMerge', "group Administrators"); // push initial ref
 
-        $this->addToSection('refs/tags', 'read', "group $contributors");
-        $this->addToSection('refs/tags', 'read', "group $integrators");
-        $this->addToSection('refs/tags', 'pushTag', "group $integrators");
+        foreach ($ugroups_read as $ugroup_read) {
+            $this->addToSection('refs/tags', 'read', "group $ugroup_read");
+        }
+        foreach ($ugroups_write as $ugroup_write) {
+            $this->addToSection('refs/tags', 'read', "group $ugroup_write");
+            $this->addToSection('refs/tags', 'pushTag', "group $ugroup_write");
+        }
 
         $this->addToSection('refs/tags', 'pushTag', "group Administrators"); // push initial ref
         $this->addToSection('refs/tags', 'create', "group Administrators");  // push initial ref

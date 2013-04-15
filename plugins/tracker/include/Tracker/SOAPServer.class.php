@@ -428,7 +428,7 @@ class Tracker_SOAPServer {
                             $fields_data[$field->getId()] = $field_data;
                         }
                     } else {
-                        throw new SoapFault(update_artifact_fault, 'Unknown value ' . $field_value->field_value . ' for field: ' . $field_value->field_name);
+                        throw new SoapFault(update_artifact_fault, 'Unknown value ' . print_r($field_value->field_value, true) . ' for field: ' . $field_value->field_name);
                     }
                 } else {
                     throw new SoapFault(update_artifact_fault, 'Unknown field: ' . $field_value->field_name);

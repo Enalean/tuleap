@@ -22,9 +22,10 @@ require_once 'common/dao/UGroupDao.class.php';
 require_once 'common/dao/UGroupUserDao.class.php';
 require_once 'common/dao/UserGroupDao.class.php';
 require_once 'common/user/User.class.php';
+require_once 'common/user/Users.class.php';
+require_once 'common/project/ProjectManager.class.php';
 require_once 'www/project/admin/ugroup_utils.php';
 require_once 'UGroup_Invalid_Exception.class.php';
-require_once 'common/user/Users.class.php';
 require_once 'utils.php';
 
 /**
@@ -69,9 +70,14 @@ class UGroup {
     protected $name         = null;
     protected $description  = null;
     protected $is_dynamic   = true;
+    protected $source_id    = false;
 
     protected $members      = null;
     protected $members_name = null;
+    /** @var Project */
+    protected $project      = null;
+    /** @var UGroup */
+    protected $source_ugroup  = false;
 
     protected $_ugroupdao;
     protected $_ugroupuserdao;
@@ -89,6 +95,7 @@ class UGroup {
         $this->name        = isset($row['name'])        ? $row['name']        : null;
         $this->description = isset($row['description']) ? $row['description'] : null;
         $this->group_id    = isset($row['group_id'])    ? $row['group_id']    : 0;
+        $this->source_id   = isset($row['source_id'])   ? $row['source_id']   : false;
         $this->is_dynamic  = $this->id < 100;
     }
 
@@ -118,6 +125,10 @@ class UGroup {
     
     public function setUGroupUserDao(UGroupUserDao $dao) {
         $this->_ugroupuserdao = $dao;
+    }
+
+    public function setProject(Project $project) {
+        $this->project = $project;
     }
 
     /**
@@ -172,6 +183,13 @@ class UGroup {
         return $this->group_id;
     }
 
+    public function getProject() {
+        if (!$this->project) {
+            $this->project = ProjectManager::instance()->getProject($this->group_id);
+        }
+        return $this->project;
+    }
+
     public function getDescription() {
         return $this->description;
     }
@@ -212,6 +230,10 @@ class UGroup {
 
     public function getUserLdapIds($group_id) {
         return $this->getUsers($group_id)->getLdapIds();
+    }
+
+    public function getLdapMembersIds($group_id) {
+        return $this->getUsers($group_id)->getNonEmptyLdapIds();
     }
 
     /**
@@ -455,12 +477,28 @@ class UGroup {
      * @return Boolean
      */
     public function isBound() {
-        $dar = $this->getUGroupDao()->getUgroupBindingSource($this->id);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
-            return  true;
-        } else {
-            return false;
+        if ($this->source_id === false) {
+            $this->getSourceGroup();
         }
+        return ($this->source_id != null);
     }
+
+    public function getSourceGroup() {
+        if ($this->source_ugroup === false) {
+            $this->setSourceGroup($this->getUgroupBindingSource($this->id));
+        }
+        return $this->source_ugroup;
+    }
+
+    protected function getUgroupBindingSource($id) {
+        $ugroup_manager = new UGroupManager();
+        return $ugroup_manager->getUgroupBindingSource($id);
+    }
+
+    public function setSourceGroup(UGroup $ugroup = null) {
+        $this->source_ugroup = $ugroup;
+        $this->source_id = ($ugroup === null) ? null : $ugroup->getId();
+    }
+
 }
 ?>

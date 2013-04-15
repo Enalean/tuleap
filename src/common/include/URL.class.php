@@ -83,11 +83,11 @@ class URL {
                 return false;
             }
             $dao = $this->getProjectDao();
-            $res_proj=$dao->searchByUnixGroupName($this_proj_name);
-            if ($res_proj->rowCount() < 1) {# project does not exist
+            $dao_results=$dao->searchByUnixGroupName($this_proj_name);
+            if ($dao_results->rowCount() < 1) {# project does not exist
                 return false;
             }
-            $group_id=$res_proj->getRow();
+            $group_id=$dao_results->getRow();
             $group_id=$group_id['group_id'];
         }
         // Forum and news. Each published news is a special forum of project 'news'
@@ -125,9 +125,25 @@ class URL {
             }
         }
 
-        if(isset($group_id)) {
+        if (strpos($req_uri,'/plugins/mediawiki/wiki/') === 0) {
+            $pieces       = explode("/", $req_uri);
+            $project_name = $pieces[4];
+            
+            $dao          = $this->getProjectDao();
+            $dao_results  = $dao->searchByUnixGroupName($project_name);
+
+            if ($dao_results->rowCount() < 1) {
+                // project does not exist
+                return false;
+            }
+
+            $project_data = $dao_results->getRow();
+            $group_id     = $project_data['group_id'];
+        }
+
+        if (isset($group_id)) {
             return $group_id;
-        }else return null;
+        } else return null;
     }
     
     function getProjectDao() {

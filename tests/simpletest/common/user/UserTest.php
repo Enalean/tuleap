@@ -283,7 +283,7 @@ class UserTest extends TuleapTestCase {
             .'mJtuHrow49+6mOuL5v+M+0FlwGthagQt1zjWvo6g8GC4x97Wt3FVu8cfQJVu7S5KBX'
             .'iz2VjRAwKTovt+M4+PlqO00vWbaaviFirwJPXjHoGVKONa/ahrXYiTICSgWUR6Cjlq'
             .'Hs15cMSFOfkmDimu9KJiaOvfMNDPDGW/HeNUYB7HqYZIRcznQ== marcel@shanon.net';
-        $ssh = $k1.'###'.$k2;
+        $ssh = $k1.PFUser::SSH_KEY_SEPARATOR.$k2;
         $user = new PFUser(array('language_id'     => 'en_US',
                                'authorized_keys' => $ssh));
         $this->assertEqual($user->getAuthorizedKeys(), $ssh);
@@ -306,7 +306,7 @@ class UserTest extends TuleapTestCase {
             .'iz2VjRAwKTovt+M4+PlqO00vWbaaviFirwJPXjHoGVKONa/ahrXYiTICSgWUR6Cjlq'
             .'Hs15cMSFOfkmDimu9KJiaOvfMNDPDGW/HeNUYB7HqYZIRcznQ== marcel@shanon.net';
         $user = new PFUser(array('language_id'     => 'en_US',
-                               'authorized_keys' => $k1.'######'.$k2));
+                               'authorized_keys' => $k1.PFUser::SSH_KEY_SEPARATOR.PFUser::SSH_KEY_SEPARATOR.$k2));
         $res = $user->getAuthorizedKeys(true);
         $this->assertEqual($res[0], $k1);
         $this->assertFalse(isset($res[1]));

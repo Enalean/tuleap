@@ -18,13 +18,6 @@
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
 require_once('common/backend/Backend.class.php');
-require_once('GitDao.class.php');
-require_once('Git_LogDao.class.php');
-require_once('GitDriver.class.php');
-require_once('Git_Backend_Interface.php');
-require_once('GitRepositoryCreator.class.php');
-require_once('GitRepository.class.php');
-require_once('exceptions/GitBackendException.class.php');
 
 /**
  * Description of GitBackend
@@ -158,7 +151,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         return true;
     }
 
-    public function isInitialized($repository) {
+    public function isInitialized(GitRepository $repository) {
         $masterExists = $this->getDriver()->masterExists( $this->getGitRootPath().'/'.$repository->getPath() );
         if ( $masterExists ) {
             $this->getDao()->initialize( $repository->getId() );
@@ -166,6 +159,15 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         } else {
             return false;
         }
+    }
+
+    /**
+     *
+     * @param GitRepository $respository
+     * @return bool
+     */
+    public function isCreated(GitRepository $repository) {
+        return $this->getDriver()->isRepositoryCreated($this->getGitRootPath().'/'.$repository->getPath());
     }
 
     public function changeRepositoryAccess($repository) {
@@ -418,18 +420,6 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
             $formatter->addLine($gitUsers);
             $formatter->addLine($gitRepo);
         }
-    }
-
-    /**
-     * Do nothing :)
-     *
-     * @param GitRepository $repository Useless param :p
-     *
-     * @return Void
-     */
-    public function commitTransaction(GitRepository $repository) {
-        // this action is not necessary for thhis type of backend
-        // well actually it might recieve the code from save.
     }
 
     public function getAllowedCharsInNamePattern() {

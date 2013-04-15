@@ -1,3 +1,12 @@
+Version 0.5 - Tuleap 5.13
+    * Managing basic permissions for mediawiki
+
+Version 0.4 - Tuleap 5.13
+    * Mediawiki packaging
+
+Version 0.3 - Tuleap 5.13
+    * Add a plugin dependency solver to force installation of needed plugins
+
 Version 0.2 - Tuleap 5.12
     * Create the mediawiki database/filesystem when the service is used for a project
 

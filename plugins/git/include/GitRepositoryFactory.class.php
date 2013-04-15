@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'GitDao.class.php';
-require_once 'GitRepository.class.php';
-require_once 'GitRepositoryWithPermissions.class.php';
 
 class GitRepositoryFactory {
     /**
@@ -123,11 +120,19 @@ class GitRepositoryFactory {
         return $repositories;
     }
 
-    public function getGerritRepositoriesWithPermissionsForUGroup(Project $project, UGroup $ugroup, PFUser $user) {
+    /**
+     * @todo should be private
+     *
+     * @param Project $project
+     * @param UGroup $ugroup
+     * @param PFUser $user
+     * @return \GitRepositoryWithPermissions
+     */
+    public function getGerritRepositoriesWithPermissionsForUGroupAndProject(Project $project, UGroup $ugroup, PFUser $user) {
         $repositories = array();
         $ugroups      = $user->getUgroups($project->getID(), null);
         $ugroups[]    = $ugroup->getId();
-        $dar          = $this->dao->searchGerritRepositoriesWithPermissionsForUGroup($project->getID(), $ugroups);
+        $dar          = $this->dao->searchGerritRepositoriesWithPermissionsForUGroupAndProject($project->getID(), $ugroups);
         foreach ($dar as $row) {
             if (isset($repositories[$row['repository_id']])) {
                 $repo_with_perms = $repositories[$row['repository_id']];
@@ -153,7 +158,7 @@ class GitRepositoryFactory {
             $all_repositories[$row['repository_id']] = new GitRepositoryWithPermissions($this->instanciateFromRow($row));
         }
         $admin_ugroup = new UGroup(array('ugroup_id' => UGroup::PROJECT_ADMIN));
-        $repositories_with_admin_permissions = $this->getGerritRepositoriesWithPermissionsForUGroup($project, $admin_ugroup, $user);
+        $repositories_with_admin_permissions = $this->getGerritRepositoriesWithPermissionsForUGroupAndProject($project, $admin_ugroup, $user);
 
         foreach ($repositories_with_admin_permissions as $repository_id => $repository) {
             $all_repositories[$repository_id] = $repository;

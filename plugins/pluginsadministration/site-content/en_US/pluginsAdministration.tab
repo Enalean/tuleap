@@ -8,12 +8,12 @@ plugin_pluginsadministration	descriptor_name	Plugins Administration
 #
 #
 plugin_pluginsadministration	Actions	Actions
-plugin_pluginsadministration	change_to_unavailable	Change to No
-plugin_pluginsadministration	change_to_available	Change to Yes
+plugin_pluginsadministration	change_to_unavailable	Do not avail this plugin
+plugin_pluginsadministration	change_to_available	Avail this plugin
 plugin_pluginsadministration	Description	Description
 plugin_pluginsadministration	discard_changes	Discard changes ?
-plugin_pluginsadministration	unavailable	No
-plugin_pluginsadministration	available	Yes
+plugin_pluginsadministration	unavailable	no
+plugin_pluginsadministration	available	yes
 plugin_pluginsadministration	feedback_available	$1 is now available.
 plugin_pluginsadministration	feedback_unavailable	$1 is now unavailable. Web space and CGI remain accessible!
 plugin_pluginsadministration	Hook:	Hook:
@@ -44,6 +44,11 @@ plugin_pluginsadministration	Scope	Scope
 plugin_pluginsadministration	scope_0	System
 plugin_pluginsadministration	scope_1	Projects
 plugin_pluginsadministration	scope_2	Users
+plugin_pluginsadministration	error_avail_dependency	Unable to unavail $1. Please unavail the following plugins before:  $2
+plugin_pluginsadministration	error_unavail_dependency	Unable to avail $1. Please avail the following plugins before: $2
+plugin_pluginsadministration	error_install_dependency	There are unmet dependencies that prevent you from installing this plugin:
+plugin_pluginsadministration	error_uninstall_dependency	You cannot uninstall <em>$1</em> since at least another plugin depends on it:
+
 #
 #
 #
@@ -51,6 +56,7 @@ plugin_pluginsadministration_properties	display_priorities	Display priorities of
 plugin_pluginsadministration_properties	properties_addproject	Add project:
 plugin_pluginsadministration_properties	properties_av_for_prj	Available for all projects
 plugin_pluginsadministration_properties	properties_delproject	Remove project:
+plugin_pluginsadministration_properties	properties_dependencies:	Dependencies:
 plugin_pluginsadministration_properties	properties_description:	Description:
 plugin_pluginsadministration_properties	properties_is_av_for_prj	This plugin available for all projects:
 plugin_pluginsadministration_properties	properties_hooks:	Listened Hooks:

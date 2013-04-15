@@ -1,3 +1,57 @@
+Version 3.0 - Tuleap 5.13
+    * story #2967 - Serialize gitolite events
+
+    Sevral concurrent processes accessing the same gitolite admin repository
+    in the same time seems to lead to race conditions and sometime might
+    crash gitolite authorized_keys.
+
+    Furthermore, as the number of git repositories grow, modifications made on
+    gitolite admin repo takes time to push (compile time in gitolite to generate
+    the permission schema).
+
+    With this change, all gitolite admin operations (ssh keys modifications,
+    creation of repository, deletion, update of description, update of permissions,
+    update of mailing list details, move to gerrit, etc) are done one after
+    another (serialized), in background (system event).
+
+    For end user, it means a UI with better reactivity but a little bit of delay
+    to actually get the things propagated at git/gitolite level (usually a couple
+    of minutes).
+
+Version 2.7.39 - Tuleap 5.13
+    * story #1462: synchronize user ssh keys with gerrit servers
+
+Version 2.7.38 - Tuleap 5.13
+    story #2795 - tuleap binded groups to be replicated on Gerrit
+
+    The Tuleap binded groups are replicated as Gerrit group of groups
+    aka. included groups.
+    This implies that, on gerrit side, we cannot take into account private
+    projects or restricted users settings into account.
+
+    Given a "Developers" user group in Tuleap "Top Level" public project
+    And a "Developers" user group in Tuleap "Product" private project, bound to "Top Level/Developers"
+    And "John", member of "Developers", "Top Level" project member but NOT "Product" project member
+    Then John don't have access to any content in "Product" Tuleap project
+    But he has access to Gerrit project that grant access to "Product/Developers" group
+
+    While this scenario might sounds legit, the behaviours are differents and should probably be documented.
+
+Version 2.7.37 - Tuleap 5.13
+    * Fix include after autload
+
+Version 2.7.36 - Tuleap 5.13
+    * Autoload git
+
+Version 2.7.35 - Tuleap 5.13
+    * A repository can now be disconnected from Gerrit
+
+Version 2.7.34 - Tuleap 5.13
+    * Tuleap User groups migration into Gerrit
+
+Version 2.7.33 - Tuleap 5.13
+    * Fix: Gerrit replication seems to be picky on permission case
+
 Version 2.7.32 - Tuleap 5.12
     * Use Gerrit replication mecanism to propagate gerrit changes onto Tuleap
 

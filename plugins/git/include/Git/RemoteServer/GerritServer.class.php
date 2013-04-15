@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once 'common/event/EventManager.class.php';
-require_once GIT_BASE_DIR. '/Git/Driver/Gerrit/RemoteSSHConfig.class.php';
-require_once GIT_BASE_DIR .'/Git/RemoteServer/Gerrit/ReplicationSSHKey.class.php';
 /**
  * @see Git_Driver_Gerrit_RemoteSSHConfig
  */
@@ -36,7 +34,7 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     private $identity_file;
     private $replication_key;
 
-    public function __construct($id, $host, $ssh_port, $http_port, $login, $identity_file, Git_RemoteServer_Gerrit_ReplicationSSHKey $replication_key) {
+    public function __construct($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key) {
         $this->id               = $id;
         $this->host             = $host;
         $this->ssh_port         = $ssh_port;
@@ -120,7 +118,7 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
 
     /**
      *
-     * @return Git_RemoteServer_Gerrit_ReplicationSSHKey
+     * @return String
      */
     public function getReplicationKey() {
         return $this->replication_key;
@@ -128,10 +126,10 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
 
     /**
      *
-     * @param Git_RemoteServer_Gerrit_ReplicationSSHKey $key
+     * @param String $key
      * @return \Git_RemoteServer_GerritServer
      */
-    public function setReplicationKey(Git_RemoteServer_Gerrit_ReplicationSSHKey $key) {
+    public function setReplicationKey($key) {
         $this->replication_key = $key;
         return $this;
     }

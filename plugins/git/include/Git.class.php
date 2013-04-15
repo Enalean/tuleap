@@ -19,14 +19,8 @@
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
 
-require_once('mvc/PluginController.class.php');
-require_once('GitViews.class.php');
-require_once('GitActions.class.php');
-require_once('GitRepository.class.php');
-require_once('GitLog.class.php');
-require_once 'Git_LastPushesGraph.class.php';
-
 require_once('common/valid/ValidFactory.class.php');
+require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 /**
  * Git
@@ -83,7 +77,19 @@ class Git extends PluginController {
     /** @var Git_Driver_Gerrit */
     private $driver;
 
-    public function __construct(GitPlugin $plugin, Git_RemoteServer_GerritServerFactory $gerrit_server_factory, Git_Driver_Gerrit $driver) {
+    /** @var GitRepositoryManager */
+    private $repository_manager;
+
+    /** @var Git_SystemEventManager */
+    private $git_system_event_manager;
+
+    public function __construct(
+        GitPlugin $plugin,
+        Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
+        Git_Driver_Gerrit $driver,
+        GitRepositoryManager $repository_manager,
+        Git_SystemEventManager $system_event_manager
+    ) {
         parent::__construct();
         
         $this->userManager           = UserManager::instance();
@@ -91,6 +97,8 @@ class Git extends PluginController {
         $this->factory               = new GitRepositoryFactory(new GitDao(), $this->projectManager);
         $this->gerrit_server_factory = $gerrit_server_factory;
         $this->driver                = $driver;
+        $this->repository_manager    = $repository_manager;
+        $this->git_system_event_manager = $system_event_manager;
         
         $matches = array();
         if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
@@ -204,6 +212,7 @@ class Git extends PluginController {
                                             'do_fork_repositories',
                                             'view_last_git_pushes',
                                             'migrate_to_gerrit',
+                                            'disconnect_gerrit',
             );
         } else {
             $this->addPermittedAction('index');
@@ -450,6 +459,16 @@ class Git extends PluginController {
                     $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
                 }
                 break;
+            case 'disconnect_gerrit':
+                $repo = $this->factory->getRepositoryById($repoId);
+                if (empty($repo)) {
+                    $this->addError($this->getText('actions_params_error'));
+                    $this->redirect('/plugins/git/?group_id='. $this->groupId);
+                } else {
+                    $this->addAction('disconnectFromGerrit', array($repo));
+                    $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
+                }
+                break;
             #LIST
             default:
                
@@ -550,9 +569,14 @@ class Git extends PluginController {
      * @return PluginActions
      */
     protected function instantiateAction($action) {
-        $system_event_manager   = SystemEventManager::instance();
-        $git_repository_manager = new GitRepositoryManager($this->factory, $system_event_manager);
-        return new $action($this, $system_event_manager, $this->factory, $git_repository_manager, $this->gerrit_server_factory, $this->driver);
+        return new $action(
+            $this,
+            $this->git_system_event_manager,
+            $this->factory,
+            $this->repository_manager,
+            $this->gerrit_server_factory,
+            $this->driver
+        );
     }
 
     public function _doDispatchForkCrossProject($request, $user) {

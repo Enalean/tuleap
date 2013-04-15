@@ -1,3 +1,6 @@
+If you installed this plugin from the package management system (RPM) all
+dependencies are already installed, you just need to activate the plugin
+to start using it.
 == How to set up ==
 * Read plugins/mediawiki/INSTALL.tuleap
 
@@ -23,6 +26,7 @@ It's mainly a wrapper around mediawiki:
 -> the view in README.codendi is supposed to get a table of projects where a plugin is activated.
    It's done with a join between "service" and "plugin" tables but the issue is that service.short_name and plugin.name
    doesn't match. Example:
+
    * docman: service.short_name = 'docman' && plugin.name = 'docman'
    * tracker: service.short_name = 'plugin_tracker' && plugin.name = 'tracker'
 

@@ -178,10 +178,10 @@ class UGroupDao extends DataAccessObject {
      */
     function getUgroupBindingSource($ugroupId) {
         $ugroupId = $this->da->escapeInt($ugroupId);
-        $sql      = "SELECT u.source_id, v.group_id
-                     FROM ugroup u, ugroup v
-                     WHERE u.ugroup_id = ".$ugroupId."
-                       AND v.ugroup_id = u.source_id";
+        $sql      = "SELECT source.*
+                     FROM ugroup u 
+                       JOIN ugroup source ON (source.ugroup_id = u.source_id)
+                     WHERE u.ugroup_id = ".$ugroupId;
         return $this->retrieve($sql);
     }
 

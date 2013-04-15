@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean SAS, 2013. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -19,13 +20,13 @@
  *
  * Portions Copyright 2010 (c) Mélanie Le Bail
  */
-require_once 'common/plugin/PluginInfo.class.php';
+require_once 'common/plugin/PluginFileInfo.class.php';
 require_once 'MediaWikiPluginDescriptor.class.php';
 
-class MediaWikiPluginInfo extends PluginInfo {
+class MediaWikiPluginInfo extends PluginFileInfo {
 
     function MediaWikiPluginInfo(&$plugin) {
-        $this->PluginInfo($plugin);
+        parent::__construct($plugin, 'mediawiki');
         $this->setPluginDescriptor(new MediaWikiPluginDescriptor());
     }
 

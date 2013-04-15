@@ -358,4 +358,35 @@ class UGroup_GetsNameTest extends TuleapTestCase {
         $this->assertEqual('Zoum_zoum_zen', $ugroup->getNormalizedName());
     }
 }
+
+class UGroup_SourceInitializationTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->ugroup = partial_mock('UGroup', array('getUgroupBindingSource'), array('ugroup_id' => 123));
+    }
+
+    public function itQueriesTheDatabaseWhenDefaultValueIsFalse() {
+        expect($this->ugroup)->getUgroupBindingSource()->once();
+        $this->ugroup->isBound();
+    }
+
+    public function itQueriesTheDatabaseOnlyOnce() {
+        expect($this->ugroup)->getUgroupBindingSource()->once();
+        stub($this->ugroup)->getUgroupBindingSource()->returns(null);
+        $this->ugroup->isBound();
+        $this->ugroup->isBound();
+    }
+
+    public function itReturnsTrueWhenTheGroupIsBound() {
+        stub($this->ugroup)->getUgroupBindingSource()->returns(stub('UGroup')->getId()->returns(666));
+        $this->assertTrue($this->ugroup->isBound());
+    }
+
+    public function itReturnsFalseWhenTheGroupIsNotBound() {
+        stub($this->ugroup)->getUgroupBindingSource()->returns(null);
+        $this->assertFalse($this->ugroup->isBound());
+    }
+
+}
 ?>

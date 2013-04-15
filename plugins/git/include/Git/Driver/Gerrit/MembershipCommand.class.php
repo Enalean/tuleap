@@ -22,55 +22,24 @@
  * I'm responsible of managing propagation of user membership changes (add/remove) to gerrit.
  */
 abstract class Git_Driver_Gerrit_MembershipCommand {
-    private   $user_finder;
+    /** @var Git_Driver_Gerrit_MembershipManager */
+    protected $membership_manager;
+    /** @var Git_Driver_Gerrit */
     protected $driver;
+    /** @var UGroup */
+    protected $ugroup;
 
-    public function __construct(Git_Driver_Gerrit $driver, Git_Driver_Gerrit_UserFinder $user_finder) {
-        $this->driver      = $driver;
-        $this->user_finder = $user_finder;
+    public function __construct(Git_Driver_Gerrit_MembershipManager $membership_manager, Git_Driver_Gerrit $driver, UGroup $ugroup) {
+        $this->membership_manager = $membership_manager;
+        $this->driver = $driver;
+        $this->ugroup = $ugroup;
     }
 
-    protected abstract function propagateToGerrit(Git_RemoteServer_GerritServer $server, PFUser $user, $group_full_name);
-
-    protected abstract function isUserConcernedByPermission(PFUser $user, Project $project, $groups);
-
-    public function execute(Git_RemoteServer_GerritServer $server, PFUser $user, Project $project, $repository) {
-        $groups_full_names = $this->getConcernedGerritGroups($user, $project, $repository);
-
-        foreach ($groups_full_names as $group_full_name) {
-            $this->propagateToGerrit($server, $user, $group_full_name);
-        }
+    public function getUGroup() {
+        return $this->ugroup;
     }
 
-    protected function getConcernedGerritGroups(PFUser $user, Project $project, GitRepositoryWithPermissions $repository_with_permissions) {
-        $groups_full_names = array();
-
-        foreach ($repository_with_permissions->getPermissions() as $tuleap_permission_type => $groups_with_permission) {
-            if (count($groups_with_permission) > 0) {
-                if ($this->isUserConcernedByPermission($user, $project, $groups_with_permission)) {
-                    $groups_full_names[] = $this->getGerritGroupName($project, $repository_with_permissions->getRepository(), Git_Driver_Gerrit_MembershipManager::$PERMS_TO_GROUPS[$tuleap_permission_type]);
-                }
-            }
-        }
-
-        return $groups_full_names;
-    }
-
-    protected function isUserInGroups($user, $project, $group_list) {
-        $user_groups = $user->getUgroups($project->getID(), null);
-        foreach ($user_groups as $user_group) {
-            if (in_array($user_group, $group_list)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function getGerritGroupName(Project $project, GitRepository $repo, $group_name) {
-        $project_name    = $project->getUnixName();
-        $repository_name = $repo->getFullName();
-
-        return "$project_name/$repository_name-$group_name";
-    }
+    abstract public function execute(Git_RemoteServer_GerritServer $server);
 }
+
 ?>

@@ -64,6 +64,10 @@ class Tracker_Report_Criteria {
     public function fetch() {
         return $this->field->fetchCriteria($this);
     }
+
+    public function fetchWithoutExpandFunctionnality() {
+        return $this->field->fetchCriteriaWithoutExpandFunctionnality($this);
+    }
     
     public function delete() {
         return $this->field->deleteCriteriaValue($this);

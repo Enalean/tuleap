@@ -1365,3 +1365,7 @@ tr.artifact-children-table-head {
 .artifact-child > td {
     border-left: 0 none;
 }
+
+.toggle-child > img {
+    vertical-align: middle;
+}

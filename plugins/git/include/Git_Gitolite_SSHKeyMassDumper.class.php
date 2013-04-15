@@ -22,7 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Git_Gitolite_SSHKeyMassDumper.class.php';
 
 class Git_Gitolite_SSHKeyMassDumper {
     private $dumper;
@@ -35,7 +34,10 @@ class Git_Gitolite_SSHKeyMassDumper {
 
     public function dumpSSHKeys() {
         $this->dumpAllKeys();
-        return $this->dumper->commitKeyDir('SystemEvent update all user keys');
+        if ($this->dumper->commitKeyDir('SystemEvent update all user keys')) {
+            return $this->dumper->getGitExec()->push();
+        }
+        return false;
     }
 
     private function dumpAllKeys() {

@@ -46,6 +46,15 @@ class Event {
     const DUMP_SSH_KEYS = 'dump_ssh_keys';
 
     /**
+     * The user is accessing a list of their keys
+     *
+     * Parameters:
+     *   'user' => PFUser
+     *   'html' => string An emty string of html output- passed by reference
+     */
+    const LIST_SSH_KEYS = 'list_ssh_keys';
+
+    /**
      * The user has just changed his email address.
      * 
      * Parameters:
@@ -357,6 +366,29 @@ class Event {
      *     'allowed' => Boolean indicating that the update of members of the ugroup is allowed
      */
     const  UGROUP_UPDATE_USERS_ALLOWED = 'ugroup_update_users_allowed';
+
+    /**
+     * Raised when an ugroup is bound to another one
+     *
+     * Parameters
+     *     'ugroup' => UGroup The modified ugroup
+     *     'source' => UGroup The new ugroup we bind with
+     *
+     * Expected results:
+     *     void
+     */
+    const UGROUP_MANAGER_UPDATE_UGROUP_BINDING_ADD = 'ugroup_manager_update_ugroup_binding_add';
+
+    /**
+     * Raised when an ugroup binding is removed
+     *
+     * Parameters
+     *     'ugroup' => UGroup The modified ugroup (no longer bound)
+     *
+     * Expected results:
+     *     void
+     */
+    const UGROUP_MANAGER_UPDATE_UGROUP_BINDING_REMOVE = 'ugroup_manager_update_ugroup_binding_remove';
 
     /**
      * Display information about SOAP end points

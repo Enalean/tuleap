@@ -693,12 +693,21 @@ class UserManager {
      * @param String $keys
      */
     public function updateUserSSHKeys(PFUser $user, $keys) {
+        $original_authorised_keys = $user->getAuthorizedKeysRaw();
+
         $ssh_validator = new User_SSHKeyValidator($this, $this->_getEventManager());
-        $valid_keys = $ssh_validator->filterValidKeys($keys);
+        $valid_keys    = $ssh_validator->filterValidKeys($keys);
         $user->setAuthorizedKeys(implode('###', $valid_keys));
+
         if ($this->updateDb($user)) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('account_editsshkeys', 'update_filesystem'));
-            $this->_getEventManager()->processEvent(Event::EDIT_SSH_KEYS, array('user_id' => $user->getId()));
+
+            $event_parameters = array(
+                'user_id'       => $user->getId(),
+                'original_keys' => $original_authorised_keys,
+            );
+
+            $this->_getEventManager()->processEvent(Event::EDIT_SSH_KEYS, $event_parameters);
         }
     }
 

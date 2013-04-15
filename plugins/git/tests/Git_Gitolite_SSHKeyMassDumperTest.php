@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 require_once 'Git_Gitolite_SSHKeyDumperTest.php';
-require_once dirname(__FILE__).'/../include/Git_Gitolite_SSHKeyMassDumper.class.php';
+require_once 'bootstrap.php';
 
 class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase {
     protected $mass_dumper;
@@ -32,6 +32,7 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
     public function itDumpsSshKeysForOneUser() {
         stub($this->user_manager)->getUsersWithSshKey()->returnsDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do')));
 
+        expect($this->gitExec)->push()->once();
         $this->mass_dumper->dumpSSHKeys();
 
         $this->assertTrue(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
@@ -41,6 +42,8 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
     }
 
     public function itRemovesSshKeyFileWhenUserDeletedAllHisKeys() {
+        expect($this->gitExec)->push()->count(2);
+
         $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do'))));
         $this->mass_dumper->dumpSSHKeys();
 
@@ -64,7 +67,7 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
     }
 
     public function itRemovesSshFilesWhenKeysAreDeleted() {
-        $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do')), new PFUser(array('authorized_keys' => $this->key2 . '###' . $this->key1, 'user_name' => 'do_john'))));
+        $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do')), new PFUser(array('authorized_keys' => $this->key2 . PFUser::SSH_KEY_SEPARATOR . $this->key1, 'user_name' => 'do_john'))));
         $this->mass_dumper->dumpSSHKeys();
 
         $this->user_manager->setReturnValueAt(1, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'do_john'))));
