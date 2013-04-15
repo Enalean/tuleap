@@ -18,18 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//
-// front-end to plugin Cardwall//
+/**
+ * This interface is responsible for the display preferences
+ * of cards.
+ */
+interface Tracker_CardDisplayPreferences {
 
-require_once('pre.php');
-require_once('common/plugin/PluginManager.class.php');
-
-$plugin_manager = PluginManager::instance();
-$p = $plugin_manager->getPluginByName('cardwall');
-if ($p && $plugin_manager->isPluginAvailable($p)) {
-    $p->process(HTTPRequest::instance());
-} else {
-    header('Location: '.get_server_url());
+    /**
+     * @return Boolean True if users' avatars should be
+     * displayed instead of usernames.
+     */
+    public function shouldDisplayAvatars();
 }
-
 ?>

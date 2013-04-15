@@ -106,20 +106,29 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      * @return Cardwall_PaneContentPresenter
      */
     private function getPresenterUsingMappedFields(Cardwall_OnTop_Config_ColumnCollection $columns) {
-        $board_factory      = new Cardwall_BoardFactory();
+        $board_factory       = new Cardwall_BoardFactory();
         $this->milestone_factory->updateMilestoneWithPlannedArtifacts($this->user, $this->milestone);
-        $planned_artifacts  = $this->milestone->getPlannedArtifacts();
+        $planned_artifacts   = $this->milestone->getPlannedArtifacts();
 
-        $field_retriever    = new Cardwall_OnTop_Config_MappedFieldProvider($this->config,
+        $field_retriever     = new Cardwall_OnTop_Config_MappedFieldProvider($this->config,
                                 new Cardwall_FieldProviders_SemanticStatusFieldRetriever());
 
-        $board              = $board_factory->getBoard($field_retriever, $columns, $planned_artifacts, $this->config, $this->user);
-        $backlog_title      = $this->milestone->getPlanning()->getBacklogTracker()->getName();
-        $redirect_parameter = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
+        $display_preferences = $this->getDisplayPreferences();
 
-        return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title, $this->canConfigure());
+        $board               = $board_factory->getBoard($field_retriever, $columns, $planned_artifacts, $this->config, $this->user, $display_preferences);
+        $backlog_title       = $this->milestone->getPlanning()->getBacklogTracker()->getName();
+        $redirect_parameter  = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
+
+        return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title, $this->canConfigure(), $this->getSwitchDisplayAvatarsURL(), $display_preferences->shouldDisplayAvatars());
     }
-    
+
+    private function getDisplayPreferences() {
+        $pref_name = Cardwall_DisplayPreferences::ASSIGNED_TO_USERNAME_PREFERENCE_NAME . $this->milestone->getTrackerId();
+        $display_avatars = $this->user->isAnonymous() || ! $this->user->getPreference($pref_name);
+
+        return new Cardwall_DisplayPreferences($display_avatars);
+    }
+
     private function canConfigure() {        
         $project = $this->milestone->getProject();
         if ($project->userIsAdmin($this->user)){
@@ -137,6 +146,29 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             return new Cardwall_QrCode($_SERVER['REQUEST_URI'] .'&pv=2');
         }
         return false;
+    }
+
+    private function getSwitchDisplayAvatarsURL() {
+        if ($this->user->isAnonymous()) {
+            return false;
+        }
+
+        $group_id    = $this->milestone->getGroupId();
+        $planning_id = $this->milestone->getPlanningId();
+        $tracker_id  = $this->milestone->getTrackerId();
+        $artifact_id = $this->milestone->getArtifactId();
+        
+        $action      = 'toggle_user_display_avatar';
+
+        $switch_display_username_url =
+            CARDWALL_BASE_URL
+            . '/?group_id='   . $group_id
+            . '&planning_id=' . $planning_id
+            . '&tracker_id='  . $tracker_id
+            . '&aid='         . $artifact_id 
+            . '&action='      . $action;
+
+        return $switch_display_username_url;
     }
 }
 ?>

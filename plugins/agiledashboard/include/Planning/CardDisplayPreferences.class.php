@@ -18,18 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//
-// front-end to plugin Cardwall//
+class Planning_CardDisplayPreferences implements Tracker_CardDisplayPreferences {
 
-require_once('pre.php');
-require_once('common/plugin/PluginManager.class.php');
-
-$plugin_manager = PluginManager::instance();
-$p = $plugin_manager->getPluginByName('cardwall');
-if ($p && $plugin_manager->isPluginAvailable($p)) {
-    $p->process(HTTPRequest::instance());
-} else {
-    header('Location: '.get_server_url());
+    public function shouldDisplayAvatars() {
+        // Returning True because it's always avatars which
+        // are displayed in order to identify users when in
+        // Backlog planning view.
+        return true;
+    }
 }
-
-?>
+ ?>

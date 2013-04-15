@@ -24,7 +24,7 @@ class Planning_ItemPresenterTest extends TuleapTestCase {
     public function itDelegatesToPlanningItem() {
         $trackers      = array(mock('Tracker'), mock('Tracker'));
         $planning_item = stub('Planning_Item')->getAllowedChildrenTypes()->returns($trackers);
-        $presenter     = new Planning_ItemPresenter($planning_item, mock('Tracker_CardFields'), '*');
+        $presenter     = new Planning_ItemPresenter($planning_item, mock('Tracker_CardFields'), mock('Planning_CardDisplayPreferences'), '*');
         $this->assertEqual($trackers, $presenter->allowedChildrenTypes());
     }
 }
