@@ -9,11 +9,6 @@
 %define APP_DATA_DIR %{_localstatedir}/lib/%{APP_NAME}
 %define APP_CACHE_DIR %{_localstatedir}/tmp/%{APP_NAME}_cache
 
-# Check values in Tuleap's mailman .spec file
-%define mailman_groupid  106
-%define mailman_group    mailman
-%define mailman_userid   106
-%define mailman_user     mailman
 %define app_group        codendiadm
 %define app_user         codendiadm
 %define dummy_group      dummy
@@ -587,12 +582,6 @@ if [ "$1" -eq "1" ]; then
     # Make sure mandatory unix groups exist
     #
 
-    # mailman
-    if grep -q "^%{mailman_group}:" /etc/group 2> /dev/null ; then
-        /usr/sbin/groupmod -g %{mailman_groupid} -n %{mailman_group} %{mailman_group} 2> /dev/null || :
-    else
-        /usr/sbin/groupadd -g %{mailman_groupid} %{mailman_group} 2> /dev/null || :
-    fi
     # codendiadm
     if ! grep -q "^%{app_group}:" /etc/group 2> /dev/null ; then
         /usr/sbin/groupadd -r %{app_group} 2> /dev/null || :
@@ -613,17 +602,10 @@ if [ "$1" -eq "1" ]; then
     # Make suser mandatory unix users exist
 
     # codendiadm
-    # mailman group needed to write in /var/log/mailman/ directory
     if id %{app_user} >/dev/null 2>&1; then
-        /usr/sbin/usermod -c 'Owner of Tuleap directories'    -d '/home/codendiadm'    -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group},%{mailman_group} %{app_user}
+        /usr/sbin/usermod -c 'Owner of Tuleap directories'    -d '/home/codendiadm'    -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group} %{app_user}
     else
-        /usr/sbin/useradd -c 'Owner of Tuleap directories' -M -d '/home/codendiadm' -r -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group},%{mailman_group} %{app_user}
-    fi
-    # mailman
-    if id %{mailman_user} >/dev/null 2>&1; then
-        /usr/sbin/usermod -c 'Owner of Mailman directories'    -d '/usr/lib/mailman' -u %{mailman_userid} -g %{mailman_groupid} -s '/sbin/nologin' %{mailman_user}
-    else
-        /usr/sbin/useradd -c 'Owner of Mailman directories' -M -d '/usr/lib/mailman' -u %{mailman_userid} -g %{mailman_groupid} -s '/sbin/nologin' %{mailman_user}
+        /usr/sbin/useradd -c 'Owner of Tuleap directories' -M -d '/home/codendiadm' -r -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group} %{app_user}
     fi
     # ftpadmin
     if id %{ftpadmin_user} >/dev/null 2>&1; then
