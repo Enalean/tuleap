@@ -1,3 +1,6 @@
+Version 3.1 - Tuleap 5.13
+    * do not miserably fail if there is no repo
+
 Version 3.0 - Tuleap 5.13
     * story #2967 - Serialize gitolite events
 
