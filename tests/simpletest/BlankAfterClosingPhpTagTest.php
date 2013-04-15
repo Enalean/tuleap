@@ -53,6 +53,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
             'post_merge_actions.php',
             'import_all_xml.php',
             'export_all_xml.php',
+            'export_project_xml.php',
         );
         
         //Those files are allowed to contain something after closing tag

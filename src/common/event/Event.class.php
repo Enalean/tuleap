@@ -460,6 +460,6 @@ class Event {
      * Expected Results:
      *   The various plugins inject stuff in the given xml element
      */
-    const EXPORT_XML_PROJECT = 'export_xml_export';
+    const EXPORT_XML_PROJECT = 'export_xml_project';
 }
 ?>
