@@ -43,12 +43,12 @@ UPDATE tracker_artifact ta
 INNER JOIN
 (
     SELECT  @row_num := IF(@prev_value=t.tracker_id,@row_num+1,1) AS RowNumber
-    	   ,t.tracker_id
-    	   ,t.id
-    	   ,@prev_value := t.tracker_id
+           ,t.tracker_id
+           ,t.id
+           ,@prev_value := t.tracker_id
     FROM tracker_artifact t,
-    	  (SELECT @row_num := 1) x,
-    	  (SELECT @prev_value := '') y
+           (SELECT @row_num := 1) x,
+           (SELECT @prev_value := '') y
     ORDER BY t.tracker_id, t.id ASC
 ) numbered_ids on (numbered_ids.id = ta.id)
 SET per_tracker_artifact_id = numbered_ids.RowNumber;";
