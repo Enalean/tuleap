@@ -28,12 +28,6 @@ class AgileDashboard_Controller extends MVC2_PluginController {
 
     /**
      *
-     * @var Codendi_Request
-     */
-    private $request;
-
-    /**
-     *
      * @var int
      */
     private $group_id;
