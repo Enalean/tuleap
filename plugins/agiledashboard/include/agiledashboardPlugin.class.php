@@ -52,6 +52,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR, 'event_artifact_parents_selector', false);
 
             $this->_addHook(Event::SYSTRAY);
+            $this->_addHook(Event::EXPORT_XML_PROJECT);
 
             if (defined('CARDWALL_BASE_DIR')) {
                 $this->_addHook(CARDWALL_EVENT_GET_SWIMLINE_TRACKER, 'cardwall_event_get_swimline_tracker', false);
@@ -267,6 +268,19 @@ class AgileDashboardPlugin extends Plugin {
         $params['action'] = 'generate_systray_data';
         $request = new Codendi_Request($params);
 
+        $this->process($request);
+    }
+
+    /**
+     * @see Event::EXPORT_XML_PROJECT
+     */
+    public function export_xml_project($params) {
+        if (! isset($params['into_xml']) || ! isset($params['project'])) {
+            exit();
+        }
+        
+        $params['action'] = Event::EXPORT_XML_PROJECT;
+        $request = new Codendi_Request($params);
         $this->process($request);
     }
 }

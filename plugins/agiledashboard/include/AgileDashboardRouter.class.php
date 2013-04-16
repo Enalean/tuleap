@@ -108,6 +108,10 @@ class AgileDashboardRouter {
             case 'generate_systray_data':
                 $this->executeAction($controller, 'generateSystrayData', $request->params);
                 break;
+            case Event::EXPORT_XML_PROJECT:
+                $agile_dashboard_controller = new AgileDashboard_Controller($request, $this->planning_factory, $this->milestone_factory, $this->plugin->getThemePath());
+                $this->executeAction($agile_dashboard_controller, 'index', $request->params);
+                break;
             case 'index':
             default:
                 $this->renderAction($controller, 'index', $request);
