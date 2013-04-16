@@ -81,18 +81,18 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         $exporter = new AgileDashboard_XMLExporter();
         $exporter->export($this->xml_tree, $this->planning_short_access_set);
 
-        $this->assertEqual(1, $this->xml_tree->children()->count());
+        $this->assertEqual(1, count($this->xml_tree->children()));
 
         $plannings = AgileDashboard_XMLExporter::NODE_PLANNINGS;
 
         foreach ($this->xml_tree->children() as $plannings_node) {
-            $this->assertEqual(2, $plannings_node->children()->count());
+            $this->assertEqual(2, count($plannings_node->children()));
             $this->assertEqual($plannings_node->getName(), $plannings);
         }
 
         foreach ($this->xml_tree->$plannings->children() as $planning) {
             $this->assertEqual($planning->getName(), AgileDashboard_XMLExporter::NODE_PLANNING);
-            $this->assertEqual(0, $planning->children()->count());
+            $this->assertEqual(0, count($planning->children()));
         }
     }
 
