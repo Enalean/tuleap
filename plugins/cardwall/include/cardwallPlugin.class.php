@@ -56,6 +56,7 @@ class cardwallPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION);
             $this->addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE);
             $this->_addHook(Event::JAVASCRIPT);
+            $this->addHook(Event::EXPORT_XML_PROJECT);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -346,6 +347,24 @@ class cardwallPlugin extends Plugin {
     private function appendCardwallParameter(Tracker_Artifact_Redirect $redirect, $cardwall) {
         list($key, $value) = explode('=', urldecode(http_build_query(array('cardwall' => $cardwall))));
         $redirect->query_parameters[$key] = $value;
+    }
+
+    /**
+     * @param array $params parameters send by Event
+     */
+    public function export_xml_project ($params) {
+        $tracker_factory = new TrackerFactory();
+
+        $cardwall_xml_export = new Cardwall_Config_XmlExport(
+            $params['project'],
+            $tracker_factory,
+            new Cardwall_OnTop_ConfigFactory(
+                $tracker_factory,
+                Tracker_FormElementFactory::instance()
+            )
+        );
+
+        $cardwall_xml_export->exportToXml($params['into_xml']);
     }
 
     /**
