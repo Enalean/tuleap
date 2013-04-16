@@ -62,6 +62,21 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         stub($this->planning_short_access1)->getCurrentMilestone()->returns($this->planning_milestone1);
         stub($this->planning_short_access2)->getCurrentMilestone()->returns($this->planning_milestone2);
 
+        stub($this->planning1)->getName()->returns('abcd');
+        stub($this->planning2)->getName()->returns('abcd');
+
+        stub($this->planning1)->getPlanTitle()->returns('efgh');
+        stub($this->planning2)->getPlanTitle()->returns('efgh');
+
+        stub($this->planning1)->getPlanningTrackerId()->returns('ijklmon');
+        stub($this->planning2)->getPlanningTrackerId()->returns('ijklmon');
+
+        stub($this->planning1)->getBacklogTitle()->returns('p q r');
+        stub($this->planning2)->getBacklogTitle()->returns('p q r');
+
+        stub($this->planning_milestone1)->getTrackerId()->returns('stu vw x y   z');
+        stub($this->planning_milestone2)->getTrackerId()->returns('stu vw x y   z');
+
         $data = '<?xml version="1.0" encoding="UTF-8"?>
                  <plannings />';
 
@@ -97,21 +112,6 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
     }
 
     public function itAddsAttributesForEachPlanningShortAccess() {
-        stub($this->planning1)->getName()->returns('abcd');
-        stub($this->planning2)->getName()->returns('abcd');
-
-        stub($this->planning1)->getPlanTitle()->returns('efgh');
-        stub($this->planning2)->getPlanTitle()->returns('efgh');
-
-        stub($this->planning1)->getPlanningTrackerId()->returns('ijklmon');
-        stub($this->planning2)->getPlanningTrackerId()->returns('ijklmon');
-
-        stub($this->planning1)->getBacklogTitle()->returns('p q r');
-        stub($this->planning2)->getBacklogTitle()->returns('p q r');
-
-        stub($this->planning_milestone1)->getTrackerId()->returns('stu vw x y   z');
-        stub($this->planning_milestone2)->getTrackerId()->returns('stu vw x y   z');
-
         $exporter = new AgileDashboard_XMLExporter();
         $exporter->export($this->xml_tree, $this->planning_short_access_set);
 
