@@ -21,17 +21,40 @@
 
 class AgileDashboard_XMLExporter {
 
-    public function export(SimpleXMLElement $xml_element) {
-        
+    const NODE_PLANNING  = 'planning';
+
+    const ATTRIBUTE_PLANNING_NAME               = 'name';
+    const ATTRIBUTE_PLANNING_TITLE              = 'plan_title';
+    const ATTRIBUTE_PLANNING_ITEM_TRACKER       = 'item_tracker';
+    const ATTRIBUTE_PLANNING_BACKLOG_TITLE      = 'backlog_title';
+    const ATTRIBUTE_PLANNING_MILESTONE_TRACKER  = 'milestone_tracker';
+
+    /**
+     *
+     * @param SimpleXMLElement $xml_element
+     * @param array $planning_short_access_set
+     */
+    public function export(SimpleXMLElement $xml_element, array $planning_short_access_set) {
+        foreach ($planning_short_access_set as $planning_short_access) {
+            /* @var $planning Planning */
+            $planning = $planning_short_access->getPlanning();
+
+            $planning_name              = $planning->getName();
+            $planning_title             = $planning->getPlanTitle();
+            $planning_item_tracker      = $planning->getPlanningTrackerId();
+            $planning_backlog_title     = $planning->getBacklogTitle();
+            $planning_milestone_tracker = $planning_short_access->getCurrentMilestone()->getTrackerId();
+
+            $planning_node = $xml_element->addChild(self::NODE_PLANNING);
+
+            $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_NAME, $planning_name);
+            $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_TITLE, $planning_title);
+            $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_ITEM_TRACKER, $planning_item_tracker);
+            $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_BACKLOG_TITLE, $planning_backlog_title);
+            $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_MILESTONE_TRACKER, $planning_milestone_tracker);
+        }
     }
 
-    private function appendToProject($param) {
-
-    }
-
-    private function convertToXml($param) {
-
-    }
 
 }
 ?>
