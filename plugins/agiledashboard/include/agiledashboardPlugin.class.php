@@ -275,8 +275,12 @@ class AgileDashboardPlugin extends Plugin {
      * @see Event::EXPORT_XML_PROJECT
      */
     public function export_xml_project($params) {
-        if (! isset($params['into_xml']) || ! isset($params['project'])) {
-            exit();
+        if (! isset($params['into_xml']) || 
+            ! isset($params['project']) ||
+            ! $params['into_xml'] instanceof SimpleXMLElement ||
+            ! $params['project'] instanceof Project
+            ) {
+            throw new AgileDashBoardEventParamsInvalidException('Params received: ' . print_r($params, true));
         }
         
         $params['action'] = Event::EXPORT_XML_PROJECT;
