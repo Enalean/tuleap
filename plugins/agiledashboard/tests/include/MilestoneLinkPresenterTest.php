@@ -19,8 +19,7 @@
  */
 
 require_once dirname(__FILE__).'/../../include/Planning/MilestoneLinkPresenter.class.php';
-require_once dirname(__FILE__).'/../builders/aPlanning.php';
-require_once dirname(__FILE__).'/../builders/aMilestone.php';
+require_once dirname(__FILE__).'/../bootstrap.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/aMockArtifact.php';
 
 class Planning_MilestoneLinkPresenterTest extends TuleapTestCase {

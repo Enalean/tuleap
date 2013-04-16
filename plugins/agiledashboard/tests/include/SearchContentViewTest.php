@@ -19,8 +19,7 @@
  */
 
 require_once dirname(__FILE__).'/../../../tracker/tests/Tracker/CrossSearch/SearchContentViewTest.php';
-require_once dirname(__FILE__).'/../../include/Planning/Planning.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/SearchContentView.class.php';
+require_once dirname(__FILE__).'/../bootstrap.php';
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aMockTemplateRenderer.php';
 
 class Planning_SearchContentViewTest extends Tracker_CrossSearch_SearchContentViewTest {

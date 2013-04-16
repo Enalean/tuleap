@@ -19,6 +19,6 @@
  */
 require_once dirname(__FILE__).'/../include/constants.php';
 require_once dirname(__FILE__).'/../include/autoload.php';
-//require_once dirname(__FILE__).'/../../tracker/tests/bootstrap.php';
+require_once dirname(__FILE__).'/builders/all.php';
 
 ?>
