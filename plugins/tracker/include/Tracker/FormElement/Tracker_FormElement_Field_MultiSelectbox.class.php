@@ -126,12 +126,35 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
             $fields_data[$this->getId()] = array('100');
         }
     }
-    
+
+    public function getFieldDataFromCSVValue($csv_value) {
+        if ($csv_value == null) {
+            return array(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID);
+        }
+        return parent::getFieldDataFromCSVValue($csv_value);
+    }
+
     /**
      * @return boolean true if the value corresponds to what we defined as "none"
      */
     public function isNone($value) {
-        return $value === null || $value === '' || (is_array($value) && count($value) ==1 && $value[0] == '100');
+        return $this->isScalarNone($value) || (is_array($value) && $this->isArrayNone($value));
+    }
+
+    private function isScalarNone($value) {
+        return $value === null || $value === '';
+    }
+
+    private function isArrayNone(array $value) {
+        return $this->arrayContainsNone($value) || $this->arrayIsEmpty($value);
+    }
+
+    private function arrayContainsNone(array $value) {
+        return count($value) == 1 && array_pop($value) == '100';
+    }
+
+    private function arrayIsEmpty($value) {
+        return count($value) == 0;
     }
 }
 ?>
