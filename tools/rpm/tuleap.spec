@@ -388,17 +388,15 @@ Requires: %{php_base}-pear-HTTP
 This plugin provides ADMS.SW additions to the DOAP RDF documents for projects on
 /projects URLs with content-negociation (application/rdf+xml).
 
-%if %{php_base} == php53
 %package plugin-mediawiki
 Summary: Mediawiki plugin
 Group: Development/Tools
 Version: @@PLUGIN_MEDIAWIKI_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}-plugin-fusionforge_compat
-Requires: php53-mediawiki-tuleap
+Requires: php-mediawiki-tuleap
 %description plugin-mediawiki
 This plugin provides Mediawiki integration in Tuleap.
-%endif
 
 #
 ## Themes
@@ -572,14 +570,10 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
 
 # Plugin mediawiki
-%if %{php_base} == php53
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/projects
 %{__install} plugins/mediawiki/etc/mediawiki.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
-%else
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki
-%endif
 
 ##
 ## On package install
@@ -988,7 +982,6 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/foafprofiles
 
-%if %{php_base} == php53
 %files plugin-mediawiki
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/mediawiki
@@ -996,7 +989,6 @@ fi
 %dir %{APP_DATA_DIR}/mediawiki/master
 %dir %{APP_DATA_DIR}/mediawiki/projects
 %attr(644,%{APP_USER},%{APP_USER}) /etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
-%endif
 
 #
 # Themes
