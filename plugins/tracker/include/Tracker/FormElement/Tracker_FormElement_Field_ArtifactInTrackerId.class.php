@@ -59,7 +59,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        return '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">'. (int)$artifact->per_tracker_id.'</a>';
+        return '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">'. (int)$artifact->getPerTrackerArtifactId().'</a>';
     }
 
     /**
@@ -77,7 +77,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
                 $output .= '<a href= "'.$proto.'://'. $GLOBALS['sys_default_domain'].TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">'. $value .'</a>';
                 break;
             default:
-                $output .= $artifact->per_tracker_id;
+                $output .= $artifact->getPerTrackerArtifactId();
                 break;
         }
         return $output;
@@ -116,7 +116,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
-        $html .= $artifact->per_tracker_id;
+        $html .= $artifact->getPerTrackerArtifactId();
         return $html;
     }
 }
