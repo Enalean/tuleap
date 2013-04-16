@@ -57,6 +57,13 @@ class Planning_ShortAccess {
         return array_slice($this->getMilestoneLinkPresenters(), 0, self::NUMBER_TO_DISPLAY);
     }
 
+    /**
+     * @return Planning_Milestone
+     */
+    public function getCurrentMilestone() {
+        $this->milestone_factory->getCurrentMilestone($this->user, $this->planning->getId());
+    }
+
     public function hasMoreMilestone() {
         return count($this->getMilestoneLinkPresenters()) > self::NUMBER_TO_DISPLAY;
     }
@@ -96,6 +103,14 @@ class Planning_ShortAccess {
     public function createNewItemToPlan() {
         $tracker = $this->planning->getPlanningTracker();
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'create_new_item_to_plan', array($tracker->getItemName()));
+    }
+
+    /**
+     *
+     * @return Planning
+     */
+    public function getPlanning() {
+        return $this->planning;
     }
 }
 ?>
