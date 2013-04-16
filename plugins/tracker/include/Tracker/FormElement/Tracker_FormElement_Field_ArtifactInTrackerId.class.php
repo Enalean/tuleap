@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Tracker_FormElement_Field_ArtifactInTrackerId extends Tracker_FormElement_Field_ArtifactId {
+class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement_Field_ArtifactId {
 
     public function getCriteriaWhere($criteria) {
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
@@ -59,7 +59,7 @@ class Tracker_FormElement_Field_ArtifactInTrackerId extends Tracker_FormElement_
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        return '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">##'. (int)$artifact->per_tracker_id.'</a>';
+        return '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">'. (int)$artifact->per_tracker_id.'</a>';
     }
 
     /**
@@ -74,10 +74,10 @@ class Tracker_FormElement_Field_ArtifactInTrackerId extends Tracker_FormElement_
         switch ($format) {
             case 'html':
                 $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
-                $output .= '<a href= "'.$proto.'://'. $GLOBALS['sys_default_domain'].TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">##'. $value .'</a>';
+                $output .= '<a href= "'.$proto.'://'. $GLOBALS['sys_default_domain'].TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">'. $value .'</a>';
                 break;
             default:
-                $output .= '##'.$artifact->per_tracker_id;
+                $output .= $artifact->per_tracker_id;
                 break;
         }
         return $output;
@@ -89,7 +89,7 @@ class Tracker_FormElement_Field_ArtifactInTrackerId extends Tracker_FormElement_
      */
     protected function fetchAdminFormElement() {
         $html = '';
-        $html .= '<a href="#'.TRACKER_BASE_URL.'/?aid=123" onclick="return false;">##3</a>';
+        $html .= '<a href="#'.TRACKER_BASE_URL.'/?aid=123" onclick="return false;">3</a>';
         return $html;
     }
 
