@@ -354,11 +354,10 @@ class Tracker_ArtifactDao extends DataAccessObject {
     public function getPerTrackerArtifactId($aid) {
         $per_tracker_id = 0;
         $aid = $this->da->escapeInt($aid);
-        if ($aid > 0) {
-            $sql = "SELECT per_tracker_artifact_id as tid FROM tracker_artifact where id = '". $aid . "';";
-            $res = $this->retrieveFirstRow($sql);
-            $per_tracker_id = $res['tid'] | 0;
-        }
+        $sql = "SELECT per_tracker_artifact_id as tid FROM tracker_artifact where id = '". $aid . "';";
+        $res = $this->retrieveFirstRow($sql);
+        $per_tracker_id = $res['tid'] | 0;
+
         return $per_tracker_id;
     }
 
