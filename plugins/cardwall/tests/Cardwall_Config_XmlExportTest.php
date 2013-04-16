@@ -41,9 +41,9 @@ class Cardwall_Config_XmlExportTest extends TuleapTestCase {
         $this->tracker2 = aTracker()->withId(614)->build();
         $this->root     = new SimpleXMLElement('<cardwall/>');
 
-        $cardwall_config = stub('Cardwall_OnTop_Config')->getMappingFor(214)->returns(null);
-        $result_mapping[614][1] = true;
-        $cardwall_config2 = stub('Cardwall_OnTop_Config')->getMappingFor(614)->returns($result_mapping);
+        $cardwall_config  = stub('Cardwall_OnTop_Config')->getMappingFor($this->tracker1)->returns(null);
+        $cardwall_config2 = stub('Cardwall_OnTop_Config')->getMappingFor($this->tracker2)->returns(true);
+        $cardwall_config3  = stub('Cardwall_OnTop_Config')->getMappingFor($this->tracker2)->returns(null);
 
         $tracker_factory = stub('TrackerFactory')->getTrackersByGroupId(140)->returns(array(214 => $this->tracker1, 614 => $this->tracker2));
         TrackerFactory::setInstance($tracker_factory);
@@ -52,7 +52,12 @@ class Cardwall_Config_XmlExportTest extends TuleapTestCase {
         stub($this->config_factory)->getOnTopConfig($this->tracker1)->returns($cardwall_config);
         stub($this->config_factory)->getOnTopConfig($this->tracker2)->returns($cardwall_config2);
 
+        $this->config_factory2 = mock('Cardwall_OnTop_ConfigFactory');
+        stub($this->config_factory2)->getOnTopConfig($this->tracker1)->returns($cardwall_config);
+        stub($this->config_factory2)->getOnTopConfig($this->tracker2)->returns($cardwall_config3);
+
         $this->xml_exporter = new Cardwall_Config_XmlExport($project, $tracker_factory, $this->config_factory);
+        $this->xml_exporter2 = new Cardwall_Config_XmlExport($project, $tracker_factory, $this->config_factory2);
     }
 
     public function tearDown() {
@@ -60,11 +65,20 @@ class Cardwall_Config_XmlExportTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    public function itReturnsTheGoodRootXml() {
+    public function itReturnsTheGoodRootXmlWithTrackers() {
         $this->xml_exporter->exportToXml($this->root);
         $children = $this->root->children();
 
         $this->assertTrue(count($children) > 0);
+        $this->assertEqual(count($children->children()), 1);
+    }
+
+     public function itReturnsTheGoodRootXmlWithoutTrackers() {
+        $this->xml_exporter2->exportToXml($this->root);
+        $children = $this->root->children();
+
+        $this->assertTrue(count($children) > 0);
+        $this->assertEqual(count($children->children()), 0);
     }
 
     public function itCallsGetMappingForMethodForEachTracker() {

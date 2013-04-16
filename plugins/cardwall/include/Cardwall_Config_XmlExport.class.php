@@ -31,10 +31,14 @@ class Cardwall_Config_XmlExport {
     }
 
     public function exportToXml(SimpleXMLElement $root) {
-        $root->addChild('trackers');
+        $trackers_node = $root->addChild('trackers');
         $trackers = $this->tracker_factory->getTrackersByGroupId($this->project->getId());
         foreach ($trackers as $tracker) {
-            $this->config_factory->getOnTopConfig($tracker);
+            $on_top_config = $this->config_factory->getOnTopConfig($tracker);
+            if ($on_top_config->getMappingFor($tracker)) {
+                $tracker_node = $trackers_node->addChild('tracker');
+                $tracker_node->addAttribute('id', $tracker->getId());
+            }
         }
     }
 
