@@ -49,7 +49,12 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 
     protected function getCumulativeFlowData($engine, $observed_field_id, $type) {
         $result = array();
-        $timeFiller = array(3600*24, 3600*24*7, 3600*24*30.45);
+        $timeFiller = array(
+            GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => 3600*24,
+            GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_WEEK => 3600*24*7,
+            GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => 3600*24*30.45
+        );
+
         $artifact_ids = explode(',', $this->artifacts['id']);
 
         $start = $this->chart->getStartDate();
