@@ -18,13 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../include/Cardwall_Config_XmlExport.class.php';
 require_once dirname(__FILE__) .'/bootstrap.php';
-require_once TRACKER_BASE_DIR.'/../tests/builders/all.php';
 
-class Cardwall_Config_XmlExportTest extends TuleapTestCase {
+class CardwallConfigXmlExportTest extends TuleapTestCase {
 
-    /** @var Cardwall_Config_XmlExport **/
+    /** @var CardwallConfigXmlExport **/
     private $xml_exporter;
 
     /** @var SimpleXMLElement **/
@@ -36,28 +34,22 @@ class Cardwall_Config_XmlExportTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $project        = stub('Project')->getId()->returns(140);
+        $this->project  = stub('Project')->getId()->returns(140);
         $this->tracker1 = aTracker()->withId(214)->build();
         $this->tracker2 = aTracker()->withId(614)->build();
         $this->root     = new SimpleXMLElement('<cardwall/>');
 
         $cardwall_config  = stub('Cardwall_OnTop_Config')->getMappingFor($this->tracker1)->returns(null);
         $cardwall_config2 = stub('Cardwall_OnTop_Config')->getMappingFor($this->tracker2)->returns(true);
-        $cardwall_config3  = stub('Cardwall_OnTop_Config')->getMappingFor($this->tracker2)->returns(null);
 
-        $tracker_factory = stub('TrackerFactory')->getTrackersByGroupId(140)->returns(array(214 => $this->tracker1, 614 => $this->tracker2));
-        TrackerFactory::setInstance($tracker_factory);
+        $this->tracker_factory = stub('TrackerFactory')->getTrackersByGroupId(140)->returns(array(214 => $this->tracker1, 614 => $this->tracker2));
+        TrackerFactory::setInstance($this->tracker_factory);
 
         $this->config_factory = mock('Cardwall_OnTop_ConfigFactory');
         stub($this->config_factory)->getOnTopConfig($this->tracker1)->returns($cardwall_config);
         stub($this->config_factory)->getOnTopConfig($this->tracker2)->returns($cardwall_config2);
 
-        $this->config_factory2 = mock('Cardwall_OnTop_ConfigFactory');
-        stub($this->config_factory2)->getOnTopConfig($this->tracker1)->returns($cardwall_config);
-        stub($this->config_factory2)->getOnTopConfig($this->tracker2)->returns($cardwall_config3);
-
-        $this->xml_exporter = new Cardwall_Config_XmlExport($project, $tracker_factory, $this->config_factory);
-        $this->xml_exporter2 = new Cardwall_Config_XmlExport($project, $tracker_factory, $this->config_factory2);
+        $this->xml_exporter = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory);
     }
 
     public function tearDown() {
@@ -66,26 +58,34 @@ class Cardwall_Config_XmlExportTest extends TuleapTestCase {
     }
 
     public function itReturnsTheGoodRootXmlWithTrackers() {
-        $this->xml_exporter->exportToXml($this->root);
-        $children = $this->root->children();
+        $this->xml_exporter->export($this->root);
+        $children = $this->root->children()->children();
 
-        $this->assertTrue(count($children) > 0);
-        $this->assertEqual(count($children->children()), 1);
+        $this->assertEqual(count($children), 1);
+        $this->assertEqual('trackers', $children->getName());
+        $this->assertEqual('tracker', $children->children()->getName());
     }
 
      public function itReturnsTheGoodRootXmlWithoutTrackers() {
-        $this->xml_exporter2->exportToXml($this->root);
-        $children = $this->root->children();
+        $cardwall_config       = stub('Cardwall_OnTop_Config')->getMappingFor($this->tracker1)->returns(null);
+        $cardwall_config2      = stub('Cardwall_OnTop_Config')->getMappingFor($this->tracker2)->returns(null);
+        $this->config_factory2 = mock('Cardwall_OnTop_ConfigFactory');
 
-        $this->assertTrue(count($children) > 0);
-        $this->assertEqual(count($children->children()), 0);
+        stub($this->config_factory2)->getOnTopConfig($this->tracker1)->returns($cardwall_config);
+        stub($this->config_factory2)->getOnTopConfig($this->tracker2)->returns($cardwall_config2);
+
+        $xml_exporter2 = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory2);
+        $xml_exporter2->export($this->root);
+
+        $children = $this->root->children()->children();
+        $this->assertEqual('trackers', $children->getName());
+        $this->assertEqual(count($children), 0);
     }
 
-    public function itCallsGetMappingForMethodForEachTracker() {
+    public function itCallsGetOnTopConfigMethodForEachTracker() {
         $this->config_factory->expectCallCount('getOnTopConfig', 2);
-        $this->xml_exporter->exportToXml($this->root);
+        $this->xml_exporter->export($this->root);
     }
 
 }
-
 ?>
