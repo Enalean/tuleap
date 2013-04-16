@@ -1,5 +1,6 @@
 Version 5.13 (Not Released Yet)
 
+	== Plugins ==
 	* admssw: 0.2
 	* agiledashboard: 0.78
 	* cardwall: 0.9.23
@@ -9,8 +10,6 @@ Version 5.13 (Not Released Yet)
 	* pluginsadministration: 1.3
 	* fusionforge_compat: 0.3
 	* mediawiki: 0.5
-	* tracker: 5.108
-	* git: 3.0
 	* git: 3.1
 	* docman: 2.26.15
 	* tracker: 5.109
