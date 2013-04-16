@@ -59,11 +59,7 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
 
     public function itReturnsTheGoodRootXmlWithTrackers() {
         $this->xml_exporter->export($this->root);
-        $children = $this->root->children()->children()->children();
-
-        $this->assertEqual(count($children), 1);
-        $this->assertEqual('trackers', $children->getName());
-        $this->assertEqual('tracker', $children->children()->getName());
+        $this->assertEqual(count($this->root->cardwall->trackers->children()), 1);
     }
 
      public function itReturnsTheGoodRootXmlWithoutTrackers() {
@@ -75,11 +71,9 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
         stub($this->config_factory2)->getOnTopConfig($this->tracker2)->returns($cardwall_config2);
 
         $xml_exporter2 = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory2);
-        $xml_exporter2->export($this->root);
 
-        $children = $this->root->children()->children()->children();
-        $this->assertEqual('trackers', $children->getName());
-        $this->assertEqual(count($children), 0);
+        $xml_exporter2->export($this->root);
+        $this->assertEqual(count($this->root->cardwall->trackers->children()), 0);
     }
 
     public function itCallsGetOnTopConfigMethodForEachTracker() {
