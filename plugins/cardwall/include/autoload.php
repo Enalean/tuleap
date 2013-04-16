@@ -73,7 +73,8 @@ function autoload7772f8d2fd0b12804221a87d0eaf8c68($class) {
             'cardwall_view_admin_form' => '/View/Admin/Form.class.php',
             'cardwallplugin' => '/cardwallPlugin.class.php',
             'cardwallplugindescriptor' => '/CardwallPluginDescriptor.class.php',
-            'cardwallplugininfo' => '/CardwallPluginInfo.class.php'
+            'cardwallplugininfo' => '/CardwallPluginInfo.class.php',
+            'cardwall_config_xmlexport' => '/Cardwall_Config_XmlExport.class.php'
         );
     }
     $cn = strtolower($class);
