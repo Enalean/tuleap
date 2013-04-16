@@ -81,10 +81,18 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         $exporter = new AgileDashboard_XMLExporter();
         $exporter->export($this->xml_tree, $this->planning_short_access_set);
 
-        $this->assertEqual(2, $this->xml_tree->children()->count());
+        $this->assertEqual(1, $this->xml_tree->children()->count());
 
-        foreach ($this->xml_tree->children() as $planning) {
+        $plannings = AgileDashboard_XMLExporter::NODE_PLANNINGS;
+
+        foreach ($this->xml_tree->children() as $plannings_node) {
+            $this->assertEqual(2, $plannings_node->children()->count());
+            $this->assertEqual($plannings_node->getName(), $plannings);
+        }
+
+        foreach ($this->xml_tree->$plannings->children() as $planning) {
             $this->assertEqual($planning->getName(), AgileDashboard_XMLExporter::NODE_PLANNING);
+            $this->assertEqual(0, $planning->children()->count());
         }
     }
 
@@ -107,7 +115,9 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         $exporter = new AgileDashboard_XMLExporter();
         $exporter->export($this->xml_tree, $this->planning_short_access_set);
 
-        foreach ($this->xml_tree->children() as $planning) {
+        $plannings = AgileDashboard_XMLExporter::NODE_PLANNINGS;
+
+        foreach ($this->xml_tree->$plannings->children() as $planning) {
             $attributes = $planning->attributes();
 
             $this->assertEqual( (string) $attributes[AgileDashboard_XMLExporter::ATTRIBUTE_PLANNING_NAME], 'abcd');

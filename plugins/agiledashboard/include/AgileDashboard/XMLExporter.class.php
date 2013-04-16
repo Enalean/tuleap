@@ -21,6 +21,7 @@
 
 class AgileDashboard_XMLExporter {
 
+    const NODE_PLANNINGS = 'plannings';
     const NODE_PLANNING  = 'planning';
 
     const ATTRIBUTE_PLANNING_NAME               = 'name';
@@ -35,6 +36,8 @@ class AgileDashboard_XMLExporter {
      * @param array $planning_short_access_set
      */
     public function export(SimpleXMLElement $xml_element, array $planning_short_access_set) {
+        $plannings_node = $xml_element->addChild(self::NODE_PLANNINGS);
+
         foreach ($planning_short_access_set as $planning_short_access) {
             /* @var $planning Planning */
             $planning = $planning_short_access->getPlanning();
@@ -45,7 +48,7 @@ class AgileDashboard_XMLExporter {
             $planning_backlog_title     = $planning->getBacklogTitle();
             $planning_milestone_tracker = $planning_short_access->getCurrentMilestone()->getTrackerId();
 
-            $planning_node = $xml_element->addChild(self::NODE_PLANNING);
+            $planning_node = $plannings_node->addChild(self::NODE_PLANNING);
 
             $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_NAME, $planning_name);
             $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_TITLE, $planning_title);
