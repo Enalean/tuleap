@@ -353,7 +353,7 @@ class cardwallPlugin extends Plugin {
      * @param array $params parameters send by Event
      */
     public function export_xml_project ($params) {
-        $tracker_factory = new TrackerFactory();
+        $tracker_factory = TrackerFactory::instance();
 
         $cardwall_xml_export = new Cardwall_Config_XmlExport(
             $params['project'],
