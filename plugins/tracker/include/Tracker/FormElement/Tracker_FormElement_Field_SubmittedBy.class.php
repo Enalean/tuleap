@@ -341,5 +341,9 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
             return null;
         }
     }
+
+    public function isNone($value) {
+        return false;
+    }
 }
 ?>
