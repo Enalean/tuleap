@@ -42,10 +42,12 @@ class Tracker_FormElement_Field_ArtifactInTrackerId extends Tracker_FormElement_
     }
 
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+        $from_aid_content = "";
         if ($from_aid != null) {
-            return '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact_id )).'&from_aid='.$from_aid.'">'. $value .'</a>';
+            $from_aid_content = "&from_aid=$from_aid";
         }
-        return '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact_id )).'">'. $value .'</a>';
+
+        return '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact_id )).'" $from_aid_content>'. $value .'</a>';
     }
 
     /**
