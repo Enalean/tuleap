@@ -236,7 +236,7 @@ Group: Development/Tools
 Version: @@PLUGIN_IM_VERSION@@
 Release: 1%{?dist}
 AutoReqProv: no
-Requires: %{PKG_NAME}, openfire, openfire-codendi-plugins
+Requires: %{PKG_NAME}, openfire, openfire-codendi-plugins, zlib.i686
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-im = %{version}
 %else
