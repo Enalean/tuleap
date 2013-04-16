@@ -117,7 +117,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $backlog_title      = $this->milestone->getPlanning()->getBacklogTracker()->getName();
         $redirect_parameter = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
 
-        return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title, $this->canConfigure(), $this->userIsNotAnonymous());
+        return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title, $this->canConfigure(), $this->getUserSwitchDisplayUrl(), $this->isDisplayUsernameSelected());
     }
     
     private function canConfigure() {        
@@ -139,13 +139,30 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         return false;
     }
 
-    private function isUserNotAnonymous() {
+    private function getUserSwitchDisplayUrl() {
         if ($this->user->isAnonymous()) {
             return false;
         }
 
-        $switch_display_username_url = "http://google.fr";
+        $group_id    = $this->milestone->getGroupId();
+        $planning_id = $this->milestone->getPlanningId();
+        $action      = 'toggle_user_display';
+
+        $switch_display_username_url =
+            AGILEDASHBOARD_BASE_URL
+            . '/?group_id=' . $group_id
+            . '&planning_id=' . $planning_id
+            . '&action=' . $action;
+
         return $switch_display_username_url;
+    }
+
+    private function isDisplayUsernameSelected() {
+        if($this->user->isAnonymous()) {
+            return false;
+        }
+
+        return $this->user->getPreference('AD_cardwall_assign_to_display_type') == 'username';
     }
 }
 ?>

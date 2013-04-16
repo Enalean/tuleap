@@ -35,19 +35,25 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
     public $switch_display_username_url;
 
     /**
+    * @var boolean
+    */
+    public $is_display_username_selected;
+
+    /**
      * @param Cardwall_Board  $board              The board
      * @param Cardwall_QrCode $qrcode             QrCode to display. false if no qrcode (thus no typehinting)
      * @param string          $redirect_parameter the redirect paramter to add to various url
      * @param string          $swimline_title     The title to display on top of swimline headers
      */
-    public function __construct(Cardwall_Board $board, $qrcode, $redirect_parameter, $swimline_title, $configure_url, $switch_display_username_url) {
+    public function __construct(Cardwall_Board $board, $qrcode, $redirect_parameter, $swimline_title, $configure_url, $switch_display_username_url, $is_display_username_selected) {
         parent::__construct($board, $qrcode, $redirect_parameter);
-        $this->nifty                       = '';
-        $this->swimline_title              = $swimline_title;
-        $this->has_swimline_header         = true;
-        $this->configure_url               = $configure_url;
-        $this->configure_label             = $GLOBALS['Language']->getText('plugin_cardwall', 'configure_cardwall_label');
-        $this->switch_display_username_url = $switch_display_username_url;
+        $this->nifty                        = '';
+        $this->swimline_title               = $swimline_title;
+        $this->has_swimline_header          = true;
+        $this->configure_url                = $configure_url;
+        $this->configure_label              = $GLOBALS['Language']->getText('plugin_cardwall', 'configure_cardwall_label');
+        $this->switch_display_username_url  = $switch_display_username_url;
+        $this->is_display_username_selected = $is_display_username_selected;
     }
 
     public function canConfigure() {
@@ -55,11 +61,10 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
     }
 
     public function isDisplayUsernameSelected() {
-        return false;
+        return $this->is_display_username_selected;
     }
 
     public function isUserNotAnonymous() {
-        $this->switch_display_username_url = "";
         return $this->switch_display_username_url;
     }
 }
