@@ -31,6 +31,9 @@ require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_
  */
 class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
 
+    const SCALE_DAY = 0;
+    const SCALE_WEEK = 1;
+    const SCALE_MONTH = 2;
     /**
      * The date (timestamp) the sprint start
      */
@@ -195,9 +198,9 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
                     'chart[unit]',
                     'value');
         $unitSelect->addMultipleOptions(array(
-                                              0 => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_day'),
-                                              1 => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_week'),
-                                              2 => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_month'),
+                                              GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_day'),
+                                              GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_WEEK => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_week'),
+                                              GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_month'),
                                               ), $this->getUnit());
         return array_merge(parent::getProperties(),
             array(
