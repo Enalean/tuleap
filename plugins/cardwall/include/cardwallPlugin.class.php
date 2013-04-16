@@ -376,7 +376,7 @@ class cardwallPlugin extends Plugin {
             )
         );
 
-        $cardwall_xml_export->exportToXml($params['into_xml']);
+        $cardwall_xml_export->export($params['into_xml']);
     }
 
     /**
