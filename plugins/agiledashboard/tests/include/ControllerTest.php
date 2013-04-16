@@ -21,11 +21,7 @@
 require_once(dirname(__FILE__).'/../../../tracker/tests/builders/all.php');
 
 require_once TRACKER_BASE_DIR .'/Tracker/TrackerManager.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/PlanningController.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/Planning.class.php';
-require_once dirname(__FILE__).'/../builders/aPlanning.php';
-require_once dirname(__FILE__).'/../builders/aPlanningFactory.php';
-require_once dirname(__FILE__).'/../builders/aPlanningController.php';
+require_once dirname(__FILE__).'/../bootstrap.php';
 
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_Artifact');

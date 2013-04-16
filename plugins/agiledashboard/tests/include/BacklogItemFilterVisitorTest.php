@@ -19,7 +19,22 @@
  */
 
 require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
-require_once dirname(__FILE__).'/../../include/Planning/BacklogItemFilterVisitor.class.php';
+require_once dirname(__FILE__).'/../bootstrap.php';
+
+class Planning_BacklogItemFilterVisitorBaseTest extends TuleapTestCase {
+
+    protected function newTreeNode($id, $tracker_id) {
+        $node = new TreeNode();
+        $node->setData(array('id' => $id,
+                             'tracker_id' => $tracker_id));
+        $artifact = mock('Tracker_Artifact');
+        stub($artifact)->getId()->returns($id);
+        stub($artifact)->getTrackerId()->returns($tracker_id);
+        $node->setObject($artifact);
+        return $node;
+    }
+
+}
 
 class Planning_BacklogItemFilterVisitorTest extends Planning_BacklogItemFilterVisitorBaseTest {
 
@@ -166,20 +181,4 @@ class Planning_BacklogItemFilterVisitor_AlreadyPlannedItemsTest extends Planning
         $this->assertEqual($new_root->getChild(0), $this->story1);
     }
 }
-
-class Planning_BacklogItemFilterVisitorBaseTest extends TuleapTestCase {
-    
-    protected function newTreeNode($id, $tracker_id) {
-        $node = new TreeNode();
-        $node->setData(array('id' => $id, 
-                             'tracker_id' => $tracker_id));
-        $artifact = mock('Tracker_Artifact');
-        stub($artifact)->getId()->returns($id);
-        stub($artifact)->getTrackerId()->returns($tracker_id);
-        $node->setObject($artifact);
-        return $node;
-    }
-    
-}
-
 ?>

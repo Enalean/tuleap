@@ -18,14 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../include/Planning/ItemCardPresenterCallback.class.php';
+require_once dirname(__FILE__).'/../bootstrap.php';
 require_once dirname(__FILE__) .'/../../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Tracker.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Hierarchy/HierarchyFactory.class.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/aTracker.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/anArtifact.php';
 require_once TRACKER_BASE_DIR .'/Tracker/CardFields.class.php';
-require_once dirname(__FILE__).'/../builders/aPlanning.php';
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 require_once TRACKER_BASE_DIR .'/../../../tests/simpletest/common/include/builders/aTreeNode.php';
 
