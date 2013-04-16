@@ -1212,39 +1212,48 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @param array            $values   the array of added and removed artifact links ($values['added_values'] is a string and $values['removed_values'] is an array of artifact ids
      */
     protected function updateCrossReferences(Tracker_Artifact $artifact, $values) {
-        $added_artifact_ids = array();
-        if (array_key_exists('new_values', $values)) {
-            if (trim($values['new_values']) != '') {
-                $added_artifact_ids = explode(',', $values['new_values']);
-            }
+        foreach ($this->getAddedArtifactIds($values) as $added_artifact_id) {
+            $this->insertCrossReference($artifact, $added_artifact_id);
         }
-        $removed_artifact_ids = array();
-        if (array_key_exists('removed_values', $values)) {
-            $removed_artifact_ids = $values['removed_values'];
+        foreach ($this->getRemovedArtifactIds($values) as $removed_artifact_id) {
+            $this->removeCrossReference($artifact, $removed_artifact_id);
         }
-        $af           = $this->getArtifactFactory();
-        $rm           = $this->getReferenceManager();
-        $current_user = $this->getCurrentUser();
-        foreach ($added_artifact_ids as $added_artifact_id) {
-            $artifact_target = $af->getArtifactById((int)trim($added_artifact_id));
-
-            $rm->insertCrossReference(
-                $artifact->getId(),
-                $artifact->getTracker()->getGroupId(),
-                Tracker_Artifact::REFERENCE_NATURE,
-                $artifact->getTracker()->getItemname(),
-                $artifact_target->getId(),
-                $artifact_target->getTracker()->getGroupId(),
-                Tracker_Artifact::REFERENCE_NATURE,
-                $artifact_target->getTracker()->getItemname(),
-                $current_user->getId()
-            );
-        }
-        // TODO : remove the removed elements
     }
 
-    protected function getReferenceManager() {
-        return ReferenceManager::instance();
+    private function getAddedArtifactIds(array $values) {
+        if (array_key_exists('new_values', $values)) {
+            if (trim($values['new_values']) != '') {
+                return array_map('intval', explode(',', $values['new_values']));
+            }
+        }
+        return array();
+    }
+
+    private function getRemovedArtifactIds(array $values) {
+        if (array_key_exists('removed_values', $values)) {
+            return array_map('intval', array_keys($values['removed_values']));
+        }
+        return array();
+    }
+
+    private function insertCrossReference(Tracker_Artifact $source_artifact, $target_artifact_id) {
+        $this->getTrackerReferenceManager()->insertBetweenTwoArtifacts(
+            $source_artifact,
+            $this->getArtifactFactory()->getArtifactById($target_artifact_id),
+            $this->getCurrentUser()
+        );
+    }
+
+    private function removeCrossReference(Tracker_Artifact $source_artifact, $target_artifact_id) {
+        $this->getTrackerReferenceManager()->removeBetweenTwoArtifacts(
+            $source_artifact,
+            $this->getArtifactFactory()->getArtifactById($target_artifact_id),
+            $this->getCurrentUser()
+        );
+    }
+
+    protected function getTrackerReferenceManager() {
+        return new Tracker_ReferenceManager(ReferenceManager::instance());
     }
 
     /**
