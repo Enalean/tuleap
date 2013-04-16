@@ -32,7 +32,7 @@ EOT;
 }
 
 $project = ProjectManager::instance()->getProject($argv[1]);
-if ($project && !$project->isError()) {
+if ($project && !$project->isError() && !$project->isDeleted()) {
     $xml_exporter = new ProjectXMLExporter(EventManager::instance());
     $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
                                          <project />');
@@ -41,6 +41,7 @@ if ($project && !$project->isError()) {
     $dom->formatOutput = true;
     echo $dom->saveXML();
 } else {
-    die("*** ERROR: Invalid project_id\n");
+    echo "*** ERROR: Invalid project_id\n";
+    exit(1);
 }
 ?>
