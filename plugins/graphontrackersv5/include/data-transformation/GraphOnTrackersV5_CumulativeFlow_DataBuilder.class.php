@@ -55,8 +55,6 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
             GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => 3600*24*30.45
         );
 
-        $artifact_ids = explode(',', $this->artifacts['id']);
-
         $start = $this->chart->getStartDate();
         $stop = $this->chart->getStopDate() ? $this->chart->getStopDate() : time();
         $unit = $this->chart->getUnit();
@@ -80,7 +78,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 	AND changeset_value_id = v.id
 	AND c.id = v.changeset_id
 	AND v.field_id = ". $observed_field_id . "
-	AND artifact_id in (". implode(',', $artifact_ids) .")
+	AND artifact_id in (". $this->artifacts['id'] .")
 	AND submitted_on = (". $sql_latestChangeset .")
 	GROUP BY label
 	ORDER BY rank";
