@@ -40,7 +40,7 @@ class PlanningParameters {
         
         $parameters->name                = PlanningParameters::get($array, self::NAME);
         $parameters->backlog_title       = PlanningParameters::get($array, self::BACKLOG_TITLE);
-        $parameters->plan_title          = PlanningParameters::get($array, self::PLANING_TITLE);
+        $parameters->plan_title          = PlanningParameters::get($array, self::PLANNING_TITLE);
         $parameters->backlog_tracker_id  = PlanningParameters::get($array, self::BACKLOG_TRACKER_ID);
         $parameters->planning_tracker_id = PlanningParameters::get($array, self::PLANNING_TRACKER_ID);
         
