@@ -29,6 +29,12 @@ class CardwallConfigXmlExport {
     /**  @var Cardwall_OnTop_ConfigFactory */
     private $config_factory;
 
+    const NODE_CARDWALL = 'cardwall';
+    const NODE_TRACKERS = 'trackers';
+    const NODE_TRACKER  = 'tracker';
+
+    const ATTRIBUTE_TRACKER_ID = 'id';
+
     public function __construct(Project $project, TrackerFactory $tracker_factory, Cardwall_OnTop_ConfigFactory $config_factory) {
         $this->project         = $project;
         $this->tracker_factory = $tracker_factory;
@@ -41,8 +47,8 @@ class CardwallConfigXmlExport {
      * Export in XML the list of tracker with a cardwall
      */
     public function export(SimpleXMLElement $root) {
-        $cardwall_node = $root->addChild('cardwall');
-        $trackers_node = $cardwall_node->addChild('trackers');
+        $cardwall_node = $root->addChild(self::NODE_CARDWALL);
+        $trackers_node = $cardwall_node->addChild(self::NODE_TRACKERS);
         $trackers = $this->tracker_factory->getTrackersByGroupId($this->project->getId());
         foreach ($trackers as $tracker) {
             $this->addTrackerChild($tracker, $trackers_node);
@@ -52,8 +58,8 @@ class CardwallConfigXmlExport {
     private function addTrackerChild(Tracker $tracker, SimpleXMLElement $trackers_node) {
         $on_top_config = $this->config_factory->getOnTopConfig($tracker);
         if ($on_top_config->isEnabled()) {
-            $tracker_node = $trackers_node->addChild('tracker');
-            $tracker_node->addAttribute('id', $tracker->getId());
+            $tracker_node = $trackers_node->addChild(self::NODE_TRACKER);
+            $tracker_node->addAttribute(self::ATTRIBUTE_TRACKER_ID, $tracker->getId());
         }
     }
 }
