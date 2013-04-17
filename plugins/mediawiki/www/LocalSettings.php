@@ -115,7 +115,12 @@ $wgImageMagickConvertCommand = "/usr/bin/convert";
 $wgLocalInterwiki   = $wgSitename;
 $wgShowExceptionDetails = true ;
 
-$wgLanguageCode = strtolower(forge_get_config('default_country_code'));
+// disable language selection
+$wgHiddenPrefs[] = 'language';
+$user = UserManager::instance()->getCurrentUser();
+$wgLanguageCode = substr($user->getLocale(), 0, 2);
+
+//$wgLanguageCode = strtolower(forge_get_config('default_country_code'));
 
 $wgDefaultSkin = 'tuleap';
 
