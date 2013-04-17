@@ -583,7 +583,7 @@ function permission_get_ugroups_permissions($group_id, $object_id, $permission_t
  */
 function permission_fetch_selection_form($permission_type, $object_id, $group_id, $post_url) {
     $html = '';
-    if (!$post_url) $post_url=$_SERVER['PHP_SELF'];
+    if (!$post_url) $post_url='?';
 
     // Display form
     $html .= '<FORM ACTION="'. $post_url .'" METHOD="POST">

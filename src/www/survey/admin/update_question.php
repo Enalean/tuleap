@@ -69,7 +69,7 @@ if ($warn) {
 
 ?></H3><P>
 
-<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
+<FORM ACTION="?" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_question">
 <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="Y">
 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">

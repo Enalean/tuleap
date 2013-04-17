@@ -46,7 +46,7 @@ $readonly = $project->isPublic() ? '' : 'readonly="true" disabled="true"';
 
 echo "<h2>".$Language->getText('cvs_admin_commit', 'title')."</h2>";
   
-echo '<FORM ACTION="'. $PHP_SELF .'" METHOD="GET">
+echo '<FORM ACTION="?" METHOD="GET">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="setAdmin">
 	<h3>'.$Language->getText('cvs_admin_commit', 'private_hdr').'</h3>

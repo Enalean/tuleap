@@ -33,7 +33,7 @@ $HTML->header(array('title'=>$Language->getText('admin_approve_license', 'title'
 
     } else {
 
-        echo '<FORM ACTION="'.$_SERVER['PHP_SELF'].'" METHOD="POST" name="license_form">'.
+        echo '<FORM ACTION="?" METHOD="POST" name="license_form">'.
 	    "\n<table><tr><td>\n";
 
 	// Preamble

@@ -100,7 +100,7 @@ if (user_isloggedin()) {
 		<P>
 		'.$Language->getText('people_editprofile','skill_explain').'
 		<P>
-		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+		<FORM ACTION="?" METHOD="POST">
 		<P>
 		'.$Language->getText('people_editprofile','public_view_explain').'
 		<P>
