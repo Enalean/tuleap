@@ -28,19 +28,19 @@ class trackerXmlImportTest extends TuleapTestCase {
             <project>
               <trackers>
                   <tracker ID="T101">
-                    <name>t1</name>
-                    <item_name>t1</item_name>
-                    <description>t1</description>
+                    <name>t10</name>
+                    <item_name>t11</item_name>
+                    <description>t12</description>
                   </tracker>
                   <tracker ID="T102">
-                    <name>t2</name>
-                    <item_name>t2</item_name>
-                    <description>t2</description>
+                    <name>t20</name>
+                    <item_name>t21</item_name>
+                    <description>t22</description>
                   </tracker>
                   <tracker ID="T103">
-                    <name>t3</name>
-                    <item_name>t3</item_name>
-                    <description>t3</description>
+                    <name>t30</name>
+                    <item_name>t31</item_name>
+                    <description>t32</description>
                   </tracker>
               </trackers>
               <cardwall/>
@@ -50,26 +50,26 @@ class trackerXmlImportTest extends TuleapTestCase {
         $group_id = 145;
 
         $xml_tracker1 = new SimpleXMLElement(
-            '<tracker ID="T101">
-                    <name>t1</name>
-                    <item_name>t1</item_name>
-                    <description>t1</description>
+                 '<tracker ID="T101">
+                    <name>t10</name>
+                    <item_name>t11</item_name>
+                    <description>t12</description>
                   </tracker>'
         );
 
         $xml_tracker2 = new SimpleXMLElement(
-             '<tracker ID="T102">
-                    <name>t2</name>
-                    <item_name>t2</item_name>
-                    <description>t2</description>
+                 '<tracker ID="T102">
+                    <name>t20</name>
+                    <item_name>t21</item_name>
+                    <description>t22</description>
                   </tracker>'
         );
 
         $xml_tracker3 = new SimpleXMLElement(
-            '<tracker ID="T103">
-                    <name>t3</name>
-                    <item_name>t3</item_name>
-                    <description>t3</description>
+                 '<tracker ID="T103">
+                    <name>t30</name>
+                    <item_name>t31</item_name>
+                    <description>t32</description>
                   </tracker>'
         );
 
@@ -80,9 +80,9 @@ class trackerXmlImportTest extends TuleapTestCase {
         $this->tracker3 = aTracker()->withId(103)->build();
 
         $this->tracker_factory = mock('TrackerFactory');
-        stub($this->tracker_factory)->createFromXml($xml_tracker1, $group_id, '', '', '')->returns($this->tracker1);
-        stub($this->tracker_factory)->createFromXml($xml_tracker2, $group_id, '', '', '')->returns($this->tracker2);
-        stub($this->tracker_factory)->createFromXml($xml_tracker3, $group_id, '', '', '')->returns($this->tracker3);
+        stub($this->tracker_factory)->createFromXml($xml_tracker1, $group_id, 't10', 't11', 't12')->returns($this->tracker1);
+        stub($this->tracker_factory)->createFromXml($xml_tracker2, $group_id, 't20', 't21', 't22')->returns($this->tracker2);
+        stub($this->tracker_factory)->createFromXml($xml_tracker3, $group_id, 't30', 't31', 't32')->returns($this->tracker3);
 
         TrackerFactory::setInstance($this->tracker_factory);
 
