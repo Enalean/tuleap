@@ -1435,7 +1435,8 @@ substitute /etc/$PROJECT_NAME/forgeupgrade/config.ini "%project_name%" "$PROJECT
 #
 
 echo "Install tuleap plugins"
-# docman plugin
+
+echo "Install Docman"
 $CAT $INSTALL_DIR/plugins/docman/db/install.sql | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
 $CAT <<EOF | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
 INSERT INTO plugin (name, available) VALUES ('docman', '1');
@@ -1448,6 +1449,7 @@ echo "path[]=\"$INSTALL_DIR/plugins/docman\"" >> /etc/$PROJECT_NAME/forgeupgrade
 
 # Tracker plugin
 if [ "$enable_plugin_tracker" = "true" ]; then
+    echo "Install tracker"
     build_dir /etc/$PROJECT_NAME/plugins/tracker/etc $PROJECT_ADMIN $PROJECT_ADMIN 755
     $CAT $INSTALL_DIR/plugins/tracker/db/install.sql | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
     $CAT <<EOF | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
@@ -1464,6 +1466,7 @@ fi
 
 # GraphOnTrackersv5 plugin
 if [ "$enable_plugin_graphontrackersv5" = "true" ]; then
+    echo "Install Graphontrackersv5"
     build_dir /etc/$PROJECT_NAME/plugins/graphontrackersv5/etc $PROJECT_ADMIN $PROJECT_ADMIN 755
     $CAT $INSTALL_DIR/plugins/graphontrackersv5/db/install.sql | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
     $CAT <<EOF | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
@@ -1474,6 +1477,8 @@ fi
 
 # IM plugin
 if [ "$enable_plugin_im" = "true" ]; then
+    echo "Install IM"
+
     # Create openfireadm MySQL user
     $CAT <<EOF | $MYSQL $pass_opt mysql
 GRANT ALL PRIVILEGES on openfire.* to 'openfireadm'@'$mysql_httpd_host' identified by '$openfire_passwd';
