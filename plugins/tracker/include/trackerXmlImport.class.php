@@ -20,16 +20,21 @@
 
 class trackerXmlImport {
 
+    /** @var int */
+    private $group_id;
+
     /** @var SimpleXMLElement */
     private $xml_content;
 
-//    /** @var TrackerFactory */
-//    private $tracker_factory;
+    /** @var TrackerFactory */
+    private $tracker_factory;
 
     const XML_TRACKER_ID = '#^[T]{1}([0-9]+)$#';
 
-    public function __construct($xml_output) {
+    public function __construct($group_id, $xml_output, $tracker_factory) {
+        $this->group_id        = $group_id;
         $this->xml_content     = simplexml_load_string($xml_output);
+        $this->tracker_factory = $tracker_factory;
     }
 
     /**
@@ -45,6 +50,14 @@ class trackerXmlImport {
         return $tracker_list;
     }
 
+    public function import() {
+        $created_trackers = array();
+        foreach ($this->getAllXmlTrackers() as $xml_tracker_id => $xml_tracker) {
+            $created_trackers[$xml_tracker_id] = $this->tracker_factory->createFromXML($xml_tracker, $this->group_id, '', '', '');
+        }
+        return $created_trackers;
+    }
+
     /**
      *
      * @param SimpleXMLElement $xml_tracker
@@ -53,7 +66,7 @@ class trackerXmlImport {
     private function getTrackerIdFromXml(SimpleXMLElement $xml_tracker) {
         $tracker_attributes = $xml_tracker->attributes();
         $xml_tracker_id = preg_replace(self::XML_TRACKER_ID, '$1', $tracker_attributes['ID']);
-        return $xml_tracker_id;
+        return intval($xml_tracker_id);
     }
 
 }
