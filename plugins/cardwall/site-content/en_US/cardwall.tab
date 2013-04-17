@@ -16,6 +16,7 @@ plugin_cardwall	on_top_use_freestyle	Use a custom set of columns
 plugin_cardwall	on_top_label	Enable cardwall on top of this tracker
 plugin_cardwall	on_top_miss_status	The tracker must have a status semantic
 plugin_cardwall	configure_cardwall_label	Configure
+plugin_cardwall	display_username_label	Display Username
 plugin_cardwall	details	details
 plugin_cardwall	on_top_new_column	New column:
 plugin_cardwall	on_top_column_placeholders	Todo|On Going|Done|Done-Done
