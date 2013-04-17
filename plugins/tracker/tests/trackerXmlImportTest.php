@@ -96,9 +96,9 @@ class trackerXmlImportTest extends TuleapTestCase {
 
     public function itReturnsEachSimpleXmlTrackerFromTheXmlInput() {
         $trackers_result = $this->tracker_xml_importer->getAllXmlTrackers();
-
         $this->assertEqual(count($trackers_result), 3);
-        $this->assertEqual($trackers_result, $this->xml_trackers_list);
+        $diff = array_diff($trackers_result, $this->xml_trackers_list);
+        $this->assertTrue(empty($diff));
     }
 
     public function itCreatesAllTrackers() {
