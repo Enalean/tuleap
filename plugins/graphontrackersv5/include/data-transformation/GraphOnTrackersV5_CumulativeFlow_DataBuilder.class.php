@@ -68,7 +68,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
             $sql_latestChangeset = "SELECT MAX(submitted_on)
 		FROM `tracker_changeset` c2
 		WHERE c2.artifact_id = c.artifact_id
-		AND c2.submitted_on < ". $timestamp;
+		AND c2.submitted_on < $timestamp";
 
             // Count the number of occurence of each label of the source field at the given date.
             // Return {Label, count}
@@ -85,11 +85,11 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 
             //Grab the according color for each label
             //Return {Label, count, r, g, b}
-            $sql = "SELECT val2.label, r.count, deco.red, deco.green, deco.blue
+            $sql = "SELECT val2.label, IFNULL(CountPerLabel.count, 0), deco.red, deco.green, deco.blue
 FROM  tracker_field_list_bind_static_value val2
 LEFT JOIN tracker_field_list_bind_decorator deco ON (val2.id = deco.value_id)
-LEFT JOIN ( ". $sql_CountPerLabel .") as r
-ON r.label = val2.label
+LEFT JOIN ( ". $sql_CountPerLabel .") as CountPerLabel
+ON CountPerLabel.label = val2.label
 WHERE val2.field_id = ". $observed_field_id;
 
             $res = db_query($sql);
@@ -97,7 +97,7 @@ WHERE val2.field_id = ". $observed_field_id;
             $result[$timestamp] = array();
             while($data = db_fetch_array($res)) {
                $engine->colors[$data['label']] = $this->getColor($data);
-               $result[$timestamp][$data['label']] =  $data['count'] | 0; //Switch null for 0
+               $result[$timestamp][$data['label']] =  $data['count'];
             }
         }
 
