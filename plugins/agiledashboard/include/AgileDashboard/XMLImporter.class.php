@@ -27,7 +27,16 @@ class AgileDashboard_XMLImporter {
     /**
      *
      * @param SimpleXMLElement $xml_object
+     * @param array $tracker_mappings
+     *  These should be in the form of an array, e.g. :
+     *    array(
+     *      'T11' => 45,
+     *      'T8'  => 695,
+     *    )
+     *   where the keys are XML tracker IDs and the values are existing tracker IDs
+     *
      * @return array
+     * @throw AgileDashboard_XMLImporterInvalidTrackerMappingsException
      */
     public function toArray(SimpleXMLElement $xml_object, array $tracker_mappings) {
         $plannings = array();
