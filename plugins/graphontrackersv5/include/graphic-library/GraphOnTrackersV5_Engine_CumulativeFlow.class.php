@@ -92,7 +92,11 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
     }
 
     function hasData() {
-        return count(reset($this->data)) > 0;
+        $sumData = 0;
+        foreach ($this->data as $row) {
+            $sumData += array_sum($row);
+        }
+        return (count(reset($this->data)) > 0) && $sumData > 0;
     }
 }
 ?>
