@@ -65,10 +65,10 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 
             // Get the timestamp of the latest changeset BEFORE the stopdate
             // Return: Array of IDs
-            $sql_latestChangeset = "SELECT MAX(submitted_on)
-		FROM `tracker_changeset` c2
-		WHERE c2.artifact_id = c.artifact_id
-		AND c2.submitted_on < $timestamp";
+            $sql_latestChangeset = "SELECT MAX(id) as id
+                FROM `tracker_changeset` c2
+                WHERE c2.artifact_id = c.artifact_id
+                AND c2.submitted_on < $timestamp";
 
             // Count the number of occurence of each label of the source field at the given date.
             // Return {Label, count}
@@ -79,7 +79,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 	AND c.id = v.changeset_id
 	AND v.field_id = ". $observed_field_id . "
 	AND artifact_id in (". $this->artifacts['id'] .")
-	AND submitted_on = (". $sql_latestChangeset .")
+	AND c.id = (". $sql_latestChangeset .")
 	GROUP BY label
 	ORDER BY rank";
 
