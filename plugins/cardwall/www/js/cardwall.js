@@ -338,7 +338,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
             element.update( '' );
             new_values = getNewValues( transport, is_multi_select, field_id );
-            updateAvatars( element, new_values );
+            updateAssignedToValue( element, new_values );
 
             function getNewValues(transport, is_multi_select, field_id) {
                 var new_values;
@@ -352,7 +352,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                 return new_values;
             }
 
-            function updateAvatars( avatars_div, new_values ) {
+            function updateAssignedToValue( assigned_to_div, new_values ) {
                 var updateFunction;
                 if (is_display_username_selected) {
                     updateFunction = addUsername;
@@ -361,12 +361,12 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                 }
                 if(new_values instanceof Array) {
                     for(var i=0; i<new_values.length; i++) {           
-                        updateFunction( avatars_div, new_values[i] );
+                        updateFunction( assigned_to_div, new_values[i] );
                     }
                 } else if( typeof new_values === 'string' && new_values.length > 0 ){
-                    updateFunction( avatars_div, new_values );
+                    updateFunction( assigned_to_div, new_values );
                 } else {
-                    avatars_div.update( ' - ' );
+                    assigned_to_div.update( ' - ' );
                 }
             }
             
