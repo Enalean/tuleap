@@ -45,7 +45,7 @@ class trackerXmlImport {
         $tracker_list = array();
         foreach ($this->xml_content->trackers->children() as $xml_tracker) {
             $tracker_attributes = $xml_tracker->attributes();
-            $xml_tracker_id = (String) $tracker_attributes['ID'];
+            $xml_tracker_id = (String) $tracker_attributes['id'];
             $tracker_list[$xml_tracker_id] = $xml_tracker;
         }
         return $tracker_list;
