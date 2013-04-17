@@ -34,11 +34,6 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
     private $planning_short_access1;
     private $planning_short_access2;
 
-    private $planning_milestone1;
-    private $planning_milestone2;
-
-
-
     public function setUp() {
         parent::setUp();
 
@@ -59,8 +54,6 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         stub($this->planning_short_access1)->getPlanning()->returns($this->planning1);
         stub($this->planning_short_access2)->getPlanning()->returns($this->planning2);
 
-        stub($this->planning_short_access1)->getCurrentMilestone()->returns($this->planning_milestone1);
-        stub($this->planning_short_access2)->getCurrentMilestone()->returns($this->planning_milestone2);
 
         stub($this->planning1)->getName()->returns('abcd');
         stub($this->planning2)->getName()->returns('abcd');
@@ -74,8 +67,8 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         stub($this->planning1)->getBacklogTitle()->returns('p q r');
         stub($this->planning2)->getBacklogTitle()->returns('p q r');
 
-        stub($this->planning_milestone1)->getTrackerId()->returns('stu vw x y   z');
-        stub($this->planning_milestone2)->getTrackerId()->returns('stu vw x y   z');
+        stub($this->planning1)->getBacklogTrackerId()->returns('stu vw x y   z');
+        stub($this->planning2)->getBacklogTrackerId()->returns('stu vw x y   z');
 
         $data = '<?xml version="1.0" encoding="UTF-8"?>
                  <plannings />';
@@ -124,11 +117,11 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
             $this->assertEqual( (string) $attributes[PlanningParameters::PLANNING_TITLE], 'efgh');
             $this->assertEqual( (string) $attributes[PlanningParameters::BACKLOG_TITLE], 'p q r');
             
-            $expected_item_tracker_id = AgileDashboard_XMLExporter::TRACKER_ID_PREFIX.'ijklmon';
-            $expected_milestone_tracker_id = AgileDashboard_XMLExporter::TRACKER_ID_PREFIX.'stu vw x y   z';
+            $expected_planning_tracker_id = AgileDashboard_XMLExporter::TRACKER_ID_PREFIX.'ijklmon';
+            $expected_backlog_tracker_id  = AgileDashboard_XMLExporter::TRACKER_ID_PREFIX.'stu vw x y   z';
             
-            $this->assertEqual( (string) $attributes[PlanningParameters::PLANNING_TRACKER_ID], $expected_item_tracker_id);
-            $this->assertEqual( (string) $attributes[PlanningParameters::BACKLOG_TRACKER_ID], $expected_milestone_tracker_id);
+            $this->assertEqual( (string) $attributes[PlanningParameters::PLANNING_TRACKER_ID], $expected_planning_tracker_id);
+            $this->assertEqual( (string) $attributes[PlanningParameters::BACKLOG_TRACKER_ID], $expected_backlog_tracker_id);
         }
     }
 }

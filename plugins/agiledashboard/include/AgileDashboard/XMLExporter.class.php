@@ -41,21 +41,19 @@ class AgileDashboard_XMLExporter {
             /* @var $planning Planning */
             $planning = $planning_short_access->getPlanning();
 
-            $planning_name              = $planning->getName();
-            $planning_title             = $planning->getPlanTitle();
-            $planning_item_tracker      = $this->getFormattedTrackerId($planning->getPlanningTrackerId());
-            $planning_backlog_title     = $planning->getBacklogTitle();
-            $planning_milestone_tracker = $this->getFormattedTrackerId(
-                $planning_short_access->getCurrentMilestone()->getTrackerId()
-            );
+            $planning_name                  = $planning->getName();
+            $planning_title                 = $planning->getPlanTitle();
+            $planning_tracker_id            = $this->getFormattedTrackerId($planning->getPlanningTrackerId());
+            $planning_backlog_title         = $planning->getBacklogTitle();
+            $planning_backlog_tracker_id    = $this->getFormattedTrackerId($planning->getBacklogTrackerId());
 
             $planning_node = $plannings_node->addChild(self::NODE_PLANNING);
 
             $planning_node->addAttribute(PlanningParameters::NAME, $planning_name);
             $planning_node->addAttribute(PlanningParameters::PLANNING_TITLE, $planning_title);
-            $planning_node->addAttribute(PlanningParameters::PLANNING_TRACKER_ID, $planning_item_tracker);
+            $planning_node->addAttribute(PlanningParameters::PLANNING_TRACKER_ID, $planning_tracker_id);
             $planning_node->addAttribute(PlanningParameters::BACKLOG_TITLE, $planning_backlog_title);
-            $planning_node->addAttribute(PlanningParameters::BACKLOG_TRACKER_ID, $planning_milestone_tracker);
+            $planning_node->addAttribute(PlanningParameters::BACKLOG_TRACKER_ID, $planning_backlog_tracker_id);
         }
     }
 
