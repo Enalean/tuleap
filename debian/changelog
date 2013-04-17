@@ -1,5 +1,5 @@
-tuleap (5.7.99.10) unstable; urgency=low
+tuleap (5.12.99.27) unstable; urgency=low
 
   * Initial release.
 
- -- Raphaël Hertzog <hertzog@debian.org>  Mon, 11 Jun 2012 07:50:43 +0200
+ -- Raphaël Hertzog <hertzog@debian.org>  Wed, 17 Apr 2013 07:50:43 +0200
