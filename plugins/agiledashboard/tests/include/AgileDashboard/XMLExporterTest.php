@@ -120,15 +120,15 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         foreach ($this->xml_tree->$plannings->children() as $planning) {
             $attributes = $planning->attributes();
 
-            $this->assertEqual( (string) $attributes[AgileDashboard_XMLExporter::ATTRIBUTE_PLANNING_NAME], 'abcd');
-            $this->assertEqual( (string) $attributes[AgileDashboard_XMLExporter::ATTRIBUTE_PLANNING_TITLE], 'efgh');
-            $this->assertEqual( (string) $attributes[AgileDashboard_XMLExporter::ATTRIBUTE_PLANNING_BACKLOG_TITLE], 'p q r');
+            $this->assertEqual( (string) $attributes[PlanningParameters::NAME], 'abcd');
+            $this->assertEqual( (string) $attributes[PlanningParameters::PLANNING_TITLE], 'efgh');
+            $this->assertEqual( (string) $attributes[PlanningParameters::BACKLOG_TITLE], 'p q r');
             
             $expected_item_tracker_id = AgileDashboard_XMLExporter::TRACKER_ID_PREFIX.'ijklmon';
             $expected_milestone_tracker_id = AgileDashboard_XMLExporter::TRACKER_ID_PREFIX.'stu vw x y   z';
             
-            $this->assertEqual( (string) $attributes[AgileDashboard_XMLExporter::ATTRIBUTE_PLANNING_ITEM_TRACKER_ID], $expected_item_tracker_id);
-            $this->assertEqual( (string) $attributes[AgileDashboard_XMLExporter::ATTRIBUTE_PLANNING_MILESTONE_TRACKER_ID], $expected_milestone_tracker_id);
+            $this->assertEqual( (string) $attributes[PlanningParameters::PLANNING_TRACKER_ID], $expected_item_tracker_id);
+            $this->assertEqual( (string) $attributes[PlanningParameters::BACKLOG_TRACKER_ID], $expected_milestone_tracker_id);
         }
     }
 }

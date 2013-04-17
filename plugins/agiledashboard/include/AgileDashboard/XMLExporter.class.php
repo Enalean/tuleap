@@ -24,12 +24,6 @@ class AgileDashboard_XMLExporter {
     const NODE_PLANNINGS = 'plannings';
     const NODE_PLANNING  = 'planning';
 
-    const ATTRIBUTE_PLANNING_NAME                   = 'name';
-    const ATTRIBUTE_PLANNING_TITLE                  = 'plan_title';
-    const ATTRIBUTE_PLANNING_ITEM_TRACKER_ID        = 'item_tracker';
-    const ATTRIBUTE_PLANNING_BACKLOG_TITLE          = 'backlog_title';
-    const ATTRIBUTE_PLANNING_MILESTONE_TRACKER_ID   = 'milestone_tracker';
-
     /**
      * @todo move me to tracker class
      */
@@ -57,11 +51,11 @@ class AgileDashboard_XMLExporter {
 
             $planning_node = $plannings_node->addChild(self::NODE_PLANNING);
 
-            $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_NAME, $planning_name);
-            $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_TITLE, $planning_title);
-            $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_ITEM_TRACKER_ID, $planning_item_tracker);
-            $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_BACKLOG_TITLE, $planning_backlog_title);
-            $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_MILESTONE_TRACKER_ID, $planning_milestone_tracker);
+            $planning_node->addAttribute(PlanningParameters::NAME, $planning_name);
+            $planning_node->addAttribute(PlanningParameters::PLANNING_TITLE, $planning_title);
+            $planning_node->addAttribute(PlanningParameters::PLANNING_TRACKER_ID, $planning_item_tracker);
+            $planning_node->addAttribute(PlanningParameters::BACKLOG_TITLE, $planning_backlog_title);
+            $planning_node->addAttribute(PlanningParameters::BACKLOG_TRACKER_ID, $planning_milestone_tracker);
         }
     }
 
