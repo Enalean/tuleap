@@ -24,11 +24,16 @@ class AgileDashboard_XMLExporter {
     const NODE_PLANNINGS = 'plannings';
     const NODE_PLANNING  = 'planning';
 
-    const ATTRIBUTE_PLANNING_NAME               = 'name';
-    const ATTRIBUTE_PLANNING_TITLE              = 'plan_title';
-    const ATTRIBUTE_PLANNING_ITEM_TRACKER_ID       = 'item_tracker';
-    const ATTRIBUTE_PLANNING_BACKLOG_TITLE      = 'backlog_title';
-    const ATTRIBUTE_PLANNING_MILESTONE_TRACKER_ID  = 'milestone_tracker';
+    const ATTRIBUTE_PLANNING_NAME                   = 'name';
+    const ATTRIBUTE_PLANNING_TITLE                  = 'plan_title';
+    const ATTRIBUTE_PLANNING_ITEM_TRACKER_ID        = 'item_tracker';
+    const ATTRIBUTE_PLANNING_BACKLOG_TITLE          = 'backlog_title';
+    const ATTRIBUTE_PLANNING_MILESTONE_TRACKER_ID   = 'milestone_tracker';
+
+    /**
+     * @todo move me to tracker class
+     */
+    const TRACKER_ID_PREFIX                         = 'T';
 
     /**
      *
@@ -44,9 +49,11 @@ class AgileDashboard_XMLExporter {
 
             $planning_name              = $planning->getName();
             $planning_title             = $planning->getPlanTitle();
-            $planning_item_tracker      = $planning->getPlanningTrackerId();
+            $planning_item_tracker      = $this->getFormattedTrackerId($planning->getPlanningTrackerId());
             $planning_backlog_title     = $planning->getBacklogTitle();
-            $planning_milestone_tracker = $planning_short_access->getCurrentMilestone()->getTrackerId();
+            $planning_milestone_tracker = $this->getFormattedTrackerId(
+                $planning_short_access->getCurrentMilestone()->getTrackerId()
+            );
 
             $planning_node = $plannings_node->addChild(self::NODE_PLANNING);
 
@@ -56,6 +63,15 @@ class AgileDashboard_XMLExporter {
             $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_BACKLOG_TITLE, $planning_backlog_title);
             $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_MILESTONE_TRACKER_ID, $planning_milestone_tracker);
         }
+    }
+
+    /**
+     *
+     * @param int $tracker_id
+     * @return string
+     */
+    private function getFormattedTrackerId($tracker_id) {
+        return self::TRACKER_ID_PREFIX . (string) $tracker_id ;
     }
 
 
