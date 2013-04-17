@@ -150,7 +150,7 @@ $tech_box=commits_technician_box($projectname, '_commiter', $_commiter, 'Any');
 	Show the new pop-up boxes to select assigned to and/or status
 */
 echo '<H3>'.$Language->getText('cvs_browse_commit', 'browse_by').':</H3>'; 
-echo '<FORM name="commit_form" ACTION="'. $PHP_SELF .'" METHOD="GET">
+echo '<FORM name="commit_form" ACTION="?" METHOD="GET">
         <TABLE WIDTH="10%" BORDER="0">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="browse">

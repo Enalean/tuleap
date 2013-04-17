@@ -84,7 +84,7 @@ if ( !isset($view) ) {
 echo '<h2>'.$Language->getText('project_admin_utils','access_logs').'</h2>';
 
 print '
-<FORM action="'.$PHP_SELF.'" method="get">
+<FORM action="?" method="get">
 <TABLE BORDER="0" WIDTH="80%">
 <tr><td><b>'.$Language->getText('project_stats_source_code_access','access_log_from').'</b></td><td><b>'.$Language->getText('project_stats_source_code_access','for_last').'</b></td><td> </td></tr>
 <tr><td>

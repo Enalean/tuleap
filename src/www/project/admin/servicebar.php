@@ -17,7 +17,7 @@ require_once('common/event/EventManager.class.php');
 $request = HTTPRequest::instance();
     
 function display_service_row($group_id, $service_id, $label, $short_name, $description, $is_active, $is_used, $scope, $rank, &$row_num, $su, $is_template) {
-  global $Language,$PHP_SELF;
+  global $Language;
 
     // Normal projects should not see inactive services.
     if (!$su) {
