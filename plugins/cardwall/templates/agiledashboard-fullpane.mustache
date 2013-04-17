@@ -1,12 +1,12 @@
-<div class="cardwall_board-actions">
-    {{#isUserNotAnonymous}}
-        <div class="dropdown">
+{{#isUserLoggedIn}}
+    <div class="cardwall_board-actions">
+        <div class="btn-group">
             <button class="btn dropdown-toggle" data-toggle="dropdown">
                 <i class="icon-cog"></i>
                 Settings <!-- Todo: i18n -->
                 <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu pull-right">
                 <li><a href="{{switch_display_username_url}}">
                     {{#isDisplayUsernameSelected}}
                         <i class="icon-ok"></i>
@@ -19,8 +19,8 @@
                 {{/canConfigure}}
             </ul>
         </div>
-    {{/isUserNotAnonymous}}
-</div>
+    </div>
+{{/isUserLoggedIn}}
 
 {{> agiledashboard-minimalpane }}
 
