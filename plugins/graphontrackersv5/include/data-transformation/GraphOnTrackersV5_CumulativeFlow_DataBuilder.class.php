@@ -43,7 +43,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 
         $engine->legend      = null;
         $engine->start_date  = $this->chart->getStartDate();
-        $engine->unit        = $this->chart->getUnit();
+        $engine->scale        = $this->chart->getScale();
         $engine->stop_date   = $this->chart->getStopDate();
     }
 
@@ -57,11 +57,11 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 
         $start = $this->chart->getStartDate();
         $stop = $this->chart->getStopDate() ? $this->chart->getStopDate() : time();
-        $unit = $this->chart->getUnit();
-        $nbSteps = ceil(($stop - $start)/$timeFiller[$unit]);
+        $scale = $this->chart->getScale();
+        $nbSteps = ceil(($stop - $start)/$timeFiller[$scale]);
 
         for ($i = 0 ; $i <= $nbSteps; $i++ ) {
-            $timestamp = $start + ($i * $timeFiller[$unit]) ;
+            $timestamp = $start + ($i * $timeFiller[$scale]) ;
 
             // Get the timestamp of the latest changeset BEFORE the stopdate
             // Return: Array of IDs

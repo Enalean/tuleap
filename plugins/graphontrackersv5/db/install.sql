@@ -81,5 +81,5 @@ CREATE TABLE plugin_graphontrackersv5_cumulative_flow_chart(
   field_id int(11),
   start_date int(11),
   stop_date int(11),
-  unit tinyint(1)
+  scale tinyint(1)
 );

@@ -24,7 +24,7 @@ require_once('GraphOnTrackersV5_Engine.class.php');
 
 class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
 
-    public $unit;
+    public $scale;
     public $stop_date;
     public $start_date;
     public $color_set;

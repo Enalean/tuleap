@@ -44,9 +44,9 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
     /**
      * The unit of the duration
      */
-    protected $unit;
-    public function getUnit() { return $this->unit; }
-    public function setUnit($unit) { return $this->unit = $unit; }
+    protected $scale;
+    public function getScale() { return $this->scale; }
+    public function setScale($scale) { return $this->scale = $scale; }
 
     /**
      * The date (timestamp) the sprint stop
@@ -76,7 +76,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
         if (isset($chart_in_session['field_id']) && $chart_in_session['field_id'] !== '') {
             $this->field_id   = $chart_in_session['field_id'];
             $this->start_date = $chart_in_session['start_date'];
-            $this->unit       = $chart_in_session['unit'];
+            $this->scale      = $chart_in_session['scale'];
             $this->stop_date  = $chart_in_session['stop_date'];
         } else {
             $this->loadFromDb();
@@ -91,15 +91,15 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
         $arr = $this->getDao()->searchById($this->id)->getRow();
         $this->field_id   = $arr['field_id'];
         $this->start_date = $arr['start_date'];
-        $this->unit = $arr['unit'];
-        $this->stop_date   = $arr['stop_date'];
+        $this->scale      = $arr['scale'];
+        $this->stop_date  = $arr['stop_date'];
     }
 
     public function registerInSession() {
         parent::registerInSession();
         $this->report_session->set("$this->id.field_id", $this->field_id);
         $this->report_session->set("$this->id.start_date", $this->start_date);
-        $this->report_session->set("$this->id.unit", $this->unit);
+        $this->report_session->set("$this->id.scale", $this->scale);
         $this->report_session->set("$this->id.stop_date", $this->stop_date);
     }
 
@@ -113,7 +113,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
         $session->set("$id.field_id", 0);
         $session->set("$id.start_date", 0);
         $session->set("$id.stop_date", 0);
-        $session->set("$id.unit", 0);
+        $session->set("$id.scale", 0);
         $c = new GraphOnTrackersV5_Chart_CumulativeFlow($graphic_report, $id, $rank, $title, $description, $width, $height);
         $c->registerInSession();
         return $c;
@@ -128,8 +128,8 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
         return array(
             'field_id'   => $this->getFieldId(),
             'start_date' => $this->getStartDate(),
-            'stop_date'   => $this->getStopDate(),
-            'unit'   => $this->getUnit(),
+            'stop_date'  => $this->getStopDate(),
+            'scale'      => $this->getScale(),
         );
     }
 
@@ -164,13 +164,13 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
         $session->set("$this->id.field_id", $row['field_id']);
         $session->set("$this->id.start_date", strtotime($row['start_date']));
         $session->set("$this->id.stop_date", strtotime($row['stop_date']));
-        $session->set("$this->id.unit", $row['unit']);
+        $session->set("$this->id.scale", $row['scale']);
 
         $session->setHasChanged();
 
         $this->setFieldId($row['field_id']);
         $this->setStartDate(strtotime($row['start_date']));
-        $this->setUnit($row['unit']);
+        $this->setScale($row['scale']);
         $this->setStopDate(strtotime($row['stop_date']));
 
         return true;
@@ -193,15 +193,15 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
      * @return array of HTML_Element for properties
      */
     public function getProperties() {
-        $unitSelect = new HTML_Element_Selectbox(
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_unit'),
-                    'chart[unit]',
+        $scaleSelect = new HTML_Element_Selectbox(
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_scale'),
+                    'chart[scale]',
                     'value');
-        $unitSelect->addMultipleOptions(array(
+        $scaleSelect->addMultipleOptions(array(
                                               GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_day'),
                                               GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_WEEK => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_week'),
                                               GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_month'),
-                                              ), $this->getUnit());
+                                              ), $this->getScale());
         return array_merge(parent::getProperties(),
             array(
                 'field_id'   => new HTML_Element_Selectbox_TrackerFields_SelectboxesV5(
@@ -213,7 +213,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
                     $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_start_date'),
                     'chart[start_date]',
                     $this->getStartDate()),
-                    'unit'   => ( $unitSelect),
+                    'scale'   => ( $scaleSelect),
                 'stop_date'   => new HTML_Element_Input_Date(
                     $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_stop_date'),
                     'chart[stop_date]',
@@ -229,17 +229,17 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
             $field_id = $field_id->getid();
         }
         $start_date = $this->getStartDate();
-        $unit       = $this->getUnit();
+        $scale      = $this->getScale();
         $stop_date  = $this->getStopDate();
-        return $this->getDao()->save($id, $field_id, $start_date, $stop_date, $unit);
+        return $this->getDao()->save($id, $field_id, $start_date, $stop_date, $scale);
     }
 
     public function updateDb() {
         $field_id   = $this->getFieldId();
         $start_date = $this->getStartDate();
-        $unit       = $this->getUnit();
+        $scale      = $this->getScale();
         $stop_date  = $this->getStopDate();
-        return $this->getDao()->save($this->id, $field_id, $start_date, $stop_date, $unit);
+        return $this->getDao()->save($this->id, $field_id, $start_date, $stop_date, $scale);
     }
 
     /**
@@ -252,8 +252,8 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
         if ($xml['start_date']) {
             $this->setStartDate((int)$xml['start_date']);
         }
-        if ($xml['unit']) {
-            $this->setUnit((int)$xml['unit']);
+        if ($xml['scale']) {
+            $this->setScale((int)$xml['scale']);
         }
         if ($xml['stop_date']) {
             $this->setStopDate((int)$xml['stop_date']);
@@ -270,9 +270,9 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
      */
     public function arrayOfSpecificProperties() {
         return array('start_date' => $this->getStartDate(),
-                     'field_id' => $this->getFieldId(),
-                     'unit'		=> $this->getUnit(),
-                     'stop_date' => $this->getStopDate());
+                     'field_id'   => $this->getFieldId(),
+                     'scale'      => $this->getScale(),
+                     'stop_date'  => $this->getStopDate());
     }
 
     public function exportToXml(SimpleXMLElement $root, $formsMapping) {
@@ -283,8 +283,8 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
         if ($this->stop_date) {
             $root->addAttribute('stop_date', $this->stop_date);
         }
-        if ($this->unit) {
-            $root->addAttribute('unit', $this->unit);
+        if ($this->scale) {
+            $root->addAttribute('scale', $this->scale);
         }
         if ($this->field_id) {
             $root->addAttribute('effort_field', array_search($this->field_id, $formsMapping));
