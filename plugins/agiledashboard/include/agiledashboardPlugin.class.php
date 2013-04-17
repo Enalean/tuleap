@@ -284,7 +284,7 @@ class AgileDashboardPlugin extends Plugin {
             throw new AgileDashBoardEventParamsInvalidException('Params received: ' . print_r($params, true));
         }
         
-        $params['action'] = Event::EXPORT_XML_PROJECT;
+        $params['action'] = 'export';
         $request = new Codendi_Request($params);
         $this->process($request);
     }

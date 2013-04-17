@@ -33,6 +33,8 @@ class AgileDashboard_XMLimporterTest extends TuleapTestCase {
      */
     private $importer;
 
+    private $tracker_mappings;
+
     public function setUp() {
         parent::setUp();
 
@@ -41,8 +43,8 @@ class AgileDashboard_XMLimporterTest extends TuleapTestCase {
         $name                 = PlanningParameters::NAME;
         $backlog_title        = PlanningParameters::BACKLOG_TITLE;
         $plan_title           = PlanningParameters::PLANNING_TITLE;
-        $milestone_tracker_id = PlanningParameters::BACKLOG_TRACKER_ID;
-        $item_tracker_id      = PlanningParameters::PLANNING_TRACKER_ID;
+        $backlog_tracker_id   = PlanningParameters::BACKLOG_TRACKER_ID;
+        $planning_tracker_id  = PlanningParameters::PLANNING_TRACKER_ID;
 
         $default_xml = '<?xml version="1.0" encoding="UTF-8"?>
                  <agiledashboard>
@@ -50,18 +52,23 @@ class AgileDashboard_XMLimporterTest extends TuleapTestCase {
                         <planning '.
                             $name.'="Sprint Planning" '.
                             $plan_title.'="Sprint Plan" '.
-                            $item_tracker_id.'="T11" '.
+                            $planning_tracker_id.'="T11" '.
                             $backlog_title.'="Release Backlog" '.
-                            $milestone_tracker_id.'="T11"/>
+                            $backlog_tracker_id.'="T14"/>
                         <planning '.
                             $name.'="Sprint Planning" '.
                             $plan_title.'="Sprint Plan" '.
-                            $item_tracker_id.'="T11" '.
+                            $planning_tracker_id.'="T11" '.
                             $backlog_title.'="Release Backlog" '.
-                            $milestone_tracker_id.'="T11"/>
+                            $backlog_tracker_id.'="T14"/>
                     </plannings>
                  </agiledashboard>';
         $this->xml_object = new SimpleXMLElement($default_xml);
+
+        $this->tracker_mappings = array(
+            'T11' => 154,
+            'T14' => 8,
+        );
     }
 
     public function itReturnsAnEmptyArrayIfNoPlanningsExist() {
@@ -69,20 +76,20 @@ class AgileDashboard_XMLimporterTest extends TuleapTestCase {
                  <agiledashboard />';
         $xml_object = new SimpleXMLElement($xml);
 
-        $data = $this->importer->toArray($xml_object);
+        $data = $this->importer->toArray($xml_object, $this->tracker_mappings);
 
         $this->assertTrue(is_array($data));
     }
 
     public function itReturnsAnArrayForEachPlanning() {
-        $data = $this->importer->toArray($this->xml_object);
+        $data = $this->importer->toArray($this->xml_object, $this->tracker_mappings);
 
         $this->assertTrue(is_array($data));
         $this->assertCount($data, 2);
     }
 
     public function itReturnsAnArrayOfPlanningParameterValuesForAPlanning() {
-        $data = $this->importer->toArray($this->xml_object);
+        $data = $this->importer->toArray($this->xml_object, $this->tracker_mappings);
 
         $a_planning = $data[0];
 
@@ -92,5 +99,26 @@ class AgileDashboard_XMLimporterTest extends TuleapTestCase {
         $this->assertTrue(array_key_exists(PlanningParameters::BACKLOG_TRACKER_ID, $a_planning));
         $this->assertTrue(array_key_exists(PlanningParameters::PLANNING_TRACKER_ID, $a_planning));
     }
+
+    public function itReturnsCorrectTrackerIdsForAPlanning() {
+        $data = $this->importer->toArray($this->xml_object, $this->tracker_mappings);
+
+        $a_planning = $data[0];
+
+        $this->assertTrue(array_key_exists(PlanningParameters::BACKLOG_TRACKER_ID, $a_planning));
+        $this->assertTrue(array_key_exists(PlanningParameters::PLANNING_TRACKER_ID, $a_planning));
+
+        $this->assertEqual($a_planning[PlanningParameters::BACKLOG_TRACKER_ID], 8);
+        $this->assertEqual($a_planning[PlanningParameters::PLANNING_TRACKER_ID], 154);
+    }
+
+    public function itThrowsAnExceptionIfTrackerMappingsAreInvalid() {
+        $tracker_mappings = array();
+
+        $this->expectException('AgileDashboard_XMLImporterInvalidTrackerMappingsException');
+
+        $data = $this->importer->toArray($this->xml_object, $tracker_mappings);
+    }
 }
+
 ?>
