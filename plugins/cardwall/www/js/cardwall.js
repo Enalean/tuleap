@@ -223,23 +223,25 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
     bindSelectedElementsToEditor : function( editor ) {
         
         editor.getSelectedUsers = function() {
-            
-            var avatars   = editor.element.select( '.avatar' );
-            var realnames = editor.element.select( '.realname' );
-            var users = { };
 
-            avatars.each( function( avatar ) {
-                var id      = avatar.readAttribute( 'data-user-id' );
-                users[ id ] = avatar.readAttribute( 'title' );
-            });
-            
-            realnames.each( function( realname ) {
-                var id      = realname.readAttribute( 'data-user-id' );
-                users[ id ] = realname.readAttribute( 'title' );
-            });
-            
-            this.options.selected = users;
+        if (editor.element.select( '.avatar' ).length == 0) {                
+                this.options.selected = getSelectedUsersByDisplayType('realname');
+            } else {
+                this.options.selected = getSelectedUsersByDisplayType('avatar');
+            }
         };
+        
+        function getSelectedUsersByDisplayType(classname) {
+                var values   = editor.element.select( '.'+ classname );
+                var users = { };
+
+                values.each( function( classname ) {
+                    var id      = classname.readAttribute( 'data-user-id' );
+                    users[ id ] = classname.readAttribute( 'title' );
+                });
+                
+                return users;
+            }
     },
 
     createAndInjectTemporaryContainer : function () {
