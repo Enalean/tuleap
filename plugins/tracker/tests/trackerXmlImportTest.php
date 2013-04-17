@@ -24,33 +24,65 @@ class trackerXmlImportTest extends TuleapTestCase {
 
     public function setUp() {
 
-        $xml_input = '<?xml version="1.0" encoding="UTF-8"?>
-                      <project>
-                        <trackers>
-                            <tracker ID="T101"/>
-                            <tracker ID="T102"/>
-                            <tracker ID="T103"/>
-                        </trackers>
-                        <cardwall/>
-                        <agiledashboard/>
-                      </project>';
+    $xml_input = '<?xml version="1.0" encoding="UTF-8"?>
+            <project>
+              <trackers>
+                  <tracker ID="T101">
+                    <name>t10</name>
+                    <item_name>t11</item_name>
+                    <description>t12</description>
+                  </tracker>
+                  <tracker ID="T102">
+                    <name>t20</name>
+                    <item_name>t21</item_name>
+                    <description>t22</description>
+                  </tracker>
+                  <tracker ID="T103">
+                    <name>t30</name>
+                    <item_name>t31</item_name>
+                    <description>t32</description>
+                  </tracker>
+              </trackers>
+              <cardwall/>
+              <agiledashboard/>
+            </project>';
 
         $group_id = 145;
 
-        $this->xml_tracker1 = new SimpleXMLElement('<tracker ID="T101"/>');
-        $this->xml_tracker2 = new SimpleXMLElement('<tracker ID="T102"/>');
-        $this->xml_tracker3 = new SimpleXMLElement('<tracker ID="T103"/>');
+        $xml_tracker1 = new SimpleXMLElement(
+                 '<tracker ID="T101">
+                    <name>t10</name>
+                    <item_name>t11</item_name>
+                    <description>t12</description>
+                  </tracker>'
+        );
 
-        $this->trackers_list = array(101 => $this->xml_tracker1, 102 => $this->xml_tracker2, 103 => $this->xml_tracker3);
+        $xml_tracker2 = new SimpleXMLElement(
+                 '<tracker ID="T102">
+                    <name>t20</name>
+                    <item_name>t21</item_name>
+                    <description>t22</description>
+                  </tracker>'
+        );
 
-        $this->tracker1 = aTracker()->withId(101)->build();
-        $this->tracker2 = aTracker()->withId(102)->build();
-        $this->tracker3 = aTracker()->withId(103)->build();
+        $xml_tracker3 = new SimpleXMLElement(
+                 '<tracker ID="T103">
+                    <name>t30</name>
+                    <item_name>t31</item_name>
+                    <description>t32</description>
+                  </tracker>'
+        );
+
+        $this->xml_trackers_list = array("T101" => $xml_tracker1, "T102" => $xml_tracker2, "T103" => $xml_tracker3);
+
+        $this->tracker1 = aTracker()->withId(444)->build();
+        $this->tracker2 = aTracker()->withId(555)->build();
+        $this->tracker3 = aTracker()->withId(666)->build();
 
         $this->tracker_factory = mock('TrackerFactory');
-        stub($this->tracker_factory)->createFromXml($this->xml_tracker1, $group_id, '', '', '')->returns($this->tracker1);
-        stub($this->tracker_factory)->createFromXml($this->xml_tracker2, $group_id, '', '', '')->returns($this->tracker2);
-        stub($this->tracker_factory)->createFromXml($this->xml_tracker3, $group_id, '', '', '')->returns($this->tracker3);
+        stub($this->tracker_factory)->createFromXml($xml_tracker1, $group_id, 't10', 't11', 't12')->returns($this->tracker1);
+        stub($this->tracker_factory)->createFromXml($xml_tracker2, $group_id, 't20', 't21', 't22')->returns($this->tracker2);
+        stub($this->tracker_factory)->createFromXml($xml_tracker3, $group_id, 't30', 't31', 't32')->returns($this->tracker3);
 
         TrackerFactory::setInstance($this->tracker_factory);
 
@@ -64,13 +96,13 @@ class trackerXmlImportTest extends TuleapTestCase {
 
     public function itReturnsEachSimpleXmlTrackerFromTheXmlInput() {
         $trackers_result = $this->tracker_xml_importer->getAllXmlTrackers();
-
         $this->assertEqual(count($trackers_result), 3);
-        $this->assertEqual($trackers_result,  $this->trackers_list);
+        $diff = array_diff($trackers_result, $this->xml_trackers_list);
+        $this->assertTrue(empty($diff));
     }
 
     public function itCreatesAllTrackers() {
-        $expected_result = array(101 => $this->tracker1, 102 => $this->tracker2, 103 => $this->tracker3);
+        $expected_result = array("T101" => $this->tracker1, "T102" => $this->tracker2, "T103" => $this->tracker3);
         $this->tracker_factory->expectCallCount('createFromXML', 3);
 
         $result = $this->tracker_xml_importer->import();
