@@ -59,7 +59,7 @@ class CardwallConfigXmlExport {
         $on_top_config = $this->config_factory->getOnTopConfig($tracker);
         if ($on_top_config->isEnabled()) {
             $tracker_node = $trackers_node->addChild(self::NODE_TRACKER);
-            $tracker_node->addAttribute(self::ATTRIBUTE_TRACKER_ID, $tracker->getId());
+            $tracker_node->addAttribute(self::ATTRIBUTE_TRACKER_ID, 'T'.$tracker->getId());
         }
     }
 }

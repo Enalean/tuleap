@@ -59,7 +59,9 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
 
     public function itReturnsTheGoodRootXmlWithTrackers() {
         $this->xml_exporter->export($this->root);
+        $attributes = $this->root->cardwall->trackers->tracker->attributes();
         $this->assertEqual(count($this->root->cardwall->trackers->children()), 1);
+        $this->assertEqual( (String) $attributes['id'], 'T614');
     }
 
      public function itReturnsTheGoodRootXmlWithoutTrackers() {
