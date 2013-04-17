@@ -54,14 +54,19 @@ class trackerXmlImport {
     public function import() {
         $created_trackers = array();
         foreach ($this->getAllXmlTrackers() as $xml_tracker_id => $xml_tracker) {
-            $racker_created = $this->tracker_factory->createFromXML(
+            $tracker_created = $this->tracker_factory->createFromXML(
                 $xml_tracker,
                 $this->group_id,
                 (String) $xml_tracker->name,
                 (String) $xml_tracker->item_name,
                 (String) $xml_tracker->description
             );
-            $created_trackers[$xml_tracker_id] = $racker_created->getId();
+
+            if (! $tracker_created) {
+                throw new Exception();
+            }
+
+            $created_trackers[$xml_tracker_id] = $tracker_created->getId();
         }
         return $created_trackers;
     }

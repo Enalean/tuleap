@@ -24,7 +24,7 @@ class trackerXmlImportTest extends TuleapTestCase {
 
     public function setUp() {
 
-    $xml_input = '<?xml version="1.0" encoding="UTF-8"?>
+    $this->xml_input = '<?xml version="1.0" encoding="UTF-8"?>
             <project>
               <trackers>
                   <tracker ID="T101">
@@ -47,7 +47,7 @@ class trackerXmlImportTest extends TuleapTestCase {
               <agiledashboard/>
             </project>';
 
-        $group_id = 145;
+        $this->group_id = 145;
 
         $xml_tracker1 = new SimpleXMLElement(
                  '<tracker ID="T101">
@@ -80,17 +80,14 @@ class trackerXmlImportTest extends TuleapTestCase {
         $this->tracker3 = aTracker()->withId(666)->build();
 
         $this->tracker_factory = mock('TrackerFactory');
-        stub($this->tracker_factory)->createFromXml($xml_tracker1, $group_id, 't10', 't11', 't12')->returns($this->tracker1);
-        stub($this->tracker_factory)->createFromXml($xml_tracker2, $group_id, 't20', 't21', 't22')->returns($this->tracker2);
-        stub($this->tracker_factory)->createFromXml($xml_tracker3, $group_id, 't30', 't31', 't32')->returns($this->tracker3);
+        stub($this->tracker_factory)->createFromXml($xml_tracker1, $this->group_id, 't10', 't11', 't12')->returns($this->tracker1);
+        stub($this->tracker_factory)->createFromXml($xml_tracker2, $this->group_id, 't20', 't21', 't22')->returns($this->tracker2);
+        stub($this->tracker_factory)->createFromXml($xml_tracker3, $this->group_id, 't30', 't31', 't32')->returns($this->tracker3);
 
-        TrackerFactory::setInstance($this->tracker_factory);
-
-        $this->tracker_xml_importer = new trackerXmlImport($group_id, $xml_input, $this->tracker_factory);
+        $this->tracker_xml_importer = new trackerXmlImport($this->group_id, $this->xml_input, $this->tracker_factory);
     }
 
     public function tearDown() {
-        TrackerFactory::clearInstance();
         parent::tearDown();
     }
 
@@ -108,6 +105,18 @@ class trackerXmlImportTest extends TuleapTestCase {
         $result = $this->tracker_xml_importer->import();
 
         $this->assertEqual($result,$expected_result);
+    }
+
+    public function itRaiseAnExceptionIfaTrackerCannotBeCeated() {
+
+        $tracker_factory = mock('TrackerFactory');
+        stub($tracker_factory)->createFromXml()->returns(null);
+
+        $this->tracker_xml_importer = new trackerXmlImport($this->group_id, $this->xml_input, $tracker_factory);
+
+        $this->expectException();
+        $tracker_factory->expectCallCount('createFromXML', 1);
+        $this->tracker_xml_importer->import();
     }
 
 }
