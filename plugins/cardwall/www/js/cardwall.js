@@ -224,7 +224,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
         
         editor.getSelectedUsers = function() {
 
-        if (editor.element.select( '.avatar' ).length == 0) {                
+            if (editor.element.select( '.avatar' ).length == 0) {                
                 this.options.selected = getSelectedUsersByDisplayType('realname');
             } else {
                 this.options.selected = getSelectedUsersByDisplayType('avatar');
