@@ -61,7 +61,7 @@ class trackerXmlImport {
     /**
      *
      * @param SimpleXMLElement $xml_tracker
-     * @return String the id in Tuleap format
+     * @return int the id in Tuleap format
      */
     private function getTrackerIdFromXml(SimpleXMLElement $xml_tracker) {
         $tracker_attributes = $xml_tracker->attributes();
