@@ -61,7 +61,7 @@ class Planning_ShortAccess {
      * @return Planning_Milestone
      */
     public function getCurrentMilestone() {
-        $this->milestone_factory->getCurrentMilestone($this->user, $this->planning->getId());
+        return $this->milestone_factory->getCurrentMilestone($this->user, $this->planning->getId());
     }
 
     public function hasMoreMilestone() {
