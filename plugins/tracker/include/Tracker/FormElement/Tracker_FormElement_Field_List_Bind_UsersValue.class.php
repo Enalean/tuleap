@@ -85,7 +85,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         if ($current_user->isAnonymous() || $current_user->getPreference('AD_cardwall_assign_to_display_type') == 'avatar') { 
             return $user->fetchHtmlAvatar(16);
         }
-        return $user->getRealName();
+        return $user->fetchHTMLRealName();
     }
     
     public function fetchFormattedForCSV() {

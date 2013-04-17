@@ -224,12 +224,18 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
         
         editor.getSelectedUsers = function() {
             
-            var avatars = editor.element.select( '.avatar' );
+            var avatars   = editor.element.select( '.avatar' );
+            var realnames = editor.element.select( '.realname' );
             var users = { };
 
             avatars.each( function( avatar ) {
                 var id      = avatar.readAttribute( 'data-user-id' );
                 users[ id ] = avatar.readAttribute( 'title' );
+            });
+            
+            realnames.each( function( realname ) {
+                var id      = realname.readAttribute( 'data-user-id' );
+                users[ id ] = realname.readAttribute( 'title' );
             });
             
             this.options.selected = users;
@@ -370,6 +376,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                     username_div;
                     
                 username_div = new Element( 'div' );
+                username_div.addClassName( 'realname' );
                 username_div.writeAttribute( 'title', caption );
                 username_div.writeAttribute( 'data-user-id', user_id );
                 
