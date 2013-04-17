@@ -64,7 +64,7 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
         return $this->is_display_username_selected;
     }
 
-    public function isUserNotAnonymous() {
+    public function isUserLoggedIn() {
         return $this->switch_display_username_url;
     }
 }
