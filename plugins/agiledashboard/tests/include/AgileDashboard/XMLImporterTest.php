@@ -39,10 +39,10 @@ class AgileDashboard_XMLimporterTest extends TuleapTestCase {
         $this->importer = new AgileDashboard_XMLImporter();
 
         $name                 = PlanningParameters::NAME;
-        $plan_title           = PlanningParameters::PLANNING_TITLE;
         $backlog_title        = PlanningParameters::BACKLOG_TITLE;
-        $item_tracker_id      = PlanningParameters::PLANNING_TRACKER_ID;
+        $plan_title           = PlanningParameters::PLANNING_TITLE;
         $milestone_tracker_id = PlanningParameters::BACKLOG_TRACKER_ID;
+        $item_tracker_id      = PlanningParameters::PLANNING_TRACKER_ID;
 
         $default_xml = '<?xml version="1.0" encoding="UTF-8"?>
                  <agiledashboard>
