@@ -461,5 +461,17 @@ class Event {
      *   The various plugins inject stuff in the given xml element
      */
     const EXPORT_XML_PROJECT = 'export_xml_project';
+
+    /**
+     * Event launched while importing a project from a xml content
+     *
+     * Parameters:
+     *   'project'     => The given project
+     *   'xml_content' => The SimpleXMLElement to check in
+     *
+     * Expected Results:
+     *   The various plugins create objects from the xml content
+     */
+    const IMPORT_XML_PROJECT = 'import_xml_project';
 }
 ?>
