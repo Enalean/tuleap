@@ -110,7 +110,7 @@ class AgileDashboardRouter {
                 break;
             case Event::EXPORT_XML_PROJECT:
                 $agile_dashboard_controller = new AgileDashboard_Controller($request, $this->planning_factory, $this->milestone_factory, $this->plugin->getThemePath());
-                $this->executeAction($agile_dashboard_controller, 'index', $request->params);
+                $this->executeAction($agile_dashboard_controller, 'index');
                 break;
             case 'index':
             default:

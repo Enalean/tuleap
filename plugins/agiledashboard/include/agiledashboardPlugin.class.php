@@ -52,7 +52,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR, 'event_artifact_parents_selector', false);
 
             $this->_addHook(Event::SYSTRAY);
-            $this->_addHook(Event::EXPORT_XML_PROJECT);
+            $this->_addHook(Event::EXPORT_XML_PROJECT, 'exportToXml', false);
 
             if (defined('CARDWALL_BASE_DIR')) {
                 $this->_addHook(CARDWALL_EVENT_GET_SWIMLINE_TRACKER, 'cardwall_event_get_swimline_tracker', false);
@@ -273,8 +273,9 @@ class AgileDashboardPlugin extends Plugin {
 
     /**
      * @see Event::EXPORT_XML_PROJECT
+     * @param $array $params
      */
-    public function export_xml_project($params) {
+    public function exportToXml($params) {
         if (! isset($params['into_xml']) || 
             ! isset($params['project']) ||
             ! $params['into_xml'] instanceof SimpleXMLElement ||
