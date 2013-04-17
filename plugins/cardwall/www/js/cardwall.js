@@ -199,6 +199,8 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
         this.collection_url = codendi.tracker.base_url + '?func=get-values&formElement=' + this.field_id;
 
         this.users          = { };
+        
+        this.is_display_username_selected = jQuery('#cardwall div.cardwall_board').attr('data-display-username');
     },
 
     fetchUserData : function() {
@@ -316,9 +318,10 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
     },
 
     success : function() {
-        var field_id          = this.field_id,
-            is_multi_select   = (this.isMultipleSelect() === true),
-            tracker_user_data = this.tracker_user_data;
+        var field_id                     = this.field_id,
+            is_multi_select              = (this.isMultipleSelect() === true),
+            tracker_user_data            = this.tracker_user_data,
+            is_display_username_selected = this.is_display_username_selected;
 
         return function updateCardInfo( transport, element ) {
             var new_values;
@@ -344,17 +347,39 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
             }
 
             function updateAvatars( avatars_div, new_values ) {
+                var updateFunction;
+                if (is_display_username_selected) {
+                    updateFunction = addUsername;
+                } else {
+                    updateFunction = addAvatar;
+                }
                 if(new_values instanceof Array) {
                     for(var i=0; i<new_values.length; i++) {           
-                        addAvatar( avatars_div, new_values[i] );
+                        updateFunction( avatars_div, new_values[i] );
                     }
                 } else if( typeof new_values === 'string' && new_values.length > 0 ){
-                    addAvatar( avatars_div, new_values );
+                    updateFunction( avatars_div, new_values );
                 } else {
                     avatars_div.update( ' - ' );
                 }
             }
-
+            
+            function addUsername(container, user_id) {
+                var realname = tracker_user_data[ field_id ][ user_id ][ 'realname' ],
+                    caption = tracker_user_data[ field_id ][ user_id ][ 'caption' ],
+                    username_div;
+                    
+                username_div = new Element( 'div' );
+                username_div.writeAttribute( 'title', caption );
+                username_div.writeAttribute( 'data-user-id', user_id );
+                
+                username_div.innerHTML = realname;
+                
+                container.insert( username_div );
+                container.insert(' ');
+                
+            }
+            
             function addAvatar( container, user_id ) {
                 var username = tracker_user_data[ field_id ][ user_id ][ 'username' ],
                     caption = tracker_user_data[ field_id ][ user_id ][ 'caption' ],

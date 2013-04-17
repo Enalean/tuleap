@@ -80,7 +80,12 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         if ($this->getId() == 100) {
             return '';
         }
-        return $this->getUser()->fetchHtmlAvatar(16);
+        $user = $this->getUser();
+        $current_user = $this->getUserManager()->getCurrentUser();
+        if ($current_user->isAnonymous() || $current_user->getPreference('AD_cardwall_assign_to_display_type') == 'avatar') { 
+            return $user->fetchHtmlAvatar(16);
+        }
+        return $user->getRealName();
     }
     
     public function fetchFormattedForCSV() {
@@ -93,6 +98,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     public function fetchValuesForJson() {
         $json = parent::fetchValuesForJson();
         $json['username'] = $this->getUsername();
+        $json['realname'] = $this->getUser()->getRealName();
         return $json;
     }
 
