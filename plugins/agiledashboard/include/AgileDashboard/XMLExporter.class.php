@@ -26,9 +26,9 @@ class AgileDashboard_XMLExporter {
 
     const ATTRIBUTE_PLANNING_NAME               = 'name';
     const ATTRIBUTE_PLANNING_TITLE              = 'plan_title';
-    const ATTRIBUTE_PLANNING_ITEM_TRACKER       = 'item_tracker';
+    const ATTRIBUTE_PLANNING_ITEM_TRACKER_ID       = 'item_tracker';
     const ATTRIBUTE_PLANNING_BACKLOG_TITLE      = 'backlog_title';
-    const ATTRIBUTE_PLANNING_MILESTONE_TRACKER  = 'milestone_tracker';
+    const ATTRIBUTE_PLANNING_MILESTONE_TRACKER_ID  = 'milestone_tracker';
 
     /**
      *
@@ -52,9 +52,9 @@ class AgileDashboard_XMLExporter {
 
             $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_NAME, $planning_name);
             $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_TITLE, $planning_title);
-            $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_ITEM_TRACKER, $planning_item_tracker);
+            $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_ITEM_TRACKER_ID, $planning_item_tracker);
             $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_BACKLOG_TITLE, $planning_backlog_title);
-            $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_MILESTONE_TRACKER, $planning_milestone_tracker);
+            $planning_node->addAttribute(self::ATTRIBUTE_PLANNING_MILESTONE_TRACKER_ID, $planning_milestone_tracker);
         }
     }
 

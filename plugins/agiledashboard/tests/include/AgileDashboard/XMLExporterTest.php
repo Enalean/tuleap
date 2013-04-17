@@ -122,9 +122,9 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
 
             $this->assertEqual( (string) $attributes[AgileDashboard_XMLExporter::ATTRIBUTE_PLANNING_NAME], 'abcd');
             $this->assertEqual( (string) $attributes[AgileDashboard_XMLExporter::ATTRIBUTE_PLANNING_TITLE], 'efgh');
-            $this->assertEqual( (string) $attributes[AgileDashboard_XMLExporter::ATTRIBUTE_PLANNING_ITEM_TRACKER], 'ijklmon');
             $this->assertEqual( (string) $attributes[AgileDashboard_XMLExporter::ATTRIBUTE_PLANNING_BACKLOG_TITLE], 'p q r');
-            $this->assertEqual( (string) $attributes[AgileDashboard_XMLExporter::ATTRIBUTE_PLANNING_MILESTONE_TRACKER], 'stu vw x y   z');
+            $this->assertEqual( (string) $attributes[AgileDashboard_XMLExporter::ATTRIBUTE_PLANNING_ITEM_TRACKER_ID], 'ijklmon');
+            $this->assertEqual( (string) $attributes[AgileDashboard_XMLExporter::ATTRIBUTE_PLANNING_MILESTONE_TRACKER_ID], 'stu vw x y   z');
         }
     }
 }
