@@ -102,7 +102,7 @@ class trackerXmlImportTest extends TuleapTestCase {
     }
 
     public function itCreatesAllTrackers() {
-        $expected_result = array("T101" => $this->tracker1, "T102" => $this->tracker2, "T103" => $this->tracker3);
+        $expected_result = array("T101" => 444, "T102" => 555, "T103" => 666);
         $this->tracker_factory->expectCallCount('createFromXML', 3);
 
         $result = $this->tracker_xml_importer->import();
