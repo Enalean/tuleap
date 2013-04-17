@@ -46,6 +46,7 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
         require_once('common/chart/Chart.class.php');
 
         if ($this->width == 0) {
+            //$this->width = ( nbOfPoint * sizePerPoint ) + (2 * sizeOfBorderPadding)
             $this->width = (count($this->data)*100)+(2*150);
         }
 
