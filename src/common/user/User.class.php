@@ -1273,7 +1273,14 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      
      public function fetchHTMLRealName() {
          $realname = $this->purifier->purify($this->getRealName());
-         return '<div>'.$realname.'</div>';
+         $user_id  = $this->getId();
+         $html = '<div class="realname"
+                        title="'. $realname . '"
+                        data-user-id = "' . $user_id . '"
+                    >';
+         $html .= $realname;
+         $html .= '</div>';
+         return $html;
      }
 
      /**
