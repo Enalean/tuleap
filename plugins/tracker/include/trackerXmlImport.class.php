@@ -44,8 +44,9 @@ class trackerXmlImport {
     public function getAllXmlTrackers() {
         $tracker_list = array();
         foreach ($this->xml_content->trackers->children() as $xml_tracker) {
-            $tracker_id = $this->getTrackerIdFromXml($xml_tracker);
-            $tracker_list[$tracker_id] = $xml_tracker;
+            $tracker_attributes = $xml_tracker->attributes();
+            $xml_tracker_id = (String) $tracker_attributes['ID'];
+            $tracker_list[$xml_tracker_id] = $xml_tracker;
         }
         return $tracker_list;
     }
@@ -63,17 +64,5 @@ class trackerXmlImport {
         }
         return $created_trackers;
     }
-
-    /**
-     *
-     * @param SimpleXMLElement $xml_tracker
-     * @return int the id in Tuleap format
-     */
-    private function getTrackerIdFromXml(SimpleXMLElement $xml_tracker) {
-        $tracker_attributes = $xml_tracker->attributes();
-        $xml_tracker_id = preg_replace(self::XML_TRACKER_ID, '$1', $tracker_attributes['ID']);
-        return intval($xml_tracker_id);
-    }
-
 }
 ?>

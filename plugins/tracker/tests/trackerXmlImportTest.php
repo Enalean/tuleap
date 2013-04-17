@@ -73,11 +73,11 @@ class trackerXmlImportTest extends TuleapTestCase {
                   </tracker>'
         );
 
-        $this->xml_trackers_list = array(101 => $xml_tracker1, 102 => $xml_tracker2, 103 => $xml_tracker3);
+        $this->xml_trackers_list = array("T101" => $xml_tracker1, "T102" => $xml_tracker2, "T103" => $xml_tracker3);
 
-        $this->tracker1 = aTracker()->withId(101)->build();
-        $this->tracker2 = aTracker()->withId(102)->build();
-        $this->tracker3 = aTracker()->withId(103)->build();
+        $this->tracker1 = aTracker()->withId(444)->build();
+        $this->tracker2 = aTracker()->withId(555)->build();
+        $this->tracker3 = aTracker()->withId(666)->build();
 
         $this->tracker_factory = mock('TrackerFactory');
         stub($this->tracker_factory)->createFromXml($xml_tracker1, $group_id, 't10', 't11', 't12')->returns($this->tracker1);
@@ -102,7 +102,7 @@ class trackerXmlImportTest extends TuleapTestCase {
     }
 
     public function itCreatesAllTrackers() {
-        $expected_result = array(101 => $this->tracker1, 102 => $this->tracker2, 103 => $this->tracker3);
+        $expected_result = array("T101" => $this->tracker1, "T102" => $this->tracker2, "T103" => $this->tracker3);
         $this->tracker_factory->expectCallCount('createFromXML', 3);
 
         $result = $this->tracker_xml_importer->import();
