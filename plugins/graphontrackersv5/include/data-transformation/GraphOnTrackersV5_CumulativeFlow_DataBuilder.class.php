@@ -85,7 +85,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 
             //Grab the according color for each label
             //Return {Label, count, r, g, b}
-            $sql = "SELECT val2.label, IFNULL(CountPerLabel.count, 0), deco.red, deco.green, deco.blue
+            $sql = "SELECT val2.label, IFNULL(CountPerLabel.count, 0) as count, deco.red, deco.green, deco.blue
 FROM  tracker_field_list_bind_static_value val2
 LEFT JOIN tracker_field_list_bind_decorator deco ON (val2.id = deco.value_id)
 LEFT JOIN ( ". $sql_CountPerLabel .") as CountPerLabel
