@@ -1,0 +1,60 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+class trackerXmlImport {
+
+    /** @var SimpleXMLElement */
+    private $xml_content;
+
+//    /** @var TrackerFactory */
+//    private $tracker_factory;
+
+    const XML_TRACKER_ID = '#^[T]{1}([0-9]+)$#';
+
+    public function __construct($xml_output) {
+        $this->xml_content     = simplexml_load_string($xml_output);
+    }
+
+    /**
+     *
+     * @return array Array of SimpleXmlElement with each tracker
+     */
+    public function getAllXmlTrackers() {
+        $tracker_list = array();
+        foreach ($this->xml_content->trackers->children() as $xml_tracker) {
+            $tracker_id = $this->getTrackerIdFromXml($xml_tracker);
+            $tracker_list[$tracker_id] = $xml_tracker;
+        }
+        return $tracker_list;
+    }
+
+    /**
+     *
+     * @param SimpleXMLElement $xml_tracker
+     * @return String the id in Tuleap format
+     */
+    private function getTrackerIdFromXml(SimpleXMLElement $xml_tracker) {
+        $tracker_attributes = $xml_tracker->attributes();
+        $xml_tracker_id = preg_replace(self::XML_TRACKER_ID, '$1', $tracker_attributes['ID']);
+        return $xml_tracker_id;
+    }
+
+}
+?>
