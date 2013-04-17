@@ -31,7 +31,7 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
 
     function validData(){
 
-        if ($this->start_date && $this->start_date > 0){
+        if ($this->start_date && $this->start_date > 0 && $this->hasData()){
             return true;
         }else{
             echo " <p class='feedback_info'>".$GLOBALS['Language']->getText('plugin_graphontrackersv5_engine','no_datas',array($this->title))."</p>";
@@ -89,6 +89,10 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
             $this->graph->Add($line);
         }
         return $this->graph;
+    }
+
+    function hasData() {
+        return count(reset($this->data)) > 0;
     }
 }
 ?>

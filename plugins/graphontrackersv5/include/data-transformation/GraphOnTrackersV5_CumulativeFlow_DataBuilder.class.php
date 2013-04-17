@@ -72,7 +72,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 
             // Count the number of occurence of each label of the source field at the given date.
             // Return {Label, count}
-            $sql_CountPerLabel = "SELECT label, count(*) as count
+            $sql_CountPerLabel = "SELECT val.id, label, count(*) as count
 	FROM tracker_field_list_bind_static_value val,  tracker_changeset_value_list l, `tracker_changeset` as c, `tracker_changeset_value` v
 	WHERE l.bindvalue_id = val.id
 	AND changeset_value_id = v.id
@@ -89,7 +89,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 FROM  tracker_field_list_bind_static_value val2
 LEFT JOIN tracker_field_list_bind_decorator deco ON (val2.id = deco.value_id)
 LEFT JOIN ( ". $sql_CountPerLabel .") as CountPerLabel
-ON CountPerLabel.label = val2.label
+ON CountPerLabel.id = val2.id
 WHERE val2.field_id = ". $observed_field_id;
 
             $res = db_query($sql);
