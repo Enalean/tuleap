@@ -62,33 +62,15 @@ class Tracker_FormElement_Field_List_Bind_UsersValueTest extends UnitTestCase {
 }
 
 class Tracker_FormElement_Field_List_Bind_UsersValue_fetchValuesForJSONTest extends TuleapTestCase {
-    public $user_manager;
-    public $user;
-
-    public function setUp() {
-        parent::setUp();
-        $this->user_manager = mock('UserManager');
-        $this->user         = mock('PFUser');
-        UserManager::setInstance($this->user_manager);
-
-        stub($this->user)->getPreference('AD_cardwall_assign_to_display_type')->returns('username');
-        stub($this->user_manager)->getUserById()->returns($this->user);
-    }
-
-    public function tearDown() {
-        UserManager::clearInstance();
-        parent::tearDown();
-    }
 
     public function itReturnsTheUserNameAsWell() {
         $value = new Tracker_FormElement_Field_List_Bind_UsersValue(12, 'neo', 'Thomas A. Anderson (neo)');
         $json = $value->fetchValuesForJson();
         $this->assertEqual($json, array(
-            'id'                                 => '12',
-            'value'                              => 'b12',
-            'caption'                            => 'Thomas A. Anderson (neo)',
-            'username'                           => 'neo',
-            'AD_cardwall_assign_to_display_type' => 'username'
+            'id'       => '12',
+            'value'    => 'b12',
+            'caption'  => 'Thomas A. Anderson (neo)',
+            'username' => 'neo',
         ));
     }
 }

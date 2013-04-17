@@ -93,12 +93,6 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     public function fetchValuesForJson() {
         $json = parent::fetchValuesForJson();
         $json['username'] = $this->getUsername();
-        $preference = $this->getUser()->getPreference('AD_cardwall_assign_to_display_type');
-        if($preference) {
-            $json['AD_cardwall_assign_to_display_type'] = $preference;
-        } else {
-            $json['AD_cardwall_assign_to_display_type'] = 'avatar';
-        }
         return $json;
     }
 
