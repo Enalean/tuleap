@@ -30,7 +30,7 @@ class SystemEvent_EDIT_SSH_KEYS extends SystemEvent {
      */
     public function verbalizeParameters($with_link) {
         $txt = '';
-        $txt .= 'user: '. $this->verbalizeUserId($this->getIdFromParam($this->parameters), $with_link);
+        $txt .= 'user: '. $this->verbalizeUserId($this->getParameter(0), $with_link);
         return $txt;
     }
 

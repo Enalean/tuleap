@@ -297,5 +297,12 @@ class PluginTest extends TuleapTestCase {
         $plugin = new Plugin();
         $this->assertArrayEmpty($plugin->getDependencies());
     }
+
+    function itDoesntAllowToListenSameHookSeveralTimes() {
+        $this->expectException();
+        $plugin = new Plugin();
+        $plugin->addHook('bla');
+        $plugin->addHook('bla');
+    }
 }
 ?>
