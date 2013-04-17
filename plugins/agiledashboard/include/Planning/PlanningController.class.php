@@ -37,7 +37,9 @@ class Planning_Controller extends MVC2_PluginController {
      * @var PlanningFactory
      */
     private $planning_factory;
-
+    
+    const ASSIGN_TO_DISPLAY_TYPE = 'AD_cardwall_assign_to_display_type';
+    
     public function __construct(Codendi_Request $request, PlanningFactory $planning_factory, Planning_MilestoneFactory $milestone_factory, $plugin_theme_path) {
         parent::__construct('agiledashboard', $request);
         
@@ -139,14 +141,14 @@ class Planning_Controller extends MVC2_PluginController {
     }
 
     public function toggleUserDisplay() {
-        $pref_name  = 'AD_cardwall_assign_to_display_type';
+        $pref_name  = self::ASSIGN_TO_DISPLAY_TYPE;
         $user       = $this->getCurrentUser();
         $preference = $user->getPreference($pref_name);
 
         if(! $preference) {
             $user->setPreference($pref_name, 'username');
         } else {
-            $this->switchPreference($user, $preference);
+            $this->switchPreference($user, $preference, $pref_name);
         }
 
         $this->redirect(array(
@@ -157,8 +159,7 @@ class Planning_Controller extends MVC2_PluginController {
         ));
     }
 
-    private function switchPreference($user, $preference) {
-        $pref_name  = 'AD_cardwall_assign_to_display_type';
+    private function switchPreference($user, $preference, $pref_name) {
         $pref_value = 'username';
         if($preference == 'username') {
             $pref_value = 'avatar';
