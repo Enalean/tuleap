@@ -1,0 +1,6 @@
+<?php
+
+//Answer to the Ultimate Question of Life, the Universe, and Everything
+$answer = 'Bonjour Tuleap in the cloud !!!';
+
+?>
