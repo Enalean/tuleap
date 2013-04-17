@@ -138,6 +138,35 @@ class Planning_Controller extends MVC2_PluginController {
         }
     }
 
+    public function toggleUserDisplay() {
+        $pref_name  = 'AD_cardwall_assign_to_display_type';
+        $user       = $this->getCurrentUser();
+        $preference = $user->getPreference($pref_name);
+
+        if(! $preference) {
+            $user->setPreference($pref_name, 'username');
+        } else {
+            $this->switchPreference($user, $preference);
+        }
+
+        $this->redirect(array(
+            'group_id'    => $this->group_id,
+            'planning_id' => $this->request->get('planning_id'),
+            'action'      => 'show',
+            'pane'        => $this->request->get('pane')
+        ));
+    }
+
+    private function switchPreference($user, $preference) {
+        $pref_name  = 'AD_cardwall_assign_to_display_type';
+        $pref_value = 'username';
+        if($preference == 'username') {
+            $pref_value = 'avatar';
+        }
+
+        $user->setPreference($pref_name, $pref_value);
+    }
+
     /**
      *
      * @param int $projectId
