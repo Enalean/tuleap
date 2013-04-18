@@ -22,24 +22,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand.class.php';
-
 abstract class Git_Driver_Gerrit_MembershipCommand_User extends Git_Driver_Gerrit_MembershipCommand {
+    private $gerrit_user_manager;
     protected $user;
 
-    public function __construct(Git_Driver_Gerrit_MembershipManager $membership_manager, Git_Driver_Gerrit $driver, UGroup $ugroup, PFUser $user) {
+    public function __construct(
+        Git_Driver_Gerrit_MembershipManager $membership_manager,
+        Git_Driver_Gerrit $driver,
+        Git_Driver_Gerrit_UserAccountManager $gerrit_user_manager,
+        UGroup $ugroup,
+        PFUser $user
+    ) {
         parent::__construct($membership_manager, $driver, $ugroup);
-        $this->user   = $user;
+        $this->gerrit_user_manager = $gerrit_user_manager;
+        $this->user                = $user;
     }
 
     public function execute(Git_RemoteServer_GerritServer $server) {
-        if (! $this->user->getLdapId()) {
-            return;
+        $gerrit_user = $this->gerrit_user_manager->getGerritUser($this->user);
+        if ($gerrit_user) {
+            $this->executeForGerritUser($server, $gerrit_user);
         }
-        $this->executeForLdapUsers($server);
     }
 
-    abstract protected function executeForLdapUsers(Git_RemoteServer_GerritServer $server);
+    abstract protected function executeForGerritUser(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $gerrit_user);
 }
 
 ?>

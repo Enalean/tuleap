@@ -51,6 +51,9 @@ class GitActions extends PluginActions {
     /** @var Git_Driver_Gerrit */
     private $driver;
 
+    /** @var Git_Driver_Gerrit_UserAccountManager */
+    private $gerrit_usermanager;
+
     /**
      * Constructor
      *
@@ -65,7 +68,8 @@ class GitActions extends PluginActions {
         GitRepositoryFactory $factory,
         GitRepositoryManager $manager,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        Git_Driver_Gerrit $driver
+        Git_Driver_Gerrit $driver,
+        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager    = $system_event_manager;
@@ -73,6 +77,7 @@ class GitActions extends PluginActions {
         $this->manager               = $manager;
         $this->gerrit_server_factory = $gerrit_server_factory;
         $this->driver                = $driver;
+        $this->gerrit_usermanager    = $gerrit_usermanager;
 
     }
 
@@ -179,6 +184,7 @@ class GitActions extends PluginActions {
             'repository'     => $repository,
             'gerrit_servers' => $this->gerrit_server_factory->getServers(),
             'driver'         => $this->driver,
+            'gerrit_usermanager' => $this->gerrit_usermanager
         ));
         return true;
     }

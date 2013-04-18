@@ -35,26 +35,6 @@ class Git_Driver_Gerrit_UserFinder {
         $this->ugroup_manager      = $ugroup_manager;
     }
 
-    /**
-     *
-     * Get a unique list of user names with the given permission
-     *
-     * @param string $permission_type
-     * @param GitRepository $repository_id
-     *
-     * @return array of User
-     */
-    public function getUsersForPermission($permission_type, GitRepository $repository){
-        $ugroups_members = array();
-        $group_id = $repository->getProjectId();
-        foreach ($this->getUgroups($repository->getId(), $permission_type) as $ugroup_id) {
-            $ugroup = $this->ugroup_manager->getById($ugroup_id);
-            if ($ugroup) {
-                $ugroups_members = array_merge($ugroup->getUserLdapIds($group_id), $ugroups_members);
-            }
-        }
-        return array_filter(array_unique($ugroups_members));
-    }
 
     /** @return bool */
     public function areRegisteredUsersAllowedTo($permission_type, GitRepository $repository) {

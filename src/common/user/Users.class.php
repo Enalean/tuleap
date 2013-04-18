@@ -53,21 +53,5 @@ class Users {
         }
         return $result;
     }
-
-    public function getLdapIds() {
-        $result = array();
-        foreach ($this->dar as $user) {
-            $result[] = $user->getLdapId();
-        }
-        return $result;
-    }
-
-    /**
-     *
-     * @return Array string : Only the LDAP Ids non empty
-     */
-    public function getNonEmptyLdapIds() {
-        return array_filter($this->getLdapIds());
-    }
 }
 ?>
