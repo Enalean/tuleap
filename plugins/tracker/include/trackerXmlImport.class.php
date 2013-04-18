@@ -87,5 +87,17 @@ class trackerXmlImport {
         );
         return $created_trackers;
     }
+
+    public function buildTrackersHierarchy(array $hierarchy, SimpleXMLElement $xml_tracker, array $mapper) {
+        $parent_id  = $mapper[$this->getXmlTrackerAttribute($xml_tracker, 'parent_id')];
+        $tracker_id = $mapper[$this->getXmlTrackerAttribute($xml_tracker, 'id')];
+
+        if (! isset($hierarchy[$parent_id])) {
+            $hierarchy[$parent_id] = array();
+        }
+
+        array_push($hierarchy[$parent_id], $tracker_id);
+        return $hierarchy;
+    }
 }
 ?>
