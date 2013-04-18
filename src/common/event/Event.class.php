@@ -466,12 +466,24 @@ class Event {
      * Event launched while importing a project from a xml content
      *
      * Parameters:
-     *   'project'     => The given project
-     *   'xml_content' => The SimpleXMLElement to check in
+     *   'project_id'  => The id of the project where trackers, cardwall and AD must be created
+     *   'xml_content' => The xml content in string to check in
      *
      * Expected Results:
      *   The various plugins create objects from the xml content
      */
     const IMPORT_XML_PROJECT = 'import_xml_project';
+    /**
+     * Event launched while importing a project from a xml content
+     *
+     * Parameters:
+     *   'project_id'  => The id of the project where trackers, cardwall and AD must be created
+     *   'xml_content' => The SimpleXMLElement to check in
+     *   'mapping'     => An array with a mapping between xml ids and new ids for trackers
+     *
+     * Expected Results:
+     *   The various plugins create objects from the xml content
+     */
+    const EXPORT_XML_PROJECT_TRACKER_DONE = 'export_xml_project_tracker_done';
 }
 ?>

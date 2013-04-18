@@ -29,10 +29,15 @@ class trackerXmlImport {
     /** @var TrackerFactory */
     private $tracker_factory;
 
-    public function __construct($group_id, $xml_output, $tracker_factory) {
+    /** @var EventManager */
+    private $event_manager;
+
+
+    public function __construct($group_id, $xml_output, $tracker_factory, EventManager $event_manager) {
         $this->group_id        = $group_id;
         $this->xml_content     = simplexml_load_string($xml_output);
         $this->tracker_factory = $tracker_factory;
+        $this->event_manager   = $event_manager;
     }
 
     /**
@@ -59,13 +64,15 @@ class trackerXmlImport {
                 (String) $xml_tracker->item_name,
                 (String) $xml_tracker->description
             );
-
             if (! $tracker_created) {
                 throw new trackerFromXmlImportCannotBeCreatedException((String) $xml_tracker->name);
             }
-
             $created_trackers[$xml_tracker_id] = $tracker_created->getId();
         }
+        $this->event_manager->processEvent(
+            Event::EXPORT_XML_PROJECT_TRACKER_DONE,
+            array('project_id' => $this->group_id, 'xml_content' => $this->xml_content, 'mapping' => $created_trackers)
+        );
         return $created_trackers;
     }
 }
