@@ -162,7 +162,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             return false;
         }
 
-        return $this->user->getPreference('AD_cardwall_assign_to_display_type') == 'username';
+        return $this->user->getPreference('AD_cardwall_assign_to_display_username');
     }
 }
 ?>

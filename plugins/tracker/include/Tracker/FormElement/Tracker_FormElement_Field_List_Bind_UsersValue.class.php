@@ -76,13 +76,14 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         return $this->getLink();
     }
     
-    public function fetchCard() {
+    public function fetchCard($pref = null) {
         if ($this->getId() == 100) {
             return '';
         }
+
         $user = $this->getUser();
         $current_user = $this->getUserManager()->getCurrentUser();
-        if ($current_user->isAnonymous() || $current_user->getPreference('AD_cardwall_assign_to_display_type') == 'avatar') { 
+        if ($current_user->isAnonymous() || ! $current_user->getPreference('AD_cardwall_assign_to_display_username')) {
             return $user->fetchHtmlAvatar(16);
         }
         return $user->fetchHTMLRealName();
