@@ -286,6 +286,7 @@ class AgileDashboardPlugin extends Plugin {
         }
         
         $params['action'] = 'export';
+        $params['project_id'] = $params['project']->getId();
         $request = new Codendi_Request($params);
         $this->process($request);
     }
@@ -299,8 +300,8 @@ class AgileDashboardPlugin extends Plugin {
      *      mapping     array           An array of mappings between xml tracker IDs and their true IDs
      *
      */
-    public function importFromXml($param) {
-        $this->checkXmlImportParams($param);
+    public function importFromXml($params) {
+        $this->checkXmlImportParams($params);
 
         $params['action'] = 'import';
         $request = new Codendi_Request($params);

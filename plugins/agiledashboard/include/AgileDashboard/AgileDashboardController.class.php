@@ -30,7 +30,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
      *
      * @var int
      */
-    private $group_id;
+    protected $group_id;
 
     /**
      *
@@ -53,7 +53,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
     public function __construct(Codendi_Request $request, PlanningFactory $planning_factory, Planning_MilestoneFactory $milestone_factory, $plugin_theme_path) {
         parent::__construct('agiledashboard', $request);
 
-        $this->group_id          = (int) $request->get('project')->getId();
+        $this->group_id          = (int) $request->get('project_id');
         $this->planning_factory  = $planning_factory;
         $this->milestone_factory = $milestone_factory;
         $this->plugin_theme_path = $plugin_theme_path;
