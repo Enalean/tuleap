@@ -823,9 +823,6 @@ setup_tuleap() {
 	substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_lists_host = "lists.' 'sys_lists_host = "'
 	substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_disable_subdomains = 0' 'sys_disable_subdomains = 1'
     fi
-    if [ "$INSTALL_PROFILE" = "debian" ]; then
-	substitute "/etc/$PROJECT_NAME/conf/local.inc" '/usr/share/htmlpurifier' '/usr/share/php-htmlpurifier/library'
-    fi
     # replace string patterns in database.inc
     substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbpasswd%' "$codendiadm_passwd" 
     substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbuser%' "$PROJECT_ADMIN" 
