@@ -39,9 +39,11 @@ class AgileDashboard_XMLImporter {
      * @throw AgileDashboard_XMLImporterInvalidTrackerMappingsException
      */
     public function toArray(SimpleXMLElement $xml_object, array $tracker_mappings) {
-        $plannings = array();
+        
 
         $plannings_node_name = AgileDashboard_XMLExporter::NODE_PLANNINGS;
+        $plannings = array();
+        $plannings[$plannings_node_name] = array();
 
         if (! $xml_object->$plannings_node_name) {
             return $plannings;
@@ -59,7 +61,7 @@ class AgileDashboard_XMLImporter {
                 $tracker_mappings
             );
 
-            $plannings[] = array(
+            $plannings[$plannings_node_name][] = array(
                 PlanningParameters::NAME                => (string) $attributes[PlanningParameters::NAME],
                 PlanningParameters::BACKLOG_TITLE       => (string) $attributes[PlanningParameters::BACKLOG_TITLE],
                 PlanningParameters::PLANNING_TITLE      => (string) $attributes[PlanningParameters::PLANNING_TITLE],
