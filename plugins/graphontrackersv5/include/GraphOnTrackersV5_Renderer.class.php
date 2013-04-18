@@ -303,7 +303,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         $child = $root->addChild('charts');
         foreach($this->getChartFactory()->getCharts($this) as $chart) {
             $grandchild = $child->addChild('chart');
-            $chart->exportToXML(&$grandchild, $formsMapping);
+            $chart->exportToXML($grandchild, $formsMapping);
         }
     }
     
