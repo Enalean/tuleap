@@ -818,13 +818,13 @@ setup_tuleap() {
     substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_long_org_name%' "$sys_long_org_name" 
     substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_fullname%' "$sys_fullname" 
     substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_dbauth_passwd%' "$dbauth_passwd" 
-    substitute '/etc/$PROJECT_NAME/conf/local.inc' 'sys_create_project_in_one_step = 0' 'sys_create_project_in_one_step = 1'
+    substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_create_project_in_one_step = 0' 'sys_create_project_in_one_step = 1'
     if [ "$disable_subdomains" = "y" ]; then
 	substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_lists_host = "lists.' 'sys_lists_host = "'
 	substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_disable_subdomains = 0' 'sys_disable_subdomains = 1'
     fi
     if [ "$INSTALL_PROFILE" = "debian" ]; then
-	substitute "/etc/$PROJECT_NAME/conf/local.inc" 'htmlpurifier_dir = "/usr/share/htmlpurifier"' 'htmlpurifier_dir = "/usr/share/php-htmlpurifier/library"'
+	substitute "/etc/$PROJECT_NAME/conf/local.inc" '/usr/share/htmlpurifier' '/usr/share/php-htmlpurifier/library'
     fi
     # replace string patterns in database.inc
     substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbpasswd%' "$codendiadm_passwd" 
