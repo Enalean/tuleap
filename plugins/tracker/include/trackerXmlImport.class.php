@@ -47,11 +47,23 @@ class trackerXmlImport {
     public function getAllXmlTrackers() {
         $tracker_list = array();
         foreach ($this->xml_content->trackers->children() as $xml_tracker) {
-            $tracker_attributes = $xml_tracker->attributes();
-            $xml_tracker_id = (String) $tracker_attributes['id'];
-            $tracker_list[$xml_tracker_id] = $xml_tracker;
+            $tracker_list[$this->getXmlTrackerAttribute($xml_tracker, 'id')] = $xml_tracker;
         }
         return $tracker_list;
+    }
+
+    /**
+     *
+     * @param SimpleXMLElement $xml_tracker
+     * @param type $attribute_name
+     * @return the attribute value in String, False if this attribute does not exist
+     */
+    private function getXmlTrackerAttribute(SimpleXMLElement $xml_tracker, $attribute_name) {
+        $tracker_attributes = $xml_tracker->attributes();
+        if (! $tracker_attributes[$attribute_name]) {
+            return false;
+        }
+        return (String) $tracker_attributes[$attribute_name];
     }
 
     public function import() {
