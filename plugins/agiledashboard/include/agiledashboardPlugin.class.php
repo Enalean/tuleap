@@ -307,7 +307,7 @@ class AgileDashboardPlugin extends Plugin {
         $this->process($request);
     }
 
-    private function checkXmlImportParams($param) {
+    private function checkXmlImportParams($params) {
         if (! isset($params['project_id']) ||
             ! isset($params['xml_content']) ||
             ! isset($params['mapping']) ||
