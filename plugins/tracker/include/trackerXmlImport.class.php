@@ -35,7 +35,7 @@ class trackerXmlImport {
 
     public function __construct($group_id, $xml_output, $tracker_factory, EventManager $event_manager) {
         $this->group_id        = $group_id;
-        $this->xml_content     = simplexml_load_string($xml_output);
+        $this->xml_content     = $xml_output;
         $this->tracker_factory = $tracker_factory;
         $this->event_manager   = $event_manager;
     }
@@ -73,11 +73,12 @@ class trackerXmlImport {
                 $xml_tracker,
                 $this->group_id,
                 (String) $xml_tracker->name,
-                (String) $xml_tracker->item_name,
-                (String) $xml_tracker->description
+                (String) $xml_tracker->description,
+                (String) $xml_tracker->item_name
             );
             if (! $tracker_created) {
-                throw new trackerFromXmlImportCannotBeCreatedException((String) $xml_tracker->name);
+                var_dump($tracker_created);
+                throw new trackerFromXmlImportCannotBeCreatedException((String) $xml_tracker->name . $GLOBALS['Response']->getRawFeedback());
             }
             $created_trackers[$xml_tracker_id] = $tracker_created->getId();
         }
