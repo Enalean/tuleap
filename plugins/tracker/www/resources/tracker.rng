@@ -5,7 +5,12 @@
       <optional>
         <!-- old ids -->
         <attribute name="id">
-          <data type="int"/>
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="parent_id">
+          <data type="string"/>
         </attribute>
       </optional>
       <optional>
