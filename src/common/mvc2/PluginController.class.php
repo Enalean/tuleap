@@ -37,6 +37,10 @@ abstract class MVC2_PluginController extends MVC2_Controller {
     }
 
     protected function checkUserIsAdmin() {
+        if (IS_SCRIPT) {
+            return;
+        }
+
         $project = $this->request->getProject();
         $user    = $this->request->getCurrentUser();
         if (! $project->userIsAdmin($user)) {

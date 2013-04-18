@@ -75,7 +75,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $xml = $this->request->get('xml_content')->agiledashboard;
 
         $xml_importer = new AgileDashboard_XMLImporter();
-        $data = $xml_importer->toArray($xml);
+        $data = $xml_importer->toArray($xml, $this->request->get('mapping'));
 
         $validator = new Planning_RequestValidator($this->planning_factory);
 
