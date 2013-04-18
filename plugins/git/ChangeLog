@@ -1,3 +1,6 @@
+Version 3.3 - Tuleap 5.13
+    * Fix git plugin install, create table according to their FK order
+
 Version 3.2 - Tuleap 5.13
     * On user ssh key edition, appy on gerrit and gitolite
 
