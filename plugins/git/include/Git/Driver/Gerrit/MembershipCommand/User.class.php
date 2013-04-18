@@ -38,8 +38,6 @@ abstract class Git_Driver_Gerrit_MembershipCommand_User extends Git_Driver_Gerri
         EventManager::instance()->processEvent(Event::GET_LDAP_LOGIN_NAME_FOR_USER, $params);
         if ($ldap_user) {
             $this->executeForLdapUsers($server, $ldap_user);
-        } else {
-           //throw new Exception('Pas de ldap');
         }
     }
 
