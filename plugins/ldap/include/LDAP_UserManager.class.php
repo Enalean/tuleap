@@ -24,6 +24,7 @@
 require_once 'LDAP_UserDao.class.php';
 require_once 'LDAP.class.php';
 require_once 'LDAP_UserSync.class.php';
+require_once 'LDAP_User.class.php';
 require_once 'common/user/UserManager.class.php';
 require_once 'common/system_event/SystemEventManager.class.php';
 require_once 'system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN.class.php';
@@ -56,6 +57,14 @@ class LDAP_UserManager {
      */
     function __construct(LDAP $ldap) {
         $this->ldap = $ldap;
+    }
+
+    public function getLDAPUserFromUser(PFUser $user) {
+        $ldap_result = $this->getLdapFromUser($user);
+        if ($ldap_result) {
+            return new LDAP_User($user, $ldap_result);
+        }
+        return null;
     }
 
     /**

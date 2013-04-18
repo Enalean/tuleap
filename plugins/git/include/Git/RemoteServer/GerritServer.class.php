@@ -102,9 +102,13 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     }
 
     public function getEndUserCloneUrl($gerrit_project, PFUser $user) {
-        $login  = self::DEFAULT_GERRIT_USERNAME;
-        $params = array('login' => &$login, 'user' => $user);
+        $login     = self::DEFAULT_GERRIT_USERNAME;
+        $ldap_user = null;
+        $params    = array('ldap_user' => &$ldap_user, 'user' => $user);
         EventManager::instance()->processEvent(Event::GET_LDAP_LOGIN_NAME_FOR_USER, $params);
+        if ($ldap_user) {
+            $login = $ldap_user->getUid();
+        }
         return 'ssh://'.$login.'@'.$this->host.':'.$this->ssh_port.'/'.$gerrit_project.'.git';
     }
 
