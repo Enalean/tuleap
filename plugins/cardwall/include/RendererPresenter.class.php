@@ -44,6 +44,8 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter {
      */
     public $warn_no_values;
 
+    public $is_display_username_selected = "";
+
     /**
      * @param Cardwall_Board                      $board              The board
      * @param Cardwall_QrCode                     $qrcode             QrCode to display. false if no qrcode (thus no typehinting)
