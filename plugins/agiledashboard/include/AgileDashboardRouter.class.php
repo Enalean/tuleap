@@ -114,7 +114,7 @@ class AgileDashboardRouter {
                 break;
             case 'import':
                 $agile_dashboard_controller = new AgileDashboard_Controller($request, $this->planning_factory, $this->milestone_factory, $this->plugin->getThemePath());
-                $this->executeAction($agile_dashboard_controller, 'createfromXml');
+                $this->executeAction($agile_dashboard_controller, 'createMultiplefromXml');
                 break;
             case 'index':
             default:

@@ -68,43 +68,34 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $xml_exporter->export($agile_dashboard_node, $plannings);
     }
 
-    public function create() {
+    public function createMultiplefromXml() {
         $this->checkUserIsAdmin();
-        $validator = new Planning_RequestValidator($this->planning_factory);
         
-        $xml = $this->request->get('into_xml')->agiledashboard;
+        /* @var $xml SimpleXMLElement */
+        $xml = $this->request->get('xml_content')->agiledashboard;
 
         $xml_importer = new AgileDashboard_XMLImporter();
-        $plannings = $xml_importer->toArray($xml);
+        $data = $xml_importer->toArray($xml);
 
-        foreach ($plannings as $planning) {
+        $validator = new Planning_RequestValidator($this->planning_factory);
+
+        foreach ($data['plannings'] as $planning) {
             $request_params = array(
-                'planning' => $planning,
-                'group_id' => $this->group_id,
-                'planning_id' => ''
+                'planning'      => $planning,
+                'group_id'      => $this->group_id,
+                'planning_id'   => ''
             );
 
             $request = new Codendi_Request($request_params);
 
             if ($validator->isValid($request)) {
-                $this->planning_factory->createPlanning($this->group_id,
-                                                        PlanningParameters::fromArray($this->request->get('planning')));
+                $this->planning_factory->createPlanning(
+                    $this->group_id,
+                    PlanningParameters::fromArray($this->request->get('planning'))
+                );
             } else {
-                // TODO: Error message should reflect validation detail
-                $this->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory'));
-
+                //log error?
             }
-        }
-    }
-
-    private function checkUserIsAdmin() {
-        $project = $this->request->getProject();
-        $user    = $this->request->getCurrentUser();
-        if (! $project->userIsAdmin($user)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
-        //    $this->redirect(array('group_id' => $this->group_id));
-            // the below is only run by tests (redirect should exit but is mocked)
-            throw new Exception($GLOBALS['Language']->getText('global', 'perm_denied'));
         }
     }
 }
