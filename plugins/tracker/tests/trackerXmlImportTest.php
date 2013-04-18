@@ -26,6 +26,7 @@ class trackerXmlImportTest extends TuleapTestCase {
 
     $this->xml_input = '<?xml version="1.0" encoding="UTF-8"?>
             <project>
+              <empty_section />
               <trackers>
                   <tracker xmlns="http://codendi.org/tracker" id="T101" parent_id="0" instantiate_for_new_projects="1">
                     <name>t10</name>
@@ -107,7 +108,7 @@ class trackerXmlImportTest extends TuleapTestCase {
         $this->assertEqual($result,$expected_result);
     }
 
-    public function itRaiseAnExceptionIfaTrackerCannotBeCreatedAndDoesNotContinue() {
+    public function itRaisesAnExceptionIfATrackerCannotBeCreatedAndDoesNotContinue() {
 
         $tracker_factory = mock('TrackerFactory');
         stub($tracker_factory)->createFromXml()->returns(null);

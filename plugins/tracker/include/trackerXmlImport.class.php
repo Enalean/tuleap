@@ -29,8 +29,6 @@ class trackerXmlImport {
     /** @var TrackerFactory */
     private $tracker_factory;
 
-    const XML_TRACKER_ID = '#^[T]{1}([0-9]+)$#';
-
     public function __construct($group_id, $xml_output, $tracker_factory) {
         $this->group_id        = $group_id;
         $this->xml_content     = simplexml_load_string($xml_output);
@@ -63,7 +61,7 @@ class trackerXmlImport {
             );
 
             if (! $tracker_created) {
-                throw new Exception();
+                throw new trackerFromXmlImportCannotBeCreatedException((String) $xml_tracker->name);
             }
 
             $created_trackers[$xml_tracker_id] = $tracker_created->getId();
