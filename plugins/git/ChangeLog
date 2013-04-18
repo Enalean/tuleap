@@ -1,3 +1,15 @@
+Version 3.4 - Tuleap 5.13
+    * Fix sla #2847 and sla #907 Git and jenkins usage
+
+     Fixes:
+     - Git post push commit now pass token to the URL to build
+     - No longer enforce SSL verification of Jenkins server
+     - Now use proxy if any defined to communicate with jenkins server
+
+     Nota: make use of core Jenkins integration.
+
+     Change-Id: Ia26ca44b7d70b6bbf436a591d8472355796ec91b
+
 Version 3.3 - Tuleap 5.13
     * Fix git plugin install, create table according to their FK order
 
