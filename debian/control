@@ -38,7 +38,7 @@ Depends: ${misc:Depends}, ${perl:Depends},
  mysql-client,
  ttf-dejavu,
  openssl,
- curl, tmpreaper
+ curl, tmpreaper, cron
 Recommends: mysql-server
 Suggests: python
 Description: Web-based forge that address all the aspects of product development
