@@ -52,6 +52,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR, 'event_artifact_parents_selector', false);
 
             $this->_addHook(Event::SYSTRAY);
+            $this->_addHook(Event::EXPORT_XML_PROJECT_TRACKER_DONE, 'importFromXml', false);
             $this->_addHook(Event::EXPORT_XML_PROJECT, 'exportToXml', false);
 
             if (defined('CARDWALL_BASE_DIR')) {
@@ -287,6 +288,33 @@ class AgileDashboardPlugin extends Plugin {
         $params['action'] = 'export';
         $request = new Codendi_Request($params);
         $this->process($request);
+    }
+
+    /**
+     *
+     * @param array $param
+     *  Expected key/ values:
+     *      project_id  int             The ID of the project for the import
+     *      xml_content SimpleXmlObject A string of valid xml
+     *      mapping     array           An array of mappings between xml tracker IDs and their true IDs
+     *
+     */
+    public function importFromXml($param) {
+        $this->checkXmlImportParams($param);
+
+        $params['action'] = 'import';
+        $request = new Codendi_Request($params);
+        $this->process($request);
+    }
+
+    private function checkXmlImportParams($param) {
+        if (! isset($params['project_id']) ||
+            ! isset($params['xml_content']) ||
+            ! isset($params['mapping']) ||
+            ! is_array($params['mapping'])
+            ) {
+            throw new AgileDashBoardEventParamsInvalidException('Params received: ' . print_r($params, true));
+        }
     }
 }
 
