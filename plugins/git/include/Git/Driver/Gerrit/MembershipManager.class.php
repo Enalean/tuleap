@@ -171,7 +171,7 @@ class Git_Driver_Gerrit_MembershipManager {
             if ($source_ugroup) {
                 $memberlist = array();
             } else {
-                $memberlist = $ugroup->getLdapMembersIds($ugroup->getProject()->getID());
+                $memberlist = $ugroup->getLdapLogins($ugroup->getProject()->getID());
             }
             $this->driver->createGroup($server, $gerrit_group_name, $memberlist);
             $this->dao->addReference($ugroup->getProjectId(), $ugroup->getId(), $server->getId());

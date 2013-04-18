@@ -232,7 +232,7 @@ class UGroup {
         return $this->getUsers($group_id)->getLdapIds();
     }
 
-    public function getLdapMembersIds($group_id) {
+    public function getLdapLogins($group_id) {
         return $this->getUsers($group_id)->getNonEmptyLdapIds();
     }
 

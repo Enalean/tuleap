@@ -69,5 +69,18 @@ class Users {
     public function getNonEmptyLdapIds() {
         return array_filter($this->getLdapIds());
     }
+
+    public function getLdapLogin() {
+        $ldap_logins = array();
+        foreach ($this->dar as $user) {
+            $login = '';
+            $params = array('login' => &$login, 'user' => $user);
+            EventManager::instance()->processEvent(Event::GET_LDAP_LOGIN_NAME_FOR_USER, $params);
+            if ($login) {
+                $ldap_logins[] = $login;
+            }
+        }
+        return $ldap_logins;
+    }
 }
 ?>
