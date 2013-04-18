@@ -22,9 +22,14 @@ require_once 'bootstrap.php';
 
 class trackerXmlImportTest extends TuleapTestCase {
 
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+
     public function setUp() {
 
-    $this->xml_input = '<?xml version="1.0" encoding="UTF-8"?>
+    $this->xml_input =  new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <project>
               <empty_section />
               <trackers>
@@ -46,7 +51,7 @@ class trackerXmlImportTest extends TuleapTestCase {
               </trackers>
               <cardwall/>
               <agiledashboard/>
-            </project>';
+            </project>');
 
         $this->group_id = 145;
 
@@ -75,7 +80,11 @@ class trackerXmlImportTest extends TuleapTestCase {
         );
 
         $this->xml_trackers_list = array("T101" => $this->xml_tracker1, "T102" => $this->xml_tracker2, "T103" => $this->xml_tracker3);
-        $this->mapping = array("T101" => 444, "T102" => 555, "T103" => 666);
+        $this->mapping = array(
+            "T101" => 444,
+            "T102" => 555, 
+            "T103" => 666
+        );
 
         $this->tracker1 = aTracker()->withId(444)->build();
         $this->tracker2 = aTracker()->withId(555)->build();
@@ -89,6 +98,20 @@ class trackerXmlImportTest extends TuleapTestCase {
         $this->event_manager = mock('EventManager');
 
         $this->tracker_xml_importer = new trackerXmlImport($this->group_id, $this->xml_input, $this->tracker_factory, $this->event_manager);
+    
+        $GLOBALS['Response'] = new MockResponse();
+
+        $created_tracker1 = mock('Tracker');
+        $created_tracker2 = mock('Tracker');
+        $created_tracker3 = mock('Tracker');
+
+        stub($created_tracker1)->getId()->returns(444);
+        stub($created_tracker2)->getId()->returns(555);
+        stub($created_tracker3)->getId()->returns(666);
+
+        $this->tracker_factory->setReturnValueAt(0, 'createFromXML', $created_tracker1);
+        $this->tracker_factory->setReturnValueAt(1, 'createFromXML', $created_tracker2);
+        $this->tracker_factory->setReturnValueAt(2, 'createFromXML', $created_tracker3);
     }
 
     public function itReturnsEachSimpleXmlTrackerFromTheXmlInput() {
@@ -101,9 +124,10 @@ class trackerXmlImportTest extends TuleapTestCase {
 
     public function itCreatesAllTrackers() {
         $this->tracker_factory->expectCallCount('createFromXML', 3);
+
         $result = $this->tracker_xml_importer->import();
 
-        $this->assertEqual($result,$this->mapping);
+        $this->assertEqual($result, $this->mapping);
     }
 
     public function itRaisesAnExceptionIfATrackerCannotBeCreatedAndDoesNotContinue() {
@@ -119,7 +143,11 @@ class trackerXmlImportTest extends TuleapTestCase {
     public function itThrowsAnEventIfAllTrackersAreCreated() {
         expect($this->event_manager)->processEvent(
             Event::EXPORT_XML_PROJECT_TRACKER_DONE,
-            array('project_id' => $this->group_id, 'xml_content' => simplexml_load_string($this->xml_input), 'mapping' => $this->mapping)
+            array(
+                'project_id' => $this->group_id,
+                'xml_content' => $this->xml_input,
+                'mapping' => $this->mapping
+            )
         )->once();
 
         $this->tracker_factory->expectCallCount('createFromXML', 3);
