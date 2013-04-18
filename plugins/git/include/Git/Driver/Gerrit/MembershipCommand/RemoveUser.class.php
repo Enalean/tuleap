@@ -22,10 +22,10 @@ require_once 'User.class.php';
 
 class Git_Driver_Gerrit_MembershipCommand_RemoveUser extends Git_Driver_Gerrit_MembershipCommand_User {
 
-    protected function executeForLdapUsers(Git_RemoteServer_GerritServer $server) {
+    protected function executeForLdapUsers(Git_RemoteServer_GerritServer $server, LDAP_User $ldap_user) {
         $this->driver->removeUserFromGroup(
             $server,
-            $this->user,
+            $ldap_user,
             $this->membership_manager->getFullyQualifiedUGroupName($this->ugroup)
         );
     }

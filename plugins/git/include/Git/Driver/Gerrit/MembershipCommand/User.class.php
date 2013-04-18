@@ -33,13 +33,17 @@ abstract class Git_Driver_Gerrit_MembershipCommand_User extends Git_Driver_Gerri
     }
 
     public function execute(Git_RemoteServer_GerritServer $server) {
-        if (! $this->user->getLdapId()) {
-            return;
+        $ldap_user = null;
+        $params    = array('ldap_user' => &$ldap_user, 'user' => $this->user);
+        EventManager::instance()->processEvent(Event::GET_LDAP_LOGIN_NAME_FOR_USER, $params);
+        if ($ldap_user) {
+            $this->executeForLdapUsers($server, $ldap_user);
+        } else {
+           //throw new Exception('Pas de ldap');
         }
-        $this->executeForLdapUsers($server);
     }
 
-    abstract protected function executeForLdapUsers(Git_RemoteServer_GerritServer $server);
+    abstract protected function executeForLdapUsers(Git_RemoteServer_GerritServer $server, LDAP_User $ldap_user);
 }
 
 ?>
