@@ -25,6 +25,10 @@ if [ -e /etc/debian_version ]; then
     CROND_SERVICE="cron"
     HTTPD_SERVICE="apache2"
 else
+    RH_VERSION=$(rpm -qa | grep -P "^(centos|redhat)-release" | sed -rn 's/.*-release-(.-.).*/\1/p')
+    RH_MAJOR_VERSION=$(echo $RH_VERSION | cut -d'-' -f1)
+    RH_MINOR_VERSION=$(echo $RH_VERSION | cut -d'-' -f2)
+
     INSTALL_PROFILE="rhel"
     PROJECT_NAME="codendi"
     PROJECT_ADMIN="codendiadm"
@@ -449,6 +453,7 @@ setup_mysql_cnf() {
     fi
 
     echo "Creating MySQL conf file..."
+    if [ "$RH_MAJOR_VERSION" = "5" ]; then
     $CAT <<EOF >/etc/my.cnf
 [client]
 loose-default-character-set=utf8
@@ -484,6 +489,42 @@ basedir=/var/lib
 err-log=/var/log/mysqld.log
 pid-file=/var/run/mysqld/mysqld.pid
 EOF
+    else
+    $CAT <<EOF >/etc/my.cnf
+[client]
+loose-default-character-set=utf8
+
+[mysqld]
+character_set_server=utf8
+log-bin=$PROJECT_NAME-bin
+max_allowed_packet=128M
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+# Default to using old password format for compatibility with mysql 3.x
+# clients (those using the mysqlclient10 compatibility package).
+old_passwords=1
+
+# Skip logging openfire db (for instant messaging)
+# The 'monitor' openfire plugin creates large $PROJECT_NAME-bin files
+# Comment this line if you prefer to be safer.
+binlog-ignore-db=openfire
+
+# Reduce default inactive timeout (prevent DB overload in case of nscd
+# crash)
+wait_timeout=180
+
+# Innodb settings
+innodb_file_per_table
+
+[mysql.server]
+user=mysql
+basedir=/var/lib
+
+[mysqld_safe]
+err-log=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+EOF
+    fi
 
     if [ -z "$mysql_host" ]; then
 	echo "Initializing MySQL: You can ignore additionnal messages on MySQL below this line:"
@@ -961,11 +1002,13 @@ done
 # Check release
 #
 if [ "$INSTALL_PROFILE" = "rhel" ]; then
-    RH_RELEASE="5"
-    RH_UPDATE="6"
+    if [ "$RH_MAJOR_VERSION" = "5" ]; then
+	RH_UPDATE="6"
+    else
+	RH_UPDATE="3"
+    fi
 
-    minor_version=`$RPM -qa | grep -P "^(centos|redhat)-release-${RH_RELEASE}" | sed -rn 's/(centos|redhat)-release-5-(.).*/\2/p'`
-    if [ "x$minor_version" != x ] && [ "$minor_version" -ge "$RH_UPDATE" ]; then
+    if [ "x$RH_MINOR_VERSION" != x ] && [ "$RH_MINOR_VERSION" -ge "$RH_UPDATE" ]; then
 	echo "Running on RHEL or CentOS ${RH_RELEASE}... good!"
     else
 	cat <<-EOF
