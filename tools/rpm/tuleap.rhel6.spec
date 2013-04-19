@@ -140,7 +140,7 @@ Summary: Git plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}, git > 1.6, %{php_base}-Smarty, gitolite
+Requires: %{name} >= %{version}, git > 1.6, %{php_base}-Smarty, gitolite = 2.3.1
 Requires: geshi
 Provides: tuleap-plugin-git = %{version}
 %description plugin-git
@@ -175,7 +175,8 @@ Group: Development/Tools
 Version: @@PLUGIN_IM_VERSION@@
 Release: 1%{?dist}
 AutoReqProv: no
-Requires: tuleap, openfire, openfire-codendi-plugins, zlib.i686
+Requires: tuleap, openfire, openfire-codendi-plugins
+#, zlib.i686
 Provides: tuleap-plugin-im = %{version}
 %description plugin-im
 Provides instant messaging capabilities, based on a Jabber/XMPP server.
