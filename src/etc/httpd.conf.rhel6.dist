@@ -274,7 +274,7 @@ ServerAdmin root@localhost
 # redirections work in a sensible way.
 #
 #ServerName www.example.com:80
-ServerName tuleap-centos6.cro.enalean.com
+ServerName %sys_default_domain%
 
 #
 # UseCanonicalName: Determines how Apache constructs self-referencing 
@@ -1032,27 +1032,26 @@ SetEnvIf User-Agent ^Codendi let_me_in
     Allow from env=let_me_in
 </Directory>
 
-
-NameVirtualHost tuleap-centos6.cro.enalean.com:80
+NameVirtualHost *:80
                                                                                 
 #
 # Define the www and xww virtual hosts. Just
 # to be sure they are treated the right way
 <VirtualHost *:80>
- ServerName 192.168.122.70
- ServerAlias www.192.168.122.70
- ServerAlias lists.192.168.122.70
+ ServerName %sys_default_domain%
+ ServerAlias www.%sys_default_domain%
+ ServerAlias lists.%sys_default_domain%
 
  # Include all configuration files from conf.d (php, subversion, etc.)
  # (also included from conf/ssl.conf)
- Include conf.d/*.conf
+ Include conf.d/auth_mysql.conf
+ Include conf.d/codendi_aliases.conf
+ Include conf.d/codendi_svnroot.conf
+ Include conf.d/subversion.conf
+ Include conf.d/viewvc.conf
 
  CustomLog logs/access_log common
 </VirtualHost>
-
-# Include php.conf file outside of any virtual host to make sure
-# it is available everywhere. 
-Include conf.d/php.conf
 
 # Include SSL related configuration
 Include conf/ssl.conf
@@ -1060,18 +1059,18 @@ Include conf/ssl.conf
 #
 # Subversion virtual hosts alias
 #
-<VirtualHost 192.168.122.70:80>
-        ServerName 192.168.122.70
-        ServerAlias svn.*.192.168.122.70
+<VirtualHost *:80>
+        ServerName %sys_default_domain%
+        ServerAlias svn.*. %sys_default_domain%
         Include conf.d/codendi_svnroot.conf
 </VirtualHost>
 
 #
 # Project web site virtual hosts alias
 #
-<VirtualHost 192.168.122.70:80>
-        ServerName 192.168.122.70
-        ServerAlias *.192.168.122.70
+<VirtualHost *:80>
+        ServerName %sys_default_domain%
+        ServerAlias *.%sys_default_domain%
         VirtualDocumentRoot /home/groups/%1/htdocs
         # We won't allow cgi scripts to run on project web sites. (see installation guide)
         DirectoryIndex index.html index.php
