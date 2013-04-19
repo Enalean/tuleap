@@ -9,6 +9,11 @@
 %define APP_DATA_DIR %{_localstatedir}/lib/%{APP_NAME}
 %define APP_CACHE_DIR %{_localstatedir}/tmp/%{APP_NAME}_cache
 
+# Check values in Tuleap's mailman .spec file
+%define mailman_groupid  106
+%define mailman_group    mailman
+%define mailman_userid   106
+%define mailman_user     mailman
 %define app_group        codendiadm
 %define app_user         codendiadm
 %define dummy_group      dummy
@@ -43,7 +48,7 @@ Requires: %{php_base}, %{php_base}-mysql, %{php_base}-xml, %{php_base}-mbstring,
 # contains posix* functions
 Requires: %{php_base}-process
 %endif
-Requires: dejavu-lgc-sans-fonts, dejavu-lgc-sans-mono-fonts, dejavu-lgc-serif-fonts
+Requires: dejavu-lgc-fonts
 %if %{PKG_NAME} == codendi_st
 Requires: jpgraph
 # = 2.3.4-0.codendi
@@ -144,7 +149,7 @@ Summary: CVS component for Tuleap
 Group: Development/Tools
 Version: @@CORE_CVS_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}, xinetd, rcs, cvsgraph, highlight, perl-CGI
+Requires: %{PKG_NAME}, xinetd, rcs, cvsgraph, highlight
 %if %{PKG_NAME} == codendi_st
 Requires: viewvc
 # = 1.0.7-2.codendi
@@ -236,7 +241,7 @@ Group: Development/Tools
 Version: @@PLUGIN_IM_VERSION@@
 Release: 1%{?dist}
 AutoReqProv: no
-Requires: %{PKG_NAME}, openfire, openfire-codendi-plugins, zlib.i686
+Requires: %{PKG_NAME}, openfire, openfire-codendi-plugins
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-im = %{version}
 %else
@@ -388,15 +393,17 @@ Requires: %{php_base}-pear-HTTP
 This plugin provides ADMS.SW additions to the DOAP RDF documents for projects on
 /projects URLs with content-negociation (application/rdf+xml).
 
+%if %{php_base} == php53
 %package plugin-mediawiki
 Summary: Mediawiki plugin
 Group: Development/Tools
 Version: @@PLUGIN_MEDIAWIKI_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}-plugin-fusionforge_compat
-Requires: php-mediawiki-tuleap
+Requires: php53-mediawiki-tuleap
 %description plugin-mediawiki
 This plugin provides Mediawiki integration in Tuleap.
+%endif
 
 #
 ## Themes
@@ -570,10 +577,14 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
 
 # Plugin mediawiki
+%if %{php_base} == php53
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/projects
 %{__install} plugins/mediawiki/etc/mediawiki.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
+%else
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki
+%endif
 
 ##
 ## On package install
@@ -590,6 +601,12 @@ if [ "$1" -eq "1" ]; then
     # Make sure mandatory unix groups exist
     #
 
+    # mailman
+    if grep -q "^%{mailman_group}:" /etc/group 2> /dev/null ; then
+        /usr/sbin/groupmod -g %{mailman_groupid} -n %{mailman_group} %{mailman_group} 2> /dev/null || :
+    else
+        /usr/sbin/groupadd -g %{mailman_groupid} %{mailman_group} 2> /dev/null || :
+    fi
     # codendiadm
     if ! grep -q "^%{app_group}:" /etc/group 2> /dev/null ; then
         /usr/sbin/groupadd -r %{app_group} 2> /dev/null || :
@@ -610,10 +627,17 @@ if [ "$1" -eq "1" ]; then
     # Make suser mandatory unix users exist
 
     # codendiadm
+    # mailman group needed to write in /var/log/mailman/ directory
     if id %{app_user} >/dev/null 2>&1; then
-        /usr/sbin/usermod -c 'Owner of Tuleap directories'    -d '/home/codendiadm'    -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group} %{app_user}
+        /usr/sbin/usermod -c 'Owner of Tuleap directories'    -d '/home/codendiadm'    -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group},%{mailman_group} %{app_user}
     else
-        /usr/sbin/useradd -c 'Owner of Tuleap directories' -M -d '/home/codendiadm' -r -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group} %{app_user}
+        /usr/sbin/useradd -c 'Owner of Tuleap directories' -M -d '/home/codendiadm' -r -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group},%{mailman_group} %{app_user}
+    fi
+    # mailman
+    if id %{mailman_user} >/dev/null 2>&1; then
+        /usr/sbin/usermod -c 'Owner of Mailman directories'    -d '/usr/lib/mailman' -u %{mailman_userid} -g %{mailman_groupid} -s '/sbin/nologin' %{mailman_user}
+    else
+        /usr/sbin/useradd -c 'Owner of Mailman directories' -M -d '/usr/lib/mailman' -u %{mailman_userid} -g %{mailman_groupid} -s '/sbin/nologin' %{mailman_user}
     fi
     # ftpadmin
     if id %{ftpadmin_user} >/dev/null 2>&1; then
@@ -982,6 +1006,7 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/foafprofiles
 
+%if %{php_base} == php53
 %files plugin-mediawiki
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/mediawiki
@@ -989,6 +1014,7 @@ fi
 %dir %{APP_DATA_DIR}/mediawiki/master
 %dir %{APP_DATA_DIR}/mediawiki/projects
 %attr(644,%{APP_USER},%{APP_USER}) /etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
+%endif
 
 #
 # Themes
