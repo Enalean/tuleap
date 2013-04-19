@@ -44,7 +44,7 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter {
      */
     public $warn_no_values;
 
-    public $is_display_username_selected = "";
+    public $is_display_avatar_selected = "";
 
     /**
      * @param Cardwall_Board                      $board              The board

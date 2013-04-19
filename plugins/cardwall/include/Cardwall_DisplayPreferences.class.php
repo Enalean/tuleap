@@ -20,8 +20,10 @@
 
 class Cardwall_DisplayPreferences implements Tracker_CardDisplayPreferences {
     
-    const DISPLAY_AVATARS                      = true;
     const ASSIGNED_TO_USERNAME_PREFERENCE_NAME = 'AD_cardwall_assign_to_display_username_';
+
+    const DISPLAY_USERNAMES                    = 0;
+    const DISPLAY_AVATARS                      = 1;
 
     /** @var bool */
     private $should_display_avatars;

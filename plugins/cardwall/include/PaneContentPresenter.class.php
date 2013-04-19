@@ -37,7 +37,7 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
     /**
     * @var boolean
     */
-    public $is_display_username_selected;
+    public $is_display_avatar_selected;
 
     /**
      * @param Cardwall_Board  $board              The board
@@ -45,7 +45,7 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
      * @param string          $redirect_parameter the redirect paramter to add to various url
      * @param string          $swimline_title     The title to display on top of swimline headers
      */
-    public function __construct(Cardwall_Board $board, $qrcode, $redirect_parameter, $swimline_title, $configure_url, $switch_display_username_url, $is_display_username_selected) {
+    public function __construct(Cardwall_Board $board, $qrcode, $redirect_parameter, $swimline_title, $configure_url, $switch_display_username_url, $is_display_avatar_selected) {
         parent::__construct($board, $qrcode, $redirect_parameter);
         $this->nifty                        = '';
         $this->swimline_title               = $swimline_title;
@@ -53,7 +53,7 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
         $this->configure_url                = $configure_url;
         $this->configure_label              = $GLOBALS['Language']->getText('plugin_cardwall', 'configure_cardwall_label');
         $this->switch_display_username_url  = $switch_display_username_url;
-        $this->is_display_username_selected = $is_display_username_selected;
+        $this->is_display_avatar_selected = $is_display_avatar_selected;
         $this->display_avatar_label         = $GLOBALS['Language']->getText('plugin_cardwall', 'display_avatar_label');
     }
 
@@ -62,7 +62,7 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
     }
 
     public function isDisplayAvatarSelected() {
-        return !$this->is_display_username_selected;
+        return $this->is_display_avatar_selected;
     }
 
     public function isUserLoggedIn() {

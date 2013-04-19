@@ -119,7 +119,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $backlog_title       = $this->milestone->getPlanning()->getBacklogTracker()->getName();
         $redirect_parameter  = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
 
-        return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title, $this->canConfigure(), $this->getUserSwitchDisplayUrl(), $this->isDisplayUsernameSelected());
+        return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title, $this->canConfigure(), $this->getSwitchDisplayAvatarsURL(), $display_preferences->shouldDisplayAvatars());
     }
 
     private function getDisplayPreferences() {
@@ -148,7 +148,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         return false;
     }
 
-    private function getUserSwitchDisplayUrl() {
+    private function getSwitchDisplayAvatarsURL() {
         if ($this->user->isAnonymous()) {
             return false;
         }
@@ -169,14 +169,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             . '&action='      . $action;
 
         return $switch_display_username_url;
-    }
-
-    private function isDisplayUsernameSelected() {
-        if($this->user->isAnonymous()) {
-            return false;
-        }
-        $pref_name = Cardwall_DisplayPreferences::ASSIGNED_TO_USERNAME_PREFERENCE_NAME.$this->milestone->getTrackerId();
-        return $this->user->getPreference($pref_name);
     }
 }
 ?>

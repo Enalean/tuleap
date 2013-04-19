@@ -199,7 +199,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
         this.collection_url = codendi.tracker.base_url + '?func=get-values&formElement=' + this.field_id;
 
         this.users          = { };
-        this.is_display_username_selected = element.up('.cardwall_board').readAttribute('data-display-username');
+        this.is_display_avatar_selected = element.up('.cardwall_board').readAttribute('data-display-avatar');
     },
 
     fetchUserData : function() {
@@ -328,7 +328,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
         var field_id                     = this.field_id,
             is_multi_select              = (this.isMultipleSelect() === true),
             tracker_user_data            = this.tracker_user_data,
-            is_display_username_selected = this.is_display_username_selected;
+            is_display_avatar_selected   = this.is_display_avatar_selected;
 
         return function updateCardInfo( transport, element ) {
             var new_values;
@@ -355,7 +355,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
             function updateAssignedToValue( assigned_to_div, new_values ) {
                 var updateFunction;
-                if (is_display_username_selected == 1) {
+                if (is_display_avatar_selected == 0) {
                     updateFunction = addUsername;
                 } else {
                     updateFunction = addAvatar;
