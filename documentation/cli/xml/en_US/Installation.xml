@@ -44,7 +44,7 @@
     <para> Once you have PHP properly installed, you must download 
     and uncompress the CLI to a directory in your local machine.</para>
 
-    <para>Once you've uncompressed the CLI, you must edit $PREFIX/codendi.php 
+    <para>Once you've uncompressed the CLI, you must edit $PREFIX/tuleap.php 
     (where $PREFIX is the directory in which the CLI was uncompressed) 
     using your favorite editor and change the following:
     <procedure>
@@ -73,7 +73,7 @@
                         It is probably located in http://&SYS_DEFAULT_DOMAIN;/soap/index.php?wsdl. 
                         You can see if the URL is correct by entering it in your browser, 
                         you should get an XML file from the server as the result. If this variable 
-                        isn't set, the CLI will try to use the WSDL specified in the CODENDI_WSDL 
+                        isn't set, the CLI will try to use the WSDL specified in the TULEAP_WSDL 
                         environment variable.
                     </para>
                  </listitem>
@@ -82,10 +82,10 @@
           </para>
         </step>
         <step>
-          <para>Make sure the codendi.php script has execution permissions. 
+          <para>Make sure the tuleap.php script has execution permissions. 
                 If not, set the permission by issuing the following command:
                 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-chmod +x $PREFIX/codendi.php
+chmod +x $PREFIX/tuleap.php
                 </programlisting>
           </para>
         </step>
@@ -99,7 +99,7 @@ chmod +x $PREFIX/codendi.php
         <example>
             <title>login command</title>
             <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php -v login --username=(your user) --password=(your password)
+[mnazaria@linux tuleap-cli]$ ./tuleap.php -v login --username=(your user) --password=(your password)
 CodendiSOAP::Connecting to the server http://&SYS_DEFAULT_DOMAIN;/soap/index.php?wsdl...
 CodendiSOAP::Connected!
 CodendiSOAP::Executing command login...

@@ -99,7 +99,7 @@ fi
 
 # honor archivename if defined
 if [ -z "$archivename" ]; then
-    cli_version=`$GREP '\$CLI_VERSION = ' $BASESRCDIR/codendi.php | $SED -e 's/$CLI_VERSION = "\(.*\)";/\1/'`
+    cli_version=`$GREP '\$CLI_VERSION = ' $BASESRCDIR/tuleap.php | $SED -e 's/$CLI_VERSION = "\(.*\)";/\1/'`
     archivename="tuleap_cli-${cli_version}"
 fi
 
@@ -234,7 +234,7 @@ elif [ -n "$sys_https_host" ]; then
 else
     wsdl_domain='http://codendi.example.com';
 fi   
-substitute "$TMPDIR/cli/codendi.php" '%wsdl_domain%' "$wsdl_domain" 
+substitute "$TMPDIR/cli/tuleap.php" '%wsdl_domain%' "$wsdl_domain" 
 
 # Rename the dir cli before creating the archive
 $MV cli $archivename

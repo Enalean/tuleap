@@ -175,7 +175,7 @@ class CodendiSOAP extends SoapClient {
 			if (defined("WSDL_URL")) {
 				$this->wsdl_string = WSDL_URL;
 			} else {
-				exit_error("CodendiSOAP: URL of the WSDL is not defined. Please set your CODENDI_WSDL environment variable.");
+				exit_error("SOAP API: URL of the WSDL is not defined. Please set your TULEAP_WSDL environment variable.");
 			}
 		}
         return $this->wsdl_string;
