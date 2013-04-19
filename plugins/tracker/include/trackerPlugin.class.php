@@ -566,7 +566,7 @@ class trackerPlugin extends Plugin {
             throw new Exception('bad params for method');
         }
 
-        $tracker_xml_import = new trackerXmlImport(
+        $tracker_xml_import = new TrackerXmlImport(
             $params['project']->getId(),
             $params['xml_content'],
             TrackerFactory::instance(),

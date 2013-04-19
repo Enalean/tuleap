@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class trackerXmlImport {
+class TrackerXmlImport {
 
     /** @var int */
     private $group_id;
@@ -67,27 +67,51 @@ class trackerXmlImport {
     }
 
     public function import() {
-        $created_trackers = array();
+        $created_trackers_list = array();
+
         foreach ($this->getAllXmlTrackers() as $xml_tracker_id => $xml_tracker) {
-            $tracker_created = $this->tracker_factory->createFromXML(
-                $xml_tracker,
-                $this->group_id,
-                (String) $xml_tracker->name,
-                (String) $xml_tracker->description,
-                (String) $xml_tracker->item_name
-            );
-            if (! $tracker_created) {
-                throw new trackerFromXmlImportCannotBeCreatedException((String) $xml_tracker->name . $GLOBALS['Response']->getRawFeedback());
-            }
-            $created_trackers[$xml_tracker_id] = $tracker_created->getId();
+            $created_tracker = $this->instanciateTrackerFromXml($xml_tracker_id, $xml_tracker);
+            $created_trackers_list = array_merge($created_trackers_list, $created_tracker);
         }
+
         $this->event_manager->processEvent(
             Event::EXPORT_XML_PROJECT_TRACKER_DONE,
-            array('project_id' => $this->group_id, 'xml_content' => $this->xml_content, 'mapping' => $created_trackers)
+            array('project_id' => $this->group_id, 'xml_content' => $this->xml_content, 'mapping' => $created_trackers_list)
         );
-        return $created_trackers;
+
+        return $created_trackers_list;
     }
 
+    /**
+     *
+     * @param type $xml_tracker_id
+     * @param SimpleXMLElement $xml_tracker
+     * @return array the link between xml id and new id given by Tuleap
+     * @throws TrackerFromXmlImportCannotBeCreatedException
+     */
+    private function instanciateTrackerFromXml($xml_tracker_id, SimpleXMLElement $xml_tracker) {
+        $tracker_created = $this->tracker_factory->createFromXML(
+               $xml_tracker,
+               $this->group_id,
+               (String) $xml_tracker->name,
+               (String) $xml_tracker->description,
+               (String) $xml_tracker->item_name
+        );
+
+        if (! $tracker_created) {
+            throw new TrackerFromXmlImportCannotBeCreatedException((String) $xml_tracker->name . $GLOBALS['Response']->getRawFeedback());
+        }
+
+        return array($xml_tracker_id => $tracker_created->getId());
+    }
+
+    /**
+     *
+     * @param array $hierarchy
+     * @param SimpleXMLElement $xml_tracker
+     * @param array $mapper
+     * @return array The hierarchy array with new elements added
+     */
     public function buildTrackersHierarchy(array $hierarchy, SimpleXMLElement $xml_tracker, array $mapper) {
         $parent_id  = $mapper[$this->getXmlTrackerAttribute($xml_tracker, 'parent_id')];
         $tracker_id = $mapper[$this->getXmlTrackerAttribute($xml_tracker, 'id')];

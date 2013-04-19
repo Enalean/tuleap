@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class trackerFromXmlImportCannotBeCreatedException extends Exception {
+class TrackerFromXmlImportCannotBeCreatedException extends Exception {
     public function __construct($tracker_name) {
         $message = 'The tracker' .$tracker_name.' cannot be created.';
         parent::__construct($message);
