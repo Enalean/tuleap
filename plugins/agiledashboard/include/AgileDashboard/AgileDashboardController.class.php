@@ -95,10 +95,10 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             if ($validator->isValid($request)) {
                 $this->planning_factory->createPlanning(
                     $this->group_id,
-                    PlanningParameters::fromArray($this->request->get('planning'))
+                    PlanningParameters::fromArray($planning)
                 );
             } else {
-                //log error?
+                throw new Exception('Planning is not valid: '.  print_r($planning, true));
             }
         }
     }
