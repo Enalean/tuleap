@@ -218,7 +218,7 @@ LoadModule version_module modules/mod_version.so
 #
 # Load config files from the config directory "/etc/httpd/conf.d".
 #
-Include conf.d/*.conf
+#Include conf.d/*.conf
 
 #
 # ExtendedStatus controls whether Apache will generate "full" status
@@ -239,8 +239,8 @@ Include conf.d/*.conf
 #  when the value of (unsigned)Group is above 60000; 
 #  don't use Group #-1 on these systems!
 #
-User apache
-Group apache
+User codendiadm
+Group codendiadm
 
 ### Section 2: 'Main' server configuration
 #
@@ -274,6 +274,7 @@ ServerAdmin root@localhost
 # redirections work in a sensible way.
 #
 #ServerName www.example.com:80
+ServerName tuleap-centos6.cro.enalean.com
 
 #
 # UseCanonicalName: Determines how Apache constructs self-referencing 
@@ -289,7 +290,7 @@ UseCanonicalName Off
 # documents. By default, all requests are taken from this directory, but
 # symbolic links and aliases may be used to point to other locations.
 #
-DocumentRoot "/var/www/html"
+#DocumentRoot "/var/www/html"
 
 #
 # Each directory to which Apache has access can be configured with respect
@@ -299,10 +300,10 @@ DocumentRoot "/var/www/html"
 # First, we configure the "default" to be a very restrictive set of 
 # features.  
 #
-<Directory />
-    Options FollowSymLinks
-    AllowOverride None
-</Directory>
+#<Directory />
+#    Options FollowSymLinks
+#    AllowOverride None
+#</Directory>
 
 #
 # Note that from this point forward you must specifically allow
@@ -314,7 +315,7 @@ DocumentRoot "/var/www/html"
 #
 # This should be changed to whatever you set DocumentRoot to.
 #
-<Directory "/var/www/html">
+#<Directory "/var/www/html">
 
 #
 # Possible values for the Options directive are "None", "All",
@@ -328,22 +329,22 @@ DocumentRoot "/var/www/html"
 # http://httpd.apache.org/docs/2.2/mod/core.html#options
 # for more information.
 #
-    Options Indexes FollowSymLinks
+#    Options Indexes FollowSymLinks
 
 #
 # AllowOverride controls what directives may be placed in .htaccess files.
 # It can be "All", "None", or any combination of the keywords:
 #   Options FileInfo AuthConfig Limit
 #
-    AllowOverride None
+#    AllowOverride None
 
 #
 # Controls who can get stuff from this server.
 #
-    Order allow,deny
-    Allow from all
+#    Order allow,deny
+#    Allow from all
 
-</Directory>
+#</Directory>
 
 #
 # UserDir: The name of the directory that is appended onto a user's home
@@ -399,7 +400,7 @@ DocumentRoot "/var/www/html"
 # negotiated documents.  The MultiViews Option can be used for the 
 # same purpose, but it is much slower.
 #
-DirectoryIndex index.html index.html.var
+DirectoryIndex index.html index.html.var index.php
 
 #
 # AccessFileName: The name of the file to look for in each directory
@@ -573,18 +574,18 @@ Alias /icons/ "/var/www/icons/"
 # The same rules about trailing "/" apply to ScriptAlias directives as to
 # Alias.
 #
-ScriptAlias /cgi-bin/ "/var/www/cgi-bin/"
+#ScriptAlias /cgi-bin/ "/var/www/cgi-bin/"
 
 #
 # "/var/www/cgi-bin" should be changed to whatever your ScriptAliased
 # CGI directory exists, if you have that configured.
 #
-<Directory "/var/www/cgi-bin">
-    AllowOverride None
-    Options None
-    Order allow,deny
-    Allow from all
-</Directory>
+#<Directory "/var/www/cgi-bin">
+#    AllowOverride None
+#    Options None
+#    Order allow,deny
+#    Allow from all
+#</Directory>
 
 #
 # Redirect allows you to tell clients about documents which used to exist in
@@ -1007,3 +1008,90 @@ BrowserMatch "^Dreamweaver-WebDAV-SCM1" redirect-carefully
 #    ErrorLog logs/dummy-host.example.com-error_log
 #    CustomLog logs/dummy-host.example.com-access_log common
 #</VirtualHost>
+
+DocumentRoot "/usr/share/codendi/src/www"
+
+<Directory "/usr/share/codendi/src/www">
+    Options Includes FollowSymLinks MultiViews
+    AllowOverride All
+    AcceptPathInfo On
+    Order allow,deny
+    Allow from all
+    SetEnvIfNoCase Request_URI /file/download\.php no-gzip dont-vary
+</Directory>
+
+# Don't allow access to API for anyone.
+# Currently, the risk is low, so we only filter on UserAgent string (which can be easily forged)
+# For better security, you can filter on the server IP address
+SetEnvIf User-Agent ^Codendi let_me_in
+<Directory "/usr/share/codendi/src/www/api">
+    # API scrips do not end with ".php"
+    ForceType application/x-httpd-php
+    Order Deny,Allow
+    Deny from all
+    Allow from env=let_me_in
+</Directory>
+
+
+NameVirtualHost tuleap-centos6.cro.enalean.com:80
+                                                                                
+#
+# Define the www and xww virtual hosts. Just
+# to be sure they are treated the right way
+<VirtualHost *:80>
+ ServerName 192.168.122.70
+ ServerAlias www.192.168.122.70
+ ServerAlias lists.192.168.122.70
+
+ # Include all configuration files from conf.d (php, subversion, etc.)
+ # (also included from conf/ssl.conf)
+ Include conf.d/*.conf
+
+ CustomLog logs/access_log common
+</VirtualHost>
+
+# Include php.conf file outside of any virtual host to make sure
+# it is available everywhere. 
+Include conf.d/php.conf
+
+# Include SSL related configuration
+Include conf/ssl.conf
+
+#
+# Subversion virtual hosts alias
+#
+<VirtualHost 192.168.122.70:80>
+        ServerName 192.168.122.70
+        ServerAlias svn.*.192.168.122.70
+        Include conf.d/codendi_svnroot.conf
+</VirtualHost>
+
+#
+# Project web site virtual hosts alias
+#
+<VirtualHost 192.168.122.70:80>
+        ServerName 192.168.122.70
+        ServerAlias *.192.168.122.70
+        VirtualDocumentRoot /home/groups/%1/htdocs
+        # We won't allow cgi scripts to run on project web sites. (see installation guide)
+        DirectoryIndex index.html index.php
+        # PHP variables
+        php_admin_value open_basedir "/home/groups/"
+        php_admin_value include_path "."
+        php_admin_flag safe_mode on
+        php_admin_flag safe_mode_gid on
+        <Directory /home/groups>
+               Options Indexes FollowSymlinks
+               AllowOverride All
+               order allow,deny
+               allow from all
+       </Directory>
+        LogFormat "%v %h %l %u %t \"%r\" %>s %b" vhost
+        CustomLog logs/vhosts-access_log vhost
+</VirtualHost>
+
+#
+# On the production server the local.inc file is in /etc/codendi/conf/local.inc
+# because it contains sensitive data
+#
+SetEnv CODENDI_LOCAL_INC ""
