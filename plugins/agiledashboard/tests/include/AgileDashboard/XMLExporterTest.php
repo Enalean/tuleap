@@ -21,7 +21,7 @@ require_once dirname(__FILE__).'/../../bootstrap.php';
 
 class AgileDashboard_XMLExporterTest extends TuleapTestCase {
 
-    private $planning_short_access_set;
+    private $plannings;
     /**
      *
      * @var SimpleXMLElement
@@ -31,29 +31,16 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
     private $planning1;
     private $planning2;
 
-    private $planning_short_access1;
-    private $planning_short_access2;
-
     public function setUp() {
         parent::setUp();
-
-        $this->planning_short_access1 = mock('Planning_ShortAccess');
-        $this->planning_short_access2 = mock('Planning_ShortAccess');
-
-        $this->planning_short_access_set = array(
-            $this->planning_short_access1,
-            $this->planning_short_access2,
-        );
 
         $this->planning1 = mock('Planning');
         $this->planning2 = mock('Planning');
 
-        $this->planning_milestone1 = mock('Planning_Milestone');
-        $this->planning_milestone2 = mock('Planning_Milestone');
-
-        stub($this->planning_short_access1)->getPlanning()->returns($this->planning1);
-        stub($this->planning_short_access2)->getPlanning()->returns($this->planning2);
-
+        $this->plannings = array(
+            $this->planning1,
+            $this->planning2,
+        );
 
         stub($this->planning1)->getName()->returns('abcd');
         stub($this->planning2)->getName()->returns('abcd');
@@ -67,8 +54,14 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         stub($this->planning1)->getBacklogTitle()->returns('p q r');
         stub($this->planning2)->getBacklogTitle()->returns('p q r');
 
-        stub($this->planning1)->getBacklogTrackerId()->returns('stu vw x y   z');
-        stub($this->planning2)->getBacklogTrackerId()->returns('stu vw x y   z');
+        $backlog_tracker1 = mock('Tracker');
+        $backlog_tracker2 = mock('Tracker');
+
+        stub($backlog_tracker1)->getId()->returns('stu vw x y   z');
+        stub($backlog_tracker2)->getId()->returns('stu vw x y   z');
+
+        stub($this->planning1)->getBacklogTracker()->returns($backlog_tracker1);
+        stub($this->planning2)->getBacklogTracker()->returns($backlog_tracker2);
 
         $data = '<?xml version="1.0" encoding="UTF-8"?>
                  <plannings />';
@@ -80,14 +73,14 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         $exporter = new AgileDashboard_XMLExporter();
 
         $xml = $this->xml_tree;
-        $exporter->export($this->xml_tree, $this->planning_short_access_set);
+        $exporter->export($this->xml_tree, $this->plannings);
 
         $this->assertEqual($xml, $this->xml_tree);
     }
 
     public function itCreatesAnXMLEntryForEachPlanningShortAccess() {
         $exporter = new AgileDashboard_XMLExporter();
-        $exporter->export($this->xml_tree, $this->planning_short_access_set);
+        $exporter->export($this->xml_tree, $this->plannings);
 
         $this->assertEqual(1, count($this->xml_tree->children()));
 
@@ -106,7 +99,7 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
 
     public function itAddsAttributesForEachPlanningShortAccess() {
         $exporter = new AgileDashboard_XMLExporter();
-        $exporter->export($this->xml_tree, $this->planning_short_access_set);
+        $exporter->export($this->xml_tree, $this->plannings);
 
         $plannings = AgileDashboard_XMLExporter::NODE_PLANNINGS;
 
@@ -123,6 +116,116 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
             $this->assertEqual( (string) $attributes[PlanningParameters::PLANNING_TRACKER_ID], $expected_planning_tracker_id);
             $this->assertEqual( (string) $attributes[PlanningParameters::BACKLOG_TRACKER_ID], $expected_backlog_tracker_id);
         }
+    }
+
+    public function itThrowsAnExceptionIfPlanningNameIsEmpty() {
+        $planning = mock('Planning');
+
+        $plannings = array(
+            $planning,
+        );
+
+        stub($planning)->getName()->returns(null);
+        stub($planning)->getPlanTitle()->returns('efgh');
+        stub($planning)->getPlanningTrackerId()->returns('ijklmon');
+        stub($planning)->getBacklogTitle()->returns('p q r');
+
+        $backlog_tracker = mock('Tracker');
+        stub($backlog_tracker)->getId()->returns('stu vw x y   z');
+        stub($planning)->getBacklogTracker()->returns($backlog_tracker);
+
+        $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
+
+        $exporter = new AgileDashboard_XMLExporter();
+        $exporter->export($this->xml_tree, $plannings);
+    }
+
+    public function itThrowsAnExceptionIfPlanningTitleIsEmpty() {
+        $planning = mock('Planning');
+
+        $plannings = array(
+            $planning,
+        );
+
+        stub($planning)->getName()->returns('abc d');
+        stub($planning)->getPlanTitle()->returns('');
+        stub($planning)->getPlanningTrackerId()->returns('ijklmon');
+        stub($planning)->getBacklogTitle()->returns('p q r');
+
+        $backlog_tracker = mock('Tracker');
+        stub($backlog_tracker)->getId()->returns('stu vw x y   z');
+        stub($planning)->getBacklogTracker()->returns($backlog_tracker);
+
+        $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
+
+        $exporter = new AgileDashboard_XMLExporter();
+        $exporter->export($this->xml_tree, $plannings);
+    }
+
+    public function itThrowsAnExceptionIfBacklogTitleIsEmpty() {
+        $planning = mock('Planning');
+
+        $plannings = array(
+            $planning,
+        );
+
+        stub($planning)->getName()->returns('abc d');
+        stub($planning)->getPlanTitle()->returns('efgh');
+        stub($planning)->getPlanningTrackerId()->returns(45);
+        stub($planning)->getBacklogTitle()->returns(null);
+
+        $backlog_tracker = mock('Tracker');
+        stub($backlog_tracker)->getId()->returns('stu vw x y   z');
+        stub($planning)->getBacklogTracker()->returns($backlog_tracker);
+
+        $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
+
+        $exporter = new AgileDashboard_XMLExporter();
+        $exporter->export($this->xml_tree, $plannings);
+    }
+
+    public function itThrowsAnExceptionIfPlanningTrackerIdIsEmpty() {
+        $planning = mock('Planning');
+
+        $plannings = array(
+            $planning,
+        );
+
+        stub($planning)->getName()->returns('abc d');
+        stub($planning)->getPlanTitle()->returns('efgh');
+        stub($planning)->getPlanningTrackerId()->returns(null);
+        stub($planning)->getBacklogTitle()->returns('p q r');
+
+        $backlog_tracker = mock('Tracker');
+        stub($backlog_tracker)->getId()->returns('stu vw x y   z');
+        stub($planning)->getBacklogTracker()->returns($backlog_tracker);
+
+        $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
+
+        $exporter = new AgileDashboard_XMLExporter();
+        $exporter->export($this->xml_tree, $plannings);
+    }
+
+    public function itThrowsAnExceptionIfBacklogTrackerIdIsEmpty() {
+        $planning = mock('Planning');
+
+        $plannings = array(
+            $planning,
+        );
+
+        stub($planning)->getName()->returns('abc d');
+        stub($planning)->getPlanTitle()->returns('efgh');
+        stub($planning)->getPlanningTrackerId()->returns(78);
+        stub($planning)->getBacklogTitle()->returns('p q r');
+
+        $backlog_tracker = mock('Tracker');
+        stub($backlog_tracker)->getId()->returns(null);
+        stub($planning)->getBacklogTracker()->returns($backlog_tracker);
+
+        $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
+
+        $exporter = new AgileDashboard_XMLExporter();
+        $exporter->export($this->xml_tree, $plannings);
     }
 }
 ?>

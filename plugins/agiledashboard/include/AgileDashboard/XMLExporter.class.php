@@ -27,25 +27,32 @@ class AgileDashboard_XMLExporter {
     /**
      * @todo move me to tracker class
      */
-    const TRACKER_ID_PREFIX                         = 'T';
+    const TRACKER_ID_PREFIX = 'T';
 
     /**
      *
      * @param SimpleXMLElement $xml_element
-     * @param array $planning_short_access_set
+     * @param array $plannings
+     *
+     * @throws AgileDashboard_XMLExporterUnableToGetValueException
      */
-    public function export(SimpleXMLElement $xml_element, array $planning_short_access_set) {
+    public function export(SimpleXMLElement $xml_element, array $plannings) {
         $plannings_node = $xml_element->addChild(self::NODE_PLANNINGS);
 
-        foreach ($planning_short_access_set as $planning_short_access) {
+        foreach ($plannings as $planning) {
             /* @var $planning Planning */
-            $planning = $planning_short_access->getPlanning();
-
             $planning_name                  = $planning->getName();
             $planning_title                 = $planning->getPlanTitle();
             $planning_tracker_id            = $this->getFormattedTrackerId($planning->getPlanningTrackerId());
             $planning_backlog_title         = $planning->getBacklogTitle();
-            $planning_backlog_tracker_id    = $this->getFormattedTrackerId($planning->getBacklogTrackerId());
+            $planning_backlog_tracker_id    = $this->getFormattedTrackerId($planning->getBacklogTracker()->getId());
+            
+            $this->checkString($planning_name, PlanningParameters::NAME);
+            $this->checkString($planning_title, PlanningParameters::PLANNING_TITLE);
+            $this->checkString($planning_backlog_title, PlanningParameters::BACKLOG_TITLE);
+            
+            $this->checkId($planning_tracker_id, PlanningParameters::PLANNING_TRACKER_ID);
+            $this->checkId($planning_backlog_tracker_id, PlanningParameters::BACKLOG_TRACKER_ID);
 
             $planning_node = $plannings_node->addChild(self::NODE_PLANNING);
 
@@ -66,6 +73,16 @@ class AgileDashboard_XMLExporter {
         return self::TRACKER_ID_PREFIX . (string) $tracker_id ;
     }
 
+    private function checkString($value, $value_denomination) {
+        if (! $value ||  (is_string($value) && $value == '')) {
+            throw new AgileDashboard_XMLExporterUnableToGetValueException('Unable to get value for attribute: ' . $value_denomination);
+        }
+    }
 
+    private function checkId($id, $value_denomination) {
+        if ($id == self::TRACKER_ID_PREFIX) {
+            throw new AgileDashboard_XMLExporterUnableToGetValueException('Unable to get value for attribute: ' . $value_denomination);
+        }
+    }
 }
 ?>
