@@ -20,7 +20,7 @@
 
 require_once 'bootstrap.php';
 
-class trackerXmlImportTest extends TuleapTestCase {
+class TrackerXmlImportTest extends TuleapTestCase {
 
     /**
      * @var TrackerFactory
@@ -97,7 +97,7 @@ class trackerXmlImportTest extends TuleapTestCase {
 
         $this->event_manager = mock('EventManager');
 
-        $this->tracker_xml_importer = new trackerXmlImport($this->group_id, $this->xml_input, $this->tracker_factory, $this->event_manager);
+        $this->tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->xml_input, $this->tracker_factory, $this->event_manager);
     
         $GLOBALS['Response'] = new MockResponse();
 
@@ -133,7 +133,7 @@ class trackerXmlImportTest extends TuleapTestCase {
     public function itRaisesAnExceptionIfATrackerCannotBeCreatedAndDoesNotContinue() {
         $tracker_factory = mock('TrackerFactory');
         stub($tracker_factory)->createFromXml()->returns(null);
-        $this->tracker_xml_importer = new trackerXmlImport($this->group_id, $this->xml_input, $tracker_factory, $this->event_manager);
+        $this->tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->xml_input, $tracker_factory, $this->event_manager);
 
         $this->expectException();
         $tracker_factory->expectCallCount('createFromXML', 1);
