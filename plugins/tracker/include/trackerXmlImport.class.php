@@ -79,12 +79,7 @@ class TrackerXmlImport {
             $created_trackers_list = array_merge($created_trackers_list, $created_tracker);
         }
 
-        $all_hierarchies       = array();
-        foreach ($this->getAllXmlTrackers() as $xml_tracker_id => $xml_tracker) {
-            $all_hierarchies = $this->buildTrackersHierarchy($all_hierarchies, $xml_tracker, $created_trackers_list);
-        }
-
-        $this->importHierarchy($all_hierarchies);
+        $this->importHierarchy($created_trackers_list);
 
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT_TRACKER_DONE,
@@ -92,6 +87,15 @@ class TrackerXmlImport {
         );
 
         return $created_trackers_list;
+    }
+
+    private function importHierarchy(array $created_trackers_list) {
+        $all_hierarchies       = array();
+        foreach ($this->getAllXmlTrackers() as $xml_tracker) {
+            $all_hierarchies = $this->buildTrackersHierarchy($all_hierarchies, $xml_tracker, $created_trackers_list);
+        }
+
+        $this->storeHierarchyInDB($all_hierarchies);
     }
 
     /**
@@ -147,7 +151,7 @@ class TrackerXmlImport {
      *
      * Stores in database the hierarchy between created trackers
      */
-    public function importHierarchy(array $all_hierarchies) {
+    public function storeHierarchyInDB(array $all_hierarchies) {
         if (empty($all_hierarchies)) {
             return;
         }

@@ -43,7 +43,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
                     <item_name>t21</item_name>
                     <description>t22</description>
                   </tracker>
-                  <tracker xmlns="http://codendi.org/tracker" id="T103" parent_id="T101" instantiate_for_new_projects="1">
+                  <tracker xmlns="http://codendi.org/tracker" id="T103" parent_id="T102" instantiate_for_new_projects="1">
                     <name>t30</name>
                     <item_name>t31</item_name>
                     <description>t32</description>
@@ -72,7 +72,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
         );
 
         $this->xml_tracker3 = new SimpleXMLElement(
-                 '<tracker xmlns="http://codendi.org/tracker" id="T103" parent_id="T101" instantiate_for_new_projects="1">
+                 '<tracker xmlns="http://codendi.org/tracker" id="T103" parent_id="T102" instantiate_for_new_projects="1">
                     <name>t30</name>
                     <item_name>t31</item_name>
                     <description>t32</description>
@@ -124,8 +124,9 @@ class TrackerXmlImportTest extends TuleapTestCase {
         $this->assertTrue(empty($diff));
     }
 
-    public function itCreatesAllTrackers() {
+    public function itCreatesAllTrackersAndStoresTrackersHierarchy() {
         $this->tracker_factory->expectCallCount('createFromXML', 3);
+        $this->hierarchy_dao->expectCallCount('updateChildren',2);
 
         $result = $this->tracker_xml_importer->import();
 
@@ -169,22 +170,23 @@ class TrackerXmlImportTest extends TuleapTestCase {
     }
 
     public function itAddsTrackersHierarchyOnExistingHierarchy() {
-        $hierarchy = array(444 => array(555));
+        $hierarchy          = array(444 => array(555));
         $expected_hierarchy = array(444 => array(555, 666));
-        $mapper = array("T101" => 444, "T103" => 666);
-        $hierarchy = $this->tracker_xml_importer->buildTrackersHierarchy($hierarchy, $this->xml_tracker3, $mapper);
+        $mapper             = array("T101" => 444, "T103" => 666);
+        $xml_tracker        = new SimpleXMLElement(
+                 '<tracker xmlns="http://codendi.org/tracker" id="T103" parent_id="T101" instantiate_for_new_projects="1">
+                    <name>t30</name>
+                    <item_name>t31</item_name>
+                    <description>t32</description>
+                  </tracker>'
+        );
+
+        $hierarchy = $this->tracker_xml_importer->buildTrackersHierarchy($hierarchy, $xml_tracker, $mapper);
         $diff = array_diff($hierarchy, $expected_hierarchy);
 
         $this->assertTrue(! empty($hierarchy));
         $this->assertNotNull($hierarchy[444]);
         $this->assertTrue(empty($diff));
-    }
-
-    public function itStoresTrackersHierarchy() {
-        $hierarchy = array(444 => array(555,666), 777 => array(888));
-        $this->hierarchy_dao->expectCallCount('updateChildren',2);
-
-        $this->tracker_xml_importer->importHierarchy($hierarchy);
     }
 }
 ?>
