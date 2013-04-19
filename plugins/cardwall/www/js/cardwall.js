@@ -199,8 +199,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
         this.collection_url = codendi.tracker.base_url + '?func=get-values&formElement=' + this.field_id;
 
         this.users          = { };
-        
-        this.is_display_username_selected = jQuery('#cardwall div.cardwall_board').attr('data-display-username');
+        this.is_display_username_selected = element.up('.cardwall_board').readAttribute('data-display-username');
     },
 
     fetchUserData : function() {
@@ -382,7 +381,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                 username_div.writeAttribute( 'title', caption );
                 username_div.writeAttribute( 'data-user-id', user_id );
                 
-                username_div.innerHTML = realname;
+                username_div.update(realname);
                 
                 container.insert( username_div );
                 container.insert(' ');

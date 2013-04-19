@@ -112,9 +112,8 @@ class Cardwall_Pane extends AgileDashboard_Pane {
 
         $field_retriever     = new Cardwall_OnTop_Config_MappedFieldProvider($this->config,
                                 new Cardwall_FieldProviders_SemanticStatusFieldRetriever());
-        $pref_name           = 'AD_cardwall_assign_to_display_username_'.$this->milestone->getTrackerId();
-        $display_avatars     = $this->user->isAnonymous() || ! $this->user->getPreference($pref_name);
-        $display_preferences = new Cardwall_DisplayPreferences($display_avatars);
+
+        $display_preferences = $this->getDisplayPreferences();
 
         $board               = $board_factory->getBoard($field_retriever, $columns, $planned_artifacts, $this->config, $this->user, $display_preferences);
         $backlog_title       = $this->milestone->getPlanning()->getBacklogTracker()->getName();
@@ -122,7 +121,14 @@ class Cardwall_Pane extends AgileDashboard_Pane {
 
         return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title, $this->canConfigure(), $this->getUserSwitchDisplayUrl(), $this->isDisplayUsernameSelected());
     }
-    
+
+    private function getDisplayPreferences() {
+        $pref_name = Cardwall_DisplayPreferences::ASSIGNED_TO_USERNAME_PREFERENCE_NAME . $this->milestone->getTrackerId();
+        $display_avatars = $this->user->isAnonymous() || ! $this->user->getPreference($pref_name);
+
+        return new Cardwall_DisplayPreferences($display_avatars);
+    }
+
     private function canConfigure() {        
         $project = $this->milestone->getProject();
         if ($project->userIsAdmin($this->user)){
