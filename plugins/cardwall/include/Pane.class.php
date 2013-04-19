@@ -106,19 +106,19 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      * @return Cardwall_PaneContentPresenter
      */
     private function getPresenterUsingMappedFields(Cardwall_OnTop_Config_ColumnCollection $columns) {
-        $board_factory      = new Cardwall_BoardFactory();
+        $board_factory       = new Cardwall_BoardFactory();
         $this->milestone_factory->updateMilestoneWithPlannedArtifacts($this->user, $this->milestone);
-        $planned_artifacts  = $this->milestone->getPlannedArtifacts();
+        $planned_artifacts   = $this->milestone->getPlannedArtifacts();
 
-        $field_retriever    = new Cardwall_OnTop_Config_MappedFieldProvider($this->config,
+        $field_retriever     = new Cardwall_OnTop_Config_MappedFieldProvider($this->config,
                                 new Cardwall_FieldProviders_SemanticStatusFieldRetriever());
-
-        $display_avatars = $this->user->isAnonymous() || ! $this->user->getPreference('AD_cardwall_assign_to_display_username'); //FIXME: add tracker_id?
+        $pref_name           = 'AD_cardwall_assign_to_display_username_'.$this->milestone->getTrackerId();
+        $display_avatars     = $this->user->isAnonymous() || ! $this->user->getPreference($pref_name);
         $display_preferences = new Cardwall_DisplayPreferences($display_avatars);
 
-        $board              = $board_factory->getBoard($field_retriever, $columns, $planned_artifacts, $this->config, $this->user, $display_preferences);
-        $backlog_title      = $this->milestone->getPlanning()->getBacklogTracker()->getName();
-        $redirect_parameter = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
+        $board               = $board_factory->getBoard($field_retriever, $columns, $planned_artifacts, $this->config, $this->user, $display_preferences);
+        $backlog_title       = $this->milestone->getPlanning()->getBacklogTracker()->getName();
+        $redirect_parameter  = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
 
         return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title, $this->canConfigure(), $this->getUserSwitchDisplayUrl(), $this->isDisplayUsernameSelected());
     }
@@ -149,12 +149,15 @@ class Cardwall_Pane extends AgileDashboard_Pane {
 
         $group_id    = $this->milestone->getGroupId();
         $planning_id = $this->milestone->getPlanningId();
+        $tracker_id  = $this->milestone->getTrackerId();
+        
         $action      = 'toggle_user_display';
 
         $switch_display_username_url =
             AGILEDASHBOARD_BASE_URL
             . '/?group_id=' . $group_id
             . '&planning_id=' . $planning_id
+            . '&tracker_id=' . $tracker_id
             . '&action=' . $action;
 
         return $switch_display_username_url;
@@ -164,8 +167,8 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         if($this->user->isAnonymous()) {
             return false;
         }
-
-        return $this->user->getPreference('AD_cardwall_assign_to_display_username');
+        $pref_name = 'AD_cardwall_assign_to_display_username_'.$this->milestone->getTrackerId();
+        return $this->user->getPreference($pref_name);
     }
 }
 ?>

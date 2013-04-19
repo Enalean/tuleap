@@ -30,7 +30,7 @@ class Cardwall_DisplayPreferences implements Tracker_CardDisplayPreferences {
     }
     
     public function shouldDisplayAvatars() {
-        return !$this->should_display_avatars;
+        return $this->should_display_avatars;
     }
 }
 ?>

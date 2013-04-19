@@ -141,7 +141,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     /**
      * @return string
      */
-    public function formatCardValue($value, /* Tracker_CardDisplayPreferences */Cardwall_DisplayPreferences $display_preferences) {
+    public function formatCardValue($value, Tracker_CardDisplayPreferences $display_preferences) {
         return $this->formatChangesetValue($value);
     }
     

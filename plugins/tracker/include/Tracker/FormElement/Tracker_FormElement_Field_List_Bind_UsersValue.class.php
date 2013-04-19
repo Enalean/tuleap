@@ -76,7 +76,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         return $this->getLink();
     }
     
-    public function fetchCard(/* Tracker_CardDisplayPreferences */Cardwall_DisplayPreferences $display_preferences) {
+    public function fetchCard(Tracker_CardDisplayPreferences $display_preferences) {
         if ($this->getId() == 100) {
             return '';
         }
