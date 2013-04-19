@@ -32,12 +32,17 @@ class TrackerXmlImport {
     /** @var EventManager */
     private $event_manager;
 
+    /** @var Tracker_Hierarchy_Dao */
+    private $hierarchy_dao;
 
-    public function __construct($group_id, SimpleXMLElement $xml_output, TrackerFactory $tracker_factory, EventManager $event_manager) {
+    const XML_PARENT_ID_EMPTY = "0";
+
+    public function __construct($group_id, SimpleXMLElement $xml_output, TrackerFactory $tracker_factory, EventManager $event_manager, Tracker_Hierarchy_Dao $hierarchy_dao) {
         $this->group_id        = $group_id;
         $this->xml_content     = $xml_output;
         $this->tracker_factory = $tracker_factory;
         $this->event_manager   = $event_manager;
+        $this->hierarchy_dao   = $hierarchy_dao;
     }
 
     /**
@@ -73,6 +78,13 @@ class TrackerXmlImport {
             $created_tracker = $this->instanciateTrackerFromXml($xml_tracker_id, $xml_tracker);
             $created_trackers_list = array_merge($created_trackers_list, $created_tracker);
         }
+
+        $all_hierarchies       = array();
+        foreach ($this->getAllXmlTrackers() as $xml_tracker_id => $xml_tracker) {
+            $all_hierarchies = $this->buildTrackersHierarchy($all_hierarchies, $xml_tracker, $created_trackers_list);
+        }
+
+        $this->importHierarchy($all_hierarchies);
 
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT_TRACKER_DONE,
@@ -113,15 +125,35 @@ class TrackerXmlImport {
      * @return array The hierarchy array with new elements added
      */
     public function buildTrackersHierarchy(array $hierarchy, SimpleXMLElement $xml_tracker, array $mapper) {
-        $parent_id  = $mapper[$this->getXmlTrackerAttribute($xml_tracker, 'parent_id')];
-        $tracker_id = $mapper[$this->getXmlTrackerAttribute($xml_tracker, 'id')];
+        $xml_parent_id = $this->getXmlTrackerAttribute($xml_tracker, 'parent_id');
 
-        if (! isset($hierarchy[$parent_id])) {
-            $hierarchy[$parent_id] = array();
+        if ($xml_parent_id != self::XML_PARENT_ID_EMPTY) {
+            $parent_id  = $mapper[$xml_parent_id];
+            $tracker_id = $mapper[$this->getXmlTrackerAttribute($xml_tracker, 'id')];
+
+            if (! isset($hierarchy[$parent_id])) {
+                $hierarchy[$parent_id] = array();
+            }
+
+            array_push($hierarchy[$parent_id], $tracker_id);
         }
 
-        array_push($hierarchy[$parent_id], $tracker_id);
         return $hierarchy;
     }
+
+    /**
+     *
+     * @param array $all_hierarchies
+     *
+     * Stores in database the hierarchy between created trackers
+     */
+    public function importHierarchy(array $all_hierarchies) {
+        if (empty($all_hierarchies)) {
+            return;
+        }
+        foreach ($all_hierarchies as $parent_id => $hierarchy) {
+            $this->hierarchy_dao->updateChildren($parent_id, $hierarchy);
+        }
+     }
 }
 ?>

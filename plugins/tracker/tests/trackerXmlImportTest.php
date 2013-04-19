@@ -97,7 +97,9 @@ class TrackerXmlImportTest extends TuleapTestCase {
 
         $this->event_manager = mock('EventManager');
 
-        $this->tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->xml_input, $this->tracker_factory, $this->event_manager);
+        $this->hierarchy_dao = stub('Tracker_Hierarchy_Dao')->updateChildren()->returns(true);
+
+        $this->tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->xml_input, $this->tracker_factory, $this->event_manager, $this->hierarchy_dao);
     
         $GLOBALS['Response'] = new MockResponse();
 
@@ -133,7 +135,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
     public function itRaisesAnExceptionIfATrackerCannotBeCreatedAndDoesNotContinue() {
         $tracker_factory = mock('TrackerFactory');
         stub($tracker_factory)->createFromXml()->returns(null);
-        $this->tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->xml_input, $tracker_factory, $this->event_manager);
+        $this->tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->xml_input, $tracker_factory, $this->event_manager, $this->hierarchy_dao);
 
         $this->expectException();
         $tracker_factory->expectCallCount('createFromXML', 1);
@@ -176,6 +178,13 @@ class TrackerXmlImportTest extends TuleapTestCase {
         $this->assertTrue(! empty($hierarchy));
         $this->assertNotNull($hierarchy[444]);
         $this->assertTrue(empty($diff));
+    }
+
+    public function itStoresTrackersHierarchy() {
+        $hierarchy = array(444 => array(555,666), 777 => array(888));
+        $this->hierarchy_dao->expectCallCount('updateChildren',2);
+
+        $this->tracker_xml_importer->importHierarchy($hierarchy);
     }
 }
 ?>

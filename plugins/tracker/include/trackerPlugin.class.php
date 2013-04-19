@@ -570,7 +570,8 @@ class trackerPlugin extends Plugin {
             $params['project']->getId(),
             $params['xml_content'],
             TrackerFactory::instance(),
-            EventManager::instance()
+            EventManager::instance(),
+            new Tracker_Hierarchy_Dao()
         );
 
         $tracker_xml_import->import();
