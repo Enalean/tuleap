@@ -84,7 +84,7 @@ class Cardwall_SwimlineFactory {
         foreach ($potential_presenters as $p) {
             $this->addNodeToCell($p, $column, $retained_presenters);
         }
-        return array('cardincell_presenters' => $retained_presenters);;
+        return array('cardincell_presenters' => $retained_presenters);
     }
 
     private function addNodeToCell(Cardwall_CardInCellPresenter $presenter, Cardwall_Column $column, array &$presenters) {

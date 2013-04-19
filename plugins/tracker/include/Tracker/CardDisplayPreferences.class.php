@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,19 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_DisplayPreferences implements Tracker_CardDisplayPreferences {
+/**
+ * A presenter of card linked to card.mustache
+ */
+interface Tracker_CardDisplayPreferences {
     
-    const DISPLAY_AVATARS = true;
-    
-    /** @var bool */
-    private $should_display_avatars;
-
-    public function __construct($should_display_avatars) {
-        $this->should_display_avatars = $should_display_avatars;
-    }
-    
-    public function shouldDisplayAvatars() {
-        return !$this->should_display_avatars;
-    }
+    public function shouldDisplayAvatars();
 }
 ?>
+
