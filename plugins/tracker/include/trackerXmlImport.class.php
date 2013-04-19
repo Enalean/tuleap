@@ -87,7 +87,7 @@ class TrackerXmlImport {
      * @param type $xml_tracker_id
      * @param SimpleXMLElement $xml_tracker
      * @return array the link between xml id and new id given by Tuleap
-     * @throws trackerFromXmlImportCannotBeCreatedException
+     * @throws TrackerFromXmlImportCannotBeCreatedException
      */
     private function instanciateTrackerFromXml($xml_tracker_id, SimpleXMLElement $xml_tracker) {
         $tracker_created = $this->tracker_factory->createFromXML(
@@ -99,7 +99,7 @@ class TrackerXmlImport {
         );
 
         if (! $tracker_created) {
-            throw new trackerFromXmlImportCannotBeCreatedException((String) $xml_tracker->name . $GLOBALS['Response']->getRawFeedback());
+            throw new TrackerFromXmlImportCannotBeCreatedException((String) $xml_tracker->name . $GLOBALS['Response']->getRawFeedback());
         }
 
         return array($xml_tracker_id => $tracker_created->getId());
