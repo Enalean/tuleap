@@ -157,7 +157,8 @@ class Planning_Controller extends MVC2_PluginController {
             'group_id'    => $this->group_id,
             'planning_id' => $this->request->get('planning_id'),
             'action'      => 'show',
-            'pane'        => $this->request->get('pane')
+            'aid'         => $this->request->get('aid'),
+            'pane'        => 'cardwall'
         ));
     }
 
