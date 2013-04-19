@@ -1,7 +1,7 @@
 <?php
 
 require_once('pre.php');
-require_once('common/reference/CrossReference.class.php');
+require_once('common/reference/ReferenceManager.class.php');
 
 $target_id = $request->get('target_id');
 $target_gid = $request->get('target_gid');
@@ -24,9 +24,19 @@ if(!$project_admin){
 }
       
 if($project_admin){
-    
-    $crossref_fact= new CrossReference($source_id,$source_gid,$source_type,$source_key,$target_id,$target_gid,$target_type,$target_key,$user);
-    $crossref_fact->deleteCrossReference();
+    $cross_reference = new CrossReference(
+        $source_id,
+        $source_gid,
+        $source_type,
+        $source_key,
+        $target_id,
+        $target_gid,
+        $target_type,
+        $target_key,
+        $user->getId()
+    );
+    $reference_manager = new ReferenceManager();
+    $reference_manager->removeCrossReference($cross_reference);
 }
 
 ?>

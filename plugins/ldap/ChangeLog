@@ -1,3 +1,6 @@
+Version 3.28 - Tuleap 5.13
+    * Fix sla #3147: Do not update ldap login when project is not using svn/ldap
+
 Version 3.27 - Tuleap 5.12
     * Development: SystemEvents can now be processed by application owner instead of root
 
