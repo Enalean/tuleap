@@ -1,0 +1,8 @@
+jQuery(document).ready(function(){
+	jQuery('#data').dataTable( {
+		"aaSorting": [[ 4, "desc" ]],
+		"bPaginate": true,
+		"sPaginationType": "full_numbers"	
+	} );
+} );
+

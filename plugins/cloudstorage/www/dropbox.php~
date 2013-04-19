@@ -1,0 +1,160 @@
+<?php
+	echo("<table border=1>
+		<tr style='text-align: center;'>
+		<td>Chemin jusqu'au fichier ou dossier depuis le repertoire Dropbox :</td>
+		<td>Numero de revision :</td>
+		<td>Date de dernière modification :</td>
+		<td>Fichier ou Dossier ?</td>
+		<td>Taille du fichier :</td>
+		<td>Supprimer fichier :</td>
+		<td>Partager fichier ou dossier :</td>
+	</tr>");
+            
+            // Set the file path
+            $pathMeta1 = $_POST['CheminFichierDossier'];
+            // Note: Use a hash to test the NotModifiedException
+            $hash = null;
+
+            // Limit the entries returned
+            $limit = 10000;
+
+            try {
+                // Get the metadata for the file/folder specified in $path
+                $metaData1 = $dropbox->metaData($pathMeta1, null, $limit, $hash, TRUE);
+                $tabMet1 = (array)$metaData1["body"];
+                   echo("<table border=1>
+                        <tr style='text-align: center;'>
+                            <td>Chemin jusqu'au fichier ou dossier depuis le repertoire Dropbox :</td>
+                            <td>Fichier ou Dossier ?</td>
+                            <td>Taille du fichier :</td>
+                        </tr>
+                        <tr style='text-align: center;'>
+                            <td>/home/../".$tabMet1["path"]."</td>
+                            <td>".$tabMet1["icon"]."</td>
+                            <td>".$tabMet1["size"]."</td>
+                        </tr>
+                    </table>
+                   ");
+                echo("<table border=1>
+                        <tr style='text-align: center;'>
+                            <td>Chemin jusqu'au fichier ou dossier depuis le repertoire Dropbox :</td>
+                            <td>Numero de revision :</td>
+                            <td>Date de dernière modification :</td>
+                            <td>Fichier ou Dossier ?</td>
+                            <td>Taille du fichier :</td>
+                            <td>Supprimer fichier :</td>
+                            <td>Partager fichier ou dossier :</td>
+                        </tr>");
+                   $content = $tabMet1["contents"];
+                   for($i = 0; $i < sizeof($content); $i = $i + 1){
+                       $tabMetElt = (array)$content[$i];
+                       if (strpos($tabMetElt["icon"],'page') !== false){
+ $temp = substr($tabElt["path"],1);
+                //A modifier pour que sa marche sur votre ordi :
+                $chemin = "C:\wamp\www\PhpProjectDropboxTuleap\\".$temp;
+                echo("<tr style='text-align: center;'>
+                            <td><form action='Download.php' method='post'>
+		<p>
+                    <select name='CheminFichier'>
+                        <option value='".$tabElt["path"]."'>".$tabElt["path"]."</option>
+                    </select><br>
+                    <select name='EndroitOuMettreFichier'>
+                        <option value='".$chemin."'>".$tabElt["path"]."</option>
+                    </select><br>
+                    <input type='submit' value='Telecharger' /><br>
+		</p>
+	</form></td>
+                            <td>".$tabElt["revision"]."</td>
+                            <td>".$tabElt["modified"]."</td>
+                            <td>".$tabElt["icon"]."</td>
+                            <td>".$tabElt["size"]."</td>
+                <td><form action='Delete.php' method='post'>
+		<p>
+                    <select name='CheminFichierDossier'>
+                        <option value='".$tabElt["path"]."'>".$tabElt["path"]."</option>
+                    </select><br>
+                    <input type='submit' value='Supprimer' /><br>
+		</p>
+	</form></td>
+                        </tr>
+                    ");                      
+
+                       }
+                       else{
+echo("<tr style='text-align: center;'>
+                            <td>
+                                <form action='metaData.php' method='post'>
+                                    <p>
+                                        <select name='CheminFichierDossier'>
+                                            <option value ='".$tabElt["path"]."'>".$tabElt["path"]."</option>
+                                        </select><br>
+                                        <input type='submit' value='Meta Donnees' /><br>
+                                    </p>
+                                </form>     
+                            </td>
+                            <td>".$tabElt["revision"]."</td>
+                            <td>".$tabElt["modified"]."</td>
+                            <td>".$tabElt["icon"]."</td>
+                            <td>".$tabElt["size"]."</td>
+                            <td>
+                                <form action='Delete.php' method='post'>
+                                    <p>
+                                        <select name='CheminFichierDossier'>
+                                            <option value='".$tabElt["path"]."'>".$tabElt["path"]."</option>
+                                        </select><br>
+                                        <input type='submit' value='Supprimer' /><br>
+                                    </p>
+                                </form>
+                            </td>
+                            <td>
+                                <form action='shareDossier.php' method='post'>
+                                    <p>
+                                        <select name='CheminFichierDossier'>
+                                            <option value='".$tabElt["path"]."'>".$tabElt["path"]."</option>
+                                        </select><br>
+                                        <input type='submit' value='Partager' /><br>
+                                    </p>
+                                </form>
+                            </td>
+                        </tr>
+                    ");
+                       }
+                   }
+                   echo("</table>
+                   ");
+                   
+                   echo("<form action='Upload.php' method='post'>
+		<p>
+                    Fichier à uploader :
+                    <select name='CheminActuelJusquauFichier'>
+                        <option value='C:\wamp\www\PhpProjectDropboxTuleap\Travail_En_Cours.txt'>Travail_En_Cours.txt</option>
+                        <option value='C:\wamp\www\PhpProjectDropboxTuleap\test.php'>test.php</option>
+                        <option value='C:\wamp\www\PhpProjectDropboxTuleap\Architecture_Tuleap_V4.png'>Architecture_Tuleap_V4.png</option>
+                        <option value='C:\wamp\barimage.bmp'>barimage.bmp</option>
+                    </select><br>
+                    Nom du fichier une fois l'upload effectué :<input type='text' name='NomFichierApresTelechargement' value ='test.php' /><br>
+                    Emplacement du fichier après l'upload :
+                    <select name='CheminDossier'>
+                        <option value='".$tabMet1["path"]."'>".$tabMet1["path"]."</option>
+                    </select><br>
+                    <input type='submit' value='Uploader' /><br>
+		</p>
+	</form>");
+                   
+                   echo("<form action='creationDossier.php' method='post'>
+		<p>
+                    Nom du dossier a créé :<input type='text' name='CheminDossier' value ='".$tabMet1["path"]."'/><br>
+                    <input type='submit' value='Créer' /><br>
+		</p>
+	</form>");
+               // var_dump($metaData1);
+               // print_r($metaData1);
+            } catch (\Dropbox\Exception\NotModifiedException $e) {
+                // The contents were not changed since $hash was issued
+                // As you *should* be caching metadata responses, you can revert to using cached data
+                echo 'The folder contents have not been modified';
+            } catch (\Dropbox\Exception\NotAcceptableException $e) {
+                // The number of entries exceeds $limit
+                echo 'Too many entries to return';
+            }
+        ?>
