@@ -529,7 +529,7 @@ if [ "$1" -eq "1" ]; then
     if id %{app_user} >/dev/null 2>&1; then
         /usr/sbin/usermod -c 'Owner of Tuleap directories'    -d '/home/codendiadm'    -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group} %{app_user}
     else
-        /usr/sbin/useradd -c 'Owner of Tuleap directories' -M -d '/home/codendiadm' -r -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group} %{app_user}
+        /usr/sbin/useradd -c 'Owner of Tuleap directories' -m -d '/home/codendiadm' -r -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group} %{app_user}
     fi
     # ftpadmin
     if id %{ftpadmin_user} >/dev/null 2>&1; then
@@ -594,12 +594,6 @@ fi
 #
 # Post install of git plugin
 %post plugin-git
-if [ "$1" -eq "1" ]; then
-    # During install
-    #if ! %{__grep} /usr/bin/git-shell /etc/shells &> /dev/null; then
-    #    echo /usr/bin/git-shell >> /etc/shells
-    #fi
-fi
 if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
     if [ -d '/var/lib/gitolite' ]; then
 	GITOLITE_BASE_DIR=/var/lib/gitolite
