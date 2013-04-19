@@ -596,9 +596,9 @@ fi
 %post plugin-git
 if [ "$1" -eq "1" ]; then
     # During install
-    if ! %{__grep} /usr/bin/git-shell /etc/shells &> /dev/null; then
-        echo /usr/bin/git-shell >> /etc/shells
-    fi
+    #if ! %{__grep} /usr/bin/git-shell /etc/shells &> /dev/null; then
+    #    echo /usr/bin/git-shell >> /etc/shells
+    #fi
 fi
 if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
     if [ -d '/var/lib/gitolite' ]; then
