@@ -36,6 +36,8 @@ $xml = file_get_contents($argv[2], "r");
 
 $project = ProjectManager::instance()->getProject($argv[1]);
 
+$user = UserManager::instance()->forceLogin('admin', 'siteadmin');
+
 if ($project && !$project->isError() && !$project->isDeleted()) {
     $xml_element = new SimpleXMLElement($xml);
 
