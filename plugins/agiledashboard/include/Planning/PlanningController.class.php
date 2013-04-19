@@ -143,7 +143,7 @@ class Planning_Controller extends MVC2_PluginController {
     public function toggleUserDisplay() {
         
         $tracker_id = $this->request->get('tracker_id');
-        $pref_name  = self::ASSIGN_TO_DISPLAY_USERNAME.$tracker_id;
+        $pref_name  = Cardwall_DisplayPreferences::ASSIGNED_TO_USERNAME_PREFERENCE_NAME.$tracker_id;
         $user       = $this->getCurrentUser();
         $preference = $user->getPreference($pref_name);
 

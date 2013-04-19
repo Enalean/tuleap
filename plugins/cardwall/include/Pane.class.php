@@ -169,7 +169,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         if($this->user->isAnonymous()) {
             return false;
         }
-        $pref_name = 'AD_cardwall_assign_to_display_username_'.$this->milestone->getTrackerId();
+        $pref_name = Cardwall_DisplayPreferences::ASSIGNED_TO_USERNAME_PREFERENCE_NAME.$this->milestone->getTrackerId();
         return $this->user->getPreference($pref_name);
     }
 }
