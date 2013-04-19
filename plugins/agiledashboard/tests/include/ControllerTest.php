@@ -49,7 +49,9 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
         $this->planning_factory = new MockPlanningFactory();
         $this->controller       = new Planning_Controller($this->request, $this->planning_factory, mock('Planning_MilestoneFactory'), '/path/to/theme');
     
-        define('IS_SCRIPT', false);
+        if (!defined('IS_SCRIPT')) {
+            define('IS_SCRIPT', false);
+        }  
     }
 
     public function tearDown() {
