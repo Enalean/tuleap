@@ -167,8 +167,13 @@ input_password() {
 
 install_dist_conf() {
     local target="$1"
+    local template="$2"
     local fn
-    fn=$(basename $target)
+    if [ -z "$template" ]; then
+	fn=$(basename "$target")
+    else
+	fn="$template"
+    fi
     # Keep backup file
     if [ -e "$target" ]; then
 	cp -f $target $target.orig
@@ -661,6 +666,12 @@ setup_apache_rhel() {
 
     echo "Installing Apache configuration files..."
     make_backup /etc/httpd/conf/httpd.conf
+
+    if [ "$RH_MAJOR_VERSION" = 5 ]; then
+	install_dist_conf /etc/httpd/conf/httpd.conf
+    else
+	install_dist_conf /etc/httpd/conf/httpd.conf httpd.conf.rhel6.dist
+    fi
 
     for f in /etc/httpd/conf/httpd.conf /etc/httpd/conf/ssl.conf \
 	     /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
