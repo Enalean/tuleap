@@ -26,4 +26,3 @@ interface Tracker_CardDisplayPreferences {
     public function shouldDisplayAvatars();
 }
 ?>
-
