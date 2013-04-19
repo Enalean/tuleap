@@ -46,12 +46,13 @@ class Planning_ItemPresenter implements Tracker_CardPresenter {
      * @param string        $accent_color  The accent color
      * @param string        $css_classes   The space-separated CSS classes to add to the main item HTML tag.
      */
-    public function __construct(Planning_Item $planning_item, Tracker_CardFields $card_fields, $accent_color, $css_classes = '') {
-        $this->planning_item = $planning_item;
-        $this->css_classes   = $css_classes;
-        $this->details       = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
-        $this->card_fields   = $card_fields;
-        $this->accent_color  = $accent_color;
+    public function __construct(Planning_Item $planning_item, Tracker_CardFields $card_fields, $accent_color, $css_classes = '', Planning_CardDisplayPreferences $display_preferences) {
+        $this->planning_item       = $planning_item;
+        $this->css_classes         = $css_classes;
+        $this->details             = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
+        $this->card_fields         = $card_fields;
+        $this->accent_color        = $accent_color;
+        $this->display_preferences = $display_preferences;
     }
     
     public function getId() {
@@ -110,7 +111,7 @@ class Planning_ItemPresenter implements Tracker_CardPresenter {
         $displayed_fields = $this->card_fields->getFields($artifact);
         
         foreach ($displayed_fields as $displayed_field) {
-            $diplayed_fields_presenter[] = new Planning_ItemFieldPresenter($displayed_field, $this->getArtifact());
+            $diplayed_fields_presenter[] = new Planning_ItemFieldPresenter($displayed_field, $this->getArtifact(), $this->display_preferences);
         }
         return $diplayed_fields_presenter;
     }
