@@ -58,7 +58,7 @@ THEME_TULEAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Tuleap/VERSIO
 PKG_NAME=tuleap
 
 ifeq ($(OS)), 'rhel6')
-SPEC_FILE=tuleap.centos6.spec
+SPEC_FILE=tuleap.rhel6.spec
 else
 SPEC_FILE=tuleap.spec
 endif
