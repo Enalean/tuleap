@@ -62,7 +62,11 @@ class AgileDashboard_Controller extends MVC2_PluginController {
     public function index() {
         $agile_dashboard_node = $this->request->get('into_xml')->addChild('agiledashboard');
 
-        $plannings = $this->planning_factory->getPlanningsShortAccess($this->getCurrentUser(), $this->group_id, $this->milestone_factory, $this->plugin_theme_path);
+        $plannings = $this->planning_factory->getPlanningsWithBacklogTracker(
+            $this->getCurrentUser(),
+            $this->group_id,
+            $this->planning_factory
+        );
 
         $xml_exporter = new AgileDashboard_XMLExporter();
         $xml_exporter->export($agile_dashboard_node, $plannings);
