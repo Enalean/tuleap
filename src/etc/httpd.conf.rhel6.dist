@@ -1009,6 +1009,8 @@ BrowserMatch "^Dreamweaver-WebDAV-SCM1" redirect-carefully
 #    CustomLog logs/dummy-host.example.com-access_log common
 #</VirtualHost>
 
+Include conf.d/php.conf
+
 DocumentRoot "/usr/share/codendi/src/www"
 
 <Directory "/usr/share/codendi/src/www">
