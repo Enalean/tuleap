@@ -171,6 +171,7 @@ install_dist_conf() {
     local fn
     if [ -z "$template" ]; then
 	fn=$(basename "$target")
+	fn="$fn.dist"
     else
 	fn="$template"
     fi
@@ -179,7 +180,7 @@ install_dist_conf() {
 	cp -f $target $target.orig
     fi
     # Install file
-    src="$INSTALL_DIR/src/etc/$fn.dist"
+    src="$INSTALL_DIR/src/etc/$fn"
     if [ -e "$src" ]; then
 	cp -a $src $target
     else
@@ -673,7 +674,7 @@ setup_apache_rhel() {
 	install_dist_conf /etc/httpd/conf/httpd.conf httpd.conf.rhel6.dist
     fi
 
-    for f in /etc/httpd/conf/httpd.conf /etc/httpd/conf/ssl.conf \
+    for f in /etc/httpd/conf/ssl.conf \
 	     /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
 	     /etc/httpd/conf.d/auth_mysql.conf \
 	     /etc/httpd/conf.d/codendi_aliases.conf; do
