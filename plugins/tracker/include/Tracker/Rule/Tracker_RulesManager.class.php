@@ -700,7 +700,7 @@ class Tracker_RulesManager {
                         reset($values[$target]['values']);
                         while(!$error_occured && (list(,$target_value) = each($values[$target]['values']))) {
                             
-                            if($target_value == Tracker_FormElement_Field_List_Bind_StaticValue_Null::VALUE_ID
+                            if($target_value == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID
                                     || $target_value == null) {
                                 
                                 /*

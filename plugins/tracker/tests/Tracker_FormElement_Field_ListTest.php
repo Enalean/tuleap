@@ -53,6 +53,7 @@ Mock::generatePartial(
         'getFactoryDescription',
         'getFactoryIconUseIt',
         'getFactoryIconCreate',
+        'isNone',
     )
 );
 

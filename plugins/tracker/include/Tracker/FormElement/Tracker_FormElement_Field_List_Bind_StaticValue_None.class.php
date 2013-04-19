@@ -19,7 +19,7 @@
   */
 
 
-class Tracker_FormElement_Field_List_Bind_StaticValue_Null extends Tracker_FormElement_Field_List_Bind_StaticValue {
+class Tracker_FormElement_Field_List_Bind_StaticValue_None extends Tracker_FormElement_Field_List_Bind_StaticValue {
     const VALUE_ID = 100;
 
     /**

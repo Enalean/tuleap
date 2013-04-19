@@ -22,6 +22,12 @@
 abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field implements Tracker_FormElement_Field_Shareable {
 
     protected $bind;
+
+    /**
+     * Return true if submitted value is None
+     */
+    abstract public function isNone($value);
+
     /**
      * @return Tracker_FormElement_Field_List_Bind
      */
@@ -333,8 +339,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $selected = count($criteria_value) && !in_array('', $criteria_value) ? '' : 'selected="selected"';
         $html .= '<option value="" '. $selected .'>'. $GLOBALS['Language']->getText('global','any') .'</option>';
         //None value
-        $selected = in_array(100, $criteria_value) ? 'selected="selected"' : '';
-        $html .= '<option value="100" '. $selected .'>'. $GLOBALS['Language']->getText('global','none') .'</option>';
+        $selected = in_array(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID, $criteria_value) ? 'selected="selected"' : '';
+        $html .= '<option value="'.Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID.'" '. $selected .'>'. $GLOBALS['Language']->getText('global','none') .'</option>';
         //Field values
         foreach($this->getBind()->getAllValues() as $id => $value) {
             if (!$value->isHidden()) {
@@ -654,7 +660,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
         if ($values) {
             if (! $this->isRequired()) {
-                $none = new Tracker_FormElement_Field_List_Bind_StaticValue(100, $GLOBALS['Language']->getText('global','none'), '', 0, false);
+                $none = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
                 $values = array_merge(array($none), $values);
             }
         }
@@ -706,13 +712,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
         $from = $this->getSelectedValue($selected_values);
         if ($from == null && !isset($submitted_values)) {
-            $none_is_selected = isset($selected_values[100]);
+            $none_is_selected = isset($selected_values[Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID]);
         } else {
-            $none_is_selected = ($submitted_values=='100');
+            $none_is_selected = ($submitted_values==Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID);
         }
 
         if (!$this->fieldHasEnableWorkflow()) {
-            $none_value = new Tracker_FormElement_Field_List_Bind_StaticValue(100, $GLOBALS['Language']->getText('global','none'), '', 0, false);
+            $none_value = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
             $html .= $this->fetchFieldValue($none_value, $name, $none_is_selected);
         }
 
@@ -756,7 +762,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected) {
         $id = $value->getId();
-        if ($id == 100) {
+        if ($id == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
             $label = $value->getLabel();
         } else {
             $label = $this->getBind()->formatArtifactValue($id);
@@ -793,7 +799,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
         //if ( $this->fieldHasEnableWorkflow() ) {
         $html .= '<option value="'.$GLOBALS['Language']->getText('global','unchanged').'" selected="selected">'. $GLOBALS['Language']->getText('global','unchanged') .'</option>';
-        $html .= '<option value="100">'. $GLOBALS['Language']->getText('global','none') .'</option>';
+        $html .= '<option value="'.Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID.'">'. $GLOBALS['Language']->getText('global','none') .'</option>';
         //}
 
         foreach($this->getBind()->getAllValues() as $id => $value) {
@@ -825,7 +831,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $values = array();
         if ($from && isset($from['changeset_id'])) {
             foreach($this->getBind()->getChangesetValues($from['changeset_id']) as $v) {
-                if ($v['id'] != 100) {
+                if ($v['id'] != Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
                     $values[] = $this->getBind()->formatChangesetValue($v);
                 }
             }
@@ -1080,7 +1086,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function getFieldData($soap_value) {
         if ($soap_value === $GLOBALS['Language']->getText('global','none')) {
-            return 100;
+            return Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID;
         }
 
         $bind = $this->getBind();
@@ -1109,13 +1115,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $new_value = array($new_value);
         }
         if (empty($new_value)) {
-            $new_value = array(100);
+            $new_value = array(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID);
         }
         if ($previous_changesetvalue) {
             $old_value = $previous_changesetvalue->getValue();
         }
         if (empty($old_value)) {
-            $old_value = array(100);
+            $old_value = array(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID);
         }
         sort($old_value);
         sort($new_value);

@@ -25,8 +25,7 @@
  */
 
 require_once('pre.php');
-require_once(dirname(__FILE__).'/../include/GitRepository.class.php');
-require_once(dirname(__FILE__).'/../include/Git_Ci.class.php');
+require_once(dirname(__FILE__).'/../include/gitPlugin.class.php');
 
 // Check script parameters
 if ($argc != 2) {
@@ -41,7 +40,17 @@ foreach ($argv as $arg) {
 }
 
 if (isset($params['repo_location']) && !empty($params['repo_location'])) {
-    triggerCiBuild($params['repo_location']);
+    $launcher = new Git_Ci_Launcher(
+        new GitRepositoryFactory(
+            new GitDao(),
+            ProjectManager::instance()
+        ),
+        new Jenkins_Client(
+            new Http_Client()
+        ),
+        new Git_Ci_Dao()
+    );
+    $launcher->launchForLocation($params['repo_location']);
 }
 
 /**
@@ -54,25 +63,6 @@ if (isset($params['repo_location']) && !empty($params['repo_location'])) {
 function error($msg) {
     echo "*** Error: $msg".PHP_EOL;
     exit(1);
-}
-
-/**
- * Trigger jobs corresponding to the Git repository
- *
- * @param String $repositoryLocation Name of the git repository
- *
- * @return Void
- */
-function triggerCiBuild($repositoryLocation) {
-    $pm = ProjectManager::instance();
-    $repoFactory = new GitRepositoryFactory(new GitDao(), $pm);
-    $repository  = $repoFactory->getFromFullPath($repositoryLocation);
-    if ($repository) {
-        if ($repository->getProject()->usesService('hudson')) {
-            $gitCi = new Git_CI();
-            $gitCi->triggerCiBuild($repository->getId());
-        }
-    }
 }
 
 ?>

@@ -22,14 +22,21 @@ require_once 'common/Jenkins/Client.class.php';
 
 class Jenkins_ClientTest extends TuleapTestCase {
 
+    private $http_client;
+    private $jenkins_client;
+    
+    public function setUp() {
+        parent::setUp();
+        $this->http_client = mock('Http_Client');
+        $this->jenkins_client = new Jenkins_Client($this->http_client);
+    }
+
     public function testLaunchJobBuildThrowsAnExceptionOnFailedRequest() {
         $job_url = 'http://some.url.com/my_job';
-        $http_client = mock('Http_Client');
-        stub($http_client)->doRequest()->throws(new Http_ClientException());
+        stub($this->http_client)->doRequest()->throws(new Http_ClientException());
 
-        $jenkins_client = new Jenkins_Client($http_client);
         $this->expectException('Jenkins_ClientUnableToLaunchBuildException');
-        $jenkins_client->launchJobBuild($job_url);
+        $this->jenkins_client->launchJobBuild($job_url);
     }
 
     public function testLaunchJobSetsCorrectOptions() {
@@ -48,12 +55,25 @@ class Jenkins_ClientTest extends TuleapTestCase {
             CURLOPT_POSTFIELDS      => 'json='. $expected_url_params,
         );
 
-        $http_client = mock('Http_Client');
-        stub($http_client)->doRequest()->once();
-        stub($http_client)->addOptions($expected_options)->once();
+        stub($this->http_client)->doRequest()->once();
+        stub($this->http_client)->addOptions($expected_options)->once();
 
-        $jenkins_client = new Jenkins_Client($http_client);
-        $jenkins_client->launchJobBuild($job_url, $build_parameters);
+        $this->jenkins_client->launchJobBuild($job_url, $build_parameters);
+    }
+
+    public function itPassTokenAsParameter() {
+        $job_url = 'http://degaine:8080/job/dylanJob';
+
+        $expected_options = array(
+            CURLOPT_URL             => $job_url . '/build?token=thou+shall+not+pass',
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPGET         => true,
+        );
+
+        stub($this->http_client)->addOptions($expected_options)->once();
+
+        $this->jenkins_client->setToken('thou shall not pass');
+        $this->jenkins_client->launchJobBuild($job_url);
     }
 }
 ?>
