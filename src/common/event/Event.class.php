@@ -484,6 +484,6 @@ class Event {
      * Expected Results:
      *   The various plugins create objects from the xml content
      */
-    const EXPORT_XML_PROJECT_TRACKER_DONE = 'export_xml_project_tracker_done';
+    const IMPORT_XML_PROJECT_TRACKER_DONE = 'import_xml_project_tracker_done';
 }
 ?>

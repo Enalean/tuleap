@@ -75,7 +75,7 @@ class TrackerXmlImport {
         }
 
         $this->event_manager->processEvent(
-            Event::EXPORT_XML_PROJECT_TRACKER_DONE,
+            Event::IMPORT_XML_PROJECT_TRACKER_DONE,
             array('project_id' => $this->group_id, 'xml_content' => $this->xml_content, 'mapping' => $created_trackers_list)
         );
 

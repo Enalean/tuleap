@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <trackers>
+    <tracker xmlns="http://codendi.org/tracker" id="T659" parent_id="0">
+      <name>Empty</name>
+      <item_name>empty</item_name>
+      <description>Empty Tracker</description>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="cross" ID="F1" rank="4">
+          <name>xref</name>
+          <label>xref</label>
+        </formElement>
+        <formElement type="art_link" ID="F2" rank="5">
+          <name>link</name>
+          <label>link</label>
+        </formElement>
+        <formElement type="computed" ID="F3" rank="6">
+          <name>computed</name>
+          <label>computed</label>
+          <properties target_field_name="salut"/>
+        </formElement>
+        <formElement type="float" ID="F4" rank="24">
+          <name>valeur</name>
+          <label>value</label>
+          <properties size="5"/>
+        </formElement>
+        <formElement type="file" ID="F5" rank="27" use_it="0">
+          <name>attachment</name>
+          <label>Attachments</label>
+        </formElement>
+        <formElement type="text" ID="F6" rank="29" use_it="0">
+          <name>details</name>
+          <label>Original Submission</label>
+          <description>A full description of the artifact</description>
+          <properties rows="7" cols="60"/>
+        </formElement>
+        <formElement type="string" ID="F7" rank="32" use_it="0" required="1">
+          <name>summary</name>
+          <label>Summary</label>
+          <description>One line description of the artifact</description>
+          <properties maxchars="150" size="60"/>
+        </formElement>
+        <formElement type="tbl" ID="F8" rank="35" use_it="0">
+          <name>cc</name>
+          <label>CC</label>
+          <properties hint="Type in a search term"/>
+          <bind type="static" is_rank_alpha="0"/>
+        </formElement>
+        <formElement type="sb" ID="F9" rank="44" use_it="0">
+          <name>status_id</name>
+          <label>Status</label>
+          <description>Artifact Status</description>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="F9-V0" label="Open" is_hidden="0">
+                <description>The artifact has been submitted</description>
+              </item>
+              <item ID="F9-V1" label="Closed" is_hidden="0">
+                <description>The artifact is no longer active. See the Resolution field for details on how it was resolved.</description>
+              </item>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="sb" ID="F10" rank="46" use_it="0">
+          <name>assigned_to</name>
+          <label>Assigned to</label>
+          <description>Who is in charge of solving the artifact</description>
+          <bind type="users">
+            <items>
+              <item label="group_members"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="sb" ID="F11" rank="52" use_it="0">
+          <name>category_id</name>
+          <label>Category</label>
+          <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
+          <bind type="static" is_rank_alpha="0"/>
+        </formElement>
+        <formElement type="sb" ID="F12" rank="54" use_it="0">
+          <name>severity</name>
+          <label>Priority</label>
+          <description>How quickly the artifact must be completed</description>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="F12-V0" label="1 - Lowest" is_hidden="0"/>
+              <item ID="F12-V1" label="2" is_hidden="0"/>
+              <item ID="F12-V2" label="3" is_hidden="0"/>
+              <item ID="F12-V3" label="4" is_hidden="0"/>
+              <item ID="F12-V4" label="5 - Medium" is_hidden="0"/>
+              <item ID="F12-V5" label="6" is_hidden="0"/>
+              <item ID="F12-V6" label="7" is_hidden="0"/>
+              <item ID="F12-V7" label="8" is_hidden="0"/>
+              <item ID="F12-V8" label="9 - Highest" is_hidden="0"/>
+            </items>
+            <decorators>
+              <decorator REF="F12-V0" r="255" g="255" b="204"/>
+              <decorator REF="F12-V1" r="255" g="255" b="102"/>
+              <decorator REF="F12-V2" r="255" g="204" b="0"/>
+              <decorator REF="F12-V3" r="255" g="153" b="0"/>
+              <decorator REF="F12-V4" r="255" g="102" b="0"/>
+              <decorator REF="F12-V5" r="255" g="51" b="0"/>
+              <decorator REF="F12-V6" r="204" g="51" b="0"/>
+              <decorator REF="F12-V7" r="153" g="0" b="0"/>
+              <decorator REF="F12-V8" r="51" g="0" b="0"/>
+            </decorators>
+          </bind>
+        </formElement>
+        <formElement type="sb" ID="F13" rank="56" use_it="0">
+          <name>stage</name>
+          <label>Stage</label>
+          <description>Stage in the life cycle of the artifact</description>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="F13-V0" label="New" is_hidden="0">
+                <description>The artifact has just been submitted</description>
+              </item>
+              <item ID="F13-V1" label="Analyzed" is_hidden="0">
+                <description>The cause of the artifact has been identified and documented</description>
+              </item>
+              <item ID="F13-V2" label="Accepted" is_hidden="0">
+                <description>The artifact will be worked on.</description>
+              </item>
+              <item ID="F13-V3" label="Under Implementation" is_hidden="0">
+                <description>The artifact is being worked on.</description>
+              </item>
+              <item ID="F13-V4" label="Ready for Review" is_hidden="0">
+                <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
+              </item>
+              <item ID="F13-V5" label="Ready for Test" is_hidden="0">
+                <description>Updated/Created software is ready to be included in the next build</description>
+              </item>
+              <item ID="F13-V6" label="In Test" is_hidden="0">
+                <description>Updated/Created software is in the build and is ready to enter the test phase</description>
+              </item>
+              <item ID="F13-V7" label="Approved" is_hidden="0">
+                <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
+              </item>
+              <item ID="F13-V8" label="Declined" is_hidden="0">
+                <description>The artifact was not accepted.</description>
+              </item>
+              <item ID="F13-V9" label="Done" is_hidden="0">
+                <description>The artifact is closed.</description>
+              </item>
+            </items>
+          </bind>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="tooltip"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name>Default</name>
+          <description>The system default artifact report</description>
+          <criterias/>
+          <renderers>
+            <renderer type="table" rank="0" chunksz="15">
+              <name>Results</name>
+              <columns/>
+            </renderer>
+            <renderer type="plugin_graphontrackersv5" rank="1">
+              <name>Default</name>
+              <description>Graphic Report By Default For Support Requests</description>
+              <charts/>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <workflow/>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F1" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F2" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F2" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F2" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F3" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F4" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F4" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F4" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+    </tracker>
+    <tracker xmlns="http://codendi.org/tracker" id="T661" parent_id="T660">
+      <name>Empty2</name>
+      <item_name>empty2</item_name>
+      <description>Empty Tracker2</description>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="sb" ID="F14" rank="0">
+          <name>status</name>
+          <label>status</label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="F14-V0" label="a" is_hidden="0"/>
+              <item ID="F14-V1" label="b" is_hidden="0"/>
+              <item ID="F14-V2" label="c" is_hidden="0"/>
+              <item ID="F14-V3" label="d" is_hidden="0"/>
+              <item ID="F14-V4" label="e" is_hidden="0"/>
+              <item ID="F14-V5" label="f" is_hidden="0"/>
+              <item ID="F14-V6" label="g" is_hidden="0"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="cross" ID="F15" rank="1">
+          <name>xref</name>
+          <label>xref</label>
+        </formElement>
+        <formElement type="art_link" ID="F16" rank="2">
+          <name>link</name>
+          <label>link</label>
+        </formElement>
+        <formElement type="computed" ID="F17" rank="3">
+          <name>computed</name>
+          <label>computed</label>
+          <properties target_field_name="salut"/>
+        </formElement>
+        <formElement type="float" ID="F18" rank="17">
+          <name>valeur</name>
+          <label>value</label>
+          <properties size="5"/>
+        </formElement>
+        <formElement type="file" ID="F19" rank="19" use_it="0">
+          <name>attachment</name>
+          <label>Attachments</label>
+        </formElement>
+        <formElement type="text" ID="F20" rank="21" use_it="0">
+          <name>details</name>
+          <label>Original Submission</label>
+          <description>A full description of the artifact</description>
+          <properties rows="7" cols="60"/>
+        </formElement>
+        <formElement type="string" ID="F21" rank="23" use_it="0" required="1">
+          <name>summary</name>
+          <label>Summary</label>
+          <description>One line description of the artifact</description>
+          <properties maxchars="150" size="60"/>
+        </formElement>
+        <formElement type="tbl" ID="F22" rank="25" use_it="0">
+          <name>cc</name>
+          <label>CC</label>
+          <properties hint="Type in a search term"/>
+          <bind type="static" is_rank_alpha="0"/>
+        </formElement>
+        <formElement type="sb" ID="F23" rank="31" use_it="0">
+          <name>status_id</name>
+          <label>Status</label>
+          <description>Artifact Status</description>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="F23-V0" label="Open" is_hidden="0">
+                <description>The artifact has been submitted</description>
+              </item>
+              <item ID="F23-V1" label="Closed" is_hidden="0">
+                <description>The artifact is no longer active. See the Resolution field for details on how it was resolved.</description>
+              </item>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="sb" ID="F24" rank="33" use_it="0">
+          <name>assigned_to</name>
+          <label>Assigned to</label>
+          <description>Who is in charge of solving the artifact</description>
+          <bind type="users">
+            <items>
+              <item label="group_members"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="sb" ID="F25" rank="39" use_it="0">
+          <name>category_id</name>
+          <label>Category</label>
+          <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
+          <bind type="static" is_rank_alpha="0"/>
+        </formElement>
+        <formElement type="sb" ID="F26" rank="41" use_it="0">
+          <name>severity</name>
+          <label>Priority</label>
+          <description>How quickly the artifact must be completed</description>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="F26-V0" label="1 - Lowest" is_hidden="0"/>
+              <item ID="F26-V1" label="2" is_hidden="0"/>
+              <item ID="F26-V2" label="3" is_hidden="0"/>
+              <item ID="F26-V3" label="4" is_hidden="0"/>
+              <item ID="F26-V4" label="5 - Medium" is_hidden="0"/>
+              <item ID="F26-V5" label="6" is_hidden="0"/>
+              <item ID="F26-V6" label="7" is_hidden="0"/>
+              <item ID="F26-V7" label="8" is_hidden="0"/>
+              <item ID="F26-V8" label="9 - Highest" is_hidden="0"/>
+            </items>
+            <decorators>
+              <decorator REF="F26-V0" r="255" g="255" b="204"/>
+              <decorator REF="F26-V1" r="255" g="255" b="102"/>
+              <decorator REF="F26-V2" r="255" g="204" b="0"/>
+              <decorator REF="F26-V3" r="255" g="153" b="0"/>
+              <decorator REF="F26-V4" r="255" g="102" b="0"/>
+              <decorator REF="F26-V5" r="255" g="51" b="0"/>
+              <decorator REF="F26-V6" r="204" g="51" b="0"/>
+              <decorator REF="F26-V7" r="153" g="0" b="0"/>
+              <decorator REF="F26-V8" r="51" g="0" b="0"/>
+            </decorators>
+          </bind>
+        </formElement>
+        <formElement type="sb" ID="F27" rank="43" use_it="0">
+          <name>stage</name>
+          <label>Stage</label>
+          <description>Stage in the life cycle of the artifact</description>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="F27-V0" label="New" is_hidden="0">
+                <description>The artifact has just been submitted</description>
+              </item>
+              <item ID="F27-V1" label="Analyzed" is_hidden="0">
+                <description>The cause of the artifact has been identified and documented</description>
+              </item>
+              <item ID="F27-V2" label="Accepted" is_hidden="0">
+                <description>The artifact will be worked on.</description>
+              </item>
+              <item ID="F27-V3" label="Under Implementation" is_hidden="0">
+                <description>The artifact is being worked on.</description>
+              </item>
+              <item ID="F27-V4" label="Ready for Review" is_hidden="0">
+                <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
+              </item>
+              <item ID="F27-V5" label="Ready for Test" is_hidden="0">
+                <description>Updated/Created software is ready to be included in the next build</description>
+              </item>
+              <item ID="F27-V6" label="In Test" is_hidden="0">
+                <description>Updated/Created software is in the build and is ready to enter the test phase</description>
+              </item>
+              <item ID="F27-V7" label="Approved" is_hidden="0">
+                <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
+              </item>
+              <item ID="F27-V8" label="Declined" is_hidden="0">
+                <description>The artifact was not accepted.</description>
+              </item>
+              <item ID="F27-V9" label="Done" is_hidden="0">
+                <description>The artifact is closed.</description>
+              </item>
+            </items>
+          </bind>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="tooltip"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name>Default</name>
+          <description>The system default artifact report</description>
+          <criterias/>
+          <renderers>
+            <renderer type="table" rank="0" chunksz="15">
+              <name>Results</name>
+              <columns/>
+            </renderer>
+            <renderer type="plugin_graphontrackersv5" rank="1">
+              <name>Default</name>
+              <description>Graphic Report By Default For Support Requests</description>
+              <charts/>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <workflow/>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F14" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F14" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F14" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F15" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F16" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F16" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F16" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F17" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F18" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F18" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F18" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+    </tracker>
+    <tracker xmlns="http://codendi.org/tracker" id="T660" parent_id="T659" instantiate_for_new_projects="1">
+      <name>tcomputed</name>
+      <item_name>tcomputed</item_name>
+      <description>computed</description>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="cross" ID="F28" rank="4">
+          <name>xref</name>
+          <label>xref</label>
+        </formElement>
+        <formElement type="art_link" ID="F29" rank="5">
+          <name>link</name>
+          <label>link</label>
+        </formElement>
+        <formElement type="float" ID="F30" rank="9">
+          <name>salut</name>
+          <label>coucou</label>
+          <properties size="5"/>
+        </formElement>
+        <formElement type="computed" ID="F31" rank="11" use_it="0">
+          <name>computed</name>
+          <label>computed</label>
+          <properties target_field_name="value"/>
+        </formElement>
+        <formElement type="file" ID="F32" rank="27" use_it="0">
+          <name>attachment</name>
+          <label>Attachments</label>
+        </formElement>
+        <formElement type="text" ID="F33" rank="29" use_it="0">
+          <name>details</name>
+          <label>Original Submission</label>
+          <description>A full description of the artifact</description>
+          <properties rows="7" cols="60"/>
+        </formElement>
+        <formElement type="string" ID="F34" rank="32" use_it="0" required="1">
+          <name>summary</name>
+          <label>Summary</label>
+          <description>One line description of the artifact</description>
+          <properties maxchars="150" size="60"/>
+        </formElement>
+        <formElement type="tbl" ID="F35" rank="35" use_it="0">
+          <name>cc</name>
+          <label>CC</label>
+          <properties hint="Type in a search term"/>
+          <bind type="static" is_rank_alpha="0"/>
+        </formElement>
+        <formElement type="sb" ID="F36" rank="44" use_it="0">
+          <name>status_id</name>
+          <label>Status</label>
+          <description>Artifact Status</description>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="F36-V0" label="Open" is_hidden="0">
+                <description>The artifact has been submitted</description>
+              </item>
+              <item ID="F36-V1" label="Closed" is_hidden="0">
+                <description>The artifact is no longer active. See the Resolution field for details on how it was resolved.</description>
+              </item>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="sb" ID="F37" rank="46" use_it="0">
+          <name>assigned_to</name>
+          <label>Assigned to</label>
+          <description>Who is in charge of solving the artifact</description>
+          <bind type="users">
+            <items>
+              <item label="group_members"/>
+            </items>
+          </bind>
+        </formElement>
+        <formElement type="sb" ID="F38" rank="52" use_it="0">
+          <name>category_id</name>
+          <label>Category</label>
+          <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
+          <bind type="static" is_rank_alpha="0"/>
+        </formElement>
+        <formElement type="sb" ID="F39" rank="54" use_it="0">
+          <name>severity</name>
+          <label>Priority</label>
+          <description>How quickly the artifact must be completed</description>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="F39-V0" label="1 - Lowest" is_hidden="0"/>
+              <item ID="F39-V1" label="2" is_hidden="0"/>
+              <item ID="F39-V2" label="3" is_hidden="0"/>
+              <item ID="F39-V3" label="4" is_hidden="0"/>
+              <item ID="F39-V4" label="5 - Medium" is_hidden="0"/>
+              <item ID="F39-V5" label="6" is_hidden="0"/>
+              <item ID="F39-V6" label="7" is_hidden="0"/>
+              <item ID="F39-V7" label="8" is_hidden="0"/>
+              <item ID="F39-V8" label="9 - Highest" is_hidden="0"/>
+            </items>
+            <decorators>
+              <decorator REF="F39-V0" r="255" g="255" b="204"/>
+              <decorator REF="F39-V1" r="255" g="255" b="102"/>
+              <decorator REF="F39-V2" r="255" g="204" b="0"/>
+              <decorator REF="F39-V3" r="255" g="153" b="0"/>
+              <decorator REF="F39-V4" r="255" g="102" b="0"/>
+              <decorator REF="F39-V5" r="255" g="51" b="0"/>
+              <decorator REF="F39-V6" r="204" g="51" b="0"/>
+              <decorator REF="F39-V7" r="153" g="0" b="0"/>
+              <decorator REF="F39-V8" r="51" g="0" b="0"/>
+            </decorators>
+          </bind>
+        </formElement>
+        <formElement type="sb" ID="F40" rank="56" use_it="0">
+          <name>stage</name>
+          <label>Stage</label>
+          <description>Stage in the life cycle of the artifact</description>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="F40-V0" label="New" is_hidden="0">
+                <description>The artifact has just been submitted</description>
+              </item>
+              <item ID="F40-V1" label="Analyzed" is_hidden="0">
+                <description>The cause of the artifact has been identified and documented</description>
+              </item>
+              <item ID="F40-V2" label="Accepted" is_hidden="0">
+                <description>The artifact will be worked on.</description>
+              </item>
+              <item ID="F40-V3" label="Under Implementation" is_hidden="0">
+                <description>The artifact is being worked on.</description>
+              </item>
+              <item ID="F40-V4" label="Ready for Review" is_hidden="0">
+                <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
+              </item>
+              <item ID="F40-V5" label="Ready for Test" is_hidden="0">
+                <description>Updated/Created software is ready to be included in the next build</description>
+              </item>
+              <item ID="F40-V6" label="In Test" is_hidden="0">
+                <description>Updated/Created software is in the build and is ready to enter the test phase</description>
+              </item>
+              <item ID="F40-V7" label="Approved" is_hidden="0">
+                <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
+              </item>
+              <item ID="F40-V8" label="Declined" is_hidden="0">
+                <description>The artifact was not accepted.</description>
+              </item>
+              <item ID="F40-V9" label="Done" is_hidden="0">
+                <description>The artifact is closed.</description>
+              </item>
+            </items>
+          </bind>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="tooltip"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name>Default</name>
+          <description>The system default artifact report</description>
+          <criterias/>
+          <renderers>
+            <renderer type="table" rank="0" chunksz="15">
+              <name>Results</name>
+              <columns/>
+            </renderer>
+            <renderer type="plugin_graphontrackersv5" rank="1">
+              <name>Default</name>
+              <description>Graphic Report By Default For Support Requests</description>
+              <charts/>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <workflow/>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F28" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F29" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F29" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F29" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F30" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F30" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F30" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+    </tracker>
+  </trackers>
+  <agiledashboard>
+    <plannings/>
+  </agiledashboard>
+  <cardwall>
+    <trackers>
+      <tracker id="T661"/>
+    </trackers>
+  </cardwall>
+</project>
