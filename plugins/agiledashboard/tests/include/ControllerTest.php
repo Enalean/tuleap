@@ -48,6 +48,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
         $this->request          = aRequest()->withProjectManager($this->project_manager)->with('group_id', "$this->group_id")->withUser($this->current_user)->build();
         $this->planning_factory = new MockPlanningFactory();
         $this->controller       = new Planning_Controller($this->request, $this->planning_factory, mock('Planning_MilestoneFactory'), '/path/to/theme');
+    
+        define('IS_SCRIPT', false);
     }
 
     public function tearDown() {
