@@ -20,6 +20,12 @@
 
 require_once 'bootstrap.php';
 
+class GitPlugin4Tests extends GitPlugin {
+    public function dump_ssh_keys_gerrit(array $params) {
+        parent::dump_ssh_keys_gerrit($params);
+    }
+}
+
 class GitPlugin_PropagateUserKeysToGerritTest extends TuleapTestCase {
     
     private $plugin;
@@ -35,7 +41,7 @@ class GitPlugin_PropagateUserKeysToGerritTest extends TuleapTestCase {
         $mocked_methods = array(
             'getGerritServerFactory'
         );
-        $this->plugin = partial_mock('GitPlugin', $mocked_methods, array($id));
+        $this->plugin = partial_mock('GitPlugin4Tests', $mocked_methods, array($id));
 
         $this->user_account_manager = mock('Git_UserAccountManager');
         $this->plugin->setUserAccountManager($this->user_account_manager);
@@ -55,7 +61,7 @@ class GitPlugin_PropagateUserKeysToGerritTest extends TuleapTestCase {
         );
         
         expect($this->logger)->error()->once();
-        $this->plugin->propagateUserKeysToGerrit($params);
+        $this->plugin->dump_ssh_keys_gerrit($params);
     }
 
     public function testItLogsAnErrorIfUserIsInvalid() {
@@ -65,7 +71,7 @@ class GitPlugin_PropagateUserKeysToGerritTest extends TuleapTestCase {
         );
 
         expect($this->logger)->error()->once();
-        $this->plugin->propagateUserKeysToGerrit($params);
+        $this->plugin->dump_ssh_keys_gerrit($params);
     }
 
     public function itTransformsEmptyKeyStringIntoArrayBeforeSendingToGitUserManager() {
@@ -86,7 +92,7 @@ class GitPlugin_PropagateUserKeysToGerritTest extends TuleapTestCase {
                 $this->user
             )->once();
 
-        $this->plugin->propagateUserKeysToGerrit($params);
+        $this->plugin->dump_ssh_keys_gerrit($params);
     }
 
     public function itTransformsNonEmptyKeyStringIntoArrayBeforeSendingToGitUserManager() {
@@ -110,7 +116,7 @@ class GitPlugin_PropagateUserKeysToGerritTest extends TuleapTestCase {
                 $this->user
             )->once();
 
-        $this->plugin->propagateUserKeysToGerrit($params);
+        $this->plugin->dump_ssh_keys_gerrit($params);
     }
 
     public function itLogsAnErrorIfSSHKeySynchFails() {
@@ -123,7 +129,7 @@ class GitPlugin_PropagateUserKeysToGerritTest extends TuleapTestCase {
         
         expect($this->logger)->error()->once();
 
-        $this->plugin->propagateUserKeysToGerrit($params);
+        $this->plugin->dump_ssh_keys_gerrit($params);
     }
 }
 

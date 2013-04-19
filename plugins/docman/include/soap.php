@@ -6,7 +6,6 @@ require_once('common/include/Error.class.php');
 require_once('Docman_Item.class.php');
 require_once('Docman_ItemFactory.class.php');
 require_once('common/include/SOAPRequest.class.php');
-require_once('common/include/MIME.class.php');
 
 // define fault code constants
 define('invalid_item_fault', '3017');
@@ -548,25 +547,12 @@ $soapFunctions[] = array('createDocmanFolder', 'Create a folder');
 function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $file_size, $file_name, $mime_type, $content, $chunk_offset, $chunk_size, $author, $date, $owner, $create_date, $update_date) {
 
     $content = base64_decode($content);
-
-    //ignore mime type coming from the client, guess it instead
-    //Write the content of the file into a temporary file
-    //The best accurate results are got when the file has the real extension, therefore use the filename
-    $tmp     = tempnam(Config::get('tmp_dir'), 'Mime-detect');
-    $tmpname = $tmp .'-'. basename($file_name);
-    file_put_contents($tmpname, $content);
-    $mime_type = MIME::instance()->type($tmpname);
-    
-    //remove both files created by tempnam() and file_put_contents()
-    unlink($tmp);
-    unlink($tmpname);
     
     $extraParams = array(
         'chunk_offset'   => $chunk_offset,
         'chunk_size'     => $chunk_size,
         'file_size'      => $file_size,
         'file_name'      => $file_name,
-        'mime_type'      => $mime_type,
         'upload_content' => $content,
         'date'           => $date,
         'author'         => _getUserIdByUserName($author),

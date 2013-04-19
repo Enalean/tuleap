@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 /**
  * Continuous integration for Git
  */
@@ -29,11 +28,11 @@ class Git_Ci {
     /**
      * Get CI dao
      *
-     * @return Git_CiDao
+     * @return Git_Ci_Dao
      */
     function getDao() {
         if (!isset($this->dao)) {
-            $this->_dao = new Git_CiDao();
+            $this->_dao = new Git_Ci_Dao();
         }
         return $this->_dao;
     }
@@ -148,33 +147,6 @@ class Git_Ci {
     function deleteTrigger($jobId) {
         return $this->getDao()->deleteTrigger($jobId);
     }
-
-    /**
-     * Trigger CI build
-     *
-     * @param Integer $repositoryId Id of the repository where a push occured
-     *
-     * @return Void
-     */
-    function triggerCiBuild($repositoryId) {
-        $res = $this->getDao()->retrieveTriggersPathByRepository($repositoryId);
-        if ($res && !$res->isError() && $res->rowCount() > 0) {
-            foreach ($res as $row) {
-                $token = '';
-                if (!empty($row['token'])) {
-                    $token = '?token='.$row['token'];
-                }
-                $url = $row['job_url'].'/build';
-                $context = null;
-                $ch  = curl_init();
-                curl_setopt($ch, CURLOPT_FAILONERROR, true);
-                curl_setopt($ch, CURLOPT_URL, $url);
-                curl_exec($ch);
-                curl_close($ch);
-            }
-        }
-    }
-
 }
 
 ?>

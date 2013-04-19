@@ -29,6 +29,7 @@ class Plugin implements PFO_Plugin {
     
     var $id;
     var $pluginInfo;
+    /** @var Map */
     var $hooks;
     protected $_scope;
 
@@ -93,6 +94,9 @@ class Plugin implements PFO_Plugin {
     }
     
     public function addHook($hook, $callback = null, $recallHook = false) {
+        if ($this->hooks->containsKey($hook)) {
+            throw new RuntimeException('A plugin cannot listen to the same hook several time. Please check '.$hook);
+        }
         $value = array();
         $value['hook']       = $hook;
         $value['callback']   = $callback ? $callback : $hook;

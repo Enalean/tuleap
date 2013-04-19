@@ -23,7 +23,7 @@ require_once 'common/dao/include/DataAccessObject.class.php';
 /**
  * Continuous integration DAO for Git
  */
-class Git_CiDao extends DataAccessObject {
+class Git_Ci_Dao extends DataAccessObject {
 
     /**
      * Retrieve git trigger of a ci job

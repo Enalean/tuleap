@@ -27,17 +27,32 @@ require_once 'ClientUnableToLaunchBuildException.class.php';
 class Jenkins_Client {
 
     /**
-     *
      * @var Http_Client
      */
     private $http_curl_client;
 
     /**
-     *
+     * @var String
+     */
+    private $token = null;
+
+    /**
      * @param Http_Client $http_curl_client Any instance of Http_Client
      */
     public function __construct(Http_Client $http_curl_client) {
         $this->http_curl_client = $http_curl_client;
+    }
+
+    /**
+     * Allow to define token to be used for authentication
+     *
+     * @param String $token Jenkins authentication token
+     *
+     * @return Jenkins_Client
+     */
+    public function setToken($token) {
+        $this->token = $token;
+        return $this;
     }
 
     /**
@@ -48,7 +63,7 @@ class Jenkins_Client {
      */
     public function launchJobBuild($job_url, array $build_parameters = array()) {
         $options = array(
-            CURLOPT_URL             => $job_url . '/build',
+            CURLOPT_URL             => $this->getBuildUrl($job_url),
             CURLOPT_SSL_VERIFYPEER  => false,
         );
         
@@ -67,9 +82,23 @@ class Jenkins_Client {
             throw new Jenkins_ClientUnableToLaunchBuildException('Job: ' . $job_url . '; Message: ' . $e->getMessage());
         }
     }
-    
+
+    private function getBuildUrl($job_url) {
+        $params = http_build_query($this->getTokenUrlParameter());
+        if ($params) {
+            $params = '?'.$params;
+        }
+        return $job_url . '/build'.$params;
+    }
+
+    private function getTokenUrlParameter() {
+        if ($this->token) {
+            return array('token' => $this->token);
+        }
+        return array();
+    }
+
     /**
-     * 
      * @param array $build_parameters
      * @return string
      */

@@ -337,6 +337,11 @@ class Git extends PluginController {
             #repo_management
             case 'repo_management':
                 $repository = $this->factory->getRepositoryById($repoId);
+                if (empty($repository)) {
+                    $this->addError($this->getText('actions_repo_not_found'));
+                    $this->redirect('/plugins/git/?action=index&group_id='. $this->groupId);
+                    return false;
+                }
                 $this->addAction('repoManagement', array($repository));
                 $this->addView('repoManagement');
                 break;

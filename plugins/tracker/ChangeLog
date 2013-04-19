@@ -1,3 +1,6 @@
+Version 5.109 - Tuleap 5.13
+    * Fix sla #2833: With checkbox it not natural to have a none checkbox to check to indicate we don't want to check anything. So we removed it.
+
 Version 5.108 - Tuleap 5.13
     * Fix fatal error when accessing backlog
 

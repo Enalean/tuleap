@@ -913,6 +913,12 @@ class LdapPlugin extends Plugin {
             case 'PLUGIN_LDAP_UPDATE_LOGIN' :
                 include_once dirname(__FILE__).'/system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN.class.php';
                 $params['class'] = 'SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN';
+                $params['dependencies'] = array(
+                    UserManager::instance(),
+                    Backend::instance(Backend::SVN),
+                    ProjectManager::instance(),
+                    new LDAP_ProjectManager()
+                );
                 break;
         }
     }

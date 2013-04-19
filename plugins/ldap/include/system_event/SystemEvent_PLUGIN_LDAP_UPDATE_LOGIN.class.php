@@ -22,7 +22,8 @@
 require_once 'common/system_event/SystemEvent.class.php';
 require_once 'common/user/UserManager.class.php';
 require_once 'common/project/ProjectManager.class.php';
-require_once 'common/backend/Backend.class.php';
+require_once 'common/backend/BackendSVN.class.php';
+require_once dirname(__FILE__).'/../LDAP_ProjectManager.class.php';
 
 /**
  * Manage rename of LDAP users in the whole platform.
@@ -34,6 +35,29 @@ require_once 'common/backend/Backend.class.php';
  * user name is not changed).
  */
 class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN  extends SystemEvent {
+    /** @var UserManager */
+    private $user_manager;
+
+    /** @var BackendSVN */
+    private $backend_svn;
+
+    /** @var ProjectManager */
+    private $project_manager;
+
+    /** @var LDAP_ProjectManager */
+    private $ldap_project_manager;
+
+    public function injectDependencies(
+        UserManager $user_manager,
+        BackendSVN $backend_svn,
+        ProjectManager $project_manager,
+        LDAP_ProjectManager $ldap_project_manager
+    ) {
+        $this->user_manager = $user_manager;
+        $this->backend_svn = $backend_svn;
+        $this->project_manager = $project_manager;
+        $this->ldap_project_manager = $ldap_project_manager;
+    }
 
     /**
      * Execute action
@@ -61,8 +85,8 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN  extends SystemEvent {
         // Update SVNAccessFile of projects
         $backendSVN = $this->getBackendSVN();
         foreach ($project_ids as $project_id) {
-            $project = $this->getProject($project_id);
-            if ($project) {
+            $project = $this->project_manager->getProject($project_id);
+            if ($project && $this->ldap_project_manager->hasSVNLDAPAuth($project->getId())) {
                 $backendSVN->updateProjectSVNAccessFile($project);
             }
         }
@@ -87,7 +111,7 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN  extends SystemEvent {
      * @return UserManager
      */
     protected function getUserManager() {
-        return UserManager::instance();
+        return $this->user_manager;
     }
     
     /**
@@ -96,7 +120,7 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN  extends SystemEvent {
      * @return BackendSVN
      */
     protected function getBackendSVN() {
-        return Backend::instance('SVN');
+        return $this->backend_svn;
     }
 
 }
