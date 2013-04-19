@@ -602,7 +602,7 @@ class ReferenceManager {
                         $user_id=user_getid();
                     }
 
-                    $this->insertCrossReference(
+                    $this->insertCrossReference(new CrossReference(
                         $source_id,
                         $source_gid,
                         $source_type,
@@ -612,39 +612,21 @@ class ReferenceManager {
                         $target_type,
                         $target_key,
                         $user_id
-                    );
+                    ));
                 }
             }
         }
         return true;
     }
 
-    public function insertCrossReference(
-        $source_id,
-        $source_gid,
-        $source_type,
-        $source_key,
-        $target_id,
-        $target_gid,
-        $target_type,
-        $target_key,
-        $user_id
-    ){
-        $cross_ref = new CrossReference(
-            $source_id,
-            $source_gid,
-            $source_type,
-            $source_key,
-            $target_id,
-            $target_gid,
-            $target_type,
-            $target_key,
-            $user_id
-        );
-
-        if(!$cross_ref->existInDb()) {
-            $cross_ref->createDbCrossRef();
+    public function insertCrossReference(CrossReference $cross_reference) {
+        if(! $cross_reference->existInDb()) {
+            $cross_reference->createDbCrossRef();
         }
+    }
+
+    public function removeCrossReference(CrossReference $cross_reference) {
+        $cross_reference->deleteCrossReference();
     }
 
     /**
