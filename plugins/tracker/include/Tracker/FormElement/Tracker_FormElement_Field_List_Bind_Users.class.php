@@ -83,7 +83,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @return string
      */
-    public function formatCardValue($value, /* Tracker_CardDisplayPreferences */Cardwall_DisplayPreferences $display_preferences) {
+    public function formatCardValue($value, Tracker_CardDisplayPreferences $display_preferences) {
         return $value->fetchCard($display_preferences);
     }
     

@@ -527,7 +527,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string
      */
-    public function fetchCardValue(Tracker_Artifact $artifact, /* Tracker_CardDisplayPreferences */Cardwall_DisplayPreferences $display_preferences) {
+    public function fetchCardValue(Tracker_Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences) {
         return $this->fetchTooltipValue($artifact, $artifact->getLastChangeset()->getValue($this));
     }
 
@@ -538,7 +538,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string
      */
-    public function fetchCard(Tracker_Artifact $artifact, /* Tracker_CardDisplayPreferences */Cardwall_DisplayPreferences $display_preferences) {
+    public function fetchCard(Tracker_Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences) {
 
         $value = $this->fetchCardValue($artifact, $display_preferences);
         $data_field_id   = '';

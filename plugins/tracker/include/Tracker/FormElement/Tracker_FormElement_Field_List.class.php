@@ -879,7 +879,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @see Tracker_FormElement_Field::fetchCardValue()
      */
-    public function fetchCardValue(Tracker_Artifact $artifact, /* Tracker_CardDisplayPreferences */Cardwall_DisplayPreferences $display_preferences) {
+    public function fetchCardValue(Tracker_Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences) {
         $html = '';
         //We have to fetch all values of the changeset as we are a list of value
         //This is the case only if we are multiple but an old changeset may

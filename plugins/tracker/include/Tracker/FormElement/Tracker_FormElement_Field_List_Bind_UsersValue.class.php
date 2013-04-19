@@ -86,14 +86,6 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
             return $user->fetchHtmlAvatar(16);
         }
         return $user->fetchHTMLRealName();
-        /*
-        $current_user = $this->getUserManager()->getCurrentUser();
-        if ($current_user->isAnonymous() || ! $current_user->getPreference('AD_cardwall_assign_to_display_username')) {
-            return $user->fetchHtmlAvatar(16);
-        }
-        return $user->fetchHTMLRealName();
-         *
-         */
     }
     
     public function fetchFormattedForCSV() {
