@@ -1,3 +1,8 @@
+Version 5.110 - Tuleap 5.13
+    * Fix bug reported in defect #ericsson:2858 and request #ericsson:2162
+      Delete cross reference when an artifact link is removed.
+      Change-Id: Ia1b74669c55bf715cd547b5db018a3804040a844
+
 Version 5.109 - Tuleap 5.13
     * Fix sla #2833: With checkbox it not natural to have a none checkbox to check to indicate we don't want to check anything. So we removed it.
 
@@ -5,7 +10,7 @@ Version 5.108 - Tuleap 5.13
     * Fix fatal error when accessing backlog
 
 Version 5.107 - Tuleap 5.13
-    * Fix request ##2932: project cross-reference created with artifact link are displayed in parent artifact
+    * Fix request #2932: project cross-reference created with artifact link are displayed in parent artifact
 
 Version 5.106 - Tuleap 5.13
     * Fix sla #2835: Search criteria disappear when used advanced search on a field
