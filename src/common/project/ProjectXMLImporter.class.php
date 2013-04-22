@@ -39,11 +39,16 @@ class ProjectXMLImporter {
     }
 
     /**
+     * Import a project xml in a project on the behalf of a user
+     *
+     * @throws Exception
+     *
      * @return SimpleXMLElement
      */
-    public function import($project_id, $user_name, SimpleXMLElement $xml_content) {
-        $project = $this->getProject($project_id);
-        $user    = $this->getUser($user_name);
+    public function import($project_id, $user_name, $xml_file_path) {
+        $project     = $this->getProject($project_id);
+        $user        = $this->getUser($user_name);
+        $xml_content = new SimpleXMLElement(file_get_contents($xml_file_path, "r"));
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT,
             array(

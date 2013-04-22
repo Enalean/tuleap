@@ -23,29 +23,26 @@
 require_once 'pre.php';
 require_once 'common/project/ProjectXMLImporter.class.php';
 
-if ($argc < 3) {
+if ($argc < 4) {
     echo <<< EOT
-Usage: $argv[0] project_id xml
-Create a project trackers, agiledashbiard and cardwall from XML format
+Usage: $argv[0] project_id admin_user_name xml_file_path
+Create a project trackers, agiledashboard and cardwall from XML format
 
 EOT;
     exit(1);
 }
 
-$xml = file_get_contents($argv[2], "r");
+$xml_importer = new ProjectXMLImporter(
+    EventManager::instance(),
+    UserManager::instance(),
+    ProjectManager::instance()
+);
 
-$project = ProjectManager::instance()->getProject($argv[1]);
-$user = UserManager::instance()->forceLogin('admin');
-
-$user = UserManager::instance()->forceLogin('admin', 'siteadmin');
-
-if ($project && !$project->isError() && !$project->isDeleted()) {
-    $xml_element = new SimpleXMLElement($xml);
-
-    $xml_importer = new ProjectXMLImporter(EventManager::instance());
-    $xml_importer->import($project, $xml_element);
-} else {
-    echo "*** ERROR: Invalid project_id\n";
+try {
+    $xml_importer->import($argv[1], $argv[2], $argv[3]);
+} catch (Exception $exception) {
+    echo "*** ERROR: ".$exception->getMessage().PHP_EOL;
     exit(1);
 }
+
 ?>
