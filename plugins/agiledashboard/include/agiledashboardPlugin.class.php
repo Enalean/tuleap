@@ -52,7 +52,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR, 'event_artifact_parents_selector', false);
 
             $this->_addHook(Event::SYSTRAY);
-            $this->_addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE, 'importFromXml', false);
+            $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE, 'importFromXml', false);
             $this->_addHook(Event::EXPORT_XML_PROJECT, 'exportToXml', false);
 
             if (defined('CARDWALL_BASE_DIR')) {

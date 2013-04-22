@@ -57,6 +57,7 @@ class cardwallPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE);
             $this->_addHook(Event::JAVASCRIPT);
             $this->addHook(Event::EXPORT_XML_PROJECT);
+            $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -377,6 +378,16 @@ class cardwallPlugin extends Plugin {
         );
 
         $cardwall_xml_export->export($params['into_xml']);
+    }
+
+    /**
+     *
+     * @param array $params
+     * @see Event::IMPORT_XML_PROJECT_TRACKER_DONE
+     */
+    public function import_xml_project_tracker_done($params) {
+        $cardwall_ontop_import = new CardwallConfigXmlImport($params['project']->getId(), $params['xml_content'], $params['mapping'], new Cardwall_OnTop_Dao, EventManager::instance());
+        $cardwall_ontop_import->import();
     }
 
     /**
