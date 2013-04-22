@@ -26,7 +26,7 @@ class Tracker_FormElement_View_Admin_Field_Burndown extends Tracker_FormElement_
         //required
         $html .= $this->fetchRequired();
 
-        $html .= $this->fetchDisplayWeekEnds();
+        $html .= $this->fetchExcludeWeekEnds();
 
         return $html;
     }
@@ -36,15 +36,17 @@ class Tracker_FormElement_View_Admin_Field_Burndown extends Tracker_FormElement_
     }
     
     /**
-     * Fetch "display week ends" part of field admin
+     * Fetch "exclude week ends" part of field admin
      * 
      * @return string the HTML for the checkbox part
      */
-    protected function fetchDisplayWeekEnds() {
-        $html = '<p>';
-        $html .= '<input type="hidden" name="formElement_data[display_weekends]" value="1" />';
-        $html .= '<input type="checkbox" name="formElement_data[display_weekends]" id="formElement_use_capacity" value="1" />';
-        $html .= '<label for="formElement_display_weekends">'.$GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'display_weekends');
+    protected function fetchExcludeWeekEnds() {
+        $key  = 'exclude_weekends';
+        $html = '';
+        $html .= '<p>';
+        $html .= '<input type="hidden" name="formElement_data[specific_properties]['. $key .']" value="0" />';
+        $html .= '<input type="checkbox" name="formElement_data[specific_properties]['. $key .']" id="formElement_properties_'. $key .'" value="1" '. ($this->formElement->excludeWeekends() ? 'checked="checked"' : '') .'" />';
+        $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label>';
         $html .= '</p>';
         return $html;
     }

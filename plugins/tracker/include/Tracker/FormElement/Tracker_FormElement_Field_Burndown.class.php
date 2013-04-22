@@ -36,10 +36,14 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     private $hierarchy_factory;
 
+    protected $exclude_weekends;
+
     public $default_properties = array(
-        'display_weekends'      => true
+        'exclude_weekends' => array (
+            'value' => 1,
+            'type'  => 'checkbox')
     );
-    
+
     /**
      * @return the label of the field (mainly used in admin part)
      */
@@ -562,6 +566,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     private function hasRemainingEffort(Tracker $tracker) {
         return $tracker->hasFormElementWithNameAndType(self::REMAINING_EFFORT_FIELD_NAME, array('int', 'float'));
+    }
+
+    public function excludeWeekends() {
+        return $this->getProperty('exclude_weekends');
     }
 }
 ?>

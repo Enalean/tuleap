@@ -1112,7 +1112,7 @@ plugin_tracker_formelement_property	static_value	Valeur statique
 plugin_tracker_formelement_property	default_value_today	Date du jour
 plugin_tracker_formelement_property	target_field_name	Champ cible
 plugin_tracker_formelement_property	use_capacity	Utiliser le champ "capacity" pour la courbe théorique
-plugin_tracker_formelement_property	display_weekends	Afficher les week-ends
+plugin_tracker_formelement_property	exclude_weekends	Exclure les week-ends
 
 plugin_tracker_formelement_exception	wrong_field_id	Aucun champ avec l'ID:$1
 plugin_tracker_formelement_exception	permission_denied	Permissions insuffisantes
