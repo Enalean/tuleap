@@ -30,7 +30,7 @@ fi
 # Include path is only defined in php.conf (and not php.ini).
 # It was also reported that 8MB (default memory limit) is not sufficient in some cases.
 if [ -z "$PHP_PARAMS" ]; then
-    PHP_PARAMS="-q -d include_path=/usr/share/pear:/usr/share/codendi/src/www/include:/usr/share/codendi/src:. -d memory_limit=256M -d allow_call_time_pass_reference=On "
+    PHP_PARAMS="-q -d include_path=/usr/share/pear:/usr/share/codendi/src/www/include:/usr/share/codendi/src:. -d memory_limit=256M -d allow_call_time_pass_reference=On -d display_errors=On"
 fi
 
 # Common functions
