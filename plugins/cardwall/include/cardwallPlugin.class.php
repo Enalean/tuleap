@@ -374,7 +374,8 @@ class cardwallPlugin extends Plugin {
             new Cardwall_OnTop_ConfigFactory(
                 $tracker_factory,
                 Tracker_FormElementFactory::instance()
-            )
+            ),
+            new XmlValidator()
         );
 
         $cardwall_xml_export->export($params['into_xml']);

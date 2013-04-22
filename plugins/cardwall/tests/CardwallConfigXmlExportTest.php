@@ -50,7 +50,9 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
         stub($this->config_factory)->getOnTopConfig($this->tracker1)->returns($this->cardwall_config);
         stub($this->config_factory)->getOnTopConfig($this->tracker2)->returns($this->cardwall_config2);
 
-        $this->xml_exporter = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory);
+        $this->xml_validator = stub('XmlValidator')->nodeIsValid()->returns(true);
+
+        $this->xml_exporter = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory, $this->xml_validator);
     }
 
     public function tearDown() {
@@ -73,7 +75,7 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
         stub($this->config_factory2)->getOnTopConfig($this->tracker1)->returns($cardwall_config);
         stub($this->config_factory2)->getOnTopConfig($this->tracker2)->returns($cardwall_config2);
 
-        $xml_exporter2 = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory2);
+        $xml_exporter2 = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory2, $this->xml_validator);
 
         $xml_exporter2->export($this->root);
         $this->assertEqual(count($this->root->cardwall->trackers->children()), 0);
@@ -88,7 +90,10 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
 
     public function itThrowsAnExceptionIfXmlGeneratedIsNotValid() {
         $this->expectException();
-        $this->xml_exporter->validateExportedXml(new SimpleXMLElement('<empty/>'));
+
+        $xml_validator = stub('XmlValidator')->nodeIsValid()->returns(false);
+        $xml_exporter  = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory, $xml_validator);
+        $xml_exporter->export(new SimpleXMLElement('<empty/>'));
     }
 }
 ?>

@@ -20,24 +20,15 @@
  */
 class XmlValidator {
 
-    /** @var SimpleXMLElement */
-    private $xml_node;
-
-    /** @var String */
-    private $rng_path;
-
-    public function __construct($xml_node, $rng_path) {
-        $this->xml_node = $xml_node;
-        $this->rng_path = $rng_path;
-    }
+    public function __construct() {}
 
     /**
      *
      * @return boolean
      */
-    public function nodeIsValid() {
-        $dom = $this->simpleXmlElementToDomDocument($this->xml_node);
-        return $dom->relaxNGValidate($this->rng_path);
+    public function nodeIsValid(SimpleXMLElement $xml_node, $rng_path) {
+        $dom = $this->simpleXmlElementToDomDocument($xml_node);
+        return $dom->relaxNGValidate($rng_path);
     }
 
     /**

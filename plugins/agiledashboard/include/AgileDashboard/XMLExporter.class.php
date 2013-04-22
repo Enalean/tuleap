@@ -23,6 +23,9 @@ require_once 'common/XmlValidator/XmlValidator.class.php';
 
 class AgileDashboard_XMLExporter {
 
+    /**  @var XmlValidator */
+    private $xml_validator;
+
     const NODE_AGILEDASHBOARD = 'agiledashboard';
     const NODE_PLANNINGS      = 'plannings';
     const NODE_PLANNING       = 'planning';
@@ -31,6 +34,10 @@ class AgileDashboard_XMLExporter {
      * @todo move me to tracker class
      */
     const TRACKER_ID_PREFIX = 'T';
+
+    public function __construct(XmlValidator $xml_validator) {
+        $this->xml_validator   = $xml_validator;
+    }
 
     /**
      *
@@ -67,7 +74,13 @@ class AgileDashboard_XMLExporter {
             $planning_node->addAttribute(PlanningParameters::BACKLOG_TRACKER_ID, $planning_backlog_tracker_id);
         }
 
-        $this->validateExportedXml($agiledashboard_node);
+        if (! $this->xml_validator->nodeIsValid(
+                 $agiledashboard_node,
+                 realpath(dirname(__FILE__).'/../../www/resources/xml_project_agiledashboard.rng')
+               )
+         ) {
+            throw new AgileDashboard_XMLExporterNodeNotValidException();
+        }
     }
 
     /**
@@ -88,18 +101,6 @@ class AgileDashboard_XMLExporter {
     private function checkId($id, $value_denomination) {
         if ($id == self::TRACKER_ID_PREFIX) {
             throw new AgileDashboard_XMLExporterUnableToGetValueException('Unable to get value for attribute: ' . $value_denomination);
-        }
-    }
-
-    /**
-     *
-     * @param SimpleXMLElement $agiledashboard_node
-     * @throws CardwallConfigXmlExportNodeNotValidException if XML does not match RNG
-     */
-    public function validateExportedXml(SimpleXMLElement $agiledashboard_node) {
-        $xml_validator = new XmlValidator($agiledashboard_node, realpath(dirname(__FILE__).'/../../www/resources/xml_project_agiledashboard.rng'));
-        if (! $xml_validator->nodeIsValid()) {
-            throw new CardwallConfigXmlExportNodeNotValidException();
         }
     }
 }

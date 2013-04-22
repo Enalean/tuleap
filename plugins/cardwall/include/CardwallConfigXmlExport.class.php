@@ -31,16 +31,20 @@ class CardwallConfigXmlExport {
     /**  @var Cardwall_OnTop_ConfigFactory */
     private $config_factory;
 
+    /**  @var XmlValidator */
+    private $xml_validator;
+
     const NODE_CARDWALL = 'cardwall';
     const NODE_TRACKERS = 'trackers';
     const NODE_TRACKER  = 'tracker';
 
     const ATTRIBUTE_TRACKER_ID = 'id';
 
-    public function __construct(Project $project, TrackerFactory $tracker_factory, Cardwall_OnTop_ConfigFactory $config_factory) {
+    public function __construct(Project $project, TrackerFactory $tracker_factory, Cardwall_OnTop_ConfigFactory $config_factory, XmlValidator $xml_validator) {
         $this->project         = $project;
         $this->tracker_factory = $tracker_factory;
         $this->config_factory  = $config_factory;
+        $this->xml_validator   = $xml_validator;
     }
 
     /**
@@ -56,17 +60,11 @@ class CardwallConfigXmlExport {
             $this->addTrackerChild($tracker, $trackers_node);
         }
 
-        $this->validateExportedXml($cardwall_node);
-    }
-
-    /**
-     *
-     * @param SimpleXMLElement $cardwall_node
-     * @throws CardwallConfigXmlExportNodeNotValidException if XML does not match RNG
-     */
-    public function validateExportedXml(SimpleXMLElement $cardwall_node) {
-        $xml_validator = new XmlValidator($cardwall_node, realpath(dirname(__FILE__).'/../www/resources/xml_project_cardwall.rng'));
-        if (! $xml_validator->nodeIsValid()) {
+         if (! $this->xml_validator->nodeIsValid(
+                 $cardwall_node,
+                 realpath(dirname(__FILE__).'/../www/resources/xml_project_cardwall.rng')
+               )
+         ) {
             throw new CardwallConfigXmlExportNodeNotValidException();
         }
     }

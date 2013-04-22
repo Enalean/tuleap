@@ -68,7 +68,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             $this->planning_factory
         );
 
-        $xml_exporter = new AgileDashboard_XMLExporter();
+        $xml_exporter = new AgileDashboard_XMLExporter(new XmlValidator());
         $xml_exporter->export($root_node, $plannings);
     }
 
