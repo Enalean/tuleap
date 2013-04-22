@@ -57,7 +57,8 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
         $this->cardwall_ontop_dao         = stub('Cardwall_OnTop_Dao')->enable()->returns(true);
         $this->group_id                   = 145;
         $this->event_manager              = mock('EventManager');
-        $this->cardwall_config_xml_import = new CardwallConfigXmlImport($this->group_id, $this->xml_input, $this->mapping, $this->cardwall_ontop_dao, $this->event_manager);
+        $this->xml_validator              = stub('XmlValidator')->nodeIsValid()->returns(true);
+        $this->cardwall_config_xml_import = new CardwallConfigXmlImport($this->group_id, $this->xml_input, $this->mapping, $this->cardwall_ontop_dao, $this->event_manager, $this->xml_validator);
     }
 
     public function itReturnsAllTrackersIdWithACardwall() {
@@ -88,7 +89,7 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
 
     public function itDoesNotProcessAnEventIfAtLeastOneCardwallCannotBeEnabledAndThrowsAnException() {
         $cardwall_ontop_dao         = stub('Cardwall_OnTop_Dao')->enable()->returns(false);
-        $cardwall_config_xml_import = new CardwallConfigXmlImport($this->group_id, $this->xml_input, $this->mapping, $cardwall_ontop_dao, $this->event_manager);
+        $cardwall_config_xml_import = new CardwallConfigXmlImport($this->group_id, $this->xml_input, $this->mapping, $cardwall_ontop_dao, $this->event_manager, $this->xml_validator);
 
         expect($this->event_manager)->processEvent(
             Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
@@ -102,6 +103,14 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
         $cardwall_ontop_dao->expectCallCount('enable', 1);
 
         $cardwall_config_xml_import->import();
+    }
+
+    public function itThrowsAnExceptionIfXmlDoesNotMatchRNG() {
+         $xml_validator              = stub('XmlValidator')->nodeIsValid()->returns(false);
+         $cardwall_config_xml_import = new CardwallConfigXmlImport($this->group_id, $this->xml_input, $this->mapping, $this->cardwall_ontop_dao, $this->event_manager, $xml_validator);
+
+         $this->expectException();
+         $cardwall_config_xml_import->import();
     }
 }
 
