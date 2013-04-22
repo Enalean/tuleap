@@ -61,7 +61,6 @@ class cardwallPlugin extends Plugin {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
                 $this->addHook(AGILEDASHBOARD_EVENT_INDEX_PAGE);
                 $this->addHook(AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT);
-                $this->addHook(AGILEDASHBOARD_EVENT_CARDWALL_TOGGLE_AVATAR_DISPLAY);
             }
         }
         return parent::getHooksAndCallbacks();
@@ -293,12 +292,9 @@ class cardwallPlugin extends Plugin {
         }
     }
 
-    public function agiledashboard_event_cardwall_toggle_avatar_display($params) {
-        $request = $params['request'];
-        if ($request) {
-            $display_preferences_controller = new Cardwall_DisplayPreferencesController('agiledashboard', $request);
-            $display_preferences_controller->toggleUserDisplay();
-        }
+    private function toggleAvatarDisplay(Codendi_Request $request) {
+        $display_preferences_controller = new Cardwall_DisplayPreferencesInAgileDashboardController($request);
+        $display_preferences_controller->toggleUserDisplay();
     }
 
     public function tracker_event_redirect_after_artifact_creation_or_update($params) {
@@ -383,6 +379,16 @@ class cardwallPlugin extends Plugin {
      */
     private function getOnTopColumnMappingFieldValueDao() {
         return new Cardwall_OnTop_ColumnMappingFieldValueDao();
+    }
+
+    public function process(Codendi_Request $request) {
+        switch($request->get('action')) {
+            case 'toggle_user_display_avatar':
+                $this->toggleAvatarDisplay($request);
+                break;
+            default:
+                echo 'Hello !';
+        }
     }
 
 }

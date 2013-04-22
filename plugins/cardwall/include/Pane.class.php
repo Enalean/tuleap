@@ -158,10 +158,10 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $tracker_id  = $this->milestone->getTrackerId();
         $artifact_id = $this->milestone->getArtifactId();
         
-        $action      = 'toggle_user_display';
+        $action      = 'toggle_user_display_avatar';
 
         $switch_display_username_url =
-            AGILEDASHBOARD_BASE_URL
+            CARDWALL_BASE_URL
             . '/?group_id='   . $group_id
             . '&planning_id=' . $planning_id
             . '&tracker_id='  . $tracker_id

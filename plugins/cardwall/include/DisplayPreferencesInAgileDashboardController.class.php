@@ -18,11 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_DisplayPreferencesController extends MVC2_PluginController {
-    
-    public function __construct($base_name, Codendi_Request $request) {
 
-        parent::__construct($base_name, $request);
+require_once 'common/mvc2/PluginController.class.php';
+
+class Cardwall_DisplayPreferencesInAgileDashboardController extends MVC2_PluginController {
+
+    public function __construct($request) {
+        parent::__construct('agiledashboard', $request);
     }
 
     public function toggleUserDisplay() {
@@ -32,7 +34,7 @@ class Cardwall_DisplayPreferencesController extends MVC2_PluginController {
         $user       = $this->getCurrentUser();
         $current_preference = $user->getPreference($pref_name);
 
-        if(! $current_preference) {
+        if (! $current_preference) {
             $user->setPreference($pref_name, Cardwall_DisplayPreferences::DISPLAY_AVATARS);
         } else {
             $this->switchPreference($user, $current_preference, $pref_name);

@@ -108,11 +108,6 @@ class AgileDashboardRouter {
             case 'generate_systray_data':
                 $this->executeAction($controller, 'generateSystrayData', $request->params);
                 break;
-            case 'toggle_user_display':
-                EventManager::instance()->processEvent(AGILEDASHBOARD_EVENT_CARDWALL_TOGGLE_AVATAR_DISPLAY, array(
-                    'request' => $request
-                ));
-                break;
             case 'index':
             default:
                 $this->renderAction($controller, 'index', $request);
