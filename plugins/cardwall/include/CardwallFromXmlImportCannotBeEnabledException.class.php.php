@@ -25,3 +25,5 @@ class CardwallFromXmlImportCannotBeEnabledException extends Exception {
         parent::__construct($message);
     }
 }
+
+?>
