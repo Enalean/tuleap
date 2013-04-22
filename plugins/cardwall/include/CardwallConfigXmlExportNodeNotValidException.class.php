@@ -20,7 +20,7 @@
  */
 class CardwallConfigXmlExportNodeNotValidException extends Exception {
     public function __construct() {
-        $message = 'The XML exported does not match the relax NG';
+        $message = 'The XML exported does not match the relax NG definition';
         parent::__construct($message);
     }
 }

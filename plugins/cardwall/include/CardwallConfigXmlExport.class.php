@@ -55,16 +55,12 @@ class CardwallConfigXmlExport {
     public function export(SimpleXMLElement $root) {
         $cardwall_node = $root->addChild(self::NODE_CARDWALL);
         $trackers_node = $cardwall_node->addChild(self::NODE_TRACKERS);
-        $trackers = $this->tracker_factory->getTrackersByGroupId($this->project->getId());
+        $trackers      = $this->tracker_factory->getTrackersByGroupId($this->project->getId());
         foreach ($trackers as $tracker) {
             $this->addTrackerChild($tracker, $trackers_node);
         }
 
-         if (! $this->xml_validator->nodeIsValid(
-                 $cardwall_node,
-                 realpath(dirname(__FILE__).'/../www/resources/xml_project_cardwall.rng')
-               )
-         ) {
+        if (! $this->xml_validator->nodeIsValid($cardwall_node, realpath(dirname(__FILE__).'/../www/resources/xml_project_cardwall.rng'))) {
             throw new CardwallConfigXmlExportNodeNotValidException();
         }
     }

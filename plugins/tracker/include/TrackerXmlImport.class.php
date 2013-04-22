@@ -84,10 +84,10 @@ class TrackerXmlImport {
         foreach ($this->getAllXmlTrackers() as $xml_tracker_id => $xml_tracker) {
 
             if (! $this->xml_validator->nodeIsValid($xml_tracker, realpath(dirname(__FILE__).'/../www/resources/tracker.rng'))) {
-                throw new trackerFromXmlInputNotWellFormedException();
+                throw new TrackerFromXmlInputNotWellFormedException();
             }
 
-            $created_tracker = $this->instanciateTrackerFromXml($xml_tracker_id, $xml_tracker);
+            $created_tracker       = $this->instanciateTrackerFromXml($xml_tracker_id, $xml_tracker);
             $created_trackers_list = array_merge($created_trackers_list, $created_tracker);
         }
 
@@ -102,7 +102,7 @@ class TrackerXmlImport {
     }
 
     private function importHierarchy(array $created_trackers_list) {
-        $all_hierarchies       = array();
+        $all_hierarchies = array();
         foreach ($this->getAllXmlTrackers() as $xml_tracker) {
             $all_hierarchies = $this->buildTrackersHierarchy($all_hierarchies, $xml_tracker, $created_trackers_list);
         }
@@ -127,7 +127,7 @@ class TrackerXmlImport {
         );
 
         if (! $tracker_created) {
-            throw new TrackerFromXmlImportCannotBeCreatedException((String) $xml_tracker->name . $GLOBALS['Response']->getRawFeedback());
+            throw new TrackerFromXmlImportCannotBeCreatedException((String) $xml_tracker->name);
         }
 
         return array($xml_tracker_id => $tracker_created->getId());

@@ -21,7 +21,7 @@
 
 class CardwallFromXmlInputNotWellFormedException extends Exception {
     public function __construct() {
-        $message = 'The XML input is not well formed';
+        $message = 'The cardwall XML input is not well formed';
         parent::__construct($message);
     }
 }

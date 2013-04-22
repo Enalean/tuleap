@@ -548,7 +548,7 @@ class trackerPlugin extends Plugin {
      * @param array $params
      */
     public function export_xml_project($params) {
-        $xml_content = $params['into_xml']->addChild('trackers');
+        $xml_content     = $params['into_xml']->addChild('trackers');
         $tracker_manager = new TrackerManager();
         $tracker_manager->exportToXml($params['project']->getID(), $xml_content);
     }

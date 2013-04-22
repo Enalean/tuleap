@@ -19,9 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class trackerFromXmlInputNotWellFormedException extends Exception {
+class TrackerFromXmlInputNotWellFormedException extends Exception {
     public function __construct() {
-        $message = 'The XML input is not well formed';
+        $message = 'The Tracker XML input is not well formed';
         parent::__construct($message);
     }
 }
