@@ -14,12 +14,14 @@ Version 5.13 (Not Released Yet)
 	* docman: 2.26.15
 	* tracker: 5.109
 	* ldap: 3.28
+	* IM: 1.5.7
 
 	== CLI ==
 	* Version 1.5.2
 
     == Development ==
-	* Remove register globals usage on service management
+	* Remove register globals usage on service management and approval admin pages
+	* Remove usage of PHP_SELF
 
 Version 5.12 (Thursday, March 21st 2013)
 	== Plugins ==
