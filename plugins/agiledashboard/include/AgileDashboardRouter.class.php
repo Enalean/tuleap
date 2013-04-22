@@ -77,7 +77,7 @@ class AgileDashboardRouter {
      * @param Codendi_Request $request 
      */
     public function route(Codendi_Request $request) {
-        $controller                     = $this->buildController($request);
+        $controller = $this->buildController($request);
 
         switch($request->get('action')) {
             case 'show':
