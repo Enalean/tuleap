@@ -18,6 +18,9 @@ Version 5.13 (Not Released Yet)
 	== CLI ==
 	* Version 1.5.2
 
+    == Development ==
+	* Remove register globals usage on service management
+
 Version 5.12 (Thursday, March 21st 2013)
 	== Plugins ==
 	* graphontrackersv5: 5.0.8
