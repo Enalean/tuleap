@@ -162,33 +162,33 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      *
      * @return bool true if success, false otherwise
      */
-    public function savePermissions($repository, $perms) {
-        $msgs = array();
-        $ok   = false;
-        if (isset($perms['read']) && is_array($perms['read'])) {
-            $success = permission_process_selection_form($repository->getProjectId(), 'PLUGIN_GIT_READ', $repository->getId(), $perms['read']);
-        }
-        $msgs[] = $success[1];
-        if ($success[0]) {
-            if (isset($perms['write']) && is_array($perms['write'])) {
-                $success = permission_process_selection_form($repository->getProjectId(), 'PLUGIN_GIT_WRITE', $repository->getId(), $perms['write']);
+    public function savePermissions(GitRepository $repository, $perms) {
+        $ok = true;
+        $ok &= $this->savePermission($repository, Git::PERM_READ, $perms);
+        if (! $repository->getRemoteServerId()) {
+            if ($ok) {
+                $ok &= $this->savePermission($repository, Git::PERM_WRITE, $perms);
             }
-            $msgs[] = $success[1];
-            if ($success[0]) {
-                if (isset($perms['wplus']) && is_array($perms['wplus'])) {
-                    $success = permission_process_selection_form($repository->getProjectId(), 'PLUGIN_GIT_WPLUS', $repository->getId(), $perms['wplus']);
-                }
-                $msgs[] = $success[1];
-                $ok = $success[0];
+            if ($ok) {
+                $ok &= $this->savePermission($repository, Git::PERM_WPLUS, $perms);
             }
-        }
-        
-        foreach ($msgs as $msg) {
-            $GLOBALS['Response']->addFeedback($ok ? 'info' : 'error', $msg);
         }
         return $ok;
     }
-    
+
+    private function savePermission(GitRepository $repository, $type, array $perms) {
+        if (isset($perms[$type]) && is_array($perms[$type])) {
+            $success = permission_process_selection_form($repository->getProjectId(), $type, $repository->getId(), $perms[$type]);
+            return $this->addFeedbackOnPermissionsSave($success);
+        }
+        return true;
+    }
+
+    private function addFeedbackOnPermissionsSave(array $success) {
+        $GLOBALS['Response']->addFeedback($success[0] ? 'info' : 'error', $success[1]);
+        return $success[0];
+    }
+
     /**
      * Delete the permissions of the repository
      *
