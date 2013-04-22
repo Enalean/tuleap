@@ -19,16 +19,9 @@
  */
 
 class Planning_CardDisplayPreferences implements Tracker_CardDisplayPreferences {
-   /** @var bool */
-    private $should_display_avatars;
-
-    public function __construct() {
-        $this->should_display_avatars = true;
-    }
-
 
     public function shouldDisplayAvatars() {
-        return $this->should_display_avatars;
+        return true;
     }
 }
  ?>

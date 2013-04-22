@@ -53,8 +53,9 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
         $this->configure_url                = $configure_url;
         $this->configure_label              = $GLOBALS['Language']->getText('plugin_cardwall', 'configure_cardwall_label');
         $this->switch_display_username_url  = $switch_display_username_url;
-        $this->is_display_avatar_selected = $is_display_avatar_selected;
+        $this->is_display_avatar_selected   = $is_display_avatar_selected;
         $this->display_avatar_label         = $GLOBALS['Language']->getText('plugin_cardwall', 'display_avatar_label');
+        $this->display_avatar_title         = $GLOBALS['Language']->getText('plugin_cardwall', 'display_avatar_title');
     }
 
     public function canConfigure() {

@@ -211,7 +211,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         $this->has_avatar         = isset($row['has_avatar'])         ? $row['has_avatar']         : null;
         
         $this->id = $this->user_id;
-        $this->purifier = Codendi_HTMLPurifier::instance();
         
         //set the locale
         if (!$this->language_id) {

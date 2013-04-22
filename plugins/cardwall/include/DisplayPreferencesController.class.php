@@ -23,8 +23,6 @@ class Cardwall_DisplayPreferencesController extends MVC2_PluginController {
     public function __construct($base_name, Codendi_Request $request) {
 
         parent::__construct($base_name, $request);
-        
-        $this->group_id = (int)$request->get('group_id');
     }
 
     public function toggleUserDisplay() {
@@ -32,16 +30,16 @@ class Cardwall_DisplayPreferencesController extends MVC2_PluginController {
         $tracker_id = $this->request->get('tracker_id');
         $pref_name  = Cardwall_DisplayPreferences::ASSIGNED_TO_USERNAME_PREFERENCE_NAME.$tracker_id;
         $user       = $this->getCurrentUser();
-        $preference = $user->getPreference($pref_name);
+        $current_preference = $user->getPreference($pref_name);
 
-        if(! $preference) {
+        if(! $current_preference) {
             $user->setPreference($pref_name, Cardwall_DisplayPreferences::DISPLAY_AVATARS);
         } else {
-            $this->switchPreference($user, $preference, $pref_name);
+            $this->switchPreference($user, $current_preference, $pref_name);
         }
 
         $this->redirect(array(
-            'group_id'    => $this->group_id,
+            'group_id'    => $this->request->getValidated('group_id', 'int'),
             'planning_id' => $this->request->get('planning_id'),
             'action'      => 'show',
             'aid'         => $this->request->get('aid'),
@@ -49,9 +47,9 @@ class Cardwall_DisplayPreferencesController extends MVC2_PluginController {
         ));
     }
 
-    private function switchPreference($user, $preference, $pref_name) {
+    private function switchPreference($user, $current_preference, $pref_name) {
         $pref_value = Cardwall_DisplayPreferences::DISPLAY_AVATARS;
-        if($preference == $pref_value) {
+        if ($current_preference == $pref_value) {
             $pref_value = Cardwall_DisplayPreferences::DISPLAY_USERNAMES;
         }
 
