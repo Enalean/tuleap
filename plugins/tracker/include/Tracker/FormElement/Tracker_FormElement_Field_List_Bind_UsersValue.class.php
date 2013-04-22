@@ -85,7 +85,19 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         if ($display_preferences->shouldDisplayAvatars()) {
             return $user->fetchHtmlAvatar(16);
         }
-        return $user->fetchHTMLRealName();
+        return $this->fetchHTMLRealName($user);
+    }
+
+    private function fetchHTMLRealName(PFUser $user) {
+        $realname = $this->purifier->purify($user->getRealName());
+        $user_id  = $this->getId();
+        $html = '<div class="realname"
+                       title="'. $realname . '"
+                       data-user-id = "' . $user_id . '"
+                   >';
+        $html .= $realname;
+        $html .= '</div>';
+        return $html;
     }
     
     public function fetchFormattedForCSV() {
