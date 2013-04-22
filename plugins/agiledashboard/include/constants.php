@@ -59,4 +59,15 @@ define('AGILEDASHBOARD_EVENT_INDEX_PAGE', 'agiledashboard_event_index_page');
  * 'redirect_parameters' => Input/Output parameter, array of 'key' => 'value'
  */
 define('AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT', 'agiledashboard_event_milestone_selector_redirect');
+
+/**
+ * Toggle and redirect when user toggle avatars or usernames on the cardwall of the agiledashboard
+ *
+ * Parameters:
+ * 'request' => Codendi_Request
+ *
+ * Expected results
+ * 'redirect parameters' => Input/Output parameter, return to the current agiledashboard cardwall pane
+ */
+define('AGILEDASHBOARD_EVENT_CARDWALL_TOGGLE_AVATAR_DISPLAY', 'agiledashboard_event_cardwall_toggle_avatar_display');
 ?>

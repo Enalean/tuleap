@@ -61,6 +61,7 @@ class cardwallPlugin extends Plugin {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
                 $this->addHook(AGILEDASHBOARD_EVENT_INDEX_PAGE);
                 $this->addHook(AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT);
+                $this->addHook(AGILEDASHBOARD_EVENT_CARDWALL_TOGGLE_AVATAR_DISPLAY);
             }
         }
         return parent::getHooksAndCallbacks();
@@ -289,6 +290,14 @@ class cardwallPlugin extends Plugin {
             if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
                 $params['redirect_parameters']['pane'] = 'cardwall';
             }
+        }
+    }
+
+    public function agiledashboard_event_cardwall_toggle_avatar_display($params) {
+        $request = $params['request'];
+        if ($request) {
+            $display_preferences_controller = new Cardwall_DisplayPreferencesController('agiledashboard', $request);
+            $display_preferences_controller->toggleUserDisplay();
         }
     }
 

@@ -109,8 +109,9 @@ class AgileDashboardRouter {
                 $this->executeAction($controller, 'generateSystrayData', $request->params);
                 break;
             case 'toggle_user_display':
-                $display_preferences_controller = new Cardwall_DisplayPreferencesController('agiledashboard', $request);
-                $this->executeAction($display_preferences_controller, 'toggleUserDisplay');
+                EventManager::instance()->processEvent(AGILEDASHBOARD_EVENT_CARDWALL_TOGGLE_AVATAR_DISPLAY, array(
+                    'request' => $request
+                ));
                 break;
             case 'index':
             default:
