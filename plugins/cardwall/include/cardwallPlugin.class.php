@@ -386,7 +386,7 @@ class cardwallPlugin extends Plugin {
      * @see Event::IMPORT_XML_PROJECT_TRACKER_DONE
      */
     public function import_xml_project_tracker_done($params) {
-        $cardwall_ontop_import = new CardwallConfigXmlImport($params['project']->getId(), $params['xml_content'], $params['mapping'], new Cardwall_OnTop_Dao, EventManager::instance());
+        $cardwall_ontop_import = new CardwallConfigXmlImport($params['project_id'], $params['xml_content'], $params['mapping'], new Cardwall_OnTop_Dao, EventManager::instance());
         $cardwall_ontop_import->import();
     }
 
