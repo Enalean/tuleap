@@ -59,20 +59,18 @@ class CardwallConfigXmlImport {
         foreach ($tracker_ids as $tracker_id) {
             $enabled = $this->cardwall_ontop_dao->enable($tracker_id);
             if (! $enabled) {
-                break;
+                throw new CardwallFromXmlImportCannotBeEnabledException($tracker_id);
             }
         }
 
-        if ($enabled) {
-            $this->event_manager->processEvent(
-                Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
-                array(
-                    'project_id'  => $this->group_id,
-                    'xml_content' => $this->xml_input,
-                    'mapping'     => $this->mapping
-                )
-            );
-        }
+        $this->event_manager->processEvent(
+            Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
+            array(
+                'project_id'  => $this->group_id,
+                'xml_content' => $this->xml_input,
+                'mapping'     => $this->mapping
+            )
+        );
     }
 }
 

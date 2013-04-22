@@ -86,7 +86,7 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
         $this->cardwall_config_xml_import->import();
     }
 
-    public function itDoesNotProcessANEventIfAtLeastOneCardwallCannotBeEnabled() {
+    public function itDoesNotProcessAnEventIfAtLeastOneCardwallCannotBeEnabledAndThrowsAnException() {
         $cardwall_ontop_dao         = stub('Cardwall_OnTop_Dao')->enable()->returns(false);
         $cardwall_config_xml_import = new CardwallConfigXmlImport($this->group_id, $this->xml_input, $this->mapping, $cardwall_ontop_dao, $this->event_manager);
 
@@ -98,7 +98,7 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
                 'mapping'     => $this->mapping
             )
         )->never();
-
+        $this->expectException();
         $cardwall_ontop_dao->expectCallCount('enable', 1);
 
         $cardwall_config_xml_import->import();
