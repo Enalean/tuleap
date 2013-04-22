@@ -46,7 +46,7 @@ class Planning_ItemPresenter implements Tracker_CardPresenter {
      * @param string        $accent_color  The accent color
      * @param string        $css_classes   The space-separated CSS classes to add to the main item HTML tag.
      */
-    public function __construct(Planning_Item $planning_item, Tracker_CardFields $card_fields, $accent_color, $css_classes = '', Planning_CardDisplayPreferences $display_preferences) {
+    public function __construct(Planning_Item $planning_item, Tracker_CardFields $card_fields, Planning_CardDisplayPreferences $display_preferences, $accent_color, $css_classes = '') {
         $this->planning_item       = $planning_item;
         $this->css_classes         = $css_classes;
         $this->details             = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
