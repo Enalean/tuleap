@@ -109,7 +109,7 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
          $xml_validator              = stub('XmlValidator')->nodeIsValid()->returns(false);
          $cardwall_config_xml_import = new CardwallConfigXmlImport($this->group_id, $this->xml_input, $this->mapping, $this->cardwall_ontop_dao, $this->event_manager, $xml_validator);
 
-         $this->expectException();
+         $this->expectException('CardwallFromXmlInputNotWellFormedException');
          $cardwall_config_xml_import->import();
     }
 }

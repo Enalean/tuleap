@@ -150,7 +150,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
         $xml_validator = stub('XmlValidator')->nodeIsValid()->returns(false);
         $tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->xml_input, $this->tracker_factory, $this->event_manager, $this->hierarchy_dao, $xml_validator);
 
-        $this->expectException();
+        $this->expectException('trackerFromXmlInputNotWellFormedException');
         $tracker_xml_importer->import();
     }
 

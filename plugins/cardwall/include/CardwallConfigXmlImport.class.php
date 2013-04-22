@@ -61,7 +61,7 @@ class CardwallConfigXmlImport {
     public function import() {
 
         if (! $this->xml_validator->nodeIsValid($this->xml_input->cardwall, realpath(dirname(__FILE__).'/../www/resources/xml_project_cardwall.rng'))) {
-            throw new Exception();
+            throw new CardwallFromXmlInputNotWellFormedException();
         }
 
         $tracker_ids = $this->getAllTrackersId();

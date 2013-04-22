@@ -84,7 +84,7 @@ class TrackerXmlImport {
         foreach ($this->getAllXmlTrackers() as $xml_tracker_id => $xml_tracker) {
 
             if (! $this->xml_validator->nodeIsValid($xml_tracker, realpath(dirname(__FILE__).'/../www/resources/tracker.rng'))) {
-                throw new Exception();
+                throw new trackerFromXmlInputNotWellFormedException();
             }
 
             $created_tracker = $this->instanciateTrackerFromXml($xml_tracker_id, $xml_tracker);
