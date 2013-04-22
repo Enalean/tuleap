@@ -19,6 +19,7 @@
  */
 
 require_once 'bootstrap.php';
+require_once 'common/XmlValidator/XmlValidator.class.php';
 
 class TrackerXmlImportTest extends TuleapTestCase {
 
@@ -99,7 +100,9 @@ class TrackerXmlImportTest extends TuleapTestCase {
 
         $this->hierarchy_dao = stub('Tracker_Hierarchy_Dao')->updateChildren()->returns(true);
 
-        $this->tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->xml_input, $this->tracker_factory, $this->event_manager, $this->hierarchy_dao);
+        $this->xml_validator = stub('XmlValidator')->nodeIsValid()->returns(true);
+
+        $this->tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->xml_input, $this->tracker_factory, $this->event_manager, $this->hierarchy_dao, $this->xml_validator);
     
         $GLOBALS['Response'] = new MockResponse();
 
@@ -136,11 +139,19 @@ class TrackerXmlImportTest extends TuleapTestCase {
     public function itRaisesAnExceptionIfATrackerCannotBeCreatedAndDoesNotContinue() {
         $tracker_factory = mock('TrackerFactory');
         stub($tracker_factory)->createFromXml()->returns(null);
-        $this->tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->xml_input, $tracker_factory, $this->event_manager, $this->hierarchy_dao);
+        $this->tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->xml_input, $tracker_factory, $this->event_manager, $this->hierarchy_dao, $this->xml_validator);
 
         $this->expectException();
         $tracker_factory->expectCallCount('createFromXML', 1);
         $this->tracker_xml_importer->import();
+    }
+
+    public function itRaisesAnExceptionTheXmlDoesNotMatchTheRNG() {
+        $xml_validator = stub('XmlValidator')->nodeIsValid()->returns(false);
+        $tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->xml_input, $this->tracker_factory, $this->event_manager, $this->hierarchy_dao, $xml_validator);
+
+        $this->expectException();
+        $tracker_xml_importer->import();
     }
 
     public function itThrowsAnEventIfAllTrackersAreCreated() {

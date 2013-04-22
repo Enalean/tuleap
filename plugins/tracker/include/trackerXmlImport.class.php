@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/XmlValidator/XmlValidator.class.php';
+
 class TrackerXmlImport {
 
     /** @var int */
@@ -35,14 +37,19 @@ class TrackerXmlImport {
     /** @var Tracker_Hierarchy_Dao */
     private $hierarchy_dao;
 
+    /**  @var XmlValidator */
+    private $xml_validator;
+
+
     const XML_PARENT_ID_EMPTY = "0";
 
-    public function __construct($group_id, SimpleXMLElement $xml_output, TrackerFactory $tracker_factory, EventManager $event_manager, Tracker_Hierarchy_Dao $hierarchy_dao) {
+    public function __construct($group_id, SimpleXMLElement $xml_output, TrackerFactory $tracker_factory, EventManager $event_manager, Tracker_Hierarchy_Dao $hierarchy_dao, XmlValidator $xml_validator) {
         $this->group_id        = $group_id;
         $this->xml_content     = $xml_output;
         $this->tracker_factory = $tracker_factory;
         $this->event_manager   = $event_manager;
         $this->hierarchy_dao   = $hierarchy_dao;
+        $this->xml_validator   = $xml_validator;
     }
 
     /**
@@ -75,6 +82,11 @@ class TrackerXmlImport {
         $created_trackers_list = array();
 
         foreach ($this->getAllXmlTrackers() as $xml_tracker_id => $xml_tracker) {
+
+            if (! $this->xml_validator->nodeIsValid($xml_tracker, realpath(dirname(__FILE__).'/../www/resources/tracker.rng'))) {
+                throw new Exception();
+            }
+
             $created_tracker = $this->instanciateTrackerFromXml($xml_tracker_id, $xml_tracker);
             $created_trackers_list = array_merge($created_trackers_list, $created_tracker);
         }
