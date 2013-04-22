@@ -42,23 +42,39 @@ class ProjectXMLImporter {
      * @return SimpleXMLElement
      */
     public function import($project_id, $user_name, SimpleXMLElement $xml_content) {
+        $project = $this->getProject($project_id);
+        $user    = $this->getUser($user_name);
+        $this->event_manager->processEvent(
+            Event::IMPORT_XML_PROJECT,
+            array(
+                'project'     => $project,
+                'xml_content' => $xml_content
+            )
+        );
+    }
+
+    /**
+     * @throws RuntimeException
+     * @return Project
+     */
+    private function getProject($project_id) {
         $project = $this->project_manager->getProject($project_id);
-        if ($project && ! $project->isError() && ! $project->isDeleted()) {
-        $user = $this->user_manager->forceLogin($user_name);
-        if ($user->isSuperUser() && $user->isActive()) {
-            $this->event_manager->processEvent(
-                Event::IMPORT_XML_PROJECT,
-                array(
-                    'project'     => $project,
-                    'xml_content' => $xml_content
-                )
-            );
-        } else {
-            throw new RuntimeException('Invalid username '.$user_name.'. User must be site admin and active');
-        }
-        } else {
+        if (! $project || ($project && ($project->isError() || $project->isDeleted()))) {
             throw new RuntimeException('Invalid project_id '.$project_id);
         }
+        return $project;
+    }
+
+    /**
+     * @throws RuntimeException
+     * @return PFUser
+     */
+    private function getUser($user_name) {
+        $user = $this->user_manager->forceLogin($user_name);
+        if (! $user->isSuperUser() || ! $user->isActive()) {
+            throw new RuntimeException('Invalid username '.$user_name.'. User must be site admin and active');
+        }
+        return $user;
     }
 }
 ?>
