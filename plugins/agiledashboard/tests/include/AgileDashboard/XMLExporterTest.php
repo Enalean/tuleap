@@ -84,14 +84,15 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
 
         $this->assertEqual(1, count($this->xml_tree->children()));
 
-        $plannings = AgileDashboard_XMLExporter::NODE_PLANNINGS;
+        $agiledashborad = AgileDashboard_XMLExporter::NODE_AGILEDASHBOARD;
+        $plannings      = AgileDashboard_XMLExporter::NODE_PLANNINGS;
 
-        foreach ($this->xml_tree->children() as $plannings_node) {
+        foreach ($this->xml_tree->$agiledashborad->children() as $plannings_node) {
             $this->assertEqual(2, count($plannings_node->children()));
             $this->assertEqual($plannings_node->getName(), $plannings);
         }
 
-        foreach ($this->xml_tree->$plannings->children() as $planning) {
+        foreach ($this->xml_tree->$agiledashborad->$plannings->children() as $planning) {
             $this->assertEqual($planning->getName(), AgileDashboard_XMLExporter::NODE_PLANNING);
             $this->assertEqual(0, count($planning->children()));
         }
@@ -101,9 +102,10 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
         $exporter = new AgileDashboard_XMLExporter();
         $exporter->export($this->xml_tree, $this->plannings);
 
-        $plannings = AgileDashboard_XMLExporter::NODE_PLANNINGS;
+        $agiledashborad = AgileDashboard_XMLExporter::NODE_AGILEDASHBOARD;
+        $plannings      = AgileDashboard_XMLExporter::NODE_PLANNINGS;
 
-        foreach ($this->xml_tree->$plannings->children() as $planning) {
+        foreach ($this->xml_tree->$agiledashborad->$plannings->children() as $planning) {
             $attributes = $planning->attributes();
 
             $this->assertEqual( (string) $attributes[PlanningParameters::NAME], 'abcd');
@@ -226,6 +228,13 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
 
         $exporter = new AgileDashboard_XMLExporter();
         $exporter->export($this->xml_tree, $plannings);
+    }
+
+    public function itThrowsAnExceptionIfXmlGeneratedIsNotValid() {
+        $this->expectException();
+
+        $exporter = partial_mock('AgileDashboard_XMLExporter', array('nodeIsValid'));
+        $exporter->export($this->xml_tree, $this->plannings);
     }
 }
 ?>

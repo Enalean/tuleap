@@ -21,8 +21,9 @@
 
 class AgileDashboard_XMLExporter {
 
-    const NODE_PLANNINGS = 'plannings';
-    const NODE_PLANNING  = 'planning';
+    const NODE_AGILEDASHBOARD = 'agiledashboard';
+    const NODE_PLANNINGS      = 'plannings';
+    const NODE_PLANNING       = 'planning';
 
     /**
      * @todo move me to tracker class
@@ -37,7 +38,8 @@ class AgileDashboard_XMLExporter {
      * @throws AgileDashboard_XMLExporterUnableToGetValueException
      */
     public function export(SimpleXMLElement $xml_element, array $plannings) {
-        $plannings_node = $xml_element->addChild(self::NODE_PLANNINGS);
+        $agiledashboard_node = $xml_element->addChild(self::NODE_AGILEDASHBOARD);
+        $plannings_node      = $agiledashboard_node->addChild(self::NODE_PLANNINGS);
 
         foreach ($plannings as $planning) {
             /* @var $planning Planning */
@@ -62,6 +64,10 @@ class AgileDashboard_XMLExporter {
             $planning_node->addAttribute(PlanningParameters::BACKLOG_TITLE, $planning_backlog_title);
             $planning_node->addAttribute(PlanningParameters::BACKLOG_TRACKER_ID, $planning_backlog_tracker_id);
         }
+
+        if (! $this->nodeIsValid($agiledashboard_node)) {
+            throw new AgileDashboard_XMLExporterNodeNotValidException();
+        }
     }
 
     /**
@@ -83,6 +89,31 @@ class AgileDashboard_XMLExporter {
         if ($id == self::TRACKER_ID_PREFIX) {
             throw new AgileDashboard_XMLExporterUnableToGetValueException('Unable to get value for attribute: ' . $value_denomination);
         }
+    }
+
+     /**
+     *
+     * @param SimpleXMLElement $cardwall_node
+     * @return boolean
+     */
+    public function nodeIsValid(SimpleXMLElement $cardwall_node) {
+        $dom = $this->simpleXmlElementToDomDocument($cardwall_node);
+        $rng = realpath(dirname(__FILE__).'/../../www/resources/xml_project_agiledashboard.rng');
+        return $dom->relaxNGValidate($rng);
+    }
+
+    /**
+     * Create a dom document based on a SimpleXMLElement
+     *
+     * @param SimpleXMLElement $xml_element
+     *
+     * @return \DOMDocument
+     */
+    private function simpleXmlElementToDomDocument(SimpleXMLElement $xml_element) {
+        $dom = new DOMDocument("1.0", "UTF-8");
+        $dom_element = $dom->importNode(dom_import_simplexml($xml_element), true);
+        $dom->appendChild($dom_element);
+        return $dom;
     }
 }
 ?>

@@ -60,7 +60,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
     }
 
     public function index() {
-        $agile_dashboard_node = $this->request->get('into_xml')->addChild('agiledashboard');
+        $root_node = $this->request->get('into_xml');
 
         $plannings = $this->planning_factory->getPlanningsWithBacklogTracker(
             $this->getCurrentUser(),
@@ -69,7 +69,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         );
 
         $xml_exporter = new AgileDashboard_XMLExporter();
-        $xml_exporter->export($agile_dashboard_node, $plannings);
+        $xml_exporter->export($root_node, $plannings);
     }
 
     public function createMultiplefromXml() {
