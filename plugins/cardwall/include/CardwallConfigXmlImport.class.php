@@ -57,17 +57,22 @@ class CardwallConfigXmlImport {
     public function import() {
         $tracker_ids = $this->getAllTrackersId();
         foreach ($tracker_ids as $tracker_id) {
-            $this->cardwall_ontop_dao->enable($tracker_id);
+            $enabled = $this->cardwall_ontop_dao->enable($tracker_id);
+            if (! $enabled) {
+                break;
+            }
         }
 
-        $this->event_manager->processEvent(
-            Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
-            array(
-                'project_id'  => $this->group_id,
-                'xml_content' => $this->xml_input,
-                'mapping'     => $this->mapping
-            )
-        );
+        if ($enabled) {
+            $this->event_manager->processEvent(
+                Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
+                array(
+                    'project_id'  => $this->group_id,
+                    'xml_content' => $this->xml_input,
+                    'mapping'     => $this->mapping
+                )
+            );
+        }
     }
 }
 

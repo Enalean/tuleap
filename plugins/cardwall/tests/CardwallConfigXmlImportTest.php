@@ -72,7 +72,7 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
         $this->cardwall_config_xml_import->import();
     }
 
-    public function itProcessANewEventIfAllCardwallAreEnabled() {
+    public function itProcessesANewEventIfAllCardwallAreEnabled() {
         expect($this->event_manager)->processEvent(
             Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
             array(
@@ -84,6 +84,24 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
         $this->cardwall_ontop_dao->expectCallCount('enable', 2);
 
         $this->cardwall_config_xml_import->import();
+    }
+
+    public function itDoesNotProcessANEventIfAtLeastOneCardwallCannotBeEnabled() {
+        $cardwall_ontop_dao         = stub('Cardwall_OnTop_Dao')->enable()->returns(false);
+        $cardwall_config_xml_import = new CardwallConfigXmlImport($this->group_id, $this->xml_input, $this->mapping, $cardwall_ontop_dao, $this->event_manager);
+
+        expect($this->event_manager)->processEvent(
+            Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
+            array(
+                'project_id'  => $this->group_id,
+                'xml_content' => $this->xml_input,
+                'mapping'     => $this->mapping
+            )
+        )->never();
+
+        $cardwall_ontop_dao->expectCallCount('enable', 1);
+
+        $cardwall_config_xml_import->import();
     }
 }
 
