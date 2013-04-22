@@ -348,6 +348,13 @@ class Tracker implements Tracker_Dispatchable_Interface {
                                 $GLOBALS['sys_email_admin']),
                                 CODENDI_PURIFIER_FULL
                         );
+                        $reference_manager =  ReferenceManager::instance();
+                        $ref =  $reference_manager->loadReferenceFromKeywordAndNumArgs(strtolower($this->getItemName()), $this->getGroupId(), 1);
+                        if ($ref) {
+                            if ($reference_manager->deleteReference($ref)) {
+                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_reference', 't_r_deleted'));
+                            }
+                        }
                     } else {
                         $GLOBALS['Response']->addFeedback(
                                 'error',
