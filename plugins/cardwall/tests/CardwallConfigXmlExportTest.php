@@ -85,5 +85,13 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
         $this->xml_exporter->export($this->root);
     }
 
+    public function itThrowsAnExceptionIfXmlGeneratedIsNotValid() {
+        $xml_exporter = partial_mock('CardwallConfigXmlExport', array('nodeIsValid'), array($this->project, $this->tracker_factory, $this->config_factory));
+        stub($xml_exporter)->nodeIsValid()->returns(false);
+
+        $this->expectException();
+        $xml_exporter->export(new SimpleXMLElement('<empty/>'));
+    }
+
 }
 ?>

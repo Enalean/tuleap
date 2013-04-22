@@ -53,6 +53,10 @@ class CardwallConfigXmlExport {
         foreach ($trackers as $tracker) {
             $this->addTrackerChild($tracker, $trackers_node);
         }
+
+        if (! $this->nodeIsValid($cardwall_node)) {
+            throw new CardwallConfigXmlExportNodeNotValidException();
+        }
     }
 
     private function addTrackerChild(Tracker $tracker, SimpleXMLElement $trackers_node) {
@@ -61,6 +65,31 @@ class CardwallConfigXmlExport {
             $tracker_node = $trackers_node->addChild(self::NODE_TRACKER);
             $tracker_node->addAttribute(self::ATTRIBUTE_TRACKER_ID, 'T'.$tracker->getId());
         }
+    }
+
+    /**
+     *
+     * @param SimpleXMLElement $cardwall_node
+     * @return boolean
+     */
+    public function nodeIsValid(SimpleXMLElement $cardwall_node) {
+        $dom = $this->simpleXmlElementToDomDocument($cardwall_node);
+        $rng = realpath(dirname(__FILE__).'/../www/resources/xml_project_cardwall.rng');
+        return $dom->relaxNGValidate($rng);
+    }
+
+    /**
+     * Create a dom document based on a SimpleXMLElement
+     *
+     * @param SimpleXMLElement $xml_element
+     *
+     * @return \DOMDocument
+     */
+    private function simpleXmlElementToDomDocument(SimpleXMLElement $xml_element) {
+        $dom = new DOMDocument("1.0", "UTF-8");
+        $dom_element = $dom->importNode(dom_import_simplexml($xml_element), true);
+        $dom->appendChild($dom_element);
+        return $dom;
     }
 }
 ?>
