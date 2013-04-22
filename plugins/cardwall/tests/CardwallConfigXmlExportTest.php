@@ -19,6 +19,7 @@
  */
 
 require_once dirname(__FILE__) .'/bootstrap.php';
+require_once 'common/XmlValidator/XmlValidator.class.php';
 
 class CardwallConfigXmlExportTest extends TuleapTestCase {
 
@@ -86,12 +87,8 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
     }
 
     public function itThrowsAnExceptionIfXmlGeneratedIsNotValid() {
-        $xml_exporter = partial_mock('CardwallConfigXmlExport', array('nodeIsValid'), array($this->project, $this->tracker_factory, $this->config_factory));
-        stub($xml_exporter)->nodeIsValid()->returns(false);
-
         $this->expectException();
-        $xml_exporter->export(new SimpleXMLElement('<empty/>'));
+        $this->xml_exporter->validateExportedXml(new SimpleXMLElement('<empty/>'));
     }
-
 }
 ?>

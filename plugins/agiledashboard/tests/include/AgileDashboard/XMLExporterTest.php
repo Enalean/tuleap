@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once dirname(__FILE__).'/../../bootstrap.php';
+require_once 'common/XmlValidator/XmlValidator.class.php';
 
 class AgileDashboard_XMLExporterTest extends TuleapTestCase {
 
@@ -231,10 +232,9 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
     }
 
     public function itThrowsAnExceptionIfXmlGeneratedIsNotValid() {
+        $exporter = new AgileDashboard_XMLExporter();
         $this->expectException();
-
-        $exporter = partial_mock('AgileDashboard_XMLExporter', array('nodeIsValid'));
-        $exporter->export($this->xml_tree, $this->plannings);
+        $exporter->validateExportedXml(new SimpleXMLElement('<empty/>'));
     }
 }
 ?>

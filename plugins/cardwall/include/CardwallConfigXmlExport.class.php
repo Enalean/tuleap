@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/XmlValidator/XmlValidator.class.php';
+
 class CardwallConfigXmlExport {
 
     /** @var Project */
@@ -54,7 +56,17 @@ class CardwallConfigXmlExport {
             $this->addTrackerChild($tracker, $trackers_node);
         }
 
-        if (! $this->nodeIsValid($cardwall_node)) {
+        $this->validateExportedXml($cardwall_node);
+    }
+
+    /**
+     *
+     * @param SimpleXMLElement $cardwall_node
+     * @throws CardwallConfigXmlExportNodeNotValidException if XML does not match RNG
+     */
+    public function validateExportedXml(SimpleXMLElement $cardwall_node) {
+        $xml_validator = new XmlValidator($cardwall_node, realpath(dirname(__FILE__).'/../www/resources/xml_project_cardwall.rng'));
+        if (! $xml_validator->nodeIsValid()) {
             throw new CardwallConfigXmlExportNodeNotValidException();
         }
     }
@@ -65,31 +77,6 @@ class CardwallConfigXmlExport {
             $tracker_node = $trackers_node->addChild(self::NODE_TRACKER);
             $tracker_node->addAttribute(self::ATTRIBUTE_TRACKER_ID, 'T'.$tracker->getId());
         }
-    }
-
-    /**
-     *
-     * @param SimpleXMLElement $cardwall_node
-     * @return boolean
-     */
-    public function nodeIsValid(SimpleXMLElement $cardwall_node) {
-        $dom = $this->simpleXmlElementToDomDocument($cardwall_node);
-        $rng = realpath(dirname(__FILE__).'/../www/resources/xml_project_cardwall.rng');
-        return $dom->relaxNGValidate($rng);
-    }
-
-    /**
-     * Create a dom document based on a SimpleXMLElement
-     *
-     * @param SimpleXMLElement $xml_element
-     *
-     * @return \DOMDocument
-     */
-    private function simpleXmlElementToDomDocument(SimpleXMLElement $xml_element) {
-        $dom = new DOMDocument("1.0", "UTF-8");
-        $dom_element = $dom->importNode(dom_import_simplexml($xml_element), true);
-        $dom->appendChild($dom_element);
-        return $dom;
     }
 }
 ?>

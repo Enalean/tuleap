@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+require_once 'common/XmlValidator/XmlValidator.class.php';
+
 class AgileDashboard_XMLExporter {
 
     const NODE_AGILEDASHBOARD = 'agiledashboard';
@@ -65,9 +67,7 @@ class AgileDashboard_XMLExporter {
             $planning_node->addAttribute(PlanningParameters::BACKLOG_TRACKER_ID, $planning_backlog_tracker_id);
         }
 
-        if (! $this->nodeIsValid($agiledashboard_node)) {
-            throw new AgileDashboard_XMLExporterNodeNotValidException();
-        }
+        $this->validateExportedXml($agiledashboard_node);
     }
 
     /**
@@ -91,29 +91,16 @@ class AgileDashboard_XMLExporter {
         }
     }
 
-     /**
-     *
-     * @param SimpleXMLElement $cardwall_node
-     * @return boolean
-     */
-    public function nodeIsValid(SimpleXMLElement $cardwall_node) {
-        $dom = $this->simpleXmlElementToDomDocument($cardwall_node);
-        $rng = realpath(dirname(__FILE__).'/../../www/resources/xml_project_agiledashboard.rng');
-        return $dom->relaxNGValidate($rng);
-    }
-
     /**
-     * Create a dom document based on a SimpleXMLElement
      *
-     * @param SimpleXMLElement $xml_element
-     *
-     * @return \DOMDocument
+     * @param SimpleXMLElement $agiledashboard_node
+     * @throws CardwallConfigXmlExportNodeNotValidException if XML does not match RNG
      */
-    private function simpleXmlElementToDomDocument(SimpleXMLElement $xml_element) {
-        $dom = new DOMDocument("1.0", "UTF-8");
-        $dom_element = $dom->importNode(dom_import_simplexml($xml_element), true);
-        $dom->appendChild($dom_element);
-        return $dom;
+    public function validateExportedXml(SimpleXMLElement $agiledashboard_node) {
+        $xml_validator = new XmlValidator($agiledashboard_node, realpath(dirname(__FILE__).'/../../www/resources/xml_project_agiledashboard.rng'));
+        if (! $xml_validator->nodeIsValid()) {
+            throw new CardwallConfigXmlExportNodeNotValidException();
+        }
     }
 }
 ?>
