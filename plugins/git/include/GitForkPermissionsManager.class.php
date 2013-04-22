@@ -131,7 +131,7 @@ class GitForkPermissionsManager {
         if (empty($projectId)) {
             $projectId = $this->repository->getProjectId();
         }
-        $html  = '<table>';
+        $html .= '<table>';
         $html .= '<thead><tr>';
         $html .= '<td>'. $GLOBALS['Language']->getText('plugin_git', 'perm_R') .'</td>';
         $html .= '<td>'. $GLOBALS['Language']->getText('plugin_git', 'perm_W') .'</td>';
@@ -140,15 +140,15 @@ class GitForkPermissionsManager {
         $html .= '<tbody><tr>';
         // R
         $html .= '<td>';
-        $html .= permission_fetch_selection_field('PLUGIN_GIT_READ', $this->repository->getId(), $projectId, 'repo_access[read]', $disabled);
+        $html .= permission_fetch_selection_field(Git::PERM_READ, $this->repository->getId(), $projectId, 'repo_access['.Git::PERM_READ.']');
         $html .= '</td>';
         // W
         $html .= '<td>';
-        $html .= permission_fetch_selection_field('PLUGIN_GIT_WRITE', $this->repository->getId(), $projectId, 'repo_access[write]', $disabled);
+        $html .= permission_fetch_selection_field(Git::PERM_WRITE, $this->repository->getId(), $projectId, 'repo_access['.Git::PERM_WRITE.']', $disabled);
         $html .= '</td>';
         // W+
         $html .= '<td>';
-        $html .= permission_fetch_selection_field('PLUGIN_GIT_WPLUS', $this->repository->getId(), $projectId, 'repo_access[wplus]', $disabled);
+        $html .= permission_fetch_selection_field(Git::PERM_WPLUS, $this->repository->getId(), $projectId, 'repo_access['.Git::PERM_WPLUS.']', $disabled);
         $html .= '</td>';
         $html .= '</tr></tbody>';
         $html .= '</table>';
