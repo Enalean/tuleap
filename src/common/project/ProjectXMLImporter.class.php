@@ -26,21 +26,30 @@ class ProjectXMLImporter {
     /** @var EventManager */
     private $event_manager;
 
-    public function __construct(EventManager $event_manager) {
+    /** @var UserManager */
+    private $user_manager;
+
+    public function __construct(EventManager $event_manager, UserManager $user_manager) {
         $this->event_manager = $event_manager;
+        $this->user_manager  = $user_manager;
     }
 
     /**
      * @return SimpleXMLElement
      */
-    public function import(Project $project, SimpleXMLElement $xml_content) {
-        $this->event_manager->processEvent(
-            Event::IMPORT_XML_PROJECT,
-            array(
-                'project'     => $project,
-                'xml_content' => $xml_content
-            )
-        );
+    public function import(Project $project, $user_name, SimpleXMLElement $xml_content) {
+        $user = $this->user_manager->forceLogin($user_name);
+        if ($user->isSuperUser() && $user->isActive()) {
+            $this->event_manager->processEvent(
+                Event::IMPORT_XML_PROJECT,
+                array(
+                    'project'     => $project,
+                    'xml_content' => $xml_content
+                )
+            );
+        } else {
+            throw new RuntimeException('Invalid username '.$user_name.'. User must be site admin and active');
+        }
     }
 }
 ?>
