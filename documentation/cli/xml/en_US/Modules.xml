@@ -49,7 +49,7 @@
                     <example>
                         <title>login command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php login --username=john --password=johnpass --project=myproject
+[ounis@linux tuleap-cli]$ ./tuleap.php login --username=john --password=johnpass --project=myproject
 +---------+----------------------------------+
 | user_id |           session_hash           |
 +---------+----------------------------------+
@@ -57,7 +57,7 @@
 +---------+----------------------------------+
 Logged in.
 (OR)
-[ounis@linux codendi cli ]$ ./codendi.php login --username=marc --project=myproject
+[ounis@linux tuleap-cli]$ ./tuleap.php login --username=marc --project=myproject
 Password:
 +---------+----------------------------------+
 | user_id |           session_hash           |
@@ -78,7 +78,7 @@ Logged in.
                     <example>
                         <title>logout command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php logout
+[mnazaria@linux tuleap-cli]$ ./tuleap.php logout
 Session terminated.
                         </programlisting>
                     </example>
@@ -93,7 +93,7 @@ Session terminated.
                     <example>
                         <title>myprojects command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php myprojects
+[ounis@linux tuleap-cli]$ ./tuleap.php myprojects
 +----------+------------+-----------------+-------------+
 | group_id | group_name | unix_group_name | description |
 +----------+------------+-----------------+-------------+
@@ -135,7 +135,7 @@ Session terminated.
                     <example>
                         <title>trackerlist command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker trackerlist --project=project1
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker trackerlist --project=project1
 +-------------------+----------+------------------+----------------------------------------------------...
 | group_artifact_id | group_id |       name       |                         description                ...
 +-------------------+----------+------------------+----------------------------------------------------...
@@ -212,7 +212,7 @@ Session terminated.
                     <example>
                         <title>trackers command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker trackers --project=project1
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker trackers --project=project1
 +-------------------+----------+------------------+----------------------------------------------------...
 | group_artifact_id | group_id |       name       |                         description                ...
 +-------------------+----------+------------------+----------------------------------------------------...
@@ -264,7 +264,7 @@ No results
                     <example>
                         <title>tracker command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker tracker --project=project1 --tracker_id=116
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker tracker --project=project1 --tracker_id=116
 +-------------------+----------+------+--------------+-----------+------------+-------------+----------...
 | group_artifact_id | group_id | name | description  | item_name | open_count | total_count | total_fil...
 +-------------------+----------+------+--------------+-----------+------------+-------------+----------...
@@ -312,7 +312,7 @@ No results
                 <example>
                     <title>list command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker list --tracker_id=116
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker list --tracker_id=116
 +------------------------+-----------+
 | total_artifacts_number | artifacts |
 +------------------------+-----------+
@@ -374,7 +374,7 @@ No results
                 <example>
                     <title>reportlist command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker reportlist --tracker_id=116
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker reportlist --tracker_id=116
 +------------------------+-----------+
 | total_artifacts_number | artifacts |
 +------------------------+-----------+
@@ -420,7 +420,7 @@ No results
                 <example>
                     <title>reports command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker reports --tracker_id=116
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker reports --tracker_id=116
 +-----------+-------------------+---------+------------------------------------+-------+--------+
 | report_id | group_artifact_id |  name   |            description             | scope | fields |
 +-----------+-------------------+---------+------------------------------------+-------+--------+
@@ -492,7 +492,7 @@ No results
                 <example>
                     <title>add command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker add --tracker_id=116 --summary="Back button is not working" --details="When I read my email and I press the back button, a blank page appears" --severity=4 --assigned_to=103
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker add --tracker_id=116 --summary="Back button is not working" --details="When I read my email and I press the back button, a blank page appears" --severity=4 --assigned_to=103
 Confirm you want to add a new artifact with the following information:
 summary: Back button is not working
 details: When I read my email and I press the back button, a blank page appears
@@ -550,7 +550,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>update command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker update --tracker_id=116 --id=40 --severity=6
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker update --tracker_id=116 --id=40 --severity=6
 Confirm you want to add a new artifact with the following information:
 severity: 6
 group_id: 104
@@ -587,7 +587,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>comments command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker comments --tracker_id=116 --id=40
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker comments --tracker_id=116 --id=40
 +-------------+--------------+------------------+------------+---------------+-------+-------------+---...
 | artifact_id | follow_up_id |     comment      |    date    | original_date |  by   | original_by | co...
 +-------------+--------------+------------------+------------+---------------+-------+-------------+---...
@@ -629,7 +629,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>addComment command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker addComment --tracker_id=116 --id=40 --format=html --message="I agree with you"
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker addComment --tracker_id=116 --id=40 --format=html --message="I agree with you"
 
 +--------+
 | Result |
@@ -667,7 +667,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>updateComment command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker updateComment --tracker_id=116 --artifact_id=40 --comment_id=560  --comment="This comment will replace the former one"
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker updateComment --tracker_id=116 --artifact_id=40 --comment_id=560  --comment="This comment will replace the former one"
 +--------+
 | Result |
 +--------+
@@ -701,7 +701,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>deleteComment command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker deleteComment --tracker_id=116 --artifact_id=40 --comment_id=560
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker deleteComment --tracker_id=116 --artifact_id=40 --comment_id=560
 +--------+
 | Result |
 +--------+
@@ -732,7 +732,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>CCList command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker CCList --tracker_id=116 --id=40
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker CCList --tracker_id=116 --id=40
 +----------------+-------------+----------------------+----------+---------------+---------+------------+
 | artifact_cc_id | artifact_id |        email         | added_by | added_by_name | comment |    date    |
 +----------------+-------------+----------------------+----------+---------------+---------+------------+
@@ -771,7 +771,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>addCC command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker addCC --tracker_id=116 --id=40 --cc_list="nouha.terzi@st.com, ounis, salma.moakhar@st.com"
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker addCC --tracker_id=116 --id=40 --cc_list="nouha.terzi@st.com, ounis, salma.moakhar@st.com"
 +--------+
 | Result |
 +--------+
@@ -805,7 +805,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>deleteCC command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker deleteCC --tracker_id=116 --id=40 --cc_id=2
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker deleteCC --tracker_id=116 --id=40 --cc_id=2
 +--------+
 | Result |
 +--------+
@@ -836,7 +836,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>dependencies command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker dependencies --tracker_id=116 --id=40
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker dependencies --tracker_id=116 --id=40
 +--------------------+-------------+-----------------------------+-------------+------------+----------...
 | artifact_depend_id | artifact_id | is_dependent_on_artifact_id |   summary   | tracker_id | tracker_n...
 +--------------------+-------------+-----------------------------+-------------+------------+----------...
@@ -867,7 +867,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>inverseDependencies command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker inverseDependencies --tracker_id=116 --id=40
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker inverseDependencies --tracker_id=116 --id=40
 +--------------------+-------------+-----------------------------+-----------------+------------+------...
 | artifact_depend_id | artifact_id | is_dependent_on_artifact_id |     summary     | tracker_id | track...
 +--------------------+-------------+-----------------------------+-----------------+------------+------...
@@ -902,7 +902,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>addDependencies command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker addDependencies --tracker_id=116 --id=40 --dependencies="41"
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker addDependencies --tracker_id=116 --id=40 --dependencies="41"
 +--------+
 | Result |
 +--------+
@@ -936,7 +936,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>deleteDependency command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php deleteDependency tracker --tracker_id=116 --id=40 --dependency=41
+[ounis@linux tuleap-cli]$ ./tuleap.php deleteDependency tracker --tracker_id=116 --id=40 --dependency=41
 +--------+
 | Result |
 +--------+
@@ -967,7 +967,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>artifactHistory command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker artifactHistory --tracker_id=116 --id=40
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker artifactHistory --tracker_id=116 --id=40
 +------------+-----------------------------------------------+-----------------------------------------...
 | field_name |                   old_value                   |                   new_value             ...
 +------------+-----------------------------------------------+-----------------------------------------...
@@ -1004,7 +1004,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>attachedFiles command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker attachedFiles --tracker_id=116 --artifact_id=40
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker attachedFiles --tracker_id=116 --artifact_id=40
 +----+-------------+----------+-------------------+----------+----------+------------+------------+----...
 | id | artifact_id | filename |    description    | bin_data | filesize |  filetype  |  adddate   | sub...
 +----+-------------+----------+-------------------+----------+----------+------------+------------+----...
@@ -1042,7 +1042,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>attachedFile command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker attachedFile --tracker_id=116 --artifact_id=40 --file_id=2 --output=./file2
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker attachedFile --tracker_id=116 --artifact_id=40 --file_id=2 --output=./file2
 File retrieved successfully.
                     </programlisting>
                  </example>
@@ -1075,7 +1075,7 @@ File retrieved successfully.
                 <example>
                     <title>addAttachedFile command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker addAttachedFile --tracker_id=116 --artifact_id=40 --file=file2 --description="file2 description"
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker addAttachedFile --tracker_id=116 --artifact_id=40 --file=file2 --description="file2 description"
 +--------+
 | Result |
 +--------+
@@ -1110,7 +1110,7 @@ File retrieved successfully.
                 <example>
                     <title>deleteAttachedFile command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker deleteAttachedFile --tracker_id=116 --artifact_id=40 --file_id=2
+[ounis@linux tuleap-cli]$ ./tuleap.php tracker deleteAttachedFile --tracker_id=116 --artifact_id=40 --file_id=2
 +--------+
 | Result |
 +--------+
@@ -1159,7 +1159,7 @@ File retrieved successfully.
                     <example>
                         <title>getPackages command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php frs getPackages --project=project1
+[ounis@linux tuleap-cli]$ ./tuleap.php frs getPackages --project=project1
 +------------+----------+----------------+-----------+------+-----------------+
 | package_id | group_id |      name      | status_id | rank | approve_license |
 +------------+----------+----------------+-----------+------+-----------------+
@@ -1201,7 +1201,7 @@ File retrieved successfully.
                     <example>
                         <title>addPackage command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php frs addPackage --project=project1 --name="my_new_package" --status_id=1
+[ounis@linux tuleap-cli]$ ./tuleap.php frs addPackage --project=project1 --name="my_new_package" --status_id=1
 +--------+
 | Result |
 +--------+
@@ -1231,7 +1231,7 @@ File retrieved successfully.
                     <example>
                         <title>getReleases command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php frs getReleases --package_id=197
+[ounis@linux tuleap-cli]$ ./tuleap.php frs getReleases --package_id=197
 +------------+------------+---------------+--------------------------------+---------------------------...
 | release_id | package_id |     name      |             notes              |             changes       ...
 +------------+------------+---------------+--------------------------------+---------------------------...
@@ -1281,7 +1281,7 @@ File retrieved successfully.
                     <example>
                         <title>addRelease command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php frs addRelease --package_id=197 --name="new version" --notes="somes notes about this release" --changes="the changes of this new release" --status_id=1
+[ounis@linux tuleap-cli]$ ./tuleap.php frs addRelease --package_id=197 --name="new version" --notes="somes notes about this release" --changes="the changes of this new release" --status_id=1
 +--------+
 | Result |
 +--------+
@@ -1315,7 +1315,7 @@ File retrieved successfully.
                     <example>
                         <title>getFiles command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php frs getFiles --package_id=197 --release_id=143
+[ounis@linux tuleap-cli]$ ./tuleap.php frs getFiles --package_id=197 --release_id=143
 +---------+------------+-----------------+-----------+---------+--------------+--------------+---------...
 | file_id | release_id |    file_name    | file_size | type_id | processor_id | release_time | post_dat...
 +---------+------------+-----------------+-----------+---------+--------------+--------------+---------...
@@ -1372,7 +1372,7 @@ File retrieved successfully.
                     <example>
                         <title>addFile command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php frs addFile --package_id=197 --release_id=143 --local_file=file1
+[ounis@linux tuleap-cli]$ ./tuleap.php frs addFile --package_id=197 --release_id=143 --local_file=file1
 +--------+
 | Result |
 +--------+
@@ -1381,7 +1381,7 @@ File retrieved successfully.
 
 (for a local file or )
 
-[ounis@linux codendi cli ]$ ./codendi.php frs addFile --package_id=197 --release_id=143 --uploaded_file=file2
+[ounis@linux tuleap-cli]$ ./tuleap.php frs addFile --package_id=197 --release_id=143 --uploaded_file=file2
 +--------+
 | Result |
 +--------+
@@ -1430,7 +1430,7 @@ File retrieved successfully.
                     <example>
                         <title>getFile command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php frs getFile --package_id=197 --release_id=143 --file_id=419 --output=./downloaded_file
+[ounis@linux tuleap-cli]$ ./tuleap.php frs getFile --package_id=197 --release_id=143 --file_id=419 --output=./downloaded_file
 File retrieved successfully.
                         </programlisting>
                     </example>
@@ -1452,7 +1452,7 @@ File retrieved successfully.
                     <example>
                         <title>getUploadedFiles command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php frs getUploadedFiles
+[ounis@linux tuleap-cli]$ ./tuleap.php frs getUploadedFiles
 +--------+
 | Result |
 +--------+
@@ -1490,7 +1490,7 @@ File retrieved successfully.
                     <example>
                         <title>deleteFile command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php frs deleteFile --package_id=197 --release_id=143 --file_id=420
+[ounis@linux tuleap-cli]$ ./tuleap.php frs deleteFile --package_id=197 --release_id=143 --file_id=420
 +--------+
 | Result |
 +--------+
@@ -1528,7 +1528,7 @@ File retrieved successfully.
                     <example>
                         <title>getFileInfo command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php frs getFileInfo --package_id=197 --release_id=143 --file_id=419
+[ounis@linux tuleap-cli]$ ./tuleap.php frs getFileInfo --package_id=197 --release_id=143 --file_id=419
 +---------+------------+-----------------+-----------+---------+--------------+--------------+---------...
 | file_id | release_id |    file_name    | file_size | type_id | processor_id | release_time | post_dat...
 +---------+------------+-----------------+-----------+---------+--------------+--------------+---------...
@@ -1557,7 +1557,7 @@ File retrieved successfully.
                     <example>
                         <title>deleteEmptyPackage command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php frs deleteEmptyPackage --package_id=2953
+[ounis@linux tuleap-cli]$ ./tuleap.php frs deleteEmptyPackage --package_id=2953
 +------------+----------+------+-----------+------+-----------------+
 | package_id | group_id | name | status_id | rank | approve_license |
 +------------+----------+------+-----------+------+-----------------+
@@ -1583,7 +1583,7 @@ File retrieved successfully.
                     <example>
                         <title>deleteAllEmptyPackages command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php frs deleteAllEmptyPackages 
+[ounis@linux tuleap-cli]$ ./tuleap.php frs deleteAllEmptyPackages 
 +------------+----------+----------------+-----------+------+-----------------+
 | package_id | group_id |      name      | status_id | rank | approve_license |
 +------------+----------+----------------+-----------+------+-----------------+
@@ -1618,7 +1618,7 @@ File retrieved successfully.
                     <example>
                         <title>deleteEmptyRelease command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php frs deleteEmptyRelease --package_id=288 --release_id=226
+[ounis@linux tuleap-cli]$ ./tuleap.php frs deleteEmptyRelease --package_id=288 --release_id=226
 +------------+------------+---------------+-------+---------+-----------+--------------+-------------+
 | release_id | package_id |     name      | notes | changes | status_id | release_date | released_by |
 +------------+------------+---------------+-------+---------+-----------+--------------+-------------+
@@ -1648,7 +1648,7 @@ File retrieved successfully.
                     <example>
                         <title>deleteAllEmptyReleases command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php frs deleteAllEmptyReleases --package_id=288
+[ounis@linux tuleap-cli]$ ./tuleap.php frs deleteAllEmptyReleases --package_id=288
 +------------+------------+---------------+-------+---------+-----------+--------------+-------------+
 | release_id | package_id |     name      | notes | changes | status_id | release_date | released_by |
 +------------+------------+---------------+-------+---------+-----------+--------------+-------------+
@@ -1685,7 +1685,7 @@ File retrieved successfully.
                     <example>
                         <title>list command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[terzino@linux codendi cli ]$ ./codendi.php docman list --id=110418 --project=myproject
+[terzino@linux tuleap-cli]$ ./tuleap.php docman list --id=110418 --project=myproject
 +---------+-----------+----------+--------------+-------------+-------------+-------------+---------+--...
 | item_id | parent_id | group_id |    title     | create_date | update_date | delete_date | user_id | s...
 +---------+-----------+----------+--------------+-------------+-------------+-------------+---------+--...
@@ -1711,7 +1711,7 @@ File retrieved successfully.
                     <example>
                         <title>getRoot command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[terzino@linux codendi cli ]$ ./codendi.php docman getRoot --project=myproject 
+[terzino@linux tuleap-cli]$ ./tuleap.php docman getRoot --project=myproject 
 +--------+
 | Result |
 +--------+
@@ -1786,7 +1786,7 @@ File retrieved successfully.
                     <example>
                         <title>createEmbeddedFile command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[terzino@linux codendi cli ]$ ./codendi.php docman createEmbeddedFile --project=myproject --parent_id=110418 --title="EmbeddedFile sample" --content="It is just a sample to describe how  we add an embedde file to the docman manager"
+[terzino@linux tuleap-cli]$ ./tuleap.php docman createEmbeddedFile --project=myproject --parent_id=110418 --title="EmbeddedFile sample" --content="It is just a sample to describe how  we add an embedde file to the docman manager"
 +--------+
 | Result |
 +--------+
@@ -1861,7 +1861,7 @@ File retrieved successfully.
                     <example>
                         <title>createFile command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[terzino@linux codendi cli ]$ ./codendi.php docman createFile --project=myproject --parent_id=110418 --title="CLi user guide" --content="cli_user_guide.pdf"
+[terzino@linux tuleap-cli]$ ./tuleap.php docman createFile --project=myproject --parent_id=110418 --title="CLi user guide" --content="cli_user_guide.pdf"
 Sending file (100%)
 File uploaded successfully
 +--------+
@@ -1933,7 +1933,7 @@ File uploaded successfully
                     <example>
                         <title>createEmptyDocument command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[terzino@linux codendi cli ]$ ./codendi.php docman createEmptyDocument --project=myproject --parent_id=110418 --title="user guide help" 
+[terzino@linux tuleap-cli]$ ./tuleap.php docman createEmptyDocument --project=myproject --parent_id=110418 --title="user guide help" 
 +--------+
 | Result |
 +--------+
@@ -2006,7 +2006,7 @@ File uploaded successfully
                     <example>
                         <title>createLink command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[terzino@linux codendi cli ]$ ./codendi.php docman createLink --project=myproject --parent_id=110418 --title="user guide link" --content="codendi.org"
+[terzino@linux tuleap-cli]$ ./tuleap.php docman createLink --project=myproject --parent_id=110418 --title="user guide link" --content="codendi.org"
 +--------+
 | Result |
 +--------+
@@ -2080,7 +2080,7 @@ File uploaded successfully
                     <example>
                         <title>createWikiPage command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[terzino@linux codendi cli ]$ ./codendi.php docman createWikiPage --project=myproject --parent_id=110418 --title="user guide wiki" --content="user_guide_wiki"
+[terzino@linux tuleap-cli]$ ./tuleap.php docman createWikiPage --project=myproject --parent_id=110418 --title="user guide wiki" --content="user_guide_wiki"
 +--------+
 | Result |
 +--------+
@@ -2145,7 +2145,7 @@ File uploaded successfully
                     <example>
                         <title>createFolder command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[terzino@linux codendi cli ]$ ./codendi.php docman createFolder --project=myproject --parent_id=110418 --title="Tech docs folder"
+[terzino@linux tuleap-cli]$ ./tuleap.php docman createFolder --project=myproject --parent_id=110418 --title="Tech docs folder"
 +--------+
 | Result |
 +--------+
@@ -2185,7 +2185,7 @@ File uploaded successfully
                     <example>
                         <title>getFile command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[terzino@linux codendi cli ]$ ./codendi.php docman getFile --project=myproject --id=110493 --version_number=1 --output=document_cli.doc
+[terzino@linux tuleap-cli]$ ./tuleap.php docman getFile --project=myproject --id=110493 --version_number=1 --output=document_cli.doc
 File retrieved successfully.
                         </programlisting>
                     </example>
@@ -2210,7 +2210,7 @@ File retrieved successfully.
                     <example>
                         <title>delete command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[terzino@linux codendi cli ]$ ./codendi.php docman delete --project=myproject --id=110502
+[terzino@linux tuleap-cli]$ ./tuleap.php docman delete --project=myproject --id=110502
 +--------+
 | Result |
 +--------+
@@ -2239,7 +2239,7 @@ File retrieved successfully.
                     <example>
                         <title>monitor command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[terzino@linux codendi cli ]$ ./codendi.php docman monitor --project=myproject --id=110501
+[terzino@linux tuleap-cli]$ ./tuleap.php docman monitor --project=myproject --id=110501
 +--------+
 | Result |
 +--------+
@@ -2273,7 +2273,7 @@ File retrieved successfully.
                     <example>
                         <title>move command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[terzino@linux codendi cli ]$ ./codendi.php docman move --project=myproject --id=110501 --parent=110503
+[terzino@linux tuleap-cli]$ ./tuleap.php docman move --project=myproject --id=110501 --parent=110503
 +--------+
 | Result |
 +--------+
