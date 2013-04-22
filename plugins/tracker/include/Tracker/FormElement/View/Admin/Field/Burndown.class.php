@@ -41,7 +41,7 @@ class Tracker_FormElement_View_Admin_Field_Burndown extends Tracker_FormElement_
      * @return string the HTML for the checkbox part
      */
     protected function fetchExcludeWeekEnds() {
-        $key  = 'exclude_weekends';
+        $key  = 'include_weekends';
         $html = '';
         $html .= '<p>';
         $html .= '<input type="hidden" name="formElement_data[specific_properties]['. $key .']" value="0" />';

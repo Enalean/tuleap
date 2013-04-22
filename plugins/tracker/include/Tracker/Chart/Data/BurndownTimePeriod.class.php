@@ -32,10 +32,11 @@ class Tracker_Chart_Data_BurndownTimePeriod {
      * @var int The time period duration, in days.
      */
     private $duration;
-    
-    public function __construct($start_date, $duration) {
+
+    public function __construct($start_date, $duration, $include_weekends) {
         $this->start_date = $start_date;
         $this->duration   = $duration;
+        $this->include_weekends = $include_weekends;
     }
     
     /**
@@ -53,16 +54,42 @@ class Tracker_Chart_Data_BurndownTimePeriod {
     }
     
     /**
+     * @return boolean
+     */
+    public function includeWeekends() {
+        return $this->include_weekends;
+    }
+
+    /**
      * @return array of string
      */
     public function getHumanReadableDates() {
         $dates = array();
-        
-        foreach($this->getDayOffsets() as $day_offset) {
-            $day     = strtotime("+$day_offset days", $this->start_date);
-            $dates[] = date('D d', $day);
+
+        if ($this->includeWeekends()) {
+            foreach($this->getDayOffsets() as $day_offset) {
+                $day     = strtotime("+$day_offset days", $this->start_date);
+                $dates[] = date('D d', $day);
+            }
+        } else {
+            $dates = $this->getHumanReadableDatesExcludingWeekends();
         }
-        
+        return $dates;
+    }
+
+    /**
+     * @return array of string
+     */
+    public function getHumanReadableDatesExcludingWeekends() {
+        $dates = array();
+        $day_offset = 0;
+        while (count($dates)-1 != $this->duration) {
+            $day     = strtotime("+$day_offset days", $this->start_date);
+            $day_offset ++;
+            if (date('D', $day) != 'Sat' && date('D', $day) != 'Sun') {
+                $dates[] = date('D d', $day);
+            }
+        }
         return $dates;
     }
     

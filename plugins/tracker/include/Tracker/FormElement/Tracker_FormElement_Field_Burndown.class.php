@@ -36,10 +36,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     private $hierarchy_factory;
 
-    protected $exclude_weekends;
+    protected $include_weekends;
 
     public $default_properties = array(
-        'exclude_weekends' => array (
+        'include_weekends' => array (
             'value' => 1,
             'type'  => 'checkbox')
     );
@@ -166,7 +166,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             $capacity = $this->getCapacity($artifact);
         }
         $field         = $this->getBurndownRemainingEffortField($artifact, $user);
-        $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, $duration);
+        $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, $duration, $this->includeWeekends());
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
         $tonight       = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
 
@@ -572,8 +572,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $tracker->hasFormElementWithNameAndType(self::REMAINING_EFFORT_FIELD_NAME, array('int', 'float'));
     }
 
-    public function excludeWeekends() {
-        return $this->getProperty('exclude_weekends');
+    public function includeWeekends() {
+        return $this->getProperty('include_weekends');
     }
 }
 ?>

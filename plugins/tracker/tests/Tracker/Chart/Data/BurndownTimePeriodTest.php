@@ -23,16 +23,26 @@ class Tracker_Chart_Data_BurndownTimePeriodTest extends TuleapTestCase {
     
     public function itComputesDateBasedOnStartDate() {
         $start_date    = mktime(0, 0, 0, 7, 4, 2012);
-        $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, 2);
+        $include_weekends = true;
+        $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, 2, $include_weekends);
         
         $this->assertEqual($time_period->getHumanReadableDates(), array('Wed 04', 'Thu 05', 'Fri 06'));
     }
     
     public function itProvidesAListOfTheDayOffsetsInTheTimePeriod() {
         $start_date    = mktime(0, 0, 0, 7, 4, 2012);
-        $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, 2);
+        $include_weekends = true;
+        $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, 2, $include_weekends);
         
         $this->assertEqual($time_period->getDayOffsets(), array(0, 1, 2));
+    }
+
+    public function itProvidesAListOfDaysWhileExcludingWeekends() {
+        $start_date    = mktime(0, 0, 0, 7, 4, 2012);
+        $include_weekends = false;
+        $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, 4, $include_weekends);
+
+        $this->assertEqual($time_period->getHumanReadableDatesExcludingWeekends(), array('Wed 04', 'Thu 05', 'Fri 06', 'Mon 09', 'Tue 10'));
     }
 }
 ?>
