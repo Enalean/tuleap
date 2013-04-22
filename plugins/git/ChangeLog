@@ -1,3 +1,6 @@
+Version 3.5 - Tuleap 5.13
+    * One can change read permissions when repository is managed by gerrit
+
 Version 3.4 - Tuleap 5.13
     * Fix sla #2847 and sla #907 Git and jenkins usage
 
