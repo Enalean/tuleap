@@ -1,0 +1,166 @@
+
+Notice: Undefined offset:  1 in /mnt/yannis/dev/src/utils/export_project_xml.php on line 34
+
+Call Stack:
+    0.0002      80888   1. {main}() /mnt/yannis/dev/src/utils/export_project_xml.php:0
+
+
+Variables in local scope (#1):
+  $DEBUG_DISPLAY_FOR_ALL = 1
+  $DEBUG_MODE = 1
+  $G_SESSION = array ()
+  $HTML = class Tuleap_Theme { public $imgroot = '/themes/Tuleap/images/'; public $root = '/themes/Tuleap'; public $icons = array ('Summary' => 'ic/anvil24.png', 'Homepage' => 'ic/home.png', 'Forums' => 'ic/notes.png', 'Bugs' => 'ic/bug.png', 'Support' => 'ic/support.png', 'Patches' => 'ic/patch.png', 'Lists' => 'ic/mail.png', 'Tasks' => 'ic/index.png', 'Docs' => 'ic/docman.png', 'Surveys' => 'ic/survey.png', 'News' => 'ic/news.png', 'CVS' => 'ic/convert.png', 'Files' => 'ic/save.png', 'Trackers' => 'ic/tracker20w.png'); private $bgpri = array (1 => 'priora', 2 => 'priorb', 3 => 'priorc', 4 => 'priord', 5 => 'priore', 6 => 'priorf', 7 => 'priorg', 8 => 'priorh', 9 => 'priori'); public $feeds = array (); protected $javascriptFooter = array (); protected $breadcrumbs = array (); protected $toolbar = array (); protected $renderedThroughService = FALSE; protected $stylesheets = array (); protected $colorpicker_palettes = array ('small' => '[["#EEEEEE", "#FFFFFF", "#F9F7ED", "#FFFF88", "#CDEB8B", "#C3D9FF", "#36393D"],\n                        ["#FF1A00", "#CC0000", "#FF7400", "#008C00", "#006E2E", "#4096EE", "#FF0084"],\n                        ["#B02B2C", "#D15600", "#73880A", "#6BBA70", "#3F4C6B", "#356AA0", "#D01F3C"],\n                        ["#FEF5A8", "#C5F19A", "#FFD8A0", "#F5DDB7", "#B9D0E8", "#D6BFD4", "#F79494"]]', 'vivid' => '[["#ffffff", "#0000ff", "#004dff", "#0077ff", "#00a0ff", "#00c4ff", "#00e3ff", "#4dfeff", "#00ffdf", "#00ffb2", "#00ff8c", "#00ff79", "#00ff31", "#00ff00", "#17ff00", "#70ff00", "#a0ff00", "#c8ff00", "#ebff00", "#ffff00", "#ffdc00", "#ffb000", "#ff8400", "#ff5d00", "#ff3600", "#ff0000", "#ff0034", "#ff006b", "#ff0091", "#ff00aa", "#ff00d0", "#ff00ff", "#cc19ff", "#9500f9", "#7a00ff", "#6100ff", "#4700ff", "#0000ff"],\n                        ["#e2e2e2", "#0000ec", "#0049f3", "#0070f3", "#0091e9", "#00b8f3",...', 'visibone-light' => '[["#FFFFFF", "#CCCCCC", "#999999", "#666666", "#333333", "#000000", "#FFCC00", "#FF9900", "#FF6600", "#FF3300", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF"],\n                        ["#99CC00", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#CC9900", "#FFCC33", "#FFCC66", "#FF9966", "#FF6633", "#CC3300", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#CC0033"],\n                        ["#CCFF00", "#CCFF33", "#333300", "#666600", "#999900", "#CCCC00", "#FFFF00", "#CC9933", "#CC6633", "#330...', 'visibone-dark' => '[["#FFFFFF", "#CCCCCC", "#999999", "#666666", "#333333", "#000000", "#FFCC00", "#FF9900", "#FF6600", "#FF3300", "#000000", "#000000", "#000000", "#000000", "#000000", "#000000"],\n                        ["#99CC00", "#000000", "#000000", "#000000", "#000000", "#CC9900", "#FFCC33", "#FFCC66", "#FF9966", "#FF6633", "#CC3300", "#000000", "#000000", "#000000", "#000000", "#CC0033"],\n                        ["#CCFF00", "#CCFF33", "#333300", "#666600", "#999900", "#CCCC00", "#FFFF00", "#CC9933", "#CC6633", "#330...'); public $_feedback = class Feedback { public $logs = array (...) }; public $javascript = array () }
+  $HTTP_USER_AGENT = ''
+  $Language = class BaseLanguage { public $text_array = NULL; public $lang = NULL; public $name = NULL; public $id = NULL; public $code = NULL; public $file_array = array (); public $allLanguages = array (0 => 'en_US', 1 => 'fr_FR'); public $defaultLanguage = 'en_US'; public $language_res = NULL }
+  $alias_file = '/etc/aliases.codendi'
+  $argc = 1
+  $argv = array (0 => 'src/utils/export_project_xml.php')
+  $codendi_bin_prefix = '/usr/lib/codendi/bin'
+  $codendi_cache_dir = '/var/tmp/codendi_cache'
+  $codendi_dir = '/usr/share/codendi'
+  $codendi_documentation_prefix = '/usr/share/codendi/documentation'
+  $codendi_downloads_dir = '/usr/share/codendi/downloads'
+  $codendi_log = '/var/log/codendi'
+  $codendi_shell_skel = '/etc/skel_codendi'
+  $codendi_utils_prefix = '/usr/share/codendi/src/utils'
+  $config_path = '/etc/codendi'
+  $conn = class CodendiDataAccess { public $db = resource(345) of type (mysql link); public $db_name = 'codendi'; protected $host = 'localhost'; protected $user = 'codendiadm'; protected $pass = 'welcome0'; protected $opt = 0; protected $nbReco = 0; public $store = array () }
+  $cookie_manager = *uninitialized*
+  $csv_dateformats = array (0 => 'month_day_year', 1 => 'day_month_year')
+  $csv_separators = array (0 => 'comma', 1 => 'semicolon', 2 => 'tab')
+  $current_user = class PFUser { protected $id = 0; protected $user_id = 0; protected $user_name = NULL; protected $email = NULL; protected $user_pw = NULL; protected $realname = NULL; protected $register_purpose = NULL; protected $status = NULL; protected $shell = NULL; protected $unix_pw = NULL; protected $unix_status = NULL; protected $unix_uid = NULL; protected $unix_box = NULL; protected $ldap_id = NULL; protected $add_date = NULL; protected $confirm_hash = NULL; protected $mail_siteupdates = NULL; protected $mail_va = NULL; protected $sticky_login = NULL; protected $authorized_keys = NULL; protected $email_new = NULL; protected $people_view_skills = NULL; protected $people_resume = NULL; protected $timezone = NULL; protected $fontsize = NULL; protected $theme = NULL; protected $language_id = NULL; protected $last_pwd_update = NULL; protected $expiry_date = NULL; protected $has_avatar = NULL; protected $is_super_user = NULL; protected $locale = 'en_US'; public $_preferences = array (); public $_preferencesdao = NULL; public $_usergroupdao = NULL; protected $session_hash = FALSE; private $clear_password = NULL; protected $languageFactory = NULL; protected $language = NULL; protected $_group_data = NULL; protected $_tracker_data = NULL; public $_ugroups = NULL; public $_static_ugroups = NULL; public $_dynamics_ugroups = NULL }
+  $cvs_cmd = '/usr/bin/cvs'
+  $cvs_hook_tmp_dir = '/var/run/log_accum'
+  $cvs_prefix = '/var/lib/codendi/cvsroot'
+  $cvs_root_allow_file = '/etc/cvs_root_allow'
+  $cvslock_prefix = '/var/lock/cvs'
+  $cvsnt_config_file = '/etc/cvsnt/PServer'
+  $db_config_file = '/etc/codendi/conf/database.inc'
+  $dns_master_file = '/var/named/codendi.zone'
+  $dom = *uninitialized*
+  $dump_dir = '/var/lib/codendi/dumps'
+  $e = *uninitialized*
+  $feedback = ''
+  $first = '_GET'
+  $font_size = 2
+  $forgeupgrade_file = '/etc/codendi/forgeupgrade/config.ini'
+  $ftp_anon_dir_prefix = '/var/lib/codendi/ftp/pub'
+  $ftp_frs_dir_prefix = '/var/lib/codendi/ftp/codendi'
+  $ftp_incoming_dir = '/var/lib/codendi/ftp/incoming'
+  $g_pos = 1
+  $grpdir_prefix = '/home/groups'
+  $homedir_prefix = '/home/users'
+  $htmlpurifier_dir = '/usr/share/htmlpurifier'
+  $jpgraph_dir = '/usr/share/jpgraph'
+  $local_inc = '/etc/codendi/conf/local.inc'
+  $log_version = array ()
+  $mailman_bin_dir = '/usr/lib/mailman/bin'
+  $mailman_list_dir = '/var/lib/mailman/lists'
+  $mailman_wrapper = '/usr/lib/mailman/mail/mailman'
+  $master_path = '/var/lib/codendi/plugins/mediawiki/master'
+  $mw_dbtype = 'mysql'
+  $mwdata_path = '/var/lib/codendi/plugins/mediawiki'
+  $name_of_theme_class = 'Tuleap_Theme'
+  $p_pos = 2
+  $plugin_manager = class PluginManager { public $plugins_loaded = TRUE; public $pluginHookPriorityManager = class PluginHookPriorityManager { public $priorityPluginHookDao = class PriorityPluginHookDao { ... }; public $priorityCache = array (...) }; public $plugins_name = NULL }
+  $project = *uninitialized*
+  $projects_path = '/var/lib/codendi/plugins/mediawiki/projects'
+  $request = class HTTPRequest { protected $_validated_input = array (); protected $_last_access_to_input = array (); public $params = array (); protected $current_user = NULL; protected $project = NULL; private $project_manager = class ProjectManager { protected $_dao = NULL; protected $_cached_projects = array (...) } }
+  $root_for_theme = '/themes/Tuleap'
+  $second = '_POST'
+  $src_path = '/usr/share/mediawiki115'
+  $svn_prefix = '/var/lib/codendi/svnroot'
+  $svn_root_file = '/etc/httpd/conf.d/codendi_svnroot.conf'
+  $svnadmin_cmd = '/usr/bin/svnadmin'
+  $sys_allow_anon = 1
+  $sys_allow_restricted_users = 0
+  $sys_auth_svn_mod = 'modmysql'
+  $sys_auth_type = 'ldap'
+  $sys_avatar_path = '/var/lib/codendi/user/avatar/'
+  $sys_cookie_domain = 'cro.enalean.com'
+  $sys_cookie_prefix = 'CODENDI'
+  $sys_create_project_in_one_step = 1
+  $sys_custom_dir = '/etc/codendi'
+  $sys_custom_incdir = '/etc/codendi/site-content'
+  $sys_custom_themeroot = '/etc/codendi/themes'
+  $sys_custompluginspath = '/customplugins'
+  $sys_custompluginsroot = '/etc/codendi/plugins/'
+  $sys_data_dir = '/var/lib/codendi'
+  $sys_dbauth_passwd = 'pcm6k9fe'
+  $sys_dbauth_user = 'dbauthuser'
+  $sys_dbhost = 'localhost'
+  $sys_dbname = 'codendi'
+  $sys_dbpasswd = 'welcome0'
+  $sys_dbuser = 'codendiadm'
+  $sys_default_domain = 'sonde.cro.enalean.com'
+  $sys_default_trove_cat = 18
+  $sys_disable_subdomains = 1
+  $sys_display_homepage_boxes = 1
+  $sys_display_homepage_news = 1
+  $sys_display_project_privacy_in_service_bar = 1
+  $sys_email_admin = 'yannis@cro.enalean.com'
+  $sys_email_contact = 'codendi-contact@sonde.cro.enalean.com'
+  $sys_enable_avatars = 1
+  $sys_enablessl = '0'
+  $sys_exchange_policy_url = '/plugins/docman/?group_id=1'
+  $sys_file_deletion_delay = 3
+  $sys_force_ssl = 0
+  $sys_frs_license_mandatory = 1
+  $sys_fullname = 'sonde.cro.enalean.com'
+  $sys_http_user = 'codendiadm'
+  $sys_https_host = 'sonde.cro.enalean.com'
+  $sys_incdir = '/usr/share/codendi/site-content'
+  $sys_is_project_public = 1
+  $sys_lang = 'en_US'
+  $sys_lf = '\n'
+  $sys_lists_domain = 'sonde.cro.enalean.com'
+  $sys_lists_host = 'sonde.cro.enalean.com'
+  $sys_lists_name_min_length = 4
+  $sys_lists_prefix = ''
+  $sys_lists_suffix = ''
+  $sys_long_org_name = 'Enalean'
+  $sys_max_size_attachment = 16777216
+  $sys_max_size_upload = 67108864
+  $sys_my_page_survey = 1
+  $sys_name = 'Tuleap'
+  $sys_nb_sensitive_soap_calls_per_hour = 10
+  $sys_news_group = 46
+  $sys_noreply = '"Tuleap" <noreply@sonde.cro.enalean.com>'
+  $sys_org_name = 'Enalean'
+  $sys_password_lifetime = 0
+  $sys_pending_account_lifetime = 60
+  $sys_pluginspath = '/plugins'
+  $sys_pluginsroot = '/usr/share/codendi/plugins/'
+  $sys_project_approval = 0
+  $sys_proxy = ''
+  $sys_server = 'mysql'
+  $sys_server_id = 0
+  $sys_server_join = '20'
+  $sys_session_lifetime = 15811200
+  $sys_supported_languages = 'en_US,fr_FR'
+  $sys_suspend_inactive_accounts_delay = 0
+  $sys_suspend_non_project_member_delay = 0
+  $sys_themedefault = 'Tuleap'
+  $sys_themedefault_old = 'savannah'
+  $sys_themeroot = '/usr/share/codendi/src/www/themes/'
+  $sys_trove_cat_mandatory = 1
+  $sys_urlroot = '/usr/share/codendi/src/www/'
+  $sys_use_project_registration = 1
+  $sys_use_snippet = 1
+  $sys_use_trove = 1
+  $sys_user_approval = 0
+  $sys_wiki_attachment_data_dir = '/var/lib/codendi/wiki'
+  $system_event_manager = class SystemEventManager { public $dao = class SystemEventDao { public $da = class CodendiDataAccess { ... }; public $table_name = 'CLASSNAME_MUST_BE_DEFINE_FOR_EACH_CLASS' } }
+  $theme = 'Tuleap'
+  $tmp_dir = '/var/tmp'
+  $ttf_font_dir = '/usr/share/fonts/'
+  $unix_gid_add = '1000'
+  $unix_uid_add = '20000'
+  $urlVerif = *uninitialized*
+  $urlVerifFactory = *uninitialized*
+  $variable = 'pv'
+  $xml_element = *uninitialized*
+  $xml_exporter = *uninitialized*
+  $zend_path = '/usr/share/zend'
+
+*** ERROR: Invalid project_id

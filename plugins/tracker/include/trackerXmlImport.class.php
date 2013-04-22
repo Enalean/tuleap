@@ -152,9 +152,6 @@ class TrackerXmlImport {
      * Stores in database the hierarchy between created trackers
      */
     public function storeHierarchyInDB(array $all_hierarchies) {
-        if (empty($all_hierarchies)) {
-            return;
-        }
         foreach ($all_hierarchies as $parent_id => $hierarchy) {
             $this->hierarchy_dao->updateChildren($parent_id, $hierarchy);
         }
