@@ -16,17 +16,17 @@ require_once('common/event/EventManager.class.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$action = '';
-if (isset($_REQUEST['action'])) {
-    $action = $_REQUEST['action'];
-}
+$action = $request->getValidated('action', 'string', '');
+
 $em = EventManager::instance();
 $pm = ProjectManager::instance();
 
 // group public choice
 if ($action=='activate') {
-
-    $groups = explode(',',$list_of_groups);
+    $groups = array();
+    if ($request->exist('list_of_groups')) {
+        $groups = array_filter(array_map('intval', explode(",", $request->get('list_of_groups'))));
+    }
     foreach ($groups as $group_id) {
         $project = $pm->getProject($group_id);
         $pm->activate($project);
@@ -144,7 +144,7 @@ if (db_numrows($res_grp) < 1) {
                     <TABLE WIDTH="70%">
             <TR>
             <TD style="text-align:center">
-        <FORM action="<?php echo $PHP_SELF; ?>" method="POST">
+        <FORM action="?" method="POST">
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
         <INPUT TYPE="HIDDEN" NAME="list_of_groups" VALUE="<?php print $row_grp['group_id']; ?>">
         <INPUT type="submit" name="submit" value="<?php echo $Language->getText('admin_approve_pending','approve'); ?>">
@@ -152,7 +152,7 @@ if (db_numrows($res_grp) < 1) {
         </TD>
     
             <TD> 
-        <FORM action="<?php echo $PHP_SELF; ?>" method="POST">
+        <FORM action="?" method="POST">
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="delete">
         <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php print $row_grp['group_id']; ?>">
         <INPUT type="submit" name="submit" value="<?php echo $Language->getText('admin_approve_pending','delete'); ?>">
@@ -171,7 +171,7 @@ if (db_numrows($res_grp) < 1) {
     
     echo '
         <CENTER>
-        <FORM action="'.$PHP_SELF.'" method="POST">
+        <FORM action="?" method="POST">
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
         <INPUT TYPE="HIDDEN" NAME="list_of_groups" VALUE="'.$group_list.'">
         <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending','approve_all').'">

@@ -70,7 +70,7 @@ if (user_isloggedin()) {
     
     echo $Language->getText('snippet_addversion','post_s').'
 		<P>
-		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
+		<FORM ACTION="?" METHOD="POST" enctype="multipart/form-data">
         <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_upload.'">
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 		<INPUT TYPE="HIDDEN" NAME="type" VALUE="snippet">
@@ -190,7 +190,7 @@ function show_add_snippet_box() {
     echo 
       $Language->getText('snippet_addversion','post_p').'
 		<P>
-		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+		<FORM ACTION="?" METHOD="POST">
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 		<INPUT TYPE="HIDDEN" NAME="type" VALUE="package">
 		<INPUT TYPE="HIDDEN" NAME="snippet_package_id" VALUE="'.$id.'">

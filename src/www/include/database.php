@@ -182,6 +182,14 @@ function db_ei($val, $null = CODENDI_DB_NOT_NULL) {
     return db_escape_int($val, $null);
 }
 
+/**
+ * @deprecated
+ * @see DataAccess::escapeIntImplode()
+ */
+function db_ei_implode($val) {
+    return implode(',', array_map('db_ei', $val));
+}
+
 function db_begin(){
 	echo "db_begin()\n";
 }

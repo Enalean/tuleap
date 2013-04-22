@@ -768,7 +768,7 @@ Function  ShowResultSet($result,$title="Untitled",$linkify=false,$showheaders=tr
 			echo '<TR class="'. html_get_alt_row_color($j+1) .'">';
 			for ($i = 0; $i < $cols; $i++) {
 				if ($linkify && $i == 0) {
-					$link = '<A HREF="'.$_SERVER['PHP_SELF'].'?';
+					$link = '<A HREF="?';
 					$linkend = '</A>';
 					if ($linkify == "bug_cat") {
 						$link .= 'group_id='.$group_id.'&bug_cat_mod=y&bug_cat_id='.db_result($result, $j, 'bug_category_id').'">';

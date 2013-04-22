@@ -158,7 +158,7 @@ print '<P><h3>'.$Language->getText('project_admin_editgroupinfo','editing_g_info
 $hp = Codendi_HTMLPurifier::instance();
 print '
 <P>
-<FORM action="'.$PHP_SELF.'" method="post">
+<FORM action="?" method="post">
 <INPUT type="hidden" name="group_id" value="'.$group_id.'">
 
 <P>'.$Language->getText('project_admin_editgroupinfo','descriptive_g_name').'<font color="red">*</font>
