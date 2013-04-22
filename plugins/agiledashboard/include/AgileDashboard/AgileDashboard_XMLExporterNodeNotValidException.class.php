@@ -21,7 +21,7 @@
 
 class AgileDashboard_XMLExporterNodeNotValidException extends Exception {
     public function __construct() {
-        $message = 'The XML exported does not match the relax NG';
+        $message = 'The Agiledashboard XML exported does not match the relax NG definition';
         parent::__construct($message);
     }
 }
