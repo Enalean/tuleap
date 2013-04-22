@@ -20,6 +20,7 @@
  */
 
 require_once dirname(__FILE__) .'/bootstrap.php';
+require_once 'common/XmlValidator/XmlValidator.class.php';
 
 class CardwallConfigXmlImportTest extends TuleapTestCase {
 

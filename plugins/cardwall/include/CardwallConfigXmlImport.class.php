@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/XmlValidator/XmlValidator.class.php';
+
 class CardwallConfigXmlImport {
 
     /** @var SimpleXMLElement */
