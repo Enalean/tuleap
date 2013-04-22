@@ -138,37 +138,6 @@ class Planning_Controller extends MVC2_PluginController {
         }
     }
 
-    public function toggleUserDisplay() {
-        
-        $tracker_id = $this->request->get('tracker_id');
-        $pref_name  = Cardwall_DisplayPreferences::ASSIGNED_TO_USERNAME_PREFERENCE_NAME.$tracker_id;
-        $user       = $this->getCurrentUser();
-        $preference = $user->getPreference($pref_name);
-
-        if(! $preference) {
-            $user->setPreference($pref_name, Cardwall_DisplayPreferences::DISPLAY_AVATARS);
-        } else {
-            $this->switchPreference($user, $preference, $pref_name);
-        }
-
-        $this->redirect(array(
-            'group_id'    => $this->group_id,
-            'planning_id' => $this->request->get('planning_id'),
-            'action'      => 'show',
-            'aid'         => $this->request->get('aid'),
-            'pane'        => 'cardwall'
-        ));
-    }
-
-    private function switchPreference($user, $preference, $pref_name) {
-        $pref_value = Cardwall_DisplayPreferences::DISPLAY_AVATARS;
-        if($preference == $pref_value) {
-            $pref_value = Cardwall_DisplayPreferences::DISPLAY_USERNAMES;
-        }
-
-        $user->setPreference($pref_name, $pref_value);
-    }
-
     /**
      *
      * @param int $projectId
