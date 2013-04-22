@@ -349,10 +349,7 @@ class GitActions extends PluginActions {
             if ( !empty($repoAccess) ) {
                 //TODO use Polymorphism to handle this
                 if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
-                    //TODO use Polymorphism to handle this
-                    if (! $repository->getRemoteServerId()) {
-                        $repository->getBackend()->savePermissions($repository, $repoAccess);
-                    }
+                    $repository->getBackend()->savePermissions($repository, $repoAccess);
                 } else {
                     if ($repository->getAccess() != $repoAccess) {
                         $this->git_system_event_manager->queueGitShellAccess($repository, $repoAccess);
