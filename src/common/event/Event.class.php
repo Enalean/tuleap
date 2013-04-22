@@ -485,5 +485,17 @@ class Event {
      *   The various plugins create objects from the xml content
      */
     const IMPORT_XML_PROJECT_TRACKER_DONE = 'import_xml_project_tracker_done';
+        /**
+     * Event launched while importing a cardwall from a xml content
+     *
+     * Parameters:
+     *   'project_id'  => The id of the project where trackers, cardwall and AD must be created
+     *   'xml_content' => The SimpleXMLElement to check in
+     *   'mapping'     => An array with a mapping between xml ids and new ids for trackers
+     *
+     * Expected Results:
+     *   The various plugins create objects from the xml content
+     */
+    const IMPORT_XML_PROJECT_CARDWALL_DONE = 'import_xml_project_cardwall_done';
 }
 ?>

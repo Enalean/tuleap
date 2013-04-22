@@ -24,7 +24,7 @@ require_once dirname(__FILE__) .'/bootstrap.php';
 class CardwallConfigXmlImportTest extends TuleapTestCase {
 
     public function setUp() {
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+        $this->xml_input = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <project>
               <empty_section />
               <trackers>
@@ -53,9 +53,11 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
               <agiledashboard/>
             </project>');
 
-        $mapper                           = array("T101" => 444, "T102" => 555, "T103" => 666);
-        $this->cardwall_ontop_dao         = mock('Cardwall_OnTop_Dao');
-        $this->cardwall_config_xml_import = new CardwallConfigXmlImport($xml, $mapper, $this->cardwall_ontop_dao);
+        $this->mapping                    = array("T101" => 444, "T102" => 555, "T103" => 666);
+        $this->cardwall_ontop_dao         = stub('Cardwall_OnTop_Dao')->enable()->returns(true);
+        $this->group_id                   = 145;
+        $this->event_manager              = mock('EventManager');
+        $this->cardwall_config_xml_import = new CardwallConfigXmlImport($this->group_id, $this->xml_input, $this->mapping, $this->cardwall_ontop_dao, $this->event_manager);
     }
 
     public function itReturnsAllTrackersIdWithACardwall() {
@@ -67,6 +69,20 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
 
     public function itStoresAllTheCardwallOnTop() {
         $this->cardwall_ontop_dao->expectCallCount('enable', 2);
+        $this->cardwall_config_xml_import->import();
+    }
+
+    public function itProcessANewEventIfAllCardwallAreEnabled() {
+        expect($this->event_manager)->processEvent(
+            Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
+            array(
+                'project_id'  => $this->group_id,
+                'xml_content' => $this->xml_input,
+                'mapping'     => $this->mapping
+            )
+        )->once();
+        $this->cardwall_ontop_dao->expectCallCount('enable', 2);
+
         $this->cardwall_config_xml_import->import();
     }
 }

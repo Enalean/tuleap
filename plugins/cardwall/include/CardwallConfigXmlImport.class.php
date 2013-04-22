@@ -29,10 +29,18 @@ class CardwallConfigXmlImport {
     /** @var Cardwall_OnTop_Dao */
     private $cardwall_ontop_dao;
 
-    public function __construct(SimpleXMLElement $xml_input, array $mapping, Cardwall_OnTop_Dao $cardwall_ontop_dao) {
+    /** @var int */
+    private $group_id;
+
+    /** @var EventManager */
+    private $event_manager;
+
+    public function __construct($group_id, SimpleXMLElement $xml_input, array $mapping, Cardwall_OnTop_Dao $cardwall_ontop_dao, EventManager $event_manager) {
         $this->xml_input          = $xml_input;
         $this->mapping            = $mapping;
         $this->cardwall_ontop_dao = $cardwall_ontop_dao;
+        $this->group_id           = $group_id;
+        $this->event_manager      = $event_manager;
     }
 
     public function getAllTrackersId() {
@@ -51,6 +59,15 @@ class CardwallConfigXmlImport {
         foreach ($tracker_ids as $tracker_id) {
             $this->cardwall_ontop_dao->enable($tracker_id);
         }
+
+        $this->event_manager->processEvent(
+            Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
+            array(
+                'project_id'  => $this->group_id,
+                'xml_content' => $this->xml_input,
+                'mapping'     => $this->mapping
+            )
+        );
     }
 }
 
