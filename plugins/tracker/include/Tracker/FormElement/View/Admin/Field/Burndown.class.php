@@ -26,12 +26,30 @@ class Tracker_FormElement_View_Admin_Field_Burndown extends Tracker_FormElement_
         //required
         $html .= $this->fetchRequired();
 
+        $html .= $this->fetchDisplayWeekEnds();
+
         return $html;
     }
     
     protected function fetchRequired() {
         return '';
     }
+    
+    /**
+     * Fetch "display week ends" part of field admin
+     * 
+     * @return string the HTML for the checkbox part
+     */
+    protected function fetchDisplayWeekEnds() {
+        $html = '<p>';
+        $html .= '<input type="hidden" name="formElement_data[display_weekends]" value="1" />';
+        $html .= '<input type="checkbox" name="formElement_data[display_weekends]" id="formElement_use_capacity" value="1" />';
+        $html .= '<label for="formElement_display_weekends">'.$GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'display_weekends');
+        $html .= '</p>';
+        return $html;
+    }
+
+
 }
 
 ?>

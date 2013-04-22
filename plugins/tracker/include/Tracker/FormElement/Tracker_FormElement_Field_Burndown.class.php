@@ -36,6 +36,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     private $hierarchy_factory;
 
+    public $default_properties = array(
+        'display_weekends'      => true
+    );
+    
     /**
      * @return the label of the field (mainly used in admin part)
      */
