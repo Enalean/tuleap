@@ -571,7 +571,8 @@ class trackerPlugin extends Plugin {
             $params['xml_content'],
             TrackerFactory::instance(),
             EventManager::instance(),
-            new Tracker_Hierarchy_Dao()
+            new Tracker_Hierarchy_Dao(),
+            new XmlValidator()
         );
 
         $tracker_xml_import->import();

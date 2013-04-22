@@ -19,6 +19,7 @@
  */
  
 require_once 'common/mvc2/PluginController.class.php';
+require_once 'common/XmlValidator/XmlValidator.class.php';
 
 /**
  * Handles the HTTP actions related to  the agile dashborad as a whole.
@@ -75,8 +76,12 @@ class AgileDashboard_Controller extends MVC2_PluginController {
     public function createMultiplefromXml() {
         $this->checkUserIsAdmin();
         
-        /* @var $xml SimpleXMLElement */
         $xml = $this->request->get('xml_content')->agiledashboard;
+        $xml_validator = new XmlValidator();
+
+        if (! $xml_validator->nodeIsValid($xml, realpath(dirname(__FILE__).'/../../www/resources/xml_project_agiledashboard.rng'))) {
+            throw new XMLImporterInputNotWellFormedException();
+        }
 
         $xml_importer = new AgileDashboard_XMLImporter();
         $data = $xml_importer->toArray($xml, $this->request->get('mapping'));
