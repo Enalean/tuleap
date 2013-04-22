@@ -126,7 +126,7 @@ function svn_utils_show_revision_list ($result,$offset,$total_rows,$set='any', $
 		Accepts a result set from the svn_commits table. Should include all columns from
 		the table, and it should be joined to USER to get the user_name.
 	*/
-    $url = $_SERVER['PHP_SELF'].'?func=browse&group_id='.$group_id.'&set='.$set.'&msort='.$msort;
+    $url = '?func=browse&group_id='.$group_id.'&set='.$set.'&msort='.$msort;
 
     if ($set == 'custom')
      $url .= $pref_stg;

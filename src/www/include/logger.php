@@ -32,7 +32,7 @@ db_ei($log_group).','.
 floatval(browser_get_version()).','.
 '"'.db_escape_string(browser_get_platform()).'",'.
 $log_time.','.
-'"'.db_escape_string($request->getFromServer('PHP_SELF')).'",'.
+'"'.db_escape_string($request->getFromServer('SCRIPT_NAME')).'",'.
 '0'.
 ')';
 
