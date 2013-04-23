@@ -18,8 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * This interface is responsible for the display preferences
+ * of cards.
+ */
 interface Tracker_CardDisplayPreferences {
-    
+
+    /**
+     * @return Boolean True if users' avatars should be
+     * displayed instead of usernames.
+     */
     public function shouldDisplayAvatars();
 }
 ?>

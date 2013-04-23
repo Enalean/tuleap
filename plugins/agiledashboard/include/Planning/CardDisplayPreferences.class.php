@@ -21,6 +21,9 @@
 class Planning_CardDisplayPreferences implements Tracker_CardDisplayPreferences {
 
     public function shouldDisplayAvatars() {
+        // Returning True because it's always avatars which
+        // are displayed in order to identify users when in
+        // Backlog planning view.
         return true;
     }
 }

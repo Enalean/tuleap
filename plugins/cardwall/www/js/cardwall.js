@@ -354,12 +354,11 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
             }
 
             function updateAssignedToValue( assigned_to_div, new_values ) {
-                var updateFunction;
-                if (is_display_avatar_selected == 0) {
-                    updateFunction = addUsername;
-                } else {
+                var updateFunction = addUsername;
+                if (is_display_avatar_selected) {
                     updateFunction = addAvatar;
                 }
+
                 if(new_values instanceof Array) {
                     for(var i=0; i<new_values.length; i++) {           
                         updateFunction( assigned_to_div, new_values[i] );
