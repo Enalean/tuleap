@@ -40,7 +40,7 @@ class XmlContent
     }
 
     function _pushContent ($item) {
-        if (strtolower(get_class($item)) == 'xmlcontent')
+        if (is_object($item) && strtolower(get_class($item)) == 'xmlcontent')
             array_splice($this->_content, count($this->_content), 0,
                          $item->_content);
         else
@@ -66,7 +66,7 @@ class XmlContent
     }
 
     function _unshiftContent ($item) {
-        if (strtolower(get_class($item)) == 'xmlcontent')
+        if (is_object($item) && strtolower(get_class($item)) == 'xmlcontent')
             array_splice($this->_content, 0, 0, $item->_content);
         else
             array_unshift($this->_content, $item);
