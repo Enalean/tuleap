@@ -38,6 +38,10 @@ class Tracker_Chart_Data_Burndown {
         $this->capacity = $capacity;
     }
 
+    public function addEffortAt($day_offset, $remaining_effort) {
+        $this->remaining_effort[$day_offset] = $remaining_effort;
+    }
+
     /**
      * Stack a new remaining effort value
      *
@@ -73,6 +77,11 @@ class Tracker_Chart_Data_Burndown {
                 $remaining_effort[$x_axis] = null;
             } else if (array_key_exists($day_offset, $this->remaining_effort)) {
                 $remaining_effort[$x_axis] = $this->remaining_effort[$day_offset];
+                if ($last_value === null && $this->remaining_effort[$day_offset] !== null) {
+                    for ($i = $x_axis - 1; $i >= 0; $i--) {
+                        $remaining_effort[$i] = $this->remaining_effort[$day_offset];
+                    }
+                }
             } else {
                 $remaining_effort[$x_axis] = $last_value;
             }
