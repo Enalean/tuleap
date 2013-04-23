@@ -1,3 +1,6 @@
+Version 3.7 - Tuleap 5.13
+    * Make gitolite configuration file compatible with gitolite 2.3.1
+
 Version 3.6 - Tuleap 5.13
     * Update text block
 
