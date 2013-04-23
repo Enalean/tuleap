@@ -41,7 +41,7 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
 
     public function itCompletesMissingRemainingEffortWithLastValue() {
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
-        $burndown_data->pushRemainingEffort(14);
+        $burndown_data->addEffortAt(0, 14);
 
         $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 14, 14, 14, 14, 14));
     }
@@ -104,6 +104,21 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
         $burndown_data->addEffortAt(1, 13);
 
         $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 13, 13, null, null, null));
+    }
+
+    public function itReturnsRemainingEffortsWithNonLinearDayOffsets() {
+        $time_period = mock('Tracker_Chart_Data_IProvideBurndownTimePeriod');
+        stub($time_period)->getStartDate()->returns($this->start_date);
+        stub($time_period)->getDayOffsets()->returns(array(0, 1, 4, 5, 6, 7));
+        $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
+        $burndown_data->addEffortAt(0, 14);
+        $burndown_data->addEffortAt(1, 13);
+        $burndown_data->addEffortAt(4, 10);
+        $burndown_data->addEffortAt(5, 5);
+        $burndown_data->addEffortAt(6, 2);
+        $burndown_data->addEffortAt(7, 0);
+
+        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 13, 10, 5, 2, 0));
     }
 
     public function itComputesIdealBurndownWhenAddingRemainingEffort() {
