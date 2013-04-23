@@ -64,23 +64,28 @@ class Tracker_Chart_Data_Burndown {
      */
     public function getRemainingEffort() {
         $remaining_effort = array();
-        $current_day      = $this->time_period->getStartDate();
+        $start_day        = $this->time_period->getStartDate();
         $last_value       = null;
-
+        $x_axis           = 0;
         foreach($this->time_period->getDayOffsets() as $day_offset) {
 
+//            while ($day_offset - $last_offset > 1) {
+//                $last_offset++;
+//                $remaining_effort[$last_offset] = null;
+//            }
+
+            $current_day = strtotime("+".$day_offset." day", $start_day);
             if ($this->isInTheFutur($current_day)) {
-                $remaining_effort[] = null;
+                $remaining_effort[$x_axis] = null;
             } else if (array_key_exists($day_offset, $this->remaining_effort)) {
-                $remaining_effort[] = $this->remaining_effort[$day_offset];
+                $remaining_effort[$x_axis] = $this->remaining_effort[$day_offset];
             } else {
-                $remaining_effort[] = $last_value;
+                $remaining_effort[$x_axis] = $last_value;
             }
 
-            $last_value  = $remaining_effort[$day_offset];
-            $current_day = strtotime("+1 day", $current_day);
+            $last_value  = $remaining_effort[$x_axis];
+            $x_axis++;
         }
-
         return $remaining_effort;
     }
 
@@ -100,18 +105,31 @@ class Tracker_Chart_Data_Burndown {
      */
     public function getIdealEffort() {
         $start_effort = $this->getFirstEffort();
-        
+
+//        $day_offsets  = $this->time_period->getDayOffsets();
+//        $first_offset = array_shift(array_values($day_offsets));
+//        $last_offset  = end($day_offsets);
+//
+//        $this->ideal_effort[$first_offset] = $start_effort;
+//        $this->ideal_effort[$last_offset]  = 0;
+        $i = 0;
+
         foreach($this->time_period->getDayOffsets() as $day_offset) {
-            $this->ideal_effort[] = $this->getIdealEffortAtDay($day_offset, $start_effort);
+
+            $this->ideal_effort[$i] = $this->getIdealEffortAtDay($i, $start_effort);
+            $i++;
         }
-        
         return $this->ideal_effort;
     }
 
-    private function getIdealEffortAtDay($day, $start_effort) {
+    private function getIdealEffortAtDay($i, $start_effort) {
         if ($start_effort !== null) {
-            $slope = - ($start_effort / $this->getDuration());
-            return floatval($slope * $day + $start_effort);
+//            $slope = - ($start_effort / $this->getDuration());
+//            return floatval($slope * $day + $start_effort);
+
+            return floatval(($this->getDuration() - $i) * ($start_effort / $this->getDuration()));
+            
+
         }
         
         return 0;
