@@ -33,9 +33,6 @@ class Tracker_Chart_Data_BurndownTimePeriod {
      */
     private $duration;
 
-    const FRIST_WEEK_END_DAY  = 'Sat';
-    const SECOND_WEEK_END_DAY = 'Sun';
-
     public function __construct($start_date, $duration, $include_weekends) {
         $this->start_date = $start_date;
         $this->duration   = $duration;
@@ -68,10 +65,15 @@ class Tracker_Chart_Data_BurndownTimePeriod {
      */
     public function getHumanReadableDates() {
         $dates = array();
+
+        //if ($this->includeWeekends()) {
             foreach($this->getDayOffsets() as $day_offset) {
                 $day     = strtotime("+$day_offset days", $this->start_date);
                 $dates[] = date('D d', $day);
             }
+        /*} else {
+            $dates = $this->getHumanReadableDatesExcludingWeekends();
+        }*/
         return $dates;
     }
 
@@ -82,15 +84,19 @@ class Tracker_Chart_Data_BurndownTimePeriod {
         $dates = array();
         $day_offset = 0;
         while (count($dates)-1 != $this->duration) {
-            $day = strtotime("+$day_offset days", $this->start_date);
-            if ($this->dayIsInWeekEnd($day)) {
+            $day     = strtotime("+$day_offset days", $this->start_date);
+            $day_offset ++;
+            if ( ! $this->isWeekendDay($day)) {
                 $dates[] = date('D d', $day);
             }
-            $day_offset ++;
         }
         return $dates;
     }
-    
+
+    private function isWeekendDay($day) {
+        return date('D', $day) == 'Sat' || date('D', $day) == 'Sun';
+    }
+
     /**
      * To be used to iterate consistently over burndown time period
      * 
@@ -110,22 +116,16 @@ class Tracker_Chart_Data_BurndownTimePeriod {
         $day_offset = 0;
         while (count($day_offsets_excluding_we)-1 != $this->duration) {
             $day = strtotime("+$day_offset days", $this->start_date);
-            if ($this->dayIsInWeekEnd($day)) {
+            if (date('D', $day) != 'Tue' && date('D', $day) != 'Sun') {
                 $day_offsets_excluding_we[] = $day_offset;
+                $day_offset++;
+            } else {
+                $day_offsets_excluding_we[] = $day_offset + 1;
+                $day_offset += 2;
             }
-            $day_offset++;
             
        }
        return $day_offsets_excluding_we;
-    }
-
-    /**
-     *
-     * @param int $day timestamp
-     * @return boolean
-     */
-    private function dayIsInWeekEnd($day) {
-        return (date('D', $day) != self::FRIST_WEEK_END_DAY && date('D', $day) != self::SECOND_WEEK_END_DAY);
     }
 
 }
