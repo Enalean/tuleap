@@ -292,6 +292,11 @@ class cardwallPlugin extends Plugin {
         }
     }
 
+    private function toggleAvatarDisplay(Codendi_Request $request) {
+        $display_preferences_controller = new Cardwall_DisplayPreferencesInAgileDashboardController($request);
+        $display_preferences_controller->toggleUserDisplay();
+    }
+
     public function tracker_event_redirect_after_artifact_creation_or_update($params) {
         $cardwall = $params['request']->get('cardwall');
         $redirect = $params['redirect'];
@@ -374,6 +379,16 @@ class cardwallPlugin extends Plugin {
      */
     private function getOnTopColumnMappingFieldValueDao() {
         return new Cardwall_OnTop_ColumnMappingFieldValueDao();
+    }
+
+    public function process(Codendi_Request $request) {
+        switch($request->get('action')) {
+            case 'toggle_user_display_avatar':
+                $this->toggleAvatarDisplay($request);
+                break;
+            default:
+                echo 'Hello !';
+        }
     }
 
 }

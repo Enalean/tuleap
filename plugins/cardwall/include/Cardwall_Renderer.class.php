@@ -136,10 +136,11 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         if (! $field) {
             $board = new Cardwall_Board(array(), new Cardwall_OnTop_Config_ColumnCollection(), new Cardwall_MappingCollection());
         } else {
-            $board_factory      = new Cardwall_BoardFactory();
-            $field_retriever    = new Cardwall_FieldProviders_CustomFieldRetriever($field);
-            $columns            = $this->config->getRendererColumns($field);
-            $board              = $board_factory->getBoard($field_retriever, $columns, $forest_of_artifacts, $this->config, $user);
+            $board_factory       = new Cardwall_BoardFactory();
+            $field_retriever     = new Cardwall_FieldProviders_CustomFieldRetriever($field);
+            $columns             = $this->config->getRendererColumns($field);
+            $display_preferences = new Cardwall_DisplayPreferences(Cardwall_DisplayPreferences::DISPLAY_AVATARS);
+            $board               = $board_factory->getBoard($field_retriever, $columns, $forest_of_artifacts, $this->config, $user, $display_preferences);
         }
 
         return new Cardwall_RendererPresenter($board, $this->getQrCode(), $redirect_parameter, $field, $form);

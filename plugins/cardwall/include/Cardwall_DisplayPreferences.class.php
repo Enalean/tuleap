@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2011. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,18 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//
-// front-end to plugin Cardwall//
+class Cardwall_DisplayPreferences implements Tracker_CardDisplayPreferences {
+    
+    const ASSIGNED_TO_USERNAME_PREFERENCE_NAME = 'AD_cardwall_assign_to_display_username_';
 
-require_once('pre.php');
-require_once('common/plugin/PluginManager.class.php');
+    const DISPLAY_USERNAMES                    = 0;
+    const DISPLAY_AVATARS                      = 1;
 
-$plugin_manager = PluginManager::instance();
-$p = $plugin_manager->getPluginByName('cardwall');
-if ($p && $plugin_manager->isPluginAvailable($p)) {
-    $p->process(HTTPRequest::instance());
-} else {
-    header('Location: '.get_server_url());
+    /** @var bool */
+    private $should_display_avatars;
+
+    public function __construct($should_display_avatars) {
+        $this->should_display_avatars = $should_display_avatars;
+    }
+    
+    public function shouldDisplayAvatars() {
+        return $this->should_display_avatars;
+    }
 }
-
 ?>

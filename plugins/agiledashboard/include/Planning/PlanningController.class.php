@@ -37,7 +37,7 @@ class Planning_Controller extends MVC2_PluginController {
      * @var PlanningFactory
      */
     private $planning_factory;
-
+    
     public function __construct(Codendi_Request $request, PlanningFactory $planning_factory, Planning_MilestoneFactory $milestone_factory, $plugin_theme_path) {
         parent::__construct('agiledashboard', $request);
         

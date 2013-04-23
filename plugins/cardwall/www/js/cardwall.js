@@ -199,6 +199,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
         this.collection_url = codendi.tracker.base_url + '?func=get-values&formElement=' + this.field_id;
 
         this.users          = { };
+        this.is_display_avatar_selected = element.up('.cardwall_board').readAttribute('data-display-avatar');
     },
 
     fetchUserData : function() {
@@ -221,17 +222,25 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
     bindSelectedElementsToEditor : function( editor ) {
         
         editor.getSelectedUsers = function() {
-            
-            var avatars = editor.element.select( '.avatar' );
-            var users = { };
 
-            avatars.each( function( avatar ) {
-                var id      = avatar.readAttribute( 'data-user-id' );
-                users[ id ] = avatar.readAttribute( 'title' );
-            });
-            
-            this.options.selected = users;
+            if (editor.element.select( '.avatar' ).length == 0) {                
+                this.options.selected = getSelectedUsersByDisplayType('realname');
+            } else {
+                this.options.selected = getSelectedUsersByDisplayType('avatar');
+            }
         };
+        
+        function getSelectedUsersByDisplayType(classname) {
+                var values   = editor.element.select( '.'+ classname );
+                var users = { };
+
+                values.each( function( classname ) {
+                    var id      = classname.readAttribute( 'data-user-id' );
+                    users[ id ] = classname.readAttribute( 'title' );
+                });
+                
+                return users;
+            }
     },
 
     createAndInjectTemporaryContainer : function () {
@@ -316,9 +325,10 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
     },
 
     success : function() {
-        var field_id          = this.field_id,
-            is_multi_select   = (this.isMultipleSelect() === true),
-            tracker_user_data = this.tracker_user_data;
+        var field_id                     = this.field_id,
+            is_multi_select              = (this.isMultipleSelect() === true),
+            tracker_user_data            = this.tracker_user_data,
+            is_display_avatar_selected   = this.is_display_avatar_selected;
 
         return function updateCardInfo( transport, element ) {
             var new_values;
@@ -329,7 +339,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
             element.update( '' );
             new_values = getNewValues( transport, is_multi_select, field_id );
-            updateAvatars( element, new_values );
+            updateAssignedToValue( element, new_values );
 
             function getNewValues(transport, is_multi_select, field_id) {
                 var new_values;
@@ -343,18 +353,40 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                 return new_values;
             }
 
-            function updateAvatars( avatars_div, new_values ) {
+            function updateAssignedToValue( assigned_to_div, new_values ) {
+                var updateFunction = addUsername;
+                if (is_display_avatar_selected) {
+                    updateFunction = addAvatar;
+                }
+
                 if(new_values instanceof Array) {
                     for(var i=0; i<new_values.length; i++) {           
-                        addAvatar( avatars_div, new_values[i] );
+                        updateFunction( assigned_to_div, new_values[i] );
                     }
                 } else if( typeof new_values === 'string' && new_values.length > 0 ){
-                    addAvatar( avatars_div, new_values );
+                    updateFunction( assigned_to_div, new_values );
                 } else {
-                    avatars_div.update( ' - ' );
+                    assigned_to_div.update( ' - ' );
                 }
             }
-
+            
+            function addUsername(container, user_id) {
+                var realname = tracker_user_data[ field_id ][ user_id ][ 'realname' ],
+                    caption = tracker_user_data[ field_id ][ user_id ][ 'caption' ],
+                    username_div;
+                    
+                username_div = new Element( 'div' );
+                username_div.addClassName( 'realname' );
+                username_div.writeAttribute( 'title', caption );
+                username_div.writeAttribute( 'data-user-id', user_id );
+                
+                username_div.update(realname);
+                
+                container.insert( username_div );
+                container.insert(' ');
+                
+            }
+            
             function addAvatar( container, user_id ) {
                 var username = tracker_user_data[ field_id ][ user_id ][ 'username' ],
                     caption = tracker_user_data[ field_id ][ user_id ][ 'caption' ],
