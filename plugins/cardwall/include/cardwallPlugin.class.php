@@ -358,15 +358,6 @@ class cardwallPlugin extends Plugin {
      *  'into_xml' => The SimpleXMLElement to fill in
      */
     public function export_xml_project ($params) {
-
-        if (! isset($params['project']) || ! isset($params['into_xml'])) {
-            throw new CardwallEventParamsNotFoundException();
-        }
-
-        if (! $params['project'] instanceof Project || !  $params['into_xml'] instanceof SimpleXMLElement) {
-            throw new CardwallEventParamsWithoutGoodTypesException();
-        }
-
         $tracker_factory = TrackerFactory::instance();
 
         $cardwall_xml_export = new CardwallConfigXmlExport(
