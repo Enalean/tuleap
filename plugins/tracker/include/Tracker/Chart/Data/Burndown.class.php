@@ -67,7 +67,6 @@ class Tracker_Chart_Data_Burndown {
         $start_day        = $this->time_period->getStartDate();
         $last_value       = null;
         $x_axis           = 0;
-        var_dump($this->time_period);
         foreach($this->time_period->getDayOffsets() as $day_offset) {
             $current_day = strtotime("+".$day_offset." day", $start_day);
             if ($this->isInTheFutur($current_day)) {
