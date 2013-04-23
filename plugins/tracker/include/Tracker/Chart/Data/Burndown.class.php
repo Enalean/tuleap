@@ -31,13 +31,19 @@ class Tracker_Chart_Data_Burndown {
 
     private $remaining_effort = array();
     private $ideal_effort     = array();
-    private $capacity = null;
+    private $capacity         = null;
 
     public function __construct(Tracker_Chart_Data_IProvideBurndownTimePeriod $time_period, $capacity = null) {
         $this->time_period = $time_period;
-        $this->capacity = $capacity;
+        $this->capacity    = $capacity;
     }
 
+    /**
+     * Add a remaining effort at a given day offset
+     *
+     * @param Integer $day_offset
+     * @param Float   $remaining_effort
+     */
     public function addEffortAt($day_offset, $remaining_effort) {
         $this->remaining_effort[$day_offset] = $remaining_effort;
     }
