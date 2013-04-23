@@ -324,6 +324,14 @@
             </choice>
           </attribute>
         </optional>
+        <optional>
+          <attribute name="include_weekends">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </attribute>
+        </optional>
       </element>
     </optional>
     <choice>
