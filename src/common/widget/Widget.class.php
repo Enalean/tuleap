@@ -59,12 +59,14 @@ require_once('common/widget/Widget_ProjectImageViewer.class.php');
     var $hasPreferences;
     var $owner_id;
     var $owner_type;
+	var $purifier;
     /**
     * Constructor
     */
     function Widget($id) {
         $this->id = $id;
         $this->content_id = 0;
+		$this->purifier = Codendi_HTMLPurifier::instance();
     }
     
     function display($layout_id, $column_id, $readonly, $is_minimized, $display_preferences, $owner_id, $owner_type) {
