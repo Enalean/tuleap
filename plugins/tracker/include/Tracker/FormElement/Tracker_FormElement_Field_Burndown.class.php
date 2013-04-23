@@ -166,7 +166,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             $capacity = $this->getCapacity($artifact);
         }
         $field         = $this->getBurndownRemainingEffortField($artifact, $user);
-        $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, $duration, $this->includeWeekends());
+        if ($this->includeWeekends()) {
+            $time_period   = new Tracker_Chart_Data_BurndownTimePeriodWithWeekEnd($start_date, $duration);
+        } else {
+            $time_period   = new Tracker_Chart_Data_BurndownTimePeriodWithoutWeekEnd($start_date, $duration);
+        }
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
         $tonight       = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
 

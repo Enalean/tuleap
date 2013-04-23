@@ -25,7 +25,7 @@
 class Tracker_Chart_Data_Burndown {
 
     /**
-     * @var Tracker_Chart_Data_BurndownTimePeriod
+     * @var Tracker_Chart_Data_IProvideBurndownTimePeriod
      */
     private $time_period;
 
@@ -33,7 +33,7 @@ class Tracker_Chart_Data_Burndown {
     private $ideal_effort     = array();
     private $capacity = null;
 
-    public function __construct(Tracker_Chart_Data_BurndownTimePeriod $time_period, $capacity = null) {
+    public function __construct(Tracker_Chart_Data_IProvideBurndownTimePeriod $time_period, $capacity = null) {
         $this->time_period = $time_period;
         $this->capacity = $capacity;
     }
