@@ -65,15 +65,10 @@ class Tracker_Chart_Data_BurndownTimePeriod {
      */
     public function getHumanReadableDates() {
         $dates = array();
-
-        //if ($this->includeWeekends()) {
             foreach($this->getDayOffsets() as $day_offset) {
                 $day     = strtotime("+$day_offset days", $this->start_date);
                 $dates[] = date('D d', $day);
             }
-        /*} else {
-            $dates = $this->getHumanReadableDatesExcludingWeekends();
-        }*/
         return $dates;
     }
 
@@ -86,7 +81,7 @@ class Tracker_Chart_Data_BurndownTimePeriod {
         while (count($dates)-1 != $this->duration) {
             $day     = strtotime("+$day_offset days", $this->start_date);
             $day_offset ++;
-            if (date('D', $day) != 'Tue' && date('D', $day) != 'Sun') {
+            if (date('D', $day) != 'Sat' && date('D', $day) != 'Sun') {
                 $dates[] = date('D d', $day);
             }
         }
@@ -112,13 +107,10 @@ class Tracker_Chart_Data_BurndownTimePeriod {
         $day_offset = 0;
         while (count($day_offsets_excluding_we)-1 != $this->duration) {
             $day = strtotime("+$day_offset days", $this->start_date);
-            if (date('D', $day) != 'Tue' && date('D', $day) != 'Sun') {
+            if (date('D', $day) != 'Sat' && date('D', $day) != 'Sun') {
                 $day_offsets_excluding_we[] = $day_offset;
-                $day_offset++;
-            } else {
-                $day_offsets_excluding_we[] = $day_offset + 1;
-                $day_offset += 2;
             }
+            $day_offset++;
             
        }
        return $day_offsets_excluding_we;
