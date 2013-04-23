@@ -20,8 +20,6 @@
  */
 class XmlValidator {
 
-    public function __construct() {}
-
     /**
      *
      * @return boolean
