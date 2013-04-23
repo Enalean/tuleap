@@ -52,8 +52,8 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR, 'event_artifact_parents_selector', false);
 
             $this->_addHook(Event::SYSTRAY);
-            $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE, 'importFromXml', false);
-            $this->_addHook(Event::EXPORT_XML_PROJECT, 'exportToXml', false);
+            $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
+            $this->_addHook(Event::EXPORT_XML_PROJECT);
 
             if (defined('CARDWALL_BASE_DIR')) {
                 $this->_addHook(CARDWALL_EVENT_GET_SWIMLINE_TRACKER, 'cardwall_event_get_swimline_tracker', false);
@@ -276,18 +276,10 @@ class AgileDashboardPlugin extends Plugin {
      * @see Event::EXPORT_XML_PROJECT
      * @param $array $params
      */
-    public function exportToXml($params) {
-        if (! isset($params['into_xml']) || 
-            ! isset($params['project']) ||
-            ! $params['into_xml'] instanceof SimpleXMLElement ||
-            ! $params['project'] instanceof Project
-            ) {
-            throw new AgileDashBoardEventParamsInvalidException('Params received: ' . print_r($params, true));
-        }
-        
-        $params['action'] = 'export';
+    public function export_xml_project($params) {
+        $params['action']     = 'export';
         $params['project_id'] = $params['project']->getId();
-        $request = new Codendi_Request($params);
+        $request              = new Codendi_Request($params);
         $this->process($request);
     }
 
@@ -300,22 +292,10 @@ class AgileDashboardPlugin extends Plugin {
      *      mapping     array           An array of mappings between xml tracker IDs and their true IDs
      *
      */
-    public function importFromXml($params) {
-        $this->checkXmlImportParams($params);
-
+    public function import_xml_project_cardwall_done($params) {
         $params['action'] = 'import';
-        $request = new Codendi_Request($params);
+        $request          = new Codendi_Request($params);
         $this->process($request);
-    }
-
-    private function checkXmlImportParams($params) {
-        if (! isset($params['project_id']) ||
-            ! isset($params['xml_content']) ||
-            ! isset($params['mapping']) ||
-            ! is_array($params['mapping'])
-            ) {
-            throw new AgileDashBoardEventParamsInvalidException('Params received: ' . print_r($params, true));
-        }
     }
 }
 
