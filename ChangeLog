@@ -2,8 +2,8 @@ Version 5.13 (Not Released Yet)
 
 	== Plugins ==
 	* admssw: 0.2
-	* agiledashboard: 0.78
-	* cardwall: 0.9.23
+	* agiledashboard: 0.79
+	* cardwall: 0.9.24
 	* doaprdf: 0.2
 	* foafprofiles: 0.2
 	* graphontrackersv5: 5.0.9
@@ -12,7 +12,7 @@ Version 5.13 (Not Released Yet)
 	* mediawiki: 0.6
 	* git: 3.6
 	* docman: 2.26.15
-	* tracker: 5.110
+	* tracker: 5.111
 	* ldap: 3.28
 	* IM: 1.5.7
 

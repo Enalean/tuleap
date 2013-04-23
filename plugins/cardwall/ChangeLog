@@ -1,3 +1,6 @@
+Version 0.9.24 - Tuleap 5.13
+    * story #3077 see people names instead of avatars on cardwall
+
 Version 0.9.23 - Tuleap 5.13
     * Add a plugin dependency solver to force installation of needed plugins
 

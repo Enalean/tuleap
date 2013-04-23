@@ -1,3 +1,6 @@
+Version 5.111 - Tuleap 5.13
+    * story #3077 see people names instead of avatars on cardwall
+
 Version 5.110 - Tuleap 5.13
     * Fix bug reported in defect #ericsson:2858 and request #ericsson:2162
       Delete cross reference when an artifact link is removed.
