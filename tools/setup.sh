@@ -1375,7 +1375,7 @@ fi
 $MYSQL -u$PROJECT_ADMIN -p$codendiadm_passwd $PROJECT_NAME < /usr/share/forgeupgrade/db/install-mysql.sql
 $INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0755 --directory /etc/$PROJECT_NAME/forgeupgrade
 $INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0644 $INSTALL_DIR/src/etc/forgeupgrade-config.ini.dist /etc/$PROJECT_NAME/forgeupgrade/config.ini
-substitute /etc/$PROJECT_NAME/forgeupgrade/config.ini "%project_name%" "$PROJECT_NAME"
+fix_paths /etc/$PROJECT_NAME/forgeupgrade/config.ini
 
 ##############################################
 # *Last* step: install plugins
