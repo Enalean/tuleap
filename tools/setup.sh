@@ -146,6 +146,10 @@ substitute() {
   $PERL -pi -e "s/$2/$replacement/g" $1
 }
 
+fix_paths() {
+    $PERL -pi -E 'my %h = qw(/usr/share/codendi /usr/share/tuleap /etc/codendi /etc/tuleap /usr/lib/codendi /usr/lib/tuleap /var/lib/codendi /var/lib/tuleap codendi_cache tuleap_cache /var/log/codendi /var/log/tuleap); s%(/usr/share/codendi|/etc/codendi|/usr/lib/codendi|/var/lib/codendi|codendi_cache|/var/log/codendi)%$h{$1}%ge;' $1
+}
+
 generate_passwd() {
     $CAT /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 9 | head -1
 }
@@ -621,6 +625,7 @@ setup_apache_rhel() {
 	     /etc/httpd/conf.d/auth_mysql.conf \
 	     /etc/httpd/conf.d/codendi_aliases.conf; do
 	install_dist_conf $f
+	fix_paths $f
     done
 
     # replace string patterns in codendi_aliases.conf
@@ -762,7 +767,8 @@ setup_tuleap() {
     fi
 
     substitute "/etc/$PROJECT_NAME/conf/local.inc" 'codendiadm' "$PROJECT_ADMIN"
-   
+    fix_paths "/etc/$PROJECT_NAME/conf/local.inc"
+
     # replace string patterns in database.inc
     substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbpasswd%' "$codendiadm_passwd" 
     substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbuser%' "$PROJECT_ADMIN" 
