@@ -74,14 +74,10 @@ class Tracker_Chart_Data_BurndownTimePeriodWithoutWeekEnd  implements Tracker_Ch
         $day_offset = 0;
         while (count($day_offsets_excluding_we)-1 != $this->duration) {
             $day = strtotime("+$day_offset days", $this->start_date);
-            if ($this->isWeekendDay($day)) {
-                $day_offsets_excluding_we[] = $day_offset + 1;
-                $day_offset += 2;
-            } else {
+            if ( ! $this->isWeekendDay($day)) {
                 $day_offsets_excluding_we[] = $day_offset;
-                $day_offset++;
             }
-
+            $day_offset++;
        }
        return $day_offsets_excluding_we;
     }
