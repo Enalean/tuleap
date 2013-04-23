@@ -49,12 +49,10 @@ class Tracker_Chart_Data_Burndown {
      */
     public function getRemainingEffort() {
         $remaining_effort = array();
-        $start_day        = $this->time_period->getStartDate();
         $last_value       = null;
         $x_axis           = 0;
         foreach($this->time_period->getDayOffsets() as $day_offset) {
-            $current_day = strtotime("+".$day_offset." day", $start_day);
-            if ($this->isInTheFutur($current_day)) {
+            if ($this->isInTheFutur($day_offset)) {
                 $remaining_effort[$x_axis] = null;
             } else if (array_key_exists($day_offset, $this->remaining_effort)) {
                 $remaining_effort[$x_axis] = $this->remaining_effort[$day_offset];
@@ -67,7 +65,7 @@ class Tracker_Chart_Data_Burndown {
                 $remaining_effort[$x_axis] = $last_value;
             }
 
-            $last_value  = $remaining_effort[$x_axis];
+            $last_value = $remaining_effort[$x_axis];
             $x_axis++;
         }
         return $remaining_effort;
@@ -123,8 +121,8 @@ class Tracker_Chart_Data_Burndown {
         return null;
     }
 
-    private function isInTheFutur($day) {
-        return $day > $_SERVER['REQUEST_TIME'];
+    private function isInTheFutur($day_offset) {
+        return strtotime("+".$day_offset." day", $this->time_period->getStartDate()) > $_SERVER['REQUEST_TIME'];
     }
 }
 
