@@ -30,7 +30,12 @@ else
     RH_MINOR_VERSION=$(echo $RH_VERSION | cut -d'-' -f2)
 
     INSTALL_PROFILE="rhel"
-    PROJECT_NAME="codendi"
+
+    if [ $RH_MAJOR_VERSION = "6" ]; then
+	PROJECT_NAME="tuleap"
+    else
+	PROJECT_NAME="codendi"
+    fi
     PROJECT_ADMIN="codendiadm"
     TULEAP_CACHE_DIR="/var/tmp/tuleap_cache"
     NAMED_SERVICE="named"
@@ -600,7 +605,7 @@ setup_apache_rhel() {
     done
     cd - > /dev/null
 
-    $TOUCH /etc/httpd/conf.d/${PROJECT_NAME}_svnroot.conf
+    $TOUCH /etc/httpd/conf.d/codendi_svnroot.conf
 
     echo "Installing Apache configuration files..."
     make_backup /etc/httpd/conf/httpd.conf

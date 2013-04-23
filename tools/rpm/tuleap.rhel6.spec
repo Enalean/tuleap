@@ -1,6 +1,6 @@
 # Define variables
 %define PKG_NAME @@PKG_NAME@@
-%define APP_NAME codendi
+%define APP_NAME tuleap
 %define APP_USER codendiadm
 %define APP_HOME_DIR /home/%{APP_USER}
 %define APP_DIR %{_datadir}/%{APP_NAME}
@@ -175,7 +175,7 @@ Group: Development/Tools
 Version: @@PLUGIN_IM_VERSION@@
 Release: 1%{?dist}
 AutoReqProv: no
-Requires: tuleap, openfire, openfire-codendi-plugins
+Requires: tuleap, openfire, openfire-tuleap-plugins
 #, zlib.i686
 Provides: tuleap-plugin-im = %{version}
 %description plugin-im
@@ -210,6 +210,7 @@ Requires: tuleap, %{php_base}-pecl-oci8 = 1.4.5
 Plugin to insert Remedy tickets using Codex (used for ST only)
 
 %package plugin-tracker
+AutoReqProv: no
 Summary: Tracker v5 for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_TRACKER_VERSION@@
@@ -443,7 +444,7 @@ done
 
 # Install init.d script
 %{__install} -d $RPM_BUILD_ROOT/etc/rc.d/init.d
-%{__install} src/utils/init.d/%{APP_NAME} $RPM_BUILD_ROOT/etc/rc.d/init.d/
+%{__install} src/utils/init.d/codendi $RPM_BUILD_ROOT/etc/rc.d/init.d/
 
 # Install cron.d script
 %{__install} -d $RPM_BUILD_ROOT/etc/cron.d
@@ -533,21 +534,21 @@ if [ "$1" -eq "1" ]; then
     fi
     # ftpadmin
     if id %{ftpadmin_user} >/dev/null 2>&1; then
-        /usr/sbin/usermod -c 'FTP Administrator'    -d '/var/lib/codendi/ftp'    -g %{ftpadmin_group} %{ftpadmin_user}
+        /usr/sbin/usermod -c 'FTP Administrator'    -d '/var/lib/tuleap/ftp'    -g %{ftpadmin_group} %{ftpadmin_user}
     else
-        /usr/sbin/useradd -c 'FTP Administrator' -M -d '/var/lib/codendi/ftp' -r -g %{ftpadmin_group} %{ftpadmin_user}
+        /usr/sbin/useradd -c 'FTP Administrator' -M -d '/var/lib/tuleap/ftp' -r -g %{ftpadmin_group} %{ftpadmin_user}
     fi
     # ftp
     if id %{ftp_user} >/dev/null 2>&1; then
-        /usr/sbin/usermod -c 'FTP User'    -d '/var/lib/codendi/ftp'    -g %{ftp_group} %{ftp_user}
+        /usr/sbin/usermod -c 'FTP User'    -d '/var/lib/tuleap/ftp'    -g %{ftp_group} %{ftp_user}
     else
-        /usr/sbin/useradd -c 'FTP User' -M -d '/var/lib/codendi/ftp' -r -g %{ftp_group} %{ftp_user}
+        /usr/sbin/useradd -c 'FTP User' -M -d '/var/lib/tuleap/ftp' -r -g %{ftp_group} %{ftp_user}
     fi
     # dummy
     if id %{dummy_user} >/dev/null 2>&1; then
-        /usr/sbin/usermod -c 'Dummy Tuleap User'    -d '/var/lib/codendi/dumps'    -g %{dummy_group} %{dummy_user}
+        /usr/sbin/usermod -c 'Dummy Tuleap User'    -d '/var/lib/tuleap/dumps'    -g %{dummy_group} %{dummy_user}
     else
-        /usr/sbin/useradd -c 'Dummy Tuleap User' -M -d '/var/lib/codendi/dumps' -r -g %{dummy_group} %{dummy_user}
+        /usr/sbin/useradd -c 'Dummy Tuleap User' -M -d '/var/lib/tuleap/dumps' -r -g %{dummy_group} %{dummy_user}
     fi
 else
     # Stop the services
@@ -771,7 +772,7 @@ fi
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit-email.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/codendi_svn_pre_commit.php
 %attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
-%attr(00755,root,root) /etc/rc.d/init.d/%{APP_NAME}
+%attr(00755,root,root) /etc/rc.d/init.d/codendi
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
 %dir %{APP_CACHE_DIR}
 %dir /etc/httpd/conf.d/tuleap-plugins

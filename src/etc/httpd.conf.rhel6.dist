@@ -1011,9 +1011,9 @@ BrowserMatch "^Dreamweaver-WebDAV-SCM1" redirect-carefully
 
 Include conf.d/php.conf
 
-DocumentRoot "/usr/share/codendi/src/www"
+DocumentRoot "/usr/share/tuleap/src/www"
 
-<Directory "/usr/share/codendi/src/www">
+<Directory "/usr/share/tuleap/src/www">
     Options Includes FollowSymLinks MultiViews
     AllowOverride All
     AcceptPathInfo On
@@ -1026,7 +1026,7 @@ DocumentRoot "/usr/share/codendi/src/www"
 # Currently, the risk is low, so we only filter on UserAgent string (which can be easily forged)
 # For better security, you can filter on the server IP address
 SetEnvIf User-Agent ^Codendi let_me_in
-<Directory "/usr/share/codendi/src/www/api">
+<Directory "/usr/share/tuleap/src/www/api">
     # API scrips do not end with ".php"
     ForceType application/x-httpd-php
     Order Deny,Allow
@@ -1092,7 +1092,7 @@ Include conf/ssl.conf
 </VirtualHost>
 
 #
-# On the production server the local.inc file is in /etc/codendi/conf/local.inc
+# On the production server the local.inc file is in /etc/tuleap/conf/local.inc
 # because it contains sensitive data
 #
-SetEnv CODENDI_LOCAL_INC ""
+SetEnv TULEAP_LOCAL_INC ""
