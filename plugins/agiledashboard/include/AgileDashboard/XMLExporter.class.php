@@ -74,11 +74,8 @@ class AgileDashboard_XMLExporter {
             $planning_node->addAttribute(PlanningParameters::BACKLOG_TRACKER_ID, $planning_backlog_tracker_id);
         }
 
-        if (! $this->xml_validator->nodeIsValid(
-                 $agiledashboard_node,
-                 realpath(dirname(__FILE__).'/../../www/resources/xml_project_agiledashboard.rng')
-               )
-         ) {
+        $rng_path = realpath(dirname(__FILE__).'/../../www/resources/xml_project_agiledashboard.rng');
+        if (! $this->xml_validator->nodeIsValid($agiledashboard_node, $rng_path)) {
             throw new AgileDashboard_XMLExporterNodeNotValidException();
         }
     }
