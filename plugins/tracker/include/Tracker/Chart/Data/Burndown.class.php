@@ -43,25 +43,6 @@ class Tracker_Chart_Data_Burndown {
     }
 
     /**
-     * Stack a new remaining effort value
-     *
-     * @param Float|Null $remaining_effort
-     */
-    public function pushRemainingEffort($remaining_effort) {
-        $this->remaining_effort[] = $remaining_effort;
-        if($remaining_effort !== null && $this->remaining_effort[0] === null) {
-            $this->fillInInitialRemainingEffortValues($remaining_effort);
-        }
-    }
-
-    private function fillInInitialRemainingEffortValues($value) {
-        $last_day_offset = count($this->remaining_effort) - 1;
-        for ($i = $last_day_offset; $i >= 0; $i--) {
-            $this->remaining_effort[$i] = $value;
-        }
-    }
-
-    /**
      * Returns the remaining effort values for each day to display on Burndown
      *
      * @return Array
