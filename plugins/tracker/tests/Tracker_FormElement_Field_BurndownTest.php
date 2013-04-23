@@ -127,7 +127,8 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->assertEqual($data->getRemainingEffort(), array(10,9,8,7,6));
     }
 
-    public function itDoesNotFetchDataInTheFuture() {
+    public function itDoesNotFetchDataInTheFutureWhenIncludingWeekend() {
+        stub($this->field)->getProperty('include_weekends')->returns(true);
         $field = mock('Tracker_FormElement_Field_Float');
 
         $today = mktime(23, 59, 59);
