@@ -44,14 +44,5 @@ class Tracker_Chart_Data_BurndownTimePeriodWithoutWeekEndTest extends TuleapTest
 
         $this->assertEqual($time_period->getHumanReadableDates(), array('Wed 04', 'Thu 05', 'Fri 06', 'Mon 09', 'Tue 10'));
     }
-
-    public function itProvidesAListOfDays() {
-        $start_date    = mktime(0, 0, 0, 7, 4, 2012);
-        var_dump(date('D d', $start_date));
-        $time_period   = new Tracker_Chart_Data_BurndownTimePeriodWithoutWeekEnd($start_date, 4);
-
-        var_dump($time_period->getDayOffsets());
-        //$this->assertEqual($time_period->getDayOffsets(), array('Wed 04', 'Thu 05', 'Fri 06', 'Mon 09', 'Tue 10'));
-    }
 }
 ?>
