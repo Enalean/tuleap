@@ -39,7 +39,7 @@ abstract class MVC2_PluginController extends MVC2_Controller {
     protected function checkUserIsAdmin() {
         $project = $this->request->getProject();
         $user    = $this->request->getCurrentUser();
-        if (! $project->userIsAdmin($user)) {
+        if (! $project->userIsAdmin() && ! $user->isSuperUser()) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
             $this->redirect(array('group_id' => $this->group_id));
             // the below is only run by tests (redirect should exit but is mocked)

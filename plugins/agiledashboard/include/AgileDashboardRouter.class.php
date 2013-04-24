@@ -77,8 +77,8 @@ class AgileDashboardRouter {
      * @param Codendi_Request $request 
      */
     public function route(Codendi_Request $request) {
-        $controller                 = $this->buildController($request);
-        $agile_dashboard_controller = new AgileDashboard_Controller($request, $this->planning_factory, $this->milestone_factory, $this->plugin->getThemePath());
+        $controller                     = $this->buildController($request);
+        $agile_dashboard_xml_controller = new AgileDashboard_XMLController($request, $this->planning_factory, $this->milestone_factory, $this->plugin->getThemePath());
 
         switch($request->get('action')) {
             case 'show':
@@ -110,10 +110,10 @@ class AgileDashboardRouter {
                 $this->executeAction($controller, 'generateSystrayData', $request->params);
                 break;
             case 'export':
-                $this->executeAction($agile_dashboard_controller, 'index');
+                $this->executeAction($agile_dashboard_xml_controller, 'export');
                 break;
             case 'import':
-                $this->executeAction($agile_dashboard_controller, 'createMultiplefromXml');
+                $this->executeAction($agile_dashboard_xml_controller, 'import');
                 break;
             case 'index':
             default:

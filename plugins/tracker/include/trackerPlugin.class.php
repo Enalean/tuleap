@@ -561,7 +561,6 @@ class trackerPlugin extends Plugin {
     public function import_xml_project($params) {
         $tracker_xml_import = new TrackerXmlImport(
             $params['project']->getId(),
-            $params['xml_content'],
             TrackerFactory::instance(),
             EventManager::instance(),
             new Tracker_Hierarchy_Dao(),

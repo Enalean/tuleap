@@ -60,11 +60,11 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
     }
 
     protected function userIsAdmin() {
-        stub($this->project)->userIsAdmin($this->current_user)->returns(true);
+        stub($this->project)->userIsAdmin()->returns(true);
     }
 
     protected function userIsNotAdmin() {
-        stub($this->project)->userIsAdmin($this->current_user)->returns(false);
+        stub($this->project)->userIsAdmin()->returns(false);
     }
 
     /**

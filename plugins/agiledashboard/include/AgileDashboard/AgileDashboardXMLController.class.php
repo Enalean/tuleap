@@ -17,15 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 require_once 'common/mvc2/PluginController.class.php';
 require_once 'common/XmlValidator/XmlValidator.class.php';
 
 /**
  * Handles the HTTP actions related to  the agile dashborad as a whole.
- * 
+ *
  */
-class AgileDashboard_Controller extends MVC2_PluginController {
+class AgileDashboard_XMLController extends MVC2_PluginController {
 
     /**
      *
@@ -60,7 +60,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $this->plugin_theme_path = $plugin_theme_path;
     }
 
-    public function index() {
+    public function export() {
         $root_node = $this->request->get('into_xml');
 
         $plannings = $this->planning_factory->getPlanningsWithBacklogTracker(
@@ -73,12 +73,12 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $xml_exporter->export($root_node, $plannings);
     }
 
-    public function createMultiplefromXml() {
+    public function import() {
         $this->checkUserIsAdmin();
-        
+
         $xml = $this->request->get('xml_content')->agiledashboard;
         $xml_validator = new XmlValidator();
-        $rng_path      = realpath(dirname(__FILE__).'/../../www/resources/xml_project_agiledashboard.rng');
+        $rng_path      = realpath(AGILEDASHBOARD_BASE_DIR.'/www/resources/xml_project_agiledashboard.rng');
 
         if (! $xml_validator->nodeIsValid($xml, $rng_path)) {
             throw new XMLImporterInputNotWellFormedException();

@@ -60,7 +60,7 @@ class CardwallConfigXmlExport {
             $this->addTrackerChild($tracker, $trackers_node);
         }
 
-        $rng_path = realpath(dirname(__FILE__).'/../www/resources/xml_project_cardwall.rng');
+        $rng_path = realpath(CARDWALL_BASE_DIR.'/www/resources/xml_project_cardwall.rng');
         if (! $this->xml_validator->nodeIsValid($cardwall_node, $rng_path)) {
             throw new CardwallConfigXmlExportNodeNotValidException();
         }
