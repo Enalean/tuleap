@@ -25,7 +25,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
 
     public function getCriteriaWhere($criteria) {
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
-            return $this->buildMatchExpression("c.artifact_in_tracker_id", $criteria_value);
+            return $this->buildMatchExpression("artifact.per_tracker_artifact_id", $criteria_value);
         }
         return '';
     }
