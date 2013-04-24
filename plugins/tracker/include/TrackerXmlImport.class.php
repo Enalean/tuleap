@@ -25,9 +25,6 @@ class TrackerXmlImport {
     /** @var int */
     private $group_id;
 
-    /** @var SimpleXMLElement */
-    private $xml_content;
-
     /** @var TrackerFactory */
     private $tracker_factory;
 
@@ -43,9 +40,8 @@ class TrackerXmlImport {
 
     const XML_PARENT_ID_EMPTY = "0";
 
-    public function __construct($group_id, SimpleXMLElement $xml_output, TrackerFactory $tracker_factory, EventManager $event_manager, Tracker_Hierarchy_Dao $hierarchy_dao, XmlValidator $xml_validator) {
+    public function __construct($group_id, TrackerFactory $tracker_factory, EventManager $event_manager, Tracker_Hierarchy_Dao $hierarchy_dao, XmlValidator $xml_validator) {
         $this->group_id        = $group_id;
-        $this->xml_content     = $xml_output;
         $this->tracker_factory = $tracker_factory;
         $this->event_manager   = $event_manager;
         $this->hierarchy_dao   = $hierarchy_dao;
@@ -56,9 +52,9 @@ class TrackerXmlImport {
      *
      * @return array Array of SimpleXmlElement with each tracker
      */
-    public function getAllXmlTrackers() {
+    public function getAllXmlTrackers(SimpleXMLElement $xml_input) {
         $tracker_list = array();
-        foreach ($this->xml_content->trackers->children() as $xml_tracker) {
+        foreach ($xml_input->trackers->children() as $xml_tracker) {
             $tracker_list[$this->getXmlTrackerAttribute($xml_tracker, 'id')] = $xml_tracker;
         }
         return $tracker_list;
@@ -78,10 +74,10 @@ class TrackerXmlImport {
         return (String) $tracker_attributes[$attribute_name];
     }
 
-    public function import() {
+    public function import(SimpleXMLElement $xml_input) {
         $created_trackers_list = array();
 
-        foreach ($this->getAllXmlTrackers() as $xml_tracker_id => $xml_tracker) {
+        foreach ($this->getAllXmlTrackers($xml_input) as $xml_tracker_id => $xml_tracker) {
 
             if (! $this->xml_validator->nodeIsValid($xml_tracker, realpath(dirname(__FILE__).'/../www/resources/tracker.rng'))) {
                 throw new TrackerFromXmlInputNotWellFormedException();
@@ -91,19 +87,19 @@ class TrackerXmlImport {
             $created_trackers_list = array_merge($created_trackers_list, $created_tracker);
         }
 
-        $this->importHierarchy($created_trackers_list);
+        $this->importHierarchy($xml_input, $created_trackers_list);
 
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT_TRACKER_DONE,
-            array('project_id' => $this->group_id, 'xml_content' => $this->xml_content, 'mapping' => $created_trackers_list)
+            array('project_id' => $this->group_id, 'xml_content' => $xml_input, 'mapping' => $created_trackers_list)
         );
 
         return $created_trackers_list;
     }
 
-    private function importHierarchy(array $created_trackers_list) {
+    private function importHierarchy(SimpleXMLElement $xml_input, array $created_trackers_list) {
         $all_hierarchies = array();
-        foreach ($this->getAllXmlTrackers() as $xml_tracker) {
+        foreach ($this->getAllXmlTrackers($xml_input) as $xml_tracker) {
             $all_hierarchies = $this->buildTrackersHierarchy($all_hierarchies, $xml_tracker, $created_trackers_list);
         }
 

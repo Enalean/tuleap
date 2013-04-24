@@ -83,7 +83,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
         $this->xml_trackers_list = array("T101" => $this->xml_tracker1, "T102" => $this->xml_tracker2, "T103" => $this->xml_tracker3);
         $this->mapping = array(
             "T101" => 444,
-            "T102" => 555, 
+            "T102" => 555,
             "T103" => 666
         );
 
@@ -102,8 +102,8 @@ class TrackerXmlImportTest extends TuleapTestCase {
 
         $this->xml_validator = stub('XmlValidator')->nodeIsValid()->returns(true);
 
-        $this->tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->xml_input, $this->tracker_factory, $this->event_manager, $this->hierarchy_dao, $this->xml_validator);
-    
+        $this->tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->tracker_factory, $this->event_manager, $this->hierarchy_dao, $this->xml_validator);
+
         $GLOBALS['Response'] = new MockResponse();
 
         $created_tracker1 = mock('Tracker');
@@ -120,7 +120,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
     }
 
     public function itReturnsEachSimpleXmlTrackerFromTheXmlInput() {
-        $trackers_result = $this->tracker_xml_importer->getAllXmlTrackers();
+        $trackers_result = $this->tracker_xml_importer->getAllXmlTrackers($this->xml_input);
         $diff = array_diff($trackers_result, $this->xml_trackers_list);
 
         $this->assertEqual(count($trackers_result), 3);
@@ -131,7 +131,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
         $this->tracker_factory->expectCallCount('createFromXML', 3);
         $this->hierarchy_dao->expectCallCount('updateChildren',2);
 
-        $result = $this->tracker_xml_importer->import();
+        $result = $this->tracker_xml_importer->import($this->xml_input);
 
         $this->assertEqual($result, $this->mapping);
     }
@@ -139,19 +139,19 @@ class TrackerXmlImportTest extends TuleapTestCase {
     public function itRaisesAnExceptionIfATrackerCannotBeCreatedAndDoesNotContinue() {
         $tracker_factory = mock('TrackerFactory');
         stub($tracker_factory)->createFromXml()->returns(null);
-        $this->tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->xml_input, $tracker_factory, $this->event_manager, $this->hierarchy_dao, $this->xml_validator);
+        $this->tracker_xml_importer = new TrackerXmlImport($this->group_id, $tracker_factory, $this->event_manager, $this->hierarchy_dao, $this->xml_validator);
 
         $this->expectException();
         $tracker_factory->expectCallCount('createFromXML', 1);
-        $this->tracker_xml_importer->import();
+        $this->tracker_xml_importer->import($this->xml_input);
     }
 
     public function itRaisesAnExceptionTheXmlDoesNotMatchTheRNG() {
         $xml_validator = stub('XmlValidator')->nodeIsValid()->returns(false);
-        $tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->xml_input, $this->tracker_factory, $this->event_manager, $this->hierarchy_dao, $xml_validator);
+        $tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->tracker_factory, $this->event_manager, $this->hierarchy_dao, $xml_validator);
 
         $this->expectException('trackerFromXmlInputNotWellFormedException');
-        $tracker_xml_importer->import();
+        $tracker_xml_importer->import($this->xml_input);
     }
 
     public function itThrowsAnEventIfAllTrackersAreCreated() {
@@ -165,7 +165,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
         )->once();
 
         $this->tracker_factory->expectCallCount('createFromXML', 3);
-        $this->tracker_xml_importer->import();
+        $this->tracker_xml_importer->import($this->xml_input);
     }
 
     public function itBuildsTrackersHierarchy() {
