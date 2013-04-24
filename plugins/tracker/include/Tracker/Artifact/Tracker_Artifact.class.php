@@ -1421,7 +1421,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @return int the artifact id
      */
-    function getPerTrackerArtifactId() {
+    public function getPerTrackerArtifactId() {
         if ($this->per_tracker_id == null)
             $this->per_tracker_id = $this->getDao()->getPerTrackerArtifactId($this->id);
         return $this->per_tracker_id;
