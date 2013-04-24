@@ -1,3 +1,6 @@
+Version 0.9.26 - Tuleap 5.13
+    * Fix include bug
+
 Version 0.9.25 - Tuleap 5.13
     * Story #3075 : import a basic agile dashboard template
 
