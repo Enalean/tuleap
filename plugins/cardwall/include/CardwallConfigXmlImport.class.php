@@ -64,7 +64,7 @@ class CardwallConfigXmlImport {
      * @throws CardwallFromXmlImportCannotBeEnabledException
      */
     public function import(SimpleXMLElement $xml_input) {
-        $rng_path = realpath(CARDWALL_BASE_DIR.'/www/resources/xml_project_cardwall.rng');
+        $rng_path = realpath(CARDWALL_BASE_DIR.'/../www/resources/xml_project_cardwall.rng');
         if (! $this->xml_validator->nodeIsValid($xml_input->cardwall, $rng_path)) {
             throw new CardwallFromXmlInputNotWellFormedException();
         }

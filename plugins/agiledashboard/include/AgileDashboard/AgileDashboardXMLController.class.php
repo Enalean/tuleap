@@ -78,7 +78,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController {
 
         $xml = $this->request->get('xml_content')->agiledashboard;
         $xml_validator = new XmlValidator();
-        $rng_path      = realpath(AGILEDASHBOARD_BASE_DIR.'/www/resources/xml_project_agiledashboard.rng');
+        $rng_path      = realpath(AGILEDASHBOARD_BASE_DIR.'/../www/resources/xml_project_agiledashboard.rng');
 
         if (! $xml_validator->nodeIsValid($xml, $rng_path)) {
             throw new XMLImporterInputNotWellFormedException();
