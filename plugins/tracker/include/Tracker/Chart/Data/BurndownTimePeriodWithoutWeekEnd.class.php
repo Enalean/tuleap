@@ -55,9 +55,9 @@ class Tracker_Chart_Data_BurndownTimePeriodWithoutWeekEnd  implements Tracker_Ch
         $dates = array();
         $day_offset = 0;
         while (count($dates)-1 != $this->duration) {
-            $day     = strtotime("+$day_offset days", $this->start_date);
-            $day_offset ++;
-            if ( ! $this->isWeekendDay($day)) {
+            $day = $this->getNextDay($day_offset, $this->start_date);
+            $day_offset++;
+            if ( $this->isNotWeekendDay($day)) {
                 $dates[] = date('D d', $day);
             }
         }
@@ -73,8 +73,8 @@ class Tracker_Chart_Data_BurndownTimePeriodWithoutWeekEnd  implements Tracker_Ch
         $day_offsets_excluding_we = array();
         $day_offset = 0;
         while (count($day_offsets_excluding_we)-1 != $this->duration) {
-            $day = strtotime("+$day_offset days", $this->start_date);
-            if ( ! $this->isWeekendDay($day)) {
+            $day = $this->getNextDay($day_offset, $this->start_date);
+            if ( $this->isNotWeekendDay($day)) {
                 $day_offsets_excluding_we[] = $day_offset;
             }
             $day_offset++;
@@ -82,8 +82,12 @@ class Tracker_Chart_Data_BurndownTimePeriodWithoutWeekEnd  implements Tracker_Ch
        return $day_offsets_excluding_we;
     }
 
-    private function isWeekendDay($day) {
-        return date('D', $day) == 'Sat' || date('D', $day) == 'Sun';
+    private function getNextDay($next_day_number, $date) {
+        return strtotime("+$next_day_number days", $date);
+    }
+
+    private function isNotWeekendDay($day) {
+        return ! (date('D', $day) == 'Sat' || date('D', $day) == 'Sun');
     }
 }
 

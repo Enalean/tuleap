@@ -32,7 +32,7 @@ class b201304230915_create_burndown_field_table extends ForgeUpgrade_Bucket {
         $sql = "CREATE TABLE IF NOT EXISTS tracker_field_burndown (
                     field_id int(11) UNSIGNED NOT NULL PRIMARY KEY,
                     include_weekends tinyint(1) NOT NULL
-                );";
+                ) ENGINE=InnoDB";
         $this->db->createTable('tracker_field_burndown', $sql);
 
         $sql = "INSERT INTO tracker_field_burndown (field_id, include_weekends)

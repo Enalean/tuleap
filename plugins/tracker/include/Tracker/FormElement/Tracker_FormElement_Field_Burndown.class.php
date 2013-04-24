@@ -40,7 +40,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     public $default_properties = array(
         'include_weekends' => array (
-            'value' => 1,
+            'value' => 0,
             'type'  => 'checkbox')
     );
 
