@@ -25,36 +25,27 @@
 class Tracker_Chart_Data_Burndown {
 
     /**
-     * @var Tracker_Chart_Data_BurndownTimePeriod
+     * @var Tracker_Chart_Data_IProvideBurndownTimePeriod
      */
     private $time_period;
 
     private $remaining_effort = array();
     private $ideal_effort     = array();
-    private $capacity = null;
+    private $capacity         = null;
 
-    public function __construct(Tracker_Chart_Data_BurndownTimePeriod $time_period, $capacity = null) {
+    public function __construct(Tracker_Chart_Data_IProvideBurndownTimePeriod $time_period, $capacity = null) {
         $this->time_period = $time_period;
-        $this->capacity = $capacity;
+        $this->capacity    = $capacity;
     }
 
     /**
-     * Stack a new remaining effort value
+     * Add a remaining effort at a given day offset
      *
-     * @param Float|Null $remaining_effort
+     * @param Integer $day_offset
+     * @param Float   $remaining_effort
      */
-    public function pushRemainingEffort($remaining_effort) {
-        $this->remaining_effort[] = $remaining_effort;
-        if($remaining_effort !== null && $this->remaining_effort[0] === null) {
-            $this->fillInInitialRemainingEffortValues($remaining_effort);
-        }
-    }
-
-    private function fillInInitialRemainingEffortValues($value) {
-        $last_day_offset = count($this->remaining_effort) - 1;
-        for ($i = $last_day_offset; $i >= 0; $i--) {
-            $this->remaining_effort[$i] = $value;
-        }
+    public function addEffortAt($day_offset, $remaining_effort) {
+        $this->remaining_effort[$day_offset] = $remaining_effort;
     }
 
     /**
@@ -64,24 +55,37 @@ class Tracker_Chart_Data_Burndown {
      */
     public function getRemainingEffort() {
         $remaining_effort = array();
-        $current_day      = $this->time_period->getStartDate();
-        $last_value       = null;
-
+        $previous_value   = null;
+        $x_axis           = 0;
         foreach($this->time_period->getDayOffsets() as $day_offset) {
-
-            if ($this->isInTheFutur($current_day)) {
-                $remaining_effort[] = null;
-            } else if (array_key_exists($day_offset, $this->remaining_effort)) {
-                $remaining_effort[] = $this->remaining_effort[$day_offset];
-            } else {
-                $remaining_effort[] = $last_value;
+            $current_value = null;
+            if ($this->isNotInTheFutur($day_offset)) {
+                if ($this->hasRemainingEffortAt($day_offset)) {
+                    $current_value = $this->remaining_effort[$day_offset];
+                    $this->fillPreviousNullValues($previous_value, $current_value, $remaining_effort);
+                } else {
+                    $current_value = $previous_value;
+                }
             }
 
-            $last_value  = $remaining_effort[$day_offset];
-            $current_day = strtotime("+1 day", $current_day);
+            $remaining_effort[$x_axis] = $current_value;
+            $previous_value = $current_value;
+            $x_axis++;
         }
-
         return $remaining_effort;
+    }
+
+    private function hasRemainingEffortAt($day_offset) {
+        return array_key_exists($day_offset, $this->remaining_effort);
+    }
+
+    private function fillPreviousNullValues($previous_value, $current_value, array &$remaining_effort) {
+        $last_null_index = count($remaining_effort) - 1;
+        if ($previous_value === null && $current_value !== null) {
+            for ($i = $last_null_index; $i >= 0; $i--) {
+                $remaining_effort[$i] = $current_value;
+            }
+        }
     }
 
     /**
@@ -100,20 +104,19 @@ class Tracker_Chart_Data_Burndown {
      */
     public function getIdealEffort() {
         $start_effort = $this->getFirstEffort();
-        
+        $x_axis = 0;
+
         foreach($this->time_period->getDayOffsets() as $day_offset) {
-            $this->ideal_effort[] = $this->getIdealEffortAtDay($day_offset, $start_effort);
+            $this->ideal_effort[$x_axis] = $this->getIdealEffortAtDay($x_axis, $start_effort);
+            $x_axis++;
         }
-        
         return $this->ideal_effort;
     }
 
-    private function getIdealEffortAtDay($day, $start_effort) {
+    private function getIdealEffortAtDay($i, $start_effort) {
         if ($start_effort !== null) {
-            $slope = - ($start_effort / $this->getDuration());
-            return floatval($slope * $day + $start_effort);
+            return floatval(($this->getDuration() - $i) * ($start_effort / $this->getDuration()));
         }
-        
         return 0;
     }
 
@@ -135,8 +138,8 @@ class Tracker_Chart_Data_Burndown {
         return null;
     }
 
-    private function isInTheFutur($day) {
-        return $day > $_SERVER['REQUEST_TIME'];
+    private function isNotInTheFutur($day_offset) {
+        return strtotime("+".$day_offset." day", $this->time_period->getStartDate()) <= $_SERVER['REQUEST_TIME'];
     }
 }
 

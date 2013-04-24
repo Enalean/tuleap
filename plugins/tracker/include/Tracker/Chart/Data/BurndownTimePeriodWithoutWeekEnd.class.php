@@ -18,61 +18,77 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * A burndown time period, starting at a given date, and with a given duration. 
- */
-class Tracker_Chart_Data_BurndownTimePeriod {
-    
+class Tracker_Chart_Data_BurndownTimePeriodWithoutWeekEnd  implements Tracker_Chart_Data_IProvideBurndownTimePeriod {
     /**
      * @var int The time period start date, as a Unix timestamp.
      */
     private $start_date;
-    
+
     /**
      * @var int The time period duration, in days.
      */
     private $duration;
-    
+
     public function __construct($start_date, $duration) {
         $this->start_date = $start_date;
         $this->duration   = $duration;
     }
-    
+
     /**
      * @return int
      */
     public function getStartDate() {
         return $this->start_date;
     }
-    
+
     /**
      * @return int
      */
     public function getDuration() {
         return $this->duration;
     }
-    
+
     /**
      * @return array of string
      */
     public function getHumanReadableDates() {
         $dates = array();
-        
-        foreach($this->getDayOffsets() as $day_offset) {
-            $day     = strtotime("+$day_offset days", $this->start_date);
-            $dates[] = date('D d', $day);
+        $day_offset = 0;
+        while (count($dates)-1 != $this->duration) {
+            $day = $this->getNextDay($day_offset, $this->start_date);
+            $day_offset++;
+            if ( $this->isNotWeekendDay($day)) {
+                $dates[] = date('D d', $day);
+            }
         }
-        
         return $dates;
     }
-    
+
     /**
      * To be used to iterate consistently over burndown time period
-     * 
+     *
      * @return array of int
      */
     public function getDayOffsets() {
-        return range(0, $this->duration);
+        $day_offsets_excluding_we = array();
+        $day_offset = 0;
+        while (count($day_offsets_excluding_we)-1 != $this->duration) {
+            $day = $this->getNextDay($day_offset, $this->start_date);
+            if ( $this->isNotWeekendDay($day)) {
+                $day_offsets_excluding_we[] = $day_offset;
+            }
+            $day_offset++;
+       }
+       return $day_offsets_excluding_we;
+    }
+
+    private function getNextDay($next_day_number, $date) {
+        return strtotime("+$next_day_number days", $date);
+    }
+
+    private function isNotWeekendDay($day) {
+        return ! (date('D', $day) == 'Sat' || date('D', $day) == 'Sun');
     }
 }
+
 ?>
