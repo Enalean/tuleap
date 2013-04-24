@@ -1,3 +1,6 @@
+Version 5.115 - Tuleap 5.13
+    * Fix bug when updating remaining effort
+
 Version 5.114 - Tuleap 5.13
     * Fix include bug
 
