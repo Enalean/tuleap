@@ -380,7 +380,7 @@ class cardwallPlugin extends Plugin {
      */
     public function import_xml_project_tracker_done($params) {
         $cardwall_ontop_import = new CardwallConfigXmlImport($params['project_id'], $params['xml_content'], $params['mapping'], new Cardwall_OnTop_Dao, EventManager::instance(), new XmlValidator());
-        $cardwall_ontop_import->import();
+        $cardwall_ontop_import->import($params['xml_content']);
     }
 
     /**

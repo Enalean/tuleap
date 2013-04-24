@@ -568,7 +568,7 @@ class trackerPlugin extends Plugin {
             new XmlValidator()
         );
 
-        $tracker_xml_import->import();
+        $tracker_xml_import->import($params['xml_content']);
     }
 }
 
