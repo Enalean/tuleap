@@ -76,6 +76,14 @@ abstract class TuleapTestCase extends UnitTestCase {
             $GLOBALS = $this->globals;
         }
         $this->removeTmpDir();
+
+        // Sometime, somewhere, you (yes I'm looking at you crappy developer) will
+        // include code that set time limit. Later on, tests will start to fail and
+        // you will not understand why. You will be like "I don't give a damn, CI server is too slow."
+        // of "It's a yet another PHP crappiness".
+        // So to avoid a huge shame during daily stand-up we do some cleaning
+        // for you.
+        set_time_limit(0);
     }
 
     function getTests() {
