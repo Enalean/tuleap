@@ -21,6 +21,16 @@
 require_once 'bootstrap.php';
 require_once 'common/XmlValidator/XmlValidator.class.php';
 
+class TrackerXmlImportTestInstance extends TrackerXmlImport {
+    public function getAllXmlTrackers($xml) {
+        return parent::getAllXmlTrackers($xml);
+    }
+
+    public function buildTrackersHierarchy(array $hierarchy, SimpleXMLElement $xml_tracker, array $mapper) {
+        return parent::buildTrackersHierarchy($hierarchy, $xml_tracker, $mapper);
+    }
+}
+
 class TrackerXmlImportTest extends TuleapTestCase {
 
     /**
@@ -102,7 +112,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
 
         $this->xml_validator = stub('XmlValidator')->nodeIsValid()->returns(true);
 
-        $this->tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->tracker_factory, $this->event_manager, $this->hierarchy_dao, $this->xml_validator);
+        $this->tracker_xml_importer = new TrackerXmlImportTestInstance($this->group_id, $this->tracker_factory, $this->event_manager, $this->hierarchy_dao, $this->xml_validator);
 
         $GLOBALS['Response'] = new MockResponse();
 
@@ -139,16 +149,16 @@ class TrackerXmlImportTest extends TuleapTestCase {
     public function itRaisesAnExceptionIfATrackerCannotBeCreatedAndDoesNotContinue() {
         $tracker_factory = mock('TrackerFactory');
         stub($tracker_factory)->createFromXml()->returns(null);
-        $this->tracker_xml_importer = new TrackerXmlImport($this->group_id, $tracker_factory, $this->event_manager, $this->hierarchy_dao, $this->xml_validator);
+        $tracker_xml_importer = new TrackerXmlImportTestInstance($this->group_id, $tracker_factory, $this->event_manager, $this->hierarchy_dao, $this->xml_validator);
 
         $this->expectException();
         $tracker_factory->expectCallCount('createFromXML', 1);
-        $this->tracker_xml_importer->import($this->xml_input);
+        $tracker_xml_importer->import($this->xml_input);
     }
 
     public function itRaisesAnExceptionTheXmlDoesNotMatchTheRNG() {
         $xml_validator = stub('XmlValidator')->nodeIsValid()->returns(false);
-        $tracker_xml_importer = new TrackerXmlImport($this->group_id, $this->tracker_factory, $this->event_manager, $this->hierarchy_dao, $xml_validator);
+        $tracker_xml_importer = new TrackerXmlImportTestInstance($this->group_id, $this->tracker_factory, $this->event_manager, $this->hierarchy_dao, $xml_validator);
 
         $this->expectException('trackerFromXmlInputNotWellFormedException');
         $tracker_xml_importer->import($this->xml_input);

@@ -52,7 +52,7 @@ class TrackerXmlImport {
      *
      * @return array Array of SimpleXmlElement with each tracker
      */
-    public function getAllXmlTrackers(SimpleXMLElement $xml_input) {
+    protected function getAllXmlTrackers(SimpleXMLElement $xml_input) {
         $tracker_list = array();
         foreach ($xml_input->trackers->children() as $xml_tracker) {
             $tracker_list[$this->getXmlTrackerAttribute($xml_tracker, 'id')] = $xml_tracker;
@@ -136,7 +136,7 @@ class TrackerXmlImport {
      * @param array $mapper
      * @return array The hierarchy array with new elements added
      */
-    public function buildTrackersHierarchy(array $hierarchy, SimpleXMLElement $xml_tracker, array $mapper) {
+    protected function buildTrackersHierarchy(array $hierarchy, SimpleXMLElement $xml_tracker, array $mapper) {
         $xml_parent_id = $this->getXmlTrackerAttribute($xml_tracker, 'parent_id');
 
         if ($xml_parent_id != self::XML_PARENT_ID_EMPTY) {
