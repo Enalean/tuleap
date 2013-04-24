@@ -20,7 +20,6 @@
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
 require_once 'autoload.php';
-require_once 'common/XmlValidator/XmlValidator.class.php';
 
 /**
  * trackerPlugin
@@ -559,6 +558,7 @@ class trackerPlugin extends Plugin {
      * @see Event::IMPORT_XML_PROJECT
      */
     public function import_xml_project($params) {
+        include_once 'common/XmlValidator/XmlValidator.class.php';
         $tracker_xml_import = new TrackerXmlImport(
             $params['project']->getId(),
             TrackerFactory::instance(),

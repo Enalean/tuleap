@@ -21,7 +21,6 @@
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
 require_once 'autoload.php';
-require_once 'common/XmlValidator/XmlValidator.class.php';
 
 /**
  * CardwallPlugin
@@ -384,6 +383,7 @@ class cardwallPlugin extends Plugin {
      * @see Event::IMPORT_XML_PROJECT_TRACKER_DONE
      */
     public function import_xml_project_tracker_done($params) {
+        include_once 'common/XmlValidator/XmlValidator.class.php';
         $cardwall_ontop_import = new CardwallConfigXmlImport($params['project_id'], $params['mapping'], new Cardwall_OnTop_Dao, EventManager::instance(), new XmlValidator());
         $cardwall_ontop_import->import($params['xml_content']);
     }
