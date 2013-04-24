@@ -149,6 +149,14 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
             $this->assertPattern('/'.$string.'/', $actual_text);
         }
     }
+
+    public function itCreatesHierarchyFromXmlProjectImportProcess() {
+        $mapping    = array(111,222,333,444);
+        $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
+        $this->dao->expectCallCount('updateChildren',1);
+
+        $controller->updateFromXmlProjectImportProcess($mapping);
+    }
 }
 
 ?>

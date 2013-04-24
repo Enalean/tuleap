@@ -91,7 +91,7 @@ class PlanningFactory {
      * @param PFUser $user     The user who will see the planning
      * @param int  $group_id
      *
-     * @return array of Planning
+     * @return Planning[]
      */
     public function getPlannings(PFUser $user, $group_id) {
         $plannings = array();
@@ -105,6 +105,25 @@ class PlanningFactory {
         if ($plannings) {
             $this->sortPlanningsAccordinglyToHierarchy($plannings);
         }
+        return $plannings;
+    }
+
+    /**
+     * Get a list of planning defined in a group_id with added backlog trackers
+     *
+     * @param PFUser $user     The user who will see the planning
+     * @param int  $group_id
+     * @param PlanningFactory $planning_factory
+     *
+     * @return Planning[]
+     */
+    public function getPlanningsWithBacklogTracker(PFUser $user, $group_id, PlanningFactory $planning_factory) {
+        $plannings = $this->getPlannings($user, $group_id);
+
+        foreach ($plannings as $planning) {
+            $planning->setBacklogTracker($planning_factory->getBacklogTracker($planning));
+        }
+
         return $plannings;
     }
 

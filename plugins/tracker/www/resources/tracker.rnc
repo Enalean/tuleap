@@ -6,7 +6,8 @@ grammar {
     start = element tracker {
 
         # old ids
-        attribute id { xsd:int }?,
+        attribute id { xsd:string }?,
+        attribute parent_id { xsd:string }?,
         attribute group_id { xsd:int }?,
         # these attributes should be optional and have default values
         attribute allow_copy { "0" | "1" }?, # default is false

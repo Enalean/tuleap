@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/constants.php';
+require_once dirname(__FILE__).'/../bootstrap.php';
 require_once AGILEDASHBOARD_BASE_DIR .'/Planning/GroupByParentsVisitor.class.php';
 
 class Planning_GroupByParentsVisitorTest extends TuleapTestCase {
