@@ -45,7 +45,7 @@ class CardwallConfigXmlImport {
         $this->xml_validator      = $xml_validator;
     }
 
-    public function getAllTrackersId(SimpleXMLElement $xml_input) {
+    protected function getAllTrackersId(SimpleXMLElement $xml_input) {
         $tracker_ids = array();
         foreach ($xml_input->cardwall->trackers->children() as $cardwall_tracker) {
             $cardwall_tracker_xml_id = (String) $cardwall_tracker['id'];
