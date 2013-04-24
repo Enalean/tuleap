@@ -188,18 +188,22 @@ class PluginManager {
             if (@include_once "markdown.php") {
                 return Markdown($content);
             }
-            return '<pre>'. $content .'</pre>';
+            return $this->getEscapedReadme($content);
         }
         
         if (is_file("$file.txt")) {
-            return '<pre>'. file_get_contents("$file.txt") .'</pre>';
+            return $this->getEscapedReadme(file_get_contents("$file.txt"));
         }
         
         if (is_file($file)) {
-            return '<pre>'. file_get_contents($file) .'</pre>';
+            return $this->getEscapedReadme(file_get_contents($file));
         }
         
         return '';
+    }
+
+    private function getEscapedReadme($content) {
+        return '<pre>'.Codendi_HTMLPurifier::instance()->purify($content).'</pre>';
     }
 
     /**

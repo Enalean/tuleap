@@ -2,11 +2,22 @@ The plugin adds support for Mediawiki to Tuleap. When the plugin
 is activated for a project, a Mediawiki instance for the project is
 created, that can be edited by project members.
 
+=== INSTALL ===
+
 If you installed this plugin from the package management system (RPM) all
 dependencies are already installed, you just need to activate the plugin
 to start using it.
 
-Current integration was tested with mediawiki 1.20.3.
+== Apache configuration update ==
 
+1. open /etc/httpd/conf.d/codendi_aliases.conf
+2. locate the 'Plugin directories' section title.
+3. paste the following row of code straight after it
+Include conf.d/tuleap-plugins/*.conf
+4. restart apache: service httpd restart
+
+=== Acknowledgments ===
+
+Current integration was tested with mediawiki 1.20.3.
 Based on Fusionforge mediawiki plugin.
 
