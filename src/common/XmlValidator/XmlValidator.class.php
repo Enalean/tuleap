@@ -18,11 +18,17 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+/*
+ * This class ensures that a XML document is valid with a given RNG file
+ */
+
 class XmlValidator {
 
     /**
+     * This function valids our XML content with a given RNG file
      *
-     * @return boolean
+     * @return boolean True if valid, else False
      */
     public function nodeIsValid(SimpleXMLElement $xml_node, $rng_path) {
         $dom = $this->simpleXmlElementToDomDocument($xml_node);
