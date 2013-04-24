@@ -463,7 +463,7 @@ class BackendSystem extends Backend {
         foreach($user_manager->getUsersWithSshKey() as $user) {
             $sshkey_dumper->writeSSHKeys($user);
         }
-        EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, null);
+        EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, array());
         return true;
     }
     
