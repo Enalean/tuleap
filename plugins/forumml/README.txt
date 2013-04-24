@@ -1,18 +1,12 @@
 ==== RPM INSTALLATION ====
 
-## If you installed codendi-plugin-forumml, you just need to be sure the right
-## mailman package is installed:
-mailman-2.1.9-5.codendi
-
-## Then, update mailman configuration (/etc/mm_cfg.py) and set:
+After having installed plugin-forumml, you should update /etc/mm_cfg.py and set
+at the end:
 PUBLIC_EXTERNAL_ARCHIVER = '/usr/lib/codendi/bin/mail_2_DB.pl %(listname)s ;'
 PRIVATE_EXTERNAL_ARCHIVER = '/usr/lib/codendi/bin/mail_2_DB.pl %(listname)s ;'
 
-## Restart mailman:
-service mailman restart
-
-
-
+Then restart mailman:
+$> service mailman restart
 
 ==== INSTALLATION BY HAND ====
 
