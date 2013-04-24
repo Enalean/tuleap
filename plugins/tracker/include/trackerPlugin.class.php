@@ -59,7 +59,7 @@ class trackerPlugin extends Plugin {
         $this->_addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
         $this->_addHook(Event::SOAP_DESCRIPTION,               'soap_description',                  false);
         $this->_addHook(Event::EXPORT_XML_PROJECT);
-        $this->_addHook(Event::IMPORT_XML_PROJECT,              'importTrackersFromXml',            false);
+        $this->_addHook(Event::IMPORT_XML_PROJECT);
     }
     
     public function getHooksAndCallbacks() {
@@ -558,15 +558,7 @@ class trackerPlugin extends Plugin {
      * @param array $params
      * @see Event::IMPORT_XML_PROJECT
      */
-    public function importTrackersFromXml($params) {
-        if (! isset($params['project']) ||
-            ! isset($params['xml_content']) ||
-            ! $params['project'] instanceof Project ||
-            ! $params['xml_content'] instanceof SimpleXMLElement
-            ) {
-            throw new Exception('bad params for method');
-        }
-
+    public function import_xml_project($params) {
         $tracker_xml_import = new TrackerXmlImport(
             $params['project']->getId(),
             $params['xml_content'],
@@ -577,7 +569,6 @@ class trackerPlugin extends Plugin {
         );
 
         $tracker_xml_import->import();
-        
     }
 }
 
