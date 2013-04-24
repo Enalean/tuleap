@@ -1,3 +1,7 @@
+Version 5.112 - Tuleap 5.13
+    * story #3076 - Exclude week-end from burndown chart (as an option)
+      Change-Id: Idae742c8407da2566075f6ff30948996b47e14db
+
 Version 5.111 - Tuleap 5.13
     * story #3077 see people names instead of avatars on cardwall
 
