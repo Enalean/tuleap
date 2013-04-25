@@ -218,7 +218,6 @@ class Git_Driver_Gerrit {
      */
     public function addUserToGroup(Git_RemoteServer_GerritServer $server, PFUser $user, $group_name) {
         $this->setAccount($server, $user);
-
         $username = $user->getLdapId();
 
         $sql_query = "INSERT INTO account_group_members (account_id, group_id) SELECT A.account_id, G.group_id FROM account_external_ids A, account_groups G WHERE A.external_id='username:". $username ."' AND G.name='". $group_name ."'";
@@ -226,7 +225,6 @@ class Git_Driver_Gerrit {
 
         $this->flushGerritCaches($server);
     }
-
     /**
      * Remove a user from a user group on a given gerrit server
      *
