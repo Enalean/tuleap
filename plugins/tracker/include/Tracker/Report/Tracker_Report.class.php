@@ -129,7 +129,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         } else {            
             //retrieve data from database
             foreach($this->getCriteriaDao()->searchByReportId($this->id) as $row) {
-                if ($formElement = $ff->getFormElementById($row['field_id'])) {
+                if ($formElement = $ff->getFormElementFieldById($row['field_id'])) {
                     if ($formElement->userCanRead()) {
                         $this->criteria[$row['field_id']] = new Tracker_Report_Criteria(
                                 $row['id'],
