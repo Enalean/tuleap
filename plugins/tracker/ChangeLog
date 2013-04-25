@@ -1,3 +1,6 @@
+Version 5.117 - Tuleap 5.13
+    * Fix: do not display tuleapception in cards on error
+
 Version 5.116 - Tuleap 5.13
     * Fix fatal error on reports
 

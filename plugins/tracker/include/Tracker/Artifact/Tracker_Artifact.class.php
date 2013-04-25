@@ -708,11 +708,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         $GLOBALS['Response']->redirect($redirect->toUrl());
                     }
                 } catch (Tracker_NoChangeException $e) {
-                    $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
-                    $this->display($layout, $request, $current_user);
+                    if ($request->isAjax()) {
+                        $this->sendAjaxCardsUpdateInfo($current_user);
+                    } else {
+                        $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+                        $this->display($layout, $request, $current_user);
+                    }
                 } catch (Tracker_Exception $e) {
-                    $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-                    $this->display($layout, $request, $current_user);
+                    if ($request->isAjax()) {
+                        $this->sendAjaxCardsUpdateInfo($current_user);
+                    } else {
+                        $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+                        $this->display($layout, $request, $current_user);
+                    }
                 }
                 break;
             case 'unassociate-artifact-to':
