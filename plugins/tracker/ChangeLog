@@ -1,3 +1,6 @@
+Version 5.116 - Tuleap 5.13
+    * Fix fatal error on reports
+
 Version 5.115 - Tuleap 5.13
     * Fix bug when updating remaining effort
 
