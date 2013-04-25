@@ -927,7 +927,8 @@ class GitPlugin extends Plugin {
             new Git_Driver_Gerrit_MembershipDao(),
             $this->getGerritDriver(),
             $this->getGerritServerFactory(),
-            new BackendLogger()
+            new BackendLogger(),
+            UserManager::instance()
         );
     }
 

@@ -50,17 +50,20 @@ class Git_Driver_Gerrit_MembershipManager {
     private $driver;
     private $gerrit_server_factory;
     private $logger;
+    private $user_manager;
 
     public function __construct(
         Git_Driver_Gerrit_MembershipDao      $dao,
         Git_Driver_Gerrit                    $driver,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        Logger                               $logger
+        Logger                               $logger,
+        UserManager                          $user_manager
     ) {
         $this->dao                    = $dao;
         $this->driver                 = $driver;
         $this->gerrit_server_factory  = $gerrit_server_factory;
         $this->logger                 = $logger;
+        $this->user_manager           = $user_manager;
     }
 
     /**
@@ -166,22 +169,34 @@ class Git_Driver_Gerrit_MembershipManager {
 
     private function createGroupOnServerWithoutCheckingUGroupValidity(Git_RemoteServer_GerritServer $server, UGroup $ugroup) {
         $gerrit_group_name = $this->getFullyQualifiedUGroupName($ugroup);
+
+        $source_ugroup = $ugroup->getSourceGroup();
+        if ($source_ugroup) {
+            $memberlist = array();
+        } else {
+            $memberlist = $ugroup->getLdapMembersIds($ugroup->getProject()->getID());
+        }
+
         if (! $this->driver->doesTheGroupExist($server, $gerrit_group_name)) {
-            $source_ugroup = $ugroup->getSourceGroup();
-            if ($source_ugroup) {
-                $memberlist = array();
-            } else {
-                $memberlist = $ugroup->getLdapMembersIds($ugroup->getProject()->getID());
-            }
             $this->driver->createGroup($server, $gerrit_group_name, $memberlist);
-            $this->dao->addReference($ugroup->getProjectId(), $ugroup->getId(), $server->getId());
             if ($source_ugroup) {
                 $this->addUGroupBinding($ugroup, $source_ugroup);
             }
+        } else {
+            $this->addMembersToAnExistingGerritGroup($memberlist, $server, $gerrit_group_name);
         }
+
+        $this->dao->addReference($ugroup->getProjectId(), $ugroup->getId(), $server->getId());
+
         return $gerrit_group_name;
     }
 
+    private function addMembersToAnExistingGerritGroup(array $memberlist, Git_RemoteServer_GerritServer $server, $gerrit_group_name) {
+        foreach ($memberlist as $user_name) {
+            $user = $this->user_manager->getUserByUserName($user_name);
+            $this->driver->addUserToGroup($server, $user, $gerrit_group_name);
+        }
+    }
     /**
      * This should probably be in a dedicated GerritUserGroup object.
      *
