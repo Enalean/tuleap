@@ -1,6 +1,8 @@
 Version 5.13 (Not Released Yet)
+    == Bux Fix ==
 	* Installation process now compatible with rhel6 as well as rhel5 and rhel5-php53
 	* Site admin can now export and import a part of a project template (Tracker and AgileDashboard).
+	* Fix sla #3147: corrupted cron file
 
 	== Plugins ==
 	* admssw: 0.2
