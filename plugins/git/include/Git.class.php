@@ -83,12 +83,16 @@ class Git extends PluginController {
     /** @var Git_SystemEventManager */
     private $git_system_event_manager;
 
+    /** @var Git_Driver_Gerrit_UserAccountManager */
+    private $gerrit_usermanager;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         Git_Driver_Gerrit $driver,
         GitRepositoryManager $repository_manager,
-        Git_SystemEventManager $system_event_manager
+        Git_SystemEventManager $system_event_manager,
+        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager
     ) {
         parent::__construct();
         
@@ -99,6 +103,7 @@ class Git extends PluginController {
         $this->driver                = $driver;
         $this->repository_manager    = $repository_manager;
         $this->git_system_event_manager = $system_event_manager;
+        $this->gerrit_usermanager       = $gerrit_usermanager;
         
         $matches = array();
         if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
@@ -580,7 +585,8 @@ class Git extends PluginController {
             $this->factory,
             $this->repository_manager,
             $this->gerrit_server_factory,
-            $this->driver
+            $this->driver,
+            $this->gerrit_usermanager
         );
     }
 

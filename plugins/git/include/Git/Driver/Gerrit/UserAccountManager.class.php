@@ -40,6 +40,23 @@ class Git_Driver_Gerrit_UserAccountManager {
 
     /**
      *
+     * @param PFUser $user
+     *
+     * @return Git_Driver_Gerrit_User
+     */
+    public function getGerritUser(PFUser $user) {
+        $ldap_user = null;
+        $params    = array('ldap_user' => &$ldap_user, 'user' => $user);
+        EventManager::instance()->processEvent(Event::GET_LDAP_LOGIN_NAME_FOR_USER, $params);
+        if ($ldap_user) {
+            return new Git_Driver_Gerrit_User($ldap_user);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     *
      * @param array $original_keys
      * @param array $new_keys
      * @param Git_RemoteServer_GerritServerFactory $remote_gerrit_factory
