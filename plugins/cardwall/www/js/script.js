@@ -152,7 +152,12 @@ document.observe('dom:loaded', function () {
             }
 
             function selectCardsToHide(all_cards, text_to_search) {
-                var regexp = new RegExp(text_to_search, 'i');
+                try {
+                    var regexp = new RegExp(text_to_search, 'i');
+                } catch(e) {
+                    // the user broke the regexp, hide nothing
+                    return [];
+                }
 
                 return all_cards.reject(function (card) {
                     var searchable_content_list = card.select(
