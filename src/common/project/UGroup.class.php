@@ -233,7 +233,7 @@ class UGroup {
     }
 
     public function getLdapLogins($group_id) {
-        return $this->getUsers($group_id)->getNonEmptyLdapIds();
+        return $this->getUsers($group_id)->getNonEmptyLdapLogins();
     }
 
     /**

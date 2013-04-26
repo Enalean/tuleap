@@ -70,7 +70,15 @@ class Users {
         return array_filter($this->getLdapIds());
     }
 
-    public function getLdapLogin() {
+    /**
+     *
+     * @return Array string : Only the LDAP Logins non empty
+     */
+    public function getNonEmptyLdapLogins() {
+        return array_filter($this->getLdapLogins());
+    }
+
+    public function getLdapLogins() {
         $ldap_logins = array();
         foreach ($this->dar as $user) {
             $login = '';
