@@ -20,8 +20,24 @@
 
 require_once dirname(__FILE__).'/../../../bootstrap.php';
 require_once 'common/include/Config.class.php';
+require_once dirname(__FILE__).'/../../../../../ldap/include/LDAP_User.class.php';
+require_once dirname(__FILE__).'/../../../../../ldap/include/LDAPResult.class.php';
+
+class IsAGerritUserExpectation extends SimpleExpectation {
+    private $user;
+
+    public function __construct(PFUser $user) {
+        parent::__construct();
+        $this->user = $user;
+    }
+
+    public function test($compare) {
+        return $this->user == $compare->getPFUser();
+    }
+}
 
 abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestCase {
+    protected $user_ldap_id;
     protected $membership_manager;
     protected $driver;
     protected $user_finder;
@@ -115,6 +131,23 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest extends Git
 
 class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest {
 
+    public function setUp() {
+        parent::setUp();
+
+        $event_manager = new EventManager();
+        $event_manager->addListener(Event::GET_LDAP_LOGIN_NAME_FOR_USER, $this, 'hookReturnsLdapUser', false, 0);
+        EventManager::setInstance($event_manager);
+    }
+
+    public function tearDown() {
+        EventManager::clearInstance();
+        parent::tearDown();
+    }
+
+    public function hookReturnsLdapUser($params) {
+        $params['ldap_user'] = new LDAP_User($params['user'], mock('LDAPResult'));
+    }
+
     public function itAsksTheGerritDriverToAddAUserToThreeGroups() {
         stub($this->remote_server_factory)->getServersForUGroup()->returns(array($this->remote_server));
         stub($this->user)->getUgroups()->returns(array($this->u_group_id));
@@ -128,9 +161,9 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
         stub($this->u_group3)->getNormalizedName()->returns('ldap_group');
 
         $this->driver->expectCallCount('addUserToGroup', 3);
-        expect($this->driver)->addUserToGroup($this->remote_server, $this->user, $first_group_expected)->at(0);
-        expect($this->driver)->addUserToGroup($this->remote_server, $this->user, $second_group_expected)->at(1);
-        expect($this->driver)->addUserToGroup($this->remote_server, $this->user, $third_group_expected)->at(2);
+        expect($this->driver)->addUserToGroup($this->remote_server, new IsAGerritUserExpectation($this->user), $first_group_expected)->at(0);
+        expect($this->driver)->addUserToGroup($this->remote_server, new IsAGerritUserExpectation($this->user), $second_group_expected)->at(1);
+        expect($this->driver)->addUserToGroup($this->remote_server, new IsAGerritUserExpectation($this->user), $third_group_expected)->at(2);
 
         $this->membership_manager->addUserToGroup($this->user, $this->u_group);
         $this->membership_manager->addUserToGroup($this->user, $this->u_group2);
@@ -150,9 +183,9 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
         stub($this->u_group3)->getNormalizedName()->returns('ldap_group');
 
         $this->driver->expectCallCount('removeUserFromGroup', 3);
-        expect($this->driver)->removeUserFromGroup($this->remote_server, $this->user, $first_group_expected)->at(0);
-        expect($this->driver)->removeUserFromGroup($this->remote_server, $this->user, $second_group_expected)->at(1);
-        expect($this->driver)->removeUserFromGroup($this->remote_server, $this->user, $third_group_expected)->at(2);
+        expect($this->driver)->removeUserFromGroup($this->remote_server, new IsAGerritUserExpectation($this->user), $first_group_expected)->at(0);
+        expect($this->driver)->removeUserFromGroup($this->remote_server, new IsAGerritUserExpectation($this->user), $second_group_expected)->at(1);
+        expect($this->driver)->removeUserFromGroup($this->remote_server, new IsAGerritUserExpectation($this->user), $third_group_expected)->at(2);
 
         $this->membership_manager->removeUserFromGroup($this->user, $this->u_group);
         $this->membership_manager->removeUserFromGroup($this->user, $this->u_group2);
@@ -161,6 +194,7 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
 
     public function itDoesntAddNonLDAPUsersToGerrit() {
         stub($this->remote_server_factory)->getServersForUGroup()->returns(array($this->remote_server));
+        EventManager::clearInstance();
         $non_ldap_user = mock('PFUser');
         stub($non_ldap_user)->getUgroups()->returns(array($this->u_group_id));
 
@@ -217,6 +251,19 @@ class Git_Driver_Gerrit_MembershipManager_ProjectAdminTest extends Git_Driver_Ge
 
         stub($this->user)->getUgroups()->returns(array($this->u_group_id, UGroup::PROJECT_ADMIN));
         stub($this->remote_server_factory)->getServersForUGroup()->returns(array($this->remote_server));
+
+        $event_manager = new EventManager();
+        $event_manager->addListener(Event::GET_LDAP_LOGIN_NAME_FOR_USER, $this, 'hookReturnsLdapUser', false, 0);
+        EventManager::setInstance($event_manager);
+    }
+
+    public function tearDown() {
+        EventManager::clearInstance();
+        parent::tearDown();
+    }
+
+    public function hookReturnsLdapUser($params) {
+        $params['ldap_user'] = new LDAP_User($params['user'], mock('LDAPResult'));
     }
 
     public function itProcessesTheListOfGerritServersWhenWeModifyProjectAdminGroup() {
@@ -227,9 +274,8 @@ class Git_Driver_Gerrit_MembershipManager_ProjectAdminTest extends Git_Driver_Ge
     public function itUpdatesGerritProjectAdminsGroupsFromTuleapWhenIAddANewProjectAdmin() {
         stub($this->admin_ugroup)->getNormalizedName()->returns('project_admins');
 
-        expect($this->driver)->addUserToGroup()->count(1);
         $gerrit_project_project_admins_group_name = $this->project_name.'/'.'project_admins';
-        expect($this->driver)->addUserToGroup($this->remote_server, $this->user, $gerrit_project_project_admins_group_name)->once();
+        expect($this->driver)->addUserToGroup($this->remote_server,  new IsAGerritUserExpectation($this->user), $gerrit_project_project_admins_group_name)->once();
 
         $this->membership_manager->addUserToGroup($this->user, $this->admin_ugroup);
     }
@@ -332,6 +378,10 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
     }
 
     public function itAddsMembersOfPreviousSourceAsHardCodedMembersOnRemove() {
+        $event_manager = new EventManager();
+        $event_manager->addListener(Event::GET_LDAP_LOGIN_NAME_FOR_USER, $this, 'hookReturnsLdapUser', false, 0);
+        EventManager::setInstance($event_manager);
+
         $user = aUser()->withLdapId('blabla')->build();
 
         $source_ugroup = mock('UGroup');
@@ -342,10 +392,16 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
         $ugroup->setProject($project);
         $ugroup->setSourceGroup($source_ugroup);
 
-        expect($this->driver)->addUserToGroup($this->remote_server, $user, 'mozilla/developers')->once();
+        expect($this->driver)->addUserToGroup($this->remote_server,  new IsAGerritUserExpectation($user), 'mozilla/developers')->once();
 
         $this->membership_manager->removeUGroupBinding($ugroup);
+        EventManager::clearInstance();
     }
+
+    public function hookReturnsLdapUser($params) {
+        $params['ldap_user'] = new LDAP_User($params['user'], mock('LDAPResult'));
+    }
+
 }
 
 class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase {

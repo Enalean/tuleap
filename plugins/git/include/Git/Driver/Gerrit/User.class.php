@@ -39,6 +39,10 @@ class Git_Driver_Gerrit_User {
         $this->ldap_user = $ldap_user;
     }
 
+    public function getPFUser() {
+        return $this->ldap_user->getPFUser();
+    }
+
     /**
      * @return String
      */
