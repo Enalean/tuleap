@@ -50,15 +50,18 @@ class Git_Driver_Gerrit_MembershipManager {
     private $driver;
     private $gerrit_server_factory;
     private $logger;
+    private $gerrit_user_manager;
 
     public function __construct(
         Git_Driver_Gerrit_MembershipDao      $dao,
         Git_Driver_Gerrit                    $driver,
+        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         Logger                               $logger
     ) {
         $this->dao                    = $dao;
         $this->driver                 = $driver;
+        $this->gerrit_user_manager    = $gerrit_usermanager;
         $this->gerrit_server_factory  = $gerrit_server_factory;
         $this->logger                 = $logger;
     }
@@ -71,7 +74,7 @@ class Git_Driver_Gerrit_MembershipManager {
      */
     public function addUserToGroup(PFUser $user, UGroup $ugroup) {
         $this->updateUserMembership(
-            new Git_Driver_Gerrit_MembershipCommand_AddUser($this, $this->driver, $ugroup, $user)
+            new Git_Driver_Gerrit_MembershipCommand_AddUser($this, $this->driver, $this->gerrit_user_manager, $ugroup, $user)
         );
     }
 
@@ -83,7 +86,7 @@ class Git_Driver_Gerrit_MembershipManager {
      */
     public function removeUserFromGroup(PFUser $user, UGroup $ugroup) {
         $this->updateUserMembership(
-            new Git_Driver_Gerrit_MembershipCommand_RemoveUser($this, $this->driver, $ugroup, $user)
+            new Git_Driver_Gerrit_MembershipCommand_RemoveUser($this, $this->driver, $this->gerrit_user_manager, $ugroup, $user)
         );
     }
 
