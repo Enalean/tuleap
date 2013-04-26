@@ -20,21 +20,6 @@
 
 require_once dirname(__FILE__).'/../../../bootstrap.php';
 require_once 'common/include/Config.class.php';
-require_once dirname(__FILE__).'/../../../../../ldap/include/LDAP_User.class.php';
-require_once dirname(__FILE__).'/../../../../../ldap/include/LDAPResult.class.php';
-
-class IsAGerritUserExpectation extends SimpleExpectation {
-    private $user;
-
-    public function __construct(PFUser $user) {
-        parent::__construct();
-        $this->user = $user;
-    }
-
-    public function test($compare) {
-        return $this->user == $compare->getPFUser();
-    }
-}
 
 abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestCase {
     protected $user_ldap_id;

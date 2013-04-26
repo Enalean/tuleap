@@ -37,10 +37,6 @@ class LDAP_User {
         $this->ldap_result = $ldap_result;
     }
 
-    public function getPFUser() {
-        return $this->user;
-    }
-
     /**
      * @return String
      */
