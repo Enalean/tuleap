@@ -39,6 +39,9 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
     */
     public $is_display_avatar_selected;
 
+    /** @var string */
+    public $search_cardwall_placeholder;
+
     /**
      * @param Cardwall_Board  $board              The board
      * @param Cardwall_QrCode $qrcode             QrCode to display. false if no qrcode (thus no typehinting)
@@ -56,6 +59,7 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
         $this->is_display_avatar_selected   = $is_display_avatar_selected;
         $this->display_avatar_label         = $GLOBALS['Language']->getText('plugin_cardwall', 'display_avatar_label');
         $this->display_avatar_title         = $GLOBALS['Language']->getText('plugin_cardwall', 'display_avatar_title');
+        $this->search_cardwall_placeholder  = $GLOBALS['Language']->getText('plugin_cardwall', 'search_cardwall_placeholder');
     }
 
     public function canConfigure() {

@@ -1,5 +1,6 @@
-{{#isUserLoggedIn}}
-    <div class="cardwall_board-actions">
+<div class="cardwall_board-actions">
+    <input type="text" class="search-in-cardwall" placeholder="{{search_cardwall_placeholder}}" />
+    {{#isUserLoggedIn}}
         <div class="btn-group">
             <button class="btn dropdown-toggle" data-toggle="dropdown">
                 <i class="icon-cog"></i>
@@ -18,8 +19,8 @@
                 {{/canConfigure}}
             </ul>
         </div>
-    </div>
-{{/isUserLoggedIn}}
+    {{/isUserLoggedIn}}
+</div>
 
 {{> agiledashboard-minimalpane }}
 
