@@ -320,9 +320,7 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
     }
 
     public function itCreatesProjectMembersGroup() {
-        $user_list = array(aUser()->withUserName('goyotm')->build(),  aUser()->withUserName('martissonj')->build());
         $ugroup = mock('UGroup');
-        stub($ugroup)->getLdapMembersIds()->returns($user_list);
         stub($ugroup)->getNormalizedName()->returns('project_members');
         stub($ugroup)->getId()->returns(Ugroup::PROJECT_MEMBERS);
 
@@ -338,15 +336,11 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         $user1 = aUser()->withUserName('goyotm')->withLdapId('goyotm')->build();
         $user2 = aUser()->withUserName('martissonj')->withLdapId('martissonj')->build();
 
-        $project_members_list = array($user1->getLdapId(), $user2->getLdapId());
         $ugroup_project_members = mock('UGroup');
-        stub($ugroup_project_members)->getLdapMembersIds()->returns($project_members_list);
         stub($ugroup_project_members)->getNormalizedName()->returns('project_members');
         stub($ugroup_project_members)->getId()->returns(UGroup::PROJECT_MEMBERS);
 
-        $another_group_list = array($user1->getLdapId());
         $ugroup_another_group = mock('UGroup');
-        stub($ugroup_another_group)->getLdapMembersIds()->returns($another_group_list);
         stub($ugroup_another_group)->getNormalizedName()->returns('another_group');
         stub($ugroup_another_group)->getId()->returns(120);
 

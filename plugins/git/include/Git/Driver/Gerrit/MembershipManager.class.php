@@ -168,12 +168,12 @@ class Git_Driver_Gerrit_MembershipManager {
         $gerrit_group_name = $this->getFullyQualifiedUGroupName($ugroup);
         if (! $this->driver->doesTheGroupExist($server, $gerrit_group_name)) {
             $source_ugroup = $ugroup->getSourceGroup();
-            if ($source_ugroup) {
+            /*if ($source_ugroup) {
                 $memberlist = array();
             } else {
                 $memberlist = $ugroup->getLdapLogins($ugroup->getProject()->getID());
-            }
-            $this->driver->createGroup($server, $gerrit_group_name, $memberlist);
+            }*/
+            $this->driver->createGroup($server, $gerrit_group_name);
             $this->dao->addReference($ugroup->getProjectId(), $ugroup->getId(), $server->getId());
             if ($source_ugroup) {
                 $this->addUGroupBinding($ugroup, $source_ugroup);

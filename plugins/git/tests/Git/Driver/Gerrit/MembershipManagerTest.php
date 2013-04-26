@@ -426,7 +426,8 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
         $this->membership_manager = partial_mock(
             'Git_Driver_Gerrit_MembershipManager',
             array(
-                'addUGroupBinding'
+                'addUGroupBinding',
+                'addUserToGroup'
             ),
             array(
                 $this->dao,
@@ -448,7 +449,6 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
         stub($this->ugroup)->getNormalizedName()->returns('coders');
         stub($this->ugroup)->getProject()->returns($this->project);
         stub($this->ugroup)->getProjectId()->returns($project_id);
-
     }
 
     public function itCreateGroupOnAllGerritServersTheProjectUses() {
@@ -458,10 +458,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
     }
 
     public function itCreatesGerritGroupFromUGroup() {
-        expect($this->ugroup)->getLdapMembersIds(1236)->once();
-        stub($this->ugroup)->getLdapMembersIds()->returns(array('ldap_id'));
-
-        expect($this->driver)->createGroup($this->remote_server, 'w3c/coders', array('ldap_id'))->once();
+        expect($this->driver)->createGroup($this->remote_server, 'w3c/coders')->once();
         stub($this->driver)->createGroup()->returns('w3c/coders');
 
         $gerrit_group_name = $this->membership_manager->createGroupForServer($this->remote_server, $this->ugroup);
@@ -499,11 +496,10 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
         $remote_server2 = mock('Git_RemoteServer_GerritServer');
         stub($this->remote_server_factory)->getServersForProject()->returns(array($remote_server1, $remote_server2));
 
-        stub($this->ugroup)->getLdapMembersIds()->returns(array('ldap_id'));
 
         expect($this->driver)->createGroup()->count(2);
-        expect($this->driver)->createGroup($remote_server1, 'w3c/coders', array('ldap_id'))->at(0);
-        expect($this->driver)->createGroup($remote_server2, 'w3c/coders', array('ldap_id'))->at(1);
+        expect($this->driver)->createGroup($remote_server1, 'w3c/coders')->at(0);
+        expect($this->driver)->createGroup($remote_server2, 'w3c/coders')->at(1);
 
         $this->membership_manager->createGroupOnProjectsServers($this->ugroup);
     }
@@ -561,7 +557,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
 
         expect($this->driver)->createGroup()->count(2);
         stub($this->driver)->createGroup()->throwsAt(0, new Exception('whatever'));
-        expect($this->driver)->createGroup($remote_server2, '*', '*')->at(1);
+        expect($this->driver)->createGroup($remote_server2, '*')->at(1);
         expect($this->dao)->addReference('*', '*', 667)->once();
 
         $this->membership_manager->createGroupOnProjectsServers($this->ugroup);
@@ -615,10 +611,9 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
         stub($ugroup)->getNormalizedName()->returns('coders');
         stub($ugroup)->getProject()->returns($this->project);
         stub($ugroup)->getProjectId()->returns(999);
-        stub($ugroup)->getLdapMembersIds()->returns(array('ldap_id'));
         stub($ugroup)->getSourceGroup()->returns($source_group);
 
-        expect($this->driver)->createGroup($this->remote_server, 'w3c/coders', array())->once();
+        expect($this->driver)->createGroup($this->remote_server, 'w3c/coders')->once();
         expect($this->membership_manager)->addUGroupBinding($ugroup, $source_group);
 
         $this->membership_manager->createGroupForServer($this->remote_server, $ugroup);
