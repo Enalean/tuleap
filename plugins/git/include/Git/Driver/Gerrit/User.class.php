@@ -32,14 +32,23 @@ class Git_Driver_Gerrit_User {
      */
     private $ldap_user;
 
+    /**
+     * @param LDAP_User $ldap_user
+     */
     public function __construct(/*no type*/$ldap_user) {
         $this->ldap_user = $ldap_user;
     }
 
+    /**
+     * @return String
+     */
     public function getSshUserName() {
         return $this->ldap_user->getUid();
     }
 
+    /**
+     * @return String
+     */
     public function getWebUserName() {
         return $this->ldap_user->getUid();
     }

@@ -37,6 +37,9 @@ class LDAP_User {
         $this->ldap_result = $ldap_result;
     }
 
+    /**
+     * @return String
+     */
     public function getUid() {
         return strtolower($this->ldap_result->getLogin());
     }

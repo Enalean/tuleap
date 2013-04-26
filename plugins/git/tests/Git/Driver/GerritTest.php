@@ -21,6 +21,7 @@
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 require_once 'common/include/Config.class.php';
+require_once dirname(__FILE__).'/../../../../ldap/include/LDAP_User.class.php';
 
 abstract class Git_Driver_Gerrit_baseTest extends TuleapTestCase {
 
@@ -259,7 +260,7 @@ class Git_Driver_Gerrit_addUserToGroupTest extends Git_Driver_Gerrit_baseTest {
         $this->group                       = 'contributors';
         $this->groupname                   = $this->project_name.'/'.$this->namespace.'/'.$this->repository_name.'-'.$this->group;
         $this->ldap_uid                    = 'someuser';
-        $this->user                        = stub('LDAP_User')->getUid()->returns($this->ldap_uid);
+        $this->user                        = new Git_Driver_Gerrit_User(stub('LDAP_User')->getUid()->returns($this->ldap_uid));
 
         $this->insert_member_query = 'gerrit gsql --format json -c "INSERT\ INTO\ account_group_members\ (account_id,\ group_id)\ SELECT\ A.account_id,\ G.group_id\ FROM\ account_external_ids\ A,\ account_groups\ G\ WHERE\ A.external_id=\\\'username:'. $this->ldap_uid .'\\\'\ AND\ G.name=\\\''. $this->groupname .'\\\'"';
 
@@ -294,7 +295,7 @@ class Git_Driver_Gerrit_removeUserFromGroupTest extends Git_Driver_Gerrit_baseTe
         $this->group          = 'contributors';
         $this->groupname      = $this->project_name.'/'.$this->namespace.'/'.$this->repository_name.'-'.$this->group;
         $this->ldap_uid        = 'someuser';
-        $this->user           = stub('LDAP_User')->getUid()->returns($this->ldap_uid);
+        $this->user           = new Git_Driver_Gerrit_User(stub('LDAP_User')->getUid()->returns($this->ldap_uid));
 
     }
 

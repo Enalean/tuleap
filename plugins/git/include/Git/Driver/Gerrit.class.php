@@ -19,7 +19,6 @@
  */
 
 require_once 'common/backend/BackendLogger.class.php';
-require_once dirname(__FILE__).'/../../../../ldap/include/LDAP_User.class.php';
 
 /**
  * I know how to speak to a Gerrit remote server
@@ -203,9 +202,9 @@ class Git_Driver_Gerrit {
         return escapeshellarg(escapeshellarg($user_identifier));
     }
 
-    protected function setAccount(Git_RemoteServer_GerritServer $server, LDAP_User $user) {
-        $this->logger->debug("Set account ".$user->getUid());
-        $query = self::COMMAND .' set-account '. $user->getUid();
+    protected function setAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user) {
+        $this->logger->debug("Set account ".$user->getSshUserName());
+        $query = self::COMMAND .' set-account '. $user->getSshUserName();
         $this->ssh->execute($server, $query);
     }
 
@@ -218,10 +217,10 @@ class Git_Driver_Gerrit {
      * @param PFUser $user
      * @param String $group_name
      */
-    public function addUserToGroup(Git_RemoteServer_GerritServer $server, LDAP_User $user, $group_name) {
+    public function addUserToGroup(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $group_name) {
         $this->setAccount($server, $user);
 
-        $username = $user->getUid();
+        $username = $user->getWebUserName();
 
         $sql_query = "INSERT INTO account_group_members (account_id, group_id) SELECT A.account_id, G.group_id FROM account_external_ids A, account_groups G WHERE A.external_id='username:". $username ."' AND G.name='". $group_name ."'";
         $this->executeQuery($server, $sql_query);
@@ -238,8 +237,8 @@ class Git_Driver_Gerrit {
      * @param PFUser $user
      * @param String $group_name
      */
-    public function removeUserFromGroup(Git_RemoteServer_GerritServer $server, LDAP_User $user, $group_name) {
-        $username = $user->getUid();
+    public function removeUserFromGroup(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $group_name) {
+        $username = $user->getWebUserName();
 
         $sql_query = "DELETE FROM account_group_members WHERE account_id=(SELECT account_id FROM account_external_ids WHERE external_id='username:". $username ."') AND group_id=(SELECT group_id FROM account_groups WHERE name='". $group_name ."')";
         $this->executeQuery($server, $sql_query);

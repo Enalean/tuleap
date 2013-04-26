@@ -38,7 +38,7 @@ abstract class Git_Driver_Gerrit_MembershipCommand_User extends Git_Driver_Gerri
      */
     protected function getGerritUser(PFUser $user) {
         $ldap_user = null;
-        $params    = array('ldap_user' => &$ldap_user, 'user' => $this->user);
+        $params    = array('ldap_user' => &$ldap_user, 'user' => $user);
         EventManager::instance()->processEvent(Event::GET_LDAP_LOGIN_NAME_FOR_USER, $params);
         if ($ldap_user) {
             return new Git_Driver_Gerrit_User($ldap_user);
