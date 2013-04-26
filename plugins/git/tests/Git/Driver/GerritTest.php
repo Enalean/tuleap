@@ -249,7 +249,7 @@ class Git_Driver_Gerrit_getGroupIdTest extends Git_Driver_Gerrit_baseTest {
 class Git_Driver_Gerrit_addUserToGroupTest extends Git_Driver_Gerrit_baseTest {
 
     private $groupname;
-    private $ldap_id;
+    private $ldap_uid;
     private $user;
     private $account_id;
     private $group_id;
@@ -258,12 +258,12 @@ class Git_Driver_Gerrit_addUserToGroupTest extends Git_Driver_Gerrit_baseTest {
         parent::setUp();
         $this->group                       = 'contributors';
         $this->groupname                   = $this->project_name.'/'.$this->namespace.'/'.$this->repository_name.'-'.$this->group;
-        $this->ldap_id                     = 'someuser';
-        $this->user                        = aUser()->withLdapId($this->ldap_id)->build();
+        $this->ldap_uid                    = 'someuser';
+        $this->user                        = stub('LDAP_User')->getUid()->returns($this->ldap_uid);
 
-        $this->insert_member_query = 'gerrit gsql --format json -c "INSERT\ INTO\ account_group_members\ (account_id,\ group_id)\ SELECT\ A.account_id,\ G.group_id\ FROM\ account_external_ids\ A,\ account_groups\ G\ WHERE\ A.external_id=\\\'username:'. $this->ldap_id .'\\\'\ AND\ G.name=\\\''. $this->groupname .'\\\'"';
+        $this->insert_member_query = 'gerrit gsql --format json -c "INSERT\ INTO\ account_group_members\ (account_id,\ group_id)\ SELECT\ A.account_id,\ G.group_id\ FROM\ account_external_ids\ A,\ account_groups\ G\ WHERE\ A.external_id=\\\'username:'. $this->ldap_uid .'\\\'\ AND\ G.name=\\\''. $this->groupname .'\\\'"';
 
-        $this->set_account_query   = 'gerrit set-account '.$this->user->getLdapId();
+        $this->set_account_query   = 'gerrit set-account '.$this->ldap_uid;
     }
 
     public function itInitializeUserAccountInGerritWhenUserNeverLoggedToGerritUI() {
@@ -284,7 +284,7 @@ class Git_Driver_Gerrit_addUserToGroupTest extends Git_Driver_Gerrit_baseTest {
 class Git_Driver_Gerrit_removeUserFromGroupTest extends Git_Driver_Gerrit_baseTest {
 
     private $groupname;
-    private $ldap_id;
+    private $ldap_uid;
     private $user;
     private $account_id;
     private $group_id;
@@ -293,13 +293,13 @@ class Git_Driver_Gerrit_removeUserFromGroupTest extends Git_Driver_Gerrit_baseTe
         parent::setUp();
         $this->group          = 'contributors';
         $this->groupname      = $this->project_name.'/'.$this->namespace.'/'.$this->repository_name.'-'.$this->group;
-        $this->ldap_id        = 'someuser';
-        $this->user           = aUser()->withLdapId($this->ldap_id)->build();
+        $this->ldap_uid        = 'someuser';
+        $this->user           = stub('LDAP_User')->getUid()->returns($this->ldap_uid);
 
     }
 
     public function itExecutesTheDeletionCommand() {
-        $remove_member_query = 'gerrit gsql --format json -c "DELETE\ FROM\ account_group_members\ WHERE\ account_id=(SELECT\ account_id\ FROM\ account_external_ids\ WHERE\ external_id=\\\'username:'. $this->ldap_id .'\\\')\ AND\ group_id=(SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $this->groupname .'\\\')"';
+        $remove_member_query = 'gerrit gsql --format json -c "DELETE\ FROM\ account_group_members\ WHERE\ account_id=(SELECT\ account_id\ FROM\ account_external_ids\ WHERE\ external_id=\\\'username:'. $this->ldap_uid .'\\\')\ AND\ group_id=(SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $this->groupname .'\\\')"';
 
         expect($this->ssh)->execute()->count(2);
         expect($this->ssh)->execute($this->gerrit_server, $remove_member_query)->at(0);

@@ -19,6 +19,7 @@
  */
 
 require_once 'common/backend/BackendLogger.class.php';
+require_once dirname(__FILE__).'/../../../../ldap/include/LDAP_User.class.php';
 
 /**
  * I know how to speak to a Gerrit remote server
