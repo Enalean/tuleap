@@ -24,6 +24,29 @@
 
 require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand.class.php';
 
+/**
+ * There is no type hinting on constructor to avoid having to load LDAP plugin
+ * when usage of Git plugin without Gerrit
+ */
+class Git_Driver_Gerrit_User {
+    /**
+     * @var LDAP_User
+     */
+    private $ldap_user;
+
+    public function __construct(/*no type*/$ldap_user) {
+        $this->ldap_user = $ldap_user;
+    }
+
+    public function getSshUserName() {
+        return $this->ldap_user->getUid();
+    }
+
+    public function getWebUserName() {
+        return $this->ldap_user->getUid();
+    }
+}
+
 abstract class Git_Driver_Gerrit_MembershipCommand_User extends Git_Driver_Gerrit_MembershipCommand {
     protected $user;
 
@@ -32,18 +55,31 @@ abstract class Git_Driver_Gerrit_MembershipCommand_User extends Git_Driver_Gerri
         $this->user   = $user;
     }
 
-    public function execute(Git_RemoteServer_GerritServer $server) {
+    /**
+     * 
+     * @param PFUser $user
+     * 
+     * @return Git_Driver_Gerrit_User
+     */
+    protected function getGerritUser(PFUser $user) {
         $ldap_user = null;
         $params    = array('ldap_user' => &$ldap_user, 'user' => $this->user);
         EventManager::instance()->processEvent(Event::GET_LDAP_LOGIN_NAME_FOR_USER, $params);
         if ($ldap_user) {
-            $this->executeForLdapUsers($server, $ldap_user);
+            return new Git_Driver_Gerrit_User($ldap_user);
         } else {
-           //throw new Exception('Pas de ldap');
+            return null;
         }
     }
 
-    abstract protected function executeForLdapUsers(Git_RemoteServer_GerritServer $server, LDAP_User $ldap_user);
+    public function execute(Git_RemoteServer_GerritServer $server) {
+        $gerrit_user = $this->getGerritUser($this->user);
+        if ($gerrit_user) {
+            $this->executeForGerritUser($server, $gerrit_user);
+        }
+    }
+
+    abstract protected function executeForGerritUser(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $gerrit_user);
 }
 
 ?>

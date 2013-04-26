@@ -22,10 +22,10 @@ require_once 'User.class.php';
 
 class Git_Driver_Gerrit_MembershipCommand_AddUser extends Git_Driver_Gerrit_MembershipCommand_User {
 
-    protected function executeForLdapUsers(Git_RemoteServer_GerritServer $server, LDAP_User $ldap_user) {
+    protected function executeForGerritUser(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $gerrit_user) {
         $this->driver->addUserToGroup(
             $server,
-            $ldap_user,
+            $gerrit_user,
             $this->membership_manager->getFullyQualifiedUGroupName($this->ugroup)
         );
     }
