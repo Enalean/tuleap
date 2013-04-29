@@ -226,17 +226,6 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->addToSection('refs/heads', 'forgeCommitter', "group Administrators"); // push initial ref
 
         foreach ($ugroups_read as $ugroup_read) {
-            $this->addToSection('refs/changes', 'push', "group $ugroup_read");
-        }
-        foreach ($ugroups_write as $ugroup_write) {
-            $this->addToSection('refs/changes', 'push', "group $ugroup_write");
-            $this->addToSection('refs/changes', 'pushMerge', "group $ugroup_write");
-        }
-        foreach ($ugroups_rewind as $ugroup_rewind) {
-            $this->addToSection('refs/changes', 'push', "+force group $ugroup_rewind");
-        }
-
-        foreach ($ugroups_read as $ugroup_read) {
             $this->addToSection('refs/for/refs/heads', 'push', "group $ugroup_read");
         }
         foreach ($ugroups_write as $ugroup_write) {
