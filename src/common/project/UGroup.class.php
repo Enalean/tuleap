@@ -207,7 +207,7 @@ class UGroup {
     }
 
     /**
-     *  
+     *
      * @param int $group_id the group id of the static or dynamic group.
      * You have to supply this argument as $this->group_id is 100 in the case of a dynamic group
      *
@@ -215,25 +215,6 @@ class UGroup {
      */
     public function getUsers($group_id) {
         return new Users($this->getStaticOrDynamicMembers($group_id));
-    }
-    
-    /**
-     *  
-     * @param int $group_id the group id of the static or dynamic group.
-     * You have to supply this argument as $this->group_id is 100 in the case of a dynamic group
-     *
-     * @return Array of string
-     */
-    public function getUserNames($group_id) {
-        return $this->getUsers($group_id)->getNames();
-    }
-
-    public function getUserLdapIds($group_id) {
-        return $this->getUsers($group_id)->getLdapIds();
-    }
-
-    public function getLdapLogins($group_id) {
-        return $this->getUsers($group_id)->getNonEmptyLdapLogins();
     }
 
     /**

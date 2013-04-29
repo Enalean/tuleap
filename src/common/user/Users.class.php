@@ -53,42 +53,5 @@ class Users {
         }
         return $result;
     }
-
-    public function getLdapIds() {
-        $result = array();
-        foreach ($this->dar as $user) {
-            $result[] = $user->getLdapId();
-        }
-        return $result;
-    }
-
-    /**
-     *
-     * @return Array string : Only the LDAP Ids non empty
-     */
-    public function getNonEmptyLdapIds() {
-        return array_filter($this->getLdapIds());
-    }
-
-    /**
-     *
-     * @return Array string : Only the LDAP Logins non empty
-     */
-    public function getNonEmptyLdapLogins() {
-        return array_filter($this->getLdapLogins());
-    }
-
-    public function getLdapLogins() {
-        $ldap_logins = array();
-        foreach ($this->dar as $user) {
-            $login = '';
-            $params = array('login' => &$login, 'user' => $user);
-            EventManager::instance()->processEvent(Event::GET_LDAP_LOGIN_NAME_FOR_USER, $params);
-            if ($login) {
-                $ldap_logins[] = $login;
-            }
-        }
-        return $ldap_logins;
-    }
 }
 ?>

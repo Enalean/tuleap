@@ -238,7 +238,6 @@ class UGroup_getUsersTest extends UGroup_getUsersBaseTest {
         $ugroup   = new UGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsEmptyDar());
         $this->assertEqual($ugroup->getUsers($id)->reify(), array());
-        $this->assertEqual($ugroup->getUserNames($id), array());
     }
 
     public function itReturnsTheMembersOfStaticGroups() {
@@ -249,7 +248,6 @@ class UGroup_getUsersTest extends UGroup_getUsersBaseTest {
         
         $users = array($this->garfield, $this->goofy);
         $this->assertEqual($ugroup->getUsers($id)->reify(), $users);
-        $this->assertEqual($ugroup->getUserNames($id), array('garfield', 'goofy'));
     }
     
     public function itReturnsTheMembersOfDynamicGroups() {
@@ -261,7 +259,6 @@ class UGroup_getUsersTest extends UGroup_getUsersBaseTest {
 
         $users = array($this->garfield, $this->goofy);
         $this->assertEqual($ugroup->getUsers($group_id)->reify(), $users);
-        $this->assertEqual($ugroup->getUserNames($group_id), array('garfield', 'goofy'));
     }
 }
 

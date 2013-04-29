@@ -34,15 +34,5 @@ class Users_Test extends TuleapTestCase {
         $users = new Users($dar);
         $this->assertEqual($users->getNames(), array('Nicolas', 'Johan'));
     }
-
-    public function itRemovesTheEmptyLdapIds() {
-        $dar = TestHelper::arrayToDar(
-            aUser()->withUserName('Nicolas')->withLdapId('Nicolas')->build(),
-            aUser()->withUserName('Johan')->withLdapId('Johan')->build(),
-            aUser()->withUserName('Empty')->withLdapId('')->build()
-        );
-        $users = new Users($dar);
-        $this->assertEqual($users->getNonEmptyLdapIds(), array('Nicolas', 'Johan'));
-    }
 }
 ?>
