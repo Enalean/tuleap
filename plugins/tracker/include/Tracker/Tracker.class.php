@@ -550,8 +550,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
             case 'admin-export':
                 if ($this->userIsAdmin($current_user)) {
                     // TODO: change directory
-                    $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-                                                         <tracker xmlns="http://codendi.org/tracker"/>');
+                    $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
                     $this->sendXML($this->exportToXML($xml_element));
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));

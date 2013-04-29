@@ -262,7 +262,7 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
     function testExport() {
         $xml = simplexml_load_file(dirname(__FILE__) . '/../../../_fixtures/ImportTrackerRulesTest.xml');
 
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = array('F25' => 102,
                                    'F28' => 103,
                                    'F29' => 801,
