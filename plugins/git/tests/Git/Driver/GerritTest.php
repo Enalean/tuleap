@@ -156,15 +156,6 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
         $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', array());
     }
 
-    public function itCreatesGroupsWithMembers() {
-        stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
-
-        $create_group_command = "gerrit create-group firefox/project_members --member ''\''johan'\''' --member ''\''goyotm'\'''";
-        $user_list = array('johan', 'goyotm');
-        expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
-        $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', $user_list);
-    }
-
     public function itInformsAboutGroupCreation() {
         stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
 
@@ -177,26 +168,16 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
         stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
 
         $std_err = 'fatal: group "somegroup" already exists';
-        $command = "gerrit create-group firefox/project_members --member ''\''johan'\'''";
-        $user_list = array('johan');
+        $command = "gerrit create-group firefox/project_members";
 
         stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE, '', $std_err));
 
         try {
-            $this->gerrit_driver->createGroup($this->gerrit_server,  'firefox/project_members', $user_list);
+            $this->gerrit_driver->createGroup($this->gerrit_server,  'firefox/project_members');
             $this->fail('An exception was expected');
         } catch (Git_Driver_Gerrit_Exception $e) {
             $this->assertEqual($e->getMessage(), "Command: $command" . PHP_EOL . "Error: $std_err");
         }
-    }
-
-    public function itEscapesTwiceUsernameInCommandLine() {
-        stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
-
-        $create_group_command = "gerrit create-group firefox/project_members --member ''\''Johan Martinsson'\'''";
-        $user_list            = array('Johan Martinsson',);
-        expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
-        $this->gerrit_driver->createGroup($this->gerrit_server,  'firefox/project_members', $user_list);
     }
 
 }

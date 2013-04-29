@@ -113,19 +113,17 @@ class Git_Driver_Gerrit {
      * @param String $group_name
      * @param array $user_name_list
      */
-    public function createGroup(Git_RemoteServer_GerritServer $server, $group_name, array $user_name_list){
+    public function createGroup(Git_RemoteServer_GerritServer $server, $group_name){
         if ($this->doesTheGroupExist($server, $group_name)) {
             $this->logger->info("Gerrit: Group $group_name already exists on Gerrit");
             return;
         }
 
-        $base_command = array(self::COMMAND, "create-group", $group_name);
-        $member_args  = $this->compileMemberCommands($user_name_list);
-        $command_line = implode(' ', array_merge($base_command, $member_args));
+        $command = self::COMMAND . ' create-group ' . $group_name;
         try {
-            $this->ssh->execute($server, $command_line);
+            $this->ssh->execute($server, $command);
         } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
-            throw $this->computeException($e, $command_line);
+            throw $this->computeException($e, $command);
         }
 
         $this->logger->info("Gerrit: Group $group_name successfully created");
