@@ -1,6 +1,10 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
  * This file is a part of Tuleap.
  *
@@ -18,21 +22,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/user/Users.class.php';
+/**
+ * Wrapper for ldap user
+ */
+class LDAP_User {
+    /** @var PFUser */
+    private $user;
 
-class Users_Test extends TuleapTestCase {
+    /** @var LDAPResult */
+    private $ldap_result;
 
-    public function itProvidesTheBareDAR() {
-        $dar = TestHelper::arrayToDar('hej', 'hopp', 'trallalalala');
-        $users = new Users($dar);
-        $this->assertEqual($users->getDar(), $dar);
-        $this->assertEqual($users->reify(), array('hej', 'hopp', 'trallalalala'));
+    public function __construct(PFUser $user, LDAPResult $ldap_result) {
+        $this->user        = $user;
+        $this->ldap_result = $ldap_result;
     }
 
-    public function itProvidesTheUserNames() {
-        $dar = TestHelper::arrayToDar(aUser()->withUserName('Nicolas')->build(), aUser()->withUserName('Johan')->build());
-        $users = new Users($dar);
-        $this->assertEqual($users->getNames(), array('Nicolas', 'Johan'));
+    /**
+     * @return String
+     */
+    public function getUid() {
+        return strtolower($this->ldap_result->getLogin());
     }
 }
+
 ?>

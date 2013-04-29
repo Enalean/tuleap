@@ -19,6 +19,8 @@
  */
 
 require_once dirname(__FILE__).'/../../../bootstrap.php';
+require_once dirname(__FILE__).'/../../../../../ldap/include/LDAP_User.class.php';
+require_once dirname(__FILE__).'/../../../../../ldap/include/LDAPResult.class.php';
 
 class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase {
     private $user;
@@ -216,4 +218,38 @@ class Git_Driver_Gerrit_UserAccountManager_PushSSHKeysTest extends TuleapTestCas
         $this->user_account_manager->pushSSHKeys($this->user);
     }
 }
+
+class Git_Driver_Gerrit_UserAccountManager_GetGerritUserTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+        $event_manager = new EventManager();
+        $event_manager->addListener(Event::GET_LDAP_LOGIN_NAME_FOR_USER, $this, 'hookReturnsLdapUser', false, 0);
+        EventManager::setInstance($event_manager);
+
+        $this->ldap_login  = 'bla blo';
+        $this->ldap_result = stub('LDAPResult')->getLogin()->returns($this->ldap_login);
+    }
+
+    public function tearDown() {
+        EventManager::clearInstance();
+        parent::tearDown();
+    }
+
+    public function hookReturnsLdapUser($params) {
+        $params['ldap_user'] = new LDAP_User($params['user'], $this->ldap_result);
+    }
+
+    public function itCreatesGerritUserFromLdapUser() {
+        $user_manager = new Git_Driver_Gerrit_UserAccountManager(
+            mock('Git_Driver_Gerrit'),
+            mock('Git_RemoteServer_GerritServerFactory')
+        );
+
+        $gerrit_user = $user_manager->getGerritUser(mock('PFUser'));
+        $this->assertEqual($gerrit_user->getWebUserName(), $this->ldap_login);
+    }
+}
+
 ?>

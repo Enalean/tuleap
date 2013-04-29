@@ -45,6 +45,11 @@ class GitViews_ShowRepo_Content {
     private $driver;
 
     /**
+     * @var Git_Driver_Gerrit_UserAccountManager
+     */
+    private $gerrit_usermanager;
+
+    /**
      * @var array
      */
     private $gerrit_servers;
@@ -60,6 +65,7 @@ class GitViews_ShowRepo_Content {
         PFUser $current_user,
         Git $controller,
         Git_Driver_Gerrit $driver,
+        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         array $gerrit_servers,
         $theme_path
     ) {
@@ -68,6 +74,7 @@ class GitViews_ShowRepo_Content {
         $this->current_user   = $current_user;
         $this->controller     = $controller;
         $this->driver         = $driver;
+        $this->gerrit_usermanager = $gerrit_usermanager;
         $this->gerrit_servers = $gerrit_servers;
         $this->theme_path     = $theme_path;
     }
@@ -184,10 +191,11 @@ class GitViews_ShowRepo_Content {
     private function getAccessURLs() {
         $urls = $this->repository->getAccessURL();
         if ($this->repository->getRemoteServerId()) {
+            $gerrit_user = $this->gerrit_usermanager->getGerritUser($this->current_user);
             $gerrit_server  = $this->gerrit_servers[$this->repository->getRemoteServerId()];
             $gerrit_project = $this->driver->getGerritProjectName($this->repository);
 
-            $clone_url = $gerrit_server->getEndUserCloneUrl($gerrit_project, $this->current_user);
+            $clone_url = $gerrit_server->getEndUserCloneUrl($gerrit_project, $gerrit_user);
             $this->prependGerritCloneURL($urls, $clone_url);
         }
         return $urls;

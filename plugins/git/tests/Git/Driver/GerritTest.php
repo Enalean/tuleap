@@ -21,6 +21,7 @@
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 require_once 'common/include/Config.class.php';
+require_once dirname(__FILE__).'/../../../../ldap/include/LDAP_User.class.php';
 
 abstract class Git_Driver_Gerrit_baseTest extends TuleapTestCase {
 
@@ -155,15 +156,6 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
         $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', array());
     }
 
-    public function itCreatesGroupsWithMembers() {
-        stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
-
-        $create_group_command = "gerrit create-group firefox/project_members --member ''\''johan'\''' --member ''\''goyotm'\'''";
-        $user_list = array('johan', 'goyotm');
-        expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
-        $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', $user_list);
-    }
-
     public function itInformsAboutGroupCreation() {
         stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
 
@@ -176,26 +168,16 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
         stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
 
         $std_err = 'fatal: group "somegroup" already exists';
-        $command = "gerrit create-group firefox/project_members --member ''\''johan'\'''";
-        $user_list = array('johan');
+        $command = "gerrit create-group firefox/project_members";
 
         stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE, '', $std_err));
 
         try {
-            $this->gerrit_driver->createGroup($this->gerrit_server,  'firefox/project_members', $user_list);
+            $this->gerrit_driver->createGroup($this->gerrit_server,  'firefox/project_members');
             $this->fail('An exception was expected');
         } catch (Git_Driver_Gerrit_Exception $e) {
             $this->assertEqual($e->getMessage(), "Command: $command" . PHP_EOL . "Error: $std_err");
         }
-    }
-
-    public function itEscapesTwiceUsernameInCommandLine() {
-        stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
-
-        $create_group_command = "gerrit create-group firefox/project_members --member ''\''Johan Martinsson'\'''";
-        $user_list            = array('Johan Martinsson',);
-        expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
-        $this->gerrit_driver->createGroup($this->gerrit_server,  'firefox/project_members', $user_list);
     }
 
 }
@@ -249,7 +231,7 @@ class Git_Driver_Gerrit_getGroupIdTest extends Git_Driver_Gerrit_baseTest {
 class Git_Driver_Gerrit_addUserToGroupTest extends Git_Driver_Gerrit_baseTest {
 
     private $groupname;
-    private $ldap_id;
+    private $ldap_uid;
     private $user;
     private $account_id;
     private $group_id;
@@ -258,12 +240,12 @@ class Git_Driver_Gerrit_addUserToGroupTest extends Git_Driver_Gerrit_baseTest {
         parent::setUp();
         $this->group                       = 'contributors';
         $this->groupname                   = $this->project_name.'/'.$this->namespace.'/'.$this->repository_name.'-'.$this->group;
-        $this->ldap_id                     = 'someuser';
-        $this->user                        = aUser()->withLdapId($this->ldap_id)->build();
+        $this->ldap_uid                    = 'someuser';
+        $this->user                        = new Git_Driver_Gerrit_User(stub('LDAP_User')->getUid()->returns($this->ldap_uid));
 
-        $this->insert_member_query = 'gerrit gsql --format json -c "INSERT\ INTO\ account_group_members\ (account_id,\ group_id)\ SELECT\ A.account_id,\ G.group_id\ FROM\ account_external_ids\ A,\ account_groups\ G\ WHERE\ A.external_id=\\\'username:'. $this->ldap_id .'\\\'\ AND\ G.name=\\\''. $this->groupname .'\\\'"';
+        $this->insert_member_query = 'gerrit gsql --format json -c "INSERT\ INTO\ account_group_members\ (account_id,\ group_id)\ SELECT\ A.account_id,\ G.group_id\ FROM\ account_external_ids\ A,\ account_groups\ G\ WHERE\ A.external_id=\\\'username:'. $this->ldap_uid .'\\\'\ AND\ G.name=\\\''. $this->groupname .'\\\'"';
 
-        $this->set_account_query   = 'gerrit set-account '.$this->user->getLdapId();
+        $this->set_account_query   = 'gerrit set-account '.$this->ldap_uid;
     }
 
     public function itInitializeUserAccountInGerritWhenUserNeverLoggedToGerritUI() {
@@ -284,7 +266,7 @@ class Git_Driver_Gerrit_addUserToGroupTest extends Git_Driver_Gerrit_baseTest {
 class Git_Driver_Gerrit_removeUserFromGroupTest extends Git_Driver_Gerrit_baseTest {
 
     private $groupname;
-    private $ldap_id;
+    private $ldap_uid;
     private $user;
     private $account_id;
     private $group_id;
@@ -293,13 +275,13 @@ class Git_Driver_Gerrit_removeUserFromGroupTest extends Git_Driver_Gerrit_baseTe
         parent::setUp();
         $this->group          = 'contributors';
         $this->groupname      = $this->project_name.'/'.$this->namespace.'/'.$this->repository_name.'-'.$this->group;
-        $this->ldap_id        = 'someuser';
-        $this->user           = aUser()->withLdapId($this->ldap_id)->build();
+        $this->ldap_uid        = 'someuser';
+        $this->user           = new Git_Driver_Gerrit_User(stub('LDAP_User')->getUid()->returns($this->ldap_uid));
 
     }
 
     public function itExecutesTheDeletionCommand() {
-        $remove_member_query = 'gerrit gsql --format json -c "DELETE\ FROM\ account_group_members\ WHERE\ account_id=(SELECT\ account_id\ FROM\ account_external_ids\ WHERE\ external_id=\\\'username:'. $this->ldap_id .'\\\')\ AND\ group_id=(SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $this->groupname .'\\\')"';
+        $remove_member_query = 'gerrit gsql --format json -c "DELETE\ FROM\ account_group_members\ WHERE\ account_id=(SELECT\ account_id\ FROM\ account_external_ids\ WHERE\ external_id=\\\'username:'. $this->ldap_uid .'\\\')\ AND\ group_id=(SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $this->groupname .'\\\')"';
 
         expect($this->ssh)->execute()->count(2);
         expect($this->ssh)->execute($this->gerrit_server, $remove_member_query)->at(0);

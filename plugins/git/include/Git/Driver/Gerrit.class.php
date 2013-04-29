@@ -113,19 +113,17 @@ class Git_Driver_Gerrit {
      * @param String $group_name
      * @param array $user_name_list
      */
-    public function createGroup(Git_RemoteServer_GerritServer $server, $group_name, array $user_name_list){
+    public function createGroup(Git_RemoteServer_GerritServer $server, $group_name){
         if ($this->doesTheGroupExist($server, $group_name)) {
             $this->logger->info("Gerrit: Group $group_name already exists on Gerrit");
             return;
         }
 
-        $base_command = array(self::COMMAND, "create-group", $group_name);
-        $member_args  = $this->compileMemberCommands($user_name_list);
-        $command_line = implode(' ', array_merge($base_command, $member_args));
+        $command = self::COMMAND . ' create-group ' . $group_name;
         try {
-            $this->ssh->execute($server, $command_line);
+            $this->ssh->execute($server, $command);
         } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
-            throw $this->computeException($e, $command_line);
+            throw $this->computeException($e, $command);
         }
 
         $this->logger->info("Gerrit: Group $group_name successfully created");
@@ -202,8 +200,9 @@ class Git_Driver_Gerrit {
         return escapeshellarg(escapeshellarg($user_identifier));
     }
 
-    public function setAccount(Git_RemoteServer_GerritServer $server, PFUser $user) {
-        $query = self::COMMAND .' set-account '. $user->getLdapId();
+    protected function setAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user) {
+        $this->logger->debug("Set account ".$user->getSSHUserName());
+        $query = self::COMMAND .' set-account '. $user->getSSHUserName();
         $this->ssh->execute($server, $query);
     }
 
@@ -216,9 +215,10 @@ class Git_Driver_Gerrit {
      * @param PFUser $user
      * @param String $group_name
      */
-    public function addUserToGroup(Git_RemoteServer_GerritServer $server, PFUser $user, $group_name) {
+    public function addUserToGroup(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $group_name) {
         $this->setAccount($server, $user);
-        $username = $user->getLdapId();
+
+        $username = $user->getWebUserName();
 
         $sql_query = "INSERT INTO account_group_members (account_id, group_id) SELECT A.account_id, G.group_id FROM account_external_ids A, account_groups G WHERE A.external_id='username:". $username ."' AND G.name='". $group_name ."'";
         $this->executeQuery($server, $sql_query);
@@ -234,8 +234,8 @@ class Git_Driver_Gerrit {
      * @param PFUser $user
      * @param String $group_name
      */
-    public function removeUserFromGroup(Git_RemoteServer_GerritServer $server, PFUser $user, $group_name) {
-        $username = $user->getLdapId();
+    public function removeUserFromGroup(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $group_name) {
+        $username = $user->getWebUserName();
 
         $sql_query = "DELETE FROM account_group_members WHERE account_id=(SELECT account_id FROM account_external_ids WHERE external_id='username:". $username ."') AND group_id=(SELECT group_id FROM account_groups WHERE name='". $group_name ."')";
         $this->executeQuery($server, $sql_query);
