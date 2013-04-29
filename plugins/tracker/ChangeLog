@@ -1,3 +1,6 @@
+Version 5.121 - Tuleap 5.13
+    * Development: refactoring after Core update on UGroup
+
 Version 5.120 - Tuleap 5.13
     * Remove namespace in XML export/import
 

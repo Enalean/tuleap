@@ -1,3 +1,6 @@
+Version 3.29 - Tuleap 5.13
+    * Development: LDAP now provides an LDAP user to all platform
+
 Version 3.28 - Tuleap 5.13
     * Fix sla #3147: Do not update ldap login when project is not using svn/ldap
 

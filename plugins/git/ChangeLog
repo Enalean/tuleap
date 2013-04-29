@@ -1,3 +1,12 @@
+Version 3.13 - Tuleap 5.13
+    * Fix sla #3150 - Tuleap uses LDAP uid to interact with gerrit users
+
+
+We need to use LDAP uid (login) instead of id (internal value of LDAP) for
+user management between Tuleap and Gerrit.
+
+Change-Id: Ic1226200f9de2111acec159e81bd8b2bf0321029
+
 Version 3.12 - Tuleap 5.13
     * Remove perms on refs/changes/*
 
