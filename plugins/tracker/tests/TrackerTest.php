@@ -1449,8 +1449,7 @@ class TrackerTest extends TuleapTestCase {
 
         $this->tracker->setReturnValue('getRulesManager', $rules_manager);
 
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-                                     <tracker xmlns="http://codendi.org/tracker"/>');
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
 
         $this->assertTrue(isset($xml->permissions));
@@ -1491,8 +1490,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->setReturnValue('getAllFormElements', array());
         $this->tracker->setReturnValue('getRulesManager', mock('Tracker_RulesManager'));
 
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-                                     <tracker xmlns="http://codendi.org/tracker"/>');
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
 
         $attributes = $xml->attributes();
@@ -1503,8 +1501,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->setReturnValue('getAllFormElements', array());
         $this->tracker->setReturnValue('getRulesManager', mock('Tracker_RulesManager'));
 
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-                                     <tracker xmlns="http://codendi.org/tracker"/>');
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
 
         $attributes = $xml->attributes();
@@ -1516,8 +1513,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->setReturnValue('getRulesManager', mock('Tracker_RulesManager'));
         $this->hierarchy->addRelationship(9001, 110);
 
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-                                     <tracker xmlns="http://codendi.org/tracker"/>');
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
 
         $attributes = $xml->attributes();

@@ -197,7 +197,7 @@ class WorkflowTest extends UnitTestCase {
         $workflow->setReturnValue('getPermissionsManager', $pm);
 
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/importWorkflow.xml');
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
 
         $array_xml_mapping = array('F32' => 103,
                                    'values' => array(

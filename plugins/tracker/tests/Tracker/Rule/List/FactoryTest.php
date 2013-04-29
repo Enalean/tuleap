@@ -229,7 +229,7 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase {
         $bf->setReturnValue('getType', 'static', array($bind_f1));
         $bf->setReturnValue('getType', 'static', array($bind_f2));
 
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = array('F25' => 102,
                                    'F28' => 103,
                                    'values' => array(

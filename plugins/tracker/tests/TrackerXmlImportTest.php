@@ -44,17 +44,17 @@ class TrackerXmlImportTest extends TuleapTestCase {
             <project>
               <empty_section />
               <trackers>
-                  <tracker xmlns="http://codendi.org/tracker" id="T101" parent_id="0" instantiate_for_new_projects="1">
+                  <tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
                     <name>t10</name>
                     <item_name>t11</item_name>
                     <description>t12</description>
                   </tracker>
-                  <tracker xmlns="http://codendi.org/tracker" id="T102" parent_id="T101" instantiate_for_new_projects="1">
+                  <tracker id="T102" parent_id="T101" instantiate_for_new_projects="1">
                     <name>t20</name>
                     <item_name>t21</item_name>
                     <description>t22</description>
                   </tracker>
-                  <tracker xmlns="http://codendi.org/tracker" id="T103" parent_id="T102" instantiate_for_new_projects="1">
+                  <tracker id="T103" parent_id="T102" instantiate_for_new_projects="1">
                     <name>t30</name>
                     <item_name>t31</item_name>
                     <description>t32</description>
@@ -67,7 +67,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
         $this->group_id = 145;
 
         $this->xml_tracker1 = new SimpleXMLElement(
-                 '<tracker xmlns="http://codendi.org/tracker" id="T101" parent_id="0" instantiate_for_new_projects="1">
+                 '<tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
                     <name>t10</name>
                     <item_name>t11</item_name>
                     <description>t12</description>
@@ -75,7 +75,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
         );
 
         $this->xml_tracker2 = new SimpleXMLElement(
-                 '<tracker xmlns="http://codendi.org/tracker" id="T102" parent_id="T101" instantiate_for_new_projects="1">
+                 '<tracker id="T102" parent_id="T101" instantiate_for_new_projects="1">
                     <name>t20</name>
                     <item_name>t21</item_name>
                     <description>t22</description>
@@ -83,7 +83,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
         );
 
         $this->xml_tracker3 = new SimpleXMLElement(
-                 '<tracker xmlns="http://codendi.org/tracker" id="T103" parent_id="T102" instantiate_for_new_projects="1">
+                 '<tracker id="T103" parent_id="T102" instantiate_for_new_projects="1">
                     <name>t30</name>
                     <item_name>t31</item_name>
                     <description>t32</description>
@@ -195,7 +195,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
         $expected_hierarchy = array(444 => array(555, 666));
         $mapper             = array("T101" => 444, "T103" => 666);
         $xml_tracker        = new SimpleXMLElement(
-                 '<tracker xmlns="http://codendi.org/tracker" id="T103" parent_id="T101" instantiate_for_new_projects="1">
+                 '<tracker id="T103" parent_id="T101" instantiate_for_new_projects="1">
                     <name>t30</name>
                     <item_name>t31</item_name>
                     <description>t32</description>
