@@ -1,3 +1,6 @@
+Version 3.11 - Tuleap 5.13
+    * Modify table name and attribute name from uppercase to lowercase
+
 Version 3.10 - Tuleap 5.13
     * Fix Ugroup deleted and re-created on Gerrit
 
