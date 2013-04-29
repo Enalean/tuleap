@@ -1,3 +1,14 @@
+Version 3.12 - Tuleap 5.13
+    * Remove perms on refs/changes/*
+
+
+Following the discussion on tuleap-devel[1] it appears that we shouldn't
+create rules for refs/changes/*.
+
+[1] https://tuleap.net/plugins/forumml/message.php?group_id=101&topic=20064&list=1
+
+Change-Id: I5ef23d90a08669f1b15a7e32b4c305613b9ce9cd
+
 Version 3.11 - Tuleap 5.13
     * Modify table name and attribute name from uppercase to lowercase
 
