@@ -406,12 +406,14 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
     }
 
     public function itCreateGroupOnAllGerritServersTheProjectUses() {
+        stub($this->ugroup)->getMembers()->returns(array());
         expect($this->remote_server_factory)->getServersForProject($this->project)->once();
         stub($this->remote_server_factory)->getServersForProject()->returns(array($this->remote_server));
         $this->membership_manager->createGroupOnProjectsServers($this->ugroup);
     }
 
     public function itCreatesGerritGroupFromUGroup() {
+        stub($this->ugroup)->getMembers()->returns(array());
         expect($this->driver)->createGroup($this->remote_server, 'w3c/coders')->once();
         stub($this->driver)->createGroup()->returns('w3c/coders');
 
@@ -419,7 +421,24 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
         $this->assertEqual($gerrit_group_name, 'w3c/coders');
     }
 
+    public function itAddGroupMembersOnCreation() {
+        expect($this->driver)->createGroup($this->remote_server, 'w3c/coders')->once();
+        stub($this->driver)->createGroup()->returns('w3c/coders');
+
+
+        $mary = aUser()->withId(12)->build();
+        $bob  = aUser()->withId(25)->build();
+        stub($this->ugroup)->getMembers()->returns(array($mary, $bob));
+
+        stub($this->membership_manager)->addUserToGroup()->count(2);
+        stub($this->membership_manager)->addUserToGroup($mary, $this->ugroup)->at(0);
+        stub($this->membership_manager)->addUserToGroup($bob, $this->ugroup)->at(1);
+        
+        $this->membership_manager->createGroupForServer($this->remote_server, $this->ugroup);
+    }
+
     public function itStoresTheGroupInTheDb() {
+        stub($this->ugroup)->getMembers()->returns(array());
         stub($this->remote_server)->getId()->returns(666);
 
         expect($this->dao)->addReference(1236, 25698, 666)->once();
@@ -446,6 +465,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
     }
 
     public function itCreatesGerritGroupOnEachServer() {
+        stub($this->ugroup)->getMembers()->returns(array());
         $remote_server1 = mock('Git_RemoteServer_GerritServer');
         $remote_server2 = mock('Git_RemoteServer_GerritServer');
         stub($this->remote_server_factory)->getServersForProject()->returns(array($remote_server1, $remote_server2));
@@ -459,6 +479,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
     }
 
     public function itStoresTheGroupInTheDbForEachServer() {
+        stub($this->ugroup)->getMembers()->returns(array());
         $remote_server1 = mock('Git_RemoteServer_GerritServer');
         $remote_server2 = mock('Git_RemoteServer_GerritServer');
         stub($this->remote_server_factory)->getServersForProject()->returns(array($remote_server1, $remote_server2));
@@ -504,6 +525,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
     }
 
     public function itContinuesToCreateGroupsEvenIfOneFails() {
+        stub($this->ugroup)->getMembers()->returns(array());
         $remote_server1 = mock('Git_RemoteServer_GerritServer');
         $remote_server2 = mock('Git_RemoteServer_GerritServer');
         stub($remote_server2)->getId()->returns(667);
@@ -541,6 +563,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
         stub($ugroup)->getNormalizedName()->returns('project_members');
         stub($ugroup)->getProject()->returns($this->project);
         stub($ugroup)->getProjectId()->returns(999);
+        stub($ugroup)->getMembers()->returns(array());
 
         $this->membership_manager->createGroupForServer($this->remote_server, $ugroup);
     }
@@ -553,6 +576,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
         stub($ugroup)->getNormalizedName()->returns('project_admin');
         stub($ugroup)->getProject()->returns($this->project);
         stub($ugroup)->getProjectId()->returns(999);
+        stub($ugroup)->getMembers()->returns(array());
 
         $this->membership_manager->createGroupForServer($this->remote_server, $ugroup);
     }

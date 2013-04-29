@@ -170,19 +170,22 @@ class Git_Driver_Gerrit_MembershipManager {
     private function createGroupOnServerWithoutCheckingUGroupValidity(Git_RemoteServer_GerritServer $server, UGroup $ugroup) {
         $gerrit_group_name = $this->getFullyQualifiedUGroupName($ugroup);
         if (! $this->driver->doesTheGroupExist($server, $gerrit_group_name)) {
-            $source_ugroup = $ugroup->getSourceGroup();
-            /*if ($source_ugroup) {
-                $memberlist = array();
-            } else {
-                $memberlist = $ugroup->getLdapLogins($ugroup->getProject()->getID());
-            }*/
             $this->driver->createGroup($server, $gerrit_group_name);
             $this->dao->addReference($ugroup->getProjectId(), $ugroup->getId(), $server->getId());
-            if ($source_ugroup) {
-                $this->addUGroupBinding($ugroup, $source_ugroup);
-            }
+            $this->fillGroupWithMembers($ugroup);
         }
         return $gerrit_group_name;
+    }
+
+    private function fillGroupWithMembers(UGroup $ugroup) {
+        $source_ugroup = $ugroup->getSourceGroup();
+        if ($source_ugroup) {
+            $this->addUGroupBinding($ugroup, $source_ugroup);
+        } else {
+            foreach ($ugroup->getMembers() as $user) {
+                $this->addUserToGroup($user, $ugroup);
+            }
+        }
     }
 
     /**
