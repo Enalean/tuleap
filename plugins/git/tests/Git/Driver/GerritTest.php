@@ -474,7 +474,7 @@ class Git_Driver_Gerrit_AddIncludedGroupTest extends TuleapTestCase {
     public function itAddAnIncludedGroup() {
         $group_name    = 'gdb/developers';
         $included_group_name = 'gcc/coders';
-        $insert_included_query = 'gerrit gsql --format json -c "INSERT\ INTO\ ACCOUNT_GROUP_INCLUDES\ (GROUP_ID,\ INCLUDE_ID)\ SELECT\ G.GROUP_ID,\ I.GROUP_ID\ FROM\ ACCOUNT_GROUPS\ G,\ ACCOUNT_GROUPS\ I\ WHERE\ G.name=\\\''. $group_name .'\\\'\ AND\ I.name=\\\''. $included_group_name .'\\\'"';
+        $insert_included_query = 'gerrit gsql --format json -c "INSERT\ INTO\ account_group_includes\ (group_id,\ include_id)\ SELECT\ G.group_id,\ I.group_id\ FROM\ account_groups\ G,\ account_groups\ I\ WHERE\ G.name=\\\''. $group_name .'\\\'\ AND\ I.name=\\\''. $included_group_name .'\\\'"';
 
         expect($this->ssh)->execute()->count(2);
         expect($this->ssh)->execute($this->gerrit_server, $insert_included_query)->at(0);
@@ -500,7 +500,7 @@ class Git_Driver_Gerrit_RemoveIncludedGroupTest extends TuleapTestCase {
 
         stub($this->driver)->getGroupId($this->gerrit_server, $group_name)->returns($id);
 
-        $delete_included_query = 'gerrit gsql --format json -c "DELETE\ FROM\ ACCOUNT_GROUP_INCLUDES\ I\ WHERE\ I.GROUP_ID='.$id.'"';
+        $delete_included_query = 'gerrit gsql --format json -c "DELETE\ FROM\ account_group_includes\ I\ WHERE\ I.group_id='.$id.'"';
 
         expect($this->ssh)->execute()->count(2);
         expect($this->ssh)->execute($this->gerrit_server, $delete_included_query)->at(0);

@@ -272,7 +272,7 @@ class Git_Driver_Gerrit {
     }
 
     private function insertAccountGroupIncludes(Git_RemoteServer_GerritServer $server, $group_name, $included_group_name) {
-        $sql_query = "INSERT INTO ACCOUNT_GROUP_INCLUDES (GROUP_ID, INCLUDE_ID) SELECT G.GROUP_ID, I.GROUP_ID FROM ACCOUNT_GROUPS G, ACCOUNT_GROUPS I WHERE G.name='".$group_name."' AND I.name='".$included_group_name."'";
+        $sql_query = "INSERT INTO account_group_includes (group_id, include_id) SELECT G.group_id, I.group_id FROM account_groups G, account_groups I WHERE G.name='".$group_name."' AND I.name='".$included_group_name."'";
         $this->executeQuery($server, $sql_query);
     }
 
@@ -290,7 +290,7 @@ class Git_Driver_Gerrit {
     }
 
     private function removeAccountGroupIncludes(Git_RemoteServer_GerritServer $server, $gerrit_group_id) {
-        $sql_query = "DELETE FROM ACCOUNT_GROUP_INCLUDES I WHERE I.GROUP_ID=$gerrit_group_id";
+        $sql_query = "DELETE FROM account_group_includes I WHERE I.group_id=$gerrit_group_id";
         $this->executeQuery($server, $sql_query);
     }
 
