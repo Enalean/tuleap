@@ -1,3 +1,6 @@
+Version 5.120 - Tuleap 5.13
+    * Remove namespace in XML export/import
+
 Version 5.119 - Tuleap 5.13
     * remove file pushed by error
 
