@@ -234,31 +234,31 @@ class UGroup_getUsersTest extends UGroup_getUsersBaseTest {
 
     public function itIsEmptyWhenTheGroupIsEmpty() {
         $id       = 333;
-        $row      = array('ugroup_id' =>$id);
+        $row      = array('ugroup_id' => $id, 'group_id' => 105);
         $ugroup   = new UGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsEmptyDar());
-        $this->assertEqual($ugroup->getUsers($id)->reify(), array());
+        $this->assertEqual($ugroup->getUsers()->reify(), array());
     }
 
     public function itReturnsTheMembersOfStaticGroups() {
         $id       = 333;
-        $row      = array('ugroup_id' =>$id);
+        $row      = array('ugroup_id' => $id, 'group_id' => 105);
         $ugroup   = new UGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
         
         $users = array($this->garfield, $this->goofy);
-        $this->assertEqual($ugroup->getUsers($id)->reify(), $users);
+        $this->assertEqual($ugroup->getUsers()->reify(), $users);
     }
     
     public function itReturnsTheMembersOfDynamicGroups() {
         $id       = 1;
         $group_id = 555;
-        $row      = array('ugroup_id' =>$id , 'group_id' => 100); // this is how UgroupManager instantiates dynamic ugroups
+        $row      = array('ugroup_id' => $id , 'group_id' => $group_id);
         $ugroup   = new UGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByDynamicUGroupId($id, $group_id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
 
         $users = array($this->garfield, $this->goofy);
-        $this->assertEqual($ugroup->getUsers($group_id)->reify(), $users);
+        $this->assertEqual($ugroup->getUsers()->reify(), $users);
     }
 }
 

@@ -208,13 +208,10 @@ class UGroup {
 
     /**
      *
-     * @param int $group_id the group id of the static or dynamic group.
-     * You have to supply this argument as $this->group_id is 100 in the case of a dynamic group
-     *
      * @return Users
      */
-    public function getUsers($group_id) {
-        return new Users($this->getStaticOrDynamicMembers($group_id));
+    public function getUsers() {
+        return new Users($this->getStaticOrDynamicMembers($this->group_id));
     }
 
     /**
