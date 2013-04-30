@@ -144,11 +144,13 @@ document.observe('dom:loaded', function () {
             }
 
             function onUpdate(text_field) {
-                var all_cards     = cardwall.select('.card'),
+                var swimlines     = cardwall.childElements(),
+                    all_cards     = cardwall.select('.card'),
                     cards_to_hide = selectCardsToHide(all_cards, text_field.value);
 
                 all_cards.invoke('show');
                 cards_to_hide.invoke('hide');
+                swimlines.map(showSwimlineCard);
             }
 
             function selectCardsToHide(all_cards, text_to_search) {
@@ -188,6 +190,17 @@ document.observe('dom:loaded', function () {
                 return card.select('.valueOf_assigned_to .avatar').find(function (avatar) {
                     return avatar.title.match(regexp);
                 });
+            }
+
+            function showSwimlineCard(swimline) {
+                var swimline_card = swimline.down('td:first > .nodrag .card'),
+                    visible_cards = swimline.select('.card').find(function (card) {
+                        return card.visible();
+                    });
+
+                if (! swimline_card.visible() && visible_cards) {
+                    swimline_card.show();
+                }
             }
         })();
     });
