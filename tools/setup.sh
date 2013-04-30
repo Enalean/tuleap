@@ -33,6 +33,7 @@ else
 
     if [ $RH_MAJOR_VERSION = "6" ]; then
 	PROJECT_NAME="tuleap"
+    ln -s /etc/$PROJECT_NAME /etc/codendi
     else
 	PROJECT_NAME="codendi"
     fi
@@ -44,6 +45,12 @@ else
     CROND_SERVICE="crond"
     HTTPD_SERVICE="httpd"
 fi
+
+#Compatibility
+if [ $PROJECT_NAME != "codendi" ] ; then
+    ln -s /etc/$PROJECT_NAME /etc/codendi
+fi
+
 
 export INSTALL_DIR="/usr/share/$PROJECT_NAME"
 

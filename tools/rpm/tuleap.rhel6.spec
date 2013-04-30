@@ -9,6 +9,14 @@
 %define APP_DATA_DIR %{_localstatedir}/lib/%{APP_NAME}
 %define APP_CACHE_DIR %{_localstatedir}/tmp/%{APP_NAME}_cache
 
+# Compatibility
+%define OLD_APP_NAME codendi
+%define OLD_APP_DIR %{_datadir}/%{OLD_APP_NAME}
+%define OLD_APP_LIB_DIR /usr/lib/%{OLD_APP_NAME}
+%define OLD_APP_DATA_DIR %{_localstatedir}/lib/%{OLD_APP_NAME}
+%define OLD_APP_CACHE_DIR %{_localstatedir}/tmp/%{OLD_APP_NAME}_cache
+
+
 %define app_group        codendiadm
 %define app_user         codendiadm
 %define dummy_group      dummy
@@ -444,7 +452,7 @@ done
 
 # Install init.d script
 %{__install} -d $RPM_BUILD_ROOT/etc/rc.d/init.d
-%{__install} src/utils/init.d/codendi $RPM_BUILD_ROOT/etc/rc.d/init.d/
+%{__install} src/utils/init.d/codendi $RPM_BUILD_ROOT/etc/rc.d/init.d/%{APP_NAME}
 
 # Install cron.d script
 %{__install} -d $RPM_BUILD_ROOT/etc/cron.d
@@ -491,6 +499,13 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/projects
 %{__install} plugins/mediawiki/etc/mediawiki.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
+
+# Symlink for compatibility with older version
+%{__ln_s} %{APP_DIR} $RPM_BUILD_ROOT/%{OLD_APP_DIR}
+%{__ln_s} %{APP_LIB_DIR} $RPM_BUILD_ROOT/%{OLD_APP_LIB_DIR}
+%{__ln_s} %{APP_DATA_DIR} $RPM_BUILD_ROOT/%{OLD_APP_DATA_DIR}
+%{__ln_s} %{APP_CACHE_DIR} $RPM_BUILD_ROOT/%{OLD_APP_CACHE_DIR}
+%{__ln_s} /etc/rc.d/init.d/%{APP_NAME} $RPM_BUILD_ROOT/etc/rc.d/init.d/codendi
 
 ##
 ## On package install
@@ -772,10 +787,17 @@ fi
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit-email.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/codendi_svn_pre_commit.php
 %attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
-%attr(00755,root,root) /etc/rc.d/init.d/codendi
+%attr(00755,root,root) /etc/rc.d/init.d/%{APP_NAME}
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
 %dir %{APP_CACHE_DIR}
 %dir /etc/httpd/conf.d/tuleap-plugins
+
+# Compatibility with older version
+%dir %{OLD_APP_DIR}
+%dir %{OLD_APP_DATA_DIR} 
+%dir %{OLD_APP_CACHE_DIR}
+%attr(755,%{APP_USER},%{APP_USER}) %dir %{OLD_APP_LIB_DIR} 
+%attr(00644,root,root) /etc/rc.d/init.d/codendi
 
 #
 # Install
