@@ -154,7 +154,7 @@ substitute() {
 }
 
 fix_paths() {
-    $PERL -pi -E 'my %h = qw(/usr/share/codendi /usr/share/tuleap /etc/codendi /etc/tuleap /usr/lib/codendi /usr/lib/tuleap /var/lib/codendi /var/lib/tuleap codendi_cache tuleap_cache /var/log/codendi /var/log/tuleap); s%(/usr/share/codendi|/etc/codendi|/usr/lib/codendi|/var/lib/codendi|codendi_cache|/var/log/codendi)%$h{$1}%ge;' $1
+    $PERL -pi -E 'my %h = qw(/usr/share/codendi /usr/share/tuleap /etc/codendi /etc/tuleap /usr/lib/codendi /usr/lib/tuleap /var/lib/codendi /var/lib/tuleap /codendi_cache /tuleap_cache /var/log/codendi /var/log/tuleap); s%(/usr/share/codendi|/etc/codendi|/usr/lib/codendi|/var/lib/codendi|/codendi_cache|/var/log/codendi)%$h{$1}%ge;' $1
 }
 
 generate_passwd() {
