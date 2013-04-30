@@ -33,7 +33,7 @@ else
 
     if [ $RH_MAJOR_VERSION = "6" ]; then
 	PROJECT_NAME="tuleap"
-    ln -s /etc/$PROJECT_NAME /etc/codendi
+    
     else
 	PROJECT_NAME="codendi"
     fi

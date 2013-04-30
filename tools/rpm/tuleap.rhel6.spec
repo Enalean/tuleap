@@ -506,6 +506,7 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__ln_s} %{APP_DATA_DIR} $RPM_BUILD_ROOT/%{OLD_APP_DATA_DIR}
 %{__ln_s} %{APP_CACHE_DIR} $RPM_BUILD_ROOT/%{OLD_APP_CACHE_DIR}
 %{__ln_s} /etc/rc.d/init.d/%{APP_NAME} $RPM_BUILD_ROOT/etc/rc.d/init.d/codendi
+%{__ln_s} /etc/%{APP_NAME} $RPM_BUILD_ROOT/etc/%{OLD_APP_NAME}
 
 ##
 ## On package install
@@ -793,11 +794,13 @@ fi
 %dir /etc/httpd/conf.d/tuleap-plugins
 
 # Compatibility with older version
+#/etc/%{OLD_APP_NAME}
 %dir %{OLD_APP_DIR}
 %dir %{OLD_APP_DATA_DIR} 
 %dir %{OLD_APP_CACHE_DIR}
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{OLD_APP_LIB_DIR} 
 %attr(00644,root,root) /etc/rc.d/init.d/codendi
+%attr(-,root,root) /etc/%{OLD_APP_NAME}
 
 #
 # Install
