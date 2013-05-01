@@ -1,0 +1,6 @@
+Defaults:%app_user% !requiretty
+Defaults:%app_user% !env_reset
+%app_user% ALL= (gitolite) SETENV: NOPASSWD: /usr/bin/gl-auth-command
+
+Defaults:gitolite !requiretty
+gitolite ALL= (%app_user%) NOPASSWD: %app_path%/src/utils/php-launcher.sh %app_path%/plugins/git/bin/gl-membership.php*, %app_path%/src/utils/php-launcher.sh %app_path%/plugins/git/hooks/post-receive.php*
