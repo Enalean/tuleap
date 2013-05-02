@@ -9,7 +9,7 @@
 %define APP_USER codendiadm
 %define APP_DIR %{_datadir}/%{APP_NAME}
 
-Summary: Codendi customization for @@PLATFORM@@ platform
+Summary: Tuleap customization for @@PLATFORM@@ platform
 Name: %{PKG_NAME}-customization-@@PLATFORM@@
 Provides: %{PKG_NAME}-customization
 Version: @@VERSION@@
@@ -17,17 +17,16 @@ Release: 1%{?dist}
 BuildArch: noarch
 License: GPL
 Group: Development/Tools
-URL: http://codendi.org
+URL: http://tuleap.net
 Source0: %{PKG_NAME}-%{version}.tar.gz
 Source1: cli_ParametersLocal.dtd
 Source2: user_guide_ParametersLocal.dtd
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-Requires: codendi
 BuildRequires: zip
 
 %description
 This package provides the documentation, CLI package and themes modifications
-that customize the Codendi application for "@@PLATFORM@@" platform.
+that customize the Tuleap application for "@@PLATFORM@@" platform.
 
 %prep
 %setup -q -n %{PKG_NAME}-%{version}
