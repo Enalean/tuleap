@@ -13,3 +13,5 @@ WHERE reference_id IN (SELECT id FROM reference WHERE service_short_name='IM');
 
 DELETE FROM reference WHERE service_short_name='IM';
 DELETE FROM service WHERE short_name='IM';
+
+DELETE FROM user_access WHERE user_id = 99;
