@@ -738,6 +738,8 @@ setup_nss() {
     fi
 
     # replace strings in libnss-mysql config files
+    substitute '/etc/libnss-mysql.cfg' '%sys_dbhost%' "$mysql_host"
+    substitute '/etc/libnss-mysql.cfg' '%sys_dbname%' "$PROJECT_NAME"
     substitute '/etc/libnss-mysql.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
     substitute '/etc/libnss-mysql-root.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
     $CHOWN root:root /etc/libnss-mysql.cfg /etc/libnss-mysql-root.cfg

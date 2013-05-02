@@ -38,8 +38,8 @@ gidsbymem   SELECT user_group.group_id+1000 \
             FROM user,user_group \
             WHERE user.user_id=user_group.user_id AND user.user_name='%1$s'
 # Other settings
-host        localhost
-database    codendi
+host        %sys_dbhost%
+database    %sys_dbname%
 username    dbauthuser
 password    %sys_dbauth_passwd%
 #socket      /var/lib/mysql/mysql.sock
