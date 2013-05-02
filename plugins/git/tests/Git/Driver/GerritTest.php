@@ -257,7 +257,7 @@ class Git_Driver_Gerrit_addUserToGroupTest extends Git_Driver_Gerrit_baseTest {
     public function itExecutesTheInsertCommand() {
         expect($this->ssh)->execute()->count(3);
         expect($this->ssh)->execute($this->gerrit_server, $this->insert_member_query)->at(1);
-        expect($this->ssh)->execute($this->gerrit_server, 'gerrit flush-caches')->at(2);
+        expect($this->ssh)->execute($this->gerrit_server, 'gerrit flush-caches --cache accounts')->at(2);
 
         $this->driver->addUserToGroup($this->gerrit_server, $this->user, $this->groupname);
     }
@@ -285,7 +285,7 @@ class Git_Driver_Gerrit_removeUserFromGroupTest extends Git_Driver_Gerrit_baseTe
 
         expect($this->ssh)->execute()->count(2);
         expect($this->ssh)->execute($this->gerrit_server, $remove_member_query)->at(0);
-        expect($this->ssh)->execute($this->gerrit_server, 'gerrit flush-caches')->at(1);
+        expect($this->ssh)->execute($this->gerrit_server, 'gerrit flush-caches --cache accounts')->at(1);
 
         $this->driver->removeUserFromGroup($this->gerrit_server, $this->user, $this->groupname);
     }
@@ -294,7 +294,7 @@ class Git_Driver_Gerrit_removeUserFromGroupTest extends Git_Driver_Gerrit_baseTe
         $remove_all_query = 'gerrit gsql --format json -c "DELETE\ FROM\ account_group_members\ WHERE\ group_id=(SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $this->groupname .'\\\')"';
         expect($this->ssh)->execute()->count(2);
         expect($this->ssh)->execute($this->gerrit_server, $remove_all_query)->at(0);
-        expect($this->ssh)->execute($this->gerrit_server, 'gerrit flush-caches')->at(1);
+        expect($this->ssh)->execute($this->gerrit_server, 'gerrit flush-caches --cache accounts')->at(1);
 
         $this->driver->removeAllGroupMembers($this->gerrit_server, $this->groupname);
     }
@@ -460,7 +460,7 @@ class Git_Driver_Gerrit_AddIncludedGroupTest extends TuleapTestCase {
 
         expect($this->ssh)->execute()->count(2);
         expect($this->ssh)->execute($this->gerrit_server, $insert_included_query)->at(0);
-        expect($this->ssh)->execute($this->gerrit_server, 'gerrit flush-caches')->at(1);
+        expect($this->ssh)->execute($this->gerrit_server, 'gerrit flush-caches --cache groups_byinclude')->at(1);
 
         $this->driver->addIncludedGroup($this->gerrit_server, $group_name, $included_group_name);
     }
@@ -486,7 +486,7 @@ class Git_Driver_Gerrit_RemoveIncludedGroupTest extends TuleapTestCase {
 
         expect($this->ssh)->execute()->count(2);
         expect($this->ssh)->execute($this->gerrit_server, $delete_included_query)->at(0);
-        expect($this->ssh)->execute($this->gerrit_server, 'gerrit flush-caches')->at(1);
+        expect($this->ssh)->execute($this->gerrit_server, 'gerrit flush-caches --cache groups_byinclude')->at(1);
 
         $this->driver->removeAllIncludedGroups($this->gerrit_server, $group_name);
     }

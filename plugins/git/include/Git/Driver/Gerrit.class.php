@@ -24,6 +24,8 @@ require_once 'common/backend/BackendLogger.class.php';
  * I know how to speak to a Gerrit remote server
  */
 class Git_Driver_Gerrit {
+    const CACHE_ACCOUNTS        = 'accounts';
+    const CACHE_GROUPS_INCLUDES = 'groups_byinclude';
 
     const COMMAND      = 'gerrit';
     const GSQL_COMMAND = 'gerrit gsql --format json -c';
@@ -223,8 +225,9 @@ class Git_Driver_Gerrit {
         $sql_query = "INSERT INTO account_group_members (account_id, group_id) SELECT A.account_id, G.group_id FROM account_external_ids A, account_groups G WHERE A.external_id='username:". $username ."' AND G.name='". $group_name ."'";
         $this->executeQuery($server, $sql_query);
 
-        $this->flushGerritCaches($server);
+        $this->flushGerritCacheAccounts($server);
     }
+
     /**
      * Remove a user from a user group on a given gerrit server
      *
@@ -240,7 +243,7 @@ class Git_Driver_Gerrit {
         $sql_query = "DELETE FROM account_group_members WHERE account_id=(SELECT account_id FROM account_external_ids WHERE external_id='username:". $username ."') AND group_id=(SELECT group_id FROM account_groups WHERE name='". $group_name ."')";
         $this->executeQuery($server, $sql_query);
 
-        $this->flushGerritCaches($server);
+        $this->flushGerritCacheAccounts($server);
     }
 
     /**
@@ -254,7 +257,7 @@ class Git_Driver_Gerrit {
     public function removeAllGroupMembers(Git_RemoteServer_GerritServer $server, $group_name) {
         $sql_query = "DELETE FROM account_group_members WHERE group_id=(SELECT group_id FROM account_groups WHERE name='". $group_name ."')";
         $this->executeQuery($server, $sql_query);
-        $this->flushGerritCaches($server);
+        $this->flushGerritCacheAccounts($server);
     }
 
     /**
@@ -268,7 +271,7 @@ class Git_Driver_Gerrit {
      */
     public function addIncludedGroup(Git_RemoteServer_GerritServer $server, $group_name, $included_group_name) {
         $this->insertAccountGroupIncludes($server, $group_name, $included_group_name);
-        $this->flushGerritCaches($server);
+        $this->flushGerritCacheGroupsInclude($server);
     }
 
     private function insertAccountGroupIncludes(Git_RemoteServer_GerritServer $server, $group_name, $included_group_name) {
@@ -286,7 +289,7 @@ class Git_Driver_Gerrit {
      */
     public function removeAllIncludedGroups(Git_RemoteServer_GerritServer $server, $group_name) {
         $this->removeAccountGroupIncludes($server, $this->getGroupId($server, $group_name));
-        $this->flushGerritCaches($server);
+        $this->flushGerritCacheGroupsInclude($server);
     }
 
     private function removeAccountGroupIncludes(Git_RemoteServer_GerritServer $server, $gerrit_group_id) {
@@ -294,8 +297,19 @@ class Git_Driver_Gerrit {
         $this->executeQuery($server, $sql_query);
     }
 
-    private function flushGerritCaches($server) {
+    private function flushGerritCacheAccounts($server) {
+        $this->flushGerritCaches($server, self::CACHE_ACCOUNTS);
+    }
+
+    private function flushGerritCacheGroupsInclude($server) {
+        $this->flushGerritCaches($server, self::CACHE_GROUPS_INCLUDES);
+    }
+
+    private function flushGerritCaches($server, $cache=null) {
         $query = self::COMMAND .' flush-caches';
+        if ($cache) {
+            $query .= ' --cache '.$cache;
+        }
         $this->ssh->execute($server, $query);
     }
 
