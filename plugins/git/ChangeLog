@@ -1,3 +1,6 @@
+Version 3.14 - Tuleap 5.13
+    * Fix art #3241 Abusive Gerrit cache flushing
+
 Version 3.13 - Tuleap 5.13
     * Fix sla #3150 - Tuleap uses LDAP uid to interact with gerrit users
 
