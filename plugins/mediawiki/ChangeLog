@@ -1,3 +1,6 @@
+Version 0.9 - Tuleap 5.13
+    * Remove use codendi as db
+
 Version 0.8 - Tuleap 5.13
     * Fix: MediaWiki Role mapping for admins
 
