@@ -224,8 +224,6 @@ class Git_Driver_Gerrit {
 
         $sql_query = "INSERT INTO account_group_members (account_id, group_id) SELECT A.account_id, G.group_id FROM account_external_ids A, account_groups G WHERE A.external_id='username:". $username ."' AND G.name='". $group_name ."'";
         $this->executeQuery($server, $sql_query);
-
-        $this->flushGerritCacheAccounts($server);
     }
 
     /**
@@ -242,8 +240,6 @@ class Git_Driver_Gerrit {
 
         $sql_query = "DELETE FROM account_group_members WHERE account_id=(SELECT account_id FROM account_external_ids WHERE external_id='username:". $username ."') AND group_id=(SELECT group_id FROM account_groups WHERE name='". $group_name ."')";
         $this->executeQuery($server, $sql_query);
-
-        $this->flushGerritCacheAccounts($server);
     }
 
     /**
@@ -297,7 +293,7 @@ class Git_Driver_Gerrit {
         $this->executeQuery($server, $sql_query);
     }
 
-    private function flushGerritCacheAccounts($server) {
+    public function flushGerritCacheAccounts($server) {
         $this->flushGerritCaches($server, self::CACHE_ACCOUNTS);
     }
 
