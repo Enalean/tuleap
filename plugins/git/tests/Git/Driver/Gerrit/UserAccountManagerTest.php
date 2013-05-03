@@ -31,6 +31,10 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
     private $remote_server1;
     private $remote_server2;
     /**
+     * @var Git_Driver_Gerrit_User
+     */
+    private $gerrit_user;
+    /**
      * @var Git_Driver_Gerrit_UserAccountManager
      */
     private $user_account_manager;
@@ -40,7 +44,14 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
         $this->user                  = aUser()->withLdapId("testUser")->build();
         $this->gerrit_driver         = mock('Git_Driver_Gerrit');
         $this->remote_gerrit_factory = mock('Git_RemoteServer_GerritServerFactory');
-        $this->user_account_manager  = new Git_Driver_Gerrit_UserAccountManager($this->gerrit_driver, $this->remote_gerrit_factory);
+        $this->gerrit_user = mock('Git_Driver_Gerrit_User');
+
+        $this->user_account_manager  = partial_mock(
+            'Git_Driver_Gerrit_UserAccountManager',
+            array('getGerritUser'),
+            array($this->gerrit_driver, $this->remote_gerrit_factory)
+        );
+        stub($this->user_account_manager)->getGerritUser()->returns($this->gerrit_user);
 
         $this->original_keys = array(
             'Im a key',
@@ -135,6 +146,10 @@ class Git_Driver_Gerrit_UserAccountManager_PushSSHKeysTest extends TuleapTestCas
     private $remote_server1;
     private $remote_server2;
     /**
+     * @var Git_Driver_Gerrit_User
+     */
+    private $gerrit_user;
+    /**
      * @var Git_Driver_Gerrit_UserAccountManager
      */
     private $user_account_manager;
@@ -150,8 +165,14 @@ class Git_Driver_Gerrit_UserAccountManager_PushSSHKeysTest extends TuleapTestCas
 
         $this->gerrit_driver         = mock('Git_Driver_Gerrit');
         $this->remote_gerrit_factory = mock('Git_RemoteServer_GerritServerFactory');
-        $this->user_account_manager  = new Git_Driver_Gerrit_UserAccountManager($this->gerrit_driver, $this->remote_gerrit_factory);
+        $this->gerrit_user = mock('Git_Driver_Gerrit_User');
 
+        $this->user_account_manager  = partial_mock(
+            'Git_Driver_Gerrit_UserAccountManager',
+            array('getGerritUser'),
+            array($this->gerrit_driver, $this->remote_gerrit_factory)
+        );
+        stub($this->user_account_manager)->getGerritUser()->returns($this->gerrit_user);
 
         $this->remote_server1 = mock('Git_RemoteServer_GerritServer');
         $this->remote_server2 = mock('Git_RemoteServer_GerritServer');
