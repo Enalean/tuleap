@@ -164,6 +164,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                                                                   'id' => $item->getId()),
                                                             false,
                                                             isset($params['popup_doc']) ? true : false);
+                    $url = $this->hp->purify($url, CODENDI_PURIFIER_JS_DQUOTE);
                     $this->html .= '<a href="'.$url.'" id="docman_item_title_link_'.$item->getId().'">';
                 }
                 
