@@ -1,3 +1,6 @@
+Version 3.18 - Tuleap 5.13
+    * SSH keys manipulation use gerrit user
+
 Version 3.17 - Tuleap 5.13
     * Reduce number of gerrit ls-groups
 
