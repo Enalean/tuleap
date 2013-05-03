@@ -1,3 +1,6 @@
+Version 3.15 - Tuleap 5.13
+    * Flush caches only once when migrate to gerrit.
+
 Version 3.14 - Tuleap 5.13
     * Fix art #3241 Abusive Gerrit cache flushing
 
