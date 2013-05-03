@@ -52,6 +52,8 @@ class Git_Driver_Gerrit_MembershipManager {
     private $logger;
     private $gerrit_user_manager;
 
+    private $cache_groups = array();
+
     public function __construct(
         Git_Driver_Gerrit_MembershipDao      $dao,
         Git_Driver_Gerrit                    $driver,
@@ -139,15 +141,29 @@ class Git_Driver_Gerrit_MembershipManager {
         }
     }
 
+    /**
+     * Create groups during repository migration
+     *
+     * @param Git_RemoteServer_GerritServer $server
+     * @param UGroup[]                      $ugroups
+     * @return UGroup[]
+     */
     public function createArrayOfGroupsForServer(Git_RemoteServer_GerritServer $server, array $ugroups) {
         $migrated_ugroups = array();
 
+        $need_flush = false;
+
         foreach ($ugroups as $ugroup) {
-            if ($this->createGroupForServer($server, $ugroup)) {
+            if ($this->doesGroupExistOnServer($server, $ugroup)) {
+                $migrated_ugroups[] = $ugroup;
+            } elseif ($this->createGroupForServer($server, $ugroup)) {
+                $need_flush = true;
                 $migrated_ugroups[] = $ugroup;
             }
         }
-        $this->driver->flushGerritCacheAccounts($server);
+        if ($need_flush) {
+            $this->driver->flushGerritCacheAccounts($server);
+        }
 
         return $migrated_ugroups;
     }
@@ -220,7 +236,14 @@ class Git_Driver_Gerrit_MembershipManager {
         return $ugroup->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
     }
 
-     /**
+    public function doesGroupExistOnServer(Git_RemoteServer_GerritServer $server, UGroup $ugroup) {
+        if (!isset($this->cache_groups[$server->getId()])) {
+            $this->cache_groups[$server->getId()] = $this->driver->listGroups($server);
+        }
+        return in_array($this->getFullyQualifiedUGroupName($ugroup), $this->cache_groups[$server->getId()]);
+    }
+
+    /**
      *
      * @param Ugroup $ugroup
      * @return bool
