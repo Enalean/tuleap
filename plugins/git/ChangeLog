@@ -1,3 +1,6 @@
+Version 3.16 - Tuleap 5.13
+    * Fix bugs #3240: Avoid to re-create groups if they already exists
+
 Version 3.15 - Tuleap 5.13
     * Flush caches only once when migrate to gerrit.
 
