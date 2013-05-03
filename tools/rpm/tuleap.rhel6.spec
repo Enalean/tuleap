@@ -8,6 +8,7 @@
 %define APP_LIBBIN_DIR %{APP_LIB_DIR}/bin
 %define APP_DATA_DIR %{_localstatedir}/lib/%{APP_NAME}
 %define APP_CACHE_DIR %{_localstatedir}/tmp/%{APP_NAME}_cache
+%define APP_LOG_DIR /var/log/%{APP_NAME}
 
 # Compatibility
 %define OLD_APP_NAME codendi
@@ -15,6 +16,7 @@
 %define OLD_APP_LIB_DIR /usr/lib/%{OLD_APP_NAME}
 %define OLD_APP_DATA_DIR %{_localstatedir}/lib/%{OLD_APP_NAME}
 %define OLD_APP_CACHE_DIR %{_localstatedir}/tmp/%{OLD_APP_NAME}_cache
+%define OLD_APP_LOG_DIR /var/log/%{OLD_APP_NAME}
 
 
 %define app_group        codendiadm
@@ -461,6 +463,10 @@ done
 # Cache dir
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}
 
+# Log dir
+%{__install} -d $RPM_BUILD_ROOT/%{APP_LOG_DIR}
+%{__install} -d $RPM_BUILD_ROOT/%{APP_LOG_DIR}/cvslog
+
 # Core subversion mod_perl
 %{__install} -d $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
 %{__install} src/utils/svn/Tuleap.pm $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
@@ -505,6 +511,7 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__ln_s} %{APP_LIB_DIR} $RPM_BUILD_ROOT/%{OLD_APP_LIB_DIR}
 %{__ln_s} %{APP_DATA_DIR} $RPM_BUILD_ROOT/%{OLD_APP_DATA_DIR}
 %{__ln_s} %{APP_CACHE_DIR} $RPM_BUILD_ROOT/%{OLD_APP_CACHE_DIR}
+%{__ln_s} %{APP_LOG_DIR} $RPM_BUILD_ROOT/%{OLD_APP_LOG_DIR}
 %{__ln_s} /etc/rc.d/init.d/%{APP_NAME} $RPM_BUILD_ROOT/etc/rc.d/init.d/codendi
 %{__ln_s} /etc/%{APP_NAME} $RPM_BUILD_ROOT/etc/%{OLD_APP_NAME}
 
@@ -793,11 +800,16 @@ fi
 %dir %{APP_CACHE_DIR}
 %dir /etc/httpd/conf.d/tuleap-plugins
 
+# Log dir
+%attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}
+%attr(775,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}/cvslog
+
 # Compatibility with older version
 %attr(-,root,root) %{OLD_APP_DIR}
 %attr(-,root,root) %{OLD_APP_DATA_DIR} 
 %attr(-,root,root) %{OLD_APP_CACHE_DIR}
 %attr(-,root,root) %{OLD_APP_LIB_DIR} 
+%attr(-,root,root) %{OLD_APP_LOG_DIR} 
 %attr(-,root,root) /etc/rc.d/init.d/codendi
 %attr(-,root,root) /etc/%{OLD_APP_NAME}
 
