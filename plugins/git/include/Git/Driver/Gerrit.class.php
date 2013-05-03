@@ -24,6 +24,9 @@ require_once 'common/backend/BackendLogger.class.php';
  * I know how to speak to a Gerrit remote server
  */
 class Git_Driver_Gerrit {
+    const INDEX_GROUPS_VERBOSE_NAME = 0;
+    const INDEX_GROUPS_VERBOSE_UUID = 1;
+
     const CACHE_ACCOUNTS        = 'accounts';
     const CACHE_GROUPS_INCLUDES = 'groups_byinclude';
 
@@ -167,6 +170,11 @@ class Git_Driver_Gerrit {
 
     public function listGroups(Git_RemoteServer_GerritServer $server) {
         $command = self::COMMAND . ' ls-groups';
+        return explode(PHP_EOL, $this->ssh->execute($server, $command));
+    }
+
+    public function listGroupsVerbose(Git_RemoteServer_GerritServer $server) {
+        $command = self::COMMAND . ' ls-groups --verbose';
         return explode(PHP_EOL, $this->ssh->execute($server, $command));
     }
 

@@ -162,10 +162,15 @@ class Git_Driver_Gerrit_MembershipManager {
             }
         }
         if ($need_flush) {
-            $this->driver->flushGerritCacheAccounts($server);
+            $this->invalidGerritGroupsCaches($server);
         }
 
         return $migrated_ugroups;
+    }
+
+    private function invalidGerritGroupsCaches(Git_RemoteServer_GerritServer $server) {
+        unset($this->cache_groups[$server->getId()]);
+        $this->driver->flushGerritCacheAccounts($server);
     }
 
     /**
@@ -236,11 +241,42 @@ class Git_Driver_Gerrit_MembershipManager {
         return $ugroup->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
     }
 
+    /**
+     * Returns true if the user group exists on given server
+     *
+     * @param Git_RemoteServer_GerritServer $server
+     * @param UGroup $ugroup
+     * @return Boolean
+     */
     public function doesGroupExistOnServer(Git_RemoteServer_GerritServer $server, UGroup $ugroup) {
-        if (!isset($this->cache_groups[$server->getId()])) {
-            $this->cache_groups[$server->getId()] = $this->driver->listGroups($server);
+        $this->cacheGroupDefinitionForServer($server);
+        return isset($this->cache_groups[$server->getId()][$this->getFullyQualifiedUGroupName($ugroup)]);
+    }
+
+    /**
+     * Returns gerrit user group uuid
+     *
+     * @param Git_RemoteServer_GerritServer $server
+     * @param String                        $ugroup
+     * @return String
+     * @throws Exception
+     */
+    public function getGroupUUIDByNameOnServer(Git_RemoteServer_GerritServer $server, $gerrit_group_name) {
+        $this->cacheGroupDefinitionForServer($server);
+        if (isset($this->cache_groups[$server->getId()][$gerrit_group_name])) {
+            return $this->cache_groups[$server->getId()][$gerrit_group_name][Git_Driver_Gerrit::INDEX_GROUPS_VERBOSE_UUID];
         }
-        return in_array($this->getFullyQualifiedUGroupName($ugroup), $this->cache_groups[$server->getId()]);
+        throw new Exception("Group $gerrit_group_name doesn't not exist on server ".$server->getId()." ".$server->getHost());
+    }
+
+    private function cacheGroupDefinitionForServer(Git_RemoteServer_GerritServer $server) {
+        if ( ! isset($this->cache_groups[$server->getId()])) {
+            $this->cache_groups[$server->getId()] = array();
+            foreach ($this->driver->listGroupsVerbose($server) as $group_line) {
+                $group_entry = explode("\t", $group_line);
+                $this->cache_groups[$server->getId()][$group_entry[Git_Driver_Gerrit::INDEX_GROUPS_VERBOSE_NAME]] = $group_entry;
+            }
+        }
     }
 
     /**
