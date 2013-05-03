@@ -1458,7 +1458,7 @@ EOF
     IM_ADMIN_USER='imadmin-bot'
     IM_ADMIN_USER_PW='1M@dm1n'
     IM_MUC_PW='Mu6.4dm1n' # Doesn't need to change
-    $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://$mysql_host:3306/openfire -cdb jdbc:mysql://$mysql_host:3306/$PROJECT_NAME -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
+    $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://$mysql_host:3306/openfire -cdb jdbc:mysql://$mysql_host:3306/$PROJECT_NAME -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW -fdn $PROJECT_NAME
     echo "path[]=\"$INSTALL_DIR/plugins/IM\"" >> /etc/$PROJECT_NAME/forgeupgrade/config.ini
 
     # Enable service
