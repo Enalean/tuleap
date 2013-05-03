@@ -329,27 +329,27 @@ class Git_Driver_Gerrit {
     /**
      * 
      * @param Git_RemoteServer_GerritServer $server
-     * @param PFUser $user
+     * @param Git_Driver_Gerrit_User $user
      * @param string $ssh_key
      * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
      * 
      */
-    public function addSSHKeyToAccount(Git_RemoteServer_GerritServer $server, PFUser $user, $ssh_key) {
+    public function addSSHKeyToAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $ssh_key) {
         $escaped_ssh_key = escapeshellarg($ssh_key);
-        $query = self::COMMAND .' set-account --add-ssh-key "'. $escaped_ssh_key .'" '. $user->getLdapId();
+        $query = self::COMMAND .' set-account --add-ssh-key "'. $escaped_ssh_key .'" '. $user->getSSHUserName();
         $this->ssh->execute($server, $query);
     }
 
     /**
      * 
      * @param Git_RemoteServer_GerritServer $server
-     * @param PFUser $user
+     * @param Git_Driver_Gerrit_User $user
      * @param string $ssh_key
      * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
      */
-    public function removeSSHKeyFromAccount(Git_RemoteServer_GerritServer $server, PFUser $user, $ssh_key) {
+    public function removeSSHKeyFromAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $ssh_key) {
         $escaped_ssh_key = escapeshellarg($ssh_key);
-        $query = self::COMMAND .' set-account --delete-ssh-key "'. $escaped_ssh_key .'" '. $user->getLdapId();
+        $query = self::COMMAND .' set-account --delete-ssh-key "'. $escaped_ssh_key .'" '. $user->getSSHUserName();
         $this->ssh->execute($server, $query);
     }
 }
