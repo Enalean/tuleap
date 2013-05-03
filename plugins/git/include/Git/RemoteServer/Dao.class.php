@@ -47,7 +47,7 @@ class Git_RemoteServer_Dao extends DataAccessObject {
     }
 
     public function searchAllRemoteServersForUserId($user_id) {
-        $sql = "SELECT DISTINCT pgrs.*
+        $sql = "SELECT DISTINCT pgrs.* , user.authorized_keys
                 FROM plugin_git_remote_servers pgrs
                     INNER JOIN plugin_git ON (remote_server_id = pgrs.id)
                     INNER JOIN user_group ON (user_group.group_id = plugin_git.project_id)
@@ -56,7 +56,7 @@ class Git_RemoteServer_Dao extends DataAccessObject {
                     AND user.ldap_id IS NOT NULL
                     AND user.ldap_id != ''
                 UNION
-                SELECT DISTINCT pgrs.*
+                SELECT DISTINCT pgrs.*, user.authorized_keys
                 FROM plugin_git_remote_servers pgrs
                     INNER JOIN plugin_git ON (remote_server_id = pgrs.id)
                     INNER JOIN ugroup ON (ugroup.group_id = plugin_git.project_id)

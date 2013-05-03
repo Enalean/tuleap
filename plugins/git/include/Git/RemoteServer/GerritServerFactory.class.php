@@ -160,7 +160,7 @@ class Git_RemoteServer_GerritServerFactory {
             $row['http_port'],
             $row['login'],
             $row['identity_file'],
-            $row['ssh_key']
+            $row['authorized_keys']
         );
     }
 }
