@@ -138,8 +138,13 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     private function addGroupToGroupFile(Git_RemoteServer_GerritServer $gerrit_server, $group) {
-        $group_uuid = $this->driver->getGroupUUID($gerrit_server, $group);
-        $this->addGroupDefinitionToGroupFile($group_uuid, $group);
+        try {
+            $group_uuid = $this->membership_manager->getGroupUUIDByNameOnServer($gerrit_server, $group);
+            $this->addGroupDefinitionToGroupFile($group_uuid, $group);
+        } catch (Exception $exception) {
+            // we should log that the group doesn't exist but we don't
+            // inject a Logger to this class yet
+        }
     }
 
     private function addRegisteredUsersGroupToGroupFile() {

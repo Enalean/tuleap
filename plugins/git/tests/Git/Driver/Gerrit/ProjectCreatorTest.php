@@ -97,16 +97,16 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         stub($this->driver)->createProject($this->server, $this->repository_without_registered, $this->project_unix_name)->returns($this->gerrit_project);
         stub($this->driver)->createParentProject($this->server, $this->repository, $this->project_admins_gerrit_name)->returns($this->project_unix_name);
 
-        stub($this->driver)->getGroupUUID($this->server, $this->contributors)->returns($this->contributors_uuid);
-        stub($this->driver)->getGroupUUID($this->server, $this->integrators)->returns($this->integrators_uuid);
-        stub($this->driver)->getGroupUUID($this->server, $this->supermen)->returns($this->supermen_uuid);
-        stub($this->driver)->getGroupUUID($this->server, $this->owners)->returns($this->owners_uuid);
-        stub($this->driver)->getGroupUUID($this->server, $this->replication)->returns($this->replication_uuid);
+        $this->membership_manager = mock('Git_Driver_Gerrit_MembershipManager');
+        stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->contributors)->returns($this->contributors_uuid);
+        stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->integrators)->returns($this->integrators_uuid);
+        stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->supermen)->returns($this->supermen_uuid);
+        stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->owners)->returns($this->owners_uuid);
+        stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->replication)->returns($this->replication_uuid);
 
         $this->userfinder = mock('Git_Driver_Gerrit_UserFinder');
         $this->ugroup_manager = mock('UGroupManager');
 
-        $this->membership_manager = mock('Git_Driver_Gerrit_MembershipManager');
 
         $this->project_creator = new Git_Driver_Gerrit_ProjectCreator($this->tmpdir, $this->driver, $this->userfinder, $this->ugroup_manager, $this->membership_manager);
 
@@ -149,9 +149,9 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
 
         stub($this->ugroup_manager)->getUGroups()->returns(array($this->project_members, $this->another_ugroup, $this->project_admins));
 
-        stub($this->driver)->getGroupUUID($this->server, $this->project_members_gerrit_name)->returns($this->project_members_uuid);
-        stub($this->driver)->getGroupUUID($this->server, $this->another_ugroup_gerrit_name)->returns($this->another_ugroup_uuid);
-        stub($this->driver)->getGroupUUID($this->server, $this->project_admins_gerrit_name)->returns($this->project_admins_uuid);
+        stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->project_members_gerrit_name)->returns($this->project_members_uuid);
+        stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->another_ugroup_gerrit_name)->returns($this->another_ugroup_uuid);
+        stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->project_admins_gerrit_name)->returns($this->project_admins_uuid);
 
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(UGroup::REGISTERED));
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array(UGroup::PROJECT_MEMBERS, 120));
