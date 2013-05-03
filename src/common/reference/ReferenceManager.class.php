@@ -666,7 +666,7 @@ class ReferenceManager {
                 $desc=$ref->getDescription();
             }
 
-            return '<a href="'.$ref_instance->getGotoLink().'" title="'.$desc.'" class="cross-reference">'.$ref_instance->getMatch()."</a>";
+            return '<a href="'.$ref_instance->getFullGotoLink().'" title="'.$desc.'" class="cross-reference">'.$ref_instance->getMatch()."</a>";
         }
     }    
 
