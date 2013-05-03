@@ -52,6 +52,13 @@ class Git_Driver_Gerrit_User {
     public function getWebUserName() {
         return $this->ldap_user->getUid();
     }
+
+    /**
+     * @return LDAP_User
+     */
+    public function getLDAPUser() {
+        return $this->ldap_user;
+    }
 }
 
 ?>

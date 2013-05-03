@@ -47,12 +47,16 @@ class Git_UserAccountManager {
     }
 
     private function synchroniseSSHKeysWithGerrit($original_keys, $new_keys, $user) {
-        $this->getGerritUserAccountManager()
-            ->synchroniseSSHKeys(
-                $original_keys,
-                $new_keys,
-                $user
-            );
+        $gerrit_user = $this->getGerritUserAccountManager()->getGerritUser($user);
+
+        if ($gerrit_user) {
+            $this->getGerritUserAccountManager()
+                ->synchroniseSSHKeys(
+                    $original_keys,
+                    $new_keys,
+                    $gerrit_user
+                );
+        }
     }
 
     /**
@@ -66,7 +70,11 @@ class Git_UserAccountManager {
     }
 
     private function pushSSHKeysToGerrit($user) {
-        $this->getGerritUserAccountManager()->pushSSHKeys($user);
+        $gerrit_user = $this->getGerritUserAccountManager()->getGerritUser($user);
+
+        if ($gerrit_user) {
+            $this->getGerritUserAccountManager()->pushSSHKeys($gerrit_user);
+        }
     }
 
     /**

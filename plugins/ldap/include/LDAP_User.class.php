@@ -43,6 +43,13 @@ class LDAP_User {
     public function getUid() {
         return strtolower($this->ldap_result->getLogin());
     }
+
+    /**
+     * @return PFUser
+     */
+    public function getUser() {
+        return $this->user;
+    }
 }
 
 ?>

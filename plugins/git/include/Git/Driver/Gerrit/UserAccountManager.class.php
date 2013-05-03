@@ -42,7 +42,7 @@ class Git_Driver_Gerrit_UserAccountManager {
      *
      * @param PFUser $user
      *
-     * @return Git_Driver_Gerrit_User|null
+     * @return Git_Driver_Gerrit_User | null
      */
     public function getGerritUser(PFUser $user) {
         $ldap_user = null;
@@ -57,28 +57,13 @@ class Git_Driver_Gerrit_UserAccountManager {
 
     /**
      *
-     * @param PFUser $user
-     * @return bool
-     */
-    private function isGerrit(PFUser $user) {
-        return ($this->getGerritUser($user) !== null);
-    }
-
-    /**
-     *
      * @param array $original_keys
      * @param array $new_keys
-     * @param Git_RemoteServer_GerritServerFactory $remote_gerrit_factory
+     * @param Git_Driver_Gerrit_User $gerrit_user
      * @return void
      * @throws Git_UserSynchronisationException
      */
-    public function synchroniseSSHKeys(array $original_keys, array $new_keys, PFUser $user) {
-        if (! $this->isGerrit($user)) {
-            return;
-        }
-
-        $gerrit_user = $this->getGerritUser($user);
-
+    public function synchroniseSSHKeys(array $original_keys, array $new_keys, Git_Driver_Gerrit_User $gerrit_user) {
         $keys_to_add    = $this->getKeysToAdd($original_keys, $new_keys);
         $keys_to_remove = $this->getKeysToRemove($original_keys, $new_keys);
 
@@ -87,6 +72,7 @@ class Git_Driver_Gerrit_UserAccountManager {
         }
         
         $errors = array();
+        $user = $gerrit_user->getLDAPUser()->getUser();
         $remote_servers = $this->remote_gerrit_factory->getRemoteServersForUser($user);
 
         foreach($remote_servers as $remote_server) {
@@ -115,16 +101,12 @@ class Git_Driver_Gerrit_UserAccountManager {
     /**
      * Makes sure there is one copy of each key on each remote server
      * 
-     * @param Git_RemoteServer_GerritServerFactory $remote_gerrit_factory
+     * @param Git_Driver_Gerrit_User $gerrit_user
      * @return void
      * @throws Git_UserSynchronisationException
      */
-    public function pushSSHKeys(PFUser $user) {
-        if (! $this->isGerrit($user)) {
-            return;
-        }
-
-        $gerrit_user = $this->getGerritUser($user);
+    public function pushSSHKeys(Git_Driver_Gerrit_User $gerrit_user) {
+        $user = $gerrit_user->getLDAPUser()->getUser();
         $user_keys = array_unique($user->getAuthorizedKeysArray());
 
         if (! $user_keys) {
