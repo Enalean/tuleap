@@ -38,6 +38,7 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
     protected $membership_command_remove;
     protected $gerrit_user;
     protected $gerrit_user_manager;
+    protected $remote_server;
 
     public function setUp() {
         Config::store();
@@ -46,7 +47,7 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
         $this->driver                                = mock('Git_Driver_Gerrit');
         $this->user_finder                           = mock('Git_Driver_Gerrit_UserFinder');
         $this->remote_server_factory                 = mock('Git_RemoteServer_GerritServerFactory');
-        $this->remote_server                         = mock('Git_RemoteServer_GerritServer');
+        $this->remote_server                         = stub('Git_RemoteServer_GerritServer')->getId()->returns(25);
         $this->gerrit_user                           = mock('Git_Driver_Gerrit_User');
         $this->gerrit_user_manager                   = mock('Git_Driver_Gerrit_UserAccountManager');
         $this->project                               = mock('Project');
@@ -594,6 +595,75 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
         expect($this->membership_manager)->addUGroupBinding($ugroup, $source_group);
 
         $this->membership_manager->createGroupForServer($this->remote_server, $ugroup);
+    }
+}
+
+class Git_Driver_Gerrit_MembershipManagerListGroupsTest extends Git_Driver_Gerrit_MembershipManagerCommonTest {
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
+            mock('Git_Driver_Gerrit_MembershipDao'),
+            $this->driver,
+            $this->gerrit_user_manager,
+            mock('Git_RemoteServer_GerritServerFactory'),
+            mock('Logger')
+        );
+    }
+
+    public function itReturnsTrueWhenGroupExistsOnServer() {
+        $ls_groups_expected_return = array(
+            'Administrators',
+            'Anonymous Users',
+            'Non-Interactive Users',
+            'Project Owners',
+            'Registered Users',
+            'someProject/project_members',
+            'someProject/project_admins',
+            'someProject/group_from_ldap',
+        );
+        stub($this->driver)->listGroups()->returns($ls_groups_expected_return);
+
+        stub($this->u_group)->getNormalizedName()->returns('group_from_ldap');
+
+        $this->assertTrue($this->membership_manager->doesGroupExistOnServer($this->remote_server, $this->u_group));
+    }
+
+    public function itReturnsFalseWhenGroupExistsOnServer() {
+        $ls_groups_expected_return = array(
+            'Administrators',
+            'Anonymous Users',
+            'Non-Interactive Users',
+            'Project Owners',
+            'Registered Users',
+            'someProject/project_members',
+            'someProject/project_admins',
+            'someProject/group_from_ldap',
+        );
+        stub($this->driver)->listGroups()->returns($ls_groups_expected_return);
+
+        stub($this->u_group)->getNormalizedName()->returns('group_from');
+
+        $this->assertFalse($this->membership_manager->doesGroupExistOnServer($this->remote_server, $this->u_group));
+    }
+
+    public function itFetchesGroupsFromDriverOnlyOncePerServer() {
+        stub($this->driver)->listGroups()->returns(array());
+        expect($this->driver)->listGroups()->once();
+        $this->membership_manager->doesGroupExistOnServer($this->remote_server, $this->u_group);
+        $this->membership_manager->doesGroupExistOnServer($this->remote_server, $this->u_group);
+    }
+
+    public function itCachesSeveralServers() {
+        $remote_server2 = stub('Git_RemoteServer_GerritServer')->getId()->returns(37);
+
+        stub($this->driver)->listGroups()->returns(array());
+        expect($this->driver)->listGroups()->count(2);
+        expect($this->driver)->listGroups($this->remote_server)->at(0);
+        expect($this->driver)->listGroups($remote_server2)->at(1);
+        $this->membership_manager->doesGroupExistOnServer($this->remote_server, $this->u_group);
+        $this->membership_manager->doesGroupExistOnServer($remote_server2, $this->u_group);
     }
 }
 
