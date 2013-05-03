@@ -129,7 +129,7 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
         return $url;
     }
 
-    /* static */ function buildActionUrl($params, $parameters, $injs = false, $popup = false) {
+    /* static */ function buildActionUrl($params, $parameters, $injs = false, $popup = false, $purified = false) {
         $output = '';
 
         $prefix = '';
@@ -153,7 +153,9 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
             }
             $output = Docman_View_View::buildUrl($prefix, $parameters, !$injs);
         }
-
+        if ($purified != false) {
+            $output = $this->hp->purify($output, CODENDI_PURIFIER_JS_DQUOTE);
+        }
         return $output;
     }
 

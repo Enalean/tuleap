@@ -52,15 +52,12 @@ require_once('Docman_View_Docman.class.php');
         $parents = array_reverse($parents);
         foreach($parents as $parent) {
             $urlParams['id'] = $parent['id'];
-            $url = $this->buildActionUrl($params, $urlParams);
-            $url = $hp->purify($url, CODENDI_PURIFIER_JS_DQUOTE);
+            $url = $this->buildActionUrl($params, $urlParams,false,false,true);
             $html .= '&nbsp;<a href="'.$url.'">'.  $hp->purify($parent['title'], CODENDI_PURIFIER_CONVERT_HTML)  .'</a>&nbsp;/';
         }
         $urlParams['id'] = $id;
-        $url = $this->buildActionUrl($params, $urlParams);
-        $url = $hp->purify($url, CODENDI_PURIFIER_JS_DQUOTE);
+        $url = $this->buildActionUrl($params, $urlParams,false,false,true);
         $html .= '&nbsp;<a href="'.$url.'"><b>'.  $hp->purify($current_item_title, CODENDI_PURIFIER_CONVERT_HTML)  .'</b></a>';
-        
         $html .= $this->getItemMenu($current_item, $params, $bc = true);
         $this->javascript .= $this->getActionForItem($current_item); 
         $html .= '</div>';
