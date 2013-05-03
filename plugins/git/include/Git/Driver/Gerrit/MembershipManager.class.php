@@ -139,6 +139,19 @@ class Git_Driver_Gerrit_MembershipManager {
         }
     }
 
+    public function createArrayOfGroupsForServer(Git_RemoteServer_GerritServer $server, array $ugroups) {
+        $migrated_ugroups = array();
+
+        foreach ($ugroups as $ugroup) {
+            if ($this->createGroupForServer($server, $ugroup)) {
+                $migrated_ugroups[] = $ugroup;
+            }
+        }
+        $this->driver->flushGerritCacheAccounts($server);
+
+        return $migrated_ugroups;
+    }
+
     /**
      * Create a user group
      *
@@ -185,10 +198,17 @@ class Git_Driver_Gerrit_MembershipManager {
             $this->addUGroupBinding($ugroup, $source_ugroup);
         } else {
             foreach ($ugroup->getMembers() as $user) {
-                $this->addUserToGroup($user, $ugroup);
+                $this->addUserToGroupWithoutFlush($user, $ugroup);
             }
         }
     }
+
+    protected function addUserToGroupWithoutFlush(PFUser $user, UGroup $ugroup) {
+        $command = new Git_Driver_Gerrit_MembershipCommand_AddUser($this, $this->driver, $this->gerrit_user_manager, $ugroup, $user);
+        $command->disableAutoFlush();
+        $this->updateUserMembership($command);
+    }
+
 
     /**
      * This should probably be in a dedicated GerritUserGroup object.

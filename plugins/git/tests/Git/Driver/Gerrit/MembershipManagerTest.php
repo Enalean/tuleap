@@ -141,6 +141,8 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
         expect($this->driver)->addUserToGroup($this->remote_server, $this->gerrit_user, $second_group_expected)->at(1);
         expect($this->driver)->addUserToGroup($this->remote_server, $this->gerrit_user, $third_group_expected)->at(2);
 
+        $this->driver->expectCallCount('flushGerritCacheAccounts', 3);
+
         $this->membership_manager->addUserToGroup($this->user, $this->u_group);
         $this->membership_manager->addUserToGroup($this->user, $this->u_group2);
         $this->membership_manager->addUserToGroup($this->user, $this->u_group3);
@@ -162,6 +164,8 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
         expect($this->driver)->removeUserFromGroup($this->remote_server, $this->gerrit_user, $first_group_expected)->at(0);
         expect($this->driver)->removeUserFromGroup($this->remote_server, $this->gerrit_user, $second_group_expected)->at(1);
         expect($this->driver)->removeUserFromGroup($this->remote_server, $this->gerrit_user, $third_group_expected)->at(2);
+
+        $this->driver->expectCallCount('flushGerritCacheAccounts', 3);
 
         $this->membership_manager->removeUserFromGroup($this->user, $this->u_group);
         $this->membership_manager->removeUserFromGroup($this->user, $this->u_group2);
@@ -190,30 +194,12 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
         expect($this->driver)->addUserToGroup($this->remote_server, '*', '*')->at(0);
         expect($this->driver)->addUserToGroup($this->remote_server2, '*', '*')->at(1);
 
+        expect($this->driver)->flushGerritCacheAccounts()->once();
+        expect($this->driver)->flushGerritCacheAccounts($this->remote_server2)->at(0);
+
         $this->membership_manager->addUserToGroup($this->user, $this->u_group);
     }
 }
-
-//class Git_Driver_Gerrit_MembershipManager_SeveralUGroupsTest extends Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest {
-//    private $u_group_id_120 = 120;
-//
-//    public function setUp() {
-//        parent::setUp();
-//
-//        $git_permissions = array(
-//            $this->git_repository,
-//        );
-//
-//        stub($this->git_repository_factory)->getAllRepositories()->returns($git_permissions);
-//    }
-//
-////    public function itDoesntRemoveUserIfTheyBelongToAtLeastOneGroupThatHaveAccess() {
-////        // User was removed from ugroup 115 but is still member of ugroup 120
-////        stub($this->user)->getUgroups()->returns(array($this->u_group_id_120));
-////        expect($this->driver)->removeUserFromGroup()->never();
-////        $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $this->membership_command_remove);
-////    }
-//}
 
 class Git_Driver_Gerrit_MembershipManager_ProjectAdminTest extends Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest {
 
@@ -238,6 +224,7 @@ class Git_Driver_Gerrit_MembershipManager_ProjectAdminTest extends Git_Driver_Ge
 
         $gerrit_project_project_admins_group_name = $this->project_name.'/'.'project_admins';
         expect($this->driver)->addUserToGroup($this->remote_server,  $this->gerrit_user, $gerrit_project_project_admins_group_name)->once();
+        expect($this->driver)->flushGerritCacheAccounts()->once();
 
         $this->membership_manager->addUserToGroup($this->user, $this->admin_ugroup);
     }
@@ -386,7 +373,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
             'Git_Driver_Gerrit_MembershipManager',
             array(
                 'addUGroupBinding',
-                'addUserToGroup'
+                'addUserToGroupWithoutFlush'
             ),
             array(
                 $this->dao,
@@ -437,9 +424,9 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
         $bob  = aUser()->withId(25)->build();
         stub($this->ugroup)->getMembers()->returns(array($mary, $bob));
 
-        stub($this->membership_manager)->addUserToGroup()->count(2);
-        stub($this->membership_manager)->addUserToGroup($mary, $this->ugroup)->at(0);
-        stub($this->membership_manager)->addUserToGroup($bob, $this->ugroup)->at(1);
+        stub($this->membership_manager)->addUserToGroupWithoutFlush()->count(2);
+        stub($this->membership_manager)->addUserToGroupWithoutFlush($mary, $this->ugroup)->at(0);
+        stub($this->membership_manager)->addUserToGroupWithoutFlush($bob, $this->ugroup)->at(1);
         
         $this->membership_manager->createGroupForServer($this->remote_server, $this->ugroup);
     }
@@ -469,9 +456,9 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
         stub($this->driver)->doesTheGroupExist()->returns(true);
         stub($this->ugroup)->getSourceGroup()->returns(false);
 
-        expect($this->membership_manager)->addUserToGroup()->count(2);
-        expect($this->membership_manager)->addUserToGroup($this->user1, $this->ugroup)->at(0);
-        expect($this->membership_manager)->addUserToGroup($this->user2, $this->ugroup)->at(1);
+        expect($this->membership_manager)->addUserToGroupWithoutFlush()->count(2);
+        expect($this->membership_manager)->addUserToGroupWithoutFlush($this->user1, $this->ugroup)->at(0);
+        expect($this->membership_manager)->addUserToGroupWithoutFlush($this->user2, $this->ugroup)->at(1);
 
         $this->membership_manager->createGroupForServer($this->remote_server, $this->ugroup);
     }

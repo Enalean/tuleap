@@ -255,9 +255,8 @@ class Git_Driver_Gerrit_addUserToGroupTest extends Git_Driver_Gerrit_baseTest {
     }
 
     public function itExecutesTheInsertCommand() {
-        expect($this->ssh)->execute()->count(3);
+        expect($this->ssh)->execute()->count(2);
         expect($this->ssh)->execute($this->gerrit_server, $this->insert_member_query)->at(1);
-        expect($this->ssh)->execute($this->gerrit_server, 'gerrit flush-caches --cache accounts')->at(2);
 
         $this->driver->addUserToGroup($this->gerrit_server, $this->user, $this->groupname);
     }
@@ -283,9 +282,7 @@ class Git_Driver_Gerrit_removeUserFromGroupTest extends Git_Driver_Gerrit_baseTe
     public function itExecutesTheDeletionCommand() {
         $remove_member_query = 'gerrit gsql --format json -c "DELETE\ FROM\ account_group_members\ WHERE\ account_id=(SELECT\ account_id\ FROM\ account_external_ids\ WHERE\ external_id=\\\'username:'. $this->ldap_uid .'\\\')\ AND\ group_id=(SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $this->groupname .'\\\')"';
 
-        expect($this->ssh)->execute()->count(2);
-        expect($this->ssh)->execute($this->gerrit_server, $remove_member_query)->at(0);
-        expect($this->ssh)->execute($this->gerrit_server, 'gerrit flush-caches --cache accounts')->at(1);
+        expect($this->ssh)->execute($this->gerrit_server, $remove_member_query)->once();
 
         $this->driver->removeUserFromGroup($this->gerrit_server, $this->user, $this->groupname);
     }

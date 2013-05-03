@@ -23,6 +23,7 @@
  */
 
 abstract class Git_Driver_Gerrit_MembershipCommand_User extends Git_Driver_Gerrit_MembershipCommand {
+    private $autoflush = true;
     private $gerrit_user_manager;
     protected $user;
 
@@ -38,10 +39,17 @@ abstract class Git_Driver_Gerrit_MembershipCommand_User extends Git_Driver_Gerri
         $this->user                = $user;
     }
 
+    public function disableAutoFlush() {
+        $this->autoflush = false;
+    }
+
     public function execute(Git_RemoteServer_GerritServer $server) {
         $gerrit_user = $this->gerrit_user_manager->getGerritUser($this->user);
         if ($gerrit_user) {
             $this->executeForGerritUser($server, $gerrit_user);
+            if ($this->autoflush) {
+                $this->driver->flushGerritCacheAccounts($server);
+            }
         }
     }
 

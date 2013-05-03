@@ -64,7 +64,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         $project_name     = $project->getUnixName();
         $ugroups          = $this->ugroup_manager->getUGroups($project);
 
-        $migrated_ugroups = $this->migrateUGroups($ugroups, $gerrit_server);
+        $migrated_ugroups = $this->membership_manager->createArrayOfGroupsForServer($gerrit_server, $ugroups);
         $admin_ugroup     = $this->getAdminUGroup($ugroups);
 
         if (! $this->driver->doesTheParentProjectExist($gerrit_server, $project_name) && $admin_ugroup) {
@@ -100,25 +100,6 @@ class Git_Driver_Gerrit_ProjectCreator {
         }
 
         return null;
-    }
-
-    /**
-     *
-     * @param UGroup[] $ugroups
-     * @param Project $project
-     * @param Git_RemoteServer_GerritServer $gerrit_server
-     * @return UGroup[]
-     */
-    private function migrateUGroups(array $ugroups, Git_RemoteServer_GerritServer $gerrit_server) {
-        $migrated_ugroups = array();
-
-        foreach ($ugroups as $ugroup) {
-            if ($this->membership_manager->createGroupForServer($gerrit_server, $ugroup)) {
-                $migrated_ugroups[] = $ugroup;
-            }
-        }
-
-        return $migrated_ugroups;
     }
 
     private function exportGitBranches(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project, GitRepository $repository) {
