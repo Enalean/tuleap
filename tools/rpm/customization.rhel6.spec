@@ -6,7 +6,6 @@
 # Define variables
 %define PKG_NAME @@PKG_NAME@@
 %define APP_NAME tuleap
-%define APP_USER codendiadm
 %define APP_DIR %{_datadir}/%{APP_NAME}
 
 Summary: Tuleap customization for @@PLATFORM@@ platform
@@ -90,7 +89,7 @@ tools/rpm/build_release.sh
 
 
 %files
-%defattr(-,%{APP_USER},%{APP_USER},-)
+%defattr(-,root,root,-)
 %{APP_DIR}/documentation
 %{APP_DIR}/downloads
 
