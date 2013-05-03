@@ -1090,8 +1090,10 @@ build_dir /var/lib/$PROJECT_NAME/backup/mysql/old root root 700
 build_dir /var/lib/$PROJECT_NAME/backup/subversion root root 700
 build_dir /var/lib/$PROJECT_NAME/docman $PROJECT_ADMIN $PROJECT_ADMIN 700
 # log dirs
-build_dir /var/log/$PROJECT_NAME $PROJECT_ADMIN $PROJECT_ADMIN 755
-build_dir /var/log/$PROJECT_NAME/cvslogs $PROJECT_ADMIN $PROJECT_ADMIN 775
+if [ "$RH_MAJOR_VERSION" != "6" ] ; then #if rhel6, built in rpm
+    build_dir /var/log/$PROJECT_NAME $PROJECT_ADMIN $PROJECT_ADMIN 755
+    build_dir /var/log/$PROJECT_NAME/cvslogs $PROJECT_ADMIN $PROJECT_ADMIN 775
+fi
 build_dir $TULEAP_CACHE_DIR $PROJECT_ADMIN $PROJECT_ADMIN 755
 # config dirs
 build_dir /etc/skel_$PROJECT_NAME root root 755
