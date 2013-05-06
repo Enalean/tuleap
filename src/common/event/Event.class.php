@@ -473,6 +473,7 @@ class Event {
      *   The various plugins create objects from the xml content
      */
     const IMPORT_XML_PROJECT = 'import_xml_project';
+
     /**
      * Event launched while importing a project from a xml content
      *
@@ -485,7 +486,8 @@ class Event {
      *   The various plugins create objects from the xml content
      */
     const IMPORT_XML_PROJECT_TRACKER_DONE = 'import_xml_project_tracker_done';
-        /**
+
+    /**
      * Event launched while importing a cardwall from a xml content
      *
      * Parameters:
@@ -497,5 +499,16 @@ class Event {
      *   The various plugins create objects from the xml content
      */
     const IMPORT_XML_PROJECT_CARDWALL_DONE = 'import_xml_project_cardwall_done';
+
+    /**
+     * Event raised when svn hooks are updated
+     *
+     * Paramters:
+     *     'group_id' => The id of the project
+     *
+     * Expected results:
+     *     Void
+     */
+    const SVN_UPDATE_HOOKS = 'svn_update_hooks';
 }
 ?>

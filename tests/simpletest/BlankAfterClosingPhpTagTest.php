@@ -55,6 +55,8 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
             'import_all_xml.php',
             'export_all_xml.php',
             'export_project_xml.php',
+            'src/utils/svn/pre-revprop-change.php',
+            'src/utils/svn/post-revprop-change.php',
         );
         
         //Those files are allowed to contain something after closing tag
