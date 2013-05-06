@@ -426,6 +426,7 @@ class Docman_Controller extends Controler {
 
             if($this->request->exist('report')) {
                 $this->_viewParams['report'] = $this->request->get('report');
+                $this->_viewParams['report'] = addslashes($this->_viewParams['report']);
             }
 
             $item_factory =& $this->_getItemFactory();

@@ -163,8 +163,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                                                             array('action' => 'show',
                                                                   'id' => $item->getId()),
                                                             false,
-                                                            isset($params['popup_doc']) ? true : false,
-                                                            true);
+                                                            isset($params['popup_doc']) ? true : false);
                     $this->html .= '<a href="'.$url.'" id="docman_item_title_link_'.$item->getId().'">';
                 }
                 
