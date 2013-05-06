@@ -42,5 +42,4 @@ try {
     fclose($stderr);
     exit(1);
 }
-
 ?>

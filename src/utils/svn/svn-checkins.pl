@@ -135,6 +135,40 @@ sub db_get_commit {
   return $sth->{'mysql_insertid'};
 }
 
+sub db_update_description {
+
+  my ($group_id, $repo, $revision, @desc) = @_;
+  my ($query, $c, $res, $fulldesc);
+
+  @desc_escaped = @desc;
+  foreach(@desc_escaped) { s/\\/\\\\/g }
+
+  $fulldesc = join('\n', @desc_escaped);
+  $fulldesc = join("&amp;",split("&", $fulldesc));
+  $fulldesc = join("&quot;",split("\"", $fulldesc));
+  $fulldesc = join("&#39;",split("'", $fulldesc));
+  $fulldesc = join("&gt;",split(">", $fulldesc));
+  $fulldesc = join("&lt;",split("<", $fulldesc));
+
+  $repo_id = db_get_index('svn_repositories','repository', $repo);
+
+  $query = "UPDATE svn_commits SET description='$fulldesc'".
+           "WHERE group_id='$group_id' AND repositoryid='$repo_id' AND revision='$revision'";
+  if ($debug) {
+    print STDERR $query, "\n";
+  }
+  $sth = $dbh->prepare($query);
+  $res = $sth->execute();
+  if (!$res) {
+    if ($debug) {
+      print STDERR "\t res: ",  $res, "\n";
+    }
+    return 0;
+  } else {
+    # Update last_access_date
+    session_store_access($uid);
+  }
+}
 
 1;
 
