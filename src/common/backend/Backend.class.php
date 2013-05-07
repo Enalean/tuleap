@@ -47,6 +47,8 @@ class Backend {
     
     public $block_marker_start = "# !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)\n";
     public $block_marker_end   = "# END OF NEEDED CODENDI BLOCK\n";
+    public $tuleap_block_marker_start = "# !!! Tuleap Specific !!! DO NOT REMOVE (NEEDED TULEAP MARKER)\n";
+    public $tuleap_block_marker_end   = "# END OF NEEDED TULEAP BLOCK\n";
 
     // Name of apache user (codendiadm).
     protected $httpUser;
@@ -467,6 +469,26 @@ class Backend {
         fwrite($handle, $this->block_marker_start);
         fwrite($handle, $command."\n");
         fwrite($handle, $this->block_marker_end);
+        return fclose($handle);
+    }
+
+    /**
+     * Add Codendi block in a file
+     *
+     * @param string $filename Path to the file
+     * @param string $command  content of the block
+     *
+     * @return boolean true on success or false on failure.
+     */
+    public function addTuleapBlock($filename, $command) {
+
+        if (!$handle = fopen($filename, 'a')) {
+            $this->log("Can't open file for writing: $filename", self::LOG_ERROR);
+            return false;
+        }
+        fwrite($handle, $this->tuleap_block_marker_start);
+        fwrite($handle, $command."\n");
+        fwrite($handle, $this->tuleap_block_marker_end);
         return fclose($handle);
     }
 

@@ -29,7 +29,6 @@ $unix_group_name = substr($repository, strlen($GLOBALS['svn_prefix'])+1);
 $group_id = group_getid_by_name($unix_group_name);
 
 $logmsg = array();
-//svnlook log /svnroot/nap -r1
 exec("/usr/bin/svnlook log '$repository' -r '$revision'", $logmsg);
 $logmsg = implode("\n", $logmsg);
 $dao = new SvnCommitsDao();
