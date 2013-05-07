@@ -29,6 +29,7 @@ override_dh_fixperms:
 		debian/tuleap-plugin-webdav/var/cache/tuleap/plugins/webdav/locks
 	chown www-data:www-data \
 		debian/tuleap/var/cache/tuleap/javascript \
+		debian/tuleap/etc/apache2/conf.d/tuleap-plugins \
 		debian/tuleap-plugin-git/var/lib/tuleap/gitroot \
 		debian/tuleap-plugin-git/var/lib/tuleap/gitolite \
 		debian/tuleap-plugin-tracker/var/lib/tuleap/tracker
