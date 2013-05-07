@@ -426,7 +426,24 @@ class Docman_Controller extends Controler {
 
             if($this->request->exist('report')) {
                 $this->_viewParams['report'] = $this->request->get('report');
-                $this->_viewParams['report'] = addslashes($this->_viewParams['report']);
+                $views                       = Docman_View_Browse::getDefaultViews();
+                $valid_views                 = new Valid_WhiteList('report', $views);
+                if (!$this->request->valid($valid_views)) {
+                    $view_founded = false;
+                    foreach ($views as $report_view) {
+                        $pattern = '/^'. $report_view .'/';
+                        if (preg_match($pattern, $this->_viewParams['report'])) {
+                            $this->_viewParams['report'] = $report_view;
+                            $view_founded                = true;
+                            break;
+                        }
+                    }
+                    if ($view_founded == false) {
+                        $views_keys                  = array_keys($views);
+                        $default_param_key           = $views_keys[0];
+                        $this->_viewParams['report'] = $views[$default_param_key];
+                    }
+                }
             }
 
             $item_factory =& $this->_getItemFactory();
