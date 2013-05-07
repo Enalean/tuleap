@@ -348,6 +348,11 @@ class Project extends Group implements PFO_Project {
     function isSVNMandatoryRef() {
         return $this->project_data_array['svn_mandatory_ref'];
     }
+
+    function canChangeSVNLog(){
+        return true;
+        return $this->project_data_array['can_change_svn_log'];
+    }
     
     function getSVNpreamble() {
         return $this->project_data_array['svn_preamble'];

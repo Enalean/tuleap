@@ -25,6 +25,9 @@ svn_admin_general_settings	tracking_comment	Lorsque le suivi de Subversion est a
 svn_admin_general_settings	mandatory_ref	Référence obligatoire dans le message de commit
 svn_admin_general_settings	mandatory_ref_comment	Lorsque l'option Référence obligatoire dans le message de commit est activée, le message de commit doit contenir au moins une référence (vers n'importe quel objet), sinon le commit sera refusé.
 svn_admin_general_settings	preamble	<h3>Préambule Subversion</h3><P>Message d'introduction sur l'utilisation de CVS en remplacement du message par défaut figurant sur la <a href="$1">page d'accueil de Subversion</a>. (balises HTML autorisées)
+svn_admin_general_settings	can_change_svn_log	Modification des messages de commit
+svn_admin_general_settings	can_change_svn_log_comment	Lorsque l'option Modification des messages de commit est activée, le message de commit peut être modifié (svn propset --revprop -r X svn:log)
+
 #
 #-----------------------------------------------
 # Script: SF/www/svn/admin/index.php
