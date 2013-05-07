@@ -1,3 +1,77 @@
+Version 3.18 - Tuleap 5.13
+    * SSH keys manipulation use gerrit user
+
+Version 3.17 - Tuleap 5.13
+    * Reduce number of gerrit ls-groups
+
+Version 3.16 - Tuleap 5.13
+    * Fix bugs #3240: Avoid to re-create groups if they already exists
+
+Version 3.15 - Tuleap 5.13
+    * Flush caches only once when migrate to gerrit.
+
+Version 3.14 - Tuleap 5.13
+    * Fix art #3241 Abusive Gerrit cache flushing
+
+Version 3.13 - Tuleap 5.13
+    * Fix sla #3150 - Tuleap uses LDAP uid to interact with gerrit users
+
+
+We need to use LDAP uid (login) instead of id (internal value of LDAP) for
+user management between Tuleap and Gerrit.
+
+Change-Id: Ic1226200f9de2111acec159e81bd8b2bf0321029
+
+Version 3.12 - Tuleap 5.13
+    * Remove perms on refs/changes/*
+
+
+Following the discussion on tuleap-devel[1] it appears that we shouldn't
+create rules for refs/changes/*.
+
+[1] https://tuleap.net/plugins/forumml/message.php?group_id=101&topic=20064&list=1
+
+Change-Id: I5ef23d90a08669f1b15a7e32b4c305613b9ce9cd
+
+Version 3.11 - Tuleap 5.13
+    * Modify table name and attribute name from uppercase to lowercase
+
+Version 3.10 - Tuleap 5.13
+    * Fix Ugroup deleted and re-created on Gerrit
+
+Version 3.9 - Tuleap 5.13
+    * Update readme with meaningful informations
+
+Version 3.8 - Tuleap 5.13
+    * remove inconsistent description in gerrit migration help
+
+Version 3.7 - Tuleap 5.13
+    * Make gitolite configuration file compatible with gitolite 2.3.1
+
+Version 3.6 - Tuleap 5.13
+    * Update text block
+
+Version 3.5 - Tuleap 5.13
+    * One can change read permissions when repository is managed by gerrit
+
+Version 3.4 - Tuleap 5.13
+    * Fix sla #2847 and sla #907 Git and jenkins usage
+
+     Fixes:
+     - Git post push commit now pass token to the URL to build
+     - No longer enforce SSL verification of Jenkins server
+     - Now use proxy if any defined to communicate with jenkins server
+
+     Nota: make use of core Jenkins integration.
+
+     Change-Id: Ia26ca44b7d70b6bbf436a591d8472355796ec91b
+
+Version 3.3 - Tuleap 5.13
+    * Fix git plugin install, create table according to their FK order
+
+Version 3.2 - Tuleap 5.13
+    * On user ssh key edition, appy on gerrit and gitolite
+
 Version 3.1 - Tuleap 5.13
     * do not miserably fail if there is no repo
 

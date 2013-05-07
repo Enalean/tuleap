@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tracker xmlns="http://codendi.org/tracker" allow_copy="1" instantiate_for_new_projects="0">
+<tracker allow_copy="1" instantiate_for_new_projects="0">
   <name>User Stories</name>
   <item_name>story</item_name>
   <description>User stories used to store user stories and to plan sprints</description>

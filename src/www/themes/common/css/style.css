@@ -2462,7 +2462,7 @@ input.span1, textarea.span1, .uneditable-input.span1 {
   background: #ccc;
   background: rgba(0, 0, 0, 0.3);
 }
-.dropdown.open .dropdown-menu {
+.open .dropdown-menu {
   display: block;
 }
 .pull-right .dropdown-menu {
@@ -4068,6 +4068,11 @@ table th[class*="span"],
 
 .btn-group.open .btn-inverse.dropdown-toggle {
   background-color: #222222;
+}
+
+.btn .caret {
+  margin-top: 8px;
+  margin-left: 0;
 }
 /* }}} */
 

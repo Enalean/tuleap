@@ -13,7 +13,7 @@ class CLI_Action_Default_Logout extends CLI_Action {
     }
     function addProjectParam() {
     }
-    function soapResult($soap_result, $fieldnames = array(), $params = array()) {
+    function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
         $GLOBALS['soap']->endSession();
         echo "Session terminated.\n";
     }

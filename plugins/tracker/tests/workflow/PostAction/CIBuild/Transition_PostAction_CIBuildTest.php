@@ -108,7 +108,7 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
 
         $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
 
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = array();
 
         $post_action_ci_build->exportToXml($root, $array_xml_mapping);
@@ -123,7 +123,7 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
 
         $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
 
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = array();
 
         $post_action_ci_build->exportToXml($root, $array_xml_mapping);

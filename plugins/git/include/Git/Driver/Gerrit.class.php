@@ -24,6 +24,11 @@ require_once 'common/backend/BackendLogger.class.php';
  * I know how to speak to a Gerrit remote server
  */
 class Git_Driver_Gerrit {
+    const INDEX_GROUPS_VERBOSE_NAME = 0;
+    const INDEX_GROUPS_VERBOSE_UUID = 1;
+
+    const CACHE_ACCOUNTS        = 'accounts';
+    const CACHE_GROUPS_INCLUDES = 'groups_byinclude';
 
     const COMMAND      = 'gerrit';
     const GSQL_COMMAND = 'gerrit gsql --format json -c';
@@ -113,19 +118,17 @@ class Git_Driver_Gerrit {
      * @param String $group_name
      * @param array $user_name_list
      */
-    public function createGroup(Git_RemoteServer_GerritServer $server, $group_name, array $user_name_list){
+    public function createGroup(Git_RemoteServer_GerritServer $server, $group_name){
         if ($this->doesTheGroupExist($server, $group_name)) {
             $this->logger->info("Gerrit: Group $group_name already exists on Gerrit");
             return;
         }
 
-        $base_command = array(self::COMMAND, "create-group", $group_name);
-        $member_args  = $this->compileMemberCommands($user_name_list);
-        $command_line = implode(' ', array_merge($base_command, $member_args));
+        $command = self::COMMAND . ' create-group ' . $group_name;
         try {
-            $this->ssh->execute($server, $command_line);
+            $this->ssh->execute($server, $command);
         } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
-            throw $this->computeException($e, $command_line);
+            throw $this->computeException($e, $command);
         }
 
         $this->logger->info("Gerrit: Group $group_name successfully created");
@@ -170,6 +173,11 @@ class Git_Driver_Gerrit {
         return explode(PHP_EOL, $this->ssh->execute($server, $command));
     }
 
+    public function listGroupsVerbose(Git_RemoteServer_GerritServer $server) {
+        $command = self::COMMAND . ' ls-groups --verbose';
+        return explode(PHP_EOL, $this->ssh->execute($server, $command));
+    }
+
     private function computeException(Git_Driver_Gerrit_RemoteSSHCommandFailure $e, $command) {
         return $this->isGerritFailure($e) ? $this->gerritDriverException($e, $command) : $e;
 
@@ -202,8 +210,9 @@ class Git_Driver_Gerrit {
         return escapeshellarg(escapeshellarg($user_identifier));
     }
 
-    public function setAccount(Git_RemoteServer_GerritServer $server, PFUser $user) {
-        $query = self::COMMAND .' set-account '. $user->getLdapId();
+    protected function setAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user) {
+        $this->logger->debug("Set account ".$user->getSSHUserName());
+        $query = self::COMMAND .' set-account '. $user->getSSHUserName();
         $this->ssh->execute($server, $query);
     }
 
@@ -216,15 +225,13 @@ class Git_Driver_Gerrit {
      * @param PFUser $user
      * @param String $group_name
      */
-    public function addUserToGroup(Git_RemoteServer_GerritServer $server, PFUser $user, $group_name) {
+    public function addUserToGroup(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $group_name) {
         $this->setAccount($server, $user);
 
-        $username = $user->getLdapId();
+        $username = $user->getWebUserName();
 
         $sql_query = "INSERT INTO account_group_members (account_id, group_id) SELECT A.account_id, G.group_id FROM account_external_ids A, account_groups G WHERE A.external_id='username:". $username ."' AND G.name='". $group_name ."'";
         $this->executeQuery($server, $sql_query);
-
-        $this->flushGerritCaches($server);
     }
 
     /**
@@ -236,13 +243,11 @@ class Git_Driver_Gerrit {
      * @param PFUser $user
      * @param String $group_name
      */
-    public function removeUserFromGroup(Git_RemoteServer_GerritServer $server, PFUser $user, $group_name) {
-        $username = $user->getLdapId();
+    public function removeUserFromGroup(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $group_name) {
+        $username = $user->getWebUserName();
 
         $sql_query = "DELETE FROM account_group_members WHERE account_id=(SELECT account_id FROM account_external_ids WHERE external_id='username:". $username ."') AND group_id=(SELECT group_id FROM account_groups WHERE name='". $group_name ."')";
         $this->executeQuery($server, $sql_query);
-
-        $this->flushGerritCaches($server);
     }
 
     /**
@@ -256,7 +261,7 @@ class Git_Driver_Gerrit {
     public function removeAllGroupMembers(Git_RemoteServer_GerritServer $server, $group_name) {
         $sql_query = "DELETE FROM account_group_members WHERE group_id=(SELECT group_id FROM account_groups WHERE name='". $group_name ."')";
         $this->executeQuery($server, $sql_query);
-        $this->flushGerritCaches($server);
+        $this->flushGerritCacheAccounts($server);
     }
 
     /**
@@ -270,11 +275,11 @@ class Git_Driver_Gerrit {
      */
     public function addIncludedGroup(Git_RemoteServer_GerritServer $server, $group_name, $included_group_name) {
         $this->insertAccountGroupIncludes($server, $group_name, $included_group_name);
-        $this->flushGerritCaches($server);
+        $this->flushGerritCacheGroupsInclude($server);
     }
 
     private function insertAccountGroupIncludes(Git_RemoteServer_GerritServer $server, $group_name, $included_group_name) {
-        $sql_query = "INSERT INTO ACCOUNT_GROUP_INCLUDES (GROUP_ID, INCLUDE_ID) SELECT G.GROUP_ID, I.GROUP_ID FROM ACCOUNT_GROUPS G, ACCOUNT_GROUPS I WHERE G.name='".$group_name."' AND I.name='".$included_group_name."'";
+        $sql_query = "INSERT INTO account_group_includes (group_id, include_id) SELECT G.group_id, I.group_id FROM account_groups G, account_groups I WHERE G.name='".$group_name."' AND I.name='".$included_group_name."'";
         $this->executeQuery($server, $sql_query);
     }
 
@@ -288,16 +293,27 @@ class Git_Driver_Gerrit {
      */
     public function removeAllIncludedGroups(Git_RemoteServer_GerritServer $server, $group_name) {
         $this->removeAccountGroupIncludes($server, $this->getGroupId($server, $group_name));
-        $this->flushGerritCaches($server);
+        $this->flushGerritCacheGroupsInclude($server);
     }
 
     private function removeAccountGroupIncludes(Git_RemoteServer_GerritServer $server, $gerrit_group_id) {
-        $sql_query = "DELETE FROM ACCOUNT_GROUP_INCLUDES I WHERE I.GROUP_ID=$gerrit_group_id";
+        $sql_query = "DELETE FROM account_group_includes I WHERE I.group_id=$gerrit_group_id";
         $this->executeQuery($server, $sql_query);
     }
 
-    private function flushGerritCaches($server) {
+    public function flushGerritCacheAccounts($server) {
+        $this->flushGerritCaches($server, self::CACHE_ACCOUNTS);
+    }
+
+    private function flushGerritCacheGroupsInclude($server) {
+        $this->flushGerritCaches($server, self::CACHE_GROUPS_INCLUDES);
+    }
+
+    private function flushGerritCaches($server, $cache=null) {
         $query = self::COMMAND .' flush-caches';
+        if ($cache) {
+            $query .= ' --cache '.$cache;
+        }
         $this->ssh->execute($server, $query);
     }
 
@@ -317,27 +333,27 @@ class Git_Driver_Gerrit {
     /**
      * 
      * @param Git_RemoteServer_GerritServer $server
-     * @param PFUser $user
+     * @param Git_Driver_Gerrit_User $user
      * @param string $ssh_key
      * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
      * 
      */
-    public function addSSHKeyToAccount(Git_RemoteServer_GerritServer $server, PFUser $user, $ssh_key) {
+    public function addSSHKeyToAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $ssh_key) {
         $escaped_ssh_key = escapeshellarg($ssh_key);
-        $query = self::COMMAND .' set-account --add-ssh-key "'. $escaped_ssh_key .'" '. $user->getLdapId();
+        $query = self::COMMAND .' set-account --add-ssh-key "'. $escaped_ssh_key .'" '. $user->getSSHUserName();
         $this->ssh->execute($server, $query);
     }
 
     /**
      * 
      * @param Git_RemoteServer_GerritServer $server
-     * @param PFUser $user
+     * @param Git_Driver_Gerrit_User $user
      * @param string $ssh_key
      * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
      */
-    public function removeSSHKeyFromAccount(Git_RemoteServer_GerritServer $server, PFUser $user, $ssh_key) {
+    public function removeSSHKeyFromAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $ssh_key) {
         $escaped_ssh_key = escapeshellarg($ssh_key);
-        $query = self::COMMAND .' set-account --delete-ssh-key "'. $escaped_ssh_key .'" '. $user->getLdapId();
+        $query = self::COMMAND .' set-account --delete-ssh-key "'. $escaped_ssh_key .'" '. $user->getSSHUserName();
         $this->ssh->execute($server, $query);
     }
 }

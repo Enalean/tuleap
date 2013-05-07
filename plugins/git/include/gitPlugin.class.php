@@ -67,12 +67,9 @@ class GitPlugin extends Plugin {
         $this->_addHook('plugin_statistics_disk_usage_service_label',      'plugin_statistics_disk_usage_service_label',   false);
         $this->_addHook('plugin_statistics_color',                         'plugin_statistics_color',                      false);
 
-        $this->_addHook('project_admin_remove_user',                       'projectRemoveUserFromNotification',            false);
-
         $this->_addHook(Event::LIST_SSH_KEYS,                              'getRemoteServersForUser',                      false);
-        $this->_addHook(Event::DUMP_SSH_KEYS,                              'dump_ssh_keys',                                false);
-        $this->_addHook(Event::DUMP_SSH_KEYS,                              'propagateUserKeysToGerrit',                        false);
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES,                     'system_event_get_types',                       false);
+        $this->_addHook(Event::DUMP_SSH_KEYS);
         $this->_addHook(Event::PROCCESS_SYSTEM_CHECK);
 
         $this->_addHook('permission_get_name',                             'permission_get_name',                          false);
@@ -289,7 +286,7 @@ class GitPlugin extends Plugin {
      *
      * @return void
      */
-    function projectRemoveUserFromNotification($params) {
+    private function projectRemoveUserFromNotification($params) {
         $groupId = $params['group_id'];
         $userId = $params['user_id'];
 
@@ -302,6 +299,18 @@ class GitPlugin extends Plugin {
     }
 
     /**
+     * Hook. Call by backend when SSH keys are modified
+     *
+     * @param array $params Should contain two entries:
+     *     'user' => PFUser,
+     *     'original_keys' => string of concatenated ssh keys
+     */
+    public function dump_ssh_keys(array $params) {
+        $this->dump_ssh_keys_gitolite($params);
+        $this->dump_ssh_keys_gerrit($params);
+    }
+
+    /**
      * Called by backend to ensure that all ssh keys are in gitolite conf
      * 
      * As we are root we use a dedicated script to be run as codendiadm.
@@ -309,7 +318,7 @@ class GitPlugin extends Plugin {
      *
      * @param array $params
      */
-    public function dump_ssh_keys($params) {
+    protected function dump_ssh_keys_gitolite(array $params) {
         $retVal = 0;
         $output = array();
         $mvCmd  = $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$GLOBALS['codendi_dir'].'/plugins/git/bin/gl-dump-sshkeys.php';
@@ -335,7 +344,7 @@ class GitPlugin extends Plugin {
      * 
      * @return void
      */
-    public function propagateUserKeysToGerrit($params) {
+    protected function dump_ssh_keys_gerrit(array $params) {
         if (! $user = $this->getUserFromParameters($params)) {
             return;
         }
@@ -356,7 +365,7 @@ class GitPlugin extends Plugin {
                 $user
             );
         } catch (Git_UserSynchronisationException $e) {
-            $this->getLogger()->error('Unable to propagate ssh keys for user: ' . $user->getUnixName() . '. Error:' . $e->getTraceAsString());
+            $this->getLogger()->error('Unable to propagate ssh keys for user: ' . $user->getUnixName());
         }
     }
 
@@ -768,6 +777,7 @@ class GitPlugin extends Plugin {
     public function project_admin_remove_user($params) {
         $params['ugroup_id'] = UGroup::PROJECT_MEMBERS;
         $this->project_admin_ugroup_remove_user($params);
+        $this->projectRemoveUserFromNotification($params);
     }
 
     public function project_admin_ugroup_add_user($params) {
@@ -862,7 +872,8 @@ class GitPlugin extends Plugin {
             $this->getGerritServerFactory(),
             $this->getGerritDriver(),
             $this->getRepositoryManager(),
-            $this->getGitSystemEventManager()
+            $this->getGitSystemEventManager(),
+            new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory())
         );
     }
 
@@ -916,6 +927,7 @@ class GitPlugin extends Plugin {
         return new Git_Driver_Gerrit_MembershipManager(
             new Git_Driver_Gerrit_MembershipDao(),
             $this->getGerritDriver(),
+            new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory()),
             $this->getGerritServerFactory(),
             new BackendLogger()
         );

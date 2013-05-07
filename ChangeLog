@@ -1,18 +1,34 @@
-Version 5.13 (Not Released Yet)
+Version 6.0 (Monday, May 6th 2013)
+    == Bux Fix ==
+	* Installation process now compatible with rhel6 as well as rhel5 and rhel5-php53
+	* Site admin can now export and import a part of a project template (Tracker and AgileDashboard).
+	* Fix sla #3147: corrupted cron file
+	* Fix Bugs #3165: XSS vulnerability with bookmark (Contrib STMicroelectronics)
+	* Fix bugs #3256: Links in followups in email notifications are broken
 
 	== Plugins ==
 	* admssw: 0.2
-	* agiledashboard: 0.78
-	* cardwall: 0.9.23
+	* agiledashboard: 0.80
+	* cardwall: 0.9.30
 	* doaprdf: 0.2
 	* foafprofiles: 0.2
 	* graphontrackersv5: 5.0.9
 	* pluginsadministration: 1.3
 	* fusionforge_compat: 0.3
-	* mediawiki: 0.6
-	* git: 3.1
+	* mediawiki: 0.9
+	* git: 3.18
 	* docman: 2.26.15
-	* tracker: 5.109
+	* tracker: 5.121
+	* ldap: 3.29
+	* IM: 1.5.9
+	* forumml: 2.6.11
+
+	== CLI ==
+	* Version 1.5.3
+
+    == Development ==
+	* Remove register globals usage on service management and approval admin pages
+	* Remove usage of PHP_SELF
 
 Version 5.12 (Thursday, March 21st 2013)
 	== Plugins ==

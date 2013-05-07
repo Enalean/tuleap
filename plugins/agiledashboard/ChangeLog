@@ -1,3 +1,17 @@
+Version 0.80 - Tuleap 5.13
+    * Story #3075 : import a basic agile dashboard template
+
+
+We are now able to export trough the CLI an XML containing :
+Trackers / cardwalls on top and agildashboard's plannings
+
+Still with the CLI, we are able to import this XML into a new project and retrieve all these configurations
+
+Change-Id: I1b1b3f965a6375c857e8feceeebfb21e2554f163
+
+Version 0.79 - Tuleap 5.13
+    * story #3077 see people names instead of avatars on cardwall
+
 Version 0.78 - Tuleap 5.13
     * Add a plugin dependency solver to force installation of needed plugins
 

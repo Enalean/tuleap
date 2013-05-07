@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tracker xmlns="http://codendi.org/tracker" instantiate_for_new_projects="0">
+<tracker instantiate_for_new_projects="0">
   <name>Tasks</name>
   <item_name>task</item_name>
   <description>Tasks Tracker</description>

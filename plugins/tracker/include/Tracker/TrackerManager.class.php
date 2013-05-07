@@ -899,15 +899,13 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         }
     }
 
-    public function exportToXml($group_id) {
-        $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-                                             <trackers />');
+    public function exportToXml($group_id, SimpleXMLElement $xml_content) {
         $xml_field_id = 0;
-        foreach (TrackerFactory::instance()->getTrackersByGroupId($group_id) as $tracker) {
-            $child = $xml_element->addChild('tracker', null, "http://codendi.org/tracker");
+        foreach ($this->getTrackerFactory()->getTrackersByGroupId($group_id) as $tracker) {
+            $child = $xml_content->addChild('tracker');
             $tracker->exportToXML($child, $xml_field_id);
         }
-        return $xml_element;
+        return $xml_content;
     }
 }
 

@@ -15,7 +15,7 @@
 
     <para>The basic form for invoking the CLI is the following:
         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-# ./codendi.php [program options] [module name] [function name] 
+# ./tuleap.php [program options] [module name] [function name] 
 [function parameters]
         </programlisting>
         <itemizedlist mark="bullet" spacing="compact">

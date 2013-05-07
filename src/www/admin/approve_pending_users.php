@@ -55,10 +55,11 @@ $expiry_date = 0;
                 $shell=",shell='".$GLOBALS['codendi_bin_prefix'] ."/cvssh-restricted'";
             } else $newstatus='A';
         
+            $users_ids = db_ei_implode($users_array);
             // update the user status flag to active
             db_query("UPDATE user SET expiry_date='".$expiry_date."', status='".$newstatus."'".$shell.
                      ", approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
-                 " WHERE user_id IN (".implode(',', $users_array).")");
+                 " WHERE user_id IN ($users_ids)");
 
             $em =& EventManager::instance();
             foreach ($users_array as $user_id) {
@@ -67,7 +68,7 @@ $expiry_date = 0;
         
             // Now send the user verification emails
             $res_user = db_query("SELECT email, confirm_hash FROM user "
-                     . " WHERE user_id IN (".implode(',', $users_array).")");
+                     . " WHERE user_id IN ($users_ids)");
             
              // Send a notification message to the user when account is activated by the Site Administrator
              $base_url = get_server_url();

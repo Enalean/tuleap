@@ -25,8 +25,18 @@ if [ -e /etc/debian_version ]; then
     CROND_SERVICE="cron"
     HTTPD_SERVICE="apache2"
 else
+    RH_VERSION=$(rpm -qa | grep -P "^(centos|redhat)-release" | sed -rn 's/.*-release-(.-.).*/\1/p')
+    RH_MAJOR_VERSION=$(echo $RH_VERSION | cut -d'-' -f1)
+    RH_MINOR_VERSION=$(echo $RH_VERSION | cut -d'-' -f2)
+
     INSTALL_PROFILE="rhel"
-    PROJECT_NAME="codendi"
+
+    if [ $RH_MAJOR_VERSION = "6" ]; then
+	PROJECT_NAME="tuleap"
+    
+    else
+	PROJECT_NAME="codendi"
+    fi
     PROJECT_ADMIN="codendiadm"
     TULEAP_CACHE_DIR="/var/tmp/tuleap_cache"
     NAMED_SERVICE="named"
@@ -137,6 +147,10 @@ substitute() {
   $PERL -pi -e "s/$2/$replacement/g" $1
 }
 
+fix_paths() {
+    $PERL -pi -E 'my %h = qw(/usr/share/codendi /usr/share/tuleap /etc/codendi /etc/tuleap /usr/lib/codendi /usr/lib/tuleap /var/lib/codendi /var/lib/tuleap /codendi_cache /tuleap_cache /var/log/codendi /var/log/tuleap /ftp/codendi /ftp/tuleap); s%(/usr/share/codendi|/etc/codendi|/usr/lib/codendi|/var/lib/codendi|/codendi_cache|/var/log/codendi|/ftp/codendi)%$h{$1}%ge;' $1
+}
+
 generate_passwd() {
     $CAT /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 9 | head -1
 }
@@ -163,14 +177,20 @@ input_password() {
 
 install_dist_conf() {
     local target="$1"
+    local template="$2"
     local fn
-    fn=$(basename $target)
+    if [ -z "$template" ]; then
+	fn=$(basename "$target")
+	fn="$fn.dist"
+    else
+	fn="$template"
+    fi
     # Keep backup file
     if [ -e "$target" ]; then
 	cp -f $target $target.orig
     fi
     # Install file
-    src="$INSTALL_DIR/src/etc/$fn.dist"
+    src="$INSTALL_DIR/src/etc/$fn"
     if [ -e "$src" ]; then
 	cp -a $src $target
     else
@@ -449,41 +469,15 @@ setup_mysql_cnf() {
     fi
 
     echo "Creating MySQL conf file..."
-    $CAT <<EOF >/etc/my.cnf
-[client]
-loose-default-character-set=utf8
+    local template_file
+    if [ "$RH_MAJOR_VERSION" = "5" ]; then
+	template_file="my.cnf.rhel5.dist"
+    else
+	template_file="my.cnf.rhel6.dist"
+    fi
 
-[mysqld]
-default-character-set=utf8
-log-bin=$PROJECT_NAME-bin
-skip-bdb
-set-variable = max_allowed_packet=128M
-datadir=/var/lib/mysql
-socket=/var/lib/mysql/mysql.sock
-# Default to using old password format for compatibility with mysql 3.x
-# clients (those using the mysqlclient10 compatibility package).
-old_passwords=1
-
-# Skip logging openfire db (for instant messaging)
-# The 'monitor' openfire plugin creates large $PROJECT_NAME-bin files
-# Comment this line if you prefer to be safer.
-set-variable  = binlog-ignore-db=openfire
-
-# Reduce default inactive timeout (prevent DB overload in case of nscd
-# crash)
-set-variable=wait_timeout=180
-
-# Innodb settings
-innodb_file_per_table
-
-[mysql.server]
-user=mysql
-basedir=/var/lib
-
-[mysqld_safe]
-err-log=/var/log/mysqld.log
-pid-file=/var/run/mysqld/mysqld.pid
-EOF
+    install_dist_conf "/etc/my.cnf" "$template_file"
+    substitute "/etc/my.cnf" '%PROJECT_NAME%' "$PROJECT_NAME"
 
     if [ -z "$mysql_host" ]; then
 	echo "Initializing MySQL: You can ignore additionnal messages on MySQL below this line:"
@@ -616,16 +610,23 @@ setup_apache_rhel() {
     done
     cd - > /dev/null
 
-    $TOUCH /etc/httpd/conf.d/${PROJECT_NAME}_svnroot.conf
+    $TOUCH /etc/httpd/conf.d/codendi_svnroot.conf
 
     echo "Installing Apache configuration files..."
     make_backup /etc/httpd/conf/httpd.conf
 
-    for f in /etc/httpd/conf/httpd.conf /etc/httpd/conf/ssl.conf \
+    if [ "$RH_MAJOR_VERSION" = 5 ]; then
+	install_dist_conf /etc/httpd/conf/httpd.conf
+    else
+	install_dist_conf /etc/httpd/conf/httpd.conf httpd.conf.rhel6.dist
+    fi
+
+    for f in /etc/httpd/conf/ssl.conf \
 	     /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
 	     /etc/httpd/conf.d/auth_mysql.conf \
 	     /etc/httpd/conf.d/codendi_aliases.conf; do
 	install_dist_conf $f
+	fix_paths $f
     done
 
     # replace string patterns in codendi_aliases.conf
@@ -646,68 +647,10 @@ setup_apache_rhel() {
 
     # Log Files rotation configuration
     echo "Installing log files rotation..."
-    $CAT <<'EOF' | sed -e "s/@@PROJECT_NAME@@/$PROJECT_NAME/g" >/etc/logrotate.d/httpd
-/var/log/httpd/access_log {
-    missingok
-    daily
-    rotate 4
-    postrotate
-        /sbin/service httpd graceful > /dev/null || true
-     year=`date +%Y`
-     month=`date +%m`
-     day=`date +%d`
-     destdir="/var/log/@@PROJECT_NAME@@/$year/$month"
-     destfile="http_combined_$year$month$day.log"
-     mkdir -p $destdir
-     cp /var/log/httpd/access_log.1 $destdir/$destfile
-    endscript
-}
- 
-/var/log/httpd/vhosts-access_log {
-    missingok
-    daily
-    rotate 4
-    postrotate
-        /sbin/service httpd graceful > /dev/null || true
-     year=`date +%Y`
-     month=`date +%m`
-     day=`date +%d`
-     #server=`hostname`
-     destdir="/var/log/@@PROJECT_NAME@@/$year/$month"
-     destfile="vhosts-access_$year$month$day.log"
-     mkdir -p $destdir
-     cp /var/log/httpd/vhosts-access_log.1 $destdir/$destfile
-    endscript
-}
 
-/var/log/httpd/error_log {
-    missingok
-    daily
-    rotate 4
-    postrotate
-        /sbin/service httpd graceful > /dev/null || true
-    endscript
-}
+    cp -f $INSTALL_DIR/src/etc/logrotate.httpd.conf /etc/logrotate.d/httpd
+    substitute '/etc/logrotate.d/httpd' "%PROJECT_NAME%" "$PROJECT_NAME"
 
-
-/var/log/httpd/svn_log {
-    missingok
-    daily
-    rotate 4
-    postrotate
-        /sbin/service httpd graceful > /dev/null || true
-     year=`date +%Y`
-     month=`date +%m`
-     day=`date +%d`
-     #server=`hostname`
-     destdir="/var/log/@@PROJECT_NAME@@/$year/$month"
-     destfile="svn_$year$month$day.log"
-     mkdir -p $destdir
-     cp /var/log/httpd/svn_log.1 $destdir/$destfile
-    endscript
-}
-
-EOF
     $CHOWN root:root /etc/logrotate.d/httpd
     $CHMOD 644 /etc/logrotate.d/httpd
 }
@@ -795,6 +738,8 @@ setup_nss() {
     fi
 
     # replace strings in libnss-mysql config files
+    substitute '/etc/libnss-mysql.cfg' '%sys_dbhost%' "$mysql_host"
+    substitute '/etc/libnss-mysql.cfg' '%sys_dbname%' "$PROJECT_NAME"
     substitute '/etc/libnss-mysql.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
     substitute '/etc/libnss-mysql-root.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
     $CHOWN root:root /etc/libnss-mysql.cfg /etc/libnss-mysql-root.cfg
@@ -825,7 +770,8 @@ setup_tuleap() {
     fi
 
     substitute "/etc/$PROJECT_NAME/conf/local.inc" 'codendiadm' "$PROJECT_ADMIN"
-   
+    fix_paths "/etc/$PROJECT_NAME/conf/local.inc"
+
     # replace string patterns in database.inc
     substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbpasswd%' "$codendiadm_passwd" 
     substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbuser%' "$PROJECT_ADMIN" 
@@ -897,8 +843,10 @@ do
 		sys_ip_address="127.0.1.1"
 		sys_org_name="Tuleap"
 		sys_long_org_name="Tuleap ALM"
-		#rt_passwd="`dd if=/dev/urandom count=1 bs=16 2> /dev/null | md5sum | cut -c-32`"
 		auto_passwd="true"
+        mysql_host="localhost"      
+        MYSQL="$MYSQL -h$mysql_host"        
+        MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
 		shift 1 ;;
 	--auto-passwd)
 		auto_passwd="true";shift 1 ;;
@@ -961,11 +909,13 @@ done
 # Check release
 #
 if [ "$INSTALL_PROFILE" = "rhel" ]; then
-    RH_RELEASE="5"
-    RH_UPDATE="6"
+    if [ "$RH_MAJOR_VERSION" = "5" ]; then
+	RH_UPDATE="6"
+    else
+	RH_UPDATE="3"
+    fi
 
-    minor_version=`$RPM -qa | grep -P "^(centos|redhat)-release-${RH_RELEASE}" | sed -rn 's/(centos|redhat)-release-5-(.).*/\2/p'`
-    if [ "x$minor_version" != x ] && [ "$minor_version" -ge "$RH_UPDATE" ]; then
+    if [ "x$RH_MINOR_VERSION" != x ] && [ "$RH_MINOR_VERSION" -ge "$RH_UPDATE" ]; then
 	echo "Running on RHEL or CentOS ${RH_RELEASE}... good!"
     else
 	cat <<-EOF
@@ -1140,8 +1090,10 @@ build_dir /var/lib/$PROJECT_NAME/backup/mysql/old root root 700
 build_dir /var/lib/$PROJECT_NAME/backup/subversion root root 700
 build_dir /var/lib/$PROJECT_NAME/docman $PROJECT_ADMIN $PROJECT_ADMIN 700
 # log dirs
-build_dir /var/log/$PROJECT_NAME $PROJECT_ADMIN $PROJECT_ADMIN 755
-build_dir /var/log/$PROJECT_NAME/cvslogs $PROJECT_ADMIN $PROJECT_ADMIN 775
+if [ "$RH_MAJOR_VERSION" != "6" ] ; then #if rhel6, built in rpm
+    build_dir /var/log/$PROJECT_NAME $PROJECT_ADMIN $PROJECT_ADMIN 755
+    build_dir /var/log/$PROJECT_NAME/cvslogs $PROJECT_ADMIN $PROJECT_ADMIN 775
+fi
 build_dir $TULEAP_CACHE_DIR $PROJECT_ADMIN $PROJECT_ADMIN 755
 # config dirs
 build_dir /etc/skel_$PROJECT_NAME root root 755
@@ -1185,6 +1137,9 @@ if [ $SELINUX_ENABLED ]; then
     $CHCON -R -h $SELINUX_CONTEXT /etc/$PROJECT_NAME
     $CHCON -R -h $SELINUX_CONTEXT /var/lib/$PROJECT_NAME
     $CHCON -R -h $SELINUX_CONTEXT /home/groups
+    if [ -d /home/codendiadm ]; then
+	$CHCON -R -h $SELINUX_CONTEXT /home/codendiadm
+    fi
     $CHCON -h $SELINUX_CONTEXT /svnroot
     $CHCON -h $SELINUX_CONTEXT /cvsroot
 fi
@@ -1427,8 +1382,12 @@ fi
 
 $MYSQL -u$PROJECT_ADMIN -p$codendiadm_passwd $PROJECT_NAME < /usr/share/forgeupgrade/db/install-mysql.sql
 $INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0755 --directory /etc/$PROJECT_NAME/forgeupgrade
-$INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0644 $INSTALL_DIR/src/etc/forgeupgrade-config.ini.dist /etc/$PROJECT_NAME/forgeupgrade/config.ini
-substitute /etc/$PROJECT_NAME/forgeupgrade/config.ini "%project_name%" "$PROJECT_NAME"
+if [ $INSTALL_PROFILE = "rhel" -a $RH_MAJOR_VERSION = 6 ]; then
+    forge_upgrade_config_dist=$INSTALL_DIR/src/etc/forgeupgrade-config.ini.rhel6.dist
+else
+    forge_upgrade_config_dist=$INSTALL_DIR/src/etc/forgeupgrade-config.ini.dist
+fi
+$INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0644 $forge_upgrade_config_dist /etc/$PROJECT_NAME/forgeupgrade/config.ini
 
 ##############################################
 # *Last* step: install plugins
@@ -1499,7 +1458,7 @@ EOF
     IM_ADMIN_USER='imadmin-bot'
     IM_ADMIN_USER_PW='1M@dm1n'
     IM_MUC_PW='Mu6.4dm1n' # Doesn't need to change
-    $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://$mysql_host:3306/openfire -cdb jdbc:mysql://$mysql_host:3306/$PROJECT_NAME -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
+    $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://$mysql_host:3306/openfire -cdb jdbc:mysql://$mysql_host:3306/$PROJECT_NAME -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW -fdn $PROJECT_NAME
     echo "path[]=\"$INSTALL_DIR/plugins/IM\"" >> /etc/$PROJECT_NAME/forgeupgrade/config.ini
 
     # Enable service

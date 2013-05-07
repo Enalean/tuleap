@@ -1247,9 +1247,10 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       * @return string html
       */
      public function fetchHtmlAvatar($width = 50) {
-         $purifier = Codendi_HTMLPurifier::instance();
-         
-         $title    = $purifier->purify($this->getRealName());
+         $purifier    = Codendi_HTMLPurifier::instance();
+         $user_helper = new UserHelper();
+
+         $title    = $purifier->purify($user_helper->getDisplayNameFromUser($this));
          $style    = 'width: '. ($width+2) .'px; height: '. ($width+2) .'px;';
          $user_id  = $this->getId();
 

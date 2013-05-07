@@ -150,6 +150,10 @@ class Group extends Error {
 		}
 	}
 
+    public function isDeleted() {
+        return $this->getStatus() == 'D';
+    }
+
 	function getUnixName($tolower = true) {
 		return $tolower ? strtolower($this->data_array['unix_group_name']) : $this->data_array['unix_group_name'];
 	}

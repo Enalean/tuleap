@@ -61,7 +61,7 @@ class Tracker_Hierarchy_Controller {
     public function update() {
         $vChildren = new Valid_UInt('children');
         $vChildren->required();
-        
+
         if ($this->request->validArray($vChildren)) {
             $this->dao->updateChildren($this->tracker->getId(), $this->request->get('children'));
         } else {
@@ -83,6 +83,14 @@ class Tracker_Hierarchy_Controller {
     
     private function render($template_name, $presenter) {
         $this->renderer->renderToPage($template_name, $presenter);
+    }
+
+    /**
+     *
+     * @param array $mapping the id of tracker's children
+     */
+    public function updateFromXmlProjectImportProcess(array $mapping) {
+        $this->dao->updateChildren($this->tracker->getId(), $mapping);
     }
 }
 ?>

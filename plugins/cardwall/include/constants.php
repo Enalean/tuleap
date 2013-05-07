@@ -19,6 +19,7 @@
  */
 
 define('CARDWALL_BASE_DIR', dirname(__FILE__));
+define('CARDWALL_BASE_URL', '/plugins/cardwall');
 
 /**
  * Get the swimline tracker of a given tracker

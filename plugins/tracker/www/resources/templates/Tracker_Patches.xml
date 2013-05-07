@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tracker xmlns="http://codendi.org/tracker" instantiate_for_new_projects="0">
+<tracker instantiate_for_new_projects="0">
   <name>Patches</name>
   <item_name>patch</item_name>
   <description>Patch Tracker</description>

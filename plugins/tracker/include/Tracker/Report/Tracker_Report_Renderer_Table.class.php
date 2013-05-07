@@ -167,7 +167,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $ff = $this->report->getFormElementFactory();
                 $this->_columns = array();
                 foreach ($columns as $key => $column) {
-                    if ($formElement = $ff->getFormElementById($key)) {
+                    if ($formElement = $ff->getFormElementFieldById($key)) {
                         if ($formElement->userCanRead()) {
                             $this->_columns[$key] = array(
                                 'field'    => $formElement,
@@ -258,7 +258,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $ff = $this->getFieldFactory();
         $this->_columns = array();
         foreach($this->getColumnsDao()->searchByRendererId($this->id) as $row) {
-            if ($field = $ff->getUsedFormElementById($row['field_id'])) {
+            if ($field = $ff->getUsedFormElementFieldById($row['field_id'])) {
                 if ($field->userCanRead()) {
                     $this->_columns[$row['field_id']] = $row;
                     $this->_columns[$row['field_id']]['field'] = $field;
@@ -777,7 +777,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             } else {
                 $columns = array(array(
                     'width' => 0,
-                    'field' => $this->getFieldFactory()->getUsedFormElementById($only_one_column),
+                    'field' => $this->getFieldFactory()->getUsedFormElementFieldById($only_one_column),
                 ));
             }
         } else {
@@ -1064,8 +1064,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     /**
      * Build oredered query
      *
-     * @param array $matching_ids The artifact to display
-     * @param array $fields       The fields to display
+     * @param array                       $matching_ids The artifact to display
+     * @param Tracker_FormElement_Field[] $fields       The fields to display
      *
      * @return array of sql queries
      */

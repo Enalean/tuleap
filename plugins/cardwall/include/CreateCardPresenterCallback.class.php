@@ -32,9 +32,10 @@ class Cardwall_CreateCardPresenterCallback implements TreeNodeCallback {
      */
     private $user;
 
-    public function __construct($card_fields, PFUser $user) {
-         $this->card_fields = $card_fields;
-         $this->user        = $user;
+    public function __construct($card_fields, PFUser $user, Cardwall_DisplayPreferences $display_preferences) {
+         $this->card_fields         = $card_fields;
+         $this->user                = $user;
+         $this->display_preferences = $display_preferences;
     }
 
     /**
@@ -50,7 +51,7 @@ class Cardwall_CreateCardPresenterCallback implements TreeNodeCallback {
 
         $artifact  = $node->getArtifact();
         $color     = $artifact->getCardAccentColor($this->user);
-        $presenter = new Cardwall_CardPresenter($artifact, $this->card_fields, $color, $artifact->getParent($this->user));
+        $presenter = new Cardwall_CardPresenter($artifact, $this->card_fields, $color, $this->display_preferences, $artifact->getParent($this->user));
         $new_node  = new Tracker_TreeNode_CardPresenterNode($node, $presenter);
         return $new_node;
     }

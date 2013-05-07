@@ -83,7 +83,9 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
         if ($with_link) {
             $hp = Codendi_HTMLPurifier::instance();
             $repo = $this->repository_factory->getRepositoryById($repo_id);
-            $txt = '<a href="/plugins/git/index.php/'. $repo->getProjectId() .'/view/'. $repo_id .'/" title="'. $hp->purify($repo->getFullName()) .'">'. $txt .'</a>';
+            if ($repo) {
+                $txt = '<a href="/plugins/git/index.php/'. $repo->getProjectId() .'/view/'. $repo_id .'/" title="'. $hp->purify($repo->getFullName()) .'">'. $txt .'</a>';
+            }
         }
         return $txt;
     }

@@ -56,7 +56,14 @@ THEME_STEERFORGE_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/SteerForg
 THEME_TULEAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Tuleap/VERSION)
 
 PKG_NAME=tuleap
+
+ifeq ($(strip $(OS)),rhel6)
+SPEC_FILE=tuleap.rhel6.spec
+CUSTOM_SPEC_FILE=customization.rhel6.spec
+else
 SPEC_FILE=tuleap.spec
+CUSTOM_SPEC_FILE=codendi-customization.spec
+endif
 
 default: all
 
@@ -144,7 +151,7 @@ $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-1.noarch.rpm: $(SPEC_FILE)
 	rpmbuild -bb $(RPM_TMP)/SPECS/$(SPEC_FILE)
 
 custom_rpm: tarball
-	cat codendi-customization.spec |\
+	cat $(CUSTOM_SPEC_FILE) |\
 		sed -e 's/@@PLATFORM@@/default/' |\
 		sed -e 's/@@SYS_DEFAULT_DOMAIN@@/tuleap.net/' |\
 		sed -e 's/@@SYS_HTTPS_HOST@@/tuleap.net/' |\

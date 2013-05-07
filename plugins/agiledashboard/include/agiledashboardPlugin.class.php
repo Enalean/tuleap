@@ -52,6 +52,8 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR, 'event_artifact_parents_selector', false);
 
             $this->_addHook(Event::SYSTRAY);
+            $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
+            $this->_addHook(Event::EXPORT_XML_PROJECT);
 
             if (defined('CARDWALL_BASE_DIR')) {
                 $this->_addHook(CARDWALL_EVENT_GET_SWIMLINE_TRACKER, 'cardwall_event_get_swimline_tracker', false);
@@ -267,6 +269,32 @@ class AgileDashboardPlugin extends Plugin {
         $params['action'] = 'generate_systray_data';
         $request = new Codendi_Request($params);
 
+        $this->process($request);
+    }
+
+    /**
+     * @see Event::EXPORT_XML_PROJECT
+     * @param $array $params
+     */
+    public function export_xml_project($params) {
+        $params['action']     = 'export';
+        $params['project_id'] = $params['project']->getId();
+        $request              = new Codendi_Request($params);
+        $this->process($request);
+    }
+
+    /**
+     *
+     * @param array $param
+     *  Expected key/ values:
+     *      project_id  int             The ID of the project for the import
+     *      xml_content SimpleXmlObject A string of valid xml
+     *      mapping     array           An array of mappings between xml tracker IDs and their true IDs
+     *
+     */
+    public function import_xml_project_cardwall_done($params) {
+        $params['action'] = 'import';
+        $request          = new Codendi_Request($params);
         $this->process($request);
     }
 }

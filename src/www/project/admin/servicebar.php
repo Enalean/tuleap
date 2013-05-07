@@ -113,42 +113,50 @@ if (user_is_super_user()) {
     $is_superuser=true;
 }
 
-if (!isset($is_used)) $is_used=false;
-if (!isset($func)) $func="";
+$is_used = $request->getValidated('is_used', 'uint', false);
+$func    = $request->getValidated('func', 'string', '');
 
 if ($func=='delete') {
-
+    $service_id = $request->getValidated('service_id', 'uint', 0);
     // Delete service
      if (!$service_id) {
         $feedback .= ' '.$Language->getText('project_admin_servicebar','s_id_not_given').' ';
     } else {
 
-	$sql = "DELETE FROM service WHERE group_id=$group_id AND service_id=$service_id";
+	$sql = "DELETE FROM service WHERE group_id=$group_id AND service_id=".db_ei($service_id);
 
 	$result=db_query($sql);
 	if (!$result || db_affected_rows($result) < 1) {
-		$feedback .= ' '.$Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' ));
+		$GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
 	} else {
-		$feedback .= ' '.$Language->getText('project_admin_servicebar','s_del').' ';
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_servicebar','s_del'));
 	}
         if ($group_id==100) {
+            $short_name = $request->getValidated('short_name', 'string', '');
             if (!$short_name) {
-		$feedback .= ' '.$Language->getText('project_admin_servicebar','cant_delete_s_from_p').' ';
+		$GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_servicebar','cant_delete_s_from_p'));
             } else {
                 // Delete service from all projects
-                $sql = "DELETE FROM service WHERE short_name='$short_name'";
+                $sql = "DELETE FROM service WHERE short_name='".db_es($short_name)."'";
                 $result=db_query($sql);
                 if (!$result || db_affected_rows($result) < 1) {
-                    $feedback .= ' '.$Language->getText('project_admin_servicebar','del_fail',db_error());
+                    $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_servicebar','del_fail',db_error()));
                 } else {
-                    $feedback .= ' '.$Language->getText('project_admin_servicebar','s_del_from_p',db_affected_rows($result)).' ';
+                    $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_servicebar','s_del_from_p',db_affected_rows($result)));
                 }
             }
 	}
     }
+    $GLOBALS['Response']->redirect('/project/admin/servicebar.php?group_id='.$group_id);
 }
 
 if (($func=='do_create')||($func=='do_update')) {
+    $short_name  = $request->getValidated('short_name', 'string', '');
+    $label       = $request->getValidated('label', 'string', '');
+    $description = $request->getValidated('description', 'string', '');
+    $link        = $request->getValidated('link', 'string', '');
+    $rank        = $request->getValidated('rank', 'int', 500);
+    $is_active   = $request->getValidated('is_active', 'uint', 0);
     // Sanity check
     if (!$label) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','label_missed'));
@@ -174,7 +182,7 @@ if (($func=='do_create')||($func=='do_update')) {
 
     if (!$is_active) {
         if ($is_used) {
-            $feedback .= $Language->getText('project_admin_servicebar','set_stat_unused');
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_servicebar','set_stat_unused'));
             $is_used=false;
         }
     }
@@ -197,10 +205,11 @@ if (($func=='do_create')||($func=='do_update')) {
 }
 
 if ($func=='do_create') {
+    $scope = $request->getValidated('scope', 'string', '');
 
     if ($short_name) {
         // Check that the short_name is not already used
-        $sql="SELECT * FROM service WHERE short_name='$short_name'";
+        $sql="SELECT * FROM service WHERE short_name='".db_es($short_name)."'";
         $result=db_query($sql);
         if (db_numrows($result)>0) {
             exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','short_name_exist'));
@@ -218,7 +227,7 @@ if ($func=='do_create') {
     if (!$result) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','cant_create_s',db_error()));
     } else {
-        $feedback .= " ".$Language->getText('project_admin_servicebar','s_create_success')." ";
+        $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_servicebar','s_create_success'));
     }
     
     $pm->clear($group_id);
@@ -250,14 +259,16 @@ if ($func=='do_create') {
             $result=db_query($sql);
             $nbproj++;
             if (!$result) {
-                $feedback .= ' '.$Language->getText('project_admin_servicebar','cant_create_s_for_p',$my_group_id);
+                $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_servicebar','cant_create_s_for_p',$my_group_id));
             }
         }
-        $feedback .= " ".$Language->getText('project_admin_servicebar','s_add_success',$nbproj);
+        $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_servicebar','s_add_success',$nbproj));
     }
+    $GLOBALS['Response']->redirect('/project/admin/servicebar.php?group_id='.$group_id);
 }
 
 if ($func=='do_update') {
+    $service_id = $request->getValidated('service_id', 'uint', 0);
     if (!$service_id) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','s_id_missed'));
     }
@@ -284,7 +295,7 @@ if ($func=='do_update') {
     if (!$result) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','cant_update_s',db_error()));
     } else {
-        $feedback .= ' '.$Language->getText('project_admin_servicebar','s_update_success').' ';
+        $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_servicebar','s_update_success'));
     }
     
     $pm->clear($group_id);
@@ -303,6 +314,7 @@ if ($func=='do_update') {
             $em->processEvent('service_is_used', array('shortname' => $short_name, 'is_used' => $is_used?true:false, 'group_id' => $group_id));
         }
     }
+    $GLOBALS['Response']->redirect('/project/admin/servicebar.php?group_id='.$group_id);
 }
 
 project_admin_header(array('title'=>$Language->getText('project_admin_servicebar','edit_s_bar'),'group'=>$group_id,

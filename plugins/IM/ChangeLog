@@ -1,3 +1,12 @@
+Version 1.5.9 - Tuleap 5.13
+    * Create an optionnal paramater for database name in openfire install
+
+Version 1.5.8 - Tuleap 5.13
+    * Make IM plugin re-installable
+
+Version 1.5.7 - Tuleap 5.13
+    * Development: remove usage of PHP_SELF
+
 Version 1.5.6 - Tuleap 5.12
     * Rename User class to PFUser to allow integration of mediawiki
 

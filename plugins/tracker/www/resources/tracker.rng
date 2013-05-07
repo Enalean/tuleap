@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar ns="http://codendi.org/tracker" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <start>
     <element name="tracker">
       <optional>
         <!-- old ids -->
         <attribute name="id">
-          <data type="int"/>
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="parent_id">
+          <data type="string"/>
         </attribute>
       </optional>
       <optional>
@@ -318,6 +323,14 @@
         </optional>
         <optional>
           <attribute name="use_capacity">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </attribute>
+        </optional>
+        <optional>
+          <attribute name="include_weekends">
             <choice>
               <value>0</value>
               <value>1</value>

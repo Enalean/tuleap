@@ -348,6 +348,13 @@ class Tracker implements Tracker_Dispatchable_Interface {
                                 $GLOBALS['sys_email_admin']),
                                 CODENDI_PURIFIER_FULL
                         );
+                        $reference_manager =  ReferenceManager::instance();
+                        $ref =  $reference_manager->loadReferenceFromKeywordAndNumArgs(strtolower($this->getItemName()), $this->getGroupId(), 1);
+                        if ($ref) {
+                            if ($reference_manager->deleteReference($ref)) {
+                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_reference', 't_r_deleted'));
+                            }
+                        }
                     } else {
                         $GLOBALS['Response']->addFeedback(
                                 'error',
@@ -543,8 +550,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
             case 'admin-export':
                 if ($this->userIsAdmin($current_user)) {
                     // TODO: change directory
-                    $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-                                                         <tracker xmlns="http://codendi.org/tracker"/>');
+                    $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
                     $this->sendXML($this->exportToXML($xml_element));
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
@@ -2264,11 +2270,15 @@ EOS;
      * @return void
      */
     public function exportToXML(SimpleXMLElement $xmlElem, &$xmlFieldId = 0) {
-        // if old ids are important, modify code here
-        if (false) {
-            $xmlElem->addAttribute('id', $this->id);
-            $xmlElem->addAttribute('group_id', $this->group_id);
+        $xmlElem->addAttribute('id', "T". $this->getId());
+
+        $parent_id = $this->getParentId();
+        if ($parent_id) {
+            $parent_id = "T". $parent_id;
+        } else {
+            $parent_id = "0";
         }
+        $xmlElem->addAttribute('parent_id', (string)$parent_id);
 
         // only add attributes which are different from the default value
         if ($this->allow_copy) {
@@ -3167,7 +3177,7 @@ EOS;
     /**
      * @return Tracker_HierarchyFactory
      */
-    private function getHierarchyFactory() {
+    protected function getHierarchyFactory() {
         return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory(), $this->getTrackerArtifactFactory());
     }
 
@@ -3177,11 +3187,15 @@ EOS;
      * @return Tracker
      */
     public function getParent() {
-        $parent_tracker_id = $this->getHierarchy()->getParent($this->getId());
+        $parent_tracker_id = $this->getParentId();
         if ($parent_tracker_id) {
             return $this->getTrackerFactory()->getTrackerById($parent_tracker_id);
         }
         return null;
+    }
+
+    private function getParentId() {
+        return $this->getHierarchy()->getParent($this->getId());
     }
 
     /**

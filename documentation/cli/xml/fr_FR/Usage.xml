@@ -16,7 +16,7 @@
 
     <para>La ligne de commande type pour appeler le client est la suivante :
         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-# ./codendi.php [options du programme] [nom du module] [nom de la fonction] 
+# ./tuleap.php [options du programme] [nom du module] [nom de la fonction] 
 [paramètres de la fonction]
         </programlisting>
         <itemizedlist mark="bullet" spacing="compact">

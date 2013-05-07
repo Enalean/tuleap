@@ -31,94 +31,92 @@
         {{/isProjectApprovalEnabled}}
 
         <h2>{{getDescriptionContainerTitle}}</h2>
-        <table>
-            <div class="control-group">
-                <label class="control-label">{{getDescriptionContainerFullName}} <span class="mandatory_field">*</span></label>
-                <div class="controls">
-                    <input size="40"
-                           type="text"
-                           name="{{full_name_label}}"
-                           value="{{getFullName}}"
-                           required
-                           autofocus/>
-                    <div class="help">{{getDescriptionContainerFullNameHelp}}</div>
+        <div class="control-group">
+            <label class="control-label">{{getDescriptionContainerFullName}} <span class="mandatory_field">*</span></label>
+            <div class="controls">
+                <input size="40"
+                       type="text"
+                       name="{{full_name_label}}"
+                       value="{{getFullName}}"
+                       required
+                       autofocus/>
+                <div class="help">{{getDescriptionContainerFullNameHelp}}</div>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">{{getDescriptionContainerShortName}} <span class="mandatory_field">*</span></label>
+            <div class="controls">
+                <input type="text"
+                       maxlength="30"
+                       size="15"
+                       name="{{unix_name_label}}"
+                       value="{{getUnixName}}"
+                       required/>
+                <div class="help">{{getDescriptionContainerShortNameHelp}}</div>
+                <span class="label label-info">Info</span> {{getDescriptionContainerShortNameLabel}}
+                </span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">{{getDescriptionContainerShortDescription}} <span class="mandatory_field">*</span></label>
+            <div class="controls">
+                <textarea
+                    name="{{short_description_label}}"
+                    wrap="virtual"
+                    cols="40"
+                    rows="3"
+                    required>{{getShortDescription}}</textarea>
+                    <div class="help">{{getDescriptionContainerShortDescriptionHelp}}</div>
+            </div>
+        </div>
+        {{#getProjectDescriptionFields}}
+        <div class="control-group">
+            <label class="control-label">{{getName}} <span class="mandatory_field">*</span></label>
+            <div class="controls">
+                {{#isText}}<textarea name="{{getFormName}}" wrap="virtual" cols="40" rows="3" required="required">{{getValue}}</textarea>{{/isText}}
+                {{^isText}}<input name="{{getFormName}}" size="40" maxlen="70" type="text" value="{{getValue}}" required="required" />{{/isText}}
+                <div class="help">{{{getDescription}}}</div>
+            </div>
+        </div>
+        {{/getProjectDescriptionFields}}
+        <div class="control-group">
+            <label class="control-label">{{getDescriptionContainerProjectPrivacy}}</label>
+            <div class="controls">
+                <label>
+                <input type="radio"
+                       name="{{is_public_label}}"
+                       value="1"
+                       {{#isPublic}}checked="checked"{{/isPublic}}
+                    />
+                {{getDescriptionContainerPublicLabel}}
+                </label>
+                <br>
+                <label>
+                <input type="radio"
+                       name="{{is_public_label}}"
+                       value="0"
+                       {{^isPublic}}checked="checked"{{/isPublic}}
+                    />
+                {{getDescriptionContainerPrivateLabel}}
+                </label>
+            </div>
+        </div><div class="control-group">
+            <label class="control-label">{{getDescriptionContainerProjectLicense}}</label>
+            <div class="controls">
+                <select name="{{license_type_label}}">
+                    {{#getAvailableLicenses}}
+                        <option value="{{license_type}}" {{#isSelected}}selected="selected"{{/isSelected}}>{{license_description}}</option>
+                    {{/getAvailableLicenses}}
+                </select>
+                <div class="custom_license_block">
+                    <textarea name="{{custom_license_label}}"
+                        wrap=virtual
+                        cols=60
+                        rows=10>{{getCustomLicense}}</textarea>
+                    <div class="help">{{getDescriptionContainerProjectLicenseHelp}}</div>
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label">{{getDescriptionContainerShortName}} <span class="mandatory_field">*</span></label>
-                <div class="controls">
-                    <input type="text"
-                           maxlength="30"
-                           size="15"
-                           name="{{unix_name_label}}"
-                           value="{{getUnixName}}"
-                           required/>
-                    <div class="help">{{getDescriptionContainerShortNameHelp}}</div>
-                    <span class="label label-info">Info</span> {{getDescriptionContainerShortNameLabel}}
-                    </span>
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">{{getDescriptionContainerShortDescription}} <span class="mandatory_field">*</span></label>
-                <div class="controls">
-                    <textarea
-                        name="{{short_description_label}}"
-                        wrap="virtual"
-                        cols="40"
-                        rows="3"
-                        required>{{getShortDescription}}</textarea>
-                        <div class="help">{{getDescriptionContainerShortDescriptionHelp}}</div>
-                </div>
-            </div>
-            {{#getProjectDescriptionFields}}
-            <div class="control-group">
-                <label class="control-label">{{getName}} <span class="mandatory_field">*</span></label>
-                <div class="controls">
-                    {{#isText}}<textarea name="{{getFormName}}" wrap="virtual" cols="40" rows="3" required="required">{{getValue}}</textarea>{{/isText}}
-                    {{^isText}}<input name="{{getFormName}}" size="40" maxlen="70" type="text" value="{{getValue}}" required="required" />{{/isText}}
-                    <div class="help">{{{getDescription}}}</div>
-                </div>
-            </div>
-            {{/getProjectDescriptionFields}}
-            <div class="control-group">
-                <label class="control-label">{{getDescriptionContainerProjectPrivacy}}</label>
-                <div class="controls">
-                    <label>
-                    <input type="radio"
-                           name="{{is_public_label}}"
-                           value="1"
-                           {{#isPublic}}checked="checked"{{/isPublic}}
-                        />
-                    {{getDescriptionContainerPublicLabel}}
-                    </label>
-                    <br>
-                    <label>
-                    <input type="radio"
-                           name="{{is_public_label}}"
-                           value="0"
-                           {{^isPublic}}checked="checked"{{/isPublic}}
-                        />
-                    {{getDescriptionContainerPrivateLabel}}
-                    </label>
-                </div>
-            </div><div class="control-group">
-                <label class="control-label">{{getDescriptionContainerProjectLicense}}</label>
-                <div class="controls">
-                    <select name="{{license_type_label}}">
-                        {{#getAvailableLicenses}}
-                            <option value="{{license_type}}" {{#isSelected}}selected="selected"{{/isSelected}}>{{license_description}}</option>
-                        {{/getAvailableLicenses}}
-                    </select>
-                    <div class="custom_license_block">
-                        <textarea name="{{custom_license_label}}"
-                            wrap=virtual
-                            cols=60
-                            rows=10>{{getCustomLicense}}</textarea>
-                        <div class="help">{{getDescriptionContainerProjectLicenseHelp}}</div>
-                    </div>
-                </div>
-            </div>
-        </table>
+        </div>
 
         {{#hasMoreThanOneAvailableTemplate}}
             <h2>{{getChooseTemplateContainerTitle}}</h2>
