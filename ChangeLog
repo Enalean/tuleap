@@ -1,3 +1,7 @@
+Version 6.1 (Not Released Yet)
+	== Plugins ==
+	* docman: 2.26.16
+
 Version 6.0 (Monday, May 6th 2013)
     == Bux Fix ==
 	* Installation process now compatible with rhel6 as well as rhel5 and rhel5-php53
