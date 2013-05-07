@@ -350,8 +350,7 @@ class Project extends Group implements PFO_Project {
     }
 
     function canChangeSVNLog(){
-        return true;
-        return $this->project_data_array['can_change_svn_log'];
+        return $this->project_data_array['svn_can_change_log'];
     }
     
     function getSVNpreamble() {

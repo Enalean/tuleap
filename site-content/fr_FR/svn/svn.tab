@@ -18,16 +18,15 @@ svn_admin_access_control	invalid_line	La ligne "$1" est invalide
 # Script: SF/www/svn/admin/general_settings.php
 #
 svn_admin_general_settings	upd_success	Options générales mises à jour avec succès
-svn_admin_general_settings	upd_fail	La mise à jour des options générales a échoué&nbsp;
+svn_admin_general_settings	upd_fail	La mise à jour des options générales a échoué
 svn_admin_general_settings	gen_settings	Administration de Subversion  - Options générales
 svn_admin_general_settings	tracking	Suivi de Subversion
 svn_admin_general_settings	tracking_comment	Lorsque le suivi de Subversion est activé, les commits (modification, ajout ou suppression de fichiers ou répertoires) sont enregistrés dans la base de données $1 de façon à pouvoir les visualiser et  effectuer des recherches avancées. Dans le cas contraire aucune information n'est conservé dans la base de données ; vous disposez uniquement de l'historique Subversion.
 svn_admin_general_settings	mandatory_ref	Référence obligatoire dans le message de commit
 svn_admin_general_settings	mandatory_ref_comment	Lorsque l'option Référence obligatoire dans le message de commit est activée, le message de commit doit contenir au moins une référence (vers n'importe quel objet), sinon le commit sera refusé.
 svn_admin_general_settings	preamble	<h3>Préambule Subversion</h3><P>Message d'introduction sur l'utilisation de CVS en remplacement du message par défaut figurant sur la <a href="$1">page d'accueil de Subversion</a>. (balises HTML autorisées)
-svn_admin_general_settings	can_change_svn_log	Modification des messages de commit
-svn_admin_general_settings	can_change_svn_log_comment	Lorsque l'option Modification des messages de commit est activée, le message de commit peut être modifié (svn propset --revprop -r X svn:log)
-
+svn_admin_general_settings	svn_can_change_log	Modification des messages de commit
+svn_admin_general_settings	svn_can_change_log_comment	Lorsque l'option Modification des messages de commit est activée, le message de commit peut être modifié (svn propset --revprop -r X svn:log)
 #
 #-----------------------------------------------
 # Script: SF/www/svn/admin/index.php
