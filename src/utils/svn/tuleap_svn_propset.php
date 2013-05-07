@@ -19,18 +19,20 @@
 //
 
 include_once("pre.php");
+include_once("common/dao/SvnCommitsDao.class.php");
 
 $repository = $argv[1];
-$rev   = $argv[2];
+$revision   = $argv[2];
+
 // retrieve the group name from repository
 $unix_group_name = substr($repository, strlen($GLOBALS['svn_prefix'])+1);
 $group_id = group_getid_by_name($unix_group_name);
-//svnlook log /svnroot/nap -r1
-$logmsg = array();
-exec("/usr/bin/svnlook log '$repository' -r '$rev'", $logmsg);
-$logmsg = implode("\n", $logmsg);
 
-$query = "UPDATE svn_commits SET description='$logmsg'".
-         "WHERE group_id='$group_id' AND revision='$revision'";
+$logmsg = array();
+//svnlook log /svnroot/nap -r1
+exec("/usr/bin/svnlook log '$repository' -r '$revision'", $logmsg);
+$logmsg = implode("\n", $logmsg);
+$dao = new SvnCommitsDao();
+$dao->updateCommitMessage($group_id, $revision, $logmsg);
 
 ?>
