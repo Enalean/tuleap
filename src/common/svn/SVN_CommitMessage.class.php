@@ -24,14 +24,14 @@
 
 class SVN_CommitMessage {
 
-    /** @var ProjectManager */
-    private $project_manager;
+    /** @var SVN_Hooks */
+    private $svn_hooks;
 
     /** @var ReferenceManager */
     private $reference_manager;
 
-    public function __construct(ProjectManager $project_manager, ReferenceManager $reference_manager) {
-        $this->project_manager   = $project_manager;
+    public function __construct(SVN_Hooks $svn_hooks, ReferenceManager $reference_manager) {
+        $this->svn_hooks         = $svn_hooks;
         $this->reference_manager = $reference_manager;
     }
 
@@ -48,7 +48,7 @@ class SVN_CommitMessage {
      */
     public function assertCanBeModified($repository, $action, $propname, $commit_message) {
         $this->propsetIsOnLog($action, $propname);
-        $project = $this->getProjectFromRepositoryPath($repository);
+        $project = $this->svn_hooks->getProjectFromRepositoryPath($repository);
         $this->commitMessageCanBeModified($project);
         $this->commitMessageIsValid($project, $commit_message);
     }
@@ -75,25 +75,12 @@ class SVN_CommitMessage {
             }
         }
     }
-
-    private function getProjectFromRepositoryPath($repository_path) {
-        $unix_group_name = substr($repository_path, strlen(Config::get('svn_prefix')) + 1);
-        $project = $this->project_manager->getProjectByUnixName($unix_group_name);
-        if ($project && !$project->isError() && !$project->isDeleted()) {
-            return $project;
-        }
-        throw new Exception('Invalid project');
-    }
-
 }
 
 class SVN_CommitMessageUpdate {
 
-    /** @var ProjectManager */
-    private $project_manager;
-
-    /** @var UserManager */
-    private $user_manager;
+    /** @var SVN_Hooks */
+    private $svn_hooks;
 
     /** @var ReferenceManager */
     private $reference_manager;
@@ -101,9 +88,8 @@ class SVN_CommitMessageUpdate {
     /** @var SvnCommitsDao */
     private $dao;
 
-    public function __construct(ProjectManager $project_manager, UserManager $user_manager, ReferenceManager $reference_manager, SvnCommitsDao $dao) {
-        $this->project_manager   = $project_manager;
-        $this->user_manager      = $user_manager;
+    public function __construct(SVN_Hooks $svn_hooks, ReferenceManager $reference_manager, SvnCommitsDao $dao) {
+        $this->svn_hooks         = $svn_hooks;
         $this->reference_manager = $reference_manager;
         $this->dao               = $dao;
     }
@@ -116,13 +102,13 @@ class SVN_CommitMessageUpdate {
      *
      * @param String $repository_path
      * @param String $revision
-     * @param String $user
+     * @param String $user_name
      * @param String $old_commit_message
      */
-    public function update($repository_path, $revision, $user, $old_commit_message) {
-        $project = $this->getProjectFromRepositoryPath($repository_path);
-        $user    = $this->getUserByName($user);
-        $message = $this->getMessageFromRevision($repository_path, $revision);
+    public function update($repository_path, $revision, $user_name, $old_commit_message) {
+        $project = $this->svn_hooks->getProjectFromRepositoryPath($repository_path);
+        $user    = $this->svn_hooks->getUserByName($user_name);
+        $message = $this->svn_hooks->getMessageFromRevision($repository_path, $revision);
         $this->dao->updateCommitMessage($project->getID(), $revision, $message);
         $this->removePreviousCrossReferences($project, $revision, $old_commit_message);
         // Marvelous, extractCrossRef depends on globals group_id to find the group
@@ -159,22 +145,35 @@ class SVN_CommitMessageUpdate {
             }
         }
     }
+}
 
-    private function getProjectFromRepositoryPath($repository_path) {
+class SVN_Hooks {
+    /** @var ProjectManager */
+    private $project_manager;
+
+    /** @var UserManager */
+    private $user_manager;
+
+    public function __construct(ProjectManager $project_manager, UserManager $user_manager) {
+        $this->project_manager = $project_manager;
+        $this->user_manager    = $user_manager;
+    }
+
+    public function getUserByName($user_name) {
+        $user = $this->user_manager->getUserByUserName($user_name);
+        if ($user && $user->isAlive()) {
+            return $user;
+        }
+        throw new Exception('Invalid user');
+    }
+
+    public function getProjectFromRepositoryPath($repository_path) {
         $unix_group_name = substr($repository_path, strlen(Config::get('svn_prefix')) + 1);
         $project = $this->project_manager->getProjectByUnixName($unix_group_name);
         if ($project && !$project->isError() && !$project->isDeleted()) {
             return $project;
         }
         throw new Exception('Invalid project');
-    }
-
-    private function getUserByName($user_name) {
-        $user = $this->user_manager->getUserByUserName($user_name);
-        if ($user && $user->isAlive()) {
-            return $user;
-        }
-        throw new Exception('Invalid user');
     }
 
     public function getMessageFromTransaction($repository, $txn) {

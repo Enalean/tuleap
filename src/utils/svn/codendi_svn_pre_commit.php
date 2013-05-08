@@ -1,35 +1,48 @@
 <?php
-
 /**
- * PHP file called by the pre-commit hook
+ * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 try {
-    include_once("pre.php");
-    include_once("common/reference/ReferenceManager.class.php");
+    require_once 'pre.php';
+    require_once 'common/reference/ReferenceManager.class.php';
 
     $repository = $argv[1];
-    // retrieve the group name from repository
-    $unix_group_name = substr($repository, strlen($GLOBALS['svn_prefix'])+1);
-    $group_id = group_getid_by_name($unix_group_name);
-    $project = new Project($group_id);
+    $txn        = $argv[2];
+
+    $svn_hooks = new SVN_Hooks(ProjectManager::instance(), UserManager::instance());
+    $project   = $svn_hooks->getProjectFromRepositoryPath($repository);
 
     if ($project->isSVNMandatoryRef()) {
-        $ref_manager = ReferenceManager::instance();
-
-        $txn = $argv[2];
-        $logmsg = array();
-        exec("/usr/bin/svnlook log -t '$txn' '$repository'", $logmsg);
-        $logmsg = implode("\n", $logmsg);
-
-        if (! $ref_manager->stringContainsReferences($logmsg, $project)) {
-            // No reference has been found: commit is rejected
-            fwrite(STDERR, "\nYou must make at least one reference in the commit message.\n".$unix_group_name);
+        $reference_manager = ReferenceManager::instance();
+        $commit_message    = $svn_hooks->getMessageFromTransaction($repository, $txn);
+        if (! $reference_manager->stringContainsReferences($commit_message, $project)) {
+            fwrite(STDERR, "You must make at least one reference in the commit message");
             exit(1);
         }
     }
-} catch (DataAccessException $e) {
-    fwrite (STDERR, $e->getMessage());
+    exit(0);
+} catch (Exception $exeption) {
+    fwrite (STDERR, $exeption->getMessage());
     exit(1);
 }
 ?>
