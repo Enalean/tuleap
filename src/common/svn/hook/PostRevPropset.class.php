@@ -22,64 +22,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'SVN_Hooks.class.php';
+require_once 'common/dao/SvnCommitsDao.class.php';
+require_once 'common/svn/SVN_Hooks.class.php';
 
-class SVN_CommitMessage {
-
-    /** @var SVN_Hooks */
-    private $svn_hooks;
-
-    /** @var ReferenceManager */
-    private $reference_manager;
-
-    public function __construct(SVN_Hooks $svn_hooks, ReferenceManager $reference_manager) {
-        $this->svn_hooks         = $svn_hooks;
-        $this->reference_manager = $reference_manager;
-    }
-
-    /**
-     * Be careful due to a svn bug, this method will be call twice by svn server <= 1.7
-     * The first time with the new commit_message as expected
-     * The second time with the OLD commit message (oh yeah baby!)
-     * http://subversion.tigris.org/issues/show_bug.cgi?id=3085
-     *
-     * @param String $repository
-     * @param String $action
-     * @param String $propname
-     * @param String $commit_message
-     */
-    public function assertCanBeModified($repository, $action, $propname, $commit_message) {
-        $this->propsetIsOnLog($action, $propname);
-        $project = $this->svn_hooks->getProjectFromRepositoryPath($repository);
-        $this->commitMessageCanBeModified($project);
-        $this->commitMessageIsValid($project, $commit_message);
-    }
-
-    private function propsetIsOnLog($action, $propname) {
-        if (! ($action == 'M' && $propname == 'svn:log')) {
-            throw new Exception('Cannot modify anything but svn:log');
-        }
-    }
-
-    private function commitMessageCanBeModified(Project $project) {
-        if (! $project->canChangeSVNLog()) {
-            throw new Exception('Project forbid to change log messages');
-        }
-    }
-
-    private function commitMessageIsValid(Project $project, $commit_message) {
-        if ($project->isSVNMandatoryRef()) {
-            // Marvelous, extractCrossRef depends on globals group_id to find the group
-            // when it's not explicit... yeah!
-            $GLOBALS['group_id'] = $project->getID();
-            if (! $this->reference_manager->stringContainsReferences($commit_message, $project)) {
-                throw new Exception('Commit message must contains references');
-            }
-        }
-    }
-}
-
-class SVN_CommitMessageUpdate {
+class SVN_Hook_PostRevPropset {
 
     /** @var SVN_Hooks */
     private $svn_hooks;

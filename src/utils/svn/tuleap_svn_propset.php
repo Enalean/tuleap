@@ -27,16 +27,15 @@
 try {
     ini_set('include_path', '/usr/share/pear:/usr/share/codendi/src/www/include:/usr/share/codendi/src:.');
 
-    require_once "pre.php";
-    require_once "common/dao/SvnCommitsDao.class.php";
-    require_once 'common/svn/SVN_CommitMessage.class.php';
+    require_once 'pre.php';
+    require_once 'common/svn/hook/PostRevPropset.class.php';
 
     $repository         = $argv[1];
     $revision           = $argv[2];
     $user               = $argv[3];
     $old_commit_message = stream_get_contents(STDIN);
 
-    $svn_commit_message = new SVN_CommitMessageUpdate(
+    $svn_commit_message = new SVN_Hook_PostRevPropset(
         new SVN_Hooks(ProjectManager::instance(), UserManager::instance()),
         ReferenceManager::instance(),
         new SvnCommitsDao()
