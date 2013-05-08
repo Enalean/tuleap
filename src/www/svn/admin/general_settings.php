@@ -35,6 +35,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
 
         $ret = svn_data_update_general_settings($group_id,$form_tracked,$form_preamble,$form_mandatory_ref, $form_can_change_svn_log);
         if ($ret) {
+            EventManager::instance()->processEvent(Event::SVN_UPDATE_HOOKS, array('group_id' => $group_id));
             $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_general_settings','upd_success'));
         } else {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_general_settings','upd_fail'));
