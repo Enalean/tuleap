@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'SVN_Hooks.class.php';
+
 class SVN_CommitMessage {
 
     /** @var SVN_Hooks */
@@ -144,50 +146,6 @@ class SVN_CommitMessageUpdate {
                 $this->reference_manager->removeCrossReference($cross_reference);
             }
         }
-    }
-}
-
-class SVN_Hooks {
-    /** @var ProjectManager */
-    private $project_manager;
-
-    /** @var UserManager */
-    private $user_manager;
-
-    public function __construct(ProjectManager $project_manager, UserManager $user_manager) {
-        $this->project_manager = $project_manager;
-        $this->user_manager    = $user_manager;
-    }
-
-    public function getUserByName($user_name) {
-        $user = $this->user_manager->getUserByUserName($user_name);
-        if ($user && $user->isAlive()) {
-            return $user;
-        }
-        throw new Exception('Invalid user');
-    }
-
-    public function getProjectFromRepositoryPath($repository_path) {
-        $unix_group_name = substr($repository_path, strlen(Config::get('svn_prefix')) + 1);
-        $project = $this->project_manager->getProjectByUnixName($unix_group_name);
-        if ($project && !$project->isError() && !$project->isDeleted()) {
-            return $project;
-        }
-        throw new Exception('Invalid project');
-    }
-
-    public function getMessageFromTransaction($repository, $txn) {
-        return $this->getMessageFromSvnLook("-t '$txn' '$repository'");
-    }
-
-    public function getMessageFromRevision($repository, $revision) {
-        return $this->getMessageFromSvnLook("'$repository' -r '$revision'");
-    }
-
-    private function getMessageFromSvnLook($parameters) {
-        $logmsg = array();
-        exec("/usr/bin/svnlook log $parameters", $logmsg);
-        return implode("\n", $logmsg);
     }
 }
 

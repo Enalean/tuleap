@@ -25,6 +25,7 @@
 try {
     require_once 'pre.php';
     require_once 'common/reference/ReferenceManager.class.php';
+    require_once 'common/svn/SVN_Hooks.class.php';
 
     $repository = $argv[1];
     $txn        = $argv[2];
