@@ -32,13 +32,6 @@ class DivBasedTabbedLayout extends Layout
      * @var		string	$imgroot
      */
     var $imgroot;
-	
-    /**
-     * Codendi html purifier
-     *
-     * @var		Codendi_HTMLPurifier	$purifier
-     */
-    var $purifier;
 
 	/**
 	 * DivBasedTabbedLayout - Constructor
@@ -47,7 +40,6 @@ class DivBasedTabbedLayout extends Layout
         // Parent constructor
         parent::__construct($root);
         $this->imgroot = $root.'/images/';
-        $this->purifier = Codendi_HTMLPurifier::instance();
     }
 
 	/**

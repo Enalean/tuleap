@@ -21,20 +21,6 @@
 require_once('Layout.class.php');
 class TabbedLayout extends Layout {
 
-    
-    /**
-     * Codendi html purifier
-     * 
-     * @var	    Codendi_HTMLPurifier    $purifier
-     */
-    var $purifier;
-
-    function __construct($root) {
-        // Parent constructor
-        parent::__construct($root);
-        $this->purifier = Codendi_HTMLPurifier::instance();
-    }
-
 	/**
 	 *	createLinkToUserHome() - Creates a link to a user's home page	
 	 * 
