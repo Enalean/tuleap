@@ -35,6 +35,17 @@ class SVN_CommitMessage {
         $this->reference_manager = $reference_manager;
     }
 
+    /**
+     * Be careful due to a svn bug, this method will be call twice by svn server <= 1.7
+     * The first time with the new commit_message as expected
+     * The second time with the OLD commit message (oh yeah baby!)
+     * http://subversion.tigris.org/issues/show_bug.cgi?id=3085
+     *
+     * @param String $repository
+     * @param String $action
+     * @param String $propname
+     * @param String $commit_message
+     */
     public function assertCanBeModified($repository, $action, $propname, $commit_message) {
         $this->propsetIsOnLog($action, $propname);
         $project = $this->getProjectFromRepositoryPath($repository);
@@ -60,7 +71,7 @@ class SVN_CommitMessage {
             // when it's not explicit... yeah!
             $GLOBALS['group_id'] = $project->getID();
             if (! $this->reference_manager->stringContainsReferences($commit_message, $project)) {
-                throw new Exception('Commit message must contains references.');
+                throw new Exception('Commit message must contains references');
             }
         }
     }
@@ -97,6 +108,16 @@ class SVN_CommitMessageUpdate {
         $this->dao               = $dao;
     }
 
+    /**
+     * Be careful due to a svn bug, this method will be call twice by svn server <= 1.7
+     * The first time with the new commit_message as expected
+     * The second time with the OLD commit message (oh yeah baby!)
+     * http://subversion.tigris.org/issues/show_bug.cgi?id=3085
+     *
+     * @param String $repository_path
+     * @param String $revision
+     * @param String $user
+     */
     public function update($repository_path, $revision, $user) {
         $project = $this->getProjectFromRepositoryPath($repository_path);
         $user    = $this->getUserByName($user);
