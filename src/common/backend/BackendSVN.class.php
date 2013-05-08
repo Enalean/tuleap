@@ -616,8 +616,15 @@ class BackendSVN extends Backend {
     }
 
     private function enableCommitMessageUpdate($unix_group_name) {
-        symlink($GLOBALS['codendi_dir'].'/src/utils/svn/pre-revprop-change', $this->getHookPath($unix_group_name, 'pre-revprop-change'));
-        symlink($GLOBALS['codendi_dir'].'/src/utils/svn/tuleap_svn_propset.php', $this->getHookPath($unix_group_name, 'post-revprop-change'));
+        $this->enableHook($unix_group_name, 'pre-revprop-change', $GLOBALS['codendi_dir'].'/src/utils/svn/pre-revprop-change.php');
+        $this->enableHook($unix_group_name, 'post-revprop-change', $GLOBALS['codendi_dir'].'/src/utils/svn/post-revprop-change.php');
+    }
+
+    private function enableHook($unix_group_name, $hook_name, $source_tool) {
+        $path = $this->getHookPath($unix_group_name, $hook_name);
+        if (! is_file($path) && ! is_link($path)) {
+            symlink($source_tool, $path);
+        }
     }
 
     private function disableCommitMessageUpdate($unix_group_name) {
