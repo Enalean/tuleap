@@ -22,27 +22,27 @@ require_once('Layout.class.php');
 class TabbedLayout extends Layout {
 
     
-	/**
+    /**
      * Codendi html purifier
      * 
      * @var	    Codendi_HTMLPurifier    $purifier
      */
     var $purifier;
-    
+
     function __construct($root) {
         // Parent constructor
         parent::__construct($root);
         $this->purifier = Codendi_HTMLPurifier::instance();
     }
-	
+
 	/**
 	 *	createLinkToUserHome() - Creates a link to a user's home page	
 	 * 
 	 *	@param	string	The user's user_name
 	 *	@param	string	The user's realname
 	 */
-	function createLinkToUserHome($user_name, $realname) {        
-        return '<a href="/users/'.$user_name.'/">'. $this->purifier->purify($realname, CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
+	function createLinkToUserHome($user_name, $realname) {
+            return '<a href="/users/'.$user_name.'/">'. $this->purifier->purify($realname, CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
 	}
     
     function getBodyHeader($params) {

@@ -26,30 +26,29 @@ require_once('common/layout/Layout.class.php');
 
 class DivBasedTabbedLayout extends Layout
 {
-	/**
-	 * The root location for images
-	 *
-	 * @var		string	$imgroot
-	 */
-	var $imgroot;
+    /**
+     * The root location for images
+     *
+     * @var		string	$imgroot
+     */
+    var $imgroot;
 	
-	/**
-	 * Codendi html purifier
-	 *
-	 * @var		Codendi_HTMLPurifier	$purifier
-	 */
-	var $purifier;
-	
+    /**
+     * Codendi html purifier
+     *
+     * @var		Codendi_HTMLPurifier	$purifier
+     */
+    var $purifier;
+
 	/**
 	 * DivBasedTabbedLayout - Constructor
 	 */
-	function __construct($root) 
-	{
+	function __construct($root) {
         // Parent constructor
         parent::__construct($root);
         $this->imgroot = $root.'/images/';
         $this->purifier = Codendi_HTMLPurifier::instance();
-	}
+    }
 
 	/**
 	 *	createLinkToUserHome() - Creates a link to a user's home page	
@@ -58,7 +57,7 @@ class DivBasedTabbedLayout extends Layout
 	 *	@param	string	The user's realname
 	 */
 	function createLinkToUserHome($user_name, $realname) {
-		return '<a href="/users/'.$user_name.'/">'.$this->purifier->purify($realname, CODENDI_PURIFIER_CONVERT_HTML).'</a>';
+        return '<a href="/users/'.$user_name.'/">'.$this->purifier->purify($realname, CODENDI_PURIFIER_CONVERT_HTML).'</a>';
 	}
     
     function getBodyHeader($params) {
