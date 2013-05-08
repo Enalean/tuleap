@@ -34,10 +34,10 @@ class DivBasedTabbedLayout extends Layout
 	var $imgroot;
 	
 	/**
-	 * 	 * Codendi html purifier
-	 * 	 *
-	 *	 * @var		Codendi_HTMLPurifier	$purifier
-	 *	 */
+	 * Codendi html purifier
+	 *
+	 * @var		Codendi_HTMLPurifier	$purifier
+	 */
 	var $purifier;
 	
 	/**
