@@ -21,16 +21,28 @@
 require_once('Layout.class.php');
 class TabbedLayout extends Layout {
 
-
+    
+	/**
+     * Codendi html purifier
+     * 
+     * @var	    Codendi_HTMLPurifier    $purifier
+     */
+    var $purifier;
+    
+    function __construct($root) {
+        // Parent constructor
+        parent::__construct($root);
+        $this->purifier = Codendi_HTMLPurifier::instance();
+    }
+	
 	/**
 	 *	createLinkToUserHome() - Creates a link to a user's home page	
 	 * 
 	 *	@param	string	The user's user_name
 	 *	@param	string	The user's realname
 	 */
-	function createLinkToUserHome($user_name, $realname) {
-        $hp = Codendi_HTMLPurifier::instance();
-		return '<a href="/users/'.$user_name.'/">'. $hp->purify($realname, CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
+	function createLinkToUserHome($user_name, $realname) {        
+        return '<a href="/users/'.$user_name.'/">'. $this->purifier->purify($realname, CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
 	}
     
     function getBodyHeader($params) {
@@ -572,6 +584,7 @@ if (isset($params['group']) && $params['group']) {
             $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$atid\" NAME=\"atid\">\n";
         } 
         if ( isset($forum_id) ) {
+            $forum_id = $this->purifier->purify($forum_id, CODENDI_PURIFIER_CONVERT_HTML);
             $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$forum_id\" NAME=\"forum_id\">\n";
         } 
         if ( isset($is_bug_page) ) {
