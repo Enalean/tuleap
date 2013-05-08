@@ -34,6 +34,13 @@ class DivBasedTabbedLayout extends Layout
 	var $imgroot;
 	
 	/**
+	 * 	 * Codendi html purifier
+	 * 	 *
+	 *	 * @var		Codendi_HTMLPurifier	$purifier
+	 *	 */
+	var $purifier;
+	
+	/**
 	 * DivBasedTabbedLayout - Constructor
 	 */
 	function __construct($root) 
@@ -41,6 +48,7 @@ class DivBasedTabbedLayout extends Layout
         // Parent constructor
         parent::__construct($root);
         $this->imgroot = $root.'/images/';
+        $this->purifier = Codendi_HTMLPurifier::instance();
 	}
 
 	/**
@@ -50,8 +58,7 @@ class DivBasedTabbedLayout extends Layout
 	 *	@param	string	The user's realname
 	 */
 	function createLinkToUserHome($user_name, $realname) {
-	    $hp = Codendi_HTMLPurifier::instance();
-		return '<a href="/users/'.$user_name.'/">'.$hp->purify($realname, CODENDI_PURIFIER_CONVERT_HTML).'</a>';
+		return '<a href="/users/'.$user_name.'/">'.$this->purifier->purify($realname, CODENDI_PURIFIER_CONVERT_HTML).'</a>';
 	}
     
     function getBodyHeader($params) {
@@ -503,7 +510,8 @@ echo $this->outerTabs($params);
             $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$atid\" NAME=\"atid\">\n";
         } 
         if ( isset($forum_id) ) {
-            $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$forum_id\" NAME=\"forum_id\">\n";
+            $forum_id = $this->purifier->purify($forum_id, CODENDI_PURIFIER_CONVERT_HTML);
+            $output   = "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$forum_id\" NAME=\"forum_id\">\n";
         } 
         if ( isset($is_bug_page) ) {
            $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_bug_page\" NAME=\"is_bug_page\">\n";
