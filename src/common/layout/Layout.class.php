@@ -126,8 +126,8 @@ class Layout extends Response {
         $this->bgpri[8] = 'priorh';
         $this->bgpri[9] = 'priori';
         
-        $this->root    = $root;
-        $this->imgroot = $root . '/images/';
+        $this->root     = $root;
+        $this->imgroot  = $root . '/images/';
         $this->purifier = Codendi_HTMLPurifier::instance();
     }
     
