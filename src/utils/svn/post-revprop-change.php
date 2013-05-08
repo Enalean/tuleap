@@ -25,8 +25,7 @@
 
 
 try {
-    ini_set('include_path', '/usr/share/pear:/usr/share/codendi/src/www/include:/usr/share/codendi/src:.');
-
+    require_once 'env.inc.php';
     require_once 'pre.php';
     require_once 'common/svn/hook/PostRevPropset.class.php';
 
