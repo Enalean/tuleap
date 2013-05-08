@@ -117,12 +117,14 @@ class SVN_CommitMessageUpdate {
      * @param String $repository_path
      * @param String $revision
      * @param String $user
+     * @param String $old_commit_message
      */
-    public function update($repository_path, $revision, $user) {
+    public function update($repository_path, $revision, $user, $old_commit_message) {
         $project = $this->getProjectFromRepositoryPath($repository_path);
         $user    = $this->getUserByName($user);
         $message = $this->getMessageFromRevision($repository_path, $revision);
         $this->dao->updateCommitMessage($project->getID(), $revision, $message);
+        $this->removePreviousCrossReferences($project, $revision, $old_commit_message);
         // Marvelous, extractCrossRef depends on globals group_id to find the group
         // when it's not explicit... yeah!
         $GLOBALS['group_id'] = $project->getID();
@@ -133,6 +135,29 @@ class SVN_CommitMessageUpdate {
             $project->getID(),
             $user->getId()
         );
+    }
+
+    private function removePreviousCrossReferences(Project $project, $revision, $old_commit_message) {
+        $GLOBALS['group_id'] = $project->getID();
+        $references = $this->reference_manager->extractReferences($old_commit_message, $project->getID());
+        foreach ($references as $reference_instance) {
+            /* @var $reference Reference */
+            $reference = $reference_instance->getReference();
+            if ($reference) {
+                $cross_reference = new CrossReference(
+                    $revision,
+                    $project->getID(),
+                    ReferenceManager::REFERENCE_NATURE_SVNREVISION,
+                    '',
+                    $reference_instance->getValue(),
+                    $reference->getGroupId(),
+                    $reference->getNature(),
+                    '',
+                    ''
+                );
+                $this->reference_manager->removeCrossReference($cross_reference);
+            }
+        }
     }
 
     private function getProjectFromRepositoryPath($repository_path) {

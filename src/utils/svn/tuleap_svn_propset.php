@@ -26,9 +26,10 @@ try {
     require_once "common/dao/SvnCommitsDao.class.php";
     require_once 'common/svn/SVN_CommitMessage.class.php';
 
-    $repository = $argv[1];
-    $revision   = $argv[2];
-    $user       = $argv[3];
+    $repository         = $argv[1];
+    $revision           = $argv[2];
+    $user               = $argv[3];
+    $old_commit_message = stream_get_contents(STDIN);
 
     $svn_commit_message = new SVN_CommitMessageUpdate(
         ProjectManager::instance(),
@@ -36,7 +37,7 @@ try {
         ReferenceManager::instance(),
         new SvnCommitsDao()
     );
-    $svn_commit_message->update($repository, $revision, $user);
+    $svn_commit_message->update($repository, $revision, $user, $old_commit_message);
     exit(0);
 } catch(Exception $e) {
     fwrite(STDERR, $e->getMessage().PHP_EOL);
