@@ -1,3 +1,4 @@
+#!/usr/bin/php
 <?php
 
 //Copyright (c) Enalean, 2013. All Rights Reserved.
@@ -18,8 +19,10 @@
 //along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 //
 
-include_once("pre.php");
-include_once("common/dao/SvnCommitsDao.class.php");
+ini_set('include_path', '/usr/share/pear:/usr/share/codendi/src/www/include:/usr/share/codendi/src:.');
+
+require_once "pre.php";
+require_once "common/dao/SvnCommitsDao.class.php";
 
 $repository = $argv[1];
 $revision   = $argv[2];

@@ -4,6 +4,7 @@
 ini_set('include_path', '/usr/share/pear:/usr/share/codendi/src/www/include:/usr/share/codendi/src:.');
 require_once 'pre.php';
 
+
 $propname           = $argv[4];
 $action             = $argv[5];
 $new_commit_message = file_get_contents("php://stdin");
@@ -11,6 +12,8 @@ $new_commit_message = file_get_contents("php://stdin");
 if ($action == 'M' && $propname == 'svn:log') {
     exit(0);
 }
+
+fwrite(STDERR, "Cannot change commit message\n");
 exit(1);
 
 ?>

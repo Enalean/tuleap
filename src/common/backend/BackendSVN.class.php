@@ -221,7 +221,9 @@ class BackendSVN extends Backend {
         }
 
         if ($project->canChangeSVNLog()) {
-            $this->createRevpropChangeFiles($unix_group_name);
+            $this->enableCommitMessageUpdate($unix_group_name);
+        } else {
+            $this->disableCommitMessageUpdate($unix_group_name);
         }
         
         return true;
@@ -613,114 +615,25 @@ class BackendSVN extends Backend {
         return rename($GLOBALS['svn_prefix'].'/'.$project->getUnixName(false), $GLOBALS['svn_prefix'].'/'.$newName);
     }
 
-    private function createRevpropChangeFiles($unix_group_name) {
-//        // Put in place the Tuleap svn pre-revprop-change hook
-        exec('ln -s '.$GLOBALS['codendi_bin_prefix'].'/pre-revprop-change /svnroot/'.$unix_group_name.'/hooks/');
-        //exec('ln -s '.$GLOBALS['codendi_bin_prefix'].'/post-revprop-change /svnroot/'.$unix_group_name.'/hooks/');
-
-        exec('chown -h '.$this->getHTTPUser().':'.$unix_group_name.' pre-revprop-change');
-        chmod("pre-revprop-change", 0775);
-//        // if not present (if the file does not exist it is created)
-//        $filename = "$svn_dir/hooks/pre-revprop-change";
-//        $update_hook = false;
-//        if (! is_file($filename)) {
-//            // File header
-//            $fp = fopen($filename, 'w');
-//            fwrite($fp,'#!/bin/sh'.PHP_EOL);
-//            fwrite($fp,'# PRE-REVPROP-CHANGE HOOK'.PHP_EOL);
-//            fwrite($fp,'#'.PHP_EOL);
-//            fwrite($fp,'# The pre-revprop-change hook is invoked before a revision property'.PHP_EOL);
-//            fwrite($fp,'# is added, modified or deleted.  Subversion runs this hook by invoking'.PHP_EOL);
-//            fwrite($fp,'# a program (script, executable, binary, etc.) named \'pre-revprop-change\''.PHP_EOL);
-//            fwrite($fp,'# (for which this file is a template), with the following ordered'.PHP_EOL);
-//            fwrite($fp,'# arguments:'.PHP_EOL);
-//            fwrite($fp,'#'.PHP_EOL);
-//            fwrite($fp,'#   [1] REPOS-PATH   (the path to this repository)'.PHP_EOL);
-//            fwrite($fp,'#   [2] REVISION     (the revision being tweaked)'.PHP_EOL);
-//            fwrite($fp,'#   [3] USER         (the username of the person tweaking the property)'.PHP_EOL);
-//            fwrite($fp,'#   [4] PROPNAME     (the property being set on the revision)'.PHP_EOL);
-//            fwrite($fp,'#   [5] ACTION       (the property is being \'A\'dded, \'M\'odified, or \'D\'eleted)'.PHP_EOL);
-//            fwrite($fp,'#'.PHP_EOL);
-//            fwrite($fp,'#   [STDIN] PROPVAL  ** the new property value is passed via STDIN.'.PHP_EOL);
-//            fwrite($fp,'#'.PHP_EOL);
-//            fwrite($fp,'# If the hook program exits with success, the propchange happens; but'.PHP_EOL);
-//            fwrite($fp,'# if it exits with failure (non-zero), the propchange doesn\'t happen.'.PHP_EOL);
-//            fwrite($fp,'# The hook program can use the \'svnlook\' utility to examine the'.PHP_EOL);
-//            fwrite($fp,'# existing value of the revision property.'.PHP_EOL);
-//            fwrite($fp,'#'.PHP_EOL);
-//            $update_hook=true;
-//        } else {
-//            $file_array=file($filename);
-//            if (!in_array($this->tuleap_block_marker_start, $file_array)) {
-//                $update_hook=true;
-//            }
-//        }
-//
-//        if ($update_hook) {
-//            $command  = 'REPOS="$1"'."\n";
-//            $command .= 'REV="$2"'."\n";
-//            $command .= 'USER="$3"'."\n";
-//            $command .= 'PROPNAME="$4"'."\n";
-//            $command .= 'ACTION="$5"'."\n";
-//            $command .= 'if [ "$ACTION" = "M" -a "$PROPNAME" = "svn:log" ]; then exit 0; fi'."\n";
-//            $command .= 'echo "Changing revision properties other than svn:log is prohibited" >&2'."\n";
-//            $command .= 'exit 1'."\n";
-//            $this->addTuleapBlock($filename, $command);
-//            $this->chown($filename, $this->getHTTPUser());
-//            $this->chgrp($filename, $unix_group_name);
-//            chmod("$filename", 0775);
-//        }
+    private function enableCommitMessageUpdate($unix_group_name) {
+        symlink($GLOBALS['codendi_dir'].'/src/utils/pre-revprop-change', $this->getHookPath($unix_group_name, 'pre-revprop-change'));
+        symlink($GLOBALS['codendi_dir'].'/src/utils/tuleap_svn_propset.php', $this->getHookPath($unix_group_name, 'post-revprop-change'));
     }
 
-    private function createPostRevpropChangeFile($unix_group_name) {
-//        // Put in place the Tuleap svn post-revprop-change hook
-//        // if not present (if the file does not exist it is created)
-//        $filename = "$svn_dir/hooks/post-revprop-change";
-//        $update_hook = false;
-//        if (! is_file($filename)) {
-//            // File header
-//            $fp = fopen($filename, 'w');
-//
-//            fwrite($fp,'#!/bin/sh'.PHP_EOL);
-//            fwrite($fp,'# PRE-REVPROP-CHANGE HOOK'.PHP_EOL);
-//            fwrite($fp,'#'.PHP_EOL);
-//            fwrite($fp,'# The pre-revprop-change hook is invoked before a revision property'.PHP_EOL);
-//            fwrite($fp,'# is added, modified or deleted.  Subversion runs this hook by invoking'.PHP_EOL);
-//            fwrite($fp,'# a program (script, executable, binary, etc.) named \'pre-revprop-change\''.PHP_EOL);
-//            fwrite($fp,'# (for which this file is a template), with the following ordered'.PHP_EOL);
-//            fwrite($fp,'# arguments:'.PHP_EOL);
-//            fwrite($fp,'#'.PHP_EOL);
-//            fwrite($fp,'#   [1] REPOS-PATH   (the path to this repository)'.PHP_EOL);
-//            fwrite($fp,'#   [2] REVISION     (the revision being tweaked)'.PHP_EOL);
-//            fwrite($fp,'#   [3] USER         (the username of the person tweaking the property)'.PHP_EOL);
-//            fwrite($fp,'#   [4] PROPNAME     (the property being set on the revision)'.PHP_EOL);
-//            fwrite($fp,'#   [5] ACTION       (the property is being \'A\'dded, \'M\'odified, or \'D\'eleted)'.PHP_EOL);
-//            fwrite($fp,'#'.PHP_EOL);
-//            fwrite($fp,'#   [STDIN] PROPVAL  ** the new property value is passed via STDIN.'.PHP_EOL);
-//            fwrite($fp,'#'.PHP_EOL);
-//            fwrite($fp,'# If the hook program exits with success, the propchange happens; but'.PHP_EOL);
-//            fwrite($fp,'# if it exits with failure (non-zero), the propchange doesn\'t happen.'.PHP_EOL);
-//            fwrite($fp,'# The hook program can use the \'svnlook\' utility to examine the'.PHP_EOL);
-//            fwrite($fp,'# existing value of the revision property.'.PHP_EOL);
-//            fwrite($fp,'#'.PHP_EOL);
-//            $update_hook=true;
-//        } else {
-//            $file_array=file($filename);
-//            if (!in_array($this->tuleap_block_marker_start, $file_array)) {
-//                $update_hook=true;
-//            }
-//        }
-//
-//        if ($update_hook) {
-//            $command  = 'REPOS="$1"'.PHP_EOL;
-//            $command .= 'REV="$2"'.PHP_EOL;
-//            $command .= $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$GLOBALS['codendi_bin_prefix'].'/tuleap_svn_propset.php "$REPOS" "$REV" || exit 1'.PHP_EOL;
-//            $this->addTuleapBlock($filename, $command);
-//            $this->chown($filename, $this->getHTTPUser());
-//            $this->chgrp($filename, $unix_group_name);
-//            chmod("$filename", 0775);
-//        }
+    private function disableCommitMessageUpdate($unix_group_name) {
+        $this->deleteHook($unix_group_name, 'pre-revprop-change');
+        $this->deleteHook($unix_group_name, 'post-revprop-change');
+    }
 
+    private function deleteHook($unix_group_name, $hook_name) {
+        $path = $this->getHookPath($unix_group_name, $hook_name);
+        if (file_exists($path)) {
+            unlink($path);
+        }
+    }
+
+    private function getHookPath($unix_group_name, $hook_name) {
+        return $GLOBALS['svn_prefix'].'/'.$unix_group_name.'/hooks/'.$hook_name;
     }
 }
 

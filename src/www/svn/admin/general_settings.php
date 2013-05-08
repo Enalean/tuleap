@@ -42,6 +42,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     } else {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_general_settings','upd_fail'));
     }
+    $GLOBALS['Response']->redirect('/svn/admin/?func=general_settings&group_id='.$group_id);
 }
 
 // Note: no need to purify the output since the svn preamble is stored
