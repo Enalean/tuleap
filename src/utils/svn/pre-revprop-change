@@ -1,19 +1,22 @@
 #!/usr/bin/php
 <?php
 
-ini_set('include_path', '/usr/share/pear:/usr/share/codendi/src/www/include:/usr/share/codendi/src:.');
-require_once 'pre.php';
+try {
+    ini_set('include_path', '/usr/share/pear:/usr/share/codendi/src/www/include:/usr/share/codendi/src:.');
+    require_once 'pre.php';
+    require_once 'common/svn/SVN_CommitMessage.class.php';
 
+    $repository         = $argv[1];
+    $propname           = $argv[4];
+    $action             = $argv[5];
+    $new_commit_message = stream_get_contents(STDIN);
 
-$propname           = $argv[4];
-$action             = $argv[5];
-$new_commit_message = file_get_contents("php://stdin");
-
-if ($action == 'M' && $propname == 'svn:log') {
+    $svn_commit_message = new SVN_CommitMessage(ProjectManager::instance(), ReferenceManager::instance());
+    $svn_commit_message->assertCanBeModified($repository, $action, $propname, $new_commit_message);
     exit(0);
+} catch(Exception $e) {
+    fwrite(STDERR, $e->getMessage().PHP_EOL);
+    exit(1);
 }
-
-fwrite(STDERR, "Cannot change commit message\n");
-exit(1);
 
 ?>

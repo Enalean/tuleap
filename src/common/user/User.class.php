@@ -752,10 +752,20 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     function getConfirmHash() {
          return $this->confirm_hash; 
     }
-    
+
     /**
-     * isActive - test if the user is active or not
-     * 
+     * Return true if user is active or restricted.
+     *
+     * @return Boolean
+     */
+    public function isAlive() {
+        return ! $this->isAnonymous() && ($this->isActive() || $this->isRestricted());
+    }
+
+    /**
+     * isActive - test if the user is active or not, you'd better have good argument to use this instead of isAlive
+     *
+     * @see PFUser::isAlive()
      * @return boolean true if the user is active, false otherwise
      */
     function isActive() {

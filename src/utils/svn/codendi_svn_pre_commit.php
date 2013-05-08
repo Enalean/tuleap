@@ -17,29 +17,19 @@ try {
     if ($project->isSVNMandatoryRef()) {
         $ref_manager = ReferenceManager::instance();
 
-        // open the standard error output
-        $stderr = fopen('php://stderr', 'w');
-
         $txn = $argv[2];
         $logmsg = array();
         exec("/usr/bin/svnlook log -t '$txn' '$repository'", $logmsg);
         $logmsg = implode("\n", $logmsg);
-        
-        $references_array = array();
-        $references_array = $ref_manager->extractReferences($logmsg, $project->getId());
 
-        if (sizeof($references_array) < 1) {
+        if (! $ref_manager->stringContainsReferences($logmsg, $project)) {
             // No reference has been found: commit is rejected
-            fwrite($stderr, "\nYou must make at least one reference in the commit message.\n".$unix_group_name);
-            fclose($stderr);
+            fwrite(STDERR, "\nYou must make at least one reference in the commit message.\n".$unix_group_name);
             exit(1);
         }
-        fclose($stderr);
     }
 } catch (DataAccessException $e) {
-    $stderr = fopen('php://stderr', 'w');
-    fwrite ($stderr, $e->getMessage());
-    fclose($stderr);
+    fwrite (STDERR, $e->getMessage());
     exit(1);
 }
 ?>
