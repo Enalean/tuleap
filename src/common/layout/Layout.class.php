@@ -53,7 +53,7 @@ class Layout extends Response {
     public $imgroot;
 
     /**
-     * Codendi html purifier
+     * Html purifier
      */
     protected $purifier;
 

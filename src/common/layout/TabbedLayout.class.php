@@ -21,16 +21,6 @@
 require_once('Layout.class.php');
 class TabbedLayout extends Layout {
 
-	/**
-	 *	createLinkToUserHome() - Creates a link to a user's home page	
-	 * 
-	 *	@param	string	The user's user_name
-	 *	@param	string	The user's realname
-	 */
-    function createLinkToUserHome($user_name, $realname) {
-        return '<a href="/users/'.$user_name.'/">'. $this->purifier->purify($realname, CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
-    }
-
     function getBodyHeader($params) {
         $output = '
         <table cellpadding="0" cellspacing="0" border="0" width="100%">

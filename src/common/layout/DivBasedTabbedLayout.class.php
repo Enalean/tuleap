@@ -42,16 +42,6 @@ class DivBasedTabbedLayout extends Layout
         $this->imgroot = $root.'/images/';
     }
 
-	/**
-	 *	createLinkToUserHome() - Creates a link to a user's home page	
-	 * 
-	 *	@param	string	The user's user_name
-	 *	@param	string	The user's realname
-	 */
-    function createLinkToUserHome($user_name, $realname) {
-        return '<a href="/users/'.$user_name.'/">'.$this->purifier->purify($realname, CODENDI_PURIFIER_CONVERT_HTML).'</a>';
-    }
-    
     function getBodyHeader($params) {
 /* A 2x2 table header
  Organisation logo		|  users actions
