@@ -1,4 +1,7 @@
 Version 6.1 (Not Released Yet)
+	== Enhancement ==
+	* story #3226: see "svn propset --revprop -r X svn:log" modifications in commit DB
+
 	== Plugins ==
 	* docman: 2.26.16
 
