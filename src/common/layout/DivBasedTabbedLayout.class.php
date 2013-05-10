@@ -492,7 +492,7 @@ echo $this->outerTabs($params);
         } 
         if ( isset($forum_id) ) {
             $forum_id = $this->purifier->purify($forum_id, CODENDI_PURIFIER_CONVERT_HTML);
-            $output   = "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$forum_id\" NAME=\"forum_id\">\n";
+            $output  .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$forum_id\" NAME=\"forum_id\">\n";
         } 
         if ( isset($is_bug_page) ) {
            $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_bug_page\" NAME=\"is_bug_page\">\n";
