@@ -219,6 +219,13 @@ class BackendSVN extends Backend {
             $this->chgrp($filename, $unix_group_name);
             chmod("$filename", 0775);
         }
+
+        if ($project->canChangeSVNLog()) {
+            $this->enableCommitMessageUpdate($unix_group_name);
+        } else {
+            $this->disableCommitMessageUpdate($unix_group_name);
+        }
+
         return true;
     }
 
@@ -606,6 +613,34 @@ class BackendSVN extends Backend {
      */
     public function renameSVNRepository($project, $newName) {
         return rename($GLOBALS['svn_prefix'].'/'.$project->getUnixName(false), $GLOBALS['svn_prefix'].'/'.$newName);
+    }
+
+    private function enableCommitMessageUpdate($unix_group_name) {
+        $this->enableHook($unix_group_name, 'pre-revprop-change', Config::get('codendi_bin_prefix').'/pre-revprop-change.php');
+        $this->enableHook($unix_group_name, 'post-revprop-change', Config::get('codendi_bin_prefix').'/post-revprop-change.php');
+    }
+
+    private function enableHook($unix_group_name, $hook_name, $source_tool) {
+        $path = $this->getHookPath($unix_group_name, $hook_name);
+        if (! is_link($path)) {
+            symlink($source_tool, $path);
+        }
+    }
+
+    private function disableCommitMessageUpdate($unix_group_name) {
+        $this->deleteHook($unix_group_name, 'pre-revprop-change');
+        $this->deleteHook($unix_group_name, 'post-revprop-change');
+    }
+
+    private function deleteHook($unix_group_name, $hook_name) {
+        $path = $this->getHookPath($unix_group_name, $hook_name);
+        if (is_link($path)) {
+            unlink($path);
+        }
+    }
+
+    private function getHookPath($unix_group_name, $hook_name) {
+        return $GLOBALS['svn_prefix'].'/'.$unix_group_name.'/hooks/'.$hook_name;
     }
 }
 

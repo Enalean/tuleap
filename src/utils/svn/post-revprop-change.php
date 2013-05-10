@@ -1,6 +1,7 @@
+#!/usr/bin/php
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,28 +23,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 try {
+    require_once 'env.inc.php';
     require_once 'pre.php';
-    require_once 'common/reference/ReferenceManager.class.php';
-    require_once 'common/svn/SVN_Hooks.class.php';
+    require_once 'common/svn/hook/PostRevPropset.class.php';
 
-    $repository = $argv[1];
-    $txn        = $argv[2];
+    $repository         = $argv[1];
+    $revision           = $argv[2];
+    $user               = $argv[3];
+    $old_commit_message = stream_get_contents(STDIN);
 
-    $svn_hooks = new SVN_Hooks(ProjectManager::instance(), UserManager::instance());
-    $project   = $svn_hooks->getProjectFromRepositoryPath($repository);
-
-    if ($project->isSVNMandatoryRef()) {
-        $reference_manager = ReferenceManager::instance();
-        $commit_message    = $svn_hooks->getMessageFromTransaction($repository, $txn);
-        if (! $reference_manager->stringContainsReferences($commit_message, $project)) {
-            fwrite(STDERR, "You must make at least one reference in the commit message");
-            exit(1);
-        }
-    }
+    $svn_commit_message = new SVN_Hook_PostRevPropset(
+        new SVN_Hooks(ProjectManager::instance(), UserManager::instance()),
+        ReferenceManager::instance(),
+        new SvnCommitsDao()
+    );
+    $svn_commit_message->update($repository, $revision, $user, $old_commit_message);
     exit(0);
-} catch (Exception $exeption) {
-    fwrite (STDERR, $exeption->getMessage());
+} catch(Exception $e) {
+    fwrite(STDERR, $e->getMessage().PHP_EOL);
     exit(1);
 }
+
 ?>

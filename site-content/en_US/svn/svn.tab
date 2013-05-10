@@ -32,6 +32,9 @@ svn_admin_general_settings	tracking_comment	When Subversion tracking is on, the 
 svn_admin_general_settings	mandatory_ref	Mandatory Reference in commit message
 svn_admin_general_settings	mandatory_ref_comment	When Mandatory Reference in commit message is on, the message commit must contain at least one reference (to any other item), or the commit will be refused.
 svn_admin_general_settings	preamble	<h3>Subversion Preamble</h3><P>Introductory message to replace the default one on the <a href="$1">Subversion welcome page</a>. (HTML tags allowed)
+svn_admin_general_settings	svn_can_change_log	Modify the commit messages
+svn_admin_general_settings	svn_can_change_log_comment	When "Modify the commit messages" is on, the commit message can be modified (svn propset --revprop -r X svn:log)
+
 #
 #-----------------------------------------------
 # Script: SF/www/svn/admin/index.php

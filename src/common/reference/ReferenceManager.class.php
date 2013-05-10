@@ -464,7 +464,19 @@ class ReferenceManager {
         setlocale(LC_CTYPE, $locale);
         return $matches;
     }
-    
+
+    /**
+     * Return true if given text contains references
+     *
+     * @param String  $string
+     * @param Project $project
+     *
+     * @return Boolean
+     */
+    public function stringContainsReferences($string, Project $project) {
+        return count($this->extractReferences($string, $project->getId())) > 0;
+    }
+
     /**
      * extract references from text $html
      * @param $html the text to be extracted
