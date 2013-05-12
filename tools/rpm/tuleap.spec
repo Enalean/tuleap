@@ -220,6 +220,21 @@ Provides: tuleap-plugin-docmanwatermark = %{version}
 PDF Watermark plugin. Provide the possibility to add a customizable banner to
 PDF file uploaded in Docman
 
+%package plugin-titc
+Summary: Tuleap plugin to allow cloudstorage througt docman
+Group: Development/Tools
+#TODO assign @@PLUGIN_TITC_VERSION@@
+Version: 1.0.0 
+Release: 1%{?dist}
+Requires: %{PKG_NAME}
+%if %{PKG_NAME} == codendi_st
+Provides: codendi-plugin-titc = %{version}
+%else
+Provides: tuleap-plugin-titc = %{version}
+%endif
+%description plugin-titc
+Tuleap In The Cloud Plugin. Allow user to acces their cloudstorage solution througt the docman plugin 
+
 %package plugin-ldap
 Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
@@ -863,6 +878,7 @@ fi
 %dir %{APP_DIR}/plugins
 %{APP_DIR}/plugins/admindelegation
 %{APP_DIR}/plugins/docman
+%{APP_DIR}/plugins/cloudstorage
 %{APP_DIR}/plugins/graphontrackers
 %{APP_DIR}/plugins/pluginsadministration
 %{APP_DIR}/plugins/projectlinks
@@ -942,6 +958,10 @@ fi
 %files plugin-docmanwatermark
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/docmanwatermark
+
+%files plugin-titc
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/cloudstorage
 
 %files plugin-ldap
 %defattr(-,%{APP_USER},%{APP_USER},-)
