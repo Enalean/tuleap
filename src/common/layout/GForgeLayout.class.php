@@ -104,7 +104,7 @@ class GForgeLayout extends TabbedLayout {
 		global $Language;
 		 // display the searchmask
 		print '
-		<form name="advancedsearch" action="'.getStringFromServer('PHP_SELF').'" method="post">
+		<form name="advancedsearch" action="?" method="post">
 		<input type="hidden" name="search" value="1"/>
 		<input type="hidden" name="group_id" value="'.$group_id.'"/>
 		<div align="center"><br />

@@ -1,5 +1,12 @@
-DROP TABLE IF EXISTS plugin_git;
-
+CREATE TABLE IF NOT EXISTS plugin_git_remote_servers (
+    id INT(11) UNSIGNED NOT NULL auto_increment,
+    host VARCHAR(255) NOT NULL,
+    http_port INT(11) UNSIGNED NOT NULL,
+    ssh_port INT(11) UNSIGNED NOT NULL,
+    login VARCHAR(255) NOT NULL,
+    identity_file VARCHAR(255) NOT NULL,
+    ssh_key TEXT NULL,
+PRIMARY KEY (id));
 
 CREATE TABLE IF NOT EXISTS `plugin_git` (
   `repository_id` int(10) unsigned NOT NULL auto_increment,
@@ -42,16 +49,6 @@ CREATE TABLE IF NOT EXISTS `plugin_git_ci` (
 `job_id` INT(11) UNSIGNED NOT NULL,
 `repository_id` INT(10) UNSIGNED NOT NULL,
 PRIMARY KEY (`job_id`));
-
-CREATE TABLE IF NOT EXISTS plugin_git_remote_servers (
-    id INT(11) UNSIGNED NOT NULL auto_increment,
-    host VARCHAR(255) NOT NULL,
-    http_port INT(11) UNSIGNED NOT NULL,
-    ssh_port INT(11) UNSIGNED NOT NULL,
-    login VARCHAR(255) NOT NULL,
-    identity_file VARCHAR(255) NOT NULL,
-    ssh_key TEXT NULL,
-PRIMARY KEY (id));
 
 CREATE TABLE IF NOT EXISTS plugin_git_remote_ugroups (
     group_id int(11) NOT NULL,

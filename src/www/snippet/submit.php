@@ -83,7 +83,7 @@ if (user_isloggedin()) {
 	<P>
 	<span class="highlight"><B>'.$Language->getText('snippet_submit','note').'</B></span>'.$Language->getText('snippet_submit','submit_s_v').'
 	<P>
-	<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
+	<FORM ACTION="?" METHOD="POST" enctype="multipart/form-data">
     <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_upload.'">
 	<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 	<INPUT TYPE="HIDDEN" NAME="changes" VALUE="'.$Language->getText('snippet_package','first_posted_v').'">

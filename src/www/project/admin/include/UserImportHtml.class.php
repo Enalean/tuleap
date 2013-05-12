@@ -80,7 +80,7 @@ class UserImportHtml extends UserImport {
      * @param $users: array containing all the users (User Object) that are in the import file
      */
     function showParseResults($parsed_users) {
-        global $PHP_SELF,$Language;
+        global $Language;
 
         echo $Language->getText('project_admin_userimport','ready')."<br><br>\n";
     
@@ -96,7 +96,7 @@ class UserImportHtml extends UserImport {
         echo "</TABLE>\n";
     
         // Add 'import'  button to confirm import
-        echo '<FORM NAME="acceptimportdata" action="'.$PHP_SELF.'" method="POST" enctype="multipart/form-data">
+        echo '<FORM NAME="acceptimportdata" action="?" method="POST" enctype="multipart/form-data">
             <p align="left"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('project_admin_userimport','import').'"></p>
             <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->group_id.'">
             <INPUT TYPE="HIDDEN" NAME="func" VALUE="import">
@@ -142,7 +142,7 @@ class UserImportHtml extends UserImport {
      *     
      */
     function displayInput() {
-        global $PHP_SELF, $Language;
+        global $Language;
     
         project_admin_header(array('title'=>$Language->getText('project_admin_userimport','import_members'),
                  'help' => 'AddingRemovingUsers.html'));
@@ -150,7 +150,7 @@ class UserImportHtml extends UserImport {
         echo '<h2>'.$Language->getText('project_admin_userimport','import_members', array(help_button('AddingRemovingUsers.html'))).'</h2>';
         echo $Language->getText('project_admin_userimport','import_welcome',array('/project/admin/userimport.php?group_id='.$this->group_id.'&mode=showformat&func=import'));
 
-        echo '<FORM NAME="importdata" action="'.$PHP_SELF.'" method="POST" enctype="multipart/form-data">
+        echo '<FORM NAME="importdata" action="?" method="POST" enctype="multipart/form-data">
             <INPUT TYPE="hidden" name="group_id" value="'.$this->group_id.'">                
             <INPUT TYPE="hidden" name="func" value="import">
             <INPUT TYPE="hidden" name="mode" value="parse"> 

@@ -64,7 +64,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         $project_name     = $project->getUnixName();
         $ugroups          = $this->ugroup_manager->getUGroups($project);
 
-        $migrated_ugroups = $this->migrateUGroups($ugroups, $gerrit_server);
+        $migrated_ugroups = $this->membership_manager->createArrayOfGroupsForServer($gerrit_server, $ugroups);
         $admin_ugroup     = $this->getAdminUGroup($ugroups);
 
         if (! $this->driver->doesTheParentProjectExist($gerrit_server, $project_name) && $admin_ugroup) {
@@ -100,25 +100,6 @@ class Git_Driver_Gerrit_ProjectCreator {
         }
 
         return null;
-    }
-
-    /**
-     *
-     * @param UGroup[] $ugroups
-     * @param Project $project
-     * @param Git_RemoteServer_GerritServer $gerrit_server
-     * @return UGroup[]
-     */
-    private function migrateUGroups(array $ugroups, Git_RemoteServer_GerritServer $gerrit_server) {
-        $migrated_ugroups = array();
-
-        foreach ($ugroups as $ugroup) {
-            if ($this->membership_manager->createGroupForServer($gerrit_server, $ugroup)) {
-                $migrated_ugroups[] = $ugroup;
-            }
-        }
-
-        return $migrated_ugroups;
     }
 
     private function exportGitBranches(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project, GitRepository $repository) {
@@ -157,8 +138,13 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     private function addGroupToGroupFile(Git_RemoteServer_GerritServer $gerrit_server, $group) {
-        $group_uuid = $this->driver->getGroupUUID($gerrit_server, $group);
-        $this->addGroupDefinitionToGroupFile($group_uuid, $group);
+        try {
+            $group_uuid = $this->membership_manager->getGroupUUIDByNameOnServer($gerrit_server, $group);
+            $this->addGroupDefinitionToGroupFile($group_uuid, $group);
+        } catch (Exception $exception) {
+            // we should log that the group doesn't exist but we don't
+            // inject a Logger to this class yet
+        }
     }
 
     private function addRegisteredUsersGroupToGroupFile() {
@@ -224,17 +210,6 @@ class Git_Driver_Gerrit_ProjectCreator {
 
         $this->addToSection('refs/heads', 'create', "group Administrators");  // push initial ref
         $this->addToSection('refs/heads', 'forgeCommitter', "group Administrators"); // push initial ref
-
-        foreach ($ugroups_read as $ugroup_read) {
-            $this->addToSection('refs/changes', 'push', "group $ugroup_read");
-        }
-        foreach ($ugroups_write as $ugroup_write) {
-            $this->addToSection('refs/changes', 'push', "group $ugroup_write");
-            $this->addToSection('refs/changes', 'pushMerge', "group $ugroup_write");
-        }
-        foreach ($ugroups_rewind as $ugroup_rewind) {
-            $this->addToSection('refs/changes', 'push', "+force group $ugroup_rewind");
-        }
 
         foreach ($ugroups_read as $ugroup_read) {
             $this->addToSection('refs/for/refs/heads', 'push', "group $ugroup_read");

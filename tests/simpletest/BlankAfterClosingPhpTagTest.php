@@ -46,6 +46,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
         //Those files are allowed to contains something before opening tag
         $this->allow_start = array(
             'cli/codendi.php',
+            'cli/tuleap.php',
             'tools/utils/checkCommitMessage.php',
             'plugins/IM/include/jabbex_api/installation/install.php',
             'plugins/IM/www/webmuc/groupchat.php',
@@ -53,11 +54,15 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
             'post_merge_actions.php',
             'import_all_xml.php',
             'export_all_xml.php',
+            'export_project_xml.php',
+            'src/utils/svn/pre-revprop-change.php',
+            'src/utils/svn/post-revprop-change.php',
         );
         
         //Those files are allowed to contain something after closing tag
         $this->allow_end = array(
             'cli/codendi.php',
+            'cli/tuleap.php',
             'plugins/tests/www/index.php',
             'plugins/IM/www/webmuc/groupchat.php',
             'plugins/IM/www/webmuc/muckl.php',

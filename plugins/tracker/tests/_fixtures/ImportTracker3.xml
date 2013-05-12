@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tracker xmlns="http://codendi.org/tracker">
+<tracker>
     <name>stdiflu</name>
     <item_name>stdiflu</item_name>
     <description>string-text-date-int-float-staticlist-userlist</description>

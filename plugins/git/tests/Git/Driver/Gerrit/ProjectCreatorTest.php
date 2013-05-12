@@ -97,16 +97,16 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         stub($this->driver)->createProject($this->server, $this->repository_without_registered, $this->project_unix_name)->returns($this->gerrit_project);
         stub($this->driver)->createParentProject($this->server, $this->repository, $this->project_admins_gerrit_name)->returns($this->project_unix_name);
 
-        stub($this->driver)->getGroupUUID($this->server, $this->contributors)->returns($this->contributors_uuid);
-        stub($this->driver)->getGroupUUID($this->server, $this->integrators)->returns($this->integrators_uuid);
-        stub($this->driver)->getGroupUUID($this->server, $this->supermen)->returns($this->supermen_uuid);
-        stub($this->driver)->getGroupUUID($this->server, $this->owners)->returns($this->owners_uuid);
-        stub($this->driver)->getGroupUUID($this->server, $this->replication)->returns($this->replication_uuid);
+        $this->membership_manager = mock('Git_Driver_Gerrit_MembershipManager');
+        stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->contributors)->returns($this->contributors_uuid);
+        stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->integrators)->returns($this->integrators_uuid);
+        stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->supermen)->returns($this->supermen_uuid);
+        stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->owners)->returns($this->owners_uuid);
+        stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->replication)->returns($this->replication_uuid);
 
         $this->userfinder = mock('Git_Driver_Gerrit_UserFinder');
         $this->ugroup_manager = mock('UGroupManager');
 
-        $this->membership_manager = mock('Git_Driver_Gerrit_MembershipManager');
 
         $this->project_creator = new Git_Driver_Gerrit_ProjectCreator($this->tmpdir, $this->driver, $this->userfinder, $this->ugroup_manager, $this->membership_manager);
 
@@ -149,15 +149,15 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
 
         stub($this->ugroup_manager)->getUGroups()->returns(array($this->project_members, $this->another_ugroup, $this->project_admins));
 
-        stub($this->driver)->getGroupUUID($this->server, $this->project_members_gerrit_name)->returns($this->project_members_uuid);
-        stub($this->driver)->getGroupUUID($this->server, $this->another_ugroup_gerrit_name)->returns($this->another_ugroup_uuid);
-        stub($this->driver)->getGroupUUID($this->server, $this->project_admins_gerrit_name)->returns($this->project_admins_uuid);
+        stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->project_members_gerrit_name)->returns($this->project_members_uuid);
+        stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->another_ugroup_gerrit_name)->returns($this->another_ugroup_uuid);
+        stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->project_admins_gerrit_name)->returns($this->project_admins_uuid);
 
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(UGroup::REGISTERED));
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array(UGroup::PROJECT_MEMBERS, 120));
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array(UGroup::PROJECT_ADMIN));
 
-        stub($this->membership_manager)->createGroupForServer()->returns('whatever');
+        stub($this->membership_manager)->createArrayOfGroupsForServer()->returns(array($this->project_members, $this->another_ugroup, $this->project_admins));
     }
 
     public function tearDown() {
@@ -287,6 +287,8 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         stub($this->ugroup_manager)->getUGroups()->returns(array($this->project_admins));
         stub($this->driver)->DoesTheParentProjectExist()->returns(true);
 
+        stub($this->membership_manager)->createArrayOfGroupsForServer()->returns(array($this->project_admins));
+
         expect($this->driver)->DoesTheParentProjectExist($this->server, $this->repository->getProject()->getUnixName())->once();
         expect($this->driver)->createProject($this->server, $this->repository, $this->project_unix_name)->once();
         expect($this->driver)->createParentProject($this->server, $this->repository, $this->project_admins_gerrit_name)->never();
@@ -308,6 +310,8 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         stub($this->ugroup_manager)->getUGroups()->returns(array($this->project_admins));
         stub($this->driver)->DoesTheParentProjectExist()->returns(false);
 
+        stub($this->membership_manager)->createArrayOfGroupsForServer()->returns(array($this->project_admins));
+
         expect($this->driver)->DoesTheParentProjectExist($this->server, $this->repository->getProject()->getUnixName())->once();
         expect($this->driver)->createParentProject($this->server, $this->repository, $this->project_admins_gerrit_name)->once();
         expect($this->driver)->createProject($this->server, $this->repository, $this->project_unix_name)->once();
@@ -320,41 +324,32 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
     }
 
     public function itCreatesProjectMembersGroup() {
-        $user_list = array(aUser()->withUserName('goyotm')->build(),  aUser()->withUserName('martissonj')->build());
         $ugroup = mock('UGroup');
-        stub($ugroup)->getLdapMembersIds()->returns($user_list);
         stub($ugroup)->getNormalizedName()->returns('project_members');
         stub($ugroup)->getId()->returns(Ugroup::PROJECT_MEMBERS);
 
         expect($this->ugroup_manager)->getUGroups($this->project)->once();
         stub($this->ugroup_manager)->getUGroups()->returns(array($ugroup));
 
-        expect($this->membership_manager)->createGroupForServer($this->server, $ugroup)->once();
+        stub($this->membership_manager)->createArrayOfGroupsForServer()->returns(array($ugroup));
+
+        expect($this->membership_manager)->createArrayOfGroupsForServer($this->server, array($ugroup))->once();
         $this->project_creator->createGerritProject($this->server, $this->repository);
     }
 
     public function itCreatesAllGroups() {
-
-        $user1 = aUser()->withUserName('goyotm')->withLdapId('goyotm')->build();
-        $user2 = aUser()->withUserName('martissonj')->withLdapId('martissonj')->build();
-
-        $project_members_list = array($user1->getLdapId(), $user2->getLdapId());
         $ugroup_project_members = mock('UGroup');
-        stub($ugroup_project_members)->getLdapMembersIds()->returns($project_members_list);
         stub($ugroup_project_members)->getNormalizedName()->returns('project_members');
         stub($ugroup_project_members)->getId()->returns(UGroup::PROJECT_MEMBERS);
 
-        $another_group_list = array($user1->getLdapId());
         $ugroup_another_group = mock('UGroup');
-        stub($ugroup_another_group)->getLdapMembersIds()->returns($another_group_list);
         stub($ugroup_another_group)->getNormalizedName()->returns('another_group');
         stub($ugroup_another_group)->getId()->returns(120);
 
         stub($this->ugroup_manager)->getUGroups()->returns(array($ugroup_project_members, $ugroup_another_group));
 
-        expect($this->membership_manager)->createGroupForServer()->count(2);
-        expect($this->membership_manager)->createGroupForServer($this->server, $ugroup_project_members)->at(0);
-        expect($this->membership_manager)->createGroupForServer($this->server, $ugroup_another_group)->at(1);
+        expect($this->membership_manager)->createArrayOfGroupsForServer($this->server, array($ugroup_project_members, $ugroup_another_group))->once();
+        stub($this->membership_manager)->createArrayOfGroupsForServer()->returns(array($ugroup_project_members, $ugroup_another_group));
 
         $this->project_creator->createGerritProject($this->server, $this->repository);
     }

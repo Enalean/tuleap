@@ -36,6 +36,14 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     private $hierarchy_factory;
 
+    protected $include_weekends;
+
+    public $default_properties = array(
+        'include_weekends' => array (
+            'value' => 0,
+            'type'  => 'checkbox')
+    );
+
     /**
      * @return the label of the field (mainly used in admin part)
      */
@@ -158,7 +166,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             $capacity = $this->getCapacity($artifact);
         }
         $field         = $this->getBurndownRemainingEffortField($artifact, $user);
-        $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, $duration);
+        if ($this->includeWeekends()) {
+            $time_period   = new Tracker_Chart_Data_BurndownTimePeriodWithWeekEnd($start_date, $duration);
+        } else {
+            $time_period   = new Tracker_Chart_Data_BurndownTimePeriodWithoutWeekEnd($start_date, $duration);
+        }
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
         $tonight       = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
 
@@ -167,7 +179,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
             if ($timestamp <= $tonight) {
                 $remaining_effort = $field->getComputedValue($user, $artifact, $timestamp);
-                $burndown_data->pushRemainingEffort($remaining_effort);
+                $burndown_data->addEffortAt($day_offset, $remaining_effort);
             }
         }
 
@@ -244,6 +256,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     public function getCriteriaWhere($criteria) {
     }
+
+    protected function getDao() {
+        return new Tracker_FormElement_Field_BurndownDao();
+   }
 
     public function getQuerySelect() {
     }
@@ -558,6 +574,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     private function hasRemainingEffort(Tracker $tracker) {
         return $tracker->hasFormElementWithNameAndType(self::REMAINING_EFFORT_FIELD_NAME, array('int', 'float'));
+    }
+
+    public function includeWeekends() {
+        return $this->getProperty('include_weekends');
     }
 }
 ?>

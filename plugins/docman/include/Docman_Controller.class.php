@@ -429,6 +429,11 @@ class Docman_Controller extends Controler {
 
             if($this->request->exist('report')) {
                 $this->_viewParams['report'] = $this->request->get('report');
+                $views                       = Docman_View_Browse::getDefaultViews();
+                $validator                   = new Valid_WhiteList('report', $views);
+                $views_keys                  = array_keys($views);
+                $default_view                = $views[$views_keys[0]];
+                $this->_viewParams['report'] = $this->request->getValidated('report', $validator, $default_view);
             }
 
             $item_factory =& $this->_getItemFactory();

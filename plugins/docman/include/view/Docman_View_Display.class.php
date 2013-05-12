@@ -58,7 +58,6 @@ require_once('Docman_View_Docman.class.php');
         $urlParams['id'] = $id;
         $url = $this->buildActionUrl($params, $urlParams);
         $html .= '&nbsp;<a href="'.$url.'"><b>'.  $hp->purify($current_item_title, CODENDI_PURIFIER_CONVERT_HTML)  .'</b></a>';
-        
         $html .= $this->getItemMenu($current_item, $params, $bc = true);
         $this->javascript .= $this->getActionForItem($current_item); 
         $html .= '</div>';

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012, 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,11 +19,9 @@
  */
 
 
-?><h3>CLI</h3>
+?><h3>API</h3>
 <ul class="unstyled">
-    <li><?= $GLOBALS['sys_name']?> provides a Command Line Interface based on the <a href="/soap/index.php">SOAP API</a>.<br />
-        <a href="/downloads/Codendi_CLI.zip">Download</a> &mdash;
-        <a href="/documentation/cli/html/en_US/">documentation</a>.
+    <li><?= $GLOBALS['sys_name']?> provides a <a href="/soap/index.php">SOAP&nbsp;API</a>.
     </li>
 </ul>
 <?php

@@ -132,5 +132,76 @@ document.observe('dom:loaded', function () {
                 new tuleap.agiledashboard.cardwall.card.SelectElementEditor( assigned_to_container );
             })
         })();
+
+        (function searchInCardwall() {
+            var cardwall = board.down('.cardwall');
+            board.up().select('.search-in-cardwall').each(registerTextFieldEvents);
+
+            function registerTextFieldEvents(text_field) {
+                text_field.observe('keyup', function (evt) {
+                    onUpdate(text_field);
+                });
+            }
+
+            function onUpdate(text_field) {
+                var swimlines     = cardwall.childElements(),
+                    all_cards     = cardwall.select('.card'),
+                    cards_to_hide = selectCardsToHide(all_cards, text_field.value);
+
+                all_cards.invoke('show');
+                cards_to_hide.invoke('hide');
+                swimlines.map(showSwimlineCard);
+            }
+
+            function selectCardsToHide(all_cards, text_to_search) {
+                try {
+                    var regexp = new RegExp(text_to_search, 'i');
+                } catch(e) {
+                    // the user broke the regexp, hide nothing
+                    return [];
+                }
+
+                return all_cards.reject(function (card) {
+                    var searchable_content_list = card.select(
+                        '.card-title',
+                        '.dropdown-toggle',
+                        '.valueOf_assigned_to',
+                        '.valueOf_remaining_effort'
+                    );
+
+                    return searchInTextContent(searchable_content_list, regexp) || searchInAvatarTitle(card, regexp);
+                });
+            }
+
+            function searchInTextContent(searchable_content_list, regexp) {
+                return searchable_content_list.find(function (searchable_content) {
+                    var text;
+                    if (searchable_content.innerText !== undefined) { // Yay IE Family!
+                        text = searchable_content.innerText;
+                    } else {
+                        text = searchable_content.textContent;
+                    }
+
+                    return text.match(regexp);
+                });
+            }
+
+            function searchInAvatarTitle(card, regexp) {
+                return card.select('.valueOf_assigned_to .avatar').find(function (avatar) {
+                    return avatar.title.match(regexp);
+                });
+            }
+
+            function showSwimlineCard(swimline) {
+                var swimline_card = swimline.down('td:first > .nodrag .card'),
+                    visible_cards = swimline.select('.card').find(function (card) {
+                        return card.visible();
+                    });
+
+                if (! swimline_card.visible() && visible_cards) {
+                    swimline_card.show();
+                }
+            }
+        })();
     });
 });

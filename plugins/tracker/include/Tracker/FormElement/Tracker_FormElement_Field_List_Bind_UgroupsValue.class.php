@@ -55,7 +55,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
      * @return array An array of user names
      */
     public function getMembersName() {
-        return  $this->ugroup->getUsers($this->getUgroupId())->getNames();
+        return  $this->ugroup->getUsers()->getNames();
     }
 
     private function getUserName(PFUser $user) {

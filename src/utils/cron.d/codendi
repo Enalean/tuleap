@@ -54,7 +54,7 @@
 #
 # It looks like we have memory leaks in Apache in some versions so restart it
 # on Sunday. Do it while the DB is down for backup
-50 0 * * root Sun /sbin/service httpd restart 2>&1 >/dev/null
+50 0 * * Sun root /sbin/service httpd restart 2>&1 >/dev/null
 
 #
 # Codendiadm

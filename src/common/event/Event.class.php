@@ -449,5 +449,66 @@ class Event {
      *  The link contains the right project information
      */
     const SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK = 'service_replace_template_name_in_link';
+
+    /**
+     * Event launched while exporting a project into xml format
+     *
+     * Parameters:
+     *   'project'  => The given project
+     *   'into_xml' => The SimpleXMLElement to fill in
+     *
+     * Expected Results:
+     *   The various plugins inject stuff in the given xml element
+     */
+    const EXPORT_XML_PROJECT = 'export_xml_project';
+
+    /**
+     * Event launched while importing a project from a xml content
+     *
+     * Parameters:
+     *   'project_id'  => The id of the project where trackers, cardwall and AD must be created
+     *   'xml_content' => The xml content in string to check in
+     *
+     * Expected Results:
+     *   The various plugins create objects from the xml content
+     */
+    const IMPORT_XML_PROJECT = 'import_xml_project';
+
+    /**
+     * Event launched while importing a project from a xml content
+     *
+     * Parameters:
+     *   'project_id'  => The id of the project where trackers, cardwall and AD must be created
+     *   'xml_content' => The SimpleXMLElement to check in
+     *   'mapping'     => An array with a mapping between xml ids and new ids for trackers
+     *
+     * Expected Results:
+     *   The various plugins create objects from the xml content
+     */
+    const IMPORT_XML_PROJECT_TRACKER_DONE = 'import_xml_project_tracker_done';
+
+    /**
+     * Event launched while importing a cardwall from a xml content
+     *
+     * Parameters:
+     *   'project_id'  => The id of the project where trackers, cardwall and AD must be created
+     *   'xml_content' => The SimpleXMLElement to check in
+     *   'mapping'     => An array with a mapping between xml ids and new ids for trackers
+     *
+     * Expected Results:
+     *   The various plugins create objects from the xml content
+     */
+    const IMPORT_XML_PROJECT_CARDWALL_DONE = 'import_xml_project_cardwall_done';
+
+    /**
+     * Event raised when svn hooks are updated
+     *
+     * Paramters:
+     *     'group_id' => The id of the project
+     *
+     * Expected results:
+     *     Void
+     */
+    const SVN_UPDATE_HOOKS = 'svn_update_hooks';
 }
 ?>

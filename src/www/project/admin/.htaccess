@@ -1,0 +1,3 @@
+<Files ~ "(editservice|servicebar).php">
+    php_flag register_globals off
+</Files>

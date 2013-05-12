@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tracker xmlns="http://codendi.org/tracker">
+<tracker>
 	<name>test_fields</name>
 	<item_name>testTr2</item_name>
 	<description>testing tracker import</description>

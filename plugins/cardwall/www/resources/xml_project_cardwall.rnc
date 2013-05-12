@@ -1,0 +1,15 @@
+namespace xsd = "http://www.w3.org/2001/XMLSchema"
+
+grammar {
+
+    start = element cardwall {
+
+        element trackers  {
+
+            element tracker {
+                attribute id { xsd:string }
+            }*
+
+        }
+    }
+}

@@ -19,8 +19,8 @@
 
 // Please specify your database details here:
 $sys_dbhost="localhost";
-$sys_dbname="codendi";
-$sys_dbuser="codendiadm";
+$sys_dbname="%sys_dbname%";
+$sys_dbuser="%sys_dbuser%";
 $sys_dbpasswd="%sys_dbpasswd%";
 
 // If set to 1 (one) connexions to DB are made through SSL.

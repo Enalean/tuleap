@@ -36,7 +36,7 @@ class Tracker_Semantic_TitleTest extends UnitTestCase {
         $f = new MockTracker_FormElement_Field_Text();
         $f->setReturnValue('getId', 102);
         $tst = new Tracker_Semantic_Title($tracker, $f);
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_mapping = array('F13' => '102');
         $tst->exportToXML($root, $array_mapping);
 

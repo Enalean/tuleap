@@ -108,7 +108,7 @@ if (user_isloggedin()) {
 	<P>
 	'.$Language->getText('snippet_add_snippet_to_package','use_add_form').'
 	<P>
-	<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+	<FORM ACTION="?" METHOD="POST">
 	<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 	<INPUT TYPE="HIDDEN" NAME="snippet_package_version_id" VALUE="'.$snippet_package_version_id.'">
 	<INPUT TYPE="HIDDEN" NAME="suppress_nav" VALUE="'.$suppress_nav.'">

@@ -752,10 +752,20 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     function getConfirmHash() {
          return $this->confirm_hash; 
     }
-    
+
     /**
-     * isActive - test if the user is active or not
-     * 
+     * Return true if user is active or restricted.
+     *
+     * @return Boolean
+     */
+    public function isAlive() {
+        return ! $this->isAnonymous() && ($this->isActive() || $this->isRestricted());
+    }
+
+    /**
+     * isActive - test if the user is active or not, you'd better have good argument to use this instead of isAlive
+     *
+     * @see PFUser::isAlive()
      * @return boolean true if the user is active, false otherwise
      */
     function isActive() {
@@ -1247,9 +1257,10 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       * @return string html
       */
      public function fetchHtmlAvatar($width = 50) {
-         $purifier = Codendi_HTMLPurifier::instance();
-         
-         $title    = $purifier->purify($this->getRealName());
+         $purifier    = Codendi_HTMLPurifier::instance();
+         $user_helper = new UserHelper();
+
+         $title    = $purifier->purify($user_helper->getDisplayNameFromUser($this));
          $style    = 'width: '. ($width+2) .'px; height: '. ($width+2) .'px;';
          $user_id  = $this->getId();
 

@@ -30,13 +30,14 @@ class Cardwall_CardFieldPresenter {
      */
     private $artifact;
     
-    public function __construct(Tracker_FormElement_Field $field, Tracker_Artifact $artifact) {
-        $this->field = $field;
-        $this->artifact = $artifact;
+    public function __construct(Tracker_FormElement_Field $field, Tracker_Artifact $artifact, Cardwall_DisplayPreferences $display_preferences) {
+        $this->field               = $field;
+        $this->artifact            = $artifact;
+        $this->display_preferences = $display_preferences;
     }
     
     public function getField() {
-        return $this->field->fetchCard($this->artifact);
+        return $this->field->fetchCard($this->artifact, $this->display_preferences);
     }
 }
 

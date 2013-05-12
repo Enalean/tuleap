@@ -15,10 +15,14 @@ if (version_compare(phpversion(), '5.3', '>=')) {
     }
 }
 
-// Defines all of the Codendi settings first (hosts, databases, etc.)
-$local_inc = getenv('CODENDI_LOCAL_INC');
-if ( ! $local_inc ){
-    $local_inc = '/etc/codendi/conf/local.inc';
+// Defines all of the settings first (hosts, databases, etc.)
+$local_inc = getenv('TULEAP_LOCAL_INC') ? getenv('TULEAP_LOCAL_INC') : getenv('CODENDI_LOCAL_INC');
+if ( ! $local_inc ) {
+    if (is_file('/etc/tuleap/conf/local.inc')) {
+        $local_inc = '/etc/tuleap/conf/local.inc';
+    } else {
+        $local_inc = '/etc/codendi/conf/local.inc';
+    }
 }
 require($local_inc);
 require($GLOBALS['db_config_file']);

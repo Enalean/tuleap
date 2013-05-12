@@ -583,28 +583,18 @@ class UserManager {
      * @throws Exception when not in IS_SCRIPT
      *
      * @param $name string The login name submitted by the user
-     * @param $pwd string The password submitted by the user
      *
-     * @return PFUser Registered user or anonymous if the authentication failed
+     * @return PFUser Registered user or anonymous if nothing match
      */
-    function forceLogin($name, $pwd) {
+    function forceLogin($name) {
         if (!IS_SCRIPT) {
             throw new Exception("Can't log in the user when not is script");
         }
-        $logged_in = false;
         
         //If nobody answer success, look for the user into the db
         if ($row = $this->getDao()->searchByUserName($name)->getRow()) {
             $this->_currentuser = $this->getUserInstanceFromRow($row);
-            if ($this->_currentuser->getUserPw() === md5($pwd)) {
-                $logged_in = true;
-            } else {
-                //invalid password or user_name
-                $GLOBALS['Response']->addFeedback('error', "Unable to authenticate $name");
-            }
-        }
-
-        if (!$logged_in) {
+        } else {
             $this->_currentuser = $this->getUserInstanceFromRow(array('user_id' => 0));
         }
         

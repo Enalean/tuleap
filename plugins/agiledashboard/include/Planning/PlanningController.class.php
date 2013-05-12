@@ -37,7 +37,7 @@ class Planning_Controller extends MVC2_PluginController {
      * @var PlanningFactory
      */
     private $planning_factory;
-
+    
     public function __construct(Codendi_Request $request, PlanningFactory $planning_factory, Planning_MilestoneFactory $milestone_factory, $plugin_theme_path) {
         parent::__construct('agiledashboard', $request);
         
@@ -164,17 +164,6 @@ class Planning_Controller extends MVC2_PluginController {
     private function getPlanning() {
         $planning_id = $this->request->get('planning_id');
         return $this->planning_factory->getPlanning($planning_id);
-    }
-
-    private function checkUserIsAdmin() {
-        $project = $this->request->getProject();
-        $user    = $this->request->getCurrentUser();
-        if (! $project->userIsAdmin($user)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
-            $this->redirect(array('group_id' => $this->group_id));
-            // the below is only run by tests (redirect should exit but is mocked)
-            throw new Exception($GLOBALS['Language']->getText('global', 'perm_denied'));
-        }
     }
 }
 

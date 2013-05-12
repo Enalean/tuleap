@@ -33,8 +33,10 @@ EOT;
 
 $project = ProjectManager::instance()->getProject($argv[1]);
 if ($project && !$project->isError()) {
+    $xml_content = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+                                             <trackers />');
     $tracker_manager = new TrackerManager();
-    $xml_element = $tracker_manager->exportToXml($project->getID());
+    $xml_element = $tracker_manager->exportToXml($project->getID(), $xml_content);
     $dom = dom_import_simplexml($xml_element)->ownerDocument;
     $dom->formatOutput = true;
     file_put_contents($argv[2], $dom->saveXML());

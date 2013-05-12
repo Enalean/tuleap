@@ -115,7 +115,12 @@ $wgImageMagickConvertCommand = "/usr/bin/convert";
 $wgLocalInterwiki   = $wgSitename;
 $wgShowExceptionDetails = true ;
 
-$wgLanguageCode = strtolower(forge_get_config('default_country_code'));
+// disable language selection
+$wgHiddenPrefs[] = 'language';
+$user = UserManager::instance()->getCurrentUser();
+$wgLanguageCode = substr($user->getLocale(), 0, 2);
+
+//$wgLanguageCode = strtolower(forge_get_config('default_country_code'));
 
 $wgDefaultSkin = 'tuleap';
 
@@ -275,11 +280,18 @@ function SetupPermissionsFromRoles () {
 		$roles[] = $rbac_engine->getRoleById($rid);
 	}
 
-	$wgGroupPermissions['*']['read'] = true;
-        $wgGroupPermissions['*']['edit'] = true;
+	$wgGroupPermissions['*']['read']       = true;
+        $wgGroupPermissions['*']['edit']       = true;
         $wgGroupPermissions['*']['createpage'] = true;
 
         $user = UserManager::instance()->getCurrentUser();
+
+        if ($user->isMember($group->getID(), 'A')) {
+            $wgGroupPermissions['*']['editinterface'] = true;
+            $wgGroupPermissions['*']['import']        = true;
+            $wgGroupPermissions['*']['importupload']  = true;
+            $wgGroupPermissions['*']['siteadmin']     = true;
+        }
 
         if ($user->isAnonymous() || ! $user->isMember($group->getID())) {
             $wgGroupPermissions['*']['edit']                = false;

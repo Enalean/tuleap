@@ -36,7 +36,7 @@ class Tracker_Semantic_StatusTest extends UnitTestCase {
         $f = new MockTracker_FormElement_Field_List();
         $f->setReturnValue('getId', 103);
         $tst = new Tracker_Semantic_Status($tracker, $f, array(806, 807, 808, 809));
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = array('F14' => 103,
                                    'values' => array(
                                        'F14-V66' => 806,

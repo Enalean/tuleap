@@ -464,7 +464,19 @@ class ReferenceManager {
         setlocale(LC_CTYPE, $locale);
         return $matches;
     }
-    
+
+    /**
+     * Return true if given text contains references
+     *
+     * @param String  $string
+     * @param Project $project
+     *
+     * @return Boolean
+     */
+    public function stringContainsReferences($string, Project $project) {
+        return count($this->extractReferences($string, $project->getId())) > 0;
+    }
+
     /**
      * extract references from text $html
      * @param $html the text to be extracted
@@ -602,7 +614,7 @@ class ReferenceManager {
                         $user_id=user_getid();
                     }
 
-                    $this->insertCrossReference(
+                    $this->insertCrossReference(new CrossReference(
                         $source_id,
                         $source_gid,
                         $source_type,
@@ -612,39 +624,21 @@ class ReferenceManager {
                         $target_type,
                         $target_key,
                         $user_id
-                    );
+                    ));
                 }
             }
         }
         return true;
     }
 
-    public function insertCrossReference(
-        $source_id,
-        $source_gid,
-        $source_type,
-        $source_key,
-        $target_id,
-        $target_gid,
-        $target_type,
-        $target_key,
-        $user_id
-    ){
-        $cross_ref = new CrossReference(
-            $source_id,
-            $source_gid,
-            $source_type,
-            $source_key,
-            $target_id,
-            $target_gid,
-            $target_type,
-            $target_key,
-            $user_id
-        );
-
-        if(!$cross_ref->existInDb()) {
-            $cross_ref->createDbCrossRef();
+    public function insertCrossReference(CrossReference $cross_reference) {
+        if(! $cross_reference->existInDb()) {
+            $cross_reference->createDbCrossRef();
         }
+    }
+
+    public function removeCrossReference(CrossReference $cross_reference) {
+        $cross_reference->deleteCrossReference();
     }
 
     /**
@@ -684,7 +678,7 @@ class ReferenceManager {
                 $desc=$ref->getDescription();
             }
 
-            return '<a href="'.$ref_instance->getGotoLink().'" title="'.$desc.'" class="cross-reference">'.$ref_instance->getMatch()."</a>";
+            return '<a href="'.$ref_instance->getFullGotoLink().'" title="'.$desc.'" class="cross-reference">'.$ref_instance->getMatch()."</a>";
         }
     }    
 
