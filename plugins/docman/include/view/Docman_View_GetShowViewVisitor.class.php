@@ -19,6 +19,9 @@ class Docman_View_GetShowViewVisitor /* implements Visitor*/ {
     function visitLink(&$item, $params = array()) {
         return 'Redirect';
     }
+    function visitCloudstorage(&$item, $params = array()) {
+        return 'Redirect';
+    }
     function visitFile(&$item, $params = array()) {
         return 'Download';
     }

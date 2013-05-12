@@ -43,6 +43,15 @@ class CloudStorage extends Controler
            		$this->view = 'drive';
            		break;
            		
+           	case 'update_default_cloudstorage_id':
+            	$this->action = 'update_default_cloudstorage_id';
+                $this->view = 'home';
+           		break;
+           		
+           	case 'admin':
+                $this->view = 'home';
+           		break;             		    		
+           		
             default:
             	$this->view = 'home';         
                 break;

@@ -30,6 +30,9 @@ class Docman_SubItemsRemovalVisitor /* implements Visitor */ {
     function visitWiki(&$item, $params = array()) {
         $this->visitDocument($item, $params);
     }
+    function visitCloudstorage(&$item, $params = array()) {
+        $this->visitDocument($item, $params);
+    }
     function visitLink(&$item, $params = array()) {
         $this->visitDocument($item, $params);
     }

@@ -69,6 +69,9 @@ class Docman_Icons {
             case 'docman_wiki':
                 $icon .= 'wiki';
                 break;
+            case 'docman_cloudstorage':
+                $icon .= 'cloudstorage';
+                break;                
             case 'docman_file':
             case 'docman_embeddedfile':
                 $v =& $item->getCurrentVersion();

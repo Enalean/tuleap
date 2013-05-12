@@ -58,6 +58,48 @@ class Docman_MetadataHtmlLink extends Docman_MetadataHtml {
 
 }
 
+class Docman_MetadataHtmlCloudstorage extends Docman_MetadataHtml {
+    var $documentId; //cloudstorage url
+	var $serviceName;
+	
+    function Docman_MetadataHtmlCloudstorage($documentId, $serviceName) {
+        $this->documentId = $documentId;
+        $this->serviceName = $serviceName;
+    }
+
+    function getLabel() {
+        return $GLOBALS['Language']->getText('plugin_docman', 'specificfield_cloudstorage_folderid');
+    }
+    
+    function getField() {
+        $hp =& Codendi_HTMLPurifier::instance();
+        $html = '
+			<script language="javascript">
+				function affichage_popup(nom_de_la_page, nom_interne_de_la_fenetre) {
+					window.open(nom_de_la_page, nom_interne_de_la_fenetre, config="height=480, width=640, toolbar=no, menubar=no, scrollbars=yes, resizable=yes, location=no, directories=no, status=no")
+				}
+			</script>
+		';
+
+        $html .= '<input type="text" name="item[cs_docid]" id="cs_docid" size="45" value="'. $hp->purify($this->documentId) .'" />';
+        $html .= '<select name="item[cs_service]">
+        			<option value="null">Choose service...</option>
+        			<option value="dropbox" onclick="javascript:affichage_popup(\'https://'.$_SERVER['HTTP_HOST'].'/plugins/cloudstorage/?group_id=1&action=dropbox&docman=yes\', \'Select folder name from your Dropbox storage\');">Dropbox</option>
+        			<option value="drive" onclick="javascript:affichage_popup(\'https://'.$_SERVER['HTTP_HOST'].'/plugins/cloudstorage/?group_id=1&action=drive&docman=yes\', \'Select folder id from your Drive storage\');">Google Drive</option>
+        		  </select>
+        ';
+
+        return $html;
+    }
+
+    function &getValidator() {
+        $msg = $GLOBALS['Language']->getText('plugin_docman', 'error_field_link_required');
+        $validator = new Docman_ValidateValueNotEmpty($this->documentId, $msg);
+        return $validator;
+    }
+
+}
+
 class Docman_MetadataHtmlFile extends Docman_MetadataHtml {
    
     function Docman_MetadataHtmlFile() {
@@ -200,13 +242,29 @@ class Docman_View_GetSpecificFieldsVisitor {
         if(isset($params['force_item'])) {
             if($params['force_item']->getType() == PLUGIN_DOCMAN_ITEM_TYPE_LINK) {
                 $link_url = $params['force_item']->getUrl();
-            }
+            }          
         }
         else {
             $link_url = $item->getUrl();
         }
         return array(new Docman_MetadataHtmlLink($link_url));
     }
+    
+    function visitCloudstorage(&$item, $params = array()) {
+        $link_url = '';
+        $serviceName = '';
+        if(isset($params['force_item'])) {
+            if($params['force_item']->getType() == PLUGIN_DOCMAN_ITEM_TYPE_CLOUDSTORAGE) {
+                $link_url = $params['force_item']->getDocumentId();
+                $serviceName = $params['force_item']->getServiceName();
+            }            
+        }
+        else {
+            $link_url = $item->getDocumentId();
+            $serviceName = $item->getServiceName();
+        }
+        return array(new Docman_MetadataHtmlCloudstorage($link_url, $serviceName));
+    }    
     
     function visitFile(&$item, $params = array()) {
         return array(new Docman_MetadataHtmlFile($params['request']));

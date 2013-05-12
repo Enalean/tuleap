@@ -268,6 +268,11 @@ class Project extends Group implements PFO_Project {
     function usesWiki() {
         return isset($this->use_service['wiki']) && $this->use_service['wiki'];
     }   
+    
+    //whether or not this group has opted to use cloudstorage
+    function usesCloudstorage() {
+        return isset($this->use_service['cloudstorage']) && $this->use_service['cloudstorage'];
+    }  
 
 
     // Generic versions
@@ -285,6 +290,10 @@ class Project extends Group implements PFO_Project {
     
     function getWikiPage(){
         return $this->service_data_array['wiki']['link'];
+    }
+    
+    function getCloudstoragePage(){
+        return $this->service_data_array['cloudstorage']['link'];
     }
 
     function getForumPage(){

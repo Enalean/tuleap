@@ -103,6 +103,9 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
     function visitWiki(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
+    function visitCloudstorage(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
     function visitLink(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }

@@ -6,3 +6,4 @@ plugin_cloudstorage	service_desc_key	Tuleap dans les nuages.
 plugin_cloudstorage	home	Home
 plugin_cloudstorage	drive	Google Drive
 plugin_cloudstorage	dropbox	DropBox
+plugin_cloudstorage	service_short_name_desc_key	cloudstorage

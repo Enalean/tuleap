@@ -887,3 +887,7 @@ plugin_docman	item_not_restored	The selected item has not been restored.
 
 plugin_docman	permission_requests	Document access requests
 plugin_docman	permission_requests_information	The selected group will not affect people notified for permission requests on documents service.<br> Only the <b>document managers</b> will be notified in that case.
+
+plugin_docman	specificfield_cloudstorage_folderid	Specified dropbox or drive folder id:
+plugin_docman	new_document_cloudstorage	Link to a cloudstorage folder
+plugin_docman	filters_item_type_cloudstorage	Filters items type cloudstorage

@@ -77,6 +77,9 @@ class Docman_View_Icons extends Docman_View_Browse {
     function visitWiki(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
+    function visitCloudstorage(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
     function visitLink(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }

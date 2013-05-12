@@ -290,6 +290,10 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
     function visitLink($item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
+    
+    function visitCloudstorage($item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
 
     function visitFile($item, $params = array()) {
         return $this->visitDocument($item, $params);

@@ -8,16 +8,7 @@ require_once('common/mvc/Views.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('www/project/export/project_export_utils.php');
 
-//require_once('IMDao.class.php');
-//require_once('IMDataAccess.class.php');
-//require_once('JabbexFactory.class.php');
-
-//require_once('IMMucLogManager.class.php');
-
-
-//ini_set('display_errors', 1);
-//ini_set('log_errors', 1);
-//error_reporting(E_ALL);
+require_once('CloudStorageDao.class.php');
 
 class CloudStorageViews extends Views {
 	
@@ -26,11 +17,7 @@ class CloudStorageViews extends Views {
     }
     
     function display($view='') {
-        //if ($view == 'dropbox') {
-            //$this->$view();
-        //} else {
-            parent::display($view);
-        //}
+        parent::display($view);
     }
     
     function header() {
@@ -44,16 +31,15 @@ class CloudStorageViews extends Views {
         } 
         else 
         {
-            $GLOBALS['HTML']->header(array('title'=>$this->_getTitle(),'group' => $group_id,'toptab' => 'CloudStorage', 'selected_top_tab' => 'CloudStorage'));
-        	
+        	$GLOBALS['HTML']->header(array('title'=>$this->_getTitle(),'group' => $group_id,'toptab' => 'cloudstorage', 'selected_top_tab' => 'cloudstorage'));
         	if (user_ismember($request->get('group_id'))) 
         	{
             	echo '<b><a href="/plugins/cloudstorage/?group_id='. $request->get('group_id') .'&amp;action=home">'. $GLOBALS['Language']->getText('plugin_cloudstorage', 'home') . '</a> | </b>';
             	echo '<b><a href="/plugins/cloudstorage/?group_id='. $request->get('group_id') .'&amp;action=dropbox">'. $GLOBALS['Language']->getText('plugin_cloudstorage', 'dropbox') . '</a> | </b>';
-            	echo '<b><a href="/plugins/cloudstorage/?group_id='. $request->get('group_id') .'&amp;action=drive">'. $GLOBALS['Language']->getText('plugin_cloudstorage', 'drive') . '</a> | </b>';
+            	echo '<b><a href="/plugins/cloudstorage/?group_id='. $request->get('group_id') .'&amp;action=drive">'. $GLOBALS['Language']->getText('plugin_cloudstorage', 'drive') . '</a></b>';
         	}
         	
-            echo $this->_getHelp();
+            //echo $this->_getHelp();
         }
     }
     
@@ -73,19 +59,59 @@ class CloudStorageViews extends Views {
     }
     
     // {{{ Views
-    function codendi_cloudstorage_admin() {
-		echo '<h2><b>'.$GLOBALS['Language']->getText('plugin_cloudstorage','title').'</b></h2>';
-		echo '<h3><b>'.$GLOBALS['Language']->getText('plugin_cloudstorage','view').'</b></h3>';
-		
-	}
-	
     function home()
     {
     	$request = HTTPRequest::instance(); 
     	
+    	$cloudstorage_dao = new CloudstorageDao(CodendiDataAccess::instance());
+    	$res_dropbox_defcsid = $cloudstorage_dao->select_default_cloudstorage_id('dropbox');
+    	$res_drive_defcsid = $cloudstorage_dao->select_default_cloudstorage_id('drive');
+    	
     	echo '<h2>' . $GLOBALS['Language']->getText('plugin_cloudstorage', 'home_title') . '</h2>';
     	
-    	require('../www/overview.php');
+    	/*echo'
+    		<div class="content" style="text-align:center;">
+				<a href="/plugins/cloudstorage/?group_id='. $request->get('group_id') .'&amp;action=dropbox"><img src="./themes/img/dropbox.png" alt="Dropbox" /></a>
+				<a href="/plugins/cloudstorage/?group_id='. $request->get('group_id') .'&amp;action=drive"><img src="./themes/img/google-drive.jpg" alt="Google drive" /></a>
+			</div>'
+		;*/
+		
+		echo '
+			<script language="javascript">			
+				function affichage_popup(nom_de_la_page, nom_interne_de_la_fenetre) {
+					window.open(nom_de_la_page, nom_interne_de_la_fenetre, config="height=480, width=640, toolbar=no, menubar=no, scrollbars=yes, resizable=yes, location=no, directories=no, status=no")
+				}
+			</script>	
+					
+			<form class="cloudstorage_form" name="input" action="/plugins/cloudstorage/?group_id=1&action=home" method="post">
+				<div class="cloudstorage_new_item">
+					<div>
+						<h3 style="border-bottom: 1px solid #999999;">Settings</h3>
+						<table>
+							<tbody>
+								<tr>
+									<td><span title="Dropbox Folder ID:">Default Dropbox Folder ID:</span></td>
+									<td>
+										<input type="text" id="default_dropbox_id" size="30" value="'.$res_dropbox_defcsid.'" name="default_dropbox_id" class="text_field" onclick="javascript:affichage_popup(\'https://'.$_SERVER['HTTP_HOST'].'/plugins/cloudstorage/?group_id=1&action=dropbox&docman=yes&default=yes\', \'Select folder name from your Dropbox storage\');">
+										<img src="themes/img/delete.gif" alt="Delete" onclick="javascript:document.getElementById(\'default_dropbox_id\').value = \'\';" />
+									</td>
+								</tr>
+								<tr>
+									<td><span title="Drive Folder ID:">Default Google Drive Folder ID:</span></td>
+									<td>
+										<input type="text" id="default_drive_id" size="30" value="'.$res_drive_defcsid.'" name="default_drive_id" class="text_field" onclick="javascript:affichage_popup(\'https://'.$_SERVER['HTTP_HOST'].'/plugins/cloudstorage/?group_id=1&action=drive&docman=yes&default=yes\', \'Select folder id from your Drive storage\');">
+										<img src="themes/img/delete.gif" alt="Delete" onclick="javascript:document.getElementById(\'default_drive_id\').value = \'\';" />
+									</td>
+								</tr>
+							</tbody>
+						</table>				
+					</div>
+					<br />
+					<input type="hidden" name="action" value="update_default_cloudstorage_id">
+					<input type="submit" value="Update settings">
+				</div>
+			</form> 		
+		';
     }
     
     function dropbox()

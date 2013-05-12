@@ -573,6 +573,10 @@ extends Docman_View_ItemDetailsSection {
     function visitLink($item, $params = array()) {
         return '';
     }
+    
+    function visitCloudstorage($item, $params = array()) {
+        return '';
+    }
 
     function visitFile($item, $params = array()) {
         return '';

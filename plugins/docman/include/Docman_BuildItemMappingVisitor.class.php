@@ -272,6 +272,9 @@ class Docman_BuildItemMappingVisitor {
 
     function visitWiki($item, $params) {
     }
+    
+    function visitCloudstorage($item, $params) {
+    }
 
     function visitLink($item, $params) {
     }

@@ -132,6 +132,9 @@ class Docman_PermissionsExport {
             case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
                 $str = 'Link';
                 break;
+            case PLUGIN_DOCMAN_ITEM_TYPE_CLOUDSTORAGE:
+                $str = 'Document Id';
+                break;
             case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
                 $str = 'Embedded file';
                 break;

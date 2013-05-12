@@ -30,6 +30,7 @@ require_once('Docman_File.class.php');
 require_once('Docman_Link.class.php');
 require_once('Docman_EmbeddedFile.class.php');
 require_once('Docman_Wiki.class.php');
+require_once('Docman_Cloudstorage.class.php');
 require_once('Docman_Empty.class.php');
 require_once('Docman_Version.class.php');
 require_once('Docman_CloneItemsVisitor.class.php');
@@ -130,6 +131,9 @@ class Docman_ItemFactory {
         case PLUGIN_DOCMAN_ITEM_TYPE_EMPTY:
             $item = new Docman_Empty($row);
             break;
+        case PLUGIN_DOCMAN_ITEM_TYPE_CLOUDSTORAGE:
+            $item = new Docman_Cloudstorage($row);
+            break;
         default:
             return;
         }
@@ -165,6 +169,9 @@ class Docman_ItemFactory {
         case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
             return $GLOBALS['Language']->getText('plugin_docman','filters_item_type_link');
             break;
+        case PLUGIN_DOCMAN_ITEM_TYPE_CLOUDSTORAGE:
+            return $GLOBALS['Language']->getText('plugin_docman','filters_item_type_cloudstorage');
+            break;
         case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
             return $GLOBALS['Language']->getText('plugin_docman','filters_item_type_embeddedfile');
             break;
@@ -188,6 +195,9 @@ class Docman_ItemFactory {
             case 'docman_link':
                 $type = PLUGIN_DOCMAN_ITEM_TYPE_LINK;
                 break;
+            case 'docman_cloudstorage':
+                $type = PLUGIN_DOCMAN_ITEM_TYPE_CLOUDSTORAGE;
+                break;                
             case 'docman_wiki':
                $type = PLUGIN_DOCMAN_ITEM_TYPE_WIKI;
                 break;

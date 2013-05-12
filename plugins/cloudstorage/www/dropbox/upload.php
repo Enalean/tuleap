@@ -76,7 +76,7 @@ function handle_dropbox_auth($dropbox)
 	if(!$dropbox->IsAuthorized())
 	{
 		// redirect user to dropbox auth page
-		$return_url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME']."?auth_callback=1";
+		$return_url = "https://".$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME']."?auth_callback=1";
 		$auth_url = $dropbox->BuildAuthorizeUrl($return_url);
 		$request_token = $dropbox->GetRequestToken();
 		store_token($request_token, $request_token['t']);

@@ -35,6 +35,9 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */ {
     function visitWiki(&$item, $params = array()) {
         return '/wiki/?group_id='. $item->getGroupId() .'&pagename='. urlencode($item->getPagename());
     }
+    function visitCloudstorage(&$item, $params = array()) {
+        return '/plugins/cloudstorage/?group_id=' . $item->getGroupId() . '&action=' . urlencode($item->getServiceName()) . '&folder='. urlencode($item->getDocumentId());
+    }
     function visitLink(&$item, $params = array()) {
         return $item->getUrl();
     }

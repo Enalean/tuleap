@@ -66,6 +66,10 @@ class Docman_CloneItemsVisitor {
     function visitWiki(&$item, $params = array()) {
         $this->_cloneItem($item, $params);
     }
+    
+    function visitCloudstorage(&$item, $params = array()) {
+        $this->_cloneItem($item, $params);
+    }
 
     function visitLink(&$item, $params = array()) {
         $this->_cloneItem($item, $params);

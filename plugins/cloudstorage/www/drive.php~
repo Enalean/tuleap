@@ -1,21 +1,82 @@
+<?php
+	require_once('pre.php');
+	require_once('common/mvc/Views.class.php');
+	require_once('common/include/HTTPRequest.class.php');
+	require_once('www/project/export/project_export_utils.php');
+
+	require_once('../include/CloudStorageDao.class.php');
+	
+	$cloudstorage_dao = new CloudstorageDao(CodendiDataAccess::instance());
+	$res_drive_defcsid = $cloudstorage_dao->select_default_cloudstorage_id('drive');
+
+	if(isset($_GET['docman'])) { 
+		$is_docman = "yes"; 
+	} else { 
+		$is_docman = "no"; 
+	}
+	
+	if(isset($_GET['default'])) { 
+		$default = "yes"; 
+	} else { 
+		$default = "no"; 
+	}
+	
+	if(isset($_GET['folder'])) {
+		$path = "var initialRequest = gapi.client.drive.children.list({ 'folderId' : '" . $_GET['folder'] ."' });";
+	} else {
+		$path = "var initialRequest = gapi.client.drive.files.list({ 'folderId' : '' });";
+		if ($res_drive_defcsid != "" && $is_docman == "no") {
+			$path = "var initialRequest = gapi.client.drive.children.list({ 'folderId' : '" . $res_drive_defcsid ."' });";
+		}			
+	}	
+	
+	$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME']."?group_id=0&action=drive";
+?>
+
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
 <script type="text/javascript" src="themes/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript"> 
 	jQuery.noConflict();
-</script>
-<script type="text/javascript">
+	
+	var is_docman = "<? echo $is_docman; ?>";
+	var defcs_id = "<? echo $default; ?>";
+	
+	function sendDocumentIdToDocman(docid)
+	{
+		if (defcs_id == 'no') {
+			alert(1);
+			window.opener.document.getElementById("cs_docid").value = docid;
+		} else {
+		alert(2);
+			window.opener.document.getElementById("default_drive_id").value = docid;
+		}
+		window.close();
+	}
+		
 	var CLIENT_ID = '716871252082-qrqagr432idmdrh5um2cg4monu4b42qa.apps.googleusercontent.com';
 	var SCOPES = 'https://www.googleapis.com/auth/drive';
-	var tabString=
-		"<thead>" +
-			"<tr class=\"boxtable\">" +
-				"<th class=\"boxtitle\" scope=\"col\">Titre</th>" +
-				"<th class=\"boxtitle\" scope=\"col\">Type</th>" +
-				"<th class=\"boxtitle\" scope=\"col\">Date création</th>" +
-				"<th class=\"boxtitle\" scope=\"col\">Propriétaire</th>" +
-			"</tr>" +
-		"</thead>"
-	;
+	
+	if (is_docman == "no") {
+		var tabString =
+			"<thead>" +
+				"<tr class=\"boxtable\">" +
+					"<th class=\"boxtitle\" scope=\"col\">Title</th>" +
+					"<th class=\"boxtitle\" scope=\"col\">Type</th>" +
+					"<th class=\"boxtitle\" scope=\"col\">Update date</th>" +
+					"<th class=\"boxtitle\" scope=\"col\">Owner</th>" +
+				"</tr>" +
+			"</thead>";
+	}
+	else
+	{
+		var tabString =
+			"<thead>" +
+				"<tr class=\"boxtable\">" +
+					"<th class=\"boxtitle\" scope=\"col\" style=\"width:20%;\">Link folder</th>" +
+					"<th class=\"boxtitle\" scope=\"col\">Folder name</th>" +
+				"</tr>" +
+			"</thead>"	;
+	}
 	
 	/**
 	 * Called when the client library is loaded to start the auth flow.
@@ -49,7 +110,7 @@
         {
         	// Access token has been successfully retrieved, requests can be sent to the API.
         	//filePicker.style.display = 'block';
-        	filesList.style.display = 'block';
+        	//filesList.style.display = 'block';
 		  	//directory.style.display = 'block';
           	//filePicker.onchange = uploadFile;
           	jQuery('#data').fadeOut('fast');jQuery('#load').fadeIn('slow');retrieveAllFiles(alertons); 
@@ -183,9 +244,7 @@
 				'folderId': '0B-SQbuOXoGUyUVJqVmtnbnYwXzg'
 			});*/
 			
-			var initialRequest = gapi.client.drive.children.list({
-				'folderId' : '0B-SQbuOXoGUyUVJqVmtnbnYwXzg'
-			});
+			<?php echo $path; ?>
 					
 			retrievePageOfFiles(initialRequest, []);
 		});
@@ -202,6 +261,8 @@
 	{
 		gapi.client.load('drive', 'v2', function() 
 		{
+			
+			
 			var request = gapi.client.drive.files.get({
 				'fileId': fileId
 			});
@@ -254,8 +315,8 @@
 				}
 
 				var dateCreation=resp.createdDate.substr(8,2)+"/"+resp.createdDate.substr(5,2)+"/"+resp.createdDate.substr(0,4);
-
-				if(resp.webContentLink != null)
+				
+				if(resp.webContentLink != null && is_docman == "no")
 				{
 					clean_results = document.getElementById('data').innerHTML;
 					clean_results = clean_results.replace('<tbody>', '');
@@ -263,13 +324,13 @@
 									
 					document.getElementById('data').innerHTML = clean_results  +
 						"<tr class=\"boxitem\">" +
-							"<th><a id=\"a"+fileId+"\" href=\""+resp.webContentLink+"\">"+resp.title+"</a></th>" +
+							"<td><a id=\"a"+fileId+"\" href=\""+resp.webContentLink+"\">"+resp.title+"</a></td>" +
 							"<td>"+type+"</td>" +
 							"<td>"+dateCreation+"</td>" +
 							"<td>"+resp.ownerNames+" ("+resp.userPermission.role+")</td>" +
 						"</tr>";
 				}
-				else if(resp.exportLinks != null)
+				else if(resp.exportLinks != null && is_docman == "no")
 				{
 					clean_results = document.getElementById('data').innerHTML;
 					clean_results = clean_results.replace('<tbody>', '');
@@ -277,7 +338,7 @@
 			
 					document.getElementById('data').innerHTML = clean_results  +
 						"<tr class=\"boxitem\">" +
-							"<td><a id=\"a"+fileId+"\" href=\""+resp.exportLinks["application/pdf"]+"\">"+resp.title+"</a></th>" +
+							"<td><a id=\"a"+fileId+"\" href=\""+resp.exportLinks["application/pdf"]+"\">"+resp.title+"</a></td>" +
 							"<td>"+type+"</td>" +
 							"<td>"+dateCreation+"</td>" +
 							"<td>"+resp.ownerNames+" ("+resp.userPermission.role+")</td>" +
@@ -288,21 +349,35 @@
 					clean_results = document.getElementById('data').innerHTML;
 					clean_results = clean_results.replace('<tbody>', '');
 					clean_results = clean_results.replace('</tbody>', '');
-									
-					document.getElementById('data').innerHTML = clean_results  +
-						"<tr class=\"boxitem\">" +
-							"<th>"+resp.title+"</th>" +
-							"<td>"+type+"</td>" +
-							"<td>"+dateCreation+"</td>" +
-							"<td>"+resp.ownerNames+" ("+resp.userPermission.role+")</td>" +
-						"</tr>";
+					
+					if (resp.mimeType != "application/vnd.google-apps.folder" && is_docman == "no")
+					{			
+						document.getElementById('data').innerHTML = clean_results  +
+							"<tr class=\"boxitem\">" +
+								"<td>"+resp.title+"</td>" +
+								"<td>"+type+"</td>" +
+								"<td>"+dateCreation+"</td>" +
+								"<td>"+resp.ownerNames+" ("+resp.userPermission.role+")</td>" +
+							"</tr>";
+					}
+					else
+					{
+						if (resp.mimeType == "application/vnd.google-apps.folder" && is_docman == "yes")
+						{
+							document.getElementById('data').innerHTML = clean_results  +
+								"<tr class=\"boxitem\">" +
+									"<td style=\"cursor:pointer; text-align:center; font-size:0px\"><img src=\"themes/img/link.png\" alt=\"Link\" onclick=\"sendDocumentIdToDocman('"+fileId+"');\" />"+fileId+"</td>" +
+									"<td><a href=\"<?php echo $url; ?>&folder="+fileId+"\">"+resp.title+"</a></td>" +
+								"</tr>";
+						}			
+					}
 				}
 
 				var requestRev = gapi.client.drive.revisions.list({
 					'fileId': fileId
 				});
 				
-				//jQuery(document).ready(function(){
+				jQuery(document).ready(function(){
 					jQuery('#data').dataTable({
 						"bPaginate": true,
 						"bDestroy": true,	
@@ -310,7 +385,7 @@
     					"bAutoWidth": false,
     					"sDom": 'Rlfrtip'
 					});		
-				//});				
+				});				
 			});
 		});	
 	}
@@ -345,8 +420,9 @@
 <!--Add a file picker for the user to start the upload process -->
 <div style="margin-bottom: 10px;">
     <!--<input type="file" id="filePicker" style="display: none" />-->
-	<input type="button" id="filesList" value="Refresh files list" onClick="jQuery('#data').fadeOut('fast');jQuery('#load').fadeIn('slow');retrieveAllFiles(alertons)" style="display: none" />
-    <input type="button" id="authorizeButton" style="display: none" value="Authorize" />
+	<!--<input type="button" id="filesList" value="Refresh files list" onClick="jQuery('#data').fadeOut('fast');jQuery('#load').fadeIn('slow');retrieveAllFiles(alertons)" style="display: none" />-->
+    <!--<input type="button" id="authorizeButton" style="display: none" value="Authorize" />-->
+    <p id="authorizeButton" style="display: none">Authentication required. <a href='#'>Click here.</a></p>
 	<!--<input type="button" id="directory" style="display: none" value="Creer un repertoire" onClick="insertDirectory(prompt('Nommer votre repertoire'),alertDir);"/>-->
 </div>
 	

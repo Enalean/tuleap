@@ -886,3 +886,6 @@ plugin_docman	item_not_restored	L'item sélectionné n'a pas pu être restauré.
 
 plugin_docman	permission_requests	Demandes de permission pour le gestionnaire de documents
 plugin_docman	permission_requests_information	Le groupe séléctionné n'affectera pas les personnes notifiées pour les demandes de permission sur le service de documents.<br> Seuls les <b>gestionnaires du document</b> seront notifiés dans ce cas.
+
+plugin_docman	specificfield_cloudstorage_folderid	Spécifié un dossier dropbox ou drive:
+plugin_docman	new_document_cloudstorage	Lié a un dossier cloudstorage

@@ -140,6 +140,9 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
     function visitWiki(&$item, $params) {
         return $this->visitDocument($item, $params);
     }
+    function visitCloudstorage(&$item, $params) {
+        return $this->visitDocument($item, $params);
+    }
     function visitLink(&$item, $params) {
         return $this->visitDocument($item, $params);
     }

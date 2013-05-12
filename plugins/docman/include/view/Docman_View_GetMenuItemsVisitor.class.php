@@ -85,6 +85,13 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
         return $this->visitItem($item, $params);
     }
     
+    function visitCloudstorage(&$item, $params = array()) {
+        if($this->dPm->userCanWrite($this->user, $item->getId())) {
+            $this->actions['canUpdate'] = true;
+        }
+        return $this->visitDocument($item, $params);
+    }
+    
     function visitWiki(&$item, $params = array()) {
         if($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canUpdate'] = true;

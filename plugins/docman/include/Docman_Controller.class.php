@@ -360,6 +360,9 @@ class Docman_Controller extends Controler {
             case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
                 $item->setUrl($i['link_url']);
                 break;
+            case PLUGIN_DOCMAN_ITEM_TYPE_CLOUDSTORAGE:
+                $item->setDocumentId($i['cs_docid']);
+                break;                
             }
         }
     }

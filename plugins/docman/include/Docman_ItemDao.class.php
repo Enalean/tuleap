@@ -312,7 +312,7 @@ class Docman_ItemDao extends DataAccessObject {
         
         $arg    = array();
         $values = array();
-        $cols   = array('parent_id', 'group_id', 'title', 'description', 'create_date', 'update_date', 'user_id', 'status', 'obsolescence_date', 'rank', 'item_type', 'link_url', 'wiki_page', 'file_is_embedded');
+        $cols   = array('parent_id', 'group_id', 'title', 'description', 'create_date', 'update_date', 'user_id', 'status', 'obsolescence_date', 'rank', 'item_type', 'link_url', 'cs_docid', 'cs_service', 'wiki_page', 'file_is_embedded');
         foreach ($row as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]    = $key;
@@ -358,7 +358,7 @@ class Docman_ItemDao extends DataAccessObject {
     function updateById($item_id, $parent_id=null, $group_id=null, $title=null,
                     $description=null, $create_date=null, $update_date=null, 
                     $user_id=null, $rank=null, $item_type=null, $link_url=null,
-                    $wiki_page=null, $file_is_embedded=null) {       
+                    $cs_docid=null, $wiki_page=null, $file_is_embedded=null) {       
        
         $argArray = array();
 		
@@ -400,6 +400,10 @@ class Docman_ItemDao extends DataAccessObject {
 
         if($link_url !== null) {
             $argArray[] = 'link_url='.$this->da->quoteSmart($link_url);
+        }
+        
+        if($cs_docid !== null) {
+            $argArray[] = 'cs_docid='.$this->da->quoteSmart($cs_docid);
         }
 
         if($wiki_page !== null) {
@@ -804,7 +808,7 @@ class Docman_ItemDao extends DataAccessObject {
                         ' SELECT item_id, parent_id, group_id, title, '.
                         ' description, create_date, update_date, delete_date, '.
                         ' user_id, status, obsolescence_date, rank, item_type, link_url,'.
-                        ' wiki_page, file_is_embedded '.
+                        ' cs_docid, cs_service, wiki_page, file_is_embedded '.
                         ' FROM plugin_docman_item '.
                         ' WHERE item_id='.$this->da->quoteSmart($itemId);
 

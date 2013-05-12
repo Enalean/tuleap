@@ -19,6 +19,9 @@ class Docman_View_ToolbarNewDocumentVisitor /* implements Visitor*/ {
     function visitWiki(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
+    function visitCloudstorage(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
     function visitLink(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }

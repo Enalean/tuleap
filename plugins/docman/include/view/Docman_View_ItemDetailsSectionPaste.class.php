@@ -126,6 +126,10 @@ extends Docman_View_ItemDetailsSectionActions {
     function visitWiki($item, $params = array()) {
         return '';
     }
+    
+    function visitCloudstorage($item, $params = array()) {
+        return '';
+    }
 
     function visitLink($item, $params = array()) {
         return '';

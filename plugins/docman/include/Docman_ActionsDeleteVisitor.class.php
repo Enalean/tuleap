@@ -107,6 +107,10 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     public function visitLink(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
+    
+    public function visitCloudstorage(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
 
     public function visitFile($item, $params = array()) {
         if ($this->getPermissionManager($item->getGroupId())->userCanWrite($params['user'], $item->getId())) {

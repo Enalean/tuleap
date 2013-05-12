@@ -46,6 +46,9 @@ class DocmanOneFolderIsWriteable /* implements Visitor */ {
     function visitWiki(&$item, $params = array()) {
         return false;
     }
+    function visitCloudstorage(&$item, $params = array()) {
+        return false;
+    }
     function visitLink(&$item, $params = array()) {
         return false;
     }

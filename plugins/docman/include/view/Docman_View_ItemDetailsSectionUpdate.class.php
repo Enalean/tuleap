@@ -83,6 +83,9 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
     function visitWiki(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
+    function visitCloudstorage(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
     function visitLink(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }

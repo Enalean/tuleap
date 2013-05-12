@@ -45,14 +45,24 @@ class Docman_View_NewDocument extends Docman_View_New {
                 'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_link'),
                 'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_LINK)? $params['force_item'] : new Docman_Link(),
                 'checked' => ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_LINK)
-                ));
+                )
+        );
         $wikiAvailable = true;
+        $cloudstorageAvailable = true;
         if(isset($params['group_id'])) {
             $pm = ProjectManager::instance();
             $go = $pm->getProject($params['group_id']);
             $wikiAvailable = $go->usesWiki();
-
+			$cloudstorageAvailable = $go->usesCloudstorage();
         }
+        if($cloudstorageAvailable) {
+            $specifics[] = array(
+                'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_CLOUDSTORAGE,
+                'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_cloudstorage'),
+                'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_CLOUDSTORAGE)? $params['force_item'] : new Docman_Cloudstorage(),
+                'checked' => ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_CLOUDSTORAGE)
+                );
+        }        
         if($wikiAvailable) {
             $specifics[] = array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
