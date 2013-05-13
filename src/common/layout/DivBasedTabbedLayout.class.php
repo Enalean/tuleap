@@ -26,34 +26,22 @@ require_once('common/layout/Layout.class.php');
 
 class DivBasedTabbedLayout extends Layout
 {
-	/**
-	 * The root location for images
-	 *
-	 * @var		string	$imgroot
-	 */
-	var $imgroot;
-	
+    /**
+     * The root location for images
+     *
+     * @var		string	$imgroot
+     */
+    var $imgroot;
+
 	/**
 	 * DivBasedTabbedLayout - Constructor
 	 */
-	function __construct($root) 
-	{
+    function __construct($root) {
         // Parent constructor
         parent::__construct($root);
         $this->imgroot = $root.'/images/';
-	}
+    }
 
-	/**
-	 *	createLinkToUserHome() - Creates a link to a user's home page	
-	 * 
-	 *	@param	string	The user's user_name
-	 *	@param	string	The user's realname
-	 */
-	function createLinkToUserHome($user_name, $realname) {
-	    $hp = Codendi_HTMLPurifier::instance();
-		return '<a href="/users/'.$user_name.'/">'.$hp->purify($realname, CODENDI_PURIFIER_CONVERT_HTML).'</a>';
-	}
-    
     function getBodyHeader($params) {
 /* A 2x2 table header
  Organisation logo		|  users actions
@@ -503,7 +491,8 @@ echo $this->outerTabs($params);
             $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$atid\" NAME=\"atid\">\n";
         } 
         if ( isset($forum_id) ) {
-            $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$forum_id\" NAME=\"forum_id\">\n";
+            $forum_id = $this->purifier->purify($forum_id, CODENDI_PURIFIER_CONVERT_HTML);
+            $output  .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$forum_id\" NAME=\"forum_id\">\n";
         } 
         if ( isset($is_bug_page) ) {
            $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_bug_page\" NAME=\"is_bug_page\">\n";
