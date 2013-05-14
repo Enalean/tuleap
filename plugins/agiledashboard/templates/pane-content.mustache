@@ -1,31 +1,29 @@
-<div>
-    <div class="alert alert-info">
-        <span class=" lab_features">This is a lab feature that is subjected to
-        change in a near future. Please get in touch with us to
-        <a href="mailto:tuleap-devel@tuleap.net">provide any feedback</a> about
-        this work in progress, thanks!</span>
-    </div>
-    {{#can_add_story}}
-    <button class="btn btn-primary">{{add_new_story}}</button>
-    {{/can_add_story}}
-    <table class="table table-striped table-condensed">
-        <thead>
-            <tr>
-                <td>Id</td>
-                <td>{{title}}</td>
-                <td>{{points}}</td>
-                <td>{{parent}}</td>
-            </tr>
-        </thead>
-        <tbody>
-            {{#rows}}
-            <tr>
-                <td>{{id}}</td>
-                <td>{{title}}</td>
-                <td>{{points}}</td>
-                <td>{{parent}}</td>
-            </tr>
-            {{/rows}}
-        </tbody>
-    </table>
+<div class="alert alert-info">
+    <span class=" lab_features">This is a lab feature that is subjected to
+    change in a near future. Please get in touch with us to
+    <a href="mailto:tuleap-devel@tuleap.net">provide any feedback</a> about
+    this work in progress, thanks!</span>
 </div>
+{{#can_add_story}}
+<button class="btn btn-primary">{{add_new_story}}</button>
+{{/can_add_story}}
+<table class="table table-striped table-condensed">
+    <thead>
+        <tr>
+            <td>Id</td>
+            <td>{{title}}</td>
+            <td>{{points}}</td>
+            <td>{{parent}}</td>
+        </tr>
+    </thead>
+    <tbody>
+        {{#rows}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{title}}</td>
+            <td>{{points}}</td>
+            <td>{{parent}}</td>
+        </tr>
+        {{/rows}}
+    </tbody>
+</table>
