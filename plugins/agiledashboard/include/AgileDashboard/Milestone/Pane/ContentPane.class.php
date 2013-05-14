@@ -58,8 +58,17 @@ class AgileDashboard_Milestone_Pane_ContentPane extends AgileDashboard_Pane {
     }
 
     private function getPaneContent() {
+        $backlog_item_type = 'Story';
+        $can_add_backlog_item_type = true;
+        $row_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection(array(
+            new AgileDashboard_Milestone_Pane_ContentRowPresenter(12, "bla", 2, "zut", '#'),
+            new AgileDashboard_Milestone_Pane_ContentRowPresenter(13, "bla", 2, "zut", '#'),
+            new AgileDashboard_Milestone_Pane_ContentRowPresenter(14, "bla", 2, "zut", '#'),
+        ));
+        $presenter = new AgileDashboard_Milestone_Pane_ContentPresenter($row_collection, $backlog_item_type, $can_add_backlog_item_type);
+
         $renderer  = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
-        return $renderer->renderToString('pane-content', new AgileDashboard_Milestone_Pane_ContentPresenter());
+        return $renderer->renderToString('pane-content', $presenter);
     }
 }
 

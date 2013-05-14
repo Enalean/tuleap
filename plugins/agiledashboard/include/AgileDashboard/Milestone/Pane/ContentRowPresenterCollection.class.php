@@ -22,40 +22,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_ContentRowPresenter {
-    private $id;
-    private $title;
-    private $points;
-    private $parent_title;
-    private $parent_url;
+class AgileDashboard_Milestone_Pane_ContentRowPresenterCollection implements Iterator {
+    private $rows;
 
-    public function __construct($id, $title, $points, $parent_title, $parent_url) {
-        $this->id           = $id;
-        $this->title        = $title;
-        $this->points       = $points;
-        $this->parent_title = $parent_title;
-        $this->parent_url   = $parent_url;
+    public function __construct(array $rows) {
+        $this->rows = $rows;
     }
 
-    public function id() {
-        return $this->id;
+    public function current() {
+        return current($this->rows);
     }
 
-    public function title() {
-        return $this->title;
+    public function key() {
+        return key($this->rows);
     }
 
-    public function points() {
-        return $this->points;
+    public function next() {
+        return next($this->rows);
     }
 
-    public function parent_title() {
-        return $this->parent_title;
+    public function rewind() {
+        reset($this->rows);
     }
 
-    public function parent_url() {
-        return $this->parent_url;
+    public function valid() {
+        return current($this->rows) !== false;
     }
 }
-
 ?>

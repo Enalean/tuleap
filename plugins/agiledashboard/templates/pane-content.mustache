@@ -4,9 +4,9 @@
     <a href="mailto:tuleap-devel@tuleap.net">provide any feedback</a> about
     this work in progress, thanks!</span>
 </div>
-{{#can_add_story}}
-<button class="btn btn-primary">{{add_new_story}}</button>
-{{/can_add_story}}
+{{#can_add_backlog_item}}
+<button class="btn btn-primary">{{add_new_backlog_item}}</button>
+{{/can_add_backlog_item}}
 <table class="table table-striped table-condensed">
     <thead>
         <tr>
@@ -22,8 +22,9 @@
             <td>{{id}}</td>
             <td>{{title}}</td>
             <td>{{points}}</td>
-            <td>{{parent}}</td>
+            <td><a href="{{parent_url}}">{{parent_title}}</a></td>
         </tr>
         {{/rows}}
     </tbody>
 </table>
+

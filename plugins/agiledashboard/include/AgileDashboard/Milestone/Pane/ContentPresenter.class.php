@@ -23,13 +23,27 @@
  */
 
 class AgileDashboard_Milestone_Pane_ContentPresenter {
+    /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
+    private $rows;
 
-    public function can_add_story() {
-        return true;
+    /** @var String */
+    private $backlog_item_type;
+
+    /** @var Boolean */
+    private $can_add_backlog_item_type;
+
+    public function __construct(AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $rows, $backlog_item_type, $can_add_backlog_item_type) {
+        $this->rows                      = $rows;
+        $this->backlog_item_type         = $backlog_item_type;
+        $this->can_add_backlog_item_type = $can_add_backlog_item_type;
     }
 
-    public function add_new_story() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_add_new', array('Bla'));
+    public function can_add_backlog_item() {
+        return $this->can_add_backlog_item_type;
+    }
+
+    public function add_new_backlog_item() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_add_new', array($this->backlog_item_type));
     }
 
     public function title() {
@@ -45,11 +59,7 @@ class AgileDashboard_Milestone_Pane_ContentPresenter {
     }
 
     public function rows() {
-        return array(
-            new AgileDashboard_Milestone_Pane_ContentRowPresenter(),
-            new AgileDashboard_Milestone_Pane_ContentRowPresenter(),
-            new AgileDashboard_Milestone_Pane_ContentRowPresenter(),
-        );
+        return $this->rows;
     }
 }
 
