@@ -40,6 +40,9 @@ class Planning_MilestoneFactory {
      */
     private $formelement_factory;
 
+    /** @var array */
+    private $cache_all_milestones;
+
     /**
      * Instanciates a new milestone factory.
      *
@@ -332,6 +335,13 @@ class Planning_MilestoneFactory {
      * @return Array of \Planning_Milestone
      */
     public function getAllMilestones(PFUser $user, Planning $planning) {
+        if (! isset($this->cache_all_milestone[$planning->getId()])) {
+            $this->cache_all_milestone[$planning->getId()] = $this->getAllMilestonesWithoutCaching($user, $planning);
+        }
+        return $this->cache_all_milestone[$planning->getId()];
+    }
+
+    private function getAllMilestonesWithoutCaching(PFUser $user, Planning $planning) {
         $project = $planning->getPlanningTracker()->getProject();
         $milestones = array();
         $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
