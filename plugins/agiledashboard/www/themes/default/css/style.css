@@ -223,3 +223,7 @@
     font-size: 1.5em;
     color: #999;
 }
+
+.milestone-content-rows > tr {
+    cursor: move;
+}

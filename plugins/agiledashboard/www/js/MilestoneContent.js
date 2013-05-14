@@ -23,6 +23,31 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 tuleap.agiledashboard.MilestoneContent = Class.create({
     initialize: function (container) {
         (function ($) {
+            function sort(item) {
+                var item_id = $(item).attr('data-artifact-id'),
+                    next_id = $(item).next().attr('data-artifact-id'),
+                    prev_id = $(item).prev().attr('data-artifact-id');
+
+                if (next_id) {
+                    sortHigher(item_id, next_id);
+                } else if (prev_id) {
+                    sortLesser(item_id, prev_id);
+                }
+            }
+
+            function sortHigher(source_id, target_id) {
+                requestSort('higher-priority-than', source_id, target_id);
+            }
+
+            function sortLesser(source_id, target_id) {
+                requestSort('lesser-priority-than', source_id, target_id);
+            }
+
+            function requestSort(func, source_id, target_id) {
+                var url = '?func='+ func +'&aid=' + source_id + '&target-id=' + target_id;
+                $.ajax(url);
+            }
+
             var milestone_content_rows = $(container).find('.milestone-content-rows');
             milestone_content_rows.sortable({
                 revert: true,
@@ -38,6 +63,9 @@ tuleap.agiledashboard.MilestoneContent = Class.create({
                     });
 
                     return $helper;
+                },
+                stop: function (event, ui) {
+                    sort(ui.item);
                 },
                 cursor: 'move'
             });
