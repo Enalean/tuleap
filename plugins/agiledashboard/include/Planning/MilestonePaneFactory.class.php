@@ -70,12 +70,22 @@ class Planning_MilestonePaneFactory {
         $legacy_planning_pane_info = $this->legacy_planning_pane_factory->getPaneInfo($milestone);
 
         $this->list_of_pane_info[] = $legacy_planning_pane_info;
+        $this->list_of_pane_info[] = $this->getContentPaneInfo($milestone);
         $this->buildAdditionnalPanes($milestone);
 
         if (! $this->active_pane) {
             $legacy_planning_pane_info->setActive(true);
             $this->active_pane = $this->legacy_planning_pane_factory->getPane($milestone, $legacy_planning_pane_info);
         }
+    }
+
+    private function getContentPaneInfo(Planning_Milestone $milestone) {
+        $pane_info = new AgileDashboard_Milestone_Pane_ContentPaneInfo($milestone);
+        if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_ContentPaneInfo::IDENTIFIER) {
+            $pane_info->setActive(true);
+            $this->active_pane = new AgileDashboard_Milestone_Pane_ContentPane($pane_info);
+        }
+        return $pane_info;
     }
 
     private function buildAdditionnalPanes(Planning_Milestone $milestone) {
