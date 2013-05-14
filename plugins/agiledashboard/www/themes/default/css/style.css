@@ -224,6 +224,9 @@
     color: #999;
 }
 
+#mcontent table {
+    border-spacing: 0;
+}
 .milestone-content-rows > tr {
     cursor: move;
 }
