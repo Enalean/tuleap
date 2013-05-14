@@ -44,8 +44,8 @@ tuleap.agiledashboard.MilestoneContent = Class.create({
             }
 
             function requestSort(func, source_id, target_id) {
-                var url = '?func='+ func +'&aid=' + source_id + '&target-id=' + target_id;
-                $.ajax(url);
+                var query = '?func='+ func +'&aid=' + source_id + '&target-id=' + target_id;
+                $.ajax(codendi.tracker.base_url + query);
             }
 
             var milestone_content_rows = $(container).find('.milestone-content-rows');
