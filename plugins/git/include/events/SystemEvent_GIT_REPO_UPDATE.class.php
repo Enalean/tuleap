@@ -55,16 +55,13 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
     }
 
     public function verbalizeParameters($with_link) {
-        $repository = $this->getRepositoryFromParameters();
-        if ($repository) {
-            if ($with_link) {
+        if ($with_link) {
+            $repository = $this->getRepositoryFromParameters();
+            if ($repository) {
                 return '<a href="/plugins/git/?action=repo_management&group_id='.$repository->getProjectId().'&repo_id='.$repository->getId().'">'.$repository->getName().'</a>';
-            } else {
-                return $repository->getId();
             }
-        } else {
-            return $this->getRepositoryIdFromParameters();
         }
+        return $this->getRepositoryIdFromParameters();
     }
 
 
