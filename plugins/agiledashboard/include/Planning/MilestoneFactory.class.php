@@ -454,7 +454,58 @@ class Planning_MilestoneFactory {
 
     public function getMilestoneContent(Planning_ArtifactMilestone $milestone) {
         $dao = new Planning_MilestoneDao();
-        return $dao->getBacklogArtifacts($milestone->getArtifactId())->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
+        $backlog_items = array();
+        $artifacts = $dao->getBacklogArtifacts($milestone->getArtifactId())->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
+        foreach ($artifacts as $artifact) {
+            /* @var $artifact Tracker_Artifact */
+            $backlog_items[$artifact->getId()] = new BacklogItem($artifact);
+        }
+        $backlog_item_ids = array_keys($backlog_items);
+        $parents = $this->artifact_factory->getParents($backlog_item_ids);
+        foreach ($parents as $child_id => $parent) {
+            $backlog_items[$child_id]->setParent($parent);
+        }
+        return $backlog_items;
+    }
+}
+
+class BacklogItem implements AgileDashboard_Milestone_Pane_ContentRowPresenter {
+    /** @var Tracker_Artifact */
+    private $artifact;
+
+    /** @var Tracker_Artifact */
+    private $parent;
+
+    public function __construct(Tracker_Artifact $artifact) {
+        $this->artifact = $artifact;
+    }
+
+    public function setParent(Tracker_Artifact $parent) {
+        $this->parent = $parent;
+    }
+
+    public function id() {
+        return $this->artifact->getId();
+    }
+
+    public function title() {
+        return $this->artifact->getTitle();
+    }
+
+    public function url() {
+        return $this->artifact->getUri();
+    }
+
+    public function points() {
+        return '';
+    }
+
+    public function parent_title() {
+        return $this->parent->getTitle();
+    }
+
+    public function parent_url() {
+        return $this->parent->getUri();
     }
 }
 

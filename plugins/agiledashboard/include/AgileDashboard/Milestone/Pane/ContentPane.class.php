@@ -36,16 +36,8 @@ class AgileDashboard_Milestone_Pane_ContentPane extends AgileDashboard_Pane {
         $this->info = $info;
         $this->row_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
         foreach ($content as $artifact) {
-            $this->row_collection->push(
-                new AgileDashboard_Milestone_Pane_ContentRowPresenter(
-                    $artifact->getId(),
-                    $artifact->getTitle(),
-                    '',
-                    '',
-                    '',
-                    ''
-                )
-            );
+            /* @var $artifact AgileDashboard_Milestone_Pane_ContentRowPresenter */
+            $this->row_collection->push($artifact);
         }
 
     }
