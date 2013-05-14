@@ -25,13 +25,15 @@
 class AgileDashboard_Milestone_Pane_ContentRowPresenter {
     private $id;
     private $title;
+    private $url;
     private $points;
     private $parent_title;
     private $parent_url;
 
-    public function __construct($id, $title, $points, $parent_title, $parent_url) {
+    public function __construct($id, $title, $url, $points, $parent_title, $parent_url) {
         $this->id           = $id;
         $this->title        = $title;
+        $this->url          = $url;
         $this->points       = $points;
         $this->parent_title = $parent_title;
         $this->parent_url   = $parent_url;
@@ -43,6 +45,10 @@ class AgileDashboard_Milestone_Pane_ContentRowPresenter {
 
     public function title() {
         return $this->title;
+    }
+
+    public function url() {
+        return $this->url;
     }
 
     public function points() {
