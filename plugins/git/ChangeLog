@@ -1,3 +1,6 @@
+Version 3.19 - Tuleap 6.1
+    * Fixing bug that generates error message and calls wrong code when changing git repository settings.
+
 Version 3.18 - Tuleap 5.13
     * SSH keys manipulation use gerrit user
 
