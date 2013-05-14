@@ -50,7 +50,9 @@ class AgileDashboard_Milestone_Pane_ContentPaneInfo extends AgileDashboard_PaneI
      * @return string eg: 'Access to cardwall'
      */
     protected function getIconTitle() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'access_to_content');
+        return '';
     }
 
 }
+
+?>
