@@ -22,6 +22,11 @@ document.observe('dom:loaded', function () {
     if (planner) {
         new tuleap.agiledashboard.Planning(planner);
     }
-    
+
+    var milestone_content = $('mcontent');
+    if (milestone_content) {
+        new tuleap.agiledashboard.MilestoneContent(milestone_content);
+    }
+
     tuleap.agiledashboard.align_short_access_heights.defer();
 });
