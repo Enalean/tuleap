@@ -25,8 +25,12 @@
 class AgileDashboard_Milestone_Pane_ContentRowPresenterCollection implements Iterator {
     private $rows;
 
-    public function __construct(array $rows) {
+    public function __construct(array $rows = array()) {
         $this->rows = $rows;
+    }
+
+    public function push(AgileDashboard_Milestone_Pane_ContentRowPresenter $row) {
+        $this->rows[] = $row;
     }
 
     public function current() {

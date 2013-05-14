@@ -451,5 +451,11 @@ class Planning_MilestoneFactory {
         }
         return new Planning_NoMilestone($planning->getPlanningTracker()->getProject(), $planning);
     }
+
+    public function getMilestoneContent(Planning_ArtifactMilestone $milestone) {
+        $dao = new Planning_MilestoneDao();
+        return $dao->getBacklogArtifacts($milestone->getArtifactId())->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
+    }
 }
+
 ?>

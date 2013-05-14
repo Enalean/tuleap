@@ -26,13 +26,28 @@
  */
 class AgileDashboard_Milestone_Pane_ContentPane extends AgileDashboard_Pane {
 
-    /**
-     * @var Tracker_Artifact_Burndown_PaneInfo
-     */
+    /** @var Tracker_Artifact_Burndown_PaneInfo */
     private $info;
 
-    public function __construct(AgileDashboard_Milestone_Pane_ContentPaneInfo $info) {
+    /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
+    private $row_collection;
+
+    public function __construct(AgileDashboard_Milestone_Pane_ContentPaneInfo $info, $content) {
         $this->info = $info;
+        $this->row_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
+        foreach ($content as $artifact) {
+            $this->row_collection->push(
+                new AgileDashboard_Milestone_Pane_ContentRowPresenter(
+                    $artifact->getId(),
+                    $artifact->getTitle(),
+                    '',
+                    '',
+                    '',
+                    ''
+                )
+            );
+        }
+
     }
 
     public function getIdentifier() {
@@ -60,12 +75,7 @@ class AgileDashboard_Milestone_Pane_ContentPane extends AgileDashboard_Pane {
     private function getPaneContent() {
         $backlog_item_type = 'Story';
         $can_add_backlog_item_type = true;
-        $row_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection(array(
-            new AgileDashboard_Milestone_Pane_ContentRowPresenter(12, "bla", '#', 2, "zut", '#'),
-            new AgileDashboard_Milestone_Pane_ContentRowPresenter(13, "bla", '#', 2, "zut", '#'),
-            new AgileDashboard_Milestone_Pane_ContentRowPresenter(14, "bla", '#', 2, "zut", '#'),
-        ));
-        $presenter = new AgileDashboard_Milestone_Pane_ContentPresenter($row_collection, $backlog_item_type, $can_add_backlog_item_type);
+        $presenter = new AgileDashboard_Milestone_Pane_ContentPresenter($this->row_collection, $backlog_item_type, $can_add_backlog_item_type);
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
         return $renderer->renderToString('pane-content', $presenter);

@@ -87,7 +87,8 @@ class Planning_MilestonePaneFactory {
         $pane_info = new AgileDashboard_Milestone_Pane_ContentPaneInfo($milestone);
         if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_ContentPaneInfo::IDENTIFIER) {
             $pane_info->setActive(true);
-            $this->active_pane = new AgileDashboard_Milestone_Pane_ContentPane($pane_info);
+            $content = $this->milestone_factory->getMilestoneContent($milestone);
+            $this->active_pane = new AgileDashboard_Milestone_Pane_ContentPane($pane_info, $content);
         }
         return $pane_info;
     }
