@@ -5,15 +5,17 @@
     this work in progress, thanks!</span>
 </div>
 {{#can_add_backlog_item}}
-<button class="btn btn-primary">{{add_new_backlog_item}}</button>
+<p>
+    <button class="btn btn-primary">{{add_new_backlog_item}}</button>
+</p>
 {{/can_add_backlog_item}}
-<table class="table table-striped table-condensed">
+<table class="table table-striped table-condensed table-bordered">
     <thead>
         <tr>
-            <td>Id</td>
-            <td>{{title}}</td>
-            <td>{{points}}</td>
-            <td>{{parent}}</td>
+            <th>Id</th>
+            <th>{{title}}</th>
+            <th>{{points}}</th>
+            <th>{{parent}}</th>
         </tr>
     </thead>
     <tbody class="milestone-content-rows">
