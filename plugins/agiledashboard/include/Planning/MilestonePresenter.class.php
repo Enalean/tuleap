@@ -27,16 +27,6 @@ require_once 'common/TreeNode/TreeNodeMapper.class.php';
  */
 class AgileDashboard_MilestonePresenter {
     /**
-     * @var array
-     */
-    private $additional_panes = array();
-
-    /**
-     * @var array of Planning_Milestone
-     */
-    private $available_milestones;
-
-    /**
      * @var Planning_Milestone
      */
     private $milestone;
@@ -52,30 +42,26 @@ class AgileDashboard_MilestonePresenter {
     private $request;
 
     /**
-     * @var AgileDashboard_Pane
-     */
-    private $active_pane;
-
-    /**
      * @var string
      */
     private $planning_redirect_to_new;
+
+    /**
+     * @var AgileDashboard_Milestone_Pane_PresenterData 
+     */
+    private $presenter_data;
 
     public function __construct(
             Planning_Milestone $milestone,
             PFUser $current_user,
             Codendi_Request $request,
-            $active_pane,
-            array $additional_panes,
-            array $available_milestones,
+            AgileDashboard_Milestone_Pane_PresenterData $presenter_data,
             $planning_redirect_to_new
             ) {
         $this->milestone                = $milestone;
         $this->current_user             = $current_user;
         $this->request                  = $request;
-        $this->active_pane              = $active_pane;
-        $this->additional_panes         = $additional_panes;
-        $this->available_milestones     = $available_milestones;
+        $this->presenter_data           = $presenter_data;
         $this->planning_redirect_to_new = $planning_redirect_to_new;
     }
 
@@ -91,11 +77,11 @@ class AgileDashboard_MilestonePresenter {
         $artifacts_data = array();
         $selected_id    = $this->milestone->getArtifactId();
 
-        foreach ($this->available_milestones as $milestone) {
+        foreach ($this->presenter_data->getAvailableMilestones() as $milestone) {
             $artifacts_data[] = array(
                 'title'    => $hp->purify($milestone->getArtifactTitle()),
                 'selected' => ($milestone->getArtifactId() == $selected_id) ? 'selected="selected"' : '',
-                'url'      => $this->active_pane->getUriForMilestone($milestone)
+                'url'      => $this->presenter_data->getActivePane()->getUriForMilestone($milestone)
             );
         }
         return $artifacts_data;
@@ -117,14 +103,14 @@ class AgileDashboard_MilestonePresenter {
     }
 
     public function getActivePane() {
-        return $this->active_pane;
+        return $this->presenter_data->getActivePane();
     }
 
     /**
      * @return array
      */
     public function getPaneInfoList() {
-        return $this->additional_panes;
+        return $this->presenter_data->getListOfPaneInfo();
     }
 
     public function startDate() {

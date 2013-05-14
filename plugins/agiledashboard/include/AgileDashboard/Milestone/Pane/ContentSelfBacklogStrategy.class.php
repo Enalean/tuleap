@@ -1,5 +1,10 @@
+<?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright Enalean (c) 2013. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +22,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.observe('dom:loaded', function () {
-    var planner = $('planner');
-    if (planner) {
-        new tuleap.agiledashboard.Planning(planner);
-    }
+/**
+ * I am the backlog of the current milestone
+ */
+class AgileDashboard_Milestone_Pane_ContentSelfBacklogStrategy extends AgileDashboard_Milestone_Pane_ContentBacklogStrategy {
 
-    var milestone_content = $('blcontent');
-    if (milestone_content) {
-        new tuleap.agiledashboard.MilestoneContent(milestone_content);
+    /** @return Tracker_Artifact[] */
+    public function getArtifacts(PFUser $user) {
+        return $this->milestone_backlog_artifacts;
     }
+}
 
-    tuleap.agiledashboard.align_short_access_heights.defer();
-});
+?>

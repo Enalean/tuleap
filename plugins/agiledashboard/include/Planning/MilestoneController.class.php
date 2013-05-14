@@ -30,26 +30,10 @@ class Planning_MilestoneController extends MVC2_PluginController {
     private $milestone_factory;
 
     /**
-     * @var Tracker_HierarchyFactory
-     */
-    private $hierarchy_factory;
-
-    /**
      * @var Planning_Milestone
      */
     private $milestone;
 
-    /**
-     * Store all milestones of the current planning
-     *
-     * @var Array of Planning_Milestone
-     */
-    private $all_milestones = null;
-
-    /**
-     * @var Planning_ViewBuilder
-     */
-    private $view_builder;
 
     /** @var Planning_MilestonePaneFactory */
     private $pane_factory;
@@ -69,6 +53,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
                                 ProjectManager            $project_manager,
                                 Planning_ViewBuilder      $view_builder,
                                 Tracker_HierarchyFactory  $hierarchy_factory,
+                                AgileDashboard_Milestone_Pane_ContentPresenterBuilder $content_presenter_builder,
                                 $theme_path) {
         
         parent::__construct('agiledashboard', $request);
@@ -94,6 +79,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
         $this->pane_factory = new Planning_MilestonePaneFactory(
             $this->request,
             $this->milestone_factory,
+            $content_presenter_builder,
             $legacy_planning_pane_factory
         );
     }
@@ -108,19 +94,9 @@ class Planning_MilestoneController extends MVC2_PluginController {
             $this->milestone,
             $this->getCurrentUser(),
             $this->request,
-            $this->pane_factory->getActivePane($this->milestone),
-            $this->pane_factory->getListOfPaneInfo($this->milestone),
-            $this->getAvailableMilestones(),
-            $this->redirect_parameter->getPlanningRedirectToNew($this->milestone)
+            $this->pane_factory->getPanePresenterData($this->milestone),
+            $this->redirect_parameter->getPlanningRedirectToNew($this->milestone, $this->pane_factory->getDefaultPaneIdentifier())
         );
-    }
-
-    protected function getAvailableMilestones() {
-        if ($this->milestone->hasAncestors()) {
-            return $this->milestone_factory->getSiblingMilestones($this->getCurrentUser(), $this->milestone);
-        } else {
-            return $this->getAllMilestonesOfCurrentPlanning();
-        }
     }
 
     /**
@@ -136,10 +112,6 @@ class Planning_MilestoneController extends MVC2_PluginController {
             return $breadcrumbs_merger;
         }
         return new BreadCrumb_NoCrumb();
-    }
-
-    private function getAllMilestonesOfCurrentPlanning() {
-        return $this->milestone_factory->getAllMilestones($this->getCurrentUser(), $this->milestone->getPlanning());
     }
 }
 

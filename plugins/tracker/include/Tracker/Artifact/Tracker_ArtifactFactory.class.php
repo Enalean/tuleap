@@ -346,5 +346,44 @@ class Tracker_ArtifactFactory {
     public function getChildren(Tracker_Artifact $artifact) {
         return $this->getDao()->getChildren($artifact->getId())->instanciateWith(array($this, 'getInstanceFromRow'));
     }
+
+    /**
+     * Build the list of parents according to a list of artifact ids
+     *
+     * @param int[] $artifact_ids
+     * @return Tracker_Artifact[]
+     */
+    public function getParents(array $artifact_ids) {
+        $parents = array();
+        foreach ($this->getDao()->getParents($artifact_ids) as $row) {
+            $parents[$row['child_id']] = $this->getInstanceFromRow($row);
+        }
+        return $parents;
+    }
+
+    /**
+     * Batch search and update given artifact titles
+     *
+     * @param Tracker_Artifact[] $artifacts
+     */
+    public function setTitles(array $artifacts) {
+        $artifact_ids = array();
+        $index_map = array();
+        foreach ($artifacts as $index_in_source_array => $artifact) {
+            $artifact_ids[]                  = $artifact->getId();
+            $index_map[$artifact->getId()][] = $index_in_source_array;
+        }
+
+        foreach ($this->getDao()->getTitles($artifact_ids) as $row) {
+            $artifact_id = $row['id'];
+            if (isset($index_map[$artifact_id])) {
+                foreach ($index_map[$artifact_id] as $child_id) {
+                    if (isset($artifacts[$child_id])) {
+                        $artifacts[$child_id]->setTitle($row['title']);
+                    }
+                }
+            }
+        }
+    }
 }
 ?>

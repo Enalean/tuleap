@@ -75,7 +75,17 @@ abstract class AgileDashboard_PaneInfo {
      * @return string
      */
     public function getUriForMilestone(Planning_Milestone $milestone) {
-        return '?group_id='.$milestone->getGroupId().'&planning_id='.$milestone->getPlanningId().'&action=show&aid='.$milestone->getArtifactId();
+        return '?'. http_build_query($this->getUriParametersForMilestone($milestone));
+    }
+
+    protected function getUriParametersForMilestone(Planning_Milestone $milestone) {
+        return array(
+            'group_id'    => $milestone->getGroupId(),
+            'planning_id' => $milestone->getPlanningId(),
+            'action'      => 'show',
+            'aid'         => $milestone->getArtifactId(),
+            'pane'        => $this->getIdentifier()
+        );
     }
 
     /**
