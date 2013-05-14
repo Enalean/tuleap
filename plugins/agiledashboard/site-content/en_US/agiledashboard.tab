@@ -31,3 +31,7 @@ plugin_agiledashboard	backlog_destination_help	Use right arrow on item to move i
 plugin_agiledashboard	capacity	Capacity:
 plugin_agiledashboard	available	Available $1
 
+plugin_agiledashboard	content_add_new	Add new $1
+plugin_agiledashboard	content_head_title	Title
+plugin_agiledashboard	content_head_points	Points
+plugin_agiledashboard	content_head_parent	Parent

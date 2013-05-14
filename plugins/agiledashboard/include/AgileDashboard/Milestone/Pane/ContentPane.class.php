@@ -58,7 +58,9 @@ class AgileDashboard_Milestone_Pane_ContentPane extends AgileDashboard_Pane {
     }
 
     private function getPaneContent() {
-        return 'coin';
+        $renderer  = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
+        return $renderer->renderToString('pane-content', new AgileDashboard_Milestone_Pane_ContentPresenter());
     }
 }
+
 ?>

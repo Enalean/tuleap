@@ -30,26 +30,10 @@ class Planning_MilestoneController extends MVC2_PluginController {
     private $milestone_factory;
 
     /**
-     * @var Tracker_HierarchyFactory
-     */
-    private $hierarchy_factory;
-
-    /**
      * @var Planning_Milestone
      */
     private $milestone;
 
-    /**
-     * Store all milestones of the current planning
-     *
-     * @var Array of Planning_Milestone
-     */
-    private $all_milestones = null;
-
-    /**
-     * @var Planning_ViewBuilder
-     */
-    private $view_builder;
 
     /** @var Planning_MilestonePaneFactory */
     private $pane_factory;

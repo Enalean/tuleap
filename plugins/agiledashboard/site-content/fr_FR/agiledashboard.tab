@@ -31,3 +31,7 @@ plugin_agiledashboard	backlog_destination_help	Utiliser la flèche droite d'un �
 plugin_agiledashboard	capacity	Capacité :
 plugin_agiledashboard	available	$1 disponible(s)
 
+plugin_agiledashboard	content_add_new	Ajouter un(e) nouvel(lle) $1
+plugin_agiledashboard	content_head_title	Titre
+plugin_agiledashboard	content_head_points	Points
+plugin_agiledashboard	content_head_parent	Parent

@@ -1,0 +1,25 @@
+<div>
+    {{#can_add_story}}
+    <button class="btn btn-primary">{{add_new_story}}</button>
+    {{/can_add_story}}
+    <table class="table table-striped table-condensed">
+        <thead>
+            <tr>
+                <td>Id</td>
+                <td>{{title}}</td>
+                <td>{{points}}</td>
+                <td>{{parent}}</td>
+            </tr>
+        </thead>
+        <tbody>
+            {{#rows}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{title}}</td>
+                <td>{{points}}</td>
+                <td>{{parent}}</td>
+            </tr>
+            {{/rows}}
+        </tbody>
+    </table>
+</div>
