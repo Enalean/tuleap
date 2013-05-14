@@ -70,7 +70,11 @@ class Planning_MilestonePaneFactory {
         $legacy_planning_pane_info = $this->legacy_planning_pane_factory->getPaneInfo($milestone);
 
         $this->list_of_pane_info[] = $legacy_planning_pane_info;
-        $this->list_of_pane_info[] = $this->getContentPaneInfo($milestone);
+
+        if ($this->request->getCurrentUser()->useLabFeatures()) {
+            $this->list_of_pane_info[] = $this->getContentPaneInfo($milestone);
+        }
+
         $this->buildAdditionnalPanes($milestone);
 
         if (! $this->active_pane) {
