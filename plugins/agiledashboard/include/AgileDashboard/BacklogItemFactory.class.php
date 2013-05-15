@@ -24,41 +24,63 @@
 
 class AgileDashboard_BacklogItemFactory {
 
+    /** @var AgileDashboard_BacklogItemDao */
+    private $dao;
+
+    /** @var Tracker_ArtifactFactory */
+    private $artifact_factory;
+
     public function __construct(AgileDashboard_BacklogItemDao $dao, Tracker_ArtifactFactory $artifact_factory) {
         $this->dao = $dao;
         $this->artifact_factory = $artifact_factory;
     }
 
-    public function getMilestoneContent(Planning_ArtifactMilestone $milestone) {
-        $redirect_paremeter = new Planning_MilestoneRedirectParameter();
-        $redirect_to_self   = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_ContentPaneInfo::IDENTIFIER);
-
-        $backlog_items = array();
-        $artifacts = $this->dao->getBacklogArtifacts($milestone->getArtifactId())->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
-        foreach ($artifacts as $artifact) {
-            /* @var $artifact Tracker_Artifact */
-            $backlog_items[$artifact->getId()] = new AgileDashboard_BacklogItem($artifact, $redirect_to_self);
-        }
-        $backlog_item_ids = array_keys($backlog_items);
-        $parents = $this->artifact_factory->getParents($backlog_item_ids);
-        foreach ($parents as $child_id => $parent) {
-            $backlog_items[$child_id]->setParent($parent);
-        }
-
-        return $backlog_items;
-    }
-
     public function getMilestoneContentPresenter(Planning_ArtifactMilestone $milestone) {
-        $this->row_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
-        foreach ($this->getMilestoneContent($milestone) as $artifact) {
-            /* @var $artifact AgileDashboard_Milestone_Pane_ContentRowPresenter */
-            $this->row_collection->push($artifact);
-        }
+        $todo_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
+        $done_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
+        $this->getMilestoneContent($milestone, $todo_collection, $done_collection);
 
         $backlog_item_type = 'Story';
         $can_add_backlog_item_type = true;
-        return new AgileDashboard_Milestone_Pane_ContentPresenter($this->row_collection, new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection(), $backlog_item_type, $can_add_backlog_item_type);
+        return new AgileDashboard_Milestone_Pane_ContentPresenter($todo_collection, $done_collection, $backlog_item_type, $can_add_backlog_item_type);
     }
+
+    protected function getMilestoneContent(
+        Planning_ArtifactMilestone $milestone,
+        AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $todo_collection,
+        AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $done_collection
+    ) {
+        $redirect_paremeter = new Planning_MilestoneRedirectParameter();
+        $redirect_to_self   = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_ContentPaneInfo::IDENTIFIER);
+
+        $artifacts = array();
+        foreach ($this->getBacklogArtifacts($milestone) as $artifact) {
+            /* @var $artifact Tracker_Artifact */
+            $artifacts[$artifact->getId()] = $artifact;
+        }
+        $backlog_item_ids = array_keys($artifacts);
+        $parents = $this->artifact_factory->getParents($backlog_item_ids);
+        $status  = $this->dao->getArtifactsStatusAndTitle($backlog_item_ids);
+        foreach ($status as $row) {
+            if (isset($artifacts[$row['id']])) {
+                $artifacts[$row['id']]->setTitle($row['title']);
+                $backlog_item = new AgileDashboard_BacklogItem($artifacts[$row['id']], $redirect_to_self);
+                if (isset($parents[$artifact->getId()])) {
+                    $backlog_item->setParent($parents[$artifact->getId()]);
+                }
+                if ($row['status'] == AgileDashboard_BacklogItemDao::STATUS_OPEN) {
+                    $todo_collection->push($backlog_item);
+                } else {
+                    $done_collection->push($backlog_item);
+                }
+            }
+        }
+    }
+
+    protected function getBacklogArtifacts(Planning_ArtifactMilestone $milestone) {
+        return $this->dao->getBacklogArtifacts($milestone->getArtifactId())->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
+    }
+
 }
 
 class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Pane_ContentRowPresenter {

@@ -36,6 +36,7 @@ class Test_Artifact_Builder {
     private $changesets;
     private $hierarchy_factory;
     private $ancestors;
+    private $title;
 
     public function withId($id) {
         $this->id = $id;
@@ -72,6 +73,11 @@ class Test_Artifact_Builder {
         return $this;
     }
 
+    public function withTitle($title) {
+        $this->title = $title;
+        return $this;
+    }
+
     public function build() {
         $artifact = new Tracker_Artifact($this->id, $this->tracker_id, null, null, null);
         if ($this->tracker) {
@@ -88,6 +94,9 @@ class Test_Artifact_Builder {
         }
         if (isset($this->ancestors)) {
             $artifact->setAllAncestors($this->ancestors);
+        }
+        if ($this->title) {
+            $artifact->setTitle($this->title);
         }
         return $artifact;
     }

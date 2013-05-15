@@ -59,9 +59,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private $hierarchy_factory;
 
     /**
-     * @var string
+     * @var String
      */
     private $title;
+
+    /**
+     * @var String
+     */
+    private $status;
 
     /**@var Tracker_ArtifactFactory */
     private $artifact_factory;
@@ -578,12 +583,22 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return string the status of the artifact, or null if no status defined in semantics
      */
     public function getStatus() {
-        if ($status_field = Tracker_Semantic_Status::load($this->getTracker())->getField()) {
-            if ($status_field->userCanRead()) {
-                return $status_field->getFirstValueFor($this->getLastChangeset());
+        if ( ! isset($this->status)) {
+            if ($status_field = Tracker_Semantic_Status::load($this->getTracker())->getField()) {
+                if ($status_field->userCanRead()) {
+                    $this->status = $status_field->getFirstValueFor($this->getLastChangeset());
+                }
             }
+            $this->status = null;
         }
-        return null;
+        return $this->status;
+    }
+
+    /**
+     * @param String $status
+     */
+    public function setStatus($status) {
+        $this->status = $status;
     }
 
     /**

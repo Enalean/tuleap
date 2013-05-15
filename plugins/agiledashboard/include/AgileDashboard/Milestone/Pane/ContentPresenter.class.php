@@ -80,7 +80,7 @@ class AgileDashboard_Milestone_Pane_ContentPresenter {
     }
 
     public function done_collection() {
-        return array();
+        return $this->done_collection;
     }
 }
 

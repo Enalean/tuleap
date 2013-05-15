@@ -23,6 +23,8 @@
  */
 
 class AgileDashboard_BacklogItemDao extends DataAccessObject {
+    const STATUS_OPEN   = 1;
+    const STATUS_CLOSED = 0;
 
     public function getBacklogArtifacts($milestone_artifact_id) {
         $milestone_artifact_id = $this->da->escapeInt($milestone_artifact_id);
@@ -39,6 +41,36 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
                 ORDER BY tracker_artifact_priority.rank ASC";
         return $this->retrieve($sql);
 
+    }
+
+    public function getArtifactsStatusAndTitle(array $artifact_ids) {
+        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
+        $sql = "SELECT artifact.id, CVT.value as title, (SS0.open_value_id IS NOT NULL OR SS1.open_value_id IS NULL) as status
+                FROM tracker_artifact AS artifact
+                    INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
+                    LEFT JOIN (
+                        tracker_changeset_value                 AS CV0
+                        INNER JOIN tracker_semantic_title       AS ST  ON (
+                            CV0.field_id = ST.field_id
+                        )
+                        INNER JOIN tracker_changeset_value_text AS CVT ON (
+                            CV0.id       = CVT.changeset_value_id
+                        )
+                    ) ON (c.id = CV0.changeset_id)
+                    LEFT JOIN (
+                        tracker_changeset_value                 AS CV1
+                        INNER JOIN tracker_semantic_status      AS SS0  ON (
+                            CV1.field_id         = SS0.field_id
+                        )
+                        INNER JOIN tracker_changeset_value_list AS CVL ON (
+                            CV1.id               = CVL.changeset_value_id
+                            AND SS0.open_value_id = CVL.bindvalue_id
+                        )
+                     ) ON (c.id = CV1.changeset_id)
+                    LEFT JOIN tracker_semantic_status AS SS1 ON (artifact.tracker_id = SS1.tracker_id AND CVL.bindvalue_id IS NULL)
+                WHERE artifact.id IN ($artifact_ids)
+                GROUP by artifact.id";
+        return $this->retrieve($sql);
     }
 }
 
