@@ -211,7 +211,8 @@ class AgileDashboardPlugin extends Plugin {
             $this,
             $this->getMilestoneFactory(),
             $this->getPlanningFactory(),
-            $this->getHierarchyFactory()
+            $this->getHierarchyFactory(),
+            $this->getBacklogItemFactory()
         );
         $router->route($request);
     }
@@ -242,6 +243,14 @@ class AgileDashboardPlugin extends Plugin {
 
     private function getHierarchyFactory() {
         return Tracker_HierarchyFactory::instance();
+    }
+
+    private function getBacklogItemFactory() {
+        return new AgileDashboard_BacklogItemFactory(
+            new AgileDashboard_BacklogItemDao(),
+            $this->getArtifactFactory(),
+            Tracker_FormElementFactory::instance()
+        );
     }
 
     public function tracker_event_artifact_association_edited($params) {

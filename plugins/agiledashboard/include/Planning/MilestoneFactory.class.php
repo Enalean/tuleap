@@ -451,11 +451,6 @@ class Planning_MilestoneFactory {
         }
         return new Planning_NoMilestone($planning->getPlanningTracker()->getProject(), $planning);
     }
-
-    public function getMilestoneContentPresenter(Planning_ArtifactMilestone $milestone) {
-        $f = new AgileDashboard_BacklogItemFactory(new AgileDashboard_BacklogItemDao(), $this->artifact_factory);
-        return $f->getMilestoneContentPresenter($milestone);
-    }
 }
 
 ?>

@@ -35,13 +35,22 @@ class BacklogItemFactoryTest extends TuleapTestCase {
     /** @var AgileDashboard_BacklogItemFactory */
     private $factory;
 
+    /** @var Tracker_FormElementFactory */
+    private $form_element_factory;
+
+    /** @var PFUser */
+    private $user;
+
     public function setUp() {
         parent::setUp();
 
         $this->dao = mock('AgileDashboard_BacklogItemDao');
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        $this->form_element_factory = mock('Tracker_FormElementFactory');
 
-        $this->factory = partial_mock('AgileDashboard_BacklogItemFactory', array('getBacklogArtifacts'), array($this->dao, $this->artifact_factory));
+        $this->user = mock('PFUser');
+
+        $this->factory = partial_mock('AgileDashboard_BacklogItemFactory', array('getBacklogArtifacts'), array($this->dao, $this->artifact_factory, $this->form_element_factory));
     }
 
     public function itCreatesContentWithOneElementInTodo() {
@@ -52,8 +61,10 @@ class BacklogItemFactoryTest extends TuleapTestCase {
 
         stub($this->dao)->getArtifactsStatusAndTitle(array(12))->returnsDar(array('id' => 12, 'title' => 'Story blabla', 'status' => AgileDashboard_BacklogItemDao::STATUS_OPEN));
 
+        stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
+
         $milestone = mock('Planning_ArtifactMilestone');
-        $content = $this->factory->getMilestoneContentPresenter($milestone);
+        $content = $this->factory->getMilestoneContentPresenter($this->user, $milestone);
 
         $row = $content->todo_collection()->current();
         $this->assertEqual($row->id(), 12);
@@ -67,11 +78,33 @@ class BacklogItemFactoryTest extends TuleapTestCase {
 
         stub($this->dao)->getArtifactsStatusAndTitle(array(12))->returnsDar(array('id' => 12, 'title' => 'Story blabla', 'status' => AgileDashboard_BacklogItemDao::STATUS_CLOSED));
 
+        stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
+
         $milestone = mock('Planning_ArtifactMilestone');
-        $content = $this->factory->getMilestoneContentPresenter($milestone);
+        $content = $this->factory->getMilestoneContentPresenter($this->user, $milestone);
 
         $row = $content->done_collection()->current();
         $this->assertEqual($row->id(), 12);
+    }
+
+    public function itSetRemainingEffortForOpenStories() {
+        $story1 = anArtifact()->withId(12)->build();
+        stub($this->factory)->getBacklogArtifacts()->returns(array($story1));
+
+        stub($this->artifact_factory)->getParents()->returns(array());
+
+        stub($this->dao)->getArtifactsStatusAndTitle(array(12))->returnsDar(array('id' => 12, 'title' => 'Story blabla', 'status' => AgileDashboard_BacklogItemDao::STATUS_OPEN));
+
+        // Configure the returned value
+        $field = aMockField()->build();
+        stub($field)->fetchCardValue()->returns(26);
+        stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns($field);
+
+        $milestone = mock('Planning_ArtifactMilestone');
+        $content = $this->factory->getMilestoneContentPresenter($this->user, $milestone);
+
+        $row = $content->todo_collection()->current();
+        $this->assertEqual($row->points(), 26);
     }
 }
 

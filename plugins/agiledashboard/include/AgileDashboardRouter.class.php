@@ -55,16 +55,23 @@ class AgileDashboardRouter {
      */
     private $hierarchy_factory;
 
+    /**
+     * @var AgileDashboard_BacklogItemFactory 
+     */
+    private $backlog_item_factory;
+
     public function __construct(
             Plugin $plugin,
             Planning_MilestoneFactory $milestone_factory,
             PlanningFactory $planning_factory,
-            Tracker_HierarchyFactory $hierarchy_factory
-            ) {
+            Tracker_HierarchyFactory $hierarchy_factory,
+            AgileDashboard_BacklogItemFactory $backlog_item_factory
+    ) {
         $this->plugin            = $plugin;
         $this->milestone_factory = $milestone_factory;
         $this->planning_factory  = $planning_factory;
         $this->hierarchy_factory = $hierarchy_factory;
+        $this->backlog_item_factory = $backlog_item_factory;
     }
     
     /**
@@ -233,6 +240,7 @@ class AgileDashboardRouter {
             $this->getProjectManager(),
             $this->getViewBuilder($request),
             $this->hierarchy_factory,
+            $this->backlog_item_factory,
             $this->plugin->getThemePath()
         );
     }

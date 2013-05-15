@@ -30,15 +30,19 @@ class AgileDashboard_BacklogItemFactory {
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    public function __construct(AgileDashboard_BacklogItemDao $dao, Tracker_ArtifactFactory $artifact_factory) {
+    /** @var Tracker_FormElementFactory */
+    private $form_element_factory;
+
+    public function __construct(AgileDashboard_BacklogItemDao $dao, Tracker_ArtifactFactory $artifact_factory, Tracker_FormElementFactory $form_element_factory) {
         $this->dao = $dao;
         $this->artifact_factory = $artifact_factory;
+        $this->form_element_factory = $form_element_factory;
     }
 
-    public function getMilestoneContentPresenter(Planning_ArtifactMilestone $milestone) {
+    public function getMilestoneContentPresenter(PFUser $user, Planning_ArtifactMilestone $milestone) {
         $todo_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
         $done_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
-        $this->getMilestoneContent($milestone, $todo_collection, $done_collection);
+        $this->getMilestoneContent($user, $milestone, $todo_collection, $done_collection);
 
         $backlog_item_type = 'Story';
         $can_add_backlog_item_type = true;
@@ -46,6 +50,7 @@ class AgileDashboard_BacklogItemFactory {
     }
 
     protected function getMilestoneContent(
+        PFUser $user,
         Planning_ArtifactMilestone $milestone,
         AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $todo_collection,
         AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $done_collection
@@ -70,12 +75,22 @@ class AgileDashboard_BacklogItemFactory {
                     $backlog_item->setParent($parents[$artifact_id]);
                 }
                 if ($row['status'] == AgileDashboard_BacklogItemDao::STATUS_OPEN) {
+                    $this->setRemainingEffort($user, $backlog_item, $artifacts[$artifact_id]);
                     $todo_collection->push($backlog_item);
                 } else {
                     $done_collection->push($backlog_item);
                 }
             }
         }
+    }
+
+    protected function setRemainingEffort(PFUser $user, AgileDashboard_BacklogItem $backlog_item, Tracker_Artifact $artifact) {
+        $field = $this->form_element_factory->getUsedFieldByNameForUser(
+            $artifact->getTrackerId(),
+            Tracker::REMAINING_EFFORT_FIELD_NAME,
+            $user
+        );
+        $backlog_item->setRemainingEffort($field->fetchCardValue($artifact));
     }
 
     protected function getBacklogArtifacts(Planning_ArtifactMilestone $milestone) {
@@ -93,6 +108,9 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Pane_Conten
 
     /** @var String */
     private $url;
+
+    /** @var Int */
+    private $remaining_effort;
 
     /** @var String */
     private $parent_url;
@@ -115,6 +133,10 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Pane_Conten
         $this->parent_url   = $parent->getUri() .'&'. $this->redirect_to_self;
     }
 
+    public function setRemainingEffort($value) {
+        $this->remaining_effort = $value;
+    }
+
     public function id() {
         return $this->id;
     }
@@ -128,7 +150,7 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Pane_Conten
     }
 
     public function points() {
-        return '';
+        return $this->remaining_effort;
     }
 
     public function parent_title() {
