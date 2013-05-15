@@ -41,6 +41,9 @@ class BacklogItemFactoryTest extends TuleapTestCase {
     /** @var PFUser */
     private $user;
 
+    /** @var Planning_ArtifactMilestone */
+    private $milestone;
+
     public function setUp() {
         parent::setUp();
 
@@ -50,7 +53,18 @@ class BacklogItemFactoryTest extends TuleapTestCase {
 
         $this->user = mock('PFUser');
 
-        $this->factory = partial_mock('AgileDashboard_BacklogItemFactory', array('getBacklogArtifacts'), array($this->dao, $this->artifact_factory, $this->form_element_factory));
+        $planning = stub('Planning')->getBacklogTracker()->returns(mock('Tracker'));
+        $this->milestone = stub('Planning_ArtifactMilestone')->getPlanning()->returns($planning);
+
+        $this->factory = partial_mock(
+            'AgileDashboard_BacklogItemFactory',
+            array('getBacklogArtifacts'),
+            array(
+                $this->dao,
+                $this->artifact_factory,
+                $this->form_element_factory
+            )
+        );
     }
 
     public function itCreatesContentWithOneElementInTodo() {
@@ -63,8 +77,7 @@ class BacklogItemFactoryTest extends TuleapTestCase {
 
         stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
 
-        $milestone = mock('Planning_ArtifactMilestone');
-        $content = $this->factory->getMilestoneContentPresenter($this->user, $milestone);
+        $content = $this->factory->getMilestoneContentPresenter($this->user, $this->milestone);
 
         $row = $content->todo_collection()->current();
         $this->assertEqual($row->id(), 12);
@@ -80,8 +93,7 @@ class BacklogItemFactoryTest extends TuleapTestCase {
 
         stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
 
-        $milestone = mock('Planning_ArtifactMilestone');
-        $content = $this->factory->getMilestoneContentPresenter($this->user, $milestone);
+        $content = $this->factory->getMilestoneContentPresenter($this->user, $this->milestone);
 
         $row = $content->done_collection()->current();
         $this->assertEqual($row->id(), 12);
@@ -100,8 +112,7 @@ class BacklogItemFactoryTest extends TuleapTestCase {
         stub($field)->fetchCardValue()->returns(26);
         stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns($field);
 
-        $milestone = mock('Planning_ArtifactMilestone');
-        $content = $this->factory->getMilestoneContentPresenter($this->user, $milestone);
+        $content = $this->factory->getMilestoneContentPresenter($this->user, $this->milestone);
 
         $row = $content->todo_collection()->current();
         $this->assertEqual($row->points(), 26);

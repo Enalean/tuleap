@@ -55,6 +55,10 @@ class AgileDashboard_Milestone_Pane_ContentPresenter {
         $this->done_collection = $done;
     }
 
+    public function backlog_item_type() {
+        return $this->backlog_item_type;
+    }
+
     public function can_add_backlog_item() {
         return $this->can_add_backlog_item_type;
     }

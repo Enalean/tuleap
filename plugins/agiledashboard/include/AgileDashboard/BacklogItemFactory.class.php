@@ -44,7 +44,7 @@ class AgileDashboard_BacklogItemFactory {
         $done_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
         $this->getMilestoneContent($user, $milestone, $todo_collection, $done_collection);
 
-        $backlog_item_type = 'Story';
+        $backlog_item_type = $milestone->getPlanning()->getBacklogTracker()->getName();
         $can_add_backlog_item_type = true;
         return new AgileDashboard_Milestone_Pane_ContentPresenter($todo_collection, $done_collection, $backlog_item_type, $can_add_backlog_item_type);
     }
@@ -96,7 +96,6 @@ class AgileDashboard_BacklogItemFactory {
     protected function getBacklogArtifacts(Planning_ArtifactMilestone $milestone) {
         return $this->dao->getBacklogArtifacts($milestone->getArtifactId())->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
     }
-
 }
 
 class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Pane_ContentRowPresenter {
