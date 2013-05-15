@@ -48,11 +48,17 @@ class AgileDashboard_BacklogItemFactory {
         $this->getMilestoneContent($user, $milestone, $todo_collection, $done_collection, $redirect_to_self);
 
         $backlog_tracker   = $milestone->getPlanning()->getBacklogTracker();
-        $submit_url        = $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($backlog_tracker).'&'.$redirect_to_self;
-
-        $backlog_item_type = $backlog_tracker->getName();
-        $can_add_backlog_item_type = true;
-        return new AgileDashboard_Milestone_Pane_ContentPresenter($todo_collection, $done_collection, $backlog_item_type, $can_add_backlog_item_type, $submit_url);
+        $can_add_backlog_item_type = false;
+        if ($backlog_tracker->userCanSubmitArtifact()) {
+            $can_add_backlog_item_type = true;
+        }
+        return new AgileDashboard_Milestone_Pane_ContentPresenter(
+            $todo_collection,
+            $done_collection,
+            $backlog_tracker->getName(),
+            $can_add_backlog_item_type,
+            $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($backlog_tracker).'&'.$redirect_to_self
+        );
     }
 
     protected function getMilestoneContent(
