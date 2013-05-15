@@ -62,15 +62,19 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Pane_Conten
     /** @var Tracker_Artifact */
     private $artifact;
 
-    /** @var Tracker_Artifact */
-    private $parent;
+    /** @var String */
+    private $parent_url;
+
+    /** @var Title */
+    private $parent_title;
 
     public function __construct(Tracker_Artifact $artifact) {
         $this->artifact = $artifact;
     }
 
     public function setParent(Tracker_Artifact $parent) {
-        $this->parent = $parent;
+        $this->parent_title = $parent->getTitle();
+        $this->parent_url   = $parent->getUri();
     }
 
     public function id() {
@@ -90,11 +94,11 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Pane_Conten
     }
 
     public function parent_title() {
-        return $this->parent->getTitle();
+        return $this->parent_title;
     }
 
     public function parent_url() {
-        return $this->parent->getUri();
+        return $this->parent_url;
     }
 }
 
