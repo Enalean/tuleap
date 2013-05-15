@@ -452,80 +452,9 @@ class Planning_MilestoneFactory {
         return new Planning_NoMilestone($planning->getPlanningTracker()->getProject(), $planning);
     }
 
-    public function getMilestoneContent(Planning_ArtifactMilestone $milestone) {
-        $dao = new Planning_MilestoneDao();
-        $backlog_items = array();
-        $artifacts = $dao->getBacklogArtifacts($milestone->getArtifactId())->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
-        foreach ($artifacts as $artifact) {
-            /* @var $artifact Tracker_Artifact */
-            $backlog_items[$artifact->getId()] = new BacklogItem($artifact);
-        }
-        $backlog_item_ids = array_keys($backlog_items);
-        $parents = $this->artifact_factory->getParents($backlog_item_ids);
-        foreach ($parents as $child_id => $parent) {
-            $backlog_items[$child_id]->setParent($parent);
-        }
-        return $backlog_items;
-    }
-
     public function getMilestoneContentPresenter(Planning_ArtifactMilestone $milestone) {
-        $this->row_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
-        foreach ($this->getMilestoneContent($milestone) as $artifact) {
-            /* @var $artifact AgileDashboard_Milestone_Pane_ContentRowPresenter */
-            $this->row_collection->push($artifact);
-        }
-
-        $backlog_item_type = 'Story';
-        $can_add_backlog_item_type = true;
-        return new AgileDashboard_Milestone_Pane_ContentPresenter($this->row_collection, new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection(), $backlog_item_type, $can_add_backlog_item_type);
-    }
-}
-
-class BacklogItem implements AgileDashboard_Milestone_Pane_ContentRowPresenter {
-    /** @var Tracker_Artifact */
-    private $artifact;
-
-    /** @var Tracker_Artifact */
-    private $parent;
-
-    /** @var string */
-    private $parent_title = '';
-
-    /** @var string */
-    private $parent_url = '';
-
-    public function __construct(Tracker_Artifact $artifact) {
-        $this->artifact = $artifact;
-    }
-
-    public function setParent(Tracker_Artifact $parent) {
-        $this->parent       = $parent;
-        $this->parent_title = $parent->getTitle();
-        $this->parent_url   = $parent->getUri();
-    }
-
-    public function id() {
-        return $this->artifact->getId();
-    }
-
-    public function title() {
-        return $this->artifact->getTitle();
-    }
-
-    public function url() {
-        return $this->artifact->getUri();
-    }
-
-    public function points() {
-        return '';
-    }
-
-    public function parent_title() {
-        return $this->parent_title;
-    }
-
-    public function parent_url() {
-        return $this->parent_url;
+        $f = new AgileDashboard_BacklogItemFactory(new AgileDashboard_BacklogItemDao(), $this->artifact_factory);
+        return $f->getMilestoneContentPresenter($milestone);
     }
 }
 

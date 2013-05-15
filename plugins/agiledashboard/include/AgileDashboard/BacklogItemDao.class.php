@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning_MilestoneDao extends DataAccessObject {
+class AgileDashboard_BacklogItemDao extends DataAccessObject {
 
     public function getBacklogArtifacts($milestone_artifact_id) {
         $milestone_artifact_id = $this->da->escapeInt($milestone_artifact_id);

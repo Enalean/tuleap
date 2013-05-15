@@ -26,6 +26,9 @@ class AgileDashboard_Milestone_Pane_ContentPresenter {
     /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
     private $todo_collection;
 
+    /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
+    private $done_collection;
+
     /** @var String */
     private $backlog_item_type;
 
@@ -42,6 +45,14 @@ class AgileDashboard_Milestone_Pane_ContentPresenter {
         $this->done_collection           = $done;
         $this->backlog_item_type         = $backlog_item_type;
         $this->can_add_backlog_item_type = $can_add_backlog_item_type;
+    }
+
+    public function setTodoCollection(AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $todo) {
+        $this->todo_collection = $todo;
+    }
+
+    public function setDoneCollection(AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $done) {
+        $this->done_collection = $done;
     }
 
     public function can_add_backlog_item() {
