@@ -35,16 +35,21 @@ class AgileDashboard_Milestone_Pane_ContentPresenter {
     /** @var Boolean */
     private $can_add_backlog_item_type;
 
+    /** @var String */
+    private $submit_url;
+
     public function __construct(
         AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $todo,
         AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $done,
         $backlog_item_type,
-        $can_add_backlog_item_type
+        $can_add_backlog_item_type,
+        $submit_url
     ) {
         $this->todo_collection           = $todo;
         $this->done_collection           = $done;
         $this->backlog_item_type         = $backlog_item_type;
         $this->can_add_backlog_item_type = $can_add_backlog_item_type;
+        $this->submit_url                = $submit_url;
     }
 
     public function setTodoCollection(AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $todo) {
@@ -61,6 +66,10 @@ class AgileDashboard_Milestone_Pane_ContentPresenter {
 
     public function can_add_backlog_item() {
         return $this->can_add_backlog_item_type;
+    }
+
+    public function add_new_backlog_url() {
+        return $this->submit_url;
     }
 
     public function add_new_backlog_item() {

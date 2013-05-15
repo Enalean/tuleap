@@ -40,24 +40,28 @@ class AgileDashboard_BacklogItemFactory {
     }
 
     public function getMilestoneContentPresenter(PFUser $user, Planning_ArtifactMilestone $milestone) {
+        $redirect_paremeter = new Planning_MilestoneRedirectParameter();
+        $redirect_to_self   = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_ContentPaneInfo::IDENTIFIER);
+        
         $todo_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
         $done_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
-        $this->getMilestoneContent($user, $milestone, $todo_collection, $done_collection);
+        $this->getMilestoneContent($user, $milestone, $todo_collection, $done_collection, $redirect_to_self);
 
-        $backlog_item_type = $milestone->getPlanning()->getBacklogTracker()->getName();
+        $backlog_tracker = $milestone->getPlanning()->getBacklogTracker();
+        $submit_url      = $backlog_tracker->getSubmitUrl().'&child_milestone='.$milestone->getArtifactId().'&'.$redirect_to_self;
+
+        $backlog_item_type = $backlog_tracker->getName();
         $can_add_backlog_item_type = true;
-        return new AgileDashboard_Milestone_Pane_ContentPresenter($todo_collection, $done_collection, $backlog_item_type, $can_add_backlog_item_type);
+        return new AgileDashboard_Milestone_Pane_ContentPresenter($todo_collection, $done_collection, $backlog_item_type, $can_add_backlog_item_type, $submit_url);
     }
 
     protected function getMilestoneContent(
         PFUser $user,
         Planning_ArtifactMilestone $milestone,
         AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $todo_collection,
-        AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $done_collection
+        AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $done_collection,
+        $redirect_to_self
     ) {
-        $redirect_paremeter = new Planning_MilestoneRedirectParameter();
-        $redirect_to_self   = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_ContentPaneInfo::IDENTIFIER);
-
         $artifacts = array();
         foreach ($this->getBacklogArtifacts($milestone) as $artifact) {
             /* @var $artifact Tracker_Artifact */
