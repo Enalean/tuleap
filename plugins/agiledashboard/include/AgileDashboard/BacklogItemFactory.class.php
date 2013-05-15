@@ -62,11 +62,12 @@ class AgileDashboard_BacklogItemFactory {
         $parents = $this->artifact_factory->getParents($backlog_item_ids);
         $status  = $this->dao->getArtifactsStatusAndTitle($backlog_item_ids);
         foreach ($status as $row) {
-            if (isset($artifacts[$row['id']])) {
-                $artifacts[$row['id']]->setTitle($row['title']);
-                $backlog_item = new AgileDashboard_BacklogItem($artifacts[$row['id']], $redirect_to_self);
-                if (isset($parents[$artifact->getId()])) {
-                    $backlog_item->setParent($parents[$artifact->getId()]);
+            $artifact_id = $row['id'];
+            if (isset($artifacts[$artifact_id])) {
+                $artifacts[$artifact_id]->setTitle($row['title']);
+                $backlog_item = new AgileDashboard_BacklogItem($artifacts[$artifact_id], $redirect_to_self);
+                if (isset($parents[$artifact_id])) {
+                    $backlog_item->setParent($parents[$artifact_id]);
                 }
                 if ($row['status'] == AgileDashboard_BacklogItemDao::STATUS_OPEN) {
                     $todo_collection->push($backlog_item);
