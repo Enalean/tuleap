@@ -62,8 +62,14 @@ class AgileDashboard_BacklogItemFactory {
 }
 
 class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Pane_ContentRowPresenter {
-    /** @var Tracker_Artifact */
-    private $artifact;
+    /** @var Int */
+    private $id;
+
+    /** @var String */
+    private $title;
+
+    /** @var String */
+    private $url;
 
     /** @var String */
     private $parent_url;
@@ -75,7 +81,9 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Pane_Conten
     private $redirect_to_self;
 
     public function __construct(Tracker_Artifact $artifact, $redirect_to_self) {
-        $this->artifact         = $artifact;
+        $this->id    = $artifact->getId();
+        $this->title = $artifact->getTitle();
+        $this->url   = $artifact->getUri();
         $this->redirect_to_self = $redirect_to_self;
     }
 
@@ -85,15 +93,15 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Pane_Conten
     }
 
     public function id() {
-        return $this->artifact->getId();
+        return $this->id;
     }
 
     public function title() {
-        return $this->artifact->getTitle();
+        return $this->title;
     }
 
     public function url() {
-        return $this->artifact->getUri() .'&'. $this->redirect_to_self;
+        return $this->url .'&'. $this->redirect_to_self;
     }
 
     public function points() {
