@@ -23,6 +23,7 @@
 class Git_Driver_Gerrit_ProjectCreator {
 
     const GROUP_REPLICATION = 'replication';
+    const GROUP_REGISTERED_USERS = 'Registered Users';
 
     /** @var Git_Driver_Gerrit */
     private $driver;
@@ -148,7 +149,7 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     private function addRegisteredUsersGroupToGroupFile() {
-        $this->addGroupDefinitionToGroupFile('global:Registered-Users', 'Registered Users');
+        $this->addGroupDefinitionToGroupFile('global:Registered-Users', self::GROUP_REGISTERED_USERS);
     }
 
     private function addGroupDefinitionToGroupFile($uuid, $group_name) {
@@ -181,8 +182,16 @@ class Git_Driver_Gerrit_ProjectCreator {
             }
         }
 
-        if (in_array(UGroup::REGISTERED, $ugroup_ids_read) && $this->shouldAddRegisteredUsers($repository)) {
-            $ugroups_read[] = 'Registered Users';
+        if ($this->shouldAddRegisteredUsers($repository)) {
+            if (array_intersect(array(UGroup::ANONYMOUS, UGroup::REGISTERED), $ugroup_ids_read)) {
+                $ugroups_read[] = self::GROUP_REGISTERED_USERS;
+            }
+            if (array_intersect(array(UGroup::ANONYMOUS, UGroup::REGISTERED), $ugroup_ids_write)) {
+                $ugroups_write[] = self::GROUP_REGISTERED_USERS;
+            }
+            if (array_intersect(array(UGroup::ANONYMOUS, UGroup::REGISTERED), $ugroup_ids_rewind)) {
+                $ugroups_rewind[] = self::GROUP_REGISTERED_USERS;
+            }
         }
 
         $this->addToSection('refs', 'read', "group $replication_group");
