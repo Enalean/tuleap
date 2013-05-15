@@ -467,6 +467,18 @@ class Planning_MilestoneFactory {
         }
         return $backlog_items;
     }
+
+    public function getMilestoneContentPresenter(Planning_ArtifactMilestone $milestone) {
+        $this->row_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
+        foreach ($this->getMilestoneContent($milestone) as $artifact) {
+            /* @var $artifact AgileDashboard_Milestone_Pane_ContentRowPresenter */
+            $this->row_collection->push($artifact);
+        }
+
+        $backlog_item_type = 'Story';
+        $can_add_backlog_item_type = true;
+        return new AgileDashboard_Milestone_Pane_ContentPresenter($this->row_collection, new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection(), $backlog_item_type, $can_add_backlog_item_type);
+    }
 }
 
 class BacklogItem implements AgileDashboard_Milestone_Pane_ContentRowPresenter {

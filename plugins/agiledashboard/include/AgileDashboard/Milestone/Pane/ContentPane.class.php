@@ -29,17 +29,12 @@ class AgileDashboard_Milestone_Pane_ContentPane extends AgileDashboard_Pane {
     /** @var Tracker_Artifact_Burndown_PaneInfo */
     private $info;
 
-    /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
-    private $row_collection;
+    /** @var AgileDashboard_Milestone_Pane_ContentPresenter */
+    private $presenter;
 
-    public function __construct(AgileDashboard_Milestone_Pane_ContentPaneInfo $info, $content) {
-        $this->info = $info;
-        $this->row_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
-        foreach ($content as $artifact) {
-            /* @var $artifact AgileDashboard_Milestone_Pane_ContentRowPresenter */
-            $this->row_collection->push($artifact);
-        }
-
+    public function __construct(AgileDashboard_Milestone_Pane_ContentPaneInfo $info, AgileDashboard_Milestone_Pane_ContentPresenter $presenter) {
+        $this->info      = $info;
+        $this->presenter = $presenter;
     }
 
     public function getIdentifier() {
@@ -65,12 +60,8 @@ class AgileDashboard_Milestone_Pane_ContentPane extends AgileDashboard_Pane {
     }
 
     private function getPaneContent() {
-        $backlog_item_type = 'Story';
-        $can_add_backlog_item_type = true;
-        $presenter = new AgileDashboard_Milestone_Pane_ContentPresenter($this->row_collection, $backlog_item_type, $can_add_backlog_item_type);
-
         $renderer  = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
-        return $renderer->renderToString('pane-content', $presenter);
+        return $renderer->renderToString('pane-content', $this->presenter);
     }
 }
 

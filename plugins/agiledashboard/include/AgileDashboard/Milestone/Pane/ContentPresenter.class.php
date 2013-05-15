@@ -24,7 +24,7 @@
 
 class AgileDashboard_Milestone_Pane_ContentPresenter {
     /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
-    private $rows;
+    private $todo_collection;
 
     /** @var String */
     private $backlog_item_type;
@@ -32,8 +32,14 @@ class AgileDashboard_Milestone_Pane_ContentPresenter {
     /** @var Boolean */
     private $can_add_backlog_item_type;
 
-    public function __construct(AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $rows, $backlog_item_type, $can_add_backlog_item_type) {
-        $this->rows                      = $rows;
+    public function __construct(
+        AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $todo,
+        AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $done,
+        $backlog_item_type,
+        $can_add_backlog_item_type
+    ) {
+        $this->todo_collection           = $todo;
+        $this->done_collection           = $done;
         $this->backlog_item_type         = $backlog_item_type;
         $this->can_add_backlog_item_type = $can_add_backlog_item_type;
     }
@@ -58,8 +64,12 @@ class AgileDashboard_Milestone_Pane_ContentPresenter {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_parent');
     }
 
-    public function rows() {
-        return $this->rows;
+    public function todo_collection() {
+        return $this->todo_collection;
+    }
+
+    public function done_collection() {
+        return array();
     }
 }
 
