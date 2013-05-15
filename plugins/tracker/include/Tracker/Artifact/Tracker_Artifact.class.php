@@ -893,6 +893,21 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
+     * Return the URL to use when you want to create a new artifact of $target_tracker type linked to current artifact
+     *
+     * @param Tracker $target_tracker
+     * @return String
+     */
+    public function getSubmitNewArtifactLinkedToMeUri(Tracker $target_tracker) {
+        return TRACKER_BASE_URL . '/?'.http_build_query(array(
+            'tracker'   => $target_tracker->getId(),
+            'func'      => 'new-artifact-link',
+            'id'        => $this->getId(),
+            'immediate' => 1,
+        ));
+    }
+
+    /**
      * Returns a Tracker_FormElementFactory instance
      *
      * @return Tracker_FormElementFactory

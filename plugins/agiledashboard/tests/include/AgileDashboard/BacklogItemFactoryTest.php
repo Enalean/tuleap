@@ -53,8 +53,9 @@ class BacklogItemFactoryTest extends TuleapTestCase {
 
         $this->user = mock('PFUser');
 
-        $planning = stub('Planning')->getBacklogTracker()->returns(mock('Tracker'));
-        $this->milestone = stub('Planning_ArtifactMilestone')->getPlanning()->returns($planning);
+        $planning        = stub('Planning')->getBacklogTracker()->returns(mock('Tracker'));
+        $artifact        = aMockArtifact()->build();
+        $this->milestone = aMilestone()->withArtifact($artifact)->withPlanning($planning)->build();
 
         $this->factory = partial_mock(
             'AgileDashboard_BacklogItemFactory',

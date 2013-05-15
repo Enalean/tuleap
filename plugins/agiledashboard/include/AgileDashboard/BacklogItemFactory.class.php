@@ -47,8 +47,8 @@ class AgileDashboard_BacklogItemFactory {
         $done_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
         $this->getMilestoneContent($user, $milestone, $todo_collection, $done_collection, $redirect_to_self);
 
-        $backlog_tracker = $milestone->getPlanning()->getBacklogTracker();
-        $submit_url      = $backlog_tracker->getSubmitUrl().'&child_milestone='.$milestone->getArtifactId().'&'.$redirect_to_self;
+        $backlog_tracker   = $milestone->getPlanning()->getBacklogTracker();
+        $submit_url        = $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($backlog_tracker).'&'.$redirect_to_self;
 
         $backlog_item_type = $backlog_tracker->getName();
         $can_add_backlog_item_type = true;
