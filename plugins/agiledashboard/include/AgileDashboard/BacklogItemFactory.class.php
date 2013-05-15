@@ -100,7 +100,9 @@ class AgileDashboard_BacklogItemFactory {
             Tracker::REMAINING_EFFORT_FIELD_NAME,
             $user
         );
-        $backlog_item->setRemainingEffort($field->fetchCardValue($artifact));
+        if ($field) {
+            $backlog_item->setRemainingEffort($field->fetchCardValue($artifact));
+        }
     }
 
     protected function getBacklogArtifacts(Planning_ArtifactMilestone $milestone) {
