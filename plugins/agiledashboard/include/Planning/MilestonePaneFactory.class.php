@@ -66,6 +66,11 @@ class Planning_MilestonePaneFactory {
         return $this->list_of_pane_info;
     }
 
+    /** @return string */
+    public function getDefaultPaneIdentifier() {
+        return AgileDashboard_MilestonePlanningPaneInfo::IDENTIFIER;
+    }
+
     private function buildListOfPaneInfo(Planning_Milestone $milestone) {
         $legacy_planning_pane_info = $this->legacy_planning_pane_factory->getPaneInfo($milestone);
 

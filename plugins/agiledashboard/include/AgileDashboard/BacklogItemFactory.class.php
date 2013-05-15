@@ -30,11 +30,14 @@ class AgileDashboard_BacklogItemFactory {
     }
 
     public function getMilestoneContent(Planning_ArtifactMilestone $milestone) {
+        $redirect_paremeter = new Planning_MilestoneRedirectParameter();
+        $redirect_to_self   = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_ContentPaneInfo::IDENTIFIER);
+
         $backlog_items = array();
         $artifacts = $this->dao->getBacklogArtifacts($milestone->getArtifactId())->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
         foreach ($artifacts as $artifact) {
             /* @var $artifact Tracker_Artifact */
-            $backlog_items[$artifact->getId()] = new AgileDashboard_BacklogItem($artifact);
+            $backlog_items[$artifact->getId()] = new AgileDashboard_BacklogItem($artifact, $redirect_to_self);
         }
         $backlog_item_ids = array_keys($backlog_items);
         $parents = $this->artifact_factory->getParents($backlog_item_ids);
@@ -68,13 +71,17 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Pane_Conten
     /** @var Title */
     private $parent_title;
 
-    public function __construct(Tracker_Artifact $artifact) {
-        $this->artifact = $artifact;
+    /** @var Title */
+    private $redirect_to_self;
+
+    public function __construct(Tracker_Artifact $artifact, $redirect_to_self) {
+        $this->artifact         = $artifact;
+        $this->redirect_to_self = $redirect_to_self;
     }
 
     public function setParent(Tracker_Artifact $parent) {
         $this->parent_title = $parent->getTitle();
-        $this->parent_url   = $parent->getUri();
+        $this->parent_url   = $parent->getUri() .'&'. $this->redirect_to_self;
     }
 
     public function id() {
@@ -86,7 +93,7 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Pane_Conten
     }
 
     public function url() {
-        return $this->artifact->getUri();
+        return $this->artifact->getUri() .'&'. $this->redirect_to_self;
     }
 
     public function points() {

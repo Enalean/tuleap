@@ -95,7 +95,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
             $this->pane_factory->getActivePane($this->milestone),
             $this->pane_factory->getListOfPaneInfo($this->milestone),
             $this->getAvailableMilestones(),
-            $this->redirect_parameter->getPlanningRedirectToNew($this->milestone)
+            $this->redirect_parameter->getPlanningRedirectToNew($this->milestone, $this->pane_factory->getDefaultPaneIdentifier())
         );
     }
 

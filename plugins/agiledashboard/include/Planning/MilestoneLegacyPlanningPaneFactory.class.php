@@ -77,7 +77,7 @@ class Planning_MilestoneLegacyPlanningPaneFactory {
             $content_view,
             $milestone_plan,
             $this->getCurrentUser(),
-            $this->redirect_parameter->getPlanningRedirectToSelf($milestone)
+            $this->getPlanningRedirectToSelf($milestone)
         );
         return new AgileDashboard_MilestonePlanningPane($info, $milestone_planning_presenter);
     }
@@ -90,7 +90,7 @@ class Planning_MilestoneLegacyPlanningPaneFactory {
 
         $already_planned_artifact_ids = $this->getAlreadyPlannedArtifactsIds($milestone);
         $cross_search_query           = $this->getCrossSearchQuery($milestone);
-        $planning_redirect_to_self    = $this->redirect_parameter->getPlanningRedirectToSelf($milestone);
+        $planning_redirect_to_self    = $this->getPlanningRedirectToSelf($milestone);
         $backlog_tracker_ids          = $this->hierarchy_factory->getHierarchy(array($planning->getBacklogTrackerId()))->flatten();
         $backlog_actions_presenter    = new Planning_BacklogActionsPresenter( $planning->getBacklogTracker(), $milestone, $planning_redirect_to_self);
 
@@ -106,6 +106,10 @@ class Planning_MilestoneLegacyPlanningPaneFactory {
         );
 
         return $view;
+    }
+
+    private function getPlanningRedirectToSelf(Planning_Milestone $milestone) {
+        return $this->redirect_parameter->getPlanningRedirectToSelf($milestone, AgileDashboard_MilestonePlanningPaneInfo::IDENTIFIER);
     }
 
     private function getAlreadyPlannedArtifactsIds(Planning_Milestone $milestone) {

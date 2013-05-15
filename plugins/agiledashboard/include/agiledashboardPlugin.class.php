@@ -134,6 +134,7 @@ class AgileDashboardPlugin extends Plugin {
             'planning_id' => $planning->getId(),
             'action'      => 'show',
             'aid'         => $redirect_to_artifact,
+            'pane'        => $requested_planning['pane_identifier'],
         );
     }
 
@@ -147,19 +148,24 @@ class AgileDashboardPlugin extends Plugin {
     private function setQueryParametersFromRequest(Codendi_Request $request, Tracker_Artifact_Redirect $redirect) {
         $requested_planning = $this->extractPlanningAndArtifactFromRequest($request);
         if ($requested_planning) {
-            $key   = 'planning['. $requested_planning['planning_id'] .']';
+            $key   = 'planning['. $requested_planning['pane_identifier'] .']['. $requested_planning['planning_id'] .']';
             $value = $requested_planning['artifact_id'];
             $redirect->query_parameters[$key] = $value;
         }
     }
 
     private function extractPlanningAndArtifactFromRequest(Codendi_Request $request) {
-        $from_planning = $request->get('planning');
+        $planning = $request->get('planning');
+        if (! is_array($planning) || ! count($planning)) {
+            return;
+        }
+        list($pane_identifier, $from_planning) = each($planning);
         if (is_array($from_planning) && count($from_planning)) {
             list($planning_id, $planning_artifact_id) = each($from_planning);
             return array(
-                'planning_id' => $planning_id,
-                'artifact_id' => $planning_artifact_id
+                'pane_identifier' => $pane_identifier,
+                'planning_id'     => $planning_id,
+                'artifact_id'     => $planning_artifact_id
             );
         }
     }
