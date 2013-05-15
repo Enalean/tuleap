@@ -476,12 +476,20 @@ class BacklogItem implements AgileDashboard_Milestone_Pane_ContentRowPresenter {
     /** @var Tracker_Artifact */
     private $parent;
 
+    /** @var string */
+    private $parent_title = '';
+
+    /** @var string */
+    private $parent_url = '';
+
     public function __construct(Tracker_Artifact $artifact) {
         $this->artifact = $artifact;
     }
 
     public function setParent(Tracker_Artifact $parent) {
-        $this->parent = $parent;
+        $this->parent       = $parent;
+        $this->parent_title = $parent->getTitle();
+        $this->parent_url   = $parent->getUri();
     }
 
     public function id() {
@@ -501,11 +509,11 @@ class BacklogItem implements AgileDashboard_Milestone_Pane_ContentRowPresenter {
     }
 
     public function parent_title() {
-        return $this->parent->getTitle();
+        return $this->parent_title;
     }
 
     public function parent_url() {
-        return $this->parent->getUri();
+        return $this->parent_url;
     }
 }
 
