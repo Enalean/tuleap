@@ -21,7 +21,7 @@ require_once('common/include/Codendi_Request.class.php');
 require_once('common/user/User.class.php');
 
 class Tracker_Semantic_Status extends Tracker_Semantic {
-
+    const NAME   = 'status';
     const OPEN   = 'Open';
     const CLOSED = 'Closed';
 
@@ -54,7 +54,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      * @return string
      */
     public function getShortName() {
-        return 'status';
+        return self::NAME;
     }
 
     /**

@@ -43,31 +43,49 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
 
     }
 
-    public function getArtifactsStatusAndTitle(array $artifact_ids) {
+    public function getArtifactsSemantics(array $artifact_ids, array $semantics) {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
-        $sql = "SELECT artifact.id, CVT.value as title, (SS0.open_value_id IS NOT NULL OR SS1.open_value_id IS NULL) as status
+
+        $select_fields = array('artifact.id');
+        $join_fields   = array();
+        if (in_array(Tracker_Semantic_Title::NAME, $semantics)) {
+            $select_fields[] = 'CVT.value as title';
+            $join_fields[]   = 'LEFT JOIN (
+                                  tracker_changeset_value                 AS CV0
+                                  INNER JOIN tracker_semantic_title       AS ST  ON (
+                                      CV0.field_id = ST.field_id
+                                  )
+                                  INNER JOIN tracker_changeset_value_text AS CVT ON (
+                                      CV0.id       = CVT.changeset_value_id
+                                  )
+                              ) ON (c.id = CV0.changeset_id)';
+        } else {
+            $select_fields[] = '"" as title';
+        }
+
+        if (in_array(Tracker_Semantic_Status::NAME, $semantics)) {
+            $select_fields[] = '(SS0.open_value_id IS NOT NULL OR SS1.open_value_id IS NULL) as status';
+            $join_fields[]   = 'LEFT JOIN (
+                                    tracker_changeset_value                 AS CV1
+                                    INNER JOIN tracker_semantic_status      AS SS0  ON (
+                                        CV1.field_id         = SS0.field_id
+                                    )
+                                    INNER JOIN tracker_changeset_value_list AS CVL ON (
+                                        CV1.id                = CVL.changeset_value_id
+                                        AND SS0.open_value_id = CVL.bindvalue_id
+                                    )
+                                 ) ON (c.id = CV1.changeset_id)
+                                 LEFT JOIN tracker_semantic_status AS SS1 ON (
+                                         artifact.tracker_id = SS1.tracker_id
+                                        AND CVL.bindvalue_id IS NULL)';
+        } else {
+            $select_fields[] = '0 as status';
+        }
+
+        $sql = "SELECT ".implode(',', $select_fields)."
                 FROM tracker_artifact AS artifact
                     INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
-                    LEFT JOIN (
-                        tracker_changeset_value                 AS CV0
-                        INNER JOIN tracker_semantic_title       AS ST  ON (
-                            CV0.field_id = ST.field_id
-                        )
-                        INNER JOIN tracker_changeset_value_text AS CVT ON (
-                            CV0.id       = CVT.changeset_value_id
-                        )
-                    ) ON (c.id = CV0.changeset_id)
-                    LEFT JOIN (
-                        tracker_changeset_value                 AS CV1
-                        INNER JOIN tracker_semantic_status      AS SS0  ON (
-                            CV1.field_id         = SS0.field_id
-                        )
-                        INNER JOIN tracker_changeset_value_list AS CVL ON (
-                            CV1.id               = CVL.changeset_value_id
-                            AND SS0.open_value_id = CVL.bindvalue_id
-                        )
-                     ) ON (c.id = CV1.changeset_id)
-                    LEFT JOIN tracker_semantic_status AS SS1 ON (artifact.tracker_id = SS1.tracker_id AND CVL.bindvalue_id IS NULL)
+                    ".implode('', $join_fields)."
                 WHERE artifact.id IN ($artifact_ids)
                 GROUP by artifact.id";
         return $this->retrieve($sql);

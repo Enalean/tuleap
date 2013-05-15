@@ -59,13 +59,19 @@ class BacklogItemFactoryTest extends TuleapTestCase {
 
         $this->factory = partial_mock(
             'AgileDashboard_BacklogItemFactory',
-            array('getBacklogArtifacts'),
+            array(
+                'getBacklogArtifacts',
+                'userCanReadBacklogTitleField',
+                'userCanReadBacklogStatusField',
+            ),
             array(
                 $this->dao,
                 $this->artifact_factory,
                 $this->form_element_factory
             )
         );
+        stub($this->factory)->userCanReadBacklogTitleField()->returns(true);
+        stub($this->factory)->userCanReadBacklogStatusField()->returns(true);
     }
 
     public function itCreatesContentWithOneElementInTodo() {
@@ -74,7 +80,7 @@ class BacklogItemFactoryTest extends TuleapTestCase {
 
         stub($this->artifact_factory)->getParents()->returns(array());
 
-        stub($this->dao)->getArtifactsStatusAndTitle(array(12))->returnsDar(array('id' => 12, 'title' => 'Story blabla', 'status' => AgileDashboard_BacklogItemDao::STATUS_OPEN));
+        stub($this->dao)->getArtifactsSemantics(array(12), '*')->returnsDar(array('id' => 12, 'title' => 'Story blabla', 'status' => AgileDashboard_BacklogItemDao::STATUS_OPEN));
 
         stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
 
@@ -90,7 +96,7 @@ class BacklogItemFactoryTest extends TuleapTestCase {
 
         stub($this->artifact_factory)->getParents()->returns(array());
 
-        stub($this->dao)->getArtifactsStatusAndTitle(array(12))->returnsDar(array('id' => 12, 'title' => 'Story blabla', 'status' => AgileDashboard_BacklogItemDao::STATUS_CLOSED));
+        stub($this->dao)->getArtifactsSemantics(array(12), '*')->returnsDar(array('id' => 12, 'title' => 'Story blabla', 'status' => AgileDashboard_BacklogItemDao::STATUS_CLOSED));
 
         stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
 
@@ -106,7 +112,7 @@ class BacklogItemFactoryTest extends TuleapTestCase {
 
         stub($this->artifact_factory)->getParents()->returns(array());
 
-        stub($this->dao)->getArtifactsStatusAndTitle(array(12))->returnsDar(array('id' => 12, 'title' => 'Story blabla', 'status' => AgileDashboard_BacklogItemDao::STATUS_OPEN));
+        stub($this->dao)->getArtifactsSemantics(array(12), '*')->returnsDar(array('id' => 12, 'title' => 'Story blabla', 'status' => AgileDashboard_BacklogItemDao::STATUS_OPEN));
 
         // Configure the returned value
         $field = aMockField()->build();

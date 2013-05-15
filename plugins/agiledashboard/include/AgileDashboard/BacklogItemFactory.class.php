@@ -68,30 +68,42 @@ class AgileDashboard_BacklogItemFactory {
         AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $done_collection,
         $redirect_to_self
     ) {
-        $artifacts = array();
+        $artifacts        = array();
+        $backlog_item_ids = array();
         foreach ($this->getBacklogArtifacts($milestone) as $artifact) {
-            /* @var $artifact Tracker_Artifact */
             $artifacts[$artifact->getId()] = $artifact;
+            $backlog_item_ids[] = $artifact->getId();
         }
-        $backlog_item_ids = array_keys($artifacts);
-        $parents = $this->artifact_factory->getParents($backlog_item_ids);
-        $status  = $this->dao->getArtifactsStatusAndTitle($backlog_item_ids);
-        foreach ($status as $row) {
-            $artifact_id = $row['id'];
-            if (isset($artifacts[$artifact_id])) {
-                $artifacts[$artifact_id]->setTitle($row['title']);
-                $backlog_item = new AgileDashboard_BacklogItem($artifacts[$artifact_id], $redirect_to_self);
-                if (isset($parents[$artifact_id])) {
-                    $backlog_item->setParent($parents[$artifact_id]);
-                }
-                if ($row['status'] == AgileDashboard_BacklogItemDao::STATUS_OPEN) {
-                    $this->setRemainingEffort($user, $backlog_item, $artifacts[$artifact_id]);
-                    $todo_collection->push($backlog_item);
-                } else {
-                    $done_collection->push($backlog_item);
-                }
-            }
+        $parents         = $this->artifact_factory->getParents($backlog_item_ids);
+        $semantic_values = $this->dao->getArtifactsSemantics($backlog_item_ids, $this->getSemanticsTheUserCanSee($user, $milestone));
+        foreach ($semantic_values as $row) {
+            $this->buildCollections($user, $todo_collection, $done_collection, $redirect_to_self, $parents, $artifacts, $row);
         }
+    }
+
+
+    protected function getBacklogArtifacts(Planning_ArtifactMilestone $milestone) {
+        return $this->dao->getBacklogArtifacts($milestone->getArtifactId())->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
+    }
+
+    private function getSemanticsTheUserCanSee(PFUser $user, Planning_ArtifactMilestone $milestone) {
+        $backlog_tracker = $milestone->getPlanning()->getBacklogTracker();
+        $semantics = array();
+        if ($this->userCanReadBacklogTitleField($user, $backlog_tracker)) {
+            $semantics[] = Tracker_Semantic_Title::NAME;
+        }
+        if ($this->userCanReadBacklogStatusField($user, $backlog_tracker)) {
+            $semantics[] = Tracker_Semantic_Status::NAME;
+        }
+        return $semantics;
+    }
+
+    protected function userCanReadBacklogTitleField(PFUser $user, Tracker $tracker) {
+        return Tracker_Semantic_Title::load($tracker)->getField()->userCanRead($user);
+    }
+
+    protected function userCanReadBacklogStatusField(PFUser $user, Tracker $tracker) {
+        return Tracker_Semantic_Status::load($tracker)->getField()->userCanRead($user);
     }
 
     protected function setRemainingEffort(PFUser $user, AgileDashboard_BacklogItem $backlog_item, Tracker_Artifact $artifact) {
@@ -105,8 +117,29 @@ class AgileDashboard_BacklogItemFactory {
         }
     }
 
-    protected function getBacklogArtifacts(Planning_ArtifactMilestone $milestone) {
-        return $this->dao->getBacklogArtifacts($milestone->getArtifactId())->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
+    private function buildCollections(
+        PFUser $user,
+        AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $todo_collection,
+        AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $done_collection,
+        $redirect_to_self,
+        $parents,
+        $artifacts,
+        $row
+    ) {
+        $artifact_id = $row['id'];
+        if (isset($artifacts[$artifact_id])) {
+            $artifacts[$artifact_id]->setTitle($row['title']);
+            $backlog_item = new AgileDashboard_BacklogItem($artifacts[$artifact_id], $redirect_to_self);
+            if (isset($parents[$artifact_id])) {
+                $backlog_item->setParent($parents[$artifact_id]);
+            }
+            if ($row['status'] == AgileDashboard_BacklogItemDao::STATUS_OPEN) {
+                $this->setRemainingEffort($user, $backlog_item, $artifacts[$artifact_id]);
+                $todo_collection->push($backlog_item);
+            } else {
+                $done_collection->push($backlog_item);
+            }
+        }
     }
 }
 
