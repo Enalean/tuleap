@@ -1,13 +1,15 @@
 <h3>All open {{backlog_item_type}}</h3>
 
-<p>Here are the items that are still open. You can prioritize by drag 'n
-   dropping them.</p>
 
 {{#can_add_backlog_item}}
 <p>
     <a href="{{add_new_backlog_url}}" class="btn">{{add_new_backlog_item}}</a>
 </p>
 {{/can_add_backlog_item}}
+
+{{#has_something_todo}}
+<p>Here are the items that are still open. You can prioritize by drag 'n
+   dropping them.</p>
 <table class="table table-striped table-hover table-bordered">
     <thead>
         <tr>
@@ -28,3 +30,7 @@
         {{/todo_collection}}
     </tbody>
 </table>
+{{/has_something_todo}}
+{{^has_something_todo}}
+<p>Nothing todo yet.</p>
+{{/has_something_todo}}

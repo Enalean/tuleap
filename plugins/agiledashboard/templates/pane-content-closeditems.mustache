@@ -1,8 +1,8 @@
 <h3>All closed {{backlog_item_type}}</h3>
 
+{{#has_something_done}}
 <p>Please find below the items that are closed. You cannot change the
    priorities.</p>
-
 <table class="table table-striped table-hover table-bordered">
     <thead>
         <tr>
@@ -21,3 +21,7 @@
         {{/done_collection}}
     </tbody>
 </table>
+{{/has_something_done}}
+{{^has_something_done}}
+<p>Nothing done yet</p>
+{{/has_something_done}}

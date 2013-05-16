@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_ContentRowPresenterCollection implements Iterator {
+class AgileDashboard_Milestone_Pane_ContentRowPresenterCollection implements Iterator, Countable {
     private $rows;
 
     public function __construct(array $rows = array()) {
@@ -51,6 +51,10 @@ class AgileDashboard_Milestone_Pane_ContentRowPresenterCollection implements Ite
 
     public function valid() {
         return current($this->rows) !== false;
+    }
+
+    public function count() {
+        return count($this->rows);
     }
 }
 ?>
