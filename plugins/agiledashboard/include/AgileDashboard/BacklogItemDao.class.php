@@ -49,7 +49,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
         $select_fields = array('artifact.id');
         $join_fields   = array();
         if (in_array(Tracker_Semantic_Title::NAME, $semantics)) {
-            $select_fields[] = 'CVT.value as title';
+            $select_fields[] = 'CVT.value as '.Tracker_Semantic_Title::NAME;
             $join_fields[]   = 'LEFT JOIN (
                                   tracker_changeset_value                 AS CV0
                                   INNER JOIN tracker_semantic_title       AS ST  ON (
@@ -64,7 +64,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
         }
 
         if (in_array(Tracker_Semantic_Status::NAME, $semantics)) {
-            $select_fields[] = '(SS0.open_value_id IS NOT NULL OR SS1.open_value_id IS NULL) as status';
+            $select_fields[] = '(SS0.open_value_id IS NOT NULL OR SS1.open_value_id IS NULL) as '.Tracker_Semantic_Status::NAME;
             $join_fields[]   = 'LEFT JOIN (
                                     tracker_changeset_value                 AS CV1
                                     INNER JOIN tracker_semantic_status      AS SS0  ON (

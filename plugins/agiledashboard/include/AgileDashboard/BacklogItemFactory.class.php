@@ -74,10 +74,10 @@ class AgileDashboard_BacklogItemFactory {
             $artifacts[$artifact->getId()] = $artifact;
             $backlog_item_ids[] = $artifact->getId();
         }
-        $parents         = $this->getParentArtifacts($user, $milestone, $backlog_item_ids);
-        $semantic_values = $this->dao->getArtifactsSemantics($backlog_item_ids, $this->getSemanticsTheUserCanSee($user, $milestone));
-        foreach ($semantic_values as $row) {
-            $this->buildCollections($user, $todo_collection, $done_collection, $redirect_to_self, $parents, $artifacts, $row);
+        $parents   = $this->getParentArtifacts($user, $milestone, $backlog_item_ids);
+        $semantics = $this->getArtifactsSemantics($user, $milestone, $backlog_item_ids);
+        foreach ($artifacts as $artifact) {
+            $this->buildCollections($user, $todo_collection, $done_collection, $redirect_to_self, $artifact, $parents, $semantics);
         }
     }
 
@@ -98,6 +98,17 @@ class AgileDashboard_BacklogItemFactory {
             }
         }
         return $parents;
+    }
+
+    private function getArtifactsSemantics(PFUser $user, Planning_ArtifactMilestone $milestone, array $backlog_item_ids) {
+        $semantics = array();
+        foreach ($this->dao->getArtifactsSemantics($backlog_item_ids, $this->getSemanticsTheUserCanSee($user, $milestone)) as $row) {
+            $semantics[$row['id']] = array(
+                Tracker_Semantic_Title::NAME  => $row[Tracker_Semantic_Title::NAME],
+                Tracker_Semantic_Status::NAME => $row[Tracker_Semantic_Status::NAME],
+            );
+        }
+        return $semantics;
     }
 
     private function getSemanticsTheUserCanSee(PFUser $user, Planning_ArtifactMilestone $milestone) {
@@ -136,23 +147,22 @@ class AgileDashboard_BacklogItemFactory {
         AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $todo_collection,
         AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $done_collection,
         $redirect_to_self,
+        Tracker_Artifact $artifact,
         $parents,
-        $artifacts,
-        $row
+        $semantics
     ) {
-        $artifact_id = $row['id'];
-        if (isset($artifacts[$artifact_id])) {
-            $artifacts[$artifact_id]->setTitle($row['title']);
-            $backlog_item = new AgileDashboard_BacklogItem($artifacts[$artifact_id], $redirect_to_self);
-            if (isset($parents[$artifact_id])) {
-                $backlog_item->setParent($parents[$artifact_id]);
-            }
-            if ($row['status'] == AgileDashboard_BacklogItemDao::STATUS_OPEN) {
-                $this->setRemainingEffort($user, $backlog_item, $artifacts[$artifact_id]);
-                $todo_collection->push($backlog_item);
-            } else {
-                $done_collection->push($backlog_item);
-            }
+        $artifact_id = $artifact->getId();
+        $artifact->setTitle($semantics[$artifact_id][Tracker_Semantic_Title::NAME]);
+
+        $backlog_item = new AgileDashboard_BacklogItem($artifact, $redirect_to_self);
+        if (isset($parents[$artifact_id])) {
+            $backlog_item->setParent($parents[$artifact_id]);
+        }
+        if ($semantics[$artifact_id][Tracker_Semantic_Status::NAME] == AgileDashboard_BacklogItemDao::STATUS_OPEN) {
+            $this->setRemainingEffort($user, $backlog_item, $artifact);
+            $todo_collection->push($backlog_item);
+        } else {
+            $done_collection->push($backlog_item);
         }
     }
 }
