@@ -23,7 +23,7 @@ document.observe('dom:loaded', function () {
         new tuleap.agiledashboard.Planning(planner);
     }
 
-    var milestone_content = $('mcontent');
+    var milestone_content = $('blcontent');
     if (milestone_content) {
         new tuleap.agiledashboard.MilestoneContent(milestone_content);
     }

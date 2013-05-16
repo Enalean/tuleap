@@ -19,7 +19,7 @@
  */
 
 class AgileDashboard_Milestone_Pane_ContentPaneInfo extends AgileDashboard_PaneInfo {
-    const IDENTIFIER = 'mcontent';
+    const IDENTIFIER = 'blcontent';
 
     public function __construct(Planning_Milestone $milestone) {
         parent::__construct($milestone);
