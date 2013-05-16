@@ -106,7 +106,7 @@ class BacklogItemFactoryTest extends TuleapTestCase {
         $this->assertEqual($row->id(), 12);
     }
 
-    public function _itSetRemainingEffortForOpenStories() {
+    public function itSetRemainingEffortForOpenStories() {
         $story1 = anArtifact()->withId(12)->build();
         stub($this->factory)->getBacklogArtifacts()->returns(array($story1));
 
