@@ -31,7 +31,7 @@ EOT;
     }
 
     public function up() {
-        $sql = "ALTER TABLE svn_checkins DROP KEY 'uniq_checkins_idx'";
+        $sql = "ALTER TABLE svn_checkins DROP KEY uniq_checkins_idx";
         if ($this->db->tableNameExists('svn_checkins')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
