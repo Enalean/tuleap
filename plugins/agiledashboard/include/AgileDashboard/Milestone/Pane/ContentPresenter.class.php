@@ -101,7 +101,11 @@ class AgileDashboard_Milestone_Pane_ContentPresenter {
     }
 
     public function has_something_done() {
-        return $this->done_collection()->count() > 0;
+        return $this->done_collection->count() > 0;
+    }
+
+    public function has_something() {
+        return $this->has_something_todo() || $this->has_something_done();
     }
 }
 
