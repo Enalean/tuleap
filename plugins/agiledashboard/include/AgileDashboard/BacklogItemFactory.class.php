@@ -88,11 +88,13 @@ class AgileDashboard_BacklogItemFactory {
     private function getParentArtifacts(PFUser $user, Planning_ArtifactMilestone $milestone, array $backlog_item_ids) {
         $parents         = $this->artifact_factory->getParents($backlog_item_ids);
         $parent_tracker = $milestone->getPlanning()->getBacklogTracker()->getParent();
-        if ($this->userCanReadBacklogTitleField($user, $parent_tracker)) {
-            $this->artifact_factory->setTitles($parents);
-        } else {
-            foreach ($parents as $artifact) {
-                $artifact->setTitle("");
+        if ($parent_tracker) {
+            if ($this->userCanReadBacklogTitleField($user, $parent_tracker)) {
+                $this->artifact_factory->setTitles($parents);
+            } else {
+                foreach ($parents as $artifact) {
+                    $artifact->setTitle("");
+                }
             }
         }
         return $parents;
