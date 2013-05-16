@@ -126,6 +126,8 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         stub($this->userfinder)->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository_in_a_private_project)->returns(true);
         stub($this->userfinder)->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository_without_registered)->returns(false);
         stub($this->userfinder)->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository_with_registered)->returns(true);
+        stub($this->userfinder)->areRegisteredUsersAllowedTo(Git::PERM_WRITE, $this->repository_with_registered)->returns(true);
+        stub($this->userfinder)->areRegisteredUsersAllowedTo(Git::PERM_WPLUS, $this->repository_with_registered)->returns(true);
     }
 
     public function tearDown() {

@@ -182,16 +182,14 @@ class Git_Driver_Gerrit_ProjectCreator {
             }
         }
 
-        if ($this->shouldAddRegisteredUsers($repository)) {
-            if (array_intersect(array(UGroup::ANONYMOUS, UGroup::REGISTERED), $ugroup_ids_read)) {
-                $ugroups_read[] = self::GROUP_REGISTERED_USERS;
-            }
-            if (array_intersect(array(UGroup::ANONYMOUS, UGroup::REGISTERED), $ugroup_ids_write)) {
-                $ugroups_write[] = self::GROUP_REGISTERED_USERS;
-            }
-            if (array_intersect(array(UGroup::ANONYMOUS, UGroup::REGISTERED), $ugroup_ids_rewind)) {
-                $ugroups_rewind[] = self::GROUP_REGISTERED_USERS;
-            }
+        if ($this->shouldAddRegisteredUsersToGroup($repository, Git::PERM_READ, $ugroup_ids_read)) {
+            $ugroups_read[] = self::GROUP_REGISTERED_USERS;
+        }
+        if ($this->shouldAddRegisteredUsersToGroup($repository, Git::PERM_WRITE, $ugroup_ids_write)) {
+            $ugroups_write[] = self::GROUP_REGISTERED_USERS;
+        }
+        if ($this->shouldAddRegisteredUsersToGroup($repository, Git::PERM_WPLUS, $ugroup_ids_rewind)) {
+            $ugroups_rewind[] = self::GROUP_REGISTERED_USERS;
         }
 
         $this->addToSection('refs', 'read', "group $replication_group");
@@ -241,8 +239,10 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->addToSection('refs/tags', 'forgeCommitter', "group Administrators");  // push initial ref
     }
 
-    private function shouldAddRegisteredUsers(GitRepository $repository) {
-        return $repository->getProject()->isPublic() && $this->user_finder->areRegisteredUsersAllowedTo(Git::PERM_READ, $repository);
+    private function shouldAddRegisteredUsersToGroup(GitRepository $repository, $permission, $group) {
+        return array_intersect(array(UGroup::ANONYMOUS, UGroup::REGISTERED), $group) &&
+            $repository->getProject()->isPublic() &&
+            $this->user_finder->areRegisteredUsersAllowedTo($permission, $repository);
     }
 
     private function addToSection($section, $permission, $value) {
