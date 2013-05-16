@@ -226,6 +226,7 @@
 
 #blcontent table {
     border-spacing: 0;
+    width: auto;
 }
 .milestone-content-open-rows > tr {
     cursor: move;
