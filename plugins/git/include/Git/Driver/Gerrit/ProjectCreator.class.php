@@ -196,9 +196,6 @@ class Git_Driver_Gerrit_ProjectCreator {
 
         $this->addToSection('refs', 'read', "group $replication_group");
 
-        /*if ($this->shouldAddRegisteredUsers($repository) && !in_array(UGroup::REGISTERED, $ugroup_ids_read)) {
-            $this->addToSection('refs/heads', 'read', "group Registered Users");
-        }*/
         foreach ($ugroups_read as $ugroup_read) {
             $this->addToSection('refs/heads', 'read', "group $ugroup_read");
             $this->addToSection('refs/heads', 'label-Code-Review', "-1..+1 group $ugroup_read");
