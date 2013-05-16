@@ -74,17 +74,28 @@ class AgileDashboard_BacklogItemFactory {
             $artifacts[$artifact->getId()] = $artifact;
             $backlog_item_ids[] = $artifact->getId();
         }
-        $parents         = $this->artifact_factory->getParents($backlog_item_ids);
-        $this->artifact_factory->setTitles($parents);
+        $parents         = $this->getParentArtifacts($user, $milestone, $backlog_item_ids);
         $semantic_values = $this->dao->getArtifactsSemantics($backlog_item_ids, $this->getSemanticsTheUserCanSee($user, $milestone));
         foreach ($semantic_values as $row) {
             $this->buildCollections($user, $todo_collection, $done_collection, $redirect_to_self, $parents, $artifacts, $row);
         }
     }
 
-
     protected function getBacklogArtifacts(Planning_ArtifactMilestone $milestone) {
         return $this->dao->getBacklogArtifacts($milestone->getArtifactId())->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
+    }
+
+    private function getParentArtifacts(PFUser $user, Planning_ArtifactMilestone $milestone, array $backlog_item_ids) {
+        $parents         = $this->artifact_factory->getParents($backlog_item_ids);
+        $parent_tracker = $milestone->getPlanning()->getBacklogTracker()->getParent();
+        if ($this->userCanReadBacklogTitleField($user, $parent_tracker)) {
+            $this->artifact_factory->setTitles($parents);
+        } else {
+            foreach ($parents as $artifact) {
+                $artifact->setTitle("");
+            }
+        }
+        return $parents;
     }
 
     private function getSemanticsTheUserCanSee(PFUser $user, Planning_ArtifactMilestone $milestone) {
