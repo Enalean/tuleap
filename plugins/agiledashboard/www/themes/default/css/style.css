@@ -227,14 +227,14 @@
 #mcontent table {
     border-spacing: 0;
 }
-.milestone-content-rows > tr {
+.milestone-content-open-rows > tr {
     cursor: move;
 }
-.milestone-content-rows .ui-sortable-helper {
+.milestone-content-open-rows .ui-sortable-helper {
   -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
      -moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
           box-shadow: 0 1px 4px rgba(0,0,0,.065);
 }
-.milestone-content-rows .ui-sortable-helper > td {
+.milestone-content-open-rows .ui-sortable-helper > td {
     border-bottom: 1px solid #dddddd;
 }

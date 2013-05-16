@@ -1,9 +1,4 @@
-{{#has_something}}
-    <h3>{{#has_something_todo}}All{{/has_something_todo}}{{^has_something_todo}}No more{{/has_something_todo}} open {{backlog_item_type}}{{^has_something_todo}}, well done!{{/has_something_todo}}</h3>
-{{/has_something}}
-{{^has_something}}
-    <h3>No {{backlog_item_type}}{{#can_add_backlog_item}}, start adding now{{/can_add_backlog_item}}.</h3>
-{{/has_something}}
+<h3>{{open_items_title}}</h3>
 
 {{#can_add_backlog_item}}
 <p>
@@ -13,8 +8,7 @@
 
 {{#has_something}}
     {{#has_something_todo}}
-        <p>Here are the items that are still open. You can prioritize by drag 'n
-           dropping them.</p>
+        <p>{{open_items_intro}}</p>
         <table class="table table-striped table-hover table-bordered">
             <thead>
                 <tr>
@@ -24,7 +18,7 @@
                     <th>{{parent}}</th>
                 </tr>
             </thead>
-            <tbody class="milestone-content-rows">
+            <tbody class="{{#can_prioritize}}milestone-content-open-rows{{/can_prioritize}}">
                 {{#todo_collection}}
                     <tr data-artifact-id="{{id}}">
                         <td><a href="{{url}}">{{id}}</a></td>

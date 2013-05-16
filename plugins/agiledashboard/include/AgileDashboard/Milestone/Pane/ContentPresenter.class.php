@@ -68,12 +68,16 @@ class AgileDashboard_Milestone_Pane_ContentPresenter {
         return $this->can_add_backlog_item_type;
     }
 
+    public function can_prioritize() {
+        return $this->can_add_backlog_item_type;
+    }
+
     public function add_new_backlog_url() {
         return $this->submit_url;
     }
 
     public function add_new_backlog_item() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_add_new', array($this->backlog_item_type));
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'add_subitem', array($this->backlog_item_type));
     }
 
     public function title() {
@@ -97,15 +101,49 @@ class AgileDashboard_Milestone_Pane_ContentPresenter {
     }
 
     public function has_something_todo() {
-        return $this->todo_collection->count() > 0;
+        return !$this->todo_collection->count() > 0;
     }
 
     public function has_something_done() {
-        return $this->done_collection->count() > 0;
+        return !$this->done_collection->count() > 0;
     }
 
     public function has_something() {
         return $this->has_something_todo() || $this->has_something_done();
+    }
+
+    public function closed_items_title() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'closed_items_title', $this->backlog_item_type);
+    }
+
+    public function closed_items_intro() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'closed_items_intro', $this->backlog_item_type);
+    }
+
+    public function closed_items_nothing_yet() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'closed_items_nothing_yet');
+    }
+
+    public function open_items_title() {
+        $key = 'open_items_title';
+        if (! $this->has_something()) {
+            $key = 'open_items_title-not_yet';
+            if ($this->can_add_backlog_item()) {
+                $key = 'open_items_title-not_yet-can_add';
+            }
+        } else if (! $this->has_something_todo()) {
+            $key = 'open_items_title-no_more';
+        }
+
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', $key, $this->backlog_item_type);
+    }
+
+    public function open_items_intro() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'open_items_intro', $this->backlog_item_type);
+    }
+
+    public function lab() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'lab');
     }
 }
 
