@@ -75,6 +75,7 @@ class AgileDashboard_BacklogItemFactory {
             $backlog_item_ids[] = $artifact->getId();
         }
         $parents         = $this->artifact_factory->getParents($backlog_item_ids);
+        $this->artifact_factory->setTitles($parents);
         $semantic_values = $this->dao->getArtifactsSemantics($backlog_item_ids, $this->getSemanticsTheUserCanSee($user, $milestone));
         foreach ($semantic_values as $row) {
             $this->buildCollections($user, $todo_collection, $done_collection, $redirect_to_self, $parents, $artifacts, $row);

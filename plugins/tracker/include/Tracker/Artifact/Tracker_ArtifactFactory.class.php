@@ -360,5 +360,30 @@ class Tracker_ArtifactFactory {
         }
         return $parents;
     }
+
+    /**
+     * Batch search and update given artifact titles
+     *
+     * @param Tracker_Artifact[] $artifacts
+     */
+    public function setTitles(array $artifacts) {
+        $artifact_ids = array();
+        $index_map = array();
+        foreach ($artifacts as $index_in_source_array => $artifact) {
+            $artifact_ids[]                  = $artifact->getId();
+            $index_map[$artifact->getId()][] = $index_in_source_array;
+        }
+
+        foreach ($this->getDao()->getTitles($artifact_ids) as $row) {
+            $artifact_id = $row['id'];
+            if (isset($index_map[$artifact_id])) {
+                foreach ($index_map[$artifact_id] as $child_id) {
+                    if (isset($artifacts[$child_id])) {
+                        $artifacts[$child_id]->setTitle($row['title']);
+                    }
+                }
+            }
+        }
+    }
 }
 ?>

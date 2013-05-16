@@ -372,6 +372,24 @@ class Tracker_ArtifactDao extends DataAccessObject {
                 WHERE child_art.id IN ($artifact_ids)";
         return $this->retrieve($sql);
     }
+
+    public function getTitles(array $artifact_ids) {
+        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
+        $sql = "SELECT artifact.id, CVT.value as title
+                FROM tracker_artifact artifact
+                    INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
+                    LEFT JOIN (
+                        tracker_changeset_value                 AS CV0
+                        INNER JOIN tracker_semantic_title       AS ST  ON (
+                            CV0.field_id = ST.field_id
+                        )
+                        INNER JOIN tracker_changeset_value_text AS CVT ON (
+                            CV0.id       = CVT.changeset_value_id
+                        )
+                    ) ON (c.id = CV0.changeset_id)
+                WHERE artifact.id IN ($artifact_ids)";
+        return $this->retrieve($sql);
+    }
 }
 
 ?>
