@@ -38,6 +38,14 @@ EOT;
                 throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while removing key uniq_checkins_idx from table svn_checkins');
             }
         }
+
+        $sql2 = "ALTER TABLE svn_checkins ADD KEY checkins_idx (commitid,dirid,fileid)";
+        if ($this->db->tableNameExists('svn_checkins')) {
+            $res = $this->db->dbh->exec($sql2);
+            if ($res === false) {
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding non-unique key uniq_checkins_idx to table svn_checkins');
+            }
+        }
     }
 
     public function postUp() {
