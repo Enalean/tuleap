@@ -68,8 +68,8 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
         $redirect_paremeter     = new Planning_MilestoneRedirectParameter();
         $this->redirect_to_self = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_ContentPaneInfo::IDENTIFIER);
         
-        $this->initCollections($user ,$milestone);
         $this->initBacklogSettings($user ,$milestone);
+        $this->initCollections($user ,$milestone);
         return new AgileDashboard_Milestone_Pane_ContentPresenter(
             $this->todo_collection,
             $this->done_collection,
@@ -93,7 +93,7 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
     private function initCollections(PFUser $user, Planning_ArtifactMilestone $milestone) {
         $artifacts        = array();
         $backlog_item_ids = array();
-        foreach ($this->getBacklogArtifacts($milestone) as $artifact) {
+        foreach ($this->getBacklogArtifacts($user, $milestone) as $artifact) {
             $artifacts[$artifact->getId()] = $artifact;
             $backlog_item_ids[] = $artifact->getId();
         }
@@ -104,13 +104,43 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
         }
     }
 
-    protected function getBacklogArtifacts(Planning_ArtifactMilestone $milestone) {
-        return $this->dao->getBacklogArtifacts($milestone->getArtifactId())->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
+    protected function getBacklogArtifacts(PFUser $user, Planning_ArtifactMilestone $milestone) {
+        $use_milestone_backlog = false;
+        $backlog_tracker = $milestone->getPlanning()->getBacklogTracker();
+        $backlog_tracker_children = $milestone->getPlanning()->getPlanningTracker()->getChildren();
+        if ($backlog_tracker_children) {
+            $first_child_tracker = current($backlog_tracker_children);
+            $first_child_backlog_tracker = PlanningFactory::build()->getPlanningByPlanningTracker($first_child_tracker)->getBacklogTracker();
+            if ($first_child_backlog_tracker == $backlog_tracker) {
+                $use_milestone_backlog = true;
+            }
+            $this->backlog_item_name = $first_child_backlog_tracker->getName();
+            //var_dump($first_child_tracker->getItemName());
+            //var_dump($first_child_backlog_tracker->getItemName());
+        } else {
+            $parent_tracker = $milestone->getPlanning()->getBacklogTracker()->getParent();
+            if ($parent_tracker) {
+            }
+            $this->backlog_item_name = $backlog_tracker->getName();
+            $use_milestone_backlog = true;
+        }
+
+        $milestone_backlog_artifacts = $this->dao->getBacklogArtifacts($milestone->getArtifactId())->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
+        if ($use_milestone_backlog) {
+            return $milestone_backlog_artifacts;
+        } else {
+            $backlog = array();
+            foreach ($milestone_backlog_artifacts as $artifact) {
+                /* @var $artifact Tracker_Artifact */
+                $backlog = array_merge($backlog, $artifact->getChildren($user));
+            }
+            return array_filter($backlog);
+        }
     }
 
     private function getParentArtifacts(PFUser $user, Planning_ArtifactMilestone $milestone, array $backlog_item_ids) {
         $parents         = $this->artifact_factory->getParents($backlog_item_ids);
-        $parent_tracker = $milestone->getPlanning()->getBacklogTracker()->getParent();
+        $parent_tracker  = $this->getParentTracker($parents);
         if ($parent_tracker) {
             $this->parent_item_name = $parent_tracker->getName();
             if ($this->userCanReadBacklogTitleField($user, $parent_tracker)) {
@@ -123,6 +153,16 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
         }
         return $parents;
     }
+
+    private function getParentTracker(array $artifacts) {
+        if (count($artifacts) > 0) {
+            $artifact = current($artifacts);
+            reset($artifacts);
+            return $artifact->getTracker();
+        }
+        return null;
+    }
+
 
     private function getArtifactsSemantics(PFUser $user, Planning_ArtifactMilestone $milestone, array $backlog_item_ids) {
         $semantics = array();
