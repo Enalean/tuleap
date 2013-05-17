@@ -1,3 +1,6 @@
+Version 0.9.31 - Tuleap 6.1
+    * Fix request #2155: Tasks rearranging on the cardwall when clicking on a task
+
 Version 0.9.30 - Tuleap 5.13
     * Filter on cardwall: still display stories in swimlines
 
