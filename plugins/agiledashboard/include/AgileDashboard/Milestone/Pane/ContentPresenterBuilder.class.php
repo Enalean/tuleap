@@ -106,7 +106,7 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
 
     /** @return AgileDashboard_Milestone_Pane_ContentBacklogStrategy */
     private function getBacklogStrategy(Planning_ArtifactMilestone $milestone) {
-        $milestone_backlog_artifacts = $this->dao->getBacklogArtifacts($milestone->getArtifactId())->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
+        $milestone_backlog_artifacts = $this->getBacklogArtifacts($milestone);
         $backlog_tracker_children    = $milestone->getPlanning()->getPlanningTracker()->getChildren();
         $backlog_tracker             = $milestone->getPlanning()->getBacklogTracker();
 
@@ -127,6 +127,10 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
             $milestone_backlog_artifacts,
             $backlog_tracker->getName()
         );
+    }
+
+    protected function getBacklogArtifacts(Planning_ArtifactMilestone $milestone) {
+        return $this->dao->getBacklogArtifacts($milestone->getArtifactId())->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
     }
 
     private function getParentArtifacts(PFUser $user, Planning_ArtifactMilestone $milestone, array $backlog_item_ids) {

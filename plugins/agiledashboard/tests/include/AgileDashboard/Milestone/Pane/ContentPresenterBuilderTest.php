@@ -53,7 +53,10 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilderTest extends TuleapTe
 
         $this->user = mock('PFUser');
 
-        $planning        = stub('Planning')->getBacklogTracker()->returns(mock('Tracker'));
+        $planning        = mock('Planning');
+        stub($planning)->getBacklogTracker()->returns(mock('Tracker'));
+        stub($planning)->getPlanningTracker()->returns(mock('Tracker'));
+
         $artifact        = aMockArtifact()->build();
         $this->milestone = aMilestone()->withArtifact($artifact)->withPlanning($planning)->build();
 
