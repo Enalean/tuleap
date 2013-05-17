@@ -1,3 +1,6 @@
+Version 5.122 - Tuleap 6.1
+    * Fix request #3182: Decorators are correctly removed from database
+
 Version 5.121 - Tuleap 5.13
     * Development: refactoring after Core update on UGroup
 
