@@ -66,34 +66,34 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
 
     public function getMilestoneContentPresenter(PFUser $user, Planning_ArtifactMilestone $milestone) {
         $redirect_paremeter     = new Planning_MilestoneRedirectParameter();
+        $backlog_strategy       = $this->getBacklogStrategy($milestone);
         $this->redirect_to_self = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_ContentPaneInfo::IDENTIFIER);
 
-        $this->initBacklogSettings($user ,$milestone);
-        $this->initCollections($user ,$milestone);
+        $this->initBacklogSettings($user, $milestone);
+        $this->initCollections($user, $milestone, $backlog_strategy);
         return new AgileDashboard_Milestone_Pane_ContentPresenter(
             $this->todo_collection,
             $this->done_collection,
             $this->parent_item_name,
-            $this->backlog_item_name,
+            $backlog_strategy->getItemName(),
             $this->can_add_backlog_item,
             $this->new_backlog_item_url
         );
     }
 
     private function initBacklogSettings(PFUser $user, Planning_ArtifactMilestone $milestone) {
-        $backlog_tracker         = $milestone->getPlanning()->getBacklogTracker();
-
-        $this->backlog_item_name = $backlog_tracker->getName();
+        $backlog_tracker = $milestone->getPlanning()->getBacklogTracker();
         if ($backlog_tracker->userCanSubmitArtifact($user)) {
             $this->can_add_backlog_item = true;
         }
-         $this->new_backlog_item_url = $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($backlog_tracker).'&'.$this->redirect_to_self;
+
+        $this->new_backlog_item_url = $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($backlog_tracker).'&'.$this->redirect_to_self;
     }
 
-    private function initCollections(PFUser $user, Planning_ArtifactMilestone $milestone) {
+    private function initCollections(PFUser $user, Planning_ArtifactMilestone $milestone, AgileDashboard_Milestone_Pane_ContentBacklogStrategy $backlog_strategy) {
         $artifacts        = array();
         $backlog_item_ids = array();
-        foreach ($this->getBacklogArtifacts($user, $milestone) as $artifact) {
+        foreach ($backlog_strategy->getArtifacts($user) as $artifact) {
             $artifacts[$artifact->getId()] = $artifact;
             $backlog_item_ids[] = $artifact->getId();
         }
@@ -102,13 +102,6 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
         foreach ($artifacts as $artifact) {
             $this->buildCollections($user, $artifact, $parents, $semantics);
         }
-    }
-
-    protected function getBacklogArtifacts(PFUser $user, Planning_ArtifactMilestone $milestone) {
-        $backlog_strategy        = $this->getBacklogStrategy($milestone);
-        $this->backlog_item_name = $backlog_strategy->getItemName();
-
-        return $backlog_strategy->getArtifacts($user);
     }
 
     /** @return AgileDashboard_Milestone_Pane_ContentBacklogStrategy */
