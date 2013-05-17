@@ -132,7 +132,7 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
             $backlog = array();
             foreach ($milestone_backlog_artifacts as $artifact) {
                 /* @var $artifact Tracker_Artifact */
-                $backlog = array_merge($backlog, $artifact->getChildren($user));
+                $backlog = array_merge($backlog, $artifact->getChildrenForUser($user));
             }
             return array_filter($backlog);
         }

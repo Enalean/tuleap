@@ -658,7 +658,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         switch ($request->get('func')) {
             case 'get-children':
-                $children = $this->getChildren($current_user);
+                $children = $this->getChildPresenterCollection($current_user);
                 $GLOBALS['Response']->sendJSON($children);
                 exit;
                 break;
@@ -775,20 +775,28 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
     }
 
-    private function getChildren(PFUser $current_user) {
+    /** @return Tracker_Artifact[] */
+    public function getChildrenForUser(PFUser $current_user) {
         $children = array();
         foreach ($this->getArtifactFactory()->getChildren($this) as $child) {
-            if (! $child->userCanView($current_user)) {
-                continue;
+            if ($child->userCanView($current_user)) {
+                $children[] = $child;
             }
+        }
+        return $children;
+    }
 
+    /** @return Tracker_ArtifactChildPresenter[] */
+    private function getChildPresenterCollection(PFUser $current_user) {
+        $presenters = array();
+        foreach ($this->getChildrenForUser($current_user) as $child) {
             $tracker      = $child->getTracker();
             $semantics    = Tracker_Semantic_Status::load($tracker);
             $has_children = $child->hasChildren();
 
-            $children[] = new Tracker_ArtifactChildPresenter($child, $this, $semantics);
+            $presenters[] = new Tracker_ArtifactChildPresenter($child, $this, $semantics);
         }
-        return $children;
+        return $presenters;
     }
 
     public function hasChildren() {
