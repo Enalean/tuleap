@@ -29,6 +29,9 @@ class Planning_MilestonePaneFactory {
     /** @var AgileDashboard_Pane */
     private $active_pane = null;
 
+    /** @var Planning_Milestone[] */
+    private $available_milestones = array();
+
     /** @var Codendi_Request */
     private $request;
 
@@ -53,8 +56,17 @@ class Planning_MilestonePaneFactory {
         $this->legacy_planning_pane_factory = $legacy_planning_pane_factory;
     }
 
-    /** @var AgileDashboard_Pane */
-    public function getActivePane(Planning_Milestone $milestone) {
+    /** @return AgileDashboard_Milestone_Pane_PresenterData */
+    public function getPanePresenterData(Planning_Milestone $milestone) {
+        return new AgileDashboard_Milestone_Pane_PresenterData(
+            $this->getActivePane($milestone),
+            $this->getListOfPaneInfo($milestone),
+            $this->available_milestones
+        );
+    }
+
+    /** @return AgileDashboard_Pane */
+    private function getActivePane(Planning_Milestone $milestone) {
         if (! $this->list_of_pane_info) {
             $this->buildListOfPaneInfo($milestone);
         }
@@ -63,7 +75,7 @@ class Planning_MilestonePaneFactory {
     }
 
     /** @return AgileDashboard_PaneInfo[] */
-    public function getListOfPaneInfo(Planning_Milestone $milestone) {
+    private function getListOfPaneInfo(Planning_Milestone $milestone) {
         if (! $this->list_of_pane_info) {
             $this->buildListOfPaneInfo($milestone);
         }
@@ -90,6 +102,9 @@ class Planning_MilestonePaneFactory {
         if (! $this->active_pane) {
             $legacy_planning_pane_info->setActive(true);
             $this->active_pane = $this->legacy_planning_pane_factory->getPane($milestone, $legacy_planning_pane_info);
+            $this->available_milestones = $this->legacy_planning_pane_factory->getAvailableMilestones($milestone);
+        } else {
+            $this->available_milestones = $this->getAvailableMilestones($milestone);
         }
     }
 
@@ -120,5 +135,18 @@ class Planning_MilestonePaneFactory {
             );
         }
     }
+
+    protected function getAvailableMilestones(Planning_Milestone $milestone) {
+        if ($milestone->hasAncestors()) {
+            return $this->milestone_factory->getSiblingMilestones($this->request->getCurrentUser(), $milestone);
+        } else {
+            return $this->getAllMilestonesOfCurrentPlanning($milestone);
+        }
+    }
+
+    private function getAllMilestonesOfCurrentPlanning(Planning_Milestone $milestone) {
+        return $this->milestone_factory->getAllBareMilestones($this->request->getCurrentUser(), $milestone->getPlanning());
+    }
 }
+
 ?>

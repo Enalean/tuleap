@@ -94,19 +94,9 @@ class Planning_MilestoneController extends MVC2_PluginController {
             $this->milestone,
             $this->getCurrentUser(),
             $this->request,
-            $this->pane_factory->getActivePane($this->milestone),
-            $this->pane_factory->getListOfPaneInfo($this->milestone),
-            $this->getAvailableMilestones(),
+            $this->pane_factory->getPanePresenterData($this->milestone),
             $this->redirect_parameter->getPlanningRedirectToNew($this->milestone, $this->pane_factory->getDefaultPaneIdentifier())
         );
-    }
-
-    protected function getAvailableMilestones() {
-        if ($this->milestone->hasAncestors()) {
-            return $this->milestone_factory->getSiblingMilestones($this->getCurrentUser(), $this->milestone);
-        } else {
-            return $this->getAllMilestonesOfCurrentPlanning();
-        }
     }
 
     /**
@@ -122,10 +112,6 @@ class Planning_MilestoneController extends MVC2_PluginController {
             return $breadcrumbs_merger;
         }
         return new BreadCrumb_NoCrumb();
-    }
-
-    private function getAllMilestonesOfCurrentPlanning() {
-        return $this->milestone_factory->getAllMilestones($this->getCurrentUser(), $this->milestone->getPlanning());
     }
 }
 

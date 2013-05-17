@@ -57,6 +57,15 @@ class Planning_MilestoneLegacyPlanningPaneFactory {
         $this->redirect_parameter = $redirect_parameter;
     }
 
+    /** @return Planning_Milestone[] */
+    public function getAvailableMilestones(Planning_Milestone $milestone) {
+        if ($milestone->hasAncestors()) {
+            return $this->milestone_factory->getSiblingMilestones($this->request->getCurrentUser(), $milestone);
+        } else {
+            return $this->getAllMilestonesOfCurrentPlanning($milestone);
+        }
+    }
+
     /** @return AgileDashboard_MilestonePlanningPaneInfo */
     public function getPaneInfo(Planning_Milestone $milestone) {
         return new AgileDashboard_MilestonePlanningPaneInfo($milestone, $this->theme_path);

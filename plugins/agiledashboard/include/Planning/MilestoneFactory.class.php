@@ -326,6 +326,23 @@ class Planning_MilestoneFactory {
     }
 
     /**
+     * Return all open milestone without their content
+     *
+     * @param PFUser $user
+     * @param Planning $planning
+     * @return Planning_ArtifactMilestone[]
+     */
+    public function getAllBareMilestones(PFUser $user, Planning $planning) {
+        $milestones = array();
+        $project    = $planning->getPlanningTracker()->getProject();
+        $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        foreach ($artifacts as $artifact) {
+            $milestones[] = new Planning_ArtifactMilestone($project, $planning, $artifact);
+        }
+        return $milestones;
+    }
+
+    /**
      * Loads all open milestones for the given project and planning
      *
      * @param PFUser $user
