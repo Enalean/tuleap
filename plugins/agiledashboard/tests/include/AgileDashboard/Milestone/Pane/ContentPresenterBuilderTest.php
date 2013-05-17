@@ -47,9 +47,10 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilderTest extends TuleapTe
     public function setUp() {
         parent::setUp();
 
-        $this->dao = mock('AgileDashboard_BacklogItemDao');
-        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        $this->dao                  = mock('AgileDashboard_BacklogItemDao');
+        $this->artifact_factory     = mock('Tracker_ArtifactFactory');
         $this->form_element_factory = mock('Tracker_FormElementFactory');
+        $planning_factory           = mock('PlanningFactory');
 
         $this->user = mock('PFUser');
 
@@ -70,7 +71,8 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilderTest extends TuleapTe
             array(
                 $this->dao,
                 $this->artifact_factory,
-                $this->form_element_factory
+                $this->form_element_factory,
+                $planning_factory
             )
         );
         stub($this->builder)->userCanReadBacklogTitleField()->returns(true);

@@ -33,6 +33,9 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;
 
+    /** @var PlanningFactory */
+    private $planning_factory;
+
     /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
     private $todo_collection;
 
@@ -51,9 +54,15 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
     /** @var String */
     private $new_backlog_item_url;
 
-    public function __construct(AgileDashboard_BacklogItemDao $dao, Tracker_ArtifactFactory $artifact_factory, Tracker_FormElementFactory $form_element_factory) {
+    public function __construct(
+        AgileDashboard_BacklogItemDao $dao,
+        Tracker_ArtifactFactory $artifact_factory,
+        Tracker_FormElementFactory $form_element_factory,
+        PlanningFactory $planning_factory
+    ) {
         $this->dao                  = $dao;
         $this->artifact_factory     = $artifact_factory;
+        $this->planning_factory     = $planning_factory;
         $this->form_element_factory = $form_element_factory;
 
         $this->todo_collection      = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
@@ -112,7 +121,7 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
 
         if ($backlog_tracker_children) {
             $first_child_tracker         = current($backlog_tracker_children);
-            $first_child_backlog_tracker = PlanningFactory::build()->getPlanningByPlanningTracker($first_child_tracker)->getBacklogTracker();
+            $first_child_backlog_tracker = $this->planning_factory->getPlanningByPlanningTracker($first_child_tracker)->getBacklogTracker();
 
             if ($first_child_backlog_tracker != $backlog_tracker) {
                 return new AgileDashboard_Milestone_Pane_ContentDescendantBacklogStrategy(
