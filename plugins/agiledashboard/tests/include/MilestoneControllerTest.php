@@ -75,7 +75,7 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
             mock('ProjectManager'),
             $view_builder,
             $hierarchy_factory,
-            mock('AgileDashboard_BacklogItemFactory'),
+            mock('AgileDashboard_Milestone_Pane_ContentPresenterBuilder'),
             ''
         );
         $controller->show();
@@ -314,7 +314,7 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
                 $this->project_manager,
                 mock('Planning_ViewBuilder'),
                 mock('Tracker_HierarchyFactory'),
-                mock('AgileDashboard_BacklogItemFactory'),
+                mock('AgileDashboard_Milestone_Pane_ContentPresenterBuilder'),
                 ''
             )
         );
@@ -378,7 +378,7 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
         stub($this->milestone_factory)->getBareMilestone()->returns($this->sprint_1);
         stub($this->milestone_factory)->getAllMilestones()->returns(array());
         stub($this->milestone_factory)->getSiblingMilestones()->returns(array($this->sprint_1, $this->sprint_2));
-        $this->controller = new Planning_MilestoneController4Tests($this->request, $this->milestone_factory, $this->project_manager, $this->view_builder, $this->hierarchy_factory, mock('AgileDashboard_BacklogItemFactory'), '');
+        $this->controller = new Planning_MilestoneController4Tests($this->request, $this->milestone_factory, $this->project_manager, $this->view_builder, $this->hierarchy_factory, mock('AgileDashboard_Milestone_Pane_ContentPresenterBuilder'), '');
 
         $selectable_artifacts = $this->controller->getAvailableMilestones();
         $this->assertCount($selectable_artifacts, 2);
@@ -395,7 +395,7 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
 
         stub($this->milestone_factory)->getBareMilestone()->returns($current_milstone);
         stub($this->milestone_factory)->getAllMilestones($this->current_user, $this->sprint_planning)->returns(array($milstone_1001, $milstone_1002));
-        $this->controller = new Planning_MilestoneController4Tests($this->request, $this->milestone_factory, $this->project_manager, $this->view_builder, $this->hierarchy_factory, mock('AgileDashboard_BacklogItemFactory'), '');
+        $this->controller = new Planning_MilestoneController4Tests($this->request, $this->milestone_factory, $this->project_manager, $this->view_builder, $this->hierarchy_factory, mock('AgileDashboard_Milestone_Pane_ContentPresenterBuilder'), '');
 
         $selectable_artifacts = $this->controller->getAvailableMilestones();
         $this->assertCount($selectable_artifacts, 2);
