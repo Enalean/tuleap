@@ -53,7 +53,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
                                 ProjectManager            $project_manager,
                                 Planning_ViewBuilder      $view_builder,
                                 Tracker_HierarchyFactory  $hierarchy_factory,
-                                AgileDashboard_BacklogItemFactory $backlog_item_factory,
+                                AgileDashboard_Milestone_Pane_ContentPresenterBuilder $content_presenter_builder,
                                 $theme_path) {
         
         parent::__construct('agiledashboard', $request);
@@ -79,7 +79,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
         $this->pane_factory = new Planning_MilestonePaneFactory(
             $this->request,
             $this->milestone_factory,
-            $backlog_item_factory,
+            $content_presenter_builder,
             $legacy_planning_pane_factory
         );
     }

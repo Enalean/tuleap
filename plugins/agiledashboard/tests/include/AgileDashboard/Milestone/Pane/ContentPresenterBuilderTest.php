@@ -22,9 +22,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../common.php';
+require_once dirname(__FILE__).'/../../../../common.php';
 
-class BacklogItemFactoryTest extends TuleapTestCase {
+class AgileDashboard_Milestone_Pane_ContentPresenterBuilderTest extends TuleapTestCase {
 
     /** @var AgileDashboard_BacklogItemDao */
     private $dao;
@@ -32,8 +32,8 @@ class BacklogItemFactoryTest extends TuleapTestCase {
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    /** @var AgileDashboard_BacklogItemFactory */
-    private $factory;
+    /** @var AgileDashboard_Milestone_Pane_ContentPresenterBuilder */
+    private $builder;
 
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;
@@ -57,8 +57,8 @@ class BacklogItemFactoryTest extends TuleapTestCase {
         $artifact        = aMockArtifact()->build();
         $this->milestone = aMilestone()->withArtifact($artifact)->withPlanning($planning)->build();
 
-        $this->factory = partial_mock(
-            'AgileDashboard_BacklogItemFactory',
+        $this->builder = partial_mock(
+            'AgileDashboard_Milestone_Pane_ContentPresenterBuilder',
             array(
                 'getBacklogArtifacts',
                 'userCanReadBacklogTitleField',
@@ -70,13 +70,13 @@ class BacklogItemFactoryTest extends TuleapTestCase {
                 $this->form_element_factory
             )
         );
-        stub($this->factory)->userCanReadBacklogTitleField()->returns(true);
-        stub($this->factory)->userCanReadBacklogStatusField()->returns(true);
+        stub($this->builder)->userCanReadBacklogTitleField()->returns(true);
+        stub($this->builder)->userCanReadBacklogStatusField()->returns(true);
     }
 
     public function itCreatesContentWithOneElementInTodo() {
         $story1 = anArtifact()->withId(12)->build();
-        stub($this->factory)->getBacklogArtifacts()->returns(array($story1));
+        stub($this->builder)->getBacklogArtifacts()->returns(array($story1));
 
         stub($this->artifact_factory)->getParents()->returns(array());
 
@@ -84,7 +84,7 @@ class BacklogItemFactoryTest extends TuleapTestCase {
 
         stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
 
-        $content = $this->factory->getMilestoneContentPresenter($this->user, $this->milestone);
+        $content = $this->builder->getMilestoneContentPresenter($this->user, $this->milestone);
 
         $row = $content->todo_collection()->current();
         $this->assertEqual($row->id(), 12);
@@ -92,7 +92,7 @@ class BacklogItemFactoryTest extends TuleapTestCase {
 
     public function itCreatesContentWithOneElementInDone() {
         $story1 = anArtifact()->withId(12)->build();
-        stub($this->factory)->getBacklogArtifacts()->returns(array($story1));
+        stub($this->builder)->getBacklogArtifacts()->returns(array($story1));
 
         stub($this->artifact_factory)->getParents()->returns(array());
 
@@ -100,7 +100,7 @@ class BacklogItemFactoryTest extends TuleapTestCase {
 
         stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
 
-        $content = $this->factory->getMilestoneContentPresenter($this->user, $this->milestone);
+        $content = $this->builder->getMilestoneContentPresenter($this->user, $this->milestone);
 
         $row = $content->done_collection()->current();
         $this->assertEqual($row->id(), 12);
@@ -108,7 +108,7 @@ class BacklogItemFactoryTest extends TuleapTestCase {
 
     public function itSetRemainingEffortForOpenStories() {
         $story1 = anArtifact()->withId(12)->build();
-        stub($this->factory)->getBacklogArtifacts()->returns(array($story1));
+        stub($this->builder)->getBacklogArtifacts()->returns(array($story1));
 
         stub($this->artifact_factory)->getParents()->returns(array());
 
@@ -119,7 +119,7 @@ class BacklogItemFactoryTest extends TuleapTestCase {
         stub($field)->fetchCardValue()->returns(26);
         stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns($field);
 
-        $content = $this->factory->getMilestoneContentPresenter($this->user, $this->milestone);
+        $content = $this->builder->getMilestoneContentPresenter($this->user, $this->milestone);
 
         $row = $content->todo_collection()->current();
         $this->assertEqual($row->points(), 26);
