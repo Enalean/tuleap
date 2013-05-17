@@ -64,10 +64,10 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
         $this->new_backlog_item_url = '';
     }
 
-    public function getMilestoneContentPresenter(PFUser $user, Planning_ArtifactMilestone $milestone) {        
+    public function getMilestoneContentPresenter(PFUser $user, Planning_ArtifactMilestone $milestone) {
         $redirect_paremeter     = new Planning_MilestoneRedirectParameter();
         $this->redirect_to_self = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_ContentPaneInfo::IDENTIFIER);
-        
+
         $this->initBacklogSettings($user ,$milestone);
         $this->initCollections($user ,$milestone);
         return new AgileDashboard_Milestone_Pane_ContentPresenter(
@@ -82,7 +82,7 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
 
     private function initBacklogSettings(PFUser $user, Planning_ArtifactMilestone $milestone) {
         $backlog_tracker         = $milestone->getPlanning()->getBacklogTracker();
-        
+
         $this->backlog_item_name = $backlog_tracker->getName();
         if ($backlog_tracker->userCanSubmitArtifact($user)) {
             $this->can_add_backlog_item = true;
@@ -115,8 +115,6 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
                 $use_milestone_backlog = true;
             }
             $this->backlog_item_name = $first_child_backlog_tracker->getName();
-            //var_dump($first_child_tracker->getItemName());
-            //var_dump($first_child_backlog_tracker->getItemName());
         } else {
             $parent_tracker = $milestone->getPlanning()->getBacklogTracker()->getParent();
             if ($parent_tracker) {
@@ -134,8 +132,26 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
                 /* @var $artifact Tracker_Artifact */
                 $backlog = array_merge($backlog, $artifact->getChildrenForUser($user));
             }
-            return array_filter($backlog);
+            $backlog = array_filter($backlog);
+            return $this->sortByPriority($backlog);
         }
+    }
+
+    private function sortByPriority(array $artifacts) {
+        $ids              = array_map(array($this, 'extractId'), $artifacts);
+        $artifacts        = array_combine($ids, $artifacts);
+        $sorted_ids       = $this->dao->getIdsSortedByPriority($ids);
+        $sorted_artifacts = array_flip($sorted_ids);
+
+        foreach ($sorted_artifacts as $id => $nop) {
+            $sorted_artifacts[$id] = $artifacts[$id];
+        }
+
+        return $sorted_artifacts;
+    }
+
+    private function extractId($artifact) {
+        return $artifact->getId();
     }
 
     private function getParentArtifacts(PFUser $user, Planning_ArtifactMilestone $milestone, array $backlog_item_ids) {
