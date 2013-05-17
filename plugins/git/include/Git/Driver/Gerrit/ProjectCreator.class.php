@@ -23,6 +23,7 @@
 class Git_Driver_Gerrit_ProjectCreator {
 
     const GROUP_REPLICATION = 'replication';
+    const GROUP_REGISTERED_USERS = 'Registered Users';
 
     /** @var Git_Driver_Gerrit */
     private $driver;
@@ -148,7 +149,7 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     private function addRegisteredUsersGroupToGroupFile() {
-        $this->addGroupDefinitionToGroupFile('global:Registered-Users', 'Registered Users');
+        $this->addGroupDefinitionToGroupFile('global:Registered-Users', self::GROUP_REGISTERED_USERS);
     }
 
     private function addGroupDefinitionToGroupFile($uuid, $group_name) {
@@ -181,15 +182,18 @@ class Git_Driver_Gerrit_ProjectCreator {
             }
         }
 
-        if (in_array(UGroup::REGISTERED, $ugroup_ids_read) && $this->shouldAddRegisteredUsers($repository)) {
-            $ugroups_read[] = 'Registered Users';
+        if ($this->shouldAddRegisteredUsersToGroup($repository, Git::PERM_READ, $ugroup_ids_read)) {
+            $ugroups_read[] = self::GROUP_REGISTERED_USERS;
+        }
+        if ($this->shouldAddRegisteredUsersToGroup($repository, Git::PERM_WRITE, $ugroup_ids_write)) {
+            $ugroups_write[] = self::GROUP_REGISTERED_USERS;
+        }
+        if ($this->shouldAddRegisteredUsersToGroup($repository, Git::PERM_WPLUS, $ugroup_ids_rewind)) {
+            $ugroups_rewind[] = self::GROUP_REGISTERED_USERS;
         }
 
         $this->addToSection('refs', 'read', "group $replication_group");
 
-        /*if ($this->shouldAddRegisteredUsers($repository) && !in_array(UGroup::REGISTERED, $ugroup_ids_read)) {
-            $this->addToSection('refs/heads', 'read', "group Registered Users");
-        }*/
         foreach ($ugroups_read as $ugroup_read) {
             $this->addToSection('refs/heads', 'read', "group $ugroup_read");
             $this->addToSection('refs/heads', 'label-Code-Review', "-1..+1 group $ugroup_read");
@@ -235,8 +239,10 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->addToSection('refs/tags', 'forgeCommitter', "group Administrators");  // push initial ref
     }
 
-    private function shouldAddRegisteredUsers(GitRepository $repository) {
-        return $repository->getProject()->isPublic() && $this->user_finder->areRegisteredUsersAllowedTo(Git::PERM_READ, $repository);
+    private function shouldAddRegisteredUsersToGroup(GitRepository $repository, $permission, $group) {
+        return array_intersect(array(UGroup::ANONYMOUS, UGroup::REGISTERED), $group) &&
+            $repository->getProject()->isPublic() &&
+            $this->user_finder->areRegisteredUsersAllowedTo($permission, $repository);
     }
 
     private function addToSection($section, $permission, $value) {

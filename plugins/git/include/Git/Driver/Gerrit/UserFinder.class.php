@@ -60,19 +60,14 @@ class Git_Driver_Gerrit_UserFinder {
         if ($permission_type == Git::SPECIAL_PERM_ADMIN) {
             return array(UGroup::PROJECT_ADMIN);
         }
+
         $ugroup_ids = $this->permissions_manager->getAuthorizedUgroups($repository_id, $permission_type, false);
         $result = array();
         foreach ($ugroup_ids as $row) {
-            $id = $row['ugroup_id'];
-            if ($this->isNeitherRegisteredNorAnonymous($id)) {
-                $result[] = $id;
-            }
+            $result[] = $row['ugroup_id'];
         }
-        return $result;
-    }
 
-    private function isNeitherRegisteredNorAnonymous($ugroup_id) {
-        return ! in_array($ugroup_id, array(Ugroup::REGISTERED, UGroup::ANONYMOUS));
+        return $result;
     }
 }
 ?>
