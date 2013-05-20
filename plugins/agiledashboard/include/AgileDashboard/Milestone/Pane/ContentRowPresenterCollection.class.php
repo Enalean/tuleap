@@ -23,11 +23,7 @@
  */
 
 class AgileDashboard_Milestone_Pane_ContentRowPresenterCollection implements Iterator, Countable {
-    private $rows;
-
-    public function __construct(array $rows = array()) {
-        $this->rows = $rows;
-    }
+    private $rows = array();
 
     public function push(AgileDashboard_Milestone_Pane_ContentRowPresenter $row) {
         $this->rows[] = $row;
