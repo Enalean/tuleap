@@ -24,7 +24,7 @@
 
 require_once dirname(__FILE__).'/../../../../common.php';
 
-class AgileDashboard_Milestone_Pane_ContentPresenterBuilderTest extends TuleapTestCase {
+class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactoryTest extends TuleapTestCase {
 
     /** @var AgileDashboard_BacklogItemDao */
     private $dao;
@@ -33,7 +33,7 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilderTest extends TuleapTe
     private $artifact_factory;
 
     /** @var AgileDashboard_Milestone_Pane_ContentPresenterBuilder */
-    private $builder;
+    private $factory;
 
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;
@@ -61,10 +61,9 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilderTest extends TuleapTe
         $artifact        = aMockArtifact()->build();
         $this->milestone = aMilestone()->withArtifact($artifact)->withPlanning($planning)->build();
 
-        $this->builder = partial_mock(
-            'AgileDashboard_Milestone_Pane_ContentPresenterBuilder',
+        $this->factory = partial_mock(
+            'AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory',
             array(
-                'getBacklogArtifacts',
                 'userCanReadBacklogTitleField',
                 'userCanReadBacklogStatusField',
             ),
@@ -75,46 +74,41 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilderTest extends TuleapTe
                 $planning_factory
             )
         );
-        stub($this->builder)->userCanReadBacklogTitleField()->returns(true);
-        stub($this->builder)->userCanReadBacklogStatusField()->returns(true);
+        stub($this->factory)->userCanReadBacklogTitleField()->returns(true);
+        stub($this->factory)->userCanReadBacklogStatusField()->returns(true);
+
+        $story1                 = anArtifact()->withId(12)->build();
+        $this->backlog_strategy = stub('AgileDashboard_Milestone_Pane_ContentBacklogStrategy')->getArtifacts($this->user)->returns(array($story1));
+        $this->redirect_to_self = 'whatever';
     }
 
     public function itCreatesContentWithOneElementInTodo() {
-        $story1 = anArtifact()->withId(12)->build();
-        stub($this->builder)->getBacklogArtifacts()->returns(array($story1));
-
         stub($this->artifact_factory)->getParents()->returns(array());
 
         stub($this->dao)->getArtifactsSemantics(array(12), '*')->returnsDar(array('id' => 12, Tracker_Semantic_Title::NAME => 'Story blabla', Tracker_Semantic_Status::NAME => AgileDashboard_BacklogItemDao::STATUS_OPEN));
 
         stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
 
-        $content = $this->builder->getMilestoneContentPresenter($this->user, $this->milestone);
+        $content = $this->factory->getTodoCollection($this->user, $this->milestone, $this->backlog_strategy, $this->redirect_to_self);
 
-        $row = $content->todo_collection()->current();
+        $row = $content->current();
         $this->assertEqual($row->id(), 12);
     }
 
     public function itCreatesContentWithOneElementInDone() {
-        $story1 = anArtifact()->withId(12)->build();
-        stub($this->builder)->getBacklogArtifacts()->returns(array($story1));
-
         stub($this->artifact_factory)->getParents()->returns(array());
 
         stub($this->dao)->getArtifactsSemantics(array(12), '*')->returnsDar(array('id' => 12, Tracker_Semantic_Title::NAME => 'Story blabla', Tracker_Semantic_Status::NAME => AgileDashboard_BacklogItemDao::STATUS_CLOSED));
 
         stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
 
-        $content = $this->builder->getMilestoneContentPresenter($this->user, $this->milestone);
+        $content = $this->factory->getDoneCollection($this->user, $this->milestone, $this->backlog_strategy, $this->redirect_to_self);
 
-        $row = $content->done_collection()->current();
+        $row = $content->current();
         $this->assertEqual($row->id(), 12);
     }
 
     public function itSetRemainingEffortForOpenStories() {
-        $story1 = anArtifact()->withId(12)->build();
-        stub($this->builder)->getBacklogArtifacts()->returns(array($story1));
-
         stub($this->artifact_factory)->getParents()->returns(array());
 
         stub($this->dao)->getArtifactsSemantics(array(12), '*')->returnsDar(array('id' => 12, Tracker_Semantic_Title::NAME => 'Story blabla', Tracker_Semantic_Status::NAME => AgileDashboard_BacklogItemDao::STATUS_OPEN));
@@ -124,9 +118,9 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilderTest extends TuleapTe
         stub($field)->fetchCardValue()->returns(26);
         stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns($field);
 
-        $content = $this->builder->getMilestoneContentPresenter($this->user, $this->milestone);
+        $content = $this->factory->getTodoCollection($this->user, $this->milestone, $this->backlog_strategy, $this->redirect_to_self);
 
-        $row = $content->todo_collection()->current();
+        $row = $content->current();
         $this->assertEqual($row->points(), 26);
     }
 }

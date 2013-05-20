@@ -86,7 +86,12 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
         return $this->done_collection;
     }
 
-    public function initCollections(PFUser $user, Planning_ArtifactMilestone $milestone, AgileDashboard_Milestone_Pane_ContentBacklogStrategy $backlog_strategy, $redirect_to_self) {
+    private function initCollections(
+        PFUser $user,
+        Planning_ArtifactMilestone $milestone,
+        AgileDashboard_Milestone_Pane_ContentBacklogStrategy $backlog_strategy,
+        $redirect_to_self
+    ) {
         if ($this->is_initialized) {
             return;
         }
