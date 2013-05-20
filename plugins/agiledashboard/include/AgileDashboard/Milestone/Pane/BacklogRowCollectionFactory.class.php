@@ -131,6 +131,10 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
 
 
     private function getArtifactsSemantics(PFUser $user, Planning_ArtifactMilestone $milestone, array $backlog_item_ids) {
+        if (! $backlog_item_ids) {
+            return array();
+        }
+
         $semantics = array();
         foreach ($this->dao->getArtifactsSemantics($backlog_item_ids, $this->getSemanticsTheUserCanSee($user, $milestone)) as $row) {
             $semantics[$row['id']] = array(

@@ -354,6 +354,10 @@ class Tracker_ArtifactFactory {
      * @return Tracker_Artifact[]
      */
     public function getParents(array $artifact_ids) {
+        if (! $artifact_ids) {
+            return array();
+        }
+
         $parents = array();
         foreach ($this->getDao()->getParents($artifact_ids) as $row) {
             $parents[$row['child_id']] = $this->getInstanceFromRow($row);
