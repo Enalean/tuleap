@@ -43,16 +43,16 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
     private $done_collection;
 
     /** @var String */
-    private $parent_item_name;
+    private $parent_item_name = '';
 
     /** @var String */
-    private $backlog_item_name;
+    private $backlog_item_name = '';
 
     /** @var String */
-    private $can_add_backlog_item;
+    private $can_add_backlog_item = false;
 
     /** @var String */
-    private $new_backlog_item_url;
+    private $new_backlog_item_url = '';
 
     public function __construct(
         AgileDashboard_BacklogItemDao $dao,
@@ -67,10 +67,6 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
 
         $this->todo_collection      = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
         $this->done_collection      = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
-        $this->parent_item_name     = '';
-        $this->backlog_item_name    = '';
-        $this->can_add_backlog_item = false;
-        $this->new_backlog_item_url = '';
     }
 
     public function getMilestoneContentPresenter(PFUser $user, Planning_ArtifactMilestone $milestone) {
