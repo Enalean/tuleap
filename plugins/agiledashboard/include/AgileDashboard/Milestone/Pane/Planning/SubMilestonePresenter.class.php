@@ -39,6 +39,10 @@ class AgileDashboard_Milestone_Pane_Planning_SubMilestonePresenter {
         return '#';
     }
 
+    public function display_milestone_dates() {
+        return true;
+    }
+
     public function start_date() {
         return '';
     }
