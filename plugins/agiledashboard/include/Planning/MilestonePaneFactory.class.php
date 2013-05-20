@@ -116,6 +116,12 @@ class Planning_MilestonePaneFactory {
                 $pane_info,
                 $this->content_presenter_builder->getMilestoneContentPresenter($this->request->getCurrentUser(), $milestone)
             );
+        } elseif ($this->request->get('pane') == AgileDashboard_Milestone_Pane_Planning_PaneInfo::IDENTIFIER) {
+//            $pane_info->setActive(true);
+//            $this->active_pane = new AgileDashboard_Milestone_Pane_(
+//                $pane_info,
+//                $this->content_presenter_builder->getMilestoneContentPresenter($this->request->getCurrentUser(), $milestone)
+//            );
         }
         return $pane_info;
     }
