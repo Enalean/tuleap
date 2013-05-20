@@ -48,6 +48,14 @@ tuleap.agiledashboard.MilestoneContent = Class.create({
                 $.ajax(codendi.tracker.base_url + query);
             }
 
+            function establishWidthOfCellsToBeConstitentWhileDragging(milestone_content_rows) {
+                milestone_content_rows.children().each(function() {
+                    $(this).children().each(function() {
+                        $(this).width($(this).width());
+                    });
+                });
+            }
+
             var milestone_content_rows = $(container).find('.milestone-content-open-rows');
             milestone_content_rows.sortable({
                 revert: true,
@@ -71,14 +79,8 @@ tuleap.agiledashboard.MilestoneContent = Class.create({
             });
 
             milestone_content_rows.find('tr, td').disableSelection();
+            establishWidthOfCellsToBeConstitentWhileDragging(milestone_content_rows);
 
-            (function() { //why this anonymous function?
-                milestone_content_rows.children().each(function() {
-                    $(this).children().each(function() {
-                        $(this).width($(this).width());
-                    });
-                });
-            })();
         })(jQuery);
     }
 });
