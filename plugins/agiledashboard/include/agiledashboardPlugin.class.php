@@ -211,10 +211,20 @@ class AgileDashboardPlugin extends Plugin {
             $this,
             $this->getMilestoneFactory(),
             $this->getPlanningFactory(),
+            $this->getMilestoneControllerFactory()
+        );
+        $router->route($request);
+    }
+
+    private function getMilestoneControllerFactory() {
+        return new Planning_MilestoneControllerFactory(
+            $this,
+            ProjectManager::instance(),
+            $this->getMilestoneFactory(),
+            $this->getPlanningFactory(),
             $this->getHierarchyFactory(),
             $this->getContentPresenterBuilder()
         );
-        $router->route($request);
     }
 
     /**
