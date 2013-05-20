@@ -102,14 +102,16 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
             $artifacts[$artifact->getId()] = $artifact;
             $backlog_item_ids[] = $artifact->getId();
         }
-        $parents   = $this->getParentArtifacts($user, $milestone, $backlog_item_ids);
+        $parents   = $this->getParentArtifacts($user, $backlog_item_ids);
         $semantics = $this->getArtifactsSemantics($user, $milestone, $backlog_item_ids);
         foreach ($artifacts as $artifact) {
             $this->buildCollections($user, $artifact, $parents, $semantics);
         }
     }
 
-    /** @return AgileDashboard_Milestone_Pane_ContentBacklogStrategy */
+    /**
+     * @return AgileDashboard_Milestone_Pane_ContentBacklogStrategy
+     */
     private function getBacklogStrategy(Planning_ArtifactMilestone $milestone) {
         $milestone_backlog_artifacts = $this->getBacklogArtifacts($milestone);
         $backlog_tracker_children    = $milestone->getPlanning()->getPlanningTracker()->getChildren();
@@ -138,7 +140,7 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
         return $this->dao->getBacklogArtifacts($milestone->getArtifactId())->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
     }
 
-    private function getParentArtifacts(PFUser $user, Planning_ArtifactMilestone $milestone, array $backlog_item_ids) {
+    private function getParentArtifacts(PFUser $user, array $backlog_item_ids) {
         $parents         = $this->artifact_factory->getParents($backlog_item_ids);
         $parent_tracker  = $this->getParentTracker($parents);
         if ($parent_tracker) {
