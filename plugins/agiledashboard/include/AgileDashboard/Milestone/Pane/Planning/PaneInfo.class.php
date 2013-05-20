@@ -32,7 +32,7 @@ class AgileDashboard_Milestone_Pane_Planning_PaneInfo extends AgileDashboard_Pan
      * @return string eg: 'Card Wall'
      */
     public function getTitle() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_pane_title');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'milestone_planning_pane_title');
     }
 
     /**

@@ -25,6 +25,7 @@ plugin_agiledashboard	add_subitem	Ajouter un(e) nouveau(lle) $1
 plugin_agiledashboard	backlog_add	Ajouter
 plugin_agiledashboard	planning_pane_title	Backlog/Planning
 plugin_agiledashboard	content_pane_title	Content
+plugin_agiledashboard	milestone_planning_pane_title	Planning
 plugin_agiledashboard	access_to_planning	Accéder au planning
 plugin_agiledashboard	backlog_destination_help	Utiliser la flèche droite d'un élément pour le déplacer vers le milestone courant ou les flèches haut/bas pour prioriser les éléments entre eux.
 
@@ -44,5 +45,3 @@ plugin_agiledashboard_contentpane	open_items_title-no_more	Il n'y a plus de $1 o
 plugin_agiledashboard_contentpane	open_items_title-not_yet	Pas encore de $1
 plugin_agiledashboard_contentpane	open_items_title-not_yet-can_add	Pas de $1, commencez à en ajouter dès maintenant
 plugin_agiledashboard_contentpane	open_items_intro	Voici les éléments qui sont ouverts. Vous pouvez les ordonner en les glissant-déposant.
-
-plugin_agiledashboard_contentpane	planning_pane_title	Planning
