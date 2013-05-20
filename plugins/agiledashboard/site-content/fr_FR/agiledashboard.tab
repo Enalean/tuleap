@@ -37,7 +37,7 @@ plugin_agiledashboard	content_head_parent	Parent
 
 plugin_agiledashboard_contentpane	lab	Ceci est une fonctionnalité expérimentale qui est sujette à évolution prochainement. N'hésitez pas à <a href="mailto:tuleap-devel@tuleap.net">nous contater pour nous transmettre vos impressions</a> et retours d'expérience afin d'améliorer la fonctionnalité, merci!
 plugin_agiledashboard_contentpane	closed_items_title	$1 fermées
-plugin_agiledashboard_contentpane	closed_items_intro	Ci-dessous se trouvent les éléments qui sont fermés. Vous ne pouvez pas changer leur priorités.
+plugin_agiledashboard_contentpane	closed_items_intro	Ci-dessous se trouvent les éléments qui sont fermés. Vous ne pouvez pas changer leur priorité.
 plugin_agiledashboard_contentpane	closed_items_nothing_yet	Rien de fermé actuellement
 plugin_agiledashboard_contentpane	open_items_title	$1 ouvertes
 plugin_agiledashboard_contentpane	open_items_title-no_more	Il n'y a plus de $1 ouvertes, bravo !
