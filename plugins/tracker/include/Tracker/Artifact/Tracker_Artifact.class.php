@@ -59,9 +59,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private $hierarchy_factory;
 
     /**
-     * @var string
+     * @var String
      */
     private $title;
+
+    /**
+     * @var String
+     */
+    private $status;
 
     /**@var Tracker_ArtifactFactory */
     private $artifact_factory;
@@ -578,12 +583,22 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return string the status of the artifact, or null if no status defined in semantics
      */
     public function getStatus() {
-        if ($status_field = Tracker_Semantic_Status::load($this->getTracker())->getField()) {
-            if ($status_field->userCanRead()) {
-                return $status_field->getFirstValueFor($this->getLastChangeset());
+        if ( ! isset($this->status)) {
+            if ($status_field = Tracker_Semantic_Status::load($this->getTracker())->getField()) {
+                if ($status_field->userCanRead()) {
+                    $this->status = $status_field->getFirstValueFor($this->getLastChangeset());
+                }
             }
+            $this->status = null;
         }
-        return null;
+        return $this->status;
+    }
+
+    /**
+     * @param String $status
+     */
+    public function setStatus($status) {
+        $this->status = $status;
     }
 
     /**
@@ -643,7 +658,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         switch ($request->get('func')) {
             case 'get-children':
-                $children = $this->getChildren($current_user);
+                $children = $this->getChildPresenterCollection($current_user);
                 $GLOBALS['Response']->sendJSON($children);
                 exit;
                 break;
@@ -760,20 +775,28 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
     }
 
-    private function getChildren(PFUser $current_user) {
+    /** @return Tracker_Artifact[] */
+    public function getChildrenForUser(PFUser $current_user) {
         $children = array();
         foreach ($this->getArtifactFactory()->getChildren($this) as $child) {
-            if (! $child->userCanView($current_user)) {
-                continue;
+            if ($child->userCanView($current_user)) {
+                $children[] = $child;
             }
+        }
+        return $children;
+    }
 
+    /** @return Tracker_ArtifactChildPresenter[] */
+    private function getChildPresenterCollection(PFUser $current_user) {
+        $presenters = array();
+        foreach ($this->getChildrenForUser($current_user) as $child) {
             $tracker      = $child->getTracker();
             $semantics    = Tracker_Semantic_Status::load($tracker);
             $has_children = $child->hasChildren();
 
-            $children[] = new Tracker_ArtifactChildPresenter($child, $this, $semantics);
+            $presenters[] = new Tracker_ArtifactChildPresenter($child, $this, $semantics);
         }
-        return $children;
+        return $presenters;
     }
 
     public function hasChildren() {
@@ -875,6 +898,21 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             'val'      => $this->getId(),
             'group_id' => $this->getTracker()->getGroupId(),
         )) .'">'. $this->getXRef() .'</a>';
+    }
+
+    /**
+     * Return the URL to use when you want to create a new artifact of $target_tracker type linked to current artifact
+     *
+     * @param Tracker $target_tracker
+     * @return String
+     */
+    public function getSubmitNewArtifactLinkedToMeUri(Tracker $target_tracker) {
+        return TRACKER_BASE_URL . '/?'.http_build_query(array(
+            'tracker'   => $target_tracker->getId(),
+            'func'      => 'new-artifact-link',
+            'id'        => $this->getId(),
+            'immediate' => 1,
+        ));
     }
 
     /**

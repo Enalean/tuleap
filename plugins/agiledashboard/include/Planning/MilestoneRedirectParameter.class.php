@@ -19,24 +19,24 @@
  */
 
 /**
- * I build parameter to redirect to the right milestone
+ * I build url parameter to redirect to the right milestone
  */
 class Planning_MilestoneRedirectParameter {
 
     /** @return string */
-    public function getPlanningRedirectToSelf(Planning_Milestone $milestone) {
+    public function getPlanningRedirectToSelf(Planning_Milestone $milestone, $pane_identifier) {
         $planning_id = (int) $milestone->getPlanningId();
         $artifact_id = $milestone->getArtifactId();
 
-        return "planning[$planning_id]=$artifact_id";
+        return "planning[$pane_identifier][$planning_id]=$artifact_id";
     }
 
     /** @return string */
-    public function getPlanningRedirectToNew(Planning_Milestone $milestone) {
+    public function getPlanningRedirectToNew(Planning_Milestone $milestone, $pane_identifier) {
         $planning_id = (int) $milestone->getPlanningId();
         $artifact_id = $milestone->getArtifactId();
 
-        return "planning[$planning_id]=-1";
+        return "planning[$pane_identifier][$planning_id]=-1";
     }
 }
 ?>

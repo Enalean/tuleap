@@ -50,21 +50,16 @@ class AgileDashboardRouter {
      */
     private $planning_factory;
 
-    /**
-     * @var Tracker_HierarchyFactory
-     */
-    private $hierarchy_factory;
-
     public function __construct(
             Plugin $plugin,
             Planning_MilestoneFactory $milestone_factory,
             PlanningFactory $planning_factory,
-            Tracker_HierarchyFactory $hierarchy_factory
-            ) {
+            Planning_MilestoneControllerFactory $milestone_controller_factory
+    ) {
         $this->plugin            = $plugin;
         $this->milestone_factory = $milestone_factory;
         $this->planning_factory  = $planning_factory;
-        $this->hierarchy_factory = $hierarchy_factory;
+        $this->milestone_controller_factory = $milestone_controller_factory;
     }
     
     /**
@@ -218,24 +213,6 @@ class AgileDashboardRouter {
         
         return new Planning_Controller($request, $planning_factory, $this->milestone_factory, $this->plugin->getThemePath());
     }
-
-    /**
-     * Builds a new Milestone_Controller instance.
-     * 
-     * @param Codendi_Request $request
-     * 
-     * @return Planning_MilestoneController 
-     */
-    protected function buildMilestoneController(Codendi_Request $request) {
-        return new Planning_MilestoneController(
-            $request,
-            $this->milestone_factory,
-            $this->getProjectManager(),
-            $this->getViewBuilder($request),
-            $this->hierarchy_factory,
-            $this->plugin->getThemePath()
-        );
-    }
     
     /**
      * Renders the given controller action, with page header/footer.
@@ -268,32 +245,6 @@ class AgileDashboardRouter {
         
         call_user_func_array(array($controller, $action_name), $args);
     }
-
-    /**
-     * Builds a new cross-tracker search view builder.
-     * 
-     * TODO:
-     *   - move to controller (this has nothing to do with routing)
-     * 
-     * @param Codendi_Request $request
-     * 
-     * @return Tracker_CrossSearch_ViewBuilder
-     */
-    protected function getViewBuilder(Codendi_Request $request) {
-        
-        $form_element_factory = Tracker_FormElementFactory::instance();
-        $group_id             = $request->get('group_id');
-        $user                 = $request->getCurrentUser();
-        $object_god           = new TrackerManager();
-        $planning_trackers    = $this->planning_factory->getPlanningTrackers($group_id, $user);
-        $art_link_field_ids   = $form_element_factory->getArtifactLinkFieldsOfTrackers($planning_trackers);
-        
-        return new Planning_ViewBuilder(
-            $form_element_factory, 
-            $object_god->getCrossSearch($art_link_field_ids), 
-            $object_god->getCriteriaBuilder($user, $planning_trackers)
-        );
-    }
     
     /**
      * Routes some milestone-related requests.
@@ -315,14 +266,10 @@ class AgileDashboardRouter {
                 $this->executeAction($controller, 'show');
                 /* no break */
             default:
-                $controller = $this->buildMilestoneController($request);
+                $controller = $this->milestone_controller_factory->getMilestoneController($request);
                 $action_arguments = array();
                 $this->renderAction($controller, 'show', $request, $action_arguments);
         }
-    }
-
-    public function getProjectManager() {
-        return ProjectManager::instance();
     }
 }
 

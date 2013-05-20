@@ -24,9 +24,23 @@ plugin_agiledashboard	edit_item	Edit
 plugin_agiledashboard	add_subitem	Add new $1
 plugin_agiledashboard	backlog_add	Add
 plugin_agiledashboard	planning_pane_title	Backlog/Planning
+plugin_agiledashboard	content_pane_title	Content
 plugin_agiledashboard	access_to_planning	Access to planning
 plugin_agiledashboard	backlog_destination_help	Use right arrow on item to move it to current milestone or bottom/up arrow to rank items.
 
 plugin_agiledashboard	capacity	Capacity:
 plugin_agiledashboard	available	Available $1
 
+plugin_agiledashboard	content_head_title	Title
+plugin_agiledashboard	content_head_points	Remaining effort
+plugin_agiledashboard	content_head_parent	Parent
+
+plugin_agiledashboard_contentpane	lab	This is a lab feature that is subjected to change in a near future. Please get in touch with us to <a href="mailto:tuleap-devel@tuleap.net">provide any feedback</a> about this work in progress, thanks!
+plugin_agiledashboard_contentpane	closed_items_title	Closed $1
+plugin_agiledashboard_contentpane	closed_items_intro	Please find below the items that are closed. You cannot change the priorities.
+plugin_agiledashboard_contentpane	closed_items_nothing_yet	Nothing closed yet
+plugin_agiledashboard_contentpane	open_items_title	Open $1
+plugin_agiledashboard_contentpane	open_items_title-no_more	No more open $1, well done!
+plugin_agiledashboard_contentpane	open_items_title-not_yet	No $1 yet
+plugin_agiledashboard_contentpane	open_items_title-not_yet-can_add	No $1, start adding now
+plugin_agiledashboard_contentpane	open_items_intro	Here are the items that are still open. You can prioritize by drag 'n dropping them.

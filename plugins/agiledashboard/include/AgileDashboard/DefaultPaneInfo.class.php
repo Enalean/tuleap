@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.observe('dom:loaded', function () {
-    var planner = $('planner');
-    if (planner) {
-        new tuleap.agiledashboard.Planning(planner);
-    }
+/**
+ * An default pane (aka the one without any &pane=... parameter in the url)
+ */
+abstract class AgileDashboard_DefaultPaneInfo extends AgileDashboard_PaneInfo {
 
-    var milestone_content = $('blcontent');
-    if (milestone_content) {
-        new tuleap.agiledashboard.MilestoneContent(milestone_content);
+    /**
+     * @see AgileDashboard_PaneInfo::getUriParametersForMilestone()
+     */
+    protected function getUriParametersForMilestone(Planning_Milestone $milestone) {
+        $params = parent::getUriParametersForMilestone($milestone);
+        unset($params['pane']);
+        return $params;
     }
-
-    tuleap.agiledashboard.align_short_access_heights.defer();
-});
+}
+?>
