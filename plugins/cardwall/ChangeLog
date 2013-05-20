@@ -1,3 +1,6 @@
+Version 0.9.32 - Tuleap 6.1
+    * Display a new 'Content' pane with the content of a given milestone
+
 Version 0.9.31 - Tuleap 6.1
     * Fix request #2155: Tasks rearranging on the cardwall when clicking on a task
 
