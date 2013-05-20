@@ -51,9 +51,10 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
         $this->artifact_factory     = $artifact_factory;
         $this->form_element_factory = $form_element_factory;
 
-        $this->todo_collection      = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
-        $this->done_collection      = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
-        $this->is_initialized       = false;
+        $this->todo_collection           = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
+        $this->done_collection           = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
+        $this->unplanned_open_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
+        $this->is_initialized            = false;
     }
 
     public function getTodoCollection(
@@ -78,6 +79,17 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
         return $this->done_collection;
     }
 
+    public function getUnplannedOpenCollection(
+        PFUser $user,
+        Planning_ArtifactMilestone $milestone,
+        AgileDashboard_Milestone_Pane_ContentBacklogStrategy $backlog_strategy,
+        $redirect_to_self
+    ) {
+        $this->initCollections($user, $milestone, $backlog_strategy, $redirect_to_self);
+
+        return $this->unplanned_open_collection;
+    }
+
     private function initCollections(
         PFUser $user,
         Planning_ArtifactMilestone $milestone,
@@ -98,7 +110,7 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
         $parents   = $this->getParentArtifacts($user, $backlog_item_ids);
         $semantics = $this->getArtifactsSemantics($user, $milestone, $backlog_item_ids);
         foreach ($artifacts as $artifact) {
-            $this->buildCollections($user, $artifact, $parents, $semantics, $redirect_to_self);
+            $this->pushItem($user, $artifact, $parents, $semantics, $redirect_to_self);
         }
     }
 
@@ -178,7 +190,7 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
         }
     }
 
-    private function buildCollections(PFUser $user, Tracker_Artifact $artifact, array $parents, array $semantics, $redirect_to_self) {
+    private function pushItem(PFUser $user, Tracker_Artifact $artifact, array $parents, array $semantics, $redirect_to_self) {
         $artifact_id = $artifact->getId();
         $artifact->setTitle($semantics[$artifact_id][Tracker_Semantic_Title::NAME]);
 
