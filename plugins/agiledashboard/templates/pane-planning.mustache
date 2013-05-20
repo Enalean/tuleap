@@ -1,43 +1,45 @@
 <div class="alert alert-info">
-    <span class="lab_features">lab</span>
+    <span class="lab_features">{{{lab}}}</span>
 </div>
-<h3>SPrint planning</h3>
+<h3>{{title}}</h3>
 
 <div class="agiledashboard-planning-backlog">
     <table class="table table-striped table-hover table-bordered">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Title</th>
-                <th>points</th>
-                <th>parent</th>
+                <th>{{title}}</th>
+                <th>{{points}}</th>
+                <th>{{parent}}</th>
             </tr>
         </thead>
         <tbody>
-            {#backlog_collection}
+            {{#backlog_collection}}
                 <tr data-artifact-id="{id}">
                     <td><a href="{url}">{id}</a></td>
                     <td>{title}</td>
                     <td>{points}</td>
                     <td><a href="{parent_url}">{parent_title}</a></td>
                 </tr>
-            {/backlog_collection}
+            {{/backlog_collection}}
         </tbody>
     </table>
 </div>
 
 <div class="agiledashboard-planning-submilestones">
     <div id="accordion">
+        {{#submilestone_collection}}
         <div>
-            <h3><a href="#">First sprint</a> {start_date} - {end_date} - {milestone_status}</h3>
+            <h3><a href="{{milestone_url}}">{{milestone_title}}</a> {start_date} - {end_date} - {status}</h3>
             <div>
-                <table>
+                <p>Capacity: #to be update onload#</p>
+                <table class="table table-striped table-hover table-bordered">
                     <thead>
                         <tr>
-                            <th>id</th>
-                            <th>title</th>
-                            <th>parent</th>
-                            <th>points</th>
+                            <th>Id</th>
+                            <th>{{backlog_item_title}}</th>
+                            <th>{{points}}</th>
+                            <th>{{parent}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,23 +47,7 @@
                 </table>
             </div>
         </div>
-        <div>
-            <h3><a href="#">Second sprint</a> {start_date} - {end_date} - {milestone_status}</h3>
-            <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>id</th>
-                            <th>title</th>
-                            <th>parent</th>
-                            <th>points</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        {{/submilestone_collection}}
     </div>
 </div>
 

@@ -126,8 +126,14 @@ class Planning_MilestonePaneFactory {
         $pane_info = new AgileDashboard_Milestone_Pane_Planning_PaneInfo($milestone);
         if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_Planning_PaneInfo::IDENTIFIER) {
             $pane_info->setActive(true);
+            $backlog_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
+            $submilestone_collection = new AgileDashboard_Milestone_Pane_Planning_SubMilestonePresenterCollection();
+            $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_SubMilestonePresenter('Sprint 40'));
+            $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_SubMilestonePresenter('Sprint 39'));
+            $presenter = new AgileDashboard_Milestone_Pane_Planning_Presenter($backlog_collection, $submilestone_collection);
             $this->active_pane = new AgileDashboard_Milestone_Pane_Planning_Pane(
-                $pane_info
+                $pane_info,
+                $presenter
             );
         }
 

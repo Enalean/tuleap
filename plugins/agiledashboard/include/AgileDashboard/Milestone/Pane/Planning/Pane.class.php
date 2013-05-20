@@ -30,8 +30,9 @@ class AgileDashboard_Milestone_Pane_Planning_Pane extends AgileDashboard_Pane {
     /** @var AgileDashboard_Milestone_Pane_ContentPresenter */
     private $presenter;
 
-    public function __construct(AgileDashboard_Milestone_Pane_Planning_PaneInfo $info) {
+    public function __construct(AgileDashboard_Milestone_Pane_Planning_PaneInfo $info, AgileDashboard_Milestone_Pane_Planning_Presenter $presenter) {
         $this->info      = $info;
+        $this->presenter = $presenter;
     }
 
     /**
