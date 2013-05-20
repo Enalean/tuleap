@@ -36,27 +36,19 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;
 
-    /** @var PlanningFactory */
-    private $planning_factory;
-
     /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
     private $todo_collection;
 
     /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
     private $done_collection;
 
-    /** @var String */
-    private $redirect_to_self;
-
     public function __construct(
         AgileDashboard_BacklogItemDao $dao,
         Tracker_ArtifactFactory $artifact_factory,
-        Tracker_FormElementFactory $form_element_factory,
-        PlanningFactory $planning_factory
+        Tracker_FormElementFactory $form_element_factory
     ) {
         $this->dao                  = $dao;
         $this->artifact_factory     = $artifact_factory;
-        $this->planning_factory     = $planning_factory;
         $this->form_element_factory = $form_element_factory;
 
         $this->todo_collection      = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();

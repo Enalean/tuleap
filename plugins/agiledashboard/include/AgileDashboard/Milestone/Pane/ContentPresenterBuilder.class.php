@@ -30,23 +30,11 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    /** @var Tracker_FormElementFactory */
-    private $form_element_factory;
-
     /** @var PlanningFactory */
     private $planning_factory;
 
-    /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
-    private $todo_collection;
-
-    /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
-    private $done_collection;
-
     /** @var String */
     private $parent_item_name = '';
-
-    /** @var String */
-    private $backlog_item_name = '';
 
     /** @var String */
     private $can_add_backlog_item = false;
@@ -54,19 +42,19 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
     /** @var String */
     private $new_backlog_item_url = '';
 
+    /** @var AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory */
+    private $collection_factory;
+
     public function __construct(
         AgileDashboard_BacklogItemDao $dao,
         Tracker_ArtifactFactory $artifact_factory,
-        Tracker_FormElementFactory $form_element_factory,
-        PlanningFactory $planning_factory
+        PlanningFactory $planning_factory,
+        AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory $collection_factory
     ) {
         $this->dao                  = $dao;
         $this->artifact_factory     = $artifact_factory;
         $this->planning_factory     = $planning_factory;
-        $this->form_element_factory = $form_element_factory;
-
-        $this->todo_collection      = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
-        $this->done_collection      = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
+        $this->collection_factory   = $collection_factory;
     }
 
     public function getMilestoneContentPresenter(PFUser $user, Planning_ArtifactMilestone $milestone) {
@@ -76,16 +64,9 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
 
         $this->initBacklogSettings($user, $milestone);
 
-        $collection_factory = new AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory(
-            $this->dao,
-            $this->artifact_factory,
-            $this->form_element_factory,
-            $this->planning_factory
-        );
-
         return new AgileDashboard_Milestone_Pane_ContentPresenter(
-            $collection_factory->getTodoCollection($user, $milestone, $backlog_strategy, $this->redirect_to_self),
-            $collection_factory->getDoneCollection($user, $milestone, $backlog_strategy, $this->redirect_to_self),
+            $this->collection_factory->getTodoCollection($user, $milestone, $backlog_strategy, $this->redirect_to_self),
+            $this->collection_factory->getDoneCollection($user, $milestone, $backlog_strategy, $this->redirect_to_self),
             $this->parent_item_name,
             $backlog_strategy->getItemName(),
             $this->can_add_backlog_item,
@@ -129,7 +110,7 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
         );
     }
 
-    protected function getBacklogArtifacts(Planning_ArtifactMilestone $milestone) {
+    private function getBacklogArtifacts(Planning_ArtifactMilestone $milestone) {
         return $this->dao->getBacklogArtifacts($milestone->getArtifactId())->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
     }
 }

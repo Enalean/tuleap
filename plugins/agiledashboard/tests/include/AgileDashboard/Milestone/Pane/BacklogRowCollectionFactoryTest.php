@@ -71,7 +71,6 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactoryTest extends Tule
                 $this->dao,
                 $this->artifact_factory,
                 $this->form_element_factory,
-                $planning_factory
             )
         );
         stub($this->factory)->userCanReadBacklogTitleField()->returns(true);

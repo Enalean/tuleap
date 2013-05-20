@@ -256,11 +256,17 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     private function getContentPresenterBuilder() {
+        $backlog_row_collection_factory = new AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory(
+            new AgileDashboard_BacklogItemDao(),
+            $this->getArtifactFactory(),
+            Tracker_FormElementFactory::instance()
+        );
+
         return new AgileDashboard_Milestone_Pane_ContentPresenterBuilder(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
-            Tracker_FormElementFactory::instance(),
-            PlanningFactory::build()
+            PlanningFactory::build(),
+            $backlog_row_collection_factory
         );
     }
 
