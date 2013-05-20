@@ -76,6 +76,7 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
 
         $this->initBacklogSettings($user, $milestone);
         $this->initCollections($user, $milestone, $backlog_strategy);
+
         return new AgileDashboard_Milestone_Pane_ContentPresenter(
             $this->todo_collection,
             $this->done_collection,
@@ -153,6 +154,7 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
                 }
             }
         }
+
         return $parents;
     }
 
@@ -162,6 +164,7 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
             reset($artifacts);
             return $artifact->getTracker();
         }
+
         return null;
     }
 
@@ -174,6 +177,7 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
                 Tracker_Semantic_Status::NAME => $row[Tracker_Semantic_Status::NAME],
             );
         }
+
         return $semantics;
     }
 
@@ -186,6 +190,7 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
         if ($this->userCanReadBacklogStatusField($user, $backlog_tracker)) {
             $semantics[] = Tracker_Semantic_Status::NAME;
         }
+
         return $semantics;
     }
 

@@ -19,7 +19,7 @@
  */
 
 /**
- * I build parameter to redirect to the right milestone
+ * I build url parameter to redirect to the right milestone
  */
 class Planning_MilestoneRedirectParameter {
 

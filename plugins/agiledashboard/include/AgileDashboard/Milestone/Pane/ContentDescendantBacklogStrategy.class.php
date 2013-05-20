@@ -28,7 +28,7 @@
 class AgileDashboard_Milestone_Pane_ContentDescendantBacklogStrategy extends AgileDashboard_Milestone_Pane_ContentBacklogStrategy {
 
     /** @var AgileDashboard_BacklogItemDao */
-    protected $dao;
+    private $dao;
 
     public function __construct($milestone_backlog_artifacts, $item_name, AgileDashboard_BacklogItemDao $dao) {
         parent::__construct($milestone_backlog_artifacts, $item_name);

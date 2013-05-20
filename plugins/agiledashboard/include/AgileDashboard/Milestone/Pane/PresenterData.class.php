@@ -42,14 +42,17 @@ class AgileDashboard_Milestone_Pane_PresenterData {
         $this->available_milestones = $available_milestones;
     }
 
+    /** @return AgileDashboard_Pane */
     public function getActivePane() {
         return $this->active_pane;
     }
 
+    /** @return AgileDashboard_PaneInfo[] */
     public function getListOfPaneInfo() {
         return $this->list_of_pane_info;
     }
 
+    /** @return Planning_Milestone[] */
     public function getAvailableMilestones() {
         return $this->available_milestones;
     }
