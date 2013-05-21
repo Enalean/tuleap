@@ -24,94 +24,72 @@ var tuleap = tuleap || { };
 tuleap.agiledashboard = tuleap.agiledashboard || { };
 
 tuleap.agiledashboard.Planning = Class.create({
+    jQuery : jQuery,
+
     initialize: function (container) {
-        var self = this;
-        (function($) {
-            $(function() {
-                $("#accordion > div").accordion({
-                    header: "h4",
-                    collapsible: true,
-                    active: false,
-                    beforeActivate: function (event, ui) {
-                        var data_container = $(this).find(".submilestone-data");
+        var self = this,
+            $ = this.jQuery;
 
-                        if (data_container.attr("data-loaded") == "false") {
-                            fetchSubmilestoneData(data_container);
-                        }
-                    }
-                });
+        $("#accordion > div").accordion({
+            header: "h4",
+            collapsible: true,
+            active: false,
+            beforeActivate: function (event, ui) {
+                var data_container = $(this).find(".submilestone-data");
 
-                function fetchSubmilestoneData(data_container) {
-                    jQuery.ajax({
-                        url : "/plugins/agiledashboard/?action=submilestonedata",
-                        dataType : "html",
-                        data : {
-                            submilestone_id : data_container.attr('data-submilestone-id')
-                        },
-                        method : "get",
-                        success : function(data) {
-                            setSubmilestoneDataLoaded(data_container);
-                            data_container.find('tbody').append(data);
-                            self.updateSubmilestoneCapacity(data_container);
-                            self.makeSubmilestonesSortable(data_container);
-                        },
-                        error : function(data) {
-                            console.log('error', data);
-                        }
-                    })
-                };
-
-                function setSubmilestoneDataLoaded(data_container) {
-                    data_container.attr("data-loaded", "true")
-                };
-            })
-
-            
-        })(jQuery);
+                if (data_container.attr("data-loaded") == "false") {
+                    self.fetchSubmilestoneData(data_container);
+                }
+            }
+        });
     },
     
-    updateSubmilestoneCapacity : function(data_container) {
-        (function($) {
-            var capacity = 0,
-                capacities = data_container.find(".submilestone-element-capacity");
+    fetchSubmilestoneData : function(data_container) {
+        var self = this;
 
-            capacities.each(function(){
-                var element_capacity = parseFloat($(this).html());
-                if (! isNaN(element_capacity)) {
-                    capacity += parseFloat(element_capacity);
-                }
-            })
-            data_container.find(".submilestone-capacity").html(capacity);
-        })(jQuery);
+        this.jQuery.ajax({
+            url : "/plugins/agiledashboard/?action=submilestonedata",
+            dataType : "html",
+            data : {
+                submilestone_id : data_container.attr('data-submilestone-id')
+            },
+            method : "get",
+            success : function(data) {
+                self.setSubmilestoneDataLoaded(data_container);
+                data_container.find('tbody').append(data);
+                self.updateSubmilestoneCapacity(data_container);
+                self.makeSubmilestonesSortable(data_container);
+            },
+            error : function(data) {
+                console.log('error', data);
+            }
+        })
+     },
+
+    setSubmilestoneDataLoaded : function(data_container) {
+        data_container.attr("data-loaded", "true")
+    },
+
+    updateSubmilestoneCapacity : function(data_container) {
+        var $ = this.jQuery,
+            capacity = 0,
+            capacities = data_container.find(".submilestone-element-capacity");
+
+        capacities.each(function(){
+            var element_capacity = parseFloat($(this).html());
+            if (! isNaN(element_capacity)) {
+                capacity += parseFloat(element_capacity);
+            }
+        })
+        
+        data_container.find(".submilestone-capacity").html(capacity);
     },
     
     makeSubmilestonesSortable : function(data_container) {
-        (function($) {
-            data_container.find(".submilestone-element").sortable({
-                revert: true,
-                axis: 'y',
-                forcePlaceholderSize: true,
-                containment: "parent",
-                helper: function (e, tr) {
-                    var $originals = tr.children();
-                    var $helper = tr.clone();
-                    $helper.children().each(function (index) {
-                        // Set helper cell sizes to match the original size
-                        $(this).width($originals.eq(index).width());
-                    });
-
-                    return $helper;
-                },
-                stop: function (event, ui) {
-//                    sort(ui.item);
-                },
-                cursor: 'move'
-            });
-        })(jQuery);
+        var params = {
+            rowContainer    : data_container.find(".submilestone-element-rows"),
+            rowIdentifier   : 'data-artifact-id'
+        }
+        new tuleap.agiledashboard.TableRowSorter(params);
     }
-    
-    
 });
-
-
-

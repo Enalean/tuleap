@@ -112,13 +112,13 @@ class AgileDashboardRouter {
                 break;
             case 'submilestonedata' :
                 echo
-                '<tr class="submilestone-element">
+                '<tr class="submilestone-element" data-artifact-id="17">
                     <td><a href="#">Id</a></td>
                     <td>Story 1</td>
                     <td class="submilestone-element-capacity">5.0</td>
                     <td>Epic A</td>
                 </tr>
-                <tr class="submilestone-element">
+                <tr class="submilestone-element" data-artifact-id="12">
                     <td><a href="#">Id</a></td>
                     <td>Story 2</td>
                     <td class="submilestone-element-capacity">19</td>
