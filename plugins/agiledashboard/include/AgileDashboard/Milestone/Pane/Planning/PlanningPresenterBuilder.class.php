@@ -51,7 +51,8 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
         );
         return new AgileDashboard_Milestone_Pane_Planning_PlanningPresenter(
             $backlog_collection,
-            $this->getSubmilestoneCollection()
+            $this->getSubmilestoneCollection(),
+            $backlog_strategy->getItemName()
         );
     }
 
