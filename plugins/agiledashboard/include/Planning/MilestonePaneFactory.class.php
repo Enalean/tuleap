@@ -128,10 +128,10 @@ class Planning_MilestonePaneFactory {
     }
 
     private function getPlanningPaneInfo(Planning_Milestone $milestone) {
-        $pane_info = new AgileDashboard_Milestone_Pane_Planning_PaneInfo($milestone);
-        if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_Planning_PaneInfo::IDENTIFIER) {
+        $pane_info = new AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo($milestone);
+        if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo::IDENTIFIER) {
             $pane_info->setActive(true);
-            $this->active_pane = new AgileDashboard_Milestone_Pane_Planning_Pane(
+            $this->active_pane = new AgileDashboard_Milestone_Pane_Planning_PlanningPane(
                 $pane_info,
                 $this->planning_presenter_builder->getMilestonePlanningPresenter($this->request->getCurrentUser(), $milestone)
             );

@@ -27,30 +27,38 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
     /** @var AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory */
     private $collection_factory;
 
+    /** @var AgileDashboard_Milestone_Pane_BacklogStrategyFactory */
+    private $strategy_factory;
+
     public function __construct(
+        AgileDashboard_Milestone_Pane_BacklogStrategyFactory $strategy_factory,
         AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory $collection_factory
     ) {
-        $this->collection_factory   = $collection_factory;
+        $this->strategy_factory   = $strategy_factory;
+        $this->collection_factory = $collection_factory;
     }
 
     public function getMilestonePlanningPresenter(PFUser $user, Planning_ArtifactMilestone $milestone) {
-        $backlog_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
-        /* $this->collection_factory->getUnplannedOpenCollection(
+        $redirect_paremeter     = new Planning_MilestoneRedirectParameter();
+        $backlog_strategy       = $this->strategy_factory->getBacklogStrategy($milestone);
+        $redirect_to_self = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo::IDENTIFIER);
+
+        $backlog_collection = $this->collection_factory->getUnplannedOpenCollection(
             $user,
             $milestone,
-            $this->backlog_strategy,
-            $this->redirect_to_self
-        ); */
-        return new AgileDashboard_Milestone_Pane_Planning_Presenter(
+            $backlog_strategy,
+            $redirect_to_self
+        );
+        return new AgileDashboard_Milestone_Pane_Planning_PlanningPresenter(
             $backlog_collection,
             $this->getSubmilestoneCollection()
         );
     }
 
     private function getSubmilestoneCollection() {
-        $submilestone_collection = new AgileDashboard_Milestone_Pane_Planning_SubMilestonePresenterCollection();
-        $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_SubMilestonePresenter('Sprint 40'));
-        $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_SubMilestonePresenter('Sprint 39'));
+        $submilestone_collection = new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection();
+        $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter('Sprint 40'));
+        $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter('Sprint 39'));
         return $submilestone_collection;
     }
 }

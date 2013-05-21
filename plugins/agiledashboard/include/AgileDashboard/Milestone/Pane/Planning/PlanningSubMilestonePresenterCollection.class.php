@@ -22,10 +22,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_Planning_SubMilestonePresenterCollection implements Iterator, Countable {
+class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection implements Iterator, Countable {
     private $rows = array();
 
-    public function push(AgileDashboard_Milestone_Pane_Planning_SubMilestonePresenter $row) {
+    public function push(AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter $row) {
         $this->rows[] = $row;
     }
 

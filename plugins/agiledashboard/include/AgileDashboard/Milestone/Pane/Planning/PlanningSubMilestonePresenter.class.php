@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_Planning_SubMilestonePresenter {
+class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
     private $milestone_title   = '';
     private $backlog_item_type = '';
     private $parent_item_type  = '';

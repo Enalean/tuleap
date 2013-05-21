@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_Planning_Presenter {
+class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
     private $backlog_item_type = '';
     private $parent_item_type  = '';
     private $backlog_collection;
@@ -30,7 +30,7 @@ class AgileDashboard_Milestone_Pane_Planning_Presenter {
 
     public function __construct(
             AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $backlog_collection,
-            AgileDashboard_Milestone_Pane_Planning_SubMilestonePresenterCollection $submilestone_collection
+            AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection $submilestone_collection
             ) {
         $this->backlog_collection      = $backlog_collection;
         $this->submilestone_collection = $submilestone_collection;

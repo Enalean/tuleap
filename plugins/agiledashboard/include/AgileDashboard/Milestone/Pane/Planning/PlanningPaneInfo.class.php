@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_Planning_PaneInfo extends AgileDashboard_PaneInfo {
+class AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo extends AgileDashboard_PaneInfo {
     const IDENTIFIER = 'planning';
 
     /**
