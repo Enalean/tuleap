@@ -72,6 +72,7 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
             $view_builder,
             $hierarchy_factory,
             mock('AgileDashboard_Milestone_Pane_ContentPresenterBuilder'),
+            mock('AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder'),
             ''
         );
         $controller->show();
@@ -311,6 +312,7 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
                 mock('Planning_ViewBuilder'),
                 mock('Tracker_HierarchyFactory'),
                 mock('AgileDashboard_Milestone_Pane_ContentPresenterBuilder'),
+                mock('AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder'),
                 ''
             )
         );

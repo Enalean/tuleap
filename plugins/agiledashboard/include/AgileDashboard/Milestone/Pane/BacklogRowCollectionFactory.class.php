@@ -68,7 +68,7 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
     public function getTodoCollection(
         PFUser $user,
         Planning_ArtifactMilestone $milestone,
-        AgileDashboard_Milestone_Pane_ContentBacklogStrategy $backlog_strategy,
+        AgileDashboard_Milestone_Pane_BacklogStrategy $backlog_strategy,
         $redirect_to_self
     ) {
         $this->initCollections($user, $milestone, $backlog_strategy, $redirect_to_self);
@@ -79,7 +79,7 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
     public function getDoneCollection(
         PFUser $user,
         Planning_ArtifactMilestone $milestone,
-        AgileDashboard_Milestone_Pane_ContentBacklogStrategy $backlog_strategy,
+        AgileDashboard_Milestone_Pane_BacklogStrategy $backlog_strategy,
         $redirect_to_self
     ) {
         $this->initCollections($user, $milestone, $backlog_strategy, $redirect_to_self);
@@ -90,7 +90,7 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
     public function getUnplannedOpenCollection(
         PFUser $user,
         Planning_ArtifactMilestone $milestone,
-        AgileDashboard_Milestone_Pane_ContentBacklogStrategy $backlog_strategy,
+        AgileDashboard_Milestone_Pane_BacklogStrategy $backlog_strategy,
         $redirect_to_self
     ) {
         $this->initCollections($user, $milestone, $backlog_strategy, $redirect_to_self);
@@ -101,7 +101,7 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
     private function initCollections(
         PFUser $user,
         Planning_ArtifactMilestone $milestone,
-        AgileDashboard_Milestone_Pane_ContentBacklogStrategy $backlog_strategy,
+        AgileDashboard_Milestone_Pane_BacklogStrategy $backlog_strategy,
         $redirect_to_self
     ) {
         if ($this->is_initialized) {
@@ -228,6 +228,10 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
     private function getPlannedArtifactIds(PFUser $user, Planning_Milestone $milestone) {
         $sub_milestones     = $this->milestone_factory->getSubMilestones($user, $milestone);
         $sub_milestones_ids = array_map(array($this, 'extractArtifactId'), $sub_milestones);
+
+        if (! $sub_milestones_ids) {
+            return array();
+        }
 
         return $this->dao->getPlannedItemIds($sub_milestones_ids);
     }
