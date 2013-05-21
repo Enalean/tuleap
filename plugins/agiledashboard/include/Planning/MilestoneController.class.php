@@ -38,6 +38,9 @@ class Planning_MilestoneController extends MVC2_PluginController {
     /** @var Planning_MilestonePaneFactory */
     private $pane_factory;
 
+    /** @var Planning_MilestoneRedirectParameter */
+    private $redirect_parameter;
+
     /**
      * Instanciates a new controller.
      * 
@@ -112,6 +115,19 @@ class Planning_MilestoneController extends MVC2_PluginController {
             return $breadcrumbs_merger;
         }
         return new BreadCrumb_NoCrumb();
+    }
+
+    public function submilestonedata() {
+        $this->backlog_row_factory = new AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory(new AgileDashboard_BacklogItemDao(), Tracker_ArtifactFactory::instance(), Tracker_FormElementFactory::instance(), $this->milestone_factory);
+        $strategy_factory = new AgileDashboard_Milestone_Pane_BacklogStrategyFactory(new AgileDashboard_BacklogItemDao(), Tracker_ArtifactFactory::instance(), PlanningFactory::build());
+        $backlog_strategy = $strategy_factory->getSelfBacklogStrategy($this->milestone);
+        $presenter = new AgileDashboard_SubmilestonePresenter($this->backlog_row_factory->getTodoCollection(
+            $this->getCurrentUser(),
+            $this->milestone,
+            $backlog_strategy,
+            $this->redirect_parameter->getPlanningRedirectToSelf($this->milestone, '$pane_identifier')
+        ));
+        $this->render('submilestone-content', $presenter);
     }
 }
 

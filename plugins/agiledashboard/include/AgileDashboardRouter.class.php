@@ -111,19 +111,8 @@ class AgileDashboardRouter {
                 $this->executeAction($agile_dashboard_xml_controller, 'import');
                 break;
             case 'submilestonedata' :
-                echo
-                '<tr class="submilestone-element" data-artifact-id="17">
-                    <td><a href="#">Id</a></td>
-                    <td>Story 1</td>
-                    <td class="submilestone-element-capacity">5.0</td>
-                    <td>Epic A</td>
-                </tr>
-                <tr class="submilestone-element" data-artifact-id="12">
-                    <td><a href="#">Id</a></td>
-                    <td>Story 2</td>
-                    <td class="submilestone-element-capacity">19</td>
-                    <td>Epic Q</td>
-                </tr>';
+                $milestone_controller = $this->milestone_controller_factory->getMilestoneController($request);
+                $this->executeAction($milestone_controller, 'submilestonedata');
                 break;
             case 'index':
             default:
