@@ -44,6 +44,10 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactoryTest extends Tule
     /** @var Planning_ArtifactMilestone */
     private $milestone;
 
+    private $open_story_id           = 12;
+    private $open_unplanned_story_id = 47;
+    private $closed_story_id         = 66;
+
     public function setUp() {
         parent::setUp();
 
@@ -51,7 +55,6 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactoryTest extends Tule
         $this->artifact_factory     = mock('Tracker_ArtifactFactory');
         $this->form_element_factory = mock('Tracker_FormElementFactory');
         $this->milestone_factory    = mock('Planning_MilestoneFactory');
-        $planning_factory           = mock('PlanningFactory');
 
         $this->user = mock('PFUser');
 
@@ -78,79 +81,105 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactoryTest extends Tule
         stub($this->factory)->userCanReadBacklogTitleField()->returns(true);
         stub($this->factory)->userCanReadBacklogStatusField()->returns(true);
 
-        $story1                 = anArtifact()->withId(12)->build();
-        $this->backlog_strategy = stub('AgileDashboard_Milestone_Pane_ContentBacklogStrategy')->getArtifacts($this->user)->returns(array($story1));
+        $story1                 = anArtifact()->withId($this->open_story_id)->build();
+        $story2                 = anArtifact()->withId($this->open_unplanned_story_id)->build();
+        $story3                 = anArtifact()->withId($this->closed_story_id)->build();
+        $this->backlog_strategy = stub('AgileDashboard_Milestone_Pane_ContentBacklogStrategy')->getArtifacts($this->user)->returns(array($story1, $story2, $story3));
         $this->redirect_to_self = 'whatever';
 
-        $sub_milestone1 = stub('Planning_Milestone')->getArtifactId()->returns(123);
-        $sub_milestone2 = stub('Planning_Milestone')->getArtifactId()->returns(124);
+
+        stub($this->dao)->getArtifactsSemantics()->returnsDar(
+            array(
+                'id'                          => $this->open_story_id,
+                Tracker_Semantic_Title::NAME  => 'Story is open',
+                Tracker_Semantic_Status::NAME => AgileDashboard_BacklogItemDao::STATUS_OPEN
+            ),
+            array(
+                'id'                          => $this->open_unplanned_story_id,
+                Tracker_Semantic_Title::NAME  => 'Story is open and unplanned',
+                Tracker_Semantic_Status::NAME => AgileDashboard_BacklogItemDao::STATUS_OPEN
+            ),
+            array(
+                'id'                          => $this->closed_story_id,
+                Tracker_Semantic_Title::NAME  => 'Story is closed',
+                Tracker_Semantic_Status::NAME => AgileDashboard_BacklogItemDao::STATUS_CLOSED
+            )
+        );
+
+        $sub_milestone1 = stub('Planning_Milestone')->getArtifactId()->returns(121);
+        $sub_milestone2 = stub('Planning_Milestone')->getArtifactId()->returns(436);
         stub($this->milestone_factory)->getSubMilestones()->returns(
             array($sub_milestone1, $sub_milestone2)
         );
+
+        stub($this->artifact_factory)->getParents()->returns(array());
     }
 
     public function itCreatesContentWithOneElementInTodo() {
-        stub($this->artifact_factory)->getParents()->returns(array());
-
-        stub($this->dao)->getArtifactsSemantics(array(12), '*')->returnsDar(array('id' => 12, Tracker_Semantic_Title::NAME => 'Story blabla', Tracker_Semantic_Status::NAME => AgileDashboard_BacklogItemDao::STATUS_OPEN));
+        stub($this->dao)->getPlannedItemIds()->returns(array());
 
         stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
 
-        $content = $this->factory->getTodoCollection($this->user, $this->milestone, $this->backlog_strategy, $this->redirect_to_self);
+        $content = $this->factory->getTodoCollection(
+            $this->user,
+            $this->milestone,
+            $this->backlog_strategy,
+            $this->redirect_to_self
+        );
 
         $row = $content->current();
-        $this->assertEqual($row->id(), 12);
+        $this->assertEqual($row->id(), $this->open_story_id);
     }
 
     public function itCreatesContentWithOneElementInDone() {
-        stub($this->artifact_factory)->getParents()->returns(array());
-
-        stub($this->dao)->getArtifactsSemantics(array(12), '*')->returnsDar(array('id' => 12, Tracker_Semantic_Title::NAME => 'Story blabla', Tracker_Semantic_Status::NAME => AgileDashboard_BacklogItemDao::STATUS_CLOSED));
+        stub($this->dao)->getPlannedItemIds()->returns(array());
 
         stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
 
-        $content = $this->factory->getDoneCollection($this->user, $this->milestone, $this->backlog_strategy, $this->redirect_to_self);
+        $content = $this->factory->getDoneCollection(
+            $this->user,
+            $this->milestone,
+            $this->backlog_strategy,
+            $this->redirect_to_self
+        );
 
         $row = $content->current();
-        $this->assertEqual($row->id(), 12);
+        $this->assertEqual($row->id(), $this->closed_story_id);
     }
 
     public function itSetRemainingEffortForOpenStories() {
-        stub($this->artifact_factory)->getParents()->returns(array());
-
-        stub($this->dao)->getArtifactsSemantics(array(12), '*')->returnsDar(array('id' => 12, Tracker_Semantic_Title::NAME => 'Story blabla', Tracker_Semantic_Status::NAME => AgileDashboard_BacklogItemDao::STATUS_OPEN));
+        stub($this->dao)->getPlannedItemIds()->returns(array());
 
         // Configure the returned value
         $field = aMockField()->build();
         stub($field)->fetchCardValue()->returns(26);
         stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns($field);
 
-        $content = $this->factory->getTodoCollection($this->user, $this->milestone, $this->backlog_strategy, $this->redirect_to_self);
+        $content = $this->factory->getTodoCollection(
+            $this->user,
+            $this->milestone,
+            $this->backlog_strategy,
+            $this->redirect_to_self
+        );
 
         $row = $content->current();
         $this->assertEqual($row->points(), 26);
     }
 
     public function itCreatesACollectionForOpenAndUnplannedElements() {
-        stub($this->artifact_factory)->getParents()->returns(array());
-
-        stub($this->dao)->getArtifactsSemantics(array(12), '*')->returnsDar(
-            array(
-                'id'                          => 12,
-                Tracker_Semantic_Title::NAME  => 'Story blabla',
-                Tracker_Semantic_Status::NAME => AgileDashboard_BacklogItemDao::STATUS_OPEN
-            )
+        stub($this->dao)->getPlannedItemIds(array(121,436))->returns(
+            array($this->open_story_id)
         );
 
-        stub($this->dao)->getPlannedItemIds(array(123, 124))->returns(
-            array()
+        $collection = $this->factory->getUnplannedOpenCollection(
+            $this->user,
+            $this->milestone,
+            $this->backlog_strategy,
+            $this->redirect_to_self
         );
-
-        $collection = $this->factory->getUnplannedOpenCollection($this->user, $this->milestone, $this->backlog_strategy, $this->redirect_to_self);
 
         $row = $collection->current();
-        $this->assertTrue($row != false);return; //line to be removed
-        $this->assertEqual($row->id(), 12);
+        $this->assertEqual($row->id(), $this->open_unplanned_story_id);
     }
 }
 
