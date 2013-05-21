@@ -40,7 +40,6 @@
                 jQuery.ajax({
                     url : "/plugins/agiledashboard/?action=submilestonedata",
                     dataType : "html",
-                    context : data_container,
                     success : function(data) {
                         setSubmilestoneDataLoaded(data_container);
                         data_container.find('tbody').append(data);

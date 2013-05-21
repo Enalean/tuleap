@@ -117,6 +117,12 @@ class AgileDashboardRouter {
                     <td>Story 1</td>
                     <td class="submilestone-element-capacity">5.0</td>
                     <td>Epic A</td>
+                </tr>
+                <tr class="submilestone-element">
+                    <td><a href="#">Id</a></td>
+                    <td>Story 2</td>
+                    <td class="submilestone-element-capacity">19</td>
+                    <td>Epic Q</td>
                 </tr>';
                 break;
             case 'index':
