@@ -31,7 +31,7 @@
         {{#submilestone_collection}}
         <div>
             <h4><a href="{{milestone_url}}">{{milestone_title}}</a> {{#display_milestone_dates}}{{start_date}} - {{end_date}}{{/display_milestone_dates}} - {{status}}</h4>
-            <div>
+            <div data-loaded="false" class="submilestone-data">
                 <p>Capacity: #to be update onload#</p>
                 <table class="table table-striped table-hover table-bordered">
                     <thead>
@@ -43,18 +43,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><a href="#">Id</a></td>
-                            <td>Story 1</td>
-                            <td>5.0</td>
-                            <td>Epic A</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">Id</a></td>
-                            <td>Story 2</td>
-                            <td>1.0</td>
-                            <td>Epic A</td>
-                        </tr>
                     </tbody>
                 </table>
             </div>

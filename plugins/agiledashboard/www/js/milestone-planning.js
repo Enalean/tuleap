@@ -23,23 +23,38 @@
 
 (function($) {
         $(function() {
-            var view = {
-                url: '#',
-                id: 123,
-                title: 'bla',
-                remaining_effort: 12,
-                parent_title: 'Epic ploc',
-                parent_url: '#'
-            };
-            var template = '<tr><td><a href="{{url}}">{{id}}/a></td><td>{{title}}</td><td>{{remaining_effort}}</td><td><a href="{{#parent_url}}">{{parent}}</a></td></tr>';
-
             $("#accordion > div").accordion({
                 header: "h4",
                 collapsible: true,
                 active: false,
                 beforeActivate: function (event, ui) {
-                    //$('#bla').append(Mustache.render(template, view));
+                    var data_container = $(this).find(".submilestone-data");
+
+                    if (data_container.attr("data-loaded") == "false") {
+                        fetchSubmilestoneData(data_container);
+                    }       
                 }
             });
+
+            function fetchSubmilestoneData(data_container) {
+                jQuery.ajax({
+                    url : "/plugins/agiledashboard/?action=submilestonedata",
+                    dataType : "html",
+                    context : data_container,
+                    success : function(data) {
+                        setSubmilestoneDataLoaded(data_container);
+                        data_container.find('tbody').append(data);
+                    },
+                    error : function(data) {
+                        console.log('error', data);
+                    }
+                })
+            };
+
+            function setSubmilestoneDataLoaded(data_container) {
+                data_container.attr("data-loaded", "true")
+            };
         })
     })(jQuery);
+
+

@@ -110,6 +110,15 @@ class AgileDashboardRouter {
             case 'import':
                 $this->executeAction($agile_dashboard_xml_controller, 'import');
                 break;
+            case 'submilestonedata' :
+                echo
+                '<tr>
+                    <td><a href="#">Id</a></td>
+                    <td>Story 1</td>
+                    <td>5.0</td>
+                    <td>Epic A</td>
+                </tr>';
+                break;
             case 'index':
             default:
                 $this->renderAction($controller, 'index', $request);
