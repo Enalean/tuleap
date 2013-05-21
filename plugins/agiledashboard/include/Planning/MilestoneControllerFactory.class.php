@@ -48,14 +48,16 @@ class Planning_MilestoneControllerFactory {
         Planning_MilestoneFactory $milestone_factory,
         PlanningFactory $planning_factory,
         Tracker_HierarchyFactory $hierarchy_factory,
-        AgileDashboard_Milestone_Pane_ContentPresenterBuilder $content_presenter_builder
+        AgileDashboard_Milestone_Pane_ContentPresenterBuilder $content_presenter_builder,
+        AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder $planning_presenter_builder
     ) {
-        $this->plugin                    = $plugin;
-        $this->project_manager           = $project_manager;
-        $this->milestone_factory         = $milestone_factory;
-        $this->planning_factory          = $planning_factory;
-        $this->hierarchy_factory         = $hierarchy_factory;
-        $this->content_presenter_builder = $content_presenter_builder;
+        $this->plugin                     = $plugin;
+        $this->project_manager            = $project_manager;
+        $this->milestone_factory          = $milestone_factory;
+        $this->planning_factory           = $planning_factory;
+        $this->hierarchy_factory          = $hierarchy_factory;
+        $this->content_presenter_builder  = $content_presenter_builder;
+        $this->planning_presenter_builder = $planning_presenter_builder;
     }
 
     /**
@@ -73,6 +75,7 @@ class Planning_MilestoneControllerFactory {
             $this->getViewBuilder($request),
             $this->hierarchy_factory,
             $this->content_presenter_builder,
+            $this->planning_presenter_builder,
             $this->plugin->getThemePath()
         );
     }

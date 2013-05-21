@@ -41,6 +41,9 @@ class Planning_MilestonePaneFactory {
     /** @var AgileDashboard_Milestone_Pane_ContentPresenterBuilder */
     private $content_presenter_builder;
 
+    /** @var AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder */
+    private $planning_presenter_builder;
+
     /** @var Planning_MilestoneLegacyPlanningPaneFactory */
     private $legacy_planning_pane_factory;
 
@@ -48,11 +51,13 @@ class Planning_MilestonePaneFactory {
         Codendi_Request $request,
         Planning_MilestoneFactory $milestone_factory,
         AgileDashboard_Milestone_Pane_ContentPresenterBuilder $content_presenter_builder,
+        AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder $planning_presenter_builder,
         Planning_MilestoneLegacyPlanningPaneFactory $legacy_planning_pane_factory
     ) {
         $this->request                      = $request;
         $this->milestone_factory            = $milestone_factory;
         $this->content_presenter_builder    = $content_presenter_builder;
+        $this->planning_presenter_builder   = $planning_presenter_builder;
         $this->legacy_planning_pane_factory = $legacy_planning_pane_factory;
     }
 
@@ -126,14 +131,9 @@ class Planning_MilestonePaneFactory {
         $pane_info = new AgileDashboard_Milestone_Pane_Planning_PaneInfo($milestone);
         if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_Planning_PaneInfo::IDENTIFIER) {
             $pane_info->setActive(true);
-            $backlog_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
-            $submilestone_collection = new AgileDashboard_Milestone_Pane_Planning_SubMilestonePresenterCollection();
-            $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_SubMilestonePresenter('Sprint 40'));
-            $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_SubMilestonePresenter('Sprint 39'));
-            $presenter = new AgileDashboard_Milestone_Pane_Planning_Presenter($backlog_collection, $submilestone_collection);
             $this->active_pane = new AgileDashboard_Milestone_Pane_Planning_Pane(
                 $pane_info,
-                $presenter
+                $this->planning_presenter_builder->getMilestonePlanningPresenter($this->request->getCurrentUser(), $milestone)
             );
         }
 
