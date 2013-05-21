@@ -44,6 +44,7 @@
                     success : function(data) {
                         setSubmilestoneDataLoaded(data_container);
                         data_container.find('tbody').append(data);
+                        updateSubmilestoneCapacity(data_container);
                     },
                     error : function(data) {
                         console.log('error', data);
@@ -53,8 +54,21 @@
 
             function setSubmilestoneDataLoaded(data_container) {
                 data_container.attr("data-loaded", "true")
-            };
+            };       
         })
+        
+        function updateSubmilestoneCapacity(data_container) {
+            var capacity = 0,
+                capacities = data_container.find(".submilestone-element-capacity");
+
+            capacities.each(function(){
+                var element_capacity = parseFloat($(this).html());
+                if (! isNaN(element_capacity)) {
+                    capacity += parseFloat(element_capacity);
+                }
+            })
+            data_container.find(".submilestone-capacity").html(capacity);
+        }
     })(jQuery);
 
 

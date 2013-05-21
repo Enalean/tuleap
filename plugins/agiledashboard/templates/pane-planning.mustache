@@ -30,9 +30,12 @@
     <div id="accordion">
         {{#submilestone_collection}}
         <div>
-            <h4><a href="{{milestone_url}}">{{milestone_title}}</a> {{#display_milestone_dates}}{{start_date}} - {{end_date}}{{/display_milestone_dates}} - {{status}}</h4>
+            <h4>
+                <a href="{{milestone_url}}">{{milestone_title}}</a>
+                {{#display_milestone_dates}}{{start_date}} - {{end_date}}{{/display_milestone_dates}} - {{status}}
+            </h4>
             <div data-loaded="false" class="submilestone-data">
-                <p>Capacity: #to be update onload#</p>
+                <p>Capacity: <span class="submilestone-capacity"></span></p>
                 <table class="table table-striped table-hover table-bordered">
                     <thead>
                         <tr>
