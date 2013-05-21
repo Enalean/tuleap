@@ -25,6 +25,17 @@
 class AgileDashboard_Milestone_Pane_ContentRowPresenterCollection implements Iterator, Countable {
     private $rows = array();
 
+    /** @var string */
+    private $parent_item_name = '';
+
+    public function getParentItemName() {
+        return $this->parent_item_name;
+    }
+
+    public function setParentItemName($name) {
+        $this->parent_item_name = $name;
+    }
+
     public function push(AgileDashboard_Milestone_Pane_ContentRowPresenter $row) {
         $this->rows[] = $row;
     }

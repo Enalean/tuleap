@@ -54,10 +54,12 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
 
         $this->initBacklogSettings($user, $milestone);
 
+        $todo_collection = $this->collection_factory->getTodoCollection($user, $milestone, $backlog_strategy, $this->redirect_to_self);
+
         return new AgileDashboard_Milestone_Pane_ContentPresenter(
-            $this->collection_factory->getTodoCollection($user, $milestone, $backlog_strategy, $this->redirect_to_self),
+            $todo_collection,
             $this->collection_factory->getDoneCollection($user, $milestone, $backlog_strategy, $this->redirect_to_self),
-            $this->parent_item_name,
+            $todo_collection->getParentItemName(),
             $backlog_strategy->getItemName(),
             $this->can_add_backlog_item,
             $this->new_backlog_item_url
