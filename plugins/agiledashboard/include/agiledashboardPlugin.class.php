@@ -259,7 +259,8 @@ class AgileDashboardPlugin extends Plugin {
         $backlog_row_collection_factory = new AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
-            Tracker_FormElementFactory::instance()
+            Tracker_FormElementFactory::instance(),
+            $this->getMilestoneFactory()
         );
 
         return new AgileDashboard_Milestone_Pane_ContentPresenterBuilder(
