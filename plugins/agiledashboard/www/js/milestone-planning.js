@@ -34,6 +34,7 @@ tuleap.agiledashboard.Planning = Class.create({
             header: "h4",
             collapsible: true,
             active: false,
+            heightStyle: "content",
             beforeActivate: function (event, ui) {
                 var data_container = $(this).find(".submilestone-data");
 
