@@ -35,12 +35,12 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
 
     public function getMilestonePlanningPresenter(PFUser $user, Planning_ArtifactMilestone $milestone) {
         $backlog_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
-            //this->collection_factory->getUnplannedOpenCollection(
-            //   $user,
-            //   $milestone,
-            //   $this->backlog_strategy,
-            //   $this->redirect_to_self
-            //,
+        /* $this->collection_factory->getUnplannedOpenCollection(
+            $user,
+            $milestone,
+            $this->backlog_strategy,
+            $this->redirect_to_self
+        ); */
         return new AgileDashboard_Milestone_Pane_Planning_Presenter(
             $backlog_collection,
             $this->getSubmilestoneCollection()

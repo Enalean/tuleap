@@ -23,14 +23,27 @@
  */
 
 /**
- * I am the backlog of the current milestone
+ * I retrieve the content of the backlog
  */
-class AgileDashboard_Milestone_Pane_ContentSelfBacklogStrategy extends AgileDashboard_Milestone_Pane_ContentBacklogStrategy {
+abstract class AgileDashboard_Milestone_Pane_BacklogStrategy {
+
+    /** @var Tracker_Artifact[] */
+    protected $milestone_backlog_artifacts;
+
+    /** @var string */
+    protected $backlogitem_name;
+
+    public function __construct($milestone_backlog_artifacts, $backlogitem_name) {
+        $this->milestone_backlog_artifacts = $milestone_backlog_artifacts;
+        $this->backlogitem_name            = $backlogitem_name;
+    }
+
+    /** @return string */
+    public function getItemName() {
+        return $this->backlogitem_name;
+    }
 
     /** @return Tracker_Artifact[] */
-    public function getArtifacts(PFUser $user) {
-        return $this->milestone_backlog_artifacts;
-    }
+    public abstract function getArtifacts(PFUser $user);
 }
-
 ?>
