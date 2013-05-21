@@ -229,6 +229,10 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
         $sub_milestones     = $this->milestone_factory->getSubMilestones($user, $milestone);
         $sub_milestones_ids = array_map(array($this, 'extractArtifactId'), $sub_milestones);
 
+        if (! $sub_milestones_ids) {
+            return array();
+        }
+
         return $this->dao->getPlannedItemIds($sub_milestones_ids);
     }
 
