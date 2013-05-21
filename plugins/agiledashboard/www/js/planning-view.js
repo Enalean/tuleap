@@ -18,8 +18,8 @@
  */
 
 document.observe('dom:loaded', function () {
-    var planner = $('planner');
-    if (planner) {
+    var planner = $('planning');
+    if (planner) {   
         new tuleap.agiledashboard.Planning(planner);
     }
 

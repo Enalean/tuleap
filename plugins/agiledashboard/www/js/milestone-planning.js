@@ -20,47 +20,58 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+var tuleap = tuleap || { };
+tuleap.agiledashboard = tuleap.agiledashboard || { };
 
-(function($) {
-        $(function() {
-            $("#accordion > div").accordion({
-                header: "h4",
-                collapsible: true,
-                active: false,
-                beforeActivate: function (event, ui) {
-                    var data_container = $(this).find(".submilestone-data");
+tuleap.agiledashboard.Planning = Class.create({
+    initialize: function (container) {
+        var self = this;
+        (function($) {
+            $(function() {
+                $("#accordion > div").accordion({
+                    header: "h4",
+                    collapsible: true,
+                    active: false,
+                    beforeActivate: function (event, ui) {
+                        var data_container = $(this).find(".submilestone-data");
 
-                    if (data_container.attr("data-loaded") == "false") {
-                        fetchSubmilestoneData(data_container);
-                    }       
-                }
-            });
-
-            function fetchSubmilestoneData(data_container) {
-                jQuery.ajax({
-                    url : "/plugins/agiledashboard/?action=submilestonedata",
-                    dataType : "html",
-                    data : {
-                        submilestone_id : data_container.attr('data-submilestone-id')
-                    },
-                    method : "get",
-                    success : function(data) {
-                        setSubmilestoneDataLoaded(data_container);
-                        data_container.find('tbody').append(data);
-                        updateSubmilestoneCapacity(data_container);
-                    },
-                    error : function(data) {
-                        console.log('error', data);
+                        if (data_container.attr("data-loaded") == "false") {
+                            fetchSubmilestoneData(data_container);
+                        }
                     }
-                })
-            };
+                });
 
-            function setSubmilestoneDataLoaded(data_container) {
-                data_container.attr("data-loaded", "true")
-            };       
-        })
-        
-        function updateSubmilestoneCapacity(data_container) {
+                function fetchSubmilestoneData(data_container) {
+                    jQuery.ajax({
+                        url : "/plugins/agiledashboard/?action=submilestonedata",
+                        dataType : "html",
+                        data : {
+                            submilestone_id : data_container.attr('data-submilestone-id')
+                        },
+                        method : "get",
+                        success : function(data) {
+                            setSubmilestoneDataLoaded(data_container);
+                            data_container.find('tbody').append(data);
+                            self.updateSubmilestoneCapacity(data_container);
+                            self.makeSubmilestonesSortable(data_container);
+                        },
+                        error : function(data) {
+                            console.log('error', data);
+                        }
+                    })
+                };
+
+                function setSubmilestoneDataLoaded(data_container) {
+                    data_container.attr("data-loaded", "true")
+                };
+            })
+
+            
+        })(jQuery);
+    },
+    
+    updateSubmilestoneCapacity : function(data_container) {
+        (function($) {
             var capacity = 0,
                 capacities = data_container.find(".submilestone-element-capacity");
 
@@ -71,7 +82,36 @@
                 }
             })
             data_container.find(".submilestone-capacity").html(capacity);
-        }
-    })(jQuery);
+        })(jQuery);
+    },
+    
+    makeSubmilestonesSortable : function(data_container) {
+        (function($) {
+            data_container.find(".submilestone-element").sortable({
+                revert: true,
+                axis: 'y',
+                forcePlaceholderSize: true,
+                containment: "parent",
+                helper: function (e, tr) {
+                    var $originals = tr.children();
+                    var $helper = tr.clone();
+                    $helper.children().each(function (index) {
+                        // Set helper cell sizes to match the original size
+                        $(this).width($originals.eq(index).width());
+                    });
+
+                    return $helper;
+                },
+                stop: function (event, ui) {
+//                    sort(ui.item);
+                },
+                cursor: 'move'
+            });
+        })(jQuery);
+    }
+    
+    
+});
+
 
 
