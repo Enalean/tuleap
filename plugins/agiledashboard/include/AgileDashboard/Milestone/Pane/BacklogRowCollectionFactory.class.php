@@ -127,7 +127,7 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
         $parents         = $this->artifact_factory->getParents($backlog_item_ids);
         $parent_tracker  = $this->getParentTracker($parents);
         if ($parent_tracker) {
-            $this->parent_item_name = $parent_tracker->getName();
+            $this->setParentItemName($parent_tracker->getName());
             if ($this->userCanReadBacklogTitleField($user, $parent_tracker)) {
                 $this->artifact_factory->setTitles($parents);
             } else {
@@ -138,6 +138,12 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
         }
 
         return $parents;
+    }
+
+    private function setParentItemName($name) {
+        $this->todo_collection->setParentItemName($name);
+        $this->done_collection->setParentItemName($name);
+        $this->unplanned_open_collection->setParentItemName($name);
     }
 
     private function getParentTracker(array $artifacts) {

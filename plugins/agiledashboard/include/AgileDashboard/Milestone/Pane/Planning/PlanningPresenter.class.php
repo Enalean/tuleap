@@ -29,11 +29,15 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
     private $submilestone_collection;
 
     public function __construct(
-            AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $backlog_collection,
-            AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection $submilestone_collection
-            ) {
+        AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $backlog_collection,
+        AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection $submilestone_collection,
+        $parent_item_type,
+        $backlog_item_type
+    ) {
         $this->backlog_collection      = $backlog_collection;
         $this->submilestone_collection = $submilestone_collection;
+        $this->parent_item_type        = $parent_item_type;
+        $this->backlog_item_type       = $backlog_item_type;
     }
 
     public function title() {
