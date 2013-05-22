@@ -257,7 +257,7 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     private function getContentPresenterBuilder() {
-        return new AgileDashboard_Milestone_Pane_ContentPresenterBuilder(
+        return new AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder(
             $this->getBacklogStrategyFactory(),
             $this->getBacklogRowCollectionFactory()
         );

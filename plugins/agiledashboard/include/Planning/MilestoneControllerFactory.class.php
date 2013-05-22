@@ -39,7 +39,7 @@ class Planning_MilestoneControllerFactory {
     /** @var Tracker_HierarchyFactory */
     private $hierarchy_factory;
 
-    /** @var AgileDashboard_Milestone_Pane_ContentPresenterBuilder */
+    /** @var AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder */
     private $content_presenter_builder;
 
     public function __construct(
@@ -48,7 +48,7 @@ class Planning_MilestoneControllerFactory {
         Planning_MilestoneFactory $milestone_factory,
         PlanningFactory $planning_factory,
         Tracker_HierarchyFactory $hierarchy_factory,
-        AgileDashboard_Milestone_Pane_ContentPresenterBuilder $content_presenter_builder,
+        AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder $content_presenter_builder,
         AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder $planning_presenter_builder
     ) {
         $this->plugin                     = $plugin;

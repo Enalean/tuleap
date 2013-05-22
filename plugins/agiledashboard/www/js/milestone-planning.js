@@ -33,6 +33,7 @@ tuleap.agiledashboard.Planning = Class.create({
         $("#accordion > div").accordion({
             header: "h4",
             collapsible: true,
+            animate: false,
             active: false,
             heightStyle: "content",
             beforeActivate: function (event, ui) {

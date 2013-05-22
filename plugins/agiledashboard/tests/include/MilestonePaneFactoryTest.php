@@ -60,7 +60,7 @@ class Planning_MilestonePaneFactory_AvailableMilestonesTest extends TuleapTestCa
         $this->pane_factory = new Planning_MilestonePaneFactory4Tests(
             $this->request,
             $this->milestone_factory,
-            mock('AgileDashboard_Milestone_Pane_ContentPresenterBuilder'),
+            mock('AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder'),
             mock('AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder'),
             mock('Planning_MilestoneLegacyPlanningPaneFactory')
         );
@@ -81,7 +81,7 @@ class Planning_MilestonePaneFactory_AvailableMilestonesTest extends TuleapTestCa
         $this->pane_factory = new Planning_MilestonePaneFactory4Tests(
             $this->request,
             $this->milestone_factory,
-            mock('AgileDashboard_Milestone_Pane_ContentPresenterBuilder'),
+            mock('AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder'),
             mock('AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder'),
             mock('Planning_MilestoneLegacyPlanningPaneFactory')
         );
