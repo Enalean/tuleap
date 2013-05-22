@@ -25,7 +25,7 @@
 /**
  * I build collections of BacklogRow
  */
-class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
+class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
 
     /** @var AgileDashboard_BacklogItemDao */
     private $dao;
@@ -36,13 +36,13 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;
 
-    /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
+    /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
     private $todo_collection;
 
-    /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
+    /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
     private $done_collection;
 
-    /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
+    /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
     private $unplanned_open_collection;
 
     /** @var Planning_MilestoneFactory */
@@ -59,16 +59,16 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
         $this->form_element_factory = $form_element_factory;
         $this->milestone_factory    = $milestone_factory;
 
-        $this->todo_collection           = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
-        $this->done_collection           = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
-        $this->unplanned_open_collection = new AgileDashboard_Milestone_Pane_ContentRowPresenterCollection();
+        $this->todo_collection           = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
+        $this->done_collection           = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
+        $this->unplanned_open_collection = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
         $this->is_initialized            = false;
     }
 
     public function getTodoCollection(
         PFUser $user,
         Planning_ArtifactMilestone $milestone,
-        AgileDashboard_Milestone_Pane_BacklogStrategy $backlog_strategy,
+        AgileDashboard_Milestone_Backlog_BacklogStrategy $backlog_strategy,
         $redirect_to_self
     ) {
         $this->initCollections($user, $milestone, $backlog_strategy, $redirect_to_self);
@@ -79,7 +79,7 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
     public function getDoneCollection(
         PFUser $user,
         Planning_ArtifactMilestone $milestone,
-        AgileDashboard_Milestone_Pane_BacklogStrategy $backlog_strategy,
+        AgileDashboard_Milestone_Backlog_BacklogStrategy $backlog_strategy,
         $redirect_to_self
     ) {
         $this->initCollections($user, $milestone, $backlog_strategy, $redirect_to_self);
@@ -90,7 +90,7 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
     public function getUnplannedOpenCollection(
         PFUser $user,
         Planning_ArtifactMilestone $milestone,
-        AgileDashboard_Milestone_Pane_BacklogStrategy $backlog_strategy,
+        AgileDashboard_Milestone_Backlog_BacklogStrategy $backlog_strategy,
         $redirect_to_self
     ) {
         $this->initCollections($user, $milestone, $backlog_strategy, $redirect_to_self);
@@ -101,7 +101,7 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory {
     private function initCollections(
         PFUser $user,
         Planning_ArtifactMilestone $milestone,
-        AgileDashboard_Milestone_Pane_BacklogStrategy $backlog_strategy,
+        AgileDashboard_Milestone_Backlog_BacklogStrategy $backlog_strategy,
         $redirect_to_self
     ) {
         if ($this->is_initialized) {

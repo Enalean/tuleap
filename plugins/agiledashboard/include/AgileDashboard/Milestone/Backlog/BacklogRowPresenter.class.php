@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface AgileDashboard_Milestone_Pane_ContentRowPresenter {
+interface AgileDashboard_Milestone_Backlog_BacklogRowPresenter {
 
     public function id();
 

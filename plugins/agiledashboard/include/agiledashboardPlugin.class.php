@@ -264,7 +264,7 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     private function getBacklogStrategyFactory() {
-        return new AgileDashboard_Milestone_Pane_BacklogStrategyFactory(
+        return new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
             PlanningFactory::build()
@@ -279,7 +279,7 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     private function getBacklogRowCollectionFactory() {
-        return new AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory(
+        return new AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
             Tracker_FormElementFactory::instance(),
