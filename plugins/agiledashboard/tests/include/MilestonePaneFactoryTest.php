@@ -52,6 +52,10 @@ class Planning_MilestonePaneFactory_AvailableMilestonesTest extends TuleapTestCa
 
         $this->current_user = aUser()->build();
         $this->request = aRequest()->withUser($this->current_user)->build();
+
+        $this->pane_presenter_builder_factory = mock('AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory');
+        stub($this->pane_presenter_builder_factory)->getContentPresenterBuilder()->returns(mock('AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder'));
+        stub($this->pane_presenter_builder_factory)->getPlanningPresenterBuilder()->returns(mock('AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder'));
     }
 
     public function itDisplaysOnlySiblingsMilestones() {
@@ -60,8 +64,7 @@ class Planning_MilestonePaneFactory_AvailableMilestonesTest extends TuleapTestCa
         $this->pane_factory = new Planning_MilestonePaneFactory4Tests(
             $this->request,
             $this->milestone_factory,
-            mock('AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder'),
-            mock('AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder'),
+            $this->pane_presenter_builder_factory,
             mock('Planning_MilestoneLegacyPlanningPaneFactory')
         );
 
@@ -81,8 +84,7 @@ class Planning_MilestonePaneFactory_AvailableMilestonesTest extends TuleapTestCa
         $this->pane_factory = new Planning_MilestonePaneFactory4Tests(
             $this->request,
             $this->milestone_factory,
-            mock('AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder'),
-            mock('AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder'),
+            $this->pane_presenter_builder_factory,
             mock('Planning_MilestoneLegacyPlanningPaneFactory')
         );
 
