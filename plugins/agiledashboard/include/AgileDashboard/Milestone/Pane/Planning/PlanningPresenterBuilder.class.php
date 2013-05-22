@@ -32,10 +32,12 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $strategy_factory,
-        AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory $collection_factory
+        AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory $collection_factory,
+        Planning_MilestoneFactory $milestone_factory
     ) {
         $this->strategy_factory   = $strategy_factory;
         $this->collection_factory = $collection_factory;
+        $this->milestone_factory  = $milestone_factory;
     }
 
     public function getMilestonePlanningPresenter(PFUser $user, Planning_ArtifactMilestone $milestone) {
@@ -51,16 +53,20 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
         );
         return new AgileDashboard_Milestone_Pane_Planning_PlanningPresenter(
             $backlog_collection,
-            $this->getSubmilestoneCollection(),
+            $this->getSubmilestoneCollection($user, $milestone),
             $backlog_collection->getParentItemName(),
             $backlog_strategy->getItemName()
         );
     }
 
-    private function getSubmilestoneCollection() {
+    private function getSubmilestoneCollection(PFUser $user, Planning_ArtifactMilestone $milestone) {
         $submilestone_collection = new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection();
-        $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter('Sprint 40'));
-        $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter('Sprint 39'));
+
+        $submilestones = $this->milestone_factory->getSubMilestones($user, $milestone);
+        foreach ($submilestones as $submilestone) {
+            $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter($submilestone->getArtifactTitle()));
+        }
+
         return $submilestone_collection;
     }
 }
