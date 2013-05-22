@@ -59,7 +59,7 @@ class AgileDashboard_Milestone_Backlog_BacklogStrategyFactory {
     public function getSelfBacklogStrategy(Planning_ArtifactMilestone $milestone) {
         return new AgileDashboard_Milestone_Backlog_SelfBacklogStrategy(
             $this->getBacklogArtifacts($milestone),
-            $milestone->getPlanning()->getBacklogTracker()
+            $milestone->getPlanning()->getBacklogTracker()->getName()
         );
     }
 
