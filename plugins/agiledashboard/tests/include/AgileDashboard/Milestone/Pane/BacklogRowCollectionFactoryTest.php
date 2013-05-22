@@ -24,7 +24,7 @@
 
 require_once dirname(__FILE__).'/../../../../common.php';
 
-class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactoryTest extends TuleapTestCase {
+class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends TuleapTestCase {
 
     /** @var AgileDashboard_BacklogItemDao */
     private $dao;
@@ -66,7 +66,7 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactoryTest extends Tule
         $this->milestone = aMilestone()->withArtifact($artifact)->withPlanning($planning)->build();
 
         $this->factory = partial_mock(
-            'AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory',
+            'AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory',
             array(
                 'userCanReadBacklogTitleField',
                 'userCanReadBacklogStatusField',
@@ -84,7 +84,7 @@ class AgileDashboard_Milestone_Pane_BacklogRowCollectionFactoryTest extends Tule
         $story1                 = anArtifact()->withId($this->open_story_id)->build();
         $story2                 = anArtifact()->withId($this->open_unplanned_story_id)->build();
         $story3                 = anArtifact()->withId($this->closed_story_id)->build();
-        $this->backlog_strategy = stub('AgileDashboard_Milestone_Pane_BacklogStrategy')->getArtifacts($this->user)->returns(array($story1, $story2, $story3));
+        $this->backlog_strategy = stub('AgileDashboard_Milestone_Backlog_BacklogStrategy')->getArtifacts($this->user)->returns(array($story1, $story2, $story3));
         $this->redirect_to_self = 'whatever';
 
 

@@ -25,7 +25,7 @@
 /**
  * I am the backlog of the first descendant of the current milestone
  */
-class AgileDashboard_Milestone_Pane_DescendantBacklogStrategy extends AgileDashboard_Milestone_Pane_BacklogStrategy {
+class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDashboard_Milestone_Backlog_BacklogStrategy {
 
     /** @var AgileDashboard_BacklogItemDao */
     private $dao;

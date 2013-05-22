@@ -25,7 +25,7 @@
 /**
  * I am the backlog of the current milestone
  */
-class AgileDashboard_Milestone_Pane_SelfBacklogStrategy extends AgileDashboard_Milestone_Pane_BacklogStrategy {
+class AgileDashboard_Milestone_Backlog_SelfBacklogStrategy extends AgileDashboard_Milestone_Backlog_BacklogStrategy {
 
     /** @return Tracker_Artifact[] */
     public function getArtifacts(PFUser $user) {
