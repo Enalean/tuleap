@@ -33,12 +33,17 @@ class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory {
     /** @var AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory */
     private $row_collection_factory;
 
+    /** @var Planning_MilestoneFactory */
+    private $milestone_factory;
+
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $strategy_factory,
-        AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory $row_collection_factory
+        AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory $row_collection_factory,
+        Planning_MilestoneFactory $milestone_factory
     ) {
         $this->strategy_factory       = $strategy_factory;
         $this->row_collection_factory = $row_collection_factory;
+        $this->milestone_factory      = $milestone_factory;
     }
 
     public function getContentPresenterBuilder() {
@@ -51,7 +56,8 @@ class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory {
     public function getPlanningPresenterBuilder() {
         return new AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder(
             $this->strategy_factory,
-            $this->row_collection_factory
+            $this->row_collection_factory,
+            $this->milestone_factory
         );
     }
 
