@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Pane_ContentRowPresenter {
+class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_BacklogRowPresenter {
     /** @var Int */
     private $id;
 

@@ -223,8 +223,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->getMilestoneFactory(),
             $this->getPlanningFactory(),
             $this->getHierarchyFactory(),
-            $this->getContentPresenterBuilder(),
-            $this->getPlanningPresenterBuilder()
+            $this->getPanePresenterBuilderFactory()
         );
     }
 
@@ -256,34 +255,27 @@ class AgileDashboardPlugin extends Plugin {
         return Tracker_HierarchyFactory::instance();
     }
 
-    private function getContentPresenterBuilder() {
-        return new AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder(
-            $this->getBacklogStrategyFactory(),
-            $this->getBacklogRowCollectionFactory()
-        );
-    }
-
     private function getBacklogStrategyFactory() {
-        return new AgileDashboard_Milestone_Pane_BacklogStrategyFactory(
+        return new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
             PlanningFactory::build()
         );
     }
 
-    private function getPlanningPresenterBuilder() {
-        return new AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder(
-            $this->getBacklogStrategyFactory(),
-            $this->getBacklogRowCollectionFactory()
-        );
-    }
-
     private function getBacklogRowCollectionFactory() {
-        return new AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory(
+        return new AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
             Tracker_FormElementFactory::instance(),
             $this->getMilestoneFactory()
+        );
+    }
+
+    private function getPanePresenterBuilderFactory() {
+        return new AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory(
+            $this->getBacklogStrategyFactory(),
+            $this->getBacklogRowCollectionFactory()
         );
     }
 

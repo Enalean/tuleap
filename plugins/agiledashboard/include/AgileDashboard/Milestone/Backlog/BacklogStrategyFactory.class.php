@@ -23,9 +23,9 @@
  */
 
 /**
- * I build AgileDashboard_Milestone_Pane_BacklogStrategy
+ * I build AgileDashboard_Milestone_Backlog_BacklogStrategy
  */
-class AgileDashboard_Milestone_Pane_BacklogStrategyFactory {
+class AgileDashboard_Milestone_Backlog_BacklogStrategyFactory {
 
     /** @var AgileDashboard_BacklogItemDao */
     private $dao;
@@ -47,7 +47,7 @@ class AgileDashboard_Milestone_Pane_BacklogStrategyFactory {
     }
 
     /**
-     * @return AgileDashboard_Milestone_Pane_BacklogStrategy
+     * @return AgileDashboard_Milestone_Backlog_BacklogStrategy
      */
     public function getBacklogStrategy(Planning_ArtifactMilestone $milestone) {
         $milestone_backlog_artifacts = $this->getBacklogArtifacts($milestone);
@@ -61,7 +61,7 @@ class AgileDashboard_Milestone_Pane_BacklogStrategyFactory {
                 $first_child_backlog_tracker = $first_child_planning->getBacklogTracker();
 
                 if ($first_child_backlog_tracker != $backlog_tracker) {
-                    return new AgileDashboard_Milestone_Pane_DescendantBacklogStrategy(
+                    return new AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy(
                         $milestone_backlog_artifacts,
                         $first_child_backlog_tracker->getName(),
                         $this->dao
@@ -70,7 +70,7 @@ class AgileDashboard_Milestone_Pane_BacklogStrategyFactory {
             }
         }
 
-        return new AgileDashboard_Milestone_Pane_SelfBacklogStrategy(
+        return new AgileDashboard_Milestone_Backlog_SelfBacklogStrategy(
             $milestone_backlog_artifacts,
             $backlog_tracker->getName()
         );

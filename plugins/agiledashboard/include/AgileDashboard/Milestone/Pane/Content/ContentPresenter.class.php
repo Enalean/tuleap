@@ -23,10 +23,10 @@
  */
 
 class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
-    /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
+    /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
     private $todo_collection;
 
-    /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
+    /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
     private $done_collection;
 
     /** @var String */
@@ -39,8 +39,8 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     private $submit_url;
 
     public function __construct(
-        AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $todo,
-        AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $done,
+        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
+        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done,
         $parent_item_type,
         $backlog_item_type,
         $can_add_backlog_item_type,
@@ -54,11 +54,11 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
         $this->submit_url                = $submit_url;
     }
 
-    public function setTodoCollection(AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $todo) {
+    public function setTodoCollection(AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo) {
         $this->todo_collection = $todo;
     }
 
-    public function setDoneCollection(AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $done) {
+    public function setDoneCollection(AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done) {
         $this->done_collection = $done;
     }
 

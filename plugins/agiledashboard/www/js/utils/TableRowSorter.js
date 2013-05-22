@@ -20,18 +20,12 @@
 var tuleap = tuleap || { };
 tuleap.agiledashboard = tuleap.agiledashboard || { };
 
-tuleap.agiledashboard.TableRowSorter = Class.create({
-    rowIdentifier : "",
-    jQuery : jQuery,
+(function ($) {
+    tuleap.agiledashboard.TableRowSorter = function (params) {
+        var container               = params.rowContainer,
+            rowIdentifier           = params.rowIdentifier;
 
-    initialize: function (params) {
-        var container = params.rowContainer,
-            self      = this,
-            $         = this.jQuery;
-
-        this.rowIdentifier = params.rowIdentifier;
-
-        $(container).sortable({
+        container.sortable({
             revert: true,
             axis: 'y',
             forcePlaceholderSize: true,
@@ -47,48 +41,37 @@ tuleap.agiledashboard.TableRowSorter = Class.create({
                 return $helper;
             },
             stop: function (event, ui) {
-                self.sort(ui.item);
+                sort(ui.item, rowIdentifier);
             },
             cursor: 'move'
         });
 
         container.find('tr, td').disableSelection();
-        this.establishWidthOfCellsToBeConstitentWhileDragging(container);  
-    },
-    
-    establishWidthOfCellsToBeConstitentWhileDragging : function(rows) {
-        var $ = this.jQuery;
+        establishWidthOfCellsToBeConstitentWhileDragging(container);
+    }
 
-        rows.children().each(function() {
-            $(this).children().each(function() {
-                $(this).width($(this).width());
-            });
-        });
-    },
-
-    sort : function(item) {
-        var $ = this.jQuery,
-            item_id = $(item).attr(this.rowIdentifier),
-            next_id = $(item).next().attr(this.rowIdentifier),
-            prev_id = $(item).prev().attr(this.rowIdentifier);
+    function sort(item, rowIdentifier) {
+        var item_id = $(item).attr(rowIdentifier),
+            next_id = $(item).next().attr(rowIdentifier),
+            prev_id = $(item).prev().attr(rowIdentifier);
 
         if (next_id) {
-            this.sortHigher(item_id, next_id);
+            sortHigher(item_id, next_id);
         } else if (prev_id) {
-            this.sortLesser(item_id, prev_id);
+            sortLesser(item_id, prev_id);
         }
-    },
+    }
 
-    sortHigher : function(source_id, target_id) {
-        this.requestSort('higher-priority-than', source_id, target_id);
-    },
+    function sortHigher(source_id, target_id) {
+        requestSort('higher-priority-than', source_id, target_id);
+    }
 
-     sortLesser : function(source_id, target_id) {
-        this.requestSort('lesser-priority-than', source_id, target_id);
-    },
+    function sortLesser(source_id, target_id) {
+        requestSort('lesser-priority-than', source_id, target_id);
+    }
 
-     requestSort : function(action, source_id, target_id) {
-        this.jQuery.ajax({
+    function requestSort(action, source_id, target_id) {
+        $.ajax({
             url  : codendi.tracker.base_url,
             data : {
                 "func"      : action,
@@ -99,4 +82,12 @@ tuleap.agiledashboard.TableRowSorter = Class.create({
         });
     }
 
-});
+    function establishWidthOfCellsToBeConstitentWhileDragging(container) {
+        container.children().each(function() {
+            $(this).children().each(function() {
+                $(this).width($(this).width());
+            });
+        });
+    }
+
+})(jQuery);
