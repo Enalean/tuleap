@@ -61,7 +61,8 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                 url : "/plugins/agiledashboard/?action=submilestonedata",
                 dataType : "html",
                 data : {
-                    submilestone_id : data_container.attr('data-submilestone-id')
+                    planning_id: data_container.attr('data-planning-id'),
+                    aid : data_container.attr('data-submilestone-id')
                 },
                 method : "get",
                 success : function(data) {

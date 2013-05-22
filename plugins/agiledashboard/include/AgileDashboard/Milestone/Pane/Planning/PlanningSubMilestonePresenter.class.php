@@ -23,12 +23,24 @@
  */
 
 class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
+    private $id;
+    private $planning_id;
     private $milestone_title   = '';
     private $backlog_item_type = '';
     private $parent_item_type  = '';
 
-    public function __construct($milestone_title) {
-        $this->milestone_title = $milestone_title;
+    public function __construct(Planning_Milestone $milestone) {
+        $this->id              = $milestone->getArtifactId();
+        $this->planning_id     = $milestone->getPlanningId();
+        $this->milestone_title = $milestone->getArtifact()->getTitle();
+    }
+
+    public function id() {
+        return $this->id;
+    }
+
+    public function planning_id() {
+        return $this->planning_id;
     }
 
     public function milestone_title() {

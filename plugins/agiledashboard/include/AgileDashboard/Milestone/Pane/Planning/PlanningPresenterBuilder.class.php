@@ -64,7 +64,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
 
         $submilestones = $this->milestone_factory->getSubMilestones($user, $milestone);
         foreach ($submilestones as $submilestone) {
-            $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter($submilestone->getArtifactTitle()));
+            $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter($submilestone));
         }
 
         return $submilestone_collection;
