@@ -38,6 +38,9 @@ class Planning_MilestoneController extends MVC2_PluginController {
     /** @var Planning_MilestonePaneFactory */
     private $pane_factory;
 
+    /** @var Planning_MilestoneRedirectParameter */
+    private $redirect_parameter;
+
     /**
      * Instanciates a new controller.
      * 
@@ -53,8 +56,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
                                 ProjectManager            $project_manager,
                                 Planning_ViewBuilder      $view_builder,
                                 Tracker_HierarchyFactory  $hierarchy_factory,
-                                AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder $content_presenter_builder,
-                                AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder $planning_presenter_builder,
+                                AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
                                 $theme_path) {
         
         parent::__construct('agiledashboard', $request);
@@ -80,8 +82,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
         $this->pane_factory = new Planning_MilestonePaneFactory(
             $this->request,
             $this->milestone_factory,
-            $content_presenter_builder,
-            $planning_presenter_builder,
+            $pane_presenter_builder_factory,
             $legacy_planning_pane_factory
         );
     }
@@ -114,6 +115,19 @@ class Planning_MilestoneController extends MVC2_PluginController {
             return $breadcrumbs_merger;
         }
         return new BreadCrumb_NoCrumb();
+    }
+
+    public function submilestonedata() {
+        $this->backlog_row_factory = new AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory(new AgileDashboard_BacklogItemDao(), Tracker_ArtifactFactory::instance(), Tracker_FormElementFactory::instance(), $this->milestone_factory);
+        $strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(new AgileDashboard_BacklogItemDao(), Tracker_ArtifactFactory::instance(), PlanningFactory::build());
+        $backlog_strategy = $strategy_factory->getSelfBacklogStrategy($this->milestone);
+        $presenter = new AgileDashboard_SubmilestonePresenter($this->backlog_row_factory->getTodoCollection(
+            $this->getCurrentUser(),
+            $this->milestone,
+            $backlog_strategy,
+            ''
+        ));
+        $this->render('submilestone-content', $presenter);
     }
 }
 

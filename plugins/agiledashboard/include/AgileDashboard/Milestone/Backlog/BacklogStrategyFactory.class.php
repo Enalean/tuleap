@@ -50,30 +50,37 @@ class AgileDashboard_Milestone_Backlog_BacklogStrategyFactory {
      * @return AgileDashboard_Milestone_Backlog_BacklogStrategy
      */
     public function getBacklogStrategy(Planning_ArtifactMilestone $milestone) {
-        $milestone_backlog_artifacts = $this->getBacklogArtifacts($milestone);
-        $backlog_tracker_children    = $milestone->getPlanning()->getPlanningTracker()->getChildren();
-        $backlog_tracker             = $milestone->getPlanning()->getBacklogTracker();
+        if ($milestone->getPlanning()->getPlanningTracker()->getChildren()) {
+            return $this->getDescendantBacklogStrategy($milestone);
+        }
+        return $this->getSelfBacklogStrategy($milestone);
+    }
 
+    public function getSelfBacklogStrategy(Planning_ArtifactMilestone $milestone) {
+        return new AgileDashboard_Milestone_Backlog_SelfBacklogStrategy(
+            $this->getBacklogArtifacts($milestone),
+            $milestone->getPlanning()->getBacklogTracker()
+        );
+    }
+
+    public function getDescendantBacklogStrategy(Planning_ArtifactMilestone $milestone) {
+        return new AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy(
+            $this->getBacklogArtifacts($milestone),
+            $this->getFirstChildBacklogTracker($milestone)->getName(),
+            $this->dao
+        );
+    }
+
+    private function getFirstChildBacklogTracker(Planning_ArtifactMilestone $milestone) {
+        $backlog_tracker_children  = $milestone->getPlanning()->getPlanningTracker()->getChildren();
         if ($backlog_tracker_children) {
             $first_child_tracker  = current($backlog_tracker_children);
             $first_child_planning = $this->planning_factory->getPlanningByPlanningTracker($first_child_tracker);
             if ($first_child_planning) {
-                $first_child_backlog_tracker = $first_child_planning->getBacklogTracker();
-
-                if ($first_child_backlog_tracker != $backlog_tracker) {
-                    return new AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy(
-                        $milestone_backlog_artifacts,
-                        $first_child_backlog_tracker->getName(),
-                        $this->dao
-                    );
-                }
+                return $first_child_planning->getBacklogTracker();
             }
         }
-
-        return new AgileDashboard_Milestone_Backlog_SelfBacklogStrategy(
-            $milestone_backlog_artifacts,
-            $backlog_tracker->getName()
-        );
+        return null;
     }
 
     private function getBacklogArtifacts(Planning_ArtifactMilestone $milestone) {
