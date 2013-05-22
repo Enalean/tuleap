@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
+class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder {
 
     /** @var AgileDashboard_Milestone_Pane_BacklogStrategyFactory */
     private $strategy_factory;
@@ -50,13 +50,13 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
     public function getMilestoneContentPresenter(PFUser $user, Planning_ArtifactMilestone $milestone) {
         $redirect_paremeter     = new Planning_MilestoneRedirectParameter();
         $backlog_strategy       = $this->strategy_factory->getBacklogStrategy($milestone);
-        $this->redirect_to_self = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_ContentPaneInfo::IDENTIFIER);
+        $this->redirect_to_self = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_Content_ContentPaneInfo::IDENTIFIER);
 
         $this->initBacklogSettings($user, $milestone);
 
         $todo_collection = $this->collection_factory->getTodoCollection($user, $milestone, $backlog_strategy, $this->redirect_to_self);
 
-        return new AgileDashboard_Milestone_Pane_ContentPresenter(
+        return new AgileDashboard_Milestone_Pane_Content_ContentPresenter(
             $todo_collection,
             $this->collection_factory->getDoneCollection($user, $milestone, $backlog_strategy, $this->redirect_to_self),
             $todo_collection->getParentItemName(),

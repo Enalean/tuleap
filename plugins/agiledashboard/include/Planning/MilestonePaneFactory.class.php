@@ -38,7 +38,7 @@ class Planning_MilestonePaneFactory {
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
 
-    /** @var AgileDashboard_Milestone_Pane_ContentPresenterBuilder */
+    /** @var AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder */
     private $content_presenter_builder;
 
     /** @var AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder */
@@ -50,7 +50,7 @@ class Planning_MilestonePaneFactory {
     public function __construct(
         Codendi_Request $request,
         Planning_MilestoneFactory $milestone_factory,
-        AgileDashboard_Milestone_Pane_ContentPresenterBuilder $content_presenter_builder,
+        AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder $content_presenter_builder,
         AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder $planning_presenter_builder,
         Planning_MilestoneLegacyPlanningPaneFactory $legacy_planning_pane_factory
     ) {
@@ -115,10 +115,10 @@ class Planning_MilestonePaneFactory {
     }
 
     private function getContentPaneInfo(Planning_Milestone $milestone) {
-        $pane_info = new AgileDashboard_Milestone_Pane_ContentPaneInfo($milestone);
-        if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_ContentPaneInfo::IDENTIFIER) {
+        $pane_info = new AgileDashboard_Milestone_Pane_Content_ContentPaneInfo($milestone);
+        if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_Content_ContentPaneInfo::IDENTIFIER) {
             $pane_info->setActive(true);
-            $this->active_pane = new AgileDashboard_Milestone_Pane_ContentPane(
+            $this->active_pane = new AgileDashboard_Milestone_Pane_Content_ContentPane(
                 $pane_info,
                 $this->content_presenter_builder->getMilestoneContentPresenter($this->request->getCurrentUser(), $milestone)
             );

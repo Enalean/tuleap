@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_ContentPresenter {
+class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
     private $todo_collection;
 

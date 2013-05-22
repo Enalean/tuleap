@@ -53,7 +53,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
                                 ProjectManager            $project_manager,
                                 Planning_ViewBuilder      $view_builder,
                                 Tracker_HierarchyFactory  $hierarchy_factory,
-                                AgileDashboard_Milestone_Pane_ContentPresenterBuilder $content_presenter_builder,
+                                AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder $content_presenter_builder,
                                 AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder $planning_presenter_builder,
                                 $theme_path) {
         
