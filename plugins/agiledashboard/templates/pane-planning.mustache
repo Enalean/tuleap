@@ -3,6 +3,14 @@
 </div>
 <h3>{{title}}</h3>
 
+<p>This section allows to do {sprint} planning.</p>
+<p>On the left side, you have the {release 6.0} backlog with all open elements,
+not already scheduled for a {sprint}.</p>
+<p>On the right side, you have the list of sprints that belongs to this {release}.</p>
+<p>When you click on a {sprint}, you see it's content and you can drag'n drop
+{stories} from the {sprint} backlog to a sprint or from a {sprint} back to the
+backlog.</p>
+
 <div class="agiledashboard-planning-backlog">
     <table class="table table-striped table-hover table-bordered">
         <thead>
@@ -27,6 +35,11 @@
 </div>
 
 <div class="agiledashboard-planning-submilestones">
+
+    {{#can_add_submilestone}}
+    <p><a href="{{add_new_submilestone_url}}" class="btn">{{add_new_submilestone}}</a></p>
+    {{/can_add_submilestone}}
+
     <div id="accordion">
         {{#submilestone_collection}}
         <div>
