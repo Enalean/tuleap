@@ -118,14 +118,14 @@ class Planning_MilestoneController extends MVC2_PluginController {
     }
 
     public function submilestonedata() {
-        $this->backlog_row_factory = new AgileDashboard_Milestone_Pane_BacklogRowCollectionFactory(new AgileDashboard_BacklogItemDao(), Tracker_ArtifactFactory::instance(), Tracker_FormElementFactory::instance(), $this->milestone_factory);
-        $strategy_factory = new AgileDashboard_Milestone_Pane_BacklogStrategyFactory(new AgileDashboard_BacklogItemDao(), Tracker_ArtifactFactory::instance(), PlanningFactory::build());
+        $this->backlog_row_factory = new AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory(new AgileDashboard_BacklogItemDao(), Tracker_ArtifactFactory::instance(), Tracker_FormElementFactory::instance(), $this->milestone_factory);
+        $strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(new AgileDashboard_BacklogItemDao(), Tracker_ArtifactFactory::instance(), PlanningFactory::build());
         $backlog_strategy = $strategy_factory->getSelfBacklogStrategy($this->milestone);
         $presenter = new AgileDashboard_SubmilestonePresenter($this->backlog_row_factory->getTodoCollection(
             $this->getCurrentUser(),
             $this->milestone,
             $backlog_strategy,
-            $this->redirect_parameter->getPlanningRedirectToSelf($this->milestone, '$pane_identifier')
+            ''
         ));
         $this->render('submilestone-content', $presenter);
     }

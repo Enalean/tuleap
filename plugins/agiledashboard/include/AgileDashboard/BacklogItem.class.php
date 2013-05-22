@@ -53,7 +53,7 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
 
     public function setParent(Tracker_Artifact $parent) {
         $this->parent_title = $parent->getTitle();
-        $this->parent_url   = $parent->getUri() .'&'. $this->redirect_to_self;
+        $this->parent_url   = $this->getUrlWithRedirect($parent->getUri());
     }
 
     public function setRemainingEffort($value) {
@@ -69,7 +69,7 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
     }
 
     public function url() {
-        return $this->url .'&'. $this->redirect_to_self;
+        return $this->getUrlWithRedirect($this->url);
     }
 
     public function points() {
@@ -82,6 +82,13 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
 
     public function parent_url() {
         return $this->parent_url;
+    }
+
+    private function getUrlWithRedirect($url) {
+        if ($this->redirect_to_self) {
+            return $url.'&'.$this->redirect_to_self;
+        }
+        return $url;
     }
 }
 

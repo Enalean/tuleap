@@ -25,7 +25,7 @@
 class AgileDashboard_SubmilestonePresenter {
     private $backlog_collection;
 
-    public function __construct(AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $backlog_collection) {
+    public function __construct(AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $backlog_collection) {
         $this->backlog_collection = $backlog_collection;
     }
 
