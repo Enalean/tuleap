@@ -61,6 +61,7 @@ tuleap.agiledashboard.MilestoneContent = Class.create({
                 revert: true,
                 axis: 'y',
                 forcePlaceholderSize: true,
+                tolerance: 'pointer',
                 containment: "parent",
                 helper: function (e, tr) {
                     var $originals = tr.children();
