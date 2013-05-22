@@ -41,6 +41,9 @@ class Planning_MilestoneController extends MVC2_PluginController {
     /** @var Planning_MilestoneRedirectParameter */
     private $redirect_parameter;
 
+    /** @var AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory */
+    private $pane_presenter_builder_factory;
+
     /**
      * Instanciates a new controller.
      * 
@@ -63,7 +66,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
         $this->milestone_factory = $milestone_factory;
         $project                 = $project_manager->getProject($request->get('group_id'));
         $this->redirect_parameter = new Planning_MilestoneRedirectParameter();
-
+        $this->pane_presenter_builder_factory = $pane_presenter_builder_factory;
         $this->milestone = $this->milestone_factory->getBareMilestone(
             $this->getCurrentUser(),
             $project,
@@ -118,24 +121,12 @@ class Planning_MilestoneController extends MVC2_PluginController {
     }
 
     public function submilestonedata() {
-        $this->backlog_row_factory = new AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory(new AgileDashboard_BacklogItemDao(), Tracker_ArtifactFactory::instance(), Tracker_FormElementFactory::instance(), $this->milestone_factory);
-        $strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(new AgileDashboard_BacklogItemDao(), Tracker_ArtifactFactory::instance(), PlanningFactory::build());
-        $backlog_strategy = $strategy_factory->getSelfBacklogStrategy($this->milestone);
-        $presenter = new AgileDashboard_SubmilestonePresenter(
-            $this->backlog_row_factory->getTodoCollection(
-                $this->getCurrentUser(),
-                $this->milestone,
-                $backlog_strategy,
-                ''
-            ),
-            $this->backlog_row_factory->getDoneCollection(
-                $this->getCurrentUser(),
-                $this->milestone,
-                $backlog_strategy,
-                ''
-            )
-        );
-        $this->render('submilestone-content', $presenter);
+        $this->render('submilestone-content', $this->getSubmilestonePresenter());
+    }
+
+    private function getSubmilestonePresenter() {
+        $presenter_builder = $this->pane_presenter_builder_factory->getSubmilestonePresenterBuilder();
+        return $presenter_builder->getSubmilestonePresenter($this->getCurrentUser(), $this->milestone);
     }
 }
 
