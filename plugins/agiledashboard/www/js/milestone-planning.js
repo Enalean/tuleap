@@ -26,7 +26,8 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 (function ($) {
     tuleap.agiledashboard.Planning = Class.create({
         initialize: function (container) {
-            var self = this;
+            var self = this,
+                $backlog = $(".agiledashboard-planning-backlog");
 
             $("#accordion > div").accordion({
                 header: "h4",
@@ -43,28 +44,14 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                 }
             });
 
-//            // there's the gallery and the trash
-//            var $gallery = $( "#gallery" ),
-//            $trash = $( "#trash" );
-//
-//            // let the gallery items be draggable
-//            $( "li", $gallery ).draggable({
-//                cancel: "a.ui-icon", // clicking an icon won't initiate dragging
-//                revert: "invalid", // when not dropped, the item will revert back to its initial position
-//                containment: "document",
-//                helper: "clone",
-//                cursor: "move"
-//            });
-//
-//            // let the trash be droppable, accepting the gallery items
-//            $trash.droppable({
-//                accept: "#gallery > li",
-//                activeClass: "ui-state-highlight",
-//                drop: function( event, ui ) {
-//                    deleteImage( ui.draggable );
-//                }
-//            });
-
+            // let the backlog items be draggable
+            $( "tr", $backlog ).draggable({
+                cancel: "a.ui-icon", // clicking an icon won't initiate dragging
+                revert: "invalid", // when not dropped, the item will revert back to its initial position
+                containment: "document",
+                helper: "clone",
+                cursor: "move"
+            });
         },
 
         fetchSubmilestoneData : function(data_container) {
@@ -82,15 +69,16 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                     data_container.find('tbody').append(data);
                     self.updateSubmilestoneCapacity(data_container);
                     self.makeSubmilestonesSortable(data_container);
+                    self.makeSubmilestonesDroppable(data_container);
                 },
                 error : function(data) {
                     console.log('error', data);
                 }
-            })
+            });
          },
 
         setSubmilestoneDataLoaded : function(data_container) {
-            data_container.attr("data-loaded", "true")
+            data_container.attr("data-loaded", "true");
         },
 
         updateSubmilestoneCapacity : function(data_container) {
@@ -102,7 +90,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                 if (! isNaN(element_capacity)) {
                     capacity += parseFloat(element_capacity);
                 }
-            })
+            });
 
             data_container.find(".submilestone-capacity").html(capacity);
         },
@@ -111,8 +99,35 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
             var params = {
                 rowContainer    : data_container.find(".submilestone-element-rows"),
                 rowIdentifier   : 'data-artifact-id'
-            }
+            };
             new tuleap.agiledashboard.TableRowSorter(params);
+        },
+
+        makeSubmilestonesDroppable : function(data_container) {
+            var $planning= $(".agiledashboard-planning-submilestones tbody"),
+                self = this;
+
+            // let the planning be droppable, accepting the gallery items
+            $planning.droppable({
+                accept: ".agiledashboard-planning-backlog tbody > tr",
+                activeClass: "ui-state-highlight",
+                drop: function( event, ui ) {
+                    var target = event.target;
+
+                    prependSubmilestoneElement( target, ui.draggable);
+                    synchroniseSubmilestoneWithBackend(target, ui.draggable);
+                }
+            });
+
+            function prependSubmilestoneElement(target, $element) {
+                $element.addClass("submilestone-element")
+                $(target).prepend($element);
+                $element.draggable( "disable" );
+            }
+
+            function synchroniseSubmilestoneWithBackend(target, $element) {
+                //do it here
+            }
         }
     });
 })(jQuery);
