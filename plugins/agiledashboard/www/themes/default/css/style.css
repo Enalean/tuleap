@@ -242,3 +242,8 @@
 .milestone-content-open-rows .ui-sortable-helper > td {
     border-bottom: 1px solid #dddddd;
 }
+
+.table .agiledashboard-planning-submilestone-header-info {
+    text-align: right;
+    border-left: none;
+}
