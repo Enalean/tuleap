@@ -30,17 +30,17 @@ abstract class AgileDashboard_Milestone_Backlog_BacklogStrategy {
     /** @var Tracker_Artifact[] */
     protected $milestone_backlog_artifacts;
 
-    /** @var string */
-    protected $backlogitem_name;
+    /** @var Tracker */
+    protected $backlogitem_tracker;
 
-    public function __construct($milestone_backlog_artifacts, $backlogitem_name) {
+    public function __construct($milestone_backlog_artifacts, Tracker $backlogitem_tracker) {
         $this->milestone_backlog_artifacts = $milestone_backlog_artifacts;
-        $this->backlogitem_name            = $backlogitem_name;
+        $this->backlogitem_tracker         = $backlogitem_tracker;
     }
 
-    /** @return string */
-    public function getItemName() {
-        return $this->backlogitem_name;
+    /** @return Tracker */
+    public function getItemTracker() {
+        return $this->backlogitem_tracker;
     }
 
     /** @return Tracker_Artifact[] */

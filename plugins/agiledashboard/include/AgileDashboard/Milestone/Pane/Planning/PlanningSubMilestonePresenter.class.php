@@ -30,9 +30,11 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
     private $parent_item_type  = '';
 
     public function __construct(Planning_Milestone $milestone) {
-        $this->id              = $milestone->getArtifactId();
-        $this->planning_id     = $milestone->getPlanningId();
-        $this->milestone_title = $milestone->getArtifact()->getTitle();
+        $this->id                   = $milestone->getArtifactId();
+        $this->planning_id          = $milestone->getPlanningId();
+        $this->milestone_title      = $milestone->getArtifact()->getTitle();
+        $this->milestone_start_date = $milestone->getStartDate();
+        $this->milestone_end_date   = $milestone->getEndDate();
     }
 
     public function id() {
@@ -56,11 +58,21 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
     }
 
     public function start_date() {
-        return '';
+        if (! $this->milestone_start_date) {
+            return null;
+        }
+        return $this->formatDate($this->milestone_start_date);
     }
 
     public function end_date() {
-        return '';
+        if (! $this->milestone_end_date) {
+            return null;
+        }
+        return $this->formatDate($this->milestone_end_date);
+    }
+
+    private function formatDate($date) {
+        return date($GLOBALS['Language']->getText('system', 'datefmt_day_and_month'), $date);
     }
 
     public function status() {
