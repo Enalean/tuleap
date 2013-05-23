@@ -120,11 +120,10 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                 tolerance : "pointer",
                 scrollSensitivity: 50,
                 items : ".submilestone-element",
-                start : function() {
-                    $(".submilestone-drop-helper").show()
-                },
                 stop: function (event, ui) {
-                    $(".submilestone-drop-helper").hide();
+                    var submilestone_id;
+
+                    submilestone_id = $(ui.item).parents(".submilestone-data").first().attr('data-submilestone-id');
                     sort(ui.item, "data-artifact-id");
 
                     function sort(item, rowIdentifier) {
@@ -148,25 +147,25 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                         requestSort('lesser-priority-than', source_id, target_id);
                     }
 
+                    function addToSubmilestoneMilestone() {
+                        requestSort('only-element', '', '');
+                    }
+
                     function requestSort(action, source_id, target_id) {
                         $.ajax({
                             url  : codendi.tracker.base_url,
                             data : {
-                                "func"      : action,
-                                "aid"       : source_id,
-                                "target-id" : target_id
+                                "func"             : action,
+                                "aid"              : source_id,
+                                "target-id"        : target_id,
+                                "submilestone_id"  : submilestone_id
                             },
                             method : "get"
                         });
-                    }
-
-                    function addToSubmilestoneMilestone(source_id, target_id) {
-                        console.log("adding");
-                    }
+                    }                    
                 }
             }).disableSelection();
         }
-
 
     });
 })(jQuery);
