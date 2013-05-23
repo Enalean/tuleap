@@ -143,17 +143,17 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
     public function itCreatesGroupsIfItNotExistsOnGerrit() {
         stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
 
-        $create_group_command = "gerrit create-group firefox/project_members";
+        $create_group_command = "gerrit create-group firefox/project_members --owner firefox/project_admins";
         expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
-        $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', array());
+        $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', 'firefox/project_admins');
     }
 
     public function itDoesNotCreateGroupIfItAlreadyExistsOnGerrit() {
         stub($this->gerrit_driver)->DoesTheGroupExist()->returns(true);
 
-        $create_group_command = "gerrit create-group firefox/project_members";
+        $create_group_command = "gerrit create-group firefox/project_members --owner firefox/project_admins";
         expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->never();
-        $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', array());
+        $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', 'firefox/project_admins');
     }
 
     public function itInformsAboutGroupCreation() {
@@ -168,18 +168,25 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
         stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
 
         $std_err = 'fatal: group "somegroup" already exists';
-        $command = "gerrit create-group firefox/project_members";
+        $command = "gerrit create-group firefox/project_members --owner firefox/project_admins";
 
         stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE, '', $std_err));
 
         try {
-            $this->gerrit_driver->createGroup($this->gerrit_server,  'firefox/project_members');
+            $this->gerrit_driver->createGroup($this->gerrit_server,  'firefox/project_members', 'firefox/project_admins');
             $this->fail('An exception was expected');
         } catch (Git_Driver_Gerrit_Exception $e) {
             $this->assertEqual($e->getMessage(), "Command: $command" . PHP_EOL . "Error: $std_err");
         }
     }
 
+    public function itCreatesGroupWithoutOwnerWhenSelfOwnedToAvoidChickenEggIssue() {
+        stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
+
+        $create_group_command = "gerrit create-group firefox/project_admins";
+        expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
+        $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_admins', 'firefox/project_admins');
+    }
 }
 
 class Git_Driver_Gerrit_getGroupUUIDTest extends Git_Driver_Gerrit_baseTest {
