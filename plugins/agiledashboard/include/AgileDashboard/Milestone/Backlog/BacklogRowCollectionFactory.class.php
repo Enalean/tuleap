@@ -187,11 +187,21 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
     }
 
     protected function userCanReadBacklogTitleField(PFUser $user, Tracker $tracker) {
-        return Tracker_Semantic_Title::load($tracker)->getField()->userCanRead($user);
+        $field = Tracker_Semantic_Title::load($tracker)->getField();
+        if (! $field) {
+            return false;
+        }
+
+        return $field->userCanRead($user);
     }
 
     protected function userCanReadBacklogStatusField(PFUser $user, Tracker $tracker) {
-        return Tracker_Semantic_Status::load($tracker)->getField()->userCanRead($user);
+        $field = Tracker_Semantic_Status::load($tracker)->getField();
+        if (! $field) {
+            return false;
+        }
+
+        return $field->userCanRead($user);
     }
 
     protected function setRemainingEffort(PFUser $user, AgileDashboard_BacklogItem $backlog_item, Tracker_Artifact $artifact) {

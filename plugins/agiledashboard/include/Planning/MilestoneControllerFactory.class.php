@@ -72,6 +72,7 @@ class Planning_MilestoneControllerFactory {
             $this->project_manager,
             $this->getViewBuilder($request),
             $this->hierarchy_factory,
+            new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder($this->hierarchy_factory, $this->planning_factory),
             $this->pane_presenter_builder_factory,
             $this->plugin->getThemePath()
         );

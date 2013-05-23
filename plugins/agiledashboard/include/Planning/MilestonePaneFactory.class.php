@@ -44,16 +44,21 @@ class Planning_MilestonePaneFactory {
     /** @var Planning_MilestoneLegacyPlanningPaneFactory */
     private $legacy_planning_pane_factory;
 
+    /** @var AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder */
+    private $submilestone_finder;
+
     public function __construct(
         Codendi_Request $request,
         Planning_MilestoneFactory $milestone_factory,
         AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
-        Planning_MilestoneLegacyPlanningPaneFactory $legacy_planning_pane_factory
+        Planning_MilestoneLegacyPlanningPaneFactory $legacy_planning_pane_factory,
+        AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder
     ) {
         $this->request                        = $request;
         $this->milestone_factory              = $milestone_factory;
         $this->pane_presenter_builder_factory = $pane_presenter_builder_factory;
         $this->legacy_planning_pane_factory   = $legacy_planning_pane_factory;
+        $this->submilestone_finder            = $submilestone_finder;
     }
 
     /** @return AgileDashboard_Milestone_Pane_PresenterData */
@@ -99,6 +104,7 @@ class Planning_MilestonePaneFactory {
         }
 
         $this->buildAdditionnalPanes($milestone);
+        $this->list_of_pane_info = array_values(array_filter($this->list_of_pane_info));
 
         if (! $this->active_pane) {
             $legacy_planning_pane_info->setActive(true);
@@ -123,12 +129,17 @@ class Planning_MilestonePaneFactory {
     }
 
     private function getPlanningPaneInfo(Planning_Milestone $milestone) {
-        $pane_info = new AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo($milestone);
+        $submilestone_tracker = $this->submilestone_finder->findFirstSubmilestoneTracker($milestone);
+        if (! $submilestone_tracker) {
+            return;
+        }
+
+        $pane_info = new AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo($milestone, $submilestone_tracker);
         if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo::IDENTIFIER) {
             $pane_info->setActive(true);
             $this->active_pane = new AgileDashboard_Milestone_Pane_Planning_PlanningPane(
                 $pane_info,
-                $this->getPlanningPresenterBuilder()->getMilestonePlanningPresenter($this->request->getCurrentUser(), $milestone)
+                $this->getPlanningPresenterBuilder()->getMilestonePlanningPresenter($this->request->getCurrentUser(), $milestone, $submilestone_tracker)
             );
         }
 

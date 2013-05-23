@@ -21,6 +21,13 @@
 class AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo extends AgileDashboard_PaneInfo {
     const IDENTIFIER = 'planning';
 
+    /** @var Tracker */
+    private $submilestone_tracker;
+
+    public function __construct(Planning_Milestone $milestone, Tracker $submilestone_tracker) {
+        parent::__construct($milestone);
+        $this->submilestone_tracker = $submilestone_tracker;
+    }
     /**
      * @return string eg: 'cardwall'
      */
@@ -32,7 +39,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo extends AgileDashb
      * @return string eg: 'Card Wall'
      */
     public function getTitle() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'milestone_planning_pane_title');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'milestone_planning_pane_title', $this->submilestone_tracker->getName());
     }
 
     /**

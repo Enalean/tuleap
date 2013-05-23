@@ -23,7 +23,24 @@
  */
 
 class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection implements Iterator, Countable {
+    private $submilestone_tracker;
     private $rows = array();
+
+    public function __construct(Tracker $submilestone_tracker) {
+        $this->submilestone_tracker = $submilestone_tracker;
+    }
+
+    public function getName() {
+        return $this->submilestone_tracker->getItemName();
+    }
+
+    public function getSubmitNewUrlLinkedToMilestone(Planning_Milestone $milestone) {
+        return $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($this->submilestone_tracker);
+    }
+
+    public function canCreateNew(PFUser $user) {
+        return $this->submilestone_tracker->userCanSubmitArtifact($user);
+    }
 
     public function push(AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter $row) {
         $this->rows[] = $row;
