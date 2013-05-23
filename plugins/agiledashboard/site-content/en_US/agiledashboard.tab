@@ -25,7 +25,7 @@ plugin_agiledashboard	add_subitem	Add new $1
 plugin_agiledashboard	backlog_add	Add
 plugin_agiledashboard	planning_pane_title	Backlog/Planning
 plugin_agiledashboard	content_pane_title	Content
-plugin_agiledashboard	milestone_planning_pane_title	Planning
+plugin_agiledashboard	milestone_planning_pane_title	$1 Planning
 plugin_agiledashboard	access_to_planning	Access to planning
 plugin_agiledashboard	backlog_destination_help	Use right arrow on item to move it to current milestone or bottom/up arrow to rank items.
 
