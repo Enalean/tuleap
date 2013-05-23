@@ -24,24 +24,30 @@ var tuleap = tuleap || { };
 tuleap.agiledashboard = tuleap.agiledashboard || { };
    
 (function ($) {
-    tuleap.agiledashboard.Planning = Class.create({
+    tuleap.agiledashboard.NewPlanning = Class.create({
         initialize: function (container) {
             var self = this;
 
-            $("#accordion > table").accordion({
-                header: ".agiledashboard-planning-submilestone-header",
-                collapsible: true,
-                animate: false,
-                active: false,
-                heightStyle: "content",
-                beforeActivate: function (event, ui) {
-                    var data_container = $(this).find(".submilestone-data");
+            console.log($('.agiledashboard-planning-submilestone-header'));
+            $('.agiledashboard-planning-submilestone-header').click(function (event) {
+                    console.log('here');
+                var $data_container,
+                    $submilestone_content_row = $(this).next();
+
+                if ($submilestone_content_row.is(':visible')) {
+                    $submilestone_content_row.hide();
+                } else {
+                    data_container = $submilestone_content_row.find(".submilestone-data");
 
                     if (! isSubmilestoneDataLoaded(data_container)) {
                         self.fetchSubmilestoneData(data_container);
                     }
+                    $submilestone_content_row.show();
                 }
+                $(this).find('i').toggleClass('icon-chevron-down').toggleClass('icon-chevron-right');
+                event.preventDefault();
             });
+            $('.agiledashboard-planning-submilestone-header').next().hide();
 
             function isSubmilestoneDataLoaded(data_container) {
                 return data_container.attr("data-loaded") === "true";

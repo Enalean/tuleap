@@ -51,47 +51,39 @@
             </table>
         </div>
     </div>
-
-    <div class="span6">
-        <h3>{{list_of_submilestone_title}}</h3>
-        <div class="agiledashboard-planning-submilestones">
-            <div id="accordion">
-                <table class="table table-bordered table-striped">
-                {{#submilestone_collection}}
-                    <tr class="agiledashboard-planning-submilestone-header">
-                        <th>
-                            <a href="{{milestone_url}}"><i class="icon-chevron-right"></i> {{milestone_title}}</a>
-                        </th>
-                        <th class="agiledashboard-planning-submilestone-header-info">
-                            {{#display_milestone_dates}}{{start_date}} – {{end_date}}{{/display_milestone_dates}} <span class="label {{#is_open}}label-success{{/is_open}}">{{status}}</span>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td colspan=2>
-                            <div data-loaded="false" class="submilestone-data" data-submilestone-id="{{id}}" data-planning-id="{{planning_id}}">
-                                <p>Capacity: <span class="submilestone-capacity"></span></p>
-                                <table class="table table-striped table-hover table-bordered submilestone-element-rows">
-                                    <thead>
-                                        <tr>
-                                            <th>Id</th>
-                                            <th>{{backlog_item_title}}</th>
-                                            <th>{{points}}</th>
-                                            <th>{{parent}}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </td>
-                    </tr>
-                {{/submilestone_collection}}
-                </table>
-            </div>
-        </div>
-        </div>
+    <div class="span6 agiledashboard-planning-submilestones">
+        <table class="table table-bordered table-striped">
+        {{#submilestone_collection}}
+            <tr class="agiledashboard-planning-submilestone-header">
+                <th>
+                    <a href="{{milestone_url}}"><i class="icon-chevron-right"></i> {{milestone_title}}</a>
+                </th>
+                <th class="agiledashboard-planning-submilestone-header-info">
+                    {{#display_milestone_dates}}{{start_date}} – {{end_date}}{{/display_milestone_dates}} <span class="label {{#is_open}}label-success{{/is_open}}">{{status}}</span>
+                </th>
+            </tr>
+            <tr>
+                <td colspan=2>
+                    <div data-loaded="false" class="submilestone-data" data-submilestone-id="{{id}}" data-planning-id="{{planning_id}}">
+                        <p>Capacity: <span class="submilestone-capacity"></span></p>
+                        <table class="table table-striped table-hover table-bordered submilestone-element-rows">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>{{backlog_item_title}}</th>
+                                    <th>{{points}}</th>
+                                    <th>{{parent}}</th>
+                                </tr>
+                            </thead>
+                            <tbody class="">
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        {{/submilestone_collection}}
+        </table>
     </div>
 </div>
 
-<script type="text/javascript" src="/plugins/agiledashboard/js/planning-view.js"></script>
 <script type="text/javascript" src="/plugins/agiledashboard/js/milestone-planning.js"></script>

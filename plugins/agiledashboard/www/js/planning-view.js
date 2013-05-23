@@ -18,14 +18,19 @@
  */
 
 document.observe('dom:loaded', function () {
-    var planner = $('planning');
-    if (planner) {   
+    var planner = $('planner');
+    if (planner) {
         new tuleap.agiledashboard.Planning(planner);
     }
 
     var milestone_content = $('blcontent');
     if (milestone_content) {
         new tuleap.agiledashboard.MilestoneContent(milestone_content);
+    }
+
+    var milestone_planning = $('planning');
+    if (milestone_planning) {
+        new tuleap.agiledashboard.NewPlanning(milestone_planning);
     }
 
     tuleap.agiledashboard.align_short_access_heights.defer();
