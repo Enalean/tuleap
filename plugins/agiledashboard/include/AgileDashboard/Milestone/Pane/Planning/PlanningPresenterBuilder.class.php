@@ -57,6 +57,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
         return new AgileDashboard_Milestone_Pane_Planning_PlanningPresenter(
             $backlog_collection,
             $submilestone_collection,
+            $milestone,
             $backlog_collection->getParentItemName(),
             $backlog_strategy->getItemTracker()->getName(),
             $submilestone_collection->getName(),
