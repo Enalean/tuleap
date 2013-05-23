@@ -40,10 +40,10 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
         $this->milestone_factory  = $milestone_factory;
     }
 
-    public function getMilestonePlanningPresenter(PFUser $user, Planning_ArtifactMilestone $milestone) {
+    public function getMilestonePlanningPresenter(PFUser $user, Planning_ArtifactMilestone $milestone, Tracker $submilestone_tracker) {
         $redirect_paremeter     = new Planning_MilestoneRedirectParameter();
         $backlog_strategy       = $this->strategy_factory->getBacklogStrategy($milestone);
-        $redirect_to_self = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo::IDENTIFIER);
+        $redirect_to_self       = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo::IDENTIFIER);
 
         $backlog_collection = $this->collection_factory->getUnplannedOpenCollection(
             $user,
@@ -52,7 +52,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
             $redirect_to_self
         );
 
-        $submilestone_collection = $this->getSubmilestoneCollection($user, $milestone);
+        $submilestone_collection = $this->getSubmilestoneCollection($user, $milestone, $submilestone_tracker);
 
         return new AgileDashboard_Milestone_Pane_Planning_PlanningPresenter(
             $backlog_collection,
@@ -66,17 +66,13 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
         );
     }
 
-    private function getSubmilestoneCollection(PFUser $user, Planning_ArtifactMilestone $milestone) {
+    private function getSubmilestoneCollection(PFUser $user, Planning_ArtifactMilestone $milestone, Tracker $submilestone_tracker) {
         $submilestones = $this->milestone_factory->getSubMilestones($user, $milestone);
-        if (count($submilestones) > 0) {
-            $submilestone_tracker = current($submilestones)->getArtifact()->getTracker();
-            $submilestone_collection = new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection($submilestone_tracker);
-            foreach ($submilestones as $submilestone) {
-                $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter($submilestone));
-            }
-            return $submilestone_collection;
+        $submilestone_collection = new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection($submilestone_tracker);
+        foreach ($submilestones as $submilestone) {
+            $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter($submilestone));
         }
-        new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection(new NullTracker());
+        return $submilestone_collection;
     }
 }
 ?>
