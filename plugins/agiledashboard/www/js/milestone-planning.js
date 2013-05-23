@@ -70,7 +70,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                     data_container.find('tbody').append(data);
                     self.updateSubmilestoneCapacity(data_container);
                     self.makeSubmilestonesSortable(data_container);
-                    self.makeSubmilestonesDroppable(data_container);
+                    self.makeSubmilestonesDroppableInPlanning();
                 },
                 error : function(data) {
                     console.log('error', data);
@@ -104,9 +104,8 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
             new tuleap.agiledashboard.TableRowSorter(params);
         },
 
-        makeSubmilestonesDroppable : function(data_container) {
-            var $planning= $(".agiledashboard-planning-submilestones tbody"),
-                self = this;
+        makeSubmilestonesDroppableInPlanning : function() {
+            var $planning= $(".agiledashboard-planning-submilestones table");
 
             // let the planning be droppable, accepting the gallery items
             $planning.droppable({
