@@ -227,6 +227,8 @@
 #planning table,
 #blcontent table {
     border-spacing: 0;
+}
+#blcontent table {
     width: auto;
 }
 .milestone-content-open-rows > tr {

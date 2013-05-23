@@ -29,7 +29,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
             var self = this;
 
             $("#accordion > div").accordion({
-                header: "h4",
+                header: ".agiledashboard-planning-submilestone-header",
                 collapsible: true,
                 animate: false,
                 active: false,
