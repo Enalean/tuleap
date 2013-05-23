@@ -69,7 +69,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
     }
 
     private function getSubmilestoneCollection(PFUser $user, Planning_ArtifactMilestone $milestone, Tracker $submilestone_tracker) {
-        $submilestones = $this->milestone_factory->getSubMilestones($user, $milestone);
+        $submilestones = array_reverse($this->milestone_factory->getSubMilestones($user, $milestone));
         $submilestone_collection = new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection($submilestone_tracker);
         foreach ($submilestones as $submilestone) {
             $this->milestone_factory->updateMilestoneContextualInfo($user, $submilestone);
