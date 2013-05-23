@@ -33,6 +33,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
     private $add_new_submilestone_url;
     private $can_plan;
     private $redirect_to_self;
+    private $milestone_item_type;
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $backlog_collection,
@@ -57,6 +58,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
         $this->redirect_to_self         = $redirect_to_self;
         $this->milestone_id             = $milestone->getArtifactId();
         $this->milestone_planning_id    = $milestone->getPlanningId();
+        $this->milestone_item_type      = $milestone->getArtifactTitle();
     }
 
     public function milestone_id() {
@@ -69,6 +71,22 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
 
     public function title() {
         return $this->backlog_item_type;
+    }
+
+    public function help_intro() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'help_intro', array($this->submilestone_item_type));
+    }
+
+    public function help_left() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'help_left', array($this->submilestone_item_type, $this->milestone_item_type));
+    }
+
+    public function help_right() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'help_right', array($this->submilestone_item_type, $this->milestone_item_type));
+    }
+
+    public function help_dnd() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'help_dnd', array($this->submilestone_item_type, $this->milestone_item_type));
     }
 
     public function can_add_submilestone() {

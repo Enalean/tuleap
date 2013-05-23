@@ -45,3 +45,8 @@ plugin_agiledashboard_contentpane	open_items_title-no_more	No more open $1, well
 plugin_agiledashboard_contentpane	open_items_title-not_yet	No $1 yet
 plugin_agiledashboard_contentpane	open_items_title-not_yet-can_add	No $1, start adding now
 plugin_agiledashboard_contentpane	open_items_intro	Here are the items that are still open. You can prioritize by drag 'n dropping them.
+
+plugin_agiledashboard_milestone_planning	help_intro	This section allows to do $1 planning:
+plugin_agiledashboard_milestone_planning	help_left	On the left side, you have the $2 backlog with all open elements, not already scheduled for a $1.
+plugin_agiledashboard_milestone_planning	help_right	On the right side, you have the list of $1 that belongs to $2.
+plugin_agiledashboard_milestone_planning	help_dnd	When you click on a $1, you see it's content and you can drag'n drop from $2 backlog to a $1 or from a $1 back to the backlog.

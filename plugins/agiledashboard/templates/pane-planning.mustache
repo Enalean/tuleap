@@ -3,13 +3,19 @@
 </div>
 <h3>{{title}}</h3>
 
-<p>This section allows to do {sprint} planning.</p>
-<p>On the left side, you have the {release 6.0} backlog with all open elements,
-not already scheduled for a {sprint}.</p>
-<p>On the right side, you have the list of sprints that belongs to this {release}.</p>
-<p>When you click on a {sprint}, you see it's content and you can drag'n drop
-{stories} from the {sprint} backlog to a sprint or from a {sprint} back to the
-backlog.</p>
+<div class="row-fluid">
+    <div class="span6">
+        <div class="well">
+            <p>{{help_intro}}
+            <ul>
+                <li>{{help_left}}</li>
+                <li>{{help_right}}</li>
+            </ul>
+            {{help_dnd}}
+            </p>
+        </div>
+    </div>
+</div>
 {{^can_plan}}<font color="pink"><b style="background:green">Dear front end team, use {can_plan} to prevent unauthorized people to drag 'n drop from backlog to submilestone</font></b>{{/can_plan}}
 
 {{#can_add_submilestone}}
@@ -19,6 +25,7 @@ backlog.</p>
     </div>
 </div>
 {{/can_add_submilestone}}
+
 <div class="row-fluid">
     <div class="span6">
         <div class="agiledashboard-planning-backlog" data-milestone-planning-id="{{milestone_planning_id}}" data-milestone-id="{{milestone_id}}">

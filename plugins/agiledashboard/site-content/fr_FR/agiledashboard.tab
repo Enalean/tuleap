@@ -45,3 +45,8 @@ plugin_agiledashboard_contentpane	open_items_title-no_more	Il n'y a plus de $1 o
 plugin_agiledashboard_contentpane	open_items_title-not_yet	Pas encore de $1
 plugin_agiledashboard_contentpane	open_items_title-not_yet-can_add	Pas de $1, commencez à en ajouter dès maintenant
 plugin_agiledashboard_contentpane	open_items_intro	Voici les éléments qui sont ouverts. Vous pouvez les ordonner en les glissant-déposant.
+
+plugin_agiledashboard_milestone_planning	help_intro	Cette section vous permet de faire votre planning de $1:
+plugin_agiledashboard_milestone_planning	help_left	Sur la gauche, le backlog de $2, avec tous les éléments ouverts, non encore plannifiés dans un $1
+plugin_agiledashboard_milestone_planning	help_right	Sur la droite, la liste des $1 qui appartiennent à $2.
+plugin_agiledashboard_milestone_planning	help_dnd	Lorsque vous clickez sur un(e) $1, le backlog de ce(tte) $1 appartait. Vous pouvez faire un glissé-déposé des éléments de gauche à droite.
