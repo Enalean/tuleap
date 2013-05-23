@@ -24,12 +24,13 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
     tuleap.agiledashboard.TableRowSorter = function (params) {
         var container               = params.rowContainer,
             rowIdentifier           = params.rowIdentifier;
-
+ 
         container.sortable({
             revert: true,
             axis: 'y',
             forcePlaceholderSize: true,
             containment: "parent",
+            tolerance: 'pointer',
             helper: function (e, tr) {
                 var $originals = tr.children();
                 var $helper = tr.clone();

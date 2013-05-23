@@ -22,76 +22,113 @@
  */
 var tuleap = tuleap || { };
 tuleap.agiledashboard = tuleap.agiledashboard || { };
+   
+(function ($) {
+    tuleap.agiledashboard.Planning = Class.create({
+        initialize: function (container) {
+            var self = this,
+                $backlog = $(".agiledashboard-planning-backlog");
 
-tuleap.agiledashboard.Planning = Class.create({
-    jQuery : jQuery,
+            $("#accordion > div").accordion({
+                header: "h4",
+                collapsible: true,
+                animate: false,
+                active: false,
+                heightStyle: "content",
+                beforeActivate: function (event, ui) {
+                    var data_container = $(this).find(".submilestone-data");
 
-    initialize: function (container) {
-        var self = this,
-            $ = this.jQuery;
-
-        $("#accordion > div").accordion({
-            header: "h4",
-            collapsible: true,
-            animate: false,
-            active: false,
-            heightStyle: "content",
-            beforeActivate: function (event, ui) {
-                var data_container = $(this).find(".submilestone-data");
-
-                if (data_container.attr("data-loaded") == "false") {
-                    self.fetchSubmilestoneData(data_container);
+                    if (data_container.attr("data-loaded") == "false") {
+                        self.fetchSubmilestoneData(data_container);
+                    }
                 }
+            });
+
+            // let the backlog items be draggable
+            $( "tr", $backlog ).draggable({
+                cancel: "a.ui-icon", // clicking an icon won't initiate dragging
+                revert: "invalid", // when not dropped, the item will revert back to its initial position
+                containment: "document",
+                helper: "clone",
+                cursor: "move"
+            });
+        },
+
+        fetchSubmilestoneData : function(data_container) {
+            var self = this;
+
+            $.ajax({
+                url : "/plugins/agiledashboard/?action=submilestonedata",
+                dataType : "html",
+                data : {
+                    planning_id: data_container.attr('data-planning-id'),
+                    aid : data_container.attr('data-submilestone-id')
+                },
+                method : "get",
+                success : function(data) {
+                    self.setSubmilestoneDataLoaded(data_container);
+                    data_container.find('tbody').append(data);
+                    self.updateSubmilestoneCapacity(data_container);
+                    self.makeSubmilestonesSortable(data_container);
+                    self.makeSubmilestonesDroppable(data_container);
+                },
+                error : function(data) {
+                    console.log('error', data);
+                }
+            });
+         },
+
+        setSubmilestoneDataLoaded : function(data_container) {
+            data_container.attr("data-loaded", "true");
+        },
+
+        updateSubmilestoneCapacity : function(data_container) {
+            var capacity = 0,
+                capacities = data_container.find(".submilestone-element-capacity");
+
+            capacities.each(function(){
+                var element_capacity = parseFloat($(this).html());
+                if (! isNaN(element_capacity)) {
+                    capacity += parseFloat(element_capacity);
+                }
+            });
+
+            data_container.find(".submilestone-capacity").html(capacity);
+        },
+
+        makeSubmilestonesSortable : function(data_container) {
+            var params = {
+                rowContainer    : data_container.find(".submilestone-element-rows"),
+                rowIdentifier   : 'data-artifact-id'
+            };
+            new tuleap.agiledashboard.TableRowSorter(params);
+        },
+
+        makeSubmilestonesDroppable : function(data_container) {
+            var $planning= $(".agiledashboard-planning-submilestones tbody"),
+                self = this;
+
+            // let the planning be droppable, accepting the gallery items
+            $planning.droppable({
+                accept: ".agiledashboard-planning-backlog tbody > tr",
+                activeClass: "ui-state-highlight",
+                drop: function( event, ui ) {
+                    var target = event.target;
+
+                    prependSubmilestoneElement( target, ui.draggable);
+                    synchroniseSubmilestoneWithBackend(target, ui.draggable);
+                }
+            });
+
+            function prependSubmilestoneElement(target, $element) {
+                $element.addClass("submilestone-element")
+                $(target).prepend($element);
+                $element.draggable( "disable" );
             }
-        });
-    },
-    
-    fetchSubmilestoneData : function(data_container) {
-        var self = this;
 
-        this.jQuery.ajax({
-            url : "/plugins/agiledashboard/?action=submilestonedata",
-            dataType : "html",
-            data : {
-                submilestone_id : data_container.attr('data-submilestone-id')
-            },
-            method : "get",
-            success : function(data) {
-                self.setSubmilestoneDataLoaded(data_container);
-                data_container.find('tbody').append(data);
-                self.updateSubmilestoneCapacity(data_container);
-                self.makeSubmilestonesSortable(data_container);
-            },
-            error : function(data) {
-                console.log('error', data);
+            function synchroniseSubmilestoneWithBackend(target, $element) {
+                //do it here
             }
-        })
-     },
-
-    setSubmilestoneDataLoaded : function(data_container) {
-        data_container.attr("data-loaded", "true")
-    },
-
-    updateSubmilestoneCapacity : function(data_container) {
-        var $ = this.jQuery,
-            capacity = 0,
-            capacities = data_container.find(".submilestone-element-capacity");
-
-        capacities.each(function(){
-            var element_capacity = parseFloat($(this).html());
-            if (! isNaN(element_capacity)) {
-                capacity += parseFloat(element_capacity);
-            }
-        })
-        
-        data_container.find(".submilestone-capacity").html(capacity);
-    },
-    
-    makeSubmilestonesSortable : function(data_container) {
-        var params = {
-            rowContainer    : data_container.find(".submilestone-element-rows"),
-            rowIdentifier   : 'data-artifact-id'
         }
-        new tuleap.agiledashboard.TableRowSorter(params);
-    }
-});
+    });
+})(jQuery);

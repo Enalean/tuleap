@@ -27,21 +27,44 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
     private $parent_item_type  = '';
     private $backlog_collection;
     private $submilestone_collection;
+    private $submilestone_item_type;
+    private $add_new_submilestone_url;
+    private $redirect_to_self;
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $backlog_collection,
         AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection $submilestone_collection,
         $parent_item_type,
-        $backlog_item_type
+        $backlog_item_type,
+        $submilestone_item_type,
+        $add_new_submilestone_url,
+        $can_add_submilestone,
+        $redirect_to_self
     ) {
-        $this->backlog_collection      = $backlog_collection;
-        $this->submilestone_collection = $submilestone_collection;
-        $this->parent_item_type        = $parent_item_type;
-        $this->backlog_item_type       = $backlog_item_type;
+        $this->backlog_collection       = $backlog_collection;
+        $this->submilestone_collection  = $submilestone_collection;
+        $this->parent_item_type         = $parent_item_type;
+        $this->backlog_item_type        = $backlog_item_type;
+        $this->submilestone_item_type   = $submilestone_item_type;
+        $this->add_new_submilestone_url = $add_new_submilestone_url;
+        $this->can_add_submilestone     = $can_add_submilestone;
+        $this->redirect_to_self         = $redirect_to_self;
     }
 
     public function title() {
         return $this->backlog_item_type;
+    }
+
+    public function can_add_submilestone() {
+        return $this->can_add_submilestone;
+    }
+
+    public function add_new_submilestone_url() {
+        return $this->add_new_submilestone_url.'&'.$this->redirect_to_self;
+    }
+
+    public function add_new_submilestone() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'add_subitem', array($this->submilestone_item_type));
     }
 
     public function points() {

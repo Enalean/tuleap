@@ -38,6 +38,12 @@ class Planning_MilestoneController extends MVC2_PluginController {
     /** @var Planning_MilestonePaneFactory */
     private $pane_factory;
 
+    /** @var Planning_MilestoneRedirectParameter */
+    private $redirect_parameter;
+
+    /** @var AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory */
+    private $pane_presenter_builder_factory;
+
     /**
      * Instanciates a new controller.
      * 
@@ -53,6 +59,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
                                 ProjectManager            $project_manager,
                                 Planning_ViewBuilder      $view_builder,
                                 Tracker_HierarchyFactory  $hierarchy_factory,
+                                AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder,
                                 AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
                                 $theme_path) {
         
@@ -60,7 +67,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
         $this->milestone_factory = $milestone_factory;
         $project                 = $project_manager->getProject($request->get('group_id'));
         $this->redirect_parameter = new Planning_MilestoneRedirectParameter();
-
+        $this->pane_presenter_builder_factory = $pane_presenter_builder_factory;
         $this->milestone = $this->milestone_factory->getBareMilestone(
             $this->getCurrentUser(),
             $project,
@@ -80,7 +87,8 @@ class Planning_MilestoneController extends MVC2_PluginController {
             $this->request,
             $this->milestone_factory,
             $pane_presenter_builder_factory,
-            $legacy_planning_pane_factory
+            $legacy_planning_pane_factory,
+            $submilestone_finder
         );
     }
 
@@ -112,6 +120,15 @@ class Planning_MilestoneController extends MVC2_PluginController {
             return $breadcrumbs_merger;
         }
         return new BreadCrumb_NoCrumb();
+    }
+
+    public function submilestonedata() {
+        $this->render('submilestone-content', $this->getSubmilestonePresenter());
+    }
+
+    private function getSubmilestonePresenter() {
+        $presenter_builder = $this->pane_presenter_builder_factory->getSubmilestonePresenterBuilder();
+        return $presenter_builder->getSubmilestonePresenter($this->getCurrentUser(), $this->milestone);
     }
 }
 

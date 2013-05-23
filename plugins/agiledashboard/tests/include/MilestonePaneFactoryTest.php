@@ -65,7 +65,8 @@ class Planning_MilestonePaneFactory_AvailableMilestonesTest extends TuleapTestCa
             $this->request,
             $this->milestone_factory,
             $this->pane_presenter_builder_factory,
-            mock('Planning_MilestoneLegacyPlanningPaneFactory')
+            mock('Planning_MilestoneLegacyPlanningPaneFactory'),
+            mock('AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder')
         );
 
         $selectable_artifacts = $this->pane_factory->getAvailableMilestones($this->sprint_1);
@@ -85,7 +86,8 @@ class Planning_MilestonePaneFactory_AvailableMilestonesTest extends TuleapTestCa
             $this->request,
             $this->milestone_factory,
             $this->pane_presenter_builder_factory,
-            mock('Planning_MilestoneLegacyPlanningPaneFactory')
+            mock('Planning_MilestoneLegacyPlanningPaneFactory'),
+            mock('AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder')
         );
 
         $selectable_artifacts = $this->pane_factory->getAvailableMilestones($current_milstone);

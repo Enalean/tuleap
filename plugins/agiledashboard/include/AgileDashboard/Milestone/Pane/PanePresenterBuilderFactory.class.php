@@ -46,6 +46,9 @@ class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory {
         $this->milestone_factory      = $milestone_factory;
     }
 
+    /**
+     * @return AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder
+     */
     public function getContentPresenterBuilder() {
         return new AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder(
             $this->strategy_factory,
@@ -53,6 +56,9 @@ class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory {
         );
     }
 
+    /**
+     * @return AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder
+     */
     public function getPlanningPresenterBuilder() {
         return new AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder(
             $this->strategy_factory,
@@ -61,5 +67,14 @@ class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory {
         );
     }
 
+    /**
+     * @return AgileDashboard_SubmilestonePresenterBuilder
+     */
+    public function getSubmilestonePresenterBuilder() {
+        return new AgileDashboard_SubmilestonePresenterBuilder(
+            $this->row_collection_factory,
+            $this->strategy_factory
+        );
+    }
 }
 ?>

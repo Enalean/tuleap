@@ -71,6 +71,7 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
             mock('ProjectManager'),
             $view_builder,
             $hierarchy_factory,
+            mock('AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder'),
             mock('AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory'),
             ''
         );
@@ -310,6 +311,7 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
                 $this->project_manager,
                 mock('Planning_ViewBuilder'),
                 mock('Tracker_HierarchyFactory'),
+                mock('AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder'),
                 mock('AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory'),
                 ''
             )

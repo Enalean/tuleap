@@ -51,23 +51,32 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
             $backlog_strategy,
             $redirect_to_self
         );
+
+        $submilestone_collection = $this->getSubmilestoneCollection($user, $milestone);
+
         return new AgileDashboard_Milestone_Pane_Planning_PlanningPresenter(
             $backlog_collection,
-            $this->getSubmilestoneCollection($user, $milestone),
+            $submilestone_collection,
             $backlog_collection->getParentItemName(),
-            $backlog_strategy->getItemName()
+            $backlog_strategy->getItemName(),
+            $submilestone_collection->getName(),
+            $submilestone_collection->getSubmitNewUrlLinkedToMilestone($milestone),
+            $submilestone_collection->canCreateNew($user),
+            $redirect_to_self
         );
     }
 
     private function getSubmilestoneCollection(PFUser $user, Planning_ArtifactMilestone $milestone) {
-        $submilestone_collection = new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection();
-
         $submilestones = $this->milestone_factory->getSubMilestones($user, $milestone);
-        foreach ($submilestones as $submilestone) {
-            $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter($submilestone->getArtifactTitle()));
+        if (count($submilestones) > 0) {
+            $submilestone_tracker = current($submilestones)->getArtifact()->getTracker();
+            $submilestone_collection = new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection($submilestone_tracker);
+            foreach ($submilestones as $submilestone) {
+                $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter($submilestone));
+            }
+            return $submilestone_collection;
         }
-
-        return $submilestone_collection;
+        new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection(new NullTracker());
     }
 }
 ?>
