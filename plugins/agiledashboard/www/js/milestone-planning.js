@@ -124,7 +124,6 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                 scrollSensitivity: 50,
                 items : ".submilestone-element",
                 start : function (event, ui) {
-                    console.log($(event.target).parents(".submilestone-data").first().attr('data-submilestone-id'))
                     from_submilestone = $(event.target).parents(".submilestone-data").first().attr('data-submilestone-id');
                 },
                 stop: function (event, ui) {
@@ -144,16 +143,6 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                         self.updateSubmilestoneCapacity(data_container);
                     }
 
-                    function getSubmilestoneId() {
-                        id = $(ui.item).parents(".submilestone-data").first().attr('data-submilestone-id');
-
-                        if(typeof(id) === "undefined") {
-                            id = from_submilestone;
-                        }
-
-                        return id;
-                    }
-
                     function sortHigher(source_id, target_id) {
                         requestSort('higher-priority-than', source_id, target_id);
                     }
@@ -167,20 +156,42 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                     }
 
                     function requestSort(action, source_id, target_id) {
+                        var submilestone_id;
+
                         $.ajax({
                             url  : codendi.tracker.base_url,
                             data : {
                                 "func"             : action,
                                 "aid"              : source_id,
                                 "target-id"        : target_id,
-                                "submilestone_id"  : getSubmilestoneId()
+                                "submilestone_id"  : getSubmilestoneId(),
+                                "action"           : getAction()
                             },
                             method : "get"
                         });
-                    }                    
+
+                        function getSubmilestoneId() {
+                            submilestone_id = $(ui.item).parents(".submilestone-data").first().attr('data-submilestone-id');
+
+                            if(typeof(submilestone_id) === "undefined") {
+                                return from_submilestone;
+                            }
+
+                            return submilestone_id;
+                        }
+
+                        function getAction() {
+                            if(submilestone_id == from_submilestone) {
+                                return "submilestone-sort"
+                            } else if (typeof(submilestone_id) === "undefined") {
+                                return "move-to-backlog"
+                            } else {
+                                return "submilestone-swap"
+                            }
+                        }
+                    }
                 }
             }).disableSelection();   
         }
-
     });
 })(jQuery);
