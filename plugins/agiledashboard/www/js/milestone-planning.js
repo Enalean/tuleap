@@ -106,9 +106,8 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                     function sort(item, rowIdentifier) {
 
                         var item_id = $(item).attr(rowIdentifier),
-                            next_id = $(item).next(".submilestone-element").attr(rowIdentifier),
-                            prev_id = $(item).prev(".submilestone-element").attr(rowIdentifier);
-                console.log($(item).parent(), $(item).next(".submilestone-element"), $(item).prev(".submilestone-element"));
+                            next_id = $(item).nextAll(".submilestone-element").first().attr(rowIdentifier),
+                            prev_id = $(item).prevAll(".submilestone-element").first().attr(rowIdentifier);
                         if (next_id) {
                             sortHigher(item_id, next_id);
                         } else if (prev_id) {
@@ -125,7 +124,6 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                     }
 
                     function requestSort(action, source_id, target_id) {
-                        console.log(4444);
                         $.ajax({
                             url  : codendi.tracker.base_url,
                             data : {
