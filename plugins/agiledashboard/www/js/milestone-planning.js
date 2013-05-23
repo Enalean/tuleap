@@ -26,8 +26,9 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 (function ($) {
     tuleap.agiledashboard.Planning = Class.create({
         initialize: function (container) {
-            var self = this,
-                $backlog = $(".agiledashboard-planning-backlog");
+            var self = this;
+
+//            this.makeSubmilestonesDraggable();
 
             $("#accordion > div").accordion({
                 header: "h4",
@@ -42,15 +43,6 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                         self.fetchSubmilestoneData(data_container);
                     }
                 }
-            });
-
-            // let the backlog items be draggable
-            $( "tr", $backlog ).draggable({
-                cancel: "a.ui-icon", // clicking an icon won't initiate dragging
-                revert: "invalid", // when not dropped, the item will revert back to its initial position
-                containment: "document",
-                helper: "clone",
-                cursor: "move"
             });
         },
 
@@ -71,7 +63,6 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                     self.setSubmilestonesEditLinks(data_container);
                     self.updateSubmilestoneCapacity(data_container);
                     self.makeSubmilestonesSortable(data_container);
-                    self.makeSubmilestonesDroppable(data_container);
                 },
                 error : function(data) {
                     console.log('error', data);
@@ -119,38 +110,58 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
         },
 
         makeSubmilestonesSortable : function(data_container) {
-            var params = {
-                rowContainer    : data_container.find(".submilestone-element-rows"),
-                rowIdentifier   : 'data-artifact-id'
-            };
-            new tuleap.agiledashboard.TableRowSorter(params);
-        },
+            if (data_container.find(".submilestone-element-rows").hasClass('ui-sortable')) {
+                data_container.find(".submilestone-element-rows").sortable("destroy");
+            }
 
-        makeSubmilestonesDroppable : function(data_container) {
-            var $planning= $(".agiledashboard-planning-submilestones tbody"),
-                self = this;
+            $( ".submilestone-element-rows" ).sortable({
+                connectWith: ".submilestone-element-rows",
+                dropOnEmpty: true,
+                start : function() {
+                    $(".submilestone-drop-helper").show()
+                },
+                stop: function (event, ui) {
+                    $(".submilestone-drop-helper").hide();
+                    
+                    sort(ui.item, "data-artifact-id");
 
-            // let the planning be droppable, accepting the gallery items
-            $planning.droppable({
-                accept: ".agiledashboard-planning-backlog tbody > tr",
-                activeClass: "ui-state-highlight",
-                drop: function( event, ui ) {
-                    var target = event.target;
+                    function sort(item, rowIdentifier) {
 
-                    prependSubmilestoneElement( target, ui.draggable);
-                    synchroniseSubmilestoneWithBackend(target, ui.draggable);
+                        var item_id = $(item).attr(rowIdentifier),
+                            next_id = $(item).next(".submilestone-element").attr(rowIdentifier),
+                            prev_id = $(item).prev(".submilestone-element").attr(rowIdentifier);
+                console.log($(item).parent(), $(item).next(".submilestone-element"), $(item).prev(".submilestone-element"));
+                        if (next_id) {
+                            sortHigher(item_id, next_id);
+                        } else if (prev_id) {
+                            sortLesser(item_id, prev_id);
+                        }
+                    }
+
+                    function sortHigher(source_id, target_id) {
+                        requestSort('higher-priority-than', source_id, target_id);
+                    }
+
+                    function sortLesser(source_id, target_id) {
+                        requestSort('lesser-priority-than', source_id, target_id);
+                    }
+
+                    function requestSort(action, source_id, target_id) {
+                        console.log(4444);
+                        $.ajax({
+                            url  : codendi.tracker.base_url,
+                            data : {
+                                "func"      : action,
+                                "aid"       : source_id,
+                                "target-id" : target_id
+                            },
+                            method : "get"
+                        });
+                    }
                 }
             });
-
-            function prependSubmilestoneElement(target, $element) {
-                $element.addClass("submilestone-element")
-                $(target).prepend($element);
-                $element.draggable( "disable" );
-            }
-
-            function synchroniseSubmilestoneWithBackend(target, $element) {
-                //do it here
-            }
         }
+
+
     });
 })(jQuery);

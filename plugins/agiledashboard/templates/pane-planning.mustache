@@ -23,9 +23,13 @@ backlog.</p>
                 <th>{{parent}}</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="submilestone-element-rows">
+            <tr class="submilestone-drop-helper">
+                <td></td>
+                <td>Drop here</td>
+            </tr>
             {{#backlog_collection}}
-                <tr data-artifact-id="{id}">
+                <tr data-artifact-id="{id}" class="submilestone-element">
                     <td><a href="{{url}}">{{id}}</a></td>
                     <td>{{title}}</td>
                     <td>{{points}}</td>
@@ -61,6 +65,10 @@ backlog.</p>
                         </tr>
                     </thead>
                     <tbody class="submilestone-element-rows">
+                        <tr class="submilestone-drop-helper">
+                            <td></td>
+                            <td>Drop here</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -79,6 +87,11 @@ backlog.</p>
         padding-left: 1em;
         float: left;
     }
+    .submilestone-drop-helper {
+        display: none;
+        
+    }
+
 </style>
 <script type="text/javascript" src="/plugins/agiledashboard/js/planning-view.js"></script>
 <script type="text/javascript" src="/plugins/agiledashboard/js/milestone-planning.js"></script>
