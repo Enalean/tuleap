@@ -70,6 +70,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
         $submilestones = $this->milestone_factory->getSubMilestones($user, $milestone);
         $submilestone_collection = new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection($submilestone_tracker);
         foreach ($submilestones as $submilestone) {
+            $this->milestone_factory->updateMilestoneContextualInfo($user, $submilestone);
             $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter($submilestone));
         }
         return $submilestone_collection;
