@@ -38,11 +38,14 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
     /** @var String */
     private $parent_url;
 
-    /** @var Title */
+    /** @var String */
     private $parent_title;
 
-    /** @var Title */
+    /** @var String */
     private $redirect_to_self;
+
+    /** @var String */
+    private $status;
 
     public function __construct(Tracker_Artifact $artifact, $redirect_to_self) {
         $this->id    = $artifact->getId();
@@ -58,6 +61,10 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
 
     public function setRemainingEffort($value) {
         $this->remaining_effort = $value;
+    }
+
+    public function setStatus($status) {
+        $this->status = $status;
     }
 
     public function id() {
@@ -82,6 +89,10 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
 
     public function parent_url() {
         return $this->parent_url;
+    }
+
+    public function status() {
+        return $this->status;
     }
 
     private function getUrlWithRedirect($url) {

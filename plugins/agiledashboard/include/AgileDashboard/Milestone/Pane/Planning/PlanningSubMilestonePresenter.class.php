@@ -100,6 +100,10 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
             return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_parent');
         }
     }
+
+    public function header_status() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'header_status');
+    }
 }
 
 ?>

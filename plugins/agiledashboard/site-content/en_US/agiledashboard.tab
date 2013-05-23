@@ -52,3 +52,4 @@ plugin_agiledashboard_milestone_planning	help_right	On the right side, you have 
 plugin_agiledashboard_milestone_planning	help_dnd	When you click on a $1, you see it's content and you can drag'n drop from $2 backlog to a $1 or from a $1 back to the backlog.
 plugin_agiledashboard_milestone_planning	backlog_title	$1 backlog
 plugin_agiledashboard_milestone_planning	list_of_submilestone_title	List of $2 in $1
+plugin_agiledashboard_milestone_planning	header_status	Status

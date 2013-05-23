@@ -246,12 +246,14 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
             $backlog_item->setParent($parents[$artifact_id]);
         }
         if ($semantics[$artifact_id][Tracker_Semantic_Status::NAME] == AgileDashboard_BacklogItemDao::STATUS_OPEN) {
+            $backlog_item->setStatus(Tracker_Semantic_Status::OPEN);
             $this->setRemainingEffort($user, $backlog_item, $artifact);
             $this->todo_collection->push($backlog_item);
             if (! in_array($artifact_id, $planned)) {
                 $this->unplanned_open_collection->push($backlog_item);
             }
         } else {
+            $backlog_item->setStatus(Tracker_Semantic_Status::CLOSED);
             $this->done_collection->push($backlog_item);
         }
         $this->all_collection->push($backlog_item);

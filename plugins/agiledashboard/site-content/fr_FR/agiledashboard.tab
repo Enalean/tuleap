@@ -52,3 +52,4 @@ plugin_agiledashboard_milestone_planning	help_right	Sur la droite, la liste des 
 plugin_agiledashboard_milestone_planning	help_dnd	Lorsque vous clickez sur un(e) $1, le backlog de ce(tte) $1 appartait. Vous pouvez faire un glissé-déposé des éléments de gauche à droite.
 plugin_agiledashboard_milestone_planning	backlog_title	$1 backlog
 plugin_agiledashboard_milestone_planning	list_of_submilestone_title	Liste des $2 de $1
+plugin_agiledashboard_milestone_planning	header_status	Statut
