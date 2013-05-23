@@ -49,7 +49,7 @@ backlog.</p>
         <div>
             <h4>
                 <a href="{{milestone_url}}">{{milestone_title}}</a>
-                {{#display_milestone_dates}}{{start_date}} - {{end_date}}{{/display_milestone_dates}} - {{status}}
+                {{#display_milestone_dates}}{{start_date}} - {{end_date}}{{/display_milestone_dates}} - <span class="label {{#is_open}}label-success{{/is_open}}">{{status}}</span>
             </h4>
             <div data-loaded="false" class="submilestone-data" data-submilestone-id="{{id}}" data-planning-id="{{planning_id}}">
                 <p>Capacity: <span class="submilestone-capacity"></span></p>

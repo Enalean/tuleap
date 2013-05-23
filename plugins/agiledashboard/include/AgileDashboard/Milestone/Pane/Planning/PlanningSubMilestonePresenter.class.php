@@ -76,7 +76,11 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
     }
 
     public function status() {
-        return '';
+        return 's';
+    }
+
+    public function is_open() {
+        return true;
     }
 
     public function backlog_item_title() {
