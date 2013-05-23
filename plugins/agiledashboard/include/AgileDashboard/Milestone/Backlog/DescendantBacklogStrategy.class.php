@@ -47,6 +47,10 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
     }
 
     private function sortByPriority(array $artifacts) {
+        if (! $artifacts) {
+            return $artifacts;
+        }
+
         $ids              = array_map(array($this, 'extractId'), $artifacts);
         $artifacts        = array_combine($ids, $artifacts);
         $sorted_ids       = $this->dao->getIdsSortedByPriority($ids);

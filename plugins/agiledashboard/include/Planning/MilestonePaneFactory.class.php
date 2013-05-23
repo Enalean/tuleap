@@ -129,17 +129,17 @@ class Planning_MilestonePaneFactory {
     }
 
     private function getPlanningPaneInfo(Planning_Milestone $milestone) {
-        $tracker = $this->submilestone_finder->findFirstSubmilestoneTracker($milestone);
-        if (! $tracker) {
+        $submilestone_tracker = $this->submilestone_finder->findFirstSubmilestoneTracker($milestone);
+        if (! $submilestone_tracker) {
             return;
         }
 
-        $pane_info = new AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo($milestone, $tracker);
+        $pane_info = new AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo($milestone, $submilestone_tracker);
         if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo::IDENTIFIER) {
             $pane_info->setActive(true);
             $this->active_pane = new AgileDashboard_Milestone_Pane_Planning_PlanningPane(
                 $pane_info,
-                $this->getPlanningPresenterBuilder()->getMilestonePlanningPresenter($this->request->getCurrentUser(), $milestone)
+                $this->getPlanningPresenterBuilder()->getMilestonePlanningPresenter($this->request->getCurrentUser(), $milestone, $submilestone_tracker)
             );
         }
 
