@@ -51,6 +51,7 @@ class Git_Driver_Gerrit_MembershipManager {
     private $gerrit_server_factory;
     private $logger;
     private $gerrit_user_manager;
+    private $ugroup_manager;
 
     private $cache_groups = array();
 
@@ -59,13 +60,15 @@ class Git_Driver_Gerrit_MembershipManager {
         Git_Driver_Gerrit                    $driver,
         Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        Logger                               $logger
+        Logger                               $logger,
+        UGroupManager                        $ugroup_manager
     ) {
         $this->dao                    = $dao;
         $this->driver                 = $driver;
         $this->gerrit_user_manager    = $gerrit_usermanager;
         $this->gerrit_server_factory  = $gerrit_server_factory;
         $this->logger                 = $logger;
+        $this->ugroup_manager         = $ugroup_manager;
     }
 
     /**
@@ -184,7 +187,8 @@ class Git_Driver_Gerrit_MembershipManager {
     public function createGroupForServer(Git_RemoteServer_GerritServer $server, UGroup $ugroup) {
         try {
             if ($this->ugroupCanBeMigrated($ugroup)) {
-                return $this->createGroupOnServerWithoutCheckingUGroupValidity($server, $ugroup);
+                $admin_ugroup = $this->getProjectAdminsUGroup($ugroup);
+                return $this->createGroupOnServerWithoutCheckingUGroupValidity($server, $ugroup, $admin_ugroup);
             } else {
                 return false;
             }
@@ -201,11 +205,16 @@ class Git_Driver_Gerrit_MembershipManager {
         return false;
     }
 
-    private function createGroupOnServerWithoutCheckingUGroupValidity(Git_RemoteServer_GerritServer $server, UGroup $ugroup) {
+    private function getProjectAdminsUGroup(UGroup $ugroup) {
+        return $this->ugroup_manager->getUGroup($ugroup->getProject(), UGroup::PROJECT_ADMIN);
+    }
+
+    private function createGroupOnServerWithoutCheckingUGroupValidity(Git_RemoteServer_GerritServer $server, UGroup $ugroup, UGroup $admin_ugroup) {
+        $admin_group_name  = $this->getFullyQualifiedUGroupName($admin_ugroup);
         $gerrit_group_name = $this->getFullyQualifiedUGroupName($ugroup);
 
         if (! $this->driver->doesTheGroupExist($server, $gerrit_group_name)) {
-            $this->driver->createGroup($server, $gerrit_group_name);
+            $this->driver->createGroup($server, $gerrit_group_name, $admin_group_name);
         }
         $this->dao->addReference($ugroup->getProjectId(), $ugroup->getId(), $server->getId());
         $this->fillGroupWithMembers($ugroup);
