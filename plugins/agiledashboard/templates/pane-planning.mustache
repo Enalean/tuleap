@@ -16,7 +16,7 @@ backlog.</p>
 <!--{{#can_plan}}<font color="pink"><b style="background:green"><blink>Dear front end team, use {can_plan} to prevent unauthorized people to drag 'n drop from backlog to submilestone</blink></font></b>{{/can_plan}}-->
 
 
-    <table class="table table-striped table-hover table-bordered">
+    <table class="table table-striped table-hover table-bordered submilestone-element-rows">
         <thead>
             <tr>
                 <th>Id</th>
@@ -25,10 +25,7 @@ backlog.</p>
                 <th>{{parent}}</th>
             </tr>
         </thead>
-        <tbody class="submilestone-element-rows">
-            <tr class="submilestone-drop-helper">
-                <td rowspan="4"></td>
-            </tr>
+        <tbody class="">
             {{#backlog_collection}}
                 <tr data-artifact-id="{id}" class="submilestone-element">
                     <td><a href="{{url}}">{{id}}</a></td>
@@ -56,7 +53,7 @@ backlog.</p>
             </h4>
             <div data-loaded="false" class="submilestone-data" data-submilestone-id="{{id}}" data-planning-id="{{planning_id}}">
                 <p>Capacity: <span class="submilestone-capacity"></span></p>
-                <table class="table table-striped table-hover table-bordered">
+                <table class="table table-striped table-hover table-bordered submilestone-element-rows">
                     <thead>
                         <tr>
                             <th>Id</th>
@@ -65,10 +62,7 @@ backlog.</p>
                             <th>{{parent}}</th>
                         </tr>
                     </thead>
-                    <tbody class="submilestone-element-rows">
-                        <tr class="submilestone-drop-helper">
-                            <td rowspan="4"></td>
-                        </tr>
+                    <tbody class="">
                     </tbody>
                 </table>
             </div>
@@ -87,11 +81,6 @@ backlog.</p>
         padding-left: 1em;
         float: left;
     }
-    .submilestone-drop-helper {
-        display: none;
-        
-    }
-
 </style>
 <script type="text/javascript" src="/plugins/agiledashboard/js/planning-view.js"></script>
 <script type="text/javascript" src="/plugins/agiledashboard/js/milestone-planning.js"></script>
