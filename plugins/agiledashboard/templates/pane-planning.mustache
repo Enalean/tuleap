@@ -12,7 +12,7 @@ not already scheduled for a {sprint}.</p>
 backlog.</p>
 
 
-<div class="agiledashboard-planning-backlog">
+<div class="agiledashboard-planning-backlog" data-milestone-planning-id="{{milestone_planning_id}}" data-milestone-id="{{milestone_id}}">
 <!--{{#can_plan}}<font color="pink"><b style="background:green"><blink>Dear front end team, use {can_plan} to prevent unauthorized people to drag 'n drop from backlog to submilestone</blink></font></b>{{/can_plan}}-->
 
 
@@ -27,10 +27,10 @@ backlog.</p>
         </thead>
         <tbody class="">
             {{#backlog_collection}}
-                <tr data-artifact-id="{id}" class="submilestone-element">
+                <tr data-artifact-id="{{id}}" class="submilestone-element">
                     <td><a href="{{url}}">{{id}}</a></td>
                     <td>{{title}}</td>
-                    <td>{{points}}</td>
+                    <td class="submilestone-element-capacity">{{points}}</td>
                     <td><a href="{{parent_url}}">{{parent_title}}</a></td>
                 </tr>
             {{/backlog_collection}}
@@ -84,4 +84,3 @@ backlog.</p>
 </style>
 <script type="text/javascript" src="/plugins/agiledashboard/js/planning-view.js"></script>
 <script type="text/javascript" src="/plugins/agiledashboard/js/milestone-planning.js"></script>
-<script type="text/javascript" src="/plugins/agiledashboard/js/utils/TableRowSorter.js"></script>
