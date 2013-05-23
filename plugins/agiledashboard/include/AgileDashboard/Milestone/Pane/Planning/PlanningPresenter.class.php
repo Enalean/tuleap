@@ -29,6 +29,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
     private $submilestone_collection;
     private $submilestone_item_type;
     private $add_new_submilestone_url;
+    private $can_plan;
     private $redirect_to_self;
 
     public function __construct(
@@ -39,6 +40,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
         $submilestone_item_type,
         $add_new_submilestone_url,
         $can_add_submilestone,
+        $can_plan,
         $redirect_to_self
     ) {
         $this->backlog_collection       = $backlog_collection;
@@ -48,6 +50,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
         $this->submilestone_item_type   = $submilestone_item_type;
         $this->add_new_submilestone_url = $add_new_submilestone_url;
         $this->can_add_submilestone     = $can_add_submilestone;
+        $this->can_plan                 = $can_plan;
         $this->redirect_to_self         = $redirect_to_self;
     }
 
@@ -89,6 +92,10 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
 
     public function lab() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'lab');
+    }
+
+    public function can_plan() {
+        return $this->can_plan;
     }
 
 }

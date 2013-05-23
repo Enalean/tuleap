@@ -62,6 +62,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
             $submilestone_collection->getName(),
             $submilestone_collection->getSubmitNewUrlLinkedToMilestone($milestone),
             $submilestone_collection->canCreateNew($user),
+            $this->canPlan($user, $milestone),
             $redirect_to_self
         );
     }
@@ -74,6 +75,17 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
             $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter($submilestone));
         }
         return $submilestone_collection;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canPlan(PFUser $user, Planning_Milestone $milestone) {
+        $art_link_field = $milestone->getArtifact()->getAnArtifactLinkField($user);
+        if ($art_link_field && $art_link_field->userCanUpdate($user)) {
+            return true;
+        }
+        return false;
     }
 }
 ?>
