@@ -180,6 +180,13 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
         }
     }
 
+    public function itCreatesGroupWithoutOwnerWhenSelfOwnedToAvoidChickenEggIssue() {
+        stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
+
+        $create_group_command = "gerrit create-group firefox/project_admins";
+        expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
+        $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_admins', 'firefox/project_admins');
+    }
 }
 
 class Git_Driver_Gerrit_getGroupUUIDTest extends Git_Driver_Gerrit_baseTest {
