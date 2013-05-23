@@ -27,6 +27,8 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
     private $parent_item_type  = '';
     private $backlog_collection;
     private $submilestone_collection;
+    private $milestone_id;
+    private $milestone_planning_id;
     private $submilestone_item_type;
     private $add_new_submilestone_url;
     private $can_plan;
@@ -35,6 +37,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $backlog_collection,
         AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection $submilestone_collection,
+        Planning_ArtifactMilestone $milestone,
         $parent_item_type,
         $backlog_item_type,
         $submilestone_item_type,
@@ -52,6 +55,16 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
         $this->can_add_submilestone     = $can_add_submilestone;
         $this->can_plan                 = $can_plan;
         $this->redirect_to_self         = $redirect_to_self;
+        $this->milestone_id             = $milestone->getArtifactId();
+        $this->milestone_planning_id    = $milestone->getPlanningId();
+    }
+
+    public function milestone_id() {
+        return $this->milestone_id;
+    }
+
+    public function milestone_planning_id() {
+        return $this->milestone_planning_id;
     }
 
     public function title() {
