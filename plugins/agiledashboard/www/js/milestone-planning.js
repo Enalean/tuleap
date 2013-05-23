@@ -167,15 +167,13 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                         self.updateSubmilestoneCapacity(data_container);
 
                         function getMainFunc() {
-                            var submilestoneid = getSubmilestoneId();
-                            console.log(submilestoneid)
+                            var submilestoneid = $(ui.item).parents(".submilestone-data").first().attr('data-submilestone-id');
+
                             if(submilestoneid == from_submilestone) {
                                 return ""
                             } else if (typeof(submilestoneid) === "undefined") {
-                                has_submilestone_changed = true;
                                 return "unassociate-artifact-to"
                             } else {
-                                has_submilestone_changed = true;
                                 return "associate-artifact-to"
                             }
                         }
