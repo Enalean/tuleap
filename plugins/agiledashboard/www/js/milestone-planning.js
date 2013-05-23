@@ -114,7 +114,8 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
         },
 
         makeSubmilestonesSortable : function(data_container) {
-            var self = this;
+            var self = this,
+                from_submilestone;
 
             $( ".submilestone-element-rows" ).sortable({
                 connectWith: ".submilestone-element-rows",
@@ -122,10 +123,11 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                 tolerance : "pointer",
                 scrollSensitivity: 50,
                 items : ".submilestone-element",
+                start : function (event, ui) {
+                    console.log($(event.target).parents(".submilestone-data").first().attr('data-submilestone-id'))
+                    from_submilestone = $(event.target).parents(".submilestone-data").first().attr('data-submilestone-id');
+                },
                 stop: function (event, ui) {
-                    var submilestone_id;
-
-                    submilestone_id = $(ui.item).parents(".submilestone-data").first().attr('data-submilestone-id');
                     sort(ui.item, "data-artifact-id");
 
                     function sort(item, rowIdentifier) {
@@ -140,6 +142,16 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                             addToSubmilestoneMilestone(item_id, prev_id);
                         }
                         self.updateSubmilestoneCapacity(data_container);
+                    }
+
+                    function getSubmilestoneId() {
+                        id = $(ui.item).parents(".submilestone-data").first().attr('data-submilestone-id');
+
+                        if(typeof(id) === "undefined") {
+                            id = from_submilestone;
+                        }
+
+                        return id;
                     }
 
                     function sortHigher(source_id, target_id) {
@@ -161,7 +173,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                                 "func"             : action,
                                 "aid"              : source_id,
                                 "target-id"        : target_id,
-                                "submilestone_id"  : submilestone_id
+                                "submilestone_id"  : getSubmilestoneId()
                             },
                             method : "get"
                         });
