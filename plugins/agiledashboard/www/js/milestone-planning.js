@@ -84,15 +84,24 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
         },
 
         setSubmilestonesEditLinks : function(data_container) {
-            var urls = $('tr.submilestone-element td > a', data_container);
+            var urls                  = $('tr.submilestone-element td > a', data_container);
+            var milestone_id          = this.getMilestoneId();
+            var milestone_planning_id = this.getMilestonePlanningId();
 
             urls.each( function(index, url) {
-                var $url    = $(url);
-                var new_url = $url.attr('href') + '&' + 'planning[planning][' + 6 + ']=' + 24;
+                var new_url = $(url).attr('href') + '&' + 'planning[planning][' + milestone_planning_id + ']=' + milestone_id;
 
-                $url.attr('href', new_url);
+                $(url).attr('href', new_url);
             });
 
+        },
+
+        getMilestoneId : function() {
+            return $('div.agiledashboard-planning-backlog').attr('data-milestone-id');
+        },
+
+        getMilestonePlanningId : function() {
+            return $('div.agiledashboard-planning-backlog').attr('data-milestone-planning-id');
         },
 
         updateSubmilestoneCapacity : function(data_container) {
