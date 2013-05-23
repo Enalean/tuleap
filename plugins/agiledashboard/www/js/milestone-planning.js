@@ -119,7 +119,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                 dropOnEmpty: true,
                 tolerance : "pointer",
                 scrollSensitivity: 50,
-                items : ".submilestone-element",
+                items : ".submilestone-element:not(.submilestone-element-closed)",
                 stop: function (event, ui) {
                     var submilestone_id;
 
