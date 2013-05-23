@@ -56,7 +56,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
     }
 
     public function display_milestone_dates() {
-        return true;
+        return $this->milestone_start_date || $this->milestone_end_date;
     }
 
     public function start_date() {

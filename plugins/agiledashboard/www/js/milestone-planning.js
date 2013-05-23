@@ -28,7 +28,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
         initialize: function (container) {
             var self = this;
 
-            $("#accordion > div").accordion({
+            $("#accordion > table").accordion({
                 header: ".agiledashboard-planning-submilestone-header",
                 collapsible: true,
                 animate: false,

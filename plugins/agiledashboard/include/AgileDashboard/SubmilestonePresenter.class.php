@@ -23,23 +23,16 @@
  */
 
 class AgileDashboard_SubmilestonePresenter {
-    private $todo_collection;
-    private $done_collection;
+    private $backlog_collection;
 
     public function __construct(
-            AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo_collection,
-            AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done_collection
+            AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $backlog_collection
             ) {
-        $this->todo_collection = $todo_collection;
-        $this->done_collection = $done_collection;
+        $this->backlog_collection = $backlog_collection;
     }
 
-    public function todo_collection() {
-        return $this->todo_collection;
-    }
-
-    public function done_collection() {
-        return $this->done_collection;
+    public function backlog_collection() {
+        return $this->backlog_collection;
     }
 }
 
