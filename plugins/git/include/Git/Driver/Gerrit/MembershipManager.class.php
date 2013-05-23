@@ -188,9 +188,7 @@ class Git_Driver_Gerrit_MembershipManager {
         try {
             if ($this->ugroupCanBeMigrated($ugroup)) {
                 $admin_ugroup = $this->getProjectAdminsUGroup($ugroup);
-                if ( ! $this->doesGroupExistOnServer($server, $admin_ugroup)) {
-                    $this->createGroupOnServerWithoutCheckingUGroupValidity($server, $admin_ugroup, $admin_ugroup);
-                }
+                $this->createProjectAdminsGroup($server, $admin_ugroup);
                 return $this->createGroupOnServerWithoutCheckingUGroupValidity($server, $ugroup, $admin_ugroup);
             } else {
                 return false;
@@ -206,6 +204,12 @@ class Git_Driver_Gerrit_MembershipManager {
             $this->logger->error('Unknown error: ' . $e->getMessage());
         }
         return false;
+    }
+
+    private function createProjectAdminsGroup(Git_RemoteServer_GerritServer $server, UGroup $admin_ugroup) {
+        if ( ! $this->doesGroupExistOnServer($server, $admin_ugroup)) {
+            $this->createGroupOnServerWithoutCheckingUGroupValidity($server, $admin_ugroup, $admin_ugroup);
+        }
     }
 
     private function getProjectAdminsUGroup(UGroup $ugroup) {
