@@ -68,6 +68,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                 success : function(data) {
                     self.setSubmilestoneDataLoaded(data_container);
                     data_container.find('tbody').append(data);
+                    self.setSubmilestonesEditLinks(data_container);
                     self.updateSubmilestoneCapacity(data_container);
                     self.makeSubmilestonesSortable(data_container);
                     self.makeSubmilestonesDroppable(data_container);
@@ -80,6 +81,18 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 
         setSubmilestoneDataLoaded : function(data_container) {
             data_container.attr("data-loaded", "true");
+        },
+
+        setSubmilestonesEditLinks : function(data_container) {
+            var urls = $('tr.submilestone-element td > a', data_container);
+
+            urls.each( function(index, url) {
+                var $url    = $(url);
+                var new_url = $url.attr('href') + '&' + 'planning[planning][' + 6 + ']=' + 24;
+
+                $url.attr('href', new_url);
+            });
+
         },
 
         updateSubmilestoneCapacity : function(data_container) {
