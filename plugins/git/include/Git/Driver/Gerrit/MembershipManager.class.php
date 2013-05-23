@@ -222,8 +222,8 @@ class Git_Driver_Gerrit_MembershipManager {
 
         if (! $this->driver->doesTheGroupExist($server, $gerrit_group_name)) {
             $this->driver->createGroup($server, $gerrit_group_name, $admin_group_name);
+            $this->dao->addReference($ugroup->getProjectId(), $ugroup->getId(), $server->getId());
         }
-        $this->dao->addReference($ugroup->getProjectId(), $ugroup->getId(), $server->getId());
         $this->fillGroupWithMembers($ugroup);
 
         return $gerrit_group_name;
