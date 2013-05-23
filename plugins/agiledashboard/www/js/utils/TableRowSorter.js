@@ -24,7 +24,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
     tuleap.agiledashboard.TableRowSorter = function (params) {
         var container               = params.rowContainer,
             rowIdentifier           = params.rowIdentifier;
- 
+
         container.sortable({
             revert: true,
             axis: 'y',
