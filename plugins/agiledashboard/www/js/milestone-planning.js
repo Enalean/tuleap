@@ -127,48 +127,58 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                     from_submilestone = $(event.target).parents(".submilestone-data").first().attr('data-submilestone-id');
                 },
                 stop: function (event, ui) {
-                    sort(ui.item, "data-artifact-id");
+                    var rowIdentifier = "data-artifact-id",
+                        item = ui.item,
+                        submilestone_id,
+                        main_func,
+                        item_id = $(item).attr(rowIdentifier),
+                        next_id = $(item).next(".submilestone-element").attr(rowIdentifier),
+                        prev_id = $(item).prev(".submilestone-element").attr(rowIdentifier);
 
-                    function sort(item, rowIdentifier) {
-                        var item_id = $(item).attr(rowIdentifier),
-                            next_id = $(item).next(".submilestone-element").attr(rowIdentifier),
-                            prev_id = $(item).prev(".submilestone-element").attr(rowIdentifier);
-                        if (next_id) {
-                            sortHigher(item_id, next_id);
-                        } else if (prev_id) {
-                            sortLesser(item_id, prev_id);
+                        main_func = getMainFunc();
+
+                        if(main_func == "" ) {
+                            console.log(55555555)
+                            if (next_id) {
+                                sortHigher(item_id, next_id);
+                            } else if (prev_id) {
+                                sortLesser(item_id, prev_id);
+                            }
                         } else {
-                            addToSubmilestoneMilestone(item_id, prev_id);
+                            console.log(main_func)
+                            $.ajax({
+                                url  : codendi.tracker.base_url,
+                                data : {
+                                    "func"              : main_func,
+                                    "aid"               : source_id,
+                                    "linked-artifact-id": getSubmilestoneId()
+                                },
+                                method : "get",
+                                success : function() {
+                                    if (next_id) {
+                                        sortHigher(item_id, next_id);
+                                    } else if (prev_id) {
+                                        sortLesser(item_id, prev_id);
+                                    }
+                                }
+                            });
                         }
+                        
                         self.updateSubmilestoneCapacity(data_container);
-                    }
 
-                    function sortHigher(source_id, target_id) {
-                        requestSort('higher-priority-than', source_id, target_id);
-                    }
-
-                    function sortLesser(source_id, target_id) {
-                        requestSort('lesser-priority-than', source_id, target_id);
-                    }
-
-                    function addToSubmilestoneMilestone() {
-                        requestSort('only-element', '', '');
-                    }
-
-                    function requestSort(action, source_id, target_id) {
-                        var submilestone_id;
-
-                        $.ajax({
-                            url  : codendi.tracker.base_url,
-                            data : {
-                                "func"             : action,
-                                "aid"              : source_id,
-                                "target-id"        : target_id,
-                                "submilestone_id"  : getSubmilestoneId(),
-                                "action"           : getAction()
-                            },
-                            method : "get"
-                        });
+                        function getMainFunc() {
+                            var submilestoneid = getSubmilestoneId();
+                            console.log(submilestoneid)
+                            if(submilestoneid == from_submilestone) {
+                                return ""
+                            } else if (typeof(submilestoneid) === "undefined") {
+                                has_submilestone_changed = true;
+                                return "unassociate-artifact-to"
+                            } else {
+                                has_submilestone_changed = true;
+                                return "associate-artifact-to"
+                            }
+                        }
 
                         function getSubmilestoneId() {
                             submilestone_id = $(ui.item).parents(".submilestone-data").first().attr('data-submilestone-id');
@@ -180,16 +190,25 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                             return submilestone_id;
                         }
 
-                        function getAction() {
-                            if(submilestone_id == from_submilestone) {
-                                return "submilestone-sort"
-                            } else if (typeof(submilestone_id) === "undefined") {
-                                return "move-to-backlog"
-                            } else {
-                                return "submilestone-swap"
-                            }
+                        function sortHigher(source_id, target_id) {
+                            updateOrder('higher-priority-than', source_id, target_id);
                         }
-                    }
+
+                        function sortLesser(source_id, target_id) {
+                            updateOrder('lesser-priority-than', source_id, target_id);
+                        }
+
+                        function updateOrder(func, source_id, target_id) {
+                            $.ajax({
+                                url  : codendi.tracker.base_url,
+                                data : {
+                                    "func"             : func,
+                                    "aid"              : source_id,
+                                    "target-id"        : target_id
+                                },
+                                method : "get"
+                            })
+                        }
                 }
             }).disableSelection();   
         }
