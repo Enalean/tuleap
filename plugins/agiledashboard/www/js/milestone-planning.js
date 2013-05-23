@@ -114,6 +114,8 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
         },
 
         makeSubmilestonesSortable : function(data_container) {
+            var self = this;
+
             $( ".submilestone-element-rows" ).sortable({
                 connectWith: ".submilestone-element-rows",
                 dropOnEmpty: true,
@@ -137,6 +139,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                         } else {
                             addToSubmilestoneMilestone(item_id, prev_id);
                         }
+                        self.updateSubmilestoneCapacity(data_container);
                     }
 
                     function sortHigher(source_id, target_id) {
