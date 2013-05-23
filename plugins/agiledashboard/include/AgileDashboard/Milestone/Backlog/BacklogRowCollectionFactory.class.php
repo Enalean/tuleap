@@ -37,6 +37,9 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
     private $form_element_factory;
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
+    private $all_collection;
+
+    /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
     private $todo_collection;
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
@@ -59,6 +62,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
         $this->form_element_factory = $form_element_factory;
         $this->milestone_factory    = $milestone_factory;
 
+        $this->all_collection            = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
         $this->todo_collection           = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
         $this->done_collection           = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
         $this->unplanned_open_collection = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
@@ -96,6 +100,17 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
         $this->initCollections($user, $milestone, $backlog_strategy, $redirect_to_self);
 
         return $this->unplanned_open_collection;
+    }
+
+    public function getAllCollection(
+        PFUser $user,
+        Planning_ArtifactMilestone $milestone,
+        AgileDashboard_Milestone_Backlog_BacklogStrategy $backlog_strategy,
+        $redirect_to_self
+    ) {
+        $this->initCollections($user, $milestone, $backlog_strategy, $redirect_to_self);
+
+        return $this->all_collection;
     }
 
     private function initCollections(
@@ -239,6 +254,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
         } else {
             $this->done_collection->push($backlog_item);
         }
+        $this->all_collection->push($backlog_item);
     }
 
     private function getPlannedArtifactIds(PFUser $user, Planning_Milestone $milestone) {
