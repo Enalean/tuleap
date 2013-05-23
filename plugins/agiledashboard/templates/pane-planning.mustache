@@ -1,10 +1,9 @@
 <div class="alert alert-info">
     <span class="lab_features">{{{lab}}}</span>
 </div>
-<h3>{{title}}</h3>
 
 <div class="row-fluid">
-    <div class="span6">
+    <div class="span12">
         <div class="well">
             <p>{{help_intro}}
             <ul>
@@ -28,6 +27,7 @@
 
 <div class="row-fluid">
     <div class="span6">
+        <h3>{{backlog_title}}</h3>
         <div class="agiledashboard-planning-backlog" data-milestone-planning-id="{{milestone_planning_id}}" data-milestone-id="{{milestone_id}}">
             <table class="table table-striped table-hover table-bordered submilestone-element-rows">
                 <thead>
@@ -51,8 +51,9 @@
             </table>
         </div>
     </div>
-    <div class="span6">
 
+    <div class="span6">
+        <h3>{{list_of_submilestone_title}}</h3>
         <div class="agiledashboard-planning-submilestones">
             <div id="accordion">
                 <table class="table table-bordered table-striped">

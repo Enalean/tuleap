@@ -69,8 +69,12 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
         return $this->milestone_planning_id;
     }
 
-    public function title() {
-        return $this->backlog_item_type;
+    public function backlog_title() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'backlog_title', array($this->milestone_item_type));
+    }
+
+    public function list_of_submilestone_title() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'list_of_submilestone_title', array($this->submilestone_item_type, $this->milestone_item_type));
     }
 
     public function help_intro() {
@@ -99,6 +103,10 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
 
     public function add_new_submilestone() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'add_subitem', array($this->submilestone_item_type));
+    }
+
+    public function title() {
+        return $this->backlog_item_type;
     }
 
     public function points() {
