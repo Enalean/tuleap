@@ -129,7 +129,7 @@ class Planning_MilestonePaneFactory {
     }
 
     private function getPlanningPaneInfo(Planning_Milestone $milestone) {
-        $tracker = $this->submilestone_finder->findSubmilestone($milestone);
+        $tracker = $this->submilestone_finder->findFirstSubmilestoneTracker($milestone);
         if (! $tracker) {
             return;
         }

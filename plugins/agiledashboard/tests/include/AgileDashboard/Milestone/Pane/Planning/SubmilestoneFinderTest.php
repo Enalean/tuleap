@@ -72,7 +72,7 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
         stub($this->sprint_planning)->getBacklogTracker()->returns($this->user_story_tracker);
         stub($this->tracker_hierarchy_factory)->getChildren($this->sprint_tracker_id)->returns(array());
 
-        $tracker = $this->finder->findSubmilestone($this->sprint_milestone);
+        $tracker = $this->finder->findFirstSubmilestoneTracker($this->sprint_milestone);
 
         $this->assertNull($tracker);
     }
@@ -87,7 +87,7 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
         stub($this->tracker_hierarchy_factory)->getChildren($this->release_tracker_id)->returns(array($this->sprint_tracker));
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->sprint_tracker)->returns($this->sprint_planning);
 
-        $tracker = $this->finder->findSubmilestone($this->release_milestone);
+        $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
 
         $this->assertEqual($tracker, $this->sprint_tracker);
     }
@@ -101,7 +101,7 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
         stub($this->tracker_hierarchy_factory)->getChildren($this->release_tracker_id)->returns(array($this->sprint_tracker));
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->sprint_tracker)->returns(null);
 
-        $tracker = $this->finder->findSubmilestone($this->release_milestone);
+        $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
 
         $this->assertNull($tracker);
     }
@@ -117,7 +117,7 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
         stub($this->tracker_hierarchy_factory)->getAllParents($this->user_story_tracker)->returns(array($this->epic_tracker));
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->sprint_tracker)->returns($this->sprint_planning);
 
-        $tracker = $this->finder->findSubmilestone($this->release_milestone);
+        $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
 
         $this->assertEqual($tracker, $this->sprint_tracker);
     }
@@ -135,7 +135,7 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
         stub($this->tracker_hierarchy_factory)->getAllParents($this->team_tracker)->returns(array());
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->requirement_tracker)->returns($this->requirement_planning);
 
-        $tracker = $this->finder->findSubmilestone($this->release_milestone);
+        $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
 
         $this->assertNull($tracker);
     }
@@ -152,7 +152,7 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
         stub($this->tracker_hierarchy_factory)->getAllParents($this->user_story_tracker)->returns(array($this->epic_tracker, $this->theme_tracker));
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->sprint_tracker)->returns($this->sprint_planning);
 
-        $tracker = $this->finder->findSubmilestone($this->release_milestone);
+        $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
 
         $this->assertEqual($tracker, $this->sprint_tracker);
     }
@@ -175,7 +175,7 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->requirement_tracker)->returns($this->requirement_planning);
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->sprint_tracker)->returns($this->sprint_planning);
 
-        $tracker = $this->finder->findSubmilestone($this->release_milestone);
+        $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
 
         $this->assertEqual($tracker, $this->sprint_tracker);
     }

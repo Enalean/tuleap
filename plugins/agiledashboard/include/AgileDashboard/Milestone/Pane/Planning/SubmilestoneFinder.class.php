@@ -38,7 +38,7 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder {
         $this->planning_factory  = $planning_factory;
     }
 
-    public function findSubmilestone(Planning_Milestone $milestone) {
+    public function findFirstSubmilestoneTracker(Planning_Milestone $milestone) {
         $children = $this->hierarchy_factory->getChildren($milestone->getTrackerId());
 
         if (! $children) {
