@@ -51,7 +51,7 @@ class AgileDashboard_Milestone_Backlog_BacklogStrategyFactory {
      */
     public function getBacklogStrategy(Planning_ArtifactMilestone $milestone) {
         $first_child_backlog_tracker = $this->getFirstChildBacklogTracker($milestone);
-        if ($first_child_backlog_tracker != $milestone->getPlanning()->getBacklogTracker()) {
+        if ($first_child_backlog_tracker && ($first_child_backlog_tracker != $milestone->getPlanning()->getBacklogTracker())) {
             return $this->getDescendantBacklogStrategy($milestone, $first_child_backlog_tracker);
         }
         return $this->getSelfBacklogStrategy($milestone);
