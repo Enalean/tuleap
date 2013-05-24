@@ -1,3 +1,6 @@
+Version 5.125 - Tuleap 6.1
+    * Fix request #2722 - Date filtering does not work properly
+
 Version 5.124 - Tuleap 6.1
     * Fix sla #3404: Stored XSS Vulnerability in Public Areas widget (Contrib STMicroelectronics)
 
