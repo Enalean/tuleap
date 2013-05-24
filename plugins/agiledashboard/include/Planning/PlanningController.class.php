@@ -38,13 +38,20 @@ class Planning_Controller extends MVC2_PluginController {
      */
     private $planning_factory;
     
-    public function __construct(Codendi_Request $request, PlanningFactory $planning_factory, Planning_MilestoneFactory $milestone_factory, $plugin_theme_path) {
+    public function __construct(
+        Codendi_Request $request,
+        PlanningFactory $planning_factory,
+        Planning_ShortAccessFactory $planning_shortaccess_factory,
+        Planning_MilestoneFactory $milestone_factory,
+        $plugin_theme_path
+    ) {
         parent::__construct('agiledashboard', $request);
         
-        $this->group_id          = (int)$request->get('group_id');
-        $this->planning_factory  = $planning_factory;
-        $this->milestone_factory = $milestone_factory;
-        $this->plugin_theme_path = $plugin_theme_path;
+        $this->group_id                     = (int)$request->get('group_id');
+        $this->planning_factory             = $planning_factory;
+        $this->planning_shortaccess_factory = $planning_shortaccess_factory;
+        $this->milestone_factory            = $milestone_factory;
+        $this->plugin_theme_path            = $plugin_theme_path;
     }
     
     public function admin() {
@@ -54,7 +61,12 @@ class Planning_Controller extends MVC2_PluginController {
     }
     
     public function index() {
-        $plannings = $this->planning_factory->getPlanningsShortAccess($this->getCurrentUser(), $this->group_id, $this->milestone_factory, $this->plugin_theme_path);
+        $plannings = $this->planning_shortaccess_factory->getPlanningsShortAccess(
+            $this->getCurrentUser(),
+            $this->group_id,
+            $this->milestone_factory,
+            $this->plugin_theme_path
+        );
         $presenter = new Planning_IndexPresenter($plannings, $this->plugin_theme_path);
         $this->render('index', $presenter);
     }

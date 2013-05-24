@@ -207,43 +207,56 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function process(Codendi_Request $request) {
+        $planning_factory               = $this->getPlanningFactory();
+        $milestone_factory              = $this->getMilestoneFactory();
+        $hierarcy_factory               = $this->getHierarchyFactory();
+        $pane_presenter_builder_factory = $this->getPanePresenterBuilderFactory($milestone_factory);
+
+        $pane_factory = $this->getPaneFactory($request, $planning_factory, $milestone_factory, $hierarcy_factory, $pane_presenter_builder_factory);
+
+        $milestone_controller_factory = new Planning_MilestoneControllerFactory(
+            $this,
+            ProjectManager::instance(),
+            $milestone_factory,
+            $this->getPlanningFactory(),
+            $hierarcy_factory,
+            $pane_presenter_builder_factory,
+            $pane_factory
+        );
+
         $router = new AgileDashboardRouter(
             $this,
-            $this->getMilestoneFactory(),
-            $this->getPlanningFactory(),
-            $this->getMilestoneControllerFactory($request)
+            $milestone_factory,
+            $planning_factory,
+            new Planning_ShortAccessFactory($planning_factory, $pane_factory),
+            $milestone_controller_factory
         );
+
         $router->route($request);
     }
 
-    private function getMilestoneControllerFactory(Codendi_Request $request) {
-        return new Planning_MilestoneControllerFactory(
-            $this,
-            ProjectManager::instance(),
-            $this->getMilestoneFactory(),
-            $this->getPlanningFactory(),
-            $this->getHierarchyFactory(),
-            $this->getPanePresenterBuilderFactory(),
-            $this->getPaneFactory($request)
-        );
-    }
-
     /** @return Planning_MilestonePaneFactory */
-    private function getPaneFactory(Codendi_Request $request) {
+    private function getPaneFactory(
+        Codendi_Request $request,
+        PlanningFactory $planning_factory,
+        Planning_MilestoneFactory $milestone_factory,
+        Tracker_HierarchyFactory $hierarcy_factory,
+        AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory
+    ) {
         $legacy_planning_pane_factory = new Planning_MilestoneLegacyPlanningPaneFactory(
             $request,
-            $this->getMilestoneFactory(),
-            $this->getHierarchyFactory(),
-            new Planning_ViewBuilderFactory($request, $this->getPlanningFactory()),
+            $milestone_factory,
+            $hierarcy_factory,
+            new Planning_ViewBuilderFactory($request, $planning_factory),
             $this->getThemePath()
         );
 
         return new Planning_MilestonePaneFactory(
             $request,
-            $this->getMilestoneFactory(),
-            $this->getPanePresenterBuilderFactory(),
+            $milestone_factory,
+            $pane_presenter_builder_factory,
             $legacy_planning_pane_factory,
-            new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder($this->getHierarchyFactory(), $this->getPlanningFactory()),
+            new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder($hierarcy_factory, $planning_factory),
             $this->getThemePath()
         );
     }
@@ -284,20 +297,20 @@ class AgileDashboardPlugin extends Plugin {
         );
     }
 
-    private function getBacklogRowCollectionFactory() {
+    private function getBacklogRowCollectionFactory($milestone_factory) {
         return new AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
             Tracker_FormElementFactory::instance(),
-            $this->getMilestoneFactory()
+            $milestone_factory
         );
     }
 
-    private function getPanePresenterBuilderFactory() {
+    private function getPanePresenterBuilderFactory($milestone_factory) {
         return new AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory(
             $this->getBacklogStrategyFactory(),
-            $this->getBacklogRowCollectionFactory(),
-            $this->getMilestoneFactory()
+            $this->getBacklogRowCollectionFactory($milestone_factory),
+            $milestone_factory
         );
     }
 
