@@ -148,19 +148,14 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 
                         function updateElement() {
                             if(to_submilestone_id == from_submilestone_id) {
-                                console.log(from_submilestone_id, to_submilestone_id, 11)
                                  sort();
                             } else if (typeof(to_submilestone_id) === "undefined" && typeof(from_submilestone_id) === "undefined") {
-                                console.log(from_submilestone_id, to_submilestone_id, 22)
                                 sort();
                             } else if (typeof(to_submilestone_id) === "undefined") {
-                                console.log(from_submilestone_id, to_submilestone_id, 33)
                                 updateArtifactlink("unassociate-artifact-to", from_submilestone_id, sort)
                             } else if (typeof(from_submilestone_id) === "undefined") {
-                                console.log(from_submilestone_id, to_submilestone_id, 44)
                                 updateArtifactlink("associate-artifact-to", to_submilestone_id, sort)
                             } else {
-                                console.log(from_submilestone_id, to_submilestone_id, 55)
                                 updateArtifactlink("unassociate-artifact-to", from_submilestone_id, sort)
                                 updateArtifactlink("associate-artifact-to", to_submilestone_id)
                             }
@@ -179,8 +174,8 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                                 url  : codendi.tracker.base_url,
                                 data : {
                                     "func"              : func,
-                                    "aid"               : item_id,
-                                    "linked-artifact-id": linked_artifact_id
+                                    "aid"               : linked_artifact_id,
+                                    "linked-artifact-id": item_id
                                 },
                                 method : "get",
                                 success : function() {
