@@ -263,3 +263,18 @@
 .agiledashboard-planning-submilestone-header > th:first-child {
     color: #067EC9;
 }
+
+.table tbody {
+    height: 2px;
+}
+
+.table tbody tr.hidden-submilestone-element{
+    display: block;
+    visibility: hidden;
+}
+
+.table tbody tr.hidden-submilestone-element td {
+    padding: 0;
+    line-height: 0;
+    border: 0;
+}
