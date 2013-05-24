@@ -250,3 +250,15 @@
     border-left: none;
     white-space: nowrap;
 }
+
+.agiledashboard-planning-submilestone-header > th {
+    cursor: pointer;
+}
+
+.agiledashboard-planning-submilestone-header > th > a {
+    text-decoration: none;
+}
+
+.submilestone-data > a {
+    float: right;
+}

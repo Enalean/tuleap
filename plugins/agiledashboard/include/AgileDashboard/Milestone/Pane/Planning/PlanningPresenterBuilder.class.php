@@ -52,7 +52,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
             $redirect_to_self
         );
 
-        $submilestone_collection = $this->getSubmilestoneCollection($user, $milestone, $submilestone_tracker);
+        $submilestone_collection = $this->getSubmilestoneCollection($user, $milestone, $submilestone_tracker, $redirect_to_self);
 
         return new AgileDashboard_Milestone_Pane_Planning_PlanningPresenter(
             $backlog_collection,
@@ -68,12 +68,12 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
         );
     }
 
-    private function getSubmilestoneCollection(PFUser $user, Planning_ArtifactMilestone $milestone, Tracker $submilestone_tracker) {
+    private function getSubmilestoneCollection(PFUser $user, Planning_ArtifactMilestone $milestone, Tracker $submilestone_tracker, $redirect_to_self) {
         $submilestones = array_reverse($this->milestone_factory->getSubMilestones($user, $milestone));
         $submilestone_collection = new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection($submilestone_tracker);
         foreach ($submilestones as $submilestone) {
             $this->milestone_factory->updateMilestoneContextualInfo($user, $submilestone);
-            $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter($submilestone));
+            $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter($submilestone, $redirect_to_self));
         }
         return $submilestone_collection;
     }

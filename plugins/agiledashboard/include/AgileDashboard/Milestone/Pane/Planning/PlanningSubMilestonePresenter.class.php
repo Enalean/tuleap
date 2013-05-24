@@ -25,22 +25,29 @@
 class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
     private $id;
     private $planning_id;
-    private $milestone_title   = '';
-    private $backlog_item_type = '';
-    private $parent_item_type  = '';
+    private $milestone_title    = '';
+    private $backlog_item_type  = '';
+    private $parent_item_type   = '';
+    private $redirect_to_self   = '';
+    private $edit_milestone_url = '';
 
-    public function __construct(Planning_Milestone $milestone) {
-        $this->id                   = $milestone->getArtifactId();
-        $this->planning_id          = $milestone->getPlanningId();
-        $this->milestone_title      = $milestone->getArtifact()->getTitle();
-        $this->milestone_start_date = $milestone->getStartDate();
-        $this->milestone_end_date   = $milestone->getEndDate();
-        $this->milestone_status     = $milestone->getArtifact()->getStatus();
-
+    public function __construct(Planning_Milestone $milestone, $redirect_to_self) {
+        $this->id                    = $milestone->getArtifactId();
+        $this->planning_id           = $milestone->getPlanningId();
+        $this->milestone_title       = $milestone->getArtifact()->getTitle();
+        $this->milestone_start_date  = $milestone->getStartDate();
+        $this->milestone_end_date    = $milestone->getEndDate();
+        $this->milestone_status      = $milestone->getArtifact()->getStatus();
+        $this->edit_submilestone_url = $milestone->getArtifact()->getUri();
+        $this->redirect_to_self      = $redirect_to_self;
     }
 
     public function id() {
         return $this->id;
+    }
+
+    public function edit_submilestone_url() {
+        return $this->edit_submilestone_url.'&'.$this->redirect_to_self;
     }
 
     public function planning_id() {
