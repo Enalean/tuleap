@@ -251,8 +251,10 @@
     white-space: nowrap;
 }
 
-.agiledashboard-planning-submilestone-header > th {
+.table .agiledashboard-planning-submilestone-header > th {
     cursor: pointer;
+    background-color: #EBEBEB;
+    /*background: repeating-linear-gradient(60deg, white, white 35px, #8b0 35px, #8b0 70px);*/
 }
 
 .submilestone-data > a {
