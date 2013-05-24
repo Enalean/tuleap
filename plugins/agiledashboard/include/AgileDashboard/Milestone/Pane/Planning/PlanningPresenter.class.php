@@ -138,7 +138,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
     }
 
     public function can_plan() {
-        return $this->can_plan;
+        return ($this->can_plan) ? 'true' : 'false';
     }
 
 }

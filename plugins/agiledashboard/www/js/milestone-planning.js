@@ -27,7 +27,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
     tuleap.agiledashboard.NewPlanning = Class.create({
         initialize: function () {
             var self = this;
-
+            
             $('.agiledashboard-planning-submilestone-header').click(function (event) {
                 var $submilestone_content_row = $(this).next();
 
@@ -115,7 +115,12 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 
         makeSubmilestonesSortable : function(data_container) {
             var self = this,
-                from_submilestone_id;
+                from_submilestone_id,
+                can_sort = $("[data-can-plan]").attr("data-can-plan");
+
+            if (can_sort !== "true") {
+                return;
+            }
 
             $( ".submilestone-element-rows" ).sortable({
                 connectWith: ".submilestone-element-rows",
@@ -136,7 +141,10 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                         prev_id = $(item).prev(".submilestone-element").attr(rowIdentifier);
 
                         updateElement();
-                        self.updateSubmilestoneCapacity(data_container);
+                        
+                        if( typeof(data_container) !== "undefined" ) {
+                            self.updateSubmilestoneCapacity(data_container);
+                        }   
 
                         function getToSubmilestoneId() {
                             return $(ui.item).parents(".submilestone-data").first().attr('data-submilestone-id');
