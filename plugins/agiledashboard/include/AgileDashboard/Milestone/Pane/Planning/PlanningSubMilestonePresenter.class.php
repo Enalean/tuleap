@@ -81,6 +81,10 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
         return strtolower($this->milestone_status);
     }
 
+    public function has_status() {
+        return ! empty($this->milestone_status);
+    }
+
     public function backlog_item_title() {
         return $this->backlog_item_type;
     }
