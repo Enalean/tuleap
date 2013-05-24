@@ -121,6 +121,10 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
         }
     }
 
+    public function header_status() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'header_status');
+    }
+
     public function backlog_collection() {
         return $this->backlog_collection;
     }
