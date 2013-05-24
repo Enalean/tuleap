@@ -53,7 +53,7 @@ class Planning_ShortAccessFactory {
         $plannings    = $this->planning_factory->getPlannings($user, $group_id);
         $short_access = array();
         foreach ($plannings as $planning) {
-            $short_access[] = new Planning_ShortAccess($planning, $user, $milestone_factory, $theme_path);
+            $short_access[] = new Planning_ShortAccess($planning, $user, $milestone_factory, $this->pane_factory, $theme_path);
         }
         if (!empty($short_access)) {
             end($short_access)->setIsLatest();
