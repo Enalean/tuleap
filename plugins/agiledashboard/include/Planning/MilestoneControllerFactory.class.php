@@ -48,7 +48,8 @@ class Planning_MilestoneControllerFactory {
         Planning_MilestoneFactory $milestone_factory,
         PlanningFactory $planning_factory,
         Tracker_HierarchyFactory $hierarchy_factory,
-        AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory
+        AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
+        Planning_MilestonePaneFactory $pane_factory
     ) {
         $this->plugin                         = $plugin;
         $this->project_manager                = $project_manager;
@@ -56,6 +57,7 @@ class Planning_MilestoneControllerFactory {
         $this->planning_factory               = $planning_factory;
         $this->hierarchy_factory              = $hierarchy_factory;
         $this->pane_presenter_builder_factory = $pane_presenter_builder_factory;
+        $this->pane_factory                   = $pane_factory;
     }
 
     /**
@@ -70,33 +72,9 @@ class Planning_MilestoneControllerFactory {
             $request,
             $this->milestone_factory,
             $this->project_manager,
-            $this->getViewBuilder($request),
-            $this->hierarchy_factory,
-            new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder($this->hierarchy_factory, $this->planning_factory),
+            $this->pane_factory,
             $this->pane_presenter_builder_factory,
             $this->plugin->getThemePath()
-        );
-    }
-
-    /**
-     * Builds a new cross-tracker search view builder.
-     *
-     * @param Codendi_Request $request
-     *
-     * @return Tracker_CrossSearch_ViewBuilder
-     */
-    protected function getViewBuilder(Codendi_Request $request) {
-        $form_element_factory = Tracker_FormElementFactory::instance();
-        $group_id             = $request->get('group_id');
-        $user                 = $request->getCurrentUser();
-        $object_god           = new TrackerManager();
-        $planning_trackers    = $this->planning_factory->getPlanningTrackers($group_id, $user);
-        $art_link_field_ids   = $form_element_factory->getArtifactLinkFieldsOfTrackers($planning_trackers);
-
-        return new Planning_ViewBuilder(
-            $form_element_factory,
-            $object_god->getCrossSearch($art_link_field_ids),
-            $object_god->getCriteriaBuilder($user, $planning_trackers)
         );
     }
 }

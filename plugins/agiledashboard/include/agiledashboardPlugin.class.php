@@ -211,19 +211,40 @@ class AgileDashboardPlugin extends Plugin {
             $this,
             $this->getMilestoneFactory(),
             $this->getPlanningFactory(),
-            $this->getMilestoneControllerFactory()
+            $this->getMilestoneControllerFactory($request)
         );
         $router->route($request);
     }
 
-    private function getMilestoneControllerFactory() {
+    private function getMilestoneControllerFactory(Codendi_Request $request) {
         return new Planning_MilestoneControllerFactory(
             $this,
             ProjectManager::instance(),
             $this->getMilestoneFactory(),
             $this->getPlanningFactory(),
             $this->getHierarchyFactory(),
-            $this->getPanePresenterBuilderFactory()
+            $this->getPanePresenterBuilderFactory(),
+            $this->getPaneFactory($request)
+        );
+    }
+
+    /** @return Planning_MilestonePaneFactory */
+    private function getPaneFactory(Codendi_Request $request) {
+        $legacy_planning_pane_factory = new Planning_MilestoneLegacyPlanningPaneFactory(
+            $request,
+            $this->getMilestoneFactory(),
+            $this->getHierarchyFactory(),
+            new Planning_ViewBuilderFactory($request, $this->getPlanningFactory()),
+            $this->getThemePath()
+        );
+
+        return new Planning_MilestonePaneFactory(
+            $request,
+            $this->getMilestoneFactory(),
+            $this->getPanePresenterBuilderFactory(),
+            $legacy_planning_pane_factory,
+            new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder($this->getHierarchyFactory(), $this->getPlanningFactory()),
+            $this->getThemePath()
         );
     }
 
