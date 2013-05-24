@@ -1,3 +1,6 @@
+Version 3.21 - Tuleap 6.1
+    * story #3318: be owner of all gerrit groups created for my project
+
 Version 3.20 - Tuleap 6.1
     * bugs #3244 - Read permission to Registered Users is not propagated to Gerrit
 
