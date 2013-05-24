@@ -25,17 +25,16 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
    
 (function ($) {
     tuleap.agiledashboard.NewPlanning = Class.create({
-        initialize: function (container) {
+        initialize: function () {
             var self = this;
 
             $('.agiledashboard-planning-submilestone-header').click(function (event) {
-                var $data_container,
-                    $submilestone_content_row = $(this).next();
+                var $submilestone_content_row = $(this).next();
 
                 if ($submilestone_content_row.is(':visible')) {
                     $submilestone_content_row.hide();
                 } else {
-                    data_container = $submilestone_content_row.find(".submilestone-data");
+                    var data_container = $submilestone_content_row.find(".submilestone-data");
 
                     if (! isSubmilestoneDataLoaded(data_container)) {
                         self.fetchSubmilestoneData(data_container);
@@ -71,9 +70,6 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                     self.setSubmilestonesEditLinks(data_container);
                     self.updateSubmilestoneCapacity(data_container);
                     self.makeSubmilestonesSortable(data_container);
-                },
-                error : function(data) {
-                    console.log('error', data);
                 }
             });
          },
@@ -169,12 +165,12 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                             }
                         }
 
-                        function updateArtifactlink(func, linked_artifact_id, callback) {
+                        function updateArtifactlink(func, submilestone_id, callback) {
                              $.ajax({
                                 url  : codendi.tracker.base_url,
                                 data : {
                                     "func"              : func,
-                                    "aid"               : linked_artifact_id,
+                                    "aid"               : submilestone_id,
                                     "linked-artifact-id": item_id
                                 },
                                 method : "get",
