@@ -255,10 +255,10 @@
     cursor: pointer;
 }
 
-.agiledashboard-planning-submilestone-header > th > a {
-    text-decoration: none;
-}
-
 .submilestone-data > a {
     float: right;
+}
+
+.agiledashboard-planning-submilestone-header > th:first-child {
+    color: #067EC9;
 }

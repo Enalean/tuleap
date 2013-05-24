@@ -25,11 +25,11 @@
 class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
     private $id;
     private $planning_id;
-    private $milestone_title    = '';
-    private $backlog_item_type  = '';
-    private $parent_item_type   = '';
-    private $redirect_to_self   = '';
-    private $edit_milestone_url = '';
+    private $milestone_title       = '';
+    private $backlog_item_type     = '';
+    private $parent_item_type      = '';
+    private $redirect_to_self      = '';
+    private $edit_submilestone_url = '';
 
     public function __construct(Planning_Milestone $milestone, $redirect_to_self) {
         $this->id                    = $milestone->getArtifactId();
@@ -56,10 +56,6 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
 
     public function milestone_title() {
         return $this->milestone_title;
-    }
-
-    public function milestone_url() {
-        return '#';
     }
 
     public function display_milestone_dates() {
