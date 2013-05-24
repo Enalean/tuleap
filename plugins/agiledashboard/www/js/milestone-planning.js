@@ -103,18 +103,18 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
             var submilestones = $(".submilestone-data");
 
             submilestones.each(function(index, submilestone) {
-                var capacity = 0,
-                    capacities = $(submilestone).find(".submilestone-element-capacity");
+                var remaining_effort = 0,
+                    all_efforts = $(submilestone).find(".submilestone-element-remaining-effort");
 
-                capacities.each(function(){
-                    var element_capacity = parseFloat($(this).html());
+                all_efforts.each(function(){
+                    var element_effort = parseFloat($(this).html());
                     
-                    if (! isNaN(element_capacity)) {
-                        capacity += parseFloat(element_capacity);
+                    if (! isNaN(element_effort)) {
+                        remaining_effort += parseFloat(element_effort);
                     }
                 });
 
-                $(submilestone).find(".submilestone-capacity").html(capacity);
+                $(submilestone).find(".submilestone-effort").html(remaining_effort);
             });
         },
 

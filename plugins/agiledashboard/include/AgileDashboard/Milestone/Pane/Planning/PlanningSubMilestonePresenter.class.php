@@ -30,8 +30,9 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
     private $parent_item_type      = '';
     private $redirect_to_self      = '';
     private $edit_submilestone_url = '';
+    private $milestone_capacity;
 
-    public function __construct(Planning_Milestone $milestone, $redirect_to_self) {
+    public function __construct(Planning_Milestone $milestone, $redirect_to_self, PFUser $user) {
         $this->id                    = $milestone->getArtifactId();
         $this->planning_id           = $milestone->getPlanningId();
         $this->milestone_title       = $milestone->getArtifact()->getTitle();
@@ -40,6 +41,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
         $this->milestone_status      = $milestone->getArtifact()->getStatus();
         $this->edit_submilestone_url = $milestone->getArtifact()->getUri();
         $this->redirect_to_self      = $redirect_to_self;
+        $this->milestone_capacity    = $milestone->getCapacity($user);
     }
 
     public function id() {
@@ -106,6 +108,14 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
 
     public function header_status() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'header_status');
+    }
+
+    public function capacity() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'capacity');
+    }
+
+    public function get_capacity() {
+        return $this->milestone_capacity;
     }
 }
 

@@ -251,6 +251,17 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         return $end_date;
     }
 
+    /**
+     * @param PFUser $user
+     * @return int | void
+     */
+    public function getCapacity(PFUser $user) {
+        $burndown_field = $this->artifact->getABurndownField($user);
+
+        if($burndown_field) {
+            return $burndown_field->getCapacity($this->artifact);
+        }
+    }
 }
 
 ?>
