@@ -28,9 +28,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
         initialize: function (container) {
             var self = this;
 
-            console.log($('.agiledashboard-planning-submilestone-header'));
             $('.agiledashboard-planning-submilestone-header').click(function (event) {
-                    console.log('here');
                 var $data_container,
                     $submilestone_content_row = $(this).next();
 
@@ -121,7 +119,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 
         makeSubmilestonesSortable : function(data_container) {
             var self = this,
-                from_submilestone;
+                from_submilestone_id;
 
             $( ".submilestone-element-rows" ).sortable({
                 connectWith: ".submilestone-element-rows",
@@ -130,66 +128,66 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                 scrollSensitivity: 50,
                 items : ".submilestone-element",
                 start : function (event, ui) {
-                    from_submilestone = $(event.target).parents(".submilestone-data").first().attr('data-submilestone-id');
+                    from_submilestone_id = $(event.target).parents(".submilestone-data").first().attr('data-submilestone-id');
                 },
                 stop: function (event, ui) {
                     var rowIdentifier = "data-artifact-id",
                         item = ui.item,
-                        submilestone_id,
-                        association,
+                        to_submilestone_id = getToSubmilestoneId(),
                         item_id = $(item).attr(rowIdentifier),
                         next_id = $(item).next(".submilestone-element").attr(rowIdentifier),
                         prev_id = $(item).prev(".submilestone-element").attr(rowIdentifier);
 
-                        association = getMainFunc();
+                        updateElement();
+                        self.updateSubmilestoneCapacity(data_container);
 
-                        if(association === "" ) {
+                        function getToSubmilestoneId() {
+                            return $(ui.item).parents(".submilestone-data").first().attr('data-submilestone-id');
+                        }
+
+                        function updateElement() {
+                            if(to_submilestone_id == from_submilestone_id) {
+                                console.log(from_submilestone_id, to_submilestone_id, 11)
+                                 sort();
+                            } else if (typeof(to_submilestone_id) === "undefined" && typeof(from_submilestone_id) === "undefined") {
+                                console.log(from_submilestone_id, to_submilestone_id, 22)
+                                sort();
+                            } else if (typeof(to_submilestone_id) === "undefined") {
+                                console.log(from_submilestone_id, to_submilestone_id, 33)
+                                updateArtifactlink("unassociate-artifact-to", from_submilestone_id, sort)
+                            } else if (typeof(from_submilestone_id) === "undefined") {
+                                console.log(from_submilestone_id, to_submilestone_id, 44)
+                                updateArtifactlink("associate-artifact-to", to_submilestone_id, sort)
+                            } else {
+                                console.log(from_submilestone_id, to_submilestone_id, 55)
+                                updateArtifactlink("unassociate-artifact-to", from_submilestone_id, sort)
+                                updateArtifactlink("associate-artifact-to", to_submilestone_id)
+                            }
+                        }
+
+                        function sort() {
                             if (next_id) {
                                 sortHigher(item_id, next_id);
                             } else if (prev_id) {
                                 sortLesser(item_id, prev_id);
                             }
-                        } else {
-                            $.ajax({
+                        }
+
+                        function updateArtifactlink(func, linked_artifact_id, callback) {
+                             $.ajax({
                                 url  : codendi.tracker.base_url,
                                 data : {
-                                    "func"              : association,
+                                    "func"              : func,
                                     "aid"               : item_id,
-                                    "linked-artifact-id": getSubmilestoneId()
+                                    "linked-artifact-id": linked_artifact_id
                                 },
                                 method : "get",
                                 success : function() {
-                                    if (next_id) {
-                                        sortHigher(item_id, next_id);
-                                    } else if (prev_id) {
-                                        sortLesser(item_id, prev_id);
+                                    if (typeof(callback) === "function") {
+                                        callback();
                                     }
                                 }
                             });
-                        }
-                        
-                        self.updateSubmilestoneCapacity(data_container);
-
-                        function getMainFunc() {
-                            var submilestoneid = $(ui.item).parents(".submilestone-data").first().attr('data-submilestone-id');
-
-                            if(submilestoneid == from_submilestone) {
-                                return ""
-                            } else if (typeof(submilestoneid) === "undefined") {
-                                return "unassociate-artifact-to"
-                            } else {
-                                return "associate-artifact-to"
-                            }
-                        }
-
-                        function getSubmilestoneId() {
-                            submilestone_id = $(ui.item).parents(".submilestone-data").first().attr('data-submilestone-id');
-
-                            if(typeof(submilestone_id) === "undefined") {
-                                return from_submilestone;
-                            }
-
-                            return submilestone_id;
                         }
 
                         function sortHigher(source_id, target_id) {
@@ -209,7 +207,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                                     "target-id"        : target_id
                                 },
                                 method : "get"
-                            })
+                            });
                         }
                 }
             }).disableSelection();   
