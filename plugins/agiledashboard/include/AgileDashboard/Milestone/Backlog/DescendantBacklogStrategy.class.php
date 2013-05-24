@@ -30,9 +30,17 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
     /** @var AgileDashboard_BacklogItemDao */
     private $dao;
 
-    public function __construct($milestone_backlog_artifacts, $item_name, AgileDashboard_BacklogItemDao $dao) {
+    /** @var Tracker */
+    private $descendant_tracker;
+
+    public function __construct($milestone_backlog_artifacts, Tracker $item_name, Tracker $descendant_tracker, AgileDashboard_BacklogItemDao $dao) {
         parent::__construct($milestone_backlog_artifacts, $item_name);
         $this->dao = $dao;
+        $this->descendant_tracker = $descendant_tracker;
+    }
+
+    public function getDescendantTracker() {
+        return $this->descendant_tracker;
     }
 
     /** @return Tracker_Artifact[] */

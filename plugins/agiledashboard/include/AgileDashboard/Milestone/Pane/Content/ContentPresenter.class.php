@@ -38,6 +38,12 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     /** @var String */
     private $submit_url;
 
+    /** @var Array */
+    private $backlog_elements;
+
+    /** @var String */
+    private $descendant_item_name;
+
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done,
@@ -62,15 +68,19 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
         $this->done_collection = $done;
     }
 
+    public function setBacklogElements($backlog_elements) {
+        $this->backlog_elements = $backlog_elements;
+    }
+
+    public function setDescendantItemName($descendant_item_name) {
+        $this->descendant_item_name = $descendant_item_name;
+    }
+
     public function backlog_item_type() {
         return $this->backlog_item_type;
     }
 
     public function can_add_backlog_item() {
-        return $this->can_add_backlog_item_type;
-    }
-
-    public function can_prioritize() {
         return $this->can_add_backlog_item_type;
     }
 
@@ -80,6 +90,28 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
 
     public function add_new_backlog_item() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'add_subitem', array($this->backlog_item_type));
+    }
+
+    public function can_add_subbacklog_items() {
+        if (count($this->backlog_elements)) {
+            return true;
+        }
+    }
+
+    public function allow_other_create() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'allow_other_create');
+    }
+
+    public function add_in_descendant_title() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'add_in_descendant_title', array($this->descendant_item_name, $this->backlog_item_type));
+    }
+
+    public function backlog_elements() {
+        return $this->backlog_elements;
+    }
+
+    public function can_prioritize() {
+        return $this->can_add_backlog_item_type;
     }
 
     public function title() {
