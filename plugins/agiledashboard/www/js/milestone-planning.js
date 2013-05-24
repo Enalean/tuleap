@@ -136,27 +136,25 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                     var rowIdentifier = "data-artifact-id",
                         item = ui.item,
                         submilestone_id,
-                        main_func,
+                        association,
                         item_id = $(item).attr(rowIdentifier),
                         next_id = $(item).next(".submilestone-element").attr(rowIdentifier),
                         prev_id = $(item).prev(".submilestone-element").attr(rowIdentifier);
 
-                        main_func = getMainFunc();
+                        association = getMainFunc();
 
-                        if(main_func == "" ) {
-                            console.log(55555555)
+                        if(association === "" ) {
                             if (next_id) {
                                 sortHigher(item_id, next_id);
                             } else if (prev_id) {
                                 sortLesser(item_id, prev_id);
                             }
                         } else {
-                            console.log(main_func)
                             $.ajax({
                                 url  : codendi.tracker.base_url,
                                 data : {
-                                    "func"              : main_func,
-                                    "aid"               : source_id,
+                                    "func"              : association,
+                                    "aid"               : item_id,
                                     "linked-artifact-id": getSubmilestoneId()
                                 },
                                 method : "get",
