@@ -35,7 +35,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
         $this->milestone_title      = $milestone->getArtifact()->getTitle();
         $this->milestone_start_date = $milestone->getStartDate();
         $this->milestone_end_date   = $milestone->getEndDate();
-        $this->milestone_status     = Tracker_Semantic_Status::load($milestone->getArtifact()->getTracker())->getStatus($milestone->getArtifact());
+        $this->milestone_status     = $milestone->getArtifact()->getStatus();
 
     }
 
@@ -81,8 +81,8 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
         return strtolower($this->milestone_status);
     }
 
-    public function is_open() {
-        return $this->milestone_status == Tracker_Semantic_Status::OPEN;
+    public function has_status() {
+        return ! empty($this->milestone_status);
     }
 
     public function backlog_item_title() {

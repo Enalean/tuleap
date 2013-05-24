@@ -65,7 +65,7 @@
                         </th>
                         <th class="agiledashboard-planning-submilestone-header-info">
                             {{#display_milestone_dates}}{{start_date}} – {{end_date}}{{/display_milestone_dates}}
-                            <span class="label {{#is_open}}label-success{{/is_open}}">{{status}}</span>
+                            {{#has_status}}<span class="label">{{status}}</span>{{/has_status}}
                         </th>
                     </tr>
                     <tr>
