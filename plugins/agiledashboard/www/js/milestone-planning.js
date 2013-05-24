@@ -68,8 +68,8 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                     self.setSubmilestoneDataLoaded(data_container);
                     data_container.find('tbody').append(data);
                     self.setSubmilestonesEditLinks(data_container);
-                    self.updateSubmilestoneCapacity(data_container);
-                    self.makeSubmilestonesSortable(data_container);
+                    self.updateSubmilestoneCapacities();
+                    self.makeSubmilestonesSortable();
                 }
             });
          },
@@ -99,21 +99,26 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
             return $('div.agiledashboard-planning-backlog').attr('data-milestone-planning-id');
         },
 
-        updateSubmilestoneCapacity : function(data_container) {
-            var capacity = 0,
-                capacities = data_container.find(".submilestone-element-capacity");
+        updateSubmilestoneCapacities : function() {
+            var submilestones = $(".submilestone-data");
 
-            capacities.each(function(){
-                var element_capacity = parseFloat($(this).html());
-                if (! isNaN(element_capacity)) {
-                    capacity += parseFloat(element_capacity);
-                }
+            submilestones.each(function(index, submilestone) {
+                var capacity = 0,
+                    capacities = $(submilestone).find(".submilestone-element-capacity");
+
+                capacities.each(function(){
+                    var element_capacity = parseFloat($(this).html());
+                    
+                    if (! isNaN(element_capacity)) {
+                        capacity += parseFloat(element_capacity);
+                    }
+                });
+
+                $(submilestone).find(".submilestone-capacity").html(capacity);
             });
-
-            data_container.find(".submilestone-capacity").html(capacity);
         },
 
-        makeSubmilestonesSortable : function(data_container) {
+        makeSubmilestonesSortable : function() {
             var self = this,
                 from_submilestone_id,
                 can_sort = $("[data-can-plan]").attr("data-can-plan");
@@ -141,10 +146,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                         prev_id = $(item).prev(".submilestone-element").attr(rowIdentifier);
 
                         updateElement();
-                        
-                        if( typeof(data_container) !== "undefined" ) {
-                            self.updateSubmilestoneCapacity(data_container);
-                        }   
+                        self.updateSubmilestoneCapacities();
 
                         function getToSubmilestoneId() {
                             return $(ui.item).parents(".submilestone-data").first().attr('data-submilestone-id');
