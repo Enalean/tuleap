@@ -38,6 +38,7 @@ class Planning_MilestonePaneFactory_AvailableMilestonesTest extends TuleapTestCa
     private $milestone_factory;
     private $pane_factory;
     private $request;
+    private $theme_path = '/path';
 
     public function setUp() {
         parent::setUp();
@@ -66,7 +67,8 @@ class Planning_MilestonePaneFactory_AvailableMilestonesTest extends TuleapTestCa
             $this->milestone_factory,
             $this->pane_presenter_builder_factory,
             mock('Planning_MilestoneLegacyPlanningPaneFactory'),
-            mock('AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder')
+            mock('AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder'),
+            $this->theme_path
         );
 
         $selectable_artifacts = $this->pane_factory->getAvailableMilestones($this->sprint_1);
@@ -87,7 +89,8 @@ class Planning_MilestonePaneFactory_AvailableMilestonesTest extends TuleapTestCa
             $this->milestone_factory,
             $this->pane_presenter_builder_factory,
             mock('Planning_MilestoneLegacyPlanningPaneFactory'),
-            mock('AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder')
+            mock('AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder'),
+            $this->theme_path
         );
 
         $selectable_artifacts = $this->pane_factory->getAvailableMilestones($current_milstone);

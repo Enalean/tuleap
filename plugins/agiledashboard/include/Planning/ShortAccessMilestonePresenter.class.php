@@ -55,7 +55,10 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
     private function getPaneInfoList() {
         if (!$this->pane_info_list) {
             $active_pane          = null;
-            $this->pane_info_list = array();
+            $this->pane_info_list = array(
+                new AgileDashboard_Milestone_Pane_Content_ContentPaneInfo($this->milestone, $this->theme_path),
+                new AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo($this->milestone, $this->theme_path, new NullTracker())
+            );
             EventManager::instance()->processEvent(
                 AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
                 array(

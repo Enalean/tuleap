@@ -88,7 +88,8 @@ class Planning_MilestoneController extends MVC2_PluginController {
             $this->milestone_factory,
             $pane_presenter_builder_factory,
             $legacy_planning_pane_factory,
-            $submilestone_finder
+            $submilestone_finder,
+            $theme_path
         );
     }
 

@@ -21,8 +21,12 @@
 class AgileDashboard_Milestone_Pane_Content_ContentPaneInfo extends AgileDashboard_PaneInfo {
     const IDENTIFIER = 'blcontent';
 
-    public function __construct(Planning_Milestone $milestone) {
+    /** @var string */
+    private $theme_path;
+
+    public function __construct(Planning_Milestone $milestone, $theme_path) {
         parent::__construct($milestone);
+        $this->theme_path = $theme_path;
     }
 
     /**
@@ -43,7 +47,7 @@ class AgileDashboard_Milestone_Pane_Content_ContentPaneInfo extends AgileDashboa
      * @see string eg: '/themes/common/images/ic/duck.png'
      */
     protected function getIcon() {
-        //return $this->theme_path.'/images/sticky-notes-stack.png';
+        return $this->theme_path.'/images/sticky-notes-stack--flask.png';
     }
 
     /**
