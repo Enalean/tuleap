@@ -50,8 +50,9 @@ class AgileDashboard_Milestone_Backlog_BacklogStrategyFactory {
      * @return AgileDashboard_Milestone_Backlog_BacklogStrategy
      */
     public function getBacklogStrategy(Planning_ArtifactMilestone $milestone) {
-        if ($milestone->getPlanning()->getPlanningTracker()->getChildren()) {
-            return $this->getDescendantBacklogStrategy($milestone);
+        $first_child_backlog_tracker = $this->getFirstChildBacklogTracker($milestone);
+        if ($first_child_backlog_tracker != $milestone->getPlanning()->getBacklogTracker()) {
+            return $this->getDescendantBacklogStrategy($milestone, $first_child_backlog_tracker);
         }
         return $this->getSelfBacklogStrategy($milestone);
     }
@@ -63,11 +64,11 @@ class AgileDashboard_Milestone_Backlog_BacklogStrategyFactory {
         );
     }
 
-    public function getDescendantBacklogStrategy(Planning_ArtifactMilestone $milestone) {
+    private function getDescendantBacklogStrategy(Planning_ArtifactMilestone $milestone, Tracker $first_child_backlog_tracker) {
         return new AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy(
             $this->getBacklogArtifacts($milestone),
             $milestone->getPlanning()->getBacklogTracker(),
-            $this->getFirstChildBacklogTracker($milestone),
+            $first_child_backlog_tracker,
             $this->dao
         );
     }
