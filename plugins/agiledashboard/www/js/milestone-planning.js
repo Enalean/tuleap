@@ -124,6 +124,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
             $( ".submilestone-element-rows" ).sortable({
                 connectWith: ".submilestone-element-rows",
                 dropOnEmpty: true,
+                scroll: true,
                 tolerance : "pointer",
                 scrollSensitivity: 50,
                 items : ".submilestone-element",
