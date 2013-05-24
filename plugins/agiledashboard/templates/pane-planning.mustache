@@ -4,26 +4,17 @@
 
 <div class="row-fluid">
     <div class="span12">
-        <div class="well">
-            <p>{{help_intro}}
+        <div class="">
+            <p>{{help_intro}}</p>
             <ul>
                 <li>{{help_left}}</li>
                 <li>{{help_right}}</li>
             </ul>
-            {{help_dnd}}
-            </p>
+            <p>{{help_dnd}}</p>
         </div>
+        <font color="red"><b style="">Dear front end team, use {can_plan} to prevent unauthorized people to drag 'n drop from backlog to submilestone</font></b>
     </div>
 </div>
-{{^can_plan}}<font color="pink"><b style="background:green">Dear front end team, use {can_plan} to prevent unauthorized people to drag 'n drop from backlog to submilestone</font></b>{{/can_plan}}
-
-{{#can_add_submilestone}}
-<div class="row-fluid">
-    <div class="span12" style="text-align:right;">
-        <p><a href="{{add_new_submilestone_url}}" class="btn">{{add_new_submilestone}}</a></p>
-    </div>
-</div>
-{{/can_add_submilestone}}
 
 <div class="row-fluid">
     <div class="span6">
@@ -52,36 +43,49 @@
     </div>
     <div class="span6 agiledashboard-planning-submilestones">
         <table class="table table-bordered table-striped">
-        {{#submilestone_collection}}
-            <tr class="agiledashboard-planning-submilestone-header">
-                <th>
-                    <a href="{{milestone_url}}"><i class="icon-chevron-right"></i> {{milestone_title}}</a>
-                </th>
-                <th class="agiledashboard-planning-submilestone-header-info">
-                    {{#display_milestone_dates}}{{start_date}} – {{end_date}}{{/display_milestone_dates}} <span class="label {{#is_open}}label-success{{/is_open}}">{{status}}</span>
-                </th>
-            </tr>
-            <tr>
-                <td colspan=2>
-                    <div data-loaded="false" class="submilestone-data" data-submilestone-id="{{id}}" data-planning-id="{{planning_id}}">
-                        <p>Capacity: <span class="submilestone-capacity"></span></p>
-                        <table class="table table-striped table-hover table-bordered submilestone-element-rows">
-                            <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>{{title}}</th>
-                                    <th>{{points}}</th>
-                                    <th>{{parent}}</th>
-                                    <th>{{header_status}}</th>
-                                </tr>
-                            </thead>
-                            <tbody class="">
-                            </tbody>
-                        </table>
-                    </div>
-                </td>
-            </tr>
-        {{/submilestone_collection}}
+            <thead>
+                <tr>
+                    <th>Sprints of 0.2</th>
+                    <th class="agiledashboard-planning-submilestones-addnew">
+                        {{#can_add_submilestone}}
+                            <a href="{{add_new_submilestone_url}}" class="btn btn-small">{{add_new_submilestone}}</a>
+                        {{/can_add_submilestone}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#submilestone_collection}}
+                    <tr class="agiledashboard-planning-submilestone-header">
+                        <th>
+                            <a href="{{milestone_url}}"><i class="icon-chevron-right"></i> {{milestone_title}}</a>
+                        </th>
+                        <th class="agiledashboard-planning-submilestone-header-info">
+                            {{#display_milestone_dates}}{{start_date}} – {{end_date}}{{/display_milestone_dates}}
+                            <span class="label {{#is_open}}label-success{{/is_open}}">{{status}}</span>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td colspan=2>
+                            <div data-loaded="false" class="submilestone-data" data-submilestone-id="{{id}}" data-planning-id="{{planning_id}}">
+                                <p>Capacity: <span class="submilestone-capacity"></span></p>
+                                <table class="table table-striped table-hover table-bordered submilestone-element-rows">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>{{title}}</th>
+                                            <th>{{points}}</th>
+                                            <th>{{parent}}</th>
+                                            <th>{{header_status}}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                {{/submilestone_collection}}
+            </tbody>
         </table>
     </div>
 </div>

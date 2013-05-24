@@ -78,7 +78,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
     }
 
     public function status() {
-        return $this->milestone_status;
+        return strtolower($this->milestone_status);
     }
 
     public function is_open() {

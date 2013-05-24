@@ -231,6 +231,7 @@
 #blcontent table {
     width: auto;
 }
+.submilestone-element-rows > tbody > tr,
 .milestone-content-open-rows > tr {
     cursor: move;
 }
@@ -243,6 +244,7 @@
     border-bottom: 1px solid #dddddd;
 }
 
+.table .agiledashboard-planning-submilestones-addnew,
 .table .agiledashboard-planning-submilestone-header-info {
     text-align: right;
     border-left: none;
