@@ -115,6 +115,9 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     }
 
     public function title() {
+        if ($this->descendant_item_name) {
+            return $this->descendant_item_name;
+        }
         return $this->backlog_item_type;
     }
 
