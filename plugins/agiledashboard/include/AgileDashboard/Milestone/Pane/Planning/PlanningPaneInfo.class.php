@@ -57,7 +57,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo extends AgileDashb
      * @return string eg: 'Access to cardwall'
      */
     protected function getIconTitle() {
-        return '';
+        return $this->getTitle();
     }
 
 }
