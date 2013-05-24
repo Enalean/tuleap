@@ -248,4 +248,5 @@
 .table .agiledashboard-planning-submilestone-header-info {
     text-align: right;
     border-left: none;
+    white-space: nowrap;
 }
