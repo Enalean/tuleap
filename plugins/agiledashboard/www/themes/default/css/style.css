@@ -264,17 +264,12 @@
     color: #067EC9;
 }
 
-.table tbody {
-    height: 2px;
+.empty-table-placeholder > td {
+    text-align: center;
+    font-style: italic;
+    cursor: default;
 }
 
-.table tbody tr.hidden-submilestone-element{
-    display: block;
-    visibility: hidden;
-}
-
-.table tbody tr.hidden-submilestone-element td {
-    padding: 0;
-    line-height: 0;
-    border: 0;
+tbody.empty {
+    display: none;
 }

@@ -30,13 +30,13 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
             
             $('.agiledashboard-planning-submilestone-header').click(function (event) {
                 var $submilestone_content_row = $(this).next();
-
                 if ($submilestone_content_row.is(':visible')) {
                     $submilestone_content_row.hide();
                 } else {
                     var data_container = $submilestone_content_row.find(".submilestone-data");
 
                     if (! isSubmilestoneDataLoaded(data_container)) {
+                        self.cleanAnyEmptyPlaceHolder($submilestone_content_row);
                         self.fetchSubmilestoneData(data_container);
                     }
                     $submilestone_content_row.show();
@@ -117,6 +117,38 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
             });
         },
 
+        cleanAnyEmptyPlaceHolder : function(submilestone) {
+          var placeholders = $('tbody.ui-sortable tr.empty-table-placeholder', submilestone);
+
+          placeholders.each(function(index, placeholder){
+              $(placeholder).detach();
+          });
+
+        },
+
+        displayPlaceHolderIfEmpty : function() {
+            var $tables = $('table.submilestone-element-rows');
+
+            $tables.each(function(index, table){
+                if($('tbody.ui-sortable tr.submilestone-element', table).length === 0) {
+
+                    if($('tbody.ui-sortable tr.empty-table-placeholder', table).length === 0) {
+
+                        var placeholder = $('tbody.empty tr.empty-table-placeholder', table).clone();
+                        placeholder.css('display','none');
+                        $('tbody.ui-sortable', table).append(placeholder);
+                        placeholder.fadeIn('slow');
+                    }
+
+                } else {
+
+                    $('tbody.ui-sortable > tr.empty-table-placeholder', table).fadeOut('slow', function(){
+                        $(this).detach();
+                    });
+
+                }
+            });
+        },
 
         makeSubmilestonesSortable : function() {
             var self = this,
@@ -128,13 +160,13 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                 return;
             }
 
-            var $submilestone_element_rows = $(".submilestone-element-rows > tbody");
+            var $submilestone_element_rows = $(".submilestone-element-rows > tbody.ui-sortable");
 
             $submilestone_element_rows.sortable({
-                connectWith: ".submilestone-element-rows > tbody",
+                connectWith: ".submilestone-element-rows > tbody.ui-sortable",
                 dropOnEmpty: true,
                 scroll: true,
-                cancel: '.hidden-submilestone-element',
+                cancel: ".empty-table-placeholder",
                 tolerance : "pointer",
                 scrollSensitivity: 50,
                 items : ".submilestone-element",
@@ -161,6 +193,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 
                         updateElement();
                         self.updateSubmilestoneCapacities();
+                        self.displayPlaceHolderIfEmpty();
 
                         function getToSubmilestoneId() {
                             return $(ui.item).parents(".submilestone-data").first().attr('data-submilestone-id');
@@ -227,6 +260,8 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                         }
                 }
             }).disableSelection();
+
+            self.displayPlaceHolderIfEmpty();
 
             (establishWidthOfCellsToBeConstitentWhileDragging = function() {
                 $submilestone_element_rows.children().each(function() {
