@@ -61,12 +61,7 @@ class Planning_Controller extends MVC2_PluginController {
     }
     
     public function index() {
-        $plannings = $this->planning_shortaccess_factory->getPlanningsShortAccess(
-            $this->getCurrentUser(),
-            $this->group_id,
-            $this->milestone_factory,
-            $this->plugin_theme_path
-        );
+        $plannings = $this->getPlanningsShortAccess($this->group_id);
         $presenter = new Planning_IndexPresenter($plannings, $this->plugin_theme_path);
         $this->render('index', $presenter);
     }
@@ -156,7 +151,7 @@ class Planning_Controller extends MVC2_PluginController {
      * @return Planning_ShortAccess[]
      */
     private function getPlanningsShortAccess($projectId) {
-        return $this->planning_factory->getPlanningsShortAccess(
+        return $this->planning_shortaccess_factory->getPlanningsShortAccess(
             $this->getCurrentUser(),
             $projectId,
             $this->milestone_factory,
