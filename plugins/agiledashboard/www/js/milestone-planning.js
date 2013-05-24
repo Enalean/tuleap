@@ -121,9 +121,9 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
         makeSubmilestonesSortable : function() {
             var self = this,
                 from_submilestone_id,
-                can_sort = $("[data-can-plan]").attr("data-can-plan");
+                user_can_plan = $("[data-can-plan]").attr("data-can-plan");
 
-            if (can_sort !== "true") {
+            if (user_can_plan !== "true") {
                 return;
             }
 
@@ -138,12 +138,12 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                     from_submilestone_id = $(event.target).parents(".submilestone-data").first().attr('data-submilestone-id');
                 },
                 stop: function (event, ui) {
-                    var rowIdentifier = "data-artifact-id",
-                        item = ui.item,
-                        to_submilestone_id = getToSubmilestoneId(),
-                        item_id = $(item).attr(rowIdentifier),
-                        next_id = $(item).next(".submilestone-element").attr(rowIdentifier),
-                        prev_id = $(item).prev(".submilestone-element").attr(rowIdentifier);
+                    var item               = ui.item,
+                        rowIdentifier      = "data-artifact-id",
+                        item_id            = $(item).attr(rowIdentifier),
+                        next_id            = $(item).next(".submilestone-element").attr(rowIdentifier),
+                        prev_id            = $(item).prev(".submilestone-element").attr(rowIdentifier),
+                        to_submilestone_id = getToSubmilestoneId();
 
                         updateElement();
                         self.updateSubmilestoneCapacities();
