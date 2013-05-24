@@ -58,7 +58,6 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
     tuleap.agiledashboard.MilestoneContent = function MilestoneContent(container) {
         var $milestone_content_rows = $(container).find('.milestone-content-open-rows');
         $milestone_content_rows.sortable({
-            revert: true,
             axis: 'y',
             forcePlaceholderSize: true,
             tolerance: 'pointer',
