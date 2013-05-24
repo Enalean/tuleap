@@ -81,6 +81,6 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 
         $milestone_content_rows.find('tr, td').disableSelection();
         establishWidthOfCellsToBeConstitentWhileDragging($milestone_content_rows);
-    }
+    };
 
 })(jQuery);

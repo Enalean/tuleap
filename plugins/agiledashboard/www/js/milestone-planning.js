@@ -118,6 +118,15 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
             });
         },
 
+        establishWidthOfCellsToBeConstitentWhileDragging : function($milestone_content_rows) {
+            console.log('tata');
+            $milestone_content_rows.children().each(function() {
+                $(this).children().each(function() {
+                    $(this).width($(this).width());
+                });
+            });
+        },
+
         makeSubmilestonesSortable : function() {
             var self = this,
                 from_submilestone_id,
@@ -127,13 +136,25 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                 return;
             }
 
-            $( ".submilestone-element-rows" ).sortable({
+            var $submilestone_element_rows = $(".submilestone-element-rows");
+
+            $submilestone_element_rows.sortable({
                 connectWith: ".submilestone-element-rows",
                 dropOnEmpty: true,
                 scroll: true,
                 tolerance : "pointer",
                 scrollSensitivity: 50,
                 items : ".submilestone-element",
+                helper: function (e, tr) {
+                    var $originals = tr.children();
+                    var $helper = tr.clone();
+                    $helper.children().each(function (index) {
+                        // Set helper cell sizes to match the original size
+                        $(this).width($originals.eq(index).width());
+                    });
+
+                    return $helper;
+                },
                 start : function (event, ui) {
                     from_submilestone_id = $(event.target).parents(".submilestone-data").first().attr('data-submilestone-id');
                 },
@@ -212,7 +233,9 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                             });
                         }
                 }
-            }).disableSelection();   
+            }).disableSelection();
+
+            self.establishWidthOfCellsToBeConstitentWhileDragging($submilestone_element_rows);
         }
     });
 })(jQuery);
