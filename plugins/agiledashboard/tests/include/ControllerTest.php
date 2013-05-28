@@ -47,7 +47,13 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
         $this->current_user     = stub('PFUser')->getId()->returns(666);
         $this->request          = aRequest()->withProjectManager($this->project_manager)->with('group_id', "$this->group_id")->withUser($this->current_user)->build();
         $this->planning_factory = new MockPlanningFactory();
-        $this->controller       = new Planning_Controller($this->request, $this->planning_factory, mock('Planning_MilestoneFactory'), '/path/to/theme');
+        $this->controller       = new Planning_Controller(
+            $this->request,
+            $this->planning_factory,
+            mock('Planning_ShortAccessFactory'),
+            mock('Planning_MilestoneFactory'),
+            '/path/to/theme'
+        );
     
         if (!defined('IS_SCRIPT')) {
             define('IS_SCRIPT', false);
@@ -149,7 +155,13 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         $this->dao              = mock('PlanningDao');
         $this->planning_factory = aPlanningFactory()->withDao($this->dao)->build();
         $this->tracker_factory  = $this->planning_factory->getTrackerFactory();
-        $this->controller       = new Planning_Controller($this->request, $this->planning_factory, mock('Planning_MilestoneFactory'), '/path/to/theme');
+        $this->controller       = new Planning_Controller(
+            $this->request,
+            $this->planning_factory,
+            mock('Planning_ShortAccessFactory'),
+            mock('Planning_MilestoneFactory'),
+            '/path/to/theme'
+        );
         $GLOBALS['Language']    = new MockBaseLanguage_Planning_ControllerNewTest();
 
         $this->available_backlog_trackers = array(
@@ -266,7 +278,13 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
         stub($planning_factory)->getAvailableTrackers($group_id)->returns(array());
         stub($planning_factory)->getAvailablePlanningTrackers($planning)->returns(array());
 
-        $controller->__construct($request, $planning_factory, mock('Planning_MilestoneFactory'), '/path/to/theme');
+        $controller->__construct(
+            $request,
+            $planning_factory,
+            mock('Planning_ShortAccessFactory'),
+            mock('Planning_MilestoneFactory'),
+            '/path/to/theme'
+        );
 
         $controller->expectOnce('render', array('edit', new IsAExpectation('Planning_FormPresenter')));
         $controller->edit();

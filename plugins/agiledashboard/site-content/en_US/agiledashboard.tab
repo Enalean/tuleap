@@ -25,6 +25,7 @@ plugin_agiledashboard	add_subitem	Add new $1
 plugin_agiledashboard	backlog_add	Add
 plugin_agiledashboard	planning_pane_title	Backlog/Planning
 plugin_agiledashboard	content_pane_title	Content
+plugin_agiledashboard	milestone_planning_pane_title	$1 Planning
 plugin_agiledashboard	access_to_planning	Access to planning
 plugin_agiledashboard	backlog_destination_help	Use right arrow on item to move it to current milestone or bottom/up arrow to rank items.
 
@@ -44,3 +45,14 @@ plugin_agiledashboard_contentpane	open_items_title-no_more	No more open $1, well
 plugin_agiledashboard_contentpane	open_items_title-not_yet	No $1 yet
 plugin_agiledashboard_contentpane	open_items_title-not_yet-can_add	No $1, start adding now
 plugin_agiledashboard_contentpane	open_items_intro	Here are the items that are still open. You can prioritize by drag 'n dropping them.
+plugin_agiledashboard_contentpane	allow_other_create	or
+plugin_agiledashboard_contentpane	add_in_descendant_title	Add $1 in existing $2
+
+plugin_agiledashboard_milestone_planning	help_intro	This section allows to do $1 planning:
+plugin_agiledashboard_milestone_planning	help_left	On the left side, you have the $2 backlog with all open elements, not already scheduled for a $1.
+plugin_agiledashboard_milestone_planning	help_right	On the right side, you have the list of $1 that belongs to $2.
+plugin_agiledashboard_milestone_planning	help_dnd	When you click on a $1, you see it's content and you can drag'n drop from $2 backlog to a $1 or from a $1 back to the backlog.
+plugin_agiledashboard_milestone_planning	backlog_title	$1 backlog
+plugin_agiledashboard_milestone_planning	list_of_submilestone_title	List of $1 in $2
+plugin_agiledashboard_milestone_planning	header_status	Status
+plugin_agiledashboard_milestone_planning	empty_element_tip	This element is empty, please drag anything here

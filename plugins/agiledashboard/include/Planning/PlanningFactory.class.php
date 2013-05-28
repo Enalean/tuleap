@@ -127,26 +127,6 @@ class PlanningFactory {
         return $plannings;
     }
 
-    /**
-     * Get a list of planning short access defined in a group_id
-     *
-     * @param PFUser $user     The user who will see the planning
-     * @param int  $group_id
-     *
-     * @return array of Planning_ShortAccess
-     */
-    public function getPlanningsShortAccess(PFUser $user, $group_id, Planning_MilestoneFactory $milestone_factory, $theme_path) {
-        $plannings    = $this->getPlannings($user, $group_id);
-        $short_access = array();
-        foreach ($plannings as $planning) {
-            $short_access[] = new Planning_ShortAccess($planning, $user, $milestone_factory, $theme_path);
-        }
-        if (!empty($short_access)) {
-            end($short_access)->setIsLatest();
-        }
-        return $short_access;
-    }
-
     private function sortPlanningsAccordinglyToHierarchy(array &$plannings) {
         $tracker_ids = array_map(array($this, 'getPlanningTrackerId'), $plannings);
         $hierarchy   = $this->tracker_factory->getHierarchy($tracker_ids);
@@ -196,12 +176,12 @@ class PlanningFactory {
      *
      * @param Tracker $planning_tracker
      *
-     * @return Planning
+     * @return Planning|null
      */
     public function getPlanningByPlanningTracker(Tracker $planning_tracker) {
         $planning = $this->dao->searchByPlanningTrackerId($planning_tracker->getId())->getRow();
 
-        if($planning) {
+        if ($planning) {
             $p = new Planning($planning['id'],
                               $planning['name'],
                               $planning['group_id'],

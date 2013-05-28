@@ -224,10 +224,14 @@
     color: #999;
 }
 
+#planning table,
 #blcontent table {
     border-spacing: 0;
+}
+#blcontent table {
     width: auto;
 }
+.submilestone-element-rows > tbody > tr,
 .milestone-content-open-rows > tr {
     cursor: move;
 }
@@ -238,4 +242,34 @@
 }
 .milestone-content-open-rows .ui-sortable-helper > td {
     border-bottom: 1px solid #dddddd;
+}
+
+.table .agiledashboard-planning-submilestones-addnew,
+.table .agiledashboard-planning-submilestone-header-info {
+    text-align: right;
+    border-left: none;
+    white-space: nowrap;
+}
+
+.table .agiledashboard-planning-submilestone-header > th {
+    cursor: pointer;
+    background-color: #EBEBEB;
+}
+
+.submilestone-data > a {
+    float: right;
+}
+
+.agiledashboard-planning-submilestone-header > th:first-child {
+    color: #067EC9;
+}
+
+.empty-table-placeholder > td {
+    text-align: center;
+    font-style: italic;
+    cursor: default;
+}
+
+.empty-table-placeholder {
+    display: none;
 }

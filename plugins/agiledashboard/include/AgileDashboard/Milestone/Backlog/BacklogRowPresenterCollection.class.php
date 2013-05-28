@@ -22,28 +22,46 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * I retrieve the content of the backlog
- */
-abstract class AgileDashboard_Milestone_Pane_ContentBacklogStrategy {
-
-    /** @var Tracker_Artifact[] */
-    protected $milestone_backlog_artifacts;
+class AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection implements Iterator, Countable {
+    private $rows = array();
 
     /** @var string */
-    protected $backlogitem_name;
+    private $parent_item_name = '';
 
-    public function __construct($milestone_backlog_artifacts, $backlogitem_name) {
-        $this->milestone_backlog_artifacts = $milestone_backlog_artifacts;
-        $this->backlogitem_name            = $backlogitem_name;
+    public function getParentItemName() {
+        return $this->parent_item_name;
     }
 
-    /** @return string */
-    public function getItemName() {
-        return $this->backlogitem_name;
+    public function setParentItemName($name) {
+        $this->parent_item_name = $name;
     }
 
-    /** @return Tracker_Artifact[] */
-    public abstract function getArtifacts(PFUser $user);
+    public function push(AgileDashboard_Milestone_Backlog_BacklogRowPresenter $row) {
+        $this->rows[] = $row;
+    }
+
+    public function current() {
+        return current($this->rows);
+    }
+
+    public function key() {
+        return key($this->rows);
+    }
+
+    public function next() {
+        return next($this->rows);
+    }
+
+    public function rewind() {
+        reset($this->rows);
+    }
+
+    public function valid() {
+        return current($this->rows) !== false;
+    }
+
+    public function count() {
+        return count($this->rows);
+    }
 }
 ?>

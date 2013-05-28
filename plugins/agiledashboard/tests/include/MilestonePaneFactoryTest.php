@@ -38,6 +38,7 @@ class Planning_MilestonePaneFactory_AvailableMilestonesTest extends TuleapTestCa
     private $milestone_factory;
     private $pane_factory;
     private $request;
+    private $theme_path = '/path';
 
     public function setUp() {
         parent::setUp();
@@ -52,12 +53,23 @@ class Planning_MilestonePaneFactory_AvailableMilestonesTest extends TuleapTestCa
 
         $this->current_user = aUser()->build();
         $this->request = aRequest()->withUser($this->current_user)->build();
+
+        $this->pane_presenter_builder_factory = mock('AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory');
+        stub($this->pane_presenter_builder_factory)->getContentPresenterBuilder()->returns(mock('AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder'));
+        stub($this->pane_presenter_builder_factory)->getPlanningPresenterBuilder()->returns(mock('AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder'));
     }
 
     public function itDisplaysOnlySiblingsMilestones() {
         stub($this->milestone_factory)->getAllBareMilestones()->returns(array());
         stub($this->milestone_factory)->getSiblingMilestones()->returns(array($this->sprint_1, $this->sprint_2));
-        $this->pane_factory = new Planning_MilestonePaneFactory4Tests($this->request, $this->milestone_factory, mock('AgileDashboard_Milestone_Pane_ContentPresenterBuilder'), mock('Planning_MilestoneLegacyPlanningPaneFactory'));
+        $this->pane_factory = new Planning_MilestonePaneFactory4Tests(
+            $this->request,
+            $this->milestone_factory,
+            $this->pane_presenter_builder_factory,
+            mock('Planning_MilestoneLegacyPlanningPaneFactory'),
+            mock('AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder'),
+            $this->theme_path
+        );
 
         $selectable_artifacts = $this->pane_factory->getAvailableMilestones($this->sprint_1);
         $this->assertCount($selectable_artifacts, 2);
@@ -72,7 +84,14 @@ class Planning_MilestonePaneFactory_AvailableMilestonesTest extends TuleapTestCa
         $milstone_1002 = aMilestone()->withArtifact(aMockArtifact()->withId(1002)->withTitle('Another open artifact')->build())->build();
 
         stub($this->milestone_factory)->getAllBareMilestones($this->current_user, $this->sprint_planning)->returns(array($milstone_1001, $milstone_1002));
-        $this->pane_factory = new Planning_MilestonePaneFactory4Tests($this->request, $this->milestone_factory, mock('AgileDashboard_Milestone_Pane_ContentPresenterBuilder'), mock('Planning_MilestoneLegacyPlanningPaneFactory'));
+        $this->pane_factory = new Planning_MilestonePaneFactory4Tests(
+            $this->request,
+            $this->milestone_factory,
+            $this->pane_presenter_builder_factory,
+            mock('Planning_MilestoneLegacyPlanningPaneFactory'),
+            mock('AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder'),
+            $this->theme_path
+        );
 
         $selectable_artifacts = $this->pane_factory->getAvailableMilestones($current_milstone);
         $this->assertCount($selectable_artifacts, 2);

@@ -20,67 +20,66 @@
 var tuleap = tuleap || { };
 tuleap.agiledashboard = tuleap.agiledashboard || { };
 
-tuleap.agiledashboard.MilestoneContent = Class.create({
-    initialize: function (container) {
-        (function ($) {
-            function sort(item) {
-                var item_id = $(item).attr('data-artifact-id'),
-                    next_id = $(item).next().attr('data-artifact-id'),
-                    prev_id = $(item).prev().attr('data-artifact-id');
+(function ($) {
 
-                if (next_id) {
-                    sortHigher(item_id, next_id);
-                } else if (prev_id) {
-                    sortLesser(item_id, prev_id);
-                }
-            }
+    function sort(item) {
+        var item_id = $(item).attr('data-artifact-id'),
+            next_id = $(item).next().attr('data-artifact-id'),
+            prev_id = $(item).prev().attr('data-artifact-id');
 
-            function sortHigher(source_id, target_id) {
-                requestSort('higher-priority-than', source_id, target_id);
-            }
-
-            function sortLesser(source_id, target_id) {
-                requestSort('lesser-priority-than', source_id, target_id);
-            }
-
-            function requestSort(func, source_id, target_id) {
-                var query = '?func='+ func +'&aid=' + source_id + '&target-id=' + target_id;
-                $.ajax(codendi.tracker.base_url + query);
-            }
-
-            function establishWidthOfCellsToBeConstitentWhileDragging(milestone_content_rows) {
-                milestone_content_rows.children().each(function() {
-                    $(this).children().each(function() {
-                        $(this).width($(this).width());
-                    });
-                });
-            }
-
-            var milestone_content_rows = $(container).find('.milestone-content-open-rows');
-            milestone_content_rows.sortable({
-                revert: true,
-                axis: 'y',
-                forcePlaceholderSize: true,
-                containment: "parent",
-                helper: function (e, tr) {
-                    var $originals = tr.children();
-                    var $helper = tr.clone();
-                    $helper.children().each(function (index) {
-                        // Set helper cell sizes to match the original size
-                        $(this).width($originals.eq(index).width());
-                    });
-
-                    return $helper;
-                },
-                stop: function (event, ui) {
-                    sort(ui.item);
-                },
-                cursor: 'move'
-            });
-
-            milestone_content_rows.find('tr, td').disableSelection();
-            establishWidthOfCellsToBeConstitentWhileDragging(milestone_content_rows);
-
-        })(jQuery);
+        if (next_id) {
+            sortHigher(item_id, next_id);
+        } else if (prev_id) {
+            sortLesser(item_id, prev_id);
+        }
     }
-});
+
+    function sortHigher(source_id, target_id) {
+        requestSort('higher-priority-than', source_id, target_id);
+    }
+
+    function sortLesser(source_id, target_id) {
+        requestSort('lesser-priority-than', source_id, target_id);
+    }
+
+    function requestSort(func, source_id, target_id) {
+        var query = '?func='+ func +'&aid=' + source_id + '&target-id=' + target_id;
+        $.ajax(codendi.tracker.base_url + query);
+    }
+
+    function establishWidthOfCellsToBeConstitentWhileDragging($milestone_content_rows) {
+        $milestone_content_rows.children().each(function() {
+            $(this).children().each(function() {
+                $(this).width($(this).width());
+            });
+        });
+    }
+
+    tuleap.agiledashboard.MilestoneContent = function MilestoneContent(container) {
+        var $milestone_content_rows = $(container).find('.milestone-content-open-rows');
+        $milestone_content_rows.sortable({
+            axis: 'y',
+            forcePlaceholderSize: true,
+            tolerance: 'pointer',
+            containment: "parent",
+            helper: function (e, tr) {
+                var $originals = tr.children();
+                var $helper = tr.clone();
+                $helper.children().each(function (index) {
+                    // Set helper cell sizes to match the original size
+                    $(this).width($originals.eq(index).width());
+                });
+
+                return $helper;
+            },
+            stop: function (event, ui) {
+                sort(ui.item);
+            },
+            cursor: 'move'
+        });
+
+        $milestone_content_rows.find('tr, td').disableSelection();
+        establishWidthOfCellsToBeConstitentWhileDragging($milestone_content_rows);
+    };
+
+})(jQuery);

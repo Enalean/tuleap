@@ -29,8 +29,8 @@ class Planning_MilestoneLegacyPlanningPaneFactory {
     /** @var string */
     private $theme_path;
 
-    /** @var Planning_ViewBuilder */
-    private $view_builder;
+    /** @var Planning_ViewBuilderFactory */
+    private $view_builder_factory;
 
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
@@ -38,23 +38,18 @@ class Planning_MilestoneLegacyPlanningPaneFactory {
     /** @var Tracker_HierarchyFactory */
     private $hierarchy_factory;
 
-    /** @var Planning_MilestoneRedirectParameter */
-    private $redirect_parameter;
-
     public function __construct(
         Codendi_Request $request,
         Planning_MilestoneFactory $milestone_factory,
         Tracker_HierarchyFactory  $hierarchy_factory,
-        Planning_ViewBuilder $view_builder,
-        $theme_path,
-        Planning_MilestoneRedirectParameter $redirect_parameter
+        Planning_ViewBuilderFactory $view_builder_factory,
+        $theme_path
     ) {
-        $this->request            = $request;
-        $this->theme_path         = $theme_path;
-        $this->view_builder       = $view_builder;
-        $this->milestone_factory  = $milestone_factory;
-        $this->hierarchy_factory  = $hierarchy_factory;
-        $this->redirect_parameter = $redirect_parameter;
+        $this->request              = $request;
+        $this->theme_path           = $theme_path;
+        $this->view_builder_factory = $view_builder_factory;
+        $this->milestone_factory    = $milestone_factory;
+        $this->hierarchy_factory    = $hierarchy_factory;
     }
 
     /** @return Planning_Milestone[] */
@@ -78,7 +73,7 @@ class Planning_MilestoneLegacyPlanningPaneFactory {
         // $milestone = $info->getMilestone();
 
         $planning     = $milestone->getPlanning();
-        $content_view = $this->buildContentView($this->view_builder, $planning, $milestone);
+        $content_view = $this->buildContentView($this->view_builder_factory->getViewBuilder(), $planning, $milestone);
 
         $milestone_plan = $this->milestone_factory->getMilestonePlan($this->getCurrentUser(), $milestone);
 
@@ -118,7 +113,8 @@ class Planning_MilestoneLegacyPlanningPaneFactory {
     }
 
     private function getPlanningRedirectToSelf(Planning_Milestone $milestone) {
-        return $this->redirect_parameter->getPlanningRedirectToSelf($milestone, AgileDashboard_MilestonePlanningPaneInfo::IDENTIFIER);
+        $redirect_parameter = new Planning_MilestoneRedirectParameter();
+        return $redirect_parameter->getPlanningRedirectToSelf($milestone, AgileDashboard_MilestonePlanningPaneInfo::IDENTIFIER);
     }
 
     private function getAlreadyPlannedArtifactsIds(Planning_Milestone $milestone) {

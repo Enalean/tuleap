@@ -1,5 +1,10 @@
+<?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright Enalean (c) 2013. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
  * This file is a part of Tuleap.
  *
@@ -17,21 +22,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.observe('dom:loaded', function () {
-    var planner = $('planner');
-    if (planner) {
-        new tuleap.agiledashboard.Planning(planner);
-    }
+interface AgileDashboard_Milestone_Backlog_BacklogRowPresenter {
 
-    var milestone_content = $('blcontent');
-    if (milestone_content) {
-        tuleap.agiledashboard.MilestoneContent(milestone_content);
-    }
+    public function id();
 
-    var milestone_planning = $('planning');
-    if (milestone_planning) {
-        new tuleap.agiledashboard.NewPlanning(milestone_planning);
-    }
+    public function title();
 
-    tuleap.agiledashboard.align_short_access_heights.defer();
-});
+    public function url();
+
+    public function points();
+
+    public function parent_title();
+
+    public function parent_url();
+}
+
+?>

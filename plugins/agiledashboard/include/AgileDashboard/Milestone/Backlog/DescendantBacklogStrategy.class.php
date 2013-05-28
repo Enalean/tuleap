@@ -25,14 +25,22 @@
 /**
  * I am the backlog of the first descendant of the current milestone
  */
-class AgileDashboard_Milestone_Pane_ContentDescendantBacklogStrategy extends AgileDashboard_Milestone_Pane_ContentBacklogStrategy {
+class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDashboard_Milestone_Backlog_BacklogStrategy {
 
     /** @var AgileDashboard_BacklogItemDao */
     private $dao;
 
-    public function __construct($milestone_backlog_artifacts, $item_name, AgileDashboard_BacklogItemDao $dao) {
+    /** @var Tracker */
+    private $descendant_tracker;
+
+    public function __construct($milestone_backlog_artifacts, Tracker $item_name, Tracker $descendant_tracker, AgileDashboard_BacklogItemDao $dao) {
         parent::__construct($milestone_backlog_artifacts, $item_name);
         $this->dao = $dao;
+        $this->descendant_tracker = $descendant_tracker;
+    }
+
+    public function getDescendantTracker() {
+        return $this->descendant_tracker;
     }
 
     /** @return Tracker_Artifact[] */
@@ -47,6 +55,10 @@ class AgileDashboard_Milestone_Pane_ContentDescendantBacklogStrategy extends Agi
     }
 
     private function sortByPriority(array $artifacts) {
+        if (! $artifacts) {
+            return $artifacts;
+        }
+
         $ids              = array_map(array($this, 'extractId'), $artifacts);
         $artifacts        = array_combine($ids, $artifacts);
         $sorted_ids       = $this->dao->getIdsSortedByPriority($ids);

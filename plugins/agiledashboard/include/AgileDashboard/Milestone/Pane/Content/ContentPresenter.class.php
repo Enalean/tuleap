@@ -22,11 +22,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_ContentPresenter {
-    /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
+class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
+    /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
     private $todo_collection;
 
-    /** @var AgileDashboard_Milestone_Pane_ContentRowPresenterCollection */
+    /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
     private $done_collection;
 
     /** @var String */
@@ -38,9 +38,15 @@ class AgileDashboard_Milestone_Pane_ContentPresenter {
     /** @var String */
     private $submit_url;
 
+    /** @var Array */
+    private $backlog_elements;
+
+    /** @var String */
+    private $descendant_item_name;
+
     public function __construct(
-        AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $todo,
-        AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $done,
+        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
+        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done,
         $parent_item_type,
         $backlog_item_type,
         $can_add_backlog_item_type,
@@ -54,12 +60,20 @@ class AgileDashboard_Milestone_Pane_ContentPresenter {
         $this->submit_url                = $submit_url;
     }
 
-    public function setTodoCollection(AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $todo) {
+    public function setTodoCollection(AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo) {
         $this->todo_collection = $todo;
     }
 
-    public function setDoneCollection(AgileDashboard_Milestone_Pane_ContentRowPresenterCollection $done) {
+    public function setDoneCollection(AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done) {
         $this->done_collection = $done;
+    }
+
+    public function setBacklogElements($backlog_elements) {
+        $this->backlog_elements = $backlog_elements;
+    }
+
+    public function setDescendantItemName($descendant_item_name) {
+        $this->descendant_item_name = $descendant_item_name;
     }
 
     public function backlog_item_type() {
@@ -67,10 +81,6 @@ class AgileDashboard_Milestone_Pane_ContentPresenter {
     }
 
     public function can_add_backlog_item() {
-        return $this->can_add_backlog_item_type;
-    }
-
-    public function can_prioritize() {
         return $this->can_add_backlog_item_type;
     }
 
@@ -82,7 +92,32 @@ class AgileDashboard_Milestone_Pane_ContentPresenter {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'add_subitem', array($this->backlog_item_type));
     }
 
+    public function can_add_subbacklog_items() {
+        if (count($this->backlog_elements)) {
+            return true;
+        }
+    }
+
+    public function allow_other_create() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'allow_other_create');
+    }
+
+    public function add_in_descendant_title() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'add_in_descendant_title', array($this->descendant_item_name, $this->backlog_item_type));
+    }
+
+    public function backlog_elements() {
+        return $this->backlog_elements;
+    }
+
+    public function can_prioritize() {
+        return $this->can_add_backlog_item_type;
+    }
+
     public function title() {
+        if ($this->descendant_item_name) {
+            return $this->descendant_item_name;
+        }
         return $this->backlog_item_type;
     }
 
@@ -118,6 +153,14 @@ class AgileDashboard_Milestone_Pane_ContentPresenter {
         return $this->has_something_todo() || $this->has_something_done();
     }
 
+    public function has_nothing() {
+        return ! $this->has_something();
+    }
+
+    public function has_nothing_todo() {
+        return ! $this->has_something_done();
+    }
+
     public function closed_items_title() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'closed_items_title', $this->backlog_item_type);
     }
@@ -132,12 +175,12 @@ class AgileDashboard_Milestone_Pane_ContentPresenter {
 
     public function open_items_title() {
         $key = 'open_items_title';
-        if (! $this->has_something()) {
+        if ($this->has_nothing()) {
             $key = 'open_items_title-not_yet';
             if ($this->can_add_backlog_item()) {
                 $key = 'open_items_title-not_yet-can_add';
             }
-        } else if (! $this->has_something_todo()) {
+        } else if ($this->has_nothing_todo()) {
             $key = 'open_items_title-no_more';
         }
 

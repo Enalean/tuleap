@@ -589,7 +589,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $this->status = $status_field->getFirstValueFor($this->getLastChangeset());
                 }
             }
-            $this->status = null;
         }
         return $this->status;
     }
