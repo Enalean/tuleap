@@ -122,8 +122,9 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
             var $tables = $('table.submilestone-element-rows'),
                 self = this;
 
-            $tables.each(function(){
-                if($('tbody tr', this).length === 1 || isDraggingLastRow(this)) {
+            $tables.each(function() {
+
+                if (shouldDisplayPlaceholder(this)) {
                     var $placeholder = $('tr.empty-table-placeholder', this);
 
                     $placeholder.show('slow');
@@ -131,13 +132,32 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                     $('tr.empty-table-placeholder', this).fadeOut('slow');
                 }
 
+                function shouldDisplayPlaceholder(table) {
+                    console.log($('tbody tr', table).length);
+                    var SIZE_OF_TABLE_WHEN_THERE_IS_ONLY_OUR_EMPTY_PLACEHOLDER = 1;
+
+                    return $('tbody tr', table).length === SIZE_OF_TABLE_WHEN_THERE_IS_ONLY_OUR_EMPTY_PLACEHOLDER || isDraggingLastRow(table);
+                }
+
                 function isDraggingLastRow(table) {
-                    if(typeof(target) !== 'undefined') {
+                    /* When we are dragging the last row in a table, there is
+                     * actually 4 remaining rows:
+                     *
+                     * - the initial row
+                     * - the helper (jQuery, clone of the initial row)
+                     * - placeholder (jQuery)
+                     * - empty placeholder (ours, "This element is empty, bla bla bla")
+                     */
+                    var SIZE_OF_TABLE_WHILE_DRAGGING_THE_LAST_ROW = 4;
+
+                    if (typeof(target) !== 'undefined') {
                         var target_submilestone_id = $(target).parents('[data-submilestone-id]').first().attr('data-submilestone-id');
                         var table_submilestone_id  = $(table).parents('[data-submilestone-id]').first().attr('data-submilestone-id');
                         var submilestone_are_equal = target_submilestone_id === table_submilestone_id;
 
-                        return self.dragging === true && $('tr', target).length === 4 && submilestone_are_equal;
+                        return self.dragging === true
+                            && $('tr', target).length === SIZE_OF_TABLE_WHILE_DRAGGING_THE_LAST_ROW
+                            && submilestone_are_equal;
                     }
                 }
             });
