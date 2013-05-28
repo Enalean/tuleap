@@ -209,17 +209,17 @@ class AgileDashboardPlugin extends Plugin {
     public function process(Codendi_Request $request) {
         $planning_factory               = $this->getPlanningFactory();
         $milestone_factory              = $this->getMilestoneFactory();
-        $hierarcy_factory               = $this->getHierarchyFactory();
+        $hierarchy_factory              = $this->getHierarchyFactory();
         $pane_presenter_builder_factory = $this->getPanePresenterBuilderFactory($milestone_factory);
 
-        $pane_factory = $this->getPaneFactory($request, $planning_factory, $milestone_factory, $hierarcy_factory, $pane_presenter_builder_factory);
+        $pane_factory = $this->getPaneFactory($request, $planning_factory, $milestone_factory, $hierarchy_factory, $pane_presenter_builder_factory);
 
         $milestone_controller_factory = new Planning_MilestoneControllerFactory(
             $this,
             ProjectManager::instance(),
             $milestone_factory,
             $this->getPlanningFactory(),
-            $hierarcy_factory,
+            $hierarchy_factory,
             $pane_presenter_builder_factory,
             $pane_factory
         );
@@ -240,13 +240,13 @@ class AgileDashboardPlugin extends Plugin {
         Codendi_Request $request,
         PlanningFactory $planning_factory,
         Planning_MilestoneFactory $milestone_factory,
-        Tracker_HierarchyFactory $hierarcy_factory,
+        Tracker_HierarchyFactory $hierarchy_factory,
         AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory
     ) {
         $legacy_planning_pane_factory = new Planning_MilestoneLegacyPlanningPaneFactory(
             $request,
             $milestone_factory,
-            $hierarcy_factory,
+            $hierarchy_factory,
             new Planning_ViewBuilderFactory($request, $planning_factory),
             $this->getThemePath()
         );
@@ -256,7 +256,7 @@ class AgileDashboardPlugin extends Plugin {
             $milestone_factory,
             $pane_presenter_builder_factory,
             $legacy_planning_pane_factory,
-            new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder($hierarcy_factory, $planning_factory),
+            new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder($hierarchy_factory, $planning_factory),
             $this->getThemePath()
         );
     }
