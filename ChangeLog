@@ -8,9 +8,9 @@ Version 6.1 (Not Released Yet)
 	== Plugins ==
 	* docman: 2.26.16
 	* git: 3.21
-	* agiledashboard: 0.82
+	* agiledashboard: 0.83
 	* cardwall: 0.9.32
-	* tracker: 5.125
+	* tracker: 5.126
 	* ldap: 3.30
 
 Version 6.0 (Monday, May 6th 2013)
