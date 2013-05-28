@@ -31,7 +31,8 @@
                         <th>{{header_status}}</th>
                     </tr>
                 </thead>
-                <tbody class="ui-sortable">
+                <tbody class="">
+                    <tr class="empty-table-placeholder"><td colspan="5">This element is empty, please drag anything here</td></tr>
                     {{#backlog_collection}}
                         <tr data-artifact-id="{{id}}" class="submilestone-element">
                             <td><a href="{{url}}">{{id}}</a></td>
@@ -41,9 +42,6 @@
                             <td>{{status}}</td>
                         </tr>
                     {{/backlog_collection}}
-                </tbody>
-                <tbody class="empty">
-                    <tr class="empty-table-placeholder"><td colspan="5">This element is empty, please drag anything here</td></tr>
                 </tbody>
             </table>
         </div>
@@ -86,9 +84,7 @@
                                             <th>{{header_status}}</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="ui-sortable">
-                                    </tbody>
-                                    <tbody class="empty">
+                                    <tbody class="">
                                         <tr class="empty-table-placeholder"><td colspan="5">This element is empty, please drag anything here</td></tr>
                                     </tbody>
                                 </table>

@@ -442,7 +442,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     public function getCapacity(Tracker_Artifact $artifact) {
         $field = $this->getCapacityField();
-        if (! $field) {
+        if (! $field || ! $artifact->getValue($field)) {
             return null;
         }
 

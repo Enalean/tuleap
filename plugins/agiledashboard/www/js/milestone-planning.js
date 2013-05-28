@@ -25,6 +25,8 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
    
 (function ($) {
     tuleap.agiledashboard.NewPlanning = Class.create({
+        dragging : false,
+
         initialize: function () {
             var self = this;
             
@@ -36,7 +38,6 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                     var data_container = $submilestone_content_row.find(".submilestone-data");
 
                     if (! isSubmilestoneDataLoaded(data_container)) {
-                        self.cleanAnyEmptyPlaceHolder($submilestone_content_row);
                         self.fetchSubmilestoneData(data_container);
                     }
                     $submilestone_content_row.show();
@@ -117,35 +118,21 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
             });
         },
 
-        cleanAnyEmptyPlaceHolder : function(submilestone) {
-          var placeholders = $('tbody.ui-sortable tr.empty-table-placeholder', submilestone);
-
-          placeholders.each(function(index, placeholder){
-              $(placeholder).detach();
-          });
-
-        },
-
         displayPlaceHolderIfEmpty : function() {
-            var $tables = $('table.submilestone-element-rows');
+            var $tables = $('table.submilestone-element-rows'),
+                self = this;
 
-            $tables.each(function(index, table){
-                if($('tbody.ui-sortable tr.submilestone-element', table).length === 0) {
-
-                    if($('tbody.ui-sortable tr.empty-table-placeholder', table).length === 0) {
-
-                        var placeholder = $('tbody.empty tr.empty-table-placeholder', table).clone();
-                        placeholder.css('display','none');
-                        $('tbody.ui-sortable', table).append(placeholder);
-                        placeholder.fadeIn('slow');
-                    }
-
+            $tables.each(function(){
+                if($('tbody tr', this).length === 1 || isDraggingLastRow(this)) {
+                    var $placeholder = $('tr.empty-table-placeholder', this);
+                    
+                    $placeholder.show('slow');
                 } else {
+                    $('tr.empty-table-placeholder', this).fadeOut('slow');
+                }
 
-                    $('tbody.ui-sortable > tr.empty-table-placeholder', table).fadeOut('slow', function(){
-                        $(this).detach();
-                    });
-
+                function isDraggingLastRow($table) {
+                    return self.dragging === true && $('tbody tr', $table).length === 4;
                 }
             });
         },
@@ -160,10 +147,10 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                 return;
             }
 
-            var $submilestone_element_rows = $(".submilestone-element-rows > tbody.ui-sortable");
+            var $submilestone_element_rows = $(".submilestone-element-rows tbody");
 
             $submilestone_element_rows.sortable({
-                connectWith: ".submilestone-element-rows > tbody.ui-sortable",
+                connectWith: ".submilestone-element-rows tbody",
                 dropOnEmpty: true,
                 scroll: true,
                 cancel: ".empty-table-placeholder",
@@ -181,16 +168,19 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                     return $helper;
                 },
                 start : function (event, ui) {
+                    self.dragging = true;
+                    self.displayPlaceHolderIfEmpty();
                     from_submilestone_id = $(event.target).parents(".submilestone-data").first().attr('data-submilestone-id');
                 },
                 stop: function (event, ui) {
                     var item               = ui.item,
                         rowIdentifier      = "data-artifact-id",
                         item_id            = $(item).attr(rowIdentifier),
-                        next_id            = $(item).next(".submilestone-element").attr(rowIdentifier),
-                        prev_id            = $(item).prev(".submilestone-element").attr(rowIdentifier),
+                        next_id            = $(item).nextAll(".submilestone-element").first().attr(rowIdentifier),
+                        prev_id            = $(item).prevAll(".submilestone-element").first().attr(rowIdentifier),
                         to_submilestone_id = getToSubmilestoneId();
 
+                        self.dragging = false;
                         updateElement();
                         self.updateSubmilestoneCapacities();
                         self.displayPlaceHolderIfEmpty();

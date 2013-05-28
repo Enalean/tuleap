@@ -270,6 +270,6 @@
     cursor: default;
 }
 
-tbody.empty {
+.empty-table-placeholder {
     display: none;
 }
