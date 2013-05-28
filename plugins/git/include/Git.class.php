@@ -35,6 +35,9 @@ class Git extends PluginController {
 
     const SCOPE_PERSONAL = 'personal';
 
+    const REFERENCE_KEYWORD = 'git';
+    const REFERENCE_NATURE  = 'git_commit';
+
     /**
      * Lists all git-related permission types.
      * 
