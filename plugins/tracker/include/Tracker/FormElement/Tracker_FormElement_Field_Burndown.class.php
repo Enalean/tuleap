@@ -441,8 +441,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
 
     /**
-     *
      * @param Tracker_Artifact $artifact
+     *
      * @return null|int
      */
     public function getCapacity(Tracker_Artifact $artifact) {
