@@ -52,14 +52,14 @@ class Planning_ViewBuilderFactory {
         $form_element_factory = Tracker_FormElementFactory::instance();
         $group_id             = $this->request->get('group_id');
         $user                 = $this->request->getCurrentUser();
-        $object_god           = new TrackerManager();
+        $tracker_manager      = new TrackerManager(); //God object
         $planning_trackers    = $this->planning_factory->getPlanningTrackers($group_id, $user);
         $art_link_field_ids   = $form_element_factory->getArtifactLinkFieldsOfTrackers($planning_trackers);
 
         return new Planning_ViewBuilder(
             $form_element_factory,
-            $object_god->getCrossSearch($art_link_field_ids),
-            $object_god->getCriteriaBuilder($user, $planning_trackers)
+            $tracker_manager->getCrossSearch($art_link_field_ids),
+            $tracker_manager->getCriteriaBuilder($user, $planning_trackers)
         );
     }
 }
