@@ -9,6 +9,7 @@
 require_once('pre.php');
 require('../people/people_utils.php');
 
+$purifier = Codendi_HTMLPurifier::instance();
 
 if (user_isloggedin()) {
 
@@ -111,7 +112,7 @@ if (user_isloggedin()) {
 		'.$Language->getText('people_editprofile','give_us_info').'
 		<P>
 		<B>'.$Language->getText('people_editprofile','resume').':</B><BR>
-		<TEXTAREA NAME="people_resume" ROWS="15" COLS="60" WRAP="SOFT">'. db_result($result,0,'people_resume') .'</TEXTAREA>
+		<TEXTAREA NAME="people_resume" ROWS="15" COLS="60" WRAP="SOFT">'. $purifier->purify(db_result($result,0,'people_resume'), CODENDI_PURIFIER_CONVERT_HTML).'</TEXTAREA>
 		<P>
 		<INPUT TYPE="SUBMIT" NAME="update_profile" VALUE="'.$Language->getText('people_editprofile','update_profile').'">
 		</FORM>';
