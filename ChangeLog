@@ -11,6 +11,7 @@ Version 6.1 (Not Released Yet)
 	* agiledashboard: 0.82
 	* cardwall: 0.9.32
 	* tracker: 5.125
+	* ldap: 3.30
 
 Version 6.0 (Monday, May 6th 2013)
     == Bux Fix ==
