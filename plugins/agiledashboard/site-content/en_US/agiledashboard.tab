@@ -55,3 +55,4 @@ plugin_agiledashboard_milestone_planning	help_dnd	When you click on a $1, you se
 plugin_agiledashboard_milestone_planning	backlog_title	$1 backlog
 plugin_agiledashboard_milestone_planning	list_of_submilestone_title	List of $1 in $2
 plugin_agiledashboard_milestone_planning	header_status	Status
+plugin_agiledashboard_milestone_planning	empty_element_tip	This element is empty, please drag anything here

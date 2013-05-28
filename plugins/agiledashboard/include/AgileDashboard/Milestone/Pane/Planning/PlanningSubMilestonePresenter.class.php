@@ -121,6 +121,10 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
     public function get_capacity() {
         return $this->milestone_capacity;
     }
+
+    public function empty_element_tip() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'empty_element_tip');
+    }
 }
 
 ?>
