@@ -158,7 +158,7 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     }
 
     public function has_nothing_todo() {
-        return ! $this->has_nothing_todo();
+        return ! $this->has_something_done();
     }
 
     public function closed_items_title() {
