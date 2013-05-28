@@ -38,9 +38,6 @@ class Planning_MilestoneController extends MVC2_PluginController {
     /** @var Planning_MilestonePaneFactory */
     private $pane_factory;
 
-    /** @var Planning_MilestoneRedirectParameter */
-    private $redirect_parameter;
-
     /** @var AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory */
     private $pane_presenter_builder_factory;
 
