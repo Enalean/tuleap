@@ -1,35 +1,35 @@
-/* 
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
- * 
+/*
+ * Copyright Enalean (c) 2013. All rights reserved.
+ *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
- * 
+ *
  * This file is a part of Tuleap.
- * 
+ *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 var tuleap = tuleap || { };
 tuleap.agiledashboard = tuleap.agiledashboard || { };
-   
+
 (function ($) {
     tuleap.agiledashboard.NewPlanning = Class.create({
         dragging : false,
 
         initialize: function () {
             var self = this;
-            
+
             $('.agiledashboard-planning-submilestone-header').click(function (event) {
                 var $submilestone_content_row = $(this).next();
                 if ($submilestone_content_row.is(':visible')) {
@@ -108,7 +108,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 
                 $all_efforts.each(function(){
                     var element_effort = parseFloat($(this).html());
-                    
+
                     if (! isNaN(element_effort)) {
                         remaining_effort += parseFloat(element_effort);
                     }
@@ -125,7 +125,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
             $tables.each(function(){
                 if($('tbody tr', this).length === 1 || isDraggingLastRow(this)) {
                     var $placeholder = $('tr.empty-table-placeholder', this);
-                    
+
                     $placeholder.show('slow');
                 } else {
                     $('tr.empty-table-placeholder', this).fadeOut('slow');
