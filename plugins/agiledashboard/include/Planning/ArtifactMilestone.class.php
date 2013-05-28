@@ -258,9 +258,8 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
     public function getCapacity(PFUser $user) {
         $burndown_field = $this->artifact->getABurndownField($user);
 
-        if($burndown_field) {
-            $capacity = $burndown_field->getCapacity($this->artifact);
-            return (is_int($capacity)) ? $capacity : null;
+        if ($burndown_field) {
+            return $burndown_field->getCapacity($this->artifact);
         }
 
         return null;
