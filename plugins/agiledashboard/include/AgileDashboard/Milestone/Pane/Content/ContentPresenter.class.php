@@ -153,6 +153,14 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
         return $this->has_something_todo() || $this->has_something_done();
     }
 
+    public function has_nothing() {
+        return ! $this->has_something();
+    }
+
+    public function has_nothing_todo() {
+        return ! $this->has_nothing_todo();
+    }
+
     public function closed_items_title() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'closed_items_title', $this->backlog_item_type);
     }
@@ -167,12 +175,12 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
 
     public function open_items_title() {
         $key = 'open_items_title';
-        if (! $this->has_something()) {
+        if ($this->has_nothing()) {
             $key = 'open_items_title-not_yet';
             if ($this->can_add_backlog_item()) {
                 $key = 'open_items_title-not_yet-can_add';
             }
-        } else if (! $this->has_something_todo()) {
+        } else if ($this->has_nothing_todo()) {
             $key = 'open_items_title-no_more';
         }
 
