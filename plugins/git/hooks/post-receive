@@ -16,10 +16,19 @@
 
 push_timestamp=$(date +%s)
 
+git_dir_path=$(git rev-parse --git-dir 2>/dev/null)
+repository_path=$(cd $git_dir_path; pwd)
+
+if [ ! -z "$GL_USER" ]; then
+    user_name="$GL_USER"
+else
+    user_name=$(whoami)
+fi
+
 while read oldrev newrev refname
     do
 	echo $oldrev $newrev $refname | /usr/share/codendi/plugins/git/hooks/post-receive-email 2>/dev/null
 	. /usr/share/codendi/plugins/git/hooks/post-receive-log 2>/dev/null
 	. /usr/share/codendi/plugins/git/hooks/post-receive-trigger-ci 2>/dev/null
-	. /usr/share/codendi/plugins/git/hooks/post-receive-reference 2>/dev/null
+	/usr/share/codendi/plugins/git/hooks/post-receive.php "$repository_path" "$user_name" "$oldrev" "$newrev" "$refname"
     done
