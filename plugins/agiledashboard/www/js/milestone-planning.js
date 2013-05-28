@@ -118,7 +118,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
             });
         },
 
-        displayPlaceHolderIfEmpty : function() {
+        displayPlaceHolderIfEmpty : function(target) {
             var $tables = $('table.submilestone-element-rows'),
                 self = this;
 
@@ -131,8 +131,14 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                     $('tr.empty-table-placeholder', this).fadeOut('slow');
                 }
 
-                function isDraggingLastRow($table) {
-                    return self.dragging === true && $('tbody tr', $table).length === 4;
+                function isDraggingLastRow(table) {
+                    if(typeof(target) !== 'undefined') {
+                        var target_submilestone_id = $(target).parents('[data-submilestone-id]').first().attr('data-submilestone-id');
+                        var table_submilestone_id  = $(table).parents('[data-submilestone-id]').first().attr('data-submilestone-id');
+                        var submilestone_are_equal = target_submilestone_id === table_submilestone_id;
+
+                        return self.dragging === true && $('tr', target).length === 4 && submilestone_are_equal;
+                    }
                 }
             });
         },
@@ -169,7 +175,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                 },
                 start : function (event, ui) {
                     self.dragging = true;
-                    self.displayPlaceHolderIfEmpty();
+                    self.displayPlaceHolderIfEmpty(event.target);
                     from_submilestone_id = $(event.target).parents(".submilestone-data").first().attr('data-submilestone-id');
                 },
                 stop: function (event, ui) {
