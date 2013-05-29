@@ -11,7 +11,29 @@ if (user_isloggedin()) {
     $lm = new WidgetLayoutManager();
     $vLayoutId = new Valid_UInt('layout_id');
     $vLayoutId->required();
-    if ($request->valid($vLayoutId)) {
+
+    //Validating base Url
+    $base_url      = $_SERVER['REQUEST_URI'];
+    $url_validated = true;
+    $pattern1 = '/widgets.php\?/';
+    $pattern2 = '/widgets.php\/\?/';
+
+    if(!preg_match($pattern1, $base_url) && !preg_match($pattern2, $base_url)) {
+        $url_validated = false;
+    }
+    
+    //Validating Url parameters
+    $request_parameters = $request->params;
+
+    $valid_parameters     = array("owner","layout_id","group_id");
+    $parameters_validated = true;
+
+    foreach ($request_parameters as $parameter => $params_value) {
+        if( !in_array($parameter,$valid_parameters) )
+            $parameters_validated = false;
+    }
+
+    if ($url_validated == true && $parameters_validated == true && $request->valid($vLayoutId)) {
         $layout_id = $request->get('layout_id');
 
         $vOwner = new Valid_Widget_Owner('owner');
