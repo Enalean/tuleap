@@ -20,10 +20,13 @@
  */
 require_once('bootstrap.php');
 class Tracker_SemanticManagerTest extends TuleapTestCase {
-
+    private $user;
     private $semantic_title;
+    private $unreadable_semantic_title;
     private $semantic_contributor;
+    private $unreadable_semantic_contributor;
     private $semantic_status;
+    private $unreadable_semantic_status;
     private $semantic_tooltip;
     private $not_defined_semantic_title;
     private $not_defined_semantic_status;
@@ -31,14 +34,31 @@ class Tracker_SemanticManagerTest extends TuleapTestCase {
     private $open_values = array(803,2354,2943);
 
     public function setUp() {
+        $this->user        = aUser()->build();
         $tracker           = mock('Tracker');
-        $summary_field     = aTextField()->withName('summary')->build();
-        $assigned_to_field = aSelectBoxField()->withName('assigned_to')->build();
-        $values_field      = aSelectBoxField()->withName('status')->build();
+        $summary_field     = mock('Tracker_FormElement_Field_Text');
+        stub($summary_field)->getName()->returns('summary');
+        stub($summary_field)->userCanRead()->returns(true);
+        $assigned_to_field = mock('Tracker_FormElement_Field_List');
+        stub($assigned_to_field)->getName()->returns('assigned_to');
+        stub($assigned_to_field)->userCanRead()->returns(true);
+        $values_field      = mock('Tracker_FormElement_Field_List');
+        stub($values_field)->getName()->returns('status');
+        stub($values_field)->userCanRead()->returns(true);
+
+        $unreable_field      = mock('Tracker_FormElement_Field_Text');
+        stub($unreable_field)->getName()->returns('whatever');
+        stub($unreable_field)->userCanRead()->returns(false);
+        $unreable_field_list = mock('Tracker_FormElement_Field_List');
+        stub($unreable_field_list)->getName()->returns('whatever');
+        stub($unreable_field_list)->userCanRead()->returns(false);
 
         $this->semantic_title                   = new Tracker_Semantic_Title($tracker, $summary_field);
+        $this->unreadable_semantic_title        = new Tracker_Semantic_Title($tracker, $unreable_field);
         $this->semantic_contributor             = new Tracker_Semantic_Contributor($tracker, $assigned_to_field);
+        $this->unreadable_semantic_contributor  = new Tracker_Semantic_Contributor($tracker, $unreable_field_list);
         $this->semantic_status                  = new Tracker_Semantic_Status($tracker, $values_field, $this->open_values);
+        $this->unreadable_semantic_status       = new Tracker_Semantic_Status($tracker, $unreable_field_list, $this->open_values);
         $this->semantic_tooltip                 = new Tracker_Tooltip($tracker);
         $this->not_defined_semantic_title       = new Tracker_Semantic_Title($tracker);
         $this->not_defined_semantic_status      = new Tracker_Semantic_Status($tracker);
@@ -48,11 +68,19 @@ class Tracker_SemanticManagerTest extends TuleapTestCase {
 
     }
 
+    public function itReturnsEmptyIfUserCannoAccessTitleSemanticField() {
+        stub($this->semantic_manager)->getSemantics()->returns(array(
+            'title' => $this->unreadable_semantic_title
+        ));
+        $result = $this->semantic_manager->exportToSOAP($this->user);
+        $this->assertEqual($result['title']['field_name'], '');
+    }
+
     public function itReturnsTheFieldNameOfTheTitleSemantic() {
         stub($this->semantic_manager)->getSemantics()->returns(array(
             'title' => $this->semantic_title
         ));
-        $result = $this->semantic_manager->exportToSOAP();
+        $result = $this->semantic_manager->exportToSOAP($this->user);
         $this->assertEqual($result['title']['field_name'], 'summary');
     }
 
@@ -60,7 +88,7 @@ class Tracker_SemanticManagerTest extends TuleapTestCase {
         stub($this->semantic_manager)->getSemantics()->returns(array(
             'title' => $this->not_defined_semantic_title
         ));
-        $result = $this->semantic_manager->exportToSOAP();
+        $result = $this->semantic_manager->exportToSOAP($this->user);
         $this->assertEqual($result['title']['field_name'], '');
     }
 
@@ -68,22 +96,40 @@ class Tracker_SemanticManagerTest extends TuleapTestCase {
         stub($this->semantic_manager)->getSemantics()->returns(array(
             'contributor' => $this->semantic_contributor
         ));
-        $result = $this->semantic_manager->exportToSOAP();
+        $result = $this->semantic_manager->exportToSOAP($this->user);
         $this->assertEqual($result['contributor']['field_name'], 'assigned_to');
+    }
+
+    public function itReturnsEmptyIfUserCannoAccessContributorSemantic() {
+        stub($this->semantic_manager)->getSemantics()->returns(array(
+            'contributor' => $this->unreadable_semantic_contributor
+        ));
+        $result = $this->semantic_manager->exportToSOAP($this->user);
+        $this->assertEqual($result['contributor']['field_name'], '');
     }
 
     public function itReturnsEmptyIfNoContributorSemantic() {
         stub($this->semantic_manager)->getSemantics()->returns(array(
             'contributor' => $this->not_defined_semantic_contributor
         ));
-        $result = $this->semantic_manager->exportToSOAP();
+        $result = $this->semantic_manager->exportToSOAP($this->user);
         $this->assertEqual($result['contributor']['field_name'], '');
     }
+
+    public function itReturnsEmptyIfUserCannoAccessStatusSemantic() {
+        stub($this->semantic_manager)->getSemantics()->returns(array(
+            'status' => $this->unreadable_semantic_status
+        ));
+        $result = $this->semantic_manager->exportToSOAP($this->user);
+        $this->assertEqual($result['status']['field_name'], '');
+        $this->assertEqual($result['status']['values'], array());
+    }
+
     public function itReturnsTheFieldNameAndValuesOfTheStatusSemantic() {
         stub($this->semantic_manager)->getSemantics()->returns(array(
             'status' => $this->semantic_status
         ));
-        $result = $this->semantic_manager->exportToSOAP();
+        $result = $this->semantic_manager->exportToSOAP($this->user);
         $this->assertEqual($result['status']['field_name'], 'status');
         $this->assertEqual($result['status']['values'], $this->open_values);
     }
@@ -92,7 +138,7 @@ class Tracker_SemanticManagerTest extends TuleapTestCase {
         stub($this->semantic_manager)->getSemantics()->returns(array(
             'status' => $this->not_defined_semantic_status
         ));
-        $result = $this->semantic_manager->exportToSOAP();
+        $result = $this->semantic_manager->exportToSOAP($this->user);
         $this->assertEqual($result['status']['field_name'], '');
         $this->assertEqual($result['status']['values'], array());
     }
@@ -104,7 +150,7 @@ class Tracker_SemanticManagerTest extends TuleapTestCase {
             'status'      => $this->semantic_status
         ));
 
-        $result = $this->semantic_manager->exportToSOAP();
+        $result = $this->semantic_manager->exportToSOAP($this->user);
         $result_keys = array_keys($result);
         $this->assertEqual($result_keys, array('title', 'status', 'contributor'));
     }
@@ -114,7 +160,7 @@ class Tracker_SemanticManagerTest extends TuleapTestCase {
             'tooltip' => $this->semantic_tooltip
         ));
 
-        $result = $this->semantic_manager->exportToSOAP();
+        $result = $this->semantic_manager->exportToSOAP($this->user);
         $this->assertFalse(isset($result['tooltip']));
     }
 }

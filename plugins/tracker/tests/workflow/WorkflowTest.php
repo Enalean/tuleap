@@ -317,14 +317,18 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
 }
 
 class Workflow_ExportToSOAP_BaseTest extends TuleapTestCase {
-
+    protected $field;
+    protected $user;
     protected $tracker_id = 123;
     protected $tracker;
     protected $workflow;
+    protected $unreadable_workflow;
     protected $result;
 
     public function setUp() {
         parent::setUp();
+
+        $this->user = aUser()->build();
 
         $this->tracker   = stub('Tracker')->getId()->returns($this->tracker_id);
         $tracker_factory = mock('TrackerFactory');
@@ -346,7 +350,19 @@ class Workflow_ExportToSOAP_BaseTest extends TuleapTestCase {
         $transition2 = new Transition(0,1, $field_list_value3, $field_list_value4);
         $transition3 = new Transition(0,1, $field_list_value5, $field_list_value6);
 
+        $this->field = mock('Tracker_FormElement_Field_List');
+        stub($this->field)->getId()->returns(1);
+        stub($this->field)->userCanRead()->returns(true);
+
+        $unreadable_field = mock('Tracker_FormElement_Field_List');
+        stub($unreadable_field)->getId()->returns(1);
+        stub($unreadable_field)->userCanRead()->returns(false);
+
         $this->workflow = new Workflow(1, $this->tracker_id, 1, 1, array($transition1, $transition2, $transition3));
+        $this->workflow->setField($this->field);
+
+        $this->unreadable_workflow = new Workflow(1, $this->tracker_id, 1, 1, array($transition1, $transition2, $transition3));
+        $this->unreadable_workflow->setField($unreadable_field);
     }
 
     public function tearDown() {
@@ -357,14 +373,27 @@ class Workflow_ExportToSOAP_BaseTest extends TuleapTestCase {
 
 class Workflow_ExportToSOAPTest extends Workflow_ExportToSOAP_BaseTest {
 
+    public function itExportsEmptyWorkflowWhenFieldIsUnreadable() {
+        $result = $this->unreadable_workflow->exportToSOAP($this->user);
+        $this->assertEqual(
+            $result,
+            array(
+                'field_id' => 0,
+                'is_used'  => 0,
+                'rules'    => 'rules in soap format',
+                'transitions' => array()
+            )
+        );
+    }
+
     public function itExportsTheFieldId() {
-        $result = $this->workflow->exportToSOAP();
+        $result = $this->workflow->exportToSOAP($this->user);
         $expected_field_id = 1;
         $this->assertEqual($result['field_id'], $expected_field_id);
     }
 
     public function itExportsTheIsUsedValue() {
-        $result = $this->workflow->exportToSOAP();
+        $result = $this->workflow->exportToSOAP($this->user);
         $expected_is_used = 1;
         $this->assertEqual($result['is_used'], $expected_is_used);
     }
@@ -373,7 +402,7 @@ class Workflow_ExportToSOAPTest extends Workflow_ExportToSOAP_BaseTest {
 class Workflow_ExportToSOAP_transitionsTest extends Workflow_ExportToSOAP_BaseTest {
 
     public function itExportsAllTheTransitions() {
-        $result = $this->workflow->exportToSOAP();
+        $result = $this->workflow->exportToSOAP($this->user);
         $expected_transisitions = array(
             '0' => array ('from_id' => 0, 'to_id'=> 11),
             '1' => array ('from_id' => 4, 'to_id'=> 5),
@@ -385,7 +414,8 @@ class Workflow_ExportToSOAP_transitionsTest extends Workflow_ExportToSOAP_BaseTe
 
     public function itExportsEmptyTransitionWhenWorkflowDoesntHaveTransition() {
         $workflow = new Workflow(1, $this->tracker_id, 1, 1, array());
-        $result   = $workflow->exportToSOAP();
+        $workflow->setField($this->field);
+        $result   = $workflow->exportToSOAP($this->user);
         $this->assertArrayEmpty($result['transitions']);
     }
 }
@@ -393,7 +423,7 @@ class Workflow_ExportToSOAP_transitionsTest extends Workflow_ExportToSOAP_BaseTe
 class Workflow_ExportToSOAP_rulesTest extends Workflow_ExportToSOAP_BaseTest {
 
     public function itExportsRules() {
-        $result = $this->workflow->exportToSOAP();
+        $result = $this->workflow->exportToSOAP($this->user);
 
         $this->assertEqual($result['rules'], 'rules in soap format');
     }
