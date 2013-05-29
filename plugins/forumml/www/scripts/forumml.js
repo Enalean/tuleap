@@ -43,7 +43,7 @@ codendi.PluginForumml = Class.create({
             }
             event.stop();
         });
-    },
+    }
 });
 
 document.observe('dom:loaded', function() {
