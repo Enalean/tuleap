@@ -32,6 +32,7 @@ class Planning_MilestoneSelectorController extends MVC2_PluginController {
             $this->request->getCurrentUser(),
             $this->request->getValidated('planning_id', 'uint', 0)
         );
+        
         if ($milestone->getArtifact()) {
             $redirect_parameters = array(
                 'group_id'    => $milestone->getGroupId(),

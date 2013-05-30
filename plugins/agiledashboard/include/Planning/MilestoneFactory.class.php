@@ -461,6 +461,7 @@ class Planning_MilestoneFactory {
      * @return Planning_Milestone
      */
     public function getCurrentMilestone(PFUser $user, $planning_id) {
+        
         $planning  = $this->planning_factory->getPlanningWithTrackers($planning_id);
         $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         if (count($artifacts) > 0) {

@@ -142,7 +142,12 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
     }
 
     private function getParentArtifacts(PFUser $user, array $backlog_item_ids) {
-        $parents         = $this->artifact_factory->getParents($backlog_item_ids);
+        $parents = array();
+
+        if($backlog_item_ids) {
+            $parents = $this->artifact_factory->getParents($backlog_item_ids);
+        }
+        
         $parent_tracker  = $this->getParentTracker($parents);
         if ($parent_tracker) {
             $this->parent_item_name = $parent_tracker->getName();
@@ -171,6 +176,11 @@ class AgileDashboard_Milestone_Pane_ContentPresenterBuilder {
 
     private function getArtifactsSemantics(PFUser $user, Planning_ArtifactMilestone $milestone, array $backlog_item_ids) {
         $semantics = array();
+
+        if(! $backlog_item_ids) {
+            return $semantics;
+        }
+
         foreach ($this->dao->getArtifactsSemantics($backlog_item_ids, $this->getSemanticsTheUserCanSee($user, $milestone)) as $row) {
             $semantics[$row['id']] = array(
                 Tracker_Semantic_Title::NAME  => $row[Tracker_Semantic_Title::NAME],
