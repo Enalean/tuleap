@@ -338,7 +338,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         return $return;
     }
 
-    public function getForumsActivities() {
+    public function getForumsActivitiesBetweenStartDateAndEndDate() {
         $sql = "SELECT group_id,COUNT(DISTINCT f.msg_id )
                 FROM forum_group_list fg, forum f
                 WHERE fg.group_forum_id =f.group_forum_id
@@ -359,6 +359,186 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         $sql = "SELECT group_id, COUNT( DISTINCT id)
                 FROM wiki_group_list
                 GROUP BY group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate() {
+        $sql = "SELECT group_id, COUNT(pagename)
+                FROM wiki_log
+                WHERE time <= $this->end_date
+                    AND time >= $this->start_date
+                GROUP BY group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getNumberOfDistinctWikiPages() {
+        $sql = "SELECT group_id, COUNT( DISTINCT pagename)
+                FROM wiki_log
+                WHERE time <= $this->end_date
+                GROUP BY group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getNumberOfOpenArtifactsBetweenStartDateAndEndDate() {
+        $sql = "SELECT artifact_group_list.group_id, COUNT(artifact.artifact_id)
+                FROM artifact_group_list, artifact
+                WHERE ( open_date >= $this->start_date
+                    AND open_date < $this->end_date
+                    AND artifact_group_list.group_artifact_id = artifact.group_artifact_id )
+                GROUP BY artifact_group_list.group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getNumberOfClosedArtifactsBetweenStartDateAndEndDate() {
+        $sql = "SELECT artifact_group_list.group_id, COUNT(artifact.artifact_id)
+                FROM artifact_group_list, artifact
+                WHERE ( close_date >= $this->start_date
+                    AND close_date < $this->end_date
+                    AND artifact_group_list.group_artifact_id = artifact.group_artifact_id )
+                GROUP BY artifact_group_list.group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getNumberOfUserAddedBetweenStartDateAndEndDate() {
+        $sql = "SELECT group_id,COUNT(u.user_id)
+                FROM user_group ug, user u
+                WHERE u.user_id = ug.user_id
+                    AND add_date >= $this->start_date
+                    AND add_date <= $this->end_date
+                GROUP BY  group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getProjectCode() {
+        $sql = "SELECT g.group_id, value
+                FROM groups g,group_desc_value gdv, group_desc gd
+                WHERE g.group_id = gdv.group_id
+                    AND gdv.group_desc_id = gd.group_desc_id
+                    AND gd.desc_name = 'Code projet'
+                    AND register_time <= $this->end_date
+                GROUP BY g.group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getAddedDocumentBetweenStartDateAndEndDate() {
+        $sql = "SELECT group_id, COUNT(item_id)
+                FROM plugin_docman_item
+                WHERE create_date >= $this->start_date
+                    AND create_date <= $this->end_date
+                GROUP BY  group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getDeletedDocumentBetweenStartDateAndEndDate() {
+        $sql = "SELECT group_id, COUNT(item_id)
+                FROM plugin_docman_item
+                WHERE delete_date >= $this->start_date
+                    AND delete_date <= $this->end_date
+                GROUP BY  group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getNumberOfNewsBetweenStartDateAndEndDate() {
+        $sql = "SELECT group_id, COUNT(id)
+                FROM news_bytes
+                WHERE date >= $this->start_date
+                    AND date <= $this->end_date
+                GROUP BY  group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getActiveSurveys() {
+        $sql = "SELECT g.group_id, COUNT(survey_id)
+                FROM surveys s, groups g
+                WHERE is_active = 1
+                    AND g.group_id = s.group_id
+                GROUP BY  g.group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getSurveysAnswersBetweenStartDateAndEndDate() {
+        $sql = "SELECT group_id, COUNT(*)
+                FROM survey_responses
+                WHERE date >= $this->start_date
+                    AND date <= $this->end_date
+                GROUP BY  group_id";
 
         $return = array();
         $retrieve = $this->retrieve($sql);
