@@ -108,10 +108,13 @@ class PlanningControllerTest_systrayTest extends PlanningControllerTest {
 
         $this->request = new Codendi_Request($params);
 
+        $this->planning_shortaccess_factory = mock('Planning_ShortAccessFactory');
+
         $controller_mocked_methods = array('getCurrentUser');
         $controller_contructor_params = array(
             $this->request,
             $this->planning_factory,
+            $this->planning_shortaccess_factory,
             $this->milestone_factory,
             $this->plugin_theme_path
         );
@@ -151,7 +154,7 @@ class PlanningControllerTest_systrayTest extends PlanningControllerTest {
     public function testSystrayWillAddALinkIfuserHasNoMilestonesInTheAgileDashboardPlugin() {
         stub($this->garden_project)->usesService('plugin_agiledashboard')->returns(true);
         stub($this->user)->getGroups()->returns(array($this->garden_project));
-        stub($this->planning_factory)->getPlanningsShortAccess()->returns(array());
+        stub($this->planning_shortaccess_factory)->getPlanningsShortAccess()->returns(array());
 
         $this->controller->generateSystrayData();
 
@@ -200,7 +203,7 @@ class PlanningControllerTest_systrayTest extends PlanningControllerTest {
 
         $short_access_array = array($planning_short_access);
         stub($planning_short_access)->getLastOpenMilestones()->returns($milestone_presenters);
-        stub($this->planning_factory)->getPlanningsShortAccess()->returns($short_access_array);
+        stub($this->planning_shortaccess_factory)->getPlanningsShortAccess()->returns($short_access_array);
 
         $this->controller->generateSystrayData();
 
@@ -217,7 +220,7 @@ class PlanningControllerTest_systrayTest extends PlanningControllerTest {
 
         $short_access_array = array($planning_short_access);
         stub($planning_short_access)->getLastOpenMilestones()->returns(array($milestone_presenter));
-        stub($this->planning_factory)
+        stub($this->planning_shortaccess_factory)
             ->getPlanningsShortAccess(
                 $this->user,
                 $project->getId(),

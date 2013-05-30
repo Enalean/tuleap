@@ -1,3 +1,7 @@
+Version 3.22 - Tuleap 6.1
+    * Fix bugs #3576: fix js crying on git service homepage
+    * Fix bugs #3573: CI: get an error message if no git trigger selected
+
 Version 3.21 - Tuleap 6.1
     * story #3318: be owner of all gerrit groups created for my project
 

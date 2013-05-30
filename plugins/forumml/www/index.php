@@ -61,10 +61,9 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 		}
 	}
 
-	$vPost = new Valid_WhiteList('post',array('Submit'));
-	$vPost->required();
+        $message_posted = false;
 	// If message is posted, send a mail	
-	if ($request->isPost() && $request->valid($vPost)) {
+	if ($request->isPost() && $request->exist('post')) {
 		// Checks if mail subject is empty
 		$vSub = new Valid_String('subject');
 		$vSub->required();
@@ -74,6 +73,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 			// process the mail
 			$return = plugin_forumml_process_mail($p);
 			if ($return) {
+				$message_posted = true;
 				$GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_forumml','delay_redirection',array($p->getThemePath()."/images/ic/spinner-greenie.gif",$group_id,$list_id,0)), CODENDI_PURIFIER_DISABLED);
 			}
 		}
@@ -86,13 +86,11 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 	$params['toptab'] = 'mail';
 	$params['help'] = "CommunicationServices.html#MailingLists";
 	mail_header($params);
-		
-	if ($request->isPost() && $request->valid($vPost) && $request->valid($vSub)) {
-		if (isset($return) && $return) {
-			// wait few seconds before redirecting to archives page
-			echo "<script> setTimeout('window.location=\"/plugins/forumml/message.php?group_id=".$group_id."&list=".$list_id."\"',3000) </script>";
-		}
-	}
+
+        if ($message_posted) {
+            // wait few seconds before redirecting to archives page
+            echo "<script> setTimeout('window.location=\"/plugins/forumml/message.php?group_id=".$group_id."&list=".$list_id."\"',3000) </script>";
+        }
 
 	$list_link = '<a href="/plugins/forumml/message.php?group_id='.$group_id.'&list='.$list_id.'">'.mail_get_listname_from_list_id($list_id).'</a>';
 	echo '<H2><b>'.$GLOBALS['Language']->getText('plugin_forumml','list_new_thread',array($list_link)).'</b></H2>

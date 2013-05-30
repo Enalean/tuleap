@@ -38,49 +38,38 @@ class Planning_MilestoneController extends MVC2_PluginController {
     /** @var Planning_MilestonePaneFactory */
     private $pane_factory;
 
+    /** @var AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory */
+    private $pane_presenter_builder_factory;
+
     /**
      * Instanciates a new controller.
-     * 
+     *
      * TODO:
      *   - pass $request to actions (e.g. show).
-     * 
+     *
      * @param Codendi_Request           $request
      * @param PlanningFactory           $planning_factory
-     * @param Planning_MilestoneFactory $milestone_factory 
+     * @param Planning_MilestoneFactory $milestone_factory
      */
-    public function __construct(Codendi_Request           $request,
-                                Planning_MilestoneFactory $milestone_factory,
-                                ProjectManager            $project_manager,
-                                Planning_ViewBuilder      $view_builder,
-                                Tracker_HierarchyFactory  $hierarchy_factory,
-                                AgileDashboard_Milestone_Pane_ContentPresenterBuilder $content_presenter_builder,
-                                $theme_path) {
-        
+    public function __construct(
+        Codendi_Request $request,
+        Planning_MilestoneFactory $milestone_factory,
+        ProjectManager $project_manager,
+        Planning_MilestonePaneFactory $pane_factory,
+        AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
+        $theme_path
+    ) {
         parent::__construct('agiledashboard', $request);
-        $this->milestone_factory = $milestone_factory;
-        $project                 = $project_manager->getProject($request->get('group_id'));
-        $this->redirect_parameter = new Planning_MilestoneRedirectParameter();
+        $this->milestone_factory              = $milestone_factory;
+        $this->pane_factory                   = $pane_factory;
+        $this->pane_presenter_builder_factory = $pane_presenter_builder_factory;
 
+        $project         = $project_manager->getProject($request->get('group_id'));
         $this->milestone = $this->milestone_factory->getBareMilestone(
             $this->getCurrentUser(),
             $project,
             $request->get('planning_id'),
             $request->get('aid')
-        );
-
-        $legacy_planning_pane_factory = new Planning_MilestoneLegacyPlanningPaneFactory(
-            $this->request,
-            $this->milestone_factory,
-            $hierarchy_factory,
-            $view_builder,
-            $theme_path,
-            $this->redirect_parameter
-        );
-        $this->pane_factory = new Planning_MilestonePaneFactory(
-            $this->request,
-            $this->milestone_factory,
-            $content_presenter_builder,
-            $legacy_planning_pane_factory
         );
     }
 
@@ -90,12 +79,13 @@ class Planning_MilestoneController extends MVC2_PluginController {
     }
 
     private function getMilestonePresenter() {
+        $redirect_parameter = new Planning_MilestoneRedirectParameter();
         return new AgileDashboard_MilestonePresenter(
             $this->milestone,
             $this->getCurrentUser(),
             $this->request,
             $this->pane_factory->getPanePresenterData($this->milestone),
-            $this->redirect_parameter->getPlanningRedirectToNew($this->milestone, $this->pane_factory->getDefaultPaneIdentifier())
+            $redirect_parameter->getPlanningRedirectToNew($this->milestone, $this->pane_factory->getDefaultPaneIdentifier())
         );
     }
 
@@ -112,6 +102,15 @@ class Planning_MilestoneController extends MVC2_PluginController {
             return $breadcrumbs_merger;
         }
         return new BreadCrumb_NoCrumb();
+    }
+
+    public function submilestonedata() {
+        $this->render('submilestone-content', $this->getSubmilestonePresenter());
+    }
+
+    private function getSubmilestonePresenter() {
+        $presenter_builder = $this->pane_presenter_builder_factory->getSubmilestonePresenterBuilder();
+        return $presenter_builder->getSubmilestonePresenter($this->getCurrentUser(), $this->milestone);
     }
 }
 

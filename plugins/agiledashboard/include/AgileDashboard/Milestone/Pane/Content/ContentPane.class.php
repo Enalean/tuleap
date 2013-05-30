@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,7 @@
  * The content of a "release" is all "stories" (open and closed) that belongs to
  * the release (aka their "epic" parent are planned into the release)
  */
-class AgileDashboard_Milestone_Pane_ContentPane extends AgileDashboard_Pane {
+class AgileDashboard_Milestone_Pane_Content_ContentPane extends AgileDashboard_Pane {
 
     /** @var Tracker_Artifact_Burndown_PaneInfo */
     private $info;
@@ -32,7 +32,7 @@ class AgileDashboard_Milestone_Pane_ContentPane extends AgileDashboard_Pane {
     /** @var AgileDashboard_Milestone_Pane_ContentPresenter */
     private $presenter;
 
-    public function __construct(AgileDashboard_Milestone_Pane_ContentPaneInfo $info, AgileDashboard_Milestone_Pane_ContentPresenter $presenter) {
+    public function __construct(AgileDashboard_Milestone_Pane_Content_ContentPaneInfo $info, AgileDashboard_Milestone_Pane_Content_ContentPresenter $presenter) {
         $this->info      = $info;
         $this->presenter = $presenter;
     }

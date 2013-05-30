@@ -50,16 +50,23 @@ class AgileDashboardRouter {
      */
     private $planning_factory;
 
+    /**
+     * @var Planning_ShortAccessFactory
+     */
+    private $planning_shortaccess_factory;
+
     public function __construct(
-            Plugin $plugin,
-            Planning_MilestoneFactory $milestone_factory,
-            PlanningFactory $planning_factory,
-            Planning_MilestoneControllerFactory $milestone_controller_factory
+        Plugin $plugin,
+        Planning_MilestoneFactory $milestone_factory,
+        PlanningFactory $planning_factory,
+        Planning_ShortAccessFactory $planning_shortaccess_factory,
+        Planning_MilestoneControllerFactory $milestone_controller_factory
     ) {
-        $this->plugin            = $plugin;
-        $this->milestone_factory = $milestone_factory;
-        $this->planning_factory  = $planning_factory;
-        $this->milestone_controller_factory = $milestone_controller_factory;
+        $this->plugin                        = $plugin;
+        $this->milestone_factory             = $milestone_factory;
+        $this->planning_factory              = $planning_factory;
+        $this->planning_shortaccess_factory  = $planning_shortaccess_factory;
+        $this->milestone_controller_factory  = $milestone_controller_factory;
     }
     
     /**
@@ -109,6 +116,10 @@ class AgileDashboardRouter {
                 break;
             case 'import':
                 $this->executeAction($agile_dashboard_xml_controller, 'import');
+                break;
+            case 'submilestonedata' :
+                $milestone_controller = $this->milestone_controller_factory->getMilestoneController($request);
+                $this->executeAction($milestone_controller, 'submilestonedata');
                 break;
             case 'index':
             default:
@@ -209,9 +220,13 @@ class AgileDashboardRouter {
      * @return Planning_Controller 
      */
     protected function buildController(Codendi_Request $request) {
-        $planning_factory = PlanningFactory::build();
-        
-        return new Planning_Controller($request, $planning_factory, $this->milestone_factory, $this->plugin->getThemePath());
+        return new Planning_Controller(
+            $request,
+            $this->planning_factory,
+            $this->planning_shortaccess_factory,
+            $this->milestone_factory,
+            $this->plugin->getThemePath()
+        );
     }
     
     /**

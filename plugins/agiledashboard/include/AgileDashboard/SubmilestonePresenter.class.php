@@ -22,14 +22,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * I am the backlog of the current milestone
- */
-class AgileDashboard_Milestone_Pane_ContentSelfBacklogStrategy extends AgileDashboard_Milestone_Pane_ContentBacklogStrategy {
+class AgileDashboard_SubmilestonePresenter {
+    private $backlog_collection;
 
-    /** @return Tracker_Artifact[] */
-    public function getArtifacts(PFUser $user) {
-        return $this->milestone_backlog_artifacts;
+    public function __construct(
+            AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $backlog_collection
+            ) {
+        $this->backlog_collection = $backlog_collection;
+    }
+
+    public function backlog_collection() {
+        return $this->backlog_collection;
     }
 }
 

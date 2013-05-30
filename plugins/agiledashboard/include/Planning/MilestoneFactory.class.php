@@ -128,7 +128,7 @@ class Planning_MilestoneFactory {
         }
     }
 
-    private function updateMilestoneContextualInfo(PFUser $user, Planning_ArtifactMilestone $milestone) {
+    public function updateMilestoneContextualInfo(PFUser $user, Planning_ArtifactMilestone $milestone) {
         return $milestone
             ->setStartDate($this->getTimestamp($user, $milestone, Planning_Milestone::START_DATE_FIELD_NAME))
             ->setDuration($this->getComputedFieldValue($user, $milestone, Planning_Milestone::DURATION_FIELD_NAME));

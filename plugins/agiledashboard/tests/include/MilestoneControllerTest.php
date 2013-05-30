@@ -65,13 +65,31 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
         $hierarchy_factory = mock('Tracker_HierarchyFactory');
         stub($hierarchy_factory)->getHierarchy()->returns(new Tracker_Hierarchy());
 
+        $view_builder_factory = stub('Planning_ViewBuilderFactory')->getViewBuilder()->returns($view_builder);
+
+        $legacy_planning_pane_factory = new Planning_MilestoneLegacyPlanningPaneFactory(
+            $request,
+            $this->milestone_factory,
+            $hierarchy_factory,
+            $view_builder_factory,
+            ''
+        );
+
+        $pane_factory = new Planning_MilestonePaneFactory(
+            $request,
+            $this->milestone_factory,
+            mock('AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory'),
+            $legacy_planning_pane_factory,
+            mock('AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder'),
+            ''
+        );
+
         $controller = new Planning_MilestoneController4Tests(
             $request,
             $this->milestone_factory,
             mock('ProjectManager'),
-            $view_builder,
-            $hierarchy_factory,
-            mock('AgileDashboard_Milestone_Pane_ContentPresenterBuilder'),
+            $pane_factory,
+            mock('AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory'),
             ''
         );
         $controller->show();
@@ -308,9 +326,8 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
                 $this->request,
                 $this->milestone_factory,
                 $this->project_manager,
-                mock('Planning_ViewBuilder'),
-                mock('Tracker_HierarchyFactory'),
-                mock('AgileDashboard_Milestone_Pane_ContentPresenterBuilder'),
+                mock('Planning_MilestonePaneFactory'),
+                mock('AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory'),
                 ''
             )
         );
