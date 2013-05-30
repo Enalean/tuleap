@@ -98,7 +98,11 @@ class UGroupManager {
      * @return UGroup[]
      */
     public function getStaticUGroups(Project $project) {
-        die('Not Yet Implemented');
+        $ugroups = array();
+        foreach ($this->getDao()->searchStaticByGroupId($project->getId()) as $row) {
+            $ugroups[] = $this->instanciateGroupForProject($project, $row);
+        }
+        return $ugroups;
     }
 
     public function getUGroupByName(Project $project, $name) {
