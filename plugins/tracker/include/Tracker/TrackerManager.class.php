@@ -161,10 +161,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                 }
                                 break;
                             case 'check_ugroup_consistency':
-                                //nasty stuff here to check consistency
-                                if (1) {
-                                    echo '<div class="alert alert-warning">Are you crazy?</div>';
-                                }
+                                $permissions_manager = new Tracker_PermissionsManager(PermissionsManager::instance());
+                                $checker = new Tracker_UgroupPermissionsConsistencyChecker($permissions_manager, new UGroupManager());
+                                echo $checker->checkConsistency();
                                 break;
                             case 'csvimportoverview':
                                 $this->displayCSVImportOverview($project, $group_id, $user);
