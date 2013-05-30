@@ -548,6 +548,35 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
 
         return $return;
     }
+
+    public function getProjectWithCIActivated() {
+        $sql = "SELECT group_id, is_used
+                FROM service
+                WHERE short_name = 'hudson'
+                GROUP BY  group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getNumberOfCIJobs() {
+        $sql = "SELECT group_id, COUNT(*)
+                FROM plugin_hudson_job
+                GROUP BY  group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
 }
 
 ?>
