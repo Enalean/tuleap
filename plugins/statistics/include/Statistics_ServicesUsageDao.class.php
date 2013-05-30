@@ -119,6 +119,105 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
 
         return $return;
     }
+
+    public function getAdministratorsRealNames() {
+        $sql = "SELECT g.group_id, u.realname
+                FROM user_group g, user u
+                WHERE g.user_id=u.user_id
+                    AND u.status='A'
+                GROUP BY group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getAdministratorsEMails() {
+        $sql = "SELECT g.group_id, u.email
+                FROM user_group g, user u
+                WHERE g.user_id=u.user_id
+                    AND u.status='A'
+                GROUP BY group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getCVSActivities() {
+        $sql = "SELECT group_id, SUM(cvs_commits)
+                FROM group_cvs_full_history
+                WHERE day <= $this->end_date
+                    AND day >= $this->start_date
+                GROUP BY group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getSVNActivities() {
+        $sql = "SELECT group_id,COUNT(*)
+                FROM  svn_commits
+                WHERE date <= $this->end_date
+                    AND date >= $this->start_date
+                GROUP BY group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getGitActivities() {
+        $sql = "SELECT project_id, count(*)
+                FROM  plugin_git_log
+                    INNER JOIN plugin_git USING(repository_id)
+                WHERE push_date <= $this->end_date
+                    AND push_date >= $this->start_date
+                GROUP BY project_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getFilesPublished() {
+        $sql = "SELECT p.group_id, COUNT(file_id )
+                FROM frs_file f,frs_package p,frs_release r
+                WHERE f.release_id= r.release_id
+                    AND r.package_id= p.package_id
+                    AND f.post_date <= $this->end_date
+                    AND f.post_date >= $this->start_date
+                GROUP BY p.group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
 }
 
 ?>
