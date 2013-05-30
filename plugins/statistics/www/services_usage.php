@@ -122,59 +122,21 @@ if (!$error && $request->exist('export')) {
     var_dump($dao->getInfosFromTroveGroupLink());
     echo '<hr/>';
     var_dump($dao->getAdministrators());
+    echo '<hr/>';
+    var_dump($dao->getAdministratorsRealNames());
+    echo '<hr/>';
+    var_dump($dao->getAdministratorsEMails());
+    echo '<hr/>';
+    var_dump($dao->getCVSActivities());
+    echo '<hr/>';
+    var_dump($dao->getSVNActivities());
+    echo '<hr/>';
+    var_dump($dao->getGitActivities());
+    echo '<hr/>';
+    var_dump($dao->getFilesPublished());
 
     $GLOBALS['HTML']->footer(array());
 }
-//push(@Allmetrics,new SQLmetrics("Nom",
-//"SELECT g.group_id, u.realname  FROM user_group g, user u
-//WHERE g.user_id=u.user_id AND u.status='A'
-//GROUP BY group_id"));
-//
-//push(@Allmetrics,new SQLmetrics("Email",
-//"SELECT g.group_id, u.email  FROM user_group g, user u
-//WHERE g.user_id=u.user_id AND u.status='A'
-//GROUP BY group_id"));
-//
-//#push(@Allmetrics,new SQLmetrics("Other_Comments",
-//#"SELECT group_id, REPLACE(REPLACE (other_comments, CHAR(13),' '),CHAR(10),' ') FROM groups
-//#WHERE status='A' AND register_time<=$time_end
-//#GROUP BY group_id"));
-//
-//#Calcul de l'indicateur 'Activite CVS' par projet
-//#date de "l'activite CVS":  group_cvs_full_history.day
-//#TODO Activite CVS evaluer la necessite d'inclure d'autre champ dans le calcul exemple: cvs_adds, cvs_checktout, cvs_browse
-//push(@Allmetrics,new SQLmetrics("Activite CVS",
-//"SELECT group_id, SUM(cvs_commits)
-//FROM group_cvs_full_history
-//WHERE day<=$cvs_time_end AND day>=$cvs_time_start
-//GROUP BY group_id"));
-//
-//#Calcul de l'indicateur 'Activite SVN' par projet
-//#date de "creation du fichier":  group_svn_full_history.day
-//#TODO Activite SVN evaluer la necessite d'inclure d'autre champ dans le calcul exemple: svn_adds, svn_checktout, svn_browse, svn_commit
-//#TODO Activite SVN contrôler la pertinence de la requete sur le serveur de prod
-//#TODO renommer l'indicateur commit SVN
-//#NOTE: les champs svn_commit... ne sont pas renseigner dans la base
-//push(@Allmetrics,new SQLmetrics("ActiviteSVN",
-//"SELECT group_id,COUNT(*)
-//FROM  svn_commits
-//WHERE date<=$time_end AND date>=$time_start
-//GROUP BY group_id"));
-//
-//push(@Allmetrics,new SQLmetrics("Push Git",
-//"SELECT project_id, count(*)
-//FROM  plugin_git_log INNER JOIN plugin_git USING(repository_id)
-//WHERE push_date<=$time_end AND push_date>=$time_start
-//GROUP BY project_id"));
-//
-//#Calcul de l'indicateur 'Fichiers publies' par projet
-//#date de "creation du fichier":  frs_file.postdate
-//push(@Allmetrics,new SQLmetrics("Fichiers publie","SELECT p.group_id, COUNT(file_id )
-//FROM frs_file f,frs_package p,frs_release r
-//WHERE f.release_id= r.release_id AND r.package_id= p.package_id AND f.post_date<=$time_end
-//AND f.post_date>=$time_start
-//GROUP BY p.group_id"));
-//
 //#Calcul de l'indicateur 'Fichiers publies (total)' par projet
 //#date de "creation du fichier":  frs_file.postdate
 //push(@Allmetrics,new SQLmetrics("Fichiers publies (total)","SELECT p.group_id, COUNT( DISTINCT file_id )
