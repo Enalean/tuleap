@@ -114,10 +114,8 @@ if (!$error && $request->exist('export')) {
 
     echo '<hr/>';
     var_dump($dao->getDescriptionOfActiveProjectsBeforeEndDate());
-
     echo '<hr/>';
     var_dump($dao->getRegisterTimeOfActiveProjectsBeforeEndDate());
-
     echo '<hr/>';
     var_dump($dao->getInfosFromTroveGroupLink());
     echo '<hr/>';
@@ -149,114 +147,34 @@ if (!$error && $request->exist('export')) {
     echo '<hr/>';
     var_dump($dao->getNumberOfInactiveForums());
     echo '<hr/>';
-    var_dump($dao->getForumsActivities());
+    var_dump($dao->getForumsActivitiesBetweenStartDateAndEndDate());
     echo '<hr/>';
     var_dump($dao->getNumberOfWikiDocuments());
+    echo '<hr/>';
+    var_dump($dao->getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate());
+    echo '<hr/>';
+    var_dump($dao->getNumberOfDistinctWikiPages());
+    echo '<hr/>';
+    var_dump($dao->getNumberOfOpenArtifactsBetweenStartDateAndEndDate());
+    echo '<hr/>';
+    var_dump($dao->getNumberOfClosedArtifactsBetweenStartDateAndEndDate());
+    echo '<hr/>';
+    var_dump($dao->getNumberOfUserAddedBetweenStartDateAndEndDate());
+    echo '<hr/>';
+    var_dump($dao->getProjectCode());
+    echo '<hr/>';
+    var_dump($dao->getAddedDocumentBetweenStartDateAndEndDate());
+    echo '<hr/>';
+    var_dump($dao->getDeletedDocumentBetweenStartDateAndEndDate());
+    echo '<hr/>';
+    var_dump($dao->getNumberOfNewsBetweenStartDateAndEndDate());
+    echo '<hr/>';
+    var_dump($dao->getActiveSurveys());
+    echo '<hr/>';
+    var_dump($dao->getSurveysAnswersBetweenStartDateAndEndDate());
 
     $GLOBALS['HTML']->footer(array());
 }
-//#Calcul de l'indicateur 'Documents wiki' par projet
-//#date de "creation du document": ? pas de moyens consistant les documents et les pages sont relativement decoreles
-//#Il existe un document acceuil cree automatiquement dès que le wiki est initialise
-//push(@Allmetrics,new SQLmetrics("Documents wiki",
-//"SELECT group_id, COUNT( DISTINCT id) FROM wiki_group_list GROUP BY group_id"));
-//
-//#Calcul de l'indicateur 'Pages modifies (periode X jours)' par projet
-//#date de "creation de la page":plus vieux temps time
-//#TODO Tenir compte du problème des pages creees par defaut!
-//push(@Allmetrics,new SQLmetrics("Pages modifiees",
-//"SELECT group_id, COUNT(pagename) FROM wiki_log
-//WHERE time<=$time_end AND time>=$time_start
-//GROUP BY group_id"));
-//
-//#Calcul de l'indicateur 'page wiki' par projet
-//#date de "creation de la page":plus vieux temps time
-//#TODO Tenir compte du problème des pages creees par defaut!
-//push(@Allmetrics,new SQLmetrics("Pages wiki (total)",
-//"SELECT group_id, COUNT( DISTINCT pagename) FROM wiki_log
-//WHERE time<=$time_end
-//GROUP BY group_id"));
-//
-//# Calcul de l'indicateur 'Artifacts ouverts' par projet
-//
-//push(@Allmetrics,new SQLmetrics("Artifacts ouverts",
-//"SELECT artifact_group_list.group_id,
-//COUNT(artifact.artifact_id)
-//FROM artifact_group_list, artifact
-//WHERE ( open_date >= $time_start AND open_date < $time_end AND artifact_group_list.group_artifact_id = artifact.group_artifact_id )
-//GROUP BY artifact_group_list.group_id"));
-//
-//# Calcul de l'indicateur 'Artifacts fermes' par projet
-//
-//push(@Allmetrics,new SQLmetrics("Artifacts fermes",
-//"SELECT artifact_group_list.group_id,
-//COUNT(artifact.artifact_id)
-//FROM artifact_group_list, artifact
-//WHERE ( close_date >= $time_start
-//AND close_date < $time_end
-//AND artifact_group_list.group_artifact_id = artifact.group_artifact_id )
-//GROUP BY artifact_group_list.group_id"));
-//
-//# Calcul de l'indicateur 'Utilisateurs ajoutes' par projet
-//
-//push(@Allmetrics,new SQLmetrics("Utilisateurs ajoutes",
-//"SELECT group_id,COUNT(u.user_id)
-//FROM user_group ug, user u
-//WHERE u.user_id = ug.user_id
-//AND add_date>=$time_start
-//AND add_date<=$time_end
-//GROUP BY  group_id"));
-//
-//# Extraction du champ 'Code projet' par projet
-//
-//push(@Allmetrics,new SQLmetrics("Code projet",
-//"select g.group_id, value from groups g,group_desc_value gdv, group_desc gd
-//WHERE g.group_id = gdv.group_id
-//AND gdv.group_desc_id = gd.group_desc_id
-//AND gd.desc_name = 'Code projet'
-//AND register_time<=$time_end
-//GROUP BY g.group_id"));
-//
-//# Calcul de l'indicateur 'Documents ajoutés' par projet
-//
-//push(@Allmetrics,new SQLmetrics("Documents ajoutes",
-//"select group_id, COUNT(item_id) FROM plugin_docman_item
-//WHERE create_date >=$time_start
-//AND create_date <=$time_end
-//GROUP BY  group_id"));
-//
-//# Calcul de l'indicateur 'Documents effacés' par projet
-//
-//push(@Allmetrics,new SQLmetrics("Documents effaces",
-//"select group_id, COUNT(item_id) FROM plugin_docman_item
-//WHERE delete_date >=$time_start
-//AND delete_date <=$time_end
-//GROUP BY  group_id"));
-//
-//# Calcul de l'indicateur 'News publiées' par projet
-//
-//push(@Allmetrics,new SQLmetrics("News publiees",
-//"select group_id, COUNT(id) FROM news_bytes
-//WHERE date >=$time_start
-//AND date <=$time_end
-//GROUP BY  group_id"));
-//
-//# Calcul de l'indicateur 'Sondages actif' par projet
-//
-//push(@Allmetrics,new SQLmetrics("Sondages actif",
-//"select g.group_id, COUNT(survey_id) FROM surveys s, groups g
-//WHERE is_active = 1
-//AND g.group_id = s.group_id
-//GROUP BY  g.group_id"));
-//
-//# Calcul de l'indicateur 'Réponses aux sondages publiées' par projet
-//
-//push(@Allmetrics,new SQLmetrics("Reponses sondages",
-//"select group_id, COUNT(*) FROM survey_responses
-//WHERE date >=$time_start
-//AND date <=$time_end
-//GROUP BY  group_id"));
-//
 //# Verifier si le service 'Integration Continue' est activé par projet
 //
 //push(@Allmetrics,new SQLmetrics("IntegrationContinueActive",
