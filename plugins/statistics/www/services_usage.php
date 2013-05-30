@@ -21,6 +21,7 @@
 
 require_once 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_ServicesUsageDao.class.php';
+require_once dirname(__FILE__).'/../include/Statistics_Services_UsageFormatter.php';
 
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
@@ -70,16 +71,92 @@ if ($request->valid($vGroupId)) {
 }
 
 if (!$error && $request->exist('export')) {
+    $startDate = $request->get('start');
+    $endDate   = $request->get('end');
+
     header('Content-Type: text/csv');
-    header('Content-Disposition: filename=scm_stats_'.$startDate.'_'.$endDate.'.csv');
-    $statsSvn = new Statistics_Formatter_Svn($startDate, $endDate, $groupId);
-    echo $statsSvn->getStats();
-    $statsCvs = new Statistics_Formatter_Cvs($startDate, $endDate, $groupId);
-    echo $statsCvs->getStats();
-    $em = EventManager::instance();
-    $params['formatter'] = new Statistics_Formatter($startDate, $endDate, $groupId);
-    $em->processEvent('statistics_collector', $params);
-    exit;
+    header('Content-Disposition: filename=services_usage_'.$startDate.'_'.$endDate.'.csv');
+//    $statsSvn = new Statistics_Formatter_Svn($startDate, $endDate, $groupId);
+//    echo $statsSvn->getStats();
+//    $statsCvs = new Statistics_Formatter_Cvs($startDate, $endDate, $groupId);
+//    echo $statsCvs->getStats();
+//    $em = EventManager::instance();
+//    $params['formatter'] = new Statistics_Formatter($startDate, $endDate, $groupId);
+//    $em->processEvent('statistics_collector', $params);
+
+//    var_dump($startDate, $endDate);
+
+    $dao          = new Statistics_ServicesUsageDao(CodendiDataAccess::instance(), $startDate, $endDate);
+    $csv_exporter = new Statistics_Services_UsageFormatter($startDate, $endDate);
+
+    echo $csv_exporter->exportCSV($dao->getNameOfActiveProjectsBeforeEndDate());
+
+//    var_dump($dao->getNameOfActiveProjectsBeforeEndDate());
+//    echo '<hr/>';
+//    var_dump($dao->getDescriptionOfActiveProjectsBeforeEndDate());
+//    echo '<hr/>';
+//    var_dump($dao->getRegisterTimeOfActiveProjectsBeforeEndDate());
+//    echo '<hr/>';
+//    var_dump($dao->getInfosFromTroveGroupLink());
+//    echo '<hr/>';
+//    var_dump($dao->getAdministrators());
+//    echo '<hr/>';
+//    var_dump($dao->getAdministratorsRealNames());
+//    echo '<hr/>';
+//    var_dump($dao->getAdministratorsEMails());
+//    echo '<hr/>';
+//    var_dump($dao->getCVSActivities());
+//    echo '<hr/>';
+//    var_dump($dao->getSVNActivities());
+//    echo '<hr/>';
+//    var_dump($dao->getGitActivities());
+//    echo '<hr/>';
+//    var_dump($dao->getFilesPublished());
+//    echo '<hr/>';
+//    var_dump($dao->getDistinctFilesPublished());
+//    echo '<hr/>';
+//    var_dump($dao->getNumberOfDownloadedFilesBeforeEndDate());
+//    echo '<hr/>';
+//    var_dump($dao->getNumberOfDownloadedFilesBetweenStartDateAndEndDate());
+//    echo '<hr/>';
+//    var_dump($dao->getNumberOfActiveMailingLists());
+//    echo '<hr/>';
+//    var_dump($dao->getNumberOfInactiveMailingLists());
+//    echo '<hr/>';
+//    var_dump($dao->getNumberOfActiveForums());
+//    echo '<hr/>';
+//    var_dump($dao->getNumberOfInactiveForums());
+//    echo '<hr/>';
+//    var_dump($dao->getForumsActivitiesBetweenStartDateAndEndDate());
+//    echo '<hr/>';
+//    var_dump($dao->getNumberOfWikiDocuments());
+//    echo '<hr/>';
+//    var_dump($dao->getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate());
+//    echo '<hr/>';
+//    var_dump($dao->getNumberOfDistinctWikiPages());
+//    echo '<hr/>';
+//    var_dump($dao->getNumberOfOpenArtifactsBetweenStartDateAndEndDate());
+//    echo '<hr/>';
+//    var_dump($dao->getNumberOfClosedArtifactsBetweenStartDateAndEndDate());
+//    echo '<hr/>';
+//    var_dump($dao->getNumberOfUserAddedBetweenStartDateAndEndDate());
+//    echo '<hr/>';
+//    var_dump($dao->getProjectCode());
+//    echo '<hr/>';
+//    var_dump($dao->getAddedDocumentBetweenStartDateAndEndDate());
+//    echo '<hr/>';
+//    var_dump($dao->getDeletedDocumentBetweenStartDateAndEndDate());
+//    echo '<hr/>';
+//    var_dump($dao->getNumberOfNewsBetweenStartDateAndEndDate());
+//    echo '<hr/>';
+//    var_dump($dao->getActiveSurveys());
+//    echo '<hr/>';
+//    var_dump($dao->getSurveysAnswersBetweenStartDateAndEndDate());
+//    echo '<hr/>';
+//    var_dump($dao->getProjectWithCIActivated());
+//    echo '<hr/>';
+//    var_dump($dao->getNumberOfCIJobs());
+
 } else {
     $title = $GLOBALS['Language']->getText('plugin_statistics', 'services_usage');
     $GLOBALS['HTML']->includeCalendarScripts();
@@ -108,74 +185,6 @@ if (!$error && $request->exist('export')) {
     echo '</tr>';
     echo '</table>';
     echo '</form>';
-
-    $dao = new Statistics_ServicesUsageDao(CodendiDataAccess::instance(), $startDate, $endDate);
-    var_dump($dao->getNameOfActiveProjectsBeforeEndDate());
-
-    echo '<hr/>';
-    var_dump($dao->getDescriptionOfActiveProjectsBeforeEndDate());
-    echo '<hr/>';
-    var_dump($dao->getRegisterTimeOfActiveProjectsBeforeEndDate());
-    echo '<hr/>';
-    var_dump($dao->getInfosFromTroveGroupLink());
-    echo '<hr/>';
-    var_dump($dao->getAdministrators());
-    echo '<hr/>';
-    var_dump($dao->getAdministratorsRealNames());
-    echo '<hr/>';
-    var_dump($dao->getAdministratorsEMails());
-    echo '<hr/>';
-    var_dump($dao->getCVSActivities());
-    echo '<hr/>';
-    var_dump($dao->getSVNActivities());
-    echo '<hr/>';
-    var_dump($dao->getGitActivities());
-    echo '<hr/>';
-    var_dump($dao->getFilesPublished());
-    echo '<hr/>';
-    var_dump($dao->getDistinctFilesPublished());
-    echo '<hr/>';
-    var_dump($dao->getNumberOfDownloadedFilesBeforeEndDate());
-    echo '<hr/>';
-    var_dump($dao->getNumberOfDownloadedFilesBetweenStartDateAndEndDate());
-    echo '<hr/>';
-    var_dump($dao->getNumberOfActiveMailingLists());
-    echo '<hr/>';
-    var_dump($dao->getNumberOfInactiveMailingLists());
-    echo '<hr/>';
-    var_dump($dao->getNumberOfActiveForums());
-    echo '<hr/>';
-    var_dump($dao->getNumberOfInactiveForums());
-    echo '<hr/>';
-    var_dump($dao->getForumsActivitiesBetweenStartDateAndEndDate());
-    echo '<hr/>';
-    var_dump($dao->getNumberOfWikiDocuments());
-    echo '<hr/>';
-    var_dump($dao->getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate());
-    echo '<hr/>';
-    var_dump($dao->getNumberOfDistinctWikiPages());
-    echo '<hr/>';
-    var_dump($dao->getNumberOfOpenArtifactsBetweenStartDateAndEndDate());
-    echo '<hr/>';
-    var_dump($dao->getNumberOfClosedArtifactsBetweenStartDateAndEndDate());
-    echo '<hr/>';
-    var_dump($dao->getNumberOfUserAddedBetweenStartDateAndEndDate());
-    echo '<hr/>';
-    var_dump($dao->getProjectCode());
-    echo '<hr/>';
-    var_dump($dao->getAddedDocumentBetweenStartDateAndEndDate());
-    echo '<hr/>';
-    var_dump($dao->getDeletedDocumentBetweenStartDateAndEndDate());
-    echo '<hr/>';
-    var_dump($dao->getNumberOfNewsBetweenStartDateAndEndDate());
-    echo '<hr/>';
-    var_dump($dao->getActiveSurveys());
-    echo '<hr/>';
-    var_dump($dao->getSurveysAnswersBetweenStartDateAndEndDate());
-    echo '<hr/>';
-    var_dump($dao->getProjectWithCIActivated());
-    echo '<hr/>';
-    var_dump($dao->getNumberOfCIJobs());
     $GLOBALS['HTML']->footer(array());
 }
 ?>
