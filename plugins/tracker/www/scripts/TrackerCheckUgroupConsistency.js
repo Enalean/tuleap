@@ -23,13 +23,20 @@
 
 document.observe('dom:loaded', function () {
 
-    var select_template = $('tracker_list_trackers_from_project'),
-        select_project  = $('tracker_new_project_list'),
-        radio_gallery   = $('tracker_create_mode_gallery');
+    function observeCreateModeChanges(form) {
+        var check_consistency_feedback = $('check_consistency_feedback');
+        form.select('input[name=create_mode]').each(function (mode) {
+            mode.observe('click', function () {
+                if (mode.value == 'gallery' && mode.checked) {
+                    check_consistency_feedback.show();
+                } else {
+                    check_consistency_feedback.hide();
+                }
+            });
+        });
+    }
 
-    if (select_template) {
-        var group_id = select_template.up('form').down('input[name=group_id]').value;
-
+    function observeTemplateSelectorChanges(group_id, select_template, select_project) {
         select_template.observe('change', function () { //todo: check that 'change' evt is valid on IE
             var template_group_id   = $F(select_project),
                 template_tracker_id = $F(select_template);
@@ -47,5 +54,16 @@ document.observe('dom:loaded', function () {
                 }
             );
         });
+    }
+
+    var select_template = $('tracker_list_trackers_from_project'),
+        select_project  = $('tracker_new_project_list');
+
+    if (select_template) {
+        var form = select_template.up('form');
+            group_id = form.down('input[name=group_id]').value;
+
+        observeCreateModeChanges(form);
+        observeTemplateSelectorChanges(group_id, select_template, select_project);
     }
 });

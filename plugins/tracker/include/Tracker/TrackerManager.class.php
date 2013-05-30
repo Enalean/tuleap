@@ -162,7 +162,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                 break;
                             case 'check_ugroup_consistency':
                                 //nasty stuff here to check consistency
-                                if (!1) {
+                                if (1) {
                                     echo '<div class="alert alert-warning">Are you crazy?</div>';
                                 }
                                 break;
