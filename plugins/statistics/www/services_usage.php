@@ -172,20 +172,10 @@ if (!$error && $request->exist('export')) {
     var_dump($dao->getActiveSurveys());
     echo '<hr/>';
     var_dump($dao->getSurveysAnswersBetweenStartDateAndEndDate());
-
+    echo '<hr/>';
+    var_dump($dao->getProjectWithCIActivated());
+    echo '<hr/>';
+    var_dump($dao->getNumberOfCIJobs());
     $GLOBALS['HTML']->footer(array());
 }
-//# Verifier si le service 'Integration Continue' est activé par projet
-//
-//push(@Allmetrics,new SQLmetrics("IntegrationContinueActive",
-//"select group_id, is_used from service
-//WHERE short_name = 'hudson'
-//GROUP BY  group_id"));
-//
-//# Calcul des jobs existants pour le service 'Integration Continue' par projet
-//
-//push(@Allmetrics,new SQLmetrics("IntegrationContinueJobs",
-//"select group_id, COUNT(*) from plugin_hudson_job
-//GROUP BY  group_id"));
-
 ?>
