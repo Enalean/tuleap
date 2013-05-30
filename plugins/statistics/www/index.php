@@ -59,6 +59,9 @@ echo '<h1>'.$title.'</h1>';
 
     <dt><a href="project_quota.php"><?php echo $GLOBALS['Language']->getText('plugin_statistics', 'quota_title'); ?></a></dt>
     <dd><?php echo $GLOBALS['Language']->getText('plugin_statistics', 'quota_description'); ?></dd>
+
+    <dt><a href="services_usage.php">Service usage</a></dt>
+    <dd>Service usag</dd>
 </dl>
 
 <?php
