@@ -1,4 +1,4 @@
-Version 6.1 (Not Released Yet)
+Version 6.1 (Thursday, May 30th 2013)
 	== Enhancement ==
 	* story #3226: see "svn propset --revprop -r X svn:log" modifications in commit DB
 
