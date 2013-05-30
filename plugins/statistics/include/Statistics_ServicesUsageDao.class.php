@@ -23,6 +23,9 @@
 
 class Statistics_ServicesUsageDao extends DataAccessObject {
 
+    private $end_date;
+    private $start_date;
+
     /**
      * Constructor
      *
@@ -209,6 +212,153 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND f.post_date <= $this->end_date
                     AND f.post_date >= $this->start_date
                 GROUP BY p.group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getDistinctFilesPublished() {
+        $sql = "SELECT p.group_id, COUNT( DISTINCT file_id )
+                FROM frs_file f,frs_package p,frs_release r
+                WHERE f.release_id = r.release_id
+                    AND r.package_id = p.package_id
+                    AND f.post_date <= $this->end_date
+                GROUP BY p.group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getNumberOfDownloadedFilesBeforeEndDate() {
+        $sql = "SELECT p.group_id, COUNT(filerelease_id )
+                FROM filedownload_log l,frs_package p,frs_release r
+                WHERE l.filerelease_id = r.release_id
+                    AND r.package_id = p.package_id
+                    AND l.time <= $this->end_date
+                GROUP BY p.group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getNumberOfDownloadedFilesBetweenStartDateAndEndDate() {
+        $sql = "SELECT p.group_id,SUM(downloads )
+                FROM frs_dlstats_file_agg fdl, frs_file f,frs_package p,frs_release r
+                WHERE fdl.file_id=f.file_id AND f.release_id = r.release_id
+                    AND r.package_id = p.package_id
+                    AND fdl.day <= $this->end_date
+                    AND fdl.day >= $this->start_date
+                GROUP BY p.group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getNumberOfActiveMailingLists() {
+        $sql = "SELECT group_id, COUNT( DISTINCT group_list_id )
+                FROM mail_group_list
+                WHERE is_public != 9
+                GROUP BY group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getNumberOfInactiveMailingLists() {
+        $sql = "SELECT group_id, COUNT( DISTINCT group_list_id )
+                FROM mail_group_list
+                WHERE is_public = 9
+                GROUP BY group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getNumberOfActiveForums() {
+        $sql = "SELECT group_id,COUNT( DISTINCT fg.group_forum_id )
+                FROM forum_group_list fg, forum f
+                WHERE fg.group_forum_id =f.group_forum_id
+                    AND f.date <= $this->end_date
+                    AND fg.is_public != 9
+                GROUP BY  fg.group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getNumberOfInactiveForums() {
+        $sql = "SELECT group_id,COUNT( DISTINCT fg.group_forum_id )
+                FROM forum_group_list fg, forum f
+                WHERE fg.group_forum_id =f.group_forum_id
+                    AND f.date <= $this->end_date
+                    AND fg.is_public = 9
+                GROUP BY  fg.group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getForumsActivities() {
+        $sql = "SELECT group_id,COUNT(DISTINCT f.msg_id )
+                FROM forum_group_list fg, forum f
+                WHERE fg.group_forum_id =f.group_forum_id
+                    AND f.date <= $this->end_date
+                    AND f.date >= $this->start_date
+                GROUP BY  fg.group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getNumberOfWikiDocuments() {
+        $sql = "SELECT group_id, COUNT( DISTINCT id)
+                FROM wiki_group_list
+                GROUP BY group_id";
 
         $return = array();
         $retrieve = $this->retrieve($sql);

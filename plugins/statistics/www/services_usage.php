@@ -134,77 +134,27 @@ if (!$error && $request->exist('export')) {
     var_dump($dao->getGitActivities());
     echo '<hr/>';
     var_dump($dao->getFilesPublished());
+    echo '<hr/>';
+    var_dump($dao->getDistinctFilesPublished());
+    echo '<hr/>';
+    var_dump($dao->getNumberOfDownloadedFilesBeforeEndDate());
+    echo '<hr/>';
+    var_dump($dao->getNumberOfDownloadedFilesBetweenStartDateAndEndDate());
+    echo '<hr/>';
+    var_dump($dao->getNumberOfActiveMailingLists());
+    echo '<hr/>';
+    var_dump($dao->getNumberOfInactiveMailingLists());
+    echo '<hr/>';
+    var_dump($dao->getNumberOfActiveForums());
+    echo '<hr/>';
+    var_dump($dao->getNumberOfInactiveForums());
+    echo '<hr/>';
+    var_dump($dao->getForumsActivities());
+    echo '<hr/>';
+    var_dump($dao->getNumberOfWikiDocuments());
 
     $GLOBALS['HTML']->footer(array());
 }
-//#Calcul de l'indicateur 'Fichiers publies (total)' par projet
-//#date de "creation du fichier":  frs_file.postdate
-//push(@Allmetrics,new SQLmetrics("Fichiers publies (total)","SELECT p.group_id, COUNT( DISTINCT file_id )
-//FROM frs_file f,frs_package p,frs_release r
-//WHERE f.release_id = r.release_id AND r.package_id = p.package_id AND f.post_date<=$time_end
-//GROUP BY p.group_id"));
-//
-//#Calcul de l'indicateur 'fichiers telecharges (total)' par projet
-//#date de "creation du fichier":  frs_file.postdate
-//push(@Allmetrics,new SQLmetrics("Fichiers telecharges (total)","SELECT p.group_id, COUNT(filerelease_id )
-//FROM filedownload_log l,frs_package p,frs_release r
-//WHERE l.filerelease_id = r.release_id AND r.package_id = p.package_id AND l.time<=$time_end
-//GROUP BY p.group_id"));
-//
-//#Calcul de l'indicateur 'Telechargements (periode X jours)' par projet
-//#date de "telechargement": frs_dlstats_file_agg.day
-//push(@Allmetrics,new SQLmetrics("Telechargements",
-//"SELECT p.group_id,SUM(downloads )
-//FROM frs_dlstats_file_agg fdl, frs_file f,frs_package p,frs_release r
-//WHERE fdl.file_id=f.file_id AND f.release_id = r.release_id AND r.package_id = p.package_id
-//AND fdl.day<=$cvs_time_end AND fdl.day>=$cvs_time_start
-//GROUP BY p.group_id"));
-//
-//#Calcul de l'indicateur 'Listes de diffusion actives' par projet
-//#valeur des listes detruites: is_public=9
-//#TODO date de "creation de la liste":  ?
-//push(@Allmetrics,new SQLmetrics("Listes de diffusion actives","SELECT group_id, COUNT( DISTINCT group_list_id )
-//FROM mail_group_list
-//WHERE is_public!=9
-//GROUP BY group_id
-//"));
-//
-//#Calcul de l'indicateur 'Listes de diffusion inactives' par projet
-//#valeur des listes detruites: is_public=9
-//#TODO date de "creation de la liste":  ?
-//push(@Allmetrics,new SQLmetrics("Listes de diffusion inactives","SELECT group_id, COUNT( DISTINCT group_list_id )
-//FROM mail_group_list
-//WHERE is_public=9
-//GROUP BY group_id"));
-//
-//#Calcul de l'indicateur 'Forums actifs' par projet
-//#date de "creation du forum", filtrer les forums n'ayant pas de message avant la date $date dans la table forum
-//#NOTE: Le terme 'actif' est trompeur on ne controle pas l'activite du forum mais seulement la presence d'un message avant la date nom de projet 0
-//push(@Allmetrics,new SQLmetrics("Forums actifs",
-//"SELECT group_id,COUNT( DISTINCT fg.group_forum_id )
-//FROM forum_group_list fg, forum f
-//WHERE fg.group_forum_id =f.group_forum_id
-//AND f.date<=$time_end AND fg.is_public != 9
-//GROUP BY  fg.group_id"));
-//
-//#Calcul de l'indicateur 'Forums inactifs' par projet
-//push(@Allmetrics,new SQLmetrics("Forums inactifs",
-//"SELECT group_id,COUNT( DISTINCT fg.group_forum_id )
-//FROM forum_group_list fg, forum f
-//WHERE fg.group_forum_id =f.group_forum_id
-//AND f.date<=$time_end AND fg.is_public = 9
-//GROUP BY  fg.group_id"));
-//
-//
-//#Calcul de l'indicateur 'Activites Forum' par projet
-//#Nombre de message poster sur tout les forums du projet depuis X jours
-//#date de "creation du forum", filtrer les forums n'ayant pas de message avant la date $date dans la table forum
-//push(@Allmetrics,new SQLmetrics("Activites Forum",
-//"SELECT group_id,COUNT(DISTINCT f.msg_id )
-//FROM forum_group_list fg, forum f
-//WHERE fg.group_forum_id =f.group_forum_id  AND f.date<=$time_end AND f.date>=$time_start
-//GROUP BY  fg.group_id"));
-//
 //#Calcul de l'indicateur 'Documents wiki' par projet
 //#date de "creation du document": ? pas de moyens consistant les documents et les pages sont relativement decoreles
 //#Il existe un document acceuil cree automatiquement dès que le wiki est initialise
