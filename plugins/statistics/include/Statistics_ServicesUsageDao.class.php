@@ -70,6 +70,55 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
 
         return $return;
     }
+
+    public function getRegisterTimeOfActiveProjectsBeforeEndDate() {
+        $sql = "SELECT group_id, FROM_UNIXTIME(register_time,'%Y-%m-%d')
+                FROM groups
+                WHERE status='A'
+                    AND register_time <= $this->end_date
+                GROUP BY group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getInfosFromTroveGroupLink() {
+        $sql = "SELECT tgl.group_id, tc.shortname
+                FROM trove_group_link tgl, trove_cat tc
+                WHERE tgl.trove_cat_root='281'
+                    AND tc.root_parent=tgl.trove_cat_root
+                    AND tc.trove_cat_id=tgl.trove_cat_id
+                GROUP BY group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
+
+    public function getAdministrators() {
+        $sql = "SELECT g.group_id, u.user_name
+                FROM user_group g, user u
+                WHERE g.user_id=u.user_id
+                    AND u.status='A'
+                GROUP BY group_id";
+
+        $return = array();
+        $retrieve = $this->retrieve($sql);
+        foreach ($retrieve as $res) {
+            $return[] = $res;
+        }
+
+        return $return;
+    }
 }
 
 ?>
