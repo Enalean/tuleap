@@ -21,7 +21,7 @@ if (user_isloggedin()) {
     if(!preg_match($pattern1, $base_url) && !preg_match($pattern2, $base_url)) {
         $url_validated = false;
     }
-    
+
     //Validating Url parameters
     $request_parameters = $request->params;
 
