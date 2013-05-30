@@ -160,6 +160,12 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $group_id);
                                 }
                                 break;
+                            case 'check_ugroup_consistency':
+                                //nasty stuff here to check consistency
+                                if (!1) {
+                                    echo '<div class="alert alert-warning">Are you crazy?</div>';
+                                }
+                                break;
                             case 'csvimportoverview':
                                 $this->displayCSVImportOverview($project, $group_id, $user);
                                 break;
@@ -310,6 +316,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
               <span style="color:#999;">'.$Language->getText('plugin_tracker_include_type','avoid_spaces').'</span>
           </p>';
         
+        echo '<div id="check_consistency_feedback"></div>';
         echo '<input type="submit" name="Create" value="'.$Language->getText('global','btn_create').'">';
 
         echo '</td></tr></table></form>';
@@ -325,6 +332,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $hp = Codendi_HTMLPurifier::instance();
 
         $GLOBALS['Response']->includeFooterJavascriptFile(TRACKER_BASE_URL.'/scripts/TrackerTemplateSelector.js');
+        $GLOBALS['Response']->includeFooterJavascriptFile(TRACKER_BASE_URL.'/scripts/TrackerCheckUgroupConsistency.js');
         
         $js = '';
         $trackers = $this->getTrackerFactory()->getTrackersByGroupId(100);
