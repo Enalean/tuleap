@@ -116,39 +116,15 @@ if (!$error && $request->exist('export')) {
     var_dump($dao->getDescriptionOfActiveProjectsBeforeEndDate());
 
     echo '<hr/>';
+    var_dump($dao->getRegisterTimeOfActiveProjectsBeforeEndDate());
+
+    echo '<hr/>';
+    var_dump($dao->getInfosFromTroveGroupLink());
+    echo '<hr/>';
+    var_dump($dao->getAdministrators());
 
     $GLOBALS['HTML']->footer(array());
 }
-
-
-//$sql = "SELECT group_id, REPLACE(REPLACE (short_description, CHAR(13),' '),CHAR(10),' ')
-//        FROM groups
-//        WHERE status='A'
-//            AND register_time <= $end_date
-//        GROUP BY group_id";
-//
-//$res = db_query($sql);
-//while($row = db_fetch_array($res)) {
-//    var_dump($row);
-//}
-//
-//echo '<hr/>';
-
-//push(@Allmetrics,new SQLmetrics("Cree le",
-//"SELECT group_id, FROM_UNIXTIME(register_time,'%Y-%m-%d')  FROM groups
-//WHERE status='A' AND register_time<=$time_end
-//GROUP BY group_id"));
-//
-//push(@Allmetrics,new SQLmetrics("Organisation",
-//"SELECT tgl.group_id, tc.shortname  FROM trove_group_link tgl, trove_cat tc
-//WHERE tgl.trove_cat_root='281' AND tc.root_parent=tgl.trove_cat_root AND tc.trove_cat_id=tgl.trove_cat_id
-//GROUP BY group_id"));
-//
-//push(@Allmetrics,new SQLmetrics("Administrateur",
-//"SELECT g.group_id, u.user_name  FROM user_group g, user u
-//WHERE g.user_id=u.user_id AND u.status='A'
-//GROUP BY group_id"));
-//
 //push(@Allmetrics,new SQLmetrics("Nom",
 //"SELECT g.group_id, u.realname  FROM user_group g, user u
 //WHERE g.user_id=u.user_id AND u.status='A'
