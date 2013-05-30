@@ -123,9 +123,9 @@ function forum_header($params) {
         	print ' <a href="forum.php?forum_id='. $forum_id .'#start_new_thread">';
 	    	echo  html_image("ic/thread.png",array()) .' '.$Language->getText('forum_forum_utils','start_thread').'</A> | ';
         	if (isset($msg_id) && $msg_id) {
-            	echo "<A HREF='?msg_id=$msg_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
+                echo "<A HREF='/forum/forum.php?msg_id=$msg_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
 	    	} else {
-            	echo "<A HREF='?forum_id=$forum_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
+                echo "<A HREF='/forum/forum.php?forum_id=$forum_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
             }
 	    }
 
