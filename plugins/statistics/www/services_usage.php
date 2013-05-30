@@ -20,9 +20,7 @@
  */
 
 require_once 'pre.php';
-require_once dirname(__FILE__).'/../include/Statistics_Formatter.class.php';
-require_once dirname(__FILE__).'/../include/Statistics_Formatter_Cvs.class.php';
-require_once dirname(__FILE__).'/../include/Statistics_Formatter_Svn.class.php';
+require_once dirname(__FILE__).'/../include/Statistics_ServicesUsageDao.class.php';
 
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
@@ -30,7 +28,7 @@ if (!$p || !$pluginManager->isPluginAvailable($p)) {
     header('Location: '.get_server_url());
 }
 
-// Grant access only to site admin
+//Grant access only to site admin
 if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
     header('Location: '.get_server_url());
 }
@@ -111,35 +109,29 @@ if (!$error && $request->exist('export')) {
     echo '</table>';
     echo '</form>';
 
+    $dao = new Statistics_ServicesUsageDao(CodendiDataAccess::instance(), $startDate, $endDate);
+    var_dump($dao->getNameOfActiveProjectsBeforeEndDate());
+
+    echo '<hr/>';
+    var_dump($dao->getDescriptionOfActiveProjectsBeforeEndDate());
+
+    echo '<hr/>';
+
     $GLOBALS['HTML']->footer(array());
 }
 
-//$start_date = '';
-//$end_date   = '';
-
-//$sql = "SELECT group_id, group_name
-        //FROM groups
-        //WHERE status='A'
-           //AND register_time <= $end_date
-        //GROUP BY group_id;";
-//$res = db_query($sql);
-//while($row = db_fetch_array($res)) {
-    //var_dump($row);
-//}
-
-//echo '<hr/>';
 
 //$sql = "SELECT group_id, REPLACE(REPLACE (short_description, CHAR(13),' '),CHAR(10),' ')
-        //FROM groups
-        //WHERE status='A'
-            //AND register_time <= $end_date
-        //GROUP BY group_id";
-
+//        FROM groups
+//        WHERE status='A'
+//            AND register_time <= $end_date
+//        GROUP BY group_id";
+//
 //$res = db_query($sql);
 //while($row = db_fetch_array($res)) {
-    //var_dump($row);
+//    var_dump($row);
 //}
-
+//
 //echo '<hr/>';
 
 //push(@Allmetrics,new SQLmetrics("Cree le",
