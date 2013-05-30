@@ -64,7 +64,8 @@ class Planning_RequestValidator {
         return $this->nameIsPresent($planning_parameters)
             && $this->backlogTrackerIdIsPresentAndIsAPositiveIntegers($planning_parameters)
             && $this->planningTrackerIdIsPresentAndIsAPositiveInteger($planning_parameters)
-            && $this->planningTrackerIsNotThePlanningTrackerOfAnotherPlanningInTheSameProject($group_id, $planning_id, $planning_parameters);
+           // && $this->planningTrackerIsNotThePlanningTrackerOfAnotherPlanningInTheSameProject($group_id, $planning_id, $planning_parameters)
+            ;
     }
     
     /**

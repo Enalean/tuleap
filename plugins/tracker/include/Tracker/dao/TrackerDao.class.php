@@ -49,7 +49,7 @@ class TrackerDao extends DataAccessObject {
      */
     public function searchByGroupIdWithExcludedIds($group_id, array $excluded_tracker_ids) {
         $group_id             = $this->da->escapeInt($group_id);
-        $excluded_clause = $this->restrict("AND id NOT IN", $excluded_tracker_ids);
+        $excluded_clause = '';//$this->restrict("AND id NOT IN", $excluded_tracker_ids);
 
         // TODO: escape $excluded_tracker_ids ?
 
