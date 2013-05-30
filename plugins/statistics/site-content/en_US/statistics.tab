@@ -79,3 +79,4 @@ plugin_statistics	no_project	Project not found
 plugin_statistics	quota_added	Quota for project "$1" is now $2 GB
 plugin_statistics	quota_deleted	Quota deleted for $1
 plugin_statistics	no_search_result	No result correspond to the search
+plugin_statistics	services_usage	Services usage statistics
