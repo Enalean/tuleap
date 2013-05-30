@@ -20,34 +20,127 @@
  */
 
 require_once 'pre.php';
+require_once dirname(__FILE__).'/../include/Statistics_Formatter.class.php';
+require_once dirname(__FILE__).'/../include/Statistics_Formatter_Cvs.class.php';
+require_once dirname(__FILE__).'/../include/Statistics_Formatter_Svn.class.php';
 
-$start_date = '';
-$end_date   = '';
-
-$sql = "SELECT group_id, group_name
-        FROM groups
-        WHERE status='A'
-           AND register_time <= $end_date
-        GROUP BY group_id;";
-$res = db_query($sql);
-while($row = db_fetch_array($res)) {
-    var_dump($row);
+$pluginManager = PluginManager::instance();
+$p = $pluginManager->getPluginByName('statistics');
+if (!$p || !$pluginManager->isPluginAvailable($p)) {
+    header('Location: '.get_server_url());
 }
 
-echo '<hr/>';
-
-$sql = "SELECT group_id, REPLACE(REPLACE (short_description, CHAR(13),' '),CHAR(10),' ')
-        FROM groups
-        WHERE status='A'
-            AND register_time <= $end_date
-        GROUP BY group_id";
-
-$res = db_query($sql);
-while($row = db_fetch_array($res)) {
-    var_dump($row);
+// Grant access only to site admin
+if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
+    header('Location: '.get_server_url());
 }
 
-echo '<hr/>';
+$request = HTTPRequest::instance();
+
+$error = false;
+
+$vStartDate = new Valid('start');
+$vStartDate->addRule(new Rule_Date());
+$vStartDate->required();
+$startDate = $request->get('start');
+if ($request->valid($vStartDate)) {
+    $startDate = $request->get('start');
+} else {
+    $startDate = date('Y-m-d', strtotime('-1 year'));
+}
+
+$vEndDate = new Valid('end');
+$vEndDate->addRule(new Rule_Date());
+$vEndDate->required();
+$endDate = $request->get('end');
+if ($request->valid($vEndDate)) {
+    $endDate = $request->get('end');
+} else {
+    $endDate = date('Y-m-d', strtotime('+1 month'));
+}
+
+if ($startDate >= $endDate) {
+    $error = true;
+    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'period_error'));
+}
+
+$groupId  = null;
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+if ($request->valid($vGroupId)) {
+    $groupId = $request->get('group_id');
+}
+
+if (!$error && $request->exist('export')) {
+    header('Content-Type: text/csv');
+    header('Content-Disposition: filename=scm_stats_'.$startDate.'_'.$endDate.'.csv');
+    $statsSvn = new Statistics_Formatter_Svn($startDate, $endDate, $groupId);
+    echo $statsSvn->getStats();
+    $statsCvs = new Statistics_Formatter_Cvs($startDate, $endDate, $groupId);
+    echo $statsCvs->getStats();
+    $em = EventManager::instance();
+    $params['formatter'] = new Statistics_Formatter($startDate, $endDate, $groupId);
+    $em->processEvent('statistics_collector', $params);
+    exit;
+} else {
+    $title = $GLOBALS['Language']->getText('plugin_statistics', 'services_usage');
+    $GLOBALS['HTML']->includeCalendarScripts();
+    $GLOBALS['HTML']->header(array('title' => $title));
+    echo '<h1>'.$title.'</h1>';
+
+    echo '<form name="form_scm_stats" method="get">';
+    echo '<table>';
+    echo '<tr>';
+    echo '<td>';
+    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_start').'</b>';
+    echo '</td><td>';
+    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_end').'</b>';
+    echo '</td>';
+    echo '</tr><tr>';
+    echo '<td>';
+    list($timestamp,) = util_date_to_unixtime($startDate);
+    echo html_field_date('start', $startDate, false, 10, 10, 'form_scm_stats', false);
+    echo '</td><td>';
+    list($timestamp,) = util_date_to_unixtime($endDate);
+    echo html_field_date('end', $endDate, false, 10, 10, 'form_scm_stats', false);
+    echo '</td>';
+    echo '</tr><tr><td>';
+    echo '<input type="submit" name="export" value="'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_export_button').'" >';
+    echo '</td>';
+    echo '</tr>';
+    echo '</table>';
+    echo '</form>';
+
+    $GLOBALS['HTML']->footer(array());
+}
+
+//$start_date = '';
+//$end_date   = '';
+
+//$sql = "SELECT group_id, group_name
+        //FROM groups
+        //WHERE status='A'
+           //AND register_time <= $end_date
+        //GROUP BY group_id;";
+//$res = db_query($sql);
+//while($row = db_fetch_array($res)) {
+    //var_dump($row);
+//}
+
+//echo '<hr/>';
+
+//$sql = "SELECT group_id, REPLACE(REPLACE (short_description, CHAR(13),' '),CHAR(10),' ')
+        //FROM groups
+        //WHERE status='A'
+            //AND register_time <= $end_date
+        //GROUP BY group_id";
+
+//$res = db_query($sql);
+//while($row = db_fetch_array($res)) {
+    //var_dump($row);
+//}
+
+//echo '<hr/>';
 
 //push(@Allmetrics,new SQLmetrics("Cree le",
 //"SELECT group_id, FROM_UNIXTIME(register_time,'%Y-%m-%d')  FROM groups
