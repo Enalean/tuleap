@@ -166,10 +166,12 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                     return;
                                 }
 
+                                $messenger           = new Tracker_UgroupPermissionsConsistencyMessenger();
                                 $ugroup_manager      = new UGroupManager();
                                 $permissions_manager = new Tracker_PermissionsManager(PermissionsManager::instance(), $ugroup_manager);
-                                $checker = new Tracker_UgroupPermissionsConsistencyChecker($permissions_manager, $ugroup_manager);
-                                echo $checker->checkConsistency($tracker, $project);
+
+                                $checker = new Tracker_UgroupPermissionsConsistencyChecker($permissions_manager, $ugroup_manager, $messenger);
+                                $checker->checkConsistency($tracker, $project);
                                 break;
                             case 'csvimportoverview':
                                 $this->displayCSVImportOverview($project, $group_id, $user);

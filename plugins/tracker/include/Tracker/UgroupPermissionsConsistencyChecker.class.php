@@ -39,9 +39,17 @@ class Tracker_UgroupPermissionsConsistencyChecker {
     /** @var UGroupManager */
     private $ugroup_manager;
 
-    public function __construct(Tracker_PermissionsManager $permissions_manager, UGroupManager $ugroup_manager) {
+    /** @var Tracker_UgroupPermissionsConsistencyMessenger */
+    private $messenger;
+
+    public function __construct(
+        Tracker_PermissionsManager $permissions_manager,
+        UGroupManager $ugroup_manager,
+        Tracker_UgroupPermissionsConsistencyMessenger $messenger
+    ) {
         $this->permissions_manager = $permissions_manager;
         $this->ugroup_manager      = $ugroup_manager;
+        $this->messenger           = $messenger;
     }
 
     /**
@@ -51,7 +59,8 @@ class Tracker_UgroupPermissionsConsistencyChecker {
         $ugroups = $this->permissions_manager->getListOfInvolvedStaticUgroups($template_tracker);
 
         if (! $ugroups) {
-            return new Tracker_UgroupPermissionsConsistencyNoMessage();
+            $this->messenger->allIsWell();
+            return;
         }
 
         $template_ugroups_names = array_map(array($this, 'extractUGroupName'), $ugroups);
@@ -61,10 +70,10 @@ class Tracker_UgroupPermissionsConsistencyChecker {
 
         $diff = array_diff($template_ugroups_names, $target_ugroups_names);
         if ($diff) {
-            return new Tracker_UgroupPermissionsConsistencyWarningMessage();
+            $this->messenger->ugroupsMissing();
+        } else {
+            $this->messenger->ugroupsAreTheSame();
         }
-
-        return new Tracker_UgroupPermissionsConsistencyInfoMessage();
     }
 
     private function extractUGroupName(UGroup $ugroup) {
