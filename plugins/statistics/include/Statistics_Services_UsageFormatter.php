@@ -66,7 +66,7 @@ class Statistics_Services_UsageFormatter extends Statistics_Formatter {
 
     private function addValuesFromQueryResultForTitle(array $query_result, $title) {
         foreach ($query_result as $data) {
-            if (array_key_exists($data['group_id'], $this->datas)) {
+            if ($this->canAddValueFromQuery($data)) {
                 $this->datas[$data['group_id']][$title] = $data['result'];
             }
         }
@@ -80,6 +80,10 @@ class Statistics_Services_UsageFormatter extends Statistics_Formatter {
         foreach ($query_result as $data) {
             $this->datas[$data['group_id']] = array();
         }
+    }
+
+    private function canAddValueFromQuery(array $data) {
+        return array_key_exists($data['group_id'], $this->datas) && isset($data['result']);
     }
 }
 
