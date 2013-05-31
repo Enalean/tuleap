@@ -114,7 +114,7 @@ class Planning_MilestoneFactory {
      * 
      * @return Planning_Milestone
      */
-    public function getBareMilestone(PFUser $user, Project $project, $planning_id, $artifact_id, $is_top) {
+    public function getBareMilestone(PFUser $user, Project $project, $planning_id, $artifact_id, $is_top = false) {
         $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
 
