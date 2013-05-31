@@ -68,10 +68,12 @@ class Planning_MilestonePaneFactory {
 
     /** @return AgileDashboard_Milestone_Pane_PresenterData */
     public function getPanePresenterData(Planning_Milestone $milestone) {
+        $available_milestones = (isset($this->available_milestones[$milestone->getArtifactId()])) ? $this->available_milestones[$milestone->getArtifactId()] : array();
+
         return new AgileDashboard_Milestone_Pane_PresenterData(
             $this->getActivePane($milestone),
             $this->getListOfPaneInfo($milestone),
-            $this->available_milestones[$milestone->getArtifactId()]
+            $available_milestones
         );
     }
 
@@ -79,6 +81,18 @@ class Planning_MilestonePaneFactory {
     private function getActivePane(Planning_Milestone $milestone) {
         if (! isset($this->list_of_pane_info[$milestone->getArtifactId()])) {
             $this->buildActivePane($milestone);
+        }
+
+        if($milestone instanceof Planning_TopMilestone) {
+            $top_pane_info = new AgileDashboard_Milestone_Pane_TopContent_Info($milestone, $this->theme_path);
+
+            if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_TopContent_Info::IDENTIFIER) {
+                $top_pane_info->setActive(true);
+                return new AgileDashboard_Milestone_Pane_TopContent_Pane(
+                    $top_pane_info,
+                    $this->getTopContentPresenterBuilder()->getMilestoneContentPresenter($this->request->getCurrentUser(), $milestone)
+                );
+            }
         }
 
         return $this->active_pane[$milestone->getArtifactId()];
@@ -123,11 +137,11 @@ class Planning_MilestonePaneFactory {
     private function buildActivePane(Planning_Milestone $milestone) {
         $this->buildListOfPaneInfo($milestone);
         $legacy_planning_pane_info = $this->getLegacyPaneInfo($milestone);
-        if (! $this->active_pane[$milestone->getArtifactId()]) {
+        if (! $this->active_pane[$milestone->getArtifactId()] && ! $milestone instanceof Planning_TopMilestone) {
             $legacy_planning_pane_info->setActive(true);
             $this->active_pane[$milestone->getArtifactId()] = $this->legacy_planning_pane_factory->getPane($milestone, $legacy_planning_pane_info);
             $this->available_milestones[$milestone->getArtifactId()] = $this->legacy_planning_pane_factory->getAvailableMilestones($milestone);
-        } else {
+        } elseif(! $milestone instanceof Planning_TopMilestone) {
             $this->available_milestones[$milestone->getArtifactId()] = $this->getAvailableMilestones($milestone);
         }
     }
@@ -193,6 +207,10 @@ class Planning_MilestonePaneFactory {
 
     private function getContentPresenterBuilder() {
         return $this->pane_presenter_builder_factory->getContentPresenterBuilder();
+    }
+
+    private function getTopContentPresenterBuilder() {
+        return $this->pane_presenter_builder_factory->getTopContentPresenterBuilder();
     }
 
     private function getPlanningPresenterBuilder() {
