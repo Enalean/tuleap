@@ -413,16 +413,37 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getMediawikiPagesNumberOfAProject(PFO_Project $project) {
-        $database_name = "plugin_mediawiki_". $project->getUnixName();
+        $database_name = $this->getMediawikiDatabaseName($project);
 
         $sql = "USE $database_name;
                 SELECT COUNT(page_id)
                 FROM mwpage";
 
         $result = $this->retrieve($sql);
-        $this->DataAccessObject();
-
         return $result;
+    }
+
+    public function getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate(PFO_Project $project) {
+        $database_name = $this->getMediawikiDatabaseName($project);
+        $start_date    = date("YmdHis", $this->start_date);
+        $end_date      = date("YmdHis", $this->end_date);
+
+        $sql = "USE $database_name;
+                SELECT COUNT(page_id)
+                FROM mwpage
+                WHERE
+                    page_touched >= $start_date
+                    AND
+                    page_touched <= $end_date
+               ";
+
+        $result = $this->retrieve($sql);
+        return $result;
+    }
+
+    private function getMediawikiDatabaseName(PFO_Project $project) {
+        $database_name = "plugin_mediawiki_".$project->getUnixName();
+        return $database_name;
     }
 
     private function processMultipleRowInResult(DataAccessResult $retrieve) {
