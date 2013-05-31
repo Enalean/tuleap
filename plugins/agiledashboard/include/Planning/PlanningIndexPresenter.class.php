@@ -45,6 +45,10 @@ class Planning_IndexPresenter {
         $latest_short_access = end($this->short_access);
         return current($latest_short_access->getLastOpenMilestones());
     }
+
+    public function get_default_top_pane() {
+        return AgileDashboard_Milestone_Pane_TopContent_Info::IDENTIFIER;
+    }
 }
 
 ?>
