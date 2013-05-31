@@ -400,6 +400,11 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
 
     private function processMultipleRowInResult(DataAccessResult $retrieve) {
         $return = array();
+
+        if ($retrieve->isError()) {
+            return $return;
+        }
+
         foreach ($retrieve as $res) {
             $return[] = $res;
         }
