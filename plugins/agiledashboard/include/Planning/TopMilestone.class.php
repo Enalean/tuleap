@@ -35,8 +35,56 @@ class Planning_TopMilestone  implements Planning_Milestone {
      */
     private $planning;
 
-    public function __construct(Project $project) {
+    public function __construct(Project $project, Codendi_Request $request) {
         $this->project  = $project;
+        $this->request = $request;
+
+        $this->determineTrackers();
+    }
+
+    private function determineTrackers() {
+        $hierarchy_factory = Tracker_HierarchyFactory::instance();
+
+        $tracker_manager = new TrackerManager();
+        $trackers = $tracker_manager->getTrackersByGroupId($this->project->getID());
+
+        $tracker_ids = array();
+        foreach ($trackers as $tracker) {
+            $tracker_ids[] = $tracker->getId();
+        }
+
+        $hierarchy = $hierarchy_factory->getHierarchy($tracker_ids);
+
+        $top_trackers = array();
+        foreach ($tracker_ids as $id) {
+            if($hierarchy->isRoot($id)) {
+                $top_trackers[] = $id;
+            }
+        }
+
+        $user = $this->request->getCurrentUser();
+        $planning_factory = PlanningFactory::build();
+        $plannings = $planning_factory->getPlannings($user, $this->project->getID());
+
+        /*
+         * No idea if this logic is correct
+         */
+        $top_tracker_id = null;
+        foreach ($plannings as $planning) {
+            if (in_array($planning->getPlanningTrackerId(), $top_trackers)) {
+                $top_tracker_id = $planning->getPlanningTrackerId();
+            }
+        }
+
+        $this->planning = new Planning(
+                1,
+                'name',
+                $this->project->getID(),
+                'my backlog_title',
+                'my plan title',
+                null,
+                $top_tracker_id
+                );
     }
 
     /**
@@ -78,11 +126,11 @@ class Planning_TopMilestone  implements Planning_Milestone {
     }
 
     public function getPlanning() {
-
+        return $this->planning;
     }
 
     public function getPlanningId() {
-
+        return $this->planning->getId();
     }
 
     public function getProject() {

@@ -44,6 +44,11 @@ class Planning_MilestoneFactory {
     private $cache_all_milestones;
 
     /**
+     * @var Codendi_Request
+     */
+    private $request;
+
+    /**
      * Instanciates a new milestone factory.
      *
      * @param PlanningFactory            $planning_factory    The factory to delegate planning retrieval.
@@ -52,11 +57,13 @@ class Planning_MilestoneFactory {
      */
     public function __construct(PlanningFactory            $planning_factory,
                                 Tracker_ArtifactFactory    $artifact_factory,
-                                Tracker_FormElementFactory $formelement_factory) {
+                                Tracker_FormElementFactory $formelement_factory,
+                                Codendi_Request $request) {
 
         $this->planning_factory    = $planning_factory;
         $this->artifact_factory    = $artifact_factory;
         $this->formelement_factory = $formelement_factory;
+        $this->request = $request;
     }
 
     /**
@@ -125,7 +132,7 @@ class Planning_MilestoneFactory {
             $this->updateMilestoneContextualInfo($user, $milestone);
             return $milestone;
         } elseif ($is_top) {
-            return new Planning_TopMilestone($project);
+            return new Planning_TopMilestone($project, $this->request);
         } else {
             return new Planning_NoMilestone($project, $planning);
         }

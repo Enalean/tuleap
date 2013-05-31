@@ -208,7 +208,7 @@ class AgileDashboardPlugin extends Plugin {
 
     public function process(Codendi_Request $request) {
         $planning_factory               = $this->getPlanningFactory();
-        $milestone_factory              = $this->getMilestoneFactory();
+        $milestone_factory              = $this->getMilestoneFactory($request);
         $hierarchy_factory              = $this->getHierarchyFactory();
         $pane_presenter_builder_factory = $this->getPanePresenterBuilderFactory($milestone_factory);
 
@@ -274,11 +274,12 @@ class AgileDashboardPlugin extends Plugin {
      * Builds a new Planning_MilestoneFactory instance.
      * @return Planning_MilestoneFactory
      */
-    protected function getMilestoneFactory() {
+    protected function getMilestoneFactory($request) {
         return new Planning_MilestoneFactory(
             $this->getPlanningFactory(),
             $this->getArtifactFactory(),
-            Tracker_FormElementFactory::instance());
+            Tracker_FormElementFactory::instance(),
+            $request);
     }
 
     private function getArtifactFactory() {
