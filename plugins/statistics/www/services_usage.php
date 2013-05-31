@@ -77,16 +77,7 @@ if (!$error && $request->exist('export')) {
     header('Content-Type: text/csv');
     header('Content-Disposition: filename=services_usage_'.$startDate.'_'.$endDate.'.csv');
     echo "Start date : $startDate \n";
-    echo "End date : $endDate \n";
-//    $statsSvn = new Statistics_Formatter_Svn($startDate, $endDate, $groupId);
-//    echo $statsSvn->getStats();
-//    $statsCvs = new Statistics_Formatter_Cvs($startDate, $endDate, $groupId);
-//    echo $statsCvs->getStats();
-//    $em = EventManager::instance();
-//    $params['formatter'] = new Statistics_Formatter($startDate, $endDate, $groupId);
-//    $em->processEvent('statistics_collector', $params);
-
-//    var_dump($startDate, $endDate);
+    echo "End date : $endDate \n\n";
 
     $dao          = new Statistics_ServicesUsageDao(CodendiDataAccess::instance(), $startDate, $endDate);
     $csv_exporter = new Statistics_Services_UsageFormatter($startDate, $endDate);
@@ -132,24 +123,24 @@ if (!$error && $request->exist('export')) {
     $GLOBALS['HTML']->header(array('title' => $title));
     echo '<h1>'.$title.'</h1>';
 
-    echo '<form name="form_scm_stats" method="get">';
+    echo '<form name="form_service_usage_stats" method="get">';
     echo '<table>';
     echo '<tr>';
     echo '<td>';
-    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_start').'</b>';
+    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'start_date').'</b>';
     echo '</td><td>';
-    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_end').'</b>';
+    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'end_date').'</b>';
     echo '</td>';
     echo '</tr><tr>';
     echo '<td>';
     list($timestamp,) = util_date_to_unixtime($startDate);
-    echo html_field_date('start', $startDate, false, 10, 10, 'form_scm_stats', false);
+    echo html_field_date('start', $startDate, false, 10, 10, 'form_service_usage_stats', false);
     echo '</td><td>';
     list($timestamp,) = util_date_to_unixtime($endDate);
-    echo html_field_date('end', $endDate, false, 10, 10, 'form_scm_stats', false);
+    echo html_field_date('end', $endDate, false, 10, 10, 'form_service_usage_stats', false);
     echo '</td>';
     echo '</tr><tr><td>';
-    echo '<input type="submit" name="export" value="'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_export_button').'" >';
+    echo '<input type="submit" name="export" value="'.$GLOBALS['Language']->getText('plugin_statistics', 'csv_export_button').'" >';
     echo '</td>';
     echo '</tr>';
     echo '</table>';
