@@ -43,7 +43,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getNameOfActiveProjectsBeforeEndDate() {
-        $sql = "SELECT group_id, group_name
+        $sql = "SELECT group_id, group_name AS result
             FROM groups
             WHERE status='A'
                AND register_time <= $this->end_date
@@ -54,7 +54,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getDescriptionOfActiveProjectsBeforeEndDate() {
-        $sql = "SELECT group_id, REPLACE(REPLACE (short_description, CHAR(13),' '),CHAR(10),' ')
+        $sql = "SELECT group_id, REPLACE(REPLACE (short_description, CHAR(13),' '),CHAR(10),' ') AS result
                 FROM groups
                 WHERE status='A'
                     AND register_time <= $this->end_date
@@ -65,7 +65,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getRegisterTimeOfActiveProjectsBeforeEndDate() {
-        $sql = "SELECT group_id, FROM_UNIXTIME(register_time,'%Y-%m-%d')
+        $sql = "SELECT group_id, FROM_UNIXTIME(register_time,'%Y-%m-%d') AS result
                 FROM groups
                 WHERE status='A'
                     AND register_time <= $this->end_date
@@ -76,7 +76,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getInfosFromTroveGroupLink() {
-        $sql = "SELECT tgl.group_id, tc.shortname
+        $sql = "SELECT tgl.group_id, tc.shortname AS result
                 FROM trove_group_link tgl, trove_cat tc
                 WHERE tgl.trove_cat_root='281'
                     AND tc.root_parent=tgl.trove_cat_root
@@ -88,7 +88,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getAdministrators() {
-        $sql = "SELECT g.group_id, u.user_name
+        $sql = "SELECT g.group_id, u.user_name AS result
                 FROM user_group g, user u
                 WHERE g.user_id=u.user_id
                     AND u.status='A'
@@ -99,7 +99,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getAdministratorsRealNames() {
-        $sql = "SELECT g.group_id, u.realname
+        $sql = "SELECT g.group_id, u.realname AS result
                 FROM user_group g, user u
                 WHERE g.user_id=u.user_id
                     AND u.status='A'
@@ -110,7 +110,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getAdministratorsEMails() {
-        $sql = "SELECT g.group_id, u.email
+        $sql = "SELECT g.group_id, u.email AS result
                 FROM user_group g, user u
                 WHERE g.user_id=u.user_id
                     AND u.status='A'
@@ -121,7 +121,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getCVSActivities() {
-        $sql = "SELECT group_id, SUM(cvs_commits)
+        $sql = "SELECT group_id, SUM(cvs_commits) AS result
                 FROM group_cvs_full_history
                 WHERE day <= $this->end_date
                     AND day >= $this->start_date
@@ -132,7 +132,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getSVNActivities() {
-        $sql = "SELECT group_id,COUNT(*)
+        $sql = "SELECT group_id,COUNT(*) AS result
                 FROM  svn_commits
                 WHERE date <= $this->end_date
                     AND date >= $this->start_date
@@ -143,7 +143,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getGitActivities() {
-        $sql = "SELECT project_id, count(*)
+        $sql = "SELECT project_id AS group_id, count(*) AS result
                 FROM  plugin_git_log
                     INNER JOIN plugin_git USING(repository_id)
                 WHERE push_date <= $this->end_date
@@ -155,7 +155,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getFilesPublished() {
-        $sql = "SELECT p.group_id, COUNT(file_id )
+        $sql = "SELECT p.group_id, COUNT(file_id ) AS result
                 FROM frs_file f,frs_package p,frs_release r
                 WHERE f.release_id= r.release_id
                     AND r.package_id= p.package_id
@@ -168,7 +168,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getDistinctFilesPublished() {
-        $sql = "SELECT p.group_id, COUNT( DISTINCT file_id )
+        $sql = "SELECT p.group_id, COUNT( DISTINCT file_id ) AS result
                 FROM frs_file f,frs_package p,frs_release r
                 WHERE f.release_id = r.release_id
                     AND r.package_id = p.package_id
@@ -180,7 +180,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getNumberOfDownloadedFilesBeforeEndDate() {
-        $sql = "SELECT p.group_id, COUNT(filerelease_id )
+        $sql = "SELECT p.group_id, COUNT(filerelease_id ) AS result
                 FROM filedownload_log l,frs_package p,frs_release r
                 WHERE l.filerelease_id = r.release_id
                     AND r.package_id = p.package_id
@@ -192,7 +192,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getNumberOfDownloadedFilesBetweenStartDateAndEndDate() {
-        $sql = "SELECT p.group_id,SUM(downloads )
+        $sql = "SELECT p.group_id,SUM(downloads ) AS result
                 FROM frs_dlstats_file_agg fdl, frs_file f,frs_package p,frs_release r
                 WHERE fdl.file_id=f.file_id AND f.release_id = r.release_id
                     AND r.package_id = p.package_id
@@ -205,7 +205,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getNumberOfActiveMailingLists() {
-        $sql = "SELECT group_id, COUNT( DISTINCT group_list_id )
+        $sql = "SELECT group_id, COUNT( DISTINCT group_list_id ) AS result
                 FROM mail_group_list
                 WHERE is_public != 9
                 GROUP BY group_id";
@@ -215,7 +215,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getNumberOfInactiveMailingLists() {
-        $sql = "SELECT group_id, COUNT( DISTINCT group_list_id )
+        $sql = "SELECT group_id, COUNT( DISTINCT group_list_id ) AS result
                 FROM mail_group_list
                 WHERE is_public = 9
                 GROUP BY group_id";
@@ -225,7 +225,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getNumberOfActiveForums() {
-        $sql = "SELECT group_id,COUNT( DISTINCT fg.group_forum_id )
+        $sql = "SELECT group_id,COUNT( DISTINCT fg.group_forum_id ) AS result
                 FROM forum_group_list fg, forum f
                 WHERE fg.group_forum_id =f.group_forum_id
                     AND f.date <= $this->end_date
@@ -237,7 +237,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getNumberOfInactiveForums() {
-        $sql = "SELECT group_id,COUNT( DISTINCT fg.group_forum_id )
+        $sql = "SELECT group_id,COUNT( DISTINCT fg.group_forum_id ) AS result
                 FROM forum_group_list fg, forum f
                 WHERE fg.group_forum_id =f.group_forum_id
                     AND f.date <= $this->end_date
@@ -249,7 +249,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getForumsActivitiesBetweenStartDateAndEndDate() {
-        $sql = "SELECT group_id,COUNT(DISTINCT f.msg_id )
+        $sql = "SELECT group_id,COUNT(DISTINCT f.msg_id ) AS result
                 FROM forum_group_list fg, forum f
                 WHERE fg.group_forum_id =f.group_forum_id
                     AND f.date <= $this->end_date
@@ -261,7 +261,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getNumberOfWikiDocuments() {
-        $sql = "SELECT group_id, COUNT( DISTINCT id)
+        $sql = "SELECT group_id, COUNT( DISTINCT id) AS result
                 FROM wiki_group_list
                 GROUP BY group_id";
 
@@ -270,7 +270,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate() {
-        $sql = "SELECT group_id, COUNT(pagename)
+        $sql = "SELECT group_id, COUNT(pagename) AS result
                 FROM wiki_log
                 WHERE time <= $this->end_date
                     AND time >= $this->start_date
@@ -281,7 +281,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getNumberOfDistinctWikiPages() {
-        $sql = "SELECT group_id, COUNT( DISTINCT pagename)
+        $sql = "SELECT group_id, COUNT( DISTINCT pagename) AS result
                 FROM wiki_log
                 WHERE time <= $this->end_date
                 GROUP BY group_id";
@@ -291,7 +291,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getNumberOfOpenArtifactsBetweenStartDateAndEndDate() {
-        $sql = "SELECT artifact_group_list.group_id, COUNT(artifact.artifact_id)
+        $sql = "SELECT artifact_group_list.group_id, COUNT(artifact.artifact_id) AS result
                 FROM artifact_group_list, artifact
                 WHERE ( open_date >= $this->start_date
                     AND open_date < $this->end_date

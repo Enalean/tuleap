@@ -89,42 +89,33 @@ if (!$error && $request->exist('export')) {
     $dao          = new Statistics_ServicesUsageDao(CodendiDataAccess::instance(), $startDate, $endDate);
     $csv_exporter = new Statistics_Services_UsageFormatter($startDate, $endDate);
 
-    echo $csv_exporter->exportCSV($dao->getNameOfActiveProjectsBeforeEndDate());
-
-//    var_dump($dao->getNameOfActiveProjectsBeforeEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getDescriptionOfActiveProjectsBeforeEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getRegisterTimeOfActiveProjectsBeforeEndDate());
-//    echo '<hr/>';
+//    echo $csv_exporter->exportCSV($dao->getNameOfActiveProjectsBeforeEndDate(), "Projet");
+//    echo $csv_exporter->exportCSV($dao->getDescriptionOfActiveProjectsBeforeEndDate(), "Description");
+//    echo $csv_exporter->exportCSV($dao->getRegisterTimeOfActiveProjectsBeforeEndDate(), "Cree le");
 //    var_dump($dao->getInfosFromTroveGroupLink());
 //    echo '<hr/>';
-//    var_dump($dao->getAdministrators());
-//    echo '<hr/>';
-//    var_dump($dao->getAdministratorsRealNames());
-//    echo '<hr/>';
-//    var_dump($dao->getAdministratorsEMails());
-//    echo '<hr/>';
-//    var_dump($dao->getCVSActivities());
-//    echo '<hr/>';
-//    var_dump($dao->getSVNActivities());
-//    echo '<hr/>';
-//    var_dump($dao->getGitActivities());
-//    echo '<hr/>';
-//    var_dump($dao->getFilesPublished());
-//    echo '<hr/>';
-//    var_dump($dao->getDistinctFilesPublished());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfDownloadedFilesBeforeEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfDownloadedFilesBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfActiveMailingLists());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfInactiveMailingLists());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfActiveForums());
-//    echo '<hr/>';
+
+    $csv_exporter->buildDatas($dao->getNameOfActiveProjectsBeforeEndDate(), "Project");
+    $csv_exporter->buildDatas($dao->getDescriptionOfActiveProjectsBeforeEndDate(), "Description");
+    $csv_exporter->buildDatas($dao->getRegisterTimeOfActiveProjectsBeforeEndDate(), "Creation date");
+    $csv_exporter->buildDatas($dao->getInfosFromTroveGroupLink(), "Organization");
+    $csv_exporter->buildDatas($dao->getAdministrators(), "Created by");
+    $csv_exporter->buildDatas($dao->getAdministratorsRealNames(), "Created by (Real name)");
+    $csv_exporter->buildDatas($dao->getAdministratorsEMails(), "Created by (Email)");
+    $csv_exporter->buildDatas($dao->getCVSActivities(), "CVS activities");
+    $csv_exporter->buildDatas($dao->getSVNActivities(), "SVN activities");
+    $csv_exporter->buildDatas($dao->getGitActivities(), "GIT activities");
+    $csv_exporter->buildDatas($dao->getFilesPublished(), "Files published");
+    $csv_exporter->buildDatas($dao->getDistinctFilesPublished(), "Distinct files published");
+    $csv_exporter->buildDatas($dao->getNumberOfDownloadedFilesBeforeEndDate(), "Downloaded files (before end date)");
+    $csv_exporter->buildDatas($dao->getNumberOfDownloadedFilesBetweenStartDateAndEndDate(), "Downloaded files (between start date and end date)");
+    $csv_exporter->buildDatas($dao->getNumberOfActiveMailingLists(), "Active mailing lists");
+    $csv_exporter->buildDatas($dao->getNumberOfInactiveMailingLists(), "Inactive mailing lists");
+    $csv_exporter->buildDatas($dao->getNumberOfActiveForums(), "Active forums");
+
+
+    echo $csv_exporter->exportCSV();
+
 //    var_dump($dao->getNumberOfInactiveForums());
 //    echo '<hr/>';
 //    var_dump($dao->getForumsActivitiesBetweenStartDateAndEndDate());

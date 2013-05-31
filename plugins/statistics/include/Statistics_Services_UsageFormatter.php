@@ -23,15 +23,49 @@ require_once 'Statistics_Formatter.class.php';
 
 class Statistics_Services_UsageFormatter extends Statistics_Formatter {
 
+    private $datas;
+    private $title;
+
     public function __construct($startDate, $endDate) {
         parent::__construct($startDate, $endDate);
+        $this->datas = array();
+        $this->title = array();
     }
 
-    public function exportCSV(array $data) {
-        $this->addLine(array_keys($data[0]));
+    public function exportCSV() {
+        $this->clearContent();
+        $this->addLine(array_values($this->title));
+        foreach ($this->datas as $value) {
+            $this->addLine(array_values($value));
+        }
         $this->addEmptyLine();
-
         return $this->content;
+    }
+
+    public function buildDatas(array $query_result, $title) {
+        $this->initiateDatas($query_result);
+        $this->title[] = $title;
+
+        $ids = array_keys($this->datas);
+        foreach ($ids as $id) {
+            $this->datas[$id][$title] = 0;
+        }
+
+        foreach ($query_result as $data) {
+            if (array_key_exists($data['group_id'], $this->datas)) {
+                $this->datas[$data['group_id']][$title] = $data['result'];
+            }
+        }
+    }
+
+    private function initiateDatas(array $query_result) {
+        if (! empty($this->datas)) {
+            return;
+        }
+
+        foreach ($query_result as $data) {
+            $this->datas[$data['group_id']] = array();
+        }
     }
 }
 
