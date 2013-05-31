@@ -70,9 +70,9 @@ class Tracker_UgroupPermissionsConsistencyChecker {
 
         $diff = array_diff($template_ugroups_names, $target_ugroups_names);
         if ($diff) {
-            $this->messenger->ugroupsMissing();
+            $this->messenger->ugroupsMissing($diff);
         } else {
-            $this->messenger->ugroupsAreTheSame();
+            $this->messenger->ugroupsAreTheSame($template_ugroups_names);
         }
     }
 

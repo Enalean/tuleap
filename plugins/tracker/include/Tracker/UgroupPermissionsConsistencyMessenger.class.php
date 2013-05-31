@@ -27,15 +27,25 @@
  */
 class Tracker_UgroupPermissionsConsistencyMessenger {
 
-    public function ugroupsAreTheSame() {
-        echo '<div class="alert alert-info">This template use ugroups that seems to be defined in your project.</div>';
+    public function ugroupsAreTheSame($ugroup_names) {
+        $ugroup_names = $this->formatUGroupNames($ugroup_names);
+        echo '<div class="alert alert-info">';
+        echo 'This template usset permissions on user groups that seems to have their counterpart in your project: '. $ugroup_names;
+        echo '</div>';
     }
 
-    public function ugroupsMissing() {
-        echo '<div class="alert alert-warning">This template use ugroups that are not defined in your project. Perhaps it will make some chocapics.</div>';
+    public function ugroupsMissing($missing_ugroup_names) {
+        $missing_ugroup_names = $this->formatUGroupNames($missing_ugroup_names);
+        echo '<div class="alert alert-warning">';
+        echo 'This template set permissions on user groups that are not defined in your project. Perhaps it will make some chocapics: '. $missing_ugroup_names;
+        echo '</div>';
     }
 
     public function allIsWell() {
+    }
+
+    private function formatUGroupNames($ugroup_names) {
+        return '<ul><li>'. implode('</li><li>', $ugroup_names) .'</li></ul>';
     }
 }
 ?>
