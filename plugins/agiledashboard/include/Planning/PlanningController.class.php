@@ -61,8 +61,9 @@ class Planning_Controller extends MVC2_PluginController {
     }
     
     public function index() {
+        $project_id = $this->request->getProject()->getID();
         $plannings = $this->getPlanningsShortAccess($this->group_id);
-        $presenter = new Planning_IndexPresenter($plannings, $this->plugin_theme_path);
+        $presenter = new Planning_IndexPresenter($plannings, $this->plugin_theme_path, $project_id);
         $this->render('index', $presenter);
     }
     
