@@ -76,15 +76,19 @@ class Planning_TopMilestone  implements Planning_Milestone {
             }
         }
 
+        $tracker = $trackers[$top_tracker_id];
+
         $this->planning = new Planning(
                 1,
                 'name',
                 $this->project->getID(),
                 'my backlog_title',
                 'my plan title',
-                null,
-                $top_tracker_id
+                $top_tracker_id,
+                null
                 );
+
+                $this->planning->setBacklogTracker($tracker);
     }
 
     /**

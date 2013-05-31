@@ -41,21 +41,22 @@ class AgileDashboard_Milestone_Pane_TopContent_PresenterBuilder {
 
     public function getMilestoneContentPresenter(PFUser $user, Planning_Milestone $milestone) {
         $redirect_paremeter   = new Planning_MilestoneRedirectParameter();
-     //   $backlog_strategy     = $this->strategy_factory->getBacklogStrategy($milestone);
+        $backlog_strategy     = $this->strategy_factory->getBacklogStrategy($milestone);
+        $item_tracker         = $backlog_strategy->getItemTracker();
+        
         $redirect_to_self     = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_Content_ContentPaneInfo::IDENTIFIER);
 
-     //   $can_add_backlog_item = $this->canAddBacklogItem($user, $milestone);
+        $can_add_backlog_item = $this->canAddBacklogItem($user, $milestone);
 
-  //      $item_tracker         = $backlog_strategy->getItemTracker();
-       // $new_backlog_item_url = $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($item_tracker).'&'.$redirect_to_self;
+//        $new_backlog_item_url = $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($item_tracker).'&'.$redirect_to_self;
 
-      //  $todo_collection = $this->collection_factory->getTodoCollection($user, $milestone, $backlog_strategy, $redirect_to_self);
+//        $todo_collection = $this->collection_factory->getTodoCollection($user, $milestone, $backlog_strategy, $redirect_to_self);
 
         $content_presenter = new AgileDashboard_Milestone_Pane_TopContent_Presenter(
             array(),//$todo_collection,
             array(),//$this->collection_factory->getDoneCollection($user, $milestone, $backlog_strategy, $redirect_to_self),
             'par', //$todo_collection->getParentItemName(),
-            'name', //$item_tracker->getName(),
+            $item_tracker->getName(),
             true,//$can_add_backlog_item,
             'www'//$new_backlog_item_url
         );
@@ -79,7 +80,7 @@ class AgileDashboard_Milestone_Pane_TopContent_PresenterBuilder {
         return $create_new;
     }
 
-    private function canAddBacklogItem(PFUser $user, Planning_ArtifactMilestone $milestone) {
+    private function canAddBacklogItem(PFUser $user, Planning_Milestone $milestone) {
         $backlog_tracker = $milestone->getPlanning()->getBacklogTracker();
         if ($backlog_tracker->userCanSubmitArtifact($user)) {
             return true;
