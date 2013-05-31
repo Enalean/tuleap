@@ -32,6 +32,9 @@ class Statistics_Services_UsageFormatter {
     /** @var Statistics_Formatter */
     private $stats_formatter;
 
+    const GROUP_ID = 'group_id';
+    const VALUES   = 'result';
+
     public function __construct(Statistics_Formatter $stats_formatter) {
         $this->stats_formatter = $stats_formatter;
         $this->datas           = array();
@@ -75,7 +78,7 @@ class Statistics_Services_UsageFormatter {
     private function addValuesFromQueryResultForTitle(array $query_result, $title) {
         foreach ($query_result as $data) {
             if ($this->canAddValueFromQuery($data)) {
-                $this->datas[$data['group_id']][$title] = $data['result'];
+                $this->datas[$data[self::GROUP_ID]][$title] = $data[self::VALUES];
             }
         }
     }
@@ -86,12 +89,12 @@ class Statistics_Services_UsageFormatter {
         }
 
         foreach ($query_result as $data) {
-            $this->datas[$data['group_id']] = array();
+            $this->datas[$data[self::GROUP_ID]] = array();
         }
     }
 
     private function canAddValueFromQuery(array $data) {
-        return array_key_exists($data['group_id'], $this->datas) && isset($data['result']);
+        return array_key_exists($data[self::GROUP_ID], $this->datas) && isset($data[self::VALUES]);
     }
 }
 
