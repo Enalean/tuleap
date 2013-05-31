@@ -416,7 +416,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         $database_name = $this->getMediawikiDatabaseName($project);
 
         $sql = "USE $database_name;
-                SELECT COUNT(page_id)
+                SELECT COUNT(1)
                 FROM mwpage";
 
         $result = $this->retrieve($sql);
@@ -429,12 +429,29 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         $end_date      = date("YmdHis", $this->end_date);
 
         $sql = "USE $database_name;
-                SELECT COUNT(page_id)
+                SELECT COUNT(1)
                 FROM mwpage
                 WHERE
                     page_touched >= $start_date
                     AND
                     page_touched <= $end_date
+               ";
+
+        $result = $this->retrieve($sql);
+        return $result;
+    }
+
+    public function getCreatedPagesNumberSinceStartDate(PFO_Project $project) {
+        $database_name = $this->getMediawikiDatabaseName($project);
+        $start_date    = date("YmdHis", $this->start_date);
+
+        $sql = "USE $database_name;
+                SELECT COUNT(1)
+                FROM mwrevision
+                WHERE
+                    rev_parent_id=0
+                    AND
+                    rev_timestamp >= $start_date
                ";
 
         $result = $this->retrieve($sql);
