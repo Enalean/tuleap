@@ -47,12 +47,6 @@ class Tracker_PermissionsManager {
         $this->injectUGroupIdsThatHavePermmission($ugroup_ids, $tracker, 'PLUGIN_TRACKER_ADMIN');
         $this->injectUGroupIdsThatHavePermmission($ugroup_ids, $tracker, 'PLUGIN_TRACKER_FIELD_%');
 
-        $project = $tracker->getProject();
-        $ugroups = array();
-        foreach ($ugroup_ids as $ugroup_id) {
-            $ugroups[] = $this->ugroup_manager->getUGroup($project, $ugroup_id);
-        }
-
         return $this->getUGroups($tracker, $ugroup_ids);
     }
 
