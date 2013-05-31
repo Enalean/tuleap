@@ -114,7 +114,7 @@ class Planning_MilestoneFactory {
      * 
      * @return Planning_Milestone
      */
-    public function getBareMilestone(PFUser $user, Project $project, $planning_id, $artifact_id) {
+    public function getBareMilestone(PFUser $user, Project $project, $planning_id, $artifact_id, $is_top) {
         $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
 
@@ -123,6 +123,8 @@ class Planning_MilestoneFactory {
             $milestone->setAncestors($this->getMilestoneAncestors($user, $milestone));
             $this->updateMilestoneContextualInfo($user, $milestone);
             return $milestone;
+        } elseif ($is_top) {
+            return new Planning_TopMilestone($project);
         } else {
             return new Planning_NoMilestone($project, $planning);
         }
