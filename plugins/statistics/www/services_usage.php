@@ -45,7 +45,7 @@ $startDate = $request->get('start');
 if ($request->valid($vStartDate)) {
     $startDate = $request->get('start');
 } else {
-    $startDate = date('Y-m-d', strtotime('-1 year'));
+    $startDate = date('Y-m-d', strtotime('-1 month'));
 }
 
 $vEndDate = new Valid('end');
@@ -55,7 +55,7 @@ $endDate = $request->get('end');
 if ($request->valid($vEndDate)) {
     $endDate = $request->get('end');
 } else {
-    $endDate = date('Y-m-d', strtotime('+1 month'));
+    $endDate = date('Y-m-d');
 }
 
 if ($startDate >= $endDate) {
