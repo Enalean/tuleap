@@ -27,8 +27,12 @@ class Tracker_PermissionsManager {
     /** @var PermissionsManager */
     private $permissions_manager;
 
-    public function __construct(PermissionsManager $permissions_manager) {
+    /** @var UGroupManager */
+    private $ugroup_manager;
+
+    public function __construct(PermissionsManager $permissions_manager, UGroupManager $ugroup_manager) {
         $this->permissions_manager = $permissions_manager;
+        $this->ugroup_manager      = $ugroup_manager;
     }
 
     /**
@@ -38,7 +42,37 @@ class Tracker_PermissionsManager {
      * @return UGroup[]
      */
     public function getListOfInvolvedStaticUgroups(Tracker $tracker) {
-        die('Not Yet Implemented');
+        $ugroup_ids = array();
+        $this->injectUGroupIdsThatHavePermmission($ugroup_ids, $tracker, 'PLUGIN_TRACKER_ACCESS_%');
+        $this->injectUGroupIdsThatHavePermmission($ugroup_ids, $tracker, 'PLUGIN_TRACKER_ADMIN');
+        $this->injectUGroupIdsThatHavePermmission($ugroup_ids, $tracker, 'PLUGIN_TRACKER_FIELD_%');
+
+        $project = $tracker->getProject();
+        $ugroups = array();
+        foreach ($ugroup_ids as $ugroup_id) {
+            $ugroups[] = $this->ugroup_manager->getUGroup($project, $ugroup_id);
+        }
+
+        return $this->getUGroups($tracker, $ugroup_ids);
+    }
+
+    private function injectUGroupIdsThatHavePermmission(&$ugroup_ids, Tracker $tracker, $permission_type) {
+        $ugroup_ids = array_unique(
+            array_merge(
+                $ugroup_ids,
+                $this->permissions_manager->getAuthorizedUgroupIds($tracker->getId(), $permission_type)
+            )
+        );
+    }
+
+    private function getUGroups(Tracker $tracker, $ugroup_ids) {
+        $project = $tracker->getProject();
+        $ugroups = array();
+        foreach ($ugroup_ids as $ugroup_id) {
+            $ugroups[] = $this->ugroup_manager->getUGroup($project, $ugroup_id);
+        }
+
+        return $ugroups;
     }
 }
 ?>
