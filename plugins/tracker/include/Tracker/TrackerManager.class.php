@@ -168,7 +168,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
 
                                 $messenger           = new Tracker_UgroupPermissionsConsistencyMessenger();
                                 $ugroup_manager      = new UGroupManager();
-                                $permissions_manager = new Tracker_PermissionsManager(PermissionsManager::instance(), $ugroup_manager);
+                                $dao                 = new Tracker_PermissionsDao();
+                                $permissions_manager = new Tracker_PermissionsManager(PermissionsManager::instance(), $dao, $ugroup_manager);
 
                                 $checker = new Tracker_UgroupPermissionsConsistencyChecker($permissions_manager, $ugroup_manager, $messenger);
                                 $checker->checkConsistency($tracker, $project);

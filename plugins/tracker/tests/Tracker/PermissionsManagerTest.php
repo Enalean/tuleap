@@ -26,6 +26,7 @@ require_once dirname(__FILE__) .'/../bootstrap.php';
 
 class Tracker_PermissionsManagerTest extends TuleapTestCase {
 
+    protected $dao;
     protected $template_tracker;
     protected $target_project;
     protected $permissions_manager;
@@ -52,13 +53,15 @@ class Tracker_PermissionsManagerTest extends TuleapTestCase {
         stub($ugroup_manager)->getUGroup($this->project, $this->ugroup_support_id)->returns($this->ugroup_support);
         stub($ugroup_manager)->getUGroup($this->project, UGroup::PROJECT_MEMBERS)->returns(mock('UGroup'));
 
-        $this->tracker_permissions_manager = new Tracker_PermissionsManager($this->permissions_manager, $ugroup_manager);
+        $this->dao = mock('Tracker_PermissionsDao');
+
+        $this->tracker_permissions_manager = new Tracker_PermissionsManager($this->permissions_manager, $this->dao, $ugroup_manager);
     }
 
     public function itReturnsTheListOfUGroupsThatHaveATrackerPermissionsOnTheGivenTracker() {
         stub($this->permissions_manager)->getAuthorizedUgroupIds($this->tracker_id, 'PLUGIN_TRACKER_ACCESS_%')->returns(array($this->ugroup_dev_id));
         stub($this->permissions_manager)->getAuthorizedUgroupIds($this->tracker_id, 'PLUGIN_TRACKER_ADMIN')->returns(array($this->ugroup_support_id));
-        stub($this->permissions_manager)->getAuthorizedUgroupIds($this->tracker_id, 'PLUGIN_TRACKER_FIELD_%')->returns(array());
+        stub($this->dao)->getAuthorizedUgroupIdsForFields($this->tracker_id)->returns(array());
 
         $ugroups = $this->tracker_permissions_manager->getListOfInvolvedStaticUgroups($this->tracker);
 
@@ -68,7 +71,7 @@ class Tracker_PermissionsManagerTest extends TuleapTestCase {
     public function itReturnsTheListOfUGroupsThatHaveAFieldPermissionsOnTheGivenTracker() {
         stub($this->permissions_manager)->getAuthorizedUgroupIds($this->tracker_id, 'PLUGIN_TRACKER_ACCESS_%')->returns(array($this->ugroup_dev_id));
         stub($this->permissions_manager)->getAuthorizedUgroupIds($this->tracker_id, 'PLUGIN_TRACKER_ADMIN')->returns(array());
-        stub($this->permissions_manager)->getAuthorizedUgroupIds($this->tracker_id, 'PLUGIN_TRACKER_FIELD_%')->returns(array($this->ugroup_support_id));
+        stub($this->dao)->getAuthorizedUgroupIdsForFields($this->tracker_id)->returns(array($this->ugroup_support_id));
 
         $ugroups = $this->tracker_permissions_manager->getListOfInvolvedStaticUgroups($this->tracker);
 
@@ -78,7 +81,7 @@ class Tracker_PermissionsManagerTest extends TuleapTestCase {
     public function itDoesNotDuplicateGroups() {
         stub($this->permissions_manager)->getAuthorizedUgroupIds($this->tracker_id, 'PLUGIN_TRACKER_ACCESS_%')->returns(array($this->ugroup_dev_id));
         stub($this->permissions_manager)->getAuthorizedUgroupIds($this->tracker_id, 'PLUGIN_TRACKER_ADMIN')->returns(array($this->ugroup_support_id));
-        stub($this->permissions_manager)->getAuthorizedUgroupIds($this->tracker_id, 'PLUGIN_TRACKER_FIELD_%')->returns(array($this->ugroup_dev_id, $this->ugroup_support_id));
+        stub($this->dao)->getAuthorizedUgroupIdsForFields($this->tracker_id)->returns(array($this->ugroup_dev_id, $this->ugroup_support_id));
 
         $ugroups = $this->tracker_permissions_manager->getListOfInvolvedStaticUgroups($this->tracker);
 
@@ -88,7 +91,7 @@ class Tracker_PermissionsManagerTest extends TuleapTestCase {
     public function itRemoveDynamicUGroups() {
         stub($this->permissions_manager)->getAuthorizedUgroupIds($this->tracker_id, 'PLUGIN_TRACKER_ACCESS_%')->returns(array(UGroup::PROJECT_MEMBERS));
         stub($this->permissions_manager)->getAuthorizedUgroupIds($this->tracker_id, 'PLUGIN_TRACKER_ADMIN')->returns(array());
-        stub($this->permissions_manager)->getAuthorizedUgroupIds($this->tracker_id, 'PLUGIN_TRACKER_FIELD_%')->returns(array());
+        stub($this->dao)->getAuthorizedUgroupIdsForFields($this->tracker_id)->returns(array());
 
         $ugroups = $this->tracker_permissions_manager->getListOfInvolvedStaticUgroups($this->tracker);
 

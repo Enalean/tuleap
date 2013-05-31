@@ -30,9 +30,13 @@ class Tracker_PermissionsManager {
     /** @var UGroupManager */
     private $ugroup_manager;
 
-    public function __construct(PermissionsManager $permissions_manager, UGroupManager $ugroup_manager) {
+    /** @var Tracker_PermissionsDao */
+    private $dao;
+
+    public function __construct(PermissionsManager $permissions_manager, Tracker_PermissionsDao $dao, UGroupManager $ugroup_manager) {
         $this->permissions_manager = $permissions_manager;
         $this->ugroup_manager      = $ugroup_manager;
+        $this->dao                 = $dao;
     }
 
     /**
@@ -45,13 +49,24 @@ class Tracker_PermissionsManager {
         $ugroup_ids = array();
         $this->injectUGroupIdsThatHavePermmission($ugroup_ids, $tracker, 'PLUGIN_TRACKER_ACCESS_%');
         $this->injectUGroupIdsThatHavePermmission($ugroup_ids, $tracker, 'PLUGIN_TRACKER_ADMIN');
-        $this->injectUGroupIdsThatHavePermmission($ugroup_ids, $tracker, 'PLUGIN_TRACKER_FIELD_%');
+        $this->injectUGroupIdsThatHaveFieldPermmission($ugroup_ids, $tracker);
 
         return $this->getUGroups($tracker, $ugroup_ids);
     }
 
     private function injectUGroupIdsThatHavePermmission(&$ugroup_ids, Tracker $tracker, $permission_type) {
         $ugroup_ids_to_add = $this->permissions_manager->getAuthorizedUgroupIds($tracker->getId(), $permission_type);
+        $ugroup_ids_to_add = array_filter($ugroup_ids_to_add, array($this, 'isStaticUgroup'));
+        $ugroup_ids = array_unique(
+            array_merge(
+                $ugroup_ids,
+                $ugroup_ids_to_add
+            )
+        );
+    }
+
+    private function injectUGroupIdsThatHaveFieldPermmission(&$ugroup_ids, Tracker $tracker) {
+        $ugroup_ids_to_add = $this->dao->getAuthorizedUgroupIdsForFields($tracker->getId());
         $ugroup_ids_to_add = array_filter($ugroup_ids_to_add, array($this, 'isStaticUgroup'));
         $ugroup_ids = array_unique(
             array_merge(
