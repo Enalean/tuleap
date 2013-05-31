@@ -30,14 +30,14 @@ class Tracker_UgroupPermissionsConsistencyMessenger {
     public function ugroupsAreTheSame($ugroup_names) {
         $ugroup_names = $this->formatUGroupNames($ugroup_names);
         echo '<div class="alert alert-info">';
-        echo 'This template usset permissions on user groups that seems to have their counterpart in your project: '. $ugroup_names;
+        echo $GLOBALS['Language']->getText('plugin_tracker', 'info_same_ugroups', $ugroup_names);
         echo '</div>';
     }
 
     public function ugroupsMissing($missing_ugroup_names) {
         $missing_ugroup_names = $this->formatUGroupNames($missing_ugroup_names);
         echo '<div class="alert alert-warning">';
-        echo 'This template set permissions on user groups that are not defined in your project. Perhaps it will make some chocapics: '. $missing_ugroup_names;
+        echo $GLOBALS['Language']->getText('plugin_tracker', 'missing_ugroups', $missing_ugroup_names);
         echo '</div>';
     }
 

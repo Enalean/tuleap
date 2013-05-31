@@ -1455,3 +1455,5 @@ project_admin_utils	tracker_date_reminder_before_submittedOn	Impossible d'ajoute
 project_admin_utils	tracker_date_reminder_duplicated	Impossible de dupliquer un rappel sur date de tracker
 
 plugin_tracker	access_burndown	Accéder au burndown
+plugin_tracker	info_same_ugroups	Ce template a des permissions sur des groupes d'utilisateurs qui semblent avoir leur équivalent dans votre projet : $1
+plugin_tracker	missing_ugroups	Ce template a des permissions sur des groupes d'utilisateurs qui ne sont pas défini dans votre projet : $1 Ça va faire des chocapics !
