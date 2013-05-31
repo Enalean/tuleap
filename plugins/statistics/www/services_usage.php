@@ -76,6 +76,8 @@ if (!$error && $request->exist('export')) {
 
     header('Content-Type: text/csv');
     header('Content-Disposition: filename=services_usage_'.$startDate.'_'.$endDate.'.csv');
+    echo "Start date : $startDate \n";
+    echo "End date : $endDate \n";
 //    $statsSvn = new Statistics_Formatter_Svn($startDate, $endDate, $groupId);
 //    echo $statsSvn->getStats();
 //    $statsCvs = new Statistics_Formatter_Cvs($startDate, $endDate, $groupId);
@@ -88,12 +90,6 @@ if (!$error && $request->exist('export')) {
 
     $dao          = new Statistics_ServicesUsageDao(CodendiDataAccess::instance(), $startDate, $endDate);
     $csv_exporter = new Statistics_Services_UsageFormatter($startDate, $endDate);
-
-//    echo $csv_exporter->exportCSV($dao->getNameOfActiveProjectsBeforeEndDate(), "Projet");
-//    echo $csv_exporter->exportCSV($dao->getDescriptionOfActiveProjectsBeforeEndDate(), "Description");
-//    echo $csv_exporter->exportCSV($dao->getRegisterTimeOfActiveProjectsBeforeEndDate(), "Cree le");
-//    var_dump($dao->getInfosFromTroveGroupLink());
-//    echo '<hr/>';
 
     $csv_exporter->buildDatas($dao->getNameOfActiveProjectsBeforeEndDate(), "Project");
     $csv_exporter->buildDatas($dao->getDescriptionOfActiveProjectsBeforeEndDate(), "Description");
@@ -112,41 +108,24 @@ if (!$error && $request->exist('export')) {
     $csv_exporter->buildDatas($dao->getNumberOfActiveMailingLists(), "Active mailing lists");
     $csv_exporter->buildDatas($dao->getNumberOfInactiveMailingLists(), "Inactive mailing lists");
     $csv_exporter->buildDatas($dao->getNumberOfActiveForums(), "Active forums");
-
+    $csv_exporter->buildDatas($dao->getNumberOfInactiveForums(), "Inactive forums");
+    $csv_exporter->buildDatas($dao->getForumsActivitiesBetweenStartDateAndEndDate(), "Forums activities");
+    $csv_exporter->buildDatas($dao->getNumberOfWikiDocuments(), "Wiki documents");
+    $csv_exporter->buildDatas($dao->getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate(), "Modified wiki pages");
+    $csv_exporter->buildDatas($dao->getNumberOfDistinctWikiPages(), "Distinct wiki pages");
+    $csv_exporter->buildDatas($dao->getNumberOfOpenArtifactsBetweenStartDateAndEndDate(), "Open artifacts");
+    $csv_exporter->buildDatas($dao->getNumberOfClosedArtifactsBetweenStartDateAndEndDate(), "Closed artifacts");
+    $csv_exporter->buildDatas($dao->getNumberOfUserAddedBetweenStartDateAndEndDate(), "Users added");
+    $csv_exporter->buildDatas($dao->getProjectCode(), "Project code");
+    $csv_exporter->buildDatas($dao->getAddedDocumentBetweenStartDateAndEndDate(), "Added documents");
+    $csv_exporter->buildDatas($dao->getDeletedDocumentBetweenStartDateAndEndDate(), "Deleted documents");
+    $csv_exporter->buildDatas($dao->getNumberOfNewsBetweenStartDateAndEndDate(), "News");
+    $csv_exporter->buildDatas($dao->getActiveSurveys(), "Active surveys");
+    $csv_exporter->buildDatas($dao->getSurveysAnswersBetweenStartDateAndEndDate(), "Surveys answers");
+    $csv_exporter->buildDatas($dao->getProjectWithCIActivated(), "Continuous integration");
+    $csv_exporter->buildDatas($dao->getNumberOfCIJobs(), "Continuous integration jobs");
 
     echo $csv_exporter->exportCSV();
-
-//    var_dump($dao->getNumberOfInactiveForums());
-//    echo '<hr/>';
-//    var_dump($dao->getForumsActivitiesBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfWikiDocuments());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfDistinctWikiPages());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfOpenArtifactsBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfClosedArtifactsBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfUserAddedBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getProjectCode());
-//    echo '<hr/>';
-//    var_dump($dao->getAddedDocumentBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getDeletedDocumentBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfNewsBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getActiveSurveys());
-//    echo '<hr/>';
-//    var_dump($dao->getSurveysAnswersBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getProjectWithCIActivated());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfCIJobs());
 
 } else {
     $title = $GLOBALS['Language']->getText('plugin_statistics', 'services_usage');

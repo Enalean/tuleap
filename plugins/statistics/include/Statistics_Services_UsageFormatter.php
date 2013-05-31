@@ -32,6 +32,10 @@ class Statistics_Services_UsageFormatter extends Statistics_Formatter {
         $this->title = array();
     }
 
+    /**
+     * Export in CSV the datas builded from SQL queries
+     * @return String $content the CSV content
+     */
     public function exportCSV() {
         $this->clearContent();
         $this->addLine(array_values($this->title));
@@ -42,15 +46,26 @@ class Statistics_Services_UsageFormatter extends Statistics_Formatter {
         return $this->content;
     }
 
+    /**
+     * Build CVS datas from SQL queries results to export them in a file
+     * @param array $query_result
+     * @param type $title
+     */
     public function buildDatas(array $query_result, $title) {
         $this->initiateDatas($query_result);
         $this->title[] = $title;
+        $this->addDefaultValuesForTitle($title);
+        $this->addValuesFromQueryResultForTitle($query_result, $title);
+    }
 
+    private function addDefaultValuesForTitle($title) {
         $ids = array_keys($this->datas);
         foreach ($ids as $id) {
             $this->datas[$id][$title] = 0;
         }
+    }
 
+    private function addValuesFromQueryResultForTitle(array $query_result, $title) {
         foreach ($query_result as $data) {
             if (array_key_exists($data['group_id'], $this->datas)) {
                 $this->datas[$data['group_id']][$title] = $data['result'];

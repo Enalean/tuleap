@@ -303,7 +303,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getNumberOfClosedArtifactsBetweenStartDateAndEndDate() {
-        $sql = "SELECT artifact_group_list.group_id, COUNT(artifact.artifact_id)
+        $sql = "SELECT artifact_group_list.group_id, COUNT(artifact.artifact_id) AS result
                 FROM artifact_group_list, artifact
                 WHERE ( close_date >= $this->start_date
                     AND close_date < $this->end_date
@@ -315,7 +315,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getNumberOfUserAddedBetweenStartDateAndEndDate() {
-        $sql = "SELECT group_id,COUNT(u.user_id)
+        $sql = "SELECT group_id,COUNT(u.user_id) AS result
                 FROM user_group ug, user u
                 WHERE u.user_id = ug.user_id
                     AND add_date >= $this->start_date
@@ -327,7 +327,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getProjectCode() {
-        $sql = "SELECT g.group_id, value
+        $sql = "SELECT g.group_id, value AS result
                 FROM groups g,group_desc_value gdv, group_desc gd
                 WHERE g.group_id = gdv.group_id
                     AND gdv.group_desc_id = gd.group_desc_id
@@ -340,7 +340,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getAddedDocumentBetweenStartDateAndEndDate() {
-        $sql = "SELECT group_id, COUNT(item_id)
+        $sql = "SELECT group_id, COUNT(item_id) AS result
                 FROM plugin_docman_item
                 WHERE create_date >= $this->start_date
                     AND create_date <= $this->end_date
@@ -351,7 +351,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getDeletedDocumentBetweenStartDateAndEndDate() {
-        $sql = "SELECT group_id, COUNT(item_id)
+        $sql = "SELECT group_id, COUNT(item_id) AS result
                 FROM plugin_docman_item
                 WHERE delete_date >= $this->start_date
                     AND delete_date <= $this->end_date
@@ -362,7 +362,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getNumberOfNewsBetweenStartDateAndEndDate() {
-        $sql = "SELECT group_id, COUNT(id)
+        $sql = "SELECT group_id, COUNT(id) AS result
                 FROM news_bytes
                 WHERE date >= $this->start_date
                     AND date <= $this->end_date
@@ -373,7 +373,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getActiveSurveys() {
-        $sql = "SELECT g.group_id, COUNT(survey_id)
+        $sql = "SELECT g.group_id, COUNT(survey_id) AS result
                 FROM surveys s, groups g
                 WHERE is_active = 1
                     AND g.group_id = s.group_id
@@ -384,7 +384,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getSurveysAnswersBetweenStartDateAndEndDate() {
-        $sql = "SELECT group_id, COUNT(*)
+        $sql = "SELECT group_id, COUNT(*) AS result
                 FROM survey_responses
                 WHERE date >= $this->start_date
                     AND date <= $this->end_date
@@ -395,7 +395,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getProjectWithCIActivated() {
-        $sql = "SELECT group_id, is_used
+        $sql = "SELECT group_id, is_used AS result
                 FROM service
                 WHERE short_name = 'hudson'
                 GROUP BY  group_id";
@@ -405,7 +405,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getNumberOfCIJobs() {
-        $sql = "SELECT group_id, COUNT(*)
+        $sql = "SELECT group_id, COUNT(*) AS result
                 FROM plugin_hudson_job
                 GROUP BY  group_id";
 
