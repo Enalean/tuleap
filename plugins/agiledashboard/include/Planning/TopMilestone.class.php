@@ -18,10 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-/**
- * Null-object pattern for planning milestones.
- */
 class Planning_TopMilestone  implements Planning_Milestone {
 
     /**
