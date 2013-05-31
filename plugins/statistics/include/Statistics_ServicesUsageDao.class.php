@@ -413,6 +413,19 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         return $this->processMultipleRowInResult($retrieve);
     }
 
+    public function getMediawikiPagesNumberOfAProject(PFO_Project $project) {
+        $database_name = "plugin_mediawiki_". $project->getUnixName();
+
+        $sql = "USE $database_name;
+                SELECT COUNT(page_id)
+                FROM mwpage";
+
+        $result = $this->retrieve($sql);
+        $this->DataAccessObject();
+
+        return $result;
+    }
+
     private function processMultipleRowInResult(DataAccessResult $retrieve) {
         $return = array();
         foreach ($retrieve as $res) {
