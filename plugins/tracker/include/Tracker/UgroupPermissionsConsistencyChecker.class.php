@@ -33,8 +33,8 @@
  */
 class Tracker_UgroupPermissionsConsistencyChecker {
 
-    /** @var Tracker_PermissionsManager */
-    private $permissions_manager;
+    /** @var Tracker_PermissionsDao */
+    private $permissions_dao;
 
     /** @var UGroupManager */
     private $ugroup_manager;
@@ -43,20 +43,20 @@ class Tracker_UgroupPermissionsConsistencyChecker {
     private $messenger;
 
     public function __construct(
-        Tracker_PermissionsManager $permissions_manager,
+        Tracker_PermissionsDao $permissions_dao,
         UGroupManager $ugroup_manager,
         Tracker_UgroupPermissionsConsistencyMessenger $messenger
     ) {
-        $this->permissions_manager = $permissions_manager;
-        $this->ugroup_manager      = $ugroup_manager;
-        $this->messenger           = $messenger;
+        $this->permissions_dao = $permissions_dao;
+        $this->ugroup_manager  = $ugroup_manager;
+        $this->messenger       = $messenger;
     }
 
     /**
      * @return Tracker_UgroupPermissionsConsistencyMessage
      */
     public function checkConsistency(Tracker $template_tracker, Project $target_project) {
-        $ugroups = $this->permissions_manager->getListOfInvolvedStaticUgroups($template_tracker);
+        $ugroups = $this->getListOfInvolvedStaticUgroups($template_tracker);
 
         if (! $ugroups) {
             $this->messenger->allIsWell();
@@ -78,6 +78,15 @@ class Tracker_UgroupPermissionsConsistencyChecker {
 
     private function extractUGroupName(UGroup $ugroup) {
         return $ugroup->getName();
+    }
+
+    private function getListOfInvolvedStaticUgroups(Tracker $template_tracker) {
+        $project = $template_tracker->getProject();
+        $ugroups = array();
+        foreach ($this->permissions_dao->getAuthorizedStaticUgroupIds($template_tracker->getId()) as $id) {
+            $ugroups[] = $this->ugroup_manager->getUGroup($project, $id);
+        }
+        return $ugroups;
     }
 }
 ?>

@@ -24,13 +24,25 @@
 
 class Tracker_PermissionsDao extends DataAccessObject {
 
-    public function getAuthorizedUgroupIdsForFields($tracker_id) {
+    public function getAuthorizedStaticUgroupIds($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
 
         $sql = "SELECT DISTINCT ugroup_id
                 FROM tracker_field AS F
                     INNER JOIN permissions ON (object_id = id AND permission_type LIKE 'PLUGIN_TRACKER_FIELD_%')
-                WHERE F.tracker_id = $tracker_id";
+                WHERE F.tracker_id = $tracker_id
+                  AND ugroup_id > 100
+
+                UNION
+
+                SELECT DISTINCT ugroup_id
+                FROM permissions
+                WHERE object_id = $tracker_id
+                  AND (
+                    permission_type LIKE 'PLUGIN_TRACKER_ACCESS_%'
+                    OR permission_type = 'PLUGIN_TRACKER_ADMIN'
+                  )
+                  AND ugroup_id > 100";
 
         $ugroup_ids = array();
         foreach ($this->retrieve($sql) as $row) {

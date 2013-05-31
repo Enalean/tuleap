@@ -166,12 +166,11 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                     return;
                                 }
 
-                                $messenger           = new Tracker_UgroupPermissionsConsistencyMessenger();
-                                $ugroup_manager      = new UGroupManager();
-                                $dao                 = new Tracker_PermissionsDao();
-                                $permissions_manager = new Tracker_PermissionsManager(PermissionsManager::instance(), $dao, $ugroup_manager);
-
-                                $checker = new Tracker_UgroupPermissionsConsistencyChecker($permissions_manager, $ugroup_manager, $messenger);
+                                $checker = new Tracker_UgroupPermissionsConsistencyChecker(
+                                    new Tracker_PermissionsDao(),
+                                    new UGroupManager(),
+                                    new Tracker_UgroupPermissionsConsistencyMessenger()
+                                );
                                 $checker->checkConsistency($tracker, $project);
                                 break;
                             case 'csvimportoverview':
