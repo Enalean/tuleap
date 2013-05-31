@@ -23,8 +23,13 @@ require_once 'Statistics_Formatter.class.php';
 
 class Statistics_Services_UsageFormatter {
 
+    /** @var array */
     private $datas;
+
+    /** @var array */
     private $title;
+
+    /** @var Statistics_Formatter */
     private $stats_formatter;
 
     public function __construct(Statistics_Formatter $stats_formatter) {

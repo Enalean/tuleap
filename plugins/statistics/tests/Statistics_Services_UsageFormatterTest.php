@@ -23,11 +23,15 @@ require_once 'www/include/user.php';
 
 class Statistics_Services_UsageFormatterTest extends TuleapTestCase {
 
-    public function itBuildsData() {
-        $stats_formatter = mock('Statistics_Formatter');
-        $formatter  = new Statistics_Services_UsageFormatter($stats_formatter);
+    /** @var Statistics_Services_UsageFormatter */
+    private $usage_formatter;
 
-        $input_datas = array(
+    public function setUp() {
+        parent::setUp();
+        $stats_formatter        = mock('Statistics_Formatter');
+        $this->usage_formatter  = new Statistics_Services_UsageFormatter($stats_formatter);
+
+        $this->first_input_datas = array(
             array(
                 'group_id' => 1,
                 'result'   => 'res1'
@@ -41,7 +45,9 @@ class Statistics_Services_UsageFormatterTest extends TuleapTestCase {
                 'result'   => 'res3'
             )
         );
+    }
 
+    public function itBuildsData() {
         $expected = array(
             1 => array(
                 "title" => 'res1'
@@ -54,12 +60,38 @@ class Statistics_Services_UsageFormatterTest extends TuleapTestCase {
             )
         );
 
-        $datas = $formatter->buildDatas($input_datas, "title");
+        $datas = $this->usage_formatter->buildDatas($this->first_input_datas, "title");
         $this->assertEqual($datas, $expected);
+
     }
 
-    public function _itOnlyAddTitlesWhithEmptyData() {
+    public function itOnlyAddTitlesWhithEmptyData() {
+        $input_datas = array(
+            array(
+                'group_id' => 87,
+                'result'   => 'descr2'
+            )
+        );
 
+        $expected = array(
+            1 => array(
+                "title" => 'res1',
+                "descr" => 0
+            ),
+            87 => array(
+                "title" => 'res2',
+                "descr" => 'descr2'
+            ),
+            104 => array(
+                "title" => 'res3',
+                "descr" => 0
+            )
+        );
+
+        $this->usage_formatter->buildDatas($this->first_input_datas, "title");
+        $datas = $this->usage_formatter->buildDatas($input_datas, "descr");
+
+        $this->assertEqual($datas, $expected);
     }
 
 }
