@@ -42,7 +42,6 @@ class Statistics_Services_UsageFormatter extends Statistics_Formatter {
         foreach ($this->datas as $value) {
             $this->addLine(array_values($value));
         }
-        $this->addEmptyLine();
         return $this->content;
     }
 

@@ -326,19 +326,6 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         return $this->processMultipleRowInResult($retrieve);
     }
 
-    public function getProjectCode() {
-        $sql = "SELECT g.group_id, value AS result
-                FROM groups g,group_desc_value gdv, group_desc gd
-                WHERE g.group_id = gdv.group_id
-                    AND gdv.group_desc_id = gd.group_desc_id
-                    AND gd.desc_name = 'Code projet'
-                    AND register_time <= $this->end_date
-                GROUP BY g.group_id";
-
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
-    }
-
     public function getAddedDocumentBetweenStartDateAndEndDate() {
         $sql = "SELECT group_id, COUNT(item_id) AS result
                 FROM plugin_docman_item

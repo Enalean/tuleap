@@ -116,13 +116,12 @@ if (!$error && $request->exist('export')) {
     $csv_exporter->buildDatas($dao->getNumberOfOpenArtifactsBetweenStartDateAndEndDate(), "Open artifacts");
     $csv_exporter->buildDatas($dao->getNumberOfClosedArtifactsBetweenStartDateAndEndDate(), "Closed artifacts");
     $csv_exporter->buildDatas($dao->getNumberOfUserAddedBetweenStartDateAndEndDate(), "Users added");
-    $csv_exporter->buildDatas($dao->getProjectCode(), "Project code");
     $csv_exporter->buildDatas($dao->getAddedDocumentBetweenStartDateAndEndDate(), "Added documents");
     $csv_exporter->buildDatas($dao->getDeletedDocumentBetweenStartDateAndEndDate(), "Deleted documents");
     $csv_exporter->buildDatas($dao->getNumberOfNewsBetweenStartDateAndEndDate(), "News");
     $csv_exporter->buildDatas($dao->getActiveSurveys(), "Active surveys");
     $csv_exporter->buildDatas($dao->getSurveysAnswersBetweenStartDateAndEndDate(), "Surveys answers");
-    $csv_exporter->buildDatas($dao->getProjectWithCIActivated(), "Continuous integration");
+    $csv_exporter->buildDatas($dao->getProjectWithCIActivated(), "Continuous integration activated");
     $csv_exporter->buildDatas($dao->getNumberOfCIJobs(), "Continuous integration jobs");
 
     echo $csv_exporter->exportCSV();
