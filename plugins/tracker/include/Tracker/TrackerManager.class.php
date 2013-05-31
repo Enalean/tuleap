@@ -324,7 +324,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
           </p>';
         
         echo '<div id="check_consistency_feedback"></div>';
-        echo '<input type="submit" name="Create" value="'.$Language->getText('global','btn_create').'">';
+        echo '<input type="submit" name="Create" value="'.$Language->getText('global','btn_create').'" id="create_new_tracker_btn">';
 
         echo '</td></tr></table></form>';
 

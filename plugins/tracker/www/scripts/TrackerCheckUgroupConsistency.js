@@ -36,11 +36,12 @@ document.observe('dom:loaded', function () {
         });
     }
 
-    function observeTemplateSelectorChanges(group_id, select_template, select_project) {
+    function observeTemplateSelectorChanges(group_id, select_template, select_project, create_new_tracker_btn) {
         select_template.observe('change', function () { //todo: check that 'change' evt is valid on IE
             var template_group_id   = $F(select_project),
                 template_tracker_id = $F(select_template);
 
+            create_new_tracker_btn.disable();
             new Ajax.Updater(
                 $('check_consistency_feedback'),
                 '/plugins/tracker/index.php',
@@ -50,20 +51,24 @@ document.observe('dom:loaded', function () {
                         func: 'check_ugroup_consistency',
                         template_group_id: template_group_id,
                         template_tracker_id: template_tracker_id
+                    },
+                    onComplete: function () {
+                        create_new_tracker_btn.enable();
                     }
                 }
             );
         });
     }
 
-    var select_template = $('tracker_list_trackers_from_project'),
-        select_project  = $('tracker_new_project_list');
+    var select_template = $('tracker_list_trackers_from_project');
 
     if (select_template) {
-        var form = select_template.up('form');
-            group_id = form.down('input[name=group_id]').value;
+        var form                   = select_template.up('form'),
+            select_project         = $('tracker_new_project_list'),
+            create_new_tracker_btn = $('create_new_tracker_btn'),
+            group_id               = form.down('input[name=group_id]').value;
 
         observeCreateModeChanges(form);
-        observeTemplateSelectorChanges(group_id, select_template, select_project);
+        observeTemplateSelectorChanges(group_id, select_template, select_project, create_new_tracker_btn);
     }
 });
