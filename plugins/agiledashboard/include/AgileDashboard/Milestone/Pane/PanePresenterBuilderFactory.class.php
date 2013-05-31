@@ -57,6 +57,16 @@ class AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory {
     }
 
     /**
+     * @return AgileDashboard_Milestone_Pane_TopContent_PresenterBuilder
+     */
+    public function getTopContentPresenterBuilder() {
+        return new AgileDashboard_Milestone_Pane_TopContent_PresenterBuilder(
+            $this->strategy_factory,
+            $this->row_collection_factory
+        );
+    }
+
+    /**
      * @return AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder
      */
     public function getPlanningPresenterBuilder() {
