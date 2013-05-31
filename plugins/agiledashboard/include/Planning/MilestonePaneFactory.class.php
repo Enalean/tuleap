@@ -83,18 +83,6 @@ class Planning_MilestonePaneFactory {
             $this->buildActivePane($milestone);
         }
 
-        if($milestone instanceof Planning_TopMilestone) {
-            $top_pane_info = new AgileDashboard_Milestone_Pane_TopContent_Info($milestone, $this->theme_path);
-
-            if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_TopContent_Info::IDENTIFIER) {
-                $top_pane_info->setActive(true);
-                return new AgileDashboard_Milestone_Pane_TopContent_Pane(
-                    $top_pane_info,
-                    $this->getTopContentPresenterBuilder()->getMilestoneContentPresenter($this->request->getCurrentUser(), $milestone)
-                );
-            }
-        }
-
         return $this->active_pane[$milestone->getArtifactId()];
     }
 
@@ -114,12 +102,18 @@ class Planning_MilestonePaneFactory {
 
     private function buildListOfPaneInfo(Planning_Milestone $milestone) {
         $this->active_pane[$milestone->getArtifactId()] = null;
-
-        $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getLegacyPaneInfo($milestone);
+        
+        if (! $this->request->get('is_top')) {
+            $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getLegacyPaneInfo($milestone);
+        }
 
         if ($this->request->getCurrentUser()->useLabFeatures()) {
-            $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getContentPaneInfo($milestone);
-            $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getPlanningPaneInfo($milestone);
+            if ($this->request->get('is_top') === true) {
+                $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getTopContentPaneInfo($milestone);
+            } else {
+                $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getContentPaneInfo($milestone);
+                $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getPlanningPaneInfo($milestone);
+            }
         }
 
         $this->buildAdditionnalPanes($milestone);
@@ -146,6 +140,9 @@ class Planning_MilestonePaneFactory {
         }
     }
 
+    /**
+     * @return \AgileDashboard_Milestone_Pane_Content_ContentPaneInfo
+     */
     private function getContentPaneInfo(Planning_Milestone $milestone) {
         $pane_info = new AgileDashboard_Milestone_Pane_Content_ContentPaneInfo($milestone, $this->theme_path);
         if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_Content_ContentPaneInfo::IDENTIFIER) {
@@ -159,6 +156,26 @@ class Planning_MilestonePaneFactory {
         return $pane_info;
     }
 
+    /**
+     * @return \AgileDashboard_Milestone_Pane_TopContent_PaneInfo
+     */
+    private function getTopContentPaneInfo(Planning_Milestone $milestone) {
+        $top_pane_info = new AgileDashboard_Milestone_Pane_TopContent_PaneInfo($milestone, $this->theme_path);
+
+        if ($this->request->get('pane') == AgileDashboard_Milestone_Pane_TopContent_PaneInfo::IDENTIFIER) {
+            $top_pane_info->setActive(true);
+            $this->active_pane[$milestone->getArtifactId()] = new AgileDashboard_Milestone_Pane_TopContent_Pane(
+                $top_pane_info,
+                $this->getTopContentPresenterBuilder()->getMilestoneContentPresenter($this->request->getCurrentUser(), $milestone)
+            );
+        }
+
+        return $top_pane_info;
+    }
+
+    /**
+     * @return \AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo
+     */
     private function getPlanningPaneInfo(Planning_Milestone $milestone) {
         $submilestone_tracker = $this->submilestone_finder->findFirstSubmilestoneTracker($milestone);
         if (! $submilestone_tracker) {

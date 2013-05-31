@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_TopContent_Info extends AgileDashboard_PaneInfo {
+class AgileDashboard_Milestone_Pane_TopContent_PaneInfo extends AgileDashboard_PaneInfo {
     const IDENTIFIER = 'topblcontent';
 
     /** @var string */

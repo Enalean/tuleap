@@ -111,6 +111,7 @@ class Planning_MilestoneFactory {
      * @param Project $project
      * @param Integer $planning_id
      * @param Integer $artifact_id
+     * @param bool $is_top Do we want a bare milestone for top planning
      * 
      * @return Planning_Milestone
      */
