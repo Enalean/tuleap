@@ -69,13 +69,21 @@ class Planning_MilestoneController extends MVC2_PluginController {
             $this->getCurrentUser(),
             $project,
             $request->get('planning_id'),
-            $request->get('aid')
+            $request->get('aid'),
+            $request->get('is_top')
         );
+
+        $this->request = $request;
     }
 
     public function show() {
         $presenter = $this->getMilestonePresenter();
         $this->render('show', $presenter);
+    }
+
+    public function showTop() {
+        $presenter = $this->getMilestonePresenter();
+        $this->render('show-top', $presenter);
     }
 
     private function getMilestonePresenter() {

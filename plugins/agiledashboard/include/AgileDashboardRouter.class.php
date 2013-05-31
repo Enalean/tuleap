@@ -86,6 +86,9 @@ class AgileDashboardRouter {
             case 'show':
                 $this->routeShowPlanning($request);
                 break;
+            case 'show-top-planning':
+                $this->routeShowTopPlanning($request);
+                break;
             case 'new':
                 $this->renderAction($controller, 'new_', $request);
                 break;
@@ -143,7 +146,8 @@ class AgileDashboardRouter {
             'admin' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin'),
             'new_'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
             'edit'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit'),
-            'show'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show')
+            'show'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show'),
+            'showTop'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show')
         );
         
         return $header_title[$action_name];
@@ -285,6 +289,14 @@ class AgileDashboardRouter {
                 $action_arguments = array();
                 $this->renderAction($controller, 'show', $request, $action_arguments);
         }
+    }
+
+    public function routeShowTopPlanning(Codendi_Request $request) {
+        $request->set('is_top', true);
+
+        $controller = $this->milestone_controller_factory->getMilestoneController($request);
+        $action_arguments = array();
+        $this->renderAction($controller, 'showTop', $request, $action_arguments);
     }
 }
 
