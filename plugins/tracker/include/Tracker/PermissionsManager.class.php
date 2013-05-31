@@ -51,12 +51,18 @@ class Tracker_PermissionsManager {
     }
 
     private function injectUGroupIdsThatHavePermmission(&$ugroup_ids, Tracker $tracker, $permission_type) {
+        $ugroup_ids_to_add = $this->permissions_manager->getAuthorizedUgroupIds($tracker->getId(), $permission_type);
+        $ugroup_ids_to_add = array_filter($ugroup_ids_to_add, array($this, 'isStaticUgroup'));
         $ugroup_ids = array_unique(
             array_merge(
                 $ugroup_ids,
-                $this->permissions_manager->getAuthorizedUgroupIds($tracker->getId(), $permission_type)
+                $ugroup_ids_to_add
             )
         );
+    }
+
+    private function isStaticUgroup($ugroup_id) {
+        return $ugroup_id > 100;
     }
 
     private function getUGroups(Tracker $tracker, $ugroup_ids) {

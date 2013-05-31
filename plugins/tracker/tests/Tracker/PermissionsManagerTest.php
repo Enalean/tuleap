@@ -50,6 +50,7 @@ class Tracker_PermissionsManagerTest extends TuleapTestCase {
         $ugroup_manager = mock('UGroupManager');
         stub($ugroup_manager)->getUGroup($this->project, $this->ugroup_dev_id)->returns($this->ugroup_dev);
         stub($ugroup_manager)->getUGroup($this->project, $this->ugroup_support_id)->returns($this->ugroup_support);
+        stub($ugroup_manager)->getUGroup($this->project, UGroup::PROJECT_MEMBERS)->returns(mock('UGroup'));
 
         $this->tracker_permissions_manager = new Tracker_PermissionsManager($this->permissions_manager, $ugroup_manager);
     }
@@ -82,6 +83,16 @@ class Tracker_PermissionsManagerTest extends TuleapTestCase {
         $ugroups = $this->tracker_permissions_manager->getListOfInvolvedStaticUgroups($this->tracker);
 
         $this->assertEqual($ugroups, array($this->ugroup_dev, $this->ugroup_support));
+    }
+
+    public function itRemoveDynamicUGroups() {
+        stub($this->permissions_manager)->getAuthorizedUgroupIds($this->tracker_id, 'PLUGIN_TRACKER_ACCESS_%')->returns(array(UGroup::PROJECT_MEMBERS));
+        stub($this->permissions_manager)->getAuthorizedUgroupIds($this->tracker_id, 'PLUGIN_TRACKER_ADMIN')->returns(array());
+        stub($this->permissions_manager)->getAuthorizedUgroupIds($this->tracker_id, 'PLUGIN_TRACKER_FIELD_%')->returns(array());
+
+        $ugroups = $this->tracker_permissions_manager->getListOfInvolvedStaticUgroups($this->tracker);
+
+        $this->assertEqual($ugroups, array());
     }
 }
 ?>
