@@ -21,7 +21,8 @@
 
 require_once 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_ServicesUsageDao.class.php';
-require_once dirname(__FILE__).'/../include/Statistics_Services_UsageFormatter.php';
+require_once dirname(__FILE__).'/../include/Statistics_Services_UsageFormatter.class.php';
+require_once dirname(__FILE__).'/../include/Statistics_Formatter.class.php';
 
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
@@ -45,7 +46,7 @@ $startDate = $request->get('start');
 if ($request->valid($vStartDate)) {
     $startDate = $request->get('start');
 } else {
-    $startDate = date('Y-m-d', strtotime('-1 year'));
+    $startDate = date('Y-m-d', strtotime('-1 month'));
 }
 
 $vEndDate = new Valid('end');
@@ -55,7 +56,7 @@ $endDate = $request->get('end');
 if ($request->valid($vEndDate)) {
     $endDate = $request->get('end');
 } else {
-    $endDate = date('Y-m-d', strtotime('+1 month'));
+    $endDate = date('Y-m-d');
 }
 
 if ($startDate >= $endDate) {
@@ -76,86 +77,46 @@ if (!$error && $request->exist('export')) {
 
     header('Content-Type: text/csv');
     header('Content-Disposition: filename=services_usage_'.$startDate.'_'.$endDate.'.csv');
-//    $statsSvn = new Statistics_Formatter_Svn($startDate, $endDate, $groupId);
-//    echo $statsSvn->getStats();
-//    $statsCvs = new Statistics_Formatter_Cvs($startDate, $endDate, $groupId);
-//    echo $statsCvs->getStats();
-//    $em = EventManager::instance();
-//    $params['formatter'] = new Statistics_Formatter($startDate, $endDate, $groupId);
-//    $em->processEvent('statistics_collector', $params);
-
-//    var_dump($startDate, $endDate);
+    echo "Start date : $startDate \n";
+    echo "End date : $endDate \n\n";
 
     $dao          = new Statistics_ServicesUsageDao(CodendiDataAccess::instance(), $startDate, $endDate);
-    $csv_exporter = new Statistics_Services_UsageFormatter($startDate, $endDate);
+    $csv_exporter = new Statistics_Services_UsageFormatter(new Statistics_Formatter($startDate, $endDate));
 
-    echo $csv_exporter->exportCSV($dao->getNameOfActiveProjectsBeforeEndDate());
+    $csv_exporter->buildDatas($dao->getNameOfActiveProjectsBeforeEndDate(), "Project");
+    $csv_exporter->buildDatas($dao->getDescriptionOfActiveProjectsBeforeEndDate(), "Description");
+    $csv_exporter->buildDatas($dao->getRegisterTimeOfActiveProjectsBeforeEndDate(), "Creation date");
+    $csv_exporter->buildDatas($dao->getInfosFromTroveGroupLink(), "Organization");
+    $csv_exporter->buildDatas($dao->getAdministrators(), "Created by");
+    $csv_exporter->buildDatas($dao->getAdministratorsRealNames(), "Created by (Real name)");
+    $csv_exporter->buildDatas($dao->getAdministratorsEMails(), "Created by (Email)");
+    $csv_exporter->buildDatas($dao->getCVSActivities(), "CVS activities");
+    $csv_exporter->buildDatas($dao->getSVNActivities(), "SVN activities");
+    $csv_exporter->buildDatas($dao->getGitActivities(), "GIT activities");
+    $csv_exporter->buildDatas($dao->getFilesPublished(), "Files published");
+    $csv_exporter->buildDatas($dao->getDistinctFilesPublished(), "Distinct files published");
+    $csv_exporter->buildDatas($dao->getNumberOfDownloadedFilesBeforeEndDate(), "Downloaded files (before end date)");
+    $csv_exporter->buildDatas($dao->getNumberOfDownloadedFilesBetweenStartDateAndEndDate(), "Downloaded files (between start date and end date)");
+    $csv_exporter->buildDatas($dao->getNumberOfActiveMailingLists(), "Active mailing lists");
+    $csv_exporter->buildDatas($dao->getNumberOfInactiveMailingLists(), "Inactive mailing lists");
+    $csv_exporter->buildDatas($dao->getNumberOfActiveForums(), "Active forums");
+    $csv_exporter->buildDatas($dao->getNumberOfInactiveForums(), "Inactive forums");
+    $csv_exporter->buildDatas($dao->getForumsActivitiesBetweenStartDateAndEndDate(), "Forums activities");
+    $csv_exporter->buildDatas($dao->getNumberOfWikiDocuments(), "Wiki documents");
+    $csv_exporter->buildDatas($dao->getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate(), "Modified wiki pages");
+    $csv_exporter->buildDatas($dao->getNumberOfDistinctWikiPages(), "Distinct wiki pages");
+    $csv_exporter->buildDatas($dao->getNumberOfOpenArtifactsBetweenStartDateAndEndDate(), "Open artifacts");
+    $csv_exporter->buildDatas($dao->getNumberOfClosedArtifactsBetweenStartDateAndEndDate(), "Closed artifacts");
+    $csv_exporter->buildDatas($dao->getNumberOfUserAddedBetweenStartDateAndEndDate(), "Users added");
+    $csv_exporter->buildDatas($dao->getAddedDocumentBetweenStartDateAndEndDate(), "Added documents");
+    $csv_exporter->buildDatas($dao->getDeletedDocumentBetweenStartDateAndEndDate(), "Deleted documents");
+    $csv_exporter->buildDatas($dao->getNumberOfNewsBetweenStartDateAndEndDate(), "News");
+    $csv_exporter->buildDatas($dao->getActiveSurveys(), "Active surveys");
+    $csv_exporter->buildDatas($dao->getSurveysAnswersBetweenStartDateAndEndDate(), "Surveys answers");
+    $csv_exporter->buildDatas($dao->getProjectWithCIActivated(), "Continuous integration activated");
+    $csv_exporter->buildDatas($dao->getNumberOfCIJobs(), "Continuous integration jobs");
 
-//    var_dump($dao->getNameOfActiveProjectsBeforeEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getDescriptionOfActiveProjectsBeforeEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getRegisterTimeOfActiveProjectsBeforeEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getInfosFromTroveGroupLink());
-//    echo '<hr/>';
-//    var_dump($dao->getAdministrators());
-//    echo '<hr/>';
-//    var_dump($dao->getAdministratorsRealNames());
-//    echo '<hr/>';
-//    var_dump($dao->getAdministratorsEMails());
-//    echo '<hr/>';
-//    var_dump($dao->getCVSActivities());
-//    echo '<hr/>';
-//    var_dump($dao->getSVNActivities());
-//    echo '<hr/>';
-//    var_dump($dao->getGitActivities());
-//    echo '<hr/>';
-//    var_dump($dao->getFilesPublished());
-//    echo '<hr/>';
-//    var_dump($dao->getDistinctFilesPublished());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfDownloadedFilesBeforeEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfDownloadedFilesBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfActiveMailingLists());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfInactiveMailingLists());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfActiveForums());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfInactiveForums());
-//    echo '<hr/>';
-//    var_dump($dao->getForumsActivitiesBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfWikiDocuments());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfDistinctWikiPages());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfOpenArtifactsBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfClosedArtifactsBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfUserAddedBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getProjectCode());
-//    echo '<hr/>';
-//    var_dump($dao->getAddedDocumentBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getDeletedDocumentBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfNewsBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getActiveSurveys());
-//    echo '<hr/>';
-//    var_dump($dao->getSurveysAnswersBetweenStartDateAndEndDate());
-//    echo '<hr/>';
-//    var_dump($dao->getProjectWithCIActivated());
-//    echo '<hr/>';
-//    var_dump($dao->getNumberOfCIJobs());
+    echo $csv_exporter->exportCSV();
 
 } else {
     $title = $GLOBALS['Language']->getText('plugin_statistics', 'services_usage');
@@ -163,24 +124,24 @@ if (!$error && $request->exist('export')) {
     $GLOBALS['HTML']->header(array('title' => $title));
     echo '<h1>'.$title.'</h1>';
 
-    echo '<form name="form_scm_stats" method="get">';
+    echo '<form name="form_service_usage_stats" method="get">';
     echo '<table>';
     echo '<tr>';
     echo '<td>';
-    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_start').'</b>';
+    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'start_date').'</b>';
     echo '</td><td>';
-    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_end').'</b>';
+    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'end_date').'</b>';
     echo '</td>';
     echo '</tr><tr>';
     echo '<td>';
     list($timestamp,) = util_date_to_unixtime($startDate);
-    echo html_field_date('start', $startDate, false, 10, 10, 'form_scm_stats', false);
+    echo html_field_date('start', $startDate, false, 10, 10, 'form_service_usage_stats', false);
     echo '</td><td>';
     list($timestamp,) = util_date_to_unixtime($endDate);
-    echo html_field_date('end', $endDate, false, 10, 10, 'form_scm_stats', false);
+    echo html_field_date('end', $endDate, false, 10, 10, 'form_service_usage_stats', false);
     echo '</td>';
     echo '</tr><tr><td>';
-    echo '<input type="submit" name="export" value="'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_export_button').'" >';
+    echo '<input type="submit" name="export" value="'.$GLOBALS['Language']->getText('plugin_statistics', 'csv_export_button').'" >';
     echo '</td>';
     echo '</tr>';
     echo '</table>';
