@@ -21,15 +21,16 @@
  */
 require_once 'Statistics_Formatter.class.php';
 
-class Statistics_Services_UsageFormatter extends Statistics_Formatter {
+class Statistics_Services_UsageFormatter {
 
     private $datas;
     private $title;
+    private $stats_formatter;
 
-    public function __construct($startDate, $endDate) {
-        parent::__construct($startDate, $endDate);
-        $this->datas = array();
-        $this->title = array();
+    public function __construct(Statistics_Formatter $stats_formatter) {
+        $this->stats_formatter = $stats_formatter;
+        $this->datas           = array();
+        $this->title           = array();
     }
 
     /**
@@ -37,12 +38,12 @@ class Statistics_Services_UsageFormatter extends Statistics_Formatter {
      * @return String $content the CSV content
      */
     public function exportCSV() {
-        $this->clearContent();
-        $this->addLine(array_values($this->title));
+        $this->stats_formatter->clearContent();
+        $this->stats_formatter->addLine(array_values($this->title));
         foreach ($this->datas as $value) {
-            $this->addLine(array_values($value));
+            $this->stats_formatter->addLine(array_values($value));
         }
-        return $this->content;
+        return $this->stats_formatter->getCsvContent();
     }
 
     /**
@@ -55,6 +56,8 @@ class Statistics_Services_UsageFormatter extends Statistics_Formatter {
         $this->title[] = $title;
         $this->addDefaultValuesForTitle($title);
         $this->addValuesFromQueryResultForTitle($query_result, $title);
+
+        return $this->datas;
     }
 
     private function addDefaultValuesForTitle($title) {
