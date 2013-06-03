@@ -40,17 +40,22 @@ class Git_Hook_PostReceive {
     /** @var Git_Ci_Launcher */
     private $ci_launcher;
 
+    /** @var Git_Hook_LogPushes */
+    private $log_pushes;
+
     public function __construct(
             Git_Exec $exec_repo,
             GitRepositoryFactory $repository_factory,
             UserManager $user_manager,
             Git_Hook_ExtractCrossReferences $extract_cross_ref,
-            Git_Ci_Launcher $ci_launcher) {
+            Git_Ci_Launcher $ci_launcher,
+            Git_Hook_LogPushes $log_pushes) {
         $this->exec_repo          = $exec_repo;
         $this->repository_factory = $repository_factory;
         $this->user_manager       = $user_manager;
         $this->extract_cross_ref  = $extract_cross_ref;
         $this->ci_launcher        = $ci_launcher;
+        $this->log_pushes         = $log_pushes;
     }
 
     public function execute($repository_path, $user_name, $oldrev, $newrev, $refname) {
@@ -62,13 +67,17 @@ class Git_Hook_PostReceive {
             if ($user === null) {
                 $user = new PFUser(array('user_id' => 0));
             }
-            foreach ($this->getRevisionsList($oldrev, $newrev, $refname) as $commit) {
+
+            $revision_list = $this->getRevisionList($oldrev, $newrev, $refname);
+            $this->log_pushes->executeForRepository($repository, $user, $revision_list, $refname);
+
+            foreach ($revision_list as $commit) {
                 $this->extract_cross_ref->execute($repository, $user, $commit, $refname);
             }
         }
     }
 
-    private function getRevisionsList($oldrev, $newrev, $refname) {
+    private function getRevisionList($oldrev, $newrev, $refname) {
         if ($oldrev == self::FAKE_EMPTY_COMMIT) {
             return $this->exec_repo->revListSinceStart($refname, $newrev);
         } elseif ($newrev == self::FAKE_EMPTY_COMMIT) {
