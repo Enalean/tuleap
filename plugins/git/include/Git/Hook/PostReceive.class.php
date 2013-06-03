@@ -22,9 +22,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Central access point for things that needs to happen when post-receive is
+ * executed
+ */
 class Git_Hook_PostReceive {
-    /** @var Git_Exec */
-    private $exec_repo;
+    /** @var Git_Hook_LogAnalyzer */
+    private $log_analyzer;
 
     /** @var GitRepositoryFactory  */
     private $repository_factory;
@@ -42,13 +46,13 @@ class Git_Hook_PostReceive {
     private $log_pushes;
 
     public function __construct(
-            Git_Exec $exec_repo,
+            Git_Hook_LogAnalyzer $log_analyzer,
             GitRepositoryFactory $repository_factory,
             UserManager $user_manager,
             Git_Hook_ExtractCrossReferences $extract_cross_ref,
             Git_Ci_Launcher $ci_launcher,
             Git_Hook_LogPushes $log_pushes) {
-        $this->exec_repo          = $exec_repo;
+        $this->log_analyzer       = $log_analyzer;
         $this->repository_factory = $repository_factory;
         $this->user_manager       = $user_manager;
         $this->extract_cross_ref  = $extract_cross_ref;
@@ -70,8 +74,7 @@ class Git_Hook_PostReceive {
     private function executeForRepositoryAndUser(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname) {
         $this->ci_launcher->executeForRepository($repository);
 
-        $log_analyzer = new Git_Hook_LogAnalyzer($this->exec_repo);
-        $push_details = $log_analyzer->getPushDetails($repository, $user, $oldrev, $newrev, $refname);
+        $push_details = $this->log_analyzer->getPushDetails($repository, $user, $oldrev, $newrev, $refname);
 
         $this->log_pushes->executeForRepository($push_details);
 

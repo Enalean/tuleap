@@ -35,7 +35,9 @@ $git_exec = new Git_Exec($repository_path, $repository_path);
 $git_dao  = new GitDao();
 
 $post_receive = new Git_Hook_PostReceive(
-    $git_exec,
+    new Git_Hook_LogAnalyzer(
+        $git_exec
+    ),
     new GitRepositoryFactory(
         $git_dao,
         ProjectManager::instance()
