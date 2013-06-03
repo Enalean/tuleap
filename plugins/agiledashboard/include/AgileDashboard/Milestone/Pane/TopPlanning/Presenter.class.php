@@ -113,14 +113,6 @@ class AgileDashboard_Milestone_Pane_TopPlanning_Presenter {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_points');
     }
 
-    public function parent() {
-        if ($this->parent_item_type) {
-            return $this->parent_item_type;
-        } else {
-            return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_parent');
-        }
-    }
-
     public function header_status() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'header_status');
     }
