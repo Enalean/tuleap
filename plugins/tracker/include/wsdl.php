@@ -492,11 +492,11 @@ $GLOBALS['server']->wsdl->addComplexType(
     'TrackerWorkflowRuleArray',
     'complexType',
     'struct',
-    'choice',
+    'sequence',
     '',
     array(
-        'date' => array('type' => 'tns:TrackerWorkflowRuleDateArray'),
-        'list' => array('type' => 'tns:TrackerWorkflowRuleListArray'),
+        'dates' => array('type' => 'tns:TrackerWorkflowRuleDateArray'),
+        'lists' => array('type' => 'tns:TrackerWorkflowRuleListArray'),
     )
 );
 
