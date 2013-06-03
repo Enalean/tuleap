@@ -1,7 +1,6 @@
 <?php
-
-/*
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+/**
+ * Copyright Enalean (c) 2013. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -23,26 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_Hook_LogPushes {
-    /** @var GitDao */
-    private $dao;
+class Git_Command_UnknownObjectTypeException extends Exception {
 
-    public function __construct(GitDao $dao) {
-        $this->dao = $dao;
-    }
-
-    public function executeForRepository(Git_Hook_PushDetails $push_details) {
-        $this->dao->logGitPush(
-            $push_details->getRepository()->getId(),
-            $push_details->getUser()->getId(),
-            $_SERVER['REQUEST_TIME'],
-            count($push_details->getRevisionList()),
-            $push_details->getRefname(),
-            $push_details->getType(),
-            $push_details->getRefnameType()
-        );
-
-    }
 }
 
 ?>

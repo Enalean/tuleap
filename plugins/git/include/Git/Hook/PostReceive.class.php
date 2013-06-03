@@ -23,8 +23,6 @@
  */
 
 class Git_Hook_PostReceive {
-    const FAKE_EMPTY_COMMIT = '0000000000000000000000000000000000000000';
-
     /** @var Git_Exec */
     private $exec_repo;
 
@@ -72,39 +70,13 @@ class Git_Hook_PostReceive {
     private function executeForRepositoryAndUser(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname) {
         $this->ci_launcher->executeForRepository($repository);
 
-        $push_details = $this->getPushDetails($repository, $user, $oldrev, $newrev, $refname);
+        $log_analyzer = new Git_Hook_LogAnalyzer($this->exec_repo);
+        $push_details = $log_analyzer->getPushDetails($repository, $user, $oldrev, $newrev, $refname);
+
         $this->log_pushes->executeForRepository($push_details);
 
         foreach ($push_details->getRevisionList() as $commit) {
             $this->extract_cross_ref->execute($repository, $user, $commit, $refname);
-        }
-    }
-
-    private function getPushDetails(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname) {
-        if ($oldrev == self::FAKE_EMPTY_COMMIT) {
-            return new Git_Hook_PushDetails(
-                $repository,
-                $user,
-                $refname,
-                Git_Hook_PushDetails::CREATE_BRANCH,
-                $this->exec_repo->revListSinceStart($refname, $newrev)
-            );
-        } elseif ($newrev == self::FAKE_EMPTY_COMMIT) {
-            return new Git_Hook_PushDetails(
-                $repository,
-                $user,
-                $refname,
-                Git_Hook_PushDetails::DELETE_BRANCH,
-                array()
-            );
-        } else {
-            return new Git_Hook_PushDetails(
-                $repository,
-                $user,
-                $refname,
-                Git_Hook_PushDetails::UPDATE_BRANCH,
-                $this->exec_repo->revList($oldrev, $newrev)
-            );
         }
     }
 }
