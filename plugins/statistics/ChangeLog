@@ -1,3 +1,6 @@
+Version 0.24 - Tuleap 6.2
+    *  story #3541 - have statistics about usage of the services by project
+
 Version 0.23 - Tuleap 5.12
     * Rename User class to PFUser to allow integration of mediawiki
 
