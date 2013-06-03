@@ -43,6 +43,12 @@ $post_receive = new Git_Hook_PostReceive(
     new Git_Hook_ExtractCrossReferences(
         $git_exec,
         ReferenceManager::instance()
+    ),
+    new Git_Ci_Launcher(
+        new Jenkins_Client(
+            new Http_Client()
+        ),
+        new Git_Ci_Dao()
     )
 );
 

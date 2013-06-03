@@ -30,8 +30,6 @@ require_once 'common/Jenkins/Client.class.php';
  * on push
  */
 class Git_Ci_Launcher {
-    /** @var GitRepositoryFactory */
-    private $repository_factory;
 
     /** @var Jenkins_Client */
     private $jenkins_client;
@@ -39,8 +37,7 @@ class Git_Ci_Launcher {
     /** @var Git_Ci_Dao */
     private $dao;
 
-    public function __construct(GitRepositoryFactory $repository_factory, Jenkins_Client $jenkins_client, Git_Ci_Dao $dao) {
-        $this->repository_factory = $repository_factory;
+    public function __construct(Jenkins_Client $jenkins_client, Git_Ci_Dao $dao) {
         $this->jenkins_client     = $jenkins_client;
         $this->dao                = $dao;
     }
@@ -48,14 +45,11 @@ class Git_Ci_Launcher {
     /**
      * Trigger jobs corresponding to the Git repository
      *
-     * @param String $repository_location Name of the git repository
+     * @param GitRepository $repository_location Name of the git repository
      */
-    public function launchForLocation($repository_location) {
-        $repository  = $this->repository_factory->getFromFullPath($repository_location);
-        if ($repository) {
-            if ($repository->getProject()->usesService('hudson')) {
-                $this->launchForRepository($repository);
-            }
+    public function executeForRepository(GitRepository $repository) {
+        if ($repository->getProject()->usesService('hudson')) {
+            $this->launchForRepository($repository);
         }
     }
 

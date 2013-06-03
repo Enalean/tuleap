@@ -37,16 +37,27 @@ class Git_Hook_PostReceive {
     /** @var Git_Hook_ExtractCrossReferences */
     private $extract_cross_ref;
 
-    public function __construct(Git_Exec $exec_repo, GitRepositoryFactory $repository_factory, UserManager $user_manager, Git_Hook_ExtractCrossReferences $extract_cross_ref) {
+    /** @var Git_Ci_Launcher */
+    private $ci_launcher;
+
+    public function __construct(
+            Git_Exec $exec_repo,
+            GitRepositoryFactory $repository_factory,
+            UserManager $user_manager,
+            Git_Hook_ExtractCrossReferences $extract_cross_ref,
+            Git_Ci_Launcher $ci_launcher) {
         $this->exec_repo          = $exec_repo;
         $this->repository_factory = $repository_factory;
         $this->user_manager       = $user_manager;
         $this->extract_cross_ref  = $extract_cross_ref;
+        $this->ci_launcher        = $ci_launcher;
     }
 
     public function execute($repository_path, $user_name, $oldrev, $newrev, $refname) {
         $repository = $this->repository_factory->getFromFullPath($repository_path);
         if ($repository !== null) {
+            $this->ci_launcher->executeForRepository($repository);
+
             $user = $this->user_manager->getUserByUserName($user_name);
             if ($user === null) {
                 $user = new PFUser(array('user_id' => 0));

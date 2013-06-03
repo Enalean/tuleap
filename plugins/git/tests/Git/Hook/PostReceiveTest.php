@@ -24,13 +24,14 @@
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
-class PostReceiveTest extends TuleapTestCase {
-    private $git_exec_repo;
-    private $extract_cross_ref;
-    private $git_repository_factory;
-    private $post_receive;
-    private $user_manager;
-    private $repository;
+abstract class Git_Hook_PostReceive_Common extends TuleapTestCase {
+    protected $git_exec_repo;
+    protected $extract_cross_ref;
+    protected $git_repository_factory;
+    protected $post_receive;
+    protected $user_manager;
+    protected $repository;
+    protected $ci_launcher;
 
     public function setUp() {
         parent::setUp();
@@ -39,9 +40,19 @@ class PostReceiveTest extends TuleapTestCase {
         $this->git_repository_factory = mock('GitRepositoryFactory');
         $this->user_manager           = mock('UserManager');
         $this->repository             = mock('GitRepository');
+        $this->ci_launcher            = mock('Git_Ci_Launcher');
 
-        $this->post_receive = new Git_Hook_PostReceive($this->git_exec_repo, $this->git_repository_factory, $this->user_manager, $this->extract_cross_ref);
+        $this->post_receive = new Git_Hook_PostReceive(
+            $this->git_exec_repo,
+            $this->git_repository_factory,
+            $this->user_manager,
+            $this->extract_cross_ref,
+            $this->ci_launcher
+        );
     }
+}
+
+class Git_Hook_PostReceive_UserAndRepoTest extends Git_Hook_PostReceive_Common {
 
     public function itGetRepositoryFromFactory() {
         expect($this->git_repository_factory)->getFromFullPath('/var/lib/tuleap/gitolite/repositories/garden/dev.git')->once();
@@ -53,19 +64,6 @@ class PostReceiveTest extends TuleapTestCase {
         stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
         expect($this->user_manager)->getUserByUserName('john_doe')->once();
         stub($this->git_exec_repo)->revList()->returns(array());
-        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
-    }
-
-    public function itExecutesExtractOnEachCommit() {
-        stub($this->git_exec_repo)->revList()->returns(array('469eaa9'));
-
-        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
-
-        $user = mock('PFUser');
-        stub($this->user_manager)->getUserByUserName()->returns($user);
-
-        expect($this->extract_cross_ref)->execute($this->repository, $user, '469eaa9', 'refs/heads/master')->once();
-
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
     }
 
@@ -106,18 +104,48 @@ class PostReceiveTest extends TuleapTestCase {
 
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', '0000000000000000000000000000000000000000', '469eaa9', 'refs/heads/master');
     }
+}
 
+class Git_Hook_PostReceive_ExtractTest extends Git_Hook_PostReceive_Common {
+    private $user;
+
+    public function setUp() {
+        parent::setUp();
+        $this->user = mock('PFUser');
+        stub($this->git_exec_repo)->revList()->returns(array('469eaa9'));
+        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
+        stub($this->user_manager)->getUserByUserName()->returns($this->user);
+    }
+
+    public function itExecutesExtractOnEachCommit() {
+        expect($this->extract_cross_ref)->execute($this->repository, $this->user, '469eaa9', 'refs/heads/master')->once();
+
+        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
+    }
 
     public function itDoesntAttemptToExtractWhenBranchIsDeleted() {
         stub($this->git_exec_repo)->revListSinceStart()->returns(array('469eaa9'));
-        stub($this->git_exec_repo)->revList()->returns(array('469eaa9'));
-        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
-        stub($this->user_manager)->getUserByUserName()->returns(mock('PFUser'));
 
         expect($this->extract_cross_ref)->execute()->never();
 
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', '469eaa9', '0000000000000000000000000000000000000000', 'refs/heads/master');
     }
+}
+
+class Git_Hook_PostReceive_TriggerCiTest extends Git_Hook_PostReceive_Common {
+
+    public function setUp() {
+        parent::setUp();
+        stub($this->git_exec_repo)->revList()->returns(array('469eaa9'));
+        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
+        stub($this->user_manager)->getUserByUserName()->returns(mock('PFUser'));
+    }
+
+    public function itTriggersACiBuild() {
+        expect($this->ci_launcher)->executeForRepository($this->repository)->once();
+        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
+    }
+
 }
 
 class IsAnonymousUserExpectaction extends SimpleExpectation {
