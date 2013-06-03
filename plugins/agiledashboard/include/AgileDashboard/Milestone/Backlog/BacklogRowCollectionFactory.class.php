@@ -92,7 +92,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
 
     public function getUnplannedOpenCollection(
         PFUser $user,
-        Planning_ArtifactMilestone $milestone,
+        Planning_Milestone $milestone,
         AgileDashboard_Milestone_Backlog_BacklogStrategy $backlog_strategy,
         $redirect_to_self
     ) {

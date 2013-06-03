@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_TopPlanning_SubMilestonePresenterCollection implements Iterator, Countable {
+class AgileDashboard_Milestone_Pane_TopPlanning_MilestonePresenterCollection implements Iterator, Countable {
     private $submilestone_tracker;
     private $rows = array();
 
@@ -35,14 +35,14 @@ class AgileDashboard_Milestone_Pane_TopPlanning_SubMilestonePresenterCollection 
     }
 
     public function getSubmitNewUrlLinkedToMilestone(Planning_Milestone $milestone) {
-        return $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($this->submilestone_tracker);
+        return null;//$milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($this->submilestone_tracker);
     }
 
     public function canCreateNew(PFUser $user) {
         return $this->submilestone_tracker->userCanSubmitArtifact($user);
     }
 
-    public function push(AgileDashboard_Milestone_Pane_TopPlanning_SubMilestonePresenter $row) {
+    public function push(AgileDashboard_Milestone_Pane_TopPlanning_MilestonePresenter $row) {
         $this->rows[] = $row;
     }
 

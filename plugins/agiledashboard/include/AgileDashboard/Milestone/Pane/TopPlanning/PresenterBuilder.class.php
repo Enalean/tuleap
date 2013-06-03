@@ -30,6 +30,9 @@ class AgileDashboard_Milestone_Pane_TopPlanning_PresenterBuilder {
     /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
     private $strategy_factory;
 
+    /** @var Planning_MilestoneFactory */
+    private $milestone_factory;
+
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $strategy_factory,
         AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory $collection_factory,
@@ -40,7 +43,7 @@ class AgileDashboard_Milestone_Pane_TopPlanning_PresenterBuilder {
         $this->milestone_factory  = $milestone_factory;
     }
 
-    public function getMilestonePlanningPresenter(PFUser $user, Planning_Milestone $milestone, Tracker $submilestone_tracker) {
+    public function getMilestoneTopPlanningPresenter(PFUser $user, Planning_Milestone $milestone, Tracker $submilestone_tracker) {
         $redirect_paremeter     = new Planning_MilestoneRedirectParameter();
         $backlog_strategy       = $this->strategy_factory->getBacklogStrategy($milestone);
         $redirect_to_self       = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_TopPlanning_PaneInfo::IDENTIFIER);
@@ -52,41 +55,43 @@ class AgileDashboard_Milestone_Pane_TopPlanning_PresenterBuilder {
             $redirect_to_self
         );
 
-        $submilestone_collection = $this->getSubmilestoneCollection($user, $milestone, $submilestone_tracker, $redirect_to_self);
+        $milestone_collection = $this->getMilestoneCollection($user, $milestone, $submilestone_tracker, $redirect_to_self);
 
         return new AgileDashboard_Milestone_Pane_TopPlanning_Presenter(
             $backlog_collection,
-            $submilestone_collection,
+            $milestone_collection,
             $milestone,
             $backlog_collection->getParentItemName(),
             $backlog_strategy->getItemTracker()->getName(),
-            $submilestone_collection->getName(),
-            $submilestone_collection->getSubmitNewUrlLinkedToMilestone($milestone),
-            $submilestone_collection->canCreateNew($user),
+            $milestone_collection->getName(),
+            $milestone_collection->getSubmitNewUrlLinkedToMilestone($milestone),
+            $milestone_collection->canCreateNew($user),
             $this->canPlan($user, $milestone),
             $redirect_to_self
         );
     }
 
-    private function getSubmilestoneCollection(PFUser $user, Planning_Milestone $milestone, Tracker $submilestone_tracker, $redirect_to_self) {
-        $submilestones = array_reverse($this->milestone_factory->getSubMilestones($user, $milestone));
-        $submilestone_collection = new AgileDashboard_Milestone_Pane_TopPlanning_SubMilestonePresenterCollection($submilestone_tracker);
-        foreach ($submilestones as $submilestone) {
-            $this->milestone_factory->updateMilestoneContextualInfo($user, $submilestone);
-            $submilestone_collection->push(new AgileDashboard_Milestone_Pane_TopPlanning_SubMilestonePresenter($submilestone, $redirect_to_self, $user));
+    private function getMilestoneCollection(PFUser $user, Planning_Milestone $milestone, Tracker $submilestone_tracker, $redirect_to_self) {
+        $milestone_collection = new AgileDashboard_Milestone_Pane_TopPlanning_MilestonePresenterCollection($submilestone_tracker);
+        $milestones = array_reverse($this->milestone_factory->getAllMilestones($user, $milestone->getPlanning()));
+
+        foreach ($milestones as $milestone) {
+            $this->milestone_factory->updateMilestoneContextualInfo($user, $milestone);
+            $milestone_collection->push(new AgileDashboard_Milestone_Pane_TopPlanning_MilestonePresenter($milestone, $redirect_to_self, $user));
         }
-        return $submilestone_collection;
+
+        return $milestone_collection;
     }
 
     /**
      * @return bool
      */
     public function canPlan(PFUser $user, Planning_Milestone $milestone) {
-        $art_link_field = $milestone->getArtifact()->getAnArtifactLinkField($user);
-        if ($art_link_field && $art_link_field->userCanUpdate($user)) {
+//        $art_link_field = $milestone->getArtifact()->getAnArtifactLinkField($user);
+//        if ($art_link_field && $art_link_field->userCanUpdate($user)) {
             return true;
-        }
-        return false;
+//        }
+//        return false;
     }
 }
 ?>
