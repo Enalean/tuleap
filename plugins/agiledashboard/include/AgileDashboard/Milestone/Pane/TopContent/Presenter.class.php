@@ -45,7 +45,7 @@ class AgileDashboard_Milestone_Pane_TopContent_Presenter {
     private $descendant_item_name;
 
     public function __construct(
-        $todo,
+        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
         $done,
         $backlog_item_type,
         $can_add_backlog_item_type,
@@ -136,7 +136,7 @@ class AgileDashboard_Milestone_Pane_TopContent_Presenter {
     }
 
     public function has_something_done() {
-    //    return $this->done_collection->count() > 0;
+        return count($this->done_collection) > 0;
     }
 
     public function has_something() {

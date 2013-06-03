@@ -43,28 +43,29 @@ class AgileDashboard_Milestone_Pane_TopContent_PresenterBuilder {
         $redirect_paremeter   = new Planning_MilestoneRedirectParameter();
         $backlog_strategy     = $this->strategy_factory->getBacklogStrategy($milestone);
         $item_tracker         = $backlog_strategy->getItemTracker();
-        
-        $redirect_to_self     = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_Content_ContentPaneInfo::IDENTIFIER);
-
+        $identifier           = AgileDashboard_Milestone_Pane_TopContent_PaneInfo::IDENTIFIER;
+        $redirect_to_self     = $redirect_paremeter->getPlanningRedirectToSelf($milestone, $identifier);
         $can_add_backlog_item = $this->canAddBacklogItem($user, $milestone);
 
 //        $new_backlog_item_url = $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($item_tracker).'&'.$redirect_to_self;
 
-//        $todo_collection = $this->collection_factory->getTodoCollection($user, $milestone, $backlog_strategy, $redirect_to_self);
+        $todo_collection = $this->collection_factory->getToDoCollection($user, $milestone, $backlog_strategy, $redirect_to_self);
+        $done_collection = $this->collection_factory->getDoneCollection($user, $milestone, $backlog_strategy, $redirect_to_self);
 
         $content_presenter = new AgileDashboard_Milestone_Pane_TopContent_Presenter(
-            array(),//$todo_collection,
-            array(),//$this->collection_factory->getDoneCollection($user, $milestone, $backlog_strategy, $redirect_to_self),
-            'par', //$todo_collection->getParentItemName(),
+            $todo_collection,
+            $done_collection,
             $item_tracker->getName(),
-            true,//$can_add_backlog_item,
+            $can_add_backlog_item,
             'www'//$new_backlog_item_url
         );
-//        if ($backlog_strategy instanceof AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy) {
-//            $descendant_tracker = $backlog_strategy->getDescendantTracker();
-//            $content_presenter->setBacklogElements($this->getCreateNewPresenter($user, $milestone, $descendant_tracker, $redirect_to_self));
-//            $content_presenter->setDescendantItemName($descendant_tracker->getName());
-//        }
+
+        if ($backlog_strategy instanceof AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy) {
+            $descendant_tracker = $backlog_strategy->getDescendantTracker();
+            $content_presenter->setBacklogElements($this->getCreateNewPresenter($user, $milestone, $descendant_tracker, $redirect_to_self));
+            $content_presenter->setDescendantItemName($descendant_tracker->getName());
+        }
+
         return $content_presenter;
     }
 
