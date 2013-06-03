@@ -87,7 +87,7 @@ class AgileDashboardRouter {
                 $this->routeShowPlanning($request);
                 break;
             case 'show-top':
-                $this->routeShowTopPlanning($request);
+                $this->routeShowTopPlanning($request, $controller);
                 break;
             case 'new':
                 $this->renderAction($controller, 'new_', $request);
@@ -291,11 +291,17 @@ class AgileDashboardRouter {
         }
     }
 
-    public function routeShowTopPlanning(Codendi_Request $request) {
-        $request->set('is_top', true);
-
-        $controller = $this->milestone_controller_factory->getMilestoneController($request);
+    public function routeShowTopPlanning(Codendi_Request $request, $default_controller) {
         $action_arguments = array();
+
+        $user = $request->getCurrentUser();
+        if (! $user || ! $user->useLabFeatures()) {
+            $this->renderAction($default_controller, 'index', $request, $action_arguments);
+            return;
+        }
+
+        $request->set('is_top', true);
+        $controller = $this->milestone_controller_factory->getMilestoneController($request);
         $this->renderAction($controller, 'showTop', $request, $action_arguments);
     }
 }
