@@ -31,8 +31,14 @@ class Git_Hook_LogPushes {
         $this->dao = $dao;
     }
 
-    public function executeForRepository(GitRepository $repository, PFUser $user, array $commit_list, $refname) {
-        $this->dao->logGitPush($repository->getId(), $user->getId(), $_SERVER['REQUEST_TIME'], count($commit_list));
+    public function executeForRepository(Git_Hook_PushDetails $push_details) {
+        $this->dao->logGitPush(
+            $push_details->getRepository()->getId(),
+            $push_details->getUser()->getId(),
+            $_SERVER['REQUEST_TIME'],
+            count($push_details->getRevisionList())
+        );
+
     }
 }
 
