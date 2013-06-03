@@ -43,13 +43,13 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
 
     }
 
-    public function getTopBacklogArtifacts($milestone_artifact_id) {
-        $milestone_artifact_id = $this->da->escapeInt($milestone_artifact_id);
+    public function getTopBacklogArtifacts($milestone_tracker_id) {
+        $milestone_tracker_id = $this->da->escapeInt($milestone_tracker_id);
 
         $sql = "SELECT *
                 FROM tracker_artifact
                     INNER JOIN tracker_artifact_priority ON (tracker_artifact_priority.curr_id = tracker_artifact.id)
-                WHERE tracker_id = $milestone_artifact_id
+                WHERE tracker_id = $milestone_tracker_id
                 ORDER BY tracker_artifact_priority.rank ASC";
 
         return $this->retrieve($sql);
