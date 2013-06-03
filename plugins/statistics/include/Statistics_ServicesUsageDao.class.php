@@ -290,7 +290,6 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
 
     public function getNumberOfOpenArtifactsBetweenStartDateAndEndDate() {
         $sql = "SELECT artifact_group_list.group_id, COUNT(artifact.artifact_id) AS result
-
                 FROM artifact_group_list, artifact
                 WHERE ( open_date >= $this->start_date
                     AND open_date < $this->end_date
@@ -320,19 +319,6 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND add_date >= $this->start_date
                     AND add_date <= $this->end_date
                 GROUP BY  group_id";
-
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
-    }
-
-    public function getProjectCode() {
-        $sql = "SELECT g.group_id, value
-                FROM groups g,group_desc_value gdv, group_desc gd
-                WHERE g.group_id = gdv.group_id
-                    AND gdv.group_desc_id = gd.group_desc_id
-                    AND gd.desc_name = 'Code projet'
-                    AND register_time <= $this->end_date
-                GROUP BY g.group_id";
 
         $retrieve = $this->retrieve($sql);
         return $this->processMultipleRowInResult($retrieve);
