@@ -86,7 +86,7 @@ class AgileDashboardRouter {
             case 'show':
                 $this->routeShowPlanning($request);
                 break;
-            case 'show-top-planning':
+            case 'show-top':
                 $this->routeShowTopPlanning($request);
                 break;
             case 'new':
