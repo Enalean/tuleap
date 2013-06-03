@@ -48,7 +48,7 @@ class AgileDashboard_Milestone_Pane_TopPlanning_PresenterBuilder {
 
     public function getMilestoneTopPlanningPresenter(PFUser $user, Planning_Milestone $milestone, Tracker $submilestone_tracker) {
         $redirect_paremeter     = new Planning_MilestoneRedirectParameter();
-        $backlog_strategy       = $this->strategy_factory->getBacklogStrategy($milestone);
+        $backlog_strategy       = $this->strategy_factory->getSelfBacklogStrategy($milestone);
         $redirect_to_self       = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_TopPlanning_PaneInfo::IDENTIFIER);
 
         $backlog_collection = $this->collection_factory->getUnplannedOpenCollection(
