@@ -25,15 +25,74 @@
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
 class PostReceiveTest extends TuleapTestCase {
+    private $git_exec_repo;
+    private $extract_cross_ref;
+    private $git_repository_factory;
+    private $post_receive;
+    private $user_manager;
+    private $repository;
 
     public function setUp() {
         parent::setUp();
-        $this->git_exec_repo = mock('Git_Exec');
-        $this->extract_cross_ref = mock('Git_Hook_ExtractCrossReferences');
-        $this->post_receive = new Git_Hook_PostReceive($this->git_exec_repo, $this->extract_cross_ref);
+        $this->git_exec_repo          = mock('Git_Exec');
+        $this->extract_cross_ref      = mock('Git_Hook_ExtractCrossReferences');
+        $this->git_repository_factory = mock('GitRepositoryFactory');
+        $this->user_manager           = mock('UserManager');
+        $this->repository             = mock('GitRepository');
+
+        $this->post_receive = new Git_Hook_PostReceive($this->git_exec_repo, $this->git_repository_factory, $this->user_manager, $this->extract_cross_ref);
+    }
+
+    public function itGetRepositoryFromFactory() {
+        expect($this->git_repository_factory)->getFromFullPath('/var/lib/tuleap/gitolite/repositories/garden/dev.git')->once();
+        stub($this->git_exec_repo)->revList()->returns(array());
+        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
+    }
+
+    public function itGetUserFromManager() {
+        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
+        expect($this->user_manager)->getUserByUserName('john_doe')->once();
+        stub($this->git_exec_repo)->revList()->returns(array());
+        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
+    }
+
+    public function itExecutesExtractOnEachCommit() {
+        stub($this->git_exec_repo)->revList()->returns(array('469eaa9'));
+
+        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
+
+        $user = mock('PFUser');
+        stub($this->user_manager)->getUserByUserName()->returns($user);
+
+        expect($this->extract_cross_ref)->execute($this->repository, $user, '469eaa9', 'refs/heads/master')->once();
+
+        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
+    }
+
+    public function itSkipsIfRepositoryIsNotKnown() {
+        stub($this->git_exec_repo)->revList()->returns(array('469eaa9'));
+
+        stub($this->git_repository_factory)->getFromFullPath()->returns(null);
+
+        expect($this->extract_cross_ref)->execute()->never();
+
+        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
+    }
+
+    public function itFallsBackOnAnonymousIfUserIsNotKnows() {
+        stub($this->git_exec_repo)->revList()->returns(array('469eaa9'));
+        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
+
+        stub($this->user_manager)->getUserByUserName()->returns(null);
+
+        expect($this->extract_cross_ref)->execute($this->repository, new IsAnonymousUserExpectaction(), '469eaa9', 'refs/heads/master')->once();
+
+        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
     }
 
     public function itIteratesOnRevs() {
+        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
+
         expect($this->git_exec_repo)->revList('d8f1e57', '469eaa9')->once();
         stub($this->git_exec_repo)->revList()->returns(array());
 
@@ -41,126 +100,34 @@ class PostReceiveTest extends TuleapTestCase {
     }
 
     public function itIteratesOnRevsSinceStart() {
+        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
         expect($this->git_exec_repo)->revListSinceStart('refs/heads/master', '469eaa9')->once();
         stub($this->git_exec_repo)->revListSinceStart()->returns(array());
 
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', '0000000000000000000000000000000000000000', '469eaa9', 'refs/heads/master');
     }
 
+
     public function itDoesntAttemptToExtractWhenBranchIsDeleted() {
-        expect($this->extract_cross_ref)->extract()->never();
+        stub($this->git_exec_repo)->revListSinceStart()->returns(array('469eaa9'));
+        stub($this->git_exec_repo)->revList()->returns(array('469eaa9'));
+        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
+        stub($this->user_manager)->getUserByUserName()->returns(mock('PFUser'));
+
+        expect($this->extract_cross_ref)->execute()->never();
+
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', '469eaa9', '0000000000000000000000000000000000000000', 'refs/heads/master');
     }
+}
 
-    public function itGetsEachRevisionContent() {
-        stub($this->git_exec_repo)->revList()->returns(array('469eaa92'));
-
-        expect($this->git_exec_repo)->catFile('469eaa92')->once();
-
-        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
+class IsAnonymousUserExpectaction extends SimpleExpectation {
+    public function test($user) {
+        return ($user instanceof PFUser && $user->isAnonymous());
     }
 
-    public function itExtractCrossReferencesForGivenUser() {
-        stub($this->git_exec_repo)->revList()->returns(array('469eaa92'));
-        stub($this->git_exec_repo)->catFile()->returns('whatever');
-
-        expect($this->extract_cross_ref)->extract('*', 'john_doe', '*', '*', '*')->once();
-        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
-    }
-
-    public function itExtractCrossReferencesOnGitCommit() {
-        stub($this->git_exec_repo)->revList()->returns(array('469eaa92'));
-        stub($this->git_exec_repo)->catFile()->returns('whatever');
-
-        expect($this->extract_cross_ref)->extract('*', '*', 'git_commit', '*', '*')->once();
-        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
-    }
-
-    public function itExtractCrossReferencesOnCommitMessage() {
-        stub($this->git_exec_repo)->revList()->returns(array('469eaa92'));
-        stub($this->git_exec_repo)->catFile()->returns('bla bla bla');
-
-        expect($this->extract_cross_ref)->extract('*', '*', '*', '*', 'bla bla bla')->once();
-        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
-    }
-
-    public function itSetTheReferenceToTheRepository() {
-        stub($this->git_exec_repo)->revList()->returns(array('469eaa92'));
-        stub($this->git_exec_repo)->catFile()->returns('');
-
-        expect($this->extract_cross_ref)->extract('*', '*', '*', 'dev/469eaa92', '*')->once();
-        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
-    }
-
-    public function itSetTheReferenceToTheRepositoryWithSubRepo() {
-        stub($this->git_exec_repo)->revList()->returns(array('469eaa92'));
-        stub($this->git_exec_repo)->catFile()->returns('');
-
-        expect($this->extract_cross_ref)->extract('*', '*', '*', 'arch/x86_64/dev/469eaa92', '*')->once();
-        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/arch/x86_64/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
+    public function testMessage($user) {
+        return "Given parameter is not an anonymous user ($user).";
     }
 }
 
-class PostReceive_ExtractProjectNameTest extends TuleapTestCase {
-
-    public function setUp() {
-        parent::setUp();
-        $this->git_exec_repo = mock('Git_Exec');
-        stub($this->git_exec_repo)->revList()->returns(array('469eaa92'));
-        stub($this->git_exec_repo)->catFile()->returns('whatever');
-        $this->extract_cross_ref = mock('Git_Hook_ExtractCrossReferences');
-        $this->post_receive = new Git_Hook_PostReceive($this->git_exec_repo, $this->extract_cross_ref);
-    }
-
-    public function itExtractCrossReferencesOnProject() {
-        expect($this->extract_cross_ref)->extract('garden', '*', '*', '*', '*')->once();
-        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
-    }
-
-    function testExtractsGroupNameFromProjectRepos() {
-        expect($this->extract_cross_ref)->extract('myproject', '*', '*', '*', '*')->once();
-        $this->post_receive->execute('/gitroot/myproject/stuff.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
-    }
-
-    function testExtractsGroupNameFromProjectRepos2() {
-        expect($this->extract_cross_ref)->extract('gpig', '*', '*', '*', '*')->once();
-        $this->post_receive->execute('/gitolite/repositories/gpig/dalvik.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
-    }
-
-    function testExtractsGroupNameFromProjectRepos3() {
-        expect($this->extract_cross_ref)->extract('gpig', '*', '*', '*', '*')->once();
-        $this->post_receive->execute('/var/lib/codendi/gitolite/repositories/gpig/dalvik.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
-    }
-
-    function testExtractsGroupNameFromProjectRepos4() {
-        expect($this->extract_cross_ref)->extract('gpig', '*', '*', '*', '*')->once();
-        $this->post_receive->execute('/var/lib/codendi/gitroot/gpig/dalvik.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
-    }
-
-    function testExtractsTheNameAfterTheFirstOccurrenceOfRootPath() {
-        expect($this->extract_cross_ref)->extract('gitroot', '*', '*', '*', '*')->once();
-        $this->post_receive->execute('/gitroot/gitroot/stuff.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
-    }
-
-    function testExtractsGroupNameFromPersonalRepos() {
-        expect($this->extract_cross_ref)->extract('gpig', '*', '*', '*', '*')->once();
-        $this->post_receive->execute('/var/lib/codendi/gitolite/repositories/gpig/u/manuel/dalvik.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
-    }
-
-    function testExtractsGroupNameFromPersonalRepos2() {
-        expect($this->extract_cross_ref)->extract('gpig', '*', '*', '*', '*')->once();
-        $this->post_receive->execute('/var/lib/codendi/gitroot/gpig/u/manuel/dalvik.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
-    }
-
-    function testExtractsGroupNameFromSymlinkedRepo() {
-        expect($this->extract_cross_ref)->extract('chene', '*', '*', '*', '*')->once();
-        $this->post_receive->execute('/data/codendi/gitroot/chene/gitshell.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
-    }
-
-    function testExtractsGroupNameThrowsAnExceptionWhenNoProjectNameFound() {
-        $this->expectException('GitNoProjectFoundException');
-        expect($this->extract_cross_ref)->extract()->never();
-        $this->post_receive->execute('/non_existing_path/dalvik.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
-    }
-}
 ?>

@@ -30,24 +30,19 @@
  */
 class Git_Hook_ExtractCrossReferences {
 
-    public function extract($project_name, $user_name, $type, $rev_id, $text) {
-        $ch = curl_init();
+    private $git_exec;
+    private $reference_manager;
 
-        curl_setopt($ch, CURLOPT_URL, 'http://localhost/api/reference/extractCross');
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Codendi Perl Agent');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array(
-            'group_name' => $project_name,
-            'login'      => $user_name,
-            'type'       => $type,
-            'rev_id'     => $rev_id,
-            'text'       => $text
-        )));
+    public function __construct(Git_Exec $git_exec, ReferenceManager $reference_manager) {
+        $this->git_exec = $git_exec;
+        $this->reference_manager = $reference_manager;
+    }
 
-        $result = curl_exec($ch);
-
-        curl_close($ch);
-        return $result;
+    public function execute(GitRepository $repository, PFUser $user, $commit, $refname) {
+        $rev_id = $repository->getFullName().'/'.$commit;
+        $text   = $this->git_exec->catFile($commit);
+        $GLOBALS['group_id'] = $repository->getProject()->getId();
+        $this->reference_manager->extractCrossRef($text, $rev_id, Git::REFERENCE_NATURE, $repository->getProject()->getId(), $user->getId());
     }
 }
 
