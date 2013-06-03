@@ -41,13 +41,15 @@ abstract class Git_Hook_PostReceive_Common extends TuleapTestCase {
         $this->user_manager           = mock('UserManager');
         $this->repository             = mock('GitRepository');
         $this->ci_launcher            = mock('Git_Ci_Launcher');
+        $this->log_pushes             = mock('Git_Hook_LogPushes');
 
         $this->post_receive = new Git_Hook_PostReceive(
             $this->git_exec_repo,
             $this->git_repository_factory,
             $this->user_manager,
             $this->extract_cross_ref,
-            $this->ci_launcher
+            $this->ci_launcher,
+            $this->log_pushes
         );
     }
 }
@@ -143,6 +145,24 @@ class Git_Hook_PostReceive_TriggerCiTest extends Git_Hook_PostReceive_Common {
 
     public function itTriggersACiBuild() {
         expect($this->ci_launcher)->executeForRepository($this->repository)->once();
+        $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
+    }
+
+}
+
+class Git_Hook_PostReceive_CountPushesTest extends Git_Hook_PostReceive_Common {
+    private $user;
+
+    public function setUp() {
+        parent::setUp();
+        $this->user = mock('PFUser');
+        stub($this->git_exec_repo)->revList()->returns(array('469eaa9'));
+        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
+        stub($this->user_manager)->getUserByUserName()->returns($this->user);
+    }
+
+    public function itTriggersACiBuild() {
+        expect($this->log_pushes)->executeForRepository($this->repository, $this->user, array('469eaa9'), 'refs/heads/master')->once();
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
     }
 
