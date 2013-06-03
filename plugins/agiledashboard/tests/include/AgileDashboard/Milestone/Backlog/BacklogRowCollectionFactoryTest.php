@@ -181,15 +181,6 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
         $row = $collection->current();
         $this->assertEqual($row->id(), $this->open_unplanned_story_id);
     }
-
-    public function testgetTopCollectionReturnsAnArray() {
-        $milestone = mock('Planning_TopMilestone');
-
-        $collection = $this->factory->getTopCollection($this->user,$milestone);
-        $this->assertTrue(is_array($collection));
-    }
-
-
 }
 
 ?>
