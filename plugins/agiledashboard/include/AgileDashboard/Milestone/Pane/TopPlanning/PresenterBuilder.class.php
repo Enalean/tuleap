@@ -33,6 +33,9 @@ class AgileDashboard_Milestone_Pane_TopPlanning_PresenterBuilder {
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
 
+    /** @var bool */
+    private $can_plan = true;
+
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $strategy_factory,
         AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory $collection_factory,
@@ -66,32 +69,36 @@ class AgileDashboard_Milestone_Pane_TopPlanning_PresenterBuilder {
             $milestone_collection->getName(),
             $milestone_collection->getSubmitNewUrlLinkedToMilestone($milestone),
             $milestone_collection->canCreateNew($user),
-            $this->canPlan($user, $milestone),
+            $this->can_plan,
             $redirect_to_self
         );
     }
 
     private function getMilestoneCollection(PFUser $user, Planning_Milestone $milestone, Tracker $submilestone_tracker, $redirect_to_self) {
         $milestone_collection = new AgileDashboard_Milestone_Pane_TopPlanning_MilestonePresenterCollection($submilestone_tracker);
-        $milestones = array_reverse($this->milestone_factory->getAllMilestones($user, $milestone->getPlanning()));
+        $milestones = array_reverse($this->milestone_factory->getTopMilestones($user, $milestone));
 
         foreach ($milestones as $milestone) {
             $this->milestone_factory->updateMilestoneContextualInfo($user, $milestone);
             $milestone_collection->push(new AgileDashboard_Milestone_Pane_TopPlanning_MilestonePresenter($milestone, $redirect_to_self, $user));
-        }
 
+            if (! $this->canPlan($user, $milestone)) {
+                $this->can_plan = false;
+            }
+        }
+        
         return $milestone_collection;
     }
 
     /**
      * @return bool
      */
-    public function canPlan(PFUser $user, Planning_Milestone $milestone) {
-//        $art_link_field = $milestone->getArtifact()->getAnArtifactLinkField($user);
-//        if ($art_link_field && $art_link_field->userCanUpdate($user)) {
+    private function canPlan(PFUser $user, Planning_Milestone $milestone) {
+        $art_link_field = $milestone->getArtifact()->getAnArtifactLinkField($user);
+        if ($art_link_field && $art_link_field->userCanUpdate($user)) {
             return true;
-//        }
-//        return false;
+        }
+        return false;
     }
 }
 ?>

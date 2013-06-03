@@ -35,9 +35,14 @@ class Planning_TopMilestone  implements Planning_Milestone {
      */
     private $planning;
 
-    public function __construct(Project $project, Codendi_Request $request) {
+    /**
+     * @var Tracker_Artifact
+     */
+    private $artifact = null;
+
+    public function __construct(Project $project, PFUser $user) {
         $this->project  = $project;
-        $this->request = $request;
+        $this->user = $user;
 
         $this->determineTrackers();
     }
@@ -68,16 +73,17 @@ class Planning_TopMilestone  implements Planning_Milestone {
             $this->project->getID(),
             'my backlog_title',
             'my plan title',
-            $planning_tracker_id,
-            $backlog_tracker_id
+            $backlog_tracker_id,
+            $planning_tracker_id
         );
 
-        $this->planning->setPlanningTracker($planning_tracker);
-        $this->planning->setBacklogTracker($backlog_tracker);
+        $this->planning
+            ->setPlanningTracker($planning_tracker)
+            ->setBacklogTracker($backlog_tracker);
     }
 
     private function getPlanningTrackerIds() {
-        $user = $this->request->getCurrentUser();
+        $user = $this->user;
         $planning_factory = PlanningFactory::build();
         $plannings = $planning_factory->getPlannings($user, $this->project->getID());
 
@@ -117,11 +123,21 @@ class Planning_TopMilestone  implements Planning_Milestone {
     }
 
     public function getArtifact() {
-
+        if ($this->artifact) {
+            return $this->artifact;
+        }
     }
 
     public function getArtifactId() {
+        if ($this->artifact) {
+            return $this->artifact->getID();
+        }
+
         return null;
+    }
+
+    public function setArtifact(Tracker_Artifact $artifact) {
+        $this->artifact = $artifact;
     }
 
     public function getTrackerId() {
@@ -182,5 +198,19 @@ class Planning_TopMilestone  implements Planning_Milestone {
     public function getEndDate() {
         return null;
     }
+
+    public function setStartDate() {
+        return $this;
+    }
+
+    public function setDuration() {
+        return $this;
+    }
+
+    public function getCapacity() {
+        
+    }
+
+
 }
 ?>

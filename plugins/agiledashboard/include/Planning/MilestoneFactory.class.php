@@ -132,21 +132,21 @@ class Planning_MilestoneFactory {
             $this->updateMilestoneContextualInfo($user, $milestone);
             return $milestone;
         } elseif ($is_top) {
-            return new Planning_TopMilestone($project, $this->request);
+            return new Planning_TopMilestone($project, $this->request->getCurrentUser());
         } else {
             return new Planning_NoMilestone($project, $planning);
         }
     }
 
-    public function updateMilestoneContextualInfo(PFUser $user, Planning_ArtifactMilestone $milestone) {
+    public function updateMilestoneContextualInfo(PFUser $user, Planning_Milestone $milestone) {
         return $milestone
             ->setStartDate($this->getTimestamp($user, $milestone, Planning_Milestone::START_DATE_FIELD_NAME))
             ->setDuration($this->getComputedFieldValue($user, $milestone, Planning_Milestone::DURATION_FIELD_NAME));
     }
 
-    private function getTimestamp(PFUser $user, Planning_ArtifactMilestone $milestone, $field_name) {
+    private function getTimestamp(PFUser $user, Planning_Milestone $milestone, $field_name) {
         $milestone_artifact = $milestone->getArtifact();
-        $field              = $this->formelement_factory->getUsedFieldByNameForUser($milestone_artifact->getTracker()->getId(), $field_name, $user);
+        $field = $this->formelement_factory->getUsedFieldByNameForUser($milestone_artifact->getTracker()->getId(), $field_name, $user);
 
         if (! $field) {
             return 0;
@@ -160,7 +160,7 @@ class Planning_MilestoneFactory {
         return $value->getTimestamp();
     }
 
-    protected function getComputedFieldValue(PFUser $user, Planning_ArtifactMilestone $milestone, $field_name) {
+    protected function getComputedFieldValue(PFUser $user, Planning_Milestone $milestone, $field_name) {
         $milestone_artifact = $milestone->getArtifact();
         $field = $this->formelement_factory->getComputableFieldByNameForUser(
             $milestone_artifact->getTracker()->getId(),
@@ -297,6 +297,24 @@ class Planning_MilestoneFactory {
         }
 
         return $sub_milestones;
+    }
+
+    public function getTopMilestones(PFUser $user, Planning_Milestone $milestone) {
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+        $milestone_planning_tracker_id = $milestone->getPlanning()->getPlanningTrackerId();
+        $artifacts = $artifact_factory->getArtifactsByTrackerId($milestone_planning_tracker_id);
+
+        $milestones = array();
+
+        if ($milestone_planning_tracker_id) {
+            foreach($artifacts as $artifact) {                        
+                $milestone = new Planning_TopMilestone($milestone->getProject(), $user);
+                $milestone->setArtifact($artifact);
+                $milestones[] = $milestone;
+            }
+        }
+
+        return $milestones;
     }
 
     /**
