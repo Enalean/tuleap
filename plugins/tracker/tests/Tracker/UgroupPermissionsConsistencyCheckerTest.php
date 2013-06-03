@@ -28,7 +28,7 @@ class Tracker_UgroupPermissionsConsistencyCheckerTest extends TuleapTestCase {
 
     protected $template_tracker;
     protected $target_project;
-    protected $permissions_dao;
+    protected $permissions_retriever;
     protected $ugroup_manager;
     protected $template_ugroup_dev;
     protected $template_ugroup_support;
@@ -46,17 +46,14 @@ class Tracker_UgroupPermissionsConsistencyCheckerTest extends TuleapTestCase {
         $this->target_ugroup_dev       = stub('UGroup')->getName()->returns('dev');
         $this->target_ugroup_support   = stub('UGroup')->getName()->returns('support');
 
-        $template_project       = aMockProject()->withId(101)->build();
-        $this->template_tracker = aTracker()->withId($this->tracker_id)->withProject($template_project)->build();
-        $this->target_project   = mock('Project');
-        $this->permissions_dao  = mock('Tracker_PermissionsDao');
-        $this->ugroup_manager   = mock('UGroupManager');
-        $this->messenger        = mock('Tracker_UgroupPermissionsConsistencyMessenger');
+        $template_project            = stub('Project')->getId()->returns(103);
+        $this->template_tracker      = aTracker()->withProject($template_project)->build();
+        $this->target_project        = stub('Project')->getId()->returns(104);
+        $this->ugroup_manager        = mock('UGroupManager');
+        $this->messenger             = mock('Tracker_UgroupPermissionsConsistencyMessenger');
+        $this->permissions_retriever = mock('Tracker_UgroupPermissionsRetriever');
 
-        stub($this->ugroup_manager)->getUGroup($template_project, $this->template_ugroup_dev_id)->returns($this->template_ugroup_dev);
-        stub($this->ugroup_manager)->getUGroup($template_project, $this->template_ugroup_support_id)->returns($this->template_ugroup_support);
-
-        $this->checker = new Tracker_UgroupPermissionsConsistencyChecker($this->permissions_dao, $this->ugroup_manager, $this->messenger);
+        $this->checker = new Tracker_UgroupPermissionsConsistencyChecker($this->permissions_retriever, $this->ugroup_manager, $this->messenger);
     }
 }
 
@@ -74,7 +71,7 @@ class Tracker_UgroupPermissionsConsistencyChecker_SameProjectTest extends Tracke
 class Tracker_UgroupPermissionsConsistencyChecker_NoPermOnStaticGroupsTest extends Tracker_UgroupPermissionsConsistencyCheckerTest {
 
     public function itReturnsNoMessage() {
-        stub($this->permissions_dao)->getAuthorizedStaticUgroupIds($this->tracker_id)->returns(array());
+        stub($this->permissions_retriever)->getListOfInvolvedStaticUgroups($this->template_tracker)->returns(array());
 
         expect($this->messenger)->allIsWell()->once();
         expect($this->messenger)->ugroupsMissing()->never();
@@ -89,7 +86,7 @@ class Tracker_UgroupPermissionsConsistencyChecker_PermOnOneStaticGroupTest exten
 
     public function setUp() {
         parent::setUp();
-        stub($this->permissions_dao)->getAuthorizedStaticUgroupIds($this->tracker_id)->returns(array($this->template_ugroup_dev_id));
+        stub($this->permissions_retriever)->getListOfInvolvedStaticUgroups($this->template_tracker)->returns(array($this->template_ugroup_dev));
     }
 
     public function itReturnsAWarningWhenTheTargetProjectDoesNotHaveTheStaticGroup() {
@@ -117,7 +114,7 @@ class Tracker_UgroupPermissionsConsistencyChecker_PermOnManyStaticGroupTest exte
 
     public function setUp() {
         parent::setUp();
-        stub($this->permissions_dao)->getAuthorizedStaticUgroupIds($this->tracker_id)->returns(array($this->template_ugroup_dev_id, $this->template_ugroup_support_id));
+        stub($this->permissions_retriever)->getListOfInvolvedStaticUgroups($this->template_tracker)->returns(array($this->template_ugroup_dev, $this->template_ugroup_support));
     }
 
     public function itReturnsAWarningWhenTheTargetProjectDoesNotHaveTheStaticGroups() {
