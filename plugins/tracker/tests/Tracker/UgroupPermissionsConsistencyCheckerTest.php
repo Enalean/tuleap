@@ -60,6 +60,17 @@ class Tracker_UgroupPermissionsConsistencyCheckerTest extends TuleapTestCase {
     }
 }
 
+class Tracker_UgroupPermissionsConsistencyChecker_SameProjectTest extends Tracker_UgroupPermissionsConsistencyCheckerTest {
+
+    public function itReturnsNoMessage() {
+        expect($this->messenger)->allIsWell()->once();
+        expect($this->messenger)->ugroupsMissing()->never();
+        expect($this->messenger)->ugroupsAreTheSame()->never();
+
+        $message = $this->checker->checkConsistency($this->template_tracker, $this->template_tracker->getProject());
+    }
+}
+
 class Tracker_UgroupPermissionsConsistencyChecker_NoPermOnStaticGroupsTest extends Tracker_UgroupPermissionsConsistencyCheckerTest {
 
     public function itReturnsNoMessage() {

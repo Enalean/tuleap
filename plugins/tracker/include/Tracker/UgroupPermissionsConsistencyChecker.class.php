@@ -56,8 +56,12 @@ class Tracker_UgroupPermissionsConsistencyChecker {
      * @return Tracker_UgroupPermissionsConsistencyMessage
      */
     public function checkConsistency(Tracker $template_tracker, Project $target_project) {
-        $ugroups = $this->getListOfInvolvedStaticUgroups($template_tracker);
+        if ($template_tracker->getProject() == $target_project) {
+            $this->messenger->allIsWell();
+            return;
+        }
 
+        $ugroups = $this->getListOfInvolvedStaticUgroups($template_tracker);
         if (! $ugroups) {
             $this->messenger->allIsWell();
             return;
