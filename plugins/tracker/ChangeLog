@@ -1,3 +1,12 @@
+Version 5.127 - Tuleap 6.2
+    * Fix bugs #3582 - getTrackerStructure permissions
+
+
+SOAP method getTrackerStructure returns fields visible by user
+instead of requiring admin permission.
+
+Change-Id: Iafdb79916d4c4076146a33392d1a169e25081b7c
+
 Version 5.126 - Tuleap 6.1
     * story #2923: Display dedicated planning pane in agiledashboard
 
