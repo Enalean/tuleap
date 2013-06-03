@@ -63,7 +63,7 @@ class Statistics_Services_UsageFormatter {
         $this->title[] = $title;
         $this->addDefaultValuesForTitle($title);
         $this->addValuesFromQueryResultForTitle($query_result, $title);
-
+        
         return $this->datas;
     }
 

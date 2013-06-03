@@ -1,4 +1,6 @@
 <?php
+
+use Project;
 /**
  * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
@@ -92,7 +94,10 @@ if (!$error && $request->exist('export')) {
     $csv_exporter->buildDatas($dao->getAdministratorsEMails(), "Created by (Email)");
     $csv_exporter->buildDatas($dao->getCVSActivities(), "CVS activities");
     $csv_exporter->buildDatas($dao->getSVNActivities(), "SVN activities");
-    $csv_exporter->buildDatas($dao->getGitActivities(), "GIT activities");
+    $p = $plugin_manager->getPluginByName('git');
+    if ($p && $plugin_manager->isPluginAvailable($p)) {
+        $csv_exporter->buildDatas($dao->getGitActivities(), "GIT activities");
+    }
     $csv_exporter->buildDatas($dao->getFilesPublished(), "Files published");
     $csv_exporter->buildDatas($dao->getDistinctFilesPublished(), "Distinct files published");
     $csv_exporter->buildDatas($dao->getNumberOfDownloadedFilesBeforeEndDate(), "Downloaded files (before end date)");
@@ -113,9 +118,34 @@ if (!$error && $request->exist('export')) {
     $csv_exporter->buildDatas($dao->getNumberOfNewsBetweenStartDateAndEndDate(), "News");
     $csv_exporter->buildDatas($dao->getActiveSurveys(), "Active surveys");
     $csv_exporter->buildDatas($dao->getSurveysAnswersBetweenStartDateAndEndDate(), "Surveys answers");
-    $csv_exporter->buildDatas($dao->getProjectWithCIActivated(), "Continuous integration activated");
-    $csv_exporter->buildDatas($dao->getNumberOfCIJobs(), "Continuous integration jobs");
+    $p = $plugin_manager->getPluginByName('IM---');
+    if ($p && $plugin_manager->isPluginAvailable($p)) {
+        $csv_exporter->buildDatas($dao->getProjectWithCIActivated(), "Continuous integration activated");
+        $csv_exporter->buildDatas($dao->getNumberOfCIJobs(), "Continuous integration jobs");
+    }
+    $p = $plugin_manager->getPluginByName('mediawiki');
+    if ($p && $plugin_manager->isPluginAvailable($p)) {
+        $project_manager = ProjectManager::instance();
+        $number_of_page                   = array();
+        $number_of_page_between_two_dates = array();
+        $number_of_page_since_a_date      = array();
+        foreach($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
+            if ($project->usesService('plugin_mediawiki')) {
+                $group_id = $project->getID();
+                $result = $dao->getMediawikiPagesNumberOfAProject($project)->getRow();
+                $number_of_page[] = array('group_id' => $group_id, 'result' => $result['result']);
 
+                $result = $dao->getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate($project)->getRow();
+                $number_of_page_between_two_dates[] = array('group_id' => $group_id, 'result' => $result['result']);
+
+                $result = $dao->getCreatedPagesNumberSinceStartDate($project)->getRow();
+                $number_of_page_since_a_date[] = array('group_id' => $group_id, 'result' => $result['result']);
+            }
+        }
+        $csv_exporter->buildDatas($number_of_page, "Mediawiki Pages");
+        $csv_exporter->buildDatas($number_of_page_between_two_dates, "Modified Mediawiki pages");
+        $csv_exporter->buildDatas($number_of_page_since_a_date, "Number of created Mediawiki pages since start date");
+    }
     echo $csv_exporter->exportCSV();
 
 } else {

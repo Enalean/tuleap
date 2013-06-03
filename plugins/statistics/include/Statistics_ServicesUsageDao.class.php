@@ -398,24 +398,27 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         return $this->processMultipleRowInResult($retrieve);
     }
 
-    public function getMediawikiPagesNumberOfAProject(PFO_Project $project) {
+
+    public function getMediawikiPagesNumberOfAProject(Project $project) {
         $database_name = $this->getMediawikiDatabaseName($project);
 
-        $sql = "USE $database_name;
-                SELECT COUNT(1)
+        $sql = "USE $database_name";
+        $this->retrieve($sql);
+        $sql = "SELECT COUNT(1) AS result
                 FROM mwpage";
-
         $result = $this->retrieve($sql);
         return $result;
     }
 
-    public function getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate(PFO_Project $project) {
+    public function getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate(Project $project) {
         $database_name = $this->getMediawikiDatabaseName($project);
         $start_date    = date("YmdHis", $this->start_date);
         $end_date      = date("YmdHis", $this->end_date);
 
-        $sql = "USE $database_name;
-                SELECT COUNT(1)
+        $sql = "USE $database_name";
+        $this->retrieve($sql);
+
+        $sql = "SELECT COUNT(1) AS result
                 FROM mwpage
                 WHERE
                     page_touched >= $start_date
@@ -427,12 +430,14 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         return $result;
     }
 
-    public function getCreatedPagesNumberSinceStartDate(PFO_Project $project) {
+    public function getCreatedPagesNumberSinceStartDate(Project $project) {
         $database_name = $this->getMediawikiDatabaseName($project);
         $start_date    = date("YmdHis", $this->start_date);
 
-        $sql = "USE $database_name;
-                SELECT COUNT(1)
+        $sql = "USE $database_name";
+        $this->retrieve($sql);
+
+        $sql = "SELECT COUNT(1) AS result
                 FROM mwrevision
                 WHERE
                     rev_parent_id=0
@@ -444,7 +449,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         return $result;
     }
 
-    private function getMediawikiDatabaseName(PFO_Project $project) {
+    private function getMediawikiDatabaseName(Project $project) {
         $database_name = "plugin_mediawiki_".$project->getUnixName();
         return $database_name;
     }
