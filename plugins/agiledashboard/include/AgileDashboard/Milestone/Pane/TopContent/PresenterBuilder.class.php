@@ -69,7 +69,7 @@ class AgileDashboard_Milestone_Pane_TopContent_PresenterBuilder {
         return $content_presenter;
     }
 
-    private function getCreateNewPresenter(PFUser $user, Planning_ArtifactMilestone $milestone, Tracker $item_tracker, $redirect_to_self) {
+    private function getCreateNewPresenter(PFUser $user, Planning_Milestone $milestone, Tracker $item_tracker, $redirect_to_self) {
         $create_new = array();
         foreach ($this->strategy_factory->getSelfBacklogStrategy($milestone)->getArtifacts($user) as $artifact) {
             /* @var Tracker_Artifact $artifact */

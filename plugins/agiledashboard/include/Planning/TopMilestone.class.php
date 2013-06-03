@@ -43,40 +43,24 @@ class Planning_TopMilestone  implements Planning_Milestone {
     }
 
     private function determineTrackers() {
-        $hierarchy_factory = Tracker_HierarchyFactory::instance();
-
         $tracker_manager = new TrackerManager();
         $trackers = $tracker_manager->getTrackersByGroupId($this->project->getID());
 
-        $tracker_ids = array();
-        foreach ($trackers as $tracker) {
-            $tracker_ids[] = $tracker->getId();
-        }
+        $top_trackers_ids     = $this->getTopTrackerIds($trackers);
+        $planning_tracker_ids = $this->getPlanningTrackerIds();
 
-        $hierarchy = $hierarchy_factory->getHierarchy($tracker_ids);
-
-        $top_trackers = array();
-        foreach ($tracker_ids as $id) {
-            if($hierarchy->isRoot($id)) {
-                $top_trackers[] = $id;
+        $planning_tracker_id = null;
+        $backlog_tracker_id  = null;
+        foreach ($top_trackers_ids as $top_tracker_id) {
+            if (in_array($top_tracker_id, $planning_tracker_ids)) {
+                $planning_tracker_id = $top_tracker_id;
+            } else {
+                $backlog_tracker_id = $top_tracker_id;
             }
         }
 
-        $user = $this->request->getCurrentUser();
-        $planning_factory = PlanningFactory::build();
-        $plannings = $planning_factory->getPlannings($user, $this->project->getID());
-
-        /*
-         * No idea if this logic is correct
-         */
-        $top_tracker_id = null;
-        foreach ($plannings as $planning) {
-            if (in_array($planning->getPlanningTrackerId(), $top_trackers)) {
-                $top_tracker_id = $planning->getPlanningTrackerId();
-            }
-        }
-
-        $tracker = $trackers[$top_tracker_id];
+        $planning_tracker = $trackers[$planning_tracker_id];
+        $backlog_tracker = $trackers[$backlog_tracker_id];
 
         $this->planning = new Planning(
             1,
@@ -84,11 +68,45 @@ class Planning_TopMilestone  implements Planning_Milestone {
             $this->project->getID(),
             'my backlog_title',
             'my plan title',
-            $top_tracker_id,
-            null
+            $planning_tracker_id,
+            $backlog_tracker_id
         );
 
-        $this->planning->setBacklogTracker($tracker);
+        $this->planning->setPlanningTracker($planning_tracker);
+        $this->planning->setBacklogTracker($backlog_tracker);
+    }
+
+    private function getPlanningTrackerIds() {
+        $user = $this->request->getCurrentUser();
+        $planning_factory = PlanningFactory::build();
+        $plannings = $planning_factory->getPlannings($user, $this->project->getID());
+
+        $planning_tracker_ids = array();
+        foreach ($plannings as $planning) {
+            $planning_tracker_ids[] = $planning->getPlanningTrackerId();
+        }
+
+        return $planning_tracker_ids;
+    }
+
+    public function getTopTrackerIds($trackers) {
+        $hierarchy_factory = Tracker_HierarchyFactory::instance();
+
+        $tracker_ids = array();
+        foreach ($trackers as $planning_tracker) {
+            $tracker_ids[] = $planning_tracker->getId();
+        }
+
+        $hierarchy = $hierarchy_factory->getHierarchy($tracker_ids);
+
+        $top_trackers_ids = array();
+        foreach ($tracker_ids as $id) {
+            if($hierarchy->isRoot($id)) {
+                $top_trackers_ids[] = $id;
+            }
+        }
+
+        return $top_trackers_ids;
     }
 
     /**
@@ -107,6 +125,7 @@ class Planning_TopMilestone  implements Planning_Milestone {
     }
 
     public function getTrackerId() {
+        return $this->planning->getBacklogTrackerId();
     }
 
     public function getArtifactTitle() {

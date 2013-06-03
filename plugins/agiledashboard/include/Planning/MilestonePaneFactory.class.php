@@ -247,7 +247,7 @@ class Planning_MilestonePaneFactory {
                 $this->getPlanningPresenterBuilder()->getMilestonePlanningPresenter($this->request->getCurrentUser(), $milestone, $submilestone_tracker)
             );
         }
-
+        
         return $pane_info;
     }
 
