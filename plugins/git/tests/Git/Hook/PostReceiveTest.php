@@ -32,6 +32,7 @@ abstract class Git_Hook_PostReceive_Common extends TuleapTestCase {
     protected $user_manager;
     protected $repository;
     protected $ci_launcher;
+    protected $log_pushes;
 
     public function setUp() {
         parent::setUp();
@@ -161,8 +162,8 @@ class Git_Hook_PostReceive_CountPushesTest extends Git_Hook_PostReceive_Common {
         stub($this->user_manager)->getUserByUserName()->returns($this->user);
     }
 
-    public function itTriggersACiBuild() {
-        expect($this->log_pushes)->executeForRepository($this->repository, $this->user, array('469eaa9'), 'refs/heads/master')->once();
+    public function itLogPush() {
+        expect($this->log_pushes)->executeForRepository()->once();
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master');
     }
 

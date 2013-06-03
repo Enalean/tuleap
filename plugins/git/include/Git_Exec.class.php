@@ -148,6 +148,22 @@ class Git_Exec {
     }
 
     /**
+     * Return the object type (commit, tag, etc);
+     *
+     * @param String $rev
+     * @throws Git_Command_UnknownObjectTypeException
+     * @return String
+     */
+    public function getObjectType($rev) {
+        $output = array();
+        $this->gitCmdWithOutput('cat-file -t '.escapeshellarg($rev), $output);
+        if (count($output) == 1) {
+            return $output[0];
+        }
+        throw new Git_Command_UnknownObjectTypeException();
+    }
+
+    /**
      * git help commit
      *
      * Commit only if there is something to commit

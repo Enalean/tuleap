@@ -26,39 +26,110 @@
  * Store informations about a push
  */
 class Git_Hook_PushDetails {
-    const CREATE_BRANCH = 'create_branch';
-    const DELETE_BRANCH = 'delete_branch';
-    const UPDATE_BRANCH = 'update_branch';
+    const ACTION_CREATE = 'create';
+    const ACTION_DELETE = 'delete';
+    const ACTION_UPDATE = 'update';
+
+    const OBJECT_TYPE_COMMIT = 'commit';
+    const OBJECT_TYPE_TAG    = 'tag';
+
+    const TYPE_BRANCH          = 'branch';
+    const TYPE_UNANNOTATED_TAG = 'tag';
+    const TYPE_ANNOTATED_TAG   = 'annotated_tag';
+    const TYPE_TRACKING_BRANCH = 'tracking_branch';
+    const TYPE_UNKNOWN         = '';
 
     private $type;
+    private $rev_type;
     private $revision_list;
     private $repository;
     private $user;
+    private $refname;
 
-    public function __construct(GitRepository $repository, PFUser $user, $refname, $type, array $revision_list) {
-        $this->repository = $repository;
-        $this->user       = $user;
-        $this->refname    = $refname;
-        $this->type       = $type;
+    public function __construct(GitRepository $repository, PFUser $user, $refname, $type, $rev_type, array $revision_list) {
+        $this->repository    = $repository;
+        $this->user          = $user;
+        $this->refname       = $refname;
+        $this->type          = $type;
+        $this->rev_type      = $rev_type;
         $this->revision_list = $revision_list;
     }
 
+    /**
+     * The repository where the push was made
+     *
+     *  @return GitRepository
+     */
     public function getRepository() {
         return $this->repository;
     }
 
+    /**
+     * Who made the push
+     *
+     * @return PFUser
+     */
     public function getUser() {
         return $this->user;
     }
 
+    /**
+     * On which element in the repository the push was done (branch, tag, etc)
+     *
+     * @return String
+     */
     public function getRefname() {
         return $this->refname;
     }
 
+    /**
+     * Operation type (create, update, delete)
+     *
+     * @return String
+     */
     public function getType() {
         return $this->type;
     }
 
+    /**
+     * What object type (commit, tag)
+     *
+     * @return String
+     */
+    public function getRevType() {
+        return $this->rev_type;
+    }
+
+    /**
+     * What kind of reference was updated (tag, annotated_tag, commit, tracking_branch)
+     *
+     * @return String
+     */
+    public function getRefnameType() {
+        if (strpos($this->refname, 'refs/tags/') === 0) {
+            switch ($this->rev_type) {
+                case self::OBJECT_TYPE_COMMIT:
+                    return self::TYPE_UNANNOTATED_TAG;
+                    break;
+                case self::OBJECT_TYPE_TAG:
+                    return self::TYPE_ANNOTATED_TAG;
+                    break;
+            }
+        } elseif ($this->rev_type == self::OBJECT_TYPE_COMMIT) {
+            if (strpos($this->refname, 'refs/heads/') === 0) {
+                return self::TYPE_BRANCH;
+            } elseif (strpos($this->refname, 'refs/remotes/') === 0) {
+                return self::TYPE_TRACKING_BRANCH;
+            }
+        }
+        return self::TYPE_UNKNOWN;
+    }
+
+    /**
+     * List of impacted revisions
+     *
+     * @return String[] A list of sha1
+     */
     public function getRevisionList() {
         return $this->revision_list;
     }
