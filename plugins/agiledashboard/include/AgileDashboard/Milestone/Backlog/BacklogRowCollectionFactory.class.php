@@ -130,13 +130,16 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
         $this->unplanned_open_collection[$id] = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
         $artifacts            = array();
         $backlog_item_ids     = array();
+        
         foreach ($backlog_strategy->getArtifacts($user) as $artifact) {
             $artifacts[$artifact->getId()] = $artifact;
             $backlog_item_ids[] = $artifact->getId();
         }
+
         $parents   = $this->getParentArtifacts($milestone, $user, $backlog_item_ids);
         $semantics = $this->getArtifactsSemantics($user, $milestone, $backlog_item_ids);
         $planned   = $this->getPlannedArtifactIds($user, $milestone);
+
         foreach ($artifacts as $artifact) {
             $this->pushItem(
                 $milestone,
@@ -271,7 +274,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
             $backlog_item->setStatus(Tracker_Semantic_Status::OPEN);
             $this->setRemainingEffort($user, $backlog_item, $artifact);
             $this->todo_collection[$milestone->getArtifactId()]->push($backlog_item);
-            
+
             if (! in_array($artifact_id, $planned)) {
                 $this->unplanned_open_collection[$milestone->getArtifactId()]->push($backlog_item);
             }
@@ -286,14 +289,18 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
     }
 
     private function getPlannedArtifactIds(PFUser $user, Planning_Milestone $milestone) {
-        $sub_milestones     = $this->milestone_factory->getSubMilestones($user, $milestone);
-        $sub_milestones_ids = array_map(array($this, 'extractArtifactId'), $sub_milestones);
+        if ($milestone instanceof Planning_TopMilestone) {
+            $milestones = $this->milestone_factory->getTopMilestones($user, $milestone);
+        } else {
+            $milestones     = $this->milestone_factory->getSubMilestones($user, $milestone);
+        }
 
-        if (! $sub_milestones_ids) {
+        $milestones_ids = array_map(array($this, 'extractArtifactId'), $milestones);
+        if (! $milestones_ids) {
             return array();
         }
 
-        return $this->dao->getPlannedItemIds($sub_milestones_ids);
+        return $this->dao->getPlannedItemIds($milestones_ids);
     }
 
     private function extractArtifactId(Planning_Milestone $milestone) {
