@@ -24,16 +24,21 @@ document.observe('dom:loaded', function () {
     }
 
     var milestone_content = $('blcontent'),
-        top_milestone_content = $('topblcontent')
-    if (milestone_content || top_milestone_content) {
+        top_milestone_content = $('topblcontent');
+
+    if (milestone_content) {
         tuleap.agiledashboard.MilestoneContent(milestone_content);
+    }
+
+    if (top_milestone_content) {
+        tuleap.agiledashboard.MilestoneContent(top_milestone_content);
     }
 
     var milestone_planning = $('planning'),
         top_milestone_planning = $('topplanning');
 
     if (milestone_planning || top_milestone_planning) {
-        new tuleap.agiledashboard.NewPlanning(milestone_planning);
+        new tuleap.agiledashboard.NewPlanning();
     }
 
     tuleap.agiledashboard.align_short_access_heights.defer();
