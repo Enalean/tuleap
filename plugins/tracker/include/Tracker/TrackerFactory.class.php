@@ -486,6 +486,9 @@ class TrackerFactory {
                 } else if ($project_id == $project_id_template) {
                      $duplicate_type = PermissionsDao::DUPLICATE_SAME_PROJECT;
                 } else {
+                    $ugroup_manager = new UGroupManager();
+                    $builder = new Tracker_UgroupMappingBuilder(new Tracker_UgroupPermissionsRetriever(new Tracker_PermissionsDao(), $ugroup_manager), $ugroup_manager);
+                    $ugroup_mapping = $builder->getMapping($template_tracker, ProjectManager::instance()->getProject($project_id));
                     $duplicate_type = PermissionsDao::DUPLICATE_OTHER_PROJECT;
                 }
 
