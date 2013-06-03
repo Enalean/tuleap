@@ -30,7 +30,5 @@ while read oldrev newrev refname
 	echo $oldrev $newrev $refname | /usr/share/codendi/plugins/git/hooks/post-receive-email 2>/dev/null
         /usr/lib/codendi/bin/git-post-receive.pl $repository_path $user_name $oldrev $newrev $refname
 	. /usr/share/codendi/plugins/git/hooks/post-receive-log 2>/dev/null
-	. /usr/share/codendi/plugins/git/hooks/post-receive-trigger-ci 2>/dev/null
-	#/usr/share/codendi/plugins/git/hooks/post-receive.php "$repository_path" "$user_name" "$oldrev" "$newrev" "$refname"
     done
 
