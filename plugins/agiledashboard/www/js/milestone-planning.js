@@ -133,7 +133,6 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                 }
 
                 function shouldDisplayPlaceholder(table) {
-                    console.log($('tbody tr', table).length);
                     var SIZE_OF_TABLE_WHEN_THERE_IS_ONLY_OUR_EMPTY_PLACEHOLDER = 1;
 
                     return $('tbody tr', table).length === SIZE_OF_TABLE_WHEN_THERE_IS_ONLY_OUR_EMPTY_PLACEHOLDER || isDraggingLastRow(table);

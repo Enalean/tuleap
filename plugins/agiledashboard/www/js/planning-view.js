@@ -23,13 +23,16 @@ document.observe('dom:loaded', function () {
         new tuleap.agiledashboard.Planning(planner);
     }
 
-    var milestone_content = $('blcontent');
-    if (milestone_content) {
+    var milestone_content = $('blcontent'),
+        top_milestone_content = $('topblcontent')
+    if (milestone_content || top_milestone_content) {
         tuleap.agiledashboard.MilestoneContent(milestone_content);
     }
 
-    var milestone_planning = $('planning');
-    if (milestone_planning) {
+    var milestone_planning = $('planning'),
+        top_milestone_planning = $('topplanning');
+
+    if (milestone_planning || top_milestone_planning) {
         new tuleap.agiledashboard.NewPlanning(milestone_planning);
     }
 
