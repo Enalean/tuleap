@@ -55,19 +55,30 @@ class Planning_TopMilestone  implements Planning_Milestone {
         $tracker_manager = new TrackerManager();
         $trackers = $tracker_manager->getTrackersByGroupId($this->project->getID());
 
-        $top_trackers_ids     = $this->getTopTrackerIds($trackers);
-        $planning_tracker_ids = $this->getPlanningTrackerIds();
-
-        $planning_tracker_id = null;
-        $backlog_tracker_id  = null;
-        foreach ($top_trackers_ids as $top_tracker_id) {
-            if (in_array($top_tracker_id, $planning_tracker_ids)) {
-                $planning_tracker_id = $top_tracker_id;
-            } else {
-                $backlog_tracker_id = $top_tracker_id;
-            }
+        $planning_factory = PlanningFactory::build();
+        $plannings = $planning_factory->getPlannings($this->user, $this->project->getID());
+        if (! $plannings) {
+            die('Ha ha');
         }
+        $first = current($plannings);
 
+        $backlog_tracker_id  = $first->getPlanningTrackerId();;
+        $planning_tracker_id = $first->getPlanningTrackerId();;
+
+
+        //$top_trackers_ids     = $this->getTopTrackerIds($trackers);
+        //$planning_tracker_ids = $this->getPlanningTrackerIds();
+        //
+        //$planning_tracker_id = null;
+        //$backlog_tracker_id  = null;
+        //foreach ($top_trackers_ids as $top_tracker_id) {
+        //    if (in_array($top_tracker_id, $planning_tracker_ids)) {
+        //        $planning_tracker_id = $top_tracker_id;
+        //    } else {
+        //        $backlog_tracker_id = $top_tracker_id;
+        //    }
+        //}
+        //
         $planning_tracker = $trackers[$planning_tracker_id];
         $backlog_tracker = $trackers[$backlog_tracker_id];
 
