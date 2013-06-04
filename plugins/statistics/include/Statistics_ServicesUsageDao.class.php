@@ -401,28 +401,27 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
 
     public function getMediawikiPagesNumberOfAProject(Project $project) {
         $database_name = $this->getMediawikiDatabaseName($project);
+        $group_id      = $project->getID();
 
         $sql = "USE $database_name";
         $this->retrieve($sql);
-        $sql = "SELECT COUNT(1) AS result
+        $sql = "SELECT $group_id AS group_id, COUNT(1) AS result
                 FROM mwpage";
 
-        $row = $this->retrieve($sql)->getRow();
-        if ($row) {
-            return array('group_id' => $project->getID(), 'result' => $row['result']);
-        }
-        return array();
+        return $this->retrieve($sql)->getRow();
     }
 
     public function getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate(Project $project) {
         $database_name = $this->getMediawikiDatabaseName($project);
+        $group_id      = $project->getID();
+
         $start_date    = date("YmdHis", $this->start_date);
         $end_date      = date("YmdHis", $this->end_date);
 
         $sql = "USE $database_name";
         $this->retrieve($sql);
 
-        $sql = "SELECT COUNT(1) AS result
+        $sql = "SELECT $group_id AS group_id, COUNT(1) AS result
                 FROM mwpage
                 WHERE
                     page_touched >= $start_date
@@ -430,21 +429,19 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     page_touched <= $end_date
                ";
 
-        $row = $this->retrieve($sql)->getRow();
-        if ($row) {
-            return array('group_id' => $project->getID(), 'result' => $row['result']);
-        }
-        return array();
+        return $this->retrieve($sql)->getRow();
     }
 
     public function getCreatedPagesNumberSinceStartDate(Project $project) {
         $database_name = $this->getMediawikiDatabaseName($project);
+        $group_id      = $project->getID();
+
         $start_date    = date("YmdHis", $this->start_date);
 
         $sql = "USE $database_name";
         $this->retrieve($sql);
 
-        $sql = "SELECT COUNT(1) AS result
+        $sql = "SELECT $group_id AS group_id, COUNT(1) AS result
                 FROM mwrevision
                 WHERE
                     rev_parent_id=0
@@ -452,11 +449,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     rev_timestamp >= $start_date
                ";
 
-        $row = $this->retrieve($sql)->getRow();
-        if ($row) {
-            return array('group_id' => $project->getID(), 'result' => $row['result']);
-        }
-        return array();
+        return $this->retrieve($sql)->getRow();
     }
 
     private function getMediawikiDatabaseName(Project $project) {
