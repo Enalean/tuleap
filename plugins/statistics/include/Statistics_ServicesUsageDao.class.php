@@ -406,8 +406,12 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         $this->retrieve($sql);
         $sql = "SELECT COUNT(1) AS result
                 FROM mwpage";
-        $result = $this->retrieve($sql);
-        return $result;
+
+        $row = $this->retrieve($sql)->getRow();
+        if ($row) {
+            return array('group_id' => $project->getID(), 'result' => $row['result']);
+        }
+        return array();
     }
 
     public function getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate(Project $project) {
@@ -426,8 +430,11 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     page_touched <= $end_date
                ";
 
-        $result = $this->retrieve($sql);
-        return $result;
+        $row = $this->retrieve($sql)->getRow();
+        if ($row) {
+            return array('group_id' => $project->getID(), 'result' => $row['result']);
+        }
+        return array();
     }
 
     public function getCreatedPagesNumberSinceStartDate(Project $project) {
@@ -445,8 +452,11 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     rev_timestamp >= $start_date
                ";
 
-        $result = $this->retrieve($sql);
-        return $result;
+        $row = $this->retrieve($sql)->getRow();
+        if ($row) {
+            return array('group_id' => $project->getID(), 'result' => $row['result']);
+        }
+        return array();
     }
 
     private function getMediawikiDatabaseName(Project $project) {

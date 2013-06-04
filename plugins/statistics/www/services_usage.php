@@ -152,15 +152,9 @@ if (!$error && $request->exist('export')) {
         $number_of_page_since_a_date      = array();
         foreach($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
             if ($project->usesService('plugin_mediawiki')) {
-                $group_id = $project->getID();
-                $result = $dao->getMediawikiPagesNumberOfAProject($project)->getRow();
-                $number_of_page[] = array('group_id' => $group_id, 'result' => $result['result']);
-
-                $result = $dao->getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate($project)->getRow();
-                $number_of_page_between_two_dates[] = array('group_id' => $group_id, 'result' => $result['result']);
-
-                $result = $dao->getCreatedPagesNumberSinceStartDate($project)->getRow();
-                $number_of_page_since_a_date[] = array('group_id' => $group_id, 'result' => $result['result']);
+                $number_of_page[] = $dao->getMediawikiPagesNumberOfAProject($project);
+                $number_of_page_between_two_dates[] = $dao->getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate($project);
+                $number_of_page_since_a_date[] = $dao->getCreatedPagesNumberSinceStartDate($project);
             }
         }
         $csv_exporter->buildDatas($number_of_page, "Mediawiki Pages");
