@@ -47,8 +47,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                AND register_time <= $this->end_date
             GROUP BY group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getDescriptionOfActiveProjectsBeforeEndDate() {
@@ -58,8 +57,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND register_time <= $this->end_date
                 GROUP BY group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getRegisterTimeOfActiveProjectsBeforeEndDate() {
@@ -69,8 +67,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND register_time <= $this->end_date
                 GROUP BY group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getInfosFromTroveGroupLink() {
@@ -81,8 +78,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND tc.trove_cat_id=tgl.trove_cat_id
                 GROUP BY group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getAdministrators() {
@@ -92,8 +88,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND u.status='A'
                 GROUP BY group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getAdministratorsRealNames() {
@@ -103,8 +98,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND u.status='A'
                 GROUP BY group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getAdministratorsEMails() {
@@ -114,8 +108,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND u.status='A'
                 GROUP BY group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getCVSActivities() {
@@ -125,8 +118,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND day >= $this->start_date
                 GROUP BY group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getSVNActivities() {
@@ -136,8 +128,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND date >= $this->start_date
                 GROUP BY group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getGitActivities() {
@@ -148,8 +139,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND push_date >= $this->start_date
                 GROUP BY project_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getFilesPublished() {
@@ -161,8 +151,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND f.post_date >= $this->start_date
                 GROUP BY p.group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getDistinctFilesPublished() {
@@ -173,8 +162,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND f.post_date <= $this->end_date
                 GROUP BY p.group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getNumberOfDownloadedFilesBeforeEndDate() {
@@ -185,8 +173,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND l.time <= $this->end_date
                 GROUP BY p.group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getNumberOfDownloadedFilesBetweenStartDateAndEndDate() {
@@ -198,8 +185,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND fdl.day >= $this->start_date
                 GROUP BY p.group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getNumberOfActiveMailingLists() {
@@ -208,8 +194,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                 WHERE is_public != 9
                 GROUP BY group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getNumberOfInactiveMailingLists() {
@@ -218,8 +203,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                 WHERE is_public = 9
                 GROUP BY group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getNumberOfActiveForums() {
@@ -230,8 +214,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND fg.is_public != 9
                 GROUP BY  fg.group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getNumberOfInactiveForums() {
@@ -242,8 +225,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND fg.is_public = 9
                 GROUP BY  fg.group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getForumsActivitiesBetweenStartDateAndEndDate() {
@@ -254,8 +236,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND f.date >= $this->start_date
                 GROUP BY  fg.group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getNumberOfWikiDocuments() {
@@ -263,8 +244,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                 FROM wiki_group_list
                 GROUP BY group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate() {
@@ -274,8 +254,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND time >= $this->start_date
                 GROUP BY group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getNumberOfDistinctWikiPages() {
@@ -284,8 +263,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                 WHERE time <= $this->end_date
                 GROUP BY group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getNumberOfOpenArtifactsBetweenStartDateAndEndDate() {
@@ -296,8 +274,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND artifact_group_list.group_artifact_id = artifact.group_artifact_id )
                 GROUP BY artifact_group_list.group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getNumberOfClosedArtifactsBetweenStartDateAndEndDate() {
@@ -308,8 +285,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND artifact_group_list.group_artifact_id = artifact.group_artifact_id )
                 GROUP BY artifact_group_list.group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getNumberOfUserAddedBetweenStartDateAndEndDate() {
@@ -320,8 +296,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND add_date <= $this->end_date
                 GROUP BY  group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getAddedDocumentBetweenStartDateAndEndDate() {
@@ -331,8 +306,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND create_date <= $this->end_date
                 GROUP BY  group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getDeletedDocumentBetweenStartDateAndEndDate() {
@@ -342,8 +316,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND delete_date <= $this->end_date
                 GROUP BY  group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getNumberOfNewsBetweenStartDateAndEndDate() {
@@ -353,8 +326,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND date <= $this->end_date
                 GROUP BY  group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getActiveSurveys() {
@@ -364,8 +336,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND g.group_id = s.group_id
                 GROUP BY  g.group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getSurveysAnswersBetweenStartDateAndEndDate() {
@@ -375,8 +346,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                     AND date <= $this->end_date
                 GROUP BY  group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getProjectWithCIActivated() {
@@ -385,8 +355,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                 WHERE short_name = 'hudson'
                 GROUP BY  group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
     public function getNumberOfCIJobs() {
@@ -394,8 +363,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
                 FROM plugin_hudson_job
                 GROUP BY  group_id";
 
-        $retrieve = $this->retrieve($sql);
-        return $this->processMultipleRowInResult($retrieve);
+        return $this->retrieve($sql);
     }
 
 
@@ -455,16 +423,6 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     private function getMediawikiDatabaseName(Project $project) {
         $database_name = "plugin_mediawiki_".$project->getUnixName();
         return $database_name;
-    }
-
-    private function processMultipleRowInResult(DataAccessResult $retrieve) {
-        $return = array();
-
-        if ($retrieve->isError()) {
-            return $return;
-        }
-        
-        return $retrieve;
     }
 }
 
