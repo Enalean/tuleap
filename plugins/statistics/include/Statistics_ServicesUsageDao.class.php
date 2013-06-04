@@ -463,12 +463,8 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         if ($retrieve->isError()) {
             return $return;
         }
-
-        foreach ($retrieve as $res) {
-            $return[] = $res;
-        }
-
-        return $return;
+        
+        return $retrieve;
     }
 }
 

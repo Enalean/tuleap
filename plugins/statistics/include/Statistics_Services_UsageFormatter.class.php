@@ -55,10 +55,10 @@ class Statistics_Services_UsageFormatter {
 
     /**
      * Build CVS datas from SQL queries results to export them in a file
-     * @param array $query_result
+     * @param array|DataAccessResult $query_result
      * @param type $title
      */
-    public function buildDatas(array $query_result, $title) {
+    public function buildDatas($query_result, $title) {
         $this->initiateDatas($query_result);
         $this->title[] = $title;
         $this->addDefaultValuesForTitle($title);
@@ -74,7 +74,7 @@ class Statistics_Services_UsageFormatter {
         }
     }
 
-    private function addValuesFromQueryResultForTitle(array $query_result, $title) {
+    private function addValuesFromQueryResultForTitle($query_result, $title) {
         foreach ($query_result as $data) {
             if ($this->canAddValueFromQuery($data)) {
                 $this->datas[$data[self::GROUP_ID]][$title] = $data[self::VALUES];
@@ -82,7 +82,7 @@ class Statistics_Services_UsageFormatter {
         }
     }
 
-    private function initiateDatas(array $query_result) {
+    private function initiateDatas($query_result) {
         if (! empty($this->datas)) {
             return;
         }
