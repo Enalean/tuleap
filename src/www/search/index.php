@@ -148,7 +148,7 @@ if ($type_of_search == "soft") {
 
 	if (!$result || $rows < 1) {
 		$no_rows = 1;
-		echo '<H2>'.$Language->getText('search_index','no_match_found', $hp->purify(htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8'), CODENDI_PURIFIER_CONVERT_HTML)).'</H2>';
+		echo '<H2>'.$Language->getText('search_index','no_match_found', $hp->purify($words, CODENDI_PURIFIER_CONVERT_HTML)).'</H2>';
 		echo db_error();
 //		echo $sql;
 	} else {
