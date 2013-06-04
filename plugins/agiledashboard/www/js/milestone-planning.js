@@ -26,9 +26,12 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 (function ($) {
     tuleap.agiledashboard.NewPlanning = Class.create({
         dragging : false,
+        params : null,
 
-        initialize: function () {
+        initialize: function (params) {
             var self = this;
+
+            this.params = params;
 
             $('.agiledashboard-planning-submilestone-header').click(function (event) {
                 var $submilestone_content_row = $(this).next();
@@ -55,12 +58,14 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
         },
 
         fetchSubmilestoneData : function(data_container) {
-            var self = this;
+            var self = this,
+                action = this.params.data_route;
 
             $.ajax({
-                url : "/plugins/agiledashboard/?action=submilestonedata",
+                url : "/plugins/agiledashboard/",
                 dataType : "html",
                 data : {
+                    action: action,
                     planning_id: data_container.attr('data-planning-id'),
                     aid : data_container.attr('data-submilestone-id')
                 },
