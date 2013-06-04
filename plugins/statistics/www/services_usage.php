@@ -94,8 +94,8 @@ if (!$error && $request->exist('export')) {
     $csv_exporter->buildDatas($dao->getAdministratorsEMails(), "Created by (Email)");
     $csv_exporter->buildDatas($dao->getCVSActivities(), "CVS activities");
     $csv_exporter->buildDatas($dao->getSVNActivities(), "SVN activities");
-    $p = $plugin_manager->getPluginByName('git');
-    if ($p && $plugin_manager->isPluginAvailable($p)) {
+    $p = $pluginManager->getPluginByName('git');
+    if ($p && $pluginManager->isPluginAvailable($p)) {
         $csv_exporter->buildDatas($dao->getGitActivities(), "GIT activities");
     }
     $csv_exporter->buildDatas($dao->getFilesPublished(), "Files published");
@@ -118,13 +118,13 @@ if (!$error && $request->exist('export')) {
     $csv_exporter->buildDatas($dao->getNumberOfNewsBetweenStartDateAndEndDate(), "News");
     $csv_exporter->buildDatas($dao->getActiveSurveys(), "Active surveys");
     $csv_exporter->buildDatas($dao->getSurveysAnswersBetweenStartDateAndEndDate(), "Surveys answers");
-    $p = $plugin_manager->getPluginByName('IM---');
-    if ($p && $plugin_manager->isPluginAvailable($p)) {
+    $p = $pluginManager->getPluginByName('hudson');
+    if ($p && $pluginManager->isPluginAvailable($p)) {
         $csv_exporter->buildDatas($dao->getProjectWithCIActivated(), "Continuous integration activated");
         $csv_exporter->buildDatas($dao->getNumberOfCIJobs(), "Continuous integration jobs");
     }
-    $p = $plugin_manager->getPluginByName('mediawiki');
-    if ($p && $plugin_manager->isPluginAvailable($p)) {
+    $p = $pluginManager->getPluginByName('mediawiki');
+    if ($p && $pluginManager->isPluginAvailable($p)) {
         $project_manager = ProjectManager::instance();
         $number_of_page                   = array();
         $number_of_page_between_two_dates = array();
