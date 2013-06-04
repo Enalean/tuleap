@@ -1,4 +1,6 @@
 <?php
+
+use Project;
 /**
  * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
@@ -83,6 +85,7 @@ if (!$error && $request->exist('export')) {
     $dao          = new Statistics_ServicesUsageDao(CodendiDataAccess::instance(), $startDate, $endDate);
     $csv_exporter = new Statistics_Services_UsageFormatter(new Statistics_Formatter($startDate, $endDate));
 
+    //Project admin
     $csv_exporter->buildDatas($dao->getNameOfActiveProjectsBeforeEndDate(), "Project");
     $csv_exporter->buildDatas($dao->getDescriptionOfActiveProjectsBeforeEndDate(), "Description");
     $csv_exporter->buildDatas($dao->getRegisterTimeOfActiveProjectsBeforeEndDate(), "Creation date");
@@ -90,32 +93,74 @@ if (!$error && $request->exist('export')) {
     $csv_exporter->buildDatas($dao->getAdministrators(), "Created by");
     $csv_exporter->buildDatas($dao->getAdministratorsRealNames(), "Created by (Real name)");
     $csv_exporter->buildDatas($dao->getAdministratorsEMails(), "Created by (Email)");
+    $csv_exporter->buildDatas($dao->getNumberOfUserAddedBetweenStartDateAndEndDate(), "Users added");
+
+    //CVS & SVN
     $csv_exporter->buildDatas($dao->getCVSActivities(), "CVS activities");
     $csv_exporter->buildDatas($dao->getSVNActivities(), "SVN activities");
-    $csv_exporter->buildDatas($dao->getGitActivities(), "GIT activities");
+
+    //GIT
+    $p = $pluginManager->getPluginByName('git');
+    if ($p && $pluginManager->isPluginAvailable($p)) {
+        $csv_exporter->buildDatas($dao->getGitActivities(), "GIT activities");
+    }
+
+    //FRS
     $csv_exporter->buildDatas($dao->getFilesPublished(), "Files published");
     $csv_exporter->buildDatas($dao->getDistinctFilesPublished(), "Distinct files published");
     $csv_exporter->buildDatas($dao->getNumberOfDownloadedFilesBeforeEndDate(), "Downloaded files (before end date)");
     $csv_exporter->buildDatas($dao->getNumberOfDownloadedFilesBetweenStartDateAndEndDate(), "Downloaded files (between start date and end date)");
     $csv_exporter->buildDatas($dao->getNumberOfActiveMailingLists(), "Active mailing lists");
     $csv_exporter->buildDatas($dao->getNumberOfInactiveMailingLists(), "Inactive mailing lists");
+
+    //Forums
     $csv_exporter->buildDatas($dao->getNumberOfActiveForums(), "Active forums");
     $csv_exporter->buildDatas($dao->getNumberOfInactiveForums(), "Inactive forums");
     $csv_exporter->buildDatas($dao->getForumsActivitiesBetweenStartDateAndEndDate(), "Forums activities");
+
+    //PHPWiki
     $csv_exporter->buildDatas($dao->getNumberOfWikiDocuments(), "Wiki documents");
     $csv_exporter->buildDatas($dao->getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate(), "Modified wiki pages");
     $csv_exporter->buildDatas($dao->getNumberOfDistinctWikiPages(), "Distinct wiki pages");
+
+    //Trackers v3
     $csv_exporter->buildDatas($dao->getNumberOfOpenArtifactsBetweenStartDateAndEndDate(), "Open artifacts");
     $csv_exporter->buildDatas($dao->getNumberOfClosedArtifactsBetweenStartDateAndEndDate(), "Closed artifacts");
-    $csv_exporter->buildDatas($dao->getNumberOfUserAddedBetweenStartDateAndEndDate(), "Users added");
+    
+    //Docman
     $csv_exporter->buildDatas($dao->getAddedDocumentBetweenStartDateAndEndDate(), "Added documents");
     $csv_exporter->buildDatas($dao->getDeletedDocumentBetweenStartDateAndEndDate(), "Deleted documents");
+
+    //News and survey
     $csv_exporter->buildDatas($dao->getNumberOfNewsBetweenStartDateAndEndDate(), "News");
     $csv_exporter->buildDatas($dao->getActiveSurveys(), "Active surveys");
     $csv_exporter->buildDatas($dao->getSurveysAnswersBetweenStartDateAndEndDate(), "Surveys answers");
-    $csv_exporter->buildDatas($dao->getProjectWithCIActivated(), "Continuous integration activated");
-    $csv_exporter->buildDatas($dao->getNumberOfCIJobs(), "Continuous integration jobs");
 
+    //CI
+    $p = $pluginManager->getPluginByName('hudson');
+    if ($p && $pluginManager->isPluginAvailable($p)) {
+        $csv_exporter->buildDatas($dao->getProjectWithCIActivated(), "Continuous integration activated");
+        $csv_exporter->buildDatas($dao->getNumberOfCIJobs(), "Continuous integration jobs");
+    }
+
+    //Mediawiki
+    $p = $pluginManager->getPluginByName('mediawiki');
+    if ($p && $pluginManager->isPluginAvailable($p)) {
+        $project_manager = ProjectManager::instance();
+        $number_of_page                   = array();
+        $number_of_page_between_two_dates = array();
+        $number_of_page_since_a_date      = array();
+        foreach($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
+            if ($project->usesService('plugin_mediawiki')) {
+                $number_of_page[] = $dao->getMediawikiPagesNumberOfAProject($project);
+                $number_of_page_between_two_dates[] = $dao->getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate($project);
+                $number_of_page_since_a_date[] = $dao->getCreatedPagesNumberSinceStartDate($project);
+            }
+        }
+        $csv_exporter->buildDatas($number_of_page, "Mediawiki Pages");
+        $csv_exporter->buildDatas($number_of_page_between_two_dates, "Modified Mediawiki pages");
+        $csv_exporter->buildDatas($number_of_page_since_a_date, "Number of created Mediawiki pages since start date");
+    }
     echo $csv_exporter->exportCSV();
 
 } else {
