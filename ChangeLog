@@ -3,7 +3,7 @@ Version 6.1 (Thursday, May 30th 2013)
 	* story #3226: see "svn propset --revprop -r X svn:log" modifications in commit DB
 
 	== Bug fixing ==
-	* Fix XSS injection in Forums, Wiki (contrib STMicroelectronics).
+	* Fix XSS injection in Forums, Wiki, Search (contrib STMicroelectronics).
 
 	== Plugins ==
 	* docman: 2.26.16
