@@ -80,7 +80,9 @@ class AgileDashboard_Milestone_Pane_TopPlanning_PresenterBuilder {
 
         foreach ($milestones as $milestone) {
             $this->milestone_factory->updateMilestoneContextualInfo($user, $milestone);
-            $milestone_collection->push(new AgileDashboard_Milestone_Pane_TopPlanning_MilestonePresenter($milestone, $redirect_to_self, $user));
+            $presenter = new AgileDashboard_Milestone_Pane_TopPlanning_MilestonePresenter($milestone, $redirect_to_self, $user);
+
+            $milestone_collection->push($presenter);
 
             if (! $this->canPlan($user, $milestone)) {
                 $this->can_plan = false;

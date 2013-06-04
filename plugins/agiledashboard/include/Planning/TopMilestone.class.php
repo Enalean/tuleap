@@ -35,6 +35,10 @@ class Planning_TopMilestone  implements Planning_Milestone {
      */
     private $planning;
 
+    private $duration;
+
+    private $start_date;
+
     /**
      * @var Tracker_Artifact
      */
@@ -119,6 +123,10 @@ class Planning_TopMilestone  implements Planning_Milestone {
      * @return string
      */
     public function getXRef() {
+        if ($this->artifact) {
+           return $this->artifact->getXRef();
+        }
+
         return '';
     }
 
@@ -126,6 +134,8 @@ class Planning_TopMilestone  implements Planning_Milestone {
         if ($this->artifact) {
             return $this->artifact;
         }
+
+        return null;
     }
 
     public function getArtifactId() {
@@ -145,6 +155,10 @@ class Planning_TopMilestone  implements Planning_Milestone {
     }
 
     public function getArtifactTitle() {
+        if ($this->artifact) {
+            return $this->artifact->getTitle();
+        }
+
         return null;
     }
 
@@ -153,15 +167,17 @@ class Planning_TopMilestone  implements Planning_Milestone {
      * @return boolean
      */
     public function userCanView(PFUser $user) {
-        return true; // User can view milestone content, since it's empty.
+        if ($this->artifact) {
+            return $this->artifact->getTracker()->userCanView($user);
+        }
+
+        return null;
     }
 
     public function getLinkedArtifacts(PFUser $user) {
-
     }
 
     public function getPlannedArtifacts() {
-
     }
 
     public function getPlanning() {
@@ -191,26 +207,50 @@ class Planning_TopMilestone  implements Planning_Milestone {
     public function setAncestors(array $ancestors) {
     }
 
+    public function setStartDate($start_date) {
+        $this->start_date = $start_date;
+        return $this;
+    }
+
     public function getStartDate() {
-        return null;
+        return $this->start_date;
+    }
+
+    public function setDuration($duration) {
+        $this->duration = $duration;
+        return $this;
     }
 
     public function getEndDate() {
+        if (! $this->start_date) {
+            return null;
+        }
+
+        if (! $this->duration) {
+            return null;
+        }
+
+        $end_date   = strtotime("+".floor($this->duration)." days", $this->start_date);
+
+        return $end_date;
+    }
+
+    /**
+     * @param PFUser $user
+     * @return int | null
+     */
+    public function getCapacity(PFUser $user) {
+        if (! $this->artifact) {
+            return null;
+        }
+
+        $burndown_field = $this->artifact->getABurndownField($user);
+
+        if ($burndown_field) {
+            return $burndown_field->getCapacity($this->artifact);
+        }
+
         return null;
     }
-
-    public function setStartDate() {
-        return $this;
-    }
-
-    public function setDuration() {
-        return $this;
-    }
-
-    public function getCapacity() {
-        
-    }
-
-
 }
 ?>
