@@ -39,11 +39,15 @@ document.observe('dom:loaded', function () {
 
     if (milestone_planning) {
         params.data_route = 'submilestonedata';
+        params.is_top = false;
+
         new tuleap.agiledashboard.NewPlanning(params);
     }
 
     if (top_milestone_planning) {
         params.data_route = 'milestonedata';
+        params.is_top = true;
+        
         new tuleap.agiledashboard.NewPlanning(params);
     }
 

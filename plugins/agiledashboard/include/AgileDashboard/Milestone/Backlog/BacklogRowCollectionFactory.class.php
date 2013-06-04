@@ -258,6 +258,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
         $artifact->setTitle($semantics[$artifact_id][Tracker_Semantic_Title::NAME]);
 
         $backlog_item = new AgileDashboard_BacklogItem($artifact, $redirect_to_self);
+        
         if (isset($parents[$artifact_id])) {
             $backlog_item->setParent($parents[$artifact_id]);
         }
