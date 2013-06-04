@@ -371,10 +371,8 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         $database_name = $this->getMediawikiDatabaseName($project);
         $group_id      = $project->getID();
 
-        $sql = "USE $database_name";
-        $this->retrieve($sql);
         $sql = "SELECT $group_id AS group_id, COUNT(1) AS result
-                FROM mwpage";
+                FROM $database_name.mwpage";
 
         return $this->retrieve($sql)->getRow();
     }
@@ -386,11 +384,8 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         $start_date    = date("YmdHis", $this->start_date);
         $end_date      = date("YmdHis", $this->end_date);
 
-        $sql = "USE $database_name";
-        $this->retrieve($sql);
-
         $sql = "SELECT $group_id AS group_id, COUNT(1) AS result
-                FROM mwpage
+                FROM $database_name.mwpage
                 WHERE
                     page_touched >= $start_date
                     AND
@@ -406,11 +401,8 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
 
         $start_date    = date("YmdHis", $this->start_date);
 
-        $sql = "USE $database_name";
-        $this->retrieve($sql);
-
         $sql = "SELECT $group_id AS group_id, COUNT(1) AS result
-                FROM mwrevision
+                FROM $database_name.mwrevision
                 WHERE
                     rev_parent_id=0
                     AND
