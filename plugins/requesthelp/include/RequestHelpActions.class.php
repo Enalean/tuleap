@@ -41,13 +41,14 @@ class RequestHelpActions extends PluginAction {
     * @return Array
     */
     function validateRequest($request) {
-        $status  = true;
-        $invalid = array();
-        $valid = new Valid_String('request_summary');
+        $purifier = Codendi_HTMLPurifier::instance();
+        $status   = true;
+        $invalid  = array();
+        $valid    = new Valid_String('request_summary');
         $valid->required();
         $summary = trim($request->get('request_summary'));
         if ($request->valid($valid) && strlen($summary) < self::MAX_SUMMARY_LENGTH && $summary != '') {
-            $params['summary'] = $summary;
+            $params['summary'] = $purifier->purify($summary);
         } else {
             $status = false;
             $invalid[] = $GLOBALS['Language']->getText('plugin_requesthelp', 'summary');
@@ -57,9 +58,9 @@ class RequestHelpActions extends PluginAction {
         $description = trim($request->get('request_description'));
         $defaultDescription = $GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_default_description');
         if ($request->valid($valid) && strlen($description) < self::MAX_DESCRIPTION_LENGTH && $description != '' && $description != $defaultDescription) {
-            $params['description'] = $description;
+            $params['description'] = $purifier->purify($description);
         } else {
-            $status = false;
+            $status    = false;
             $invalid[] = 'Description';
         }
         $valid = new Valid_UInt('type');
