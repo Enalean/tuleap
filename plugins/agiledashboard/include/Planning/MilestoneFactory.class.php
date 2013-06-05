@@ -139,7 +139,12 @@ class Planning_MilestoneFactory {
             $this->updateMilestoneContextualInfo($user, $milestone);
             return $milestone;
         } elseif ($is_top) {
-            return new Planning_TopMilestone($project, $this->request->getCurrentUser(), $this->getTrackerManager());
+            return new Planning_TopMilestone(
+                $project,
+                $this->request->getCurrentUser(),
+                $this->getTrackerManager(),
+                $this->planning_factory
+            );
         } else {
             return new Planning_NoMilestone($project, $planning);
         }
@@ -327,7 +332,12 @@ class Planning_MilestoneFactory {
         if ($milestone_planning_tracker_id) {
             foreach($artifacts as $artifact) {
                 try {
-                    $milestone = new Planning_TopMilestone($milestone->getProject(), $user, $this->getTrackerManager());
+                    $milestone = new Planning_TopMilestone(
+                        $milestone->getProject(),
+                        $user,
+                        $this->getTrackerManager(),
+                        $this->planning_factory
+                    );
                 } catch (Planning_TopMilestoneNoPlanningsException $e) {
                     continue;
                 }

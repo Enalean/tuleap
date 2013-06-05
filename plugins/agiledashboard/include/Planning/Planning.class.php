@@ -51,7 +51,7 @@ class Planning {
     private $plan_title;
     
     /**
-     * @var Array of int
+     * @var int
      */
     private $backlog_tracker_id;
     

@@ -50,15 +50,14 @@ class Planning_TopMilestone  implements Planning_Milestone {
      * @param TrackerManager $tracker_manager
      * @throws Planning_TopMilestoneNoPlanningsException
      */
-    public function __construct(Project $project, PFUser $user, TrackerManager $tracker_manager) {
+    public function __construct(Project $project, PFUser $user, TrackerManager $tracker_manager, PlanningFactory $planning_factory) {
         $this->project  = $project;
         $this->user = $user;
 
-        $this->generatePlanning($tracker_manager);
+        $this->generatePlanning($tracker_manager, $planning_factory);
     }
 
-    private function generatePlanning(TrackerManager $tracker_manager) {
-        $planning_factory = PlanningFactory::build();
+    private function generatePlanning(TrackerManager $tracker_manager, PlanningFactory $planning_factory) {
         $project_plannings = $planning_factory->getOrderedPlanningsWithBacklogTracker($this->user, $this->project->getID());
         if (! $project_plannings) {
             throw new Planning_TopMilestoneNoPlanningsException('No Plannings Exist');
