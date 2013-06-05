@@ -1,6 +1,4 @@
 <?php
-
-use Project;
 /**
  * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
