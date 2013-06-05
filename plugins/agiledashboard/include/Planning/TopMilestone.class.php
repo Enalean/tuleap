@@ -44,31 +44,35 @@ class Planning_TopMilestone  implements Planning_Milestone {
      */
     private $artifact = null;
 
-    public function __construct(Project $project, PFUser $user) {
+    /**
+     * @param Project $project
+     * @param PFUser $user
+     * @param TrackerManager $tracker_manager
+     * @throws Planning_TopMilestoneNoPlanningsException
+     */
+    public function __construct(Project $project, PFUser $user, TrackerManager $tracker_manager) {
         $this->project  = $project;
         $this->user = $user;
 
-        $this->determineTrackers();
+        $this->generatePlanning($tracker_manager);
     }
 
-    private function determineTrackers() {
-        $tracker_manager = new TrackerManager();
-        $trackers = $tracker_manager->getTrackersByGroupId($this->project->getID());
-
+    private function generatePlanning(TrackerManager $tracker_manager) {
         $planning_factory = PlanningFactory::build();
-        $plannings = $planning_factory->getPlanningsWithBacklogTracker($this->user, $this->project->getID());
-
-        if (! $plannings) {
+        $project_plannings = $planning_factory->getOrderedPlanningsWithBacklogTracker($this->user, $this->project->getID());
+        if (! $project_plannings) {
             throw new Planning_TopMilestoneNoPlanningsException('No Plannings Exist');
         }
+        // Currently just take the first
+        $first_planning = current($project_plannings);
+        
+        $project_trackers = $tracker_manager->getTrackersByGroupId($this->project->getID());
 
-        $first = current($plannings);
+        $planning_tracker_id = $first_planning->getPlanningTrackerId();
+        $backlog_tracker_id  = $first_planning->getBacklogTrackerId();
 
-        $planning_tracker_id = $first->getPlanningTrackerId();
-        $backlog_tracker_id  = $first->getBacklogTrackerId();
-
-        $planning_tracker = $trackers[$planning_tracker_id];
-        $backlog_tracker = $trackers[$backlog_tracker_id];
+        $planning_tracker = $project_trackers[$planning_tracker_id];
+        $backlog_tracker  = $project_trackers[$backlog_tracker_id];
 
         $this->planning = new Planning(
             null,

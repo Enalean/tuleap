@@ -63,7 +63,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController {
     public function export() {
         $root_node = $this->request->get('into_xml');
 
-        $plannings = $this->planning_factory->getPlanningsWithBacklogTracker(
+        $plannings = $this->planning_factory->getOrderedPlanningsWithBacklogTracker(
             $this->getCurrentUser(),
             $this->group_id
         );

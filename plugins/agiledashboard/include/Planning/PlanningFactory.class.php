@@ -117,7 +117,7 @@ class PlanningFactory {
      *
      * @return Planning[]
      */
-    public function getPlanningsWithBacklogTracker(PFUser $user, $group_id) {
+    public function getOrderedPlanningsWithBacklogTracker(PFUser $user, $group_id) {
         $plannings = $this->getPlannings($user, $group_id);
 
         foreach ($plannings as $planning) {

@@ -40,13 +40,15 @@ class Planning_MilestoneFactory {
      */
     private $formelement_factory;
 
-    /** @var array */
-    private $cache_all_milestones;
-
     /**
      * @var Codendi_Request
      */
     private $request;
+
+    /**
+     * @var TrackerManager
+     */
+    private $tracker_manager;
 
     /**
      * Instanciates a new milestone factory.
@@ -137,10 +139,21 @@ class Planning_MilestoneFactory {
             $this->updateMilestoneContextualInfo($user, $milestone);
             return $milestone;
         } elseif ($is_top) {
-            return new Planning_TopMilestone($project, $this->request->getCurrentUser());
+            return new Planning_TopMilestone($project, $this->request->getCurrentUser(), $this->getTrackerManager());
         } else {
             return new Planning_NoMilestone($project, $planning);
         }
+    }
+
+    /**
+     * @return TrackerManager
+     */
+    private function getTrackerManager() {
+        if (! $this->tracker_manager) {
+            $this->tracker_manager = new TrackerManager();
+        }
+
+        return $this->tracker_manager;
     }
 
     public function updateMilestoneContextualInfo(PFUser $user, Planning_Milestone $milestone) {
@@ -314,7 +327,7 @@ class Planning_MilestoneFactory {
         if ($milestone_planning_tracker_id) {
             foreach($artifacts as $artifact) {
                 try {
-                    $milestone = new Planning_TopMilestone($milestone->getProject(), $user);
+                    $milestone = new Planning_TopMilestone($milestone->getProject(), $user, $this->getTrackerManager());
                 } catch (Planning_TopMilestoneNoPlanningsException $e) {
                     continue;
                 }
