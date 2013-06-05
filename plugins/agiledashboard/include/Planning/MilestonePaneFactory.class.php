@@ -84,13 +84,17 @@ class Planning_MilestonePaneFactory {
      * @return int
      */
     private function getMilestoneArtifactId(Planning_Milestone $milestone) {
-        if ($this->request->get('is_top') === true) {
+        if ($this->isTopMilestonePane()) {
             $milestone_artifact_id = self::TOP_MILESTONE_DUMMY_ARTIFACT_ID;
         } else {
             $milestone_artifact_id = $milestone->getArtifactId();
         }
 
         return $milestone_artifact_id;
+    }
+
+    private function isTopMilestonePane() {
+        return $this->request->get('is_top');
     }
 
     /** @return AgileDashboard_Pane */
@@ -124,12 +128,12 @@ class Planning_MilestonePaneFactory {
         $milestone_artifact_id = $this->getMilestoneArtifactId($milestone);
 
         $this->active_pane[$milestone_artifact_id] = null;
-        if (! $this->request->get('is_top') || ! $this->request->getCurrentUser()->useLabFeatures()) {
+        if (! $this->isTopMilestonePane() || ! $this->request->getCurrentUser()->useLabFeatures()) {
             $this->list_of_pane_info[$milestone_artifact_id][] = $this->getLegacyPaneInfo($milestone);
         }
 
         if ($this->request->getCurrentUser()->useLabFeatures()) {
-            if ($this->request->get('is_top') === true) {
+            if ($this->isTopMilestonePane()) {
                 $this->list_of_pane_info[$milestone_artifact_id][] = $this->getTopPlanningPaneInfo($milestone);
                 $this->list_of_pane_info[$milestone_artifact_id][] = $this->getTopContentPaneInfo($milestone);
             } else {
