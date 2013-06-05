@@ -23,27 +23,40 @@
 
 document.observe('dom:loaded', function () {
 
-    function observeCreateModeChanges(form) {
-        var check_consistency_feedback = $('check_consistency_feedback');
-        form.select('input[name=create_mode]').each(function (mode) {
+    function disableFeedback(check_consistency_feedback) {
+        check_consistency_feedback.hide();
+    }
+
+    function enableFeedback(check_consistency_feedback) {
+        check_consistency_feedback.show();
+    }
+
+    function observeCreateModeChanges(modes, check_consistency_feedback) {
+        modes.each(function (mode) {
             mode.observe('click', function () {
                 if (mode.value == 'gallery' && mode.checked) {
-                    check_consistency_feedback.show();
+                    disableFeedback(check_consistency_feedback);
                 } else {
-                    check_consistency_feedback.hide();
+                    enableFeedback(check_consistency_feedback);
                 }
             });
         });
     }
 
-    function observeTemplateSelectorChanges(group_id, select_template, select_project, create_new_tracker_btn) {
+    function observeProjectSelectorChanges(select_project) {
+        select_project.observe('change', function () {
+            disableFeedback(check_consistency_feedback);
+        });
+    }
+
+    function observeTemplateSelectorChanges(group_id, select_template, select_project, create_new_tracker_btn, check_consistency_feedback) {
         select_template.observe('change', function () {
             var template_group_id   = $F(select_project),
                 template_tracker_id = $F(select_template);
 
             create_new_tracker_btn.disable();
             new Ajax.Updater(
-                $('check_consistency_feedback'),
+                check_consistency_feedback,
                 '/plugins/tracker/index.php',
                 {
                     parameters: {
@@ -53,6 +66,7 @@ document.observe('dom:loaded', function () {
                         template_tracker_id: template_tracker_id
                     },
                     onComplete: function () {
+                        enableFeedback(check_consistency_feedback);
                         create_new_tracker_btn.enable();
                     }
                 }
@@ -63,12 +77,15 @@ document.observe('dom:loaded', function () {
     var select_template = $('tracker_list_trackers_from_project');
 
     if (select_template) {
-        var form                   = select_template.up('form'),
-            select_project         = $('tracker_new_project_list'),
-            create_new_tracker_btn = $('create_new_tracker_btn'),
-            group_id               = form.down('input[name=group_id]').value;
+        var form                       = select_template.up('form'),
+            modes                      = form.select('input[name=create_mode]'),
+            select_project             = $('tracker_new_project_list'),
+            create_new_tracker_btn     = $('create_new_tracker_btn'),
+            group_id                   = form.down('input[name=group_id]').value,
+            check_consistency_feedback = $('check_consistency_feedback');;
 
-        observeCreateModeChanges(form);
-        observeTemplateSelectorChanges(group_id, select_template, select_project, create_new_tracker_btn);
+        observeCreateModeChanges(modes, check_consistency_feedback);
+        observeProjectSelectorChanges(select_project);
+        observeTemplateSelectorChanges(group_id, select_template, select_project, create_new_tracker_btn, check_consistency_feedback);
     }
 });
