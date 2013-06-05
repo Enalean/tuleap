@@ -254,6 +254,15 @@ class PlanningFactory {
         return new Planning(null, null, $group_id, 'Release Backlog', 'Sprint Backlog');
     }
 
+     /**
+     * Build a new empty planning
+     *
+     * @return Planning
+     */
+    public function buildEmptyPlanning() {
+        return new Planning(null, null, null, 'Release Backlog', 'Sprint Backlog');
+    }
+
     /**
      * Get a list of tracker ids defined as backlog for a planning
      *

@@ -204,7 +204,12 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
     }
 
     private function getSemanticsTheUserCanSee(PFUser $user, Planning_Milestone $milestone) {
-        $backlog_tracker = $milestone->getPlanning()->getBacklogTracker();
+        if ($milestone instanceof Planning_ArtifactMilestone && $milestone->isTop()) {
+            $backlog_tracker = $milestone->getArtifact()->getTracker();
+        } else {
+            $backlog_tracker = $milestone->getPlanning()->getBacklogTracker();
+        }
+
         $semantics = array();
         if ($this->userCanReadBacklogTitleField($user ,$backlog_tracker)) {
             $semantics[] = Tracker_Semantic_Title::NAME;

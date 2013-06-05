@@ -128,7 +128,11 @@ class Planning_MilestoneFactory {
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
 
         if ($artifact && $artifact->userCanView($user)) {
+            if (! $planning) {
+                $planning = $this->planning_factory->buildEmptyPlanning();
+            }
             $milestone = new Planning_ArtifactMilestone($project, $planning, $artifact);
+            $milestone->setIsTop($is_top);
             $milestone->setAncestors($this->getMilestoneAncestors($user, $milestone));
             $this->updateMilestoneContextualInfo($user, $milestone);
             return $milestone;
