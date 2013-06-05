@@ -134,6 +134,7 @@ class AgileDashboardPlugin extends Plugin {
             'planning_id' => $planning->getId(),
             'action'      => 'show',
             'aid'         => $redirect_to_artifact,
+            'pane'        => $requested_planning['pane_identifier'],
         );
     }
 
@@ -147,19 +148,24 @@ class AgileDashboardPlugin extends Plugin {
     private function setQueryParametersFromRequest(Codendi_Request $request, Tracker_Artifact_Redirect $redirect) {
         $requested_planning = $this->extractPlanningAndArtifactFromRequest($request);
         if ($requested_planning) {
-            $key   = 'planning['. $requested_planning['planning_id'] .']';
+            $key   = 'planning['. $requested_planning['pane_identifier'] .']['. $requested_planning['planning_id'] .']';
             $value = $requested_planning['artifact_id'];
             $redirect->query_parameters[$key] = $value;
         }
     }
 
     private function extractPlanningAndArtifactFromRequest(Codendi_Request $request) {
-        $from_planning = $request->get('planning');
+        $planning = $request->get('planning');
+        if (! is_array($planning) || ! count($planning)) {
+            return;
+        }
+        list($pane_identifier, $from_planning) = each($planning);
         if (is_array($from_planning) && count($from_planning)) {
             list($planning_id, $planning_artifact_id) = each($from_planning);
             return array(
-                'planning_id' => $planning_id,
-                'artifact_id' => $planning_artifact_id
+                'pane_identifier' => $pane_identifier,
+                'planning_id'     => $planning_id,
+                'artifact_id'     => $planning_artifact_id
             );
         }
     }
@@ -186,6 +192,7 @@ class AgileDashboardPlugin extends Plugin {
         $params['scripts'] = array_merge(
             $params['scripts'],
             array(
+                $this->getPluginPath().'/js/MilestoneContent.js',
                 $this->getPluginPath().'/js/planning.js',
                 $this->getPluginPath().'/js/OuterGlow.js',
                 $this->getPluginPath().'/js/expand-collapse.js',
@@ -200,13 +207,58 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function process(Codendi_Request $request) {
+        $planning_factory               = $this->getPlanningFactory();
+        $milestone_factory              = $this->getMilestoneFactory();
+        $hierarchy_factory              = $this->getHierarchyFactory();
+        $pane_presenter_builder_factory = $this->getPanePresenterBuilderFactory($milestone_factory);
+
+        $pane_factory = $this->getPaneFactory($request, $planning_factory, $milestone_factory, $hierarchy_factory, $pane_presenter_builder_factory);
+
+        $milestone_controller_factory = new Planning_MilestoneControllerFactory(
+            $this,
+            ProjectManager::instance(),
+            $milestone_factory,
+            $this->getPlanningFactory(),
+            $hierarchy_factory,
+            $pane_presenter_builder_factory,
+            $pane_factory
+        );
+
         $router = new AgileDashboardRouter(
             $this,
-            $this->getMilestoneFactory(),
-            $this->getPlanningFactory(),
-            $this->getHierarchyFactory()
+            $milestone_factory,
+            $planning_factory,
+            new Planning_ShortAccessFactory($planning_factory, $pane_factory),
+            $milestone_controller_factory
         );
+
         $router->route($request);
+    }
+
+    /** @return Planning_MilestonePaneFactory */
+    private function getPaneFactory(
+        Codendi_Request $request,
+        PlanningFactory $planning_factory,
+        Planning_MilestoneFactory $milestone_factory,
+        Tracker_HierarchyFactory $hierarchy_factory,
+        AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory
+    ) {
+        $legacy_planning_pane_factory = new Planning_MilestoneLegacyPlanningPaneFactory(
+            $request,
+            $milestone_factory,
+            $hierarchy_factory,
+            new Planning_ViewBuilderFactory($request, $planning_factory),
+            $this->getThemePath()
+        );
+
+        return new Planning_MilestonePaneFactory(
+            $request,
+            $milestone_factory,
+            $pane_presenter_builder_factory,
+            $legacy_planning_pane_factory,
+            new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder($hierarchy_factory, $planning_factory),
+            $this->getThemePath()
+        );
     }
 
     /**
@@ -235,6 +287,31 @@ class AgileDashboardPlugin extends Plugin {
 
     private function getHierarchyFactory() {
         return Tracker_HierarchyFactory::instance();
+    }
+
+    private function getBacklogStrategyFactory() {
+        return new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
+            new AgileDashboard_BacklogItemDao(),
+            $this->getArtifactFactory(),
+            PlanningFactory::build()
+        );
+    }
+
+    private function getBacklogRowCollectionFactory($milestone_factory) {
+        return new AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory(
+            new AgileDashboard_BacklogItemDao(),
+            $this->getArtifactFactory(),
+            Tracker_FormElementFactory::instance(),
+            $milestone_factory
+        );
+    }
+
+    private function getPanePresenterBuilderFactory($milestone_factory) {
+        return new AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory(
+            $this->getBacklogStrategyFactory(),
+            $this->getBacklogRowCollectionFactory($milestone_factory),
+            $milestone_factory
+        );
     }
 
     public function tracker_event_artifact_association_edited($params) {

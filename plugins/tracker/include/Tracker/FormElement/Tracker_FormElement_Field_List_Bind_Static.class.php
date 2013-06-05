@@ -615,8 +615,9 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                     break;
                 case 'delete':
                     if (($row = $value_dao->searchById((int)$value)->getRow()) && $value_dao->delete((int)$value)) {
+                        $params['decorator'] = array((int)$value => null);
                         $redirect = true;
-                        $GLOBALS['Response']->addFeedback('info', 'Value '.  $hp->purify($row['label'], CODENDI_PURIFIER_CONVERT_HTML)  .'deleted');
+                        $GLOBALS['Response']->addFeedback('info', 'Value '.  $hp->purify($row['label'], CODENDI_PURIFIER_CONVERT_HTML)  .' deleted');
                     }
                     break;
                 case 'edit':

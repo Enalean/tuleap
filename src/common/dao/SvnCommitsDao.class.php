@@ -24,8 +24,8 @@ require_once('include/DataAccessObject.class.php');
 
 class SvnCommitsDao extends DataAccessObject {
     
-    public function __construct($da) {
-        parent::__construct($da);
+    public function __construct() {
+        parent::__construct();
         $this->table_name = 'svn_commits';
     }
     
@@ -42,6 +42,16 @@ class SvnCommitsDao extends DataAccessObject {
                 GROUP BY whoid, week 
                 ORDER BY whoid, day";
         return $this->retrieve($sql);
+    }
+
+    public function updateCommitMessage($group_id, $revision, $description) {
+        $group_id    = $this->da->escapeInt($group_id);
+        $revision    = $this->da->escapeInt($revision);
+        $description = $this->da->quoteSmart($description);
+        $sql = "UPDATE svn_commits
+                SET description = $description
+                WHERE group_id = $group_id AND revision=$revision";
+        $this->update($sql);
     }
 }
 

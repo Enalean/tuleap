@@ -40,6 +40,9 @@ class Planning_MilestoneFactory {
      */
     private $formelement_factory;
 
+    /** @var array */
+    private $cache_all_milestones;
+
     /**
      * Instanciates a new milestone factory.
      *
@@ -125,7 +128,7 @@ class Planning_MilestoneFactory {
         }
     }
 
-    private function updateMilestoneContextualInfo(PFUser $user, Planning_ArtifactMilestone $milestone) {
+    public function updateMilestoneContextualInfo(PFUser $user, Planning_ArtifactMilestone $milestone) {
         return $milestone
             ->setStartDate($this->getTimestamp($user, $milestone, Planning_Milestone::START_DATE_FIELD_NAME))
             ->setDuration($this->getComputedFieldValue($user, $milestone, Planning_Milestone::DURATION_FIELD_NAME));
@@ -323,6 +326,23 @@ class Planning_MilestoneFactory {
     }
 
     /**
+     * Return all open milestone without their content
+     *
+     * @param PFUser $user
+     * @param Planning $planning
+     * @return Planning_ArtifactMilestone[]
+     */
+    public function getAllBareMilestones(PFUser $user, Planning $planning) {
+        $milestones = array();
+        $project    = $planning->getPlanningTracker()->getProject();
+        $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        foreach ($artifacts as $artifact) {
+            $milestones[] = new Planning_ArtifactMilestone($project, $planning, $artifact);
+        }
+        return $milestones;
+    }
+
+    /**
      * Loads all open milestones for the given project and planning
      *
      * @param PFUser $user
@@ -332,6 +352,13 @@ class Planning_MilestoneFactory {
      * @return Array of \Planning_Milestone
      */
     public function getAllMilestones(PFUser $user, Planning $planning) {
+        if (! isset($this->cache_all_milestone[$planning->getId()])) {
+            $this->cache_all_milestone[$planning->getId()] = $this->getAllMilestonesWithoutCaching($user, $planning);
+        }
+        return $this->cache_all_milestone[$planning->getId()];
+    }
+
+    private function getAllMilestonesWithoutCaching(PFUser $user, Planning $planning) {
         $project = $planning->getPlanningTracker()->getProject();
         $milestones = array();
         $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
@@ -442,4 +469,5 @@ class Planning_MilestoneFactory {
         return new Planning_NoMilestone($planning->getPlanningTracker()->getProject(), $planning);
     }
 }
+
 ?>

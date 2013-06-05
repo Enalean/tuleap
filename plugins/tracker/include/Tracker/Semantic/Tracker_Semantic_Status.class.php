@@ -21,6 +21,9 @@ require_once('common/include/Codendi_Request.class.php');
 require_once('common/user/User.class.php');
 
 class Tracker_Semantic_Status extends Tracker_Semantic {
+    const NAME   = 'status';
+    const OPEN   = 'Open';
+    const CLOSED = 'Closed';
 
     /**
      * @var Tracker_FormElement_Field_List
@@ -51,7 +54,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      * @return string
      */
     public function getShortName() {
-        return 'status';
+        return self::NAME;
     }
 
     /**
@@ -112,9 +115,9 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
             return '';
         }
 
-        $key = 'Closed';
+        $key = self::CLOSED;
         if (in_array($artifact->getStatus(), $this->getOpenLabels())) {
-            $key = 'Open';
+            $key = self::OPEN;
         }
         return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_'. $key);
     }

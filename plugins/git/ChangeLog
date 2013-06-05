@@ -1,3 +1,16 @@
+Version 3.22 - Tuleap 6.1
+    * Fix bugs #3576: fix js crying on git service homepage
+    * Fix bugs #3573: CI: get an error message if no git trigger selected
+
+Version 3.21 - Tuleap 6.1
+    * story #3318: be owner of all gerrit groups created for my project
+
+Version 3.20 - Tuleap 6.1
+    * bugs #3244 - Read permission to Registered Users is not propagated to Gerrit
+
+Version 3.19 - Tuleap 6.1
+    * Fixing bug that generates error message and calls wrong code when changing git repository settings.
+
 Version 3.18 - Tuleap 5.13
     * SSH keys manipulation use gerrit user
 

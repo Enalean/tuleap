@@ -141,6 +141,25 @@ class Tracker_HierarchyFactory {
     }
 
     /**
+     * Epic
+     * `-- Story
+     *     `-- Task
+     * getAllParents(Task) -> ['Story', 'Epic']
+     *
+     * @return Tracker[]
+     */
+    public function getAllParents(Tracker $tracker) {
+        $hierarchy         = $this->getHierarchy(array($tracker->getId()));
+        $parent_tracker_id = $hierarchy->getParent($tracker->getId());
+        $stack = array();
+        while ($parent_tracker = $this->tracker_factory->getTrackerById($parent_tracker_id)) {
+            $stack[] = $parent_tracker;
+            $parent_tracker_id = $hierarchy->getParent($parent_tracker->getId());
+        }
+        return $stack;
+    }
+
+    /**
      * Return the parent artifact
      *
      * @param PFUser $user

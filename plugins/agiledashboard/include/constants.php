@@ -20,6 +20,7 @@
 
 define('AGILEDASHBOARD_BASE_URL', '/plugins/agiledashboard');
 define('AGILEDASHBOARD_BASE_DIR', dirname(__FILE__));
+define('AGILEDASHBOARD_TEMPLATE_DIR', dirname(__FILE__).'/../templates');
 
 /**
  * Get the additional panes to display next to a milestone in the agiledashboard

@@ -124,9 +124,14 @@ document.observe('dom:loaded', function () {
     })();
 
     (function autoSelectGitCloneUrl() {
-        $('plugin_git_clone_field').observe('click', function (evt) {
-            Event.element(evt).select();
-        });
+        var clone_field = $('plugin_git_clone_field');
+        if (clone_field) {
+            clone_field.observe('click', function (evt) {
+                Event.element(evt).select();
+            });
+        }
+
     })();
+
 });
 

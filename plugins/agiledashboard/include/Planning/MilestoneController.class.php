@@ -30,62 +30,41 @@ class Planning_MilestoneController extends MVC2_PluginController {
     private $milestone_factory;
 
     /**
-     * @var Tracker_HierarchyFactory
-     */
-    private $hierarchy_factory;
-
-    /**
      * @var Planning_Milestone
      */
     private $milestone;
 
-    /**
-     * Store all milestones of the current planning
-     *
-     * @var Array of Planning_Milestone
-     */
-    private $all_milestones = null;
 
-    /**
-     * @var Planning_ViewBuilder
-     */
-    private $view_builder;
+    /** @var Planning_MilestonePaneFactory */
+    private $pane_factory;
 
-    /**
-     * @var string
-     */
-    private $theme_path;
-
-    /** @var array of AgileDashboard_PaneInfo */
-    private $available_panes_info;
-
-    /** @var AgileDashboard_Pane */
-    private $active_pane;
+    /** @var AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory */
+    private $pane_presenter_builder_factory;
 
     /**
      * Instanciates a new controller.
-     * 
+     *
      * TODO:
      *   - pass $request to actions (e.g. show).
-     * 
+     *
      * @param Codendi_Request           $request
      * @param PlanningFactory           $planning_factory
-     * @param Planning_MilestoneFactory $milestone_factory 
+     * @param Planning_MilestoneFactory $milestone_factory
      */
-    public function __construct(Codendi_Request           $request,
-                                Planning_MilestoneFactory $milestone_factory,
-                                ProjectManager            $project_manager,
-                                Planning_ViewBuilder      $view_builder,
-                                Tracker_HierarchyFactory  $hierarchy_factory,
-                                $theme_path) {
-        
+    public function __construct(
+        Codendi_Request $request,
+        Planning_MilestoneFactory $milestone_factory,
+        ProjectManager $project_manager,
+        Planning_MilestonePaneFactory $pane_factory,
+        AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
+        $theme_path
+    ) {
         parent::__construct('agiledashboard', $request);
-        $this->milestone_factory = $milestone_factory;
-        $this->hierarchy_factory = $hierarchy_factory;
-        $this->view_builder      = $view_builder;
-        $this->theme_path        = $theme_path;
-        $project                 = $project_manager->getProject($request->get('group_id'));
+        $this->milestone_factory              = $milestone_factory;
+        $this->pane_factory                   = $pane_factory;
+        $this->pane_presenter_builder_factory = $pane_presenter_builder_factory;
 
+        $project         = $project_manager->getProject($request->get('group_id'));
         $this->milestone = $this->milestone_factory->getBareMilestone(
             $this->getCurrentUser(),
             $project,
@@ -100,159 +79,16 @@ class Planning_MilestoneController extends MVC2_PluginController {
     }
 
     private function getMilestonePresenter() {
-        $this->initAdditionalPanes();
+        $redirect_parameter = new Planning_MilestoneRedirectParameter();
         return new AgileDashboard_MilestonePresenter(
             $this->milestone,
             $this->getCurrentUser(),
             $this->request,
-            $this->active_pane,
-            $this->available_panes_info,
-            $this->getAvailableMilestones(),
-            $this->getPlanningRedirectToNew()
+            $this->pane_factory->getPanePresenterData($this->milestone),
+            $redirect_parameter->getPlanningRedirectToNew($this->milestone, $this->pane_factory->getDefaultPaneIdentifier())
         );
     }
 
-    protected function getAvailableMilestones() {
-        if ($this->milestone->hasAncestors()) {
-            return $this->milestone_factory->getSiblingMilestones($this->getCurrentUser(), $this->milestone);
-        } else {
-            return $this->getAllMilestonesOfCurrentPlanning();
-        }
-    }
-
-    private function initAdditionalPanes() {
-        $pane_info = new AgileDashboard_MilestonePlanningPaneInfo($this->milestone, $this->theme_path);
-        $this->available_panes_info = array($pane_info);
-        $this->active_pane = null;
-        if ($this->milestone->getArtifact()) {
-            EventManager::instance()->processEvent(
-                AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
-                array(
-                    'milestone'   => $this->milestone,
-                    'request'     => $this->request,
-                    'user'        => $this->getCurrentUser(),
-                    'panes'       => &$this->available_panes_info,
-                    'active_pane' => &$this->active_pane,
-                    'milestone_factory' => $this->milestone_factory,
-                )
-            );
-        }
-        if (!$this->active_pane) {
-            $this->available_panes_info[0]->setActive(true);
-            $this->active_pane = $this->getMilestonePlanningPane($pane_info);
-        }
-        return $this->available_panes_info;
-    }
-
-    private function getMilestonePlanningPane(AgileDashboard_MilestonePlanningPaneInfo $info) {
-        $planning     = $this->milestone->getPlanning();
-        $content_view = $this->buildContentView($this->view_builder, $planning, $this->milestone->getProject());
-
-        $milestone_plan = $this->milestone_factory->getMilestonePlan($this->getCurrentUser(), $this->milestone);
-
-        $milestone_planning_presenter = new AgileDashboard_MilestonePlanningPresenter(
-            $content_view,
-            $milestone_plan,
-            $this->getCurrentUser(),
-            $this->getPlanningRedirectToSelf()
-        );
-        return new AgileDashboard_MilestonePlanningPane($info, $milestone_planning_presenter);
-    }
-    
-    private function getPlanningRedirectToSelf() {
-        $planning_id = (int) $this->milestone->getPlanningId();
-        $artifact_id = $this->milestone->getArtifactId();
-        
-        return "planning[$planning_id]=$artifact_id";
-    }
-
-    private function getPlanningRedirectToNew() {
-        $planning_id = (int) $this->milestone->getPlanningId();
-        $artifact_id = $this->milestone->getArtifactId();
-
-        return "planning[$planning_id]=-1";
-    }
-
-    private function getCrossSearchQuery() {
-        $request_criteria      = $this->getArrayFromRequest('criteria');
-        $semantic_criteria     = $this->getArrayFromRequest('semantic_criteria');
-        $artifact_criteria     = $this->getArtifactCriteria();
-        
-        return new Tracker_CrossSearch_Query($request_criteria, $semantic_criteria, $artifact_criteria);
-    }
-    
-    protected function buildContentView(
-        Planning_ViewBuilder $view_builder,
-        Planning             $planning,
-        Project              $project = null
-    ) {
-        
-        $already_planned_artifact_ids = $this->getAlreadyPlannedArtifactsIds();
-        $cross_search_query           = $this->getCrossSearchQuery();
-        $backlog_tracker_ids          = $this->hierarchy_factory->getHierarchy(array($planning->getBacklogTrackerId()))->flatten();
-        $backlog_actions_presenter    = new Planning_BacklogActionsPresenter($planning->getBacklogTracker(), $this->milestone, $this->getPlanningRedirectToSelf());
-
-        $view = $view_builder->build(
-            $this->getCurrentUser(),
-            $project,
-            $cross_search_query,
-            $already_planned_artifact_ids,
-            $backlog_tracker_ids,
-            $planning,
-            $backlog_actions_presenter,
-            $this->getPlanningRedirectToSelf()
-        );
-        
-        return $view;
-    }
-
-    private function getArrayFromRequest($parameter_name) {
-        $request_criteria = array();
-        $valid_criteria   = new Valid_Array($parameter_name);
-        $valid_criteria->required();
-        if ($this->request->valid($valid_criteria)) {
-            $request_criteria = $this->request->get($parameter_name);
-        }
-        return $request_criteria;
-    }
-
-    private function getArtifactCriteria() {
-        $criteria = $this->getArrayFromRequest('artifact_criteria');
-        if(empty($criteria) && $this->milestone->getArtifact()) {
-            $criteria = $this->getPreselectedCriteriaFromAncestors();
-        }
-        return $criteria;
-    }
-
-    private function getPreselectedCriteriaFromAncestors() {
-        $preselected_criteria = array();
-        foreach($this->milestone->getAncestors() as $milestone) {
-            $preselected_criteria[$milestone->getArtifact()->getTrackerId()] = array($milestone->getArtifactId());
-        }
-        return $preselected_criteria;
-    }
-
-    private function getAlreadyPlannedArtifactsIds() {
-        return array_map(array($this, 'getArtifactId'), $this->getAlreadyPlannedArtifacts());
-    }
-
-    private function getArtifactId(Tracker_Artifact $artifact) {
-        return $artifact->getId();
-    }
-
-    /**
-     * @param array of Planning_Milestone $available_milestones
-     * 
-     * @return array of Tracker_Artifact
-     */
-    private function getAlreadyPlannedArtifacts() {
-        $linked_items = array();
-        foreach ($this->getAllMilestonesOfCurrentPlanning() as $milestone) {
-            $linked_items = array_merge($linked_items, $milestone->getLinkedArtifacts($this->getCurrentUser()));
-        }
-        return $linked_items;
-    }
- 
     /**
      * @return BreadCrumb_BreadCrumbGenerator
      */
@@ -268,11 +104,13 @@ class Planning_MilestoneController extends MVC2_PluginController {
         return new BreadCrumb_NoCrumb();
     }
 
-    private function getAllMilestonesOfCurrentPlanning() {
-        if (!$this->all_milestones) {
-            $this->all_milestones = $this->milestone_factory->getAllMilestones($this->getCurrentUser(), $this->milestone->getPlanning());
-        }
-        return $this->all_milestones;
+    public function submilestonedata() {
+        $this->render('submilestone-content', $this->getSubmilestonePresenter());
+    }
+
+    private function getSubmilestonePresenter() {
+        $presenter_builder = $this->pane_presenter_builder_factory->getSubmilestonePresenterBuilder();
+        return $presenter_builder->getSubmilestonePresenter($this->getCurrentUser(), $this->milestone);
     }
 }
 

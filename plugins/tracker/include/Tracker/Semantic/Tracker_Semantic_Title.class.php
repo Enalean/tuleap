@@ -20,6 +20,7 @@
 
 
 class Tracker_Semantic_Title extends Tracker_Semantic {
+    const NAME = 'title';
 
     /**
      * @var Tracker_FormElement_Field_Text
@@ -43,7 +44,7 @@ class Tracker_Semantic_Title extends Tracker_Semantic {
      * @return string
      */
     public function getShortName() {
-        return 'title';
+        return self::NAME;
     }
 
     /**

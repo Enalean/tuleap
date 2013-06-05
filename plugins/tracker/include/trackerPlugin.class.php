@@ -467,10 +467,12 @@ class trackerPlugin extends Plugin {
             $trackers = $tf->getTrackersByGroupId($params['project']->getGroupId());
             
             if ($trackers) {
-                $entries = array();
+                $entries  = array();
+                $purifier = Codendi_HTMLPurifier::instance();
                 foreach($trackers as $t) {
                     if ($t->userCanView()) {
-                        $entries[] = '<a href="'. TRACKER_BASE_URL .'/?tracker='. $t->id .'">'. $t->name .'</a>';
+                        $name      = $purifier->purify($t->name, CODENDI_PURIFIER_CONVERT_HTML);
+                        $entries[] = '<a href="'. TRACKER_BASE_URL .'/?tracker='. $t->id .'">'. $name .'</a>';
                     }
                 }
                 if ($entries) {

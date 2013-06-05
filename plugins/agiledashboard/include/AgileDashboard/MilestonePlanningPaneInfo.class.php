@@ -23,7 +23,7 @@
  *
  * @see AgileDashboard_MilestonePlanningPresenter for description of what MilestonePlanning is
  */
-class AgileDashboard_MilestonePlanningPaneInfo extends AgileDashboard_PaneInfo {
+class AgileDashboard_MilestonePlanningPaneInfo extends AgileDashboard_DefaultPaneInfo {
     const IDENTIFIER = 'planner';
 
     /**

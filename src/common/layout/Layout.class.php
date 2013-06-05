@@ -52,6 +52,11 @@ class Layout extends Response {
      */
     public $imgroot;
 
+    /**
+     * Html purifier
+     */
+    protected $purifier;
+
     //Define all the icons for this theme
     var $icons = array('Summary' => 'ic/anvil24.png',
         'Homepage' => 'ic/home.png',
@@ -121,8 +126,9 @@ class Layout extends Response {
         $this->bgpri[8] = 'priorh';
         $this->bgpri[9] = 'priori';
         
-        $this->root    = $root;
-        $this->imgroot = $root . '/images/';
+        $this->root     = $root;
+        $this->imgroot  = $root . '/images/';
+        $this->purifier = Codendi_HTMLPurifier::instance();
     }
     
     function getChartColors() {

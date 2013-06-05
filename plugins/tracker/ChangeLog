@@ -1,3 +1,18 @@
+Version 5.126 - Tuleap 6.1
+    * story #2923: Display dedicated planning pane in agiledashboard
+
+Version 5.125 - Tuleap 6.1
+    * Fix request #2722 - Date filtering does not work properly
+
+Version 5.124 - Tuleap 6.1
+    * Fix sla #3404: Stored XSS Vulnerability in Public Areas widget (Contrib STMicroelectronics)
+
+Version 5.123 - Tuleap 6.1
+    * Display a new 'Content' pane with the content of a given milestone
+
+Version 5.122 - Tuleap 6.1
+    * Fix request #3182: Decorators are correctly removed from database
+
 Version 5.121 - Tuleap 5.13
     * Development: refactoring after Core update on UGroup
 

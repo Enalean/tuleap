@@ -127,20 +127,7 @@ class Git_Driver_Gerrit_UserFinder_getUGroupsTest extends TuleapTestCase {
 
         $this->assertEqual($ugroups, $expected_ugroups);
     }
-
-    public function itDoesntReturnAnyGroupsWhenAllUsersAreGranted() {
-        stub($this->permissions_manager)->getAuthorizedUgroups()->returnsDar(array('ugroup_id' => UGroup::ANONYMOUS));
-
-        $ugroups = $this->user_finder->getUgroups('whatever', 'whatever');
-        $this->assertArrayEmpty($ugroups);
-    }
-    public function itDoesntReturnAnyGroupsWhenRegisteredAreGranted() {
-        stub($this->permissions_manager)->getAuthorizedUgroups()->returnsDar(array('ugroup_id' => UGroup::REGISTERED));
-
-        $ugroups = $this->user_finder->getUgroups('whatever', 'whatever');
-        $this->assertArrayEmpty($ugroups);
-    }
-
+    
     public function itDoesntJoinWithUGroupTableWhenItFetchesGroupPermissionsInOrderToReturnSomethingWhenWeAreDeletingTheGroup() {
         stub($this->permissions_manager)->getAuthorizedUgroups()->returnsEmptyDar();
 

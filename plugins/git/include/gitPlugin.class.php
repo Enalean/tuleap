@@ -631,17 +631,19 @@ class GitPlugin extends Plugin {
      */
     public function save_ci_triggers($params) {
         if (isset($params['job_id']) && !empty($params['job_id']) && isset($params['request']) && !empty($params['request'])) {
-            $repositoryId = $params['request']->get('hudson_use_plugin_git_trigger');
-            if ($repositoryId) {
-                $vRepoId = new Valid_Uint('hudson_use_plugin_git_trigger');
-                $vRepoId->required();
-                if($params['request']->valid($vRepoId)) {
-                    $ci = new Git_Ci();
-                    if (!$ci->saveTrigger($params['job_id'], $repositoryId)) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_saved'));
+            if ($params['request']->get('hudson_use_plugin_git_trigger_checkbox')) {
+                $repositoryId = $params['request']->get('hudson_use_plugin_git_trigger');
+                if ($repositoryId) {
+                    $vRepoId = new Valid_Uint('hudson_use_plugin_git_trigger');
+                    $vRepoId->required();
+                    if($params['request']->valid($vRepoId)) {
+                        $ci = new Git_Ci();
+                        if (!$ci->saveTrigger($params['job_id'], $repositoryId)) {
+                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_saved'));
+                        }
+                    } else {
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_bad_repo_id'));
                     }
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_bad_repo_id'));
                 }
             }
         }
@@ -823,8 +825,7 @@ class GitPlugin extends Plugin {
             return $params['ugroup'];
         } else {
             $project = ProjectManager::instance()->getProject($params['group_id']);
-            $ugroup_manager = new UGroupManager();
-            return $ugroup_manager->getUGroup($project, $params['ugroup_id']);
+            return $this->getUGroupManager()->getUGroup($project, $params['ugroup_id']);
         }
     }
 
@@ -857,13 +858,13 @@ class GitPlugin extends Plugin {
             $tmp_dir,
             $this->getGerritDriver(),
             $this->getGerritUserFinder(),
-            new UGroupManager(),
+            $this->getUGroupManager(),
             $this->getGerritMembershipManager()
         );
     }
 
     private function getGerritUserFinder() {
-        return new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), new UGroupManager());
+        return new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), $this->getUGroupManager());
     }
 
     private function getGitController() {
@@ -899,8 +900,8 @@ class GitPlugin extends Plugin {
 
     private function getGerritDriver() {
         return new Git_Driver_Gerrit(
-            new Git_Driver_Gerrit_RemoteSSHCommand(new BackendLogger()),
-            new BackendLogger()
+            new Git_Driver_Gerrit_RemoteSSHCommand($this->getLogger()),
+            $this->getLogger()
         );
     }
 
@@ -929,7 +930,8 @@ class GitPlugin extends Plugin {
             $this->getGerritDriver(),
             new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory()),
             $this->getGerritServerFactory(),
-            new BackendLogger()
+            $this->getLogger(),
+            $this->getUGroupManager()
         );
     }
 
@@ -947,6 +949,10 @@ class GitPlugin extends Plugin {
             $gitolite_admin_path,
             new Git_Exec($gitolite_admin_path)
         );
+    }
+
+    private function getUGroupManager() {
+        return new UGroupManager();
     }
 }
 

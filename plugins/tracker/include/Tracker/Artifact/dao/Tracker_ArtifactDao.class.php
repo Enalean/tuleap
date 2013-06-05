@@ -360,6 +360,36 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function getParents(array $artifact_ids) {
+        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
+        $sql = "SELECT child_art.id child_id, parent_art.*
+                FROM tracker_artifact parent_art
+                    INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                    INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                    INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
+                    INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
+                    INNER JOIN tracker_hierarchy                    hierarchy  ON (hierarchy.child_id = child_art.tracker_id AND hierarchy.parent_id = parent_art.tracker_id)
+                WHERE child_art.id IN ($artifact_ids)";
+        return $this->retrieve($sql);
+    }
+
+    public function getTitles(array $artifact_ids) {
+        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
+        $sql = "SELECT artifact.id, CVT.value as title
+                FROM tracker_artifact artifact
+                    INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
+                    LEFT JOIN (
+                        tracker_changeset_value                 AS CV0
+                        INNER JOIN tracker_semantic_title       AS ST  ON (
+                            CV0.field_id = ST.field_id
+                        )
+                        INNER JOIN tracker_changeset_value_text AS CVT ON (
+                            CV0.id       = CVT.changeset_value_id
+                        )
+                    ) ON (c.id = CV0.changeset_id)
+                WHERE artifact.id IN ($artifact_ids)";
+        return $this->retrieve($sql);
+    }
 }
 
 ?>
