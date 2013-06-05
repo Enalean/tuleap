@@ -224,10 +224,13 @@
     color: #999;
 }
 
+#topplanning table,
 #planning table,
 #blcontent table {
     border-spacing: 0;
 }
+
+#topblcontent table,
 #blcontent table {
     width: auto;
 }

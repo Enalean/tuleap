@@ -77,10 +77,11 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function event_artifact_parents_selector($params) {
+        $request = new Codendi_Request($params);
         $artifact_parents_selector = new Planning_ArtifactParentsSelector(
             $this->getArtifactFactory(),
             PlanningFactory::build(),
-            $this->getMilestoneFactory(),
+            $this->getMilestoneFactory($request),
             $this->getHierarchyFactory()
         );
         $event_listener = new Planning_ArtifactParentsSelectorEventListener($this->getArtifactFactory(), $artifact_parents_selector, HTTPRequest::instance());
