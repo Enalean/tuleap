@@ -74,7 +74,7 @@ class AgileDashboard_Milestone_Pane_TopPlanning_Presenter {
     }
 
     public function list_of_submilestone_title() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'list_of_submilestone_title', array($this->submilestone_item_type, $this->milestone_item_type));
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'list_of_milestone_title', array($this->submilestone_item_type));
     }
 
     public function help_intro() {

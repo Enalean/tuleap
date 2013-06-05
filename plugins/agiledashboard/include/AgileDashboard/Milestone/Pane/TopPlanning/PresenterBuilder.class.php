@@ -46,7 +46,7 @@ class AgileDashboard_Milestone_Pane_TopPlanning_PresenterBuilder {
         $this->milestone_factory  = $milestone_factory;
     }
 
-    public function getMilestoneTopPlanningPresenter(PFUser $user, Planning_Milestone $milestone, Tracker $submilestone_tracker) {
+    public function getMilestoneTopPlanningPresenter(PFUser $user, Planning_Milestone $milestone, Tracker $milestone_tracker) {
         $redirect_paremeter     = new Planning_MilestoneRedirectParameter();
         $backlog_strategy       = $this->strategy_factory->getSelfBacklogStrategy($milestone);
         $redirect_to_self       = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_TopPlanning_PaneInfo::IDENTIFIER);
@@ -58,7 +58,7 @@ class AgileDashboard_Milestone_Pane_TopPlanning_PresenterBuilder {
             $redirect_to_self
         );
 
-        $milestone_collection = $this->getMilestoneCollection($user, $milestone, $submilestone_tracker, $redirect_to_self);
+        $milestone_collection = $this->getMilestoneCollection($user, $milestone, $milestone_tracker, $redirect_to_self);
 
         return new AgileDashboard_Milestone_Pane_TopPlanning_Presenter(
             $backlog_collection,
@@ -67,7 +67,7 @@ class AgileDashboard_Milestone_Pane_TopPlanning_PresenterBuilder {
             $backlog_collection->getParentItemName(),
             $backlog_strategy->getItemTracker()->getName(),
             $milestone_collection->getName(),
-            $milestone_collection->getSubmitNewUrlLinkedToMilestone($milestone),
+            $milestone_collection->getSubmitNewUrlLinkedToMilestone($milestone_tracker),
             $milestone_collection->canCreateNew($user),
             $this->can_plan,
             $redirect_to_self

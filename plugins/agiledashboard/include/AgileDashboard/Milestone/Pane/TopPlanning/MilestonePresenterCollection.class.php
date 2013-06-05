@@ -31,11 +31,11 @@ class AgileDashboard_Milestone_Pane_TopPlanning_MilestonePresenterCollection imp
     }
 
     public function getName() {
-        return $this->submilestone_tracker->getItemName();
+        return $this->submilestone_tracker->getName();
     }
 
-    public function getSubmitNewUrlLinkedToMilestone(Planning_Milestone $milestone) {
-        return null;//$milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($this->submilestone_tracker);
+    public function getSubmitNewUrlLinkedToMilestone(Tracker $milestone_tracker) {
+        return $milestone_tracker->getSubmitUrl();
     }
 
     public function canCreateNew(PFUser $user) {

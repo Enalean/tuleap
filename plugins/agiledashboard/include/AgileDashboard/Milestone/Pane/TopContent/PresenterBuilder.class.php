@@ -46,8 +46,7 @@ class AgileDashboard_Milestone_Pane_TopContent_PresenterBuilder {
         $identifier           = AgileDashboard_Milestone_Pane_TopContent_PaneInfo::IDENTIFIER;
         $redirect_to_self     = $redirect_paremeter->getPlanningRedirectToSelf($milestone, $identifier);
         $can_add_backlog_item = $this->canAddBacklogItem($user, $milestone);
-
-//        $new_backlog_item_url = $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($item_tracker).'&'.$redirect_to_self;
+        $new_backlog_item_url = $item_tracker->getSubmitUrl().'&'.$redirect_to_self;
 
         $todo_collection = $this->collection_factory->getToDoCollection($user, $milestone, $backlog_strategy, $redirect_to_self);
         $done_collection = $this->collection_factory->getDoneCollection($user, $milestone, $backlog_strategy, $redirect_to_self);
@@ -57,7 +56,7 @@ class AgileDashboard_Milestone_Pane_TopContent_PresenterBuilder {
             $done_collection,
             $item_tracker->getName(),
             $can_add_backlog_item,
-            'www'//$new_backlog_item_url
+            $new_backlog_item_url
         );
 
         if ($backlog_strategy instanceof AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy) {
