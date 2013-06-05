@@ -35,6 +35,7 @@ plugin_agiledashboard	available	Available $1
 plugin_agiledashboard	content_head_title	Title
 plugin_agiledashboard	content_head_points	Remaining effort
 plugin_agiledashboard	content_head_parent	Parent
+plugin_agiledashboard	top_planning_link	Top Backlog Planning
 
 plugin_agiledashboard_contentpane	lab	This is a lab feature that is subjected to change in a near future. Please get in touch with us to <a href="mailto:tuleap-devel@tuleap.net">provide any feedback</a> about this work in progress, thanks!
 plugin_agiledashboard_contentpane	closed_items_title	Closed $1

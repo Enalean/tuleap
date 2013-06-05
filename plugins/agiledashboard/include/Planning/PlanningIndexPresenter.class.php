@@ -52,6 +52,11 @@ class Planning_IndexPresenter {
     public function get_default_top_pane() {
         return AgileDashboard_Milestone_Pane_TopContent_PaneInfo::IDENTIFIER;
     }
+
+    public function top_planning() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'top_planning_link');
+        return 'do not click here';
+    }
 }
 
 ?>
