@@ -149,10 +149,10 @@ abstract class Tracker_Semantic {
     * Export the semantic to SOAP format
     * @return array the SOAPification of the semantic
     */
-    public function exportToSOAP() {
+    public function exportToSOAP(PFUser $user) {
         $field_name = "";
         $field      = $this->getField();
-        if ($field) {
+        if ($field && $field->userCanRead($user)) {
             $field_name = $field->getName();
         }
 

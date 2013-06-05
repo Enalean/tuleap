@@ -140,14 +140,14 @@ class Tracker_SemanticManager {
      * Export the semantic to SOAP format
      * @return array the SOAPification of the semantic
      */
-    public function exportToSOAP() {
+    public function exportToSOAP(PFUser $user) {
         $semantic_order = array('title', 'status', 'contributor');
         $semantics      = $this->getSemantics();
         $soap_result    = array();
 
         foreach ($semantic_order as $semantic_key) {
             if (isset($semantics[$semantic_key])){
-                $soap_result[$semantic_key] = $semantics[$semantic_key]->exportToSOAP();
+                $soap_result[$semantic_key] = $semantics[$semantic_key]->exportToSOAP($user);
             }
         }
 
