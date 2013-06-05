@@ -27,7 +27,6 @@ class AgileDashboard_Milestone_Pane_TopPlanning_MilestonePresenter {
     private $planning_id;
     private $milestone_title       = '';
     private $backlog_item_type     = '';
-    private $parent_item_type      = '';
     private $redirect_to_self      = '';
     private $edit_submilestone_url = '';
     private $milestone_capacity;
@@ -96,14 +95,6 @@ class AgileDashboard_Milestone_Pane_TopPlanning_MilestonePresenter {
 
     public function points() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_points');
-    }
-
-    public function parent() {
-        if ($this->parent_item_type) {
-            return $this->parent_item_type;
-        } else {
-            return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_parent');
-        }
     }
 
     public function header_status() {

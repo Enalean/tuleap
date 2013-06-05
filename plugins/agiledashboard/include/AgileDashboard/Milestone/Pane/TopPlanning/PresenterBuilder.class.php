@@ -64,7 +64,6 @@ class AgileDashboard_Milestone_Pane_TopPlanning_PresenterBuilder {
             $backlog_collection,
             $milestone_collection,
             $milestone,
-            $backlog_collection->getParentItemName(),
             $backlog_strategy->getItemTracker()->getName(),
             $milestone_collection->getName(),
             $milestone_collection->getSubmitNewUrlLinkedToMilestone($milestone_tracker),

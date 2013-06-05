@@ -48,16 +48,16 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>{{list_of_submilestone_title}}</th>
+                    <th>{{list_of_milestone_title}}</th>
                     <th class="agiledashboard-planning-submilestones-addnew">
-                        {{#can_add_submilestone}}
+                        {{#can_add_milestone}}
                             <a href="{{add_new_submilestone_url}}" class="btn btn-small">{{add_new_submilestone}}</a>
-                        {{/can_add_submilestone}}
+                        {{/can_add_milestone}}
                     </th>
                 </tr>
             </thead>
             <tbody>
-                {{#submilestone_collection}}
+                {{#milestone_collection}}
                     <tr class="agiledashboard-planning-submilestone-header">
                         <th>
                             <span><i class="icon-chevron-right"></i> {{milestone_title}}</span>
@@ -88,7 +88,7 @@
                             </div>
                         </td>
                     </tr>
-                {{/submilestone_collection}}
+                {{/milestone_collection}}
             </tbody>
         </table>
     </div>
