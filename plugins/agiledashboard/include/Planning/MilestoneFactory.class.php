@@ -121,6 +121,7 @@ class Planning_MilestoneFactory {
      * @param bool $is_top Do we want a bare milestone for top planning
      * 
      * @return Planning_Milestone
+     * @throws Planning_TopMilestoneNoPlanningsException
      */
     public function getBareMilestone(PFUser $user, Project $project, $planning_id, $artifact_id, $is_top = false) {
         $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
@@ -307,8 +308,12 @@ class Planning_MilestoneFactory {
         $milestones = array();
 
         if ($milestone_planning_tracker_id) {
-            foreach($artifacts as $artifact) {                        
-                $milestone = new Planning_TopMilestone($milestone->getProject(), $user);
+            foreach($artifacts as $artifact) {
+                try {
+                    $milestone = new Planning_TopMilestone($milestone->getProject(), $user);
+                } catch (Planning_TopMilestoneNoPlanningsException $e) {
+                    continue;
+                }
                 $milestone->setArtifact($artifact);
                 $milestones[] = $milestone;
             }
