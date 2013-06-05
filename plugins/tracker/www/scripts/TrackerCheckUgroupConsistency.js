@@ -31,6 +31,16 @@ document.observe('dom:loaded', function () {
         check_consistency_feedback.show();
     }
 
+    function disableCreateBtn(create_new_tracker_btn, label) {
+        create_new_tracker_btn.value = label;
+        create_new_tracker_btn.disable();
+    }
+
+    function enableCreateBtn(create_new_tracker_btn, label) {
+        create_new_tracker_btn.value = label;
+        create_new_tracker_btn.enable();
+    }
+
     function observeCreateModeChanges(modes, check_consistency_feedback) {
         modes.each(function (mode) {
             mode.observe('click', function () {
@@ -49,12 +59,12 @@ document.observe('dom:loaded', function () {
         });
     }
 
-    function observeTemplateSelectorChanges(group_id, select_template, select_project, create_new_tracker_btn, check_consistency_feedback) {
+    function observeTemplateSelectorChanges(group_id, select_template, select_project, create_new_tracker_btn, check_consistency_feedback, initial_btn_label) {
         select_template.observe('change', function () {
             var template_group_id   = $F(select_project),
                 template_tracker_id = $F(select_template);
 
-            create_new_tracker_btn.disable();
+            disableCreateBtn(create_new_tracker_btn, initial_btn_label);
             new Ajax.Updater(
                 check_consistency_feedback,
                 '/plugins/tracker/index.php',
@@ -65,9 +75,14 @@ document.observe('dom:loaded', function () {
                         template_group_id: template_group_id,
                         template_tracker_id: template_tracker_id
                     },
-                    onComplete: function () {
+                    onComplete: function (transport) {
+                        var label = initial_btn_label;
+
+                        if (transport.responseText.length) {
+                            label = codendi.locales.tracker.create_anyway;
+                        }
                         enableFeedback(check_consistency_feedback);
-                        create_new_tracker_btn.enable();
+                        enableCreateBtn(create_new_tracker_btn, label);
                     }
                 }
             );
@@ -81,11 +96,12 @@ document.observe('dom:loaded', function () {
             modes                      = form.select('input[name=create_mode]'),
             select_project             = $('tracker_new_project_list'),
             create_new_tracker_btn     = $('create_new_tracker_btn'),
+            initial_btn_label          = create_new_tracker_btn.value,
             group_id                   = form.down('input[name=group_id]').value,
-            check_consistency_feedback = $('check_consistency_feedback');;
+            check_consistency_feedback = $('check_consistency_feedback');
 
         observeCreateModeChanges(modes, check_consistency_feedback);
         observeProjectSelectorChanges(select_project);
-        observeTemplateSelectorChanges(group_id, select_template, select_project, create_new_tracker_btn, check_consistency_feedback);
+        observeTemplateSelectorChanges(group_id, select_template, select_project, create_new_tracker_btn, check_consistency_feedback, initial_btn_label);
     }
 });
