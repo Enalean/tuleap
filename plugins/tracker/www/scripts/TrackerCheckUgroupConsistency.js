@@ -37,7 +37,7 @@ document.observe('dom:loaded', function () {
     }
 
     function observeTemplateSelectorChanges(group_id, select_template, select_project, create_new_tracker_btn) {
-        select_template.observe('change', function () { //todo: check that 'change' evt is valid on IE
+        select_template.observe('change', function () {
             var template_group_id   = $F(select_project),
                 template_tracker_id = $F(select_template);
 
