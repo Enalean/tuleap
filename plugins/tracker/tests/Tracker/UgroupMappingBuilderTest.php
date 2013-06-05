@@ -52,7 +52,7 @@ class Tracker_UgroupMappingBuilderTest extends TuleapTestCase {
         $this->template_tracker      = aTracker()->withProject($template_project)->build();
         $this->target_project        = stub('Project')->getId()->returns(104);
         $this->ugroup_manager        = mock('UGroupManager');
-        $this->permissions_retriever = mock('Tracker_UgroupPermissionsRetriever');
+        $this->permissions_retriever = mock('Tracker_UgroupPermissionsGoldenRetriever');
 
         stub($this->permissions_retriever)->getListOfInvolvedStaticUgroups($this->template_tracker)->returns(
             array($this->template_ugroup_dev, $this->template_ugroup_support, $this->template_ugroup_staff)

@@ -51,7 +51,7 @@ class Tracker_UgroupPermissionsConsistencyCheckerTest extends TuleapTestCase {
         $this->target_project        = stub('Project')->getId()->returns(104);
         $this->ugroup_manager        = mock('UGroupManager');
         $this->messenger             = mock('Tracker_UgroupPermissionsConsistencyMessenger');
-        $this->permissions_retriever = mock('Tracker_UgroupPermissionsRetriever');
+        $this->permissions_retriever = mock('Tracker_UgroupPermissionsGoldenRetriever');
 
         $this->checker = new Tracker_UgroupPermissionsConsistencyChecker($this->permissions_retriever, $this->ugroup_manager, $this->messenger);
     }
