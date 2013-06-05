@@ -27,14 +27,14 @@
  */
 class Tracker_UgroupMappingBuilder {
 
-    /** @var Tracker_UgroupPermissionsRetriever */
+    /** @var Tracker_UgroupPermissionsGoldenRetriever */
     private $permissions_retriever;
 
     /** @var UGroupManager */
     private $ugroup_manager;
 
     public function __construct(
-        Tracker_UgroupPermissionsRetriever $permissions_retriever,
+        Tracker_UgroupPermissionsGoldenRetriever $permissions_retriever,
         UGroupManager $ugroup_manager
     ) {
         $this->permissions_retriever = $permissions_retriever;

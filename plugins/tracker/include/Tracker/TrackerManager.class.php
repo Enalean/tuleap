@@ -167,7 +167,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                 }
 
                                 $checker = new Tracker_UgroupPermissionsConsistencyChecker(
-                                    new Tracker_UgroupPermissionsRetriever(
+                                    new Tracker_UgroupPermissionsGoldenRetriever(
                                         new Tracker_PermissionsDao(),
                                         new UGroupManager()
                                     ),

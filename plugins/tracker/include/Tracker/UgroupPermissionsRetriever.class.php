@@ -25,7 +25,7 @@
 /**
  * I retrieve permissions ugroup for a given tracker
  */
-class Tracker_UgroupPermissionsRetriever {
+class Tracker_UgroupPermissionsGoldenRetriever {
 
     /** @var Tracker_PermissionsDao */
     private $permissions_dao;

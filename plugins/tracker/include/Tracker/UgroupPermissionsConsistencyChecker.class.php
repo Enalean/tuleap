@@ -33,7 +33,7 @@
  */
 class Tracker_UgroupPermissionsConsistencyChecker {
 
-    /** @var Tracker_UgroupPermissionsRetriever */
+    /** @var Tracker_UgroupPermissionsGoldenRetriever */
     private $permissions_retriever;
 
     /** @var UGroupManager */
@@ -43,7 +43,7 @@ class Tracker_UgroupPermissionsConsistencyChecker {
     private $messenger;
 
     public function __construct(
-        Tracker_UgroupPermissionsRetriever $permissions_retriever,
+        Tracker_UgroupPermissionsGoldenRetriever $permissions_retriever,
         UGroupManager $ugroup_manager,
         Tracker_UgroupPermissionsConsistencyMessenger $messenger
     ) {
