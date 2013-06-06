@@ -64,7 +64,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
         $this->pane_factory                   = $pane_factory;
         $this->pane_presenter_builder_factory = $pane_presenter_builder_factory;
 
-        $project         = $project_manager->getProject($request->get('group_id'));
+        $project = $project_manager->getProject($request->get('group_id'));
 
         try {
             $this->milestone = $this->milestone_factory->getBareMilestone(
@@ -75,7 +75,8 @@ class Planning_MilestoneController extends MVC2_PluginController {
                 $request->get('is_top')
             );
         } catch (Planning_TopMilestoneNoPlanningsException $e) {
-            $this->redirect();
+            $query_parts = array('group_id' => $request->get('group_id'));
+            $this->redirect($query_parts);
         }
 
         $this->request = $request;

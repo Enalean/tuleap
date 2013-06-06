@@ -69,11 +69,13 @@ class Planning_MilestonePaneFactory {
 
     /** @return AgileDashboard_Milestone_Pane_PresenterData */
     public function getPanePresenterData(Planning_Milestone $milestone) {
+        $active_pane = $this->getActivePane($milestone);//This needs to be run first!
         $milestone_artifact_id = $this->getMilestoneArtifactId($milestone);
+        
         $available_milestones = (isset($this->available_milestones[$milestone_artifact_id])) ? $this->available_milestones[$milestone_artifact_id] : array();
 
         return new AgileDashboard_Milestone_Pane_PresenterData(
-            $this->getActivePane($milestone),
+            $active_pane,
             $this->getListOfPaneInfo($milestone),
             $available_milestones
         );
