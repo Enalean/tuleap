@@ -413,7 +413,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     private function getMediawikiDatabaseName(Project $project) {
-        $database_name = "plugin_mediawiki_".$project->getUnixName();
+        $database_name = str_replace ('-', '_', "plugin_mediawiki_".$project->getUnixName());
         return $database_name;
     }
 }
