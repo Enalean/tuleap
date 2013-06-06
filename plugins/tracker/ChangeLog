@@ -1,3 +1,6 @@
+Version 5.128 - Tuleap 6.2
+    * story #3544 - copy a tracker template with its permissions
+
 Version 5.127 - Tuleap 6.2
     * Fix bugs #3582 - getTrackerStructure permissions
 
