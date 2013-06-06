@@ -131,24 +131,24 @@ class AgileDashboard_Milestone_Pane_TopContent_Presenter {
         return $this->done_collection;
     }
 
-    public function has_something_todo() {
+    public function has_milestones_todo() {
         return count($this->todo_collection) > 0;
     }
 
-    public function has_something_done() {
+    public function has_milestones_done() {
         return count($this->done_collection) > 0;
     }
 
-    public function has_something() {
-        return $this->has_something_todo() || $this->has_something_done();
+    public function has_milestones() {
+        return $this->has_milestones_todo() || $this->has_milestones_done();
     }
 
-    public function has_nothing() {
-        return ! $this->has_something();
+    public function has_no_milestones() {
+        return ! $this->has_milestones();
     }
 
-    public function has_nothing_todo() {
-        return ! $this->has_something_done();
+    public function has_no_milestones_todo() {
+        return ! $this->has_milestones_done();
     }
 
     public function closed_items_title() {
@@ -165,12 +165,12 @@ class AgileDashboard_Milestone_Pane_TopContent_Presenter {
 
     public function open_items_title() {
         $key = 'open_items_title';
-        if ($this->has_nothing()) {
+        if ($this->has_no_milestones()) {
             $key = 'open_items_title-not_yet';
             if ($this->can_add_backlog_item()) {
                 $key = 'open_items_title-not_yet-can_add';
             }
-        } else if ($this->has_nothing_todo()) {
+        } else if ($this->has_no_milestones_todo()) {
             $key = 'open_items_title-no_more';
         }
 
