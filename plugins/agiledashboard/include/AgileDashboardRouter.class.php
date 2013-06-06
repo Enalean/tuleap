@@ -297,17 +297,15 @@ class AgileDashboardRouter {
     }
 
     public function routeShowTopPlanning(Codendi_Request $request, $default_controller) {
-        $action_arguments = array();
-
         $user = $request->getCurrentUser();
         if (! $user || ! $user->useLabFeatures()) {
-            $this->renderAction($default_controller, 'index', $request, $action_arguments);
+            $this->renderAction($default_controller, 'index', $request);
             return;
         }
 
         $request->set('is_top', true);
         $controller = $this->milestone_controller_factory->getMilestoneController($request);
-        $this->renderAction($controller, 'showTop', $request, $action_arguments);
+        $this->renderAction($controller, 'showTop', $request);
     }
 }
 
