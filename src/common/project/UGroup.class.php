@@ -48,6 +48,8 @@ class UGroup {
     const NEWS_EDITOR        = 18;
     const SVN_ADMIN          = 19;
 
+    const DYNAMIC_UPPER_BOUNDARY = 100;
+
     private $normalized_names = array(
         self::NONE               => 'nobody',
         self::ANONYMOUS          => 'all_users',

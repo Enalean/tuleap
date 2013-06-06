@@ -94,6 +94,17 @@ class UGroupManager {
         return $ugroups;
     }
 
+    /**
+     * @return UGroup[]
+     */
+    public function getStaticUGroups(Project $project) {
+        $ugroups = array();
+        foreach ($this->getDao()->searchStaticByGroupId($project->getId()) as $row) {
+            $ugroups[] = $this->instanciateGroupForProject($project, $row);
+        }
+        return $ugroups;
+    }
+
     public function getUGroupByName(Project $project, $name) {
         $row = $this->getDao()->searchByGroupIdAndName($project->getID(), $name)->getRow();
         if (!$row && preg_match('/^ugroup_.*_key$/', $name)) {
