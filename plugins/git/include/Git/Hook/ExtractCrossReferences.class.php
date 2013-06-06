@@ -23,14 +23,18 @@
  */
 
 /**
- * This class is a wrapper for call to api/reference/extractCross
- *
- * This allow applications that run on the server to extract cross references
- * without having access to the database
+ * Extract references usage in commit messages
  */
 class Git_Hook_ExtractCrossReferences {
 
+    /**
+     * @var Git_Exec
+     */
     private $git_exec;
+
+    /**
+     * @var ReferenceManager
+     */
     private $reference_manager;
 
     public function __construct(Git_Exec $git_exec, ReferenceManager $reference_manager) {
@@ -38,9 +42,9 @@ class Git_Hook_ExtractCrossReferences {
         $this->reference_manager = $reference_manager;
     }
 
-    public function execute(GitRepository $repository, PFUser $user, $commit, $refname) {
-        $rev_id = $repository->getFullName().'/'.$commit;
-        $text   = $this->git_exec->catFile($commit);
+    public function execute(GitRepository $repository, PFUser $user, $commit_sha1, $refname) {
+        $rev_id = $repository->getFullName().'/'.$commit_sha1;
+        $text   = $this->git_exec->catFile($commit_sha1);
         $GLOBALS['group_id'] = $repository->getProject()->getId();
         $this->reference_manager->extractCrossRef($text, $rev_id, Git::REFERENCE_NATURE, $repository->getProject()->getId(), $user->getId());
     }

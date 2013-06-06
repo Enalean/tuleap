@@ -23,6 +23,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Store push information in the database
+ */
 class Git_Hook_LogPushes {
     /** @var GitDao */
     private $dao;

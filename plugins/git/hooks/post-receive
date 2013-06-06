@@ -31,6 +31,6 @@ fi
 while read oldrev newrev refname
     do
 	echo $oldrev $newrev $refname | /usr/share/codendi/plugins/git/hooks/post-receive-email 2>/dev/null
-        /usr/lib/codendi/bin/git-post-receive.pl $repository_path $user_name $oldrev $newrev $refname
+        /usr/lib/codendi/bin/git-post-receive.pl $repository_path $user_name $oldrev $newrev $refname 2>/dev/null
     done
 
