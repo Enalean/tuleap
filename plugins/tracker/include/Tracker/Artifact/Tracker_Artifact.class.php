@@ -586,7 +586,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ( ! isset($this->status)) {
             if ($status_field = Tracker_Semantic_Status::load($this->getTracker())->getField()) {
                 if ($status_field->userCanRead()) {
-                    $this->status = $status_field->getFirstValueFor($this->getLastChangeset());
+                    $last_changeset = $this->getLastChangeset();
+                    if ($last_changeset) {
+                        $this->status = $status_field->getFirstValueFor($last_changeset);
+                    }
                 }
             }
         }
@@ -1396,7 +1399,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if (!$changeset) {
             $changeset = $this->getLastChangeset();
         }
-        return $changeset->getValue($field);
+        if ($changeset) {
+            return $changeset->getValue($field);
+        }
+        return null;
     }
 
     /**
