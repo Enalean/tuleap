@@ -335,8 +335,6 @@ class Planning_MilestoneFactory {
             $group_id = $milestone->getProject()->getID();
 
             foreach($artifacts as $artifact) {
-                // Some artifacts have no changeset on Tuleap.net (because of anonymous that can create
-                // artifacts).
                 if ($artifact->getLastChangeset()) {
                     $planning = $this->planning_factory->buildNewPlanning($group_id);
 

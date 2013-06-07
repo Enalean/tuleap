@@ -661,8 +661,8 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
     }
 
     public function itReturnsMilestonePerArtifact() {
-        $artifact_1 = mock('Tracker_Artifact');
-        $artifact_2 = mock('Tracker_Artifact');
+        $artifact_1 = stub('Tracker_Artifact')->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
+        $artifact_2 = stub('Tracker_Artifact')->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
 
         $my_artifacts = array(
             $artifact_1,
@@ -681,6 +681,30 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
 
         $this->assertEqual($milestone_1->getArtifact(), $artifact_1);
         $this->assertEqual($milestone_2->getArtifact(), $artifact_2);
+    }
+
+    public function itSkipsArtifactsWithoutChangeset() {
+        // Some artifacts have no changeset on Tuleap.net (because of anonymous that can create
+        // artifacts but artifact creation fails because they have to write access to fields
+        // the artifact creation is stopped half the way hence without changeset
+        $artifact_1 = stub('Tracker_Artifact')->getLastChangeset()->returns(null);
+        $artifact_2 = stub('Tracker_Artifact')->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
+
+        $my_artifacts = array(
+            $artifact_1,
+            $artifact_2
+        );
+
+        stub($this->artifact_factory)->getArtifactsByTrackerId()->returns($my_artifacts);
+        stub($this->planning_factory)->buildNewPlanning()->returns(mock('Planning'));
+
+        $milestones = $this->milestone_factory->getTopMilestones($this->milestone);
+
+        $this->assertCount($milestones, 1);
+
+        $milestone_1 = $milestones[0];
+
+        $this->assertEqual($milestone_1->getArtifact(), $artifact_2);
     }
 }
 ?>
