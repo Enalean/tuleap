@@ -204,11 +204,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
     }
 
     private function getSemanticsTheUserCanSee(PFUser $user, Planning_Milestone $milestone) {
-        if ($milestone instanceof Planning_ArtifactMilestone && $milestone->isTop()) {
-            $backlog_tracker = $milestone->getArtifact()->getTracker();
-        } else {
-            $backlog_tracker = $milestone->getPlanning()->getBacklogTracker();
-        }
+        $backlog_tracker = $milestone->getPlanning()->getBacklogTracker();
 
         $semantics = array();
         if ($this->userCanReadBacklogTitleField($user ,$backlog_tracker)) {
@@ -235,7 +231,6 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
         if (! $field) {
             return false;
         }
-
         return $field->userCanRead($user);
     }
 
@@ -300,7 +295,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
 
     private function getPlannedArtifactIds(PFUser $user, Planning_Milestone $milestone) {
         if ($milestone instanceof Planning_VirtualTopMilestone) {
-            $milestones = $this->milestone_factory->getTopMilestones($milestone);
+            $milestones = $this->milestone_factory->getTopSubMilestones($user, $milestone);
         } else {
             $milestones     = $this->milestone_factory->getSubMilestones($user, $milestone);
         }

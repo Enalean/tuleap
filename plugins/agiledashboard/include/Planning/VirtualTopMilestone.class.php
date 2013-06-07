@@ -75,7 +75,6 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
         }
         // Currently just take the first
         $first_planning = current($project_plannings);
-        
         $project_trackers = $tracker_manager->getTrackersByGroupId($this->project->getID());
 
         $planning_tracker_id = $first_planning->getPlanningTrackerId();
@@ -85,7 +84,7 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
         $backlog_tracker  = $project_trackers[$backlog_tracker_id];
 
         $this->planning = new Planning(
-            null,
+            $first_planning->getId(),
             null,
             $this->project->getID(),
             null,

@@ -322,25 +322,29 @@ class Planning_MilestoneFactory {
         return $sub_milestones;
     }
 
-    public function getTopMilestones(Planning_VirtualTopMilestone $milestone) {
+    /**
+     * Return the list of top most milestones
+     *
+     * @param PFUser $user
+     * @param Planning_VirtualTopMilestone $top_milestone
+     *
+     * @return Planning_ArtifactMilestone[]
+     */
+    public function getTopSubMilestones(PFUser $user, Planning_VirtualTopMilestone $top_milestone) {
         $milestones = array();
-        if (! $milestone->getPlanning()) {
+        if (! $top_milestone->getPlanning()) {
             return $milestones;
         }
 
-        $milestone_planning_tracker_id = $milestone->getPlanning()->getPlanningTrackerId();
+        $milestone_planning_tracker_id = $top_milestone->getPlanning()->getPlanningTrackerId();
         $artifacts = $this->artifact_factory->getArtifactsByTrackerId($milestone_planning_tracker_id);
 
         if ($milestone_planning_tracker_id) {
-            $group_id = $milestone->getProject()->getID();
-
             foreach($artifacts as $artifact) {
-                if ($artifact->getLastChangeset()) {
-                    $planning = $this->planning_factory->buildNewPlanning($group_id);
-
+                if ($artifact->getLastChangeset() && $artifact->userCanView($user)) {
                     $milestones[] = new Planning_ArtifactMilestone(
-                        $milestone->getProject(),
-                        $planning,
+                        $top_milestone->getProject(),
+                        $top_milestone->getPlanning(),
                         $artifact
                     );
                 }

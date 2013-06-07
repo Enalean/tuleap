@@ -626,7 +626,8 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
     private $milestone_factory;
     private $planning_factory;
     private $artifact_factory;
-    private $milestone;
+    private $top_milestone;
+    private $user;
 
     public function setUp() {
         parent::setUp();
@@ -647,22 +648,26 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         $project = mock('Project');
         stub($project)->getID()->returns(3233);
 
-        $this->milestone = mock('Planning_VirtualTopMilestone');
-        stub($this->milestone)->getPlanning()->returns($planning);
-        stub($this->milestone)->getProject()->returns($project);
+        $this->user = mock('PFUser');
+
+        $this->top_milestone = mock('Planning_VirtualTopMilestone');
+        stub($this->top_milestone)->getPlanning()->returns($planning);
+        stub($this->top_milestone)->getProject()->returns($project);
     }
 
     public function itReturnsEmptyArrayWhenNoTopMilestonesExist() {
         stub($this->artifact_factory)->getArtifactsByTrackerId()->returns(array());
 
-        $milestones = $this->milestone_factory->getTopMilestones($this->milestone);
+        $milestones = $this->milestone_factory->getTopSubMilestones($this->user, $this->top_milestone);
 
         $this->assertArrayEmpty($milestones);
     }
 
     public function itReturnsMilestonePerArtifact() {
         $artifact_1 = stub('Tracker_Artifact')->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
+        stub($artifact_1)->userCanView()->returns(true);
         $artifact_2 = stub('Tracker_Artifact')->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
+        stub($artifact_2)->userCanView()->returns(true);
 
         $my_artifacts = array(
             $artifact_1,
@@ -672,7 +677,7 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         stub($this->artifact_factory)->getArtifactsByTrackerId()->returns($my_artifacts);
         stub($this->planning_factory)->buildNewPlanning()->returns(mock('Planning'));
 
-        $milestones = $this->milestone_factory->getTopMilestones($this->milestone);
+        $milestones = $this->milestone_factory->getTopSubMilestones($this->user, $this->top_milestone);
 
         $this->assertCount($milestones, 2);
 
@@ -689,6 +694,7 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         // the artifact creation is stopped half the way hence without changeset
         $artifact_1 = stub('Tracker_Artifact')->getLastChangeset()->returns(null);
         $artifact_2 = stub('Tracker_Artifact')->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
+        stub($artifact_2)->userCanView()->returns(true);
 
         $my_artifacts = array(
             $artifact_1,
@@ -698,7 +704,7 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         stub($this->artifact_factory)->getArtifactsByTrackerId()->returns($my_artifacts);
         stub($this->planning_factory)->buildNewPlanning()->returns(mock('Planning'));
 
-        $milestones = $this->milestone_factory->getTopMilestones($this->milestone);
+        $milestones = $this->milestone_factory->getTopSubMilestones($this->user, $this->top_milestone);
 
         $this->assertCount($milestones, 1);
 
