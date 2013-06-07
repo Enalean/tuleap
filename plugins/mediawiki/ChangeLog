@@ -1,3 +1,6 @@
+Version 0.10 - Tuleap 6.2
+    * Fix bugs #3637 - Can't create mediawiki pages for some projects
+
 Version 0.9 - Tuleap 5.13
     * Remove use codendi as db
 
