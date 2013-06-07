@@ -1,3 +1,6 @@
+Version 0.11 - Tuleap 6.2
+    * Fix request #3450 - Mediawiki does not work with project that have dash in name
+
 Version 0.10 - Tuleap 6.2
     * Fix bugs #3637 - Can't create mediawiki pages for some projects
 
