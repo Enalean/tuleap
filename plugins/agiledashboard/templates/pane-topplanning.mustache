@@ -27,6 +27,7 @@
                         <th>Id</th>
                         <th>{{title}}</th>
                         <th>{{points}}</th>
+                        <th>{{parent}}</th>
                         <th>{{header_status}}</th>
                     </tr>
                 </thead>
@@ -37,6 +38,7 @@
                             <td><a href="{{url}}">{{id}}</a></td>
                             <td>{{title}}</td>
                             <td class="submilestone-element-remaining-effort">{{points}}</td>
+                            <td><a href="{{parent_url}}">{{parent_title}}</a></td>
                             <td>{{status}}</td>
                         </tr>
                     {{/backlog_collection}}
@@ -78,6 +80,7 @@
                                             <th>Id</th>
                                             <th>{{title}}</th>
                                             <th>{{points}}</th>
+                                            <th>{{parent}}</th>
                                             <th>{{header_status}}</th>
                                         </tr>
                                     </thead>

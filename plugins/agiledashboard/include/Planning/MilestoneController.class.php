@@ -123,7 +123,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
     }
 
     public function milestonedata() {
-        $this->render('milestone-content', $this->getSubmilestonePresenter());
+        $this->render('submilestone-content', $this->getSubmilestonePresenter());
     }
 
     private function getSubmilestonePresenter() {

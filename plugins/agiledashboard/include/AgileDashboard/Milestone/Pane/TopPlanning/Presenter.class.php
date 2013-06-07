@@ -38,6 +38,7 @@ class AgileDashboard_Milestone_Pane_TopPlanning_Presenter {
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $backlog_collection,
         AgileDashboard_Milestone_Pane_TopPlanning_MilestonePresenterCollection $submilestone_collection,
         Planning_Milestone $milestone,
+        $parent_item_type,
         $backlog_item_type,
         $milestone_item_type,
         $add_new_milestone_url,
@@ -47,6 +48,7 @@ class AgileDashboard_Milestone_Pane_TopPlanning_Presenter {
     ) {
         $this->backlog_collection       = $backlog_collection;
         $this->milestone_collection     = $submilestone_collection;
+        $this->parent_item_type         = $parent_item_type;
         $this->backlog_item_type        = $backlog_item_type;
         $this->milestone_item_type      = $milestone_item_type;
         $this->add_new_milestone_url    = $add_new_milestone_url;
@@ -111,6 +113,14 @@ class AgileDashboard_Milestone_Pane_TopPlanning_Presenter {
 
     public function header_status() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'header_status');
+    }
+
+    public function parent() {
+        if ($this->parent_item_type) {
+            return $this->parent_item_type;
+        } else {
+            return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_parent');
+        }
     }
 
     public function backlog_collection() {

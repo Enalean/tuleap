@@ -41,8 +41,12 @@ class AgileDashboard_Milestone_Pane_TopContent_Presenter {
     /** @var String */
     private $descendant_item_name;
 
+    /** @var String */
+    private $parent_item_type;
+
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
+        $parent_item_type,
         $backlog_item_type,
         $can_add_backlog_item_type,
         $submit_url
@@ -51,6 +55,7 @@ class AgileDashboard_Milestone_Pane_TopContent_Presenter {
         $this->backlog_item_type         = $backlog_item_type;
         $this->can_add_backlog_item_type = $can_add_backlog_item_type;
         $this->submit_url                = $submit_url;
+        $this->parent_item_type          = $parent_item_type;
     }
 
     public function setTodoCollection( $todo) {
@@ -118,6 +123,13 @@ class AgileDashboard_Milestone_Pane_TopContent_Presenter {
         return $this->todo_collection;
     }
 
+    public function parent() {
+        if ($this->parent_item_type) {
+            return $this->parent_item_type;
+        } else {
+            return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_parent');
+        }
+    }
 
     public function has_milestones_todo() {
         return count($this->todo_collection) > 0;
