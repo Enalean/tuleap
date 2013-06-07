@@ -260,6 +260,10 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
         $redirect_to_self
     ) {
         $artifact_id = $artifact->getId();
+        if (!isset($semantics[$artifact_id])) {
+            return;
+        }
+
         $artifact->setTitle($semantics[$artifact_id][Tracker_Semantic_Title::NAME]);
 
         $backlog_item = new AgileDashboard_BacklogItem($artifact, $redirect_to_self);
