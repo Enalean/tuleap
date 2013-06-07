@@ -20,13 +20,12 @@
 
 class Planning_IndexPresenter {
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $plugin_theme_path;
 
     public $project_id;
 
+    /** @var bool */
     public $use_lab;
 
     public function __construct(array $short_access, $plugin_theme_path, $project_id, $use_lab) {
@@ -55,7 +54,6 @@ class Planning_IndexPresenter {
 
     public function top_planning() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'top_planning_link');
-        return 'do not click here';
     }
 }
 
