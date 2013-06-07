@@ -46,6 +46,7 @@ plugin_agiledashboard_contentpane	open_items_title-no_more	No more open $1, well
 plugin_agiledashboard_contentpane	open_items_title-not_yet	No $1 yet
 plugin_agiledashboard_contentpane	open_items_title-not_yet-can_add	No $1, start adding now
 plugin_agiledashboard_contentpane	open_items_intro	Here are the items that are still open. You can prioritize by drag 'n dropping them.
+plugin_agiledashboard_contentpane	open_unplanned_items_intro	Here are the items that are still open and unplanned. You can prioritize by drag 'n dropping them.
 plugin_agiledashboard_contentpane	allow_other_create	or
 plugin_agiledashboard_contentpane	add_in_descendant_title	Add $1 in existing $2
 

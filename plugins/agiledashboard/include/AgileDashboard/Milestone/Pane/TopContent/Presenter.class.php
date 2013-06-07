@@ -26,9 +26,6 @@ class AgileDashboard_Milestone_Pane_TopContent_Presenter {
     /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
     private $todo_collection;
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
-    private $done_collection;
-
     /** @var String */
     private $backlog_item_type;
 
@@ -46,13 +43,11 @@ class AgileDashboard_Milestone_Pane_TopContent_Presenter {
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
-        $done,
         $backlog_item_type,
         $can_add_backlog_item_type,
         $submit_url
     ) {
         $this->todo_collection           = $todo;
-        $this->done_collection           = $done;
         $this->backlog_item_type         = $backlog_item_type;
         $this->can_add_backlog_item_type = $can_add_backlog_item_type;
         $this->submit_url                = $submit_url;
@@ -60,10 +55,6 @@ class AgileDashboard_Milestone_Pane_TopContent_Presenter {
 
     public function setTodoCollection( $todo) {
         $this->todo_collection = $todo;
-    }
-
-    public function setDoneCollection( $done) {
-        $this->done_collection = $done;
     }
 
     public function setBacklogElements($backlog_elements) {
@@ -127,28 +118,17 @@ class AgileDashboard_Milestone_Pane_TopContent_Presenter {
         return $this->todo_collection;
     }
 
-    public function done_collection() {
-        return $this->done_collection;
-    }
 
     public function has_milestones_todo() {
         return count($this->todo_collection) > 0;
     }
 
-    public function has_milestones_done() {
-        return count($this->done_collection) > 0;
-    }
-
     public function has_milestones() {
-        return $this->has_milestones_todo() || $this->has_milestones_done();
+        return $this->has_milestones_todo();
     }
 
     public function has_no_milestones() {
         return ! $this->has_milestones();
-    }
-
-    public function has_no_milestones_todo() {
-        return ! $this->has_milestones_done();
     }
 
     public function closed_items_title() {
@@ -170,15 +150,13 @@ class AgileDashboard_Milestone_Pane_TopContent_Presenter {
             if ($this->can_add_backlog_item()) {
                 $key = 'open_items_title-not_yet-can_add';
             }
-        } else if ($this->has_no_milestones_todo()) {
-            $key = 'open_items_title-no_more';
         }
 
         return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', $key, $this->backlog_item_type);
     }
 
     public function open_items_intro() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'open_items_intro', $this->backlog_item_type);
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'open_unplanned_items_intro', $this->backlog_item_type);
     }
 
     public function lab() {
