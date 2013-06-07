@@ -8,20 +8,21 @@
 
 require_once('pre.php');    
 require_once('account.php');
-
+require_once('common/include/CSRFSynchronizerToken.class.php');
 $request =& HTTPRequest::instance();
-
+$csrf    = new CSRFSynchronizerToken('/account/change_pw.php');
 
 // ###### function register_valid()
 // ###### checks for valid register from form post
 
-function register_valid($user_id)	{
+function register_valid($user_id, CSRFSynchronizerToken $csrf)	{
     $request =& HTTPRequest::instance();
 
     if (!$request->isPost() || !$request->exist('Update')) {
 		return 0;
 	}
-	
+    $csrf->check();
+
 	// check against old pw
 	$res = db_query("SELECT user_pw, status FROM user WHERE status IN ('A', 'R') AND user_id=".db_ei($user_id));
 	if (!$res  || db_numrows($res) != 1) {
@@ -70,7 +71,7 @@ $em->processEvent('before_change_pw', array());
 
 // ###### first check for valid login, if so, congratulate
 $user_id = is_numeric($request->get('user_id')) ? (int)$request->get('user_id') : user_getid();
-if (register_valid($user_id)) {
+if (register_valid($user_id, $csrf)) {
     $HTML->header(array('title'=>$Language->getText('account_change_pw', 'title_success')));
 ?>
 <p><b><? echo $Language->getText('account_change_pw', 'title_success'); ?></b>
@@ -85,7 +86,9 @@ if (register_valid($user_id)) {
 ?>
 <p><b><? echo $Language->getText('account_change_pw', 'title'); ?></b>
 <form action="change_pw.php" method="post" autocomplete="off" >
-<p><? echo $Language->getText('account_change_pw', 'old_password'); ?>:
+<p><?
+echo $csrf->fetchHTMLInput();
+echo $Language->getText('account_change_pw', 'old_password'); ?>:
 <br><input type="password" value="" name="form_oldpw">
 <?php user_display_choose_password('',is_numeric($request->get('user_id')) ? $request->get('user_id') : 0); ?>
 <p><input type="submit" name="Update" value="<? echo $Language->getText('global', 'btn_update'); ?>">
