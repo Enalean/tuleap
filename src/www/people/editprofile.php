@@ -14,8 +14,8 @@ $purifier = Codendi_HTMLPurifier::instance();
 $csrf     = new CSRFSynchronizerToken('/people/editprofile.php');
 
 if (user_isloggedin()) {
-	$csrf->check();
 	if ($update_profile) {
+		$csrf->check();
 		/*
 			update the job's description, status, etc
 		*/
@@ -122,7 +122,8 @@ if (user_isloggedin()) {
 		//now show the list of desired skills
 		echo '<P>'.people_edit_skill_inventory( user_getid() );
 
-		echo '<P><FORM ACTION="/account/" METHOD="POST"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('people_editjob','finished').'"></FORM>'; 
+		echo '<P><FORM ACTION="/account/" METHOD="POST">';
+		echo '<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('people_editjob','finished').'"></FORM>';
 	}
 
 	people_footer(array());
