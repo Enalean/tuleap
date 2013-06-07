@@ -41,11 +41,6 @@ class Planning_MilestoneFactory {
     private $formelement_factory;
 
     /**
-     * @var Codendi_Request
-     */
-    private $request;
-
-    /**
      * @var TrackerManager
      */
     private $tracker_manager;
@@ -59,13 +54,11 @@ class Planning_MilestoneFactory {
      */
     public function __construct(PlanningFactory            $planning_factory,
                                 Tracker_ArtifactFactory    $artifact_factory,
-                                Tracker_FormElementFactory $formelement_factory,
-                                Codendi_Request $request) {
+                                Tracker_FormElementFactory $formelement_factory) {
 
         $this->planning_factory    = $planning_factory;
         $this->artifact_factory    = $artifact_factory;
         $this->formelement_factory = $formelement_factory;
-        $this->request = $request;
     }
 
     /**
@@ -125,29 +118,36 @@ class Planning_MilestoneFactory {
      * @return Planning_Milestone
      * @throws Planning_VirtualTopMilestoneNoPlanningsException
      */
-    public function getBareMilestone(PFUser $user, Project $project, $planning_id, $artifact_id, $is_top = false) {
+    public function getBareMilestone(PFUser $user, Project $project, $planning_id, $artifact_id) {
         $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
 
         if ($artifact && $artifact->userCanView($user)) {
-            if (! $planning) {
-                $planning = $this->planning_factory->buildEmptyPlanning();
-            }
             $milestone = new Planning_ArtifactMilestone($project, $planning, $artifact);
-            $milestone->setIsTop($is_top);
+            $milestone->setIsTop(false);
             $milestone->setAncestors($this->getMilestoneAncestors($user, $milestone));
             $this->updateMilestoneContextualInfo($user, $milestone);
             return $milestone;
-        } elseif ($is_top) {
-            return new Planning_VirtualTopMilestone(
-                $project,
-                $this->request->getCurrentUser(),
-                $this->getTrackerManager(),
-                $this->planning_factory
-            );
         } else {
             return new Planning_NoMilestone($project, $planning);
         }
+    }
+
+    /**
+     * Build a fake milestone that catch all submilestones of root planning
+     *
+     * @param PFUser $user
+     * @param Project $project
+     *
+     * @return Planning_VirtualTopMilestone
+     */
+    public function getVirtualTopMilestone(PFUser $user, Project $project) {
+        return new Planning_VirtualTopMilestone(
+            $project,
+            $user,
+            $this->getTrackerManager(),
+            $this->planning_factory
+        );
     }
 
     /**

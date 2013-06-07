@@ -67,13 +67,19 @@ class Planning_MilestoneController extends MVC2_PluginController {
         $project = $project_manager->getProject($request->get('group_id'));
 
         try {
-            $this->milestone = $this->milestone_factory->getBareMilestone(
-                $this->getCurrentUser(),
-                $project,
-                $request->get('planning_id'),
-                $request->get('aid'),
-                $request->get('is_top')
-            );
+            if ($request->get('is_top')) {
+                $this->milestone = $this->milestone_factory->getVirtualTopMilestone(
+                    $this->getCurrentUser(),
+                    $project
+                );
+            } else {
+                $this->milestone = $this->milestone_factory->getBareMilestone(
+                    $this->getCurrentUser(),
+                    $project,
+                    $request->get('planning_id'),
+                    $request->get('aid')
+                );
+            }
         } catch (Planning_VirtualTopMilestoneNoPlanningsException $e) {
             $query_parts = array('group_id' => $request->get('group_id'));
             $this->redirect($query_parts);

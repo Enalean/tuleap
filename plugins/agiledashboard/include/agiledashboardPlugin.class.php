@@ -77,11 +77,10 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function event_artifact_parents_selector($params) {
-        $request = new Codendi_Request($params);
         $artifact_parents_selector = new Planning_ArtifactParentsSelector(
             $this->getArtifactFactory(),
             PlanningFactory::build(),
-            $this->getMilestoneFactory($request),
+            $this->getMilestoneFactory(),
             $this->getHierarchyFactory()
         );
         $event_listener = new Planning_ArtifactParentsSelectorEventListener($this->getArtifactFactory(), $artifact_parents_selector, HTTPRequest::instance());
@@ -233,7 +232,7 @@ class AgileDashboardPlugin extends Plugin {
 
     public function process(Codendi_Request $request) {
         $planning_factory               = $this->getPlanningFactory();
-        $milestone_factory              = $this->getMilestoneFactory($request);
+        $milestone_factory              = $this->getMilestoneFactory();
         $hierarchy_factory              = $this->getHierarchyFactory();
         $pane_presenter_builder_factory = $this->getPanePresenterBuilderFactory($milestone_factory);
 
@@ -299,12 +298,11 @@ class AgileDashboardPlugin extends Plugin {
      * Builds a new Planning_MilestoneFactory instance.
      * @return Planning_MilestoneFactory
      */
-    protected function getMilestoneFactory($request) {
+    protected function getMilestoneFactory() {
         return new Planning_MilestoneFactory(
             $this->getPlanningFactory(),
             $this->getArtifactFactory(),
-            Tracker_FormElementFactory::instance(),
-            $request);
+            Tracker_FormElementFactory::instance());
     }
 
     private function getArtifactFactory() {
