@@ -123,7 +123,7 @@ class Planning_MilestoneFactory {
      * @param bool $is_top Do we want a bare milestone for top planning
      * 
      * @return Planning_Milestone
-     * @throws Planning_TopMilestoneNoPlanningsException
+     * @throws Planning_VirtualTopMilestoneNoPlanningsException
      */
     public function getBareMilestone(PFUser $user, Project $project, $planning_id, $artifact_id, $is_top = false) {
         $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
@@ -139,7 +139,7 @@ class Planning_MilestoneFactory {
             $this->updateMilestoneContextualInfo($user, $milestone);
             return $milestone;
         } elseif ($is_top) {
-            return new Planning_TopMilestone(
+            return new Planning_VirtualTopMilestone(
                 $project,
                 $this->request->getCurrentUser(),
                 $this->getTrackerManager(),
@@ -322,7 +322,7 @@ class Planning_MilestoneFactory {
         return $sub_milestones;
     }
 
-    public function getTopMilestones(Planning_TopMilestone $milestone) {
+    public function getTopMilestones(Planning_VirtualTopMilestone $milestone) {
         $milestones = array();
         if (! $milestone->getPlanning()) {
             return $milestones;

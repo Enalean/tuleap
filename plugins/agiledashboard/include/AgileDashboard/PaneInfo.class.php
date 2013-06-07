@@ -79,7 +79,7 @@ abstract class AgileDashboard_PaneInfo {
     }
 
     protected function getUriParametersForMilestone(Planning_Milestone $milestone) {
-        $action = ($milestone instanceof Planning_TopMilestone) ? 'show-top' : 'show';
+        $action = ($milestone instanceof Planning_VirtualTopMilestone) ? 'show-top' : 'show';
 
         return array(
             'group_id'    => $milestone->getGroupId(),

@@ -74,7 +74,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
                 $request->get('aid'),
                 $request->get('is_top')
             );
-        } catch (Planning_TopMilestoneNoPlanningsException $e) {
+        } catch (Planning_VirtualTopMilestoneNoPlanningsException $e) {
             $query_parts = array('group_id' => $request->get('group_id'));
             $this->redirect($query_parts);
         }

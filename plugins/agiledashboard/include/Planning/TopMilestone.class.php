@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning_TopMilestone  implements Planning_Milestone {
+class Planning_VirtualTopMilestone  implements Planning_Milestone {
 
     /**
      * The project where the milestone is defined
@@ -48,7 +48,7 @@ class Planning_TopMilestone  implements Planning_Milestone {
      * @param Project $project
      * @param PFUser $user
      * @param TrackerManager $tracker_manager
-     * @throws Planning_TopMilestoneNoPlanningsException
+     * @throws Planning_VirtualTopMilestoneNoPlanningsException
      */
     public function __construct(Project $project, PFUser $user, TrackerManager $tracker_manager, PlanningFactory $planning_factory) {
         $this->project  = $project;
@@ -60,7 +60,7 @@ class Planning_TopMilestone  implements Planning_Milestone {
     private function generatePlanning(TrackerManager $tracker_manager, PlanningFactory $planning_factory) {
         $project_plannings = $planning_factory->getOrderedPlanningsWithBacklogTracker($this->user, $this->project->getID());
         if (! $project_plannings) {
-            throw new Planning_TopMilestoneNoPlanningsException('No Plannings Exist');
+            throw new Planning_VirtualTopMilestoneNoPlanningsException('No Plannings Exist');
         }
         // Currently just take the first
         $first_planning = current($project_plannings);

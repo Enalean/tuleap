@@ -25,7 +25,7 @@ class Planning_MilestoneRedirectParameter {
 
     /** @return string */
     public function getPlanningRedirectToSelf(Planning_Milestone $milestone, $pane_identifier) {
-        if ($milestone instanceof Planning_TopMilestone) {
+        if ($milestone instanceof Planning_VirtualTopMilestone) {
             $planning_id = null;
         } else {
             $planning_id = (int) $milestone->getPlanningId();

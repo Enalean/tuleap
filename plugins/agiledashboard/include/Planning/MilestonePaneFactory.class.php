@@ -164,11 +164,11 @@ class Planning_MilestonePaneFactory {
         $this->buildListOfPaneInfo($milestone);
         $legacy_planning_pane_info = $this->getLegacyPaneInfo($milestone);
 
-        if (! $this->active_pane[$milestone_artifact_id] && (! $milestone instanceof Planning_TopMilestone)) {
+        if (! $this->active_pane[$milestone_artifact_id] && (! $milestone instanceof Planning_VirtualTopMilestone)) {
             $legacy_planning_pane_info->setActive(true);
             $this->active_pane[$milestone_artifact_id] = $this->legacy_planning_pane_factory->getPane($milestone, $legacy_planning_pane_info);
             $this->available_milestones[$milestone_artifact_id] = $this->legacy_planning_pane_factory->getAvailableMilestones($milestone);
-        } elseif(! $milestone instanceof Planning_TopMilestone) {
+        } elseif(! $milestone instanceof Planning_VirtualTopMilestone) {
             $this->available_milestones[$milestone_artifact_id] = $this->getAvailableMilestones($milestone);
         }
     }

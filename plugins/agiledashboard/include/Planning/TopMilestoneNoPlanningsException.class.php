@@ -18,5 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning_TopMilestoneNoPlanningsException extends Exception{}
+class Planning_VirtualTopMilestoneNoPlanningsException extends Exception{}
 ?>

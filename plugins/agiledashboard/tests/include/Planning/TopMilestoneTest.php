@@ -20,7 +20,7 @@
  */
 require_once dirname(__FILE__).'/../../common.php';
 
-class Planning_TopMilestoneTest extends TuleapTestCase {
+class Planning_VirtualTopMilestoneTest extends TuleapTestCase {
 
     public function itThrowsAnExceptionIfNoPlanningsExistForProject() {
         $project = mock('Project');
@@ -28,9 +28,9 @@ class Planning_TopMilestoneTest extends TuleapTestCase {
         $tracker_manager = mock('TrackerManager');
         $planning_factory = mock('PlanningFactory');
 
-        $this->expectException('Planning_TopMilestoneNoPlanningsException');
+        $this->expectException('Planning_VirtualTopMilestoneNoPlanningsException');
 
-        $milestone = new Planning_TopMilestone($project, $user, $tracker_manager, $planning_factory);
+        $milestone = new Planning_VirtualTopMilestone($project, $user, $tracker_manager, $planning_factory);
     }
 
     public function itCreatesNewPlanningWithValidBacklogAndPlanningTrackers() {
@@ -60,7 +60,7 @@ class Planning_TopMilestoneTest extends TuleapTestCase {
         );
         stub($project)->getID()->returns(56);
 
-        $milestone = new Planning_TopMilestone($project, $user, $tracker_manager, $planning_factory);
+        $milestone = new Planning_VirtualTopMilestone($project, $user, $tracker_manager, $planning_factory);
 
         $this->assertIsA($milestone->getPlanning(), 'Planning');
         $this->assertIsA($milestone->getPlanning()->getBacklogTracker(), 'Tracker');

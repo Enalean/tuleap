@@ -92,7 +92,7 @@ class AgileDashboard_Milestone_Backlog_BacklogStrategyFactory {
     }
 
     private function getBacklogArtifacts(Planning_Milestone $milestone) {
-        if ($milestone instanceof Planning_TopMilestone) {
+        if ($milestone instanceof Planning_VirtualTopMilestone) {
             return $this->dao
                 ->getTopBacklogArtifacts($milestone->getPlanning()->getBacklogTrackerId())
                 ->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));

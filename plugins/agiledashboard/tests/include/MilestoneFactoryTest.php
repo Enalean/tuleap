@@ -647,7 +647,7 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         $project = mock('Project');
         stub($project)->getID()->returns(3233);
 
-        $this->milestone = mock('Planning_TopMilestone');
+        $this->milestone = mock('Planning_VirtualTopMilestone');
         stub($this->milestone)->getPlanning()->returns($planning);
         stub($this->milestone)->getProject()->returns($project);
     }
