@@ -1,3 +1,4 @@
+<div style="min-height: 300px;">
 <h3>{{open_items_title}}</h3>
 
 
@@ -9,14 +10,16 @@
 
 {{#can_add_subbacklog_items}}
 {{allow_other_create}}
-<div class="btn-group">
+<div class="btn-group dropdown">
     <a class="dropdown-toggle btn" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
         {{add_in_descendant_title}}
         <b class="caret"></b>
     </a>
     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
         {{#backlog_elements}}
-        <li><a href="{{url}}">{{title}}</a></li>
+        <li>
+            <a href="{{url}}">{{title}}</a>
+        </li>
         {{/backlog_elements}}
     </ul>
 </div>
@@ -47,3 +50,4 @@
         </table>
     {{/has_submilestones_todo}}
 {{/has_submilestones}}
+</div>
