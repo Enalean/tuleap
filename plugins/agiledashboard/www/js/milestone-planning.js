@@ -26,7 +26,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 (function ($) {
     tuleap.agiledashboard.NewPlanning = Class.create({
         dragging : false,
-        params : null,
+        params : {},
 
         initialize: function (params) {
             var self = this;
@@ -99,10 +99,9 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                     new_url = $(this).attr('href') + '&'
                         + 'planning[planning][' + milestone_planning_id + ']=' + milestone_id;   
                 }
-                
+
                $(this).attr('href', new_url);
-            });
-            
+            });   
         },
 
         getMilestoneId : function() {
