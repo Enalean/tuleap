@@ -1,3 +1,6 @@
+Version 3.23 - Tuleap 6.2
+    * Fix request #1561 - Error with link to git commit from a artifact
+
 Version 3.22 - Tuleap 6.1
     * Fix bugs #3576: fix js crying on git service homepage
     * Fix bugs #3573: CI: get an error message if no git trigger selected
