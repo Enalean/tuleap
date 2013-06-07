@@ -8,12 +8,13 @@
 
 require_once('pre.php');
 require('../people/people_utils.php');
+require_once('common/include/CSRFSynchronizerToken.class.php');
 
 $purifier = Codendi_HTMLPurifier::instance();
+$csrf     = new CSRFSynchronizerToken('/people/editprofile.php');
 
 if (user_isloggedin()) {
-
-
+	$csrf->check();
 	if ($update_profile) {
 		/*
 			update the job's description, status, etc
@@ -95,13 +96,14 @@ if (user_isloggedin()) {
 		$feedback .= ' '.$Language->getText('people_editprofile','user_fetch_failed').' ';
 		echo '<H2>'.$Language->getText('people_editprofile','no_such_user').'</H2>';
 	} else {
+		$csrfToken =  $csrf->fetchHTMLInput();
 
 		echo '
 		<H2>'.$Language->getText('people_editprofile','edit_your_profile').'</H2>
 		<P>
 		'.$Language->getText('people_editprofile','skill_explain').'
 		<P>
-		<FORM ACTION="?" METHOD="POST">
+		<FORM ACTION="?" METHOD="POST">'.$csrfToken.'
 		<P>
 		'.$Language->getText('people_editprofile','public_view_explain').'
 		<P>
