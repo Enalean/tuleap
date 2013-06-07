@@ -92,7 +92,10 @@ $wgDBtype           = "forge";
 $wgDBserver         = forge_get_config('database_host') ;
 if (forge_get_config('mw_dbtype', 'mediawiki')=='mysql'){
 	// At the time writing schema in mysql is synonym for database
-	$wgDBname           = 'plugin_mediawiki_'.$fusionforgeproject;
+
+    // /!\ this str_replace is duplicated in
+    // plugins/statistics/include/Statistics_ServicesUsageDao.class.php
+	$wgDBname           = str_replace ('-', '_', 'plugin_mediawiki_'.$fusionforgeproject);
 	$wgDBprefix         = 'mw';
 } else {
 	$wgDBname           = forge_get_config('database_name');
