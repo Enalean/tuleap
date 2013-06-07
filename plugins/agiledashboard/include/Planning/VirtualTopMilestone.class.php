@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * This class represents a virtual TopMilestone
+ *
+ * In essence, it is a milestone that sits above all other milestones in a
+ * hierarchy.
+ *
+ * Example 1: Say your only milestones are called sprints. Then collections
+ * of sprints will not be defined. So, this virtual top milestone will represent the
+ * collection of all sprints.
+ *
+ * Example 2: Say you have milestones called releases and each release has a set
+ * of sprints. In this case, collections/ sets of releases will not be defined.
+ * Thus, this virtual milestone will represent the set of all releases.
+ *
+ * Because of all this, a Planning_VirtualTopMilestone does not correspond to any
+ * Tracker_Artifact; there is no artifact that represents this milestone or
+ * vice-versa. Hence, most of the properties of a virtual milestone are irrelevant
+ * and null
+ *
+ */
 class Planning_VirtualTopMilestone  implements Planning_Milestone {
 
     /**
@@ -34,15 +54,6 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
      * @var Planning
      */
     private $planning;
-
-    private $duration;
-
-    private $start_date;
-
-    /**
-     * @var Tracker_Artifact
-     */
-    private $artifact = null;
 
     /**
      * @param Project $project
@@ -92,26 +103,14 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
      * @return string
      */
     public function getXRef() {
-        if ($this->artifact) {
-           return $this->artifact->getXRef();
-        }
-
         return '';
     }
 
     public function getArtifact() {
-        if ($this->artifact) {
-            return $this->artifact;
-        }
-
         return null;
     }
 
     public function getArtifactId() {
-        if ($this->artifact) {
-            return $this->artifact->getID();
-        }
-
         return null;
     }
 
@@ -124,10 +123,6 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
     }
 
     public function getArtifactTitle() {
-        if ($this->artifact) {
-            return $this->artifact->getTitle();
-        }
-
         return null;
     }
 
@@ -136,10 +131,6 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
      * @return boolean
      */
     public function userCanView(PFUser $user) {
-        if ($this->artifact) {
-            return $this->artifact->getTracker()->userCanView($user);
-        }
-
         return null;
     }
 
@@ -177,48 +168,20 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
     }
 
     public function setStartDate($start_date) {
-        $this->start_date = $start_date;
-        return $this;
     }
 
     public function getStartDate() {
-        return $this->start_date;
+        return null;
     }
 
     public function setDuration($duration) {
-        $this->duration = $duration;
-        return $this;
     }
 
     public function getEndDate() {
-        if (! $this->start_date) {
-            return null;
-        }
-
-        if (! $this->duration) {
-            return null;
-        }
-
-        $end_date   = strtotime("+".floor($this->duration)." days", $this->start_date);
-
-        return $end_date;
+        return null;
     }
 
-    /**
-     * @param PFUser $user
-     * @return int | null
-     */
     public function getCapacity(PFUser $user) {
-        if (! $this->artifact) {
-            return null;
-        }
-
-        $burndown_field = $this->artifact->getABurndownField($user);
-
-        if ($burndown_field) {
-            return $burndown_field->getCapacity($this->artifact);
-        }
-
         return null;
     }
 }
