@@ -17,6 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+-- copied from mediawiki maintenance/tables.sql
+CREATE TABLE plugin_mediawiki_interwiki (
+  -- The interwiki prefix, (e.g. "Meatball", or the language prefix "de")
+  iw_prefix varchar(32) NOT NULL,
+
+  -- The URL of the wiki, with "$1" as a placeholder for an article name.
+  -- Any spaces in the name will be transformed to underscores before
+  -- insertion.
+  iw_url blob NOT NULL,
+
+  -- The URL of the file api.php
+  iw_api blob NOT NULL,
+
+  -- The name of the database (for a connection to be established with wfGetLB( 'wikiid' ))
+  iw_wikiid varchar(64) NOT NULL,
+
+  -- A boolean value indicating whether the wiki is in this project
+  -- (used, for example, to detect redirect loops)
+  iw_local bool NOT NULL,
+
+  -- Boolean value indicating whether interwiki transclusions are allowed.
+  iw_trans tinyint NOT NULL default 0
+) /*$wgDBTableOptions*/;
+
+CREATE UNIQUE INDEX /*i*/iw_prefix ON plugin_mediawiki_interwiki (iw_prefix);
+
 CREATE VIEW group_plugin
     AS (
         SELECT service.service_id group_plugin_id,
