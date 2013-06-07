@@ -658,7 +658,7 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
     public function itReturnsEmptyArrayWhenNoTopMilestonesExist() {
         stub($this->artifact_factory)->getArtifactsByTrackerId()->returns(array());
 
-        $milestones = $this->milestone_factory->getTopSubMilestones($this->user, $this->top_milestone);
+        $milestones = $this->milestone_factory->getSubMilestones($this->user, $this->top_milestone);
 
         $this->assertArrayEmpty($milestones);
     }
@@ -677,7 +677,7 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         stub($this->artifact_factory)->getArtifactsByTrackerId()->returns($my_artifacts);
         stub($this->planning_factory)->buildNewPlanning()->returns(mock('Planning'));
 
-        $milestones = $this->milestone_factory->getTopSubMilestones($this->user, $this->top_milestone);
+        $milestones = $this->milestone_factory->getSubMilestones($this->user, $this->top_milestone);
 
         $this->assertCount($milestones, 2);
 
@@ -704,7 +704,7 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         stub($this->artifact_factory)->getArtifactsByTrackerId()->returns($my_artifacts);
         stub($this->planning_factory)->buildNewPlanning()->returns(mock('Planning'));
 
-        $milestones = $this->milestone_factory->getTopSubMilestones($this->user, $this->top_milestone);
+        $milestones = $this->milestone_factory->getSubMilestones($this->user, $this->top_milestone);
 
         $this->assertCount($milestones, 1);
 

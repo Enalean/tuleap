@@ -304,6 +304,14 @@ class Planning_MilestoneFactory {
      * @return array of Planning_Milestone
      */
     public function getSubMilestones(PFUser $user, Planning_Milestone $milestone) {
+        if ($milestone instanceof Planning_VirtualTopMilestone) {
+            return $this->getTopSubMilestones($user, $milestone);
+        } else {
+            return $this->getRegularSubMilestones($user, $milestone);
+        }
+    }
+
+    private function getRegularSubMilestones(PFUser $user, Planning_Milestone $milestone) {
         $milestone_artifact = $milestone->getArtifact();
         $sub_milestones     = array();
 
@@ -330,7 +338,7 @@ class Planning_MilestoneFactory {
      *
      * @return Planning_ArtifactMilestone[]
      */
-    public function getTopSubMilestones(PFUser $user, Planning_VirtualTopMilestone $top_milestone) {
+    private function getTopSubMilestones(PFUser $user, Planning_VirtualTopMilestone $top_milestone) {
         $milestones = array();
         if (! $top_milestone->getPlanning()) {
             return $milestones;

@@ -76,7 +76,7 @@ class AgileDashboard_Milestone_Pane_TopPlanning_PresenterBuilder {
 
     private function getMilestoneCollection(PFUser $user, Planning_Milestone $milestone, Tracker $submilestone_tracker, $redirect_to_self) {
         $milestone_collection = new AgileDashboard_Milestone_Pane_TopPlanning_MilestonePresenterCollection($submilestone_tracker);
-        $milestones = array_reverse($this->milestone_factory->getTopSubMilestones($user, $milestone));
+        $milestones = array_reverse($this->milestone_factory->getSubMilestones($user, $milestone));
 
         foreach ($milestones as $milestone) {
             $this->milestone_factory->updateMilestoneContextualInfo($user, $milestone);

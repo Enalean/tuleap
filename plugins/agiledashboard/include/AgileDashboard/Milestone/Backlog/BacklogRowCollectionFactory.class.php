@@ -294,13 +294,8 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
     }
 
     private function getPlannedArtifactIds(PFUser $user, Planning_Milestone $milestone) {
-        if ($milestone instanceof Planning_VirtualTopMilestone) {
-            $milestones = $this->milestone_factory->getTopSubMilestones($user, $milestone);
-        } else {
-            $milestones     = $this->milestone_factory->getSubMilestones($user, $milestone);
-        }
-
-        $milestones_ids = array_map(array($this, 'extractArtifactId'), $milestones);
+        $sub_milestones = $this->milestone_factory->getSubMilestones($user, $milestone);
+        $milestones_ids = array_map(array($this, 'extractArtifactId'), $sub_milestones);
         if (! $milestones_ids) {
             return array();
         }
