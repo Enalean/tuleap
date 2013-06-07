@@ -38,17 +38,15 @@ document.observe('dom:loaded', function () {
     }
 
     if (milestone_planning) {
-        params.data_route = 'submilestonedata';
-        params.is_top = false;
+        var is_top = false;
 
-        new tuleap.agiledashboard.NewPlanning(params);
+        new tuleap.agiledashboard.NewPlanning(is_top);
     }
 
     if (top_milestone_planning) {
-        params.data_route = 'submilestonedata';
-        params.is_top = true;
-        
-        new tuleap.agiledashboard.NewPlanning(params);
+        var is_top = true;
+
+        new tuleap.agiledashboard.NewPlanning(is_top);
     }
 
     tuleap.agiledashboard.align_short_access_heights.defer();
