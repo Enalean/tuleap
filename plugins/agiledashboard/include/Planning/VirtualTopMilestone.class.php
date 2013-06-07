@@ -58,24 +58,24 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
     /**
      * @param Project $project
      * @param PFUser $user
-     * @param TrackerManager $tracker_manager
+     * @param TrackerFactory $tracker_factory
      * @throws Planning_VirtualTopMilestoneNoPlanningsException
      */
-    public function __construct(Project $project, PFUser $user, TrackerManager $tracker_manager, PlanningFactory $planning_factory) {
-        $this->project  = $project;
-        $this->user = $user;
+    public function __construct(Project $project, PFUser $user, TrackerFactory $tracker_factory, PlanningFactory $planning_factory) {
+        $this->project = $project;
+        $this->user    = $user;
 
-        $this->generatePlanning($tracker_manager, $planning_factory);
+        $this->generatePlanning($tracker_factory, $planning_factory);
     }
 
-    private function generatePlanning(TrackerManager $tracker_manager, PlanningFactory $planning_factory) {
+    private function generatePlanning(TrackerFactory $tracker_factory, PlanningFactory $planning_factory) {
         $project_plannings = $planning_factory->getOrderedPlanningsWithBacklogTracker($this->user, $this->project->getID());
         if (! $project_plannings) {
             throw new Planning_VirtualTopMilestoneNoPlanningsException('No Plannings Exist');
         }
         // Currently just take the first
         $first_planning = current($project_plannings);
-        $project_trackers = $tracker_manager->getTrackersByGroupId($this->project->getID());
+        $project_trackers = $tracker_factory->getTrackersByGroupId($this->project->getID());
 
         $planning_tracker_id = $first_planning->getPlanningTrackerId();
         $backlog_tracker_id  = $first_planning->getBacklogTrackerId();

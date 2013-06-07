@@ -302,7 +302,9 @@ class AgileDashboardPlugin extends Plugin {
         return new Planning_MilestoneFactory(
             $this->getPlanningFactory(),
             $this->getArtifactFactory(),
-            Tracker_FormElementFactory::instance());
+            Tracker_FormElementFactory::instance(),
+            TrackerFactory::instance()
+        );
     }
 
     private function getArtifactFactory() {

@@ -60,19 +60,19 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
         $this->milestone_tracker_id = 112;
         $this->milestone_tracker    = stub('Tracker')->getId()->returns($this->milestone_tracker_id);
 
-        $this->user              = mock('PFUser');
-        $this->planning          = aPlanning()->withId($this->planning_id)->build();
-        $this->artifact          = mock('Tracker_Artifact');
-        $this->planning_factory  = mock('PlanningFactory');
-        $this->artifact_factory  = mock('Tracker_ArtifactFactory');
+        $this->user                = mock('PFUser');
+        $this->planning            = aPlanning()->withId($this->planning_id)->build();
+        $this->artifact            = mock('Tracker_Artifact');
+        $this->planning_factory    = mock('PlanningFactory');
+        $this->artifact_factory    = mock('Tracker_ArtifactFactory');
         $this->formelement_factory = mock('Tracker_FormElementFactory');
-        $this->request           = mock('Codendi_Request');
-        $this->milestone_factory = new Planning_MilestoneFactory(
+        $this->tracker_factory     = mock('TrackerFactory');
+        $this->milestone_factory   = new Planning_MilestoneFactory(
             $this->planning_factory,
             $this->artifact_factory,
             $this->formelement_factory,
-            $this->request
-            );
+            $this->tracker_factory
+        );
         
         stub($this->artifact)->getUniqueLinkedArtifacts($this->user)->returns(array());
         stub($this->artifact)->getHierarchyLinkedArtifacts($this->user)->returns(array());
@@ -89,7 +89,7 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
         $milestone_factory = partial_mock(
             'Planning_MilestoneFactory',
              array('updateMilestoneWithPlannedArtifacts', 'getSubMilestones', 'getComputedFieldValue'),
-             array($this->planning_factory, $this->artifact_factory, $this->formelement_factory, $this->request)
+             array($this->planning_factory, $this->artifact_factory, $this->formelement_factory, $this->tracker_factory)
         );
 
         $milestone = aMilestone()->build();
@@ -225,7 +225,7 @@ abstract class MilestoneFactory_MilestoneAsComputedValues extends Planning_Miles
         $this->milestone_factory = partial_mock(
             'Planning_MilestoneFactory',
             array('getSubMilestones', 'updateMilestoneWithPlannedArtifacts'),
-            array($this->planning_factory, $this->artifact_factory, $this->formelement_factory, $this->request)
+            array($this->planning_factory, $this->artifact_factory, $this->formelement_factory, $this->tracker_factory)
         );
         stub($this->milestone_factory)->getSubMilestones()->returns(array());
         $this->milestone = aMilestone()->withArtifact($this->artifact)->build();
@@ -387,7 +387,7 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
 
     public function newMileStoneFactory($planning_factory, $artifact_factory) {
         $factory = TestHelper::getPartialMock('Planning_MilestoneFactory', array('getPlannedArtifacts'));
-        $factory->__construct($planning_factory, $artifact_factory, mock('Tracker_FormElementFactory'), mock('Codendi_Request'));
+        $factory->__construct($planning_factory, $artifact_factory, mock('Tracker_FormElementFactory'), mock('TrackerFactory'));
         return $factory;
     }
 }
@@ -400,7 +400,7 @@ class MilestoneFactory_PlannedArtifactsTest extends Planning_MilestoneBaseTest {
         $depth1_artifact  = $this->anArtifactWithIdAndUniqueLinkedArtifacts(1, array($depth2_artifact));
         $root_artifact    = $this->anArtifactWithIdAndUniqueLinkedArtifacts(100, array($depth1_artifact));
 
-        $factory = new Planning_MileStoneFactory(mock('PlanningFactory'), mock('Tracker_ArtifactFactory'), mock('Tracker_FormElementFactory'), mock('Codendi_Request'));
+        $factory = new Planning_MileStoneFactory(mock('PlanningFactory'), mock('Tracker_ArtifactFactory'), mock('Tracker_FormElementFactory'), mock('TrackerFactory'));
         $planning_items_tree = $factory->getPlannedArtifacts(mock('PFUser'), $root_artifact);
 
         $children = $planning_items_tree->flattenChildren();
@@ -426,7 +426,7 @@ class MilestoneFactory_GetMilestoneFromArtifactTest extends TuleapTestCase {
         $this->task_artifact = aMockArtifact()->withTracker($this->task_tracker)->build();
 
         $planning_factory        = stub('PlanningFactory')->getPlanningByPlanningTracker($this->release_tracker)->returns($this->release_planning);
-        $this->milestone_factory = new Planning_MilestoneFactory($planning_factory, mock('Tracker_ArtifactFactory'), mock('Tracker_FormElementFactory'), mock('Codendi_Request'));
+        $this->milestone_factory = new Planning_MilestoneFactory($planning_factory, mock('Tracker_ArtifactFactory'), mock('Tracker_FormElementFactory'), mock('TrackerFactory'));
     }
 
     public function itCreateMilestoneFromArtifact() {
@@ -451,7 +451,7 @@ class MilestoneFactory_getMilestoneFromArtifactWithPlannedArtifactsTest extends 
         $milestone_factory = partial_mock(
             'Planning_MilestoneFactory', 
             array('getPlannedArtifacts', 'getMilestoneFromArtifact'), 
-            array(mock('PlanningFactory'), mock('Tracker_ArtifactFactory'), mock('Tracker_FormElementFactory'), mock('Codendi_Request'))
+            array(mock('PlanningFactory'), mock('Tracker_ArtifactFactory'), mock('Tracker_FormElementFactory'), mock('TrackerFactory'))
         );
 
         $user     = aUser()->build();
@@ -589,7 +589,7 @@ class MilestoneFactory_GetCurrentMilestonesTest extends TuleapTestCase {
         $this->milestone_factory = partial_mock(
             'Planning_MilestoneFactory',
             array('getMilestoneFromArtifact'),
-            array($this->planning_factory, $this->artifact_factory, mock('Tracker_FormElementFactory'), mock('Codendi_Request'))
+            array($this->planning_factory, $this->artifact_factory, mock('Tracker_FormElementFactory'), mock('TrackerFactory'))
         );
 
         $this->sprint_1_artifact   = aMockArtifact()->withId(1)->build();
@@ -638,7 +638,7 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
             $this->planning_factory,
             $this->artifact_factory,
             mock('Tracker_FormElementFactory'),
-            mock('Codendi_Request')
+            mock('TrackerFactory')
         );
         
         $planning = mock('Planning');

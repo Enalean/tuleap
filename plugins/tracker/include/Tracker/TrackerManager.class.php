@@ -413,14 +413,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
 
         echo '</div>';
     }
-
-    /**
-     * @param int $group_id
-     * @return Tracker[]
-     */
-    public function getTrackersByGroupId($group_id) {
-        return $this->getTrackerFactory()->getTrackersByGroupId($group_id);
-    }
     
     /**
      * 

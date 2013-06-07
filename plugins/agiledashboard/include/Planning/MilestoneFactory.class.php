@@ -41,9 +41,9 @@ class Planning_MilestoneFactory {
     private $formelement_factory;
 
     /**
-     * @var TrackerManager
+     * @var TrackerFactory
      */
-    private $tracker_manager;
+    private $tracker_factory;
 
     /**
      * Instanciates a new milestone factory.
@@ -52,13 +52,17 @@ class Planning_MilestoneFactory {
      * @param Tracker_ArtifactFactory    $artifact_factory    The factory to delegate artifacts retrieval.
      * @param Tracker_FormElementFactory $formelement_factory The factory to delegate artifacts retrieval.
      */
-    public function __construct(PlanningFactory            $planning_factory,
-                                Tracker_ArtifactFactory    $artifact_factory,
-                                Tracker_FormElementFactory $formelement_factory) {
+    public function __construct(
+        PlanningFactory $planning_factory,
+        Tracker_ArtifactFactory $artifact_factory,
+        Tracker_FormElementFactory $formelement_factory,
+        TrackerFactory $tracker_factory
+    ) {
 
         $this->planning_factory    = $planning_factory;
         $this->artifact_factory    = $artifact_factory;
         $this->formelement_factory = $formelement_factory;
+        $this->tracker_factory     = $tracker_factory;
     }
 
     /**
@@ -145,20 +149,9 @@ class Planning_MilestoneFactory {
         return new Planning_VirtualTopMilestone(
             $project,
             $user,
-            $this->getTrackerManager(),
+            $this->tracker_factory,
             $this->planning_factory
         );
-    }
-
-    /**
-     * @return TrackerManager
-     */
-    private function getTrackerManager() {
-        if (! $this->tracker_manager) {
-            $this->tracker_manager = new TrackerManager();
-        }
-
-        return $this->tracker_manager;
     }
 
     public function updateMilestoneContextualInfo(PFUser $user, Planning_Milestone $milestone) {
