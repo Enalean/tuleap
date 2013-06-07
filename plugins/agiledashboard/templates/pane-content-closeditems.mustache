@@ -1,7 +1,7 @@
-{{#has_submilestones}}
+{{#has_something}}
     <h3>{{closed_items_title}}</h3>
 
-    {{#has_submilestones_done}}
+    {{#has_something_done}}
         <p>{{closed_items_intro}}</p>
         <table class="table table-striped table-hover table-bordered">
             <thead>
@@ -21,8 +21,8 @@
                 {{/done_collection}}
             </tbody>
         </table>
-    {{/has_submilestones_done}}
-    {{^has_submilestones_done}}
+    {{/has_something_done}}
+    {{^has_something_done}}
         <p>{{closed_items_nothing_yet}}</p>
-    {{/has_submilestones_done}}
-{{/has_submilestones}}
+    {{/has_something_done}}
+{{/has_something}}

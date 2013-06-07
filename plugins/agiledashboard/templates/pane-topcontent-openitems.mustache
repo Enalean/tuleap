@@ -22,8 +22,8 @@
 </div>
 {{/can_add_subbacklog_items}}
 
-{{#has_milestones}}
-    {{#has_milestones_todo}}
+{{#has_something}}
+    {{#has_something_todo}}
         <p>{{open_items_intro}}</p>
         <table class="table table-striped table-hover table-bordered">
             <thead>
@@ -45,5 +45,5 @@
                 {{/todo_collection}}
             </tbody>
         </table>
-    {{/has_milestones_todo}}
-{{/has_milestones}}
+    {{/has_something_todo}}
+{{/has_something}}
