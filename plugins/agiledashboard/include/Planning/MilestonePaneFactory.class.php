@@ -136,8 +136,8 @@ class Planning_MilestonePaneFactory {
 
         if ($this->request->getCurrentUser()->useLabFeatures()) {
             if ($this->isTopMilestonePane()) {
-                $this->list_of_pane_info[$milestone_artifact_id][] = $this->getTopPlanningPaneInfo($milestone);
                 $this->list_of_pane_info[$milestone_artifact_id][] = $this->getTopContentPaneInfo($milestone);
+                $this->list_of_pane_info[$milestone_artifact_id][] = $this->getTopPlanningPaneInfo($milestone);
             } else {
                 $this->list_of_pane_info[$milestone_artifact_id][] = $this->getContentPaneInfo($milestone);
                 $this->list_of_pane_info[$milestone_artifact_id][] = $this->getPlanningPaneInfo($milestone);
