@@ -31,6 +31,7 @@ require_once('common/include/Codendi_HTMLPurifier.class.php');
 require_once('common/include/Combined.class.php');
 
 require_once('common/include/Toggler.class.php');
+require_once('common/include/CSRFSynchronizerToken.class.php');
 
 /** 
  *
@@ -1981,7 +1982,9 @@ class Layout extends Response {
         
         $output = "\t<CENTER>\n";
         $output .= "\t<FORM action=\"/search/\" method=\"post\">\n";
-        
+        $csrf    = new CSRFSynchronizerToken('/search/index.php');
+        $output .=  $csrf->fetchHTMLInput();
+
         $output .= "\t<SELECT name=\"type_of_search\">\n";
         if ($is_bug_page && $group_id) {
             $output .= "\t<OPTION value=\"bugs\"".( $type_of_search == "bugs" ? " SELECTED" : "" ).">".$Language->getText('include_menu','bugs')."</OPTION>\n";
