@@ -621,4 +621,66 @@ class MilestoneFactory_GetCurrentMilestonesTest extends TuleapTestCase {
     }
 }
 
+class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
+    /** @var Planning_MilestoneFactory */
+    private $milestone_factory;
+    private $planning_factory;
+    private $artifact_factory;
+    private $milestone;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->planning_factory  = mock('PlanningFactory');
+        $this->artifact_factory  = mock('Tracker_ArtifactFactory');
+        $this->milestone_factory = new Planning_MilestoneFactory(
+            $this->planning_factory,
+            $this->artifact_factory,
+            mock('Tracker_FormElementFactory'),
+            mock('Codendi_Request')
+        );
+        
+        $planning = mock('Planning');
+        stub($planning)->getPlanningTrackerId()->returns(45);
+
+
+        $project = mock('Project');
+        stub($project)->getID()->returns(3233);
+
+        $this->milestone = mock('Planning_TopMilestone');
+        stub($this->milestone)->getPlanning()->returns($planning);
+        stub($this->milestone)->getProject()->returns($project);
+    }
+
+    public function itReturnsEmptyArrayWhenNoTopMilestonesExist() {
+        stub($this->artifact_factory)->getArtifactsByTrackerId()->returns(array());
+
+        $milestones = $this->milestone_factory->getTopMilestones($this->milestone);
+
+        $this->assertArrayEmpty($milestones);
+    }
+
+    public function itReturnsMilestonePerArtifact() {
+        $artifact_1 = mock('Tracker_Artifact');
+        $artifact_2 = mock('Tracker_Artifact');
+
+        $my_artifacts = array(
+            $artifact_1,
+            $artifact_2
+        );
+
+        stub($this->artifact_factory)->getArtifactsByTrackerId()->returns($my_artifacts);
+        stub($this->planning_factory)->buildNewPlanning()->returns(mock('Planning'));
+
+        $milestones = $this->milestone_factory->getTopMilestones($this->milestone);
+
+        $this->assertCount($milestones, 2);
+
+        $milestone_1 = $milestones[0];
+        $milestone_2 = $milestones[1];
+
+        $this->assertEqual($milestone_1->getArtifact(), $artifact_1);
+        $this->assertEqual($milestone_2->getArtifact(), $artifact_2);
+    }
+}
 ?>

@@ -322,27 +322,26 @@ class Planning_MilestoneFactory {
         return $sub_milestones;
     }
 
-    public function getTopMilestones(PFUser $user, Planning_Milestone $milestone) {
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        $milestone_planning_tracker_id = $milestone->getPlanning()->getPlanningTrackerId();
-        $artifacts = $artifact_factory->getArtifactsByTrackerId($milestone_planning_tracker_id);
-
+    public function getTopMilestones(Planning_TopMilestone $milestone) {
         $milestones = array();
+        if (! $milestone->getPlanning()) {
+            return $milestones;
+        }
+
+        $milestone_planning_tracker_id = $milestone->getPlanning()->getPlanningTrackerId();
+        $artifacts = $this->artifact_factory->getArtifactsByTrackerId($milestone_planning_tracker_id);
 
         if ($milestone_planning_tracker_id) {
+            $group_id = $milestone->getProject()->getID();
+
             foreach($artifacts as $artifact) {
-                try {
-                    $milestone = new Planning_TopMilestone(
-                        $milestone->getProject(),
-                        $user,
-                        $this->getTrackerManager(),
-                        $this->planning_factory
-                    );
-                } catch (Planning_TopMilestoneNoPlanningsException $e) {
-                    continue;
-                }
-                $milestone->setArtifact($artifact);
-                $milestones[] = $milestone;
+                $planning = $this->planning_factory->buildNewPlanning($group_id);
+                
+                $milestones[] = new Planning_ArtifactMilestone(
+                    $milestone->getProject(),
+                    $planning,
+                    $artifact
+                );
             }
         }
 
