@@ -22,7 +22,7 @@
 class MediawikiDao extends DataAccessObject {
 
     public function getMediawikiPagesNumberOfAProject(Project $project) {
-        $database_name = $this->getMediawikiDatabaseName($project);
+        $database_name = self::getMediawikiDatabaseName($project);
         $group_id      = $project->getID();
 
         $sql = "SELECT $group_id AS group_id, COUNT(1) AS result
@@ -32,11 +32,11 @@ class MediawikiDao extends DataAccessObject {
     }
 
     public function getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate(Project $project, $start_date, $end_date) {
-        $database_name = $this->getMediawikiDatabaseName($project);
+        $database_name = self::getMediawikiDatabaseName($project);
         $group_id      = $project->getID();
 
-        $start_date    = date("YmdHis", $start_date);
-        $end_date      = date("YmdHis", $end_date);
+        $start_date    = date("YmdHis", strtotime($start_date));
+        $end_date      = date("YmdHis", strtotime($end_date));
 
         $sql = "SELECT $group_id AS group_id, COUNT(1) AS result
                 FROM $database_name.mwpage
@@ -50,10 +50,10 @@ class MediawikiDao extends DataAccessObject {
     }
 
     public function getCreatedPagesNumberSinceStartDate(Project $project, $start_date) {
-        $database_name = $this->getMediawikiDatabaseName($project);
+        $database_name = self::getMediawikiDatabaseName($project);
         $group_id      = $project->getID();
 
-        $start_date    = date("YmdHis", $start_date);
+        $start_date    = date("YmdHis", strtotime($start_date));
 
         $sql = "SELECT $group_id AS group_id, COUNT(1) AS result
                 FROM $database_name.mwrevision
@@ -66,11 +66,8 @@ class MediawikiDao extends DataAccessObject {
         return $this->retrieve($sql)->getRow();
     }
 
-    private function getMediawikiDatabaseName(Project $project) {
-        // /!\ beware this str_replace is duplicated in
-        // plugins/mediawiki/www/LocalSettings.php
-        $database_name = str_replace ('-', '_', "plugin_mediawiki_".$project->getUnixName());
-        return $database_name;
+    public static function getMediawikiDatabaseName(Project $project) {
+        return str_replace ('-', '_', "plugin_mediawiki_". $project->getUnixName());
     }
 }
 

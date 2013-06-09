@@ -465,7 +465,7 @@ class MediaWikiPlugin extends Plugin {
         $dao             = new MediawikiDao();
         $project_manager = ProjectManager::instance();
         $start_date      = $params['start_date'];
-        $end_date        = $parms['end_date'];
+        $end_date        = $params['end_date'];
 
         $number_of_page                   = array();
         $number_of_page_between_two_dates = array();
