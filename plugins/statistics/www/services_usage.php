@@ -141,24 +141,16 @@ if (!$error && $request->exist('export')) {
         $csv_exporter->buildDatas($dao->getNumberOfCIJobs(), "Continuous integration jobs");
     }
 
-    //Mediawiki
-    $p = $pluginManager->getPluginByName('mediawiki');
-    if ($p && $pluginManager->isPluginAvailable($p)) {
-        $project_manager = ProjectManager::instance();
-        $number_of_page                   = array();
-        $number_of_page_between_two_dates = array();
-        $number_of_page_since_a_date      = array();
-        foreach($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
-            if ($project->usesService('plugin_mediawiki')) {
-                $number_of_page[] = $dao->getMediawikiPagesNumberOfAProject($project);
-                $number_of_page_between_two_dates[] = $dao->getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate($project);
-                $number_of_page_since_a_date[] = $dao->getCreatedPagesNumberSinceStartDate($project);
-            }
-        }
-        $csv_exporter->buildDatas($number_of_page, "Mediawiki Pages");
-        $csv_exporter->buildDatas($number_of_page_between_two_dates, "Modified Mediawiki pages");
-        $csv_exporter->buildDatas($number_of_page_since_a_date, "Number of created Mediawiki pages since start date");
-    }
+    // Let plugins add their own data
+    EventManager::instance()->processEvent(
+        'plugin_statistics_service_usage',
+        array(
+            'csv_exporter' => $csv_exporter,
+            'start_date'   => $startDate,
+            'end_date'     => $endDate
+        )
+    );
+
     echo $csv_exporter->exportCSV();
 
 } else {

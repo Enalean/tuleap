@@ -1,0 +1,76 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+class MediawikiDao extends DataAccessObject {
+
+    public function getMediawikiPagesNumberOfAProject(Project $project) {
+        $database_name = $this->getMediawikiDatabaseName($project);
+        $group_id      = $project->getID();
+
+        $sql = "SELECT $group_id AS group_id, COUNT(1) AS result
+                FROM $database_name.mwpage";
+
+        return $this->retrieve($sql)->getRow();
+    }
+
+    public function getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate(Project $project, $start_date, $end_date) {
+        $database_name = $this->getMediawikiDatabaseName($project);
+        $group_id      = $project->getID();
+
+        $start_date    = date("YmdHis", $start_date);
+        $end_date      = date("YmdHis", $end_date);
+
+        $sql = "SELECT $group_id AS group_id, COUNT(1) AS result
+                FROM $database_name.mwpage
+                WHERE
+                    page_touched >= $start_date
+                    AND
+                    page_touched <= $end_date
+               ";
+
+        return $this->retrieve($sql)->getRow();
+    }
+
+    public function getCreatedPagesNumberSinceStartDate(Project $project, $start_date) {
+        $database_name = $this->getMediawikiDatabaseName($project);
+        $group_id      = $project->getID();
+
+        $start_date    = date("YmdHis", $start_date);
+
+        $sql = "SELECT $group_id AS group_id, COUNT(1) AS result
+                FROM $database_name.mwrevision
+                WHERE
+                    rev_parent_id=0
+                    AND
+                    rev_timestamp >= $start_date
+               ";
+
+        return $this->retrieve($sql)->getRow();
+    }
+
+    private function getMediawikiDatabaseName(Project $project) {
+        // /!\ beware this str_replace is duplicated in
+        // plugins/mediawiki/www/LocalSettings.php
+        $database_name = str_replace ('-', '_', "plugin_mediawiki_".$project->getUnixName());
+        return $database_name;
+    }
+}
+
