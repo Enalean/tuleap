@@ -205,6 +205,14 @@ if ($group->isTemplate()) {
 EOS;
 }
 
+echo '<HR NoShade SIZE="1">';
+$parent_project = $group->getParent();
+if ($parent_project) {
+    echo $Language->getText('project_admin_editugroup', 'parent', $parent_project->getPublicName());
+} else {
+    echo $Language->getText('project_admin_editugroup', 'no_parent');
+}
+
 $HTML->box1_bottom(); 
 
 echo '

@@ -148,6 +148,8 @@ project_admin_editugroup	group_empty	The group is empty
 project_admin_editugroup	permissions_title	Permissions
 project_admin_editugroup	settings_title	General settings
 project_admin_editugroup	binding_title	Groups binding
+project_admin_editugroup	parent	Parent project: $1
+project_admin_editugroup	no_parent	This project has no parent
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/grouptrove.php

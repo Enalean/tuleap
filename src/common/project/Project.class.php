@@ -499,5 +499,14 @@ class Project extends Group implements PFO_Project {
 
             return $result;
     }
+
+    /**
+     * Parent project of current project (if any)
+     *
+     * @return Project|null
+     */
+    public function getParent() {
+        return null;
+    }
 }
 ?>
