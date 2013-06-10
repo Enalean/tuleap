@@ -22,13 +22,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
+class AgileDashboard_Milestone_Pane_TopPlanning_PresenterBuilder {
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory */
     private $collection_factory;
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
     private $strategy_factory;
+
+    /** @var Planning_MilestoneFactory */
+    private $milestone_factory;
+
+    /** @var bool */
+    private $can_plan = true;
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $strategy_factory,
@@ -40,10 +46,10 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
         $this->milestone_factory  = $milestone_factory;
     }
 
-    public function getMilestonePlanningPresenter(PFUser $user, Planning_ArtifactMilestone $milestone, Tracker $submilestone_tracker) {
+    public function getMilestoneTopPlanningPresenter(PFUser $user, Planning_Milestone $milestone, Tracker $milestone_tracker) {
         $redirect_paremeter     = new Planning_MilestoneRedirectParameter();
-        $backlog_strategy       = $this->strategy_factory->getBacklogStrategy($milestone);
-        $redirect_to_self       = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo::IDENTIFIER);
+        $backlog_strategy       = $this->strategy_factory->getSelfBacklogStrategy($milestone);
+        $redirect_to_self       = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_TopPlanning_PaneInfo::IDENTIFIER);
 
         $backlog_collection = $this->collection_factory->getUnplannedOpenCollection(
             $user,
@@ -52,42 +58,44 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
             $redirect_to_self
         );
 
-        $submilestone_collection = $this->getSubmilestoneCollection($user, $milestone, $submilestone_tracker, $redirect_to_self);
+        $milestone_collection = $this->getMilestoneCollection($user, $milestone, $milestone_tracker, $redirect_to_self);
 
-        $planning_presenter = new AgileDashboard_Milestone_Pane_Planning_PlanningPresenter(
+        return new AgileDashboard_Milestone_Pane_TopPlanning_Presenter(
             $backlog_collection,
-            $submilestone_collection,
+            $milestone_collection,
             $milestone,
             $backlog_collection->getParentItemName(),
             $backlog_strategy->getItemTracker()->getName(),
-            $submilestone_collection->getName(),
-            $submilestone_collection->getSubmitNewUrlLinkedToMilestone($milestone),
-            $submilestone_collection->canCreateNew($user),
-            $this->canPlan($user, $milestone),
+            $milestone_collection->getName(),
+            $milestone_collection->getSubmitNewUrlLinkedToMilestone($milestone_tracker),
+            $milestone_collection->canCreateNew($user),
+            $this->can_plan,
             $redirect_to_self
         );
-
-        if ($backlog_strategy instanceof AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy) {
-            $descendant_tracker = $backlog_strategy->getDescendantTracker();
-            $planning_presenter->setDescendantItemName($descendant_tracker->getName());
-        }
-        return $planning_presenter;
     }
 
-    private function getSubmilestoneCollection(PFUser $user, Planning_ArtifactMilestone $milestone, Tracker $submilestone_tracker, $redirect_to_self) {
-        $submilestones = array_reverse($this->milestone_factory->getSubMilestones($user, $milestone));
-        $submilestone_collection = new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection($submilestone_tracker);
-        foreach ($submilestones as $submilestone) {
-            $this->milestone_factory->updateMilestoneContextualInfo($user, $submilestone);
-            $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter($submilestone, $redirect_to_self, $user));
+    private function getMilestoneCollection(PFUser $user, Planning_Milestone $milestone, Tracker $submilestone_tracker, $redirect_to_self) {
+        $milestone_collection = new AgileDashboard_Milestone_Pane_TopPlanning_MilestonePresenterCollection($submilestone_tracker);
+        $milestones = array_reverse($this->milestone_factory->getSubMilestones($user, $milestone));
+
+        foreach ($milestones as $milestone) {
+            $this->milestone_factory->updateMilestoneContextualInfo($user, $milestone);
+            $presenter = new AgileDashboard_Milestone_Pane_TopPlanning_MilestonePresenter($milestone, $redirect_to_self, $user);
+
+            $milestone_collection->push($presenter);
+
+            if (! $this->canPlan($user, $milestone)) {
+                $this->can_plan = false;
+            }
         }
-        return $submilestone_collection;
+        
+        return $milestone_collection;
     }
 
     /**
      * @return bool
      */
-    public function canPlan(PFUser $user, Planning_Milestone $milestone) {
+    private function canPlan(PFUser $user, Planning_Milestone $milestone) {
         $art_link_field = $milestone->getArtifact()->getAnArtifactLinkField($user);
         if ($art_link_field && $art_link_field->userCanUpdate($user)) {
             return true;

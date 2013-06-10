@@ -31,6 +31,10 @@
     font-weight: bold;
 }
 
+.agiledashboard > .tab-content {
+    padding-bottom: 1em;
+}
+
 .planning-backlog > table {
     width: 100%;
 }
@@ -224,10 +228,13 @@
     color: #999;
 }
 
+#topplanning table,
 #planning table,
 #blcontent table {
     border-spacing: 0;
 }
+
+#topblcontent table,
 #blcontent table {
     width: auto;
 }

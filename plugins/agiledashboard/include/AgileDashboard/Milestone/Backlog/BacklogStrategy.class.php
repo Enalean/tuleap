@@ -33,6 +33,10 @@ abstract class AgileDashboard_Milestone_Backlog_BacklogStrategy {
     /** @var Tracker */
     protected $backlogitem_tracker;
 
+    /**
+     * @param array $milestone_backlog_artifacts
+     * @param Tracker $backlogitem_tracker
+     */
     public function __construct($milestone_backlog_artifacts, Tracker $backlogitem_tracker) {
         $this->milestone_backlog_artifacts = $milestone_backlog_artifacts;
         $this->backlogitem_tracker         = $backlogitem_tracker;

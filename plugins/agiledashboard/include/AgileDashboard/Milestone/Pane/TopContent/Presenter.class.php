@@ -22,12 +22,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
+class AgileDashboard_Milestone_Pane_TopContent_Presenter {
     /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
     private $todo_collection;
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
-    private $done_collection;
+    private $done_collection = array();
 
     /** @var String */
     private $backlog_item_type;
@@ -44,28 +44,25 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     /** @var String */
     private $descendant_item_name;
 
+    /** @var String */
+    private $parent_item_type;
+
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
-        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done,
         $parent_item_type,
         $backlog_item_type,
         $can_add_backlog_item_type,
         $submit_url
     ) {
         $this->todo_collection           = $todo;
-        $this->done_collection           = $done;
-        $this->parent_item_type          = $parent_item_type;
         $this->backlog_item_type         = $backlog_item_type;
         $this->can_add_backlog_item_type = $can_add_backlog_item_type;
         $this->submit_url                = $submit_url;
+        $this->parent_item_type          = $parent_item_type;
     }
 
-    public function setTodoCollection(AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo) {
+    public function setTodoCollection( $todo) {
         $this->todo_collection = $todo;
-    }
-
-    public function setDoneCollection(AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done) {
-        $this->done_collection = $done;
     }
 
     public function setBacklogElements($backlog_elements) {
@@ -125,6 +122,10 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_points');
     }
 
+    public function todo_collection() {
+        return $this->todo_collection;
+    }
+
     public function parent() {
         if ($this->parent_item_type) {
             return $this->parent_item_type;
@@ -133,20 +134,12 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
         }
     }
 
-    public function todo_collection() {
-        return $this->todo_collection;
-    }
-
-    public function done_collection() {
-        return $this->done_collection;
-    }
-
     public function has_something_todo() {
-        return $this->todo_collection->count() > 0;
+        return count($this->todo_collection) > 0;
     }
 
     public function has_something_done() {
-        return $this->done_collection->count() > 0;
+        return count($this->done_collection) > 0;
     }
 
     public function has_something() {
@@ -158,7 +151,7 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     }
 
     public function has_nothing_todo() {
-        return ! $this->has_something_todo();
+        return ! $this->has_something_done();
     }
 
     public function closed_items_title() {
@@ -188,7 +181,7 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     }
 
     public function open_items_intro() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'open_items_intro', $this->backlog_item_type);
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'open_unplanned_items_intro', $this->backlog_item_type);
     }
 
     public function lab() {

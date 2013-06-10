@@ -59,10 +59,14 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
             return $artifacts;
         }
 
+        $sorted_artifacts = array();
         $ids              = array_map(array($this, 'extractId'), $artifacts);
-        $artifacts        = array_combine($ids, $artifacts);
-        $sorted_ids       = $this->dao->getIdsSortedByPriority($ids);
-        $sorted_artifacts = array_flip($sorted_ids);
+
+        if($ids) {
+            $artifacts        = array_combine($ids, $artifacts);
+            $sorted_ids       = $this->dao->getIdsSortedByPriority($ids);
+            $sorted_artifacts = array_flip($sorted_ids);
+        }
 
         foreach ($sorted_artifacts as $id => $nop) {
             $sorted_artifacts[$id] = $artifacts[$id];

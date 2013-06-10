@@ -18,19 +18,35 @@
  */
 
 document.observe('dom:loaded', function () {
-    var planner = $('planner');
+    var planner = $('planner'),
+        milestone_planning = $('planning'),
+        top_milestone_planning = $('topplanning'),
+        milestone_content = $('blcontent'),
+        top_milestone_content = $('topblcontent'),
+        params = {};
+
     if (planner) {
         new tuleap.agiledashboard.Planning(planner);
     }
 
-    var milestone_content = $('blcontent');
     if (milestone_content) {
         tuleap.agiledashboard.MilestoneContent(milestone_content);
     }
 
-    var milestone_planning = $('planning');
+    if (top_milestone_content) {
+        tuleap.agiledashboard.MilestoneContent(top_milestone_content);
+    }
+
     if (milestone_planning) {
-        new tuleap.agiledashboard.NewPlanning(milestone_planning);
+        var is_top = false;
+
+        new tuleap.agiledashboard.NewPlanning(is_top);
+    }
+
+    if (top_milestone_planning) {
+        var is_top = true;
+
+        new tuleap.agiledashboard.NewPlanning(is_top);
     }
 
     tuleap.agiledashboard.align_short_access_heights.defer();
