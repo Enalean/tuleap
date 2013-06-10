@@ -30,6 +30,7 @@ $fusionforge_plugin_mediawiki_LocalSettings_included = true;
 require_once 'pre.php';
 require_once 'plugins_utils.php';
 require_once 'common/user/UserManager.class.php';
+require_once dirname(__FILE__) .'/../include/MediawikiDao.class.php';
 
 //require_once 'common/include/RBACEngine.class.php';
 sysdebug_lazymode(true);
@@ -93,9 +94,7 @@ $wgDBserver         = forge_get_config('database_host') ;
 if (forge_get_config('mw_dbtype', 'mediawiki')=='mysql'){
 	// At the time writing schema in mysql is synonym for database
 
-    // /!\ this str_replace is duplicated in
-    // plugins/statistics/include/Statistics_ServicesUsageDao.class.php
-	$wgDBname           = str_replace ('-', '_', 'plugin_mediawiki_'.$fusionforgeproject);
+	$wgDBname           = MediawikiDao::getMediawikiDatabaseName($g);
 	$wgDBprefix         = 'mw';
 } else {
 	$wgDBname           = forge_get_config('database_name');
