@@ -101,15 +101,9 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function tracker_event_redirect_after_artifact_creation_or_update($params) {
-
-
-
-        $artifact_linker = new Planning_ArtifactLinker($this->getArtifactFactory(), PlanningFactory::build());
+        $artifact_linker         = new Planning_ArtifactLinker($this->getArtifactFactory(), PlanningFactory::build());
         $last_milestone_artifact = $artifact_linker->linkBacklogWithPlanningItems($params['request'], $params['artifact']);
-
-        $requested_planning = $this->extractPlanningAndArtifactFromRequest($params['request']);
-
-
+        $requested_planning      = $this->extractPlanningAndArtifactFromRequest($params['request']);
 
         if ($requested_planning) {
             $this->redirectOrAppend($params['request'], $params['artifact'], $params['redirect'], $requested_planning, $last_milestone_artifact);
