@@ -1,3 +1,6 @@
+Version 0.28 - Tuleap 6.2
+    * Extract mediawiki stats in the plugin
+
 Version 0.27 - Tuleap 6.2
     * Fix request #3450 - Mediawiki does not work with project that have dash in name
 

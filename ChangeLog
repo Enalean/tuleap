@@ -1,3 +1,8 @@
+Version 6.2 (Not released yet)
+	== Plugins ==
+	* mediawiki 0.12
+	* statistics 0.28
+
 Version 6.1 (Thursday, May 30th 2013)
 	== Enhancement ==
 	* story #3226: see "svn propset --revprop -r X svn:log" modifications in commit DB
