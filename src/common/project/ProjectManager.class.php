@@ -73,7 +73,7 @@ class ProjectManager {
     public static function clearInstance() {
         self::$_instance = null;
     }
-    
+
     /**
      * @return ProjectDao
      */
@@ -400,7 +400,7 @@ class ProjectManager {
     public function checkGroupIdForSoap($groupId, $method, $byUnixName = false) {
         $this->getGroupByIdForSoap($groupId, $method, $byUnixName);
     }
-    
+
     /**
      * Check if the user can access the project $group,
      * regarding the restricted access
@@ -493,6 +493,55 @@ class ProjectManager {
             ->searchProjectsUserIsAdmin($user->getId())
             ->instanciateWith(array($this, 'getProjectFromDbRow'));
     }
+
+    /**
+     * @param int $group_id
+     * @param int $parent_group_id
+     * @return Boolean
+     */
+    public function addParentProject($group_id, $parent_group_id) {
+        return $this->_getDao()->addParentProject($group_id, $parent_group_id);
+    }
+
+    /**
+     * @param int $group_id
+     * @param int $parent_group_id
+     * @return Boolean
+     */
+    public function updateParentProject($group_id, $parent_group_id) {
+        return $this->_getDao()->updateParentProject($group_id, $parent_group_id);
+    }
+
+    /**
+     * @param int $group_id
+     * @return Boolean
+     */
+    public function removeParentProject($group_id) {
+        return $this->_getDao()->removeParentProject($group_id);
+    }
+
+    /**
+     * @param int $group_id
+     * @return Project
+     */
+    public function getParentProject($group_id) {
+        return $this->_getDao()
+            ->getParentProject($group_id)
+            ->instanciateWith(array($this, 'getProjectFromDbRow'));
+    }
+
+    /**
+     * @param int $group_id
+     * @return Project[]
+     */
+    public function getChildProjects($group_id) {
+        $children = array();
+        foreach ($this->_getDao()->getChildProjects($group_id) as $child) {
+            $children[] = $child->instanciateWith(array($this, 'getProjectFromDbRow'));
+        }
+        return $children;
+    }
+
 }
 
 ?>
