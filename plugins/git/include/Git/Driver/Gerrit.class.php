@@ -65,9 +65,9 @@ class Git_Driver_Gerrit {
      * @param Git_RemoteServer_GerritServer $server
      * @param Project $project
      * @param String $admin_group_name
-     * @return String Gerrit parent project name
+     * @return String Gerrit project name
      */
-    public function createParentProject(Git_RemoteServer_GerritServer $server, Project $project, $admin_group_name) {
+    public function createProjectWithPermissionsOnly(Git_RemoteServer_GerritServer $server, Project $project, $admin_group_name) {
         $project_parent_name = $project->getUnixName();
         $command = implode(' ', array(self::COMMAND, 'create-project --permissions-only', $project_parent_name, '--owner', $admin_group_name));
         return $this->actionCreateProject($server, $command, $project_parent_name);

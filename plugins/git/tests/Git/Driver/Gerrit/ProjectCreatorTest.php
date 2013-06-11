@@ -102,7 +102,7 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         stub($this->driver)->createProject($this->server, $this->repository_in_a_private_project, $this->project_unix_name)->returns($this->gerrit_project);
         stub($this->driver)->createProject($this->server, $this->repository_without_registered, $this->project_unix_name)->returns($this->gerrit_project);
         stub($this->driver)->createProject($this->server, $this->repository_with_registered, $this->project_unix_name)->returns($this->gerrit_project);
-        stub($this->driver)->createParentProject($this->server, $this->project, $this->project_admins_gerrit_name)->returns($this->project_unix_name);
+        stub($this->driver)->createProjectWithPermissionsOnly($this->server, $this->project, $this->project_admins_gerrit_name)->returns($this->project_unix_name);
 
         $this->membership_manager = mock('Git_Driver_Gerrit_MembershipManager');
         stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->contributors)->returns($this->contributors_uuid);
@@ -370,7 +370,7 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
 
         expect($this->driver)->DoesTheParentProjectExist($this->server, $this->repository->getProject()->getUnixName())->once();
         expect($this->driver)->createProject($this->server, $this->repository, $this->project_unix_name)->once();
-        expect($this->driver)->createParentProject($this->server, $this->project, $this->project_admins_gerrit_name)->never();
+        expect($this->driver)->createProjectWithPermissionsOnly($this->server, $this->project, $this->project_admins_gerrit_name)->never();
 
         $project_name = $this->project_creator->createGerritProject($this->server, $this->repository);
         $this->assertEqual($this->gerrit_project, $project_name);
@@ -392,7 +392,7 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         stub($this->membership_manager)->createArrayOfGroupsForServer()->returns(array($this->project_admins));
 
         expect($this->driver)->DoesTheParentProjectExist($this->server, $this->repository->getProject()->getUnixName())->once();
-        expect($this->driver)->createParentProject($this->server, $this->project, $this->project_admins_gerrit_name)->once();
+        expect($this->driver)->createProjectWithPermissionsOnly($this->server, $this->project, $this->project_admins_gerrit_name)->once();
         expect($this->driver)->createProject($this->server, $this->repository, $this->project_unix_name)->once();
 
         $project_name = $this->project_creator->createGerritProject($this->server, $this->repository);
@@ -407,12 +407,16 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         stub($ugroup)->getNormalizedName()->returns('project_members');
         stub($ugroup)->getId()->returns(Ugroup::PROJECT_MEMBERS);
 
-        expect($this->ugroup_manager)->getUGroups($this->project)->once();
-        stub($this->ugroup_manager)->getUGroups()->returns(array($ugroup));
+        $ugroup_project_admins = mock('UGroup');
+        stub($ugroup_project_admins)->getNormalizedName()->returns('project_admins');
+        stub($ugroup_project_admins)->getId()->returns(UGroup::PROJECT_ADMIN);
 
-        stub($this->membership_manager)->createArrayOfGroupsForServer()->returns(array($ugroup));
+        expect($this->ugroup_manager)->getUGroups($this->project)->count(2);
+        stub($this->ugroup_manager)->getUGroups()->returns(array($ugroup, $ugroup_project_admins));
 
-        expect($this->membership_manager)->createArrayOfGroupsForServer($this->server, array($ugroup))->once();
+        stub($this->membership_manager)->createArrayOfGroupsForServer()->returns(array($ugroup, $ugroup_project_admins));
+
+        expect($this->membership_manager)->createArrayOfGroupsForServer($this->server, array($ugroup, $ugroup_project_admins))->once();
         $this->project_creator->createGerritProject($this->server, $this->repository);
     }
 
@@ -421,14 +425,18 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         stub($ugroup_project_members)->getNormalizedName()->returns('project_members');
         stub($ugroup_project_members)->getId()->returns(UGroup::PROJECT_MEMBERS);
 
+        $ugroup_project_admins = mock('UGroup');
+        stub($ugroup_project_admins)->getNormalizedName()->returns('project_admins');
+        stub($ugroup_project_admins)->getId()->returns(UGroup::PROJECT_ADMIN);
+
         $ugroup_another_group = mock('UGroup');
         stub($ugroup_another_group)->getNormalizedName()->returns('another_group');
         stub($ugroup_another_group)->getId()->returns(120);
 
-        stub($this->ugroup_manager)->getUGroups()->returns(array($ugroup_project_members, $ugroup_another_group));
+        stub($this->ugroup_manager)->getUGroups()->returns(array($ugroup_project_members, $ugroup_another_group, $ugroup_project_admins));
 
-        expect($this->membership_manager)->createArrayOfGroupsForServer($this->server, array($ugroup_project_members, $ugroup_another_group))->once();
-        stub($this->membership_manager)->createArrayOfGroupsForServer()->returns(array($ugroup_project_members, $ugroup_another_group));
+        expect($this->membership_manager)->createArrayOfGroupsForServer($this->server, array($ugroup_project_members, $ugroup_another_group, $ugroup_project_admins))->once();
+        stub($this->membership_manager)->createArrayOfGroupsForServer()->returns(array($ugroup_project_members, $ugroup_another_group, $ugroup_project_admins));
 
         $this->project_creator->createGerritProject($this->server, $this->repository);
     }
@@ -474,6 +482,57 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
 
         $this->assertEqual($output, $expected_result);
         $this->assertEqual($ret_val, 0);
+    }
+}
+
+class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends Git_Driver_Gerrit_ProjectCreator_BaseTest {
+
+    public function setUp() {
+        parent::setUp();
+        stub($this->userfinder)->getUGroups()->returns(array());
+
+        $this->project_admins_gerrit_parent_name = 'grozilla/project_admins';
+        $this->parent_project = mock('Project');
+        stub($this->parent_project)->getUnixName()->returns('grozilla');
+
+        $this->parent_project_admins = mock('UGroup');
+        stub($this->parent_project_admins)->getNormalizedName()->returns('project_admins');
+        stub($this->parent_project_admins)->getId()->returns(UGroup::PROJECT_ADMIN);
+
+        $this->project_admins = mock('UGroup');
+        stub($this->project_admins)->getNormalizedName()->returns('project_admins');
+        stub($this->project_admins)->getId()->returns(UGroup::PROJECT_ADMIN);
+
+        stub($this->driver)->DoesTheParentProjectExist()->returns(false);
+
+        stub($this->ugroup_manager)->getUGroups($this->project)->returns(array($this->project_admins));
+        stub($this->ugroup_manager)->getUGroups($this->parent_project)->returns(array($this->parent_project_admins));
+
+        stub($this->membership_manager)->createArrayOfGroupsForServer()->returns(array($this->project_admins, $this->parent_project_admins));
+    }
+
+    public function itOnlyCallsCreateParentProjectOnceIfTheProjectHasNoParents() {
+        stub($this->project)->getParent()->returns(null);
+
+        expect($this->driver)->createProjectWithPermissionsOnly($this->server, $this->project, $this->project_admins_gerrit_name)->once();
+
+        $this->project_creator->createGerritProject($this->server, $this->repository);
+    }
+
+    public function itOnlyCallsCreateParentProjectTwiceIfTheProjectHasOneParent() {
+        stub($this->project)->getParent()->returns($this->parent_project);
+        expect($this->driver)->createProjectWithPermissionsOnly()->count(2);
+
+        $this->project_creator->createGerritProject($this->server, $this->repository);
+    }
+
+    public function itCallsCreateParentProjectWithTheCorrectParameters() {
+        stub($this->project)->getParent()->returns($this->parent_project);
+
+        expect($this->driver)->createProjectWithPermissionsOnly($this->server, $this->parent_project, $this->project_admins_gerrit_parent_name)->at(0);
+        expect($this->driver)->createProjectWithPermissionsOnly($this->server, $this->project, $this->project_admins_gerrit_name)->at(1);
+
+        $this->project_creator->createGerritProject($this->server, $this->repository);
     }
 }
 ?>
