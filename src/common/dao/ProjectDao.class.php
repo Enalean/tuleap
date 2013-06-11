@@ -372,7 +372,7 @@ class ProjectDao extends DataAccessObject {
 
        $sql = "SELECT groups.*
                FROM groups
-               JOIN project_parent ON (groups.group_id = parent_project.parent_group_id)
+               JOIN project_parent ON (groups.group_id = project_parent.parent_group_id)
                WHERE project_parent.group_id = $group_id";
 
        return $this->retrieve($sql);
@@ -387,7 +387,7 @@ class ProjectDao extends DataAccessObject {
 
        $sql = "SELECT groups.*
                FROM groups
-               JOIN project_parent ON (groups.group_id = parent_project.group_id)
+               JOIN project_parent ON (groups.group_id = project_parent.group_id)
                WHERE project_parent.parent_group_id = $group_id";
 
        return $this->retrieve($sql);

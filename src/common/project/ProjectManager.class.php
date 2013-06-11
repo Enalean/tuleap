@@ -499,7 +499,42 @@ class ProjectManager {
      * @param int $parent_group_id
      * @return Boolean
      */
-    public function addParentProject($group_id, $parent_group_id) {
+    public function setParentProject($group_id, $parent_group_id) {
+        $parent = $this->getParentProject($group_id);
+
+        if ($this->doesParentMatch($parent, $parent_group_id)) {
+            return false;
+        }
+
+        if (! $parent_group_id) {
+            return $this->removeParentProject($group_id);
+        }
+
+        if ($parent) {
+            return $this->updateParentProject($group_id, $parent_group_id);
+        }
+
+        return $this->addParentProject($group_id, $parent_group_id);
+    }
+
+    private function doesParentMatch($parent, $parent_group_id) {
+        if ($parent && $parent->getID() === $parent_group_id) {
+            return true;
+        }
+
+        if (! $parent && ! $parent_group_id) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param int $group_id
+     * @param int $parent_group_id
+     * @return Boolean
+     */
+    private function addParentProject($group_id, $parent_group_id) {
         return $this->_getDao()->addParentProject($group_id, $parent_group_id);
     }
 
@@ -508,7 +543,7 @@ class ProjectManager {
      * @param int $parent_group_id
      * @return Boolean
      */
-    public function updateParentProject($group_id, $parent_group_id) {
+    private function updateParentProject($group_id, $parent_group_id) {
         return $this->_getDao()->updateParentProject($group_id, $parent_group_id);
     }
 
@@ -516,18 +551,22 @@ class ProjectManager {
      * @param int $group_id
      * @return Boolean
      */
-    public function removeParentProject($group_id) {
+    private function removeParentProject($group_id) {
         return $this->_getDao()->removeParentProject($group_id);
     }
 
     /**
      * @param int $group_id
-     * @return Project
+     * @return Project | null
      */
     public function getParentProject($group_id) {
-        return $this->_getDao()
-            ->getParentProject($group_id)
-            ->instanciateWith(array($this, 'getProjectFromDbRow'));
+        $data = $this->_getDao()->getParentProject($group_id);
+
+        if ($data->count() > 0) {
+            return $this->getProjectFromDbRow($data->getRow());
+        }
+
+        return null;
     }
 
     /**
@@ -537,8 +576,9 @@ class ProjectManager {
     public function getChildProjects($group_id) {
         $children = array();
         foreach ($this->_getDao()->getChildProjects($group_id) as $child) {
-            $children[] = $child->instanciateWith(array($this, 'getProjectFromDbRow'));
+            $children[] = $this->getProjectFromDbRow($child->getRow());
         }
+
         return $children;
     }
 

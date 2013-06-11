@@ -58,7 +58,8 @@ if($Update){
 	}
 }
     
-
+$project_manager = ProjectManager::instance();
+$set_parent = false;
 if ($valid_data==1) {
 	
 	// insert descriptions 
@@ -98,7 +99,17 @@ if ($valid_data==1) {
 					$updatedesc=1;
 				}	
 			}
-								
+
+                        /*
+                         * Setting parent project
+                         */
+                        $parent_id = null;
+
+                        if ($request->existAndNonEmpty('parent_project')) {
+                            $parent_id = $project_manager->getProjectFromAutocompleter($request->get('parent_project'))->getID();
+                        }
+
+                        $set_parent = $project_manager->setParentProject($group_id, $parent_id);
 		}else{
 			if(isset($previousvalue[$i])){	
 				$sql="DELETE FROM group_desc_value WHERE group_id=". db_ei($group_id) ." AND group_desc_id='".db_ei($descfieldsinfos[$i]["group_desc_id"])."'";
@@ -120,8 +131,8 @@ if ($valid_data==1) {
 
     //echo $sql;
     $result=db_query($sql);
-    
-    if ((!$result || db_affected_rows($result) < 1)&&($updatedesc==0)) {
+
+    if ((!$result || db_affected_rows($result) < 1) && ($updatedesc==0) && ! $set_parent) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
     } else {
     	
@@ -214,11 +225,16 @@ for($i=0;$i<sizeof($descfieldsinfos);$i++){
 	echo "</P>";
 }
 
+$parent_name = $GLOBALS['Language']->getText('plugin_plinks', 'add_project_autocompleter');
+$parent = $project_manager->getParentProject($group_id);
+if ($parent) {
+    $parent_name = $parent->getUnixName();
+}
 echo '
 <p>
     <u>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo','parent_project').'</u>
     <br/>
-    <input type="text" name="parent_project" value="" size ="50" id="parent_project" />
+    <input type="text" name="parent_project" value="'.$parent_name.'" size ="50" id="parent_project" />
 </p>';
 
 $js = "new ProjectAutoCompleter('parent_project', '".util_get_dir_image_theme()."', false);";

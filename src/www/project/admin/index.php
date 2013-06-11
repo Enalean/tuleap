@@ -206,7 +206,8 @@ EOS;
 }
 
 echo '<HR NoShade SIZE="1">';
-$parent_project = $group->getParent();
+$parent_project = $pm->getParentProject($group_id);
+
 if ($parent_project) {
     echo $Language->getText('project_admin_editugroup', 'parent', $parent_project->getPublicName());
 } else {
