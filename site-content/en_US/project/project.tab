@@ -18,6 +18,7 @@ project_admin_editgroupinfo	soft_required	Other Software Required
 project_admin_editgroupinfo	comments	Other Comments:
 project_admin_editgroupinfo	license_comment	Comments about Other License used for this project:
 project_admin_editgroupinfo	info_missed	Missing Information. PLEASE fill in all required information.
+project_admin_editgroupinfo	parent_project	Parent Project:
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editservice.php

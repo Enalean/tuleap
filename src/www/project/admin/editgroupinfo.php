@@ -162,7 +162,7 @@ print '
 <INPUT type="hidden" name="group_id" value="'.$group_id.'">
 
 <P>'.$Language->getText('project_admin_editgroupinfo','descriptive_g_name').'<font color="red">*</font>
-<BR><INPUT type="text" size="40" maxlen="40" name="form_group_name" value="'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['group_name']), CODENDI_PURIFIER_CONVERT_HTML) .'">
+<BR><INPUT type="text" size="50" maxlen="40" name="form_group_name" value="'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['group_name']), CODENDI_PURIFIER_CONVERT_HTML) .'">
 
 <P>'.$Language->getText('project_admin_editgroupinfo','short_desc').'<font color="red">*</font>
 <BR><TEXTAREA cols="70" rows="3" wrap="virtual" name="form_shortdesc">
@@ -213,6 +213,16 @@ for($i=0;$i<sizeof($descfieldsinfos);$i++){
 	}
 	echo "</P>";
 }
+
+echo '
+<p>
+    <u>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo','parent_project').'</u>
+    <br/>
+    <input type="text" name="parent_project" value="" size ="50" id="parent_project" />
+</p>';
+
+$js = "new ProjectAutoCompleter('parent_project', '".util_get_dir_image_theme()."', false);";
+$GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
 
 echo '
 <P><INPUT type="submit" name="Update" value="'.$Language->getText('global','btn_update').'">
