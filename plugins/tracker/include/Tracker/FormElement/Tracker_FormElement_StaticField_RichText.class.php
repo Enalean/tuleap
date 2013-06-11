@@ -51,10 +51,9 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
     
     protected function fetchReadOnly() {
         $html = '';
-        $html .= '<span class="tracker-admin-staticrichtext" id="tracker-admin-formElements_'. $this->id .'" />';
+        $html .= '<div class="tracker-admin-staticrichtext" id="tracker-admin-formElements_'. $this->id .'" />';
         $html .= $this->getRichText();
-        $html .= '</span>';
-        $html .= '<br />';
+        $html .= '</div>';
         return $html;
     }
     
@@ -81,9 +80,9 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
      */
     protected function fetchAdminFormElement() {
         $html = '';
-        $html .= '<span class="tracker-admin-staticrichtext" id="tracker-admin-formElements_'. $this->id .'" />';
+        $html .= '<div class="tracker-admin-staticrichtext" id="tracker-admin-formElements_'. $this->id .'" />';
         $html .= $this->getRichText();;
-        $html .= '</span>';
+        $html .= '</div>';
         return $html;
     }
         
