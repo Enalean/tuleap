@@ -70,7 +70,7 @@ class Git_Driver_Gerrit_ProjectCreator {
 
         if (! $this->driver->doesTheParentProjectExist($gerrit_server, $project_name) && $admin_ugroup) {
             $admin_group_name = $project_name.'/'.$admin_ugroup->getNormalizedName();
-            $project_name = $this->driver->createParentProject($gerrit_server, $repository, $admin_group_name);
+            $project_name = $this->driver->createParentProject($gerrit_server, $project, $admin_group_name);
         }
 
         $gerrit_project_name = $this->driver->createProject($gerrit_server, $repository, $project_name);

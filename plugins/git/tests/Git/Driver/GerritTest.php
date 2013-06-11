@@ -33,6 +33,8 @@ abstract class Git_Driver_Gerrit_baseTest extends TuleapTestCase {
     /** @var Git_RemoteServer_GerritServer */
     protected $gerrit_server;
 
+    /** @var Project */
+    protected $project;
 
     /**
      * @var RemoteSshCommand
@@ -46,10 +48,10 @@ abstract class Git_Driver_Gerrit_baseTest extends TuleapTestCase {
         $this->namespace       = 'jean-claude';
         $this->repository_name = 'dusse';
 
-        $project = stub('Project')->getUnixName()->returns($this->project_name);
+        $this->project = stub('Project')->getUnixName()->returns($this->project_name);
 
         $this->repository = aGitRepository()
-            ->withProject($project)
+            ->withProject($this->project)
             ->withNamespace($this->namespace)
             ->withName($this->repository_name)
             ->build();
@@ -86,7 +88,7 @@ class Git_Driver_Gerrit_createProjectTest extends Git_Driver_Gerrit_baseTest {
 
     public function itExecutesTheCreateCommandForParentProjectOnTheGerritServer() {
         expect($this->ssh)->execute($this->gerrit_server, "gerrit create-project --permissions-only firefox --owner firefox/project_admins")->once();
-        $this->driver->createParentProject($this->gerrit_server, $this->repository, 'firefox/project_admins');
+        $this->driver->createParentProject($this->gerrit_server, $this->project, 'firefox/project_admins');
     }
 
     public function itReturnsTheNameOfTheCreatedProject() {
