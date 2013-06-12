@@ -22,7 +22,7 @@
  */
 require_once('common/project/ProjectManager.class.php');
 
-Mock::generatePartial('ProjectManager', 'ProjectManagerTestVersion', array('createProjectInstance', '_getDao', '_getUserManager', 'getParentProject'));
+Mock::generatePartial('ProjectManager', 'ProjectManagerTestVersion', array('createProjectInstance', '_getDao', '_getUserManager'));
 Mock::generatePartial('ProjectManager', 'ProjectManagerTestVersion2', array('getProject', 'getProjectByUnixName', 'checkRestrictedAccess'));
 Mock::generate('Project');
 require_once('common/dao/ProjectDao.class.php');
@@ -239,74 +239,5 @@ class ProjectManagerTest extends TuleapTestCase {
         $this->assertTrue($pm->checkRestrictedAccess($project));
         $pm->expectOnce('_getUserManager');
     }
-
-    public function testsetParentProjectReturnsFalseIfParentMatches() {
-        $project_manager              = new ProjectManagerTestVersion();
-        $parent_project_already_saved = stub('Project')->getId()->returns(52);
-
-        stub($project_manager)->getParentProject()->returns($parent_project_already_saved);
-
-        $set = $project_manager->setParentProject(185, 52);
-        $this->assertFalse($set);
-    }
-
-    public function testsetParentProjectReturnsFalseIfNoParentPreviouslyAndNow() {
-        $project_manager = new ProjectManagerTestVersion();
-
-        stub($project_manager)->getParentProject()->returns(null);
-
-        $set = $project_manager->setParentProject(185, null);
-        $this->assertFalse($set);
-    }
-
-    public function testsetParentProjectReturnsTrueIfItAddsParent() {
-        $project_manager = new ProjectManagerTestVersion();
-        $dao             = stub('ProjectDao')->addParentProject()->returns(true);
-
-        stub($project_manager)->_getDao()->returns($dao);
-        stub($project_manager)->getParentProject()->returns(null);
-
-        expect($dao)->removeParentProject()->never();
-        expect($dao)->addParentProject()->once();
-        expect($dao)->updateParentProject()->never();
-
-        $set = $project_manager->setParentProject(185, 52);
-        $this->assertTrue($set);
-    }
-
-    public function testsetParentProjectReturnsTrueIfItUpdatesParent() {
-        $project_manager = new ProjectManagerTestVersion();
-        $dao             = stub('ProjectDao')->updateParentProject()->returns(true);
-
-        $parent_project_already_saved = stub('Project')->getId()->returns(52);
-
-        stub($project_manager)->getParentProject()->returns($parent_project_already_saved);
-        stub($project_manager)->_getDao()->returns($dao);
-
-        expect($dao)->removeParentProject()->never();
-        expect($dao)->addParentProject()->never();
-        expect($dao)->updateParentProject()->once();
-
-        $set = $project_manager->setParentProject(185, 59);
-        $this->assertTrue($set);
-    }
-
-    public function testsetParentProjectReturnsTrueIfItDeletesParent() {
-        $project_manager = new ProjectManagerTestVersion();
-        $dao             = stub('ProjectDao')->removeParentProject()->returns(true);
-
-        $parent_project_already_saved = stub('Project')->getId()->returns(52);
-
-        stub($project_manager)->getParentProject()->returns($parent_project_already_saved);
-        stub($project_manager)->_getDao()->returns($dao);
-
-        expect($dao)->removeParentProject()->once();
-        expect($dao)->addParentProject()->never();
-        expect($dao)->updateParentProject()->never();
-
-        $set = $project_manager->setParentProject(185, null);
-        $this->assertTrue($set);
-    }
-
 }
 ?>

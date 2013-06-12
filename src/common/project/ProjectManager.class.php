@@ -19,6 +19,7 @@
  */
 require_once('Project.class.php');
 require_once('common/dao/ProjectDao.class.php');
+require_once('common/project/Hierarchy/HierarchyFactory.class.php');
 
 /**
  * Provide access to projects
@@ -39,6 +40,11 @@ class ProjectManager {
      * Hold an instance of the class
      */
     private static $_instance;
+
+    /**
+     * @var Project_HierarchyFactory
+     */
+    private $hierarchy_factory;
 
     /**
      * A private constructor; prevents direct creation of object
@@ -500,59 +506,7 @@ class ProjectManager {
      * @return Boolean
      */
     public function setParentProject($group_id, $parent_group_id) {
-        $parent = $this->getParentProject($group_id);
-
-        if ($this->doesParentMatch($parent, $parent_group_id)) {
-            return false;
-        }
-
-        if (! $parent_group_id) {
-            return $this->removeParentProject($group_id);
-        }
-
-        if ($parent) {
-            return $this->updateParentProject($group_id, $parent_group_id);
-        }
-
-        return $this->addParentProject($group_id, $parent_group_id);
-    }
-
-    private function doesParentMatch($parent, $parent_group_id) {
-        if ($parent && $parent->getID() === $parent_group_id) {
-            return true;
-        }
-
-        if (! $parent && ! $parent_group_id) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param int $group_id
-     * @param int $parent_group_id
-     * @return Boolean
-     */
-    private function addParentProject($group_id, $parent_group_id) {
-        return $this->_getDao()->addParentProject($group_id, $parent_group_id);
-    }
-
-    /**
-     * @param int $group_id
-     * @param int $parent_group_id
-     * @return Boolean
-     */
-    private function updateParentProject($group_id, $parent_group_id) {
-        return $this->_getDao()->updateParentProject($group_id, $parent_group_id);
-    }
-
-    /**
-     * @param int $group_id
-     * @return Boolean
-     */
-    private function removeParentProject($group_id) {
-        return $this->_getDao()->removeParentProject($group_id);
+        return $this->getHierarchyFactory()->setParentProject($group_id, $parent_group_id);
     }
 
     /**
@@ -560,28 +514,19 @@ class ProjectManager {
      * @return Project | null
      */
     public function getParentProject($group_id) {
-        $data = $this->_getDao()->getParentProject($group_id);
-
-        if ($data->count() > 0) {
-            return $this->getProjectFromDbRow($data->getRow());
-        }
-
-        return null;
+        return $this->getHierarchyFactory()->getParentProject($group_id);
     }
 
     /**
-     * @param int $group_id
-     * @return Project[]
+     * @return Project_HierarchyFactory
      */
-    public function getChildProjects($group_id) {
-        $children = array();
-        foreach ($this->_getDao()->getChildProjects($group_id) as $child) {
-            $children[] = $this->getProjectFromDbRow($child->getRow());
+    private function getHierarchyFactory() {
+        if (! $this->hierarchy_factory) {
+            $this->hierarchy_factory = new Project_HierarchyFactory($this);
         }
 
-        return $children;
+        return $this->hierarchy_factory;
     }
-
 }
 
 ?>
