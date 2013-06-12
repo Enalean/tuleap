@@ -152,6 +152,7 @@ project_admin_editugroup	settings_title	General settings
 project_admin_editugroup	binding_title	Groups binding
 project_admin_editugroup	parent	Parent project: $1
 project_admin_editugroup	no_parent	This project has no parent
+project_admin_editugroup	go_to_hierarchy_admin	Go to project hierarchy administration
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/grouptrove.php

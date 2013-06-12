@@ -207,13 +207,12 @@ EOS;
 
 echo '<HR NoShade SIZE="1">';
 $parent_project = $pm->getParentProject($group_id);
-
 if ($parent_project) {
-    echo $Language->getText('project_admin_editugroup', 'parent', $parent_project->getPublicName());
+    echo $Language->getText('project_admin_editugroup', 'parent').' <a href="?group_id='.$parent_project->getID().'">'.$parent_project->getPublicName().'</a>';
 } else {
     echo $Language->getText('project_admin_editugroup', 'no_parent');
 }
-
+echo ' &dash; <a href="editgroupinfo.php?group_id='.$group_id.'">'.$Language->getText('project_admin_editugroup', 'go_to_hierarchy_admin').'</a>';
 $HTML->box1_bottom(); 
 
 echo '
