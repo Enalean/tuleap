@@ -2,11 +2,11 @@ Version 6.2 (Not released yet)
 	* Fix XSS injection in Forums, Wiki, Search, People resume (contrib STMicroelectronics).
 
 	== Plugins ==
-	* agiledashboard 0.84
-	* git 3.23
-	* tracker: 5.130
-	* mediawiki 0.12
-	* statistics 0.28
+	* agiledashboard: 0.84
+	* git: 3.23
+	* tracker: 5.131
+	* mediawiki: 0.12
+	* statistics: 0.28
 
 Version 6.1 (Thursday, May 30th 2013)
 	== Enhancement ==
