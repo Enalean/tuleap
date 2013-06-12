@@ -237,7 +237,7 @@ echo '
     <input type="text" name="parent_project" value="'.$parent_name.'" size ="50" id="parent_project" />
 </p>';
 
-$js = "new ProjectAutoCompleter('parent_project', '".util_get_dir_image_theme()."', false);";
+$js = "new ProjectAutoCompleter('parent_project', '".util_get_dir_image_theme()."', false, {'allowNull' : true});";
 $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
 
 echo '
