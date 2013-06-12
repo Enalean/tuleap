@@ -112,7 +112,7 @@ class Project_HierarchyFactory {
     public function getChildProjects($project_id) {
         $children = array();
         foreach ($this->getDao()->getChildProjects($project_id) as $child) {
-            $children[] = $this->project_manager->getProjectFromDbRow($child->getRow());
+            $children[] = $this->project_manager->getProjectFromDbRow($child);
         }
 
         return $children;

@@ -19,6 +19,7 @@ project_admin_editgroupinfo	comments	Autre commentaires&nbsp;:
 project_admin_editgroupinfo	license_comment	Commentaires à propos de la licence non répertoriée utilisée par ce projet&nbsp;:
 project_admin_editgroupinfo	info_missed	Information Manquante. SVP remplissez tous les champs requis.
 project_admin_editgroupinfo	parent_project	Projet Parent :
+project_admin_editgroupinfo	sub_projects	Sous-Projets :
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editservice.php

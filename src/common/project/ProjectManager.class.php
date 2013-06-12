@@ -518,6 +518,15 @@ class ProjectManager {
     }
 
     /**
+     *
+     * @param int $group_id
+     * @return Project[]
+     */
+    public function getChildProjects($group_id) {
+        return $this->hierarchy_factory->getChildProjects($group_id);
+    }
+
+    /**
      * @return Project_HierarchyFactory
      */
     private function getHierarchyFactory() {

@@ -240,6 +240,13 @@ echo '
 $js = "new ProjectAutoCompleter('parent_project', '".util_get_dir_image_theme()."', false, {'allowNull' : true});";
 $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
 
+echo "<u>".$GLOBALS['Language']->getText('project_admin_editgroupinfo', 'sub_projects')."</u><br>";
+$children = $project_manager->getChildProjects($group_id);
+
+foreach ($children as $child) {
+    echo '<a href="/projects/'.$child->getUnixName().'">'.$child->getPublicName() . '</a> ';
+}
+
 echo '
 <P><INPUT type="submit" name="Update" value="'.$Language->getText('global','btn_update').'">
 </FORM>
