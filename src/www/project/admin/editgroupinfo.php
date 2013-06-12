@@ -226,6 +226,9 @@ for($i=0;$i<sizeof($descfieldsinfos);$i++){
 }
 
 echo '<h3>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo', 'project_hierarchy_title').'</h3>';
+echo '<p>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo', 'project_hierarchy_desc_1').'</p>';
+echo '<p>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo', 'project_hierarchy_desc_2').'</p>';
+echo '<p><strong>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo', 'project_hierarchy_desc_3').'</strong></p>';
 
 $parent_name = $GLOBALS['Language']->getText('project_admin_editgroupinfo', 'autocompleter_placeholder');
 $parent = $project_manager->getParentProject($group_id);

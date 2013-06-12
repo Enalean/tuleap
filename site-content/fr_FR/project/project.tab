@@ -21,6 +21,9 @@ project_admin_editgroupinfo	info_missed	Information Manquante. SVP remplissez to
 project_admin_editgroupinfo	parent_project	Projet parent :
 project_admin_editgroupinfo	sub_projects	Sous projets :
 project_admin_editgroupinfo	project_hierarchy_title	Hierarchie de projets
+project_admin_editgroupinfo	project_hierarchy_desc_1	Cette fonctionnalité permettra, à terme, d'organiser vos projects les uns par rapport aux autres en terme de permissions, groupes d'utilisateurs et contrôle.
+project_admin_editgroupinfo	project_hierarchy_desc_2	Cependant, à l'heure actuelle, elle n'est exploitée que par Git/Gerrit pour les projets "parapluies" (si ces services sont activés/disponibles sur votre plate-forme).
+project_admin_editgroupinfo	project_hierarchy_desc_3	Veuillez noter que, plus tard, au cours de futurs développements, la définition d'une hierarchy pourra avoir un impact sur l'organisation des enfants (ex. les administrateurs d'un projet parent pourraient automatiquement avoir accès à l'administration des tous les enfants et petits enfants).
 project_admin_editgroupinfo	autocompleter_placeholder	Nom du projet (auto completé à la volée)
 #
 #-----------------------------------------------
