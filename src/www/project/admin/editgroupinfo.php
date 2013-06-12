@@ -225,7 +225,9 @@ for($i=0;$i<sizeof($descfieldsinfos);$i++){
 	echo "</P>";
 }
 
-$parent_name = $GLOBALS['Language']->getText('plugin_plinks', 'add_project_autocompleter');
+echo '<h3>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo', 'project_hierarchy_title').'</h3>';
+
+$parent_name = $GLOBALS['Language']->getText('project_admin_editgroupinfo', 'autocompleter_placeholder');
 $parent = $project_manager->getParentProject($group_id);
 if ($parent) {
     $parent_name = $parent->getUnixName();
@@ -243,8 +245,14 @@ $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
 echo "<u>".$GLOBALS['Language']->getText('project_admin_editgroupinfo', 'sub_projects')."</u><br>";
 $children = $project_manager->getChildProjects($group_id);
 
+$current_user = $request->getCurrentUser();
 foreach ($children as $child) {
-    echo '<a href="/projects/'.$child->getUnixName().'">'.$child->getPublicName() . '</a> ';
+    if ($current_user->isMember($child->getId(), 'A')) {
+        $url = '?group_id='.$child->getID();
+    } else {
+        $url = '/projects/'.$child->getUnixName();
+    }
+    echo '<a href="'.$url.'">'.$child->getPublicName() . '</a> ';
 }
 
 echo '

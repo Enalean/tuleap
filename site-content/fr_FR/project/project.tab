@@ -18,8 +18,10 @@ project_admin_editgroupinfo	soft_required	Autre(s) logiciel(s) requis
 project_admin_editgroupinfo	comments	Autre commentaires&nbsp;:
 project_admin_editgroupinfo	license_comment	Commentaires à propos de la licence non répertoriée utilisée par ce projet&nbsp;:
 project_admin_editgroupinfo	info_missed	Information Manquante. SVP remplissez tous les champs requis.
-project_admin_editgroupinfo	parent_project	Projet Parent :
-project_admin_editgroupinfo	sub_projects	Sous-Projets :
+project_admin_editgroupinfo	parent_project	Projet parent :
+project_admin_editgroupinfo	sub_projects	Sous projets :
+project_admin_editgroupinfo	project_hierarchy_title	Hierarchie de projets
+project_admin_editgroupinfo	autocompleter_placeholder	Nom du projet (auto completé à la volée)
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editservice.php
@@ -150,7 +152,7 @@ project_admin_editugroup	group_empty	le groupe est vide
 project_admin_editugroup	permissions_title	Gestion des permissions
 project_admin_editugroup	settings_title	Paramètres
 project_admin_editugroup	binding_title	Lier des groupes
-project_admin_editugroup	parent	Projet parent : $1
+project_admin_editugroup	parent	Projet parent : 
 project_admin_editugroup	no_parent	Ce projet n'a pas de parent
 project_admin_editugroup	go_to_hierarchy_admin	Administration de la hiérarchie de projets
 #

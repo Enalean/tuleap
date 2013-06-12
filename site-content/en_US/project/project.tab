@@ -20,6 +20,8 @@ project_admin_editgroupinfo	license_comment	Comments about Other License used fo
 project_admin_editgroupinfo	info_missed	Missing Information. PLEASE fill in all required information.
 project_admin_editgroupinfo	parent_project	Parent Project:
 project_admin_editgroupinfo	sub_projects	Sub-Projects:
+project_admin_editgroupinfo	project_hierarchy_title	Project hierarchy
+project_admin_editgroupinfo	autocompleter_placeholder	Project name (search as you type)
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editservice.php
@@ -150,7 +152,7 @@ project_admin_editugroup	group_empty	The group is empty
 project_admin_editugroup	permissions_title	Permissions
 project_admin_editugroup	settings_title	General settings
 project_admin_editugroup	binding_title	Groups binding
-project_admin_editugroup	parent	Parent project: $1
+project_admin_editugroup	parent	Parent project: 
 project_admin_editugroup	no_parent	This project has no parent
 project_admin_editugroup	go_to_hierarchy_admin	Go to project hierarchy administration
 #
