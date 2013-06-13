@@ -111,19 +111,26 @@ if ($valid_data==1) {
 		}
 	}
 
-    /*
-     * Setting parent project
-     */
-
-    if ($request->existAndNonEmpty('parent_project')) {
-        $parent_project = $project_manager->getProjectFromAutocompleter($request->get('parent_project'));
-        if ($parent_project && $current_user->isMember($parent_project->getId(), 'A')) {
-            $set_parent = $project_manager->setParentProject($group_id, $parent_project->getID());
+        /*
+         * Setting parent project
+         */
+        try {
+            if ($request->existAndNonEmpty('parent_project')) {
+                $parent_project = $project_manager->getProjectFromAutocompleter($request->get('parent_project'));
+                if ($parent_project && $current_user->isMember($parent_project->getId(), 'A')) {
+                $set_parent = $project_manager->setParentProject($group_id, $parent_project->getID());
+                }
+            }
+            if ($request->existAndNonEmpty('remove_parent_project')) {
+            $set_parent = $project_manager->removeParentProject($group_id);
+            }
+        } catch (Project_HierarchyManagerNoChangeException $e) {
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
+        } catch (Project_HierarchyManagerAncestorIsSelfException $e) {
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','self_exception',(db_error() ? db_error() : ' ' )));
+        } catch (Project_HierarchyManagerAlreadyAncestorException $e) {
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','ancestor_exception',(db_error() ? db_error() : ' ' )));
         }
-    }
-    if ($request->existAndNonEmpty('remove_parent_project')) {
-        $set_parent = $project_manager->removeParentProject($group_id);
-    }
 
     // in the database, these all default to '1', 
     // so we have to explicity set 0
@@ -136,13 +143,12 @@ if ($valid_data==1) {
 
     //echo $sql;
     $result=db_query($sql);
-
-    if ((!$result || db_affected_rows($result) < 1) && ($updatedesc==0) && ! $set_parent) {
+    if ((!$result || db_affected_rows($result) < 1) && ($updatedesc==0)) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
     } else {
-    	
-    	
-        $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_editgroupinfo','upd_success'));
+        if ($set_parent) {
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_editgroupinfo','upd_success'));
+        }
         group_add_history('changed_public_info','',$group_id);
         
         // Raise an event
@@ -150,11 +156,7 @@ if ($valid_data==1) {
         $em->processEvent('project_admin_edition', array(
             'group_id'       => $group_id
         ));
-    
     }
-    
-    
-    
 }
 
 // update info for page
@@ -175,8 +177,6 @@ $hp = Codendi_HTMLPurifier::instance();
 print '
 <P>
 <FORM action="?group_id='.$group_id.'" method="post">
-<INPUT type="hidden" name="group_id" value="'.$group_id.'">
-
 <P>'.$Language->getText('project_admin_editgroupinfo','descriptive_g_name').'<font color="red">*</font>
 <BR><INPUT type="text" size="50" maxlen="40" name="form_group_name" value="'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['group_name']), CODENDI_PURIFIER_CONVERT_HTML) .'">
 

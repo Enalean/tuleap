@@ -38,20 +38,21 @@ class Project_HierarchyManagerTest extends TuleapTestCase {
         stub($this->hierarchy_manager)->getAllParents()->returns(array());
     }
 
-   public function testSetParentProjectReturnsFalseIfParentMatches() {
+   public function testSetParentProjectThrowsExceptionIfParentMatches() {
         $parent_project_already_saved = stub('Project')->getId()->returns(52);
-
         stub($this->hierarchy_manager)->getParentProject()->returns($parent_project_already_saved);
 
-        $set = $this->hierarchy_manager->setParentProject(185, 52);
-        $this->assertFalse($set);
+        $this->expectException('Project_HierarchyManagerNoChangeException');
+
+        $this->hierarchy_manager->setParentProject(185, 52);
     }
 
-    public function testSetParentProjectReturnsFalseIfNoParentPreviouslyAndNow() {
+    public function testSetParentProjectThrowsExceptionIfNoParentPreviouslyAndNow() {
         stub($this->hierarchy_manager)->getParentProject()->returns(null);
 
-        $set = $this->hierarchy_manager->setParentProject(185, null);
-        $this->assertFalse($set);
+        $this->expectException('Project_HierarchyManagerNoChangeException');
+
+        $this->hierarchy_manager->setParentProject(185, null);
     }
 
     public function testSetParentProjectReturnsTrueIfItAddsParent() {
@@ -97,7 +98,7 @@ class Project_HierarchyManagerTest extends TuleapTestCase {
         $this->assertTrue($set);
     }
 
-    public function testSetParentProjectReturnsFalseIfProjectIsAncestorOfParent() {
+    public function testSetParentProjectThrowsExceptionIfProjectIsAncestorOfParent() {
         $project_manager   = stub('ProjectManager')->_getDao()->returns($this->dao);
         $hierarchy_manager = partial_mock('Project_HierarchyManager', array('getParentProject', 'getAllParents'), array($project_manager));
 
@@ -105,15 +106,17 @@ class Project_HierarchyManagerTest extends TuleapTestCase {
         stub($hierarchy_manager)->getAllParents(185)->returns(array(135));
         stub($hierarchy_manager)->getParentProject(135)->returns(null);
 
-        $set = $hierarchy_manager->setParentProject(135, 185);
-        $this->assertFalse($set);
+        $this->expectException('Project_HierarchyManagerAlreadyAncestorException');
+
+        $hierarchy_manager->setParentProject(135, 185);
     }
 
     public function testSetParentProjectReturnsFalseIfProjectAddsItselfAsParent() {
         stub($this->dao)->addParentProject()->returns(true);
 
-        $set = $this->hierarchy_manager->setParentProject(135, 135);
-        $this->assertFalse($set);
+        $this->expectException('Project_HierarchyManagerAncestorIsSelfException');
+
+        $this->hierarchy_manager->setParentProject(135, 135);
     }
 
 }

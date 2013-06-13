@@ -26,6 +26,8 @@ project_admin_editgroupinfo	project_hierarchy_desc_2	As of today, it's only used
 project_admin_editgroupinfo	project_hierarchy_desc_3	However, setting a hierarchy between projects might have future impacts (e.g. members of the parent project could possibly have access to all sub-projects even without explicit permissions granted).
 project_admin_editgroupinfo	autocompleter_placeholder	Project name (search as you type)
 project_admin_editgroupinfo	remove_parent_project	Remove parent project
+project_admin_editgroupinfo	self_exception	A project cannot be its own parent.
+project_admin_editgroupinfo	ancestor_exception	These projects are already related.
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editservice.php

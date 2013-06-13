@@ -19,6 +19,10 @@
  */
 
 
+require_once 'HierarchyManagerNoChangeException.class.php';
+require_once 'HierarchyManagerAlreadyAncestorException.class.php';
+require_once 'HierarchyManagerAncestorIsSelfException.class.php';
+
 class Project_HierarchyManager {
 
     /**
@@ -43,13 +47,14 @@ class Project_HierarchyManager {
      * @param int $project_id
      * @param int $parent_project_id
      * @return Boolean
+     * @throws Project_HierarchyManagerNoChangeException
+     * @throws Project_HierarchyManagerAlreadyAncestorException
+     * @throws Project_HierarchyManagerAncestorIsSelfException
      */
     public function setParentProject($project_id, $parent_project_id) {
         $current_parent = $this->getParentProject($project_id);
 
-        if (! $this->isProjectAllowed($project_id, $parent_project_id, $current_parent)) {
-            return false;
-        }
+        $this->validateParent($project_id, $parent_project_id, $current_parent);
 
         if (! $parent_project_id) {
             return $this->removeParentProject($project_id);
@@ -68,29 +73,23 @@ class Project_HierarchyManager {
      * @param Project|null $current_parent
      * @return boolean
      */
-    private function isProjectAllowed($project_id, $parent_project_id, $current_parent) {
-        $parents = $this->getAllParents($parent_project_id);
-
-        return ! in_array($project_id, $parents)
-            && $project_id != $parent_project_id
-            && ! $this->doesParentMatch($current_parent, $parent_project_id);
-    }
-
-    /**
-     * @param int $current_parent
-     * @param int $parent_project_id
-     * @return boolean
-     */
-    private function doesParentMatch($current_parent, $parent_project_id) {
-        if ($current_parent && $current_parent->getID() === $parent_project_id) {
-            return true;
-        }
-
+    private function validateParent($project_id, $parent_project_id, $current_parent) {
         if (! $current_parent && ! $parent_project_id) {
-            return true;
+            throw new Project_HierarchyManagerNoChangeException();
         }
 
-        return false;
+        if ($current_parent && $current_parent->getID() === $parent_project_id) {
+            throw new Project_HierarchyManagerNoChangeException();
+        }
+
+        $parents = $this->getAllParents($parent_project_id);
+        if (in_array($project_id, $parents)) {
+            throw new Project_HierarchyManagerAlreadyAncestorException();
+        }
+
+        if ($project_id == $parent_project_id) {
+            throw new Project_HierarchyManagerAncestorIsSelfException();
+        }
     }
 
     /**
