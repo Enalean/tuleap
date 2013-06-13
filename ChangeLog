@@ -1,6 +1,7 @@
 Version 6.2 (Not released yet)
 	* Introduce project hierarchy definition.
 	* Fix XSS injection in Forums, Wiki, Search, People resume (contrib STMicroelectronics).
+	* Add tool to dump a forum of a project
 
 	== Plugins ==
 	* agiledashboard: 0.84
