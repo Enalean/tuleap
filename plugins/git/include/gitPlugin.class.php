@@ -888,8 +888,13 @@ class GitPlugin extends Plugin {
             $this->getGerritDriver(),
             $this->getGerritUserFinder(),
             $this->getUGroupManager(),
-            $this->getGerritMembershipManager()
+            $this->getGerritMembershipManager(),
+            $this->getProjectManager()
         );
+    }
+
+    private function getProjectManager() {
+        return ProjectManager::instance();
     }
 
     private function getGerritUserFinder() {

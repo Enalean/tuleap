@@ -50,6 +50,7 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
 
     /** @var Project */
     protected $project;
+    protected $project_id = 103;
     protected $project_unix_name = 'mozilla';
 
     /** @var UGroupManager */
@@ -57,6 +58,9 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
 
     /** @var Git_Driver_Gerrit_MembershipManager */
     protected $membership_manager;
+
+    /** @var ProjectManager */
+    protected $project_manager;
 
     protected $gerrit_project = 'tuleap-localhost-mozilla/firefox';
     protected $gerrit_git_url;
@@ -86,6 +90,7 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         $this->project = mock('Project');
         stub($this->project)->getUnixName()->returns($this->project_unix_name);
         stub($this->project)->isPublic()->returns(true);
+        stub($this->project)->getID()->returns($this->project_id);
         $private_project = stub('Project')->isPublic()->returns(false);
 
         $this->repository                      = mock('GitRepository');
@@ -114,8 +119,16 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         $this->userfinder = mock('Git_Driver_Gerrit_UserFinder');
         $this->ugroup_manager = mock('UGroupManager');
 
+        $this->project_manager = mock('ProjectManager');
 
-        $this->project_creator = new Git_Driver_Gerrit_ProjectCreator($this->tmpdir, $this->driver, $this->userfinder, $this->ugroup_manager, $this->membership_manager);
+        $this->project_creator = new Git_Driver_Gerrit_ProjectCreator(
+                    $this->tmpdir,
+                    $this->driver,
+                    $this->userfinder,
+                    $this->ugroup_manager,
+                    $this->membership_manager,
+                    $this->project_manager
+        );
 
         stub($this->repository)->getProject()->returns($this->project);
         stub($this->repository_in_a_private_project)->getProject()->returns($private_project);
@@ -494,6 +507,7 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
         $this->project_admins_gerrit_parent_name = 'grozilla/project_admins';
         $this->parent_project = mock('Project');
         stub($this->parent_project)->getUnixName()->returns('grozilla');
+        stub($this->parent_project)->getID()->returns(104);
 
         $this->parent_project_admins = mock('UGroup');
         stub($this->parent_project_admins)->getNormalizedName()->returns('project_admins');
@@ -512,7 +526,7 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
     }
 
     public function itOnlyCallsCreateParentProjectOnceIfTheProjectHasNoParents() {
-        stub($this->project)->getParent()->returns(null);
+        stub($this->project_manager)->getParentProject($this->project->getID())->returns(null);
 
         expect($this->driver)->createProjectWithPermissionsOnly($this->server, $this->project, $this->project_admins_gerrit_name)->once();
 
@@ -520,14 +534,16 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
     }
 
     public function itOnlyCallsCreateParentProjectTwiceIfTheProjectHasOneParent() {
-        stub($this->project)->getParent()->returns($this->parent_project);
+        stub($this->project_manager)->getParentProject($this->project->getID())->returns($this->parent_project);
+        stub($this->project_manager)->getParentProject($this->parent_project->getID())->returns(null);
         expect($this->driver)->createProjectWithPermissionsOnly()->count(2);
 
         $this->project_creator->createGerritProject($this->server, $this->repository);
     }
 
     public function itCallsCreateParentProjectWithTheCorrectParameters() {
-        stub($this->project)->getParent()->returns($this->parent_project);
+        stub($this->project_manager)->getParentProject($this->project->getID())->returns($this->parent_project);
+        stub($this->project_manager)->getParentProject($this->parent_project->getID())->returns(null);
 
         expect($this->driver)->createProjectWithPermissionsOnly($this->server, $this->parent_project, $this->project_admins_gerrit_parent_name)->at(0);
         expect($this->driver)->createProjectWithPermissionsOnly($this->server, $this->project, $this->project_admins_gerrit_name)->at(1);

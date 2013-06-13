@@ -40,18 +40,23 @@ class Git_Driver_Gerrit_ProjectCreator {
     /** @var Git_Driver_Gerrit_MembershipManager */
     private $membership_manager;
 
+    /** @var ProjectManager */
+    private $project_manager;
+
     public function __construct(
         $dir,
         Git_Driver_Gerrit $driver,
         Git_Driver_Gerrit_UserFinder $user_finder,
         UGroupManager $ugroup_manager,
-        Git_Driver_Gerrit_MembershipManager $membership_manager
+        Git_Driver_Gerrit_MembershipManager $membership_manager,
+        ProjectManager $project_manager
     ) {
-        $this->dir            = $dir;
-        $this->driver         = $driver;
-        $this->user_finder    = $user_finder;
-        $this->ugroup_manager = $ugroup_manager;
+        $this->dir                = $dir;
+        $this->driver             = $driver;
+        $this->user_finder        = $user_finder;
+        $this->ugroup_manager     = $ugroup_manager;
         $this->membership_manager = $membership_manager;
+        $this->project_manager    = $project_manager;
     }
 
     /**
@@ -88,7 +93,7 @@ class Git_Driver_Gerrit_ProjectCreator {
 
         $ugroups        = $this->ugroup_manager->getUGroups($project);
         $admin_ugroup   = $this->getAdminUGroup($ugroups);
-        $parent_project = $project->getParent();
+        $parent_project = $this->project_manager->getParentProject($project->getID());
         $project_name   = $project->getUnixName();
 
         if ($parent_project) {
