@@ -59,6 +59,7 @@ if($Update){
 }
     
 $project_manager = ProjectManager::instance();
+$current_user = $request->getCurrentUser();
 $set_parent = false;
 if ($valid_data==1) {
 	
@@ -113,9 +114,10 @@ if ($valid_data==1) {
     /*
      * Setting parent project
      */
+
     if ($request->existAndNonEmpty('parent_project')) {
         $parent_project = $project_manager->getProjectFromAutocompleter($request->get('parent_project'));
-        if ($parent_project) {
+        if ($parent_project && $current_user->isMember($parent_project->getId(), 'A')) {
             $set_parent = $project_manager->setParentProject($group_id, $parent_project->getID());
         }
     }
@@ -238,7 +240,6 @@ echo '
     <u>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo','parent_project').'</u>
     <br/> ';
 
-$current_user = $request->getCurrentUser();
 $parent = $project_manager->getParentProject($group_id);
 if ($parent) {
     $parent_name = $parent->getUnixName();
