@@ -45,9 +45,9 @@ class Project_HierarchyManager {
      * @return Boolean
      */
     public function setParentProject($project_id, $parent_project_id) {
-        $parent = $this->getParentProject($project_id);
+        $current_parent = $this->getParentProject($project_id);
 
-        if ($this->doesParentMatch($parent, $parent_project_id) || $this->isProjectInParents($project_id, $parent_project_id)) {
+        if (! $this->isProjectAllowed($project_id, $parent_project_id, $current_parent)) {
             return false;
         }
 
@@ -55,7 +55,7 @@ class Project_HierarchyManager {
             return $this->removeParentProject($project_id);
         }
 
-        if ($parent) {
+        if ($current_parent) {
             return $this->updateParentProject($project_id, $parent_project_id);
         }
 
@@ -63,16 +63,30 @@ class Project_HierarchyManager {
     }
 
     /**
-     * @param int $parent
+     * @param int $project_id
+     * @param int $parent_project_id
+     * @param Project|null $current_parent
+     * @return boolean
+     */
+    private function isProjectAllowed($project_id, $parent_project_id, $current_parent) {
+        $parents = $this->getAllParents($parent_project_id);
+
+        return ! in_array($project_id, $parents)
+            && $project_id != $parent_project_id
+            && ! $this->doesParentMatch($current_parent, $parent_project_id);
+    }
+
+    /**
+     * @param int $current_parent
      * @param int $parent_project_id
      * @return boolean
      */
-    private function doesParentMatch($parent, $parent_project_id) {
-        if ($parent && $parent->getID() === $parent_project_id) {
+    private function doesParentMatch($current_parent, $parent_project_id) {
+        if ($current_parent && $current_parent->getID() === $parent_project_id) {
             return true;
         }
 
-        if (! $parent && ! $parent_project_id) {
+        if (! $current_parent && ! $parent_project_id) {
             return true;
         }
 
@@ -150,17 +164,6 @@ class Project_HierarchyManager {
         }
 
         return $parent_ids;
-    }
-
-    /**
-     * @param int $project_id
-     * @param int $parent_project_id
-     * @return boolean
-     */
-    private function isProjectInParents($project_id, $parent_project_id) {
-        $parents = $this->getAllParents($parent_project_id);
-
-        return in_array($project_id, $parents);
     }
 
     /**

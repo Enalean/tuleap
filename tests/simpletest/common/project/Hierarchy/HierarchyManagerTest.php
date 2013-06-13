@@ -108,6 +108,14 @@ class Project_HierarchyManagerTest extends TuleapTestCase {
         $set = $hierarchy_manager->setParentProject(135, 185);
         $this->assertFalse($set);
     }
+
+    public function testSetParentProjectReturnsFalseIfProjectAddsItselfAsParent() {
+        stub($this->dao)->addParentProject()->returns(true);
+
+        $set = $this->hierarchy_manager->setParentProject(135, 135);
+        $this->assertFalse($set);
+    }
+
 }
 
 class Project_HierarchyManagerAllParentsTest extends TuleapTestCase {
