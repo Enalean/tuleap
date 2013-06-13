@@ -101,7 +101,7 @@ class Project_HierarchyManager {
      * @param int $project_id
      * @return Boolean
      */
-    private function removeParentProject($project_id) {
+    public function removeParentProject($project_id) {
         return $this->getDao()->removeParentProject($project_id);
     }
 

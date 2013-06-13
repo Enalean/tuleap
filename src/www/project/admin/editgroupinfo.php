@@ -113,11 +113,15 @@ if ($valid_data==1) {
     /*
      * Setting parent project
      */
-    $parent_id = null;
     if ($request->existAndNonEmpty('parent_project')) {
-        $parent_id = $project_manager->getProjectFromAutocompleter($request->get('parent_project'))->getID();
+        $parent_project = $project_manager->getProjectFromAutocompleter($request->get('parent_project'));
+        if ($parent_project) {
+            $set_parent = $project_manager->setParentProject($group_id, $parent_project->getID());
+        }
     }
-    $set_parent = $project_manager->setParentProject($group_id, $parent_id);
+    if ($request->existAndNonEmpty('remove_parent_project')) {
+        $set_parent = $project_manager->removeParentProject($group_id);
+    }
 
     // in the database, these all default to '1', 
     // so we have to explicity set 0
@@ -168,7 +172,7 @@ print '<P><h3>'.$Language->getText('project_admin_editgroupinfo','editing_g_info
 $hp = Codendi_HTMLPurifier::instance();
 print '
 <P>
-<FORM action="?" method="post">
+<FORM action="?group_id='.$group_id.'" method="post">
 <INPUT type="hidden" name="group_id" value="'.$group_id.'">
 
 <P>'.$Language->getText('project_admin_editgroupinfo','descriptive_g_name').'<font color="red">*</font>
@@ -229,17 +233,29 @@ echo '<p>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo', 'project
 echo '<p>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo', 'project_hierarchy_desc_2').'</p>';
 echo '<p><strong>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo', 'project_hierarchy_desc_3').'</strong></p>';
 
-$parent_name = $GLOBALS['Language']->getText('project_admin_editgroupinfo', 'autocompleter_placeholder');
-$parent = $project_manager->getParentProject($group_id);
-if ($parent) {
-    $parent_name = $parent->getUnixName();
-}
 echo '
 <p>
     <u>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo','parent_project').'</u>
+    <br/> ';
+
+$current_user = $request->getCurrentUser();
+$parent = $project_manager->getParentProject($group_id);
+if ($parent) {
+    $parent_name = $parent->getUnixName();
+
+    if ($current_user->isMember($parent->getId(), 'A')) {
+        $url = '?group_id='.$parent->getID();
+    } else {
+        $url = '/projects/'.$parent->getUnixName();
+    }
+
+    echo '<a href="'.$url.'"> '.$parent_name.' </a>
     <br/>
-    <input type="text" name="parent_project" value="'.$parent_name.'" size ="50" id="parent_project" />
-</p>';
+    <label><input type="checkbox" name="remove_parent_project"/>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo','remove_parent_project').'</label>';
+} else {
+     echo '<input type="text" name="parent_project" size ="50" id="parent_project" /><br/>';
+}
+echo '</p>';
 
 $js = "new ProjectAutoCompleter('parent_project', '".util_get_dir_image_theme()."', false, {'allowNull' : true});";
 $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
@@ -247,7 +263,6 @@ $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
 echo "<u>".$GLOBALS['Language']->getText('project_admin_editgroupinfo', 'sub_projects')."</u><br>";
 $children = $project_manager->getChildProjects($group_id);
 
-$current_user = $request->getCurrentUser();
 foreach ($children as $child) {
     if ($current_user->isMember($child->getId(), 'A')) {
         $url = '?group_id='.$child->getID();

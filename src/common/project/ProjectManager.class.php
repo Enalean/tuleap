@@ -511,6 +511,14 @@ class ProjectManager {
 
     /**
      * @param int $group_id
+     * @return Boolean
+     */
+    public function removeParentProject($group_id) {
+        return $this->getHierarchyManager()->removeParentProject($group_id);
+    }
+
+    /**
+     * @param int $group_id
      * @return Project | null
      */
     public function getParentProject($group_id) {
