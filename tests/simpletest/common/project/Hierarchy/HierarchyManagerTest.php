@@ -18,52 +18,52 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/project/Hierarchy/HierarchyFactory.class.php');
+require_once('common/project/Hierarchy/HierarchyManager.class.php');
 require_once('common/project/ProjectManager.class.php');
 
-class Project_HierarchyFactoryTest extends TuleapTestCase {
+class Project_HierarchyManagerTest extends TuleapTestCase {
 
     private $dao;
 
-    /** @var Project_HierarchyFactory */
-    private $hierarchy_factory;
+    /** @var Project_HierarchyManager */
+    private $hierarchy_manager;
 
     public function setUp() {
         parent::setUp();
 
         $this->dao = mock('ProjectDao');
         $project_manager = stub('ProjectManager')->_getDao()->returns($this->dao);
-        $this->hierarchy_factory = partial_mock('Project_HierarchyFactory', array('getParentProject', 'getAllParents'), array($project_manager));
+        $this->hierarchy_manager = partial_mock('Project_HierarchyManager', array('getParentProject', 'getAllParents'), array($project_manager));
 
-        stub($this->hierarchy_factory)->getAllParents()->returns(array());
+        stub($this->hierarchy_manager)->getAllParents()->returns(array());
     }
 
    public function testSetParentProjectReturnsFalseIfParentMatches() {
         $parent_project_already_saved = stub('Project')->getId()->returns(52);
 
-        stub($this->hierarchy_factory)->getParentProject()->returns($parent_project_already_saved);
+        stub($this->hierarchy_manager)->getParentProject()->returns($parent_project_already_saved);
 
-        $set = $this->hierarchy_factory->setParentProject(185, 52);
+        $set = $this->hierarchy_manager->setParentProject(185, 52);
         $this->assertFalse($set);
     }
 
     public function testSetParentProjectReturnsFalseIfNoParentPreviouslyAndNow() {
-        stub($this->hierarchy_factory)->getParentProject()->returns(null);
+        stub($this->hierarchy_manager)->getParentProject()->returns(null);
 
-        $set = $this->hierarchy_factory->setParentProject(185, null);
+        $set = $this->hierarchy_manager->setParentProject(185, null);
         $this->assertFalse($set);
     }
 
     public function testSetParentProjectReturnsTrueIfItAddsParent() {
         stub($this->dao)->addParentProject()->returns(true);
 
-        stub($this->hierarchy_factory)->getParentProject()->returns(null);
+        stub($this->hierarchy_manager)->getParentProject()->returns(null);
 
         expect($this->dao)->removeParentProject()->never();
         expect($this->dao)->addParentProject()->once();
         expect($this->dao)->updateParentProject()->never();
 
-        $set = $this->hierarchy_factory->setParentProject(185, 52);
+        $set = $this->hierarchy_manager->setParentProject(185, 52);
         $this->assertTrue($set);
     }
 
@@ -72,13 +72,13 @@ class Project_HierarchyFactoryTest extends TuleapTestCase {
 
         $parent_project_already_saved = stub('Project')->getId()->returns(52);
 
-        stub($this->hierarchy_factory)->getParentProject()->returns($parent_project_already_saved);
+        stub($this->hierarchy_manager)->getParentProject()->returns($parent_project_already_saved);
 
         expect($this->dao)->removeParentProject()->never();
         expect($this->dao)->addParentProject()->never();
         expect($this->dao)->updateParentProject()->once();
 
-        $set = $this->hierarchy_factory->setParentProject(185, 59);
+        $set = $this->hierarchy_manager->setParentProject(185, 59);
         $this->assertTrue($set);
     }
 
@@ -87,50 +87,50 @@ class Project_HierarchyFactoryTest extends TuleapTestCase {
 
         $parent_project_already_saved = stub('Project')->getId()->returns(52);
 
-        stub($this->hierarchy_factory)->getParentProject()->returns($parent_project_already_saved);
+        stub($this->hierarchy_manager)->getParentProject()->returns($parent_project_already_saved);
 
         expect($this->dao)->removeParentProject()->once();
         expect($this->dao)->addParentProject()->never();
         expect($this->dao)->updateParentProject()->never();
 
-        $set = $this->hierarchy_factory->setParentProject(185, null);
+        $set = $this->hierarchy_manager->setParentProject(185, null);
         $this->assertTrue($set);
     }
 
     public function testSetParentProjectReturnsFalseIfProjectIsAncestorOfParent() {
         $project_manager   = stub('ProjectManager')->_getDao()->returns($this->dao);
-        $hierarchy_factory = partial_mock('Project_HierarchyFactory', array('getParentProject', 'getAllParents'), array($project_manager));
+        $hierarchy_manager = partial_mock('Project_HierarchyManager', array('getParentProject', 'getAllParents'), array($project_manager));
 
         stub($this->dao)->addParentProject()->returns(true);
-        stub($hierarchy_factory)->getAllParents(185)->returns(array(135));
-        stub($hierarchy_factory)->getParentProject(135)->returns(null);
+        stub($hierarchy_manager)->getAllParents(185)->returns(array(135));
+        stub($hierarchy_manager)->getParentProject(135)->returns(null);
 
-        $set = $hierarchy_factory->setParentProject(135, 185);
+        $set = $hierarchy_manager->setParentProject(135, 185);
         $this->assertFalse($set);
     }
 }
 
-class Project_HierarchyFactoryAllParentsTest extends TuleapTestCase {
+class Project_HierarchyManagerAllParentsTest extends TuleapTestCase {
 
     private $dao;
 
-    /** @var Project_HierarchyFactory */
-    private $hierarchy_factory;
+    /** @var Project_HierarchyManager */
+    private $hierarchy_manager;
 
     public function setUp() {
         parent::setUp();
 
         $this->dao = mock('ProjectDao');
         $project_manager = stub('ProjectManager')->_getDao()->returns($this->dao);
-        $this->hierarchy_factory = partial_mock('Project_HierarchyFactory', array('getParentProject'), array($project_manager));
+        $this->hierarchy_manager = partial_mock('Project_HierarchyManager', array('getParentProject'), array($project_manager));
     }
 
 
     public function testGetAllParentsReturnsAnEmptyArrayIfTheProjectIsOrphan() {
         $project_id = 145;
-        stub($this->hierarchy_factory)->getParentProject(145)->returns(false);
+        stub($this->hierarchy_manager)->getParentProject(145)->returns(false);
 
-        $result = $this->hierarchy_factory->getAllParents($project_id);
+        $result = $this->hierarchy_manager->getAllParents($project_id);
         $this->assertArrayEmpty($result);
     }
 
@@ -138,10 +138,10 @@ class Project_HierarchyFactoryAllParentsTest extends TuleapTestCase {
         $father_project = stub('Project')->getId()->returns(247);
         $project_id     = 145;
 
-        stub($this->hierarchy_factory)->getParentProject(145)->returns($father_project);
-        stub($this->hierarchy_factory)->getParentProject(247)->returns(false);
+        stub($this->hierarchy_manager)->getParentProject(145)->returns($father_project);
+        stub($this->hierarchy_manager)->getParentProject(247)->returns(false);
 
-        $result   = $this->hierarchy_factory->getAllParents($project_id);
+        $result   = $this->hierarchy_manager->getAllParents($project_id);
         $expected = array(247);
 
         $this->assertArrayNotEmpty($result);
@@ -154,12 +154,12 @@ class Project_HierarchyFactoryAllParentsTest extends TuleapTestCase {
         $mother_project             = stub('Project')->getId()->returns(222);
         $project_id                 = 111;
 
-        stub($this->hierarchy_factory)->getParentProject(111)->returns($mother_project);
-        stub($this->hierarchy_factory)->getParentProject(222)->returns($grand_mother_project);
-        stub($this->hierarchy_factory)->getParentProject(333)->returns($great_grand_mother_project);
-        stub($this->hierarchy_factory)->getParentProject(444)->returns(false);
+        stub($this->hierarchy_manager)->getParentProject(111)->returns($mother_project);
+        stub($this->hierarchy_manager)->getParentProject(222)->returns($grand_mother_project);
+        stub($this->hierarchy_manager)->getParentProject(333)->returns($great_grand_mother_project);
+        stub($this->hierarchy_manager)->getParentProject(444)->returns(false);
 
-        $result   = $this->hierarchy_factory->getAllParents($project_id);
+        $result   = $this->hierarchy_manager->getAllParents($project_id);
         $expected = array(
             222,
             333,

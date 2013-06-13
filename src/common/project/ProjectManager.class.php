@@ -19,7 +19,7 @@
  */
 require_once('Project.class.php');
 require_once('common/dao/ProjectDao.class.php');
-require_once('common/project/Hierarchy/HierarchyFactory.class.php');
+require_once('common/project/Hierarchy/HierarchyManager.class.php');
 
 /**
  * Provide access to projects
@@ -42,9 +42,9 @@ class ProjectManager {
     private static $_instance;
 
     /**
-     * @var Project_HierarchyFactory
+     * @var Project_HierarchyManager
      */
-    private $hierarchy_factory;
+    private $hierarchy_manager;
 
     /**
      * A private constructor; prevents direct creation of object
@@ -506,7 +506,7 @@ class ProjectManager {
      * @return Boolean
      */
     public function setParentProject($group_id, $parent_group_id) {
-        return $this->getHierarchyFactory()->setParentProject($group_id, $parent_group_id);
+        return $this->getHierarchyManager()->setParentProject($group_id, $parent_group_id);
     }
 
     /**
@@ -514,7 +514,7 @@ class ProjectManager {
      * @return Project | null
      */
     public function getParentProject($group_id) {
-        return $this->getHierarchyFactory()->getParentProject($group_id);
+        return $this->getHierarchyManager()->getParentProject($group_id);
     }
 
     /**
@@ -523,18 +523,18 @@ class ProjectManager {
      * @return Project[]
      */
     public function getChildProjects($group_id) {
-        return $this->hierarchy_factory->getChildProjects($group_id);
+        return $this->hierarchy_manager->getChildProjects($group_id);
     }
 
     /**
-     * @return Project_HierarchyFactory
+     * @return Project_HierarchyManager
      */
-    private function getHierarchyFactory() {
-        if (! $this->hierarchy_factory) {
-            $this->hierarchy_factory = new Project_HierarchyFactory($this);
+    private function getHierarchyManager() {
+        if (! $this->hierarchy_manager) {
+            $this->hierarchy_manager = new Project_HierarchyManager($this);
         }
 
-        return $this->hierarchy_factory;
+        return $this->hierarchy_manager;
     }
 }
 

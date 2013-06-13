@@ -68,7 +68,7 @@ if ($valid_data==1) {
 		
 		$currentform=trim($request->get("form_".$descfieldsinfos[$i]["group_desc_id"]));
 		
-		
+
 		
 		for($j=0;$j<sizeof($descfieldsvalue);$j++){
 		
@@ -99,17 +99,6 @@ if ($valid_data==1) {
 					$updatedesc=1;
 				}	
 			}
-
-                        /*
-                         * Setting parent project
-                         */
-                        $parent_id = null;
-
-                        if ($request->existAndNonEmpty('parent_project')) {
-                            $parent_id = $project_manager->getProjectFromAutocompleter($request->get('parent_project'))->getID();
-                        }
-
-                        $set_parent = $project_manager->setParentProject($group_id, $parent_id);
 		}else{
 			if(isset($previousvalue[$i])){	
 				$sql="DELETE FROM group_desc_value WHERE group_id=". db_ei($group_id) ." AND group_desc_id='".db_ei($descfieldsinfos[$i]["group_desc_id"])."'";
@@ -119,7 +108,17 @@ if ($valid_data==1) {
 				}	
 			}			
 		}
-	}	
+	}
+
+    /*
+     * Setting parent project
+     */
+    $parent_id = null;
+    if ($request->existAndNonEmpty('parent_project')) {
+        $parent_id = $project_manager->getProjectFromAutocompleter($request->get('parent_project'))->getID();
+    }
+    $set_parent = $project_manager->setParentProject($group_id, $parent_id);
+
     // in the database, these all default to '1', 
     // so we have to explicity set 0
     

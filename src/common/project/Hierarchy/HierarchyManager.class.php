@@ -19,7 +19,7 @@
  */
 
 
-class Project_HierarchyFactory {
+class Project_HierarchyManager {
 
     /**
      * @var ProjectDao
