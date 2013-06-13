@@ -1981,7 +1981,7 @@ class Layout extends Response {
         
         $output = "\t<CENTER>\n";
         $output .= "\t<FORM action=\"/search/\" method=\"post\">\n";
-
+        
         $output .= "\t<SELECT name=\"type_of_search\">\n";
         if ($is_bug_page && $group_id) {
             $output .= "\t<OPTION value=\"bugs\"".( $type_of_search == "bugs" ? " SELECTED" : "" ).">".$Language->getText('include_menu','bugs')."</OPTION>\n";
