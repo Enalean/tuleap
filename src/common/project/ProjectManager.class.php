@@ -19,6 +19,7 @@
  */
 require_once('Project.class.php');
 require_once('common/dao/ProjectDao.class.php');
+require_once('common/dao/ProjectHierarchyDao.class.php');
 require_once('common/project/Hierarchy/HierarchyManager.class.php');
 
 /**
@@ -542,7 +543,10 @@ class ProjectManager {
      */
     private function getHierarchyManager() {
         if (! $this->hierarchy_manager) {
-            $this->hierarchy_manager = new Project_HierarchyManager($this);
+            $this->hierarchy_manager = new Project_HierarchyManager(
+                $this,
+                new ProjectHierarchyDao(CodendiDataAccess::instance())
+            );
         }
 
         return $this->hierarchy_manager;

@@ -26,7 +26,7 @@ require_once 'HierarchyManagerAncestorIsSelfException.class.php';
 class Project_HierarchyManager {
 
     /**
-     * @var ProjectDao
+     * @var ProjectHierarchyDao
      */
     private $dao;
 
@@ -38,9 +38,9 @@ class Project_HierarchyManager {
     /**
      * @param ProjectManager $project_manager
      */
-    public function __construct(ProjectManager $project_manager) {
+    public function __construct(ProjectManager $project_manager, ProjectHierarchyDao $dao) {
         $this->project_manager = $project_manager;
-        $this->dao             = $project_manager->_getDao();
+        $this->dao             = $dao;
     }
 
     /**

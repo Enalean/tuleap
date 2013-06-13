@@ -31,9 +31,9 @@ class Project_HierarchyManagerTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->dao = mock('ProjectDao');
-        $project_manager = stub('ProjectManager')->_getDao()->returns($this->dao);
-        $this->hierarchy_manager = partial_mock('Project_HierarchyManager', array('getParentProject', 'getAllParents'), array($project_manager));
+        $this->dao = mock('ProjectHierarchyDao');
+        $project_manager = mock('ProjectManager');
+        $this->hierarchy_manager = partial_mock('Project_HierarchyManager', array('getParentProject', 'getAllParents'), array($project_manager, $this->dao));
 
         stub($this->hierarchy_manager)->getAllParents()->returns(array());
     }
@@ -99,8 +99,8 @@ class Project_HierarchyManagerTest extends TuleapTestCase {
     }
 
     public function testSetParentProjectThrowsExceptionIfProjectIsAncestorOfParent() {
-        $project_manager   = stub('ProjectManager')->_getDao()->returns($this->dao);
-        $hierarchy_manager = partial_mock('Project_HierarchyManager', array('getParentProject', 'getAllParents'), array($project_manager));
+        $project_manager   = mock('ProjectManager');
+        $hierarchy_manager = partial_mock('Project_HierarchyManager', array('getParentProject', 'getAllParents'), array($project_manager, $this->dao));
 
         stub($this->dao)->addParentProject()->returns(true);
         stub($hierarchy_manager)->getAllParents(185)->returns(array(135));
@@ -131,9 +131,9 @@ class Project_HierarchyManagerAllParentsTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->dao = mock('ProjectDao');
-        $project_manager = stub('ProjectManager')->_getDao()->returns($this->dao);
-        $this->hierarchy_manager = partial_mock('Project_HierarchyManager', array('getParentProject'), array($project_manager));
+        $this->dao = mock('ProjectHierarchyDao');
+        $project_manager = mock('ProjectManager');
+        $this->hierarchy_manager = partial_mock('Project_HierarchyManager', array('getParentProject'), array($project_manager, $this->dao));
     }
 
 

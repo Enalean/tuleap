@@ -61,6 +61,7 @@ if($Update){
 $project_manager = ProjectManager::instance();
 $current_user = $request->getCurrentUser();
 $set_parent = false;
+$valid_parent = true;
 if ($valid_data==1) {
 	
 	// insert descriptions 
@@ -126,10 +127,13 @@ if ($valid_data==1) {
             }
         } catch (Project_HierarchyManagerNoChangeException $e) {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
+            $valid_parent = false;
         } catch (Project_HierarchyManagerAncestorIsSelfException $e) {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','self_exception',(db_error() ? db_error() : ' ' )));
+            $valid_parent = false;
         } catch (Project_HierarchyManagerAlreadyAncestorException $e) {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','ancestor_exception',(db_error() ? db_error() : ' ' )));
+            $valid_parent = false;
         }
 
     // in the database, these all default to '1', 
@@ -143,10 +147,10 @@ if ($valid_data==1) {
 
     //echo $sql;
     $result=db_query($sql);
-    if ((!$result || db_affected_rows($result) < 1) && ($updatedesc==0)) {
+    if ((! $result || db_affected_rows($result) < 1) && ($updatedesc==0) && ! $set_parent) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
     } else {
-        if ($set_parent) {
+        if ($set_parent || (($result || db_affected_rows($result) > 0) && $valid_parent)) {
             $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_editgroupinfo','upd_success'));
         }
         group_add_history('changed_public_info','',$group_id);
