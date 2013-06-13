@@ -33,6 +33,7 @@
 
 .agiledashboard > .tab-content {
     padding-bottom: 1em;
+    overflow: visible;
 }
 
 .planning-backlog > table {
