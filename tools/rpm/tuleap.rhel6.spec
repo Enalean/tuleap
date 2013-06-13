@@ -604,7 +604,7 @@ else
     %{APP_DIR}/src/utils/php-launcher.sh %{APP_DIR}/src/utils/generate_language_files.php
 
     # Remove existing combined js
-    rm -f %{APP_DIR}/src/www/scripts/combined/codendi-*.js
+    %{__rm} -f %{APP_DIR}/src/www/scripts/combined/codendi-*.js
     %{__chown} %{APP_USER}:%{APP_USER} %{APP_CACHE_DIR}/lang/*.php
 
     # Remove soap cache
