@@ -25,6 +25,8 @@ require_once 'common/user/UserManager.class.php';
 
 class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 
+    const MAX_STEPS = 40;
+
     /**
      * build cumulative_flow chart properties
      *
@@ -60,44 +62,69 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
         $scale = $this->chart->getScale();
         $nbSteps = ceil(($stop - $start)/$timeFiller[$scale]);
 
-        for ($i = 0 ; $i <= $nbSteps; $i++ ) {
-            $timestamp = $start + ($i * $timeFiller[$scale]) ;
-
-            // Get the timestamp of the latest changeset BEFORE the stopdate
-            // Return: Array of IDs
-            $sql_latestChangeset = "SELECT MAX(id) as id
-                FROM `tracker_changeset` c2
-                WHERE c2.artifact_id = c.artifact_id
-                AND c2.submitted_on < $timestamp";
-
-            // Count the number of occurence of each label of the source field at the given date.
-            // Return {Label, count}
-            $sql_CountPerLabel = "SELECT val.id, label, count(*) as count
-	FROM tracker_field_list_bind_static_value val,  tracker_changeset_value_list l, `tracker_changeset` as c, `tracker_changeset_value` v
-	WHERE l.bindvalue_id = val.id
-	AND changeset_value_id = v.id
-	AND c.id = v.changeset_id
-	AND v.field_id = ". $observed_field_id . "
-	AND artifact_id in (". $this->artifacts['id'] .")
-	AND c.id = (". $sql_latestChangeset .")
-	GROUP BY label
-	ORDER BY rank";
-
-            //Grab the according color for each label
-            //Return {Label, count, r, g, b}
-            $sql = "SELECT val2.label, IFNULL(CountPerLabel.count, 0) as count, deco.red, deco.green, deco.blue
-FROM  tracker_field_list_bind_static_value val2
-LEFT JOIN tracker_field_list_bind_decorator deco ON (val2.id = deco.value_id)
-LEFT JOIN ( ". $sql_CountPerLabel .") as CountPerLabel
-ON CountPerLabel.id = val2.id
-WHERE val2.field_id = ". $observed_field_id;
+        if($nbSteps > GraphOnTrackersV5_CumulativeFlow_DataBuilder::MAX_STEPS) {
+            //STHAP
+            $GLOBALS['Response']->addFeedback('error', "Please choose a smaller period, or increase the scale");
+        } else {
+            //Grab the according colors and labels for this field
+            //Return {Label, r, g, b}
+            $sql = "SELECT val.id, val.label, deco.red, deco.green, deco.blue
+    FROM  tracker_field_list_bind_static_value val
+    LEFT JOIN tracker_field_list_bind_decorator deco ON (val.id = deco.value_id)
+    WHERE val.field_id = $observed_field_id
+    ORDER BY val.id";
 
             $res = db_query($sql);
-
-            $result[$timestamp] = array();
+            $labels = array();
+            $resultTmp = array();
+            // Fetch the colors, and initialize an empty result array. => $tempData[timestamp][label_id] = 0
             while($data = db_fetch_array($res)) {
                $engine->colors[$data['label']] = $this->getColor($data);
-               $result[$timestamp][$data['label']] =  $data['count'];
+               $labels[$data['id']] = $data['label'];
+               for ($i = 0 ; $i <= $nbSteps; $i++ ) {
+                   $timestamp = $start + ($i * $timeFiller[$scale]) ;
+                   $resultTmp[$timestamp][$data['id']] =  0;//$tempData[$data['id']];
+               }
+            }
+
+            for ($i = 0 ; $i <= $nbSteps; $i++ ) {
+                $timestamp = $start + ($i * $timeFiller[$scale]) ;
+
+                // Get the timestamp of the latest changeset BEFORE the stopdate
+                // Return: Array of IDs
+                $sql = "SELECT MAX(id) as id
+                    FROM `tracker_changeset` c
+                    WHERE c.submitted_on < $timestamp
+                    AND c.artifact_id IN (". $this->artifacts['id'] .")
+                    GROUP BY artifact_id";
+
+                $res = db_query($sql);
+                $changesets = array();
+                while($data = db_fetch_array($res)) {
+                   $changesets[] = $data['id'];
+                }
+                // Count the number of occurence of each label of the source field at the given date.
+                // Return {Label, count}
+
+
+                $sql = "SELECT l.bindvalue_id, count(*) as count
+    	FROM `tracker_changeset` as c
+    	JOIN `tracker_changeset_value` v ON (v.changeset_id = c.id AND v.field_id = $observed_field_id )
+    	JOIN tracker_changeset_value_list l ON (l.changeset_value_id = v.id)
+    	WHERE artifact_id in (". $this->artifacts['id'] .")
+    	AND c.id IN (". implode(',', $changesets) .")
+    	GROUP BY l.bindvalue_id";
+
+                $res = db_query($sql);
+                while($data = db_fetch_array($res)) {
+                   $resultTmp[$timestamp][$data['bindvalue_id']] = intval($data['count']);
+                }
+
+                //Assemble all the gathered data into the result array
+                 $result[$timestamp] = array();
+                 foreach ($resultTmp[$timestamp] as $k => $v) {
+                    $result[$timestamp][$labels[$k]] = $v;
+                 }
             }
         }
 
