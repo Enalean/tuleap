@@ -32,6 +32,12 @@ var AutoCompleter = Class.create({
             this.element.defaultValueActsAsHint();
         }
 
+        if (this.options['allowNull']) {
+            this.element.observe('click', function(){
+                this.stopObserving('blur');
+            });
+        }
+
         var tokens = '';
         if(this.options.multiple == true) {
             tokens = [',', ';'];

@@ -32,7 +32,7 @@ Mock::generate('PFUser');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-class ProjectManagerTest extends UnitTestCase {
+class ProjectManagerTest extends TuleapTestCase {
 
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage();
@@ -239,6 +239,5 @@ class ProjectManagerTest extends UnitTestCase {
         $this->assertTrue($pm->checkRestrictedAccess($project));
         $pm->expectOnce('_getUserManager');
     }
-
 }
 ?>
