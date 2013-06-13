@@ -55,6 +55,11 @@ class AgileDashboardRouter {
      */
     private $planning_shortaccess_factory;
 
+    /**
+     * @var Planning_MilestoneControllerFactory
+     */
+    private $milestone_controller_factory;
+
     public function __construct(
         Plugin $plugin,
         Planning_MilestoneFactory $milestone_factory,
@@ -295,12 +300,36 @@ class AgileDashboardRouter {
         $user = $request->getCurrentUser();
         if (! $user || ! $user->useLabFeatures()) {
             $this->renderAction($default_controller, 'index', $request);
-            return;
         }
 
-        $request->set('is_top', true);
-        $controller = $this->milestone_controller_factory->getMilestoneController($request);
-        $this->renderAction($controller, 'showTop', $request);
+        $service = $this->getService($request);
+        if (! $service) {
+            exit_error(
+                $GLOBALS['Language']->getText('global', 'error'),
+                $GLOBALS['Language']->getText(
+                    'project_service',
+                    'service_not_used',
+                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'))
+            );
+        }
+
+        $toolbar     = array();
+        if ($this->userIsAdmin($request)) {
+            $toolbar[] = array(
+                'title' => $GLOBALS['Language']->getText('global', 'Admin'),
+                'url'   => AGILEDASHBOARD_BASE_URL .'/?'. http_build_query(array(
+                    'group_id' => $request->get('group_id'),
+                    'action'   => 'admin',
+                ))
+            );
+        }
+
+        $no_breadcrumbs = new BreadCrumb_NoCrumb();
+        $service->displayHeader($this->getHeaderTitle('showTop'), $no_breadcrumbs, $toolbar);
+        $controller = $this->milestone_controller_factory->getVirtualTopMilestoneController($request);
+
+        $this->executeAction($controller, 'showTop', array());
+        $this->displayFooter($request);
     }
 }
 

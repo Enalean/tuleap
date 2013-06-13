@@ -85,13 +85,6 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
      */
      private $start_date = null;
 
-     /**
-      * Does this Milestone correspond to a top Milestone.
-      *
-      * @var bool
-      */
-     private $is_top  = false;
-
     /**
      * @param Project $project
      * @param Planning $planning
@@ -271,22 +264,5 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
 
         return null;
     }
-
-    /**
-     * @return bool
-     */
-    public function isTop() {
-        return $this->is_top;
-    }
-
-    /**
-     * @param type $is_top
-     * @return Planning_ArtifactMilestone
-     */
-    public function setIsTop($is_top) {
-        $this->is_top = (bool) $is_top;
-        return $this;
-    }
 }
-
 ?>

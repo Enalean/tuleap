@@ -117,7 +117,6 @@ class Planning_MilestoneFactory {
      * @param Project $project
      * @param Integer $planning_id
      * @param Integer $artifact_id
-     * @param bool $is_top Do we want a bare milestone for top planning
      * 
      * @return Planning_Milestone
      * @throws Planning_VirtualTopMilestoneNoPlanningsException
@@ -128,7 +127,6 @@ class Planning_MilestoneFactory {
 
         if ($artifact && $artifact->userCanView($user)) {
             $milestone = new Planning_ArtifactMilestone($project, $planning, $artifact);
-            $milestone->setIsTop(false);
             $milestone->setAncestors($this->getMilestoneAncestors($user, $milestone));
             $this->updateMilestoneContextualInfo($user, $milestone);
             return $milestone;
@@ -313,9 +311,11 @@ class Planning_MilestoneFactory {
                 $planning = $this->planning_factory->getPlanningByPlanningTracker($sub_milestone_artifact->getTracker());
 
                 if ($planning) {
-                    $sub_milestones[] = new Planning_ArtifactMilestone($milestone->getProject(),
-                                                               $planning,
-                                                               $sub_milestone_artifact);
+                    $sub_milestones[] = new Planning_ArtifactMilestone(
+                        $milestone->getProject(),
+                        $planning,
+                        $sub_milestone_artifact
+                    );
                 }
             }
         }
