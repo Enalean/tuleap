@@ -58,15 +58,9 @@ class AgileDashboard_Milestone_Backlog_BacklogStrategyFactory {
     }
 
     public function getSelfBacklogStrategy(Planning_Milestone $milestone) {
-        if ($milestone instanceof Planning_ArtifactMilestone && $milestone->isTop()) {
-            $backlog_tracker = $milestone->getArtifact()->getTracker();
-        } else {
-            $backlog_tracker = $milestone->getPlanning()->getBacklogTracker();
-        }
-
         return new AgileDashboard_Milestone_Backlog_SelfBacklogStrategy(
             $this->getBacklogArtifacts($milestone),
-            $backlog_tracker
+            $milestone->getPlanning()->getBacklogTracker()
         );
     }
 
