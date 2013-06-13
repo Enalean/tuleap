@@ -14,7 +14,6 @@ require_once('www/tracker/include/ArtifactHtml.class.php');
 require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/Artifact.class.php');
 require_once('common/tracker/ArtifactFieldFactory.class.php');
-require_once('common/include/CSRFSynchronizerToken.class.php');
 
 
 $em =& EventManager::instance();   
@@ -22,8 +21,6 @@ $plugins_powered_search = false;
 $em->processEvent('plugins_powered_search', array('type_of_search' => $type_of_search,
                                                 'plugins_powered_search' => &$plugins_powered_search)); 
 
-$csrf = new CSRFSynchronizerToken('/search/index.php');
-$csrf->check();
 
 if ($type_of_search !== "tracker" && $type_of_search !== "wiki" && !$plugins_powered_search) {
     if (!$request->isAjax()) {

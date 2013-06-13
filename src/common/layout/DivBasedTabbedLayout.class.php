@@ -453,9 +453,6 @@ echo $this->outerTabs($params);
 		$output = '
 		<form action="/search/" method="post"><table style="text-align:left;float:right"><tr style="vertical-align:top;"><td>
 		';
-                $csrf    = new CSRFSynchronizerToken('/search/index.php');
-                $output .=  $csrf->fetchHTMLInput();
-
 		$output .= '<select style="font-size: x-small" name="type_of_search">';
         if ($is_bug_page && $group_id) {
             $output .= "\t<OPTION value=\"bugs\"".( $type_of_search == "bugs" ? " SELECTED" : "" ).">".$Language->getText('include_menu','bugs')."</OPTION>\n";
