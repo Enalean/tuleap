@@ -100,6 +100,8 @@ class Git_Driver_Gerrit_ProjectCreator {
             $this->recursivelyCreateUmbrellaProjects($gerrit_server, $parent_project);
         }
 
+        $this->membership_manager->createArrayOfGroupsForServer($gerrit_server, $ugroups);
+
         if (! $this->driver->doesTheParentProjectExist($gerrit_server, $project_name)) {
             $admin_group_name = $project_name.'/'.$admin_ugroup->getNormalizedName();
             $project_name = $this->driver->createProjectWithPermissionsOnly($gerrit_server, $project, $admin_group_name);

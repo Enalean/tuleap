@@ -429,7 +429,7 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
 
         stub($this->membership_manager)->createArrayOfGroupsForServer()->returns(array($ugroup, $ugroup_project_admins));
 
-        expect($this->membership_manager)->createArrayOfGroupsForServer($this->server, array($ugroup, $ugroup_project_admins))->once();
+        expect($this->membership_manager)->createArrayOfGroupsForServer($this->server, array($ugroup, $ugroup_project_admins))->count(2);
         $this->project_creator->createGerritProject($this->server, $this->repository);
     }
 
@@ -448,7 +448,7 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
 
         stub($this->ugroup_manager)->getUGroups()->returns(array($ugroup_project_members, $ugroup_another_group, $ugroup_project_admins));
 
-        expect($this->membership_manager)->createArrayOfGroupsForServer($this->server, array($ugroup_project_members, $ugroup_another_group, $ugroup_project_admins))->once();
+        expect($this->membership_manager)->createArrayOfGroupsForServer($this->server, array($ugroup_project_members, $ugroup_another_group, $ugroup_project_admins))->count(2);
         stub($this->membership_manager)->createArrayOfGroupsForServer()->returns(array($ugroup_project_members, $ugroup_another_group, $ugroup_project_admins));
 
         $this->project_creator->createGerritProject($this->server, $this->repository);
@@ -547,6 +547,16 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
 
         expect($this->driver)->createProjectWithPermissionsOnly($this->server, $this->parent_project, $this->project_admins_gerrit_parent_name)->at(0);
         expect($this->driver)->createProjectWithPermissionsOnly($this->server, $this->project, $this->project_admins_gerrit_name)->at(1);
+
+        $this->project_creator->createGerritProject($this->server, $this->repository);
+    }
+
+    public function itMigratesTheUserGroupsAlsoForParentUmbrellaProjects() {
+        stub($this->project_manager)->getParentProject($this->project->getID())->returns($this->parent_project);
+        stub($this->project_manager)->getParentProject($this->parent_project->getID())->returns(null);
+
+        // Once for the initial project, and one time for each project in the hierarchy
+        expect($this->membership_manager)->createArrayOfGroupsForServer()->count(3);
 
         $this->project_creator->createGerritProject($this->server, $this->repository);
     }
