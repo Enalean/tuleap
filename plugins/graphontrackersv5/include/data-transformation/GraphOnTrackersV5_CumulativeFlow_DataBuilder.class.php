@@ -25,7 +25,7 @@ require_once 'common/user/UserManager.class.php';
 
 class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 
-    const MAX_STEPS = 99;
+    const MAX_STEPS = 75;
     protected $timeFiller;
     protected $startDate;
     protected $stopDate;
@@ -70,6 +70,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 
         if($this->nbSteps > GraphOnTrackersV5_CumulativeFlow_DataBuilder::MAX_STEPS) {
             //STHAP
+            echo " <p class='feedback_error'>Please choose a smaller period, or increase the scale</p>";
             $GLOBALS['Response']->addFeedback('error', "Please choose a smaller period, or increase the scale");
         } else {
             $tmpResult = $this->initEmptyResultArrayFromField($engine);

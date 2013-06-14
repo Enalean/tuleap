@@ -28,7 +28,11 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
     public $stop_date;
     public $start_date;
     public $color_set;
+    public $keys;
+    public $nbOpt;
 
+    const WIDTH_PER_POINT = 100;
+    const MARGIN = 200;
     function validData(){
 
         if ($this->start_date && $this->start_date > 0 && $this->hasData()){
@@ -46,11 +50,8 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
         require_once('common/chart/Chart.class.php');
 
         if ($this->width == 0) {
-            //$this->width = ( nbOfPoint * sizePerPoint ) + (2 * sizeOfBorderPadding)
-            $this->width = (count($this->data)*100)+(2*150);
+            $this->width = (count($this->data)* GraphOnTrackersV5_Engine_CumulativeFlow::WIDTH_PER_POINT)+(GraphOnTrackersV5_Engine_CumulativeFlow::MARGIN);
         }
-
-        $right_margin = 50;
 
         foreach ($this->data as $date => $label)
             $dates[] = date('M-d', $date);
@@ -65,27 +66,20 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
             $this->description = "";
         }
         $this->graph->subtitle->Set($this->description);
-
-        $keys = array_keys($this->data[$this->start_date]);
-        $nbOpt = count($keys);
-        foreach ($this->data as $date => $row) {
-            for($i = 1; $i < $nbOpt ;$i++) {
-                if($this->data[$date][$keys[$i]]!==null){
-                    $this->data[$date][$keys[$i]] += $this->data[$date][$keys[$i-1]];
-                }
-            }
-        }
+        $this->keys = array_keys($this->data[$this->start_date]);
+        $this->nbOpt = count($this->keys);
+        $this->stackDataCount();
         $this->graph->ygrid->SetFill(true,'#F3FFFF@0.5','#FFFFFF@0.5');
 
-        for($i = $nbOpt-1; $i >= 0; $i--) {
+        for($i = $this->nbOpt-1; $i >= 0; $i--) {
             $lineData = array();
             foreach ($this->data as $data => $row) {
-                $lineData[] = $row[$keys[$i]];
+                $lineData[] = $row[$this->keys[$i]];
             }
             $line = new LinePlot($lineData);
-            $line->SetFillColor($colors[$keys[$i]]);
+            $line->SetFillColor($colors[$this->keys[$i]]);
             $line->SetColor('#000');
-            $line->SetLegend($keys[$i]);
+            $line->SetLegend($this->keys[$i]);
             $this->graph->Add($line);
         }
         return $this->graph;
@@ -97,6 +91,20 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
             $sumData += array_sum($row);
         }
         return (count(reset($this->data)) > 0) && $sumData > 0;
+    }
+
+    /**
+     *
+     * Stack the counts to see each line on top of each other.
+     */
+    private function stackDataCount() {
+        foreach ($this->data as $date => $row) {
+            for($i = 1; $i < $this->nbOpt ;$i++) {
+                if($this->data[$date][$this->keys[$i]]!==null){
+                    $this->data[$date][$this->keys[$i]] += $this->data[$date][$this->keys[$i-1]];
+                }
+            }
+        }
     }
 }
 ?>
