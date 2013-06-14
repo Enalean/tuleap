@@ -2,10 +2,12 @@ Version 6.2 (Not released yet)
 	* Introduce project hierarchy definition.
 	* Fix XSS injection in Forums, Wiki, Search, People resume (contrib STMicroelectronics).
 	* Add tool to dump a forum of a project
+	* Attempt to fix bug when invalidating combined js cache
+	* Fix notice error on service management page
 
 	== Plugins ==
-	* agiledashboard: 0.84
-	* git: 3.23
+	* agiledashboard: 0.85
+	* git: 3.24
 	* tracker: 5.131
 	* mediawiki: 0.12
 	* statistics: 0.28

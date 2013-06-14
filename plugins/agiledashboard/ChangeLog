@@ -1,3 +1,7 @@
+Version 0.85 - Tuleap 6.2
+    * Fix border-spacing for top content view
+    * Fix overflow which prevent dropdowns to display when no content
+
 Version 0.84 - Tuleap 6.2
     * Story 3539: initiate product backlog. Added two new panes for the top backlog
 
