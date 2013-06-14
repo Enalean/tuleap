@@ -19,6 +19,7 @@
  */
 
 class AgileDashboard_Milestone_Pane_TopPlanning_PaneInfo extends AgileDashboard_PaneInfo {
+    const ACTION = 'show-top';
     const IDENTIFIER = 'topplanning';
 
     /** @var Tracker */

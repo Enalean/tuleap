@@ -675,7 +675,7 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         );
 
         stub($this->artifact_factory)->getArtifactsByTrackerId()->returns($my_artifacts);
-        stub($this->planning_factory)->buildNewPlanning()->returns(mock('Planning'));
+        stub($this->planning_factory)->getRootPlanning()->returns(mock('Planning'));
 
         $milestones = $this->milestone_factory->getSubMilestones($this->user, $this->top_milestone);
 
@@ -702,7 +702,7 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         );
 
         stub($this->artifact_factory)->getArtifactsByTrackerId()->returns($my_artifacts);
-        stub($this->planning_factory)->buildNewPlanning()->returns(mock('Planning'));
+        stub($this->planning_factory)->getRootPlanning()->returns(mock('Planning'));
 
         $milestones = $this->milestone_factory->getSubMilestones($this->user, $this->top_milestone);
 

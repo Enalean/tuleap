@@ -19,7 +19,8 @@
  */
 
 class AgileDashboard_Milestone_Pane_TopContent_PaneInfo extends AgileDashboard_PaneInfo {
-    const IDENTIFIER = 'topblcontent';
+    const ACTION         = 'show-top';
+    const IDENTIFIER     = 'topblcontent';
 
     /** @var string */
     private $theme_path;

@@ -61,7 +61,7 @@ class Planning_VirtualTopMilestoneController extends MVC2_PluginController {
     public function showTop() {
         try {
             $this->generateVirtualTopMilestone();
-        } catch (Planning_VirtualTopMilestoneNoPlanningsException $e) {
+        } catch (Planning_NoPlanningsException $e) {
             $query_parts = array('group_id' => $this->request->get('group_id'));
             $this->redirect($query_parts);
         }

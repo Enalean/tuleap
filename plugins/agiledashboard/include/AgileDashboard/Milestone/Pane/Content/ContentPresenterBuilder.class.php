@@ -54,28 +54,13 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder {
             $todo_collection,
             $this->collection_factory->getDoneCollection($user, $milestone, $backlog_strategy, $redirect_to_self),
             $todo_collection->getParentItemName(),
-            $item_tracker->getName(),
+            $backlog_strategy->getBacklogItemName(),
             $can_add_backlog_item,
             $new_backlog_item_url
         );
-        if ($backlog_strategy instanceof AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy) {
-            $descendant_tracker = $backlog_strategy->getDescendantTracker();
-            $content_presenter->setBacklogElements($this->getCreateNewPresenter($user, $milestone, $descendant_tracker, $redirect_to_self));
-            $content_presenter->setDescendantItemName($descendant_tracker->getName());
-        }
-        return $content_presenter;
-    }
+        $content_presenter->setBacklogParentElements($backlog_strategy->getBacklogParentElements($user, $redirect_to_self));
 
-    private function getCreateNewPresenter(PFUser $user, Planning_ArtifactMilestone $milestone, Tracker $item_tracker, $redirect_to_self) {
-        $create_new = array();
-        foreach ($this->strategy_factory->getSelfBacklogStrategy($milestone)->getArtifacts($user) as $artifact) {
-            /* @var Tracker_Artifact $artifact */
-            $create_new[] = new AgileDashboard_Milestone_Pane_Content_ContentNewPresenter(
-                $artifact->getTitle(),
-                $artifact->getSubmitNewArtifactLinkedToMeUri($item_tracker).'&'.$redirect_to_self
-            );
-        }
-        return $create_new;
+        return $content_presenter;
     }
 
     private function canAddBacklogItem(PFUser $user, Planning_ArtifactMilestone $milestone) {

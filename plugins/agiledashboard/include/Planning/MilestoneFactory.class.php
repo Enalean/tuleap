@@ -119,7 +119,7 @@ class Planning_MilestoneFactory {
      * @param Integer $artifact_id
      * 
      * @return Planning_Milestone
-     * @throws Planning_VirtualTopMilestoneNoPlanningsException
+     * @throws Planning_NoPlanningsException
      */
     public function getBareMilestone(PFUser $user, Project $project, $planning_id, $artifact_id) {
         $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
@@ -146,9 +146,7 @@ class Planning_MilestoneFactory {
     public function getVirtualTopMilestone(PFUser $user, Project $project) {
         return new Planning_VirtualTopMilestone(
             $project,
-            $user,
-            $this->tracker_factory,
-            $this->planning_factory
+            $this->planning_factory->getVirtualTopPlanning($user, $project->getID())
         );
     }
 
@@ -337,6 +335,7 @@ class Planning_MilestoneFactory {
             return $milestones;
         }
 
+        $root_planning = $this->planning_factory->getRootPlanning($user, $top_milestone->getProject()->getID());
         $milestone_planning_tracker_id = $top_milestone->getPlanning()->getPlanningTrackerId();
         $artifacts = $this->artifact_factory->getArtifactsByTrackerId($milestone_planning_tracker_id);
 
@@ -345,7 +344,7 @@ class Planning_MilestoneFactory {
                 if ($artifact->getLastChangeset() && $artifact->userCanView($user)) {
                     $milestones[] = new Planning_ArtifactMilestone(
                         $top_milestone->getProject(),
-                        $top_milestone->getPlanning(),
+                        $root_planning,
                         $artifact
                     );
                 }

@@ -58,25 +58,7 @@ class AgileDashboard_Milestone_Pane_TopContent_PresenterBuilder {
             $new_backlog_item_url
         );
 
-        if ($backlog_strategy instanceof AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy) {
-            $descendant_tracker = $backlog_strategy->getDescendantTracker();
-            $content_presenter->setBacklogElements($this->getCreateNewPresenter($user, $milestone, $descendant_tracker, $redirect_to_self));
-            $content_presenter->setDescendantItemName($descendant_tracker->getName());
-        }
-
         return $content_presenter;
-    }
-
-    private function getCreateNewPresenter(PFUser $user, Planning_Milestone $milestone, Tracker $item_tracker, $redirect_to_self) {
-        $create_new = array();
-        foreach ($this->strategy_factory->getSelfBacklogStrategy($milestone)->getArtifacts($user) as $artifact) {
-            /* @var Tracker_Artifact $artifact */
-            $create_new[] = new AgileDashboard_Milestone_Pane_Content_ContentNewPresenter(
-                $artifact->getTitle(),
-                $artifact->getSubmitNewArtifactLinkedToMeUri($item_tracker).'&'.$redirect_to_self
-            );
-        }
-        return $create_new;
     }
 
     private function canAddBacklogItem(PFUser $user, Planning_Milestone $milestone) {
