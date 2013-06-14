@@ -204,8 +204,9 @@ if (($func=='do_create')||($func=='do_update')) {
 
 }
 
+$scope = $request->getValidated('scope', 'string', '');
+
 if ($func=='do_create') {
-    $scope = $request->getValidated('scope', 'string', '');
 
     if ($short_name) {
         // Check that the short_name is not already used
