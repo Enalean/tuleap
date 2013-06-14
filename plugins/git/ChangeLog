@@ -1,3 +1,6 @@
+Version 3.25 - Tuleap 6.2
+    * Story #3633 - Gerrit projects inherits Tuleap parents information
+
 Version 3.24 - Tuleap 6.2
     * story #3634: my parent project are migrated when I migrate a repository
 
