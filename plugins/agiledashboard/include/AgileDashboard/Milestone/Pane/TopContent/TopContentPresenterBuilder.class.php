@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_TopContent_PresenterBuilder {
+class AgileDashboard_Milestone_Pane_TopContent_TopContentPresenterBuilder {
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
     private $strategy_factory;
@@ -43,7 +43,7 @@ class AgileDashboard_Milestone_Pane_TopContent_PresenterBuilder {
         $redirect_paremeter   = new Planning_MilestoneRedirectParameter();
         $backlog_strategy     = $this->strategy_factory->getSelfBacklogStrategy($milestone);
         $item_tracker         = $backlog_strategy->getItemTracker();
-        $identifier           = AgileDashboard_Milestone_Pane_TopContent_PaneInfo::IDENTIFIER;
+        $identifier           = AgileDashboard_Milestone_Pane_TopContent_TopContentPaneInfo::IDENTIFIER;
         $redirect_to_self     = $redirect_paremeter->getPlanningRedirectToSelf($milestone, $identifier);
         $can_add_backlog_item = $this->canAddBacklogItem($user, $milestone);
         $new_backlog_item_url = $item_tracker->getSubmitUrl().'&'.$redirect_to_self;

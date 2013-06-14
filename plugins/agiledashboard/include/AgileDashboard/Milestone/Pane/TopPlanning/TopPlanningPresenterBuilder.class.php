@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_TopPlanning_PresenterBuilder {
+class AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningPresenterBuilder {
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory */
     private $collection_factory;
@@ -49,7 +49,7 @@ class AgileDashboard_Milestone_Pane_TopPlanning_PresenterBuilder {
     public function getMilestoneTopPlanningPresenter(PFUser $user, Planning_Milestone $milestone, Tracker $milestone_tracker) {
         $redirect_paremeter     = new Planning_MilestoneRedirectParameter();
         $backlog_strategy       = $this->strategy_factory->getSelfBacklogStrategy($milestone);
-        $redirect_to_self       = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_TopPlanning_PaneInfo::IDENTIFIER);
+        $redirect_to_self       = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningPaneInfo::IDENTIFIER);
 
         $backlog_collection = $this->collection_factory->getUnplannedOpenCollection(
             $user,
