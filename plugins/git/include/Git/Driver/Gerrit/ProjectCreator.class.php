@@ -98,6 +98,7 @@ class Git_Driver_Gerrit_ProjectCreator {
 
         if ($parent_project) {
             $this->recursivelyCreateUmbrellaProjects($gerrit_server, $parent_project);
+            $this->driver->setProjectInheritance($gerrit_server, $project_name, $parent_project->getUnixName());
         }
 
         $this->membership_manager->createArrayOfGroupsForServer($gerrit_server, $ugroups);

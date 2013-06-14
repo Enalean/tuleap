@@ -560,5 +560,22 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
 
         $this->project_creator->createGerritProject($this->server, $this->repository);
     }
+
+    public function itCallsTheDriverToSetTheParentProjectIfAny() {
+        stub($this->project_manager)->getParentProject($this->project->getID())->returns($this->parent_project);
+        stub($this->project_manager)->getParentProject($this->parent_project->getID())->returns(null);
+
+        expect($this->driver)->setProjectInheritance($this->server, $this->project->getUnixName(), $this->parent_project->getUnixName())->once();
+
+        $this->project_creator->createGerritProject($this->server, $this->repository);
+    }
+
+    public function itDoesntCallTheDriverToSetTheParentProjectIfNone() {
+        stub($this->project_manager)->getParentProject($this->project->getID())->returns(null);
+
+        expect($this->driver)->setProjectInheritance($this->server, $this->project->getUnixName(), $this->parent_project->getUnixName())->never();
+
+        $this->project_creator->createGerritProject($this->server, $this->repository);
+    }
 }
 ?>
