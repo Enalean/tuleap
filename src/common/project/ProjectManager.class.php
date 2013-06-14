@@ -19,6 +19,7 @@
  */
 require_once('Project.class.php');
 require_once('common/dao/ProjectDao.class.php');
+require_once('common/dao/ProjectHierarchyDao.class.php');
 require_once('common/project/Hierarchy/HierarchyManager.class.php');
 
 /**
@@ -504,9 +505,20 @@ class ProjectManager {
      * @param int $group_id
      * @param int $parent_group_id
      * @return Boolean
+     * @throws Project_HierarchyManagerNoChangeException
+     * @throws Project_HierarchyManagerAlreadyAncestorException
+     * @throws Project_HierarchyManagerAncestorIsSelfException
      */
     public function setParentProject($group_id, $parent_group_id) {
         return $this->getHierarchyManager()->setParentProject($group_id, $parent_group_id);
+    }
+
+    /**
+     * @param int $group_id
+     * @return Boolean
+     */
+    public function removeParentProject($group_id) {
+        return $this->getHierarchyManager()->removeParentProject($group_id);
     }
 
     /**
@@ -531,7 +543,10 @@ class ProjectManager {
      */
     private function getHierarchyManager() {
         if (! $this->hierarchy_manager) {
-            $this->hierarchy_manager = new Project_HierarchyManager($this);
+            $this->hierarchy_manager = new Project_HierarchyManager(
+                $this,
+                new ProjectHierarchyDao(CodendiDataAccess::instance())
+            );
         }
 
         return $this->hierarchy_manager;

@@ -19,10 +19,14 @@
  */
 
 
+require_once 'HierarchyManagerNoChangeException.class.php';
+require_once 'HierarchyManagerAlreadyAncestorException.class.php';
+require_once 'HierarchyManagerAncestorIsSelfException.class.php';
+
 class Project_HierarchyManager {
 
     /**
-     * @var ProjectDao
+     * @var ProjectHierarchyDao
      */
     private $dao;
 
@@ -34,28 +38,29 @@ class Project_HierarchyManager {
     /**
      * @param ProjectManager $project_manager
      */
-    public function __construct(ProjectManager $project_manager) {
+    public function __construct(ProjectManager $project_manager, ProjectHierarchyDao $dao) {
         $this->project_manager = $project_manager;
-        $this->dao             = $project_manager->_getDao();
+        $this->dao             = $dao;
     }
 
     /**
      * @param int $project_id
      * @param int $parent_project_id
      * @return Boolean
+     * @throws Project_HierarchyManagerNoChangeException
+     * @throws Project_HierarchyManagerAlreadyAncestorException
+     * @throws Project_HierarchyManagerAncestorIsSelfException
      */
     public function setParentProject($project_id, $parent_project_id) {
-        $parent = $this->getParentProject($project_id);
+        $current_parent = $this->getParentProject($project_id);
 
-        if ($this->doesParentMatch($parent, $parent_project_id) || $this->isProjectInParents($project_id, $parent_project_id)) {
-            return false;
-        }
+        $this->validateParent($project_id, $parent_project_id, $current_parent);
 
         if (! $parent_project_id) {
             return $this->removeParentProject($project_id);
         }
 
-        if ($parent) {
+        if ($current_parent) {
             return $this->updateParentProject($project_id, $parent_project_id);
         }
 
@@ -63,20 +68,28 @@ class Project_HierarchyManager {
     }
 
     /**
-     * @param int $parent
+     * @param int $project_id
      * @param int $parent_project_id
+     * @param Project|null $current_parent
      * @return boolean
      */
-    private function doesParentMatch($parent, $parent_project_id) {
-        if ($parent && $parent->getID() === $parent_project_id) {
-            return true;
+    private function validateParent($project_id, $parent_project_id, $current_parent) {
+        if (! $current_parent && ! $parent_project_id) {
+            throw new Project_HierarchyManagerNoChangeException();
         }
 
-        if (! $parent && ! $parent_project_id) {
-            return true;
+        if ($current_parent && $current_parent->getID() === $parent_project_id) {
+            throw new Project_HierarchyManagerNoChangeException();
         }
 
-        return false;
+        $parents = $this->getAllParents($parent_project_id);
+        if (in_array($project_id, $parents)) {
+            throw new Project_HierarchyManagerAlreadyAncestorException();
+        }
+
+        if ($project_id == $parent_project_id) {
+            throw new Project_HierarchyManagerAncestorIsSelfException();
+        }
     }
 
     /**
@@ -101,7 +114,7 @@ class Project_HierarchyManager {
      * @param int $project_id
      * @return Boolean
      */
-    private function removeParentProject($project_id) {
+    public function removeParentProject($project_id) {
         return $this->getDao()->removeParentProject($project_id);
     }
 
@@ -150,17 +163,6 @@ class Project_HierarchyManager {
         }
 
         return $parent_ids;
-    }
-
-    /**
-     * @param int $project_id
-     * @param int $parent_project_id
-     * @return boolean
-     */
-    private function isProjectInParents($project_id, $parent_project_id) {
-        $parents = $this->getAllParents($parent_project_id);
-
-        return in_array($project_id, $parents);
     }
 
     /**
