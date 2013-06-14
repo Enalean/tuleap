@@ -159,10 +159,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'closed_items_intro', $this->backlog_item_type);
     }
 
-    public function closed_items_nothing_yet() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'closed_items_nothing_yet');
-    }
-
     public function open_items_title() {
         $key = 'open_items_title';
         if ($this->has_nothing()) {

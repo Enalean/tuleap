@@ -49,9 +49,11 @@ class AgileDashboard_Milestone_Pane_TopContent_PresenterBuilder {
         $new_backlog_item_url = $item_tracker->getSubmitUrl().'&'.$redirect_to_self;
 
         $todo_collection = $this->collection_factory->getUnplannedOpenCollection($user, $milestone, $backlog_strategy, $redirect_to_self);
+        $done_collection = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
 
-        $content_presenter = new AgileDashboard_Milestone_Pane_TopContent_Presenter(
+        $content_presenter = new AgileDashboard_Milestone_Pane_Content_ContentPresenter(
             $todo_collection,
+            $done_collection,
             $todo_collection->getParentItemName(),
             $item_tracker->getName(),
             $can_add_backlog_item,

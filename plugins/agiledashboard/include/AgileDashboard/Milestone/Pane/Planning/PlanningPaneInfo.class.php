@@ -32,6 +32,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo extends AgileDashb
         $this->theme_path           = $theme_path;
         $this->submilestone_tracker = $submilestone_tracker;
     }
+
     /**
      * @return string eg: 'cardwall'
      */
