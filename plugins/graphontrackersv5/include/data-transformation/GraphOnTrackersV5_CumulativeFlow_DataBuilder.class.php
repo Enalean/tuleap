@@ -25,7 +25,14 @@ require_once 'common/user/UserManager.class.php';
 
 class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 
-    const MAX_STEPS = 40;
+    const MAX_STEPS = 99;
+    protected $timeFiller;
+    protected $startDate;
+    protected $stopDate;
+    protected $scale;
+    protected $nbSteps;
+    protected $labels;
+    protected $observed_field_id;
 
     /**
      * build cumulative_flow chart properties
@@ -38,9 +45,18 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
         $form_element_factory = Tracker_FormElementFactory::instance();
         $observed_field       = $form_element_factory->getFormElementById($this->chart->getFieldId());
         $type                 = $form_element_factory->getType($observed_field);
+        $this->observed_field_id = $observed_field->getId();
+        $this->timeFiller = array(GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => 3600*24,
+            GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_WEEK => 3600*24*7,
+            GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => 3600*24*30.45
+        );
+        $this->startDate = $this->chart->getStartDate();
+        $this->stopDate = $this->chart->getStopDate() ? $this->chart->getStopDate() : time();
+        $this->scale = $this->chart->getScale();
+        $this->nbSteps = ceil(($this->stopDate - $this->startDate)/$this->timeFiller[$this->scale]);
 
         if ($this->isValidObservedField($observed_field, $type) && $this->isValidType($type)) {
-            $engine->data    = $this->getCumulativeFlowData($engine, $observed_field->getId(), $type);
+            $engine->data    = $this->getCumulativeFlowData($engine);
         }
 
         $engine->legend      = null;
@@ -49,85 +65,36 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
         $engine->stop_date   = $this->chart->getStopDate();
     }
 
-    protected function getCumulativeFlowData($engine, $observed_field_id, $type) {
+    protected function getCumulativeFlowData($engine) {
         $result = array();
-        $timeFiller = array(
-            GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => 3600*24,
-            GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_WEEK => 3600*24*7,
-            GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => 3600*24*30.45
-        );
 
-        $start = $this->chart->getStartDate();
-        $stop = $this->chart->getStopDate() ? $this->chart->getStopDate() : time();
-        $scale = $this->chart->getScale();
-        $nbSteps = ceil(($stop - $start)/$timeFiller[$scale]);
-
-        if($nbSteps > GraphOnTrackersV5_CumulativeFlow_DataBuilder::MAX_STEPS) {
+        if($this->nbSteps > GraphOnTrackersV5_CumulativeFlow_DataBuilder::MAX_STEPS) {
             //STHAP
             $GLOBALS['Response']->addFeedback('error', "Please choose a smaller period, or increase the scale");
         } else {
-            //Grab the according colors and labels for this field
-            //Return {Label, r, g, b}
-            $sql = "SELECT val.id, val.label, deco.red, deco.green, deco.blue
-    FROM  tracker_field_list_bind_static_value val
-    LEFT JOIN tracker_field_list_bind_decorator deco ON (val.id = deco.value_id)
-    WHERE val.field_id = $observed_field_id
-    ORDER BY val.id";
+            $tmpResult = $this->initEmptyResultArrayFromField($engine);
 
-            $res = db_query($sql);
-            $labels = array();
-            $resultTmp = array();
-            // Fetch the colors, and initialize an empty result array. => $tempData[timestamp][label_id] = 0
-            while($data = db_fetch_array($res)) {
-               $engine->colors[$data['label']] = $this->getColor($data);
-               $labels[$data['id']] = $data['label'];
-               for ($i = 0 ; $i <= $nbSteps; $i++ ) {
-                   $timestamp = $start + ($i * $timeFiller[$scale]) ;
-                   $resultTmp[$timestamp][$data['id']] =  0;//$tempData[$data['id']];
-               }
-            }
+            for ($i = 0 ; $i <= $this->nbSteps; $i++ ) {
+                $timestamp = $this->startDate + ($i * $this->timeFiller[$this->scale]) ;
+                $changesets = $this->getLastChangesetsBefore($timestamp);
 
-            for ($i = 0 ; $i <= $nbSteps; $i++ ) {
-                $timestamp = $start + ($i * $timeFiller[$scale]) ;
-
-                // Get the timestamp of the latest changeset BEFORE the stopdate
-                // Return: Array of IDs
-                $sql = "SELECT MAX(id) as id
-                    FROM `tracker_changeset` c
-                    WHERE c.submitted_on < $timestamp
-                    AND c.artifact_id IN (". $this->artifacts['id'] .")
-                    GROUP BY artifact_id";
-
-                $res = db_query($sql);
-                $changesets = array();
-                while($data = db_fetch_array($res)) {
-                   $changesets[] = $data['id'];
-                }
                 // Count the number of occurence of each label of the source field at the given date.
                 // Return {Label, count}
-
-
                 $sql = "SELECT l.bindvalue_id, count(*) as count
     	FROM `tracker_changeset` as c
-    	JOIN `tracker_changeset_value` v ON (v.changeset_id = c.id AND v.field_id = $observed_field_id )
+    	JOIN `tracker_changeset_value` v ON (v.changeset_id = c.id AND v.field_id = $this->observed_field_id )
     	JOIN tracker_changeset_value_list l ON (l.changeset_value_id = v.id)
     	WHERE artifact_id in (". $this->artifacts['id'] .")
     	AND c.id IN (". implode(',', $changesets) .")
     	GROUP BY l.bindvalue_id";
-
                 $res = db_query($sql);
                 while($data = db_fetch_array($res)) {
-                   $resultTmp[$timestamp][$data['bindvalue_id']] = intval($data['count']);
+                   $tmpResult[$timestamp][$data['bindvalue_id']] = intval($data['count']);
                 }
 
-                //Assemble all the gathered data into the result array
-                 $result[$timestamp] = array();
-                 foreach ($resultTmp[$timestamp] as $k => $v) {
-                    $result[$timestamp][$labels[$k]] = $v;
-                 }
+                $result[$timestamp] = $this->switchArrayKeys($tmpResult[$timestamp]);
             }
         }
-
         return $result;
     }
 
@@ -142,6 +109,71 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
      */
     protected function isValidType($type) {
         return in_array($type, array('sb'));
+    }
+
+    /**
+     *
+     * Fetch the colors, and initialize an empty result array. => $tempData[timestamp][label_id] = 0
+     * @param int $field_id ID of the observed field
+     * @return array $resultArray Initialized array for this graph
+     */
+    private function initEmptyResultArrayFromField($engine) {
+
+            //Return {Label, r, g, b}
+            $sql = "SELECT val.id, val.label, deco.red, deco.green, deco.blue
+    FROM  tracker_field_list_bind_static_value val
+    LEFT JOIN tracker_field_list_bind_decorator deco ON (val.id = deco.value_id)
+    WHERE val.field_id = $this->observed_field_id
+    ORDER BY val.id";
+            $res = db_query($sql);
+            $this->labels = array();
+            $resultArray = array();
+            $rolf = 1;
+            while($data = db_fetch_array($res)) {
+               $engine->colors[$data['label']] = $this->getColor($data);
+               $this->labels[$data['id']] = $data['label'];
+               for ($i = 0 ; $i <= $this->nbSteps; $i++ ) {
+                   $timestamp = $this->startDate + ($i * $this->timeFiller[$this->scale]) ;
+                   $resultArray[$timestamp][$data['id']] =  0;
+               }
+            }
+        return $resultArray;
+    }
+
+    /**
+     *
+     * Get the the last changeset BEFORE the timestamp for each artifact
+     * @param int $beforeTimestamp
+     * @return $changesets array of changeset_id
+     */
+    private function getLastChangesetsBefore($timestamp) {
+        $sql = "SELECT MAX(id) as id
+            FROM `tracker_changeset` c
+            WHERE c.submitted_on < $timestamp
+            AND c.artifact_id IN (". $this->artifacts['id'] .")
+            GROUP BY artifact_id";
+
+        $res = db_query($sql);
+        $changesets = array();
+        while($data = db_fetch_array($res)) {
+           $changesets[] = $data['id'];
+        }
+        return $changesets;
+    }
+
+    /**
+     *
+     * Switch field_value_id to field_value_label
+     * @param array $tmpArray Array to convert
+     * @return array $result Switched array
+     */
+    private function switchArrayKeys($tmpArray) {
+        $result = array();
+        foreach ($tmpArray as $k => $v) {
+            //echo'<pre>';var_dump($this->labels);echo'</pre>';exit(1);
+            $result[$this->labels[$k]] = $v;
+        }
+        return $result;
     }
 
 }
