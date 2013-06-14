@@ -455,7 +455,7 @@ class GitPlugin extends Plugin {
 
             foreach ($remote_servers as $server) {
                 $html .= '<li>
-                        <a href="'.$server->getHost().':'.$server->getHTTPPort().'/#/settings/ssh-keys">'.
+                        <a href="'.$server->getBaseUrl().'/#/settings/ssh-keys">'.
                             $server->getHost().'
                         </a>
                     </li>';
