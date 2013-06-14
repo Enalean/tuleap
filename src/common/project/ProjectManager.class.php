@@ -523,7 +523,7 @@ class ProjectManager {
      * @return Project[]
      */
     public function getChildProjects($group_id) {
-        return $this->hierarchy_manager->getChildProjects($group_id);
+        return $this->getHierarchyManager()->getChildProjects($group_id);
     }
 
     /**

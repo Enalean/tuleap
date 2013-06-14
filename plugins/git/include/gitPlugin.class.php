@@ -965,7 +965,8 @@ class GitPlugin extends Plugin {
             new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory()),
             $this->getGerritServerFactory(),
             $this->getLogger(),
-            $this->getUGroupManager()
+            $this->getUGroupManager(),
+            $this->getProjectManager()
         );
     }
 
