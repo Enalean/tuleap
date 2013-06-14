@@ -39,6 +39,7 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
     protected $gerrit_user;
     protected $gerrit_user_manager;
     protected $remote_server;
+    protected $project_manager;
 
     public function setUp() {
         Config::store();
@@ -55,10 +56,12 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
         $this->u_group2                              = mock('UGroup');
         $this->u_group3                              = mock('UGroup');
         $this->git_repository                        = mock('GitRepository');
+        $this->project_manager                       = mock('ProjectManager');
 
         stub($this->u_group)->getProject()->returns($this->project);
         stub($this->u_group2)->getProject()->returns($this->project);
         stub($this->u_group3)->getProject()->returns($this->project);
+        stub($this->project_manager)->getChildProjects()->returns(array());
 
         stub($this->remote_server_factory)->getServer()->returns($this->remote_server);
         stub($this->project)->getUnixName()->returns($this->project_name);
@@ -86,7 +89,8 @@ class Git_Driver_Gerrit_MembershipManager_NoGerritRepoTest extends Git_Driver_Ge
             $this->gerrit_user_manager,
             $this->remote_server_factory_without_gerrit,
             mock('Logger'),
-            mock('UGroupManager')
+            mock('UGroupManager'),
+            $this->project_manager
         );
         stub($this->remote_server_factory)->getServersForUGroup()->returns(array($this->remote_server));
     }
@@ -120,7 +124,8 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest extends Git
             $this->gerrit_user_manager,
             $this->remote_server_factory,
             mock('Logger'),
-            mock('UGroupManager')
+            mock('UGroupManager'),
+            $this->project_manager
         );
     }
 }
@@ -256,13 +261,20 @@ class Git_Driver_Gerrit_MembershipManager_ProjectAdminTest extends Git_Driver_Ge
 }
 
 class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCase {
+
+    /** @var ProjectManager */
+    protected $project_manager;
+
     public function setUp() {
         parent::setUp();
 
         $this->remote_server_factory                 = mock('Git_RemoteServer_GerritServerFactory');
         $this->remote_server                         = mock('Git_RemoteServer_GerritServer');
         $this->gerrit_user_manager                   = mock('Git_Driver_Gerrit_UserAccountManager');
+        $this->project_manager                       = mock('ProjectManager');
+
         stub($this->remote_server_factory)->getServersForUGroup()->returns(array($this->remote_server));
+        stub($this->project_manager)->getChildProjects()->returns(array());
 
         $this->driver = mock('Git_Driver_Gerrit');
 
@@ -275,7 +287,8 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
                 $this->gerrit_user_manager,
                 $this->remote_server_factory,
                 mock('Logger'),
-                mock('UGroupManager')
+                mock('UGroupManager'),
+                $this->project_manager
             )
         );
 
@@ -370,6 +383,9 @@ class Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest extends TuleapT
     /** @var UGroupManager */
     protected $ugroup_manager;
 
+    /** @var ProjectManager */
+    protected $project_manager;
+
 
 
     public function setUp() {
@@ -378,8 +394,10 @@ class Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest extends TuleapT
         $this->driver              = mock('Git_Driver_Gerrit');
         $this->remote_server       = mock('Git_RemoteServer_GerritServer');
         $this->gerrit_user_manager = mock('Git_Driver_Gerrit_UserAccountManager');
+        $this->project_manager     = mock('ProjectManager');
 
         $this->ugroup_manager = mock('UGroupManager');
+        stub($this->project_manager)->getChildProjects()->returns(array());
 
         $this->membership_manager = partial_mock(
             'Git_Driver_Gerrit_MembershipManager',
@@ -392,7 +410,8 @@ class Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest extends TuleapT
                 $this->gerrit_user_manager,
                 mock('Git_RemoteServer_GerritServerFactory'),
                 mock('Logger'),
-                $this->ugroup_manager
+                $this->ugroup_manager,
+                $this->project_manager
             )
         );
 
@@ -468,7 +487,8 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Ger
                 $this->gerrit_user_manager,
                 $this->remote_server_factory,
                 $this->logger,
-                $this->ugroup_manager
+                $this->ugroup_manager,
+                $this->project_manager
             )
         );
 
@@ -684,7 +704,8 @@ class Git_Driver_Gerrit_MembershipManagerListGroupsTest extends Git_Driver_Gerri
             $this->gerrit_user_manager,
             mock('Git_RemoteServer_GerritServerFactory'),
             mock('Logger'),
-            mock('UGroupManager')
+            mock('UGroupManager'),
+            $this->project_manager
         );
         $ls_groups_expected_return = array(
             'Administrators	31c2cb467c263d73eb24552a7cc98b7131ac2115	Gerrit Site Administrators	INTERNAL	Administrators	31c2cb467c263d73eb24552a7cc98b7131ac2115	false',
@@ -735,7 +756,8 @@ class Git_Driver_Gerrit_MembershipManagerListGroupsCacheTest extends Git_Driver_
             $this->gerrit_user_manager,
             mock('Git_RemoteServer_GerritServerFactory'),
             mock('Logger'),
-            mock('UGroupManager')
+            mock('UGroupManager'),
+            $this->project_manager
         );
     }
     public function itFetchesGroupsFromDriverOnlyOncePerServer() {
