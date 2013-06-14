@@ -31,7 +31,7 @@ EOT;
     }
 
     public function up() {
-        $sql = "CREATE TABLE `codendi`.`project_parent` (
+        $sql = "CREATE TABLE project_parent (
                     group_id INT(11) PRIMARY KEY,
                     parent_group_id INT(11) NOT NULL
                 )";
@@ -45,7 +45,7 @@ EOT;
 
     public function postUp() {
         if (! $this->db->tableNameExists('project_parent')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Table project_parent not created in system_event');
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Table project_parent not created');
         }
     }
 }
