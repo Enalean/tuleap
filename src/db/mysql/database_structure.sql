@@ -1020,6 +1020,7 @@ CREATE TABLE groups (
   cvs_is_private TINYINT(1) NOT NULL DEFAULT 0,
   svn_tracker int(11)   NOT NULL default '1',
   svn_mandatory_ref TINYINT NOT NULL default '0',
+  svn_can_change_log TINYINT(1) NOT NULL default '0',
   svn_events_mailing_header varchar(64) binary DEFAULT NULL,
   svn_preamble text NOT NULL,
   svn_accessfile text NULL,
@@ -3378,6 +3379,7 @@ CREATE TABLE IF NOT EXISTS system_event (
   create_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
   process_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
   end_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  owner VARCHAR(255) NOT NULL default 'root',
   log TEXT,
   PRIMARY KEY (id)
 );
@@ -3443,6 +3445,15 @@ CREATE TABLE IF NOT EXISTS svn_notification (
     svn_events_mailing_list text NOT NULL DEFAULT "",
     path varchar(255) DEFAULT "/",
     PRIMARY KEY (group_id, path)
+);
+
+#
+# Table structure for Project parent relationship
+#
+
+CREATE TABLE IF NOT EXISTS `codendi`.`project_parent` (
+    group_id INT(11) PRIMARY KEY,
+    parent_group_id INT(11) NOT NULL
 );
 
 

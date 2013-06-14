@@ -319,5 +319,4 @@ class ProjectDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-
 ?>

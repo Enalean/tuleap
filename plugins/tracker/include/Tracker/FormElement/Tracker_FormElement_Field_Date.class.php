@@ -242,7 +242,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                 $to = PHP_INT_MAX; //infinity
             }
             $and_compare_date = "$column BETWEEN ". $from ."
-                                                   AND ". $to ." + 24 * 60 * 60";
+                                                   AND ". $to ." + 24 * 60 * 60 - 1";
         } else {
             switch ($op) {
                 case '<':
@@ -250,7 +250,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                     break;
                 case '=':
                     $and_compare_date = "$column BETWEEN ". $to ."
-                                                           AND ". $to ." + 24 * 60 * 60";
+                                                           AND ". $to ." + 24 * 60 * 60 - 1";
                     break;
                 default:
                     $and_compare_date = "$column > ". $to ." + 24 * 60 * 60";

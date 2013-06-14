@@ -1,0 +1,20 @@
+FFDIR=/usr/share/gforge
+MWCRON=/usr/share/gforge/src/plugins/mediawiki/cronjobs
+FFUSER=gforge
+
+# You may need to change the pathname to php CLI (command line interface)
+PHP="/usr/bin/php -q -d include_path=.:/etc/gforge:/usr/share/gforge:/usr/share/gforge/www/include:/usr/share/gforge/plugins"
+
+# Don't mail command output to anyone.
+MAILTO=""
+
+#
+# Regular cron jobs for the plugin-mediawiki package
+#
+
+# Create new mediawikis four times an hour
+0,15,30,45 * * * * root [ -x $MWCRON/create-wikis.php ] && $PHP $MWCRON/create-wikis.php
+1,16,31,46 * * * * root [ -x $MWCRON/create-imagedirs.php ] && $PHP $MWCRON/create-imagedirs.php
+
+# Create wiki XML dumps every night
+55 1 * * * root [ -x $MWCRON/dump-wikis.php ] && $PHP $MWCRON/dump-wikis.php

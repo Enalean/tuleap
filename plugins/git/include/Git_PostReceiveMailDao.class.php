@@ -19,7 +19,6 @@
  */
 
 require_once('common/dao/include/DataAccessObject.class.php');
-require_once('exceptions/GitDaoException.class.php');
 
 /**
  *  Data Access Object for Git_PostReceiveMail

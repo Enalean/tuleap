@@ -57,6 +57,8 @@ class trackerPlugin extends Plugin {
         $this->_addHook('codendi_daily_start',                 'codendi_daily_start',               false);
         $this->_addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
         $this->_addHook(Event::SOAP_DESCRIPTION,               'soap_description',                  false);
+        $this->_addHook(Event::EXPORT_XML_PROJECT);
+        $this->_addHook(Event::IMPORT_XML_PROJECT);
     }
     
     public function getHooksAndCallbacks() {
@@ -80,6 +82,8 @@ class trackerPlugin extends Plugin {
             // Cannot be moved in combined (it conflicts with same implementation in tracker v3)
             echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerFieldDependencies.js"></script>'."\n";
             echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerRichTextEditor.js"></script>'."\n";
+            echo '<script type="text/javascript" src="/plugins/tracker/scripts/artifactChildren.js"></script>'."\n";
+            echo '<script type="text/javascript" src="/plugins/tracker/scripts/load-artifactChildren.js"></script>'."\n";
         }
     }
     
@@ -463,10 +467,12 @@ class trackerPlugin extends Plugin {
             $trackers = $tf->getTrackersByGroupId($params['project']->getGroupId());
             
             if ($trackers) {
-                $entries = array();
+                $entries  = array();
+                $purifier = Codendi_HTMLPurifier::instance();
                 foreach($trackers as $t) {
                     if ($t->userCanView()) {
-                        $entries[] = '<a href="'. TRACKER_BASE_URL .'/?tracker='. $t->id .'">'. $t->name .'</a>';
+                        $name      = $purifier->purify($t->name, CODENDI_PURIFIER_CONVERT_HTML);
+                        $entries[] = '<a href="'. TRACKER_BASE_URL .'/?tracker='. $t->id .'">'. $name .'</a>';
                     }
                 }
                 if ($entries) {
@@ -536,6 +542,34 @@ class trackerPlugin extends Plugin {
             'version'     => file_get_contents(dirname(__FILE__).'/../www/soap/VERSION'),
             'description' => 'Query and modify Trackers.',
         );
+    }
+
+    /**
+     * @see Event::EXPORT_XML_PROJECT
+     * @param array $params
+     */
+    public function export_xml_project($params) {
+        $xml_content     = $params['into_xml']->addChild('trackers');
+        $tracker_manager = new TrackerManager();
+        $tracker_manager->exportToXml($params['project']->getID(), $xml_content);
+    }
+
+    /**
+     *
+     * @param array $params
+     * @see Event::IMPORT_XML_PROJECT
+     */
+    public function import_xml_project($params) {
+        include_once 'common/XmlValidator/XmlValidator.class.php';
+        $tracker_xml_import = new TrackerXmlImport(
+            $params['project']->getId(),
+            TrackerFactory::instance(),
+            EventManager::instance(),
+            new Tracker_Hierarchy_Dao(),
+            new XmlValidator()
+        );
+
+        $tracker_xml_import->import($params['xml_content']);
     }
 }
 

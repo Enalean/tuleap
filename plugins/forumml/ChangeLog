@@ -1,3 +1,15 @@
+Version 2.6.12 - Tuleap 6.1
+    * Post new thread with interface in french (follow-up of bugs #1184 and branch #1428)
+
+Version 2.6.11 - Tuleap 5.13
+    * Update readme with meaningful informations
+
+Version 2.6.10 - Tuleap 5.12
+    * art #2898: private list archives no longer accessible.
+
+Version 2.6.9 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
 Version 2.6.8 - Tuleap 5.11
     * Fix bugs #1868: tuleap-devel get posts from email-not-found@tuleap.net
 

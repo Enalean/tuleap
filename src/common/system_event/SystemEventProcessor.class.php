@@ -19,106 +19,68 @@
  */
 
 require_once 'SystemEventManager.class.php';
-require_once 'common/backend/BackendAliases.class.php';
-require_once 'common/backend/BackendCVS.class.php';
-require_once 'common/backend/BackendSVN.class.php';
-require_once 'common/backend/BackendSystem.class.php';
+require_once 'IRunInAMutex.php';
 
-class SystemEventProcessor {
-
+abstract class SystemEventProcessor implements IRunInAMutex {
     /**
      * @var SystemEventManager
      */
-    private $system_event_manager;
+    protected $system_event_manager;
 
     /**
      * @var SystemEventDao
      */
-    private $dao;
+    protected $dao;
 
     /**
-     * @var BackendAliases
+     * @var Logger
      */
-    private $backend_aliases;
+    protected $logger;
 
-    /**
-     * @var BackendCVS
-     */
-    private $backend_cvs;
-
-    /**
-     * @var BackendSVN
-     */
-    private $backend_svn;
-
-    /**
-     * @var BackendSystem
-     */
-    private $backend_system;
-
-    public function __construct(
-            SystemEventManager $system_event_manager,
-            SystemEventDao     $dao,
-            BackendAliases     $backend_aliases,
-            BackendCVS         $backend_cvs,
-            BackendSVN         $backend_svn,
-            BackendSystem      $backend_system) {
+    public function __construct(SystemEventManager $system_event_manager, SystemEventDao $dao, Logger $logger) {
         $this->system_event_manager = $system_event_manager;
-        $this->dao             = $dao;
-        $this->backend_aliases = $backend_aliases;
-        $this->backend_cvs     = $backend_cvs;
-        $this->backend_svn     = $backend_svn;
-        $this->backend_system  = $backend_system;
-
+        $this->dao                  = $dao;
+        $this->logger               = $logger;
     }
 
-    /**
-     * Process stored events.
-     */
-    public function process() {
-        while (($dar=$this->dao->checkOutNextEvent()) != null) {
-            if ($row = $dar->getRow()) {
-                //echo "Processing event ".$row['id']." (".$row['type'].")\n";
-                $sysevent = $this->system_event_manager->getInstanceFromRow($row);
-                // Process $sysevent
-                if ($sysevent) {
-                    $this->backend_system->log("Processing event #".$sysevent->getId()." ".$sysevent->getType()."(".$sysevent->getParameters().")", Backend::LOG_INFO);
-                    try {
-                        $sysevent->process();
-                    } catch (Exception $exception) {
-                        $sysevent->logException($exception);
-                    }
-                    $this->dao->close($sysevent);
-                    $sysevent->notify();
-                    $this->backend_system->log("Processing event #".$sysevent->getId().": done.", Backend::LOG_INFO);
-                    // Output errors???
-                }
+    public function execute() {
+        $this->loopOverEventsForOwner($this->getOwner());
+        $this->postEventsActions();
+    }
+
+    protected function loopOverEventsForOwner($owner) {
+        while (($dar=$this->dao->checkOutNextEvent($owner)) != null) {
+            $sysevent = $this->getSystemEventFromDar($dar);
+            if ($sysevent) {
+                $this->executeSystemEvent($sysevent);
             }
         }
-        // Since generating aliases may be costly, do it only once everything else is processed
-        if ($this->backend_aliases->aliasesNeedUpdate()) {
-            $this->backend_aliases->update();
-        }
-
-        // Update CVS root allow file once everything else is processed
-        if ($this->backend_cvs->getCVSRootListNeedUpdate()) {
-            $this->backend_cvs->CVSRootListUpdate();
-        }
-
-        // Update SVN root definition for Apache once everything else is processed
-        if ($this->backend_svn->getSVNApacheConfNeedUpdate()) {
-            $this->backend_svn->generateSVNApacheConf();
-            // Need to refresh apache (graceful)
-            system('/sbin/service httpd graceful');
-        }
-        // Update system user and group caches once everything else is processed
-        if ($this->backend_system->getNeedRefreshUserCache()) {
-            $this->backend_system->refreshUserCache();
-        }
-        if ($this->backend_system->getNeedRefreshGroupCache()) {
-            $this->backend_system->refreshGroupCache();
-        }
     }
+
+    private function getSystemEventFromDar($dar) {
+        if ($row = $dar->getRow()) {
+            return $this->system_event_manager->getInstanceFromRow($row);
+        }
+        return null;
+    }
+
+
+    private function executeSystemEvent(SystemEvent $sysevent) {
+        $this->logger->info("Processing event #".$sysevent->getId()." ".$sysevent->getType()."(".$sysevent->getParameters().")");
+        try {
+            $sysevent->process();
+        } catch (Exception $exception) {
+            $sysevent->logException($exception);
+        }
+        $this->dao->close($sysevent);
+        $sysevent->notify();
+        $this->logger->info("Processing event #".$sysevent->getId().": done.", Backend::LOG_INFO);
+        // Output errors???
+    }
+
+    abstract protected function getOwner();
+
+    abstract protected function postEventsActions();
 }
 
 ?>

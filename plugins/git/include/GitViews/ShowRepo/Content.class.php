@@ -30,7 +30,7 @@ class GitViews_ShowRepo_Content {
     private $gitphp_viewer;
 
     /**
-     * @var User
+     * @var PFUser
      */
     private $current_user;
 
@@ -45,6 +45,11 @@ class GitViews_ShowRepo_Content {
     private $driver;
 
     /**
+     * @var Git_Driver_Gerrit_UserAccountManager
+     */
+    private $gerrit_usermanager;
+
+    /**
      * @var array
      */
     private $gerrit_servers;
@@ -57,9 +62,10 @@ class GitViews_ShowRepo_Content {
     public function __construct(
         GitRepository $repository,
         GitViews_GitPhpViewer $gitphp_viewer,
-        User $current_user,
+        PFUser $current_user,
         Git $controller,
         Git_Driver_Gerrit $driver,
+        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         array $gerrit_servers,
         $theme_path
     ) {
@@ -68,6 +74,7 @@ class GitViews_ShowRepo_Content {
         $this->current_user   = $current_user;
         $this->controller     = $controller;
         $this->driver         = $driver;
+        $this->gerrit_usermanager = $gerrit_usermanager;
         $this->gerrit_servers = $gerrit_servers;
         $this->theme_path     = $theme_path;
     }
@@ -80,8 +87,13 @@ class GitViews_ShowRepo_Content {
             $html .= $this->getRemoteRepositoryInfo();
         }
         $html .= $this->getCloneUrl();
+
         $html .= '</div>';
-        $html .= $this->gitphp_viewer->getContent();
+        if ($this->repository->isCreated()) {
+            $html .= $this->gitphp_viewer->getContent();
+        } else {
+            $html .= $this->getWaitingForRepositoryCreationInfo();
+        }
         echo $html;
     }
 
@@ -179,10 +191,11 @@ class GitViews_ShowRepo_Content {
     private function getAccessURLs() {
         $urls = $this->repository->getAccessURL();
         if ($this->repository->getRemoteServerId()) {
+            $gerrit_user = $this->gerrit_usermanager->getGerritUser($this->current_user);
             $gerrit_server  = $this->gerrit_servers[$this->repository->getRemoteServerId()];
             $gerrit_project = $this->driver->getGerritProjectName($this->repository);
 
-            $clone_url = $gerrit_server->getEndUserCloneUrl($gerrit_project, $this->current_user);
+            $clone_url = $gerrit_server->getEndUserCloneUrl($gerrit_project, $gerrit_user);
             $this->prependGerritCloneURL($urls, $clone_url);
         }
         return $urls;
@@ -203,6 +216,13 @@ class GitViews_ShowRepo_Content {
         $html .= '<div class="alert alert-info gerrit_url">';
         $html .= $GLOBALS['Language']->getText('plugin_git', 'delegated_to_gerrit');
         $html .= ' <a href="'.$link.'">'.$gerrit_project.'</a>';
+        $html .= '</div>';
+        return $html;
+    }
+
+    private function getWaitingForRepositoryCreationInfo() {;
+        $html = '<div class="alert alert-info wait_creation">';
+        $html .= $GLOBALS['Language']->getText('plugin_git', 'waiting_for_repo_creation');
         $html .= '</div>';
         return $html;
     }

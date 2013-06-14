@@ -33,6 +33,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     const REMAINING_EFFORT_FIELD_NAME = "remaining_effort";
     const ASSIGNED_TO_FIELD_NAME      = "assigned_to";
     const IMPEDIMENT_FIELD_NAME       = "impediment";
+    const TYPE_FIELD_NAME             = "type";
 
     public $id;
     public $group_id;
@@ -347,6 +348,13 @@ class Tracker implements Tracker_Dispatchable_Interface {
                                 $GLOBALS['sys_email_admin']),
                                 CODENDI_PURIFIER_FULL
                         );
+                        $reference_manager =  ReferenceManager::instance();
+                        $ref =  $reference_manager->loadReferenceFromKeywordAndNumArgs(strtolower($this->getItemName()), $this->getGroupId(), 1);
+                        if ($ref) {
+                            if ($reference_manager->deleteReference($ref)) {
+                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_reference', 't_r_deleted'));
+                            }
+                        }
                     } else {
                         $GLOBALS['Response']->addFeedback(
                                 'error',
@@ -542,8 +550,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
             case 'admin-export':
                 if ($this->userIsAdmin($current_user)) {
                     // TODO: change directory
-                    $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-                                                         <tracker xmlns="http://codendi.org/tracker"/>');
+                    $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
                     $this->sendXML($this->exportToXML($xml_element));
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
@@ -690,7 +697,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
      *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
      * @param Codendi_Request                $request         The request
-     * @param User                           $current_user    The user who made the request
+     * @param PFUser                           $current_user    The user who made the request
      *
      * @return void
      */
@@ -2068,7 +2075,7 @@ EOS;
      * @return boolean true if the user can view the tracker.
      */
     public function userCanView($user = 0) {
-        if (!is_a($user, 'User')) {
+        if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             if (!$user) {
                 $user = $um->getCurrentUser();
@@ -2169,7 +2176,7 @@ EOS;
      * @return boolean True if the user is tracker admin, false otherwise
      */
     function userIsAdmin($user = false) {
-        if (!is_a($user, 'User')) {
+        if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             if (!$user) {
                 $user = $um->getCurrentUser();
@@ -2196,12 +2203,12 @@ EOS;
     /**
      * Check if user has permission to submit artifact or not
      *
-     * @param User $user The user to test (current user if not defined)
+     * @param PFUser $user The user to test (current user if not defined)
      *
      * @return boolean true if user has persission to submit artifacts, false otherwise
      */
     function userCanSubmitArtifact($user = false) {
-        if (!is_a($user, 'User')) {
+        if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
         }
@@ -2216,12 +2223,12 @@ EOS;
     /**
      * Check if user has permission to delete a tracker or not
      *
-     * @param User $user The user to test (current user if not defined)
+     * @param PFUser $user The user to test (current user if not defined)
      *
      * @return boolean true if user has persission to delete trackers, false otherwise
      */
     function userCanDeleteTracker($user = false) {
-        if (!is_a($user, 'User')) {
+        if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
         }
@@ -2231,12 +2238,12 @@ EOS;
     /**
      * Check if user has full access to a tracker or not
      *
-     * @param User $user The user to test (current user if not defined)
+     * @param PFUser $user The user to test (current user if not defined)
      *
      * @return boolean true if user has full access to tracker, false otherwise
      */
     function userHasFullAccess($user = false) {
-        if (!is_a($user, 'User')) {
+        if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
         }
@@ -2263,11 +2270,15 @@ EOS;
      * @return void
      */
     public function exportToXML(SimpleXMLElement $xmlElem, &$xmlFieldId = 0) {
-        // if old ids are important, modify code here
-        if (false) {
-            $xmlElem->addAttribute('id', $this->id);
-            $xmlElem->addAttribute('group_id', $this->group_id);
+        $xmlElem->addAttribute('id', "T". $this->getId());
+
+        $parent_id = $this->getParentId();
+        if ($parent_id) {
+            $parent_id = "T". $parent_id;
+        } else {
+            $parent_id = "0";
         }
+        $xmlElem->addAttribute('parent_id', (string)$parent_id);
 
         // only add attributes which are different from the default value
         if ($this->allow_copy) {
@@ -2426,7 +2437,7 @@ EOS;
     }
     
     private function _getCSVSeparator($current_user) {
-        if ( ! $current_user || ! is_a($current_user, 'User')) {
+        if ( ! $current_user || ! ($current_user instanceof PFUser)) {
             $current_user = UserManager::instance()->getCurrentUser();
         }
         
@@ -2447,7 +2458,7 @@ EOS;
     }
     
     private function _getCSVDateformat($current_user) {
-        if ( ! $current_user || ! is_a($current_user, 'User')) {
+        if ( ! $current_user || ! ($current_user instanceof PFUser)) {
             $current_user = UserManager::instance()->getCurrentUser();
         }
         $dateformat_csv_export_pref = $current_user->getPreference('user_csv_dateformat');
@@ -3146,13 +3157,28 @@ EOS;
     }
 
     /**
+     * Return the children of the tracker
+     *
+     * @return Tracker[]
+     */
+    public function getChildren() {
+        return $this->getHierarchyFactory()->getChildren($this->getId());
+    }
+
+    /**
      * Return the hierarchy the tracker belongs to
      *
      * @return Tracker_Hierarchy
      */
     public function getHierarchy() {
-        $hierarchy_factory = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory(), $this->getTrackerArtifactFactory());
-        return $hierarchy_factory->getHierarchy(array($this->getId()));
+        return $this->getHierarchyFactory()->getHierarchy(array($this->getId()));
+    }
+
+    /**
+     * @return Tracker_HierarchyFactory
+     */
+    protected function getHierarchyFactory() {
+        return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory(), $this->getTrackerArtifactFactory());
     }
 
     /**
@@ -3161,11 +3187,15 @@ EOS;
      * @return Tracker
      */
     public function getParent() {
-        $parent_tracker_id = $this->getHierarchy()->getParent($this->getId());
+        $parent_tracker_id = $this->getParentId();
         if ($parent_tracker_id) {
             return $this->getTrackerFactory()->getTrackerById($parent_tracker_id);
         }
         return null;
+    }
+
+    private function getParentId() {
+        return $this->getHierarchy()->getParent($this->getId());
     }
 
     /**

@@ -133,6 +133,16 @@
         <revremark>Add FRS functions to clean up empty releases and packages</revremark>
       </revision>
 
+      <revision>
+        <revnumber>1.5.2</revnumber>
+
+        <date>22-Apr-2013</date>
+
+        <authorinitials>Nicolas Terray</authorinitials>
+
+        <revremark>Rename package</revremark>
+      </revision>
+
     </revhistory>
   </bookinfo>
 <!--

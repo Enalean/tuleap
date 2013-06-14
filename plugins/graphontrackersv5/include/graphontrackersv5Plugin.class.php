@@ -69,6 +69,13 @@ class GraphOnTrackersV5Plugin extends Plugin {
         $this->allowedForProject = array();
     }
 
+    /**
+     * @see Plugin::getDependencies()
+     */
+    public function getDependencies() {
+        return array('tracker');
+    }
+
     
     /**
      * This hook ask to create a new instance of a renderer

@@ -313,6 +313,12 @@ td.plugin_git_first_col {
     font-weight: bold;
     white-space: nowrap;
 }
+
+.wait_creation.alert.alert-info {
+    display: inline-block;
+    margin-bottom: 1em;
+}
+
 #plugin_git_clone_url_group > .add-on {
     display: none;
 }

@@ -100,7 +100,7 @@ class Tracker_Artifact_Changeset {
     /**
      * Return the changeset values of this changeset
      *
-     * @return array of Tracker_Artifact_ChangesetValue, or empty array if not found
+     * @return Tracker_Artifact_ChangesetValue[] or empty array if not found
      */
     public function getValues() {
         if (!$this->values) {
@@ -118,11 +118,11 @@ class Tracker_Artifact_Changeset {
     /**
      * Delete the changeset
      *
-     * @param User $user the user who wants to delete the changeset
+     * @param PFUser $user the user who wants to delete the changeset
      *
      * @return void
      */
-    public function delete(User $user) {
+    public function delete(PFUser $user) {
         if ($this->userCanDeletePermanently($user)) {
             $this->getChangesetDao()->delete($this->id);
             $this->getCommentDao()->delete($this->id);
@@ -268,11 +268,11 @@ class Tracker_Artifact_Changeset {
     /**
      * Say if a user can permanently (no restore) delete a changeset
      *
-     * @param User $user The user who does the delete
+     * @param PFUser $user The user who does the delete
      *
      * @return boolean true if the user can delete
      */
-    protected function userCanDeletePermanently(User $user) {
+    protected function userCanDeletePermanently(PFUser $user) {
         // Only tracker admin can edit a comment
         return $this->artifact->getTracker()->userIsAdmin($user);
     }
@@ -280,11 +280,11 @@ class Tracker_Artifact_Changeset {
     /**
      * Say if a user can delete a changeset
      *
-     * @param User $user The user. If null, the current logged in user will be used.
+     * @param PFUser $user The user. If null, the current logged in user will be used.
      *
      * @return boolean true if the user can delete
      */
-    protected function userCanDelete(User $user = null) {
+    protected function userCanDelete(PFUser $user = null) {
         if (!$user) {
             $user = $this->getUserManager()->getCurrentUser();
         }
@@ -295,11 +295,11 @@ class Tracker_Artifact_Changeset {
     /**
      * Say if a user can edit a comment
      *
-     * @param User $user The user. If null, the current logged in user will be used.
+     * @param PFUser $user The user. If null, the current logged in user will be used.
      *
      * @return boolean true if the user can edit
      */
-    public function userCanEdit(User $user = null) {
+    public function userCanEdit(PFUser $user = null) {
         if (!$user) {
             $user = $this->getUserManager()->getCurrentUser();
         }
@@ -311,7 +311,7 @@ class Tracker_Artifact_Changeset {
      * Update the content
      *
      * @param string  $body          The new content
-     * @param User    $user          The user
+     * @param PFUser    $user          The user
      * @param String  $comment_format Format of the comment
      *
      * @return void

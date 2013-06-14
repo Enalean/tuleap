@@ -58,6 +58,10 @@ plugin_git	dao_error_remove_notification	L'adresse mail n'a pas été supprimée
 
 plugin_git	dao_child_params	Paramètres invalides
 
+plugin_git	disconnect_gerrit_title	Déconnexion de Gerrit
+plugin_git	disconnect_gerrit_msg	Cette opération est <strong>irréversible</strong>. Ce dépôt ne pourra plus être géré de nouveau par un serveur gerrit. Êtes vous certain de vouloir continuer ?
+plugin_git	disconnect_gerrit_yes	Oui, je veux déconnecter ce dépôt de Gerrit
+
 plugin_git	backend_delete_haschild_error	Impossible de supprimer le dépôt : est parent d'au moins un autre dépôt
 plugin_git	backend_delete_path_error	Impossible de supprimer le dépôt : chemin n'appartient pas au répertoire root du projet
 plugin_git	backend_gitroot_mkdir_error	Erreur à la création du répertoire racine des dépôts Git (Contactez l'administrateur)
@@ -109,11 +113,11 @@ plugin_git	gerrit_pane_title	Gerrit
 plugin_git	gerrit_title	Migration vers Gerrit
 plugin_git	gerrit_url	Veuillez choisir le serveur Gerrit de destination :
 plugin_git	gerrit_migration_description	Vous vous apprêtez à effectuer la migration de votre dépôt <em>$1</em> vers l'outil Gerrit.
-plugin_git	gerrit_migration_more_description	La gestion du dépôt (permissions, ...) sera déléguée à Gerrit : <ul><li>Un projet <em>$1</em> sera créé sur le serveur sélectionné.</li><li>Les groupes d'utilisateurs <em>contributors, integrators, supermen</em> et <em>owners</em> seront créés et obtiendront les droits d'accès par défaut.</li><li>Le dépot courant deviendra un miroir de la référence sur Gerrit.</li></ul>
-plugin_git	gerrit_migrated_more_description	Pour rappel, la gestion du dépôt (permissions, ...) à été déléguée à Gerrit : <ul><li>Un projet <em>$1</em> a été créé sur le serveur $2.</li><li>Les groupes d'utilisateurs <em>contributors, integrators, supermen</em> et <em>owners</em> ont été créés et ont obtenu les droits d'accès par défaut.</li><li>Le dépot courant est maintenant un miroir de la référence sur Gerrit.</li></ul>
+plugin_git	gerrit_migration_more_description	La gestion du dépôt (permissions, ...) sera déléguée à Gerrit : <ul><li>Un projet <em>$1</em> sera créé sur le serveur sélectionné.</li><li>Le dépot courant deviendra un miroir de la référence sur Gerrit.</li></ul>
+plugin_git	gerrit_migrated_more_description	Pour rappel, la gestion du dépôt (permissions, ...) à été déléguée à Gerrit : <ul><li>Un projet <em>$1</em> a été créé sur le serveur $2.</li><li>Le dépot courant est maintenant un miroir de la référence sur Gerrit.</li></ul>
 plugin_git	gerrit_migrate_to	Migrer repo vers Gerrit
 plugin_git	gerrit_server_already_migrated	Le dépôt <em>$1</em> a déjà été migré sur le projet Gerrit : <a href="$3">$2</a>.
-plugin_git	permissions_on_remote_server	Vous ne pouvez pas modifier les permissions, car elles sont gérés sur un serveur distant
+plugin_git	permissions_on_remote_server	Vous ne pouvez modifier QUE les permissions en <strong>LECTURE</strong>, car elles sont gérés par un serveur Gerrit distant. Ces modifications affectent uniquement $1 et <strong>NE SONT PAS propagées vers Gerrit</strong>.
 plugin_git	gerrit_migration_ongoing	La migration de ce dépôt vers le serveur Gerrit est en cours, merci de patienter quelques minutes.
 
 plugin_git	mail_prefix_label	Préfixe de notification
@@ -210,3 +214,12 @@ plugin_git	logsdaily_field	Nom du répertoire
 plugin_git	logsdaily_title	Les Git push
 
 plugin_git	delegated_to_gerrit	La gestion de ce dépôt Git a été déléguée à la plateforme Gerrit:
+plugin_git	waiting_for_repo_creation	Le dépôt est en attente de création. Veuillez revenir dans quelques minutes.
+
+plugin_git	push_ssh_keys_error	Impossible de copier les clés SSH. Ajoutez-les de façon manuelle.
+plugin_git	push_ssh_keys_button_value	Pousser les clés SSH
+plugin_git	push_ssh_keys_button_title	Pousser les clés SSH sur les serveurs externes
+plugin_git	push_ssh_keys_info	Vos anciennes clés ne sont pas poussées automatiquement. Toute nouvelle clé sera automatiquement poussée sur les serveurs suivants :
+
+plugin_git	gerrit_cannot_migrate_error_msg	Ce dépôt ne peux pas être migré. Ceci est dû au fait qu'il a déjà été migré par le passé et ne peut plus être migré de nouveau.
+

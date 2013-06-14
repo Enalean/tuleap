@@ -164,6 +164,26 @@ class Tracker_FormElementFactory {
     }
 
     /**
+     * @return Tracker_FormElement_Field
+     */
+    public function getFormElementFieldById($id) {
+        $field = $this->getFormElementById($id);
+        if ($field instanceof Tracker_FormElement_Field) {
+            return $field;
+        }
+    }
+
+    /**
+     * @return Tracker_FormElement_Field
+     */
+    public function getUsedFormElementFieldById($id) {
+        $field = $this->getUsedFormElementById($id);
+        if ($field instanceof Tracker_FormElement_Field) {
+            return $field;
+        }
+    }
+
+    /**
      * Get a formElement by its short name
      *
      * @param int $tracker_id the tracker of the formElement to retrieve
@@ -222,13 +242,30 @@ class Tracker_FormElementFactory {
      *
      * @param int    $tracker_id
      * @param string $field_name
-     * @param User   $user
+     * @param PFUser   $user
      *
      * @return Tracker_FormElement_Field
      */
-    public function getUsedFieldByNameForUser($tracker_id, $field_name, User $user) {
+    public function getUsedFieldByNameForUser($tracker_id, $field_name, PFUser $user) {
         $field = $this->getUsedFieldByName($tracker_id, $field_name);
         if ($field && $field->userCanRead($user)) {
+            return $field;
+        }
+        return null;
+    }
+
+    /**
+     * Return a selectbox field. This field is used and the user can see its value.
+     *
+     * @param int    $tracker_id
+     * @param string $field_name
+     * @param PFUser   $user
+     *
+     * @return Tracker_FormElement_Field_Selectbox | null
+     */
+    public function getSelectboxFieldByNameForUser($tracker_id, $field_name, PFUser $user) {
+        $field = $this->getUsedFieldByNameForUser($tracker_id, $field_name, $user);
+        if ($field && $field instanceof Tracker_FormElement_Field_Selectbox) {
             return $field;
         }
         return null;
@@ -239,11 +276,11 @@ class Tracker_FormElementFactory {
      *
      * @param int    $tracker_id
      * @param string $field_name
-     * @param User   $user
+     * @param PFUser   $user
      *
      * @return Tracker_FormElement_IComputeValues
      */
-    public function getComputableFieldByNameForUser($tracker_id, $field_name, User $user) {
+    public function getComputableFieldByNameForUser($tracker_id, $field_name, PFUser $user) {
         $field = $this->getUsedFieldByNameForUser($tracker_id, $field_name, $user);
         if ($field && $field instanceof Tracker_FormElement_IComputeValues) {
             return $field;
@@ -325,13 +362,39 @@ class Tracker_FormElementFactory {
     }
 
     /**
+     * All fields used by the tracker
+     *
      * @param Tracker $tracker
-     * @return array of Tracker_FormElement - All fields used by the tracker
+     *
+     * @return Tracker_FormElement_Field[]
      */
     public function getUsedFields($tracker) {
+        return $this->getUsedFormElementsByType($tracker, $this->getFieldsSQLTypes());
+    }
+
+    /**
+     * Returns FormElements used by a tracker, except those already in SOAP Basic Info
+     *
+     * @param Tracker $tracker
+     *
+     * @return Tracker_FormElement_Field[]
+     */
+    public function getUsedFieldsForSoap(Tracker $tracker) {
+        $element_already_in_soap_basic_info = array(
+            'aid',
+            'lud',
+            'subby',
+            'subon',
+            'cross',
+        );
+        $field_types = array_diff($this->getFieldsSQLTypes(), $element_already_in_soap_basic_info);
+        return $this->getUsedFormElementsByType($tracker, $field_types);
+    }
+
+    private function getFieldsSQLTypes() {
         $field_classnames = array_merge($this->classnames, $this->special_classnames);
         EventManager::instance()->processEvent('tracker_formElement_classnames', array('classnames' => &$field_classnames));
-        return $this->getUsedFormElementsByType($tracker, array_keys($field_classnames));
+        return array_keys($field_classnames);
     }
 
     /**
@@ -411,7 +474,7 @@ class Tracker_FormElementFactory {
      *
      * @return Tracker_FormElement_Field_ArtifactLink
      */
-    public function getAnArtifactLinkField(User $user, Tracker $tracker) {
+    public function getAnArtifactLinkField(PFUser $user, Tracker $tracker) {
         $artifact_link_fields = $this->getUsedArtifactLinkFields($tracker);
         if (count($artifact_link_fields) > 0 && $artifact_link_fields[0]->userCanRead($user)) {
             return $artifact_link_fields[0];
@@ -432,7 +495,7 @@ class Tracker_FormElementFactory {
      *
      * @return Tracker_FormElement_Field_ArtifactLink
      */
-    public function getABurndownField(User $user, Tracker $tracker) {
+    public function getABurndownField(PFUser $user, Tracker $tracker) {
         $burndown_fields = $this->getUsedBurndownFields($tracker);
         if (count($burndown_fields) > 0 && $burndown_fields[0]->userCanRead($user)) {
             return $burndown_fields[0];
@@ -844,7 +907,7 @@ class Tracker_FormElementFactory {
      *
      * @return Array of Tracker_FormElement_Field
      */
-    public function getSharedFieldsReadableBy(User $user, Project $project) {
+    public function getSharedFieldsReadableBy(PFUser $user, Project $project) {
         $fields = $this->getProjectSharedFields($project);
         foreach ($fields as $k => $field) {
             if (!$this->userCanReadSharedField($user, $field)) {
@@ -854,11 +917,11 @@ class Tracker_FormElementFactory {
         return $fields;
     }
 
-    protected function userCanReadSharedField(User $user, Tracker_FormElement $field) {
+    protected function userCanReadSharedField(PFUser $user, Tracker_FormElement $field) {
         return ($field->userCanRead($user) && $this->canReadAllTargets($user, $field));
     }
 
-    private function canReadAllTargets(User $user, Tracker_FormElement $field) {
+    private function canReadAllTargets(PFUser $user, Tracker_FormElement $field) {
         foreach ($this->getSharedTargets($field) as $target_field) {
             if (!$target_field->userCanRead($user)) {
                 return false;
@@ -1080,7 +1143,7 @@ class Tracker_FormElementFactory {
         return false;
     }
 
-    public function displayAdminCreateFormElement(TrackerManager $tracker_manager, Codendi_Request $request, User $current_user, $type, Tracker $tracker) {
+    public function displayAdminCreateFormElement(TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user, $type, Tracker $tracker) {
         $row = array(
                         'formElement_type'  => $type,
                         'id'                => 0,

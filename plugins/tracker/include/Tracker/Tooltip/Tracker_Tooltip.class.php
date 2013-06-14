@@ -66,11 +66,11 @@ class Tracker_Tooltip extends Tracker_Semantic {
      * @param Tracker_SemanticManager $sm              The semantic manager
      * @param TrackerManager          $tracker_manager The tracker manager
      * @param Codendi_Request         $request         The request
-     * @param User                    $current_user    The user who made the request
+     * @param PFUser                    $current_user    The user who made the request
      *
      * @return void
      */
-    public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, User $current_user) {
+    public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         if ($request->get('add-field') && (int)$request->get('field')) {
             //retrieve the field if used
             $f = Tracker_FormElementFactory::instance()->getUsedFormElementById($request->get('field'));
@@ -120,11 +120,11 @@ class Tracker_Tooltip extends Tracker_Semantic {
      * @param Tracker_SemanticManager $sm              The semantic manager
      * @param TrackerManager          $tracker_manager The tracker manager
      * @param Codendi_Request         $request         The request
-     * @param User                    $current_user    The user who made the request
+     * @param PFUser                    $current_user    The user who made the request
      *
      * @return string html
      */
-    public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, User $current_user) {
+    public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $sm->displaySemanticHeader($this, $tracker_manager);
 
@@ -234,7 +234,7 @@ class Tracker_Tooltip extends Tracker_Semantic {
     * the SOAP export
     * @return null
     */
-    public function exportToSOAP() {
+    public function exportToSOAP(PFUser $user) {
         return;
     }
 }

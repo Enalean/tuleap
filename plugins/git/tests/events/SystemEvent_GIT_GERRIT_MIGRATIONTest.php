@@ -19,8 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../include/constants.php';
-require_once GIT_BASE_DIR .'/events/SystemEvent_GIT_GERRIT_MIGRATION.class.php';
+require_once dirname(__FILE__).'/../bootstrap.php';
 require_once 'common/log/Logger.class.php';
 
 abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {
@@ -34,19 +33,18 @@ abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase 
     protected $repository;
     protected $gerrit_server;
     protected $server_factory;
+    protected $gitolite_backend;
 
     public function setUp() {
         parent::setUp();
 
-        $this->dao = mock('GitDao');
-
-
-        $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
-        $this->repository = mock('GitRepository');
-
-        $this->server_factory = mock('Git_RemoteServer_GerritServerFactory');
-
-        $this->project_creator = mock('Git_Driver_Gerrit_ProjectCreator');
+        $this->dao              = mock('GitDao');
+        $this->gerrit_server    = mock('Git_RemoteServer_GerritServer');
+        $this->server_factory   = mock('Git_RemoteServer_GerritServerFactory');
+        $this->project_creator  = mock('Git_Driver_Gerrit_ProjectCreator');
+        $this->gitolite_backend = mock('Git_Backend_Gitolite');
+        $this->repository       = mock('GitRepository');
+        stub($this->repository)->getBackend()->returns($this->gitolite_backend);
 
         $factory = mock('GitRepositoryFactory');
         stub($factory)->getRepositoryById($this->repository_id)->returns($this->repository);
@@ -68,9 +66,16 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
         expect($this->dao)->switchToGerrit($this->repository_id, $this->remote_server_id)->once();
         $this->event->process();
     }
+
     public function itCallsDoneAndReturnsTrue() {
         stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         expect($this->event)->done()->once();
+        $this->assertTrue($this->event->process());
+    }
+
+    public function itUpdatesGitolitePermissionsToForbidPushesByAnyoneButGerrit() {
+        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
+        expect($this->gitolite_backend)->updateRepoConf()->once();
         $this->assertTrue($this->event->process());
     }
 
@@ -78,7 +83,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
         stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         $remote_project = 'tuleap.net-Firefox/mobile';
         $gerrit_host  = 'gerrit.instance.net';
-        stub($this->project_creator)->createProject()->returns($remote_project);
+        stub($this->project_creator)->createGerritProject()->returns($remote_project);
         stub($this->gerrit_server)->getHost()->returns($gerrit_host);
         expect($this->event)->done("Created project $remote_project on $gerrit_host")->once();
         $this->event->process();
@@ -86,7 +91,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
 
     public function itInformsAboutAnyGenericFailure() {
         $e = new Exception("failure detail");
-        stub($this->project_creator)->createProject()->throws($e);
+        stub($this->project_creator)->createGerritProject()->throws($e);
         expect($this->event)->error("failure detail")->once();
         expect($this->logger)->error("An error occured while processing event: ".$this->event->verbalizeParameters(null), $e)->once();
         $this->event->process();
@@ -94,7 +99,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
 
     public function itInformsAboutAnyGerritRelatedFailureByAddingAPrefix() {
         $e = new Git_Driver_Gerrit_Exception("failure detail");
-        stub($this->project_creator)->createProject()->throws($e);
+        stub($this->project_creator)->createGerritProject()->throws($e);
         expect($this->event)->error("gerrit: failure detail")->once();
         expect($this->logger)->error("Gerrit failure: ".$this->event->verbalizeParameters(null), $e)->once();
         $this->event->process();
@@ -115,7 +120,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_CallsToProjectCreatorTest extends SystemE
     public function itCreatesAProject() {
         stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
-        expect($this->project_creator)->createProject($this->gerrit_server, $this->repository)->once();
+        expect($this->project_creator)->createGerritProject($this->gerrit_server, $this->repository)->once();
         $this->event->process();
     }
 }

@@ -279,7 +279,7 @@ class BackendCVS extends Backend {
     /**
      * Update CVS writers into all projects that given user belongs to
      *
-     * @param User $user member to add as committer
+     * @param PFUser $user member to add as committer
      *
      * @return Boolean
      */

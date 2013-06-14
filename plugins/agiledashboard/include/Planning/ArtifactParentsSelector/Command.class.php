@@ -47,7 +47,7 @@ abstract class Planning_ArtifactParentsSelector_Command {
         $this->hierarchy_factory = $hierarchy_factory;
     }
 
-    public abstract function getPossibleParents(Tracker $parent_tracker, Tracker_Artifact $source_artifact, User $user);
+    public abstract function getPossibleParents(Tracker $parent_tracker, Tracker_Artifact $source_artifact, PFUser $user);
 
     /**
      * @return array of Tracker_Artifact

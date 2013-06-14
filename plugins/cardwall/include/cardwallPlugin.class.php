@@ -56,6 +56,8 @@ class cardwallPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION);
             $this->addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE);
             $this->_addHook(Event::JAVASCRIPT);
+            $this->addHook(Event::EXPORT_XML_PROJECT);
+            $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -64,6 +66,13 @@ class cardwallPlugin extends Plugin {
             }
         }
         return parent::getHooksAndCallbacks();
+    }
+
+    /**
+     * @see Plugin::getDependencies()
+     */
+    public function getDependencies() {
+        return array('tracker');
     }
 
     
@@ -260,7 +269,7 @@ class cardwallPlugin extends Plugin {
         $params['pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user'], $params['milestone_factory']);
     }
 
-    protected function getCardwallPane(Cardwall_PaneInfo $info, Planning_Milestone $milestone, User $user, Planning_MilestoneFactory $milestone_factory) {
+    protected function getCardwallPane(Cardwall_PaneInfo $info, Planning_Milestone $milestone, PFUser $user, Planning_MilestoneFactory $milestone_factory) {
         $tracker = $milestone->getArtifact()->getTracker();
         if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
             $config = $this->getConfigFactory()->getOnTopConfig($tracker);
@@ -283,6 +292,11 @@ class cardwallPlugin extends Plugin {
                 $params['redirect_parameters']['pane'] = 'cardwall';
             }
         }
+    }
+
+    private function toggleAvatarDisplay(Codendi_Request $request) {
+        $display_preferences_controller = new Cardwall_DisplayPreferencesInAgileDashboardController($request);
+        $display_preferences_controller->toggleUserDisplay();
     }
 
     public function tracker_event_redirect_after_artifact_creation_or_update($params) {
@@ -342,6 +356,39 @@ class cardwallPlugin extends Plugin {
     }
 
     /**
+     * @param array $params parameters send by Event
+     * Parameters:
+     *  'project'  => The given project
+     *  'into_xml' => The SimpleXMLElement to fill in
+     */
+    public function export_xml_project ($params) {
+        $tracker_factory = TrackerFactory::instance();
+
+        $cardwall_xml_export = new CardwallConfigXmlExport(
+            $params['project'],
+            $tracker_factory,
+            new Cardwall_OnTop_ConfigFactory(
+                $tracker_factory,
+                Tracker_FormElementFactory::instance()
+            ),
+            new XmlValidator()
+        );
+
+        $cardwall_xml_export->export($params['into_xml']);
+    }
+
+    /**
+     *
+     * @param array $params
+     * @see Event::IMPORT_XML_PROJECT_TRACKER_DONE
+     */
+    public function import_xml_project_tracker_done($params) {
+        include_once 'common/XmlValidator/XmlValidator.class.php';
+        $cardwall_ontop_import = new CardwallConfigXmlImport($params['project_id'], $params['mapping'], new Cardwall_OnTop_Dao, EventManager::instance(), new XmlValidator());
+        $cardwall_ontop_import->import($params['xml_content']);
+    }
+
+    /**
      * @return Cardwall_OnTop_Dao
      */
     private function getOnTopDao() {
@@ -367,6 +414,16 @@ class cardwallPlugin extends Plugin {
      */
     private function getOnTopColumnMappingFieldValueDao() {
         return new Cardwall_OnTop_ColumnMappingFieldValueDao();
+    }
+
+    public function process(Codendi_Request $request) {
+        switch($request->get('action')) {
+            case 'toggle_user_display_avatar':
+                $this->toggleAvatarDisplay($request);
+                break;
+            default:
+                echo 'Hello !';
+        }
     }
 
 }

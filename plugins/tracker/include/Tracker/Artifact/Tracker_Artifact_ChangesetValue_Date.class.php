@@ -79,7 +79,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
      * @return string The value of this artifact changeset value for Soap API
      */
     public function getSoapValue() {
-        return (string)$this->getTimestamp();
+        return $this->encapsulateRawSoapValue($this->getTimestamp());
     }
     
     /**

@@ -50,12 +50,12 @@ class LDAPPluginCustomUserSyncOrange extends LDAP_UserSync {
      * This method returns if it modified the user or not. This is usefull during
      * batch process in order to limit computing.
      *
-     * @param User       $user User
+     * @param PFUser       $user User
      * @param LDAPResult $lr   Ldap result
      *
      * @return Boolean True if the method modified the user object
      */
-    public function sync(User $user, LDAPResult $lr) {
+    public function sync(PFUser $user, LDAPResult $lr) {
         $modified  = false;
 
     $realname = $this->getCommonName($lr);
@@ -75,19 +75,19 @@ class LDAPPluginCustomUserSyncOrange extends LDAP_UserSync {
     $userEmail = $user->getEmail();
 
     if ($userEmail !== null) {
-        if ($user->getStatus() != User::STATUS_ACTIVE) {
+        if ($user->getStatus() != PFUser::STATUS_ACTIVE) {
             if (preg_match("/.ext@orange.com/i", $userEmail)) {
-                $user->setStatus(User::STATUS_RESTRICTED);
+                $user->setStatus(PFUser::STATUS_RESTRICTED);
                 if (isset($GLOBALS['Response'])) {
                     $GLOBALS['Response']->addFeedback('info', "Your account is restricted to projects your are member of");
                 }
                 $modified = true;
             } else {
                 if (preg_match("/@orange.com/i", $userEmail)) {
-                    $user->setStatus(User::STATUS_ACTIVE);
+                    $user->setStatus(PFUser::STATUS_ACTIVE);
                     $modified = true;
                 } else {
-                    $user->setStatus(User::STATUS_RESTRICTED);
+                    $user->setStatus(PFUser::STATUS_RESTRICTED);
                     if (isset($GLOBALS['Response'])) {
                         $GLOBALS['Response']->addFeedback('info', "Your account is restricted to projects your are member of");
                     }
@@ -96,8 +96,8 @@ class LDAPPluginCustomUserSyncOrange extends LDAP_UserSync {
             }
         }
     } else {
-        if ($user->getStatus() != User::STATUS_ACTIVE) {
-            $user->setStatus(User::STATUS_RESTRICTED);
+        if ($user->getStatus() != PFUser::STATUS_ACTIVE) {
+            $user->setStatus(PFUser::STATUS_RESTRICTED);
             if (isset($GLOBALS['Response'])) {
                 $GLOBALS['Response']->addFeedback('info', "Your account is restricted to projects your are member of");
             }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tracker xmlns="http://codendi.org/tracker">
+<tracker>
     <field_id REF="F32"/>
     <is_used>1</is_used>
     <transitions>

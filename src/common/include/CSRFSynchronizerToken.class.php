@@ -148,7 +148,7 @@ class CSRFSynchronizerToken {
     }
     
     /**
-     * @return User
+     * @return PFUser
      */
     protected function getUser() {
         return UserManager::instance()->getCurrentUser();

@@ -27,7 +27,7 @@ Mock::generatePartial('Rule_UserName', 'Rule_UserNameTestVersion', array('_getPr
 
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
@@ -40,10 +40,6 @@ require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 class Rule_UserNameTest extends UnitTestCase {
-
-    function UnitTestCase($name = 'Rule_UserName test') {
-        $this->UnitTestCase($name);
-    }
 
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
@@ -93,6 +89,14 @@ class Rule_UserNameTest extends UnitTestCase {
         $this->assertTrue($r->isReservedName("ROOT"));
         $this->assertTrue($r->isReservedName("WWW"));
         $this->assertTrue($r->isReservedName("DUMMY"));
+    }
+
+    function testReservedPrefix() {
+        $r = new Rule_UserName();
+        $this->assertTrue($r->isReservedName("forge__"));
+        $this->assertTrue($r->isReservedName("forge__tutu"));
+        $this->assertFalse($r->isReservedName("forge_loic"));
+        $this->assertFalse($r->isReservedName("forgeron"));
     }
 
     function testCVSNames() {
@@ -203,7 +207,7 @@ class Rule_UserNameTest extends UnitTestCase {
     }
 
     function testUserNameExists() {
-        $u = new MockUser($this);
+        $u = mock('PFUser');
 
         $um = new MockUserManager($this);
         $um->setReturnValue('getUserByUserName', $u, array("usertest"));

@@ -1,7 +1,8 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- *
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * 
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -23,11 +24,13 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     protected $id;
     protected $user_name;
     protected $display_name;
-    
+    private   $hp;
+
     public function __construct($id, $user_name = null, $display_name = null) {
         parent::__construct($id, false);
         $this->user_name    = $user_name;
         $this->display_name = $display_name;
+        $this->hp           = Codendi_HTMLPurifier::instance();
     }
     
     public function getUsername() {
@@ -60,7 +63,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
             $user_name = $this->getUser()->getUserName();
         }
         return '<a class="direct-link-to-user" href="/users/'. urlencode($user_name) .'">'.
-               Codendi_HTMLPurifier::instance()->purify($display_name, CODENDI_PURIFIER_CONVERT_HTML) .
+               $this->hp->purify($display_name, CODENDI_PURIFIER_CONVERT_HTML) .
                '</a>';
     }
     
@@ -76,11 +79,30 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         return $this->getLink();
     }
     
-    public function fetchCard() {
+    public function fetchCard(Tracker_CardDisplayPreferences $display_preferences) {
         if ($this->getId() == 100) {
             return '';
         }
-        return $this->getUser()->fetchHtmlAvatar(16);
+
+        $user = $this->getUser();
+        if ($display_preferences->shouldDisplayAvatars()) {
+            return $user->fetchHtmlAvatar(16);
+        }
+        return $this->fetchUserDisplayName($user);
+    }
+
+    private function fetchUserDisplayName(PFUser $user) {
+        $user_helper = new UserHelper();
+        $name        = $this->hp->purify($user_helper->getDisplayNameFromUser($user));
+        $user_id     = $this->getId();
+
+        $html = '<div class="realname"
+                       title="'. $name . '"
+                       data-user-id = "' . $user_id . '"
+                   >';
+        $html .= $name;
+        $html .= '</div>';
+        return $html;
     }
     
     public function fetchFormattedForCSV() {
@@ -93,7 +115,12 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     public function fetchValuesForJson() {
         $json = parent::fetchValuesForJson();
         $json['username'] = $this->getUsername();
+        $json['realname'] = $this->getUser()->getRealName();
         return $json;
+    }
+
+    public function getSoapValue() {
+        return $this->getUsername();
     }
 }
 ?>

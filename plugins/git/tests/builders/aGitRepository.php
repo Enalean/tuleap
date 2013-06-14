@@ -41,6 +41,11 @@ class Test_Git_RepositoryBuilder {
         return $this;
     }
 
+    public function withId($id) {
+        $this->repository->setId($id);
+        return $this;
+    }
+
     public function withName($name) {
         $this->repository->setName($name);
         return $this;

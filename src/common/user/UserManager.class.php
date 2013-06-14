@@ -78,7 +78,7 @@ class UserManager {
 
     /**
      * @param int the user_id of the user to find
-     * @return User or null if the user is not found
+     * @return PFUser or null if the user is not found
      */
     function getUserById($user_id) {
         if (!isset($this->_users[$user_id])) {
@@ -104,7 +104,7 @@ class UserManager {
     
     /**
      * @param string the user_name of the user to find
-     * @return User or null if the user is not found
+     * @return PFUser or null if the user is not found
      */
     function getUserByUserName($user_name) {
         if (!isset($this->_userid_bynames[$user_name])) {
@@ -129,13 +129,13 @@ class UserManager {
     }
 
     public function getUserInstanceFromRow($row) {
-        $u = new User($row);
+        $u = new PFUser($row);
         return $u;
     }
     
     /**
      * @param  string Ldap identifier
-     * @return User or null if the user is not found
+     * @return PFUser or null if the user is not found
      */
     function getUserByLdapId($ldapId) {
         if($ldapId == null) {
@@ -163,7 +163,7 @@ class UserManager {
      * 
      * @param String $ident A user identifier
      * 
-     * @return User
+     * @return PFUser
      */
     function findUser($ident) {
         $user = null;
@@ -214,7 +214,7 @@ class UserManager {
      *
      * @param String $email mail address of the user to retrieve
      *
-     * @return User or null if no user found
+     * @return PFUser or null if no user found
      */
     public function getUserByEmail($email) {
         $users = $this->getDao()->searchByEmail($email);
@@ -244,7 +244,7 @@ class UserManager {
      * 
      * @param string $identifier User identifier
      * 
-     * @return User
+     * @return PFUser
      */
     public function getUserByIdentifier($identifier) {
         $user = null;
@@ -288,7 +288,7 @@ class UserManager {
      * 
      * @param String $hash
      * 
-     * @return User
+     * @return PFUser
      */
     public function getUserByConfirmHash($hash) {
         $dar = $this->getDao()->searchByConfirmHash($hash);
@@ -303,7 +303,7 @@ class UserManager {
      * @param $session_hash string Optional parameter. If given, this will force 
      *                             the load of the user with the given session_hash. 
      *                             else it will check from the user cookies & ip
-     * @return User the user currently logged in (who made the request)
+     * @return PFUser the user currently logged in (who made the request)
      */
     function getCurrentUser($session_hash = false) {
         if (!isset($this->_currentuser) || $session_hash !== false) {
@@ -371,7 +371,7 @@ class UserManager {
     /**
      * Return the user acess information for a given user 
      * 
-     * @param User $user
+     * @param PFUser $user
      * 
      * @return Array
      */
@@ -384,7 +384,7 @@ class UserManager {
      * @param $name string The login name submitted by the user
      * @param $pwd string The password submitted by the user
      * @param $allowpending boolean True if pending users are allowed (for verify.php). Default is false
-     * @return User Registered user or anonymous if the authentication failed
+     * @return PFUser Registered user or anonymous if the authentication failed
      */
     function login($name, $pwd, $allowpending = false) {
         $logged_in = false;
@@ -530,7 +530,7 @@ class UserManager {
         return $this->createSession($user_login_as);
     }
 
-    private function createSession(User $user) {
+    private function createSession(PFUser $user) {
         $now = $_SERVER['REQUEST_TIME'];
         $session_hash = $this->getDao()->createSession($user->getId(), $now);
         if (!$session_hash) {
@@ -583,28 +583,18 @@ class UserManager {
      * @throws Exception when not in IS_SCRIPT
      *
      * @param $name string The login name submitted by the user
-     * @param $pwd string The password submitted by the user
      *
-     * @return User Registered user or anonymous if the authentication failed
+     * @return PFUser Registered user or anonymous if nothing match
      */
-    function forceLogin($name, $pwd) {
+    function forceLogin($name) {
         if (!IS_SCRIPT) {
             throw new Exception("Can't log in the user when not is script");
         }
-        $logged_in = false;
         
         //If nobody answer success, look for the user into the db
         if ($row = $this->getDao()->searchByUserName($name)->getRow()) {
             $this->_currentuser = $this->getUserInstanceFromRow($row);
-            if ($this->_currentuser->getUserPw() === md5($pwd)) {
-                $logged_in = true;
-            } else {
-                //invalid password or user_name
-                $GLOBALS['Response']->addFeedback('error', "Unable to authenticate $name");
-            }
-        }
-
-        if (!$logged_in) {
+        } else {
             $this->_currentuser = $this->getUserInstanceFromRow(array('user_id' => 0));
         }
         
@@ -663,7 +653,7 @@ class UserManager {
     
     /**
      * Update db entry of 'user' table with values in object
-     * @param User $user
+     * @param PFUser $user
      */
     public function updateDb($user) {
         if (!$user->isAnonymous()) {
@@ -689,16 +679,25 @@ class UserManager {
      * Should probably be merged with updateDb but I don't know the impact of
      * validating keys each time we update a user
      *
-     * @param User $user
+     * @param PFUser $user
      * @param String $keys
      */
-    public function updateUserSSHKeys(User $user, $keys) {
+    public function updateUserSSHKeys(PFUser $user, $keys) {
+        $original_authorised_keys = $user->getAuthorizedKeysRaw();
+
         $ssh_validator = new User_SSHKeyValidator($this, $this->_getEventManager());
-        $valid_keys = $ssh_validator->filterValidKeys($keys);
+        $valid_keys    = $ssh_validator->filterValidKeys($keys);
         $user->setAuthorizedKeys(implode('###', $valid_keys));
+
         if ($this->updateDb($user)) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('account_editsshkeys', 'update_filesystem'));
-            $this->_getEventManager()->processEvent(Event::EDIT_SSH_KEYS, array('user_id' => $user->getId()));
+
+            $event_parameters = array(
+                'user_id'       => $user->getId(),
+                'original_keys' => $original_authorised_keys,
+            );
+
+            $this->_getEventManager()->processEvent(Event::EDIT_SSH_KEYS, $event_parameters);
         }
     }
 
@@ -711,7 +710,7 @@ class UserManager {
      * between the user table and the user object, the user object must contains
      * what was updated by this method.
      * 
-     * @param User $user A user object to update
+     * @param PFUser $user A user object to update
      * 
      * @return Boolean
      */
@@ -727,9 +726,9 @@ class UserManager {
     /**
      * Create new account
      * 
-     * @param User $user
+     * @param PFUser $user
      * 
-     * @return User
+     * @return PFUser
      */
     function createAccount($user){
         $dao = $this->getDao();
@@ -851,7 +850,7 @@ class UserManager {
 
     /**
      * Update user name in different tables containing the old user name  
-     * @param User $user
+     * @param PFUser $user
      * @param String $newName
      * @return Boolean
      */

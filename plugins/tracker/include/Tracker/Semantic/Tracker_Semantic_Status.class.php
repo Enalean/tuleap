@@ -21,6 +21,9 @@ require_once('common/include/Codendi_Request.class.php');
 require_once('common/user/User.class.php');
 
 class Tracker_Semantic_Status extends Tracker_Semantic {
+    const NAME   = 'status';
+    const OPEN   = 'Open';
+    const CLOSED = 'Closed';
 
     /**
      * @var Tracker_FormElement_Field_List
@@ -51,7 +54,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      * @return string
      */
     public function getShortName() {
-        return 'status';
+        return self::NAME;
     }
 
     /**
@@ -104,6 +107,43 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
     }
 
     /**
+     * @return string
+     */
+    public function getStatus(Tracker_Artifact $artifact) {
+        $status = $artifact->getStatus();
+        if (! $status) {
+            return '';
+        }
+
+        $key = self::CLOSED;
+        if (in_array($artifact->getStatus(), $this->getOpenLabels())) {
+            $key = self::OPEN;
+        }
+        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_'. $key);
+    }
+
+    /**
+     *
+     * @return array
+     */
+    private function getOpenLabels() {
+        $labels = array();
+        
+        if (! $this->list_field instanceof Tracker_FormElement_Field_List) {
+            return $labels;
+        }
+        $field_values = $this->list_field->getAllValues();
+        
+        foreach ($this->open_values as $value) {
+            if (isset($field_values[$value])) {
+                $labels[] = $field_values[$value]->getLabel();
+            }
+        }
+
+        return $labels;
+    }
+
+    /**
      * Display the basic info about this semantic
      *
      * @return string html
@@ -134,11 +174,11 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      * @param Tracker_SemanticManager $sm              The semantic manager
      * @param TrackerManager          $tracker_manager The tracker manager
      * @param Codendi_Request         $request         The request
-     * @param User                    $current_user    The user who made the request
+     * @param PFUser                    $current_user    The user who made the request
      *
      * @return string html
      */
-    public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, User $current_user) {
+    public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $sm->displaySemanticHeader($this, $tracker_manager);
         $html = '';
@@ -210,11 +250,11 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      * @param Tracker_SemanticManager $sm              The semantic manager
      * @param TrackerManager          $tracker_manager The tracker manager
      * @param Codendi_Request         $request         The request
-     * @param User                    $current_user    The user who made the request
+     * @param PFUser                    $current_user    The user who made the request
      *
      * @return void
      */
-    public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, User $current_user) {
+    public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         if ($request->exist('update')) {
             if ($request->get('field_id') == '-1') {
                 if ($this->getField()) {
@@ -340,9 +380,13 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      * Export the semantic to SOAP format
      * @return array the SOAPification of the semantic
      */
-    public function exportToSOAP() {
-        $SOAP_array = parent::exportToSoap();
-        $SOAP_array['values'] = $this->getOpenValues();
+    public function exportToSOAP(PFUser $user) {
+        $SOAP_array = parent::exportToSoap($user);
+        if ($SOAP_array['field_name']) {
+            $SOAP_array['values'] = $this->getOpenValues();
+        } else {
+            $SOAP_array['values'] = array();
+        }
         return $SOAP_array;
     }
 

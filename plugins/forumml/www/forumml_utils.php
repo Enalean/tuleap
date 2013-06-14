@@ -462,7 +462,7 @@ function plugin_forumml_build_flattened_thread($topic, $list_id) {
 }
 
 // List all messages inside a thread
-function plugin_forumml_show_thread($p, $list_id, $parentId, $purgeCache, User $current_user) {
+function plugin_forumml_show_thread($p, $list_id, $parentId, $purgeCache, PFUser $current_user) {
     $hp     = ForumML_HTMLPurifier::instance();
     $thread = plugin_forumml_build_flattened_thread($parentId, $list_id);
     foreach ($thread as $message) {
@@ -472,7 +472,7 @@ function plugin_forumml_show_thread($p, $list_id, $parentId, $purgeCache, User $
 
 
 // Display a message
-function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, User $current_user) {
+function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFUser $current_user) {
 	$body    = $msg['body'];
 	$request = HTTPRequest::instance();
 

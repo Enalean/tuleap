@@ -890,7 +890,6 @@ div.datePicker table td
 /* only if they are not defined in the wiki stuff... So what?*/
 .wikitext { /* no effect...*/
     background: white;
-    border: 1px solid: gray;
 }
 .wikitext pre {
     margin: 1em;
@@ -1004,4 +1003,3 @@ a:hover {
     text-align: center;
     text-decoration: none;
 }
-

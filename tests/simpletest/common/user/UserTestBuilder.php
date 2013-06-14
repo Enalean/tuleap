@@ -48,7 +48,7 @@ class UserTestBuilder {
     }
 
     function withAuthorizedKeysArray(array $keys) {
-        $this->params['authorized_keys'] = implode('###', $keys);
+        $this->params['authorized_keys'] = implode(PFUser::SSH_KEY_SEPARATOR, $keys);
         return $this;
     }
 
@@ -57,8 +57,13 @@ class UserTestBuilder {
         return $this;
     }
 
+    function withLdapId($id) {
+        $this->params['ldap_id'] = $id;
+        return $this;
+    }
+
     function build() {
-        return new User($this->params);
+        return new PFUser($this->params);
     }
 }
 

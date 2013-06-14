@@ -1,7 +1,0 @@
-#!/bin/sh
-# location: /usr/share/codendi/plugins/git/bin/cron-start
-# script name: crontab script
-SRC_GERRIT_FETCH_SCRIPT=/usr/share/codendi/plugins/git/bin/gerrit-fetch.php
-
-# add custom entries to crontab
-0,15,30,45 * * * * codendiadm /usr/share/codendi/src/utils/php-launcher.sh $SRC_GERRIT_FETCH_SCRIPT

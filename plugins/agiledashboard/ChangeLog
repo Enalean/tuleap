@@ -1,3 +1,44 @@
+Version 0.84 - Tuleap 6.2
+    * Story 3539: initiate product backlog. Added two new panes for the top backlog
+
+Version 0.83 - Tuleap 6.1
+    * story #2923: Display dedicated planning pane in agiledashboard
+
+Version 0.82 - Tuleap 6.1
+    * Display a new 'Content' pane with the content of a given milestone
+
+Version 0.81 - Tuleap 6.1
+    * Refactoring: Better building of panes
+
+Version 0.80 - Tuleap 5.13
+    * Story #3075 : import a basic agile dashboard template
+
+
+We are now able to export trough the CLI an XML containing :
+Trackers / cardwalls on top and agildashboard's plannings
+
+Still with the CLI, we are able to import this XML into a new project and retrieve all these configurations
+
+Change-Id: I1b1b3f965a6375c857e8feceeebfb21e2554f163
+
+Version 0.79 - Tuleap 5.13
+    * story #3077 see people names instead of avatars on cardwall
+
+Version 0.78 - Tuleap 5.13
+    * Add a plugin dependency solver to force installation of needed plugins
+
+Version 0.77 - Tuleap 5.12
+    * Enhancement: add a tab on top of artifact to display its children
+
+Version 0.76 - Tuleap 5.12
+    * SOAP method related to tracker fields now returns computed field value
+
+Version 0.75 - Tuleap 5.12
+    * Story #2524: see colour type at a glance on cardwall.
+
+Version 0.74 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
 Version 0.73 - Tuleap 5.12
     * Fix bug on tuleap.net with empty burndown
 

@@ -1,13 +1,13 @@
 <?php
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generatePartial(
-    'User',
+    'PFUser',
     'UserTestVersion',
     array('getStatus', 'getUnixStatus', 'getPreferencesDao', 'getId', 'isAnonymous')
 );
 Mock::generatePartial(
-    'User',
+    'PFUser',
     'UserTestVersion2',
     array('getUserGroupData')
 );
@@ -263,7 +263,7 @@ class UserTest extends TuleapTestCase {
             .'yT7c1FysnHJtiy70W/100LdwJJWYCZNqgh5y02ThiDcbRIPwB8B/vD9n5AIZiyiuHn'
             .'QQp4PLi4+NzCne3C/kOMpI5UVxHlgoJmtx0jr1RpvdfX4cTzCSud0J1F+6g7MWg3YL'
             .'Rp2IZyp88CdZBoUYeW0MNbYZi1ju3FeZu6EKKltZ0uftOfj6w== marcel@labobine.net';
-        $user = new User(array('language_id'     => 'en_US',
+        $user = new PFUser(array('language_id'     => 'en_US',
                                'authorized_keys' => $k1));
         $this->assertEqual($user->getAuthorizedKeys(), $k1);
         $res = $user->getAuthorizedKeys(true);
@@ -283,8 +283,8 @@ class UserTest extends TuleapTestCase {
             .'mJtuHrow49+6mOuL5v+M+0FlwGthagQt1zjWvo6g8GC4x97Wt3FVu8cfQJVu7S5KBX'
             .'iz2VjRAwKTovt+M4+PlqO00vWbaaviFirwJPXjHoGVKONa/ahrXYiTICSgWUR6Cjlq'
             .'Hs15cMSFOfkmDimu9KJiaOvfMNDPDGW/HeNUYB7HqYZIRcznQ== marcel@shanon.net';
-        $ssh = $k1.'###'.$k2;
-        $user = new User(array('language_id'     => 'en_US',
+        $ssh = $k1.PFUser::SSH_KEY_SEPARATOR.$k2;
+        $user = new PFUser(array('language_id'     => 'en_US',
                                'authorized_keys' => $ssh));
         $this->assertEqual($user->getAuthorizedKeys(), $ssh);
         $res = $user->getAuthorizedKeys(true);
@@ -305,8 +305,8 @@ class UserTest extends TuleapTestCase {
             .'mJtuHrow49+6mOuL5v+M+0FlwGthagQt1zjWvo6g8GC4x97Wt3FVu8cfQJVu7S5KBX'
             .'iz2VjRAwKTovt+M4+PlqO00vWbaaviFirwJPXjHoGVKONa/ahrXYiTICSgWUR6Cjlq'
             .'Hs15cMSFOfkmDimu9KJiaOvfMNDPDGW/HeNUYB7HqYZIRcznQ== marcel@shanon.net';
-        $user = new User(array('language_id'     => 'en_US',
-                               'authorized_keys' => $k1.'######'.$k2));
+        $user = new PFUser(array('language_id'     => 'en_US',
+                               'authorized_keys' => $k1.PFUser::SSH_KEY_SEPARATOR.PFUser::SSH_KEY_SEPARATOR.$k2));
         $res = $user->getAuthorizedKeys(true);
         $this->assertEqual($res[0], $k1);
         $this->assertFalse(isset($res[1]));
@@ -318,7 +318,7 @@ class UserTest extends TuleapTestCase {
         $activeUser->setId(123);
         $activeUser->setReturnValue('getUserGroupData', array(101 => array(),
                                                               102 => array()));
-        $activeUser->setStatus(User::STATUS_ACTIVE);
+        $activeUser->setStatus(PFUser::STATUS_ACTIVE);
 
         $notProjectMember = new UserTestVersion2($this);
         $notProjectMember->setReturnValue('getUserGroupData', array(103 => array()));
@@ -331,7 +331,7 @@ class UserTest extends TuleapTestCase {
         $restrictedUser->setId(123);
         $restrictedUser->setReturnValue('getUserGroupData', array(101 => array(),
                                                                   102 => array()));
-        $restrictedUser->setStatus(User::STATUS_RESTRICTED);
+        $restrictedUser->setStatus(PFUser::STATUS_RESTRICTED);
 
         $otherProjectMember = new UserTestVersion2($this);
         $otherProjectMember->setReturnValue('getUserGroupData', array(102 => array()));
@@ -344,7 +344,7 @@ class UserTest extends TuleapTestCase {
         $restrictedUser->setId(123);
         $restrictedUser->setReturnValue('getUserGroupData', array(101 => array(),
                                                                   102 => array()));
-        $restrictedUser->setStatus(User::STATUS_RESTRICTED);
+        $restrictedUser->setStatus(PFUser::STATUS_RESTRICTED);
 
         $notProjectMember = new UserTestVersion2($this);
         $notProjectMember->setReturnValue('getUserGroupData', array(103 => array()));
@@ -353,7 +353,7 @@ class UserTest extends TuleapTestCase {
     }
 
     function testGetAuthorizedKeysSplitedWithoutKey() {
-        $user = new User(array('language_id'     => 'en_US',
+        $user = new PFUser(array('language_id'     => 'en_US',
                                'authorized_keys' => ''));
         $res = $user->getAuthorizedKeys(true);
         $this->assertEqual(count($res), 0);
@@ -422,7 +422,7 @@ class UserTest extends TuleapTestCase {
     }
     
     function testGetAllProjectShouldListOnlyOneOccurenceOfEachProject() {
-        $user = TestHelper::getPartialMock('User', array('getProjects', 'getUGroupDao'));
+        $user = partial_mock('PFUser', array('getProjects', 'getUGroupDao'));
         
         $user->setReturnValue('getProjects', array(101, 103));
         
@@ -438,7 +438,7 @@ class UserTest extends TuleapTestCase {
         $langFactory = new MockBaseLanguageFactory();
         $langFactory->expectOnce('getBaseLanguage', array('fr_BE'));
         
-        $user = new User(array('language_id' => 'fr_BE'));
+        $user = new PFUser(array('language_id' => 'fr_BE'));
         $user->setLanguageFactory($langFactory);
         $user->getLanguage();
     }

@@ -20,7 +20,7 @@
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 Mock::generate('Tracker_FormElement_Field_List_Value');
 Mock::generate('Transition_PostAction');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 class Transition_baseTest extends TuleapTestCase {
 
@@ -94,7 +94,7 @@ class Transition_equalsTest extends Transition_baseTest {
 class Transition_beforeTest extends Transition_baseTest {
 
     function testBeforeShouldTriggerActions() {
-        $current_user = new MockUser();
+        $current_user = mock('PFUser');
 
         $field_value_new = new MockTracker_FormElement_Field_List_Value();
         $field_value_new->setReturnValue('getId', 2066);

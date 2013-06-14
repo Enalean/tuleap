@@ -20,14 +20,19 @@
 
 class Planning_IndexPresenter {
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $plugin_theme_path;
 
-    public function __construct(array $short_access, $plugin_theme_path) {
+    public $project_id;
+
+    /** @var bool */
+    public $use_lab;
+
+    public function __construct(array $short_access, $plugin_theme_path, $project_id, $use_lab) {
         $this->short_access      = $short_access;
         $this->plugin_theme_path = $plugin_theme_path;
+        $this->project_id = $project_id;
+        $this->use_lab = $use_lab;
     }
 
     public function getShortAccess() {
@@ -41,6 +46,14 @@ class Planning_IndexPresenter {
     public function getLatestLeafMilestone() {
         $latest_short_access = end($this->short_access);
         return current($latest_short_access->getLastOpenMilestones());
+    }
+
+    public function get_default_top_pane() {
+        return AgileDashboard_Milestone_Pane_TopContent_PaneInfo::IDENTIFIER;
+    }
+
+    public function top_planning() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'top_planning_link');
     }
 }
 

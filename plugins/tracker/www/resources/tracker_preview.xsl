@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xsl:stylesheet version="1.0"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:t="http://codendi.org/tracker">
-    <xsl:template match="/t:tracker">
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:template match="/tracker">
         <html>
             <head>
                 <title>Tracker Preview</title>
@@ -23,23 +23,23 @@
                 </xsl:if>
                 <h3>Fields</h3>
                 <ul>
-                    <xsl:for-each select="t:formElements/t:formElement">
+                    <xsl:for-each select="formElements/formElement">
                         <xsl:call-template name="field" />
                     </xsl:for-each>
                 </ul>
                 <h3>Canned Responses</h3>
                 <dl>
-                    <xsl:for-each select="t:cannedResponses/t:cannedResponse">
+                    <xsl:for-each select="cannedResponses/cannedResponse">
                         <xsl:call-template name="response" />
                     </xsl:for-each>
                 </dl>
                 <h3>Report</h3>
                 <h4>Criterias</h4>
                 <ul>
-                    <xsl:for-each select="t:report/t:criterias/t:criteria">
-                        <xsl:variable name="fieldID" select="t:field/@REF" />
+                    <xsl:for-each select="report/criterias/criteria">
+                        <xsl:variable name="fieldID" select="field/@REF" />
                         <li>
-                            <xsl:value-of select="//t:formElement[@ID=$fieldID]/t:label" />
+                            <xsl:value-of select="//formElement[@ID=$fieldID]/label" />
                         </li>
                     </xsl:for-each>
                 </ul>
@@ -47,13 +47,13 @@
                     Renderers
                 </h4>
                 <ul>
-                    <xsl:for-each select="t:report/t:renderers/t:renderer">
+                    <xsl:for-each select="report/renderers/renderer">
                         <xsl:call-template name="renderer" />
                     </xsl:for-each>
                 </ul>
                 <h3>Tooltip</h3>
                 <ul>
-                    <xsl:for-each select="t:tooltip/t:field">
+                    <xsl:for-each select="tooltip/field">
                         <xsl:call-template name="fieldById">
                             <xsl:with-param name="fieldID" select="@REF" />
                         </xsl:call-template>
@@ -66,19 +66,19 @@
     <xsl:template name="field">
         <xsl:if test="count(@use_it)=0 or @use_it=1">
             <li>
-                <xsl:value-of select="t:label" />
+                <xsl:value-of select="label" />
                 :
                 <xsl:choose>
                     <xsl:when
                         test="@type='string' or @type='int' or @type='float' or @type='aid'">
-                        <input type="text" title="{t:description}" />
+                        <input type="text" title="{description}" />
                     </xsl:when>
                     <xsl:when test="@type='text'">
-                        <textarea rows="{t:properties/@rows}" cols="{t:properties/@cols}" />
+                        <textarea rows="{properties/@rows}" cols="{properties/@cols}" />
                     </xsl:when>
                     <xsl:when test="@type='sb' or @type='msb' or @type='tbl'">
-                        <select title="{t:description}">
-                            <xsl:for-each select="t:bind/t:items/t:item">
+                        <select title="{description}">
+                            <xsl:for-each select="bind/items/item">
                                 <option>
                                     <xsl:value-of select="@label" />
                                 </option>
@@ -86,7 +86,7 @@
                         </select>
                     </xsl:when>
                     <xsl:when test="@type='date' or @type='file'">
-                        <input type="text" title="{t:description}" />
+                        <input type="text" title="{description}" />
                     </xsl:when>
                     <xsl:when test="@type='fieldset'">
                         Fieldset
@@ -114,7 +114,7 @@
                 <xsl:if test="@required=1">
                     *
                 </xsl:if>
-                <xsl:for-each select="t:formElements/t:formElement">
+                <xsl:for-each select="formElements/formElement">
                     <ul>
                         <xsl:call-template name="field" />
                     </ul>
@@ -125,10 +125,10 @@
 
     <xsl:template name="response">
         <dt>
-            <xsl:value-of select="t:title" />
+            <xsl:value-of select="title" />
         </dt>
         <dd>
-            <xsl:value-of select="t:body" />
+            <xsl:value-of select="body" />
         </dd>
     </xsl:template>
 
@@ -136,14 +136,14 @@
         <xsl:param name="fieldID" />
         <li>
             <!-- display the label of the referenced field -->
-            <xsl:value-of select="//t:formElement[@ID=$fieldID]/t:label" />
+            <xsl:value-of select="//formElement[@ID=$fieldID]/label" />
         </li>
     </xsl:template>
 
     <xsl:template name="renderer">
-        <xsl:value-of select="t:name" />
+        <xsl:value-of select="name" />
         <ul>
-            <xsl:for-each select="t:columns/t:field">
+            <xsl:for-each select="columns/field">
                 <xsl:call-template name="fieldById">
                     <xsl:with-param name="fieldID" select="@REF" />
                 </xsl:call-template>

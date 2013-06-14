@@ -39,10 +39,24 @@ $project_id  = 0;
 $tracker_id  = 0;
 $artifact_id = $argv[1];
 $value       = array(
+    //example of updating a list field (select, multiselect....)
     array(
-        'field_name' => 'summary',
-        'field_label' => 'title',
-        'field_value' => array('value' => $argv[2])
+        'field_name'  => 'list_field',
+        'field_label' => '',
+        'field_value' => array('bind_value' =>
+            array(
+                array(
+                    'bind_value_id' => '106',
+                    'bind_value_label' => 'roger'
+                )
+            )
+        )
+    ),
+    //example of updating a simple field (int, text, string, ....)
+    array(
+        'field_name'  => 'summary_1',
+        'field_label' => '',
+        'field_value' => array('value' => 'my new summary')
     )
 );
 

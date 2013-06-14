@@ -31,6 +31,7 @@ Mock::generate('Layout');
 require_once dirname(__FILE__).'/../simpletest/common/user/UserTestBuilder.php';
 require_once dirname(__FILE__).'/../simpletest/common/include/builders/aRequest.php';
 require_once dirname(__FILE__).'/../simpletest/common/project/aMockProject.php';
+require_once dirname(__FILE__).'/../simpletest/common/system_event/builders/aSystemEvent.php';
 
 require_once 'MockBuilder.php';
 
@@ -45,6 +46,11 @@ abstract class TuleapTestCase extends UnitTestCase {
      * @var Save/restore the GLOBALS
      */
     private $globals;
+
+    /**
+     * @var String Path to a directory where temporary things can be done
+     */
+    private $tmp_dir;
 
     /**
      * SetUp a test (called before each test)
@@ -69,6 +75,15 @@ abstract class TuleapTestCase extends UnitTestCase {
         if ($this->globals !== null) {
             $GLOBALS = $this->globals;
         }
+        $this->removeTmpDir();
+
+        // Sometime, somewhere, you (yes I'm looking at you crappy developer) will
+        // include code that set time limit. Later on, tests will start to fail and
+        // you will not understand why. You will be like "I don't give a damn, CI server is too slow."
+        // of "It's a yet another PHP crappiness".
+        // So to avoid a huge shame during daily stand-up we do some cleaning
+        // for you.
+        set_time_limit(0);
     }
 
     function getTests() {
@@ -216,6 +231,14 @@ abstract class TuleapTestCase extends UnitTestCase {
         return $this->assertEqual(count($array), $expected_count);
     }
 
+    protected function assertFileExists($path) {
+        return $this->assertTrue(is_file($path));
+    }
+
+    protected function assertFileDoesntExist($path) {
+        return $this->assertFalse(is_file($path));
+    }
+
     /**
      * Recursive rm function.
      * see: http://us2.php.net/manual/en/function.rmdir.php#87385
@@ -233,15 +256,39 @@ abstract class TuleapTestCase extends UnitTestCase {
 
                 $typepath = $mypath . "/" . $file ;
 
-                if ( is_dir($typepath) ) {
+                if (is_file($typepath) || is_link($typepath)) {
+                    unlink($typepath);
+                } else {
                     $this->recurseDeleteInDir($typepath);
                     rmdir($typepath);
-                } else {
-                    unlink($typepath);
                 }
             }
         }
         closedir($d);
+    }
+
+    /**
+     * Creates a tmpDir and returns the path (dir automtically deleted in tearDown)
+     */
+    protected function getTmpDir() {
+        if (!$this->tmp_dir) {
+            clearstatcache();
+            do {
+                $this->tmp_dir = '/tmp/tuleap_tests_'.rand(0,10000);
+            } while (file_exists($this->tmp_dir));
+        }
+        if (!is_dir($this->tmp_dir)) {
+            mkdir($this->tmp_dir, 0700, true);
+        }
+        return $this->tmp_dir;
+    }
+
+    private function removeTmpDir() {
+        if ($this->tmp_dir && file_exists($this->tmp_dir)) {
+            $this->recurseDeleteInDir($this->tmp_dir);
+            rmdir($this->tmp_dir);
+        }
+        clearstatcache();
     }
 }
 ?>

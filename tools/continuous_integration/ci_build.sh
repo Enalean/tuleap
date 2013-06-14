@@ -100,7 +100,7 @@ cd "$src_dir"
 
 # Execute the Tests
 # This will produce a "JUnit like" test result file named codendi_unit_tests_report.xml that Hudson can use to produce test results.
-php -d include_path="src/www/include:src:/usr/share/pear:." -d memory_limit=196M tests/bin/simpletest -x tests/simpletest plugins tests/integration
+php -d include_path="src/www/include:src:/usr/share/pear:." tests/bin/simpletest -x tests/simpletest plugins tests/integration
 
 # Checkstyle
 files=$(git diff --name-only --diff-filter=A stable/master... | grep ".php" | grep -v "plugins/git/gitphp-0.1.0\|plugins/webdav/include/lib\|src/db/mysql/updates\|tools/examples\|cli" || true)

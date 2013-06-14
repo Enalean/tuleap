@@ -22,7 +22,7 @@ require_once('common/system_event/include/SystemEvent_COMPUTE_MD5SUM.class.php')
 Mock::generatePartial('SystemEvent_COMPUTE_MD5SUM', 'SystemEvent_COMPUTE_MD5SUM_TestVersion', array('getUser','getFileFactory', 'done', 'computeFRSMd5Sum', 'compareMd5Checksums', 'sendNotificationMail', 'updateDB'));
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 require_once('common/frs/FRSFileFactory.class.php');
 Mock::generate('FRSFileFactory');
@@ -47,7 +47,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
      */
     public function testComputeMd5sumSucceed() {
         $evt = new SystemEvent_COMPUTE_MD5SUM_TestVersion($this);
-        $evt->__construct('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_COMPUTE_MD5SUM, SystemEvent::OWNER_ROOT, '100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The file
         $fileFactory = new MockFRSFileFactory($this);
@@ -72,7 +72,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
 
     public function testComputeMd5sumFailure() {
         $evt = new SystemEvent_COMPUTE_MD5SUM_TestVersion($this);
-        $evt->__construct('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_COMPUTE_MD5SUM, SystemEvent::OWNER_ROOT, '100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The file
         $fileFactory = new MockFRSFileFactory($this);
@@ -85,7 +85,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
         $evt->setReturnValue('computeFRSMd5Sum', false);
 
         // The user
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getEmail', 'mickey@codendi.org');
         $evt->setReturnValue('getUser', $user);
         $evt->setReturnValue('sendNotificationMail', false);
@@ -102,7 +102,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
 
     public function testComputeMd5sumUpdateDBFailure() {
         $evt = new SystemEvent_COMPUTE_MD5SUM_TestVersion($this);
-        $evt->__construct('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '10013', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_COMPUTE_MD5SUM, SystemEvent::OWNER_ROOT, '10013', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The file
         $fileFactory = new MockFRSFileFactory($this);
@@ -126,7 +126,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
     
     public function testComparisonMd5sumFailure() {
         $evt = new SystemEvent_COMPUTE_MD5SUM_TestVersion($this);
-        $evt->__construct('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_COMPUTE_MD5SUM, SystemEvent::OWNER_ROOT, '100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The file
         $fileFactory = new MockFRSFileFactory($this);
@@ -141,7 +141,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
         $evt->setReturnValue('compareMd5Checksums', false);
 
         // The user
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getEmail', 'mickey@codendi.org');
         $evt->setReturnValue('getUser', $user);
         $evt->setReturnValue('sendNotificationMail', false);

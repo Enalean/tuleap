@@ -26,12 +26,7 @@
  * @author gstorchi
  */
  $DIR = dirname(__FILE__);
- require_once('GitBackend.class.php');
  require_once($DIR.'/../DVCS/DVCSDriver.class.php');
- require_once('exceptions/GitDriverException.class.php');
- require_once('exceptions/GitDriverErrorException.class.php');
- require_once('exceptions/GitDriverSourceNotFoundException.class.php');
- require_once('exceptions/GitDriverDestinationNotEmptyException.class.php');
 
 class GitDriver implements DVCSDriver {
 
@@ -159,6 +154,15 @@ class GitDriver implements DVCSDriver {
             return true;
         }
         return false;
+    }
+
+    /**
+     *
+     * @param string $repoPath
+     * @return bool
+     */
+    public function isRepositoryCreated($repoPath) {
+        return is_dir($repoPath.'/refs/heads/master');
     }
 
     public function setDescription($repoPath, $description) {

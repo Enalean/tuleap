@@ -26,7 +26,7 @@ class WorkflowManager {
         $this->tracker = $tracker;
     }
 
-    public function process(TrackerManager $engine, Codendi_Request $request, User $current_user) {
+    public function process(TrackerManager $engine, Codendi_Request $request, PFUser $current_user) {
         if ($request->get('func') == Workflow::FUNC_ADMIN_RULES) {
             $token = new CSRFSynchronizerToken(TRACKER_BASE_URL. '/?'. http_build_query(
                 array(

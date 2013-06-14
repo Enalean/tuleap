@@ -40,7 +40,8 @@ input[name=tracker_query_submit] {
 
 #tracker_report_renderers,
 #tracker-home-nav,
-.tracker-form-element-artifactlink-list-nav {
+.tracker-form-element-artifactlink-list-nav,
+.tracker-artifact-nav {
     padding: 5px 1em 3px;
     margin: 0;
     border-bottom: 1px solid #999;
@@ -56,15 +57,21 @@ input[name=tracker_query_submit] {
     border-right: none;
 }
 
+.tracker-artifact-nav,
 .tracker-form-element-artifactlink-list-nav {
     background-color: inherit;
     border-left: none;
     border-right: none;
 }
 
+.tracker-artifact-nav {
+    margin-bottom: 1em;
+}
+
 #tracker_report_renderers li,
 #tracker-home-nav li,
-.tracker-form-element-artifactlink-list-nav li {
+.tracker-form-element-artifactlink-list-nav li,
+.tracker-artifact-nav li {
     list-style: none;
     margin: 0;
     display: inline;
@@ -72,7 +79,8 @@ input[name=tracker_query_submit] {
 
 #tracker_report_renderers li a,
 #tracker-home-nav li a,
-.tracker-form-element-artifactlink-list-nav li a {
+.tracker-form-element-artifactlink-list-nav li a,
+.tracker-artifact-nav li a {
     padding: 4px 0.5em;
     padding-left: 24px;
     margin-right: 3px;
@@ -85,7 +93,8 @@ input[name=tracker_query_submit] {
 }
 
 #tracker-home-nav li a,
-.tracker-form-element-artifactlink-list-nav li a {
+.tracker-form-element-artifactlink-list-nav li a,
+.tracker-artifact-nav li a {
         padding-left: 0.5em;
 }
 
@@ -97,19 +106,23 @@ input[name=tracker_query_submit] {
 #tracker-home-nav li a:link,
 #tracker-home-nav li a:visited,
 .tracker-form-element-artifactlink-list-nav li a:link,
-.tracker-form-element-artifactlink-list-nav li a:visited { 
+.tracker-form-element-artifactlink-list-nav li a:visited,
+.tracker-artifact-nav li a:link,
+.tracker-artifact-nav li a:visited {
     color: black; 
 }
 
 #tracker_report_renderers li a:hover,
 #tracker-home-nav li a:hover,
-.tracker-form-element-artifactlink-list-nav li a:hover {
+.tracker-form-element-artifactlink-list-nav li a:hover,
+.tracker-artifact-nav li a:hover {
     color: black;
     background-color: #CCC;
 }
 #tracker_report_renderers li.tracker_report_renderers-current a,
 #tracker-home-nav li.current a,
-.tracker-form-element-artifactlink-list-nav li.tracker-form-element-artifactlink-list-nav-current a {
+.tracker-form-element-artifactlink-list-nav li.tracker-form-element-artifactlink-list-nav-current a,
+.tracker-artifact-nav li.tracker-artifact-nav-current a {
     font-weight:bold;
     background-color: white;
     border-bottom: 1px solid white;
@@ -1210,13 +1223,13 @@ td.first-column {
     padding-left: 5px;
     color: #333;
     position:relative;
-    min-height: 50px;
 }
 .card-container {
     background: #ffe;
     padding: 0.25em;
     padding-left: 0.5em;
     padding-right: 0.5em;
+    min-height: 50px;
 }
 .card.placeholder {
     border:1px dashed #3A87AD;
@@ -1315,4 +1328,44 @@ td.first-column {
 
 .workflow_rule_date_comparator {
     margin: auto 0.5em;
+}
+
+.artifact-children-table {
+    min-width: 50%;
+}
+.artifact-children-table, .artifact-children-table tr, .artifact-children-table td, .artifact-children-table tbody {
+    height:100%;
+    vertical-align:top;
+    border:0px;
+    margin:0px;
+    border-collapse:collapse;
+    border-spacing: 0px;
+    zoom:1;
+}
+.artifact-children-table td {
+    padding:0px;
+    padding-left:0.5em;
+    padding-right:0.5em;
+    border-left: 1px white solid;
+}
+
+.artifact-children-table, .artifact-children-table tbody {
+    overflow:auto;
+}
+
+.artifact-children-table > tbody > tr:nth-child(odd) > td {
+  background-color: #f9f9f9;
+}
+
+tr.artifact-children-table-head {
+    vertical-align: middle;
+    height: 2em;
+}
+
+.artifact-child > td {
+    border-left: 0 none;
+}
+
+.toggle-child > img {
+    vertical-align: middle;
 }

@@ -30,21 +30,25 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
         Config::store();
         Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
 
+        $milestone_controller_factory = mock('Planning_MilestoneControllerFactory');
         $this->planning_controller = mock('Planning_Controller');
         $this->router = TestHelper::getPartialMock('AgileDashboardRouter',
-                                             array('getViewBuilder',
-                                                   'renderAction',
+                                             array('renderAction',
                                                    'executeAction',
                                                    'buildController',
-                                                   'getProjectManager',
-                                                   'getArtifactFactory',
-                                                   'buildMilestoneController'));
-        $this->router->__construct(mock('Plugin'), mock('Planning_MilestoneFactory'), mock('PlanningFactory'), mock('Tracker_HierarchyFactory'));
+                                                   'getArtifactFactory',));
+
+
+        $this->router->__construct(
+            mock('Plugin'),
+            mock('Planning_MilestoneFactory'),
+            mock('PlanningFactory'),
+            mock('Planning_ShortAccessFactory'),
+            $milestone_controller_factory
+        );
         
         stub($this->router)->buildController()->returns($this->planning_controller);
-        stub($this->router)->getViewBuilder()->returns(mock('Planning_ViewBuilder'));
-        stub($this->router)->getProjectManager()->returns(mock('ProjectManager'));
-        stub($this->router)->buildMilestoneController()->returns(mock('Planning_MilestoneController'));
+        stub($milestone_controller_factory)->getMilestoneController()->returns(mock('Planning_MilestoneController'));
     }
 
     public function tearDown() {

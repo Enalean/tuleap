@@ -88,12 +88,12 @@ class PlanningFactory {
     /**
      * Get a list of planning defined in a group_id
      *
-     * @param User $user     The user who will see the planning
+     * @param PFUser $user     The user who will see the planning
      * @param int  $group_id
      *
-     * @return array of Planning
+     * @return Planning[]
      */
-    public function getPlannings(User $user, $group_id) {
+    public function getPlannings(PFUser $user, $group_id) {
         $plannings = array();
         foreach ($this->dao->searchPlannings($group_id) as $row) {
             $tracker = $this->tracker_factory->getTrackerById($row['planning_tracker_id']);
@@ -109,23 +109,25 @@ class PlanningFactory {
     }
 
     /**
-     * Get a list of planning short access defined in a group_id
+     * Get a list of planning defined in a group_id with added backlog trackers
      *
-     * @param User $user     The user who will see the planning
+     * @param PFUser $user     The user who will see the planning
      * @param int  $group_id
+     * @param PlanningFactory $planning_factory
      *
-     * @return array of Planning_ShortAccess
+     * @return Planning[]
      */
-    public function getPlanningsShortAccess(User $user, $group_id, Planning_MilestoneFactory $milestone_factory, $theme_path) {
-        $plannings    = $this->getPlannings($user, $group_id);
-        $short_access = array();
+    public function getOrderedPlanningsWithBacklogTracker(PFUser $user, $group_id) {
+        $plannings = $this->getPlannings($user, $group_id);
+
         foreach ($plannings as $planning) {
-            $short_access[] = new Planning_ShortAccess($planning, $user, $milestone_factory, $theme_path);
+            $planning->setBacklogTracker($this->getBacklogTracker($planning));
         }
-        if (!empty($short_access)) {
-            end($short_access)->setIsLatest();
+        if ($plannings) {
+            $this->sortPlanningsAccordinglyToHierarchy($plannings);
         }
-        return $short_access;
+
+        return $plannings;
     }
 
     private function sortPlanningsAccordinglyToHierarchy(array &$plannings) {
@@ -177,12 +179,12 @@ class PlanningFactory {
      *
      * @param Tracker $planning_tracker
      *
-     * @return Planning
+     * @return Planning|null
      */
     public function getPlanningByPlanningTracker(Tracker $planning_tracker) {
         $planning = $this->dao->searchByPlanningTrackerId($planning_tracker->getId())->getRow();
 
-        if($planning) {
+        if ($planning) {
             $p = new Planning($planning['id'],
                               $planning['name'],
                               $planning['group_id'],
@@ -250,6 +252,15 @@ class PlanningFactory {
      */
     public function buildNewPlanning($group_id) {
         return new Planning(null, null, $group_id, 'Release Backlog', 'Sprint Backlog');
+    }
+
+     /**
+     * Build a new empty planning
+     *
+     * @return Planning
+     */
+    public function buildEmptyPlanning() {
+        return new Planning(null, null, null, 'Release Backlog', 'Sprint Backlog');
     }
 
     /**
@@ -366,7 +377,7 @@ class PlanningFactory {
      *
      * @return Array of Integer
      */
-    public function getPlanningTrackers($group_id, User $user) {
+    public function getPlanningTrackers($group_id, PFUser $user) {
         $trackers = array();
         foreach ($this->getPlannings($user, $group_id) as $planning) {
             $planning   = $this->getPlanning($planning->getId());

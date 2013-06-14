@@ -21,52 +21,58 @@
 
 require_once(dirname(__FILE__).'/../../include/system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN.class.php');
 
-Mock::generate('Project');
-Mock::generate('User');
-Mock::generate('UserManager');
+class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends TuleapTestCase {
 
-class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends UnitTestCase {
-    
-    function testUpdateShouldUpdateAllProjects() {
-        $id           = 1002;
-        $type         = LDAP_UserManager::EVENT_UPDATE_LOGIN;
-        $parameters   = '101::102';
-        $priority     = SystemEvent::PRIORITY_MEDIUM;
-        $status       = SystemEvent::STATUS_RUNNING;
-        $create_date  = '';
-        $process_date = '';
-        $end_date     = '';
-        $log          = '';
-        
-        $se = TestHelper::getPartialMock('SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN', array('getUserManager', 'getBackendSVN', 'getProject'));
-        
-        $user1 = new MockUser();
+    public function setUp() {
+        parent::setUp();
+        $this->um = mock('UserManager');
+        $this->project_manager = mock('ProjectManager');
+        $this->backend = mock('BackendSVN');
+        $this->ldap_project_manager = mock('LDAP_ProjectManager');
+        $this->system_event = aSystemEvent('SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN')->withParameters('101::102')->build();
+        $this->system_event->injectDependencies($this->um, $this->backend, $this->project_manager, $this->ldap_project_manager);
+
+        $user1 = mock('PFUser');
         $user1->setReturnValue('getAllProjects', array(201, 202));
         $user1->setReturnValue('isActive', true);
-        $user2 = new MockUser();
+        $user2 = mock('PFUser');
         $user2->setReturnValue('getAllProjects', array(202, 203));
         $user2->setReturnValue('isActive', true);
-        $um = new MockUserManager();
-        $um->setReturnValue('getUserById', $user1, array('101'));
-        $um->setReturnValue('getUserById', $user2, array('102'));
-        $se->setReturnValue('getUserManager', $um);
-        
-        $prj1 = new MockProject();
-        $prj2 = new MockProject();
-        $prj3 = new MockProject();
-        $se->setReturnValue('getProject', $prj1, array(201));
-        $se->setReturnValue('getProject', $prj2, array(202));
-        $se->setReturnValue('getProject', $prj3, array(203));
-        
-        $backend = new MockBackendSVN();
-        $backend->expectCallCount('updateProjectSVNAccessFile', 3);
-        $backend->expect('updateProjectSVNAccessFile', array($prj1));
-        $backend->expect('updateProjectSVNAccessFile', array($prj2));
-        $backend->expect('updateProjectSVNAccessFile', array($prj3));
-        $se->setReturnValue('getBackendSVN', $backend);
-        
-        $se->__construct($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log);
-        $se->process();
+        $this->um->setReturnValue('getUserById', $user1, array('101'));
+        $this->um->setReturnValue('getUserById', $user2, array('102'));
+
+        $this->prj1 = stub('Project')->getId()->returns(201);
+        $this->prj2 = stub('Project')->getId()->returns(202);
+        $this->prj3 = stub('Project')->getId()->returns(203);
+        $this->project_manager->setReturnValue('getProject', $this->prj1, array(201));
+        $this->project_manager->setReturnValue('getProject', $this->prj2, array(202));
+        $this->project_manager->setReturnValue('getProject', $this->prj3, array(203));
+    }
+
+    function testUpdateShouldUpdateAllProjects() {
+        $this->backend->expectCallCount('updateProjectSVNAccessFile', 3);
+        expect($this->backend)->updateProjectSVNAccessFile($this->prj1)->at(0);
+        expect($this->backend)->updateProjectSVNAccessFile($this->prj2)->at(1);
+        expect($this->backend)->updateProjectSVNAccessFile($this->prj3)->at(2);
+
+        stub($this->ldap_project_manager)->hasSVNLDAPAuth()->returns(true);
+
+        $this->system_event->process();
+    }
+
+    function itSkipsProjectsThatAreNotManagedByLdap() {
+        expect($this->backend)->updateProjectSVNAccessFile()->never();
+        stub($this->ldap_project_manager)->hasSVNLDAPAuth()->returns(false);
+        $this->system_event->process();
+    }
+
+    function itSkipsProjectsBasedOnProjectId() {
+        expect($this->ldap_project_manager)->hasSVNLDAPAuth()->count(3);
+        expect($this->ldap_project_manager)->hasSVNLDAPAuth(201)->at(0);
+        expect($this->ldap_project_manager)->hasSVNLDAPAuth(202)->at(1);
+        expect($this->ldap_project_manager)->hasSVNLDAPAuth(203)->at(2);
+
+        $this->system_event->process();
     }
 }
 ?>

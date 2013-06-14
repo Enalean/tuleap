@@ -128,7 +128,7 @@ class Workflow {
     }
 
     /**
-     * @return array of Transition
+     * @return Transition[]
      */
     public function getTransitions() {
         if ($this->transitions === null) {
@@ -246,14 +246,19 @@ class Workflow {
            }
     }
 
-    public function exportToSOAP() {
-        $soap_result = array();
-        $soap_result['field_id']    = $this->getFieldId();
-        $soap_result['is_used']     = $this->getIsUsed();
-        $soap_result['rules']       = $this->getTracker()->getRulesManager()->exportToSOAP();
-        $soap_result['transitions'] = array();
-        foreach ($this->getTransitions() as $transition) {
-            $soap_result['transitions'][] = $transition->exportToSOAP();
+    public function exportToSOAP(PFUser $user) {
+        $soap_result = array(
+            'field_id'    => 0,
+            'is_used'     => 0,
+            'rules'       => $this->getTracker()->getRulesManager()->exportToSOAP($this->getField()->userCanRead($user)),
+            'transitions' => array(),
+        );
+        if ($this->getField()->userCanRead($user)) {
+            $soap_result['field_id']    = $this->getFieldId();
+            $soap_result['is_used']     = $this->getIsUsed();
+            foreach ($this->getTransitions() as $transition) {
+                $soap_result['transitions'][] = $transition->exportToSOAP();
+            }
         }
         return $soap_result;
     }
@@ -262,12 +267,12 @@ class Workflow {
      * Execute actions before transition happens (if there is one)
      *
      * @param Array $fields_data  Request field data (array[field_id] => data)
-     * @param User  $current_user The user who are performing the update
+     * @param PFUser  $current_user The user who are performing the update
      * @param Tracker_Artifact  $artifact The artifact
      *
      * @return void
      */
-    public function before(array &$fields_data, User $current_user, Tracker_Artifact $artifact) {
+    public function before(array &$fields_data, PFUser $current_user, Tracker_Artifact $artifact) {
         if (isset($fields_data[$this->getFieldId()])) {
             $transition = $this->getCurrentTransition($fields_data, $artifact->getLastChangeset());
             if ($transition) {

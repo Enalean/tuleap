@@ -47,7 +47,7 @@ function show_questions() {
 
 <H2><?php echo $Language->getText('survey_admin_add_survey','add_s'); ?></H2><P>
 
-<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
+<FORM ACTION="?" METHOD="POST">
 
 <B><?php echo $Language->getText('survey_admin_add_survey','s_name'); ?></B>
 <BR>

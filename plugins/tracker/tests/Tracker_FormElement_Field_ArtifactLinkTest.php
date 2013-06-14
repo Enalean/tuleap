@@ -195,12 +195,6 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $this->assertNull($f->getSoapAvailableValues());
     }
     
-    function testGetFieldData() {
-        $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
-        $res = array('new_values' => '1,3,9');
-        $this->assertEqual($res, $f->getFieldData('1,3,9'));
-    }
-    
     function testIsValid_AddsErrorIfARequiredFieldIsAnArrayWithoutNewValues() {
         $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
         $f->setReturnValue('isRequired', true);
@@ -437,50 +431,58 @@ class Tracker_FormElement_Field_ArtifactLink_UpdateCrossRefTest extends TuleapTe
 
         $this->current_user_id   = 852;
         $this->artifact_factory  = mock('Tracker_ArtifactFactory');
-        $this->reference_manager = mock('ReferenceManager');
+        $this->reference_manager = mock('Tracker_ReferenceManager');
 
         $this->field = partial_mock(
             'Tracker_FormElement_Field_ArtifactLink_TestUpdateCrossRef',
             array(
                 'getArtifactFactory',
-                'getReferenceManager',
+                'getTrackerReferenceManager',
                 'getCurrentUser'
             )
         );
-        stub($this->field)->getCurrentUser()->returns(aUser()->withId($this->current_user_id)->build());
-        stub($this->field)->getReferenceManager()->returns($this->reference_manager);
+
+        $this->user = aUser()->withId($this->current_user_id)->build();
+
+        stub($this->field)->getCurrentUser()->returns($this->user);
+        stub($this->field)->getTrackerReferenceManager()->returns($this->reference_manager);
         stub($this->field)->getArtifactFactory()->returns($this->artifact_factory);
+
+        $this->art_567             = anArtifact()->withId(567)->build();
+        stub($this->artifact_factory)->getArtifactById(567)->returns($this->art_567);
+
+        $this->source_artifact     = anArtifact()->withId(123)->build();
     }
 
-    public function itStuff() {
-        $target_tracker_name = 'target';
-        $target_project_id   = 963;
-        $target_tracker      = aTracker()->withItemName($target_tracker_name)->withProjectId($target_project_id)->build();
-        $changesets          = array(mock('Tracker_Artifact_Changeset'));
-        $art_567             = anArtifact()->withId(567)->withTracker($target_tracker)->withChangesets($changesets)->build();
-        stub($this->artifact_factory)->getArtifactById(567)->returns($art_567);
+    public function itAddsACrossReferenceOnTheTargetArtifact() {
+        $values  = array(
+            'new_values'     => '567',
+        );
 
-        $source_project_id   = 789;
-        $source_tracker_name = 'source';
-        $source_tracker      = aTracker()->withItemName($source_tracker_name)->withProjectId($source_project_id)->build();
-        $source_artifact_id  = 123;
-        $source_artifact     = anArtifact()->withId($source_artifact_id)->withTracker($source_tracker)->build();
+        expect($this->reference_manager)->insertBetweenTwoArtifacts(
+            $this->source_artifact,
+            $this->art_567,
+            $this->user
+        )->once();
 
-        $values   = array('new_values' => '567');
+        $this->field->updateCrossReferences($this->source_artifact, $values);
+    }
 
-        $this->reference_manager->expectOnce(
-            'extractCrossRef',
-            array(
-                'target #567',
-                $source_artifact_id,
-                Tracker_Artifact::REFERENCE_NATURE,
-                $source_project_id,
-                $this->current_user_id,
-                $source_tracker_name
+    public function itRemoveACrossReferenceFromTheTargetArtifact() {
+        $values  = array(
+            'new_values'     => '',
+            'removed_values' => array(
+                567 => array('567')
             )
         );
 
-        $this->field->updateCrossReferences($source_artifact, $values);
+        expect($this->reference_manager)->removeBetweenTwoArtifacts(
+            $this->source_artifact,
+            $this->art_567,
+            $this->user
+        )->once();
+
+        $this->field->updateCrossReferences($this->source_artifact, $values);
     }
 }
 
@@ -565,4 +567,152 @@ class Tracker_FormElement_Field_ArtifactLink_AugmentDataFromRequestTest extends 
     }
 }
 
+class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->field = partial_mock('Tracker_FormElement_Field_ArtifactLink', array('getChangesetValues'));
+
+        $this->last_changset_id = 1234;
+        $this->artifact = anArtifact()->build();
+        $last_changeset = new Tracker_Artifact_Changeset($this->last_changset_id, $this->artifact, '', '', '');
+        $this->artifact->setChangesets(array($last_changeset));
+    }
+
+    public function itGetValuesFromArtifactChangesetWhenThereIsAnArtifact() {
+        expect($this->field)->getChangesetValues($this->last_changset_id)->once();
+        stub($this->field)->getChangesetValues()->returns(array());
+
+        $this->field->getFieldData('55', $this->artifact);
+    }
+
+    public function itDoesntFetchValuesWhenNoArtifactGiven() {
+        expect($this->field)->getChangesetValues($this->last_changset_id)->never();
+
+        $this->field->getFieldData('55');
+    }
+
+    public function itOnlyAddNewValuesWhenNoArifactGiven() {
+        $this->assertEqual(
+            $this->field->getFieldData('55'),
+            array('new_values' => '55', 'removed_values' => array())
+        );
+    }
+
+    public function itAddsOneValue() {
+        stub($this->field)->getChangesetValues()->returns(array());
+        $this->assertEqual(
+            $this->field->getFieldData('55', $this->artifact),
+            array('new_values' => '55', 'removed_values' => array())
+        );
+    }
+
+    public function itAddsTwoNewValues() {
+        stub($this->field)->getChangesetValues()->returns(array());
+        $this->assertEqual(
+            $this->field->getFieldData('55, 66', $this->artifact),
+            array('new_values' => '55,66', 'removed_values' => array())
+        );
+    }
+
+    public function itIgnoresAddOfArtifactThatAreAlreadyLinked() {
+        stub($this->field)->getChangesetValues()->returns(array(
+            new Tracker_ArtifactLinkInfo(55, '', '', '', '')
+        ));
+
+        $this->assertEqual(
+            $this->field->getFieldData('55, 66', $this->artifact),
+            array('new_values' => '66', 'removed_values' => array())
+        );
+    }
+
+    public function itRemovesAllExistingArtifactLinks() {
+        stub($this->field)->getChangesetValues()->returns(array(
+            new Tracker_ArtifactLinkInfo(55, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', ''),
+        ));
+
+        $this->assertEqual(
+            $this->field->getFieldData('', $this->artifact),
+            array('new_values' => '', 'removed_values' => array(55 => array('55'), 66 => array('66')))
+        );
+    }
+
+    public function itRemovesFirstArtifactLink() {
+        stub($this->field)->getChangesetValues()->returns(array(
+            new Tracker_ArtifactLinkInfo(55, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(77, '', '', '', ''),
+        ));
+
+        $this->assertEqual(
+            $this->field->getFieldData('66,77', $this->artifact),
+            array('new_values' => '', 'removed_values' => array(55 => array('55')))
+        );
+    }
+
+    public function itRemovesMiddleArtifactLink() {
+        stub($this->field)->getChangesetValues()->returns(array(
+            new Tracker_ArtifactLinkInfo(55, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(77, '', '', '', ''),
+        ));
+
+        $this->assertEqual(
+            $this->field->getFieldData('55,77', $this->artifact),
+            array('new_values' => '', 'removed_values' => array(66 => array('66')))
+        );
+    }
+
+    public function itRemovesLastArtifactLink() {
+        stub($this->field)->getChangesetValues()->returns(array(
+            new Tracker_ArtifactLinkInfo(55, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(77, '', '', '', ''),
+        ));
+
+        $this->assertEqual(
+            $this->field->getFieldData('55,66', $this->artifact),
+            array('new_values' => '', 'removed_values' => array(77 => array('77')))
+        );
+    }
+
+    public function itAddsAndRemovesInOneCall() {
+        stub($this->field)->getChangesetValues()->returns(array(
+            new Tracker_ArtifactLinkInfo(55, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(77, '', '', '', ''),
+        ));
+
+        $this->assertEqual(
+            $this->field->getFieldData('55,66,88', $this->artifact),
+            array('new_values' => '88', 'removed_values' => array(77 => array('77')))
+        );
+    }
+}
+
+class Tracker_FormElement_Field_ArtifactLink_getFieldDataFromSoapValue extends TuleapTestCase {
+    
+    public function setUp() {
+        parent::setUp();
+        $this->field = partial_mock('Tracker_FormElement_Field_ArtifactLink', array('getFieldData'));
+    }
+
+    public function itPassesArtifactToGetFieldData() {
+        $artifact = anArtifact()->build();
+
+        $soap_value = (object) array(
+            'field_name'  => '',
+            'field_label' => '',
+            'field_value' => (object) array(
+                'value' => '55'
+            )
+        );
+
+        expect($this->field)->getFieldData('55', $artifact)->once();
+        stub($this->field)->getFieldData()->returns('whatever');
+
+        $this->assertEqual($this->field->getFieldDataFromSoapValue($soap_value, $artifact), 'whatever');
+    }
+}
 ?>

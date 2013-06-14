@@ -20,7 +20,7 @@ function send_new_project_email(Project $project) {
     $hp = Codendi_HTMLPurifier::instance();
 
     foreach ($admin_ugroup->getMembers() as $user) {
-        /* @var $user User */
+        /* @var $user PFUser */
         $language = $user->getLanguage();
         $subject = $GLOBALS['sys_name'] . ' ' . $language->getText('include_proj_email', 'proj_approve', $project->getUnixName());
         $message = '';

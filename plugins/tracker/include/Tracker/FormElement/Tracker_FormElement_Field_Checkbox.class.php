@@ -29,11 +29,16 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
     }
 
     protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected) {
+        if ($value->getId() == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+            return '';
+        }
         $id      = $value->getId();
         $html    = '';
         $checked = $is_selected ? 'checked="checked"' : '';
 
-        $html .= '<li><input type="checkbox" '. $name .' value="'. $id .'" id=cb_'. $id .' '. $checked .' valign="middle" />';
+        $html .= '<li>';
+        $html .= '<input type="hidden" '.$name.' value="0"  />';
+        $html .= '<input type="checkbox" '. $name .' value="'. $id .'" id=cb_'. $id .' '. $checked .' valign="middle" />';
         $html .= '<label for="cb_'. $id .'" >'. $this->getBind()->formatChangesetValue($value) .'</label>';
         $html .= '</li>';
         return $html;
@@ -41,6 +46,19 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
 
     protected function fetchFieldContainerEnd() {
         return '</ul>';
+    }
+
+
+    public function hasChanges(Tracker_Artifact_ChangesetValue_List $previous_changesetvalue, $new_value) {
+        return parent::hasChanges($previous_changesetvalue, $this->filterZeroWhenArray($new_value));
+    }
+
+    public function isNone($value) {
+        return parent::isNone($this->filterZeroWhenArray($value));
+    }
+
+    private function filterZeroWhenArray($values) {
+        return is_array($values) ? array_filter($values) : $values;
     }
 
     /**

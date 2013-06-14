@@ -9,6 +9,7 @@
  */
 
 require_once 'common/include/Error.class.php';
+require_once 'utils.php';
 
 class CrossReference extends Error {
     var $id; 

@@ -74,7 +74,7 @@ class Docman_LockFactory {
      * Retrun true if given user locked given item
      * 
      * @param Docman_Item $item Item to test
-     * @param User        $user User to test
+     * @param PFUser        $user User to test
      * 
      * @return Boolean
      */
@@ -86,7 +86,7 @@ class Docman_LockFactory {
      * Retrun true if given user locked given item
      *
      * @param Intger $itemId Item to test
-     * @param User   $user   User to test
+     * @param PFUser   $user   User to test
      *
      * @return Boolean
      */
@@ -167,7 +167,7 @@ class Docman_LockFactory {
      * Lock an item for a user
      *
      * @param Docman_Item $item Item to lock
-     * @param User        $user User who lock
+     * @param PFUser        $user User who lock
      *
      * @return Boolean
      */

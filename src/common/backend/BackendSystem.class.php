@@ -111,11 +111,11 @@ class BackendSystem extends Backend {
     /**
      * Ensure user home directory is created and has the right uid
      * 
-     * @param User $user the user we want to sanitize his home
+     * @param PFUser $user the user we want to sanitize his home
      * 
      * @return null
      */
-    public function userHomeSanityCheck(User $user) {
+    public function userHomeSanityCheck(PFUser $user) {
         if (!$this->userHomeExists($user->getUserName())) {
             $this->createUserHome($user);
         }
@@ -130,11 +130,11 @@ class BackendSystem extends Backend {
      * Also copy files from the skel directory to the new home directory.
      * If the directory already exists, nothing is done.
      * 
-     * @param User $user the user we want to create a home
+     * @param PFUser $user the user we want to create a home
      * 
      * @return true if directory is successfully created, false otherwise
      */
-    public function createUserHome(User $user) {
+    public function createUserHome(PFUser $user) {
         $homedir = $user->getUnixHomeDir();
 
         if (!is_dir($homedir)) {
@@ -169,11 +169,11 @@ class BackendSystem extends Backend {
     /**
      * Verify is user home directory has the right uid
      * 
-     * @param User $user the user needed to verify his home directory
+     * @param PFUser $user the user needed to verify his home directory
      * 
      * @return boolean
      */
-    private function isUserHomeOwnedByUser(User $user) {
+    private function isUserHomeOwnedByUser(PFUser $user) {
         $stat = stat($user->getUnixHomeDir());
         if ($stat) {
             if ($stat['uid'] != $user->getRealUnixUID()) {
@@ -186,11 +186,11 @@ class BackendSystem extends Backend {
     /**
      * Set user's uid/gid on its home directory (recursively)
      * 
-     * @param User $user user to set uid/gid
+     * @param PFUser $user user to set uid/gid
      * 
      * @return null
      */
-    private function setUserHomeOwnership(User $user) {
+    private function setUserHomeOwnership(PFUser $user) {
         $this->recurseChownChgrp($user->getUnixHomeDir(), $user->getUserName(), $user->getUserName());
     }
     
@@ -463,21 +463,27 @@ class BackendSystem extends Backend {
         foreach($user_manager->getUsersWithSshKey() as $user) {
             $sshkey_dumper->writeSSHKeys($user);
         }
-        EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, null);
+        EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, array());
         return true;
     }
     
     /**
      * dumps SSH authorized_keys for a user in its homedir
      * 
-     * @param User $user the user we want to dump his key
+     * @param PFUser $user the user we want to dump his key
+     * @param string $original_keys the original keys of the user
      * 
      * @return boolean if the ssh key was written
      */
-    public function dumpSSHKeysForUser(User $user) {
+    public function dumpSSHKeysForUser(PFUser $user, $original_keys) {
         $sshkey_dumper = new User_SSHKeyDumper($this);
         $write_status = $sshkey_dumper->writeSSHKeys($user);
-        EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, array('user' => $user));
+        $event_parameters = array(
+            'user'          => $user,
+            'original_keys' => $original_keys,
+        );
+
+        EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, $event_parameters);
         return $write_status;
     }
 
@@ -607,7 +613,7 @@ class BackendSystem extends Backend {
     /**
      * Rename User home directory 
      * 
-     * @param User    $user    a user
+     * @param PFUser    $user    a user
      * @param String  $newName the new name of user home directory
      * 
      * @return boolean

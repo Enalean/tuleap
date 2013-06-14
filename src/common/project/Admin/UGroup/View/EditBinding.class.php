@@ -31,12 +31,9 @@ class Project_Admin_UGroup_View_EditBinding extends Project_Admin_UGroup_View_Bi
 
     public function getContent() {
         $currentProject = null;
-        $currentSource  = null;
-        $dar = $this->ugroup_binding->getUGroupManager()->getUgroupBindingSource($this->ugroup->getId());
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
-            $row            = $dar->getRow();
-            $currentSource  = $this->ugroup_binding->getUGroupManager()->getById($row['source_id']);
-            $currentProject = $this->project_manager->getProject($row['group_id']);
+        $currentSource  = $this->ugroup->getSourceGroup();
+        if ($currentSource) {
+            $currentProject = $currentSource->getProject();
             if ($currentProject && $currentProject->userIsAdmin()) {
                 if (!$this->source_project_id) {
                     $this->source_project_id = $currentProject->getID();

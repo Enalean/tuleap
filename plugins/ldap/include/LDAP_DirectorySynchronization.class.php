@@ -77,7 +77,7 @@ class LDAP_DirectorySynchronization {
         $this->ldapTime += ($time_end-$time_start);
 
         if ($this->ldap->getErrno() === LDAP::ERR_SUCCESS && $lri) {
-            $user     = new User($row);
+            $user     = new PFUser($row);
             $modified = false;
 
             if (count($lri) == 1) {

@@ -30,7 +30,7 @@ use Term::ReadKey;
 use Crypt::SSLeay;
 use warnings;
 use strict;
-use Env qw($CODENDI_WSDL);
+use Env qw($TULEAP_WSDL);
 
 #################################
 #      /path/to/codendi/cli       #
@@ -41,7 +41,7 @@ my $_cli_dir   = "/usr/share/codendi/cli";
 # Server URL where all the stuff will be uploaded
 my $_codendi_url = "http://codendi.example.com";
 # CLI execution command
-my $_cli_cmd   = "/usr/bin/php $_cli_dir/codendi.php";
+my $_cli_cmd   = "/usr/bin/php $_cli_dir/tuleap.php";
 
 ######                          ######
 ###### End of parameter section ######
@@ -154,16 +154,16 @@ for my $item (@files)
 }
 
 ###########################################
-##             LOGIN TO CODENDI            ##
+##             LOGIN TO Tuleap           ##
 ###########################################
 
-print "\n....... Logging in to codendi .......\n";
+print "\n....... Logging in to tuleap .......\n";
 
-# Set CODENDI_WSDL according to DocmanUploader settings
-$CODENDI_WSDL = $_codendi_url."/soap/index.php?wsdl";
+# Set TULEAP_WSDL according to DocmanUploader settings
+$TULEAP_WSDL = $_codendi_url."/soap/index.php?wsdl";
 my $_login_cmd=$_cli_cmd.' login --username="'.$_username.'" --password="'.$_password.'"';
 system ($_login_cmd) == 0
-    or die "Login ($_login_cmd) with Codendi CLI failed: $?";
+    or die "Login ($_login_cmd) with Tuleap CLI failed: $?";
 
 my $_stay_in_ssl = 1;                     # item of the login form
 my $_login_var = 'Login';                 # item of the login form

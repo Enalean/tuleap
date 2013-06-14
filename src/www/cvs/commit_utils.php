@@ -149,7 +149,7 @@ function show_commitslist ($result,$offset,$total_rows,$set='any', $commiter='10
 		Accepts a result set from the commits table. Should include all columns from
 		the table, and it should be joined to USER to get the user_name.
 	*/
-    $url = $PHP_SELF.'?func=browse&group_id='.$group_id.'&set='.$set.'&msort='.$msort;
+    $url = '?func=browse&group_id='.$group_id.'&set='.$set.'&msort='.$msort;
 
     if ($set == 'custom')
      $url .= $pref_stg;
@@ -277,15 +277,11 @@ function show_commitslist ($result,$offset,$total_rows,$set='any', $commiter='10
 	      $id_str = ' ? ';
 	      $id_link = "&checkin_id=".db_result($result, $i, 'did').
 		  "&when=".db_result($result, $i, 'c_when').$filter_string;
-	      ##$id_sublink =" <br><A HREF=\"".$PHP_SELF."?func=detailcommit&group_id=".$group_id."&checkin_id=".db_result($result, $i, 'did').$filter_string."&desc_id=".db_result($result, $i, 'did')."\">".$Language->getText('cvs_commit_utils', 'no_date')."</A>";
-	    } else {
-	      ##$id_sublink =" <br><A HREF=\"".$PHP_SELF."?func=detailcommit&group_id=".$group_id.$id_link.$filter_string."&desc_id=".db_result($result, $i, 'did')."\">".$id_str." ".$Language->getText('cvs_commit_utils', 'on_log')."</A>";
-	      
 	    }
-	    
+
 	    echo '
 			<TR class="'. util_get_alt_row_color($i) .'">'.
-			'<TD class="small"><b><A HREF="'.$PHP_SELF.'?func=detailcommit&group_id='.$group_id.$id_link.$filter_string.'">'.$id_str.
+			'<TD class="small"><b><A HREF="?func=detailcommit&group_id='.$group_id.$id_link.$filter_string.'">'.$id_str.
 		  '</b></A></TD>'.
 			'<TD class="small">'.util_make_links(join('<br>', split("\n",db_result($result, $i, 'description'))),$group_id).$id_sublink.'</TD>'.
 			##'<TD class="small">'.$commits_url.'</TD>'.
@@ -545,14 +541,14 @@ function show_commit_details ($result) {
 	echo '
 		<TR><TD COLSPAN="2" class="small">';
 	if ($offset > 0) {
-		echo '<A HREF="'.$PHP_SELF.'?func=browse&group_id='.$group_id.'&set='.$set.'&offset='.($offset-50).'"><B>&lt; '.$Language->getText('global', 'prev').'</B></A>';
+		echo '<A HREF="?func=browse&group_id='.$group_id.'&set='.$set.'&offset='.($offset-50).'"><B>&lt; '.$Language->getText('global', 'prev').'</B></A>';
 	} else {
 		echo '&nbsp;';
 	}
 	echo '</TD><TD>&nbsp;</TD><TD COLSPAN="2" class="small">';
 	
 	if ($rows==50) {
-		echo '<A HREF="'.$PHP_SELF.'?func=browse&group_id='.$group_id.'&set='.$set.'&offset='.($offset+50).'"><B>'.$Language->getText('global', 'prev').' 50 &gt;</B></A>';
+		echo '<A HREF="?func=browse&group_id='.$group_id.'&set='.$set.'&offset='.($offset+50).'"><B>'.$Language->getText('global', 'prev').' 50 &gt;</B></A>';
 	} else {
 		echo '&nbsp;';
 	}

@@ -24,9 +24,38 @@ plugin_agiledashboard	edit_item	Éditer
 plugin_agiledashboard	add_subitem	Ajouter un(e) nouveau(lle) $1
 plugin_agiledashboard	backlog_add	Ajouter
 plugin_agiledashboard	planning_pane_title	Backlog/Planning
+plugin_agiledashboard	content_pane_title	Content
+plugin_agiledashboard	milestone_planning_pane_title	Planification de $1
 plugin_agiledashboard	access_to_planning	Accéder au planning
 plugin_agiledashboard	backlog_destination_help	Utiliser la flèche droite d'un élément pour le déplacer vers le milestone courant ou les flèches haut/bas pour prioriser les éléments entre eux.
 
 plugin_agiledashboard	capacity	Capacité :
 plugin_agiledashboard	available	$1 disponible(s)
 
+plugin_agiledashboard	content_head_title	Titre
+plugin_agiledashboard	content_head_points	Reste à faire
+plugin_agiledashboard	content_head_parent	Parent
+plugin_agiledashboard	top_planning_link	Planification Générale
+
+plugin_agiledashboard_contentpane	lab	Ceci est une fonctionnalité expérimentale qui est sujette à évolution prochainement. N'hésitez pas à <a href="mailto:tuleap-devel@tuleap.net">nous contater pour nous transmettre vos impressions</a> et retours d'expérience afin d'améliorer la fonctionnalité, merci!
+plugin_agiledashboard_contentpane	closed_items_title	$1 fermées
+plugin_agiledashboard_contentpane	closed_items_intro	Ci-dessous se trouvent les éléments qui sont fermés. Vous ne pouvez pas changer leur priorité.
+plugin_agiledashboard_contentpane	closed_items_nothing_yet	Rien de fermé actuellement
+plugin_agiledashboard_contentpane	open_items_title	$1 ouvertes
+plugin_agiledashboard_contentpane	open_items_title-no_more	Il n'y a plus de $1 ouvertes, bravo !
+plugin_agiledashboard_contentpane	open_items_title-not_yet	Pas encore de $1
+plugin_agiledashboard_contentpane	open_items_title-not_yet-can_add	Pas de $1, commencez à en ajouter dès maintenant
+plugin_agiledashboard_contentpane	open_items_intro	Voici les éléments qui sont ouverts. Vous pouvez les ordonner en les glissant-déposant.
+plugin_agiledashboard_contentpane	open_unplanned_items_intro	Voici les éléments qui sont ouverts et non encore plannifiés. Vous pouvez les ordonner en les glissant-déposant.
+plugin_agiledashboard_contentpane	allow_other_create	ou
+plugin_agiledashboard_contentpane	add_in_descendant_title	Ajouter un(e) $1 dans un(e) $2
+
+plugin_agiledashboard_milestone_planning	help_intro	Cette section vous permet de faire votre planning de $1:
+plugin_agiledashboard_milestone_planning	help_left	Sur la gauche, le backlog de $2, avec tous les éléments ouverts, non encore plannifiés dans un $1
+plugin_agiledashboard_milestone_planning	help_right	Sur la droite, la liste des $1 qui appartiennent à $2.
+plugin_agiledashboard_milestone_planning	help_dnd	Lorsque vous clickez sur un(e) $1, le backlog de ce(tte) $1 appartait. Vous pouvez faire un glissé-déposé des éléments de gauche à droite.
+plugin_agiledashboard_milestone_planning	backlog_title	$1 backlog
+plugin_agiledashboard_milestone_planning	list_of_submilestone_title	Liste des $1 de $2
+plugin_agiledashboard_milestone_planning	list_of_milestone_title	Liste des $1
+plugin_agiledashboard_milestone_planning	header_status	Statut
+plugin_agiledashboard_milestone_planning	empty_element_tip	Cet élément est vide, vous pouvez y glisser-déposer ce que vous voulez planifier

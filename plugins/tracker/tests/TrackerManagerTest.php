@@ -38,14 +38,14 @@ Mock::generatePartial('TrackerManager',
                           'getProject',
                           'displayAllTrackers',
                           'checkServiceEnabled',
-                          'getCrossSearchController'
+                          'getCrossSearchController',
                       )
 );
 Mock::generate('Tracker_CrossSearch_SearchController');
 require_once('common/include/Codendi_Request.class.php');
 Mock::generate('Codendi_Request');
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once('common/layout/Layout.class.php');
 Mock::generate('Layout');
 require_once('common/project/Project.class.php');
@@ -57,7 +57,7 @@ class TrackerManagerTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->user = new MockUser($this);
+        $this->user = mock('PFUser');
         $this->user->setReturnValue('getId', 666);
         
         $this->url = new MockTracker_URL();
@@ -75,8 +75,12 @@ class TrackerManagerTest extends TuleapTestCase {
         $this->tracker = new MockTracker($this);
         $this->tracker->setReturnValue('isActive', true);
         $this->tracker->setReturnValue('getTracker', $this->tracker);
+        $this->tracker2 = stub('Tracker')->exportToXML()->returns('<tracker>');
+        $trackers       = array($this->tracker, $this->tracker2);
+
         $tf = new MockTrackerFactory($this);
         $tf->setReturnReference('getTrackerById', $this->tracker, array(3));
+        stub($tf)->getTrackersByGroupId()->returns($trackers);
         
         $this->formElement = new MockTracker_FormElement_Interface($this);
         $ff = new MockTracker_FormElementFactory($this);
@@ -95,7 +99,7 @@ class TrackerManagerTest extends TuleapTestCase {
         $this->tm->setReturnReference('getArtifactFactory', $af);
         $this->tm->setReturnReference('getArtifactReportFactory', $rf);
         $this->tm->setReturnValue('checkServiceEnabled', true);
-        
+
         $GLOBALS['HTML'] = new MockLayout();
     }
     public function tearDown() {
@@ -297,6 +301,16 @@ class TrackerManagerTest extends TuleapTestCase {
         
         $controller->expectOnce('search');
         $this->tm->process($request, $user);
+    }
+
+    public function testExportToXml() {
+        $xml_content = new SimpleXMLElement('<project/>');
+        $group_id    = 123;
+
+        $this->tracker->expectCallCount('exportToXML', 1);
+        $this->tracker2->expectCallCount('exportToXML', 1);
+
+        $this->tm->exportToXMl($group_id, $xml_content);
     }
 }
 

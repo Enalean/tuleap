@@ -1,3 +1,6 @@
+codendi.locales['tracker'] = {
+    create_anyway: 'Got it, create it anyway!'
+};
 codendi.locales['tracker_formelement_admin'] = {
     cancel: 'cancel',
     add_another_file: 'Add another file',
@@ -24,4 +27,9 @@ codendi.locales['tracker_template'] = {
 codendi.locales['tracker_crosssearch'] = {
     expand_all: 'Expand all',
     collapse_all: 'Collapse all'
+};
+codendi.locales['tracker_hierarchy'] = {
+    no_child_artifacts: 'This artifact has no children yet',
+    title_column_name: 'Title',
+    status_column_name: 'Status'
 };

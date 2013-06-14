@@ -82,5 +82,14 @@ interface Tracker_CardPresenter {
      * @var array of Tracker
      */
     public function allowedChildrenTypes();
+
+    /**
+     * The accent color of the card to distinguish it among others.
+     *
+     * If no color, should returns empty string.
+     *
+     * @return string css compatible color
+     */
+    public function getAccentColor();
 }
 ?>

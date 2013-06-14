@@ -1,0 +1,59 @@
+=============== INSTALL on local server ===============
+#install fusion forge compatibility plugin
+As forge admin, go to your tuleap instance in the administration pannel -> plugins administration.
+If the plugin isn't yet installed, install it !
+Then, you have to check if the plugin is activated or not. If it doesn't, activate it !
+
+#install mediawiki plugin
+As forge admin, go to your tuleap instance in the administration pannel -> plugins administration.
+If the plugin isn't yet installed, install it !
+Then, you have to check if the plugin is activated or not. If it doesn't, activate it !
+
+# Update codendi_aliases.conf
+# -open /etc/httpd/conf.d/codendi_aliases.conf
+# -locate the 'Plugin directories' section title.
+# -paste the following row of code straight after it
+# include /etc/httpd/conf.d/plugins/*.inc
+# -then
+# mkdir /etc/httpd/conf.d/plugins (if not exists)
+
+# run db/install.sql
+# run bin/install.sh
+
+============================= TO CHECK LATER ============================= 
+
+Is there a need for bin/create_links.sh??? as of today the links are commited
+into git
+
+
+FFDIR=/usr/share/codendi
+MWCRON=/usr/share/codendi/plugins/mediawiki/cronjobs
+FFUSER=gforge
+
+# You may need to change the pathname to php CLI (command line interface)
+PHP="/usr/bin/php -q -d include_path=.:/etc/codendi:/usr/share/codendi/src:/usr/share/codendi/src/www/include:/usr/share/codendi/plugins"
+PHP="/usr/bin/php -d include_path=.:/etc/codendi:/usr/share/codendi/src:/usr/share/codendi/src/www/include:/usr/share/codendi/plugins"
+
+# Don't mail command output to anyone.
+MAILTO=""
+
+#
+# Regular cron jobs for the plugin-mediawiki package
+#
+
+echo "Running $PHP $MWCRON/create-wikis.php"
+$PHP $MWCRON/create-wikis-mysql.php
+
+# Create new mediawikis four times an hour
+#0,15,30,45 * * * * root [ -x $MWCRON/create-wikis.php ] && $PHP $MWCRON/create-wikis.php
+#,16,31,46 * * * * root [ -x $MWCRON/create-imagedirs.php ] && $PHP $MWCRON/create-imagedirs.php
+
+# Create wiki XML dumps every night
+#5 1 * * * root [ -x $MWCRON/dump-wikis.php ] && $PHP $MWCRON/dump-wikis.php
+
+
+
+
+
+
+

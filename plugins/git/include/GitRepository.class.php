@@ -18,14 +18,8 @@
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
 
-
-require_once('GitBackend.class.php');
-require_once('Git_Backend_Gitolite.class.php');
-require_once('GitDriver.class.php');
-require_once('GitDao.class.php');
-require_once('PathJoinUtil.php');
 require_once(dirname(__FILE__).'/../DVCS/DVCSRepository.class.php');
-require_once('exceptions/GitRepositoryException.class.php');
+require_once 'PathJoinUtil.php';
 
 /**
  * Description of GitRepositoryclass
@@ -73,7 +67,8 @@ class GitRepository implements DVCSRepository {
     private $namespace;
     private $scope;
     private $remote_server_id;
-    
+    private $remote_server_disconnect_date;
+
     protected $backendType;
 
     public function __construct() {
@@ -323,31 +318,6 @@ class GitRepository implements DVCSRepository {
     }
 
     /**
-     * Prepare data then log a Git push.
-     *
-     * @param String  $identifier     Name of the user that performed the push, in case of a repository with gitshell backend.
-     * @param Integer $pushTimestamp  Date of the push
-     * @param Integer $commitsNumber  Number of commits
-     * @param String  $gitoliteUser   Name of the user that performed the push, in case of a repository with gitolite backend.
-     *
-     * @return Boolean
-     */
-    public function logGitPush($identifier, $pushTimestamp, $commitsNumber, $gitoliteUser = null) {
-        $um = $this->_getUserManager();
-        if ($this->getBackendType() == GitDao::BACKEND_GITOLITE) {
-            if (!empty($gitoliteUser)) {
-                $identifier = $gitoliteUser;
-            }
-        }
-        if ($user = $um->getUserByIdentifier($identifier)) {
-            $userId = $user->getId();
-        } else {
-            $userId = 100;
-        }
-        return $this->getDao()->logGitPush($this->getId(), $userId, $pushTimestamp, $commitsNumber);
-    }
-
-    /**
      * @param String $name
      */
     public function setName($name) {
@@ -423,7 +393,15 @@ class GitRepository implements DVCSRepository {
                 return false;
             }
         }
-    }    
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function isCreated() {
+        return $this->getBackend()->isCreated($this);
+    }
 
     public function setCreationDate($date) {
         $this->creationDate = $date;
@@ -770,7 +748,7 @@ class GitRepository implements DVCSRepository {
     /**
      * Test is user can read the content of this repository and metadata
      *
-     * @param User $user The user to test
+     * @param PFUser $user The user to test
      *
      * @return Boolean
      */
@@ -782,7 +760,7 @@ class GitRepository implements DVCSRepository {
     /**
      * Test if user can modify repository configuration
      *
-     * @param User $user The user to test
+     * @param PFUser $user The user to test
      *
      * @return Boolean
      */
@@ -833,17 +811,18 @@ class GitRepository implements DVCSRepository {
     /**
      * Say if a repo belongs to a user
      *
-     * @param User $user the user
+     * @param PFUser $user the user
      *
      * @return true if the repo is a personnal rep and if it is created by $user
      */
-    public function belongsTo(User $user) {
+    public function belongsTo(PFUser $user) {
         return $this->getScope() == self::REPO_SCOPE_INDIVIDUAL && $this->getCreatorId() == $user->getId();
     }
     
     public function canMigrateToGerrit() {
         return $this->getBackendType() == GitDao::BACKEND_GITOLITE && 
-               $this->getRemoteServerId() == false;
+               $this->getRemoteServerId() == false &&
+               $this->remote_server_disconnect_date == false;
     }
 
     public function setRemoteServerId($id) {
@@ -852,6 +831,18 @@ class GitRepository implements DVCSRepository {
 
     public function getRemoteServerId() {
         return $this->remote_server_id;
+    }
+
+    public function isMigratedToGerrit() {
+        if ($this->remote_server_id) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function setRemoteServerDisconnectDate($date) {
+        $this->remote_server_disconnect_date = $date;
     }
 
     /**

@@ -18,20 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function forge_get_config($key) {
+function forge_get_config($key, $scope = 'core') {
     $conf_variables_mapping = array(
         'web_host'          => 'sys_default_domain',
         'use_ssl'           => 'sys_force_ssl',
         'forge_name'        => 'sys_name',
         //'lists_host'        => 'sys_lists_host',
         //'config_path'       => 'sys_custom_dir',
-        //'database_host'     => 'sys_dbhost',
-        //'database_user'     => 'sys_dbuser',
-        //'database_name'     => 'sys_dbname',
-        //'database_password' => 'sys_dbpasswd',
+        'database_host'     => 'sys_dbhost',
+        'database_user'     => 'sys_dbuser',
+        'database_name'     => 'sys_dbname',
+        'database_password' => 'sys_dbpasswd',
     );
     if (isset($conf_variables_mapping[$key])) {
         $key = $conf_variables_mapping[$key];
+    } else if ($scope !== 'core') {
+        $plugin_manager = PluginManager::instance();
+        $plugin = $plugin_manager->getPluginByName($scope);
+        if (! $plugin || ! $plugin_manager->isPluginAvailable($plugin)) {
+            return null;
+        }
+        return $plugin->getPluginInfo()->getPropertyValueForName($key);
     }
     return Config::get($key);
 }

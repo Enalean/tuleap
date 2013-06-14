@@ -1,5 +1,5 @@
 {{#board}}
-    <div class="cardwall_board {{nifty}}">
+    <div class="cardwall_board {{nifty}}" data-display-avatar="{{is_display_avatar_selected}}">
         {{#mappings}}
             <input type="hidden" id="cardwall_column_mapping_{{column_id}}_{{field_id}}" value="{{value_id}}" />
         {{/mappings}}
@@ -30,7 +30,9 @@
                         {{#has_swimline_header}}
                             <td class="cardwall-cell">
                                 <ul class="nodrag">
-                                    <li id="cardwall_board_postit-{{swimline_id}}">{{> card}}</td>
+                                    <li id="cardwall_board_postit-{{swimline_id}}">
+                                        {{> card}}
+                                    </li>
                                 </ul>
                             </td>
                         {{/has_swimline_header}}

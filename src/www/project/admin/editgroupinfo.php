@@ -58,7 +58,10 @@ if($Update){
 	}
 }
     
-
+$project_manager = ProjectManager::instance();
+$current_user = $request->getCurrentUser();
+$set_parent = false;
+$valid_parent = true;
 if ($valid_data==1) {
 	
 	// insert descriptions 
@@ -67,7 +70,7 @@ if ($valid_data==1) {
 		
 		$currentform=trim($request->get("form_".$descfieldsinfos[$i]["group_desc_id"]));
 		
-		
+
 		
 		for($j=0;$j<sizeof($descfieldsvalue);$j++){
 		
@@ -98,7 +101,6 @@ if ($valid_data==1) {
 					$updatedesc=1;
 				}	
 			}
-								
 		}else{
 			if(isset($previousvalue[$i])){	
 				$sql="DELETE FROM group_desc_value WHERE group_id=". db_ei($group_id) ." AND group_desc_id='".db_ei($descfieldsinfos[$i]["group_desc_id"])."'";
@@ -108,7 +110,32 @@ if ($valid_data==1) {
 				}	
 			}			
 		}
-	}	
+	}
+
+        /*
+         * Setting parent project
+         */
+        try {
+            if ($request->existAndNonEmpty('parent_project')) {
+                $parent_project = $project_manager->getProjectFromAutocompleter($request->get('parent_project'));
+                if ($parent_project && $current_user->isMember($parent_project->getId(), 'A')) {
+                $set_parent = $project_manager->setParentProject($group_id, $parent_project->getID());
+                }
+            }
+            if ($request->existAndNonEmpty('remove_parent_project')) {
+            $set_parent = $project_manager->removeParentProject($group_id);
+            }
+        } catch (Project_HierarchyManagerNoChangeException $e) {
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
+            $valid_parent = false;
+        } catch (Project_HierarchyManagerAncestorIsSelfException $e) {
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','self_exception',(db_error() ? db_error() : ' ' )));
+            $valid_parent = false;
+        } catch (Project_HierarchyManagerAlreadyAncestorException $e) {
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','ancestor_exception',(db_error() ? db_error() : ' ' )));
+            $valid_parent = false;
+        }
+
     // in the database, these all default to '1', 
     // so we have to explicity set 0
     
@@ -120,13 +147,12 @@ if ($valid_data==1) {
 
     //echo $sql;
     $result=db_query($sql);
-    
-    if ((!$result || db_affected_rows($result) < 1)&&($updatedesc==0)) {
+    if ((! $result || db_affected_rows($result) < 1) && ($updatedesc==0) && ! $set_parent) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
     } else {
-    	
-    	
-        $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_editgroupinfo','upd_success'));
+        if ($set_parent || (($result || db_affected_rows($result) > 0) && $valid_parent)) {
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_editgroupinfo','upd_success'));
+        }
         group_add_history('changed_public_info','',$group_id);
         
         // Raise an event
@@ -134,11 +160,7 @@ if ($valid_data==1) {
         $em->processEvent('project_admin_edition', array(
             'group_id'       => $group_id
         ));
-    
     }
-    
-    
-    
 }
 
 // update info for page
@@ -158,11 +180,9 @@ print '<P><h3>'.$Language->getText('project_admin_editgroupinfo','editing_g_info
 $hp = Codendi_HTMLPurifier::instance();
 print '
 <P>
-<FORM action="'.$PHP_SELF.'" method="post">
-<INPUT type="hidden" name="group_id" value="'.$group_id.'">
-
+<FORM action="?group_id='.$group_id.'" method="post">
 <P>'.$Language->getText('project_admin_editgroupinfo','descriptive_g_name').'<font color="red">*</font>
-<BR><INPUT type="text" size="40" maxlen="40" name="form_group_name" value="'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['group_name']), CODENDI_PURIFIER_CONVERT_HTML) .'">
+<BR><INPUT type="text" size="50" maxlen="40" name="form_group_name" value="'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['group_name']), CODENDI_PURIFIER_CONVERT_HTML) .'">
 
 <P>'.$Language->getText('project_admin_editgroupinfo','short_desc').'<font color="red">*</font>
 <BR><TEXTAREA cols="70" rows="3" wrap="virtual" name="form_shortdesc">
@@ -212,6 +232,49 @@ for($i=0;$i<sizeof($descfieldsinfos);$i++){
 		echo "</TEXTAREA></BR>" ;
 	}
 	echo "</P>";
+}
+
+echo '<h3>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo', 'project_hierarchy_title').'</h3>';
+echo '<p>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo', 'project_hierarchy_desc_1').'</p>';
+echo '<p>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo', 'project_hierarchy_desc_2').'</p>';
+echo '<p><strong>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo', 'project_hierarchy_desc_3').'</strong></p>';
+
+echo '
+<p>
+    <u>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo','parent_project').'</u>
+    <br/> ';
+
+$parent = $project_manager->getParentProject($group_id);
+if ($parent) {
+    $parent_name = $parent->getUnixName();
+
+    if ($current_user->isMember($parent->getId(), 'A')) {
+        $url = '?group_id='.$parent->getID();
+    } else {
+        $url = '/projects/'.$parent->getUnixName();
+    }
+
+    echo '<a href="'.$url.'"> '.$parent_name.' </a>
+    <br/>
+    <label><input type="checkbox" name="remove_parent_project"/>'.$GLOBALS['Language']->getText('project_admin_editgroupinfo','remove_parent_project').'</label>';
+} else {
+     echo '<input type="text" name="parent_project" size ="50" id="parent_project" /><br/>';
+}
+echo '</p>';
+
+$js = "new ProjectAutoCompleter('parent_project', '".util_get_dir_image_theme()."', false, {'allowNull' : true});";
+$GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
+
+echo "<u>".$GLOBALS['Language']->getText('project_admin_editgroupinfo', 'sub_projects')."</u><br>";
+$children = $project_manager->getChildProjects($group_id);
+
+foreach ($children as $child) {
+    if ($current_user->isMember($child->getId(), 'A')) {
+        $url = '?group_id='.$child->getID();
+    } else {
+        $url = '/projects/'.$child->getUnixName();
+    }
+    echo '<a href="'.$url.'">'.$child->getPublicName() . '</a> ';
 }
 
 echo '

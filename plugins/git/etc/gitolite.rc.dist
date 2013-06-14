@@ -19,14 +19,16 @@ $GL_CONF_COMPILED="$GL_ADMINDIR/conf/gitolite.conf-compiled.pm";
 # DO NOT CHANGE THE NEXT FOUR LINES UNLESS YOU REALLY KNOW WHAT YOU'RE DOING.
 # These variables are set automatically by the install method you choose.
 #            (PACKAGE MAINTAINERS: PLEASE READ doc/packaging.mkd)
-# $GL_PACKAGE_CONF = "";
-# $GL_PACKAGE_HOOKS = "";
+$GL_PACKAGE_CONF = "/usr/share/gitolite/conf";
+$GL_PACKAGE_HOOKS = "/usr/share/gitolite/hooks";
 
 # ------------------------------------------------------------------------------
 # most often used/changed variables
 # ------------------------------------------------------------------------------
 $GL_WILDREPOS = 0;
-$PROJECTS_LIST = "/var/lib/codendi/gitolite/projects.list";
+$PROJECTS_LIST = $ENV{HOME} . "/projects.list";
+# $WEB_INTERFACE = "gitweb";
+# $GITWEB_URI_ESCAPE = 0;
 $REPO_UMASK = 0007;
 
 # ------------------------------------------------------------------------------
@@ -35,6 +37,7 @@ $REPO_UMASK = 0007;
 $GL_BIG_CONFIG = 1;
 $GL_NO_DAEMON_NO_GITWEB = 0;
 # $GL_NICE_VALUE = 0;
+# $BIG_INFO_CAP = 20;
 
 # ------------------------------------------------------------------------------
 # VARIABLES WITH A SECURITY IMPACT.  READ DOCS BEFORE CHANGING THESE!
@@ -44,7 +47,6 @@ $GL_NO_DAEMON_NO_GITWEB = 0;
 # $GL_ALL_READ_ALL = 0;
 $GIT_PATH="";
 $GL_GITCONFIG_KEYS = ".*";
-# $GL_GITCONFIG_WILD = 0;
 $GL_NO_CREATE_REPOS = 0;
 $GL_NO_SETUP_AUTHKEYS = 0;
 # $GL_WILDREPOS_DEFPERMS = 'R @all';
@@ -56,6 +58,7 @@ $SVNSERVE = "";
 # $GL_ADC_PATH = "";
 # $GL_GET_MEMBERSHIPS_PGM = "/usr/lib/codendi/bin/gl-membership.pl";
 # $GL_HTTP_ANON_USER = "mob";
+# $GL_REF_OR_FILENAME_PATT=qr(^[0-9a-zA-Z][0-9a-zA-Z._\@/+ :,-]*$);
 
 # ------------------------------------------------------------------------------
 # less used/changed variables
@@ -66,6 +69,7 @@ $SVNSERVE = "";
 # PLEASE USE SINGLE QUOTES ABOVE, NOT DOUBLE QUOTES
 $GL_WILDREPOS_PERM_CATS = "READERS WRITERS";
 # $GL_SITE_INFO = "XYZ.COM DEVELOPERS: PLEASE SEE http://xyz.com/gitolite/help first";
+# $GL_HOSTNAME = "frodo";       # read doc/mirroring.mkd COMPLETELY before setting this
 
 # ------------------------------------------------------------------------------
 # rarely changed variables

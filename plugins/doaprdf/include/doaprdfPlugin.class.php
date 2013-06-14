@@ -40,6 +40,13 @@ class doaprdfPlugin extends Plugin {
 
 	}
 
+    /**
+     * @see Plugin::getDependencies()
+     */
+    public function getDependencies() {
+        return array('fusionforge_compat');
+    }
+
 	/**
 	 * Declares itself as accepting RDF XML on /projects/...
 	 * @param unknown_type $params

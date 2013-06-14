@@ -22,7 +22,7 @@ require_once 'common/dao/include/DataAccessObject.class.php';
 
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('Tracker_FormElement_Field_String');
 Mock::generate('Tracker_FormElement_Field_Selectbox');
 Mock::generate('Tracker_FormElement_Field_List_BindFactory');
@@ -170,7 +170,7 @@ class Tracker_SharedFormElementFactoryTest extends TuleapTestCase {
     }
 
     private function GivenASharedFormElementFactory($field, $type) {
-        $user = new MockUser();
+        $user = mock('PFUser');
         $tracker = new MockTracker();
         $factory = new MockTracker_FormElementFactory();
         $boundValuesFactory = new MockTracker_FormElement_Field_List_BindFactory();

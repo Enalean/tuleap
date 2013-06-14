@@ -21,7 +21,7 @@
 
 require_once('common/frs/FRSReleaseFactory.class.php');
 
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UserManager');
 Mock::generate('PermissionsManager');
 Mock::generate('FRSPackageFactory');
@@ -41,7 +41,7 @@ class FRSReleaseFactoryTest extends UnitTestCase {
         // Setup test
         $frsrf = new FRSReleaseFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', false);
         $user->setReturnValue('isMember', true, array($this->group_id, 'R2'));
 
@@ -57,7 +57,7 @@ class FRSReleaseFactoryTest extends UnitTestCase {
         // Setup test
         $frsrf = new FRSReleaseFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', false);
         $user->setReturnValue('isMember', true, array($this->group_id, 'A'));
 
@@ -72,7 +72,7 @@ class FRSReleaseFactoryTest extends UnitTestCase {
         // Setup test
         $frsrf = new FRSReleaseFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', true);
 
         $um = new MockUserManager($this);
@@ -87,7 +87,7 @@ class FRSReleaseFactoryTest extends UnitTestCase {
         $frsrf = new FRSReleaseFactoryTestVersion($this);
 
         // User
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getId', $this->user_id);
         $um = new MockUserManager($this);
         $um->setReturnValue('getUserById', $user);
@@ -123,7 +123,7 @@ class FRSReleaseFactoryTest extends UnitTestCase {
         $frsrf = new FRSReleaseFactoryTestVersion($this);
 
         // User
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->expectOnce('getUgroups', array($this->group_id, array()));
         $user->setReturnValue('getUgroups', array(1,2,76));
         $um = new MockUserManager($this);
@@ -158,7 +158,7 @@ class FRSReleaseFactoryTest extends UnitTestCase {
         // Setup test
         $frsrf = new FRSReleaseFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', false);
         $user->setReturnValue('isMember', true, array($this->group_id, 'R2'));
 
@@ -174,7 +174,7 @@ class FRSReleaseFactoryTest extends UnitTestCase {
         // Setup test
         $frsrf = new FRSReleaseFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', false);
         $user->setReturnValue('isMember', true, array($this->group_id, 'A'));
 
@@ -189,7 +189,7 @@ class FRSReleaseFactoryTest extends UnitTestCase {
         // Setup test
         $frsrf = new FRSReleaseFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', true);
 
         $um = new MockUserManager($this);
@@ -203,7 +203,7 @@ class FRSReleaseFactoryTest extends UnitTestCase {
         // Setup test
         $frsrf = new FRSReleaseFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
 
         $um = new MockUserManager($this);
         $um->setReturnValue('getUserById', $user);
@@ -220,7 +220,7 @@ class FRSReleaseFactoryTest extends UnitTestCase {
         // Setup test
         $frsrf = new FRSReleaseFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', false);
         $user->setReturnValue('isMember', true, array($this->group_id, 'R2'));
 
@@ -236,7 +236,7 @@ class FRSReleaseFactoryTest extends UnitTestCase {
         // Setup test
         $frsrf = new FRSReleaseFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', false);
         $user->setReturnValue('isMember', true, array($this->group_id, 'A'));
 
@@ -251,7 +251,7 @@ class FRSReleaseFactoryTest extends UnitTestCase {
         // Setup test
         $frsrf = new FRSReleaseFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', true);
 
         $um = new MockUserManager($this);
@@ -265,7 +265,7 @@ class FRSReleaseFactoryTest extends UnitTestCase {
         // Setup test
         $frsrf = new FRSReleaseFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
 
         $um = new MockUserManager($this);
         $um->setReturnValue('getUserById', $user);

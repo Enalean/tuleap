@@ -268,6 +268,7 @@ project_admin_header(array('title'=>$Language->getText('project_admin_editservic
 // '' -> show service and allow modification (-> do_update) 
 
 
+$func = $request->get('func');
 
 if (isset($func) && $func=="create") {
     $is_superuser=false;
@@ -277,7 +278,7 @@ if (isset($func) && $func=="create") {
     display_service_creation_form($group_id,$is_superuser);
 }
 else {
-
+    $service_id = $request->getValidated('service_id', 'uint', 0);
     if (!$service_id) {
         exit_error('ERROR','Service Id was not specified ');
     }

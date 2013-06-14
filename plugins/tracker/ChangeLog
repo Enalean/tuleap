@@ -1,3 +1,145 @@
+Version 5.131 - Tuleap 6.2
+    * Fix sla #3835: remove additional whitespace when using Rich Text field
+
+Version 5.130 - Tuleap 6.2
+    * Story 3539: initiate product backlog. Added two new panes for the top backlog
+
+Version 5.129 - Tuleap 6.2
+    * Do not crash when artifact has no last changeset
+
+Version 5.128 - Tuleap 6.2
+    * story #3544 - copy a tracker template with its permissions
+
+Version 5.127 - Tuleap 6.2
+    * Fix bugs #3582 - getTrackerStructure permissions
+
+
+SOAP method getTrackerStructure returns fields visible by user
+instead of requiring admin permission.
+
+Change-Id: Iafdb79916d4c4076146a33392d1a169e25081b7c
+
+Version 5.126 - Tuleap 6.1
+    * story #2923: Display dedicated planning pane in agiledashboard
+
+Version 5.125 - Tuleap 6.1
+    * Fix request #2722 - Date filtering does not work properly
+
+Version 5.124 - Tuleap 6.1
+    * Fix sla #3404: Stored XSS Vulnerability in Public Areas widget (Contrib STMicroelectronics)
+
+Version 5.123 - Tuleap 6.1
+    * Display a new 'Content' pane with the content of a given milestone
+
+Version 5.122 - Tuleap 6.1
+    * Fix request #3182: Decorators are correctly removed from database
+
+Version 5.121 - Tuleap 5.13
+    * Development: refactoring after Core update on UGroup
+
+Version 5.120 - Tuleap 5.13
+    * Remove namespace in XML export/import
+
+Version 5.119 - Tuleap 5.13
+    * remove file pushed by error
+
+Version 5.118 - Tuleap 5.13
+    * Allow one to filter cards on cardwall
+
+Version 5.117 - Tuleap 5.13
+    * Fix: do not display tuleapception in cards on error
+
+Version 5.116 - Tuleap 5.13
+    * Fix fatal error on reports
+
+Version 5.115 - Tuleap 5.13
+    * Fix bug when updating remaining effort
+
+Version 5.114 - Tuleap 5.13
+    * Fix include bug
+
+Version 5.113 - Tuleap 5.13
+    * Story #3075 : import a basic agile dashboard template
+
+
+We are now able to export trough the CLI an XML containing :
+Trackers / cardwalls on top and agildashboard's plannings
+
+Still with the CLI, we are able to import this XML into a new project and retrieve all these configurations
+
+Change-Id: I1b1b3f965a6375c857e8feceeebfb21e2554f163
+
+Version 5.112 - Tuleap 5.13
+    * story #3076 - Exclude week-end from burndown chart (as an option)
+      Change-Id: Idae742c8407da2566075f6ff30948996b47e14db
+
+Version 5.111 - Tuleap 5.13
+    * story #3077 see people names instead of avatars on cardwall
+
+Version 5.110 - Tuleap 5.13
+    * Fix bug reported in defect #ericsson:2858 and request #ericsson:2162
+      Delete cross reference when an artifact link is removed.
+      Change-Id: Ia1b74669c55bf715cd547b5db018a3804040a844
+
+Version 5.109 - Tuleap 5.13
+    * Fix sla #2833: With checkbox it not natural to have a none checkbox to check to indicate we don't want to check anything. So we removed it.
+
+Version 5.108 - Tuleap 5.13
+    * Fix fatal error when accessing backlog
+
+Version 5.107 - Tuleap 5.13
+    * Fix request #2932: project cross-reference created with artifact link are displayed in parent artifact
+
+Version 5.106 - Tuleap 5.13
+    * Fix sla #2835: Search criteria disappear when used advanced search on a field
+
+Version 5.105 - Tuleap 5.13
+    * See grand-children of an artifact in its hierarchical view
+
+Version 5.104 - Tuleap 5.13
+    * Fix SOAP getTrackerFields(): do not list registered_users
+
+Version 5.103 - Tuleap 5.13
+    * Tuleap User groups migration into Gerrit
+
+Version 5.102 - Tuleap 5.13
+    * Fix sla #1631: Workflow not applied when there is a default value
+
+Version 5.101 - Tuleap 5.13
+    * SOAP: better error message
+
+Version 5.100 - Tuleap 5.13
+    * Fix: tracker template selection not working
+
+Version 5.99 - Tuleap 5.13
+    * Migration of date reminder from tracker v3 to tracker v5
+
+Version 5.98 - Tuleap 5.12
+    * SOAP API v2.0.7
+    * Fix: SOAP getTrackerFields do not longer list members from registered_users in in list field
+    * Note: If registered_users is used in the list, use method getProjectGroupsAndUsers() to get the members list
+
+Version 5.97 - Tuleap 5.12
+    * Enhancement: add a tab on top of artifact to display its children
+
+Version 5.96 - Tuleap 5.12
+    * SOAP methods related to tracker v5 fields now return computed field value
+
+Version 5.95 - Tuleap 5.12
+    * Story #2524: see colour type at a glance on cardwall.
+
+Version 5.94 - Tuleap 5.12
+    * Fix bugs #2728 - [SOAP] Problem with the update of an artifact field value of type artifact link.
+
+Version 5.93 - Tuleap 5.12
+    * Fix bugs #2705: solve inconsitency issues between getTrackerFields, getArtifact and add/update artifact
+
+Version 5.92 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
+Version 5.91 - Tuleap 5.12
+    * Autofill tracker name/description/shortname based on XML file content (not supported under IE)
+
 Version 5.90 - Tuleap 5.12
     * Slices in pie/bar charts now is the same that the color attributed to the field in the tracker. (Contrib JTEKT)
 

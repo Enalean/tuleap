@@ -20,6 +20,8 @@
 require_once 'common/svn/SVN_Apache.class.php';
 
 class LDAP_SVN_Apache extends SVN_Apache {
+    const DEFAULT_ATTRIBUTE = 'uid';
+
     /**
      * @var LDAP
      */
@@ -57,7 +59,7 @@ class LDAP_SVN_Apache extends SVN_Apache {
         }
         return $conf;
     }
-    
+
     /**
      * Format LDAP url for apache mod_ldap
      *
@@ -70,26 +72,40 @@ class LDAP_SVN_Apache extends SVN_Apache {
      */
     public function getLDAPServersUrl() {
         if ($this->ldapUrl === null) {
-            $serverList = explode(',', $this->ldap->getLDAPParam('server'));
-            $firstIsLdaps = false;
-            foreach ($serverList as $k => $server) {
-                $server = strtolower(trim($server));
-                if ($k == 0 && strpos($server, 'ldaps://') === 0) {
-                    $firstIsLdaps = true;
-                }
-                $server = str_replace('ldap://', '', $server);
-                $server = str_replace('ldaps://', '', $server);
-                $serverList[$k] = $server;
-            }
-            if ($firstIsLdaps) {
-                $this->ldapUrl = 'ldaps://';
-            } else {
-                $this->ldapUrl = 'ldap://';
-            }
-            $this->ldapUrl .= implode(' ', $serverList).'/'.$this->ldap->getLDAPParam('dn');
+            $this->ldapUrl = $this->getHosts().$this->getBaseDn().$this->getAttribute();
         }
         return $this->ldapUrl;
     }
+
+    private function getHosts() {
+        $serverList = explode(',', $this->ldap->getLDAPParam('server'));
+        $firstIsLdaps = false;
+        foreach ($serverList as $k => $server) {
+            $server = strtolower(trim($server));
+            if ($k == 0 && strpos($server, 'ldaps://') === 0) {
+                $firstIsLdaps = true;
+            }
+            $server = str_replace('ldap://', '', $server);
+            $server = str_replace('ldaps://', '', $server);
+            $serverList[$k] = $server;
+        }
+        $prefix = 'ldap://';
+        if ($firstIsLdaps) {
+            $prefix = 'ldaps://';
+        }
+        return $prefix.implode(' ', $serverList);
+    }
+
+    private function getBaseDn() {
+        return '/'.$this->ldap->getLDAPParam('dn');
+    }
+
+    private function getAttribute() {
+        if ($this->ldap->getLDAPParam('uid') && $this->ldap->getLDAPParam('uid') != self::DEFAULT_ATTRIBUTE) {
+            return '?'.$this->ldap->getLDAPParam('uid');
+        }
+    }
+
 }
 
 ?>

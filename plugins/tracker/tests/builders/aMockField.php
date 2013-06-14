@@ -41,7 +41,17 @@ class MockFieldBuilder {
         
         return $this;
     }
-    
+
+    public function withLabel($label) {
+        stub($this->field)->getLabel()->returns($label);
+        return $this;
+    }
+
+    public function withName($name) {
+        stub($this->field)->getName()->returns($name);
+        return $this;
+    }
+
     public function build() {
         return $this->field;
     }

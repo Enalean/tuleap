@@ -1,3 +1,18 @@
+Version 3.30 - Tuleap 6.1
+    * Fix art #3535 - Apache authentication fails with Active Directory
+
+Version 3.29 - Tuleap 5.13
+    * Development: LDAP now provides an LDAP user to all platform
+
+Version 3.28 - Tuleap 5.13
+    * Fix sla #3147: Do not update ldap login when project is not using svn/ldap
+
+Version 3.27 - Tuleap 5.12
+    * Development: SystemEvents can now be processed by application owner instead of root
+
+Version 3.26 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
 Version 3.25 - Tuleap 5.11
     * Improve user experience with user group management (contrib STMicroelectronics)
 

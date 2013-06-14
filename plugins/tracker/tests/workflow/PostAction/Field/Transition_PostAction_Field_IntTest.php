@@ -66,7 +66,7 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
     }
     
     public function testBeforeShouldSetTheIntegerField() {
-        $user = new MockUser();
+        $user = mock('PFUser');
         
         stub($this->field)->getLabel()->returns('Remaining Effort');
         stub($this->field)->userCanRead($user)->returns(true);
@@ -84,7 +84,7 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
     }
     
     public function testBeforeShouldBypassAndSetTheIntegerField() {
-        $user = new MockUser();
+        $user = mock('PFUser');
         
         $label           = stub($this->field)->getLabel()->returns('Remaining Effort');
         $readableField   = stub($this->field)->userCanRead($user)->returns(true);
@@ -101,7 +101,7 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
     }
     
     public function testBeforeShouldNOTDisplayFeedback() {
-        $user = new MockUser();
+        $user = mock('PFUser');
         
         $label           = stub($this->field)->getLabel()->returns('Remaining Effort');
         $readableField   = stub($this->field)->userCanRead($user)->returns(false);

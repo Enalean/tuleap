@@ -18,18 +18,18 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once(dirname(__FILE__).'/../include/GitRepository.class.php');
+require_once 'bootstrap.php';
+
 Mock::generatePartial('GitRepository', 'GitRepositoryTestVersion', array('_getUserManager', 'getRepositoryIDByName', 'getDao'));
 Mock::generatePartial('GitRepository', 'GitRepositorySecondTestVersion', array('_getProjectManager', 'getDao'));
-require_once(dirname(__FILE__).'/../include/Git_Backend_Gitolite.class.php');
+
 Mock::generate('Git_Backend_Gitolite');
-require_once(dirname(__FILE__).'/../include/GitBackend.class.php');
+
 Mock::generate('GitBackend');
-require_once(dirname(__FILE__).'/../include/GitDao.class.php');
+
 Mock::generate('GitDao');
 Mock::generate('UserManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('ProjectManager');
 Mock::generate('Project');
 Mock::generate('DataAccessResult');
@@ -68,60 +68,6 @@ class GitRepositoryTest extends TuleapTestCase {
         $this->assertFalse($repo->isDotGit('d'));
         $this->assertFalse($repo->isDotGit('defaultgit'));
         $this->assertFalse($repo->isDotGit('default.git.old'));
-    }
-
-    public function testLogGitPushNoUser() {
-        $um = new MockUserManager();
-        $um->setReturnValue('getUserByIdentifier', null);
-        $repo = new GitRepositoryTestVersion();
-        $repo->setReturnValue('_getUserManager', $um);
-        $dao = new MockGitDao();
-        $dao->setReturnValue('logGitPush', true);
-        $repo->setReturnValue('getDao', $dao);
-
-        $this->assertTrue($repo->logGitPush('repo', 'user', 'prj', 1327577111, 3));
-
-        $repo->expectOnce('_getUserManager');
-        $um->expectOnce('getUserByIdentifier');
-        $dao->expectOnce('logGitPush');
-    }
-
-    public function testLogGitPushDaoFail() {
-        $user = new MockUser();
-        $user->setReturnValue('getId', 2);
-        $um = new MockUserManager();
-        $um->setReturnValue('getUserByIdentifier', $user);
-        $repo = new GitRepositoryTestVersion();
-        $repo->setReturnValue('_getUserManager', $um);
-        $dao = new MockGitDao();
-        $dao->setReturnValue('logGitPush', false);
-        $repo->setReturnValue('getDao', $dao);
-
-        $this->assertFalse($repo->logGitPush('repo', 'user', 'prj', 1327577111, 3));
-
-        $repo->expectOnce('_getUserManager');
-        $um->expectOnce('getUserByIdentifier');
-        $user->expectOnce('getId');
-        $dao->expectOnce('logGitPush');
-    }
-
-    public function testLogGitPushSuccess() {
-        $user = new MockUser();
-        $user->setReturnValue('getId', 2);
-        $um = new MockUserManager();
-        $um->setReturnValue('getUserByIdentifier', $user);
-        $repo = new GitRepositoryTestVersion();
-        $repo->setReturnValue('_getUserManager', $um);
-        $dao = new MockGitDao();
-        $dao->setReturnValue('logGitPush', true);
-        $repo->setReturnValue('getDao', $dao);
-
-        $this->assertTrue($repo->logGitPush('repo', 'user', 'prj', 1327577111, 3));
-
-        $repo->expectOnce('_getUserManager');
-        $um->expectOnce('getUserByIdentifier');
-        $user->expectOnce('getId');
-        $dao->expectOnce('logGitPush');
     }
 
     public function testGetRepositoryIDByNameSuccess() {
@@ -181,7 +127,7 @@ class GitRepositoryTest extends TuleapTestCase {
     }
     
     public function _newUser($name) {
-        $user = new User(array('language_id' => 1));
+        $user = new PFUser(array('language_id' => 1));
         $user->setUserName($name);
         return $user;
     }
@@ -202,7 +148,7 @@ class GitRepositoryTest extends TuleapTestCase {
     }
 
     public function testProjectRepositoryDosNotBelongToUser() {
-        $user = new User(array('language_id' => 1));
+        $user = new PFUser(array('language_id' => 1));
         $user->setUserName('sandra');
         
         $repo = new GitRepository();
@@ -213,7 +159,7 @@ class GitRepositoryTest extends TuleapTestCase {
     }
     
     public function testUserRepositoryBelongsToUser() {
-        $user = new User(array('language_id' => 1));
+        $user = new PFUser(array('language_id' => 1));
         $user->setUserName('sandra');
         
         $repo = new GitRepository();
@@ -223,10 +169,10 @@ class GitRepositoryTest extends TuleapTestCase {
         $this->assertTrue($repo->belongsTo($user));
     }
     public function testUserRepositoryDoesNotBelongToAnotherUser() {
-        $creator = new User(array('language_id' => 1));
+        $creator = new PFUser(array('language_id' => 1));
         $creator->setId(123);
         
-        $user = new User(array('language_id' => 1));
+        $user = new PFUser(array('language_id' => 1));
         $user->setId(456);
         
         $repo = new GitRepository();
@@ -252,6 +198,13 @@ class GitRepositoryTest extends TuleapTestCase {
         $repo = new GitRepository();
         $repo->setBackendType(GitDao::BACKEND_GITOLITE);
         $repo->setRemoteServerId(34);
+        $this->assertFalse($repo->canMigrateToGerrit());
+    }
+
+    public function itIsNotMigratableIfItHasAlreadyBeenAGerritRepoInThePast() {
+        $repo = new GitRepository();
+        $repo->setBackendType(GitDao::BACKEND_GITOLITE);
+        $repo->setRemoteServerDisconnectDate(12345677890);
         $this->assertFalse($repo->canMigrateToGerrit());
     }
 }

@@ -31,21 +31,22 @@ class Cardwall_BoardFactory {
                              Cardwall_OnTop_Config_ColumnCollection               $columns, 
                              TreeNode                                             $forests_of_artifacts, 
                              Cardwall_OnTop_Config                                $config,
-                             User                                                 $user) {
+                             PFUser                                               $user,
+                             Cardwall_DisplayPreferences                          $display_preferences) {
         $acc_field_provider = new Cardwall_FieldsExtractor($field_retriever);
         $status_fields      = $acc_field_provider->extractAndIndexFieldsOf($forests_of_artifacts);
         
         $mapping_collection = $config->getCardwallMappings($status_fields, $columns);
-        $forests_of_cardincell_presenters = $this->transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection, $user);
+        $forests_of_cardincell_presenters = $this->transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection, $user, $display_preferences);
         $swimlines                        = $this->getSwimlines($columns, $forests_of_cardincell_presenters, $config, $field_retriever);
 
         return new Cardwall_Board($swimlines, $columns, $mapping_collection);
         
     }
 
-    private function transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection, User $user) {
+    private function transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection, PFUser $user, Cardwall_DisplayPreferences $display_preferences) {
         
-        $card_presenter_mapper      = new TreeNodeMapper(new Cardwall_CreateCardPresenterCallback(new Tracker_CardFields(), $user));
+        $card_presenter_mapper      = new TreeNodeMapper(new Cardwall_CreateCardPresenterCallback(new Tracker_CardFields(), $user, $display_preferences));
         $forests_of_card_presenters = $card_presenter_mapper->map($forests_of_artifacts);
 
         $column_id_mapper           = new TreeNodeMapper(new Cardwall_CardInCellPresenterCallback($field_retriever, $mapping_collection));

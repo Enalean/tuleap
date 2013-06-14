@@ -85,6 +85,13 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
      */
      private $start_date = null;
 
+     /**
+      * Does this Milestone correspond to a top Milestone.
+      *
+      * @var bool
+      */
+     private $is_top  = false;
+
     /**
      * @param Project $project
      * @param Planning $planning
@@ -126,7 +133,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
     /**
      * @return Boolean
      */
-    public function userCanView(User $user) {
+    public function userCanView(PFUser $user) {
         return $this->artifact->getTracker()->userCanView($user);
     }
 
@@ -189,10 +196,10 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
 
     /**
      * All artifacts linked by either the root artifact or any of the artifacts in plannedArtifacts()
-     * @param User $user
+     * @param PFUser $user
      * @return Tracker_Artifact[]
      */
-    public function getLinkedArtifacts(User $user) {
+    public function getLinkedArtifacts(PFUser $user) {
         $artifacts = $this->artifact->getUniqueLinkedArtifacts($user);
         $root_node = $this->getPlannedArtifacts();
         // TODO get rid of this if, in favor of an empty treenode
@@ -251,6 +258,35 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         return $end_date;
     }
 
+    /**
+     * @param PFUser $user
+     * @return int | null
+     */
+    public function getCapacity(PFUser $user) {
+        $burndown_field = $this->artifact->getABurndownField($user);
+
+        if ($burndown_field) {
+            return $burndown_field->getCapacity($this->artifact);
+        }
+
+        return null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTop() {
+        return $this->is_top;
+    }
+
+    /**
+     * @param type $is_top
+     * @return Planning_ArtifactMilestone
+     */
+    public function setIsTop($is_top) {
+        $this->is_top = (bool) $is_top;
+        return $this;
+    }
 }
 
 ?>

@@ -153,7 +153,6 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
             }
             $output = Docman_View_View::buildUrl($prefix, $parameters, !$injs);
         }
-
         return $output;
     }
 

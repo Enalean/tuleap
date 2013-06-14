@@ -27,7 +27,7 @@ class Tracker_SOAP_TemporaryFile {
     private $user;
     private $attachment_name;
 
-    public function __construct(User $user, $attachment_name = null) {
+    public function __construct(PFUser $user, $attachment_name = null) {
         $this->user = $user;
         $this->attachment_name = $attachment_name;
     }

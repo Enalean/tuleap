@@ -21,7 +21,7 @@
 /**
  * Sanitizer (Abstract)
  */
-class Sanitizer {
+abstract class Tuleap_Sanitizer {
     
     function Sanitizer() {
         $this->_construct();

@@ -44,7 +44,7 @@ class Tracker_Workflow_Action_Transitions_CreateMatrix extends Tracker_Workflow_
         }
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
         $workflow = $this->workflow_factory->getWorkflowByTrackerId($this->tracker->id);
         $this->processEnabled($workflow, $request->get('is_used'));
 

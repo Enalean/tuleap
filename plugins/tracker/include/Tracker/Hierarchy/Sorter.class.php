@@ -118,11 +118,11 @@ class Tracker_Hierarchy_Sorter {
      *
      * @todo: limit to the hierarchy ? (currently add all the descendants)
      * 
-     * @param User             $user
+     * @param PFUser             $user
      * @param DataAccessResult $artifacts_info
      * @return \TreeNode
      */
-    public function buildTreeWithMissingChildren(User $user, $artifacts_info, array $excluded_artifact_ids) {
+    public function buildTreeWithMissingChildren(PFUser $user, $artifacts_info, array $excluded_artifact_ids) {
         $root           = new TreeNode();
         $artifacts_info = $this->indexArtifactInfoByArtifactId($artifacts_info);
         $artifacts      = $this->getArtifactsFromArtifactInfo($artifacts_info);
@@ -146,16 +146,17 @@ class Tracker_Hierarchy_Sorter {
         }
         return $artifacts;
     }
+
     /**
      *
-     * @param User     $user                  the user who build the tree
+     * @param PFUser     $user                  the user who build the tree
      * @param TreeNode $root                  the artifacts tree
      * @param array    $artifacts             list of artifacts
      * @param array    $artifacts_info        list of the artifacts informations : id, last_changeset_id, title, tracker_id, artifactlinks
      * @param array    $excluded_artifact_ids list of excluded artifact ids
      * @param array    $artifacts_done        list of artifacts already processed
      */
-    private function buildArtifactsTree(User $user, TreeNode $root, array $artifacts, array $artifacts_info, array $excluded_artifact_ids, array &$artifacts_done) {
+    private function buildArtifactsTree(PFUser $user, TreeNode $root, array $artifacts, array $artifacts_info, array $excluded_artifact_ids, array &$artifacts_done) {
         foreach ($artifacts as $artifact) {
             $artifact_id = $artifact->getId();
             if (!isset($excluded_artifact_ids[$artifact_id]) && ! isset($artifacts_done[$artifact_id])) {
