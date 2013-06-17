@@ -1,3 +1,19 @@
+Version 3.25 - Tuleap 6.2
+    * Story #3633 - Gerrit projects inherits Tuleap parents information
+
+Version 3.24 - Tuleap 6.2
+    * story #3634: my parent project are migrated when I migrate a repository
+
+    * Fix scheme issue in account maintenance page
+
+      When the gerrit host is gerrit.example.com and its port is 8080, the
+      link displayed in account maintenance page is:
+      <a href="gerrit.example.com:8080">…</a>
+
+      However the scheme is missing and therefore the browser thinks that the
+      scheme is gerrit.example.com and try to open an application (like apt:
+      or mailto:)
+
 Version 3.23 - Tuleap 6.2
     * Fix request #1561 - Error with link to git commit from a artifact
 

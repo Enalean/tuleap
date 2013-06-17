@@ -117,11 +117,14 @@ class PlanningFactory {
      *
      * @return Planning[]
      */
-    public function getPlanningsWithBacklogTracker(PFUser $user, $group_id, PlanningFactory $planning_factory) {
+    public function getOrderedPlanningsWithBacklogTracker(PFUser $user, $group_id) {
         $plannings = $this->getPlannings($user, $group_id);
 
         foreach ($plannings as $planning) {
-            $planning->setBacklogTracker($planning_factory->getBacklogTracker($planning));
+            $planning->setBacklogTracker($this->getBacklogTracker($planning));
+        }
+        if ($plannings) {
+            $this->sortPlanningsAccordinglyToHierarchy($plannings);
         }
 
         return $plannings;
@@ -249,6 +252,15 @@ class PlanningFactory {
      */
     public function buildNewPlanning($group_id) {
         return new Planning(null, null, $group_id, 'Release Backlog', 'Sprint Backlog');
+    }
+
+     /**
+     * Build a new empty planning
+     *
+     * @return Planning
+     */
+    public function buildEmptyPlanning() {
+        return new Planning(null, null, null, 'Release Backlog', 'Sprint Backlog');
     }
 
     /**

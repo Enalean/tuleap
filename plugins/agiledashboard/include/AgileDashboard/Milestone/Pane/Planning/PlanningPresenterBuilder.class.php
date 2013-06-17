@@ -54,7 +54,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
 
         $submilestone_collection = $this->getSubmilestoneCollection($user, $milestone, $submilestone_tracker, $redirect_to_self);
 
-        return new AgileDashboard_Milestone_Pane_Planning_PlanningPresenter(
+        $planning_presenter = new AgileDashboard_Milestone_Pane_Planning_PlanningPresenter(
             $backlog_collection,
             $submilestone_collection,
             $milestone,
@@ -66,6 +66,12 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
             $this->canPlan($user, $milestone),
             $redirect_to_self
         );
+
+        if ($backlog_strategy instanceof AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy) {
+            $descendant_tracker = $backlog_strategy->getDescendantTracker();
+            $planning_presenter->setDescendantItemName($descendant_tracker->getName());
+        }
+        return $planning_presenter;
     }
 
     private function getSubmilestoneCollection(PFUser $user, Planning_ArtifactMilestone $milestone, Tracker $submilestone_tracker, $redirect_to_self) {

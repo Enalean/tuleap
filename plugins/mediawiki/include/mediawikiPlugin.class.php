@@ -53,6 +53,7 @@ class MediaWikiPlugin extends Plugin {
                 // Search
                 $this->_addHook('search_type_entry', 'search_type_entry', false);
                 $this->_addHook('search_type', 'search_type', false);
+        $this->_addHook('plugin_statistics_service_usage');
 	}
 
     /**
@@ -456,6 +457,30 @@ class MediaWikiPlugin extends Plugin {
         $mediawiki_instantiater = new MediaWikiInstantiater($project_name);
 
         $mediawiki_instantiater->instantiate();
+    }
+
+    public function plugin_statistics_service_usage($params) {
+        require_once 'MediawikiDao.class.php';
+
+        $dao             = new MediawikiDao();
+        $project_manager = ProjectManager::instance();
+        $start_date      = $params['start_date'];
+        $end_date        = $params['end_date'];
+
+        $number_of_page                   = array();
+        $number_of_page_between_two_dates = array();
+        $number_of_page_since_a_date      = array();
+        foreach($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
+            if ($project->usesService('plugin_mediawiki')) {
+                $number_of_page[] = $dao->getMediawikiPagesNumberOfAProject($project);
+                $number_of_page_between_two_dates[] = $dao->getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate($project, $start_date, $end_date);
+                $number_of_page_since_a_date[] = $dao->getCreatedPagesNumberSinceStartDate($project, $start_date);
+            }
+        }
+
+        $params['csv_exporter']->buildDatas($number_of_page, "Mediawiki Pages");
+        $params['csv_exporter']->buildDatas($number_of_page_between_two_dates, "Modified Mediawiki pages");
+        $params['csv_exporter']->buildDatas($number_of_page_since_a_date, "Number of created Mediawiki pages since start date");
     }
 }
 

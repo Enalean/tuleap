@@ -26,9 +26,12 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 (function ($) {
     tuleap.agiledashboard.NewPlanning = Class.create({
         dragging : false,
+        params : {},
 
-        initialize: function () {
+        initialize: function (is_top) {
             var self = this;
+
+            this.is_top = is_top;
 
             $('.agiledashboard-planning-submilestone-header').click(function (event) {
                 var $submilestone_content_row = $(this).next();
@@ -58,9 +61,10 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
             var self = this;
 
             $.ajax({
-                url : "/plugins/agiledashboard/?action=submilestonedata",
+                url : "/plugins/agiledashboard/",
                 dataType : "html",
                 data : {
+                    action: 'submilestonedata',
                     planning_id: data_container.attr('data-planning-id'),
                     aid : data_container.attr('data-submilestone-id')
                 },
@@ -80,15 +84,23 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
         },
 
         setSubmilestonesEditLinks : function(data_container) {
-            var urls                  = $('tr.submilestone-element td > a', data_container),
+            var $urls                 = $('tr.submilestone-element td > a', data_container),
                 milestone_id          = this.getMilestoneId(),
-                milestone_planning_id = this.getMilestonePlanningId();
+                milestone_planning_id = this.getMilestonePlanningId(),
+                is_top = this.params.is_top;
 
-            urls.each( function() {
-                var new_url = $(this).attr('href') + '&' + 'planning[planning][' + milestone_planning_id + ']=' + milestone_id;
+            $urls.each( function() {
+                var new_url;
 
-                $(this).attr('href', new_url);
-            });
+                if (is_top) {
+                    new_url = $(this).attr('href') + '&planning[topplanning][]';
+                } else {
+                    new_url = $(this).attr('href') + '&'
+                        + 'planning[planning][' + milestone_planning_id + ']=' + milestone_id;   
+                }
+
+               $(this).attr('href', new_url);
+            });   
         },
 
         getMilestoneId : function() {
@@ -133,7 +145,6 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                 }
 
                 function shouldDisplayPlaceholder(table) {
-                    console.log($('tbody tr', table).length);
                     var SIZE_OF_TABLE_WHEN_THERE_IS_ONLY_OUR_EMPTY_PLACEHOLDER = 1;
 
                     return $('tbody tr', table).length === SIZE_OF_TABLE_WHEN_THERE_IS_ONLY_OUR_EMPTY_PLACEHOLDER || isDraggingLastRow(table);

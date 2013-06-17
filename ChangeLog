@@ -1,16 +1,30 @@
+Version 6.2 (Not released yet)
+	* Introduce project hierarchy definition.
+	* Fix XSS injection in Forums, Wiki, Search, People resume (contrib STMicroelectronics).
+	* Add tool to dump a forum of a project
+	* Attempt to fix bug when invalidating combined js cache
+	* Fix notice error on service management page
+
+	== Plugins ==
+	* agiledashboard: 0.85
+	* git: 3.25
+	* tracker: 5.131
+	* mediawiki: 0.12
+	* statistics: 0.28
+
 Version 6.1 (Thursday, May 30th 2013)
 	== Enhancement ==
 	* story #3226: see "svn propset --revprop -r X svn:log" modifications in commit DB
 
 	== Bug fixing ==
-	* Fix XSS injection in Forums, Wiki, Search, People resume (contrib STMicroelectronics).
+	* Fix XSS injection in Forums (contrib STMicroelectronics).
 
 	== Plugins ==
 	* docman: 2.26.16
 	* git: 3.22
 	* agiledashboard: 0.83
 	* cardwall: 0.9.32
-	* tracker: 5.127
+	* tracker: 5.126
 	* ldap: 3.30
 	* forumml: 2.6.12
 

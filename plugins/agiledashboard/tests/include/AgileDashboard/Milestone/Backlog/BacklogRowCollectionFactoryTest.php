@@ -32,7 +32,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    /** @var AgileDashboard_Milestone_Pane_ContentPresenterBuilder */
+    /** @var AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory */
     private $factory;
 
     /** @var Tracker_FormElementFactory */

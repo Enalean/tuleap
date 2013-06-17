@@ -71,7 +71,11 @@ class Tracker_Hierarchy {
      * @return type
      */
     public function isRoot($tracker_id) {
-        return $this->getLevel($tracker_id) == 0;
+        try {
+            return $this->getLevel($tracker_id) == 0;
+        } catch (Tracker_Hierarchy_NotInHierarchyException $e) {
+            return false;
+        }
     }
 
     /**

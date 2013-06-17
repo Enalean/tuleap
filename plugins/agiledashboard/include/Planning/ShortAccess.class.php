@@ -101,7 +101,7 @@ class Planning_ShortAccess {
     }
 
     public function planningRedirectToNew() {
-        return 'planning['. $this->planning->getId() .']=-1';
+        return 'planning[]['. $this->planning->getId() .']=-1';
     }
 
     public function setIsLatest() {

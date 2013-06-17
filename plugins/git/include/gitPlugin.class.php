@@ -455,7 +455,7 @@ class GitPlugin extends Plugin {
 
             foreach ($remote_servers as $server) {
                 $html .= '<li>
-                        <a href="'.$server->getHost().':'.$server->getHTTPPort().'/#/settings/ssh-keys">'.
+                        <a href="'.$server->getBaseUrl().'/#/settings/ssh-keys">'.
                             $server->getHost().'
                         </a>
                     </li>';
@@ -888,8 +888,13 @@ class GitPlugin extends Plugin {
             $this->getGerritDriver(),
             $this->getGerritUserFinder(),
             $this->getUGroupManager(),
-            $this->getGerritMembershipManager()
+            $this->getGerritMembershipManager(),
+            $this->getProjectManager()
         );
+    }
+
+    private function getProjectManager() {
+        return ProjectManager::instance();
     }
 
     private function getGerritUserFinder() {
@@ -960,7 +965,8 @@ class GitPlugin extends Plugin {
             new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory()),
             $this->getGerritServerFactory(),
             $this->getLogger(),
-            $this->getUGroupManager()
+            $this->getUGroupManager(),
+            $this->getProjectManager()
         );
     }
 

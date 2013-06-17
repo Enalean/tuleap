@@ -365,57 +365,5 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
-
-
-    public function getMediawikiPagesNumberOfAProject(Project $project) {
-        $database_name = $this->getMediawikiDatabaseName($project);
-        $group_id      = $project->getID();
-
-        $sql = "SELECT $group_id AS group_id, COUNT(1) AS result
-                FROM $database_name.mwpage";
-
-        return $this->retrieve($sql)->getRow();
-    }
-
-    public function getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate(Project $project) {
-        $database_name = $this->getMediawikiDatabaseName($project);
-        $group_id      = $project->getID();
-
-        $start_date    = date("YmdHis", $this->start_date);
-        $end_date      = date("YmdHis", $this->end_date);
-
-        $sql = "SELECT $group_id AS group_id, COUNT(1) AS result
-                FROM $database_name.mwpage
-                WHERE
-                    page_touched >= $start_date
-                    AND
-                    page_touched <= $end_date
-               ";
-
-        return $this->retrieve($sql)->getRow();
-    }
-
-    public function getCreatedPagesNumberSinceStartDate(Project $project) {
-        $database_name = $this->getMediawikiDatabaseName($project);
-        $group_id      = $project->getID();
-
-        $start_date    = date("YmdHis", $this->start_date);
-
-        $sql = "SELECT $group_id AS group_id, COUNT(1) AS result
-                FROM $database_name.mwrevision
-                WHERE
-                    rev_parent_id=0
-                    AND
-                    rev_timestamp >= $start_date
-               ";
-
-        return $this->retrieve($sql)->getRow();
-    }
-
-    private function getMediawikiDatabaseName(Project $project) {
-        $database_name = "plugin_mediawiki_".$project->getUnixName();
-        return $database_name;
-    }
 }
-
 ?>

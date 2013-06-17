@@ -35,6 +35,9 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
     private $redirect_to_self;
     private $milestone_item_type;
 
+    /** @var String */
+    private $descendant_item_name;
+
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $backlog_collection,
         AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection $submilestone_collection,
@@ -105,7 +108,14 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'add_subitem', array($this->submilestone_item_type));
     }
 
+    public function setDescendantItemName($descendant_item_name) {
+        $this->descendant_item_name = $descendant_item_name;
+    }
+
     public function title() {
+        if ($this->descendant_item_name) {
+            return $this->descendant_item_name;
+        }
         return $this->backlog_item_type;
     }
 

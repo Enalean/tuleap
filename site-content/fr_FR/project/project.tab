@@ -18,6 +18,16 @@ project_admin_editgroupinfo	soft_required	Autre(s) logiciel(s) requis
 project_admin_editgroupinfo	comments	Autre commentaires&nbsp;:
 project_admin_editgroupinfo	license_comment	Commentaires à propos de la licence non répertoriée utilisée par ce projet&nbsp;:
 project_admin_editgroupinfo	info_missed	Information Manquante. SVP remplissez tous les champs requis.
+project_admin_editgroupinfo	parent_project	Projet parent :
+project_admin_editgroupinfo	sub_projects	Sous projets :
+project_admin_editgroupinfo	project_hierarchy_title	Hierarchie de projets
+project_admin_editgroupinfo	project_hierarchy_desc_1	Cette fonctionnalité permettra, à terme, d'organiser vos projects les uns par rapport aux autres en terme de permissions, groupes d'utilisateurs et contrôle.
+project_admin_editgroupinfo	project_hierarchy_desc_2	Cependant, à l'heure actuelle, elle n'est exploitée que par Git/Gerrit pour les projets "parapluies" (si ces services sont activés/disponibles sur votre plate-forme).
+project_admin_editgroupinfo	project_hierarchy_desc_3	Veuillez noter que, plus tard, au cours de futurs développements, la définition d'une hierarchy pourra avoir un impact sur l'organisation des enfants (ex. les administrateurs d'un projet parent pourraient automatiquement avoir accès à l'administration des tous les enfants et petits enfants).
+project_admin_editgroupinfo	autocompleter_placeholder	Nom du projet (auto completé à la volée)
+project_admin_editgroupinfo	remove_parent_project	Supprimer le projet parent
+project_admin_editgroupinfo	self_exception	Un projet ne peut être son propre parent.
+project_admin_editgroupinfo	ancestor_exception	Un lien de parenté existe déjà entre ces projets.
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editservice.php
@@ -148,6 +158,9 @@ project_admin_editugroup	group_empty	le groupe est vide
 project_admin_editugroup	permissions_title	Gestion des permissions
 project_admin_editugroup	settings_title	Paramètres
 project_admin_editugroup	binding_title	Lier des groupes
+project_admin_editugroup	parent	Projet parent : 
+project_admin_editugroup	no_parent	Ce projet n'a pas de parent
+project_admin_editugroup	go_to_hierarchy_admin	Administration de la hiérarchie de projets
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/grouptrove.php

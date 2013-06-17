@@ -110,11 +110,11 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     }
 
     public function getProjectAdminUrl($gerrit_project) {
-        return $this->getGerritServerBaseUrl()."/#/admin/projects/$gerrit_project";
+        return $this->getBaseUrl()."/#/admin/projects/$gerrit_project";
     }
 
     public function getProjectUrl($gerrit_project) {
-        return $this->getGerritServerBaseUrl()."/#/q/project:$gerrit_project,n,z";
+        return $this->getBaseUrl()."/#/q/project:$gerrit_project,n,z";
     }
 
     /**
@@ -135,7 +135,10 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         return $this;
     }
 
-    private function getGerritServerBaseUrl() {
+    /**
+     * @return string The base url of the server. Eg: http://gerrit.example.com:8080/
+     */
+    public function getBaseUrl() {
         $url = "http://$this->host";
         if ($this->http_port != self::DEFAULT_HTTP_PORT) {
             $url .= ":$this->http_port";

@@ -29,11 +29,6 @@ require_once 'common/mvc2/PluginController.class.php';
 class Planning_Controller extends MVC2_PluginController {
     
     /**
-     * @var Tracker_Artifact
-     */
-    private $artifact;
-    
-    /**
      * @var PlanningFactory
      */
     private $planning_factory;
@@ -61,8 +56,14 @@ class Planning_Controller extends MVC2_PluginController {
     }
     
     public function index() {
+        $project_id = $this->request->getProject()->getID();
         $plannings = $this->getPlanningsShortAccess($this->group_id);
-        $presenter = new Planning_IndexPresenter($plannings, $this->plugin_theme_path);
+        $presenter = new Planning_IndexPresenter(
+            $plannings,
+            $this->plugin_theme_path,
+            $project_id,
+            $this->request->getCurrentUser()->useLabFeatures()
+        );
         $this->render('index', $presenter);
     }
     

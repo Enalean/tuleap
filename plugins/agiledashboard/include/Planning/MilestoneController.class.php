@@ -64,18 +64,38 @@ class Planning_MilestoneController extends MVC2_PluginController {
         $this->pane_factory                   = $pane_factory;
         $this->pane_presenter_builder_factory = $pane_presenter_builder_factory;
 
-        $project         = $project_manager->getProject($request->get('group_id'));
-        $this->milestone = $this->milestone_factory->getBareMilestone(
-            $this->getCurrentUser(),
-            $project,
-            $request->get('planning_id'),
-            $request->get('aid')
-        );
+        $project = $project_manager->getProject($request->get('group_id'));
+
+        try {
+            if ($request->get('is_top')) {
+                $this->milestone = $this->milestone_factory->getVirtualTopMilestone(
+                    $this->getCurrentUser(),
+                    $project
+                );
+            } else {
+                $this->milestone = $this->milestone_factory->getBareMilestone(
+                    $this->getCurrentUser(),
+                    $project,
+                    $request->get('planning_id'),
+                    $request->get('aid')
+                );
+            }
+        } catch (Planning_VirtualTopMilestoneNoPlanningsException $e) {
+            $query_parts = array('group_id' => $request->get('group_id'));
+            $this->redirect($query_parts);
+        }
+
+        $this->request = $request;
     }
 
     public function show() {
         $presenter = $this->getMilestonePresenter();
         $this->render('show', $presenter);
+    }
+
+    public function showTop() {
+        $presenter = $this->getMilestonePresenter();
+        $this->render('show-top', $presenter);
     }
 
     private function getMilestonePresenter() {
@@ -110,6 +130,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
 
     private function getSubmilestonePresenter() {
         $presenter_builder = $this->pane_presenter_builder_factory->getSubmilestonePresenterBuilder();
+        
         return $presenter_builder->getSubmilestonePresenter($this->getCurrentUser(), $this->milestone);
     }
 }
