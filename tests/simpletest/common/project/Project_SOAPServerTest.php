@@ -18,6 +18,7 @@
  */
 
 require_once 'common/project/Project_SOAPServer.class.php';
+require_once 'common/user/GenericUserFactory.class.php';
 
 Mock::generate('PFUser');
 Mock::generate('UserManager');
@@ -27,7 +28,7 @@ Mock::generate('ProjectManager');
 Mock::generate('ProjectCreator');
 Mock::generate('SOAP_RequestLimitator');
 
-class Project_SOAPServerTest extends UnitTestCase {
+class Project_SOAPServerTest extends TuleapTestCase {
     
     function testAddProjectShouldFailWhenRequesterIsNotProjectAdmin() {
         $server = $this->GivenASOAPServerWithBadTemplate();
@@ -145,8 +146,9 @@ class Project_SOAPServerTest extends UnitTestCase {
         
         $this->pm        = new MockProjectManager();
         $this->pc        = new MockProjectCreator();
+        $this->guf       = mock('GenericUserFactory');
         $this->limitator = new MockSOAP_RequestLimitator();
-        $server          = new Project_SOAPServer($this->pm, $this->pc, $this->um, $this->limitator);
+        $server          = new Project_SOAPServer($this->pm, $this->pc, $this->um, $this->guf, $this->limitator);
         return $server;
     }
 }
