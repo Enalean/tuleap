@@ -342,4 +342,48 @@ class PlanningFactoryTest_getAvailablePlanningTrackersTest extends PlanningFacto
     }
 }
 
+class PlanningFactoryTest_getVirtualTopPlanningTest extends TuleapTestCase {
+
+    /** @var TrackerFactory */
+    private $tracker_factory;
+
+    /** @var PlanningDao */
+    private $planning_dao;
+
+    public function setUp() {
+        parent::setUp();
+        $this->user            = mock('PFUser');
+        $this->planning_dao    = mock('PlanningDao');
+        $this->tracker_factory = mock('TrackerFactory');
+        $this->planning_factory = partial_mock('PlanningFactory', array('getRootPlanning'), array($this->planning_dao, $this->tracker_factory));
+    }
+    public function itThrowsAnExceptionIfNoPlanningsExistForProject() {
+        $this->expectException('Planning_NoPlanningsException');
+
+        $this->planning_factory->getVirtualTopPlanning($this->user, 112);
+    }
+
+    public function itCreatesNewPlanningWithValidBacklogAndPlanningTrackers() {
+        $backlog_tracker  = mock('Tracker');
+        $planning_tracker = mock('Tracker');
+
+        stub($backlog_tracker)->getId()->returns(78);
+
+        $my_planning = new Planning(null, null, null, null, null, 78, 45);
+        $my_planning->setBacklogTracker($backlog_tracker)
+                ->setPlanningTracker($planning_tracker);
+
+        stub($this->planning_factory)->getRootPlanning()->returns($my_planning);
+        stub($this->tracker_factory)->getTrackerById(45)->returns($backlog_tracker);
+        stub($this->tracker_factory)->getTrackerById(78)->returns($planning_tracker);
+
+
+        $planning = $this->planning_factory->getVirtualTopPlanning($this->user, 56);
+
+        $this->assertIsA($planning, 'Planning');
+        $this->assertIsA($planning->getBacklogTracker(), 'Tracker');
+        $this->assertIsA($planning->getPlanningTracker(), 'Tracker');
+    }
+}
+
 ?>

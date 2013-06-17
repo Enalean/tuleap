@@ -59,7 +59,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
             $submilestone_collection,
             $milestone,
             $backlog_collection->getParentItemName(),
-            $backlog_strategy->getItemTracker()->getName(),
+            $backlog_strategy->getBacklogItemName(),
             $submilestone_collection->getName(),
             $submilestone_collection->getSubmitNewUrlLinkedToMilestone($milestone),
             $submilestone_collection->canCreateNew($user),
@@ -67,10 +67,6 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
             $redirect_to_self
         );
 
-        if ($backlog_strategy instanceof AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy) {
-            $descendant_tracker = $backlog_strategy->getDescendantTracker();
-            $planning_presenter->setDescendantItemName($descendant_tracker->getName());
-        }
         return $planning_presenter;
     }
 

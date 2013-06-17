@@ -26,12 +26,9 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 (function ($) {
     tuleap.agiledashboard.NewPlanning = Class.create({
         dragging : false,
-        params : {},
 
-        initialize: function (is_top) {
+        initialize: function () {
             var self = this;
-
-            this.is_top = is_top;
 
             $('.agiledashboard-planning-submilestone-header').click(function (event) {
                 var $submilestone_content_row = $(this).next();
@@ -87,17 +84,13 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
             var $urls                 = $('tr.submilestone-element td > a', data_container),
                 milestone_id          = this.getMilestoneId(),
                 milestone_planning_id = this.getMilestonePlanningId(),
-                is_top = this.params.is_top;
-
+                pane = this.getPane();
+        
             $urls.each( function() {
                 var new_url;
 
-                if (is_top) {
-                    new_url = $(this).attr('href') + '&planning[topplanning][]';
-                } else {
-                    new_url = $(this).attr('href') + '&'
-                        + 'planning[planning][' + milestone_planning_id + ']=' + milestone_id;   
-                }
+                new_url = $(this).attr('href') + '&'
+                    + 'planning['+pane+'][' + milestone_planning_id + ']=' + milestone_id;
 
                $(this).attr('href', new_url);
             });   
@@ -109,6 +102,18 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 
         getMilestonePlanningId : function() {
             return $('div.agiledashboard-planning-backlog').attr('data-milestone-planning-id');
+        },
+
+        getPane : function() {
+            var path_parts = window.location.href.split('&');
+
+            for (var i=0; i < path_parts.length; i++) {
+                if (path_parts[i].indexOf( 'pane') === 0) {
+                    return path_parts[i].split("pane=")[1];
+                }
+            }
+
+            return null;
         },
 
         updateSubmilestoneCapacities : function() {

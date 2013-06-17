@@ -39,8 +39,7 @@ class Planning_MilestoneControllerFactory {
     /** @var Tracker_HierarchyFactory */
     private $hierarchy_factory;
 
-    /** @var AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder */
-    private $content_presenter_builder;
+
 
     public function __construct(
         Plugin $plugin,
@@ -49,7 +48,8 @@ class Planning_MilestoneControllerFactory {
         PlanningFactory $planning_factory,
         Tracker_HierarchyFactory $hierarchy_factory,
         AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
-        Planning_MilestonePaneFactory $pane_factory
+        Planning_MilestonePaneFactory $pane_factory,
+        Planning_VirtualTopMilestonePaneFactory $top_milestone_pane_factory
     ) {
         $this->plugin                         = $plugin;
         $this->project_manager                = $project_manager;
@@ -58,6 +58,7 @@ class Planning_MilestoneControllerFactory {
         $this->hierarchy_factory              = $hierarchy_factory;
         $this->pane_presenter_builder_factory = $pane_presenter_builder_factory;
         $this->pane_factory                   = $pane_factory;
+        $this->top_milestone_pane_factory     = $top_milestone_pane_factory;
     }
 
     /**
@@ -73,8 +74,23 @@ class Planning_MilestoneControllerFactory {
             $this->milestone_factory,
             $this->project_manager,
             $this->pane_factory,
-            $this->pane_presenter_builder_factory,
-            $this->plugin->getThemePath()
+            $this->pane_presenter_builder_factory
+        );
+    }
+
+    /**
+     * Builds a new Milestone_Controller instance.
+     *
+     * @param Codendi_Request $request
+     *
+     * @return Planning_MilestoneController
+     */
+    public function getVirtualTopMilestoneController(Codendi_Request $request) {
+        return new Planning_VirtualTopMilestoneController(
+            $request,
+            $this->milestone_factory,
+            $this->project_manager,
+            $this->top_milestone_pane_factory
         );
     }
 }

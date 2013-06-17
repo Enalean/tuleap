@@ -109,6 +109,60 @@ class PlanningFactory {
     }
 
     /**
+     * Return a planning for a VirtualTopMilestone
+     *
+     * @param PFUser  $user
+     * @param Integer $group_id
+     * @return \Planning
+     * @throws Planning_NoPlanningsException
+     */
+    public function getVirtualTopPlanning(PFUser $user, $group_id) {
+        $first_planning   = $this->getRootPlanning($user, $group_id);
+        if (! $first_planning) {
+            throw new Planning_NoPlanningsException('No Root Plannings Exist');
+        }
+
+        $planning_tracker_id = $first_planning->getPlanningTrackerId();
+        $backlog_tracker_id  = $first_planning->getBacklogTrackerId();
+
+        $planning_tracker = $this->tracker_factory->getTrackerById($planning_tracker_id);
+        $backlog_tracker = $this->tracker_factory->getTrackerById($backlog_tracker_id);
+
+        $planning = new Planning(
+            null,
+            null,
+            $group_id,
+            null,
+            null,
+            $backlog_tracker_id,
+            $planning_tracker_id
+        );
+
+        $planning
+            ->setPlanningTracker($planning_tracker)
+            ->setBacklogTracker($backlog_tracker);
+
+        return $planning;
+    }
+
+
+    /**
+     * Return the planning at the top of planning hierarchy
+     *
+     * Note: if there are several parallel, we only return the fist one
+     *
+     * @param PFUser  $user
+     * @param Integer $group_id
+     *
+     * @return Planning | false
+     */
+    public function getRootPlanning(PFUser $user, $group_id) {
+        $project_plannings = $this->getOrderedPlanningsWithBacklogTracker($user, $group_id);
+        reset($project_plannings);
+        return current($project_plannings);
+    }
+
+    /**
      * Get a list of planning defined in a group_id with added backlog trackers
      *
      * @param PFUser $user     The user who will see the planning

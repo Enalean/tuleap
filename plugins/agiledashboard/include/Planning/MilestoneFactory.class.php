@@ -117,10 +117,9 @@ class Planning_MilestoneFactory {
      * @param Project $project
      * @param Integer $planning_id
      * @param Integer $artifact_id
-     * @param bool $is_top Do we want a bare milestone for top planning
      * 
      * @return Planning_Milestone
-     * @throws Planning_VirtualTopMilestoneNoPlanningsException
+     * @throws Planning_NoPlanningsException
      */
     public function getBareMilestone(PFUser $user, Project $project, $planning_id, $artifact_id) {
         $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
@@ -128,7 +127,6 @@ class Planning_MilestoneFactory {
 
         if ($artifact && $artifact->userCanView($user)) {
             $milestone = new Planning_ArtifactMilestone($project, $planning, $artifact);
-            $milestone->setIsTop(false);
             $milestone->setAncestors($this->getMilestoneAncestors($user, $milestone));
             $this->updateMilestoneContextualInfo($user, $milestone);
             return $milestone;
@@ -148,9 +146,7 @@ class Planning_MilestoneFactory {
     public function getVirtualTopMilestone(PFUser $user, Project $project) {
         return new Planning_VirtualTopMilestone(
             $project,
-            $user,
-            $this->tracker_factory,
-            $this->planning_factory
+            $this->planning_factory->getVirtualTopPlanning($user, $project->getID())
         );
     }
 
@@ -313,9 +309,11 @@ class Planning_MilestoneFactory {
                 $planning = $this->planning_factory->getPlanningByPlanningTracker($sub_milestone_artifact->getTracker());
 
                 if ($planning) {
-                    $sub_milestones[] = new Planning_ArtifactMilestone($milestone->getProject(),
-                                                               $planning,
-                                                               $sub_milestone_artifact);
+                    $sub_milestones[] = new Planning_ArtifactMilestone(
+                        $milestone->getProject(),
+                        $planning,
+                        $sub_milestone_artifact
+                    );
                 }
             }
         }
@@ -337,6 +335,7 @@ class Planning_MilestoneFactory {
             return $milestones;
         }
 
+        $root_planning = $this->planning_factory->getRootPlanning($user, $top_milestone->getProject()->getID());
         $milestone_planning_tracker_id = $top_milestone->getPlanning()->getPlanningTrackerId();
         $artifacts = $this->artifact_factory->getArtifactsByTrackerId($milestone_planning_tracker_id);
 
@@ -345,7 +344,7 @@ class Planning_MilestoneFactory {
                 if ($artifact->getLastChangeset() && $artifact->userCanView($user)) {
                     $milestones[] = new Planning_ArtifactMilestone(
                         $top_milestone->getProject(),
-                        $top_milestone->getPlanning(),
+                        $root_planning,
                         $artifact
                     );
                 }
