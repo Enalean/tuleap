@@ -1652,6 +1652,22 @@ class Layout extends Response {
         }
     }
 
+    /**
+     * This method generates header for pages embbeded in overlay like LiteWindow
+     */
+    public function overlay_header() {
+        echo '<html>
+              <head>
+                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
+        echo $this->displayJavascriptElements();
+        echo $this->displayStylesheetElements(array());
+        echo $this->displaySyndicationElements();
+        echo '    </head>
+                     <body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">
+                       <div class="main_body_row">
+                           <div class="contenttable">';
+    }
+
     function header($params) {
         global $Language;
         
@@ -1757,7 +1773,18 @@ class Layout extends Response {
     function feedback($feedback) {
         return '';
     }
-    
+
+    /**
+     * This method generates footer for pages embbeded in overlay like LiteWindow
+     */
+    public function overlay_footer() {
+        echo '         </div>
+                     </div>
+                 '.$this->displayFooterJavascriptElements().'
+                 </body>
+             </html>';
+    }
+
     function footer($params) {
         if (!isset($params['showfeedback']) || $params['showfeedback']) {
             echo $this->_getFeedback();

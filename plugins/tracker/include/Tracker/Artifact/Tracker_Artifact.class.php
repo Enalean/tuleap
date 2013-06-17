@@ -405,6 +405,23 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $html;
     }
 
+    private function displayInOverlay(Codendi_Request $request, PFUser $current_user) {
+        $redirect = new Tracker_Artifact_Redirect();
+        $redirect->base_url = TRACKER_BASE_URL;
+        $redirect->query_parameters = array(
+            'aid'       => $this->id,
+            'func'      => 'artifact-update',
+        );
+
+        $view_helper = new Tracker_Artifact_View_ViewHelper();
+        $GLOBALS['HTML']->overlay_header();
+        echo $view_helper->fetchArtifactEditForm(
+                $redirect->toUrl(),
+                $view_helper->fetchFields($this, $request->get('artifact')).$view_helper->fetchSubmitButton()
+            );
+        $GLOBALS['HTML']->overlay_footer();
+    }
+
     /**
      * Display the artifact
      *
@@ -451,16 +468,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             )
         );
 
-        $html .= '<form action="'. $redirect->toUrl() .'" method="POST" enctype="multipart/form-data">';
+        $view_helper = new Tracker_Artifact_View_ViewHelper();
 
+        $html .= $view_helper->fetchArtifactEditForm(
+            $redirect->toUrl(),
+            $this->fetchTitleInHierarchy($hierarchy).$this->fetchView($request, $current_user)
+        );
 
-        $html .= '<input type="hidden" value="67108864" name="max_file_size" />';
-
-        $html .= $this->fetchTitleInHierarchy($hierarchy);
-
-        $html .= $this->fetchView($request, $current_user);
-
-        $html .= '</form>';
         $trm = new Tracker_RulesManager($tracker, $this->getFormElementFactory());
         $html .= $trm->displayRulesAsJavascript();
 
@@ -472,7 +486,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     private function fetchView(Codendi_Request $request, PFUser $user) {
         $view_collection = new Tracker_Artifact_View_ViewCollection();
-        $view_collection->add(new Tracker_Artifact_View_Edit($this, $request, $user));
+        $view_collection->add(new Tracker_Artifact_View_Edit($this, $request, $user, new Tracker_Artifact_View_ViewHelper()));
         if ($this->getTracker()->getChildren()) {
             $view_collection->add(new Tracker_Artifact_View_Hierarchy($this, $request, $user));
         }
@@ -766,6 +780,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'lesser-priority-than':
                 $dao = new Tracker_Artifact_PriorityDao();
                 $dao->moveArtifactAfter($this->getId(), (int)$request->get('target-id'));
+                break;
+            case 'show-in-overlay':
+                $this->displayInOverlay($request, $current_user);
                 break;
             default:
                 if ($request->isAjax()) {

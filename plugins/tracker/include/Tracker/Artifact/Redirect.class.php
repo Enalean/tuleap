@@ -26,7 +26,7 @@ class Tracker_Artifact_Redirect {
     public $mode;
     public $base_url;
     public $query_parameters;
-    
+
     public function toUrl() {
         return $this->base_url.'/?'.http_build_query($this->query_parameters);
     }

@@ -839,23 +839,9 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         'url'   => $this->getSubmitUrl(),
                 ),
         );
-        
-        if (!$link) {
-            $this->displayHeader($layout, $this->name, $breadcrumbs);
-        }
-        
+
         if ($link) {
-            echo '<html>';
-            echo '<head>';
-            echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
-            $GLOBALS['HTML']->displayStylesheetElements(array());
-            $GLOBALS['HTML']->includeCalendarScripts();
-            $GLOBALS['HTML']->displayJavascriptElements(array());
-            echo '</head>';
-            
-            echo '<body>';
-            echo '<div class="main_body_row">';
-            echo '<div class="contenttable">';
+            $GLOBALS['HTML']->overlay_header();
 
             $project = null;
             $artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($link);
@@ -877,7 +863,10 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 $GLOBALS['Response']->addFeedback('error', 'Error the artifact to link doesn\'t exist');
             }
             $GLOBALS['Response']->displayFeedback();
+        } else {
+            $this->displayHeader($layout, $this->name, $breadcrumbs);
         }
+
         $html = '';
         if ($this->submit_instructions) {
             $html .= '<p class="submit_instructions">' . $hp->purify($this->submit_instructions, CODENDI_PURIFIER_FULL) . '</p>';
@@ -896,25 +885,43 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 'redirect' => $redirect,
             )
         );
+
+        $view_helper = new Tracker_Artifact_View_ViewHelper();
+        $html .= $view_helper->fetchArtifactEditForm(
+            $redirect->toUrl(),
+            $this->fetchNewArtifactForm($request, $redirect, $current_user, $link)
+        );
+
+        $trm = $this->getRulesManager();
+        $html .= $trm->displayRulesAsJavascript();
         
-        $html .= '<form action="'. $redirect->toUrl() .'" method="POST" enctype="multipart/form-data">';
+        echo $html;
+
+        if ($link) {
+            $GLOBALS['HTML']->overlay_footer();
+        } else {
+            $this->displayFooter($layout);
+        }
+    }
+
+    private function fetchNewArtifactForm(Codendi_Request $request, Tracker_Artifact_Redirect $redirect, PFUser $current_user, $link) {
+        $html = '';
         if ($link) {
             $html .= '<input type="hidden" name="link-artifact-id" value="'. (int)$link .'" />';
             if ($request->get('immediate')) {
                 $html .= '<input type="hidden" name="immediate" value="1" />';
             }
         }
-        $html .= '<input type="hidden" value="67108864" name="max_file_size" />';
         $html .= '<table><tr><td>';
         foreach($this->getFormElements() as $formElement) {
             $html .= $formElement->fetchSubmit($request->get('artifact'));
         }
         $html .= '</td></tr></table>';
-        
+
         if ($current_user->isAnonymous()) {
             $html .= $this->fetchAnonymousEmailForm();
         }
-        
+
         if (!$link) {
             $html .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
             $html .= ' ';
@@ -923,20 +930,11 @@ class Tracker implements Tracker_Dispatchable_Interface {
         } else {
             $html .= '<input type="submit" id="tracker_artifact_submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
         }
-        
+
         $html .= '</form>';
-        
-        $trm = $this->getRulesManager();
-        $html .= $trm->displayRulesAsJavascript();
-        
-        $html .= '</div></div>';
-        
-        echo $html;
-        if (!$link) {
-            $this->displayFooter($layout);
-        }
+        return $html;
     }
-    
+
     /**
      * Display the submit form
      */
