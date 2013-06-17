@@ -1,3 +1,6 @@
+Version 0.86 - Tuleap 6.2
+    * Refactor initiate top planning
+
 Version 0.85 - Tuleap 6.2
     * Fix border-spacing for top content view
     * Fix overflow which prevent dropdowns to display when no content

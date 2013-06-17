@@ -6,7 +6,7 @@ Version 6.2 (Not released yet)
 	* Fix notice error on service management page
 
 	== Plugins ==
-	* agiledashboard: 0.85
+	* agiledashboard: 0.86
 	* git: 3.25
 	* tracker: 5.131
 	* mediawiki: 0.12
