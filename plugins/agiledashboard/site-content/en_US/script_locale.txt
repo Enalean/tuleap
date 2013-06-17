@@ -6,5 +6,6 @@ codendi.locales['agiledashboard'] = {
     move_top:    'Highest priority',
     move_bottom: 'Lowest priority',
     move_plan:   'Move to $1',
-    move_backlog:'Move to backlog'
+    move_backlog:'Move to backlog',
+    edit_card:   'Edit card',
 };

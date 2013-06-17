@@ -6,5 +6,6 @@ codendi.locales['agiledashboard'] = {
     move_top:    'Priorité la plus haute',
     move_bottom: 'Priorité la plus basse',
     move_plan:   'Déplacer dans le $1',
-    move_backlog:'Déplacer dans le backlog'
+    move_backlog:'Déplacer dans le backlog',
+    edit_card:   'Éditer la carte',
 };
