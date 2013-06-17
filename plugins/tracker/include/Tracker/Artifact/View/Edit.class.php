@@ -21,13 +21,13 @@
 class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
     /**
-     * @var Tracker_Artifact_View_ViewHelper
+     * @var Tracker_Artifact_ArtifactRenderer
      */
-    private $view_helper;
+    private $renderer;
 
-    public function __construct(Tracker_Artifact $artifact, Codendi_Request $request, PFUser $user, Tracker_Artifact_View_ViewHelper $view_helper) {
+    public function __construct(Tracker_Artifact $artifact, Codendi_Request $request, PFUser $user, Tracker_Artifact_ArtifactRenderer $renderer) {
         parent::__construct($artifact, $request, $user);
-        $this->view_helper = $view_helper;
+        $this->renderer = $renderer;
     }
 
     /** @see Tracker_Artifact_View_View::getURL() */
@@ -51,7 +51,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
     /** @see Tracker_Artifact_View_View::fetch() */
     public function fetch() {
-        $html = $this->view_helper->fetchFields($this->artifact, $this->request->get('artifact'));
+        $html = $this->renderer->fetchFields($this->artifact, $this->request->get('artifact'));
         $html .= $this->fetchFollowUps($this->request->get('artifact_followup_comment'));
 
         return $html;
@@ -67,7 +67,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
     private function fetchFollowUps($submitted_comment = '') {
         $html = '';
 
-        $html .= $this->view_helper->fetchSubmitButton();
+        $html .= $this->renderer->fetchSubmitButton();
 
         $html .= '<fieldset id="tracker_artifact_followup_comments"><legend
                           class="'. Toggler::getClassName('tracker_artifact_followups', true, true) .'"
@@ -104,26 +104,17 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         $html .= '</div>';
 
         if ($this->user->isAnonymous()) {
-            $html .= $this->fetchAnonymousEmailForm();
+            $html .= $this->renderer->fetchAnonymousEmailForm();
         }
         $html .= '</li>';
 
         $html .= '</ul>';
         $html .= '</fieldset>';
 
-        $html .= $this->view_helper->fetchSubmitButton();
+        $html .= $this->renderer->fetchSubmitButton();
 
         $html .= '</td></tr></table>'; //see fetchFields
 
-        return $html;
-    }
-
-    protected function fetchAnonymousEmailForm() {
-        $html = '<p>';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'not_logged_in', array('/account/login.php?return_to='.urlencode($_SERVER['REQUEST_URI'])));
-        $html .= '<br />';
-        $html .= '<input type="text" name="email" id="email" size="50" maxsize="100" />';
-        $html .= '</p>';
         return $html;
     }
 }
