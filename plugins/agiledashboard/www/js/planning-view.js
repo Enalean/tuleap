@@ -22,8 +22,7 @@ document.observe('dom:loaded', function () {
         milestone_planning = $('planning'),
         top_milestone_planning = $('topplanning'),
         milestone_content = $('blcontent'),
-        top_milestone_content = $('topblcontent'),
-        params = {};
+        top_milestone_content = $('topblcontent');
 
     if (planner) {
         new tuleap.agiledashboard.Planning(planner);
@@ -37,16 +36,8 @@ document.observe('dom:loaded', function () {
         tuleap.agiledashboard.MilestoneContent(top_milestone_content);
     }
 
-    if (milestone_planning) {
-        var is_top = false;
-
-        new tuleap.agiledashboard.NewPlanning(is_top);
-    }
-
-    if (top_milestone_planning) {
-        var is_top = true;
-
-        new tuleap.agiledashboard.NewPlanning(is_top);
+    if (milestone_planning || top_milestone_planning) {
+        new tuleap.agiledashboard.NewPlanning();
     }
 
     tuleap.agiledashboard.align_short_access_heights.defer();
