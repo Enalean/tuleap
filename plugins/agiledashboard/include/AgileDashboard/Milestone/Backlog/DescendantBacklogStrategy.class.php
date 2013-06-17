@@ -33,10 +33,14 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
     /** @var Tracker */
     private $descendant_tracker;
 
-    public function __construct($milestone_backlog_artifacts, Tracker $item_name, Tracker $descendant_tracker, AgileDashboard_BacklogItemDao $dao) {
+    /** @var AgileDashboard_Milestone_Backlog_SelfBacklogStrategy */
+    private $self_strategy;
+
+    public function __construct($milestone_backlog_artifacts, Tracker $item_name, Tracker $descendant_tracker, AgileDashboard_BacklogItemDao $dao, AgileDashboard_Milestone_Backlog_SelfBacklogStrategy $self_strategy) {
         parent::__construct($milestone_backlog_artifacts, $item_name);
         $this->dao = $dao;
         $this->descendant_tracker = $descendant_tracker;
+        $this->self_strategy = $self_strategy;
     }
 
     public function getDescendantTracker() {
@@ -77,6 +81,22 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
 
     private function extractId($artifact) {
         return $artifact->getId();
+    }
+
+    public function getBacklogItemName() {
+        return $this->getDescendantTracker()->getName();
+    }
+
+    public function getBacklogParentElements(PFUser $user, $redirect_to_self) {
+        $create_new = array();
+        foreach ($this->self_strategy->getArtifacts($user) as $artifact) {
+            /* @var Tracker_Artifact $artifact */
+            $create_new[] = new AgileDashboard_Milestone_Pane_Content_ContentNewPresenter(
+                $artifact->getTitle(),
+                $artifact->getSubmitNewArtifactLinkedToMeUri($this->getDescendantTracker()).'&'.$redirect_to_self
+            );
+        }
+        return $create_new;
     }
 }
 ?>

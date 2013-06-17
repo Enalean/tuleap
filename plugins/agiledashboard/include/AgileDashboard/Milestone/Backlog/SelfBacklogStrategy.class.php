@@ -31,6 +31,14 @@ class AgileDashboard_Milestone_Backlog_SelfBacklogStrategy extends AgileDashboar
     public function getArtifacts(PFUser $user) {
         return $this->milestone_backlog_artifacts;
     }
+
+    public function getBacklogItemName() {
+        return $this->getItemTracker()->getName();
+    }
+
+    public function getBacklogParentElements(PFUser $user, $redirect_to_self) {
+        return array();
+    }
 }
 
 ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,5 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning_VirtualTopMilestoneNoPlanningsException extends Exception{}
+class AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningPaneInfo extends AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo {
+    const ACTION     = 'show-top';
+    const IDENTIFIER = 'topplanning';
+
+    /**
+     * @return string eg: 'cardwall'
+     */
+    public function getIdentifier() {
+        return self::IDENTIFIER;
+    }
+}
+
 ?>

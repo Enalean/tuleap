@@ -360,5 +360,16 @@ class Git_Driver_Gerrit {
         $query = self::COMMAND .' set-account --delete-ssh-key "'. $escaped_ssh_key .'" '. $user->getSSHUserName();
         $this->ssh->execute($server, $query);
     }
+
+    /**
+     * Set the parent of a project
+     * @param Git_RemoteServer_GerritServer $server
+     * @param string $project_name
+     * @param string $parent_project_name
+     */
+    public function setProjectInheritance(Git_RemoteServer_GerritServer $server, $project_name, $parent_project_name) {
+        $query = self::COMMAND .' set-project-parent '. $project_name .' --parent '. $parent_project_name;
+        $this->ssh->execute($server, $query);
+    }
 }
 ?>

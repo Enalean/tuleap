@@ -49,7 +49,7 @@ class Planning_IndexPresenter {
     }
 
     public function get_default_top_pane() {
-        return AgileDashboard_Milestone_Pane_TopContent_PaneInfo::IDENTIFIER;
+        return AgileDashboard_Milestone_Pane_TopContent_TopContentPaneInfo::IDENTIFIER;
     }
 
     public function top_planning() {

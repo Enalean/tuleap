@@ -41,7 +41,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $backlog_collection,
         AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection $submilestone_collection,
-        Planning_ArtifactMilestone $milestone,
+        Planning_Milestone $milestone,
         $parent_item_type,
         $backlog_item_type,
         $submilestone_item_type,

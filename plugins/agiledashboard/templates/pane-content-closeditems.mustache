@@ -1,7 +1,6 @@
 {{#has_something}}
-    <h3>{{closed_items_title}}</h3>
-
     {{#has_something_done}}
+        <h3>{{closed_items_title}}</h3>
         <p>{{closed_items_intro}}</p>
         <table class="table table-striped table-hover table-bordered">
             <thead>
@@ -21,8 +20,5 @@
                 {{/done_collection}}
             </tbody>
         </table>
-    {{/has_something_done}}
-    {{^has_something_done}}
-        <p>{{closed_items_nothing_yet}}</p>
     {{/has_something_done}}
 {{/has_something}}

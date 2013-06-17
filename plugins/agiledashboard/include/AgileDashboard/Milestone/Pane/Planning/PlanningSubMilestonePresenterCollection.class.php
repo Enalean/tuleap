@@ -34,6 +34,10 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollec
         return $this->submilestone_tracker->getItemName();
     }
 
+    public function getSubmitNewUrlLinkedToTracker(Tracker $tracker) {
+        return $tracker->getSubmitUrl();
+    }
+
     public function getSubmitNewUrlLinkedToMilestone(Planning_Milestone $milestone) {
         return $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($this->submilestone_tracker);
     }

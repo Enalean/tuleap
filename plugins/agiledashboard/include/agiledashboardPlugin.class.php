@@ -231,6 +231,7 @@ class AgileDashboardPlugin extends Plugin {
         $pane_presenter_builder_factory = $this->getPanePresenterBuilderFactory($milestone_factory);
 
         $pane_factory = $this->getPaneFactory($request, $planning_factory, $milestone_factory, $hierarchy_factory, $pane_presenter_builder_factory);
+        $top_milestone_pane_factory = $this->getTopMilestonePaneFactory($request, $pane_presenter_builder_factory);
 
         $milestone_controller_factory = new Planning_MilestoneControllerFactory(
             $this,
@@ -239,7 +240,8 @@ class AgileDashboardPlugin extends Plugin {
             $this->getPlanningFactory(),
             $hierarchy_factory,
             $pane_presenter_builder_factory,
-            $pane_factory
+            $pane_factory,
+            $top_milestone_pane_factory
         );
 
         $router = new AgileDashboardRouter(
@@ -275,6 +277,14 @@ class AgileDashboardPlugin extends Plugin {
             $pane_presenter_builder_factory,
             $legacy_planning_pane_factory,
             new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder($hierarchy_factory, $planning_factory),
+            $this->getThemePath()
+        );
+    }
+
+    private function getTopMilestonePaneFactory($request, $pane_presenter_builder_factory) {
+        return new Planning_VirtualTopMilestonePaneFactory(
+            $request,
+            $pane_presenter_builder_factory,
             $this->getThemePath()
         );
     }
