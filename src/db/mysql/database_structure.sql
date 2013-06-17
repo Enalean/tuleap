@@ -3451,11 +3451,19 @@ CREATE TABLE IF NOT EXISTS svn_notification (
 # Table structure for Project parent relationship
 #
 
-CREATE TABLE IF NOT EXISTS `codendi`.`project_parent` (
+CREATE TABLE IF NOT EXISTS project_parent (
     group_id INT(11) PRIMARY KEY,
     parent_group_id INT(11) NOT NULL
 );
 
+#
+# Table structure for Project parent relationship
+#
+
+CREATE TABLE IF NOT EXISTS generic_user (
+    group_id INT(11) PRIMARY KEY,
+    user_id INT(11) NOT NULL
+);
 
 #
 # EOF
