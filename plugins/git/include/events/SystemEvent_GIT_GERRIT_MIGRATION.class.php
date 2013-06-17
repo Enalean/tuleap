@@ -46,6 +46,11 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
         $this->dao->switchToGerrit($repo_id, $remote_server_id);
 
         $repository = $this->repository_factory->getRepositoryById($repo_id);
+        if (! $repository) {
+            $this->warning('Unable to find repository, perhaps it was deleted in the mean time?');
+            return;
+        }
+
         try {
             $server         = $this->server_factory->getServer($repository);
             $gerrit_project = $this->project_creator->createGerritProject($server, $repository);

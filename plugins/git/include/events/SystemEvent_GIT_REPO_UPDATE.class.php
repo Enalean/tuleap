@@ -50,6 +50,11 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
 
     public function process() {
         $repository = $this->getRepositoryFromParameters();
+        if (! $repository) {
+            $this->warning('Unable to find repository, perhaps it was deleted in the mean time?');
+            return;
+        }
+
         $repository->getBackend()->updateRepoConf($repository);
         $this->done();
     }
