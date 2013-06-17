@@ -162,7 +162,7 @@ class GitDriver implements DVCSDriver {
      * @return bool
      */
     public function isRepositoryCreated($repoPath) {
-        return is_dir($repoPath.'/refs/heads/master');
+        return is_dir($repoPath.'/refs/heads');
     }
 
     public function setDescription($repoPath, $description) {

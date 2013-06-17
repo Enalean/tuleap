@@ -1,3 +1,6 @@
+Version 3.26 - Tuleap 6.2
+    * Fix sla #4002: it was not possible anymore to browse gitshell repositories
+
 Version 3.25 - Tuleap 6.2
     * Story #3633 - Gerrit projects inherits Tuleap parents information
 
