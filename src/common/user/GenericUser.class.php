@@ -64,6 +64,5 @@ class GenericUser extends PFUser{
     public function getProject() {
         return $this->project;
     }
-
 }
 ?>

@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 require_once 'GenericUser.class.php';
-require_once 'GenericUserAlreadyExistsException.class.php';
 require_once 'UserManager.class.php';
 require_once 'common/dao/GenericUserDao.class.php';
 
@@ -48,16 +47,11 @@ class GenericUserFactory {
         $this->dao = $dao;
     }
 
-    /**-
-     * @param int $group_id
-     * @param string $password
+    /**
      * @return GenericUser
      */
-    public function create($group_id, $password) {
-        $project = $this->project_manager->getProject($group_id);
-        
-        $user = new GenericUser($project);
-        $user->setPassword($password);
+    public function update(GenericUser $user) {
+        $this->user_manager->updateDb($user);
 
         return $user;
     }
@@ -65,28 +59,45 @@ class GenericUserFactory {
     /**
      *
      * @param int $group_id
-     * @param int $password
-     * @return PFUser
+     * @return GenericUser|null
      */
-    public function save(GenericUser $user) {
-        $group_id = $user->getProject()->getID();
+    public function fetch($group_id) {
+        if ($row = $this->dao->fetch($group_id)->getRow()){
+            $generic_user = $this->generateGenericUser($group_id);
 
-        if ($this->fetch($group_id)->getRow()) {
-            throw new GenericUserAlreadyExistsException('Generic User already exists in this project');
+            $pfuser = $this->user_manager->getUserById($row['user_id']);
+            $generic_user->setId($pfuser->getId());
+
+            return $generic_user;
         }
-        
-        $user = $this->user_manager->createAccount($user);
-        $this->getDao()->save($group_id, $user->getId());
 
-        return $user;
+        return null;
     }
 
-    private function fetch($group_id) {
-        return $this->getDao()->fetch($group_id);
+    /**
+     *
+     * @param int $group_id
+     * @param string $password
+     * @return GenericUser
+     */
+    public function create($group_id, $password) {
+        $generic_user = $this->generateGenericUser($group_id);
+        $generic_user->setPassword($password);
+
+        $this->user_manager->createAccount($generic_user);
+        $this->dao->save($group_id, $generic_user->getId());
+
+        return $generic_user;
     }
 
-    private function getDao() {
-        return $this->dao;
+    /**-
+     * @param int $group_id
+     * @return GenericUser
+     */
+    private function generateGenericUser($group_id) {
+        $project = $this->project_manager->getProject($group_id);
+
+        return new GenericUser($project);
     }
 }
 ?>

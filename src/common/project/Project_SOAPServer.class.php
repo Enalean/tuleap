@@ -89,7 +89,6 @@ class Project_SOAPServer {
      * * 3103, Invalid full name
      * * 3104, Project is not a template
      * * 3105, Generic User creation failure
-     * * 3106, Generic User already exists
      * * 4000, SOAP Call Quota exceeded (you created to much project during the last hour, according to configuration)
      * 
      * @param String  $sessionKey      Session key of the desired project admin
@@ -303,18 +302,18 @@ class Project_SOAPServer {
             throw new SoapFault('3201', 'Permission denied: need to be project admin.');
         }
 
-        $user = $this->generic_user_factory->create($groupId, $password);
-        try {
-            $user = $this->generic_user_factory->save($user);
-        } catch (GenericUserAlreadyExistsException $e) {
-            throw new SoapFault('3106', $e->getMessage());
-        }
+        $user = $this->generic_user_factory->fetch($groupId);
 
         if (! $user) {
-            throw new SoapFault('3105', "Generic User creation failure");
+            $user = $this->generic_user_factory->create($groupId, $password);
+            if (! $user) {
+                throw new SoapFault('3105', "Generic User creation failure");
+            }
+            $this->addProjectMember($sessionKey, $groupId, $user->getUnixName());
+        } else {
+            $user->setPassword($password);
+            $this->generic_user_factory->update($user);
         }
-        
-        $this->addProjectMember($sessionKey, $groupId, $user->getUnixName());
 
         return user_to_soap($user, $this->userManager->getCurrentUser());
     }
