@@ -210,6 +210,7 @@ class AgileDashboardPlugin extends Plugin {
         $params['scripts'] = array_merge(
             $params['scripts'],
             array(
+                $this->getPluginPath().'/js/load-more-milestones.js',
                 $this->getPluginPath().'/js/MilestoneContent.js',
                 $this->getPluginPath().'/js/planning.js',
                 $this->getPluginPath().'/js/OuterGlow.js',

@@ -40,5 +40,7 @@ document.observe('dom:loaded', function () {
         new tuleap.agiledashboard.NewPlanning();
     }
 
+    $$('.ad_index_load_more_milestones').map(tuleap.agiledashboard.loadMoreMilestones);
+
     tuleap.agiledashboard.align_short_access_heights.defer();
 });
