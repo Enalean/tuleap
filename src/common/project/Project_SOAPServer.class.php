@@ -317,6 +317,27 @@ class Project_SOAPServer {
 
         return user_to_soap($user, $this->userManager->getCurrentUser());
     }
+
+    /**
+     * Get a generic user
+     *
+     * @param String  $sessionKey The project admin session hash
+     * @param Integer $groupId    The Project id where the User Group is defined
+     *
+     * @return ArrayOfUserInfo
+     */
+    public function getProjectGenericUser($sessionKey, $groupId) {
+        if (! $this->isRequesterAdmin($sessionKey, $groupId)) {
+            throw new SoapFault('3201', 'Permission denied: need to be project admin.');
+        }
+
+        $user = $this->generic_user_factory->fetch($groupId);
+
+        if (! $user) {
+            throw new SoapFault('3106', "Generic User does not exist");
+        }
+        return user_to_soap($user, $this->userManager->getCurrentUser());
+    }
     
     /**
      * Return a user member of project
