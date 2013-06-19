@@ -109,12 +109,14 @@ class GitViews extends PluginViews {
      * REPO VIEW
      */
     public function view() {
-        $params = $this->getData();
+        $params     = $this->getData();
         $repository = $params['repository'];
+        $request    = $this->controller->getRequest();
 
-        echo '<br />';
-        
-        $this->_getBreadCrumb();
+        if (! $request->get('noheader')) {
+            echo '<br />';
+            $this->_getBreadCrumb();
+        }
 
         $index_view = new GitViews_ShowRepo(
             $repository,
