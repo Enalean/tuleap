@@ -525,7 +525,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @return String The valid followup comment format
      */
-    private function validateCommentFormat($request, $comment_format_field_name) {
+    public function validateCommentFormat($request, $comment_format_field_name) {
         $comment_format = $request->get($comment_format_field_name);
         return Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
     }
@@ -581,46 +581,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $GLOBALS['Response']->redirect('?aid='. $this->id);
                 break;
             case 'artifact-update':
-                //TODO : check permissions on this action?
-                $comment_format = $this->validateCommentFormat($request, 'comment_formatnew');
-                $this->setUseArtifactPermissions( $request->get('use_artifact_permissions') ? 1 : 0 );
-
-                $fields_data   = $request->get('artifact');
-
-                $fields_data['request_method_called'] = 'artifact-update';
-                $this->getTracker()->augmentDataFromRequest($fields_data);
-                unset($fields_data['request_method_called']);
-
-                try {
-
-                    $this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'), true, $comment_format);
-
-                    $art_link = $this->fetchDirectLinkToArtifact();
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
-
-                    $redirect = $this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId());
-                    $this->summonArtifactRedirectors($request, $redirect);
-
-                    if ($request->isAjax()) {
-                        $this->sendAjaxCardsUpdateInfo($current_user);
-                    } else {
-                        $GLOBALS['Response']->redirect($redirect->toUrl());
-                    }
-                } catch (Tracker_NoChangeException $e) {
-                    if ($request->isAjax()) {
-                        $this->sendAjaxCardsUpdateInfo($current_user);
-                    } else {
-                        $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
-                        $this->display($layout, $request, $current_user);
-                    }
-                } catch (Tracker_Exception $e) {
-                    if ($request->isAjax()) {
-                        $this->sendAjaxCardsUpdateInfo($current_user);
-                    } else {
-                        $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-                        $this->display($layout, $request, $current_user);
-                    }
-                }
+                $action = new Tracker_Action_UpdateArtifact($this, $this->getFormElementFactory(), $this->getEventManager());
+                $action->process($layout, $request, $current_user);
                 break;
             case 'unassociate-artifact-to':
                 $artlink_fields     = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
@@ -690,35 +652,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     public function hasChildren() {
         return count($this->getArtifactFactory()->getChildren($this)) > 0;
-    }
-
-    private function sendAjaxCardsUpdateInfo(PFUser $current_user) {
-        $cards_info = $this->getCardUpdateInfo($this, $current_user);
-        $parent = $this->getParent($current_user);
-        if ($parent) {
-            $cards_info = $cards_info + $this->getCardUpdateInfo($parent, $current_user);
-        }
-
-        $GLOBALS['Response']->sendJSON($cards_info);
-    }
-
-    private function getCardUpdateInfo(Tracker_Artifact $artifact, PFUser $current_user) {
-        $card_info               = array();
-        $tracker_id              = $artifact->getTracker()->getId();
-        $form_element_factory    = $this->getFormElementFactory();
-        $remaining_effort_field  = $form_element_factory->getComputableFieldByNameForUser(
-            $tracker_id,
-            Tracker::REMAINING_EFFORT_FIELD_NAME,
-            $current_user
-        );
-
-        if ($remaining_effort_field) {
-            $remaining_effort = $remaining_effort_field->fetchCardValue($artifact);
-            $card_info[$artifact->getId()] = array(
-                Tracker::REMAINING_EFFORT_FIELD_NAME => $remaining_effort
-            );
-        }
-        return $card_info;
     }
 
     /**
@@ -1550,33 +1483,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         } catch (Tracker_Exception $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
         }
-    }
-
-    protected function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request) {
-        $stay     = $request->get('submit_and_stay') ;
-        $from_aid = $request->get('from_aid');
-
-        $redirect = new Tracker_Artifact_Redirect();
-        $redirect->mode             = Tracker_Artifact_Redirect::STATE_SUBMIT;
-        $redirect->base_url         = TRACKER_BASE_URL;
-        $redirect->query_parameters = $this->calculateRedirectParams($stay, $from_aid);
-        if ($stay) {
-            $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY_OR_CONTINUE;
-        }
-        return $redirect;
-    }
-
-    private function calculateRedirectParams($stay, $from_aid) {
-        $redirect_params = array();
-        if ($stay) {
-            $redirect_params['aid']       = $this->getId();
-            $redirect_params['from_aid']  = $from_aid;
-        } else if ($from_aid) {
-            $redirect_params['aid']       = $from_aid;
-        } else {
-            $redirect_params['tracker']   = $this->tracker_id;
-        }
-        return array_filter($redirect_params);
     }
 
     /**
