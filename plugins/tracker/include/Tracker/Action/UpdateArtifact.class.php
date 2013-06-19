@@ -58,6 +58,9 @@ class Tracker_Action_UpdateArtifact {
 
             if ($request->isAjax()) {
                 $this->sendAjaxCardsUpdateInfo($current_user, $this->artifact, $this->form_element_factory);
+            } elseif ($request->existAndNonEmpty('from_overlay')) {
+                echo '<script>window.parent.tuleap.cardwall.cardsEditInPlace.validateEdition('.$this->artifact->getId().')</script>';
+                return;
             } else {
                 $GLOBALS['Response']->redirect($redirect->toUrl());
             }

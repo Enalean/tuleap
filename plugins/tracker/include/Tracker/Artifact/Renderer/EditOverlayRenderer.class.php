@@ -27,6 +27,7 @@ class Tracker_Artifact_EditOverlayRenderer extends Tracker_Artifact_EditAbstract
     protected function fetchFormContent(Codendi_Request $request, PFUser $current_user) {
         $html  = '';
         $html .= $this->fetchFields($this->artifact, $request->get('artifact'));
+        $html .= '<input type="hidden" name="from_overlay" value="1">';
         $html .= $this->fetchSubmitButton();
         return $html;
     }
