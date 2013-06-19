@@ -23,7 +23,7 @@
  */
 
 var tuleap = tuleap || {};
-tuleap.agiledashboard = tuleap.agiledashboard || { };
+tuleap.cardwall = tuleap.cardwall || { };
 
 (function ($) {
     var overlay_window;
@@ -39,19 +39,38 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 
         overlay_window.activateWindow({
                 href        : codendi.tracker.base_url + '?' + $.param(params),
-                title       : codendi.locales['agiledashboard']['edit_card'],
-                iframeEmbed : true,
-            });
+                title       : codendi.locales['cardwall']['edit_card'],
+                iframeEmbed : true
+        });
     }
 
-    tuleap.agiledashboard.CardsOverlay = function () {
-        $('li > a.edit-card').each(function(){
-            $(this).click(displayOverlay);
-        });
+    function getNewCardData(artifact_id) {
+        $.ajax({
+            url: "/plugins/cardwall/card.json",
+            dataType: "json"
+        }).success(updateCard);
+    }
+
+    function updateCard(update_json) {
+        //something will go here
+    }
+
+    tuleap.cardwall.cardsEditInPlace = {
+
+        init: function() {
+            $('li > a.edit-card').each(function(){
+                $(this).click(displayOverlay);
+            });
+        },
+
+        validateEdition: function(artifact_id) {
+            getNewCardData(artifact_id);
+        }
+
     };
 
     $(document).ready(function () {
-        tuleap.agiledashboard.CardsOverlay();
+        tuleap.cardwall.cardsEditInPlace.init();
         overlay_window = new lightwindow({
             resizeSpeed: 10,
             delay: 0,

@@ -179,6 +179,7 @@ class cardwallPlugin extends Plugin {
                 'script.js',
                 'admin.js',
                 'select2.min.js',
+                'CardsEditInPlace.js',
             ));
         }
     }
