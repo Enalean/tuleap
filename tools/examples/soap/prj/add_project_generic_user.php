@@ -18,9 +18,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*if ($argc < 2) {
-    die("Usage: ".$argv[0]." projectId member_1 [member_2] [...]\n");
-}*/
 if ($argc != 3) {
     die("Usage: ".$argv[0]." project_id generic_user_pwd\n");
 }
