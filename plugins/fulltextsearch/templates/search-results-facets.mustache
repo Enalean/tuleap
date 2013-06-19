@@ -7,7 +7,7 @@
 
     {{#has_facets}}
     <h3 class="frs_facet_main_title">Filter results:</h3>
-    <h4 class="frs_facet_main_title">By projects:</h4>
+    <h4 class="frs_facet_main_title">By projects</h4>
     <ul class="frs_facet">
     {{#facets}}
         <li><label><input type="checkbox" value="{{value}}" name="facets[{{name}}][]" {{checked}} onclick="this.form.submit()"/>{{label}} ({{count}})</label></li>
@@ -15,9 +15,9 @@
     </ul>
         <h4 class="frs_facet_main_title">By nature</h4>
     <ul class="frs_facet">
-    {{#facets}}
+    {{#services_facets}}
         <li><label><input type="checkbox" value="{{value}}" name="facets[{{name}}][]" {{checked}} onclick="this.form.submit()"/>{{label}} ({{count}})</label></li>
-    {{/facets}}
+    {{/services_facets}}
     </ul>
     {{/has_facets}}
     {{/has_results}}

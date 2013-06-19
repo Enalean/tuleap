@@ -43,7 +43,16 @@ class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
     public function facets() {
         return $this->query_result->getFacets();
     }
-    
+
+    /**
+     * Feed faceted search template with results count by service
+     *
+     * @return ElasticSearch_SearchResultProjectsFacetCollection
+     */
+    public function services_facets() {
+        return $this->query_result->getFacets();
+    }
+
     public function no_results() {
         return !$this->has_results();
     }
