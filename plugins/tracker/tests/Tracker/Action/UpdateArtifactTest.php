@@ -20,10 +20,6 @@
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
-class Tracker_Action_UpdateArtifactTest {
-
-}
-
 class Tracker_Artifact_Update_BaseTest extends TuleapTestCase {
 
     /** @var Tracker_Artifact */
@@ -44,9 +40,10 @@ class Tracker_Artifact_Update_BaseTest extends TuleapTestCase {
     /** @var Tracker_FormElement_Field_Computed */
     protected $us_computed_field;
 
+    protected $old_request_with;
+
     public function setUp() {
         parent::setUp();
-        $this->setUpAjaxRequestHeaders();
 
         $tracker_user_story_id     = 103;
         $user_story_id             = 107;
@@ -85,18 +82,27 @@ class Tracker_Artifact_Update_BaseTest extends TuleapTestCase {
         $this->action = new Tracker_Action_UpdateArtifact($this->task, $this->formelement_factory, $this->event_manager);
     }
 
-    public function tearDown() {
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = $this->old_request_with;
-        parent::tearDown();
-    }
-
-    private function setUpAjaxRequestHeaders() {
+    protected function setUpAjaxRequestHeaders() {
         $this->old_request_with           = isset($_SERVER['HTTP_X_REQUESTED_WITH']) ? $_SERVER['HTTP_X_REQUESTED_WITH'] : null;
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHTTPREQUEST';
+    }
+
+    protected function restoreAjaxRequestHeaders() {
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = $this->old_request_with;
     }
 }
 
 class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends Tracker_Artifact_Update_BaseTest {
+
+    public function setUp() {
+        parent::setUp();
+        $this->setUpAjaxRequestHeaders();
+    }
+
+    public function tearDown() {
+        $this->restoreAjaxRequestHeaders();
+        parent::tearDown();
+    }
 
     public function itDoesNotSendAnythingIfNoRemainingEffortFieldIsDefinedOnTask() {
         $this->task->setAllAncestors(array());
@@ -140,7 +146,13 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
 
     public function setUp() {
         parent::setUp();
+        $this->setUpAjaxRequestHeaders();
         stub($this->formelement_factory)->getComputableFieldByNameForUser($this->tracker_id, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->returns($this->computed_field);
+    }
+
+    public function tearDown() {
+        $this->restoreAjaxRequestHeaders();
+        parent::tearDown();
     }
 
     public function itSendsTheRemainingEffortOfTheArtifactAndItsParent() {
@@ -185,6 +197,43 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
         $this->action->process($this->layout, $this->request, $this->user);
     }
 
+}
+
+class Tracker_Artifact_UpdateActionFromOverlay extends Tracker_Artifact_Update_BaseTest {
+
+    public function itCreatesAChangeset() {
+        $this->task->setAllAncestors(array());
+        $request      = aRequest()->with('func', 'artifact-update')->with('from_overlay', '1')->build();
+
+        expect($this->task)->createNewChangeset()->once();
+
+        $this->getProccesAndCaptureOutput($this->layout, $request, $this->user);
+    }
+
+    public function itReturnsTheScriptBaliseIfRequestIsFromOverlay() {
+        $this->task->setAllAncestors(array());
+        $request      = aRequest()->with('func', 'artifact-update')->with('from_overlay', '1')->build();
+
+        $from_overlay = $this->getProccesAndCaptureOutput($this->layout, $request, $this->user);
+        $expected     = '<script>window.parent.tuleap.cardwall.cardsEditInPlace.validateEdition('.$this->task->getId().')</script>';
+        $this->assertIdentical($from_overlay, $expected);
+    }
+
+    public function itDoesntReturnScriptWhenInAjax() {
+        $this->setUpAjaxRequestHeaders();
+        $this->task->setAllAncestors(array());
+        $request      = aRequest()->with('func', 'artifact-update')->with('from_overlay', '1')->build();
+
+        $from_overlay = $this->getProccesAndCaptureOutput($this->layout, $request, $this->user);
+        $this->assertNoPattern('/<script>/i', $from_overlay);
+        $this->restoreAjaxRequestHeaders();
+    }
+
+    private function getProccesAndCaptureOutput($layout, $request, $user) {
+        ob_start();
+        $this->action->process($layout, $request, $user);
+        return ob_get_clean();
+    }
 }
 
 class Tracker_Artifact_RedirectUrlTestVersion extends Tracker_Action_UpdateArtifact {
