@@ -44,27 +44,159 @@ tuleap.cardwall = tuleap.cardwall || { };
         });
     }
 
-    function getNewCardData(artifact_id) {
+    function getNewCardData(artifact_id, planning_id) {
+        var params = {
+            id          : artifact_id,
+            planning_id : planning_id,
+            action : 'get-card'
+        };
+
         $.ajax({
-            url: "/plugins/cardwall/card.json",
+            url: "/plugins/cardwall/?" + $.param(params),
             dataType: "json"
-        }).success(updateCard);
+        }).success(updateCards);
     }
 
-    function updateCard(update_json) {
-        //something will go here
+    function updateCards(update_json) {
+        for (artifact_id in update_json) {
+            updateCard(artifact_id, update_json[artifact_id]);
+        }
+    }
+
+    function updateCard(artifact_id, update_json) {
+        var $card = getCardArtifact(artifact_id);
+        moveCardIfNeeded($card, update_json);
+        updateCardContent($card, update_json);
+    }
+
+    function updateCardContent($card, artifact_json) {
+        if (artifact_json.title || artifact_json.title === "") {
+            updateCardTitle($card, artifact_json.title);
+        }
+
+        if (artifact_json.fields.remaining_effort || artifact_json.fields.remaining_effort === "") {
+            updateCardRemainingEffort($card, artifact_json.fields.remaining_effort);
+        }
+
+        if (artifact_json.fields.assigned_to) {
+            updateCardAssignTo($card, artifact_json.fields.assigned_to);
+        }
+
+        if (artifact_json.html_fields.impediment || artifact_json.html_fields.impediment === "") {
+            updateCardImpediment($card, artifact_json.html_fields.impediment);
+        }
+    }
+
+    function setEmptyPlaceHolder($element) {
+        $element.html("-");
+    }
+
+    function updateCardImpediment($card, impediment) {
+        $card.find('div.card-details td.valueOf_impediment').html(impediment);
+    }
+
+    function updateCardAssignTo($card, assigned_to) {
+        if (assigned_to.length === 0) {
+            setEmptyPlaceHolder($('.valueOf_assigned_to > div', $card));
+            return;
+        }
+
+        var card_id          = $card.attr('data-artifact-id');
+        var $assigned_to_div = $('.valueOf_assigned_to > div', $card);
+        var assigned_to_div  = $assigned_to_div.get(0);
+
+        $assigned_to_div.html("");
+
+        tuleap.agiledashboard.cardwall.cards.selectEditors[card_id].updateAssignedToValue(assigned_to_div, assigned_to);
+    }
+
+    function updateCardRemainingEffort($card, remaining_effort) {
+        if (remaining_effort === "") {
+            setEmptyPlaceHolder($('td.valueOf_remaining_effort > div', $card));
+            return;
+        }
+        $card.find('div.card-details td.valueOf_remaining_effort > div').html(remaining_effort);
+    }
+
+    function updateCardTitle($card, title) {
+        $card.find('span.card-title').html(title);
+    }
+
+    function getCardArtifact(artifact_id) {
+        return $('div.card[data-artifact-id='+ artifact_id +']');
+    }
+
+    function moveCardIfNeeded($card, artifact_json) {
+        if (isAnAncestor($card)) {
+            return;
+        }
+
+        if (cardHasToBeMoved($card, artifact_json)) {
+            var $element = $card.parent().detach();
+            var $cell    = getConcernedCell(artifact_json);
+            $cell.append($element);
+
+            updateDroppableAreas($card, artifact_json);
+        }
+    }
+
+    function getConcernedCell(artifact_json) {
+        return $('tbody.cardwall tr[data-row-id='+artifact_json['ancestor_id']+'] td.cardwall-cell[data-column-id='+artifact_json['column_id']+'] ul');
+    }
+
+    function cardHasToBeMoved($card, artifact_json) {
+        var current_parent_id = $card.parents('tr[data-row-id]').attr('data-row-id');
+        var current_status_id = $card.parents('td[data-column-id]').attr('data-column-id');
+
+        return current_parent_id !== artifact_json['ancestor_id'] || current_status_id !== artifact_json['column_id'];
+    }
+
+    function isAnAncestor($card) {
+        if ($card.parents('td.cardwall-cell:not([data-column-id])').length > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    function updateDroppableAreas($card, artifact_json) {
+        removeAllDropIntoClassesFromCard($card);
+
+        artifact_json.drop_into.each(function(drop_class){
+            $card.parent().addClass(drop_class);
+        });
+    }
+
+    function removeAllDropIntoClassesFromCard($card) {
+        var current_classes = $card.parent().attr('class');
+
+        var cleared_classes = current_classes.replace(/drop-into-(\S)*(\s|$)/g, "");
+        cleared_classes = cleared_classes.trim();
+
+        $card.parent().attr('class', cleared_classes);
+    }
+
+    function getConcernedPlanningId() {
+        return $('div.hidden[data-planning-id]').attr('data-planning-id');
+    }
+
+    function isOnAgiledashboard() {
+        return $('div.hidden[data-planning-id]').length > 0;
     }
 
     tuleap.cardwall.cardsEditInPlace = {
 
         init: function() {
-            $('li > a.edit-card').each(function(){
-                $(this).click(displayOverlay);
-            });
+            if (isOnAgiledashboard()) {
+                $('div.cardwall_board div.card li > a.edit-card').each(function(){
+                    $(this).click(displayOverlay);
+                });
+            }
         },
 
         validateEdition: function(artifact_id) {
-            getNewCardData(artifact_id);
+            var planning_id = getConcernedPlanningId();
+            getNewCardData(artifact_id, planning_id);
+            overlay_window.deactivate();
         }
 
     };

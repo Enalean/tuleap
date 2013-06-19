@@ -1,16 +1,16 @@
 {
- "23": {
+ "34": {
         "title": "martin",
-        "xref": 'task #dsfds',
-        "edit_url": '<a href=""></a>',
+        "xref": "task #dsfds",
+        "edit_url": "<a href=''></a>",
         "accent_color": "rgb(213,213,123)",
         "fields": {
             "remaining_effort": 5.1,
-            "assigned_to": [101, 201],
+            "assigned_to": [105],
             "impediment": "<span>Decorator</span>"
         },
-        "ancestor_id" : 45,
-        "column_id" : 997,
-        "drop_into": ['drop-into-1234-5', 'drop-into-1234-7']
+        "ancestor_id" : 23,
+        "column_id" : 990,
+        "drop_into": ["drop-into-23-992", "drop-into-23-993", "drop-into-23-991"]
      }
 }

@@ -129,7 +129,9 @@ document.observe('dom:loaded', function () {
 
         (function enableAssignedToInPlaceEditing() {
             $$( '.valueOf_assigned_to' ).each( function( assigned_to_container ) {
-                new tuleap.agiledashboard.cardwall.card.SelectElementEditor( assigned_to_container );
+                var select_editor = new tuleap.agiledashboard.cardwall.card.SelectElementEditor( assigned_to_container );
+                var card_id       = assigned_to_container.up('.card').readAttribute('data-artifact-id');
+                tuleap.agiledashboard.cardwall.cards.selectEditors[card_id] = select_editor;
             })
         })();
 
