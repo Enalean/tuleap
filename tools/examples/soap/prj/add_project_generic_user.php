@@ -33,7 +33,7 @@ $requesterSessionHash     = $soapLogin->login('admin', 'siteadmin')->session_has
 $soapProject = new SoapClient($serverUrl.'/soap/project/?wsdl', 
                               array('cache_wsdl' => WSDL_CACHE_NONE));
 
-$prjId = 103;
+$prjId = 102;
 $pwd = 'hjmltfk';
 var_dump($soapProject->setProjectGenericUser($requesterSessionHash, $prjId, $pwd));
 

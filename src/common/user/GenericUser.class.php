@@ -20,6 +20,7 @@
  */
 class GenericUser extends PFUser{
     const NAME_PREFIX = 'forge__prjgen_';
+    const REAL_NAME = 'Generic User For Project';
 
     /**
      * @var Project
@@ -42,25 +43,21 @@ class GenericUser extends PFUser{
      * @return string
      */
     public function getRealName() {
-        $project_name = $this->project->getUnixName();
-
-        return self::NAME_PREFIX.$project_name;
+        return self::REAL_NAME;
     }
 
     /**
      * @return string
      */
     public function getUserName() {
-        return $this->getRealName();
+        $project_name = $this->project->getUnixName();
+
+        return self::NAME_PREFIX.$project_name;
     }
 
     /**
-     * @return string
+     * @return Project
      */
-    public function getUnixUid() {
-        return $this->getRealName();
-    }
-
     public function getProject() {
         return $this->project;
     }
