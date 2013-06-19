@@ -1036,6 +1036,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return null;
     }
 
+    public function getJsonValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        if ($this->userCanRead($user)) {
+            $value = $changeset->getValue($this);
+            return $value ? $value->getJsonValue() : '';
+        }
+        return null;
+    }
 
     /**
      * Get the field data for artifact submission

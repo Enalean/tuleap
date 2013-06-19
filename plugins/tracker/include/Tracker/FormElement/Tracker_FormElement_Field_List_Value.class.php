@@ -79,6 +79,10 @@ abstract class Tracker_FormElement_Field_List_Value {
     public function getSoapValue() {
         return $this->getLabel();
     }
+
+    public function getJsonValue() {
+        return $this->getId();
+    }
 }
 
 ?>

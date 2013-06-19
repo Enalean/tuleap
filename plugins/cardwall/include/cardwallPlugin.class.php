@@ -271,9 +271,8 @@ class cardwallPlugin extends Plugin {
     }
 
     protected function getCardwallPane(Cardwall_PaneInfo $info, Planning_Milestone $milestone, PFUser $user, Planning_MilestoneFactory $milestone_factory) {
-        $tracker = $milestone->getArtifact()->getTracker();
-        if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
-            $config = $this->getConfigFactory()->getOnTopConfig($tracker);
+        $config = $this->getConfigFactory()->getOnTopConfigByPlanning($milestone->getPlanning());
+        if ($config) {
             return new Cardwall_Pane(
                 $info,
                 $milestone,
@@ -422,10 +421,19 @@ class cardwallPlugin extends Plugin {
             case 'toggle_user_display_avatar':
                 $this->toggleAvatarDisplay($request);
                 break;
+            case 'get-card':
+                try {
+                    $controller_builder = new Cardwall_CardControllerBuilder($this->getConfigFactory());
+                    $controller = $controller_builder->getCardController($request);
+                    $controller->getCard();
+                } catch (Exception $exception) {
+                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+                    $GLOBALS['Response']->sendStatusCode(400);
+                }
+                break;
             default:
                 echo 'Hello !';
         }
     }
-
 }
 ?>

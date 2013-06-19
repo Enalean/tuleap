@@ -36,7 +36,9 @@ class CardInCellPresenterCallbackTest extends TuleapTestCase {
         $this->card_presenter_node  = new Tracker_TreeNode_CardPresenterNode($this->node, $this->card_presenter);
 
         $this->field_retriever = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($this->artifact)->returns($this->field);
-        $this->callback        = new Cardwall_CardInCellPresenterCallback($this->field_retriever, new Cardwall_MappingCollection());
+
+        $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_retriever, new Cardwall_MappingCollection());
+        $this->callback        = new Cardwall_CardInCellPresenterCallback($card_in_cell_presenter_factory);
     }
 
     public function itJustClonesTheNodeIfItIsNotAPresenterNode() {
@@ -52,40 +54,6 @@ class CardInCellPresenterCallbackTest extends TuleapTestCase {
     public function itHasTheSameIdAsTheGivenNode() {
         $cardincell_presenter_node = $this->callback->apply($this->card_presenter_node);
         $this->assertEqual($this->node->getId(), $cardincell_presenter_node->getId());
-    }
-
-    public function itHasACardInCellPresenterWithASemanticStatusFieldId() {
-        $cardincell_presenter_callback = new Cardwall_CardInCellPresenterCallback($this->field_retriever, new Cardwall_MappingCollection());
-        $cardincell_presenter_node     = $cardincell_presenter_callback->apply($this->card_presenter_node);
-
-        $this->assertIdentical($cardincell_presenter_node->getCardInCellPresenter(),
-                               new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id));
-    }
-
-    public function itHasACardInCellPresenterWithSwimLineId() {
-        $parent_node = new TreeNode();
-        $parent_node->addChild($this->card_presenter_node);
-
-        $mapping_collection = new Cardwall_MappingCollection();
-
-        $cardincell_presenter_callback = new Cardwall_CardInCellPresenterCallback($this->field_retriever, $mapping_collection);
-        $cardincell_presenter_node     = $cardincell_presenter_callback->apply($this->card_presenter_node);
-
-        $this->assertEqual($cardincell_presenter_node->getCardInCellPresenter(),
-                           new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id, $parent_node->getId()));
-    }
-
-    public function itHasACardInCellPresenterWithSwimLineValueCollection() {
-        $parent_node = new TreeNode();
-        $parent_node->addChild($this->card_presenter_node);
-
-        $mapping_collection = stub('Cardwall_MappingCollection')->getSwimLineValues($this->field_id)->returns(array(123, 456));
-
-        $cardincell_presenter_callback = new Cardwall_CardInCellPresenterCallback($this->field_retriever, $mapping_collection);
-        $cardincell_presenter_node     = $cardincell_presenter_callback->apply($this->card_presenter_node);
-
-        $this->assertEqual($cardincell_presenter_node->getCardInCellPresenter(),
-                           new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id, $parent_node->getId(), array(123, 456)));
     }
 }
 

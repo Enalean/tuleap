@@ -175,6 +175,24 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         }
         return $array;
     }
+
+    /**
+     * Return a string that will be return in Json Format
+     * as the value of this ChangesetValue_List
+     *
+     * @return string The value of this artifact changeset value in Json Format
+     */
+    public function getJsonValue() {
+        $values = $this->getListValues();
+        $returned_values = array();
+        foreach ($values as $value) {
+            $json_value = $value->getJsonValue();
+            if ($json_value) {
+                $returned_values[] = $json_value;
+            }
+        }
+        return $returned_values;
+    }
     
     /**
      * Return a string that will be use in SOAP API
