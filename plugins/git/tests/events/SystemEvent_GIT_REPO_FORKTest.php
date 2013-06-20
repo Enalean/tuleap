@@ -40,15 +40,15 @@ class SystemEvent_GIT_REPO_FORKTest extends TuleapTestCase {
         $this->new_repository = mock('GitRepository');
         
         $this->repository_factory = mock('GitRepositoryFactory');
-        stub($this->repository_factory)->getRepositoryById($this->old_repository_id)->returns($this->old_repository);
-        stub($this->repository_factory)->getRepositoryById($this->new_repository_id)->returns($this->new_repository);
 
-        $this->event = partial_mock('SystemEvent_GIT_REPO_FORK', array('done', 'error'));
+        $this->event = partial_mock('SystemEvent_GIT_REPO_FORK', array('done', 'warning', 'error'));
         $this->event->setParameters($this->old_repository_id.SystemEvent::PARAMETER_SEPARATOR.$this->new_repository_id);
         $this->event->injectDependencies($this->repository_factory);
     }
 
     public function itGetsTheRepositoryIdsFromTheFactory() {
+        stub($this->repository_factory)->getRepositoryById($this->old_repository_id)->returns($this->old_repository);
+        stub($this->repository_factory)->getRepositoryById($this->new_repository_id)->returns($this->new_repository);
         expect($this->repository_factory)->getRepositoryById()->count(2);
         expect($this->repository_factory)->getRepositoryById($this->old_repository_id)->at(0);
         expect($this->repository_factory)->getRepositoryById($this->new_repository_id)->at(1);
@@ -56,12 +56,22 @@ class SystemEvent_GIT_REPO_FORKTest extends TuleapTestCase {
     }
 
     public function itDelegatesToBackendRepositoryCreation() {
+        stub($this->repository_factory)->getRepositoryById($this->old_repository_id)->returns($this->old_repository);
+        stub($this->repository_factory)->getRepositoryById($this->new_repository_id)->returns($this->new_repository);
         expect($this->backend)->forkOnFilesystem('*', $this->new_repository)->once();
         $this->event->process();
     }
 
     public function itMarksTheEventAsDone() {
+        stub($this->repository_factory)->getRepositoryById($this->old_repository_id)->returns($this->old_repository);
+        stub($this->repository_factory)->getRepositoryById($this->new_repository_id)->returns($this->new_repository);
         expect($this->event)->done()->once();
+        $this->event->process();
+    }
+
+    public function itMarksTheEventAsWarningWhenTheRepoDoesNotExist() {
+        stub($this->repository_factory)->getRepositoryById()->returns(null);
+        expect($this->event)->warning('Unable to find repository, perhaps it was deleted in the mean time?')->once();
         $this->event->process();
     }
 }
