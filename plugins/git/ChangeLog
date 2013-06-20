@@ -1,3 +1,6 @@
+Version 3.27 - Tuleap 6.2
+    * Fix sla #4002: System event no more kept 'Running' when repo is deleted
+
 Version 3.26 - Tuleap 6.2
     * Fix sla #4002: it was not possible anymore to browse gitshell repositories
 
