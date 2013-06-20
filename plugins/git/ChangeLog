@@ -1,3 +1,16 @@
+Version 3.28 - Tuleap 6.2
+    * Remove garbage output when downloading files from git
+
+
+The noheader parameter is not taken into account when we display the
+toolbar.
+
+This fix request #3276 - Garbage output when downloading files from git
+service
+This fix sla #3577 - Not able to unzip git codex snapshot
+
+Change-Id: I427fc05f04a121794958ee24bf4ef8573aee7617
+
 Version 3.27 - Tuleap 6.2
     * Fix sla #4002: System event no more kept 'Running' when repo is deleted
 
