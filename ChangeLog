@@ -14,6 +14,7 @@ Version 6.2 (Not released yet)
 	* mediawiki: 0.12
 	* statistics: 0.28
 	* ldap: 3.31
+	* fusionforge_compat: 0.4
 
 Version 6.1 (Thursday, May 30th 2013)
 	== Enhancement ==
