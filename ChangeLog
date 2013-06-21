@@ -8,7 +8,7 @@ Version 6.2 (Not released yet)
 	* Fix sla #4006: autodetection of redhat releases.
 
 	== Plugins ==
-	* agiledashboard: 0.86
+	* agiledashboard: 0.87
 	* git: 3.28
 	* tracker: 5.131
 	* mediawiki: 0.12
