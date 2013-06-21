@@ -85,6 +85,15 @@ tuleap.cardwall = tuleap.cardwall || { };
         if (artifact_json.html_fields.impediment || artifact_json.html_fields.impediment === "") {
             updateCardImpediment($card, artifact_json.html_fields.impediment);
         }
+
+        if (artifact_json.accent_color || artifact_json.accent_color === null) {
+            updateColorOnCard($card, artifact_json.accent_color);
+        }
+    }
+
+    function updateColorOnCard($card, color) {
+        $card.css('background-color','');
+        $card.css('background-color', color);
     }
 
     function setEmptyPlaceHolder($element) {
