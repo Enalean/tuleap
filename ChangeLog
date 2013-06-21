@@ -1,5 +1,6 @@
 Version 6.2 (Not released yet)
-	* Introduce project hierarchy definition.
+	* Story #3820: activate generic user creation
+	* Story #3632: Introduce project hierarchy definition.
 	* Fix XSS injection in Forums, Wiki, Search, People resume (contrib STMicroelectronics).
 	* Add tool to dump a forum of a project
 	* Attempt to fix bug when invalidating combined js cache
@@ -11,6 +12,7 @@ Version 6.2 (Not released yet)
 	* tracker: 5.131
 	* mediawiki: 0.12
 	* statistics: 0.28
+	* ldap: 3.31
 
 Version 6.1 (Thursday, May 30th 2013)
 	== Enhancement ==

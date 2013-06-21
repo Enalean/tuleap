@@ -1,3 +1,6 @@
+Version 3.31 - Tuleap 6.2
+    * Update user creation after change in core (ensure user consistency)
+
 Version 3.30 - Tuleap 6.1
     * Fix art #3535 - Apache authentication fails with Active Directory
 
