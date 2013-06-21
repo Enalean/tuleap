@@ -18,23 +18,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*if ($argc < 2) {
-    die("Usage: ".$argv[0]." projectId member_1 [member_2] [...]\n");
-}*/
+if ($argc < 2) {
+    die("Usage: ".$argv[0]." projectId\n");
+}
 
-$serverUrl = 'http://ibex.cro.enalean.com';
+$serverUrl = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://chaussette.cro.enalean.com';
+$login     = isset($_SERVER['TULEAP_USER']) ? $_SERVER['TULEAP_USER'] : 'sandrae';
+$password  = isset($_SERVER['TULEAP_PASSWORD']) ? $_SERVER['TULEAP_PASSWORD'] : 'sandrae';
 
 // Establish connexion to the server
 $soapLogin = new SoapClient($serverUrl.'/soap/?wsdl', 
                             array('cache_wsdl' => WSDL_CACHE_NONE));
 
-$requesterSessionHash     = $soapLogin->login('admin', 'siteadmin')->session_hash;
+$requesterSessionHash     = $soapLogin->login($login, $password)->session_hash;
 
 $soapProject = new SoapClient($serverUrl.'/soap/project/?wsdl', 
                               array('cache_wsdl' => WSDL_CACHE_NONE));
 
-$prjId = 105;
-var_dump($soapProject->getProjectGenericUser($requesterSessionHash, $prjId));
+var_dump($soapProject->getProjectGenericUser($requesterSessionHash, $argv[1]));
 
 
 $soapLogin->logout($requesterSessionHash);
