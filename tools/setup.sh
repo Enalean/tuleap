@@ -14,6 +14,17 @@
 
 TODO_FILE=/root/todo_tuleap.txt
 
+todo() {
+    # $1: message to log in the todo file
+    echo -e "- $1" >> $TODO_FILE
+}
+
+die() {
+  # $1: message to prompt before exiting
+  echo -e "**ERROR** $1"; exit 1
+}
+
+
 if [ -e /etc/debian_version ]; then
     INSTALL_PROFILE="debian"
     PROJECT_NAME="tuleap"
@@ -25,9 +36,15 @@ if [ -e /etc/debian_version ]; then
     CROND_SERVICE="cron"
     HTTPD_SERVICE="apache2"
 else
-    RH_VERSION=$(rpm -qa | grep -P "^(centos|redhat)-release" | sed -rn 's/.*-release-(.-.).*/\1/p')
-    RH_MAJOR_VERSION=$(echo $RH_VERSION | cut -d'-' -f1)
-    RH_MINOR_VERSION=$(echo $RH_VERSION | cut -d'-' -f2)
+    lsb_release=$(which lsb_release)
+    if [ ! -x $lsb_release ]; then
+	die "lsb_release is missing, please install it first (yum install redhat-lsb)"
+    fi
+    if lsb_release -s -i | grep -i -P '(centos|redhatenterprise)'; then
+	RH_VERSION=$(lsb_release -s -r)
+	RH_MAJOR_VERSION=$(echo $RH_VERSION | cut -d'.' -f1)
+	RH_MINOR_VERSION=$(echo $RH_VERSION | cut -d'.' -f2)
+    fi
 
     INSTALL_PROFILE="rhel"
 
@@ -128,16 +145,6 @@ make_backup() {
     fi
     backup_file="$1.$ext"
     [ -e "$file" -a ! -e "$backup_file" ] && $CP "$file" "$backup_file"
-}
-
-todo() {
-    # $1: message to log in the todo file
-    echo -e "- $1" >> $TODO_FILE
-}
-
-die() {
-  # $1: message to prompt before exiting
-  echo -e "**ERROR** $1"; exit 1
 }
 
 substitute() {
