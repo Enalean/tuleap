@@ -74,7 +74,7 @@ tuleap.cardwall = tuleap.cardwall || { };
             updateCardTitle($card, artifact_json.title);
         }
 
-        if (artifact_json.fields.remaining_effort || artifact_json.fields.remaining_effort === "") {
+        if (artifact_json.fields.remaining_effort || artifact_json.fields.remaining_effort === null) {
             updateCardRemainingEffort($card, artifact_json.fields.remaining_effort);
         }
 
@@ -120,7 +120,7 @@ tuleap.cardwall = tuleap.cardwall || { };
     }
 
     function updateCardRemainingEffort($card, remaining_effort) {
-        if (remaining_effort === "") {
+        if (remaining_effort === null) {
             setEmptyPlaceHolder($('td.valueOf_remaining_effort > div', $card));
             return;
         }
