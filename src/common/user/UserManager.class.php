@@ -762,7 +762,7 @@ class UserManager {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_exit','error'));
             return 0;
         } else {
-            $user = $this->getUserById($user_id);
+            $user->setId($user_id);
             $this->assignNextUnixUid($user);
             
             // Create the first layout for the user and add some initial widgets
