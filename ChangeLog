@@ -5,6 +5,7 @@ Version 6.2 (Not released yet)
 	* Add tool to dump a forum of a project
 	* Attempt to fix bug when invalidating combined js cache
 	* Fix notice error on service management page
+	* Fix sla #4006: autodetection of redhat releases.
 
 	== Plugins ==
 	* agiledashboard: 0.86
