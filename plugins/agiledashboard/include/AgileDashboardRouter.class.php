@@ -129,6 +129,9 @@ class AgileDashboardRouter {
                 $milestone_controller = $this->milestone_controller_factory->getMilestoneController($request);
                 $this->executeAction($milestone_controller, 'submilestonedata');
                 break;
+            case 'get-more-milestones':
+                $this->executeAction($controller, 'getMoreMilestones');
+                break;
             case 'index':
             default:
                 $this->renderAction($controller, 'index', $request);

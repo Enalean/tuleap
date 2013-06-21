@@ -53,12 +53,19 @@ class Planning_ShortAccessFactory {
         $plannings    = $this->planning_factory->getPlannings($user, $group_id);
         $short_access = array();
         foreach ($plannings as $planning) {
-            $short_access[] = new Planning_ShortAccess($planning, $user, $milestone_factory, $this->pane_factory, $theme_path);
+            $short_access[] = $this->getShortAccessForPlanning($planning, $user, $milestone_factory, $theme_path, 0);
         }
         if (!empty($short_access)) {
             end($short_access)->setIsLatest();
         }
         return $short_access;
+    }
+
+    /**
+     * @return Planning_ShortAccess
+     */
+    public function getShortAccessForPlanning(Planning $planning, PFUser $user, Planning_MilestoneFactory $milestone_factory, $theme_path, $offset) {
+        return new Planning_ShortAccess($planning, $user, $milestone_factory, $this->pane_factory, $theme_path, $offset);
     }
 }
 

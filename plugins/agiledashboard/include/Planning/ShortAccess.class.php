@@ -35,6 +35,21 @@ class Planning_ShortAccess {
      */
     public $planning;
 
+    /**@var int */
+    public $planning_id;
+
+    /**@var int */
+    private $offset;
+
+    /** @var int */
+    public $next_offset;
+
+    /** @var string */
+    public $more;
+
+    /** @var string */
+    public $more_title;
+
     /**
      * @var Planning_MilestoneFactory
      */
@@ -51,12 +66,17 @@ class Planning_ShortAccess {
     /** @var string */
     private $theme_path;
 
-    public function __construct(Planning $planning, PFUser $user, Planning_MilestoneFactory $milestone_factory, Planning_MilestonePaneFactory $pane_factory, $theme_path) {
+    public function __construct(Planning $planning, PFUser $user, Planning_MilestoneFactory $milestone_factory, Planning_MilestonePaneFactory $pane_factory, $theme_path, $offset) {
         $this->user              = $user;
         $this->planning          = $planning;
+        $this->planning_id       = $planning->getId();
         $this->milestone_factory = $milestone_factory;
         $this->pane_factory      = $pane_factory;
         $this->theme_path        = $theme_path;
+        $this->offset            = $offset;
+        $this->next_offset       = $offset + self::NUMBER_TO_DISPLAY;
+        $this->more              = $GLOBALS['Language']->getText('global', 'more');
+        $this->more_title        = $GLOBALS['Language']->getText('plugin_agiledashboard', 'display_five_more', self::NUMBER_TO_DISPLAY);
     }
 
     public function getLastOpenMilestones() {
@@ -77,7 +97,7 @@ class Planning_ShortAccess {
     private function getMilestoneLinkPresenters() {
         if (!$this->presenters) {
             $this->presenters = array();
-            $milestones = $this->milestone_factory->getLastOpenMilestones($this->user, $this->planning, self::NUMBER_TO_DISPLAY + 1);
+            $milestones = $this->milestone_factory->getLastOpenMilestones($this->user, $this->planning, $this->offset, self::NUMBER_TO_DISPLAY + 1);
             foreach ($milestones as $milestone) {
                 $this->presenters[] = new Planning_ShortAccessMilestonePresenter(
                     $this,

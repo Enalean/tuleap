@@ -81,8 +81,8 @@ class Planning_MilestoneFactory {
     /**
      * @return array of Planning_Milestone (the last $number_to_fetch open ones for the given $planning)
      */
-    public function getLastOpenMilestones(PFUser $user, Planning $planning, $number_to_fetch) {
-        $artifacts           = $this->getLastOpenArtifacts($user, $planning, $number_to_fetch);
+    public function getLastOpenMilestones(PFUser $user, Planning $planning, $offset, $number_to_fetch) {
+        $artifacts           = $this->getLastOpenArtifacts($user, $planning, $offset, $number_to_fetch);
         $number_of_artifacts = count($artifacts);
         $current_index       = 0;
         $milestones          = array();
@@ -93,10 +93,11 @@ class Planning_MilestoneFactory {
         return $milestones;
     }
 
-    private function getLastOpenArtifacts(PFUser $user, Planning $planning, $number_to_fetch) {
-        $artifacts  = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
-        ksort($artifacts);
-        return array_slice($artifacts, - $number_to_fetch);
+    private function getLastOpenArtifacts(PFUser $user, Planning $planning, $offset, $number_to_fetch) {
+        $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        $artifacts = array_slice($artifacts, $offset, $number_to_fetch);
+        krsort($artifacts);
+        return $artifacts;
     }
 
     private function getPlannedArtifactsForLatestMilestone(PFUser $user, Tracker_Artifact $artifact, $current_index, $number_of_artifacts) {

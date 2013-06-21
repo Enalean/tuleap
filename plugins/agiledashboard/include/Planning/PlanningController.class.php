@@ -146,6 +146,20 @@ class Planning_Controller extends MVC2_PluginController {
         }
     }
 
+    public function getMoreMilestones() {
+        $offset = $this->request->get('offset', 'uint', 0);
+        $planning = $this->planning_factory->getPlanning($this->request->get('planning_id'));
+        $short_access = $this->planning_shortaccess_factory->getShortAccessForPlanning(
+            $planning,
+            $this->getCurrentUser(),
+            $this->milestone_factory,
+            $this->plugin_theme_path,
+            $offset
+        );
+
+        $this->render('shortaccess-milestones', $short_access);
+    }
+
     /**
      *
      * @param int $projectId
