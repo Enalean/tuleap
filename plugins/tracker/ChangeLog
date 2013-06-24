@@ -1,3 +1,6 @@
+Version 5.133 - Tuleap 6.2
+    * Story #3814: edit cards in overlay on cardwall
+
 Version 5.132 - Tuleap 6.2
     * branch #2747: Remove htmlentities from csv output (Contrib STMicroelectronics)
 

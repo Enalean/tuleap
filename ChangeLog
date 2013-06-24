@@ -10,11 +10,12 @@ Version 6.2 (Not released yet)
 	== Plugins ==
 	* agiledashboard: 0.87
 	* git: 3.28
-	* tracker: 5.132
+	* tracker: 5.133
 	* mediawiki: 0.12
 	* statistics: 0.28
 	* ldap: 3.31
 	* fusionforge_compat: 0.4
+	* cardwall: 0.9.33
 
 Version 6.1 (Thursday, May 30th 2013)
 	== Enhancement ==
