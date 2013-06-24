@@ -42,6 +42,8 @@ tuleap.cardwall = tuleap.cardwall || { };
                 title       : codendi.locales['cardwall']['edit_card'],
                 iframeEmbed : true
         });
+
+        bindCancelEvent();
     }
 
     function getNewCardData(artifact_id, planning_id) {
@@ -192,6 +194,23 @@ tuleap.cardwall = tuleap.cardwall || { };
         return $('div.hidden[data-planning-id]').length > 0;
     }
 
+    function disableOverlay() {
+        overlay_window.deactivate();
+    }
+
+    function bindCancelEvent() {
+        var iframe = $('#lightwindow_iframe').get(0);
+        $(iframe).load(function() {
+            var content = iframe.contentWindow.document;
+            $('button[name=cancel]',content).each(function(){
+                $(this).on('click', function(e){
+                   disableOverlay();
+                   e.preventDefault();
+                });
+            });
+        });
+    }
+
     tuleap.cardwall.cardsEditInPlace = {
 
         init: function() {
@@ -205,7 +224,7 @@ tuleap.cardwall = tuleap.cardwall || { };
         validateEdition: function(artifact_id) {
             var planning_id = getConcernedPlanningId();
             getNewCardData(artifact_id, planning_id);
-            overlay_window.deactivate();
+            disableOverlay();
         }
 
     };
