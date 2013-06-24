@@ -2643,6 +2643,7 @@ EOS;
         $aid_key = array_search('aid', $header_line);
         $af = $this->getTrackerArtifactFactory();
         $artifact = null;
+        $hp       = Codendi_HTMLPurifier::instance();
         
         foreach ($lines as $cpt_line => $line) {
             $data = array();
@@ -2672,8 +2673,7 @@ EOS;
                                         )
                                   );
                         if ($line[$idx]!=''){
-                            
-                            $hp = Codendi_HTMLPurifier::instance();
+
                             $data[$field->getId()] = $hp->purify($field->getFieldDataFromCSVValue($line[$idx]), CODENDI_PURIFIER_CONVERT_HTML);
                             
                             if ($data[$field->getId()] === null) {
