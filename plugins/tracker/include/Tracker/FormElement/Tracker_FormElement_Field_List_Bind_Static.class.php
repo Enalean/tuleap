@@ -127,7 +127,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         if ($value['id'] == 100 || ! array_key_exists($value['id'], $this->values)) {
             return '';
         } else {
-            return $this->format($this->values[$value['id']]);
+            return $this->values[$value['id']]->getLabel();
         }
     }
     
