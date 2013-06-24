@@ -21,7 +21,6 @@
 
 require_once('mvc/PluginView.class.php');
 require_once('common/include/HTTPRequest.class.php');
-require_once('common/include/CSRFSynchronizerToken.class.php');
 
 /**
  * RequestHelpViews
@@ -74,11 +73,9 @@ class RequestHelpViews extends PluginView {
      * @return Void
      */
     function displayForm($params = null) {
-        $um         = UserManager::instance();
-        $user       = $um->getCurrentUser();
+        $um = UserManager::instance();
+        $user = $um->getCurrentUser();
         $ignoreLabs = $this->getController()->getPlugin()->getProperty('ignore_labs');
-        $csrf       = new CSRFSynchronizerToken($this->getController()->getPlugin()->getPluginPath().'/');
-        $csrfToken  = $csrf->fetchHTMLInput();
         if ($user->isLoggedIn() && ($ignoreLabs || $user->useLabFeatures())) {
             $type        = RequestHelp::TYPE_SUPPORT;
             $severity    = RequestHelp::SEVERITY_MINOR;
@@ -112,7 +109,6 @@ class RequestHelpViews extends PluginView {
              <form name="request" class="requesthelp_cssform" action="'.$p->getPluginPath().'/" method="post" enctype="multipart/form-data">
                  <table>
                      <tr>';
-            echo $csrfToken;
             echo '<td><b><a class="tooltip" href="#" title="'.$GLOBALS['Language']->getText('plugin_requesthelp', 'tooltip_type').
                  '">Type:</a></b>&nbsp;<span class="highlight"><big>*</big></b></span></td><td><select name="type"><option value="'.RequestHelp::TYPE_SUPPORT.'" ';
             if ($type == RequestHelp::TYPE_SUPPORT) {

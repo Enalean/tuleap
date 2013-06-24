@@ -24,7 +24,6 @@ require_once('common/include/HTTPRequest.class.php');
 require_once('common/mail/Codendi_Mail.class.php');
 require_once('RequestHelpDao.class.php');
 require_once('RequestHelpDBDriver.class.php');
-require_once('common/include/CSRFSynchronizerToken.class.php');
 
 /**
  * RequestHelpActions
@@ -274,8 +273,6 @@ class RequestHelpActions extends PluginAction {
         $um                    = $this->_getUserManager();
         $user                  = $um->getCurrentUser();
         $request               = $c->getRequest();
-        $csrf                  = new CSRFSynchronizerToken($c->getPlugin()->getPluginPath().'/');
-        $csrf->check();
         $validation            = $this->validateRequest($request);
         $status                = $validation['status'];
         $params                = $validation['params'];
