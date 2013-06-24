@@ -8,13 +8,16 @@
 
 require_once('pre.php');    
 require_once('account.php');
-
+require_once('common/include/CSRFSynchronizerToken.class.php');
 require_once('common/event/EventManager.class.php');
+
 $em =& EventManager::instance();
 $em->processEvent('before_change_email-complete', array());
 
 $hp = Codendi_HTMLPurifier::instance();
 $request =& HTTPRequest::instance();
+$csrf = new CSRFSynchronizerToken('/account/change_email.php');
+$csrf->check();
 
 // ###### function register_valid()
 // ###### checks for valid register from form post
