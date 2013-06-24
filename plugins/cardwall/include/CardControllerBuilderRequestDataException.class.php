@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,25 +15,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Tracker_Artifact_Redirect {
-    const STATE_CREATE_PARENT    = 'to_parent';
-    const STATE_STAY_OR_CONTINUE = 'stay_continue';
-    const STATE_SUBMIT           = 'submit';
-    
-    public $mode;
-    public $base_url;
-    public $query_parameters;
-
-    public function toUrl() {
-        return $this->base_url.'/?'.http_build_query($this->query_parameters);
-    }
-
-    public function stayInTracker() {
-        return ($this->mode != self::STATE_SUBMIT);
+class CardControllerBuilderRequestDataException extends Exception {
+    public function __construct() {
+        $message = 'Invalid/missing data (no cardwall for this planning_id)';
+        parent::__construct($message);
     }
 }
-
 ?>

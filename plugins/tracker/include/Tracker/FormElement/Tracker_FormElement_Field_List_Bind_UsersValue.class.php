@@ -122,5 +122,12 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     public function getSoapValue() {
         return $this->getUsername();
     }
+
+    public function getJsonValue() {
+        if($this->id == 100) {
+            return;
+        }
+        return $this->id;
+    }
 }
 ?>

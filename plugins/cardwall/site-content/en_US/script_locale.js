@@ -22,3 +22,7 @@ codendi.locales['cardwall_field_validation'] = {
         'int_type'   : 'the value must be an integer'
     }
 };
+
+codendi.locales['cardwall'] = {
+    edit_card : 'Edit Card'
+};

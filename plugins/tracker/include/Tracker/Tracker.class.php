@@ -832,111 +832,15 @@ class Tracker implements Tracker_Dispatchable_Interface {
      * Display the submit form
      */
     public function displaySubmit(Tracker_IFetchTrackerSwitcher $layout, $request, $current_user, $link = null) {
-        $hp = Codendi_HTMLPurifier::instance();
-        $breadcrumbs = array(
-                array(
-                        'title' => 'New artifact',
-                        'url'   => $this->getSubmitUrl(),
-                ),
-        );
-        
-        if (!$link) {
-            $this->displayHeader($layout, $this->name, $breadcrumbs);
-        }
-        
         if ($link) {
-            echo '<html>';
-            echo '<head>';
-            echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
-            $GLOBALS['HTML']->displayStylesheetElements(array());
-            $GLOBALS['HTML']->includeCalendarScripts();
-            $GLOBALS['HTML']->displayJavascriptElements(array());
-            echo '</head>';
-            
-            echo '<body>';
-            echo '<div class="main_body_row">';
-            echo '<div class="contenttable">';
-
-            $project = null;
-            $artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($link);
-            if ($artifact) {
-                $project = $artifact->getTracker()->getProject();
-                $GLOBALS['Response']->addFeedback(
-                    'warning', 
-                    $GLOBALS['Language']->getText(
-                        'plugin_tracker', 
-                        'linked_to', 
-                        array(
-                            $artifact->fetchDirectLinkToArtifact(),
-                            $layout->fetchTrackerSwitcher($current_user, ' ', $project, $this),
-                        )
-                    ),
-                    CODENDI_PURIFIER_DISABLED
-                );
-            } else {
-                $GLOBALS['Response']->addFeedback('error', 'Error the artifact to link doesn\'t exist');
-            }
-            $GLOBALS['Response']->displayFeedback();
-        }
-        $html = '';
-        if ($this->submit_instructions) {
-            $html .= '<p class="submit_instructions">' . $hp->purify($this->submit_instructions, CODENDI_PURIFIER_FULL) . '</p>';
-        }
-        
-        $redirect = new Tracker_Artifact_Redirect();
-        $redirect->base_url = TRACKER_BASE_URL;
-        $redirect->query_parameters = array(
-            'tracker'  => $this->id,
-            'func'     => 'submit-artifact',
-        );
-        EventManager::instance()->processEvent(
-            TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
-            array(
-                'request'  => $request,
-                'redirect' => $redirect,
-            )
-        );
-        
-        $html .= '<form action="'. $redirect->toUrl() .'" method="POST" enctype="multipart/form-data">';
-        if ($link) {
-            $html .= '<input type="hidden" name="link-artifact-id" value="'. (int)$link .'" />';
-            if ($request->get('immediate')) {
-                $html .= '<input type="hidden" name="immediate" value="1" />';
-            }
-        }
-        $html .= '<input type="hidden" value="67108864" name="max_file_size" />';
-        $html .= '<table><tr><td>';
-        foreach($this->getFormElements() as $formElement) {
-            $html .= $formElement->fetchSubmit($request->get('artifact'));
-        }
-        $html .= '</td></tr></table>';
-        
-        if ($current_user->isAnonymous()) {
-            $html .= $this->fetchAnonymousEmailForm();
-        }
-        
-        if (!$link) {
-            $html .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-            $html .= ' ';
-            $html .= '<input type="submit" name="submit_and_continue" value="'. $GLOBALS['Language']->getText('global', 'btn_submit_and_continue') .'" />';
-            $html .= '<input type="submit" name="submit_and_stay" value="'. $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') .'" />';
+            $source_artifact = $this->getTrackerArtifactFactory()->getArtifactByid($link);
+            $submit_renderer = new Tracker_Artifact_SubmitOverlayRenderer($this, $source_artifact, EventManager::instance(), $layout);
         } else {
-            $html .= '<input type="submit" id="tracker_artifact_submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+            $submit_renderer = new Tracker_Artifact_SubmitRenderer($this, EventManager::instance(), $layout);
         }
-        
-        $html .= '</form>';
-        
-        $trm = $this->getRulesManager();
-        $html .= $trm->displayRulesAsJavascript();
-        
-        $html .= '</div></div>';
-        
-        echo $html;
-        if (!$link) {
-            $this->displayFooter($layout);
-        }
+        $submit_renderer->display($request, $current_user);
     }
-    
+
     /**
      * Display the submit form
      */
@@ -1071,16 +975,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         echo $html;
         $this->displayFooter($layout);
     }
-    
-    protected function fetchAnonymousEmailForm() {
-        $html = '<p>';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'not_logged_in', array('/account/login.php?return_to='.urlencode($_SERVER['REQUEST_URI'])));
-        $html .= '<br />';
-        $html .= '<input type="text" name="email" id="email" size="50" maxsize="100" />';
-        $html .= '</p>';
-        return $html;
-    }
-    
+
     public function displayHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs, $toolbar = null) {
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
             $hp = Codendi_HTMLPurifier::instance();

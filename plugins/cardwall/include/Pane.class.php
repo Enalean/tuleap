@@ -107,6 +107,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      */
     private function getPresenterUsingMappedFields(Cardwall_OnTop_Config_ColumnCollection $columns) {
         $board_factory       = new Cardwall_BoardFactory();
+        $planning            = $this->milestone->getPlanning();
         $this->milestone_factory->updateMilestoneWithPlannedArtifacts($this->user, $this->milestone);
         $planned_artifacts   = $this->milestone->getPlannedArtifacts();
 
@@ -117,9 +118,18 @@ class Cardwall_Pane extends AgileDashboard_Pane {
 
         $board               = $board_factory->getBoard($field_retriever, $columns, $planned_artifacts, $this->config, $this->user, $display_preferences);
         $backlog_title       = $this->milestone->getPlanning()->getBacklogTracker()->getName();
-        $redirect_parameter  = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
+        $redirect_parameter  = 'cardwall[agile]['. $planning->getId() .']='. $this->milestone->getArtifactId();
 
-        return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title, $this->canConfigure(), $this->getSwitchDisplayAvatarsURL(), $display_preferences->shouldDisplayAvatars());
+        return new Cardwall_PaneContentPresenter(
+            $board,
+            $this->getQrCode(),
+            $redirect_parameter,
+            $backlog_title,
+            $this->canConfigure(),
+            $this->getSwitchDisplayAvatarsURL(),
+            $display_preferences->shouldDisplayAvatars(),
+            $planning
+        );
     }
 
     private function getDisplayPreferences() {

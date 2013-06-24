@@ -20,6 +20,10 @@
 codendi.locales['cardwall_field_validation'] = {
     'error_message' : {
         'float_type' : 'la valeur doit être de type décimal',
-        'int_type'   : 'la valeur doit être un entier'
+        'int_type'   : 'la valeur doit être un entier',
     }
+};
+
+codendi.locales['cardwall'] = {
+    edit_card : 'Éditer la carte'
 };

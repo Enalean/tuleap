@@ -26,7 +26,7 @@
 
             <tbody class="cardwall">
                 {{#swimlines}}
-                    <tr valign="top" id="swimline-{{swimline_id}}">
+                    <tr valign="top" id="swimline-{{swimline_id}}" data-row-id="{{swimline_id}}">
                         {{#has_swimline_header}}
                             <td class="cardwall-cell">
                                 <ul class="nodrag">
@@ -37,7 +37,7 @@
                             </td>
                         {{/has_swimline_header}}
                         {{#cells}}
-                            <td class="cardwall-cell">
+                            <td class="cardwall-cell" data-column-id="{{column_id}}">
                                 <ul>
                                     {{#cardincell_presenters}}
                                         <li class="cardwall_board_postit {{getDropIntoClass}} " id="cardwall_board_postit-{{getId}}" data-column-field-id="{{getCardFieldId}}">

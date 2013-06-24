@@ -1,7 +1,12 @@
 // lightwindow.js v2.0
 //
-// Copyright (c) 2007 stickmanlabs
+// Copyright (c) 2007 stickmanlabs, Enalean (c) 2013
 // Author: Kevin P Miller | http://www.stickmanlabs.com
+// Contributors: Enalean
+//
+// Tuleap and Enalean names and logos are registrated trademarks owned by
+// Enalean SAS. All other trademarks or names are properties of their respective
+// owners.
 // 
 // LightWindow is freely distributable under the terms of an MIT-style license.
 //
@@ -79,7 +84,10 @@ lightwindow.prototype = {
 	initialize : function(options) {
 		this.options = Object.extend({
 			resizeSpeed : 8,
-			contentOffset : {
+                        delay : 0.25,
+                        finalAnimationDuration : 0.75,
+                        finalAnimationDelay : 1.0,
+                        contentOffset : {
 				height : 20,
 				width : 20
 			},
@@ -1631,7 +1639,7 @@ lightwindow.prototype = {
 					new Effect.Scale('lightwindow_container', 100*(ratio/(this.dimensions.container.width)), {sync: true, scaleY: false, scaleFromCenter: true, scaleContent: false})
 				], {
 					duration: this.duration, 
-					delay: 0.25,
+					delay: this.options.delay,
 					queue: {position: 'end', scope: 'lightwindowAnimation'}
 				}
 			);		
@@ -1701,8 +1709,8 @@ lightwindow.prototype = {
 			this._setStatus(false);
 		} else {
 			Effect.Fade('lightwindow_loading', {
-				duration: 0.75,
-				delay: 1.0, 
+				duration : this.options.finalAnimationDuration,
+				delay: this.options.finalAnimationDelay,
 				afterFinish: function() {
 					// Just in case we need some scroll goodness (this also avoids the swiss cheese effect)
 					if (this.windowType != 'image' && this.windowType != 'media' && this.windowType != 'external') {

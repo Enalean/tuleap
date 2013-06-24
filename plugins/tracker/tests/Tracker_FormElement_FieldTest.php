@@ -340,5 +340,14 @@ class Tracker_FormElement_Field_getSoapValueTest extends TuleapTestCase {
             )
         );
     }
+
+    public function itReturnsTheJsonFieldValue() {
+        stub($this->changesetvalue)->getJsonValue()->returns('bla');
+        stub($this->field)->userCanRead()->returns(true);
+        $this->assertIdentical(
+            $this->field->getJsonValue($this->user, $this->last_changeset),
+            'bla'
+        );
+    }
 }
 ?>

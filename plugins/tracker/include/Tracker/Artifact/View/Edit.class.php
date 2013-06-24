@@ -20,6 +20,16 @@
 
 class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
+    /**
+     * @var Tracker_Artifact_ArtifactRenderer
+     */
+    private $renderer;
+
+    public function __construct(Tracker_Artifact $artifact, Codendi_Request $request, PFUser $user, Tracker_Artifact_ArtifactRenderer $renderer) {
+        parent::__construct($artifact, $request, $user);
+        $this->renderer = $renderer;
+    }
+
     /** @see Tracker_Artifact_View_View::getURL() */
     public function getURL() {
         return TRACKER_BASE_URL .'/?'. http_build_query(
@@ -41,30 +51,10 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
     /** @see Tracker_Artifact_View_View::fetch() */
     public function fetch() {
-        $html = $this->fetchFields($this->request->get('artifact'));
+        $html = $this->renderer->fetchFields($this->artifact, $this->request->get('artifact'));
         $html .= $this->fetchFollowUps($this->request->get('artifact_followup_comment'));
 
         return $html;
-    }
-
-    /**
-     * Returns HTML code to display the artifact fields
-     *
-     * @param array $submitted_values array of submitted values
-     *
-     * @return string The HTML code for artifact fields
-     */
-    private function fetchFields($submitted_values = array()) {
-        return
-            '<div class="tabForStory1693" id="fieldsFetchedChangeMe">
-                <table cellspacing="0" cellpadding="0" border="0">
-                    <tr valign="top">
-                        <td style="padding-right:1em;">'.
-                            $this->artifact->getTracker()->fetchFormElements($this->artifact, array($submitted_values)).
-                        '</td>
-                    </tr>
-                </table>
-            </div>';
     }
 
     /**
@@ -77,13 +67,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
     private function fetchFollowUps($submitted_comment = '') {
         $html = '';
 
-        $html_submit_button = '<p style="text-align:center;">';
-        $html_submit_button .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        $html_submit_button .= ' ';
-        $html_submit_button .= '<input type="submit" name="submit_and_stay" value="'. $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') .'" />';
-        $html_submit_button .= '</p>';
-
-        $html .= $html_submit_button;
+        $html .= $this->renderer->fetchSubmitButton();
 
         $html .= '<fieldset id="tracker_artifact_followup_comments"><legend
                           class="'. Toggler::getClassName('tracker_artifact_followups', true, true) .'"
@@ -120,26 +104,17 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         $html .= '</div>';
 
         if ($this->user->isAnonymous()) {
-            $html .= $this->fetchAnonymousEmailForm();
+            $html .= $this->renderer->fetchAnonymousEmailForm();
         }
         $html .= '</li>';
 
         $html .= '</ul>';
         $html .= '</fieldset>';
 
-        $html .= $html_submit_button;
+        $html .= $this->renderer->fetchSubmitButton();
 
         $html .= '</td></tr></table>'; //see fetchFields
 
-        return $html;
-    }
-
-    protected function fetchAnonymousEmailForm() {
-        $html = '<p>';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'not_logged_in', array('/account/login.php?return_to='.urlencode($_SERVER['REQUEST_URI'])));
-        $html .= '<br />';
-        $html .= '<input type="text" name="email" id="email" size="50" maxsize="100" />';
-        $html .= '</p>';
         return $html;
     }
 }

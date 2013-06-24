@@ -42,13 +42,17 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
     /** @var string */
     public $search_cardwall_placeholder;
 
+    /** @var int */
+    public $planning_id;
+
     /**
      * @param Cardwall_Board  $board              The board
      * @param Cardwall_QrCode $qrcode             QrCode to display. false if no qrcode (thus no typehinting)
      * @param string          $redirect_parameter the redirect paramter to add to various url
      * @param string          $swimline_title     The title to display on top of swimline headers
+     * @param Planning        $planning           The concerned planning
      */
-    public function __construct(Cardwall_Board $board, $qrcode, $redirect_parameter, $swimline_title, $configure_url, $switch_display_username_url, $is_display_avatar_selected) {
+    public function __construct(Cardwall_Board $board, Cardwall_QrCode $qrcode, $redirect_parameter, $swimline_title, $configure_url, $switch_display_username_url, $is_display_avatar_selected, Planning $planning) {
         parent::__construct($board, $qrcode, $redirect_parameter);
         $this->nifty                        = '';
         $this->swimline_title               = $swimline_title;
@@ -60,6 +64,7 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
         $this->display_avatar_label         = $GLOBALS['Language']->getText('plugin_cardwall', 'display_avatar_label');
         $this->display_avatar_title         = $GLOBALS['Language']->getText('plugin_cardwall', 'display_avatar_title');
         $this->search_cardwall_placeholder  = $GLOBALS['Language']->getText('plugin_cardwall', 'search_cardwall_placeholder');
+        $this->planning_id                  = $planning->getId();
     }
 
     public function canConfigure() {

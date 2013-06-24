@@ -21,6 +21,8 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 tuleap.agiledashboard.cardwall = tuleap.agiledashboard.cardwall || { };
 tuleap.agiledashboard.cardwall.tracker_user_data = [ ];
 tuleap.agiledashboard.cardwall.card = tuleap.agiledashboard.cardwall.card || { };
+tuleap.agiledashboard.cardwall.cards = tuleap.agiledashboard.cardwall.cards || { };
+tuleap.agiledashboard.cardwall.cards.selectEditors = tuleap.agiledashboard.cardwall.cards.selectEditors || [ ];
 
 tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
     var artifacts_modifications = $H(transport.responseJSON);
@@ -330,6 +332,8 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
             tracker_user_data            = this.tracker_user_data,
             is_display_avatar_selected   = this.is_display_avatar_selected;
 
+        var self = this;
+
         return function updateCardInfo( transport, element ) {
             var new_values;
 
@@ -339,7 +343,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
             element.update( '' );
             new_values = getNewValues( transport, is_multi_select, field_id );
-            updateAssignedToValue( element, new_values );
+            self.updateAssignedToValue( element, new_values );
 
             function getNewValues(transport, is_multi_select, field_id) {
                 var new_values;
@@ -353,65 +357,71 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                 return new_values;
             }
 
-            function updateAssignedToValue( assigned_to_div, new_values ) {
-                var updateFunction = addUsername;
-                if (is_display_avatar_selected) {
-                    updateFunction = addAvatar;
-                }
-
-                if(new_values instanceof Array) {
-                    for(var i=0; i<new_values.length; i++) {           
-                        updateFunction( assigned_to_div, new_values[i] );
-                    }
-                } else if( typeof new_values === 'string' && new_values.length > 0 ){
-                    updateFunction( assigned_to_div, new_values );
-                } else {
-                    assigned_to_div.update( ' - ' );
-                }
-            }
             
-            function addUsername(container, user_id) {
-                var realname = tracker_user_data[ field_id ][ user_id ][ 'realname' ],
-                    caption = tracker_user_data[ field_id ][ user_id ][ 'caption' ],
-                    username_div;
-                    
-                username_div = new Element( 'div' );
-                username_div.addClassName( 'realname' );
-                username_div.writeAttribute( 'title', caption );
-                username_div.writeAttribute( 'data-user-id', user_id );
-                
-                username_div.update(realname);
-                
-                container.insert( username_div );
-                container.insert(' ');
-                
+        }
+
+    },
+
+    updateAssignedToValue : function( assigned_to_div, new_values ) {
+        var updateFunction    = addUsername,
+            field_id          = this.field_id,
+            tracker_user_data = this.tracker_user_data;
+
+        if (this.is_display_avatar_selected) {
+            updateFunction = addAvatar;
+        }
+
+        if(new_values instanceof Array) {
+            for(var i=0; i<new_values.length; i++) {
+                updateFunction( assigned_to_div, new_values[i] );
             }
-            
-            function addAvatar( container, user_id ) {
-                var username = tracker_user_data[ field_id ][ user_id ][ 'username' ],
-                    caption = tracker_user_data[ field_id ][ user_id ][ 'caption' ],
-                    avatar_img,
-                    avatar_div;
+        } else if( typeof new_values === 'string' && new_values.length > 0 ){
+            updateFunction( assigned_to_div, new_values );
+        } else {
+            assigned_to_div.update( ' - ' );
+        }
 
+        function addUsername(container, user_id) {
+            var realname = tracker_user_data[ field_id ][ user_id ][ 'realname' ],
+                caption = tracker_user_data[ field_id ][ user_id ][ 'caption' ],
+                username_div;
 
-                avatar_div = new Element( 'div' );
-                avatar_div.addClassName( 'avatar' );
-                avatar_div.writeAttribute( 'title', caption );
-                avatar_div.writeAttribute( 'data-user-id', user_id );
+            username_div = new Element( 'div' );
+            username_div.addClassName( 'realname' );
+            username_div.writeAttribute( 'title', caption );
+            username_div.writeAttribute( 'data-user-id', user_id );
 
-                avatar_img = new Element('img', {
-                    src: '/users/' + username + '/avatar.png'
-                });
-                avatar_img.observe('load', function() {
-                    if( this.width == 0 || this.height == 0 ) {
-                        return;
-                    }
-                });
-                avatar_div.appendChild(avatar_img);
+            username_div.update(realname);
 
-                container.insert( avatar_div );
-                container.insert(' ');
-            }
+            container.insert( username_div );
+            container.insert(' ');
+
+        }
+
+        function addAvatar( container, user_id ) {
+            var username = tracker_user_data[ field_id ][ user_id ][ 'username' ],
+                caption = tracker_user_data[ field_id ][ user_id ][ 'caption' ],
+                avatar_img,
+                avatar_div;
+
+            avatar_div = new Element( 'div' );
+            avatar_div.addClassName( 'avatar' );
+            avatar_div.writeAttribute( 'title', caption );
+            avatar_div.writeAttribute( 'data-user-id', user_id );
+
+            avatar_img = new Element('img', {
+                src: '/users/' + username + '/avatar.png'
+            });
+            avatar_img.observe('load', function() {
+                if( this.width == 0 || this.height == 0 ) {
+                    return;
+                }
+            });
+            avatar_div.appendChild(avatar_img);
+
+            container.insert( avatar_div );
+            container.insert(' ');
         }
     }
+
 });
