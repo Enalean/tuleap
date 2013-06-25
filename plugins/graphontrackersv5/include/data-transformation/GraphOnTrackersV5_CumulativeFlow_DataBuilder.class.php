@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Xerox, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * Originally written by Yoann Celton, 2013. Jtekt Europe SAS.
  *
@@ -127,15 +127,16 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
     WHERE val.field_id = $this->observed_field_id
     ORDER BY val.id";
             $res = db_query($sql);
-            $this->labels = array();
+            $this->labels[100] = $GLOBALS['Language']->getText('global','none');
+            $engine->colors[$this->labels[100]] = array(null, null, null);
             $resultArray = array();
-            $rolf = 1;
             while($data = db_fetch_array($res)) {
                $engine->colors[$data['label']] = $this->getColor($data);
                $this->labels[$data['id']] = $data['label'];
                for ($i = 0 ; $i <= $this->nbSteps; $i++ ) {
                    $timestamp = $this->startDate + ($i * $this->timeFiller[$this->scale]) ;
                    $resultArray[$timestamp][$data['id']] =  0;
+                   $resultArray[$timestamp][100] =  0;
                }
             }
         return $resultArray;
@@ -171,7 +172,6 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
     private function switchArrayKeys($tmpArray) {
         $result = array();
         foreach ($tmpArray as $k => $v) {
-            //echo'<pre>';var_dump($this->labels);echo'</pre>';exit(1);
             $result[$this->labels[$k]] = $v;
         }
         return $result;

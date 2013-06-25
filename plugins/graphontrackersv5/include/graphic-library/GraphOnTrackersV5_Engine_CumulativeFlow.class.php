@@ -50,7 +50,7 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
         require_once('common/chart/Chart.class.php');
 
         if ($this->width == 0) {
-            $this->width = (count($this->data)* GraphOnTrackersV5_Engine_CumulativeFlow::WIDTH_PER_POINT)+(GraphOnTrackersV5_Engine_CumulativeFlow::MARGIN);
+            $this->width = (count($this->data)* self::WIDTH_PER_POINT)+(self::MARGIN);
         }
 
         foreach ($this->data as $date => $label)
