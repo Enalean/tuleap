@@ -70,8 +70,9 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 
         if($this->nbSteps > GraphOnTrackersV5_CumulativeFlow_DataBuilder::MAX_STEPS) {
             //STHAP
-            echo " <p class='feedback_error'>Please choose a smaller period, or increase the scale</p>";
-            $GLOBALS['Response']->addFeedback('error', "Please choose a smaller period, or increase the scale");
+            //$GLOBALS['Response']->addFeedback('error', "Please choose a smaller period, or increase the scale");
+            $engine->error = new ErrorChart($GLOBALS['Language']->getText('plugin_tracker', 'unable_to_render_the_chart'),
+            $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'error_too_many_points'), 400, 200);
         } else {
             $tmpResult = $this->initEmptyResultArrayFromField($engine);
 
