@@ -22,23 +22,41 @@
 require_once dirname(__FILE__) .'/bootstrap.php';
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 
+class Cardwall_ArtifactNodeTreeProvider4Tests extends Cardwall_ArtifactNodeTreeProvider {
+    public function getCards(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory) {
+        return parent::getCards($artifact_ids, $artifact_factory);
+    }
+
+    public function wrapInAThreeLevelArtifactTree(array $cards, $swimline_id) {
+        return parent::wrapInAThreeLevelArtifactTree($cards, $swimline_id);
+    }
+}
+
 class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
         
     public function itCreatesTwoLevelsEvenIfNoArtifactIdsAreGiven() {
-        $provider  = new Cardwall_ArtifactNodeTreeProvider();
+        $provider  = new Cardwall_ArtifactNodeTreeProvider4Tests();
         
-        $root_node = $provider->wrapInAThreeLevelArtifactTree(array());
+        $root_node = $provider->wrapInAThreeLevelArtifactTree(array(), 'whatever');
         
         $this->assertTrue($root_node->hasChildren());
         $this->assertFalse($root_node->getChild(0)->hasChildren());
         
     }
+
+    public function itHasASwimlineId() {
+        $provider  = new Cardwall_ArtifactNodeTreeProvider4Tests();
+
+        $root_node = $provider->wrapInAThreeLevelArtifactTree(array(), 'Dat Id');
+
+        $this->assertEqual($root_node->getChild(0)->getId(), 'Dat Id');
+    }
     
     public function itCreatesAThreeLevelTreeBecauseItMustLookLikeTheNodeTreeFromAMilestone() {
-        $provider  = new Cardwall_ArtifactNodeTreeProvider();
+        $provider  = new Cardwall_ArtifactNodeTreeProvider4Tests();
         $artifact4 = aMockArtifact()->withId(4)->build();
         
-        $root_node = $provider->wrapInAThreeLevelArtifactTree(array(new ArtifactNode($artifact4)));
+        $root_node = $provider->wrapInAThreeLevelArtifactTree(array(new ArtifactNode($artifact4)), 'whatever');
 
         $this->assertTrue($root_node->hasChildren());
         $this->assertTrue($root_node->getChild(0)->hasChildren());
@@ -54,7 +72,7 @@ class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
     }
     
     public function itCreatesAnArtifactNodeForEveryArtifactId() {
-        $provider = new Cardwall_ArtifactNodeTreeProvider();
+        $provider = new Cardwall_ArtifactNodeTreeProvider4Tests();
         $artifact_factory = mock('Tracker_ArtifactFactory');
         
         $artifact4 = aMockArtifact()->withId(4)->build();

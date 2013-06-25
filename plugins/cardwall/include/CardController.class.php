@@ -74,7 +74,7 @@ class Cardwall_CardController extends MVC2_PluginController {
                 'xref'         => $card_presenter->getXRef(),
                 'edit_url'     => $card_presenter->getEditUrl(),
                 'accent_color' => $card_presenter->getAccentColor(),
-                'ancestor_id'  => $card_presenter->getAncestorId(),
+                'swimline_id'  => $card_presenter->getSwimlineId(),
                 'column_id'    => $this->getColumnId(),
                 'drop_into'    => $card_in_cell_presenter->getDropIntoClasses(),
                 'fields'       => array(),
@@ -101,12 +101,19 @@ class Cardwall_CardController extends MVC2_PluginController {
      * @return Cardwall_CardPresenter
      */
     protected function getCardPresenter() {
+        $user            = $this->request->getCurrentUser();
+        $parent_artifact = $this->artifact->getParent($user);
+        $swimline_id     = 0;
+        if ($parent_artifact) {
+            $swimline_id = $parent_artifact->getId();
+        }
         return new Cardwall_CardPresenter(
             $this->artifact,
             $this->card_fields,
-            $this->artifact->getCardAccentColor($this->request->getCurrentUser()),
+            $this->artifact->getCardAccentColor($user),
             $this->display_preferences,
-            $this->artifact->getParent($this->request->getCurrentUser())
+            $swimline_id,
+            $parent_artifact
         );
     }
 
