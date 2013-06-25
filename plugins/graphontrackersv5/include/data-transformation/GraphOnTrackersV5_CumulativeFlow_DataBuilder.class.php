@@ -110,7 +110,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
      * @var array
      */
     protected function isValidType($type) {
-        return in_array($type, array('sb'));
+        return in_array($type, array('sb', 'msb', 'cb'));
     }
 
     /**
