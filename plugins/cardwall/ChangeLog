@@ -1,3 +1,9 @@
+Version 0.9.35 - Tuleap 6.2
+    * Fix request #4081: remove type hinting for QRCode
+
+Version 0.9.34 - Tuleap 6.2
+    * Fix request #4077: IE7 js typo bug
+
 Version 0.9.33 - Tuleap 6.2
     * Story #3814: edit cards in overlay on cardwall
 
