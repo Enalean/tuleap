@@ -61,7 +61,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
         $this->graph->xaxis->title->setMargin(60,20,20,20);
         
         if (!is_null($this->xaxis)) {
-            sort($this->xaxis);
+            ksort($this->xaxis);
             $this->graph->xaxis->SetTickLabels(array_values($this->xaxis));
         } else {
             $this->graph->xaxis->SetTickLabels(array_values($this->legend));
