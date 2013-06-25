@@ -52,7 +52,7 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
      * @param string          $swimline_title     The title to display on top of swimline headers
      * @param Planning        $planning           The concerned planning
      */
-    public function __construct(Cardwall_Board $board, Cardwall_QrCode $qrcode, $redirect_parameter, $swimline_title, $configure_url, $switch_display_username_url, $is_display_avatar_selected, Planning $planning) {
+    public function __construct(Cardwall_Board $board, $qrcode, $redirect_parameter, $swimline_title, $configure_url, $switch_display_username_url, $is_display_avatar_selected, Planning $planning) {
         parent::__construct($board, $qrcode, $redirect_parameter);
         $this->nifty                        = '';
         $this->swimline_title               = $swimline_title;
