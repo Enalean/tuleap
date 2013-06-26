@@ -1,3 +1,6 @@
+Version 5.0.10 - Tuleap 6.2
+    * Request #4083: Bar charts groupby misbehavior (again) (Contrib JTekt)
+
 Version 5.0.9 - Tuleap 5.13
     * Add a plugin dependency solver to force installation of needed plugins
 
