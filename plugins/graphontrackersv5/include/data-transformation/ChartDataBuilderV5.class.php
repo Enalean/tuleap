@@ -19,15 +19,15 @@
  */
 
 abstract class ChartDataBuilderV5 {
-    
+
     protected $chart;
     protected $artifacts;
-    
+
     function __construct($chart, $artifacts) {
         $this->chart     = $chart;
         $this->artifacts = $artifacts;
     }
-    
+
     function buildProperties($engine) {
         $engine->title       = $this->chart->getTitle();
         $engine->description = $this->chart->getDescription();

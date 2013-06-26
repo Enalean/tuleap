@@ -23,12 +23,12 @@
  * Graphic engine which builds a graph
  */
 abstract class GraphOnTrackersV5_Engine {
-    
+
     public $graph;
     public $data;
     /** @var array */
     public $colors;
-    
+
     /**
      * @return boolean true if the data are valid to buid the chart
      */
@@ -58,7 +58,7 @@ abstract class GraphOnTrackersV5_Engine {
     }
 
     /**
-     * If the given color is undefined(null), then we must take one from the current 
+     * If the given color is undefined(null), then we must take one from the current
      * theme (in available_colors).
      *
      * @return string hexadecimal representation of the color
