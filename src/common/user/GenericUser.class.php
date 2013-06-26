@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-class GenericUser extends PFUser{
+class GenericUser extends PFUser {
     const NAME_PREFIX = 'forge__prjgen_';
     const REAL_NAME = 'Generic User For Project';
 
@@ -27,32 +27,12 @@ class GenericUser extends PFUser{
      */
     private $project;
 
-    public function __construct(Project $project, $data = null) {
-        parent::__construct($data);
-        $this->project  = $project;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus() {
-        return 'R';
-    }
-
-    /**
-     * @return string
-     */
-    public function getRealName() {
-        return self::REAL_NAME;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserName() {
-        $project_name = $this->project->getUnixName();
-
-        return self::NAME_PREFIX.$project_name;
+    public function __construct(Project $project, PFUser $pfuser) {
+        parent::__construct($pfuser->toRow());
+        $this->setStatus(PFUser::STATUS_RESTRICTED);
+        $this->setRealName(self::REAL_NAME);
+        $this->setUserName(self::NAME_PREFIX . $project->getUnixName());
+        $this->project = $project;
     }
 
     /**
