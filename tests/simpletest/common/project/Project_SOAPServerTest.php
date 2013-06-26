@@ -189,7 +189,7 @@ class Project_SOAPServerGenericUserTest extends TuleapTestCase {
 
         $this->server = partial_mock(
                 'Project_SOAPServerObjectTest',
-                array('isRequesterAdmin', 'addProjectMember'),
+                array('isRequesterAdmin', 'addProjectMember', 'removeProjectMember'),
                 array($project_manager, $project_creator, $user_manager, $this->generic_user_factory, $limitator)
         );
 
@@ -215,6 +215,22 @@ class Project_SOAPServerGenericUserTest extends TuleapTestCase {
         expect($this->server)->addProjectMember()->once();
 
         $this->server->setProjectGenericUser($this->session_key, $this->group_id, $this->password);
+    }
+
+    public function itUnsetsGenericUser() {
+        stub($this->generic_user_factory)->fetch($this->group_id)->returns($this->user);
+
+        expect($this->server)->removeProjectMember()->once();
+
+        $this->server->unsetGenericUser($this->session_key, $this->group_id);
+    }
+
+    public function itThrowsASoapFaultWhileUnsetingGenericUserIfItIsNotActivated() {
+        stub($this->generic_user_factory)->fetch($this->group_id)->returns(null);
+
+        $this->expectException();
+
+        $this->server->unsetGenericUser($this->session_key, $this->group_id);
     }
 }
 
