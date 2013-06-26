@@ -227,15 +227,16 @@ $HTML->box1_top($Language->getText('project_admin_editugroup','proj_members')."&
 
 */
 
-$res_memb = db_query(
-    "SELECT user.realname, user.user_id, user.user_name, user.status
+$sql = "SELECT user.realname, user.user_id, user.user_name, user.status
         FROM user_group
         INNER JOIN user ON (user.user_id = user_group.user_id)
-        LEFT OUTER JOIN generic_user ON generic_user.user_id = user.user_id
+        LEFT JOIN generic_user ON (
+            generic_user.user_id = user.user_id AND
+            generic_user.group_id = $group_id)
         WHERE user_group.group_id = $group_id
-            AND generic_user.user_id IS NULL
-        ORDER BY user.realname");
+        ORDER BY user.realname";
 
+$res_memb = db_query($sql);
 print '<div  style="max-height:200px; overflow:auto;">';
 print '<TABLE WIDTH="100%" BORDER="0">';
 $user_helper = new UserHelper();
