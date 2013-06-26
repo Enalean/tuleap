@@ -1,4 +1,4 @@
-Version 6.2 (Not released yet)
+Version 6.2 (Wednesday, June 26th 2013)
 	* Story #3820: activate generic user creation
 	* Story #3632: Introduce project hierarchy definition.
 	* Fix XSS injection in Forums, Wiki, Search, People resume (contrib STMicroelectronics).
