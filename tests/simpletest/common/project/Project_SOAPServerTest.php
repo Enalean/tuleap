@@ -153,4 +153,69 @@ class Project_SOAPServerTest extends TuleapTestCase {
     }
 }
 
+class Project_SOAPServerObjectTest extends Project_SOAPServer {
+    public function isRequesterAdmin($sessionKey, $project_id) {
+        parent::isRequesterAdmin($sessionKey, $project_id);
+    }
+}
+
+class Project_SOAPServerGenericUserTest extends TuleapTestCase {
+
+    /** @var Project_SOAPServerObjectTest */
+    private $server;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->group_id    = 154;
+        $this->session_key = '123';
+        $this->password    = 'pwd';
+
+        $this->user = mock('PFUser');
+        $this->user->setReturnValue('isLoggedIn', true);
+
+        $this->admin  = mock('PFUser');
+        $this->admin->setReturnValue('isLoggedIn', true);
+        $this->admin->setReturnValue('isSuperUser', true);
+
+        $user_manager = new MockUserManager();
+
+        $project = new MockProject();
+
+        $project_manager            = stub('ProjectManager')->getProject($this->group_id)->returns($project);
+        $project_creator            = new MockProjectCreator();
+        $this->generic_user_factory = mock('GenericUserFactory');
+        $limitator                  = new MockSOAP_RequestLimitator();
+
+        $this->server = partial_mock(
+                'Project_SOAPServerObjectTest',
+                array('isRequesterAdmin', 'addProjectMember'),
+                array($project_manager, $project_creator, $user_manager, $this->generic_user_factory, $limitator)
+        );
+
+        stub($this->server)->isRequesterAdmin($this->session_key, $this->group_id)->returns(true);
+        stub($this->generic_user_factory)->create($this->group_id, $this->password)->returns($this->user);
+        stub($this->user)->getUserName()->returns('User1');
+        stub($user_manager)->getCurrentUser()->returns($this->admin);
+    }
+
+    public function itCreatesANewGenericUser() {
+        stub($this->generic_user_factory)->fetch($this->group_id)->returns(null);
+
+        expect($this->generic_user_factory)->create($this->group_id, $this->password)->once();
+        expect($this->server)->addProjectMember()->once();
+
+        $this->server->setProjectGenericUser($this->session_key, $this->group_id, $this->password);
+    }
+
+    public function itDoesNotRecreateAGenericUserIfItAlreadyExists() {
+        stub($this->generic_user_factory)->fetch($this->group_id)->returns($this->user);
+
+        expect($this->generic_user_factory)->create($this->group_id, $this->password)->never();
+        expect($this->server)->addProjectMember()->once();
+
+        $this->server->setProjectGenericUser($this->session_key, $this->group_id, $this->password);
+    }
+}
+
 ?>
