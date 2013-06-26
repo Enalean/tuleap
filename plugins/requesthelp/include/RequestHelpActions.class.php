@@ -41,9 +41,9 @@ class RequestHelpActions extends PluginAction {
     * @return Array
     */
     function validateRequest($request) {
-        $status  = true;
-        $invalid = array();
-        $valid = new Valid_String('request_summary');
+        $status   = true;
+        $invalid  = array();
+        $valid    = new Valid_String('request_summary');
         $valid->required();
         $summary = trim($request->get('request_summary'));
         if ($request->valid($valid) && strlen($summary) < self::MAX_SUMMARY_LENGTH && $summary != '') {
@@ -59,7 +59,7 @@ class RequestHelpActions extends PluginAction {
         if ($request->valid($valid) && strlen($description) < self::MAX_DESCRIPTION_LENGTH && $description != '' && $description != $defaultDescription) {
             $params['description'] = $description;
         } else {
-            $status = false;
+            $status    = false;
             $invalid[] = 'Description';
         }
         $valid = new Valid_UInt('type');
