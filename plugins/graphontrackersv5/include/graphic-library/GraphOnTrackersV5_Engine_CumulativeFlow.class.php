@@ -50,14 +50,18 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
     public function buildGraph() {
         require_once('common/chart/Chart.class.php');
 
-
         if($this->error == NULL) {
             if ($this->width == 0) {
                 $this->width = (count($this->data)* self::WIDTH_PER_POINT)+(self::MARGIN);
             }
 
-            foreach ($this->data as $date => $label)
-                $dates[] = date('M-d', $date);
+            if($this->scale == GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY) {
+                foreach ($this->data as $date => $label)
+                    $dates[] = date('M-d', $date);
+            } else {
+                foreach ($this->data as $date => $label)
+                    $dates[] = date('M-Y', $date);
+            }
 
             $this->graph = new Chart($this->width,$this->height);
             $colors = $this->getColors();
