@@ -47,8 +47,8 @@ class CardInCellPresenterFactoryTest extends TuleapTestCase {
     }
 
     public function itHasACardInCellPresenterWithSwimLineId() {
-        $parent_id = 112;
-        stub($this->card_presenter)->getAncestorId()->returns($parent_id);
+        $swimline_id = 112;
+        stub($this->card_presenter)->getSwimlineId()->returns($swimline_id);
 
         $mapping_collection = new Cardwall_MappingCollection();
 
@@ -57,13 +57,13 @@ class CardInCellPresenterFactoryTest extends TuleapTestCase {
 
         $this->assertEqual(
             $cell_presenter,
-            new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id, $parent_id)
+            new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id, $swimline_id)
         );
     }
 
     public function itHasACardInCellPresenterWithSwimLineValueCollection() {
-        $parent_id = 112;
-        stub($this->card_presenter)->getAncestorId()->returns($parent_id);
+        $swimline_id = 112;
+        stub($this->card_presenter)->getSwimlineId()->returns($swimline_id);
 
         $mapping_collection = stub('Cardwall_MappingCollection')->getSwimLineValues($this->field_id)->returns(array(123, 456));
 
@@ -72,7 +72,7 @@ class CardInCellPresenterFactoryTest extends TuleapTestCase {
 
         $this->assertEqual(
             $cell_presenter,
-            new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id, $parent_id, array(123, 456))
+            new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id, $swimline_id, array(123, 456))
         );
     }
 }

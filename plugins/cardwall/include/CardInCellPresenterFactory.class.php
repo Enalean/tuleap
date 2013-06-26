@@ -51,7 +51,7 @@ class Cardwall_CardInCellPresenterFactory {
     public function getCardInCellPresenter(Cardwall_CardPresenter $card_presenter) {
         $card_field_id    = $this->getFieldId($card_presenter);
         $swim_line_values = $this->mappings->getSwimLineValues($card_field_id);
-        return new Cardwall_CardInCellPresenter($card_presenter, $card_field_id, $card_presenter->getAncestorId(), $swim_line_values);
+        return new Cardwall_CardInCellPresenter($card_presenter, $card_field_id, $card_presenter->getSwimlineId(), $swim_line_values);
     }
 
     private function getFieldId(Cardwall_CardPresenter $card_presenter) {

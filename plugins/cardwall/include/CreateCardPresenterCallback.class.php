@@ -51,9 +51,13 @@ class Cardwall_CreateCardPresenterCallback implements TreeNodeCallback {
 
         $artifact  = $node->getArtifact();
         $color     = $artifact->getCardAccentColor($this->user);
-        $presenter = new Cardwall_CardPresenter($artifact, $this->card_fields, $color, $this->display_preferences, $artifact->getParent($this->user));
+        $presenter = new Cardwall_CardPresenter($artifact, $this->card_fields, $color, $this->display_preferences, $this->getSwimlineId($node), $artifact->getParent($this->user));
         $new_node  = new Tracker_TreeNode_CardPresenterNode($node, $presenter);
         return $new_node;
+    }
+
+    private function getSwimlineId(TreeNode $node) {
+        return $node->getParentNode() ? $node->getParentNode()->getId() : 0;
     }
 }
 

@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_CardPresenter implements Tracker_CardPresenter{
-    
+class Cardwall_CardPresenter implements Tracker_CardPresenter {
+
     /**
      * @var Tracker_Artifact
      */
@@ -38,13 +38,16 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
     /** @var string */
     private $accent_color;
 
-    public function __construct(Tracker_Artifact $artifact, Tracker_CardFields $card_fields, $accent_color, Cardwall_DisplayPreferences $display_preferences, Tracker_Artifact $parent = null) {
+    private $swimline_id;
+
+    public function __construct(Tracker_Artifact $artifact, Tracker_CardFields $card_fields, $accent_color, Cardwall_DisplayPreferences $display_preferences, $swimline_id, Tracker_Artifact $parent = null) {
         $this->artifact            = $artifact;
         $this->parent              = $parent;
         $this->details             = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
         $this->card_fields         = $card_fields;
         $this->accent_color        = $accent_color;
         $this->display_preferences = $display_preferences;
+        $this->swimline_id         = $swimline_id;
     }
 
     /**
@@ -112,6 +115,10 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
     
     public function getAncestorId() {
         return $this->parent ? $this->parent->getId() : 0;
+    }
+
+    public function getSwimlineId() {
+        return $this->swimline_id;
     }
 
     /**

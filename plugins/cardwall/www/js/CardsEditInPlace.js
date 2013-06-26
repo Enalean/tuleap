@@ -152,14 +152,14 @@ tuleap.cardwall = tuleap.cardwall || { };
     }
 
     function getConcernedCell(artifact_json) {
-        return $('tbody.cardwall tr[data-row-id='+artifact_json['ancestor_id']+'] td.cardwall-cell[data-column-id='+artifact_json['column_id']+'] ul');
+        return $('tbody.cardwall tr[data-row-id='+artifact_json['swimline_id']+'] td.cardwall-cell[data-column-id='+artifact_json['column_id']+'] ul');
     }
 
     function cardHasToBeMoved($card, artifact_json) {
         var current_parent_id = $card.parents('tr[data-row-id]').attr('data-row-id');
         var current_status_id = $card.parents('td[data-column-id]').attr('data-column-id');
 
-        return current_parent_id !== artifact_json['ancestor_id'] || current_status_id !== artifact_json['column_id'];
+        return current_parent_id !== artifact_json['swimline_id'] || current_status_id !== artifact_json['column_id'];
     }
 
     function isAnAncestor($card) {
