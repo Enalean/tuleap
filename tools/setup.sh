@@ -486,7 +486,7 @@ setup_mysql_cnf() {
     install_dist_conf "/etc/my.cnf" "$template_file"
     substitute "/etc/my.cnf" '%PROJECT_NAME%' "$PROJECT_NAME"
 
-    if [ -z "$mysql_host" ]; then
+    if [ -z "$mysql_remote_server" ]; then
 	echo "Initializing MySQL: You can ignore additionnal messages on MySQL below this line:"
 	echo "***************************************"
 	control_service $MYSQLD_SERVICE restart
@@ -502,7 +502,7 @@ setup_mysql() {
 
     # If DB is local, mysql password where not already tested
     pass_opt=""
-    if [ -z "$mysql_host" ]; then
+    if [ -z "$mysql_remote_server" ]; then
         # See if MySQL root account is password protected
         $MYSQLSHOW -uroot 2>&1 | grep password
         while [ $? -eq 0 ]; do
@@ -782,9 +782,8 @@ setup_tuleap() {
     # replace string patterns in database.inc
     substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbpasswd%' "$codendiadm_passwd" 
     substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbuser%' "$PROJECT_ADMIN" 
-    substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbname%' "$PROJECT_NAME" 
+    substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbname%' "$PROJECT_NAME"
     substitute "/etc/$PROJECT_NAME/conf/database.inc" 'localhost' "$mysql_host" 
-
 }
 
 ###############################################################################
@@ -827,9 +826,10 @@ disable_subdomains=""
 auto=""
 auto_passwd=""
 configure_bind=""
-mysql_host=""
+mysql_host="localhost"
 mysql_port=""
 mysql_httpd_host="localhost"
+mysql_remote_server=""
 rt_passwd=""
 
 options=`getopt -o h -l auto,auto-passwd,without-bind-config,mysql-host:,mysql-port:,mysql-root-password:,mysql-httpd-host:,sys-default-domain:,sys-fullname:,sys-ip-address:,sys-org-name:,sys-long-org-name:,disable-subdomains -- "$@"`
@@ -880,6 +880,7 @@ do
 		mysql_port="$2";shift 2
 		MYSQL="$MYSQL -P$mysql_port"
 		MYSQLSHOW="$MYSQLSHOW -P$mysql_port"
+		mysql_remote_server=true
 		;;
 	--mysql-root-password)
 		rt_passwd="$2";shift 2
@@ -895,7 +896,7 @@ do
     esac
 done
 
-if [ ! -z "$mysql_host" ]; then
+if [ ! -z "$mysql_remote_server" ]; then
     test_mysql_host
 else
     if ! has_package mysql-server; then

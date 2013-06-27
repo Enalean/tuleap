@@ -227,15 +227,16 @@ $HTML->box1_top($Language->getText('project_admin_editugroup','proj_members')."&
 
 */
 
-$res_memb = db_query(
-    "SELECT user.realname, user.user_id, user.user_name, user.status
+$sql = "SELECT user.realname, user.user_id, user.user_name, user.status, IF(generic_user.group_id, 1, 0) AS is_generic
         FROM user_group
         INNER JOIN user ON (user.user_id = user_group.user_id)
-        LEFT OUTER JOIN generic_user ON generic_user.user_id = user.user_id
+        LEFT JOIN generic_user ON (
+            generic_user.user_id = user.user_id AND
+            generic_user.group_id = $group_id)
         WHERE user_group.group_id = $group_id
-            AND generic_user.user_id IS NULL
-        ORDER BY user.realname");
+        ORDER BY user.realname";
 
+$res_memb = db_query($sql);
 print '<div  style="max-height:200px; overflow:auto;">';
 print '<TABLE WIDTH="100%" BORDER="0">';
 $user_helper = new UserHelper();
@@ -252,11 +253,22 @@ while ($row_memb=db_fetch_array($res_memb)) {
     if (!$display_name) {
         $display_name = $hp->purify($user_helper->getDisplayName($row_memb['user_name'], $row_memb['realname']));
     }
+
+    $edit_settings = '';
+    if ($row_memb['is_generic']) {
+        $url   = '/project/admin/editgenericmember.php?group_id='. $group_id;
+        $title = $GLOBALS['Language']->getText('project_admin', 'edit_generic_user_settings');
+
+        $edit_settings  = '<a href="'. $url .'" title="'. $title .'">';
+        $edit_settings .= $GLOBALS['HTML']->getImage('ic/edit.png');
+        $edit_settings .= '</a>';
+    }
+
     print '<FORM ACTION="?" METHOD="POST"><INPUT TYPE="HIDDEN" NAME="func" VALUE="rmuser">'.
 	'<INPUT TYPE="HIDDEN" NAME="rm_id" VALUE="'.$row_memb['user_id'].'">'.
 	'<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'. $group_id .'">'.
 	'<TR><TD ALIGN="center"><INPUT TYPE="IMAGE" NAME="DELETE" SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></TD></FORM>'.
-	'<TD><A href="/users/'.$row_memb['user_name'].'/">'. $display_name .' </A></TD></TR>';
+	'<TD><A href="/users/'.$row_memb['user_name'].'/">'. $display_name .' </A>'. $edit_settings .'</TD></TR>';
 }
 
 print '</TABLE></div> <HR NoShade SIZE="1">';
