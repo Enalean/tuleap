@@ -30,22 +30,6 @@ require_once 'MembershipCommand/RemoveBinding.class.php';
  * -> adding and removing user and groups
  */
 class Git_Driver_Gerrit_MembershipManager {
-    const GROUP_CONTRIBUTORS = 'contributors';
-    const GROUP_INTEGRATORS  = 'integrators';
-    const GROUP_SUPERMEN     = 'supermen';
-    const GROUP_OWNERS       = 'owners';
-
-    public static $GERRIT_GROUPS = array(self::GROUP_CONTRIBUTORS => Git::PERM_READ,
-                                         self::GROUP_INTEGRATORS  => Git::PERM_WRITE,
-                                         self::GROUP_SUPERMEN     => Git::PERM_WPLUS,
-                                         self::GROUP_OWNERS       => Git::SPECIAL_PERM_ADMIN);
-    public static $PERMS_TO_GROUPS = array(
-        Git::PERM_READ          => self::GROUP_CONTRIBUTORS,
-        Git::PERM_WRITE         => self::GROUP_INTEGRATORS,
-        Git::PERM_WPLUS         => self::GROUP_SUPERMEN,
-        Git::SPECIAL_PERM_ADMIN => self::GROUP_OWNERS,
-    );
-
     private $dao;
     private $driver;
     private $gerrit_server_factory;
