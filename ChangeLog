@@ -6,6 +6,9 @@ Version 6.3 (Not released yet)
 	== Bug fix ==
 	* request #4112: Python exception pass (Contrib Raphaël Enrici)
 
+	== Enhancement ==
+	* Project admin can configure the generic user from ui (change password & email)
+
 Version 6.2 (Wednesday, June 26th 2013)
 	* Story #3820: activate generic user creation
 	* Story #3632: Introduce project hierarchy definition.
