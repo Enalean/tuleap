@@ -18,15 +18,33 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'FeedbackFormatter.class.php';
+
 class Feedback {
+
+    /**
+     * @var array
+     */
+    public $logs;
+
+    /**
+     * @var FeebackFormatter
+     */
+    private $formatter;
+
     const INFO =  'info';
     const WARN  = 'warning';
     const ERROR = 'error';
 
-    var $logs;
-    function Feedback() {
+    function __construct() {
         $this->logs = array();
+        $this->setFormatter(new FeedbackFormatter());
     }
+
+    function setFormatter(FeedbackFormatter $formatter) {
+        $this->formatter = $formatter;
+    }
+
     function log($level, $msg, $purify=CODENDI_PURIFIER_CONVERT_HTML) {
         if(!is_array($msg)) {
             $msg = array($msg);
@@ -35,25 +53,11 @@ class Feedback {
             $this->logs[] = array('level' => $level, 'msg' => $m, 'purify' => $purify);
         }
     }
+
     function fetch() {
-        $html = '';
-        $old_level = null;
-        $hp =& Codendi_HTMLPurifier::instance();
-        foreach($this->logs as $log) {
-            if (!is_null($old_level) && $old_level != $log['level']) {
-                $html .= '</ul>';
-            }
-            if (is_null($old_level) || $old_level != $log['level']) {
-                $old_level = $log['level'];
-                $html .= '<ul class="feedback_'. $log['level'] .'">';
-            }
-            $html .= '<li>'. $hp->purify($log['msg'], $log['purify']) .'</li>';
-        }
-        if (!is_null($old_level)) {
-            $html .= '</ul>';
-        }
-        return $html;
+        return $this->formatter->format($this->logs);
     }
+
     function fetchAsPlainText() {
     	   $txt = '';
        foreach($this->logs as $log) {
