@@ -78,7 +78,7 @@ class Bootstrap_Theme extends DivBasedTabbedLayout {
         return $html;
     }
 
-    private function container(array $params, ProjectManager $project_manager, User $current_user) {
+    private function container(array $params, ProjectManager $project_manager, PFUser $current_user) {
         $html  = '';
         $html .= '<div class="main container-fluid">';
         $html .= '<div class="row-fluid">';
@@ -158,7 +158,7 @@ class Bootstrap_Theme extends DivBasedTabbedLayout {
         return $html;
     }
 
-    public function projectSidebar(Project $project, $toptab, Codendi_HTMLPurifier $hp, User $user) {
+    public function projectSidebar(Project $project, $toptab, Codendi_HTMLPurifier $hp, PFUser $user) {
         $html = '';
         $html .= '<div class="span2">';
         $html .= '<div class="well sidebar-nav">';

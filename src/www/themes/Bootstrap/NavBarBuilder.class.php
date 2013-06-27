@@ -20,7 +20,7 @@
 
 class NavBarBuilder {
 
-    public function __construct(ProjectManager $projectManager, EventManager $eventManager, BaseLanguage $language, HTTPRequest $request, User $user, $title, $imgroot, $requestUri, $selectedTopTab) {
+    public function __construct(ProjectManager $projectManager, EventManager $eventManager, BaseLanguage $language, HTTPRequest $request, PFUser $user, $title, $imgroot, $requestUri, $selectedTopTab) {
         $this->user           = $user;
         $this->title          = $title;
         $this->request        = $request;
