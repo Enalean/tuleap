@@ -3,6 +3,9 @@ Version 6.3 (Not released yet)
 	* graphontrackersv5: 5.1
 	* requesthelp: 1.3.3
 
+	== Bug fix ==
+	* request #4112: Python exception pass (Contrib Raphaël Enrici)
+
 Version 6.2 (Wednesday, June 26th 2013)
 	* Story #3820: activate generic user creation
 	* Story #3632: Introduce project hierarchy definition.
