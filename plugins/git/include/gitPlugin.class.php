@@ -889,7 +889,16 @@ class GitPlugin extends Plugin {
             $this->getGerritUserFinder(),
             $this->getUGroupManager(),
             $this->getGerritMembershipManager(),
-            $this->getProjectManager()
+            $this->getUmbrellaProjectManager()
+        );
+    }
+
+    private function getUmbrellaProjectManager() {
+        return new Git_Driver_Gerrit_UmbrellaProjectManager(
+            $this->getUGroupManager(),
+            $this->getProjectManager(),
+            $this->getGerritMembershipManager(),
+            $this->getGerritDriver()
         );
     }
 

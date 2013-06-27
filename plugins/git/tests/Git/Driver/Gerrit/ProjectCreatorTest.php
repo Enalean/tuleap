@@ -62,6 +62,9 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
     /** @var ProjectManager */
     protected $project_manager;
 
+    /** @var Git_Driver_Gerrit_UmbrellaProjectManager */
+    protected $umbrella_manager;
+
     protected $gerrit_project = 'tuleap-localhost-mozilla/firefox';
     protected $gerrit_git_url;
     protected $gerrit_admin_instance = 'admin-tuleap.example.com';
@@ -121,13 +124,20 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
 
         $this->project_manager = mock('ProjectManager');
 
+        $this->umbrella_manager = new Git_Driver_Gerrit_UmbrellaProjectManager(
+            $this->ugroup_manager,
+            $this->project_manager,
+            $this->membership_manager,
+            $this->driver
+        );
+
         $this->project_creator = new Git_Driver_Gerrit_ProjectCreator(
                     $this->tmpdir,
                     $this->driver,
                     $this->userfinder,
                     $this->ugroup_manager,
                     $this->membership_manager,
-                    $this->project_manager
+                    $this->umbrella_manager
         );
 
         stub($this->repository)->getProject()->returns($this->project);
