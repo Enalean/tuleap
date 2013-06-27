@@ -16,8 +16,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_DateReminderRenderer.class.php');
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
 require_once('common/mail/MailManager.class.php');
 require_once 'common/date/DateHelper.class.php';
 
@@ -66,7 +64,7 @@ class Tracker_DateReminderManager {
      *
      * @param TrackerManager $trackerManager
      * @param HTTPRequest    $request
-     * @param User           $currentUser
+     * @param PFUser           $currentUser
      *
      * @return Void
      */
@@ -142,7 +140,7 @@ class Tracker_DateReminderManager {
      * @param Tracker_DateReminder $reminder Reminder that will send notifications
      * @param Tracker_Artifact $artifact Artifact for which reminders will be sent
      * @param Array            $messages Messages
-     * @param User             $user     Receipient
+     * @param PFUser             $user     Receipient
      *
      * return Array
      */

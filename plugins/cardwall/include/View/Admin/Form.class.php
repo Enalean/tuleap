@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once CARDWALL_BASE_DIR .'/View.class.php';
 
 class Cardwall_View_Admin_Form extends Cardwall_View {
 

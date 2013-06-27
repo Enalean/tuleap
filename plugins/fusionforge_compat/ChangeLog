@@ -1,0 +1,14 @@
+Version 0.4 - Tuleap 6.2
+    * Add missing group_get_object() function.
+
+
+This fix sla #4036 (unable to use the global search with mediawiki)
+
+Change-Id: I9104e08c091d0ebc1b0efe030a61efc5f1b92195
+
+Version 0.3 - Tuleap 5.13
+    * Mediawiki packaging
+
+Version 0.2 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+

@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once dirname(__FILE__) .'/../../../include/Tracker/Hierarchy/Hierarchy.class.php';
-
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 class Tracker_HierarchyTest extends TuleapTestCase {
 
     public function testWithEmptyHierarchGetLevelyShouldThrowExceptionForAnyTracker() {
@@ -96,6 +95,12 @@ class Tracker_HierarchyTest extends TuleapTestCase {
         $this->assertTrue($hierarchy->isRoot(112));
         $this->assertFalse($hierarchy->isRoot(111));
         $this->assertFalse($hierarchy->isRoot(110));
+    }
+
+    public function testIsRootShouldReturnFalseWhenTrackerIsNotInHierarchy() {
+        $hierarchy = new Tracker_Hierarchy();
+        $hierarchy->addRelationship(112, 111);
+        $this->assertFalse($hierarchy->isRoot(666));
     }
 
     public function ItShouldBeChild() {

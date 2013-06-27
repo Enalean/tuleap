@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('Tracker_Artifact_ChangesetValue.class.php');
 require_once('common/include/Codendi_HTMLPurifier.class.php');
 
 /**
@@ -58,7 +57,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      * @return string The value of this artifact changeset value for Soap API
      */
     public function getSoapValue() {
-        return $this->getText();
+        return $this->encapsulateRawSoapValue($this->getText());
     }
     
     /**
@@ -89,9 +88,10 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      * @return string The sentence to add in changeset
      */
     public function nodiff($format='html') {
-        $previous = '';
         $next = $this->getText();
         if ($next != '') {
+            $previous = array('');
+            $next     = explode(PHP_EOL, $this->getText());
             return $this->fetchDiff($previous, $next, $format);
         }
     }

@@ -17,12 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once 'aTracker.php';
-require_once 'aField.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 function aChangesetValueArtifactLink() {
     return new Test_Tracker_ChangesetValue_ArtifactLink_Builder();
+}
+
+function aChangesetValueList() {
+    return new Test_Tracker_ChangesetValue_List_Builder();
 }
 
 class Test_Tracker_ChangesetValue_Builder {
@@ -73,6 +75,26 @@ class Test_Tracker_ChangesetValue_ArtifactLink_Builder extends Test_Tracker_Chan
     public function build() {
         $object = new Tracker_Artifact_ChangesetValue_ArtifactLink($this->id, $this->field, null, $this->artifact_links);
         return $object;
+    }
+}
+
+class Test_Tracker_ChangesetValue_List_Builder extends Test_Tracker_ChangesetValue_Builder {
+    private $list_values = array();
+
+    public function __construct() {
+        parent::__construct('Tracker_Artifact_ChangesetValue_List');
+    }
+
+    public function withValues(array $list_values) {
+        $this->list_values = $list_values;
+        return $this;
+    }
+
+    /**
+     * @return Tracker_Artifact_ChangesetValue_List
+     */
+    public function build() {
+        return new Tracker_Artifact_ChangesetValue_List($this->id, $this->field, null, $this->list_values);
     }
 }
 

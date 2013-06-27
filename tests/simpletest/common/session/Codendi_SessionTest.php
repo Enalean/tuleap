@@ -173,7 +173,7 @@ class Codendi_SessionTest extends UnitTestCase {
     
     public function test_Overloading() {
         $pseudo_php_session = array();
-        $session = new Codendi_Session(&$pseudo_php_session);
+        $session = new Codendi_Session($pseudo_php_session);
         $this->assertFalse(isset($session->riri));
         $this->assertFalse(isset($pseudo_php_session['riri']));
         $session->riri = 'fifi';
@@ -188,7 +188,7 @@ class Codendi_SessionTest extends UnitTestCase {
     
     public function test_Overloading_namespace() {
         $pseudo_php_session = array();
-        $session = new Codendi_Session(&$pseudo_php_session);
+        $session = new Codendi_Session($pseudo_php_session);
         $this->assertFalse(isset($session->riri));
         $this->assertFalse(isset($pseudo_php_session['riri']));
         $session->changeSessionNamespace('riri');        

@@ -16,11 +16,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElement_Field.class.php');
 require_once('common/project/UGroupManager.class.php');
 
 class Tracker_DateReminder {
+
+    const BEFORE = 0;
+    const AFTER  = 1;
+
+    const DISABLED = 0;
+    const ENABLED  = 1;
 
     protected $reminderId;
     protected $trackerId;
@@ -207,18 +211,12 @@ class Tracker_DateReminder {
         foreach ($ugroups as $ugroupId) {
             if ($ugroupId < 100) {
                 $members = $uGroupManager->getDynamicUGroupsMembers($ugroupId, $this->getTracker()->getGroupId());
-                if ($members && !$members->isError()) {
-                    foreach ($members as $member) {
-                        $user                       = $um->getUserById($member['user_id']);
-                        $recipients[$user->getId()] = $user;
-                    }
-                }
             } else {
-                $uGroup     = $uGroupManager->getById($ugroupId);
-                $members    = $uGroup->getMembers();
-                foreach ($members as $user) {
-                    $recipients[$user->getId()] = $user;
-                }
+                $uGroup  = $uGroupManager->getById($ugroupId);
+                $members = $uGroup->getMembers();
+            }
+            foreach ($members as $user) {
+                $recipients[$user->getId()] = $user;
             }
         }
         return $recipients;
@@ -230,7 +228,7 @@ class Tracker_DateReminder {
      * @return String
      */
     public function getReminderStatusLabel() {
-        if ($this->getStatus() == 1) {
+        if ($this->getStatus() == self::ENABLED) {
             $reminderStatusLabel = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_enabled');
         } else {
             $reminderStatusLabel = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_disabled');
@@ -244,7 +242,7 @@ class Tracker_DateReminder {
      * @return String
      */
     public function getNotificationTypeLabel() {
-        if ($this->getNotificationType() == 1) {
+        if ($this->getNotificationType() == self::AFTER) {
             $notificationTypeLabel = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after');
         } else {
             $notificationTypeLabel = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before');

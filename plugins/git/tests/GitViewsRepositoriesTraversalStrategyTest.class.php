@@ -18,11 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once dirname(__FILE__) .'/../include/Git_Backend_Gitolite.class.php';
+require_once 'bootstrap.php';
 
 Mock::generate('GitViews');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('Git_Backend_Gitolite');
 
 abstract class GitViewsRepositoriesTraversalStrategyTest extends TuleapTestCase {
@@ -34,7 +33,7 @@ abstract class GitViewsRepositoriesTraversalStrategyTest extends TuleapTestCase 
     
     public function testEmptyListShouldReturnEmptyString() {
         $view = new MockGitViews();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $repositories = array();
         $strategy = new $this->classname($view);
         $this->assertIdentical('', $strategy->fetch($repositories, $user));
@@ -42,7 +41,7 @@ abstract class GitViewsRepositoriesTraversalStrategyTest extends TuleapTestCase 
     
     public function testFlatTreeShouldReturnRepresentation() {
         $view = new MockGitViews();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));
         
         $repositories    = $this->getFlatTree($strategy);
@@ -57,16 +56,19 @@ abstract class GitViewsRepositoriesTraversalStrategyTest extends TuleapTestCase 
     protected function getFlatTree($strategy) {
         //go find the variable $repositories
         include dirname(__FILE__) .'/_fixtures/flat_tree_of_repositories.php'; 
-        $gitolite_backend = new MockGit_Backend_Gitolite();
         foreach ($repositories as $row) {
-            $r = mock('GitRepository');
-            $r->setReturnValue('getId', $row['repository_id']);
-            $r->setReturnValue('getDescription', $row['repository_description']);
-            $r->setReturnValue('userCanRead', true);
+            /* @var $repository GitRepository */
+            $repository = partial_mock('GitRepository', array('userCanRead'));
+            $repository->setId($row['repository_id']);
+            $repository->setName($row['repository_name']);
+            $repository->setDescription($row['repository_description']);
+            stub($repository)->userCanRead()->returns(true);
             if ($row['repository_backend_type'] == 'gitolite') {
-                $r->setReturnValue('getBackend', $gitolite_backend);
+                $repository->setBackend(mock('Git_Backend_Gitolite'));
+            } else {
+                $repository->setBackend(mock('GitBackend'));
             }
-            $strategy->setReturnValue('getRepository', $r, array($row));
+            $strategy->setReturnValue('getRepository', $repository, array($row));
         }
         return $repositories;
     }

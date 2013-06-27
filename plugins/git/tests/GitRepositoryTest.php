@@ -18,23 +18,23 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once(dirname(__FILE__).'/../include/GitRepository.class.php');
+require_once 'bootstrap.php';
+
 Mock::generatePartial('GitRepository', 'GitRepositoryTestVersion', array('_getUserManager', 'getRepositoryIDByName', 'getDao'));
 Mock::generatePartial('GitRepository', 'GitRepositorySecondTestVersion', array('_getProjectManager', 'getDao'));
-require_once(dirname(__FILE__).'/../include/Git_Backend_Gitolite.class.php');
+
 Mock::generate('Git_Backend_Gitolite');
-require_once(dirname(__FILE__).'/../include/GitBackend.class.php');
+
 Mock::generate('GitBackend');
-require_once(dirname(__FILE__).'/../include/GitDao.class.php');
+
 Mock::generate('GitDao');
 Mock::generate('UserManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('ProjectManager');
 Mock::generate('Project');
 Mock::generate('DataAccessResult');
 
-class GitRepositoryTest extends UnitTestCase {
+class GitRepositoryTest extends TuleapTestCase {
 
     public function setUp() {
         $link =dirname(__FILE__).'/_fixtures/tmp/perms';
@@ -47,42 +47,7 @@ class GitRepositoryTest extends UnitTestCase {
     public function tearDown() {
         unlink(dirname(__FILE__).'/_fixtures/tmp/perms');
     }
-
-    public function test_isNameValid() {
-        $gitolite = new MockGit_Backend_Gitolite();
-        $gitolite->setReturnValue('getAllowedCharsInNamePattern', 'a-zA-Z0-9/_.-');
-        
-        $gitshell = new MockGitBackend();
-        $gitshell->setReturnValue('getAllowedCharsInNamePattern', 'a-zA-Z0-9_.-');
-        
-        $repo = new GitRepository();
-        
-        $repo->setBackend($gitolite);
-        $this->checkNameValidation($repo);
-        $this->assertTrue($repo->isNameValid('jambon/beurre'));
-        
-        $repo->setBackend($gitshell);
-        $this->checkNameValidation($repo);
-        $this->assertFalse($repo->isNameValid('jambon/beurre'));
-    }
-    
-    private function checkNameValidation(GitRepository $repo) {
-        $this->assertFalse($repo->isNameValid(''));
-        $this->assertFalse($repo->isNameValid('/'));
-        $this->assertFalse($repo->isNameValid('/jambon'));
-        $this->assertFalse($repo->isNameValid('jambon/'));
-        $this->assertTrue($repo->isNameValid('jambon'));
-        $this->assertTrue($repo->isNameValid('jambon.beurre'));
-        $this->assertTrue($repo->isNameValid('jambon-beurre'));
-        $this->assertTrue($repo->isNameValid('jambon_beurre'));
-        $this->assertFalse($repo->isNameValid('jambon/.beurre'));
-        $this->assertFalse($repo->isNameValid('jambon..beurre'));
-        $this->assertFalse($repo->isNameValid('jambon...beurre'));
-        $this->assertFalse($repo->isNameValid(str_pad('name_with_more_than_255_chars_', 256, '_')));
-        $this->assertFalse($repo->isNameValid('repo.git'));
-        $this->assertFalse($repo->isNameValid('u/toto'));
-    }
-    
+   
         
     public function testDeletionPathShouldBeInProjectPath() {
         $repo = new GitRepository();
@@ -103,60 +68,6 @@ class GitRepositoryTest extends UnitTestCase {
         $this->assertFalse($repo->isDotGit('d'));
         $this->assertFalse($repo->isDotGit('defaultgit'));
         $this->assertFalse($repo->isDotGit('default.git.old'));
-    }
-
-    public function testLogGitPushNoUser() {
-        $um = new MockUserManager();
-        $um->setReturnValue('getUserByIdentifier', null);
-        $repo = new GitRepositoryTestVersion();
-        $repo->setReturnValue('_getUserManager', $um);
-        $dao = new MockGitDao();
-        $dao->setReturnValue('logGitPush', true);
-        $repo->setReturnValue('getDao', $dao);
-
-        $this->assertTrue($repo->logGitPush('repo', 'user', 'prj', 1327577111, 3));
-
-        $repo->expectOnce('_getUserManager');
-        $um->expectOnce('getUserByIdentifier');
-        $dao->expectOnce('logGitPush');
-    }
-
-    public function testLogGitPushDaoFail() {
-        $user = new MockUser();
-        $user->setReturnValue('getId', 2);
-        $um = new MockUserManager();
-        $um->setReturnValue('getUserByIdentifier', $user);
-        $repo = new GitRepositoryTestVersion();
-        $repo->setReturnValue('_getUserManager', $um);
-        $dao = new MockGitDao();
-        $dao->setReturnValue('logGitPush', false);
-        $repo->setReturnValue('getDao', $dao);
-
-        $this->assertFalse($repo->logGitPush('repo', 'user', 'prj', 1327577111, 3));
-
-        $repo->expectOnce('_getUserManager');
-        $um->expectOnce('getUserByIdentifier');
-        $user->expectOnce('getId');
-        $dao->expectOnce('logGitPush');
-    }
-
-    public function testLogGitPushSuccess() {
-        $user = new MockUser();
-        $user->setReturnValue('getId', 2);
-        $um = new MockUserManager();
-        $um->setReturnValue('getUserByIdentifier', $user);
-        $repo = new GitRepositoryTestVersion();
-        $repo->setReturnValue('_getUserManager', $um);
-        $dao = new MockGitDao();
-        $dao->setReturnValue('logGitPush', true);
-        $repo->setReturnValue('getDao', $dao);
-
-        $this->assertTrue($repo->logGitPush('repo', 'user', 'prj', 1327577111, 3));
-
-        $repo->expectOnce('_getUserManager');
-        $um->expectOnce('getUserByIdentifier');
-        $user->expectOnce('getId');
-        $dao->expectOnce('logGitPush');
     }
 
     public function testGetRepositoryIDByNameSuccess() {
@@ -215,58 +126,8 @@ class GitRepositoryTest extends UnitTestCase {
         $project->expectNever('getID');
     }
     
-    public function testForkCreatesAnewRepoAndPassesItToTheBackend() {
-        $user = $this->_newUser("sandra");
-        $backend = new MockGit_Backend_Gitolite();
-        $project = new Mockproject();
-        $project->setReturnValue('getUnixName', 'tulip');
-        
-        $repo    = new GitRepository();
-        $repo->setBackend($backend);
-        $repo->setProject($project);
-        
-        $namespace = "toto/tata";
-        $clone = $this->_aGitRepoWith($user, $repo, $namespace, $backend, GitRepository::REPO_SCOPE_INDIVIDUAL);
-        $clone->setProject($repo->getProject());
-        $clone->setPath(unixPathJoin(array($project->getUnixName(), $namespace, $repo->getName())).'.git');
-
-        $backend->expectOnce('fork', array(new EqualExpectation($repo), new EqualExpectation($clone)));
-
-        $repo->fork($user, $namespace, GitRepository::REPO_SCOPE_INDIVIDUAL, $project);
-    }
-    public function testForkCrossProjectClonesByChangingTheProjectAndPath() {
-        $user = $this->_newUser("sandra");
-        $backend = new MockGit_Backend_Gitolite();
-        $project = new Mockproject();
-        $project->setReturnValue('getUnixName', 'tulip');
-
-        $to_project = new Mockproject();
-        $to_project->setReturnValue('getUnixName', 'blabla');
-
-        $repo    = new GitRepository();
-        $repo->setBackend($backend);
-        $repo->setProject($project);
-        
-        $expectedRepo = $this->_aGitRepoWith($user, $repo, '', $backend, GitRepository::REPO_SCOPE_PROJECT);
-        $expectedRepo->setProject($to_project);
-        $expectedRepo->setPath(unixPathJoin(array($to_project->getUnixName(), '', $repo->getName())).'.git');
-
-        $backend->expectOnce('fork', array(new EqualExpectation($repo), new EqualExpectation($expectedRepo)));
-        $repo->fork($user, '', GitRepository::REPO_SCOPE_PROJECT, $to_project);
-    }
-    private function _aGitRepoWith($user, $repo, $namespace, $backend, $scope) {
-        $clone = new GitRepository();
-        $clone->setCreator($user);
-        $clone->setNamespace($namespace);
-        $clone->setBackend($backend);
-        $clone->setParent($repo);
-        $clone->setScope($scope);
-        $clone->setName($repo->getName());
-        return $clone;
-    }
-    
     public function _newUser($name) {
-        $user = new User(array('language_id' => 1));
+        $user = new PFUser(array('language_id' => 1));
         $user->setUserName($name);
         return $user;
     }
@@ -287,7 +148,7 @@ class GitRepositoryTest extends UnitTestCase {
     }
 
     public function testProjectRepositoryDosNotBelongToUser() {
-        $user = new User(array('language_id' => 1));
+        $user = new PFUser(array('language_id' => 1));
         $user->setUserName('sandra');
         
         $repo = new GitRepository();
@@ -298,7 +159,7 @@ class GitRepositoryTest extends UnitTestCase {
     }
     
     public function testUserRepositoryBelongsToUser() {
-        $user = new User(array('language_id' => 1));
+        $user = new PFUser(array('language_id' => 1));
         $user->setUserName('sandra');
         
         $repo = new GitRepository();
@@ -308,10 +169,10 @@ class GitRepositoryTest extends UnitTestCase {
         $this->assertTrue($repo->belongsTo($user));
     }
     public function testUserRepositoryDoesNotBelongToAnotherUser() {
-        $creator = new User(array('language_id' => 1));
+        $creator = new PFUser(array('language_id' => 1));
         $creator->setId(123);
         
-        $user = new User(array('language_id' => 1));
+        $user = new PFUser(array('language_id' => 1));
         $user->setId(456);
         
         $repo = new GitRepository();
@@ -319,6 +180,32 @@ class GitRepositoryTest extends UnitTestCase {
         $repo->setScope(GitRepository::REPO_SCOPE_INDIVIDUAL);
         
         $this->assertFalse($repo->belongsTo($user));
+    }
+    
+    public function itIsMigratableIfItIsAGitoliteRepo() {
+        $repo = new GitRepository();
+        $repo->setBackendType(GitDao::BACKEND_GITOLITE);
+        $this->assertTrue($repo->canMigrateToGerrit());
+    }
+    
+    public function itIsNotMigratableIfItIsAGitshellRepo() {
+        $repo = new GitRepository();
+        $repo->setBackendType(GitDao::BACKEND_GITSHELL);
+        $this->assertFalse($repo->canMigrateToGerrit());
+    }
+    
+    public function itIsNotMigratableIfAlreadyAGerritRepo() {
+        $repo = new GitRepository();
+        $repo->setBackendType(GitDao::BACKEND_GITOLITE);
+        $repo->setRemoteServerId(34);
+        $this->assertFalse($repo->canMigrateToGerrit());
+    }
+
+    public function itIsNotMigratableIfItHasAlreadyBeenAGerritRepoInThePast() {
+        $repo = new GitRepository();
+        $repo->setBackendType(GitDao::BACKEND_GITOLITE);
+        $repo->setRemoteServerDisconnectDate(12345677890);
+        $this->assertFalse($repo->canMigrateToGerrit());
     }
 }
 
@@ -356,6 +243,33 @@ class GitRepository_CanDeletedTest extends TuleapTestCase {
         $this->assertFalse($this->repo->canBeDeleted());
     }
     
+}
+
+class GitRepository_GetAccessUrlTest extends TuleapTestCase {
+    /**
+     * @var Git_Backend_Interface
+     */
+    private $backend;
+
+    /**
+     * @var GitRepository
+     */
+    private $repository;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->backend = mock('GitBackend');
+
+        $this->repository = new GitRepository();
+        $this->repository->setBackend($this->backend);
+    }
+
+    public function itReturnsTheBackendContent() {
+        $access_url = array('ssh' => 'plop');
+        stub($this->backend)->getAccessURL()->returns(array('ssh' => 'plop'));
+        $this->assertEqual($this->repository->getAccessURL(), $access_url);
+    }
 }
 
 ?>

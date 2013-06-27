@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Pane.class.php';
 
 class GitViews_RepoManagement_Pane_AccessControl extends GitViews_RepoManagement_Pane {
 
@@ -89,30 +88,8 @@ class GitViews_RepoManagement_Pane_AccessControl extends GitViews_RepoManagement
      * @return void
      */
     private function accessControlGitolite() {
-        $html  = '';
-        $html .= '<table>';
-        $html .= '<thead><tr>';
-        $html .= '<td>'. $GLOBALS['Language']->getText('plugin_git', 'perm_R') .'</td>';
-        $html .= '<td>'. $GLOBALS['Language']->getText('plugin_git', 'perm_W') .'</td>';
-        $html .= '<td>'. $GLOBALS['Language']->getText('plugin_git', 'perm_W+') .'</td>';
-        $html .= '</tr></thead>';
-        $html .= '<tbody><tr>';
-        // R
-        $html .= '<td>';
-        $html .= permission_fetch_selection_field('PLUGIN_GIT_READ', $this->repository->getId(), $this->repository->getProjectId(), 'repo_access[read]');
-        $html .= '</td>';
-        // W
-        $html .= '<td>';
-        $html .= permission_fetch_selection_field('PLUGIN_GIT_WRITE', $this->repository->getId(), $this->repository->getProjectId(), 'repo_access[write]');
-        $html .= '</td>';
-        // W+
-        $html .= '<td>';
-        $html .= permission_fetch_selection_field('PLUGIN_GIT_WPLUS', $this->repository->getId(), $this->repository->getProjectId(), 'repo_access[wplus]');
-        $html .= '</td>';
-
-        $html .= '</tr></tbody>';
-        $html .= '</table>';
-        return $html;
+        $forkPermissionsManager = new GitForkPermissionsManager($this->repository);
+        return $forkPermissionsManager->displayAccessControl();
     }
 }
 ?>

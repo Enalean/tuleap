@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
- 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_UsersValue.class.php');
+ require_once('bootstrap.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field_List_Bind_UsersValue', 
     'Tracker_FormElement_Field_List_Bind_UsersValueTestVersion', 
@@ -32,7 +31,7 @@ require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 class Tracker_FormElement_Field_List_Bind_UsersValueTest extends UnitTestCase {
     
@@ -48,7 +47,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValueTest extends UnitTestCase {
     }
     
     public function testGetUser() {
-        $u = new MockUser();
+        $u = mock('PFUser');
         
         $uh = new MockUserManager();
         $uh->setReturnValue('getUserById', $u, array(123));
@@ -60,5 +59,44 @@ class Tracker_FormElement_Field_List_Bind_UsersValueTest extends UnitTestCase {
         $this->assertReference($bv->getUser(), $u);
     }
     
+}
+
+class Tracker_FormElement_Field_List_Bind_UsersValue_fetchValuesForJSONTest extends TuleapTestCase {
+    public $user_manager;
+    public $user;
+
+    public function setUp() {
+        parent::setUp();
+        $this->user_manager = mock('UserManager');
+        $this->user         = mock('PFUser');
+        UserManager::setInstance($this->user_manager);
+
+        stub($this->user)->getRealName()->returns('Le roi arthur');
+        stub($this->user_manager)->getUserById()->returns($this->user);
+    }
+
+    public function tearDown() {
+        UserManager::clearInstance();
+        parent::tearDown();
+    }
+
+
+    public function itReturnsTheUserNameAsWell() {
+        $value = new Tracker_FormElement_Field_List_Bind_UsersValue(12, 'neo', 'Thomas A. Anderson (neo)');
+        $json = $value->fetchValuesForJson();
+        $this->assertEqual($json, array(
+            'id'       => '12',
+            'value'    => 'b12',
+            'caption'  => 'Thomas A. Anderson (neo)',
+            'username' => 'neo',
+            'realname' => 'Le roi arthur',
+        ));
+    }
+
+    public function itReturnsNullForGetJsonIfUserIsNone() {
+        $value = new Tracker_FormElement_Field_List_Bind_UsersValue(100, 'none', 'none');
+        $json = $value->getJsonValue();
+        $this->assertNull($json);
+    }
 }
 ?>

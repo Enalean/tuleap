@@ -39,6 +39,12 @@ PLUGIN_GRAPHONTRACKERS_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/graphontra
 PLUGIN_CARDWALL_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/cardwall/VERSION)
 PLUGIN_AGILEDASHBOARD_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/agiledashboard/VERSION)
 PLUGIN_FULLTEXTSEARCH_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/fulltextsearch/VERSION)
+PLUGIN_ARCHIVEDELETEDITEMS_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/archivedeleteditems/VERSION)
+PLUGIN_FUSIONFORGE_COMPAT_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/fusionforge_compat/VERSION)
+PLUGIN_ADMSSW_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/admssw/VERSION)
+PLUGIN_DOAPRDF_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/doaprdf/VERSION)
+PLUGIN_FOAFPROFILES_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/foafprofiles/VERSION)
+PLUGIN_MEDIAWIKI_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/mediawiki/VERSION)
 
 THEME_CODEX_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/CodeX/VERSION)
 THEME_CODEXTAB_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/CodeXTab/VERSION)
@@ -51,7 +57,14 @@ THEME_TULEAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Tuleap/VERSIO
 THEME_BOOTSTRAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/BOOTSTRAP/VERSION)
 
 PKG_NAME=tuleap
+
+ifeq ($(strip $(OS)),rhel6)
+SPEC_FILE=tuleap.rhel6.spec
+CUSTOM_SPEC_FILE=customization.rhel6.spec
+else
 SPEC_FILE=tuleap.spec
+CUSTOM_SPEC_FILE=codendi-customization.spec
+endif
 
 default: all
 
@@ -120,6 +133,12 @@ $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-1.noarch.rpm: $(SPEC_FILE)
 		sed -e 's/@@PLUGIN_CARDWALL_VERSION@@/$(PLUGIN_CARDWALL_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_AGILEDASHBOARD_VERSION@@/$(PLUGIN_AGILEDASHBOARD_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_FULLTEXTSEARCH_VERSION@@/$(PLUGIN_FULLTEXTSEARCH_VERSION)/g' |\
+		sed -e 's/@@PLUGIN_ARCHIVEDELETEDITEMS_VERSION@@/$(PLUGIN_ARCHIVEDELETEDITEMS_VERSION)/g' |\
+		sed -e 's/@@PLUGIN_FUSIONFORGE_COMPAT_VERSION@@/$(PLUGIN_FUSIONFORGE_COMPAT_VERSION)/g' |\
+		sed -e 's/@@PLUGIN_ADMSSW_VERSION@@/$(PLUGIN_ADMSSW_VERSION)/g' |\
+		sed -e 's/@@PLUGIN_DOAPRDF_VERSION@@/$(PLUGIN_DOAPRDF_VERSION)/g' |\
+		sed -e 's/@@PLUGIN_FOAFPROFILES_VERSION@@/$(PLUGIN_FOAFPROFILES_VERSION)/g' |\
+		sed -e 's/@@PLUGIN_MEDIAWIKI_VERSION@@/$(PLUGIN_MEDIAWIKI_VERSION)/g' |\
 		sed -e 's/@@THEME_CODEX_VERSION@@/$(THEME_CODEX_VERSION)/g' |\
 		sed -e 's/@@THEME_CODEXTAB_VERSION@@/$(THEME_CODEXTAB_VERSION)/g' |\
 		sed -e 's/@@THEME_DAWN_VERSION@@/$(THEME_DAWN_VERSION)/g' |\
@@ -134,7 +153,7 @@ $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-1.noarch.rpm: $(SPEC_FILE)
 	rpmbuild -bb $(RPM_TMP)/SPECS/$(SPEC_FILE)
 
 custom_rpm: tarball
-	cat codendi-customization.spec |\
+	cat $(CUSTOM_SPEC_FILE) |\
 		sed -e 's/@@PLATFORM@@/default/' |\
 		sed -e 's/@@SYS_DEFAULT_DOMAIN@@/tuleap.net/' |\
 		sed -e 's/@@SYS_HTTPS_HOST@@/tuleap.net/' |\

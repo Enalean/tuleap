@@ -21,22 +21,17 @@
 
 require_once 'common/include/URL.class.php';
 
-require_once 'Tracker_ResourceDoesntExistException.class.php';
-require_once 'Tracker_NoMachingResourceException.class.php';
-require_once 'TrackerFactory.class.php';
-require_once 'Tracker_Dispatchable_Interface.class.php';
-
 class Tracker_URL extends URL {
     
     /**
      * Return the Tracker object that correspond to the given request
      *
      * @param Codendi_Request $request The request
-     * @param User            $user    Who access the request
+     * @param PFUser            $user    Who access the request
      * 
      * @return Tracker_Dispatchable_Interface
      */
-    function getDispatchableFromRequest(Codendi_Request $request, User $user) {
+    function getDispatchableFromRequest(Codendi_Request $request, PFUser $user) {
         if ((int)$request->get('aid')) {
             if ($artifact = $this->getArtifactFactory()->getArtifactByid($request->get('aid'))) {
                 return $artifact;

@@ -90,7 +90,6 @@ class LdapPlugin extends Plugin {
         $this->_addHook('usergroup_update', 'updateLdapID', false);
 
         // Project admin
-        $this->_addHook('ugroup_table_title',               'ugroup_table_title',          false);
         $this->_addHook('ugroup_table_row',                 'ugroup_table_row',            false);
         $this->_addHook('project_admin_add_user_form',      'project_admin_add_user_form', false);
         $this->_addHook(Event::UGROUP_UPDATE_USERS_ALLOWED, 'ugroup_update_users_allowed', false);
@@ -117,6 +116,9 @@ class LdapPlugin extends Plugin {
         // SystemEvent
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
+
+        // Ask for LDAP Username of a User
+        $this->_addHook(Event::GET_LDAP_LOGIN_NAME_FOR_USER);
     }
     
     /**
@@ -193,9 +195,10 @@ class LdapPlugin extends Plugin {
 
             $ldap = $this->getLdap();
             $lri  = $ldap->searchUserAsYouType($params['searchToken'], $params['limit'], $validEmail);
+            $sync = LDAP_UserSync::instance();
             foreach($lri as $lr) {
                 if ($lr->exist() && $lr->valid()) {
-                    $params['userList'][] = $lr->getCommonName().' ('.$lr->getLogin().')';
+                    $params['userList'][] = $sync->getCommonName($lr).' ('.$lr->getLogin().')';
                 }
             }
             if($ldap->getErrno() == LDAP::ERR_SIZELIMIT) {
@@ -340,31 +343,36 @@ class LdapPlugin extends Plugin {
      * account was automatically created and user must complete his
      * registeration.
      */
-    function account_redirect_after_login() {
+    function account_redirect_after_login($params) {
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
             $ldapUserDao = new LDAP_UserDao(CodendiDataAccess::instance());
             if(!$ldapUserDao->alreadyLoggedInOnce(user_getid())) {
                 $return_to_arg = "";
-                $request = HTTPRequest::instance();
-                if($request->existAndNonEmpty('return_to')) {
-                    $return_to_arg ='?return_to='.urlencode($request->get('return_to'));
+                if($params['request']->existAndNonEmpty('return_to')) {
+                    $return_to_arg ='?return_to='.urlencode($params['request']->get('return_to'));
                     if (isset($pv) && $pv == 2) $return_to_arg .= '&pv='.$pv;
                 } else {
                     if (isset($pv) && $pv == 2) $return_to_arg .= '?pv='.$pv;
                 }
-                $request->set('return_to', '/plugins/ldap/welcome.php'.$return_to_arg);
+                $params['request']->set('return_to', '/plugins/ldap/welcome.php'.$return_to_arg);
             }
         }
     }
 
     /**
-     * @params $params $params['user_id'] IN
+     * @params $params $params['user'] IN
      *                 $params['allow_codendi_login'] IN/OUT
      */
     function allowCodendiLogin($params) {
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
+
+            if ($params['user']->getLdapId() != null) {
+                $params['allow_codendi_login'] = false;
+                return;
+            }
+
             $ldapUm = $this->_getLdapUserManager();
-            $lr = $ldapUm->getLdapFromUserId($params['user_id']);
+            $lr = $ldapUm->getLdapFromUserId($params['user']->getId());
             if($lr) {
                 $params['allow_codendi_login'] = false;
                 $GLOBALS['feedback'] .= ' '.$GLOBALS['Language']->getText('plugin_ldap',
@@ -391,7 +399,7 @@ class LdapPlugin extends Plugin {
      * 
      * @param LDAPResultIterator $lri An LDAP result iterator
      * 
-     * @return User
+     * @return PFUser
      */
     protected function getUserFromLdapIterator($lri) {
         if($lri && count($lri) === 1) {
@@ -712,17 +720,6 @@ class LdapPlugin extends Plugin {
     }
 
     /**
-     * Hook in ugroup edition.
-     *
-     * @param array $params
-     */
-    function ugroup_table_title($params) {
-        if($GLOBALS['sys_auth_type'] == 'ldap' && $this->isLDAPGroupsUsageEnabled()) {
-            $params['html_array'][150] = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_ldap_title');
-        }
-    }
-
-    /**
      * Hook in upgroup edition
      * $params['row'] A row from ugroup table
      *
@@ -731,9 +728,7 @@ class LdapPlugin extends Plugin {
     function ugroup_table_row($params) {
         if($GLOBALS['sys_auth_type'] == 'ldap' && $this->isLDAPGroupsUsageEnabled()) {
             // No ldap for project 100
-            if($params['row']['group_id'] == 100) {
-                $params['html_array'][150] = array('value' => '-', 'html_attrs' => 'align="center"');
-            } else {
+            if($params['row']['group_id'] != 100) {
                 $hp = Codendi_HTMLPurifier::instance();
                 $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
                 
@@ -756,9 +751,7 @@ class LdapPlugin extends Plugin {
                 $urlBind = $this->getPluginPath().'/ugroup_edit.php?ugroup_id='.$params['row']['ugroup_id'].'&func=bind_with_group';
                 $linkBind = '<a href="'.$urlBind.'">- '.$title.'</a>';
                 
-                $link = $linkAdd.$linkBind;
-                
-                $params['html_array'][150] = array('value' => $link, 'html_attrs' => 'align="center"');
+                $params['html'] .= '<br />'.$linkAdd.$linkBind;
             }
         }
     }
@@ -920,7 +913,19 @@ class LdapPlugin extends Plugin {
             case 'PLUGIN_LDAP_UPDATE_LOGIN' :
                 include_once dirname(__FILE__).'/system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN.class.php';
                 $params['class'] = 'SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN';
+                $params['dependencies'] = array(
+                    UserManager::instance(),
+                    Backend::instance(Backend::SVN),
+                    ProjectManager::instance(),
+                    new LDAP_ProjectManager()
+                );
                 break;
+        }
+    }
+
+    public function get_ldap_login_name_for_user($params) {
+        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+            $params['ldap_user'] = $this->_getLdapUserManager()->getLDAPUserFromUser($params['user']);
         }
     }
 }

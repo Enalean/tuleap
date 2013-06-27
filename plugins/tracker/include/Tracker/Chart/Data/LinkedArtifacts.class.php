@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'LinkedArtifactsDao.class.php';
-require_once 'IProvideDataForBurndownChart.class.php';
 
 class Tracker_Chart_Burndown_Data_LinkedArtifacts implements Tracker_Chart_Data_IProvideDataForBurndownChart {
     private $artifact_ids     = array();
@@ -27,7 +25,7 @@ class Tracker_Chart_Burndown_Data_LinkedArtifacts implements Tracker_Chart_Data_
     private $min_day = PHP_INT_MAX;
     private $max_day = 0;
     
-    public function __construct(array $linked_artifacts, $remaining_effort_field_name, User $user) {
+    public function __construct(array $linked_artifacts, $remaining_effort_field_name, PFUser $user) {
         $form_element_factory = Tracker_FormElementFactory::instance();
         
         $artifact_ids_by_tracker = array();

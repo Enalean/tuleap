@@ -18,11 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('dao/Tracker_Artifact_Changeset_ValueDao.class.php');
-require_once('dao/Tracker_Artifact_Changeset_CommentDao.class.php');
-require_once('Tracker_Artifact_Changeset_Comment.class.php');
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
-require_once(dirname(__FILE__).'/../Tracker_NotificationsManager.class.php');
 require_once('common/date/DateHelper.class.php');
 require_once('common/include/Config.class.php');
 require_once('common/mail/MailManager.class.php');
@@ -105,7 +100,7 @@ class Tracker_Artifact_Changeset {
     /**
      * Return the changeset values of this changeset
      *
-     * @return array of Tracker_Artifact_ChangesetValue, or empty array if not found
+     * @return Tracker_Artifact_ChangesetValue[] or empty array if not found
      */
     public function getValues() {
         if (!$this->values) {
@@ -123,11 +118,11 @@ class Tracker_Artifact_Changeset {
     /**
      * Delete the changeset
      *
-     * @param User $user the user who wants to delete the changeset
+     * @param PFUser $user the user who wants to delete the changeset
      *
      * @return void
      */
-    public function delete(User $user) {
+    public function delete(PFUser $user) {
         if ($this->userCanDeletePermanently($user)) {
             $this->getChangesetDao()->delete($this->id);
             $this->getCommentDao()->delete($this->id);
@@ -273,11 +268,11 @@ class Tracker_Artifact_Changeset {
     /**
      * Say if a user can permanently (no restore) delete a changeset
      *
-     * @param User $user The user who does the delete
+     * @param PFUser $user The user who does the delete
      *
      * @return boolean true if the user can delete
      */
-    protected function userCanDeletePermanently(User $user) {
+    protected function userCanDeletePermanently(PFUser $user) {
         // Only tracker admin can edit a comment
         return $this->artifact->getTracker()->userIsAdmin($user);
     }
@@ -285,11 +280,11 @@ class Tracker_Artifact_Changeset {
     /**
      * Say if a user can delete a changeset
      *
-     * @param User $user The user. If null, the current logged in user will be used.
+     * @param PFUser $user The user. If null, the current logged in user will be used.
      *
      * @return boolean true if the user can delete
      */
-    protected function userCanDelete(User $user = null) {
+    protected function userCanDelete(PFUser $user = null) {
         if (!$user) {
             $user = $this->getUserManager()->getCurrentUser();
         }
@@ -300,11 +295,11 @@ class Tracker_Artifact_Changeset {
     /**
      * Say if a user can edit a comment
      *
-     * @param User $user The user. If null, the current logged in user will be used.
+     * @param PFUser $user The user. If null, the current logged in user will be used.
      *
      * @return boolean true if the user can edit
      */
-    public function userCanEdit(User $user = null) {
+    public function userCanEdit(PFUser $user = null) {
         if (!$user) {
             $user = $this->getUserManager()->getCurrentUser();
         }
@@ -316,14 +311,21 @@ class Tracker_Artifact_Changeset {
      * Update the content
      *
      * @param string  $body          The new content
-     * @param User    $user          The user
+     * @param PFUser    $user          The user
      * @param String  $comment_format Format of the comment
      *
      * @return void
      */
     public function updateComment($body, $user, $comment_format) {
         if ($this->userCanEdit($user)) {
-            $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $this->getComment()->id, $comment_format);
+            $commentUpdated = $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $this->getComment()->id, $comment_format);
+            if ($commentUpdated) {
+                $params = array('group_id'     => $this->getArtifact()->getTracker()->getGroupId(),
+                                'artifact_id'  => $this->getArtifact()->getId(),
+                                'changeset_id' => $this->getId(),
+                                'text'         => $body);
+                EventManager::instance()->processEvent('tracker_followup_event_update', $params);
+            }
         }
     }
 
@@ -333,7 +335,9 @@ class Tracker_Artifact_Changeset {
      * @return Tracker_Artifact_Changeset_Comment The comment of this changeset, or null if no comments
      */
     public function getComment() {
-        if (isset($this->latest_comment)) return $this->latest_comment;
+        if (isset($this->latest_comment)) {
+            return $this->latest_comment;
+        }
         
         if ($row = $this->getCommentDao()->searchLastVersion($this->id)->getRow()) {
             $this->latest_comment = new Tracker_Artifact_Changeset_Comment($row['id'],
@@ -347,6 +351,10 @@ class Tracker_Artifact_Changeset {
                                                     $row['parent_id']);
         }
         return $this->latest_comment;
+    }
+
+    public function setLatestComment(Tracker_Artifact_Changeset_Comment $comment) {
+        $this->latest_comment = $comment;
     }
 
     /**
@@ -380,8 +388,9 @@ class Tracker_Artifact_Changeset {
         reset($used_fields);
         while (!$has_changes && (list(,$field) = each($used_fields))) {
             if (!is_a($field, 'Tracker_FormElement_Field_ReadOnly')) {
-                if (isset($fields_data[$field->id])) {
-                    if ($current_value = $this->getValue($field)) {
+               if (array_key_exists($field->id, $fields_data)) {
+                   $current_value = $this->getValue($field);
+                    if ($current_value) {
                         $has_changes = $field->hasChanges($current_value, $fields_data[$field->id]);
                     } else {
                         //There is no current value in the changeset for the submitted field
@@ -438,7 +447,7 @@ class Tracker_Artifact_Changeset {
         switch($format) {
             case 'html':
                 $result .= '<li>';
-                $result .= '<span class="tracker_artifact_followup_changes_field">'. $field->getLabel() .'</span> ';
+                $result .= '<span class="tracker_artifact_followup_changes_field"><b>'. $field->getLabel() .'</b></span> ';
                 $result .= '<span class="tracker_artifact_followup_changes_changes">'. $diff .'</span>';
                 $result .= '</li>';
             break;
@@ -665,7 +674,7 @@ class Tracker_Artifact_Changeset {
         $output .= ' on '.DateHelper::formatForLanguage($language, $this->submitted_on);
         if ( $comment = $this->getComment() ) {
             $output .= PHP_EOL;
-            $output .= $comment->fetchFollowUp($format);
+            $output .= $comment->fetchMailFollowUp($format);
         }
         $output .= PHP_EOL;
         $output .= ' -------------- ' . $language->getText('plugin_tracker_artifact_changeset', 'header_changeset') . ' ---------------- ' ;
@@ -692,34 +701,66 @@ class Tracker_Artifact_Changeset {
         $format = 'html';
         $art = $this->getArtifact();
         $hp = Codendi_HTMLPurifier::instance();
-        
-        $output ='<h1>'.$hp->purify($art->fetchMailTitle($recipient_user, $format, $ignore_perms)).'</h1>'.PHP_EOL;
         $followup = '';
+        $changes = $this->diffToPrevious($format, $recipient_user, $ignore_perms);
         // Display latest changes (diff)
         if ($comment = $this->getComment()) {
-            $followup = $comment->fetchFollowUp($format, true, true);
+            $followup = $comment->fetchMailFollowUp($format);
         }
-        $changes = $this->diffToPrevious($format, $recipient_user, $ignore_perms);
+
+        $output = 
+        '<table style="width:100%">
+            <tr>
+                <td align="left" colspan="2">
+                    <h1>'.$hp->purify($art->fetchMailTitle($recipient_user, $format, $ignore_perms)).'
+                    </h1>
+                </td>
+            </tr>';
+
         if ($followup || $changes) {
-            $output .= '<h2>'.$language->getText('plugin_tracker_artifact_changeset', 'header_html_changeset').'</h2>';
-            $output .= '<div class="tracker_artifact_followup_header">';
+
+            $output .= 
+                '<tr>
+                    <td colspan="2" align="left">
+                        <h2>'.$language->getText('plugin_tracker_artifact_changeset', 'header_html_changeset').'
+                        </h2>
+                    </td>
+                </tr>';
             // Last comment
             if ($followup) {
-                $output .= $followup.PHP_EOL;
+                $output .= $followup;
             }
             // Last changes
             if ($changes) {
                 //TODO check that the following is PHP compliant (what if I made a changes without a comment? -- comment is null)
                 if (!empty($comment->body)) {
-                    $output .= '<hr size="1" />';
+                    $output .= '
+                        <tr>
+                            <td colspan="2">
+                                <hr size="1" />
+                            </td>
+                        </tr>';
                 }
-                $output .= '<ul class="tracker_artifact_followup_changes">';
-                $output .= $changes;
-                $output .= '</ul>';
+                $output .= 
+                    '<tr>
+                        <td> </td>
+                        <td align="left">
+                            <ul>'.
+                                $changes.'
+                            </ul>
+                        </td>
+                    </tr>';
             }
-            $output .= '</div>'.PHP_EOL;
-            $output .= $this->fetchHtmlAnswerButton(get_server_url().'/plugins/tracker/?aid='.(int)$art->getId());
+
+            $output .=
+                '<tr>
+                    <td> </td>
+                    <td align="right">'.
+                        $this->fetchHtmlAnswerButton(get_server_url().'/plugins/tracker/?aid='.(int)$art->getId()).
+                    '</td>
+                </tr>';
         }
+        $output .= '</table>';
 
         //Display of snapshot
         $snapshot = $art->fetchMail($recipient_user, $format, $ignore_perms);
@@ -779,6 +820,13 @@ class Tracker_Artifact_Changeset {
      */
     public function getId() {
         return $this->id;
+    }
+
+    public function exportCommentToSOAP() {
+        $comment = $this->getComment();
+        if ($comment) {
+            return $comment->exportToSOAP();
+        }
     }
 }
 ?>

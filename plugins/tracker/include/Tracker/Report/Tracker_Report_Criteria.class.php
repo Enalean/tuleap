@@ -64,6 +64,10 @@ class Tracker_Report_Criteria {
     public function fetch() {
         return $this->field->fetchCriteria($this);
     }
+
+    public function fetchWithoutExpandFunctionnality() {
+        return $this->field->fetchCriteriaWithoutExpandFunctionnality($this);
+    }
     
     public function delete() {
         return $this->field->deleteCriteriaValue($this);
@@ -86,7 +90,7 @@ class Tracker_Report_Criteria {
      * 
      * @param SimpleXMLElement $root the node to which the Criteria is attached (passed by reference)
      */
-    public function exportToXML($root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         $root->addAttribute('rank', $this->rank);
         if ($this->is_advanced) {
             $root->addAttribute('is_advanced', $this->is_advanced);

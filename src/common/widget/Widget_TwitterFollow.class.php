@@ -77,7 +77,7 @@ class Widget_TwitterFollow extends Widget {
                 } else {
                     $content .= '>'; //end of <span
                 }
-                $content .=  $item->get_title(); //Trust SimplePie for purifying
+                $content .=  $hp->purify($item->get_title(), CODENDI_PURIFIER_STRIP_HTML) ;
                 if ($item->get_date()) {
                     $content .= ' <span style="color:#999; white-space:nowrap;" title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $item->get_date('U')) .'">- '. DateHelper::timeAgoInWords($item->get_date('U')) .'</span>';
                 }

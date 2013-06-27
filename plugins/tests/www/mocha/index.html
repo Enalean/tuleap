@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!--
+    /**
+     * Copyright (c) Enalean, 2013. All Rights Reserved.
+     *
+     * This file is a part of Tuleap.
+     *
+     * Tuleap is free software; you can redistribute it and/or modify
+     * it under the terms of the GNU General Public License as published by
+     * the Free Software Foundation; either version 2 of the License, or
+     * (at your option) any later version.
+     *
+     * Tuleap is distributed in the hope that it will be useful,
+     * but WITHOUT ANY WARRANTY; without even the implied warranty of
+     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     * GNU General Public License for more details.
+     *
+     * You should have received a copy of the GNU General Public License
+     * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+     */
+    -->
+    <head>
+        <meta charset="UTF-8" />
+        <title>Javascript Tests - Tuleap</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="vendor/mocha.css" />
+    </head>
+    <body>
+        <div id="mocha"></div>
+        <script src="vendor/prototype.js"></script>
+        <script src="vendor/mocha.js"></script>
+        <script src="vendor/chai.js"></script>
+        <script src="vendor/sinon-chai.js"></script>
+        <script src="vendor/sinon.js"></script>
+        <script>
+            mocha.ui('bdd');
+            mocha.reporter('html');
+            var should = chai.should(),
+                expect = chai.expect;
+        </script>
+        <script src="tests/systray.test.js"></script>
+        <script src="src/core/tuleap/systray.js"></script>
+        <script src="src/core/AZHU/storage.js"></script>
+        <script src="tests/storage.test.js"></script>
+        <script src="tests/tracker/artifactChildren.test.js"></script>
+        <script src="src/plugins/tracker/artifactChildren.js"></script>
+        <script>
+            if (window.mochaPhantomJS) {
+                mochaPhantomJS.run();
+            } else {
+                mocha.run();
+            }
+        </script>
+    </body>
+</html>

@@ -18,10 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'GitViewsRepositoriesTraversalStrategy.class.php';
-require_once 'GitDao.class.php';
-require_once 'GitRepository.class.php';
-require_once 'GitViews.class.php';
 
 /**
  * Traverse a list of repositories and furnish a ul/li tree representation
@@ -41,21 +37,6 @@ class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositori
     public function __construct(GitViews $view) {
         parent::__construct();
         $this->view = $view;
-    }
-    
-    /**
-     * Get the repository label
-     *
-     * @param GitRepository $repository    Teh repository
-     * @param bool          $isInitialized true of the repo is initialized
-     * @param string        $accessType    The access type of the repository
-     * @param string        $repoName      The name of the repository
-     *
-     * @return string
-     */
-    protected function getLabel(GitRepository $repository, $isInitialized, $accessType, $repoName) {
-        $label = $repoName;
-        return $label;
     }
     
     /**
@@ -84,16 +65,5 @@ class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositori
         return '';
     }
     
-    /**
-     * Get group wrapper
-     *
-     * @param string $label the name of the group
-     * @param string $inner the string representation of a group of items
-     *
-     * @return string the $inner encapsulated in its own wrapper
-     */
-    protected function getGroupWrapper($label, $inner) {
-        return $inner;
-    }
 }
 ?>

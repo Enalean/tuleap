@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar ns="http://codendi.org/tracker" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <start>
     <element name="tracker">
       <optional>
         <!-- old ids -->
         <attribute name="id">
-          <data type="int"/>
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="parent_id">
+          <data type="string"/>
         </attribute>
       </optional>
       <optional>
@@ -97,6 +102,37 @@
               <ref name="semanticContent"/>
             </element>
           </zeroOrMore>
+        </element>
+      </optional>
+      <optional>
+        <element name="dependencies">
+          <zeroOrMore>
+            <element name="rule">
+              <ref name="listRuleContent"/>
+            </element>
+          </zeroOrMore>
+        </element>
+      </optional>
+      <optional>
+        <element name="rules">
+          <optional>
+            <element name="date_rules">
+              <zeroOrMore>
+                <element name="rule">
+                  <ref name="dateRuleContent"/>
+                </element>
+              </zeroOrMore>
+            </element>
+          </optional>
+          <optional>
+            <element name="list_rules">
+              <zeroOrMore>
+                <element name="rule">
+                  <ref name="listRuleContent"/>
+                </element>
+              </zeroOrMore>
+            </element>
+          </optional>
         </element>
       </optional>
       <optional>
@@ -285,6 +321,22 @@
             <data type="string"/>
           </attribute>
         </optional>
+        <optional>
+          <attribute name="use_capacity">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </attribute>
+        </optional>
+        <optional>
+          <attribute name="include_weekends">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </attribute>
+        </optional>
       </element>
     </optional>
     <choice>
@@ -308,6 +360,7 @@
             <value>sb</value>
             <value>msb</value>
             <value>tbl</value>
+            <value>cb</value>
           </choice>
         </attribute>
         <ref name="bindContent"/>
@@ -408,7 +461,7 @@
         <data type="string"/>
       </attribute>
     </element>
-    <zeroOrMore>
+    <optional>
       <element name="postactions">
         <zeroOrMore>
           <element name="postaction_field_date">
@@ -446,19 +499,95 @@
             </element>
           </element>
         </zeroOrMore>
-      </element>
-    </zeroOrMore>
-    <zeroOrMore>
-      <element name="permissions">
         <zeroOrMore>
-          <element name="permission">
-            <attribute name="ugroup">
+          <element name="postaction_ci_build">
+            <attribute name="job_url">
               <data type="string"/>
             </attribute>
           </element>
         </zeroOrMore>
       </element>
-    </zeroOrMore>
+    </optional>
+    <choice>
+      <ref name="conditionPermissionsContent"/>
+      <optional>
+        <element name="conditions">
+          <optional>
+            <element name="condition">
+              <attribute name="type">
+                <value>perms</value>
+              </attribute>
+              <ref name="conditionPermissionsContent"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="condition">
+              <attribute name="type">
+                <value>notempty</value>
+              </attribute>
+              <ref name="conditionFieldNotEmptyContent"/>
+            </element>
+          </optional>
+        </element>
+      </optional>
+    </choice>
+  </define>
+  <define name="conditionPermissionsContent">
+    <element name="permissions">
+      <zeroOrMore>
+        <element name="permission">
+          <attribute name="ugroup">
+            <data type="string"/>
+          </attribute>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="conditionFieldNotEmptyContent">
+    <element name="field">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+  </define>
+  <define name="listRuleContent">
+    <element name="source_field">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+    <element name="target_field">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+    <element name="source_value">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+    <element name="target_value">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+  </define>
+  <define name="dateRuleContent">
+    <element name="source_field">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+    <element name="target_field">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+    <element name="comparator">
+      <attribute name="type">
+        <data type="string"/>
+      </attribute>
+    </element>
   </define>
   <define name="semanticContent">
     <choice>
@@ -564,7 +693,7 @@
     <optional>
       <!--
         defaout is true
-        these ids are initial ids of the exported report 
+        these ids are initial ids of the exported report
       -->
       <attribute name="id">
         <data type="int"/>

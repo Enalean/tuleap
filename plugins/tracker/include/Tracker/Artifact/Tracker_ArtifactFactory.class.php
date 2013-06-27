@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('dao/Tracker_ArtifactDao.class.php');
-require_once('Tracker_Artifact.class.php');
 
 class Tracker_ArtifactFactory {
     
@@ -88,12 +86,12 @@ class Tracker_ArtifactFactory {
     /**
      * Return the artifact corresponding to $id the user can access
      * 
-     * @param User    $user
+     * @param PFUser    $user
      * @param Integer $id
      * 
      * @return Tracker_Artifact
      */
-    public function getArtifactByIdUserCanView(User $user, $id) {
+    public function getArtifactByIdUserCanView(PFUser $user, $id) {
         $artifact = $this->getArtifactById($id);
         if ($artifact && $artifact->userCanView($user)) {
             return $artifact;
@@ -136,12 +134,12 @@ class Tracker_ArtifactFactory {
     /**
      * Returns all the artifacts of the tracker with id $tracker_id the User $user can read
      *
-     * @param User $user       User who want to access to artifacts
+     * @param PFUser $user       User who want to access to artifacts
      * @param int  $tracker_id the id of the tracker
      *
      * @return array of Tracker_Artifact identified by id (array() if not found)
      */
-    public function getArtifactsByTrackerIdUserCanView(User $user, $tracker_id) {
+    public function getArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id) {
         $artifacts = array();
         foreach ($this->getDao()->searchByTrackerId($tracker_id) as $row) {
             $artifact = $this->getInstanceFromRow($row);
@@ -152,7 +150,7 @@ class Tracker_ArtifactFactory {
         return $artifacts;
     }
     
-    public function getOpenArtifactsByTrackerIdUserCanView(User $user, $tracker_id) {
+    public function getOpenArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id) {
         $artifacts = array();
         foreach ($this->getDao()->searchOpenByTrackerId($tracker_id) as $row) {
             $artifact = $this->getInstanceFromRow($row);
@@ -300,13 +298,13 @@ class Tracker_ArtifactFactory {
      * 
      * @param Tracker $tracker           The tracker this artifact belongs to
      * @param array   $fields_data       The data of the artifact to create
-     * @param User    $user              The user that want to create the artifact
+     * @param PFUser    $user              The user that want to create the artifact
      * @param string  $email             The email if the user is anonymous (null if anonymous)
      * @param boolean $send_notification true if a notification must be sent, false otherwise
      * 
      * @return Tracker_Artifact or false if an error occured
      */
-    public function createArtifact(Tracker $tracker, $fields_data, User $user, $email, $send_notification = true) {
+    public function createArtifact(Tracker $tracker, $fields_data, PFUser $user, $email, $send_notification = true) {
         $artifact = $this->getInstanceFromRow(
             array(
                 'id'                       => 0, 
@@ -340,6 +338,56 @@ class Tracker_ArtifactFactory {
     
     public function save(Tracker_Artifact $artifact) {
         return $this->getDao()->save($artifact->getId(), $artifact->getTrackerId(), $artifact->useArtifactPermissions());
+    }
+
+    /**
+     * @return Tracker_Artifact[]
+     */
+    public function getChildren(Tracker_Artifact $artifact) {
+        return $this->getDao()->getChildren($artifact->getId())->instanciateWith(array($this, 'getInstanceFromRow'));
+    }
+
+    /**
+     * Build the list of parents according to a list of artifact ids
+     *
+     * @param int[] $artifact_ids
+     * @return Tracker_Artifact[]
+     */
+    public function getParents(array $artifact_ids) {
+        if (! $artifact_ids) {
+            return array();
+        }
+
+        $parents = array();
+        foreach ($this->getDao()->getParents($artifact_ids) as $row) {
+            $parents[$row['child_id']] = $this->getInstanceFromRow($row);
+        }
+        return $parents;
+    }
+
+    /**
+     * Batch search and update given artifact titles
+     *
+     * @param Tracker_Artifact[] $artifacts
+     */
+    public function setTitles(array $artifacts) {
+        $artifact_ids = array();
+        $index_map = array();
+        foreach ($artifacts as $index_in_source_array => $artifact) {
+            $artifact_ids[]                  = $artifact->getId();
+            $index_map[$artifact->getId()][] = $index_in_source_array;
+        }
+
+        foreach ($this->getDao()->getTitles($artifact_ids) as $row) {
+            $artifact_id = $row['id'];
+            if (isset($index_map[$artifact_id])) {
+                foreach ($index_map[$artifact_id] as $child_id) {
+                    if (isset($artifacts[$child_id])) {
+                        $artifacts[$child_id]->setTitle($row['title']);
+                    }
+                }
+            }
+        }
     }
 }
 ?>

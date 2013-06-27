@@ -17,10 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once dirname(__FILE__).'/builders/aField.php';
-require_once dirname(__FILE__).'/builders/anArtifact.php';
-require_once dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Computed.class.php';
+require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
     private $user;
@@ -29,7 +26,7 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->user  = mock('User');
+        $this->user  = mock('PFUser');
         $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Computed', array('getProperty'));
         stub($this->field)->getProperty()->returns('effort');
 
@@ -98,6 +95,46 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         stub($this->formelement_factory)->getComputableFieldByNameForUser()->returns($field);
 
         $this->assertEqual(20, $this->field->getComputedValue($this->user, $artifact, $timestamp));
+    }
+}
+
+class Tracker_FormElement_Field_Computed_getSoapValueTest extends TuleapTestCase {
+
+    private $field;
+
+    public function setUp() {
+        parent::setUp();
+        $id = $tracker_id = $parent_id = $description = $use_it = $scope = $required = $notifications = $rank = '';
+        $name = 'foo';
+        $label = 'Foo Bar';
+        $this->field = partial_mock('Tracker_FormElement_Field_Computed', array('getComputedValue', 'userCanRead'), array($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank));
+
+        $this->artifact = anArtifact()->build();
+        $this->user = aUser()->build();
+        $this->changeset = mock('Tracker_Artifact_Changeset');
+        stub($this->changeset)->getArtifact()->returns($this->artifact);
+    }
+
+    public function itReturnsNullIfUserCannotAccessField() {
+        expect($this->field)->userCanRead($this->user)->once();
+        stub($this->field)->userCanRead()->returns(false);
+        $this->assertIdentical($this->field->getSoapValue($this->user, $this->changeset), null);
+    }
+
+    public function itUsedTheComputedFieldValue() {
+        stub($this->field)->userCanRead()->returns(true);
+
+        expect($this->field)->getComputedValue($this->user, $this->artifact)->once();
+        stub($this->field)->getComputedValue()->returns(9.0);
+
+        $this->assertIdentical(
+            $this->field->getSoapValue($this->user, $this->changeset),
+            array(
+                'field_name'  => 'foo',
+                'field_label' => 'Foo Bar',
+                'field_value' => array('value' => '9')
+            )
+        );
     }
 }
 

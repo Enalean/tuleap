@@ -17,11 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
- 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
+require_once('bootstrap.php');
 Mock::generate('Tracker_Artifact');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field_Date', 
     'Tracker_FormElement_Field_DateTestVersion', 
@@ -45,10 +43,8 @@ Mock::generatePartial(
     )
 );
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_Date.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue_Date');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_DateDao.class.php');
 Mock::generate('Tracker_FormElement_Field_Value_DateDao');
 
 require_once('common/dao/include/DataAccessResult.class.php');
@@ -142,6 +138,12 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $this->assertNull($f->getFieldData('03-04-2010'));
     }
     
+    function testGetFieldDataAsTimestamp() {
+        $f = new Tracker_FormElement_Field_DateTestVersion();
+        $this->assertEqual('2010-04-30', $f->getFieldData((string)mktime(5,3,2,4,30,2010)));
+        $this->assertNull($f->getFieldData('1.5'));
+    }
+
     function testGetFieldDataForCSVPreview() {
         $f = new Tracker_FormElement_Field_DateTestVersion();
         $f->setReturnValueAt(0, '_getUserCSVDateFormat', 'day_month_year');
@@ -209,7 +211,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
             )
         );
         $date_field->setReturnReference('getProperties', $properties);
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $date_field->exportPropertiesToXML($root);
         $this->assertEqual((string)$xml_test->properties, (string)$root->properties);
         $this->assertEqual(count($root->properties->attributes()), 0);
@@ -239,7 +241,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
             )
         );
         $date_field->setReturnReference('getProperties', $properties);
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $date_field->exportPropertiesToXML($root);
         $this->assertEqual((string)$xml_test->properties, (string)$root->properties);
         $this->assertEqual(count($root->properties->attributes()), 0);
@@ -268,7 +270,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
             )
         );
         $date_field->setReturnReference('getProperties', $properties);
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $date_field->exportPropertiesToXML($root);
         $this->assertEqual((string)$xml_test->properties, (string)$root->properties);
         $this->assertEqual(count($root->properties->attributes()), 1);
@@ -299,7 +301,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
             )
         );
         $date_field->setReturnReference('getProperties', $properties);
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $date_field->exportPropertiesToXML($root);
         $this->assertEqual((string)$xml_test->properties, (string)$root->properties);
         $this->assertEqual(count($root->properties->attributes()), 1);
@@ -394,7 +396,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
     function testFieldDateShouldSendEmptyMailValueWhenValueIsEmpty() {
         $artifact = new MockTracker_Artifact();
         $date = new Tracker_FormElement_Field_DateTestVersion();
-        $this->assertEqual('', $date->fetchMailArtifactValue($artifact, null, null));
+        $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, null, null));
     }
     
     function testFieldDateShouldSendAMailWithAReadableDate() {
@@ -418,8 +420,8 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $value = new MockTracker_Artifact_ChangesetValue_Date();
         $value->setReturnValue('getTimestamp', 0);
         
-        $this->assertEqual('', $date->fetchMailArtifactValue($artifact, $value, 'text'));
-        $this->assertEqual('', $date->fetchMailArtifactValue($artifact, $value, 'html'));
+        $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, $value, 'text'));
+        $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, $value, 'html'));
     }
 }
 

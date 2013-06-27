@@ -25,7 +25,7 @@ require_once(dirname(__FILE__).'/../include/Docman_BuildItemMappingVisitor.class
 Mock::generate('DataAccessResult');
 Mock::generate('Docman_ItemDao');
 Mock::generate('Docman_PermissionsManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generatePartial('Docman_BuildItemMappingVisitor', 'BuildItemMappingVisitorTestVersion', array('getItemDao', 'getPermissionsManager', 'getCurrentUser'));
 
 class BuildItemMappingVisitorTest extends UnitTestCase {
@@ -214,7 +214,7 @@ class BuildItemMappingVisitorTest extends UnitTestCase {
         // Permissions mock
         $mockDPM  =& new MockDocman_PermissionsManager();
         $mockDPM->setReturnValue('userCanRead', true);
-        $mockUser =& new MockUser();
+        $mockUser = mock('PFUser');
 
 
         $itemMappingVisitor =& new BuildItemMappingVisitorTestVersion($this);
@@ -286,7 +286,7 @@ class BuildItemMappingVisitorTest extends UnitTestCase {
 
         //
         // Permissions mock
-        $mockUser =& new MockUser();
+        $mockUser = mock('PFUser');
         $mockDPM  =& new MockDocman_PermissionsManager();
         // Item 40 is unreadable
         $mockDPM->setReturnValue('userCanRead', false, array($mockUser, 40));
@@ -367,7 +367,7 @@ class BuildItemMappingVisitorTest extends UnitTestCase {
         // Permissions mock
         $mockDPM  =& new MockDocman_PermissionsManager();
         $mockDPM->setReturnValue('userCanRead', true);
-        $mockUser =& new MockUser();
+        $mockUser = mock('PFUser');
 
         $itemMappingVisitor =& new BuildItemMappingVisitorTestVersion($this);
         // Need to init by hand because of fake constructor.

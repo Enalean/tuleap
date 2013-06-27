@@ -18,42 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'GitViewsRepositoriesTraversalStrategy.class.php';
-require_once 'GitRepository.class.php';
-require_once 'GitViews.class.php';
+require_once 'PathJoinUtil.php';
 require_once 'html.php';
 
 /**
  * Traverse a list of repositories and provides a tree in a table view
  */
 class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTraversalStrategy {
+    private $view;
+    private $lastPushes;
     
     /**
      * Constructor
      *
      * @param GitViews $view The GitViews
      */
-    public function __construct(GitViews $view, $lastPushes) {
+    public function __construct($lastPushes) {
         parent::__construct();
-        $this->view = $view;
         $this->lastPushes = $lastPushes;
     }
     
-    /**
-     * Get the repository label
-     *
-     * @param GitRepository $repository    Teh repository
-     * @param bool          $isInitialized true of the repo is initialized
-     * @param string        $accessType    The access type of the repository
-     * @param string        $repoName      The name of the repository
-     *
-     * @return string
-     */
-    protected function getLabel(GitRepository $repository, $isInitialized, $accessType, $repoName) {
-        return $repoName;
-    }
-    
-       
     /**
      * Get the main wrapper of the whole representation
      *
@@ -78,26 +62,14 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
     }
     
     /**
-     * Get group wrapper
-     *
-     * @param string $label the name of the group
-     * @param string $inner the string representation of a group of items
-     *
-     * @return string the $inner encapsulated in its own wrapper
-     */
-    protected function getGroupWrapper($label, $inner) {
-        return $inner;
-    }
-
-    /**
      * Obtain the tree of git repositories for a user
      *
      * @param Array $repositories Array of raw representation of repositories, indexed by repository id (the person that made the choice of the format must be executed)
-     * @param User  $user         The user who traverse the forest (yet another foolish expression)
+     * @param PFUser  $user         The user who traverse the forest (yet another foolish expression)
      *
      * @result Array
      */
-    public function getTree(array $repositories, User $user) {
+    public function getTree(array $repositories, PFUser $user) {
         $tree = array();
         foreach ($repositories as $repoId => $row) {
             $path = explode('/', unixPathJoin(array($row['repository_namespace'], $row['repository_name'])));
@@ -124,11 +96,11 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
      * Display the list of repositories
      *
      * @param array $repositories Array of raw representation of repositories, indexed by repository id
-     * @param User  $user         The user who traverse the forest
+     * @param PFUser  $user         The user who traverse the forest
      *
      * @return string
      */
-    public function fetch(array $repositories, User $user) {
+    public function fetch(array $repositories, PFUser $user) {
         $html = '';
         if (empty($repositories)) {
             return '';
@@ -172,7 +144,8 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
     
     protected function fetchGitRepositoryRow(GitRepository $repository, $name, $depth) {
         $trclass     = 'boxitem';
-        $label       = $this->view->_getRepositoryPageUrl($repository->getId(), $name);
+        $label       = $repository->getBasenameHTMLLink();
+
         $description = $repository->getDescription();
         
         $lastPush    = '&nbsp;';

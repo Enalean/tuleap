@@ -18,22 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once dirname(__FILE__).'/../include/GitRepositoryManager.class.php';
-require_once dirname(__FILE__).'/builders/aGitRepository.php';
+require_once 'bootstrap.php';
 
 class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase {
     private $project;
     private $git_repository_manager;
+    private $git_system_event_manager;
+    private $dao;
 
     public function setUp() {
         parent::setUp();
         $this->project_id           = 42;
         $this->project              = stub('Project')->getID()->returns($this->project_id);
         $this->repository_factory   = mock('GitRepositoryFactory');
-        $this->system_event_manager = mock('SystemEventManager');
+        $this->git_system_event_manager = mock('Git_SystemEventManager');
+        $this->dao                  = mock('GitDao');
 
-        $this->git_repository_manager = new GitRepositoryManager($this->repository_factory, $this->system_event_manager);
+        $this->git_repository_manager = new GitRepositoryManager($this->repository_factory, $this->git_system_event_manager, $this->dao);
     }
 
     public function itDeletesNothingWhenThereAreNoRepositories() {
@@ -49,26 +50,18 @@ class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase {
         $repository_1->expectOnce('forceMarkAsDeleted');
         stub($repository_1)->getId()->returns($repository_1_id);
         stub($repository_1)->getProjectId()->returns($this->project);
+        stub($repository_1)->getBackend()->returns(mock('Git_Backend_Gitolite'));
 
         $repository_2_id = 2;
         $repository_2    = mock('GitRepository');
         $repository_2->expectOnce('forceMarkAsDeleted');
         stub($repository_2)->getId()->returns($repository_2_id);
         stub($repository_2)->getProjectId()->returns($this->project);
+        stub($repository_2)->getBackend()->returns(mock('Git_Backend_Gitolite'));
 
-        $this->system_event_manager->expectCallCount('createEvent', 2);
-
-        $this->system_event_manager->expectAt(0, 'createEvent', array(
-            'GIT_REPO_DELETE',
-            $this->project_id.SystemEvent::PARAMETER_SEPARATOR.$repository_1_id,
-            '*'
-        ));
-
-        $this->system_event_manager->expectAt(1, 'createEvent', array(
-            'GIT_REPO_DELETE',
-            $this->project_id.SystemEvent::PARAMETER_SEPARATOR.$repository_2_id,
-            '*'
-        ));
+        expect($this->git_system_event_manager)->queueRepositoryDeletion()->count(2);
+        expect($this->git_system_event_manager)->queueRepositoryDeletion($repository_1)->at(0);
+        expect($this->git_system_event_manager)->queueRepositoryDeletion($repository_2)->at(1);
 
         stub($this->repository_factory)->getAllRepositories()->returns(array($repository_1, $repository_2));
 
@@ -82,6 +75,7 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
     private $manager;
     private $project_id;
     private $project_name;
+    private $dao;
 
     public function setUp() {
         parent::setUp();
@@ -90,9 +84,10 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
         $this->project      = mock('Project');
         stub($this->project)->getID()->returns($this->project_id);
         stub($this->project)->getUnixName()->returns($this->project_name);
+        $this->dao = mock('GitDao');
 
         $this->factory    = mock('GitRepositoryFactory');
-        $this->manager    = new GitRepositoryManager($this->factory, mock('SystemEventManager'));
+        $this->manager    = new GitRepositoryManager($this->factory, mock('Git_SystemEventManager'), $this->dao);
     }
 
     private function aRepoWithPath($path) {
@@ -155,37 +150,89 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
 
 class GitRepositoryManager_CreateTest extends TuleapTestCase {
 
+    private $creator;
+    private $dao;
+    private $git_system_event_manager;
+
     public function setUp() {
         parent::setUp();
-        $this->backend    = mock('Git_Backend_Interface');
-        $this->repository = mock('GitRepository');
-        stub($this->repository)->getBackend()->returns($this->backend);
+        $this->creator    = mock('GitRepositoryCreator');
+        $this->repository = new GitRepository();
 
-        $this->manager = partial_mock('GitRepositoryManager', array('isRepositoryNameAlreadyUsed'));
+        $this->git_system_event_manager = mock('Git_SystemEventManager');
+        $this->dao                  = mock('GitDao');
+
+        $this->manager = partial_mock(
+            'GitRepositoryManager',
+            array('isRepositoryNameAlreadyUsed'),
+            array(
+                mock('GitRepositoryFactory'),
+                $this->git_system_event_manager,
+                $this->dao
+            )
+        );
     }
 
     public function itThrowAnExceptionIfRepositoryNameCannotBeUsed() {
         stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(true);
-        stub($this->repository)->isNameValid()->returns(true);
+        stub($this->creator)->isNameValid()->returns(true);
 
         $this->expectException();
-        $this->manager->create($this->repository);
+        $this->manager->create($this->repository, $this->creator);
     }
 
     public function itThrowsAnExceptionIfNameIsNotCompliantToBackendStandards() {
         stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(false);
-        stub($this->repository)->isNameValid()->returns(false);
+        stub($this->creator)->isNameValid()->returns(false);
 
         $this->expectException();
-        $this->manager->create($this->repository);
+        $this->manager->create($this->repository, $this->creator);
     }
 
     public function itCreatesOnRepositoryBackendIfEverythingIsClean() {
         stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(false);
-        stub($this->repository)->isNameValid()->returns(true);
+        stub($this->creator)->isNameValid()->returns(true);
 
-        $this->backend->expectOnce('createReference');
-        $this->manager->create($this->repository);
+        expect($this->dao)->save($this->repository)->once();
+        $this->manager->create($this->repository, $this->creator);
+    }
+
+    public function itScheduleAnEventToCreateTheRepositoryInGitolite() {
+        stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(false);
+        stub($this->creator)->isNameValid()->returns(true);
+
+        stub($this->dao)->save()->returns(54);
+
+        expect($this->git_system_event_manager)->queueRepositoryUpdate($this->repository)->once();
+
+        $this->manager->create($this->repository, $this->creator);
+    }
+
+    public function itSetRepositoryIdOnceSavedInDatabase() {
+        stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(false);
+        stub($this->creator)->isNameValid()->returns(true);
+
+        stub($this->dao)->save()->returns(54);
+
+        $this->manager->create($this->repository, $this->creator);
+        $this->assertEqual($this->repository->getId(), 54);
+    }
+}
+
+class GitRepositoryIdMatchExpectation extends SimpleExpectation {
+    private $repository_id;
+
+    public function __construct($repository_id) {
+        parent::__construct();
+        $this->repository_id = $repository_id;
+    }
+
+    public function test(GitRepository $compare) {
+        return $compare->getId() === $this->repository_id;
+    }
+
+    public function testMessage($compare) {
+        return "Expected repository id is $this->repository_id, ".$compare->getId()." given";
     }
 }
 
@@ -195,45 +242,96 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
     private $user;
     private $project;
     private $manager;
+    private $forkPermissions;
+    private $git_system_event_manager;
 
     public function setUp() {
         parent::setUp();
         $this->backend    = mock('Git_Backend_Gitolite');
-        $this->repository = mock('GitRepository');
-        stub($this->repository)->getBackend()->returns($this->backend);
+        $this->repository = partial_mock('GitRepository', array('userCanRead', 'isNameValid'));
+        $this->repository->setId(554);
+        $this->repository->setBackend($this->backend);
 
-        $this->user    = stub('User')->getId()->returns(123);
+        $this->user    = stub('PFUser')->getId()->returns(123);
         $this->project = stub('Project')->getId()->returns(101);
-        $this->manager = partial_mock('GitRepositoryManager', array('isRepositoryNameAlreadyUsed'));
+
+        $this->git_system_event_manager = mock('Git_SystemEventManager');
+
+        $this->manager = partial_mock(
+            'GitRepositoryManager',
+            array('isRepositoryNameAlreadyUsed'),
+            array(
+                mock('GitRepositoryFactory'),
+                $this->git_system_event_manager,
+                mock('GitDao')
+            )
+        );
+        $this->forkPermissions = array();
     }
 
     public function itThrowAnExceptionIfRepositoryNameCannotBeUsed() {
         stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(true);
 
         $this->expectException();
-        $this->manager->fork($this->repository, mock('Project'), mock('User'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL);
+        $this->manager->fork($this->repository, mock('Project'), mock('PFUser'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
     }
 
     public function itForkInRepositoryBackendIfEverythingIsClean() {
+        stub($this->backend)->fork()->returns(667);
         stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(false);
 
         $this->backend->expectOnce('fork');
-        $this->manager->fork($this->repository, mock('Project'), mock('User'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL);
+        $this->manager->fork($this->repository, mock('Project'), mock('PFUser'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
     }
+
+    public function itScheduleAndEventToApplyForkOnFilesystem() {
+        stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(false);
+
+        stub($this->backend)->fork()->returns(667);
+
+        expect($this->git_system_event_manager)->queueRepositoryFork($this->repository, new GitRepositoryIdMatchExpectation(667))->once();
+
+        $this->manager->fork($this->repository, mock('Project'), mock('PFUser'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
+    }
+
+    public function itDoesntScheduleAnEventIfAnExceptionIsThrownByBackend() {
+        stub($this->backend)->fork()->throws(new Exception('whatever'));
+
+        $this->expectException();
+        expect($this->git_system_event_manager)->queueRepositoryFork()->never();
+
+        $this->manager->fork($this->repository, mock('Project'), mock('PFUser'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
+    }
+
+    public function itDoesntScheduleAnEventWhenBackendReturnsNoId() {
+        stub($this->backend)->fork()->returns(false);
+
+        $this->expectException();
+        expect($this->git_system_event_manager)->queueRepositoryFork()->never();
+
+        $this->manager->fork($this->repository, mock('Project'), mock('PFUser'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
+    }
+
+    public function itThrowsAnExceptionWhenBackendReturnsNoId() {
+        stub($this->backend)->fork()->returns(false);
+        
+        $this->expectException();
+        
+        $this->manager->fork($this->repository, mock('Project'), mock('PFUser'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
+    }
+
 
     function testForkIndividualRepositories() {
         $path  = 'toto';
-
         $this->repository->setReturnValue('userCanRead', true, array($this->user));
-        $this->repository->setReturnValue('isNameValid', true, array($path));
+        $this->backend->setReturnValue('isNameValid', true, array($path));
 
         $this->backend->expectOnce('fork');
-        $this->manager->forkRepositories(array($this->repository), $this->project, $this->user, $path, null);
+        $this->manager->forkRepositories(array($this->repository), $this->project, $this->user, $path, null, $this->forkPermissions);
     }
 
     function testClonesManyInternalRepositories() {
         $namespace  = 'toto';
-
         $repo_ids = array('1', '2', '3');
 
         $repos = array();
@@ -241,18 +339,17 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
             $repo = new MockGitRepository();
             $repo->setReturnValue('getId', $id);
             $repo->setReturnValue('userCanRead', true, array($this->user));
-            $repo->setReturnValue('isNameValid', true, array($namespace));
+            $this->backend->setReturnValue('isNameValid', true, array($namespace));
             stub($repo)->getBackend()->returns($this->backend);
             $repos[] = $repo;
         }
 
         $this->backend->expectCallCount('fork', 3);
-        $this->manager->forkRepositories($repos, $this->project, $this->user, $namespace, null);
+        $this->manager->forkRepositories($repos, $this->project, $this->user, $namespace, null, $this->forkPermissions);
     }
 
     function testCloneManyCrossProjectRepositories() {
         $this->user->setReturnValue('isMember', true);
-
         $to_project = stub('Project')->getId()->returns(2);
 
         $repo_ids = array('1', '2', '3');
@@ -266,29 +363,28 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         }
 
         $this->backend->expectCallCount('fork', 3);
-        $this->manager->forkRepositories($repos, $to_project, $this->user, '', null);
+        $this->manager->forkRepositories($repos, $to_project, $this->user, '', null, $this->forkPermissions);
     }
 
     function testWhenNoRepositorySelectedItAddsWarning() {
         $this->expectException();
-        $this->manager->forkRepositories(array(), $this->project, $this->user, '', null);
+        $this->manager->forkRepositories(array(), $this->project, $this->user, '', null, $this->forkPermissions);
     }
 
     function testClonesOneRepository() {
-        $this->repository->setReturnValue('getId', 1);
+        $this->repository->setId(1);
         $this->repository->setReturnValue('userCanRead', true, array($this->user));
 
         $this->backend->expectOnce('fork');
-        $this->manager->forkRepositories(array($this->repository), $this->project, $this->user, '', null);
+        $this->manager->forkRepositories(array($this->repository), $this->project, $this->user, '', null, $this->forkPermissions);
     }
 
     function testDoesntCloneUnreadableRepos() {
         $repos = $this->getRepoCollectionUnreadableFor(array('1', '2', '3'), $this->user);
-
         $to_project = stub('Project')->getId()->returns(2);
 
         $this->backend->expectNever('fork');
-        $this->manager->forkRepositories($repos, $to_project, $this->user, '', null);
+        $this->manager->forkRepositories($repos, $to_project, $this->user, '', null, $this->forkPermissions);
     }
 
     protected function getRepoCollectionUnreadableFor($repo_ids, $user) {
@@ -311,12 +407,12 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
 
         $this->backend->expectOnce('fork');
 
-        $this->repository->setReturnValue('getId', $repo_id);
+        $this->repository->setId($repo_id);
         $this->repository->setReturnValue('userCanRead', true, array($this->user));
 
         $repos = array($this->repository);
 
-        $this->manager->forkRepositories($repos, $to_project, $this->user, '', null);
+        $this->manager->forkRepositories($repos, $to_project, $this->user, '', null, $this->forkPermissions);
     }
 
     function testForkShouldNotCloneAnyNonExistentRepositories() {
@@ -324,11 +420,12 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
 
         $repo = $this->GivenARepository(123);
 
-        $this->manager->forkRepositories(array($repo, null), $this->project, $this->user, null, null);
+        $this->manager->forkRepositories(array($repo, null), $this->project, $this->user, null, null, $this->forkPermissions);
     }
 
     function testForkShouldIgnoreAlreadyExistingRepository() {
         $this->backend->throwAt(0, 'fork', new GitRepositoryAlreadyExistsException(''));
+        $this->backend->setReturnValueAt(1, 'fork', 667);
 
         $errorMessage = 'Repository Xxx already exists';
         $GLOBALS['Language']->setReturnValue('getText', $errorMessage);
@@ -347,6 +444,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         $repo2 = $this->GivenARepository(456);
 
         $GLOBALS['Response']->expectOnce('addFeedback', array('warning', $errorMessage));
+        $this->backend->setReturnValueAt(0, 'fork', 667);
         $this->backend->throwAt(1, 'fork', new GitRepositoryAlreadyExistsException($repo2->getName()));
 
         $repo1 = $this->GivenARepository(123);
@@ -361,6 +459,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         $repo2->setName('megaRepoGit');
 
         $GLOBALS['Response']->expectOnce('addFeedback', array('warning', "Got an unexpected error while forking ".$repo2->getName().": ".$errorMessage));
+        $this->backend->setReturnValueAt(0, 'fork', 667);
         $this->backend->throwAt(1, 'fork', new Exception($errorMessage));
 
         $repo1 = $this->GivenARepository(123);
@@ -370,7 +469,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
     }
 
     function testForkAssertNamespaceIsValid() {
-        $this->repository->setReturnValue('isNameValid', false);
+        $this->backend->setReturnValue('isNameValid', false);
         $this->backend->expectNever('fork');
 
         $this->expectException();
@@ -382,13 +481,13 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         $repo = new MockGitRepository();
         $repo->setReturnValue('getId', $id);
         $repo->setReturnValue('userCanRead', true);
-        $repo->setReturnValue('isNameValid', true);
+        $this->backend->setReturnValue('isNameValid', true);
         stub($repo)->getBackend()->returns($this->backend);
         return $repo;
     }
 
     private function forkRepositories($repositories, $namespace=null) {
-        $this->manager->forkRepositories($repositories, $this->project, $this->user, $namespace, null);
+        $this->manager->forkRepositories($repositories, $this->project, $this->user, $namespace, null, $this->forkPermissions);
     }
 }
 

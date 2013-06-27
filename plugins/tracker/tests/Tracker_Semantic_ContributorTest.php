@@ -18,11 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
-
-require_once(dirname(__FILE__).'/../include/Tracker/Semantic/Tracker_Semantic_Contributor.class.php');
+require_once('bootstrap.php');
 Mock::generate('Tracker');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
 Mock::generate('Tracker_FormElement_Field_List');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
@@ -40,7 +37,7 @@ class Tracker_Semantic_ContributorTest extends TuleapTestCase {
         $f = new MockTracker_FormElement_Field_List();
         $f->setReturnValue('getId', 102);
         $tst = new Tracker_Semantic_Contributor($tracker, $f);
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_mapping = array('F13' => '102');
         $tst->exportToXML($root, $array_mapping);
         

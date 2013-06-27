@@ -52,7 +52,7 @@ class SOAP_RequestValidator {
      * 
      * @param String $session_key
      * 
-     * @return User
+     * @return PFUser
      */
     public function continueSession($session_key) {
         $user = $this->user_manager->getCurrentUser($session_key);
@@ -62,7 +62,7 @@ class SOAP_RequestValidator {
         throw new Exception('Invalid session', '3001');
     }
 
-    public function assertUserCanAccessProject(User $user, Project $project) {
+    public function assertUserCanAccessProject(PFUser $user, Project $project) {
         if (($project->isPublic() && $user->isRestricted() && ! $user->isMember($project->getGroupId())) ||
             (! $project->isPublic() && ! $user->isMember($project->getGroupId()))) {
             throw new Exception('User do not have access to the project', '3002');

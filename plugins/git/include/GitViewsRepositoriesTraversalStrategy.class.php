@@ -30,11 +30,11 @@ abstract class GitViewsRepositoriesTraversalStrategy {
      * Display the list of repositories
      *
      * @param array $repositories Array of raw representation of repositories, indexed by repository id
-     * @param User  $user         The user who traverse the forest
+     * @param PFUser  $user         The user who traverse the forest
      *
      * @return string
      */
-    public function fetch(array $repositories, User $user) {
+    public function fetch(array $repositories, PFUser $user) {
         if (empty($repositories)) {
             return '';
         }
@@ -44,21 +44,12 @@ abstract class GitViewsRepositoriesTraversalStrategy {
     /**
      * @return string
      */
-    protected function _makeRepositoryList(array $repositories, User $user) {
+    protected function _makeRepositoryList(array $repositories, PFUser $user) {
         $html = '';
         foreach ( $repositories as $repository ) {
             $repoName = $repository[GitDao::REPOSITORY_NAME];
-            $repoDesc = $repository[GitDao::REPOSITORY_DESCRIPTION];
             $delDate  = $repository[GitDao::REPOSITORY_DELETION_DATE];
-            $isInit   = $repository[GitDao::REPOSITORY_IS_INITIALIZED];
-            $access   = $repository[GitDao::REPOSITORY_ACCESS];
-            //needs to be checked on filesystem (GitDao::getRepositoryList do not check)
-            //TODO move this code to GitBackend and write a new getRepositoryList function ?
-            //TODO find a better way to do that to avoid the ton of SQL requests!
             $r = $this->getRepository($repository);
-            if ( $isInit == 0 ) {
-                $isInit = $r->isInitialized();
-            }
 
             if (!$r->userCanRead($user)) {
                 continue;
@@ -68,28 +59,11 @@ abstract class GitViewsRepositoriesTraversalStrategy {
                 continue;
             }
             
-            $accessType = $this->view->fetchAccessType($access, $repository[GitDao::REPOSITORY_BACKEND_TYPE] == GitDao::BACKEND_GITOLITE);
-            
-            //TODO Why the hell do we need to use isInit or repoName? Isn't it a property of the repo?
-            $item_representation = $this->getLabel($r, $isInit, $accessType, $repoName);
-
-            $html .= $this->getItemWrapper($r, $item_representation);
+            $html .= $this->getItemWrapper($r, $repoName);
         }
         return $html;
     }
 
-    /**
-     * Get the repository label
-     *
-     * @param GitRepository $repository    Teh repository
-     * @param bool          $isInitialized true of the repo is initialized
-     * @param string        $accessType    The access type of the repository
-     * @param string        $repoName      The name of the repository
-     *
-     * @return string
-     */
-    protected abstract function getLabel(GitRepository $repository, $isInitialized, $accessType, $repoName);
-    
     /**
      * Wrapper for GitRepository for unit testing purpose
      *
@@ -123,14 +97,5 @@ abstract class GitViewsRepositoriesTraversalStrategy {
      */
     protected abstract function getItemWrapper(GitRepository $repo, $inner);
     
-    /**
-     * Get group wrapper
-     *
-     * @param string $label the name of the group
-     * @param string $inner the string representation of a group of items
-     *
-     * @return string the $inner encapsulated in its own wrapper
-     */
-    protected abstract function getGroupWrapper($label, $inner);
 }
 ?>

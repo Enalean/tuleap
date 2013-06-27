@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('Tracker_Artifact_ChangesetValue_Numeric.class.php');
 
 /**
  * Manage values in changeset for float fields
@@ -64,7 +63,16 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
      * @return string The value of this artifact changeset value for SOAP
      */
     public function getSoapValue() {
-        return (string)$this->getFloat();
+        return $this->encapsulateRawSoapValue($this->getFloat());
+    }
+
+    /**
+     * Get the Json value
+     *
+     * @return string The value of this artifact changeset value in Json format
+     */
+    public function getJsonValue() {
+        return $this->getFloat();
     }
 
 }

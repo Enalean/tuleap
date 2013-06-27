@@ -41,10 +41,13 @@ class Widget_MyBookmarks extends Widget {
             $html_my_bookmarks .= $GLOBALS['Language']->getText('my_index', 'no_bookmark');
             $html_my_bookmarks .= db_error();
         } else {
-            $html_my_bookmarks .= '<table class="table table-bordered table-striped table-condensed" style="width:100%">';
+            $purifier = Codendi_HTMLPurifier::instance();
+            $html_my_bookmarks .= '<table  class="table table-bordered table-striped table-condensed" style="width:100%">';
             for ($i=0; $i<$rows; $i++) {
+                $bookmark_url = $purifier->purify(db_result($result,$i,'bookmark_url'),CODENDI_PURIFIER_CONVERT_HTML);
+                $bookmark_title = $purifier->purify(db_result($result,$i,'bookmark_title'),CODENDI_PURIFIER_CONVERT_HTML);
                 $html_my_bookmarks .= '<TR class="'. util_get_alt_row_color($i) .'"><TD>';
-                $html_my_bookmarks .= '<A HREF="'. db_result($result,$i,'bookmark_url') .'">'. db_result($result,$i,'bookmark_title') .'</A> ';
+                $html_my_bookmarks .= '<A HREF="'. $bookmark_url .'">'. $bookmark_title .'</A> ';
                 $html_my_bookmarks .= '<small><A HREF="/my/bookmark_edit.php?bookmark_id='. db_result($result,$i,'bookmark_id') .'">['.$GLOBALS['Language']->getText('my_index', 'edit_link').']</A></SMALL></TD>';
                 $html_my_bookmarks .= '<td style="text-align:right"><A HREF="/my/bookmark_delete.php?bookmark_id='. db_result($result,$i,'bookmark_id');
                 $html_my_bookmarks .= '" onClick="return confirm(\''.$GLOBALS['Language']->getText('my_index', 'del_bookmark').'\')">';

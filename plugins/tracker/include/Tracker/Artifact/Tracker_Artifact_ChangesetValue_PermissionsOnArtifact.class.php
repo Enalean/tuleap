@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('Tracker_Artifact_ChangesetValue.class.php');
 require_once('common/dao/UGroupDao.class.php');
 
 /**
@@ -69,7 +68,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
      * @return string The value of this artifact changeset value for Soap API
      */
     public function getSoapValue() {
-        return implode(",", $this->getPerms());
+        return $this->encapsulateRawSoapValue(implode(",", $this->getPerms()));
     }
     
     /**

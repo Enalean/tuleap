@@ -20,9 +20,11 @@
 
 
 class FullTextSearch_Presenter_SearchOnlyResults extends FullTextSearch_Presenter_Search {
-    public $template = 'search-results';
+    public $template;
 
     public function __construct(FullTextSearch_SearchResultCollection $query_result) {
+        $this->query_result = $query_result;
+        $this->template = 'search-results-'.$this->query_result->type;
         parent::__construct(null, null, $query_result);
     }
 }

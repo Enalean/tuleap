@@ -21,7 +21,7 @@
 require_once('common/include/HTTPRequest.class.php');
 Mock::generate('HTTPRequest');
 require_once('common/valid/ValidFactory.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UserManager');
 require_once('common/mail/Codendi_Mail.class.php');
 Mock::generate('Codendi_Mail');
@@ -262,7 +262,7 @@ class RequestHelpActionsTest extends UnitTestCase {
 
     function testAddTicketCodexDBFail() {
         $um = new MockUserManager();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $um->setReturnValue('getCurrentUser', $user);
         $actions = new RequestHelpActionsTestVersion2();
         $c = new MockRequestHelp();
@@ -287,7 +287,7 @@ class RequestHelpActionsTest extends UnitTestCase {
 
     function testAddTicketRIFDBFail() {
         $um = new MockUserManager();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $um->setReturnValue('getCurrentUser', $user);
         $actions = new RequestHelpActionsTestVersion2();
         $c = new MockRequestHelp();
@@ -313,7 +313,7 @@ class RequestHelpActionsTest extends UnitTestCase {
 
     function testAddTicketSuccess() {
         $um = new MockUserManager();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $um->setReturnValue('getCurrentUser', $user);
         $actions = new RequestHelpActionsTestVersion2();
         $c = new MockRequestHelp();
@@ -340,7 +340,7 @@ class RequestHelpActionsTest extends UnitTestCase {
 
     function testSendMailToSDFailure() {
         $um   = new MockUserManager();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $um->setReturnValue('getCurrentUser', $user);
 
         $validParams = array('ticket_id'     => 'QA0000000000001',

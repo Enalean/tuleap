@@ -19,21 +19,11 @@
  */
 
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
-require_once TRACKER_BASE_DIR .'/constants.php';
-require_once TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.php';
-require_once TRACKER_BASE_DIR .'/Tracker/CrossSearch/ArtifactNode.class.php';
-require_once 'RendererPresenter.class.php';
-require_once 'ArtifactNodeTreeProvider.class.php';
-require_once 'BoardFactory.class.php';
-require_once 'QrCode.class.php';
-require_once 'Form.class.php';
-require_once 'FieldProviders/CustomFieldProvider.class.php';
-require_once 'CreateCardPresenterCallback.class.php';
-require_once 'CardInCellPresenterCallback.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
 class Cardwall_Renderer extends Tracker_Report_Renderer {
-    
+    const FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER = 'FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER';
+
     /**
      * @var Plugin
      */
@@ -107,13 +97,13 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      *
      * @return string
      */
-    public function fetch($matching_ids, $request, $report_can_be_modified, User $user) {
+    public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user) {
         $used_sb = $this->getFormElementFactory()->getUsedFormElementsByType($this->report->getTracker(), array('sb'));
         $form    = new Cardwall_Form($this->report->id, $this->id, $request->get('pv'), $this->getField(), $used_sb);
         return $this->fetchCards($matching_ids, $user, $form);
     }
     
-    private function fetchCards($matching_ids, User $user, $form = null) {
+    private function fetchCards($matching_ids, PFUser $user, $form = null) {
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         if (!$total_rows) {
             return '<p>'. $GLOBALS['Language']->getText('plugin_tracker', 'no_artifacts') .'</p>';
@@ -133,13 +123,13 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      */
     public function getForestsOfArtifacts(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory) {
         $provider = new Cardwall_ArtifactNodeTreeProvider();
-        return $provider->flatForestOfArtifacts($artifact_ids, $artifact_factory);
+        return $provider->flatForestOfArtifacts($artifact_ids, $artifact_factory, self::FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER);
     }
     
     /**
      * @return Cardwall_RendererPresenter
      */
-    private function getPresenter(TreeNode $forest_of_artifacts, User $user, $form = null) {
+    private function getPresenter(TreeNode $forest_of_artifacts, PFUser $user, $form = null) {
         $redirect_parameter = 'cardwall[renderer]['. $this->report->id .']='. $this->id;
         
         $field              = $this->getField();
@@ -147,10 +137,11 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         if (! $field) {
             $board = new Cardwall_Board(array(), new Cardwall_OnTop_Config_ColumnCollection(), new Cardwall_MappingCollection());
         } else {
-            $board_factory      = new Cardwall_BoardFactory();
-            $field_retriever    = new Cardwall_FieldProviders_CustomFieldRetriever($field);
-            $columns            = $this->config->getRendererColumns($field);
-            $board              = $board_factory->getBoard($field_retriever, $columns, $forest_of_artifacts, $this->config, $user);
+            $board_factory       = new Cardwall_BoardFactory();
+            $field_retriever     = new Cardwall_FieldProviders_CustomFieldRetriever($field);
+            $columns             = $this->config->getRendererColumns($field);
+            $display_preferences = new Cardwall_DisplayPreferences(Cardwall_DisplayPreferences::DISPLAY_AVATARS);
+            $board               = $board_factory->getBoard($field_retriever, $columns, $forest_of_artifacts, $this->config, $user, $display_preferences);
         }
 
         return new Cardwall_RendererPresenter($board, $this->getQrCode(), $redirect_parameter, $field, $form);
@@ -202,7 +193,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     /**
      * Fetch content to be displayed in widget
      */
-    public function fetchWidget(User $user) {
+    public function fetchWidget(PFUser $user) {
         $this->enable_qr_code = false;
         $html  = '';
         $html .= $this->fetchCards($this->report->getMatchingIds(), $user);
@@ -266,7 +257,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      * @param $formsMapping the form elements mapping
      */
-    public function exportToXML(&$root, $formsMapping) {
+    public function exportToXml(SimpleXMLElement $root, $formsMapping) {
         parent::exportToXML($root, $formsMapping);
         if ($mapping = (string)array_search($this->field_id, $formsMapping)) {
             $root->addAttribute('field_id', $mapping);

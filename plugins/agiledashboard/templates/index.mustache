@@ -1,24 +1,61 @@
-<h2>{{planningsTitle}}</h2>
-<p>
-    <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;action=new" id="planning_create">
-        <img border="0" alt="add" src="/themes/Tuleap/images/ic/add.png" style="vertical-align:middle"> 
-        {{createPlanning}}
-    </a>
-</p>
-{{#hasPlannings}}
-<ul>
-    {{#getPlannings}}
-    <li>
-        <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;planning_id={{getId}}&amp;action=show">
-            {{getName}}
-        </a>
-        <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;planning_id={{getId}}&amp;action=edit">
-            <img src="{{getEditIconPath}}" alt="{{getEditActionLabel}}" />
-        </a>
-        <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;planning_id={{getId}}&amp;action=delete">
-            <img src="{{getDeleteImagePath}}" alt="delete" />
-        </a>
+{{#hasShortAccess}}
+    {{#use_lab}}
+        <center>
+            <ul class="ad_index_plannings">
+                <li class="ad_index_planning" style ="padding-left:10px;padding-right: 10px; height: auto">
+                    <h2>
+                        <a href ="?action=show-top&group_id={{project_id}}&pane={{get_default_top_pane}}">
+                            {{top_planning}}
+                        </a>
+                    </h2>
+                </li>
+            </ul>
+        </center>
+    {{/use_lab}}
+<ul class="ad_index_plannings">
+    {{#getShortAccess}}
+    <li class="ad_index_planning">
+        <div class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <h2>{{#planning}}{{getName}}{{/planning}} <b class="caret"></b></h2>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="/plugins/tracker/?tracker={{planningTrackerId}}&func=new-artifact-link&id=0&immediate=1&{{planningRedirectToNew}}">
+                        {{createNewItemToPlan}}
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <ul>
+            {{#getLastOpenMilestones}}
+            <li class="{{#is_active}}active{{/is_active}}">
+                <div class="ad_index_planning_icons">
+                    {{#getQuickLinkIconList}}
+                        <a href="{{uri}}"><img title="{{title}}" src="{{icon}}"></a>
+                    {{/getQuickLinkIconList}}
+                </div>
+                {{getTitle}}{{^getTitle}}{{getXRef}}{{/getTitle}}
+            </li>
+            {{/getLastOpenMilestones}}
+            {{#hasMoreMilestone}}
+            <li><a
+                href="?group_id={{project_id}}&planning_id={{planning_id}}&action=get-more-milestones&offset={{next_offset}}"
+                title="{{more_title}}" class="ad_index_load_more_milestones">{{more}}</a>
+            </li>
+            {{/hasMoreMilestone}}
+        </ul>
     </li>
-    {{/getPlannings}}
+    {{/getShortAccess}}
 </ul>
-{{/hasPlannings}}
+
+{{#getLatestLeafMilestone}}
+    {{{getContent}}}
+{{/getLatestLeafMilestone}}
+
+{{/hasShortAccess}}
+{{^hasShortAccess}}
+<p>
+    <em>Nothing has been setup yet. Please come again later!</em>
+</p>
+{{/hasShortAccess}}

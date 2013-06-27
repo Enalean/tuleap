@@ -1,5 +1,9 @@
+#cardwall {
+    padding-bottom: 1em;
+}
 .cardwall_board-actions {
     text-align: right;
+    margin-bottom: 1em;
 }
 .cardwall_board table {
     clear:both;
@@ -155,4 +159,66 @@
   font-style: normal;
   font-weight: normal;
   src: local('Reenie Beanie'), local('ReenieBeanie'), url('../fonts/Reenie-Beanie-regular.woff') format('woff');
+}
+
+.card_element_edit_form > input[type=text] {
+    width: 40px;
+}
+
+.card_element_edit_form > input[type=submit] {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.valueOf_remaining_effort {
+    min-width: 30px;
+}
+
+.search-in-cardwall::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+
+.search-in-cardwall {
+    display: inline-block;
+    vertical-align: middle;
+
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+
+    width: 330px;
+    height: 20px;
+
+    margin: 0;
+    padding: 4px 6px;
+
+    color: #555555;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+
+    -webkit-border-radius:  4px;
+        -moz-border-radius: 4px;
+            border-radius:  4px;
+
+    -webkit-box-shadow:  inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        box-shadow:      inset 0 1px 1px rgba(0, 0, 0, 0.075);
+
+    -webkit-transition:     border linear 0.2s, box-shadow linear 0.2s;
+        -moz-transition:    border linear 0.2s, box-shadow linear 0.2s;
+            -o-transition:  border linear 0.2s, box-shadow linear 0.2s;
+                transition: border linear 0.2s, box-shadow linear 0.2s;
+}
+
+
+.search-in-cardwall:focus {
+  border-color: rgba(82, 168, 236, 0.8);
+  outline: 0;
+  outline: thin dotted \9;
+
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
 }

@@ -670,7 +670,7 @@ CREATE TABLE forum_group_list (
   PRIMARY KEY  (group_forum_id),
   FULLTEXT (description),
   KEY idx_forum_group_list_group_id (group_id)
-);
+) ENGINE=MyISAM;
 
 #
 # Table structure for table 'forum_monitored_forums'
@@ -1020,6 +1020,7 @@ CREATE TABLE groups (
   cvs_is_private TINYINT(1) NOT NULL DEFAULT 0,
   svn_tracker int(11)   NOT NULL default '1',
   svn_mandatory_ref TINYINT NOT NULL default '0',
+  svn_can_change_log TINYINT(1) NOT NULL default '0',
   svn_events_mailing_header varchar(64) binary DEFAULT NULL,
   svn_preamble text NOT NULL,
   svn_accessfile text NULL,
@@ -2420,7 +2421,7 @@ CREATE TABLE svn_commits (
   KEY idx_search (group_id, whoid, id),
   KEY idx_repositoryid_date (repositoryid, date),
   FULLTEXT (description)
-);
+) ENGINe=MyISAM;
 
 CREATE TABLE svn_dirs (
   id int(11) NOT NULL auto_increment,
@@ -2929,6 +2930,7 @@ CREATE TABLE ugroup (
   ugroup_id int(11) NOT NULL auto_increment,
   name text NOT NULL,
   description text NOT NULL,
+  source_id INT(11) DEFAULT NULL,
   group_id int(11) NOT NULL,
   PRIMARY KEY  (ugroup_id)
 );
@@ -3377,6 +3379,7 @@ CREATE TABLE IF NOT EXISTS system_event (
   create_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
   process_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
   end_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  owner VARCHAR(255) NOT NULL default 'root',
   log TEXT,
   PRIMARY KEY (id)
 );
@@ -3444,6 +3447,23 @@ CREATE TABLE IF NOT EXISTS svn_notification (
     PRIMARY KEY (group_id, path)
 );
 
+#
+# Table structure for Project parent relationship
+#
+
+CREATE TABLE IF NOT EXISTS project_parent (
+    group_id INT(11) PRIMARY KEY,
+    parent_group_id INT(11) NOT NULL
+);
+
+#
+# Table structure for Project parent relationship
+#
+
+CREATE TABLE IF NOT EXISTS generic_user (
+    group_id INT(11) PRIMARY KEY,
+    user_id INT(11) NOT NULL
+);
 
 #
 # EOF

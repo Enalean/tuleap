@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once dirname(__FILE__).'/../../builders/anArtifact.php';
-require_once dirname(__FILE__).'/../../../include/Tracker/CrossSearch/ArtifactNode.class.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 class Tracker_ArtifactNodeTest extends TuleapTestCase {
     
     public function setUp() {

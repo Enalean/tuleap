@@ -17,9 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('Tracker_Semantic_Status.class.php');
-require_once('dao/Tracker_Semantic_StatusDao.class.php');
-require_once 'IRetrieveSemantic.class.php';
 
 class Tracker_Semantic_StatusFactory implements Tracker_Semantic_IRetrieveSemantic {
     
@@ -113,7 +110,9 @@ class Tracker_Semantic_StatusFactory implements Tracker_Semantic_IRetrieveSemant
                 $mapping_values = $mapping['values'];
                 // get the value ids for status open values target
                 foreach ($from_open_value_ids as $from_open_value_id) {
-                    $to_open_value_ids[] = $mapping_values[$from_open_value_id];
+                    if (isset($mapping_values[$from_open_value_id])) {
+                        $to_open_value_ids[] = $mapping_values[$from_open_value_id];
+                    }
                 }
             }
         }

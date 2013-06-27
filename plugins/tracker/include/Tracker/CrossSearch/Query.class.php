@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../Artifact/Tracker_Artifact.class.php';
 
 /**
  * The criteria for a cross-tracker search.
@@ -199,7 +198,7 @@ class Tracker_CrossSearch_Query {
     }
 
     private function isSemanticStatusEmpty() {
-        return ($this->semantic_criteria['status'] == '' || $this->semantic_criteria['status'] == 'any');
+        return isset($this->semantic_criteria['status']) && ($this->semantic_criteria['status'] == '' || $this->semantic_criteria['status'] == 'any');
     }
 }
 ?>

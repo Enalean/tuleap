@@ -17,20 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Float.class.php');
+require_once('bootstrap.php');
 Mock::generatePartial('Tracker_FormElement_Field_Float', 'Tracker_FormElement_Field_FloatTestVersion', array('getValueDao', 'isRequired', 'getProperty'));
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_Float.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue_Float');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_FloatDao.class.php');
 Mock::generate('Tracker_FormElement_Field_Value_FloatDao');
 
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
 
 class Tracker_FormElement_Field_FloatTest extends TuleapTestCase {

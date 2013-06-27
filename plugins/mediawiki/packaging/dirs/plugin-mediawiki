@@ -1,0 +1,11 @@
+@CONFIG_PATH@/plugins/mediawiki
+etc/mediawiki-extensions/extensions-available
+@PLUGIN_PATH@/mediawiki/bin
+@PLUGIN_PATH@/mediawiki/common
+@PLUGIN_PATH@/mediawiki/cronjobs
+@PLUGIN_PATH@/mediawiki/www
+@SOURCE_PATH@/etc/httpd.d
+@SOURCE_PATH@/www/plugins
+usr/share/mediawiki/skins
+@DATA_PATH@/plugins/mediawiki/dumps
+@DATA_PATH@/plugins/mediawiki/projects

@@ -19,8 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once dirname(__FILE__).'/../include/GitBackend.class.php';
+require_once 'bootstrap.php';
+
 Mock::generatePartial('GitBackend', 'GitBackendTestVersion', array('getDao', 'getDriver', 'getSystemEventManager'));
 Mock::generatePartial('GitBackend', 'GitBackend4SetUp', array('getDao', 'getDriver', 'deployPostReceive', 'setRepositoryPermissions', 'changeRepositoryAccess'));
 

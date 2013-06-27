@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Git_LogDao.class.php';
 
 /**
  * Widget displaying last git pushes for the user

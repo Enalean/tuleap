@@ -1,0 +1,4 @@
+1.1 - Tuleap 6.3
+	* Add method setProjectGenericUser
+	* Add method unsetGenericUser
+	* Add method getProjectGenericUser

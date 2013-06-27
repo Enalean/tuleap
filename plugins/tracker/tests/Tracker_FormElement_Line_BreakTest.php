@@ -17,12 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_StaticField_LineBreak.class.php');
+require_once('bootstrap.php');
 
 class Tracker_FormElement_StaticField_LineBreakTest extends UnitTestCase {
     
     public function testFetchDescription() {
+        $expected_message = '';
         $id = 2;
         $tracker_id = 254;
         $parent_id = 0;
@@ -40,7 +40,7 @@ class Tracker_FormElement_StaticField_LineBreakTest extends UnitTestCase {
 
         $this->assertEqual('Line Break Label', $line_break->getLabel());
         $this->assertEqual('', $line_break->getDescription());
-        $this->assertTrue($line_break->canBeUnused());
+        $this->assertEqual($expected_message, $line_break->getCannotRemoveMessage());
     }
 
 }

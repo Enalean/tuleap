@@ -19,20 +19,31 @@
  */
 
 abstract class ChartDataBuilderV5 {
-    
+
     protected $chart;
     protected $artifacts;
-    
+
     function __construct($chart, $artifacts) {
         $this->chart     = $chart;
         $this->artifacts = $artifacts;
     }
-    
+
     function buildProperties($engine) {
         $engine->title       = $this->chart->getTitle();
         $engine->description = $this->chart->getDescription();
         $engine->height      = $this->chart->getHeight();
         $engine->width       = $this->chart->getWidth();
+    }
+
+    /**
+     * @return array (r,g,b) color from $data if exist, else a null triple
+     */
+    protected function getColor(array $data) {
+        if (! isset($data['red'])) {
+            return array(null, null, null);
+        }
+
+        return array($data['red'], $data['green'], $data['blue']);
     }
 }
 ?>

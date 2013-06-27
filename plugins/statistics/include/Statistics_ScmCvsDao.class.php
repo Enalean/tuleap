@@ -55,7 +55,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
                 FROM group_cvs_full_history
                 WHERE day BETWEEN DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d') AND DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
                   ".$this->groupFilter."
-                GROUP BY YEAR(day), MONTH(day)";
+                GROUP BY YEAR(day), MONTH(day)
+                ORDER BY YEAR(day), MONTH(day)";
 
         return $this->retrieve($sql);
     }
@@ -77,7 +78,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
                 FROM group_cvs_full_history
                 WHERE day BETWEEN DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d') AND DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
                   ".$this->groupFilter."
-                GROUP BY YEAR(day), MONTH(day)";
+                GROUP BY YEAR(day), MONTH(day)
+                ORDER BY YEAR(day), MONTH(day)";
 
         return $this->retrieve($sql);
     }

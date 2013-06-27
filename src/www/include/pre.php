@@ -9,17 +9,27 @@
 if (version_compare(phpversion(), '5.1.6', '<')) {
     die('Codendi must be run on a PHP 5.1.6 (or greater) engine');
 }
+if (version_compare(phpversion(), '5.3', '>=')) {
+    if (!ini_get('date.timezone')) {
+        date_default_timezone_set('Europe/Paris');
+    }
+}
 
-// Defines all of the Codendi settings first (hosts, databases, etc.)
-$local_inc = getenv('CODENDI_LOCAL_INC');
-if ( ! $local_inc ){
-    $local_inc = '/etc/codendi/conf/local.inc';
+// Defines all of the settings first (hosts, databases, etc.)
+$local_inc = getenv('TULEAP_LOCAL_INC') ? getenv('TULEAP_LOCAL_INC') : getenv('CODENDI_LOCAL_INC');
+if ( ! $local_inc ) {
+    if (is_file('/etc/tuleap/conf/local.inc')) {
+        $local_inc = '/etc/tuleap/conf/local.inc';
+    } else {
+        $local_inc = '/etc/codendi/conf/local.inc';
+    }
 }
 require($local_inc);
 require($GLOBALS['db_config_file']);
 require_once('common/include/Config.class.php');
 Config::load($GLOBALS['codendi_dir'] .'/src/etc/local.inc.dist'); //load the default settings
 Config::load($local_inc);
+Config::load($GLOBALS['db_config_file']);
 if (isset($GLOBALS['DEBUG_MODE'])) {
     Config::load($GLOBALS['codendi_dir'] .'/src/etc/development.inc.dist');
     Config::load(dirname($local_inc).'/development.inc');
@@ -35,17 +45,23 @@ if (isset($GLOBALS['jpgraph_dir'])) {
 
 define('TTF_DIR',isset($GLOBALS['ttf_font_dir']) ? $GLOBALS['ttf_font_dir'] : '/usr/share/fonts/');
 
+require_once('common/autoload_zend.php');
+require_once('common/autoload.php');
 require_once('common/include/CookieManager.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/include/SimpleSanitizer.class.php');
 require_once('common/include/URL.class.php');
-require_once('common/autoload_zend.php');
+
 
 // Detect whether this file is called by a script running in cli mode, or in normal web mode
-if (array_key_exists('HTTP_HOST', $_SERVER) == true) {
-    define('IS_SCRIPT', false); ;
+if (php_sapi_name() == "cli") {
+    // Backend scripts should never ends because of lack of time or memory
+    ini_set('max_execution_time', 0);
+    ini_set('memory_limit', -1);
+
+    define('IS_SCRIPT', true);
 } else {
-    define('IS_SCRIPT', true); 
+    define('IS_SCRIPT', false);
 }
 
 //{{{ Sanitize $_REQUEST : remove cookies
@@ -175,12 +191,14 @@ if(!IS_SCRIPT) {
 
 
 */
-//set up the user's timezone if they are logged in
-if (user_isloggedin()) {
-    putenv('TZ='.$current_user->getTimezone());
-} else {
-    //just use pacific time as always
+if ($current_user->isLoggedIn()) {
+    if (version_compare(phpversion(), '5.3', '>=')) {
+        date_default_timezone_set($current_user->getTimezone());
+    } else {
+        putenv('TZ='.$current_user->getTimezone());
+    }
 }
+
 
 //Set up the vars and theme functions 
 require_once('theme.php');

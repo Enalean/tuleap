@@ -307,6 +307,8 @@ extends Rule {
 class Rule_UserName
 extends Rule {
 
+    const RESERVED_PREFIX = 'forge__';
+
     /**
      * Test if value is a name on underlying OS.
      * 
@@ -408,7 +410,7 @@ extends Rule {
      * @return Boolean
      */
     public function isReservedName($val) {
-        if (preg_match('/^('.
+        $is_reserved_name = preg_match('/^('.
              '(www[0-9]?)|(cvs[0-9]?)|(shell[0-9]?)|(ftp[0-9]?)|(irc[0-9]?)|(news[0-9]?)'.
              '|(mail[0-9]?)|(ns[0-9]?)|(download[0-9]?)|(pub)|(users)|(compile)|(lists)'.
              '|(slayer)|(orbital)|(tokyojoe)|(webdev)|(projects)|(cvs)|(monitor)|(mirrors?)'.
@@ -416,8 +418,25 @@ extends Rule {
              '|(uucp)|(operator)|(games)|(mysql)|(httpd)|(nobody)|(dummy)|(debian)'.
              '|(munin)|(mailman)|(ftpadmin)|(codendiadm)|(imadmin-bot)|(apache)|(nscd)'.
              '|(git)|(gitolite)'.
-             ')$/i', $val) != 0) {
+             ')$/i', $val);
+        $is_reserved_prefix = $this->isReservedPrefix($val);
+
+        if ($is_reserved_name || $is_reserved_prefix) {
             $this->error = $GLOBALS['Language']->getText('include_account','reserved');
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Test if the name begins with a reserved prefix
+     *
+     * @param string $val Value to test
+     *
+     * @return bool
+     */
+    private function isReservedPrefix($val) {
+        if (strpos($val, self::RESERVED_PREFIX) === 0) {
             return true;
         }
         return false;
@@ -811,6 +830,33 @@ extends Rule {
         } else {
             return true;
         }
+    }
+}
+
+class Rule_RealName extends Rule {
+
+    public function isValid($string) {
+        if ($this->containsBackslashCharacter($string) || $this->containsNonPrintingCharacter($string)) {
+            return false;
+        }
+        return true;
+    }
+
+    private function containsBackslashCharacter($string) {
+        return strpos($string, "\\") !== false;
+    }
+
+    private function containsNonPrintingCharacter($string) {
+        for ($i = 0; $i < strlen($string); $i++) {
+            if ($this->isNonPrintingCharacter($string[$i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function isNonPrintingCharacter($char) {
+        return hexdec(bin2hex($char)) < 32;
     }
 }
 

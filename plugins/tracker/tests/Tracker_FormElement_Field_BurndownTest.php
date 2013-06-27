@@ -17,17 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php';
-require_once dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Burndown.class.php';
-require_once dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php';
-require_once dirname(__FILE__).'/builders/aTracker.php';
-require_once dirname(__FILE__).'/builders/anArtifact.php';
-require_once dirname(__FILE__).'/builders/aBurndownField.php';
-require_once dirname(__FILE__).'/builders/aMockTracker.php';
-require_once dirname(__FILE__).'/builders/aMockHierarchyFactory.php';
-
-require_once(dirname(__FILE__).'/../include/constants.php');
+require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_Burndown_StartDateAndDurationTest extends TuleapTestCase {
     
@@ -111,11 +101,12 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($this->form_element_factory)->getUsedFieldByNameForUser($this->sprint_tracker_id, 'duration', $this->current_user)->returns($this->duration_field);
         Tracker_FormElementFactory::setInstance($this->form_element_factory);
         
-        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage', 'userCanRead'));
+        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage', 'userCanRead', 'getProperty', 'includeWeekends'));
         
         $this->burndown_view = mock('Tracker_Chart_Burndown');
         stub($this->field)->getBurndown()->returns($this->burndown_view);
         stub($this->field)->userCanRead()->returns(true);
+        stub($this->field)->includeWeekends()->returns(true);
     }
     
     public function tearDown() {
@@ -136,7 +127,8 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->assertEqual($data->getRemainingEffort(), array(10,9,8,7,6));
     }
 
-    public function itDoesNotFetchDataInTheFuture() {
+    public function itDoesNotFetchDataInTheFutureWhenIncludingWeekend() {
+        stub($this->field)->getProperty('include_weekends')->returns(true);
         $field = mock('Tracker_FormElement_Field_Float');
 
         $today = mktime(23, 59, 59);
@@ -149,14 +141,19 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
 
         $start_date = strtotime('-2 days', mktime(0, 0, 0));
 
-        $data = $this->field->getBurndownData($this->sprint, $this->current_user, $start_date, $this->duration);
-        $remaining_effort = $data->getRemainingEffort();
+        $data = $this->field->getBurndownData(
+            $this->sprint,
+            $this->current_user,
+            $start_date,
+            $this->duration
+        );
 
+        $remaining_effort = $data->getRemainingEffort();
         $this->assertEqual($remaining_effort, array(10, 9, 8, null, null, null));
     }
 
     public function itCreatesABurndownWithArtifactLinkedArtifactsAStartDateAndADuration() {
-        $time_period    = new Tracker_Chart_Data_BurndownTimePeriod($this->timestamp, $this->duration);
+        $time_period    = new Tracker_Chart_Data_BurndownTimePeriodWithWeekEnd($this->timestamp, $this->duration);
         $burndown_data  = new Tracker_Chart_Data_Burndown($time_period);
         $this->field    = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage', 'userCanRead', 'getBurndownData'));
         $this->burndown_view = mock('Tracker_Chart_BurndownView');
@@ -292,7 +289,7 @@ class Tracker_FormElement_Field_Burndown_RequestProcessingTest extends TuleapTes
         parent::setUp();
         
         $this->tracker_manager = mock('TrackerManager');
-        $this->current_user    = mock('User');
+        $this->current_user    = mock('PFUser');
         
         $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('fetchBurndownImage'));
     }

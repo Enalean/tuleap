@@ -19,10 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__) .'/bootstrap.php';
 require_once dirname(__FILE__).'/../../../tests/simpletest/common/TreeNode/NodeDuplicatorContractTest.class.php';
-require_once dirname(__FILE__).'/../include/CardInCellPresenter.class.php';
-require_once dirname(__FILE__).'/../include/CardInCellPresenterNode.class.php';
-require_once TRACKER_BASE_DIR. '/Tracker/Artifact/Tracker_Artifact.class.php';
+
 
 class Cardwall_CardInCellPresenterNodeTest extends NodeDuplicatorContractTest {
 

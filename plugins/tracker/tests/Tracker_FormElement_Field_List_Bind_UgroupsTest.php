@@ -16,9 +16,7 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-require_once dirname(__FILE__).'/builders/all.php';
-require_once TRACKER_BASE_DIR.'/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Ugroups.class.php';
+require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_List_Bind_BaseTest extends TuleapTestCase {
     public function setUp() {
@@ -192,13 +190,11 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_SOAPTest extends Tracker_FormE
         $this->assertEqual(count($bind->getSoapAvailableValues()), 2);
         $soap_values = array(
             array(
-                'field_id'         => $this->field_id,
-                'bind_value_id'    => 1,
+                'bind_value_id'    => 4545,
                 'bind_value_label' => 'ugroup_project_members_name_key',
             ),
             array(
-                'field_id'         => $this->field_id,
-                'bind_value_id'    => 2,
+                'bind_value_id'    => 687,
                 'bind_value_label' => 'Customers',
             )
         );

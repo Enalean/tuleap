@@ -1,0 +1,10 @@
+DOAP RDF plugin
+
+This plugin will provide content-negociation means to export RDF+XML DOAP profiles for projects on /projects URLs.
+
+For instance, one may try :
+ curl -k -H 'Accept: application/rdf+xml' https://myforge.example.com/projects/aproject/
+
+More details about DOAP available from https://github.com/edumbill/doap/wiki
+
+This plugin has been initiated as part of the COCLICO project.

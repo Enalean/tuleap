@@ -131,7 +131,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 		ShowResultSet($result,$Language->getText('mail_admin_index','existing_mail_list'), false, false);
 
 		echo 	'<P>
-			<FORM METHOD="POST" ACTION="'.$PHP_SELF.'">
+			<FORM METHOD="POST" ACTION="?">
 			<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="add_list" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
@@ -194,7 +194,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 				echo '
 					<TR class="'. util_get_alt_row_color($i) .'"><TD><B>'.db_result($result,$i,'list_name').'</B></TD>';
 				echo '
-					<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+					<FORM ACTION="?" METHOD="POST">
 					<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 					<INPUT TYPE="HIDDEN" NAME="change_status" VALUE="y">
 					<INPUT TYPE="HIDDEN" NAME="group_list_id" VALUE="'.db_result($result,$i,'group_list_id').'">
@@ -234,9 +234,9 @@ if ($group_id && user_ismember($group_id,'A')) {
 		echo '
 			<H2>'.$Language->getText('mail_admin_index','mail_list_admin').'</H2>
 			<h3>
-			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&add_list=1">'.$Language->getText('mail_admin_index','add_mail_list').'</A></h3>
+			<A HREF="?group_id='.$group_id.'&add_list=1">'.$Language->getText('mail_admin_index','add_mail_list').'</A></h3>
                                                       <p>'.$Language->getText('mail_admin_index','create_new_mail_lists').'
-			<h3><A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&change_status=1">'.$Language->getText('mail_admin_index','admin_update_lists').'</A></h3>
+			<h3><A HREF="?group_id='.$group_id.'&change_status=1">'.$Language->getText('mail_admin_index','admin_update_lists').'</A></h3>
                                                       <p>'.$Language->getText('mail_admin_index','manage_mail');
 		mail_footer(array());
 	}

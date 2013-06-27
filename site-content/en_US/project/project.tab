@@ -18,6 +18,16 @@ project_admin_editgroupinfo	soft_required	Other Software Required
 project_admin_editgroupinfo	comments	Other Comments:
 project_admin_editgroupinfo	license_comment	Comments about Other License used for this project:
 project_admin_editgroupinfo	info_missed	Missing Information. PLEASE fill in all required information.
+project_admin_editgroupinfo	parent_project	Parent Project:
+project_admin_editgroupinfo	sub_projects	Sub-Projects:
+project_admin_editgroupinfo	project_hierarchy_title	Project hierarchy
+project_admin_editgroupinfo	project_hierarchy_desc_1	This feature aims to provide a way to structure projects organizations from a permissions, user groups and control point of view.
+project_admin_editgroupinfo	project_hierarchy_desc_2	As of today, it's only used by Git/ Gerrit for umbrella projects (if relevant to your platform/ project).
+project_admin_editgroupinfo	project_hierarchy_desc_3	However, setting a hierarchy between projects might have future impacts (e.g. members of the parent project could possibly have access to all sub-projects even without explicit permissions granted).
+project_admin_editgroupinfo	autocompleter_placeholder	Project name (search as you type)
+project_admin_editgroupinfo	remove_parent_project	Remove parent project
+project_admin_editgroupinfo	self_exception	A project cannot be its own parent.
+project_admin_editgroupinfo	ancestor_exception	These projects are already related.
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editservice.php
@@ -118,6 +128,7 @@ project_admin_editugroup	sel01	Selection 01 - please ignore
 project_admin_editugroup	please_wait	Please wait...
 project_admin_editugroup	filter	Filter:
 project_admin_editugroup	ug_perms	This user group is granted the following permissions:
+project_admin_editugroup	no_perms	This user group is not granted any permissions yet
 project_admin_editugroup	permission	Permission
 project_admin_editugroup	resource_name	Resource Name
 project_admin_editugroup	release	Release
@@ -135,7 +146,7 @@ project_admin_editugroup	go_back	Go back to the user groups list
 project_admin_editugroup	add_user	Add users to this group
 project_admin_editugroup	members	Members
 project_admin_editugroup	users	Users
-project_admin_editugroup	search_in	Search in
+project_admin_editugroup	search_in	Or search in 
 project_admin_editugroup	any_project	any project
 project_admin_editugroup	this_project	this project
 project_admin_editugroup	name_contains	 users whose name or email contains
@@ -144,6 +155,12 @@ project_admin_editugroup	show	Show
 project_admin_editugroup	users_per_page	users per page.
 project_admin_editugroup	add_users_to	Add users to
 project_admin_editugroup	group_empty	The group is empty
+project_admin_editugroup	permissions_title	Permissions
+project_admin_editugroup	settings_title	General settings
+project_admin_editugroup	binding_title	Groups binding
+project_admin_editugroup	parent	Parent project: 
+project_admin_editugroup	no_parent	This project has no parent
+project_admin_editugroup	go_to_hierarchy_admin	Go to project hierarchy administration
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/grouptrove.php
@@ -456,9 +473,12 @@ project_admin_utils	verify_dates	Start date must be inferior to end date
 project_admin_utils	from	From
 project_admin_utils	to	To
 project_admin_utils	status	Status changed
+project_admin_utils	ugroup_add_binding	User group binding added
+project_admin_utils	ugroup_remove_binding	Ugroup binding removed
 project_admin_utils	frs_self_add_monitor_package	Add package monitoring to himself
 project_admin_utils	frs_add_monitor_package	Add package monitoring
 project_admin_utils	frs_stop_monitor_package	Stop package monitoring
+project_admin_utils	ugroup_binding	Binding
 #... end of values
 #
 #-----------------------------------------------
@@ -678,6 +698,7 @@ project_export_bug_export	depend_on_bugs_desc	List of bugs this bug depends on
 # Script: SF/www/project/export/index.php
 #
 project_export_index	proj_db_success	Your project database has been successfully generated. You can now use your favorite desktop application and access your project database through the MySQL ODBC/JDBC driver installed on your desktop machine. The parameters to configure your ODBC/JDBC database connection are as follows:
+project_export_index	proj_db_no_data	No data to export. Only <strong>Surveys</strong> and <strong>Tracker v3</strong> are exported.
 project_export_index	export_to_csv_or_db	Your project data can either be exported in individual text files (CSV format) or in a project specific database that you can directly access from your desktop machine through an ODBC/JDBC connection. See $1 for more information.
 project_export_index	export_to_csv_hdr	Text File Export $2
 project_export_index	export_to_csv_msg	Click on the links below to generate a text file export (CSV format).
@@ -971,3 +992,44 @@ project_privacy	tooltip_public_wo_anon	<p>Project privacy set to <big><strong>pu
 
 project_service	service_not_used	$1 service is not enabled
 project	does_not_exist	The project doesn't exist
+#-----------------------------------------------
+# Script: /www/project/admin/ugroup_binding.php
+#
+project_ugroup_binding	ugroup	User group
+project_ugroup_binding	binding	Binding
+project_ugroup_binding	edit_binding_title	Edit user group binding
+project_ugroup_binding	update_binding	Update binding
+project_ugroup_binding	add_binding	Add binding
+project_ugroup_binding	binding_added	Binding added
+project_ugroup_binding	add_error	Something went wrong when binding user group
+project_ugroup_binding	duplicate_binding_warning	The user group with the id $1 is already defined as binding source
+project_ugroup_binding	binding_removed	User group binding successfully removed
+project_ugroup_binding	remove_error	User group binding not removed
+project_ugroup_binding	current_binding	Current binding
+project_ugroup_binding	binding_sources	User groups bound to this one
+project_ugroup_binding	edit_binding	Edit binding
+project_ugroup_binding	source_project	Source project
+project_ugroup_binding	source_ugroup	Source user group
+project_ugroup_binding	no_binding	This user group is not bound to any other user group
+project_ugroup_binding	remove_binding	Remove current binding
+project_ugroup_binding	current_binded	This user group is bound to $1 in project $2
+project_ugroup_binding	not_source	This user group is not the source of any other user group
+project_ugroup_binding	update_user_not_allowed	Update users is not allowed for the ugroup $1
+project_ugroup_binding	reset_error	Unable to reset ugroup $1
+project_ugroup_binding	clone_error	Unable to clone ugroup $1
+
+#-----------------------------------------------
+# Script: /www/project/admin/ugroup/UGroupController.class.php
+#
+
+project_ugroup_binding	ldap_group_error	The LDAP group '$1' does not exist.
+project_ugroup_binding	link_ldap_group	The LDAP group '$1' has been linked with your project.
+project_ugroup_binding	ldap_group_empty	LDAP group name cannot be empty.
+project_ugroup_user	add_username	Type username
+
+project_admin	generic_member_settings	Generic User Settings
+project_admin	generic_member_updated	Generic user settings updated
+project_admin	generic_member_not_updated	Error while updating generic user settings
+project_admin	generic_member_not_changed	Generic user settings not changed
+project_admin	generic_member_leave_blank	Leave empty to keep the current password
+project_admin	edit_generic_user_settings	edit settings

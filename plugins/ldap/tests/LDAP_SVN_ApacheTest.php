@@ -17,7 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once dirname(__FILE__).'/../include/LDAP.class.php';
 require_once dirname(__FILE__).'/../include/LDAP_SVN_Apache.class.php';
+require_once dirname(__FILE__).'/../include/LDAP_ProjectManager.class.php';
 
 class LDAP_SVN_ApacheTest extends TuleapTestCase {
     private $ldap;
@@ -70,6 +72,13 @@ class LDAP_SVN_ApacheTest extends TuleapTestCase {
         $conf = $this->apache->getProjectAuthentication(array('group_name' => "Plop"));
         $this->assertNoPattern("/AuthLDAPBindDN/", $conf);
         $this->assertNoPattern("/AuthLDAPBindPassword/", $conf);
+    }
+
+    function itAddsTheUidWhenItsNotDefaultForActiveDirectory() {
+        stub($this->ldap)->getLDAPParam('server')->returns('ldap://ldap.tuleap.com');
+        stub($this->ldap)->getLDAPParam('uid')->returns('sAMAccountName');
+
+        $this->assertEqual($this->apache->getLDAPServersUrl(), 'ldap://ldap.tuleap.com/dc=tuleap,dc=com?sAMAccountName');
     }
 }
 ?>

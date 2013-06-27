@@ -20,29 +20,31 @@
 
 class Tracker_CardFields {
     
-    const REMAINING_EFFORT_FIELD_NAME = "remaining_effort";
-    const ASSIGNED_TO_FIELD_NAME      = "assigned_to";
-    const IMPEDIMENT_FIELD_NAME       = "impediment";
-    
     /**
      * @var Array
      */
     private $displayed_fields;
     
     /**
-     * @var User
+     * @var PFUser
      */
     private $user_manager;
     
     
     public function __construct() {
-        $this->displayed_fields     = array(self::REMAINING_EFFORT_FIELD_NAME,
-                                            self::ASSIGNED_TO_FIELD_NAME,
-                                            self::IMPEDIMENT_FIELD_NAME);
+        $this->displayed_fields     = array(Tracker::REMAINING_EFFORT_FIELD_NAME,
+                                            Tracker::ASSIGNED_TO_FIELD_NAME,
+                                            Tracker::IMPEDIMENT_FIELD_NAME);
         $this->user_manager                 = UserManager::instance();
         $this->form_element_factory = Tracker_FormElementFactory::instance();
     }
-    
+
+    /**
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return Tracker_FormElement_Field[]
+     */
     public function getFields(Tracker_Artifact $artifact) {
         $diplayed_fields = array();
         $tracker_id      = $artifact->getTrackerId();

@@ -89,10 +89,26 @@ abstract class Tracker_Artifact_ChangesetValue {
     public abstract function getSoapValue();
     
     /**
+     * Returns the Json value of this changeset value
+     *
+     * @return string The value of this artifact changeset value for Json format
+     */
+    public function getJsonValue() {
+        return $this->getValue();
+    }
+
+    /**
      * Returns the value of this changeset value
      *
      * @return string The value of this artifact changeset value
      */
     public abstract function getValue();
+
+    /**
+     * By default, changeset values are returned as string in 'value' field
+     */
+    protected function encapsulateRawSoapValue($value) {
+        return array('value' => (string)$value);
+    }
 }
 ?>

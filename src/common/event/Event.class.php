@@ -46,6 +46,15 @@ class Event {
     const DUMP_SSH_KEYS = 'dump_ssh_keys';
 
     /**
+     * The user is accessing a list of their keys
+     *
+     * Parameters:
+     *   'user' => PFUser
+     *   'html' => string An emty string of html output- passed by reference
+     */
+    const LIST_SSH_KEYS = 'list_ssh_keys';
+
+    /**
      * The user has just changed his email address.
      * 
      * Parameters:
@@ -163,6 +172,21 @@ class Event {
       *   array('keyword' => 'awsome', label => 'Really kick ass')
       */
      const GET_AVAILABLE_REFERENCE_NATURE = 'get_available_reference_natures';
+
+     /**
+      * Allow to override default behaviour when managing reference
+      *
+      * Parameters:
+      *  'reference_manager' => ReferenceManager
+      *  'project'           => Project
+      *  'keyword'           => String
+      *  'value'             => String
+      *  'group_id'          => Integer
+      *
+      * Expected results:
+      *  'reference'         => Reference | false
+      */
+     const GET_REFERENCE = 'get_reference';
 
      /**
       * Allow to define the group_id of an artifact reference
@@ -358,5 +382,148 @@ class Event {
      */
     const  UGROUP_UPDATE_USERS_ALLOWED = 'ugroup_update_users_allowed';
 
+    /**
+     * Raised when an ugroup is bound to another one
+     *
+     * Parameters
+     *     'ugroup' => UGroup The modified ugroup
+     *     'source' => UGroup The new ugroup we bind with
+     *
+     * Expected results:
+     *     void
+     */
+    const UGROUP_MANAGER_UPDATE_UGROUP_BINDING_ADD = 'ugroup_manager_update_ugroup_binding_add';
+
+    /**
+     * Raised when an ugroup binding is removed
+     *
+     * Parameters
+     *     'ugroup' => UGroup The modified ugroup (no longer bound)
+     *
+     * Expected results:
+     *     void
+     */
+    const UGROUP_MANAGER_UPDATE_UGROUP_BINDING_REMOVE = 'ugroup_manager_update_ugroup_binding_remove';
+
+    /**
+     * Display information about SOAP end points
+     *
+     * Parameters:
+     *    None
+     * Expected results
+     *    'end_points' => array of array(
+     *        'title'       => '',
+     *        'wsdl'        => '',
+     *        'wsdl_viewer' => '',
+     *        'description' => '',
+     *    );
+     */
+    const SOAP_DESCRIPTION = 'soap_description';
+
+    /**
+     * Get ldap login for a given user
+     *
+     * Parameters:
+     *    'user'  => User object
+     *
+     * Expected results:
+     *    'login' => String, ldap username
+     */
+    const GET_LDAP_LOGIN_NAME_FOR_USER = 'get_ldap_login_name_for_user';
+
+    /**
+     * Get the content of the sprint
+     *
+     * Parameters:
+     *    'user'  => The User who made the request
+     *    'links' => The Systray_LinksCollection
+     *
+     * Expected results:
+     *    The links are added in the collection
+     */
+    const SYSTRAY = 'systray';
+
+    /**
+     * Event launched during the system check event
+     *
+     * Expected results:
+     *    An exception is raised if the system check is in error
+     */
+    const PROCCESS_SYSTEM_CHECK = 'proccess_system_check';
+
+    /**
+     * Event launched during the project creation
+     * when we have to rewrite some service URLs
+     *
+     * Parameters:
+     *    'link'  => The service link to modify
+     *    'template' => The project used as a template
+     *    'project' => The project newly created
+     *
+     * Expected results:
+     *  The link contains the right project information
+     */
+    const SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK = 'service_replace_template_name_in_link';
+
+    /**
+     * Event launched while exporting a project into xml format
+     *
+     * Parameters:
+     *   'project'  => The given project
+     *   'into_xml' => The SimpleXMLElement to fill in
+     *
+     * Expected Results:
+     *   The various plugins inject stuff in the given xml element
+     */
+    const EXPORT_XML_PROJECT = 'export_xml_project';
+
+    /**
+     * Event launched while importing a project from a xml content
+     *
+     * Parameters:
+     *   'project_id'  => The id of the project where trackers, cardwall and AD must be created
+     *   'xml_content' => The xml content in string to check in
+     *
+     * Expected Results:
+     *   The various plugins create objects from the xml content
+     */
+    const IMPORT_XML_PROJECT = 'import_xml_project';
+
+    /**
+     * Event launched while importing a project from a xml content
+     *
+     * Parameters:
+     *   'project_id'  => The id of the project where trackers, cardwall and AD must be created
+     *   'xml_content' => The SimpleXMLElement to check in
+     *   'mapping'     => An array with a mapping between xml ids and new ids for trackers
+     *
+     * Expected Results:
+     *   The various plugins create objects from the xml content
+     */
+    const IMPORT_XML_PROJECT_TRACKER_DONE = 'import_xml_project_tracker_done';
+
+    /**
+     * Event launched while importing a cardwall from a xml content
+     *
+     * Parameters:
+     *   'project_id'  => The id of the project where trackers, cardwall and AD must be created
+     *   'xml_content' => The SimpleXMLElement to check in
+     *   'mapping'     => An array with a mapping between xml ids and new ids for trackers
+     *
+     * Expected Results:
+     *   The various plugins create objects from the xml content
+     */
+    const IMPORT_XML_PROJECT_CARDWALL_DONE = 'import_xml_project_cardwall_done';
+
+    /**
+     * Event raised when svn hooks are updated
+     *
+     * Paramters:
+     *     'group_id' => The id of the project
+     *
+     * Expected results:
+     *     Void
+     */
+    const SVN_UPDATE_HOOKS = 'svn_update_hooks';
 }
 ?>

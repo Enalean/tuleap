@@ -18,14 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_OpenList.class.php');
-require_once('Tracker_FormElement_Field_List.class.php');
-require_once('Tracker_FormElement_Field_List_OpenValue.class.php');
-require_once('Tracker_FormElement_Field_List_UnsavedValue.class.php');
-require_once('dao/Tracker_FormElement_Field_OpenListDao.class.php');
-require_once('dao/Tracker_FormElement_Field_List_OpenValueDao.class.php');
-require_once('dao/Tracker_FormElement_Field_Value_OpenListDao.class.php');
-require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_OpenList_ValueDao.class.php');
 
 class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List {
     
@@ -166,14 +158,14 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        $html = '';
+        $labels = array();
         $selected_values = $value ? $value->getListValues() : array();
         foreach($selected_values as $id => $v) {
             if ($id != 100) {
-                $html .= $v->getLabel();
+                $labels[] = $v->getLabel();
             }
         }
-        return $html;
+        return implode(', ', $labels);
     }
 
     /**
@@ -186,8 +178,8 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      * @return string
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
-        if ( empty($value) ) {
-            return '';
+        if ( empty($value) || ! $value->getListValues()) {
+            return '-';
         }
         $output = '';
         switch ($format) {
@@ -220,7 +212,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             }
         }
         foreach($matching_values as $v) {
-            $json_values[] = $v->fetchJson();
+            $json_values[] = $v->fetchValuesForJson();
         }
         return json_encode($json_values);
     }
@@ -726,7 +718,28 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     protected function criteriaCanBeAdvanced() {
         return false;
     }
-    
+
+    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
+        if (isset($soap_value->field_value->bind_value)) {
+            return $this->joinFieldDataFromArray(
+                array_map(
+                    array($this, 'getSOAPBindValueLabel'),
+                    $soap_value->field_value->bind_value
+                )
+            );
+        } else {
+            return $this->getFieldData($soap_value->field_value->value);
+        }
+    }
+
+    private function getSOAPBindValueLabel(stdClass $field_bind_value) {
+        return $this->getFieldDataFromStringValue($field_bind_value->bind_value_label);
+    }
+
+    private function joinFieldDataFromArray(array $field_data) {
+        return implode(',', array_filter($field_data));
+    }
+
     /**
      * Get the field data for artifact submission
      *
@@ -736,34 +749,37 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      */
     public function getFieldData($soap_value) {
         if (trim($soap_value) != '') {
-            $return = array();
-            $bind = $this->getBind();
-            $soap_values = explode(',', $soap_value);
-            foreach ($soap_values as $v) {
-                $sv = $bind->getFieldData($v, false);   // false because we are walking all values one by one
-                if ($sv) {
-                    // existing bind value
-                    $return[] = 'b'.$sv;
-                } else {
-                    $dar = $this->getOpenValueDao()->searchByExactLabel($this->getId(), $v);
-                    $row = $dar->getRow();
-                    if ($row) {
-                        // existing open value
-                        $return[] = 'o'.$row['id'];
-                    } else {
-                        if ($v != '') {
-                            // new open value
-                            $return[] = '!'.$v;
-                        }
-                    }
-                }
-            }
-            return implode(',', $return);
+            return $this->joinFieldDataFromArray(
+                array_map(
+                    array($this, 'getFieldDataFromStringValue'),
+                    explode(',', $soap_value)
+                )
+            );
         } else {
-            return null;
+            return '';
         }
     }
-    
+
+    protected function getFieldDataFromStringValue($value) {
+        if ($value == '') {
+            return;
+        }
+        $sv = $this->getBind()->getFieldData($value, false);   // false because we are walking all values one by one
+        if ($sv) {
+            // existing bind value
+            return 'b'.$sv;
+        } else {
+            $row = $this->getOpenValueDao()->searchByExactLabel($this->getId(), $value)->getRow();
+            if ($row) {
+                // existing open value
+                return 'o'.$row['id'];
+            } else {
+                // new open value
+                return '!'.$value;
+            }
+        }
+    }
+
     /**
      * Validate a value
      *

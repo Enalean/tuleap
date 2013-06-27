@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../TrackerManager.class.php');
-require_once(dirname(__FILE__).'/../Tracker.class.php');
 require_once 'common/TreeNode/InjectPaddingInTreeNodeVisitor.class.php';
 
 class Tracker_Hierarchy_Presenter {

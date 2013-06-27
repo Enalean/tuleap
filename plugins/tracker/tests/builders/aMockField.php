@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 class MockFieldBuilder {
     public function __construct() {
         $this->field = mock('Tracker_FormElement_Field_SelectBox');
@@ -41,7 +41,17 @@ class MockFieldBuilder {
         
         return $this;
     }
-    
+
+    public function withLabel($label) {
+        stub($this->field)->getLabel()->returns($label);
+        return $this;
+    }
+
+    public function withName($name) {
+        stub($this->field)->getName()->returns($name);
+        return $this;
+    }
+
     public function build() {
         return $this->field;
     }

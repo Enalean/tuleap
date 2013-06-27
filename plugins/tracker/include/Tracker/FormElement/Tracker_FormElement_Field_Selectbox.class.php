@@ -18,9 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
  
-require_once('dao/Tracker_FormElement_Field_List_Bind_Static_ValueDao.class.php');
-require_once('dao/Tracker_FormElement_Field_List_Bind_StaticDao.class.php');
-require_once('Tracker_FormElement_Field_List.class.php');
 
 class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List {
     
@@ -134,7 +131,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
      */
     public function changeType($type) {
         // only "msb" available at the moment.
-        if ($type === 'msb') {
+        if ($type === 'msb' || $type === 'cb') {
             //do not change from SB to MSB if the field is used to define the workflow
             $wf = WorkflowFactory::instance();
             return !$wf->isWorkflowField($this);
@@ -156,7 +153,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
           if ($check) {
               echo ' <a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                         'tracker' => (int)$this->tracker_id,
-                                                        'func'    => 'admin-workflow',
+                                                        'func'    => Workflow::FUNC_ADMIN_TRANSITIONS,
                                                         'edit_transition'  => $transition->getTransitionId())) .'">[Details]</a>';
           }
           echo '</td>';
@@ -173,7 +170,6 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
        }
        
        $nb_field_values =count($field_values);
-        echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker_id, 'func'    => 'admin-workflow')) .'" method="POST">';
         echo '<table id="tracker_workflow_matrix">';
             echo "<tr class='boxtitle'>\n";
             echo "<td>FROM</td>";
@@ -219,8 +215,6 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
            }
 
             echo '</table>';
-            echo '<input type="submit" name="create_matrix" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-            echo '</FORM>';
     }
     
     /**
@@ -228,6 +222,39 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
      */
     public function isNone($value) {
         return $value === null || $value === '' || $value === '100';
+    }
+
+    /**
+     * Get the color for the current value of the field for an artifact.
+     *
+     * If no value, null is returned.
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return string | null
+     */
+    public function getCurrentDecoratorColor(Tracker_Artifact $artifact) {
+        $changeset = $artifact->getLastChangeset();
+        if (! $changeset) {
+            return null;
+        };
+
+        $values = $this->getBind()->getChangesetValues($changeset->getId());
+        if (! $values) {
+            return null;
+        }
+
+        // We might have many values selected in a list field (eg:
+        // multi-selectbox, checkbox). As we want only one color,
+        // arbitrary take the color of the first selected value.
+        $value_id = $values[0]['id'];
+
+        $decorators = $this->getDecorators();
+        if (! isset($decorators[$value_id])) {
+            return null;
+        }
+
+        return $decorators[$value_id]->css(null);
     }
 }
 ?>

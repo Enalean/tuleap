@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Tracker_FormElement_Field_Alphanum.class.php';
-require_once 'IComputeValues.class.php';
 
 abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Field_Alphanum implements Tracker_FormElement_IComputeValues {
     
@@ -44,12 +42,12 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     /**
      * Given an artifact, return a numerical value of the field for this artifact.
      *
-     * @param User             $user     The user who see the results
+     * @param PFUser             $user     The user who see the results
      * @param Tracker_Artifact $artifact The artifact on which the value is computed
      *
      * @return mixed
      */
-    public function getComputedValue(User $user, Tracker_Artifact $artifact, $timestamp = null) {
+    public function getComputedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null) {
         if ($this->userCanRead($user)) {
             if ($timestamp !== null) {
                 return $this->getComputedValueAt($artifact, $timestamp);
@@ -60,7 +58,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     }
 
     /**
-     * @param User             $user
+     * @param PFUser             $user
      * @param Tracker_Artifact $artifact
      * @param int              $timestamp
      * 
@@ -72,7 +70,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     }
 
     /**
-     * @param User             $user
+     * @param PFUser             $user
      * @param Tracker_Artifact $artifact
      * 
      * @return mixed
@@ -255,8 +253,8 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      * @return string
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
-        if ( empty($value) ) {
-            return '';
+        if ( empty($value) || !$value->getNumeric()) {
+            return '-';
         }
         $output = '';
         switch($format) {

@@ -80,33 +80,33 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
         $purgeCache = false;
     }
 	
-	// Checks 'list' parameter
-	$vList = new Valid_UInt('list');
-	$vList->required();
-	if (! $request->valid($vList)) {
-		exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('plugin_forumml','specify_list'));
-	} else {
-		$list_id = $request->get('list');
-		$project = ProjectManager::instance()->getProject($group_id);
-		if (!$user->isMember($group_id) && 
-		    ($user->isRestricted() || !mail_is_list_public($list_id) || !$project->isPublic())
-		) {
-			exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('include_exit','no_perm'));
-		}		
-		if (!mail_is_list_active($list_id)) {
-			exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('plugin_forumml','wrong_list'));
-		}
-	}
+    // Checks 'list' parameter
+    $vList = new Valid_UInt('list');
+    $vList->required();
+    if (! $request->valid($vList)) {
+            exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('plugin_forumml','specify_list'));
+    } else {
+            $list_id = $request->get('list');
+            $project = ProjectManager::instance()->getProject($group_id);
+            if (!$user->isMember($group_id) && 
+                ($user->isRestricted() || !mail_is_list_public($list_id) || !$project->isPublic())
+            ) {
+                    exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('include_exit','no_perm'));
+            }		
+            if (!mail_is_list_active($list_id)) {
+                    exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('plugin_forumml','wrong_list'));
+            }
+    }
 
-	// If the list is private, search if the current user is a member of that list. If not, permission denied
-	$list_name = mail_get_listname_from_list_id($list_id);
-	if (!mail_is_list_public($list_id)) {
- 		exec("{$GLOBALS['mailman_bin_dir']}/list_members ".$list_name,$members);
- 		$user = user_getemail(user_getid());
- 		if (! in_array($user,$members)) {
- 			exit_permission_denied();
- 		}
-	}
+    // If the list is private, search if the current user is a member of that list. If not, permission denied
+    $list_name = mail_get_listname_from_list_id($list_id);
+    if (!mail_is_list_public($list_id)) {
+        $members = array();
+        exec("{$GLOBALS['mailman_bin_dir']}/list_members ".$list_name, $members);
+        if (! in_array($user->getEmail(), $members)) {
+                exit_permission_denied();
+        }
+    }
 
 	// Build the mail to be sent
 	if ($request->exist('send_reply')) {
@@ -183,16 +183,16 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 	if (! $request->valid($vSrch)) {
 		// Check if there are archives to browse
 		$qry = sprintf('SELECT NULL'.
-						' FROM plugin_forumml_message'.
-						' WHERE id_list = %d'.
-                        ' LIMIT 1',
-						db_ei($list_id));
+                                ' FROM plugin_forumml_message'.
+                                ' WHERE id_list = %d'.
+                        '        LIMIT 1',
+                                db_ei($list_id));
 		$res = db_query($qry);
 		if (db_numrows($res) > 0) {
 			// Call to show_thread() function to display the archives			
 			if (isset($topic) && $topic != 0) {
 				// specific thread
-				plugin_forumml_show_thread($p, $list_id, $topic, $purgeCache);
+				plugin_forumml_show_thread($p, $list_id, $topic, $purgeCache, $user);
 			} else {
 				plugin_forumml_show_all_threads($p,$list_id,$list_name,$offset);
 			}	

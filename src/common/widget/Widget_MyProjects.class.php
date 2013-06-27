@@ -35,15 +35,19 @@ class Widget_MyProjects extends Widget {
     }
     function getContent() {
         $html = '';
-
+        $display_privacy = Config::get('sys_display_project_privacy_in_service_bar');
         $user = UserManager::instance()->getCurrentUser();
 
+        $order = 'groups.group_name';
+        if ($display_privacy) {
+            $order = 'is_public, groups.group_name';
+        }
         $result = db_query("SELECT groups.group_id, groups.group_name, groups.unix_group_name, groups.status, groups.is_public, user_group.admin_flags".
                            " FROM groups".
                            " JOIN user_group USING (group_id)".
                            " WHERE user_group.user_id = ".$user->getId().
                            " AND groups.status = 'A'".
-                           " ORDER BY is_public, groups.group_name");
+                           " ORDER BY $order");
         $rows=db_numrows($result);
         if (!$result || $rows < 1) {
             $html .= $GLOBALS['Language']->getText('my_index', 'not_member');
@@ -53,21 +57,23 @@ class Widget_MyProjects extends Widget {
             $prevIsPublic = -1;
             while ($row = db_fetch_array($result)) {
                 $tdClass = '';
-                if ($prevIsPublic == 0 && $row['is_public'] == 1) {
+                if ($display_privacy && $prevIsPublic == 0 && $row['is_public'] == 1) {
                     $tdClass .= ' widget_my_projects_first_public';
                 }
 
                 $html .= '<tr class="'.util_get_alt_row_color($i++).'" >';
 
                 // Privacy
-                if ($row['is_public'] == 1) {
-                    $privacy = 'public';
-                } else {
-                    $privacy = 'private';
+                if ($display_privacy) {
+                    if ($row['is_public'] == 1) {
+                        $privacy = 'public';
+                    } else {
+                        $privacy = 'private';
+                    }
+                    $html .= '<td class="widget_my_projects_privacy'.$tdClass.'"><span class="project_privacy_'.$privacy.'">';
+                    $html .= '&nbsp;';
+                    $html .= '</span></td>';
                 }
-                $html .= '<td class="widget_my_projects_privacy'.$tdClass.'"><span class="project_privacy_'.$privacy.'">';
-                $html .= '&nbsp;';
-                $html .= '</span></td>';
 
                 // Project name
                 $html .= '<td class="widget_my_projects_project_name'.$tdClass.'"><a href="/projects/'.$row['unix_group_name'].'/">'.$row['group_name'].'</a></td>';
@@ -95,27 +101,31 @@ class Widget_MyProjects extends Widget {
                 $prevIsPublic = $row['is_public'];
             }
 
-            // Legend
-            $html .= '<tr>';
-            $html .= '<td colspan="4" class="widget_my_projects_legend">';
-            $html .= '<span class="widget_my_projects_legend_title">'.$GLOBALS['Language']->getText('my_index', 'my_projects_legend').'</span>';
-            $html .= '<span class="project_privacy_private">&nbsp;'.$GLOBALS['Language']->getText('project_privacy', 'private').'</span>';
-            $html .= '<span class="project_privacy_public">&nbsp;'.$GLOBALS['Language']->getText('project_privacy', 'public').'</span>';
-            $html .= '</td>';
-            $html .= '</tr>';
+            if ($display_privacy) {
+                // Legend
+                $html .= '<tr>';
+                $html .= '<td colspan="4" class="widget_my_projects_legend">';
+                $html .= '<span class="widget_my_projects_legend_title">'.$GLOBALS['Language']->getText('my_index', 'my_projects_legend').'</span>';
+                $html .= '<span class="project_privacy_private">&nbsp;'.$GLOBALS['Language']->getText('project_privacy', 'private').'</span>';
+                $html .= '<span class="project_privacy_public">&nbsp;'.$GLOBALS['Language']->getText('project_privacy', 'public').'</span>';
+                $html .= '</td>';
+                $html .= '</tr>';
+            }
 
             $html .= '</table>';
 
-            // Javascript for project privacy tooltip
-            $js = "
-document.observe('dom:loaded', function() {
-    $$('span[class=project_privacy_private], span[class=project_privacy_public]').each(function (span) {
-        var type = span.className.substring('project_privacy_'.length, span.className.length);
-        codendi.Tooltips.push(new codendi.Tooltip(span, '/project/privacy.php?project_type='+type));
-    });
-});
-";
-            $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
+            if ($display_privacy) {
+                // Javascript for project privacy tooltip
+                $js = "
+                    document.observe('dom:loaded', function() {
+                        $$('span[class=project_privacy_private], span[class=project_privacy_public]').each(function (span) {
+                            var type = span.className.substring('project_privacy_'.length, span.className.length);
+                            codendi.Tooltips.push(new codendi.Tooltip(span, '/project/privacy.php?project_type='+type));
+                        });
+                    });
+                ";
+                $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
+            }
         }
         return $html;
     }

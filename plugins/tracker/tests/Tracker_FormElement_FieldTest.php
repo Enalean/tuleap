@@ -18,20 +18,15 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
  
- 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
+require_once('bootstrap.php');
 Mock::generate('Tracker_Artifact');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
 Mock::generate('Tracker_FormElementFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_Changeset.class.php');
 Mock::generate('Tracker_Artifact_Changeset');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field.class.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field', 
     'Tracker_FormElement_FieldTestVersion', 
@@ -65,7 +60,6 @@ Mock::generatePartial(
     )
 );
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field.class.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field', 
     'Tracker_FormElement_FieldTestVersion2', 
@@ -109,7 +103,6 @@ Mock::generate('Response');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue');
 
 class Tracker_FormElement_FieldTest extends UnitTestCase {
@@ -280,6 +273,81 @@ class Tracker_FormElement_FieldTest extends UnitTestCase {
         
         $this->assertTrue($field->isValid($artifact, '123'));
         $this->assertFalse($field->hasErrors());
+    }
+}
+
+class Tracker_FormElement_Field_getSoapValueTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+        $field_abstract_methods = array(
+            'fetchCriteriaValue',
+            'fetchChangesetValue',
+            'fetchRawValue',
+            'getCriteriaFrom',
+            'getCriteriaWhere',
+            'getCriteriaDao',
+            'fetchArtifactValue',
+            'fetchArtifactValueReadOnly',
+            'fetchSubmitValue',
+            'fetchTooltipValue',
+            'getValueDao',
+            'fetchFollowUp',
+            'fetchRawValueFromChangeset',
+            'saveValue',
+            'fetchAdminFormElement',
+            'getFactoryLabel',
+            'getFactoryDescription',
+            'getFactoryIconUseIt',
+            'getFactoryIconCreate',
+            'getChangesetValue',
+            'isRequired',
+            'validate',
+            'getSoapAvailableValues',
+            'fetchSubmitValueMasschange',
+            // Methods we want to mock
+            'userCanRead',
+        );
+
+        $id = $tracker_id = $parent_id = $description = $use_it = $scope = $required = $notifications = $rank = '';
+        $name = 'foo';
+        $label = 'Foo Bar';
+        $this->field = partial_mock('Tracker_FormElement_Field', $field_abstract_methods, array($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank));
+
+        $this->user = aUser()->build();
+
+        $this->changesetvalue = mock('Tracker_Artifact_ChangesetValue');
+        $this->last_changeset  = mock('Tracker_Artifact_Changeset');
+        stub($this->last_changeset)->getValue($this->field)->returns($this->changesetvalue);
+    }
+
+    public function itReturnsNullIfUserCannotAccessField() {
+        expect($this->field)->userCanRead($this->user)->once();
+        stub($this->field)->userCanRead()->returns(false);
+        $this->assertIdentical($this->field->getSoapValue($this->user, $this->last_changeset), null);
+    }
+
+    public function itReturnsTheSoapFieldValue() {
+        stub($this->changesetvalue)->getSoapValue()->returns(array('value' => 'bla'));
+        stub($this->field)->userCanRead()->returns(true);
+        $this->assertIdentical(
+            $this->field->getSoapValue($this->user, $this->last_changeset),
+            array(
+                'field_name'  => 'foo',
+                'field_label' => 'Foo Bar',
+                'field_value' => array('value' => 'bla')
+            )
+        );
+    }
+
+    public function itReturnsTheJsonFieldValue() {
+        stub($this->changesetvalue)->getJsonValue()->returns('bla');
+        stub($this->field)->userCanRead()->returns(true);
+        $this->assertIdentical(
+            $this->field->getJsonValue($this->user, $this->last_changeset),
+            'bla'
+        );
     }
 }
 ?>

@@ -41,5 +41,40 @@ class TuleapTestCaseTest extends TuleapTestCase {
         
         return $result;
     }
+
+}
+class TuleapTestCase_isArrayEmptyTest extends TuleapTestCase {
+
+
+    public function itIsFalseForNonArrays() {
+        $this->assertFalse($this->assertArrayEmpty(''));
+        $this->assertFalse($this->assertArrayEmpty(0));
+    }
+    
+    public function itIsTrueForEmptyArrays() {
+        $this->assertTrue($this->assertArrayEmpty(array()));
+    }
+    
+    public function itIsFalseForArraysWithElements() {
+        $this->assertFalse($this->assertArrayEmpty(array(1)));
+        $this->assertFalse($this->assertArrayEmpty(array(0)));
+        $this->assertFalse($this->assertArrayEmpty(array('')));
+    }
+
+    public function assertArrayEmpty($a) {
+        //disable the current reporter when we test assertions
+        $reporter        = $this->_reporter;
+        $this->_reporter = new SimpleReporter();
+        
+        //assert
+        $result = parent::assertArrayEmpty($a);
+        
+        //restore the old reporter
+        $this->_reporter = $reporter;
+        
+        return $result;
+
+    }
+
 }
 ?>

@@ -17,11 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../../../include/constants.php');
-require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/Presenter.class.php');
-require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/Controller.class.php');
-require_once(dirname(__FILE__).'/../../builders/aTracker.php');
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 Mock::generate('Tracker');
 Mock::generate('Tracker_Hierarchy_HierarchicalTrackerFactory');
 Mock::generate('TrackerFactory');
@@ -152,6 +148,14 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         foreach($expected_strings as $string) {
             $this->assertPattern('/'.$string.'/', $actual_text);
         }
+    }
+
+    public function itCreatesHierarchyFromXmlProjectImportProcess() {
+        $mapping    = array(111,222,333,444);
+        $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
+        $this->dao->expectCallCount('updateChildren',1);
+
+        $controller->updateFromXmlProjectImportProcess($mapping);
     }
 }
 

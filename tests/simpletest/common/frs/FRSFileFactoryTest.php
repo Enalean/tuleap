@@ -6,7 +6,7 @@ require_once('common/backend/BackendSystem.class.php');
 require_once 'common/valid/Rule.class.php';
 require_once('common/language/BaseLanguage.class.php');
 
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UserManager');
 Mock::generate('EventManager');
 require_once('common/project/Project.class.php');
@@ -21,8 +21,8 @@ Mock::generate('FRSFile');
 Mock::generate('BackendSystem');
 Mock::generate('BaseLanguage');
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestVersion', array('_getFRSReleaseFactory', '_getProjectManager', 'moveDeletedFilesToStagingArea'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeFiles', array('_getFRSFileDao', 'purgeFile'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeOneFile', array('_getFRSFileDao'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeFiles', array('_getFRSFileDao', 'purgeFile', 'archiveBeforePurge'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeOneFile', array('_getFRSFileDao', 'archiveBeforePurge'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestMoveToStaging', array('_getFRSFileDao', 'moveDeletedFileToStagingArea'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', array('purgeFiles', 'moveDeletedFilesToStagingArea', 'cleanStaging', 'restoreDeletedFiles'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSReleaseFactory', '_getFRSFileDao', '_getUserManager', '_getEventManager'));
@@ -391,6 +391,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $backend = new MockBackendSystem();
         $backend->expectNever('log', array('File p1_r1/foobar.xls(12) not purged, Set purge date in DB fail', 'error'));
         $this->assertTrue($ff->purgeFile($file, $backend));
+        $ff->expectOnce('archiveBeforePurge', array($file, $backend));
 
         $this->assertFalse(is_file($filepath), "File should be deleted");
 
@@ -420,6 +421,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $backend = new MockBackendSystem();
         $backend->expectOnce('log', array('File '.$filepath.' not purged, Set purge date in DB fail', 'error'));
         $this->assertFalse($ff->purgeFile($file, $backend));
+        $ff->expectOnce('archiveBeforePurge', array($file, $backend));
 
         $this->assertFalse(is_file($filepath), "File should be deleted");
 
@@ -447,6 +449,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $backend = new MockBackendSystem();
         $backend->expectOnce('log', array('File '.$filepath.' not found on file system, automatically marked as purged', 'warn'));
         $this->assertTrue($ff->purgeFile($file, $backend));
+        $ff->expectNever('archiveBeforePurge', array($file, $backend));
     }
 
     function testRemoveStagingEmptyDirectories() {
@@ -499,7 +502,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $fileFactory->setReturnValue('_getFRSFileDao', $dao);
         $backend = new MockBackendSystem($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $um = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $fileFactory->setReturnValue('_getUserManager', $um);
@@ -579,7 +582,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao->setReturnValue('restoreFile', true);
         $fileFactory->setReturnValue('_getFRSFileDao', $dao);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $um = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $fileFactory->setReturnValue('_getUserManager', $um);
@@ -624,7 +627,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $backend = new MockBackendSystem($this);
         $backend->setReturnValue('chgrp', true);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $um = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $fileFactory->setReturnValue('_getUserManager', $um);

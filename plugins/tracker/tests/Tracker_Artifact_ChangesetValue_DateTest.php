@@ -17,11 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
- 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
+require_once('bootstrap.php');
 Mock::generate('Tracker_Artifact');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_Date.class.php');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php');
 Mock::generate('Tracker_FormElement_Field_Date');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
@@ -44,13 +41,13 @@ class Tracker_Artifact_ChangesetValue_DateTest extends UnitTestCase {
         $this->assertEqual($date->getTimestamp(), 1221221466);
         $this->assertEqual($date->getDate(), "2008-09-12");
         $this->assertEqual($date->getDate(), "12/09/2008");
-        $this->assertEqual($date->getSoapValue(), 1221221466);
+        $this->assertEqual($date->getSoapValue(), array('value' => 1221221466));
         $this->assertEqual($date->getValue(), "2008-09-12");
         
         $null_date = new Tracker_Artifact_ChangesetValue_Date(111, $field, false, null);
         $this->assertNull($null_date->getTimestamp());
         $this->assertEqual($null_date->getDate(), '');
-        $this->assertEqual($null_date->getSoapValue(), '');
+        $this->assertEqual($null_date->getSoapValue(), array('value' => ''));
     }
     
     function testNoDiff() {

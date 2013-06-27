@@ -26,7 +26,7 @@ require_once dirname(__FILE__).'/../../../tracker/include/Tracker/CrossSearch/Vi
  */
 class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
 
-    public function build(User $user, 
+    public function build(PFUser $user, 
                           Project $project,
                           Tracker_CrossSearch_Query $cross_search_query, 
                           array $already_planned_artifact_ids,
@@ -35,7 +35,7 @@ class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
                           Planning_BacklogActionsPresenter $backlog_actions_presenter,
                           $planning_redirect_parameter) {
     
-        $report      = $this->getReport($user);
+        $report      = $this->getReport($user, $project);
         $criteria    = $this->getCriteria($user, $project, $report, $cross_search_query);
         $artifacts   = $this->getHierarchicallySortedArtifacts($user, $project, $backlog_tracker_ids, $cross_search_query, $already_planned_artifact_ids);
 

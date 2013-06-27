@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Codendi    This shell script starts and stops Codendi backend
+# Tuleap    This shell script starts and stops Tuleap backend
 #
 # This file is a copy/modify/paste of mailman equivalent. Thanks to
 # them!
@@ -45,6 +45,7 @@ SRC_CRON_SCRIPT_ON=$CODENDI_HOME/src/utils/cron.d/codendi
 SRC_CRON_SCRIPT_OFF=$CODENDI_HOME/src/utils/cron.d/codendi-stop
 
 DST_CRON_SCRIPT=/etc/cron.d/codendi
+DST_GERRIT_CRON_SCRIPT=/etc/cron.d/gerrit-fetch
 
 InstallCron()
 {
@@ -60,10 +61,15 @@ RemoveCron()
 #. /etc/rc.d/init.d/functions
 
 RETVAL=0
-prog="codendi"
+prog="Tuleap"
 
 start()
 {
+    if [ "$1" == "gerrit" ]; then
+        InstallGerritCron
+        RETVAL=$?
+        return $RETVAL
+    fi
     echo -n "Starting $prog: "
     InstallCron
     echo "[OK]"
@@ -73,6 +79,10 @@ start()
 
 stop()
 {
+    if [ "$1" == "gerrit" ]; then
+        RETVAL=$?
+        return $RETVAL
+    fi
     echo -n "Shutting down $prog: "
     RemoveCron
     echo "[OK]"
@@ -97,12 +107,14 @@ status()
 
 case "$1" in
 'start')
-    start
+    shift
+    start $@
     RETVAL=$?
     ;;
 
 'stop')
-    stop
+    shift
+    stop $@
     RETVAL=$?
     ;;
 

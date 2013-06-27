@@ -19,7 +19,16 @@
  */
 
 abstract class Tracker_FormElement_Field_List_Value {
+    /**
+     *
+     * @var int 
+     */
     protected $id;
+    
+    /**
+     *
+     * @var bool 
+     */
     protected $is_hidden = false;
     
     public function __construct($id, $is_hidden) {
@@ -39,10 +48,11 @@ abstract class Tracker_FormElement_Field_List_Value {
     /**
      * Format a value to json
      *
-     * @return string
+     * @return array
      */
-    public function fetchJson() {
+    public function fetchValuesForJson() {
         return array(
+            'id'      => $this->getId(),
             'value'   => $this->getJsonId(),
             'caption' => $this->getLabel(),
         );
@@ -68,6 +78,10 @@ abstract class Tracker_FormElement_Field_List_Value {
 
     public function getSoapValue() {
         return $this->getLabel();
+    }
+
+    public function getJsonValue() {
+        return $this->getId();
     }
 }
 

@@ -23,6 +23,13 @@ CREATE TABLE IF NOT EXISTS tracker_workflow_transition (
   INDEX idx_wf_workflow_id( workflow_id )
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS tracker_workflow_transition_condition_field_notempty;
+CREATE TABLE  tracker_workflow_transition_condition_field_notempty(
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    transition_id INT(11) NOT NULL,
+    field_id INT(11) NOT NULL
+) ENGINE=InnoDB;
+
 --  
 --  Table structure for workflow_transition_postactions_field_date
 -- 
@@ -59,6 +66,17 @@ CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_float (
   INDEX idx_wf_transition_id( transition_id )
 ) ENGINE=InnoDB;
 
+--  
+--  Table structure for tracker_workflow_transition_postactions_cibuild
+-- 
+DROP TABLE IF EXISTS tracker_workflow_transition_postactions_cibuild;
+CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_cibuild (
+  id int(11) UNSIGNED NOT NULL auto_increment  PRIMARY KEY,
+  transition_id int(11) NOT NULL,
+  job_url varchar(255) default NULL,
+  INDEX idx_wf_transition_id( transition_id )
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS tracker_widget_renderer;
 CREATE TABLE tracker_widget_renderer (
    id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
@@ -83,6 +101,7 @@ CREATE TABLE tracker(
     deletion_date INT( 11 ) default NULL ,
     instantiate_for_new_projects INT( 11 ) NOT NULL default '0',
     stop_notification INT( 11 ) NOT NULL default '0',
+    from_tv3_id INT(11) NULL,
     INDEX idx_fk_group_id( group_id )
 ) ENGINE=InnoDB;
 
@@ -150,6 +169,12 @@ CREATE TABLE tracker_field_date(
     field_id INT(11) NOT NULL PRIMARY KEY,
     default_value INT(11) NULL,
     default_value_type TINYINT(1) NULL
+) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS tracker_field_burndown;
+CREATE TABLE tracker_field_burndown(
+    field_id INT(11) NOT NULL PRIMARY KEY,
+    include_weekends tinyint(1) NOT NULL
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_field_list;
@@ -604,12 +629,25 @@ DROP TABLE IF EXISTS tracker_rule;
 CREATE TABLE IF NOT EXISTS tracker_rule(
   id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
   tracker_id int(11) unsigned NOT NULL default '0',
+  rule_type tinyint(4) unsigned NOT NULL default '0',
+  KEY tracker_id (tracker_id)
+) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS tracker_rule_list;
+CREATE TABLE IF NOT EXISTS tracker_rule_list(
+  tracker_rule_id int(11) unsigned NOT NULL PRIMARY KEY,
   source_field_id int(11) unsigned NOT NULL default '0',
   source_value_id int(11) unsigned NOT NULL default '0',
   target_field_id int(11) unsigned NOT NULL default '0',
-  rule_type tinyint(4) unsigned NOT NULL default '0',
-  target_value_id int(11) unsigned default NULL,
-  KEY tracker_id (tracker_id)
+  target_value_id int(11) unsigned default NULL
+) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS tracker_rule_date;
+CREATE TABLE IF NOT EXISTS tracker_rule_date(
+  tracker_rule_id int(11) unsigned NOT NULL PRIMARY KEY,
+  source_field_id int(11) unsigned NOT NULL,
+  target_field_id int(11) unsigned NOT NULL,
+  comparator varchar(2) NOT NULL
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_hierarchy;
@@ -677,3 +715,5 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACK
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_WORKFLOW_TRANSITION',2);
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('PLUGIN_TRACKER_WORKFLOW_TRANSITION',3,1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_WORKFLOW_TRANSITION',4);
+
+INSERT INTO tracker_artifact_priority (curr_id, succ_id, rank) VALUES (NULL, NULL, 0);

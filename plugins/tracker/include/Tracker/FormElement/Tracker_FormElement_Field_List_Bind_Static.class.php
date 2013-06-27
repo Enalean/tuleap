@@ -18,14 +18,16 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field_List_Bind.class.php');
-require_once('dao/Tracker_FormElement_Field_List_Bind_Static_ValueDao.class.php');
 require_once('common/html/HTML_Element_Input_Checkbox.class.php');
 
 class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Field_List_Bind {
 
+    /**
+     * @var Array of Tracker_FormElement_Field_List_Bind_StaticValue
+     */
     protected $values;
     protected $is_rank_alpha;
+    
     public function __construct($field, $is_rank_alpha, $values, $default_values, $decorators) {
         parent::__construct($field, $default_values, $decorators);
         $this->is_rank_alpha = $is_rank_alpha;
@@ -74,6 +76,11 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             'join_on_id' => 'tracker_field_list_bind_static_value.id',
         );
     }
+
+    protected function getSoapBindingList() {
+        // returns empty array as static are already listed in 'values'
+        return array();
+    }
     
     /**
      * @return string
@@ -93,10 +100,24 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      * @return string
      */
     public function formatChangesetValue($value) {
-        if (isset($this->decorators[$value['id']])) {
-            return $this->decorators[$value['id']]->decorate($this->format($this->values[$value['id']]));
+        // Should receive only valid value object but keep it as is for compatibility reasons
+        if (is_array($value)) {
+            if (isset($this->values[$value['id']])) {
+                $value = $this->values[$value['id']];
+            } elseif ($value['id'] == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+                $value = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
+            }
         }
-        return $this->format($this->values[$value['id']]);
+        if ($value) {
+            return $this->formatChangesetValueObject($value);
+        }
+    }
+
+    private function formatChangesetValueObject(Tracker_FormElement_Field_List_Value $value) {
+        if (isset($this->decorators[$value->getId()])) {
+            return $this->decorators[$value->getId()]->decorate($this->format($value));
+        }
+        return $this->format($value);
     }
 
     /**
@@ -106,34 +127,17 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         if ($value['id'] == 100 || ! array_key_exists($value['id'], $this->values)) {
             return '';
         } else {
-            return $this->format($this->values[$value['id']]);
+            return $this->values[$value['id']]->getLabel();
         }
     }
     
     /**
-     * @return array
+     * @return Tracker_FormElement_Field_List_Bind_StaticValue[]
      */
     public function getAllValues() {
         return $this->values;
     }
-    /**
-     * Get available values of this field for SOAP usage
-     * Fields like int, float, date, string don't have available values
-     *
-     * @return mixed The values or null if there are no specific available values
-     */
-    public function getSoapAvailableValues() {
-        $soap_values = array();
-        $values = $this->getAllValues();
-        foreach ($values as $id => $value) {
-            $soap_values[] = array(
-                            'field_id' => $this->field->getId(),
-                            'bind_value_id' => $id,
-                            'bind_value_label' => $value->getLabel(),
-                        );
-        }
-        return $soap_values;
-    }
+
     /**
      * Get the field data for artifact submission
      *
@@ -290,6 +294,15 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return "$R2.id AS `". $this->field->name ."`";
     }
     
+	/**
+     * Get the "select" statement to retrieve field values with the RGB values of their decorator
+     * @return string
+     * @see getQueryFrom
+     */
+    public function getQuerySelectWithDecorator() {
+        return $this->getQuerySelect() . ", color.red, color.green, color.blue";
+    }
+    
     /**
      * Get the "from" statement to retrieve field values
      * You can join on artifact AS a, tracker_changeset AS c 
@@ -310,6 +323,16 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                     LEFT JOIN tracker_field_list_bind_static_value AS $R2 ON ($R2.id = $R3.bindvalue_id AND $R2.field_id = ". $this->field->id ." )
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = ". $this->field->id ." )
                ";
+    }
+    
+/**
+     * Get the "from" statement to retrieve field values with the RGB values of their decorator
+     * Has no sense for fields other than lists
+     * @return string
+     */
+    public function getQueryFromWithDecorator($changesetvalue_table = 'tracker_changeset_value_list') {
+        $R2 = 'R2_'. $this->field->id;
+        return $this->getQueryFrom($changesetvalue_table) . " LEFT OUTER JOIN tracker_field_list_bind_decorator AS color ON (color.value_id = $R2.id)";
     }
     
     /**
@@ -592,8 +615,9 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                     break;
                 case 'delete':
                     if (($row = $value_dao->searchById((int)$value)->getRow()) && $value_dao->delete((int)$value)) {
+                        $params['decorator'] = array((int)$value => null);
                         $redirect = true;
-                        $GLOBALS['Response']->addFeedback('info', 'Value '.  $hp->purify($row['label'], CODENDI_PURIFIER_CONVERT_HTML)  .'deleted');
+                        $GLOBALS['Response']->addFeedback('info', 'Value '.  $hp->purify($row['label'], CODENDI_PURIFIER_CONVERT_HTML)  .' deleted');
                     }
                     break;
                 case 'edit':
@@ -644,7 +668,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                         $params['decorator'] = array();
                         foreach ($params['decorators'] as $key => $deco) {
                             $params['decorator'][$valueMapping[$key]] = 
-                                   Tracker_FormElement_Field_List_BindDecorator::toHexa($deco->r, $deco->g, $deco->b);
+                                   ColorHelper::RGBtoHexa($deco->r, $deco->g, $deco->b);
                         }
                     }
                     break;
@@ -667,7 +691,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      * @param array            &$xmlMapping the array of mapping XML ID => real IDs
      * @param string           $fieldID     XML ID of the binded field
      */
-    public function exportToXML($root, &$xmlMapping, $fieldID) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $fieldID) {
         $root->addAttribute('is_rank_alpha', $this->is_rank_alpha);
         if ($this->getAllValues()) {
             $child = $root->addChild('items');

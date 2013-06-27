@@ -26,7 +26,7 @@ abstract class SystemEvent_FULLTEXTSEARCH_DOCMANTest extends TuleapTestCase {
         parent::setUp();
         $this->item    = mock('Docman_Item');
         $this->version = mock('Docman_Version');
-        $this->actions = mock('FullTextSearchActions');
+        $this->actions = mock('FullTextSearchDocmanActions');
 
         $this->item_factory = mock('Docman_ItemFactory');
         stub($this->item_factory)->getItemFromDb(103, '*')->returns($this->item);
@@ -36,8 +36,8 @@ abstract class SystemEvent_FULLTEXTSEARCH_DOCMANTest extends TuleapTestCase {
     }
 
     public function aSystemEventWithParameter($parameters) {
-        $id = $type = $priority = $status = $create_date = $process_date = $end_date = $log = null;
-        $event = new $this->klass($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log);
+        $id = $type = $owner = $priority = $status = $create_date = $process_date = $end_date = $log = null;
+        $event = new $this->klass($id, $type, $owner, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log);
         $event->setFullTextSearchActions($this->actions)
             ->setItemFactory($this->item_factory)
             ->setVersionFactory($this->version_factory);

@@ -45,24 +45,36 @@ if ($keyword == 'wiki') {
     }
 }
 
-$ref=& $reference_manager->loadReferenceFromKeywordAndNumArgs($keyword,$group_id,count($args), $request->get('val'));
-if (!$ref) {
+$project_manager = ProjectManager::instance();
+$project         = $project_manager->getProject($group_id);
+
+$ref = null;
+
+$event_manager = EventManager::instance();
+$event_manager->processEvent(
+    Event::GET_REFERENCE,
+    array(
+        'reference_manager' => $reference_manager,
+        'project'           => $project,
+        'keyword'           => $keyword,
+        'value'             => $value,
+        'group_id'          => $group_id,
+        'reference'         => &$ref,
+    )
+);
+if ($ref === null) {
+    $ref = $reference_manager->loadReferenceFromKeywordAndNumArgs($keyword, $group_id, count($args), $request->get('val'));
+    if ($ref) {
+        if ($project) {
+            $project_name = $project->getUnixName();
+        }
+        $ref->replaceLink($args, $project_name);
+    }
+}
+if ( ! $ref) {
     exit_error($GLOBALS['Language']->getText('global','error'),
                $GLOBALS['Language']->getText('include_exit', 'missing_param_err'));
 }
-
-// Get groupname (might be useful in replace rules)
-$projname=null;
-$gf = new GroupFactory();
-$results = $gf->getAllGroups();
-while ($groups_array = db_fetch_array($results)) {
-    if ($groups_array["group_id"]==$group_id) {
-        $projname=$groups_array["unix_group_name"];
-        break;
-    }
- }
-
-$ref->replaceLink($args,$projname);
 
 if ($request->isAjax()) {
     switch($ref->getServiceShortName()) {
@@ -79,8 +91,7 @@ if ($request->isAjax()) {
                 require_once('common/tracker/ArtifactFieldFactory.class.php');
                 require_once('tracker/include/ArtifactHtml.class.php');
                 require_once('tracker/include/ArtifactFieldHtml.class.php');
-                $pm = ProjectManager::instance();
-                $at = new ArtifactType($pm->getProject($group_id),$atid);
+                $at = new ArtifactType($project, $atid);
                 $values = null;
                 if (!$at->isError() && $at->isValid()) {
                     $art_field_fact = new ArtifactFieldFactory($at);
@@ -194,13 +205,12 @@ if ($request->isAjax()) {
             }
             break;
         default:
-            $em = EventManager::instance();
-                $em->processEvent('ajax_reference_tooltip', array(
-                    'reference'=> $ref,
-                    'keyword'  => $keyword,
-                    'group_id' => $group_id,
-                    'val'      => $request->get('val')
-                ));
+            $event_manager->processEvent('ajax_reference_tooltip', array(
+                'reference'=> $ref,
+                'keyword'  => $keyword,
+                'group_id' => $group_id,
+                'val'      => $request->get('val')
+            ));
             break;
     }
 } else {

@@ -22,8 +22,7 @@
 // please add the functions/methods below when needed.
 // For further information about the Test Data Builder pattern
 // @see http://nat.truemesh.com/archives/000727.html
-
-require_once(dirname(__FILE__).'/../../include/Tracker/TrackerManager.class.php');
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 function aTextField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Text');
@@ -57,39 +56,58 @@ function aSelectBoxField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Selectbox');
 }
 
+function aMultiSelectBoxField() {
+    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_MultiSelectbox');
+}
+
+function aCheckboxField() {
+    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Checkbox');
+}
+
+function aFileField() {
+    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_File');
+}
+
 class Test_Tracker_FormElement_Builder {
-    private $name;
+    private $klass;
     private $id;
+    private $name;
     private $tracker;
     private $trackerId;
     private $originalField;
     private $use_it;
     private $bind;
+    private $label;
 
     public function __construct($klass) {
-        $this->name = $klass;
+        $this->klass = $klass;
     }
-    
+
+    public function withName($name) {
+        $this->name = $name;
+        return $this;
+    }
+
     public function withId($id) {
         $this->id = $id;
         return $this;
     }
-    
+
     public function withTracker($tracker) {
         $this->tracker   = $tracker;
         return $this;
     }
-    
+
     public function withTrackerId($trackerId) {
         $this->trackerId = $trackerId;
         return $this;
     }
-    
+
     public function isUsed() {
         $this->use_it = true;
         return $this;
     }
-    
+
     /**
      * @only for Tracker_FormElement_Field_List
      */
@@ -97,13 +115,18 @@ class Test_Tracker_FormElement_Builder {
         $this->bind = $bind;
         return $this;
     }
-    
+
+    public function withLabel($label) {
+        $this->label = $label;
+        return $this;
+    }
+
     /**
      * @return Tracker_FormElement
      */
     public function build() {
-        $klass  = $this->name;
-        $object = new $klass($this->id, $this->trackerId, null, null, null, null, $this->use_it, null, null, null, null, $this->originalField);
+        $klass  = $this->klass;
+        $object = new $klass($this->id, $this->trackerId, null, $this->name, $this->label, null, $this->use_it, null, null, null, null, $this->originalField);
         if ($this->tracker) {
             $object->setTracker($this->tracker);
         }

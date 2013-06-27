@@ -125,8 +125,8 @@ class Git_LogDao extends DataAccessObject {
     /**
      * Return the SQL Statement for logs daily pushs
      *
-     * @param Integer $groupId
-     * @param String $logsCond
+     * @param Integer $groupId  Id of the project
+     * @param String  $logsCond Condition
      *
      * @return String
      */
@@ -145,9 +145,9 @@ class Git_LogDao extends DataAccessObject {
     /**
      * Count all Git pushes for the given period
      *
-     * @param String $startDate Period start date
-     * @param String $endDate   Period end date
-	 * @param Integer $projectId Id of the project we want to retrieve its git stats
+     * @param String  $startDate Period start date
+     * @param String  $endDate   Period end date
+     * @param Integer $projectId Id of the project we want to retrieve its git stats
      *
      * @return DataAccessResult
      */
@@ -168,7 +168,8 @@ class Git_LogDao extends DataAccessObject {
                 FROM plugin_git_log JOIN plugin_git USING(repository_id)
                 WHERE push_date BETWEEN UNIX_TIMESTAMP(".$startDate.") AND UNIX_TIMESTAMP(".$endDate.")
                   ".$projectFilter."
-                GROUP BY year, month";
+                GROUP BY year, month
+                ORDER BY year, STR_TO_DATE(month,'%M')";
         return $this->retrieve($sql);
     }
 }

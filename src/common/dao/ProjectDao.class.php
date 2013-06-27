@@ -29,7 +29,7 @@ class ProjectDao extends DataAccessObject {
     const IS_PUBLIC        = 'is_public';
    
 
-    public function __construct($da) {
+    public function __construct($da = null) {
         parent::__construct($da);
         $this->table_name = 'groups';
     }
@@ -72,13 +72,18 @@ class ProjectDao extends DataAccessObject {
      * @param Integer $userId
      * @param Boolean $isMember
      * @param Boolean $isAdmin
-     * 
+     * @param Boolean $isPrivate Display private projects if true
+     *
      * @return DataAccessResult
      */
-    public function searchProjectsNameLike($name, $limit, $userId=null, $isMember=false, $isAdmin=false) {
+    public function searchProjectsNameLike($name, $limit, $userId=null, $isMember=false, $isAdmin=false, $isPrivate = false) {
         $join    = '';
         $where   = '';
         $groupby = '';
+        $public  = ' g.is_public = 1 ';
+        if ($isPrivate) {
+            $public = ' 1 ';
+        }
         if ($userId != null) {
             if ($isMember || $isAdmin) {
                 // Manage if we search project the user is member or admin of
@@ -90,13 +95,13 @@ class ProjectDao extends DataAccessObject {
             } else {
                 // Either public projects or private projects the user is member of
                 $join  .= ' LEFT JOIN user_group ug ON (ug.group_id = g.group_id)';
-                $where .= ' AND (g.is_public = 1'.
+                $where .= ' AND ('.$public.
                           '      OR (g.is_public = 0 and ug.user_id = '.$this->da->escapeInt($userId).'))';
             }
             $groupby .= ' GROUP BY g.group_id';
         } else {
             // If no user_id provided, only return public projects
-            $where .= ' AND g.is_public = 1';
+            $where .= ' AND '.$public;
         }
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS g.*".
@@ -109,6 +114,25 @@ class ProjectDao extends DataAccessObject {
                $groupby.
                " ORDER BY group_name".
                " LIMIT ".$this->da->escapeInt($limit);
+        return $this->retrieve($sql);
+    }
+
+    public function searchSiteTemplates() {
+        $sql = "SELECT *
+         FROM groups
+         WHERE type='2'
+             AND status IN ('A','s')";
+        return $this->retrieve($sql);
+    }
+
+    public function searchProjectsUserIsAdmin($user_id) {
+        $sql = "SELECT groups.*
+            FROM groups
+              JOIN user_group ON (user_group.group_id = groups.group_id)
+            WHERE user_group.user_id = '". $this->da->escapeInt($user_id) ."'
+              AND user_group.admin_flags = 'A'
+              AND groups.status='A'
+            ORDER BY group_name";
         return $this->retrieve($sql);
     }
 
@@ -295,5 +319,4 @@ class ProjectDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-
 ?>

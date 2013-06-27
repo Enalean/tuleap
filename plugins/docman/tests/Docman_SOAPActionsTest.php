@@ -35,7 +35,7 @@ Mock::generate('Docman_Version');
 Mock::generate('Docman_VersionFactory');
 Mock::generate('Docman_FileStorage');
 Mock::generate('UserManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('EventManager');
 Mock::generate('PermissionsManager');
 Mock::generate('Docman_PermissionsManager');
@@ -98,7 +98,7 @@ class Docman_SOAPActionsTest extends UnitTestCase {
             $this->fileStorage->setReturnValue('getFileMD5sum', $md5);
         }
         
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 9);
         
         $userManager = new MockUserManager();

@@ -127,85 +127,110 @@ class Tracker_Artifact_Changeset_Comment {
     /**
      * Returns the HTML code of this comment
      *
-     * @param String  $format          Format of the output
-     * @param Boolean $forMail         If the output is intended for mail notification then value should be true
-     * @param Boolean $ignoreEmptyBody If true then display the user and the time even if the body is empty
-     *
      * @return string the HTML code of this comment
      */
-    public function fetchFollowUp($format='html', $forMail = false, $ignoreEmptyBody = false) {
-        if ($ignoreEmptyBody || !empty($this->body)) {
-            $uh = UserHelper::instance();
-            $hp = Codendi_HTMLPurifier::instance();
-            switch ($format) {
-                case 'html':
-                    $html = '';
-                    if ($forMail) {
-                        $html .= '<div class="tracker_artifact_followup_title">';
-                        $html .= '<span class="tracker_artifact_followup_title_user">';
-                        $user = UserManager::instance()->getUserById($this->submitted_by);
-                        if ($user && !$user->isAnonymous()) {
-                            $html .= '<a href="mailto:'.$hp->purify($user->getEmail()).'">'.$hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()) .')</a>';
-                        } else {
-                            $user = UserManager::instance()->getUserAnonymous();
-                            $user->setEmail($this->changeset->getEmail());
-                            $html .= $GLOBALS['Language']->getText('tracker_include_artifact','anon_user');
-                        }
-                        $html .= '</span></div>';
-                        $timezone = '';
-                        if ($user->getId() != 0) {
-                            $timezone = ' ('.$user->getTimezone().')';
-                        }
-                        $html .= '<div class="tracker_artifact_followup_date">'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->submitted_on).$timezone.'</div>';
-                        $html .= '</div>';
-                        if (Config::get('sys_enable_avatars')) {
-                            $html .= '<div class="tracker_artifact_followup_avatar">';
-                            $html .= $user->fetchHtmlAvatar();
-                            $html .= '</div>';
-                        }
-                        $html .= '<div class="tracker_artifact_followup_content">';
-                        $html .= '<div class="tracker_artifact_followup_comment">';
-                    } else {
-                        $html .= '<div class="tracker_artifact_followup_comment_edited_by">';
-                        if ($this->parent_id) {
-                            $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
-                            $html .= ' '. $uh->getLinkOnUserFromUserId($this->submitted_by) .' ';
-                            $html .= DateHelper::timeAgoInWords($this->submitted_on, false, true);
-                        }
-                        $html .= '</div>';
-                    }
-                    if (!$forMail || !empty($this->body)) {
-                        $html .= '<input type="hidden" id="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'" name="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'" value="'.$this->bodyFormat.'" >';
-                        $html .= '<div class="tracker_artifact_followup_comment_body">';
-                        if ($this->parent_id && !trim($this->body)) {
-                            $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>';
-                        } else {
-                            $html .= $this->getPurifiedBodyForHTML();
-                        }
-                        $html .= '</div>';
-                    }
-                    if ($forMail) {
-                        $html .= '</div>';
-                    }
-                    return $html;
-                    break;
-                default:
-                    $output = '';
-                    //if ($this->parent_id) {
-                    //$output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
-                    //$output .= ' '.$uh->getDisplayNameFromUserId($this->submitted_by);
-                    //$output .= ' '.DateHelper::timeAgoInWords($this->submitted_on).PHP_EOL;
-                    //}
-                    if ( !empty($this->body) ) {
-                        $body    = $this->getPurifiedBodyForText();
-                        $output .= PHP_EOL.PHP_EOL.$body.PHP_EOL.PHP_EOL;
-                    }
-                    return $output;
-                    break;
-            }
-        } else {
+    public function fetchFollowUp() {
+        if (empty($this->body)) {
             return null;
         }
+
+        $uh   = UserHelper::instance();
+        $html = '<div class="tracker_artifact_followup_comment_edited_by">';
+        if ($this->parent_id) {
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
+            $html .= ' '. $uh->getLinkOnUserFromUserId($this->submitted_by) .' ';
+            $html .= DateHelper::timeAgoInWords($this->submitted_on, false, true);
+        }
+        $html .= '</div>';
+
+        if (!empty($this->body)) {
+            $html .= '<input type="hidden"
+                id="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
+                name="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
+                value="'.$this->bodyFormat.'" />';
+            $html .= '<div class="tracker_artifact_followup_comment_body">';
+            if ($this->parent_id && !trim($this->body)) {
+                $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>';
+            } else {
+                $html .= $this->getPurifiedBodyForHTML();
+            }
+            $html .= '</div>';
+        }
+
+        return $html;
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function hasEmptyBody() {
+        return empty($this->body);
+    }
+
+    /**
+     * Returns the HTML code of this comment
+     *
+     * @param String  $format Format of the output
+     * @return string the HTML code of this comment
+     */
+    public function fetchMailFollowUp($format = 'html') {
+        if ($format != 'html') {
+            if ($this->hasEmptyBody()) {
+                return '';
+            }
+
+            $body = $this->getPurifiedBodyForText();
+            return PHP_EOL.PHP_EOL.$body.PHP_EOL.PHP_EOL;
+        }
+        
+        $user     = UserManager::instance()->getUserById($this->submitted_by);
+        $avatar   = (Config::get('sys_enable_avatars')) ? $user->fetchHtmlAvatar() : '';
+        $timezone = ($user->getId() != 0) ? ' ('.$user->getTimezone().')' : '';
+
+        $html =
+            '<tr valign="top">
+                <td align="left">'.
+                    $avatar.'
+                </td>
+                <td align="left" valign="top">
+                    <div style="
+                        padding:15px;
+                        margin-bottom:20px;
+                        margin-left:10px;
+                        min-height:50px;
+                        border: 1px solid #f6f6f6;
+                        border-top: none;
+                        -webkit-border-radius:20px;
+                        border-radius:20px;
+                        -moz-border-radius:20px;
+                        background-color:#F6F6F6;"
+                    >
+                        <table style="width:100%; background-color:#F6F6F6;">
+                            <tr>
+                                <td>
+                                    <span> '.
+                                        $this->fetchFormattedMailUserInfo($user).'
+                                    </span>
+                                </td>
+                                <td align="right" valign="top">
+                                    <div style="text-align:right;font-size:0.95em;color:#666;">'.
+                                        format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->submitted_on).
+                                        $timezone.'
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" >'.
+                                    $this->fetchFormattedMailComment() . ' ' .'
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>';
+        
+        return $html;
     }
 
     /**
@@ -222,6 +247,60 @@ class Tracker_Artifact_Changeset_Comment {
         }
 
         return $comment_format;
+    }
+
+    public function exportToSOAP() {
+        if (! $this->body) {
+            return null;
+        }
+
+        return array(
+            'submitted_by' => $this->changeset->getSubmittedBy(),
+            'email'        => $this->getEmailForUndefinedSubmitter(),
+            'submitted_on' => $this->submitted_on,
+            'body'         => $this->body,
+        );
+    }
+
+    private function getEmailForUndefinedSubmitter() {
+        if (! $this->changeset->getSubmittedBy()) {
+            return $this->changeset->getEmail();
+        }
+    }
+
+    private function fetchFormattedMailComment() {
+        $formatted_comment = '';
+        if (!empty($this->body)) {
+           if ($this->parent_id && !trim($this->body)) {
+               $comment =
+                '<em>'.
+                    $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'
+                </em>';
+           } else {
+               $comment = $this->getPurifiedBodyForHTML();
+           }
+
+           $formatted_comment = '<div style="margin: 1em 0; padding: 0.5em 1em;">'. $comment .'</div>';
+        }
+
+        return $formatted_comment;
+    }
+
+    private function fetchFormattedMailUserInfo(PFUser $user) {
+        $hp = Codendi_HTMLPurifier::instance();
+
+        if ($user && !$user->isAnonymous()) {
+            $user_info =
+                '<a href="mailto:'.$hp->purify($user->getEmail()).'">'.
+                    $hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()) .')
+                </a>';
+        } else {
+            $user = UserManager::instance()->getUserAnonymous();
+            $user->setEmail($this->changeset->getEmail());
+            $user_info = $GLOBALS['Language']->getText('tracker_include_artifact','anon_user');
+        }
+
+        return $user_info;
     }
 }
 ?>

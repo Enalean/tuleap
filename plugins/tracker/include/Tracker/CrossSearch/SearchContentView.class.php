@@ -22,6 +22,9 @@
 /**
  * Renders both the cross-tracker search form and results. 
  */
+require_once 'common/TreeNode/InjectSpanPaddingInTreeNodeVisitor.class.php';
+require_once 'html.php';
+
 class Tracker_CrossSearch_SearchContentView {
     /**
      * @var Tracker_Report
@@ -49,7 +52,7 @@ class Tracker_CrossSearch_SearchContentView {
     private $factory;
 
     /**
-     * @var User
+     * @var PFUser
      */
     private $user;
     
@@ -58,7 +61,7 @@ class Tracker_CrossSearch_SearchContentView {
                                 TreeNode                         $tree_of_artifacts, 
                                 Tracker_ArtifactFactory          $artifact_factory, 
                                 Tracker_FormElementFactory       $factory,
-                                User                             $user) {
+                                PFUser                           $user) {
         
         $this->report            = $report;
         $this->criteria          = $criteria;
@@ -75,7 +78,7 @@ class Tracker_CrossSearch_SearchContentView {
         $report_can_be_modified = false;
         
         $html  = '';
-        $html .= $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
+        $html .= $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified, $this->user);
         $html .= $this->fetchResults();
         
         return $html;

@@ -18,10 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../../include/workflow/PostAction/Field/Transition_PostAction_Field_Int.class.php';
-require_once dirname(__FILE__).'/../../../../../../tests/simpletest/common/include/builders/aRequest.php';
-require_once  dirname(__FILE__).'/../../../../include/workflow/PostAction/Field/dao/Transition_PostAction_Field_IntDao.class.php';
-
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 Mock::generatePartial('Transition_PostAction_Field_Int', 'Transition_PostAction_Field_IntTestVersion', array('getDao', 'addFeedback', 'getFormElementFactory', 'isDefined', 'getFieldIdOfPostActionToUpdate'));
 
 class Transition_PostAction_Field_IntTest extends TuleapTestCase {
@@ -69,7 +66,7 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
     }
     
     public function testBeforeShouldSetTheIntegerField() {
-        $user = new MockUser();
+        $user = mock('PFUser');
         
         stub($this->field)->getLabel()->returns('Remaining Effort');
         stub($this->field)->userCanRead($user)->returns(true);
@@ -87,7 +84,7 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
     }
     
     public function testBeforeShouldBypassAndSetTheIntegerField() {
-        $user = new MockUser();
+        $user = mock('PFUser');
         
         $label           = stub($this->field)->getLabel()->returns('Remaining Effort');
         $readableField   = stub($this->field)->userCanRead($user)->returns(true);
@@ -104,7 +101,7 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
     }
     
     public function testBeforeShouldNOTDisplayFeedback() {
-        $user = new MockUser();
+        $user = mock('PFUser');
         
         $label           = stub($this->field)->getLabel()->returns('Remaining Effort');
         $readableField   = stub($this->field)->userCanRead($user)->returns(false);

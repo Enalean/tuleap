@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field_Selectbox.class.php');
-require_once('dao/Tracker_FormElement_Field_MultiSelectboxDao.class.php');
 class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field_Selectbox {
     
     public $default_properties = array(
@@ -92,7 +90,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
      */
     public function changeType($type) {
         // only "sb" available at the moment.
-        if ($type === 'sb') {
+        if ($type === 'sb' || $type === 'cb') {
             // We should remove the entry in msb table
             // However we keep it for the case where admin changes its mind.
             return true;
@@ -111,16 +109,52 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
      * @return void
      */
     public function augmentDataFromRequest(&$fields_data) {
+
+        if(isset($fields_data['request_method_called']) && $fields_data['request_method_called'] = 'artifact-update') {
+            return;
+            /* When updating an artifact, we do not want this method to reset the selected options.
+             *
+             * This method is in iteself somewhat of a hack. Its aim is to set default values for multiselect fields
+             * that do not have a value in the $fields_data array. However, this method assumes that EVERY field
+             * and its value(s) will be submitted. This is a BAD assumption since it is possible to submit only those 
+             * fields that have changed. In that case, we do not want to set a default value but, rather, use the 
+             * existing one.
+             */
+        }
+
         if ((!isset($fields_data[$this->getId()]) || !is_array($fields_data[$this->getId()])) && !$this->isRequired() && $this->userCanUpdate()) {
             $fields_data[$this->getId()] = array('100');
         }
     }
-    
+
+    public function getFieldDataFromCSVValue($csv_value) {
+        if ($csv_value == null) {
+            return array(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID);
+        }
+        return parent::getFieldDataFromCSVValue($csv_value);
+    }
+
     /**
      * @return boolean true if the value corresponds to what we defined as "none"
      */
     public function isNone($value) {
-        return $value === null || $value === '' || (is_array($value) && count($value) ==1 && $value[0] == '100');
+        return $this->isScalarNone($value) || (is_array($value) && $this->isArrayNone($value));
+    }
+
+    private function isScalarNone($value) {
+        return $value === null || $value === '';
+    }
+
+    private function isArrayNone(array $value) {
+        return $this->arrayContainsNone($value) || $this->arrayIsEmpty($value);
+    }
+
+    private function arrayContainsNone(array $value) {
+        return count($value) == 1 && array_pop($value) == '100';
+    }
+
+    private function arrayIsEmpty($value) {
+        return count($value) == 0;
     }
 }
 ?>

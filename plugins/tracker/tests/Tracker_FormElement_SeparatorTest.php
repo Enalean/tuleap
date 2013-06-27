@@ -18,11 +18,11 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_StaticField_Separator.class.php');
 
-class Tracker_FormElement_StaticField_SeparatorTest extends UnitTestCase {
+class Tracker_FormElement_StaticField_SeparatorTest extends TuleapTestCase {
     
     public function testFetchDescription() {
+        $expected_message = '';
         $id = 2;
         $tracker_id = 254;
         $parent_id = 0;
@@ -40,7 +40,7 @@ class Tracker_FormElement_StaticField_SeparatorTest extends UnitTestCase {
 
         $this->assertEqual('Separator Label', $separator->getLabel());
         $this->assertEqual('', $separator->getDescription());
-        $this->assertTrue($separator->canBeUnused());
+        $this->assertEqual($expected_message, $separator->getCannotRemoveMessage());
     }
 
 }

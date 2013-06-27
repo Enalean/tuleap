@@ -18,28 +18,22 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('dao/TrackerDao.class.php');
-require_once('dao/Tracker_PermDao.class.php');
-require_once('Semantic/Tracker_SemanticManager.class.php');
-require_once('Tooltip/Tracker_Tooltip.class.php');
-require_once('Tracker_NotificationsManager.class.php');
-require_once('CannedResponse/Tracker_CannedResponseManager.class.php');
-require_once('DateReminder/Tracker_DateReminderManager.class.php');
-require_once('Rule/Tracker_RulesManager.class.php');
-require_once(dirname(__FILE__).'/../workflow/WorkflowManager.class.php');
 require_once('common/date/DateHelper.class.php');
 require_once('common/widget/Widget_Static.class.php');
-require_once(dirname(__FILE__).'/../tracker_permissions.php');
-require_once('Tracker_Dispatchable_Interface.class.php');
-require_once('FormElement/Tracker_SharedFormElementFactory.class.php');
-require_once('Hierarchy/Controller.class.php');
-require_once('Hierarchy/HierarchyFactory.class.php');
-require_once 'IFetchTrackerSwitcher.class.php';
-require_once 'Action/CreateArtifact.class.php';
+require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 require_once('json.php');
 
 class Tracker implements Tracker_Dispatchable_Interface {
+    const PERMISSION_ADMIN            = 'PLUGIN_TRACKER_ADMIN';
+    const PERMISSION_FULL             = 'PLUGIN_TRACKER_ACCESS_FULL';
+    const PERMISSION_ASSIGNEE         = 'PLUGIN_TRACKER_ACCESS_ASSIGNEE';
+    const PERMISSION_SUBMITTER        = 'PLUGIN_TRACKER_ACCESS_SUBMITTER';
+    const PERMISSION_NONE             = 'PLUGIN_TRACKER_NONE';
+    const REMAINING_EFFORT_FIELD_NAME = "remaining_effort";
+    const ASSIGNED_TO_FIELD_NAME      = "assigned_to";
+    const IMPEDIMENT_FIELD_NAME       = "impediment";
+    const TYPE_FIELD_NAME             = "type";
 
     public $id;
     public $group_id;
@@ -354,6 +348,13 @@ class Tracker implements Tracker_Dispatchable_Interface {
                                 $GLOBALS['sys_email_admin']),
                                 CODENDI_PURIFIER_FULL
                         );
+                        $reference_manager =  ReferenceManager::instance();
+                        $ref =  $reference_manager->loadReferenceFromKeywordAndNumArgs(strtolower($this->getItemName()), $this->getGroupId(), 1);
+                        if ($ref) {
+                            if ($reference_manager->deleteReference($ref)) {
+                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_reference', 't_r_deleted'));
+                            }
+                        }
                     } else {
                         $GLOBALS['Response']->addFeedback(
                                 'error',
@@ -513,7 +514,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
-            case 'admin-workflow':
+            case Workflow::FUNC_ADMIN_RULES:
+            case Workflow::FUNC_ADMIN_TRANSITIONS:
                 if ($this->userIsAdmin($current_user)) {
                     $this->getWorkflowManager()->process($layout, $request, $current_user);
                 } else {
@@ -548,7 +550,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
             case 'admin-export':
                 if ($this->userIsAdmin($current_user)) {
                     // TODO: change directory
-                    $this->sendXML($this->exportToXML());
+                    $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+                    $this->sendXML($this->exportToXML($xml_element));
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
@@ -694,7 +697,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
      *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
      * @param Codendi_Request                $request         The request
-     * @param User                           $current_user    The user who made the request
+     * @param PFUser                           $current_user    The user who made the request
      *
      * @return void
      */
@@ -829,111 +832,15 @@ class Tracker implements Tracker_Dispatchable_Interface {
      * Display the submit form
      */
     public function displaySubmit(Tracker_IFetchTrackerSwitcher $layout, $request, $current_user, $link = null) {
-        $hp = Codendi_HTMLPurifier::instance();
-        $breadcrumbs = array(
-                array(
-                        'title' => 'New artifact',
-                        'url'   => $this->getSubmitUrl(),
-                ),
-        );
-        
-        if (!$link) {
-            $this->displayHeader($layout, $this->name, $breadcrumbs);
-        }
-        
         if ($link) {
-            echo '<html>';
-            echo '<head>';
-            echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
-            $GLOBALS['HTML']->displayStylesheetElements(array());
-            $GLOBALS['HTML']->includeCalendarScripts();
-            $GLOBALS['HTML']->displayJavascriptElements(array());
-            echo '</head>';
-            
-            echo '<body>';
-            echo '<div class="main_body_row">';
-            echo '<div class="contenttable">';
-
-            $project = null;
-            $artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($link);
-            if ($artifact) {
-                $project = $artifact->getTracker()->getProject();
-                $GLOBALS['Response']->addFeedback(
-                    'warning', 
-                    $GLOBALS['Language']->getText(
-                        'plugin_tracker', 
-                        'linked_to', 
-                        array(
-                            $artifact->fetchDirectLinkToArtifact(),
-                            $layout->fetchTrackerSwitcher($current_user, ' ', $project, $this),
-                        )
-                    ),
-                    CODENDI_PURIFIER_DISABLED
-                );
-            } else {
-                $GLOBALS['Response']->addFeedback('error', 'Error the artifact to link doesn\'t exist');
-            }
-            $GLOBALS['Response']->displayFeedback();
-        }
-        $html = '';
-        if ($this->submit_instructions) {
-            $html .= '<p class="submit_instructions">' . $hp->purify($this->submit_instructions, CODENDI_PURIFIER_FULL) . '</p>';
-        }
-        
-        $redirect = new Tracker_Artifact_Redirect();
-        $redirect->base_url = TRACKER_BASE_URL;
-        $redirect->query_parameters = array(
-            'tracker'  => $this->id,
-            'func'     => 'submit-artifact',
-        );
-        EventManager::instance()->processEvent(
-            TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
-            array(
-                'request'  => $request,
-                'redirect' => $redirect,
-            )
-        );
-        
-        $html .= '<form action="'. $redirect->toUrl() .'" method="POST" enctype="multipart/form-data">';
-        if ($link) {
-            $html .= '<input type="hidden" name="link-artifact-id" value="'. (int)$link .'" />';
-            if ($request->get('immediate')) {
-                $html .= '<input type="hidden" name="immediate" value="1" />';
-            }
-        }
-        $html .= '<input type="hidden" value="67108864" name="max_file_size" />';
-        $html .= '<table><tr><td>';
-        foreach($this->getFormElements() as $formElement) {
-            $html .= $formElement->fetchSubmit($request->get('artifact'));
-        }
-        $html .= '</td></tr></table>';
-        
-        if ($current_user->isAnonymous()) {
-            $html .= $this->fetchAnonymousEmailForm();
-        }
-        
-        if (!$link) {
-            $html .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-            $html .= ' ';
-            $html .= '<input type="submit" name="submit_and_continue" value="'. $GLOBALS['Language']->getText('global', 'btn_submit_and_continue') .'" />';
-            $html .= '<input type="submit" name="submit_and_stay" value="'. $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') .'" />';
+            $source_artifact = $this->getTrackerArtifactFactory()->getArtifactByid($link);
+            $submit_renderer = new Tracker_Artifact_SubmitOverlayRenderer($this, $source_artifact, EventManager::instance(), $layout);
         } else {
-            $html .= '<input type="submit" id="tracker_artifact_submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+            $submit_renderer = new Tracker_Artifact_SubmitRenderer($this, EventManager::instance(), $layout);
         }
-        
-        $html .= '</form>';
-        
-        $trm = new Tracker_RulesManager($this);
-        $html .= $trm->displayRulesAsJavascript();
-        
-        $html .= '</div></div>';
-        
-        echo $html;
-        if (!$link) {
-            $this->displayFooter($layout);
-        }
+        $submit_renderer->display($request, $current_user);
     }
-    
+
     /**
      * Display the submit form
      */
@@ -1068,16 +975,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         echo $html;
         $this->displayFooter($layout);
     }
-    
-    protected function fetchAnonymousEmailForm() {
-        $html = '<p>';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'not_logged_in', array('/account/login.php?return_to='.urlencode($_SERVER['REQUEST_URI'])));
-        $html .= '<br />';
-        $html .= '<input type="text" name="email" id="email" size="50" maxsize="100" />';
-        $html .= '</p>';
-        return $html;
-    }
-    
+
     public function displayHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs, $toolbar = null) {
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
             $hp = Codendi_HTMLPurifier::instance();
@@ -1157,7 +1055,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-semantic.png'),
                 ),
                 'editworkflow' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-workflow',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func='. Workflow::FUNC_ADMIN_RULES,
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','workflow'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_workflow'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_workflow_desc'),
@@ -1791,7 +1689,9 @@ EOS;
         echo '<form name="form1" method="POST" enctype="multipart/form-data" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&amp;func=admin-csvimport">';
         echo '<input type="file" name="csv_filename" size="50">';
         echo '<br>';
-        echo '<span class="smaller"><em>'.$GLOBALS['Language']->getText('plugin_tracker_import','max_upload_size',formatByteToMb($GLOBALS['sys_max_size_upload'])).'</em></span>';
+        echo '<span class="smaller"><em>';
+        echo $GLOBALS['Language']->getText('plugin_tracker_import', 'file_upload_instructions', formatByteToMb($GLOBALS['sys_max_size_upload']));
+        echo '</em></span>';
         echo '<br>';
         echo $GLOBALS['Language']->getText('plugin_tracker_admin_import','send_notifications');
         echo '<input type="checkbox" name="notify" value="ok" />';
@@ -1889,7 +1789,7 @@ EOS;
             $fields_data[$field_id] = $data;
         }
         $this->augmentDataFromRequest($fields_data);
-        
+
         $not_updated_aids = array();
         foreach ( $masschange_aids as $aid ) {
             $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($aid);
@@ -1897,8 +1797,16 @@ EOS;
                 $not_updated_aids[] = $aid;
                 continue;
             }
-            
-            if ( !$artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $comment_format)) {
+
+            try {
+                $artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $comment_format);
+            } catch (Tracker_NoChangeException $e) {
+                $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+                $not_updated_aids[] = $aid;
+                continue;
+            } catch (Tracker_Exception $e) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unable_to_update_artifact', array($aid)));
+                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                 $not_updated_aids[] = $aid;
                 continue;
             }
@@ -2004,7 +1912,7 @@ EOS;
     public function getTrackerSemanticManager() {
         return new Tracker_SemanticManager($this);
     }
-
+    
     /**
      * @return Tracker_Tooltip
      */
@@ -2051,7 +1959,7 @@ EOS;
      * @return Tracker_RulesManager
      */
     public function getRulesManager() {
-        return new Tracker_RulesManager($this);
+        return new Tracker_RulesManager($this, $this->getFormElementFactory());
     }
     /**
      * Determine if the user can view this tracker.
@@ -2062,7 +1970,7 @@ EOS;
      * @return boolean true if the user can view the tracker.
      */
     public function userCanView($user = 0) {
-        if (!is_a($user, 'User')) {
+        if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             if (!$user) {
                 $user = $um->getCurrentUser();
@@ -2163,7 +2071,7 @@ EOS;
      * @return boolean True if the user is tracker admin, false otherwise
      */
     function userIsAdmin($user = false) {
-        if (!is_a($user, 'User')) {
+        if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             if (!$user) {
                 $user = $um->getCurrentUser();
@@ -2190,12 +2098,12 @@ EOS;
     /**
      * Check if user has permission to submit artifact or not
      *
-     * @param User $user The user to test (current user if not defined)
+     * @param PFUser $user The user to test (current user if not defined)
      *
      * @return boolean true if user has persission to submit artifacts, false otherwise
      */
     function userCanSubmitArtifact($user = false) {
-        if (!is_a($user, 'User')) {
+        if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
         }
@@ -2210,12 +2118,12 @@ EOS;
     /**
      * Check if user has permission to delete a tracker or not
      *
-     * @param User $user The user to test (current user if not defined)
+     * @param PFUser $user The user to test (current user if not defined)
      *
      * @return boolean true if user has persission to delete trackers, false otherwise
      */
     function userCanDeleteTracker($user = false) {
-        if (!is_a($user, 'User')) {
+        if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
         }
@@ -2225,12 +2133,12 @@ EOS;
     /**
      * Check if user has full access to a tracker or not
      *
-     * @param User $user The user to test (current user if not defined)
+     * @param PFUser $user The user to test (current user if not defined)
      *
      * @return boolean true if user has full access to tracker, false otherwise
      */
     function userHasFullAccess($user = false) {
-        if (!is_a($user, 'User')) {
+        if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
         }
@@ -2256,16 +2164,16 @@ EOS;
      *
      * @return void
      */
-    public function exportToXML() {
-        // create a SimpleXMLElement corresponding to this tracker
-        // sets encoding to UTF-8
-        $xmlElem = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-                                         <tracker xmlns="http://codendi.org/tracker" />');
-        // if old ids are important, modify code here
-        if (false) {
-            $xmlElem->addAttribute('id', $this->id);
-            $xmlElem->addAttribute('group_id', $this->group_id);
+    public function exportToXML(SimpleXMLElement $xmlElem, &$xmlFieldId = 0) {
+        $xmlElem->addAttribute('id', "T". $this->getId());
+
+        $parent_id = $this->getParentId();
+        if ($parent_id) {
+            $parent_id = "T". $parent_id;
+        } else {
+            $parent_id = "0";
         }
+        $xmlElem->addAttribute('parent_id', (string)$parent_id);
 
         // only add attributes which are different from the default value
         if ($this->allow_copy) {
@@ -2308,12 +2216,11 @@ EOS;
         $child = $xmlElem->addChild('formElements');
         // association between ids in database and ids in xml
         $xmlMapping = array();
-        $i = 0;        
         if ($formelements = $this->getAllFormElements()) {
             foreach ($formelements as $formElement) {
                 $grandchild = $child->addChild('formElement');
-                $i++;
-                $formElement->exportToXML($grandchild, $xmlMapping, $i);
+                $xmlFieldId++;
+                $formElement->exportToXML($grandchild, $xmlMapping, $xmlFieldId);
             }
         }
 
@@ -2321,7 +2228,12 @@ EOS;
         $tsm = $this->getTrackerSemanticManager();
         $child = $xmlElem->addChild('semantics');
         $tsm->exportToXML($child, $xmlMapping);
-
+        
+        // rules
+        $trm = $this->getRulesManager();
+        $child = $xmlElem->addChild('rules');
+        $trm->exportToXML($child, $xmlMapping);
+        
         // only the reports with project scope are exported
         $reports = $this->getReportFactory()->getReportsByTrackerId($this->id, null);
         if ($reports) {
@@ -2373,6 +2285,7 @@ EOS;
                 }
             }
         }
+
         return $xmlElem;
     }
 
@@ -2419,7 +2332,7 @@ EOS;
     }
     
     private function _getCSVSeparator($current_user) {
-        if ( ! $current_user || ! is_a($current_user, 'User')) {
+        if ( ! $current_user || ! ($current_user instanceof PFUser)) {
             $current_user = UserManager::instance()->getCurrentUser();
         }
         
@@ -2440,7 +2353,7 @@ EOS;
     }
     
     private function _getCSVDateformat($current_user) {
-        if ( ! $current_user || ! is_a($current_user, 'User')) {
+        if ( ! $current_user || ! ($current_user instanceof PFUser)) {
             $current_user = UserManager::instance()->getCurrentUser();
         }
         $dateformat_csv_export_pref = $current_user->getPreference('user_csv_dateformat');
@@ -2636,6 +2549,7 @@ EOS;
         $aid_key = array_search('aid', $header_line);
         $af = $this->getTrackerArtifactFactory();
         $artifact = null;
+        $hp       = Codendi_HTMLPurifier::instance();
         
         foreach ($lines as $cpt_line => $line) {
             $data = array();
@@ -2665,8 +2579,8 @@ EOS;
                                         )
                                   );
                         if ($line[$idx]!=''){
-                            
-                            $data[$field->getId()] = $field->getFieldData($line[$idx]);
+
+                            $data[$field->getId()] = $hp->purify($field->getFieldDataFromCSVValue($line[$idx]), CODENDI_PURIFIER_CONVERT_HTML);
                             
                             if ($data[$field->getId()] === null) {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_value', array($line[$idx], $field_name)));
@@ -2769,7 +2683,7 @@ EOS;
                 foreach ($data_line as $idx => $data_cell) {
                     if ($fields[$idx] && is_a($fields[$idx], 'Tracker_FormElement_Field')) {
                         $field = $fields[$idx];
-                        $fields_data[$field->getId()] = $field->getFieldData($data_cell);
+                        $fields_data[$field->getId()] = $field->getFieldDataFromCSVValue($data_cell);
                     } else  {
                         // else: this cell is an 'aid' cell
                         if ($data_cell) {
@@ -2793,10 +2707,15 @@ EOS;
                     $artifact = $af->getArtifactById($artifact_id);
                     if ($artifact) {
                         $followup_comment = '';
-                        if ($artifact->createNewChangeset($fields_data, $followup_comment, $current_user, null, $send_notifications)) {
+                        try {
+                            $artifact->createNewChangeset($fields_data, $followup_comment, $current_user, null, $send_notifications);
                             $nb_artifact_update++;
-                        } else {
+                        } catch (Tracker_NoChangeException $e) {
+                            $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+                            $is_error = true;
+                        } catch (Tracker_Exception $e) {
                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unable_to_update_artifact', array($artifact_id)));
+                            $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                             $is_error = true;
                         }
                     } else {
@@ -3134,13 +3053,28 @@ EOS;
     }
 
     /**
+     * Return the children of the tracker
+     *
+     * @return Tracker[]
+     */
+    public function getChildren() {
+        return $this->getHierarchyFactory()->getChildren($this->getId());
+    }
+
+    /**
      * Return the hierarchy the tracker belongs to
      *
      * @return Tracker_Hierarchy
      */
     public function getHierarchy() {
-        $hierarchy_factory = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory(), $this->getTrackerArtifactFactory());
-        return $hierarchy_factory->getHierarchy(array($this->getId()));
+        return $this->getHierarchyFactory()->getHierarchy(array($this->getId()));
+    }
+
+    /**
+     * @return Tracker_HierarchyFactory
+     */
+    protected function getHierarchyFactory() {
+        return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory(), $this->getTrackerArtifactFactory());
     }
 
     /**
@@ -3149,12 +3083,31 @@ EOS;
      * @return Tracker
      */
     public function getParent() {
-        $parent_tracker_id = $this->getHierarchy()->getParent($this->getId());
+        $parent_tracker_id = $this->getParentId();
         if ($parent_tracker_id) {
             return $this->getTrackerFactory()->getTrackerById($parent_tracker_id);
         }
         return null;
     }
-}
 
+    private function getParentId() {
+        return $this->getHierarchy()->getParent($this->getId());
+    }
+
+    /**
+     * Return workflow of the current tracker (there is always a workflow).
+     *
+     * @return Workflow
+     */
+    public function getWorkflow() {
+        $workflow = $this->getWorkflowFactory()->getWorkflowByTrackerId($this->getId());
+        if (! $workflow) {
+            $workflow_id = 0;
+            $field_id    = 0;
+            $is_used     = false;
+            $workflow    = new Workflow($workflow_id, $this->getId(), $field_id, $is_used);
+        }
+        return $workflow;
+    }
+}
 ?>

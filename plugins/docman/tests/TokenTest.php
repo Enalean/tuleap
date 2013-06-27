@@ -39,7 +39,7 @@ Mock::generate('Docman_TokenDao');
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 require_once('common/include/HTTPRequest.class.php');
@@ -175,7 +175,7 @@ class TokenTest extends UnitTestCase {
         $dao->setReturnReference('searchUrl', $dar);
         //$dao->expectOnce('delete'); //Doesn't work with PHP4 because we have to use references in retrieveUrl
         
-        $u =& new MockUser();
+        $u = mock('PFUser');
         $u->setReturnValue('getId', $user_id);
         $um =& new MockUserManager();
         $um->setReturnReference('getCurrentUser', $u);
@@ -194,7 +194,7 @@ class TokenTest extends UnitTestCase {
         $dao =& new MockDocman_TokenDao();
         $dao->setReturnReference('searchUrl', $dar);
         
-        $u =& new MockUser();
+        $u = mock('PFUser');
         $u->setReturnValue('getId', $user_id);
         $um =& new MockUserManager();
         $um->setReturnReference('getCurrentUser', $u);

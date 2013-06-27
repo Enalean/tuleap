@@ -669,6 +669,14 @@
             Remove references to old screenshots
         </revremark>
       </revision>
+      <revision>
+        <revnumber>5.6</revnumber>
+        <date>27-September-2012</date>
+        <authorinitials>Codex Team</authorinitials>
+        <revremark>
+            Add project links documentation
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--
@@ -676,4 +684,3 @@ Local Variables:
 sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
-

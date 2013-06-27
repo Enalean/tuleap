@@ -3323,7 +3323,7 @@ function addArtifactFollowup($sessionKey, $group_id,$group_artifact_id,$artifact
             return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'addArtifactFollowup');
         }
         // add the follow up with 0 as canned_response_id. To set a canned response, just put the content in the body comment.
-        if (!$a->addFollowUpComment($body, $comment_type_id, 0, &$changes, $format)) {
+        if (!$a->addFollowUpComment($body, $comment_type_id, 0, $changes, $format)) {
             return new SoapFault(create_followup_fault, 'Comment could not be saved', 'addArtifactFollowup');
         } else {
             // Send notification

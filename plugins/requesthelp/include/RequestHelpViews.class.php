@@ -73,6 +73,7 @@ class RequestHelpViews extends PluginView {
      * @return Void
      */
     function displayForm($params = null) {
+        $purifier = Codendi_HTMLPurifier::instance();
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
         $ignoreLabs = $this->getController()->getPlugin()->getProperty('ignore_labs');
@@ -92,11 +93,11 @@ class RequestHelpViews extends PluginView {
                 }
                 $valid = new Valid_String();
                 if (isset($params['summary']) && $valid->validate($params['summary'])) {
-                    $summary = $params['summary'];
+                    $summary = $purifier->purify($params['summary'], CODENDI_PURIFIER_CONVERT_HTML);
                 }
                 $valid = new Valid_Text();
                 if (isset($params['description']) && $valid->validate($params['description'])) {
-                    $description = $params['description'];
+                    $description = $purifier->purify($params['description'], CODENDI_PURIFIER_CONVERT_HTML);
                 }
                 $valid = new Valid_String();
                 if (isset($params['cc']) && $valid->validate($params['cc'])) {

@@ -17,9 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once 'common/mvc2/Controller.class.php';
+require_once 'common/mvc2/PluginController.class.php';
 
-class Planning_MilestoneSelectorController extends MVC2_Controller {
+class Planning_MilestoneSelectorController extends MVC2_PluginController {
     private $milestone_factory;
 
     public function __construct(Codendi_Request $request, Planning_MilestoneFactory $milestone_factory) {
@@ -32,6 +32,7 @@ class Planning_MilestoneSelectorController extends MVC2_Controller {
             $this->request->getCurrentUser(),
             $this->request->getValidated('planning_id', 'uint', 0)
         );
+        
         if ($milestone->getArtifact()) {
             $redirect_parameters = array(
                 'group_id'    => $milestone->getGroupId(),

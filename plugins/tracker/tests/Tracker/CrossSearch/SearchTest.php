@@ -17,13 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once dirname(__FILE__) . '/../../builders/aTracker.php';
-require_once dirname(__FILE__) . '/../../builders/aField.php';
-require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/Search.class.php';
-require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/SemanticStatusReportField.class.php';
-require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/Query.class.php';
-require_once dirname(__FILE__).'/../../builders/aCrossSearchCriteria.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 Mock::generate('Tracker_CrossSearch_SharedFieldFactory');
 Mock::generate('Tracker_CrossSearch_SearchDao');

@@ -324,14 +324,10 @@ class PageEditor
         $request->setArg('version', false);
         //$request->setArg('action', false);
 
-        $template = Template('savepage', $this->tokens);
-        $template->replace('CONTENT', $newrevision->getTransformedContent());
-        if (!empty($warnings->_content))
-            $template->replace('WARNINGS', $warnings);
+        $pagename = WikiLink($page)->asString();
 
-        $pagelink = WikiLink($page);
+        $this->redirectAfterSavingPage($pagename);
 
-        GeneratePage($template, fmt("Saved: %s", $pagelink), $newrevision);
         return true;
     }
 
@@ -613,6 +609,15 @@ class PageEditor
 
     function _redirectToBrowsePage() {
         $this->request->redirect(WikiURL($this->page, false, 'absolute_url'));
+    }
+
+    function redirectAfterSavingPage($pagename) {
+        $url     = WikiURL($this->page, false, 'absolute_url');
+        $link    = '<a href="' . $url . '">'.$pagename.'</a>';
+        $message = fmt("Saved: %s", $link)->asString();
+
+        $GLOBALS['Response']->addFeedback('info', $message, CODENDI_PURIFIER_LIGHT);
+        $GLOBALS['Response']->redirect($url);
     }
 
     function _restoreState () {

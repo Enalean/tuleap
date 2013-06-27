@@ -18,11 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once dirname(__FILE__).'/../../../include/constants.php';
-require_once dirname(__FILE__).'/../../../include/Tracker/Hierarchy/Sorter.class.php';
-require_once dirname(__FILE__).'/../../builders/aCrossSearchCriteria.php';
-require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/Query.class.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class Tracker_Hierarchy_Sorter_BuildTreeWithCompleteListTest extends TuleapTestCase {
     
@@ -127,7 +123,7 @@ class Tracker_Hierarchy_Sorter_BuildTreeWithMissingChildrenTest extends TuleapTe
 //            $sorter = new Tracker_Hierarchy_Sorter($artifact_factory);
 //            $artifacts_dar = $this->getResultsForTrackerOutsideHierarchy();
 //
-//            $user = mock('User');
+//            $user = mock('PFUser');
 //            $artifacts = $sorter->buildTreeWithMissingChildren($user, $artifacts_dar);
 //            $all_artifact_nodes = $artifacts->flattenChildren();
 //

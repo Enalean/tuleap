@@ -13,7 +13,7 @@ plugin_ldap	not_found	Error - Not Found
 plugin_ldap	no_ldap_login_found	No Enterprise Directory login found
 plugin_ldap	login_pls_use_ldap	Please use your Enterprise Directory login (not the $1 one).
 plugin_ldap	ugroup_list_ldap_title	Import from Enterprise Directory
-plugin_ldap	ugroup_list_add_users	Add users
+plugin_ldap	ugroup_list_add_users	Add directory users
 plugin_ldap	ugroup_list_add_set_binding	Set Directory group binding
 plugin_ldap	ugroup_list_add_upd_binding	Update Directory group binding ($1)
 plugin_ldap	project_admin_add_ugroup	Link with an Enterprise Directory Group:

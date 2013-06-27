@@ -25,12 +25,16 @@ require_once('PluginManager.class.php');
 /**
  * Plugin
  */
-class Plugin {
+class Plugin implements PFO_Plugin {
     
     var $id;
     var $pluginInfo;
+    /** @var Map */
     var $hooks;
     protected $_scope;
+
+    /** @var bool */
+    private $is_custom = false;
     
     const SCOPE_SYSTEM  = 0;
     const SCOPE_PROJECT = 1;
@@ -54,7 +58,15 @@ class Plugin {
         
         $this->_scope = Plugin::SCOPE_SYSTEM;
     }
-    
+
+    /**
+     * Callback called when the plugin is loaded
+     *
+     * @return void
+     */
+    public function loaded() {
+    }
+
     public function isAllowed($group_id) {
         if(!isset($this->allowedForProject[$group_id])) {
             $this->allowedForProject[$group_id] = PluginManager::instance()->isPluginAllowedForProject($this, $group_id);
@@ -81,16 +93,27 @@ class Plugin {
         return $this->hooks->getValues();
     }
     
-    protected function _addHook($hook, $callback = 'CallHook', $recallHook = true) {
+    public function addHook($hook, $callback = null, $recallHook = false) {
+        if ($this->hooks->containsKey($hook)) {
+            throw new RuntimeException('A plugin cannot listen to the same hook several time. Please check '.$hook);
+        }
         $value = array();
         $value['hook']       = $hook;
-        $value['callback']   = $callback;
+        $value['callback']   = $callback ? $callback : $hook;
         $value['recallHook'] = $recallHook;
-        $this->hooks->put( $hook, $value);
+        $this->hooks->put($hook, $value);
     }
     
-    protected function _removeHook($hook) {
-        $this->hooks->removeKey( $hook);
+    /**
+     * @deprecated
+     * @see addHook()
+     */
+    protected function _addHook($hook, $callback = null, $recallHook = false) {
+        return $this->addHook($hook, $callback, $recallHook);
+    }
+
+    public function removeHook($hook) {
+        $this->hooks->removeKey($hook);
     }
     
     public function CallHook($hook, $param) {
@@ -105,8 +128,7 @@ class Plugin {
     }
 
     public function getPluginEtcRoot() {
-        $pm = $this->_getPluginManager();
-        return $GLOBALS['sys_custompluginsroot'] . '/' . $pm->getNameForPlugin($this) .'/etc';
+        return $GLOBALS['sys_custompluginsroot'] . '/' . $this->getName() .'/etc';
     }
     
     public function _getPluginPath() {
@@ -130,7 +152,7 @@ class Plugin {
         if ($pm->pluginIsCustom($this)) {
             $path = $GLOBALS['sys_custompluginspath'];
         }
-        return $path.'/'.$pm->getNameForPlugin($this);
+        return $path .'/'. $this->getName();
     }
 
     public function _getThemePath() {
@@ -144,7 +166,7 @@ class Plugin {
             return null;
         }
         
-        $pluginName = $this->_getPluginManager()->getNameForPlugin($this);
+        $pluginName = $this->getName();
         
         $paths  = array($GLOBALS['sys_custompluginspath'], $GLOBALS['sys_pluginspath']);
         $roots  = array($GLOBALS['sys_custompluginsroot'], $GLOBALS['sys_pluginsroot']);
@@ -181,7 +203,14 @@ class Plugin {
         if ($path[strlen($path) -1 ] != '/') {
             $path .= '/';
         }
-        return $path.$pm->getNameForPlugin($this);
+        return $path . $this->getName();
+    }
+
+    /**
+     * @return string the short name of the plugin (docman, tracker, …)
+     */
+    public function getName() {
+        return $this->_getPluginManager()->getNameForPlugin($this);
     }
 
     /**
@@ -226,6 +255,21 @@ class Plugin {
      */
     public function getReadme() {
         return $this->getFilesystemPath().'/README';
+    }
+
+    /**
+     * @return array of strings (identifier of plugins this one depends on)
+     */
+    public function getDependencies() {
+        return array();
+    }
+
+    public function setIsCustom($is_custom) {
+        $this->is_custom = $is_custom;
+    }
+
+    public function isCustom() {
+        return $this->is_custom;
     }
 }
 ?>

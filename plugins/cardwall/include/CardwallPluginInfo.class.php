@@ -19,8 +19,6 @@
  */
 
 require_once('common/plugin/PluginFileInfo.class.php');
-require_once('CardwallPluginDescriptor.class.php');
-
 
 /**
  * CardwallPluginInfo

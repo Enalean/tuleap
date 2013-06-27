@@ -132,9 +132,9 @@ function forum_header($params) {
         	print ' <a href="forum.php?forum_id='. $forum_id .'#start_new_thread">';
 	    	echo  html_image("ic/thread.png",array()) .' '.$Language->getText('forum_forum_utils','start_thread').'</A> | ';
         	if (isset($msg_id) && $msg_id) {
-            	echo "<A HREF='".$_SERVER['PHP_SELF']."?msg_id=$msg_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
+            	echo "<A HREF='?msg_id=$msg_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
 	    	} else {
-            	echo "<A HREF='".$_SERVER['PHP_SELF']."?forum_id=$forum_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
+            	echo "<A HREF='?forum_id=$forum_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
             }
 	    }
 
@@ -218,7 +218,7 @@ function forum_delete_monitor ($forum_id, $user_id) {
  * @return forum_id = -1 if error
  */
 function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_message=1,$description='', $need_feedback = true) {
-  global $feedback,$Language;
+  global $feedback;
 	/*
 		Adding forums to this group
 	*/
@@ -228,12 +228,12 @@ function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_m
 	$result=db_query($sql);
 	if (!$result) {
 		if ($need_feedback) {
-            $feedback .= ' '.$Language->getText('forum_forum_utils','add_err', array($forum_name)).' ';
+            $feedback .= ' '.$GLOBALS['Language']->getText('forum_forum_utils','add_err', array($forum_name)).' ';
         }
 		return -1;
 	} else {
 	  if ($need_feedback) {
-        $GLOBALS['Response']->addFeedback('info', $Language->getText('forum_forum_utils','forum_added', array($forum_name)));
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('forum_forum_utils','forum_added', array($forum_name)));
       }
 	
 	  $forum_id=db_insertid($result);
@@ -250,8 +250,8 @@ function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_m
 	    //set up a cheap default message
 	    $result2=db_query("INSERT INTO forum ".
 			      "(group_forum_id,posted_by,subject,body,date,is_followup_to,thread_id) ".
-			      "VALUES (".db_ei($forum_id).",100,'".db_es($Language->getText('forum_forum_utils','welcome_to', array($group_name))." ".htmlspecialchars($forum_name))."',".
-			      "'".db_es($Language->getText('forum_forum_utils','welcome_to', array($group_name))." ".htmlspecialchars($forum_name))."','".time()."',0,'".get_next_thread_id()."')");
+			      "VALUES (".db_ei($forum_id).",100,'".db_es($GLOBALS['Language']->getText('forum_forum_utils','welcome_to', array($group_name))." ".htmlspecialchars($forum_name))."',".
+			      "'".db_es($GLOBALS['Language']->getText('forum_forum_utils','welcome_to', array($group_name))." ".htmlspecialchars($forum_name))."','".time()."',0,'".get_next_thread_id()."')");
 	  }
 	  return $forum_id;
 	}
@@ -485,7 +485,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 			"WHERE is_followup_to=".db_ei($is_followup_to)." ".
 			"AND subject='".  db_es(htmlspecialchars($subject)) ."' ".
 			"AND group_forum_id=".db_ei($group_forum_id)." ".
-            "AND body='".db_es($body)."' ".
+            "AND body='".db_es(htmlspecialchars($body))."' ".
 			"AND posted_by='". user_getid() ."'");
 
 		if (db_numrows($res3) > 0) {

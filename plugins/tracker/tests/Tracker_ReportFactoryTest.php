@@ -18,13 +18,11 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/Tracker/Report/Tracker_ReportFactory.class.php');
+require_once('bootstrap.php');
 Mock::generatePartial('Tracker_ReportFactory',
                       'Tracker_ReportFactoryTestVersion',
                       array('getCriteriaFactory', 'getRendererFactory'));
-require_once(dirname(__FILE__).'/../include/Tracker/Report/Tracker_Report_CriteriaFactory.class.php');
 Mock::generate('Tracker_Report_CriteriaFactory');
-require_once(dirname(__FILE__).'/../include/Tracker/Report/Tracker_Report_RendererFactory.class.php');
 Mock::generate('Tracker_Report_RendererFactory');
 
 class Tracker_ReportFactoryTest extends TuleapTestCase {
@@ -58,6 +56,42 @@ class Tracker_ReportFactoryTest extends TuleapTestCase {
         
         //default values
         $this->assertEqual($reports[0]->is_query_displayed, 1);
+    }
+}
+
+class Tracker_ReportFactory_SOAPExportTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->tracker_id = 12;
+        $this->tracker = aTracker()->withId($this->tracker_id)->build();
+        $this->user_id    = 32;
+        $this->user = aUser()->withId($this->user_id)->build();
+
+        $this->report_factory = partial_mock('Tracker_ReportFactory', array('getReportsByTrackerId'));
+    }
+
+    public function itTransformTheReportIntoASoapResponse() {
+        $report = mock('Tracker_Report');
+        expect($report)->exportToSoap()->once();
+
+        stub($this->report_factory)->getReportsByTrackerId($this->tracker_id, $this->user_id)->returns(
+            array(
+                100 => $report
+            )
+        );
+        $this->report_factory->exportToSoap($this->tracker, $this->user);
+    }
+
+    public function itReturnsTheSOAPVersionOfTheReport() {
+        $soap_of_one_report = array('id' => 100);
+        stub($this->report_factory)->getReportsByTrackerId()->returns(
+            array(
+                100 => stub('Tracker_Report')->exportToSoap()->returns($soap_of_one_report)
+            )
+        );
+        $soap_response = $this->report_factory->exportToSoap($this->tracker, $this->user);
+        $this->assertEqual($soap_response, array($soap_of_one_report));
     }
 }
 ?>

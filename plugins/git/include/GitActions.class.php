@@ -18,19 +18,7 @@
   * You should have received a copy of the GNU General Public License
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
-require_once('mvc/PluginActions.class.php');
-require_once('events/SystemEvent_GIT_REPO_CREATE.class.php');
-require_once('events/SystemEvent_GIT_REPO_CLONE.class.php');
-require_once('events/SystemEvent_GIT_REPO_DELETE.class.php');
-require_once('events/SystemEvent_GIT_REPO_ACCESS.class.php');
-require_once('common/system_event/SystemEventManager.class.php');
-require_once('GitBackend.class.php');
-require_once('GitRepository.class.php');
-require_once('GitDao.class.php');
-require_once('Git_GitoliteDriver.class.php');
-require_once('Git_Backend_Gitolite.class.php');
-require_once('GitRepositoryFactory.class.php');
-require_once('GitRepositoryManager.class.php');
+
 require_once('common/layout/Layout.class.php');
 
 /**
@@ -41,9 +29,9 @@ require_once('common/layout/Layout.class.php');
 class GitActions extends PluginActions {
 
     /**
-     * @var SystemEventManager
+     * @var Git_SystemEventManager
      */
-    protected $systemEventManager;
+    protected $git_system_event_manager;
     
     /**
      * @var GitRepositoryFactory 
@@ -56,23 +44,40 @@ class GitActions extends PluginActions {
     private $manager;
 
     /**
+     * @var Git_RemoteServer_GerritServerFactory
+     */
+    private $gerrit_server_factory;
+
+    /** @var Git_Driver_Gerrit */
+    private $driver;
+
+    /** @var Git_Driver_Gerrit_UserAccountManager */
+    private $gerrit_usermanager;
+
+    /**
      * Constructor
      *
      * @param Git                  $controller         The controller
-     * @param SystemEventManager   $systemEventManager The system manager
+     * @param Git_SystemEventManager   $system_event_manager The system manager
      * @param GitRepositoryFactory $factory            The factory to manage repositories
      * @param GitRepositoryManager $manager            The manager to create/delete repositories
      */
     public function __construct(
         Git                $controller,
-        SystemEventManager $systemEventManager,
+        Git_SystemEventManager $system_event_manager,
         GitRepositoryFactory $factory,
-        GitRepositoryManager $manager
+        GitRepositoryManager $manager,
+        Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
+        Git_Driver_Gerrit $driver,
+        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager
     ) {
         parent::__construct($controller);
-        $this->systemEventManager = $systemEventManager;
-        $this->factory            = $factory;
-        $this->manager            = $manager;
+        $this->git_system_event_manager    = $system_event_manager;
+        $this->factory               = $factory;
+        $this->manager               = $manager;
+        $this->gerrit_server_factory = $gerrit_server_factory;
+        $this->driver                = $driver;
+        $this->gerrit_usermanager    = $gerrit_usermanager;
 
     }
 
@@ -112,89 +117,29 @@ class GitActions extends PluginActions {
 
     private function markAsDeleted(GitRepository $repository) {
         $repository->markAsDeleted();
-        $this->systemEventManager->createEvent(
-            'GIT_REPO_DELETE',
-            $repository->getProjectId().SystemEvent::PARAMETER_SEPARATOR.$repository->getId(),
-            SystemEvent::PRIORITY_MEDIUM
-        );
+        $this->git_system_event_manager->queueRepositoryDeletion($repository);
     }
 
-    private function createGitshellReference($projectId, $repositoryName) {
-        $this->systemEventManager->createEvent(
-            'GIT_REPO_CREATE',
-            $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryName.SystemEvent::PARAMETER_SEPARATOR.UserManager::instance()->getCurrentUser()->getId(),
-            SystemEvent::PRIORITY_MEDIUM
-        );
-        $this->getController()->redirect('/plugins/git/?action=index&group_id='.$projectId);
-        exit;
-    }
-    
     public function createReference($projectId, $repositoryName) {
-        // Uncomment the following line only for debug prupose if you ever need to
-        // create a gitshell repo (good luck, luke, may the force be with you).
-        //$this->createGitshellReference($projectId, $repositoryName);
-        $c         = $this->getController();
-        $projectId = intval( $projectId );
+        $controller = $this->getController();
+        $projectId  = intval( $projectId );
 
         try {
+            $backend    = new Git_Backend_Gitolite(new Git_GitoliteDriver());
             $repository = new GitRepository();
-            $repository->setBackend(new Git_Backend_Gitolite(new Git_GitoliteDriver()));
+            $repository->setBackend($backend);
             $repository->setDescription(GitRepository::DEFAULT_DESCRIPTION);
             $repository->setCreator(UserManager::instance()->getCurrentUser());
             $repository->setProject(ProjectManager::instance()->getProject($projectId));
             $repository->setName($repositoryName);
 
-            $this->manager->create($repository);
+            $this->manager->create($repository, $backend);
+            $this->redirectToRepo($projectId, $repository->getId());
         } catch (Exception $exception) {
-            $c->addError($exception->getMessage());
+            $controller->addError($exception->getMessage());
         }
 
-        $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
-        return;
-    }
-
-    public function cloneRepository( $projectId, $forkName, $parentId) {
-        
-        $c         = $this->getController();
-        $projectId = intval($projectId);
-        $parentId  = intval($parentId);
-        if ( empty($projectId) || empty($forkName) || empty($parentId) ) {
-            $this->addError('actions_params_error');
-            return false;
-        }
-        
-        $parentRepo = $this->factory->getRepositoryById($parentId);
-        if ($parentRepo) {
-            
-            // Disable possibility to delete gitolite repositories
-            if ($parentRepo->getBackend() instanceof Git_Backend_Gitolite) {
-                $this->addError('disable_fork_gitolite');
-                $this->redirectToRepo($projectId, $parentId);
-            }
-
-            if ($parentRepo->isNameValid($forkName) === false) {
-                $c->addError( $this->getText('actions_input_format_error', array($parentRepo->getBackend()->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
-                $this->redirectToRepo($projectId, $parentId);
-                return false;
-            }
-
-            if ( !$parentRepo->isInitialized() ) {
-                $this->addError('repo_not_initialized');
-                $this->redirectToRepo($projectId, $parentId);
-                return false;
-            }
-        } else {
-            $this->addError( 'actions_repo_not_found' );
-            $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
-            return false;
-        }
-        $this->systemEventManager->createEvent(
-            'GIT_REPO_CLONE',
-            $projectId.SystemEvent::PARAMETER_SEPARATOR.$forkName.SystemEvent::PARAMETER_SEPARATOR.$parentId.SystemEvent::PARAMETER_SEPARATOR.$this->user->getId(),
-            SystemEvent::PRIORITY_MEDIUM
-        );
-        $c->addInfo( $this->getText('actions_create_repo_process') );
-        $this->redirectToRepo($projectId, $parentId);
+        $controller->redirect('/plugins/git/?action=index&group_id='.$projectId);
         return;
     }
 
@@ -235,17 +180,24 @@ class GitActions extends PluginActions {
             $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
             return;
         }
-        $this->addData( array('repository'=>$repository) );
+        $this->addData(array(
+            'repository'     => $repository,
+            'gerrit_servers' => $this->gerrit_server_factory->getServers(),
+            'driver'         => $this->driver,
+            'gerrit_usermanager' => $this->gerrit_usermanager
+        ));
         return true;
     }
 
-    public function repoManagement($projectId, $repositoryId) {
-        $c = $this->getController();
-        if (empty($repositoryId)) {
-            $this->addError('actions_params_error');
-            return false;
+    public function repoManagement(GitRepository $repository) {
+        $this->addData(array('repository'=>$repository));
+        if ($this->git_system_event_manager->isRepositoryMigrationToGerritOnGoing($repository)) {
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $this->getText('gerrit_migration_ongoing'));
         }
-        $this->_loadRepository($projectId, $repositoryId);
+        $this->addData(array(
+            'gerrit_servers' => $this->gerrit_server_factory->getServers(),
+            'driver'         => $this->driver,
+        ));
         return true;
     }
 
@@ -263,6 +215,7 @@ class GitActions extends PluginActions {
             $c->addInfo($this->getText('mail_prefix_updated'));
             $this->addData(array('repository'=>$repository));
         }
+        $this->git_system_event_manager->queueRepositoryUpdate($repository);
         return true;
     }
 
@@ -286,6 +239,7 @@ class GitActions extends PluginActions {
                 }
             }
         }
+        $this->git_system_event_manager->queueRepositoryUpdate($repository);
         //Display this message, just if all the entred mails have been added
         if ($res) {
             $c->addInfo($this->getText('mail_added'));
@@ -309,6 +263,7 @@ class GitActions extends PluginActions {
                 $ret = false;
             }
         }
+        $this->git_system_event_manager->queueRepositoryUpdate($repository);
         return $ret;
     }
 
@@ -357,9 +312,7 @@ class GitActions extends PluginActions {
         foreach ($mailsToDelete as $mail) {
             $repository->notificationRemoveMail($mail);
         }
-        $this->systemEventManager->createEvent('GIT_REPO_ACCESS',
-                                               $repoId.SystemEvent::PARAMETER_SEPARATOR.'private',
-                                               SystemEvent::PRIORITY_HIGH);
+        $this->git_system_event_manager->queueGitShellAccess($repository, 'private');
         $c->addInfo($this->getText('actions_repo_access'));
     }
 
@@ -400,20 +353,17 @@ class GitActions extends PluginActions {
         try {
             $repository->save();
             if ( !empty($repoAccess) ) {
+                //TODO use Polymorphism to handle this
                 if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
                     $repository->getBackend()->savePermissions($repository, $repoAccess);
                 } else {
                     if ($repository->getAccess() != $repoAccess) {
-                        $this->systemEventManager->createEvent(
-                                                      'GIT_REPO_ACCESS',
-                                                       $repoId.SystemEvent::PARAMETER_SEPARATOR.$repoAccess,
-                                                       SystemEvent::PRIORITY_HIGH
-                                                    );
+                        $this->git_system_event_manager->queueGitShellAccess($repository, $repoAccess);
                         $c->addInfo( $this->getText('actions_repo_access') );
                     }
                 }
             }
-            $repository->getBackend()->commitTransaction($repository);
+            $this->git_system_event_manager->queueRepositoryUpdate($repository);
             
         } catch (GitDaoException $e) {
             $c->addError( $e->getMessage() );
@@ -499,15 +449,16 @@ class GitActions extends PluginActions {
     /**
      * Fork a bunch of repositories in a project for a given user
      * 
-     * @param int    $groupId   The project id
-     * @param array  $repos_ids The array of id of repositories to fork
-     * @param string $namespace The namespace where the new repositories will live
-     * @param User   $user      The owner of those new repositories
-     * @param Layout $response  The response object
+     * @param int    $groupId         The project id
+     * @param array  $repos_ids       The array of id of repositories to fork
+     * @param string $namespace       The namespace where the new repositories will live
+     * @param PFUser   $user            The owner of those new repositories
+     * @param Layout $response        The response object
+     * @param array  $forkPermissions Permissions to be applied for the new repository
      */
-    public function fork(array $repos, Project $to_project, $namespace, $scope, User $user, Layout $response, $redirect_url) {
+    public function fork(array $repos, Project $to_project, $namespace, $scope, PFUser $user, Layout $response, $redirect_url, array $forkPermissions) {
         try {
-            if ($this->manager->forkRepositories($repos, $to_project, $user, $namespace, $scope)) {
+            if ($this->manager->forkRepositories($repos, $to_project, $user, $namespace, $scope, $forkPermissions)) {
                 $GLOBALS['Response']->addFeedback('info', $this->getText('successfully_forked'));
                 $response->redirect($redirect_url);
             }
@@ -515,7 +466,45 @@ class GitActions extends PluginActions {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
         }
     }
-    
+
+    /**
+     * Prepare data for fork permissions action
+     *
+     * @param array  $repos     Repositories Ids we want to fork
+     * @param array  $project   The project Id where repositories would be forked
+     * @param string $namespace The namespace where the new repositories will live
+     * @param string $scope     The scope of the fork: personal or cross project.
+     *
+     * @return void
+     */
+    public function forkRepositoriesPermissions($repos, $project, $namespace, $scope) {
+        $this->addData(array('repos'     => join(',', $repos),
+                             'group_id'  => $project,
+                             'namespace' => $namespace,
+                             'scope'     => $scope));
+    }
+
+    /**
+     * 
+     * @param GitRepository $repository
+     * @param int $remote_server_id the id of the server to which we want to migrate
+     */
+    public function migrateToGerrit(GitRepository $repository, $remote_server_id) {
+        if ($repository->canMigrateToGerrit()) {
+            try {
+                $this->gerrit_server_factory->getServerById($remote_server_id);
+                $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id);
+            } catch (Git_RemoteServer_NotFoundException $e) {
+                // TODO log error to the syslog
+            }
+        }
+    }
+
+    public function disconnectFromGerrit(GitRepository $repository) {
+        $repository->getBackend()->disconnectFromGerrit($repository);
+        $this->git_system_event_manager->queueRepositoryUpdate($repository);
+    }
+
     private function redirectToRepo($projectId, $repoId) {
         $this->getController()->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
     }
@@ -523,6 +512,8 @@ class GitActions extends PluginActions {
     private function addError($error_key) {
         $this->getController()->addError($this->getText($error_key));
     }
+    
+    
 }
 
 ?>

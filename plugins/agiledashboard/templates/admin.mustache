@@ -1,0 +1,24 @@
+<h2>{{adminTitle}}</h2>
+<p>
+    <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;action=new" id="planning_create">
+        <img border="0" alt="add" src="/themes/Tuleap/images/ic/add.png" style="vertical-align:middle"> 
+        {{createPlanning}}
+    </a>
+</p>
+{{#hasPlannings}}
+<ul>
+    {{#getPlannings}}
+    <li>
+        <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;planning_id={{getId}}&amp;action=show">
+            {{getName}}
+        </a>
+        <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;planning_id={{getId}}&amp;action=edit">
+            <img src="{{getEditIconPath}}" alt="{{getEditActionLabel}}" />
+        </a>
+        <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;planning_id={{getId}}&amp;action=delete">
+            <img src="{{getDeleteImagePath}}" alt="delete" />
+        </a>
+    </li>
+    {{/getPlannings}}
+</ul>
+{{/hasPlannings}}

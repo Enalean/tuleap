@@ -148,21 +148,19 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
 	$return = '
 		<SELECT NAME="'.$select_name.'" id="'.$select_name.'">';
 
-	$rows=count($vals);
-
-	for ($i=0; $i<$rows; $i++) {
+        foreach ($vals as $value => $label) {
 		if ( $samevals ) {
-			$return .= "\n\t\t<OPTION VALUE=\"" . $vals[$i] . "\"";
-			if ($vals[$i] == $checked_val) {
+			$return .= "\n\t\t<OPTION VALUE=\"" . $label . "\"";
+			if ($label == $checked_val) {
 				$return .= ' SELECTED';
 			}
 		} else {
-			$return .= "\n\t\t<OPTION VALUE=\"" . $i .'"';
-			if ($i == $checked_val) {
+			$return .= "\n\t\t<OPTION VALUE=\"" . $value .'"';
+			if ($value == $checked_val) {
 				$return .= ' SELECTED';
 			}
 		}
-		$return .= '>'.$vals[$i].'</OPTION>';
+		$return .= '>'.$label.'</OPTION>';
 	}
 	$return .= '
 		</SELECT>';
@@ -321,7 +319,7 @@ function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=tr
 	return html_build_select_box_from_arrays (util_result_column_to_array($result,0),util_result_column_to_array($result,1),$name,$checked_val,$show_100,$text_100,$show_any,$text_any,$show_unchanged,$text_unchanged, $purify_level);
 }
 
-function html_build_multiple_select_box($result,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true, $purify_level=CODENDI_PURIFIER_CONVERT_HTML) {
+function html_build_multiple_select_box($result,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true, $purify_level=CODENDI_PURIFIER_CONVERT_HTML, $disabled = false) {
     if (is_array($result)) {
         $array =& $result;
     } else {
@@ -330,9 +328,9 @@ function html_build_multiple_select_box($result,$name,$checked_array,$size='8',$
             $array[] = array('value' => $row[0], 'text' => $row[1]);
         }
     }
-    return html_build_multiple_select_box_from_array($array,$name,$checked_array,$size,$show_100,$text_100, $show_any,$text_any,$show_unchanged,$text_unchanged,$show_value, $purify_level);
+    return html_build_multiple_select_box_from_array($array,$name,$checked_array,$size,$show_100,$text_100, $show_any,$text_any,$show_unchanged,$text_unchanged,$show_value, $purify_level, $disabled);
 }
-function html_build_multiple_select_box_from_array($array,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true, $purify_level=CODENDI_PURIFIER_CONVERT_HTML) {
+function html_build_multiple_select_box_from_array($array,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true, $purify_level=CODENDI_PURIFIER_CONVERT_HTML, $disabled = false) {
         global $Language;
 	/*
 		Takes a result set, with the first column being the "id" or value
@@ -355,12 +353,13 @@ function html_build_multiple_select_box_from_array($array,$name,$checked_array,$
         if ($text_100 == '') { $text_100 = $Language->getText('global','none'); }
         if ($text_any == '') { $text_any = $Language->getText('global','any'); }
         if ($text_unchanged == '') { $text_unchanged = $Language->getText('global','unchanged'); }
+        $disabled = $disabled ? 'disabled="disabled"' : '';
 
 	$checked_count=count($checked_array);
 //      echo '-- '.$checked_count.' --';
     $id = str_replace('[]', '', $name);
 	$return = '
-		<SELECT NAME="'.$name.'" id="'.$id.'" MULTIPLE SIZE="'.$size.'">';
+		<SELECT NAME="'.$name.'" id="'.$id.'" MULTIPLE SIZE="'.$size.'" '. $disabled .'>';
 
 	/*
 		Put in the Unchanged box

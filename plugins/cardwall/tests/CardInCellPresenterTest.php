@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../include/CardInCellPresenter.class.php';
+require_once dirname(__FILE__) .'/bootstrap.php';
 
 class CardInCellPresenterTest extends TuleapTestCase {
     

@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field_Integer.class.php');
-require_once('Tracker_FormElement_Field_ReadOnly.class.php');
 class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly {
     
     public $default_properties = array();

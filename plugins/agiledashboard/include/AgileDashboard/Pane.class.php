@@ -25,37 +25,31 @@
 abstract class AgileDashboard_Pane {
 
     /**
-     * @var bool
+     * @see AgileDashboard_PaneInfo::getUriForMilestone()
+     * @return string URI of the pane for a given milestone
      */
-    private $is_active;
-    
-    /**
-     * @return bool
-     */
-    public function isActive() {
-        return $this->is_active;
-    }
-    
-    /**
-     * @param bool $state
-     */
-    public function setActive($state) {
-        $this->is_active = (bool)$state;
-    }
+    public abstract function getUriForMilestone(Planning_Milestone $milestone);
 
     /**
+     * @see AgileDashboard_PaneInfo::getIdentifier()
      * @return string eg: 'cardwall'
      */
     public abstract function getIdentifier();
 
     /**
-     * @return string eg: 'Card Wall'
+     * Return the content when displayed as a Pane
+     *
+     * @return string eg: '<a href="">customize</a> <table>...</table>'
      */
-    public abstract function getTitle();
+    public abstract function getFullContent();
 
     /**
+     * Return the content when displayed on the agile dashboard front page
+     * Only used for cardwall as of today
+     *
      * @return string eg: '<table>...</table>'
      */
-    public abstract function getContent();
+    public abstract function getMinimalContent();
+
 }
 ?>

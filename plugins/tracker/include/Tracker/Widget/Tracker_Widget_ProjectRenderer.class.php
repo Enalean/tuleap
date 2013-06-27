@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/widget/WidgetLayoutManager.class.php';
 require_once 'Tracker_Widget_Renderer.class.php';
 
 /**

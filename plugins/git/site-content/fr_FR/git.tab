@@ -9,7 +9,7 @@ plugin_git	help_reference_title	Intialiser un dépôt
 plugin_git	help_init_reference	<li>cd mysources</li><li>git init</li><li>touch README (par exemple)</li><li>git add README</li><li>git commit -m 'initial commit'</li><li>git push &lt;url_du_dépôt&gt; master</li>
 plugin_git	help_init_reference_msg	Le dépôt n'a pas encore été initialisé, ceci est nécessaire pour permettre aux utilisateurs de le cloner
 plugin_git	help_create_reference_title	Créer une réference
-plugin_git	help_create_reference	<li>Une référence est un dépôt principal qui peut être cloné sur le serveur codendi (ex: développement d'une fonctionnalité) et aussi cloné localement par les membres du projet pour leur développements.</li>
+plugin_git	help_create_reference	<li>Une référence est un dépôt principal qui peut être cloné sur le serveur Tuleap (ex: développement d'une fonctionnalité) et aussi cloné localement par les membres du projet pour leur développements.</li>
 plugin_git	help_link	Aide
 plugin_git	help_tree	<li>La liste des dépôt est hiérarchique.</li><li>Les références sont les racines tandis que les clones (forks) sont présentés décalés sous leur dépôt parent.</li><li>Chaque dépôt est un lien vers un page de détail et d'adminstration.</li>
 plugin_git	help_fork	<li>Un fork est le clone d'une référence ou d'un fork.</li><li>Il est accessible en lecture et écriture pour tous les membres d'un projet.</li><li>Il peut être utilisé comme le dépôt pour le développement d'une fonctionnalité.</li>
@@ -58,6 +58,10 @@ plugin_git	dao_error_remove_notification	L'adresse mail n'a pas été supprimée
 
 plugin_git	dao_child_params	Paramètres invalides
 
+plugin_git	disconnect_gerrit_title	Déconnexion de Gerrit
+plugin_git	disconnect_gerrit_msg	Cette opération est <strong>irréversible</strong>. Ce dépôt ne pourra plus être géré de nouveau par un serveur gerrit. Êtes vous certain de vouloir continuer ?
+plugin_git	disconnect_gerrit_yes	Oui, je veux déconnecter ce dépôt de Gerrit
+
 plugin_git	backend_delete_haschild_error	Impossible de supprimer le dépôt : est parent d'au moins un autre dépôt
 plugin_git	backend_delete_path_error	Impossible de supprimer le dépôt : chemin n'appartient pas au répertoire root du projet
 plugin_git	backend_gitroot_mkdir_error	Erreur à la création du répertoire racine des dépôts Git (Contactez l'administrateur)
@@ -84,7 +88,8 @@ plugin_git	actions_no_repository_forked	Aucun dépôt n'a été forké.
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Crée par
 plugin_git	view_repo_creation_date	Date
-plugin_git	view_repo_parent	Parent
+plugin_git	view_repo_parent_gitshell	Parent : $1
+plugin_git	view_repo_parent_gitolite	Fork de $1
 plugin_git	view_repo_initialized	Initialisé
 plugin_git	view_repo_not_initialized	Non initialisé
 plugin_git	view_repo_clone_url	Clone url
@@ -103,9 +108,17 @@ plugin_git	project_service_not_available	Le service n'est pas disponible pour vo
 plugin_git	reference_commit_nature_key	Commit Git
 plugin_git	reference_commit_desc_key	Commit Git
 
-plugin_git	admin_repo_management	Gestion du dépôt GIT
-
 plugin_git	admin_settings	Options générales
+plugin_git	gerrit_pane_title	Gerrit
+plugin_git	gerrit_title	Migration vers Gerrit
+plugin_git	gerrit_url	Veuillez choisir le serveur Gerrit de destination :
+plugin_git	gerrit_migration_description	Vous vous apprêtez à effectuer la migration de votre dépôt <em>$1</em> vers l'outil Gerrit.
+plugin_git	gerrit_migration_more_description	La gestion du dépôt (permissions, ...) sera déléguée à Gerrit : <ul><li>Un projet <em>$1</em> sera créé sur le serveur sélectionné.</li><li>Le dépot courant deviendra un miroir de la référence sur Gerrit.</li></ul>
+plugin_git	gerrit_migrated_more_description	Pour rappel, la gestion du dépôt (permissions, ...) à été déléguée à Gerrit : <ul><li>Un projet <em>$1</em> a été créé sur le serveur $2.</li><li>Le dépot courant est maintenant un miroir de la référence sur Gerrit.</li></ul>
+plugin_git	gerrit_migrate_to	Migrer repo vers Gerrit
+plugin_git	gerrit_server_already_migrated	Le dépôt <em>$1</em> a déjà été migré sur le projet Gerrit : <a href="$3">$2</a>.
+plugin_git	permissions_on_remote_server	Vous ne pouvez modifier QUE les permissions en <strong>LECTURE</strong>, car elles sont gérés par un serveur Gerrit distant. Ces modifications affectent uniquement $1 et <strong>NE SONT PAS propagées vers Gerrit</strong>.
+plugin_git	gerrit_migration_ongoing	La migration de ce dépôt vers le serveur Gerrit est en cours, merci de patienter quelques minutes.
 
 plugin_git	mail_prefix_label	Préfixe de notification
 plugin_git	mail_prefix_title	Mettre a jour le préfixe du mail de notification
@@ -136,7 +149,6 @@ plugin_git	set_private_confirm	Etes-vous certain(e) de vouloir changer l'accés 
 plugin_git	set_private_mails	Liste des adresses mail a ne plus notifier
 
 plugin_git	feedback_event_create	Un événement est en attente pour la création du dépôt $1. Il sera traité dans une minute ou deux. Merci de votre patience.
-plugin_git	feedback_event_fork	Un événement est en attente pour le fork ($1) d'un dépôt. Il sera traité dans une minute ou deux. Merci de votre patience.
 plugin_git	feedback_event_delete	Un événement est en attente pour la suppression du dépôt '$1'. Il sera traité dans une minute ou deux. Merci de votre patience.
 plugin_git	feedback_event_access	Un événement est en attente pour le changement de permissions d'un dépôt. Il sera traité dans une minute ou deux. Merci de votre patience.
 
@@ -158,6 +170,9 @@ plugin_git	fork_malformed_path	Le chemin ne peut pas contenir (..)
 plugin_git	fork_choose_destination_project	Copier vers un autre projet
 plugin_git	fork_choose_destination_personal	Créer les dépôts personnels dans ce projet
 plugin_git	successfully_forked	Fork créé avec succès
+plugin_git	fork_destination_project_message	Dans le projet <b>$1</b>
+plugin_git	fork_destination_personal_message	en tant que fork personnel
+plugin_git	fork_repository_message	Vous êtes sur le point de créer un fork du dépôt: $1
 
 plugin_git	tree_view_project	Projet
 plugin_git	tree_view_repository	Dépôt
@@ -197,3 +212,14 @@ plugin_git	widget_project_pushes_error	Pas de push pour la/les dernière(s) $1 s
 
 plugin_git	logsdaily_field	Nom du répertoire
 plugin_git	logsdaily_title	Les Git push
+
+plugin_git	delegated_to_gerrit	La gestion de ce dépôt Git a été déléguée à la plateforme Gerrit:
+plugin_git	waiting_for_repo_creation	Le dépôt est en attente de création. Veuillez revenir dans quelques minutes.
+
+plugin_git	push_ssh_keys_error	Impossible de copier les clés SSH. Ajoutez-les de façon manuelle.
+plugin_git	push_ssh_keys_button_value	Pousser les clés SSH
+plugin_git	push_ssh_keys_button_title	Pousser les clés SSH sur les serveurs externes
+plugin_git	push_ssh_keys_info	Vos anciennes clés ne sont pas poussées automatiquement. Toute nouvelle clé sera automatiquement poussée sur les serveurs suivants :
+
+plugin_git	gerrit_cannot_migrate_error_msg	Ce dépôt ne peux pas être migré. Ceci est dû au fait qu'il a déjà été migré par le passé et ne peut plus être migré de nouveau.
+

@@ -25,8 +25,8 @@ require_once dirname(__FILE__).'/../../tools/continuous_integration/singletons/S
  * Avoid contaminating new classes with singleton lookup
  */
 class NoMoreSingletonitusTest extends TuleapTestCase {
-    
-    public function testThereAreNoNewSingletonLookups() {
+
+    public function _testThereAreNoNewSingletonLookups() {
         $singleton_counter          = new SingletonCounter();
         $expected_singleton_lookups = $singleton_counter->expectedSingletonCount();
         $actual_singleton_lookups   = $singleton_counter->countSingletonLookupsInProject();
@@ -38,7 +38,7 @@ class NoMoreSingletonitusTest extends TuleapTestCase {
         
         $singleton_count_file = $singleton_counter->getSingletoncountFilename();
         $this->assertFalse($new_singletons < 0, 
-                "Great job! You removed one or more singleton lookups, you're a Dependency Injection champion!
+                "Great job! You removed ".-$new_singletons." singleton lookups, you're a Dependency Injection champion!
                  please decrease the current_number_of_singleton_lookups variable in $singleton_count_file >
                  It should be : $actual_singleton_lookups");
     }

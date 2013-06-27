@@ -17,11 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
+require_once('bootstrap.php');
 Mock::generate('Tracker_Artifact');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field_List', 
     'Tracker_FormElement_Field_ListTestVersion', 
@@ -55,40 +53,31 @@ Mock::generatePartial(
         'getFactoryDescription',
         'getFactoryIconUseIt',
         'getFactoryIconCreate',
+        'isNone',
     )
 );
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_BindFactory.class.php');
 Mock::generate('Tracker_FormElement_Field_List_BindFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind.class.php');
-Mock::generate('Tracker_FormElement_Field_List_Bind');
+Mock::generate('Tracker_FormElement_Field_List_Bind_Static');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_BindValue.class.php');
 Mock::generate('Tracker_FormElement_Field_List_BindValue');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_ListDao.class.php');
 Mock::generate('Tracker_FormElement_Field_Value_ListDao');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/dao/Tracker_FormElement_Field_ListDao.class.php');
 Mock::generate('Tracker_FormElement_Field_ListDao');
 
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
-require_once(dirname(__FILE__).'/../include/workflow/Workflow.class.php');
 Mock::generate('Workflow');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_Changeset.class.php');
 Mock::generate('Tracker_Artifact_Changeset');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_Changeset_Null.class.php');
 Mock::generate('Tracker_Artifact_Changeset_Null');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_List.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue_List');
 
 require_once('common/include/Response.class.php');
@@ -97,28 +86,22 @@ Mock::generate('Response');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 
-require_once(dirname(__FILE__).'/../include/workflow/TransitionFactory.class.php');
 Mock::generate('TransitionFactory');
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 
 class Tracker_FormElement_Field_ListTest extends UnitTestCase {
-    
-    function __construct($name = 'Open List test') {
-        parent::__construct($name);
+
+    function setUp() {
         $this->field_class            = 'Tracker_FormElement_Field_ListTestVersion';
         $this->field_class_for_import = 'Tracker_FormElement_Field_ListTestVersion_ForImport';
         $this->dao_class              = 'MockTracker_FormElement_Field_Value_ListDao';
         $this->cv_class               = 'Tracker_Artifact_ChangesetValue_List';
         $this->mockcv_class           = 'MockTracker_Artifact_ChangesetValue_List';
-    }
-    
-    function setUp() {
         $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['Language'] = new MockBaseLanguage();
     }
@@ -138,7 +121,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $dar->setReturnValueAt(3, 'valid', false);
         $value_dao->setReturnReference('searchById', $dar);
         
-        $bind = new MockTracker_FormElement_Field_List_Bind();
+        $bind = new MockTracker_FormElement_Field_List_Bind_Static();
         $bind->setReturnValue('getBindValues', array_fill(0, 3, new MockTracker_FormElement_Field_List_BindValue()));
         
         $list_field = new $this->field_class();
@@ -237,11 +220,11 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
     function testIsTransitionExist() {
         $artifact             = new MockTracker_Artifact();
         $changeset            = new MockTracker_Artifact_Changeset();
-        $bind                 = new MockTracker_FormElement_Field_List_Bind();
+        $bind                 = new MockTracker_FormElement_Field_List_Bind_Static();
         $changeset_value_list = new $this->mockcv_class();
         $workflow             = new MockWorkflow();
         $tracker              = new MockTracker();
-        $user                 = new MockUser();
+        $user                 = mock('PFUser');
         
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v1->setReturnValue('__toString', '# 123');
@@ -299,10 +282,10 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
     function testTransitionIsValidOnSubmit() {
         $artifact             = new MockTracker_Artifact();
         $changeset            = new MockTracker_Artifact_Changeset_Null();
-        $bind                 = new MockTracker_FormElement_Field_List_Bind();
+        $bind                 = new MockTracker_FormElement_Field_List_Bind_Static();
         $workflow             = new MockWorkflow();
         $tracker              = new MockTracker();
-        $user                 = new MockUser();
+        $user                 = mock('PFUser');
         
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v1->setReturnValue('__toString', '# 123');
@@ -337,10 +320,10 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
     function testTransitionIsInvalidOnSubmit() {
         $artifact             = new MockTracker_Artifact();
         $changeset            = new MockTracker_Artifact_Changeset_Null();
-        $bind                 = new MockTracker_FormElement_Field_List_Bind();
+        $bind                 = new MockTracker_FormElement_Field_List_Bind_Static();
         $workflow             = new MockWorkflow();
         $tracker              = new MockTracker();
-        $user                 = new MockUser();
+        $user                 = mock('PFUser');
         
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v1->setReturnValue('__toString', '# 123');
@@ -379,7 +362,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
     }
     
     function testSoapAvailableValues() {
-        $bind = new MockTracker_FormElement_Field_List_Bind();
+        $bind = new MockTracker_FormElement_Field_List_Bind_Static();
         $f = new $this->field_class();
         $f->setReturnReference('getBind', $bind);
         $bind->expectOnce('getSoapAvailableValues');
@@ -401,7 +384,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         
         $mapping = array();
         
-        $bind    = new MockTracker_FormElement_Field_List_Bind();
+        $bind    = new MockTracker_FormElement_Field_List_Bind_Static();
         $factory = new MockTracker_FormElement_Field_List_BindFactory();
         
         $f = new $this->field_class_for_import();
@@ -416,7 +399,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
     
     public function test_afterSaveObject() {
         $tracker = new MockTracker();
-        $bind    = new MockTracker_FormElement_Field_List_Bind();
+        $bind    = new MockTracker_FormElement_Field_List_Bind_Static();
         $factory = new MockTracker_FormElement_Field_List_BindFactory();
         $dao     = new MockTracker_FormElement_Field_ListDao();
         
@@ -455,6 +438,46 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $this->assertFalse($field_list->isValid($artifact, $value3));
         $this->assertTrue($field_list->isValid($artifact, $value4));
     }
-
 }
+
+class Tracker_FormElement_Field_List_processGetValuesTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->layout  = mock('Tracker_IDisplayTrackerLayout');
+        $this->user    = mock('PFUser');
+        $this->request = aRequest()->with('func', 'get-values')->build();
+        $this->bind    = mock('Tracker_FormElement_Field_List_Bind_Static');
+        $this->list    = new Tracker_FormElement_Field_ListTestVersion();
+        stub($this->list)->getBind()->returns($this->bind);
+    }
+
+    public function itDoesNothingIfTheRequestDoesNotContainTheParameter() {
+        $request = aRequest()->with('func', 'whatever')->build();
+        expect($GLOBALS['Response'])->sendJSON()->never();
+        $this->list->process($this->layout, $request, $this->user);
+    }
+
+    public function itSendsAnEmptyArrayInJSONFormatWhenNoValues() {
+        stub($this->bind)->getAllValues()->returns(array());
+        expect($GLOBALS['Response'])->sendJSON(array())->once();
+        $this->list->process($this->layout, $this->request, $this->user);
+    }
+
+    public function itSendsTheValuesInJSONFormat() {
+        $v1 = new Tracker_FormElement_Field_List_Bind_StaticValue(10, 'label1', 'desc1', 'rank', false);
+        $v2 = new Tracker_FormElement_Field_List_Bind_StaticValue(11, 'label2', 'desc2', 'rank', false);
+
+        stub($this->bind)->getAllValues()->returns(array($v1, $v2));
+
+        expect($GLOBALS['Response'])->sendJSON(
+                array(
+                    10 => $v1->fetchValuesForJson(),
+                    11 => $v2->fetchValuesForJson()
+                ))->once();
+
+        $this->list->process($this->layout, $this->request, $this->user);
+    }
+}
+
 ?>

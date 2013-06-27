@@ -1,3 +1,24 @@
+Version 2.26.16 - Tuleap 6.1
+    * Fix XSS issue in docman (Contrib STMicroelectronics)
+
+Version 2.26.15 - Tuleap 5.13
+    * Fix sla #2121: Problem with mime type detection when uploading a file in docman via webdav
+
+Version 2.26.14 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
+Version 2.26.13 - Tuleap 5.9
+    * Fix: typo
+
+Version 2.26.12 - Tuleap 5.9
+    * Fix bug with document filename on download with IE9 (contrib STMicroelectronics)
+
+Version 2.26.11 - Tuleap 5.9
+    * Fix fatal error when an approval table is set on a deleted item
+
+Version 2.26.10 - Tuleap 5.7
+    * Files (docman & FRS) can now be archived in a dedicated place before being purged
+
 Version 2.26.9 - Tuleap 5.5.1
     * Adjust look 'n feel of the lock icon
 

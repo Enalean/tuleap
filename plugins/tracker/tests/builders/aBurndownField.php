@@ -18,8 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElement_Field_Burndown.class.php';
-
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 class BurndownFieldBuilder {
     
     private $tracker;

@@ -20,8 +20,7 @@
 
 class BlankAfterClosingPhpTagTest extends UnitTestCase {
     
-    function BlankAfterClosingPhpTagTest($name = 'Blank after closing php tag test') {
-        $this->UnitTestCase($name);
+    function __construct() {
         $this->NONE   = 0;
         $this->START  = 1;
         $this->END    = 2;
@@ -36,22 +35,35 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
                                 'plugins/git/gitphp',
                                 'plugins/git/gitphp-0.1.0',
                                 'plugins/webdav/include/lib',
+                                'plugins/doaprdf',
+                                'plugins/admssw',
+                                'plugins/foafprofiles',
+                                'plugins/fusionforge_compat',
                                 'tools/utils/releases_notes',
+                                'plugins/mediawiki',
                                 )) .')$`';
         
         //Those files are allowed to contains something before opening tag
         $this->allow_start = array(
             'cli/codendi.php',
+            'cli/tuleap.php',
             'tools/utils/checkCommitMessage.php',
             'plugins/IM/include/jabbex_api/installation/install.php',
             'plugins/IM/www/webmuc/groupchat.php',
             'plugins/docman/bin/DocmanImport/FSDocmanUploader.class.php',
             'post_merge_actions.php',
+            'import_all_xml.php',
+            'export_all_xml.php',
+            'export_project_xml.php',
+            'src/utils/svn/pre-revprop-change.php',
+            'src/utils/svn/post-revprop-change.php',
+            'plugins/git/hooks/post-receive.php',
         );
         
         //Those files are allowed to contain something after closing tag
         $this->allow_end = array(
             'cli/codendi.php',
+            'cli/tuleap.php',
             'plugins/tests/www/index.php',
             'plugins/IM/www/webmuc/groupchat.php',
             'plugins/IM/www/webmuc/muckl.php',
@@ -63,12 +75,16 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
             'plugins/tracker/www/group_selection.php',
             'src/www/scripts/check_pw.js.php',
             'src/www/scripts/cross_references.js.php',
+            'plugins/tests/www/mocha/src/core/check_pw.js.php',
+            'plugins/tests/www/mocha/src/core/cross_references.js.php',
             'plugins/tracker/www/scripts/codendi/TrackerArtifact.js.php',
             'plugins/tracker/www/scripts/codendi/TrackerReports.js.php',
             'plugins/tracker/www/scripts/codendi/TrackerAdminFields.js.php',
             'site-content/en_US/others/default_page.php',
             'site-content/fr_FR/others/default_page.php',
             'site-content/en_US/mail/html_template.php',
+            'plugins/git/site-content/en_US/git_url_example.php',
+            'plugins/git/site-content/fr_FR/git_url_example.php',
             'autoload.php',
         );
     }

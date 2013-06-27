@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'NotInHierarchyException.class.php';
-require_once 'CyclicHierarchyException.class.php';
 
 /**
  * Store relationship between tracker based on their ids.
@@ -73,7 +71,11 @@ class Tracker_Hierarchy {
      * @return type
      */
     public function isRoot($tracker_id) {
-        return $this->getLevel($tracker_id) == 0;
+        try {
+            return $this->getLevel($tracker_id) == 0;
+        } catch (Tracker_Hierarchy_NotInHierarchyException $e) {
+            return false;
+        }
     }
 
     /**

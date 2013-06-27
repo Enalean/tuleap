@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'BoardPresenter.class.php';
 
 /**
  * The content of the renderer
@@ -44,6 +43,8 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter {
      * @var string
      */
     public $warn_no_values;
+
+    public $is_display_avatar_selected = "";
 
     /**
      * @param Cardwall_Board                      $board              The board

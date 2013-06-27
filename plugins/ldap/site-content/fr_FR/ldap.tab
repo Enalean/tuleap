@@ -13,7 +13,7 @@ plugin_ldap	not_found	Erreur - Introuvable
 plugin_ldap	no_ldap_login_found	Login sur l'annuaire d'entreprise introuvable
 plugin_ldap	login_pls_use_ldap	Merci d'utiliser le login de votre annuaire d'entreprise (pas celui de $1).
 plugin_ldap	ugroup_list_ldap_title	Import depuis l'annuaire
-plugin_ldap	ugroup_list_add_users	Ajouter des utilisateurs
+plugin_ldap	ugroup_list_add_users	Ajouter des utilisateurs depuis l'annuaire
 plugin_ldap	ugroup_list_add_set_binding	Lier avec un group de l'annuaire
 plugin_ldap	ugroup_list_add_upd_binding	Mettre à jour le lien avec l'annuaire ($1)
 plugin_ldap	project_admin_add_ugroup	Lier avec un groupe de l'annuaire:

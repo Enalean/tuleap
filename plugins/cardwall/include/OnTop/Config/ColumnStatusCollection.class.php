@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ColumnCollection.class.php';
-require_once 'ColumnsVisitor.class.php';
 
 /**
  * Wrapper of array of columns based on the status field

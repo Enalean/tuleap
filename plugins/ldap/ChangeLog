@@ -1,3 +1,39 @@
+Version 3.31 - Tuleap 6.2
+    * Update user creation after change in core (ensure user consistency)
+
+Version 3.30 - Tuleap 6.1
+    * Fix art #3535 - Apache authentication fails with Active Directory
+
+Version 3.29 - Tuleap 5.13
+    * Development: LDAP now provides an LDAP user to all platform
+
+Version 3.28 - Tuleap 5.13
+    * Fix sla #3147: Do not update ldap login when project is not using svn/ldap
+
+Version 3.27 - Tuleap 5.12
+    * Development: SystemEvents can now be processed by application owner instead of root
+
+Version 3.26 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
+Version 3.25 - Tuleap 5.11
+    * Improve user experience with user group management (contrib STMicroelectronics)
+
+Version 3.24 - Tuleap 5.11
+    * Forbid login when user as an LDAP id but LDAP authentication failed
+
+Version 3.23 - Tuleap 5.11
+    * Development: add new hook to provide LDAP uid to other component of the application
+
+Version 3.22 - Tuleap 5.7
+    * Fix art #1679: Not redirected to Personal Page after log in from Tuleap Home page
+
+Version 3.21 - Tuleap 5.6
+    * User groups can be bound to a group of another project (Contrib STMicroelectronics)
+
+Version 3.20 - Tuleap 5.6
+    * Improve compatibility with Active Directory: make autocomplete on user names works (contrib Orange).
+
 Version 3.19 - Tuleap 5.5
     * LDAP plugin now includes bind_dn/password in Apache configuration if needed
     * Normalize to lowercase

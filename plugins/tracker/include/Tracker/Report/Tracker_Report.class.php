@@ -18,16 +18,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('dao/Tracker_Report_CriteriaDao.class.php');
 
-require_once(dirname(__FILE__).'/../TrackerFactory.class.php');
-require_once(dirname(__FILE__).'/../Tracker_Dispatchable_Interface.class.php');
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
-require_once('Tracker_Report_RendererFactory.class.php');
-require_once('Tracker_Report_Criteria.class.php');
-require_once('Tracker_Report_Session.class.php');
 require_once('common/include/Toggler.class.php');
-require_once dirname(__FILE__).'/../IFetchTrackerSwitcher.class.php';
+require_once('common/html/HTML_Element_Input_Checkbox.class.php');
 
 /**
  * Tracker_ report.
@@ -40,7 +33,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     const ACTION_REPLACE = 'report-replace';
     const ACTION_DELETE  = 'report-delete';
     const ACTION_SCOPE   = 'report-scope';
-    const ACTION_DEFAULT   = 'report-default';
+    const ACTION_DEFAULT = 'report-default';
     
     public $id;
     public $name;
@@ -57,6 +50,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     
     public $renderers;
     public $criteria;
+
     /**
      * Constructor
      *
@@ -83,7 +77,18 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $this->updated_by          = $updated_by;
         $this->updated_at          = $updated_at;
     }
-    
+
+    public function setProjectId($id) {
+        $this->group_id = $id;
+    }
+
+    protected function getProjectId() {
+        if (!$this->group_id) {
+            $this->group_id = $this->tracker->getGroupId();
+        }
+        return $this->group_id;
+    }
+
     public function registerInSession() {
         $this->report_session = new Tracker_Report_Session($this->id);
     }
@@ -124,7 +129,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         } else {            
             //retrieve data from database
             foreach($this->getCriteriaDao()->searchByReportId($this->id) as $row) {
-                if ($formElement = $ff->getFormElementById($row['field_id'])) {
+                if ($formElement = $ff->getFormElementFieldById($row['field_id'])) {
                     if ($formElement->userCanRead()) {
                         $this->criteria[$row['field_id']] = new Tracker_Report_Criteria(
                                 $row['id'],
@@ -216,8 +221,56 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
        }
        return $this->matching_ids;
     }
-    
-    protected function getMatchingIdsInDb(DataAccessObject $dao, PermissionsManager $permissionManager, Tracker $tracker, User $user, array $criteria) {
+
+    /**
+     * Given the output of getMatchingIds() which returns an array containing 'artifacts ids' and  'Last changeset ids'
+     * as two strings with comma separated values, this method would format such output to an array with artifactIds in keys
+     * and last changeset ids in values.
+     * @see Tracker_Report::joinResults() for usage
+     *
+     * @param HTTPRequest $request       @see getMatchingIds()
+     * @param Boolean     $useDataFromDb @see getMatchingIds()
+     *
+     * @return Array
+     */
+    private function getLastChangesetIdByArtifactId($request = null, $useDataFromDb = false) {
+        $matchingIds          = $this->getMatchingIds($request, $useDataFromDb);
+        $artifactIds          = explode(',', $matchingIds['id']);
+        $lastChangesetIds     = explode(',', $matchingIds['last_changeset_id']);
+        $formattedMatchingIds = array();
+        foreach ($artifactIds as $key => $artifactId) {
+            $formattedMatchingIds[$artifactId] = $lastChangesetIds[$key];
+        }
+        return $formattedMatchingIds;
+    }
+
+    /**
+     * This method is the opposite of getLastChangesetIdByArtifactId().
+     * Given an array with artifactIds in keys and lastChangesetIds on values it would return and array with two elements of type string
+     * the first contains comma separated "artifactIds" and the second contains comma separated "lastChangesetIds".
+     * @see Tracker_Report::joinResults() for usage
+     *
+     * @param Array $formattedMatchingIds Matching Id's that will get converted in that format
+     *
+     * @return Array
+     */
+    private function implodeMatchingIds($formattedMatchingIds) {
+        $matchingIds['id']                = '';
+        $matchingIds['last_changeset_id'] = '';
+        foreach ($formattedMatchingIds as $artifactId => $lastChangesetId) {
+            $matchingIds['id']                .= $artifactId.',';
+            $matchingIds['last_changeset_id'] .= $lastChangesetId.',';
+        }
+        if (substr($matchingIds['id'], -1) === ',') {
+            $matchingIds['id'] = substr($matchingIds['id'], 0, -1);
+        }
+        if (substr($matchingIds['last_changeset_id'], -1) === ',') {
+            $matchingIds['last_changeset_id'] = substr($matchingIds['last_changeset_id'], 0, -1);
+        }
+        return $matchingIds;
+    }
+
+    protected function getMatchingIdsInDb(DataAccessObject $dao, PermissionsManager $permissionManager, Tracker $tracker, PFUser $user, array $criteria) {
         $dump_criteria = array();
         foreach ($criteria as $c) {
             $dump_criteria[$c->field->getName()] = $c->field->getCriteriaValue($c);
@@ -445,8 +498,10 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $i;
     }
     
-    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, User $current_user = null) {
-        $hp = Codendi_HTMLPurifier::instance();
+    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, PFUser $current_user) {
+        $hp              = Codendi_HTMLPurifier::instance();
+        $user_can_update = $this->userCanUpdate($current_user);
+
         $html = '';
         
         $html .= '<div class="tracker_report_query">';
@@ -457,20 +512,35 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
 
         //  Query title
         $html .= $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) . '</h3>';
-
         $used = array();
         $criteria_fetched = array();
         foreach ($criteria as $criterion) {
             if ($criterion->field->isUsed()) {
-                $criteria_fetched[] = '<li id="tracker_report_crit_' . $criterion->field->getId() . '">' . $criterion->fetch() . '</li>';
+                $li = '<li id="tracker_report_crit_' . $criterion->field->getId() . '">';
+                if ($user_can_update) {
+                    $li .= $criterion->fetch();
+                } else {
+                    $li .= $criterion->fetchWithoutExpandFunctionnality();
+                }
+                $li .= '</li>';
+                $criteria_fetched[] = $li;
                 $used[$criterion->field->getId()] = $criterion->field;
             }
         }
-        if ($report_can_be_modified && $this->userCanUpdate($current_user)) {
+        if ($report_can_be_modified && $user_can_update) {
             $html .= '<div id="tracker_report_addcriteria_panel">' . $this->_fetchAddCriteria($used) . '</div>';
         }
-        $html .= '<ul id="tracker_query">' . implode('', $criteria_fetched) . '</ul>';
-        $html .= '<div align="center"><input type="submit" name="tracker_query_submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></div>';
+
+        $followupSearchForm = '';
+        $params = array('html' => &$followupSearchForm, 'group_id' => $this->getProjectId());
+        EventManager::instance()->processEvent('tracker_report_followup_search', $params);
+        if (!empty($followupSearchForm)) {
+            $criteria_fetched[] = '<li id="tracker_report_crit_followup_search">' . $followupSearchForm. '</li>';
+        }
+        $html .= '<ul id="tracker_query">' . implode('', $criteria_fetched).'</ul>';
+ 
+        $html .= '<div align="center">';
+        $html .= '<input type="submit" name="tracker_query_submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></div>';
         $html .= '</form>';
         $html .= '</div>';
         return $html;
@@ -734,18 +804,48 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 if ($current_renderer->description) {
                     $html .= '<p class="tracker_report_renderer_description">'. $hp->purify($current_renderer->description, CODENDI_PURIFIER_BASIC) .'</p>';
                 }
-                $html .= $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified, $current_user);
+                //Warning about Full text in Tracker Report...
+                $fts_warning = '';
+                $params = array('html' => &$fts_warning, 'request' => $request, 'group_id' => $this->getProjectId());
+                EventManager::instance()->processEvent('tracker_report_followup_warning', $params);
+                $html .= $fts_warning;
+
+                $html .= $current_renderer->fetch($this->joinResults($request), $request, $report_can_be_modified, $current_user);
                 $html .= '</div>';
             }
             $html .= '</div>';
             echo $html;
+
             if ($report_can_be_modified) {
                 $this->getTracker()->displayFooter($layout);
                 exit();
             }
         }
     }
-    
+
+    /**
+     * Join search results from plugins with matching id's
+     *
+     * @param HTTPRequest $request HTTP request
+     *
+     * @return array
+     */
+    private function joinResults($request) {
+        $result          = array();
+        $searchPerformed = false;
+        $params          = array('request' => $request, 'result' => &$result, 'search_performed' => &$searchPerformed, 'group_id' => $this->getProjectId());
+        EventManager::instance()->processEvent('tracker_report_followup_search_process', $params);
+        $matchingIds = $this->getLastChangesetIdByArtifactId($request, false);
+        if ($searchPerformed && is_array($params['result']) && $params['search_performed']) {
+            foreach ($matchingIds as $artifactId => $lastChangesetId) {
+                if (!array_key_exists($artifactId, $params['result'])) {
+                    unset($matchingIds[$artifactId]);
+                }
+            }
+        }
+        return $this->implodeMatchingIds($matchingIds);
+    }
+
     public function getRenderers() {
         return Tracker_Report_RendererFactory::instance()->getReportRenderersByReport($this);
     }    
@@ -798,10 +898,14 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
      * Only owners of a report can update it.
      * owner = report->user_id
      * or if null, owner = tracker admin or site admins
-     * @param User $user the user who wants to update the report
+     * @param PFUser $user the user who wants to update the report
      * @return boolean
      */
     public function userCanUpdate($user) {
+        if (! $this->isBelongingToATracker()) {
+            return false;
+        }
+
         if ($this->user_id) {
             return $this->user_id == $user->getId();
         } else {
@@ -809,7 +913,11 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             return $user->isSuperUser() || $tracker->userIsAdmin($user);
         }
     }
-    
+
+    private function isBelongingToATracker() {
+        return $this->getTracker() != null;
+    }
+
     protected $tracker;
     public function getTracker() {
         if (!$this->tracker) {
@@ -817,7 +925,12 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
         return $this->tracker;
     }
-    
+
+    public function setTracker(Tracker $tracker) {
+        $this->tracker    = $tracker;
+        $this->tracker_id = $tracker->getId();
+    }
+
     /**
      * hide or show the criteria
      */
@@ -1211,15 +1324,18 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         //Delete criteria in the db
         $this->deleteAllCriteria();
 
-        foreach($this->report_session->getCriteria() as $key=>$session_criterion) {
-            if ( !empty($session_criterion['is_removed']) ) {
-                continue;
+        $session_criteria = $this->report_session->getCriteria();
+        if (is_array($session_criteria)) {
+            foreach($session_criteria as $key=>$session_criterion) {
+                if ( !empty($session_criterion['is_removed']) ) {
+                    continue;
+                }
+                $c  = $this->criteria[$key];
+                $id = $this->addCriteria($c);
+                $c->setId($id);
+                $c->updateValue($session_criterion['value']);
             }
-            $c  = $this->criteria[$key];
-            $id = $this->addCriteria($c);
-            $c->setId($id);
-            $c->updateValue($session_criterion['value']);
-        }       
+        }
     }
 
     /**
@@ -1295,7 +1411,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
      * 
      * @param SimpleXMLElement $root the node to which the Report is attached (passed by reference)
      */
-    public function exportToXML($roott, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $roott, $xmlMapping) {
         $root = $roott->addChild('report');
         // if old ids are important, modify code here 
         if (false) {
@@ -1328,7 +1444,22 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $renderer->exportToXML($grandchild, $xmlMapping);
         }
     }
-    
+
+    /**
+     * Convert the current report to its SOAP representation
+     *
+     * @return Array
+     */
+    public function exportToSoap() {
+        return array(
+            'id'          => (int)$this->id,
+            'name'        => (string)$this->name,
+            'description' => (string)$this->description,
+            'user_id'     => (int)$this->user_id,
+            'is_default'  => (bool)$this->is_default,
+        );
+    }
+
     protected $dao;
     /**
      * @return Tracker_ReportDao

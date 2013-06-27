@@ -17,7 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'Tracker_FormElement_Field_List_Bind.class.php';
 
 class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field_List_Bind {
     
@@ -185,7 +184,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      * @param array            &$xmlMapping the correspondance between real ids and XML IDs
      * @param string           $fieldID     XML ID of the binded field
      */
-    public function exportToXML($root, &$xmlMapping, $fieldID) { return ''; }
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $fieldID) { return ''; }
     
     /**
      * Give an extract of the bindvalues defined. The extract is based on $bindvalue_ids. 
@@ -205,5 +204,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     public function fixOriginalValueIds(array $value_mapping) { return array(); }
     
     public function getQuerySelectAggregate($functions) { return array(); }
+
+    protected function getSoapBindingList() { return array(); }
 }
 ?>

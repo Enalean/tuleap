@@ -21,6 +21,7 @@
 require_once 'FeedbackFormatter.class.php';
 
 class Feedback {
+
     /**
      * @var array
      */
@@ -30,6 +31,10 @@ class Feedback {
      * @var FeebackFormatter
      */
     private $formatter;
+
+    const INFO =  'info';
+    const WARN  = 'warning';
+    const ERROR = 'error';
 
     function __construct() {
         $this->logs = array();
@@ -68,7 +73,7 @@ class Feedback {
     	   $found = false;
        reset($this->logs);
        while(!$found && list(,$log) = each($this->logs)) {
-            $found = ($log['level'] == 'warning' || $log['level'] == 'error');
+            $found = ($log['level'] == self::WARN || $log['level'] == self::ERROR);
        }
        return $found;
     }
@@ -77,7 +82,7 @@ class Feedback {
        $found = false;
        reset($this->logs);
        while(!$found && list(,$log) = each($this->logs)) {
-            $found = ($log['level'] == 'error');
+            $found = ($log['level'] == self::ERROR);
        }
        return $found;
     }

@@ -1,36 +1,31 @@
 <?php
-
+/**
+ * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
 require_once('common/plugin/Plugin.class.php');
 Mock::generatePartial('Plugin', 'PluginTestVersion', array('_getPluginManager'));
-
-class TestPlugin extends Plugin {
-    function addHook($hook, $callback = 'CallHook', $recallHook = true) {
-        $this->_addHook($hook, $callback, $recallHook);
-    }
-    function removeHook(&$hook) {
-        $this->_removeHook($hook);
-    }
-}
 
 require_once('common/plugin/PluginManager.class.php');
 Mock::generate('PluginManager');
 
-/**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * 
- * 
- *
- * Tests the class Plugin
- */
-class PluginTest extends UnitTestCase {
-
-    function setUp() {
-        $this->globals = $GLOBALS;
-    }
-
-    function tearDown() {
-        $GLOBALS = $this->globals;
-    }
+class PluginTest extends TuleapTestCase {
 
     function testId() {
         $p =& new Plugin();
@@ -45,7 +40,7 @@ class PluginTest extends UnitTestCase {
     }
     
     function testHooks() {
-        $p =& new TestPlugin();
+        $p =& new Plugin();
         $col =& $p->getHooks();
         $this->assertTrue($col->isEmpty());
         
@@ -72,7 +67,7 @@ class PluginTest extends UnitTestCase {
     }
     
     function testDefaultCallback() {
-        $p =& new TestPlugin();
+        $p =& new Plugin();
         $col =& $p->getHooksAndCallbacks();
         $this->assertTrue($col->isEmpty());
         
@@ -82,11 +77,11 @@ class PluginTest extends UnitTestCase {
         $it =& $col->iterator();
         $current_hook =& $it->current();
         $this->assertEqual($current_hook['hook'],       $hook);
-        $this->assertEqual($current_hook['callback'],   'CallHook');
-        $this->assertTrue($current_hook['recallHook']);
+        $this->assertEqual($current_hook['callback'],   $hook);
+        $this->assertFalse($current_hook['recallHook']);
     }
     function testSpecialCallback() {
-        $p =& new TestPlugin();
+        $p =& new Plugin();
         
         $hook     = 'name_of_hook';
         $callback = 'doSomething';
@@ -96,14 +91,14 @@ class PluginTest extends UnitTestCase {
         $current_hook =& $it->current();
         $this->assertEqual($current_hook['hook'],       $hook);
         $this->assertEqual($current_hook['callback'],   $callback);
-        $this->assertTrue($current_hook['recallHook']);
+        $this->assertFalse($current_hook['recallHook']);
     }
     function testAnotherSpecialCallback() {
-        $p =& new TestPlugin();
+        $p =& new Plugin();
         
         $hook     = 'name_of_hook';
         $callback = 'doSomething';
-        $recall   = false;
+        $recall   = true;
         $p->addHook($hook, $callback, $recall);
         $col =& $p->getHooksAndCallbacks();
         $it =& $col->iterator();
@@ -296,6 +291,18 @@ class PluginTest extends UnitTestCase {
         $p->setReturnValue('_getPluginManager', $pm);
 
         $this->assertEqual($p->getFilesystemPath(), '/my/application/zataz');
+    }
+
+    function itHasNoDependenciesByDefault() {
+        $plugin = new Plugin();
+        $this->assertArrayEmpty($plugin->getDependencies());
+    }
+
+    function itDoesntAllowToListenSameHookSeveralTimes() {
+        $this->expectException();
+        $plugin = new Plugin();
+        $plugin->addHook('bla');
+        $plugin->addHook('bla');
     }
 }
 ?>

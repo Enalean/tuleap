@@ -40,7 +40,8 @@ input[name=tracker_query_submit] {
 
 #tracker_report_renderers,
 #tracker-home-nav,
-.tracker-form-element-artifactlink-list-nav {
+.tracker-form-element-artifactlink-list-nav,
+.tracker-artifact-nav {
     padding: 5px 1em 3px;
     margin: 0;
     border-bottom: 1px solid #999;
@@ -56,15 +57,21 @@ input[name=tracker_query_submit] {
     border-right: none;
 }
 
+.tracker-artifact-nav,
 .tracker-form-element-artifactlink-list-nav {
     background-color: inherit;
     border-left: none;
     border-right: none;
 }
 
+.tracker-artifact-nav {
+    margin-bottom: 1em;
+}
+
 #tracker_report_renderers li,
 #tracker-home-nav li,
-.tracker-form-element-artifactlink-list-nav li {
+.tracker-form-element-artifactlink-list-nav li,
+.tracker-artifact-nav li {
     list-style: none;
     margin: 0;
     display: inline;
@@ -72,7 +79,8 @@ input[name=tracker_query_submit] {
 
 #tracker_report_renderers li a,
 #tracker-home-nav li a,
-.tracker-form-element-artifactlink-list-nav li a {
+.tracker-form-element-artifactlink-list-nav li a,
+.tracker-artifact-nav li a {
     padding: 4px 0.5em;
     padding-left: 24px;
     margin-right: 3px;
@@ -85,7 +93,8 @@ input[name=tracker_query_submit] {
 }
 
 #tracker-home-nav li a,
-.tracker-form-element-artifactlink-list-nav li a {
+.tracker-form-element-artifactlink-list-nav li a,
+.tracker-artifact-nav li a {
         padding-left: 0.5em;
 }
 
@@ -97,19 +106,23 @@ input[name=tracker_query_submit] {
 #tracker-home-nav li a:link,
 #tracker-home-nav li a:visited,
 .tracker-form-element-artifactlink-list-nav li a:link,
-.tracker-form-element-artifactlink-list-nav li a:visited { 
+.tracker-form-element-artifactlink-list-nav li a:visited,
+.tracker-artifact-nav li a:link,
+.tracker-artifact-nav li a:visited {
     color: black; 
 }
 
 #tracker_report_renderers li a:hover,
 #tracker-home-nav li a:hover,
-.tracker-form-element-artifactlink-list-nav li a:hover {
+.tracker-form-element-artifactlink-list-nav li a:hover,
+.tracker-artifact-nav li a:hover {
     color: black;
     background-color: #CCC;
 }
 #tracker_report_renderers li.tracker_report_renderers-current a,
 #tracker-home-nav li.current a,
-.tracker-form-element-artifactlink-list-nav li.tracker-form-element-artifactlink-list-nav-current a {
+.tracker-form-element-artifactlink-list-nav li.tracker-form-element-artifactlink-list-nav-current a,
+.tracker-artifact-nav li.tracker-artifact-nav-current a {
     font-weight:bold;
     background-color: white;
     border-bottom: 1px solid white;
@@ -143,11 +156,25 @@ input[name=tracker_query_submit] {
     z-index:100;
     position:relative;
 }
+.tracker_report_query_followup_search {
+    border-left:1px solid #CCC;
+    border-top:1px solid #CCC;
+    border-right:1px solid #CCC;
+    padding:0 1em;
+    background:#f5f7f7 url(../images/tracker_report_query_bg.png) top left repeat-x;
+    position:relative;
+}
 .tracker_report_query form {
     margin:0px;
     position:relative;
 }
 .tracker_report_query h3 {
+    padding-top: 0;
+    margin-top: 0;
+    text-shadow: 1px 1px white;
+}
+
+.tracker_report_query_followup_search h3 {
     padding-top: 0;
     margin-top: 0;
     text-shadow: 1px 1px white;
@@ -562,6 +589,11 @@ ul.tracker-form-element-artifactlink-list {
     padding-left: 0.5em;
     margin-top: 0;
 }
+ul.tracker-form-element-checkbox {
+    list-style-type:none;
+    padding-left:0.5em; 
+    margin-top: 0px;
+}
 .tracker_alltrackers dd {
     margin-left:1.5em;
     margin-bottom:1.5em;
@@ -762,29 +794,56 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 
 #tracker_workflow_matrix .pc_check_unchecked,
 #tracker_field_dependencies_matrix .pc_check_unchecked {
-   background-image: url(../images/ic/bullet_grey.png);
+    background-image: url(../images/ic/bullet_grey.png);
 }
 #tracker_workflow_matrix .pc_check_checked,
 #tracker_field_dependencies_matrix .pc_check_checked {
-   background-image: url(../images/ic/arrow-turn-090-left.png);
+    background-image: url(../images/ic/arrow-turn-090-left.png);
 }
 
 .workflow_actions .pc_check_unchecked {
-   background-image: url(/themes/common/images/ic/bin_closed.png);
+    background-image: url(/themes/common/images/ic/bin_closed.png);
 }
 .workflow_actions .pc_check_checked {
-   background-image: url(/themes/common/images/ic/bin.png);
+    background-image: url(/themes/common/images/ic/bin.png);
 }
-.workflow_action_deleted {
-   text-decoration: line-through;
+
+.workflow_transitions,
+.workflow_rules {
+    display: inline-block;
+}
+
+.workflow_existing_rules {
+    list-style: none;
+    padding-left: 0;
+}
+.workflow_rule {
+    clear: both;
+    margin: 5px 0px;
+}
+.workflow_existing_rules .pc_check_unchecked {
+    background-image: url(/themes/common/images/ic/bin_closed.png);
+    float: right;
+}
+.workflow_existing_rules .pc_check_checked {
+    background-image: url(/themes/common/images/ic/bin.png);
+    float: right;
+}
+.workflow_action.deleted,
+.workflow_rule.deleted {
+    text-decoration: line-through;
+}
+.add_new_rule {
+    line-height:2em;
 }
 .workflow_actions, .workflow_conditions  {
     list-style-type: none;
 }
+.workflow_rule,
 .workflow_action {
     padding: 1em 2em 1em 3em;
     border: 1px solid #ccc;
-    border-radius: 1em;
+    border-radius: 0.5em;
     background-color: #F6F6F6;
     background-position: 1em 1em;
     background-repeat: no-repeat;
@@ -792,8 +851,14 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 .workflow_action_field {
     background-image: url(../images/ic/ui-text-field-change.png);
 }
+.workflow_action_ci_build {
+    background-image: url(../images/ic/ci_build/server.png);
+}
 .workflow_conditions_perms {
     list-style-image: url(/themes/common/images/ic/lock.png);
+}
+.workflow_conditions_notempty {
+    list-style-image: url(../images/ic/ui-text-field--exclamation-red.png);
 }
 /* }}} */
 
@@ -1164,6 +1229,7 @@ td.first-column {
     padding: 0.25em;
     padding-left: 0.5em;
     padding-right: 0.5em;
+    min-height: 50px;
 }
 .card.placeholder {
     border:1px dashed #3A87AD;
@@ -1211,6 +1277,16 @@ td.first-column {
 .card-details tr td:last-child {
     font-weight: bold;
 }
+
+.card-details .avatar {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+}
+.card-details .avatar > img {
+    width: 16px;
+    height: 16px;
+}
 /* }}} */
 .tracker_artifact_attachment_delete.pc_check_unchecked {
     background-image:url('../images/ic/cross-disabled.png');
@@ -1220,6 +1296,11 @@ td.first-column {
 }
 .tracker_artifact_attachment_deleted {
    text-decoration: line-through;
+}
+
+.help {
+    color: #999;
+    margin-top: 0;
 }
 
 /* {{{ */
@@ -1240,3 +1321,51 @@ td.first-column {
     margin: 1em auto;
 }
 /* }}} */
+
+.tracker_create_mode {
+    padding-left: 1em;
+}
+
+.workflow_rule_date_comparator {
+    margin: auto 0.5em;
+}
+
+.artifact-children-table {
+    min-width: 50%;
+}
+.artifact-children-table, .artifact-children-table tr, .artifact-children-table td, .artifact-children-table tbody {
+    height:100%;
+    vertical-align:top;
+    border:0px;
+    margin:0px;
+    border-collapse:collapse;
+    border-spacing: 0px;
+    zoom:1;
+}
+.artifact-children-table td {
+    padding:0px;
+    padding-left:0.5em;
+    padding-right:0.5em;
+    border-left: 1px white solid;
+}
+
+.artifact-children-table, .artifact-children-table tbody {
+    overflow:auto;
+}
+
+.artifact-children-table > tbody > tr:nth-child(odd) > td {
+  background-color: #f9f9f9;
+}
+
+tr.artifact-children-table-head {
+    vertical-align: middle;
+    height: 2em;
+}
+
+.artifact-child > td {
+    border-left: 0 none;
+}
+
+.toggle-child > img {
+    vertical-align: middle;
+}

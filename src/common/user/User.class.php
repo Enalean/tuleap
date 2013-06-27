@@ -22,13 +22,14 @@ require_once('common/dao/UserPreferencesDao.class.php');
 require_once('common/dao/UserGroupDao.class.php');
 require_once('common/include/Recent_Element_Interface.class.php');
 require_once('common/language/BaseLanguageFactory.class.php');
+require_once('IHaveAnSSHKey.php');
 /**
  *
  * User object
  * 
  * Sets up database results and preferences for a user and abstracts this info
  */
-class User {
+class PFUser implements PFO_User, IHaveAnSSHKey {
     
     /**
      * The user is active
@@ -74,6 +75,11 @@ class User {
      * Pref for recent elements
      */
     const PREFERENCE_RECENT_ELEMENTS = 'recent_elements';
+
+    /**
+     * Seperator for ssh key concatenation
+     */
+    const SSH_KEY_SEPARATOR = '###';
     
     /**
      * the id of the user
@@ -472,7 +478,7 @@ class User {
      * - the "querying" user is Restricted AND the user to see is
      *   member of a project the restricted user is member too.
      *
-     * @param User $user A user to test
+     * @param PFUser $user A user to test
      *
      * @return Boolean
      */
@@ -523,6 +529,13 @@ class User {
         return $this->user_name;
     }
     /**
+     * alias of getUserName()
+     * @return string the name of the user (aka login)
+     */
+    function getUnixName() {
+        return $this->getUserName();
+    }
+    /**
      * @return string the real name of the user
      */
     function getRealName() {
@@ -549,7 +562,14 @@ class User {
      */
     function getLdapId() {
         return $this->ldap_id;
-    }    
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLDAP() {
+        return $this->getLdapId() != null;
+    }
     /**
      * @return string the registration date of the user (timestamp format)
      */
@@ -650,7 +670,7 @@ class User {
      */
     function getAuthorizedKeys($split=false) {
         if ($split) {
-            return array_filter(explode('###', $this->authorized_keys));
+            return array_filter(explode(self::SSH_KEY_SEPARATOR, $this->authorized_keys));
         } else {
             return $this->authorized_keys;
         }
@@ -732,10 +752,20 @@ class User {
     function getConfirmHash() {
          return $this->confirm_hash; 
     }
-    
+
     /**
-     * isActive - test if the user is active or not
-     * 
+     * Return true if user is active or restricted.
+     *
+     * @return Boolean
+     */
+    public function isAlive() {
+        return ! $this->isAnonymous() && ($this->isActive() || $this->isRestricted());
+    }
+
+    /**
+     * isActive - test if the user is active or not, you'd better have good argument to use this instead of isAlive
+     *
+     * @see PFUser::isAlive()
      * @return boolean true if the user is active, false otherwise
      */
     function isActive() {
@@ -819,6 +849,21 @@ class User {
             } else {
                 $projects[] = $data['group_id'];
             }
+        }
+        return $projects;
+    }
+
+    /**
+     * Should be an alias of getProjects()
+     *
+     * However we need real objects. Maybe it would be great to force getProjects to return POPO...
+     *
+     * @return Project[]
+     */
+    public function getGroups() {
+        $projects = array();
+        foreach ($this->getProjects() as $group_id) {
+            $projects[] = ProjectManager::instance()->getProject($group_id);
         }
         return $projects;
     }
@@ -1074,14 +1119,14 @@ class User {
     
     protected function getPreferencesDao() {
         if (!$this->_preferencesdao) {
-            $this->_preferencesdao = new UserPreferencesDao(CodendiDataAccess::instance());
+            $this->_preferencesdao = new UserPreferencesDao();
         }
         return $this->_preferencesdao;
     }
     
     protected function getUserGroupDao() {
         if (!$this->_usergroupdao) {
-            $this->_usergroupdao = new UserGroupDao(CodendiDataAccess::instance());
+            $this->_usergroupdao = new UserGroupDao();
         }
         return $this->_usergroupdao;
     }
@@ -1199,7 +1244,7 @@ class User {
       *
       * @param bool $has_avatar true if the user has an avatar
       *
-      * @return User for chaining methods
+      * @return PFUser for chaining methods
       */
      public function setHasAvatar($has_avatar = 1) {
          $this->has_avatar = ($has_avatar ? 1 : 0);
@@ -1212,9 +1257,19 @@ class User {
       * @return string html
       */
      public function fetchHtmlAvatar($width = 50) {
-         $purifier = Codendi_HTMLPurifier::instance();
-         $html = '';
-         $html .= '<div class="avatar" title="'. $purifier->purify($this->getRealName()) .'" style="width: '. ($width+2) .'px; height: '. ($width+2) .'px;">';
+         $purifier    = Codendi_HTMLPurifier::instance();
+         $user_helper = new UserHelper();
+
+         $title    = $purifier->purify($user_helper->getDisplayNameFromUser($this));
+         $style    = 'width: '. ($width+2) .'px; height: '. ($width+2) .'px;';
+         $user_id  = $this->getId();
+
+         $html = '<div class="avatar"
+                        title="'. $title . '"
+                        style="' . $style .'"
+                        data-user-id = "' . $user_id . '"
+                    >';
+
          if ($this->isAnonymous()) {
              $html .= '<img src="http://www.gravatar.com/avatar/'. md5($this->getEmail()) .'.jpg?s='. $width .'&amp;d=wavatar" />';
          } else {
@@ -1332,6 +1387,10 @@ class User {
      */
     public function setLanguageFactory(BaseLanguageFactory $languageFactory) {
         $this->languageFactory = $languageFactory;
+    }
+    
+    public function __toString() {
+        return "User #". $this->getId();
     }
 }
 

@@ -18,116 +18,9 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+require_once 'Git_GitoliteTestCase.class.php';
 
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once dirname(__FILE__).'/../include/Git.class.php';
-require_once dirname(__FILE__).'/../include/Git_GitoliteDriver.class.php';
-
-Mock::generate('Project');
-Mock::generate('User');
-Mock::generate('GitDao');
-Mock::generate('PermissionsManager');
-Mock::generate('DataAccessResult');
-Mock::generate('Git_PostReceiveMailManager');
-
-class GitoliteTestCase extends TuleapTestCase {
-    
-    /** @var Git_GitoliteDriver */
-    protected $driver;
-    
-    public function setUp() {
-        parent::setUp();
-        $this->cwd           = getcwd();
-        $this->_fixDir       = dirname(__FILE__).'/_fixtures';
-        $tmpDir              = '/tmp';
-        $this->_glAdmDirRef  = $tmpDir.'/gitolite-admin-ref';
-        $this->_glAdmDir     = $tmpDir.'/gitolite-admin';
-        $this->repoDir       = $tmpDir.'/repositories';
-        
-        // Copy the reference to save time & create symlink because
-        // git is very sensitive to path you are using. Just symlinking
-        // spots bugs
-        system('tar -xf '. $this->_fixDir.'/gitolite-admin-ref' .'.tar --directory '.$tmpDir);
-        symlink($this->_glAdmDirRef, $this->_glAdmDir);
-
-        mkdir($this->repoDir);
-
-        $this->httpsHost = $GLOBALS['sys_https_host'];
-
-        $GLOBALS['sys_https_host'] = 'localhost';
-        PermissionsManager::setInstance(new MockPermissionsManager());
-        $this->permissions_manager = PermissionsManager::instance();
-        $this->gitExec = partial_mock('Git_Exec', array('push'), array($this->_glAdmDir));
-        stub($this->gitExec)->push()->returns(true);
-        $this->driver = new Git_GitoliteDriver($this->_glAdmDir, $this->gitExec);
-    }
-    
-    public function tearDown() {
-        parent::tearDown();
-        chdir($this->cwd);
-    
-        system('rm -rf '. $this->_glAdmDirRef);
-        system('rm -rf '. $this->_glAdmDir .'/repositories/*');
-        system('rm -rf '. $this->repoDir);
-        unlink($this->_glAdmDir);
-        $GLOBALS['sys_https_host'] = $this->httpsHost;
-        PermissionsManager::clearInstance();
-    }
-    
-    public function assertEmptyGitStatus() {
-        $cwd = getcwd();
-        chdir($this->_glAdmDir);
-        exec('git status --porcelain', $output, $ret_val);
-        chdir($cwd);
-        $this->assertEqual($output, array());
-        $this->assertEqual($ret_val, 0);
-    }
-    
-    protected function assertNameSpaceFileHasBeenInitialized($repoPath, $namespace, $group) {
-        $namespaceInfoFile = $repoPath.'/tuleap_namespace';
-        $this->assertTrue(file_exists($namespaceInfoFile), 'the file (' . $namespaceInfoFile . ') does not exists');
-        $this->assertEqual(file_get_contents($namespaceInfoFile), $namespace);
-        $this->assertEqual($group, $this->_getFileGroupName($namespaceInfoFile));
-
-    }
-    
-    protected function assertWritableByGroup($new_root_dir, $group) {
-        $this->assertEqual($group, $this->_getFileGroupName($new_root_dir));
-        $this->assertEqual($group, $this->_getFileGroupName($new_root_dir .'/hooks/gitolite_hook.sh'));
-
-        clearstatcache();
-        $rootStats = stat($new_root_dir);
-        $this->assertPattern('/.*770$/', decoct($rootStats[2]));
-    }
-    
-    protected function _getFileGroupName($filePath) {
-        clearstatcache();
-        $rootStats = stat($filePath);
-        $groupInfo = posix_getgrgid($rootStats[5]);
-        return $groupInfo['name'];
-    }
-    
-    public function assertRepoIsClonedWithHooks($new_root_dir) {
-        $this->assertTrue(is_dir($new_root_dir), "the new git repo dir ($new_root_dir) wasn't found.");
-        $new_repo_HEAD = $new_root_dir . '/HEAD';
-        $this->assertTrue(file_exists($new_repo_HEAD), 'the file (' . $new_repo_HEAD . ') does not exists');
-        $this->assertTrue(file_exists($new_root_dir . '/hooks/gitolite_hook.sh'), 'the hook file wasn\'t copied to the fork');
-    }
-
-    public function arrayToDar() {
-        $argList = func_get_args();
-        $dar = new MockDataAccessResult();
-        $rowCount = 0;
-        foreach ($argList as $row) {
-            $dar->setReturnValueAt($rowCount, 'valid', true);
-            $dar->setReturnValueAt($rowCount, 'current', $row);
-            $rowCount++;
-        }
-        $dar->setReturnValueAt($rowCount, 'valid', false);
-        $dar->setReturnValue('rowCount', $rowCount);
-        $dar->setReturnValue('isError', false);
-        return $dar;
-    }
+class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
     
     protected function _GivenARepositoryWithNameAndNamespace($name, $namespace) {
         $repo = new GitRepository();
@@ -135,68 +28,6 @@ class GitoliteTestCase extends TuleapTestCase {
         $repo->setNamespace($namespace);
         return $repo;
     }
-}
-
-class Git_GitoliteDriver_UserKeysTest extends GitoliteTestCase {
-
-    public function setUp() {
-        parent::setUp();
-        $this->key1 = 'ssh-rsa AAAAYZi1ju3FeZu6EKKltZ0uftOfj6w== marcel@labobine.net';
-        $this->key2 = 'ssh-rsa AAAAXYiTICSgWURDPDGW/HeNUYZIRcznQ== marcel@shanon.net';
-    }
-    public function testAddUserKey() {
-        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1))->build();
-
-        $this->driver->dumpSSHKeys($user);
-
-        $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@0.pub'));
-        $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $this->key1);
-
-        $this->assertEmptyGitStatus();
-    }
-
-    public function testAddUserWithSeveralKeys() {
-        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
-
-        $this->driver->dumpSSHKeys($user);
-
-        $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@0.pub'));
-        $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $this->key1);
-        $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@1.pub'));
-        $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@1.pub'), $this->key2);
-
-        $this->assertEmptyGitStatus();
-    }
-
-    public function testRemoveUserKey() {
-        // User has 2 keys
-        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
-        $this->driver->dumpSSHKeys($user);
-
-        // internal push reset the pwd
-        $this->driver->setAdminPath($this->_glAdmDir);
-        
-        // Now back with only one
-        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1))->build();
-        $this->driver->dumpSSHKeys($user);
-
-        // Ensure second key was deleted
-        $this->assertFalse(is_file($this->_glAdmDir.'/keydir/john_do@1.pub'), "Second key should be deleted");
-
-        $this->assertEmptyGitStatus();
-    }
-
-    public function itDoesntGenerateAnyErrorsWhenThereAreNoChangesOnKeys() {
-        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
-        $this->driver->dumpSSHKeys($user);
-
-        // After push directory change, so we need to re-changedir
-        $this->driver->setAdminPath($this->_glAdmDir);
-        $this->driver->dumpSSHKeys($user);
-    }
-}
-
-class Git_GitoliteDriverTest extends GitoliteTestCase {
 
     public function testGitoliteConfUpdate() {
         // Test base: one gitolite conf + 1 project file
@@ -268,7 +99,7 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         );
     }
 
-    public function ________________itAddsTheDescriptionToTheConfFile() {
+    public function itAddsTheDescriptionToTheConfFile() {
         $driver = partial_mock('Git_GitoliteDriver', array('getDao', 'getPostReceiveMailManager'), array($this->_glAdmDir));
         //$driver->setAdminPath($this->_glAdmDir);
         $repo_description = 'Vive tuleap';
@@ -283,7 +114,8 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
                     'repository_name' => $repo_name, 
                     'repository_namespace' => '', 
                     'repository_events_mailing_prefix' => "[SCM]", 
-                    'repository_description' => $repo_description));
+                    'repository_description' => $repo_description,
+                    'remote_server_id' => null));
         $driver->setReturnValue('getDao', $dao);
         
         $permissions_manager = $this->permissions_manager;
@@ -306,7 +138,7 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         $this->assertPattern("%$project_name/$repo_name = \"$repo_description\"%", $result);
     }
     
-    public function ________________itReplacesNewlinesBySpaces() {
+    public function itReplacesNewlinesBySpaces() {
         $driver = partial_mock('Git_GitoliteDriver', array('getDao', 'getPostReceiveMailManager'), array($this->_glAdmDir));
         //$driver->setAdminPath($this->_glAdmDir);
         $repo_description = 'Vive 
@@ -322,7 +154,8 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
                     'repository_name' => $repo_name, 
                     'repository_namespace' => '', 
                     'repository_events_mailing_prefix' => "[SCM]", 
-                    'repository_description' => $repo_description));
+                    'repository_description' => $repo_description,
+                    'remote_server_id' => null));
         $driver->setReturnValue('getDao', $dao);
         
         $permissions_manager = $this->permissions_manager;
@@ -360,8 +193,23 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
 
         // List all repo
         $dao = stub('GitDao')->getAllGitoliteRespositories()->once()->returnsDar(
-                array('repository_id' => 4, 'repository_name' => 'test_default', 'repository_namespace' => '', 'repository_events_mailing_prefix' => "[SCM]", 'repository_description' => ''),
-                array('repository_id' => 5, 'repository_name' => 'test_pimped', 'repository_namespace' => '', 'repository_events_mailing_prefix' => "[KOIN] ", 'repository_description' => ''));
+            array(
+                'repository_id'                    => 4,
+                'repository_name'                  => 'test_default',
+                'repository_namespace'             => '',
+                'repository_events_mailing_prefix' => "[SCM]",
+                'repository_description'           => '',
+                'remote_server_id'                 => null
+            ),
+            array(
+                'repository_id'                    => 5,
+                'repository_name'                  => 'test_pimped',
+                'repository_namespace'             => '',
+                'repository_events_mailing_prefix' => "[KOIN] ",
+                'repository_description'           => '',
+                'remote_server_id'                 => null
+            )
+        );
         $driver->setReturnValue('getDao', $dao);
         
         $permissions_manager = $this->permissions_manager;
@@ -396,7 +244,55 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         $gitoliteConf = $this->getGitoliteConf();
         $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
     }
-    
+
+    public function testRewindAccessRightsToGerritUserWhenRepoIsMigratedToGerrit() {
+        $driver = partial_mock('Git_GitoliteDriver', array('getDao', 'getPostReceiveMailManager'), array($this->_glAdmDir));
+
+        $prj = new MockProject($this);
+        $prj->setReturnValue('getUnixName', 'project1');
+        $prj->setReturnValue('getId', 404);
+
+        // List all repo
+        $dao = stub('GitDao')->getAllGitoliteRespositories()->once()->returnsDar(
+            array(
+                'repository_id'                    => 4,
+                'repository_name'                  => 'before_migration_to_gerrit',
+                'repository_namespace'             => '',
+                'repository_events_mailing_prefix' => "[SCM]",
+                'repository_description'           => '',
+                'remote_server_id'                 => null
+            ),
+            array(
+                'repository_id'                    => 5,
+                'repository_name'                  => 'after_migration_to_gerrit',
+                'repository_namespace'             => '',
+                'repository_events_mailing_prefix' => "[SCM]",
+                'repository_description'           => '',
+                'remote_server_id'                 => 1
+            )
+        );
+        $driver->setReturnValue('getDao', $dao);
+
+        $permissions_manager = $this->permissions_manager;
+        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_READ')->returns(array('2'));
+        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_WRITE')->returns(array('3'));
+        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_WPLUS')->returns(array('125'));
+        stub($this->permissions_manager)->getAuthorizedUgroupIds(5, 'PLUGIN_GIT_READ')->returns(array('2'));
+        stub($this->permissions_manager)->getAuthorizedUgroupIds(5, 'PLUGIN_GIT_WRITE')->returns(array('3'));
+        stub($this->permissions_manager)->getAuthorizedUgroupIds(5, 'PLUGIN_GIT_WPLUS')->returns(array('125'));
+
+        // Notified emails
+        $notifMgr = new MockGit_PostReceiveMailManager();
+        $driver->setReturnValue('getPostReceiveMailManager', $notifMgr);
+
+        $driver->dumpProjectRepoConf($prj);
+
+        // Ensure file is correct
+        $result   = file_get_contents($this->_glAdmDir.'/conf/projects/project1.conf');
+        $expected = file_get_contents($this->_fixDir .'/perms/migrated_to_gerrit.conf');
+        $this->assertIdentical($expected, $result);
+    }
+
     public function testRepoFullNameConcats_UnixProjectName_Namespace_And_Name() {
         $unix_name = 'project1';
         
@@ -428,7 +324,38 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
     }
 }
 
-class Git_GitoliteDriver_ForkTest extends GitoliteTestCase {
+class Git_GitoliteDriver_ForkTest extends Git_GitoliteTestCase {
+    
+    protected function _getFileGroupName($filePath) {
+        clearstatcache();
+        $rootStats = stat($filePath);
+        $groupInfo = posix_getgrgid($rootStats[5]);
+        return $groupInfo['name'];
+    }
+    
+    protected function assertNameSpaceFileHasBeenInitialized($repoPath, $namespace, $group) {
+        $namespaceInfoFile = $repoPath.'/tuleap_namespace';
+        $this->assertTrue(file_exists($namespaceInfoFile), 'the file (' . $namespaceInfoFile . ') does not exists');
+        $this->assertEqual(file_get_contents($namespaceInfoFile), $namespace);
+        $this->assertEqual($group, $this->_getFileGroupName($namespaceInfoFile));
+
+    }
+    
+    protected function assertWritableByGroup($new_root_dir, $group) {
+        $this->assertEqual($group, $this->_getFileGroupName($new_root_dir));
+        $this->assertEqual($group, $this->_getFileGroupName($new_root_dir .'/hooks/gitolite_hook.sh'));
+
+        clearstatcache();
+        $rootStats = stat($new_root_dir);
+        $this->assertPattern('/.*770$/', decoct($rootStats[2]));
+    }
+    
+    public function assertRepoIsClonedWithHooks($new_root_dir) {
+        $this->assertTrue(is_dir($new_root_dir), "the new git repo dir ($new_root_dir) wasn't found.");
+        $new_repo_HEAD = $new_root_dir . '/HEAD';
+        $this->assertTrue(file_exists($new_repo_HEAD), 'the file (' . $new_repo_HEAD . ') does not exists');
+        $this->assertTrue(file_exists($new_root_dir . '/hooks/gitolite_hook.sh'), 'the hook file wasn\'t copied to the fork');
+    }
 
     public function testFork_CloneEmptyToSpecifiedPath() {
 

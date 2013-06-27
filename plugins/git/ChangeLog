@@ -1,3 +1,250 @@
+Version 3.28 - Tuleap 6.2
+    * Remove garbage output when downloading files from git
+
+
+The noheader parameter is not taken into account when we display the
+toolbar.
+
+This fix request #3276 - Garbage output when downloading files from git
+service
+This fix sla #3577 - Not able to unzip git codex snapshot
+
+Change-Id: I427fc05f04a121794958ee24bf4ef8573aee7617
+
+Version 3.27 - Tuleap 6.2
+    * Fix sla #4002: System event no more kept 'Running' when repo is deleted
+
+Version 3.26 - Tuleap 6.2
+    * Fix sla #4002: it was not possible anymore to browse gitshell repositories
+
+Version 3.25 - Tuleap 6.2
+    * Story #3633 - Gerrit projects inherits Tuleap parents information
+
+Version 3.24 - Tuleap 6.2
+    * story #3634: my parent project are migrated when I migrate a repository
+
+    * Fix scheme issue in account maintenance page
+
+      When the gerrit host is gerrit.example.com and its port is 8080, the
+      link displayed in account maintenance page is:
+      <a href="gerrit.example.com:8080">…</a>
+
+      However the scheme is missing and therefore the browser thinks that the
+      scheme is gerrit.example.com and try to open an application (like apt:
+      or mailto:)
+
+Version 3.23 - Tuleap 6.2
+    * Fix request #1561 - Error with link to git commit from a artifact
+
+Version 3.22 - Tuleap 6.1
+    * Fix bugs #3576: fix js crying on git service homepage
+    * Fix bugs #3573: CI: get an error message if no git trigger selected
+
+Version 3.21 - Tuleap 6.1
+    * story #3318: be owner of all gerrit groups created for my project
+
+Version 3.20 - Tuleap 6.1
+    * bugs #3244 - Read permission to Registered Users is not propagated to Gerrit
+
+Version 3.19 - Tuleap 6.1
+    * Fixing bug that generates error message and calls wrong code when changing git repository settings.
+
+Version 3.18 - Tuleap 5.13
+    * SSH keys manipulation use gerrit user
+
+Version 3.17 - Tuleap 5.13
+    * Reduce number of gerrit ls-groups
+
+Version 3.16 - Tuleap 5.13
+    * Fix bugs #3240: Avoid to re-create groups if they already exists
+
+Version 3.15 - Tuleap 5.13
+    * Flush caches only once when migrate to gerrit.
+
+Version 3.14 - Tuleap 5.13
+    * Fix art #3241 Abusive Gerrit cache flushing
+
+Version 3.13 - Tuleap 5.13
+    * Fix sla #3150 - Tuleap uses LDAP uid to interact with gerrit users
+
+
+We need to use LDAP uid (login) instead of id (internal value of LDAP) for
+user management between Tuleap and Gerrit.
+
+Change-Id: Ic1226200f9de2111acec159e81bd8b2bf0321029
+
+Version 3.12 - Tuleap 5.13
+    * Remove perms on refs/changes/*
+
+
+Following the discussion on tuleap-devel[1] it appears that we shouldn't
+create rules for refs/changes/*.
+
+[1] https://tuleap.net/plugins/forumml/message.php?group_id=101&topic=20064&list=1
+
+Change-Id: I5ef23d90a08669f1b15a7e32b4c305613b9ce9cd
+
+Version 3.11 - Tuleap 5.13
+    * Modify table name and attribute name from uppercase to lowercase
+
+Version 3.10 - Tuleap 5.13
+    * Fix Ugroup deleted and re-created on Gerrit
+
+Version 3.9 - Tuleap 5.13
+    * Update readme with meaningful informations
+
+Version 3.8 - Tuleap 5.13
+    * remove inconsistent description in gerrit migration help
+
+Version 3.7 - Tuleap 5.13
+    * Make gitolite configuration file compatible with gitolite 2.3.1
+
+Version 3.6 - Tuleap 5.13
+    * Update text block
+
+Version 3.5 - Tuleap 5.13
+    * One can change read permissions when repository is managed by gerrit
+
+Version 3.4 - Tuleap 5.13
+    * Fix sla #2847 and sla #907 Git and jenkins usage
+
+     Fixes:
+     - Git post push commit now pass token to the URL to build
+     - No longer enforce SSL verification of Jenkins server
+     - Now use proxy if any defined to communicate with jenkins server
+
+     Nota: make use of core Jenkins integration.
+
+     Change-Id: Ia26ca44b7d70b6bbf436a591d8472355796ec91b
+
+Version 3.3 - Tuleap 5.13
+    * Fix git plugin install, create table according to their FK order
+
+Version 3.2 - Tuleap 5.13
+    * On user ssh key edition, appy on gerrit and gitolite
+
+Version 3.1 - Tuleap 5.13
+    * do not miserably fail if there is no repo
+
+Version 3.0 - Tuleap 5.13
+    * story #2967 - Serialize gitolite events
+
+    Sevral concurrent processes accessing the same gitolite admin repository
+    in the same time seems to lead to race conditions and sometime might
+    crash gitolite authorized_keys.
+
+    Furthermore, as the number of git repositories grow, modifications made on
+    gitolite admin repo takes time to push (compile time in gitolite to generate
+    the permission schema).
+
+    With this change, all gitolite admin operations (ssh keys modifications,
+    creation of repository, deletion, update of description, update of permissions,
+    update of mailing list details, move to gerrit, etc) are done one after
+    another (serialized), in background (system event).
+
+    For end user, it means a UI with better reactivity but a little bit of delay
+    to actually get the things propagated at git/gitolite level (usually a couple
+    of minutes).
+
+Version 2.7.39 - Tuleap 5.13
+    * story #1462: synchronize user ssh keys with gerrit servers
+
+Version 2.7.38 - Tuleap 5.13
+    story #2795 - tuleap binded groups to be replicated on Gerrit
+
+    The Tuleap binded groups are replicated as Gerrit group of groups
+    aka. included groups.
+    This implies that, on gerrit side, we cannot take into account private
+    projects or restricted users settings into account.
+
+    Given a "Developers" user group in Tuleap "Top Level" public project
+    And a "Developers" user group in Tuleap "Product" private project, bound to "Top Level/Developers"
+    And "John", member of "Developers", "Top Level" project member but NOT "Product" project member
+    Then John don't have access to any content in "Product" Tuleap project
+    But he has access to Gerrit project that grant access to "Product/Developers" group
+
+    While this scenario might sounds legit, the behaviours are differents and should probably be documented.
+
+Version 2.7.37 - Tuleap 5.13
+    * Fix include after autload
+
+Version 2.7.36 - Tuleap 5.13
+    * Autoload git
+
+Version 2.7.35 - Tuleap 5.13
+    * A repository can now be disconnected from Gerrit
+
+Version 2.7.34 - Tuleap 5.13
+    * Tuleap User groups migration into Gerrit
+
+Version 2.7.33 - Tuleap 5.13
+    * Fix: Gerrit replication seems to be picky on permission case
+
+Version 2.7.32 - Tuleap 5.12
+    * Use Gerrit replication mecanism to propagate gerrit changes onto Tuleap
+
+Version 2.7.31 - Tuleap 5.12
+    * Development: SystemEvents can now be processed by application owner instead of root
+
+Version 2.7.30 - Tuleap 5.12
+    * Replicate user groups modification to gerrit for migrate repositories
+
+Version 2.7.29 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
+Version 2.7.28 - Tuleap 5.12
+    * Fix a warning when non project admin does a personal fork
+
+Version 2.7.27 - Tuleap 5.12
+    * Check that gitolite authorized_keys is not empty && add a script to automaticaly recover this file
+
+Version 2.7.26 - Tuleap 5.11
+    * Fix regression introduced in git 2.7.24
+    * No longer need to pass a view to the tree strategy
+    * Fix styling issue for various screen sizes
+
+Version 2.7.25 - Tuleap 5.11
+    * Do not migrate deleted repositories
+
+Version 2.7.24 - Tuleap 5.11
+    * Improve git URLs rendering and add contextual help
+
+Version 2.7.23 - Tuleap 5.9
+    * Fix bug that prevent display of access log
+
+Version 2.7.22 - Tuleap 5.9
+    * Allow to set git description so it's displayed in gitphp view
+
+Version 2.7.21 - Tuleap 5.9
+    * One can choose permissions when forking repositories from one project to another
+
+Version 2.7.20 - Tuleap 5.9
+    * On conversion of a Tuleap repository to gerrit, push the content of the tuleap repo and keep it synchronized afterward
+
+Version 2.7.19 - Tuleap 5.9
+    * Continue migration of a git repository from Tuleap to Gerrit
+
+Version 2.7.18 - Tuleap 5.8
+    * Fix link between Jenkins and gitphp (to display diff in the right sense)
+
+Version 2.7.17 - Tuleap 5.8
+    * Allow anonymous browsing of repositories
+
+Version 2.7.16 - Tuleap 5.7
+    * Fix fatal error on project access logs page
+
+Version 2.7.15 - Tuleap 5.7
+    * First step to allow one to migrate a tuleap repository to a gerrit remote server
+
+Version 2.7.14 - Tuleap 5.6
+    * Gitolite should dump ssh keys of unix_status <> A users too
+
+Version 2.7.13 - Tuleap 5.6
+    * Fix git statistics
+
+Version 2.7.12 - Tuleap 5.5.4
+    * Overall rewrite of SSH key dump to reduce the frequency of dumps and validate keys
+
 Version 2.7.11 - Tuleap 5.5.3
     * Disable dump of repository description for Gitolite backend as it seems to make trouble in some configuration.
 

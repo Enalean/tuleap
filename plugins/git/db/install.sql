@@ -1,5 +1,12 @@
-DROP TABLE IF EXISTS plugin_git;
-
+CREATE TABLE IF NOT EXISTS plugin_git_remote_servers (
+    id INT(11) UNSIGNED NOT NULL auto_increment,
+    host VARCHAR(255) NOT NULL,
+    http_port INT(11) UNSIGNED NOT NULL,
+    ssh_port INT(11) UNSIGNED NOT NULL,
+    login VARCHAR(255) NOT NULL,
+    identity_file VARCHAR(255) NOT NULL,
+    ssh_key TEXT NULL,
+PRIMARY KEY (id));
 
 CREATE TABLE IF NOT EXISTS `plugin_git` (
   `repository_id` int(10) unsigned NOT NULL auto_increment,
@@ -17,8 +24,11 @@ CREATE TABLE IF NOT EXISTS `plugin_git` (
   `repository_backend_type` varchar(16) DEFAULT 'gitshell',
   `repository_scope` varchar(1) NOT NULL,
   `repository_namespace` varchar(255),
+  `remote_server_id` INT(11) UNSIGNED NULL,
+  remote_server_disconnect_date INT(11) NULL,
   PRIMARY KEY  (`repository_id`),
-  KEY `project_id` (`project_id`)
+  KEY `project_id` (`project_id`),
+  FOREIGN KEY  remote_server_idx (remote_server_id) REFERENCES plugin_git_remote_servers (id)
 );
 
 CREATE TABLE IF NOT EXISTS `plugin_git_post_receive_mail` (
@@ -35,10 +45,18 @@ CREATE TABLE IF NOT EXISTS `plugin_git_log` (
   `commits_number` int,
    INDEX `idx_repository_user`(`repository_id`, `user_id`));
 
-CREATE TABLE `plugin_git_ci` (
+CREATE TABLE IF NOT EXISTS `plugin_git_ci` (
 `job_id` INT(11) UNSIGNED NOT NULL,
 `repository_id` INT(10) UNSIGNED NOT NULL,
 PRIMARY KEY (`job_id`));
+
+CREATE TABLE IF NOT EXISTS plugin_git_remote_ugroups (
+    group_id int(11) NOT NULL,
+    ugroup_id int(11) NOT NULL,
+    remote_server_id INT(11) UNSIGNED NOT NULL,
+    PRIMARY KEY (group_id, ugroup_id, remote_server_id),
+    FOREIGN KEY remote_server_idx (remote_server_id) REFERENCES plugin_git_remote_servers (id)
+);
 
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) 
@@ -63,6 +81,7 @@ INSERT INTO permissions_values (permission_type, ugroup_id, is_default)
 VALUES ('PLUGIN_GIT_READ', 2, 1),
        ('PLUGIN_GIT_READ', 3, 0),
        ('PLUGIN_GIT_READ', 4, 0),
+       ('PLUGIN_GIT_READ', 1, 0),
        ('PLUGIN_GIT_WRITE', 2, 0),
        ('PLUGIN_GIT_WRITE', 3, 1),
        ('PLUGIN_GIT_WRITE', 4, 0),

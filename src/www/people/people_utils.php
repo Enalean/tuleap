@@ -127,7 +127,7 @@ function people_show_skill_inventory($user_id) {
 }
 
 function people_edit_skill_inventory($user_id) {
-	global $PHP_SELF,$Language;
+	global $Language;
 	$sql="SELECT * FROM people_skill_inventory WHERE user_id='$user_id'";
 	$result=db_query($sql);
 
@@ -147,7 +147,7 @@ function people_edit_skill_inventory($user_id) {
 	} else {
 		for ($i=0; $i < $rows; $i++) {
 			echo '
-			<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+			<FORM ACTION="?" METHOD="POST">
 			<INPUT TYPE="HIDDEN" NAME="skill_inventory_id" VALUE="'.db_result($result,$i,'skill_inventory_id').'">
 			<TR class="'. util_get_alt_row_color($i) .'">
 				<TD><FONT SIZE="-1">'. people_get_skill_name(db_result($result,$i,'skill_id')) .'</TD>
@@ -164,7 +164,7 @@ function people_edit_skill_inventory($user_id) {
 	
 	echo '
 	<TR><TD COLSPAN="4"><H3>'.$Language->getText('people_utils','add_new_skill').'</H3></TD></TR>
-	<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+	<FORM ACTION="?" METHOD="POST">
 	<TR class="'. util_get_alt_row_color($i) .'">
 		<TD><FONT SIZE="-1">'. people_skill_box('skill_id'). '</TD>
 		<TD><FONT SIZE="-1">'. people_skill_level_box('skill_level_id'). '</TD>

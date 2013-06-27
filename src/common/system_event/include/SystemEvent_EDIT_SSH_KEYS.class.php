@@ -30,14 +30,24 @@ class SystemEvent_EDIT_SSH_KEYS extends SystemEvent {
      */
     public function verbalizeParameters($with_link) {
         $txt = '';
-        $txt .= 'user: '. $this->verbalizeUserId($this->getIdFromParam($this->parameters), $with_link);
+        $txt .= 'user: '. $this->verbalizeUserId($this->getParameter(0), $with_link);
         return $txt;
     }
 
+    /**
+     * @see BackendSystem::dumpSSHKeysForUser()
+     * @see UserManager::updateUserSSHKeys()
+     * @see SystemEventManager::addSystemEvent()
+     * 
+     * @return boolean
+     */
     public function process() {
-        $user_id = $this->getIdFromParam($this->parameters);
+        $user_id = $this->getParameter(0);
+        if (! $this->int_ok($user_id)) {
+            $user_id = 0;
+        }
         if ($user = UserManager::instance()->getUserById($user_id)) {
-            if (!Backend::instance('System')->dumpSSHKeysForUser($user)) {
+            if (! Backend::instance('System')->dumpSSHKeysForUser($user, $this->getParameter(1))) {
                 $this->error("Could not dump ssh keys for user ". $user->getUserName());
                 return false;
             }

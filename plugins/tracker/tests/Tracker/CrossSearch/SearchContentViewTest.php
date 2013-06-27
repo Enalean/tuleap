@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../builders/anArtifact.php';
-require_once dirname(__FILE__).'/../../builders/aMockArtifact.php';
-
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
     
     //TODO this exercises the same code as itIncludesSearchResults but it documents something else, what to do?
@@ -57,7 +55,7 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
         $report   = $report ? $report : mock('Tracker_Report');
         $criteria = $this->buildCriteria($report);
         $factory  = $this->buildAFormElementFactory();
-        $user     = mock('User');
+        $user     = mock('PFUser');
         $view     = new Tracker_CrossSearch_SearchContentView($report,
                                                               $criteria,
                                                               $tree_of_artifacts,
@@ -145,7 +143,7 @@ class Tracker_CrossSearch_SearchContentView_ArtifactLinkTest extends TuleapTestC
         $factory           = new MockTracker_FormElementFactory();
         $tracker           = new MockTracker();
         $artifact          = new MockTracker_Artifact();
-        $this->user              = mock('User');
+        $this->user              = mock('PFUser');
         
         $artifact->setReturnValue('getTracker', $tracker);
         

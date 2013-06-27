@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'DataAccess.class.php';
 require_once 'DataAccessResult.class.php';
 require_once 'DataAccessResultEmpty.class.php';
 
@@ -51,6 +52,18 @@ class DataAccessObject {
 
     public function commit() {
         $this->da->commit();
+    }
+    
+    public function rollBack() {
+        $this->da->rollback();
+    }
+    
+    /**
+     * 
+     * @return DataAccess
+     */
+    public function getDa() {
+        return $this->da;
     }
 
     /**

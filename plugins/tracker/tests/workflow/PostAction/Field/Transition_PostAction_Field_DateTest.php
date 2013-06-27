@@ -17,16 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../../../../include/Tracker/TrackerManager.class.php');
-require_once(dirname(__FILE__).'/../../../../include/workflow/PostAction/Field/Transition_PostAction_Field_Date.class.php');
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 Mock::generatePartial('Transition_PostAction_Field_Date', 'Transition_PostAction_Field_DateTestVersion', array('addFeedback', 'getFormElementFactory'));
 Mock::generate('Transition');
-require_once ('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_FormElement_Field_Date');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 class Transition_PostAction_Field_DateTest extends UnitTestCase {
     
@@ -39,7 +36,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
     }
     
     public function testBeforeShouldSetTheDate() {
-        $current_user = new MockUser();
+        $current_user = mock('PFUser');
         
         $field = new MockTracker_FormElement_Field_Date();
         $field->setReturnValue('getId', 102);
@@ -69,7 +66,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
     }
     
     public function testBeforeShouldClearTheDate() {
-        $current_user = new MockUser();
+        $current_user = mock('PFUser');
         
         $field = new MockTracker_FormElement_Field_Date();
         $field->setReturnValue('getId', 102);
@@ -99,7 +96,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
     }
     
     public function testBeforeShouldBypassAndSetTheDate() {
-        $current_user = new MockUser();
+        $current_user = mock('PFUser');
         
         $field = new MockTracker_FormElement_Field_Date();
         $field->setReturnValue('getId', 102);
@@ -127,7 +124,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
     }
     
     public function testBeforeShouldBypassAndClearTheDate() {
-        $current_user = new MockUser();
+        $current_user = mock('PFUser');
         
         $field = new MockTracker_FormElement_Field_Date();
         $field->setReturnValue('getId', 102);
@@ -158,7 +155,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
     }
     
     public function testBeforeShouldNOTDisplayFeedback() {
-        $current_user = new MockUser();
+        $current_user = mock('PFUser');
         
         $field = new MockTracker_FormElement_Field_Date();
         $field->setReturnValue('getId', 102);

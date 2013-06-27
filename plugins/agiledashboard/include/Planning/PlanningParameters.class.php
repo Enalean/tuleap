@@ -22,6 +22,12 @@
  * User-editable parameters of the planning.
  */
 class PlanningParameters {
+
+    const NAME                  = 'name';
+    const BACKLOG_TITLE         = 'backlog_title';
+    const PLANNING_TITLE        = 'plan_title';
+    const BACKLOG_TRACKER_ID    = 'backlog_tracker_id';
+    const PLANNING_TRACKER_ID   = 'planning_tracker_id';
     
     public $name;
     public $backlog_title;
@@ -32,11 +38,11 @@ class PlanningParameters {
     public static function fromArray(array $array) {
         $parameters = new PlanningParameters();
         
-        $parameters->name                = PlanningParameters::get($array, 'name');
-        $parameters->backlog_title       = PlanningParameters::get($array, 'backlog_title');
-        $parameters->plan_title          = PlanningParameters::get($array, 'plan_title');
-        $parameters->backlog_tracker_id  = PlanningParameters::get($array, 'backlog_tracker_id');
-        $parameters->planning_tracker_id = PlanningParameters::get($array, 'planning_tracker_id');
+        $parameters->name                = PlanningParameters::get($array, self::NAME);
+        $parameters->backlog_title       = PlanningParameters::get($array, self::BACKLOG_TITLE);
+        $parameters->plan_title          = PlanningParameters::get($array, self::PLANNING_TITLE);
+        $parameters->backlog_tracker_id  = PlanningParameters::get($array, self::BACKLOG_TRACKER_ID);
+        $parameters->planning_tracker_id = PlanningParameters::get($array, self::PLANNING_TRACKER_ID);
         
         return $parameters;
     }

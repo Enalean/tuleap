@@ -30,14 +30,6 @@ class BackendCVS extends Backend {
     protected $UseCVSNT;
 
     /**
-     * Constructor
-     */
-    protected function __construct() {
-        parent::__construct();
-    }
-
-
-    /**
      * Return an instance of ServiceDao
      *
      * @return ServiceDao
@@ -287,7 +279,7 @@ class BackendCVS extends Backend {
     /**
      * Update CVS writers into all projects that given user belongs to
      *
-     * @param User $user member to add as committer
+     * @param PFUser $user member to add as committer
      *
      * @return Boolean
      */

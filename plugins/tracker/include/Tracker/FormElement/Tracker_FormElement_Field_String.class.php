@@ -18,9 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact.class.php');
-require_once('Tracker_FormElement_Field_Text.class.php');
-require_once('dao/Tracker_FormElement_Field_StringDao.class.php');
 
 class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
     

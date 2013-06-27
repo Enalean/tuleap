@@ -18,12 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Dao.class.php';
-require_once 'Config/ColumnFactory.class.php';
-require_once 'Config/TrackerMappingFactory.class.php';
-require_once 'Config/ColumnCollection.class.php';
-require_once CARDWALL_BASE_DIR. '/Mapping.class.php';
-require_once 'IConfig.class.php';
 
 /**
  * Manage configuration of a cardwall on top of a tracker

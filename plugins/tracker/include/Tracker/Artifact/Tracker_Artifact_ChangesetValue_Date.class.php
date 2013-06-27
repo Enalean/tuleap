@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('Tracker_Artifact_ChangesetValue.class.php');
 
 /**
  * Manage values in changeset for date fields
@@ -80,7 +79,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
      * @return string The value of this artifact changeset value for Soap API
      */
     public function getSoapValue() {
-        return (string)$this->getTimestamp();
+        return $this->encapsulateRawSoapValue($this->getTimestamp());
     }
     
     /**

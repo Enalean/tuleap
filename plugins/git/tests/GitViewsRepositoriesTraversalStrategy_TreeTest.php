@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/constants.php');
+require_once 'bootstrap.php';
 require_once 'GitViewsRepositoriesTraversalStrategyTest.class.php';
-require_once dirname(__FILE__) .'/../include/GitViewsRepositoriesTraversalStrategy_Tree.class.php';
+
 Mock::generate('GitViews');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('GitRepository');
 
 class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositoriesTraversalStrategyTest {
@@ -32,18 +32,16 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     }
     
     public function testEmptyListShouldReturnEmptyString() {
-        $view = new MockGitViews();
         $lastPushes = array();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $repositories = array();
-        $strategy = new $this->classname($view, $lastPushes);
+        $strategy = new $this->classname($lastPushes);
         $this->assertIdentical('', $strategy->fetch($repositories, $user));
     }
     
     public function testInsertInTreeWithOneFolderShouldInsertInTheFirstLevel() {
-        $view      = new MockGitViews();
         $lastPushes = array();
-        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($view, $lastPushes);
+        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($lastPushes);
         
         $tree = array();
         $path = array('a');
@@ -54,9 +52,8 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     }
     
     public function testInsertInTreeWithEmptyPathShouldDoNothing() {
-        $view      = new MockGitViews();
         $lastPushes = array();
-        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($view, $lastPushes);
+        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($lastPushes);
         
         $tree = array();
         $path = array();
@@ -67,9 +64,8 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     }
     
     public function testInsertInTreeShouldInsertAtTheLeaf() {
-        $view      = new MockGitViews();
         $lastPushes = array();
-        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($view, $lastPushes);
+        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($lastPushes);
         
         $tree = array();
         $path = array('a', 'b', 'c');
@@ -80,9 +76,8 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     }
     
     public function testInsertInTreeShouldInsertInSeveralBranches() {
-        $view      = new MockGitViews();
         $lastPushes = array();
-        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($view, $lastPushes);
+        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($lastPushes);
         $tree      = array();
         
         $path  = array('a', 'b', 'c');
@@ -110,7 +105,7 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
         
         // Magic call that do stuff we want, yeah!
         $repositories = $this->getFlatTree($traversal);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $tree = $traversal->getTree($repositories, $user);
         $this->assertTrue(is_array($tree['automaticTests']));
         $this->assertIsA(($tree['automaticTests']['Python']), 'GitRepository');
@@ -128,18 +123,16 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     }
     
     public function testFetchShouldReturnOneRowPerDepthLevel() {
-        $view = TestHelper::getPartialMock('GitViews', array());
-        $view->groupId = 101;
-        $user = new MockUser();
+        $user = mock('PFUser');
         $lastPushes = array();
         
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));
-        $strategy->__construct($view, $lastPushes);
+        $strategy->__construct($lastPushes);
         
-        $repositories    = $this->getFlatTree($strategy);
+        $repositories = $this->getFlatTree($strategy);
         
         $output = $strategy->fetch($repositories, $user);
-        
+
         // Ensure nested levels
         $this->assertPattern('%<td style="padding-left: 1em;">automaticTests</td>%', $output);
         $this->assertPattern('%<td style="padding-left: 2em;">.*Python.*</td>%', $output);
@@ -149,17 +142,15 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
         $this->assertPattern("%Python.*</td><td>$description</td>%", $output);
         
         // Ensure that there is a link to the repository
-        $this->assertPattern('%<a href="[^"]*/view/3/"  >Python</a>%', $output);
+        $this->assertPattern('%<a href="[^"]*/view/3/">Python</a>%', $output);
     }
   
     public function testFetchShouldReturnFolderBeforeLeaves() {
-        $view = TestHelper::getPartialMock('GitViews', array());
-        $view->groupId = 101;
-        $user = new MockUser();
+        $user = mock('PFUser');
         $lastPushes = array();
 
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));
-        $strategy->__construct($view, $lastPushes);
+        $strategy->__construct($lastPushes);
 
         $repositories = $this->getFlatTree($strategy);
 

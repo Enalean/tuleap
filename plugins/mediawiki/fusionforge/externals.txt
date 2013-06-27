@@ -1,0 +1,7 @@
+#
+# svn propset svn:externals .  -F externals.txt
+#
+src/rpm-specific svn://scm.fusionforge.org/svnroot/fusionforge/trunk/src/rpm-specific
+tests svn://scm.fusionforge.org/svnroot/fusionforge/trunk/tests
+3rd-party svn://scm.fusionforge.org/svnroot/fusionforge/trunk/3rd-party
+plugins/mediawiki svn://scm.fusionforge.org/svnroot/fusionforge/trunk/src/plugins/mediawiki

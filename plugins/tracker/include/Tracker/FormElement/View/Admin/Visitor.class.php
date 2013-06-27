@@ -17,7 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once dirname(__FILE__).'/../../Tracker_FormElement_Visitor.class.php';
 
 /**
  * Can visit a FormElement and provides the corresponding administration element 
@@ -55,7 +54,9 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
     public function visit(/*Tracker_FormElement*/ $element) {
         $this->element = $element;
         
-        if ($element instanceof Tracker_FormElement_Field_MultiSelectbox) {
+        if ($element instanceof Tracker_FormElement_Field_Checkbox) {
+            $this->visitCheckbox($element);
+        } elseif ($element instanceof Tracker_FormElement_Field_MultiSelectbox) {
             $this->visitMultiSelectbox($element);
         } elseif ($element instanceof Tracker_FormElement_Field_Selectbox) {
             $this->visitSelectbox($element);
@@ -145,6 +146,11 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
     private function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $element) {
         include_once 'Field/MultiSelectbox.class.php';
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_MultiSelectbox($element, $this->allUsedElements);
+    }
+    
+    private function visitCheckbox(Tracker_FormElement_Field_Checkbox $element) {
+        include_once 'Field/Checkbox.class.php';
+        $this->adminElement = new Tracker_FormElement_View_Admin_Field_Checkbox($element, $this->allUsedElements);
     }
     
     private function visitContainer(Tracker_FormElement_Container $element) {

@@ -19,10 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'CardInCellPresenter.class.php';
-require_once 'CardInCellPresenterNode.class.php';
-require_once 'MappingCollection.class.php';
-require_once 'FieldProviders/IProvideFieldGivenAnArtifact.class.php';
 require_once 'common/TreeNode/TreeNodeCallback.class.php';
 
 /**
@@ -30,20 +26,11 @@ require_once 'common/TreeNode/TreeNodeCallback.class.php';
  */
 class Cardwall_CardInCellPresenterCallback implements TreeNodeCallback {
 
-    /**
-     * @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
-     */
-    private $field_retriever;
-    
-    /**
-     * @var Cardwall_MappingCollection
-     */
-    private $mappings;
+    /** @var Cardwall_CardInCellPresenterFactory */
+    private $card_in_cell_presenter_factory;
 
-
-    public function __construct(Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $retriever, Cardwall_MappingCollection $mappings) {
-        $this->field_retriever = $retriever;
-        $this->mappings        = $mappings;
+    public function __construct(Cardwall_CardInCellPresenterFactory $card_in_cell_presenter_factory) {
+        $this->card_in_cell_presenter_factory = $card_in_cell_presenter_factory;
     }
     
     /**
@@ -53,23 +40,11 @@ class Cardwall_CardInCellPresenterCallback implements TreeNodeCallback {
         if (!$node instanceof Tracker_TreeNode_CardPresenterNode) {
             return clone $node;
         }
-        $card_field_id    = $this->getFieldId($node);
-        $swim_line_values = $this->mappings->getSwimLineValues($card_field_id);
-        $presenter        = new Cardwall_CardInCellPresenter($node->getCardPresenter(), $card_field_id, $this->getParentNodeId($node), $swim_line_values);
-        return new Cardwall_CardInCellPresenterNode($node, $presenter);
+        return new Cardwall_CardInCellPresenterNode(
+            $node,
+            $this->card_in_cell_presenter_factory->getCardInCellPresenter($node->getCardPresenter())
+        );
     }
-
-    private function getParentNodeId(TreeNode $node) {
-        $parent_node = $node->getParentNode();
-        return $parent_node ? $parent_node->getId() : 0;
-    }
-
-    private function getFieldId(Tracker_TreeNode_CardPresenterNode $node) {
-        $artifact = $node->getCardPresenter()->getArtifact();
-        $field    = $this->field_retriever->getField($artifact);
-        return $field ? $field->getId() : 0;
-    }
-    
 }
 
 

@@ -42,7 +42,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
      * Process stored event
      */
     function process() {
-        
+        /* @var $backendSystem BackendSystem */
         $backendSystem      = Backend::instance('System');
         $backendAliases     = Backend::instance('Aliases');
         $backendSVN         = Backend::instance('SVN');
@@ -89,7 +89,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         // (re-)create missing home directories
         $user_manager     = UserManager::instance();
         $userdao          = new UserDao();
-        $allowed_statuses = array(User::STATUS_ACTIVE, User::STATUS_RESTRICTED);
+        $allowed_statuses = array(PFUser::STATUS_ACTIVE, PFUser::STATUS_RESTRICTED);
         $dar              = $userdao->searchByStatus($allowed_statuses);
         foreach($dar as $row) {
             $user = $user_manager->getUserInstanceFromRow($row);
@@ -97,9 +97,6 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
                 $backendSystem->userHomeSanityCheck($user);
             }
         }
-
-        // dump SSH authorized_keys into all users homedirs
-        $backendSystem->dumpSSHKeys();
         
         $project_manager = ProjectManager::instance();
         foreach($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
@@ -151,10 +148,30 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
                 $backendSVN->checkSVNMode($project);
             }
         }
-        
+
+        $logger = new BackendLogger();
+        if (is_file($logger->getFilepath())) {
+            $backendSystem->changeOwnerGroupMode(
+                $logger->getFilepath(),
+                Config::get('sys_http_user'),
+                Config::get('sys_http_user'),
+                0640
+            );
+        }
+
         // If no codendi_svnroot.conf file, force recreate.
         if (!is_file($GLOBALS['svn_root_file'])) {
             $backendSVN->setSVNApacheConfNeedUpdate();
+        }
+
+        try {
+            EventManager::instance()->processEvent(
+                Event::PROCCESS_SYSTEM_CHECK,
+                null
+            );
+        } catch(Exception $exception) {
+            $this->error($exception->getMessage());
+            return false;
         }
         
         $this->done();

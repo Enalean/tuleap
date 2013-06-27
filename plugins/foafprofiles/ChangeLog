@@ -1,0 +1,2 @@
+Version 0.2 - Tuleap 5.13
+    * Add a plugin dependency solver to force installation of needed plugins

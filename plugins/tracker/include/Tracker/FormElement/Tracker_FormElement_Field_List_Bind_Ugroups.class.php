@@ -17,8 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('Tracker_FormElement_Field_List_Bind.class.php');
-require_once('Tracker_FormElement_Field_List_Bind_UgroupsValue.class.php');
 
 class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Field_List_Bind {
     /**
@@ -161,25 +159,6 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
             'from'       => 'tracker_field_list_bind_ugroups_value',
             'join_on_id' => 'tracker_field_list_bind_ugroups_value.id',
         );
-    }
-
-    /**
-     * Get available values of this field for SOAP usage
-     * Fields like int, float, date, string don't have available values
-     *
-     * @return mixed The values or null if there are no specific available values
-     */
-    public function getSoapAvailableValues() {
-        $values      = $this->getAllValues();
-        $soap_values = array();
-        foreach ($values as $id => $value) {
-            $soap_values[] = array(
-                'field_id'         => $this->field->getId(),
-                'bind_value_id'    => $id,
-                'bind_value_label' => $value->getUGroupName(),
-            );
-        }
-        return $soap_values;
     }
 
     /**
@@ -547,7 +526,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      * @param array            &$xmlMapping the array of mapping XML ID => real IDs
      * @param string           $fieldID     XML ID of the binded field
      */
-    public function exportToXML($root, &$xmlMapping, $fieldID) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $fieldID) {
         $items = $root->addChild('items');
         $i = 0;
         foreach ($this->values as $value) {
@@ -633,6 +612,11 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      */
     public function fixOriginalValueIds(array $value_mapping) {
         // Nothing to do: user value ids stay the same accross projects.
+    }
+
+    protected function getSoapBindingList() {
+        // returns empty array as ugroups are already listed in 'values'
+        return array();
     }
 }
 

@@ -52,6 +52,11 @@ class Layout extends Response {
      */
     public $imgroot;
 
+    /**
+     * Html purifier
+     */
+    protected $purifier;
+
     //Define all the icons for this theme
     var $icons = array('Summary' => 'ic/anvil24.png',
         'Homepage' => 'ic/home.png',
@@ -121,8 +126,9 @@ class Layout extends Response {
         $this->bgpri[8] = 'priorh';
         $this->bgpri[9] = 'priori';
         
-        $this->root    = $root;
-        $this->imgroot = $root . '/images/';
+        $this->root     = $root;
+        $this->imgroot  = $root . '/images/';
+        $this->purifier = Codendi_HTMLPurifier::instance();
     }
     
     function getChartColors() {
@@ -866,9 +872,22 @@ class Layout extends Response {
     function includeFooterJavascriptSnippet($snippet) {
         $this->javascriptFooter[] = array('snippet' => $snippet);
     }
-    
+
+    /**
+     * @return PFUser
+     */
+    protected function getUser() {
+        return UserManager::instance()->getCurrentUser();
+    }
+
+    public function addUserAutocompleteOn($element_id, $multiple=false) {
+        $jsbool = $multiple ? "true" : "false";
+        $js = "new UserAutoCompleter('".$element_id."', '".util_get_dir_image_theme()."', ".$jsbool.");";
+        $this->includeFooterJavascriptSnippet($js);
+    }
+
     function includeCalendarScripts() {
-        $this->includeJavascriptSnippet("var useLanguage = '". substr(UserManager::instance()->getCurrentUser()->getLocale(), 0, 2) ."';");
+        $this->includeJavascriptSnippet("var useLanguage = '". substr($this->getUser()->getLocale(), 0, 2) ."';");
         $this->includeJavascriptFile("/scripts/datepicker/datepicker.js");
         return $this;
     }
@@ -1650,6 +1669,31 @@ class Layout extends Response {
         echo "\n</body></html>";
     }
 
+    /**
+     * @return string
+     */
+    protected function getClassnamesForBodyTag() {
+        if ($this->getUser()->useLabFeatures()) {
+            return 'lab-mode';
+        }
+    }
+
+    /**
+     * This method generates header for pages embbeded in overlay like LiteWindow
+     */
+    public function overlay_header() {
+        echo '<html>
+              <head>
+                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
+        echo $this->displayJavascriptElements();
+        echo $this->displayStylesheetElements(array());
+        echo $this->displaySyndicationElements();
+        echo '    </head>
+                     <body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">
+                       <div class="main_body_row">
+                           <div class="contenttable">';
+    }
+
     function header($params) {
         global $Language;
         
@@ -1658,7 +1702,7 @@ class Layout extends Response {
         //themable someday?
         $site_fonts='verdana,arial,helvetica,sans-serif';
 
-        echo '<body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">';
+        echo '<body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0" class="'. $this->getClassnamesForBodyTag() .'">';
 
         echo $this->getOsdnNavBar();
 
@@ -1755,7 +1799,18 @@ class Layout extends Response {
     function feedback($feedback) {
         return '';
     }
-    
+
+    /**
+     * This method generates footer for pages embbeded in overlay like LiteWindow
+     */
+    public function overlay_footer() {
+        echo '         </div>
+                     </div>
+                 '.$this->displayFooterJavascriptElements().'
+                 </body>
+             </html>';
+    }
+
     function footer($params) {
         if (!isset($params['showfeedback']) || $params['showfeedback']) {
             echo $this->_getFeedback();
@@ -1925,30 +1980,35 @@ class Layout extends Response {
             $hp =& Codendi_HTMLPurifier::instance();
             if ($short_name == 'summary') {
 
-                // Add a default tab to explain project privacy
-                if ($project->isPublic()) {
-                    $privacy = 'public';
-                } else {
-                    $privacy = 'private';
+                $label = '';
+                if (Config::get('sys_display_project_privacy_in_service_bar')) {
+                    // Add a default tab to explain project privacy
+                    if ($project->isPublic()) {
+                        $privacy = 'public';
+                    } else {
+                        $privacy = 'private';
+                    }
+                    $label .= '<span class="project_privacy_'.$privacy.'">[';
+                    $label .= $GLOBALS['Language']->getText('project_privacy', $privacy);
+                    $label .= ']</span>';
+
+                    // Javascript for project privacy tooltip
+                    $js = "
+                    document.observe('dom:loaded', function() {
+                        $$('span[class=project_privacy_private], span[class=project_privacy_public]').each(function (span) {
+                            var type = span.className.substring('project_privacy_'.length, span.className.length);
+                            codendi.Tooltips.push(new codendi.Tooltip(span, '/project/privacy.php?project_type='+type));
+                        });
+                    });
+                    ";
+                    $this->includeFooterJavascriptSnippet($js);
+
+                    $label .= '&nbsp;';
                 }
-                $label  = '<span class="project_privacy_'.$privacy.'">[';
-                $label .= $GLOBALS['Language']->getText('project_privacy', $privacy);
-                $label .= ']</span>';
-
-                // Javascript for project privacy tooltip
-                $js = "
-document.observe('dom:loaded', function() {
-    $$('span[class=project_privacy_private], span[class=project_privacy_public]').each(function (span) {
-        var type = span.className.substring('project_privacy_'.length, span.className.length);
-        codendi.Tooltips.push(new codendi.Tooltip(span, '/project/privacy.php?project_type='+type));
-    });
-});
-";
-                $this->includeFooterJavascriptSnippet($js);
-
-                $label .= '&nbsp;'.$hp->purify(util_unconvert_htmlspecialchars($project->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML).'&nbsp;&raquo;';
+                $label .= $hp->purify(util_unconvert_htmlspecialchars($project->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML).'&nbsp;&raquo;';
             } else {
-                $label = $hp->purify($service_data['label']);
+                $label  = '<span title="'.$hp->purify($service_data['description']).'">';
+                $label .= $hp->purify($service_data['label']).'</span>';
             }
             $tabs[] = array('link'        => $link,
                             'icon'        => null,

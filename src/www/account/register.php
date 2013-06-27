@@ -4,7 +4,9 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
+
+header("Cache-Control: no-cache, no-store, must-revalidate");
 
 require_once('pre.php');
 require_once('proj_email.php');
@@ -19,17 +21,25 @@ $page = $request->get('page');
 // ###### function register_valid()
 // ###### checks for valid register from form post
 if($page == "admin_creation"){
-   session_require(array('group'=>'1','admin_flags'=>'A')); 
+   session_require(array('group'=>'1','admin_flags'=>'A'));
 }
 
 function register_valid($confirm_hash)	{
     global $Language;
 
     $request =& HTTPRequest::instance();
-    
+
+
     $vLoginName = new Valid_UserNameFormat('form_loginname');
     $vLoginName->required();
     if (!$request->valid($vLoginName)) {
+        return 0;
+    }
+
+    $vRealName = new Valid_RealNameFormat('form_realname');
+    $vRealName->required();
+    if (!$request->valid($vRealName)) {
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_realname'));
         return 0;
     }
 
@@ -51,7 +61,7 @@ function register_valid($confirm_hash)	{
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_email'));
 	return 0;
     }
-    
+
     if ($request->get('page')!="admin_creation" && $request->get('form_pw') != $request->get('form_pw2')) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_passwd'));
         return 0;
@@ -72,8 +82,8 @@ function register_valid($confirm_hash)	{
     if ($request->exist('form_expiry') && $vDate->validate($request->get('form_expiry'))) {
         $date_list = split("-", $request->get('form_expiry'), 3);
         $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
-        $expiry_date = $unix_expiry_time; 
-        
+        $expiry_date = $unix_expiry_time;
+
     }
 
     $status = 'P';
@@ -100,7 +110,7 @@ function register_valid($confirm_hash)	{
                           ,UserManager::instance()->getCurrentUser()->getLocale()
                           ,'A',$expiry_date);
 
-    
+
     return $res;
 }
 
@@ -130,8 +140,8 @@ function display_account_form($register_error)	{
     $form_register_purpose = $request->exist('form_register_purpose')?$purifier->purify($request->get('form_register_purpose')):'';
 
     ?>
-<?php if($page == "admin_creation"){ ?>        
-    <form action="/admin/register_admin.php?page=admin_creation" name="new_user" method="post"> 
+<?php if($page == "admin_creation"){ ?>
+    <form action="/admin/register_admin.php?page=admin_creation" name="new_user" method="post">
 <?php } else { ?>
     <form action="/account/register.php" method="post">
 <?php }?>
@@ -145,34 +155,34 @@ function display_account_form($register_error)	{
 <P><?php print $Language->getText('account_register', 'email').'&nbsp;'.$star; ?>:<BR>
 <INPUT size=40 type="text" name="form_email" value="<?php echo $form_email; ?>"><BR>
 <?php print $Language->getText('account_register', 'email_directions'); ?>
-<?php if($page == "admin_creation"){ ?>    
+<?php if($page == "admin_creation"){ ?>
     <P><?php print $Language->getText('account_register', 'expiry_date')?>:<BR>
     <?php echo $GLOBALS['HTML']->getDatePicker("form_expiry", "form_expiry", $form_expiry); ?>
     <BR>
     <?php print $Language->getText('account_register', 'expiry_date_directions'); ?>
 <?php } ?>
 <P><?php print $Language->getText('account_register', 'tz').'&nbsp;'.$star; ?>:<BR>
-<?php 
+<?php
     echo html_get_timezone_popup ('timezone',$timezone); ?>
 <P>
 <?php
 if($request->isPost() && $request->exist('Register') && !($request->get('form_mail_site')==1)){
 
 	echo '<P><INPUT type="checkbox" name="form_mail_site" value="1" >';
-	
+
 }else{
-	
+
 	echo '<P><INPUT type="checkbox" name="form_mail_site" value="1" checked>';
 
-}	
+}
 print $Language->getText('account_register', 'siteupdate');
 
 if($request->isPost() && $request->exist('Register') && ($request->get('form_mail_va')==1)){
 
 	echo '<P><INPUT type="checkbox" name="form_mail_va" value="1" checked>';
-	
+
 }else{
-	
+
 	echo '<P><INPUT type="checkbox" name="form_mail_va" value="1" >';
 
 }
@@ -193,7 +203,7 @@ if ($GLOBALS['sys_user_approval'] == 1 || $page == "admin_creation") {
         print $Language->getText('account_register', 'purpose_directions_admin');
     }
     echo '<textarea wrap="virtual" rows="5" cols="70" name="form_register_purpose">'.$form_register_purpose.'</textarea></p>';
-} 
+}
 ?>
 
 <p>
@@ -206,14 +216,14 @@ if($page == "admin_creation" && $GLOBALS['sys_allow_restricted_users'] == 1){
 	if($request->isPost() && $request->exist('Register') && !($request->get('form_restricted')==1)){
 
 		echo '<INPUT type="checkbox" name="form_restricted" value="1" >';
-		
-	}else{
-		
-		echo '<INPUT type="checkbox" name="form_restricted" value="1" checked>';
-	
-	}	
 
-	print $Language->getText('account_register', 'restricted_user'); 
+	}else{
+
+		echo '<INPUT type="checkbox" name="form_restricted" value="1" checked>';
+
+	}
+
+	print $Language->getText('account_register', 'restricted_user');
 }
 ?>
 
@@ -227,13 +237,13 @@ if($page == "admin_creation") {
 	if($request->isPost() && $request->exist('Register') && ($request->get('form_send_email')==1)){
 
 		echo '<INPUT type="checkbox" name="form_send_email" value="1" checked>';
-		
+
 	}else{
-		
+
 		echo '<INPUT type="checkbox" name="form_send_email" value="1" >';
-	
+
 	}
-	print $Language->getText('account_register', 'send_email'); 
+	print $Language->getText('account_register', 'send_email');
 } else {
     include $Language->getContent('account/user_legal');
 }
@@ -255,7 +265,7 @@ if ($request->isPost() && $request->exist('Register')) {
     $confirm_hash = substr(md5($GLOBALS['session_hash'] . $request->get('form_pw') . time()),0,16);
 
     if ($new_userid = register_valid($confirm_hash)) {
-    
+
         $user_name = user_getname($new_userid);
         $content = '';
         $admin_creation = false;
@@ -265,13 +275,13 @@ if ($request->isPost() && $request->exist('Register')) {
             $password = $request->get('form_pw');
             $login = $request->get('form_loginname');
             if($request->get('form_send_email')){
-                //send an email to the user with th login and password                
+                //send an email to the user with th login and password
                 $from = $GLOBALS['sys_noreply'];
                 $to = $request->get('form_email');
                 $subject = $Language->getText('account_register', 'welcome_email_title', $GLOBALS['sys_name']);
-                
+
                 include($Language->getContent('account/new_account_email'));
-                
+
                 $mail = new Mail();
                 $mail->setSubject($subject);
                 $mail->setFrom($from);
@@ -286,26 +296,26 @@ if ($request->isPost() && $request->exist('Register')) {
             if(!$admin_creation) {
                 if (!send_new_user_email($request->get('form_email'), $confirm_hash, $user_name)) {
                     $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
-                }   
+                }
             } else {
-                
-            }   
+
+            }
             $content .= '<p><b>'.$Language->getText('account_register', 'title_confirm').'</b>';
             if($admin_creation){
                     if($request->get('form_send_email')){
                         $content .= '<p>'.$Language->getText('account_register', 'msg_confirm_admin', array($request->get('form_realname'),$GLOBALS['sys_name'], $request->get('form_loginname'), $request->get('form_pw')));
                     }else {
                         $content .= '<p>'.$Language->getText('account_register', 'msg_confirm_no_email', array($request->get('form_realname'),$GLOBALS['sys_name'], $request->get('form_loginname'), $request->get('form_pw')));
-                    }             
+                    }
             }else{
                 $content .= '<p>'.$Language->getText('account_register', 'msg_confirm', array($GLOBALS['sys_name'],$user_name));
             }
-            
+
         } else {
             // Registration requires approval - send a mail to site admin and
             // inform the user that approval is required
             $href_approval = get_server_url().'/admin/approve_pending_users.php?page=pending';
-    
+
             $content .= '<p><b>'.$Language->getText('account_register', 'title_approval').'</b>';
             $content .= '<p>'.$Language->getText('account_register', 'msg_approval', array($GLOBALS['sys_name'],$user_name,$href_approval));
             // Send a notification message to the Site administrator
@@ -313,7 +323,7 @@ if ($request->isPost() && $request->exist('Register')) {
             $to = $GLOBALS['sys_email_admin'];
             $subject = $Language->getText('account_register', 'mail_approval_subject', array($user_name));
             $body = stripcslashes($Language->getText('account_register', 'mail_approval_body', array($GLOBALS['sys_name'], $user_name, $href_approval)));
-            
+
             $mail = new Mail();
             $mail->setSubject($subject);
             $mail->setFrom($from);
@@ -322,7 +332,7 @@ if ($request->isPost() && $request->exist('Register')) {
             if (!$mail->send()) {
                 $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
             }
-            
+
         }
         site_header(array('title'=>$Language->getText('account_register', 'title_confirm')));
         echo $content;
@@ -334,7 +344,7 @@ if ($request->isPost() && $request->exist('Register')) {
 if($page != 'admin_creation'){
    require_once('common/event/EventManager.class.php');
     $em =& EventManager::instance();
-    $em->processEvent('before_register', array()); 
+    $em->processEvent('before_register', array());
 }
 
 
@@ -344,14 +354,14 @@ if($page != 'admin_creation'){
 $HTML->includeJavascriptFile('/scripts/check_pw.js.php');
 $HTML->header(array('title'=>$Language->getText('account_register', 'title') ));
 ?>
-    
+
 
 <h2><?php print $Language->getText('account_register', 'title').' ';
 if($page != 'admin_creation'){
     print help_button('UserRegistration.html');
 }
 ?></h2>
-<?php 
+<?php
 
 $reg_err = isset($GLOBALS['register_error'])?$GLOBALS['register_error']:'';
 display_account_form($reg_err);

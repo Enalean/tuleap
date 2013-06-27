@@ -17,18 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once dirname(__FILE__) . '/../../builders/aTracker.php';
-require_once dirname(__FILE__) . '/../../builders/anArtifact.php';
-require_once dirname(__FILE__) . '/../../builders/aField.php';
-require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SearchViewBuilder.class.php';
-require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SemanticValueFactory.class.php';
-require_once dirname(__FILE__) . '/../../../include/Tracker/TrackerFactory.class.php';
-require_once dirname(__FILE__) . '/../../../include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
 require_once 'common/include/Codendi_Request.class.php';
-require_once dirname(__FILE__).'/../../builders/aCrossSearchCriteria.php';
-require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SemanticStatusReportField.class.php';
-require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/CriteriaBuilder.class.php';
-
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 Mock::generate('Tracker_CrossSearch_Search');
 Mock::generate('Tracker_CrossSearch_SearchContentView');
 Mock::generate('Project');
@@ -58,7 +48,7 @@ class Tracker_CrossSearch_CriteriaBuilderTest extends TuleapTestCase {
         
         $this->project              = new MockProject();
         $this->report               = new MockTracker_Report();
-        $this->user                 = mock('User');
+        $this->user                 = mock('PFUser');
         
         stub($this->semantic_factory)->allTitlesAreReadable($this->user, $this->project)->returns(true);
         stub($this->semantic_factory)->allStatusesAreReadable($this->user, $this->project)->returns(true);
@@ -183,7 +173,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithAllCriteriaTypesTest extends Track
         $project               = new MockProject();
         $report                = new MockTracker_Report();
 
-        $user                  = mock('User');
+        $user                  = mock('PFUser');
         return $criteria_builder->getCriteria($user, $project, $report, $cross_search_criteria);
     }
     
@@ -216,7 +206,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSemanticTest extends Tracker_Cross
     }
     
     public function itDontBuildSemanticTitleCriteriaIfOneTitleIsNotReadable() {
-        $user = stub('User')->getId()->returns(uniqid());
+        $user = stub('PFUser')->getId()->returns(uniqid());
         stub($this->semantic_factory)->allTitlesAreReadable($user, $this->project)->returns(false);
         stub($this->semantic_factory)->allStatusesAreReadable($user, $this->project)->returns(true);
         
@@ -233,7 +223,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSemanticTest extends Tracker_Cross
     }
     
     public function itDontBuildSemanticStatusCriteriaIfOneStatusIsNotReadable() {
-        $user = stub('User')->getId()->returns(uniqid());
+        $user = stub('PFUser')->getId()->returns(uniqid());
         stub($this->semantic_factory)->allTitlesAreReadable($user, $this->project)->returns(true);
         stub($this->semantic_factory)->allStatusesAreReadable($user, $this->project)->returns(false);
         
@@ -249,7 +239,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSemanticTest extends Tracker_Cross
         $this->assertNotNull($cross_search_criteria->getTitle());
     }
     
-    protected function getSemanticCriteria(User $user, $cross_search_criteria) {
+    protected function getSemanticCriteria(PFUser $user, $cross_search_criteria) {
         $builder = new Tracker_CrossSearch_CriteriaBuilder($this->form_element_factory, $this->semantic_factory, array());
         $report  = new MockTracker_Report();
         return $builder->getSemanticFieldsCriteria($user, $this->project, $report, $cross_search_criteria);
@@ -263,7 +253,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithNoArtifactIDTest extends Tracker_C
         $report   = new MockTracker_Report();
         
         $builder  = $this->givenACriteriaBuilderForArtifacts(array());
-        $user     = new MockUser();
+        $user     = mock('PFUser');
         $artifact_criteria = $builder->getArtifactLinkCriteria($user, $report, $criteria);
         
         $this->assertEqual(array(), $artifact_criteria);
@@ -273,7 +263,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithNoArtifactIDTest extends Tracker_C
         $criteria = aCrossSearchCriteria()->withArtifactIds(array())->build();
         $report   = new MockTracker_Report();
         $builder  = $this->givenACriteriaBuilderForArtifacts(array());
-        $user     = new MockUser();
+        $user     = mock('PFUser');
         $artifact_criteria = $builder->getArtifactLinkCriteria($user, $report, $criteria);
         
         $this->assertEqual(array(), $artifact_criteria);
@@ -291,7 +281,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithOneArtifactListTest extends Tracke
         $artifact                = new Tracker_Artifact(1, $release_tracker_id, null, null, null);
         $this->planning_trackers = array($release_tracker);
         $builder                 = $this->givenACriteriaBuilderForArtifacts(array($artifact));
-        $user                    = new MockUser();
+        $user                    = mock('PFUser');
         $artifact_criteria       = $builder->getArtifactLinkCriteria($user, $report, $criteria);
 
         $expected_criterion      = new Tracker_CrossSearch_ArtifactReportField($release_tracker, array($artifact));
@@ -305,7 +295,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithOneArtifactListTest extends Tracke
 class Tracker_CrossSearch_CriteriaBuilder_WithSeveralArtifactListsTest extends Tracker_CrossSearch_CriteriaBuilderTest {
     
     public function itCreatesSeveralArtifactIdCriteria() {
-        $user                    = new MockUser();
+        $user                    = mock('PFUser');
         $release_tracker_id      = 999;
         $release_tracker         = aTracker()->withId($release_tracker_id)->build();
         
@@ -339,7 +329,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSeveralArtifactListsTest extends T
     }
     
     public function _itRemovesFromQueryArtifactIdsThatAreNotReadableByUser() {
-        $user                    = mock('User');
+        $user                    = mock('PFUser');
         $release_tracker_id      = 999;
         $release_tracker         = aTracker()->withId($release_tracker_id)->build();
         

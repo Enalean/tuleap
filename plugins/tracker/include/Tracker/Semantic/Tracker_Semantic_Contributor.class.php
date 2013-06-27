@@ -18,11 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
  
-require_once(dirname(__FILE__).'/../Tracker.class.php');
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElement_Field_List.class.php');
-require_once('Tracker_Semantic.class.php');
-require_once('dao/Tracker_Semantic_ContributorDao.class.php');
 
 class Tracker_Semantic_Contributor extends Tracker_Semantic {
     
@@ -111,11 +106,11 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
      * @param Tracker_SemanticManager $sm              The semantic manager
      * @param TrackerManager          $tracker_manager The tracker manager
      * @param Codendi_Request         $request         The request
-     * @param User                    $current_user    The user who made the request
+     * @param PFUser                    $current_user    The user who made the request
      *
      * @return string html
      */
-    public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, User $current_user) {
+    public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $sm->displaySemanticHeader($this, $tracker_manager);
         $html = '';
@@ -160,11 +155,11 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
      * @param Tracker_SemanticManager $sm              The semantic manager
      * @param TrackerManager          $tracker_manager The tracker manager
      * @param Codendi_Request         $request         The request
-     * @param User                    $current_user    The user who made the request
+     * @param PFUser                    $current_user    The user who made the request
      *
      * @return void
      */
-    public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, User $current_user) {
+    public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         if ($request->exist('update')) {
             if ($field = Tracker_FormElementFactory::instance()->getUsedUserSbFieldById($this->tracker, $request->get('list_field_id'))) {
                 $this->list_field = $field;
@@ -219,7 +214,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
      *
      * @return void
      */
-     public function exportToXML(&$root, $xmlMapping) {
+     public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
          if ($this->getFieldId()) {
              $child = $root->addChild('semantic');
              $child->addAttribute('type', $this->getShortName());

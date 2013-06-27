@@ -19,15 +19,13 @@
  */
 
 require_once 'common/dao/include/DataAccessObject.class.php';
-require_once 'SharedField.class.php';
-require_once dirname(__FILE__).'/../Report/dao/Tracker_ReportDao.class.php';
 
 class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     
     /**
      * Monstro query 
      * 
-     * @param User $user
+     * @param PFUser $user
      * @param unknown_type $group_id
      * @param Tracker_CrossSearch_Query $query
      * @param array $tracker_ids
@@ -36,7 +34,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
      * @param array $artifact_link_field_ids_for_column_display
      * @param array $excluded_artifact_ids
      */
-    public function searchMatchingArtifacts(User $user,
+    public function searchMatchingArtifacts(PFUser $user,
                                             $group_id,
                                             Tracker_CrossSearch_Query $query,
                                             array $tracker_ids, 

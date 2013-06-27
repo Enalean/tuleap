@@ -11,7 +11,7 @@ $request =& HTTPRequest::instance();
 if ($request->exist('group_id')) {
     $pm = ProjectManager::instance();
     $project = $pm->getProject($request->get('group_id'));
-    if (!$project || !$project->isPublic()) {
+    if (!$project) {
         $rss = new RSS(array(
             'title'       => $Language->getText('export_rss_sfnews','news',$GLOBALS['sys_name']),
             'description' => $Language->getText('export_rss_sfnews','highlights',$GLOBALS['sys_name']),

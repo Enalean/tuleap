@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_OpenValue.class.php');
+require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_List_OpenValueTest extends UnitTestCase {
     
@@ -26,7 +25,7 @@ class Tracker_FormElement_Field_List_OpenValueTest extends UnitTestCase {
         $id          = 123;
         $label       = 'Reopen';
         $value = new Tracker_FormElement_Field_List_OpenValue($id, $label);
-        $this->assertEqual(json_encode($value->fetchJson()), '{"value":"o123","caption":"Reopen"}');
+        $this->assertEqual(json_encode($value->fetchValuesForJson()), '{"id":123,"value":"o123","caption":"Reopen"}');
     }
     
 }

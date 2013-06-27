@@ -26,7 +26,7 @@ require_once('common/backend/BackendSystem.class.php');
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once(dirname(__FILE__).'/../user/UserTestBuilder.php');
 require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
@@ -397,4 +397,5 @@ class BackendSystemTest extends UnitTestCase {
         $this->assertTrue($backend->cleanupFRS());
     }
 }
+
 ?>

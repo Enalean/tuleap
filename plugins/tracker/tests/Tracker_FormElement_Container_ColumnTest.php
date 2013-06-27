@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
+require_once('bootstrap.php');
 Mock::generatePartial(
     'Tracker_FormElement_Container_Column', 
     'Tracker_FormElement_Container_ColumnTestVersion', 
@@ -26,23 +26,23 @@ Mock::generatePartial(
     )
 );
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php');
 Mock::generate('Tracker_FormElement_Field_Date');
 
-class Tracker_FormElement_Container_ColumnTest extends UnitTestCase {
+class Tracker_FormElement_Container_ColumnTest extends TuleapTestCase {
 
     public function testIsDeletableWithFields() {
         $column = new Tracker_FormElement_Container_ColumnTestVersion();
         $e1 = new MockTracker_FormElement_Field_Date();
         $elements = array($e1);
         $column->setReturnReference('getFormElements', $e1);
-        $this->assertFalse($column->canBeUnused());
+        $this->assertFalse($column->getCannotRemoveMessage());
     }
     
     public function testIsDeletableWithoutFields() {
+        $expected_message = '';
         $column = new Tracker_FormElement_Container_ColumnTestVersion();
         $column->setReturnValue('getFormElements', null);
-        $this->assertTrue($column->canBeUnused());
+        $this->assertEqual($expected_message, $column->getCannotRemoveMessage());
     }
     
 }

@@ -17,10 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
- 
-require_once dirname(__FILE__).'/builders/all.php';
-require_once dirname(__FILE__).'/../include/constants.php';
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_Changeset.class.php');
+require_once('bootstrap.php');
 Mock::generatePartial(
     'Tracker_Artifact_Changeset', 
     'Tracker_Artifact_ChangesetTestVersion', 
@@ -36,23 +33,15 @@ Mock::generatePartial(
 );
 
 Mock::generate('Tracker_Artifact_Changeset');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php');
 Mock::generate('Tracker_FormElement_Field_Date');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/dao/Tracker_Artifact_Changeset_ValueDao.class.php');
 Mock::generate('Tracker_Artifact_Changeset_ValueDao');
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
 Mock::generate('Tracker_FormElementFactory');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_Date.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue_Date');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_List.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue_List');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Selectbox.class.php');
 Mock::generate('Tracker_FormElement_Field_Selectbox');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
@@ -61,7 +50,7 @@ require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 Mock::generate('UserHelper');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('BaseLanguageFactory');
 
 class Tracker_Artifact_ChangesetTest extends UnitTestCase {
@@ -311,7 +300,7 @@ BODY;
     }
     
     function testChangesetShouldUseUserLanguageInGetBody() {
-        $user = new MockUser();
+        $user = mock('PFUser');
         $userLanguage = new MockBaseLanguage();
         $GLOBALS['Language']->expectNever('getText');
         $userLanguage->expectAtLeastOnce('getText');
@@ -324,7 +313,7 @@ BODY;
         $userLanguage = new MockBaseLanguage();
         $userLanguage->expectAtLeastOnce('getText');
         
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getPreference', 'text', array('user_tracker_mailformat'));
         $user->setReturnValue('getLanguage', $userLanguage);
         
@@ -380,7 +369,7 @@ class Tracker_Artifact_ChangesetDeleteTest extends TuleapTestCase {
         parent::setUp();
         $this->tracker      = aMockTracker()->build();
         $artifact     = anArtifact()->withTracker($this->tracker)->build();
-        $this->user         = stub('User')->isSuperUser()->returns(true);
+        $this->user         = stub('PFUser')->isSuperUser()->returns(true);
         $this->changeset_id = 1234;
         $this->changeset    = partial_mock(
             'Tracker_Artifact_Changeset',

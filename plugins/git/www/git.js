@@ -1,11 +1,28 @@
 document.observe('dom:loaded', function () {
     var fork_repositories_prefix = $('fork_repositories_prefix');
 
+    // About the read-only add-on
+    (function ($) {
+        var element = '<span class="add-on"><span class="label">read-only</span></span>';
+        $(element).insertBefore($('#plugin_git_clone_field'));
+        displayReadOnly = function (transport) {
+            if ($('.gerrit_url').length > 0 && transport !== "gerrit") {
+                $('#plugin_git_clone_url_group').addClass('plugin_git_clone_field-read-only');
+            } else {
+                $('#plugin_git_clone_url_group').removeClass('plugin_git_clone_field-read-only');
+            }
+        }
+    })(jQuery);
+
     // Update clone url field value according to selected protocol
     $$('.plugin_git_transport').each(function (radio) {
        radio.observe('click', function (event) {
-           $('plugin_git_clone_field').value = event.target.value;
-       }) 
+           var url = radio.readAttribute('data-url');
+           var transport = event.target.innerHTML;
+           $('plugin_git_clone_field').value = url;
+           $$('.plugin_git_example_url').invoke('update', url);
+           displayReadOnly(transport);
+       });
     });
 
     if (fork_repositories_prefix) {
@@ -95,5 +112,26 @@ document.observe('dom:loaded', function () {
         $('choose_project').observe('click', toggleDestination); 
         $('choose_personal').observe('click', toggleDestination);
     }
-} );
+
+    (function toggleContextualHelpForCloneUrl() {
+        var handle = $('plugin_git_example-handle');
+        if (handle) {
+            $('plugin_git_example').hide();
+            handle.observe('click', function (evt) {
+                $('plugin_git_example').toggle();
+            });
+        }
+    })();
+
+    (function autoSelectGitCloneUrl() {
+        var clone_field = $('plugin_git_clone_field');
+        if (clone_field) {
+            clone_field.observe('click', function (evt) {
+                Event.element(evt).select();
+            });
+        }
+
+    })();
+
+});
 

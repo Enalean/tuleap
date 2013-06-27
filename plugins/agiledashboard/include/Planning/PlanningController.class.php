@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
  
-require_once 'common/mvc2/Controller.class.php';
-require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
-require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
+require_once 'common/mvc2/PluginController.class.php';
 
 /**
  * Handles the HTTP actions related to a planning.
@@ -28,28 +26,44 @@ require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Track
  * TODO: Rename this file to PlanningController.class.php, to be consistent with
  * other classes. 
  */
-class Planning_Controller extends MVC2_Controller {
-    
-    /**
-     * @var Tracker_Artifact
-     */
-    private $artifact;
+class Planning_Controller extends MVC2_PluginController {
     
     /**
      * @var PlanningFactory
      */
     private $planning_factory;
-
-    public function __construct(Codendi_Request $request, PlanningFactory $planning_factory) {
+    
+    public function __construct(
+        Codendi_Request $request,
+        PlanningFactory $planning_factory,
+        Planning_ShortAccessFactory $planning_shortaccess_factory,
+        Planning_MilestoneFactory $milestone_factory,
+        $plugin_theme_path
+    ) {
         parent::__construct('agiledashboard', $request);
         
-        $this->group_id         = $request->get('group_id');
-        $this->planning_factory = $planning_factory;
+        $this->group_id                     = (int)$request->get('group_id');
+        $this->planning_factory             = $planning_factory;
+        $this->planning_shortaccess_factory = $planning_shortaccess_factory;
+        $this->milestone_factory            = $milestone_factory;
+        $this->plugin_theme_path            = $plugin_theme_path;
+    }
+    
+    public function admin() {
+        $plannings = $this->planning_factory->getPlannings($this->getCurrentUser(), $this->group_id);
+        $presenter = new Planning_ListPresenter($plannings, $this->group_id);
+        $this->render('admin', $presenter);
     }
     
     public function index() {
-        $plannings = $this->planning_factory->getPlannings($this->getCurrentUser(), $this->group_id);
-        $presenter = new Planning_ListPresenter($plannings, $this->group_id);
+        $project_id = $this->request->getProject()->getID();
+        $plannings = $this->getPlanningsShortAccess($this->group_id);
+        $presenter = new Planning_IndexPresenter(
+            $plannings,
+            $this->plugin_theme_path,
+            $project_id,
+            $this->request->getCurrentUser()->useLabFeatures()
+        );
         $this->render('index', $presenter);
     }
     
@@ -61,6 +75,7 @@ class Planning_Controller extends MVC2_Controller {
     }
     
     public function create() {
+        $this->checkUserIsAdmin();
         $validator = new Planning_RequestValidator($this->planning_factory);
         
         if ($validator->isValid($this->request)) {
@@ -83,6 +98,7 @@ class Planning_Controller extends MVC2_Controller {
     }
     
     public function update() {
+        $this->checkUserIsAdmin();
         $validator = new Planning_RequestValidator($this->planning_factory);
         
         if ($validator->isValid($this->request)) {
@@ -100,10 +116,64 @@ class Planning_Controller extends MVC2_Controller {
     }
     
     public function delete() {
+        $this->checkUserIsAdmin();
         $this->planning_factory->deletePlanning($this->request->get('planning_id'));
         $this->redirect(array('group_id' => $this->group_id));
     }
-    
+
+    /**
+     * @return BreadCrumb_BreadCrumbGenerator
+     */
+    public function getBreadcrumbs($plugin_path) {
+        return new BreadCrumb_AgileDashboard();
+    }
+
+    public function generateSystrayData() {
+        $user  = $this->request->get('user');
+        $links = $this->request->get('links');
+        
+        foreach ($user->getGroups() as $project) {
+            if (! $project->usesService('plugin_agiledashboard')) {
+                continue;
+            }
+
+            $plannings = $this->getPlanningsShortAccess($project->getID());
+
+            /* @var $links Systray_LinksCollection */
+            $links->append(
+                new Systray_AgileDashboardLink($project, $plannings)
+            );
+        }
+    }
+
+    public function getMoreMilestones() {
+        $offset = $this->request->get('offset', 'uint', 0);
+        $planning = $this->planning_factory->getPlanning($this->request->get('planning_id'));
+        $short_access = $this->planning_shortaccess_factory->getShortAccessForPlanning(
+            $planning,
+            $this->getCurrentUser(),
+            $this->milestone_factory,
+            $this->plugin_theme_path,
+            $offset
+        );
+
+        $this->render('shortaccess-milestones', $short_access);
+    }
+
+    /**
+     *
+     * @param int $projectId
+     * @return Planning_ShortAccess[]
+     */
+    private function getPlanningsShortAccess($projectId) {
+        return $this->planning_shortaccess_factory->getPlanningsShortAccess(
+            $this->getCurrentUser(),
+            $projectId,
+            $this->milestone_factory,
+            $this->plugin_theme_path
+        );
+    }
+
     private function getFormPresenter(Planning $planning) {
         $group_id = $planning->getGroupId();
         
@@ -116,13 +186,6 @@ class Planning_Controller extends MVC2_Controller {
     private function getPlanning() {
         $planning_id = $this->request->get('planning_id');
         return $this->planning_factory->getPlanning($planning_id);
-    }
-    
-    /**
-     * @return BreadCrumb_BreadCrumbGenerator
-     */
-    public function getBreadcrumbs($plugin_path) {
-        return new BreadCrumb_AgileDashboard($plugin_path, (int) $this->request->get('group_id'));
     }
 }
 

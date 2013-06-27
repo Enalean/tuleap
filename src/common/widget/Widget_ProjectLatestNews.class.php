@@ -21,43 +21,114 @@
 require_once('Widget.class.php');
 
 /**
-* Widget_ProjectLatestNews
-*/
+ * Widget_ProjectLatestNews
+ */
 class Widget_ProjectLatestNews extends Widget {
+
     var $content;
+
+    /**
+     * Constructor of the class
+     *
+     * @retun Void
+     */
     function Widget_ProjectLatestNews() {
         $this->Widget('projectlatestnews');
-        $request =& HTTPRequest::instance();
-        $pm = ProjectManager::instance();
+        $request = $this->getHTTPRequest();
+        $pm      = $this->getProjectManager();
         $project = $pm->getProject($request->get('group_id'));
         if ($project && $this->canBeUsedByProject($project)) {
             require_once('www/news/news_utils.php');
-            $this->content = news_show_latest($request->get('group_id'),10,false);
+            $this->content = news_show_latest($request->get('group_id'), 10, false);
         }
     }
+
+    /**
+     * Title of the widget
+     *
+     * @return String
+     */
     function getTitle() {
-        return $GLOBALS['Language']->getText('include_project_home','latest_news');
+        return $GLOBALS['Language']->getText('include_project_home', 'latest_news');
     }
+
+    /**
+     * Content of the widget
+     *
+     * @return String
+     */
     function getContent() {
         return $this->content;
     }
+
+    /**
+     * Content is available
+     *
+     * @return Boolean
+     */
     function isAvailable() {
         return $this->content ? true : false;
     }
-    function hasRss() {
+
+    /**
+     * Allow RSS display
+     *
+     * @return Boolean
+     */
+    public function hasRss() {
         return true;
     }
+
+    /**
+     * Display RSS
+     *
+     * @return Void
+     */
     function displayRss() {
         global $Language;
-        $request =& HTTPRequest::instance();
+        $request  = $this->getHTTPRequest();
         $group_id = $request->get('group_id');
         include('www/export/rss_sfnews.php');
     }
-    function canBeUsedByProject(&$project) {
+
+    /**
+     * Does project has news
+     *
+     * @param Project $project The project
+     *
+     * @return Boolean
+     */
+    function canBeUsedByProject($project) {
         return $project->usesNews();
     }
+
+    /**
+     * Description of the widget
+     *
+     * @return String
+     */
     function getDescription() {
-        return $GLOBALS['Language']->getText('widget_description_project_latest_news','description');
+        return $GLOBALS['Language']->getText('widget_description_project_latest_news', 'description');
     }
+
+    /**
+     * HTTPRequest instance
+     *
+     * @return HTTPRequest
+     */
+    private function getHTTPRequest() {
+        return HTTPRequest::instance();
+    }
+
+    /**
+     * ProjectManager instance
+     *
+     * @return ProjectManager
+     */
+    private function getProjectManager() {
+        return ProjectManager::instance();
+    }
+
 }
+
 ?>

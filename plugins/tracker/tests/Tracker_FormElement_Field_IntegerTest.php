@@ -17,17 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Integer.class.php');
+require_once('bootstrap.php');
 Mock::generatePartial('Tracker_FormElement_Field_Integer', 'Tracker_FormElement_Field_IntegerTestVersion', array('getValueDao', 'isRequired', 'getProperty'));
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_Integer.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue_Integer');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_IntegerDao.class.php');
 Mock::generate('Tracker_FormElement_Field_Value_IntegerDao');
 
 require_once('common/dao/include/DataAccessResult.class.php');

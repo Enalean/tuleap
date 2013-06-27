@@ -17,12 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
+require_once('bootstrap.php');
 Mock::generate('Tracker_Artifact');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_Integer.class.php');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Integer.class.php');
 Mock::generate('Tracker_FormElement_Field_Integer');
 
 class Tracker_Artifact_ChangesetValue_IntegerTest extends TuleapTestCase {
@@ -32,21 +29,21 @@ class Tracker_Artifact_ChangesetValue_IntegerTest extends TuleapTestCase {
         $integer = new Tracker_Artifact_ChangesetValue_Integer(111, $field, false, 42);
         $this->assertEqual($integer->getInteger(), 42);
         $this->assertNotIdentical($integer->getInteger(), '42');
-        $this->assertEqual($integer->getSoapValue(), '42');
-        $this->assertIdentical($integer->getSoapValue(), '42');
+        $this->assertEqual($integer->getSoapValue(), array('value' => '42'));
+        $this->assertIdentical($integer->getSoapValue(), array('value' => '42'));
         $this->assertIdentical($integer->getValue(), 42);
         
         $string_int = new Tracker_Artifact_ChangesetValue_Integer(111, $field, false, '55');
         $this->assertEqual($string_int->getInteger(), 55);
         $this->assertEqual($string_int->getInteger(), '55');
         $this->assertNotIdentical($string_int->getInteger(), '55');
-        $this->assertIdentical($string_int->getSoapValue(), '55');
+        $this->assertIdentical($string_int->getSoapValue(), array('value' => '55'));
         $this->assertIdentical($string_int->getValue(), 55);
         
         $null_int = new Tracker_Artifact_ChangesetValue_Integer(111, $field, false, null);
         $this->assertNull($null_int->getInteger());
-        $this->assertEqual($null_int->getSoapValue(), '');
-        $this->assertIdentical($null_int->getSoapValue(), '');
+        $this->assertEqual($null_int->getSoapValue(), array('value' => ''));
+        $this->assertIdentical($null_int->getSoapValue(), array('value' => ''));
         $this->assertNull($null_int->getValue());
     }
     

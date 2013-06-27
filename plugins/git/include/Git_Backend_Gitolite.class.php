@@ -19,11 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'Git_Backend_Interface.php';
-require_once 'Git.class.php';
-require_once 'exceptions/GitRepositoryAlreadyExistsException.class.php';
 
-class Git_Backend_Gitolite implements Git_Backend_Interface {
+class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backend_Interface {
     /**
      * @var Git_GitoliteDriver
      */
@@ -60,8 +57,6 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @param GitRepository $repository
      */
     public function createReference($repository) {
-        $id = $this->getDao()->save($repository);
-        $this->updateRepoConf($repository);
     }
 
     public function updateRepoConf($repository) {
@@ -76,7 +71,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @param  GitRepository $repository
      * @return Boolean
      */
-    public function isInitialized($repository) {
+    public function isInitialized(GitRepository $repository) {
         $init = $this->driver->isInitialized($this->getGitRootPath().'/'.$repository->getPath());
         if ($init) {
             $this->getDao()->initialize($repository->getId());
@@ -84,6 +79,15 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         } else {
             return false;
         }
+    }
+
+    /**
+     *
+     * @param GitRepository $repository
+     * @return bool
+     */
+    public function isCreated(GitRepository $repository) {
+        return $this->driver->isRepositoryCreated($this->getGitRootPath().'/'.$repository->getPath());
     }
 
     /**
@@ -158,33 +162,33 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      *
      * @return bool true if success, false otherwise
      */
-    public function savePermissions($repository, $perms) {
-        $msgs = array();
-        $ok   = false;
-        if (isset($perms['read']) && is_array($perms['read'])) {
-            $success = permission_process_selection_form($repository->getProjectId(), 'PLUGIN_GIT_READ', $repository->getId(), $perms['read']);
-        }
-        $msgs[] = $success[1];
-        if ($success[0]) {
-            if (isset($perms['write']) && is_array($perms['write'])) {
-                $success = permission_process_selection_form($repository->getProjectId(), 'PLUGIN_GIT_WRITE', $repository->getId(), $perms['write']);
+    public function savePermissions(GitRepository $repository, $perms) {
+        $ok = true;
+        $ok &= $this->savePermission($repository, Git::PERM_READ, $perms);
+        if (! $repository->getRemoteServerId()) {
+            if ($ok) {
+                $ok &= $this->savePermission($repository, Git::PERM_WRITE, $perms);
             }
-            $msgs[] = $success[1];
-            if ($success[0]) {
-                if (isset($perms['wplus']) && is_array($perms['wplus'])) {
-                    $success = permission_process_selection_form($repository->getProjectId(), 'PLUGIN_GIT_WPLUS', $repository->getId(), $perms['wplus']);
-                }
-                $msgs[] = $success[1];
-                $ok = $success[0];
+            if ($ok) {
+                $ok &= $this->savePermission($repository, Git::PERM_WPLUS, $perms);
             }
-        }
-        
-        foreach ($msgs as $msg) {
-            $GLOBALS['Response']->addFeedback($ok ? 'info' : 'error', $msg);
         }
         return $ok;
     }
-    
+
+    private function savePermission(GitRepository $repository, $type, array $perms) {
+        if (isset($perms[$type]) && is_array($perms[$type])) {
+            $success = permission_process_selection_form($repository->getProjectId(), $type, $repository->getId(), $perms[$type]);
+            return $this->addFeedbackOnPermissionsSave($success);
+        }
+        return true;
+    }
+
+    private function addFeedbackOnPermissionsSave(array $success) {
+        $GLOBALS['Response']->addFeedback($success[0] ? 'info' : 'error', $success[1]);
+        return $success[0];
+    }
+
     /**
      * Delete the permissions of the repository
      *
@@ -205,7 +209,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
     /**
      * Test is user can read the content of this repository and metadata
      *
-     * @param User          $user       The user to test
+     * @param PFUser          $user       The user to test
      * @param GitRepository $repository The repository to test
      *
      * @return Boolean
@@ -225,13 +229,6 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @return bool
      */
     public function save($repository) {
-        // TODO: Uncomment this when GIT_GitoliteDriver::setDescription() is ready
-        /*$path          = $this->getGitRootPath().$repository->getPath();
-        $fsDescription = $this->getDriver()->getDescription($path);
-        $description   = $repository->getDescription();
-        if ($description != $fsDescription) {
-            $this->getDriver()->setDescription($path, $description);
-        }*/
         return $this->getDao()->save($repository);
     }
 
@@ -241,8 +238,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @param GitRepository $repository
      */
     public function changeRepositoryMailingList($repository) {
-        $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
-        return $this->updateRepoConf($repository);
+        return true;
     }
 
     /**
@@ -256,16 +252,6 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         return $this->changeRepositoryMailingList($repository);
     }
 
-    /**
-     * Get the regexp pattern to use for name repository validation
-     *
-     * @return string
-     */
-    public function getAllowedCharsInNamePattern() {
-        //alphanums, underscores, slashes and dash
-        return 'a-zA-Z0-9/_.-';
-    }
-    
     /**
      * Rename a project
      *
@@ -333,12 +319,10 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
     public function markAsDeleted(GitRepository $repository) {
         $this->deletePermissions($repository);
         $this->getDao()->delete($repository);
-
-        $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
-        $this->updateRepoConf($repository);
     }
 
     public function delete(GitRepository $repository) {
+        $this->updateRepoConf($repository);
         $path = $this->getGitRootPath().$repository->getPath();
         $this->getDriver()->delete($path);
     }
@@ -346,26 +330,35 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
     /**
      * @throws GitRepositoryAlreadyExistsException 
      */
-    public function fork(GitRepository $old, GitRepository $new) {
-        $name = $old->getName();
-        //TODO use $old->getRootPath() (good luck for Unit Tests!)
-        $old_namespace = $old->getProject()->getUnixName() .'/'. $old->getNamespace();
-        $new_namespace = $new->getProject()->getUnixName() .'/'. $new->getNamespace();
-        
+    public function fork(GitRepository $old, GitRepository $new, array $forkPermissions) {
         $new_project = $new->getProject();
         if ($this->getDao()->isRepositoryExisting($new_project->getId(), $new->getPath())) {
             throw new GitRepositoryAlreadyExistsException('Respository already exists');
         } else {
-            $forkSucceeded = $this->getDriver()->fork($name, $old_namespace, $new_namespace);
-            if ($forkSucceeded) {
-                $id = $this->getDao()->save($new);
-                $new->setId($id);
+            $id = $this->getDao()->save($new);
+            $new->setId($id);
+            if (empty($forkPermissions)) {
                 $this->clonePermissions($old, $new);
-                $this->updateRepoConf($new);
+            } else {
+                $this->savePermissions($new, $forkPermissions);
             }
+            return $id;
         }
     }
-    
+
+    public function forkOnFilesystem(GitRepository $old, GitRepository $new) {
+        $name = $old->getName();
+        //TODO use $old->getRootPath() (good luck for Unit Tests!)
+        $old_namespace = $old->getProject()->getUnixName() .'/'. $old->getNamespace();
+        $new_namespace = $new->getProject()->getUnixName() .'/'. $new->getNamespace();
+
+        $forkSucceeded = $this->getDriver()->fork($name, $old_namespace, $new_namespace);
+        if ($forkSucceeded) {
+            $this->updateRepoConf($new);
+        }
+    }
+
+
     public function clonePermissions(GitRepository $old, GitRepository $new) {
         $pm = $this->getPermissionsManager();
         
@@ -445,8 +438,8 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         $this->gitPlugin = $gitPlugin;
     }
 
-    public function commitTransaction(GitRepository $repository) {
-        $this->updateRepoConf($repository);
+    public function disconnectFromGerrit(GitRepository $repository) {
+        $this->getDao()->disconnectFromGerrit($repository->getId());
     }
 }
 

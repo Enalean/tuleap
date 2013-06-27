@@ -13,6 +13,7 @@ CREATE TABLE plugin_graphontrackersv5_report_graphic (
 DROP TABLE IF EXISTS plugin_graphontrackersv5_chart;
 CREATE TABLE plugin_graphontrackersv5_chart (
   id int(11)  NOT NULL PRIMARY KEY AUTO_INCREMENT ,
+  old_id int(11),
   report_graphic_id int(11) NOT NULL,
   rank int(11) NOT NULL,
   chart_type varchar(255),
@@ -74,3 +75,11 @@ CREATE TABLE plugin_graphontrackersv5_scrum_burndown(
 --   duration int(11)
 -- );
 
+DROP TABLE IF EXISTS plugin_graphontrackersv5_cumulative_flow_chart;
+CREATE TABLE plugin_graphontrackersv5_cumulative_flow_chart(
+  id int(11)  NOT NULL PRIMARY KEY ,
+  field_id int(11),
+  start_date int(11),
+  stop_date int(11),
+  scale tinyint(1)
+);

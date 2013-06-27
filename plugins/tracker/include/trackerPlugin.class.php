@@ -19,6 +19,7 @@
 
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
+require_once 'autoload.php';
 
 /**
  * trackerPlugin
@@ -55,6 +56,16 @@ class trackerPlugin extends Plugin {
         $this->_addHook('register_project_creation',           'register_project_creation',         false);
         $this->_addHook('codendi_daily_start',                 'codendi_daily_start',               false);
         $this->_addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
+        $this->_addHook(Event::SOAP_DESCRIPTION,               'soap_description',                  false);
+        $this->_addHook(Event::EXPORT_XML_PROJECT);
+        $this->_addHook(Event::IMPORT_XML_PROJECT);
+    }
+    
+    public function getHooksAndCallbacks() {
+        if (defined('AGILEDASHBOARD_BASE_DIR')) {
+            $this->_addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE, 'agiledashboard_event_additional_panes_on_milestone', false);
+        }
+        return parent::getHooksAndCallbacks();
     }
     
     public function getPluginInfo() {
@@ -71,6 +82,8 @@ class trackerPlugin extends Plugin {
             // Cannot be moved in combined (it conflicts with same implementation in tracker v3)
             echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerFieldDependencies.js"></script>'."\n";
             echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerRichTextEditor.js"></script>'."\n";
+            echo '<script type="text/javascript" src="/plugins/tracker/scripts/artifactChildren.js"></script>'."\n";
+            echo '<script type="text/javascript" src="/plugins/tracker/scripts/load-artifactChildren.js"></script>'."\n";
         }
     }
     
@@ -106,6 +119,7 @@ class trackerPlugin extends Plugin {
                 '/plugins/tracker/scripts/TrackerAdminFields.js',
                 '/plugins/tracker/scripts/TrackerArtifact.js',
                 '/plugins/tracker/scripts/TrackerArtifactLink.js',
+                '/plugins/tracker/scripts/TrackerCreate.js',
                 '/plugins/tracker/scripts/TrackerFormElementFieldPermissions.js',
                 '/plugins/tracker/scripts/TrackerDateReminderForms.js',
             )
@@ -125,7 +139,6 @@ class trackerPlugin extends Plugin {
             Toggler::togglePreference($params['user'], $params['id']);
             $params['done'] = true;
         } else if (strpos($params['id'], 'tracker_report_query_') === 0) {
-            require_once('Tracker/Report/Tracker_ReportFactory.class.php');
             $report_id = (int)substr($params['id'], strlen('tracker_report_query_'));
             $report_factory = Tracker_ReportFactory::instance();
             if (($report = $report_factory->getReportById($report_id, $params['user']->getid())) && $report->userCanUpdate($params['user'])) {
@@ -136,13 +149,31 @@ class trackerPlugin extends Plugin {
         }
     }
     
+    public function agiledashboard_event_additional_panes_on_milestone($params) {
+        $artifact = $params['milestone']->getArtifact();
+        $user     = $params['user'];
+        $burndown_field = $artifact->getABurndownField($user);
+        if ($burndown_field) {
+            $pane_info = new Tracker_Artifact_Burndown_PaneInfo($params['milestone']);
+            if ($params['request']->get('pane') == Tracker_Artifact_Burndown_PaneInfo::IDENTIFIER) {
+                $pane_info->setActive(true);
+                $params['active_pane'] = new Tracker_Artifact_Burndown_Pane(
+                        $pane_info,
+                        $artifact,
+                        $burndown_field,
+                        $params['user']
+                );
+            }
+            $params['panes'][] = $pane_info;
+        }
+    }
+    
    /**
     * Project creation hook
     *
     * @param Array $params
     */
     function register_project_creation($params) {
-        require_once('Tracker/TrackerManager.class.php');
         $tm = new TrackerManager();
         $tm->duplicate($params['template_id'], $params['group_id'], $params['ugroupsMapping']);
 
@@ -211,9 +242,6 @@ class trackerPlugin extends Plugin {
     }
     
     function permission_get_object_name($params) {
-        require_once 'Tracker/TrackerFactory.class.php';
-        require_once 'Tracker/FormElement/Tracker_FormElementFactory.class.php';
-        require_once 'Tracker/Artifact/Tracker_ArtifactFactory.class.php';
         if (!$params['object_name']) {
             $type = $this->getObjectTypeFromPermissions($params);
             if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ADMIN', 'PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
@@ -253,8 +281,6 @@ class trackerPlugin extends Plugin {
     }
     
     function permissions_for_ugroup($params) {
-        require_once 'Tracker/FormElement/Tracker_FormElementFactory.class.php';
-        require_once 'workflow/TransitionFactory.class.php';
         if (!$params['results']) {
             
             $group_id = $params['group_id'];
@@ -264,26 +290,32 @@ class trackerPlugin extends Plugin {
             
             if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ADMIN', 'PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS', 'PLUGIN_TRACKER_WORKFLOW_TRANSITION'))) {
                 if (strpos($params['permission_type'], 'PLUGIN_TRACKER_ACCESS') === 0 || $params['permission_type'] === 'PLUGIN_TRACKER_ADMIN') {
-                    echo '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup','tracker') 
+                    $params['results'] = $GLOBALS['Language']->getText('project_admin_editugroup','tracker') 
                     .' <a href="'.TRACKER_BASE_URL.'/?tracker='.$atid.'&func=admin-perms-tracker">'
-                    .$objname.'</a></TD>';
+                    .$objname.'</a>';
                     
                 } else if (strpos($params['permission_type'], 'PLUGIN_TRACKER_FIELD') === 0) {
                     $field = Tracker_FormElementFactory::instance()->getFormElementById($atid);
                     $tracker_id = $field->getTrackerId();
                     
-                    echo '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup','tracker') 
+                    $params['results'] = $GLOBALS['Language']->getText('project_admin_editugroup','tracker') 
                     .' <a href="'.TRACKER_BASE_URL.'/?tracker='.$tracker_id.'&func=admin-perms-fields">'
-                    .$objname.'</a></TD>';
+                    .$objname.'</a>';
                     
                 } else if ($params['permission_type'] == 'PLUGIN_TRACKER_ARTIFACT_ACCESS') {
-                    echo '<td>'. $hp->purify($objname, CODENDI_PURIFIER_BASIC) .'</td>';
+                    $params['results'] = $hp->purify($objname, CODENDI_PURIFIER_BASIC);
                     
                 } else if ($params['permission_type'] == 'PLUGIN_TRACKER_WORKFLOW_TRANSITION') {
                     $transition = TransitionFactory::instance()->getTransition($atid);
                     $tracker_id = $transition->getWorkflow()->getTrackerId();
                     $edit_transition = $transition->getFieldValueFrom().'_'.$transition->getFieldValueTo();
-                    echo '<TD><a href="'.TRACKER_BASE_URL.'/?tracker='.$tracker_id.'&func=admin-workflow&edit_transition='.$edit_transition.'">'.$objname.'</a></TD>';
+                    $params['results'] = '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
+                        array(
+                            'tracker'         => $tracker_id,
+                            'func'            => Workflow::FUNC_ADMIN_TRANSITIONS,
+                            'edit_transition' => $edit_transition
+                        )
+                    ).'">'.$objname.'</a>';
                 }
             }
         }
@@ -291,10 +323,6 @@ class trackerPlugin extends Plugin {
     
     var $_cached_permission_user_allowed_to_change;
     function permission_user_allowed_to_change($params) {
-        require_once 'Tracker/TrackerFactory.class.php';
-        require_once 'Tracker/FormElement/Tracker_FormElementFactory.class.php';
-        require_once 'workflow/TransitionFactory.class.php';
-        require_once 'Tracker/Artifact/Tracker_ArtifactFactory.class.php';
         if (!$params['allowed']) {
             $allowed = array(
                 'PLUGIN_TRACKER_ADMIN', 
@@ -343,14 +371,12 @@ class trackerPlugin extends Plugin {
     }
     
     public function get_available_reference_natures($params) {
-        require_once('Tracker/Artifact/Tracker_Artifact.class.php');
         $natures = array(Tracker_Artifact::REFERENCE_NATURE => array('keyword' => 'artifact',
                                                                      'label'   => 'Artifact Tracker v5'));
         $params['natures'] = array_merge($params['natures'], $natures);
     }
     
     public function get_artifact_reference_group_id($params) {        
-        require_once('Tracker/Artifact/Tracker_ArtifactFactory.class.php');
         $artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($params['artifact_id']);
         if ($artifact) {
             $tracker = $artifact->getTracker();
@@ -359,19 +385,16 @@ class trackerPlugin extends Plugin {
     }
     
     public function build_reference($params) {
-        require_once('Tracker/Artifact/Tracker_Artifact.class.php');
         $row = $params['row'];
         $params['ref'] = new Reference($params['ref_id'],$row['keyword'],$row['description'],'/plugins'.$row['link'],
                                     $row['scope'],'plugin_tracker', Tracker_Artifact::REFERENCE_NATURE, $row['is_active'],$row['group_id']);
     }
     
     public function ajax_reference_tooltip($params) {
-        require_once 'Tracker/Artifact/Tracker_ArtifactFactory.class.php';
         if ($params['reference']->getServiceShortName() == 'plugin_tracker') {
             if ($params['reference']->getNature() == Tracker_Artifact::REFERENCE_NATURE) {
                 $user = UserManager::instance()->getCurrentUser();
                 $aid = $params['val'];
-                require_once('Tracker/Artifact/Tracker_ArtifactFactory.class.php');
                 if ($artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($aid)) {
                     if ($artifact && $artifact->getTracker()->isActive()) {
                         echo $artifact->fetchTooltip($user);
@@ -437,7 +460,6 @@ class trackerPlugin extends Plugin {
     }
     
     function service_public_areas($params) {
-        require_once 'Tracker/TrackerFactory.class.php';
         if ($params['project']->usesService('plugin_tracker')) {
             $tf = TrackerFactory::instance();
             
@@ -445,10 +467,12 @@ class trackerPlugin extends Plugin {
             $trackers = $tf->getTrackersByGroupId($params['project']->getGroupId());
             
             if ($trackers) {
-                $entries = array();
+                $entries  = array();
+                $purifier = Codendi_HTMLPurifier::instance();
                 foreach($trackers as $t) {
                     if ($t->userCanView()) {
-                        $entries[] = '<a href="'. TRACKER_BASE_URL .'/?tracker='. $t->id .'">'. $t->name .'</a>';
+                        $name      = $purifier->purify($t->name, CODENDI_PURIFIER_CONVERT_HTML);
+                        $entries[] = '<a href="'. TRACKER_BASE_URL .'/?tracker='. $t->id .'">'. $name .'</a>';
                     }
                 }
                 if ($entries) {
@@ -509,6 +533,44 @@ class trackerPlugin extends Plugin {
         );
     }
 
+    public function soap_description($params) {
+        $params['end_points'][] = array(
+            'title'       => 'Tracker',
+            'wsdl'        => $this->getPluginPath().'/soap/?wsdl',
+            'wsdl_viewer' => $this->getPluginPath().'/soap/view-wsdl',
+            'changelog'   => $this->getPluginPath().'/soap/ChangeLog',
+            'version'     => file_get_contents(dirname(__FILE__).'/../www/soap/VERSION'),
+            'description' => 'Query and modify Trackers.',
+        );
+    }
+
+    /**
+     * @see Event::EXPORT_XML_PROJECT
+     * @param array $params
+     */
+    public function export_xml_project($params) {
+        $xml_content     = $params['into_xml']->addChild('trackers');
+        $tracker_manager = new TrackerManager();
+        $tracker_manager->exportToXml($params['project']->getID(), $xml_content);
+    }
+
+    /**
+     *
+     * @param array $params
+     * @see Event::IMPORT_XML_PROJECT
+     */
+    public function import_xml_project($params) {
+        include_once 'common/XmlValidator/XmlValidator.class.php';
+        $tracker_xml_import = new TrackerXmlImport(
+            $params['project']->getId(),
+            TrackerFactory::instance(),
+            EventManager::instance(),
+            new Tracker_Hierarchy_Dao(),
+            new XmlValidator()
+        );
+
+        $tracker_xml_import->import($params['xml_content']);
+    }
 }
 
 ?>

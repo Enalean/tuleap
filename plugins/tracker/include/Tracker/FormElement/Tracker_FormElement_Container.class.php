@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement.class.php');
 
 /**
  * Base class for composite formElements. 
@@ -148,7 +147,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
      * @param array            &$xmlMapping correspondance between real ids and xml IDs
      * @param int              $index       of the last field in the array
      */
-    public function exportToXML($root, &$xmlMapping, &$index) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, &$index) {
         parent::exportToXML($root, $xmlMapping, $index);
         $subfields = $this->getAllFormElements();
         $child = $root->addChild('formElements');
@@ -330,25 +329,47 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     }
     
     /**
-     * Is the field can be set as unused?
-     * You can't set a field unused if it is used in the tracker
+     * Is the form element can be removed from usage?
      * This method is to prevent tracker inconsistency
      *
-     * @return boolean returns true if the field can be unused, false otherwise
+     * @return string
      */
-    public function canBeUnused() {
-        // a container is deletable if it does not contain any field
-        return ! count($this->getFormElements());
+    public function getCannotRemoveMessage() {
+        $message = '';
+
+        if (! $this->canBeRemovedFromUsage()) {
+            $message = $GLOBALS['Language']->getText(
+                'plugin_tracker_common_fieldset_factory',
+                'delete_only_empty_fieldset'
+            );
+        }
+        
+        return $message;
     }
-    
+
+    /**
+     *
+     * @return boolean
+     */
+    public function canBeRemovedFromUsage() {
+        $container_sub_elements = count($this->getFormElements());
+
+        if ($container_sub_elements > 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+
     /** 
      * return true if user has Read or Update permission on this field
      * 
-     * @param User $user The user. if not given or null take the current user
+     * @param PFUser $user The user. if not given or null take the current user
      *
      * @return bool
      */ 
-    public function userCanRead(User $user = null) {
+    public function userCanRead(PFUser $user = null) {
         return true;
     }
     

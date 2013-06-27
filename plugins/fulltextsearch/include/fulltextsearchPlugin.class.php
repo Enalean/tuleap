@@ -23,9 +23,12 @@ require_once 'autoload.php';
 
 class fulltextsearchPlugin extends Plugin {
 
-    const SEARCH_TYPE = 'fulltext';
+    const SEARCH_TYPE         = 'fulltext';
+    const SEARCH_DOCMAN_TYPE  = 'docman';
+    const SEARCH_TRACKER_TYPE = 'tracker';
 
     private $actions;
+    private $trackerActions;
 
     public function __construct($id) {
         parent::__construct($id);
@@ -38,6 +41,13 @@ class fulltextsearchPlugin extends Plugin {
         $this->_addHook('plugin_docman_event_update', 'plugin_docman_event_update', false);
         $this->_addHook('plugin_docman_event_perms_change', 'plugin_docman_event_perms_change', false);
         $this->_addHook('plugin_docman_event_new_version', 'plugin_docman_event_new_version', false);
+
+        // tracker
+        $this->_addHook('tracker_report_followup_search', 'tracker_report_followup_search', false);
+        $this->_addHook('tracker_report_followup_search_process', 'tracker_report_followup_search_process', false);
+        $this->_addHook('tracker_followup_event_add', 'tracker_followup_event_add', false);
+        $this->_addHook('tracker_followup_event_update', 'tracker_followup_event_update', false);
+        $this->_addHook('tracker_report_followup_warning', 'tracker_report_followup_warning', false);
 
         // site admin
         $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
@@ -87,16 +97,21 @@ class fulltextsearchPlugin extends Plugin {
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA';
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_DELETE';
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE';
+        $params['types'][] = 'FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD';
+        $params['types'][] = 'FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE';
     }
 
     /**
      * This callback make SystemEvent manager knows about fulltext plugin System Events
      */
     public function get_system_event_class($params) {
-        if (strpos($params['type'], 'FULLTEXTSEARCH_') !== false) {
+        if (strpos($params['type'], 'FULLTEXTSEARCH_DOCMAN') !== false) {
             $params['class']        = 'SystemEvent_'. $params['type'];
             $params['dependencies'] = array($this->getActions(), new Docman_ItemFactory(), new Docman_VersionFactory());
-            require_once $params['class'] .'.class.php';
+        }
+        if (strpos($params['type'], 'FULLTEXTSEARCH_TRACKER') !== false) {
+            $params['class']        = 'SystemEvent_'. $params['type'];
+            $params['dependencies'] = array($this->getTrackerActions());
         }
     }
 
@@ -115,10 +130,24 @@ class fulltextsearchPlugin extends Plugin {
     }
 
     private function getActions() {
-        if (!isset($this->actions) && ($search_client = $this->getIndexClient())) {
-            $this->actions = new FullTextSearchActions($search_client, new Docman_PermissionsItemManager());
+        $type = 'docman';
+        if (!isset($this->actions) && ($search_client = $this->getIndexClient($type))) {
+            $this->actions = new FullTextSearchDocmanActions($search_client, new Docman_PermissionsItemManager());
         }
         return $this->actions;
+    }
+
+    /**
+     * Get tracker actions
+     *
+     * @return FullTextSearchTrackerActions
+     */
+    private function getTrackerActions() {
+        $type = self::SEARCH_TRACKER_TYPE;
+        if (!isset($this->trackerActions) && ($search_client = $this->getIndexClient($type))) {
+            $this->trackerActions = new FullTextSearchTrackerActions($search_client);
+        }
+        return $this->trackerActions;
     }
 
     /**
@@ -127,7 +156,7 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function plugin_docman_event_update($params) {
-        $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA', SystemEvent::PRIORITY_MEDIUM, $params['item']);
+        $this->createDocmanSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA', SystemEvent::PRIORITY_MEDIUM, $params['item']);
     }
 
     /**
@@ -136,7 +165,7 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function plugin_docman_after_new_document($params) {
-        $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_INDEX', SystemEvent::PRIORITY_MEDIUM, $params['item'], $params['version']->getNumber());
+        $this->createDocmanSystemEvent('FULLTEXTSEARCH_DOCMAN_INDEX', SystemEvent::PRIORITY_MEDIUM, $params['item'], $params['version']->getNumber());
     }
 
     /**
@@ -145,14 +174,14 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function plugin_docman_event_del($params) {
-        $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_DELETE', SystemEvent::PRIORITY_HIGH, $params['item']);
+        $this->createDocmanSystemEvent('FULLTEXTSEARCH_DOCMAN_DELETE', SystemEvent::PRIORITY_HIGH, $params['item']);
     }
 
     /**
      * Event triggered when the permissions on a document change
      */
     public function plugin_docman_event_perms_change($params) {
-        $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS', SystemEvent::PRIORITY_HIGH, $params['item']);
+        $this->createDocmanSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS', SystemEvent::PRIORITY_HIGH, $params['item']);
     }
 
     /**
@@ -162,17 +191,139 @@ class fulltextsearchPlugin extends Plugin {
         // will be done in plugin_docman_after_new_document since we
         // receive both event for a new document
         if ($params['version']->getNumber() > 1) {
-            $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE', SystemEvent::PRIORITY_MEDIUM, $params['item'], $params['version']->getNumber());
+            $this->createDocmanSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE', SystemEvent::PRIORITY_MEDIUM, $params['item'], $params['version']->getNumber());
         }
     }
 
-    private function createSystemEvent($type, $priority, Docman_Item $item, $additional_params = '') {
+    /**
+     * Display search form in tracker followup
+     *
+     * @param Array $params Hook params
+     *
+     * @return Void
+     */
+    public function tracker_report_followup_search($params) {
+        if ($this->tracker_followup_check_preconditions($params['group_id'])) {
+            $request = new HTTPRequest();
+            $hp      = Codendi_HTMLPurifier::instance();
+            $filter  = $hp->purify($request->getValidated('search_followups', 'string', ''));
+            $params['html'] .='<span class ="lab_features">';
+            $params['html'] .= '<label title="'.$GLOBALS['Language']->getText('plugin_fulltextsearch', 'search_followup_comments').'" for="tracker_report_crit_followup_search">';
+            $params['html'] .= $GLOBALS['Language']->getText('plugin_fulltextsearch', 'followups_search');
+            $params['html'] .= '</label><br>';
+            $params['html'] .= '<input id="tracker_report_crit_followup_search" type="text" name="search_followups" value="'.$filter.'" />';
+            $params['html'] .= '</span>';
+        }
+    }
+
+    /**
+     * Process warning display for tracker followup search
+     *
+     * @param Array $params Hook params
+     *
+     * @return Void
+     */
+    public function tracker_report_followup_warning($params) {
+        if ($this->tracker_followup_check_preconditions($params['group_id'])) {
+            if ($params['request']->get('search_followups')) {
+                $params['html'] .= '<div id="tracker_report_selection" class="tracker_report_haschanged_and_isobsolete" style="z-index: 2;position: relative;">';
+                $params['html'] .= $GLOBALS['HTML']->getimage('ic/warning.png', array('style' => 'vertical-align:top;'));
+                $params['html'] .= $GLOBALS['Language']->getText('plugin_fulltextsearch', 'followup_full_text_warning_search');
+                $params['html'] .= '</div>';
+            }
+        }
+    }
+
+    /**
+     * This method check preconditions to use fulltext:
+     * Elastic Search is available, the plugin is enabled for this project and the user is enabling mode Lab.
+     *
+     * @param Integer $group_id Project Id
+     *
+     * @return Boolean
+     */
+    private function tracker_followup_check_preconditions($group_id) {
+        try {
+            $index_status = $this->getAdminController()->getIndexStatus();
+        } catch (ElasticSearchTransportHTTPException $e) {
+            return false;
+        }
+        return $this->isAllowed($group_id) && $this->getCurrentUser()->useLabFeatures();
+    }
+
+    /**
+     * Process search in tracker followup
+     *
+     * @param Array $params Hook params
+     *
+     * @return Void
+     */
+    public function tracker_report_followup_search_process($params) {
+        if ($this->tracker_followup_check_preconditions($params['group_id'])) {
+            $filter = $params['request']->get('search_followups');
+            if (!empty($filter)) {
+                $controller       = $this->getSearchController('tracker');
+                $params['result'] = $controller->search($params['request']);
+                $params['search_performed'] = true;
+            }
+        }
+    }
+
+    /**
+     * Index added followup comment
+     *
+     * @param Array $params Hook params
+     *
+     * @return Void
+     */
+    public function tracker_followup_event_add($params) {
+        $this->createTrackerSystemEvent('FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD', SystemEvent::PRIORITY_MEDIUM, $params);
+    }
+
+    /**
+     * Index updated followup comment
+     *
+     * @param Array $params Hook params
+     *
+     * @return Void
+     */
+    public function tracker_followup_event_update($params) {
+        $this->createTrackerSystemEvent('FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE', SystemEvent::PRIORITY_MEDIUM, $params);
+    }
+
+    /**
+     * Create system event for docman indexing operations
+     *
+     * @param String      $type              Type of the event
+     * @param String      $priority          Priority of the system event
+     * @param Docman_Item $item              Docman item
+     * @param Mixed       $additional_params Extra params
+     *
+     * @return Void
+     */
+    private function createDocmanSystemEvent($type, $priority, Docman_Item $item, $additional_params = '') {
         if ($this->isAllowed($item->getGroupId())) {
 
             $params = $item->getGroupId() . SystemEvent::PARAMETER_SEPARATOR . $item->getId();
             if ($additional_params) {
                 $params .= SystemEvent::PARAMETER_SEPARATOR . $additional_params;
             }
+            SystemEventManager::instance()->createEvent($type, $params, $priority);
+        }
+    }
+
+    /**
+     * Create system event for docman indexing operations
+     *
+     * @param String $type     Type of the event
+     * @param String $priority Priority of the system event
+     * @param Array  $params   Event params
+     *
+     * @return Void
+     */
+    private function createTrackerSystemEvent($type, $priority, $params) {
+        if ($this->isAllowed($params['group_id'])) {
+            $params = $params['group_id'].SystemEvent::PARAMETER_SEPARATOR.$params['artifact_id'].SystemEvent::PARAMETER_SEPARATOR.$params['changeset_id'].SystemEvent::PARAMETER_SEPARATOR.$params['text'];
             SystemEventManager::instance()->createEvent($type, $params, $priority);
         }
     }
@@ -211,24 +362,38 @@ class fulltextsearchPlugin extends Plugin {
             strpos($_SERVER['REQUEST_URI'], '/search/') === 0;
     }
 
-    private function getIndexClient() {
+    /**
+     * Obtain index client
+     *
+     * @param String $type Type of the index
+     *
+     * @return ElasticSearch_IndexClientFacade
+     */
+    private function getIndexClient($type) {
         $factory         = $this->getClientFactory();
         $client_path     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
         $server_host     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
         $server_port     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
         $server_user     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_user');
         $server_password = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_password');
-        return $factory->buildIndexClient($client_path, $server_host, $server_port, $server_user, $server_password);
+        return $factory->buildIndexClient($client_path, $server_host, $server_port, $server_user, $server_password, $type);
     }
 
-    private function getSearchClient() {
+    /**
+     * Obtain search client
+     *
+     * @param String $type Type of the index
+     *
+     * @return ElasticSearch_SearchClientFacade
+     */
+    private function getSearchClient($type) {
         $factory         = $this->getClientFactory();
         $client_path     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
         $server_host     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
         $server_port     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
         $server_user     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_user');
         $server_password = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_password');
-        return $factory->buildSearchClient($client_path, $server_host, $server_port, $server_user, $server_password, $this->getProjectManager());
+        return $factory->buildSearchClient($client_path, $server_host, $server_port, $server_user, $server_password, $this->getProjectManager(), $type);
     }
 
     private function getSearchAdminClient() {
@@ -252,8 +417,8 @@ class fulltextsearchPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
-    private function getSearchController() {
-        return new FullTextSearch_Controller_Search($this->getRequest(), $this->getSearchClient());
+    private function getSearchController($type = self::SEARCH_DOCMAN_TYPE) {
+        return new FullTextSearch_Controller_Search($this->getRequest(), $this->getSearchClient($type));
     }
 
     private function getAdminController() {

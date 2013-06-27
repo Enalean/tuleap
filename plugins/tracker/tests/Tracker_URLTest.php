@@ -18,8 +18,7 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker_URL.class.php');
+require_once('bootstrap.php');
 Mock::generate('Tracker');
 Mock::generate('Tracker_FormElement_Interface');
 Mock::generate('Tracker_Artifact');
@@ -41,13 +40,13 @@ Mock::generatePartial('Tracker_URL',
 require_once('common/include/Codendi_Request.class.php');
 Mock::generate('Codendi_Request');
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 class Tracker_URLTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->user = new MockUser($this);
+        $this->user = mock('PFUser');
         $this->user->setReturnValue('getId', 666);
         
         $this->artifact = new MockTracker_Artifact($this);

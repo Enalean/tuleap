@@ -22,18 +22,27 @@
 // please add the functions/methods below when needed.
 // For further information about the Test Data Builder pattern
 // @see http://nat.truemesh.com/archives/000727.html
-
-require_once(dirname(__FILE__).'/../../include/Tracker/TrackerManager.class.php');
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 function aBindStatic() {
     return new Test_Tracker_FormElement_List_Bind_Static_Builder('Tracker_FormElement_Field_List_Bind_Static');
 }
 
 class Test_Tracker_FormElement_List_Bind_Static_Builder {
+    private $values = null;
+    private $field  = null;
 
-    private $field = null;
     public function withField(Tracker_FormElement_Field_List $field) {
         $this->field = $field;
+        return $this;
+    }
+
+    /**
+     * @param Array of Tracker_FormElement_Field_List_Bind_StaticValue $values
+     * @return Test_Tracker_FormElement_List_Bind_Static_Builder
+     */
+    public function withValues(array $values) {
+        $this->values = $values;
         return $this;
     }
 
@@ -41,8 +50,8 @@ class Test_Tracker_FormElement_List_Bind_Static_Builder {
      * @return Tracker_FormElement_Field_List_Bind_Static
      */
     public function build() {
-        $is_rank_alpha = $values = $default_values = $decorators = null;
-        $object = new Tracker_FormElement_Field_List_Bind_Static($this->field, $is_rank_alpha, $values, $default_values, $decorators);
+        $is_rank_alpha = $default_values = $decorators = null;
+        $object = new Tracker_FormElement_Field_List_Bind_Static($this->field, $is_rank_alpha, $this->values, $default_values, $decorators);
         return $object;
     }
 }

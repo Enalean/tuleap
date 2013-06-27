@@ -121,7 +121,7 @@ extends Valid {
 }
 
 /**
- * Check that value match Codendi user short name format.
+ * Check that value match user short name format.
  *
  * This rule doesn't check that user actually exists.
  */
@@ -134,9 +134,20 @@ extends Valid_String {
     }
 }
 
+/**
+ * Check that value match user real name format.
+ */
+class Valid_RealNameFormat extends Valid_String {
+    public function validate($value) {
+        $this->addRule(new Rule_String());
+        $this->addRule(new Rule_RealName());
+        return parent::validate($value);
+    }
+}
+
 
 /**
- * Check that submitted value is a simple string and a valid Codendi email.
+ * Check that submitted value is a simple string and a valid email.
  */
 class Valid_Email
 extends Valid_String {

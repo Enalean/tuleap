@@ -18,8 +18,9 @@
  */
 
 require_once 'common/project/Project_SOAPServer.class.php';
+require_once 'common/user/GenericUserFactory.class.php';
 
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UserManager');
 
 Mock::generate('Project');
@@ -27,7 +28,7 @@ Mock::generate('ProjectManager');
 Mock::generate('ProjectCreator');
 Mock::generate('SOAP_RequestLimitator');
 
-class Project_SOAPServerTest extends UnitTestCase {
+class Project_SOAPServerTest extends TuleapTestCase {
     
     function testAddProjectShouldFailWhenRequesterIsNotProjectAdmin() {
         $server = $this->GivenASOAPServerWithBadTemplate();
@@ -113,7 +114,7 @@ class Project_SOAPServerTest extends UnitTestCase {
     private function GivenASOAPServerReadyToCreate() {
         $server = $this->GivenASOAPServer();
         
-        $another_user = new MockUser();
+        $another_user = mock('PFUser');
         $another_user->setReturnValue('isLoggedIn', true);
         
         $this->um->setReturnValue('getCurrentUser', $another_user, array('789'));
@@ -132,10 +133,10 @@ class Project_SOAPServerTest extends UnitTestCase {
     }
     
     private function GivenASOAPServer() {
-        $this->user = new MockUser();
+        $this->user = mock('PFUser');
         $this->user->setReturnValue('isLoggedIn', true);
         
-        $admin  = new MockUser();
+        $admin  = mock('PFUser');
         $admin->setReturnValue('isLoggedIn', true);
         $admin->setReturnValue('isSuperUser', true);
         
@@ -145,9 +146,91 @@ class Project_SOAPServerTest extends UnitTestCase {
         
         $this->pm        = new MockProjectManager();
         $this->pc        = new MockProjectCreator();
+        $this->guf       = mock('GenericUserFactory');
         $this->limitator = new MockSOAP_RequestLimitator();
-        $server          = new Project_SOAPServer($this->pm, $this->pc, $this->um, $this->limitator);
+        $server          = new Project_SOAPServer($this->pm, $this->pc, $this->um, $this->guf, $this->limitator);
         return $server;
+    }
+}
+
+class Project_SOAPServerObjectTest extends Project_SOAPServer {
+    public function isRequesterAdmin($sessionKey, $project_id) {
+        parent::isRequesterAdmin($sessionKey, $project_id);
+    }
+}
+
+class Project_SOAPServerGenericUserTest extends TuleapTestCase {
+
+    /** @var Project_SOAPServerObjectTest */
+    private $server;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->group_id    = 154;
+        $this->session_key = '123';
+        $this->password    = 'pwd';
+
+        $this->user = mock('PFUser');
+        $this->user->setReturnValue('isLoggedIn', true);
+
+        $this->admin  = mock('PFUser');
+        $this->admin->setReturnValue('isLoggedIn', true);
+        $this->admin->setReturnValue('isSuperUser', true);
+
+        $user_manager = new MockUserManager();
+
+        $project = new MockProject();
+
+        $project_manager            = stub('ProjectManager')->getProject($this->group_id)->returns($project);
+        $project_creator            = new MockProjectCreator();
+        $this->generic_user_factory = mock('GenericUserFactory');
+        $limitator                  = new MockSOAP_RequestLimitator();
+
+        $this->server = partial_mock(
+                'Project_SOAPServerObjectTest',
+                array('isRequesterAdmin', 'addProjectMember', 'removeProjectMember'),
+                array($project_manager, $project_creator, $user_manager, $this->generic_user_factory, $limitator)
+        );
+
+        stub($this->server)->isRequesterAdmin($this->session_key, $this->group_id)->returns(true);
+        stub($this->generic_user_factory)->create($this->group_id, $this->password)->returns($this->user);
+        stub($this->user)->getUserName()->returns('User1');
+        stub($user_manager)->getCurrentUser()->returns($this->admin);
+    }
+
+    public function itCreatesANewGenericUser() {
+        stub($this->generic_user_factory)->fetch($this->group_id)->returns(null);
+
+        expect($this->generic_user_factory)->create($this->group_id, $this->password)->once();
+        expect($this->server)->addProjectMember()->once();
+
+        $this->server->setProjectGenericUser($this->session_key, $this->group_id, $this->password);
+    }
+
+    public function itDoesNotRecreateAGenericUserIfItAlreadyExists() {
+        stub($this->generic_user_factory)->fetch($this->group_id)->returns($this->user);
+
+        expect($this->generic_user_factory)->create($this->group_id, $this->password)->never();
+        expect($this->server)->addProjectMember()->once();
+
+        $this->server->setProjectGenericUser($this->session_key, $this->group_id, $this->password);
+    }
+
+    public function itUnsetsGenericUser() {
+        stub($this->generic_user_factory)->fetch($this->group_id)->returns($this->user);
+
+        expect($this->server)->removeProjectMember()->once();
+
+        $this->server->unsetGenericUser($this->session_key, $this->group_id);
+    }
+
+    public function itThrowsASoapFaultWhileUnsetingGenericUserIfItIsNotActivated() {
+        stub($this->generic_user_factory)->fetch($this->group_id)->returns(null);
+
+        $this->expectException();
+
+        $this->server->unsetGenericUser($this->session_key, $this->group_id);
     }
 }
 

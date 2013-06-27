@@ -18,11 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field_Numeric.class.php');
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_Integer.class.php');
-require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_Int_ValueDao.class.php');
-require_once('dao/Tracker_FormElement_Field_Value_IntegerDao.class.php');
-require_once('dao/Tracker_FormElement_Field_IntegerDao.class.php');
 
 class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeric {
     

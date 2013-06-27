@@ -1,5 +1,5 @@
-Codendi RPMS
-============
+Tuleap RPMS
+===========
 
 
 How to rebuild
@@ -30,6 +30,12 @@ This assume sh-like shell, for csh-like use setenv.
 
 $> export DOCBOOK_TOOLS_DIR=/path/to/docbook
 $> export RPM_TMP=/path/to/rpm/build/directory
+
+Build only tuleap RPM
+---------------------
+
+* For RHEL5: make clean rpmprep rpm
+* For RHEL6: make OS=rhel6 clean rpmprep rpm
 
 Build the packages
 ------------------

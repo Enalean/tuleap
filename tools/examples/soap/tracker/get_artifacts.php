@@ -19,11 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$host       = 'http://shunt.cro.enalean.com';
-$user       = 'manuel';
-$pass       = '';
+$serverURL = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://sonde.cro.enalean.com';
+$login     = isset($_SERVER['TULEAP_USER']) ? $_SERVER['TULEAP_USER'] : 'testman';
+$password  = isset($_SERVER['TULEAP_PASSWORD']) ? $_SERVER['TULEAP_PASSWORD'] : 'testpwd';
+
 $project_id = 0; //not needed
-$tracker_id = 276;
+$tracker_id = 274;
 $offset     = 0;
 $limit      = 100;
 $criteria = array(
@@ -48,7 +49,7 @@ $criteria = array(
 //    ),
     array(
         'field_name' => 'status',
-        'value' => array('value' => '4746')
+        'value' => array('value' => '4731')
     )
 );
 
@@ -57,12 +58,12 @@ $soap_options = array(
     'exceptions' => 1,
     'trace'      => 1,
 );
-$host_login   = $host .'/soap/?wsdl';
-$host_tracker = $host .'/plugins/tracker/soap/?wsdl';
+$host_login   = $serverURL .'/soap/?wsdl';
+$host_tracker = $serverURL .'/plugins/tracker/soap/?wsdl';
 
 // Establish connection to the server
 $client_login = new SoapClient($host_login, $soap_options);
-$session_hash = $client_login->login($user, $pass)->session_hash;
+$session_hash = $client_login->login($login, $password)->session_hash;
 try {
     // Connecting to the soap's tracker api
     $client_tracker = new SoapClient($host_tracker, $soap_options);
@@ -83,8 +84,8 @@ try {
             if ((string)$value->field_name == "description") {
                 $message .= " ".(string)$value->field_value;
             }
-            if ((string)$value->field_name == "remaining_effort" && (string)$value->field_value) {
-                $message .= " (".(string)$value->field_label.": ".(string)$value->field_value.")";
+            if ((string)$value->field_name == "remaining_effort" ) {
+                $message .= " (".(string)$value->field_label.": ".(string)$value->field_value->value.")";
             }
         }
         echo $message."\n";

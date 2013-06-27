@@ -18,11 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-require_once(dirname(__FILE__).'/../../../include/constants.php');
-require_once dirname(__FILE__) . '/../../builders/aTracker.php';
-require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/SearchView.class.php';
-require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/SemanticValueFactory.class.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 Mock::generate('Service');
 Mock::generate('Project');
@@ -237,7 +233,7 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
     }
 
     private function setContentView($report, $criteria, $root, $artifact_factory, $shared_factory) {
-        $user = mock('User');
+        $user = mock('PFUser');
         $this->content_view = new Tracker_CrossSearch_SearchContentView($report, $criteria, $root, $artifact_factory, $shared_factory, $user);
     }
 }

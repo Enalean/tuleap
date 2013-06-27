@@ -32,6 +32,12 @@ var AutoCompleter = Class.create({
             this.element.defaultValueActsAsHint();
         }
 
+        if (this.options['allowNull']) {
+            this.element.observe('click', function(){
+                this.stopObserving('blur');
+            });
+        }
+
         var tokens = '';
         if(this.options.multiple == true) {
             tokens = [',', ';'];
@@ -111,5 +117,8 @@ var ProjectAutoCompleter = Class.create(AutoCompleter, {
     initialize: function($super, elementId, imgPath, multiple, options) {
         $super(elementId, imgPath, multiple, options);
         this.url = '/project/autocomplete.php';
+        if(this.options.private == 1) {
+            this.url += '?private=1';
+        }
     }
 });

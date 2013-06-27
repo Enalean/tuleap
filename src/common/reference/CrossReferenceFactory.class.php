@@ -24,7 +24,7 @@ class CrossReferenceFactory {
     var $source_refs_datas;
     
     /**
-     * array of references {Object CrossReference} made by the current CrossReferenceFaxtory
+     * array of references {Object CrossReference} made by the current CrossReferenceFactory
      * In other words, Items in this array are referenced by the current Item
      * @var array
      */
@@ -111,8 +111,13 @@ class CrossReferenceFactory {
         $params.= "&source_key=".$currRef->getRefSourceKey() ;
         return $params;
     }
-    
-    function getMailCrossRefs($format='text') {
+
+    /**
+     * Returns the cross references grouped by 'source', 'target' and
+     * 'both' types with their URLs and tags.
+     * @return array The formatted cross references
+     */
+    public function getFormattedCrossReferences() {
         $crossRefArray = $this->getCrossReferences();
         $refs = array();
         foreach ($crossRefArray as $nature => $refArraySourceTarget) {
@@ -270,6 +275,35 @@ class CrossReferenceFactory {
         }
         
         return $display;
+    }
+
+    public function getHTMLCrossRefsForMail() {
+        $html              = '';
+        $cross_refs        = $this->getCrossReferences();
+        $reference_manager = ReferenceManager::instance();
+        $available_natures = $reference_manager->getAvailableNatures();
+
+        foreach ($cross_refs as $nature => $references_by_destination) {
+            $html .= '<div>';
+            $refs = array();
+            foreach ($references_by_destination as $key => $references) {
+                foreach ($references as $reference) {
+                    if ($key === 'source') {
+                        $ref = $reference->getRefSourceKey() ." #". $reference->getRefSourceId();
+                        $url = $reference->getRefSourceUrl();
+                    } else {
+                        $ref = $reference->getRefTargetKey() ." #". $reference->getRefTargetId();
+                        $url = $reference->getRefTargetUrl();
+                    }
+                    $title = $available_natures[$nature]['label'];
+                    $refs[] = '<a title="'. $title .'" href="'. $url .'">'. $ref .'</a>';
+                }
+            }
+            $html .= implode(', ', $refs);
+            $html .= '</div>';
+        }
+
+        return $html;
     }
 
     /**

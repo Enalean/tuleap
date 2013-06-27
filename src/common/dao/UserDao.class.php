@@ -89,8 +89,7 @@ class UserDao extends DataAccessObject {
     public function searchSSHKeys() {
         $sql = "SELECT *
                 FROM user 
-                WHERE unix_status = 'A' 
-                  AND (status= 'A' OR status='R') 
+                WHERE (status= 'A' OR status='R')
                   AND authorized_keys != '' 
                   AND authorized_keys IS NOT NULL";
         return $this->retrieve($sql);
@@ -728,7 +727,29 @@ class UserDao extends DataAccessObject {
         } else {
             return false;
         }
-     }
-   
+    }
+
+    /**
+     * Get the list of letters with which user names begin (silly isn't it?)
+     *
+     * @return DataAccessResult
+     */
+    public function firstUsernamesLetters() {
+        $sql = "SELECT DISTINCT UPPER(LEFT(user.email,1)) as capital
+                FROM user
+                WHERE status in ('A', 'R')
+                UNION
+                SELECT DISTINCT UPPER(LEFT(user.realname,1)) as capital
+                FROM user
+                WHERE status in ('A', 'R')
+                UNION
+                SELECT DISTINCT UPPER(LEFT(user.user_name,1)) as capital
+                FROM user
+                WHERE status in ('A', 'R')
+                ORDER BY capital";
+        return $this->retrieve($sql);
+    }
+
 }
+
 ?>

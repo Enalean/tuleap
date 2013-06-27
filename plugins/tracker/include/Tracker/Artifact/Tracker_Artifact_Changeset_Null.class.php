@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_Artifact_Changeset.class.php');
 
 /**
  * Fake / Null class for Tracker_Artifact_Changeset
@@ -71,11 +70,11 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
     /**
      * Say if a user can edit a comment
      *
-     * @param User $user The user. If null, the current logged in user will be used.
+     * @param PFUser $user The user. If null, the current logged in user will be used.
      *
      * @return boolean true if the user can edit
      */
-    public function userCanEdit(User $user = null) {
+    public function userCanEdit(PFUser $user = null) {
         return false;
     }
 
@@ -83,7 +82,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
      * Update the content
      *
      * @param string $body The new content
-     * @param User   $user The user
+     * @param PFUser   $user The user
      *
      * @return void
      */
@@ -93,11 +92,11 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
     /**
      * Delete the changeset
      *
-     * @param User $user the user who wants to delete the changeset
+     * @param PFUser $user the user who wants to delete the changeset
      *
      * @return void
      */
-    public function delete(User $user) {
+    public function delete(PFUser $user) {
     }
 
     /**

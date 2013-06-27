@@ -86,6 +86,18 @@ class JUnitXMLReporter extends SimpleReporter {
         $this->terminateAbnormally($exception);
     }
 
+    /**
+     *    Paints a PHP error or exception.
+     *    @param string $message        Message to be shown.
+     *    @access public
+     *    @abstract
+     */
+    function paintError($message) {
+        parent::paintError($message);
+        error_log("Exception: " . $message);
+        $this->terminateAbnormally($message);
+    }
+
     function terminateAbnormally($message) {
         if (!$this->currCase) {
             error_log("!! currCase was not set.");

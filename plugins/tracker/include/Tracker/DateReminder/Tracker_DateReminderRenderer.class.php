@@ -16,9 +16,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_DateReminder.class.php');
-require_once('Tracker_DateReminderFactory.class.php');
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
 
 class Tracker_DateReminderRenderer {
 
@@ -92,7 +89,7 @@ class Tracker_DateReminderRenderer {
         $reminder = $this->dateReminderFactory->getReminder($reminderId);
         if ($reminder) {
             $notificationType = $reminder->getNotificationType();
-            if ($notificationType == 1) {
+            if ($notificationType == Tracker_DateReminder::AFTER) {
                 $after  = "selected";
                 $before = "";
             } else {
@@ -100,7 +97,7 @@ class Tracker_DateReminderRenderer {
                 $before = "selected";
             }
             $reminderStatus = $reminder->getStatus();
-            if ($reminderStatus == 1) {
+            if ($reminderStatus == Tracker_DateReminder::ENABLED) {
                 $enabled  = "selected";
                 $disabled = "";
             } else {
@@ -336,7 +333,7 @@ class Tracker_DateReminderRenderer {
         if (!empty($trackerReminders)) {
             $output = html_build_list_table_top($titles,false,false,false);
             foreach ($trackerReminders as $reminder) {
-                if ($reminder->getStatus() == 1) {
+                if ($reminder->getStatus() == Tracker_DateReminder::ENABLED) {
                     $output .= '<tr class="'.util_get_alt_row_color($i++).'">';
                 } else {
                     $output .= '<tr class="tracker_date_reminder">';

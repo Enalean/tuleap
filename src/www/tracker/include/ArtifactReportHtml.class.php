@@ -322,7 +322,7 @@ class ArtifactReportHtml extends ArtifactReport {
          *
          */
         function showResult ($group_id,$prefs,$offset,$total_rows,$url,$nolink,$chunksz,$morder,$advsrch,$chunksz,$aids,$masschange=false,$pv) {
-            global $PHP_SELF,$Language,$ath;
+            global $Language,$ath;
             $hp = Codendi_HTMLPurifier::instance();
             $html_result = "";
         

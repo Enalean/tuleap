@@ -1,0 +1,11 @@
+ADMS.SW plugin
+
+This plugin will provide content-negociation means to export RDF+XML ADMS.SW profiles for projects on /projects URLs, in addition to the content already provided by doaprdf.
+
+ADMS.SW stands for Asset Description Metadata Schema for Software. See https://joinup.ec.europa.eu/asset/adms_foss/description for more details.
+
+For instance, one may try :
+ curl -k -H 'Accept: application/rdf+xml' https://myforge.example.com/projects/aproject/
+
+The doaprdf plugin has to be installed.
+

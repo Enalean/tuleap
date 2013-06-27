@@ -18,75 +18,74 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../include/constants.php';
-require_once GIT_BASE_DIR .'/GitViews.class.php';
+require_once 'bootstrap.php';
 
 Mock::generate('Project');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('ProjectManager');
 
 
 class GitViewsTest extends UnitTestCase {
-    
+
     public function testCanReturnOptionsListOfProjectsTheUserIsAdminOf() {
         $user    = $this->GivenAUserWithProjects();
         $project = $this->GivenAProject('123', 'Guinea Pig');
         $manager = $this->GivenAProjectManager($project);
-        
+
         $view = TestHelper::getPartialMock('GitViews', array());
         $output = $view->getUserProjectsAsOptions($user, $manager, '50');
         $this->assertPattern('/<option value="123"/', $output);
         $this->assertNoPattern('/<option value="456"/', $output);
     }
-    
+
     public function testOptionsShouldContainThePublicNameOfTheProject() {
         $user    = $this->GivenAUserWithProjects();
         $project = $this->GivenAProject('123', 'Guinea Pig');
         $manager = $this->GivenAProjectManager($project);
-        
+
         $view = TestHelper::getPartialMock('GitViews', array());
         $this->assertPattern('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
     }
-    
+
     public function testOptionsShouldContainTheUnixNameOfTheProjectAsTitle() {
         $user    = $this->GivenAUserWithProjects();
         $project = $this->GivenAProject('123', 'Guinea Pig', 'gpig');
         $manager = $this->GivenAProjectManager($project);
-        
+
         $view = TestHelper::getPartialMock('GitViews', array());
         $this->assertPattern('/title="gpig"/', $view->getUserProjectsAsOptions($user, $manager, '50'));
     }
-    
+
     public function testOptionsShouldPurifyThePublicNameOfTheProject() {
         $user    = $this->GivenAUserWithProjects();
         $project = $this->GivenAProject('123', 'Guinea < Pig');
         $manager = $this->GivenAProjectManager($project);
-        
+
         $view = TestHelper::getPartialMock('GitViews', array());
         $this->assertPattern('/Guinea &lt; Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
     }
-    
+
     public function testCurrentProjectMustNotBeInProjectList() {
         $user    = $this->GivenAUserWithProjects();
         $project = $this->GivenAProject('123', 'Guinea Pig');
         $manager = $this->GivenAProjectManager($project);
-        
+
         $view = TestHelper::getPartialMock('GitViews', array());
         $this->assertNoPattern('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '123'));
-        
-        
+
+
     }
-    
+
     public function testProjectListMustContainsOnlyProjectsWithGitEnabled() {
         $user    = $this->GivenAUserWithProjects();
         $project = $this->GivenAProjectWithoutGitService('123', 'Guinea Pig');
         $manager = $this->GivenAProjectManager($project);
-        
+
         $view = TestHelper::getPartialMock('GitViews', array());
         $this->assertNoPattern('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
-        
+
     }
-    
+
     private function GivenAProject($id, $name, $unixName = null, $useGit = true) {
         $project = new MockProject();
         $project->setReturnValue('getId', $id);
@@ -95,25 +94,51 @@ class GitViewsTest extends UnitTestCase {
         $project->setReturnValue('usesService', $useGit, array(GitPlugin::SERVICE_SHORTNAME));
         return $project;
     }
-    
+
     private function GivenAProjectWithoutGitService($id, $name) {
         return $this->GivenAProject($id, $name, null, false);
     }
-    
+
     private function GivenAProjectManager($project) {
         $manager = new MockProjectManager();
         $manager->setReturnValue('getProject', $project, array($project->getId()));
-        
+
         return $manager;
     }
-    
+
     private function GivenAUserWithProjects() {
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getAllProjects', array('123', '456'));
         $user->setReturnValue('isMember', true, array('123', 'A'));
         $user->setReturnValue('isMember', false, array('456', 'A'));
         return $user;
     }
+
+}
+
+class GitView_DiffViewTest extends TuleapTestCase {
+
+    public function testGetViewInverseURLArgumentIfActionIsBlobdiff() {
+        $_REQUEST['a'] = 'blobdiff';
+        $src_initial   = 'src';
+        $dest_initial  = 'dest';
+        $_GET['h']     = $src_initial;
+        $_GET['hp']    = $dest_initial;
+
+        $repository = mock('GitRepository');
+        stub($repository)->getId()->returns(148);
+        stub($repository)->getFullName()->returns('abcd');
+        stub($repository)->getProject()->returns(stub('Project')->getUnixName()->returns('project'));
+        stub($repository)->getGitRootPath()->returns('/home/abcd');
+
+        $gitphp_viewer = new GitViews_GitPhpViewer($repository, dirname(__FILE__).'/_fixtures/fakeGitPHP');
+        $gitphp_viewer->getContent();
+
+        $this->assertEqual($_GET['h'], $dest_initial);
+        $this->assertEqual($_GET['hp'], $src_initial);
+
+    }
+
 }
 
 ?>

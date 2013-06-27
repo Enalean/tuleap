@@ -18,12 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Presenter.class.php';
-require_once 'Dao.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once 'common/valid/ValidFactory.class.php';
-require_once 'HierarchicalTracker.class.php';
-require_once 'HierarchicalTrackerFactory.class.php';
 
 class Tracker_Hierarchy_Controller {
 
@@ -65,7 +61,7 @@ class Tracker_Hierarchy_Controller {
     public function update() {
         $vChildren = new Valid_UInt('children');
         $vChildren->required();
-        
+
         if ($this->request->validArray($vChildren)) {
             $this->dao->updateChildren($this->tracker->getId(), $this->request->get('children'));
         } else {
@@ -87,6 +83,14 @@ class Tracker_Hierarchy_Controller {
     
     private function render($template_name, $presenter) {
         $this->renderer->renderToPage($template_name, $presenter);
+    }
+
+    /**
+     *
+     * @param array $mapping the id of tracker's children
+     */
+    public function updateFromXmlProjectImportProcess(array $mapping) {
+        $this->dao->updateChildren($this->tracker->getId(), $mapping);
     }
 }
 ?>

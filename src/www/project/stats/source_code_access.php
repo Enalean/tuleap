@@ -6,7 +6,7 @@
 //
 //  
 require_once('pre.php');
-require('../admin/project_admin_utils.php');
+require_once '../admin/project_admin_utils.php';
 require('./source_code_access_utils.php');
 require('www/project/export/access_logs_export.php');
 
@@ -84,7 +84,7 @@ if ( !isset($view) ) {
 echo '<h2>'.$Language->getText('project_admin_utils','access_logs').'</h2>';
 
 print '
-<FORM action="'.$PHP_SELF.'" method="get">
+<FORM action="?" method="get">
 <TABLE BORDER="0" WIDTH="80%">
 <tr><td><b>'.$Language->getText('project_stats_source_code_access','access_log_from').'</b></td><td><b>'.$Language->getText('project_stats_source_code_access','for_last').'</b></td><td> </td></tr>
 <tr><td>

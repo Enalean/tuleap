@@ -23,15 +23,19 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     $vMandatoryRef = new Valid_WhiteList('form_mandatory_ref', array('0', '1'));
     $vMandatoryRef->required();
     $vPreamble = new Valid_Text('form_preamble');
+    $vCanChangeSVNLog = new Valid_WhiteList('form_can_change_svn_log', array('0', '1'));
+    $vCanChangeSVNLog->required();
 
-    if($request->valid($vTracked) && $request->valid($vPreamble) && $request->valid($vMandatoryRef)) {
+    if($request->valid($vTracked) && $request->valid($vPreamble) && $request->valid($vMandatoryRef) && $request->valid($vCanChangeSVNLog)) {
         // group_id was validated in index.
         $form_tracked = $request->get('form_tracked');
         $form_preamble = $request->get('form_preamble');
         $form_mandatory_ref = $request->get('form_mandatory_ref');
-        
-        $ret = svn_data_update_general_settings($group_id,$form_tracked,$form_preamble,$form_mandatory_ref);
+        $form_can_change_svn_log = $request->get('form_can_change_svn_log');
+
+        $ret = svn_data_update_general_settings($group_id,$form_tracked,$form_preamble,$form_mandatory_ref, $form_can_change_svn_log);
         if ($ret) {
+            EventManager::instance()->processEvent(Event::SVN_UPDATE_HOOKS, array('group_id' => $group_id));
             $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_general_settings','upd_success'));
         } else {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_general_settings','upd_fail'));
@@ -39,6 +43,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     } else {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_general_settings','upd_fail'));
     }
+    $GLOBALS['Response']->redirect('/svn/admin/?func=general_settings&group_id='.$group_id);
 }
 
 // Note: no need to purify the output since the svn preamble is stored
@@ -53,6 +58,7 @@ $project = $pm->getProject($group_id);
 $svn_tracked = $project->isSVNTracked();
 $svn_mandatory_ref = $project->isSVNMandatoryRef();
 $svn_preamble = $project->getSVNPreamble();
+$svn_can_change_log = $project->canChangeSVNLog();
 
 echo '
        <H2>'.$Language->getText('svn_admin_general_settings','gen_settings').'</H2>
@@ -72,6 +78,12 @@ echo '
        <p><b>'.$Language->getText('svn_admin_general_settings','mandatory_ref').'</b>&nbsp;&nbsp;&nbsp;&nbsp;<SELECT name="form_mandatory_ref">
        <OPTION VALUE="1"'.(($svn_mandatory_ref == '1') ? ' SELECTED':'').'>'.$Language->getText('global','on').'</OPTION>
        <OPTION VALUE="0"'.(($svn_mandatory_ref == '0') ? ' SELECTED':'').'>'.$Language->getText('global','off').'</OPTION>       </SELECT></p>
+        <br><h3>'.$Language->getText('svn_admin_general_settings','svn_can_change_log').'</H3><I>
+       <p>'.$Language->getText('svn_admin_general_settings','svn_can_change_log_comment').
+    '</I>
+       <p><b>'.$Language->getText('svn_admin_general_settings','svn_can_change_log').'</b>&nbsp;&nbsp;&nbsp;&nbsp;<SELECT name="form_can_change_svn_log">
+       <OPTION VALUE="1"'.(($svn_can_change_log == '1') ? ' SELECTED':'').'>'.$Language->getText('global','on').'</OPTION>
+       <OPTION VALUE="0"'.(($svn_can_change_log == '0') ? ' SELECTED':'').'>'.$Language->getText('global','off').'</OPTION>       </SELECT></p>
        <br>'.$Language->getText('svn_admin_general_settings','preamble',array('/svn/?func=info&group_id='.$group_id,$GLOBALS['sys_name'])).'
        <BR>
        <TEXTAREA cols="70" rows="8" wrap="virtual" name="form_preamble">'.$svn_preamble.'</TEXTAREA>

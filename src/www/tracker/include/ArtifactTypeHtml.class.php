@@ -2313,7 +2313,7 @@ EOS;
 		echo '
 	    <br><br>';
                 echo '
-            <FORM ACTION="'. $_SERVER['PHP_SELF'] .'" METHOD="POST" enctype="multipart/form-data" NAME="masschange_form">
+            <FORM ACTION="?" METHOD="POST" enctype="multipart/form-data" NAME="masschange_form">
             <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_attachment.'">
             <INPUT TYPE="HIDDEN" NAME="func" VALUE="postmasschange">
             <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$group_id.'">

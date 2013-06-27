@@ -17,17 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_OpenList.class.php');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_OpenList.class.php');
+require_once('bootstrap.php');
+require_once('Tracker_Artifact_ChangesetValue_ListTest.php');
 Mock::generate('Tracker_FormElement_Field_OpenList');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_OpenValue.class.php');
 Mock::generate('Tracker_FormElement_Field_List_OpenValue');
 
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-require_once('Tracker_Artifact_ChangesetValue_ListTest.php');
+require_once 'Tracker_Artifact_ChangesetValue_ListTest.php';
 
 class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_ChangesetValue_ListTest {
     
@@ -45,7 +43,7 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_Chan
         $value_list = new $this->changesetvalue_class(111, $field, false, array($bind_value));
         $this->assertEqual(count($value_list), 1);
         $this->assertEqual($value_list[0], $bind_value);
-        $this->assertEqual($value_list->getSoapValue(), "Reopen");
+        $this->assertEqual($value_list->getSoapValue(), array('bind_value' => array(array('bind_value_id' => 106, 'bind_value_label' => "Reopen"))));
         $this->assertEqual($value_list->getValue(), array('b106'));
     }
     

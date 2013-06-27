@@ -18,12 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/mvc2/Controller.class.php';
+require_once 'common/mvc2/PluginController.class.php';
 
 /**
  * Controller for basic fulltext searches
  */
-class FullTextSearch_Controller_Search extends MVC2_Controller {
+class FullTextSearch_Controller_Search extends MVC2_PluginController {
 
     /**
      * @var FullTextSearch_ISearchDocuments
@@ -36,22 +36,33 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
         $this->client = $client;
     }
 
-    public function search() {
+    public function search($request = NULL) {
         $terms  = $this->request->getValidated('words', 'string', '');
         $facets = $this->getFacets();
         $offset = $this->request->getValidated('offset', 'uint', 0);
-
-        try {
-            $search_result = $this->client->searchDocuments($terms, $facets, $offset, $this->request->getCurrentUser());
-            if ($this->request->isAjax()) {
-                $presenter = new FullTextSearch_Presenter_SearchOnlyResults($search_result);
-            } else {
-                $presenter = $this->getSearchPresenter($terms, $search_result);
+        if(!empty($request)) {
+            /* This request should return a simple array with artifact ids as keys and changesets ids as values
+            then delegate search result presentation to TV5 report */
+            $search_result = array();
+            try {
+                $search_result = $this->client->searchFollowups($request, $facets, $offset, $this->request->getCurrentUser());
+            } catch (ElasticSearchTransportHTTPException $e) {
+                echo $e->getMessage();
             }
-        } catch (ElasticSearchTransportHTTPException $e) {
-            $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
+            return $search_result;
+        } else {
+            try {
+                $search_result = $this->client->searchDocuments($terms, $facets, $offset, $this->request->getCurrentUser());
+                if ($this->request->isAjax()) {
+                    $presenter = new FullTextSearch_Presenter_SearchOnlyResults($search_result);
+                } else {
+                    $presenter = $this->getSearchPresenter($terms, $search_result);
+                }
+            } catch (ElasticSearchTransportHTTPException $e) {
+                $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
+            }
+            $this->render($presenter->template, $presenter);
         }
-        $this->render($presenter->template, $presenter);
     }
 
     protected function getSearchPresenter($terms, $search_result) {

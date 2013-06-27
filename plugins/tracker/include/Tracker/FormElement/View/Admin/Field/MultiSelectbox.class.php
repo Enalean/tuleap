@@ -17,27 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'Selectbox.class.php';
 
 class Tracker_FormElement_View_Admin_Field_MultiSelectbox extends Tracker_FormElement_View_Admin_Field_Selectbox {
-
-     public function fetchTypeForUpdate() {
-        $html = '';
-        $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label><br />';
-        $html .= '<img width="16" height="16" alt="" src="'. $this->formElement->getFactoryIconUseIt() .'" style="vertical-align:middle"/> '. $this->formElement->getFactoryLabel();
-
-        $html .= ' (<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
-                        'tracker'            => $this->formElement->tracker_id,
-                        'func'               => 'admin-formElement-update',
-                        'formElement'        => $this->formElement->id,
-                        'change-type'        => 'sb'
-                    )) .'" onclick="return confirm(\''.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_type_confirm').'\');">'
-               .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_sb').'</a>)';
-
-        $html .= '</p>';
-        return $html;
-    }
-
+     protected $availableTypes = array('sb', 'cb');
 }
 
 ?>

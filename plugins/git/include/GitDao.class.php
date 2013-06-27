@@ -18,10 +18,8 @@
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
 require_once('common/dao/include/DataAccessObject.class.php');
-require_once('exceptions/GitDaoException.class.php');
 require_once('common/project/ProjectManager.class.php');
 require_once('common/user/UserManager.class.php');
-require_once('GitRepository.class.php');
 /**
  * Description of GitDaoclass
  * @todo change date format to timestamp instead of mysql date format
@@ -50,6 +48,9 @@ class GitDao extends DataAccessObject {
 
     const BACKEND_GITSHELL = 'gitshell';
     const BACKEND_GITOLITE = 'gitolite';
+
+    const REMOTE_SERVER_ID              = 'remote_server_id';
+    const REMOTE_SERVER_DISCONNECT_DATE = 'remote_server_disconnect_date';
 
     public function __construct() {
         parent::__construct( CodendiDataAccess::instance() );
@@ -261,6 +262,17 @@ class GitDao extends DataAccessObject {
         }
         return $list;
     }
+    
+    /**
+     * 
+     * @return DataAccessResult
+     */
+    public function getActiveRepositoryPathsWithRemoteServersForAllProjects() {
+        $sql = "SELECT * FROM $this->tableName
+                WHERE remote_server_id IS NOT NULL
+                AND repository_deletion_date = '0000-00-00 00:00:00'";
+        return $this->retrieve($sql);
+    }
 
     /**
      * Return the list of users that owns repositories in the project $projectId
@@ -356,20 +368,30 @@ class GitDao extends DataAccessObject {
      *
      * @return Boolean
      */
-    public function logGitPush($repoId, $userId, $pushTimestamp, $commitsNumber) {
+    public function logGitPush($repoId, $userId, $pushTimestamp, $commitsNumber, $refname, $operation_type, $refname_type) {
         $repositoryId  = $this->da->escapeInt($repoId);
         $userId        = $this->da->escapeInt($userId);
         $commitsNumber = $this->da->escapeInt($commitsNumber);
         $pushDate      = $this->da->escapeInt($pushTimestamp);
+        $refname       = $this->da->quoteSmart($refname);
+        $operation_type = $this->da->quoteSmart($operation_type);
+        $refname_type  = $this->da->quoteSmart($refname_type);
+
         $query         = "INSERT INTO plugin_git_log (".self::REPOSITORY_ID.",
                                                       user_id,
                                                       push_date,
-                                                      commits_number
+                                                      commits_number,
+                                                      refname,
+                                                      operation_type,
+                                                      refname_type
                                                       ) values (
                                                       $repositoryId,
                                                       $userId,
                                                       $pushDate,
-                                                      $commitsNumber
+                                                      $commitsNumber,
+                                                      $refname,
+                                                      $operation_type,
+                                                      $refname_type
                                                       )";
         return $this->update($query);
     }
@@ -432,6 +454,11 @@ class GitDao extends DataAccessObject {
         return $this->retrieve($query);
     }
 
+    /**
+     * @deprecated Should use GitRepository::getInstanceFrom row instead.
+     * @param GitRepository $repository
+     * @param type $result
+     */
     public function hydrateRepositoryObject(GitRepository $repository, $result) {
         $repository->setName($result[self::REPOSITORY_NAME]);
         $repository->setPath($result[self::REPOSITORY_PATH]);
@@ -450,22 +477,28 @@ class GitDao extends DataAccessObject {
         $repository->setBackendType($result[self::REPOSITORY_BACKEND_TYPE]);
         $repository->setNamespace($result[self::REPOSITORY_NAMESPACE]);
         $repository->setScope($result[self::REPOSITORY_SCOPE]);
+        $repository->setRemoteServerId($result[self::REMOTE_SERVER_ID]);
+        $repository->setRemoteServerDisconnectDate($result[self::REMOTE_SERVER_DISCONNECT_DATE]);
         $repository->loadNotifiedMails();
     }
 
     /**
      * Count number of repositories grouped by backend type
      *
-     * @param String  $startDate
-     * @param String  $endDate
-     * @param Integer $projectId
+     * @param String  $startDate   Start date
+     * @param String  $endDate     End date
+     * @param Integer $projectId   Project Id
+     * @param Boolean $stillActive Select only reposirtories that still active
      *
      * @return DataAccessResult
      */
-    public function getBackendStatistics($backend, $startDate, $endDate, $projectId = null) {
+    public function getBackendStatistics($backend, $startDate, $endDate, $projectId = null, $stillActive = false) {
         $condition = '';
         if ($projectId) {
             $condition = "AND ".self::FK_PROJECT_ID."=".$this->da->escapeInt($projectId);
+        }
+        if ($stillActive) {
+            $condition .= " AND status = 'A' AND ".self::REPOSITORY_DELETION_DATE."="."'0000-00-00 00:00:00' ";
         }
         $query = "SELECT count(repository_id) AS count,
                   YEAR(repository_creation_date) AS year,
@@ -475,12 +508,11 @@ class GitDao extends DataAccessObject {
                   WHERE repository_backend_type = ".$this->da->quoteSmart($backend)."
                     AND repository_creation_date BETWEEN CAST(".$this->da->quoteSmart($startDate)." AS DATETIME) AND CAST(".$this->da->quoteSmart($endDate)." AS DATETIME)
                     ".$condition."
-                    AND status = 'A'
-                    AND ".self::REPOSITORY_DELETION_DATE."="."'0000-00-00 00:00:00'
-                  GROUP BY year, month";
+                  GROUP BY year, month
+                  ORDER BY year, STR_TO_DATE(month,'%M')";
         return $this->retrieve($query);
     }
-    
+
     public function isRepositoryExisting($project_id, $path) {
         $project_id = $this->da->escapeInt($project_id);
         $path       = $this->da->quoteSmart($path);
@@ -491,6 +523,85 @@ class GitDao extends DataAccessObject {
                   AND ".self::REPOSITORY_DELETION_DATE." = '0000-00-00 00:00:00'
                 LIMIT 1";
         return count($this->retrieve($sql)) > 0;
+    }
+    
+    /**
+     * 
+     * @param int $repository_id
+     * @param int $remote_server_id
+     * 
+     * @return Boolean
+     */
+    public function switchToGerrit($repository_id, $remote_server_id) {
+        $repository_id    = $this->da->escapeInt($repository_id);
+        $remote_server_id = $this->da->escapeInt($remote_server_id);
+        $sql = "UPDATE plugin_git
+                SET remote_server_id = $remote_server_id
+                WHERE repository_id = $repository_id";
+        return $this->update($sql);
+    }
+
+    public function disconnectFromGerrit($repository_id) {
+        $repository_id = $this->da->escapeInt($repository_id);
+        $sql = "UPDATE plugin_git
+                SET remote_server_id = 0,
+                    remote_server_disconnect_date = UNIX_TIMESTAMP()
+                WHERE repository_id = $repository_id";
+        return $this->update($sql);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRemoteServerUsed($remote_server_id) {
+        $remote_server_id = $this->da->escapeInt($remote_server_id);
+        $sql = "SELECT NULL
+                FROM plugin_git
+                WHERE remote_server_id = $remote_server_id
+                LIMIT 1";
+        return count($this->retrieve($sql)) > 0;
+    }
+
+    public function searchGerritRepositoriesWithPermissionsForUGroupAndProject($project_id, $ugroup_ids) {
+        $project_id = $this->da->escapeInt($project_id);
+        $ugroup_ids = $this->da->escapeIntImplode($ugroup_ids);
+        $sql = "SELECT *
+                FROM plugin_git git
+                  JOIN permissions ON (
+                    permissions.object_id = CAST(git.repository_id as CHAR)
+                    AND permissions.permission_type LIKE 'PLUGIN_GIT_%')
+                WHERE git.remote_server_id IS NOT NULL
+                  AND git.project_id = $project_id
+                  AND permissions.ugroup_id IN ($ugroup_ids)";
+        return $this->retrieve($sql);
+
+    }
+
+    public function searchAllGerritRepositoriesOfProject($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
+        $sql = "SELECT *
+                FROM plugin_git
+                WHERE remote_server_id IS NOT NULL
+                  AND project_id = $project_id";
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * @param array $ugroup_ids
+     * @return DataAccessResult | false
+     */
+    public function searchGerritRepositoriesIdsWithPermissionsForUGroups($ugroup_ids) {
+        $ugroup_ids = $this->da->escapeIntImplode($ugroup_ids);
+
+        $sql = "SELECT git.repository_id
+                FROM plugin_git AS git
+                  JOIN permissions ON (
+                    permissions.object_id = CAST(git.repository_id as CHAR)
+                    AND permissions.permission_type LIKE 'PLUGIN_GIT_%')
+                WHERE git.remote_server_id IS NOT NULL
+                  AND permissions.ugroup_id IN ($ugroup_ids)";
+
+        return $this->retrieve($sql);
     }
 }
 

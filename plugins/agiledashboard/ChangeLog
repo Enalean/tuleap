@@ -1,3 +1,117 @@
+Version 0.87 - Tuleap 6.2
+    * Fix request #1919: Dynamically load milestones of a planning
+
+
+When a project has many teams, the default number (5) of displayed
+sprints is not sufficient. Let the user click on [more] link in order to
+display additional milestones.
+
+Version 0.86 - Tuleap 6.2
+    * Refactor initiate top planning
+
+Version 0.85 - Tuleap 6.2
+    * Fix border-spacing for top content view
+    * Fix overflow which prevent dropdowns to display when no content
+
+Version 0.84 - Tuleap 6.2
+    * Story 3539: initiate product backlog. Added two new panes for the top backlog
+
+Version 0.83 - Tuleap 6.1
+    * story #2923: Display dedicated planning pane in agiledashboard
+
+Version 0.82 - Tuleap 6.1
+    * Display a new 'Content' pane with the content of a given milestone
+
+Version 0.81 - Tuleap 6.1
+    * Refactoring: Better building of panes
+
+Version 0.80 - Tuleap 5.13
+    * Story #3075 : import a basic agile dashboard template
+
+
+We are now able to export trough the CLI an XML containing :
+Trackers / cardwalls on top and agildashboard's plannings
+
+Still with the CLI, we are able to import this XML into a new project and retrieve all these configurations
+
+Change-Id: I1b1b3f965a6375c857e8feceeebfb21e2554f163
+
+Version 0.79 - Tuleap 5.13
+    * story #3077 see people names instead of avatars on cardwall
+
+Version 0.78 - Tuleap 5.13
+    * Add a plugin dependency solver to force installation of needed plugins
+
+Version 0.77 - Tuleap 5.12
+    * Enhancement: add a tab on top of artifact to display its children
+
+Version 0.76 - Tuleap 5.12
+    * SOAP method related to tracker fields now returns computed field value
+
+Version 0.75 - Tuleap 5.12
+    * Story #2524: see colour type at a glance on cardwall.
+
+Version 0.74 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
+Version 0.73 - Tuleap 5.12
+    * Fix bug on tuleap.net with empty burndown
+
+Version 0.72 - Tuleap 5.11
+    * Fix integration of search in follow-up comments and cross tracker search
+
+Version 0.71 - Tuleap 5.11
+    * Enhancement: first version of a systray
+
+Version 0.70 - Tuleap 5.11
+    * Delegate milestone building to each Pane
+
+Version 0.69 - Tuleap 5.11
+    * Fix bug: start date and end_date are displayed 2 times
+
+Version 0.68 - Tuleap 5.11
+    * Add css rules for avatars
+
+Version 0.67 - Tuleap 5.11
+    * Fix displaybug on milestone selector
+
+Version 0.66 - Tuleap 5.11
+    * Enhancement: displays start and end date of a sprint on the agile dashboard
+
+Version 0.65 - Tuleap 5.11
+    * Refactor rendering of AgileDashboard Panes
+
+Version 0.64 - Tuleap 5.11
+    * Enhancement: update the remaining effort on a story without leaving the agile dashboard
+
+Version 0.63 - Tuleap 5.9
+    * Refactoring
+
+Version 0.62 - Tuleap 5.9
+    * Add autoload to trackers
+
+Version 0.61 - Tuleap 5.9
+    * Fix unit test notice
+
+Version 0.60 - Tuleap 5.8
+    * The title of the milestones title is not anymore displayed as a tab
+
+Version 0.59 - Tuleap 5.7
+    * Fix bugs #1100: Display of plan part broken on firefox.
+Fix bugs #1780: fix arrow location on cardwall item
+
+Version 0.58 - Tuleap 5.7
+    * Add a pane in agiledashboard that displays the sprint burndown.
+
+Version 0.57 - Tuleap 5.6
+    * Fix: typo
+
+Version 0.56 - Tuleap 5.6
+    * Add help messages on agile dashboard
+
+Version 0.55 - Tuleap 5.6
+    * Make agile dashboard home page more user friendly
+
 Version 0.54 - Tuleap 5.5
     * Fix sla #1444: artifacts with two parents throw an exception
 

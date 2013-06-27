@@ -36,6 +36,21 @@ class Test_Git_RepositoryBuilder {
         return $this;
     }
 
+    public function withNamespace($namespace) {
+        $this->repository->setNamespace($namespace);
+        return $this;
+    }
+
+    public function withId($id) {
+        $this->repository->setId($id);
+        return $this;
+    }
+
+    public function withName($name) {
+        $this->repository->setName($name);
+        return $this;
+    }
+
     public function withProject(Project $project) {
         $this->repository->setProject($project);
         return $this;
@@ -45,7 +60,12 @@ class Test_Git_RepositoryBuilder {
         $this->repository->setBackend($backend);
         return $this;
     }
-
+    
+    public function withRemoteServerId($id) {
+        $this->repository->setRemoteServerId($id);
+        return $this;
+    }
+    
     public function build() {
         return $this->repository;
     }

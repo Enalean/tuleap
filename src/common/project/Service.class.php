@@ -136,6 +136,7 @@ class Service {
            $breadcrumbs
         );
         $GLOBALS['HTML']->addBreadcrumbs($breadcrumbs);
+
         foreach($toolbar as $t) {
             $class = isset($t['class']) ? 'class="'. $t['class'] .'"' : '';
             $item_title = isset($t['short_title']) ? $t['short_title'] :$t['title'];

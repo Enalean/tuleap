@@ -54,11 +54,11 @@ function account_add_user_to_group ($group_id,&$user_unix_name) {
  * Add a new user into a given project
  * 
  * @param Integer $group_id Project id
- * @param User    $user     User to add
+ * @param PFUser    $user     User to add
  * 
  * @return Boolean
  */
-function account_add_user_obj_to_group ($group_id, User $user) {
+function account_add_user_obj_to_group ($group_id, PFUser $user) {
     //user was found but if it's a pending account adding
     //is not allowed
     if (!$user->isActive() && !$user->isRestricted()) {
@@ -253,7 +253,7 @@ function account_shellselects($current) {
     if (!$current) {
         $current = '/sbin/nologin';
     }
-    foreach (User::getAllUnixShells() as $shell) {
+    foreach (PFUser::getAllUnixShells() as $shell) {
         $selected = '';
         if ($current == $shell) {
             $selected = ' selected="selected"';
@@ -278,7 +278,7 @@ function account_create($loginname=''
                         ,$expiry_date=0
                         ) {
     $um   = UserManager::instance();
-    $user = new User();
+    $user = new PFUser();
     $user->setUserName($loginname);
     $user->setRealName($realname);
     $user->setPassword($pw);
@@ -309,10 +309,11 @@ function account_create_mypage($user_id) {
 function account_redirect_after_login() {
     global $pv;  
 
-    $em =& EventManager::instance();
-    $em->processEvent('account_redirect_after_login', null);
-
     $request = HTTPRequest::instance();
+
+    $em = EventManager::instance();
+    $em->processEvent('account_redirect_after_login', array('request' => $request));
+
     if($request->existAndNonEmpty('return_to')) {
         $returnToToken = parse_url($request->get('return_to'));
         if(preg_match('{/my(/|/index.php|)}i', $returnToToken['path'])) {

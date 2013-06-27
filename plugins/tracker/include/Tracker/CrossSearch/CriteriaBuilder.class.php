@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ArtifactReportField.class.php';
 
 
 /**
@@ -52,7 +51,7 @@ class Tracker_CrossSearch_CriteriaBuilder {
     /**
      * @return array of \Tracker_Report_Criteria 
      */
-    public function getCriteria(User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
+    public function getCriteria(PFUser $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
         $shared_fields   = $this->getSharedFieldsCriteria($user, $project, $report, $cross_search_query);
         $semantic_fields = $this->getSemanticFieldsCriteria($user, $project, $report, $cross_search_query);
         $artifact_fields = $this->getArtifactLinkCriteria($user, $report, $cross_search_query);
@@ -67,7 +66,7 @@ class Tracker_CrossSearch_CriteriaBuilder {
      * 
      * @return array of \Tracker_Report_Criteria 
      */
-    public function getSharedFieldsCriteria(User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
+    public function getSharedFieldsCriteria(PFUser $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
         $fields            = $this->form_element_factory->getSharedFieldsReadableBy($user, $project);
         $criteria          = array();
         $allowed_field_ids = array();
@@ -88,7 +87,7 @@ class Tracker_CrossSearch_CriteriaBuilder {
     /**
      * @return array of \Tracker_Report_Criteria 
      */
-    public function getSemanticFieldsCriteria(User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
+    public function getSemanticFieldsCriteria(PFUser $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
         $criteria = array();
         
         $this->getSemanticTitleCriteria($criteria, $user, $project, $report, $cross_search_query);
@@ -97,7 +96,7 @@ class Tracker_CrossSearch_CriteriaBuilder {
         return $criteria;
     }
     
-    private function getSemanticStatusCriteria(array &$criteria, User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
+    private function getSemanticStatusCriteria(array &$criteria, PFUser $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
         if ($this->semantic_value_factory->allStatusesAreReadable($user, $project)) {
             $status_field = new Tracker_CrossSearch_SemanticStatusReportField($cross_search_query->getStatus(), $this->semantic_value_factory);
             $criteria[]   = $this->buildCriteria($report, $status_field);
@@ -106,7 +105,7 @@ class Tracker_CrossSearch_CriteriaBuilder {
         }
     }
     
-    private function getSemanticTitleCriteria(array &$criteria, User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
+    private function getSemanticTitleCriteria(array &$criteria, PFUser $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
         if ($this->semantic_value_factory->allTitlesAreReadable($user, $project)) {
             $title_field = new Tracker_CrossSearch_SemanticTitleReportField($cross_search_query->getTitle(), $this->semantic_value_factory);
             $criteria[]  = $this->buildCriteria($report, $title_field);
@@ -115,7 +114,7 @@ class Tracker_CrossSearch_CriteriaBuilder {
         }
     }
 
-    public function getArtifactLinkCriteria(User $user, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
+    public function getArtifactLinkCriteria(PFUser $user, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
         $criteria = array();
         
         $allowed_artifact_ids = array();
@@ -148,7 +147,7 @@ class Tracker_CrossSearch_CriteriaBuilder {
         return $current_value;
     }
     
-    public function userCanSearchOnArtifact(User $user, Tracker_Artifact $artifact) {
+    public function userCanSearchOnArtifact(PFUser $user, Tracker_Artifact $artifact) {
         return ($artifact->getTracker()->getTitleField() !== null)
             && $artifact->getTracker()->getTitleField()->userCanRead($user)
             && ($artifact->getAnArtifactLinkField($user) !== null);

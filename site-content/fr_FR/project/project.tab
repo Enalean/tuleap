@@ -18,6 +18,16 @@ project_admin_editgroupinfo	soft_required	Autre(s) logiciel(s) requis
 project_admin_editgroupinfo	comments	Autre commentaires&nbsp;:
 project_admin_editgroupinfo	license_comment	Commentaires à propos de la licence non répertoriée utilisée par ce projet&nbsp;:
 project_admin_editgroupinfo	info_missed	Information Manquante. SVP remplissez tous les champs requis.
+project_admin_editgroupinfo	parent_project	Projet parent :
+project_admin_editgroupinfo	sub_projects	Sous projets :
+project_admin_editgroupinfo	project_hierarchy_title	Hierarchie de projets
+project_admin_editgroupinfo	project_hierarchy_desc_1	Cette fonctionnalité permettra, à terme, d'organiser vos projects les uns par rapport aux autres en terme de permissions, groupes d'utilisateurs et contrôle.
+project_admin_editgroupinfo	project_hierarchy_desc_2	Cependant, à l'heure actuelle, elle n'est exploitée que par Git/Gerrit pour les projets "parapluies" (si ces services sont activés/disponibles sur votre plate-forme).
+project_admin_editgroupinfo	project_hierarchy_desc_3	Veuillez noter que, plus tard, au cours de futurs développements, la définition d'une hierarchy pourra avoir un impact sur l'organisation des enfants (ex. les administrateurs d'un projet parent pourraient automatiquement avoir accès à l'administration des tous les enfants et petits enfants).
+project_admin_editgroupinfo	autocompleter_placeholder	Nom du projet (auto completé à la volée)
+project_admin_editgroupinfo	remove_parent_project	Supprimer le projet parent
+project_admin_editgroupinfo	self_exception	Un projet ne peut être son propre parent.
+project_admin_editgroupinfo	ancestor_exception	Un lien de parenté existe déjà entre ces projets.
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editservice.php
@@ -118,6 +128,7 @@ project_admin_editugroup	sel01	Sélection 01 - veuillez ignorer
 project_admin_editugroup	please_wait	Veuillez patienter...
 project_admin_editugroup	filter	Filtre&nbsp;:
 project_admin_editugroup	ug_perms	Ce groupe d'utilisateurs possède les permissions suivantes&nbsp;:
+project_admin_editugroup	no_perms	Ce groupe d'utilisateurs ne possède pas encore des permissions
 project_admin_editugroup	permission	Permission
 project_admin_editugroup	resource_name	Nom de la ressource
 project_admin_editugroup	release		Version
@@ -135,7 +146,7 @@ project_admin_editugroup	go_back	Retourner à la liste des groupes d'utilisateur
 project_admin_editugroup	add_user	Ajouter des utilisateurs à ce groupe
 project_admin_editugroup	members	Membres
 project_admin_editugroup	users	Utilisateurs
-project_admin_editugroup	search_in	Chercher dans 
+project_admin_editugroup	search_in	Ou chercher dans 
 project_admin_editugroup	any_project	tous les projets
 project_admin_editugroup	this_project	ce projet
 project_admin_editugroup	name_contains	 les utilisateurs dont le nom ou l'adresse email contient 
@@ -144,6 +155,12 @@ project_admin_editugroup	show	Afficher
 project_admin_editugroup	users_per_page	utilisateurs par page.
 project_admin_editugroup	add_users_to	Ajouter des utilisateurs à 
 project_admin_editugroup	group_empty	le groupe est vide
+project_admin_editugroup	permissions_title	Gestion des permissions
+project_admin_editugroup	settings_title	Paramètres
+project_admin_editugroup	binding_title	Lier des groupes
+project_admin_editugroup	parent	Projet parent : 
+project_admin_editugroup	no_parent	Ce projet n'a pas de parent
+project_admin_editugroup	go_to_hierarchy_admin	Administration de la hiérarchie de projets
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/grouptrove.php
@@ -452,9 +469,12 @@ project_admin_utils	verify_dates	La date de début doit être inférieure à la 
 project_admin_utils	from	Depuis
 project_admin_utils	to	Jusqu'a
 project_admin_utils	status	Statut modifié
+project_admin_utils	ugroup_add_binding	Liaison avec groupe d'utilisateurs ajoutée
+project_admin_utils	ugroup_remove_binding	Liaison avec groupe d'utilisateurs enlevée
 project_admin_utils	frs_self_add_monitor_package	Auto ajout du suivi de paquet
 project_admin_utils	frs_add_monitor_package	Ajout du suivi de paquet
 project_admin_utils	frs_stop_monitor_package	Arrêt du suivi de paquet
+project_admin_utils	ugroup_binding	Liens
 #... end of values
 #
 #-----------------------------------------------
@@ -675,6 +695,7 @@ project_export_bug_export	depend_on_bugs_desc	Liste des bus dont celui-ci dépen
 # Script: SF/www/project/export/index.php
 #
 project_export_index	proj_db_success	La base de données de votre projet a été créé avec succès. Vous pouvez maintenant utiliser votre application préférée et accéder à vos données en utilisant le pilote ODBC/JDBC de MySQL installé sur votre ordinateur. Les paramètres de connexion à la base de données pour le pilote ODB/JDC sont les suivants&nbsp;:
+project_export_index	proj_db_no_data	Aucune donnée exportable. Seuls les <strong>sondages</strong> et les <strong>outils de suivi v3</strong> sont exportables.
 project_export_index	export_to_csv_or_db	Les données de votre projet peuvent être exportées dans des fichiers texte (format CSV) ou dans une base de données spécifique à laquelle vous pouvez vous connecter depuis votre environnement de travail en utilisant le pilote ODBC/JDBC approprié. Voir l'$1 pour plus d'information.
 project_export_index	export_to_csv_hdr	Exporter au format texte $1
 project_export_index	export_to_csv_msg	Cliquer sur un des liens ci-dessous pour exporter les données au format texte (CSV format).
@@ -967,4 +988,44 @@ project_privacy	tooltip_public_wo_anon	<p>Le niveau de confidentialité du proje
 
 project_service	service_not_used	Le service $1 n'est pas activé
 project	does_not_exist	Le projet n'existe pas
+#-----------------------------------------------
+# Script: /www/project/admin/ugroup_binding.php
+#
+project_ugroup_binding	ugroup	Groupe d'utilisateurs
+project_ugroup_binding	binding	Liaisons
+project_ugroup_binding	edit_binding_title	Editer la liaison avec le groupe d'utilisateurs
+project_ugroup_binding	update_binding	Mettre à jour la liaison
+project_ugroup_binding	add_binding	Ajouter une liaison
+project_ugroup_binding	binding_added	Liaison ajoutée
+project_ugroup_binding	add_error	Une erreur est survenue lors de l'ajout de liaison avec le groupe d'utilisateurs
+project_ugroup_binding	duplicate_binding_warning	Le groupe d'utilisateurs ayant l'id $1 est déjà défini comme source de liaison.
+project_ugroup_binding	binding_removed	Liaison avec le groupe d'utilisateurs faite avec succés
+project_ugroup_binding	remove_error	La liaison avec le groupe d'utilisateurs n'a pas été enlevée
+project_ugroup_binding	current_binding	Liaison actuelle
+project_ugroup_binding	binding_sources	Groupes d'utilisateurs liés à celui ci
+project_ugroup_binding	edit_binding	Modifier la liaison
+project_ugroup_binding	source_project	Projet source
+project_ugroup_binding	source_ugroup	groupe d'utilisateurs source
+project_ugroup_binding	no_binding	Ce groupe d'utilisateurs n'est lié a aucun autre groupe
+project_ugroup_binding	remove_binding	Enlever la liaison actuelle
+project_ugroup_binding	current_binded	Ce groupe d'utilisateurs est lié au groupe $1 dans le projet $2
+project_ugroup_binding	not_source	Ce groupe d'utilisateurs n'est la source d'aucun autre groupe d'utilisateurs
+project_ugroup_binding	update_user_not_allowed	La mise à jour d'utilisateurs n'est pas autorisée pour le groupe d'utilisateurs $1
+project_ugroup_binding	reset_error	Impossible de réinitialiser le groupe d'utilisateurs $1
+project_ugroup_binding	clone_error	Impossible de cloner le groupe d'utilisateurs $1
 
+#-----------------------------------------------
+# Script: /www/project/admin/ugroup/UGroupController.class.php
+#
+
+project_ugroup_binding	ldap_group_error	Le groupe LDAP '$1' n'existe pas.
+project_ugroup_binding	link_ldap_group	Le groupe LDAP '$1' a correctement été lié au projet.
+project_ugroup_binding	ldap_group_empty	Le groupe LDAP doit être renseigné.
+project_ugroup_user	add_username	Entrez le nom d'utilisateur
+
+project_admin	generic_member_settings	Paramètres de l'utilisateur générique
+project_admin	generic_member_updated	Paramètres de l'utilisateur générique mis à jour
+project_admin	generic_member_not_updated	Erreur pendant la mise à jour des paramètres de l'utilisateur générique
+project_admin	generic_member_not_changed	Les parmètres de l'utilisateur générique n'ont pas été mis à jour
+project_admin	generic_member_leave_blank	Laisser vide si vous souhaitez conserver le mot de passe actuel
+project_admin	edit_generic_user_settings	éditer les paramètres

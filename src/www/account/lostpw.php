@@ -6,6 +6,8 @@
 //
 // 
 
+header("Cache-Control: no-cache, no-store, must-revalidate");
+
 require_once('pre.php');
 
 

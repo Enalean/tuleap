@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Tracker_FormElement_Field_Shareable.class.php';
+require_once 'common/layout/ColorHelper.class.php';
 
 abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElement_Field_Shareable {
 
@@ -51,16 +51,46 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     }
 
     /**
-     * @return array all values of the field
+     * @return Tracker_FormElement_Field_List_BindValue[]
      */
     public abstract function getAllValues();
+
     /**
      * Get available values of this field for SOAP usage
      * Fields like int, float, date, string don't have available values
      *
      * @return mixed The values or null if there are no specific available values
      */
-    public abstract function getSoapAvailableValues();
+    public function getSoapAvailableValues() {
+        $soap_values = array();
+        foreach($this->getAllValues() as $value) {
+            $soap_values[] = $this->getSoapBindValue($value);
+        }
+        return $soap_values;
+    }
+
+    private function getSoapBindValue($value) {
+        return array(
+            'bind_value_id'    => $value->getId(),
+            'bind_value_label' => $value->getSoapValue()
+        );
+    }
+
+    public function getSoapBindingProperties() {
+        $bind_factory = new Tracker_FormElement_Field_List_BindFactory();
+        $bind_type = $bind_factory->getType($this);
+        return array(
+            'bind_type' => $bind_type,
+            'bind_list' => $this->getSoapBindingList()
+        );
+    }
+
+    /**
+     *
+     * @return array
+     */
+    protected abstract function getSoapBindingList();
+    
     /**
      * Get the field data for artifact submission
      *
@@ -111,7 +141,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     /**
      * @return string
      */
-    public function formatCardValue($value) {
+    public function formatCardValue($value, Tracker_CardDisplayPreferences $display_preferences) {
         return $this->formatChangesetValue($value);
     }
     
@@ -126,6 +156,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     public function formatArtifactValue($value_id) {
         if ($value_id != 100) {
             return $this->formatCriteriaValue($value_id);
+        } else {
+            return '-';
         }
     }
 
@@ -160,6 +192,15 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      */
     public abstract function getQuerySelect();
     
+    /**
+     * Get the "select" statement to retrieve field values with their decorator if they exist
+     * @return string
+     * @see getQuerySelect
+     */
+    public function getQuerySelectWithDecorator() {
+        return $this->getQuerySelect();
+    }
+    
     
     /**
      * Get the "from" statement to retrieve field values
@@ -171,6 +212,15 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @return string
      */
     public abstract function getQueryFrom($changesetvalue_table = 'tracker_changeset_value_list');
+    
+	/**
+     * Get the "from" statement to retrieve field values with their decorator if they exist
+     * @return string
+     * @see getQueryFrom
+     */
+    public function getQueryFromWithDecorator($changesetvalue_table = 'tracker_changeset_value_list') {
+        return $this->getQueryFrom($changesetvalue_table);
+    }
     
     /**
      * Get the field
@@ -314,7 +364,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @param array            &$xmlMapping the correspondance between real ids and XML IDs
      * @param string           $fieldID     XML ID of the binded field
      */
-    public abstract function exportToXML($root, &$xmlMapping, $fieldID);
+    public abstract function exportToXml(SimpleXMLElement $root, &$xmlMapping, $fieldID);
     
     /**
      * Give an extract of the bindvalues defined. The extract is based on $bindvalue_ids. 
@@ -399,7 +449,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
         if (is_array($this->decorators) && !empty($this->decorators)) {
             $values = $this->getBindValues();
             foreach ( $this->decorators as $decorator) {
-                $hexacolor = Tracker_FormElement_Field_List_BindDecorator::toHexa($decorator->r, $decorator->g, $decorator->b);
+                $hexacolor = ColorHelper::RGBtoHexa($decorator->r, $decorator->g, $decorator->b);
                 Tracker_FormElement_Field_List_BindDecorator::save($this->field->getId(), $values[$decorator->value_id]->getId(), $hexacolor);
             }
         }

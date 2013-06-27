@@ -31,6 +31,11 @@
     font-weight: bold;
 }
 
+.agiledashboard > .tab-content {
+    padding-bottom: 1em;
+    overflow: visible;
+}
+
 .planning-backlog > table {
     width: 100%;
 }
@@ -50,7 +55,6 @@
     color: #999;
     margin-top: 0;
 }
-
 .agiledashboard .cards {
   list-style: none;
   margin: 0;
@@ -168,4 +172,113 @@
 }
 .card-planning-controls > div > i:hover {
     opacity:1;
+}
+
+.ad_index_plannings {
+    list-style: none;
+    margin: 0;
+    padding: 1em;
+    text-align: center;
+}
+.ad_index_planning {
+    margin-right: 1em;
+    text-align: left;
+    
+    background: #fcfcfc;
+    min-width: 100px;
+    border:1px solid #ccc;
+    padding: 0.25em 0em;
+    border-radius: 0.5em;
+    
+    display: inline-block;
+    zoom: 1;
+    *display: inline;
+    vertical-align: top;
+    position: relative;
+}
+.ad_index_planning > .dropdown {
+    margin: auto 1em;
+}
+.ad_index_planning > ul {
+    list-style: none;
+    margin: auto 0;
+    padding: 0;
+}
+.ad_index_planning > ul > li {
+    clear: both;
+    padding: 0.25em 1em;
+}
+.ad_index_planning > ul > li.active {
+    background: #eee;
+}
+.ad_index_planning > .dropdown > a:hover {
+    text-decoration: none;
+}
+.ad_index_planning > .dropdown > a > h2 {
+    color: #333;
+}
+.ad_index_planning_icons {
+    margin-left:0.5em;
+    float:right;
+}
+
+.release-date-info {
+    margin-top: -0.5em;
+    margin-bottom: 1em;
+    font-size: 1.5em;
+    color: #999;
+}
+
+#topblcontent table,
+#topplanning table,
+#planning table,
+#blcontent table {
+    border-spacing: 0;
+}
+
+#topblcontent table,
+#blcontent table {
+    width: auto;
+}
+.submilestone-element-rows > tbody > tr,
+.milestone-content-open-rows > tr {
+    cursor: move;
+}
+.milestone-content-open-rows .ui-sortable-helper {
+  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+     -moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+          box-shadow: 0 1px 4px rgba(0,0,0,.065);
+}
+.milestone-content-open-rows .ui-sortable-helper > td {
+    border-bottom: 1px solid #dddddd;
+}
+
+.table .agiledashboard-planning-submilestones-addnew,
+.table .agiledashboard-planning-submilestone-header-info {
+    text-align: right;
+    border-left: none;
+    white-space: nowrap;
+}
+
+.table .agiledashboard-planning-submilestone-header > th {
+    cursor: pointer;
+    background-color: #EBEBEB;
+}
+
+.submilestone-data > a {
+    float: right;
+}
+
+.agiledashboard-planning-submilestone-header > th:first-child {
+    color: #067EC9;
+}
+
+.empty-table-placeholder > td {
+    text-align: center;
+    font-style: italic;
+    cursor: default;
+}
+
+.empty-table-placeholder {
+    display: none;
 }

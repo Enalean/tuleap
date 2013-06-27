@@ -43,6 +43,7 @@ require_once('common/system_event/include/SystemEvent_UGROUP_MODIFY.class.php');
 require_once('common/system_event/include/SystemEvent_EDIT_SSH_KEYS.class.php');
 require_once('common/system_event/include/SystemEvent_ROOT_DAILY.class.php');
 require_once('common/system_event/include/SystemEvent_COMPUTE_MD5SUM.class.php');
+require_once('common/system_event/include/SystemEvent_SVN_UPDATE_HOOKS.class.php');
 
 // Backends
 require_once('common/backend/Backend.class.php');
@@ -68,6 +69,7 @@ class SystemEventManager {
             Event::PROJECT_RENAME,
             Event::USER_RENAME,
             Event::COMPUTE_MD5SUM,
+            Event::SVN_UPDATE_HOOKS,
             'approve_pending_project',
             'project_is_deleted',
             'project_admin_add_user',
@@ -115,7 +117,15 @@ class SystemEventManager {
         }
         return self::$_instance;
     }
-    
+
+    public function setInstance(SystemEventManager $instance) {
+        self::$_instance = $instance;
+    }
+
+    public function clearInstance() {
+        self::$_instance = null;
+    }
+
     function _getEventManager() {
         return EventManager::instance();
     }
@@ -145,7 +155,7 @@ class SystemEventManager {
             break;
         case Event::EDIT_SSH_KEYS:
             $this->createEvent(SystemEvent::TYPE_EDIT_SSH_KEYS,
-                               $params['user_id'],
+                               $this->concatParameters($params, array('user_id', 'original_keys')),
                                SystemEvent::PRIORITY_MEDIUM);
             break;
         case Event::USER_EMAIL_CHANGED:
@@ -250,12 +260,20 @@ class SystemEventManager {
                                '',
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-               case Event::COMPUTE_MD5SUM:
+        case Event::COMPUTE_MD5SUM:
             $this->createEvent(SystemEvent::TYPE_COMPUTE_MD5SUM,
                                $params['fileId'],
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-  
+
+        case Event::SVN_UPDATE_HOOKS:
+            $this->createEvent(
+                SystemEvent::TYPE_SVN_UPDATE_HOOKS,
+                $params['group_id'],
+                SystemEvent::PRIORITY_MEDIUM
+            );
+            break;
+
         default:
 
             break;
@@ -265,11 +283,12 @@ class SystemEventManager {
     /**
      * Create a new event, store it in the db and send notifications
      */
-    public function createEvent($type, $parameters, $priority) {
-        if ($id = $this->dao->store($type, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'])) {
+    public function createEvent($type, $parameters, $priority,$owner=SystemEvent::OWNER_ROOT) {
+        if ($id = $this->dao->store($type, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'],$owner)) {
             $klass = 'SystemEvent_'. $type;
             $sysevent = new $klass($id, 
-                                   $type, 
+                                   $type,
+                                   $owner,
                                    $parameters,
                                    $priority, 
                                    SystemEvent::STATUS_NEW, 
@@ -293,51 +312,7 @@ class SystemEventManager {
         }
         return implode(SystemEvent::PARAMETER_SEPARATOR, $concat);
     }
-    
-    /**
-     * Process stored events. Should this be moved to a new class?
-     */
-    function processEvents() {        
-        while (($dar=$this->dao->checkOutNextEvent()) != null) {            
-            if ($row = $dar->getRow()) {
-                //echo "Processing event ".$row['id']." (".$row['type'].")\n";
-                $sysevent = $this->getInstanceFromRow($row);               
-                // Process $sysevent
-                if ($sysevent) {
-                    Backend::instance('Backend')->log("Processing event #".$sysevent->getId()." ".$sysevent->getType()."(".$sysevent->getParameters().")", Backend::LOG_INFO);
-                    $sysevent->process();
-                    $this->dao->close($sysevent);
-                    $sysevent->notify();
-                    Backend::instance('Backend')->log("Processing event #".$sysevent->getId().": done.", Backend::LOG_INFO);
-                    // Output errors???
-                }
-            }
-        }
-        // Since generating aliases may be costly, do it only once everything else is processed
-        if (Backend::instance('Aliases')->aliasesNeedUpdate()) {
-            Backend::instance('Aliases')->update();
-        }
 
-        // Update CVS root allow file once everything else is processed
-        if (Backend::instance('CVS')->getCVSRootListNeedUpdate()) {
-            Backend::instance('CVS')->CVSRootListUpdate();
-        }
-
-        // Update SVN root definition for Apache once everything else is processed
-        if (Backend::instance('SVN')->getSVNApacheConfNeedUpdate()) {
-            Backend::instance('SVN')->generateSVNApacheConf();
-            // Need to refresh apache (graceful)
-            system('/sbin/service httpd graceful');
-        }
-        // Update system user and group caches once everything else is processed
-        if (Backend::instance('System')->getNeedRefreshUserCache()) {
-            Backend::instance('System')->refreshUserCache();
-        }
-        if (Backend::instance('System')->getNeedRefreshGroupCache()) {
-            Backend::instance('System')->refreshGroupCache();
-        }
-    }
-    
     /**
      * Instantiate a SystemEvent from a row
      *
@@ -345,7 +320,7 @@ class SystemEventManager {
      *
      * @return SystemEvent
      */
-    protected function getInstanceFromRow($row) {
+    public function getInstanceFromRow($row) {
         $em           = EventManager::instance();
         $sysevent     = null;
         $klass        = null;
@@ -372,13 +347,20 @@ class SystemEventManager {
         case SystemEvent::TYPE_COMPUTE_MD5SUM:
             $klass = 'SystemEvent_'. $row['type'];
             break;
+
+        case SystemEvent::TYPE_SVN_UPDATE_HOOKS:
+            $klass = 'SystemEvent_'. $row['type'];
+            $klass_params = array(Backend::instance(Backend::SVN));
+            break;
+
         default:
             $em->processEvent(Event::GET_SYSTEM_EVENT_CLASS, array('type' => $row['type'], 'class' => &$klass, 'dependencies' => &$klass_params));
             break;
         }
-        if (!empty($klass)) {
+        if (class_exists($klass)) {
             $sysevent = new $klass($row['id'],
                                    $row['type'],
+                                   $row['owner'],
                                    $row['parameters'],
                                    $row['priority'],
                                    $row['status'],
@@ -433,6 +415,7 @@ class SystemEventManager {
             $html .= '<thead><tr>';
             $html .= '<th class="boxtitle">'. 'id' .'</td>';
             $html .= '<th class="boxtitle">'. 'type' .'</td>';
+            $html .= '<th class="boxtitle">'. 'owner' .'</td>';
             $html .= '<th class="boxtitle" style="text-align:center">'. 'status' .'</th>';
             $html .= '<th class="boxtitle" style="text-align:center">'. 'priority' .'</th>';
             $html .= '<th class="boxtitle">'. 'parameters' .'</th>';
@@ -473,6 +456,8 @@ class SystemEventManager {
                 
                 //name of the event
                 $html .= '<td>'. $sysevent->getType() .'</td>';
+
+                $html .= '<td>'. $sysevent->getOwner() .'</td>';
                 
                 //status
                 $html .= '<td class="system_event_status_'. $row['status'] .'"';
@@ -497,7 +482,7 @@ class SystemEventManager {
                     $html .= '<td>'. $sysevent->getCreateDate().'</td>';
                     $html .= '<td>'. $sysevent->getProcessDate() .'</td>';
                     $html .= '<td>'. $sysevent->getEndDate() .'</td>';
-                    $html .= '<td>'. $sysevent->getLog() .'</td>';
+                    $html .= '<td>'. nl2br($sysevent->getLog()) .'</td>';
                     $html .= '<td>'. $replay_link .'</td>';
                 }
                 
@@ -536,32 +521,44 @@ class SystemEventManager {
         }
         return $html;
     }
+
     /**
-     * Return true if there is no pending rename event of this user, otherwise false
-     * 
-     * @param User $user 
-     * @return Boolean
+     *
+     * @param type $event_type
+     * @param type $parameter
+     * @return boolean
      */
-    public function canRenameUser($user) {
-        $dar = $this->_getDao()->searchWithParam('head', $user->getId(), array(SystemEvent::TYPE_USER_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
-        if ($dar && !$dar->isError() && $dar->rowCount() == 0) {
+    public function isThereAnEventAlreadyOnGoing($event_type, $parameter) {
+        $dar = $this->_getDao()->searchWithParam(
+            'head',
+             $parameter,
+             array($event_type),
+             array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING)
+        );
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Return true if there is no pending rename event of this user, otherwise false
+     * 
+     * @param PFUser $user 
+     * @return Boolean
+     */
+    public function canRenameUser($user) {
+        return ! $this->isThereAnEventAlreadyOnGoing(SystemEvent::TYPE_USER_RENAME, $user->getId());
     }
     
     /**
      * Return true if there is no pending rename event of this project, otherwise false
      * 
-     * @param User $user 
+     * @param PFUser $user 
      * @return Boolean
      */
     public function canRenameProject($project) {
-        $dar = $this->_getDao()->searchWithParam('head', $project->getId(), array(SystemEvent::TYPE_PROJECT_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
-        if ($dar && !$dar->isError() && $dar->rowCount() == 0) {
-            return true;
-        }
-        return false;
+        return ! $this->isThereAnEventAlreadyOnGoing(SystemEvent::TYPE_PROJECT_RENAME, $project->getId());
     }
     
     

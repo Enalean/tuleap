@@ -17,41 +17,48 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once('PostAction/Transition_PostAction.class.php');
-
 class Transition {
     public $transition_id;
     public $workflow_id;
-    
+
     /**
      * @var Tracker_FormElement_Field_List_Value
      */
     protected $from = null;
-    
+
     /**
      * @var Tracker_FormElement_Field_List_Value
      */
     protected $to   = null;
-    
+
     /**
      * @var Array of Transition_PostAction
      */
     protected $post_actions = array();
-    
+
+    /**
+     * @var Array of Transition_PostAction run after fields validation
+     */
+    protected $post_actions_after = array();
+
+    /**
+     * @var Array of Workflow_Transition_Condition
+     */
+    private $conditions = array();
+
     /**
      * @var Array of permissions
      */
     protected $cache_permissions = array();
-    
+
     /**
      * @var Workflow
      */
     protected $workflow = null;
-    
+
     /**
      * Constructor
-     * 
+     *
      * @param Integer                              $transition_id Id of the transition
      * @param Integer                              $workflow_id   Id of the workflow
      * @param Tracker_FormElement_Field_List_Value $from          Source value
@@ -63,7 +70,7 @@ class Transition {
         $this->from          = $from;
         $this->to            = $to;
     }
-    
+
     /**
      * Set workflow
      *
@@ -72,25 +79,25 @@ class Transition {
     public function setWorkflow(Workflow $workflow) {
         $this->workflow = $workflow;
     }
-    
+
     /**
      * Access From field value
-     * 
+     *
      * @return Tracker_FormElement_Field_List_Value
      */
     public function getFieldValueFrom() {
         return $this->from;
     }
-    
+
     /**
      * Access To field value
-     * 
+     *
      * @return Tracker_FormElement_Field_List_Value
      */
     public function getFieldValueTo() {
         return $this->to;
     }
-    
+
     /**
      * Says if this transition is equals to another transtion
      *
@@ -103,39 +110,46 @@ class Transition {
         $source_to   = $this->getFieldValueTo();
         $target_from = $transition->getFieldValueFrom();
         $target_to   = $transition->getFieldValueTo();
-        
+
         return is_null($source_from) && is_null($target_from) && is_null($source_to) && is_null($target_to)
-                
-            || is_null($source_from) && is_null($target_from) && !is_null($source_to) && !is_null($target_to) 
+
+            || is_null($source_from) && is_null($target_from) && !is_null($source_to) && !is_null($target_to)
                 && $source_to->getId() === $target_to->getId()
-                
-            || !is_null($source_from) && !is_null($target_from) && is_null($source_to) && is_null($target_to) 
+
+            || !is_null($source_from) && !is_null($target_from) && is_null($source_to) && is_null($target_to)
                 && $source_from->getId() === $target_from->getId()
-                
-            || !is_null($source_from) && !is_null($target_from) && !is_null($source_to) && !is_null($target_to) 
+
+            || !is_null($source_from) && !is_null($target_from) && !is_null($source_to) && !is_null($target_to)
                 && $source_from->getId() === $target_from->getId() && $source_to->getId() === $target_to->getId();
     }
-    
+
     /**
-     * Get the transition id     
-     * 
+     * Get the transition id
+     *
+     * @deprecated since Tuleap 5.7
+     * @see getId()
+     *
      * @return int
      */
     public function getTransitionId() {
         return $this->transition_id;
     }
-    
+
+    public function getId() {
+        return $this->transition_id;
+    }
+
     /**
      * Set the transition id
-     * 
+     *
      * @param int $id the transition id
-     * 
+     *
      * @return int
      */
     public function setTransitionId($id) {
         $this->transition_id = $id;
     }
-    
+
     /**
      * Get parent workflow
      *
@@ -147,37 +161,67 @@ class Transition {
         }
         return $this->workflow;
     }
-    
+
     public function displayTransitionDetails() {
     }
-    
-    
+
+    /**
+     * @return int
+     */
+    public function getGroupId() {
+        return $this->getWorkflow()->getTracker()->getGroupId();
+    }
+
     /**
      * Execute actions before transition happens
-     * 
+     *
      * @param Array $fields_data Request field data (array[field_id] => data)
-     * @param User  $current_user The user who are performing the update
-     * 
+     * @param PFUser  $current_user The user who are performing the update
+     *
      * @return void
      */
-    public function before(&$fields_data, User $current_user) {
+    public function before(&$fields_data, PFUser $current_user) {
         $post_actions = $this->getPostActions();
         foreach ($post_actions as $post_action) {
             $post_action->before($fields_data, $current_user);
         }
     }
-    
+
+    /**
+     * Execute actions after transition happenstype
+     * 
+     * @param Tracker_Artifact_Changeset $changeset
+     * @return void
+     */
+    public function after(Tracker_Artifact_Changeset $changeset) {
+        $post_actions = $this->getPostActions();
+        foreach ($post_actions as $post_action) {
+            $post_action->after($changeset);
+        }
+    }
+
+    /**
+     * Validate that transition can occur
+     *
+     * @param Array $fields_data Request field data (array[field_id] => data)
+     *
+     * @return bool, true if the transition can occur, false otherwise
+     */
+    public function validate($fields_data, Tracker_Artifact $artifact) {
+        return $this->getConditions()->validate($fields_data, $artifact);
+    }
+
     /**
      * Set Post Actions for the transition
-     * 
+     *
      * @param Array $post_actions array of Transition_PostAction
-     * 
+     *
      * @return void
      */
     public function setPostActions($post_actions) {
         $this->post_actions = $post_actions;
     }
-    
+
     /**
      * Get Post Actions for the transition
      *
@@ -186,7 +230,25 @@ class Transition {
     public function getPostActions() {
         return $this->post_actions;
     }
-    
+
+    /**
+     * Get Post Actions for the transition
+     *
+     * @return Array
+     */
+    public function getAllPostActions() {
+        return array_merge($this->post_actions, $this->post_actions_after);
+    }
+
+    /**
+     * Get Post Actions for the transition
+     *
+     * @return Array
+     */
+    public function getPostActionsAfter() {
+        return $this->post_actions_after;
+    }
+
     /**
      * Get the html code needed to display the post actions in workflow admin
      *
@@ -195,7 +257,7 @@ class Transition {
     public function fetchPostActions() {
         $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
-        if ($post_actions = $this->getPostActions()) {
+        if ($post_actions = $this->getAllPostActions()) {
             $html .= '<table class="workflow_actions" width="100%" cellpadding="0" cellspacing="10">';
             foreach ($post_actions as $pa) {
                 $classnames = $pa->getCssClasses();
@@ -215,7 +277,7 @@ class Transition {
                 $html .= '<label class="pc_checkbox" title="'. $hp->purify($GLOBALS['Language']->getText('workflow_admin','remove_postaction')) .'">&nbsp';
                 $html .= '<input type="checkbox" name="remove_postaction['. (int)$pa->getId() .']" value="1" />';
                 $html .= '</label>';
-                
+
                 $html .= '</td></tr>';
             }
             $html .= '</table>';
@@ -224,28 +286,35 @@ class Transition {
         }
         return $html;
     }
-    
+
     /**
-     * Set the permissions for the ugroup_id
-     * Use during the two-step xml import
-     *
-     * @param Array    $ugroup_ids An array of ugroup id
-     *
-     * @return void
+     * @return string html permission form for the transition
      */
-    public function setPermissions($ugroup_ids) {
-        $this->cache_permissions = $ugroup_ids;
+    public function fetchConditions() {
+        return $this->getConditions()->fetch();
     }
-    
+
     /**
-     * Get the permissions for this transition
-     *
-     * @return array
+     * @return Workflow_Transition_ConditionsCollection
      */
-    public function getPermissions() {
-        return $this->cache_permissions;
+    public function getConditions() {
+        if (! $this->conditions) {
+            $this->conditions = $this->getConditionFactory()->getConditions($this);
+        }
+        return $this->conditions;
     }
-    
+
+    public function setConditions(Workflow_Transition_ConditionsCollection $conditions) {
+        $this->conditions = $conditions;
+    }
+
+    /**
+     * @return Workflow_Transition_ConditionFactory
+     */
+    private function getConditionFactory() {
+        return Workflow_Transition_ConditionFactory::build();
+    }
+
     /**
      * Export transition to XML
      *
@@ -254,7 +323,7 @@ class Transition {
      *
      * @return void
      */
-    public function exportToXml(&$root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         $child = $root->addChild('transition');
         if ($this->getFieldValueFrom() == null) {
             $child->addChild('from_id')->addAttribute('REF', 'null');
@@ -262,7 +331,7 @@ class Transition {
             $child->addChild('from_id')->addAttribute('REF', array_search($this->getFieldValueFrom()->getId(), $xmlMapping['values']));
         }
         $child->addChild('to_id')->addAttribute('REF', array_search($this->getFieldValueTo()->getId(), $xmlMapping['values']));
-        
+
         $postactions = $this->getPostActions();
         if ($postactions) {
             $grand_child = $child->addChild('postactions');
@@ -270,30 +339,10 @@ class Transition {
                 $postaction->exportToXML($grand_child, $xmlMapping);
             }
         }
-        
-        $pm = $this->getPermissionsManager();
-        $transition_ugroups = $pm->getAuthorizedUgroups($this->getTransitionId(), 'PLUGIN_TRACKER_WORKFLOW_TRANSITION');
-        
-        if ($transition_ugroups) {
-            $grand_child = $child->addChild('permissions');
-            
-            foreach ($transition_ugroups as $transition_ugroup) {
-                if (($ugroup = array_search($transition_ugroup['ugroup_id'], $GLOBALS['UGROUPS'])) !== false && $transition_ugroup['ugroup_id'] < 100) {
-                    $grand_child->addChild('permission')->addAttribute('ugroup', $ugroup);
-                }
-            }
-        }
+
+        $this->getConditions()->exportToXML($child, $xmlMapping);
     }
-    
-   /**
-    * Wrapper for PermissionsManager
-    *
-    * @return PermissionsManager
-    */
-    public function getPermissionsManager() {
-        return PermissionsManager::instance();
-    }
-    
+
    /**
     * Indicates if permissions on a field can be bypassed
     *
@@ -309,6 +358,33 @@ class Transition {
             }
         }
         return false;
+    }
+
+    /**
+     * Creates   the soap format of the transition
+     * @return array the soap format of the transition
+     */
+    public function exportToSOAP() {
+        return array(
+            'from_id' => $this->getIdFrom(),
+            'to_id'   => $this->getIdTo(),
+        );
+    }
+
+    private function getIdFrom() {
+        $from = $this->getFieldValueFrom();
+        if ($from) {
+            return $from->getId();
+        }
+        return '';
+    }
+
+    public function getIdTo() {
+        $to = $this->getFieldValueTo();
+        if ($to) {
+            return $to->getId();
+        }
+        return '';
     }
 }
 ?>

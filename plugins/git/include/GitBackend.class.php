@@ -18,19 +18,13 @@
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
 require_once('common/backend/Backend.class.php');
-require_once('GitDao.class.php');
-require_once('Git_LogDao.class.php');
-require_once('GitDriver.class.php');
-require_once('Git_Backend_Interface.php');
-require_once('GitRepository.class.php');
-require_once('exceptions/GitBackendException.class.php');
 
 /**
  * Description of GitBackend
  *
  * @author Guillaume Storchi
  */
-class GitBackend extends Backend implements Git_Backend_Interface {
+class GitBackend extends Backend implements Git_Backend_Interface, GitRepositoryCreator {
     
     private $driver;    
     private $packagesFile;
@@ -157,7 +151,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         return true;
     }
 
-    public function isInitialized($repository) {
+    public function isInitialized(GitRepository $repository) {
         $masterExists = $this->getDriver()->masterExists( $this->getGitRootPath().'/'.$repository->getPath() );
         if ( $masterExists ) {
             $this->getDao()->initialize( $repository->getId() );
@@ -165,6 +159,15 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         } else {
             return false;
         }
+    }
+
+    /**
+     *
+     * @param GitRepository $respository
+     * @return bool
+     */
+    public function isCreated(GitRepository $repository) {
+        return $this->getDriver()->isRepositoryCreated($this->getGitRootPath().'/'.$repository->getPath());
     }
 
     public function changeRepositoryAccess($repository) {
@@ -312,7 +315,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
     /**
      * Test is user can read the content of this repository and metadata
      *
-     * @param User          $user       The user to test
+     * @param PFUser          $user       The user to test
      * @param GitRepository $repository The repository to test
      *
      * @return Boolean
@@ -333,16 +336,6 @@ class GitBackend extends Backend implements Git_Backend_Interface {
     }
     
     /**
-     * Get the regexp pattern to use for name repository validation
-     *
-     * @return string
-     */
-    public function getAllowedCharsInNamePattern() {
-        //alphanums, underscores and dash
-        return 'a-zA-Z0-9_.-';
-    }
-
-    /**
      * Obtain statistics about backend format for CSV export
      *
      * @param Statistics_Formatter $formatter instance of statistics formatter class
@@ -354,28 +347,18 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $formatter->clearContent();
         $formatter->addEmptyLine();
         $formatter->addHeader('Git');
-        $gitShellIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
-        $gitShell[]      = "Git shell";
-        $gitoliteIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
-        $gitolite[]      = "Gitolite";
-        $dar             = $dao->getBackendStatistics('gitshell', $formatter->startDate, $formatter->endDate, $formatter->groupId);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
-            foreach ($dar as $row) {
-                $gitShellIndex[] = $row['month']." ".$row['year'];
-                $gitShell[]      = intval($row['count']);
-            }
-            $formatter->addLine($gitShellIndex);
-            $formatter->addLine($gitShell);
-        }
-        $dar = $dao->getBackendStatistics('gitolite', $formatter->startDate, $formatter->endDate, $formatter->groupId);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
-            foreach ($dar as $row) {
-                $gitoliteIndex[] = $row['month']." ".$row['year'];
-                $gitolite[]      = intval($row['count']);
-            }
-            $formatter->addLine($gitoliteIndex);
-            $formatter->addLine($gitolite);
-        }
+        $gitShellIndex[]       = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitShell[]            = "Git shell created repositories";
+        $gitShellActiveIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitShellActive[]      = "Git shell created repositories (still active)";
+        $gitoliteIndex[]       = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitolite[]            = "Gitolite created repositories";
+        $gitoliteActiveIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitoliteActive[]      = "Gitolite created repositories (still active)";
+        $this->fillBackendStatisticsByType($formatter, 'gitshell', $gitShellIndex,       $gitShell,       false);
+        $this->fillBackendStatisticsByType($formatter, 'gitshell', $gitShellActiveIndex, $gitShellActive, true);
+        $this->fillBackendStatisticsByType($formatter, 'gitolite', $gitoliteIndex,       $gitolite,       false);
+        $this->fillBackendStatisticsByType($formatter, 'gitolite', $gitoliteActiveIndex, $gitoliteActive, true);
         $this->retrieveLoggedPushesStatistics($formatter);
         $content = $formatter->getCsvContent();
         $formatter->clearContent();
@@ -383,11 +366,36 @@ class GitBackend extends Backend implements Git_Backend_Interface {
     }
 
     /**
+     * Fill statistics by Backend type
+     *
+     * @param Statistics_Formatter $formatter   instance of statistics formatter class
+     * @param String               $type        backend type
+     * @param Array                $typeIndex   backend type index
+     * @param Array                $typeArray   backend type array
+     * @param Boolean              $keepedAlive keep only reposirtories that still active
+     *
+     * @return Void
+     */
+    private function fillBackendStatisticsByType(Statistics_Formatter $formatter, $type, $typeIndex, $typeArray, $keepedAlive) {
+        $dao = $this->getDao();
+        $dar = $dao->getBackendStatistics($type, $formatter->startDate, $formatter->endDate, $formatter->groupId, $keepedAlive);
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            foreach ($dar as $row) {
+                $typeIndex[] = $row['month']." ".$row['year'];
+                $typeArray[]      = intval($row['count']);
+            }
+            $formatter->addLine($typeIndex);
+            $formatter->addLine($typeArray);
+            $formatter->addEmptyLine();
+        }
+    }
+
+    /**
      * Retrieve logged pushes statistics for CSV export
      *
      * @param Statistics_Formatter $formatter instance of statistics formatter class
      *
-     * @return void
+     * @return Void
      */
     private function retrieveLoggedPushesStatistics(Statistics_Formatter $formatter) {
         $gitIndex[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
@@ -414,8 +422,12 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         }
     }
 
-    public function commitTransaction(GitRepository $repository) {
-        // this action is not necessary for thhis type of backend
+    public function getAllowedCharsInNamePattern() {
+        throw new Exception('not implemented');
+    }
+
+    public function isNameValid($name) {
+        throw new Exception('not implemented');
     }
 }
 

@@ -18,22 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'IDisplayTrackerLayout.class.php';
-require_once 'IFetchTrackerSwitcher.class.php';
-require_once('TrackerFactory.class.php');
-require_once('Tracker_URL.class.php');
-require_once('Tracker_CannotAccessTrackerException.class.php');
-require_once('FormElement/Tracker_FormElementFactory.class.php');
-require_once('Artifact/Tracker_ArtifactFactory.class.php');
-require_once('Report/Tracker_ReportFactory.class.php');
-require_once('dao/Tracker_PermDao.class.php');
 require_once('common/reference/ReferenceManager.class.php');
-require_once('CrossSearch/SearchController.class.php');
-require_once('CrossSearch/SearchViewBuilder.class.php');
-require_once('CrossSearch/Search.class.php');
-require_once('CrossSearch/SemanticValueFactory.class.php');
-require_once 'HomeNavPresenter.class.php';
-require_once('DateReminder/dao/Tracker_DateReminderDao.class.php');
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher {
@@ -64,7 +49,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * Check that tracker can be accessed by user
      *
      * @param Tracker         $tracker
-     * @param User            $user
+     * @param PFUser            $user
      * @param Codendi_Request $request
      *
      * @throws Tracker_CannotAccessTrackerException
@@ -85,9 +70,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      *
      * @param Tracker_Dispatchable_Interface $object
      * @param Codendi_Request                $request
-     * @param User                           $user
+     * @param PFUser                           $user
      */
-    protected function processSubElement(Tracker_Dispatchable_Interface $object, Codendi_Request $request, User $user) {
+    protected function processSubElement(Tracker_Dispatchable_Interface $object, Codendi_Request $request, PFUser $user) {
         // Tracker related check
         $this->checkUserCanAccessTracker($object->getTracker(), $user, $request);
         $GLOBALS['group_id'] = $object->getTracker()->getGroupId();
@@ -127,21 +112,27 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * Controler
      *
      * @param Codendi_Request $request The request
-     * @param User            $user    The user that execute the request
+     * @param PFUser            $user    The user that execute the request
      *
      * @return void
      */
     public function process($request, $user) {
+        $url    = $this->getUrl();
+        
         try {
-            $url    = $this->getUrl();
             $object = $url->getDispatchableFromRequest($request, $user);
             $this->processSubElement($object, $request, $user);
         } catch (Tracker_ResourceDoesntExistException $e) {
              exit_error($GLOBALS['Language']->getText('global', 'error'), $e->getMessage());
         } catch (Tracker_CannotAccessTrackerException $e) {
-            $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-            $this->displayAllTrackers($object->getTracker()->getProject(), $user);
+            if (! $request->isAjax()) {
+                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+                $this->displayAllTrackers($object->getTracker()->getProject(), $user);
+            } else {
+                $GLOBALS['Response']->send401UnauthorizedHeader();
+            }
         } catch (Tracker_NoMachingResourceException $e) {
+
             //show, admin all trackers
             if ((int)$request->get('group_id')) {
                 $group_id = (int)$request->get('group_id');
@@ -169,6 +160,22 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $group_id);
                                 }
                                 break;
+                            case 'check_ugroup_consistency':
+                                $tracker = $this->getTrackerFactory()->getTrackerByid($request->get('template_tracker_id'));
+                                if (! $tracker) {
+                                    return;
+                                }
+
+                                $checker = new Tracker_UgroupPermissionsConsistencyChecker(
+                                    new Tracker_UgroupPermissionsGoldenRetriever(
+                                        new Tracker_PermissionsDao(),
+                                        new UGroupManager()
+                                    ),
+                                    new UGroupManager(),
+                                    new Tracker_UgroupPermissionsConsistencyMessenger()
+                                );
+                                $checker->checkConsistency($tracker, $project);
+                                break;
                             case 'csvimportoverview':
                                 $this->displayCSVImportOverview($project, $group_id, $user);
                                 break;
@@ -184,6 +191,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                 }
             }
         }
+        
+        
     }
     
     /**
@@ -240,6 +249,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             if ($request->validFile($vFile)) {
                 $new_tracker = $this->importTracker($project, $name, $description, $itemname, $_FILES["tracker_new_xml_file"]["tmp_name"]);
             }
+        } else if ($request->existAndNonEmpty('create_mode') && $request->get('create_mode') == 'tv3') {
+            $atid = $request->get('tracker_new_tv3');
+            $new_tracker = $this->getTrackerFactory()->createFromTV3($atid, $project, $name, $description, $itemname);
         } else {
             // Otherwise tries duplicate
             $duplicate = $this->getTrackerFactory()->create($project->getId(), -1, $atid_template, $name, $description, $itemname);
@@ -292,30 +304,30 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
           
         echo '<p>'.$Language->getText('plugin_tracker_include_type','choose_creation').'</p>';
 
-        if ($request->existAndNonEmpty('create_mode') && $request->get('create_mode') == 'xml') {
-            $this->displayCreateTrackerFromXML($project);
-        } else {
-            $this->displayCreateTrackerFromTemplate($project, $tracker_template);
-        }
+        $create_mode = $request->get('create_mode');
+        $this->displayCreateTrackerFromTemplate($create_mode, $project, $tracker_template);
+        $this->displayCreateTrackerFromXML($create_mode, $project);
+        $this->displayCreateTrackerFromTV3($create_mode, $project, $request->get('tracker_new_tv3'));
 
         echo '</td><td style="padding-left:2em;">';
 
         echo '<p>'. $Language->getText('plugin_tracker_include_type','create_tracker_fill_name') .'</p>
           <p>
               <label for="newtracker_name"><b>'. $Language->getText('plugin_tracker_include_artifact','name').'</b>: <font color="red">*</font></label><br />
-              <input type="text" name="name" id="newtracker_name" value="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'">
+              <input type="text" name="name" id="newtracker_name" value="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'" required="required" />
           </p>
           <p>
               <label for="newtracker_description"><b>'.$Language->getText('plugin_tracker_include_artifact','desc').'</b>: <font color="red">*</font><br />
-              <textarea id="newtracker_description" name="description" rows="3" cols="50">'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>
+              <textarea id="newtracker_description" name="description" rows="3" cols="50" required="required">'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>
           </p>
           <p>
               <label for="newtracker_itemname"><b>'.$Language->getText('plugin_tracker_include_type','short_name').'</b>: <font color="red">*</font></label><br />
-              <input type="text" id="newtracker_itemname" name="itemname" value="'. $hp->purify($itemname, CODENDI_PURIFIER_CONVERT_HTML) .'"><br />
+              <input type="text" id="newtracker_itemname" name="itemname" value="'. $hp->purify($itemname, CODENDI_PURIFIER_CONVERT_HTML) .'" required="required" /><br />
               <span style="color:#999;">'.$Language->getText('plugin_tracker_include_type','avoid_spaces').'</span>
           </p>';
         
-        echo '<input type="submit" name="Create" value="'.$Language->getText('global','btn_create').'">';
+        echo '<div id="check_consistency_feedback"></div>';
+        echo '<input type="submit" name="Create" value="'.$Language->getText('global','btn_create').'" id="create_new_tracker_btn" class="btn">';
 
         echo '</td></tr></table></form>';
 
@@ -326,10 +338,11 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * 
      *
      */
-    function displayCreateTrackerFromTemplate(Project $project, Tracker $tracker_template = null) {
+    function displayCreateTrackerFromTemplate($requested_create_mode, Project $project, Tracker $tracker_template = null) {
         $hp = Codendi_HTMLPurifier::instance();
 
         $GLOBALS['Response']->includeFooterJavascriptFile(TRACKER_BASE_URL.'/scripts/TrackerTemplateSelector.js');
+        $GLOBALS['Response']->includeFooterJavascriptFile(TRACKER_BASE_URL.'/scripts/TrackerCheckUgroupConsistency.js');
         
         $js = '';
         $trackers = $this->getTrackerFactory()->getTrackersByGroupId(100);
@@ -340,12 +353,13 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
         
         $gf = new GroupFactory();
-        echo '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','from_tmpl').'</h3>';
+        $radio = $this->getCreateTrackerRadio('gallery', $requested_create_mode);
+        echo '<h3><label>'. $radio . $GLOBALS['Language']->getText('plugin_tracker_include_type','from_tmpl').'</label></h3>';
+
         //
-        echo '<div>';
+        echo '<div class="tracker_create_mode">';
         echo '<noscript>Project Id: <input type="text" name="group_id_template" value=""><br/>Tracker Id: <input type="text" name="atid_template" value=""></noscript>';
-        echo '<input type="hidden" name="create_mode" value="gallery">';
-        
+
         echo '<table>';
 
         echo '<tr>';
@@ -415,25 +429,63 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         echo '</tr>';
         echo '</table>';
 
-        echo '<p>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'create_mode_xml', array('?'.http_build_query(array('group_id' => $project->getID(), 'func' => 'create', 'create_mode' => 'xml')))).'</p>';
-
         echo '</div>';
     }
     
     /**
      * 
      */
-    function displayCreateTrackerFromXML(Project $project) {
-        echo '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','from_xml').'</h3>
-              <div>
+    function displayCreateTrackerFromXML($requested_create_mode, Project $project) {
+        $radio = $this->getCreateTrackerRadio('xml', $requested_create_mode);
+        echo '<h3><label>'. $radio . $GLOBALS['Language']->getText('plugin_tracker_include_type','from_xml').'</label></h3>
+              <div class="tracker_create_mode">
                 <p>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','from_xml_desc', TRACKER_BASE_URL.'/resources/templates/').'</p>
-                <input type="hidden" name="create_mode" value="xml">
                 <input type="file" name="tracker_new_xml_file" id="tracker_new_xml_file" />
                 
-                <p>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'create_mode_gallery', array('?'.http_build_query(array('group_id' => $project->getID(), 'func' => 'create', 'create_mode' => 'gallery')))).'</p>
               </div>';
     }
-    
+
+    private function displayCreateTrackerFromTV3($requested_create_mode, Project $project, $requested_template_id) {
+        $hp   = Codendi_HTMLPurifier::instance();
+        $html = '';
+        if ($project->usesService('tracker')) {
+            require_once 'common/tracker/ArtifactTypeFactory.class.php';
+            $atf         = new ArtifactTypeFactory($project);
+            $trackers_v3 = $atf->getArtifactTypes();
+            if ($trackers_v3) {
+                $radio = $this->getCreateTrackerRadio('tv3', $requested_create_mode);
+                $html .= '<h3><label>'. $radio . $GLOBALS['Language']->getText('plugin_tracker_include_type','from_tv3').'</label></h3>';
+                $html .= '<div class="tracker_create_mode">';
+                $checked = $requested_template_id ? '' : 'checked="checked"';
+                foreach ($trackers_v3 as $tracker_v3) {
+                    $html .= '<p>';
+                    $html .= '<label>';
+                    if ($requested_template_id == $tracker_v3->getID()) {
+                        $checked = 'checked="checked"';
+                    }
+                    $html .= '<input type="radio" name="tracker_new_tv3" value="'. $tracker_v3->getID() .'" '. $checked .' />';
+                    $html .= $hp->purify(SimpleSanitizer::unsanitize($tracker_v3->getName()), CODENDI_PURIFIER_CONVERT_HTML);
+                    $html .= '</label>';
+                    $html .= '</p>';
+                    $checked = '';
+                }
+                $html .= '</div>';
+            }
+        }
+        echo $html;
+    }
+
+    public function getCreateTrackerRadio($create_mode, $requested_create_mode) {
+        $checked = '';
+        if (! $requested_create_mode) {
+            $requested_create_mode = 'gallery';
+        }
+        if ($create_mode == $requested_create_mode) {
+            $checked = 'checked="checked"';
+        }
+        return '<input type="radio" name="create_mode" value="'. $create_mode .'" '. $checked .' />';
+    }
+
     public function displayTrackerHomeNav(Project $project) {
         $presenter = new Tracker_HomeNavPresenter($project);
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../templates');
@@ -445,7 +497,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * Display all trackers of project $project that $user is able to see
      *
      * @param Project $project The project
-     * @param User    $user    The user
+     * @param PFUser    $user    The user
      *
      * @return void
      */
@@ -574,7 +626,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $this->displayFooter($project);
     }
     
-    public function fetchTrackerSwitcher(User $user, $separator, Project $include_project = null, Tracker $current_tracker = null) {
+    public function fetchTrackerSwitcher(PFUser $user, $separator, Project $include_project = null, Tracker $current_tracker = null) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         
@@ -644,7 +696,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      */
     protected function importTracker($project, $name, $description, $itemname, $filename) {
         //TODO: add restrictions for the file
-        return $this->getTrackerFactory()->createFromXML($filename, $project->group_id, $name, $description, $itemname, $this);
+        if (($xml_element = simplexml_load_file($filename)) !== false) {
+            return $this->getTrackerFactory()->createFromXML($xml_element, $project->group_id, $name, $description, $itemname, $this);
+        }
     }
     
     /**
@@ -733,12 +787,12 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * Check if user has permission to create a tracker or not
      *
      * @param int  $group_id The Id of the project where the user wants to create a tracker
-     * @param User $user     The user to test (current user if not defined)
+     * @param PFUser $user     The user to test (current user if not defined)
      *
      * @return boolean true if user has persission to create trackers, false otherwise
      */
     public function userCanCreateTracker($group_id, $user = false) {
-        if (!is_a($user, 'User')) {
+        if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
         }
@@ -788,7 +842,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         return $search;
     }
     
-    public function getCrossSearchViewBuilder($group_id, User $user) {
+    public function getCrossSearchViewBuilder($group_id, PFUser $user) {
         $form_element_factory    = Tracker_FormElementFactory::instance();
         $planning_trackers       = $this->getPlanningTrackers($group_id, $user);
         $art_link_field_ids      = $form_element_factory->getArtifactLinkFieldsOfTrackers($planning_trackers);
@@ -812,7 +866,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * 
      * @return Array of Integer
      */
-    private function getPlanningTrackers($group_id, User $user) {
+    private function getPlanningTrackers($group_id, PFUser $user) {
         $trackers = array();
         @include_once dirname(__FILE__).'/../../../agiledashboard/include/Planning/PlanningFactory.class.php';
         if (class_exists('PlanningFactory')) {
@@ -861,6 +915,15 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             $dateReminderManager = new Tracker_DateReminderManager($tracker);
             $dateReminderManager->process();
         }
+    }
+
+    public function exportToXml($group_id, SimpleXMLElement $xml_content) {
+        $xml_field_id = 0;
+        foreach ($this->getTrackerFactory()->getTrackersByGroupId($group_id) as $tracker) {
+            $child = $xml_content->addChild('tracker');
+            $tracker->exportToXML($child, $xml_field_id);
+        }
+        return $xml_content;
     }
 }
 

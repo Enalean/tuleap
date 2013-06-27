@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_Artifact_ChangesetValue_Numeric.class.php');
 
 /**
  * Manage values in changeset for integer fields
@@ -61,7 +60,7 @@ class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_Changeset
      * @return string the soap value of this changeset value
      */
     public function getSoapValue() {
-        return (string)$this->getInteger();
+        return $this->encapsulateRawSoapValue($this->getInteger());
     }
 }
 
