@@ -142,7 +142,8 @@
     font-weight: bold;
 }
 
-.planning_overcapacity .planning_remaining_effort {
+.planning_overcapacity .planning_remaining_effort,
+.submilestone-effort.planning_overcapacity {
     color: red;
 }
 
