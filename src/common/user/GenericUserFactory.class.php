@@ -63,10 +63,9 @@ class GenericUserFactory {
      */
     public function fetch($group_id) {
         if ($row = $this->dao->fetch($group_id)->getRow()){
-            $generic_user = $this->generateGenericUser($group_id);
-
             $pfuser = $this->user_manager->getUserById($row['user_id']);
-            $generic_user->setId($pfuser->getId());
+
+            $generic_user = $this->generateGenericUser($group_id, $pfuser);
 
             return $generic_user;
         }
@@ -81,7 +80,7 @@ class GenericUserFactory {
      * @return GenericUser
      */
     public function create($group_id, $password) {
-        $generic_user = $this->generateGenericUser($group_id);
+        $generic_user = $this->generateGenericUser($group_id, new PFUser());
         $generic_user->setPassword($password);
 
         $this->user_manager->createAccount($generic_user);
@@ -94,10 +93,10 @@ class GenericUserFactory {
      * @param int $group_id
      * @return GenericUser
      */
-    private function generateGenericUser($group_id) {
+    private function generateGenericUser($group_id, PFUser $user) {
         $project = $this->project_manager->getProject($group_id);
 
-        return new GenericUser($project);
+        return new GenericUser($project, $user);
     }
 }
 ?>
