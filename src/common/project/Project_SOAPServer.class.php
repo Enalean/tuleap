@@ -291,31 +291,53 @@ class Project_SOAPServer {
     /**
      * Create a generic user
      *
-     * @param String  $sessionKey The project admin session hash
-     * @param Integer $groupId    The Project id where the User Group is defined
-     * @param String  $password   The password of the generic user about to be created
+     * @param String  $session_key The project admin session hash
+     * @param Integer $group_id    The Project id where the User Group is defined
+     * @param String  $password    The password of the generic user about to be created
      *
      * @return ArrayOfUserInfo
      */
-    public function setProjectGenericUser($sessionKey, $groupId, $password) {
-        if (! $this->isRequesterAdmin($sessionKey, $groupId)) {
+    public function setProjectGenericUser($session_key, $group_id, $password) {
+        if (! $this->isRequesterAdmin($session_key, $group_id)) {
             throw new SoapFault('3201', 'Permission denied: need to be project admin.');
         }
-
-        $user = $this->generic_user_factory->fetch($groupId);
+        $user = $this->generic_user_factory->fetch($group_id);
 
         if (! $user) {
-            $user = $this->generic_user_factory->create($groupId, $password);
+            $user = $this->generic_user_factory->create($group_id, $password);
             if (! $user) {
                 throw new SoapFault('3105', "Generic User creation failure");
             }
-            $this->addProjectMember($sessionKey, $groupId, $user->getUnixName());
+
         } else {
             $user->setPassword($password);
             $this->generic_user_factory->update($user);
         }
 
+        $this->addGenericUserInProject($user, $session_key, $group_id);
         return user_to_soap($user, $this->userManager->getCurrentUser());
+    }
+
+    private function addGenericUserInProject(PFUser $user, $session_key, $group_id) {
+        if (! $user->isMember($group_id)) {
+            $this->addProjectMember($session_key, $group_id, $user->getUnixName());
+        }
+    }
+    /**
+     *
+     * @param String  $session_key  The project admin session hash
+     * @param Integer $groupId      The Project id where the Generic user is
+     */
+    public function unsetGenericUser($session_key, $group_id) {
+        if (! $this->isRequesterAdmin($session_key, $group_id)) {
+            throw new SoapFault('3201', 'Permission denied: need to be project admin.');
+        }
+
+        $user = $this->generic_user_factory->fetch($group_id);
+        if (! $user) {
+            throw new SoapFault('3300', "Generic User is not created for this project");
+        }
+        $this->removeProjectMember($session_key, $group_id, $user->getUserName());
     }
 
     /**
@@ -377,7 +399,7 @@ class Project_SOAPServer {
         throw new SoapFault('3000', "Invalid project id");
     }
 
-    private function isRequesterAdmin($sessionKey, $project_id) {
+    protected function isRequesterAdmin($sessionKey, $project_id) {
         $requester = $this->continueSession($sessionKey);
 
         return $requester->isMember($project_id, 'A');
