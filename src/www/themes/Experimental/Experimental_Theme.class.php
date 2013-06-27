@@ -29,6 +29,10 @@ class Experimental_Theme extends DivBasedTabbedLayout {
         $this->_feedback->setFormatter(new Bootstrap_FeedbackFormatter());
     }
 
+    public function isLabFeature() {
+        return true;
+    }
+
     public function header($params) {
         $htmlclassname = '';
         if (isset($params['htmlclassname'])) {
