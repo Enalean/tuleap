@@ -403,6 +403,15 @@ Requires: tuleap
 %description theme-tuleap
 Tuleap theme
 
+%package theme-experimental
+Summary: Experimental theme for Tuleap
+Group: Development/Tools
+Version: @@THEME_EXPERIMENTAL_VERSION@@
+Release: 1%{?dist}
+Requires: tuleap
+%description theme-experimental
+Experimental theme for Tuleap
+
 # 
 # Package setup
 %prep
@@ -981,6 +990,10 @@ fi
 %files theme-tuleap
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/src/www/themes/Tuleap
+
+%files theme-experimental
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/Experimental
 
 #%doc
 #%config
