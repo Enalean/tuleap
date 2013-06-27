@@ -225,3 +225,5 @@ plugin_git	push_ssh_keys_error	Error pushing SSH Keys. Please add them manually.
 plugin_git	push_ssh_keys_button_value	Manually push SSH keys
 plugin_git	push_ssh_keys_button_title	Push SSH keys to remote servers
 plugin_git	push_ssh_keys_info	Old keys need to be pushed manually. All new keys are automatically pushed to the following Gerrit servers:
+
+plugin_git	gerrit_remote_exception	An error occured while trying to access Gerrit server, maybe the server is down, please check with administrators: $1

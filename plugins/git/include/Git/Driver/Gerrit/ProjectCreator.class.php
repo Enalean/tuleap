@@ -72,7 +72,7 @@ class Git_Driver_Gerrit_ProjectCreator {
 
         $migrated_ugroups = $this->membership_manager->createArrayOfGroupsForServer($gerrit_server, $ugroups);
 
-        $this->umbrella_manager->recursivelyCreateUmbrellaProjects($gerrit_server, $project);
+        $this->umbrella_manager->recursivelyCreateUmbrellaProjects(array($gerrit_server), $project);
 
         $gerrit_project_name = $this->driver->createProject($gerrit_server, $repository, $project_name);
 

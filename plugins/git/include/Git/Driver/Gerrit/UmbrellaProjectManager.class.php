@@ -54,26 +54,61 @@ class Git_Driver_Gerrit_UmbrellaProjectManager {
 
     /**
      * Creates the Umbrella Projects of a given project
-     * @param Git_RemoteServer_GerritServer $gerrit_server
+     * @param Git_RemoteServer_GerritServer[] $gerrit_servers
      * @param Project $project
      */
-    public function recursivelyCreateUmbrellaProjects(Git_RemoteServer_GerritServer $gerrit_server, Project $project) {
-
-        $ugroups        = $this->ugroup_manager->getUGroups($project);
-        $admin_ugroup   = $this->getAdminUGroup($ugroups);
+    public function recursivelyCreateUmbrellaProjects(array $gerrit_servers, Project $project) {
         $parent_project = $this->project_manager->getParentProject($project->getID());
-        $project_name   = $project->getUnixName();
 
-        if ($parent_project) {
-            $this->recursivelyCreateUmbrellaProjects($gerrit_server, $parent_project);
-            $this->driver->setProjectInheritance($gerrit_server, $project_name, $parent_project->getUnixName());
+        $this->createProjectOnServers($gerrit_servers, $project);
+
+        if (!$parent_project) {
+            $this->resetProjectInheritanceOnServers($gerrit_servers, $project);
+            return;
         }
 
-        $this->membership_manager->createArrayOfGroupsForServer($gerrit_server, $ugroups);
+        $this->recursivelyCreateUmbrellaProjects($gerrit_servers, $parent_project);
+        $this->setProjectInheritanceOnServers($gerrit_servers, $project, $parent_project);
+    }
 
-        if (! $this->driver->doesTheParentProjectExist($gerrit_server, $project_name)) {
-            $admin_group_name = $project_name.'/'.$admin_ugroup->getNormalizedName();
-            $project_name = $this->driver->createProjectWithPermissionsOnly($gerrit_server, $project, $admin_group_name);
+    /**
+     * set the inheritance on all Project's servers
+     * @param array $gerrit_servers
+     * @param type $project_name
+     * @param type $parent_project_name
+     */
+    private function setProjectInheritanceOnServers(array $gerrit_servers, Project $project, Project $parent_project) {
+        foreach ($gerrit_servers as $gerrit_server) {
+            $this->driver->setProjectInheritance($gerrit_server, $project->getUnixName(), $parent_project->getUnixName());
+        }
+    }
+
+    /**
+     * @param array $gerrit_servers
+     * @param Project $project
+     */
+    private function resetProjectInheritanceOnServers(array $gerrit_servers, Project $project) {
+        foreach ($gerrit_servers as $gerrit_server) {
+            $this->driver->resetProjectInheritance($gerrit_server, $project->getUnixName());
+        }
+    }
+
+    /**
+     * @param array $gerrit_servers
+     * @param Project $project
+     */
+    private function createProjectOnServers(array $gerrit_servers, Project $project) {
+        $ugroups      = $this->ugroup_manager->getUGroups($project);
+        $admin_ugroup = $this->getAdminUGroup($ugroups);
+        $project_name = $project->getUnixName();
+
+        foreach ($gerrit_servers as $gerrit_server) {
+            $this->membership_manager->createArrayOfGroupsForServer($gerrit_server, $ugroups);
+
+            if (! $this->driver->doesTheParentProjectExist($gerrit_server, $project_name)) {
+                $admin_group_name = $project_name.'/'.$admin_ugroup->getNormalizedName();
+                $project_name = $this->driver->createProjectWithPermissionsOnly($gerrit_server, $project, $admin_group_name);
+            }
         }
     }
 

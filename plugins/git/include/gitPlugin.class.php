@@ -100,8 +100,13 @@ class GitPlugin extends Plugin {
         $this->_addHook('project_admin_ugroup_deletion');
         $this->_addHook('project_admin_remove_user_from_project_ugroups');
         $this->_addHook('project_admin_ugroup_creation');
+        $this->_addHook('project_admin_parent_project_modification');
         $this->_addHook(Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_ADD);
         $this->_addHook(Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_REMOVE);
+
+        // Project hierarchy modification
+        $this->_addHook(Event::PROJECT_SET_PARENT_PROJECT, 'project_admin_parent_project_modification');
+        $this->_addHook(Event::PROJECT_UNSET_PARENT_PROJECT, 'project_admin_parent_project_modification');
     }
 
     public function site_admin_option_hook() {
@@ -831,6 +836,19 @@ class GitPlugin extends Plugin {
         );
     }
 
+    public function project_admin_parent_project_modification($params) {
+        try {
+            $project        = ProjectManager::instance()->getProject($params['group_id']);
+            $gerrit_servers = $this->getGerritServerFactory()->getServersForProject($project);
+
+            $this->getGerritUmbrellaProjectManager()->recursivelyCreateUmbrellaProjects($gerrit_servers, $project);
+        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'gerrit_remote_exception', $exception->getMessage()));
+        } catch (Exception $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+        }
+    }
+
     public function ugroup_manager_update_ugroup_binding_add($params) {
         $this->getGerritMembershipManager()->addUGroupBinding(
             $params['ugroup'],
@@ -889,11 +907,11 @@ class GitPlugin extends Plugin {
             $this->getGerritUserFinder(),
             $this->getUGroupManager(),
             $this->getGerritMembershipManager(),
-            $this->getUmbrellaProjectManager()
+            $this->getGerritUmbrellaProjectManager()
         );
     }
 
-    private function getUmbrellaProjectManager() {
+    private function getGerritUmbrellaProjectManager() {
         return new Git_Driver_Gerrit_UmbrellaProjectManager(
             $this->getUGroupManager(),
             $this->getProjectManager(),
@@ -983,7 +1001,8 @@ class GitPlugin extends Plugin {
         return new Git_RemoteServer_GerritServerFactory(
             new Git_RemoteServer_Dao(),
             $this->getGitDao(),
-            $this->getGitSystemEventManager()
+            $this->getGitSystemEventManager(),
+            $this->getProjectManager()
         );
     }
 
