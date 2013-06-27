@@ -5,6 +5,7 @@ Version 6.3 (Not released yet)
 
 	== Bug fix ==
 	* request #4112: Python exception pass (Contrib Raphaël Enrici)
+	* Fix libnss-mysql install (set a default host and distinguish case where an empty hostname was used to detect if we need to bootstrap the db (local deployments).
 
 	== Enhancement ==
 	* Project admin can configure the generic user from ui (change password & email)
