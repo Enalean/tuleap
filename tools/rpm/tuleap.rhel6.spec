@@ -67,6 +67,8 @@ Requires: mysql
 Requires: libnss-mysql, mod_auth_mysql, nss, nscd
 # Forgeupgrade
 Requires: forgeupgrade >= 1.2
+# MIME libs
+Requires: shared-mime-info
 
 %description
 Tuleap is a web based application that address all the aspects of product development.
