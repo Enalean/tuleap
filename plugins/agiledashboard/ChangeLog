@@ -1,3 +1,6 @@
+Version 0.88 - Tuleap 6.3
+    * story #4047: see capacity highlighted in red when remaining effort for a sprint is > capacity
+
 Version 0.87 - Tuleap 6.2
     * Fix request #1919: Dynamically load milestones of a planning
 
