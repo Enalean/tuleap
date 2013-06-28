@@ -121,7 +121,9 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 
             $submilestones.each(function() {
                 var remaining_effort = 0,
-                    $all_efforts = $(this).find(".submilestone-element-remaining-effort");
+                    $all_efforts = $(this).find(".submilestone-element-remaining-effort"),
+                    $effort_field = $(this).find(".submilestone-effort"),
+                    capacity = parseFloat($(this).find(".submilestone-capacity").html());
 
                 $all_efforts.each(function(){
                     var element_effort = parseFloat($(this).html());
@@ -131,7 +133,11 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                     }
                 });
 
-                $(this).find(".submilestone-effort").html(remaining_effort);
+                $effort_field.html(remaining_effort);
+
+                if (remaining_effort > capacity) {
+                    $effort_field.addClass('planning_overcapacity');
+                }
             });
         },
 
