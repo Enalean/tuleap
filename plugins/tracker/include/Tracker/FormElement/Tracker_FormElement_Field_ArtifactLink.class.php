@@ -1147,7 +1147,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     protected function getArtifactsFromChangesetValue($value, $previous_changesetvalue = null) {
         $new_values     = (string)$value['new_values'];
         $removed_values = isset($value['removed_values']) ? $value['removed_values'] : array();
-        
         // this array will be the one to save in the new changeset
         $artifact_ids = array();
         if ($previous_changesetvalue != null) {
@@ -1157,7 +1156,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $artifact_ids = array_diff($artifact_ids, array_keys($removed_values));
             }
         }
-        
+
         if (trim($new_values) != '') {
             $new_artifact_ids = array_diff(explode(',', $new_values), array_keys($removed_values));
             // We add new links to existing ones
@@ -1165,6 +1164,27 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 if ( ! in_array($new_artifact_id, $artifact_ids)) {
                     $artifact_ids[] = $new_artifact_id;
                 }
+            }
+        }
+
+        return $this->getArtifactFactory()->getArtifactsByArtifactIdList($artifact_ids);
+    }
+
+    /**
+     *
+     * @param array $value
+     * @param Tracker_Artifact_ChangesetValue_ArtifactLink $previous_changesetvalue
+     * @return Artifact[]
+     */
+    private function getRemovedArtifactsFromChangesetValue($value, $previous_changesetvalue = null) {
+        $removed_values = isset($value['removed_values']) ? $value['removed_values'] : array();
+
+        $artifact_ids = array();
+        if ($previous_changesetvalue != null) {
+            $artifact_ids = $previous_changesetvalue->getArtifactIds();
+            // We remove artifact links that user wants to remove
+            if (is_array($removed_values) && ! empty($removed_values)) {
+                $artifact_ids = array_intersect($artifact_ids, array_keys($removed_values));
             }
         }
         
@@ -1183,9 +1203,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      */
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         $success = true;
-        
-        $artifacts_to_link = $this->getArtifactsFromChangesetValue($value, $previous_changesetvalue);
-        
+
+        $artifacts_to_link   = $this->getArtifactsFromChangesetValue($value, $previous_changesetvalue);
+        $artifacts_to_unlink = $this->getRemovedArtifactsFromChangesetValue($value, $previous_changesetvalue);
+
         $dao = $this->getValueDao();
         // we create the new changeset
         foreach ($artifacts_to_link as $artifact_to_link) {
@@ -1198,6 +1219,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 }
             }
         }
+
+        foreach ($artifacts_to_unlink as $artifact_to_unlink) {
+            if ($this->canLinkArtifacts($artifact, $artifact_to_unlink)) {
+                $tracker = $artifact_to_unlink->getTracker();
+                $this->updateCrossReferences($artifact, $value);
+            }
+        }
+
         return $success;
     }
 
