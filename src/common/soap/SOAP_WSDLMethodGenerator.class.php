@@ -43,6 +43,7 @@ class SOAP_WSDLMethodGenerator {
         'arrayofrevision'    => 'tns:ArrayOfRevision',
         'arrayofcommiter'    => 'tns:ArrayOfCommiter',
         'arrayofsvnpathinfo' => 'tns:ArrayOfSvnPathInfo',
+        'arrayofuserinfo'    => 'tns:ArrayOfUserInfo',
     );
     
     public function __construct(ReflectionMethod $method) {

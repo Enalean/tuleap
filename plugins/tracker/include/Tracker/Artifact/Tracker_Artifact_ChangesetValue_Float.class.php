@@ -66,6 +66,15 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
         return $this->encapsulateRawSoapValue($this->getFloat());
     }
 
+    /**
+     * Get the Json value
+     *
+     * @return string The value of this artifact changeset value in Json format
+     */
+    public function getJsonValue() {
+        return $this->getFloat();
+    }
+
 }
 
 ?>

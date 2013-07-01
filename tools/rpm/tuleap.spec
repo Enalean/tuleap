@@ -80,6 +80,8 @@ Requires: mysql
 Requires: libnss-mysql, mod_auth_mysql, nss, nscd
 # Forgeupgrade
 Requires: forgeupgrade >= 1.2
+# MIME libs
+Requires: shared-mime-info
 
 %description
 Tuleap is a web based application that address all the aspects of product development.
@@ -93,7 +95,7 @@ Summary: Initial setup of the platform
 Group: Development/Tools
 Version: @@VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}
+Requires: %{PKG_NAME}, redhat-lsb
 %description install
 This package contains the setup script for the %{PKG_NAME} platform.
 It is meant to be install at the initial setup of the platform and
@@ -481,6 +483,15 @@ Requires: %{PKG_NAME}
 %description theme-tuleap
 Tuleap theme
 
+%package theme-experimental
+Summary: Experimental theme for Tuleap
+Group: Development/Tools
+Version: @@THEME_EXPERIMENTAL_VERSION@@
+Release: 1%{?dist}
+Requires: tuleap
+%description theme-experimental
+Experimental theme for Tuleap
+
 # 
 # Package setup
 %prep
@@ -573,8 +584,7 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/templates_c
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/cache
 %{__install} plugins/git/bin/gl-membership.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} plugins/git/bin/git-log.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} plugins/git/bin/git-ci.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} plugins/git/bin/git-post-receive.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/bin/gitolite-suexec-wrapper.sh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 
 # Plugin archivedeleteditems
@@ -689,7 +699,7 @@ else
     %{APP_DIR}/src/utils/php-launcher.sh %{APP_DIR}/src/utils/generate_language_files.php
 
     # Remove existing combined js
-    rm -f %{APP_DIR}/src/www/scripts/combined/codendi-*.js
+    %{__rm} -f %{APP_DIR}/src/www/scripts/combined/codendi-*.js
     %{__chown} %{APP_USER}:%{APP_USER} %{APP_CACHE_DIR}/lang/*.php
 
     # Remove soap cache
@@ -945,8 +955,7 @@ fi
 %attr(-,root,root) /gitroot
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/smarty
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gl-membership.pl
-%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/git-log.pl
-%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/git-ci.pl
+%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/git-post-receive.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gitolite-suexec-wrapper.sh
 
 %files plugin-docmanwatermark
@@ -1060,6 +1069,10 @@ fi
 %files theme-tuleap
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/src/www/themes/Tuleap
+
+%files theme-experimental
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/Experimental
 
 #%doc
 #%config

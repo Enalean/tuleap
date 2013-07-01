@@ -35,25 +35,33 @@ class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase {
         stub($this->repository)->getBackend()->returns($this->backend);
         
         $this->repository_factory = mock('GitRepositoryFactory');
-        stub($this->repository_factory)->getRepositoryById()->returns($this->repository);
 
-        $this->event = partial_mock('SystemEvent_GIT_REPO_UPDATE', array('done', 'error'));
+        $this->event = partial_mock('SystemEvent_GIT_REPO_UPDATE', array('done', 'warning', 'error'));
         $this->event->setParameters("$this->repository_id");
         $this->event->injectDependencies($this->repository_factory);
     }
 
     public function itGetsTheRepositoryFromTheFactory() {
+        stub($this->repository_factory)->getRepositoryById()->returns($this->repository);
         expect($this->repository_factory)->getRepositoryById($this->repository_id)->once();
         $this->event->process();
     }
 
     public function itDelegatesToBackendRepositoryCreation() {
+        stub($this->repository_factory)->getRepositoryById()->returns($this->repository);
         expect($this->backend)->updateRepoConf()->once();
         $this->event->process();
     }
 
     public function itMarksTheEventAsDone() {
+        stub($this->repository_factory)->getRepositoryById()->returns($this->repository);
         expect($this->event)->done()->once();
+        $this->event->process();
+    }
+
+    public function itMarksTheEventAsWarningWhenTheRepoDoesNotExist() {
+        stub($this->repository_factory)->getRepositoryById()->returns(null);
+        expect($this->event)->warning('Unable to find repository, perhaps it was deleted in the mean time?')->once();
         $this->event->process();
     }
 }

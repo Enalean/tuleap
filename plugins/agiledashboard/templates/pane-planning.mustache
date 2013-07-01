@@ -73,7 +73,10 @@
                         <td colspan=2>
                             <div data-loaded="false" class="submilestone-data" data-submilestone-id="{{id}}" data-planning-id="{{planning_id}}">
                                 <a href="{{edit_submilestone_url}}" title="edit" alt="edit"><i class="icon-edit"> edit</i></a>
-                                <p>{{points}}: <span class="submilestone-effort"></span> {{capacity}} {{get_capacity}}</p>
+                                <p>
+                                    {{points}} <span class="submilestone-effort"></span>
+                                    {{capacity}} <span class="submilestone-capacity"> {{get_capacity}} </span>
+                                </p>
                                 <table class="table table-striped table-hover table-bordered submilestone-element-rows">
                                     <thead>
                                         <tr>

@@ -28,8 +28,9 @@ abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase 
      * @var SystemEvent_GIT_GERRIT_MIGRATION
      */
     protected $event;
-    protected $repository_id    = 123;
-    protected $remote_server_id = 12;
+    protected $repository_id         = 123;
+    protected $deleted_repository_id = 124;
+    protected $remote_server_id      = 12;
     protected $repository;
     protected $gerrit_server;
     protected $server_factory;
@@ -50,7 +51,7 @@ abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase 
         stub($factory)->getRepositoryById($this->repository_id)->returns($this->repository);
 
         $id= $type= $parameters= $priority= $status= $create_date= $process_date= $end_date= $log = 0;
-        $this->event = TestHelper::getPartialMock('SystemEvent_GIT_GERRIT_MIGRATION', array('done', 'error'),
+        $this->event = TestHelper::getPartialMock('SystemEvent_GIT_GERRIT_MIGRATION', array('done', 'warning', 'error'),
                                                   array($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log));
         $this->event->setParameters("$this->repository_id::$this->remote_server_id");
         $this->logger = mock('Logger');
@@ -113,6 +114,11 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
         $this->event->process();
     }
 
+    public function itMarksTheEventAsWarningWhenTheRepoDoesNotExist() {
+        $this->event->setParameters("$this->deleted_repository_id::$this->remote_server_id");
+        expect($this->event)->warning('Unable to find repository, perhaps it was deleted in the mean time?')->once();
+        $this->event->process();
+    }
 }
 
 class SystemEvent_GIT_GERRIT_MIGRATION_CallsToProjectCreatorTest extends SystemEvent_GIT_GERRIT_MIGRATION_BaseTest  {

@@ -27,6 +27,8 @@ codendi.tracker = codendi.tracker || { };
 codendi.tracker.artifact = codendi.tracker.artifact || { };
 
 codendi.tracker.artifact.artifactLink = {
+
+    overlay_window: null,
         
     strike: function(td, checkbox) {
         td.up().childElements().invoke('setStyle', {
@@ -74,7 +76,7 @@ codendi.tracker.artifact.artifactLink = {
             }
             input_field.value += aid;
             codendi.tracker.artifact.artifactLink.addTemporaryArtifactLinks();
-            myLightWindow.deactivate();
+            overlay_window.deactivate();
         }
     },
     
@@ -253,7 +255,14 @@ codendi.tracker.artifact.artifactLink = {
 document.observe('dom:loaded', function () {
 
     //{{{ artifact links    
-    
+
+    overlay_window = new lightwindow({
+        resizeSpeed: 10,
+        delay: 0,
+        finalAnimationDuration: 0,
+        finalAnimationDelay: 0
+    });
+
     var artifactlink_selector_url = {
         tracker: 1,
         'link-artifact-id': location.href.toQueryParams().aid
@@ -516,10 +525,10 @@ document.observe('dom:loaded', function () {
                 
             //create a new artifact via artifact links
             //tracker='.$tracker_id.'&func=new-artifact-link&id='.$artifact->getId().
-            myLightWindow.options.afterFinishWindow = function() {
+            overlay_window.options.afterFinishWindow = function() {
                 
             };
-            myLightWindow.activateWindow({
+            overlay_window.activateWindow({
                 href: codendi.tracker.base_url + '?'+ $H({
                     tracker: codendi.tracker.artifact.artifactLink.selector_url.tracker,
                     func: 'new-artifact-link',
@@ -537,7 +546,7 @@ document.observe('dom:loaded', function () {
         link.observe('click', function (evt) {
                 
             $$('button.tracker-form-element-artifactlink-selector')
-            myLightWindow.options.afterFinishWindow = function() {
+            overlay_window.options.afterFinishWindow = function() {
                 if ($('tracker-link-artifact-fast-ways')) {
                     //Tooltips. load only in fast ways panels 
                     // since report table are loaded later in 
@@ -613,7 +622,7 @@ document.observe('dom:loaded', function () {
                         codendi.tracker.artifact.artifactLink.addTemporaryArtifactLinks();
                         
                         //hide the modal window
-                        myLightWindow.deactivate();
+                        overlay_window.deactivate();
                         
                         //stop the propagation of the event (don't submit any forms)
                         Event.stop(evt);
@@ -622,7 +631,7 @@ document.observe('dom:loaded', function () {
                 }
             };
             
-         myLightWindow.activateWindow({
+         overlay_window.activateWindow({
                 href: location.href.split('?')[0] + '?' + $H(codendi.tracker.artifact.artifactLink.selector_url).toQueryString(),
                 title: ''
             });

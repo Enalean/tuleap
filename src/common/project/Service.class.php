@@ -121,14 +121,8 @@ class Service {
     
     public function displayHeader($title, $breadcrumbs, $toolbar) {
         $GLOBALS['HTML']->setRenderedThroughService(true);
-        
-        foreach($breadcrumbs as $b) {
-            $classname = '';
-            if (isset($b['classname'])) {
-                $classname = 'class="breadcrumb-step-'. $b['classname'] .'"';
-            }
-            $GLOBALS['HTML']->addBreadcrumb('<a href="'. $b['url'] .'" '. $classname .'>'. $b['title'] .'</a>');
-        }
+        $GLOBALS['HTML']->addBreadcrumbs($breadcrumbs);
+
         foreach($toolbar as $t) {
             $class = isset($t['class']) ? 'class="'. $t['class'] .'"' : '';
             $item_title = isset($t['short_title']) ? $t['short_title'] :$t['title'];

@@ -22,7 +22,8 @@ require_once 'common/TreeNode/TreeNodeMapper.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
 class Cardwall_Renderer extends Tracker_Report_Renderer {
-    
+    const FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER = 'FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER';
+
     /**
      * @var Plugin
      */
@@ -122,7 +123,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      */
     public function getForestsOfArtifacts(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory) {
         $provider = new Cardwall_ArtifactNodeTreeProvider();
-        return $provider->flatForestOfArtifacts($artifact_ids, $artifact_factory);
+        return $provider->flatForestOfArtifacts($artifact_ids, $artifact_factory, self::FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER);
     }
     
     /**

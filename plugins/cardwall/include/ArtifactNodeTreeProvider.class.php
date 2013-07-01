@@ -23,20 +23,21 @@
  * root -> forest -> artifactNodes
  */
 class Cardwall_ArtifactNodeTreeProvider {
-    
+
     /**
      * @return TreeNode
      */
-    public function flatForestOfArtifacts(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory) {
+    public function flatForestOfArtifacts(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory, $swimline_id) {
         $cards  = $this->getCards($artifact_ids, $artifact_factory);
-        return $this->wrapInAThreeLevelArtifactTree($cards);
+        return $this->wrapInAThreeLevelArtifactTree($cards, $swimline_id);
     }
     
     /**
      * @return TreeNode
      */
-    public function wrapInAThreeLevelArtifactTree(array $cards) {
+    protected function wrapInAThreeLevelArtifactTree(array $cards, $swimline_id) {
         $forest = new TreeNode();
+        $forest->setId($swimline_id);
         $forest->setChildren($cards);
         $root = new TreeNode();
         $root->addChild($forest);
@@ -46,7 +47,7 @@ class Cardwall_ArtifactNodeTreeProvider {
     /**
      * @return array
      */
-    public function getCards(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory) {
+    protected function getCards(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory) {
         $cards = array();
         foreach ($artifact_ids as $id) {
             $cards[] = new ArtifactNode($artifact_factory->getArtifactById($id));

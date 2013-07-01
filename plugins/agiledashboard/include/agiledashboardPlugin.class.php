@@ -103,8 +103,8 @@ class AgileDashboardPlugin extends Plugin {
     public function tracker_event_redirect_after_artifact_creation_or_update($params) {
         $artifact_linker         = new Planning_ArtifactLinker($this->getArtifactFactory(), PlanningFactory::build());
         $last_milestone_artifact = $artifact_linker->linkBacklogWithPlanningItems($params['request'], $params['artifact']);
+        $requested_planning      = $this->extractPlanningAndArtifactFromRequest($params['request']);
 
-        $requested_planning = $this->extractPlanningAndArtifactFromRequest($params['request']);
         if ($requested_planning) {
             $this->redirectOrAppend($params['request'], $params['artifact'], $params['redirect'], $requested_planning, $last_milestone_artifact);
         }
@@ -112,8 +112,11 @@ class AgileDashboardPlugin extends Plugin {
 
     private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Artifact_Redirect $redirect, $requested_planning, Tracker_Artifact $last_milestone_artifact = null) {
         $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
-        if ($planning && !$redirect->stayInTracker()) {
+
+        if ($planning && ! $redirect->stayInTracker()) {
             $this->redirectToPlanning($artifact, $requested_planning, $planning, $redirect);
+        } elseif (! $redirect->stayInTracker()) {
+            $this->redirectToTopPlanning($artifact, $requested_planning, $redirect);
         } else {
              $this->setQueryParametersFromRequest($request, $redirect);
              // Pass the right parameters so parent can be created in the right milestone (see updateBacklogs)
@@ -134,6 +137,21 @@ class AgileDashboardPlugin extends Plugin {
             'planning_id' => $planning->getId(),
             'action'      => 'show',
             'aid'         => $redirect_to_artifact,
+            'pane'        => $requested_planning['pane_identifier'],
+        );
+    }
+
+    private function redirectToTopPlanning(Tracker_Artifact $artifact, $requested_planning, Tracker_Artifact_Redirect $redirect) {
+        $redirect->base_url = '/plugins/agiledashboard/';
+        $group_id = null;
+
+        if ($artifact->getTracker() &&  $artifact->getTracker()->getProject()) {
+            $group_id = $artifact->getTracker()->getProject()->getID();
+        }
+
+        $redirect->query_parameters = array(
+            'group_id'    => $group_id,
+            'action'      => 'show-top',
             'pane'        => $requested_planning['pane_identifier'],
         );
     }
@@ -192,6 +210,7 @@ class AgileDashboardPlugin extends Plugin {
         $params['scripts'] = array_merge(
             $params['scripts'],
             array(
+                $this->getPluginPath().'/js/load-more-milestones.js',
                 $this->getPluginPath().'/js/MilestoneContent.js',
                 $this->getPluginPath().'/js/planning.js',
                 $this->getPluginPath().'/js/OuterGlow.js',
@@ -213,6 +232,7 @@ class AgileDashboardPlugin extends Plugin {
         $pane_presenter_builder_factory = $this->getPanePresenterBuilderFactory($milestone_factory);
 
         $pane_factory = $this->getPaneFactory($request, $planning_factory, $milestone_factory, $hierarchy_factory, $pane_presenter_builder_factory);
+        $top_milestone_pane_factory = $this->getTopMilestonePaneFactory($request, $pane_presenter_builder_factory);
 
         $milestone_controller_factory = new Planning_MilestoneControllerFactory(
             $this,
@@ -221,7 +241,8 @@ class AgileDashboardPlugin extends Plugin {
             $this->getPlanningFactory(),
             $hierarchy_factory,
             $pane_presenter_builder_factory,
-            $pane_factory
+            $pane_factory,
+            $top_milestone_pane_factory
         );
 
         $router = new AgileDashboardRouter(
@@ -261,6 +282,14 @@ class AgileDashboardPlugin extends Plugin {
         );
     }
 
+    private function getTopMilestonePaneFactory($request, $pane_presenter_builder_factory) {
+        return new Planning_VirtualTopMilestonePaneFactory(
+            $request,
+            $pane_presenter_builder_factory,
+            $this->getThemePath()
+        );
+    }
+
     /**
      * Builds a new PlanningFactory instance.
      *
@@ -278,7 +307,9 @@ class AgileDashboardPlugin extends Plugin {
         return new Planning_MilestoneFactory(
             $this->getPlanningFactory(),
             $this->getArtifactFactory(),
-            Tracker_FormElementFactory::instance());
+            Tracker_FormElementFactory::instance(),
+            TrackerFactory::instance()
+        );
     }
 
     private function getArtifactFactory() {

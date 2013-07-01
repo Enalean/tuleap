@@ -160,6 +160,22 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $group_id);
                                 }
                                 break;
+                            case 'check_ugroup_consistency':
+                                $tracker = $this->getTrackerFactory()->getTrackerByid($request->get('template_tracker_id'));
+                                if (! $tracker) {
+                                    return;
+                                }
+
+                                $checker = new Tracker_UgroupPermissionsConsistencyChecker(
+                                    new Tracker_UgroupPermissionsGoldenRetriever(
+                                        new Tracker_PermissionsDao(),
+                                        new UGroupManager()
+                                    ),
+                                    new UGroupManager(),
+                                    new Tracker_UgroupPermissionsConsistencyMessenger()
+                                );
+                                $checker->checkConsistency($tracker, $project);
+                                break;
                             case 'csvimportoverview':
                                 $this->displayCSVImportOverview($project, $group_id, $user);
                                 break;
@@ -310,7 +326,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
               <span style="color:#999;">'.$Language->getText('plugin_tracker_include_type','avoid_spaces').'</span>
           </p>';
         
-        echo '<input type="submit" name="Create" value="'.$Language->getText('global','btn_create').'">';
+        echo '<div id="check_consistency_feedback"></div>';
+        echo '<input type="submit" name="Create" value="'.$Language->getText('global','btn_create').'" id="create_new_tracker_btn" class="btn">';
 
         echo '</td></tr></table></form>';
 
@@ -325,6 +342,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $hp = Codendi_HTMLPurifier::instance();
 
         $GLOBALS['Response']->includeFooterJavascriptFile(TRACKER_BASE_URL.'/scripts/TrackerTemplateSelector.js');
+        $GLOBALS['Response']->includeFooterJavascriptFile(TRACKER_BASE_URL.'/scripts/TrackerCheckUgroupConsistency.js');
         
         $js = '';
         $trackers = $this->getTrackerFactory()->getTrackersByGroupId(100);

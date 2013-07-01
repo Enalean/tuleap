@@ -318,10 +318,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function fetchArtifact(Tracker_Artifact $artifact, $submitted_values = array()) {
         if ($this->userCanUpdate()) {
-            $value       = $artifact->getLastChangeset()->getValue($this);
-            $html_value  = $this->fetchArtifactValue($artifact, $value, $submitted_values);
-            $html_value .= $this->fetchArtifactAdditionnalInfo($value, $submitted_values);
-            return $this->fetchArtifactField($artifact, $html_value);
+            $last_changeset = $artifact->getLastChangeset();
+            if ($last_changeset) {
+                $value       = $last_changeset->getValue($this);
+                $html_value  = $this->fetchArtifactValue($artifact, $value, $submitted_values);
+                $html_value .= $this->fetchArtifactAdditionnalInfo($value, $submitted_values);
+                return $this->fetchArtifactField($artifact, $html_value);
+            }
+            return '';
         }
         return $this->fetchArtifactReadOnly($artifact);
     }
@@ -334,10 +338,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return string html
      */
     public function fetchArtifactReadOnly(Tracker_Artifact $artifact) {
-        $value       = $artifact->getLastChangeset()->getValue($this);
-        $html_value  = $this->fetchArtifactValueReadOnly($artifact, $value);
-        $html_value .= $this->fetchArtifactAdditionnalInfo($value);
-        return $this->fetchArtifactField($artifact, $html_value);
+        $last_changeset = $artifact->getLastChangeset();
+        if ($last_changeset) {
+            $value       = $last_changeset->getValue($this);
+            $html_value  = $this->fetchArtifactValueReadOnly($artifact, $value);
+            $html_value .= $this->fetchArtifactAdditionnalInfo($value);
+            return $this->fetchArtifactField($artifact, $html_value);
+        }
+        return '';
     }
 
     /**
@@ -1028,6 +1036,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return null;
     }
 
+    public function getJsonValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        if ($this->userCanRead($user)) {
+            $value = $changeset->getValue($this);
+            return $value ? $value->getJsonValue() : '';
+        }
+        return null;
+    }
 
     /**
      * Get the field data for artifact submission

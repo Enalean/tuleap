@@ -41,6 +41,9 @@ class Planning_MilestoneController extends MVC2_PluginController {
     /** @var AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory */
     private $pane_presenter_builder_factory;
 
+    /** @var Project */
+    private $project;
+
     /**
      * Instanciates a new controller.
      *
@@ -56,30 +59,26 @@ class Planning_MilestoneController extends MVC2_PluginController {
         Planning_MilestoneFactory $milestone_factory,
         ProjectManager $project_manager,
         Planning_MilestonePaneFactory $pane_factory,
-        AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
-        $theme_path
+        AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory
     ) {
         parent::__construct('agiledashboard', $request);
         $this->milestone_factory              = $milestone_factory;
         $this->pane_factory                   = $pane_factory;
         $this->pane_presenter_builder_factory = $pane_presenter_builder_factory;
-
-        $project         = $project_manager->getProject($request->get('group_id'));
-        $this->milestone = $this->milestone_factory->getBareMilestone(
-            $this->getCurrentUser(),
-            $project,
-            $request->get('planning_id'),
-            $request->get('aid')
-        );
+        $this->project = $project_manager->getProject($request->get('group_id'));
     }
 
     public function show() {
-        $presenter = $this->getMilestonePresenter();
-        $this->render('show', $presenter);
+        $this->generateBareMilestone();
+        $this->render(
+            'show',
+            $this->getMilestonePresenter()
+        );
     }
 
     private function getMilestonePresenter() {
         $redirect_parameter = new Planning_MilestoneRedirectParameter();
+        
         return new AgileDashboard_MilestonePresenter(
             $this->milestone,
             $this->getCurrentUser(),
@@ -93,6 +92,8 @@ class Planning_MilestoneController extends MVC2_PluginController {
      * @return BreadCrumb_BreadCrumbGenerator
      */
     public function getBreadcrumbs($plugin_path) {
+        $this->generateBareMilestone();
+
         if ($this->milestone->getArtifact()) {
             $breadcrumbs_merger = new BreadCrumb_Merger();
             foreach(array_reverse($this->milestone->getAncestors()) as $milestone) {
@@ -101,16 +102,28 @@ class Planning_MilestoneController extends MVC2_PluginController {
             $breadcrumbs_merger->push(new BreadCrumb_Milestone($plugin_path, $this->milestone));
             return $breadcrumbs_merger;
         }
+        
         return new BreadCrumb_NoCrumb();
     }
 
     public function submilestonedata() {
+        $this->generateBareMilestone();
         $this->render('submilestone-content', $this->getSubmilestonePresenter());
     }
 
     private function getSubmilestonePresenter() {
         $presenter_builder = $this->pane_presenter_builder_factory->getSubmilestonePresenterBuilder();
+        
         return $presenter_builder->getSubmilestonePresenter($this->getCurrentUser(), $this->milestone);
+    }
+
+    private function generateBareMilestone() {
+        $this->milestone = $this->milestone_factory->getBareMilestone(
+            $this->getCurrentUser(),
+            $this->project,
+            $this->request->get('planning_id'),
+            $this->request->get('aid')
+        );
     }
 }
 

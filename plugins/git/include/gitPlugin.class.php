@@ -56,7 +56,8 @@ class GitPlugin extends Plugin {
         $this->_addHook(Event::JAVASCRIPT,                                 'javascript',                                   false);
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS,                     'getSystemEventClass',                          false);
         $this->_addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES,  'getReferenceKeywords',                         false);
-        $this->_addHook('get_available_reference_natures',                 'getReferenceNatures',                          false);
+        $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE,             'getReferenceNatures',                          false);
+        $this->addHook(Event::GET_REFERENCE);
         $this->_addHook('SystemEvent_PROJECT_IS_PRIVATE',                  'changeProjectRepositoriesAccess',              false);
         $this->_addHook('SystemEvent_PROJECT_RENAME',                      'systemEventProjectRename',                     false);
         $this->_addHook('project_is_deleted',                              'project_is_deleted',                           false);
@@ -199,12 +200,40 @@ class GitPlugin extends Plugin {
     }
 
     public function getReferenceKeywords($params) {
-        $params['keywords'] = array_merge($params['keywords'], array('git') );
+        $params['keywords'] = array_merge(
+            $params['keywords'],
+            array(Git::REFERENCE_KEYWORD)
+        );
     }
 
     public function getReferenceNatures($params) {
-        $params['natures'] = array_merge( $params['natures'],
-        array( 'git_commit'=>array('keyword'=>'git', 'label'=> $GLOBALS['Language']->getText('plugin_git', 'reference_commit_nature_key') ) ) );
+        $params['natures'] = array_merge(
+            $params['natures'],
+            array(
+                Git::REFERENCE_NATURE => array(
+                    'keyword' => Git::REFERENCE_KEYWORD,
+                    'label'   => $GLOBALS['Language']->getText('plugin_git', 'reference_commit_nature_key')
+                )
+            )
+        );
+    }
+
+    public function get_reference($params) {
+        if ($params['keyword'] == Git::REFERENCE_KEYWORD) {
+            $reference = false;
+            if ($params['project']) {
+                $git_reference_manager = new Git_ReferenceManager(
+                    $this->getRepositoryFactory(),
+                    $params['reference_manager']
+                );
+                $reference = $git_reference_manager->getReference(
+                    $params['project'],
+                    $params['keyword'],
+                    $params['value']
+                );
+            }
+            $params['reference'] = $reference;
+        }
     }
 
     public function changeProjectRepositoriesAccess($params) {
@@ -426,7 +455,7 @@ class GitPlugin extends Plugin {
 
             foreach ($remote_servers as $server) {
                 $html .= '<li>
-                        <a href="'.$server->getHost().':'.$server->getHTTPPort().'/#/settings/ssh-keys">'.
+                        <a href="'.$server->getBaseUrl().'/#/settings/ssh-keys">'.
                             $server->getHost().'
                         </a>
                     </li>';
@@ -859,8 +888,13 @@ class GitPlugin extends Plugin {
             $this->getGerritDriver(),
             $this->getGerritUserFinder(),
             $this->getUGroupManager(),
-            $this->getGerritMembershipManager()
+            $this->getGerritMembershipManager(),
+            $this->getProjectManager()
         );
+    }
+
+    private function getProjectManager() {
+        return ProjectManager::instance();
     }
 
     private function getGerritUserFinder() {
@@ -931,7 +965,8 @@ class GitPlugin extends Plugin {
             new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory()),
             $this->getGerritServerFactory(),
             $this->getLogger(),
-            $this->getUGroupManager()
+            $this->getUGroupManager(),
+            $this->getProjectManager()
         );
     }
 

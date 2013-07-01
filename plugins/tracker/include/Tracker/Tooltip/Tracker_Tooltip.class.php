@@ -234,7 +234,7 @@ class Tracker_Tooltip extends Tracker_Semantic {
     * the SOAP export
     * @return null
     */
-    public function exportToSOAP() {
+    public function exportToSOAP(PFUser $user) {
         return;
     }
 }

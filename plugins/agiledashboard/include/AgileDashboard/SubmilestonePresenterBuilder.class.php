@@ -39,6 +39,7 @@ class AgileDashboard_SubmilestonePresenterBuilder {
 
     public function getSubmilestonePresenter(PFUser $user, Planning_Milestone $milestone) {
         $backlog_strategy = $this->strategy_factory->getSelfBacklogStrategy($milestone);
+
         return new AgileDashboard_SubmilestonePresenter(
             $this->backlog_row_factory->getAllCollection(
                 $user,

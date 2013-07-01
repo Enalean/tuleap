@@ -111,7 +111,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
     }
 
     public function capacity() {
-        if (is_int($this->get_capacity())) {
+        if (is_numeric($this->get_capacity())) {
             return '/ ' . $GLOBALS['Language']->getText('plugin_agiledashboard', 'capacity');
         }
 
@@ -119,7 +119,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
     }
 
     public function get_capacity() {
-        return $this->milestone_capacity;
+        return (float)$this->milestone_capacity;
     }
 
     public function empty_element_tip() {

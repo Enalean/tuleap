@@ -405,124 +405,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $html;
     }
 
-    /**
-     * Display the artifact
-     *
-     * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
-     * @param Codendi_Request                $request         The data coming from the user
-     * @param PFUser                           $current_user    The current user
-     *
-     * @return void
-     */
-    public function display(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
-        // the following statement needs to be called before displayHeader
-        // in order to get the feedback, if any
-        $hierarchy = $this->getAllAncestors($current_user);
-
-        $hp          = Codendi_HTMLPurifier::instance();
-        $tracker     = $this->getTracker();
-        $title       = $hp->purify($tracker->item_name, CODENDI_PURIFIER_CONVERT_HTML)  .' #'. $this->id;
-        $breadcrumbs = array(
-            array('title' => $title,
-                  'url'   => TRACKER_BASE_URL.'/?aid='. $this->id)
-        );
-        $tracker->displayHeader($layout, $title, $breadcrumbs);
-
-        $current_user->addRecentElement($this);
-        $from_aid = $request->get('from_aid');
-
-        $html = '';
-
-        $redirect = new Tracker_Artifact_Redirect();
-        $redirect->base_url = TRACKER_BASE_URL;
-        $redirect->query_parameters = array(
-            'aid'       => $this->id,
-            'func'      => 'artifact-update',
-        );
-
-        if ($from_aid != null) {
-            $redirect->query_parameters['from_aid'] = $from_aid;
-        }
-        $this->getEventManager()->processEvent(
-            TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
-            array(
-                'request'  => $request,
-                'redirect' => $redirect,
-            )
-        );
-
-        $html .= '<form action="'. $redirect->toUrl() .'" method="POST" enctype="multipart/form-data">';
-
-
-        $html .= '<input type="hidden" value="67108864" name="max_file_size" />';
-
-        $html .= $this->fetchTitleInHierarchy($hierarchy);
-
-        $html .= $this->fetchView($request, $current_user);
-
-        $html .= '</form>';
-        $trm = new Tracker_RulesManager($tracker, $this->getFormElementFactory());
-        $html .= $trm->displayRulesAsJavascript();
-
-        echo $html;
-
-        $tracker->displayFooter($layout);
-        exit();
-    }
-
-    private function fetchView(Codendi_Request $request, PFUser $user) {
-        $view_collection = new Tracker_Artifact_View_ViewCollection();
-        $view_collection->add(new Tracker_Artifact_View_Edit($this, $request, $user));
-        if ($this->getTracker()->getChildren()) {
-            $view_collection->add(new Tracker_Artifact_View_Hierarchy($this, $request, $user));
-        }
-
-        return $view_collection->fetchRequestedView($request);
-    }
-
-    private function fetchTitleInHierarchy(array $hierarchy) {
-        $hp    = Codendi_HTMLPurifier::instance();
-        $html  = '';
-        $html .= $this->fetchHiddenTrackerId();
-        if ($hierarchy) {
-            array_unshift($hierarchy, $this);
-            $html .= $this->fetchParentsTitle($hp, $hierarchy);
-        } else {
-            $html .= $this->fetchTitle();
-        }
-        return $html;
-    }
-
-    private function fetchParentsTitle(Codendi_HTMLPurifier $hp, array $parents, $padding_prefix = '') {
-        $html   = '';
-        $parent = array_pop($parents);
-        if ($parent) {
-            $html .= '<ul class="tracker-hierarchy">';
-            $html .= '<li>';
-            $html .= $padding_prefix;
-            $html .= '<div class="tree-last">&nbsp;</div> ';
-            if ($parents) {
-                $html .= $parent->fetchDirectLinkToArtifactWithTitle();
-            } else {
-                $html .= $hp->purify($parent->getXRefAndTitle());
-            }
-            if ($parents) {
-                $html .= '</a>';
-                $div_prefix = '';
-                $div_suffix = '';
-                if (count($parents) == 1) {
-                    $div_prefix = '<div class="tracker_artifact_title">';
-                    $div_suffix = '</div>';
-                }
-                $html .= $div_prefix;
-                $html .= $this->fetchParentsTitle($hp, $parents, $padding_prefix . '<div class="tree-blank">&nbsp;</div>');
-                $html .= $div_suffix;
-            }
-            $html .= '</li>';
-            $html .= '</ul>';
-        }
-        return $html;
-    }
 
     /**
      * Returns HTML code to display the artifact title
@@ -586,7 +468,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ( ! isset($this->status)) {
             if ($status_field = Tracker_Semantic_Status::load($this->getTracker())->getField()) {
                 if ($status_field->userCanRead()) {
-                    $this->status = $status_field->getFirstValueFor($this->getLastChangeset());
+                    $last_changeset = $this->getLastChangeset();
+                    if ($last_changeset) {
+                        $this->status = $status_field->getFirstValueFor($last_changeset);
+                    }
                 }
             }
         }
@@ -640,7 +525,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @return String The valid followup comment format
      */
-    private function validateCommentFormat($request, $comment_format_field_name) {
+    public function validateCommentFormat($request, $comment_format_field_name) {
         $comment_format = $request->get($comment_format_field_name);
         return Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
     }
@@ -696,46 +581,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $GLOBALS['Response']->redirect('?aid='. $this->id);
                 break;
             case 'artifact-update':
-                //TODO : check permissions on this action?
-                $comment_format = $this->validateCommentFormat($request, 'comment_formatnew');
-                $this->setUseArtifactPermissions( $request->get('use_artifact_permissions') ? 1 : 0 );
-
-                $fields_data   = $request->get('artifact');
-
-                $fields_data['request_method_called'] = 'artifact-update';
-                $this->getTracker()->augmentDataFromRequest($fields_data);
-                unset($fields_data['request_method_called']);
-
-                try {
-
-                    $this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'), true, $comment_format);
-
-                    $art_link = $this->fetchDirectLinkToArtifact();
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
-
-                    $redirect = $this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId());
-                    $this->summonArtifactRedirectors($request, $redirect);
-
-                    if ($request->isAjax()) {
-                        $this->sendAjaxCardsUpdateInfo($current_user);
-                    } else {
-                        $GLOBALS['Response']->redirect($redirect->toUrl());
-                    }
-                } catch (Tracker_NoChangeException $e) {
-                    if ($request->isAjax()) {
-                        $this->sendAjaxCardsUpdateInfo($current_user);
-                    } else {
-                        $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
-                        $this->display($layout, $request, $current_user);
-                    }
-                } catch (Tracker_Exception $e) {
-                    if ($request->isAjax()) {
-                        $this->sendAjaxCardsUpdateInfo($current_user);
-                    } else {
-                        $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-                        $this->display($layout, $request, $current_user);
-                    }
-                }
+                $action = new Tracker_Action_UpdateArtifact($this, $this->getFormElementFactory(), $this->getEventManager());
+                $action->process($layout, $request, $current_user);
                 break;
             case 'unassociate-artifact-to':
                 $artlink_fields     = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
@@ -764,11 +611,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $dao = new Tracker_Artifact_PriorityDao();
                 $dao->moveArtifactAfter($this->getId(), (int)$request->get('target-id'));
                 break;
+            case 'show-in-overlay':
+                $renderer = new Tracker_Artifact_EditOverlayRenderer($this, $this->getEventManager());
+                $renderer->display($request, $current_user);
+                break;
             default:
                 if ($request->isAjax()) {
                     echo $this->fetchTooltip($current_user);
                 } else {
-                    $this->display($layout, $request, $current_user);
+                    $renderer = new Tracker_Artifact_EditRenderer($this->getEventManager(), $this, $this->getFormElementFactory(), $layout);
+                    $renderer->display($request, $current_user);
                 }
                 break;
         }
@@ -800,35 +652,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     public function hasChildren() {
         return count($this->getArtifactFactory()->getChildren($this)) > 0;
-    }
-
-    private function sendAjaxCardsUpdateInfo(PFUser $current_user) {
-        $cards_info = $this->getCardUpdateInfo($this, $current_user);
-        $parent = $this->getParent($current_user);
-        if ($parent) {
-            $cards_info = $cards_info + $this->getCardUpdateInfo($parent, $current_user);
-        }
-
-        $GLOBALS['Response']->sendJSON($cards_info);
-    }
-
-    private function getCardUpdateInfo(Tracker_Artifact $artifact, PFUser $current_user) {
-        $card_info               = array();
-        $tracker_id              = $artifact->getTracker()->getId();
-        $form_element_factory    = $this->getFormElementFactory();
-        $remaining_effort_field  = $form_element_factory->getComputableFieldByNameForUser(
-            $tracker_id,
-            Tracker::REMAINING_EFFORT_FIELD_NAME,
-            $current_user
-        );
-
-        if ($remaining_effort_field) {
-            $remaining_effort = $remaining_effort_field->fetchCardValue($artifact);
-            $card_info[$artifact->getId()] = array(
-                Tracker::REMAINING_EFFORT_FIELD_NAME => $remaining_effort
-            );
-        }
-        return $card_info;
     }
 
     /**
@@ -1396,7 +1219,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if (!$changeset) {
             $changeset = $this->getLastChangeset();
         }
-        return $changeset->getValue($field);
+        if ($changeset) {
+            return $changeset->getValue($field);
+        }
+        return null;
     }
 
     /**
@@ -1557,7 +1383,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @param PFUser $user
      *
-     * @return Array of Tracker_Artifact
+     * @return Tracker_Artifact[]
      */
     public function getAllAncestors(PFUser $user) {
         if (!isset($this->ancestors)) {
@@ -1657,33 +1483,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         } catch (Tracker_Exception $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
         }
-    }
-
-    protected function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request) {
-        $stay     = $request->get('submit_and_stay') ;
-        $from_aid = $request->get('from_aid');
-
-        $redirect = new Tracker_Artifact_Redirect();
-        $redirect->mode             = Tracker_Artifact_Redirect::STATE_SUBMIT;
-        $redirect->base_url         = TRACKER_BASE_URL;
-        $redirect->query_parameters = $this->calculateRedirectParams($stay, $from_aid);
-        if ($stay) {
-            $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY_OR_CONTINUE;
-        }
-        return $redirect;
-    }
-
-    private function calculateRedirectParams($stay, $from_aid) {
-        $redirect_params = array();
-        if ($stay) {
-            $redirect_params['aid']       = $this->getId();
-            $redirect_params['from_aid']  = $from_aid;
-        } else if ($from_aid) {
-            $redirect_params['aid']       = $from_aid;
-        } else {
-            $redirect_params['tracker']   = $this->tracker_id;
-        }
-        return array_filter($redirect_params);
     }
 
     /**

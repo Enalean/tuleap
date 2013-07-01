@@ -26,6 +26,9 @@
  * regardless of what we want to display.
  */
 abstract class AgileDashboard_PaneInfo {
+
+    const ACTION = 'show';
+
     /**
      * @var bool
      */
@@ -35,6 +38,8 @@ abstract class AgileDashboard_PaneInfo {
      * @var Planning_Milestone
      */
     private $milestone;
+
+    protected $action = self::ACTION;
 
     public function __construct(Planning_Milestone $milestone) {
         $this->milestone = $milestone;
@@ -82,7 +87,7 @@ abstract class AgileDashboard_PaneInfo {
         return array(
             'group_id'    => $milestone->getGroupId(),
             'planning_id' => $milestone->getPlanningId(),
-            'action'      => 'show',
+            'action'      => $this->action,
             'aid'         => $milestone->getArtifactId(),
             'pane'        => $this->getIdentifier()
         );

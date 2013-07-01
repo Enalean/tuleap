@@ -289,6 +289,7 @@ class GraphOnTrackersV5Plugin extends Plugin {
         require_once('data-access/GraphOnTrackersV5_Chart_Pie.class.php');
         require_once('data-access/GraphOnTrackersV5_Chart_Gantt.class.php');
         require_once('data-access/GraphOnTrackersV5_Chart_Burndown.class.php');
+        require_once('data-access/GraphOnTrackersV5_Chart_CumulativeFlow.class.php');
         //require_once('data-access/GraphOnTrackersV5_Scrum_Chart_Burnup.class.php');
         $params['factories']['pie'] = array(
             'chart_type'      => 'pie',
@@ -329,6 +330,16 @@ class GraphOnTrackersV5Plugin extends Plugin {
             //The title for the button 'Add a chart'
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum', 'add_title_burnup'),
         );*/
+        $params['factories']['cumulative_flow'] = array(
+            //The type of the chart
+            'chart_type'      => 'cumulative_flow',
+            //The classname of the chart. The class must be already declared.
+            'chart_classname' => 'GraphOnTrackersV5_Chart_CumulativeFlow',
+            //The icon used for the button 'Add a chart'
+            'icon'            => $this->getThemePath().'/images/cumulative_flow.png',
+            //The title for the button 'Add a chart'
+            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','cumulative_flow'),
+        );
     }
 }
 ?>

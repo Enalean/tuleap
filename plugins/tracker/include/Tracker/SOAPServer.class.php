@@ -494,23 +494,23 @@ class Tracker_SOAPServer {
         try {
             $user      = $this->soap_request_validator->continueSession($session_key);
             $tracker   = $this->getTrackerById($group_id, $tracker_id, 'getTrackerSemantic');
-            $this->checkUserCanAdminTracker($user, $tracker);
+            $this->checkUserCanViewTracker($tracker, $user);
             return array(
-                'semantic' => $this->getTrackerSemantic($tracker),
-                'workflow' => $this->getTrackerWorkflow($tracker),
+                'semantic' => $this->getTrackerSemantic($user, $tracker),
+                'workflow' => $this->getTrackerWorkflow($user, $tracker),
             );
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
     }
 
-    protected function getTrackerSemantic(Tracker $tracker) {
+    protected function getTrackerSemantic(PFUser $user, Tracker $tracker) {
         $tracker_semantic_manager = new Tracker_SemanticManager($tracker);
-        return $tracker_semantic_manager->exportToSOAP();
+        return $tracker_semantic_manager->exportToSOAP($user);
     }
 
-    protected function getTrackerWorkflow (Tracker $tracker) {
-        return $tracker->getWorkflow()->exportToSOAP();
+    protected function getTrackerWorkflow (PFUser $user, Tracker $tracker) {
+        return $tracker->getWorkflow()->exportToSOAP($user);
     }
 
     /**

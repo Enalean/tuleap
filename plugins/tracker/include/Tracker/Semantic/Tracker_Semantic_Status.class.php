@@ -380,9 +380,13 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      * Export the semantic to SOAP format
      * @return array the SOAPification of the semantic
      */
-    public function exportToSOAP() {
-        $SOAP_array = parent::exportToSoap();
-        $SOAP_array['values'] = $this->getOpenValues();
+    public function exportToSOAP(PFUser $user) {
+        $SOAP_array = parent::exportToSoap($user);
+        if ($SOAP_array['field_name']) {
+            $SOAP_array['values'] = $this->getOpenValues();
+        } else {
+            $SOAP_array['values'] = array();
+        }
         return $SOAP_array;
     }
 

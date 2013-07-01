@@ -29,11 +29,11 @@ plugin_statistics_admin_page	months	View statistics for the last year
 
 plugin_statistics	scm_title	SCM statistics
 plugin_statistics	scm_description	Display SCM statistics of the platform.
-plugin_statistics	scm_start	Start date
-plugin_statistics	scm_end	End date
+plugin_statistics	start_date	Start date
+plugin_statistics	end_date	End date
 plugin_statistics	scm_project_id	Project Id
 plugin_statistics	scm_project_id_info	Project Id is optional, you can leave it empty to calculate statistics for the whole platform.
-plugin_statistics	scm_export_button	Export CSV
+plugin_statistics	csv_export_button	Export CSV
 plugin_statistics	scm_month	Month
 plugin_statistics	scm_svn_total_read	Total number of SVN read access
 plugin_statistics	scm_svn_read_project	Total number of projects with SVN read access
@@ -79,3 +79,4 @@ plugin_statistics	no_project	Project not found
 plugin_statistics	quota_added	Quota for project "$1" is now $2 GB
 plugin_statistics	quota_deleted	Quota deleted for $1
 plugin_statistics	no_search_result	No result correspond to the search
+plugin_statistics	services_usage	Services usage statistics

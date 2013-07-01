@@ -290,6 +290,7 @@ class LDAP_UserManager {
         $um = $this->getUserManager();
         $u  = $um->createAccount($user);
         if ($u) {
+            $u = $um->getUserById($user->getId());
             // Create an entry in the ldap user db
             $ldapUserDao = $this->getDao();
             $ldapUserDao->createLdapUser($u->getId(), 0, $uid);

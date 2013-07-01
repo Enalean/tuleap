@@ -51,7 +51,7 @@ class Planning {
     private $plan_title;
     
     /**
-     * @var Array of int
+     * @var int
      */
     private $backlog_tracker_id;
     
@@ -145,6 +145,7 @@ class Planning {
      */
     public function setPlanningTracker(Tracker $planning_tracker) {
         $this->planning_tracker = $planning_tracker;
+        return $this;
     }
     
     /**
@@ -153,6 +154,8 @@ class Planning {
     public function setBacklogTracker(Tracker $backlog_tracker) {
         $this->backlog_tracker = $backlog_tracker;
         $this->backlog_tracker_id = $backlog_tracker->getId();
+
+        return $this;
     }
     
     /**

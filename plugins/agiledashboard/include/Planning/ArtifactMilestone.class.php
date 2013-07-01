@@ -265,5 +265,4 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         return null;
     }
 }
-
 ?>

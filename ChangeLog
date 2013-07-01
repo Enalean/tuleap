@@ -1,3 +1,43 @@
+Version 6.3 (Not released yet)
+	== Plugins ==
+	* graphontrackersv5: 5.1
+	* requesthelp: 1.3.3
+	* agiledashboard: 0.88
+
+	== Bug fix ==
+	* request #4112: Python exception pass (Contrib Raphaël Enrici)
+	* Fix libnss-mysql install (set a default host and distinguish case where an empty hostname was used to detect if we need to bootstrap the db (local deployments).
+	* sla #4103: Mime type not recognized in Docman
+
+	== Enhancement ==
+	* Project admin can configure the generic user from ui (change password & email)
+
+	== API ==
+	* SOAP /soap/project: 1.1
+
+	== Development ==
+	* Add new theme for experimental wireframing
+
+Version 6.2 (Wednesday, June 26th 2013)
+	* Story #3820: activate generic user creation
+	* Story #3632: Introduce project hierarchy definition.
+	* Fix XSS injection in Forums, Wiki, Search, People resume (contrib STMicroelectronics).
+	* Add tool to dump a forum of a project
+	* Attempt to fix bug when invalidating combined js cache
+	* Fix notice error on service management page
+	* Fix sla #4006: autodetection of redhat releases.
+
+	== Plugins ==
+	* agiledashboard: 0.87
+	* git: 3.28
+	* tracker: 5.134
+	* mediawiki: 0.12
+	* statistics: 0.28
+	* ldap: 3.31
+	* fusionforge_compat: 0.4
+	* cardwall: 0.9.36
+	* graphontrackersv5: 5.0.10
+
 Version 6.1 (Thursday, May 30th 2013)
 	== Enhancement ==
 	* story #3226: see "svn propset --revprop -r X svn:log" modifications in commit DB

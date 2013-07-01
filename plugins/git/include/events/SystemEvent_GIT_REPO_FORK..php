@@ -49,6 +49,12 @@ class SystemEvent_GIT_REPO_FORK extends SystemEvent {
     public function process() {
         $old_repository = $this->getOldRepositoryFromParameters();
         $new_repository = $this->getNewRepositoryFromParameters();
+
+        if (! $old_repository || ! $new_repository) {
+            $this->warning('Unable to find repository, perhaps it was deleted in the mean time?');
+            return;
+        }
+
         $backend = $old_repository->getBackend();
         $backend->forkOnFilesystem($old_repository, $new_repository);
         $this->done();

@@ -89,9 +89,9 @@ if (!$error && $request->exist('export')) {
     echo '<table>';
     echo '<tr>';
     echo '<td>';
-    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_start').'</b>';
+    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'start_date').'</b>';
     echo '</td><td>';
-    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_end').'</b>';
+    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'end_date').'</b>';
     echo '</td><td>';
     echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_project_id').' <font color="red">*</font></b>';
     echo '</td>';
@@ -105,7 +105,7 @@ if (!$error && $request->exist('export')) {
     echo '</td><td>';
     echo '<input id="scm_stats_group_id" name="group_id" >';
     echo '</td><td></tr><tr><td>';
-    echo '<input type="submit" name="export" value="'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_export_button').'" >';
+    echo '<input type="submit" name="export" value="'.$GLOBALS['Language']->getText('plugin_statistics', 'csv_export_button').'" >';
     echo '</td>';
     echo '</tr><tr><td colspan="3">';
     echo '<font color="red"><b>*</b></font> <font size="-2">'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_project_id_info').'</font>';

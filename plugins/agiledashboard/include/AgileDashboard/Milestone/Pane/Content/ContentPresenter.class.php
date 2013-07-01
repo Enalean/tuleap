@@ -39,10 +39,7 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     private $submit_url;
 
     /** @var Array */
-    private $backlog_elements;
-
-    /** @var String */
-    private $descendant_item_name;
+    private $backlog_parent_elements = array();
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
@@ -68,12 +65,8 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
         $this->done_collection = $done;
     }
 
-    public function setBacklogElements($backlog_elements) {
-        $this->backlog_elements = $backlog_elements;
-    }
-
-    public function setDescendantItemName($descendant_item_name) {
-        $this->descendant_item_name = $descendant_item_name;
+    public function setBacklogParentElements($backlog_parent_elements) {
+        $this->backlog_parent_elements = $backlog_parent_elements;
     }
 
     public function backlog_item_type() {
@@ -93,7 +86,7 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     }
 
     public function can_add_subbacklog_items() {
-        if (count($this->backlog_elements)) {
+        if (count($this->backlog_parent_elements)) {
             return true;
         }
     }
@@ -103,11 +96,11 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     }
 
     public function add_in_descendant_title() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'add_in_descendant_title', array($this->descendant_item_name, $this->backlog_item_type));
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'add_in_descendant_title', array($this->backlog_item_type, $this->parent_item_type));
     }
 
     public function backlog_elements() {
-        return $this->backlog_elements;
+        return $this->backlog_parent_elements;
     }
 
     public function can_prioritize() {
@@ -115,9 +108,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     }
 
     public function title() {
-        if ($this->descendant_item_name) {
-            return $this->descendant_item_name;
-        }
         return $this->backlog_item_type;
     }
 
@@ -158,7 +148,7 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     }
 
     public function has_nothing_todo() {
-        return ! $this->has_something_done();
+        return ! $this->has_something_todo();
     }
 
     public function closed_items_title() {
@@ -167,10 +157,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
 
     public function closed_items_intro() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'closed_items_intro', $this->backlog_item_type);
-    }
-
-    public function closed_items_nothing_yet() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'closed_items_nothing_yet');
     }
 
     public function open_items_title() {

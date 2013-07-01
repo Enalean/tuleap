@@ -38,7 +38,13 @@ class Tracker_CardFields {
         $this->user_manager                 = UserManager::instance();
         $this->form_element_factory = Tracker_FormElementFactory::instance();
     }
-    
+
+    /**
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return Tracker_FormElement_Field[]
+     */
     public function getFields(Tracker_Artifact $artifact) {
         $diplayed_fields = array();
         $tracker_id      = $artifact->getTrackerId();

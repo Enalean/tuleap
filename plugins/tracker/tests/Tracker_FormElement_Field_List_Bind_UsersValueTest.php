@@ -92,5 +92,11 @@ class Tracker_FormElement_Field_List_Bind_UsersValue_fetchValuesForJSONTest exte
             'realname' => 'Le roi arthur',
         ));
     }
+
+    public function itReturnsNullForGetJsonIfUserIsNone() {
+        $value = new Tracker_FormElement_Field_List_Bind_UsersValue(100, 'none', 'none');
+        $json = $value->getJsonValue();
+        $this->assertNull($json);
+    }
 }
 ?>

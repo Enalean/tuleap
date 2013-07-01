@@ -1,3 +1,41 @@
+Version 3.28 - Tuleap 6.2
+    * Remove garbage output when downloading files from git
+
+
+The noheader parameter is not taken into account when we display the
+toolbar.
+
+This fix request #3276 - Garbage output when downloading files from git
+service
+This fix sla #3577 - Not able to unzip git codex snapshot
+
+Change-Id: I427fc05f04a121794958ee24bf4ef8573aee7617
+
+Version 3.27 - Tuleap 6.2
+    * Fix sla #4002: System event no more kept 'Running' when repo is deleted
+
+Version 3.26 - Tuleap 6.2
+    * Fix sla #4002: it was not possible anymore to browse gitshell repositories
+
+Version 3.25 - Tuleap 6.2
+    * Story #3633 - Gerrit projects inherits Tuleap parents information
+
+Version 3.24 - Tuleap 6.2
+    * story #3634: my parent project are migrated when I migrate a repository
+
+    * Fix scheme issue in account maintenance page
+
+      When the gerrit host is gerrit.example.com and its port is 8080, the
+      link displayed in account maintenance page is:
+      <a href="gerrit.example.com:8080">…</a>
+
+      However the scheme is missing and therefore the browser thinks that the
+      scheme is gerrit.example.com and try to open an application (like apt:
+      or mailto:)
+
+Version 3.23 - Tuleap 6.2
+    * Fix request #1561 - Error with link to git commit from a artifact
+
 Version 3.22 - Tuleap 6.1
     * Fix bugs #3576: fix js crying on git service homepage
     * Fix bugs #3573: CI: get an error message if no git trigger selected

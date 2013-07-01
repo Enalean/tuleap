@@ -70,60 +70,6 @@ class GitRepositoryTest extends TuleapTestCase {
         $this->assertFalse($repo->isDotGit('default.git.old'));
     }
 
-    public function testLogGitPushNoUser() {
-        $um = new MockUserManager();
-        $um->setReturnValue('getUserByIdentifier', null);
-        $repo = new GitRepositoryTestVersion();
-        $repo->setReturnValue('_getUserManager', $um);
-        $dao = new MockGitDao();
-        $dao->setReturnValue('logGitPush', true);
-        $repo->setReturnValue('getDao', $dao);
-
-        $this->assertTrue($repo->logGitPush('repo', 'user', 'prj', 1327577111, 3));
-
-        $repo->expectOnce('_getUserManager');
-        $um->expectOnce('getUserByIdentifier');
-        $dao->expectOnce('logGitPush');
-    }
-
-    public function testLogGitPushDaoFail() {
-        $user = mock('PFUser');
-        $user->setReturnValue('getId', 2);
-        $um = new MockUserManager();
-        $um->setReturnValue('getUserByIdentifier', $user);
-        $repo = new GitRepositoryTestVersion();
-        $repo->setReturnValue('_getUserManager', $um);
-        $dao = new MockGitDao();
-        $dao->setReturnValue('logGitPush', false);
-        $repo->setReturnValue('getDao', $dao);
-
-        $this->assertFalse($repo->logGitPush('repo', 'user', 'prj', 1327577111, 3));
-
-        $repo->expectOnce('_getUserManager');
-        $um->expectOnce('getUserByIdentifier');
-        $user->expectOnce('getId');
-        $dao->expectOnce('logGitPush');
-    }
-
-    public function testLogGitPushSuccess() {
-        $user = mock('PFUser');
-        $user->setReturnValue('getId', 2);
-        $um = new MockUserManager();
-        $um->setReturnValue('getUserByIdentifier', $user);
-        $repo = new GitRepositoryTestVersion();
-        $repo->setReturnValue('_getUserManager', $um);
-        $dao = new MockGitDao();
-        $dao->setReturnValue('logGitPush', true);
-        $repo->setReturnValue('getDao', $dao);
-
-        $this->assertTrue($repo->logGitPush('repo', 'user', 'prj', 1327577111, 3));
-
-        $repo->expectOnce('_getUserManager');
-        $um->expectOnce('getUserByIdentifier');
-        $user->expectOnce('getId');
-        $dao->expectOnce('logGitPush');
-    }
-
     public function testGetRepositoryIDByNameSuccess() {
         $repo = new GitRepositorySecondTestVersion();
         $pm = new MockProjectManager();

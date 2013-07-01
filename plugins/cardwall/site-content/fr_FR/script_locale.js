@@ -23,3 +23,7 @@ codendi.locales['cardwall_field_validation'] = {
         'int_type'   : 'la valeur doit être un entier'
     }
 };
+
+codendi.locales['cardwall'] = {
+    edit_card : 'Éditer la carte'
+};

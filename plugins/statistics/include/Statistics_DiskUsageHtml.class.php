@@ -84,7 +84,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
     }
 
     public function getTopProjects($startDate, $endDate, $service, $order, $url, $offset) {
-        $limit  = 10;
+        $limit  = 100;
         list($res, $nbRows) = $this->_dum->getTopProjects($startDate, $endDate, $service, $order, $offset, $limit);
         if ($res) {
             $titles = array('Rank', 'Id', 'Name', 'Start size', 'End size', 'Evolution Size ', 'Evolution Rate (%)');

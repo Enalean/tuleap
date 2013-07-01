@@ -1,3 +1,33 @@
+Version 5.134 - Tuleap 6.2
+    * Update soap to v2.0.9
+
+Version 5.133 - Tuleap 6.2
+    * Story #3814: edit cards in overlay on cardwall
+
+Version 5.132 - Tuleap 6.2
+    * branch #2747: Remove htmlentities from csv output (Contrib STMicroelectronics)
+
+Version 5.131 - Tuleap 6.2
+    * Fix sla #3835: remove additional whitespace when using Rich Text field
+
+Version 5.130 - Tuleap 6.2
+    * Story 3539: initiate product backlog. Added two new panes for the top backlog
+
+Version 5.129 - Tuleap 6.2
+    * Do not crash when artifact has no last changeset
+
+Version 5.128 - Tuleap 6.2
+    * story #3544 - copy a tracker template with its permissions
+
+Version 5.127 - Tuleap 6.2
+    * Fix bugs #3582 - getTrackerStructure permissions
+
+
+SOAP method getTrackerStructure returns fields visible by user
+instead of requiring admin permission.
+
+Change-Id: Iafdb79916d4c4076146a33392d1a169e25081b7c
+
 Version 5.126 - Tuleap 6.1
     * story #2923: Display dedicated planning pane in agiledashboard
 

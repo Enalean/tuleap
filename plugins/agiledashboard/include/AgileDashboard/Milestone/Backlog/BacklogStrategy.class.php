@@ -33,6 +33,10 @@ abstract class AgileDashboard_Milestone_Backlog_BacklogStrategy {
     /** @var Tracker */
     protected $backlogitem_tracker;
 
+    /**
+     * @param array $milestone_backlog_artifacts
+     * @param Tracker $backlogitem_tracker
+     */
     public function __construct($milestone_backlog_artifacts, Tracker $backlogitem_tracker) {
         $this->milestone_backlog_artifacts = $milestone_backlog_artifacts;
         $this->backlogitem_tracker         = $backlogitem_tracker;
@@ -45,5 +49,18 @@ abstract class AgileDashboard_Milestone_Backlog_BacklogStrategy {
 
     /** @return Tracker_Artifact[] */
     public abstract function getArtifacts(PFUser $user);
+
+    /**
+     * Return the string representation of the backlog tracker
+     *
+     * @return String
+     */
+    public abstract function getBacklogItemName();
+
+    /**
+     * Return parent elements to create from (if any)
+     * @return AgileDashboard_Milestone_Pane_Content_ContentNewPresenter[]
+     */
+    public abstract function getBacklogParentElements(PFUser $user, $redirect_to_self);
 }
 ?>

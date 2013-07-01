@@ -31,6 +31,11 @@
     font-weight: bold;
 }
 
+.agiledashboard > .tab-content {
+    padding-bottom: 1em;
+    overflow: visible;
+}
+
 .planning-backlog > table {
     width: 100%;
 }
@@ -137,7 +142,8 @@
     font-weight: bold;
 }
 
-.planning_overcapacity .planning_remaining_effort {
+.planning_overcapacity .planning_remaining_effort,
+.submilestone-effort.planning_overcapacity {
     color: red;
 }
 
@@ -224,10 +230,14 @@
     color: #999;
 }
 
+#topblcontent table,
+#topplanning table,
 #planning table,
 #blcontent table {
     border-spacing: 0;
 }
+
+#topblcontent table,
 #blcontent table {
     width: auto;
 }

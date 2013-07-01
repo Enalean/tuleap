@@ -53,6 +53,9 @@ class Git_Driver_Gerrit_MembershipManager {
     private $gerrit_user_manager;
     private $ugroup_manager;
 
+    /** @var ProjectManager */
+    private $project_manager;
+
     private $cache_groups = array();
 
     public function __construct(
@@ -61,7 +64,8 @@ class Git_Driver_Gerrit_MembershipManager {
         Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         Logger                               $logger,
-        UGroupManager                        $ugroup_manager
+        UGroupManager                        $ugroup_manager,
+        ProjectManager                       $project_manager
     ) {
         $this->dao                    = $dao;
         $this->driver                 = $driver;
@@ -69,6 +73,7 @@ class Git_Driver_Gerrit_MembershipManager {
         $this->gerrit_server_factory  = $gerrit_server_factory;
         $this->logger                 = $logger;
         $this->ugroup_manager         = $ugroup_manager;
+        $this->project_manager        = $project_manager;
     }
 
     /**
@@ -138,10 +143,22 @@ class Git_Driver_Gerrit_MembershipManager {
      * @param UGroup $ugroup
      */
     public function createGroupOnProjectsServers(UGroup $ugroup) {
-        $remote_servers = $this->gerrit_server_factory->getServersForProject($ugroup->getProject());
+        $remote_servers = $this->getServersForProjectAndItsChildren($ugroup->getProject());
         foreach ($remote_servers as $remote_server) {
             $this->createGroupForServer($remote_server, $ugroup);
         }
+    }
+
+    private function getServersForProjectAndItsChildren(Project $project) {
+        $remote_servers = $this->gerrit_server_factory->getServersForProject($project);
+        $children       = $this->project_manager->getChildProjects($project->getID());
+
+        foreach ($children as $child) {
+            $child_remote_servers = $this->gerrit_server_factory->getServersForProject($child);
+            $remote_servers       = array_unique(array_merge($remote_servers, $child_remote_servers));
+        }
+
+        return $remote_servers;
     }
 
     /**

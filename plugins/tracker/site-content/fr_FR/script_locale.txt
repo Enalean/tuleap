@@ -1,3 +1,6 @@
+codendi.locales['tracker'] = {
+    create_anyway: 'Ok, le créer quand même !'
+};
 codendi.locales['tracker_formelement_admin'] = {
     cancel: 'annuler',
     add_another_file: 'Ajouter un autre fichier',

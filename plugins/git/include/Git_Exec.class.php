@@ -23,13 +23,19 @@
  * Wrap access to git commands
  */
 class Git_Exec {
-    private $path;
+    private $work_tree;
+    private $git_dir;
 
     /**
-     * @param String $path The git repository path where we should operate
+     * @param String $work_tree The git repository path where we should operate
      */
-    public function __construct($path) {
-        $this->path = $path;
+    public function __construct($work_tree, $git_dir = null) {
+        $this->work_tree = $work_tree;
+        if ( ! $git_dir) {
+            $this->git_dir = $work_tree.'/.git';
+        } else {
+            $this->git_dir = $git_dir;
+        }
     }
 
     /**
@@ -84,6 +90,80 @@ class Git_Exec {
     }
 
     /**
+     * List all commits between the two revisions
+     *
+     * @param String $oldrev
+     * @param String $newrev
+     *
+     * @return array of String sha1 of each commit
+     */
+    public function revList($oldrev, $newrev) {
+        $output = array();
+        $this->gitCmdWithOutput('rev-list '.escapeshellarg($oldrev).'..'.escapeshellarg($newrev), $output);
+        return $output;
+    }
+
+    /**
+     * List all commits in the new branch that doesnt already belong to the repository
+     *
+     * @param String $refname Branch name
+     * @param String $newrev  Commit sha1
+     *
+     * @return array of String sha1 of each commit
+     */
+    public function revListSinceStart($refname, $newrev) {
+        $output = array();
+        $other_branches = implode(' ', $this->getOtherBranches($refname));
+        $this->gitCmdWithOutput('rev-parse --not '.$other_branches.' | git rev-list --stdin '.escapeshellarg($newrev), $output);
+        return $output;
+    }
+
+    private function getOtherBranches($refname) {
+        $branches = $this->getAllBranches();
+        foreach($branches as $key => $branch) {
+            if ($branch == $refname) {
+                unset($branches[$key]);
+            }
+        }
+        return $branches;
+    }
+
+    private function getAllBranches() {
+        $output = array();
+        $this->gitCmdWithOutput("for-each-ref --format='%(refname)' refs/heads", $output);
+        return $output;
+    }
+
+    /**
+     * Return content of an object
+     *
+     * @param String $rev
+     *
+     * @return String
+     */
+    public function catFile($rev) {
+        $output = array();
+        $this->gitCmdWithOutput('cat-file -p '.escapeshellarg($rev), $output);
+        return implode(PHP_EOL, $output);
+    }
+
+    /**
+     * Return the object type (commit, tag, etc);
+     *
+     * @param String $rev
+     * @throws Git_Command_UnknownObjectTypeException
+     * @return String
+     */
+    public function getObjectType($rev) {
+        $output = array();
+        $this->gitCmdWithOutput('cat-file -t '.escapeshellarg($rev), $output);
+        if (count($output) == 1) {
+            return $output[0];
+        }
+        throw new Git_Command_UnknownObjectTypeException();
+    }
+
+    /**
      * git help commit
      *
      * Commit only if there is something to commit
@@ -134,7 +214,7 @@ class Git_Exec {
      * @return string The git repository path where we operate
      */
     public function getPath() {
-        return $this->path;
+        return $this->work_tree;
     }
 
     protected function gitCmd($cmd) {
@@ -148,7 +228,7 @@ class Git_Exec {
 
     protected function execInPath($cmd, &$output) {
         $retVal = 1;
-        $git = 'git --work-tree='.escapeshellarg($this->path).' --git-dir='.escapeshellarg($this->path.'/.git');
+        $git = 'git --work-tree='.escapeshellarg($this->work_tree).' --git-dir='.escapeshellarg($this->git_dir);
         exec("$git $cmd 2>&1", $output, $retVal);
         if ($retVal == 0) {
             return true;
