@@ -1,0 +1,4 @@
+# The name without extensions is used but the upstream archive provide a
+# file with the extension (that dh_install can't rename on the fly)
+usr/share/tuleap/bin/fileforge.pl usr/share/tuleap/bin/fileforge
+var/cache/tuleap/javascript usr/share/tuleap/src/www/scripts/combined

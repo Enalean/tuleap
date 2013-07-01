@@ -1,0 +1,2 @@
+tuleap-plugin-im: php-script-but-no-phpX-cli-dep usr/share/tuleap/plugins/IM/include/jabbex_api/installation/install.php
+

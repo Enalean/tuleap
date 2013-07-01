@@ -158,7 +158,7 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart {
     }
     
     public function exportToXml(SimpleXMLElement $root, $formsMapping) {
-        parent::exportToXML(&$root, $formsMapping);
+        parent::exportToXML($root, $formsMapping);
         if ($mapping = (string)array_search($this->field_base, $formsMapping)) {
             $root->addAttribute('base', $mapping);
         }

@@ -23,6 +23,7 @@ if ($group_id) {
 
 $res_logger = db_query ("INSERT INTO activity_log (day,hour,group_id,browser,ver,platform,time,page,type) ".
 	"VALUES (".date('Ymd', mktime()).",'".date('H', mktime())."','$log_group','". browser_get_agent() ."','". browser_get_version() ."','". browser_get_platform() ."','". time() ."','".db_es($_SERVER['REQUEST_URI'])."','1');");
+
 if (!$res_logger) {
 	echo $Language->getText('sflogo','err_logger')."\n";
 	echo db_error();

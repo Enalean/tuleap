@@ -24,7 +24,7 @@ CREATE TABLE plugin_docman_item (
   FULLTEXT fltxt_title (title),
   FULLTEXT fltxt_description (description),
   FULLTEXT fltxt (title, description)
-);
+) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS plugin_docman_item_deleted;
 CREATE TABLE plugin_docman_item_deleted (
@@ -64,7 +64,7 @@ CREATE TABLE plugin_docman_version (
   PRIMARY KEY(id),
   KEY item_id (item_id),
   FULLTEXT fltxt (label, changelog, filename)
-);
+) ENGINE=MyISAM;
 
 
 CREATE TABLE plugin_docman_version_deleted (
@@ -189,7 +189,7 @@ CREATE TABLE plugin_docman_metadata_value (
   FULLTEXT fltxt (valueText, valueString),
   FULLTEXT fltxt_txt (valueText),
   FULLTEXT fltxt_str (valueString)
-);
+) ENGINE=MyISAM;
 
 --
 -- Table structure for table 'plugin_docman_metadata_love'

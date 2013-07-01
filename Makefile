@@ -7,7 +7,7 @@ doc:
 	$(MAKE) -C documentation all
 
 test:
-	@php -d allow_call_time_pass_reference=On tests/bin/simpletest tests/simpletest plugins
+	@php tests/bin/simpletest tests/simpletest plugins
 
 autoload:
 	@for path in $(AUTOLOADED_PATH); do \

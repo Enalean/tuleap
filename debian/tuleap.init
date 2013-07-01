@@ -1,0 +1,129 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          tuleap
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Tuleap
+# Description:       This init scripts enables and disables
+#                    the Tuleap tasks which are run by cron.
+### END INIT INFO
+#
+# Tuleap    This shell script starts and stops Tuleap backend
+#
+# This file is a copy/modify/paste of mailman equivalent. Thanks to
+# them!
+#
+# Copyright (C) 2001-2003 by the Free Software Foundation, Inc.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+# Copy this file to /etc/init.d/ (or /etc/rc.d/init.d/ depending on
+# your system) and activate it as such:
+#
+# On Debian, type "update-rc.d tuleap defaults"
+
+TULEAP_HOME=/usr/share/tuleap
+
+SRC_CRON_SCRIPT_ON=$TULEAP_HOME/src/utils/cron.d/codendi
+SRC_CRON_SCRIPT_OFF=$TULEAP_HOME/src/utils/cron.d/codendi-stop
+
+DST_CRON_SCRIPT=/etc/cron.d/tuleap
+
+InstallCron()
+{
+    install -m644 -o root -g root $SRC_CRON_SCRIPT_ON $DST_CRON_SCRIPT
+}
+
+RemoveCron()
+{
+    install -m644 -o root -g root $SRC_CRON_SCRIPT_OFF $DST_CRON_SCRIPT
+}
+
+RETVAL=0
+prog="tuleap"
+
+start()
+{
+    echo -n "Starting $prog: "
+    InstallCron
+    echo "[OK]"
+    RETVAL=$?
+    return $RETVAL
+}
+
+stop()
+{
+    echo -n "Shutting down $prog: "
+    RemoveCron
+    echo "[OK]"
+    RETVAL=$?
+    return $RETVAL
+}
+
+restart()
+{
+    stop
+    start
+    RETVAL=$?
+    return $RETVAL
+}
+
+status()
+{
+    cmp -s "$DST_CRON_SCRIPT" "SRC_CRON_SCRIPT_ON"
+    RETVAL=$?
+    return $RETVAL
+}
+
+case "$1" in
+'start')
+    start
+    RETVAL=$?
+    ;;
+
+'stop')
+    stop
+    RETVAL=$?
+    ;;
+
+'restart'|'force-reload')
+    restart
+    RETVAL=$?
+    ;;
+
+'condrestart')
+    status
+    retval=$?
+    if [ $retval -eq 0 ]
+    then
+        restart
+        RETVAL=$?
+    fi
+    ;;
+
+'status')
+    status
+    RETVAL=$?
+    ;;
+
+*)
+    echo "Usage: $prog {start|stop|restart|force-reload|condrestart}"
+	RETVAL=3
+    ;;
+
+esac
+exit $RETVAL

@@ -1,0 +1,4 @@
+var/lib/tuleap/gitolite/repositories
+var/lib/tuleap/gitroot
+var/cache/tuleap/smarty/templates_c
+var/cache/tuleap/smarty/cache
