@@ -1,8 +1,10 @@
 Version 6.3 (Not released yet)
 	== Plugins ==
-	* graphontrackersv5: 5.1
+	* graphontrackersv5: 5.2
 	* requesthelp: 1.3.3
 	* agiledashboard: 0.88
+	* docman: 2.26.17
+	* git: 3.29
 
 	== Bug fix ==
 	* request #4112: Python exception pass (Contrib Raphaël Enrici)
@@ -17,6 +19,7 @@ Version 6.3 (Not released yet)
 
 	== Development ==
 	* Add new theme for experimental wireframing
+	* Integrate debian packaging (Contrib Raphaël Hertzog)
 
 Version 6.2 (Wednesday, June 26th 2013)
 	* Story #3820: activate generic user creation

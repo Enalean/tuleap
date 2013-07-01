@@ -1,3 +1,6 @@
+Version 3.29 - Tuleap 6.3
+    * Integrate debian packaging (Contrib Raphaël Hertzog)
+
 Version 3.28 - Tuleap 6.2
     * Remove garbage output when downloading files from git
 

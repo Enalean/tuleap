@@ -1,3 +1,6 @@
+Version 5.2 - Tuleap 6.3
+    * Integrate debian packaging (Contrib Raphaël Hertzog)
+
 Version 5.1 - Tuleap 6.3
     * branch #2172: Add cumulative flow chart (contrib Jtekt).
 

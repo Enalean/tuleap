@@ -1,3 +1,6 @@
+Version 2.26.17 - Tuleap 6.3
+    * Integrate debian packaging (Contrib Raphaël Hertzog)
+
 Version 2.26.16 - Tuleap 6.1
     * Fix XSS issue in docman (Contrib STMicroelectronics)
 
