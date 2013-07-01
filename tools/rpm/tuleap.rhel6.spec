@@ -50,7 +50,7 @@ Requires: %{php_base}-process
 Requires: dejavu-lgc-sans-fonts, dejavu-lgc-sans-mono-fonts, dejavu-lgc-serif-fonts
 
 Requires: jpgraph-%{PKG_NAME}
-Requires: htmlpurifier
+Requires: htmlpurifier >= 4.5
 
 Requires: %{php_base}-pecl-apc
 Requires: curl
