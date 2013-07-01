@@ -700,7 +700,11 @@ class Layout extends Response {
             return "#".$r.$g.$b;
         }
     }
-    
+
+    public function isLabFeature() {
+        return false;
+    }
+
     function redirect($url) {
        $is_anon = session_hash() ? false : true;
        $fb = $GLOBALS['feedback'] || count($this->_feedback->logs);
