@@ -20,6 +20,7 @@ Version 6.3 (Not released yet)
 	== Development ==
 	* Add new theme for experimental wireframing
 	* Integrate debian packaging (Contrib Raphaël Hertzog)
+	* Add tool to ease uid/gid change for lxc containers with binded mount
 
 Version 6.2 (Wednesday, June 26th 2013)
 	* Story #3820: activate generic user creation
