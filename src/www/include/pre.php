@@ -1,13 +1,15 @@
 <?php
 //
-// SourceForge: Breaking Down the Barriers to Open Source Development
+// Copyright 2011-2013 (c) Enalean
 // Copyright 1999-2000 (c) The SourceForge Crew
+//
+// SourceForge: Breaking Down the Barriers to Open Source Development
 // http://sourceforge.net
 //
 // 
 
 if (version_compare(phpversion(), '5.1.6', '<')) {
-    die('Codendi must be run on a PHP 5.1.6 (or greater) engine');
+    die('Tuleap must be run on a PHP 5.1.6 (or greater) engine');
 }
 if (version_compare(phpversion(), '5.3', '>=')) {
     if (!ini_get('date.timezone')) {
