@@ -21,6 +21,7 @@ project_admin_editgroupinfo	info_missed	Missing Information. PLEASE fill in all 
 project_admin_editgroupinfo	parent_project	Parent Project:
 project_admin_editgroupinfo	sub_projects	Sub-Projects:
 project_admin_editgroupinfo	project_hierarchy_title	Project hierarchy
+project_admin_editgroupinfo	must_be_admin_of_parent_project	The given parent project does not exist or you are not its administrator.
 project_admin_editgroupinfo	project_hierarchy_desc_1	This feature aims to provide a way to structure projects organizations from a permissions, user groups and control point of view.
 project_admin_editgroupinfo	project_hierarchy_desc_2	As of today, it's only used by Git/ Gerrit for umbrella projects (if relevant to your platform/ project).
 project_admin_editgroupinfo	project_hierarchy_desc_3	However, setting a hierarchy between projects might have future impacts (e.g. members of the parent project could possibly have access to all sub-projects even without explicit permissions granted).
