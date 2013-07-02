@@ -938,9 +938,9 @@ if [ "$INSTALL_PROFILE" = "rhel" ]; then
     fi
 fi
 
-# Check if IM plugin is installed
+# Check if IM plugin is installed (works only on rhel).
 enable_plugin_im="false"
-if [ -d "$INSTALL_DIR/plugins/IM" ]; then
+if [ -d "$INSTALL_DIR/plugins/IM" -a "$INSTALL_PROFILE" = "rhel" ]; then
     enable_plugin_im="true"
 fi
 
