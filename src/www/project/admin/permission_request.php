@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2004-2011. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('pre.php');
@@ -69,6 +70,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
                 // If some selected ugroups are not valid display them to the user.
                 $diff = array_diff($ugroups, $validUgroups);
                 if (!empty($diff)) {
+                    $deletedUgroups = array();
                     foreach ($diff as $ugroupId) {
                         $deletedUgroups[] = ugroup_get_name_from_id($ugroupId);
                     }
@@ -83,6 +85,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
             //to retreive the old marked ugroups
             $darUgroups = $pm->getMembershipRequestNotificationUGroup($group_id);
             if ($pm->setMembershipRequestNotificationUGroup($group_id, $validUgroups)) {
+                $oldUgroups = array();
                 if ($darUgroups && !$darUgroups->isError() && $darUgroups->rowCount() > 0) {
                     foreach ($darUgroups as $row) {
                         $oldUgroups[] = ugroup_get_name_from_id($row['ugroup_id']);
@@ -91,8 +94,9 @@ if ($request->isPost() && $request->valid($vFunc)) {
                     $oldUgroups = array(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN']));
                 }
                 foreach ($validUgroups as $ugroupId) {
-                    $ugroupName = ugroup_get_name_from_id($ugroupId);
-                    $newUgroups[] = $ugroupName;
+                    $ugroupName   = ugroup_get_name_from_id($ugroupId);
+                    $newUgroups   = array($ugroupName);
+                    $addedUgroups = array();
                     if ($ugroupId == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
                         $addedUgroups[] = util_translate_name_ugroup('project_admin');
                     } else {
@@ -153,6 +157,7 @@ echo '</p></td></tr>';
 //Retrieve the saved ugroups for notification from DB
 $dar = $pm->getMembershipRequestNotificationUGroup($group_id);
 if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+    $selectedUgroup = array();
     foreach ($dar as $row) {
         $selectedUgroup[] = $row['ugroup_id'];
     }

@@ -65,7 +65,9 @@ $valid_parent = true;
 if ($valid_data==1) {
 	
 	// insert descriptions 
-	$updatedesc=0;
+	$updatedesc    = 0;
+	$previousvalue = array();
+	$resultdesc    = array();
 	for($i=0;$i<sizeof($descfieldsinfos);$i++){
 		
 		$currentform=trim($request->get("form_".$descfieldsinfos[$i]["group_desc_id"]));
@@ -188,7 +190,7 @@ print '
 <BR><TEXTAREA cols="70" rows="3" wrap="virtual" name="form_shortdesc">
 '. $hp->purify(util_unconvert_htmlspecialchars($row_grp['short_description']), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>';
 
-
+$displayfieldvalue = array();
 for($i=0;$i<sizeof($descfieldsinfos);$i++){
 
 	for($j=0;$j<sizeof($descfieldsvalue);$j++){

@@ -1,11 +1,24 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * 
- * 
  *
- * ReferenceAdministrationViews
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 require_once('common/mvc/Views.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/reference/ReferenceManager.class.php');
@@ -75,7 +88,8 @@ class ReferenceAdministrationViews extends Views {
             $title_arr[]=$GLOBALS['Language']->getText('project_reference','del?');
         }
         echo html_build_list_table_top($title_arr);
-        $current_scope='S';
+        $current_scope = 'S';
+        $row_num       = 0;
         foreach ($references as $ref) {
             if ($ref->getScope() != $current_scope ) {
                 //changing from system to project
@@ -97,7 +111,7 @@ class ReferenceAdministrationViews extends Views {
                 echo html_build_list_table_top($title_arr_project);
             }
             $current_scope=$ref->getScope();
-            $this->_display_reference_row($ref,$row_num);
+            $this->_display_reference_row($ref, $row_num);
         }
                 
         echo '
@@ -115,6 +129,7 @@ class ReferenceAdministrationViews extends Views {
     public static function getReferenceDescription(Reference $ref) {
         $description = '';
         if (strpos($ref->getDescription(),"_desc_key")!==false) {
+            $matches = array();
             if (preg_match('/(.*):(.*)/', $ref->getDescription(), $matches)) {
                 if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
                     $description = $GLOBALS['Language']->getText($matches[1], $matches[2]);

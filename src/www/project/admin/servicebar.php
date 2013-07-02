@@ -17,7 +17,8 @@ require_once('common/event/EventManager.class.php');
 $request = HTTPRequest::instance();
     
 function display_service_row($group_id, $service_id, $label, $short_name, $description, $is_active, $is_used, $scope, $rank, &$row_num, $su, $is_template) {
-  global $Language;
+    global $Language;
+    $matches = array();
 
     // Normal projects should not see inactive services.
     if (!$su) {
@@ -100,12 +101,12 @@ function display_service_row($group_id, $service_id, $label, $short_name, $descr
 }
 
 
-
+$group_id = $request->getValidated('group_id', 'uint', 0);
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 $pm = ProjectManager::instance();
-$project=$pm->getProject($group_id);
+$project = $pm->getProject($group_id);
 
 
 $is_superuser=false;
@@ -120,21 +121,21 @@ if ($func=='delete') {
     $service_id = $request->getValidated('service_id', 'uint', 0);
     // Delete service
      if (!$service_id) {
-        $feedback .= ' '.$Language->getText('project_admin_servicebar','s_id_not_given').' ';
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_servicebar','s_id_not_given'));
     } else {
 
-	$sql = "DELETE FROM service WHERE group_id=$group_id AND service_id=".db_ei($service_id);
+        $sql = "DELETE FROM service WHERE group_id=". db_ei($group_id) ." AND service_id=". db_ei($service_id);
 
-	$result=db_query($sql);
-	if (!$result || db_affected_rows($result) < 1) {
-		$GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
-	} else {
+        $result=db_query($sql);
+        if (!$result || db_affected_rows($result) < 1) {
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
+        } else {
             $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_servicebar','s_del'));
-	}
+        }
         if ($group_id==100) {
             $short_name = $request->getValidated('short_name', 'string', '');
             if (!$short_name) {
-		$GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_servicebar','cant_delete_s_from_p'));
+                $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_servicebar','cant_delete_s_from_p'));
             } else {
                 // Delete service from all projects
                 $sql = "DELETE FROM service WHERE short_name='".db_es($short_name)."'";
@@ -145,7 +146,7 @@ if ($func=='delete') {
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_servicebar','s_del_from_p',db_affected_rows($result)));
                 }
             }
-	}
+        }
     }
     $GLOBALS['Response']->redirect('/project/admin/servicebar.php?group_id='.$group_id);
 }
