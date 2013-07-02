@@ -17,7 +17,7 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 $delete_desc_id=$request->get('delete_group_desc_id');
 if($delete_desc_id){
 	
-	$sql="DELETE FROM group_desc where group_desc_id='".$delete_desc_id."'";
+	$sql="DELETE FROM group_desc where group_desc_id='".db_ei($delete_desc_id)."'";
 	$result=db_query($sql);
 	        		
 	    if (!$result) {
@@ -25,7 +25,7 @@ if($delete_desc_id){
 	    	exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('admin_desc_fields','del_desc_field_fail',array($host,db_error())));
 	    }
 	    
-	$sql="DELETE FROM group_desc_value where group_desc_id='".$delete_desc_id."'";
+	$sql="DELETE FROM group_desc_value where group_desc_id='".db_ei($delete_desc_id)."'";
 	$result=db_query($sql);
 
 	if (!$result) {
@@ -39,7 +39,7 @@ if($delete_desc_id){
 $make_required_desc_id=$request->get('make_required_desc_id');
 $remove_required_desc_id=$request->get('remove_required_desc_id');
 if($make_required_desc_id){
-	$sql="UPDATE group_desc SET desc_required='1' where group_desc_id='".$make_required_desc_id."'";
+	$sql="UPDATE group_desc SET desc_required='1' where group_desc_id='".db_ei($make_required_desc_id)."'";
 	$result=db_query($sql);
 	if (!$result) {
     	list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
@@ -50,7 +50,7 @@ if($make_required_desc_id){
 }
 
 if($remove_required_desc_id){
-	$sql="UPDATE group_desc SET desc_required='0' where group_desc_id='".$remove_required_desc_id."'";
+	$sql="UPDATE group_desc SET desc_required='0' where group_desc_id='".db_ei($remove_required_desc_id)."'";
 	$result=db_query($sql);
 	if (!$result) {
     	list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
@@ -87,7 +87,7 @@ if ($add_desc || $update) {
 		if($add_desc){
 			$sql="INSERT INTO group_desc (desc_name, desc_description, desc_rank, desc_type, desc_required) ";
 			$sql.=	"VALUES ('".db_escape_string($desc_name)."','".db_escape_string($desc_description)."','";
-			$sql.= db_escape_string($desc_rank)."','".$desc_type."','".$desc_required."')"; 
+			$sql.= db_escape_string($desc_rank)."','".db_ei($desc_type)."','".db_ei($desc_required)."')";
 			$result=db_query($sql);
 		        		
 		    if (!$result) {
@@ -100,14 +100,13 @@ if ($add_desc || $update) {
 		    }
 		}else{
 			
-			$update_desc_id=$request->get('form_desc_id');
 			$sql="UPDATE group_desc SET ";
 			$sql.= "desc_name='".db_escape_string($desc_name)."',";
 			$sql.= "desc_description='".db_escape_string($desc_description)."',";
 			$sql.= "desc_rank='".db_escape_string($desc_rank)."',";
 			$sql.= "desc_type='".db_escape_string($desc_type)."',";
 			$sql.= "desc_required='".db_escape_string($desc_required)."'";
-			$sql.= " WHERE group_desc_id='".$update_desc_id."'";
+			$sql.= " WHERE group_desc_id='".db_ei($request->get('form_desc_id'))."'";
 			
 			$result=db_query($sql);
 		        		
@@ -138,10 +137,10 @@ echo "<H2>".$Language->getText('admin_desc_fields','header')."</H2>";
 
 $hp = Codendi_HTMLPurifier::instance();
 
-$update_fields_desc_id=$request->get('update_fields_desc_id');
+$update_fields_desc_id=$request->getValidated('update_fields_desc_id', 'uint', 0);
 if($update_fields_desc_id){
 	
-	$sql = "SELECT * FROM group_desc WHERE group_desc_id='".$update_fields_desc_id."'";
+	$sql = "SELECT * FROM group_desc WHERE group_desc_id='".db_ei($update_fields_desc_id)."'";
 	$result_update = db_query($sql);
 	$row_update = db_fetch_array($result_update);
 	
@@ -205,6 +204,7 @@ if($update_fields_desc_id){
 	for($i=0;$i<sizeof($descfieldsinfos);$i++){
 		
 		$desc_name_inst=$descfieldsinfos[$i]["desc_name"];
+                $matches =array();
 		if(preg_match('/(.*):(.*)/', $desc_name_inst, $matches)) {
 			
 			if ($Language->hasText($matches[1], $matches[2])) {
