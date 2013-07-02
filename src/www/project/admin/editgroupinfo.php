@@ -119,11 +119,14 @@ if ($valid_data==1) {
             if ($request->existAndNonEmpty('parent_project')) {
                 $parent_project = $project_manager->getProjectFromAutocompleter($request->get('parent_project'));
                 if ($parent_project && $current_user->isMember($parent_project->getId(), 'A')) {
-                $set_parent = $project_manager->setParentProject($group_id, $parent_project->getID());
+                    $set_parent = $project_manager->setParentProject($group_id, $parent_project->getID());
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo', 'must_be_admin_of_parent_project'));
+                    $valid_parent = false;
                 }
             }
             if ($request->existAndNonEmpty('remove_parent_project')) {
-            $set_parent = $project_manager->removeParentProject($group_id);
+                $set_parent = $project_manager->removeParentProject($group_id);
             }
         } catch (Project_HierarchyManagerNoChangeException $e) {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));

@@ -34,6 +34,8 @@ class Git_Driver_Gerrit {
     const GSQL_COMMAND = 'gerrit gsql --format json -c';
     const EXIT_CODE    = 1;
 
+    const DEFAULT_PARENT_PROJECT = 'All-Projects';
+
     /**
      * @var Git_Driver_Gerrit_RemoteSSHCommand
      */
@@ -370,6 +372,17 @@ class Git_Driver_Gerrit {
     public function setProjectInheritance(Git_RemoteServer_GerritServer $server, $project_name, $parent_project_name) {
         $query = self::COMMAND .' set-project-parent '. $project_name .' --parent '. $parent_project_name;
         $this->ssh->execute($server, $query);
+    }
+
+    /**
+     * Reset the parent of a project
+     * @param Git_RemoteServer_GerritServer $server
+     * @param type $project_name
+     */
+    public function resetProjectInheritance(Git_RemoteServer_GerritServer $server, $project_name) {
+        $query = self::COMMAND .' set-project-parent '. $project_name .' --parent '. self::DEFAULT_PARENT_PROJECT;
+        $this->ssh->execute($server, $query);
+
     }
 }
 ?>

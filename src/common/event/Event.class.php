@@ -525,5 +525,28 @@ class Event {
      *     Void
      */
     const SVN_UPDATE_HOOKS = 'svn_update_hooks';
+
+    /**
+     * Event raised when a project has a new parent
+     *
+     * Parameters:
+     *     'group_id' => The id of the child project
+     *     'parent_group_id' => the id of the parent project
+     *
+     * Expected results:
+     *     Void
+     */
+    const PROJECT_SET_PARENT_PROJECT= 'project_set_parent_project';
+
+    /**
+     *  Event raised when project parent is removed
+     *
+     * Parameters:
+     *     'group_id' => The id of the child project
+     *
+     * Expected results:
+     *     Void
+     */
+    const PROJECT_UNSET_PARENT_PROJECT= 'project_unset_parent_project';
 }
 ?>

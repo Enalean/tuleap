@@ -1,60 +1,52 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
- *
+ * Copyright Enalean (c) 2013. All rights reserved.
+ * 
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
+ * 
  * This file is a part of Tuleap.
- *
+ * 
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
+ * 
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function aMockProject() {
-    return new MockProjectBuilder();
+function aMockUGroup() {
+    return new MockUGroupBuilder();
 }
 
-class MockProjectBuilder {
-    
-    private $project;
-    private $id        = false;
-    private $unix_name = false;
-    private $is_public = false;
-    
-    public function __construct() {
-        $this->project   = mock('Project');
-        $this->id        = uniqid();
-    }
-    
+class MockUGroupBuilder {
+
+    private $id              = false;
+    private $normalized_name = false;
+
+
     public function withId($id) {
         $this->id = $id;
         return $this;
     }
 
-    public function withUnixName($name) {
-        $this->unix_name = $name;
-        return $this;
-    }
-
-    public function isPublic() {
-        $this->is_public = true;
+    public function withNormalizedName($name) {
+        $this->normalized_name = $name;
         return $this;
     }
 
     public function build() {
-        stub($this->project)->getId()->returns($this->id);
-        stub($this->project)->getUnixName()->returns($this->unix_name);
-        stub($this->project)->isPublic()->returns($this->is_public);
-        return $this->project;
+        $ugroup = mock('UGroup');
+        stub($ugroup)->getId()->returns($this->id);
+        stub($ugroup)->getNormalizedName()->returns($this->normalized_name);
+        return $ugroup;
     }
 }
-
 ?>

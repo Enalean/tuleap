@@ -31,16 +31,21 @@ class Git_RemoteServer_GerritServerFactory {
     /** @var Git_SystemEventManager */
     private $system_event_manager;
 
+    /** @var ProjectManager */
+    private $project_manager;
+
     /**
      *
      * @param Git_RemoteServer_Dao $dao
      * @param GitDao $git_dao
-     * @param Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory $replication_key_factory
+     * @param Git_SystemEventManager $system_event_manager
+     * @param ProjectManager $project_manager
      */
-    public function __construct(Git_RemoteServer_Dao $dao, GitDao $git_dao, Git_SystemEventManager $system_event_manager) {
+    public function __construct(Git_RemoteServer_Dao $dao, GitDao $git_dao, Git_SystemEventManager $system_event_manager, ProjectManager $project_manager) {
         $this->dao     = $dao;
         $this->git_dao = $git_dao;
         $this->system_event_manager = $system_event_manager;
+        $this->project_manager = $project_manager;
     }
 
     /**
@@ -85,6 +90,10 @@ class Git_RemoteServer_GerritServerFactory {
         $servers = array();
         foreach ($this->dao->searchAllByProjectId($project->getID()) as $row) {
             $servers[$row['id']] = $this->instantiateFromRow($row);
+        }
+        foreach ($this->project_manager->getChildProjects($project->getID()) as $child) {
+            // don't use array_merge, it will nuke the keys
+            $servers = $servers + $this->getServersForProject($child);
         }
         return $servers;
     }

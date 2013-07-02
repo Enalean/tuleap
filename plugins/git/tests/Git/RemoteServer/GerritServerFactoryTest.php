@@ -40,9 +40,15 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
     /** @var Git_RemoteServer_GerritServerFactory  */
     private $factory;
 
+    /** @var ProjectManager */
+    private $project_manager;
+
+    private $dar_1;
+    private $dar_2;
+
     public function setUp() {
         parent::setUp();
-        $dar_1 = array(
+        $this->dar_1 = array(
             'id'                => $this->server_id,
             'host'              => $this->host,
             'ssh_port'          => $this->ssh_port,
@@ -51,7 +57,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             'identity_file'     => $this->identity_file,
             'ssh_key'           => $this->replication_key,
         );
-        $dar_2 = array(
+        $this->dar_2 = array(
             'id'                => $this->alternate_server_id,
             'host'              => $this->alternate_host,
             'ssh_port'          => $this->ssh_port,
@@ -65,11 +71,13 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         $this->dao = mock('Git_RemoteServer_Dao');
         $this->system_event_manager = mock('Git_SystemEventManager');
 
-        stub($this->dao)->searchAll()->returnsDar($dar_1, $dar_2);
-        stub($this->dao)->searchAllByProjectId()->returnsDar($dar_1);
-        stub($this->dao)->searchById($this->server_id)->returnsDar($dar_1);
+        stub($this->dao)->searchAll()->returnsDar($this->dar_1, $this->dar_2);
+        stub($this->dao)->searchById($this->server_id)->returnsDar($this->dar_1);
         stub($this->dao)->searchById()->returnsEmptyDar();
-        $this->factory = new Git_RemoteServer_GerritServerFactory($this->dao, $git_dao, $this->system_event_manager);
+
+        $this->project_manager = mock('ProjectManager');
+
+        $this->factory = new Git_RemoteServer_GerritServerFactory($this->dao, $git_dao, $this->system_event_manager, $this->project_manager);
 
         $this->main_gerrit_server = new Git_RemoteServer_GerritServer(
             $this->server_id,
@@ -91,6 +99,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         );
         stub($git_dao)->isRemoteServerUsed($this->server_id)->returns(true);
         stub($git_dao)->isRemoteServerUsed($this->alternate_server_id)->returns(false);
+
     }
 
     public function itThrowsAnExceptionIfThereIsNoSuchServer() {
@@ -119,11 +128,68 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
     }
 
     public function itGetsAllServersForAGivenProject() {
+        stub($this->project_manager)->getChildProjects()->returns(array());
         $project = stub('Project')->getId()->returns(458);
         expect($this->dao)->searchAllByProjectId(458)->once();
+        stub($this->dao)->searchAllByProjectId()->returnsDar($this->dar_1);
         $servers = $this->factory->getServersForProject($project);
         $this->assertIsA($servers[$this->server_id], 'Git_RemoteServer_GerritServer');
     }
+
+    public function itReturnsChildServers() {
+        $parent     = aMockProject()->withId(369)->build();
+        $child1      = aMockProject()->withId(933)->build();
+        $child2      = aMockProject()->withId(934)->build();
+
+        stub($this->project_manager)->getChildProjects(369)->returns(array($child1, $child2));
+        stub($this->project_manager)->getChildProjects()->returns(array());
+
+        stub($this->dao)->searchAllByProjectId(933)->returnsDar($this->dar_1);
+        stub($this->dao)->searchAllByProjectId(934)->returnsDar($this->dar_2);
+        stub($this->dao)->searchAllByProjectId()->returnsEmptyDar();
+
+        $servers = $this->factory->getServersForProject($parent);
+        $this->assertCount($servers, 2);
+        $this->assertIsA($servers[$this->server_id], 'Git_RemoteServer_GerritServer');
+        $this->assertEqual($servers[$this->server_id]->getId(), $this->server_id);
+        $this->assertIsA($servers[$this->alternate_server_id], 'Git_RemoteServer_GerritServer');
+        $this->assertEqual($servers[$this->alternate_server_id]->getId(), $this->alternate_server_id);
+    }
+
+    public function itReturnsAllProjectChildren() {
+        $parent      = aMockProject()->withId(369)->build();
+        $child1      = aMockProject()->withId(933)->build();
+        $child2      = aMockProject()->withId(934)->build();
+        $grandchild  = aMockProject()->withId(96)->build();
+
+        stub($this->project_manager)->getChildProjects(369)->returns(array($child1, $child2));
+        stub($this->project_manager)->getChildProjects(933)->returns(array($grandchild));
+        stub($this->project_manager)->getChildProjects()->returns(array());
+
+        stub($this->dao)->searchAllByProjectId()->returnsEmptyDar();
+        expect($this->dao)->searchAllByProjectId()->count(4);
+        expect($this->dao)->searchAllByProjectId(369)->at(0);
+        expect($this->dao)->searchAllByProjectId(933)->at(1);
+        expect($this->dao)->searchAllByProjectId(96)->at(2);
+        expect($this->dao)->searchAllByProjectId(934)->at(3);
+
+        $this->factory->getServersForProject($parent);
+    }
+
+    public function itReturnsOnlyOneServerEvenWhenThereAreSeveral() {
+        $parent     = aMockProject()->withId(369)->build();
+        $child      = aMockProject()->withId(933)->build();
+
+        stub($this->project_manager)->getChildProjects(369)->returns(array($child));
+        stub($this->project_manager)->getChildProjects()->returns(array());
+
+        stub($this->dao)->searchAllByProjectId(369)->returnsDar($this->dar_1);
+        stub($this->dao)->searchAllByProjectId(933)->returnsDar($this->dar_1);
+
+        $servers = $this->factory->getServersForProject($parent);
+        $this->assertCount($servers, 1);
+    }
+
 
     public function itSavesAnExistingServer() {
         $this->main_gerrit_server->setLogin('new_login');

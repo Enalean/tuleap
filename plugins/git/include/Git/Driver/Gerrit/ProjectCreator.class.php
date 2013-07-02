@@ -40,8 +40,8 @@ class Git_Driver_Gerrit_ProjectCreator {
     /** @var Git_Driver_Gerrit_MembershipManager */
     private $membership_manager;
 
-    /** @var ProjectManager */
-    private $project_manager;
+    /** @var Git_Driver_Gerrit_UmbrellaProjectManager */
+    private $umbrella_manager;
 
     public function __construct(
         $dir,
@@ -49,14 +49,14 @@ class Git_Driver_Gerrit_ProjectCreator {
         Git_Driver_Gerrit_UserFinder $user_finder,
         UGroupManager $ugroup_manager,
         Git_Driver_Gerrit_MembershipManager $membership_manager,
-        ProjectManager $project_manager
+        Git_Driver_Gerrit_UmbrellaProjectManager $umbrella_manager
     ) {
         $this->dir                = $dir;
         $this->driver             = $driver;
         $this->user_finder        = $user_finder;
         $this->ugroup_manager     = $ugroup_manager;
         $this->membership_manager = $membership_manager;
-        $this->project_manager    = $project_manager;
+        $this->umbrella_manager   = $umbrella_manager;
     }
 
     /**
@@ -72,7 +72,7 @@ class Git_Driver_Gerrit_ProjectCreator {
 
         $migrated_ugroups = $this->membership_manager->createArrayOfGroupsForServer($gerrit_server, $ugroups);
 
-        $this->recursivelyCreateUmbrellaProjects($gerrit_server, $project);
+        $this->umbrella_manager->recursivelyCreateUmbrellaProjects(array($gerrit_server), $project);
 
         $gerrit_project_name = $this->driver->createProject($gerrit_server, $repository, $project_name);
 
@@ -87,41 +87,6 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->exportGitBranches($gerrit_server, $gerrit_project_name, $repository);
 
         return $gerrit_project_name;
-    }
-
-    private function recursivelyCreateUmbrellaProjects(Git_RemoteServer_GerritServer $gerrit_server, Project $project) {
-
-        $ugroups        = $this->ugroup_manager->getUGroups($project);
-        $admin_ugroup   = $this->getAdminUGroup($ugroups);
-        $parent_project = $this->project_manager->getParentProject($project->getID());
-        $project_name   = $project->getUnixName();
-
-        if ($parent_project) {
-            $this->recursivelyCreateUmbrellaProjects($gerrit_server, $parent_project);
-            $this->driver->setProjectInheritance($gerrit_server, $project_name, $parent_project->getUnixName());
-        }
-
-        $this->membership_manager->createArrayOfGroupsForServer($gerrit_server, $ugroups);
-
-        if (! $this->driver->doesTheParentProjectExist($gerrit_server, $project_name)) {
-            $admin_group_name = $project_name.'/'.$admin_ugroup->getNormalizedName();
-            $project_name = $this->driver->createProjectWithPermissionsOnly($gerrit_server, $project, $admin_group_name);
-        }
-    }
-
-    /**
-     *
-     * @param UGroup[] $ugroups
-     * @return null | UGroup
-     */
-    private function getAdminUGroup(array $ugroups) {
-        foreach ($ugroups as $ugroup) {
-            if ($ugroup->getId() == UGroup::PROJECT_ADMIN) {
-                return $ugroup;
-            }
-        }
-
-        return null;
     }
 
     private function exportGitBranches(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project, GitRepository $repository) {

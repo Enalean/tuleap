@@ -510,7 +510,17 @@ class ProjectManager {
      * @throws Project_HierarchyManagerAncestorIsSelfException
      */
     public function setParentProject($group_id, $parent_group_id) {
-        return $this->getHierarchyManager()->setParentProject($group_id, $parent_group_id);
+        $event_manager = EventManager::instance();
+        $result        = $this->getHierarchyManager()->setParentProject($group_id, $parent_group_id);
+
+        if ($result) {
+            $event_manager->processEvent(Event::PROJECT_SET_PARENT_PROJECT, array(
+                'group_id'  => $group_id,
+                'parent_id' => $parent_group_id
+            ));
+        }
+
+        return $result;
     }
 
     /**
@@ -518,7 +528,16 @@ class ProjectManager {
      * @return Boolean
      */
     public function removeParentProject($group_id) {
-        return $this->getHierarchyManager()->removeParentProject($group_id);
+        $event_manager = EventManager::instance();
+        $result        = $this->getHierarchyManager()->removeParentProject($group_id);
+
+        if ($result) {
+            $event_manager->processEvent(Event::PROJECT_UNSET_PARENT_PROJECT, array(
+                'group_id'  => $group_id
+            ));
+        }
+
+        return $result;
     }
 
     /**
