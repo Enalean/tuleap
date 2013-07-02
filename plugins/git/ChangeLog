@@ -1,3 +1,6 @@
+Version 3.30 - Tuleap 6.3
+    * Story #3635: When someone set a new parent in project hierarchy, this is propagated to Gerrit
+
 Version 3.29 - Tuleap 6.3
     * Integrate debian packaging (Contrib Raphaël Hertzog)
 
