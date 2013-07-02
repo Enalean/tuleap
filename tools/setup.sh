@@ -1390,12 +1390,13 @@ fi
 
 $MYSQL -u$PROJECT_ADMIN -p$codendiadm_passwd $PROJECT_NAME < /usr/share/forgeupgrade/db/install-mysql.sql
 $INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0755 --directory /etc/$PROJECT_NAME/forgeupgrade
-if [ $INSTALL_PROFILE = "rhel" -a "z$RH_MAJOR_VERSION" = "z6" ]; then
-    forge_upgrade_config_dist=$INSTALL_DIR/src/etc/forgeupgrade-config.ini.rhel6.dist
-else
+if [ $INSTALL_PROFILE = "rhel" -a "z$RH_MAJOR_VERSION" = "z5" ]; then
     forge_upgrade_config_dist=$INSTALL_DIR/src/etc/forgeupgrade-config.ini.dist
+else
+    forge_upgrade_config_dist=$INSTALL_DIR/src/etc/forgeupgrade-config.ini.rhel6.dist
 fi
 $INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0644 $forge_upgrade_config_dist /etc/$PROJECT_NAME/forgeupgrade/config.ini
+substitute /etc/$PROJECT_NAME/forgeupgrade/config.ini "%project_name%" "$PROJECT_NAME"
 
 ##############################################
 # *Last* step: install plugins
