@@ -71,16 +71,21 @@ class HTTPRequest extends Codendi_Request {
     }
 
     /**
-     * Singleton method for the class.
-     *
-     * @return mixed HTTPRequest Object.
+     * Hold an instance of the class
      */
-    public function &instance() {
-        static $_httprequest_instance;
-        if (!$_httprequest_instance) {
-            $_httprequest_instance = new HTTPRequest();
+    protected static $_instance;
+
+    /**
+     * The singleton method
+     *
+     * @return HTTPRequest
+     */
+    public static function instance() {
+        if (!isset(self::$_instance)) {
+            $c = __CLASS__;
+            self::$_instance = new $c;
         }
-        return $_httprequest_instance;
+        return self::$_instance;
     }
 
     /**
