@@ -499,5 +499,25 @@ class Project extends Group implements PFO_Project {
 
             return $result;
     }
+
+    /**
+     * Return predefined license
+     *
+     * @see vars.php
+     *
+     * @return String
+     */
+    public function getLicense() {
+        return $this->project_data_array['license'];
+    }
+
+    /**
+     * Return custom license if any (free text)
+     *
+     * @return String
+     */
+    public function getLicenseOther() {
+        return $this->project_data_array['license_other'];
+    }
 }
 ?>

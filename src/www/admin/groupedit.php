@@ -15,16 +15,17 @@ require_once('www/project/admin/project_history.php');
 require_once('common/include/TemplateSingleton.class.php');
 require_once('common/event/EventManager.class.php');
 
-
 session_require(array('group'=>'1','admin_flags'=>'A'));
 $pm = ProjectManager::instance();
-$group = $pm->getProject($group_id,false,true);
-$currentproject= new project($group_id);
+$group = $pm->getProject($group_id);
+if (!$group || $group->isError()) {
+    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_groupedit','error_group'));
+    $GLOBALS['Response']->redirect('/admin');
+}
 
 $em = EventManager::instance();
 
-$Rename=$request->get('Rename');
-if ($Rename) {
+if ($request->existAndNonEmpty('Rename')) {
     $new_name = $request->get('new_name');
     if (isset($new_name) && $group_id) {
         if (SystemEventManager::instance()->canRenameProject($group)) {
@@ -32,7 +33,6 @@ if ($Rename) {
             if (!$rule->isValid($new_name)) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_groupedit','invalid_short_name'));
                 $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
-                $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id='.$group_id);
             } else {
                 $em->processEvent(Event::PROJECT_RENAME, array('group_id' => $group_id,
                                                            'new_name' => $new_name));
@@ -40,70 +40,64 @@ if ($Rename) {
                 group_add_history('rename_request', $group->getUnixName(false).' :: '.$new_name, $group_id);
                 $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_groupedit','rename_project_msg', array($group->getUnixName(false), $new_name )));
                 $GLOBALS['Response']->addFeedback('warning', $Language->getText('admin_groupedit','rename_project_warn'));
-                $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id='.$group_id);
             }
         } else {
             $GLOBALS['Response']->addFeedback('warning', $Language->getText('admin_groupedit', 'rename_project_already_queued'), CODENDI_PURIFIER_DISABLED);
-            $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id='.$group_id);
         }
     }
-}        
-// group public choice
-$Update=$request->get('Update');
-if ($Update) {
-    $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
+    $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id='.$group_id);
+}
 
-	//audit trail
-    if (isset($form_status) && $form_status && ($group->getStatus() != $form_status)) {
-        group_add_history ('status', $Language->getText('admin_groupedit', 'status_'.$group->getStatus())." :: ".$Language->getText('admin_groupedit', 'status_'.$form_status), $group_id);
+if ($request->existAndNonEmpty('Update')) {
+
+    $form_status  = $request->getValidated('form_status', 'string', $group->getStatus());
+    $form_public  = $request->getValidated('form_public', 'string', $group->isPublic());
+    $group_type   = $request->getValidated('group_type', 'string', $group->getType());
+    $form_domain  = $request->getValidated('form_domain', 'string', $group->getHTTPDomain());
+    $form_box     = $request->getValidated('form_box', 'string', $group->getUnixBox());
+    $form_license = $request->getValidated('form_license', 'string', $group->getLicense());
+    if ($group->getStatus() != $form_status) {
+        group_add_history('status', $Language->getText('admin_groupedit', 'status_' . $group->getStatus()) . " :: " . $Language->getText('admin_groupedit', 'status_' . $form_status), $group_id);
     }
-	if ($group->isPublic() != $form_public) { 
-        group_add_history('is_public',$group->isPublic(),$group_id);
+    if ($group->isPublic() != $form_public) {
+        group_add_history('is_public', $group->isPublic(), $group_id);
         $em->processEvent('project_is_private', array(
-            'group_id'           => $group_id, 
+            'group_id' => $group_id,
             'project_is_private' => $form_public ? 0 : 1
         ));
     }
-    if ($group->getType() != $group_type)
-    { group_add_history ('group_type',$group->getType(),$group_id);  }
-    if ($group->getHTTPDomain()!= $form_domain)
-    { group_add_history ('http_domain',$group->getHTTPDomain(),$group_id);  }
-    if ($group->getUnixBox() != $form_box)
-    { group_add_history ('unix_box',$group->getUnixBox(),$group_id);  }
+    if ($group->getType() != $group_type) {
+        group_add_history('group_type', $group->getType(), $group_id);
+    }
+    if ($group->getHTTPDomain() != $form_domain) {
+        group_add_history('http_domain', $group->getHTTPDomain(), $group_id);
+    }
+    if ($group->getUnixBox() != $form_box) {
+        group_add_history('unix_box', $group->getUnixBox(), $group_id);
+    }
     if (isset($form_status) && $form_status) {
-        db_query("UPDATE groups SET is_public=$form_public,status='$form_status',"
-        . "license='$form_license',type='$group_type',"
-        . "unix_box='$form_box',http_domain='$form_domain', "
-        . "type='$group_type' WHERE group_id=$group_id");
+        db_query("UPDATE groups SET is_public=".db_ei($form_public).",status='".db_es($form_status)."',"
+                . "license='".db_es($form_license)."',type='".db_es($group_type)."',"
+                . "unix_box='".db_es($form_box)."',http_domain='".db_es($form_domain)."'"
+                . " WHERE group_id=".db_ei($group_id));
     }
 
-	$feedback .= $Language->getText('admin_groupedit','feedback_info');
+    $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_groupedit', 'feedback_info'));
 
-	$group = $pm->getProject($group_id,false,true);
-	
-	// ZD: Raise an event for group update 
-        if(isset($form_status) && $form_status && ($form_status=="H" || $form_status=="P")){
-	        $em->processEvent('project_is_suspended_or_pending', array(
-	            'group_id'       => $group_id
-	        ));
-        }else if(isset($form_status) && $form_status && $form_status=="A" ){
-        	$em->processEvent('project_is_active', array(
-	            'group_id'       => $group_id
-	        ));
-        }else if(isset($form_status) && $form_status && $form_status=="D"){
-        	$em->processEvent('project_is_deleted', array('group_id' => $group_id ));
-        }
-
+    // ZD: Raise an event for group update
+    if (isset($form_status) && $form_status && ($form_status == "H" || $form_status == "P")) {
+        $em->processEvent('project_is_suspended_or_pending', array(
+            'group_id' => $group_id
+        ));
+    } else if (isset($form_status) && $form_status && $form_status == "A") {
+        $em->processEvent('project_is_active', array(
+            'group_id' => $group_id
+        ));
+    } else if (isset($form_status) && $form_status && $form_status == "D") {
+        $em->processEvent('project_is_deleted', array('group_id' => $group_id));
+    }
+    $GLOBALS['Response']->redirect('/admin/groupedit?group_id='.$group_id);
 }
-
-// get current information
-$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
-
-if (db_numrows($res_grp) < 1) {
-	exit_error("ERROR",$Language->getText('admin_groupedit','error_group'));
-}
-
-$row_grp = db_fetch_array($res_grp);
 
 if ($request->exist('export')) {
     export_grouphistory($group_id, $event, $subEvents, $value, $startDate, $endDate, $by);
@@ -112,7 +106,7 @@ if ($request->exist('export')) {
 
 site_admin_header(array('title'=>$Language->getText('admin_groupedit','title')));
 
-echo '<H2>'.$row_grp['group_name'].'</H2>' ;?>
+echo '<H2>'.$group->getPublicName().'</H2>' ;?>
 
 <p>
 <A href="/project/admin/?group_id=<?php print $group_id; ?>"><B><BIG>[<?php echo $Language->getText('admin_groupedit','proj_admin'); ?>]</BIG></B></A><BR/>
@@ -135,24 +129,24 @@ echo $template->showTypeBox('group_type',$group->getType());
 <?php
 //Disable the possibilty to switch from deleted status to an active one
 ?>
-<SELECT name="form_status" <?php if ($row_grp['status'] == "D") print "disabled=disabled"; ?>>
-<OPTION <?php if ($row_grp['status'] == "I") print "selected "; ?> value="I">
+<SELECT name="form_status" <?php if ($group->getStatus() == "D") print "disabled=disabled"; ?>>
+<OPTION <?php if ($group->getStatus() == "I") print "selected "; ?> value="I">
 <?php echo $Language->getText('admin_groupedit', 'status_I'); ?></OPTION>
-<OPTION <?php if ($row_grp['status'] == "A") print "selected "; ?> value="A">
+<OPTION <?php if ($group->getStatus() == "A") print "selected "; ?> value="A">
 <?php echo $Language->getText('admin_groupedit', 'status_A'); ?></OPTION>
-<OPTION <?php if ($row_grp['status'] == "P") print "selected "; ?> value="P">
+<OPTION <?php if ($group->getStatus() == "P") print "selected "; ?> value="P">
 <?php echo $Language->getText('admin_groupedit', 'status_P'); ?></OPTION>
-<OPTION <?php if ($row_grp['status'] == "H") print "selected "; ?> value="H">
+<OPTION <?php if ($group->getStatus() == "H") print "selected "; ?> value="H">
 <?php echo $Language->getText('admin_groupedit', 'status_H'); ?></OPTION>
-<OPTION <?php if ($row_grp['status'] == "D") print "selected "; ?> value="D">
+<OPTION <?php if ($group->getStatus() == "D") print "selected "; ?> value="D">
 <?php echo $Language->getText('admin_groupedit', 'status_D'); ?></OPTION>
 </SELECT>
 
 <B><?php echo $Language->getText('admin_groupedit','public'); ?></B>
 <SELECT name="form_public">
-<OPTION <?php if ($row_grp['is_public'] == 1) print "selected "; ?> value="1">
+    <OPTION <?php if ($group->isPublic()) print "selected "; ?> value="1">
 <?php echo $Language->getText('global','yes'); ?>
-<OPTION <?php if ($row_grp['is_public'] == 0) print "selected "; ?> value="0">
+<OPTION <?php if (! $group->isPublic()) print "selected "; ?> value="0">
 <?php echo $Language->getText('global','no'); ?>
 </SELECT>
 
@@ -163,7 +157,7 @@ echo $template->showTypeBox('group_type',$group->getType());
 <?php
 	while (list($k,$v) = each($LICENSE)) {
 		print "<OPTION value=\"$k\"";
-		if ($k == $row_grp['license']) print " selected";
+		if ($k == $group->getLicense()) print " selected";
 		print ">$v\n";
 	}
 ?>
@@ -172,9 +166,9 @@ echo $template->showTypeBox('group_type',$group->getType());
 
 <INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
 <BR><?php echo $Language->getText('admin_groupedit','home_box'); ?>:
-<INPUT type="text" name="form_box" value="<?php print $row_grp['unix_box']; ?>">
+<INPUT type="text" name="form_box" value="<?php print $group->getUnixBox(); ?>">
 <BR><?php echo $Language->getText('admin_groupedit','http_domain'); ?>:
-<INPUT size=40 type="text" name="form_domain" value="<?php print $row_grp['http_domain']; ?>">
+<INPUT size=40 type="text" name="form_domain" value="<?php print $group->getHTTPDomain() ?>">
 <BR><INPUT type="submit" name="Update" value="<?php echo $Language->getText('global','btn_update'); ?>">
 </FORM>
 
@@ -186,19 +180,19 @@ echo $template->showTypeBox('group_type',$group->getType());
 // ########################## OTHER INFO
 
 print "<h3>".$Language->getText('admin_groupedit','other_info')."</h3>";
-print $Language->getText('admin_groupedit','unix_grp').": $row_grp[unix_group_name]";
+print $Language->getText('admin_groupedit','unix_grp').": ".$group->getUnixName();
 ?>
 <FORM action="?" method="POST">
 <INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
 <?php echo $Language->getText('admin_groupedit','rename_project_label'); ?>:
-<INPUT type="text" name="new_name" value="<?php $new_name; ?>" id="new_name">
+<INPUT type="text" name="new_name" value="" id="new_name">
 <INPUT type="submit" name="Rename" value="<?php echo $Language->getText('global','btn_update'); ?>">
 </FORM>
 
 <?php 
-$currentproject->displayProjectsDescFieldsValue();
+$group->displayProjectsDescFieldsValue();
 
-print "<h3>".$Language->getText('admin_groupedit','license_other')."</h3> $row_grp[license_other]";
+print "<h3>".$Language->getText('admin_groupedit','license_other')."</h3> ".$group->getLicenseOther();
 
 $template_group = $pm->getProject($group->getTemplate());
 print "<h3>".$Language->getText('admin_groupedit','built_from_template').':</h3> <a href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_group->getPublicname().' </B></A>';

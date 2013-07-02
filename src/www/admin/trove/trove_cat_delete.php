@@ -17,10 +17,10 @@ $request =& HTTPRequest::instance();
 function listallchilds($nodeid, &$list) {
     // list current node and then all subnodes
     $res_child = db_query("SELECT trove_cat_id, parent, shortname FROM trove_cat "
-		."WHERE parent='$nodeid'");
+		."WHERE parent='".db_ei($nodeid)."'");
     while ($row_child = db_fetch_array($res_child)) {
 	$list[] = $row_child['trove_cat_id'];
-	listallchilds($row_child['trove_cat_id'], &$list);
+	listallchilds($row_child['trove_cat_id'], $list);
     }
     
 }
@@ -28,12 +28,12 @@ function listallchilds($nodeid, &$list) {
 // ########################################################
 // FORM SUBMISSION: Delete or Cancel
 //
-if ($request->get("Delete") && $GLOBALS['form_trove_cat_id']) {
+if ($request->get("Delete") && $request->existAndNonEmpty('form_trove_cat_id')) {
     $res_cat = db_query("SELECT trove_cat_id, parent, root_parent, shortname "
 		       ."FROM trove_cat "
-		       ." WHERE trove_cat_id =".$GLOBALS['form_trove_cat_id']);
+		       ." WHERE trove_cat_id =".db_ei($request->get('form_trove_cat_id')));
     if (!$res_cat || db_numrows($res_cat) < 1) {
-	$feedback .= "**ERROR** Category '".$GLOBALS['form_shortname']."' could not be found in database";
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, "**ERROR** Category '".$request->get('form_shortname')."' could not be found in database");
 	session_redirect("/admin/trove/trove_cat_list.php");
     }
 
@@ -45,25 +45,24 @@ if ($request->get("Delete") && $GLOBALS['form_trove_cat_id']) {
     // to this parent
     if ($row_cat['parent'] == $row_cat['root_parent']) {
 	$res_del = db_query('DELETE FROM trove_group_link '
-			    .' WHERE trove_cat_id='.$row_cat['trove_cat_id']);
+			    .' WHERE trove_cat_id='.db_ei($row_cat['trove_cat_id']));
     } else {
 	$res_upd = db_query('UPDATE trove_group_link '
-			    .' SET trove_cat_id='.$row_cat['parent']
-			    .' WHERE trove_cat_id='.$row_cat['trove_cat_id']);
+			    .' SET trove_cat_id='.db_ei($row_cat['parent'])
+			    .' WHERE trove_cat_id='.db_ei($row_cat['trove_cat_id']));
     }
 
     // Find all child categories
     $list_child = array();
-    listallchilds($row_cat['trove_cat_id'], &$list_child);
+    listallchilds($row_cat['trove_cat_id'], $list_child);
     $list_child[] = $row_cat['trove_cat_id'];
 
     // Delete the category and all childs
-    $result = db_query('DELETE FROM trove_cat '
-		       .'WHERE trove_cat_id IN ('.join(',',$list_child).')');
+    $result = db_query('DELETE FROM trove_cat WHERE trove_cat_id IN ('.  db_ei_implode($list_child).')');
     if (!$result || db_affected_rows($result) < 1) {
-	$feedback .= "**ERROR** Category '".$GLOBALS['form_shortname']."' could not be  deleted";
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, "**ERROR** Category '".$request->get('form_shortname')."' could not be  deleted");
     } else {
-	$feedback .= "Category '".$GLOBALS['form_shortname']."' (and childs) succesfully deleted";
+	$GLOBALS['Response']->addFeedback(Feedback::INFO, "Category '".$request->get('form_shortname')."' (and childs) succesfully deleted");
     }
     session_redirect("/admin/trove/trove_cat_list.php");
 } 
@@ -75,7 +74,7 @@ if ($request->get("Cancel")) {
 // ########################################################
 // MAIN PAGE
 //
-$res_cat = db_query("SELECT * FROM trove_cat WHERE trove_cat_id=$trove_cat_id");
+$res_cat = db_query("SELECT * FROM trove_cat WHERE trove_cat_id=".db_ei($request->getValidated('trove_cat_id', 'uint', 0)));
 if (db_numrows($res_cat)<1) {
     exit_error("ERROR",$Language->getText('admin_trove_cat_delete','error_nocat'));
 }
@@ -89,9 +88,9 @@ $HTML->header(array('title'=>$Language->getText('admin_trove_cat_delete','title'
 <P><b><?php echo $Language->getText('admin_trove_cat_delete','warning'); ?></b>
 <form action="trove_cat_delete.php" method="post">
 <input type="hidden" name="form_trove_cat_id" value="<?php
-  print $GLOBALS['trove_cat_id']; ?>">
+  print $request->get('trove_cat_id', 'uint', 0); ?>">
 <input type="hidden" name="form_shortname" value="<?php
-  print $GLOBALS['shortname']; ?>">
+  print $row_cat['shortname']; ?>">
 
 <table border="1" cellpadding="2">
 <tr><td><?php echo $Language->getText('admin_trove_cat_add','short_name'); ?></td><td> <?php print $row_cat["shortname"]; ?></td></tr>
@@ -102,7 +101,7 @@ $HTML->header(array('title'=>$Language->getText('admin_trove_cat_delete','title'
 <?php
 // See if there are childs
 $child_list = array();
-listallchilds($GLOBALS['trove_cat_id'], $child_list);
+listallchilds($request->get('trove_cat_id', 'uint', 0), $child_list);
 
 if (($nb_child = count($child_list)) > 0) {
     echo "<p>".$Language->getText('admin_trove_cat_delete','caution_child',array($nb_child));
@@ -111,7 +110,7 @@ if (($nb_child = count($child_list)) > 0) {
 }
 
 // See if projects are using this category or one of his child
-$child_list[] = $GLOBALS['trove_cat_id'];
+$child_list[] = $request->get('trove_cat_id', 'uint', 0);
 $res_proj = db_query("SELECT DISTINCT group_id FROM trove_group_link "
 		     ."WHERE trove_cat_id IN (".join(',',$child_list).")");
 $nb_proj = db_numrows($res_proj);

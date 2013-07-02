@@ -46,7 +46,6 @@ if($request->valid($vGroupId)) {
     exit_no_group();
 }
 
-$pm = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 if (!$project->isActive()) {
     exit_error($GLOBALS['Language']->getText('include_exit','exit_error'), $GLOBALS['Language']->getText('include_exit', 'project_status_'.$project->getStatus()));
