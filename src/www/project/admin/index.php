@@ -1,10 +1,25 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/**
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ * SourceForge: Breaking Down the Barriers to Open Source Development
+ * http://sourceforge.net
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('pre.php');    
 require_once('www/project/admin/project_admin_utils.php');
@@ -51,15 +66,18 @@ if ($request->isPost() && $request->valid($vFunc)) {
     switch ($request->get('func')) {
     case 'adduser':
         // add user to this project
-        $res = account_add_user_to_group ($group_id,$form_unix_name);
+        $form_unix_name = $request->get('form_unix_name');
+        $res = account_add_user_to_group ($group_id, $form_unix_name);
         break;
 
     case 'rmuser':
         // remove a user from this portal
+        $rm_id = $request->getValidated('rm_id', 'uint', 0);
         account_remove_user_from_group($group_id, $rm_id);
         break;
 
     case 'change_group_type':
+        $form_project_type = $request->getValidated('form_project_type', 'uint', 0);
         if (user_is_super_user() && ($group->getType() != $form_project_type)) {
             group_add_history ('group_type',$group->getType(),$group_id);
 
@@ -405,6 +423,7 @@ echo '</TD>
 $HTML->box1_top($Language->getText('project_admin_index','member_request_delegation_title'));
 
 //Retrieve the saved ugroups for notification from DB
+$selectedUgroup = array();
 $dar = $pm->getMembershipRequestNotificationUGroup($group_id);
 if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
     foreach ($dar as $row) {

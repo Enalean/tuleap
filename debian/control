@@ -86,7 +86,7 @@ Description: Mailman component for the Tuleap forge
 
 Package: tuleap-core-subversion
 Architecture: all
-Depends: tuleap (= ${source:Version}), viewvc-tuleap, subversion, libapache2-svn, libsvn-perl, highlight, ${misc:Depends}
+Depends: tuleap (= ${source:Version}), viewvc-tuleap, subversion, libapache2-svn, libsvn-perl, highlight, tuleap-core-subversion-modperl, ${misc:Depends}
 Description: Subversion component for the Tuleap forge
  This package contains the Subversion plugin for the Tuleap platform.
 

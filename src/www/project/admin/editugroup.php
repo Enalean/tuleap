@@ -42,9 +42,9 @@ $vFunc = new Valid_WhiteList('func', array('create', 'do_create', 'edit'));
 $vFunc->required();
 $func = $request->getValidated('func', $vFunc, 'create');
 
+$name = $request->getValidated('ugroup_name', 'String', '');
+$desc = $request->getValidated('ugroup_description', 'String', '');
 if ($request->isPost() && $func == 'do_create') {
-    $name = $request->getValidated('ugroup_name', 'String', '');
-    $desc = $request->getValidated('ugroup_description', 'String', '');
     $tmpl = $request->getValidated('group_templates', 'String', '');
     $ugroup_id = ugroup_create($group_id, $name, $desc, $tmpl);
     $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit');
@@ -56,22 +56,25 @@ if ($func=='create') {
     echo '<form method="post" name="form_create" action="/project/admin/editugroup.php?group_id='.$group_id.'">
     <input type="hidden" name="func" value="do_create">
     <input type="hidden" name="group_id" value="'.$group_id.'">';
-    echo get_name_and_desc_form_content(isset($ugroup_name)?$ugroup_name:'', isset($ugroup_description)?$ugroup_description:'');
+    echo get_name_and_desc_form_content($name, $desc);
     echo '<tr> 
       <td width="21%"><b>'.$Language->getText('project_admin_editugroup', 'create_from').'</b>:</td>
       <td width="79%">';
-    $group_arr         = array();
-    $group_arr[]       = $Language->getText('project_admin_editugroup', 'empty_g');
-    $group_arr_value[] = 'cx_empty';
-    $group_arr[]       = '-------------------';
-    $group_arr_value[] = 'cx_empty2';
-    $group_arr[]       = $Language->getText('project_admin_editugroup', 'proj_members');
-    $group_arr_value[] = 'cx_members';
-    $group_arr[]       = $Language->getText('project_admin_editugroup', 'proj_admins');
-    $group_arr_value[] = 'cx_admins';
-    $group_arr[]       = '-------------------';
-    $group_arr_value[] = 'cx_empty2';
-    $res               = ugroup_db_get_existing_ugroups($group_id);
+    $group_arr = array(
+        $Language->getText('project_admin_editugroup', 'empty_g'),
+        '-------------------',
+        $Language->getText('project_admin_editugroup', 'proj_members'),
+        $Language->getText('project_admin_editugroup', 'proj_admins'),
+        '-------------------',
+    );
+    $group_arr_value = array(
+        'cx_empty',
+        'cx_empty2',
+        'cx_members',
+        'cx_admins',
+        'cx_empty2',
+    );
+    $res = ugroup_db_get_existing_ugroups($group_id);
     while ($row = db_fetch_array($res)) {
         $group_arr[]       = $row['name'];
         $group_arr_value[] = $row['ugroup_id'];

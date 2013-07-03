@@ -692,7 +692,12 @@ setup_apache_debian() {
     install_dist_conf /etc/apache2/tuleap/php.conf
     install_dist_conf /etc/apache2/tuleap/auth_mysql.conf
 
-    touch /etc/apache2/tuleap_svnroot.conf
+    # Subversion / apache specific
+    touch /etc/apache2/tuleap/svnroot.conf
+    substitute '/etc/tuleap/conf/local.inc' '/etc/httpd/conf.d/codendi_svnroot.conf' '/etc/apache2/tuleap/svnroot.conf'
+    substitute '/etc/tuleap/conf/local.inc' 'logs/svn_log' '${APACHE_LOG_DIR}/tuleap_svn.log'
+    substitute '/etc/tuleap/conf/local.inc' 'modmysql' 'modperl'
+
 
     substitute "/etc/apache2/tuleap/codendi_aliases.conf" '%sys_default_domain%' "$sys_default_domain"
     substitute '/etc/apache2/sites-available/tuleap' '%sys_default_domain%' "$sys_default_domain"
@@ -938,9 +943,9 @@ if [ "$INSTALL_PROFILE" = "rhel" ]; then
     fi
 fi
 
-# Check if IM plugin is installed
+# Check if IM plugin is installed (works only on rhel).
 enable_plugin_im="false"
-if [ -d "$INSTALL_DIR/plugins/IM" ]; then
+if [ -d "$INSTALL_DIR/plugins/IM" -a "$INSTALL_PROFILE" = "rhel" ]; then
     enable_plugin_im="true"
 fi
 
@@ -1390,12 +1395,13 @@ fi
 
 $MYSQL -u$PROJECT_ADMIN -p$codendiadm_passwd $PROJECT_NAME < /usr/share/forgeupgrade/db/install-mysql.sql
 $INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0755 --directory /etc/$PROJECT_NAME/forgeupgrade
-if [ $INSTALL_PROFILE = "rhel" -a $RH_MAJOR_VERSION = 6 ]; then
-    forge_upgrade_config_dist=$INSTALL_DIR/src/etc/forgeupgrade-config.ini.rhel6.dist
-else
+if [ $INSTALL_PROFILE = "rhel" -a "z$RH_MAJOR_VERSION" = "z5" ]; then
     forge_upgrade_config_dist=$INSTALL_DIR/src/etc/forgeupgrade-config.ini.dist
+else
+    forge_upgrade_config_dist=$INSTALL_DIR/src/etc/forgeupgrade-config.ini.rhel6.dist
 fi
 $INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0644 $forge_upgrade_config_dist /etc/$PROJECT_NAME/forgeupgrade/config.ini
+substitute /etc/$PROJECT_NAME/forgeupgrade/config.ini "%project_name%" "$PROJECT_NAME"
 
 ##############################################
 # *Last* step: install plugins

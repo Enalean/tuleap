@@ -5,7 +5,7 @@ require_once 'common/svn/SVN_Apache_SvnrootConf.class.php';
 
 mock::generate('EventManager');
 
-class SVN_Apache_SvnrootConfTest extends UnitTestCase {
+class SVN_Apache_SvnrootConfTest extends TuleapTestCase {
     
     function setUp() {
         Config::store();
@@ -85,6 +85,16 @@ class SVN_Apache_SvnrootConfTest extends UnitTestCase {
         $this->assertNoPattern('/AuthMYSQLEnable/', $conf);
         $this->ThenThereAreTwoLocationDefinedGpigAndGarden($conf);
         $this->ThenThereAreOnlyOneCustomLogStatement($conf);
+    }
+
+    public function itHasALogFileFromConfiguration() {
+        Config::store();
+        Config::set(SVN_Apache_SvnrootConf::CONFIG_SVN_LOG_PATH, '${APACHE_LOG_DIR}/tuleap_svn.log');
+
+        $conf = $this->GivenAFullApacheConfWithModPerl();
+        $this->assertPattern('%\${APACHE_LOG_DIR}/tuleap_svn\.log%', $conf);
+
+        Config::restore();
     }
 }
 

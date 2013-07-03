@@ -19,7 +19,6 @@
  */
 
 require_once('RegisterProjectStep.class.php');
-require_once('common/server/ServerFactory.class.php');
 
 /**
 * RegisterProjectStep_Services
@@ -35,20 +34,14 @@ class RegisterProjectStep_Services extends RegisterProjectStep {
     }
     function display($data) {
         echo '<p>'. $GLOBALS['Language']->getText('register_services', 'desc') .'</p>';
-        
-        $sf = new ServerFactory();
-        $servers = $sf->getAllServers();
-        $can_display_servers = count($servers) > 1;
-        
+
         $pm = ProjectManager::instance();
         $p = $pm->getProject($data['project']['built_from_template']);
         $title_arr=array();
         $title_arr[]=''; //$GLOBALS['Language']->getText('project_admin_editservice','enabled');
         $title_arr[]=$GLOBALS['Language']->getText('project_admin_editservice','s_label');
         $title_arr[]=$GLOBALS['Language']->getText('project_admin_editservice','s_desc');
-        if ($can_display_servers) {
-            $title_arr[]=$GLOBALS['Language']->getText('register_services','server');
-        }
+
         echo html_build_list_table_top($title_arr);
         $row_num = 0;
         
@@ -87,23 +80,7 @@ class RegisterProjectStep_Services extends RegisterProjectStep {
                 //}}}
                 echo '<td>'. $label .'</td>';
                 echo '<td>'. $description .'</td>';
-                //{{{ server
-                if ($can_display_servers) {
-                    echo '<td style="text-align:center">';
-                    if ($short_name == 'svn' || $short_name == 'file') {
-                        echo '<select name="services['. $id .'][server_id]">';
-                        foreach($servers as $server_key => $nop) {
-                            $selected = $servers[$server_key]->getId() == $p->services[$key]->getServerId() ? 'selected="selected"' : '';
-                            echo '<option value="'. $servers[$server_key]->getId() .'" '. $selected .'>'. $servers[$server_key]->getName() .'</option>';
-                        }
-                        echo '</select>';
-                    } else {
-                        echo '-';
-                        echo '<input type="hidden" name="services['. $id .'][server_id]" value="'. $p->services[$key]->getServerId() .'" />';
-                    }
-                    echo '</td>';
-                }
-                //}}}
+
                 echo '</tr>';
             }
         }

@@ -9,7 +9,6 @@
 //	Originally written by Laurent Julliard 2001- 2003 Codendi Team, Xerox
 //
 
-require_once('common/server/ServerFactory.class.php');
 require_once('common/include/URL.class.php');
 require_once('common/event/EventManager.class.php');
 
@@ -41,12 +40,6 @@ if ($row_grp['svn_preamble'] != '') {
     echo $hp->purify(util_unconvert_htmlspecialchars($row_grp['svn_preamble']), CODENDI_PURIFIER_FULL);
 } else {
     $host = $GLOBALS['sys_default_domain'];
-    if ($p && $p->usesService('svn')) {
-       $sf = new ServerFactory();
-       if ($server =& $sf->getServerById($p->services['svn']->getServerId())) {
-           $host = URL::getHost($server->getUrl(session_issecure()));
-       }
-    }
     if ($GLOBALS['sys_force_ssl']) {
        $svn_url = 'https://'. $host;
     } else if (isset($GLOBALS['sys_disable_subdomains']) && $GLOBALS['sys_disable_subdomains']) {
