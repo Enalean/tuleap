@@ -165,6 +165,7 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
 
 tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
     tuleap.agiledashboard.cardwall.card.AbstractElementEditor, {
+    null_user_id : 100,
 
     initialize : function( element ) {
         this.setProperties( element );
@@ -282,7 +283,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
     },
 
     fetchUsers : function() {
-        var users = { };
+        var users = this.getDefaultUsers();
 
         new Ajax.Request( this.collection_url, {
             method: 'GET',
@@ -295,17 +296,27 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
                     users[ id ] = user_data;
                 })
-            },
-            onFailure : function() {
-                users = { };
             }
-
         });
 
         this.users = users;
         this.tracker_user_data[ this.field_id ] = users;
 
         tuleap.agiledashboard.cardwall.tracker_user_data[ this.field_id ] = users;
+    },
+
+    getDefaultUsers : function() {
+        var none_id = this.null_user_id;
+
+        return {
+            none_id : {
+                "id"       : none_id,
+                "value"    : "",
+                "caption"  : "None",
+                "username" : "None",
+                "realname" : "None"
+            }
+        };
     },
 
     preRequestCallback : function() {
@@ -375,7 +386,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
             for(var i=0; i<new_values.length; i++) {
                 updateFunction( assigned_to_div, new_values[i] );
             }
-        } else if( typeof new_values === 'string' && new_values.length > 0 ){
+        } else if( typeof new_values === 'string' && new_values != this.null_user_id ){
             updateFunction( assigned_to_div, new_values );
         } else {
             assigned_to_div.update( ' - ' );
