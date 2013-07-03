@@ -62,7 +62,7 @@ Include tuleap/php.conf
 <VirtualHost *:80>
 	ServerName %sys_default_domain%
 	ServerAlias svn.*.%sys_default_domain%
-	Include tuleap_svnroot.conf
+	Include tuleap/svnroot.conf
 
 	CustomLog ${APACHE_LOG_DIR}/tuleap_svn_access.log common
 	ErrorLog ${APACHE_LOG_DIR}/tuleap_svn_error.log

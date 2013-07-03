@@ -692,7 +692,12 @@ setup_apache_debian() {
     install_dist_conf /etc/apache2/tuleap/php.conf
     install_dist_conf /etc/apache2/tuleap/auth_mysql.conf
 
-    touch /etc/apache2/tuleap_svnroot.conf
+    # Subversion / apache specific
+    touch /etc/apache2/tuleap/svnroot.conf
+    substitute '/etc/tuleap/conf/local.inc' '/etc/httpd/conf.d/codendi_svnroot.conf' '/etc/apache2/tuleap/svnroot.conf'
+    substitute '/etc/tuleap/conf/local.inc' 'logs/svn_log' '${APACHE_LOG_DIR}/tuleap_svn.log'
+    substitute '/etc/tuleap/conf/local.inc' 'modmysql' 'modperl'
+
 
     substitute "/etc/apache2/tuleap/codendi_aliases.conf" '%sys_default_domain%' "$sys_default_domain"
     substitute '/etc/apache2/sites-available/tuleap' '%sys_default_domain%' "$sys_default_domain"
