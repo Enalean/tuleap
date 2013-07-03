@@ -5,6 +5,7 @@ Version 6.3 (Not released yet)
 	* agiledashboard: 0.88
 	* docman: 2.26.17
 	* git: 3.30
+	* cardwall: 0.9.37
 
 	== Bug fix ==
 	* request #4112: Python exception pass (Contrib Raphaël Enrici)

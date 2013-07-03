@@ -1,3 +1,6 @@
+Version 0.9.37 - Tuleap 6.3
+    * Fix request #3533: allowing the none option on a simple select for assigned to on cardwall
+
 Version 0.9.36 - Tuleap 6.2
     * Fix request #4078 - Can't drag n'drop cards on cardwall renderer
 
