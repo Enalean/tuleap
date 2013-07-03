@@ -1,3 +1,6 @@
+Version 3.31 - Tuleap 6.3
+    * Make tuleap plugin compatible with debian
+
 Version 3.30 - Tuleap 6.3
     * Story #3635: When someone set a new parent in project hierarchy, this is propagated to Gerrit
 
