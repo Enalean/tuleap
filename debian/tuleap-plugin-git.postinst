@@ -5,10 +5,12 @@ set -e
 TULEAP_GITOLITE_DIR=/var/lib/tuleap/gitolite
 GITOLITE_HOME=/var/lib/gitolite
 
-setup_git_shell() {
-    if ! grep -q /usr/bin/git-shell /etc/shells; then
-	echo /usr/bin/git-shell >> /etc/shells
-    fi
+fix_tuleap_paths() {
+    perl -pi -E 'my %h = qw(/usr/share/codendi /usr/share/tuleap /etc/codendi /etc/tuleap /usr/lib/codendi /usr/lib/tuleap /var/lib/codendi /var/lib/tuleap /codendi_cache /tuleap_cache /var/log/codendi /var/log/tuleap /ftp/codendi /ftp/tuleap); s%(/usr/share/codendi|/etc/codendi|/usr/lib/codendi|/var/lib/codendi|/codendi_cache|/var/log/codendi|/ftp/codendi)%$h{$1}%ge;' $1
+}
+
+substitute_variables() {
+    perl -pi -E 'my %h = qw(%app_user% www-data %app_path% /usr/share/tuleap %app_libdir_path% /usr/lib/tuleap); s/(%app_user%|%app_path%|%app_libdir_path%)/$h{$1}/ge;' $1
 }
 
 setup_gitolite() {
@@ -42,6 +44,8 @@ setup_gitolite() {
     chown gitolite:gitolite $GITOLITE_HOME
     install -d -g gitolite -o gitolite -m 700 $GITOLITE_HOME/.gitolite
     install -d -g gitolite -o gitolite -m 700 $GITOLITE_HOME/.gitolite/conf
+    install -g gitolite -o gitolite -m 644 /usr/share/tuleap/plugins/git/etc/gitolite.rc.dist $GITOLITE_HOME/.gitolite.rc
+    fix_tuleap_paths $GITOLITE_HOME/.gitolite.rc
     install -g gitolite -o gitolite -m 644 /usr/share/tuleap/plugins/git/etc/gitolite.conf.dist $GITOLITE_HOME/.gitolite/conf/gitolite.conf
     install -g gitolite -o gitolite -m 755 /usr/share/tuleap/plugins/git/hooks/post-receive-gitolite /usr/share/gitolite/hooks/common/post-receive
     su -c 'git config --global user.name "gitolite"' - gitolite
@@ -49,23 +53,30 @@ setup_gitolite() {
     su -c 'gl-setup -q /var/lib/tuleap/git-ssh/id_rsa_gl-adm.pub' - gitolite
 
     # Checkout the gitolite-admin repository for tuleap's usage
-    GIT_URL="ext::ssh -o NoHostAuthenticationForLocalhost=yes -i /var/lib/tuleap/git-ssh/id_rsa_gl-adm gitolite@localhost %S 'gitolite-admin'"
+    GIT_URL="ext::ssh -o NoHostAuthenticationForLocalhost=yes -o BatchMode=yes -F /var/lib/tuleap/git-ssh/ssh.config -i /var/lib/tuleap/git-ssh/id_rsa_gl-adm gitolite@localhost %S 'gitolite-admin'"
     su -c "cd /var/lib/tuleap/gitolite && git clone \"$GIT_URL\" admin" \
        -s /bin/bash - www-data
-    su -c "cd /var/lib/tuleap/gitolite/admin && git config user.name tuleap && git config user.email tuleap@localhost" \
+    su -c "cd /var/lib/tuleap/gitolite/admin && git config --add user.name tuleap && git config --add user.email tuleap@localhost" \
        -s /bin/bash - www-data
     chmod 750 /var/lib/tuleap/gitolite/admin
 
     # uncomment gl-membership
     # Cannot be done before Tuleap setup. Otherwise previous clone command
     # fails because gl-membership doesn't have DB access .
-    perl -pi -e 's/^# \$GL_GET_MEMBERSHIPS_PGM/\$GL_GET_MEMBERSHIPS_PGM/' $GITOLITE_HOME/.gitolite.rc
+    perl -pi -e 's/^# \$GL_GET_MEMBERSHIPS_PGM =/\$GL_GET_MEMBERSHIPS_PGM =/' $GITOLITE_HOME/.gitolite.rc
+}
+
+setup_tuleap() {
+    substitute_variables /usr/lib/tuleap/bin/git-post-receive.pl
+    substitute_variables /usr/lib/tuleap/bin/gl-membership.pl
+    substitute_variables /etc/sudoers.d/tuleap-plugin-git
+    chmod 0644 /etc/sudoers.d/tuleap-plugin-git
 }
 
 case "$1" in
     configure)
-	setup_git_shell
 	setup_gitolite
+	setup_tuleap
     ;;
 esac
 
