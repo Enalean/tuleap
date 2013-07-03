@@ -122,24 +122,6 @@ if (db_numrows($res_grp) < 1) {
         $template_group = ProjectManager::instance()->getProject($row_grp['built_from_template']);
         print "<br><u>".$Language->getText('admin_groupedit','built_from_template').'</u>: <br> <A href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_group->getPublicname().' </B></A>';
 
-        $sf = new ServerFactory();
-        if (count($sf->getAllServers()) > 1) {
-            $p = $pm->getProject($row_grp['group_id']);
-            if ($p->usesFile() || $p->usesSVN()) {
-                print '<br><u>'. $Language->getText('admin_approve_pending','distributed_services') .'</u>:<br><ul>';
-                if ($p->usesFile()) {
-                    if ($s =& $sf->getServerById($p->services['file']->getServerId())) {
-                        print '<li>'. $Language->getText('project_admin_editservice', 'service_file_lbl_key') .': '. $s->getName() .'</li>';
-                    }
-                }
-                if ($p->usesSVN()) {
-                    if ($s =& $sf->getServerById($p->services['svn']->getServerId())) {
-                        print '<li>'. $Language->getText('project_admin_editservice', 'service_svn_lbl_key') .': '. $s->getName() .'</li>';
-                    }
-                }
-                print '</ul>';
-            }
-        }
         ?>
                     <TABLE WIDTH="70%">
             <TR>

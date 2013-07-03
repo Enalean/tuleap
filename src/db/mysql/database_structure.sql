@@ -2914,8 +2914,8 @@ CREATE TABLE service (
 	is_used int(11) DEFAULT 0 NOT NULL,
         scope text NOT NULL,
         rank int(11) NOT NULL default '0',
-        location ENUM( 'master', 'same', 'satellite' ) NOT NULL DEFAULT 'master',
-        server_id INT( 11 ) UNSIGNED NULL,
+        location ENUM( 'master', 'same', 'satellite' ) NOT NULL DEFAULT 'master', -- distributed architecture: to be deleted (but requires to check all plugins)
+        server_id INT( 11 ) UNSIGNED NULL,  -- distributed architecture: to be deleted (but requires to check all plugins)
         is_in_iframe TINYINT(1) NOT NULL DEFAULT '0',
 	primary key (service_id),
         key idx_group_id(group_id)
@@ -3184,15 +3184,6 @@ CREATE TABLE feedback (
   feedback TEXT NOT NULL ,
   created_at DATETIME NOT NULL ,
   PRIMARY KEY ( session_hash )
-);
-
-CREATE TABLE server (
-  id INT( 11 ) UNSIGNED NOT NULL PRIMARY KEY ,
-  name VARCHAR( 255 ) NOT NULL ,
-  description TEXT NOT NULL ,
-  http TEXT NOT NULL,
-  https TEXT NOT NULL,
-  is_master TINYINT(1) NOT NULL default 0
 );
 
 CREATE TABLE artifact_global_notification (
