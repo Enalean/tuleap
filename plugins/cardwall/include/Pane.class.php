@@ -137,10 +137,10 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     }
 
     private function getDisplayPreferences() {
-        $pref_name = Cardwall_DisplayPreferences::ASSIGNED_TO_USERNAME_PREFERENCE_NAME . $this->milestone->getTrackerId();
+        $pref_name = Cardwall_UserPreferences_UserPreferencesDisplayUser::ASSIGNED_TO_USERNAME_PREFERENCE_NAME . $this->milestone->getTrackerId();
         $display_avatars = $this->user->isAnonymous() || ! $this->user->getPreference($pref_name);
 
-        return new Cardwall_DisplayPreferences($display_avatars);
+        return new Cardwall_UserPreferences_UserPreferencesDisplayUser($display_avatars);
     }
 
     private function canConfigure() {        

@@ -62,7 +62,7 @@ class Cardwall_CardControllerTest extends TuleapTestCase {
                 mock('Codendi_Request'),
                 $artifact,
                 $card_fields,
-                mock('Cardwall_DisplayPreferences'),
+                mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'),
                 $config,
                 $field_retriever,
                 mock('Cardwall_CardInCellPresenterFactory'),
