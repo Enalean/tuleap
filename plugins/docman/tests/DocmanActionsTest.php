@@ -59,7 +59,7 @@ Mock::generate('BaseLanguage');
 
 Mock::generate('EventManager');
 Mock::generate('UserManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 class DocmanActionsTest extends UnitTestCase {
 
@@ -251,13 +251,13 @@ class DocmanActionsTest extends UnitTestCase {
     function testRemove_monitoringNotifDoesNotExist() {
         $controller = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
-        $user1 = new MockUser();
+        $user1 = mock('PFUser');
         $user1->setReturnValue('getId', 123);
         $user1->setReturnValue('getName', 'Carol');
-        $user2 = new MockUser();
+        $user2 = mock('PFUser');
         $user2->setReturnValue('getId', 132);
         $user2->setReturnValue('getName', 'Carlos');
-        $user3 = new MockUser();
+        $user3 = mock('PFUser');
         $user3->setReturnValue('getId', 133);
         $user3->setReturnValue('getName', 'Charlie');
         $controller->feedback->expectAt(0, 'log', array('warning', '*'));
@@ -282,13 +282,13 @@ class DocmanActionsTest extends UnitTestCase {
         $controller = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
         $userManager = new MockUserManager();
-        $user1 = new MockUser();
+        $user1 = mock('PFUser');
         $user1->setReturnValue('getId', 123);
         $user1->setReturnValue('getName', 'Carol');
-        $user2 = new MockUser();
+        $user2 = mock('PFUser');
         $user2->setReturnValue('getId', 132);
         $user2->setReturnValue('getName', 'Carlos');
-        $user3 = new MockUser();
+        $user3 = mock('PFUser');
         $user3->setReturnValue('getId', 133);
         $user3->setReturnValue('getName', 'Charlie');
         $controller->feedback->expectAt(0, 'log', array('error', '*'));
@@ -314,13 +314,13 @@ class DocmanActionsTest extends UnitTestCase {
         $controller = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
         $userManager = new MockUserManager();
-        $user1 = new MockUser();
+        $user1 = mock('PFUser');
         $user1->setReturnValue('getId', 123);
         $user1->setReturnValue('getName', 'Carol');
-        $user2 = new MockUser();
+        $user2 = mock('PFUser');
         $user2->setReturnValue('getId', 132);
         $user2->setReturnValue('getName', 'Carlos');
-        $user3 = new MockUser();
+        $user3 = mock('PFUser');
         $user3->setReturnValue('getId', 133);
         $user3->setReturnValue('getName', 'Charlie');
         $controller->feedback->expectOnce('log', array('info', '*'));
@@ -358,10 +358,10 @@ class DocmanActionsTest extends UnitTestCase {
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
-        $user1 = new MockUser();
+        $user1 = mock('PFUser');
         $user1->setReturnValue('getName', 'Carol');
         $user1->setReturnValue('getId', 1);
-        $user2 = new MockUser();
+        $user2 = mock('PFUser');
         $user2->setReturnValue('getName', 'Carlos');
         $user2->setReturnValue('getId', 2);
         $controller->feedback->expectOnce('log', array('warning', '*'));
@@ -386,10 +386,10 @@ class DocmanActionsTest extends UnitTestCase {
         $docmanPermissionsManager = new MockDocman_PermissionsManager();
         $docmanPermissionsManager->setReturnValue('userCanRead', true);
         $actions->setReturnValue('_getDocmanPermissionsManagerInstance', $docmanPermissionsManager);
-        $user1 = new MockUser();
+        $user1 = mock('PFUser');
         $user1->setReturnValue('getId', 123);
         $user1->setReturnValue('getName', 'Carol');
-        $user2 = new MockUser();
+        $user2 = mock('PFUser');
         $user2->setReturnValue('getId', 132);
         $user2->setReturnValue('getName', 'Carlos');
         $controller->feedback->expectAt(0, 'log', array('error', '*'));
@@ -418,10 +418,10 @@ class DocmanActionsTest extends UnitTestCase {
         $docmanPermissionsManager->setReturnValueAt(1,'userCanRead', false);
         $actions->setReturnValue('_getDocmanPermissionsManagerInstance', $docmanPermissionsManager);
         $actions->event_manager = new MockEventManager($this);
-        $user1 = new MockUser();
+        $user1 = mock('PFUser');
         $user1->setReturnValue('getId', 123);
         $user1->setReturnValue('getName', 'Carol');
-        $user2 = new MockUser();
+        $user2 = mock('PFUser');
         $user2->setReturnValue('getId', 132);
         $user2->setReturnValue('getName', 'Carlos');
         $controller->feedback->expectAt(0, 'log', array('warning', '*'));
@@ -440,7 +440,7 @@ class DocmanActionsTest extends UnitTestCase {
     function testAdd_monitoringSuccess() {
         $controller = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 123);
         $user->setReturnValue('getName', 'Carol');
         $controller->feedback->expectOnce('log', array('info', '*'));

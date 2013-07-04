@@ -48,7 +48,8 @@ Mock::generatePartial('Tracker',
                           'getAllFormElements',
                           'getTrackerArtifactFactory',
                           'aidExists',
-                          'getUserManager'
+                          'getUserManager',
+                          'getHierarchyFactory'
                       )
 );
 
@@ -100,7 +101,7 @@ require_once('common/include/Codendi_Request.class.php');
 Mock::generate('Codendi_Request');
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
@@ -203,7 +204,7 @@ class TrackerTest extends TuleapTestCase {
             1002 => array( 102 => 'PLUGIN_TRACKER_ADMIN'),
         ));
 
-        $this->site_admin_user = new MockUser($this);
+        $this->site_admin_user = mock('PFUser');
         $this->site_admin_user->setReturnValue('getId', 1);
         $this->site_admin_user->setReturnValue('isMember', false);
         $this->site_admin_user->setReturnValue('isSuperUser', true);
@@ -211,7 +212,7 @@ class TrackerTest extends TuleapTestCase {
         $this->site_admin_user->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
         $this->site_admin_user->setReturnValue('isLoggedIn', true);
 
-        $this->project_admin_user = new MockUser($this);
+        $this->project_admin_user = mock('PFUser');
         $this->project_admin_user->setReturnValue('getId', 123);
         $this->project_admin_user->setReturnValue('isMember', true, array($group_id, 'A'));
         $this->project_admin_user->setReturnValue('isSuperUser', false);
@@ -219,7 +220,7 @@ class TrackerTest extends TuleapTestCase {
         $this->project_admin_user->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
         $this->project_admin_user->setReturnValue('isLoggedIn', true);
 
-        $this->all_trackers_admin_user = new MockUser($this);
+        $this->all_trackers_admin_user = mock('PFUser');
         $this->all_trackers_admin_user->setReturnValue('getId', 222);
         $this->all_trackers_admin_user->setReturnValue('isMember', false, array($group_id, 'A'));
         $this->all_trackers_admin_user->setReturnValue('isSuperUser', false);
@@ -228,7 +229,7 @@ class TrackerTest extends TuleapTestCase {
         $this->all_trackers_admin_user->setReturnValue('isMemberOfUGroup', true, array(1002, '*')); //1002 = ugroup who has ADMIN perm on tracker
         $this->all_trackers_admin_user->setReturnValue('isLoggedIn', true);
 
-        $this->tracker1_admin_user = new MockUser($this);
+        $this->tracker1_admin_user = mock('PFUser');
         $this->tracker1_admin_user->setReturnValue('getId', 333);
         $this->tracker1_admin_user->setReturnValue('isMember', false, array($group_id, 'A'));
         $this->tracker1_admin_user->setReturnValue('isSuperUser', false);
@@ -237,7 +238,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker1_admin_user->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
         $this->tracker1_admin_user->setReturnValue('isLoggedIn', true);
 
-        $this->tracker2_admin_user = new MockUser($this);
+        $this->tracker2_admin_user = mock('PFUser');
         $this->tracker2_admin_user->setReturnValue('getId', 444);
         $this->tracker2_admin_user->setReturnValue('isMember', false, array($group_id, 'A'));
         $this->tracker2_admin_user->setReturnValue('isSuperUser', false);
@@ -246,7 +247,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2_admin_user->setReturnValue('isMemberOfUGroup', true, array(1002, '*'));
         $this->tracker2_admin_user->setReturnValue('isLoggedIn', true);
 
-        $this->project_member_user = new MockUser($this);
+        $this->project_member_user = mock('PFUser');
         $this->project_member_user->setReturnValue('getId', 555);
         $this->project_member_user->setReturnValue('isMember', false, array($group_id, 'A'));
         $this->project_member_user->setReturnValue('isSuperUser', false);
@@ -256,7 +257,7 @@ class TrackerTest extends TuleapTestCase {
         $this->project_member_user->setReturnValue('isTrackerAdmin', false);
         $this->project_member_user->setReturnValue('isLoggedIn', true);
 
-        $this->registered_user = new MockUser($this);
+        $this->registered_user = mock('PFUser');
         $this->registered_user->setReturnValue('getId', 777);
         $this->registered_user->setReturnValue('isMember', false);
         $this->registered_user->setReturnValue('isSuperUser', false);
@@ -264,7 +265,7 @@ class TrackerTest extends TuleapTestCase {
         $this->registered_user->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
         $this->registered_user->setReturnValue('isLoggedIn', true);
 
-        $this->anonymous_user = new MockUser($this);
+        $this->anonymous_user = mock('PFUser');
         $this->anonymous_user->setReturnValue('getId', 777);
         $this->anonymous_user->setReturnValue('isMember', false);
         $this->anonymous_user->setReturnValue('isSuperUser', false);
@@ -273,7 +274,7 @@ class TrackerTest extends TuleapTestCase {
         $this->anonymous_user->setReturnValue('isLoggedIn', false);
 
         // Users for tracker access perm tests
-        $this->anonymous = new MockUser();
+        $this->anonymous = mock('PFUser');
         $this->anonymous->setReturnValue('isSuperUser', false);
         $this->anonymous->setReturnValue('getId', 0);
         $this->anonymous->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
@@ -285,7 +286,7 @@ class TrackerTest extends TuleapTestCase {
         $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
         $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
 
-        $this->registered = new MockUser();
+        $this->registered = mock('PFUser');
         $this->registered->setReturnValue('isSuperUser',false);
         $this->registered->setReturnValue('getId', 101);
         $this->registered->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
@@ -297,7 +298,7 @@ class TrackerTest extends TuleapTestCase {
         $this->registered->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
         $this->registered->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
 
-        $this->project_member = new MockUser();
+        $this->project_member = mock('PFUser');
         $this->project_member->setReturnValue('isSuperUser', false);
         $this->project_member->setReturnValue('getId', 102);
         $this->project_member->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
@@ -309,7 +310,7 @@ class TrackerTest extends TuleapTestCase {
         $this->project_member->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
         $this->project_member->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
 
-        $this->project_admin = new MockUser();
+        $this->project_admin = mock('PFUser');
         $this->project_admin->setReturnValue('isSuperUser', false);
         $this->project_admin->setReturnValue('getId', 103);
         $this->project_admin->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
@@ -321,14 +322,14 @@ class TrackerTest extends TuleapTestCase {
         $this->project_admin->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
         $this->project_admin->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
 
-        $this->super_admin = new MockUser();
+        $this->super_admin = mock('PFUser');
         $this->super_admin->setReturnValue('isSuperUser', true);
         $this->super_admin->setReturnValue('getId', 104);
         $this->super_admin->setReturnValue('isMemberOfUGroup', true, array('*', '*'));
         $this->super_admin->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
         $this->super_admin->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
 
-        $this->tracker_submitter = new MockUser();
+        $this->tracker_submitter = mock('PFUser');
         $this->tracker_submitter->setReturnValue('isSuperUser', false);
         $this->tracker_submitter->setReturnValue('getId', 105);
         $this->tracker_submitter->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
@@ -340,7 +341,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
         $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
 
-        $this->tracker_assignee = new MockUser();
+        $this->tracker_assignee = mock('PFUser');
         $this->tracker_assignee->setReturnValue('isSuperUser', false);
         $this->tracker_assignee->setReturnValue('getId', 106);
         $this->tracker_assignee->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
@@ -352,7 +353,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
         $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
 
-        $this->tracker_submitterassignee = new MockUser();
+        $this->tracker_submitterassignee = mock('PFUser');
         $this->tracker_submitterassignee->setReturnValue('isSuperUser', false);
         $this->tracker_submitterassignee->setReturnValue('getId', 107);
         $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
@@ -364,7 +365,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
         $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
 
-        $this->tracker_admin = new MockUser();
+        $this->tracker_admin = mock('PFUser');
         $this->tracker_admin->setReturnValue('isSuperUser', false);
         $this->tracker_admin->setReturnValue('getId', 107);
         $this->tracker_admin->setReturnValue('isMemberOfUGroup', false, array(1, '*'));
@@ -387,6 +388,11 @@ class TrackerTest extends TuleapTestCase {
 
         $this->canned_response_factory = new MockTracker_CannedResponseFactory();
         $this->tracker->setReturnReference('getCannedResponseFactory', $this->canned_response_factory);
+
+        $this->hierarchy = new Tracker_Hierarchy();
+        $hierarchy_factory = mock('Tracker_HierarchyFactory');
+        stub($hierarchy_factory)->getHierarchy()->returns($this->hierarchy);
+        $this->tracker->setReturnValue('getHierarchyFactory', $hierarchy_factory);
 
         $GLOBALS['Response'] = new MockLayout();
 
@@ -1443,8 +1449,7 @@ class TrackerTest extends TuleapTestCase {
 
         $this->tracker->setReturnValue('getRulesManager', $rules_manager);
 
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-                                     <tracker xmlns="http://codendi.org/tracker"/>');
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
 
         $this->assertTrue(isset($xml->permissions));
@@ -1481,6 +1486,40 @@ class TrackerTest extends TuleapTestCase {
         $this->assertEqual((string)$xml->permissions->permission[6]['REF'], 'F2');
     }
 
+    public function itExportsTheTrackerID() {
+        $this->tracker->setReturnValue('getAllFormElements', array());
+        $this->tracker->setReturnValue('getRulesManager', mock('Tracker_RulesManager'));
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $xml = $this->tracker->exportToXML($xml);
+
+        $attributes = $xml->attributes();
+        $this->assertEqual((string)$attributes['id'], 'T110');
+    }
+
+    public function itExportsNoParentIfNotInAHierarchy() {
+        $this->tracker->setReturnValue('getAllFormElements', array());
+        $this->tracker->setReturnValue('getRulesManager', mock('Tracker_RulesManager'));
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $xml = $this->tracker->exportToXML($xml);
+
+        $attributes = $xml->attributes();
+        $this->assertEqual((string)$attributes['parent_id'], "0");
+    }
+
+    public function itExportsTheParentId() {
+        $this->tracker->setReturnValue('getAllFormElements', array());
+        $this->tracker->setReturnValue('getRulesManager', mock('Tracker_RulesManager'));
+        $this->hierarchy->addRelationship(9001, 110);
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $xml = $this->tracker->exportToXML($xml);
+
+        $attributes = $xml->attributes();
+        $this->assertEqual((string)$attributes['parent_id'], "T9001");
+    }
+
     public function testHasErrorNoError() {
         $header = array('summary', 'details');
         $lines = array(
@@ -1512,7 +1551,7 @@ class TrackerTest extends TuleapTestCase {
         $artifact->setReturnValue('validateFields', true);
 
         $um = new MockUserManager();
-        $u = new MockUser();
+        $u = mock('PFUser');
         $u->setReturnValue('getId', '107');
         $this->tracker->setReturnReference('getUserManager', $um);
         $um->setReturnReference('getCurrentUser', $u);
@@ -1661,7 +1700,7 @@ class TrackerTest extends TuleapTestCase {
         $tracker->setFormElementFactory($factory);
         $sharedFactory = new MockTracker_SharedFormElementFactory();
         $tracker->setSharedFormElementFactory($sharedFactory);
-        $user = new MockUser();
+        $user = mock('PFUser');
         return array($tracker, $factory, $sharedFactory, $user);
     }
 }

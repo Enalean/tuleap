@@ -211,7 +211,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
             )
         );
         $date_field->setReturnReference('getProperties', $properties);
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $date_field->exportPropertiesToXML($root);
         $this->assertEqual((string)$xml_test->properties, (string)$root->properties);
         $this->assertEqual(count($root->properties->attributes()), 0);
@@ -241,7 +241,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
             )
         );
         $date_field->setReturnReference('getProperties', $properties);
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $date_field->exportPropertiesToXML($root);
         $this->assertEqual((string)$xml_test->properties, (string)$root->properties);
         $this->assertEqual(count($root->properties->attributes()), 0);
@@ -270,7 +270,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
             )
         );
         $date_field->setReturnReference('getProperties', $properties);
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $date_field->exportPropertiesToXML($root);
         $this->assertEqual((string)$xml_test->properties, (string)$root->properties);
         $this->assertEqual(count($root->properties->attributes()), 1);
@@ -301,7 +301,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
             )
         );
         $date_field->setReturnReference('getProperties', $properties);
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $date_field->exportPropertiesToXML($root);
         $this->assertEqual((string)$xml_test->properties, (string)$root->properties);
         $this->assertEqual(count($root->properties->attributes()), 1);

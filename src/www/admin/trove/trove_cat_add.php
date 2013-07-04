@@ -25,7 +25,7 @@ if ($request->exist('Submit')) {
 			.'\',\''.db_escape_string($request->get('form_description'))
 			.'\',\''.db_escape_string($request->get('form_parent'))
 			.'\','.date("Ymd",time()).'01'
-			.',\''.$newroot.'\')');
+			.',\''.db_es($newroot).'\')');
 	} 
 
 	// update full paths now

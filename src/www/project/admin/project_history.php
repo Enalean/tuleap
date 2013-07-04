@@ -1,6 +1,9 @@
 <?php
 /**
- * Copyright (c) STMicroelectronics 2011. All rights reserved
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) STMicroelectronics, 2004-2011. All rights reserved
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,9 +44,9 @@ if (!$event ) {
     $validPaginationEvents = new Valid_WhiteList('event', $eventsList);
     $event = $request->getValidated('event', $validPaginationEvents, null);
 }
-
 $validSubEvents = new Valid_String('sub_events_box');
 if ($request->validArray($validSubEvents)) {
+    $subEvents      = array();
     $subEventsArray = $request->get('sub_events_box');
     foreach ($subEventsArray as $element) {
         $subEvents[$element] = true;
@@ -51,8 +54,9 @@ if ($request->validArray($validSubEvents)) {
 } elseif ($request->exist('subEventsBox')) {
     $validPaginationSubEvents = new Valid_String('subEventsBox');
     if ($request->valid($validPaginationSubEvents)) {
+        $subEvents       = array();
         $subEventsString = $request->get('subEventsBox');
-        $subEventsBox = explode(",", $subEventsString);
+        $subEventsBox    = explode(",", $subEventsString);
         foreach ($subEventsBox as $element) {
             $subEvents[$element] = true;
         }

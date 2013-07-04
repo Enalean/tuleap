@@ -1,10 +1,25 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/**
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ * SourceForge: Breaking Down the Barriers to Open Source Development
+ * http://sourceforge.net
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('pre.php');    
 require_once('www/project/admin/project_admin_utils.php');
@@ -51,15 +66,18 @@ if ($request->isPost() && $request->valid($vFunc)) {
     switch ($request->get('func')) {
     case 'adduser':
         // add user to this project
-        $res = account_add_user_to_group ($group_id,$form_unix_name);
+        $form_unix_name = $request->get('form_unix_name');
+        $res = account_add_user_to_group ($group_id, $form_unix_name);
         break;
 
     case 'rmuser':
         // remove a user from this portal
+        $rm_id = $request->getValidated('rm_id', 'uint', 0);
         account_remove_user_from_group($group_id, $rm_id);
         break;
 
     case 'change_group_type':
+        $form_project_type = $request->getValidated('form_project_type', 'uint', 0);
         if (user_is_super_user() && ($group->getType() != $form_project_type)) {
             group_add_history ('group_type',$group->getType(),$group_id);
 
@@ -205,6 +223,14 @@ if ($group->isTemplate()) {
 EOS;
 }
 
+echo '<HR NoShade SIZE="1">';
+$parent_project = $pm->getParentProject($group_id);
+if ($parent_project) {
+    echo $Language->getText('project_admin_editugroup', 'parent').' <a href="?group_id='.$parent_project->getID().'">'.$parent_project->getPublicName().'</a>';
+} else {
+    echo $Language->getText('project_admin_editugroup', 'no_parent');
+}
+echo ' &dash; <a href="editgroupinfo.php?group_id='.$group_id.'">'.$Language->getText('project_admin_editugroup', 'go_to_hierarchy_admin').'</a>';
 $HTML->box1_bottom(); 
 
 echo '
@@ -219,16 +245,23 @@ $HTML->box1_top($Language->getText('project_admin_editugroup','proj_members')."&
 
 */
 
-$res_memb = db_query("SELECT user.realname,user.user_id,user.user_name,user.status ".
-		     "FROM user,user_group ".
-		     "WHERE user.user_id=user_group.user_id ".
-		     "AND user_group.group_id=$group_id ".
-             "ORDER BY user.realname");
+$sql = "SELECT user.realname, user.user_id, user.user_name, user.status, IF(generic_user.group_id, 1, 0) AS is_generic
+        FROM user_group
+        INNER JOIN user ON (user.user_id = user_group.user_id)
+        LEFT JOIN generic_user ON (
+            generic_user.user_id = user.user_id AND
+            generic_user.group_id = $group_id)
+        WHERE user_group.group_id = $group_id
+        ORDER BY user.realname";
+
+$res_memb = db_query($sql);
 print '<div  style="max-height:200px; overflow:auto;">';
 print '<TABLE WIDTH="100%" BORDER="0">';
 $user_helper = new UserHelper();
+
 while ($row_memb=db_fetch_array($res_memb)) {
     $display_name = '';
+    
     $em->processEvent('get_user_display_name', array(
         'user_id'           => $row_memb['user_id'],
         'user_name'         => $row_memb['user_name'],
@@ -238,11 +271,22 @@ while ($row_memb=db_fetch_array($res_memb)) {
     if (!$display_name) {
         $display_name = $hp->purify($user_helper->getDisplayName($row_memb['user_name'], $row_memb['realname']));
     }
+
+    $edit_settings = '';
+    if ($row_memb['is_generic']) {
+        $url   = '/project/admin/editgenericmember.php?group_id='. $group_id;
+        $title = $GLOBALS['Language']->getText('project_admin', 'edit_generic_user_settings');
+
+        $edit_settings  = '<a href="'. $url .'" title="'. $title .'">';
+        $edit_settings .= $GLOBALS['HTML']->getImage('ic/edit.png');
+        $edit_settings .= '</a>';
+    }
+
     print '<FORM ACTION="?" METHOD="POST"><INPUT TYPE="HIDDEN" NAME="func" VALUE="rmuser">'.
 	'<INPUT TYPE="HIDDEN" NAME="rm_id" VALUE="'.$row_memb['user_id'].'">'.
 	'<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'. $group_id .'">'.
 	'<TR><TD ALIGN="center"><INPUT TYPE="IMAGE" NAME="DELETE" SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></TD></FORM>'.
-	'<TD><A href="/users/'.$row_memb['user_name'].'/">'. $display_name .' </A></TD></TR>';
+	'<TD><A href="/users/'.$row_memb['user_name'].'/">'. $display_name .' </A>'. $edit_settings .'</TD></TR>';
 }
 
 print '</TABLE></div> <HR NoShade SIZE="1">';
@@ -379,6 +423,7 @@ echo '</TD>
 $HTML->box1_top($Language->getText('project_admin_index','member_request_delegation_title'));
 
 //Retrieve the saved ugroups for notification from DB
+$selectedUgroup = array();
 $dar = $pm->getMembershipRequestNotificationUGroup($group_id);
 if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
     foreach ($dar as $row) {

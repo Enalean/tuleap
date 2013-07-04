@@ -419,7 +419,6 @@ class IMViews extends Views {
 		echo'<legend class="im_synchronize">'.$GLOBALS["Language"]->getText('plugin_im_admin','projects_to_sync').'</legend>';
 		if ( $nb_grp != 0 || $nb_muc ) {
 			//************form
-			global $PHP_SELF;
 			if (sizeof($array_muc_and_grp)) {
 				foreach ($array_muc_and_grp as $key => $val) {
 					$project = $pm->getProject($val);

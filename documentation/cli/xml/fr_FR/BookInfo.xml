@@ -133,6 +133,16 @@
         <revremark>Ajout de quelques fonctions dans FRS pour assurer la suppression des releases  et packages vides</revremark>
       </revision>
 
+      <revision>
+        <revnumber>1.5.2</revnumber>
+
+        <date>22-Apr-2013</date>
+
+        <authorinitials>Nicolas Terray</authorinitials>
+
+        <revremark>Renomage des packages</revremark>
+      </revision>
+
     </revhistory>
   </bookinfo>
 <!--

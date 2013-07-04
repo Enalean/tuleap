@@ -66,7 +66,7 @@ class CLI_Action_Default_Login extends CLI_Action {
         }
         return true;
     }
-    function before_soapCall($loaded_params) {
+    function before_soapCall(&$loaded_params) {
     	$GLOBALS['soap']->endSession();
     	
         if (isset($loaded_params['others']['host'])) {

@@ -32,7 +32,7 @@ Mock::generate('Docman_Folder');
 Mock::generate('Docman_File');
 Mock::generate('Docman_Version');
 Mock::generate('Docman_VersionFactory');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UserManager');
 Mock::generatePartial('Docman_ItemFactory', 'Docman_ItemFactoryTestVersion', array('_getItemDao', 'purgeDeletedItem','getItemFromDb','isRoot'));
 Mock::generatePartial('Docman_ItemFactory', 'Docman_ItemFactoryTestRestore', array('_getItemDao', '_getVersionFactory', 'getItemTypeForItem', '_getUserManager', '_getEventManager'));
@@ -484,7 +484,7 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $itemFactory->setReturnValue('_getItemDao', $dao);
 
         // Event
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $um   = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $itemFactory->setReturnValue('_getUserManager', $um);
@@ -520,7 +520,7 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $itemFactory->setReturnValue('_getVersionFactory', $versionFactory);
 
         // Event
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $um   = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $itemFactory->setReturnValue('_getUserManager', $um);
@@ -581,7 +581,7 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $itemFactory->setReturnValue('_getVersionFactory', $versionFactory);
 
         // Event
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $um   = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $itemFactory->setReturnValue('_getUserManager', $um);

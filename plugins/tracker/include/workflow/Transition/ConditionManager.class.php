@@ -30,11 +30,11 @@ class Transition_ConditionManager {
      *
      * @param Transition      $transition   The transition
      * @param Codendi_Request $request      The data from the user
-     * @param User            $current_user The current user
+     * @param PFUser            $current_user The current user
      *
      * @return void
      */
-    public function process(Transition $transition, Codendi_Request $request, User $current_user) {
+    public function process(Transition $transition, Codendi_Request $request, PFUser $current_user) {
         $transition_condition_factory = $this->getConditionFactory();
 
         // Create new condition

@@ -19,6 +19,7 @@
  */
 
 require_once 'common/tracker/ArtifactType.class.php';
+require_once dirname(__FILE__).'/../../../plugins/tracker/include/autoload.php';
 require_once dirname(__FILE__).'/../../../plugins/tracker/include/constants.php';
 require_once TRACKER_BASE_DIR.'/Tracker/TrackerManager.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/Migration/V3.class.php';
@@ -39,7 +40,7 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
     /** @var Tracker_FormElementFactory */
     protected $form_element_factory;
     /** @var Tracker_Factory */
-    protected $tracker_factory; 
+    protected $tracker_factory;
 
 
     public function __construct() {
@@ -607,4 +608,86 @@ class MigrateTracker_TaskTrackerReportsTest extends MigrateDefaultTrackersTest {
 
 }
 
+class MigrateTracker_TaskTrackerDateReminder_startDateTest extends MigrateDefaultTrackersTest {
+
+    private $notified_ugroups = array(UGroup::PROJECT_ADMIN, UGroup::TRACKER_ADMIN);
+
+    public function setUp() {
+        parent::setUp();
+        $this->start_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'start_date');
+
+        $factory = new Tracker_DateReminderFactory($this->task_tracker);
+        $this->reminders = $factory->getTrackerReminders();
+    }
+
+    public function itSendsAnEmailToProjectAndTrackerAdminsTwoDaysBeforeStartDate() {
+        $this->assertEqual($this->reminders[0]->getDistance(), 2);
+        $this->assertEqual($this->reminders[0]->getNotificationType(), Tracker_DateReminder::BEFORE);
+        $this->assertEqual($this->reminders[0]->getField(), $this->start_date_field);
+        $this->assertEqual($this->reminders[0]->getStatus(), Tracker_DateReminder::ENABLED);
+        $this->assertEqual($this->reminders[0]->getUgroups(true), $this->notified_ugroups);
+    }
+
+    public function itSendsASecondEmailOnStartDate() {
+        $this->assertEqual($this->reminders[1]->getDistance(), 0);
+        $this->assertEqual($this->reminders[1]->getNotificationType(), Tracker_DateReminder::BEFORE);
+        $this->assertEqual($this->reminders[1]->getField(), $this->start_date_field);
+        $this->assertEqual($this->reminders[1]->getStatus(), Tracker_DateReminder::ENABLED);
+        $this->assertEqual($this->reminders[1]->getUgroups(true), $this->notified_ugroups);
+    }
+
+    public function itSendsTheLastEmailTwoDaysAfterStartDate() {
+        $this->assertEqual($this->reminders[2]->getDistance(), 2);
+        $this->assertEqual($this->reminders[2]->getNotificationType(), Tracker_DateReminder::AFTER);
+        $this->assertEqual($this->reminders[2]->getField(), $this->start_date_field);
+        $this->assertEqual($this->reminders[2]->getStatus(), Tracker_DateReminder::ENABLED);
+        $this->assertEqual($this->reminders[2]->getUgroups(true), $this->notified_ugroups);
+    }
+}
+
+class MigrateTracker_TaskTrackerDateReminder_endDateTest extends MigrateDefaultTrackersTest {
+
+    private $notified_ugroups = array(UGroup::PROJECT_MEMBERS);
+
+    public function setUp() {
+        parent::setUp();
+        $this->end_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'end_date');
+
+        $factory = new Tracker_DateReminderFactory($this->task_tracker);
+        $this->reminders = $factory->getTrackerReminders();
+    }
+
+    public function itSendsAnEmailToProjectMembersOneDayAfterEndDate() {
+        $this->assertEqual($this->reminders[3]->getDistance(), 1);
+        $this->assertEqual($this->reminders[3]->getNotificationType(), Tracker_DateReminder::AFTER);
+        $this->assertEqual($this->reminders[3]->getField(), $this->end_date_field);
+        $this->assertEqual($this->reminders[3]->getStatus(), Tracker_DateReminder::ENABLED);
+        $this->assertEqual($this->reminders[3]->getUgroups(true), $this->notified_ugroups);
+    }
+
+    public function itSendsTheLastEmailThreeDaysAfterEndDate() {
+        $this->assertEqual($this->reminders[4]->getDistance(), 3);
+        $this->assertEqual($this->reminders[4]->getNotificationType(), Tracker_DateReminder::AFTER);
+        $this->assertEqual($this->reminders[4]->getField(), $this->end_date_field);
+        $this->assertEqual($this->reminders[4]->getStatus(), Tracker_DateReminder::ENABLED);
+        $this->assertEqual($this->reminders[4]->getUgroups(true), $this->notified_ugroups);
+    }
+}
+class MigrateTracker_TaskTrackerDateReminder_edgeCasesTest extends MigrateDefaultTrackersTest {
+
+    private $notified_ugroups = array(UGroup::PROJECT_MEMBERS);
+
+    public function setUp() {
+        parent::setUp();
+        $this->due_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'due_date');
+
+        $factory = new Tracker_DateReminderFactory($this->task_tracker);
+        $this->reminders = $factory->getTrackerReminders();
+    }
+
+    public function itDoesNotCreateReminderWhenTheListOfUgroupsIsEmpty() {
+        // There is no more rules than what have been tested in the above tests
+        $this->assertCount($this->reminders, 5);
+    }
+}
 ?>

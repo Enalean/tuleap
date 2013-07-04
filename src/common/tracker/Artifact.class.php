@@ -3025,11 +3025,12 @@ class Artifact extends Error {
             <div class="tracker_artifact_followup_header">
                 <div class="tracker_artifact_followup_title">
                     <span class="tracker_artifact_followup_title_user">';
-        
+
+        $user = UserManager::instance()->getCurrentUser();
+
         if ($this->hasFieldPermission($field_perm, 'assigned_to') || 
             $this->hasFieldPermission($field_perm, 'multi_assigned_to') || 
             (!isset($field_perm['assigned_to']) && !isset($field_perm['multi_assigned_to']))) {
-            $user = UserManager::instance()->getCurrentUser();
             if ($user->isLoggedIn()) {
                 $out .= '<a href="mailto:'.$hp->purify($user->getEmail()).'">'.$hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()) .')</a>';
             } else {

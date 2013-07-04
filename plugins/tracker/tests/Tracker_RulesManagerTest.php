@@ -919,7 +919,15 @@ class Tracker_RulesManager_exportToSOAPTest extends TuleapTestCase {
     public function itExportsEmptyArraysIfNoRules() {
         stub($this->rules_manager)->getAllListRulesByTrackerWithOrder($this->tracker_id)->returns(array());
         stub($this->rules_manager)->getAllDateRulesByTrackerId($this->tracker_id)->returns(array());
-        $result = $this->rules_manager->exportToSOAP();
+        $result = $this->rules_manager->exportToSOAP(true);
+        $this->assertArrayEmpty($result['dates']);
+        $this->assertArrayEmpty($result['lists']);
+    }
+
+    public function itExportsEmptyArraysIfNoAccessToWorkflowField() {
+        stub($this->rules_manager)->getAllListRulesByTrackerWithOrder($this->tracker_id)->returns($this->lists);
+        stub($this->rules_manager)->getAllDateRulesByTrackerId($this->tracker_id)->returns($this->dates);
+        $result = $this->rules_manager->exportToSOAP(false);
         $this->assertArrayEmpty($result['dates']);
         $this->assertArrayEmpty($result['lists']);
     }
@@ -927,7 +935,7 @@ class Tracker_RulesManager_exportToSOAPTest extends TuleapTestCase {
     public function itExportsDates() {
         stub($this->rules_manager)->getAllListRulesByTrackerWithOrder($this->tracker_id)->returns(array());
         stub($this->rules_manager)->getAllDateRulesByTrackerId($this->tracker_id)->returns($this->dates);
-        $result = $this->rules_manager->exportToSOAP();
+        $result = $this->rules_manager->exportToSOAP(true);
         $this->assertEqual($result['dates'], $this->expected_dates);
         $this->assertArrayEmpty($result['lists']);
     }
@@ -935,7 +943,7 @@ class Tracker_RulesManager_exportToSOAPTest extends TuleapTestCase {
     public function itExportsLists() {
         stub($this->rules_manager)->getAllListRulesByTrackerWithOrder($this->tracker_id)->returns($this->lists);
         stub($this->rules_manager)->getAllDateRulesByTrackerId($this->tracker_id)->returns(array());
-        $result = $this->rules_manager->exportToSOAP();
+        $result = $this->rules_manager->exportToSOAP(true);
         $this->assertArrayEmpty($result['dates']);
         $this->assertEqual($result['lists'], $this->expected_lists);
     }
@@ -943,7 +951,7 @@ class Tracker_RulesManager_exportToSOAPTest extends TuleapTestCase {
     public function itExportsAll() {
         stub($this->rules_manager)->getAllListRulesByTrackerWithOrder($this->tracker_id)->returns($this->lists);
         stub($this->rules_manager)->getAllDateRulesByTrackerId($this->tracker_id)->returns($this->dates);
-        $result = $this->rules_manager->exportToSOAP();
+        $result = $this->rules_manager->exportToSOAP(true);
         $this->assertEqual($result['dates'], $this->expected_dates);
         $this->assertEqual($result['lists'], $this->expected_lists);
     }

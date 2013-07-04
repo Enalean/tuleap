@@ -137,7 +137,7 @@ if ($request->valid($vFrm)) {
 
 	    	$ret_val .= '
 		    	    <TR class="'. util_get_alt_row_color($i) .'">'.
-					'<TD align="center"><FORM NAME="thread_monitor" action="'.$PHP_SELF.'" METHOD="POST">'.
+					'<TD align="center"><FORM NAME="thread_monitor" action="?" METHOD="POST">'.
 					'<INPUT TYPE="hidden" NAME="thread_id" VALUE="'.$thr_id.'">'.
 					'<INPUT TYPE="hidden" NAME="user_id" VALUE="'.user_getid().'">'.
 					'<INPUT TYPE="hidden" NAME="forum_id" VALUE="'.$forum_id.'">'.

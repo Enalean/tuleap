@@ -29,7 +29,7 @@ class SVN_RepositoryListing {
         $this->svn_permissions_manager = $svn_permissions_manager;
     }
 
-    public function getSvnPath(User $user, Project $project, $svn_path) {
+    public function getSvnPath(PFUser $user, Project $project, $svn_path) {
         $paths            = array();
         $repository_path  = $GLOBALS['svn_prefix'].'/'.$project->getUnixName();
         $content          = $this->getDirectoryListing($repository_path, $svn_path);

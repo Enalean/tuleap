@@ -19,18 +19,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once GIT_BASE_DIR .'/mvc/PluginViews.class.php';
-require_once GIT_BASE_DIR .'/gitPlugin.class.php';
-require_once GIT_BASE_DIR .'/GitDao.class.php';
-require_once GIT_BASE_DIR .'/Git_LogDao.class.php';
-require_once GIT_BASE_DIR .'/GitBackend.class.php';
-require_once GIT_BASE_DIR .'/GitViewsRepositoriesTraversalStrategy_Selectbox.class.php';
-require_once GIT_BASE_DIR .'/GitViewsRepositoriesTraversalStrategy_Tree.class.php';
-require_once GIT_BASE_DIR .'/GitForkPermissionsManager.class.php';
 require_once 'www/project/admin/permissions.php';
 require_once 'common/include/CSRFSynchronizerToken.class.php';
-require_once 'GitViews/RepoManagement/RepoManagement.class.php';
-require_once 'GitViews/ShowRepo.class.php';
 
 /**
  * GitViews
@@ -119,14 +109,23 @@ class GitViews extends PluginViews {
      * REPO VIEW
      */
     public function view() {
-        $params = $this->getData();
+        $params     = $this->getData();
         $repository = $params['repository'];
+        $request    = $this->controller->getRequest();
 
-        echo '<br />';
-        
-        $this->_getBreadCrumb();
+        if (! $request->get('noheader')) {
+            echo '<br />';
+            $this->_getBreadCrumb();
+        }
 
-        $index_view = new GitViews_ShowRepo($repository, $this->controller, $this->controller->getRequest(), $params['driver'], $params['gerrit_servers']);
+        $index_view = new GitViews_ShowRepo(
+            $repository,
+            $this->controller,
+            $this->controller->getRequest(),
+            $params['driver'],
+            $params['gerrit_usermanager'],
+            $params['gerrit_servers']
+        );
         $index_view->display();
     }
 
@@ -311,7 +310,7 @@ class GitViews extends PluginViews {
                 $options = ' checked="true" ';
             }
             echo '<div>
-                <input id="choose_personal" type="radio" name="choose_destination" value="personal" '.$options.' />
+                <input id="choose_personal" type="radio" name="choose_destination" value="'. Git::SCOPE_PERSONAL .'" '.$options.' />
                 <label for="choose_personal">'.$this->getText('fork_choose_destination_personal').'</label>
             </div>';
 
@@ -382,7 +381,7 @@ class GitViews extends PluginViews {
         return $html;
     }
 
-    public function getUserProjectsAsOptions(User $user, ProjectManager $manager, $currentProjectId) {
+    public function getUserProjectsAsOptions(PFUser $user, ProjectManager $manager, $currentProjectId) {
         $purifier   = Codendi_HTMLPurifier::instance();
         $html       = '';
         $option     = '<option value="%d" title="%s">%s</option>';

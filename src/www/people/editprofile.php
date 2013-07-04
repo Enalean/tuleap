@@ -8,12 +8,14 @@
 
 require_once('pre.php');
 require('../people/people_utils.php');
+require_once('common/include/CSRFSynchronizerToken.class.php');
 
+$purifier = Codendi_HTMLPurifier::instance();
+$csrf     = new CSRFSynchronizerToken('/people/editprofile.php');
 
 if (user_isloggedin()) {
-
-
 	if ($update_profile) {
+		$csrf->check();
 		/*
 			update the job's description, status, etc
 		*/
@@ -94,13 +96,14 @@ if (user_isloggedin()) {
 		$feedback .= ' '.$Language->getText('people_editprofile','user_fetch_failed').' ';
 		echo '<H2>'.$Language->getText('people_editprofile','no_such_user').'</H2>';
 	} else {
+		$csrfToken =  $csrf->fetchHTMLInput();
 
 		echo '
 		<H2>'.$Language->getText('people_editprofile','edit_your_profile').'</H2>
 		<P>
 		'.$Language->getText('people_editprofile','skill_explain').'
 		<P>
-		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+		<FORM ACTION="?" METHOD="POST">'.$csrfToken.'
 		<P>
 		'.$Language->getText('people_editprofile','public_view_explain').'
 		<P>
@@ -111,7 +114,7 @@ if (user_isloggedin()) {
 		'.$Language->getText('people_editprofile','give_us_info').'
 		<P>
 		<B>'.$Language->getText('people_editprofile','resume').':</B><BR>
-		<TEXTAREA NAME="people_resume" ROWS="15" COLS="60" WRAP="SOFT">'. db_result($result,0,'people_resume') .'</TEXTAREA>
+		<TEXTAREA NAME="people_resume" ROWS="15" COLS="60" WRAP="SOFT">'. $purifier->purify(db_result($result,0,'people_resume'), CODENDI_PURIFIER_CONVERT_HTML).'</TEXTAREA>
 		<P>
 		<INPUT TYPE="SUBMIT" NAME="update_profile" VALUE="'.$Language->getText('people_editprofile','update_profile').'">
 		</FORM>';
@@ -119,7 +122,8 @@ if (user_isloggedin()) {
 		//now show the list of desired skills
 		echo '<P>'.people_edit_skill_inventory( user_getid() );
 
-		echo '<P><FORM ACTION="/account/" METHOD="POST"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('people_editjob','finished').'"></FORM>'; 
+		echo '<P><FORM ACTION="/account/" METHOD="POST">';
+		echo '<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('people_editjob','finished').'"></FORM>';
 	}
 
 	people_footer(array());

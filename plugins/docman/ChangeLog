@@ -1,3 +1,15 @@
+Version 2.26.17 - Tuleap 6.3
+    * Integrate debian packaging (Contrib Raphaël Hertzog)
+
+Version 2.26.16 - Tuleap 6.1
+    * Fix XSS issue in docman (Contrib STMicroelectronics)
+
+Version 2.26.15 - Tuleap 5.13
+    * Fix sla #2121: Problem with mime type detection when uploading a file in docman via webdav
+
+Version 2.26.14 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
 Version 2.26.13 - Tuleap 5.9
     * Fix: typo
 

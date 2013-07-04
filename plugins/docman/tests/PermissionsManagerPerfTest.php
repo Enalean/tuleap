@@ -26,7 +26,7 @@ require_once(dirname(__FILE__).'/../include/Docman_PermissionsManager.class.php'
 require_once('common/user/User.class.php');
 
 Mock::generatePartial('Docman_PermissionsManager', 'Docman_PermissionsManagerTestPerfVersion', array('_getPermissionManagerInstance', '_isUserDocmanAdmin', '_itemIsLockedForUser'));
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('PermissionsManager');
 
 class PermissionsManagerPerfTest extends UnitTestCase {
@@ -35,7 +35,7 @@ class PermissionsManagerPerfTest extends UnitTestCase {
     var $refOnNull;
 
     function setUp() {
-        $this->user =& new MockUser($this);
+        $this->user = mock('PFUser');
         $this->docmanPm =& new Docman_PermissionsManagerTestPerfVersion($this);
         $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
         $this->refOnNull = null;

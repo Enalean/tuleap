@@ -16,17 +16,17 @@ require_once('common/event/EventManager.class.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$action = '';
-if (isset($_REQUEST['action'])) {
-    $action = $_REQUEST['action'];
-}
+$action = $request->getValidated('action', 'string', '');
+
 $em = EventManager::instance();
 $pm = ProjectManager::instance();
 
 // group public choice
 if ($action=='activate') {
-
-    $groups = explode(',',$list_of_groups);
+    $groups = array();
+    if ($request->exist('list_of_groups')) {
+        $groups = array_filter(array_map('intval', explode(",", $request->get('list_of_groups'))));
+    }
     foreach ($groups as $group_id) {
         $project = $pm->getProject($group_id);
         $pm->activate($project);
@@ -122,29 +122,11 @@ if (db_numrows($res_grp) < 1) {
         $template_group = ProjectManager::instance()->getProject($row_grp['built_from_template']);
         print "<br><u>".$Language->getText('admin_groupedit','built_from_template').'</u>: <br> <A href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_group->getPublicname().' </B></A>';
 
-        $sf = new ServerFactory();
-        if (count($sf->getAllServers()) > 1) {
-            $p = $pm->getProject($row_grp['group_id']);
-            if ($p->usesFile() || $p->usesSVN()) {
-                print '<br><u>'. $Language->getText('admin_approve_pending','distributed_services') .'</u>:<br><ul>';
-                if ($p->usesFile()) {
-                    if ($s =& $sf->getServerById($p->services['file']->getServerId())) {
-                        print '<li>'. $Language->getText('project_admin_editservice', 'service_file_lbl_key') .': '. $s->getName() .'</li>';
-                    }
-                }
-                if ($p->usesSVN()) {
-                    if ($s =& $sf->getServerById($p->services['svn']->getServerId())) {
-                        print '<li>'. $Language->getText('project_admin_editservice', 'service_svn_lbl_key') .': '. $s->getName() .'</li>';
-                    }
-                }
-                print '</ul>';
-            }
-        }
         ?>
                     <TABLE WIDTH="70%">
             <TR>
             <TD style="text-align:center">
-        <FORM action="<?php echo $PHP_SELF; ?>" method="POST">
+        <FORM action="?" method="POST">
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
         <INPUT TYPE="HIDDEN" NAME="list_of_groups" VALUE="<?php print $row_grp['group_id']; ?>">
         <INPUT type="submit" name="submit" value="<?php echo $Language->getText('admin_approve_pending','approve'); ?>">
@@ -152,7 +134,7 @@ if (db_numrows($res_grp) < 1) {
         </TD>
     
             <TD> 
-        <FORM action="<?php echo $PHP_SELF; ?>" method="POST">
+        <FORM action="?" method="POST">
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="delete">
         <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php print $row_grp['group_id']; ?>">
         <INPUT type="submit" name="submit" value="<?php echo $Language->getText('admin_approve_pending','delete'); ?>">
@@ -171,7 +153,7 @@ if (db_numrows($res_grp) < 1) {
     
     echo '
         <CENTER>
-        <FORM action="'.$PHP_SELF.'" method="POST">
+        <FORM action="?" method="POST">
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
         <INPUT TYPE="HIDDEN" NAME="list_of_groups" VALUE="'.$group_list.'">
         <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending','approve_all').'">

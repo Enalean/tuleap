@@ -18,6 +18,17 @@ project_admin_editgroupinfo	soft_required	Autre(s) logiciel(s) requis
 project_admin_editgroupinfo	comments	Autre commentaires&nbsp;:
 project_admin_editgroupinfo	license_comment	Commentaires à propos de la licence non répertoriée utilisée par ce projet&nbsp;:
 project_admin_editgroupinfo	info_missed	Information Manquante. SVP remplissez tous les champs requis.
+project_admin_editgroupinfo	parent_project	Projet parent :
+project_admin_editgroupinfo	sub_projects	Sous projets :
+project_admin_editgroupinfo	project_hierarchy_title	Hierarchie de projets
+project_admin_editgroupinfo	must_be_admin_of_parent_project	Le projet n'existe pas ou alors vous n'êtes pas administrateur.
+project_admin_editgroupinfo	project_hierarchy_desc_1	Cette fonctionnalité permettra, à terme, d'organiser vos projects les uns par rapport aux autres en terme de permissions, groupes d'utilisateurs et contrôle.
+project_admin_editgroupinfo	project_hierarchy_desc_2	Cependant, à l'heure actuelle, elle n'est exploitée que par Git/Gerrit pour les projets "parapluies" (si ces services sont activés/disponibles sur votre plate-forme).
+project_admin_editgroupinfo	project_hierarchy_desc_3	Veuillez noter que, plus tard, au cours de futurs développements, la définition d'une hierarchy pourra avoir un impact sur l'organisation des enfants (ex. les administrateurs d'un projet parent pourraient automatiquement avoir accès à l'administration des tous les enfants et petits enfants).
+project_admin_editgroupinfo	autocompleter_placeholder	Nom du projet (auto completé à la volée)
+project_admin_editgroupinfo	remove_parent_project	Supprimer le projet parent
+project_admin_editgroupinfo	self_exception	Un projet ne peut être son propre parent.
+project_admin_editgroupinfo	ancestor_exception	Un lien de parenté existe déjà entre ces projets.
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editservice.php
@@ -148,6 +159,9 @@ project_admin_editugroup	group_empty	le groupe est vide
 project_admin_editugroup	permissions_title	Gestion des permissions
 project_admin_editugroup	settings_title	Paramètres
 project_admin_editugroup	binding_title	Lier des groupes
+project_admin_editugroup	parent	Projet parent : 
+project_admin_editugroup	no_parent	Ce projet n'a pas de parent
+project_admin_editugroup	go_to_hierarchy_admin	Administration de la hiérarchie de projets
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/grouptrove.php
@@ -682,6 +696,7 @@ project_export_bug_export	depend_on_bugs_desc	Liste des bus dont celui-ci dépen
 # Script: SF/www/project/export/index.php
 #
 project_export_index	proj_db_success	La base de données de votre projet a été créé avec succès. Vous pouvez maintenant utiliser votre application préférée et accéder à vos données en utilisant le pilote ODBC/JDBC de MySQL installé sur votre ordinateur. Les paramètres de connexion à la base de données pour le pilote ODB/JDC sont les suivants&nbsp;:
+project_export_index	proj_db_no_data	Aucune donnée exportable. Seuls les <strong>sondages</strong> et les <strong>outils de suivi v3</strong> sont exportables.
 project_export_index	export_to_csv_or_db	Les données de votre projet peuvent être exportées dans des fichiers texte (format CSV) ou dans une base de données spécifique à laquelle vous pouvez vous connecter depuis votre environnement de travail en utilisant le pilote ODBC/JDBC approprié. Voir l'$1 pour plus d'information.
 project_export_index	export_to_csv_hdr	Exporter au format texte $1
 project_export_index	export_to_csv_msg	Cliquer sur un des liens ci-dessous pour exporter les données au format texte (CSV format).
@@ -1008,3 +1023,10 @@ project_ugroup_binding	ldap_group_error	Le groupe LDAP '$1' n'existe pas.
 project_ugroup_binding	link_ldap_group	Le groupe LDAP '$1' a correctement été lié au projet.
 project_ugroup_binding	ldap_group_empty	Le groupe LDAP doit être renseigné.
 project_ugroup_user	add_username	Entrez le nom d'utilisateur
+
+project_admin	generic_member_settings	Paramètres de l'utilisateur générique
+project_admin	generic_member_updated	Paramètres de l'utilisateur générique mis à jour
+project_admin	generic_member_not_updated	Erreur pendant la mise à jour des paramètres de l'utilisateur générique
+project_admin	generic_member_not_changed	Les parmètres de l'utilisateur générique n'ont pas été mis à jour
+project_admin	generic_member_leave_blank	Laisser vide si vous souhaitez conserver le mot de passe actuel
+project_admin	edit_generic_user_settings	éditer les paramètres

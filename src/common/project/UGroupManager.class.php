@@ -23,6 +23,7 @@ require_once 'UGroup.class.php';
 require_once 'Project.class.php';
 require_once 'common/dao/UGroupDao.class.php';
 require_once 'common/dao/UGroupUserDao.class.php';
+require_once 'common/event/EventManager.class.php';
 
 class UGroupManager {
     
@@ -31,8 +32,28 @@ class UGroupManager {
      */
     private $dao;
 
-    public function __construct(UGroupDao $dao = null) {
-        $this->dao = $dao;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
+    public function __construct(UGroupDao $dao = null, EventManager $event_manager = null) {
+        $this->dao           = $dao;
+        $this->event_manager = $event_manager;
+    }
+
+    /**
+     *
+     * @param Project $project
+     * @param type $ugroup_id
+     *
+     * @return UGroup
+     */
+    public function getUGroupWithMembers(Project $project, $ugroup_id) {
+        $ugroup = $this->getUGroup($project, $ugroup_id);
+        $ugroup->getMembers();
+
+        return $ugroup;
     }
 
     /**
@@ -46,19 +67,40 @@ class UGroupManager {
 
         $row = $this->getDao()->searchByGroupIdAndUGroupId($project_id, $ugroup_id)->getRow();
         if ($row) {
-            // force group_id as it is set to 100 for dynamic groups
-            $row['group_id'] = $project_id;
-            return new UGroup($row);
+            return $this->instanciateGroupForProject($project, $row);
         }
     }
 
-    public function getUGroups(Project $project, array $exclude = array()) {
+    private function instanciateGroupForProject(Project $project, array $row) {
+        // force group_id as it is set to 100 for dynamic groups
+        $row['group_id'] = $project->getID();
+        return new UGroup($row);
+    }
+
+    /**
+     *
+     * @param Project $project
+     * @param array $excluded_ugroups_id
+     * @return UGroup[]
+     */
+    public function getUGroups(Project $project, array $excluded_ugroups_id = array()) {
         $ugroups = array();
         foreach ($this->getDao()->searchDynamicAndStaticByGroupId($project->getId()) as $row) {
-            if (in_array($row['ugroup_id'], $exclude)) {
+            if (in_array($row['ugroup_id'], $excluded_ugroups_id)) {
                 continue;
             }
-            $ugroups[] = new UGroup($row);
+            $ugroups[] = $this->instanciateGroupForProject($project, $row);
+        }
+        return $ugroups;
+    }
+
+    /**
+     * @return UGroup[]
+     */
+    public function getStaticUGroups(Project $project) {
+        $ugroups = array();
+        foreach ($this->getDao()->searchStaticByGroupId($project->getId()) as $row) {
+            $ugroups[] = $this->instanciateGroupForProject($project, $row);
         }
         return $ugroups;
     }
@@ -77,7 +119,7 @@ class UGroupManager {
     /**
      * Return all UGroups the user belongs to
      *
-     * @param User $user The user
+     * @param PFUser $user The user
      *
      * @return DataAccessResult
      */
@@ -119,7 +161,10 @@ class UGroupManager {
      * @return EventManager
      */
     private function getEventManager() {
-        return EventManager::instance();
+        if (! $this->event_manager) {
+            $this->event_manager = EventManager::instance();
+        }
+        return $this->event_manager;
     }
 
     /**
@@ -185,12 +230,31 @@ class UGroupManager {
     /**
      * Wrapper for dao method that updates binding option for a given UGroup
      *
-     * @param Integer $ugroupId Id of the user goup
+     * @param Integer $ugroup_id Id of the user group
+     * @param Integer $source_ugroup_id Id of the user group we should bind to
      *
      * @return Boolean
      */
-    public function updateUgroupBinding($ugroupId, $sourceId = null) {
-        return $this->getDao()->updateUgroupBinding($ugroupId, $sourceId);
+    public function updateUgroupBinding($ugroup_id, $source_ugroup_id = null) {
+        $ugroup = $this->getById($ugroup_id);
+        if ($source_ugroup_id === null) {
+            $this->getEventManager()->processEvent(
+                Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_REMOVE,
+                array(
+                    'ugroup' => $ugroup
+                )
+            );
+        } else {
+            $source = $this->getById($source_ugroup_id);
+            $this->getEventManager()->processEvent(
+                Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_ADD,
+                array(
+                    'ugroup' => $ugroup,
+                    'source' => $source,
+                )
+            );
+        }
+        return $this->getDao()->updateUgroupBinding($ugroup_id, $source_ugroup_id);
     }
 
     /**
@@ -201,7 +265,12 @@ class UGroupManager {
      * @return DataAccessResult
      */
     public function getUgroupBindingSource($ugroupId) {
-        return $this->getDao()->getUgroupBindingSource($ugroupId);
+        $dar = $this->getDao()->getUgroupBindingSource($ugroupId);
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            return new UGroup($dar->getRow());
+        } else {
+            return null;
+        }
     }
 
     /**

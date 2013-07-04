@@ -116,7 +116,7 @@ class SystemEvent_USER_RENAME extends SystemEvent {
      /**
      * Update database
      * 
-     * @param User    $user     User to update
+     * @param PFUser    $user     User to update
      * @param String  $new_name New name
      * 
      * @return Boolean

@@ -43,6 +43,7 @@ require_once('common/system_event/include/SystemEvent_UGROUP_MODIFY.class.php');
 require_once('common/system_event/include/SystemEvent_EDIT_SSH_KEYS.class.php');
 require_once('common/system_event/include/SystemEvent_ROOT_DAILY.class.php');
 require_once('common/system_event/include/SystemEvent_COMPUTE_MD5SUM.class.php');
+require_once('common/system_event/include/SystemEvent_SVN_UPDATE_HOOKS.class.php');
 
 // Backends
 require_once('common/backend/Backend.class.php');
@@ -68,6 +69,7 @@ class SystemEventManager {
             Event::PROJECT_RENAME,
             Event::USER_RENAME,
             Event::COMPUTE_MD5SUM,
+            Event::SVN_UPDATE_HOOKS,
             'approve_pending_project',
             'project_is_deleted',
             'project_admin_add_user',
@@ -153,7 +155,7 @@ class SystemEventManager {
             break;
         case Event::EDIT_SSH_KEYS:
             $this->createEvent(SystemEvent::TYPE_EDIT_SSH_KEYS,
-                               $params['user_id'],
+                               $this->concatParameters($params, array('user_id', 'original_keys')),
                                SystemEvent::PRIORITY_MEDIUM);
             break;
         case Event::USER_EMAIL_CHANGED:
@@ -258,12 +260,20 @@ class SystemEventManager {
                                '',
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-               case Event::COMPUTE_MD5SUM:
+        case Event::COMPUTE_MD5SUM:
             $this->createEvent(SystemEvent::TYPE_COMPUTE_MD5SUM,
                                $params['fileId'],
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-  
+
+        case Event::SVN_UPDATE_HOOKS:
+            $this->createEvent(
+                SystemEvent::TYPE_SVN_UPDATE_HOOKS,
+                $params['group_id'],
+                SystemEvent::PRIORITY_MEDIUM
+            );
+            break;
+
         default:
 
             break;
@@ -273,11 +283,12 @@ class SystemEventManager {
     /**
      * Create a new event, store it in the db and send notifications
      */
-    public function createEvent($type, $parameters, $priority) {
-        if ($id = $this->dao->store($type, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'])) {
+    public function createEvent($type, $parameters, $priority,$owner=SystemEvent::OWNER_ROOT) {
+        if ($id = $this->dao->store($type, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'],$owner)) {
             $klass = 'SystemEvent_'. $type;
             $sysevent = new $klass($id, 
-                                   $type, 
+                                   $type,
+                                   $owner,
                                    $parameters,
                                    $priority, 
                                    SystemEvent::STATUS_NEW, 
@@ -336,13 +347,20 @@ class SystemEventManager {
         case SystemEvent::TYPE_COMPUTE_MD5SUM:
             $klass = 'SystemEvent_'. $row['type'];
             break;
+
+        case SystemEvent::TYPE_SVN_UPDATE_HOOKS:
+            $klass = 'SystemEvent_'. $row['type'];
+            $klass_params = array(Backend::instance(Backend::SVN));
+            break;
+
         default:
             $em->processEvent(Event::GET_SYSTEM_EVENT_CLASS, array('type' => $row['type'], 'class' => &$klass, 'dependencies' => &$klass_params));
             break;
         }
-        if (!empty($klass)) {
+        if (class_exists($klass)) {
             $sysevent = new $klass($row['id'],
                                    $row['type'],
+                                   $row['owner'],
                                    $row['parameters'],
                                    $row['priority'],
                                    $row['status'],
@@ -397,6 +415,7 @@ class SystemEventManager {
             $html .= '<thead><tr>';
             $html .= '<th class="boxtitle">'. 'id' .'</td>';
             $html .= '<th class="boxtitle">'. 'type' .'</td>';
+            $html .= '<th class="boxtitle">'. 'owner' .'</td>';
             $html .= '<th class="boxtitle" style="text-align:center">'. 'status' .'</th>';
             $html .= '<th class="boxtitle" style="text-align:center">'. 'priority' .'</th>';
             $html .= '<th class="boxtitle">'. 'parameters' .'</th>';
@@ -437,6 +456,8 @@ class SystemEventManager {
                 
                 //name of the event
                 $html .= '<td>'. $sysevent->getType() .'</td>';
+
+                $html .= '<td>'. $sysevent->getOwner() .'</td>';
                 
                 //status
                 $html .= '<td class="system_event_status_'. $row['status'] .'"';
@@ -523,7 +544,7 @@ class SystemEventManager {
     /**
      * Return true if there is no pending rename event of this user, otherwise false
      * 
-     * @param User $user 
+     * @param PFUser $user 
      * @return Boolean
      */
     public function canRenameUser($user) {
@@ -533,7 +554,7 @@ class SystemEventManager {
     /**
      * Return true if there is no pending rename event of this project, otherwise false
      * 
-     * @param User $user 
+     * @param PFUser $user 
      * @return Boolean
      */
     public function canRenameProject($project) {

@@ -11,7 +11,7 @@ require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 
@@ -53,7 +53,7 @@ class IMPluginTest extends UnitTestCase {
         $this->project_manager->setReturnReference('getProject', $this->project);
         $this->implugin->setReturnReference('getProjectManager', $this->project_manager);
         
-        $this->user = new MockUser($this);
+        $this->user = mock('PFUser');
         $this->user->setReturnValue('getName', 'mockuser');
         $this->user_manager = new MockUserManager($this);
         $this->user_manager->setReturnReference('getUserById', $this->user);

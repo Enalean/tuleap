@@ -23,7 +23,6 @@ $current_user_display_name = '';
 if ($current_user->isLoggedIn()) {
     $current_user_display_name = $hp->purify(UserHelper::instance()->getDisplayNameFromUser($current_user));
 }
-
 if (Config::get('sys_https_host')) {
     $login_form_url = 'https://'. Config::get('sys_https_host');
 } else {

@@ -18,11 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('SERVICE_MASTER',    'master');
-define('SERVICE_SAME',      'same');
-define('SERVICE_SATELLITE', 'satellite');
-require_once('common/server/ServerFactory.class.php');
-
 require_once('ServiceNotAllowedForProjectException.class.php');
 
 /**
@@ -80,26 +75,11 @@ class Service {
     function isIFrame() {
     	return $this->data['is_in_iframe'];
     }
-    function getServerId() {
-        return $this->data['server_id'];
-    }
-    function getLocation() {
-        return $this->data['location'];
-    }
     function getUrl($url = null) {
         if (is_null($url)) {
             $url = $this->data['link'];
         }
-        if (!$this->isAbsolute($url) && $this->getLocation() != SERVICE_SAME) {
-            $sf =& $this->_getServerFactory();
-            if ($s =& $sf->getServerById($this->getServerId())) {
-                $url = $s->getUrl($this->_sessionIsSecure()) . $url;
-            }
-        }
         return $url;
-    }
-    function &_getServerFactory() {
-        return new ServerFactory();
     }
     
     /**
@@ -121,14 +101,8 @@ class Service {
     
     public function displayHeader($title, $breadcrumbs, $toolbar) {
         $GLOBALS['HTML']->setRenderedThroughService(true);
-        
-        foreach($breadcrumbs as $b) {
-            $classname = '';
-            if (isset($b['classname'])) {
-                $classname = 'class="breadcrumb-step-'. $b['classname'] .'"';
-            }
-            $GLOBALS['HTML']->addBreadcrumb('<a href="'. $b['url'] .'" '. $classname .'>'. $b['title'] .'</a>');
-        }
+        $GLOBALS['HTML']->addBreadcrumbs($breadcrumbs);
+
         foreach($toolbar as $t) {
             $class = isset($t['class']) ? 'class="'. $t['class'] .'"' : '';
             $item_title = isset($t['short_title']) ? $t['short_title'] :$t['title'];

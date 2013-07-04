@@ -99,22 +99,34 @@ class PluginFactory {
     function _getInstancePlugin($id, $row) {
         if (!isset($this->retrieved_plugins['by_id'][$id])) {
             $this->retrieved_plugins['by_id'][$id] = false;
-            $plugin_class_info = $this->_getClassNameForPluginName($row['name']);
-            $plugin_class      = $plugin_class_info['class'];
-            if ($plugin_class) {
-                $p = new $plugin_class($id);
+            $p = $this->instantiatePlugin($id, $row['name']);
+            if ($p) {
                 $this->retrieved_plugins['by_id'][$id]            = $p;
                 $this->retrieved_plugins['by_name'][$row['name']] = $p;
                 $this->retrieved_plugins[($row['available'] ? 'available' : 'unavailable')][$id] = $p;
                 $this->name_by_id[$id] = $row['name'];
-                if ($plugin_class_info['custom']) {
+                if ($p->isCustom()) {
                     $this->custom_plugins[$id] = $p;
                 }
             }
         }
         return $this->retrieved_plugins['by_id'][$id];
     }
-    
+
+    public function instantiatePlugin($id, $name) {
+        $plugin_class_info = $this->_getClassNameForPluginName($name);
+        $plugin_class      = $plugin_class_info['class'];
+        if (! $plugin_class) {
+            return null;
+        }
+
+        $plugin = new $plugin_class($id);
+        if ($plugin_class_info['custom']) {
+            $plugin->setIsCustom(true);
+        }
+        return $plugin;
+    }
+
     function _getClassNameForPluginName($name) {
         $class_name = $name."Plugin";
         $custom     = false;

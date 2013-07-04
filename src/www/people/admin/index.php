@@ -92,7 +92,7 @@ if (user_ismember(1,'A')) {
 		<P>
 		<H3>'.$Language->getText('people_utils','add_new_skill').':</H3>
 		<P>
-		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+		<FORM ACTION="?" METHOD="POST">
 		<INPUT TYPE="HIDDEN" NAME="people_skills" VALUE="y">
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 		<H4>'.$Language->getText('people_admin_index','new_skill_name').':</H4>
@@ -116,7 +116,7 @@ if (user_ismember(1,'A')) {
 		echo '
 			<H2>'.$Language->getText('people_admin_index','people_skills_admin').'</H2>';
 
-		echo "\n<h3><A HREF=\"$PHP_SELF?people_skills=1\">".$Language->getText('people_admin_index','add_skills')."</A></h3>";
+		echo "\n<h3><A HREF=\"?people_skills=1\">".$Language->getText('people_admin_index','add_skills')."</A></h3>";
 		echo "<p>".$Language->getText('people_admin_index','add_new_skill_to_list')."</p>";
 		people_footer(array());
 	}

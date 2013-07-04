@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+require_once dirname(__FILE__).'/../../../../bootstrap.php';
+
 class GitViews_RepoManagement_Pane_GerritTest extends TuleapTestCase {
     
     public function testCanBeDisplayedReturnsFalseIfAuthTypeNotLdapAndGerritServersSet() {

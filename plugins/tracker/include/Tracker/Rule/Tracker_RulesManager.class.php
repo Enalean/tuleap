@@ -53,7 +53,7 @@ class Tracker_RulesManager {
     /**
      *
      * @param int $tracker_id
-     * @return array
+     * @return Tracker_Rule_List[]
      */
     public function getAllListRulesByTrackerWithOrder($tracker_id) {
         if (!isset($this->rules_by_tracker_id[$tracker_id])) {
@@ -700,7 +700,7 @@ class Tracker_RulesManager {
                         reset($values[$target]['values']);
                         while(!$error_occured && (list(,$target_value) = each($values[$target]['values']))) {
                             
-                            if($target_value == Tracker_FormElement_Field_List_Bind_StaticValue_Null::VALUE_ID
+                            if($target_value == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID
                                     || $target_value == null) {
                                 
                                 /*
@@ -779,17 +779,23 @@ class Tracker_RulesManager {
         return $field;
     }
 
-    /** @return array { 'dates' => [...], 'lists' => [...] } */
-    public function exportToSOAP() {
+    /**
+     * @param Boolean $user_can_read_workdlow_field
+     *
+     * @return array { 'dates' => [...], 'lists' => [...] }
+     */
+    public function exportToSOAP($user_can_read_workdlow_field) {
         $soap = array(
             'dates' => array(),
             'lists' => array()
         );
-        foreach ($this->getAllListRulesByTrackerWithOrder($this->tracker->getId()) as $rule) {
-            $soap['lists'][] = $rule->exportToSOAP();
-        }
-        foreach ($this->getAllDateRulesByTrackerId($this->tracker->getId()) as $rule) {
-            $soap['dates'][] = $rule->exportToSOAP();
+        if ($user_can_read_workdlow_field) {
+            foreach ($this->getAllListRulesByTrackerWithOrder($this->tracker->getId()) as $rule) {
+                $soap['lists'][] = $rule->exportToSOAP();
+            }
+            foreach ($this->getAllDateRulesByTrackerId($this->tracker->getId()) as $rule) {
+                $soap['dates'][] = $rule->exportToSOAP();
+            }
         }
         return $soap;
     }

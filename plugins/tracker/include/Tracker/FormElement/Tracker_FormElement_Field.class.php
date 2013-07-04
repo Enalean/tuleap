@@ -160,8 +160,16 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     }
 
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
+        return $this->buildReportCriteria($criteria, $this->criteriaCanBeAdvanced());
+    }
+
+    public function fetchCriteriaWithoutExpandFunctionnality(Tracker_Report_Criteria $criteria) {
+        return $this->buildReportCriteria($criteria, false);
+    }
+
+    private function buildReportCriteria(Tracker_Report_Criteria $criteria, $advanced_criteria) {
         $html = '';
-        if ($this->criteriaCanBeAdvanced()) {
+        if ($advanced_criteria) {
             $html .= '<table cellpadding="0" cellspacing="0"><tbody><tr><td>';
             $html .= $GLOBALS['HTML']->getImage('ic/toggle_'. ($criteria->is_advanced ? 'minus' : 'plus' ) .'.png',
                                                 array('class' => 'tracker_report_criteria_advanced_toggle')
@@ -173,11 +181,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $html .= '</label>';
 
         $html .= '<br />';
-        if ($this->criteriaCanBeAdvanced()) {
+        if ($advanced_criteria) {
             $html .=  '<div class="tracker_report_criteria">';
         }
         $html .= $this->fetchCriteriaValue($criteria);
-        if ($this->criteriaCanBeAdvanced()) {
+        if ($advanced_criteria) {
             $html .= '</div></td></tr></tbody></table>';
         }
         $html .= $this->fetchCriteriaAdditionnalInfo($criteria);
@@ -310,10 +318,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function fetchArtifact(Tracker_Artifact $artifact, $submitted_values = array()) {
         if ($this->userCanUpdate()) {
-            $value       = $artifact->getLastChangeset()->getValue($this);
-            $html_value  = $this->fetchArtifactValue($artifact, $value, $submitted_values);
-            $html_value .= $this->fetchArtifactAdditionnalInfo($value, $submitted_values);
-            return $this->fetchArtifactField($artifact, $html_value);
+            $last_changeset = $artifact->getLastChangeset();
+            if ($last_changeset) {
+                $value       = $last_changeset->getValue($this);
+                $html_value  = $this->fetchArtifactValue($artifact, $value, $submitted_values);
+                $html_value .= $this->fetchArtifactAdditionnalInfo($value, $submitted_values);
+                return $this->fetchArtifactField($artifact, $html_value);
+            }
+            return '';
         }
         return $this->fetchArtifactReadOnly($artifact);
     }
@@ -326,10 +338,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return string html
      */
     public function fetchArtifactReadOnly(Tracker_Artifact $artifact) {
-        $value       = $artifact->getLastChangeset()->getValue($this);
-        $html_value  = $this->fetchArtifactValueReadOnly($artifact, $value);
-        $html_value .= $this->fetchArtifactAdditionnalInfo($value);
-        return $this->fetchArtifactField($artifact, $html_value);
+        $last_changeset = $artifact->getLastChangeset();
+        if ($last_changeset) {
+            $value       = $last_changeset->getValue($this);
+            $html_value  = $this->fetchArtifactValueReadOnly($artifact, $value);
+            $html_value .= $this->fetchArtifactAdditionnalInfo($value);
+            return $this->fetchArtifactField($artifact, $html_value);
+        }
+        return '';
     }
 
     /**
@@ -519,7 +535,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string
      */
-    public function fetchCardValue(Tracker_Artifact $artifact) {
+    public function fetchCardValue(Tracker_Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences = null) {
         return $this->fetchTooltipValue($artifact, $artifact->getLastChangeset()->getValue($this));
     }
 
@@ -530,9 +546,9 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string
      */
-    public function fetchCard(Tracker_Artifact $artifact) {
+    public function fetchCard(Tracker_Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences) {
 
-        $value = $this->fetchCardValue($artifact);
+        $value = $this->fetchCardValue($artifact, $display_preferences);
         $data_field_id   = '';
         $data_field_type = '';
         
@@ -886,13 +902,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @param Tracker_Artifact_Changeset $old_changeset      The old changeset. null if it is the first one
      * @param int                        $new_changeset_id   The id of the new changeset
      * @param mixed                      $submitted_value    The value submitted by the user
-     * @param User                       $submitter          The user who made the modification
+     * @param PFUser                       $submitter          The user who made the modification
      * @param boolean                    $is_submission      True if artifact submission, false if artifact update
      * @param boolean                    $bypass_permissions If true, permissions to update/submit the value on field is not checked
      *
      * @return bool true if success
      */
-    public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, User $submitter, $is_submission = false, $bypass_permissions = false) {
+    public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, PFUser $submitter, $is_submission = false, $bypass_permissions = false) {
         $updated        = false;
         $save_new_value = false;
         $dao            = $this->getChangesetValueDao();
@@ -1001,6 +1017,34 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public abstract function getSoapAvailableValues();
 
     /**
+     * Returns the SOAP value of a field for the given changeset.
+     *
+     * @param PFUser $user
+     * @param Tracker_Artifact_Changeset $changeset
+     *
+     * @return array
+     */
+    public function getSoapValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        if ($this->userCanRead($user)) {
+            $value = $changeset->getValue($this);
+            return array(
+                'field_name'  => $this->getName(),
+                'field_label' => $this->getLabel(),
+                'field_value' => $value ? $value->getSoapValue() : '',
+            );
+        }
+        return null;
+    }
+
+    public function getJsonValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        if ($this->userCanRead($user)) {
+            $value = $changeset->getValue($this);
+            return $value ? $value->getJsonValue() : '';
+        }
+        return null;
+    }
+
+    /**
      * Get the field data for artifact submission
      *
      * @param string the soap field value
@@ -1019,8 +1063,20 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return mixed
      */
-    public function getFieldDataFromSoapValue(stdClass $soap_value) {
+    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
         return $this->getFieldData($soap_value->field_value->value);
+    }
+
+    /**
+     * Get binding data for Soap
+     *
+     * @return array the binding data
+     */
+    public function getSoapBindingProperties() {
+        return array(
+            'bind_type' => null,
+            'bind_list' => array()
+        );
     }
 
     /**

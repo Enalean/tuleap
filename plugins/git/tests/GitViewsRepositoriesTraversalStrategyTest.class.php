@@ -18,11 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once dirname(__FILE__) .'/../include/Git_Backend_Gitolite.class.php';
+require_once 'bootstrap.php';
 
 Mock::generate('GitViews');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('Git_Backend_Gitolite');
 
 abstract class GitViewsRepositoriesTraversalStrategyTest extends TuleapTestCase {
@@ -34,7 +33,7 @@ abstract class GitViewsRepositoriesTraversalStrategyTest extends TuleapTestCase 
     
     public function testEmptyListShouldReturnEmptyString() {
         $view = new MockGitViews();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $repositories = array();
         $strategy = new $this->classname($view);
         $this->assertIdentical('', $strategy->fetch($repositories, $user));
@@ -42,7 +41,7 @@ abstract class GitViewsRepositoriesTraversalStrategyTest extends TuleapTestCase 
     
     public function testFlatTreeShouldReturnRepresentation() {
         $view = new MockGitViews();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));
         
         $repositories    = $this->getFlatTree($strategy);

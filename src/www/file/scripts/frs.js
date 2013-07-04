@@ -349,33 +349,78 @@ Event.observe(window, 'load', function() {
 
 document.observe('dom:loaded', function () {
     var create_release_btn = $('create_release');
+
+    function updateFeedbackBox(html_msg) {
+        $('feedback').innerHTML = html_msg;
+        Element.scrollTo('feedback');
+    }
+
+    function checkFileUploadSize(onsuccess_callback) {
+        var input_files = $('files').select('input[type=file]'),
+            total_bytes = 0;
+
+        if (! window.FileReader) {
+            // Unsupported browser, continue validation
+            onsuccess_callback();
+        }
+
+        if (! input_files.size()) {
+            // No files to check, continue validation
+            onsuccess_callback();
+        }
+
+        var total_bytes = input_files.inject(0, function (total_bytes, input_file) {
+            var files = input_file.files,
+                length = files.length;
+
+            // Since html5 we may have multiple files per input type=file
+            for (var i = 0 ; i < length ; ++i) {
+                total_bytes += files[i].size;
+            }
+
+            return total_bytes;
+        });
+
+        if (total_bytes < $('frs_form').down('input[name=MAX_FILE_SIZE]').value) {
+            onsuccess_callback();
+        } else {
+            updateFeedbackBox('<ul class="feedback_error"><li>' + codendi.locales.files.error_max_file_size + '</li></ul>');
+        }
+    }
+
+    function checkParametersOnServer() {
+        $('feedback').innerHTML = '';
+        var valide = false;
+        if(release_mode == 'creation'){
+            if( $('package_id')){
+                var package_id = $('package_id').value;
+            } else {
+                var package_id = null;
+            }
+            var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_create&package_id=' + package_id+'&date=' + $('release_date').value+
+                        '&name=' + encodeURIComponent($('release_name').value);
+        } else {
+            var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_update&package_id=' + $('package_id').value+'&date=' + $('release_date').value+
+                    '&name=' + encodeURIComponent($('release_name').value) +'&release_id=' + $('release_id').value;
+        }
+        new Ajax.Request(url, {
+            method:'get',
+            onSuccess: (function(transport, json) {
+                if (json.valid) {
+                    this.form.submit();
+                } else {
+                    updateFeedbackBox(json.msg);
+                }
+            }).bind(create_release_btn)
+        });
+    }
+
     if (create_release_btn) {
         create_release_btn.observe('click', function check_parameters(evt){
-            $('feedback').innerHTML = '';
-            var valide = false;
-            if(release_mode == 'creation'){
-                if( $('package_id')){
-                    var package_id = $('package_id').value;
-                } else { 
-                    var package_id = null; 
-                }
-                var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_create&package_id=' + package_id+'&date=' + $('release_date').value+
-                            '&name=' + encodeURIComponent($('release_name').value);
-            } else {
-                var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_update&package_id=' + $('package_id').value+'&date=' + $('release_date').value+
-                        '&name=' + encodeURIComponent($('release_name').value) +'&release_id=' + $('release_id').value;
-            }
-            new Ajax.Request(url, {
-                method:'get',
-                onSuccess: (function(transport, json) {
-                    if (json.valid) {
-                        this.form.submit();
-                    } else {
-                        $('feedback').innerHTML = json.msg;
-                        Element.scrollTo('feedback');
-                    }
-                }).bind(create_release_btn) 
-            });
+
+            // Yay Promises!
+            checkFileUploadSize(checkParametersOnServer);
+
             Event.stop(evt);
             return false;
         });

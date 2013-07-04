@@ -18,32 +18,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/constants.php';
-require_once GIT_BASE_DIR.'/Git/Admin.class.php';
+require_once dirname(__FILE__).'/../bootstrap.php';
+
+require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 class Git_Admin_process_Test extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
         $this->request = aRequest()->build();
-        $this->csrf    = $this->setUpCSRF();
+        $this->csrf    = mock('CSRFSynchronizerToken');
         $this->factory = mock('Git_RemoteServer_GerritServerFactory');
         $this->admin   = new Git_Admin($this->factory, $this->csrf);
 
         $this->request_new_server = array(
-            'host'          => 'host',
-            'port'          => '1234',
-            'login'         => 'login',
-            'identity_file' => '/path/to/file',
+            'host'              => 'host',
+            'port'              => '1234',
+            'login'             => 'login',
+            'identity_file'     => '/path/to/file',
+            'replication_key'   => '',
         );
         $this->request_update_existing_server = array(
-            'host'          => 'g.example.com',
-            'port'          => '1234',
-            'login'         => 'new_login',
-            'identity_file' => '/path/to/file',
+            'host'              => 'g.example.com',
+            'port'              => '1234',
+            'login'             => 'new_login',
+            'identity_file'     => '/path/to/file',
+            'replication_key'   => '',
         );
-        $this->a_brand_new_server = new Git_RemoteServer_GerritServer(0, 'host', '1234', '80', 'login', '/path/to/file');
-        $this->an_existing_server = new Git_RemoteServer_GerritServer(1, 'g.example.com', '1234', '80', 'login', '/path/to/file');
+        $this->a_brand_new_server = new Git_RemoteServer_GerritServer(0, 'host', '1234', '80', 'login', '/path/to/file', '');
+        $this->an_existing_server = new Git_RemoteServer_GerritServer(1, 'g.example.com', '1234', '80', 'login', '/path/to/file', '');
 
         stub($this->factory)->getServers()->returns(array(
             1 => $this->an_existing_server
@@ -52,34 +55,27 @@ class Git_Admin_process_Test extends TuleapTestCase {
         $this->request->set($this->csrf->getTokenName(), $this->csrf->getToken());
     }
 
-    /**
-     * @return CSRFSynchronizerToken
-     */
-    private function setUpCSRF() {
-        $user = mock('User');
-        $csrf = TestHelper::getPartialMock('CSRFSynchronizerToken', array('getUser'));
-        stub($csrf)->getUser()->returns($user);
-        $csrf->__construct('/plugin/git/admin/');
-        return $csrf;
-    }
-
     public function itDoesNotSaveAnythingIfTheRequestIsNotValid() {
         $this->request->set('gerrit_servers', false);
         expect($this->factory)->save()->never();
         $this->admin->process($this->request);
     }
 
-    public function itGivesUpIfTheRequestIsForged() {
+    public function itCheckWithCSRFIfTheRequestIsForged() {
         $this->request->set('gerrit_servers', array(0 => $this->request_new_server));
-        $this->request->set($this->csrf->getTokenName(), 'a-F0rG3d-7ok3N');
-        stub($GLOBALS['Response'])->addFeedback('error', '*')->once();
-        stub($GLOBALS['Response'])->redirect('/plugin/git/admin/')->once();
+        expect($this->csrf)->check()->once();
         $this->admin->process($this->request);
     }
 
     public function itSavesNewGerritServer() {
         $this->request->set('gerrit_servers', array(0 => $this->request_new_server));
         expect($this->factory)->save($this->a_brand_new_server)->once();
+        $this->admin->process($this->request);
+    }
+
+    public function itRedirectsAfterSave() {
+        $this->request->set('gerrit_servers', array(0 => $this->request_new_server));
+        expect($GLOBALS['Response'])->redirect()->once();
         $this->admin->process($this->request);
     }
 

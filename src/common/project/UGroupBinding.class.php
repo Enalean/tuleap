@@ -29,7 +29,7 @@ class UGroupBinding {
     private $ugroupUserDao;
     private $ugroupManager;
 
-    public function __construct($ugroup_user_dao, $ugroup_manager) {
+    public function __construct(UGroupUserDao $ugroup_user_dao, UGroupManager $ugroup_manager) {
         $this->ugroupUserDao = $ugroup_user_dao;
         $this->ugroupManager = $ugroup_manager;
     }
@@ -244,13 +244,10 @@ class UGroupBinding {
      * @return boolean
      */
     public function addBinding($ugroupId, $sourceId) {
-        $dar = $this->getUGroupManager()->getUgroupBindingSource($ugroupId);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
-            $row = $dar->getRow();
-            if ($row['source_id'] == $sourceId) {
-                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('project_ugroup_binding', 'duplicate_binding_warning', array($sourceId)));
-                return false;
-            }
+        $source_ugroup = $this->getUGroupManager()->getUgroupBindingSource($ugroupId);
+        if ($source_ugroup && $source_ugroup->getId() == $sourceId) {
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('project_ugroup_binding', 'duplicate_binding_warning', array($sourceId)));
+            return false;
         }
         try {
             $this->reloadUgroupBinding($ugroupId, $sourceId);

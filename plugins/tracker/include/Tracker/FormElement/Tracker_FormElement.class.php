@@ -156,7 +156,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
      * @param Codendi_Request                $request         The data coming from the user
-     * @param User                           $current_user    The user who mades the request
+     * @param PFUser                           $current_user    The user who mades the request
      *
      * @return void
      */
@@ -190,7 +190,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
      * @param Codendi_Request                $request         The data coming from the user
-     * @param User                           $current_user    The user who mades the request
+     * @param PFUser                           $current_user    The user who mades the request
      * @param bool                           $redirect        Do we need to redirect? default is false
      *
      * @return void
@@ -319,7 +319,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
      * @param Codendi_Request                $request         The data coming from the user
-     * @param User                           $current_user    The user who mades the request
+     * @param PFUser                           $current_user    The user who mades the request
      *
      * @return void
      */
@@ -919,7 +919,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      * Get the current user
      *
-     * @return User
+     * @return PFUser
      */
     protected function getCurrentUser() {
         return UserManager::instance()->getCurrentUser();
@@ -930,11 +930,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * Do not call this directly. Use userCanRead, userCanUpdate or userCanSubmit instead.
      *
      * @param string $permission_type PLUGIN_TRACKER_FIELD_READ | PLUGIN_TRACKER_FIELD_UPDATE | PLUGIN_TRACKER_FIELD_SUBMIT
-     * @param User  $user             The user. if null given take the current user
+     * @param PFUser  $user             The user. if null given take the current user
      *
      * @return bool
      */
-    protected function userHasPermission($permission_type, User $user = null) {
+    protected function userHasPermission($permission_type, PFUser $user = null) {
         if (! $user) {
             $user = $this->getCurrentUser();
         }
@@ -953,11 +953,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      * return true if user has Read or Update permission on this field
      *
-     * @param User $user The user. if not given or null take the current user
+     * @param PFUser $user The user. if not given or null take the current user
      *
      * @return bool
      */
-    public function userCanRead(User $user = null) {
+    public function userCanRead(PFUser $user = null) {
         $ok = $this->userHasPermission('PLUGIN_TRACKER_FIELD_READ', $user)
               || $this->userHasPermission('PLUGIN_TRACKER_FIELD_UPDATE', $user);
         return $ok;
@@ -966,11 +966,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      * return true if user has Update permission on this field
      *
-     * @param User $user The user. if not given or null take the current user
+     * @param PFUser $user The user. if not given or null take the current user
      *
      * @return bool
      */
-    public function userCanUpdate(User $user = null) {
+    public function userCanUpdate(PFUser $user = null) {
         $ok = $this->isUpdateable() && $this->userHasPermission('PLUGIN_TRACKER_FIELD_UPDATE', $user);
         return $ok;
     }
@@ -978,11 +978,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      * return true if user has Submit permission on this field
      *
-     * @param User $user The user. if not given or null take the current user
+     * @param PFUser $user The user. if not given or null take the current user
      *
      * @return bool
      */
-    public function userCanSubmit(User $user = null) {
+    public function userCanSubmit(PFUser $user = null) {
         $ok = $this->isSubmitable() && $this->userHasPermission('PLUGIN_TRACKER_FIELD_SUBMIT', $user);
         return $ok;
     }
@@ -1128,7 +1128,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return format_date("Y-m-d", (float)$date, '');
     }
 
-    public function exportCurrentUserPermissionsToSOAP(User $user) {
+    public function exportCurrentUserPermissionsToSOAP(PFUser $user) {
 
         $permissions = array();
 

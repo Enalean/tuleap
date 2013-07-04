@@ -28,13 +28,14 @@ class Cardwall_CreateCardPresenterCallback implements TreeNodeCallback {
     private $card_fields;
 
     /**
-     * @var User
+     * @var PFUser
      */
     private $user;
 
-    public function __construct($card_fields, User $user) {
-         $this->card_fields = $card_fields;
-         $this->user        = $user;
+    public function __construct($card_fields, PFUser $user, Cardwall_DisplayPreferences $display_preferences) {
+         $this->card_fields         = $card_fields;
+         $this->user                = $user;
+         $this->display_preferences = $display_preferences;
     }
 
     /**
@@ -49,9 +50,14 @@ class Cardwall_CreateCardPresenterCallback implements TreeNodeCallback {
         }
 
         $artifact  = $node->getArtifact();
-        $presenter = new Cardwall_CardPresenter($artifact, $this->card_fields, $artifact->getParent($this->user));
+        $color     = $artifact->getCardAccentColor($this->user);
+        $presenter = new Cardwall_CardPresenter($artifact, $this->card_fields, $color, $this->display_preferences, $this->getSwimlineId($node), $artifact->getParent($this->user));
         $new_node  = new Tracker_TreeNode_CardPresenterNode($node, $presenter);
         return $new_node;
+    }
+
+    private function getSwimlineId(TreeNode $node) {
+        return $node->getParentNode() ? $node->getParentNode()->getId() : 0;
     }
 }
 

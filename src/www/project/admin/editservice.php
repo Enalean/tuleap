@@ -150,31 +150,6 @@ if ($service['short_name']=='summary'){
 }
 echo '</td></tr>';
 
-
-//{{{ Distributed architecture
-if (in_array($service['short_name'], array('file', 'svn'))) {
-    $sf = new ServerFactory();
-    $servers = $sf->getAllServers();
-    if ($servers && count($servers) > 1) {
-        echo '<tr><td colspan="2"><b>Server</b></tr>';
-        echo '<tr><td><label><a href="#" title="Location">Location:</a></label></td><td>';
-        if ($su) {
-            echo '<select name="server_id">';
-            foreach($servers as $key => $nop) {
-                $selected = $servers[$key]->getId() == $service['server_id'] ? 'selected="selected"' : '';
-                echo '<option value="'. $servers[$key]->getId() .'" '. $selected .'>'. $servers[$key]->getName() .'</option>';
-            }
-        } else {
-            foreach($servers as $key => $nop) {
-                if ($servers[$key]->getId() == $service['server_id']) {
-                    echo $servers[$key]->getName();
-                }
-            }
-        }
-        echo '</td></tr>';
-    }
-}
-//}}}
 echo '</table>
 
 <P><INPUT type="submit" name="Update" value="'.$Language->getText('global','btn_update').'">
@@ -268,6 +243,7 @@ project_admin_header(array('title'=>$Language->getText('project_admin_editservic
 // '' -> show service and allow modification (-> do_update) 
 
 
+$func = $request->get('func');
 
 if (isset($func) && $func=="create") {
     $is_superuser=false;
@@ -277,7 +253,7 @@ if (isset($func) && $func=="create") {
     display_service_creation_form($group_id,$is_superuser);
 }
 else {
-
+    $service_id = $request->getValidated('service_id', 'uint', 0);
     if (!$service_id) {
         exit_error('ERROR','Service Id was not specified ');
     }

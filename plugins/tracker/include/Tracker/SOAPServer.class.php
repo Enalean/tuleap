@@ -145,7 +145,7 @@ class Tracker_SOAPServer {
         }
     }
 
-    private function artifactListToSoap(User $user, $id_list, $offset, $max_rows) {
+    private function artifactListToSoap(PFUser $user, $id_list, $offset, $max_rows) {
         $return = array(
             'artifacts' => array(),
             'total_artifacts_number' => 0
@@ -155,7 +155,7 @@ class Tracker_SOAPServer {
             $return['total_artifacts_number'] = count($id_list);
             foreach (array_slice($id_list, $offset, $max_rows) as $artifact_id) {
                 $artifact      = $this->artifact_factory->getArtifactById((int)$artifact_id);
-                $soap_artifact = $this->artifact_to_soap($user, $artifact);
+                $soap_artifact = $artifact->getSoapValue($user);
                 if (count($soap_artifact)) {
                     $return['artifacts'][] = $soap_artifact;
                 }
@@ -222,7 +222,7 @@ class Tracker_SOAPServer {
      * @param array of Object{Tracker} $tf_arr the array of ArtifactTrackers to convert.
      * @return array the SOAPArrayOfTracker corresponding to the array of Trackers Object
      */
-    private function trackerlist_to_soap($tf_arr, User $user) {
+    private function trackerlist_to_soap($tf_arr, PFUser $user) {
         $return = array();
         foreach ($tf_arr as $tracker_id => $tracker) {
 
@@ -290,7 +290,7 @@ class Tracker_SOAPServer {
      * @param array of Object{Field} $tracker_fields the array of TrackerFields to convert.
      * @return array the SOAPArrayOfTrackerField corresponding to the array of Tracker Fields Object
      */
-    private function trackerfields_to_soap(User $user, Tracker $tracker, $tracker_fields) {
+    private function trackerfields_to_soap(PFUser $user, Tracker $tracker, $tracker_fields) {
         $return = array();
         foreach ($tracker_fields as $tracker_field) {
             if ($tracker_field->userCanRead($user)) {
@@ -301,6 +301,7 @@ class Tracker_SOAPServer {
                     'label'       => $tracker_field->getLabel(),
                     'type'        => $this->formelement_factory->getType($tracker_field),
                     'values'      => $tracker_field->getSoapAvailableValues(),
+                    'binding'     => $tracker_field->getSoapBindingProperties(),
                     'permissions' => $tracker_field->exportCurrentUserPermissionsToSOAP($user)
                 );
             }
@@ -322,13 +323,13 @@ class Tracker_SOAPServer {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
             $artifact     = $this->getArtifactById($artifact_id, $current_user, 'getArtifact');
-            return $this->artifact_to_soap($current_user, $artifact);
+            return $artifact->getSoapValue($current_user);
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
     }
 
-    private function checkUserCanViewArtifact(Tracker_Artifact $artifact, User $user) {
+    private function checkUserCanViewArtifact(Tracker_Artifact $artifact, PFUser $user) {
         if (!$artifact->userCanView($user)) {
             throw new SoapFault(get_artifact_fault, 'Permission Denied: you cannot access this artifact');
         }
@@ -345,7 +346,7 @@ class Tracker_SOAPServer {
     /**
      * @throws SoapFault if user can't view the tracker
      */
-    private function checkUserCanViewTracker(Tracker $tracker, User $user) {
+    private function checkUserCanViewTracker(Tracker $tracker, PFUser $user) {
         if (! $tracker->userCanView($user)) {
             throw new Exception('Permission Denied: You are not granted sufficient permission to perform this operation.', (string)get_tracker_factory_fault);
         }
@@ -355,7 +356,7 @@ class Tracker_SOAPServer {
     /**
      * @throws SoapFault if user can't view the tracker
      */
-    private function checkUserCanAdminTracker(User $user, $tracker) {
+    private function checkUserCanAdminTracker(PFUser $user, $tracker) {
         $this->checkUserCanViewTracker($tracker, $user);
         if (! $tracker->userIsAdmin($user)) {
             throw new SoapFault(user_is_not_tracker_admin,' Permission Denied: You are not granted sufficient permission to perform this operation.', 'getTrackerSemantic');
@@ -365,53 +366,8 @@ class Tracker_SOAPServer {
     /**
      * @throws SoapFault if user can't access the project
      */
-    private function checkUserCanAccessProject(User $user, Project $project) {
+    private function checkUserCanAccessProject(PFUser $user, Project $project) {
         $this->soap_request_validator->assertUserCanAccessProject($user, $project);
-    }
-
-    /**
-     * artifact_to_soap : return the soap artifact structure giving a PHP Artifact Object.
-     * @access private
-     *
-     * WARNING : We check the permissions here : only the readable fields are returned.
-     *
-     * @param Object{Artifact} $artifact the artifact to convert.
-     * @return array the SOAPArtifact corresponding to the Artifact Object
-     */
-    private function artifact_to_soap(User $user, Tracker_Artifact $artifact) {
-        $soap_artifact = array();
-
-        // We check if the user can view this artifact
-        if ($artifact->userCanView($user)) {
-            $last_changeset = $artifact->getLastChangeset();
-
-            $soap_artifact['artifact_id']      = $artifact->getId();
-            $soap_artifact['tracker_id']       = $artifact->getTrackerId();
-            $soap_artifact['submitted_by']     = $artifact->getSubmittedBy();
-            $soap_artifact['submitted_on']     = $artifact->getSubmittedOn();
-            $soap_artifact['cross_references'] = $artifact->getCrossReferencesSOAPValues();
-            $soap_artifact['last_update_date'] = $last_changeset->getSubmittedOn();
-
-            $soap_artifact['value'] = array();
-            foreach ($last_changeset->getValues() as $field_id => $field_value) {
-                if ($field_value &&
-                        ($field = $this->formelement_factory->getFormElementById($field_id)) &&
-                        ($field->userCanRead($user))) {
-                    $soap_field_value = array(
-                        'field_name' => $field->getName(),
-                        'field_label' => $field->getLabel(),
-                    );
-                    if ($field instanceof Tracker_FormElement_Field_File) {
-                        $soap_field_value['field_value'] = $field_value->getSoapValue();
-                    } else {
-                        // TODO: refactor to move 'value' into Field
-                        $soap_field_value['field_value'] = array('value' => $field_value->getSoapValue());
-                    }
-                    $soap_artifact['value'][] = $soap_field_value;
-                }
-            }
-        }
-        return $soap_artifact;
     }
 
     /**
@@ -451,7 +407,7 @@ class Tracker_SOAPServer {
         }
     }
 
-    private function getArtifactDataFromSoapRequest(Tracker $tracker, $values) {
+    private function getArtifactDataFromSoapRequest(Tracker $tracker, $values, Tracker_Artifact $artifact = null) {
         $fields_data = array();
         foreach ($values as $field_value) {
             // field are identified by name, we need to retrieve the field id
@@ -459,9 +415,9 @@ class Tracker_SOAPServer {
 
                 $field = $this->formelement_factory->getUsedFieldByName($tracker->getId(), $field_value->field_name);
                 if ($field) {
-                    $field_data = $field->getFieldDataFromSoapValue($field_value);
+                    $field_data = $field->getFieldDataFromSoapValue($field_value, $artifact);
 
-                    if ($field_data != null) {
+                    if ($field_data !== null) {
                         // $field_value is an object: SOAP must cast it in ArtifactFieldValue
                         if (isset($fields_data[$field->getId()])) {
                             if (!is_array($fields_data[$field->getId()])) {
@@ -472,7 +428,7 @@ class Tracker_SOAPServer {
                             $fields_data[$field->getId()] = $field_data;
                         }
                     } else {
-                        throw new SoapFault(update_artifact_fault, 'Unknown value ' . $field_value->field_value . ' for field: ' . $field_value->field_name);
+                        throw new SoapFault(update_artifact_fault, 'Unknown value ' . print_r($field_value->field_value, true) . ' for field: ' . $field_value->field_name);
                     }
                 } else {
                     throw new SoapFault(update_artifact_fault, 'Unknown field: ' . $field_value->field_name);
@@ -506,7 +462,7 @@ class Tracker_SOAPServer {
             $user = $this->soap_request_validator->continueSession($session_key);
             $artifact = $this->getArtifactById($artifact_id, $user, 'updateArtifact');
 
-            $fields_data = $this->getArtifactDataFromSoapRequest($artifact->getTracker(), $value);
+            $fields_data = $this->getArtifactDataFromSoapRequest($artifact->getTracker(), $value, $artifact);
             try {
                 $artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format);
                 return $artifact_id;
@@ -538,23 +494,23 @@ class Tracker_SOAPServer {
         try {
             $user      = $this->soap_request_validator->continueSession($session_key);
             $tracker   = $this->getTrackerById($group_id, $tracker_id, 'getTrackerSemantic');
-            $this->checkUserCanAdminTracker($user, $tracker);
+            $this->checkUserCanViewTracker($tracker, $user);
             return array(
-                'semantic' => $this->getTrackerSemantic($tracker),
-                'workflow' => $this->getTrackerWorkflow($tracker),
+                'semantic' => $this->getTrackerSemantic($user, $tracker),
+                'workflow' => $this->getTrackerWorkflow($user, $tracker),
             );
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
     }
 
-    protected function getTrackerSemantic(Tracker $tracker) {
+    protected function getTrackerSemantic(PFUser $user, Tracker $tracker) {
         $tracker_semantic_manager = new Tracker_SemanticManager($tracker);
-        return $tracker_semantic_manager->exportToSOAP();
+        return $tracker_semantic_manager->exportToSOAP($user);
     }
 
-    protected function getTrackerWorkflow (Tracker $tracker) {
-        return $tracker->getWorkflow()->exportToSOAP();
+    protected function getTrackerWorkflow (PFUser $user, Tracker $tracker) {
+        return $tracker->getWorkflow()->exportToSOAP($user);
     }
 
     /**

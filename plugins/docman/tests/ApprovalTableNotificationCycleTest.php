@@ -31,7 +31,7 @@ Mock::generatePartial('Docman_ApprovalTableNotificationCycle', 'Docman_ApprovalT
 // For  testLastReviewerApprove
 
 
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('Mail');
 Mock::generate('Docman_ApprovalReviewer');
 Mock::generate('Docman_ApprovalTable');
@@ -55,7 +55,7 @@ class ApprovalTableNotificationCycleTest extends UnitTestCase {
         $mail =& new MockMail();
         $mail->expectOnce('_sendmail');
 
-        $owner =& new MockUser();
+        $owner = mock('PFUser');
         $owner->setReturnValue('getEmail', 'owner@codendi.com');
         $owner->setReturnValue('getRealName', 'Owner');
 

@@ -1,13 +1,15 @@
 <?php
 //
-// SourceForge: Breaking Down the Barriers to Open Source Development
+// Copyright 2011-2013 (c) Enalean
 // Copyright 1999-2000 (c) The SourceForge Crew
+//
+// SourceForge: Breaking Down the Barriers to Open Source Development
 // http://sourceforge.net
 //
 // 
 
 if (version_compare(phpversion(), '5.1.6', '<')) {
-    die('Codendi must be run on a PHP 5.1.6 (or greater) engine');
+    die('Tuleap must be run on a PHP 5.1.6 (or greater) engine');
 }
 if (version_compare(phpversion(), '5.3', '>=')) {
     if (!ini_get('date.timezone')) {
@@ -15,16 +17,21 @@ if (version_compare(phpversion(), '5.3', '>=')) {
     }
 }
 
-// Defines all of the Codendi settings first (hosts, databases, etc.)
-$local_inc = getenv('CODENDI_LOCAL_INC');
-if ( ! $local_inc ){
-    $local_inc = '/etc/codendi/conf/local.inc';
+// Defines all of the settings first (hosts, databases, etc.)
+$local_inc = getenv('TULEAP_LOCAL_INC') ? getenv('TULEAP_LOCAL_INC') : getenv('CODENDI_LOCAL_INC');
+if ( ! $local_inc ) {
+    if (is_file('/etc/tuleap/conf/local.inc')) {
+        $local_inc = '/etc/tuleap/conf/local.inc';
+    } else {
+        $local_inc = '/etc/codendi/conf/local.inc';
+    }
 }
 require($local_inc);
 require($GLOBALS['db_config_file']);
 require_once('common/include/Config.class.php');
 Config::load($GLOBALS['codendi_dir'] .'/src/etc/local.inc.dist'); //load the default settings
 Config::load($local_inc);
+Config::load($GLOBALS['db_config_file']);
 if (isset($GLOBALS['DEBUG_MODE'])) {
     Config::load($GLOBALS['codendi_dir'] .'/src/etc/development.inc.dist');
     Config::load(dirname($local_inc).'/development.inc');
@@ -50,6 +57,10 @@ require_once('common/include/URL.class.php');
 
 // Detect whether this file is called by a script running in cli mode, or in normal web mode
 if (php_sapi_name() == "cli") {
+    // Backend scripts should never ends because of lack of time or memory
+    ini_set('max_execution_time', 0);
+    ini_set('memory_limit', -1);
+
     define('IS_SCRIPT', true);
 } else {
     define('IS_SCRIPT', false);

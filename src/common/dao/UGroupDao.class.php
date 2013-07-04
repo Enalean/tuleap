@@ -65,6 +65,15 @@ class UGroupDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    function searchStaticByGroupId($group_id) {
+        $group_id = $this->da->escapeInt($group_id);
+        $sql = "SELECT *
+                FROM ugroup
+                WHERE group_id = $group_id
+                ORDER BY ugroup_id";
+        return $this->retrieve($sql);
+    }
+
     function searchByGroupIdAndUGroupId($group_id, $ugroup_id) {
         $group_id  = $this->da->escapeInt($group_id);
         $ugroup_id = $this->da->escapeInt($ugroup_id);
@@ -178,10 +187,10 @@ class UGroupDao extends DataAccessObject {
      */
     function getUgroupBindingSource($ugroupId) {
         $ugroupId = $this->da->escapeInt($ugroupId);
-        $sql      = "SELECT u.source_id, v.group_id
-                     FROM ugroup u, ugroup v
-                     WHERE u.ugroup_id = ".$ugroupId."
-                       AND v.ugroup_id = u.source_id";
+        $sql      = "SELECT source.*
+                     FROM ugroup u 
+                       JOIN ugroup source ON (source.ugroup_id = u.source_id)
+                     WHERE u.ugroup_id = ".$ugroupId;
         return $this->retrieve($sql);
     }
 

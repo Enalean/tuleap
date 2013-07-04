@@ -92,6 +92,21 @@ class Cardwall_OnTop_ConfigFactory {
     }
 
     /**
+     * Returns the cardwall configuration of the given planning
+     *
+     * @param Planning $planning
+     *
+     * @return Cardwall_OnTop_Config | null
+     */
+    public function getOnTopConfigByPlanning(Planning $planning) {
+        $tracker = $planning->getPlanningTracker();
+        if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
+            return $this->getOnTopConfig($tracker);
+        }
+        return null;
+    }
+
+    /**
      * @return Cardwall_OnTop_Config_Updater
      */
     public function getOnTopConfigUpdater(Tracker $tracker) {

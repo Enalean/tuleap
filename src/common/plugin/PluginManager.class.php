@@ -59,7 +59,11 @@ class PluginManager {
         }
         $this->plugins_loaded = true;
     }
-    
+
+    public function getAvailablePlugins() {
+        return $this->_getPluginFactory()->getAvailablePlugins();
+    }
+
     function _getPluginFactory() {
         return PluginFactory::instance();
     }
@@ -184,18 +188,22 @@ class PluginManager {
             if (@include_once "markdown.php") {
                 return Markdown($content);
             }
-            return '<pre>'. $content .'</pre>';
+            return $this->getEscapedReadme($content);
         }
         
         if (is_file("$file.txt")) {
-            return '<pre>'. file_get_contents("$file.txt") .'</pre>';
+            return $this->getEscapedReadme(file_get_contents("$file.txt"));
         }
         
         if (is_file($file)) {
-            return '<pre>'. file_get_contents($file) .'</pre>';
+            return $this->getEscapedReadme(file_get_contents($file));
         }
         
         return '';
+    }
+
+    private function getEscapedReadme($content) {
+        return '<pre>'.Codendi_HTMLPurifier::instance()->purify($content).'</pre>';
     }
 
     /**
@@ -282,6 +290,12 @@ class PluginManager {
         $plugin_factory = $this->_getPluginFactory();
         $p = $plugin_factory->getPluginByName($name);
         return $p;
+    }
+    function getAvailablePluginByName($name) {
+        $plugin = $this->getPluginByName($name);
+        if ($plugin && $this->isPluginAvailable($plugin)) {
+            return $plugin;
+        }
     }
     function getPluginById($id) {
         $plugin_factory = $this->_getPluginFactory();
@@ -382,6 +396,18 @@ class PluginManager {
         else {
             return true;
         }
+    }
+
+    /**
+     * This method instantiate a plugin that should not be used outside
+     * of installation use case. It bypass all caches and do not check availability
+     * of the plugin.
+     *
+     * @param string $name The name of the plugin (docman, tracker, …)
+     * @return Plugin
+     */
+    public function getPluginDuringInstall($name) {
+        return $this->_getPluginFactory()->instantiatePlugin(0, $name);
     }
 }
 ?>

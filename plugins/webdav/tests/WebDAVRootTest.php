@@ -22,7 +22,7 @@ require_once (dirname(__FILE__).'/../../../src/common/language/BaseLanguage.clas
 Mock::generate('BaseLanguage');
 require_once ('requirements.php');
 require_once (dirname(__FILE__).'/../../../src/common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once (dirname(__FILE__).'/../../../src/common/project/Project.class.php');
 Mock::generate('Project');
 require_once (dirname(__FILE__).'/../include/FS/WebDAVProject.class.php');
@@ -57,7 +57,7 @@ class WebDAVRootTest extends UnitTestCase {
     function testGetChildrenWithNoPublicProjects() {
 
         $webDAVRoot = new WebDAVRootTestVersion($this);
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', true);
         $webDAVRoot->setReturnValue('getUser', $user);
         $webDAVRoot->setReturnValue('getPublicProjectList', array());
@@ -71,7 +71,7 @@ class WebDAVRootTest extends UnitTestCase {
     function testGetChildrenWithNoPublicProjectWithWebDAVActivated() {
 
         $webDAVRoot = new WebDAVRootTestVersion($this);
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', true);
 
         $webDAVProject = new MockWebDAVProject();
@@ -89,7 +89,7 @@ class WebDAVRootTest extends UnitTestCase {
     function testGetChildrenWithPublicProjects() {
 
         $webDAVRoot = new WebDAVRootTestVersion($this);
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', true);
 
         $webDAVProject = new MockWebDAVProject();
@@ -108,7 +108,7 @@ class WebDAVRootTest extends UnitTestCase {
     function testGetChildrenNoUserProjects() {
 
         $webDAVRoot = new WebDAVRootTestVersion($this);
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', false);
 
         $webDAVRoot->setReturnValue('getUser', $user);
@@ -123,7 +123,7 @@ class WebDAVRootTest extends UnitTestCase {
     function testGetChildrenUserHaveNoProjectsWithWebDAVActivated() {
 
         $webDAVRoot = new WebDAVRootTestVersion($this);
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', false);
 
         $webDAVProject = new MockWebDAVProject();
@@ -142,7 +142,7 @@ class WebDAVRootTest extends UnitTestCase {
     function testGetChildrenUserHaveProjects() {
 
         $webDAVRoot = new WebDAVRootTestVersion($this);
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', false);
 
         $webDAVProject = new MockWebDAVProject();
@@ -242,7 +242,7 @@ class WebDAVRootTest extends UnitTestCase {
         $project->setReturnValue('exist', true);
         $project->setReturnValue('isActive', true);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $webDAVRoot->setReturnValue('getUser', $user);
 
         $project->setReturnValue('userCanRead', true);

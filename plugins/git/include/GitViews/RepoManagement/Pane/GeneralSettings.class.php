@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Pane.class.php';
 
 class GitViews_RepoManagement_Pane_GeneralSettings extends GitViews_RepoManagement_Pane {
 

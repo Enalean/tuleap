@@ -37,8 +37,8 @@ def ldap_connect():
                 l.simple_bind_s()
             return l
         except ldap.SERVER_DOWN:
-            nop
-    
+            pass
+
 def get_login_from_eduid(ldap_id):
     l = ldap_connect()
     r = l.search_s(include.sys_ldap_dn, ldap.SCOPE_SUBTREE, include.sys_ldap_eduid+'='+ldap_id, [include.sys_ldap_uid])

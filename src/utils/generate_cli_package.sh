@@ -1,6 +1,8 @@
 #!/bin/sh
 #
 # Copyright (c) Xerox Corporation, Codendi 2007-2008.
+# Copyright (c) Enalean, 2012. All Rights Reserved.
+#
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
 # Purpose:
@@ -97,8 +99,8 @@ fi
 
 # honor archivename if defined
 if [ -z "$archivename" ]; then
-    cli_version=`$GREP '\$CLI_VERSION = ' $BASESRCDIR/codendi.php | $SED -e 's/$CLI_VERSION = "\(.*\)";/\1/'`
-    archivename="codendi_cli-${cli_version}"
+    cli_version=`$GREP '\$CLI_VERSION = ' $BASESRCDIR/tuleap.php | $SED -e 's/$CLI_VERSION = "\(.*\)";/\1/'`
+    archivename="tuleap_cli-${cli_version}"
 fi
 
 
@@ -232,7 +234,7 @@ elif [ -n "$sys_https_host" ]; then
 else
     wsdl_domain='http://codendi.example.com';
 fi   
-substitute "$TMPDIR/cli/codendi.php" '%wsdl_domain%' "$wsdl_domain" 
+substitute "$TMPDIR/cli/tuleap.php" '%wsdl_domain%' "$wsdl_domain" 
 
 # Rename the dir cli before creating the archive
 $MV cli $archivename
@@ -258,10 +260,10 @@ then
     exit 1
 fi
 
-if [ -f "$DESTDIR/Codendi_CLI.zip" ]; then
-   $RM "$DESTDIR/Codendi_CLI.zip"
+if [ -f "$DESTDIR/Tuleap_CLI.zip" ]; then
+   $RM "$DESTDIR/Tuleap_CLI.zip"
 fi
-$LN -s $archivename.zip $DESTDIR/Codendi_CLI.zip
+$LN -s $archivename.zip $DESTDIR/Tuleap_CLI.zip
 
 # Fix SELinux context (it is set to 'user_u:object_r:tmp_t')
 SELINUX_ENABLED=1
@@ -271,7 +273,7 @@ if [ ! -e $CHCON ] || [ ! -e "/etc/selinux/config" ] || `$GREP -i -q '^SELINUX=d
 fi
 if [ $SELINUX_ENABLED != 0 ]; then
   $CHCON -h  root:object_r:httpd_sys_content_t $DESTDIR/$archivename.zip
-  $CHCON -h  root:object_r:httpd_sys_content_t $DESTDIR/Codendi_CLI.zip
+  $CHCON -h  root:object_r:httpd_sys_content_t $DESTDIR/Tuleap_CLI.zip
 fi
 
 # Then delete the copied files needed to create the archive

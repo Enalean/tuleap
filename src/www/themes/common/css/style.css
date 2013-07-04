@@ -2462,7 +2462,7 @@ input.span1, textarea.span1, .uneditable-input.span1 {
   background: #ccc;
   background: rgba(0, 0, 0, 0.3);
 }
-.dropdown.open .dropdown-menu {
+.open .dropdown-menu {
   display: block;
 }
 .pull-right .dropdown-menu {
@@ -2481,6 +2481,41 @@ input.span1, textarea.span1, .uneditable-input.span1 {
   bottom: 100%;
   margin-bottom: 1px;
 }
+
+
+.well {
+  min-height: 20px;
+  padding: 19px;
+  margin-bottom: 20px;
+  background-color: #f5f5f5;
+  border: 1px solid #e3e3e3;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.well blockquote {
+  border-color: #ddd;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.well-large {
+  padding: 24px;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+}
+
+.well-small {
+  padding: 9px;
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+}
+
 
 .alert {
   padding: 8px 35px 8px 14px;
@@ -4069,6 +4104,11 @@ table th[class*="span"],
 .btn-group.open .btn-inverse.dropdown-toggle {
   background-color: #222222;
 }
+
+.btn .caret {
+  margin-top: 8px;
+  margin-left: 0;
+}
 /* }}} */
 
 /* {{{ Customized bootstrap elements for tuleap TODO: use less framework */
@@ -4247,7 +4287,8 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
     /*margin: 10px 0;*/
     text-rendering: optimizelegibility;
 }
-.label {
+.label,
+.badge {
     padding: 1px 4px 2px;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
@@ -4260,6 +4301,13 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
     white-space: nowrap;
     vertical-align: baseline;
     background-color: #999;
+}
+.badge {
+  padding-right: 9px;
+  padding-left: 9px;
+  -webkit-border-radius: 9px;
+     -moz-border-radius: 9px;
+          border-radius: 9px;
 }
 .label-important,
 .badge-important {
@@ -4533,6 +4581,17 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
           box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
+.btn.disabled,
+.btn[disabled] {
+  cursor: default;
+  background-image: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+}
+
 .btn-primary:hover,
 .btn-primary:active,
 .btn-primary.active,
@@ -4548,11 +4607,58 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
   background-color: #003399 \9;
 }
 
+.btn-danger {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #da4f49;
+  *background-color: #bd362f;
+  background-image: -moz-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ee5f5b), to(#bd362f));
+  background-image: -webkit-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: -o-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: linear-gradient(to bottom, #ee5f5b, #bd362f);
+  background-repeat: repeat-x;
+  border-color: #bd362f #bd362f #802420;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffee5f5b', endColorstr='#ffbd362f', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active,
+.btn-danger.active,
+.btn-danger.disabled,
+.btn-danger[disabled] {
+  color: #ffffff;
+  background-color: #bd362f;
+  *background-color: #a9302a;
+}
+
+.btn-danger:active,
+.btn-danger.active {
+  background-color: #942a25 \9;
+}
+
 button.btn,
 input[type="submit"].btn {
   *padding-top: 3px;
   *padding-bottom: 3px;
 }
+
+.btn-small {
+  padding: 2px 10px;
+  font-size: 11.9px;
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+}
+
+.btn-small [class^="icon-"],
+.btn-small [class*=" icon-"] {
+  margin-top: 0;
+}
+
 .container.one_step_project input,
 .container.one_step_project button,
 .container.one_step_project select,

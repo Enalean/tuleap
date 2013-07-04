@@ -993,6 +993,9 @@ plugin_tracker_artifact	mail_followup_by	Par :
 plugin_tracker_artifact	not_logged_in	<strong><span class="highlight">Vous n'êtes PAS connecté<br />Veuillez <a href="$1">vous connecter,</a> de façon à ce que les notifications de mise à jour puissent vous être envoyées.</span></strong><br />Si vous ne possédez pas de compte utilisateur, veuillez entrer votre adresse e-mail à la place&nbsp;:
 plugin_tracker_artifact	email_required	Votre adresse email est obligatoire si vous n'êtes pas connecté.
 
+plugin_tracker_artifact	edit_title	Artefact
+plugin_tracker_artifact	hierarchy_title	Enfants
+
 plugin_tracker_artifactlink	go_to_tracker	Aller voir cet outil de suivi
 plugin_tracker_artifactlink	manual_panel_desc	Si vous connaissez l'id de l'artefact, entrez-le manuellement dans le champs texte ci-dessous. Le champs attends une liste d'ids séparés par des virgules.
 plugin_tracker_artifactlink	manual_panel_label	Artefact id(s)
@@ -1111,6 +1114,7 @@ plugin_tracker_formelement_property	static_value	Valeur statique
 plugin_tracker_formelement_property	default_value_today	Date du jour
 plugin_tracker_formelement_property	target_field_name	Champ cible
 plugin_tracker_formelement_property	use_capacity	Utiliser le champ "capacity" pour la courbe théorique
+plugin_tracker_formelement_property	include_weekends	Inclure les week-ends
 
 plugin_tracker_formelement_exception	wrong_field_id	Aucun champ avec l'ID:$1
 plugin_tracker_formelement_exception	permission_denied	Permissions insuffisantes
@@ -1181,6 +1185,8 @@ plugin_tracker_admin_semantic	bad_field_status	Le champ soumis n'est pas un cham
 plugin_tracker_admin_semantic	status_impossible	Vous ne pouvez pas définir la sémantique <em>état</em> car il n'y a aucun champ liste dans votre outil de suivi.
 plugin_tracker_admin_semantic	status_now	L'état est maintenant lié au champ : $1
 plugin_tracker_admin_semantic	unable_save_status	Impossible de sauvegarder la sémantique état
+plugin_tracker_admin_semantic	status_Open	Ouvert
+plugin_tracker_admin_semantic	status_Closed	Clos
 plugin_tracker_admin_semantic	tooltip_label	Tooltip
 plugin_tracker_admin_semantic	tooltip_description	Gérer le tooltip
 plugin_tracker_admin_semantic	tooltip_fields	Les champs suivants seront affichés dans le tooltip :
@@ -1451,3 +1457,5 @@ project_admin_utils	tracker_date_reminder_before_submittedOn	Impossible d'ajoute
 project_admin_utils	tracker_date_reminder_duplicated	Impossible de dupliquer un rappel sur date de tracker
 
 plugin_tracker	access_burndown	Accéder au burndown
+plugin_tracker	info_same_ugroups	Le patron sélectionné a des permissions sur des groupes d'utilisateurs qui semblent avoir leur équivalent dans votre projet : $1 Veuillez notez que seulement le nom des groupes est vérifié, les appartenances effectives peuvent être différentes.
+plugin_tracker	missing_ugroups	Le patron sélectionné a des permissions sur des groupes d'utilisateurs qui ne sont pas définis dans votre projet : $1 Sans ces groupes, des champs peuvent être inutilisables et des transitions pourraient ne pas fonctionner correctement. Si vous créez quand même l'outil de suivi, nous vous suggérons de vérifier après coup : <ul><li>Les permissions d'accès à l'outil de suivi,</li><li>Les permissions sur les champs,</li><li>Ainsi que les transitions du workflow.</li></ul>

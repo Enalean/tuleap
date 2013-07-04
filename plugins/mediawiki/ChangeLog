@@ -1,0 +1,36 @@
+Version 0.12 - Tuleap 6.2
+    * Extract mediawiki stats in the plugin
+
+Version 0.11 - Tuleap 6.2
+    * Fix request #3450 - Mediawiki does not work with project that have dash in name
+
+Version 0.10 - Tuleap 6.2
+    * Fix bugs #3637 - Can't create mediawiki pages for some projects
+
+Version 0.9 - Tuleap 5.13
+    * Remove use codendi as db
+
+Version 0.8 - Tuleap 5.13
+    * Fix: MediaWiki Role mapping for admins
+
+Version 0.7 - Tuleap 5.13
+    * Update readme with meaningful informations
+
+Version 0.6 - Tuleap 5.13
+    * Mediawiki language match user preference
+
+Version 0.5 - Tuleap 5.13
+    * Managing basic permissions for mediawiki
+
+Version 0.4 - Tuleap 5.13
+    * Mediawiki packaging
+
+Version 0.3 - Tuleap 5.13
+    * Add a plugin dependency solver to force installation of needed plugins
+
+Version 0.2 - Tuleap 5.12
+    * Create the mediawiki database/filesystem when the service is used for a project
+
+Version 0.1
+
+	* Initial version of the plugin borrowed from fusionforge

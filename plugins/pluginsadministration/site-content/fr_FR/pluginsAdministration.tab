@@ -8,12 +8,12 @@ plugin_pluginsadministration	descriptor_name	Administration des Plugins
 #
 #
 plugin_pluginsadministration	Actions	Actions
-plugin_pluginsadministration	change_to_unavailable	Changer à Non
-plugin_pluginsadministration	change_to_available	Changer à Oui
+plugin_pluginsadministration	change_to_unavailable	Ne pas utiliser le plugin
+plugin_pluginsadministration	change_to_available	Utiliser le plugin
 plugin_pluginsadministration	Description	Description
 plugin_pluginsadministration	discard_changes	Annuler les modifications ?
-plugin_pluginsadministration	unavailable	Non
-plugin_pluginsadministration	available	Oui
+plugin_pluginsadministration	unavailable	non
+plugin_pluginsadministration	available	oui
 plugin_pluginsadministration	feedback_available	$1 est maintenant disponible.
 plugin_pluginsadministration	feedback_unavailable	$1 est maintenant indisponible. L'espace web et les scripts cgi sont toujours accessibles !
 plugin_pluginsadministration	Hook:	Hook :
@@ -44,6 +44,10 @@ plugin_pluginsadministration	Scope	Portée
 plugin_pluginsadministration	scope_0	Système
 plugin_pluginsadministration	scope_1	Projets
 plugin_pluginsadministration	scope_2	Utilisateurs
+plugin_pluginsadministration	error_avail_dependency	Impossible de désactiver $1. Veuillez désactiver les plugins suivants : $2
+plugin_pluginsadministration	error_unavail_dependency	Impossible d'activer $1. Veuillez activer les plugins suivants : $2
+plugin_pluginsadministration	error_install_dependency	Impossible d'installer ce plugin sans avoir installé au préalable :
+plugin_pluginsadministration	error_uninstall_dependency	Vous ne pouvez pas désinstaller <em>$1</em> tant que ces plugins seront installés :
 #
 #
 #
@@ -51,6 +55,7 @@ plugin_pluginsadministration_properties	display_priorities	Afficher les priorit�
 plugin_pluginsadministration_properties	properties_addproject	Ajouter un projet :
 plugin_pluginsadministration_properties	properties_av_for_prj	Disponible pour tous les projets
 plugin_pluginsadministration_properties	properties_delproject	Enlever un projet :
+plugin_pluginsadministration_properties	properties_dependencies:	Dépendances :
 plugin_pluginsadministration_properties	properties_description:	Description :
 plugin_pluginsadministration_properties	properties_is_av_for_prj	Ce plugin est disponible pour tous les projets :
 plugin_pluginsadministration_properties	properties_hooks:	Hooks écoutés :

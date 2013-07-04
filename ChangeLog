@@ -1,9 +1,122 @@
-Version 5.12 (Not released yet)
+Version 6.3 (Not released yet)
 	== Plugins ==
-	* tracker 5.89
-	* graphontrackersv5: 5.0.7
-	* tracker: 5.90
-	* agiledashboard: 0.73
+	* graphontrackersv5: 5.2
+	* requesthelp: 1.3.3
+	* agiledashboard: 0.88
+	* docman: 2.26.17
+	* git: 3.31
+	* cardwall: 0.9.37
+
+	== Bug fix ==
+	* request #4112: Python exception pass (Contrib Raphaël Enrici)
+	* Fix libnss-mysql install (set a default host and distinguish case where an empty hostname was used to detect if we need to bootstrap the db (local deployments).
+	* sla #4103: Mime type not recognized in Docman
+
+	== Enhancement ==
+	* Project admin can configure the generic user from ui (change password & email)
+	* Debian compatibility: support of subversion, git. Install fix IM plugin and forgeupgrade.
+
+	== API ==
+	* SOAP /soap/project: 1.1
+
+	== Development ==
+	* Add new theme for experimental wireframing
+	* Integrate debian packaging (Contrib Raphaël Hertzog)
+	* Add tool to ease uid/gid change for lxc containers with binded mount
+	* Remove register_globals on site admin and project admin
+
+Version 6.2 (Wednesday, June 26th 2013)
+	* Story #3820: activate generic user creation
+	* Story #3632: Introduce project hierarchy definition.
+	* Fix XSS injection in Forums, Wiki, Search, People resume (contrib STMicroelectronics).
+	* Add tool to dump a forum of a project
+	* Attempt to fix bug when invalidating combined js cache
+	* Fix notice error on service management page
+	* Fix sla #4006: autodetection of redhat releases.
+
+	== Plugins ==
+	* agiledashboard: 0.87
+	* git: 3.28
+	* tracker: 5.134
+	* mediawiki: 0.12
+	* statistics: 0.28
+	* ldap: 3.31
+	* fusionforge_compat: 0.4
+	* cardwall: 0.9.36
+	* graphontrackersv5: 5.0.10
+
+Version 6.1 (Thursday, May 30th 2013)
+	== Enhancement ==
+	* story #3226: see "svn propset --revprop -r X svn:log" modifications in commit DB
+
+	== Bug fixing ==
+	* Fix XSS injection in Forums (contrib STMicroelectronics).
+
+	== Plugins ==
+	* docman: 2.26.16
+	* git: 3.22
+	* agiledashboard: 0.83
+	* cardwall: 0.9.32
+	* tracker: 5.126
+	* ldap: 3.30
+	* forumml: 2.6.12
+
+Version 6.0 (Monday, May 6th 2013)
+    == Bux Fix ==
+	* Installation process now compatible with rhel6 as well as rhel5 and rhel5-php53
+	* Site admin can now export and import a part of a project template (Tracker and AgileDashboard).
+	* Fix sla #3147: corrupted cron file
+	* Fix Bugs #3165: XSS vulnerability with bookmark (Contrib STMicroelectronics)
+	* Fix bugs #3256: Links in followups in email notifications are broken
+
+	== Plugins ==
+	* admssw: 0.2
+	* agiledashboard: 0.80
+	* cardwall: 0.9.30
+	* doaprdf: 0.2
+	* foafprofiles: 0.2
+	* graphontrackersv5: 5.0.9
+	* pluginsadministration: 1.3
+	* fusionforge_compat: 0.3
+	* mediawiki: 0.9
+	* git: 3.18
+	* docman: 2.26.15
+	* tracker: 5.121
+	* ldap: 3.29
+	* IM: 1.5.9
+	* forumml: 2.6.11
+
+	== CLI ==
+	* Version 1.5.3
+
+    == Development ==
+	* Remove register globals usage on service management and approval admin pages
+	* Remove usage of PHP_SELF
+
+Version 5.12 (Thursday, March 21st 2013)
+	== Plugins ==
+	* graphontrackersv5: 5.0.8
+	* tracker: 5.98
+	* agiledashboard: 0.77
+	* git: 2.7.32
+	* IM: 1.5.6
+	* admindelegation: 2.5
+	* cardwall: 0.9.22
+	* docman: 2.26.14
+	* docmanwatermark: 2.4
+	* forumml: 2.6.10
+	* fulltextsearch: 0.18
+	* fusionforge_compat: 0.2
+	* ldap: 3.27
+	* requesthelp: 1.3.2
+	* statistics: 0.23
+	* webdav: 1.9.2
+	* mediawiki: 0.2
+	* tests: 5.17
+
+  == Bug Fix ==
+	* Fix request #2817: When a service in iframe is created in template project, the "is in iframe" information were not propagated to other projects.
+	* Fix bugs #2901: When there are permissions set on fields and tracker, there are edge cases when we got a fatal error while updating an artifact in tracker v3
 
 Version 5.11 (Thursday, February 21st 2013)
 

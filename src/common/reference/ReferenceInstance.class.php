@@ -35,14 +35,18 @@ class ReferenceInstance {
      * Note that we need a valid reference parameter 
      */
     function ReferenceInstance($match,$ref,$value) {
-        $this->reference =& $ref;
+        $this->reference = $ref;
         $this->match = $match;
         $this->value = $value;
     }
 
     /** Accessors */
     function getMatch() { return $this->match;}
-    function &getReference() { return $this->reference;}
+
+    /**
+     * @return Reference
+     */
+    function getReference() { return $this->reference;}
     function getGotoLink() { return $this->gotoLink;}
     function getValue() { return $this->value;}
 

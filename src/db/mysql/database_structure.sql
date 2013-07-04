@@ -1020,6 +1020,7 @@ CREATE TABLE groups (
   cvs_is_private TINYINT(1) NOT NULL DEFAULT 0,
   svn_tracker int(11)   NOT NULL default '1',
   svn_mandatory_ref TINYINT NOT NULL default '0',
+  svn_can_change_log TINYINT(1) NOT NULL default '0',
   svn_events_mailing_header varchar(64) binary DEFAULT NULL,
   svn_preamble text NOT NULL,
   svn_accessfile text NULL,
@@ -2913,8 +2914,8 @@ CREATE TABLE service (
 	is_used int(11) DEFAULT 0 NOT NULL,
         scope text NOT NULL,
         rank int(11) NOT NULL default '0',
-        location ENUM( 'master', 'same', 'satellite' ) NOT NULL DEFAULT 'master',
-        server_id INT( 11 ) UNSIGNED NULL,
+        location ENUM( 'master', 'same', 'satellite' ) NOT NULL DEFAULT 'master', -- distributed architecture: to be deleted (but requires to check all plugins)
+        server_id INT( 11 ) UNSIGNED NULL,  -- distributed architecture: to be deleted (but requires to check all plugins)
         is_in_iframe TINYINT(1) NOT NULL DEFAULT '0',
 	primary key (service_id),
         key idx_group_id(group_id)
@@ -3185,15 +3186,6 @@ CREATE TABLE feedback (
   PRIMARY KEY ( session_hash )
 );
 
-CREATE TABLE server (
-  id INT( 11 ) UNSIGNED NOT NULL PRIMARY KEY ,
-  name VARCHAR( 255 ) NOT NULL ,
-  description TEXT NOT NULL ,
-  http TEXT NOT NULL,
-  https TEXT NOT NULL,
-  is_master TINYINT(1) NOT NULL default 0
-);
-
 CREATE TABLE artifact_global_notification (
   id                INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
   tracker_id        INT(11) NOT NULL ,
@@ -3378,6 +3370,7 @@ CREATE TABLE IF NOT EXISTS system_event (
   create_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
   process_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
   end_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  owner VARCHAR(255) NOT NULL default 'root',
   log TEXT,
   PRIMARY KEY (id)
 );
@@ -3445,6 +3438,23 @@ CREATE TABLE IF NOT EXISTS svn_notification (
     PRIMARY KEY (group_id, path)
 );
 
+#
+# Table structure for Project parent relationship
+#
+
+CREATE TABLE IF NOT EXISTS project_parent (
+    group_id INT(11) PRIMARY KEY,
+    parent_group_id INT(11) NOT NULL
+);
+
+#
+# Table structure for Project parent relationship
+#
+
+CREATE TABLE IF NOT EXISTS generic_user (
+    group_id INT(11) PRIMARY KEY,
+    user_id INT(11) NOT NULL
+);
 
 #
 # EOF

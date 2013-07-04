@@ -1,3 +1,70 @@
+Version 0.9.37 - Tuleap 6.3
+    * Fix request #3533: allowing the none option on a simple select for assigned to on cardwall
+
+Version 0.9.36 - Tuleap 6.2
+    * Fix request #4078 - Can't drag n'drop cards on cardwall renderer
+
+
+
+Version 0.9.35 - Tuleap 6.2
+    * Fix request #4081: remove type hinting for QRCode
+
+Version 0.9.34 - Tuleap 6.2
+    * Fix request #4077: IE7 js typo bug
+
+Version 0.9.33 - Tuleap 6.2
+    * Story #3814: edit cards in overlay on cardwall
+
+Version 0.9.32 - Tuleap 6.1
+    * Display a new 'Content' pane with the content of a given milestone
+
+Version 0.9.31 - Tuleap 6.1
+    * Fix request #2155: Tasks rearranging on the cardwall when clicking on a task
+
+Version 0.9.30 - Tuleap 5.13
+    * Filter on cardwall: still display stories in swimlines
+
+Version 0.9.29 - Tuleap 5.13
+    * Update help from the filtering part of the cardwall
+
+Version 0.9.28 - Tuleap 5.13
+    * Fix error while entering a regexp
+
+Version 0.9.27 - Tuleap 5.13
+    * Allow one to filter cards on cardwall
+
+Version 0.9.26 - Tuleap 5.13
+    * Fix include bug
+
+Version 0.9.25 - Tuleap 5.13
+    * Story #3075 : import a basic agile dashboard template
+
+
+We are now able to export trough the CLI an XML containing :
+Trackers / cardwalls on top and agildashboard's plannings
+
+Still with the CLI, we are able to import this XML into a new project and retrieve all these configurations
+
+Change-Id: I1b1b3f965a6375c857e8feceeebfb21e2554f163
+
+Version 0.9.24 - Tuleap 5.13
+    * story #3077 see people names instead of avatars on cardwall
+
+Version 0.9.23 - Tuleap 5.13
+    * Add a plugin dependency solver to force installation of needed plugins
+
+Version 0.9.22 - Tuleap 5.12
+    * sla #2849 - Problem in the use of Cardwall on IE 7
+
+Version 0.9.21 - Tuleap 5.12
+    * SOAP method related to tracker fields now returns computed field value
+
+Version 0.9.20 - Tuleap 5.12
+    * Story #2524: see colour type at a glance on cardwall.
+
+Version 0.9.19 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
 Version 0.9.18 - Tuleap 5.11
     * Fix art #2604: can no longer administrate cardwall on top of tracker
 

@@ -9,3 +9,6 @@ codendi.locales['cross_ref_fact_include'] = {
     hide_references_to:	'Hide items referenced by this item'
 };
 
+codendi.locales['files'] = {
+    error_max_file_size: 'You exceed the max file size'
+};

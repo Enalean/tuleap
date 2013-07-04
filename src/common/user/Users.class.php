@@ -53,13 +53,5 @@ class Users {
         }
         return $result;
     }
-
-    public function getLdapIds() {
-        $result = array();
-        foreach ($this->dar as $user) {
-            $result[] = $user->getLdapId();
-        }
-        return $result;
-    }
 }
 ?>

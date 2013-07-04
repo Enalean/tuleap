@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/constants.php');
+require_once 'bootstrap.php';
 require_once 'GitViewsRepositoriesTraversalStrategyTest.class.php';
-require_once dirname(__FILE__) .'/../include/GitViewsRepositoriesTraversalStrategy_Selectbox.class.php';
+
 Mock::generate('GitViews');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 class GitViewsRepositoriesTraversalStrategy_SelectboxTest extends GitViewsRepositoriesTraversalStrategyTest {
     
@@ -46,7 +46,7 @@ class GitViewsRepositoriesTraversalStrategy_SelectboxTest extends GitViewsReposi
     
     public function testRepoIDShouldBeTheValue() {
         $view = new MockGitViews();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));
         
         $repositories    = $this->getFlatTree($strategy);

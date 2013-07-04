@@ -29,22 +29,24 @@ require_once 'common/mvc2/PluginController.class.php';
 class Planning_Controller extends MVC2_PluginController {
     
     /**
-     * @var Tracker_Artifact
-     */
-    private $artifact;
-    
-    /**
      * @var PlanningFactory
      */
     private $planning_factory;
-
-    public function __construct(Codendi_Request $request, PlanningFactory $planning_factory, Planning_MilestoneFactory $milestone_factory, $plugin_theme_path) {
+    
+    public function __construct(
+        Codendi_Request $request,
+        PlanningFactory $planning_factory,
+        Planning_ShortAccessFactory $planning_shortaccess_factory,
+        Planning_MilestoneFactory $milestone_factory,
+        $plugin_theme_path
+    ) {
         parent::__construct('agiledashboard', $request);
         
-        $this->group_id          = (int)$request->get('group_id');
-        $this->planning_factory  = $planning_factory;
-        $this->milestone_factory = $milestone_factory;
-        $this->plugin_theme_path = $plugin_theme_path;
+        $this->group_id                     = (int)$request->get('group_id');
+        $this->planning_factory             = $planning_factory;
+        $this->planning_shortaccess_factory = $planning_shortaccess_factory;
+        $this->milestone_factory            = $milestone_factory;
+        $this->plugin_theme_path            = $plugin_theme_path;
     }
     
     public function admin() {
@@ -54,8 +56,14 @@ class Planning_Controller extends MVC2_PluginController {
     }
     
     public function index() {
-        $plannings = $this->planning_factory->getPlanningsShortAccess($this->getCurrentUser(), $this->group_id, $this->milestone_factory, $this->plugin_theme_path);
-        $presenter = new Planning_IndexPresenter($plannings, $this->plugin_theme_path);
+        $project_id = $this->request->getProject()->getID();
+        $plannings = $this->getPlanningsShortAccess($this->group_id);
+        $presenter = new Planning_IndexPresenter(
+            $plannings,
+            $this->plugin_theme_path,
+            $project_id,
+            $this->request->getCurrentUser()->useLabFeatures()
+        );
         $this->render('index', $presenter);
     }
     
@@ -138,13 +146,27 @@ class Planning_Controller extends MVC2_PluginController {
         }
     }
 
+    public function getMoreMilestones() {
+        $offset = $this->request->get('offset', 'uint', 0);
+        $planning = $this->planning_factory->getPlanning($this->request->get('planning_id'));
+        $short_access = $this->planning_shortaccess_factory->getShortAccessForPlanning(
+            $planning,
+            $this->getCurrentUser(),
+            $this->milestone_factory,
+            $this->plugin_theme_path,
+            $offset
+        );
+
+        $this->render('shortaccess-milestones', $short_access);
+    }
+
     /**
      *
      * @param int $projectId
      * @return Planning_ShortAccess[]
      */
     private function getPlanningsShortAccess($projectId) {
-        return $this->planning_factory->getPlanningsShortAccess(
+        return $this->planning_shortaccess_factory->getPlanningsShortAccess(
             $this->getCurrentUser(),
             $projectId,
             $this->milestone_factory,
@@ -164,17 +186,6 @@ class Planning_Controller extends MVC2_PluginController {
     private function getPlanning() {
         $planning_id = $this->request->get('planning_id');
         return $this->planning_factory->getPlanning($planning_id);
-    }
-
-    private function checkUserIsAdmin() {
-        $project = $this->request->getProject();
-        $user    = $this->request->getCurrentUser();
-        if (! $project->userIsAdmin($user)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
-            $this->redirect(array('group_id' => $this->group_id));
-            // the below is only run by tests (redirect should exit but is mocked)
-            throw new Exception($GLOBALS['Language']->getText('global', 'perm_denied'));
-        }
     }
 }
 

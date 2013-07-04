@@ -1,0 +1,1 @@
+/usr/share/mediawiki-tuleap/api.php

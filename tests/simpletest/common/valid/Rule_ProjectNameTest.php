@@ -36,10 +36,6 @@ Mock::generate('BackendCVS');
 
 class Rule_ProjectNameTest extends UnitTestCase {
 
-    function __construct($name = 'Rule_ProjectNameFormat test') {
-        parent::__construct($name);
-    }
-    
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
     }
@@ -139,7 +135,13 @@ class Rule_ProjectNameTest extends UnitTestCase {
         $this->assertTrue($r->isReservedName("MIRRORS"));
         $this->assertTrue($r->isReservedName("MIRROR"));
     }
-    
+
+    function testReservedPrefix() {
+        $r = new Rule_UserName();
+        $this->assertTrue($r->isReservedName("forge__"));
+        $this->assertFalse($r->isReservedName("forgeron"));
+    }
+
     function testIsNameAvailableSuccess() {
         $r = new Rule_ProjectNameTestVersion();
     

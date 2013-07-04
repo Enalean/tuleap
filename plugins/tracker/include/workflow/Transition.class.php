@@ -176,11 +176,11 @@ class Transition {
      * Execute actions before transition happens
      *
      * @param Array $fields_data Request field data (array[field_id] => data)
-     * @param User  $current_user The user who are performing the update
+     * @param PFUser  $current_user The user who are performing the update
      *
      * @return void
      */
-    public function before(&$fields_data, User $current_user) {
+    public function before(&$fields_data, PFUser $current_user) {
         $post_actions = $this->getPostActions();
         foreach ($post_actions as $post_action) {
             $post_action->before($fields_data, $current_user);

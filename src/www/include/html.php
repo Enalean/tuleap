@@ -47,7 +47,7 @@ function html_image($src,$args,$display=1) {
 				$img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src);
 			}
 		}
-		$return .= ' ' . $img_size[$src];
+		$return .= ' width="' . $img_size[$src][0].'" height="'.$img_size[$src][1].'"';
 	}
 
 	// ## insert alt tag if there isn't one

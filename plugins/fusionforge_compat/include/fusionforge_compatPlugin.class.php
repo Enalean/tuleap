@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__));
+set_include_path(get_include_path()
+        . PATH_SEPARATOR . dirname(__FILE__)
+        . PATH_SEPARATOR . dirname(__FILE__). '/include');
 
 class fusionforge_compatPlugin extends Plugin {
     
@@ -27,6 +29,7 @@ class fusionforge_compatPlugin extends Plugin {
         require_once 'fusionforge/forge_check_perm.php';
         require_once 'fusionforge/plugin_hook_by_reference.php';
         require_once 'fusionforge/utils.php';
+        require_once 'fusionforge/group_get_object.php';
         require_once 'fusionforge/get_public_active_projects_asc.php';
         require_once 'fusionforge/FusionForge.php';
         require_once 'fusionforge/user_get_object_by_name.php';

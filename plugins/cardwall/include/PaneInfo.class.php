@@ -31,10 +31,6 @@ class Cardwall_PaneInfo extends AgileDashboard_PaneInfo {
         $this->plugin_theme_path = $plugin_theme_path;
     }
 
-    public function getUriForMilestone(Planning_Milestone $milestone) {
-        return parent::getUriForMilestone($milestone).'&pane='.$this->getIdentifier();
-    }
-
     /**
      * @see AgileDashboard_Pane::getIdentifier()
      */

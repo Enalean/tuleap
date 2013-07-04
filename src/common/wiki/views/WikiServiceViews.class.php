@@ -32,23 +32,28 @@ require_once(dirname(__FILE__).'/../lib/WikiEntry.class.php');
  */
 class WikiServiceViews extends WikiViews {
 
+    protected $purifier;
+    private $base_url;
+
   /**
    * WikiServiceViews - Constructor
    */
   function WikiServiceViews(&$controler, $id=0, $view=null) {
-      $hp = Codendi_HTMLPurifier::instance();
+    $this->purifier = Codendi_HTMLPurifier::instance();
     parent::WikiView($controler, $id, $view);
     $pm = ProjectManager::instance();
     if(!is_null($_REQUEST['pagename'])) {
         $this->html_params['title']  = $GLOBALS['Language']->getText('wiki_views_wikiserviceviews',
                                                           'wiki_page_title',
-                                                          array( $hp->purify($_REQUEST['pagename'], CODENDI_PURIFIER_CONVERT_HTML) ,
+                                                          array( $this->purifier->purify($_REQUEST['pagename'], CODENDI_PURIFIER_CONVERT_HTML) ,
                                                                 $pm->getProject($this->gid)->getPublicName()));
+		$this->base_url = '/wiki/index.php?group_id='.$this->gid.'&pagename='.urlencode($_REQUEST['pagename']);
     }
     else {
         $this->html_params['title']  = $GLOBALS['Language']->getText('wiki_views_wikiserviceviews',
                                                           'wiki_title',
                                                           array($pm->getProject($this->gid)->getPublicName()));
+		$this->base_url = '/wiki/index.php?group_id='.$this->gid;
     }
     $GLOBALS['wiki_view'] =& $this;
   }
@@ -201,6 +206,8 @@ class WikiServiceViews extends WikiViews {
       // Build page link
       if(empty($title))
 	$title = $pagename;
+
+      $title = $this->purifier->purify($title, CODENDI_PURIFIER_CONVERT_HTML);
  
       $link='/wiki/index.php?group_id='.$this->gid.'&pagename='.urlencode($pagename);
       
@@ -296,7 +303,7 @@ class WikiServiceViews extends WikiViews {
   //Display printer_version link only in wiki pages
   if (isset($_REQUEST['pagename'])) {
       print '
-          (<a href="'.$_SERVER['REQUEST_URI'].'&pv=1" title="'.$GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lighter_display').'">
+          (<a href="'.$this->base_url.'&pv=1" title="'.$GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lighter_display').'">
           <img src="'.util_get_image_theme("msg.png").'" border="0">&nbsp;'.
           $GLOBALS['Language']->getText('global','printer_version').'</A> ) 
           </li>';

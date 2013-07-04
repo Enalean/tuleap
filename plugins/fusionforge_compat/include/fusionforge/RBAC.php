@@ -26,5 +26,70 @@ class RBACEngine {
     function getAvailableRolesForUser($user_obj) {
         return array();
     }
+    
+    public function getGlobalRoles() {
+        return array();
+    }
+    
+    public function getAvailableRoles() {
+        return array(new Role());
+    }
+}
+
+class Role {
+    public function getName() {
+        return 'forge_admin';
+    }
+	public function setName($name) {
+            
+        }
+	public function getID() {
+            
+        }
+
+	public function isPublic() {
+            
+        }
+	public function setPublic($flag) {
+            
+        }
+
+	public function getHomeProject() {
+            return null;
+        }
+	public function getLinkedProjects() {
+            
+        }
+	public function linkProject($project) {
+            
+        }
+	public function unlinkProject($project) {
+            
+        }
+
+	public function getUsers() {
+            
+        }
+	public function hasUser($user) {
+            
+        }
+	public function hasPermission($section, $reference, $action = NULL) {
+            
+        }
+	public function hasGlobalPermission($section, $action = NULL) {
+            return true;
+        }
+	public function normalizeData() {
+            
+        }
+	public function getSettings() {
+            
+        }
+	public function getSettingsForProject($project) {
+            
+        }
+	public function setSettings($data) {
+            
+        }
 }
 

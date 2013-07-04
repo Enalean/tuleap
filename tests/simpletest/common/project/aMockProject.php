@@ -25,20 +25,34 @@ function aMockProject() {
 class MockProjectBuilder {
     
     private $project;
-    private $id;
+    private $id        = false;
+    private $unix_name = false;
+    private $is_public = false;
     
     public function __construct() {
-        $this->project = mock('Project');
-        $this->id      = uniqid();
+        $this->project   = mock('Project');
+        $this->id        = uniqid();
     }
     
     public function withId($id) {
         $this->id = $id;
         return $this;
     }
-    
+
+    public function withUnixName($name) {
+        $this->unix_name = $name;
+        return $this;
+    }
+
+    public function isPublic() {
+        $this->is_public = true;
+        return $this;
+    }
+
     public function build() {
         stub($this->project)->getId()->returns($this->id);
+        stub($this->project)->getUnixName()->returns($this->unix_name);
+        stub($this->project)->isPublic()->returns($this->is_public);
         return $this->project;
     }
 }

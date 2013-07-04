@@ -26,6 +26,9 @@
  * regardless of what we want to display.
  */
 abstract class AgileDashboard_PaneInfo {
+
+    const ACTION = 'show';
+
     /**
      * @var bool
      */
@@ -35,6 +38,8 @@ abstract class AgileDashboard_PaneInfo {
      * @var Planning_Milestone
      */
     private $milestone;
+
+    protected $action = self::ACTION;
 
     public function __construct(Planning_Milestone $milestone) {
         $this->milestone = $milestone;
@@ -75,7 +80,17 @@ abstract class AgileDashboard_PaneInfo {
      * @return string
      */
     public function getUriForMilestone(Planning_Milestone $milestone) {
-        return '?group_id='.$milestone->getGroupId().'&planning_id='.$milestone->getPlanningId().'&action=show&aid='.$milestone->getArtifactId();
+        return '?'. http_build_query($this->getUriParametersForMilestone($milestone));
+    }
+
+    protected function getUriParametersForMilestone(Planning_Milestone $milestone) {
+        return array(
+            'group_id'    => $milestone->getGroupId(),
+            'planning_id' => $milestone->getPlanningId(),
+            'action'      => $this->action,
+            'aid'         => $milestone->getArtifactId(),
+            'pane'        => $this->getIdentifier()
+        );
     }
 
     /**

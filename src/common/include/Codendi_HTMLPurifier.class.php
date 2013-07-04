@@ -1,9 +1,10 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
- * 
+ *
  * Originally written by Manuel VACELET, 2007.
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -50,7 +51,7 @@ class Codendi_HTMLPurifier {
      * Hold an instance of the class
      */
     private static $Codendi_HTMLPurifier_instance;
-    
+
     /**
      * Constructor
      */
@@ -60,7 +61,7 @@ class Codendi_HTMLPurifier {
     /**
      * Singleton access.
      *
-     * @access: static
+     * @return Codendi_HTMLPurifier
      */
     public static function instance() {
         if (!isset(self::$Codendi_HTMLPurifier_instance)) {
@@ -70,14 +71,21 @@ class Codendi_HTMLPurifier {
         return self::$Codendi_HTMLPurifier_instance;
     }
 
+    private function setConfigAttribute(HTMLPurifier_Config $config, $key, $subkey, $value) {
+        if (version_compare($config->version, '4.0.0') >= 0) {
+            $config->set("$key.$subkey", $value);
+        } else {
+            $config->set($key, $subkey, $value);
+        }
+    }
+
     /**
      * Base configuration of HTML Purifier for codendi.
      */
     protected function getCodendiConfig() {
         $config = HTMLPurifier_Config::createDefault();
-        $config->set('Core', 'Encoding', 'UTF-8');
-        // $config->set('HTML', 'Doctype', 'XHTML 1.0 Strict');
-        $config->set('Cache', 'SerializerPath', $GLOBALS['codendi_cache_dir']);
+        $this->setConfigAttribute($config, 'Core', 'Encoding', 'UTF-8');
+        $this->setConfigAttribute($config, 'Cache', 'SerializerPath', $GLOBALS['codendi_cache_dir']);
         return $config;
     }
 
@@ -88,11 +96,11 @@ class Codendi_HTMLPurifier {
      */
     function getLightConfig() {
         $config = $this->getCodendiConfig();
-        $config->set('HTML', 'Allowed', $this->getLightConfigMarkups());
-        $config->set('AutoFormat','Linkify', true);
+        $this->setConfigAttribute($config, 'HTML', 'Allowed', $this->getLightConfigMarkups());
+        $this->setConfigAttribute($config, 'AutoFormat', 'Linkify', true);
         return $config;
     }
-    
+
     /**
      * Get allowed markups for light config
      *
@@ -118,7 +126,7 @@ class Codendi_HTMLPurifier {
      */
     function getStripConfig() {
         $config = $this->getCodendiConfig();
-        $config->set('HTML', 'Allowed', '');
+        $this->setConfigAttribute($config, 'HTML', 'Allowed', '');
         return $config;
     }
 
@@ -158,7 +166,7 @@ class Codendi_HTMLPurifier {
 
         // http://www.yahoo.com => <a href="...">...</a>
 
-        // Special case for urls between brackets or double quotes 
+        // Special case for urls between brackets or double quotes
         // e.g. <http://www.google.com> or "http://www.google.com"
         // In some places (e.g. tracker follow-ups) the text is already encoded, so the brackets are replaced by &lt; and &gt; See SR #652.
         $data = preg_replace("/([[:alnum:]]+):\/\/([^[:space:]<]*)([[:alnum:]#?\/&=])&quot;/i", "\\1://\\2\\3\"", $data);
@@ -193,7 +201,7 @@ class Codendi_HTMLPurifier {
      *   consider CONVERT_HTML.
      *
      * - CODENDI_PURIFIER_BASIC (need $groupId to be set for automagic links)
-     *   Removes all user submitted HTML markups but: 
+     *   Removes all user submitted HTML markups but:
      *    - transform typed URLs into clickable URLs.
      *    - transform autmagic links.
      *    - transform carrige return into HTML br markup.
@@ -230,6 +238,7 @@ class Codendi_HTMLPurifier {
         case CODENDI_PURIFIER_FULL:
             require_once('HTMLPurifier.auto.php');
             $hp = HTMLPurifier::getInstance();
+
             $config = $this->getHPConfig($level);
             $clean = $hp->purify($html, $config);
             // Quite big object, it's better to unset it (memory).
@@ -262,7 +271,7 @@ class Codendi_HTMLPurifier {
     function purifyMap($array, $level=0, $groupId=0) {
         return array_map(array(&$this, "purify"), $array, array($level), array($groupId));
     }
-    
+
     /**
      * Returns an instance of ReferenceManager
      *

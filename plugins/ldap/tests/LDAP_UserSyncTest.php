@@ -23,7 +23,7 @@ require_once 'common/user/UserManager.class.php';
 
 // Partial because of inheritance issues
 Mock::generatePartial('LDAPResult', 'LDAPResultTestVersion', array('getEmail', 'getCommonName', 'get'));
-Mock::generatePartial('User', 'User4LDAPUserSync', array('getRealName', 'getEmail', 'getStatus', 'setRealName', 'setEmail', 'setStatus'));
+Mock::generatePartial('PFUser', 'User4LDAPUserSync', array('getRealName', 'getEmail', 'getStatus', 'setRealName', 'setEmail', 'setStatus'));
 
 // Override instance to test the right file
 class LDAP_UserSyncTestVersion extends LDAP_UserSync {
@@ -85,10 +85,10 @@ class LDAP_UserSyncTest extends UnitTestCase {
         $user = new User4LDAPUserSync($this);
         $user->setReturnValue('getRealName', 'toto');
         $user->setReturnValue('getEmail',    'toto');
-        $user->setReturnValue('getStatus',   User::STATUS_ACTIVE);
+        $user->setReturnValue('getStatus',   PFUser::STATUS_ACTIVE);
         $user->expectNever('setRealName');
         $user->expectNever('setEmail');
-        $user->expectOnce('setStatus', array(User::STATUS_RESTRICTED));
+        $user->expectOnce('setStatus', array(PFUser::STATUS_RESTRICTED));
         
         $lr = new LDAPResultTestVersion($this);
         $lr->setReturnValue('getCommonName', 'toto');

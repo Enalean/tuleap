@@ -38,9 +38,11 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends UnitTestCase {
     
     public function testGetSoapAvailableValues() {
         $bv1 = new MockTracker_FormElement_Field_List_Bind_StaticValue();
-        $bv1->setReturnValue('getLabel', 'bv label 1');
+        $bv1->setReturnValue('getId', 101);
+        $bv1->setReturnValue('getSoapValue', 'bv label 1');
         $bv2 = new MockTracker_FormElement_Field_List_Bind_StaticValue();
-        $bv2->setReturnValue('getLabel', 'bv label 2');
+        $bv2->setReturnValue('getId', 102);
+        $bv2->setReturnValue('getSoapValue', 'bv label 2');
         $field = new MockTracker_FormElement_Field_List();
         $field->setReturnValue('getId', 123);
         $is_rank_alpha = $default_values = $decorators = '';
@@ -49,48 +51,36 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends UnitTestCase {
         
         $this->assertEqual(count($static->getSoapAvailableValues()), 2);
         $soap_values = array(
-                        array('bind_value_id' => 101,
-                              'bind_value_label' => 'bv label 1',
-                             ),
-                        array('bind_value_id' => 102,
-                              'bind_value_label' => 'bv label 2'
-                             )
-                        );
+            array(
+                'bind_value_id' => 101,
+                'bind_value_label' => 'bv label 1',
+            ),
+            array(
+                'bind_value_id' => 102,
+                'bind_value_label' => 'bv label 2'
+            )
+        );
         $this->assertEqual($static->getSoapAvailableValues(), $soap_values);
     }
     
     function testGetFieldData() {
-        $bv1 = new MockTracker_FormElement_Field_List_Bind_StaticValue();
-        $bv1->setReturnValue('getLabel', '1 - Ordinary');
-        $bv2 = new MockTracker_FormElement_Field_List_Bind_StaticValue();
-        $bv2->setReturnValue('getLabel', '9 - Critical');
-        $field = $is_rank_alpha = $default_values = $decorators = '';
+        $bv1 = aFieldListStaticValue()->withLabel('1 - Ordinary')->build();
+        $bv2 = aFieldListStaticValue()->withLabel('9 - Critical')->build();
         $values = array(13564 => $bv1, 13987 => $bv2);
-        $f = new Tracker_FormElement_Field_List_Bind_Static($field, $is_rank_alpha, $values, $default_values, $decorators);
-
-        $soap_values = '13564';
-        $expected = 13564;
-
-        $this->assertEqual($expected, $f->getFieldData($soap_values, false));
+        $f = aBindStatic()->withValues($values)->build();
+        $this->assertEqual('13564', $f->getFieldData('1 - Ordinary', false));
     }
     
     function testGetFieldDataMultiple() {
-        $bv1 = new MockTracker_FormElement_Field_List_Bind_StaticValue();
-        $bv1->setReturnValue('getLabel', 'Admin');
-        $bv2 = new MockTracker_FormElement_Field_List_Bind_StaticValue();
-        $bv2->setReturnValue('getLabel', 'Tracker');
-        $bv3 = new MockTracker_FormElement_Field_List_Bind_StaticValue();
-        $bv3->setReturnValue('getLabel', 'User Interface');
-        $bv4 = new MockTracker_FormElement_Field_List_Bind_StaticValue();
-        $bv4->setReturnValue('getLabel', 'Docman');
-        $field = $is_rank_alpha = $default_values = $decorators = '';
+        $bv1 = aFieldListStaticValue()->withLabel('Admin')->build();
+        $bv2 = aFieldListStaticValue()->withLabel('Tracker')->build();
+        $bv3 = aFieldListStaticValue()->withLabel('User Interface')->build();
+        $bv4 = aFieldListStaticValue()->withLabel('Docman')->build();
         $values = array(13564 => $bv1, 13987 => $bv2, 125 => $bv3, 666 => $bv4);
-        $res = '13564, 125, 666';
-        $f = new Tracker_FormElement_Field_List_Bind_Static($field, $is_rank_alpha, $values, $default_values, $decorators);
 
-        $expected = array(13564,125,666);
-
-        $this->assertEqual($expected, $f->getFieldData($res, true));
+        $res = array('13564', '125', '666');
+        $f = aBindStatic()->withValues($values)->build();
+        $this->assertEqual($res, $f->getFieldData('Admin,User Interface,Docman', true));
     }
 }
 ?>

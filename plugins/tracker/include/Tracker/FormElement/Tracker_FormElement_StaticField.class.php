@@ -168,11 +168,11 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
     /** 
      * return true if user has Read or Update permission on this field
      * 
-     * @param User $user The user. if not given or null take the current user
+     * @param PFUser $user The user. if not given or null take the current user
      *
      * @return bool
      */ 
-    public function userCanRead(User $user = null) {
+    public function userCanRead(PFUser $user = null) {
         return true;
     }
     

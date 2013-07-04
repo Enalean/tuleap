@@ -28,7 +28,7 @@ class Tracker_Workflow_Action_Transitions_Details extends Tracker_Workflow_Actio
         $this->transition_factory = $transition_factory;
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
         $transition = $request->get('transition');
 
         //TODO check that the transition belongs to the current tracker

@@ -64,7 +64,7 @@ Mock::generate('Tracker_Artifact_ChangesetValue_OpenList');
 
 Mock::generate('Tracker_FormElement_Field_List_OpenValueDao');
 
-class Tracker_FormElement_Field_OpenListTest extends UnitTestCase {
+class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
     
     function __construct($name = 'Open List test') {
         parent::__construct($name);
@@ -77,15 +77,15 @@ class Tracker_FormElement_Field_OpenListTest extends UnitTestCase {
     
     function testGetChangesetValue() {
         $open_value_dao = new MockTracker_FormElement_Field_List_OpenValueDao();
-        $odar_10 = new MockDataAccessResult();
+        $odar_10 = mock('DataAccessResult');
         $odar_10->setReturnValue('getRow', array('id' => '10', 'field_id' => '1', 'label' => 'Open_1'));
-        $odar_20 = new MockDataAccessResult();
+        $odar_20 = mock('DataAccessResult');
         $odar_20->setReturnValue('getRow', array('id' => '10', 'field_id' => '1', 'label' => 'Open_2'));
         $open_value_dao->setReturnReference('searchById', $odar_10, array(1, '10'));
         $open_value_dao->setReturnReference('searchById', $odar_20, array(1, '20'));
         
         $value_dao = new $this->dao_class();
-        $dar = new MockDataAccessResult();
+        $dar = mock('DataAccessResult');
         $dar->setReturnValueAt(0, 'current', array('id' => '123', 'field_id' => '1', 'bindvalue_id' => '1000', 'openvalue_id' => null));
         $dar->setReturnValueAt(1, 'current', array('id' => '123', 'field_id' => '1', 'bindvalue_id' => '1001', 'openvalue_id' => null));
         $dar->setReturnValueAt(2, 'current', array('id' => '123', 'field_id' => '1', 'bindvalue_id' => null, 'openvalue_id' => '10'));
@@ -103,11 +103,11 @@ class Tracker_FormElement_Field_OpenListTest extends UnitTestCase {
         $dar->setReturnValueAt(11, 'valid', false);
         $value_dao->setReturnReference('searchById', $dar);
         
-        $bind = new MockTracker_FormElement_Field_List_Bind();
+        $bind = new MockTracker_FormElement_Field_List_Bind_Static();
         $bind_values = array(
-            1000 => new MockTracker_FormElement_Field_List_BindValue(),
-            1001 => new MockTracker_FormElement_Field_List_BindValue(),
-            1002 => new MockTracker_FormElement_Field_List_BindValue(),
+            1000 => mock('Tracker_FormElement_Field_List_BindValue'),
+            1001 => mock('Tracker_FormElement_Field_List_BindValue'),
+            1002 => mock('Tracker_FormElement_Field_List_BindValue'),
         );
         $bind->setReturnValue('getBindValues', $bind_values, array(array('1000', '1001', '1002')));
         
@@ -131,7 +131,7 @@ class Tracker_FormElement_Field_OpenListTest extends UnitTestCase {
     
     function testGetChangesetValue_doesnt_exist() {
         $value_dao = new $this->dao_class();
-        $dar = new MockDataAccessResult();
+        $dar = mock('DataAccessResult');
         $dar->setReturnValue('valid', false);
         $value_dao->setReturnReference('searchById', $dar);
         
@@ -187,42 +187,185 @@ class Tracker_FormElement_Field_OpenListTest extends UnitTestCase {
         
         $list_field->saveValue($artifact, $changeset_id, $submitted_value);
     }
-    
-    function testGetFieldData() {
-        $bind = new MockTracker_FormElement_Field_List_Bind();
-        $bind->setReturnValue('getFieldData', '115', array('existing value', '*'));
-        $bind->setReturnValue('getFieldData', '118', array('yet another existing value', '*'));
-        $bind->setReturnValue('getFieldData', null, array('new value', '*'));
-        $bind->setReturnValue('getFieldData', null, array('yet another new value', '*'));
-        $bind->setReturnValue('getFieldData', null, array('existing open value', '*'));
-        $bind->setReturnValue('getFieldData', null, array('yet another existing open value', '*'));
-        $bind->setReturnValue('getFieldData', null, array('', '*'));
-        
-        $odar = new MockDataAccessResult();
-        $odar->setReturnValue('getRow', false);
-        
-        $open_value_dao = new MockTracker_FormElement_Field_List_OpenValueDao();
-        
-        $odar_30 = new MockDataAccessResult();
-        $odar_30->setReturnValue('getRow', array('id' => '30', 'field_id' => '1', 'label' => 'existing open value'));
-        $odar_40 = new MockDataAccessResult();
-        $odar_40->setReturnValue('getRow', array('id' => '40', 'field_id' => '1', 'label' => 'yet another existing open value'));
-        $open_value_dao->setReturnReference('searchByExactLabel', $odar_30, array(1, 'existing open value'));
-        $open_value_dao->setReturnReference('searchByExactLabel', $odar_40, array(1, 'yet another existing open value'));
-        $open_value_dao->setReturnReference('searchByExactLabel', $odar, array(1, 'new value'));
-        $open_value_dao->setReturnReference('searchByExactLabel', $odar, array(1, 'yet another new value'));
-        $open_value_dao->setReturnReference('searchByExactLabel', $odar, array(1, ''));
-        
-        $f = new Tracker_FormElement_Field_OpenListTestVersion();
-        $f->setReturnReference('getOpenValueDao', $open_value_dao);
-        $f->setReturnReference('getBind', $bind);
-        $f->setReturnValue('getId', 1);
-        
-        $this->assertEqual("!new value,!yet another new value", $f->getFieldData('new value,yet another new value', true));
-        $this->assertEqual("!new value,b115", $f->getFieldData('new value,existing value', true));
-        $this->assertEqual("!new value,o30,b115", $f->getFieldData('new value,existing open value,existing value', true));
-        $this->assertNull($f->getFieldData('', true));
+}
+
+class Tracker_FormElement_Field_OpenList_getFieldDataTest extends TuleapTestCase {
+
+    private $dao;
+    private $bind;
+    private $field;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->dao   = mock('Tracker_FormElement_Field_List_OpenValueDao');
+        $this->bind  = mock('Tracker_FormElement_Field_List_Bind_Static');
+        $this->field = partial_mock('Tracker_FormElement_Field_OpenList', array('getOpenValueDao', 'getBind', 'getId'));
+
+        stub($this->field)->getOpenValueDao()->returns($this->dao);
+        stub($this->field)->getBind()->returns($this->bind);
+        stub($this->field)->getId()->returns(1);
     }
 
+    function itResetsTheFieldValueWhenSubmittedValueIsEmpty() {
+        $this->assertIdentical('', $this->field->getFieldData('', true));
+    }
+
+    function itCreatesOneValue() {
+        expect($this->bind)->getFieldData()->count(1);
+        stub($this->bind)->getFieldData('new value', '*')->returns(null);
+
+        expect($this->dao)->searchByExactLabel()->count(1);
+        stub($this->dao)->searchByExactLabel(1, 'new value')->returnsEmptyDar();
+
+        $this->assertEqual("!new value", $this->field->getFieldData('new value', true));
+    }
+
+    function itUsesOneValueDefinedByAdmin() {
+        expect($this->bind)->getFieldData()->count(1);
+        stub($this->bind)->getFieldData('existing value', '*')->returns(115);
+
+        expect($this->dao)->searchByExactLabel()->never();
+
+        $this->assertEqual("b115", $this->field->getFieldData('existing value', true));
+    }
+
+    function itUsesOneOpenValueDefinedPreviously() {
+        expect($this->bind)->getFieldData()->count(1);
+        stub($this->bind)->getFieldData('existing open value', '*')->returns(null);
+
+        expect($this->dao)->searchByExactLabel()->count(1);
+        stub($this->dao)->searchByExactLabel(1, 'existing open value')->returnsDar(array('id' => '30', 'field_id' => '1', 'label' => 'existing open value'));
+
+        $this->assertEqual("o30", $this->field->getFieldData('existing open value', true));
+    }
+
+    function itCreatesTwoNewValues() {
+        expect($this->bind)->getFieldData()->count(2);
+        stub($this->bind)->getFieldData('new value', '*')->returns(null);
+        stub($this->bind)->getFieldData('yet another new value', '*')->returns(null);
+
+        expect($this->dao)->searchByExactLabel()->count(2);
+        stub($this->dao)->searchByExactLabel(1, 'new value')->returnsEmptyDar();
+        stub($this->dao)->searchByExactLabel(1, 'yet another new value')->returnsEmptyDar();
+
+        $this->assertEqual("!new value,!yet another new value", $this->field->getFieldData('new value,yet another new value', true));
+    }
+
+    function itIgnoresEmptyValues() {
+        stub($this->bind)->getFieldData('new value', '*')->returns(null);
+        stub($this->bind)->getFieldData('yet another new value', '*')->returns(null);
+
+        stub($this->dao)->searchByExactLabel(1, 'new value')->returnsEmptyDar();
+        stub($this->dao)->searchByExactLabel(1, 'yet another new value')->returnsEmptyDar();
+
+        $this->assertEqual("!new value,!yet another new value", $this->field->getFieldData('new value,,yet another new value', true));
+    }
+
+    function itCreatesANewValueAndReuseABindValueSetByAdmin() {
+        expect($this->bind)->getFieldData()->count(2);
+        stub($this->bind)->getFieldData('new value', '*')->returns(null);
+        stub($this->bind)->getFieldData('existing value', '*')->returns(115);
+
+        expect($this->dao)->searchByExactLabel()->count(1);
+        stub($this->dao)->searchByExactLabel(1, 'new value')->returnsEmptyDar();
+
+        $this->assertEqual("!new value,b115", $this->field->getFieldData('new value,existing value', true));
+    }
+
+    function itCreatesANewValueAndReuseABindValueAndCreatesAnOpenValue() {
+        expect($this->bind)->getFieldData()->count(3);
+        stub($this->bind)->getFieldData('new value', '*')->returns(null);
+        stub($this->bind)->getFieldData('existing open value', '*')->returns(null);
+        stub($this->bind)->getFieldData('existing value', '*')->returns(115);
+
+        expect($this->dao)->searchByExactLabel()->count(2);
+        stub($this->dao)->searchByExactLabel(1, 'new value')->returnsEmptyDar();
+        stub($this->dao)->searchByExactLabel(1, 'existing open value')->returnsDar(array('id' => '30', 'field_id' => '1', 'label' => 'existing open value'));
+
+        $this->assertEqual("!new value,o30,b115", $this->field->getFieldData('new value,existing open value,existing value', true));
+    }
 }
+
+class Tracker_FormElement_Field_OpenList_getFieldDataFromSoapValueTest extends TuleapTestCase {
+
+    private $field;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->field = partial_mock('Tracker_FormElement_Field_OpenList', array('getFieldData', 'getFieldDataFromStringValue'));
+    }
+
+    public function itPassesStringValueStraightToGetFieldData() {
+        $soap_value = (object) array(
+            'field_name'  => '',
+            'field_label' => '',
+            'field_value' => (object) array(
+                'value' => 'Zoulou'
+            )
+        );
+
+        expect($this->field)->getFieldData('Zoulou')->once();
+        stub($this->field)->getFieldData()->returns('!Zoulou');
+
+        $this->assertEqual('!Zoulou', $this->field->getFieldDataFromSoapValue($soap_value));
+    }
+
+    public function itCallsGetFieldDataWithOneValueFromBindValueLabel() {
+        $soap_value = (object) array(
+            'field_name'  => '',
+            'field_label' => '',
+            'field_value' => (object) array(
+                'bind_value' => array(
+                    (object) array('bind_value_id' => -1, 'bind_value_label' => 'Zoulou')
+                )
+            )
+        );
+
+        expect($this->field)->getFieldDataFromStringValue('Zoulou')->once();
+        stub($this->field)->getFieldDataFromStringValue()->returns('!Zoulou');
+
+        $this->assertEqual('!Zoulou', $this->field->getFieldDataFromSoapValue($soap_value));
+    }
+
+    public function itCallsGetFieldDataWithEachValueFromBindValueLabel() {
+        $soap_value = (object) array(
+            'field_name'  => '',
+            'field_label' => '',
+            'field_value' => (object) array(
+                'bind_value' => array(
+                    (object) array('bind_value_id' => -1, 'bind_value_label' => 'Zoulou'),
+                    (object) array('bind_value_id' => -1, 'bind_value_label' => 'Bravo')
+                )
+            )
+        );
+
+        expect($this->field)->getFieldDataFromStringValue()->count(2);
+        stub($this->field)->getFieldDataFromStringValue('Zoulou')->returns('!Zoulou');
+        stub($this->field)->getFieldDataFromStringValue('Bravo')->returns('o30');
+
+        $this->assertEqual('!Zoulou,o30', $this->field->getFieldDataFromSoapValue($soap_value));
+    }
+
+    public function itIgnoresEmptyStrings() {
+        $soap_value = (object) array(
+            'field_name'  => '',
+            'field_label' => '',
+            'field_value' => (object) array(
+                'bind_value' => array(
+                    (object) array('bind_value_id' => -1, 'bind_value_label' => 'Zoulou'),
+                    (object) array('bind_value_id' => -1, 'bind_value_label' => ''),
+                    (object) array('bind_value_id' => -1, 'bind_value_label' => 'Bravo')
+                )
+            )
+        );
+
+        stub($this->field)->getFieldDataFromStringValue('Zoulou')->returns('!Zoulou');
+        stub($this->field)->getFieldDataFromStringValue('Bravo')->returns('o30');
+
+        $this->assertEqual('!Zoulou,o30', $this->field->getFieldDataFromSoapValue($soap_value));
+    }
+}
+
 ?>

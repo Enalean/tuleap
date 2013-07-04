@@ -129,7 +129,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         } else {            
             //retrieve data from database
             foreach($this->getCriteriaDao()->searchByReportId($this->id) as $row) {
-                if ($formElement = $ff->getFormElementById($row['field_id'])) {
+                if ($formElement = $ff->getFormElementFieldById($row['field_id'])) {
                     if ($formElement->userCanRead()) {
                         $this->criteria[$row['field_id']] = new Tracker_Report_Criteria(
                                 $row['id'],
@@ -270,7 +270,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $matchingIds;
     }
 
-    protected function getMatchingIdsInDb(DataAccessObject $dao, PermissionsManager $permissionManager, Tracker $tracker, User $user, array $criteria) {
+    protected function getMatchingIdsInDb(DataAccessObject $dao, PermissionsManager $permissionManager, Tracker $tracker, PFUser $user, array $criteria) {
         $dump_criteria = array();
         foreach ($criteria as $c) {
             $dump_criteria[$c->field->getName()] = $c->field->getCriteriaValue($c);
@@ -498,8 +498,9 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $i;
     }
     
-    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, User $current_user = null) {
-        $hp = Codendi_HTMLPurifier::instance();
+    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, PFUser $current_user) {
+        $hp              = Codendi_HTMLPurifier::instance();
+        $user_can_update = $this->userCanUpdate($current_user);
 
         $html = '';
         
@@ -515,11 +516,18 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $criteria_fetched = array();
         foreach ($criteria as $criterion) {
             if ($criterion->field->isUsed()) {
-                $criteria_fetched[] = '<li id="tracker_report_crit_' . $criterion->field->getId() . '">' . $criterion->fetch() . '</li>';
+                $li = '<li id="tracker_report_crit_' . $criterion->field->getId() . '">';
+                if ($user_can_update) {
+                    $li .= $criterion->fetch();
+                } else {
+                    $li .= $criterion->fetchWithoutExpandFunctionnality();
+                }
+                $li .= '</li>';
+                $criteria_fetched[] = $li;
                 $used[$criterion->field->getId()] = $criterion->field;
             }
         }
-        if ($report_can_be_modified && $this->userCanUpdate($current_user)) {
+        if ($report_can_be_modified && $user_can_update) {
             $html .= '<div id="tracker_report_addcriteria_panel">' . $this->_fetchAddCriteria($used) . '</div>';
         }
 
@@ -890,10 +898,14 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
      * Only owners of a report can update it.
      * owner = report->user_id
      * or if null, owner = tracker admin or site admins
-     * @param User $user the user who wants to update the report
+     * @param PFUser $user the user who wants to update the report
      * @return boolean
      */
     public function userCanUpdate($user) {
+        if (! $this->isBelongingToATracker()) {
+            return false;
+        }
+
         if ($this->user_id) {
             return $this->user_id == $user->getId();
         } else {
@@ -901,7 +913,11 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             return $user->isSuperUser() || $tracker->userIsAdmin($user);
         }
     }
-    
+
+    private function isBelongingToATracker() {
+        return $this->getTracker() != null;
+    }
+
     protected $tracker;
     public function getTracker() {
         if (!$this->tracker) {

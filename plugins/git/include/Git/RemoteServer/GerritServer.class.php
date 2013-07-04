@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once 'common/event/EventManager.class.php';
-require_once GIT_BASE_DIR. '/Git/Driver/Gerrit/RemoteSSHConfig.class.php';
-
 /**
  * @see Git_Driver_Gerrit_RemoteSSHConfig
  */
@@ -34,14 +32,16 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     private $http_port;
     private $login;
     private $identity_file;
+    private $replication_key;
 
-    public function __construct($id, $host, $ssh_port, $http_port, $login, $identity_file) {
-        $this->id            = $id;
-        $this->host          = $host;
-        $this->ssh_port      = $ssh_port;
-        $this->http_port     = $http_port;
-        $this->login         = $login;
-        $this->identity_file = $identity_file;
+    public function __construct($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key) {
+        $this->id               = $id;
+        $this->host             = $host;
+        $this->ssh_port         = $ssh_port;
+        $this->http_port        = $http_port;
+        $this->login            = $login;
+        $this->identity_file    = $identity_file;
+        $this->replication_key  = $replication_key;
     }
 
     public function getId() {
@@ -66,6 +66,10 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
 
     public function getHTTPPort() {
         return $this->http_port;
+    }
+
+    public function setId($id) {
+        $this->id = $id;
     }
 
     public function setHost($host) {
@@ -97,22 +101,44 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         return "ext::ssh -p $this->ssh_port -i $this->identity_file $this->login@$this->host %S $gerrit_project";
     }
 
-    public function getEndUserCloneUrl($gerrit_project, User $user) {
-        $login  = self::DEFAULT_GERRIT_USERNAME;
-        $params = array('login' => &$login, 'user' => $user);
-        EventManager::instance()->processEvent(Event::GET_LDAP_LOGIN_NAME_FOR_USER, $params);
+    public function getEndUserCloneUrl($gerrit_project, Git_Driver_Gerrit_User $user = null) {
+        $login = self::DEFAULT_GERRIT_USERNAME;
+        if ($user !== null) {
+            $login = $user->getSSHUserName();
+        }
         return 'ssh://'.$login.'@'.$this->host.':'.$this->ssh_port.'/'.$gerrit_project.'.git';
     }
 
     public function getProjectAdminUrl($gerrit_project) {
-        return $this->getGerritServerBaseUrl()."/#/admin/projects/$gerrit_project";
+        return $this->getBaseUrl()."/#/admin/projects/$gerrit_project";
     }
 
     public function getProjectUrl($gerrit_project) {
-        return $this->getGerritServerBaseUrl()."/#/q/project:$gerrit_project,n,z";
+        return $this->getBaseUrl()."/#/q/project:$gerrit_project,n,z";
     }
 
-    private function getGerritServerBaseUrl() {
+    /**
+     *
+     * @return String
+     */
+    public function getReplicationKey() {
+        return $this->replication_key;
+    }
+
+    /**
+     *
+     * @param String $key
+     * @return \Git_RemoteServer_GerritServer
+     */
+    public function setReplicationKey($key) {
+        $this->replication_key = $key;
+        return $this;
+    }
+
+    /**
+     * @return string The base url of the server. Eg: http://gerrit.example.com:8080/
+     */
+    public function getBaseUrl() {
         $url = "http://$this->host";
         if ($this->http_port != self::DEFAULT_HTTP_PORT) {
             $url .= ":$this->http_port";

@@ -20,7 +20,6 @@
   */
 
 
-require_once('common/plugin/PluginDescriptor.class.php');
 
 
 /**

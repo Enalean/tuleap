@@ -100,12 +100,12 @@ if ($request->isPost()) {
                 && in_array($user->getStatus(), $user->getAllWorkingStatus())
                 && $user->getStatus() != $request->get('form_status')) {
                 switch ($request->get('form_status')) {
-                    case User::STATUS_ACTIVE:
+                    case PFUser::STATUS_ACTIVE:
                         $user->setStatus($request->get('form_status'));
                         $accountActivationEvent = 'project_admin_activate_user';
                         break;
 
-                    case User::STATUS_RESTRICTED:
+                    case PFUser::STATUS_RESTRICTED:
                         if (isset($GLOBALS['sys_allow_restricted_users']) && $GLOBALS['sys_allow_restricted_users'] == 1) {
                             $user->setStatus($request->get('form_status'));
                             // If the user had a shell, set it to restricted shell
@@ -118,13 +118,13 @@ if ($request->isPost()) {
                         }
                         break;
 
-                    case User::STATUS_DELETED:
+                    case PFUser::STATUS_DELETED:
                         $user->setStatus($request->get('form_status'));
                         $user->setUnixStatus($user->getStatus());
                         $accountActivationEvent = 'project_admin_delete_user';
                         break;
 
-                    case User::STATUS_SUSPENDED:
+                    case PFUser::STATUS_SUSPENDED:
                         $user->setStatus($request->get('form_status'));
                         $user->setUnixStatus($user->getStatus());
                         break;
@@ -138,9 +138,9 @@ if ($request->isPost()) {
                     $vLoginName->required();
                     if ($request->valid($vLoginName)) {
                         switch ($user->getStatus()) {
-                            case User::STATUS_PENDING:
-                            case User::STATUS_VALIDATED:
-                            case User::STATUS_VALIDATED_RESTRICTED:
+                            case PFUser::STATUS_PENDING:
+                            case PFUser::STATUS_VALIDATED:
+                            case PFUser::STATUS_VALIDATED_RESTRICTED:
                                 $user->setUserName($request->get('form_loginname'));
                                 break;
                             default:

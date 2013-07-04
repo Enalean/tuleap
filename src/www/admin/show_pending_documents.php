@@ -46,7 +46,6 @@ if($request->valid($vGroupId)) {
     exit_no_group();
 }
 
-$pm = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 if (!$project->isActive()) {
     exit_error($GLOBALS['Language']->getText('include_exit','exit_error'), $GLOBALS['Language']->getText('include_exit', 'project_status_'.$project->getStatus()));
@@ -72,8 +71,8 @@ $idArray   = array();
 $nomArray  = array();
 $htmlArray = array();
 
-frs_file_restore_view($group_id, &$idArray, &$nomArray, &$htmlArray);
-wiki_attachment_restore_view($group_id, &$idArray, &$nomArray, &$htmlArray);
+frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray);
+wiki_attachment_restore_view($group_id, $idArray, $nomArray, $htmlArray);
 
 $params = array('group_id' => $group_id,
                 'id'       => &$idArray,
@@ -144,7 +143,7 @@ site_admin_footer(array());
  * Functions
  */
 
-function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
+function frs_file_restore_view($group_id, &$idArray, &$nomArray, &$htmlArray) {
     $fileFactory        = new FRSFileFactory();
     $files              = $fileFactory->listPendingFiles($group_id, 0, 0);
     $toBeRestoredFiles = $fileFactory->listToBeRestoredFiles($group_id);
@@ -253,7 +252,7 @@ function frs_file_restore_process($request, $group_id) {
     $GLOBALS['Response']->redirect('?group_id='.$group_id);
 }
 
-function wiki_attachment_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
+function wiki_attachment_restore_view($group_id, &$idArray, &$nomArray, &$htmlArray) {
     $wikiAttachment = new WikiAttachment($group_id);
     $attachments = $wikiAttachment->listPendingAttachments($group_id, 0, 0);
 

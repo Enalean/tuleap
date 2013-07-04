@@ -43,7 +43,7 @@ require_once (dirname(__FILE__).'/../include/FS/WebDAVFRSPackage.class.php');
 require_once(dirname(__FILE__).'/../include/WebDAVTree.class.php');
 require_once(dirname(__FILE__).'/../include/WebDAVUtils.class.php');
 Mock::generate('WebDAVUtils');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 /**
  * This is the unit test of WebDAVTree
@@ -421,7 +421,7 @@ class WebDAVTreeTest extends UnitTestCase {
         $sourceItem->setReturnValue('getGroupId', 1);
         $sourceItem->setReturnValue('getId', 128);
         $source->setItem($sourceItem);
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $destinationItem = new MockDocman_Item();
         $destinationItem->setReturnValue('getGroupId', 1);
         $destinationItem->setReturnValue('getId', 256);

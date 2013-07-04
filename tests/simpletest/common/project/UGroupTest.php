@@ -24,7 +24,7 @@ class UGroup_AddUserTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->user_id = 400;
-        $this->user    = stub('User')->getId()->returns($this->user_id);
+        $this->user    = stub('PFUser')->getId()->returns($this->user_id);
     }
     
     function itAddUserIntoStaticGroup() {
@@ -109,7 +109,7 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->user_id = 400;
-        $this->user    = stub('User')->getId()->returns($this->user_id);
+        $this->user    = stub('PFUser')->getId()->returns($this->user_id);
     }
     
     function itRemoveUserFromStaticGroup() {
@@ -218,8 +218,8 @@ class UGroup_getUsersBaseTest extends TuleapTestCase {
         $user_manager = mock('UserManager');
         UserManager::setInstance($user_manager);
 
-        $this->garfield = new User($this->garfield_incomplete_row);
-        $this->goofy = new User($this->goofy_incomplete_row);
+        $this->garfield = new PFUser($this->garfield_incomplete_row);
+        $this->goofy    = new PFUser($this->goofy_incomplete_row);
         stub($user_manager)->getUserById($this->garfield_incomplete_row['user_id'])->returns($this->garfield);
         stub($user_manager)->getUserById($this->goofy_incomplete_row['user_id'])->returns($this->goofy);
     }
@@ -234,34 +234,31 @@ class UGroup_getUsersTest extends UGroup_getUsersBaseTest {
 
     public function itIsEmptyWhenTheGroupIsEmpty() {
         $id       = 333;
-        $row      = array('ugroup_id' =>$id);
+        $row      = array('ugroup_id' => $id, 'group_id' => 105);
         $ugroup   = new UGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsEmptyDar());
-        $this->assertEqual($ugroup->getUsers($id)->reify(), array());
-        $this->assertEqual($ugroup->getUserNames($id), array());
+        $this->assertEqual($ugroup->getUsers()->reify(), array());
     }
 
     public function itReturnsTheMembersOfStaticGroups() {
         $id       = 333;
-        $row      = array('ugroup_id' =>$id);
+        $row      = array('ugroup_id' => $id, 'group_id' => 105);
         $ugroup   = new UGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
         
         $users = array($this->garfield, $this->goofy);
-        $this->assertEqual($ugroup->getUsers($id)->reify(), $users);
-        $this->assertEqual($ugroup->getUserNames($id), array('garfield', 'goofy'));
+        $this->assertEqual($ugroup->getUsers()->reify(), $users);
     }
     
     public function itReturnsTheMembersOfDynamicGroups() {
         $id       = 1;
         $group_id = 555;
-        $row      = array('ugroup_id' =>$id , 'group_id' => 100); // this is how UgroupManager instantiates dynamic ugroups
+        $row      = array('ugroup_id' => $id , 'group_id' => $group_id);
         $ugroup   = new UGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByDynamicUGroupId($id, $group_id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
 
         $users = array($this->garfield, $this->goofy);
-        $this->assertEqual($ugroup->getUsers($group_id)->reify(), $users);
-        $this->assertEqual($ugroup->getUserNames($group_id), array('garfield', 'goofy'));
+        $this->assertEqual($ugroup->getUsers()->reify(), $users);
     }
 }
 
@@ -327,5 +324,66 @@ class UGroup_DynamicGroupTest extends TuleapTestCase {
         $this->assertEqual(UGroup::getRemoveFlagForUGroupId(UGroup::NEWS_ADMIN),                    "news_flags = 0");
         $this->assertEqual(UGroup::getRemoveFlagForUGroupId(UGroup::NEWS_EDITOR),                   "news_flags = 0");
     }
+}
+
+class UGroup_GetsNameTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->setText('membre_de_projet', array('project_ugroup', 'ugroup_project_members_name_key'));
+        $this->setText('administrateur_de_le_projet', array('project_ugroup', 'ugroup_project_admins_name_key'));
+    }
+
+    public function itReturnsProjectMembers() {
+        $ugroup = new UGroup(array('ugroup_id' => UGroup::PROJECT_MEMBERS, 'name' => 'ugroup_project_members_name_key'));
+        $this->assertEqual('ugroup_project_members_name_key', $ugroup->getName());
+        $this->assertEqual('membre_de_projet', $ugroup->getTranslatedName());
+        $this->assertEqual('project_members', $ugroup->getNormalizedName());
+    }
+
+    public function itReturnsProjectAdmins() {
+        $ugroup = new UGroup(array('ugroup_id' => UGroup::PROJECT_ADMIN, 'name' => 'ugroup_project_admins_name_key'));
+        $this->assertEqual('ugroup_project_admins_name_key', $ugroup->getName());
+        $this->assertEqual('administrateur_de_le_projet', $ugroup->getTranslatedName());
+        $this->assertEqual('project_admins', $ugroup->getNormalizedName());
+    }
+
+    public function itReturnsAStaticGroup() {
+        $ugroup = new UGroup(array('ugroup_id' => 120, 'name' => 'Zoum_zoum_zen'));
+        $this->assertEqual('Zoum_zoum_zen', $ugroup->getName());
+        $this->assertEqual('Zoum_zoum_zen', $ugroup->getTranslatedName());
+        $this->assertEqual('Zoum_zoum_zen', $ugroup->getNormalizedName());
+    }
+}
+
+class UGroup_SourceInitializationTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->ugroup = partial_mock('UGroup', array('getUgroupBindingSource'), array('ugroup_id' => 123));
+    }
+
+    public function itQueriesTheDatabaseWhenDefaultValueIsFalse() {
+        expect($this->ugroup)->getUgroupBindingSource()->once();
+        $this->ugroup->isBound();
+    }
+
+    public function itQueriesTheDatabaseOnlyOnce() {
+        expect($this->ugroup)->getUgroupBindingSource()->once();
+        stub($this->ugroup)->getUgroupBindingSource()->returns(null);
+        $this->ugroup->isBound();
+        $this->ugroup->isBound();
+    }
+
+    public function itReturnsTrueWhenTheGroupIsBound() {
+        stub($this->ugroup)->getUgroupBindingSource()->returns(stub('UGroup')->getId()->returns(666));
+        $this->assertTrue($this->ugroup->isBound());
+    }
+
+    public function itReturnsFalseWhenTheGroupIsNotBound() {
+        stub($this->ugroup)->getUgroupBindingSource()->returns(null);
+        $this->assertFalse($this->ugroup->isBound());
+    }
+
 }
 ?>

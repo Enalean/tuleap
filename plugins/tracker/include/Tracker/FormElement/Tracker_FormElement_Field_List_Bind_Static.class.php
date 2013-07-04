@@ -76,6 +76,11 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             'join_on_id' => 'tracker_field_list_bind_static_value.id',
         );
     }
+
+    protected function getSoapBindingList() {
+        // returns empty array as static are already listed in 'values'
+        return array();
+    }
     
     /**
      * @return string
@@ -99,8 +104,8 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         if (is_array($value)) {
             if (isset($this->values[$value['id']])) {
                 $value = $this->values[$value['id']];
-            } elseif ($value['id'] == Tracker_FormElement_Field_List_Bind_StaticValue_Null::VALUE_ID) {
-                $value = new Tracker_FormElement_Field_List_Bind_StaticValue_Null();
+            } elseif ($value['id'] == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+                $value = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
             }
         }
         if ($value) {
@@ -122,32 +127,50 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         if ($value['id'] == 100 || ! array_key_exists($value['id'], $this->values)) {
             return '';
         } else {
-            return $this->format($this->values[$value['id']]);
+            return $this->values[$value['id']]->getLabel();
         }
     }
     
     /**
-     * @return array
+     * @return Tracker_FormElement_Field_List_Bind_StaticValue[]
      */
     public function getAllValues() {
         return $this->values;
     }
+
     /**
-     * Get available values of this field for SOAP usage
-     * Fields like int, float, date, string don't have available values
+     * Get the field data for artifact submission
      *
-     * @return mixed The values or null if there are no specific available values
+     * @param string $soap_value  the soap field values
+     * @param bool   $is_multiple if the soap value is multiple or not
+     *
+     * @return mixed the field data corresponding to the soap_value for artifact submision
      */
-    public function getSoapAvailableValues() {
-        $soap_values = array();
+    public function getFieldData($soap_value, $is_multiple) {
         $values = $this->getAllValues();
-        foreach ($values as $id => $value) {
-            $soap_values[] = array(
-                            'bind_value_id' => $id,
-                            'bind_value_label' => $value->getLabel(),
-                        );
+        if ($is_multiple) {
+            $return = array();
+            $soap_values = explode(",", $soap_value);
+            foreach ($values as $id => $value) {
+                if (in_array($value->getLabel(), $soap_values)) {
+                    $return[] = $id;
+                }
+            }
+            if (count($soap_values) == count($return)) {
+                return $return;
+            } else {
+                // if one value was not found, return null
+                return null;
+            }
+        } else {
+            foreach ($values as $id => $value) {
+                if ($value->getLabel() == $soap_value) {
+                    return $id;
+                }
+            }
+            // if not found, return null
+            return null;
         }
-        return $soap_values;
     }
     /**
      * @return array
@@ -592,8 +615,9 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                     break;
                 case 'delete':
                     if (($row = $value_dao->searchById((int)$value)->getRow()) && $value_dao->delete((int)$value)) {
+                        $params['decorator'] = array((int)$value => null);
                         $redirect = true;
-                        $GLOBALS['Response']->addFeedback('info', 'Value '.  $hp->purify($row['label'], CODENDI_PURIFIER_CONVERT_HTML)  .'deleted');
+                        $GLOBALS['Response']->addFeedback('info', 'Value '.  $hp->purify($row['label'], CODENDI_PURIFIER_CONVERT_HTML)  .' deleted');
                     }
                     break;
                 case 'edit':

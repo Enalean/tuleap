@@ -106,7 +106,7 @@ function show_add_snippet_box() {
 	<P>
 	'.$Language->getText('snippet_package','group_s_into_p').'
 	<P>
-	<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+	<FORM ACTION="?" METHOD="POST">
 	<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 	<INPUT TYPE="HIDDEN" NAME="changes" VALUE="'.$Language->getText('snippet_package','first_posted_v').'">
 

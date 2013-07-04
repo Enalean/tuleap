@@ -19,6 +19,8 @@
  */
 require_once('Project.class.php');
 require_once('common/dao/ProjectDao.class.php');
+require_once('common/dao/ProjectHierarchyDao.class.php');
+require_once('common/project/Hierarchy/HierarchyManager.class.php');
 
 /**
  * Provide access to projects
@@ -39,6 +41,11 @@ class ProjectManager {
      * Hold an instance of the class
      */
     private static $_instance;
+
+    /**
+     * @var Project_HierarchyManager
+     */
+    private $hierarchy_manager;
 
     /**
      * A private constructor; prevents direct creation of object
@@ -73,7 +80,7 @@ class ProjectManager {
     public static function clearInstance() {
         self::$_instance = null;
     }
-    
+
     /**
      * @return ProjectDao
      */
@@ -137,7 +144,7 @@ class ProjectManager {
      * @param String  $name
      * @param Integer $limit
      * @param Integer $nbFound
-     * @param User    $user
+     * @param PFUser    $user
      * @param Boolean $isMember
      * @param Boolean $isAdmin
      * @param Boolean $isPrivate Display private projects if true
@@ -400,7 +407,7 @@ class ProjectManager {
     public function checkGroupIdForSoap($groupId, $method, $byUnixName = false) {
         $this->getGroupByIdForSoap($groupId, $method, $byUnixName);
     }
-    
+
     /**
      * Check if the user can access the project $group,
      * regarding the restricted access
@@ -487,11 +494,81 @@ class ProjectManager {
     /**
      * @return Project[]
      */
-    public function getProjectsUserIsAdmin(User $user) {
+    public function getProjectsUserIsAdmin(PFUser $user) {
         // Why not use method in User class?
         return $this->_getDao()
             ->searchProjectsUserIsAdmin($user->getId())
             ->instanciateWith(array($this, 'getProjectFromDbRow'));
+    }
+
+    /**
+     * @param int $group_id
+     * @param int $parent_group_id
+     * @return Boolean
+     * @throws Project_HierarchyManagerNoChangeException
+     * @throws Project_HierarchyManagerAlreadyAncestorException
+     * @throws Project_HierarchyManagerAncestorIsSelfException
+     */
+    public function setParentProject($group_id, $parent_group_id) {
+        $event_manager = EventManager::instance();
+        $result        = $this->getHierarchyManager()->setParentProject($group_id, $parent_group_id);
+
+        if ($result) {
+            $event_manager->processEvent(Event::PROJECT_SET_PARENT_PROJECT, array(
+                'group_id'  => $group_id,
+                'parent_id' => $parent_group_id
+            ));
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param int $group_id
+     * @return Boolean
+     */
+    public function removeParentProject($group_id) {
+        $event_manager = EventManager::instance();
+        $result        = $this->getHierarchyManager()->removeParentProject($group_id);
+
+        if ($result) {
+            $event_manager->processEvent(Event::PROJECT_UNSET_PARENT_PROJECT, array(
+                'group_id'  => $group_id
+            ));
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param int $group_id
+     * @return Project | null
+     */
+    public function getParentProject($group_id) {
+        return $this->getHierarchyManager()->getParentProject($group_id);
+    }
+
+    /**
+     *
+     * @param int $group_id
+     * @return Project[]
+     */
+    public function getChildProjects($group_id) {
+        return $this->getHierarchyManager()->getChildProjects($group_id);
+    }
+
+    /**
+     * @return Project_HierarchyManager
+     */
+    private function getHierarchyManager() {
+        if (! $this->hierarchy_manager) {
+            $this->hierarchy_manager = new Project_HierarchyManager(
+                $this,
+                new ProjectHierarchyDao(CodendiDataAccess::instance())
+            );
+        }
+
+        return $this->hierarchy_manager;
     }
 }
 

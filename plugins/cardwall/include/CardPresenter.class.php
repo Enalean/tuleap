@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_CardPresenter implements Tracker_CardPresenter{
-    
+class Cardwall_CardPresenter implements Tracker_CardPresenter {
+
     /**
      * @var Tracker_Artifact
      */
@@ -35,11 +35,19 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
      */
     private $card_fields;
 
-    public function __construct(Tracker_Artifact $artifact, Tracker_CardFields $card_fields, Tracker_Artifact $parent = null) {
-        $this->artifact     = $artifact;
-        $this->parent       = $parent;
-        $this->details      = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
-        $this->card_fields  = $card_fields;
+    /** @var string */
+    private $accent_color;
+
+    private $swimline_id;
+
+    public function __construct(Tracker_Artifact $artifact, Tracker_CardFields $card_fields, $accent_color, Cardwall_DisplayPreferences $display_preferences, $swimline_id, Tracker_Artifact $parent = null) {
+        $this->artifact            = $artifact;
+        $this->parent              = $parent;
+        $this->details             = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
+        $this->card_fields         = $card_fields;
+        $this->accent_color        = $accent_color;
+        $this->display_preferences = $display_preferences;
+        $this->swimline_id         = $swimline_id;
     }
 
     /**
@@ -61,7 +69,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
         $displayed_fields = $this->card_fields->getFields($this->getArtifact());
         
         foreach ($displayed_fields as $displayed_field) {
-            $diplayed_fields_presenter[] = new Cardwall_CardFieldPresenter($displayed_field, $this->artifact);
+            $diplayed_fields_presenter[] = new Cardwall_CardFieldPresenter($displayed_field, $this->artifact, $this->display_preferences);
         }
         return $diplayed_fields_presenter;
     }
@@ -109,6 +117,10 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
         return $this->parent ? $this->parent->getId() : 0;
     }
 
+    public function getSwimlineId() {
+        return $this->swimline_id;
+    }
+
     /**
      * @see Tracker_CardPresenter
      */
@@ -121,6 +133,13 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
      */
     public function getCssClasses() {
         return '';
+    }
+
+    /**
+     * @see Tracker_CardPresenter::getAccentColor()
+     */
+    public function getAccentColor() {
+        return $this->accent_color;
     }
 
     /**

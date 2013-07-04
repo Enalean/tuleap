@@ -31,14 +31,14 @@ php_flag magic_quotes_gpc on
 php_flag short_open_tag on
 # Needed by trackers and phpWiki
 php_flag register_long_arrays on
-php_value include_path "/usr/share/pear/:/usr/share/codendi/src/www/include:/usr/share/codendi/src:."
+php_value include_path "/usr/share/pear/:/usr/share/php:/usr/share/codendi/src/www/include:/usr/share/codendi/src:."
 php_value memory_limit 196M
 php_value post_max_size 128M
 php_value upload_max_filesize 128M
 php_admin_value upload_tmp_dir /var/tmp
 
 # For phpwiki
-php_flag allow_call_time_pass_reference on
+# php_flag allow_call_time_pass_reference on
 
 #
 # With PHP5 session.save_path may not have a default value. This will raise a notice when

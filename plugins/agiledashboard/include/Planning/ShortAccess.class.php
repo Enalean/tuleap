@@ -26,7 +26,7 @@ class Planning_ShortAccess {
     private $is_latest = false;
 
     /**
-     * @var User
+     * @var PFUser
      */
     private $user;
 
@@ -35,10 +35,30 @@ class Planning_ShortAccess {
      */
     public $planning;
 
+    /**@var int */
+    public $planning_id;
+
+    /**@var int */
+    private $offset;
+
+    /** @var int */
+    public $next_offset;
+
+    /** @var string */
+    public $more;
+
+    /** @var string */
+    public $more_title;
+
     /**
      * @var Planning_MilestoneFactory
      */
     protected $milestone_factory;
+
+    /**
+     * @var Planning_MilestonePaneFactory
+     */
+    protected $pane_factory;
 
     /** @var array of Planning_MilestoneLinkPresenter */
     private $presenters;
@@ -46,15 +66,28 @@ class Planning_ShortAccess {
     /** @var string */
     private $theme_path;
 
-    public function __construct(Planning $planning, User $user, Planning_MilestoneFactory $milestone_factory, $theme_path) {
+    public function __construct(Planning $planning, PFUser $user, Planning_MilestoneFactory $milestone_factory, Planning_MilestonePaneFactory $pane_factory, $theme_path, $offset) {
         $this->user              = $user;
         $this->planning          = $planning;
+        $this->planning_id       = $planning->getId();
         $this->milestone_factory = $milestone_factory;
+        $this->pane_factory      = $pane_factory;
         $this->theme_path        = $theme_path;
+        $this->offset            = $offset;
+        $this->next_offset       = $offset + self::NUMBER_TO_DISPLAY;
+        $this->more              = $GLOBALS['Language']->getText('global', 'more');
+        $this->more_title        = $GLOBALS['Language']->getText('plugin_agiledashboard', 'display_five_more', self::NUMBER_TO_DISPLAY);
     }
 
     public function getLastOpenMilestones() {
         return array_slice($this->getMilestoneLinkPresenters(), 0, self::NUMBER_TO_DISPLAY);
+    }
+
+    /**
+     * @return Planning_Milestone
+     */
+    public function getCurrentMilestone() {
+        return $this->milestone_factory->getCurrentMilestone($this->user, $this->planning->getId());
     }
 
     public function hasMoreMilestone() {
@@ -64,9 +97,16 @@ class Planning_ShortAccess {
     private function getMilestoneLinkPresenters() {
         if (!$this->presenters) {
             $this->presenters = array();
-            $milestones = $this->milestone_factory->getLastOpenMilestones($this->user, $this->planning, self::NUMBER_TO_DISPLAY + 1);
+            $milestones = $this->milestone_factory->getLastOpenMilestones($this->user, $this->planning, $this->offset, self::NUMBER_TO_DISPLAY + 1);
             foreach ($milestones as $milestone) {
-                $this->presenters[] = new Planning_ShortAccessMilestonePresenter($this, $milestone, $this->milestone_factory, $this->user, $this->theme_path);
+                $this->presenters[] = new Planning_ShortAccessMilestonePresenter(
+                    $this,
+                    $milestone,
+                    $this->pane_factory->getListOfPaneInfo($milestone),
+                    $this->milestone_factory,
+                    $this->user,
+                    $this->theme_path
+                );
             }
             if (!empty($this->presenters)) {
                 end($this->presenters)->setIsLatest();
@@ -81,7 +121,7 @@ class Planning_ShortAccess {
     }
 
     public function planningRedirectToNew() {
-        return 'planning['. $this->planning->getId() .']=-1';
+        return 'planning[]['. $this->planning->getId() .']=-1';
     }
 
     public function setIsLatest() {
@@ -96,6 +136,14 @@ class Planning_ShortAccess {
     public function createNewItemToPlan() {
         $tracker = $this->planning->getPlanningTracker();
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'create_new_item_to_plan', array($tracker->getItemName()));
+    }
+
+    /**
+     *
+     * @return Planning
+     */
+    public function getPlanning() {
+        return $this->planning;
     }
 }
 ?>

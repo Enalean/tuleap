@@ -266,7 +266,16 @@ function prepare_artifact_record($at,$fields,$group_artifact_id, &$record, $expo
 		$dependent .= $dependent_on_artifact_id.",";
 	}
     $record['is_dependent_on'] = (($dependent !== '')?substr($dependent,0,strlen($dependent)-1):$Language->getText('global','none'));
-
+    
+    //CC
+    $cc_list = $ah->getCCList();
+    $rows = db_numrows($cc_list);
+    $cc = array();
+    for ($i=0; $i < $rows; $i++) {
+        $cc_email = db_result($cc_list, $i, 'email');
+        $cc[] = $cc_email;
+    }   
+    $record['cc'] = implode(',', $cc);
 }
 
 function pe_utils_format_bug_followups($group_id,$bug_id) {
@@ -463,8 +472,8 @@ function prepare_artifact_history_record($at, $art_field_fact, &$record) {
   
   $field = $art_field_fact->getFieldFromName($record['field_name']);
   if ( $field ) {
-    prepare_historic_value(&$record, $field, $at->getID(), 'old_value');
-    prepare_historic_value(&$record, $field, $at->getID(), 'new_value');
+    prepare_historic_value($record, $field, $at->getID(), 'old_value');
+    prepare_historic_value($record, $field, $at->getID(), 'new_value');
   }	else {
   	if (preg_match("/^(lbl_)/",$record['field_name']) && preg_match("/(_comment)$/",$record['field_name'])) {
   		$record['field_name'] = "comment";

@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ShowRepo/Content.class.php';
-require_once 'ShowRepo/Download.class.php';
-require_once 'GitPhpViewer.class.php';
 
 class GitViews_ShowRepo {
     /**
@@ -45,6 +42,11 @@ class GitViews_ShowRepo {
     private $driver;
 
     /**
+     * @var Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager
+     */
+    private $gerrit_usermanager;
+
+    /**
      * @var array
      */
     private $gerrit_servers;
@@ -54,12 +56,14 @@ class GitViews_ShowRepo {
             Git $controller,
             Codendi_Request $request,
             Git_Driver_Gerrit $driver,
+            Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
             array $gerrit_servers
     ) {
         $this->repository     = $repository;
         $this->controller     = $controller;
         $this->request        = $request;
         $this->driver         = $driver;
+        $this->gerrit_usermanager = $gerrit_usermanager;
         $this->gerrit_servers = $gerrit_servers;
     }
 
@@ -78,6 +82,7 @@ class GitViews_ShowRepo {
                 $this->request->getCurrentUser(),
                 $this->controller,
                 $this->driver,
+                $this->gerrit_usermanager,
                 $this->gerrit_servers,
                 $this->controller->getPlugin()->getThemePath()
             );

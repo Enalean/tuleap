@@ -43,8 +43,6 @@ CODENDI_HOME=/usr/share/codendi
 
 SRC_CRON_SCRIPT_ON=$CODENDI_HOME/src/utils/cron.d/codendi
 SRC_CRON_SCRIPT_OFF=$CODENDI_HOME/src/utils/cron.d/codendi-stop
-SRC_GERRIT_CRON_SCRIPT_ON=$CODENDI_HOME/plugins/git/bin/cron-start
-SRC_GERRIT_CRON_SCRIPT_OFF=$CODENDI_HOME/plugins/git/bin/cron-stop
 
 DST_CRON_SCRIPT=/etc/cron.d/codendi
 DST_GERRIT_CRON_SCRIPT=/etc/cron.d/gerrit-fetch
@@ -57,20 +55,6 @@ InstallCron()
 RemoveCron()
 {
     install -m644 -o root -g root $SRC_CRON_SCRIPT_OFF $DST_CRON_SCRIPT
-}
-
-InstallGerritCron()
-{
-    if [ -f "$SRC_GERRIT_CRON_SCRIPT_ON" ]; then
-        install -m644 -o root -g root $SRC_GERRIT_CRON_SCRIPT_ON $DST_GERRIT_CRON_SCRIPT
-    fi
-}
-
-RemoveGerritCron()
-{
-    if [ -f "$SRC_GERRIT_CRON_SCRIPT_OFF" ]; then
-        install -m644 -o root -g root $SRC_GERRIT_CRON_SCRIPT_OFF $DST_GERRIT_CRON_SCRIPT
-    fi
 }
 
 # Source function library.
@@ -88,7 +72,6 @@ start()
     fi
     echo -n "Starting $prog: "
     InstallCron
-    InstallGerritCron
     echo "[OK]"
     RETVAL=$?
     return $RETVAL
@@ -97,13 +80,11 @@ start()
 stop()
 {
     if [ "$1" == "gerrit" ]; then
-        RemoveGerritCron
         RETVAL=$?
         return $RETVAL
     fi
     echo -n "Shutting down $prog: "
     RemoveCron
-    RemoveGerritCron
     echo "[OK]"
     RETVAL=$?
     return $RETVAL

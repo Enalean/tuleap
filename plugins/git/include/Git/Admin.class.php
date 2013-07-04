@@ -18,12 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
+require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 /**
  * This handles site admin part of Git
  */
 class Git_Admin {
+    
+    private $servers;
 
     /** @var Git_RemoteServer_GerritServerFactory */
     private $gerrit_server_factory;
@@ -40,13 +42,15 @@ class Git_Admin {
         $request_gerrit_servers = $request->get('gerrit_servers');
         if (is_array($request_gerrit_servers)) {
             $this->csrf->check();
-            $gerrit_servers = $this->getGerritServers();
-            $this->updateServers($request_gerrit_servers, $gerrit_servers);
+            $this->fetchGerritServers();
+            $this->updateServers($request_gerrit_servers);
+            $GLOBALS['Response']->redirect('/plugins/git/admin/');
         }
     }
 
     public function display() {
-        $servers = $this->getGerritServers();
+        $this->fetchGerritServers();
+
         $title = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
         $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
         $html  = '';
@@ -58,7 +62,7 @@ class Git_Admin {
         $html .= $this->csrf->fetchHTMLInput();
         $html .= '<h2>'. 'Admin gerrit servers' .'</h2>';
         $html .= '<dl>';
-        foreach ($servers as $server) {
+        foreach ($this->servers as $server) {
             $html .= $this->getInputForm($server->getHost(), $server);
         }
         $html .= '</dl>';
@@ -84,60 +88,80 @@ class Git_Admin {
         $html .= '<dt><h3>'. $title .'</h3></dt>';
         $html .= '<dd>';
         $html .= '<table><tbody>';
-        $fields = array(array('Host:',          'host',          $server->getHost()), 
-                        array('HTTP Port:',     'http_port',     $server->getHTTPPort()),
-                        array('SSH Port:',      'ssh_port',      $server->getSSHPort()),
-                        array('Login:',         'login',         $server->getLogin()),
-                        array('Identity File:', 'identity_file', $server->getIdentityFile()));
+        $fields = array(
+            array('Host:',              'host',             $server->getHost()),
+            array('HTTP Port:',         'http_port',        $server->getHTTPPort()),
+            array('SSH Port:',          'ssh_port',         $server->getSSHPort()),
+            array('Login:',             'login',            $server->getLogin()),
+            array('Identity File:',     'identity_file',    $server->getIdentityFile())
+        );
+
         foreach ($fields as $field) {
-            $html .= '<td><label>'. $field[0].'<br /><input type="text" name="gerrit_servers['. $id .']['.$field[1].']" value="'. $hp->purify($field[2]) .'" /></label></td>';
+            $html .= '<tr valign="top"><td>'. $field[0].'</td><td><input type="text" name="gerrit_servers['. $id .']['.$field[1].']" value="'. $hp->purify($field[2]) .'" /></td></tr>';
         }
+        $html .= '<tr valign="top">
+            <td>Replication SSH Key (SSH key of the user who runs gerrit server)</td>
+            <td><textarea
+                type="checkbox"
+                name="gerrit_servers['. $id .'][replication_key]"
+                cols="30"
+                rows="5">'.$server->getReplicationKey().'</textarea>
+            </td></tr>';
+
         if ($id && ! $this->gerrit_server_factory->isServerUsed($server)) {
             $html .= '<td><label>'. 'Delete?' .'<br /><input type="checkbox" name="gerrit_servers['. $id .'][delete]" value="1" /></label></td>';
+        } else {
+            $html .= '<td>This server is already used by some repositories, cannot delete it.</td>';
         }
         $html .= '</tbody></table>';
         $html .= '</dd>';
         return $html;
     }
 
-    /**
-     * @return array of Git_RemoteServer_GerritServer
-     */
-    private function getGerritServers() {
-        $servers = $this->gerrit_server_factory->getServers();
-        $servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '');
-        return $servers;
+    private function fetchGerritServers() {
+        if (empty($this->servers)) {
+            $this->servers = $this->gerrit_server_factory->getServers();
+        }
+ 
+        $this->servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', '');
     }
 
-    private function updateServers(array $request_gerrit_servers, array $gerrit_servers) {
+    private function updateServers(array $request_gerrit_servers) {
         foreach ($request_gerrit_servers as $id => $settings) {
-            if (empty($gerrit_servers[$id])) {
+            $server = $this->servers[$id];
+
+            if (empty($server)) {
                 continue;
             }
             if (! empty($settings['delete'])) {
-                $this->gerrit_server_factory->delete($gerrit_servers[$id]);
+                $this->gerrit_server_factory->delete($server);
+                unset($this->servers[$id]);
                 continue;
             }
 
-            $host          = isset($settings['host'])          ? $settings['host']          : '';
-            $ssh_port      = isset($settings['ssh_port'])      ? $settings['ssh_port']      : '';
-            $http_port     = isset($settings['http_port'])     ? $settings['http_port']     : '';
-            $login         = isset($settings['login'])         ? $settings['login']         : '';
-            $identity_file = isset($settings['identity_file']) ? $settings['identity_file'] : '';
+            $host                   = isset($settings['host'])              ? $settings['host']             : '';
+            $ssh_port               = isset($settings['ssh_port'])          ? $settings['ssh_port']         : '';
+            $http_port              = isset($settings['http_port'])         ? $settings['http_port']        : '';
+            $login                  = isset($settings['login'])             ? $settings['login']            : '';
+            $identity_file          = isset($settings['identity_file'])     ? $settings['identity_file']    : '';
+            $replication_ssh_key    = isset($settings['replication_key'])   ? $settings['replication_key']  : '';
             if ($host &&
-                $host != $gerrit_servers[$id]->getHost() ||
-                $ssh_port != $gerrit_servers[$id]->getSSHPort() ||
-                $http_port != $gerrit_servers[$id]->getHTTPPort() ||
-                $login != $gerrit_servers[$id]->getLogin() ||
-                $identity_file != $gerrit_servers[$id]->getIdentityFile()
+                $host != $server->getHost() ||
+                $ssh_port != $server->getSSHPort() ||
+                $http_port != $server->getHTTPPort() ||
+                $login != $server->getLogin() ||
+                $identity_file != $server->getIdentityFile() ||
+                $replication_ssh_key != $server->getReplicationKey()
             ) {
-                $gerrit_servers[$id]
+                $server
                     ->setHost($host)
                     ->setSSHPort($ssh_port)
                     ->setHTTPPort($http_port)
                     ->setLogin($login)
-                    ->setIdentityFile($identity_file);
-                $this->gerrit_server_factory->save($gerrit_servers[$id]);
+                    ->setIdentityFile($identity_file)
+                    ->setReplicationKey($replication_ssh_key)  ;
+                $this->gerrit_server_factory->save($server);
+                $this->servers[$server->getId()] = $server;
             }
         }
     }

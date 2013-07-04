@@ -50,7 +50,7 @@ class URLVerification {
     /**
      * Returns the current user
      *
-     * @return User
+     * @return PFUser
      */
     function getCurrentUser() {
         return UserManager::instance()->getCurrentUser();
@@ -270,7 +270,7 @@ class URLVerification {
     /**
      * Test if given url is restricted for user
      *
-     * @param User  $user
+     * @param PFUser  $user
      * @param Url   $url
      * @param Array $request_uri
      * @param Array $script_name

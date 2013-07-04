@@ -38,31 +38,31 @@ function show_users_list ($res, $offset, $limit, $user_name_search="") {
     if ($res['numrows'] > 0) {
         foreach ($result as $usr) {
             switch ($usr['status']) {
-                case User::STATUS_ACTIVE:
+                case PFUser::STATUS_ACTIVE:
                     $status = $Language->getText('admin_userlist','active');
                     $name   = '<strong>'.$usr['user_name'].'</strong>';
                     break;
-                case User::STATUS_RESTRICTED:
+                case PFUser::STATUS_RESTRICTED:
                     $status = $Language->getText('admin_userlist','restricted');
                     $name   = '<em>'.$usr['user_name'].'</em>';
                     break;
-                case User::STATUS_DELETED:
+                case PFUser::STATUS_DELETED:
                     $status = $Language->getText('admin_userlist','deleted');
                     $name   = '<i>'.$usr['user_name'].'</i>';
                     break;
-                case User::STATUS_SUSPENDED:
+                case PFUser::STATUS_SUSPENDED:
                     $status = $Language->getText('admin_userlist','suspended');
                     $name   = $usr['user_name'];
                     break;
-                case User::STATUS_PENDING:
+                case PFUser::STATUS_PENDING:
                     $status = $Language->getText('admin_userlist','pending');
                     $name   = '* '.$usr['user_name'];
                     break;
-                case User::STATUS_VALIDATED:
+                case PFUser::STATUS_VALIDATED:
                     $status = $Language->getText('admin_userlist','validated');
                     $name   = '(v) '.$usr['user_name'];
                     break;
-                case User::STATUS_VALIDATED_RESTRICTED:
+                case PFUser::STATUS_VALIDATED_RESTRICTED:
                     $status = $Language->getText('admin_userlist','validated_restricted');
                     $name   = '(vr) '.$usr['user_name'];
                     break;

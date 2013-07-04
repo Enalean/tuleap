@@ -79,6 +79,7 @@ class JabbeXInstaller {
 						"*		-aps	Secure web admin port (default: 9091).\n".
 						"*		-odd	Openfire's DB driver (default: com.mysql.jdbc.Driver).\n".
 						"*		-cdd	Codendi's DB driver (default: com.mysql.jdbc.Driver).\n".
+						"*		-fdn 	Forge Database Name (default: codendi).\n".
 						"*		-op		Jabber port (default: 5222).\n".
 						"*		-hbot	Helga bot username (default: bot).\n".
 						"*		-hsv	Helga service identifier (default: helga).\n".
@@ -227,6 +228,10 @@ class JabbeXInstaller {
 		print("\nThe password for MUC management:\n");
 		$this->arguments["PWD_MUC"] = $this->read();
 
+		print("\nForge Database Name [codendi]:\n");
+		$this->arguments["FORGE_DB_NAME"] = $this->read();
+		if(empty($this->arguments["FORGE_DB_NAME"])) $this->arguments["FORGE_DB_NAME"] = "codendi";
+
 		print("\nHelga bot's name [bot]:\n");
 		$this->arguments["HELGA_BOT"] = $this->read();
 		if(empty($this->arguments["HELGA_BOT"])) $this->arguments["HELGA_BOT"] = "bot";
@@ -311,7 +316,7 @@ class JabbeXInstaller {
 			$arguments = array("-orp","-uod","-pod","-ucd","-pcd","-odb","-cdb"
 			,"-ouri","-gjx","-ujx","-pjx","-pmuc");  // Requested arguments.
 			$opt_arguments = array("-dir","-etcdir","-ap","-aps","-odd","-cdd"
-			,"-op","-hbot","-hsv","-shrg");  // Optional arguments.
+			,"-op","-hbot","-hsv","-shrg","-fdn");  // Optional arguments.
 
 			$default_val = array(
 						"-dir" => "/opt/openfire",
@@ -326,6 +331,7 @@ class JabbeXInstaller {
 						"-hsv" => "helga",
 						"-shrg" => "1",
 
+						"-fdn" => "codendi",
 						"-rdb" => "root" /* root user for Openfire SGDB*/
 						);
 
@@ -382,7 +388,8 @@ class JabbeXInstaller {
 						"-op" => "OF_PORT",
 						"-hbot" => "HELGA_BOT",
 						"-hsv" => "HELGA_SERV",
-						"-shrg" => "SHRG_ACTIVE"
+						"-shrg" => "SHRG_ACTIVE",
+						"-fdn" => "FORGE_DB_NAME"
 					);
 							
 						foreach($mapping as $key => $value){
@@ -645,7 +652,7 @@ class JabbeXInstaller {
 
         $root = "root";
         $pwd = $this->arguments["ROOT_OF_DB"];
-        $db_name = 'codendi';
+        $db_name = $this->arguments["FORGE_DB_NAME"];
         $openfire_db_host = $this->arguments["OF_DB_HOST"]; 
 
         $jabbex_user_password = $this->arguments["PWD_JABBEX"];

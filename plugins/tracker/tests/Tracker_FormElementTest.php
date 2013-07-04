@@ -73,7 +73,7 @@ class Tracker_FormElementTest extends TuleapTestCase {
         $GLOBALS['Language']->setReturnValue('getText', 'Update', array('plugin_tracker_include_type', 'upd_label', '*'));
 
         $tracker_manager = mock('TrackerManager');
-        $user            = mock('User');
+        $user            = mock('PFUser');
         $request         = mock('HTTPRequest');
 
         ob_start();

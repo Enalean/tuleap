@@ -158,6 +158,10 @@ class Reference {
         $this->description=$my_description;
     }
 
+    public function setLink($link) {
+        $this->link = $link;
+    }
+
    /** 
      * Replace original link with arguments
      * 

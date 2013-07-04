@@ -1,3 +1,9 @@
+Version 0.18 - Tuleap 5.12
+    * Development: SystemEvents can now be processed by application owner instead of root
+
+Version 0.17 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
 Version 0.16 - Tuleap 5.11
     * Fix bugs #2600: FT indexing of TV5 follow-ups fails
 

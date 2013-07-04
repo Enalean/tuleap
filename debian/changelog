@@ -1,0 +1,26 @@
+tuleap (6.2.99.15) unstable; urgency=low
+
+  * Release of tuleap 6.2.99.15
+
+ -- Thomas Cottier (Thomas Cottier Enalean) <thomas.cottier@enalean.com>  Wed, 03 Jul 2013 18:20:34 +0200
+
+
+tuleap (6.1) unstable; urgency=low
+
+  * Release of tuleap 6.1 http://tuleap.com/sites/default/files/release/6.1/release-notes.html
+
+ -- Thomas Cottier (Thomas Cottier Enalean) <thomas.cottier@enalean.com>  Wed, 05 Jun 2013 09:54:10 +0200
+
+
+tuleap (6.0) unstable; urgency=low
+
+  * Release of tuleap 6 with debian integration (alpha)
+
+ -- Thomas Cottier (Thomas Cottier Enalean) <thomas.cottier@enalean.com>  Tue, 07 May 2013 14:00:00 +0200
+
+tuleap (5.12.99.27) unstable; urgency=low
+
+  * Initial release.
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Wed, 17 Apr 2013 07:50:43 +0200
+

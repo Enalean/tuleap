@@ -18,8 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
-require_once('common/plugin/PluginManager.class.php');
+require_once 'pre.php';
 
 $p = $plugin_manager->getPluginByName('git');
 if ($p && $plugin_manager->isPluginAvailable($p) && $request->getCurrentUser()->isSuperUser()) {

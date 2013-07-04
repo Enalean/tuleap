@@ -52,6 +52,11 @@ class Layout extends Response {
      */
     public $imgroot;
 
+    /**
+     * Html purifier
+     */
+    protected $purifier;
+
     //Define all the icons for this theme
     var $icons = array('Summary' => 'ic/anvil24.png',
         'Homepage' => 'ic/home.png',
@@ -121,8 +126,9 @@ class Layout extends Response {
         $this->bgpri[8] = 'priorh';
         $this->bgpri[9] = 'priori';
         
-        $this->root    = $root;
-        $this->imgroot = $root . '/images/';
+        $this->root     = $root;
+        $this->imgroot  = $root . '/images/';
+        $this->purifier = Codendi_HTMLPurifier::instance();
     }
     
     function getChartColors() {
@@ -694,7 +700,11 @@ class Layout extends Response {
             return "#".$r.$g.$b;
         }
     }
-    
+
+    public function isLabFeature() {
+        return false;
+    }
+
     function redirect($url) {
        $is_anon = session_hash() ? false : true;
        $fb = $GLOBALS['feedback'] || count($this->_feedback->logs);
@@ -868,7 +878,7 @@ class Layout extends Response {
     }
 
     /**
-     * @return User
+     * @return PFUser
      */
     protected function getUser() {
         return UserManager::instance()->getCurrentUser();
@@ -889,6 +899,17 @@ class Layout extends Response {
         $this->breadcrumbs[] = $step;
         return $this;
     }
+
+    public function addBreadcrumbs($breadcrumbs) {
+        foreach($breadcrumbs as $b) {
+            $classname = '';
+            if (isset($b['classname'])) {
+                $classname = 'class="breadcrumb-step-'. $b['classname'] .'"';
+            }
+            $this->addBreadcrumb('<a href="'. $b['url'] .'" '. $classname .'>'. $b['title'] .'</a>');
+        }
+    }
+
     function getBreadCrumbs() {
         $html = '';
         if (count($this->breadcrumbs)) {
@@ -1246,14 +1267,8 @@ class Layout extends Response {
      * Display all the stylesheets for the current page
      */
     public function displayStylesheetElements($params) {
+        $this->displayCommonStylesheetElements($params);
         // Stylesheet external files
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/font-awesome.css" />';
-        echo '<!--[if IE 7]><link rel="stylesheet" href="/themes/common/css/font-awesome-ie7.css"><![endif]-->';
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/print.css" media="print" />';
-        $css = $GLOBALS['sys_user_theme'] . $this->getFontSizeName($GLOBALS['sys_user_font_size']) .'.css';
-        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme($css) .'" />';
-        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
         if(isset($params['stylesheet']) && is_array($params['stylesheet'])) {
             foreach($params['stylesheet'] as $css) {
                 print '<link rel="stylesheet" type="text/css" href="'.$css.'" />';
@@ -1276,6 +1291,16 @@ class Layout extends Response {
         $em->processEvent("cssstyle", null);
         echo '
         </style>';
+    }
+    
+    protected function displayCommonStylesheetElements($params) {
+        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/font-awesome.css" />';
+        echo '<!--[if IE 7]><link rel="stylesheet" href="/themes/common/css/font-awesome-ie7.css"><![endif]-->';
+        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/print.css" media="print" />';
+        $css = $GLOBALS['sys_user_theme'] . $this->getFontSizeName($GLOBALS['sys_user_font_size']) .'.css';
+        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme($css) .'" />';
+        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
     }
     
     protected function getFontSizeName($p) {
@@ -1379,9 +1404,11 @@ class Layout extends Response {
 
         // Codendi version number
         $version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
-
+        
+        echo '<footer class="footer">';
         include($Language->getContent('layout/footer'));
-            
+        echo '</footer>';
+        
         if ( Config::get('DEBUG_MODE') && (Config::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')) ) {
             $this->showDebugInfo();
         }
@@ -1646,6 +1673,22 @@ class Layout extends Response {
         }
     }
 
+    /**
+     * This method generates header for pages embbeded in overlay like LiteWindow
+     */
+    public function overlay_header() {
+        echo '<html>
+              <head>
+                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
+        echo $this->displayJavascriptElements();
+        echo $this->displayStylesheetElements(array());
+        echo $this->displaySyndicationElements();
+        echo '    </head>
+                     <body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">
+                       <div class="main_body_row">
+                           <div class="contenttable">';
+    }
+
     function header($params) {
         global $Language;
         
@@ -1751,7 +1794,18 @@ class Layout extends Response {
     function feedback($feedback) {
         return '';
     }
-    
+
+    /**
+     * This method generates footer for pages embbeded in overlay like LiteWindow
+     */
+    public function overlay_footer() {
+        echo '         </div>
+                     </div>
+                 '.$this->displayFooterJavascriptElements().'
+                 </body>
+             </html>';
+    }
+
     function footer($params) {
         if (!isset($params['showfeedback']) || $params['showfeedback']) {
             echo $this->_getFeedback();

@@ -25,7 +25,7 @@ if ($request->exist('Submit')) {
 			.'\',parent=\''.db_escape_string($request->get('form_parent'))
 			.'\',version='.date("Ymd",time()).'01'
 			.',root_parent=\''.$newroot
-			.'\' WHERE trove_cat_id='.$GLOBALS["form_trove_cat_id"]);
+			.'\' WHERE trove_cat_id='.$request->getValidated('form_trove_cat_id', 'uint', 0));
 	} 
 	// update full paths now
 	trove_genfullpaths($newroot,trove_getfullname($newroot),$newroot);
@@ -33,7 +33,7 @@ if ($request->exist('Submit')) {
 	session_redirect("/admin/trove/trove_cat_list.php");
 } 
 
-$res_cat = db_query("SELECT * FROM trove_cat WHERE trove_cat_id=$trove_cat_id");
+$res_cat = db_query("SELECT * FROM trove_cat WHERE trove_cat_id=".$request->getValidated('trove_cat_id', 'uint', 0));
 if (db_numrows($res_cat)<1) {
     exit_error("ERROR",$Language->getText('admin_trove_cat_delete','error_nocat'));
 }
@@ -45,7 +45,7 @@ $HTML->header(array('title'=>$Language->getText('admin_trove_cat_edit','title'))
 <H2><?php echo $Language->getText('admin_trove_cat_edit','header'); ?></H2>
 <form action="trove_cat_edit.php" method="post">
 <input type="hidden" name="form_trove_cat_id" value="<?php
-  print $GLOBALS['trove_cat_id']; ?>">
+  print $row_cat['trove_cat_id']; ?>">
 <p><?php echo $Language->getText('admin_trove_cat_add','short_name'); ?>
 <br><input type="text"  size="25" maxlen="80" name="form_shortname" value="<?php print $row_cat["shortname"]; ?>">
 <?php echo $Language->getText('admin_trove_cat_add','short_name_note'); ?>

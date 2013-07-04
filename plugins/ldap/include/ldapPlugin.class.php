@@ -399,7 +399,7 @@ class LdapPlugin extends Plugin {
      * 
      * @param LDAPResultIterator $lri An LDAP result iterator
      * 
-     * @return User
+     * @return PFUser
      */
     protected function getUserFromLdapIterator($lri) {
         if($lri && count($lri) === 1) {
@@ -913,18 +913,19 @@ class LdapPlugin extends Plugin {
             case 'PLUGIN_LDAP_UPDATE_LOGIN' :
                 include_once dirname(__FILE__).'/system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN.class.php';
                 $params['class'] = 'SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN';
+                $params['dependencies'] = array(
+                    UserManager::instance(),
+                    Backend::instance(Backend::SVN),
+                    ProjectManager::instance(),
+                    new LDAP_ProjectManager()
+                );
                 break;
         }
     }
 
     public function get_ldap_login_name_for_user($params) {
-        $user = $params['user'];
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
-            $ldap_user_manager = $this->_getLdapUserManager();
-            $ldap_result = $ldap_user_manager->getLdapFromUser($user);
-            if($ldap_result !== false) {
-                $params['login'] = strtolower($ldap_result->getLogin());
-            }
+            $params['ldap_user'] = $this->_getLdapUserManager()->getLDAPUserFromUser($params['user']);
         }
     }
 }

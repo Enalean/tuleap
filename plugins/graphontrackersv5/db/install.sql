@@ -75,3 +75,11 @@ CREATE TABLE plugin_graphontrackersv5_scrum_burndown(
 --   duration int(11)
 -- );
 
+DROP TABLE IF EXISTS plugin_graphontrackersv5_cumulative_flow_chart;
+CREATE TABLE plugin_graphontrackersv5_cumulative_flow_chart(
+  id int(11)  NOT NULL PRIMARY KEY ,
+  field_id int(11),
+  start_date int(11),
+  stop_date int(11),
+  scale tinyint(1)
+);

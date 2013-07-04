@@ -188,7 +188,7 @@ class SVN_SOAPServer {
 
     private function getUser($author_id) {
         if (! $author_id) {
-            $no_user_in_particular = new User(array('user_name' => ''));
+            $no_user_in_particular = new PFUser(array('user_name' => ''));
             return $no_user_in_particular;
         } 
         

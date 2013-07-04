@@ -37,6 +37,13 @@ class admsswPlugin extends Plugin {
 		$this->_addHook("content_negociated_projects_list");
 	}
 
+    /**
+     * @see Plugin::getDependencies()
+     */
+    public function getDependencies() {
+        return array('fusionforge_compat');
+    }
+
 
 	/**
 	 * Declares itself as accepting RDF XML on /projects/...

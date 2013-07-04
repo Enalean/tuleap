@@ -12,6 +12,7 @@ require_once('common/valid/Rule.class.php');
 require_once('common/include/URL.class.php');
 require_once('common/include/Codendi_HTMLPurifier.class.php');
 require_once('common/date/DateHelper.class.php');
+require_once('session.php');
 
 // Part about CSV format export
 // The separator for CSV export can differ regarding the Excel version.
@@ -32,6 +33,7 @@ define("FONT_SIZE_LARGE", 3);
 $csv_dateformats = array("month_day_year", "day_month_year");
 
 function util_get_theme_list() {
+    $user = UserManager::instance()->getCurrentUser();
     // Build the theme list from directories in css and css/custom
     //$dir = opendir($GLOBALS['sys_themeroot']);
     $theme_list = array();
@@ -42,8 +44,14 @@ function util_get_theme_list() {
             $dir = opendir($dirname);
             while ($file = readdir($dir)) {
                 if (is_dir("$dirname/$file") && $file != "." && $file != ".." && $file != "CVS" && $file != "custom" && $file != ".svn") {
-                    if (is_file($dirname.DIRECTORY_SEPARATOR.$file.DIRECTORY_SEPARATOR.$file.'_Theme.class.php')) {
-                        $theme_list[] = $file;
+                    $path = $dirname.DIRECTORY_SEPARATOR.$file.DIRECTORY_SEPARATOR.$file.'_Theme.class.php';
+                    if (is_file($path)) {
+                        require_once $path;
+                        $class = $file.'_Theme';
+                        $theme = new $class(($GLOBALS['sys_is_theme_custom'] ? '/custom/' : '/themes/') . $file);
+                        if (! $theme->isLabFeature() || $user->useLabFeatures()) {
+                            $theme_list[] = $file;
+                        }
                     }
                 }
             }
@@ -767,7 +775,7 @@ Function  ShowResultSet($result,$title="Untitled",$linkify=false,$showheaders=tr
 			echo '<TR class="'. html_get_alt_row_color($j+1) .'">';
 			for ($i = 0; $i < $cols; $i++) {
 				if ($linkify && $i == 0) {
-					$link = '<A HREF="'.$_SERVER['PHP_SELF'].'?';
+					$link = '<A HREF="?';
 					$linkend = '</A>';
 					if ($linkify == "bug_cat") {
 						$link .= 'group_id='.$group_id.'&bug_cat_mod=y&bug_cat_id='.db_result($result, $j, 'bug_category_id').'">';

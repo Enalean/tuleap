@@ -34,7 +34,7 @@ class SVN_RepositoryListingTest extends TuleapTestCase {
     }
 
     public function itShowsOnlyTheDirectoryContents() {
-        $user     = mock('User');
+        $user     = mock('PFUser');
         $project  = stub('Project')->getUnixName()->returns('gpig');
         $svn_path = '/my/Project/tags';
         
@@ -53,7 +53,7 @@ class SVN_RepositoryListingTest extends TuleapTestCase {
     }
     
     public function itEnsuresUserCannotAccessPathSheIsNotAllowedToSee() {
-        $user     = mock('User');
+        $user     = mock('PFUser');
         $project  = stub('Project')->getUnixName()->returns('gpig');
         $svn_path = '/my/Project/tags';
         
@@ -92,7 +92,7 @@ class SVN_RepositoryListing_SubversionRepositoryTest extends TuleapTestCase {
     }
 
     public function itExecuteTheCommandOnTheSystem() {
-        $user     = mock('User');
+        $user     = mock('PFUser');
         $project  = stub('Project')->getUnixName()->returns($this->project_name);
         $svn_path = '/tags';
         

@@ -1,3 +1,4 @@
+#!/usr/bin/php
 <?php
 /**
  * Copyright (c) Enalean, 2011. All Rights Reserved.

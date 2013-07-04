@@ -1,0 +1,92 @@
+FUSIONFORGE MEDIAWIKI PLUGIN README
+-----------------------------------
+Olaf Lenz, 2010
+
+The plugin adds support for Mediawiki to FusionForge. When the plugin
+is activated for a project, a Mediawiki instance for the project is
+created, that can be edited by project members.
+
+This file describes how to INSTALL and CUSTOMIZE the plugin, and what
+to do when the Mediawiki instalation is UPGRADEd.
+
+Installation
+------------
+
+If you have installed FusionForge and the plugin via a packaging
+system (RPM or DEB), the plugin should be ready to run and only needs
+to be enabled in the plugin manager.
+If you have manually installed FusionForge, you need to do the
+following to get it working:
+
+1. Download the Mediawiki sources from 
+      http://www.mediawiki.org/wiki/MediaWiki
+   or install Mediawiki via a package manager.
+
+2. Unpack the sources into a directory that is accessible to
+   FusionForge.
+
+3. Put the path to Mediawiki's source directory into the configuration
+   variable "[mediawiki]source_path" by adding the following lines into
+   your FusionForge configuration file (@CONFIG_PATH@/config.ini):
+
+[mediawiki]
+src_path = < Mediawiki source path >
+
+4. Run
+
+> php bin/mw-plugin-init.php
+
+  This will create a number of symbolic links in the FusionForge var
+  directory (/var/lib/fusionforge) required by the plugin. The command
+  has to be run by a user that can write to the FusionForge var
+  directory.
+
+5. Adapt and add the contents of the file etc/httpd.d/61plugin-mediawiki to
+   your apache configuration. To do that, the script "setup" might be
+   helpful. Furthermore, adapt and add the following lines to the
+   apache configuration:
+
+RedirectMatch 301 ^({sys_urlprefix}plugins/mediawiki/wiki/[-a-zA-Z0-9_]*)/*$ $1/index.php
+        AliasMatch ^{sys_urlprefix}plugins/mediawiki/wiki/[-a-zA-Z0-9_]*/api.php {usr_share_gforge}/www/plugins/mediawiki/api.php
+        AliasMatch ^{sys_urlprefix}plugins/mediawiki/wiki/[-a-zA-Z0-9_]*/index.php {usr_share_gforge}/www/plugins/mediawiki/index.php
+        AliasMatch ^{sys_urlprefix}plugins/mediawiki/wiki/([-a-zA-Z0-9_]*)/images/(.*) {var_lib_gforge}/plugins/mediawiki/projects/$1/images/$2
+	AliasMatch ^{sys_urlprefix}plugins/mediawiki/wiki/([-a-zA-Z0-9_]*)/skins/(.*) /usr/share/gforge/www/plugins/mediawiki/skins/$2
+
+6. Add the cronjob in etc/cron.d/mediawiki to the FusionForge
+   crontab. To do that, the script "setup" might be helpful.
+
+7. add on the beginning of the codendi_aliases file :
+Include /usr/share/codendi/plugins/mediawiki/etc/plugin-mediawiki.inc
+
+Customizing the plugin
+----------------------
+
+The Mediawiki plugin knows all configuration variables described in
+etc/config.ini. To customize Mediawiki (e.g. enable uploads), change
+the value of any of the variables in the file
+@CONFIG_PATH@/config.ini.
+
+Furthermore, you can customize all Mediawiki instances within
+FusionForge by creating and/or modifying the file
+  @CONFIG_PATH@/plugins/mediawiki/LocalSettings.php 
+In this file, you can add extensions or change anything that can be
+done in Mediawiki's LocalSettings.php.
+
+To customize the settings of a specific project, you can additionally
+create a file 
+  @DATA_PATH@/plugin/mediawiki/projects/<project>/ProjectSettings.php
+with additional customizations.
+
+
+Upgrading the Mediawiki installation
+------------------------------------
+
+(TODO: not working!)
+When FusionForge was installed from a package manager, this should be
+happening automatically. Otherwise, when the Mediawiki installation is
+upgraded, it is necessary to upgrade all project instances. To do
+that, you can call
+
+	bin/mw-wrapper <project> update.php
+
+

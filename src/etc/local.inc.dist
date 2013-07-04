@@ -76,10 +76,10 @@ $sys_https_host = "%sys_default_domain%";
 //This is used for cookie authentication. If you have distributed servers, 
 //please use a generic domain to allow single sign on.
 //Examples:
-//- you have 1 server (s1.codendi.com) 
-//   => cookie domain is "s1.codendi.com"
-//- you have 2 servers (s1.codendi.com & s2.codendi.com) 
-//   => cookie domain should be "codendi.com" for SSO
+//- you have 1 server (s1.example.com)
+//   => cookie domain is "s1.example.com"
+//- you have 2 servers (s1.example.com & s2.example.com)
+//   => cookie domain should be "example.com" for SSO
 $sys_cookie_domain = "%sys_default_domain%";
  
 // Machine that hosts the mailing lists (This could also be
@@ -99,7 +99,7 @@ $sys_fullname = "%sys_fullname%";
 
 //This is used for cookie authentication. If you have distributed servers, 
 //please use same cookie prefix for a "cluster"
-$sys_cookie_prefix = "CODENDI";
+$sys_cookie_prefix = "TULEAP";
 
 
 //
@@ -115,8 +115,8 @@ $sys_server_id = 0;
 
 // In order to run a test server (without backend cron jobs, CVS, SVN, mailman, vhosts, FRS, etc.)
 // Please update the following variables:
-// $codendi_dir = "mydir/codendi"
-// $sys_custom_dir = "mydir/etc/codendi"
+// $codendi_dir = "mydir/tuleap"
+// $sys_custom_dir = "mydir/etc/tuleap"
 // $sys_data_dir = "mydir/data"
 
 
@@ -176,6 +176,7 @@ $cvs_hook_tmp_dir    = "/var/run/log_accum"; // temporary directory used by CVS 
 $svn_prefix    = "/var/lib/codendi/svnroot";// prefix to add to the subversion root directory
 $svnadmin_cmd  = "/usr/bin/svnadmin";     // SVN Admin binary
 $svn_root_file = "/etc/httpd/conf.d/codendi_svnroot.conf"; // File containing SVN repository definitions for Apache
+$svn_log_path  = 'logs/svn_log'; // Where apache logs files for svn should go to
 
 // FRS paths - do *not* use variables in the following parameters
 // If you change those paths, please run utils/compile_fileforge.sh
@@ -258,7 +259,7 @@ $sys_my_page_survey = 1;
 // Linefeed characters: \r\n for Windows, \n for Linux/Unix
 $sys_lf = "\n";
 
-// Disable sub-domains (like cvs.proj.codendi.xerox.com)
+// Disable sub-domains (like cvs.proj.example.com)
 // Should be disabled if no DNS delegation
 $sys_disable_subdomains = 0;
 

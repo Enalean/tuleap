@@ -19,10 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'GerritServer.class.php';
-require_once 'NotFoundException.class.php';
-require_once 'Dao.class.php';
-require_once GIT_BASE_DIR .'/GitRepository.class.php';
 
 class Git_RemoteServer_GerritServerFactory {
 
@@ -32,16 +28,42 @@ class Git_RemoteServer_GerritServerFactory {
     /** @var GitDao */
     private $git_dao;
 
-    public function __construct(Git_RemoteServer_Dao $dao, GitDao $git_dao) {
+    /** @var Git_SystemEventManager */
+    private $system_event_manager;
+
+    /** @var ProjectManager */
+    private $project_manager;
+
+    /**
+     *
+     * @param Git_RemoteServer_Dao $dao
+     * @param GitDao $git_dao
+     * @param Git_SystemEventManager $system_event_manager
+     * @param ProjectManager $project_manager
+     */
+    public function __construct(Git_RemoteServer_Dao $dao, GitDao $git_dao, Git_SystemEventManager $system_event_manager, ProjectManager $project_manager) {
         $this->dao     = $dao;
         $this->git_dao = $git_dao;
+        $this->system_event_manager = $system_event_manager;
+        $this->project_manager = $project_manager;
     }
 
+    /**
+     *
+     * @param GitRepository $repository
+     * @return Git_RemoteServer_GerritServer
+     */
     public function getServer(GitRepository $repository) {
         $id  = $repository->getRemoteServerId();
         return $this->getServerById($id);
     }
 
+    /**
+     *
+     * @param int $id
+     * @return Git_RemoteServer_GerritServer
+     * @throws Git_RemoteServer_NotFoundException
+     */
     public function getServerById($id) {
         $row = $this->dao->searchById($id)->getRow();
         if ($row) {
@@ -51,7 +73,7 @@ class Git_RemoteServer_GerritServerFactory {
     }
 
     /**
-     * @return array of Git_RemoteServer_GerritServer
+     * @return Git_RemoteServer_GerritServer[]
      */
     public function getServers() {
         $servers = array();
@@ -61,30 +83,94 @@ class Git_RemoteServer_GerritServerFactory {
         return $servers;
     }
 
+    /**
+     * @return Git_RemoteServer_GerritServer[]
+     */
+    public function getServersForProject(Project $project) {
+        $servers = array();
+        foreach ($this->dao->searchAllByProjectId($project->getID()) as $row) {
+            $servers[$row['id']] = $this->instantiateFromRow($row);
+        }
+        foreach ($this->project_manager->getChildProjects($project->getID()) as $child) {
+            // don't use array_merge, it will nuke the keys
+            $servers = $servers + $this->getServersForProject($child);
+        }
+        return $servers;
+    }
+
+    public function getServersForUGroup(UGroup $ugroup) {
+        $servers = array();
+        foreach ($this->dao->searchAllByUGroupId($ugroup->getProjectId(), $ugroup->getId()) as $row) {
+            $servers[$row['id']] = $this->instantiateFromRow($row);
+        }
+        return $servers;
+    }
+
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $server
+     */
     public function save(Git_RemoteServer_GerritServer $server) {
-        $this->dao->save(
+        $id = $this->dao->save(
             $server->getId(),
             $server->getHost(),
             $server->getSSHPort(),
             $server->getHTTPPort(),
             $server->getLogin(),
-            $server->getIdentityFile()
+            $server->getIdentityFile(),
+            $server->getReplicationKey()
         );
+        if ($server->getId() == 0) {
+            $server->setId($id);
+        }
+        $this->system_event_manager->queueGerritReplicationKeyUpdate($server);
     }
 
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $server
+     */
     public function delete(Git_RemoteServer_GerritServer $server) {
         if (! $this->isServerUsed($server)) {
             $this->dao->delete($server->getId());
+            $this->system_event_manager->queueGerritReplicationKeyUpdate($server);
         }
     }
 
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $server
+     * @return bool
+     */
     public function isServerUsed(Git_RemoteServer_GerritServer $server) {
         return $this->git_dao->isRemoteServerUsed($server->getId());
     }
 
-    private function instantiateFromRow(array $row) {
-        return new Git_RemoteServer_GerritServer($row['id'], $row['host'], $row['ssh_port'], $row['http_port'], $row['login'], $row['identity_file']);
+    /**
+     *
+     * @param PFUser $user
+     * @return \Git_RemoteServer_GerritServer[]
+     */
+    public function getRemoteServersForUser(PFUser $user) {
+        return $this->dao->searchAllRemoteServersForUserId($user->getId())
+            ->instanciateWith(array($this, 'instantiateFromRow'));
     }
 
+    /**
+     *
+     * @param array $row
+     * @return \Git_RemoteServer_GerritServer
+     */
+    public function instantiateFromRow(array $row) {
+        return new Git_RemoteServer_GerritServer(
+            $row['id'],
+            $row['host'],
+            $row['ssh_port'],
+            $row['http_port'],
+            $row['login'],
+            $row['identity_file'],
+            $row['ssh_key']
+        );
+    }
 }
 ?>

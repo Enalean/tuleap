@@ -20,7 +20,7 @@
 
 require_once 'common/mail/MailManager.class.php';
 
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UserManager');
 
 class MailManagerTest extends UnitTestCase {
@@ -28,14 +28,14 @@ class MailManagerTest extends UnitTestCase {
     function testMailShouldCreateHtmlMailForUserByDefault() {
         $mm = TestHelper::getPartialMock('MailManager', array('getConfig'));
         
-        $user = new MockUser();
+        $user = mock('PFUser');
         $this->assertIsA($mm->getMailForUser($user), 'Codendi_Mail');
     }
     
     function testMailShouldCreateTextMailWhenUserAsSetPreference() {
         $mm = TestHelper::getPartialMock('MailManager', array('getConfig'));
         
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getPreference', 'text');
         
         $this->assertIsA($mm->getMailForUser($user), 'Mail');
@@ -44,7 +44,7 @@ class MailManagerTest extends UnitTestCase {
     function testMailShouldBeSetToUserAutomatically() {
         $mm = TestHelper::getPartialMock('MailManager', array('getConfig'));
         
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getStatus', 'A');
         $user->setReturnValue('getEmail', 'john.doe@mailserver.com');
         
@@ -56,7 +56,7 @@ class MailManagerTest extends UnitTestCase {
         $mm = TestHelper::getPartialMock('MailManager', array('getConfig'));
         $mm->setReturnValue('getConfig', 'TheName <noreply@thename.com>', array('sys_noreply'));
         
-        $user = new MockUser();
+        $user = mock('PFUser');
         $mail = $mm->getMailForUser($user);
         
         $this->assertEqual($mail->getFrom(), 'noreply@thename.com');
@@ -90,11 +90,11 @@ class MailManagerTest extends UnitTestCase {
     function testGetMailPrefsShouldReturnUsersAccordingToPreferences() {
         $mm = TestHelper::getPartialMock('MailManager', array('getUserManager'));
         
-        $manuel = new MockUser();
+        $manuel = mock('PFUser');
         $manuel->setReturnValue('getPreference', 'html', array('user_tracker_mailformat'));
         $manuel->setReturnValue('getStatus', 'A');
 
-        $nicolas = new MockUser();
+        $nicolas = mock('PFUser');
         $nicolas->setReturnValue('getPreference', 'text', array('user_tracker_mailformat'));
         $nicolas->setReturnValue('getStatus', 'A');
         
@@ -114,11 +114,11 @@ class MailManagerTest extends UnitTestCase {
     function testGetMailPrefsShouldReturnUserWithTextPref() {
         $mm = TestHelper::getPartialMock('MailManager', array('getUserManager'));
         
-        $manuel = new MockUser();
+        $manuel = mock('PFUser');
         $manuel->setReturnValue('getPreference', 'text', array('user_tracker_mailformat'));
         $manuel->setReturnValue('getStatus', 'A');
         
-        $manuel2 = new MockUser();
+        $manuel2 = mock('PFUser');
         $manuel2->setReturnValue('getPreference', 'html', array('user_tracker_mailformat'));
         $manuel2->setReturnValue('getStatus', 'A');
         
@@ -137,11 +137,11 @@ class MailManagerTest extends UnitTestCase {
     function testGetMailPrefsShouldReturnUserWithHtmlPref() {
         $mm = TestHelper::getPartialMock('MailManager', array('getUserManager'));
         
-        $manuel = new MockUser();
+        $manuel = mock('PFUser');
         $manuel->setReturnValue('getPreference', false);
         $manuel->setReturnValue('getStatus', 'A');
         
-        $manuel2 = new MockUser();
+        $manuel2 = mock('PFUser');
         $manuel2->setReturnValue('getPreference', 'html', array('user_tracker_mailformat'));
         $manuel2->setReturnValue('getStatus', 'A');
         
@@ -160,11 +160,11 @@ class MailManagerTest extends UnitTestCase {
     function testGetMailPrefsShouldReturnLastUser() {
         $mm = TestHelper::getPartialMock('MailManager', array('getUserManager'));
         
-        $manuel = new MockUser();
+        $manuel = mock('PFUser');
         $manuel->setReturnValue('getPreference', false);
         $manuel->setReturnValue('getStatus', 'A');
         
-        $manuel2 = new MockUser();
+        $manuel2 = mock('PFUser');
         $manuel2->setReturnValue('getPreference', false);
         $manuel2->setReturnValue('getStatus', 'A');
         
@@ -199,13 +199,13 @@ class MailManagerTest extends UnitTestCase {
     
     function testGetMailPrefsByUsersShouldReturnHTMLByDefault() {
         $mm   = new MailManager();
-        $user = new User(array('id' => 123, 'language_id' => 'en_US'));
+        $user = new PFUser(array('id' => 123, 'language_id' => 'en_US'));
         $this->assertEqual($mm->getMailPreferencesByUser($user), Codendi_Mail_Interface::FORMAT_HTML);
     }
     
     function testGetMailPrefsByUsersShouldReturnTextWhenUserRequestIt() {
         $mm   = new MailManager();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->expectOnce('getPreference', array('user_tracker_mailformat'));
         $user->setReturnValue('getPreference', 'text');
         $this->assertEqual($mm->getMailPreferencesByUser($user), Codendi_Mail_Interface::FORMAT_TEXT);
@@ -213,7 +213,7 @@ class MailManagerTest extends UnitTestCase {
     
     function testGetMailPrefsByUsersShouldReturnHTMLWhenPreferenceReturnsFalse() {
         $mm   = new MailManager();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->expectOnce('getPreference', array('user_tracker_mailformat'));
         $user->setReturnValue('getPreference', false);
         $this->assertEqual($mm->getMailPreferencesByUser($user), Codendi_Mail_Interface::FORMAT_HTML);

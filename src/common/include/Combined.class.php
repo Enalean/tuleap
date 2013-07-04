@@ -33,7 +33,7 @@ class Combined {
             '/scripts/scriptaculous/controls.js',
             '/scripts/scriptaculous/slider.js',
             '/scripts/scriptaculous/sound.js',
-            '/scripts/jquery/jquery-1.7.2.min.js',
+            '/scripts/jquery/jquery-1.9.1.min.js',
             '/scripts/jquery/jquery-ui.min.js',
             '/scripts/jquery/jquery-noconflict.js',
             '/scripts/bootstrap/bootstrap-dropdown.js',

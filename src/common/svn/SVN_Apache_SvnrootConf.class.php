@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once 'common/event/EventManager.class.php';
 require_once 'SVN_Apache_Auth_Factory.class.php';
 
 /**
@@ -24,6 +25,7 @@ require_once 'SVN_Apache_Auth_Factory.class.php';
  * configuration
  */
 class SVN_Apache_SvnrootConf {
+    const CONFIG_SVN_LOG_PATH   = 'svn_log_path';
     const CONFIG_SVN_AUTH_KEY   = 'sys_auth_svn_mod';
     const CONFIG_SVN_AUTH_MYSQL = 'modmysql';
     const CONFIG_SVN_AUTH_PERL  = 'modperl';
@@ -67,26 +69,13 @@ class SVN_Apache_SvnrootConf {
     }
     
     private function getApacheConfHeaders() {
+        $log_file_path = Config::get(self::CONFIG_SVN_LOG_PATH);
         $headers  = '';
         $headers .= "# " . $GLOBALS['sys_name'] . " SVN repositories\n";
         $headers .= "# Custom log file for SVN queries\n";
-        $headers .= 'CustomLog logs/svn_log "%h %l %u %t %U %>s \"%{SVN-ACTION}e\"" env=SVN-ACTION' . "\n\n";
+        $headers .= 'CustomLog '.$log_file_path.' "%h %l %u %t %U %>s \"%{SVN-ACTION}e\"" env=SVN-ACTION' . "\n\n";
         $headers .= implode(PHP_EOL, $this->apacheConfHeaders);
         return $headers;
-    }
-    
-    /**
-     * Return the right Authentication module for SVN/apache
-     * 
-     * @param Array $projects
-     * 
-     * @return SVN_Apache_ModMysql
-     */
-    protected function getApacheAuthMod($projects) {
-        if ($this->getConfig(self::CONFIG_SVN_AUTH_KEY) == self::CONFIG_SVN_AUTH_PERL) {
-            return new SVN_Apache_ModPerl($projects);
-        }
-        return new SVN_Apache_ModMysql($projects);
     }
 }
 

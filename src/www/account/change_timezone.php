@@ -9,19 +9,21 @@
 require_once('pre.php');
 require_once('account.php');
 require_once('timezones.php');
-
+require_once('common/include/CSRFSynchronizerToken.class.php');
 require_once('common/event/EventManager.class.php');
+
 $em =& EventManager::instance();
 $em->processEvent('before_change_timezone', array());
 
 
 $request =& HTTPRequest::instance();
-
+$csrf = new CSRFSynchronizerToken('/account/change_timezone.php');
 if (!user_isloggedin()) {
 	exit_not_logged_in();
 }
 
 if ($request->isPost()) {
+    $csrf->check();
 	if (!$request->existAndNonEmpty('timezone')) {
 		$GLOBALS['Response']->addFeedback('error', $Language->getText('account_change_timezone', 'no_update'));
 	} else if (!is_valid_timezone($request->get('timezone')) ||
@@ -43,7 +45,7 @@ $HTML->header(array('title'=>$Language->getText('account_change_timezone', 'titl
 <P>
 <form action="change_timezone.php" method="post">
 <?php
-
+echo $csrf->fetchHTMLInput();
 echo html_get_timezone_popup ('timezone',user_get_timezone());
 
 ?>

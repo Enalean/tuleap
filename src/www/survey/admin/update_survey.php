@@ -50,7 +50,7 @@ if ($survey_id) {
 <H2><?php echo $Language->getText('survey_admin_update_survey','edit_a_s'); ?></H2><P>
 
 <P>
-<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
+<FORM ACTION="?" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_survey">
 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
 <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">

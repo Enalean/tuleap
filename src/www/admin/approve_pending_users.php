@@ -12,17 +12,28 @@ require_once('proj_email.php');
 require_once('www/admin/admin_utils.php');
 $GLOBALS['HTML']->includeCalendarScripts();
 
+define('ADMIN_APPROVE_PENDING_PAGE_PENDING', 'pending');
+define('ADMIN_APPROVE_PENDING_PAGE_VALIDATED', 'validated');
+
 session_require(array('group'=>'1','admin_flags'=>'A'));
 $hp = Codendi_HTMLPurifier::instance();
 $request =& HTTPRequest:: instance();
 $action_select = '';
 $status= '';
+$users_array = array();
 if ($request->exist('action_select')) {
     $action_select = $request->get('action_select');
 }
 if ($request->exist('status')) {
     $status = $request->get('status');
 }
+if ($request->exist('list_of_users')) {
+    $users_array = array_filter(array_map('intval', explode(",", $request->get('list_of_users'))));
+}
+
+$valid_page = new Valid_WhiteList('page', array(ADMIN_APPROVE_PENDING_PAGE_PENDING, ADMIN_APPROVE_PENDING_PAGE_VALIDATED));
+$page = $request->getValidated('page', $valid_page, '');
+
 $expiry_date = 0;
     if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && !ereg("[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}", $request->get('form_expiry'))) {
         $feedback .= ' '.$Language->getText('admin_approve_pending_users', 'data_not_parsed');
@@ -34,13 +45,9 @@ $expiry_date = 0;
             $expiry_date = $unix_expiry_time; 
             
         }
-      
-        $page = '';
-        if ($request->exist('page')) {
-            $page = $request->get('page');
-        }
         
         if (($action_select=='activate')) {
+            
         
             $shell="";
             if ($status=='restricted') {
@@ -48,12 +55,12 @@ $expiry_date = 0;
                 $shell=",shell='".$GLOBALS['codendi_bin_prefix'] ."/cvssh-restricted'";
             } else $newstatus='A';
         
+            $users_ids = db_ei_implode($users_array);
             // update the user status flag to active
             db_query("UPDATE user SET expiry_date='".$expiry_date."', status='".$newstatus."'".$shell.
                      ", approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
-                 " WHERE user_id IN ($list_of_users)");
+                 " WHERE user_id IN ($users_ids)");
 
-            $users_array = explode(",", $list_of_users);
             $em =& EventManager::instance();
             foreach ($users_array as $user_id) {
                 $em->processEvent('project_admin_activate_user', array('user_id' => $user_id));
@@ -61,7 +68,7 @@ $expiry_date = 0;
         
             // Now send the user verification emails
             $res_user = db_query("SELECT email, confirm_hash FROM user "
-                     . " WHERE user_id IN ($list_of_users)");
+                     . " WHERE user_id IN ($users_ids)");
             
              // Send a notification message to the user when account is activated by the Site Administrator
              $base_url = get_server_url();
@@ -96,11 +103,11 @@ $expiry_date = 0;
             // update the user status flag to active
             db_query("UPDATE user SET expiry_date='".$expiry_date."', status='".$newstatus."'".
                      ", approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
-                     " WHERE user_id IN ($list_of_users)");
+                     " WHERE user_id IN (".implode(',', $users_array).")");
         
             // Now send the user verification emails
             $res_user = db_query("SELECT email, confirm_hash, user_name FROM user "
-                     . " WHERE user_id IN ($list_of_users)");
+                     . " WHERE user_id IN (".implode(',', $users_array).")");
             
             while ($row_user = db_fetch_array($res_user)) {
                 if (!send_new_user_email($row_user['email'],$row_user['confirm_hash'], $row_user['user_name'])) {
@@ -111,8 +118,7 @@ $expiry_date = 0;
             
         } else if ($action_select=='delete') {
             db_query("UPDATE user SET status='D', approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
-                     " WHERE user_id IN ($list_of_users)");
-            $users_array = explode(",", $list_of_users);
+                     " WHERE user_id IN (".implode(',', $users_array).")");
             $em =& EventManager::instance();
             foreach ($users_array as $user_id) {
                 $em->processEvent('project_admin_delete_user', array('user_id' => $user_id));
@@ -124,14 +130,14 @@ $expiry_date = 0;
 // No action - First time in this script 
 // Show the list of pending user waiting for approval
 //
-if($page=='pending'){
+if ($page == ADMIN_APPROVE_PENDING_PAGE_PENDING){
     $res = db_query("SELECT * FROM user WHERE status='P'");
     $msg = $Language->getText('admin_approve_pending_users','no_pending_validated');
     if($GLOBALS['sys_user_approval'] == 0) {
         $res = db_query("SELECT * FROM user WHERE status='P' OR status='V' OR status='W'");
         $msg = $Language->getText('admin_approve_pending_users','no_pending');
     }
-}else if($page=='validated'){
+}else if($page == ADMIN_APPROVE_PENDING_PAGE_VALIDATED){
     $res = db_query("SELECT * FROM user WHERE status='V' OR status='W'");
     $msg = $Language->getText('admin_approve_pending_users','no_validated');
 }
@@ -164,11 +170,11 @@ if (db_numrows($res) < 1) {
             <TABLE WIDTH="70%">
             <TR>
         <?php 
-        if($GLOBALS['sys_user_approval'] == 1 && $page=='pending' && $GLOBALS['sys_allow_restricted_users'] == 0) {
+        if($GLOBALS['sys_user_approval'] == 1 && $page==ADMIN_APPROVE_PENDING_PAGE_PENDING && $GLOBALS['sys_allow_restricted_users'] == 0) {
             
             // Can select Activate/validate
             echo '<TD>
-            <FORM name="pending_user'.$row['user_id'].'" action="'.$PHP_SELF.'?page='.$page.'" method="POST">';
+            <FORM name="pending_user'.$row['user_id'].'" action="?page='.$page.'" method="POST">';
             echo $Language->getText('admin_approve_pending_users', 'expiry_date').'<BR>'; 
             echo $GLOBALS['HTML']->getDatePicker("form_expiry", "form_expiry", "");
             ?>
@@ -192,11 +198,11 @@ if (db_numrows($res) < 1) {
              }
             echo '</TD>';
             
-        } else if($GLOBALS['sys_user_approval'] == 1 && $page=='pending' && $GLOBALS['sys_allow_restricted_users'] == 1) {
+        } else if($GLOBALS['sys_user_approval'] == 1 && $page==ADMIN_APPROVE_PENDING_PAGE_PENDING && $GLOBALS['sys_allow_restricted_users'] == 1) {
              
            // Can select Std/Restricted and Activate/validate
            echo '<TD>
-            <FORM name="pending_user'.$row['user_id'].'" action="'.$PHP_SELF.'?page='.$page.'" method="POST">';
+            <FORM name="pending_user'.$row['user_id'].'" action="?page='.$page.'" method="POST">';
             echo $Language->getText('admin_approve_pending_users', 'expiry_date').'<BR>'; 
             echo $GLOBALS['HTML']->getDatePicker("form_expiry", "form_expiry", "");
             ?>
@@ -229,7 +235,7 @@ if (db_numrows($res) < 1) {
            // We don't take into account the fact that we may have sys_user_approval=0 and sys_allow_restricted_users=1
            // which is not coherent (users may activate their account as standard themselves).
             echo '<TD>
-            <FORM name="pending_user'.$row['user_id'].'" action="'.$PHP_SELF.'?page='.$page.'" method="POST">';
+            <FORM name="pending_user'.$row['user_id'].'" action="?page='.$page.'" method="POST">';
             $exp_date='';
             if($row['expiry_date'] != 0){
                 $exp_date = format_date('Y-m-d',$row['expiry_date']); 
@@ -302,9 +308,9 @@ if (db_numrows($res) < 1) {
             <TR>';
             
             
-        if($GLOBALS['sys_user_approval'] != 1 || $page!='pending'){
+        if($GLOBALS['sys_user_approval'] != 1 || $page!=ADMIN_APPROVE_PENDING_PAGE_PENDING){
             echo '<TD>
-            <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
+            <FORM action="?page='.$page.'" method="POST">
             '.$Language->getText('admin_approve_pending_users','activate').'
             '.$Language->getText('admin_approve_pending_users','all_accounts').' ';
             if($GLOBALS['sys_allow_restricted_users'] ==1) {
@@ -322,10 +328,10 @@ if (db_numrows($res) < 1) {
             </TD>';
         }
 
-    if ($GLOBALS['sys_allow_restricted_users'] == 1 && $page=='pending') {
+    if ($GLOBALS['sys_allow_restricted_users'] == 1 && $page==ADMIN_APPROVE_PENDING_PAGE_PENDING) {
 
         echo '<TD>
-            <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
+            <FORM action="?page='.$page.'" method="POST">
                 <select name="action_select" size="1">
                 <option value="validate" selected>'.$Language->getText('admin_approve_pending_users','validate').'
                 <option value="activate">'.$Language->getText('admin_approve_pending_users','activate').'        
@@ -342,9 +348,9 @@ if (db_numrows($res) < 1) {
             </TD>';        
     }
  
-        if($GLOBALS['sys_user_approval'] == 1 && $page=='pending' && $GLOBALS['sys_allow_restricted_users'] == 0){
+        if($GLOBALS['sys_user_approval'] == 1 && $page==ADMIN_APPROVE_PENDING_PAGE_PENDING && $GLOBALS['sys_allow_restricted_users'] == 0){
             echo '<TD>
-            <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
+            <FORM action="?page='.$page.'" method="POST">
                 <select name="action_select" size="1">
                 <option value="validate" selected>'.$Language->getText('admin_approve_pending_users','validate').'
                 <option value="activate">'.$Language->getText('admin_approve_pending_users','activate').'

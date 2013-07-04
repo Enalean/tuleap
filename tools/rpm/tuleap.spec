@@ -8,6 +8,7 @@
 %define APP_LIBBIN_DIR %{APP_LIB_DIR}/bin
 %define APP_DATA_DIR %{_localstatedir}/lib/%{APP_NAME}
 %define APP_CACHE_DIR %{_localstatedir}/tmp/%{APP_NAME}_cache
+%define APP_PHP_INCLUDE_PATH /usr/share/pear:%{APP_DIR}/src/www/include:%{APP_DIR}/src:.
 
 # Check values in Tuleap's mailman .spec file
 %define mailman_groupid  106
@@ -31,7 +32,7 @@ Release: 1%{?dist}
 BuildArch: noarch
 License: GPL
 Group: Development/Tools
-URL: http://codendi.org
+URL: http://tuleap.net
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Packager: Manuel VACELET <manuel.vacelet@st.com>
@@ -57,11 +58,11 @@ Provides: codendi
 Provides: tuleap
 %if %{php_base} == php
 Requires: jpgraph-%{PKG_NAME}
-Requires: htmlpurifier
+Requires: htmlpurifier >= 4.5
 Requires: %{php_base}-pecl-json
 %else
 Requires: %{php_base}-jpgraph-%{PKG_NAME}
-Requires: %{php_base}-htmlpurifier
+Requires: %{php_base}-htmlpurifier >= 4.5
 %endif
 %endif
 Requires: %{php_base}-pecl-apc
@@ -79,6 +80,8 @@ Requires: mysql
 Requires: libnss-mysql, mod_auth_mysql, nss, nscd
 # Forgeupgrade
 Requires: forgeupgrade >= 1.2
+# MIME libs
+Requires: shared-mime-info
 
 %description
 Tuleap is a web based application that address all the aspects of product development.
@@ -92,7 +95,7 @@ Summary: Initial setup of the platform
 Group: Development/Tools
 Version: @@VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}
+Requires: %{PKG_NAME}, redhat-lsb
 %description install
 This package contains the setup script for the %{PKG_NAME} platform.
 It is meant to be install at the initial setup of the platform and
@@ -388,9 +391,22 @@ Group: Development/Tools
 Version: @@PLUGIN_ADMSSW_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}-plugin-doaprdf
+Requires: %{php_base}-pear-HTTP
 %description plugin-admssw
 This plugin provides ADMS.SW additions to the DOAP RDF documents for projects on
 /projects URLs with content-negociation (application/rdf+xml).
+
+%if %{php_base} == php53
+%package plugin-mediawiki
+Summary: Mediawiki plugin
+Group: Development/Tools
+Version: @@PLUGIN_MEDIAWIKI_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}-plugin-fusionforge_compat
+Requires: php53-mediawiki-tuleap
+%description plugin-mediawiki
+This plugin provides Mediawiki integration in Tuleap.
+%endif
 
 #
 ## Themes
@@ -467,6 +483,15 @@ Requires: %{PKG_NAME}
 %description theme-tuleap
 Tuleap theme
 
+%package theme-experimental
+Summary: Experimental theme for Tuleap
+Group: Development/Tools
+Version: @@THEME_EXPERIMENTAL_VERSION@@
+Release: 1%{?dist}
+Requires: tuleap
+%description theme-experimental
+Experimental theme for Tuleap
+
 # 
 # Package setup
 %prep
@@ -516,8 +541,14 @@ done
 %{__install} src/utils/cvs1/cvssh-restricted $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/svn/commit-email.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/svn/codendi_svn_pre_commit.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/svn/pre-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/svn/post-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/fileforge.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/fileforge
 %{__install} plugins/forumml/bin/mail_2_DB.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+
+# Special custom include script
+%{__install} src/etc/env.inc.php.dist $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/env.inc.php
+%{__perl} -pi -e "s~%include_path%~%{APP_PHP_INCLUDE_PATH}~g" $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/env.inc.php
 
 # Install init.d script
 %{__install} -d $RPM_BUILD_ROOT/etc/rc.d/init.d
@@ -533,6 +564,9 @@ done
 # Core subversion mod_perl
 %{__install} -d $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
 %{__install} src/utils/svn/Tuleap.pm $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
+
+# Apache conf dir
+%{__install} -d $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/
 
 # plugin webdav
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
@@ -550,8 +584,7 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/templates_c
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/cache
 %{__install} plugins/git/bin/gl-membership.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} plugins/git/bin/git-log.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} plugins/git/bin/git-ci.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} plugins/git/bin/git-post-receive.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/bin/gitolite-suexec-wrapper.sh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 
 # Plugin archivedeleteditems
@@ -559,6 +592,16 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 
 # Plugin tracker
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
+
+# Plugin mediawiki
+%if %{php_base} == php53
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/projects
+%{__install} plugins/mediawiki/etc/mediawiki.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
+%else
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki
+%endif
 
 ##
 ## On package install
@@ -656,7 +699,7 @@ else
     %{APP_DIR}/src/utils/php-launcher.sh %{APP_DIR}/src/utils/generate_language_files.php
 
     # Remove existing combined js
-    rm -f %{APP_DIR}/src/www/scripts/combined/codendi-*.js
+    %{__rm} -f %{APP_DIR}/src/www/scripts/combined/codendi-*.js
     %{__chown} %{APP_USER}:%{APP_USER} %{APP_CACHE_DIR}/lang/*.php
 
     # Remove soap cache
@@ -812,7 +855,6 @@ fi
 %{APP_DIR}/src/www/project
 %{APP_DIR}/src/www/projects
 %{APP_DIR}/src/www/reference
-%{APP_DIR}/src/www/robots.txt.php
 %{APP_DIR}/src/www/scripts
 %{APP_DIR}/src/www/search
 %{APP_DIR}/src/www/service
@@ -844,6 +886,7 @@ fi
 %{APP_DIR}/plugins/statistics
 %{APP_DIR}/plugins/tracker_date_reminder
 %{APP_DIR}/plugins/userlog
+
 # Data dir
 %dir %{APP_DATA_DIR}
 %dir %{APP_DATA_DIR}/user
@@ -858,10 +901,14 @@ fi
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/cvssh-restricted
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit-email.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/codendi_svn_pre_commit.php
+%attr(00755,root,root) %{APP_LIBBIN_DIR}/env.inc.php
+%attr(00755,root,root) %{APP_LIBBIN_DIR}/pre-revprop-change.php
+%attr(00755,root,root) %{APP_LIBBIN_DIR}/post-revprop-change.php
 %attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
 %attr(00755,root,root) /etc/rc.d/init.d/%{APP_NAME}
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
 %dir %{APP_CACHE_DIR}
+%dir /etc/httpd/conf.d/tuleap-plugins
 
 #
 # Install
@@ -908,8 +955,7 @@ fi
 %attr(-,root,root) /gitroot
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/smarty
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gl-membership.pl
-%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/git-log.pl
-%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/git-ci.pl
+%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/git-post-receive.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gitolite-suexec-wrapper.sh
 
 %files plugin-docmanwatermark
@@ -979,6 +1025,16 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/foafprofiles
 
+%if %{php_base} == php53
+%files plugin-mediawiki
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/mediawiki
+%dir %{APP_DATA_DIR}/mediawiki
+%dir %{APP_DATA_DIR}/mediawiki/master
+%dir %{APP_DATA_DIR}/mediawiki/projects
+%attr(644,%{APP_USER},%{APP_USER}) /etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
+%endif
+
 #
 # Themes
 #
@@ -1013,6 +1069,10 @@ fi
 %files theme-tuleap
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/src/www/themes/Tuleap
+
+%files theme-experimental
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/Experimental
 
 #%doc
 #%config

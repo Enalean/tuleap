@@ -18,8 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../../../include/constants.php';
-require_once GIT_BASE_DIR.'/Git/Driver/Gerrit/UserFinder.class.php';
+require_once dirname(__FILE__).'/../../../bootstrap.php';
 
 class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
 
@@ -44,172 +43,6 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         $this->repository = mock('GitRepository');
         stub($this->repository)->getId()->returns(5);
         stub($this->repository)->getProjectId()->returns($this->project_id);
-
-    }
-}
-
-class Git_Driver_Gerrit_UserFinder_getUsersForPermissionTest extends Git_Driver_Gerrit_UserFinderTest {
-
-    public function itReturnsNothingWhenNoGroupsHaveTheGivenPermission() {
-        $permission_level = Git::PERM_WPLUS;
-
-
-        stub($this->permissions_manager)->getAuthorizedUgroups($this->repository->getId(), $permission_level)->returns(array());
-        $this->assertArrayEmpty($this->user_finder->getUsersForPermission($permission_level, $this->repository));
-    }
-
-    public function itReturnsNothingWhenNoneOfTheGroupsHaveAnyMembers() {
-        $permission_level = Git::PERM_WPLUS;
-
-
-        $ugroup_id_list = array(99);
-        $group1         = mock('Ugroup');
-
-        stub($this->permissions_manager)->getAuthorizedUgroups($this->repository->getId(), $permission_level)->returns($ugroup_id_list);
-        stub($this->ugroup_manager)->getById(99)->returns($group1);
-        stub($group1)->getUserLdapIds($this->project_id)->returns(array());
-        $this->assertArrayEmpty($this->user_finder->getUsersForPermission($permission_level, $this->repository));
-    }
-
-    public function itReturnsMembersOfAGroup() {
-        $permission_level = Git::PERM_WPLUS;
-
-
-        $ugroup_id_dar = $this->ugroupIdDar(150);
-        $group1        = mock('Ugroup');
-
-        stub($this->permissions_manager)->getAuthorizedUgroups($this->repository->getId(), $permission_level)->once()->returns($ugroup_id_dar);
-        stub($this->ugroup_manager)->getById(150)->returns($group1);
-
-        $the_simpsons = array('Bart', 'Homer');
-        stub($group1)->getUserLdapIds($this->project_id)->returns($the_simpsons);
-
-        $users = $this->user_finder->getUsersForPermission($permission_level, $this->repository);
-        $this->assertEqual($users, $the_simpsons);
-    }
-
-    public function itExcludesUsersThatDoNotHaveALdapId() {
-        $permission_level = Git::PERM_WPLUS;
-
-        $ugroup_id_dar = $this->ugroupIdDar(150);
-        $group1        = mock('Ugroup');
-
-        stub($this->permissions_manager)->getAuthorizedUgroups($this->repository->getId(), $permission_level)->once()->returns($ugroup_id_dar);
-        stub($this->ugroup_manager)->getById(150)->returns($group1);
-
-        $bart_ldap_id  = 'Bart';
-        $homer_ldap_id = null;
-        $the_simpsons  = array($bart_ldap_id, $homer_ldap_id);
-        stub($group1)->getUserLdapIds($this->project_id)->returns($the_simpsons);
-
-        $users = $this->user_finder->getUsersForPermission($permission_level, $this->repository);
-        $this->assertEqual($users, array($bart_ldap_id));
-    }
-
-    public function itReturnsMembersOfAllGroups() {
-        $permission_level = Git::PERM_WPLUS;
-
-
-        $ugroup_id_list     = $this->ugroupIdDar(150, 152);
-        $the_simpsons       = array('Bart', 'Homer');
-        $the_mousqueteers   = array('Athos', 'Aramis');
-        $group1             = stub('Ugroup')->getUserLdapIds($this->project_id)->returns($the_simpsons);
-        $group2             = stub('Ugroup')->getUserLdapIds($this->project_id)->returns($the_mousqueteers);
-
-        stub($this->permissions_manager)->getAuthorizedUgroups($this->repository->getId(), $permission_level)->once()->returns($ugroup_id_list);
-        stub($this->ugroup_manager)->getById(150)->returns($group1);
-        stub($this->ugroup_manager)->getById(152)->returns($group2);
-
-        $users = $this->user_finder->getUsersForPermission($permission_level, $this->repository);
-        $this->assertEqual($users, array_merge($the_mousqueteers, $the_simpsons));
-    }
-
-    public function itExcludesMembersOfRegisteredUsers_ToAvoidFloodingTheGerritConfig() {
-        $permission_level = Git::PERM_WPLUS;
-
-
-        $ugroup_id_list     = $this->ugroupIdDar(150, Ugroup::REGISTERED);
-        $the_simpsons       = array('Bart', 'Homer');
-        $registered_users   = array('Bart', 'Homer',
-                                    'Athos', 'Aramis');
-        $group1             = stub('Ugroup')->getUserLdapIds($this->project_id)->returns($the_simpsons);
-        $group2             = stub('Ugroup')->getUserLdapIds($this->project_id)->returns($registered_users);
-
-        stub($this->permissions_manager)->getAuthorizedUgroups($this->repository->getId(), $permission_level)->once()->returns($ugroup_id_list);
-        stub($this->ugroup_manager)->getById(150)->returns($group1);
-        stub($this->ugroup_manager)->getById(Ugroup::REGISTERED)->returns($group2);
-
-        $users = $this->user_finder->getUsersForPermission($permission_level, $this->repository);
-        $this->assertEqual($users, $the_simpsons);
-    }
-
-    public function itExcludesMembersOfAnonymousUsers_ToAvoidFloodingTheGerritConfig() {
-        $permission_level = Git::PERM_WPLUS;
-
-        $ugroup_id_list     = $this->ugroupIdDar(150, Ugroup::ANONYMOUS);
-        $the_simpsons       = array('Bart', 'Homer');
-        $anonymous_users    = array('Bart', 'Homer',
-                                    'Athos', 'Aramis');
-        $group1             = stub('Ugroup')->getUserLdapIds($this->project_id)->returns($the_simpsons);
-        $group2             = stub('Ugroup')->getUserLdapIds($this->project_id)->returns($anonymous_users);
-
-        stub($this->permissions_manager)->getAuthorizedUgroups($this->repository->getId(), $permission_level)->once()->returns($ugroup_id_list);
-        stub($this->ugroup_manager)->getById(150)->returns($group1);
-        stub($this->ugroup_manager)->getById(Ugroup::ANONYMOUS)->returns($group2);
-
-        $users = $this->user_finder->getUsersForPermission($permission_level, $this->repository);
-        $this->assertEqual($users, $the_simpsons);
-    }
-
-    public function itReturnsAUserOnlyOnceEvenIfHeExistInSeveralGroups() {
-        $permission_level = Git::PERM_WPLUS;
-
-
-        $ugroup_id_list     = $this->ugroupIdDar(150, 152);
-        $superman           = array('ClarkKent');
-        $comics_characters  = array('ClarkKent',
-                                    'PeterParker');
-        $group1             = stub('Ugroup')->getUserLdapIds($this->project_id)->returns($superman);
-        $group2             = stub('Ugroup')->getUserLdapIds($this->project_id)->returns($comics_characters);
-
-        stub($this->permissions_manager)->getAuthorizedUgroups($this->repository->getId(), $permission_level)->once()->returns($ugroup_id_list);
-        stub($this->ugroup_manager)->getById(150)->returns($group1);
-        stub($this->ugroup_manager)->getById(152)->returns($group2);
-
-        $users = $this->user_finder->getUsersForPermission($permission_level, $this->repository);
-        $this->assertEqual($users, $comics_characters);
-    }
-
-    public function itDoesNotFailIfTheUGroupDoesNotExist() {
-        $permission_level = Git::PERM_WPLUS;
-
-
-        $ugroup_id_list = $this->ugroupIdDar(99);
-
-        stub($this->permissions_manager)->getAuthorizedUgroups($this->repository->getId(), $permission_level)->returns($ugroup_id_list);
-        stub($this->ugroup_manager)->getById(99)->returns(null);
-        $this->assertArrayEmpty($this->user_finder->getUsersForPermission($permission_level, $this->repository));
-    }
-
-    public function itReturnsTheProjectAdministratorsWhenSpecialAdminPermission() {
-        $permission_level = Git::SPECIAL_PERM_ADMIN;
-
-        $superman           = array('ClarkKent');
-        $group1             = stub('Ugroup')->getUserLdapIds($this->project_id)->returns($superman);
-
-        stub($this->ugroup_manager)->getById()->returns($group1);
-        $users = $this->user_finder->getUsersForPermission($permission_level, $this->repository);
-        $this->assertEqual($users, $superman);
-    }
-
-    private function ugroupIdDar() {
-        $ugroup_id_list = func_get_args();
-        $result = array();
-        foreach ($ugroup_id_list as $id) {
-            $result[] = array('ugroup_id' => $id);
-        }
-        return TestHelper::argListToDar($result);
-
     }
 }
 
@@ -246,4 +79,63 @@ class Git_Driver_Gerrit_UserFinder_areRegisteredUsersAllowedToTest extends Git_D
         $this->assertTrue($allowed);
     }
 }
+
+class Git_Driver_Gerrit_UserFinder_getUGroupsTest extends TuleapTestCase {
+
+    private $permissions_manager;
+    private $ugroup_manager;
+    private $user_finder;
+
+    public function setUp() {
+        parent::setUp();
+        $this->permissions_manager = mock('PermissionsManager');
+        $this->ugroup_manager      = mock('UGroupManager');
+        $this->user_finder         = new Git_Driver_Gerrit_UserFinder($this->permissions_manager, $this->ugroup_manager);
+
+    }
+
+    public function itAsksPermissionsToPermissionsManager() {
+        $repository_id   = 12;
+        $permission_type = GIT::PERM_READ;
+
+        stub($this->permissions_manager)->getAuthorizedUgroups()->returnsEmptyDar();
+        expect($this->permissions_manager)->getAuthorizedUgroups($repository_id, $permission_type, false)->once();
+
+        $this->user_finder->getUgroups($repository_id, $permission_type);
+    }
+
+    public function itReturnsUGroupIdsFromPermissionsManager() {
+        $ugroup_id_120 = 120;
+        $ugroup_id_115 = 115;
+        stub($this->permissions_manager)->getAuthorizedUgroups()->returnsDar(array('ugroup_id' => $ugroup_id_115), array('ugroup_id' => $ugroup_id_120));
+
+        $ugroups = $this->user_finder->getUgroups('whatever', 'whatever');
+        $this->assertEqual(
+            $ugroups,
+            array(
+                $ugroup_id_115,
+                $ugroup_id_120,
+            )
+        );
+    }
+
+    public function itAlwaysReturnsTheProjectAdminGroupWhenGitAdministratorsAreRequested() {
+        $project_admin_group_id = UGroup::PROJECT_ADMIN;
+
+        $expected_ugroups = array($project_admin_group_id);
+        $ugroups          = $this->user_finder->getUgroups('whatever', Git::SPECIAL_PERM_ADMIN);
+
+        $this->assertEqual($ugroups, $expected_ugroups);
+    }
+    
+    public function itDoesntJoinWithUGroupTableWhenItFetchesGroupPermissionsInOrderToReturnSomethingWhenWeAreDeletingTheGroup() {
+        stub($this->permissions_manager)->getAuthorizedUgroups()->returnsEmptyDar();
+
+        expect($this->permissions_manager)->getAuthorizedUgroups('*', '*', false)->once();
+
+        $this->user_finder->getUgroups('whatever', 'whatever');
+    }
+}
+
+
 ?>

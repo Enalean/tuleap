@@ -460,6 +460,7 @@ function  survey_utils_show_comments($result) {
     $title_arr[]=$Language->getText('survey_s_utils','occ');
     
     $sum = 0;
+    $out = '';
     for($j=0; $j<$rows; $j++)  {
 
 	$count = db_result($result,$j,'count');
