@@ -44,14 +44,30 @@ class Cardwall_Column {
     public $fgcolor;
 
     /**
+     * @var Boolean
+     */
+    private $autostack;
+
+    /**
      * @param int    $id
      * @param string $label
      */
     public function __construct($id, $label, $bgcolor, $fgcolor) {
-        $this->id      = $id;
-        $this->label   = $label;
-        $this->bgcolor = $bgcolor;
-        $this->fgcolor = $fgcolor;
+        $this->id        = $id;
+        $this->label     = $label;
+        $this->bgcolor   = $bgcolor;
+        $this->fgcolor   = $fgcolor;
+        $this->autostack = true;
+    }
+
+    public function autostack() {
+        if ($this->autostack) {
+            return ' checked="checked"';
+        }
+    }
+
+    public function autostack_preference() {
+        return '';
     }
 
     /**

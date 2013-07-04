@@ -19,7 +19,16 @@
                         <th>{{swimline_title}}</th>
                     {{/has_swimline_header}}
                     {{#columns}}
-                        <th style="background-color: {{bgcolor}}; color: {{fgcolor}}">{{label}}</th>
+                        <th class="cardwall-column-header" style="background-color: {{bgcolor}}; color: {{fgcolor}}">
+                            {{label}}
+                            <div class="cardwall-column-header-controls">
+                                <input type="checkbox"
+                                       value="{{autostack_preference}}"
+                                       {{autostack}}
+                                       title="Auto stack the cards in this column" {{! todo: i18n }}
+                                       class="cardwall-auto-stack-toggle"/>
+                            </div>
+                        </th>
                     {{/columns}}
                 </tr>
             </thead>
@@ -46,6 +55,10 @@
                                     {{/cardincell_presenters}}
                                 </ul>
                                 &nbsp;
+                                <div class="cardwall-cell-controls">
+                                    <i class="cardwall-cell-controls-stack icon-collapse-alt" title="Stack cards"></i>
+                                    <i class="cardwall-cell-controls-stack icon-expand-alt" title="Expand cards"></i>
+                                </div>
                             </td>
                         {{/cells}}
                     </tr>

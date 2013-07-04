@@ -205,5 +205,37 @@ document.observe('dom:loaded', function () {
                 }
             }
         })();
+
+        (function stackCards() {
+            var stacked_classname = 'cardwall-cell-stacked';
+
+            var columns_to_stack_index = [];
+            $$('.cardwall_board th').each(function (th) {
+                var toggle_input    = th.down('.cardwall-auto-stack-toggle'),
+                    cell_index      = th.cellIndex,
+                    cells_in_column = '.cardwall > tr > td:nth-child('+ (cell_index+1) +')';
+
+                if (! toggle_input) {
+                    return;
+                }
+
+                toggle_input.observe('click', function (evt) {
+                    var toggle = toggle_input.checked ? 'addClassName' : 'removeClassName';
+                    $$(cells_in_column).invoke(toggle, stacked_classname);
+                });
+
+                if (toggle_input.checked) {
+                    $$(cells_in_column).invoke('addClassName', stacked_classname);
+                }
+            });
+
+            $$('.cardwall-cell-controls-stack').each(function (icon_resize) {
+                var td = icon_resize.up('td');
+
+                icon_resize.observe('click', function (evt) {
+                    td.toggleClassName(stacked_classname)
+                })
+            })
+        })();
     });
 });
