@@ -115,6 +115,10 @@ class Cardwall_Pane extends AgileDashboard_Pane {
                                 new Cardwall_FieldProviders_SemanticStatusFieldRetriever());
 
         $display_preferences = $this->getDisplayPreferences();
+        $column_preferences  = new Cardwall_UserPreferences_Autostack_AutostackDashboard($this->user, $this->config->getTracker());
+        foreach ($columns as $column) {
+            $column_preferences->setColumnPreference($column);
+        }
 
         $board               = $board_factory->getBoard($field_retriever, $columns, $planned_artifacts, $this->config, $this->user, $display_preferences);
         $backlog_title       = $this->milestone->getPlanning()->getBacklogTracker()->getName();

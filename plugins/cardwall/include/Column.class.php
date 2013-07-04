@@ -46,7 +46,12 @@ class Cardwall_Column {
     /**
      * @var Boolean
      */
-    private $autostack;
+    private $autostack = true;
+
+    /**
+     * @var String
+     */
+    private $autostack_preference = '';
 
     /**
      * @param int    $id
@@ -57,7 +62,11 @@ class Cardwall_Column {
         $this->label     = $label;
         $this->bgcolor   = $bgcolor;
         $this->fgcolor   = $fgcolor;
-        $this->autostack = true;
+    }
+
+    public function setAutostack($value) {
+        $this->autostack = $value;
+        return $this;
     }
 
     public function autostack() {
@@ -66,8 +75,13 @@ class Cardwall_Column {
         }
     }
 
+    public function setAutostackPreference($name) {
+        $this->autostack_preference = $name;
+        return $this;
+    }
+
     public function autostack_preference() {
-        return '';
+        return $this->autostack_preference;
     }
 
     /**

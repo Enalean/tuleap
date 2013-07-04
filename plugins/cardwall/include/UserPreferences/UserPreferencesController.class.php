@@ -21,24 +21,19 @@
 
 require_once 'common/mvc2/PluginController.class.php';
 
-class Cardwall_DisplayPreferencesInAgileDashboardController extends MVC2_PluginController {
+class Cardwall_UserPreferences_UserPreferencesController extends MVC2_PluginController {
 
     public function __construct($request) {
         parent::__construct('agiledashboard', $request);
     }
 
     public function toggleUserDisplay() {
-
-        $tracker_id = $this->request->get('tracker_id');
-        $pref_name  = Cardwall_DisplayPreferences::ASSIGNED_TO_USERNAME_PREFERENCE_NAME.$tracker_id;
-        $user       = $this->getCurrentUser();
-        $current_preference = $user->getPreference($pref_name);
-
-        if (! $current_preference) {
-            $user->setPreference($pref_name, Cardwall_DisplayPreferences::DISPLAY_AVATARS);
-        } else {
-            $this->switchPreference($user, $current_preference, $pref_name);
-        }
+        $this->togglePreference(
+            $this->getCurrentUser(),
+            Cardwall_DisplayPreferences::ASSIGNED_TO_USERNAME_PREFERENCE_NAME.$this->request->get('tracker_id'),
+            Cardwall_DisplayPreferences::DISPLAY_AVATARS,
+            Cardwall_DisplayPreferences::DISPLAY_USERNAMES
+        );
 
         $this->redirect(array(
             'group_id'    => $this->request->getValidated('group_id', 'int'),
@@ -49,13 +44,20 @@ class Cardwall_DisplayPreferencesInAgileDashboardController extends MVC2_PluginC
         ));
     }
 
-    private function switchPreference($user, $current_preference, $pref_name) {
-        $pref_value = Cardwall_DisplayPreferences::DISPLAY_AVATARS;
-        if ($current_preference == $pref_value) {
-            $pref_value = Cardwall_DisplayPreferences::DISPLAY_USERNAMES;
-        }
+    public function toggleAutostack() {
+        $this->togglePreference(
+            $this->getCurrentUser(),
+            $this->request->get('name'),
+            Cardwall_UserPreferences_UserPreferencesAutostack::DONT_STACK,
+            Cardwall_UserPreferences_UserPreferencesAutostack::STACK
+        );
+    }
 
-        $user->setPreference($pref_name, $pref_value);
+    private function togglePreference($user, $pref_name, $default_value, $alternate_value) {
+        $current_preference = $user->getPreference($pref_name);
+
+        $user->setPreference($pref_name, $current_preference == $default_value ? $alternate_value : $default_value);
+
     }
 }
 
