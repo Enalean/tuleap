@@ -32,7 +32,7 @@ class Cardwall_CreateCardPresenterCallback implements TreeNodeCallback {
      */
     private $user;
 
-    public function __construct($card_fields, PFUser $user, Cardwall_DisplayPreferences $display_preferences) {
+    public function __construct($card_fields, PFUser $user, Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences) {
          $this->card_fields         = $card_fields;
          $this->user                = $user;
          $this->display_preferences = $display_preferences;

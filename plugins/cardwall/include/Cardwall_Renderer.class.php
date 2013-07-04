@@ -144,7 +144,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             foreach ($columns as $column) {
                 $column_preferences->setColumnPreference($column);
             }
-            $display_preferences = new Cardwall_DisplayPreferences(Cardwall_DisplayPreferences::DISPLAY_AVATARS);
+            $display_preferences = new Cardwall_UserPreferences_UserPreferencesDisplayUser(Cardwall_UserPreferences_UserPreferencesDisplayUser::DISPLAY_AVATARS);
             $board               = $board_factory->getBoard($field_retriever, $columns, $forest_of_artifacts, $this->config, $user, $display_preferences);
         }
 

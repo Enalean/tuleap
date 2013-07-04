@@ -32,7 +32,7 @@ class Cardwall_BoardFactory {
                              TreeNode                                             $forests_of_artifacts, 
                              Cardwall_OnTop_Config                                $config,
                              PFUser                                               $user,
-                             Cardwall_DisplayPreferences                          $display_preferences) {
+                             Cardwall_UserPreferences_UserPreferencesDisplayUser                          $display_preferences) {
         $acc_field_provider = new Cardwall_FieldsExtractor($field_retriever);
         $status_fields      = $acc_field_provider->extractAndIndexFieldsOf($forests_of_artifacts);
         
@@ -44,7 +44,7 @@ class Cardwall_BoardFactory {
         
     }
 
-    private function transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection, PFUser $user, Cardwall_DisplayPreferences $display_preferences) {
+    private function transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection, PFUser $user, Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences) {
         
         $card_presenter_mapper      = new TreeNodeMapper(new Cardwall_CreateCardPresenterCallback(new Tracker_CardFields(), $user, $display_preferences));
         $forests_of_card_presenters = $card_presenter_mapper->map($forests_of_artifacts);

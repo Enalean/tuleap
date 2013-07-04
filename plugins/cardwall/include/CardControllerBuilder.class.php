@@ -50,7 +50,7 @@ class Cardwall_CardControllerBuilder {
             $request,
             $card_artifact,
             new Tracker_CardFields(),
-            new Cardwall_DisplayPreferences(Cardwall_DisplayPreferences::DISPLAY_AVATARS),
+            new Cardwall_UserPreferences_UserPreferencesDisplayUser(Cardwall_UserPreferences_UserPreferencesDisplayUser::DISPLAY_AVATARS),
             $config,
             $field_retriever,
             $this->getCardInCellPresenterFactory($config, $card_artifact, $field_retriever, $columns),
