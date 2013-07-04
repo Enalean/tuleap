@@ -223,9 +223,10 @@
           box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
 }
 
-.cardwall-column-header,
-.cardwall-cell {
+.cardwall-column-header-container,
+.cardwall-cell-container {
     position: relative;
+    padding: 10px;
 }
 
 .cardwall-cell-stacked {
@@ -233,32 +234,30 @@
     padding-bottom: 1em;
 }
 
-.cardwall-cell-stacked > ul {
+.cardwall-cell-stacked > .cardwall-cell-container > ul {
     position: relative;
 }
 
-.cardwall-cell-stacked > ul > .cardwall_board_postit {
-    position: absolute !important;
+.cardwall-cell-stacked > .cardwall-cell-container > ul > .cardwall_board_postit {
+    position: absolute !important; /* !important as we want to override inline style (drag 'n drop) */
     width: 100%;
     top: 10px;
 }
 
-.cardwall-cell-stacked > ul > .cardwall_board_postit:nth-child(1) {
+.cardwall-cell-stacked > .cardwall-cell-container > ul > .cardwall_board_postit:nth-child(1) {
     top: 0px;
-    transform:rotate(-0.5deg);
 }
 
-.cardwall-cell-stacked > ul > .cardwall_board_postit:nth-child(2) {
+.cardwall-cell-stacked > .cardwall-cell-container > ul > .cardwall_board_postit:nth-child(2) {
     top: 5px;
-    transform:rotate(0.5deg);
 }
 
-.cardwall-cell > .cardwall-cell-controls > .icon-collapse-alt,
-.cardwall-cell.cardwall-cell-stacked > .cardwall-cell-controls > .icon-expand-alt {
+.cardwall-cell > .cardwall-cell-container > .cardwall-cell-controls > .icon-collapse-alt,
+.cardwall-cell.cardwall-cell-stacked > .cardwall-cell-container > .cardwall-cell-controls > .icon-expand-alt {
     display: inline;
 }
-.cardwall-cell.cardwall-cell-stacked > .cardwall-cell-controls > .icon-collapse-alt,
-.cardwall-cell > .cardwall-cell-controls > .icon-expand-alt {
+.cardwall-cell.cardwall-cell-stacked > .cardwall-cell-container > .cardwall-cell-controls > .icon-collapse-alt,
+.cardwall-cell > .cardwall-cell-container > .cardwall-cell-controls > .icon-expand-alt {
     display: none;
 }
 
