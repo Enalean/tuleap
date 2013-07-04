@@ -200,6 +200,8 @@ class cardwallPlugin extends Plugin {
 
     public function javascript($params) {
         include $GLOBALS['Language']->getContent('script_locale', null, 'cardwall', '.js');
+        echo "tuleap.cardwall = tuleap.cardwall || { };".PHP_EOL;
+        echo "tuleap.cardwall.base_url = '". CARDWALL_BASE_URL ."/';".PHP_EOL;
         echo PHP_EOL;
     }
 

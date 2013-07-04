@@ -222,6 +222,15 @@ document.observe('dom:loaded', function () {
                 toggle_input.observe('click', function (evt) {
                     var toggle = toggle_input.checked ? 'addClassName' : 'removeClassName';
                     $$(cells_in_column).invoke(toggle, stacked_classname);
+
+                    // Persist toggle on backend
+                    new Ajax.Request(tuleap.cardwall.base_url, {
+                        method : 'POST',
+                        parameters : {
+                            action: 'toggle_user_autostack_column',
+                            name: toggle_input.value
+                        }
+                    });
                 });
 
                 if (toggle_input.checked) {
