@@ -38,3 +38,6 @@ plugin_cardwall	on_top_semantic_freestyle_column_definition_speech_no_column	<p>
 plugin_cardwall	on_top_semantic_freestyle_column_definition_speech_with_columns	<p>Note : vous pouvez supprimer une colonne en supprimant son nom (effacer le champ text correspondant).</p>
 plugin_cardwall	access_cardwall	Accéder au cardwall
 plugin_cardwall	search_cardwall_placeholder	Recherchez : personnes, titre, …
+plugin_cardwall	column_autostack	Empiler automatiquement les cartes dans cette colonne
+plugin_cardwall	cell_stack	Empiler les cartes
+plugin_cardwall	cell_unstack	Dépiler les cartes

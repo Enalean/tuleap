@@ -56,5 +56,13 @@ class Cardwall_Swimline {
     public function getCardPresenter() {
         return $this->card_presenter;
     }
+
+    public function stack_cards_title() {
+        return $GLOBALS['Language']->getText('plugin_cardwall', 'cell_stack');
+    }
+
+    public function expand_cards_title() {
+        return $GLOBALS['Language']->getText('plugin_cardwall', 'cell_unstack');
+    }
 }
 ?>

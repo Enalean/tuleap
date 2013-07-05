@@ -84,6 +84,10 @@ class Cardwall_Column {
         return $this->autostack_preference;
     }
 
+    public function autostack_title() {
+        return $GLOBALS['Language']->getText('plugin_cardwall', 'column_autostack');
+    }
+
     /**
      * Return true if the given status can belong to current column
      *
