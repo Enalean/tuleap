@@ -49,9 +49,18 @@ class AgileDashboard_PaneInfoFactory {
 
     /** @return AgileDashboard_PaneInfo[] */
     public function getListOfPaneInfo(Planning_Milestone $milestone) {
+        return array_merge(
+            array(
+                $this->getLegacyPaneInfo($milestone)
+            ),
+            $this->getListOfPaneInfoWithoutLegacyOne($milestone)
+        );
+    }
+
+    /** @return AgileDashboard_PaneInfo[] */
+    public function getListOfPaneInfoWithoutLegacyOne(Planning_Milestone $milestone) {
         $panes_info = array();
 
-        $panes_info[] = $this->getLegacyPaneInfo($milestone);
         if ($this->user->useLabFeatures()) {
             $panes_info[] = $this->getContentPaneInfo($milestone);
             $panes_info[] = $this->getPlanningPaneInfo($milestone);
