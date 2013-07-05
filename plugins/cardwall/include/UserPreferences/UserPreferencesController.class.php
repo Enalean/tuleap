@@ -28,8 +28,7 @@ class Cardwall_UserPreferences_UserPreferencesController extends MVC2_PluginCont
     }
 
     public function toggleUserDisplay() {
-        $this->togglePreference(
-            $this->getCurrentUser(),
+        $this->getCurrentUser()->togglePreference(
             Cardwall_UserPreferences_UserPreferencesDisplayUser::ASSIGNED_TO_USERNAME_PREFERENCE_NAME.$this->request->get('tracker_id'),
             Cardwall_UserPreferences_UserPreferencesDisplayUser::DISPLAY_AVATARS,
             Cardwall_UserPreferences_UserPreferencesDisplayUser::DISPLAY_USERNAMES
@@ -45,19 +44,11 @@ class Cardwall_UserPreferences_UserPreferencesController extends MVC2_PluginCont
     }
 
     public function toggleAutostack() {
-        $this->togglePreference(
-            $this->getCurrentUser(),
+        $this->getCurrentUser()->togglePreference(
             $this->request->get('name'),
-            Cardwall_UserPreferences_UserPreferencesAutostack::DONT_STACK,
-            Cardwall_UserPreferences_UserPreferencesAutostack::STACK
+            Cardwall_UserPreferences_UserPreferencesAutostack::STACK,
+            Cardwall_UserPreferences_UserPreferencesAutostack::DONT_STACK
         );
-    }
-
-    private function togglePreference($user, $pref_name, $default_value, $alternate_value) {
-        $current_preference = $user->getPreference($pref_name);
-
-        $user->setPreference($pref_name, $current_preference == $default_value ? $alternate_value : $default_value);
-
     }
 }
 

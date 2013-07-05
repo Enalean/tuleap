@@ -447,4 +447,59 @@ class UserTest extends TuleapTestCase {
         $this->assertEqual("User #123", aUser()->withId(123)->build()->__toString());
     }
 }
+
+class UserTogglePreference_Test extends TuleapTestCase {
+
+    private $user_id         = 101;
+    private $preference_name = 'cardwall';
+    private $default_value   = 'display_avatars';
+    private $alternate_value = 'display_usernames';
+
+    public function setUp() {
+        $this->user = partial_mock(
+            'PFUser',
+            array('getPreferencesDao'),
+            array(
+                array(
+                    'user_id'     => $this->user_id,
+                    'language_id' => 1
+                )
+            )
+        );
+        $this->dao = mock('UserPreferencesDao');
+        stub($this->user)->getPreferencesDao()->returns($this->dao);
+    }
+
+    public function itSetTheAlternateValueWhenPreferenceIsTheDefaultOne() {
+        stub($this->dao)->search($this->user_id, $this->preference_name)->returnsDar(array(
+            'user_id'          => $this->user_id,
+            'preference_name'  => $this->preference_name,
+            'preference_value' => $this->default_value
+        ));
+
+        expect($this->dao)->set($this->user_id, $this->preference_name, $this->alternate_value)->once();
+
+        $this->user->togglePreference($this->preference_name, $this->default_value, $this->alternate_value);
+    }
+
+    public function itSetTheDefaultValueWhenPreferenceIsTheAlternateOne() {
+        stub($this->dao)->search($this->user_id, $this->preference_name)->returnsDar(array(
+            'user_id'          => $this->user_id,
+            'preference_name'  => $this->preference_name,
+            'preference_value' => $this->alternate_value
+        ));
+
+        expect($this->dao)->set($this->user_id, $this->preference_name, $this->default_value)->once();
+
+        $this->user->togglePreference($this->preference_name, $this->default_value, $this->alternate_value);
+    }
+
+    public function itSetTheDefaultValueWhenNoPreference() {
+        stub($this->dao)->search($this->user_id, $this->preference_name)->returnsEmptyDar();
+
+        expect($this->dao)->set($this->user_id, $this->preference_name, $this->default_value)->once();
+
+        $this->user->togglePreference($this->preference_name, $this->default_value, $this->alternate_value);
+    }
+}
 ?>
