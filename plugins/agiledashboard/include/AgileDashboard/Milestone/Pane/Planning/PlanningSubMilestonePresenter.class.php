@@ -31,8 +31,9 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
     private $redirect_to_self      = '';
     private $edit_submilestone_url = '';
     private $milestone_capacity;
+    private $quick_link_collection;
 
-    public function __construct(Planning_Milestone $milestone, $redirect_to_self, PFUser $user) {
+    public function __construct(Planning_Milestone $milestone, $redirect_to_self, PFUser $user, array $quick_link_collection) {
         $this->id                    = $milestone->getArtifactId();
         $this->planning_id           = $milestone->getPlanningId();
         $this->milestone_title       = $milestone->getArtifact()->getTitle();
@@ -42,10 +43,15 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
         $this->edit_submilestone_url = $milestone->getArtifact()->getUri();
         $this->redirect_to_self      = $redirect_to_self;
         $this->milestone_capacity    = $milestone->getCapacity($user);
+        $this->quick_link_collection = $quick_link_collection;
     }
 
     public function id() {
         return $this->id;
+    }
+
+    public function getQuickLinkIconList() {
+        return $this->quick_link_collection;
     }
 
     public function edit_submilestone_url() {

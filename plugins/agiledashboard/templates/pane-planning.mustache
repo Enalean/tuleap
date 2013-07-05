@@ -72,7 +72,12 @@
                     <tr>
                         <td colspan=2>
                             <div data-loaded="false" class="submilestone-data" data-submilestone-id="{{id}}" data-planning-id="{{planning_id}}">
-                                <a href="{{edit_submilestone_url}}" title="edit" alt="edit"><i class="icon-edit"> edit</i></a>
+                                <div class="submilestone-data-controls">
+                                    {{#getQuickLinkIconList}} {{! do not repeat ourselves }}
+                                        <a href="{{uri}}"><img title="{{title}}" src="{{icon}}"></a>
+                                    {{/getQuickLinkIconList}}
+                                    <a href="{{edit_submilestone_url}}" title="edit" alt="edit"><i class="icon-edit"> edit</i></a>
+                                </div>
                                 <p>
                                     {{points}} <span class="submilestone-effort"></span>
                                     {{capacity}} <span class="submilestone-capacity"> {{get_capacity}} </span>

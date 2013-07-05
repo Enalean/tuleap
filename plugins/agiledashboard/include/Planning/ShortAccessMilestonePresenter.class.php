@@ -37,31 +37,30 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
     /** @var string */
     private $theme_path;
 
-    /** @var array of AgileDashboard_PaneInfo */
-    private $pane_info_list;
+    /** @var AgileDashboard_PaneIconLinkPresenter[] */
+    private $pane_icon_list;
 
     public function __construct(
         Planning_ShortAccess $short_access,
         Planning_Milestone $milestone,
-        array $pane_info_list,
+        array $pane_icon_list,
         Planning_MilestoneFactory $milestone_factory,
         PFUser $user,
         $theme_path
     ) {
         parent::__construct($milestone);
         $this->milestone_factory = $milestone_factory;
-        $this->pane_info_list    = $pane_info_list;
+        $this->pane_icon_list    = $pane_icon_list;
         $this->short_access      = $short_access;
         $this->user              = $user;
         $this->theme_path        = $theme_path;
     }
 
+    /**
+     * @return AgileDashboard_PaneIconLinkPresenter[]
+     */
     public function getQuickLinkIconList() {
-        $panes = array();
-        foreach ($this->pane_info_list as $pane_info) {
-            $panes[] = $pane_info->getIconTemplateParametersForMilestone($this->milestone);
-        }
-        return $panes;
+        return $this->pane_icon_list;
     }
 
     public function getContent() {
@@ -94,7 +93,7 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
     }
 
     public function is_active() {
-        return $this->isLatest() && $this->short_access->isLatest() && count($this->pane_info_list);
+        return $this->isLatest() && $this->short_access->isLatest() && count($this->pane_icon_list);
     }
 }
 ?>

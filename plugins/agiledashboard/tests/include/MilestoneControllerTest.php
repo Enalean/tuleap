@@ -75,13 +75,20 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
             ''
         );
 
+        $pane_info_factory = new AgileDashboard_PaneInfoFactory(
+            mock('PFUser'),
+            $legacy_planning_pane_factory,
+            mock('AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder'),
+            ''
+        );
+
         $pane_factory = new Planning_MilestonePaneFactory(
             $request,
             $this->milestone_factory,
             mock('AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory'),
             $legacy_planning_pane_factory,
             mock('AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder'),
-            ''
+            $pane_info_factory
         );
 
         $controller = new Planning_MilestoneController4Tests(

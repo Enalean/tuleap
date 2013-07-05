@@ -27,18 +27,18 @@
  */
 class Planning_ShortAccessFactory {
 
-    /** @var Planning_MilestonePaneFactory */
-    private $pane_factory;
+    /** @var AgileDashboard_PaneInfoFactory */
+    private $pane_info_factory;
 
     /** @var PlanningFactory */
     private $planning_factory;
 
     public function __construct(
         PlanningFactory $planning_factory,
-        Planning_MilestonePaneFactory $pane_factory
+        AgileDashboard_PaneInfoFactory $pane_info_factory
     ) {
-        $this->planning_factory = $planning_factory;
-        $this->pane_factory     = $pane_factory;
+        $this->planning_factory  = $planning_factory;
+        $this->pane_info_factory = $pane_info_factory;
     }
 
     /**
@@ -65,7 +65,7 @@ class Planning_ShortAccessFactory {
      * @return Planning_ShortAccess
      */
     public function getShortAccessForPlanning(Planning $planning, PFUser $user, Planning_MilestoneFactory $milestone_factory, $theme_path, $offset) {
-        return new Planning_ShortAccess($planning, $user, $milestone_factory, $this->pane_factory, $theme_path, $offset);
+        return new Planning_ShortAccess($planning, $user, $milestone_factory, $this->pane_info_factory, $theme_path, $offset);
     }
 }
 
