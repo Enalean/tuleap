@@ -43,7 +43,7 @@ class GitViews_GitPhpViewer {
     private function getView() {
         if ( empty($_REQUEST['a']) )  {
             $_REQUEST['a'] = 'summary';
-        } else if ($_REQUEST['a'] === 'blobdiff') {
+        } else if ($_REQUEST['a'] === 'blobdiff' && isset($_REQUEST['jenkins']) && $_REQUEST['jenkins'] === 'true') {
             $this->inverseURLArgumentsForGitPhpDiff();
         }
         set_time_limit(300);
@@ -94,8 +94,10 @@ class GitViews_GitPhpViewer {
     }
 
     private function initGitPhpEnvironement() {
-        define('GITPHP_CONFIGDIR', GIT_BASE_DIR .'/../etc/');
-        ini_set('include_path', '/usr/share/gitphp-tuleap:'.ini_get('include_path'));
+        if (! defined('GITPHP_CONFIGDIR')) {
+            define('GITPHP_CONFIGDIR', GIT_BASE_DIR .'/../etc/');
+            ini_set('include_path', '/usr/share/gitphp-tuleap:'.ini_get('include_path'));
+        }
     }
 }
 
