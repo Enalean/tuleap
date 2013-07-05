@@ -116,9 +116,8 @@ class Cardwall_Pane extends AgileDashboard_Pane {
 
         $display_preferences = $this->getDisplayPreferences();
         $column_preferences  = new Cardwall_UserPreferences_Autostack_AutostackDashboard($this->user, $this->config->getTracker());
-        foreach ($columns as $column) {
-            $column_preferences->setColumnPreference($column);
-        }
+        $column_autostack    = new Cardwall_UserPreferences_UserPreferencesAutostackFactory();
+        $column_autostack->setAutostack($columns, $column_preferences);
 
         $board               = $board_factory->getBoard($field_retriever, $columns, $planned_artifacts, $this->config, $this->user, $display_preferences);
         $backlog_title       = $this->milestone->getPlanning()->getBacklogTracker()->getName();

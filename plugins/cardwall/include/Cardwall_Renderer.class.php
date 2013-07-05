@@ -141,9 +141,9 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             $field_retriever     = new Cardwall_FieldProviders_CustomFieldRetriever($field);
             $column_preferences  = new Cardwall_UserPreferences_Autostack_AutostackRenderer($user, $this->report);
             $columns             = $this->config->getRendererColumns($field, $column_preferences);
-            foreach ($columns as $column) {
-                $column_preferences->setColumnPreference($column);
-            }
+
+            $column_autostack    = new Cardwall_UserPreferences_UserPreferencesAutostackFactory();
+            $column_autostack->setAutostack($columns, $column_preferences);
             $display_preferences = new Cardwall_UserPreferences_UserPreferencesDisplayUser(Cardwall_UserPreferences_UserPreferencesDisplayUser::DISPLAY_AVATARS);
             $board               = $board_factory->getBoard($field_retriever, $columns, $forest_of_artifacts, $this->config, $user, $display_preferences);
         }
