@@ -44,14 +44,48 @@ class Cardwall_Column {
     public $fgcolor;
 
     /**
+     * @var Boolean
+     */
+    private $autostack = true;
+
+    /**
+     * @var String
+     */
+    private $autostack_preference = '';
+
+    /**
      * @param int    $id
      * @param string $label
      */
     public function __construct($id, $label, $bgcolor, $fgcolor) {
-        $this->id      = $id;
-        $this->label   = $label;
-        $this->bgcolor = $bgcolor;
-        $this->fgcolor = $fgcolor;
+        $this->id        = $id;
+        $this->label     = $label;
+        $this->bgcolor   = $bgcolor;
+        $this->fgcolor   = $fgcolor;
+    }
+
+    public function setAutostack($value) {
+        $this->autostack = $value;
+        return $this;
+    }
+
+    public function autostack() {
+        if ($this->autostack) {
+            return ' checked="checked"';
+        }
+    }
+
+    public function setAutostackPreference($name) {
+        $this->autostack_preference = $name;
+        return $this;
+    }
+
+    public function autostack_preference() {
+        return $this->autostack_preference;
+    }
+
+    public function autostack_title() {
+        return $GLOBALS['Language']->getText('plugin_cardwall', 'column_autostack');
     }
 
     /**

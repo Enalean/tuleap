@@ -1169,6 +1169,41 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         }
         return false;
     }
+
+    /**
+     * Toggle the preference
+     *
+     * If the user has not set the preference yet, then set the default value
+     *
+     * Example:
+     * $user->togglePreference('cardwall', 'display_avatars', 'display_usernames');
+     *
+     * @param string $preference_name
+     * @param mixed  $default_value
+     * @param mixed  $alternate_value
+     */
+    public function togglePreference($pref_name, $default_value, $alternate_value) {
+        $current_preference = $this->getPreference($pref_name);
+        $new_preference     = $default_value;
+
+        if ($this->shouldUseAlternatePreferenceValue($current_preference, $new_preference)) {
+            $new_preference = $alternate_value;
+        }
+        $this->setPreference($pref_name, $new_preference);
+    }
+
+    private function shouldUseAlternatePreferenceValue($current_preference, $new_preference) {
+        return ($this->hasUserSetAPreference($current_preference)
+            && $this->arePreferencesTheSame($current_preference, $new_preference));
+    }
+
+    private function hasUserSetAPreference($current_preference) {
+        return $current_preference !== false;
+    }
+
+    private function arePreferencesTheSame($current_preference, $new_preference) {
+        return $new_preference == $current_preference;
+    }
     
     /**
      * delPreference

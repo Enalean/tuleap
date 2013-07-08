@@ -38,3 +38,6 @@ plugin_cardwall	on_top_semantic_freestyle_column_definition_speech_no_column	<p>
 plugin_cardwall	on_top_semantic_freestyle_column_definition_speech_with_columns	<p>Note: you can delete a column by removing its name (make text field blank).</p>
 plugin_cardwall	access_cardwall	Access to cardwall
 plugin_cardwall	search_cardwall_placeholder	Search for: user, title, …
+plugin_cardwall	column_autostack	Auto stack the cards in this column
+plugin_cardwall	cell_stack	Stack cards
+plugin_cardwall	cell_unstack	Expand cards

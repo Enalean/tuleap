@@ -200,6 +200,8 @@ class cardwallPlugin extends Plugin {
 
     public function javascript($params) {
         include $GLOBALS['Language']->getContent('script_locale', null, 'cardwall', '.js');
+        echo "tuleap.cardwall = tuleap.cardwall || { };".PHP_EOL;
+        echo "tuleap.cardwall.base_url = '". CARDWALL_BASE_URL ."/';".PHP_EOL;
         echo PHP_EOL;
     }
 
@@ -292,11 +294,6 @@ class cardwallPlugin extends Plugin {
                 $params['redirect_parameters']['pane'] = 'cardwall';
             }
         }
-    }
-
-    private function toggleAvatarDisplay(Codendi_Request $request) {
-        $display_preferences_controller = new Cardwall_DisplayPreferencesInAgileDashboardController($request);
-        $display_preferences_controller->toggleUserDisplay();
     }
 
     public function tracker_event_redirect_after_artifact_creation_or_update($params) {
@@ -418,9 +415,16 @@ class cardwallPlugin extends Plugin {
 
     public function process(Codendi_Request $request) {
         switch($request->get('action')) {
-            case 'toggle_user_display_avatar':
-                $this->toggleAvatarDisplay($request);
+            case 'toggle_user_autostack_column':
+                $display_preferences_controller = new Cardwall_UserPreferences_UserPreferencesController($request);
+                $display_preferences_controller->toggleAutostack();
                 break;
+
+            case 'toggle_user_display_avatar':
+                $display_preferences_controller = new Cardwall_UserPreferences_UserPreferencesController($request);
+                $display_preferences_controller->toggleUserDisplay();
+                break;
+
             case 'get-card':
                 try {
                     $controller_builder = new Cardwall_CardControllerBuilder($this->getConfigFactory());
@@ -431,6 +435,7 @@ class cardwallPlugin extends Plugin {
                     $GLOBALS['Response']->sendStatusCode(400);
                 }
                 break;
+
             default:
                 echo 'Hello !';
         }

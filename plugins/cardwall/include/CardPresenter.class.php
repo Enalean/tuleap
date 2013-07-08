@@ -40,7 +40,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter {
 
     private $swimline_id;
 
-    public function __construct(Tracker_Artifact $artifact, Tracker_CardFields $card_fields, $accent_color, Cardwall_DisplayPreferences $display_preferences, $swimline_id, Tracker_Artifact $parent = null) {
+    public function __construct(Tracker_Artifact $artifact, Tracker_CardFields $card_fields, $accent_color, Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences, $swimline_id, Tracker_Artifact $parent = null) {
         $this->artifact            = $artifact;
         $this->parent              = $parent;
         $this->details             = $GLOBALS['Language']->getText('plugin_cardwall', 'details');

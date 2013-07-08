@@ -222,3 +222,61 @@
      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
           box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
 }
+
+.cardwall-column-header-container,
+.cardwall-cell-container {
+    position: relative;
+    padding: 10px;
+}
+
+.cardwall-cell-stacked {
+    overflow: hidden;
+    padding-bottom: 1em;
+}
+
+.cardwall-cell-stacked > .cardwall-cell-container > ul {
+    position: relative;
+}
+
+.cardwall-cell-stacked > .cardwall-cell-container > ul > .cardwall_board_postit {
+    position: absolute !important; /* !important as we want to override inline style (drag 'n drop) */
+    width: 100%;
+    top: 10px;
+}
+
+.cardwall-cell-stacked > .cardwall-cell-container > ul > .cardwall_board_postit:nth-child(1) {
+    top: 0px;
+}
+
+.cardwall-cell-stacked > .cardwall-cell-container > ul > .cardwall_board_postit:nth-child(2) {
+    top: 5px;
+}
+
+.cardwall-cell > .cardwall-cell-container > .cardwall-cell-controls > .icon-collapse-alt,
+.cardwall-cell.cardwall-cell-stacked > .cardwall-cell-container > .cardwall-cell-controls > .icon-expand-alt {
+    display: inline;
+}
+.cardwall-cell.cardwall-cell-stacked > .cardwall-cell-container > .cardwall-cell-controls > .icon-collapse-alt,
+.cardwall-cell > .cardwall-cell-container > .cardwall-cell-controls > .icon-expand-alt {
+    display: none;
+}
+
+.cardwall-column-header-controls,
+.cardwall-cell-controls {
+    position:absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    padding: 2px 4px;
+    color: #ccc;
+    font-size: 1.5em;
+}
+
+.cardwall-column-header-controls:hover,
+.cardwall-cell-controls:hover {
+    color: #333;
+}
+
+.cardwall-auto-stack-toggle {
+    margin: 0;
+}

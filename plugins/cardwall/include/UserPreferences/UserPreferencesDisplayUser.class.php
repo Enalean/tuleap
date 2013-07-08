@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_DisplayPreferences implements Tracker_CardDisplayPreferences {
+class Cardwall_UserPreferences_UserPreferencesDisplayUser implements Tracker_CardDisplayPreferences {
     
     const ASSIGNED_TO_USERNAME_PREFERENCE_NAME = 'AD_cardwall_assign_to_display_username_';
 

@@ -115,6 +115,9 @@ class Cardwall_Pane extends AgileDashboard_Pane {
                                 new Cardwall_FieldProviders_SemanticStatusFieldRetriever());
 
         $display_preferences = $this->getDisplayPreferences();
+        $column_preferences  = new Cardwall_UserPreferences_Autostack_AutostackDashboard($this->user, $this->config->getTracker());
+        $column_autostack    = new Cardwall_UserPreferences_UserPreferencesAutostackFactory();
+        $column_autostack->setAutostack($columns, $column_preferences);
 
         $board               = $board_factory->getBoard($field_retriever, $columns, $planned_artifacts, $this->config, $this->user, $display_preferences);
         $backlog_title       = $this->milestone->getPlanning()->getBacklogTracker()->getName();
@@ -133,10 +136,10 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     }
 
     private function getDisplayPreferences() {
-        $pref_name = Cardwall_DisplayPreferences::ASSIGNED_TO_USERNAME_PREFERENCE_NAME . $this->milestone->getTrackerId();
+        $pref_name = Cardwall_UserPreferences_UserPreferencesDisplayUser::ASSIGNED_TO_USERNAME_PREFERENCE_NAME . $this->milestone->getTrackerId();
         $display_avatars = $this->user->isAnonymous() || ! $this->user->getPreference($pref_name);
 
-        return new Cardwall_DisplayPreferences($display_avatars);
+        return new Cardwall_UserPreferences_UserPreferencesDisplayUser($display_avatars);
     }
 
     private function canConfigure() {        

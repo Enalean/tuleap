@@ -1295,14 +1295,18 @@ class Layout extends Response {
     
     protected function displayCommonStylesheetElements($params) {
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/font-awesome.css" />';
-        echo '<!--[if IE 7]><link rel="stylesheet" href="/themes/common/css/font-awesome-ie7.css"><![endif]-->';
+        $this->displayFontAwesomeStylesheetElements();
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/print.css" media="print" />';
         $css = $GLOBALS['sys_user_theme'] . $this->getFontSizeName($GLOBALS['sys_user_font_size']) .'.css';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme($css) .'" />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
     }
-    
+
+    protected function displayFontAwesomeStylesheetElements() {
+        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/font-awesome.css" />';
+        echo '<!--[if IE 7]><link rel="stylesheet" href="/themes/common/css/font-awesome-ie7.css"><![endif]-->';
+    }
+
     protected function getFontSizeName($p) {
         return getFontsizeName($GLOBALS['sys_user_font_size']);
     }
