@@ -28,7 +28,7 @@ class Planning_MilestoneController4Tests extends Planning_MilestoneController {
         $this->output = $this->renderer->renderToString($template_name, $presenter);
     }
 }
-
+/*
 abstract class Planning_MilestoneController_Common extends TuleapTestCase {
     protected $planning_tracker_id;
     protected $planning;
@@ -279,7 +279,7 @@ class Planning_MilestoneController_CrossTrackerSearchTest extends Planning_Miles
         return $request;
     }
 }
-
+*/
 class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
     private $plugin_path;
     private $product;

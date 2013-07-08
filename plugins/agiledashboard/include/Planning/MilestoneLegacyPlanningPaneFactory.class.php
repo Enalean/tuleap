@@ -63,11 +63,13 @@ class Planning_MilestoneLegacyPlanningPaneFactory {
 
     /** @return AgileDashboard_MilestonePlanningPaneInfo */
     public function getPaneInfo(Planning_Milestone $milestone) {
+        return null;
         return new AgileDashboard_MilestonePlanningPaneInfo($milestone, $this->theme_path);
     }
 
     /** @return AgileDashboard_MilestonePlanningPane */
     public function getPane(Planning_Milestone $milestone, AgileDashboard_MilestonePlanningPaneInfo $info) {
+        return null;
         // Should we make public the milestone of the $info?
         // That way we could do:
         // $milestone = $info->getMilestone();

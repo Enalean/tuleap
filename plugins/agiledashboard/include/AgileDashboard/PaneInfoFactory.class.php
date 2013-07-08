@@ -49,12 +49,12 @@ class AgileDashboard_PaneInfoFactory {
 
     /** @return AgileDashboard_PaneInfo[] */
     public function getListOfPaneInfo(Planning_Milestone $milestone) {
-        return array_merge(
+        return array_values(array_filter(array_merge(
             array(
                 $this->getLegacyPaneInfo($milestone)
             ),
             $this->getListOfPaneInfoWithoutLegacyOne($milestone)
-        );
+        )));
     }
 
     /** @return AgileDashboard_PaneInfo[] */
