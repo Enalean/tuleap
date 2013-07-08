@@ -1,3 +1,12 @@
+Version 2.26.18 - Tuleap 6.3
+    * Reverting mime type fix to previous code.
+
+
+It nullifies sla #2121 :-( which led to the regressions sla #4303 and sla #4103
+In essence, this revert should make mime type detection work for all but ppt and xls files in webdav. The latter will be treated as .doc files.
+
+Change-Id: I350d2561be15e5d7abbca6b234fa963bc9798a6e
+
 Version 2.26.17 - Tuleap 6.3
     * Integrate debian packaging (Contrib Raphaël Hertzog)
 
