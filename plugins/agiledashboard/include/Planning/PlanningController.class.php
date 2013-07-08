@@ -61,8 +61,7 @@ class Planning_Controller extends MVC2_PluginController {
         $presenter = new Planning_IndexPresenter(
             $plannings,
             $this->plugin_theme_path,
-            $project_id,
-            $this->request->getCurrentUser()->useLabFeatures()
+            $project_id
         );
         $this->render('index', $presenter);
     }

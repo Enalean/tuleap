@@ -61,10 +61,8 @@ class AgileDashboard_PaneInfoFactory {
     public function getListOfPaneInfoWithoutLegacyOne(Planning_Milestone $milestone) {
         $panes_info = array();
 
-        if ($this->user->useLabFeatures()) {
-            $panes_info[] = $this->getContentPaneInfo($milestone);
-            $panes_info[] = $this->getPlanningPaneInfo($milestone);
-        }
+        $panes_info[] = $this->getContentPaneInfo($milestone);
+        $panes_info[] = $this->getPlanningPaneInfo($milestone);
         $this->buildAdditionnalPanesInfo($milestone, $panes_info);
 
         return array_values(array_filter($panes_info));

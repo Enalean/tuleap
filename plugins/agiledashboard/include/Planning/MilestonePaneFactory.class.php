@@ -102,11 +102,8 @@ class Planning_MilestonePaneFactory {
         $this->active_pane[$milestone->getArtifactId()] = null;
 
         $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getLegacyPaneInfo($milestone);
-
-        if ($this->request->getCurrentUser()->useLabFeatures()) {
-            $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getContentPaneInfo($milestone);
-            $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getPlanningPaneInfo($milestone);
-        }
+        $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getContentPaneInfo($milestone);
+        $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getPlanningPaneInfo($milestone);
 
         $this->buildAdditionnalPanes($milestone);
         $this->list_of_pane_info[$milestone->getArtifactId()] = array_values(array_filter($this->list_of_pane_info[$milestone->getArtifactId()]));

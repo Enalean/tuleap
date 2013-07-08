@@ -176,10 +176,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     public function open_items_intro() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'open_items_intro', $this->backlog_item_type);
     }
-
-    public function lab() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'lab');
-    }
 }
 
 ?>

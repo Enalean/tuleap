@@ -301,7 +301,7 @@ class AgileDashboardRouter {
 
     public function routeShowTopPlanning(Codendi_Request $request, $default_controller) {
         $user = $request->getCurrentUser();
-        if (! $user || ! $user->useLabFeatures()) {
+        if (! $user) {
             $this->renderAction($default_controller, 'index', $request);
         }
 
