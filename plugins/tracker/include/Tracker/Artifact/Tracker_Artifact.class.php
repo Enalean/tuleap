@@ -33,6 +33,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public $id;
     public $tracker_id;
     public $use_artifact_permissions;
+    protected $per_tracker_id;
     protected $submitted_by;
     protected $submitted_on;
 
@@ -87,6 +88,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $this->submitted_by             = $submitted_by;
         $this->submitted_on             = $submitted_on;
         $this->use_artifact_permissions = $use_artifact_permissions;
+        $this->per_tracker_id           = null;
     }
 
     /**
@@ -1241,6 +1243,18 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     function getSubmittedBy() {
         return $this->submitted_by;
+    }
+
+	/**
+     * Returns the id of the artifact in this tracker
+     *
+     * @return int the artifact id
+     */
+    public function getPerTrackerArtifactId() {
+        if ($this->per_tracker_id == null) {
+            $this->per_tracker_id = $this->getDao()->getPerTrackerArtifactId($this->id);
+        }
+        return $this->per_tracker_id;
     }
 
     /**

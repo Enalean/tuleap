@@ -151,6 +151,7 @@ function autoload28154d2484baf4a5690f101e005b5a82($class) {
             'tracker_formelement_field_openlist' => '/Tracker/FormElement/Tracker_FormElement_Field_OpenList.class.php',
             'tracker_formelement_field_openlistdao' => '/Tracker/FormElement/dao/Tracker_FormElement_Field_OpenListDao.class.php',
             'tracker_formelement_field_permissionsonartifact' => '/Tracker/FormElement/Tracker_FormElement_Field_PermissionsOnArtifact.class.php',
+            'tracker_formelement_field_pertrackerartifactid' => '/Tracker/FormElement/Tracker_FormElement_Field_PerTrackerArtifactIdclass.php',
             'tracker_formelement_field_readonly' => '/Tracker/FormElement/Tracker_FormElement_Field_ReadOnly.class.php',
             'tracker_formelement_field_selectbox' => '/Tracker/FormElement/Tracker_FormElement_Field_Selectbox.class.php',
             'tracker_formelement_field_shareable' => '/Tracker/FormElement/Tracker_FormElement_Field_Shareable.class.php',

@@ -484,6 +484,7 @@ CREATE TABLE tracker_artifact(
   submitted_by INT(11) NOT NULL,
   submitted_on INT(11) NOT NULL,
   use_artifact_permissions tinyint(1) NOT NULL default '0',
+  per_tracker_artifact_id INT(11) NOT NULL,
   INDEX idx_tracker_id (tracker_id),
   INDEX idx_my (submitted_by, tracker_id, last_changeset_id)
 ) ENGINE=InnoDB;

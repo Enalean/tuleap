@@ -1032,6 +1032,8 @@ plugin_tracker_formelement_admin	lastupdatedate_description	Display the last upd
 plugin_tracker_formelement_admin	lastupdatedate_help	The field is automatically set to last artifact update date
 plugin_tracker_formelement_admin	artifactid_label	Artifact ID
 plugin_tracker_formelement_admin	artifactid_description	Display the id of the artifact
+plugin_tracker_formelement_admin	artifactInTrackerId_label	Per tracker id
+plugin_tracker_formelement_admin	artifactInTrackerId_description	Display the in-tracker numerotation
 plugin_tracker_formelement_admin	artifactid_help	The field is automatically set to a unique ID
 plugin_tracker_formelement_admin	artifact_link_label	Artifact Link
 plugin_tracker_formelement_admin	artifact_link_description	Links to other artifacts

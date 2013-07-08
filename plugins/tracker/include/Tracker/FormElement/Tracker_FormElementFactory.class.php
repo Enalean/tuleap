@@ -22,7 +22,6 @@
 
 require_once TRACKER_BASE_DIR . '/tracker_permissions.php';
 require_once('common/widget/Widget_Static.class.php');
-
 class Tracker_FormElementFactory {
 
     /**
@@ -59,6 +58,7 @@ class Tracker_FormElementFactory {
 
     protected $special_classnames     = array(
         'aid'       => 'Tracker_FormElement_Field_ArtifactId',
+        'atid'      => 'Tracker_FormElement_Field_PerTrackerArtifactId',
         'lud'       => 'Tracker_FormElement_Field_LastUpdateDate',
         'subby'     => 'Tracker_FormElement_Field_SubmittedBy',
         'subon'     => 'Tracker_FormElement_Field_SubmittedOn',
