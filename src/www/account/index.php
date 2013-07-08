@@ -16,6 +16,8 @@ session_require(array('isloggedin'=>'1'));
 $em = EventManager::instance();
 $um = UserManager::instance();
 
+header("Cache-Control: no-store, no-cache, must-revalidate");
+
 my_header(array('title'=>$Language->getText('account_options', 'title')));
 
 $purifier =& Codendi_HTMLPurifier::instance();

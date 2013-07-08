@@ -6,6 +6,8 @@ require_once('www/my/my_utils.php');
 require_once('common/include/CSRFSynchronizerToken.class.php');
 require_once('common/mail/MailManager.class.php');
 
+header("Cache-Control: no-store, no-cache, must-revalidate");
+
 session_require(array('isloggedin'=>'1'));
 
 $em = EventManager::instance();

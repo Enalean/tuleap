@@ -11,6 +11,8 @@ require_once 'account.php';
 
 session_require(array('isloggedin'=>1));
 
+header("Cache-Control: no-store, no-cache, must-revalidate");
+
 $user_manager = UserManager::instance();
 $user         = $user_manager->getCurrentUser();
 

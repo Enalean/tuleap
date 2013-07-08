@@ -12,6 +12,8 @@ require_once('timezones.php');
 require_once('common/include/CSRFSynchronizerToken.class.php');
 require_once('common/event/EventManager.class.php');
 
+header("Cache-Control: no-store, no-cache, must-revalidate");
+
 $em =& EventManager::instance();
 $em->processEvent('before_change_timezone', array());
 

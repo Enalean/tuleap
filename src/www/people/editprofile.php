@@ -10,6 +10,8 @@ require_once('pre.php');
 require('../people/people_utils.php');
 require_once('common/include/CSRFSynchronizerToken.class.php');
 
+header("Cache-Control: no-store, no-cache, must-revalidate");
+
 $purifier = Codendi_HTMLPurifier::instance();
 $csrf     = new CSRFSynchronizerToken('/people/editprofile.php');
 

@@ -9,6 +9,7 @@
 require_once('pre.php');
 require('../people/people_utils.php');
 
+header("Cache-Control: no-store, no-cache, must-revalidate");
 
 if ($user_id) {
 

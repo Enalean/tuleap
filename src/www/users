@@ -6,7 +6,9 @@
 //
 // 
 
-require_once('pre.php');    
+require_once('pre.php');   
+
+header("Cache-Control: no-store, no-cache, must-revalidate"); 
 
 $expl_pathinfo = explode('/', $request->getFromServer('REQUEST_URI'));
 

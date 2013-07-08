@@ -24,6 +24,8 @@ require_once('account.php');
 require_once('common/include/CSRFSynchronizerToken.class.php');
 require_once('common/include/lib/Upload.class.php');
 
+header("Cache-Control: no-store, no-cache, must-revalidate");
+
 $user_manager = UserManager::instance();
 $user = $user_manager->getCurrentUser();
 if ($user->isAnonymous()) {

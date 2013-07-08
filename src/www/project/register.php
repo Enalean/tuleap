@@ -23,6 +23,8 @@ require_once('common/project/CustomDescription/CustomDescriptionFactory.class.ph
 require_once 'vars.php'; //load licenses
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
+header("Cache-Control: no-store, no-cache, must-revalidate");
+
 $request = HTTPRequest::instance();
 
 if (Config::get('sys_create_project_in_one_step')) {
