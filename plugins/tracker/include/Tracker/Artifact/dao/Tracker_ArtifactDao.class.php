@@ -278,9 +278,10 @@ class Tracker_ArtifactDao extends DataAccessObject {
         $use_artifact_permissions = $this->da->escapeInt($use_artifact_permissions);
         $submitted_on             = $this->da->escapeInt($_SERVER['REQUEST_TIME']);
         $submitted_by             = $this->da->escapeInt($submitted_by);
-        $sql = "SELECT COUNT(*)+1 as per_t_id FROM tracker_artifact WHERE tracker_id = '". $tracker_id ."'";
+        $this->startTransaction();
+        $sql = "SELECT MAX(per_tracker_artifact_id)+1 as per_tracker_artifact_id FROM tracker_artifact WHERE tracker_id = '". $tracker_id ."'";
         $row = $this->retrieveFirstRow($sql);
-        $per_tracker_id            = $row['per_t_id'];
+        $per_tracker_id            = $row['per_tracker_artifact_id'];
         $id_sharing = new TrackerIdSharingDao();
         if ($id = $id_sharing->generateArtifactId()) {
             $priority_dao = new Tracker_Artifact_PriorityDao();
@@ -289,10 +290,12 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         (id, tracker_id, per_tracker_artifact_id, submitted_by, submitted_on, use_artifact_permissions)
                         VALUES ($id, $tracker_id, $per_tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)";
                 if ($this->update($sql)) {
+                    $this->commit();
                     return $id;
                 }
             }
         }
+        $this->rollBack();
         return false;
     }
 
@@ -354,9 +357,9 @@ class Tracker_ArtifactDao extends DataAccessObject {
     public function getPerTrackerArtifactId($aid) {
         $per_tracker_id = 0;
         $aid = $this->da->escapeInt($aid);
-        $sql = "SELECT per_tracker_artifact_id as tid FROM tracker_artifact where id = '". $aid . "';";
+        $sql = "SELECT per_tracker_artifact_id as per_tracker_artifact_id FROM tracker_artifact where id = '". $aid . "';";
         $res = $this->retrieveFirstRow($sql);
-        $per_tracker_id = $res['tid'] | 0;
+        $per_tracker_id = $res['per_tracker_artifact_id'] | 0;
 
         return $per_tracker_id;
     }
