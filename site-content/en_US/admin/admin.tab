@@ -86,6 +86,7 @@ admin_main	admin_guide	Administration guide
 admin_main	conf_project	Project configuration
 admin_main	tool_internal	Internal
 admin_main	tool_external	3rd party
+admin_main	configure_generic_user	Generic user
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php
@@ -460,3 +461,13 @@ admin_system_events	nobody	Nobody
 admin_show_pending_documents	pending_doc	Pending deleted documents for project <a href="/project/admin/?group_id=$1">$2</a> 
 admin_show_pending_documents	delay_info	As per the configuration (<code>$sys_file_deletion_delay</code>) defined in <code>/etc/codendi/local.inc</code> elements will be <strong>purged</strong> from the filesystem after <strong>$1 days.</strong>
 
+admin_generic_user	title	Generic user
+admin_generic_user	help	"Generic users" are per project users meant to be used in automated processes like continuous integration. Note: As of today, they can only be activated by a SOAP API call, projet by project, with project administrator access right.
+admin_generic_user	help_update	This page shows the default settings that apply to all project s. The generic user suffix can be customised with '$1' variable in local.inc
+admin_generic_user	invalid_suffix	Invalid suffix configuration, please change $1 in local.inc ASAP!
+admin_generic_user	unix_name_template	%project_name%
+admin_generic_user	name_template	%Project name%
+admin_generic_user	back	« Back
+admin_generic_user	set_by_project	Configured at project level (each project administrator can configure it in project administration page)
+admin_generic_user	email	Email
+admin_generic_user	password	Password

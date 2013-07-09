@@ -78,6 +78,7 @@ admin_main	admin_guide	Guide d'administration
 admin_main	conf_project	Configuration projet
 admin_main	tool_internal	Interne
 admin_main	tool_external	Outil tierces
+admin_main	configure_generic_user	Utilisateur générique
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php
@@ -449,3 +450,14 @@ admin_system_events	nobody	Personne
 #
 admin_show_pending_documents	pending_doc	Les supprimés documents en suspens pour le projet <a href="/project/admin/?group_id=$1"> $2 </a>
 admin_show_pending_documents	delay_info	Comme défini dans la configuration <code>/etc/codendi/local.inc</code> par la variable <code>$sys_file_deletion_delay</code>, les éléments seront <strong>définitivement purgés</strong> du système de fichier après <strong>$1 jour.</strong>
+
+admin_generic_user	title	Modifier les utilisateurs génériques
+admin_generic_user	help	Les "utilisateurs génériques" de projet sont des utilisateurs dédiés aux processus automatiques de chaque projet comme l'intégration continue. A l'heure actuelle, les utilisateurs génériques s'activent uniquement par un appel à l'API SOAP, projet par projet (nécessite les droits d'administrateur projet).
+admin_generic_user	help_update	Cette page présente les valeurs par défaut qui s'appliquent à tous les projets. Le suffixe du nom peut être adapté au travers de la variable '$1' dans local.inc
+admin_generic_user	invalid_suffix	Suffixe invalide, merci de changer la valeur de la variable $1 dans local.inc au plus vite!
+admin_generic_user	unix_name_template	%nom_de_projet%
+admin_generic_user	name_template	%Nom de projet%
+admin_generic_user	back	« Retour
+admin_generic_user	set_by_project	Configurable au niveau de chaque projet (chaque administrateur peut définir sa propre valeur dans les pages d'administration du projet)
+admin_generic_user	email	Email
+admin_generic_user	password	Mot de passe

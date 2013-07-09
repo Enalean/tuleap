@@ -202,6 +202,7 @@ $wConf->setContent('
       <li><a href="/admin/descfields/desc_fields_edit.php">'.$Language->getText('admin_main', 'desc_fields_edit').'</a></li>
       <li><a href="/project/admin/servicebar.php?group_id=100">'.$Language->getText('admin_main', 'configure_svc').'</a></li>
       <li><a href="/project/admin/reference.php?group_id=100">'.$Language->getText('admin_main', 'configure_ref').'</a></li>
+      <li><a href="/admin/generic_user.php">'.$Language->getText('admin_main', 'configure_generic_user').'</a></li>
     </ul>
   </li>
   <li>'.$Language->getText('admin_main', 'header_tracker').':

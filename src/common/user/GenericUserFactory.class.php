@@ -96,7 +96,10 @@ class GenericUserFactory {
      */
     private function generateGenericUser($group_id, PFUser $user) {
         $project = $this->project_manager->getProject($group_id);
+        return $this->getGenericUser($project, $user);
+    }
 
+    public function getGenericUser(Project $project, PFUser $user) {
         return new GenericUser($project, $user, Config::get(self::CONFIG_KEY_SUFFIX));
     }
 }
