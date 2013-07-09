@@ -118,12 +118,13 @@ class GitViewsTest extends UnitTestCase {
 
 class GitView_DiffViewTest extends TuleapTestCase {
 
-    public function testGetViewInverseURLArgumentIfActionIsBlobdiff() {
-        $_REQUEST['a'] = 'blobdiff';
-        $src_initial   = 'src';
-        $dest_initial  = 'dest';
-        $_GET['h']     = $src_initial;
-        $_GET['hp']    = $dest_initial;
+    public function testGetViewInverseURLArgumentIfActionIsBlobdiffAndJenkinsIsTrue() {
+        $_REQUEST['jenkins'] = 'true';
+        $_REQUEST['a']       = 'blobdiff';
+        $src_initial         = 'src';
+        $dest_initial        = 'dest';
+        $_GET['h']           = $src_initial;
+        $_GET['hp']          = $dest_initial;
 
         $repository = mock('GitRepository');
         stub($repository)->getId()->returns(148);
@@ -134,11 +135,30 @@ class GitView_DiffViewTest extends TuleapTestCase {
         $gitphp_viewer = new GitViews_GitPhpViewer($repository, dirname(__FILE__).'/_fixtures/fakeGitPHP');
         $gitphp_viewer->getContent();
 
-        $this->assertEqual($_GET['h'], $dest_initial);
         $this->assertEqual($_GET['hp'], $src_initial);
-
+        $this->assertEqual($_GET['h'], $dest_initial);
     }
 
+    public function testGetViewInverseURLArgumentIfActionIsBlobdiffAndJenkinsIsFalse() {
+        $_REQUEST['jenkins'] = 'false';
+        $_REQUEST['a']       = 'blobdiff';
+        $src_initial         = 'src';
+        $dest_initial        = 'dest';
+        $_GET['h']           = $src_initial;
+        $_GET['hp']          = $dest_initial;
+
+        $repository = mock('GitRepository');
+        stub($repository)->getId()->returns(148);
+        stub($repository)->getFullName()->returns('abcd');
+        stub($repository)->getProject()->returns(stub('Project')->getUnixName()->returns('project'));
+        stub($repository)->getGitRootPath()->returns('/home/abcd');
+
+        $gitphp_viewer = new GitViews_GitPhpViewer($repository, dirname(__FILE__).'/_fixtures/fakeGitPHP');
+        $gitphp_viewer->getContent();
+
+        $this->assertEqual($_GET['h'], $src_initial);
+        $this->assertEqual($_GET['hp'], $dest_initial);
+    }
 }
 
 ?>
