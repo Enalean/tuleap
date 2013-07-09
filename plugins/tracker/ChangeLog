@@ -1,3 +1,6 @@
+Version 5.137 - Tuleap 6.3
+    * Fix request #4017: Cross Reference to a release is not removed from an Epic when moved from a plan back to Product Backlog
+
 Version 5.136 - Tuleap 6.3
     * Fix bug introduced in story #2376: no more possible to create artifact in a new tracker
 
