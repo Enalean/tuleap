@@ -24,6 +24,7 @@ require_once 'common/dao/GenericUserDao.class.php';
 
 
 class GenericUserFactory {
+    const CONFIG_KEY_SUFFIX = 'sys_generic_user_suffix';
 
     /**
      * @var UserManager
@@ -96,7 +97,7 @@ class GenericUserFactory {
     private function generateGenericUser($group_id, PFUser $user) {
         $project = $this->project_manager->getProject($group_id);
 
-        return new GenericUser($project, $user);
+        return new GenericUser($project, $user, Config::get(self::CONFIG_KEY_SUFFIX));
     }
 }
 ?>
