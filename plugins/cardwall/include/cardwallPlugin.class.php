@@ -268,8 +268,11 @@ class cardwallPlugin extends Plugin {
     }
 
     public function agiledashboard_event_index_page($params) {
-        $pane_info = new Cardwall_PaneInfo($params['milestone'], $this->getThemePath());
-        $params['pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user'], $params['milestone_factory']);
+        // Only display a cardwall if there is something to display
+        if ($params['milestone'] && $params['milestone']->getPlannedArtifacts() && count($params['milestone']->getPlannedArtifacts()->getChildren()) > 0) {
+            $pane_info = new Cardwall_PaneInfo($params['milestone'], $this->getThemePath());
+            $params['pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user'], $params['milestone_factory']);
+        }
     }
 
     protected function getCardwallPane(Cardwall_PaneInfo $info, Planning_Milestone $milestone, PFUser $user, Planning_MilestoneFactory $milestone_factory) {
