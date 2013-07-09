@@ -520,7 +520,7 @@ class UserManager {
             throw new UserNotAuthorizedException();
         }
         
-        $user_login_as = $this->getUserByUserName($name);
+        $user_login_as = $this->findUser($name);
         if (!$user_login_as) {
             throw new UserNotExistException();
         }
