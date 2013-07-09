@@ -1,3 +1,11 @@
+Version 3.32 - Tuleap 6.3
+    * Only inversing url arguments when request is from Jenkins.
+
+
+This solution to sla #3969 would require all those with Jenkins jobs connected to a Tuleap git repo to put ?jenkins=true in the url of their 'gitweb' Repository browser in order to get the correct diffs.
+
+Change-Id: I8bfb29ecde77d8a5ca58189d1f035d2381b6bd9b
+
 Version 3.31 - Tuleap 6.3
     * Make tuleap plugin compatible with debian
 
