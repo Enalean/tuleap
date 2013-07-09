@@ -61,3 +61,10 @@ plugin_agiledashboard_milestone_planning	list_of_submilestone_title	List of $1 i
 plugin_agiledashboard_milestone_planning	list_of_milestone_title	List of $1
 plugin_agiledashboard_milestone_planning	header_status	Status
 plugin_agiledashboard_milestone_planning	empty_element_tip	This element is empty, please drag anything here
+
+plugin_agiledashboard_admin_semantic	initial_effort_label	Initial Effort
+plugin_agiledashboard_admin_semantic	initial_effort_description	The sum of all efforts at the beginning of any milestone.
+plugin_agiledashboard_admin_semantic	initial_effort_field	<p>The initial effort of this tracker will be represented in the Agile Dashboard by the field <strong>$1</strong>.</p>
+plugin_agiledashboard_admin_semantic	initial_effort_no_field	<p>This tracker does not have an <em>initial effort</em> field yet.</p>
+plugin_agiledashboard_admin_semantic	initial_effort_long_desc	This is used in the <b>Agile Dashboard</b> if enabled. The initial effort is the sum of all efforts at the beginning of any milestone. E.g. this would be the total of all the story points in a given sprint.
+

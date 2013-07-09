@@ -124,4 +124,16 @@ define('TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED', 'tracker_event_artifact_asso
  * 'display_selector' => bool true if we can display the selector
  */
 define('TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR', 'tracker_event_artifact_parents_selector');
+
+/**
+ * Fetch the semantics used by other plugins
+ *
+ * Parameters:
+ * 'semantics' => @var Tracker_SemanticCollection A collection of semantics that needs adding to.
+ * 'tracker'   => @var Tracker                    The Tracker the semantics are defined upon
+ *
+ * Expected results
+ * The semantics parameter is populated with additional semantic fields
+ */
+define('TRACKER_EVENT_MANAGE_SEMANTICS', 'tracker_event_manage_semantics');
 ?>
