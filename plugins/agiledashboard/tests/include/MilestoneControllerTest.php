@@ -302,7 +302,10 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
         $this->project_manager   = mock('ProjectManager');
 
         $this->current_user   = aUser()->build();
-        $this->request        = aRequest()->withUser($this->current_user)->build();
+        $this->request        = aRequest()->withUser($this->current_user)->with('group_id', 102)->build();
+
+        $this->project = mock('Project');
+        stub($this->project_manager)->getProject(102)->returns($this->project);
     }
 
     public function tearDown() {
@@ -343,6 +346,7 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
 
     public function assertEqualToBreadCrumbWithAllMilestones($breadcrumbs) {
         $expected_crumbs = new BreadCrumb_Merger(
+            new BreadCrumb_VirtualTopMilestone($this->plugin_path, $this->project),
             new BreadCrumb_Milestone($this->plugin_path, $this->product),
             new BreadCrumb_Milestone($this->plugin_path, $this->release),
             new BreadCrumb_Milestone($this->plugin_path, $this->sprint)
