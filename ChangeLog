@@ -12,6 +12,7 @@ Version 6.3 (Not released yet)
 	* request #4112: Python exception pass (Contrib Raphaël Enrici)
 	* Fix libnss-mysql install (set a default host and distinguish case where an empty hostname was used to detect if we need to bootstrap the db (local deployments).
 	* sla #4103: Mime type not recognized in Docman
+	* story #4208: loginAs create user account before to inpersonate people
 
 	== Enhancement ==
 	* Project admin can configure the generic user from ui (change password & email)
