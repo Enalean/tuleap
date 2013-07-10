@@ -67,4 +67,7 @@ plugin_agiledashboard_admin_semantic	initial_effort_description	The sum of all e
 plugin_agiledashboard_admin_semantic	initial_effort_field	<p>The initial effort of this tracker will be represented in the Agile Dashboard by the field <strong>$1</strong>.</p>
 plugin_agiledashboard_admin_semantic	initial_effort_no_field	<p>This tracker does not have an <em>initial effort</em> field yet.</p>
 plugin_agiledashboard_admin_semantic	initial_effort_long_desc	This is used in the <b>Agile Dashboard</b> if enabled. The initial effort is the sum of all efforts at the beginning of any milestone. E.g. this would be the total of all the story points in a given sprint.
-
+plugin_agiledashboard_admin_semantic	initial_effort_impossible	You cannot define the <em>initial effort</em> semantic since there aren't any numeric fields in the tracker
+plugin_agiledashboard_admin_semantic	initial_effort_now	The initial effort is now: $1
+plugin_agiledashboard_admin_semantic	bad_field_initial_effort	The field you submitted is not a numeric field
+plugin_agiledashboard_admin_semantic	unable_save_initial_effort	Unable to save the <em>initial effort</em>

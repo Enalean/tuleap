@@ -14,6 +14,14 @@ CREATE TABLE IF NOT EXISTS plugin_agiledashboard_planning_backlog_tracker(
     KEY idx(planning_id, tracker_id)
 );
 
+
+DROP TABLE IF EXISTS plugin_agiledashboard_semantic_initial_effort;
+CREATE TABLE plugin_agiledashboard_semantic_initial_effort (
+    tracker_id INT(11) PRIMARY KEY,
+    field_id INT(11) NOT NULL,
+    INDEX field_id_idx(field_id)
+) ENGINE=InnoDB;
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) 
        VALUES      ( 100, 'plugin_agiledashboard:service_lbl_key', 'plugin_agiledashboard:service_desc_key', 'plugin_agiledashboard', '/plugins/agiledashboard/?group_id=$group_id', 1, 1, 'system', 152);

@@ -35,7 +35,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      * @param Tracker                           $tracker    The tracker
      * @param Tracker_FormElement_Field_Numeric $numeric_field The field
      */
-    public function __construct(Tracker $tracker, Tracker_FormElement_Field_Numeric $numeric_field = null) {
+    public function __construct(Tracker $tracker, Tracker_FormElement_Field $numeric_field = null) {
         parent::__construct($tracker);
         $this->numeric_field = $numeric_field;
     }
@@ -96,6 +96,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      */
     public function display() {
         echo $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic','initial_effort_long_desc');
+
         if ($field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId())) {
             echo $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic','initial_effort_field', array($field->getLabel()));
         } else {
@@ -106,77 +107,84 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
     /**
      * Display the form to let the admin change the semantic
      *
-     * @param Tracker_SemanticManager $sm              The semantic manager
-     * @param TrackerManager          $tracker_manager The tracker manager
-     * @param Codendi_Request         $request         The request
-     * @param PFUser                    $current_user    The user who made the request
+     * @param Tracker_SemanticManager $semantic_manager The semantic manager
+     * @param TrackerManager          $tracker_manager  The tracker manager
+     * @param Codendi_Request         $request          The request
+     * @param PFUser                  $current_user     The user who made the request
      *
      * @return string html
      */
-    public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
-//        $hp = Codendi_HTMLPurifier::instance();
-//        $sm->displaySemanticHeader($this, $tracker_manager);
-//        $html = '';
-//
-//        if ($text_fields = Tracker_FormElementFactory::instance()->getUsedTextFields($this->tracker)) {
-//
-//            $html .= '<form method="POST" action="'. $this->geturl() .'">';
-//            $select = '<select name="text_field_id">';
-//            if ( ! $this->getFieldId()) {
-//                $select .= '<option value="-1" selected="selected">' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_a_field') . '</option>';
-//            }
-//            foreach ($text_fields as $text_field) {
-//                if ($text_field->getId() == $this->getFieldId()) {
-//                    $selected = ' selected="selected" ';
-//                } else {
-//                    $selected = '';
-//                }
-//                $select .= '<option value="' . $text_field->getId() . '" ' . $selected . '>' . $hp->purify($text_field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
-//            }
-//            $select .= '</select>';
-//
-//            $submit = '<input type="submit" name="update" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-//
-//            if (!$this->getFieldId()) {
-//                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','title_no_field');
-//                $html .= '<p>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_one_advice') . $select .' '. $submit .'</p>';
-//            } else {
-//                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','title_field', array($select)) . $submit;
-//            }
-//            $html .= '</form>';
-//        } else {
-//            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','title_impossible');
-//        }
-//        $html .= '<p><a href="'.TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId() .'&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','go_back_overview') . '</a></p>';
-//        echo $html;
-//        $sm->displaySemanticFooter($this, $tracker_manager);
+    public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
+        $hp = Codendi_HTMLPurifier::instance();
+        $semantic_manager->displaySemanticHeader($this, $tracker_manager);
+        $html = '';
+
+        if ($numeric_fields = Tracker_FormElementFactory::instance()->getUsedNumericOrComputedFields($this->tracker)) {
+
+            $html .= '<form method="POST" action="'. $this->geturl() .'">';
+            $select = '<select name="numeric_field_id">';
+            if (! $this->getFieldId()) {
+                $select .= '<option value="-1" selected="selected">' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_a_field') . '</option>';
+            }
+
+            foreach ($numeric_fields as $numeric_field) {
+                if ($numeric_field->getId() == $this->getFieldId()) {
+                    $selected = ' selected="selected" ';
+                } else {
+                    $selected = '';
+                }
+                $select .= '<option value="' . $numeric_field->getId() . '" ' . $selected . '>' . $hp->purify($numeric_field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
+            }
+            $select .= '</select>';
+
+            $submit = '<input type="submit" name="update" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+
+            if (! $this->getFieldId()) {
+                $html .= $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic','initial_effort_no_field');
+                $html .= '<p>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_one_advice') . $select .' '. $submit .'</p>';
+            } else {
+                $html .= $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic','initial_effort_field', array($select)) . $submit;
+            }
+            $html .= '</form>';
+        } else {
+            $html .= $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic','initial_effort_impossible');
+        }
+        $html .= '<p><a href="'.TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId() .'&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','go_back_overview') . '</a></p>';
+        echo $html;
+
+        $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
 
     /**
      * Process the form
      *
-     * @param Tracker_SemanticManager $sm              The semantic manager
-     * @param TrackerManager          $tracker_manager The tracker manager
-     * @param Codendi_Request         $request         The request
-     * @param PFUser                    $current_user    The user who made the request
+     * @param Tracker_SemanticManager $semantic_manager The semantic manager
+     * @param TrackerManager          $tracker_manager  The tracker manager
+     * @param Codendi_Request         $request          The request
+     * @param PFUser                  $current_user     The user who made the request
      *
      * @return void
      */
-    public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
-//        if ($request->exist('update')) {
-//            if ($field = Tracker_FormElementFactory::instance()->getUsedTextFieldById($this->tracker, $request->get('text_field_id'))) {
-//                $this->numeric_field = $field;
-//                if ($this->save()) {
-//                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','title_now', array($field->getLabel())));
-//                    $GLOBALS['Response']->redirect($this->getUrl());
-//                } else {
-//                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','unable_save_title'));
-//                }
-//            } else {
-//                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','bad_field_title'));
-//            }
-//        }
-//        $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
+    public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
+        if ($request->exist('update')) {
+            $field_id = $request->get('numeric_field_id');
+            $field = Tracker_FormElementFactory::instance()->getUsedNumericFieldById($this->tracker, $field_id);
+
+            if ($field) {
+                $this->numeric_field = $field;
+
+                if ($this->save()) {
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic','initial_effort_now', array($field->getLabel())));
+                    $GLOBALS['Response']->redirect($this->getUrl());
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic','unable_save_initial_effort'));
+                }
+            } else {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic','bad_field_initial_effort'));
+            }
+        }
+
+        $this->displayAdmin($semantic_manager, $tracker_manager, $request, $current_user);
     }
 
     /**
@@ -185,11 +193,12 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      * @return bool true if success, false otherwise
      */
     public function save() {
-//        $dao = new Tracker_Semantic_InitialEffortDao();
-//        return $dao->save($this->tracker->getId(), $this->getFieldId());
+        $dao = new AgileDashboard_Semantic_Dao_InitialEffortDao();
+        return $dao->save($this->tracker->getId(), $this->getFieldId());
     }
 
     protected static $_instances;
+
     /**
      * Load an instance of a Tracker_Semantic_InitialEffort
      *
@@ -198,20 +207,31 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      */
     public static function load(Tracker $tracker) {
         if (!isset(self::$_instances[$tracker->getId()])) {
-            $field_id = null;
-//            $dao = new Tracker_Semantic_InitialEffortDao();
-//            if ($row = $dao->searchByTrackerId($tracker->getId())->getRow()) {
-//                $field_id = $row['field_id'];
-//            }
-            $field = null;
-            if ($field_id) {
-                $field = Tracker_FormElementFactory::instance()->getFieldById($field_id);
-            }
+            $field = self::getFieldFromTracker($tracker);
             self::$_instances[$tracker->getId()] = new AgileDashBoard_Semantic_InitialEffort($tracker, $field);
         }
         return self::$_instances[$tracker->getId()];
     }
 
+    /**
+     * @param Tracker $tracker
+     * @return Tracker_FormElement_Field | null
+     */
+    private static function getFieldFromTracker(Tracker $tracker) {
+        $dao      = new AgileDashboard_Semantic_Dao_InitialEffortDao();
+        $field    = null;
+        $field_id = null;
+
+        if ($row = $dao->searchByTrackerId($tracker->getId())->getRow()) {
+            $field_id = $row['field_id'];
+        }
+
+        if ($field_id) {
+            $field = Tracker_FormElementFactory::instance()->getFieldById($field_id);
+        }
+
+        return $field;
+    }
     /**
      * Export semantic to XML
      *

@@ -67,3 +67,7 @@ plugin_agiledashboard_admin_semantic	initial_effort_description	C'est la somme d
 plugin_agiledashboard_admin_semantic	initial_effort_field	<p>L'effort estimé sera représenté par le champ <strong>$1</strong> dans ce tracker.</p>
 plugin_agiledashboard_admin_semantic	initial_effort_no_field	<p>Ce tracker n'a pas de champ <em>effort estimé</em>.</p>
 plugin_agiledashboard_admin_semantic	initial_effort_long_desc	Ce champ est utilisé dans le <b>Tableau Agile</b> si activé. L'effort estimé est la somme de tous les efforts au début de chaque jalon.
+plugin_agiledashboard_admin_semantic	initial_effort_impossible	Vous ne pouvez pas définir la sémantique <em>effort estimé</em> car il n'y a aucun champ numérique dans votre outil de suivi.
+plugin_agiledashboard_admin_semantic	initial_effort_now	L'effort estimé est maintenant : $1
+plugin_agiledashboard_admin_semantic	bad_field_initial_effort	Le champ soumis n'est pas un champ numérique
+plugin_agiledashboard_admin_semantic	unable_save_initial_effort	Impossible de sauvegarder la sémantique <em>effort estimé</em>
