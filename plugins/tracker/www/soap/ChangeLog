@@ -1,5 +1,9 @@
 All the documentation can be found at http://doc-en.tuleap.net/en/latest/soap/tracker.html
 
+2.0.10 - Tuleap 6.3
+    * WSDL change: Type AgileDashBoardSemanticInitialEffort added; Type TrackerSemantic modified.
+    * The SOAP method "getTrackerSemantic" now also exports the agile dashboard initial effort semantic.
+
 2.0.9 - Tuleap 6.2
     * Fix request #4076: The server was sending a FatalError back because no workflow was set-up for the tracker.
 

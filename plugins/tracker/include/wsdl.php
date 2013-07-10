@@ -437,15 +437,27 @@ $GLOBALS['server']->wsdl->addComplexType(
 );
 
 $GLOBALS['server']->wsdl->addComplexType(
+    'AgileDashBoardSemanticInitialEffort',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'field_name' => array('name'=>'field_name', 'type' => 'xsd:string')
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
     'TrackerSemantic',
     'complexType',
     'struct',
     'sequence',
     '',
     array(
-        'title'        => array('name'=>'title', 'type' => 'tns:TrackerSemanticTitle'),
-        'status'       => array('name'=>'status', 'type' => 'tns:TrackerSemanticStatus'),
-        'contributor'  => array('name'=>'contributor', 'type' => 'tns:TrackerSemanticContributor'),
+        'title'          => array('name'=>'title', 'type' => 'tns:TrackerSemanticTitle'),
+        'status'         => array('name'=>'status', 'type' => 'tns:TrackerSemanticStatus'),
+        'contributor'    => array('name'=>'contributor', 'type' => 'tns:TrackerSemanticContributor'),
+        'initial_effort' => array('name'=> 'initial_effort', 'type' => 'tns:AgileDashBoardSemanticInitialEffort')
     )
 );
 
@@ -826,6 +838,20 @@ $GLOBALS['server']->register(
 );
 
 $GLOBALS['server']->register(
+    'getTrackerSemantic',
+    array('sessionKey'=>'xsd:string',
+          'group_id'=>'xsd:int',
+          'tracker_id'=>'xsd:int',
+    ),
+    array('return'=>'tns:TrackerSemantic'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#getTrackerSemantic',
+    'rpc',
+    'encoded',
+    'Returns the tracker semantic and associated semantics from other plugins.'
+);
+
+$GLOBALS['server']->register(
     'getTrackerReports',
     array('sessionKey'=>'xsd:string',
           'group_id'=>'xsd:int',
@@ -851,5 +877,4 @@ $GLOBALS['server']->register(
     'encoded',
     'Returns the comments of an artifact.'
 );
-
 ?>

@@ -158,7 +158,7 @@ class Tracker_SemanticManager {
      * @return array the SOAPification of the semantic
      */
     public function exportToSOAP(PFUser $user) {
-        $semantic_order = array('title', 'status', 'contributor');
+        $semantic_order = $this->getSemanticOrder();
         $semantics      = $this->getSemantics();
         $soap_result    = array();
 
@@ -169,6 +169,18 @@ class Tracker_SemanticManager {
         }
 
         return $soap_result;
+    }
+
+    protected function getSemanticOrder() {
+        $order = array('title', 'status', 'contributor');
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_SOAP_SEMANTICS,
+            array(
+                'semantics' => &$order
+            )
+        );
+
+        return $order;
     }
 }
 ?>

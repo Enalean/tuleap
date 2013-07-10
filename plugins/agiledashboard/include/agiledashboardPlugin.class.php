@@ -51,6 +51,8 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE, 'tracker_event_redirect_after_artifact_creation_or_update', false);
             $this->_addHook(TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR, 'event_artifact_parents_selector', false);
             $this->_addHook(TRACKER_EVENT_MANAGE_SEMANTICS, 'tracker_event_manage_semantics', false);
+            $this->_addHook(TRACKER_EVENT_SEMANTIC_FROM_XML, 'tracker_event_semantic_from_xml');
+            $this->_addHook(TRACKER_EVENT_SOAP_SEMANTICS, 'tracker_event_soap_semantics');
 
             $this->_addHook(Event::SYSTRAY);
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
@@ -382,7 +384,6 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     /**
-     *
      * @see Event::TRACKER_EVENT_MANAGE_SEMANTICS
      */
     public function tracker_event_manage_semantics($parameters) {
@@ -392,6 +393,33 @@ class AgileDashboardPlugin extends Plugin {
 
         $effort_semantic = AgileDashBoard_Semantic_InitialEffort::load($tracker);
         $semantics->add($effort_semantic->getShortName(), $effort_semantic);
+    }
+
+    /**
+     * @see Event::TRACKER_EVENT_SEMANTIC_FROM_XML
+     */
+    public function tracker_event_semantic_from_xml(&$parameters) {
+        $tracker    = $parameters['tracker'];
+        $xml        = $parameters['xml'];
+        $xmlMapping = $parameters['xml_mapping'];
+        $type       = $parameters['type'];
+
+        if ($type == AgileDashBoard_Semantic_InitialEffort::NAME) {
+            $parameters['semantic'] = $this->getSemanticInitialEffortFactory()->getInstanceFromXML($xml, $xmlMapping, $tracker);
+        }
+    }
+
+    protected function getSemanticInitialEffortFactory() {
+        return AgileDashboard_Semantic_InitialEffortFactory::instance();
+    }
+
+    /**
+     * Augment $params['semantics'] with names of AgileDashboard semantics
+     * 
+     * @see TRACKER_EVENT_SOAP_SEMANTICS
+     */
+    public function tracker_event_soap_semantics(&$params) {
+        $params['semantics'][] = AgileDashBoard_Semantic_InitialEffort::NAME;
     }
 
     /**

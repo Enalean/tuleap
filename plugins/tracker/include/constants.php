@@ -136,4 +136,28 @@ define('TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR', 'tracker_event_artifact_parent
  * The semantics parameter is populated with additional semantic fields
  */
 define('TRACKER_EVENT_MANAGE_SEMANTICS', 'tracker_event_manage_semantics');
+
+/**
+ * Create a semantic from xml in other plugins
+ *
+ * Parameters:
+ * 'xml'           => @var SimpleXMLElement
+ * 'xml_mapping'   => @var array
+ * 'tracker'       => @var Tracker
+ * 'semantic'      => @var array
+ * 'type'          => @var string
+ *
+ * Expected results
+ * The semantic parameter is populated with a Tracker_Semantic object if it exists for the given type
+ */
+define('TRACKER_EVENT_SEMANTIC_FROM_XML', 'tracker_event_semantic_from_xml');
+
+/**
+ * Fetches all the semantic names
+ *
+ * Parameters:
+ * 'semantic' => @var array of semantic name strings
+ */
+define('TRACKER_EVENT_SOAP_SEMANTICS', 'tracker_event_soap_semantics');
+
 ?>

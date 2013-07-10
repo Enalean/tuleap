@@ -17,15 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 
 class Tracker_SemanticFactory {
-    
+
     /**
      * Hold an instance of the class
      */
     protected static $instance;
-    
+
     /**
      * The singleton method
      *
@@ -38,14 +38,14 @@ class Tracker_SemanticFactory {
         }
         return self::$instance;
     }
-    
+
     /**
      * Creates a Tracker_Semantic Object
-     * 
+     *
      * @param SimpleXMLElement $xml         containing the structure of the imported semantic
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
      * @param Tracker          $tracker     to which the semantic is attached
-     * 
+     *
      * @return Tracker_Semantic The semantic object, or null if error
      */
     public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {
@@ -66,12 +66,35 @@ class Tracker_SemanticFactory {
                 $semantic = $this->getSemanticTooltipFactory()->getInstanceFromXML($xml, $xmlMapping, $tracker);
                 break;
             default:
-                $semantic = null;
+                $semantic = $this->getAnotherSemanticInstance($xml, $xmlMapping, $tracker, $type);
                 break;
         }
+
+        if ($semantic === null) {
+            $semantic = $this->getSemanticFromAnotherPlugin($xml, $xmlMapping, $tracker, $type);
+        }
+
         return $semantic;
     }
-    
+
+    private function getSemanticFromAnotherPlugin(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker, $type) {
+        $semantic = null;
+
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_SEMANTIC_FROM_XML,
+            $m = array(
+                'xml'           => $xml,
+                'xml_mapping'   => $xml_mapping,
+                'tracker'       => $tracker,
+                'semantic'      => &$semantic,
+                'type'          => $type,
+            )
+        );
+
+        return $semantic;
+    }
+
+
     /**
      * Returns an instance of Tracker_Semantic_TitleFactory
      *
@@ -96,6 +119,7 @@ class Tracker_SemanticFactory {
     function getSemanticTooltipFactory() {
         return Tracker_TooltipFactory::instance();
     }
+
     /**
      * Returns an instance of Tracker_ContributorFactory
      *
@@ -104,20 +128,20 @@ class Tracker_SemanticFactory {
     function getSemanticContributorFactory() {
         return Tracker_Semantic_ContributorFactory::instance();
     }
-    
+
     /**
      * Creates new Tracker_Semantic in the database
-     * 
+     *
      * @param Tracker_Semantic $semantic The semantic to save
      * @param Tracker          $tracker  The tracker
-     * 
+     *
      * @return bool true if the semantic is saved, false otherwise
      */
     public function saveObject($semantic, $tracker) {
         $semantic->setTracker($tracker);
         return $semantic->save();
     }
-    
+
     /**
      * Duplicate the semantics from tracker source to tracker target
      *

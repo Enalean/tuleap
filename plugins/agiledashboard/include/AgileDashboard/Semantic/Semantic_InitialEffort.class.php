@@ -22,7 +22,7 @@
 */
 
 class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
-    const NAME = 'initialEffort';
+    const NAME = 'initial_effort';
 
     /**
      * @var Tracker_FormElement_Field_Numeric
@@ -35,13 +35,13 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      * @param Tracker                           $tracker    The tracker
      * @param Tracker_FormElement_Field_Numeric $numeric_field The field
      */
-    public function __construct(Tracker $tracker, Tracker_FormElement_Field $numeric_field = null) {
+    public function __construct(Tracker $tracker, Tracker_FormElement $numeric_field = null) {
         parent::__construct($tracker);
         $this->numeric_field = $numeric_field;
     }
 
     /**
-     * The short name of the semantic: initialEffort, plannedStoryPoints, ...
+     * The short name of the semantic: initial_effort, plannedStoryPoints, ...
      *
      * @return string
      */
@@ -68,9 +68,9 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
     }
 
     /**
-     * The Id of the (text) field used for initialEffort semantic
+     * The Id of the (text) field used for initial_effort semantic
      *
-     * @return int The Id of the (numeric) field used for initialEffort semantic, or 0 if no field
+     * @return int The Id of the (numeric) field used for initial_effort semantic, or 0 if no field
      */
     public function getFieldId() {
         if ($this->numeric_field) {
@@ -81,9 +81,9 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
     }
 
     /**
-     * The (numeric) field used for initialEffort semantic
+     * The (numeric) field used for initial_effort semantic
      *
-     * @return Tracker_FormElement_Field_Text The (numeric) field used for initialEffort semantic, or null if no field
+     * @return Tracker_FormElement_Field_Text The (numeric) field used for initial_effort semantic, or null if no field
      */
     public function getField() {
         return $this->numeric_field;
@@ -241,6 +241,14 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      * @return void
      */
      public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
+        if ($this->getFieldId()) {
+             $child = $root->addChild('semantic');
+             $child->addAttribute('type', $this->getShortName());
+             $child->addChild('shortname', $this->getShortName());
+             $child->addChild('label', $this->getLabel());
+             $child->addChild('description', $this->getDescription());
+             $child->addChild('field')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
+         }
      }
 
     /**
