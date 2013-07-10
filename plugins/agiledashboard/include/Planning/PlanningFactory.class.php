@@ -211,17 +211,21 @@ class PlanningFactory {
      */
     public function getPlanning($planning_id) {
         $planning =  $this->dao->searchById($planning_id)->getRow();
-        if ($planning) {
-            $backlog_tracker_id = $this->getBacklogTrackerId($planning_id);
-            return new Planning($planning_id,
-                                $planning['name'],
-                                $planning['group_id'],
-                                $planning['backlog_title'],
-                                $planning['plan_title'],
-                                $backlog_tracker_id,
-                                $planning['planning_tracker_id']);
+        if (! $planning) {
+            return null;
         }
-        return null;
+
+        $planning = new Planning($planning_id,
+                            $planning['name'],
+                            $planning['group_id'],
+                            $planning['backlog_title'],
+                            $planning['plan_title'],
+                            null,
+                            $planning['planning_tracker_id']);
+        $planning->setBacklogTracker($this->getBacklogTracker($planning));
+        $planning->setPlanningTracker($this->getPlanningTracker($planning));
+
+        return $planning;
     }
 
     /**
@@ -283,18 +287,6 @@ class PlanningFactory {
             $plannings[] = $p;
         }
         return $plannings;
-    }
-
-    public function getPlanningWithTrackers($planning_id) {
-        $planning = $this->getPlanning($planning_id);
-
-        if ($planning) {
-            // TODO: do not use setters...
-            $planning->setPlanningTracker($this->getPlanningTracker($planning));
-            $planning->setBacklogTracker($this->getBacklogTracker($planning));
-        }
-
-        return $planning;
     }
 
     /**

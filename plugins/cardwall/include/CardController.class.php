@@ -42,7 +42,7 @@ class Cardwall_CardController extends MVC2_PluginController {
     private $config;
 
     /** @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact */
-    private $field_retriever;
+    private $field_provider;
 
     public function __construct(
         Codendi_Request $request,
@@ -50,7 +50,7 @@ class Cardwall_CardController extends MVC2_PluginController {
         Cardwall_CardFields $card_fields,
         Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
         Cardwall_OnTop_Config $config,
-        Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_retriever,
+        Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
         Cardwall_CardInCellPresenterFactory $presenter_factory,
         Cardwall_OnTop_Config_ColumnCollection $columns
     ) {
@@ -59,7 +59,7 @@ class Cardwall_CardController extends MVC2_PluginController {
         $this->card_fields         = $card_fields;
         $this->display_preferences = $display_preferences;
         $this->config              = $config;
-        $this->field_retriever     = $field_retriever;
+        $this->field_provider      = $field_provider;
         $this->presenter_factory   = $presenter_factory;
         $this->columns             = $columns;
     }
@@ -126,7 +126,7 @@ class Cardwall_CardController extends MVC2_PluginController {
 
     private function getColumnId() {
         foreach ($this->columns as $column) {
-            if ($this->config->isInColumn($this->artifact, $this->field_retriever, $column)) {
+            if ($this->config->isInColumn($this->artifact, $this->field_provider, $column)) {
                 return $column->getId();
             }
         }

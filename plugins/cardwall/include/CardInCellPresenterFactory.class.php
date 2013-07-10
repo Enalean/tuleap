@@ -28,7 +28,7 @@ class Cardwall_CardInCellPresenterFactory {
     /**
      * @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
      */
-    private $field_retriever;
+    private $field_provider;
 
     /**
      * @var Cardwall_MappingCollection
@@ -36,9 +36,9 @@ class Cardwall_CardInCellPresenterFactory {
     private $mappings;
 
 
-    public function __construct(Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $retriever, Cardwall_MappingCollection $mappings) {
-        $this->field_retriever = $retriever;
-        $this->mappings        = $mappings;
+    public function __construct(Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider, Cardwall_MappingCollection $mappings) {
+        $this->field_provider = $field_provider;
+        $this->mappings       = $mappings;
     }
 
     /**
@@ -56,7 +56,7 @@ class Cardwall_CardInCellPresenterFactory {
 
     private function getFieldId(Cardwall_CardPresenter $card_presenter) {
         $artifact = $card_presenter->getArtifact();
-        $field    = $this->field_retriever->getField($artifact);
+        $field    = $this->field_provider->getField($artifact->getTracker());
         return $field ? $field->getId() : 0;
     }
 }

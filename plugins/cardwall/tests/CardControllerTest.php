@@ -52,7 +52,7 @@ class Cardwall_CardControllerTest extends TuleapTestCase {
 
         $artifact = aMockArtifact()->withId($artifact_id)->build();
         $config = mock('Cardwall_OnTop_Config');
-        $field_retriever = mock('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact');
+        $field_provider = mock('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact');
         $card_fields = mock('Cardwall_CardFields');
 
         $card_controller = partial_mock(
@@ -64,7 +64,7 @@ class Cardwall_CardControllerTest extends TuleapTestCase {
                 $card_fields,
                 mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'),
                 $config,
-                $field_retriever,
+                $field_provider,
                 mock('Cardwall_CardInCellPresenterFactory'),
                 $columns
             )
@@ -99,7 +99,7 @@ class Cardwall_CardControllerTest extends TuleapTestCase {
 
         stub($card_controller)->getCardInCellPresenter()->returns($card_in_cell_presenter);
 
-        stub($config)->isInColumn($artifact, $field_retriever, $column2)->returns(true);
+        stub($config)->isInColumn($artifact, $field_provider, $column2)->returns(true);
         stub($card_fields)->getFields()->returns(array($field1, $field2, $field3));
 
         $expected = array(

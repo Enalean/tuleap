@@ -23,8 +23,8 @@ require_once dirname(__FILE__) .'/bootstrap.php';
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 
 class Cardwall_ArtifactNodeTreeProvider4Tests extends Cardwall_ArtifactNodeTreeProvider {
-    public function getCards(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory) {
-        return parent::getCards($artifact_ids, $artifact_factory);
+    public function getCards(array $artifact_ids) {
+        return parent::getCards($artifact_ids);
     }
 
     public function wrapInAThreeLevelArtifactTree(array $cards, $swimline_id) {
@@ -33,30 +33,31 @@ class Cardwall_ArtifactNodeTreeProvider4Tests extends Cardwall_ArtifactNodeTreeP
 }
 
 class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
-        
+
+    public function setUp() {
+        parent::setUp();
+        $this->node_factory     = mock('Cardwall_CardInCellPresenterNodeFactory');
+        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        $this->provider = new Cardwall_ArtifactNodeTreeProvider4Tests($this->node_factory, $this->artifact_factory);
+    }
+
     public function itCreatesTwoLevelsEvenIfNoArtifactIdsAreGiven() {
-        $provider  = new Cardwall_ArtifactNodeTreeProvider4Tests();
-        
-        $root_node = $provider->wrapInAThreeLevelArtifactTree(array(), 'whatever');
-        
+        $root_node = $this->provider->wrapInAThreeLevelArtifactTree(array(), 'whatever');
+
         $this->assertTrue($root_node->hasChildren());
         $this->assertFalse($root_node->getChild(0)->hasChildren());
-        
     }
 
     public function itHasASwimlineId() {
-        $provider  = new Cardwall_ArtifactNodeTreeProvider4Tests();
-
-        $root_node = $provider->wrapInAThreeLevelArtifactTree(array(), 'Dat Id');
+        $root_node = $this->provider->wrapInAThreeLevelArtifactTree(array(), 'Dat Id');
 
         $this->assertEqual($root_node->getChild(0)->getId(), 'Dat Id');
     }
-    
+
     public function itCreatesAThreeLevelTreeBecauseItMustLookLikeTheNodeTreeFromAMilestone() {
-        $provider  = new Cardwall_ArtifactNodeTreeProvider4Tests();
         $artifact4 = aMockArtifact()->withId(4)->build();
-        
-        $root_node = $provider->wrapInAThreeLevelArtifactTree(array(new ArtifactNode($artifact4)), 'whatever');
+
+        $root_node = $this->provider->wrapInAThreeLevelArtifactTree(array(new ArtifactNode($artifact4)), 'whatever');
 
         $this->assertTrue($root_node->hasChildren());
         $this->assertTrue($root_node->getChild(0)->hasChildren());
@@ -68,22 +69,27 @@ class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
         $this->assertEqual($id, 4);
         $artifact = $card->getArtifact();
         $this->assertIdentical($artifact, $artifact4);
-        
+
     }
-    
+
     public function itCreatesAnArtifactNodeForEveryArtifactId() {
-        $provider = new Cardwall_ArtifactNodeTreeProvider4Tests();
-        $artifact_factory = mock('Tracker_ArtifactFactory');
-        
         $artifact4 = aMockArtifact()->withId(4)->build();
         $artifact5 = aMockArtifact()->withId(5)->build();
         $artifact6 = aMockArtifact()->withId(6)->build();
-        
-        stub($artifact_factory)->getArtifactById(4)->returns($artifact4);
-        stub($artifact_factory)->getArtifactById(5)->returns($artifact5);
-        stub($artifact_factory)->getArtifactById(6)->returns($artifact6);
-        
-        $cards = $provider->getCards(array(4, 5, 6), $artifact_factory);
+
+        $node4 = new Cardwall_CardInCellPresenterNode(new Cardwall_CardInCellPresenter(new Cardwall_CardPresenter($artifact4, mock('Cardwall_CardFields'), '*', mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'), 0), 4));
+        $node5 = new Cardwall_CardInCellPresenterNode(new Cardwall_CardInCellPresenter(new Cardwall_CardPresenter($artifact5, mock('Cardwall_CardFields'), '*', mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'), 0), 5));
+        $node6 = new Cardwall_CardInCellPresenterNode(new Cardwall_CardInCellPresenter(new Cardwall_CardPresenter($artifact6, mock('Cardwall_CardFields'), '*', mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'), 0), 6));
+
+        stub($this->artifact_factory)->getArtifactById(4)->returns($artifact4);
+        stub($this->artifact_factory)->getArtifactById(5)->returns($artifact5);
+        stub($this->artifact_factory)->getArtifactById(6)->returns($artifact6);
+
+        stub($this->node_factory)->getCardInCellPresenterNode($artifact4)->returns($node4);
+        stub($this->node_factory)->getCardInCellPresenterNode($artifact5)->returns($node5);
+        stub($this->node_factory)->getCardInCellPresenterNode($artifact6)->returns($node6);
+
+        $cards = $this->provider->getCards(array(4, 5, 6));
 
         $this->assertEqual(3, count($cards));
         foreach ($cards as $card) {
@@ -93,8 +99,8 @@ class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
             $this->assertBetweenClosedInterval($artifact->getId(), 4, 6);
             $this->assertIsA($artifact, 'Tracker_Artifact');
         }
-        
+
     }
-    
+
 }
 ?>

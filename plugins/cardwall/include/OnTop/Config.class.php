@@ -126,7 +126,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
                                Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
                                Cardwall_Column                                      $column) {
         $artifact_status = null;
-        $field           = $field_provider->getField($artifact);
+        $field           = $field_provider->getField($artifact->getTracker());
         if ($field) {
             $last_changeset = $artifact->getLastChangeset();
             if ($last_changeset) {

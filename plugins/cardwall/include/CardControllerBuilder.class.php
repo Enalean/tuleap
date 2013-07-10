@@ -43,7 +43,7 @@ class Cardwall_CardControllerBuilder {
     public function getCardController(Codendi_Request $request) {
         $card_artifact   = $this->getArtifact($request);
         $config          = $this->getConfig($request);
-        $field_retriever = $this->getFieldRetriever($config);
+        $field_provider = $this->getFieldRetriever($config);
         $columns         = $config->getDashboardColumns();
         $user_manager    = UserManager::instance();
         $factory         = Tracker_FormElementFactory::instance();
@@ -54,8 +54,8 @@ class Cardwall_CardControllerBuilder {
             new Cardwall_CardFields($user_manager, $factory),
             new Cardwall_UserPreferences_UserPreferencesDisplayUser(Cardwall_UserPreferences_UserPreferencesDisplayUser::DISPLAY_AVATARS),
             $config,
-            $field_retriever,
-            $this->getCardInCellPresenterFactory($config, $card_artifact, $field_retriever, $columns),
+            $field_provider,
+            $this->getCardInCellPresenterFactory($config, $card_artifact, $field_provider, $columns),
             $columns
         );
     }
@@ -77,7 +77,7 @@ class Cardwall_CardControllerBuilder {
     }
 
     private function getPlanning(Codendi_Request $request) {
-        $planning = PlanningFactory::build()->getPlanningWithTrackers($request->get('planning_id'));
+        $planning = PlanningFactory::build()->getPlanning($request->get('planning_id'));
         if ($planning) {
             return $planning;
         }
@@ -91,11 +91,11 @@ class Cardwall_CardControllerBuilder {
         );
     }
 
-    private function getCardInCellPresenterFactory(Cardwall_OnTop_Config $config, Tracker_Artifact $artifact, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_retriever, Cardwall_OnTop_Config_ColumnCollection $columns) {
-        $field = $field_retriever->getField($artifact);
+    private function getCardInCellPresenterFactory(Cardwall_OnTop_Config $config, Tracker_Artifact $artifact, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider, Cardwall_OnTop_Config_ColumnCollection $columns) {
+        $field = $field_provider->getField($artifact->getTracker());
         $status_fields[$field->getId()] = $field;
         return new Cardwall_CardInCellPresenterFactory(
-            $field_retriever,
+            $field_provider,
             $config->getCardwallMappings($status_fields, $columns)
         );
     }

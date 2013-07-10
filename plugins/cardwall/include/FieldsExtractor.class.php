@@ -58,7 +58,11 @@ class Cardwall_FieldsExtractor {
     }
                 
     private function getIndexedStatusFieldsOf(array $artifacts) {
-        $status_fields          = array_filter(array_map(array($this->field_provider, 'getField'), $artifacts));
+        $trackers = array();
+        foreach ($artifacts as $artifact) {
+            $trackers[] = $artifact->getTracker();
+        }
+        $status_fields          = array_filter(array_map(array($this->field_provider, 'getField'), $trackers));
         $indexed_status_fields  = $this->indexById($status_fields);
         return $indexed_status_fields;
     }
