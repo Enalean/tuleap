@@ -33,7 +33,7 @@ plugin_agiledashboard	capacity	Capacity:
 plugin_agiledashboard	available	Available $1
 
 plugin_agiledashboard	content_head_title	Title
-plugin_agiledashboard	content_head_points	Remaining effort:
+plugin_agiledashboard	content_head_points	Effort
 plugin_agiledashboard	content_head_parent	Parent
 plugin_agiledashboard	top_planning_link	Top Backlog Planning
 

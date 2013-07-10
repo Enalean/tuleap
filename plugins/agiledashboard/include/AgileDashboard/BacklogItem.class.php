@@ -33,7 +33,7 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
     private $url;
 
     /** @var Int */
-    private $remaining_effort;
+    private $effort;
 
     /** @var String */
     private $parent_url;
@@ -60,7 +60,7 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
     }
 
     public function setRemainingEffort($value) {
-        $this->remaining_effort = $value;
+        $this->effort = $value;
     }
 
     public function setStatus($status) {
@@ -80,7 +80,7 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
     }
 
     public function points() {
-        return $this->remaining_effort;
+        return $this->effort;
     }
 
     public function parent_title() {
