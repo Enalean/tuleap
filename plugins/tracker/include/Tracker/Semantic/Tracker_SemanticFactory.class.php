@@ -70,9 +70,6 @@ class Tracker_SemanticFactory {
                 break;
         }
 
-        if ($semantic === null) {
-            $semantic = $this->getSemanticFromAnotherPlugin($xml, $xmlMapping, $tracker, $type);
-        }
 
         return $semantic;
     }
