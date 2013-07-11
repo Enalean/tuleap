@@ -391,6 +391,29 @@ class Tracker_FormElementFactory {
         return $this->getUsedFormElementsByType($tracker, $field_types);
     }
 
+    /**
+     * Augment fields_data with fields which have a default value defined
+     *
+     * @param Tracker $tracker
+     * @param Array $fields_data
+     *
+     * @return Array $fields_data
+     */
+    public function getUsedFieldsWithDefaultValueForSoap(Tracker $tracker, Array $fields_data) {
+        $fields = $this->getUsedFields($tracker);
+        foreach ($fields as $field) {
+            $fields_data = $this->augmentFieldsDataWithDefaultValue($field, $fields_data);
+        }
+        return $fields_data;
+    }
+
+    private function augmentFieldsDataWithDefaultValue($field, $fields_data) {
+        if (!array_key_exists($field->getId(), $fields_data)) {
+            $fields_data[$field->getId()] = $field->getDefaultValue();
+        }
+        return $fields_data;
+    }
+
     private function getFieldsSQLTypes() {
         $field_classnames = array_merge($this->classnames, $this->special_classnames);
         EventManager::instance()->processEvent('tracker_formElement_classnames', array('classnames' => &$field_classnames));
