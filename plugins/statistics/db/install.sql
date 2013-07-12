@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS plugin_statistics_user_session;
 CREATE TABLE plugin_statistics_user_session (
     user_id INT UNSIGNED DEFAULT 0 NOT NULL,
     time    INT UNSIGNED DEFAULT 0 NOT NULL
-) TYPE = InnoDB;
+) ENGINE = InnoDB;
 
 DROP TABLE IF EXISTS plugin_statistics_diskusage_group;
 CREATE TABLE plugin_statistics_diskusage_group (
@@ -15,7 +15,7 @@ CREATE TABLE plugin_statistics_diskusage_group (
     size BIGINT UNSIGNED DEFAULT 0 NOT NULL,
     INDEX idx_date (date, group_id, service(5)),
     INDEX idx_group_id_date (group_id, date)
-) TYPE = InnoDB;
+) ENGINE = InnoDB;
 
 DROP TABLE IF EXISTS plugin_statistics_diskusage_user;
 CREATE TABLE plugin_statistics_diskusage_user (
@@ -24,7 +24,7 @@ CREATE TABLE plugin_statistics_diskusage_user (
     date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
     size BIGINT UNSIGNED DEFAULT 0 NOT NULL,
     INDEX idx_date (date, user_id, service(5))
-) TYPE = InnoDB;	
+) ENGINE = InnoDB;	
 
 DROP TABLE IF EXISTS plugin_statistics_diskusage_site;
 CREATE TABLE plugin_statistics_diskusage_site (
@@ -32,7 +32,7 @@ CREATE TABLE plugin_statistics_diskusage_site (
     date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
     size BIGINT UNSIGNED DEFAULT 0 NOT NULL,
     INDEX idx_date (date, service(5))
-) TYPE = InnoDB;
+) ENGINE = InnoDB;
 
 DROP TABLE IF EXISTS plugin_statistics_disk_quota_exception;
 CREATE TABLE plugin_statistics_disk_quota_exception (
@@ -42,4 +42,4 @@ CREATE TABLE plugin_statistics_disk_quota_exception (
     exception_motivation text,
     request_date int(11) unsigned NOT NULL default '0',
     PRIMARY KEY (group_id)
-) TYPE = InnoDB;
+) ENGINE = InnoDB;
