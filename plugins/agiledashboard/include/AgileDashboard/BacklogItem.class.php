@@ -33,7 +33,7 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
     private $url;
 
     /** @var Int */
-    private $effort;
+    private $initial_effort;
 
     /** @var String */
     private $parent_url;
@@ -59,8 +59,8 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
         $this->parent_url   = $this->getUrlWithRedirect($parent->getUri());
     }
 
-    public function setRemainingEffort($value) {
-        $this->effort = $value;
+    public function setInitialEffort($value) {
+        $this->initial_effort = $value;
     }
 
     public function setStatus($status) {
@@ -80,7 +80,7 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
     }
 
     public function points() {
-        return $this->effort;
+        return $this->initial_effort;
     }
 
     public function parent_title() {

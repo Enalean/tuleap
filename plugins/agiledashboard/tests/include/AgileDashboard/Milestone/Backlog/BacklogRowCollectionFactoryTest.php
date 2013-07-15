@@ -70,7 +70,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
             array(
                 'userCanReadBacklogTitleField',
                 'userCanReadBacklogStatusField',
-                'getEffortField',
+                'getInitialEffortField',
             ),
             array(
                 $this->dao,
@@ -159,7 +159,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
         $field = mock('Tracker_FormElement_Field_Float');
 
         stub($field)->getComputedValue()->returns(26);
-        stub($this->factory)->getEffortField()->returns($field);
+        stub($this->factory)->getInitialEffortField()->returns($field);
 
         $content = $this->factory->getTodoCollection(
             $this->user,

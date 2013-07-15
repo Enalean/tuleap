@@ -95,7 +95,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
     }
 
     public function points() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_points');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_points_pane');
     }
 
     public function parent() {

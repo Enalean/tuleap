@@ -228,7 +228,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
      * @return string | number
      */
     private function getSemanticEffortValue(PFUser $user, Tracker_Artifact $artifact) {
-        if (! $field = $this->getEffortField($artifact->getTracker())) {
+        if (! $field = $this->getInitialEffortField($artifact->getTracker())) {
             return false;
         }
 
@@ -253,7 +253,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
     }
 
     protected function userCanReadEffortField(PFUser $user, Tracker $tracker) {
-        if (! $field = $this->getEffortField($tracker)) {
+        if (! $field = $this->getInitialEffortField($tracker)) {
             return false;
         }
 
@@ -265,7 +265,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
      * @param Tracker $tracker
      * @return Tracker_FormElement_Field | null
      */
-    protected function getEffortField(Tracker $tracker) {
+    protected function getInitialEffortField(Tracker $tracker) {
         $field = AgileDashBoard_Semantic_InitialEffort::load($tracker)->getField();
         if (! $field) {
             return null;
@@ -274,9 +274,9 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
         return $field;
     }
 
-    protected function setRemainingEffort(AgileDashboard_BacklogItem $backlog_item, $semantics_per_artifact) {
+    protected function setInitialEffort(AgileDashboard_BacklogItem $backlog_item, $semantics_per_artifact) {
         if (isset($semantics_per_artifact[AgileDashBoard_Semantic_InitialEffort::NAME])) {
-            $backlog_item->setRemainingEffort($semantics_per_artifact[AgileDashBoard_Semantic_InitialEffort::NAME]);
+            $backlog_item->setInitialEffort($semantics_per_artifact[AgileDashBoard_Semantic_InitialEffort::NAME]);
         }
     }
 
@@ -312,7 +312,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
         if ($semantics[$artifact_id][Tracker_Semantic_Status::NAME] == AgileDashboard_BacklogItemDao::STATUS_OPEN) {
             $backlog_item->setStatus(Tracker_Semantic_Status::OPEN);
 
-            $this->setRemainingEffort($backlog_item, $semantics[$artifact_id]);
+            $this->setInitialEffort($backlog_item, $semantics[$artifact_id]);
             $this->todo_collection[$milestone->getArtifactId()]->push($backlog_item);
 
             if (! in_array($artifact_id, $planned)) {
