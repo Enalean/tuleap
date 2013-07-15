@@ -130,8 +130,11 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
                 )
             ),
         );
+
         $this->filterWithGivenFacets($query, $facets);
-        $this->filterQueryWithPermissions($query, $user);
+        $this->filterWithGivenMapping($query, $facets);
+        //@TODO Permissions filter was bypassed for debug purpose, do not forget to restore it.
+        //$this->filterQueryWithPermissions($query, $user);
         return $query;
     }
 
@@ -165,6 +168,22 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
             }
             $query['filter'] = $filter_on_project;
         }
+    }
+
+    private function filterWithGivenMapping(array &$query, array $facets) {
+        //@Todo retrieve mapping from facets array
+        $mapping = array('docman','tracker');
+        $filtered_query = array(
+            'filtered' => array(
+                'query'  => $query['query'],
+                'filter' => array(
+                    'terms' => array(
+                        '_type' => $mapping
+                    )
+                )
+            )
+        );
+        $query['query'] = $filtered_query;
     }
 }
 
