@@ -6,7 +6,7 @@ Version 6.3 (Not released yet)
 	* docman: 2.26.18
 	* git: 3.32
 	* cardwall: 0.9.39
-	* tracker: 5.137
+	* tracker: 5.138
 
 	== Bug fix ==
 	* request #4112: Python exception pass (Contrib Raphaël Enrici)

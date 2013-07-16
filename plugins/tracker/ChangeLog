@@ -1,3 +1,6 @@
+Version 5.138 - Tuleap 6.3
+    * Fix sla #4371 - SOAP: when creating a new artifact default values are set
+
 Version 5.137 - Tuleap 6.3
     * Fix request #4017: Cross Reference to a release is not removed from an Epic when moved from a plan back to Product Backlog
 
