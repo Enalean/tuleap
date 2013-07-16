@@ -107,7 +107,7 @@ class Project_OneStepCreation_OneStepCreationRequest {
     public function __construct(Codendi_Request $request, ProjectManager $project_manager) {
         $this->request         = $request;
         $this->project_manager = $project_manager;
-
+        $this->is_public       = $GLOBALS['sys_is_project_public'];
         $request_data = $request->params;
         $this->setFullName($request_data)
             ->setUnixName($request_data)
