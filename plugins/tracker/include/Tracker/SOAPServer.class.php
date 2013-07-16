@@ -435,6 +435,9 @@ class Tracker_SOAPServer {
                 }
             }
         }
+        //We augment fields_data with fields which have a default value defined
+        $fields_data = $this->formelement_factory->getUsedFieldsWithDefaultValueForSoap($tracker, $fields_data);
+
         return $fields_data;
     }
 
