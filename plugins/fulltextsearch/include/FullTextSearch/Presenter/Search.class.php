@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once '/usr/share/codendi/plugins/fulltextsearch/include/ElasticSearch/SearchResultServicesFacetCollection.class.php';
 
 class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
     public $template;
@@ -50,7 +51,29 @@ class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
      * @return ElasticSearch_SearchResultProjectsFacetCollection
      */
     public function services_facets() {
-        return $this->query_result->getFacets();
+        //return $this->query_result->getFacets();
+        $result = array(
+            "_type"   => "terms",
+            "missing" => 0,
+            "total"   => 3,
+            "other"   => 0,
+            "terms"   => array(
+            array(
+                "term" => "docman",
+                "count"=> 12
+            ),
+            array(
+                "term"=> "tracker",
+                "count"=> 34
+            ),
+             array(
+                "term"=> "forum",
+                "count"=> 51
+            )
+        ));
+        $submitted_facets = array();
+        $services_facets  = new ElasticSearch_SearchResultServicesFacetCollection($result, $submitted_facets);
+        return $services_facets;
     }
 
     public function no_results() {
