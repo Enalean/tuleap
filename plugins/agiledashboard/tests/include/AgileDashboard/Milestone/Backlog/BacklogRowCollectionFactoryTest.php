@@ -91,6 +91,8 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
         $story3 = anArtifact()->withId($this->closed_story_id)->withTracker($tracker3)->build();
   
         $this->backlog_strategy = stub('AgileDashboard_Milestone_Backlog_BacklogStrategy')->getArtifacts($this->user)->returns(array($story1, $story2, $story3));
+        stub($this->backlog_strategy)->getMilestoneBacklogArtifactsTracker()->returns(mock('Tracker'));
+
         $this->redirect_to_self = 'whatever';
 
 
@@ -153,12 +155,13 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
         $this->assertEqual($row->id(), $this->closed_story_id);
     }
 
-    public function itSetEffortForOpenStories() {
+    public function itSetInitialEffortForOpenStories() {
         stub($this->dao)->getPlannedItemIds()->returns(array());
 
         $field = mock('Tracker_FormElement_Field_Float');
 
         stub($field)->getComputedValue()->returns(26);
+        stub($field)->userCanRead()->returns(true);
         stub($this->factory)->getInitialEffortField()->returns($field);
 
         $content = $this->factory->getTodoCollection(
@@ -170,6 +173,26 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
 
         $row = $content->current();
         $this->assertEqual($row->points(), 26);
+    }
+
+    public function itNotSetInitialEffortForOpenStoriesIfUserCannotRead() {
+        stub($this->dao)->getPlannedItemIds()->returns(array());
+
+        $field = mock('Tracker_FormElement_Field_Float');
+
+        stub($field)->getComputedValue()->returns(26);
+        stub($field)->userCanRead()->returns(false);
+        stub($this->factory)->getInitialEffortField()->returns($field);
+
+        $content = $this->factory->getTodoCollection(
+            $this->user,
+            $this->milestone,
+            $this->backlog_strategy,
+            $this->redirect_to_self
+        );
+
+        $row = $content->current();
+        $this->assertEqual($row->points(), null);
     }
 
     public function itCreatesACollectionForOpenAndUnplannedElements() {

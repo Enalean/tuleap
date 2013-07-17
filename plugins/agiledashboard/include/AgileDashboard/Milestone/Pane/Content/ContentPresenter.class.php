@@ -180,6 +180,14 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     public function lab() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'lab');
     }
+
+    public function initial_effort_not_defined() {
+        return ! $this->todo_collection->getInitialEffortSemanticIsDefined();
+    }
+
+    public function initial_effort_warning() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'initial_effort_warning', $this->backlog_item_type);
+    }
 }
 
 ?>

@@ -838,20 +838,6 @@ $GLOBALS['server']->register(
 );
 
 $GLOBALS['server']->register(
-    'getTrackerSemantic',
-    array('sessionKey'=>'xsd:string',
-          'group_id'=>'xsd:int',
-          'tracker_id'=>'xsd:int',
-    ),
-    array('return'=>'tns:TrackerSemantic'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#getTrackerSemantic',
-    'rpc',
-    'encoded',
-    'Returns the tracker semantic and associated semantics from other plugins.'
-);
-
-$GLOBALS['server']->register(
     'getTrackerReports',
     array('sessionKey'=>'xsd:string',
           'group_id'=>'xsd:int',

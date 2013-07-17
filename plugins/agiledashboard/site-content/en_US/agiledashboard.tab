@@ -33,8 +33,8 @@ plugin_agiledashboard	capacity	Capacity:
 plugin_agiledashboard	available	Available $1
 
 plugin_agiledashboard	content_head_title	Title
-plugin_agiledashboard	content_head_points	Effort
-plugin_agiledashboard	content_head_points_pane	Effort:
+plugin_agiledashboard	content_head_points	Initial Effort
+plugin_agiledashboard	content_head_points_pane	Initial Effort:
 plugin_agiledashboard	content_head_parent	Parent
 plugin_agiledashboard	top_planning_link	Top Backlog Planning
 
@@ -52,6 +52,7 @@ plugin_agiledashboard_contentpane	open_items_intro	Here are the items that are s
 plugin_agiledashboard_contentpane	open_unplanned_items_intro	Here are the items that are still open and unplanned. You can prioritize by drag 'n dropping them.
 plugin_agiledashboard_contentpane	allow_other_create	or
 plugin_agiledashboard_contentpane	add_in_descendant_title	Add $1 in existing $2
+plugin_agiledashboard_contentpane	initial_effort_warning	There doesn't apear to be an <em>Initial Effort</em> semantic defined for the Tracker <em>$1</em>!
 
 plugin_agiledashboard_milestone_planning	help_intro	This section allows to do $1 planning:
 plugin_agiledashboard_milestone_planning	help_left	On the left side, you have the $2 backlog with all open elements, not already scheduled for a $1.
@@ -64,10 +65,10 @@ plugin_agiledashboard_milestone_planning	header_status	Status
 plugin_agiledashboard_milestone_planning	empty_element_tip	This element is empty, please drag anything here
 
 plugin_agiledashboard_admin_semantic	initial_effort_label	Initial Effort
-plugin_agiledashboard_admin_semantic	initial_effort_description	The sum of all efforts at the beginning of any milestone.
+plugin_agiledashboard_admin_semantic	initial_effort_description	Define the initial effort of an artifact.
 plugin_agiledashboard_admin_semantic	initial_effort_field	<p>The initial effort of this tracker will be represented in the Agile Dashboard by the field <strong>$1</strong>.</p>
 plugin_agiledashboard_admin_semantic	initial_effort_no_field	<p>This tracker does not have an <em>initial effort</em> field yet.</p>
-plugin_agiledashboard_admin_semantic	initial_effort_long_desc	This is used in the <b>Agile Dashboard</b> if enabled. The initial effort is the sum of all efforts at the beginning of any milestone. E.g. this would be the total of all the story points in a given sprint.
+plugin_agiledashboard_admin_semantic	initial_effort_long_desc	This is used in the <b>Agile Dashboard</b> if enabled.
 plugin_agiledashboard_admin_semantic	initial_effort_impossible	You cannot define the <em>initial effort</em> semantic since there aren't any numeric fields in the tracker
 plugin_agiledashboard_admin_semantic	initial_effort_now	The initial effort is now: $1
 plugin_agiledashboard_admin_semantic	bad_field_initial_effort	The field you submitted is not a numeric field

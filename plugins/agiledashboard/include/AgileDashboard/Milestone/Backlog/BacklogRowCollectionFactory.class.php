@@ -150,6 +150,21 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
                 $redirect_to_self
             );
         }
+
+        $this->addInitialEffortMetaDataToCollections($id, $backlog_strategy->getMilestoneBacklogArtifactsTracker());
+    }
+
+    /**
+     * @param id $id
+     * @param Tracker $artifact_tracker
+     */
+    private function addInitialEffortMetaDataToCollections($id, Tracker $artifact_tracker) {
+        $effort_is_defined = ($this->getInitialEffortField($artifact_tracker)) ? true : false;
+
+        $this->all_collection[$id]->setInitialEffortSemanticIsDefined($effort_is_defined);
+        $this->todo_collection[$id]->setInitialEffortSemanticIsDefined($effort_is_defined);
+        $this->done_collection[$id]->setInitialEffortSemanticIsDefined($effort_is_defined);
+        $this->unplanned_open_collection[$id]->setInitialEffortSemanticIsDefined($effort_is_defined);
     }
 
     private function getParentArtifacts(Planning_Milestone $milestone, PFUser $user, array $backlog_item_ids) {
@@ -191,32 +206,32 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
             return array();
         }
 
-        $semantics = array();
-
-        $allowed_semantics = $this->getSemanticsTheUserCanSee($user, $milestone);
+        $semantics              = array();
+        $backlog_tracker        = $milestone->getPlanning()->getBacklogTracker();
+        $allowed_semantics      = $this->getSemanticsTheUserCanSee($user, $backlog_tracker);
+        $allowed_initial_effort = $this->userCanReadInitialEffortField($user, $artifacts);
         foreach ($this->dao->getArtifactsSemantics($backlog_item_ids, $allowed_semantics) as $row) {
             $semantics[$row['id']] = array(
                 Tracker_Semantic_Title::NAME                => $row[Tracker_Semantic_Title::NAME],
                 Tracker_Semantic_Status::NAME               => $row[Tracker_Semantic_Status::NAME],
-                AgileDashBoard_Semantic_InitialEffort::NAME => $this->getSemanticEffortValue($user, $artifacts[$row['id']]),
             );
+
+            if ($allowed_initial_effort) {
+                $key = AgileDashBoard_Semantic_InitialEffort::NAME;
+                $semantics[$row['id']][$key] = $this->getSemanticEffortValue($user, $artifacts[$row['id']]);
+            }
         }
 
         return $semantics;
     }
 
-    private function getSemanticsTheUserCanSee(PFUser $user, Planning_Milestone $milestone) {
-        $backlog_tracker = $milestone->getPlanning()->getBacklogTracker();
-
+    private function getSemanticsTheUserCanSee(PFUser $user, Tracker $backlog_tracker) {
         $semantics = array();
         if ($this->userCanReadBacklogTitleField($user ,$backlog_tracker)) {
             $semantics[] = Tracker_Semantic_Title::NAME;
         }
         if ($this->userCanReadBacklogStatusField($user, $backlog_tracker)) {
             $semantics[] = Tracker_Semantic_Status::NAME;
-        }
-        if ($this->userCanReadEffortField($user, $backlog_tracker)) {
-            $semantics[] = AgileDashBoard_Semantic_InitialEffort::NAME;
         }
 
         return $semantics;
@@ -252,8 +267,20 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
         return $field->userCanRead($user);
     }
 
-    protected function userCanReadEffortField(PFUser $user, Tracker $tracker) {
-        if (! $field = $this->getInitialEffortField($tracker)) {
+    /**
+     *
+     * @param PFUser $user
+     * @param Tracker_Artifact[] $artifacts
+     * @return boolean
+     */
+    private function userCanReadInitialEffortField(PFUser $user, array $artifacts) {
+        $an_artifact = array_pop($artifacts);
+        if (! $an_artifact) {
+            return false;
+        }
+
+        $field = $this->getInitialEffortField($an_artifact->getTracker());
+        if (! $field) {
             return false;
         }
 
@@ -261,17 +288,11 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
     }
 
     /**
-     *
      * @param Tracker $tracker
      * @return Tracker_FormElement_Field | null
      */
     protected function getInitialEffortField(Tracker $tracker) {
-        $field = AgileDashBoard_Semantic_InitialEffort::load($tracker)->getField();
-        if (! $field) {
-            return null;
-        }
-
-        return $field;
+        return AgileDashBoard_Semantic_InitialEffort::load($tracker)->getField();
     }
 
     protected function setInitialEffort(AgileDashboard_BacklogItem $backlog_item, $semantics_per_artifact) {
@@ -322,6 +343,8 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
     }
 
     private function pushItemInDoneCollection(Planning_Milestone $milestone, array $semantics, $artifact_id, AgileDashboard_BacklogItem $backlog_item) {
+        $this->setInitialEffort($backlog_item, $semantics[$artifact_id]);
+
         if ($semantics[$artifact_id][Tracker_Semantic_Status::NAME] != AgileDashboard_BacklogItemDao::STATUS_OPEN) {
             $backlog_item->setStatus(Tracker_Semantic_Status::CLOSED);
             $this->done_collection[$milestone->getArtifactId()]->push($backlog_item);

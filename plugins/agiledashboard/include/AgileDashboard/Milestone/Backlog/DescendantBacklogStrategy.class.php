@@ -98,5 +98,9 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
         }
         return $create_new;
     }
+
+    public function getMilestoneBacklogArtifactsTracker() {
+        return $this->getDescendantTracker();
+    }
 }
 ?>

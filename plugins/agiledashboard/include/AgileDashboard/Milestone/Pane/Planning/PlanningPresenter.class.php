@@ -155,6 +155,13 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'empty_element_tip');
     }
 
+    public function initial_effort_not_defined() {
+        return ! $this->backlog_collection->getInitialEffortSemanticIsDefined();
+    }
+
+    public function initial_effort_warning() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'initial_effort_warning', $this->backlog_item_type);
+    }
 }
 
 ?>
