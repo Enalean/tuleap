@@ -66,10 +66,9 @@ class Tracker_SemanticFactory {
                 $semantic = $this->getSemanticTooltipFactory()->getInstanceFromXML($xml, $xmlMapping, $tracker);
                 break;
             default:
-                $semantic = $this->getAnotherSemanticInstance($xml, $xmlMapping, $tracker, $type);
+                $semantic = $this->getSemanticFromAnotherPlugin($xml, $xmlMapping, $tracker, $type);
                 break;
         }
-
 
         return $semantic;
     }
