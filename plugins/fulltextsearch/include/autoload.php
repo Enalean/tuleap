@@ -16,6 +16,8 @@ function autoloade7df6a993e6a8ddae206b10ec198826b($class) {
             'elasticsearch_searchresultdocman' => '/ElasticSearch/SearchResultDocman.class.php',
             'elasticsearch_searchresultprojectsfacet' => '/ElasticSearch/SearchResultProjectsFacet.class.php',
             'elasticsearch_searchresultprojectsfacetcollection' => '/ElasticSearch/SearchResultProjectsFacetCollection.class.php',
+            'elasticsearch_searchresultservicesfacet' => '/ElasticSearch/SearchResultServicesFacet.class.php',
+            'elasticSearch_searchresultservicesfacetcollection' => '/ElasticSearch/SearchResultServicesFacetCollection.class.php',
             'elasticsearch_searchresulttracker' => '/ElasticSearch/SearchResultTracker.class.php',
             'elasticsearch_transporthttpbasicauth' => '/ElasticSearch/TransportHTTPBasicAuth.class.php',
             'fulltextsearch_controller_admin' => '/FullTextSearch/Controller/Admin.class.php',
