@@ -1,3 +1,8 @@
+Version 3.33 - Tuleap 6.3
+    * Add forgotten fields that were introduced by an upgrade bucket
+    Correspond to bucket
+    plugins/git/db/mysql/updates/2013/201306031352_add_branch_and_type_to_log.php
+
 Version 3.32 - Tuleap 6.3
     * Only inversing url arguments when request is from Jenkins.
 
