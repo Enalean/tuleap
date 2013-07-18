@@ -18,6 +18,7 @@ Version 6.3 (Not released yet)
 	== Enhancement ==
 	* Project admin can configure the generic user from ui (change password & email)
 	* Debian compatibility: support of subversion, git. Install fix IM plugin and forgeupgrade.
+	* story #3823: configure generic users as siteadmin
 
 	== API ==
 	* SOAP /soap/project: 1.1
