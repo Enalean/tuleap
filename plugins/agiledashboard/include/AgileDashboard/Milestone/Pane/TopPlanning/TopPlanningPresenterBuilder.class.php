@@ -33,17 +33,22 @@ class AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningPresenterBuilder {
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
 
+    /** @var AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterFactory */
+    private $submilestone_presenter_factory;
+
     /** @var bool */
     private $can_plan = true;
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $strategy_factory,
         AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory $collection_factory,
-        Planning_MilestoneFactory $milestone_factory
+        Planning_MilestoneFactory $milestone_factory,
+        AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterFactory $submilestone_presenter_factory
     ) {
-        $this->strategy_factory   = $strategy_factory;
-        $this->collection_factory = $collection_factory;
-        $this->milestone_factory  = $milestone_factory;
+        $this->strategy_factory               = $strategy_factory;
+        $this->collection_factory             = $collection_factory;
+        $this->milestone_factory              = $milestone_factory;
+        $this->submilestone_presenter_factory = $submilestone_presenter_factory;
     }
 
     public function getMilestoneTopPlanningPresenter(PFUser $user, Planning_Milestone $milestone, Tracker $milestone_tracker) {
@@ -79,8 +84,7 @@ class AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningPresenterBuilder {
         $milestones = array_reverse($this->milestone_factory->getSubMilestones($user, $milestone));
 
         foreach ($milestones as $milestone) {
-            $this->milestone_factory->updateMilestoneContextualInfo($user, $milestone);
-            $presenter = new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter($milestone, $redirect_to_self, $user);
+            $presenter = $this->submilestone_presenter_factory->getPlanningSubMilestonePresenter($user, $milestone, $redirect_to_self);
 
             $milestone_collection->push($presenter);
 

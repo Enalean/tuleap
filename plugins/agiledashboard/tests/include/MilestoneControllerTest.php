@@ -28,7 +28,7 @@ class Planning_MilestoneController4Tests extends Planning_MilestoneController {
         $this->output = $this->renderer->renderToString($template_name, $presenter);
     }
 }
-
+/*
 abstract class Planning_MilestoneController_Common extends TuleapTestCase {
     protected $planning_tracker_id;
     protected $planning;
@@ -75,13 +75,20 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
             ''
         );
 
+        $pane_info_factory = new AgileDashboard_PaneInfoFactory(
+            mock('PFUser'),
+            $legacy_planning_pane_factory,
+            mock('AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder'),
+            ''
+        );
+
         $pane_factory = new Planning_MilestonePaneFactory(
             $request,
             $this->milestone_factory,
             mock('AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory'),
             $legacy_planning_pane_factory,
             mock('AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder'),
-            ''
+            $pane_info_factory
         );
 
         $controller = new Planning_MilestoneController4Tests(
@@ -272,7 +279,7 @@ class Planning_MilestoneController_CrossTrackerSearchTest extends Planning_Miles
         return $request;
     }
 }
-
+*/
 class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
     private $plugin_path;
     private $product;
@@ -295,7 +302,10 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
         $this->project_manager   = mock('ProjectManager');
 
         $this->current_user   = aUser()->build();
-        $this->request        = aRequest()->withUser($this->current_user)->build();
+        $this->request        = aRequest()->withUser($this->current_user)->with('group_id', 102)->build();
+
+        $this->project = mock('Project');
+        stub($this->project_manager)->getProject(102)->returns($this->project);
     }
 
     public function tearDown() {
@@ -336,6 +346,7 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
 
     public function assertEqualToBreadCrumbWithAllMilestones($breadcrumbs) {
         $expected_crumbs = new BreadCrumb_Merger(
+            new BreadCrumb_VirtualTopMilestone($this->plugin_path, $this->project),
             new BreadCrumb_Milestone($this->plugin_path, $this->product),
             new BreadCrumb_Milestone($this->plugin_path, $this->release),
             new BreadCrumb_Milestone($this->plugin_path, $this->sprint)

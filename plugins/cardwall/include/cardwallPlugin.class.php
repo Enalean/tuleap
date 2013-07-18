@@ -61,6 +61,7 @@ class cardwallPlugin extends Plugin {
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
+                $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_INFO_ON_MILESTONE);
                 $this->addHook(AGILEDASHBOARD_EVENT_INDEX_PAGE);
                 $this->addHook(AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT);
             }
@@ -255,16 +256,37 @@ class cardwallPlugin extends Plugin {
     }
 
     public function agiledashboard_event_additional_panes_on_milestone($params) {
-        $tracker  = $params['milestone']->getArtifact()->getTracker();
+        $pane_info = $this->getPaneInfo($params['milestone']);
 
-        if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
-            $pane_info = new Cardwall_PaneInfo($params['milestone'], $this->getThemePath());
-            if ($params['request']->get('pane') == Cardwall_PaneInfo::IDENTIFIER) {
-                $pane_info->setActive(true);
-                $params['active_pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user'], $params['milestone_factory']);
-            }
-            $params['panes'][] = $pane_info;
+        if (! $pane_info) {
+            return;
         }
+
+        if ($params['request']->get('pane') == Cardwall_PaneInfo::IDENTIFIER) {
+            $pane_info->setActive(true);
+            $params['active_pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user'], $params['milestone_factory']);
+        }
+        $params['panes'][] = $pane_info;
+    }
+
+    public function agiledashboard_event_additional_panes_info_on_milestone($params) {
+        $pane_info = $this->getPaneInfo($params['milestone']);
+
+        if (! $pane_info) {
+            return;
+        }
+
+        $params['pane_info_list'][] = $pane_info;
+    }
+
+    private function getPaneInfo($milestone) {
+        $tracker  = $milestone->getArtifact()->getTracker();
+
+        if (! $this->getOnTopDao()->isEnabled($tracker->getId())) {
+            return;
+        }
+
+        return new Cardwall_PaneInfo($milestone, $this->getThemePath());
     }
 
     public function agiledashboard_event_index_page($params) {

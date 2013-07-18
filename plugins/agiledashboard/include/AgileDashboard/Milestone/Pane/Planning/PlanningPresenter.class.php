@@ -143,10 +143,6 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
         return $this->submilestone_collection;
     }
 
-    public function lab() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'lab');
-    }
-
     public function can_plan() {
         return ($this->can_plan) ? 'true' : 'false';
     }

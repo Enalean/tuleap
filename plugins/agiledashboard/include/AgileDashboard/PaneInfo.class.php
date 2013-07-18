@@ -101,10 +101,10 @@ abstract class AgileDashboard_PaneInfo {
      * @return Array
      */
     public function getIconTemplateParametersForMilestone(Planning_Milestone $milestone) {
-        return array(
-            'uri'   => $this->getUriForMilestone($milestone),
-            'title' => $this->getIconTitle(),
-            'icon'  => $this->getIcon(),
+        return new AgileDashboard_PaneIconLinkPresenter(
+            $this->getUriForMilestone($milestone),
+            $this->getIconTitle(),
+            $this->getIcon()
         );
     }
 

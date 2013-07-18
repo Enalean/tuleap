@@ -56,9 +56,9 @@ class Planning_ShortAccess {
     protected $milestone_factory;
 
     /**
-     * @var Planning_MilestonePaneFactory
+     * @var AgileDashboard_PaneInfoFactory
      */
-    protected $pane_factory;
+    protected $pane_info_factory;
 
     /** @var array of Planning_MilestoneLinkPresenter */
     private $presenters;
@@ -66,12 +66,12 @@ class Planning_ShortAccess {
     /** @var string */
     private $theme_path;
 
-    public function __construct(Planning $planning, PFUser $user, Planning_MilestoneFactory $milestone_factory, Planning_MilestonePaneFactory $pane_factory, $theme_path, $offset) {
+    public function __construct(Planning $planning, PFUser $user, Planning_MilestoneFactory $milestone_factory, AgileDashboard_PaneInfoFactory $pane_info_factory, $theme_path, $offset) {
         $this->user              = $user;
         $this->planning          = $planning;
         $this->planning_id       = $planning->getId();
         $this->milestone_factory = $milestone_factory;
-        $this->pane_factory      = $pane_factory;
+        $this->pane_info_factory = $pane_info_factory;
         $this->theme_path        = $theme_path;
         $this->offset            = $offset;
         $this->next_offset       = $offset + self::NUMBER_TO_DISPLAY;
@@ -98,11 +98,12 @@ class Planning_ShortAccess {
         if (!$this->presenters) {
             $this->presenters = array();
             $milestones = $this->milestone_factory->getLastOpenMilestones($this->user, $this->planning, $this->offset, self::NUMBER_TO_DISPLAY + 1);
+            $icon_factory = new AgileDashboard_PaneIconLinkPresenterCollectionFactory($this->pane_info_factory);
             foreach ($milestones as $milestone) {
                 $this->presenters[] = new Planning_ShortAccessMilestonePresenter(
                     $this,
                     $milestone,
-                    $this->pane_factory->getListOfPaneInfo($milestone),
+                    $icon_factory->getIconLinkPresenterCollection($milestone),
                     $this->milestone_factory,
                     $this->user,
                     $this->theme_path
