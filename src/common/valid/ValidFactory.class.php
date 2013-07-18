@@ -134,6 +134,23 @@ extends Valid_String {
     }
 }
 
+class Valid_GenericUserNameSuffix extends Valid_UserNameFormat {
+    /**
+     * Append a fake prefix to leverage on username format checking.
+     *
+     * As we want to validate a suffix, we need to append it to something
+     * we now as valid otherwise the check might be invalid. For instance:
+     * '-team' is a valid suffix but an invalid UserNameFormat (cannot start
+     * by '-'
+     * But aaa-team is a valid name at whole.
+     */
+    const FAKE_PREFIX = 'aaa';
+
+    function validate($value) {
+        return parent::validate(self::FAKE_PREFIX.$value);
+    }
+}
+
 /**
  * Check that value match user real name format.
  */

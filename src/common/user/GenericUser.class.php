@@ -27,11 +27,11 @@ class GenericUser extends PFUser {
      */
     private $project;
 
-    public function __construct(Project $project, PFUser $pfuser) {
+    public function __construct(Project $project, PFUser $pfuser, $suffix) {
         parent::__construct($pfuser->toRow());
         $this->setStatus(PFUser::STATUS_RESTRICTED);
         $this->setRealName(self::REAL_NAME);
-        $this->setUserName(self::NAME_PREFIX . $project->getUnixName());
+        $this->setUserName(self::NAME_PREFIX . $project->getUnixName() . $suffix);
         $this->project = $project;
     }
 
