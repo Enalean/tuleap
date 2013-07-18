@@ -1,3 +1,6 @@
+Version 2.26.19 - Tuleap 6.3
+    * Bug Fix - Fixing notices
+
 Version 2.26.18 - Tuleap 6.3
     * Reverting mime type fix to previous code.
 
