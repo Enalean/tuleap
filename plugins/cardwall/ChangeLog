@@ -1,3 +1,6 @@
+Version 0.9.40 - Tuleap 6.3
+    * Development: adding support for AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_INFO_ON_MILESTONE event
+
 Version 0.9.39 - Tuleap 6.3
     * Do not display a cardwall on AD front page when there is nothing to show
 
