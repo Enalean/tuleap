@@ -135,10 +135,22 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 
                 $effort_field.html(remaining_effort);
 
+                addCorrespondingStyleToCapacity(remaining_effort, capacity, $effort_field);
+            });
+
+            function addCorrespondingStyleToCapacity(remaining_effort, capacity, $effort_field) {
+                cleanCapacityStyle($effort_field);
                 if (remaining_effort > capacity) {
                     $effort_field.addClass('planning_overcapacity');
+                } else if (remaining_effort === capacity) {
+                    $effort_field.addClass('planning_balancedcapacity');
                 }
-            });
+            }
+
+            function cleanCapacityStyle($effort_field) {
+                $effort_field.removeClass('planning_overcapacity');
+                $effort_field.removeClass('planning_balancedcapacity');
+            }
         },
 
         displayPlaceHolderIfEmpty : function(target) {
