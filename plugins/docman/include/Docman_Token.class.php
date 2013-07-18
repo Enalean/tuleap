@@ -97,7 +97,7 @@ class Docman_Token {
         $user =& $um->getCurrentUser();
         return $user->isAnonymous() ? null : $user->getId();
     }
-    function &_getHTTPRequest() {
+    function _getHTTPRequest() {
         return HTTPRequest::instance();
     }
 }
