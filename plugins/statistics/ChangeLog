@@ -1,3 +1,6 @@
+Version 0.29 - Tuleap 6.3
+    * Make DB schema compatible with mysql 5.5.x
+
 Version 0.28 - Tuleap 6.2
     * Extract mediawiki stats in the plugin
 

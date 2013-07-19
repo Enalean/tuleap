@@ -1,3 +1,6 @@
+Version 1.2.3 - Tuleap 6.3
+    * Make DB schema compatible with mysql 5.5.x
+
 Version 1.2.2 - Tuleap 6.0
     * Add some examples for v3 -> v5 migration
 

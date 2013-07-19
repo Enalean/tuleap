@@ -8,6 +8,8 @@ Version 6.3 (Not released yet)
 	* cardwall: 0.9.40
 	* tracker: 5.140
 	* forumml: 2.6.13
+	* statistics: 0.29
+	* tracker_date_reminder: 1.2.3
 
 	== Bug fix ==
 	* Fix sla #4015- Project one step creation uses sys_is_project_public (project are no longer private by default)
