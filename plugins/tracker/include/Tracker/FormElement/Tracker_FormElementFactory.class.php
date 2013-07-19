@@ -478,6 +478,14 @@ class Tracker_FormElementFactory {
 
     /**
      * @param Tracker $tracker
+     * @return array All numeric or computed formElements used by the tracker
+     */
+    public function getUsedNumericOrComputedFields(Tracker $tracker) {
+        return $this->getUsedFormElementsByType($tracker, array('int', 'float', 'computed'));
+    }
+
+    /**
+     * @param Tracker $tracker
      * @return array All (multi) selectboxes formElements used by the tracker
      */
     public function getUsedListFields($tracker) {
@@ -592,6 +600,15 @@ class Tracker_FormElementFactory {
 
     /**
      * @param Tracker $tracker
+     * @param int $field_id
+     * @return Tracker_FormElement | void
+     */
+    public function getUsedNumericFieldById($tracker, $field_id) {
+        return $this->getUsedFieldByIdAndType($tracker, $field_id, array('int', 'float', 'computed'));
+    }
+
+    /**
+     * @param Tracker $tracker
      * @return array All string formElements used by the tracker
      */
     public function getUsedStringFields($tracker) {
@@ -671,11 +688,13 @@ class Tracker_FormElementFactory {
     public function getUsedFormElementsByType($tracker, $type) {
         $key        = md5(serialize($type));
         $tracker_id = $tracker->getId();
+
         if (!isset($this->cache_used_form_elements_by_tracker_and_type[$tracker_id][$key])) {
             $used                      = true;
             $used_form_elements_result = $this->getDao()->searchUsedByTrackerIdAndType($tracker_id, $type, $used);
             $this->cache_used_form_elements_by_tracker_and_type[$tracker_id][$key] = $this->getCachedInstancesFromDAR($used_form_elements_result);
         }
+
         return $this->cache_used_form_elements_by_tracker_and_type[$tracker_id][$key];
     }
 

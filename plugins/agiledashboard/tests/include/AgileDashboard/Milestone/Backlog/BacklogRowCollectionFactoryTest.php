@@ -70,6 +70,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
             array(
                 'userCanReadBacklogTitleField',
                 'userCanReadBacklogStatusField',
+                'getInitialEffortField',
             ),
             array(
                 $this->dao,
@@ -81,10 +82,17 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
         stub($this->factory)->userCanReadBacklogTitleField()->returns(true);
         stub($this->factory)->userCanReadBacklogStatusField()->returns(true);
 
-        $story1                 = anArtifact()->withId($this->open_story_id)->build();
-        $story2                 = anArtifact()->withId($this->open_unplanned_story_id)->build();
-        $story3                 = anArtifact()->withId($this->closed_story_id)->build();
+        $tracker1 = mock('Tracker');
+        $tracker2 = mock('Tracker');
+        $tracker3 = mock('Tracker');
+
+        $story1 = anArtifact()->withId($this->open_story_id)->withTracker($tracker1)->build();
+        $story2 = anArtifact()->withId($this->open_unplanned_story_id)->withTracker($tracker2)->build();
+        $story3 = anArtifact()->withId($this->closed_story_id)->withTracker($tracker3)->build();
+  
         $this->backlog_strategy = stub('AgileDashboard_Milestone_Backlog_BacklogStrategy')->getArtifacts($this->user)->returns(array($story1, $story2, $story3));
+        stub($this->backlog_strategy)->getMilestoneBacklogArtifactsTracker()->returns(mock('Tracker'));
+
         $this->redirect_to_self = 'whatever';
 
 
@@ -147,13 +155,14 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
         $this->assertEqual($row->id(), $this->closed_story_id);
     }
 
-    public function itSetRemainingEffortForOpenStories() {
+    public function itSetInitialEffortForOpenStories() {
         stub($this->dao)->getPlannedItemIds()->returns(array());
 
-        // Configure the returned value
-        $field = aMockField()->build();
-        stub($field)->fetchCardValue()->returns(26);
-        stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns($field);
+        $field = mock('Tracker_FormElement_Field_Float');
+
+        stub($field)->getComputedValue()->returns(26);
+        stub($field)->userCanRead()->returns(true);
+        stub($this->factory)->getInitialEffortField()->returns($field);
 
         $content = $this->factory->getTodoCollection(
             $this->user,
@@ -164,6 +173,26 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
 
         $row = $content->current();
         $this->assertEqual($row->points(), 26);
+    }
+
+    public function itNotSetInitialEffortForOpenStoriesIfUserCannotRead() {
+        stub($this->dao)->getPlannedItemIds()->returns(array());
+
+        $field = mock('Tracker_FormElement_Field_Float');
+
+        stub($field)->getComputedValue()->returns(26);
+        stub($field)->userCanRead()->returns(false);
+        stub($this->factory)->getInitialEffortField()->returns($field);
+
+        $content = $this->factory->getTodoCollection(
+            $this->user,
+            $this->milestone,
+            $this->backlog_strategy,
+            $this->redirect_to_self
+        );
+
+        $row = $content->current();
+        $this->assertEqual($row->points(), null);
     }
 
     public function itCreatesACollectionForOpenAndUnplannedElements() {

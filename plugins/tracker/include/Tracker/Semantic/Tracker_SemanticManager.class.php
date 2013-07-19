@@ -101,24 +101,41 @@ class Tracker_SemanticManager {
     }
 
     /**
-     * @return array of Tracker_Semantic
+     * @return Tracker_SemanticCollection
      */
     public function getSemantics() {
-        $semantics = array();
+        $semantics = new Tracker_SemanticCollection();
 
-        $t = Tracker_Semantic_Title::load($this->tracker);
-        $semantics[$t->getShortName()] = $t;
+        $title_semantic = Tracker_Semantic_Title::load($this->tracker);
+        $semantics->add($title_semantic->getShortName(), $title_semantic);
 
-        $t = Tracker_Semantic_Status::load($this->tracker);
-        $semantics[$t->getShortName()] = $t;
+        $status_semantic = Tracker_Semantic_Status::load($this->tracker);
+        $semantics->add($status_semantic->getShortName(), $status_semantic);
 
-        $t = Tracker_Semantic_Contributor::load($this->tracker);
-        $semantics[$t->getShortName()] = $t;
+        $contributor_semantic = Tracker_Semantic_Contributor::load($this->tracker);
+        $semantics->add($contributor_semantic->getShortName(), $contributor_semantic);
 
-        $t = $this->tracker->getTooltip();
-        $semantics[$t->getShortName()] = $t;
+        $tooltip_semantic = $this->tracker->getTooltip();
+        $semantics->add($tooltip_semantic->getShortName(), $tooltip_semantic);
+
+        $this->addOtherSemantics($semantics);
 
         return $semantics;
+    }
+
+    /**
+     * Use an event to get semantics from other plugins.
+     *
+     * @param Tracker_SemanticCollection $semantics
+     */
+    private function addOtherSemantics(Tracker_SemanticCollection $semantics) {
+         EventManager::instance()->processEvent(
+            TRACKER_EVENT_MANAGE_SEMANTICS,
+            array(
+                'semantics'   => $semantics,
+                'tracker'     => $this->tracker,
+            )
+        );
     }
 
     /**
@@ -141,7 +158,7 @@ class Tracker_SemanticManager {
      * @return array the SOAPification of the semantic
      */
     public function exportToSOAP(PFUser $user) {
-        $semantic_order = array('title', 'status', 'contributor');
+        $semantic_order = $this->getSemanticOrder();
         $semantics      = $this->getSemantics();
         $soap_result    = array();
 
@@ -152,6 +169,18 @@ class Tracker_SemanticManager {
         }
 
         return $soap_result;
+    }
+
+    protected function getSemanticOrder() {
+        $order = array('title', 'status', 'contributor');
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_SOAP_SEMANTICS,
+            array(
+                'semantics' => &$order
+            )
+        );
+
+        return $order;
     }
 }
 ?>

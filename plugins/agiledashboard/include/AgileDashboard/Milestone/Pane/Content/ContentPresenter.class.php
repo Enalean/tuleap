@@ -176,6 +176,14 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     public function open_items_intro() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'open_items_intro', $this->backlog_item_type);
     }
+
+    public function initial_effort_not_defined() {
+        return ! $this->todo_collection->getInitialEffortSemanticIsDefined();
+    }
+
+    public function initial_effort_warning() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'initial_effort_warning', $this->backlog_item_type);
+    }
 }
 
 ?>

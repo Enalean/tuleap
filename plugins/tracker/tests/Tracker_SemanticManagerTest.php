@@ -35,7 +35,7 @@ class Tracker_SemanticManagerTest extends TuleapTestCase {
 
     public function setUp() {
         $this->user        = aUser()->build();
-        $tracker           = mock('Tracker');
+        $this->tracker     = mock('Tracker');
         $summary_field     = mock('Tracker_FormElement_Field_Text');
         stub($summary_field)->getName()->returns('summary');
         stub($summary_field)->userCanRead()->returns(true);
@@ -53,19 +53,21 @@ class Tracker_SemanticManagerTest extends TuleapTestCase {
         stub($unreable_field_list)->getName()->returns('whatever');
         stub($unreable_field_list)->userCanRead()->returns(false);
 
-        $this->semantic_title                   = new Tracker_Semantic_Title($tracker, $summary_field);
-        $this->unreadable_semantic_title        = new Tracker_Semantic_Title($tracker, $unreable_field);
-        $this->semantic_contributor             = new Tracker_Semantic_Contributor($tracker, $assigned_to_field);
-        $this->unreadable_semantic_contributor  = new Tracker_Semantic_Contributor($tracker, $unreable_field_list);
-        $this->semantic_status                  = new Tracker_Semantic_Status($tracker, $values_field, $this->open_values);
-        $this->unreadable_semantic_status       = new Tracker_Semantic_Status($tracker, $unreable_field_list, $this->open_values);
-        $this->semantic_tooltip                 = new Tracker_Tooltip($tracker);
-        $this->not_defined_semantic_title       = new Tracker_Semantic_Title($tracker);
-        $this->not_defined_semantic_status      = new Tracker_Semantic_Status($tracker);
-        $this->not_defined_semantic_contributor = new Tracker_Semantic_Contributor($tracker);
+        $this->semantic_title                   = new Tracker_Semantic_Title($this->tracker, $summary_field);
+        $this->unreadable_semantic_title        = new Tracker_Semantic_Title($this->tracker, $unreable_field);
+        $this->semantic_contributor             = new Tracker_Semantic_Contributor($this->tracker, $assigned_to_field);
+        $this->unreadable_semantic_contributor  = new Tracker_Semantic_Contributor($this->tracker, $unreable_field_list);
+        $this->semantic_status                  = new Tracker_Semantic_Status($this->tracker, $values_field, $this->open_values);
+        $this->unreadable_semantic_status       = new Tracker_Semantic_Status($this->tracker, $unreable_field_list, $this->open_values);
+        $this->semantic_tooltip                 = new Tracker_Tooltip($this->tracker);
+        $this->not_defined_semantic_title       = new Tracker_Semantic_Title($this->tracker);
+        $this->not_defined_semantic_status      = new Tracker_Semantic_Status($this->tracker);
+        $this->not_defined_semantic_contributor = new Tracker_Semantic_Contributor($this->tracker);
 
-        $this->semantic_manager = partial_mock('Tracker_SemanticManager', array('getSemantics'), array($tracker));
-
+        $this->semantic_manager = partial_mock('Tracker_SemanticManager', array('getSemantics', 'getSemanticOrder'), array($this->tracker));
+        stub($this->semantic_manager)->getSemanticOrder()->returns(
+            array('title', 'status', 'contributor')
+        );
     }
 
     public function itReturnsEmptyIfUserCannoAccessTitleSemanticField() {
@@ -144,15 +146,22 @@ class Tracker_SemanticManagerTest extends TuleapTestCase {
     }
 
     public function itReturnsSemanticInTheRightOrder() {
-        stub($this->semantic_manager)->getSemantics()->returns(array(
-            'title'       => $this->semantic_title,
-            'contributor' => $this->semantic_contributor,
-            'status'      => $this->semantic_status
+        $semantic_manager = partial_mock('Tracker_SemanticManager', array('getSemantics', 'getSemanticOrder'), array($this->tracker));
+
+        stub($semantic_manager)->getSemantics()->returns(array(
+            'title'          => $this->semantic_title,
+            'contributor'    => $this->semantic_contributor,
+            'status'         => $this->semantic_status,
+            'random_from_ad' => stub('AgileDashBoard_Semantic_InitialEffort')->exportToSOAP()->returns('bla')
         ));
 
-        $result = $this->semantic_manager->exportToSOAP($this->user);
+        stub($semantic_manager)->getSemanticOrder()->returns(
+            array('title', 'status', 'contributor', 'random_from_ad')
+        );
+
+        $result = $semantic_manager->exportToSOAP($this->user);
         $result_keys = array_keys($result);
-        $this->assertEqual($result_keys, array('title', 'status', 'contributor'));
+        $this->assertEqual($result_keys, array('title', 'status', 'contributor', 'random_from_ad'));
     }
 
     public function itDoesNotExportTooltipSemantic() {

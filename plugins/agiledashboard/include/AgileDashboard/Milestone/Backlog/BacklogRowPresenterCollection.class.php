@@ -28,6 +28,9 @@ class AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection implements 
     /** @var string */
     private $parent_item_name = '';
 
+    /** @var bool */
+    private $initial_effort_semantic_is_defined;
+
     public function getParentItemName() {
         return $this->parent_item_name;
     }
@@ -62,6 +65,14 @@ class AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection implements 
 
     public function count() {
         return count($this->rows);
+    }
+
+    public function setInitialEffortSemanticIsDefined($bool) {
+        $this->initial_effort_semantic_is_defined = $bool;
+    }
+
+    public function getInitialEffortSemanticIsDefined() {
+        return $this->initial_effort_semantic_is_defined ;
     }
 }
 ?>

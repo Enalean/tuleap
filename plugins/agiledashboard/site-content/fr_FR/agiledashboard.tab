@@ -33,7 +33,8 @@ plugin_agiledashboard	capacity	Capacité :
 plugin_agiledashboard	available	$1 disponible(s)
 
 plugin_agiledashboard	content_head_title	Titre
-plugin_agiledashboard	content_head_points	Reste à faire :
+plugin_agiledashboard	content_head_points	Effort estimé
+plugin_agiledashboard	content_head_points_pane	Effort estimé :
 plugin_agiledashboard	content_head_parent	Parent
 plugin_agiledashboard	top_planning_link	Planification Générale
 
@@ -51,6 +52,7 @@ plugin_agiledashboard_contentpane	open_items_intro	Voici les éléments qui sont
 plugin_agiledashboard_contentpane	open_unplanned_items_intro	Voici les éléments qui sont ouverts et non encore plannifiés. Vous pouvez les ordonner en les glissant-déposant.
 plugin_agiledashboard_contentpane	allow_other_create	ou
 plugin_agiledashboard_contentpane	add_in_descendant_title	Ajouter un(e) $1 dans un(e) $2
+plugin_agiledashboard_contentpane	initial_effort_warning	La sémantique <em>Effort Estimé</em> pour le Tracker <em>$1</em> ne semble pas être définie !
 
 plugin_agiledashboard_milestone_planning	help_intro	Cette section vous permet de faire votre planning de $1:
 plugin_agiledashboard_milestone_planning	help_left	Sur la gauche, le backlog de $2, avec tous les éléments ouverts, non encore plannifiés dans un $1
@@ -61,3 +63,13 @@ plugin_agiledashboard_milestone_planning	list_of_submilestone_title	Liste des $1
 plugin_agiledashboard_milestone_planning	list_of_milestone_title	Liste des $1
 plugin_agiledashboard_milestone_planning	header_status	Statut
 plugin_agiledashboard_milestone_planning	empty_element_tip	Cet élément est vide, vous pouvez y glisser-déposer ce que vous voulez planifier
+
+plugin_agiledashboard_admin_semantic	initial_effort_label	Effort Estimé
+plugin_agiledashboard_admin_semantic	initial_effort_description	Définir l'effort estimé d'un artéfact
+plugin_agiledashboard_admin_semantic	initial_effort_field	<p>L'effort estimé sera représenté par le champ <strong>$1</strong> dans ce tracker.</p>
+plugin_agiledashboard_admin_semantic	initial_effort_no_field	<p>Ce tracker n'a pas de champ <em>effort estimé</em>.</p>
+plugin_agiledashboard_admin_semantic	initial_effort_long_desc	Ce champ est utilisé dans le <b>Tableau Agile</b> si activé.
+plugin_agiledashboard_admin_semantic	initial_effort_impossible	Vous ne pouvez pas définir la sémantique <em>effort estimé</em> car il n'y a aucun champ numérique dans votre outil de suivi.
+plugin_agiledashboard_admin_semantic	initial_effort_now	L'effort estimé est maintenant : $1
+plugin_agiledashboard_admin_semantic	bad_field_initial_effort	Le champ soumis n'est pas un champ numérique
+plugin_agiledashboard_admin_semantic	unable_save_initial_effort	Impossible de sauvegarder la sémantique <em>effort estimé</em>

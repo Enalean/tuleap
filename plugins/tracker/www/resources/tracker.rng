@@ -669,6 +669,25 @@
           </element>
         </zeroOrMore>
       </group>
+      <zeroOrMore>
+        <attribute name="type">
+          <value>initial_effort</value>
+        </attribute>
+        <element name="shortname">
+          <data type="string"/>
+        </element>
+        <element name="label">
+          <data type="string"/>
+        </element>
+        <element name="description">
+          <data type="string"/>
+        </element>
+        <element name="field">
+          <attribute name="REF">
+            <data type="IDREF"/>
+          </attribute>
+        </element>
+      </zeroOrMore>
     </choice>
   </define>
   <define name="reportContent">

@@ -299,6 +299,16 @@ grammar {
                     attribute REF { xsd:IDREF }
                 }*
             )
+        |
+            (
+                attribute type { "initial_effort" },
+                element shortname {xsd:string},
+                element label {xsd:string},
+                element description {xsd:string},
+                element field {
+                    attribute REF { xsd:IDREF }
+                }
+            )*
         )
 
 
