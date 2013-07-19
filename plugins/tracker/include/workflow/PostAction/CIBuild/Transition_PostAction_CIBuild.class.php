@@ -174,6 +174,10 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
             }
         }
     }
+
+    public function bypassPermissions(Tracker_FormElement_Field $field) {
+        return $this->bypass_permissions;
+    }
 }
 
 ?>

@@ -183,4 +183,29 @@ class Transition_validateTest extends Transition_baseTest {
         $this->assertFalse($transition->validate($fields_data, $artifact));
     }
 }
+
+class Transition_Bypass_Permissions extends Transition_baseTest {
+
+    public function setUp() {
+        parent::setUp();
+        $this->transition       = new Transition($this->id, $this->workflow_id, $this->from, $this->to);
+        $this->field            = mock('Tracker_FormElement_Field_Date');
+        $this->date_post_action = stub('Transition_PostAction_Field_Date')->bypassPermissions()->returns(true);
+    }
+
+    public function itBypassesPermission() {
+        $posts_actions    = array($this->date_post_action);
+
+        $this->transition->setPostActions($posts_actions);
+        $this->assertTrue($this->transition->bypassPermissions($this->field));
+    }
+
+    public function itBypassesPermissionIfThereIsACIJob() {
+        $ci_job           = mock('Transition_PostAction_CIBuild');
+        $posts_actions    = array($ci_job, $this->date_post_action);
+
+        $this->transition->setPostActions($posts_actions);
+        $this->assertTrue($this->transition->bypassPermissions($this->field));
+    }
+}
 ?>
