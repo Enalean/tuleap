@@ -1,6 +1,6 @@
 ==== RPM INSTALLATION ====
 
-After having installed plugin-forumml, you should update /etc/mm_cfg.py and set
+After having installed plugin-forumml, you should update /etc/mailman/mm_cfg.py and set
 at the end:
 PUBLIC_EXTERNAL_ARCHIVER = '/usr/lib/codendi/bin/mail_2_DB.pl %(listname)s ;'
 PRIVATE_EXTERNAL_ARCHIVER = '/usr/lib/codendi/bin/mail_2_DB.pl %(listname)s ;'
