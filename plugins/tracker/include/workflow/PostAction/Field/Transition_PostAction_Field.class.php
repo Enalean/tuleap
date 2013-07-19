@@ -29,11 +29,6 @@ abstract class Transition_PostAction_Field extends Transition_PostAction {
     protected $field;
     
     /**
-     * @var $bypass_permissions true if permissions on field can be bypassed at submission or update
-     */
-    protected $bypass_permissions = false;
-    
-    /**
      * Constructor
      *
      * @param Transition                   $transition The transition the post action belongs to
@@ -81,10 +76,10 @@ abstract class Transition_PostAction_Field extends Transition_PostAction {
      *
      * @return boolean
      */
-    public function bypassPermissions($field) {
+    public function bypassPermissions(Tracker_FormElement_Field $field) {
         return $this->getFieldId() == $field->getId() && $this->bypass_permissions;
     }
-    
+
     /**
      * Check if a post action on field_id already exists
      *

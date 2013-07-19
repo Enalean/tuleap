@@ -37,6 +37,11 @@ abstract class Transition_PostAction {
     protected $id;
 
     /**
+     * @var $bypass_permissions true if permissions on field can be bypassed at submission or update
+     */
+    protected $bypass_permissions = false;
+
+    /**
      * Constructor
      *
      * @param Transition $transition The transition the post action belongs to
@@ -166,5 +171,14 @@ abstract class Transition_PostAction {
      * @return void
      */
     public abstract function exportToXml(SimpleXMLElement $root, $xmlMapping);
+
+    /**
+     * Get the value of bypass_permissions
+     *
+     * @param Tracker_FormElement_Field $field
+     *
+     * @return boolean
+     */
+    public abstract function bypassPermissions(Tracker_FormElement_Field $field);
 }
 ?>

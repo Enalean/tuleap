@@ -350,7 +350,7 @@ class Transition {
     *
     * @return boolean true if the permissions on the field can be by passed, false otherwise
     */
-    public function bypassPermissions($field) {
+    public function bypassPermissions(Tracker_FormElement_Field $field) {
         $postactions = $this->getPostActions();
         foreach ($postactions as $postaction) {
             if ($postaction->bypassPermissions($field)) {
