@@ -38,6 +38,18 @@ define('AGILEDASHBOARD_TEMPLATE_DIR', dirname(__FILE__).'/../templates');
 define('AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE', 'agiledashboard_event_additional_panes_on_milestone');
 
 /**
+ * Get the additional panes *info* for a milestone
+ *
+ * Parameters:
+ * 'milestone'         => The current Planning_Milestone
+ * 'user'              => The current user
+ *
+ * Expected results
+ * 'pane_info_list' => Input/Output parameter, array of type AgileDashboard_PaneInfo
+ */
+define('AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_INFO_ON_MILESTONE', 'agiledashboard_event_additional_panes_info_on_milestone');
+
+/**
  * Get the pane to display on agile dashboard index page
  *
  * Parameters:

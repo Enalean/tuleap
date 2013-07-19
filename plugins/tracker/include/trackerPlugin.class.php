@@ -63,7 +63,8 @@ class trackerPlugin extends Plugin {
     
     public function getHooksAndCallbacks() {
         if (defined('AGILEDASHBOARD_BASE_DIR')) {
-            $this->_addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE, 'agiledashboard_event_additional_panes_on_milestone', false);
+            $this->_addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
+            $this->_addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_INFO_ON_MILESTONE);
         }
         return parent::getHooksAndCallbacks();
     }
@@ -148,26 +149,46 @@ class trackerPlugin extends Plugin {
             $params['done'] = true;
         }
     }
-    
+
     public function agiledashboard_event_additional_panes_on_milestone($params) {
-        $artifact = $params['milestone']->getArtifact();
-        $user     = $params['user'];
-        $burndown_field = $artifact->getABurndownField($user);
-        if ($burndown_field) {
-            $pane_info = new Tracker_Artifact_Burndown_PaneInfo($params['milestone']);
-            if ($params['request']->get('pane') == Tracker_Artifact_Burndown_PaneInfo::IDENTIFIER) {
-                $pane_info->setActive(true);
-                $params['active_pane'] = new Tracker_Artifact_Burndown_Pane(
-                        $pane_info,
-                        $artifact,
-                        $burndown_field,
-                        $params['user']
-                );
-            }
-            $params['panes'][] = $pane_info;
+        $user      = $params['user'];
+        $milestone = $params['milestone'];
+        $pane_info = $this->getPaneInfo($milestone, $user);
+        if (! $pane_info) {
+            return;
         }
+
+        if ($params['request']->get('pane') == Tracker_Artifact_Burndown_PaneInfo::IDENTIFIER) {
+            $pane_info->setActive(true);
+            $artifact = $milestone->getArtifact();
+            $params['active_pane'] = new Tracker_Artifact_Burndown_Pane(
+                    $pane_info,
+                    $artifact,
+                    $artifact->getABurndownField($user),
+                    $user
+            );
+        }
+        $params['panes'][] = $pane_info;
     }
-    
+
+    public function agiledashboard_event_additional_panes_info_on_milestone($params) {
+        $pane_info = $this->getPaneInfo($params['milestone'], $params['user']);
+        if (! $pane_info) {
+            return;
+        }
+
+        $params['pane_info_list'][] = $pane_info;
+    }
+
+    private function getPaneInfo($milestone, $user) {
+        $artifact = $milestone->getArtifact();
+        if (! $artifact->getABurndownField($user)) {
+            return;
+        }
+
+        return new Tracker_Artifact_Burndown_PaneInfo($milestone);
+    }
+
    /**
     * Project creation hook
     *

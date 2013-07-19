@@ -43,6 +43,9 @@ CREATE TABLE IF NOT EXISTS `plugin_git_log` (
   `user_id` int(11) unsigned NULL,
   `push_date` int(11) DEFAULT 0,
   `commits_number` int,
+  `refname` TEXT NULL,
+  `operation_type` varchar(64) NULL,
+  `refname_type` varchar(64) NULL,
    INDEX `idx_repository_user`(`repository_id`, `user_id`));
 
 CREATE TABLE IF NOT EXISTS `plugin_git_ci` (

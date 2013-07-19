@@ -61,6 +61,13 @@ function session_require($req) {
 }
 
 /**
+ * Mandate current session to be site admin otherwise redirect to an error page
+ */
+function session_require_site_admin() {
+    session_require(array('group' => '1', 'admin_flags' => 'A'));
+}
+
+/**
  *  session_continue - A utility method to carry on with an already established session with
  *  sessionKey
  * 

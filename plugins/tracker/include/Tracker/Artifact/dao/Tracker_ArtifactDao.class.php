@@ -279,7 +279,9 @@ class Tracker_ArtifactDao extends DataAccessObject {
         $submitted_on             = $this->da->escapeInt($_SERVER['REQUEST_TIME']);
         $submitted_by             = $this->da->escapeInt($submitted_by);
         $this->startTransaction();
-        $sql = "SELECT MAX(per_tracker_artifact_id)+1 as per_tracker_artifact_id FROM tracker_artifact WHERE tracker_id = '". $tracker_id ."'";
+        $sql = "SELECT IFNULL(MAX(per_tracker_artifact_id), 0) + 1 as per_tracker_artifact_id
+                FROM tracker_artifact
+                WHERE tracker_id = $tracker_id";
         $row = $this->retrieveFirstRow($sql);
         $per_tracker_id            = $row['per_tracker_artifact_id'];
         $id_sharing = new TrackerIdSharingDao();

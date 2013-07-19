@@ -1,9 +1,8 @@
-<div class="alert alert-info">
-    <span class="lab_features">{{{lab}}}</span>
-    {{#initial_effort_not_defined}}
+{{#initial_effort_not_defined}}
+    <div class="alert alert-info">
         <br /><span>{{{initial_effort_warning}}}</span>
-    {{/initial_effort_not_defined}}
-</div>
+    </div>
+{{/initial_effort_not_defined}}
 
 {{> pane-content-openitems}}
 {{> pane-content-closeditems}}

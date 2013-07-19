@@ -434,10 +434,15 @@ $sys_lists_prefix = '';
 // The mailing list name suffix
 $sys_lists_suffix = '';
 
-//Displays to end users the privacy of the project
+// Displays to end users the privacy of the project
 // If enabled (1), a 'lock' icon will be displayed plus the mention public|private
 // If disabled (0), only the project name is displayed
 $sys_display_project_privacy_in_service_bar = 1;
+
+// Set a custom suffix for Generic Users
+// This suffix should respect user login name constraints (number of chars, allowed
+// chars, etc)
+$sys_generic_user_suffix = '';
 
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

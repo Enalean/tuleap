@@ -715,4 +715,109 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldDataFromSoapValue extends T
         $this->assertEqual($this->field->getFieldDataFromSoapValue($soap_value, $artifact), 'whatever');
     }
 }
+
+class Tracker_FormElement_Field_ArtifactLink_Testable extends Tracker_FormElement_Field_ArtifactLink {
+    public function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+        return parent::saveValue($artifact, $changeset_value_id, $value, $previous_changesetvalue);
+    }
+}
+
+class Tracker_FormElement_Field_ArtifactLink_SaveValue extends TuleapTestCase {
+
+    /** @var Tracker_FormElement_Field_ArtifactLink_Testable */
+    private $artifact_link;
+
+    /** @var Tracker_ReferenceManager */
+    private $tracker_referencer_manager;
+
+    /** @var Tracker_Artifact */
+    private $some_artifact;
+
+    /** @var Tracker_ArtifactFactory */
+    private $artifact_factory;
+
+    /** @var Tracker_Artifact_ChangesetValue_ArtifactLink */
+    private $previous_changesetvalue;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->artifact_link = partial_mock(
+            'Tracker_FormElement_Field_ArtifactLink_Testable',
+            array(
+                'getValueDao',
+                'getArtifactFactory',
+                'getArtifactsByArtifactIdList',
+                'getTrackerReferenceManager',
+                'getCurrentUser'
+            )
+        );
+
+        $this->tracker_referencer_manager = mock('Tracker_ReferenceManager');
+        stub($this->artifact_link)->getTrackerReferenceManager()->returns($this->tracker_referencer_manager);
+
+        $this->some_artifact = mock('Tracker_Artifact');
+        stub($this->some_artifact)->getId()->returns(456);
+        stub($this->some_artifact)->gettracker()->returns(mock('Tracker'));
+
+        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        stub($this->artifact_link)->getArtifactFactory()->returns($this->artifact_factory);
+
+        $this->previous_changesetvalue = mock('Tracker_Artifact_ChangesetValue_ArtifactLink');
+        stub($this->previous_changesetvalue)->getArtifactIds()->returns(array(36));
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+
+        unset($this->artifact_link);
+        unset($this->tracker_referencer_manager);
+        unset($this->some_artifact);
+        unset($this->artifact_factory);
+        unset($this->previous_changesetvalue);
+    }
+
+    public function itRemovesACrossReference() {;
+        $artifact_to_unlink = $this->some_artifact;
+        $artifact = mock('Tracker_Artifact');
+        $changeset_value_id = 56;
+        $value = array(
+            'new_values' => '',
+            'removed_values' => array(
+                36 => 1
+            )
+        );
+
+        stub($this->artifact_link)->getValueDao()->returns(mock('Tracker_FormElement_Field_Value_ArtifactLinkDao'));
+        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array())->at(0)->returns(array());
+        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36))->at(1)->returns(array($artifact_to_unlink));
+        
+        expect($this->tracker_referencer_manager)->removeBetweenTwoArtifacts()->once();
+
+        $saved = $this->artifact_link->saveValue($artifact, $changeset_value_id, $value, $this->previous_changesetvalue);
+        $this->assertTrue($saved);
+    }
+
+    public function itAddsACrossReference() {
+        $artifact_to_link = $this->some_artifact;
+        $artifact = mock('Tracker_Artifact');
+        $changeset_value_id = 56;
+        $value = array(
+            'new_values' => 36,
+            'removed_values' => array()
+        );
+
+        $dao = mock('Tracker_FormElement_Field_Value_ArtifactLinkDao');
+        stub($dao)->create()->returns(true);
+        stub($this->artifact_link)->getValueDao()->returns($dao);
+        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36))->at(0)->returns(array($artifact_to_link));
+        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36))->at(1)->returns(array());
+
+        expect($this->tracker_referencer_manager)->insertBetweenTwoArtifacts()->count(2);
+
+        $saved = $this->artifact_link->saveValue($artifact, $changeset_value_id, $value, $this->previous_changesetvalue);
+        $this->assertTrue($saved);
+    }
+}
+
 ?>

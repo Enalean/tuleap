@@ -30,14 +30,22 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
     /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
     private $strategy_factory;
 
+    /** @var Planning_MilestoneFactory */
+    private $milestone_factory;
+
+    /** @var AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterFactory */
+    private $submilestone_presenter_factory;
+
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $strategy_factory,
         AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory $collection_factory,
-        Planning_MilestoneFactory $milestone_factory
+        Planning_MilestoneFactory $milestone_factory,
+        AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterFactory $submilestone_presenter_factory
     ) {
-        $this->strategy_factory   = $strategy_factory;
-        $this->collection_factory = $collection_factory;
-        $this->milestone_factory  = $milestone_factory;
+        $this->strategy_factory               = $strategy_factory;
+        $this->collection_factory             = $collection_factory;
+        $this->milestone_factory              = $milestone_factory;
+        $this->submilestone_presenter_factory = $submilestone_presenter_factory;
     }
 
     public function getMilestonePlanningPresenter(PFUser $user, Planning_ArtifactMilestone $milestone, Tracker $submilestone_tracker) {
@@ -74,8 +82,8 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenterBuilder {
         $submilestones = array_reverse($this->milestone_factory->getSubMilestones($user, $milestone));
         $submilestone_collection = new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection($submilestone_tracker);
         foreach ($submilestones as $submilestone) {
-            $this->milestone_factory->updateMilestoneContextualInfo($user, $submilestone);
-            $submilestone_collection->push(new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter($submilestone, $redirect_to_self, $user));
+            $presenter = $this->submilestone_presenter_factory->getPlanningSubMilestonePresenter($user, $submilestone, $redirect_to_self);
+            $submilestone_collection->push($presenter);
         }
         return $submilestone_collection;
     }

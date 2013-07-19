@@ -1,3 +1,15 @@
+Version 5.139 - Tuleap 6.3
+    * Development: adding support for AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_INFO_ON_MILESTONE and AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE events
+
+Version 5.138 - Tuleap 6.3
+    * Fix sla #4371 - SOAP: when creating a new artifact default values are set
+
+Version 5.137 - Tuleap 6.3
+    * Fix request #4017: Cross Reference to a release is not removed from an Epic when moved from a plan back to Product Backlog
+
+Version 5.136 - Tuleap 6.3
+    * Fix bug introduced in story #2376: no more possible to create artifact in a new tracker
+
 Version 5.135 - Tuleap 6.3
     * story #2376: have a per tracker numerotation of the artifacts (Contrib JTEKT)
 

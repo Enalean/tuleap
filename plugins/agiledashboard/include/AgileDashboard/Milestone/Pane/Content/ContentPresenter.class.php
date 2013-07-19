@@ -177,10 +177,6 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'open_items_intro', $this->backlog_item_type);
     }
 
-    public function lab() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'lab');
-    }
-
     public function initial_effort_not_defined() {
         return ! $this->todo_collection->getInitialEffortSemanticIsDefined();
     }
