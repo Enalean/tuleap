@@ -1,3 +1,9 @@
+Version 5.141 - Tuleap 6.3
+    * Fix request #4456 : Fatal error when transition occurs
+
+
+This is due to the missing  bypassPermissions() method into Transition_PostAction_CIBuild class.
+
 Version 5.140 - Tuleap 6.3
     * Development: plugin can now provide semantics (story #4127).
 
