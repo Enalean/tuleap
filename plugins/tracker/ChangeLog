@@ -1,3 +1,6 @@
+Version 5.140 - Tuleap 6.3
+    * Development: plugin can now provide semantics (story #4127).
+
 Version 5.139 - Tuleap 6.3
     * Development: adding support for AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_INFO_ON_MILESTONE and AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE events
 
