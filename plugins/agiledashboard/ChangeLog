@@ -1,3 +1,6 @@
+Version 0.91 - Tuleap 6.3
+    * Fix request #4549: AD doesn't display capacity if no burndown
+
 Version 0.90 - Tuleap 6.3
     * Story #4127: see initial effort in backlog view
 
