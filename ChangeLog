@@ -22,6 +22,7 @@ Version 6.3 (Not released yet)
 	* Project admin can configure the generic user from ui (change password & email)
 	* Debian compatibility: support of subversion, git. Install fix IM plugin and forgeupgrade.
 	* story #3823: configure generic users as siteadmin
+	* Lower mysql privileges needed to run Tuleap
 
 	== API ==
 	* SOAP /soap/project: 1.1
