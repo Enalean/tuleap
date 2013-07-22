@@ -86,6 +86,13 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
      private $start_date = null;
 
     /**
+     * The capacity of the milestone
+     *
+     * @var float
+     */
+     private $capacity = null;
+
+    /**
      * @param Project $project
      * @param Planning $planning
      * @param Tracker_Artifact $artifact
@@ -251,18 +258,14 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         return $end_date;
     }
 
-    /**
-     * @param PFUser $user
-     * @return int | null
-     */
-    public function getCapacity(PFUser $user) {
-        $burndown_field = $this->artifact->getABurndownField($user);
-
-        if ($burndown_field) {
-            return $burndown_field->getCapacity($this->artifact);
-        }
-
-        return null;
+    public function getCapacity() {
+        return $this->capacity;
     }
+
+    public function setCapacity($capacity) {
+        $this->capacity = $capacity;
+        return $this;
+    }
+
 }
 ?>
