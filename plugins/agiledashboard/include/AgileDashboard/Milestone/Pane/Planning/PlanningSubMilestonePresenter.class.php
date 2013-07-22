@@ -42,7 +42,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
         $this->milestone_status      = $milestone->getArtifact()->getStatus();
         $this->edit_submilestone_url = $milestone->getArtifact()->getUri();
         $this->redirect_to_self      = $redirect_to_self;
-        $this->milestone_capacity    = $milestone->getCapacity($user);
+        $this->milestone_capacity    = $milestone->getCapacity();
         $this->quick_link_collection = $quick_link_collection;
     }
 
