@@ -781,5 +781,25 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             $value_dao->updateOriginalValueId($field_id, $old_original_value_id, $new_original_value_id);
         }
     }
+
+    public function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value) {
+        $bind_values = $this->getBindValues($changeset_value->getValue());
+
+        return $this->extractNumericValues($bind_values);
+    }
+
+    private function extractNumericValues(Array $bind_values) {
+        $numeric_values = array();
+
+        foreach ($bind_values as $bind_value) {
+            $value = $bind_value->getLabel();
+
+            if (is_numeric($value)) {
+                $numeric_values[] = $value;
+            }
+        }
+
+        return $numeric_values;
+    }
 }
 ?>

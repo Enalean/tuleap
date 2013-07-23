@@ -496,5 +496,13 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
         }
         return $values;
     }
+
+    /**
+     * Retrieve all the numeric values of the binded values
+     *
+     * @param Tracker_Artifact_ChangesetValue $changeset_value
+     * @return array of numeric bind values
+     */
+    public abstract function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value);
 }
 ?>

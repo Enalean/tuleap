@@ -25,19 +25,19 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
     const NAME = 'initial_effort';
 
     /**
-     * @var Tracker_FormElement_Field_Numeric
+     * @var Tracker_FormElement_Field
      */
-    protected $numeric_field;
+    protected $initial_effort_field;
 
     /**
      * Constructor
      *
      * @param Tracker                           $tracker    The tracker
-     * @param Tracker_FormElement_Field_Numeric $numeric_field The field
+     * @param Tracker_FormElement_Field $initial_effort_field The field
      */
-    public function __construct(Tracker $tracker, Tracker_FormElement $numeric_field = null) {
+    public function __construct(Tracker $tracker, Tracker_FormElement_Field $initial_effort_field = null) {
         parent::__construct($tracker);
-        $this->numeric_field = $numeric_field;
+        $this->initial_effort_field = $initial_effort_field;
     }
 
     /**
@@ -73,8 +73,8 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      * @return int The Id of the (numeric) field used for initial_effort semantic, or 0 if no field
      */
     public function getFieldId() {
-        if ($this->numeric_field) {
-            return $this->numeric_field->getId();
+        if ($this->initial_effort_field) {
+            return $this->initial_effort_field->getId();
         } else {
             return 0;
         }
@@ -86,7 +86,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      * @return Tracker_FormElement_Field_Text The (numeric) field used for initial_effort semantic, or null if no field
      */
     public function getField() {
-        return $this->numeric_field;
+        return $this->initial_effort_field;
     }
 
     /**
@@ -119,10 +119,10 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
         $semantic_manager->displaySemanticHeader($this, $tracker_manager);
         $html = '';
 
-        if ($numeric_fields = Tracker_FormElementFactory::instance()->getUsedNumericOrComputedFields($this->tracker)) {
+        if ($numeric_fields = Tracker_FormElementFactory::instance()->getUsedPotentiallyContainingNumericValueFields($this->tracker)) {
 
             $html .= '<form method="POST" action="'. $this->geturl() .'">';
-            $select = '<select name="numeric_field_id">';
+            $select = '<select name="initial_effort_field_id">';
             if (! $this->getFieldId()) {
                 $select .= '<option value="-1" selected="selected">' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_a_field') . '</option>';
             }
@@ -167,11 +167,11 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      */
     public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         if ($request->exist('update')) {
-            $field_id = $request->get('numeric_field_id');
-            $field = Tracker_FormElementFactory::instance()->getUsedNumericFieldById($this->tracker, $field_id);
+            $field_id = $request->get('initial_effort_field_id');
+            $field = Tracker_FormElementFactory::instance()->getUsedPotentiallyContainingNumericValueFieldById($this->tracker, $field_id);
 
             if ($field) {
-                $this->numeric_field = $field;
+                $this->initial_effort_field = $field;
 
                 if ($this->save()) {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic','initial_effort_now', array($field->getLabel())));

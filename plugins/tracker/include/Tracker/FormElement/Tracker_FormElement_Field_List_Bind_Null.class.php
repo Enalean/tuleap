@@ -206,5 +206,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     public function getQuerySelectAggregate($functions) { return array(); }
 
     protected function getSoapBindingList() { return array(); }
+
+    public function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value) { return array(); }
 }
 ?>
