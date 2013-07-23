@@ -999,12 +999,12 @@ BrowserMatch "^Dreamweaver-WebDAV-SCM1" redirect-carefully
 #    CustomLog logs/dummy-host.example.com-access_log common
 #</VirtualHost>
 
-NameVirtualHost %sys_ip_address%:80
+NameVirtualHost *:80
                                                                                 
 #
 # Define the www and xww virtual hosts. Just
 # to be sure they are treated the right way
-<VirtualHost %sys_ip_address%:80>
+<VirtualHost *:80>
  ServerName %sys_default_domain%
  ServerAlias www.%sys_default_domain%
  ServerAlias lists.%sys_default_domain%
@@ -1027,7 +1027,7 @@ Include conf/ssl.conf
 #
 # Subversion virtual hosts alias
 #
-<VirtualHost %sys_ip_address%:80>
+<VirtualHost *:80>
         ServerName %sys_default_domain%
         ServerAlias svn.*.%sys_default_domain%
         Include conf.d/codendi_svnroot.conf
@@ -1036,7 +1036,7 @@ Include conf/ssl.conf
 #
 # Project web site virtual hosts alias
 #
-<VirtualHost %sys_ip_address%:80>
+<VirtualHost *:80>
         ServerName %sys_default_domain%
         ServerAlias *.%sys_default_domain%
         VirtualDocumentRoot /home/groups/%1/htdocs
