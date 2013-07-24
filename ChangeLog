@@ -23,6 +23,7 @@ Version 6.3 (Not released yet)
 	* Debian compatibility: support of subversion, git. Install fix IM plugin and forgeupgrade.
 	* story #3823: configure generic users as siteadmin
 	* Lower mysql privileges needed to run Tuleap
+	* Simplify Tuleap installation
 
 	== API ==
 	* SOAP /soap/project: 1.1
