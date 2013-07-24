@@ -15,6 +15,11 @@ sub ldap_connect {
     @servers = split /[ ]*,[ ]*/, $sys_ldap_server;
     $ldap = Net::LDAP->new( \@servers )
       or die "Unable to connect to ldap server: $@\n";
+    if ($sys_ldap_bind_dn) {
+        $ldap->bind($sys_ldap_bind_dn, password => $sys_ldap_bind_passwd);
+    } else {
+	$ldap->bind
+    }
 }
 
 #
