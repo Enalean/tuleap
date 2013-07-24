@@ -1,3 +1,6 @@
+Version 0.92 - Tuleap 6.3
+    * Fix capacity color behavior on the Planning pane
+
 Version 0.91 - Tuleap 6.3
     * Fix request #4549: AD doesn't display capacity if no burndown
 
