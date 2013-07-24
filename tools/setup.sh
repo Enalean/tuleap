@@ -35,6 +35,7 @@ if [ -e /etc/debian_version ]; then
     SSHD_SERVICE="ssh"
     CROND_SERVICE="cron"
     HTTPD_SERVICE="apache2"
+    generate_ssl_certificate="y"
 else
     lsb_release=$(which lsb_release)
     if [ ! -x $lsb_release ]; then
@@ -61,6 +62,7 @@ else
     SSHD_SERVICE="sshd"
     CROND_SERVICE="crond"
     HTTPD_SERVICE="httpd"
+    generate_ssl_certificate="n"
 fi
 
 export INSTALL_DIR="/usr/share/$PROJECT_NAME"
@@ -642,7 +644,6 @@ setup_apache_rhel() {
 
     # replace string patterns in httpd.conf
     substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
-    substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
 
     # replace string patterns in munin.conf (for MySQL authentication)
     if [ -f '/etc/httpd/conf.d/munin.conf' ]; then
@@ -800,16 +801,22 @@ usage() {
     cat <<EOF
 Usage: $1 [options]
 Options:
-  --auto-passwd                    Automaticaly generate random passwords
-  --without-bind-config            Do not setup local DNS server
-  --disable-subdomains		   Disable subdomain
+  --disable-auto-passwd            Do not automaticaly generate random passwords
+  --disable-httpd-restart          Do not restart httpd during the setup
+  --disable-generate-ssl-certs     Do not generate a new ssl certificate
 
-  Mysql configuration (if database on remote server):
   --sys-default-domain=<domain>	   Server Domain name
-  --sys-fullname=<fqdn>            Server fully qualified machine name
-  --sys-ip-address=<ip address>    Server IP address
   --sys-org-name=<string>          Your Company short name
   --sys-long-org-name=<string>     Your Company long name
+
+  DNS delegation configuration:
+  --enable-bind-config             Configure DNS server (only useful if you have subdomain delegation)
+  --enable-subdomains		   Setup subdomain usage (for project home pages)
+  --sys-fullname=<fqdn>            Server fully qualified machine name
+  --sys-ip-address=<ip address>    Server IP address
+
+
+  Mysql configuration (if database on remote server):
   --mysql-host=<host>              Hostname (or IP) of mysql server
   --mysql-port=<integer>           Port if not default (3306)
   --mysql-root-password=<password> Mysql root user password on remote host
@@ -827,18 +834,20 @@ sys_fullname=""
 sys_ip_address=""
 sys_org_name=""
 sys_long_org_name=""
-disable_subdomains=""
+disable_subdomains="y"
+
 
 auto=""
-auto_passwd=""
-configure_bind=""
+auto_passwd="true"
+configure_bind="false"
 mysql_host="localhost"
 mysql_port=""
 mysql_httpd_host="localhost"
 mysql_remote_server=""
 rt_passwd=""
+restart_httpd="y"
 
-options=`getopt -o h -l auto,auto-passwd,without-bind-config,mysql-host:,mysql-port:,mysql-root-password:,mysql-httpd-host:,sys-default-domain:,sys-fullname:,sys-ip-address:,sys-org-name:,sys-long-org-name:,disable-subdomains -- "$@"`
+options=`getopt -o h -l auto,disable-auto-passwd,enable-bind-config,mysql-host:,mysql-port:,mysql-root-password:,mysql-httpd-host:,sys-default-domain:,sys-fullname:,sys-ip-address:,sys-org-name:,sys-long-org-name:,enable-subdomains,disable-httpd-restart,disable-generate-ssl-certs -- "$@"`
 
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; usage $0 ;exit 1 ; fi
 
@@ -861,12 +870,16 @@ do
         MYSQL="$MYSQL -h$mysql_host"        
         MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
 		shift 1 ;;
-	--auto-passwd)
-		auto_passwd="true";shift 1 ;;
-        --without-bind-config)
-		configure_bind="false";shift 1 ;;
-	--disable-subdomains)
-		disable_subdomains="y"; shift 1 ;;
+	--disable-auto-passwd)
+		auto_passwd="false";shift 1 ;;
+        --enable-bind-config)
+		configure_bind="true";shift 1 ;;
+	--enable-subdomains)
+		disable_subdomains="n"; shift 1 ;;
+	--disable-httpd-restart)
+		restart_httpd="n"; shift 1 ;;
+        --disable-generate-ssl-certs)
+                generate_ssl_certificate="n"; shift 1 ;;
 	--sys-default-domain)
 		sys_default_domain="$2" ; shift 2 ;;
 	--sys-fullname)
@@ -985,35 +998,29 @@ echo
 # Ask for domain name and other installation parameters
 if [ -z "$sys_default_domain" ]
 then
-	read -p "Tuleap Domain name: " sys_default_domain
-fi
-if [ -z "$sys_fullname" ]
-then
-	read -p "Tuleap Server fully qualified machine name: " sys_fullname
-fi
-if [ -z "$sys_ip_address" ]
-then
-	read -p "Tuleap Server IP address: " sys_ip_address
+	read -p "Tuleap domain name: (e.g. mytuleap.company.com): " sys_default_domain
+        sys_fullname=$sys_default_domain
 fi
 if [ -z "$sys_org_name" ]
 then
-	read -p "Your Company short name: " sys_org_name
-fi
-if [ -z "$sys_long_org_name" ]
-then
-	read -p "Your Company long name: " sys_long_org_name
-fi
-if [ -z "$disable_subdomains" ]
-then
-	read -p "Disable sub-domain management (no DNS delegation)? [y|n]:" disable_subdomains
+	read -p "Your company name: (e.g. My Company): " sys_org_name
+        sys_long_org_name=$sys_org_name
 fi
 
-if [ "$disable_subdomains" != "y" ]; then
-    if [ "$configure_bind" != "false" ]; then
-        configure_bind="true"
+if [ "$configure_bind" != "false" ]; then
+    configure_bind="true"
+
+    echo "Bind (DNS server) configuration questions"
+
+    if [ -z "$sys_fullname" ]
+    then
+            read -p "Fully qualified machine name: " sys_fullname
     fi
-else
-    configure_bind="false"
+
+    if [ -z "$sys_ip_address" ]
+    then
+            read -p "IP address: " sys_ip_address
+    fi
 fi
 
 if [ "$auto_passwd" = "true" ]; then
@@ -1164,7 +1171,10 @@ fi
 
 setup_tuleap
 
-$INSTALL_DIR/src/utils/generate_ssl_certificate.sh
+if [ "$generate_ssl_certificate" = "y" ]; then
+    $INSTALL_DIR/src/utils/generate_ssl_certificate.sh
+fi
+
 setup_apache
 setup_nss
 
@@ -1369,7 +1379,10 @@ enable_service $CROND_SERVICE
 
 /etc/init.d/$PROJECT_NAME start
 
-control_service $HTTPD_SERVICE restart
+if [ "$restart_httpd" = "y" ]; then
+    control_service $HTTPD_SERVICE restart
+fi
+
 control_service $CROND_SERVICE restart
 
 # NSCD is the Name Service Caching Daemon.
@@ -1494,6 +1507,11 @@ if [ -e /etc/sudoers ]; then
 	echo "#includedir /etc/sudoers.d" >>/etc/sudoers
     fi
 fi
+
+if [ "$auto_passwd" = "true" ]; then
+    todo "Auto generated passwords (mysql, application, etc) are stored in $passwd_file"
+fi
+
 
 ##############################################
 # End of installation
