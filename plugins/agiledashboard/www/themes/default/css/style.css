@@ -138,13 +138,16 @@
     width: .8em;
 }
 
-.planning_overcapacity {
-    font-weight: bold;
-}
-
+.planning_overcapacity,
 .planning_overcapacity .planning_remaining_effort,
 .submilestone-effort.planning_overcapacity {
+    font-weight: bold;
     color: red;
+}
+
+.submilestone-effort.planning_balancedcapacity {
+    font-weight: bold;
+    color: green;
 }
 
 .card-planning-controls {
