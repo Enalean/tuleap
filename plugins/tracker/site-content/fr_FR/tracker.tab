@@ -1321,11 +1321,15 @@ workflow_admin	deleted_rules	Règle(s) supprimée(s) avec succès
 workflow_admin	updated_rules	Règle(s) mise(s) à jour avec succès
 workflow_admin	created_rule	Règle créée avec succès
 workflow_admin	title_define_global_date_rules	Définition des règles globales sur les dates
+workflow_admin	title_define_triggers	Définition des règles globales sur les déclencheurs
 workflow_admin	hint_date_rules_definition	Ces règles s'appliqueront à chaque création/modification d'artéfacts.
+workflow_admin	hint_triggers_definition	Ces déclencheurs s'appliqueront à chaque création/modification d'artéfacts
 workflow_admin	add_new_rule	Ajouter une nouvelle règle
+workflow_admin	add_new_trigger	Ajouter un nouveau déclencheur
 workflow_admin	title_define_transitions	Definir les transitions
 workflow_admin	tab_global_rules	Règles Globales
 workflow_admin	tab_transitions	Transitions
+workflow_admin	tab_triggers	Déclenchements
 workflow_admin	field	Champ sur lequel les transitions seront basées :
 workflow_admin	enabled	Appliquer les règles sur les transitions.
 workflow_admin	delete	Supprimer toutes les transitions

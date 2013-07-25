@@ -1,0 +1,18 @@
+<div class="workflow_rules">
+    <h3> {{triggers_title}}</h3>
+    <p class="help">
+        {{triggers_definition}}
+    </p>
+    <form method="post" action="{{triggers_form_action}}">
+        {{{triggers_synch_token}}}
+        <p class="add_new_trigger">
+            <span class="add_new_trigger_title">
+                <i class="icon-plus"></i>
+                {{triggers_add_new}}
+            </span>
+        </p>
+        <p>
+            <input type="submit" value="{{triggers_submit}}" />
+        </p>
+    </form>
+</div>

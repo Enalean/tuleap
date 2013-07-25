@@ -36,6 +36,16 @@ class WorkflowManager {
             ));
             $rule_date_factory = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), Tracker_FormElementFactory::instance());
             $action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $rule_date_factory, $token);
+        } elseif ($request->get('func') == Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS) {
+            $token = new CSRFSynchronizerToken(TRACKER_BASE_URL. '/?'. http_build_query(
+                array(
+                    'tracker' => (int)$this->tracker->id,
+                    'func'    => Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS,
+                    )
+            ));
+            $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_BASE_DIR.'/../templates');
+
+            $action = new Tracker_Workflow_Action_Triggers_EditTriggers($this->tracker, $token, $renderer);
         } else if ($request->get('create')) {
             $action = new Tracker_Workflow_Action_Transitions_Create($this->tracker, WorkflowFactory::instance());
         } else if ($request->get('edit_transition')) {
