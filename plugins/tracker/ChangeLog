@@ -1,3 +1,6 @@
+Version 5.142 - Tuleap 6.3
+    * Fix sla #4551 - Initial effort semantic can use a selectbox field
+
 Version 5.141 - Tuleap 6.3
     * Fix request #4456 : Fatal error when transition occurs
 
