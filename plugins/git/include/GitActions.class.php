@@ -488,12 +488,13 @@ class GitActions extends PluginActions {
      * 
      * @param GitRepository $repository
      * @param int $remote_server_id the id of the server to which we want to migrate
+     * @param Boolean $migrate_access_right if the acess right will be migrated or not
      */
-    public function migrateToGerrit(GitRepository $repository, $remote_server_id) {
+    public function migrateToGerrit(GitRepository $repository, $remote_server_id, $migrate_access_right) {
         if ($repository->canMigrateToGerrit()) {
             try {
                 $this->gerrit_server_factory->getServerById($remote_server_id);
-                $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id);
+                $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id, $migrate_access_right);
             } catch (Git_RemoteServer_NotFoundException $e) {
                 // TODO log error to the syslog
             }

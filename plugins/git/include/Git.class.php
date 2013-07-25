@@ -468,7 +468,8 @@ class Git extends PluginController {
                     $this->addError($this->getText('actions_params_error'));
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
                 } else {
-                    $this->addAction('migrateToGerrit', array($repo, $remote_server_id));
+                    $migrate_access_right = $this->request->existAndNonEmpty('migrate_access_right');
+                    $this->addAction('migrateToGerrit', array($repo, $remote_server_id, $migrate_access_right));
                     $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
                 }
                 break;
