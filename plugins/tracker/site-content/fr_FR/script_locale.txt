@@ -33,3 +33,9 @@ codendi.locales['tracker_hierarchy'] = {
     title_column_name: 'Titre',
     status_column_name: 'Status'
 };
+codendi.locales['tracker_trigger'] = {
+    at_least_one: 'au moins un',
+    all_of: 'tous',
+    and: 'et',
+    or: 'ou'
+};

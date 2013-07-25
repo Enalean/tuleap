@@ -331,5 +331,50 @@ document.observe('dom:loaded', function () {
         add.update(link);
         add.next().hide();
     });
+
+    /*
+     * Trigger event handling
+     */
+
+
+     (function trigger_init() {
+        if($('add_new_trigger_title')) {
+            var trigger = new tuleap.trackers.trigger();
+
+            (function display() {
+                $('trigger_create_new').hide();
+
+                (function bindAddNewTrigger() {
+                    Event.observe($('add_new_trigger_title'), 'click', function() {
+                        var condition = trigger.addCondition();
+
+                        $('add_new_trigger_title').hide();
+                        $('trigger_create_new').show();
+
+                        condition.removeDeleteButton();
+                        condition.addQuantitySelector();
+                    });
+                })()
+            })();
+
+            (function bindAddExtraCondition() {
+                Event.observe($('trigger_add_condition'), 'click', function() {
+                    var condition = trigger.addCondition();
+
+                    condition.activateDeleteButton();
+                    condition.makeQuantityDynamic();
+               });
+            })();
+
+            (function bindCancelAddNewTrigger(){
+                Event.observe($('trigger_add_cancel'), 'click', function() {
+                    $('trigger_create_new').hide();
+                    $('add_new_trigger_title').show();
+                    $('trigger_condition_list').update('');
+                });
+            })();
+         }
+     })();
 });
+
 

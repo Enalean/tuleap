@@ -1369,3 +1369,12 @@ tr.artifact-children-table-head {
 .toggle-child > img {
     vertical-align: middle;
 }
+
+.trigger_link {
+    cursor: pointer;
+    color: #0676B9;
+}
+
+.trigger_condition_remove {
+    cursor: pointer;
+}

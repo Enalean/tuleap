@@ -51,6 +51,43 @@ class Tracker_Workflow_Action_Triggers_TriggersPresenter {
     public function triggers_synch_token() {
         return $this->token->fetchHTMLInput();
     }
+
+    public function new_trigger_select_target_field_name() {
+        return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_new_trigger_select_target_field_name');
+    }
+
+    public function new_trigger_select_target_field_value() {
+        return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_new_trigger_select_target_field_value');
+    }
+
+    public function condition_select_tracker_name() {
+        return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_condition_select_tracker_name');
+    }
+
+    public function condition_select_tracker_field() {
+        return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_condition_select_tracker_field');
+    }
+
+    public function condition_select_tracker_field_value() {
+        return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_condition_select_tracker_field_value');
+    }
+
+    public function new_trigger_condition_list_intro() {
+        return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_new_trigger_condition_list_intro');
+    }
+
+    public function new_trigger_target_intro() {
+        return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_new_trigger_target_intro');
+    }
+
+    public function equals() {
+        return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_equals');
+    }
+
+    public function cancel() {
+        return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_cancel');
+    }
+
 }
 
 ?>
