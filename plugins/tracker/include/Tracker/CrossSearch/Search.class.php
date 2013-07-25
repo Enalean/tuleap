@@ -86,12 +86,8 @@ class Tracker_CrossSearch_Search {
         $semantic_fields = $query->getSemanticCriteria();
         
         $artifacts_info = $this->dao->searchMatchingArtifacts($user, $project->getId(), $query, $tracker_ids, $shared_fields, $semantic_fields, $this->artifact_link_field_ids_for_column_display, $excluded_artifact_ids);
-        
-        if ($query->isEmpty()) {
-            return $this->result_sorter->buildTreeWithCompleteList($artifacts_info, $tracker_ids, $hierarchy);
-        } else {
-            return $this->result_sorter->buildTreeWithMissingChildren($user, $artifacts_info, $excluded_artifact_ids);
-        }
+
+        return $this->result_sorter->buildTreeWithMissingChildren($user, $artifacts_info, $excluded_artifact_ids);
     }
 
    

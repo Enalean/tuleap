@@ -29,12 +29,12 @@ class Tracker_CrossSearch_SearchContentView {
     /**
      * @var Tracker_Report
      */
-    private $report;
+    protected $report;
     
     /**
      * @var Array of Tracker_Report_Criteria
      */
-    private $criteria;
+    protected $criteria;
     
     /**
      * @var TreeNode of artifacts rows
@@ -54,7 +54,7 @@ class Tracker_CrossSearch_SearchContentView {
     /**
      * @var PFUser
      */
-    private $user;
+    protected $user;
     
     public function __construct(Tracker_Report                   $report, 
                                 array                            $criteria, 
@@ -84,7 +84,7 @@ class Tracker_CrossSearch_SearchContentView {
         return $html;
     }
     
-    private function fetchResults() {  
+    protected function fetchResults() {
         $html  = '';
         $html .= '<div class="tracker_report_renderer">';
         $html .= $this->fetchResultActions();

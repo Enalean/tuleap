@@ -194,11 +194,15 @@ class Tracker_CrossSearch_Query {
     }
 
     private function isSemanticEmpty() {
-        return (!$this->getTitle() && $this->isSemanticStatusEmpty());
+        return ($this->getTitle() == '' && $this->isSemanticStatusEmpty());
     }
 
     private function isSemanticStatusEmpty() {
-        return isset($this->semantic_criteria['status']) && ($this->semantic_criteria['status'] == '' || $this->semantic_criteria['status'] == 'any');
+        return isset($this->semantic_criteria['status']) ? $this->isSemanticStatusValueEmpty() : true;
+    }
+
+    private function isSemanticStatusValueEmpty() {
+        return $this->semantic_criteria['status'] == '' || $this->semantic_criteria['status'] == 'any';
     }
 }
 ?>
