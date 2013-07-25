@@ -1,3 +1,6 @@
+Version 5.143 - Tuleap 6.3
+    * Remove default cross tracker search to avoid bad user experience to users
+
 Version 5.142 - Tuleap 6.3
     * Fix sla #4551 - Initial effort semantic can use a selectbox field
 
