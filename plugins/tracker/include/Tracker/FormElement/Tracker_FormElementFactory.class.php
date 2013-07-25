@@ -477,11 +477,12 @@ class Tracker_FormElementFactory {
     }
 
     /**
+     * It retrieves simple value fields that can potentially contain numeric values
      * @param Tracker $tracker
      * @return array All numeric or computed formElements used by the tracker
      */
-    public function getUsedNumericOrComputedFields(Tracker $tracker) {
-        return $this->getUsedFormElementsByType($tracker, array('int', 'float', 'computed'));
+    public function getUsedPotentiallyContainingNumericValueFields(Tracker $tracker) {
+        return $this->getUsedFormElementsByType($tracker, array('int', 'float', 'computed', 'sb'));
     }
 
     /**
@@ -605,6 +606,16 @@ class Tracker_FormElementFactory {
      */
     public function getUsedNumericFieldById($tracker, $field_id) {
         return $this->getUsedFieldByIdAndType($tracker, $field_id, array('int', 'float', 'computed'));
+    }
+
+    /**
+     * It retrieves by its Id a simple value field that can potentially contain numeric values
+     * @param Tracker $tracker
+     * @param int $field_id
+     * @return Tracker_FormElement | void
+     */
+    public function getUsedPotentiallyContainingNumericValueFieldById($tracker, $field_id) {
+        return $this->getUsedFieldByIdAndType($tracker, $field_id, array('int', 'float', 'computed', 'sb'));
     }
 
     /**

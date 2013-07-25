@@ -841,6 +841,11 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function fixOriginalValueIds(array $value_mapping) {
         // Nothing to do: user value ids stay the same accross projects.
     }
+
+    public function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value) {
+        // returns an empty array as it doesn't make sense with Users
+        return array();
+    }
 }
 
 ?>

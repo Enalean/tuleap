@@ -618,6 +618,11 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         // returns empty array as ugroups are already listed in 'values'
         return array();
     }
+
+    public function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value) {
+        // returns an empty array as it doesn't make sense with Ugroups
+        return array();
+    }
 }
 
 ?>

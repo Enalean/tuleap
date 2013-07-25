@@ -19,7 +19,7 @@
  */
  
 
-class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List {
+class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List implements Tracker_FormElement_IComputeValues{
     
 
     /**
@@ -255,6 +255,25 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         }
 
         return $decorators[$value_id]->css(null);
+    }
+
+    public function getComputedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null) {
+        if ($this->userCanRead($user)) {
+            return $this->getCurrentValue($artifact);
+        }
+        return null;
+    }
+
+    private function getCurrentValue(Tracker_Artifact $artifact) {
+        $changeset_value = $artifact->getValue($this);
+
+        if ($changeset_value) {
+            $values = $this->getBind()->getNumericValues($changeset_value);
+            if (! empty($values)) {
+                return $values[0];
+            }
+        }
+        return null;
     }
 }
 ?>
