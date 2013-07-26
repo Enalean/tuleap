@@ -148,7 +148,9 @@ class Project_SOAPServerTest extends TuleapTestCase {
         $this->pc        = new MockProjectCreator();
         $this->guf       = mock('GenericUserFactory');
         $this->limitator = new MockSOAP_RequestLimitator();
-        $server          = new Project_SOAPServer($this->pm, $this->pc, $this->um, $this->guf, $this->limitator);
+        $this->description_factory = mock('Project_CustomDescription_CustomDescriptionFactory');
+
+        $server          = new Project_SOAPServer($this->pm, $this->pc, $this->um, $this->guf, $this->limitator, $this->description_factory);
         return $server;
     }
 }
@@ -186,11 +188,12 @@ class Project_SOAPServerGenericUserTest extends TuleapTestCase {
         $project_creator            = new MockProjectCreator();
         $this->generic_user_factory = mock('GenericUserFactory');
         $limitator                  = new MockSOAP_RequestLimitator();
+        $description_factory        = mock('Project_CustomDescription_CustomDescriptionFactory');
 
         $this->server = partial_mock(
                 'Project_SOAPServerObjectTest',
                 array('isRequesterAdmin', 'addProjectMember', 'removeProjectMember'),
-                array($project_manager, $project_creator, $user_manager, $this->generic_user_factory, $limitator)
+                array($project_manager, $project_creator, $user_manager, $this->generic_user_factory, $limitator, $description_factory)
         );
 
         stub($this->server)->isRequesterAdmin($this->session_key, $this->group_id)->returns(true);
@@ -234,4 +237,60 @@ class Project_SOAPServerGenericUserTest extends TuleapTestCase {
     }
 }
 
+class Project_SOAPServerProjectDescriptionFieldsTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->session_key         = 'abcde123';
+        $this->project_manager      = mock('ProjectManager');
+        $this->project_creator      = new MockProjectCreator();
+        $this->user_manager         = new MockUserManager();
+        $this->generic_user_factory = mock('GenericUserFactory');
+        $this->limitator            = new MockSOAP_RequestLimitator();
+        $user                       = stub('PFUser')->isLoggedIn()->returns(true);
+
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($user);
+    }
+
+    public function itReturnsTheProjectDescriptionFields() {
+        $field1 = stub('Project_CustomDescription_CustomDescription')->getId()->returns(145);
+        stub($field1)->getName()->returns('champs 1');
+        stub($field1)->isRequired()->returns(true);
+        $field2 = stub('Project_CustomDescription_CustomDescription')->getId()->returns(255);
+        stub($field2)->getName()->returns('champs 2');
+        stub($field2)->isRequired()->returns(false);
+
+        $project_desc_fields = array(
+            $field1,
+            $field2
+        );
+
+        $expected = array(
+            0 => array(
+                'id' => 145,
+                'name' => 'champs 1',
+                'is_mandatory' => true
+            ),
+
+            1 => array(
+                'id' => 255,
+                'name' => 'champs 2',
+                'is_mandatory' => false
+            )
+        );
+
+        $description_factory  = stub('Project_CustomDescription_CustomDescriptionFactory')->getCustomDescriptions()->returns($project_desc_fields);
+
+        $server = new Project_SOAPServer($this->project_manager, $this->project_creator, $this->user_manager, $this->generic_user_factory, $this->limitator, $description_factory);
+        $this->assertEqual($expected, $server->getPlateformProjectDescriptionFields($this->session_key));
+    }
+
+    public function itThrowsASOAPFaultIfNoDescriptionField() {
+        $description_factory  = stub('Project_CustomDescription_CustomDescriptionFactory')->getCustomDescriptions()->returns(array());
+        $server = new Project_SOAPServer($this->project_manager, $this->project_creator, $this->user_manager, $this->generic_user_factory, $this->limitator, $description_factory);
+
+        $this->expectException();
+        $server->getPlateformProjectDescriptionFields($this->session_key);
+    }
+}
 ?>

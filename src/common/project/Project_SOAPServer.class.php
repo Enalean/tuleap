@@ -54,12 +54,23 @@ class Project_SOAPServer {
      */
     private $generic_user_factory;
 
-    public function __construct(ProjectManager $projectManager, ProjectCreator $projectCreator, UserManager $userManager, GenericUserFactory $generic_user_factory, SOAP_RequestLimitator $limitator) {
-        $this->projectManager = $projectManager;
-        $this->projectCreator = $projectCreator;
-        $this->userManager    = $userManager;
+    /** @var Project_CustomDescription_CustomDescriptionFactory */
+    private $description_factory;
+
+    public function __construct(
+        ProjectManager $projectManager,
+        ProjectCreator $projectCreator,
+        UserManager $userManager,
+        GenericUserFactory $generic_user_factory,
+        SOAP_RequestLimitator $limitator,
+        Project_CustomDescription_CustomDescriptionFactory $description_factory
+    ) {
+        $this->projectManager       = $projectManager;
+        $this->projectCreator       = $projectCreator;
+        $this->userManager          = $userManager;
         $this->generic_user_factory = $generic_user_factory;
-        $this->limitator      = $limitator;
+        $this->limitator            = $limitator;
+        $this->description_factory  = $description_factory;
     }
 
     /**
@@ -360,7 +371,39 @@ class Project_SOAPServer {
         }
         return user_to_soap($user, $this->userManager->getCurrentUser());
     }
-    
+
+    /**
+     * Get all the description fields
+     *
+     * * Error codes:
+     *   * 3107, No custom project description fields
+     *
+     * @param String  $sessionKey The project admin session hash
+     *
+     * @return ArrayOfDescFields
+     */
+    public function getPlateformProjectDescriptionFields($sessionKey) {
+
+        $this->continueSession($sessionKey);
+        $project_desc_fields = $this->description_factory->getCustomDescriptions();
+        $soap_return = array();
+        if (empty($project_desc_fields)) {
+                throw new SoapFault('3107', "No custom project description fields");
+        }
+        foreach ($project_desc_fields as $desc_field) {
+             $soap_return[] = $this->extractDescFieldSOAPDatas($desc_field);
+        }
+        return $soap_return;
+    }
+
+    private function extractDescFieldSOAPDatas(Project_CustomDescription_CustomDescription $desc_field) {
+        $field_datas = array();
+        $field_datas['id']           = $desc_field->getId();
+        $field_datas['name']         = $desc_field->getName();
+        $field_datas['is_mandatory'] = $desc_field->isRequired();
+        return $field_datas;
+    }
+
     /**
      * Return a user member of project
      * 

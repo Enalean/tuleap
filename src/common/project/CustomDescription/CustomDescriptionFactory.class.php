@@ -43,5 +43,24 @@ class Project_CustomDescription_CustomDescriptionFactory {
         }
         return $required_custom_descriptions;
     }
+
+    /**
+     * @return Project_CustomDescription_CustomDescription[]
+     */
+    public function getCustomDescriptions() {
+        $custom_descriptions = array();
+        $res = db_query('SELECT * FROM group_desc ORDER BY desc_rank');
+        while ($row = db_fetch_array($res)) {
+            $custom_descriptions[$row['group_desc_id']] = new Project_CustomDescription_CustomDescription(
+                $row['group_desc_id'],
+                $row['desc_name'],
+                $row['desc_description'],
+                $row['desc_required'],
+                $row['desc_type'],
+                $row['desc_rank']
+            );
+        }
+        return $custom_descriptions;
+    }
 }
 ?>
