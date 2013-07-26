@@ -113,7 +113,7 @@ class Git_Exec {
      */
     public function revListSinceStart($refname, $newrev) {
         $output = array();
-        $other_branches = implode(' ', $this->getOtherBranches($refname));
+        $other_branches = implode(' ', array_map('escapeshellarg', $this->getOtherBranches($refname)));
         $this->gitCmdWithOutput('rev-parse --not '.$other_branches.' | git rev-list --stdin '.escapeshellarg($newrev), $output);
         return $output;
     }
