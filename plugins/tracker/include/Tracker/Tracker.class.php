@@ -50,6 +50,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     private $formElementFactory;
     private $sharedFormElementFactory;
     private $project;
+    private $children;
 
     // attributes necessary to to create an intermediate Tracker Object
     // (before Database import) during XML import
@@ -517,6 +518,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
             case Workflow::FUNC_ADMIN_RULES:
             case Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS:
             case Workflow::FUNC_ADMIN_TRANSITIONS:
+            case Workflow::FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA:
                 if ($this->userIsAdmin($current_user)) {
                     $this->getWorkflowManager()->process($layout, $request, $current_user);
                 } else {
@@ -3054,12 +3056,24 @@ EOS;
     }
 
     /**
+     * Set children trackers
+     *
+     * @param Tracker[] $trackers
+     */
+    public function setChildren(array $trackers) {
+        $this->children = $trackers;
+    }
+
+    /**
      * Return the children of the tracker
      *
      * @return Tracker[]
      */
     public function getChildren() {
-        return $this->getHierarchyFactory()->getChildren($this->getId());
+        if ($this->children === null) {
+            $this->children = $this->getHierarchyFactory()->getChildren($this->getId());
+        }
+        return $this->children;
     }
 
     /**

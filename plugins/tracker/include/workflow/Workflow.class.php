@@ -22,6 +22,7 @@ class Workflow {
     const FUNC_ADMIN_RULES       = 'admin-workflow';
     const FUNC_ADMIN_TRANSITIONS = 'admin-workflow-transitions';
     const FUNC_ADMIN_CROSS_TRACKER_TRIGGERS = 'admin-workflow-triggers';
+    const FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA = 'admin-get-triggers-rules-builder-data';
 
     public $workflow_id;
     public $tracker_id;

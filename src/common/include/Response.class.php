@@ -114,6 +114,11 @@ class Response {
         echo json_encode($content);
     }
 
+    public function sendAsJSON($content) {
+        $this->setContentType('application/json');
+        echo $content;
+    }
+
     /**
      * Send 401 Unauthorized and exit if the client asks for something else than text/html
      *
