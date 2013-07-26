@@ -20,6 +20,7 @@ require_once('common/project/RegisterProjectStep_Confirmation.class.php');
 require_once('common/project/RegisterProjectStep_Services.class.php');
 require_once('common/project/OneStepCreation/OneStepCreationRouter.class.php');
 require_once('common/project/CustomDescription/CustomDescriptionFactory.class.php');
+require_once('common/project/CustomDescription/CustomDescriptionDao.class.php');
 require_once 'vars.php'; //load licenses
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
@@ -28,7 +29,7 @@ $request = HTTPRequest::instance();
 if (Config::get('sys_create_project_in_one_step')) {
     $router = new Project_OneStepCreation_OneStepCreationRouter(
         ProjectManager::instance(),
-        new Project_CustomDescription_CustomDescriptionFactory()
+        new Project_CustomDescription_CustomDescriptionFactory(new Project_CustomDescription_CustomDescriptionDao())
     );
     $router->route($request);
     exit;

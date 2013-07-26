@@ -144,13 +144,14 @@ class Project_SOAPServerTest extends TuleapTestCase {
         $this->um->setReturnValue('getCurrentUser', $this->user, array('123'));
         $this->um->setReturnValue('getCurrentUser', $admin, array('456'));
         
-        $this->pm        = new MockProjectManager();
-        $this->pc        = new MockProjectCreator();
-        $this->guf       = mock('GenericUserFactory');
-        $this->limitator = new MockSOAP_RequestLimitator();
+        $this->pm                  = new MockProjectManager();
+        $this->pc                  = new MockProjectCreator();
+        $this->guf                 = mock('GenericUserFactory');
+        $this->limitator           = new MockSOAP_RequestLimitator();
         $this->description_factory = mock('Project_CustomDescription_CustomDescriptionFactory');
+        $this->description_manager = mock('Project_CustomDescription_CustomDescriptionValueManager');
 
-        $server          = new Project_SOAPServer($this->pm, $this->pc, $this->um, $this->guf, $this->limitator, $this->description_factory);
+        $server = new Project_SOAPServer($this->pm, $this->pc, $this->um, $this->guf, $this->limitator, $this->description_factory, $this->description_manager);
         return $server;
     }
 }
@@ -189,11 +190,12 @@ class Project_SOAPServerGenericUserTest extends TuleapTestCase {
         $this->generic_user_factory = mock('GenericUserFactory');
         $limitator                  = new MockSOAP_RequestLimitator();
         $description_factory        = mock('Project_CustomDescription_CustomDescriptionFactory');
+        $description_manager        = mock('Project_CustomDescription_CustomDescriptionValueManager');
 
         $this->server = partial_mock(
                 'Project_SOAPServerObjectTest',
                 array('isRequesterAdmin', 'addProjectMember', 'removeProjectMember'),
-                array($project_manager, $project_creator, $user_manager, $this->generic_user_factory, $limitator, $description_factory)
+                array($project_manager, $project_creator, $user_manager, $this->generic_user_factory, $limitator, $description_factory, $description_manager)
         );
 
         stub($this->server)->isRequesterAdmin($this->session_key, $this->group_id)->returns(true);
@@ -241,15 +243,30 @@ class Project_SOAPServerProjectDescriptionFieldsTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->session_key         = 'abcde123';
-        $this->project_manager      = mock('ProjectManager');
+
+        $project                    = stub('Project')->getId()->returns(101);
+        $this->session_key          = 'abcde123';
+        $this->project_manager      = stub('ProjectManager')->getProject()->returns($project);
         $this->project_creator      = new MockProjectCreator();
         $this->user_manager         = new MockUserManager();
         $this->generic_user_factory = mock('GenericUserFactory');
         $this->limitator            = new MockSOAP_RequestLimitator();
-        $user                       = stub('PFUser')->isLoggedIn()->returns(true);
+        $this->description_factory  = mock('Project_CustomDescription_CustomDescriptionFactory');
+        $this->description_manager  = mock('Project_CustomDescription_CustomDescriptionValueManager');
 
-        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($user);
+        $this->server = new Project_SOAPServer(
+            $this->project_manager,
+            $this->project_creator,
+            $this->user_manager,
+            $this->generic_user_factory,
+            $this->limitator,
+            $this->description_factory,
+            $this->description_manager
+        );
+
+        $this->user       = stub('PFUser')->isLoggedIn()->returns(true);
+        $this->user_admin = stub('PFUser')->isLoggedIn()->returns(true);
+        stub($this->user_admin)->isMember(101, 'A')->returns(true);
     }
 
     public function itReturnsTheProjectDescriptionFields() {
@@ -279,18 +296,40 @@ class Project_SOAPServerProjectDescriptionFieldsTest extends TuleapTestCase {
             )
         );
 
-        $description_factory  = stub('Project_CustomDescription_CustomDescriptionFactory')->getCustomDescriptions()->returns($project_desc_fields);
+        stub($this->description_factory)->getCustomDescriptions()->returns($project_desc_fields);
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user);
 
-        $server = new Project_SOAPServer($this->project_manager, $this->project_creator, $this->user_manager, $this->generic_user_factory, $this->limitator, $description_factory);
-        $this->assertEqual($expected, $server->getPlateformProjectDescriptionFields($this->session_key));
+        $this->assertEqual($expected, $this->server->getPlateformProjectDescriptionFields($this->session_key));
     }
 
     public function itThrowsASOAPFaultIfNoDescriptionField() {
-        $description_factory  = stub('Project_CustomDescription_CustomDescriptionFactory')->getCustomDescriptions()->returns(array());
-        $server = new Project_SOAPServer($this->project_manager, $this->project_creator, $this->user_manager, $this->generic_user_factory, $this->limitator, $description_factory);
+        stub($this->description_factory)->getCustomDescriptions()->returns(array());
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user);
 
         $this->expectException();
-        $server->getPlateformProjectDescriptionFields($this->session_key);
+        $this->server->getPlateformProjectDescriptionFields($this->session_key);
+    }
+
+    public function itUpdatesProjectDescriptionFields() {
+        $field_id_to_update = 104;
+        $field_value        = 'new_value_104';
+        $group_id           = 101;
+
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
+
+        expect($this->description_manager)->setCustomDescription()->once();
+        $this->server->setProjectDescriptionFieldValue($this->session_key, $group_id, $field_id_to_update, $field_value);
+    }
+
+    public function itThrowsASOAPFaultIfUserIsNotAdmin() {
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user);
+
+        $field_id_to_update = 104;
+        $field_value        = 'new_value_104';
+        $group_id           = 101;
+
+        $this->expectException();
+        $this->server->setProjectDescriptionFieldValue($this->session_key, $group_id, $field_id_to_update, $field_value);
     }
 }
 ?>

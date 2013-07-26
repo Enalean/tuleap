@@ -19,19 +19,27 @@
  */
 
 require_once 'CustomDescription.class.php';
+require_once 'CustomDescriptionDao.class.php';
 
 /**
  * Factory to instanciate Project_CustomDescription_CustomDescription
  */
 class Project_CustomDescription_CustomDescriptionFactory {
 
+    /** @var Project_CustomDescription_CustomDescriptionDao */
+    private $dao;
+
+    public function __construct(Project_CustomDescription_CustomDescriptionDao $dao) {
+        $this->dao = $dao;
+    }
+
     /**
      * @return Project_CustomDescription_CustomDescription[]
      */
     public function getRequiredCustomDescriptions() {
         $required_custom_descriptions = array();
-        $res = db_query('SELECT * FROM group_desc WHERE desc_required = 1 ORDER BY desc_rank');
-        while ($row = db_fetch_array($res)) {
+        $res = $this->dao->getRequiredCustomDescriptions();
+        while ($row = $res->getRow()) {
             $required_custom_descriptions[$row['group_desc_id']] = new Project_CustomDescription_CustomDescription(
                 $row['group_desc_id'],
                 $row['desc_name'],
@@ -49,8 +57,8 @@ class Project_CustomDescription_CustomDescriptionFactory {
      */
     public function getCustomDescriptions() {
         $custom_descriptions = array();
-        $res = db_query('SELECT * FROM group_desc ORDER BY desc_rank');
-        while ($row = db_fetch_array($res)) {
+        $res = $this->dao->getCustomDescriptions();
+        while ($row = $res->getRow()) {
             $custom_descriptions[$row['group_desc_id']] = new Project_CustomDescription_CustomDescription(
                 $row['group_desc_id'],
                 $row['desc_name'],

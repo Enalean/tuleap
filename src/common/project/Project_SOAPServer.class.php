@@ -57,13 +57,17 @@ class Project_SOAPServer {
     /** @var Project_CustomDescription_CustomDescriptionFactory */
     private $description_factory;
 
+    /** @var Project_CustomDescription_CustomDescriptionValueManager */
+    private $description_manager;
+
     public function __construct(
         ProjectManager $projectManager,
         ProjectCreator $projectCreator,
         UserManager $userManager,
         GenericUserFactory $generic_user_factory,
         SOAP_RequestLimitator $limitator,
-        Project_CustomDescription_CustomDescriptionFactory $description_factory
+        Project_CustomDescription_CustomDescriptionFactory $description_factory,
+        Project_CustomDescription_CustomDescriptionValueManager $description_manager
     ) {
         $this->projectManager       = $projectManager;
         $this->projectCreator       = $projectCreator;
@@ -71,6 +75,7 @@ class Project_SOAPServer {
         $this->generic_user_factory = $generic_user_factory;
         $this->limitator            = $limitator;
         $this->description_factory  = $description_factory;
+        $this->description_manager  = $description_manager;
     }
 
     /**
@@ -394,6 +399,25 @@ class Project_SOAPServer {
              $soap_return[] = $this->extractDescFieldSOAPDatas($desc_field);
         }
         return $soap_return;
+    }
+
+    /**
+     * Set description fields
+     *
+     * * Error codes:
+     *   * 3000, Invalid project id
+     *   * 3201, Permission denied: need to be project admin
+     *
+     * @param String  $sessionKey         The project admin session hash
+     * @param int     $group_id           The Id of the project
+     * @param int     $field_id_to_update The Id of the field
+     * @param String  $field_value        The new value to set
+     *
+     */
+    public function setProjectDescriptionFieldValue($sessionKey, $group_id, $field_id_to_update, $field_value) {
+        $project = $this->getProjectIfUserIsAdmin($group_id, $sessionKey);
+
+        $this->description_manager->setCustomDescription($project, $field_id_to_update,$field_value);
     }
 
     private function extractDescFieldSOAPDatas(Project_CustomDescription_CustomDescription $desc_field) {
