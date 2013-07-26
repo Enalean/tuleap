@@ -1,3 +1,6 @@
+Version 3.34 - Tuleap 6.4
+    * Fix request #4599 - Git_Command_Exception during a git push command with branch names containing special characters
+
 Version 3.33 - Tuleap 6.3
     * Add forgotten fields that were introduced by an upgrade bucket
     Correspond to bucket
