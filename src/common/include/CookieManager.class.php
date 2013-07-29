@@ -44,8 +44,12 @@ class CookieManager {
             $cookie_host=".".$host;
         }
         $secure = (bool)Config::get('sys_force_ssl');
-        $httpOnly = true;
-        return setcookie($this->getInternalCookieName($name), $value, $expire, '/', $cookie_host, $secure, $httpOnly);
+        if (PHP_VERSION < 5.2) {
+            return setcookie($this->getInternalCookieName($name), $value, $expire, '/', $cookie_host. '; HttpOnly', $secure);
+        } else {
+            $httpOnly = true;
+            return setcookie($this->getInternalCookieName($name), $value, $expire, '/', $cookie_host, $secure, $httpOnly);
+        }
     }
     
     function getCookie($name) {
