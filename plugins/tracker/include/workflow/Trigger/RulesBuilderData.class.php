@@ -50,15 +50,7 @@ class Tracker_Workflow_Trigger_RulesBuilderData {
     }
 
     private function getTargetField(Tracker_FormElement_Field_List $target) {
-        return array(
-            'id'    => $target->getId(),
-            'label' => $target->getLabel(),
-            'values' => array_map(array($this, 'getValueJson'), $target->getAllValues())
-        );
-    }
-
-    private function getValueJson(Tracker_FormElement_Field_List_Value $value) {
-        return $value->fetchValuesForJson();
+        return $target->fetchFormattedForJson();
     }
 
     private function getTriggers() {

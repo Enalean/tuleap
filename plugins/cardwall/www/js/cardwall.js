@@ -276,7 +276,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
         }
 
         $H( this.users ).each( function( user_details ) {
-            user_collection.push( [ user_details.value.id, user_details.value.caption ] );
+            user_collection.push( [ user_details.value.id, user_details.value.label ] );
         });
 
         return user_collection;
@@ -311,8 +311,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
         return {
             none_id : {
                 "id"       : none_id,
-                "value"    : "",
-                "caption"  : "None",
+                "label"  : "None",
                 "username" : "None",
                 "realname" : "None"
             }
@@ -394,12 +393,12 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
         function addUsername(container, user_id) {
             var realname = tracker_user_data[ field_id ][ user_id ][ 'realname' ],
-                caption = tracker_user_data[ field_id ][ user_id ][ 'caption' ],
+                label = tracker_user_data[ field_id ][ user_id ][ 'label' ],
                 username_div;
 
             username_div = new Element( 'div' );
             username_div.addClassName( 'realname' );
-            username_div.writeAttribute( 'title', caption );
+            username_div.writeAttribute( 'title', label );
             username_div.writeAttribute( 'data-user-id', user_id );
 
             username_div.update(realname);
@@ -411,13 +410,13 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
         function addAvatar( container, user_id ) {
             var username = tracker_user_data[ field_id ][ user_id ][ 'username' ],
-                caption = tracker_user_data[ field_id ][ user_id ][ 'caption' ],
+                label = tracker_user_data[ field_id ][ user_id ][ 'label' ],
                 avatar_img,
                 avatar_div;
 
             avatar_div = new Element( 'div' );
             avatar_div.addClassName( 'avatar' );
-            avatar_div.writeAttribute( 'title', caption );
+            avatar_div.writeAttribute( 'title', label );
             avatar_div.writeAttribute( 'data-user-id', user_id );
 
             avatar_img = new Element('img', {

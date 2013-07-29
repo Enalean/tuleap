@@ -458,25 +458,33 @@ class Tracker_FormElement_Field_List_processGetValuesTest extends TuleapTestCase
         $this->list->process($this->layout, $request, $this->user);
     }
 
-    public function itSendsAnEmptyArrayInJSONFormatWhenNoValues() {
-        stub($this->bind)->getAllValues()->returns(array());
-        expect($GLOBALS['Response'])->sendJSON(array())->once();
+    public function itSendsWhateverBindReturns() {
+        stub($this->bind)->fetchFormattedForJson()->returns('whatever');
+        expect($GLOBALS['Response'])->sendJSON('whatever')->once();
         $this->list->process($this->layout, $this->request, $this->user);
     }
+}
 
-    public function itSendsTheValuesInJSONFormat() {
-        $v1 = new Tracker_FormElement_Field_List_Bind_StaticValue(10, 'label1', 'desc1', 'rank', false);
-        $v2 = new Tracker_FormElement_Field_List_Bind_StaticValue(11, 'label2', 'desc2', 'rank', false);
+class Tracker_FormElement_Field_ListJsonFormattedTest extends TuleapTestCase {
 
-        stub($this->bind)->getAllValues()->returns(array($v1, $v2));
+    private $bind;
+    private $list;
 
-        expect($GLOBALS['Response'])->sendJSON(
-                array(
-                    10 => $v1->fetchValuesForJson(),
-                    11 => $v2->fetchValuesForJson()
-                ))->once();
+    public function setUp() {
+        parent::setUp();
+        $this->bind     = mock('Tracker_FormElement_Field_List_Bind_Static');
+        $this->list     = new Tracker_FormElement_Field_ListTestVersion();
+        $this->list->id = 234;
+        stub($this->list)->getBind()->returns($this->bind);
+    }
 
-        $this->list->process($this->layout, $this->request, $this->user);
+    public function itHasValuesInAdditionToCommonFormat() {
+        expect($this->bind)->fetchFormattedForJson()->once();
+        stub($this->bind)->fetchFormattedForJson()->returns(array());
+
+        $json = $this->list->fetchFormattedForJson();
+        $this->assertEqual($json['id'], 234);
+        $this->assertIdentical($json['values'], array());
     }
 }
 

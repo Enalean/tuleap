@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Tracker_FormElement_Field_List_Value {
+abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJsonFormatOfMyself {
     /**
      *
      * @var int 
@@ -44,20 +44,39 @@ abstract class Tracker_FormElement_Field_List_Value {
         $this->id = $id;
         return $this;
     }
-    
+
     /**
-     * Format a value to json
+     * JSon representation of the object
      *
      * @return array
      */
-    public function fetchValuesForJson() {
+    public function fetchFormattedForJson() {
+        return array(
+            'id'        => $this->getId(),
+            'label'     => $this->getLabel(),
+            'is_hidden' => (boolean) $this->isHidden(),
+        );
+    }
+
+    /**
+     * Specific JSon format for OpenList fields
+     *
+     * ProtoMultiSelect JS library used for requires a special format for JSON
+     * (caption, value) so a specific method for that.
+     *
+     * If you are looking for a JSon representation of the current object,
+     * @see Tracker_FormElement_Field_List_Value::fetchFormattedForJson
+     *
+     * @return type
+     */
+    public function fetchForOpenListJson() {
         return array(
             'id'      => $this->getId(),
             'value'   => $this->getJsonId(),
             'caption' => $this->getLabel(),
         );
     }
-    
+
     public abstract function getJsonId();
     
     public abstract function __toString();

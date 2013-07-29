@@ -31,31 +31,15 @@ class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase {
     }
 
     public function itHasATargetFieldOfTheTrackerOnWhichRulesWillApply() {
-        $target_field = aSelectBoxField()
-            ->withId(30)
-            ->withLabel("Status")
-            ->withBind(new Tracker_FormElement_Field_List_Bind_Null(aMockField()->build()))
-            ->build();
+        $target_field = aMockField()->build();
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(array($target_field), array());
+
+        expect($target_field)->fetchFormattedForJson()->once();
+        stub($target_field)->fetchFormattedForJson()->returns('whatever');
 
         $result = json_decode($rules_builder_data->toJson());
         $this->assertCount($result->targets, 1);
-        $this->assertEqual($result->targets[0]->id, 30);
-        $this->assertEqual($result->targets[0]->label, "Status");
-    }
-
-    public function itHasATargetFieldWithValues() {
-        $target_field = aSelectBoxField()->withBind(
-            aBindStatic()->withValues(array(
-                aBindStaticValue()->withId(345)->withLabel('Todo')->build(),
-            ))->build()
-        )->build();
-        $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(array($target_field), array());
-
-        $result = json_decode($rules_builder_data->toJson());
-        $this->assertCount($result->targets[0]->values, 1);
-        $this->assertEqual($result->targets[0]->values[0]->id, 345);
-        $this->assertEqual($result->targets[0]->values[0]->caption, 'Todo');
+        $this->assertEqual($result->targets[0], 'whatever');
     }
 
     public function itHasATriggerTracker() {
@@ -73,23 +57,20 @@ class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase {
     }
 
      public function itHasATriggerTrackerWithAField() {
+         $field = aMockField()->build();
+         expect($field)->fetchFormattedForJson()->once();
+         stub($field)->fetchFormattedForJson()->returns('whatever');
+
          $triggering_field = new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields(
             aTracker()->withId(90)->withName('Tasks')->build(),
-            array(
-                aSelectBoxField()
-                    ->withId(91)
-                    ->withLabel("Status")
-                    ->withBind(new Tracker_FormElement_Field_List_Bind_Null(aMockField()->build()))
-                    ->build()
-            )
+            array($field)
         );
 
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(array(), array($triggering_field));
         $result = json_decode($rules_builder_data->toJson());
         $trigger = $result->triggers[0];
         $this->assertCount($trigger->fields, 1);
-        $this->assertEqual($trigger->fields[0]->id, 91);
-        $this->assertEqual($trigger->fields[0]->label, "Status");
+        $this->assertEqual($trigger->fields[0], 'whatever');
     }
 }
 
