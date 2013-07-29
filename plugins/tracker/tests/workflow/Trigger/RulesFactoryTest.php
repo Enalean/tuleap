@@ -1,0 +1,322 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+
+class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test extends TuleapTestCase {
+
+    protected $tracker_id;
+    protected $tracker;
+    protected $formelement_factory;
+    protected $factory;
+    protected $json_input;
+
+    public function setUp() {
+        parent::setUp();
+        $this->tracker_id = 274;
+        $this->tracker = aTracker()->withId($this->tracker_id)->build();
+        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        $this->factory = new Tracker_Workflow_Trigger_RulesFactory($this->formelement_factory);
+        $this->json_input = json_decode(file_get_contents(dirname(__FILE__).'/_fixtures/add_rule.json'));
+    }
+}
+
+class Tracker_Workflow_Trigger_RulesFactory_validateJsonFormat_Test extends Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test {
+
+    public function itRaisesAnExceptionIfNoTarget() {
+        $json = new stdClass();
+        $json->target = new stdClass();
+
+        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
+        $this->factory->getRuleFromJson($this->tracker, $json);
+    }
+
+    public function itRaisesAnExceptionIfTargetHasNoFieldId() {
+        $json = new stdClass();
+        $json->target = new stdClass();
+
+        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
+        $this->factory->getRuleFromJson($this->tracker, $json);
+    }
+
+    public function itRaisesAnExceptionIfTargetHasNoFieldValueId() {
+        $json = new stdClass();
+        $json->target = new stdClass();
+        $json->target->field_id = 34;
+
+        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
+        $this->factory->getRuleFromJson($this->tracker, $json);
+    }
+
+    public function itRaisesAnExceptionIfTargetHasNoCondition() {
+        $json = new stdClass();
+        $json->target = new stdClass();
+        $json->target->field_id = 34;
+        $json->target->field_value_id = 75;
+
+        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
+        $this->factory->getRuleFromJson($this->tracker, $json);
+    }
+
+    public function itRaisesAnExceptionIfTargetHasInvalidCondition() {
+        $json = new stdClass();
+        $json->target = new stdClass();
+        $json->target->field_id = 34;
+        $json->target->field_value_id = 75;
+        $json->condition = 'bla';
+
+        $this->expectException('Tracker_Workflow_Trigger_TriggerInvalidConditionException');
+        $this->factory->getRuleFromJson($this->tracker, $json);
+    }
+
+    public function itRaisesAnExceptionIfNoTriggeringField() {
+        $json = new stdClass();
+        $json->target = new stdClass();
+        $json->target->field_id = 34;
+        $json->target->field_value_id = 75;
+        $json->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
+
+        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
+        $this->factory->getRuleFromJson($this->tracker, $json);
+    }
+
+    public function itRaisesAnExceptionIfTriggeringFieldIsNotAnArray() {
+        $json = new stdClass();
+        $json->target = new stdClass();
+        $json->target->field_id = 34;
+        $json->target->field_value_id = 75;
+        $json->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
+        $json->triggering_fields = 'bla';
+
+        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
+        $this->factory->getRuleFromJson($this->tracker, $json);
+    }
+
+    public function itRaisesAnExceptionIfTriggeringFieldIsNotAnArrayOfFields() {
+        $json = new stdClass();
+        $json->target = new stdClass();
+        $json->target->field_id = 34;
+        $json->target->field_value_id = 75;
+        $json->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
+        $json->triggering_fields = array('bla');
+
+        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
+        $this->factory->getRuleFromJson($this->tracker, $json);
+    }
+}
+
+class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TargetTest extends Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test {
+
+    public function setUp() {
+        parent::setUp();
+        $this->tracker_id = 274;
+        $this->tracker = aTracker()->withId($this->tracker_id)->build();
+        $this->target_value_id = 250;
+        $this->target_field_value = aBindStaticValue()->withId($this->target_value_id)->build();
+        $this->target_field = aMockField()->withTracker($this->tracker)->build();
+        stub($this->target_field)->getAllValues()->returns(
+            array(
+                aBindStaticValue()->withId(9998)->build(),
+                $this->target_field_value,
+                aBindStaticValue()->withId(9999)->build(),
+            )
+        );
+    }
+
+    public function itFetchesFieldFromFormElementFactory() {
+        expect($this->formelement_factory)->getUsedFormElementFieldById()->count(2);
+        expect($this->formelement_factory)->getUsedFormElementFieldById('30')->at(0);
+        stub($this->formelement_factory)->getUsedFormElementFieldById('30')->returns($this->target_field);
+
+        $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+    }
+
+    public function itRaisesAnExceptionIfFieldIsInvalid() {
+        $this->json_input->target->field_id = '40';
+
+        $this->expectException('Tracker_FormElement_InvalidFieldException');
+        $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+    }
+
+    public function itRaisesAnExceptionWhenFieldDoesntBelongToTracker() {
+        $tracker = aTracker()->withId(37)->build();
+        stub($this->formelement_factory)->getUsedFormElementFieldById()->returns(aMockField()->withTracker($tracker)->build());
+
+        $this->expectException('Tracker_FormElement_InvalidFieldException');
+        $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+    }
+
+    public function itBuildsTheRuleWithTargetFieldAndValue() {
+        stub($this->formelement_factory)->getUsedFormElementFieldById('30')->returns($this->target_field);
+
+        $rule = $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+        $this->assertEqual($rule->getTarget()->getField(), $this->target_field);
+        $this->assertEqual($rule->getTarget()->getValue(), $this->target_field_value);
+    }
+
+    public function itRaisesAnExceptionWhenTargetValueDoesntBelongToField() {
+        $target_field = aMockField()->withTracker($this->tracker)->build();
+        stub($target_field)->getAllValues()->returns(array());
+        stub($this->formelement_factory)->getUsedFormElementFieldById()->returns($target_field);
+
+        $this->expectException('Tracker_FormElement_InvalidFieldValueException');
+
+        $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+    }
+
+}
+
+class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_ConditionTest extends Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test {
+
+    public function setUp() {
+        parent::setUp();
+        $this->tracker_id = 274;
+        $this->tracker = aTracker()->withId($this->tracker_id)->build();
+        $this->target_value_id = 250;
+        $this->target_field_value = aBindStaticValue()->withId($this->target_value_id)->build();
+        $this->target_field = aMockField()->withTracker($this->tracker)->build();
+        stub($this->target_field)->getAllValues()->returns(
+            array(
+                $this->target_field_value,
+            )
+        );
+        stub($this->formelement_factory)->getUsedFormElementFieldById('30')->returns($this->target_field);
+    }
+
+    public function itBuildsTheRuleWithCondition() {
+        $rule = $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+        $this->assertEqual($rule->getCondition(), Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF);
+    }
+}
+
+class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TriggerTest extends Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test {
+
+    public function setUp() {
+        parent::setUp();
+        $this->target_field_id = 30;
+        $this->tracker_id = 274;
+        $this->tracker = aTracker()->withId($this->tracker_id)->build();
+        $this->target_value_id = 250;
+        $this->target_field_value = aBindStaticValue()->withId($this->target_value_id)->build();
+        $this->target_field = aMockField()->withTracker($this->tracker)->build();
+        stub($this->target_field)->getAllValues()->returns(
+            array(
+                $this->target_field_value,
+            )
+        );
+        stub($this->formelement_factory)->getUsedFormElementFieldById("$this->target_field_id")->returns($this->target_field);
+    }
+
+    public function itHasATrigger() {
+        $this->child_tracker = aTracker()->withParent($this->tracker)->build();
+
+        $this->trigger_field_id = 369;
+        $this->trigger_value_id = 852;
+
+        $this->trigger_field_value = aBindStaticValue()->withId($this->trigger_value_id)->build();
+
+        $this->trigger_field = aMockField()->withTracker($this->child_tracker)->build();
+        stub($this->trigger_field)->getAllValues()->returns(
+            array(
+                $this->trigger_field_value,
+            )
+        );
+
+        stub($this->formelement_factory)->getUsedFormElementFieldById("$this->trigger_field_id")->returns($this->trigger_field);
+
+        $rule = $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+        $this->assertCount($rule->getTriggers(), 1);
+        $rule1 = array_pop($rule->getTriggers());
+        $this->assertEqual($rule1->getField(), $this->trigger_field);
+        $this->assertEqual($rule1->getValue(), $this->trigger_field_value);
+    }
+
+    public function itRaisesAnErrorIfTriggerTrackerDoesntBelongToChildren() {
+        $this->not_child_tracker = aTracker()->withParent(null)->build();
+
+        $this->trigger_field_id = 369;
+        $this->trigger_value_id = 852;
+
+        $this->trigger_field = aMockField()->withTracker($this->not_child_tracker)->build();
+
+        stub($this->formelement_factory)->getUsedFormElementFieldById("$this->trigger_field_id")->returns($this->trigger_field);
+
+        $this->expectException('Tracker_FormElement_InvalidFieldException');
+
+        $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+    }
+
+     public function itHasTwoTriggers() {
+         // field 1
+         $this->child_tracker_1 = aTracker()->withParent($this->tracker)->build();
+
+        $this->trigger_field_id_1 = 369;
+        $this->trigger_value_id_1 = 852;
+
+        $this->trigger_field_value_1 = aBindStaticValue()->withId($this->trigger_value_id_1)->build();
+
+        $this->trigger_field_1 = aMockField()->withTracker($this->child_tracker_1)->build();
+        stub($this->trigger_field_1)->getAllValues()->returns(
+            array(
+                $this->trigger_field_value_1,
+            )
+        );
+
+        // field 2
+        $this->child_tracker_2 = aTracker()->withParent($this->tracker)->build();
+
+        $this->trigger_field_id_2 = 874;
+        $this->trigger_value_id_2 = 147;
+
+        $this->trigger_field_value_2 = aBindStaticValue()->withId($this->trigger_value_id_2)->build();
+
+        $this->trigger_field_2 = aMockField()->withTracker($this->child_tracker_2)->build();
+        stub($this->trigger_field_2)->getAllValues()->returns(
+            array(
+                $this->trigger_field_value_2,
+            )
+        );
+
+        // Returns the 2 fields
+        stub($this->formelement_factory)->getUsedFormElementFieldById("$this->trigger_field_id_1")->returns($this->trigger_field_1);
+        stub($this->formelement_factory)->getUsedFormElementFieldById("$this->trigger_field_id_2")->returns($this->trigger_field_2);
+
+        // Update input
+        $json_triggering_field2 = new stdClass();
+        $json_triggering_field2->field_id = "$this->trigger_field_id_2";
+        $json_triggering_field2->field_value_id = "$this->trigger_value_id_2";
+        $this->json_input->triggering_fields[] = $json_triggering_field2;
+
+        // GO!
+        $rule = $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+        $this->assertCount($rule->getTriggers(), 2);
+
+        $triggering_fields = $rule->getTriggers();
+        $rule1 = array_shift($triggering_fields);
+        $this->assertEqual($rule1->getField(), $this->trigger_field_1);
+        $this->assertEqual($rule1->getValue(), $this->trigger_field_value_1);
+
+        $rule2 = array_shift($triggering_fields);
+        $this->assertEqual($rule2->getField(), $this->trigger_field_2);
+        $this->assertEqual($rule2->getValue(), $this->trigger_field_value_2);
+    }
+}
+
+?>

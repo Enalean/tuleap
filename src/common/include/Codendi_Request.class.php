@@ -318,5 +318,14 @@ class Codendi_Request {
     public function dump() {
         var_dump($this->params);
     }
+
+    /**
+     * Return the content of the request when posted as JSon
+     *
+     * @see http://stackoverflow.com/questions/3063787/handle-json-request-in-php
+     */
+    public function getJsonDecodedBody() {
+        return json_decode(file_get_contents('php://input'));
+    }
 }
 ?>

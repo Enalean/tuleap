@@ -34,6 +34,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     const ASSIGNED_TO_FIELD_NAME      = "assigned_to";
     const IMPEDIMENT_FIELD_NAME       = "impediment";
     const TYPE_FIELD_NAME             = "type";
+    const NO_PARENT                   = -1;
 
     public $id;
     public $group_id;
@@ -51,6 +52,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     private $sharedFormElementFactory;
     private $project;
     private $children;
+    private $parent = false;
 
     // attributes necessary to to create an intermediate Tracker Object
     // (before Database import) during XML import
@@ -519,6 +521,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
             case Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS:
             case Workflow::FUNC_ADMIN_TRANSITIONS:
             case Workflow::FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA:
+            case Workflow::FUNC_ADMIN_ADD_TRIGGER:
                 if ($this->userIsAdmin($current_user)) {
                     $this->getWorkflowManager()->process($layout, $request, $current_user);
                 } else {
@@ -3093,19 +3096,35 @@ EOS;
     }
 
     /**
+     * Set parent
+     * 
+     * @param Tracker $tracker
+     */
+    public function setParent(Tracker $tracker = null) {
+        $this->parent = $tracker;
+    }
+
+    /**
      * Return parent tracker of current tracker (if any)
      *
      * @return Tracker
      */
     public function getParent() {
-        $parent_tracker_id = $this->getParentId();
-        if ($parent_tracker_id) {
-            return $this->getTrackerFactory()->getTrackerById($parent_tracker_id);
+        if ($this->parent === false) {
+            $parent_tracker_id = $this->getParentId();
+            if ($parent_tracker_id) {
+                $this->parent = $this->getTrackerFactory()->getTrackerById($parent_tracker_id);
+            } else {
+                $this->parent = self::NO_PARENT;
+            }
         }
-        return null;
+        if ($this->parent === self::NO_PARENT) {
+            return null;
+        }
+        return $this->parent;
     }
 
-    private function getParentId() {
+    protected function getParentId() {
         return $this->getHierarchy()->getParent($this->getId());
     }
 
