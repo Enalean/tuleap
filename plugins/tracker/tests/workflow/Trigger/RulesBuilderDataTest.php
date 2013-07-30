@@ -25,52 +25,69 @@ class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase {
     public function itHasNoData() {
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(array(), array());
         $this->assertEqual(
-            $rules_builder_data->toJson(),
-            '{"targets":[],"conditions":["'.Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE.'","'.Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF.'"],"triggers":[]}'
+            $rules_builder_data->fetchFormattedForJson(),
+            array(
+                "targets" => array(),
+                "conditions" => array(
+                    array(
+                        "name" => Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE,
+                        "operator" => "or"
+                    ),
+                    array(
+                        "name" => Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF,
+                        "operator" => "and"
+                    ),
+                ),
+                "triggers" => array()
+            )
         );
     }
 
     public function itHasATargetFieldOfTheTrackerOnWhichRulesWillApply() {
-        $target_field = aMockField()->build();
+        $field_id = 269;
+        $target_field = aMockField()->withId($field_id)->build();
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(array($target_field), array());
 
         expect($target_field)->fetchFormattedForJson()->once();
         stub($target_field)->fetchFormattedForJson()->returns('whatever');
 
-        $result = json_decode($rules_builder_data->toJson());
-        $this->assertCount($result->targets, 1);
-        $this->assertEqual($result->targets[0], 'whatever');
+        $result = $rules_builder_data->fetchFormattedForJson();
+        $this->assertCount($result['targets'], 1);
+        $this->assertEqual($result['targets'][$field_id], 'whatever');
     }
 
     public function itHasATriggerTracker() {
+        $tracker_id = 90;
         $triggering_field = new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields(
-            aTracker()->withId(90)->withName('Tasks')->build(),
+            aTracker()->withId($tracker_id)->withName('Tasks')->build(),
             array()
         );
 
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(array(), array($triggering_field));
-        $result = json_decode($rules_builder_data->toJson());
-        $this->assertCount($result->triggers, 1);
-        $this->assertEqual($result->triggers[0]->id, 90);
-        $this->assertEqual($result->triggers[0]->name, 'Tasks');
-        $this->assertEqual($result->triggers[0]->fields, array());
+        $result = $rules_builder_data->fetchFormattedForJson();
+        $this->assertCount($result['triggers'], 1);
+        $this->assertEqual($result['triggers'][$tracker_id]['id'], 90);
+        $this->assertEqual($result['triggers'][$tracker_id]['name'], 'Tasks');
+        $this->assertEqual($result['triggers'][$tracker_id]['fields'], array());
     }
 
      public function itHasATriggerTrackerWithAField() {
-         $field = aMockField()->build();
+         $field_id = 693;
+         $field = aMockField()->withId($field_id)->build();
          expect($field)->fetchFormattedForJson()->once();
          stub($field)->fetchFormattedForJson()->returns('whatever');
 
+         $tracker_id = 90;
          $triggering_field = new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields(
-            aTracker()->withId(90)->withName('Tasks')->build(),
+            aTracker()->withId($tracker_id)->withName('Tasks')->build(),
             array($field)
         );
 
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(array(), array($triggering_field));
-        $result = json_decode($rules_builder_data->toJson());
-        $trigger = $result->triggers[0];
-        $this->assertCount($trigger->fields, 1);
-        $this->assertEqual($trigger->fields[0], 'whatever');
+        $result = $rules_builder_data->fetchFormattedForJson();
+        $trigger = $result['triggers'][$tracker_id];
+        $this->assertCount($trigger['fields'], 1);
+        $this->assertEqual($trigger['fields'][$field_id], 'whatever');
     }
 }
 

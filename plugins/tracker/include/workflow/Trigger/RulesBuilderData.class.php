@@ -18,7 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Workflow_Trigger_RulesBuilderData {
+/**
+ * Build all the data needed to create Trigger rules in workflow administration
+ */
+class Tracker_Workflow_Trigger_RulesBuilderData implements Tracker_IProvideJsonFormatOfMyself {
     const CONDITION_AT_LEAST_ONE = 'at_least_one';
     const CONDITION_ALL_OFF      = 'all_of';
 
@@ -37,32 +40,106 @@ class Tracker_Workflow_Trigger_RulesBuilderData {
         $this->triggering_fields = $triggering_fields;
     }
 
-    public function toJson() {
-        return json_encode(array(
+    /**
+     * Json format of rule builder
+     *
+     * Example:
+     * {
+     *     "targets": {
+     *         "3738": {
+     *              "id": "3738",
+     *              "name": "status",
+     *              "label": "Progress",
+     *              "values": {
+     *                  "4731": {
+     *                      "id": "4731",
+     *                      "label": "Todo",
+     *                      "is_hidden": false
+     *                  },
+     *                  ...
+     *              }
+     *          },
+     *          ...
+     *     },
+     *     "conditions: [
+     *         {
+     *             "name": "at_least_one"
+     *             "operator: "or"
+     *         },
+     *     ],
+     *     "triggers": {
+     *          "276": {
+     *              "id": "276",
+     *              "name": "Tasks",
+     *              "fields": {
+     *                  "3741": {
+     *                      "id": "3741",
+     *                      "name": "status",
+     *                      "label": "Progress",
+     *                      "values": {
+     *                          "4743": {
+     *                              "id": "4743",
+     *                              "label": "Todo",
+     *                              "is_hidden": false
+     *                          },
+     *                      }
+     *                  },
+     *                  ...
+     *              }
+     *          },
+     *          ...
+     *     }
+     * }
+     *
+     * @return Array
+     */
+    public function fetchFormattedForJson() {
+        return array(
             'targets'    => $this->getTargets(),
-            'conditions' => array(self::CONDITION_AT_LEAST_ONE,  self::CONDITION_ALL_OFF),
+            'conditions' => $this->getConditions(),
             'triggers'   => $this->getTriggers(),
-        ));
+        );
     }
 
     private function getTargets() {
-        return array_map(array($this, 'getTargetField'), $this->targets);
+        return $this->getFields($this->targets);
     }
 
-    private function getTargetField(Tracker_FormElement_Field_List $target) {
-        return $target->fetchFormattedForJson();
+    private function getConditions() {
+        return array(
+            array(
+                'name'     => self::CONDITION_AT_LEAST_ONE,
+                'operator' => 'or'
+            ),
+            array(
+                'name'     => self::CONDITION_ALL_OFF,
+                'operator' => 'and'
+            )
+        );
     }
 
     private function getTriggers() {
-        return array_map(array($this, 'getChildTracker'), $this->triggering_fields);
+        $json = array();
+        foreach ($this->triggering_fields as $triggering_fields) {
+            $json[$triggering_fields->getTracker()->getId()] = $this->getChildTracker($triggering_fields);
+        }
+        return $json;
     }
 
     private function getChildTracker(Tracker_Workflow_Trigger_RulesBuilderTriggeringFields $triggering_fields) {
         return array(
             'id'     => $triggering_fields->getTracker()->getId(),
             'name'   => $triggering_fields->getTracker()->getName(),
-            'fields' => array_map(array($this, 'getTargetField'), $triggering_fields->getFields())
+            'fields' => $this->getFields($triggering_fields->getFields()),
         );
+    }
+
+    private function getFields($fields) {
+        $json = array();
+        foreach ($fields as $field) {
+            $json[$field->getId()] = $field->fetchFormattedForJson();
+        }
+        return $json;
     }
 }
 

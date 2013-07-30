@@ -38,7 +38,7 @@ class Tracker_Workflow_Action_Triggers_GetTriggersRulesBuilderData {
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
         $rules_builder_factory = new Tracker_Workflow_Trigger_RulesBuilderFactory($this->formelement_factory);
         $rules_builder_data = $rules_builder_factory->getForTracker($this->tracker);
-        $GLOBALS['Response']->sendAsJSON($rules_builder_data->toJson());
+        $GLOBALS['Response']->sendJSON($rules_builder_data->fetchFormattedForJson());
     }
 }
 
