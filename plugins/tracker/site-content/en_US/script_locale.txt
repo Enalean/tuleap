@@ -37,5 +37,6 @@ codendi.locales['tracker_trigger'] = {
     at_least_one: 'at least one',
     all_of: 'all of',
     and: 'and',
-    or: 'or'
+    or: 'or',
+    save_missing_data : 'Cannot save: missing data in form'
 };

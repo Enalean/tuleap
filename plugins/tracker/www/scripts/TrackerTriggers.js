@@ -26,26 +26,48 @@ tuleap.trackers         = tuleap.trackers || {};
  */
 tuleap.trackers.trigger = Class.create({
     conditions : [],
+    counter : 0,
 
     initialize: function() {
-        addTriggerFormData();
+        var self = this;
 
-        function addTriggerFormData() {
+        (function populateOptions() {
+            if (typeof tuleap.trackers.trigger.form_data.targets === 'undefined') {
+                addTriggerFormDataFromAjax(self);
+            } else {
+                addTriggerFormData(self);
+            }
+        })();
+
+        function addTriggerFormDataFromAjax(self) {
+            var tracker_id = self.getUrlParam('tracker');
+
             new Ajax.Request(
-                'trigger-form-data.php',
+                codendi.tracker.base_url+'?tracker='+tracker_id+'&func=admin-get-triggers-rules-builder-data',
                 {
-                    onComplete: function (transport) {
+                    'method' : "GET",
+                    'onComplete': function (transport) {
                         tuleap.trackers.trigger.form_data = transport.responseJSON;
-                        populateOptions(transport.responseJSON);
+                        addTriggerFormData(self);
                     }
                 }
             );
         }
 
-        function populateOptions(form_data) {
+        function addTriggerFormData(self) {
+            var form_data = tuleap.trackers.trigger.form_data;
+
             populateConditions(form_data.conditions);
             populateChildTrackers(form_data.triggers);
             populateTargetFields(form_data.targets);
+            addFirstCondition(self);
+        }
+
+        function addFirstCondition(self) {
+            var condition = self.addCondition();
+
+            condition.removeDeleteButton();
+            condition.addQuantitySelector();
         }
 
         function populateConditions(conditions) {
@@ -119,21 +141,117 @@ tuleap.trackers.trigger = Class.create({
         }
     },
 
+    getUrlParam : function (name) {
+        var params = window.location.href.toQueryParams();
+
+        return params[name];
+    },
+
     addCondition : function() {
         var condition = new tuleap.trackers.trigger.condition();
 
-        this.conditions.push(condition);
+        condition.setId(this.counter);
+        this.conditions[this.counter] = condition;
+        this.counter++;
+
         return condition;
     },
 
     getConditions : function() {
         return this.conditions;
+    },
+
+    removeCondition : function(condition) {
+        condition.getContainer().remove();
+        delete this.conditions[condition.getId()];
+    },
+
+    save : function(callbacks) {
+        var triggering_fields   = getTriggeringFields(this),
+            target              = getTarget(this),
+            condition           = $F('trigger_condition_quantity'),
+            self                = this;
+
+        if (! target || ! triggering_fields) {
+            return;
+        }
+
+        submit(triggering_fields, target, condition, callbacks);
+
+        function getTriggeringFields(self) {
+            var triggering_fields = [];
+
+            self.getConditions().each(function(condition){
+                var field_id        = condition.getChildTrackerFieldId(),
+                    field_value_id  = condition.getChildTrackerFieldValueId();
+
+                if (field_id === '' || field_value_id === '') {
+                    alert(codendi.locales.tracker_trigger.save_missing_data);
+                    return false;
+                }
+
+                triggering_fields.push({
+                    "field_id"          : field_id,
+                    "field_value_id"    : field_value_id
+                });
+            });
+
+            return triggering_fields;
+        }
+
+        function getTarget(self) {
+             var field_id       = self.getTargetFieldId(),
+                 field_value_id = self.getTargetFieldValueId();
+
+            if (field_id === '' || field_value_id === '') {
+                alert(codendi.locales.tracker_trigger.save_missing_data);
+                return false;
+            }
+
+            return {
+                "field_id"          : field_id,
+                "field_value_id"    : field_value_id
+            };
+        }
+
+        function submit(triggering_fields, target, condition, callbacks) {
+            var tracker_id = self.getUrlParam('tracker'),
+                trigger_data = {
+                "target" : target,
+                "condition" : condition,
+                "triggering_fields" : triggering_fields
+            };
+
+            new Ajax.Request(
+                codendi.tracker.base_url+'?tracker='+tracker_id+'&func=admin-workflow-add-trigger',
+                {
+                    'contentType' : 'application/json',
+                    'method' : 'POST',
+                    'postBody' : Object.toJSON(trigger_data),
+                    'onSuccess' : function() {
+                        callbacks.success()
+                    },
+                    'onFailure' : function() {
+                        callbacks.fail()
+                    }
+                }
+            );
+        }
+    },
+
+    getTargetFieldId : function() {
+        return $F('trigger_condition_field_name');
+    },
+
+    getTargetFieldValueId : function() {
+        return $F('trigger_condition_field_value');
     }
 });
 
 tuleap.trackers.trigger.condition = Class.create({
     container : null,
     tracker_fields : [],
+    id : null,
 
     initialize: function() {
         var condition_data = $$('#trigger_condition_template > tbody').first().innerHTML;
@@ -145,12 +263,13 @@ tuleap.trackers.trigger.condition = Class.create({
         this.makeChildTrackerFieldValuesDynamic();
     },
 
-    activateDeleteButton : function() {
+    activateDeleteButton : function(trigger) {
         var button      = this.container.down('.trigger_condition_remove'),
-            container   = this.container;
+            container   = this.container,
+            self        = this;
 
         Event.observe(button, 'click', function() {
-            container.remove();
+            trigger.removeCondition(self);
         });
     },
 
@@ -162,20 +281,26 @@ tuleap.trackers.trigger.condition = Class.create({
         var selector = $('trigger_condition_quantity');
 
         this.container.down('td').update(selector);
+        this.container.writeAttribute('data-trigger-condition-initial', 'true')
     },
 
     makeChildTrackerFieldsDynamic : function() {
-        var container   = this.container,
-            self        = this;
+        var self = this;
 
         Event.observe($$('.trigger_condition_child_tracker_name').last(), 'change', function(event) {
             var tracker_id          = event.currentTarget.value,
                 select_box_element  = event.currentTarget;
 
-            removeExistingTrackerFields();
-            self.removeExistingFieldValues();
+            self.removeAllOptions();
             self.addTrackerFieldsData(tracker_id, select_box_element);
         });
+    },
+
+    removeAllOptions : function() {
+        var container   = this.container;
+
+        removeExistingTrackerFields();
+        this.removeExistingFieldValues();
 
         function removeExistingTrackerFields() {
             $$('.trigger-condition-tracker-field').each(function(field_value) {
@@ -294,6 +419,26 @@ tuleap.trackers.trigger.condition = Class.create({
                 span.update(locales[operator] + ' ' + locales[quantity_name]);
             });
         }
+    },
+
+    getChildTrackerFieldId : function() {
+        return this.container.down('.trigger_condition_child_tracker_field_name').value;
+    },
+
+    getChildTrackerFieldValueId : function() {
+        return this.container.down('.trigger_condition_child_tracker_field_value').value;
+    },
+
+    getId : function() {
+        return this.id;
+    },
+
+    setId : function(id) {
+        this.id = id;
+    },
+
+    getContainer : function() {
+        return this.container;
     }
 });
 

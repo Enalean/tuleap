@@ -346,13 +346,8 @@ document.observe('dom:loaded', function () {
 
                 (function bindAddNewTrigger() {
                     Event.observe($('add_new_trigger_title'), 'click', function() {
-                        var condition = trigger.addCondition();
-
                         $('add_new_trigger_title').hide();
                         $('trigger_create_new').show();
-
-                        condition.removeDeleteButton();
-                        condition.addQuantitySelector();
                     });
                 })()
             })();
@@ -361,7 +356,7 @@ document.observe('dom:loaded', function () {
                 Event.observe($('trigger_add_condition'), 'click', function() {
                     var condition = trigger.addCondition();
 
-                    condition.activateDeleteButton();
+                    condition.activateDeleteButton(trigger);
                     condition.makeQuantityDynamic();
                });
             })();
@@ -370,9 +365,43 @@ document.observe('dom:loaded', function () {
                 Event.observe($('trigger_add_cancel'), 'click', function() {
                     $('trigger_create_new').hide();
                     $('add_new_trigger_title').show();
-                    $('trigger_condition_list').update('');
+                    reset();
                 });
             })();
+
+            (function bindSubmitNewTrigger(){
+                var callbacks = {
+                    'success' : function() {
+                        $('trigger_create_new').hide();
+                        $('add_new_trigger_title').show();
+                        reset();
+                    },
+
+                    'fail' : function() {
+                        alert('error');
+                    }
+                }
+
+                Event.observe($('trigger_submit_new'), 'click', function() {
+                    trigger.save(callbacks);
+                });
+            })();
+
+            function reset() {
+                trigger.getConditions().each(function(condition) {
+                    if (condition.getContainer().readAttribute('data-trigger-condition-initial') !== 'true') {
+                        trigger.removeCondition(condition);
+                    } else {
+                        condition.removeAllOptions();
+                    }
+
+                    (function resetForm() {
+                        $$('#trigger_create_new select').each(function(select_box) {
+                            select_box.value = '';
+                        });
+                    })();
+                });
+            }
          }
      })();
 });

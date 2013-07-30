@@ -1,19 +1,19 @@
 <table style ="display: none" id="trigger_condition_template">
     <tbody>
-        <tr  class="trigger_condition" style ="padding-bottom: 5px">
+        <tr class="trigger_condition" style ="padding-bottom: 5px" data-trigger-condition-initial="false">
             <td>
                 <span class="trigger_condition_artifact_quantity_updater" style="color: #999999;"></span>
             </td>
             <td>
                 <select class="trigger_condition_child_tracker_name">
-                    <option selected="selected">select child tracker name</option>
+                    <option selected="selected" value="">select child tracker name</option>
                 </select>
                 <select class="trigger_condition_child_tracker_field_name">
-                    <option selected="selected">{{condition_select_tracker_field}}</option>
+                    <option selected="selected" value="">{{condition_select_tracker_field}}</option>
                 </select>
                 {{equals}}
                 <select class="trigger_condition_child_tracker_field_value">
-                    <option selected="selected">{{condition_select_tracker_field_value}}</option>
+                    <option selected="selected" value="">{{condition_select_tracker_field_value}}</option>
                 </select>
                 <img border="0" alt="remove" src="/themes/Tuleap/images/ic/cross.png" style="position:relative; bottom: -5px;" class="trigger_condition_remove">
             </td>

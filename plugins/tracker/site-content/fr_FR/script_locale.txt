@@ -37,5 +37,6 @@ codendi.locales['tracker_trigger'] = {
     at_least_one: 'au moins un',
     all_of: 'tous',
     and: 'et',
-    or: 'ou'
+    or: 'ou',
+    save_missing_data : 'Impossible de sauvegarder: formulaire incomplète'
 };
