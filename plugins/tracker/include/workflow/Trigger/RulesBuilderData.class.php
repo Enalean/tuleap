@@ -36,7 +36,7 @@ class Tracker_Workflow_Trigger_RulesBuilderData implements Tracker_IProvideJsonF
     private $triggering_fields;
 
     public function __construct(array $targets, array $triggering_fields) {
-        $this->targets = $targets;
+        $this->targets           = $targets;
         $this->triggering_fields = $triggering_fields;
     }
 
@@ -95,9 +95,9 @@ class Tracker_Workflow_Trigger_RulesBuilderData implements Tracker_IProvideJsonF
      */
     public function fetchFormattedForJson() {
         return array(
-            'targets'    => $this->getTargets(),
-            'conditions' => $this->getConditions(),
-            'triggers'   => $this->getTriggers(),
+            'targets'        => $this->getTargets(),
+            'conditions'     => $this->getConditions(),
+            'triggers'       => $this->getTriggers(),
         );
     }
 

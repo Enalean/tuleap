@@ -38,7 +38,7 @@ class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase {
                         "operator" => "and"
                     ),
                 ),
-                "triggers" => array()
+                "triggers" => array(),
             )
         );
     }

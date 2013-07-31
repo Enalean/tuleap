@@ -42,6 +42,19 @@ class Tracker_Workflow_Trigger_FieldValue {
     public function getValue() {
         return $this->value;
     }
+
+    /**
+     * @return Array
+     */
+    public function fetchFormattedForJson() {
+        return array(
+            'tracker_name' => $this->getField()->getTracker()->getName(),
+            'field_id' => $this->getField()->getId(),
+            'field_label' => $this->getField()->getLabel(),
+            'field_value_id' => $this->getValue()->getId(),
+            'field_value_label' => $this->getValue()->getLabel(),
+        );
+    }
 }
 
 ?>

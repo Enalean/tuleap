@@ -22,8 +22,9 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
 
     private $template_renderer;
     private $token;
+    private $rule_manager;
 
-    public function __construct(Tracker $tracker, CSRFSynchronizerToken $token, TemplateRenderer $renderer) {
+    public function __construct(Tracker $tracker, CSRFSynchronizerToken $token, TemplateRenderer $renderer, Tracker_Workflow_Trigger_RulesManager $rule_manager) {
         parent::__construct($tracker);
 
         $this->url_query = TRACKER_BASE_URL.'/?'. http_build_query(
@@ -34,6 +35,7 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
         );
         $this->template_renderer = $renderer;
         $this->token = $token;
+        $this->rule_manager = $rule_manager;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
@@ -45,6 +47,13 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
 
         $presenter = new Tracker_Workflow_Action_Triggers_TriggersPresenter($this->url_query, $this->token);
         $this->template_renderer->renderToPage('trigger-pane', $presenter);
+
+
+        $GLOBALS['HTML']->appendJsonEncodedVariable(
+            'tuleap.trackers.trigger.existing',
+            $this->rule_manager->getForTargetTracker($this->tracker)->fetchFormattedForJson()
+        );
+
 
         $this->displayFooter($layout);
     }

@@ -133,7 +133,7 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TriggerTest exten
         $this->tracker = aTracker()->withId($this->tracker_id)->build();
         $this->target_value_id = 250;
         $this->target_field_value = aBindStaticValue()->withId($this->target_value_id)->build();
-        $this->target_field = aMockField()->withTracker($this->tracker)->build();
+        $this->target_field = aMockField()->withId($this->target_field_id)->withTracker($this->tracker)->build();
         stub($this->target_field)->getAllValues()->returns(
             array(
                 $this->target_field_value,
@@ -181,16 +181,16 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TriggerTest exten
         $this->factory->getRuleFromJson($this->tracker, $this->json_input);
     }
 
-     public function itHasTwoTriggers() {
-         // field 1
-         $this->child_tracker_1 = aTracker()->withParent($this->tracker)->build();
+    private function setUpTwoTriggers() {
+        // field 1
+        $this->child_tracker_1 = aTracker()->withParent($this->tracker)->build();
 
         $this->trigger_field_id_1 = 369;
         $this->trigger_value_id_1 = 852;
 
         $this->trigger_field_value_1 = aBindStaticValue()->withId($this->trigger_value_id_1)->build();
 
-        $this->trigger_field_1 = aMockField()->withTracker($this->child_tracker_1)->build();
+        $this->trigger_field_1 = aMockField()->withId($this->trigger_field_id_1)->withTracker($this->child_tracker_1)->build();
         stub($this->trigger_field_1)->getAllValues()->returns(
             array(
                 $this->trigger_field_value_1,
@@ -205,7 +205,7 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TriggerTest exten
 
         $this->trigger_field_value_2 = aBindStaticValue()->withId($this->trigger_value_id_2)->build();
 
-        $this->trigger_field_2 = aMockField()->withTracker($this->child_tracker_2)->build();
+        $this->trigger_field_2 = aMockField()->withId($this->trigger_field_id_2)->withTracker($this->child_tracker_2)->build();
         stub($this->trigger_field_2)->getAllValues()->returns(
             array(
                 $this->trigger_field_value_2,
@@ -221,9 +221,13 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TriggerTest exten
         $json_triggering_field2->field_id = "$this->trigger_field_id_2";
         $json_triggering_field2->field_value_id = "$this->trigger_value_id_2";
         $this->json_input->triggering_fields[] = $json_triggering_field2;
+    }
 
-        // GO!
+    public function itHasTwoTriggers() {
+        $this->setUpTwoTriggers();
+
         $rule = $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+
         $this->assertCount($rule->getTriggers(), 2);
 
         $triggering_fields = $rule->getTriggers();
@@ -234,6 +238,83 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TriggerTest exten
         $rule2 = array_shift($triggering_fields);
         $this->assertEqual($rule2->getField(), $this->trigger_field_2);
         $this->assertEqual($rule2->getValue(), $this->trigger_field_value_2);
+    }
+}
+
+class Tracker_Workflow_Trigger_RulesFactory_JsonInputOutput_TriggerTest extends Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test {
+
+    public function setUp() {
+        parent::setUp();
+        $this->tracker_id = 274;
+        $this->tracker_name = 'Target Tracker Name';
+
+        $this->target_field_id = 30;
+        $this->target_value_id = 250;
+        $target_field_value = aBindStaticValue()
+            ->withId($this->target_value_id)
+            ->withLabel('Target Value Label')
+            ->build();
+        $target_field = aSelectBoxField()
+            ->withId($this->target_field_id)
+            ->withLabel('Target Field Label')
+            ->withTracker(
+                aTracker()
+                    ->withId($this->tracker_id)
+                    ->withName($this->tracker_name)
+                    ->build()
+            )
+            ->withBind(
+                aBindStatic()->withValues(
+                    array(
+                        $target_field_value,
+                    )
+                )->build()
+            )
+            ->build();
+        stub($this->formelement_factory)->getUsedFormElementFieldById("$this->target_field_id")->returns($target_field);
+
+
+        // field 1
+        $this->trigger_field_id_1 = 369;
+        $this->trigger_field_value_1 = aBindStaticValue()
+            ->withId(852)
+            ->withLabel('Triggering Value Label 1')
+            ->build();
+        $this->trigger_field_1 = aSelectBoxField()
+            ->withId($this->trigger_field_id_1)
+            ->withLabel('Triggering Field Label 1')
+            ->withTracker(
+                aTracker()
+                    ->withId(69)
+                    ->withName('Triggering Tracker 1')
+                    ->withParent($this->tracker)
+                    ->build()
+            )
+            ->withBind(
+                aBindStatic()->withValues(
+                    array(
+                        $this->trigger_field_value_1,
+                    )
+                )->build()
+            )
+            ->build();
+        stub($this->formelement_factory)->getUsedFormElementFieldById("$this->trigger_field_id_1")->returns($this->trigger_field_1);
+    }
+
+    public function itDoesATwoWayTransform() {
+        // Add to input what should be added by get
+        $json_input = clone $this->json_input;
+        $json_input->id = null;
+        $json_input->target->field_label = 'Target Field Label';
+        $json_input->target->field_value_label = 'Target Value Label';
+        $json_input->target->tracker_name = 'Target Tracker Name';
+        $json_input->triggering_fields[0]->field_label = 'Triggering Field Label 1';
+        $json_input->triggering_fields[0]->field_value_label = 'Triggering Value Label 1';
+        $json_input->triggering_fields[0]->tracker_name = 'Triggering Tracker 1';
+
+        $rule = $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+        $json_output = json_decode(json_encode($rule->fetchFormattedForJson()));
+        $this->assertEqual($json_output, $json_input);
     }
 }
 

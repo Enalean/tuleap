@@ -18,8 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Workflow_Trigger_TriggerRuleCollection implements Iterator, Countable {
+class Tracker_Workflow_Trigger_TriggerRuleCollection implements Iterator, Countable, Tracker_IProvideJsonFormatOfMyself {
+    /**
+     * @var Tracker_Workflow_Trigger_TriggerRule[]
+     */
     private $trigger_rules = array();
+
+    public function fetchFormattedForJson() {
+        $json = array();
+        foreach ($this->trigger_rules as $rule) {
+            $json[$rule->getId()] = $rule->fetchFormattedForJson();
+        }
+        return $json;
+    }
 
     public function push(Tracker_Workflow_Trigger_TriggerRule $row) {
         $this->trigger_rules[] = $row;

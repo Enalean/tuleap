@@ -45,7 +45,7 @@ class WorkflowManager {
             ));
             $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_BASE_DIR.'/../templates');
 
-            $action = new Tracker_Workflow_Action_Triggers_EditTriggers($this->tracker, $token, $renderer);
+            $action = new Tracker_Workflow_Action_Triggers_EditTriggers($this->tracker, $token, $renderer, $this->getTriggerRuleManager());
         } else if ($request->get('func') == Workflow::FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA) {
             $action = new Tracker_Workflow_Action_Triggers_GetTriggersRulesBuilderData($this->tracker, Tracker_FormElementFactory::instance());
         } else if ($request->get('func') == Workflow::FUNC_ADMIN_ADD_TRIGGER) {

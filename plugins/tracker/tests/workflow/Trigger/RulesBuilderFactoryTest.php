@@ -34,11 +34,6 @@ class Tracker_Workflow_Trigger_RulesBuilderFactoryTest extends TuleapTestCase {
         $this->factory = new Tracker_Workflow_Trigger_RulesBuilderFactory($this->formelement_factory);
     }
 
-    public function itBuildsTheData() {
-        stub($this->formelement_factory)->getUsedSbFields()->returns(array());
-
-    }
-
     public function itHasAllTargetTrackerSelectBoxFields() {
         expect($this->formelement_factory)->getUsedSbFields($this->target_tracker)->once();
         stub($this->formelement_factory)->getUsedSbFields()->returns(array());

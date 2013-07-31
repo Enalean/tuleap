@@ -21,7 +21,7 @@
 /**
  * PHP representation of a TriggerRule
  */
-class Tracker_Workflow_Trigger_TriggerRule {
+class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormatOfMyself {
 
     /** @var Integer */
     private $id;
@@ -79,6 +79,26 @@ class Tracker_Workflow_Trigger_TriggerRule {
      */
     public function setId($id) {
         $this->id = $id;
+    }
+
+    /**
+     * @return Array
+     */
+    public function fetchFormattedForJson() {
+        return array(
+            'id'                => $this->getId(),
+            'target'            => $this->getTarget()->fetchFormattedForJson(),
+            'condition'         => $this->getCondition(),
+            'triggering_fields' => $this->fetchTriggersFormattedForJson()
+        );
+    }
+
+    private function fetchTriggersFormattedForJson() {
+        $json = array();
+        foreach ($this->triggers as $trigger) {
+            $json[] = $trigger->fetchFormattedForJson();
+        }
+        return $json;
     }
 }
 
