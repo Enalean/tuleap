@@ -30,9 +30,15 @@ class Tracker_Workflow_Action_Triggers_AddTrigger {
      */
     private $formelement_factory;
 
-    public function __construct(Tracker $tracker, Tracker_FormElementFactory $formelement_factory) {
-        $this->tracker = $tracker;
+    /**
+     * @var Tracker_Workflow_Trigger_RulesManager
+     */
+    private $rule_manager;
+
+    public function __construct(Tracker $tracker, Tracker_FormElementFactory $formelement_factory, Tracker_Workflow_Trigger_RulesManager $rule_manager) {
+        $this->tracker             = $tracker;
         $this->formelement_factory = $formelement_factory;
+        $this->rule_manager        = $rule_manager;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
@@ -41,7 +47,8 @@ class Tracker_Workflow_Action_Triggers_AddTrigger {
         try {
             $rules_factory = new Tracker_Workflow_Trigger_RulesFactory($this->formelement_factory, $validator);
             $rule          = $rules_factory->getRuleFromJson($this->tracker, $request->getJsonDecodedBody());
-            // To be completed with actual save of rule in DB!
+            $this->rule_manager->add($rule);
+            echo $rule->getId();
         } catch (Tracker_Exception $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
             $GLOBALS['Response']->sendStatusCode(400);

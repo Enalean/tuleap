@@ -55,6 +55,7 @@ class Tracker_Workflow_Trigger_RulesFactory {
         $condition = $json->condition;
         $triggers  = $this->getTriggeringFields($tracker, $json->triggering_fields);
         return new Tracker_Workflow_Trigger_TriggerRule(
+            null,
             $target,
             $condition,
             $triggers

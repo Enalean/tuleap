@@ -22,6 +22,10 @@
  * PHP representation of a TriggerRule
  */
 class Tracker_Workflow_Trigger_TriggerRule {
+
+    /** @var Integer */
+    private $id;
+
     /** @var Tracker_Workflow_Trigger_FieldValue */
     private $target;
 
@@ -32,12 +36,21 @@ class Tracker_Workflow_Trigger_TriggerRule {
     private $triggers = array();
 
     public function __construct(
+            $id,
             Tracker_Workflow_Trigger_FieldValue $target,
             $condition,
             array $triggers) {
+        $this->id        = $id;
         $this->target    = $target;
         $this->condition = $condition;
         $this->triggers  = $triggers;
+    }
+
+    /**
+     * @return Integer
+     */
+    public function getId() {
+        return $this->id;
     }
 
     /**
@@ -59,6 +72,13 @@ class Tracker_Workflow_Trigger_TriggerRule {
      */
     public function getTriggers() {
         return $this->triggers;
+    }
+
+    /**
+     * @param Integer $id
+     */
+    public function setId($id) {
+        $this->id = $id;
     }
 }
 

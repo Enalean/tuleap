@@ -670,6 +670,22 @@ CREATE TABLE tracker_reminder (
     UNIQUE KEY (tracker_id, field_id, ugroups, notification_type, distance, status)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS tracker_workflow_trigger_rule_static_value;
+CREATE TABLE tracker_workflow_trigger_rule_static_value (
+    id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    value_id INT(11) NOT NULL,
+    rule_condition VARCHAR(32) NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY (value_id)
+) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS tracker_workflow_trigger_rule_trg_field_static_value;
+CREATE TABLE tracker_workflow_trigger_rule_trg_field_static_value (
+    rule_id INT(11) UNSIGNED NOT NULL,
+    value_id INT(11) NOT NULL,
+    INDEX idx_rule_value (rule_id, value_id)
+) ENGINE=InnoDB;
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) 
        VALUES      ( 100, 'plugin_tracker:service_lbl_key', 'plugin_tracker:service_desc_key', 'plugin_tracker', '/plugins/tracker/?group_id=$group_id', 1, 1, 'system', 151);
