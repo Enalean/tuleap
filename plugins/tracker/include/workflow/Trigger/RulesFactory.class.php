@@ -25,8 +25,12 @@ class Tracker_Workflow_Trigger_RulesFactory {
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
 
-    public function __construct(Tracker_FormElementFactory $formelement_factory) {
+    /** @var Tracker_Workflow_Trigger_TriggerValidator */
+    private $validator;
+
+    public function __construct(Tracker_FormElementFactory $formelement_factory, Tracker_Workflow_Trigger_TriggerValidator $validator) {
         $this->formelement_factory = $formelement_factory;
+        $this->validator = $validator;
     }
 
     /**
@@ -45,7 +49,7 @@ class Tracker_Workflow_Trigger_RulesFactory {
      * @return Tracker_Workflow_Trigger_TriggerRule
      */
     public function getRuleFromJson(Tracker $tracker, stdClass $json) {
-        $this->validateJsonFormat($json);
+        $this->validator->validateJsonFormat($json);
 
         $target    = $this->getTarget($tracker->getId(), $json->target->field_id, $json->target->field_value_id);
         $condition = $json->condition;
@@ -110,55 +114,5 @@ class Tracker_Workflow_Trigger_RulesFactory {
         }
         throw new Tracker_FormElement_InvalidFieldValueException("Value doesn't belong to field");
     }
-
-    private function validateJsonFormat(stdClass $json) {
-        $this->validateJsonTargetFormat($json);
-        $this->validateJsonConditionFormat($json);
-        $this->validateJsonTriggeringFieldsFormat($json);
-    }
-
-    private function validateJsonTargetFormat(stdClass $json) {
-        if (! isset($json->target)) {
-            throw new Tracker_Workflow_Trigger_AddRuleJsonFormatException('target is missing');
-        }
-        $this->validateJsonFieldValueFormat($json->target);
-    }
-
-    private function validateJsonConditionFormat(stdClass $json) {
-        if (! isset($json->condition)) {
-            throw new Tracker_Workflow_Trigger_AddRuleJsonFormatException('condition is missing');
-        }
-        $valid_condition = new Valid_WhiteList('condition', array(
-            Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF,
-            Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE,
-        ));
-        $valid_condition->required();
-        $valid_condition->disableFeedback();
-        if (! $valid_condition->validate($json->condition)) {
-            throw new Tracker_Workflow_Trigger_TriggerInvalidConditionException();
-        }
-    }
-
-    private function validateJsonTriggeringFieldsFormat(stdClass $json) {
-        if (! isset($json->triggering_fields)) {
-            throw new Tracker_Workflow_Trigger_AddRuleJsonFormatException('no triggering_fields');
-        }
-        if (! is_array($json->triggering_fields)) {
-            throw new Tracker_Workflow_Trigger_AddRuleJsonFormatException('triggering_fields must be an array');
-        }
-        foreach ($json->triggering_fields as $triggering_field) {
-            $this->validateJsonFieldValueFormat($triggering_field);
-        }
-    }
-
-    private function validateJsonFieldValueFormat($json) {
-        if (! isset($json->field_id)) {
-            throw new Tracker_Workflow_Trigger_AddRuleJsonFormatException('field_id is missing');
-        }
-        if (! isset($json->field_value_id)) {
-            throw new Tracker_Workflow_Trigger_AddRuleJsonFormatException('field_value_id is missing');
-        }
-    }
 }
-
 ?>

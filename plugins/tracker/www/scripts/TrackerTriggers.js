@@ -231,8 +231,8 @@ tuleap.trackers.trigger = Class.create({
                     'onSuccess' : function() {
                         callbacks.success()
                     },
-                    'onFailure' : function() {
-                        callbacks.fail()
+                    'onFailure' : function(response) {
+                        callbacks.fail(response)
                     }
                 }
             );

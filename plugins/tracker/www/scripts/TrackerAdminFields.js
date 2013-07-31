@@ -377,8 +377,8 @@ document.observe('dom:loaded', function () {
                         reset();
                     },
 
-                    'fail' : function() {
-                        alert('error');
+                    'fail' : function(response) {
+                        alert(response.responseText);
                     }
                 }
 

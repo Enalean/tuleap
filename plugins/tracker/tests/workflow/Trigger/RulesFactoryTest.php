@@ -27,98 +27,16 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test extends Tule
     protected $formelement_factory;
     protected $factory;
     protected $json_input;
+    protected $validator;
 
     public function setUp() {
         parent::setUp();
         $this->tracker_id = 274;
         $this->tracker = aTracker()->withId($this->tracker_id)->build();
         $this->formelement_factory = mock('Tracker_FormElementFactory');
-        $this->factory = new Tracker_Workflow_Trigger_RulesFactory($this->formelement_factory);
+        $this->validator = new Tracker_Workflow_Trigger_TriggerValidator();
+        $this->factory = new Tracker_Workflow_Trigger_RulesFactory($this->formelement_factory, $this->validator);
         $this->json_input = json_decode(file_get_contents(dirname(__FILE__).'/_fixtures/add_rule.json'));
-    }
-}
-
-class Tracker_Workflow_Trigger_RulesFactory_validateJsonFormat_Test extends Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test {
-
-    public function itRaisesAnExceptionIfNoTarget() {
-        $json = new stdClass();
-        $json->target = new stdClass();
-
-        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
-        $this->factory->getRuleFromJson($this->tracker, $json);
-    }
-
-    public function itRaisesAnExceptionIfTargetHasNoFieldId() {
-        $json = new stdClass();
-        $json->target = new stdClass();
-
-        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
-        $this->factory->getRuleFromJson($this->tracker, $json);
-    }
-
-    public function itRaisesAnExceptionIfTargetHasNoFieldValueId() {
-        $json = new stdClass();
-        $json->target = new stdClass();
-        $json->target->field_id = 34;
-
-        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
-        $this->factory->getRuleFromJson($this->tracker, $json);
-    }
-
-    public function itRaisesAnExceptionIfTargetHasNoCondition() {
-        $json = new stdClass();
-        $json->target = new stdClass();
-        $json->target->field_id = 34;
-        $json->target->field_value_id = 75;
-
-        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
-        $this->factory->getRuleFromJson($this->tracker, $json);
-    }
-
-    public function itRaisesAnExceptionIfTargetHasInvalidCondition() {
-        $json = new stdClass();
-        $json->target = new stdClass();
-        $json->target->field_id = 34;
-        $json->target->field_value_id = 75;
-        $json->condition = 'bla';
-
-        $this->expectException('Tracker_Workflow_Trigger_TriggerInvalidConditionException');
-        $this->factory->getRuleFromJson($this->tracker, $json);
-    }
-
-    public function itRaisesAnExceptionIfNoTriggeringField() {
-        $json = new stdClass();
-        $json->target = new stdClass();
-        $json->target->field_id = 34;
-        $json->target->field_value_id = 75;
-        $json->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
-
-        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
-        $this->factory->getRuleFromJson($this->tracker, $json);
-    }
-
-    public function itRaisesAnExceptionIfTriggeringFieldIsNotAnArray() {
-        $json = new stdClass();
-        $json->target = new stdClass();
-        $json->target->field_id = 34;
-        $json->target->field_value_id = 75;
-        $json->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
-        $json->triggering_fields = 'bla';
-
-        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
-        $this->factory->getRuleFromJson($this->tracker, $json);
-    }
-
-    public function itRaisesAnExceptionIfTriggeringFieldIsNotAnArrayOfFields() {
-        $json = new stdClass();
-        $json->target = new stdClass();
-        $json->target->field_id = 34;
-        $json->target->field_value_id = 75;
-        $json->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
-        $json->triggering_fields = array('bla');
-
-        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
-        $this->factory->getRuleFromJson($this->tracker, $json);
     }
 }
 

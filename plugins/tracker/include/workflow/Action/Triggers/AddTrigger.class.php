@@ -36,8 +36,10 @@ class Tracker_Workflow_Action_Triggers_AddTrigger {
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
+        $validator = new Tracker_Workflow_Trigger_TriggerValidator();
+
         try {
-            $rules_factory = new Tracker_Workflow_Trigger_RulesFactory($this->formelement_factory);
+            $rules_factory = new Tracker_Workflow_Trigger_RulesFactory($this->formelement_factory, $validator);
             $rule          = $rules_factory->getRuleFromJson($this->tracker, $request->getJsonDecodedBody());
             // To be completed with actual save of rule in DB!
         } catch (Tracker_Exception $exception) {
