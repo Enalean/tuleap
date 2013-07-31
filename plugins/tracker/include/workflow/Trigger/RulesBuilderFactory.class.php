@@ -38,7 +38,7 @@ class Tracker_Workflow_Trigger_RulesBuilderFactory {
      */
     public function getForTracker(Tracker $tracker) {
         return new Tracker_Workflow_Trigger_RulesBuilderData(
-            $this->formelement_factory->getUsedSbFields($tracker),
+            $this->formelement_factory->getUsedStaticSbFields($tracker),
             $this->getTriggeringFields($tracker)
         );
     }
@@ -50,7 +50,7 @@ class Tracker_Workflow_Trigger_RulesBuilderFactory {
     public function getTriggeringFieldForTracker(Tracker $tracker) {
         return new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields(
             $tracker,
-            $this->formelement_factory->getUsedSbFields($tracker)
+            $this->formelement_factory->getUsedStaticSbFields($tracker)
         );
     }
 

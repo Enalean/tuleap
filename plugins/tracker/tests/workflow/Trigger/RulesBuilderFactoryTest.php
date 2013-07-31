@@ -35,8 +35,8 @@ class Tracker_Workflow_Trigger_RulesBuilderFactoryTest extends TuleapTestCase {
     }
 
     public function itHasAllTargetTrackerSelectBoxFields() {
-        expect($this->formelement_factory)->getUsedSbFields($this->target_tracker)->once();
-        stub($this->formelement_factory)->getUsedSbFields()->returns(array());
+        expect($this->formelement_factory)->getUsedStaticSbFields($this->target_tracker)->once();
+        stub($this->formelement_factory)->getUsedStaticSbFields()->returnsEmptyDar();
 
         $this->factory->getForTracker($this->target_tracker);
     }
@@ -45,9 +45,9 @@ class Tracker_Workflow_Trigger_RulesBuilderFactoryTest extends TuleapTestCase {
         $child_tracker = aTracker()->withId(200)->build();
         $this->target_tracker->setChildren(array($child_tracker));
 
-        expect($this->formelement_factory)->getUsedSbFields()->count(2);
-        expect($this->formelement_factory)->getUsedSbFields($child_tracker)->at(1);
-        stub($this->formelement_factory)->getUsedSbFields()->returns(array());
+        expect($this->formelement_factory)->getUsedStaticSbFields()->count(2);
+        expect($this->formelement_factory)->getUsedStaticSbFields($child_tracker)->at(1);
+        stub($this->formelement_factory)->getUsedStaticSbFields()->returnsEmptyDar();
 
         $this->factory->getForTracker($this->target_tracker);
     }

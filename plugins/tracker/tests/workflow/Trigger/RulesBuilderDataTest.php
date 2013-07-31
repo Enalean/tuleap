@@ -23,7 +23,7 @@ require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase {
 
     public function itHasNoData() {
-        $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(array(), array());
+        $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator(), array());
         $this->assertEqual(
             $rules_builder_data->fetchFormattedForJson(),
             array(
@@ -46,7 +46,7 @@ class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase {
     public function itHasATargetFieldOfTheTrackerOnWhichRulesWillApply() {
         $field_id = 269;
         $target_field = aMockField()->withId($field_id)->build();
-        $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(array($target_field), array());
+        $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator(array($target_field)), array());
 
         expect($target_field)->fetchFormattedForJson()->once();
         stub($target_field)->fetchFormattedForJson()->returns('whatever');
@@ -60,10 +60,10 @@ class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase {
         $tracker_id = 90;
         $triggering_field = new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields(
             aTracker()->withId($tracker_id)->withName('Tasks')->build(),
-            array()
+            new ArrayIterator()
         );
 
-        $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(array(), array($triggering_field));
+        $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator(), array($triggering_field));
         $result = $rules_builder_data->fetchFormattedForJson();
         $this->assertCount($result['triggers'], 1);
         $this->assertEqual($result['triggers'][$tracker_id]['id'], 90);
@@ -80,10 +80,10 @@ class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase {
          $tracker_id = 90;
          $triggering_field = new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields(
             aTracker()->withId($tracker_id)->withName('Tasks')->build(),
-            array($field)
+            new ArrayIterator(array($field))
         );
 
-        $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(array(), array($triggering_field));
+        $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator(), array($triggering_field));
         $result = $rules_builder_data->fetchFormattedForJson();
         $trigger = $result['triggers'][$tracker_id];
         $this->assertCount($trigger['fields'], 1);

@@ -579,6 +579,18 @@ class Tracker_FormElementFactory {
         }
     }
 
+    /**
+     * Return all selectbox and multiselectbox fields that bind to static values
+     *
+     * @param Tracker $tracker
+     *
+     * @return DataAccessObject
+     */
+    public function getUsedStaticSbFields(Tracker $tracker) {
+        return $this->getDao()->searchUsedStaticSbFieldByTrackerId($tracker->getId())
+                    ->instanciateWith(array($this, 'getCachedInstanceFromRow'));
+    }
+
     public function getUsedListFieldById($tracker, $field_id) {
         return $this->getUsedFieldByIdAndType($tracker, $field_id, array('sb', 'msb', 'tbl', 'cb'));
     }
@@ -750,7 +762,7 @@ class Tracker_FormElementFactory {
      *
      * @return Tracker_FormElement
      */
-    private function getCachedInstanceFromRow($row) {
+    public function getCachedInstanceFromRow($row) {
         $form_element_id = $row['id'];
         if (!isset($this->formElements[$form_element_id])) {
             $this->formElements[$form_element_id] = $this->getInstanceFromRow($row);

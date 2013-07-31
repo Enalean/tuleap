@@ -35,7 +35,7 @@ class Tracker_Workflow_Trigger_RulesBuilderData implements Tracker_IProvideJsonF
      */
     private $triggering_fields;
 
-    public function __construct(array $targets, array $triggering_fields) {
+    public function __construct(Iterator $targets, array $triggering_fields) {
         $this->targets           = $targets;
         $this->triggering_fields = $triggering_fields;
     }

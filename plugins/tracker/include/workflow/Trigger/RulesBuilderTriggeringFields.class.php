@@ -30,7 +30,7 @@ class Tracker_Workflow_Trigger_RulesBuilderTriggeringFields {
      */
     private $fields;
 
-    public function __construct(Tracker $tracker, array $fields) {
+    public function __construct(Tracker $tracker, Iterator $fields) {
         $this->tracker = $tracker;
         $this->fields  = $fields;
     }
