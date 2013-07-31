@@ -27,6 +27,7 @@ tuleap.trackers         = tuleap.trackers || {};
 tuleap.trackers.trigger = Class.create({
     conditions : [],
     counter : 0,
+    id : null,
 
     initialize: function() {
         var self = this;
@@ -78,7 +79,7 @@ tuleap.trackers.trigger = Class.create({
                 option = new Element('option', {
                     "value" : condition.name,
                     "data-condition-operator" : condition.operator
-                }).update(locales[condition.name]);
+                }).update(locales[condition.name].name);
 
                 $('trigger_condition_quantity').appendChild(option);
             });
@@ -166,77 +167,30 @@ tuleap.trackers.trigger = Class.create({
         delete this.conditions[condition.getId()];
     },
 
-    save : function(callbacks) {
-        var triggering_fields   = getTriggeringFields(this),
-            target              = getTarget(this),
-            condition           = $F('trigger_condition_quantity'),
-            self                = this;
+    save : function(callback) {
+        var trigger_data    = this.toJSON(),
+            self            = this,
+            tracker_id      = this.getUrlParam('tracker');
 
-        if (! target || ! triggering_fields) {
+        if (! trigger_data) {
             return;
         }
 
-        submit(triggering_fields, target, condition, callbacks);
-
-        function getTriggeringFields(self) {
-            var triggering_fields = [];
-
-            self.getConditions().each(function(condition){
-                var field_id        = condition.getChildTrackerFieldId(),
-                    field_value_id  = condition.getChildTrackerFieldValueId();
-
-                if (field_id === '' || field_value_id === '') {
-                    alert(codendi.locales.tracker_trigger.save_missing_data);
-                    return false;
+        new Ajax.Request(
+            codendi.tracker.base_url+'?tracker='+tracker_id+'&func=admin-workflow-add-trigger',
+            {
+                'contentType' : 'application/json',
+                'method' : 'POST',
+                'postBody' : Object.toJSON(trigger_data),
+                'onSuccess' : function(response) {
+                    self.setId(response.responseText)
+                    callback();
+                },
+                'onFailure' : function(response) {
+                    alert(response.responseText);
                 }
-
-                triggering_fields.push({
-                    "field_id"          : field_id,
-                    "field_value_id"    : field_value_id
-                });
-            });
-
-            return triggering_fields;
-        }
-
-        function getTarget(self) {
-             var field_id       = self.getTargetFieldId(),
-                 field_value_id = self.getTargetFieldValueId();
-
-            if (field_id === '' || field_value_id === '') {
-                alert(codendi.locales.tracker_trigger.save_missing_data);
-                return false;
             }
-
-            return {
-                "field_id"          : field_id,
-                "field_value_id"    : field_value_id
-            };
-        }
-
-        function submit(triggering_fields, target, condition, callbacks) {
-            var tracker_id = self.getUrlParam('tracker'),
-                trigger_data = {
-                "target" : target,
-                "condition" : condition,
-                "triggering_fields" : triggering_fields
-            };
-
-            new Ajax.Request(
-                codendi.tracker.base_url+'?tracker='+tracker_id+'&func=admin-workflow-add-trigger',
-                {
-                    'contentType' : 'application/json',
-                    'method' : 'POST',
-                    'postBody' : Object.toJSON(trigger_data),
-                    'onSuccess' : function() {
-                        callbacks.success()
-                    },
-                    'onFailure' : function(response) {
-                        callbacks.fail(response)
-                    }
-                }
-            );
-        }
+        );
     },
 
     getTargetFieldId : function() {
@@ -245,6 +199,84 @@ tuleap.trackers.trigger = Class.create({
 
     getTargetFieldValueId : function() {
         return $F('trigger_condition_field_value');
+    },
+
+    getTargetFieldLabel : function() {
+        return $('trigger_condition_field_name').options[$('trigger_condition_field_name').selectedIndex].innerHTML;
+    },
+
+    getTargetFieldValueLabel : function() {
+        return $('trigger_condition_field_value').options[$('trigger_condition_field_value').selectedIndex].innerHTML;
+    },
+
+    toJSON : function() {
+        var triggering_fields   = getTriggeringFields(this),
+            target              = getTarget(this),
+            condition           = $F('trigger_condition_quantity');
+
+        if (! target || ! triggering_fields) {
+            return '';
+        }
+
+        return {
+            "target" : target,
+            "condition" : condition,
+            "triggering_fields" : triggering_fields
+        };
+
+        function getTriggeringFields(self) {
+            var triggering_fields = [];
+
+            self.getConditions().each(function(condition){
+                var field_id            = condition.getChildTrackerFieldId(),
+                    field_value_id      = condition.getChildTrackerFieldValueId(),
+                    field_label         = condition.getChildTrackerFieldLabel(),
+                    field_value_label   = condition.getChildTrackerFieldValueLabel(),
+                    tracker             = condition.getChildTrackerName();
+
+                if (field_id === '' || field_value_id === '') {
+                    alert(codendi.locales.tracker_trigger.save_missing_data);
+                    return false;
+                }
+
+                triggering_fields.push({
+                    "field_id"          : field_id,
+                    "field_value_id"    : field_value_id,
+                    "field_label"       : field_label,
+                    "field_value_label" : field_value_label,
+                    "tracker_name"      : tracker
+                });
+            });
+
+            return triggering_fields;
+        }
+
+        function getTarget(self) {
+             var field_id           = self.getTargetFieldId(),
+                 field_value_id     = self.getTargetFieldValueId(),
+                 field_label        = self.getTargetFieldLabel(),
+                 field_value_label  = self.getTargetFieldValueLabel();
+
+            if (field_id === '' || field_value_id === '') {
+                alert(codendi.locales.tracker_trigger.save_missing_data);
+                return false;
+            }
+
+            return {
+                "field_id"          : field_id,
+                "field_value_id"    : field_value_id,
+                "field_label"       : field_label,
+                "field_value_label" : field_value_label
+            };
+        }
+    },
+
+    setId : function(id) {
+        this.id = id;
+    },
+
+    getId : function() {
+        return this.id;
     }
 });
 
@@ -416,7 +448,7 @@ tuleap.trackers.trigger.condition = Class.create({
                     operator = option.readAttribute('data-condition-operator'),
                     locales = codendi.locales.tracker_trigger;
 
-                span.update(locales[operator] + ' ' + locales[quantity_name]);
+                span.update(locales[operator] + ' ' + locales[quantity_name].name);
             });
         }
     },
@@ -427,6 +459,24 @@ tuleap.trackers.trigger.condition = Class.create({
 
     getChildTrackerFieldValueId : function() {
         return this.container.down('.trigger_condition_child_tracker_field_value').value;
+    },
+
+    getChildTrackerFieldLabel : function() {
+        var selector = this.container.down('.trigger_condition_child_tracker_field_name');
+
+        return selector.options[selector.selectedIndex].innerHTML;
+    },
+
+    getChildTrackerFieldValueLabel : function() {
+        var selector = this.container.down('.trigger_condition_child_tracker_field_value');
+
+        return selector.options[selector.selectedIndex].innerHTML;
+    },
+
+    getChildTrackerName : function() {
+        var selector = this.container.down('.trigger_condition_child_tracker_name');
+
+        return selector.options[selector.selectedIndex].innerHTML;
     },
 
     getId : function() {

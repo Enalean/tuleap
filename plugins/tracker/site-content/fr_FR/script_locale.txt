@@ -34,8 +34,14 @@ codendi.locales['tracker_hierarchy'] = {
     status_column_name: 'Status'
 };
 codendi.locales['tracker_trigger'] = {
-    at_least_one: 'au moins un',
-    all_of: 'tous',
+    at_least_one: {
+        'name' : 'au moins un',
+        'operator' : 'ou'
+        },
+    all_of: {
+        'name' : 'tous',
+        'operator' : 'et'
+        },
     and: 'et',
     or: 'ou',
     save_missing_data : 'Impossible de sauvegarder: formulaire incomplète'
