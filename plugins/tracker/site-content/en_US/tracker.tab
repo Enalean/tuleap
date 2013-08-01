@@ -1343,6 +1343,7 @@ workflow_admin	tab_triggers_new_trigger_select_target_field_value	select value
 workflow_admin	tab_triggers_condition_select_tracker_name	select child tracker name
 workflow_admin	tab_triggers_condition_select_tracker_field	select child tracker field
 workflow_admin	tab_triggers_condition_select_tracker_field_value	select value
+workflow_admin	tab_triggers_no_children	There are no child trackers defined for this tracker
 workflow_admin	field	Field on which the transitions will be based:
 workflow_admin	enabled	Enforce transition rules
 workflow_admin	delete	Delete all transitions

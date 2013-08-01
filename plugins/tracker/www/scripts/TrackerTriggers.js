@@ -58,10 +58,24 @@ tuleap.trackers.trigger = Class.create({
         function addTriggerFormData(self) {
             var form_data = tuleap.trackers.trigger.form_data;
 
+            if (form_data.triggers.length === 0) {
+                showNoChildrenMessage();
+            } else {
+                showAddLink();
+            }
             populateConditions(form_data.conditions);
             populateChildTrackers(form_data.triggers);
             populateTargetFields(form_data.targets);
             addFirstTriggeringField(self);
+        }
+
+        function showNoChildrenMessage() {
+            $('triggers_form').hide();
+            $('triggers_no_children').show();
+        }
+
+        function showAddLink() {
+            $('triggers_form').show();
         }
 
         function addFirstTriggeringField(self) {

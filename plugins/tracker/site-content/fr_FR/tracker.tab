@@ -1339,6 +1339,7 @@ workflow_admin	tab_triggers_new_trigger_select_target_field_value	sélectionner 
 workflow_admin	tab_triggers_condition_select_tracker_name	sélectionner le nom du tracker enfant
 workflow_admin	tab_triggers_condition_select_tracker_field	sélectionner le champ du tracker enfant
 workflow_admin	tab_triggers_condition_select_tracker_field_value	sélectionner la valeur
+workflow_admin	tab_triggers_no_children	Ce tracker n'a pas de trackers enfants
 workflow_admin	field	Champ sur lequel les transitions seront basées :
 workflow_admin	enabled	Appliquer les règles sur les transitions.
 workflow_admin	delete	Supprimer toutes les transitions

@@ -88,6 +88,10 @@ class Tracker_Workflow_Action_Triggers_TriggersPresenter {
         return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_cancel');
     }
 
+    public function no_children() {
+        return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_no_children');
+    }
+
 }
 
 ?>
