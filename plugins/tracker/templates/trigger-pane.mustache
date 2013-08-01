@@ -5,9 +5,9 @@
     </p>
     <div id="triggers_existing">
     </div>
-    <form method="post" action="{{triggers_form_action}}">
+    <form method="post" action="{{triggers_form_action}}" id="triggers_form" style="display:none;">
         {{{triggers_synch_token}}}
-        <p class="add_new_trigger" style="float: left">
+        <p class="add_new_trigger" style="float: left;">
             <span id="add_new_trigger_title" class="trigger_link">
                 <i class="icon-plus"></i>
                 <span>
@@ -17,4 +17,5 @@
             </span>
         </p>
     </form>
+    <p id="triggers_no_children" style="display:none" class="alert alert-info">{{no_children}}</p>
 </div>
