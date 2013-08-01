@@ -364,12 +364,12 @@ document.observe('dom:loaded', function () {
                 displayExistingTriggers();
             })();
 
-            (function bindAddExtraCondition() {
+            (function bindAddExtraTriggeringField() {
                 Event.observe($('trigger_add_condition'), 'click', function() {
-                    var condition = trigger.addCondition();
-                    
-                    condition.activateDeleteButton(trigger);
-                    condition.makeQuantityDynamic();
+                    var triggering_field = trigger.addTriggeringField();
+
+                    triggering_field.activateDeleteButton(trigger);
+                    triggering_field.makeOperatorDynamic();
                });
             })();
 
@@ -401,11 +401,11 @@ document.observe('dom:loaded', function () {
              })();
 
             function reset() {
-                trigger.getConditions().each(function(condition) {
-                    if (condition.getContainer().readAttribute('data-trigger-condition-initial') !== 'true') {
-                        trigger.removeCondition(condition);
+                trigger.getTriggeringFields().each(function(triggering_field) {
+                    if (triggering_field.getContainer().readAttribute('data-trigger-condition-initial') !== 'true') {
+                        trigger.removeTriggeringField(triggering_field);
                     } else {
-                        condition.removeAllOptions();
+                        triggering_field.removeAllOptions();
                     }
 
                     (function resetForm() {
@@ -426,7 +426,7 @@ document.observe('dom:loaded', function () {
                         .update(trigger_as_JSON.target.field_value_label);
 
                 trigger_as_JSON.triggering_fields.each(function(triggering_field) {
-                    addCondition(triggering_field, trigger_element);
+                    addTriggeringField(triggering_field, trigger_element);
                 });
 
                 removeFirstOperator(trigger_element);
@@ -442,30 +442,30 @@ document.observe('dom:loaded', function () {
                     return trigger_element;
                 }
 
-                function addCondition(triggering_field, trigger_element) {
-                    var condition_template  = $('trigger_template_condition').innerHTML,
-                        conditions_list     = trigger_element.down('.trigger_description_conditions'),
-                        quantity            = codendi.locales.tracker_trigger[trigger_as_JSON.condition].name,
-                        operator            = codendi.locales.tracker_trigger[trigger_as_JSON.condition].operator,
-                        condition_element;
+                function addTriggeringField(triggering_field, trigger_element) {
+                    var triggering_field_template  = $('trigger_template_triggering_field').innerHTML,
+                        triggering_fields_list     = trigger_element.down('.trigger_description_triggering_fields'),
+                        condition                  = codendi.locales.tracker_trigger[trigger_as_JSON.condition].name,
+                        operator                   = codendi.locales.tracker_trigger[trigger_as_JSON.condition].operator,
+                        triggering_field_element;
 
-                    conditions_list.insert(condition_template);
-                    condition_element = conditions_list.childElements().last();
+                    triggering_fields_list.insert(triggering_field_template);
+                    triggering_field_element = triggering_fields_list.childElements().last();
 
-                    condition_element.down('.trigger_description_condition_operator')
+                    triggering_field_element.down('.trigger_description_triggering_field_operator')
                             .update(operator);
-                    condition_element.down('.trigger_description_condition_quantity')
-                            .update(quantity);
-                    condition_element.down('.trigger_description_condition_tracker')
+                    triggering_field_element.down('.trigger_description_triggering_field_quantity')
+                            .update(condition);
+                    triggering_field_element.down('.trigger_description_triggering_field_tracker')
                             .update(triggering_field.tracker_name);
-                    condition_element.down('.trigger_description_condition_field_name')
+                    triggering_field_element.down('.trigger_description_triggering_field_field_name')
                             .update(triggering_field.field_label);
-                    condition_element.down('.trigger_description_condition_field_value')
+                    triggering_field_element.down('.trigger_description_triggering_field_field_value')
                             .update(triggering_field.field_value_label);
                 }
 
                 function removeFirstOperator(trigger_element) {
-                    trigger_element.down('.trigger_description_condition_operator').update('');
+                    trigger_element.down('.trigger_description_triggering_field_operator').update('');
                 }
 
                 function bindRemove(trigger_element, trigger_id) {

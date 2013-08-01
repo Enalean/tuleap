@@ -25,7 +25,7 @@ tuleap.trackers         = tuleap.trackers || {};
  * Fetches data and injects it into a form.
  */
 tuleap.trackers.trigger = Class.create({
-    conditions : [],
+    triggering_fields : [],
     counter : 0,
     id : null,
 
@@ -61,14 +61,14 @@ tuleap.trackers.trigger = Class.create({
             populateConditions(form_data.conditions);
             populateChildTrackers(form_data.triggers);
             populateTargetFields(form_data.targets);
-            addFirstCondition(self);
+            addFirstTriggeringField(self);
         }
 
-        function addFirstCondition(self) {
-            var condition = self.addCondition();
+        function addFirstTriggeringField(self) {
+            var triggering_field = self.addTriggeringField();
 
-            condition.removeDeleteButton();
-            condition.addQuantitySelector();
+            triggering_field.removeDeleteButton();
+            triggering_field.addConditionSelector();
         }
 
         function populateConditions(conditions) {
@@ -91,7 +91,7 @@ tuleap.trackers.trigger = Class.create({
                         "value" : child_tracker.value.id
                     }).update(child_tracker.value.name);
 
-                $$('.trigger_condition_child_tracker_name').first().appendChild(option);
+                $$('.trigger_triggering_field_child_tracker_name').first().appendChild(option);
             });
         }
 
@@ -99,7 +99,7 @@ tuleap.trackers.trigger = Class.create({
             $H(target_trackers).each(function(target_tracker) {
                 var option = createOption(target_tracker.value, "");
 
-                $('trigger_condition_field_name').appendChild(option);
+                $('trigger_target_field_name').appendChild(option);
             });
 
             makeTargetFieldValuesDynamic(target_trackers);
@@ -113,7 +113,7 @@ tuleap.trackers.trigger = Class.create({
         }
 
         function makeTargetFieldValuesDynamic(child_trackers) {
-            Event.observe($('trigger_condition_field_name'), 'change', function(event) {
+            Event.observe($('trigger_target_field_name'), 'change', function(event) {
                 var field_id = event.currentTarget.value,
                     field_values;
 
@@ -137,7 +137,7 @@ tuleap.trackers.trigger = Class.create({
         function populateTargetFieldValues(field_values) {
             $H(field_values.values).each(function(field_value) {
                 var option = createOption(field_value.value, "trigger-target-field-value");
-                $('trigger_condition_field_value').appendChild(option);
+                $('trigger_target_field_value').appendChild(option);
             })
         }
     },
@@ -148,23 +148,23 @@ tuleap.trackers.trigger = Class.create({
         return params[name];
     },
 
-    addCondition : function() {
-        var condition = new tuleap.trackers.trigger.condition();
+    addTriggeringField : function() {
+        var triggering_field = new tuleap.trackers.trigger.triggering_field();
 
-        condition.setId(this.counter);
-        this.conditions[this.counter] = condition;
+        triggering_field.setId(this.counter);
+        this.triggering_fields[this.counter] = triggering_field;
         this.counter++;
 
-        return condition;
+        return triggering_field;
     },
 
-    getConditions : function() {
-        return this.conditions;
+    getTriggeringFields : function() {
+        return this.triggering_fields;
     },
 
-    removeCondition : function(condition) {
-        condition.getContainer().remove();
-        delete this.conditions[condition.getId()];
+    removeTriggeringField : function(triggering_field) {
+        triggering_field.getContainer().remove();
+        delete this.triggering_fields[triggering_field.getId()];
     },
 
     save : function(callback) {
@@ -194,19 +194,19 @@ tuleap.trackers.trigger = Class.create({
     },
 
     getTargetFieldId : function() {
-        return $F('trigger_condition_field_name');
+        return $F('trigger_target_field_name');
     },
 
     getTargetFieldValueId : function() {
-        return $F('trigger_condition_field_value');
+        return $F('trigger_target_field_value');
     },
 
     getTargetFieldLabel : function() {
-        return $('trigger_condition_field_name').options[$('trigger_condition_field_name').selectedIndex].innerHTML;
+        return $('trigger_target_field_name').options[$('trigger_target_field_name').selectedIndex].innerHTML;
     },
 
     getTargetFieldValueLabel : function() {
-        return $('trigger_condition_field_value').options[$('trigger_condition_field_value').selectedIndex].innerHTML;
+        return $('trigger_target_field_value').options[$('trigger_target_field_value').selectedIndex].innerHTML;
     },
 
     toJSON : function() {
@@ -227,12 +227,12 @@ tuleap.trackers.trigger = Class.create({
         function getTriggeringFields(self) {
             var triggering_fields = [];
 
-            self.getConditions().each(function(condition){
-                var field_id            = condition.getChildTrackerFieldId(),
-                    field_value_id      = condition.getChildTrackerFieldValueId(),
-                    field_label         = condition.getChildTrackerFieldLabel(),
-                    field_value_label   = condition.getChildTrackerFieldValueLabel(),
-                    tracker             = condition.getChildTrackerName();
+            self.getTriggeringFields().each(function(triggering_field){
+                var field_id            = triggering_field.getChildTrackerFieldId(),
+                    field_value_id      = triggering_field.getChildTrackerFieldValueId(),
+                    field_label         = triggering_field.getChildTrackerFieldLabel(),
+                    field_value_label   = triggering_field.getChildTrackerFieldValueLabel(),
+                    tracker             = triggering_field.getChildTrackerName();
 
                 if (field_id === '' || field_value_id === '') {
                     alert(codendi.locales.tracker_trigger.save_missing_data);
@@ -280,36 +280,36 @@ tuleap.trackers.trigger = Class.create({
     }
 });
 
-tuleap.trackers.trigger.condition = Class.create({
+tuleap.trackers.trigger.triggering_field = Class.create({
     container : null,
     tracker_fields : [],
     id : null,
 
     initialize: function() {
-        var condition_data = $$('#trigger_condition_template > tbody').first().innerHTML;
+        var triggering_field_data = $$('#trigger_triggering_fields_template > tbody').first().innerHTML;
 
-        $('trigger_condition_list').insert(condition_data);
+        $('trigger_triggering_field_list').insert(triggering_field_data);
 
-        this.container = $$('#trigger_condition_list .trigger_condition').last();
+        this.container = $$('#trigger_triggering_field_list .trigger_triggering_field').last();
         this.makeChildTrackerFieldsDynamic();
         this.makeChildTrackerFieldValuesDynamic();
     },
 
     activateDeleteButton : function(trigger) {
-        var button      = this.container.down('.trigger_condition_remove'),
+        var button      = this.container.down('.trigger_triggering_field_remove'),
             container   = this.container,
             self        = this;
 
         Event.observe(button, 'click', function() {
-            trigger.removeCondition(self);
+            trigger.removeTriggeringField(self);
         });
     },
 
     removeDeleteButton : function() {
-        this.container.down('.trigger_condition_remove').remove();
+        this.container.down('.trigger_triggering_field_remove').remove();
     },
 
-    addQuantitySelector : function() {
+    addConditionSelector : function() {
         var selector = $('trigger_condition_quantity');
 
         this.container.down('td').update(selector);
@@ -319,7 +319,7 @@ tuleap.trackers.trigger.condition = Class.create({
     makeChildTrackerFieldsDynamic : function() {
         var self = this;
 
-        Event.observe($$('.trigger_condition_child_tracker_name').last(), 'change', function(event) {
+        Event.observe($$('.trigger_triggering_field_child_tracker_name').last(), 'change', function(event) {
             var tracker_id          = event.currentTarget.value,
                 select_box_element  = event.currentTarget;
 
@@ -335,7 +335,7 @@ tuleap.trackers.trigger.condition = Class.create({
         this.removeExistingFieldValues();
 
         function removeExistingTrackerFields() {
-            $$('.trigger-condition-tracker-field').each(function(field_value) {
+            $$('.trigger-triggering_field-tracker-field').each(function(field_value) {
                 if (field_value.descendantOf(container)) {
                     field_value.remove();
                 }
@@ -347,9 +347,9 @@ tuleap.trackers.trigger.condition = Class.create({
         var container   = this.container,
             self        = this;
 
-        Event.observe($$('.trigger_condition_child_tracker_field_name').last(), 'change', function(event) {
+        Event.observe($$('.trigger_triggering_field_child_tracker_field_name').last(), 'change', function(event) {
             var field_id    = event.currentTarget.value,
-                tracker_id  = container.down('.trigger_condition_child_tracker_name').value;
+                tracker_id  = container.down('.trigger_triggering_field_child_tracker_name').value;
 
             self.removeExistingFieldValues();
             self.addTrackerFieldValuesData(tracker_id, field_id);
@@ -359,7 +359,7 @@ tuleap.trackers.trigger.condition = Class.create({
     removeExistingFieldValues : function() {
         var container = this.container;
 
-         $$('.trigger-condition-tracker-field-value').each(function(field_value) {
+         $$('.trigger-triggering_field-tracker-field-value').each(function(field_value) {
             if (field_value.descendantOf(container)) {
                 field_value.remove();
             }
@@ -393,8 +393,8 @@ tuleap.trackers.trigger.condition = Class.create({
 
         function populateTrackerFields(fields, select_box_element) {
             $H(fields).each(function(field) {
-                var option = createOption(field.value, "trigger-condition-tracker-field");
-                select_box_element.next('select', '.trigger_condition_child_tracker_field_name').appendChild(option);
+                var option = createOption(field.value, "trigger-triggering_field-tracker-field");
+                select_box_element.next('select', '.trigger_triggering_field_child_tracker_field_name').appendChild(option);
             });
         }
 
@@ -421,8 +421,8 @@ tuleap.trackers.trigger.condition = Class.create({
 
         function populateFieldValues(fields, container) {
             $H(fields).each(function(field) {
-                var option = createOption(field.value, "trigger-condition-tracker-field-value");
-                container.down('.trigger_condition_child_tracker_field_value').appendChild(option);
+                var option = createOption(field.value, "trigger-triggering_field-tracker-field-value");
+                container.down('.trigger_triggering_field_child_tracker_field_value').appendChild(option);
             });
         }
 
@@ -434,47 +434,47 @@ tuleap.trackers.trigger.condition = Class.create({
         }
     },
 
-    makeQuantityDynamic : function() {
-        updateQuantities();
+    makeOperatorDynamic : function() {
+        updateOperators();
 
         Event.observe($('trigger_condition_quantity'), 'change', function() {
-            updateQuantities();
+            updateOperators();
         });
 
-        function updateQuantities() {
-           $$('.trigger_condition_artifact_quantity_updater').each(function(span){
+        function updateOperators() {
+           $$('.trigger_condition_artifact_operator_updater').each(function(span){
                 var option = $('trigger_condition_quantity').options[$('trigger_condition_quantity').selectedIndex],
-                    quantity_name = option.value,
+                    operator_name = option.value,
                     operator = option.readAttribute('data-condition-operator'),
                     locales = codendi.locales.tracker_trigger;
 
-                span.update(locales[operator] + ' ' + locales[quantity_name].name);
+                span.update(locales[operator] + ' ' + locales[operator_name].name);
             });
         }
     },
 
     getChildTrackerFieldId : function() {
-        return this.container.down('.trigger_condition_child_tracker_field_name').value;
+        return this.container.down('.trigger_triggering_field_child_tracker_field_name').value;
     },
 
     getChildTrackerFieldValueId : function() {
-        return this.container.down('.trigger_condition_child_tracker_field_value').value;
+        return this.container.down('.trigger_triggering_field_child_tracker_field_value').value;
     },
 
     getChildTrackerFieldLabel : function() {
-        var selector = this.container.down('.trigger_condition_child_tracker_field_name');
+        var selector = this.container.down('.trigger_triggering_field_child_tracker_field_name');
 
         return selector.options[selector.selectedIndex].innerHTML;
     },
 
     getChildTrackerFieldValueLabel : function() {
-        var selector = this.container.down('.trigger_condition_child_tracker_field_value');
+        var selector = this.container.down('.trigger_triggering_field_child_tracker_field_value');
 
         return selector.options[selector.selectedIndex].innerHTML;
     },
 
     getChildTrackerName : function() {
-        var selector = this.container.down('.trigger_condition_child_tracker_name');
+        var selector = this.container.down('.trigger_triggering_field_child_tracker_name');
 
         return selector.options[selector.selectedIndex].innerHTML;
     },

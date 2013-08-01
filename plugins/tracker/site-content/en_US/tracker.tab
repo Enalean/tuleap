@@ -1336,7 +1336,7 @@ workflow_admin	tab_transitions	Transitions
 workflow_admin	tab_triggers	Triggers
 workflow_admin	tab_triggers_cancel	cancel
 workflow_admin	tab_triggers_equals	=
-workflow_admin	tab_triggers_new_trigger_condition_list_intro	When all of these conditions are met:
+workflow_admin	tab_triggers_new_trigger_triggering_field_list_intro	When all of these conditions are met:
 workflow_admin	tab_triggers_new_trigger_target_intro	Then the tracker field
 workflow_admin	tab_triggers_new_trigger_select_target_field_name	select current tracker field
 workflow_admin	tab_triggers_new_trigger_select_target_field_value	select value
