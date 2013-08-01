@@ -346,7 +346,7 @@ document.observe('dom:loaded', function () {
                     return;
                 }
 
-                tuleap.trackers.trigger.existing.each(function(trigger) {
+                $H(tuleap.trackers.trigger.existing).each(function(trigger) {
                     displayTrigger(trigger.value, trigger.key);
                 });
             }
