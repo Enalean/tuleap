@@ -2,6 +2,9 @@ Version 6.4 (NOT RELEASED YET)
 	== Plugins ==
 	* git: 3.34
 
+	== Development ==
+	* Fix lxc_fix_uid script
+
 Version 6.3 (Thursday, July 25th 2013)
 	== Plugins ==
 	* graphontrackersv5: 5.2
