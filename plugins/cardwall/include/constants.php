@@ -32,4 +32,15 @@ define('CARDWALL_BASE_URL', '/plugins/cardwall');
  *  'tracker'         => the swimline tracker, if any
  */
 define('CARDWALL_EVENT_GET_SWIMLINE_TRACKER', 'cardwall_event_get_swimline_tracker');
+
+/**
+ * A cardwall has been displayed.
+ *
+ * Parameters:
+ *  'html'            => Pane content of the cardwall.
+ *
+ * Expected Results:
+ *  'html'            => Pane content of the cardwall with injected scripts.
+ */
+define('CARDWALL_EVENT_DISPLAYED','cardwall_event_displayed');
 ?>

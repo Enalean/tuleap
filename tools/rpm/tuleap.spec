@@ -396,6 +396,14 @@ Requires: %{php_base}-pear-HTTP
 This plugin provides ADMS.SW additions to the DOAP RDF documents for projects on
 /projects URLs with content-negociation (application/rdf+xml).
 
+%package plugin-boomerang
+Summary: Boomerang plugin
+Group: Development/Tools
+Version: @@PLUGIN_BOOMERANG_VERSION@@
+Release: 1%{?dist}
+%description plugin-boomerang
+Allow performances evaluation in Tuleap.
+
 %if %{php_base} == php53
 %package plugin-mediawiki
 Summary: Mediawiki plugin
@@ -602,6 +610,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki
 %endif
+
+#Plugin boomerang
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/boomerang
 
 ##
 ## On package install
@@ -1024,6 +1035,11 @@ fi
 %files plugin-foafprofiles
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/foafprofiles
+
+%files plugin-boomerang
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/boomerang
+%dir %{APP_DATA_DIR}/boomerang
 
 %if %{php_base} == php53
 %files plugin-mediawiki

@@ -30,7 +30,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      * @var Cardwall_PaneInfo
      */
     private $info;
-    
+
     /**
      * @var Planning_Milestone
      */
@@ -80,7 +80,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         return $this->info->getUriForMilestone($milestone);
     }
 
-    
+
     /**
      * @see AgileDashboard_Pane::getFullContent()
      */
@@ -96,10 +96,15 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     }
 
     private function getPaneContent($template) {
+        $event_manager = EventManager::instance();
         $columns = $this->config->getDashboardColumns();
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
-        return $renderer->renderToString($template, $this->getPresenterUsingMappedFields($columns));
+        $html = $renderer->renderToString($template, $this->getPresenterUsingMappedFields($columns));
         // TODO what if no semantic status and no mapping????
+
+        $event_manager->processEvent(CARDWALL_EVENT_DISPLAYED, array('html' => &$html));
+
+        return $html;
     }
 
     /**
@@ -142,7 +147,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         return new Cardwall_UserPreferences_UserPreferencesDisplayUser($display_avatars);
     }
 
-    private function canConfigure() {        
+    private function canConfigure() {
         $project = $this->milestone->getProject();
         if ($project->userIsAdmin($this->user)){
             $configure_url      = TRACKER_BASE_URL .'/?tracker='. $this->milestone->getTrackerId() .'&func=admin-cardwall';
@@ -150,7 +155,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         }
         return false;
     }
-    
+
     /**
      * @return Cardwall_QrCode
      */
@@ -170,7 +175,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $planning_id = $this->milestone->getPlanningId();
         $tracker_id  = $this->milestone->getTrackerId();
         $artifact_id = $this->milestone->getArtifactId();
-        
+
         $action      = 'toggle_user_display_avatar';
 
         $switch_display_username_url =
@@ -178,7 +183,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             . '/?group_id='   . $group_id
             . '&planning_id=' . $planning_id
             . '&tracker_id='  . $tracker_id
-            . '&aid='         . $artifact_id 
+            . '&aid='         . $artifact_id
             . '&action='      . $action;
 
         return $switch_display_username_url;
