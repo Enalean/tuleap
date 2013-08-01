@@ -49,8 +49,8 @@ else
 fi
 
 
-olduid=`id -u www-data`
-oldgid=`id -g www-data`
+olduid=`id -u $appuser`
+oldgid=`id -g $appuser`
 
 usermod -u $newuid $appuser
 groupmod -g $newgid $appuser
