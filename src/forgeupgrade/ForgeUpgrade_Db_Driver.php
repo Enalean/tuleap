@@ -26,28 +26,45 @@ class ForgeUpgrade_Db_Driver extends ForgeUpgrade_Db_Driver_Abstract {
     protected $user;
     protected $password;
 
+    protected $platform_name = "tuleap";
+    protected $env_variable_name = "TULEAP_LOCAL_INC";
+
     protected function initOptions() {
         if (!$this->dsn) {
-            $localInc = getenv('TULEAP_LOCAL_INC') ? getenv('TULEAP_LOCAL_INC') : '/etc/tuleap/conf/local.inc';
+            $localInc = $this->getLocalInc();
             if (is_file($localInc)) {
                 include $localInc;
                 include $db_config_file;
 
+                $port   = '';
+                $socket = '';
+
                 if (strpos($sys_dbhost, ':') !== false) {
-                    list($host, $socket) = explode(':', $sys_dbhost);
-                    $socket = ';unix_socket='.$socket;
+                    list($host, $details) = explode(':', $sys_dbhost);
+                    if (is_numeric($details)) {
+                        $port = ';port='.$details;
+                    } else {
+                        $socket = ';unix_socket='.$socket;
+                    }
                 } else {
                     $host   = $sys_dbhost;
-                    $socket = '';
                 }
 
-                $this->dsn      = 'mysql:host='.$host.$socket.';dbname='.$sys_dbname;
+                $this->dsn      = 'mysql:host='.$host.$socket.$port.';dbname='.$sys_dbname;
                 $this->user     = $sys_dbuser;
                 $this->password = $sys_dbpasswd;
             } else {
-                throw new Exception('Unable to find a valid local.inc for Tuleap, please check TULEAP_LOCAL_INC environment variable');
+                throw new Exception($this->getErrorLocalIncMessage());
             }
         }
+    }
+
+    private function getLocalInc() {
+        return getenv($this->env_variable_name) ? getenv($this->env_variable_name) : '/etc/'.$this->platform_name.'/conf/local.inc';
+    }
+
+    private function getErrorLocalIncMessage() {
+        return 'Unable to find a valid local.inc for '.$this->platform_name.', please check '.$this->env_variable_name.' environment variable';
     }
 
     /**

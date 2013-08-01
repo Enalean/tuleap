@@ -17,7 +17,6 @@ class JabbeXInstaller {
 	
 	function _db_connect($username, $pwd, $url, $port = null, $db){
 		if(!$port) $port = "3306";
-
 		mysql_connect($url.":".$port, $username, $pwd) or die(mysql_error());
 		mysql_select_db($db) or die(mysql_error());
 
@@ -144,6 +143,15 @@ class JabbeXInstaller {
 	 * Parses an URI to extract the host URL, the port, and the DB name.
 	 * Saves this info in the arguments global var.
 	 */
+
+        private function getMysqlConnectionString() {
+            return "--host ".$this->arguments["OF_DB_HOST"]." -P ".$this->arguments["OF_DB_PORT"];
+        }
+
+        private function getMyslStringHostAndPort() {
+            return $this->arguments["OF_DB_HOST"].':'.$this->arguments["OF_DB_PORT"];
+        }
+
 	function explode_uri(){
 
 		print("Parsing server information...\n");
@@ -653,12 +661,11 @@ class JabbeXInstaller {
         $root = "root";
         $pwd = $this->arguments["ROOT_OF_DB"];
         $db_name = $this->arguments["FORGE_DB_NAME"];
-        $openfire_db_host = $this->arguments["OF_DB_HOST"]; 
-
+        $db_host_and_port = $this->getMysqlConnectionString();
         $jabbex_user_password = $this->arguments["PWD_JABBEX"];
         $jabbex_user_name = $this->arguments["USER_JABBEX"];
 
-        $result = `mysql --user=$root --password=$pwd --host=$openfire_db_host --database=$db_name -e "UPDATE user SET user_pw = MD5('$jabbex_user_password') WHERE user_name = '$jabbex_user_name'";  2>&1`;
+        $result = `mysql --user=$root --password=$pwd $db_host_and_port --database=$db_name -e "UPDATE user SET user_pw = MD5('$jabbex_user_password') WHERE user_name = '$jabbex_user_name'";  2>&1`;
 
         // Check if there was any error
         if ( !(strpos($result,"error") === false) ) {
@@ -815,7 +822,7 @@ class JabbeXInstaller {
 
 		$conf_str = file_get_contents($template_file);
 
-		$values["__OPENFIRE_DB_HOST__"] = $this->arguments["OF_DB_HOST"];
+		$values["__OPENFIRE_DB_HOST__"] = $this->getMyslStringHostAndPort();
 		$values["__OPENFIRE_DB_USER__"] = $this->arguments["USER_OF_DB"];
 		$values["__OPENFIRE_DB_PWD__"] = $this->arguments["PWD_OF_DB"];
 		$values["__OPENFIRE_DB_NAME__"] = $this->arguments["OF_DB_NAME"];
@@ -907,10 +914,10 @@ class JabbeXInstaller {
 
 		$db_name = $this->arguments["OF_DB_NAME"];
 		$openfire_dir = $this->arguments["OPENFIRE_DIR"];  // Used when mode = automatic
-		$openfire_db_host = $this->arguments["OF_DB_HOST"];
+		$openfire_db_connection_string = $this->getMysqlConnectionString();
 
 		// Check if the DB already exists.
-		$curr_db = `mysql --user=$root --password=$pwd --host=$openfire_db_host -e "show databases" | grep "^$db_name$"`;
+		$curr_db = `mysql --user=$root --password=$pwd $openfire_db_connection_string -e "show databases" | grep "^$db_name$"`;
 
 		if( !(strpos($curr_db,"error") === false) ){
 			exit("ERROR: Unable to create Openfire's DB.\n $result");
@@ -919,7 +926,7 @@ class JabbeXInstaller {
 
 		if( empty($curr_db) ){
 			// Create db
-			$result = `mysqladmin --user=$root --password=$pwd --host=$openfire_db_host create $db_name 2>&1`;
+			$result = `mysqladmin --user=$root --password=$pwd $openfire_db_connection_string create $db_name 2>&1`;
 			// Check if there was any error
 			if( !(strpos($result,"error") === false) ){
 				exit("ERROR: Unable to create Openfire's DB.\n $result");
@@ -930,7 +937,7 @@ class JabbeXInstaller {
 
 			if($sql_script){
 				$sql_script = trim($sql_script);
-				$result = `cat $sql_script | mysql --user=$root --password=$pwd --host=$openfire_db_host  $db_name 2>&1`;
+				$result = `cat $sql_script | mysql --user=$root --password=$pwd $openfire_db_connection_string $db_name 2>&1`;
 			}
 			else{
 				exit("ERROR: Unable to find Openfire's DB configuration script at resources/database/openfire_mysql.sql.\n");

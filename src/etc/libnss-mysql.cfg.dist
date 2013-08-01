@@ -43,5 +43,5 @@ database    %sys_dbname%
 username    dbauthuser
 password    %sys_dbauth_passwd%
 #socket      /var/lib/mysql/mysql.sock
-#port        3306
+#port        %sys_dbport%
 
