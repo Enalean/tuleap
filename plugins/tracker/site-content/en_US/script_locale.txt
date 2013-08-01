@@ -34,8 +34,14 @@ codendi.locales['tracker_hierarchy'] = {
     status_column_name: 'Status'
 };
 codendi.locales['tracker_trigger'] = {
-    at_least_one: 'at least one',
-    all_of: 'all of',
+    at_least_one: {
+        'name' : 'at least one',
+        'operator' : 'or'
+        },
+    all_of: {
+        'name' : 'all of',
+        'operator' : 'and'
+        },
     and: 'and',
     or: 'or',
     save_missing_data : 'Cannot save: missing data in form'
