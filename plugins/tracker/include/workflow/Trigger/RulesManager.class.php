@@ -53,8 +53,39 @@ class Tracker_Workflow_Trigger_RulesManager {
         }
     }
 
-    public function delete() {
+    /**
+     * Delete a rule in target tracker
+     *
+     * @param Tracker $tracker
+     * @param Tracker_Workflow_Trigger_TriggerRule $rule
+     * @throws Tracker_Workflow_Trigger_Exception_RuleException
+     */
+    public function delete(Tracker $tracker, Tracker_Workflow_Trigger_TriggerRule $rule) {
+        if ($rule->getTargetTracker() != $tracker) {
+            throw new Tracker_Workflow_Trigger_Exception_RuleException('Cannot delete rules from another tracker');
+        }
+        try {
+            $this->dao->enableExceptionsOnError();
+            $this->dao->startTransaction();
+            $this->dao->deleteTriggeringFieldsByRuleId($rule->getId());
+            $this->dao->deleteTargetByRuleId($rule->getId());
+            $this->dao->commit();
+        } catch (DataAccessException $exception) {
+            throw new Tracker_Workflow_Trigger_Exception_RuleException('Database error: cannot delete rule');
+        }
+    }
 
+    /**
+     * Return one Rule given its Id
+     *
+     * @return Tracker_Workflow_Trigger_TriggerRule
+     */
+    public function getRuleById($rule_id) {
+        $dar = $this->dao->searchForTargetByRuleId($rule_id);
+        if ($dar && count($dar) == 1) {
+            return $this->getInstanceFromRow($dar->current());
+        }
+        throw new Tracker_Workflow_Trigger_TriggerDoesntExistException();
     }
 
     /**
@@ -67,16 +98,18 @@ class Tracker_Workflow_Trigger_RulesManager {
     public function getForTargetTracker(Tracker $tracker) {
         $rules = new Tracker_Workflow_Trigger_TriggerRuleCollection();
         foreach ($this->dao->searchForTargetTracker($tracker->getId()) as $row) {
-            $rules->push(
-                new Tracker_Workflow_Trigger_TriggerRule(
-                    $row['id'],
-                    $this->getTarget($row['field_id'], $row['value_id']),
-                    $row['rule_condition'],
-                    $this->getTriggers($row['id'])
-                )
-            );
+            $rules->push($this->getInstanceFromRow($row));
         }
         return $rules;
+    }
+
+    private function getInstanceFromRow(array $row) {
+        return new Tracker_Workflow_Trigger_TriggerRule(
+            $row['id'],
+            $this->getTarget($row['field_id'], $row['value_id']),
+            $row['rule_condition'],
+            $this->getTriggers($row['id'])
+        );
     }
 
     private function getTarget($field_id, $value_id) {

@@ -213,4 +213,46 @@ class Tracker_Workflow_Trigger_RulesManager_getFromTrackerTest extends Tracker_W
     }
 }
 
+class Tracker_Workflow_Trigger_RulesManager_deleteByRuleIdTest extends Tracker_Workflow_Trigger_RulesManagerTest {
+
+    private $tracker;
+    private $rule;
+    private $rule_id;
+
+    public function setUp() {
+        parent::setUp();
+        $this->rule_id = 777;
+        $this->tracker = aTracker()->build();
+        $this->rule    = mock('Tracker_Workflow_Trigger_TriggerRule');
+        stub($this->rule)->getId()->returns($this->rule_id);
+        stub($this->rule)->getTargetTracker()->returns($this->tracker);
+    }
+
+    public function itDeletesTheTriggeringFields() {
+        expect($this->dao)->deleteTriggeringFieldsByRuleId($this->rule_id)->once();
+
+        $this->manager->delete($this->tracker, $this->rule);
+    }
+
+    public function itDeletesTheTarget() {
+        expect($this->dao)->deleteTargetByRuleId($this->rule_id)->once();
+
+        $this->manager->delete($this->tracker, $this->rule);
+    }
+
+    public function itUsesTransactionToKeepConsistency() {
+        expect($this->dao)->enableExceptionsOnError()->once();
+        expect($this->dao)->startTransaction()->once();
+        expect($this->dao)->commit()->once();
+
+        $this->manager->delete($this->tracker, $this->rule);
+    }
+
+    public function itRaisesAnExceptionWhenRuleTrackerDiffersFromGivenTracker() {
+        $this->expectException('Tracker_Exception');
+
+        $this->manager->delete(aTracker()->build(), $this->rule);
+    }
+}
+
 ?>

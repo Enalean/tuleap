@@ -50,6 +50,8 @@ class WorkflowManager {
             $action = new Tracker_Workflow_Action_Triggers_GetTriggersRulesBuilderData($this->tracker, Tracker_FormElementFactory::instance());
         } else if ($request->get('func') == Workflow::FUNC_ADMIN_ADD_TRIGGER) {
             $action = new Tracker_Workflow_Action_Triggers_AddTrigger($this->tracker, Tracker_FormElementFactory::instance(), $this->getTriggerRuleManager());
+        } else if ($request->get('func') == Workflow::FUNC_ADMIN_DELETE_TRIGGER) {
+            $action = new Tracker_Workflow_Action_Triggers_DeleteTrigger($this->tracker, $this->getTriggerRuleManager());
         } else if ($request->get('create')) {
             $action = new Tracker_Workflow_Action_Transitions_Create($this->tracker, WorkflowFactory::instance());
         } else if ($request->get('edit_transition')) {
