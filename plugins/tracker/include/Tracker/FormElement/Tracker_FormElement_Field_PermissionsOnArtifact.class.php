@@ -591,6 +591,11 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @return bool true if the value is considered ok
      */
     protected function validate(Tracker_Artifact $artifact, $value) {
+        if (isset($value['use_artifact_permissions']) && $value['use_artifact_permissions'] = 1) {
+            if (in_array(UGroup::NONE, $value['u_groups'])) {
+                return false;
+            }
+        }
         return true;
     }
     

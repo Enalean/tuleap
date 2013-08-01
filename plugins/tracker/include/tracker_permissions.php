@@ -1055,7 +1055,7 @@ function plugin_tracker_permission_fetch_selection_field($permission_type, $obje
         //size
         8, 
         //show_100
-        true, 
+        false,
         //text_100
         util_translate_name_ugroup('ugroup_nobody_name_key'),
         //show_any
