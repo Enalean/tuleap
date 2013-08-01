@@ -1332,7 +1332,7 @@ workflow_admin	tab_transitions	Transitions
 workflow_admin	tab_triggers	Déclenchements
 workflow_admin	tab_triggers_cancel	annuler
 workflow_admin	tab_triggers_equals	=
-workflow_admin	tab_triggers_new_trigger_condition_list_intro	Conditions requises :
+workflow_admin	tab_triggers_new_trigger_triggering_field_list_intro	Conditions requises :
 workflow_admin	tab_triggers_new_trigger_target_intro	Pour que le champ
 workflow_admin	tab_triggers_new_trigger_select_target_field_name	sélectionner le champ du tracker
 workflow_admin	tab_triggers_new_trigger_select_target_field_value	sélectionner la valeur
