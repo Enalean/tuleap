@@ -39,7 +39,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $json = new stdClass();
         $json->target = null;
 
-        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
+        $this->expectException('Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException');
         $this->validator->validateJsonFormat($json);
     }
 
@@ -47,7 +47,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $json = new stdClass();
         $json->target = new stdClass();
 
-        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
+        $this->expectException('Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException');
         $this->validator->validateJsonFormat($json);
     }
 
@@ -56,7 +56,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $json->target = new stdClass();
         $json->target->field_id = 34;
 
-        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
+        $this->expectException('Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException');
         $this->validator->validateJsonFormat($json);
     }
 
@@ -66,7 +66,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $json->target->field_id = 34;
         $json->target->field_value_id = 75;
 
-        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
+        $this->expectException('Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException');
         $this->validator->validateJsonFormat($json);
     }
 
@@ -77,7 +77,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $json->target->field_value_id = 75;
         $json->condition = 'bla';
 
-        $this->expectException('Tracker_Workflow_Trigger_TriggerInvalidConditionException');
+        $this->expectException('Tracker_Workflow_Trigger_Exception_TriggerInvalidConditionException');
         $this->validator->validateJsonFormat($json);
     }
 
@@ -88,7 +88,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $json->target->field_value_id = 75;
         $json->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
 
-        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
+        $this->expectException('Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException');
         $this->validator->validateJsonFormat($json);
     }
 
@@ -100,7 +100,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $json->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
         $json->triggering_fields = 'bla';
 
-        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
+        $this->expectException('Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException');
         $this->validator->validateJsonFormat($json);
     }
 
@@ -112,7 +112,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $json->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
         $json->triggering_fields = array('bla');
 
-        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
+        $this->expectException('Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException');
         $this->validator->validateJsonFormat($json);
     }
 
@@ -129,7 +129,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
 
         $json->triggering_fields = array($triggering_field, $triggering_field);
 
-        $this->expectException('Tracker_Workflow_Trigger_AddRuleJsonFormatException');
+        $this->expectException('Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException');
         $this->validator->validateJsonFormat($json);
     }
 

@@ -85,7 +85,7 @@ class Tracker_Workflow_Trigger_RulesManager {
         if ($dar && count($dar) == 1) {
             return $this->getInstanceFromRow($dar->current());
         }
-        throw new Tracker_Workflow_Trigger_TriggerDoesntExistException();
+        throw new Tracker_Workflow_Trigger_Exception_TriggerDoesntExistException();
     }
 
     /**

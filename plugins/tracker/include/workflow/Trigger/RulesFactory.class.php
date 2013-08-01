@@ -43,8 +43,8 @@ class Tracker_Workflow_Trigger_RulesFactory {
      *
      * @throws Tracker_FormElement_InvalidFieldException
      * @throws Tracker_FormElement_InvalidFieldValueException
-     * @throws Tracker_Workflow_Trigger_AddRuleJsonFormatException
-     * @throws Tracker_Workflow_Trigger_TriggerInvalidConditionException
+     * @throws Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException
+     * @throws Tracker_Workflow_Trigger_Exception_TriggerInvalidConditionException
      *
      * @return Tracker_Workflow_Trigger_TriggerRule
      */

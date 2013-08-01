@@ -18,6 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Workflow_Trigger_AddRuleJsonFormatException extends Tracker_Exception {}
+class Tracker_Workflow_Trigger_Exception_TriggerDoesntExistException extends Tracker_Workflow_Trigger_Exception_RuleException {
+    public function __construct($message='Trigger doesnt exist') {
+        parent::__construct($message);
+    }
+}
 
 ?>
