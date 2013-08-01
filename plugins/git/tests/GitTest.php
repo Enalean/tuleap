@@ -204,7 +204,7 @@ class Gittest_MigrateToGerritRouteTest extends Git_RouteBaseTestCase {
         $git = $this->getGit($request, $factory);
 
         expect($git)->addAction('migrateToGerrit', array($repo, $server_id, $migrate_access_right))->at(0);
-        expect($git)->addAction('redirectToRepoManagement', '*')->at(1);
+        expect($git)->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', '*')->at(1);
         $git->request();
     }
 

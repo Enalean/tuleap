@@ -89,7 +89,13 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         $html .= '</select>';
         $html .= '</p>';
         $html .= '<label>';
-        $html .= '<input type="checkbox" name="migrate_access_right" checked="checked"> '.$GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_access_right');
+
+        $checked = 'checked = "checked"';
+        if ($this->request->exist('migrate_access_right') && $this->request->get('migrate_access_right') == 0) {
+            $checked = "";
+        }
+
+        $html .= '<input type="checkbox" name="migrate_access_right" '.$checked.'"> '.$GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_access_right');
         $html .= '</label>';
         $html .= '<p><input type="submit" name="save" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_to') .'" /></p>';
         $html .= '</form>';

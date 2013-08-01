@@ -279,6 +279,19 @@ class GitActions extends PluginActions {
         $this->getController()->redirect($redirect_url);
     }
 
+    public function redirectToRepoManagementWithMigrationAccessRightInformation($projectId, $repositoryId, $pane, $migrate_access_right) {
+        $redirect_url = GIT_BASE_URL .'/?'. http_build_query(
+            array(
+                'action'               => 'repo_management',
+                'group_id'             => $projectId,
+                'repo_id'              => $repositoryId,
+                'pane'                 => $pane,
+                'migrate_access_right' => $migrate_access_right,
+            )
+        );
+        $this->getController()->redirect($redirect_url);
+    }
+
     public function confirmPrivate($projectId, $repoId, $repoAccess, $repoDescription) {
         $c = $this->getController();
         if (empty($repoId) || empty($repoAccess) || empty($repoDescription)) {

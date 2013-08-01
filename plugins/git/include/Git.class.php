@@ -470,7 +470,7 @@ class Git extends PluginController {
                 } else {
                     $migrate_access_right = $this->request->existAndNonEmpty('migrate_access_right');
                     $this->addAction('migrateToGerrit', array($repo, $remote_server_id, $migrate_access_right));
-                    $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
+                    $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repoId, $pane, $migrate_access_right));
                 }
                 break;
             case 'disconnect_gerrit':
