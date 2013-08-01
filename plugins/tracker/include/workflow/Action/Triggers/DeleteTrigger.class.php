@@ -37,6 +37,11 @@ class Tracker_Workflow_Action_Triggers_DeleteTrigger {
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
         try {
+            if (! $request->isPost()) {
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'Method must be post');
+                $GLOBALS['Response']->sendStatusCode(405);
+                return false;
+            }
             $rule = $this->rule_manager->getRuleById($request->getValidated('id', 'uint', 0));
             $this->rule_manager->delete($this->tracker, $rule);
         } catch (Tracker_Exception $exception) {

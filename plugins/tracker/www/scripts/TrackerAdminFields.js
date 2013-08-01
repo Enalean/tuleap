@@ -359,7 +359,7 @@ document.observe('dom:loaded', function () {
                         $('add_new_trigger_title').hide();
                         $('trigger_create_new').show();
                     });
-                })()
+                })();
 
                 displayExistingTriggers();
             })();
@@ -385,8 +385,8 @@ document.observe('dom:loaded', function () {
                 var callback = function() {
                     $('trigger_create_new').hide();
                     $('add_new_trigger_title').show();
-                    displayNewTrigger(trigger) 
-                }
+                    displayNewTrigger(trigger);
+                };
 
                 Event.observe($('trigger_submit_new'), 'click', function() {
                     trigger.save(callback);
@@ -395,7 +395,7 @@ document.observe('dom:loaded', function () {
                 function displayNewTrigger(trigger) {
                     var trigger_as_JSON = trigger.toJSON();
 
-                    displayTrigger(trigger_as_JSON, trigger.getId())
+                    displayTrigger(trigger_as_JSON, trigger.getId());
                     reset();
                 }
              })();
@@ -428,7 +428,6 @@ document.observe('dom:loaded', function () {
                 trigger_as_JSON.triggering_fields.each(function(triggering_field) {
                     addTriggeringField(triggering_field, trigger_element);
                 });
-
                 removeFirstOperator(trigger_element);
                 bindRemove(trigger_element, trigger_id);
 
@@ -470,12 +469,16 @@ document.observe('dom:loaded', function () {
 
                 function bindRemove(trigger_element, trigger_id) {
                     Event.observe(trigger_element.down('.trigger_remove'), 'click', function() {
+                        var query_params = window.location.href.toQueryParams();
                         new Ajax.Request(
-                            codendi.tracker.base_url+'?id='+trigger_id+'&func=admin-workflow-delete-trigger',
+                            codendi.tracker.base_url+'?tracker='+query_params['tracker']+'&id='+trigger_id+'&func=admin-workflow-delete-trigger',
                             {
-                                'method' : "GET",
-                                'onComplete': function () {
+                                'method' : "POST",
+                                'onSuccess': function () {
                                     trigger_element.remove();
+                                },
+                                'onFailure' : function(response) {
+                                    alert(response.responseText);
                                 }
                             }
                         );
