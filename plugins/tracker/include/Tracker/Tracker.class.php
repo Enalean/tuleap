@@ -522,6 +522,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
             case Workflow::FUNC_ADMIN_TRANSITIONS:
             case Workflow::FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA:
             case Workflow::FUNC_ADMIN_ADD_TRIGGER:
+            case Workflow::FUNC_ADMIN_DELETE_TRIGGER:
                 if ($this->userIsAdmin($current_user)) {
                     $this->getWorkflowManager()->process($layout, $request, $current_user);
                 } else {

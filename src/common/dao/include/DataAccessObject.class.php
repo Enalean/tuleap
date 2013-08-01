@@ -85,7 +85,7 @@ class DataAccessObject {
      * @param $sql the query string
      * @throws DataAccessQueryException
      *
-     * @return mixed either false if error or object DataAccessResult
+     * @return DataAccessResult|false
      */
     public function retrieve($sql, $params = array()) {
         $result = $this->da->query($sql, $params);

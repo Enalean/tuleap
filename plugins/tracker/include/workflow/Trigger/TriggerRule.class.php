@@ -47,6 +47,13 @@ class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormat
     }
 
     /**
+     * @return Tracker
+     */
+    public function getTargetTracker() {
+        return $this->getTarget()->getField()->getTracker();
+    }
+
+    /**
      * @return Integer
      */
     public function getId() {
