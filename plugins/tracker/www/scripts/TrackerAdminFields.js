@@ -348,17 +348,18 @@ document.observe('dom:loaded', function () {
                 trigger_template          = existing_triggers_table.down('tr').remove();
 
             function displayExistingTriggers() {
-                if (typeof tuleap.trackers.trigger.existing === 'undefined') {
+                if (tuleap.trackers.trigger.existing.size() == 0) {
                     return;
                 }
 
-                $H(tuleap.trackers.trigger.existing).each(function(trigger) {
-                    displayTrigger(trigger.value, trigger.key);
+                tuleap.trackers.trigger.existing.each(function(trigger) {
+                    displayTrigger(trigger);
                 });
             }
 
-            function displayTrigger(trigger_as_JSON, trigger_id) {
-                var trigger_element = addTriggerContainer(trigger_template, trigger_id);
+            function displayTrigger(trigger_as_JSON) {
+                var trigger_id      = trigger_as_JSON.id,
+                    trigger_element = addTriggerContainer(trigger_template, trigger_id);
 
                 trigger_element.down('.trigger_description_target_field_name').update(trigger_as_JSON.target.field_label);
                 trigger_element.down('.trigger_description_target_field_value').update(trigger_as_JSON.target.field_value_label);

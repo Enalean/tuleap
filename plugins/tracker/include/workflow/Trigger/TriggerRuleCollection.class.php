@@ -27,7 +27,7 @@ class Tracker_Workflow_Trigger_TriggerRuleCollection implements Iterator, Counta
     public function fetchFormattedForJson() {
         $json = array();
         foreach ($this->trigger_rules as $rule) {
-            $json[$rule->getId()] = $rule->fetchFormattedForJson();
+            $json[] = $rule->fetchFormattedForJson();
         }
         return $json;
     }
