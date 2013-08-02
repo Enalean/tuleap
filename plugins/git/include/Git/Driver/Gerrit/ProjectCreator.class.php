@@ -63,9 +63,10 @@ class Git_Driver_Gerrit_ProjectCreator {
      *
      * @param Git_RemoteServer_GerritServer $gerrit_server
      * @param GitRepository $repository
+     * @param Boolean $migrate_access_rights
      * @return string Gerrit project name
      */
-    public function createGerritProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
+    public function createGerritProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository, $migrate_access_rights) {
         $project          = $repository->getProject();
         $project_name     = $project->getUnixName();
         $ugroups          = $this->ugroup_manager->getUGroups($project);
@@ -77,11 +78,12 @@ class Git_Driver_Gerrit_ProjectCreator {
         $gerrit_project_name = $this->driver->createProject($gerrit_server, $repository, $project_name);
 
         $this->initiateGerritPermissions(
-            $repository,
-            $gerrit_server,
-            $gerrit_server->getCloneSSHUrl($gerrit_project_name),
-            $migrated_ugroups,
-            Config::get('sys_default_domain') .'-'. self::GROUP_REPLICATION
+                $repository,
+                $gerrit_server,
+                $gerrit_server->getCloneSSHUrl($gerrit_project_name),
+                $migrated_ugroups,
+                Config::get('sys_default_domain') .'-'. self::GROUP_REPLICATION,
+                $migrate_access_rights
         );
 
         $this->exportGitBranches($gerrit_server, $gerrit_project_name, $repository);
@@ -95,7 +97,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         `$cmd`;
     }
 
-    private function initiateGerritPermissions(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, array $ugroups, $replication_group) {
+    private function initiateGerritPermissions(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, array $ugroups, $replication_group, $migrate_access_rights) {
         $this->cloneGerritProjectConfig($gerrit_server, $gerrit_project_url);
         foreach ($ugroups as $ugroup) {
             $this->addGroupToGroupFile($gerrit_server, $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName());
@@ -103,7 +105,12 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->addGroupToGroupFile($gerrit_server, $replication_group);
         $this->addGroupToGroupFile($gerrit_server, 'Administrators');
         $this->addRegisteredUsersGroupToGroupFile();
-        $this->addPermissionsToProjectConf($repository, $ugroups, $replication_group);
+        $this->addMinimalPermissionsToMigrateTuleapRepoOnGerritWithoutTuleapAccessRigths();
+
+        if ($migrate_access_rights) {
+            $this->addPermissionsToProjectConf($repository, $ugroups, $replication_group, $migrate_access_rights);
+        }
+
         $this->pushToServer();
     }
 
@@ -142,7 +149,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         file_put_contents("$this->dir/groups", "$uuid\t$group_name\n", FILE_APPEND);
     }
 
-    private function addPermissionsToProjectConf(GitRepository $repository, array $ugroups, $replication_group) {
+    private function addPermissionsToProjectConf(GitRepository $repository, array $ugroups, $replication_group, $migrate_access_rights) {
         // https://groups.google.com/d/msg/repo-discuss/jTAY2ApcTGU/DPZz8k0ZoUMJ
         // Project owners are those who own refs/* within that project... which
         // means they can modify the permissions for any reference in the
@@ -198,9 +205,6 @@ class Git_Driver_Gerrit_ProjectCreator {
             $this->addToSection('refs/heads', 'push', "+force group $ugroup_rewind");
         }
 
-        $this->addToSection('refs/heads', 'create', "group Administrators");  // push initial ref
-        $this->addToSection('refs/heads', 'forgeCommitter', "group Administrators"); // push initial ref
-
         foreach ($ugroups_read as $ugroup_read) {
             $this->addToSection('refs/for/refs/heads', 'push', "group $ugroup_read");
         }
@@ -208,9 +212,6 @@ class Git_Driver_Gerrit_ProjectCreator {
             $this->addToSection('refs/for/refs/heads', 'push', "group $ugroup_write");
             $this->addToSection('refs/for/refs/heads', 'pushMerge', "group $ugroup_write");
         }
-        // To be able to push merge commit on master, we need pushMerge on refs/for/*
-        // http://code.google.com/p/gerrit/issues/detail?id=1072
-        $this->addToSection('refs/for', 'pushMerge', "group Administrators"); // push initial ref
 
         foreach ($ugroups_read as $ugroup_read) {
             $this->addToSection('refs/tags', 'read', "group $ugroup_read");
@@ -219,10 +220,22 @@ class Git_Driver_Gerrit_ProjectCreator {
             $this->addToSection('refs/tags', 'read', "group $ugroup_write");
             $this->addToSection('refs/tags', 'pushTag', "group $ugroup_write");
         }
+    }
 
-        $this->addToSection('refs/tags', 'pushTag', "group Administrators"); // push initial ref
-        $this->addToSection('refs/tags', 'create', "group Administrators");  // push initial ref
-        $this->addToSection('refs/tags', 'forgeCommitter', "group Administrators");  // push initial ref
+    private function addMinimalPermissionsToMigrateTuleapRepoOnGerritWithoutTuleapAccessRigths() {
+        $this->addToSection('refs/tags', 'pushTag', "group Administrators");
+        $this->addToSection('refs/tags', 'create', "group Administrators");
+        $this->addToSection('refs/tags', 'forgeCommitter', "group Administrators");
+
+        $this->addToSection('refs/heads', 'create', "group Administrators");
+        $this->addToSection('refs/heads', 'forgeCommitter', "group Administrators");
+
+        $this->addToSection('refs/heads', 'create', "group Administrators");
+        $this->addToSection('refs/heads', 'forgeCommitter', "group Administrators");
+
+        // To be able to push merge commit on master, we need pushMerge on refs/for/*
+        // http://code.google.com/p/gerrit/issues/detail?id=1072
+        $this->addToSection('refs/for', 'pushMerge', "group Administrators");
     }
 
     private function shouldAddRegisteredUsersToGroup(GitRepository $repository, $permission, $group) {
@@ -242,8 +255,10 @@ class Git_Driver_Gerrit_ProjectCreator {
 
     public function removeTemporaryDirectory() {
         $backend = Backend::instance('System');
-        $backend->recurseDeleteInDir($this->dir);
-        rmdir($this->dir);
+        if (is_dir($this->dir)) {
+            $backend->recurseDeleteInDir($this->dir);
+            rmdir($this->dir);
+        }
     }
 }
 

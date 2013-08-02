@@ -53,10 +53,9 @@ abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase 
         $id= $type= $parameters= $priority= $status= $create_date= $process_date= $end_date= $log = 0;
         $this->event = TestHelper::getPartialMock('SystemEvent_GIT_GERRIT_MIGRATION', array('done', 'warning', 'error'),
                                                   array($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log));
-        $this->event->setParameters("$this->repository_id::$this->remote_server_id");
+        $this->event->setParameters("$this->repository_id::$this->remote_server_id::true");
         $this->logger = mock('Logger');
         $this->event->injectDependencies($this->dao, $factory, $this->server_factory, $this->logger, $this->project_creator);
-
     }
 }
 
@@ -126,7 +125,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_CallsToProjectCreatorTest extends SystemE
     public function itCreatesAProject() {
         stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
-        expect($this->project_creator)->createGerritProject($this->gerrit_server, $this->repository)->once();
+        expect($this->project_creator)->createGerritProject($this->gerrit_server, $this->repository, "true")->once();
         $this->event->process();
     }
 }
