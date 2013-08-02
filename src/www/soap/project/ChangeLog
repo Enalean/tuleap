@@ -1,3 +1,11 @@
+1.2 - Tuleap 6.4
+        * Add method getProjectDescriptionFieldsValue
+            Returns the value of all field of a given project
+	* Add method setProjectDescriptionFieldValue
+            Set a value to a given description field on a given project
+	* Add method getPlateformProjectDescriptionFields
+            Returns the description field define on the platform
+
 1.1 - Tuleap 6.3
 	* Add method setProjectGenericUser
 	* Add method unsetGenericUser
