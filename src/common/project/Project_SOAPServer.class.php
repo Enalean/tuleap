@@ -435,12 +435,25 @@ class Project_SOAPServer {
             throw new SoapFault('3108', "The given project description field does not exist");
         }
 
+        if ($this->descriptionFieldIsMandatory($field_id_to_update) && $field_value == "") {
+            throw new SoapFault('3109', "The given project description is mandatory");
+        }
+
         $this->description_manager->setCustomDescription($project, $field_id_to_update,$field_value);
     }
 
     private function descriptionFieldExists($field_id_to_update) {
         $project_desc_fields = $this->description_factory->getCustomDescription($field_id_to_update);
         if ($project_desc_fields) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function descriptionFieldIsMandatory($field_id_to_update) {
+        $project_desc_fields = $this->description_factory->getRequiredCustomDescriptions();
+        if (array_key_exists($field_id_to_update, $project_desc_fields)) {
             return true;
         }
 

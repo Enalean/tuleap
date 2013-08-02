@@ -323,8 +323,26 @@ class Project_SOAPServerProjectDescriptionFieldsTest extends TuleapTestCase {
 
         stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
         stub($this->description_factory)->getCustomDescription(104)->returns(true);
+        stub($this->description_factory)->getRequiredCustomDescriptions()->returns(array(
+            104 => mock('Project_CustomDescription_CustomDescription')
+        ));
 
         expect($this->description_manager)->setCustomDescription()->once();
+        $this->server->setProjectDescriptionFieldValue($this->session_key, $group_id, $field_id_to_update, $field_value);
+    }
+
+    public function itThrowsASOAPFaultIfFieldIsMandatoryAndValueIsEmpty() {
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
+        stub($this->description_factory)->getCustomDescription(104)->returns(true);
+        stub($this->description_factory)->getRequiredCustomDescriptions()->returns(array(
+            104 => mock('Project_CustomDescription_CustomDescription')
+        ));
+
+        $field_id_to_update = 104;
+        $field_value        = '';
+        $group_id           = 101;
+
+        $this->expectException();
         $this->server->setProjectDescriptionFieldValue($this->session_key, $group_id, $field_id_to_update, $field_value);
     }
 
