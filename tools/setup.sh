@@ -755,6 +755,10 @@ setup_nss() {
     substitute '/etc/libnss-mysql.cfg' '%sys_dbhost%' "$mysql_host"
     substitute '/etc/libnss-mysql.cfg' '%sys_dbname%' "$PROJECT_NAME"
     substitute '/etc/libnss-mysql.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+    substitute '/etc/libnss-mysql.cfg' '%sys_dbport%' "$mysql_port"
+    if [ ! -z "$mysql_port" ]; then
+        substitute '/etc/libnss-mysql.cfg' '#port' 'port'
+    fi
     substitute '/etc/libnss-mysql-root.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
     $CHOWN root:root /etc/libnss-mysql.cfg /etc/libnss-mysql-root.cfg
     $CHMOD 644 /etc/libnss-mysql.cfg
@@ -790,7 +794,7 @@ setup_tuleap() {
     substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbpasswd%' "$codendiadm_passwd" 
     substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbuser%' "$PROJECT_ADMIN" 
     substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbname%' "$PROJECT_NAME"
-    substitute "/etc/$PROJECT_NAME/conf/database.inc" 'localhost' "$mysql_host" 
+    substitute "/etc/$PROJECT_NAME/conf/database.inc" 'localhost' "$mysql_host_and_port"
 }
 
 ###############################################################################
@@ -842,6 +846,7 @@ auto_passwd="true"
 configure_bind="false"
 mysql_host="localhost"
 mysql_port=""
+mysql_default_port="3306"
 mysql_httpd_host="localhost"
 mysql_remote_server=""
 rt_passwd=""
@@ -914,6 +919,13 @@ do
 		break ;;
     esac
 done
+
+mysql_host_and_port=$mysql_host;
+mysql_openfire_host_and_port="$mysql_host:$mysql_default_port";
+if [ ! -z "$mysql_port" ]; then
+    mysql_host_and_port="$mysql_host_and_port:$mysql_port"
+    mysql_openfire_host_and_port=$mysql_host_and_port;
+fi
 
 if [ ! -z "$mysql_remote_server" ]; then
     test_mysql_host
@@ -1486,9 +1498,8 @@ EOF
     IM_ADMIN_USER='imadmin-bot'
     IM_ADMIN_USER_PW='1M@dm1n'
     IM_MUC_PW='Mu6.4dm1n' # Doesn't need to change
-    $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://$mysql_host:3306/openfire -cdb jdbc:mysql://$mysql_host:3306/$PROJECT_NAME -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW -fdn $PROJECT_NAME
+    $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://$mysql_openfire_host_and_port/openfire -cdb jdbc:mysql://$mysql_openfire_host_and_port/$PROJECT_NAME -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW -fdn $PROJECT_NAME
     echo "path[]=\"$INSTALL_DIR/plugins/IM\"" >> /etc/$PROJECT_NAME/forgeupgrade/config.ini
-
     # Enable service
     enable_service openfire
     control_service openfire restart
