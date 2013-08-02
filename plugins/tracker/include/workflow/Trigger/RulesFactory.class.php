@@ -49,7 +49,7 @@ class Tracker_Workflow_Trigger_RulesFactory {
      * @return Tracker_Workflow_Trigger_TriggerRule
      */
     public function getRuleFromJson(Tracker $tracker, stdClass $json) {
-        $this->validator->validateJsonFormat($json);
+        $this->validator->validateJsonFormat($json, $tracker);
 
         $target    = $this->getTarget($tracker->getId(), $json->target->field_id, $json->target->field_value_id);
         $condition = $json->condition;

@@ -23,9 +23,15 @@
  */
 class Tracker_Workflow_Trigger_TriggerValidator {
     private $triggering_fields = array();
+    private $rules_manager;
 
-    public function validateJsonFormat(stdClass $json) {
+    public function __construct(Tracker_Workflow_Trigger_RulesManager $rules_manager) {
+        $this->rules_manager = $rules_manager;
+    }
+
+    public function validateJsonFormat(stdClass $json, Tracker $tracker) {
         $this->validateJsonTargetFormat($json);
+        $this->validateJsonTargetUniqueness($json, $tracker);
         $this->validateJsonConditionFormat($json);
         $this->validateJsonTriggeringFieldsFormat($json);
     }
@@ -35,6 +41,16 @@ class Tracker_Workflow_Trigger_TriggerValidator {
             throw new Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException('target is missing');
         }
         $this->validateJsonFieldValueFormat($json->target);
+    }
+
+    private function validateJsonTargetUniqueness($json, $tracker) {
+        $existing_rules = $this->rules_manager->getForTargetTracker($tracker);
+
+        foreach ($existing_rules as $rule) {
+            if ($rule->getTarget()->getValue()->getId() == $json->target->field_value_id) {
+                throw new Tracker_Workflow_Trigger_Exception_TriggerInvalidTargetException('trigger already exists for field value');
+            }
+        }
     }
 
     private function validateJsonConditionFormat(stdClass $json) {

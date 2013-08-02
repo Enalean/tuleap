@@ -24,12 +24,20 @@ class Tracker_Workflow_Trigger_TriggerValidator_Test extends TuleapTestCase {
 
     protected $json_input;
     protected $validator;
+    protected $rules_manager;
+    protected $tracker;
 
     public function setUp() {
         parent::setUp();
-      
-        $this->validator = new Tracker_Workflow_Trigger_TriggerValidator();
+
+        $this->rules_manager = mock('Tracker_Workflow_Trigger_RulesManager');
+        $collection = new Tracker_Workflow_Trigger_TriggerRuleCollection();
+        stub($this->rules_manager)->getForTargetTracker($this->tracker)->returns($collection);
+
+        $this->validator = new Tracker_Workflow_Trigger_TriggerValidator($this->rules_manager);
         $this->json_input = json_decode(file_get_contents(dirname(__FILE__).'/_fixtures/add_rule.json'));
+        $this->tracker = mock('Tracker');
+
     }
 }
 
@@ -40,7 +48,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $json->target = null;
 
         $this->expectException('Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException');
-        $this->validator->validateJsonFormat($json);
+        $this->validator->validateJsonFormat($json, $this->tracker);
     }
 
     public function itRaisesAnExceptionIfTargetHasNoFieldId() {
@@ -48,7 +56,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $json->target = new stdClass();
 
         $this->expectException('Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException');
-        $this->validator->validateJsonFormat($json);
+        $this->validator->validateJsonFormat($json, $this->tracker);
     }
 
     public function itRaisesAnExceptionIfTargetHasNoFieldValueId() {
@@ -57,7 +65,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $json->target->field_id = 34;
 
         $this->expectException('Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException');
-        $this->validator->validateJsonFormat($json);
+        $this->validator->validateJsonFormat($json, $this->tracker);
     }
 
     public function itRaisesAnExceptionIfTargetHasNoCondition() {
@@ -67,7 +75,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $json->target->field_value_id = 75;
 
         $this->expectException('Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException');
-        $this->validator->validateJsonFormat($json);
+        $this->validator->validateJsonFormat($json, $this->tracker);
     }
 
     public function itRaisesAnExceptionIfTargetHasInvalidCondition() {
@@ -78,7 +86,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $json->condition = 'bla';
 
         $this->expectException('Tracker_Workflow_Trigger_Exception_TriggerInvalidConditionException');
-        $this->validator->validateJsonFormat($json);
+        $this->validator->validateJsonFormat($json, $this->tracker);
     }
 
     public function itRaisesAnExceptionIfNoTriggeringField() {
@@ -89,7 +97,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $json->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
 
         $this->expectException('Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException');
-        $this->validator->validateJsonFormat($json);
+        $this->validator->validateJsonFormat($json, $this->tracker);
     }
 
     public function itRaisesAnExceptionIfTriggeringFieldIsNotAnArray() {
@@ -101,7 +109,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $json->triggering_fields = 'bla';
 
         $this->expectException('Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException');
-        $this->validator->validateJsonFormat($json);
+        $this->validator->validateJsonFormat($json, $this->tracker);
     }
 
     public function itRaisesAnExceptionIfTriggeringFieldIsNotAnArrayOfFields() {
@@ -113,7 +121,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $json->triggering_fields = array('bla');
 
         $this->expectException('Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException');
-        $this->validator->validateJsonFormat($json);
+        $this->validator->validateJsonFormat($json, $this->tracker);
     }
 
     public function itRaisesAnExceptionIfTriggeringFieldsHaveIdenticalData() {
@@ -130,7 +138,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $json->triggering_fields = array($triggering_field, $triggering_field);
 
         $this->expectException('Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException');
-        $this->validator->validateJsonFormat($json);
+        $this->validator->validateJsonFormat($json, $this->tracker);
     }
 
     public function itRaisesNoExceptionIfDataIsGood() {
@@ -149,7 +157,47 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
 
         $json->triggering_fields = array($triggering_field, $triggering_field2);
 
-        $this->validator->validateJsonFormat($json);
+        $this->validator->validateJsonFormat($json, $this->tracker);
     }
+
+    public function itRaisesAnExceptionIfTargetFieldAlreadyHasRuleForSameValue() {
+        $json = new stdClass();
+        $json->target = new stdClass();
+        $json->target->field_id = 34;
+        $json->target->field_value_id = 75;
+        $json->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
+
+        $triggering_field = new stdClass();
+        $triggering_field->field_id = 46;
+        $triggering_field->field_value_id = 156;
+        $triggering_field2 = new stdClass();
+        $triggering_field2->field_id = 67;
+        $triggering_field2->field_value_id = 62;
+
+        $json->triggering_fields = array($triggering_field, $triggering_field2);
+
+        $field_list = mock('Tracker_FormElement_Field_List');
+        $bind_value = mock('Tracker_FormElement_Field_List_BindValue');
+        stub($bind_value)->getId()->returns(75);
+        $target = new Tracker_Workflow_Trigger_FieldValue($field_list, $bind_value);
+        $condition = 'some_condition';
+        $triggers = array();
+        $rule = new Tracker_Workflow_Trigger_TriggerRule(7, $target, $condition, $triggers);
+        
+        $collection = new Tracker_Workflow_Trigger_TriggerRuleCollection();
+        $collection->push($rule);
+
+        $tracker = mock('Tracker');
+
+        $this->expectException('Tracker_Workflow_Trigger_Exception_TriggerInvalidTargetException');
+
+        $rules_manager = mock('Tracker_Workflow_Trigger_RulesManager');
+        stub($rules_manager)->getForTargetTracker($tracker)->returns($collection);
+        $validator = new Tracker_Workflow_Trigger_TriggerValidator($rules_manager);
+
+        $validator->validateJsonFormat($json, $tracker);
+    }
+
+
 }
 ?>

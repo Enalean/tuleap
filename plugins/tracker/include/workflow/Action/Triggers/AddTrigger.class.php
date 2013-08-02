@@ -42,7 +42,7 @@ class Tracker_Workflow_Action_Triggers_AddTrigger {
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
-        $validator = new Tracker_Workflow_Trigger_TriggerValidator();
+        $validator = new Tracker_Workflow_Trigger_TriggerValidator($this->rule_manager);
 
         try {
             $rules_factory = new Tracker_Workflow_Trigger_RulesFactory($this->formelement_factory, $validator);
