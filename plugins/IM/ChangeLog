@@ -1,3 +1,6 @@
+Version 1.5.10 - Tuleap 6.4
+    * Openfire database can be on a specific port
+
 Version 1.5.9 - Tuleap 5.13
     * Create an optionnal paramater for database name in openfire install
 

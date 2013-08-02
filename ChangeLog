@@ -7,6 +7,7 @@ Version 6.4 (NOT RELEASED YET)
 	  downloading big files (200MB or more). Requires to install RPM
 	  php53-pear-HTTP-Download too. (Will be added as a dependency in
 	  future)
+	* Database server can be on a non standard port
 
 	== Development ==
 	* Fix lxc_fix_uid script
