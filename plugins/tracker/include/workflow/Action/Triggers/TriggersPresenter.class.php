@@ -28,8 +28,16 @@ class Tracker_Workflow_Action_Triggers_TriggersPresenter {
         $this->token = $token;
     }
 
-    public function triggers_title() {
+    public function title_define_triggers() {
         return $GLOBALS['Language']->getText('workflow_admin','title_define_triggers');
+    }
+
+    public function title_existing_triggers() {
+        return $GLOBALS['Language']->getText('workflow_admin','title_existing_triggers');
+    }
+
+    public function title_new_trigger() {
+        return $GLOBALS['Language']->getText('workflow_admin','title_new_trigger');
     }
 
     public function triggers_definition() {
@@ -72,16 +80,24 @@ class Tracker_Workflow_Action_Triggers_TriggersPresenter {
         return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_condition_select_tracker_field_value');
     }
 
+    public function condition_of_type() {
+        return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_condition_of_type');
+    }
+
+    public function condition_set_to() {
+        return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_set_to');
+    }
+
+    public function condition_will_be_set_to() {
+        return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_will_be_set_to');
+    }
+
     public function new_trigger_triggering_field_list_intro() {
         return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_new_trigger_triggering_field_list_intro');
     }
 
     public function new_trigger_target_intro() {
         return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_new_trigger_target_intro');
-    }
-
-    public function equals() {
-        return $GLOBALS['Language']->getText('workflow_admin','tab_triggers_equals');
     }
 
     public function cancel() {

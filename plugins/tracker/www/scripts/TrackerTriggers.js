@@ -83,6 +83,7 @@ tuleap.trackers.trigger = Class.create({
 
             triggering_field.removeDeleteButton();
             triggering_field.addConditionSelector();
+            triggering_field.makeOperatorDynamic();
         }
 
         function populateConditions(conditions) {
@@ -324,8 +325,9 @@ tuleap.trackers.trigger.triggering_field = Class.create({
     },
 
     addConditionSelector : function() {
-        var selector = $('trigger_condition_quantity');
+        var selector = $('trigger_quantity_template');
 
+        selector.show();
         this.container.down('td').update(selector);
         this.container.writeAttribute('data-trigger-condition-initial', 'true')
     },
@@ -456,14 +458,19 @@ tuleap.trackers.trigger.triggering_field = Class.create({
         });
 
         function updateOperators() {
+            var option = $('trigger_condition_quantity').options[$('trigger_condition_quantity').selectedIndex],
+                operator_name = option.value,
+                locales = codendi.locales.tracker_trigger;
+
            $$('.trigger_condition_artifact_operator_updater').each(function(span){
-                var option = $('trigger_condition_quantity').options[$('trigger_condition_quantity').selectedIndex],
-                    operator_name = option.value,
-                    operator = option.readAttribute('data-condition-operator'),
-                    locales = codendi.locales.tracker_trigger;
+                var operator = option.readAttribute('data-condition-operator');
 
                 span.update(locales[operator] + ' ' + locales[operator_name].name);
-            });
+           });
+
+           $$('.trigger_triggering_have_field').each(function(span){
+                span.update(locales[operator_name].have_field);
+           });
         }
     },
 

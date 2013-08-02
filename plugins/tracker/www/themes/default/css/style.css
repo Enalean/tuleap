@@ -1370,11 +1370,32 @@ tr.artifact-children-table-head {
     vertical-align: middle;
 }
 
-.trigger_link {
-    cursor: pointer;
-    color: #0676B9;
-}
-
 .trigger_triggering_field_remove {
     cursor: pointer;
+}
+.trigger_condition_selector {
+    white-space: nowrap;
+    text-align: right;
+}
+.trigger_triggering_field {
+    vertical-align: top;
+}
+#triggers_existing > table > tbody > tr:nth-child(odd) {
+    background: #fcfcfc;
+}
+#triggers_existing > table > tbody > tr {
+    vertical-align: top;
+}
+.trigger_description_triggering_field {
+    vertical-align: top;
+}
+.trigger_description_triggering_field_intro {
+    text-align: right;
+    padding-right: 0.25em;
+}
+.trigger_remove {
+    cursor: pointer;
+}
+.trigger_triggering_field select {
+    vertical-align: top;
 }

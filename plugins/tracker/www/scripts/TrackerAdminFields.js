@@ -337,9 +337,15 @@ document.observe('dom:loaded', function () {
      */
 
 
-     (function trigger_init() {
-        if($('add_new_trigger_title')) {
-            var trigger = new tuleap.trackers.trigger();
+    (function trigger_init() {
+        if (! $('add_new_trigger_title')) {
+            return;
+        }
+
+            var trigger                   = new tuleap.trackers.trigger(),
+                existing_triggers_table   = $('triggers_existing').down('tbody'),
+                triggering_field_template = existing_triggers_table.down('.trigger_description_triggering_field').remove(),
+                trigger_template          = existing_triggers_table.down('tr').remove();
 
             function displayExistingTriggers() {
                 if (typeof tuleap.trackers.trigger.existing === 'undefined') {
@@ -352,13 +358,10 @@ document.observe('dom:loaded', function () {
             }
 
             function displayTrigger(trigger_as_JSON, trigger_id) {
-                var template        = $('trigger_template').innerHTML,
-                    trigger_element = addTriggerContainer(template, trigger_id);
+                var trigger_element = addTriggerContainer(trigger_template, trigger_id);
 
-                trigger_element.down('.trigger_description_target_field_name')
-                        .update(trigger_as_JSON.target.field_label);
-                trigger_element.down('.trigger_description_target_field_value')
-                        .update(trigger_as_JSON.target.field_value_label);
+                trigger_element.down('.trigger_description_target_field_name').update(trigger_as_JSON.target.field_label);
+                trigger_element.down('.trigger_description_target_field_value').update(trigger_as_JSON.target.field_value_label);
 
                 trigger_as_JSON.triggering_fields.each(function(triggering_field) {
                     addTriggeringField(triggering_field, trigger_element);
@@ -366,36 +369,42 @@ document.observe('dom:loaded', function () {
                 removeFirstOperator(trigger_element);
                 bindRemove(trigger_element, trigger_id);
 
-                function addTriggerContainer(template, trigger_id) {
+                function addTriggerContainer(trigger_template, trigger_id) {
                     var trigger_element;
 
-                    $('triggers_existing').insert(template);
-                    trigger_element = $('triggers_existing').childElements().last();
+                    existing_triggers_table.insert(trigger_template.cloneNode(true));
+                    trigger_element = existing_triggers_table.childElements().last();
                     trigger_element.writeAttribute('data-trigger-id', trigger_id);
 
                     return trigger_element;
                 }
 
                 function addTriggeringField(triggering_field, trigger_element) {
-                    var triggering_field_template  = $('trigger_template_triggering_field').innerHTML,
-                        triggering_fields_list     = trigger_element.down('.trigger_description_triggering_fields'),
+                    var triggering_fields_list     = trigger_element.down('.trigger_description_triggering_fields'),
                         condition                  = codendi.locales.tracker_trigger[trigger_as_JSON.condition].name,
                         operator                   = codendi.locales.tracker_trigger[trigger_as_JSON.condition].operator,
+                        have_field                 = codendi.locales.tracker_trigger[trigger_as_JSON.condition].have_field,
                         triggering_field_element;
 
-                    triggering_fields_list.insert(triggering_field_template);
+                    triggering_fields_list.insert(triggering_field_template.cloneNode(true));
                     triggering_field_element = triggering_fields_list.childElements().last();
 
                     triggering_field_element.down('.trigger_description_triggering_field_operator')
                             .update(operator);
                     triggering_field_element.down('.trigger_description_triggering_field_quantity')
                             .update(condition);
+                    triggering_field_element.down('.trigger_description_triggering_have_field')
+                            .update(have_field);
                     triggering_field_element.down('.trigger_description_triggering_field_tracker')
                             .update(triggering_field.tracker_name);
                     triggering_field_element.down('.trigger_description_triggering_field_field_name')
                             .update(triggering_field.field_label);
                     triggering_field_element.down('.trigger_description_triggering_field_field_value')
                             .update(triggering_field.field_value_label);
+
+                    if (triggering_fields_list.childElements().size() > 1) {
+                        triggering_field_element.down('.trigger_description_triggering_field_when').hide();
+                    }
                 }
 
                 function removeFirstOperator(trigger_element) {
@@ -441,9 +450,10 @@ document.observe('dom:loaded', function () {
                 $('trigger_create_new').hide();
 
                 (function bindAddNewTrigger() {
-                    Event.observe($('add_new_trigger_title'), 'click', function() {
+                    Event.observe($('add_new_trigger_title'), 'click', function(evt) {
                         $('add_new_trigger_title').hide();
                         $('trigger_create_new').show();
+                        Event.stop(evt);
                     });
                 })();
 
@@ -451,19 +461,21 @@ document.observe('dom:loaded', function () {
             })();
 
             (function bindAddExtraTriggeringField() {
-                Event.observe($('trigger_add_condition'), 'click', function() {
+                Event.observe($('trigger_add_condition'), 'click', function(evt) {
                     var triggering_field = trigger.addTriggeringField();
 
                     triggering_field.activateDeleteButton(trigger);
                     triggering_field.makeOperatorDynamic();
+                    Event.stop(evt);
                });
             })();
 
             (function bindCancelAddNewTrigger(){
-                Event.observe($('trigger_add_cancel'), 'click', function() {
+                Event.observe($('trigger_add_cancel'), 'click', function(evt) {
                     $('trigger_create_new').hide();
                     $('add_new_trigger_title').show();
                     reset();
+                    Event.stop(evt);
                 });
             })();
 
@@ -484,9 +496,8 @@ document.observe('dom:loaded', function () {
                     displayTrigger(trigger_as_JSON, trigger.getId());
                     reset();
                 }
-             })();
-         }
-     })();
+            })();
+    })();
 });
 
 

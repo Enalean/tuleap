@@ -35,14 +35,19 @@ codendi.locales['tracker_hierarchy'] = {
 };
 codendi.locales['tracker_trigger'] = {
     at_least_one: {
-        'name' : 'at least one',
-        'operator' : 'or'
-        },
+        name: 'at least one child',
+        operator: 'or',
+        have_field: 'has its field'
+    },
     all_of: {
-        'name' : 'all of',
-        'operator' : 'and'
-        },
+        name: 'all children',
+        operator: 'and',
+        have_field: 'have their field'
+    },
+    of_type: 'of type',
+    set_to: 'set to',
+    will_be_set_to: 'will be set to',
     and: 'and',
     or: 'or',
-    save_missing_data : 'Cannot save: missing data in form'
+    save_missing_data: 'Cannot save: missing data in form'
 };

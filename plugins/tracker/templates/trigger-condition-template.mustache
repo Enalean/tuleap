@@ -1,48 +1,28 @@
-<table style ="display: none" id="trigger_triggering_fields_template">
+<table style="display: none" id="trigger_triggering_fields_template">
     <tbody>
-        <tr class="trigger_triggering_field" style ="padding-bottom: 5px" data-trigger-condition-initial="false">
-            <td>
-                <span class="trigger_condition_artifact_operator_updater" style="color: #999999;"></span>
+        <tr class="trigger_triggering_field" data-trigger-condition-initial="false">
+            <td class="trigger_condition_selector">
+                <span class="trigger_condition_artifact_operator_updater"></span>
             </td>
             <td>
+                {{condition_of_type}}
                 <select class="trigger_triggering_field_child_tracker_name">
-                    <option selected="selected" value="">select child tracker name</option>
+                    <option selected="selected" value="">{{condition_select_tracker_name}}</option>
                 </select>
+                <span class="trigger_triggering_have_field"></span>
                 <select class="trigger_triggering_field_child_tracker_field_name">
                     <option selected="selected" value="">{{condition_select_tracker_field}}</option>
                 </select>
-                {{equals}}
+                {{condition_set_to}}
                 <select class="trigger_triggering_field_child_tracker_field_value">
                     <option selected="selected" value="">{{condition_select_tracker_field_value}}</option>
                 </select>
-                <img border="0" alt="remove" src="/themes/Tuleap/images/ic/cross.png" style="position:relative; bottom: -5px;" class="trigger_triggering_field_remove">
+                <img border="0" alt="remove" src="/themes/Tuleap/images/ic/cross.png" class="trigger_triggering_field_remove">
             </td>
         </tr>
     </tbody>
 </table>
-<div style ="display: none" id="trigger_quantity_template">
-    <select id="trigger_condition_quantity">
+<div style="display: none" id="trigger_quantity_template">
+    {{new_trigger_triggering_field_list_intro}} <select id="trigger_condition_quantity">
     </select>
-</div>
-<div style ="display: none" id="trigger_template">
-    <div class="trigger_description" style="margin-bottom: 5px; background-color: #D8E7EE; float: left">
-        {{new_trigger_triggering_field_list_intro}}
-        <div class="trigger_description_triggering_fields">
-        </div>
-        <p class="trigger_description_target">
-            {{new_trigger_target_intro}}
-            <em><span class="trigger_description_target_field_name"></span></em> =
-            <em><span class="trigger_description_target_field_value"></span></em>
-        </p>
-        <img border="0" alt="remove" src="/themes/Tuleap/images/ic/cross.png" style="float: right; cursor: pointer;" class="trigger_remove">
-    </div>
-</div>
-<div id ="trigger_template_triggering_field" style ="display: none">
-    <p class="trigger_description_triggering_field">
-        <span class="trigger_description_triggering_field_operator"></span> 
-        <span class="trigger_description_triggering_field_quantity"></span>
-        <em><span class="trigger_description_triggering_field_tracker"></span></em>
-        <em><span class="trigger_description_triggering_field_field_name"></span></em> =
-        <em><span class="trigger_description_triggering_field_field_value"></span></em>
-    </p>
 </div>

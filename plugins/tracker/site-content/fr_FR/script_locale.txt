@@ -35,14 +35,19 @@ codendi.locales['tracker_hierarchy'] = {
 };
 codendi.locales['tracker_trigger'] = {
     at_least_one: {
-        'name' : 'au moins un',
-        'operator' : 'ou'
-        },
+        name: 'au moins un enfant',
+        operator: 'ou',
+        have_field: 'a le champ'
+    },
     all_of: {
-        'name' : 'tous',
-        'operator' : 'et'
-        },
+        name: 'tous les enfants',
+        operator: 'et',
+        have_field: 'ont le champ'
+    },
+    of_type: 'de type',
+    set_to: 'valué à',
+    will_be_set_to: 'sera valué à',
     and: 'et',
     or: 'ou',
-    save_missing_data : 'Impossible de sauvegarder: formulaire incomplète'
+    save_missing_data: 'Impossible de sauvegarder : formulaire incomplet'
 };
