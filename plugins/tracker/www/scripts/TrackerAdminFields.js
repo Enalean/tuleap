@@ -351,71 +351,6 @@ document.observe('dom:loaded', function () {
                 });
             }
 
-            (function display() {
-                $('trigger_create_new').hide();
-
-                (function bindAddNewTrigger() {
-                    Event.observe($('add_new_trigger_title'), 'click', function() {
-                        $('add_new_trigger_title').hide();
-                        $('trigger_create_new').show();
-                    });
-                })();
-
-                displayExistingTriggers();
-            })();
-
-            (function bindAddExtraTriggeringField() {
-                Event.observe($('trigger_add_condition'), 'click', function() {
-                    var triggering_field = trigger.addTriggeringField();
-
-                    triggering_field.activateDeleteButton(trigger);
-                    triggering_field.makeOperatorDynamic();
-               });
-            })();
-
-            (function bindCancelAddNewTrigger(){
-                Event.observe($('trigger_add_cancel'), 'click', function() {
-                    $('trigger_create_new').hide();
-                    $('add_new_trigger_title').show();
-                    reset();
-                });
-            })();
-
-            (function bindSubmitNewTrigger(){
-                var callback = function() {
-                    $('trigger_create_new').hide();
-                    $('add_new_trigger_title').show();
-                    displayNewTrigger(trigger);
-                };
-
-                Event.observe($('trigger_submit_new'), 'click', function() {
-                    trigger.save(callback);
-                });
-
-                function displayNewTrigger(trigger) {
-                    var trigger_as_JSON = trigger.toJSON();
-
-                    displayTrigger(trigger_as_JSON, trigger.getId());
-                    reset();
-                }
-             })();
-
-            function reset() {
-                trigger.getTriggeringFields().each(function(triggering_field) {
-                    if (triggering_field.getContainer().readAttribute('data-trigger-condition-initial') !== 'true') {
-                        trigger.removeTriggeringField(triggering_field);
-                    } else {
-                        triggering_field.removeAllOptions();
-                    }
-
-                    (function resetForm() {
-                        $$('#trigger_create_new select').each(function(select_box) {
-                            select_box.value = '';
-                        });
-                    })();
-                });
-            }
-
             function displayTrigger(trigger_as_JSON, trigger_id) {
                 var template        = $('trigger_template').innerHTML,
                     trigger_element = addTriggerContainer(template, trigger_id);
@@ -485,6 +420,71 @@ document.observe('dom:loaded', function () {
                     });
                 }
             }
+
+            function reset() {
+                trigger.getTriggeringFields().each(function(triggering_field) {
+                    if (triggering_field.getContainer().readAttribute('data-trigger-condition-initial') !== 'true') {
+                        trigger.removeTriggeringField(triggering_field);
+                    } else {
+                        triggering_field.removeAllOptions();
+                    }
+
+                    (function resetForm() {
+                        $$('#trigger_create_new select').each(function(select_box) {
+                            select_box.value = '';
+                        });
+                    })();
+                });
+            }
+
+            (function display() {
+                $('trigger_create_new').hide();
+
+                (function bindAddNewTrigger() {
+                    Event.observe($('add_new_trigger_title'), 'click', function() {
+                        $('add_new_trigger_title').hide();
+                        $('trigger_create_new').show();
+                    });
+                })();
+
+                displayExistingTriggers();
+            })();
+
+            (function bindAddExtraTriggeringField() {
+                Event.observe($('trigger_add_condition'), 'click', function() {
+                    var triggering_field = trigger.addTriggeringField();
+
+                    triggering_field.activateDeleteButton(trigger);
+                    triggering_field.makeOperatorDynamic();
+               });
+            })();
+
+            (function bindCancelAddNewTrigger(){
+                Event.observe($('trigger_add_cancel'), 'click', function() {
+                    $('trigger_create_new').hide();
+                    $('add_new_trigger_title').show();
+                    reset();
+                });
+            })();
+
+            (function bindSubmitNewTrigger(){
+                var callback = function() {
+                    $('trigger_create_new').hide();
+                    $('add_new_trigger_title').show();
+                    displayNewTrigger(trigger);
+                };
+
+                Event.observe($('trigger_submit_new'), 'click', function() {
+                    trigger.save(callback);
+                });
+
+                function displayNewTrigger(trigger) {
+                    var trigger_as_JSON = trigger.toJSON();
+
+                    displayTrigger(trigger_as_JSON, trigger.getId());
+                    reset();
+                }
+             })();
          }
      })();
 });
