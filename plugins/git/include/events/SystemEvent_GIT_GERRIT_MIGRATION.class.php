@@ -80,8 +80,15 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
 
         $repo_id          = (int)$this->getParameter(0);
         $remote_server_id = (int)$this->getParameter(1);
-        $txt .= 'repo: '. $this->verbalizeRepoId($repo_id, $with_link) .', remote server: '. $this->verbalizeRemoteServerId($remote_server_id, $with_link);
+        $txt .= 'repo: '. $this->verbalizeRepoId($repo_id, $with_link) .', remote server: '. $this->verbalizeRemoteServerId($remote_server_id, $with_link).$this->verbalizeAccessRightMigration();
         return $txt;
+    }
+
+    private function verbalizeAccessRightMigration() {
+        $migrate_access_rights = $this->getParameter(2);
+        if (!$migrate_access_rights) {
+            return ', without access rights';
+        }
     }
 
     private function verbalizeRepoId($repo_id, $with_link) {
