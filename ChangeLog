@@ -1,6 +1,7 @@
 Version 6.4 (NOT RELEASED YET)
 	== Plugins ==
 	* git: 3.35
+	* tracker: 5.144
 
         == Bug fix ==
 	* File release system: fix bug that might affect php53 deployment when
