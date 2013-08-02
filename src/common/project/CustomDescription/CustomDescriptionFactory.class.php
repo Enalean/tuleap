@@ -40,16 +40,19 @@ class Project_CustomDescription_CustomDescriptionFactory {
         $required_custom_descriptions = array();
         $res = $this->dao->getRequiredCustomDescriptions();
         while ($row = $res->getRow()) {
-            $required_custom_descriptions[$row['group_desc_id']] = new Project_CustomDescription_CustomDescription(
-                $row['group_desc_id'],
-                $row['desc_name'],
-                $row['desc_description'],
-                $row['desc_required'],
-                $row['desc_type'],
-                $row['desc_rank']
-            );
+            $required_custom_descriptions[$row['group_desc_id']] = $this->getInstanceFromRow($row);
         }
         return $required_custom_descriptions;
+    }
+
+    public function getCustomDescription($id) {
+        $res = $this->dao->getCustomDescription($id);
+
+        if ($res && $res->rowCount() == 1) {
+            $row = $res->getRow();
+            return $this->getInstanceFromRow($row);
+        }
+        return null;
     }
 
     /**
@@ -59,16 +62,27 @@ class Project_CustomDescription_CustomDescriptionFactory {
         $custom_descriptions = array();
         $res = $this->dao->getCustomDescriptions();
         while ($row = $res->getRow()) {
-            $custom_descriptions[$row['group_desc_id']] = new Project_CustomDescription_CustomDescription(
-                $row['group_desc_id'],
-                $row['desc_name'],
-                $row['desc_description'],
-                $row['desc_required'],
-                $row['desc_type'],
-                $row['desc_rank']
-            );
+            $custom_descriptions[$row['group_desc_id']] = $this->getInstanceFromRow($row);
         }
         return $custom_descriptions;
+    }
+
+    /**
+     * Buil an instance of CustomDescription
+     *
+     * @param array $row the value of the CustomDescription form the db
+     *
+     * @return CustomDescription
+     */
+    public function getInstanceFromRow(array $row) {
+        return new Project_CustomDescription_CustomDescription(
+            $row['group_desc_id'],
+            $row['desc_name'],
+            $row['desc_description'],
+            $row['desc_required'],
+            $row['desc_type'],
+            $row['desc_rank']
+        );
     }
 }
 ?>

@@ -322,6 +322,7 @@ class Project_SOAPServerProjectDescriptionFieldsTest extends TuleapTestCase {
         $group_id           = 101;
 
         stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
+        stub($this->description_factory)->getCustomDescription(104)->returns(true);
 
         expect($this->description_manager)->setCustomDescription()->once();
         $this->server->setProjectDescriptionFieldValue($this->session_key, $group_id, $field_id_to_update, $field_value);

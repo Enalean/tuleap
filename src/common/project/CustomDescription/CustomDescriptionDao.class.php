@@ -23,6 +23,10 @@ require_once('common/dao/include/DataAccessObject.class.php');
 
 class Project_CustomDescription_CustomDescriptionDao extends DataAccessObject {
 
+    /**
+     *
+     * @return DataAccessResult
+     */
     public function getCustomDescriptions() {
         $sql = 'SELECT *
                 FROM group_desc
@@ -31,6 +35,25 @@ class Project_CustomDescription_CustomDescriptionDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     * @param int $id
+     *
+     * @return DataAccessResult
+     */
+    public function getCustomDescription($id) {
+        $id = $this->da->escapeInt($id);
+
+        $sql = "SELECT *
+                FROM group_desc
+                WHERE group_desc_id = $id";
+
+        return $this->retrieve($sql);
+    }
+
+    /**
+     *
+     * @return DataAccessResult
+     */
     public function getRequiredCustomDescriptions() {
         $sql = 'SELECT *
                 FROM group_desc

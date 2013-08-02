@@ -419,6 +419,7 @@ class Project_SOAPServer {
      *
      * * Error codes:
      *   * 3000, Invalid project id
+     *   * 3108, The given project description field does not exist
      *   * 3201, Permission denied: need to be project admin
      *
      * @param String  $session_key        The project admin session hash
@@ -430,7 +431,20 @@ class Project_SOAPServer {
     public function setProjectDescriptionFieldValue($session_key, $group_id, $field_id_to_update, $field_value) {
         $project = $this->getProjectIfUserIsAdmin($group_id, $session_key);
 
+        if (! $this->descriptionFieldExists($field_id_to_update)) {
+            throw new SoapFault('3108', "The given project description field does not exist");
+        }
+
         $this->description_manager->setCustomDescription($project, $field_id_to_update,$field_value);
+    }
+
+    private function descriptionFieldExists($field_id_to_update) {
+        $project_desc_fields = $this->description_factory->getCustomDescription($field_id_to_update);
+        if ($project_desc_fields) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -438,6 +452,8 @@ class Project_SOAPServer {
      * given project
      *
      * * Error codes:
+     *   * 3000, Invalid project id
+     *   * 3203, Permission denied: need to be project admin
      *
      * @param String  $session_key        The project admin session hash
      * @param int     $group_id           The Id of the project
@@ -445,12 +461,17 @@ class Project_SOAPServer {
      * @return ArrayOfDescFieldsValues
      */
     public function getProjectDescriptionFieldsValue($session_key, $group_id) {
-        $project   = $this->projectManager->getProject($group_id);
+        $project = $this->projectManager->getProject($group_id);
+
+        if (! $project || $project->isError()) {
+             throw new SoapFault('3000', "Invalid project id");
+        }
+
         $user      = $this->continueSession($session_key);
         $is_member = $this->getProjectMember($project, $user->getUserName());
 
         if (! $is_member) {
-            throw new SoapFault('3203', 'Permission denied: need to be project admin.');
+            throw new SoapFault('3203', 'Permission denied: need to be project admin');
         }
 
         return $this->description_value_factory->getDescriptionFieldsValue($project);
