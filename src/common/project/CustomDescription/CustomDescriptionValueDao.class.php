@@ -74,5 +74,15 @@ class Project_CustomDescription_CustomDescriptionValueDao extends DataAccessObje
         $row = $result->getRow();
         return $row['desc_value_id'];
     }
+
+    public function getDescriptionFieldsValue($group_id) {
+        $group_id = $this->da->escapeInt($group_id);
+
+        $sql = "SELECT *
+                FROM group_desc_value
+                WHERE group_id = $group_id";
+
+        return $this->retrieve($sql);
+    }
 }
 ?>

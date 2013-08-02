@@ -60,6 +60,9 @@ class Project_SOAPServer {
     /** @var Project_CustomDescription_CustomDescriptionValueManager */
     private $description_manager;
 
+    /** @var Project_CustomDescription_CustomDescriptionValueFactory */
+    private $description_value_factory;
+
     public function __construct(
         ProjectManager $projectManager,
         ProjectCreator $projectCreator,
@@ -67,15 +70,17 @@ class Project_SOAPServer {
         GenericUserFactory $generic_user_factory,
         SOAP_RequestLimitator $limitator,
         Project_CustomDescription_CustomDescriptionFactory $description_factory,
-        Project_CustomDescription_CustomDescriptionValueManager $description_manager
+        Project_CustomDescription_CustomDescriptionValueManager $description_manager,
+        Project_CustomDescription_CustomDescriptionValueFactory $description_value_factory
     ) {
-        $this->projectManager       = $projectManager;
-        $this->projectCreator       = $projectCreator;
-        $this->userManager          = $userManager;
-        $this->generic_user_factory = $generic_user_factory;
-        $this->limitator            = $limitator;
-        $this->description_factory  = $description_factory;
-        $this->description_manager  = $description_manager;
+        $this->projectManager             = $projectManager;
+        $this->projectCreator             = $projectCreator;
+        $this->userManager                = $userManager;
+        $this->generic_user_factory       = $generic_user_factory;
+        $this->limitator                  = $limitator;
+        $this->description_factory        = $description_factory;
+        $this->description_manager        = $description_manager;
+        $this->description_value_factory  = $description_value_factory;
     }
 
     /**
@@ -401,25 +406,6 @@ class Project_SOAPServer {
         return $soap_return;
     }
 
-    /**
-     * Set description fields
-     *
-     * * Error codes:
-     *   * 3000, Invalid project id
-     *   * 3201, Permission denied: need to be project admin
-     *
-     * @param String  $sessionKey         The project admin session hash
-     * @param int     $group_id           The Id of the project
-     * @param int     $field_id_to_update The Id of the field
-     * @param String  $field_value        The new value to set
-     *
-     */
-    public function setProjectDescriptionFieldValue($sessionKey, $group_id, $field_id_to_update, $field_value) {
-        $project = $this->getProjectIfUserIsAdmin($group_id, $sessionKey);
-
-        $this->description_manager->setCustomDescription($project, $field_id_to_update,$field_value);
-    }
-
     private function extractDescFieldSOAPDatas(Project_CustomDescription_CustomDescription $desc_field) {
         $field_datas = array();
         $field_datas['id']           = $desc_field->getId();
@@ -428,6 +414,47 @@ class Project_SOAPServer {
         return $field_datas;
     }
 
+    /**
+     * Set description fields
+     *
+     * * Error codes:
+     *   * 3000, Invalid project id
+     *   * 3201, Permission denied: need to be project admin
+     *
+     * @param String  $session_key        The project admin session hash
+     * @param int     $group_id           The Id of the project
+     * @param int     $field_id_to_update The Id of the field
+     * @param String  $field_value        The new value to set
+     *
+     */
+    public function setProjectDescriptionFieldValue($session_key, $group_id, $field_id_to_update, $field_value) {
+        $project = $this->getProjectIfUserIsAdmin($group_id, $session_key);
+
+        $this->description_manager->setCustomDescription($project, $field_id_to_update,$field_value);
+    }
+
+    /**
+     * get all the description fields value for a
+     * given project
+     *
+     * * Error codes:
+     *
+     * @param String  $session_key        The project admin session hash
+     * @param int     $group_id           The Id of the project
+     *
+     * @return ArrayOfDescFieldsValues
+     */
+    public function getProjectDescriptionFieldsValue($session_key, $group_id) {
+        $project   = $this->projectManager->getProject($group_id);
+        $user      = $this->continueSession($session_key);
+        $is_member = $this->getProjectMember($project, $user->getUserName());
+
+        if (! $is_member) {
+            throw new SoapFault('3203', 'Permission denied: need to be project admin.');
+        }
+
+        return $this->description_value_factory->getDescriptionFieldsValue($project);
+    }
     /**
      * Return a user member of project
      * 

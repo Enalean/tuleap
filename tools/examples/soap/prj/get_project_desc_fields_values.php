@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-if ($argc > 1) {
-    die("Usage: ".$argv[0]);
+if ($argc < 2) {
+    die("Usage: ".$argv[0] . "project_id");
 }
 
 $serverUrl = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://chaussette.cro.enalean.com';
@@ -35,7 +35,9 @@ $requesterSessionHash = $soapLogin->login($login, $password)->session_hash;
 $soapProject = new SoapClient($serverUrl.'/soap/project/?wsdl',
                               array('cache_wsdl' => WSDL_CACHE_NONE));
 
-var_dump($soapProject->getProjectDescriptionFields($requesterSessionHash));
+$group_id = $argv[1];
+
+var_dump($soapProject->getProjectDescriptionFieldsValue($requesterSessionHash, $group_id));
 
 $soapLogin->logout($requesterSessionHash);
 
