@@ -230,6 +230,7 @@ tuleap.trackers.trigger = Class.create({
             condition           = $F('trigger_condition_quantity');
 
         if (! target || ! triggering_fields) {
+            alert(codendi.locales.tracker_trigger.save_missing_data);
             return '';
         }
 
@@ -240,9 +241,10 @@ tuleap.trackers.trigger = Class.create({
         };
 
         function getTriggeringFields(self) {
-            var triggering_fields = [];
+            var triggering_fields_as_JSON = [],
+                triggering_fields         = self.getTriggeringFields();
 
-            self.getTriggeringFields().each(function(triggering_field){
+            triggering_fields.each(function(triggering_field){
                 var field_id            = triggering_field.getChildTrackerFieldId(),
                     field_value_id      = triggering_field.getChildTrackerFieldValueId(),
                     field_label         = triggering_field.getChildTrackerFieldLabel(),
@@ -250,11 +252,10 @@ tuleap.trackers.trigger = Class.create({
                     tracker             = triggering_field.getChildTrackerName();
 
                 if (field_id === '' || field_value_id === '') {
-                    alert(codendi.locales.tracker_trigger.save_missing_data);
                     return false;
                 }
 
-                triggering_fields.push({
+                triggering_fields_as_JSON.push({
                     "field_id"          : field_id,
                     "field_value_id"    : field_value_id,
                     "field_label"       : field_label,
@@ -263,7 +264,11 @@ tuleap.trackers.trigger = Class.create({
                 });
             });
 
-            return triggering_fields;
+            if (triggering_fields.length != triggering_fields_as_JSON.length) {
+                return '';
+            }
+
+            return triggering_fields_as_JSON;
         }
 
         function getTarget(self) {
@@ -273,7 +278,6 @@ tuleap.trackers.trigger = Class.create({
                  field_value_label  = self.getTargetFieldValueLabel();
 
             if (field_id === '' || field_value_id === '') {
-                alert(codendi.locales.tracker_trigger.save_missing_data);
                 return false;
             }
 
