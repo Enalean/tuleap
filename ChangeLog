@@ -11,6 +11,7 @@ Version 6.4 (NOT RELEASED YET)
 	  php53-pear-HTTP-Download too. (Will be added as a dependency in
 	  future)
 	* Database server can be on a non standard port
+	* Fix the issue of custom fields not displayed in the project admin area
 
 	== Development ==
 	* Methods to fetch and update the description fields of a project through SOAP
