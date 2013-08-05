@@ -1,3 +1,6 @@
+Version 3.32 - Tuleap 6.4
+    * update the description fields of my project through SOAP
+
 Version 3.31 - Tuleap 6.2
     * Update user creation after change in core (ensure user consistency)
 
