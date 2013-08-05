@@ -32,6 +32,36 @@ class SVN_Svnlook {
         return $this->execute($command);
     }
 
+    /**
+     * @throw SVN_SvnlookException
+     *
+     * @return array
+     */
+    public function getPathLastHistory(Project $project, $svn_path) {
+        $command = 'history --limit 1 '.escapeshellarg($this->getRepositoryPath($project)).' '.escapeshellarg($svn_path);
+        return $this->execute($command);
+    }
+
+    /**
+     * Returns revision info for a project E.g. array(
+     *      lucky luke,     //author
+     *      1545654656,     //datestamp
+     *      16,             //log message size (in bytes)
+     *      'my message',   //log message
+     *  );
+     *
+     * @param Project $project
+     * @param int $revision
+     *
+     * @throw SVN_SvnlookException
+     *
+     * @return array
+     */
+    public function getInfo(Project $project, $revision) {
+        $command = 'info -r ' . escapeshellarg($revision) . ' ' . escapeshellarg($this->getRepositoryPath($project));
+        return $this->execute($command);
+    }
+
     private function getRepositoryPath(Project $project) {
         return $this->svn_prefix. DIRECTORY_SEPARATOR . $project->getUnixName();
     }

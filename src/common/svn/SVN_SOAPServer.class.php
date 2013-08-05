@@ -66,7 +66,19 @@ class SVN_SOAPServer {
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSVNPath');
             $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
             
-            return $this->svn_repository_listing->getSvnPath($current_user, $project, $path);
+            return $this->svn_repository_listing->getSvnPaths($current_user, $project, $path);
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
+    }
+
+    public function getSvnPathsWithLogDetails($sessionKey, $group_id, $path) {
+        try {
+            $current_user = $this->soap_request_validator->continueSession($sessionKey);
+            $project      = $this->soap_request_validator->getProjectById($group_id, 'getSVNPath');
+            $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
+
+            return $this->svn_repository_listing->getSvnPathsWithLogDetails($current_user, $project, $path);
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
