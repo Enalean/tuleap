@@ -18,21 +18,27 @@
  */
 
 require_once 'SVN_PermissionsManager.class.php';
+require_once 'SVN_Svnlook.class.php';
 
 class SVN_RepositoryListing {
     /**
      * @var SVN_PermissionsManager
      */
     private $svn_permissions_manager;
-    
-    public function __construct(SVN_PermissionsManager $svn_permissions_manager) {
+
+    /**
+     * @var SVN_Svnlook
+     */
+    private $svnlook;
+
+    public function __construct(SVN_PermissionsManager $svn_permissions_manager, SVN_Svnlook $svnlook) {
         $this->svn_permissions_manager = $svn_permissions_manager;
+        $this->svnlook                 = $svnlook;
     }
 
     public function getSvnPath(PFUser $user, Project $project, $svn_path) {
         $paths            = array();
-        $repository_path  = $GLOBALS['svn_prefix'].'/'.$project->getUnixName();
-        $content          = $this->getDirectoryListing($repository_path, $svn_path);
+        $content          = $this->svnlook->getDirectoryListing($project, $svn_path);
         foreach ($content as $line) {
             if ($this->svn_permissions_manager->userCanRead($user, $project, $line)) {
                 $paths[]= $this->extractDirectoryContent($line, $svn_path);
@@ -41,13 +47,6 @@ class SVN_RepositoryListing {
         return array_filter($paths);
     }
 
-    protected function getDirectoryListing($repository_path, $svn_path) {
-        $cmd    = '/usr/bin/svnlook tree --non-recursive --full-paths '.escapeshellarg($repository_path).' '.escapeshellarg($svn_path);
-        $output = array();
-        exec($cmd, $output);
-        return $output;
-    }
-    
     private function extractDirectoryContent($line, $svn_path) {
         $match_path_regex = "%^$svn_path/%";
         if (preg_match($match_path_regex, $line)) {

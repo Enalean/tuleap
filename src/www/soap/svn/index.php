@@ -38,7 +38,7 @@ if ($request->exist('wsdl')) {
     $wsdlGen->dumpWSDL();
 } else {
     $soap_request_validator = new SOAP_RequestValidator(ProjectManager::instance(), UserManager::instance());
-    $svn_repository_listing = new SVN_RepositoryListing(new SVN_PermissionsManager());
+    $svn_repository_listing = new SVN_RepositoryListing(new SVN_PermissionsManager(), new SVN_Svnlook(Config::get('svn_prefix')));
     
     $server = new SoapServer($uri.'/?wsdl',
                              array('cache_wsdl' => WSDL_CACHE_NONE));
