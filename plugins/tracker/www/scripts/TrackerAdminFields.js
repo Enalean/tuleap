@@ -490,7 +490,8 @@ document.observe('dom:loaded', function () {
             function displayNewTrigger(trigger) {
                 var trigger_as_JSON = trigger.toJSON();
 
-                displayTrigger(trigger_as_JSON, trigger.getId());
+                trigger_as_JSON.id = trigger.getId();
+                displayTrigger(trigger_as_JSON);
                 reset();
             }
         })();
