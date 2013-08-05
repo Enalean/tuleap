@@ -75,7 +75,7 @@ INSERT INTO service(group_id, label, description, short_name, link, is_active, i
                                LIKE 'plugin_git');
         
 INSERT INTO reference (id, keyword, description, link, scope, service_short_name, nature)
-VALUES (30, 'git', 'plugin_git:reference_commit_desc_key', '/plugins/git/index.php/$group_id/view/$1/?a=commit&h=$2', 'S', 'git', 'git_commit');
+VALUES (30, 'git', 'plugin_git:reference_commit_desc_key', '/plugins/git/index.php/$group_id/view/$1/?a=commit&h=$2', 'S', 'plugin_git', 'git_commit');
 
 INSERT INTO reference_group (reference_id, group_id, is_active)
 SELECT 30, group_id, 1 FROM groups WHERE group_id;
