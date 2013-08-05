@@ -143,9 +143,9 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
 
     public function searchUsedStaticSbFieldByTrackerId($tracker_id) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
-        $sql = "SELECT *
+        $sql = "SELECT f.*
                 FROM $this->table_name f
-                  INNER JOIN tracker_field_list_bind_static lbu ON (lbu.field_id = f.id)
+                  INNER JOIN tracker_field_list fl ON (fl.field_id = f.id AND fl.bind_type = 'static')
                 WHERE f.tracker_id = $tracker_id
                   AND use_it = 1
                   AND formElement_type IN ('sb', 'msb')
