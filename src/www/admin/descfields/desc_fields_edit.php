@@ -87,7 +87,7 @@ if ($add_desc || $update) {
 		if($add_desc){
 			$sql="INSERT INTO group_desc (desc_name, desc_description, desc_rank, desc_type, desc_required) ";
 			$sql.=	"VALUES ('".db_escape_string($desc_name)."','".db_escape_string($desc_description)."','";
-			$sql.= db_escape_string($desc_rank)."','".db_ei($desc_type)."','".db_ei($desc_required)."')";
+			$sql.= db_escape_string($desc_rank)."','".db_es($desc_type)."','".db_ei($desc_required)."')";
 			$result=db_query($sql);
 		        		
 		    if (!$result) {
