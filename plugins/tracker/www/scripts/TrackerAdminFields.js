@@ -439,11 +439,7 @@ document.observe('dom:loaded', function () {
                     triggering_field.removeAllOptions();
                 }
 
-                (function resetForm() {
-                    $$('#trigger_create_new select').each(function(select_box) {
-                        select_box.value = '';
-                    });
-                })();
+                $('triggers_form').reset();
             });
         }
 
