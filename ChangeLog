@@ -1,9 +1,10 @@
 Version 6.4 (NOT RELEASED YET)
 	== Plugins ==
 	* git: 3.35
-	* tracker: 5.144
+	* tracker: 5.145
 	* ldap: 3.32
 	* tests: 5.18
+	* cardwall: 0.9.41
 
 	== Bug fix ==
 	* File release system: fix bug that might affect php53 deployment when
@@ -14,6 +15,9 @@ Version 6.4 (NOT RELEASED YET)
 	* Fix the issue of custom fields not displayed in the project admin area
 
 	== Development ==
+	* Adding a method to add JSON content to a request
+	* Adding a method to get the content of a request when posted as JSON
+	* Better error handling on SQL errors
 	* Methods to fetch and update the description fields of a project through SOAP
 	* Fix lxc_fix_uid script
 

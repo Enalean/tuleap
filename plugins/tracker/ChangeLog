@@ -1,3 +1,6 @@
+Version 5.145 - Tuleap 6.4
+    * story #4534 - have an interface to set trigger rules
+
 Version 5.144 - Tuleap 6.4
     * story #4523: Remove 'nobody' from permission list (So we can not lock ourselves outside an artifact)
 
