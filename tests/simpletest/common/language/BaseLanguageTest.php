@@ -27,7 +27,7 @@ require_once('common/include/Config.class.php');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generatePartial('BaseLanguage', 'BaseLanguageTestVersion', array('loadAllTabFiles'));
 
-class BaseLanguageTest extends TuleapTestCase {
+class BaseLanguage_BaseTest extends TuleapTestCase {
 
     function setUp() {
         parent::setUp();
@@ -54,7 +54,10 @@ class BaseLanguageTest extends TuleapTestCase {
         }
         parent::tearDown();
     }
-    
+}
+
+class BaseLanguageTest extends BaseLanguage_BaseTest {
+
     function testConstructor() {
         $l1 = new BaseLanguage(',lang1,lang2, lang3 ,lang4 , lang5,', 'lang1');
         $this->assertEqual(array('lang1','lang2','lang3','lang4','lang5'), $l1->allLanguages);
@@ -236,6 +239,33 @@ class BaseLanguageTest extends TuleapTestCase {
         $this->assertEqual("<?php\n\$this->text_array['module']['key'] = 'value';\n?>",
             file_get_contents($GLOBALS['codendi_cache_dir'] .'/lang/my_lang.php')
         );
+    }
+}
+
+class BaseLanguage_hasTextTest extends BaseLanguage_BaseTest {
+
+    public function setUp() {
+        parent::setUp();
+        $user = mock('PFUser');
+        stub($user)->getLocale()->returns('en_US');
+        $user_manager = mock('UserManager');
+        stub($user_manager)->getCurrentUser()->returns($user);
+        UserManager::setInstance($user_manager);
+    }
+
+    public function tearDown() {
+        UserManager::clearInstance();
+        parent::tearDown();
+    }
+
+    function itReturnsTrueWhenTheKeyIsPresent() {
+        $l = new BaseLanguage('en_US,fr_FR', 'en_US');
+        $this->assertTrue($l->hasText('common', 'key1'));
+    }
+
+    function itReturnsFalseWhenTheKeyIsNotPresent() {
+        $l = new BaseLanguage('en_US,fr_FR', 'en_US');
+        $this->assertFalse($l->hasText('common', 'missing_key'));
     }
 }
 ?>
