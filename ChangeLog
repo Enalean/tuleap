@@ -5,6 +5,7 @@ Version 6.4 (NOT RELEASED YET)
 	* ldap: 3.32
 	* tests: 5.18
 	* cardwall: 0.9.41
+	* statistics: 0.30
 
 	== Bug fix ==
 	* File release system: fix bug that might affect php53 deployment when

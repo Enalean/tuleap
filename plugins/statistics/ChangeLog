@@ -1,3 +1,6 @@
+Version 0.30 - Tuleap 6.4
+    * story #4592 - Add project description fields in the service usage stats
+
 Version 0.29 - Tuleap 6.3
     * Make DB schema compatible with mysql 5.5.x
 
