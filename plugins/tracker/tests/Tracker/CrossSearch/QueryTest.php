@@ -116,6 +116,12 @@ class Query_SharedFieldsTest extends TuleapTestCase {
 
 class Query_EmptyTest extends TuleapTestCase {
 
+    public function itIsEmptyWhenThereAreNoInputData() {
+        $query        = new Tracker_CrossSearch_Query(array(), array(), array());
+
+        $this->assertTrue($query->isEmpty());
+    }
+
     public function itIsEmptyWhenThereAreNoArtifactLinkSelected() {
         $artifact_ids = array(142 => array(), 143 => array());
         $query        = new Tracker_CrossSearch_Query(array(), array(), $artifact_ids);
@@ -128,6 +134,13 @@ class Query_EmptyTest extends TuleapTestCase {
         $query        = new Tracker_CrossSearch_Query(array(), array(), $artifact_ids);
 
         $this->assertFalse($query->isEmpty());
+    }
+
+    public function itIsEmptyWhenThereOnlyEmptyTitle() {
+        $sementic_criteria = array('title' => '');
+        $query        = new Tracker_CrossSearch_Query(array(), $sementic_criteria, array());
+
+        $this->assertTrue($query->isEmpty());
     }
 
     public function itIsEmptyWhenThereAreNoSementicStatusSelected() {

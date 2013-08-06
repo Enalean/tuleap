@@ -34,16 +34,18 @@ class SOAP_WSDLMethodGenerator {
      * @var array map to know a soap type corresponding to a phpdoc type
      */
     private $doc2soap_types = array(
-        'string'             => 'xsd:string',
-        'integer'            => 'xsd:int',
-        'int'                => 'xsd:int',
-        'boolean'            => 'xsd:boolean',
-        'bool'               => 'xsd:boolean',
-        'arrayofstring'      => 'tns:ArrayOfstring',
-        'arrayofrevision'    => 'tns:ArrayOfRevision',
-        'arrayofcommiter'    => 'tns:ArrayOfCommiter',
-        'arrayofsvnpathinfo' => 'tns:ArrayOfSvnPathInfo',
-        'arrayofuserinfo'    => 'tns:ArrayOfUserInfo',
+        'string'                   => 'xsd:string',
+        'integer'                  => 'xsd:int',
+        'int'                      => 'xsd:int',
+        'boolean'                  => 'xsd:boolean',
+        'bool'                     => 'xsd:boolean',
+        'arrayofstring'            => 'tns:ArrayOfstring',
+        'arrayofrevision'          => 'tns:ArrayOfRevision',
+        'arrayofcommiter'          => 'tns:ArrayOfCommiter',
+        'arrayofsvnpathinfo'       => 'tns:ArrayOfSvnPathInfo',
+        'arrayofuserinfo'          => 'tns:ArrayOfUserInfo',
+        'arrayofdescfields'        => 'tns:ArrayOfDescFields',
+        'arrayofdescfieldsvalues'  => 'tns:ArrayOfDescFieldsValues',
     );
     
     public function __construct(ReflectionMethod $method) {

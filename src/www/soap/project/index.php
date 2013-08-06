@@ -23,6 +23,11 @@ require_once 'pre.php';
 require_once 'common/project/Project_SOAPServer.class.php';
 require_once 'common/soap/SOAP_RequestLimitatorFactory.class.php';
 require_once 'common/user/GenericUserFactory.class.php';
+require_once 'common/project/CustomDescription/CustomDescriptionFactory.class.php';
+require_once 'common/project/CustomDescription/CustomDescriptionValueManager.class.php';
+require_once 'common/project/CustomDescription/CustomDescriptionDao.class.php';
+require_once 'common/project/CustomDescription/CustomDescriptionValueDao.class.php';
+require_once 'common/project/CustomDescription/CustomDescriptionValueFactory.class.php';
 
 // Check if we the server is in secure mode or not.
 if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
@@ -49,10 +54,28 @@ if ($request->exist('wsdl')) {
     $generic_user_dao     = new GenericUserDao();
     $generic_user_factory = new GenericUserFactory($userManager, $projectManager, $generic_user_dao);
     $limitator            = $soapLimitFactory->getLimitator();
-    
+
+    $custom_project_description_dao       = new Project_CustomDescription_CustomDescriptionDao();
+    $custom_project_description_value_dao = new Project_CustomDescription_CustomDescriptionValueDao();
+
+    $custom_project_description_factory = new Project_CustomDescription_CustomDescriptionFactory($custom_project_description_dao);
+    $custom_project_description_manager = new Project_CustomDescription_CustomDescriptionValueManager($custom_project_description_value_dao);
+
+    $custom_project_description_value_factory = new Project_CustomDescription_CustomDescriptionValueFactory($custom_project_description_value_dao);
+
     $server = new SoapServer($uri.'/?wsdl',
                              array('cache_wsdl' => WSDL_CACHE_NONE));
-    $server->setClass($serviceClass, $projectManager, $projectCreator, $userManager, $generic_user_factory, $limitator);
+    $server->setClass(
+        $serviceClass,
+        $projectManager,
+        $projectCreator,
+        $userManager,
+        $generic_user_factory,
+        $limitator,
+        $custom_project_description_factory,
+        $custom_project_description_manager,
+        $custom_project_description_value_factory
+    );
     $server->handle();
 }
 

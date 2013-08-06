@@ -1,12 +1,31 @@
-Version 6.3 (Not released yet)
+Version 6.4 (NOT RELEASED YET)
+	== Plugins ==
+	* git: 3.35
+	* tracker: 5.144
+	* ldap: 3.32
+	* tests: 5.18
+
+	== Bug fix ==
+	* File release system: fix bug that might affect php53 deployment when
+	  downloading big files (200MB or more). Requires to install RPM
+	  php53-pear-HTTP-Download too. (Will be added as a dependency in
+	  future)
+	* Database server can be on a non standard port
+	* Fix the issue of custom fields not displayed in the project admin area
+
+	== Development ==
+	* Methods to fetch and update the description fields of a project through SOAP
+	* Fix lxc_fix_uid script
+
+Version 6.3 (Thursday, July 25th 2013)
 	== Plugins ==
 	* graphontrackersv5: 5.2
 	* requesthelp: 1.3.3
 	* agiledashboard: 0.93
-	* docman: 2.26.19
+	* docman: 2.26.20
 	* git: 3.33
 	* cardwall: 0.9.40
-	* tracker: 5.142
+	* tracker: 5.143
 	* forumml: 2.6.13
 	* statistics: 0.29
 	* tracker_date_reminder: 1.2.3

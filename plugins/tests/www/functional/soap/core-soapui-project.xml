@@ -97,6 +97,20 @@
           </xsd:restriction>
         </xsd:complexContent>
       </xsd:complexType>
+    <xsd:complexType name="DescField">
+        <xsd:sequence>
+          <xsd:element name="id" type="xsd:int"/>
+          <xsd:element name="name" type="xsd:string"/>
+          <xsd:element name="is_mandatory" type="xsd:int"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    <xsd:complexType name="ArrayOfDescFields">
+        <xsd:complexContent>
+          <xsd:restriction base="SOAP-ENC:Array">
+            <xsd:attribute ref="SOAP-ENC:arrayType" wsdl:arrayType="tns:DescField[]" xmlns:wsdl1="http://schemas.xmlsoap.org/wsdl/"/>
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
       <xsd:complexType name="TrackerDesc">
         <xsd:sequence>
           <xsd:element name="group_artifact_id" type="xsd:int"/>

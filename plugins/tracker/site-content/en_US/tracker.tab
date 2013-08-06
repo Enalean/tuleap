@@ -23,6 +23,8 @@ plugin_tracker_crosssearch	included_trackers_not_found	No relevant tracker found
 
 plugin_tracker_crosssearch	no_matching_artifact	No artifact matches the query
 
+plugin_tracker_crosssearch	please_select_criterion	Please select at least one criterion to filter on
+
 #/**
 #  *
 #  * Tracker scripts message catalog (English)

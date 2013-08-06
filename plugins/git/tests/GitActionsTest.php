@@ -622,13 +622,13 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
     public function itDoesNothingWhenGivenServerDoesNotExist() {
         $repo = stub('GitRepository')->canMigrateToGerrit()->returns(true);
         expect($this->git_system_event_manager)->queueMigrateToGerrit()->never();
-        $this->actions->migrateToGerrit($repo, $this->unexsting_server_id);
+        $this->actions->migrateToGerrit($repo, $this->unexsting_server_id, true);
     }
 
     public function itDoesNothingWhenItIsntMigratable() {
         $repo = stub('GitRepository')->canMigrateToGerrit()->returns(false);
         expect($this->git_system_event_manager)->queueMigrateToGerrit()->never();
-        $this->actions->migrateToGerrit($repo, 0);
+        $this->actions->migrateToGerrit($repo, 0, true);
     }
 
     public function itCreatesASystemEvent() {
@@ -636,8 +636,8 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
         $server_id = $this->server_id;
         $repo_id   = 456;
         stub($repo)->getId()->returns($repo_id);
-        expect($this->git_system_event_manager)->queueMigrateToGerrit($repo, $server_id)->once();
-        $this->actions->migrateToGerrit($repo, $server_id);
+        expect($this->git_system_event_manager)->queueMigrateToGerrit($repo, $server_id, true)->once();
+        $this->actions->migrateToGerrit($repo, $server_id, true);
     }
 }
 

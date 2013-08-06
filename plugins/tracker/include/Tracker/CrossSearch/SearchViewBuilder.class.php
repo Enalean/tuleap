@@ -49,9 +49,13 @@ class Tracker_CrossSearch_SearchViewBuilder extends Tracker_CrossSearch_ViewBuil
         $service      = $this->getService($project);
         $criteria     = $this->getCriteria($user, $project, $report, $cross_search_query);
         $trackers     = $this->tracker_factory->getTrackersByGroupIdUserCanView($project->getGroupId(), $user);
-        $tracker_ids  = $this->getTrackersIds($trackers);
-        $artifacts    = $this->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query);
-        $content_view = new Tracker_CrossSearch_SearchContentView($report, $criteria, $artifacts, Tracker_ArtifactFactory::instance(), $this->form_element_factory, $user);
+        if ($cross_search_query->isEmpty()) {
+            $content_view = new Tracker_CrossSearch_SearchContentViewEmpty($report, $criteria, $user);
+        } else {
+            $tracker_ids  = $this->getTrackersIds($trackers);
+            $artifacts    = $this->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query);
+            $content_view = new Tracker_CrossSearch_SearchContentView($report, $criteria, $artifacts, Tracker_ArtifactFactory::instance(), $this->form_element_factory, $user);
+        }
         return new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers, $content_view);
     }
 

@@ -279,6 +279,19 @@ class GitActions extends PluginActions {
         $this->getController()->redirect($redirect_url);
     }
 
+    public function redirectToRepoManagementWithMigrationAccessRightInformation($projectId, $repositoryId, $pane, $migrate_access_right) {
+        $redirect_url = GIT_BASE_URL .'/?'. http_build_query(
+            array(
+                'action'               => 'repo_management',
+                'group_id'             => $projectId,
+                'repo_id'              => $repositoryId,
+                'pane'                 => $pane,
+                'migrate_access_right' => $migrate_access_right,
+            )
+        );
+        $this->getController()->redirect($redirect_url);
+    }
+
     public function confirmPrivate($projectId, $repoId, $repoAccess, $repoDescription) {
         $c = $this->getController();
         if (empty($repoId) || empty($repoAccess) || empty($repoDescription)) {
@@ -488,12 +501,13 @@ class GitActions extends PluginActions {
      * 
      * @param GitRepository $repository
      * @param int $remote_server_id the id of the server to which we want to migrate
+     * @param Boolean $migrate_access_right if the acess right will be migrated or not
      */
-    public function migrateToGerrit(GitRepository $repository, $remote_server_id) {
+    public function migrateToGerrit(GitRepository $repository, $remote_server_id, $migrate_access_right) {
         if ($repository->canMigrateToGerrit()) {
             try {
                 $this->gerrit_server_factory->getServerById($remote_server_id);
-                $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id);
+                $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id, $migrate_access_right);
             } catch (Git_RemoteServer_NotFoundException $e) {
                 // TODO log error to the syslog
             }

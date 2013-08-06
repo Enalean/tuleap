@@ -1,3 +1,6 @@
+Version 5.18 - Tuleap 6.4
+    * update the description fields of my project through SOAP
+
 Version 5.17 - Tuleap 5.12
     * Enhancement: add a tab on top of artifact to display its children
 
