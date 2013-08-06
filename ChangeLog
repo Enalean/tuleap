@@ -22,6 +22,9 @@ Version 6.4 (NOT RELEASED YET)
 	* Methods to fetch and update the description fields of a project through SOAP
 	* Fix lxc_fix_uid script
 
+	== Themes ==
+	* Experimental: 0.2
+
 Version 6.3 (Thursday, July 25th 2013)
 	== Plugins ==
 	* graphontrackersv5: 5.2
