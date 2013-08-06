@@ -242,7 +242,7 @@ tuleap.trackers.trigger = Class.create({
 
         function getTriggeringFields(self) {
             var triggering_fields_as_JSON = [],
-                triggering_fields         = self.getTriggeringFields();
+                triggering_fields         = self.getTriggeringFields().compact();
 
             triggering_fields.each(function(triggering_field){
                 var field_id            = triggering_field.getChildTrackerFieldId(),
