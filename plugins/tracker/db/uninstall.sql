@@ -74,6 +74,9 @@ DROP TABLE IF EXISTS tracker_rule_list;
 DROP TABLE IF EXISTS tracker_rule_date;
 DROP TABLE IF EXISTS tracker_reminder;
 
+DROP TABLE IF EXISTS tracker_workflow_trigger_rule_static_value;
+DROP TABLE IF EXISTS tracker_workflow_trigger_rule_trg_field_static_value;
+
 DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 DELETE FROM permissions_values WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 

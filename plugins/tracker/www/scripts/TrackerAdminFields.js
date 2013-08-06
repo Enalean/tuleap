@@ -18,7 +18,7 @@
  */
 
 document.observe('dom:loaded', function () {
-    
+
     function tracker_register_hide_value() {
         $$('.tracker_admin_static_value_hidden_chk').each(function (checkbox) {
             var img = checkbox.next();
@@ -39,7 +39,7 @@ document.observe('dom:loaded', function () {
         });
     }
     tracker_register_hide_value();
-    
+
     var palette = $$('.tracker-admin-palette')[0];
     if (palette) {
         var admin_field_properties = $('tracker-admin-field-properties');
@@ -55,7 +55,7 @@ document.observe('dom:loaded', function () {
                 after: admin_field_properties
             });
         }
-        
+
         $$('a.button[name^=create]').each(function (button) {
             button.observe('click', function (evt) {
                 // Replace button icon with spinner
@@ -63,7 +63,7 @@ document.observe('dom:loaded', function () {
                 var buttonImg  = button.down('img');
                 var buttonIcon = buttonImg.src;
                 buttonImg.src  = spinnerUrl;
-                			
+
                 $$('.tracker-admin-field-selected').each(function (selected_element) {
                     if (selected_element.visible()) {
                         var element = selected_element.up('.tracker-admin-field');
@@ -80,9 +80,9 @@ document.observe('dom:loaded', function () {
                     {
                         parameters: parameters,
                         onComplete: function (transport) {
-                            
+
                             var rtes = [];
-                            
+
                             //Don't use directly updater since the form is stripped
                             admin_field_properties.down('.widget_content').update('').insert(new Element('div').update(transport.responseText).down());
                             admin_field_properties.down('.widget_titlebar_title').update('Create an element');
@@ -108,9 +108,9 @@ document.observe('dom:loaded', function () {
                             );
                             palette.hide();
                             admin_field_properties.show();
-                            
+
                             //Put here the javascript stuff you need to call once the content of the modal dialog is loaded
-                            
+
                             //Richtext editor
                             admin_field_properties.select('.tracker-field-richtext').each(function (element) {
                                 rtes.push(new codendi.RTE(element, {
@@ -126,10 +126,10 @@ document.observe('dom:loaded', function () {
                                     }
                                 }));
                             });
-                            
+
                             //Edit list values
                             var e = new codendi.tracker.bind.Editor(admin_field_properties);
-                            
+
                             // Restore button icon
                             buttonImg.src = buttonIcon;
                         }
@@ -138,15 +138,15 @@ document.observe('dom:loaded', function () {
                 evt.stop();
             });
         });
-        
+
         $$('a.button_disabled[name^=create]').each(function(button_disabled) {
             button_disabled.observe('click', function (evt) {
                 alert(codendi.locales.tracker_formelement_admin.unique_field);
             });
         });
-        
+
         $$('.tracker-admin-field-controls a.edit-field').each(function (a) {
-            var selected_element, 
+            var selected_element,
                 element;
             var rtes = [];
             a.observe('click', function (evt) {
@@ -202,8 +202,8 @@ document.observe('dom:loaded', function () {
                                         if (element.viewportOffset()[1] < 0) {
                                             element.scrollTo();
                                         }
-                                        var e = new Effect.Highlight(element, { 
-                                            queue: 'end' 
+                                        var e = new Effect.Highlight(element, {
+                                            queue: 'end'
                                         });
                                         evt.stop();
                                     }).update('&laquo; ' + codendi.locales.tracker_formelement_admin.cancel)
@@ -217,15 +217,15 @@ document.observe('dom:loaded', function () {
                                 element.childElements().invoke('hide');
                             }
                             selected_element.show();
-                            
+
                             //Put here the javascript stuff you need to call once the content of the modal dialog is loaded
-                            
+
                             //Color picker
                             selected_element.select('.colorpicker').each(function (element) {
                                     codendi.colorpicker.colorpickers[element.identify()] = new codendi.colorpicker.Colorpicker(element);
                                 }
                             );
-                            
+
                             //Richtext editor
                             selected_element.select('.tracker-field-richtext').each(function (element) {
                                 rtes.push(new codendi.RTE(element, {
@@ -241,10 +241,10 @@ document.observe('dom:loaded', function () {
                                     }
                                 }));
                             });
-                            
+
                             //Edit list values
                             var e = new codendi.tracker.bind.Editor(selected_element);
-                            
+
                             //register hide action
                             tracker_register_hide_value();
                         }
@@ -254,9 +254,9 @@ document.observe('dom:loaded', function () {
             });
         });
     }
-    
-    
-    // {{{ Drag 'n Drop 
+
+
+    // {{{ Drag 'n Drop
     /*
     $$('.tracker-admin-field', '.tracker-admin-container').each(function (field) {
         var d = new Draggable(field, {
@@ -267,15 +267,15 @@ document.observe('dom:loaded', function () {
             }
         );
     });
-    
+
     $$('.tracker-admin-container').each(function (container) {
         Droppables.add(container, {
             accept: ['tracker-admin-container', 'tracker-admin-field'],
             hoverclass: 'tracker-admin-container_drop',
             onDrop: function (drag, drop, evt) {
                 if (drop !== drag.up('.tracker-admin-container')) {
-                    drop.insert({bottom: drag.remove()}).setStyle({ 
-                        left: 'auto', 
+                    drop.insert({bottom: drag.remove()}).setStyle({
+                        left: 'auto',
                         top: 'auto'
                     });
                 }
@@ -283,7 +283,7 @@ document.observe('dom:loaded', function () {
         });
     });
     // }}} */
-    
+
     var button = $('button_preview_xml');
     if (button) {
         var iframe = new Element('iframe', {
@@ -301,11 +301,11 @@ document.observe('dom:loaded', function () {
             iframe.show();
         });
     }
-    
+
     $$(".tracker-field-richtext").each(function define_rich_text(elem) {
         var r = new codendi.RTE(elem);
     });
-    
+
     $$("input[type=checkbox][name^=remove_postaction]", "input[type=checkbox][name^=remove_rule]").each(function (elem) {
         elem.observe('click', function (evt) {
             if (elem.checked) {
@@ -331,5 +331,171 @@ document.observe('dom:loaded', function () {
         add.update(link);
         add.next().hide();
     });
+
+    /*
+     * Trigger event handling
+     */
+
+
+    (function trigger_init() {
+        if (! $('add_new_trigger_title')) {
+            return;
+        }
+
+        var trigger                   = new tuleap.trackers.trigger(),
+            existing_triggers_table   = $('triggers_existing').down('tbody'),
+            triggering_field_template = existing_triggers_table.down('.trigger_description_triggering_field').remove(),
+            trigger_template          = existing_triggers_table.down('tr').remove();
+
+        function displayExistingTriggers() {
+            if (tuleap.trackers.trigger.existing.size() == 0) {
+                return;
+            }
+
+            tuleap.trackers.trigger.existing.each(function(trigger) {
+                displayTrigger(trigger);
+            });
+        }
+
+        function displayTrigger(trigger_as_JSON) {
+            var trigger_id      = trigger_as_JSON.id,
+                trigger_element = addTriggerContainer(trigger_template, trigger_id);
+
+            trigger_element.down('.trigger_description_target_field_name').update(trigger_as_JSON.target.field_label);
+            trigger_element.down('.trigger_description_target_field_value').update(trigger_as_JSON.target.field_value_label);
+
+            trigger_as_JSON.triggering_fields.each(function(triggering_field) {
+                addTriggeringField(triggering_field, trigger_element);
+            });
+            removeFirstOperator(trigger_element);
+            bindRemove(trigger_element, trigger_id);
+
+            function addTriggerContainer(trigger_template, trigger_id) {
+                var trigger_element;
+
+                existing_triggers_table.insert(trigger_template.cloneNode(true));
+                trigger_element = existing_triggers_table.childElements().last();
+                trigger_element.writeAttribute('data-trigger-id', trigger_id);
+
+                return trigger_element;
+            }
+
+            function addTriggeringField(triggering_field, trigger_element) {
+                var triggering_fields_list     = trigger_element.down('.trigger_description_triggering_fields'),
+                    condition                  = codendi.locales.tracker_trigger[trigger_as_JSON.condition].name,
+                    operator                   = codendi.locales.tracker_trigger[trigger_as_JSON.condition].operator,
+                    have_field                 = codendi.locales.tracker_trigger[trigger_as_JSON.condition].have_field,
+                    triggering_field_element;
+
+                triggering_fields_list.insert(triggering_field_template.cloneNode(true));
+                triggering_field_element = triggering_fields_list.childElements().last();
+
+                triggering_field_element.down('.trigger_description_triggering_field_operator')
+                        .update(operator);
+                triggering_field_element.down('.trigger_description_triggering_field_quantity')
+                        .update(condition);
+                triggering_field_element.down('.trigger_description_triggering_have_field')
+                        .update(have_field);
+                triggering_field_element.down('.trigger_description_triggering_field_tracker')
+                        .update(triggering_field.tracker_name);
+                triggering_field_element.down('.trigger_description_triggering_field_field_name')
+                        .update(triggering_field.field_label);
+                triggering_field_element.down('.trigger_description_triggering_field_field_value')
+                        .update(triggering_field.field_value_label);
+
+                if (triggering_fields_list.childElements().size() > 1) {
+                    triggering_field_element.down('.trigger_description_triggering_field_when').hide();
+                }
+            }
+
+            function removeFirstOperator(trigger_element) {
+                trigger_element.down('.trigger_description_triggering_field_operator').update('');
+            }
+
+            function bindRemove(trigger_element, trigger_id) {
+                Event.observe(trigger_element.down('.trigger_remove'), 'click', function() {
+                    var query_params = window.location.href.toQueryParams();
+                    new Ajax.Request(
+                        codendi.tracker.base_url+'?tracker='+query_params['tracker']+'&id='+trigger_id+'&func=admin-workflow-delete-trigger',
+                        {
+                            'method' : "POST",
+                            'onSuccess': function () {
+                                trigger_element.remove();
+                            },
+                            'onFailure' : function(response) {
+                                alert(response.responseText);
+                            }
+                        }
+                    );
+                });
+            }
+        }
+
+        function reset() {
+            trigger.getTriggeringFields().each(function(triggering_field) {
+                if (triggering_field.getContainer().readAttribute('data-trigger-condition-initial') !== 'true') {
+                    trigger.removeTriggeringField(triggering_field);
+                } else {
+                    triggering_field.removeAllOptions();
+                }
+
+                $('triggers_form').reset();
+            });
+        }
+
+        (function display() {
+            $('trigger_create_new').hide();
+
+            (function bindAddNewTrigger() {
+                Event.observe($('add_new_trigger_title'), 'click', function(evt) {
+                    $('add_new_trigger_title').hide();
+                    $('trigger_create_new').show();
+                    Event.stop(evt);
+                });
+            })();
+
+            displayExistingTriggers();
+        })();
+
+        (function bindAddExtraTriggeringField() {
+            Event.observe($('trigger_add_condition'), 'click', function(evt) {
+                var triggering_field = trigger.addTriggeringField();
+
+                triggering_field.activateDeleteButton(trigger);
+                triggering_field.makeOperatorDynamic();
+                Event.stop(evt);
+           });
+        })();
+
+        (function bindCancelAddNewTrigger(){
+            Event.observe($('trigger_add_cancel'), 'click', function(evt) {
+                $('trigger_create_new').hide();
+                $('add_new_trigger_title').show();
+                reset();
+                Event.stop(evt);
+            });
+        })();
+
+        (function bindSubmitNewTrigger(){
+            var callback = function() {
+                $('trigger_create_new').hide();
+                $('add_new_trigger_title').show();
+                displayNewTrigger(trigger);
+            };
+
+            Event.observe($('trigger_submit_new'), 'click', function() {
+                trigger.save(callback);
+            });
+
+            function displayNewTrigger(trigger) {
+                var trigger_as_JSON = trigger.toJSON();
+
+                trigger_as_JSON.id = trigger.getId();
+                displayTrigger(trigger_as_JSON);
+                reset();
+            }
+        })();
+    })();
 });
+
 

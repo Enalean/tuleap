@@ -152,7 +152,7 @@ class Tracker_SemanticManagerTest extends TuleapTestCase {
             'title'          => $this->semantic_title,
             'contributor'    => $this->semantic_contributor,
             'status'         => $this->semantic_status,
-            'random_from_ad' => stub('AgileDashBoard_Semantic_InitialEffort')->exportToSOAP()->returns('bla')
+            'random_from_ad' => stub('Tracker_Semantic')->exportToSOAP()->returns('bla')
         ));
 
         stub($semantic_manager)->getSemanticOrder()->returns(

@@ -1220,12 +1220,14 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         parent::process($layout, $request, $current_user);
         if ($request->get('func') == 'get-values') {
-            $json_values = array();
-            foreach ($this->getAllValues() as $value) {
-                $json_values[$value->getId()] = $value->fetchValuesForJson();
-            }
-            $GLOBALS['Response']->sendJSON($json_values);
+            $GLOBALS['Response']->sendJSON($this->getBind()->fetchFormattedForJson());
         }
+    }
+
+    public function fetchFormattedForJson() {
+        $json = parent::fetchFormattedForJson();
+        $json['values'] = $this->getBind()->fetchFormattedForJson();
+        return $json;
     }
 }
 ?>

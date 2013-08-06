@@ -36,6 +36,22 @@ class WorkflowManager {
             ));
             $rule_date_factory = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), Tracker_FormElementFactory::instance());
             $action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $rule_date_factory, $token);
+        } elseif ($request->get('func') == Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS) {
+            $token = new CSRFSynchronizerToken(TRACKER_BASE_URL. '/?'. http_build_query(
+                array(
+                    'tracker' => (int)$this->tracker->id,
+                    'func'    => Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS,
+                    )
+            ));
+            $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_BASE_DIR.'/../templates');
+
+            $action = new Tracker_Workflow_Action_Triggers_EditTriggers($this->tracker, $token, $renderer, $this->getTriggerRuleManager());
+        } else if ($request->get('func') == Workflow::FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA) {
+            $action = new Tracker_Workflow_Action_Triggers_GetTriggersRulesBuilderData($this->tracker, Tracker_FormElementFactory::instance());
+        } else if ($request->get('func') == Workflow::FUNC_ADMIN_ADD_TRIGGER) {
+            $action = new Tracker_Workflow_Action_Triggers_AddTrigger($this->tracker, Tracker_FormElementFactory::instance(), $this->getTriggerRuleManager());
+        } else if ($request->get('func') == Workflow::FUNC_ADMIN_DELETE_TRIGGER) {
+            $action = new Tracker_Workflow_Action_Triggers_DeleteTrigger($this->tracker, $this->getTriggerRuleManager());
         } else if ($request->get('create')) {
             $action = new Tracker_Workflow_Action_Transitions_Create($this->tracker, WorkflowFactory::instance());
         } else if ($request->get('edit_transition')) {
@@ -50,6 +66,13 @@ class WorkflowManager {
             $action = new Tracker_Workflow_Action_Transitions_DefineWorkflow($this->tracker, WorkflowFactory::instance(), Tracker_FormElementFactory::instance());
         }
         $action->process($engine, $request, $current_user);
+    }
+
+    private function getTriggerRuleManager() {
+        return new Tracker_Workflow_Trigger_RulesManager(
+            new Tracker_Workflow_Trigger_RulesDao(),
+            Tracker_FormElementFactory::instance()
+        );
     }
 }
 ?>

@@ -110,10 +110,10 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     }
 
     /**
-     * @see Tracker_FormElement_Field_List_Value::fetchValuesForJson()
+     * @see Tracker_FormElement_Field_List_Value::fetchFormattedForJson
      */
-    public function fetchValuesForJson() {
-        $json = parent::fetchValuesForJson();
+    public function fetchFormattedForJson() {
+        $json = parent::fetchFormattedForJson();
         $json['username'] = $this->getUsername();
         $json['realname'] = $this->getUser()->getRealName();
         return $json;

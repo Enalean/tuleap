@@ -34,6 +34,8 @@ class Test_Tracker_Builder {
     private $project_id;
     private $name;
     private $item_name;
+    private $children;
+    private $parent = false;
 
     public function __construct() {
         $this->id = rand(0, 600000);
@@ -65,6 +67,19 @@ class Test_Tracker_Builder {
         return $this;
     }
 
+    public function withParent(Tracker $parent = null) {
+        $this->parent = $parent;
+        return $this;
+    }
+
+    /**
+     * @param Tracker[] $children
+     */
+    public function withChildren(array $children) {
+        $this->children = $children;
+        return $this;
+    }
+
     /**
      * @return \Tracker
      */
@@ -72,6 +87,12 @@ class Test_Tracker_Builder {
         $tracker = new Tracker($this->id, $this->project_id, $this->name, null, $this->item_name, null, null, null, null, null, null, null);
         if ($this->project) {
             $tracker->setProject($this->project);
+        }
+        if ($this->children !== null) {
+            $tracker->setChildren($this->children);
+        }
+        if ($this->parent !== false) {
+            $tracker->setParent($this->parent);
         }
         return $tracker;
     }
