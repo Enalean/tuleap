@@ -54,6 +54,16 @@ class Project_CustomDescription_CustomDescription {
         return $this->name;
     }
 
+    public function getLabel() {
+        $label = $this->getName();
+        if (preg_match('/(.*):(.*)/', $label, $matches)) {
+            if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
+                $label = $GLOBALS['Language']->getText($matches[1], $matches[2]);
+            }
+        }
+        return $label;
+    }
+
     public function getDescription() {
         return $this->description;
     }
