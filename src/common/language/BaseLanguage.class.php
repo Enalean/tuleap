@@ -314,12 +314,9 @@ class BaseLanguage {
     }
 
     function getText($pagename, $category, $args="") {
-        if (!isset($this->lang)) {
-            $this->loadLanguage(UserManager::instance()->getCurrentUser()->getLocale());
-        }
         // If the language files were modified by an update, the compiled version might not have been generated, 
         // and the message not present.
-        if (!isset($this->text_array[$pagename][$category])) {
+        if (! $this->hasText($pagename, $category)) {
             // Force compile (only once)
             $this->text_array = $this->compileLanguage($this->lang);
         }
@@ -344,9 +341,19 @@ class BaseLanguage {
         }
         return "$tstring";
     }
-    
-    function hasText($pagename, $category) {
+
+    /**
+     * @return bool
+     */
+    public function hasText($pagename, $category) {
+        $this->ensureLanguageFilesAreLoaded();
         return isset($this->text_array[$pagename][$category]);
+    }
+
+    private function ensureLanguageFilesAreLoaded() {
+        if (! isset($this->lang)) {
+            $this->loadLanguage(UserManager::instance()->getCurrentUser()->getLocale());
+        }
     }
 
     // This is a legacy piece of code that used to be utils_get_content
