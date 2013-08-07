@@ -136,7 +136,7 @@ class WorkflowTest extends UnitTestCase {
             $t_fixed_tested,
             $t_tested_deployed);
 
-        $workflow=new Workflow(1, 2, 3, 1, $transitions);
+        $workflow = aWorkflow()->withTransitions($transitions)->build();
 
         $this->assertNotNull($workflow->getTransitions());
         $this->assertTrue($workflow->hasTransitions());
@@ -251,7 +251,13 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         $field_id    = 103;
         $is_used     = 1;
         $transitions = array($this->transition_null_to_open, $this->transition_open_to_close);
-        $this->workflow    = new Workflow($workflow_id, $tracker_id, $field_id, $is_used, $transitions);
+        $this->workflow    = aWorkflow()
+            ->withId($workflow_id)
+            ->withTrackerId($tracker_id)
+            ->withFieldId($field_id)
+            ->withIsUsed($is_used)
+            ->withTransitions($transitions)
+            ->build();
         $this->workflow->setField($this->status_field);
 
         $this->artifact = new MockTracker_Artifact();
@@ -358,10 +364,16 @@ class Workflow_ExportToSOAP_BaseTest extends TuleapTestCase {
         stub($unreadable_field)->getId()->returns(1);
         stub($unreadable_field)->userCanRead()->returns(false);
 
-        $this->workflow = new Workflow(1, $this->tracker_id, 1, 1, array($transition1, $transition2, $transition3));
+        $this->workflow = aWorkflow()
+            ->withTrackerId($this->tracker_id)
+            ->withTransitions(array($transition1, $transition2, $transition3))
+            ->build();
         $this->workflow->setField($this->field);
 
-        $this->unreadable_workflow = new Workflow(1, $this->tracker_id, 1, 1, array($transition1, $transition2, $transition3));
+        $this->unreadable_workflow = aWorkflow()
+            ->withTrackerId($this->tracker_id)
+            ->withTransitions(array($transition1, $transition2, $transition3))
+            ->build();
         $this->unreadable_workflow->setField($unreadable_field);
     }
 
@@ -413,7 +425,7 @@ class Workflow_ExportToSOAP_transitionsTest extends Workflow_ExportToSOAP_BaseTe
     }
 
     public function itExportsEmptyTransitionWhenWorkflowDoesntHaveTransition() {
-        $workflow = new Workflow(1, $this->tracker_id, 1, 1, array());
+        $workflow = aWorkflow()->withTrackerId($this->tracker_id)->withTransitions(array())->build();
         $workflow->setField($this->field);
         $result   = $workflow->exportToSOAP($this->user);
         $this->assertArrayEmpty($result['transitions']);
@@ -433,7 +445,7 @@ class Workflow_validateTest extends TuleapTestCase {
 
     public function itReturnsTrueIfWorkflowIsNotEnabled() {
         $is_used     = 0;
-        $workflow    = new Workflow(1,1,1,$is_used, array());
+        $workflow    = aWorkflow()->withIsUsed($is_used)->build();
         $fields_data = array();
         $artifact    = mock('Tracker_Artifact');
 
@@ -448,7 +460,7 @@ class Workflow_validateTest extends TuleapTestCase {
         stub($transition)->getFieldValueTo()->returns($value_to);
         $is_used     = 1;
         $field_id    = 42;
-        $workflow    = new Workflow(1, 1, $field_id, $is_used, array($transition));
+        $workflow    = aWorkflow()->withFieldId($field_id)->withTransitions(array($transition))->build();
         $fields_data = array($field_id => 66);
         $artifact    = mock('Tracker_Artifact');
 
@@ -482,7 +494,7 @@ class Workflow_validateGlobalRulesTest extends TuleapTestCase {
         $fields_data = array();
 
         expect($this->rules_manager)->validate($this->tracker_id, $fields_data)->once()->returns(true);
-        $workflow = new workflow(1, $this->tracker_id, 1, 1, array());
+        $workflow = aWorkflow()->withTrackerId($this->tracker_id)->build();
         $this->assertTrue($workflow->validateGlobalRules($fields_data));
     }
 }
