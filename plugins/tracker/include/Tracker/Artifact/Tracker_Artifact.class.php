@@ -72,6 +72,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**@var Tracker_ArtifactFactory */
     private $artifact_factory;
 
+    /** @var Tracker_Artifact[] */
+    private $siblings;
+
+    /** @var Tracker_Artifact[] */
+    private $siblings_without_permission_checking;
+
     /**
      * Constructor
      *
@@ -1429,7 +1435,35 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Array of Tracker_Artifact
      */
     public function getSiblings(PFUser $user) {
-        return $this->getHierarchyFactory()->getSiblings($user, $this);
+        if (! isset($this->siblings)) {
+            $this->siblings = array();
+            foreach ($this->getSiblingsWithoutPermissionChecking() as $artifact) {
+                if ($artifact->userCanView($user)) {
+                    $this->siblings[] = $artifact;
+                }
+            }
+        }
+        return $this->siblings;
+    }
+
+    public function setSiblings(array $artifacts) {
+        $this->siblings = $artifacts;
+    }
+
+    /**
+     * Get all sista & bro regartheless if user can access them
+     *
+     * @return Tracker_Artifact[]
+     */
+    public function getSiblingsWithoutPermissionChecking() {
+        if (! isset($this->siblings_without_permission_checking)) {
+            $this->siblings_without_permission_checking = $this->getDao()->getSiblings($this->getId())->instanciateWith(array($this->getArtifactFactory(), 'getInstanceFromRow'));
+        }
+        return $this->siblings_without_permission_checking;
+    }
+
+    public function setSiblingsWithoutPermissionChecking(array $siblings) {
+        $this->siblings_without_permission_checking = $siblings;
     }
 
     /**
