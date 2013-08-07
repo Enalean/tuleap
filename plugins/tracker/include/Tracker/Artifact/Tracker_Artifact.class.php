@@ -69,7 +69,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     private $status;
 
-    /**@var Tracker_ArtifactFactory */
+    /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
     /** @var Tracker_Artifact[] */
@@ -1428,11 +1428,32 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
-     * Get artifacts
+     * Get parent artifact regartheless if user can access it
+     *
+     * Note: even if there are several parents, only the first one is returned
+     *
+     * @return Tracker_Artifact
+     */
+    public function getParentWithoutPermissionChecking() {
+        if (! isset($this->parent_without_permission_checking)) {
+             $dar = $this->getDao()->getParents(array($this->getId()));
+             if ($dar && count($dar) == 1) {
+                 $this->parent_without_permission_checking = $this->getArtifactFactory()->getInstanceFromRow($dar->current());
+             }
+        }
+        return $this->parent_without_permission_checking;
+    }
+
+    public function setParentWithoutPermissionChecking(Tracker_Artifact $parent) {
+        $this->parent_without_permission_checking = $parent;
+    }
+
+    /**
+     * Get artifacts that share same parent that mine (sista & bro)
      *
      * @param PFUser $user
      *
-     * @return Array of Tracker_Artifact
+     * @return Tracker_Artifact[]
      */
     public function getSiblings(PFUser $user) {
         if (! isset($this->siblings)) {
