@@ -1512,4 +1512,12 @@ function util_negociate_alternate_content_types($script, $default_content_type) 
 	return $content_type;
 }
 
+function isPhpVersionEqualOrGreaterTo53() {
+    if (version_compare(phpversion(), '5.3', '>=')) {
+        return true;
+    }else {
+        return false;
+    }
+}
+
 ?>
