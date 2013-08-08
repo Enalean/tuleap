@@ -71,7 +71,9 @@ class WorkflowManager {
     private function getTriggerRuleManager() {
         return new Tracker_Workflow_Trigger_RulesManager(
             new Tracker_Workflow_Trigger_RulesDao(),
-            Tracker_FormElementFactory::instance()
+            Tracker_FormElementFactory::instance(),
+            new Tracker_Workflow_Trigger_RulesProcessor(),
+            new WorkflowBackendLogger()
         );
     }
 }

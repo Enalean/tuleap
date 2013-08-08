@@ -306,14 +306,17 @@ class Workflow {
      * @return void
      */
     public function after(PFUser $user, array $fields_data, Tracker_Artifact_Changeset $new_changeset, Tracker_Artifact_Changeset $previous_changeset = null) {
+        $this->getLogger()->start(__METHOD__, $user->getId(), '[…]', $new_changeset->getId(), ($previous_changeset ? $previous_changeset->getId() : 'null'));
+
         if (isset($fields_data[$this->getFieldId()])) {
             $transition = $this->getCurrentTransition($fields_data, $previous_changeset);
             if ($transition) {
                 $transition->after($new_changeset);
             }
         }
-
         $this->getTracker()->getTriggerRulesManager()->processTriggers($user, $new_changeset);
+
+        $this->getLogger()->start(__METHOD__, $user->getId(), '[…]', $new_changeset->getId(), ($previous_changeset ? $previous_changeset->getId() : 'null'));
     }
 
     public function validate($fields_data, Tracker_Artifact $artifact) {
@@ -375,6 +378,15 @@ class Workflow {
             }
         }
         return false;
+    }
+
+    /**
+     * Protected for testing purpose as we cannot inject the dependency
+     *
+     * @return WorkflowBackendLogger
+     */
+    protected function getLogger() {
+        return new WorkflowBackendLogger();
     }
 }
 ?>

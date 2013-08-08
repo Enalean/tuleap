@@ -28,14 +28,19 @@ class Tracker_Workflow_Trigger_RulesManager {
     /** @var Tracker_Workflow_Trigger_RulesProcessor */
     private $rules_processor;
 
+    /** @var Logger */
+    private $logger;
+
     public function __construct(
         Tracker_Workflow_Trigger_RulesDao $dao,
         Tracker_FormElementFactory $formelement_factory,
-        Tracker_Workflow_Trigger_RulesProcessor $rules_processor
+        Tracker_Workflow_Trigger_RulesProcessor $rules_processor,
+        Logger $logger
     ) {
         $this->dao                 = $dao;
         $this->formelement_factory = $formelement_factory;
         $this->rules_processor     = $rules_processor;
+        $this->logger              = $logger;
     }
 
     /**
@@ -149,12 +154,16 @@ class Tracker_Workflow_Trigger_RulesManager {
     }
 
     public function processTriggers(PFUser $user, Tracker_Artifact_Changeset $changeset) {
-        $dar_rules = $this->dao->searchForInvolvedRulesIdsByChangesetId($changeset->getId());
+        $this->logger->start(__METHOD__, $user->getId(), $changeset->getId());
 
+        $dar_rules = $this->dao->searchForInvolvedRulesIdsByChangesetId($changeset->getId());
         foreach ($dar_rules as $row) {
             $rule = $this->getRuleById($row['rule_id']);
+            $this->logger->debug("Found matching rule ". json_encode($rule->fetchFormattedForJson()));
             $this->rules_processor->process($user, $changeset->getArtifact(), $rule);
         }
+
+        $this->logger->end(__METHOD__, $user->getId(), $changeset->getId());
     }
 }
 

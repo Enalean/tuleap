@@ -34,7 +34,8 @@ abstract class Tracker_Workflow_Trigger_RulesManagerTest extends TuleapTestCase 
         $this->manager             = new Tracker_Workflow_Trigger_RulesManager(
             $this->dao,
             $this->formelement_factory,
-            $this->rules_processor
+            $this->rules_processor,
+            mock('WorkflowBackendLogger')
         );
     }
 }
@@ -267,7 +268,7 @@ class Tracker_Workflow_Trigger_RulesManager_processTriggersTest extends Tracker_
         $manager = partial_mock(
             'Tracker_Workflow_Trigger_RulesManager',
             array('getRuleById'),
-            array($this->dao, $this->formelement_factory, $this->rules_processor)
+            array($this->dao, $this->formelement_factory, $this->rules_processor, mock('WorkflowBackendLogger'))
         );
 
         $user      = mock('PFUser');

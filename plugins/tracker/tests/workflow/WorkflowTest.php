@@ -256,8 +256,13 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         $field_id    = 103;
         $is_used     = 1;
         $transitions = array($this->transition_null_to_open, $this->transition_open_to_close);
-        $this->workflow = partial_mock('Workflow', array('getTracker'), array($workflow_id, $tracker_id, $field_id, $is_used, $transitions));
+        $this->workflow = partial_mock(
+            'Workflow',
+            array('getTracker', 'getLogger'),
+            array($workflow_id, $tracker_id, $field_id, $is_used, $transitions)
+        );
         stub($this->workflow)->getTracker()->returns($tracker);
+        stub($this->workflow)->getLogger()->returns(mock('WorkflowBackendLogger'));
         $this->workflow->setField($this->status_field);
 
         $this->artifact = new MockTracker_Artifact();
@@ -329,7 +334,6 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         expect($this->trigger_rules_manager)->processTriggers($this->current_user, $new_changeset)->once();
 
         $this->workflow->after($this->current_user, $fields_data, $new_changeset, $previous_changeset);
-
     }
 }
 
