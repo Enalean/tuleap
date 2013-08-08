@@ -919,8 +919,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             return false;
         }
 
+        $new_changeset = new Tracker_Artifact_Changeset(
+            $changeset_id,
+            $this,
+            $submitter->getId(),
+            $_SERVER['REQUEST_TIME'],
+            $email
+        );
+        $this->changesets[$changeset_id] = $new_changeset;
+
         $comment = trim($comment);
-        $new_changeset = $this->getLastChangeset();
         $comment_format = Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
         $workflow = $this->getWorkflow();
 
@@ -943,12 +951,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         foreach ($used_fields as $field) {
             if (isset($fields_data[$field->getId()]) && $field->userCanUpdate()) {
 
-                $field->saveNewChangeset($this, $new_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
+                $field->saveNewChangeset($this, $previous_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
             } else if ($workflow && isset($fields_data[$field->getId()]) && !$field->userCanUpdate() && $workflow->bypassPermissions($field)) {
                 $bypass_perms  = true;
-                $field->saveNewChangeset($this, $new_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
+                $field->saveNewChangeset($this, $previous_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
             } else {
-                $field->saveNewChangeset($this, $new_changeset, $changeset_id, null, $submitter, $is_submission);
+                $field->saveNewChangeset($this, $previous_changeset, $changeset_id, null, $submitter, $is_submission);
             }
         }
 
