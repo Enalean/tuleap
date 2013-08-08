@@ -34,7 +34,6 @@ class SVN_SOAPServerBaseTest extends TuleapTestCase {
     }
 }
 
-
 class SVN_SOAPServer_GetSvnPath_Test extends SVN_SOAPServerBaseTest {
     public function itCheckUserSessionAndGroupValidity() {
         $svn_repository_listing = mock('SVN_RepositoryListing');
@@ -46,11 +45,17 @@ class SVN_SOAPServer_GetSvnPath_Test extends SVN_SOAPServerBaseTest {
 }
 
 class SVN_SOAPServer_GetSvnPathWithLogDetails_Test extends SVN_SOAPServerBaseTest {
-    public function itCheckUserSessionAndGroupValidity() {
-        $svn_repository_listing = mock('SVN_RepositoryListing');
+    public function setUp() {
+        parent::setUp();
+        
+        $this->svn_repository_listing = mock('SVN_RepositoryListing');
+        stub($this->svn_repository_listing)->getSvnPathsWithLogDetails()->returns(array());
+        $this->order = 'ASC';
+    }
 
-        $svn_soap = new SVN_SOAPServer($this->soap_request_valid, $svn_repository_listing);
-        $svn_soap->getSvnPathsWithLogDetails($this->session_key, $this->group_id, $this->svn_path);
+    public function itCheckUserSessionAndGroupValidity() {
+        $svn_soap = new SVN_SOAPServer($this->soap_request_valid, $this->svn_repository_listing);
+        $svn_soap->getSvnPathsWithLogDetails($this->session_key, $this->group_id, $this->svn_path, $this->order);
     }
 
     public function itThrowsSoapFaultIfUserHasWrongPermissions() {
@@ -59,18 +64,13 @@ class SVN_SOAPServer_GetSvnPathWithLogDetails_Test extends SVN_SOAPServerBaseTes
         stub($soap_request_valid)->continueSession($this->session_key)->returns($this->user);
         stub($soap_request_valid)->assertUserCanAccessProject($this->user, $this->project)->returns(new Exception());
 
-        $svn_repository_listing = mock('SVN_RepositoryListing');
-
-        $svn_soap = new SVN_SOAPServer($soap_request_valid, $svn_repository_listing);
-        $svn_soap->getSvnPathsWithLogDetails($this->session_key, $this->group_id, $this->svn_path);
+        $svn_soap = new SVN_SOAPServer($soap_request_valid, $this->svn_repository_listing);
+        $svn_soap->getSvnPathsWithLogDetails($this->session_key, $this->group_id, $this->svn_path, $this->order);
     }
 
     public function itDoesNotThrowSoapFaultIfRepositoryIsEmpty() {
-        $svn_repository_listing = mock('SVN_RepositoryListing');
-        stub($svn_repository_listing)->getSvnPathsWithLogDetails()->returns(array());
-
-        $svn_soap = new SVN_SOAPServer($this->soap_request_valid, $svn_repository_listing);
-        $svn_soap->getSvnPathsWithLogDetails($this->session_key, $this->group_id, $this->svn_path);
+        $svn_soap = new SVN_SOAPServer($this->soap_request_valid, $this->svn_repository_listing);
+        $svn_soap->getSvnPathsWithLogDetails($this->session_key, $this->group_id, $this->svn_path, $this->order);
 
         $this->assertNoErrors();
     }

@@ -43,6 +43,7 @@ class SOAP_WSDLMethodGenerator {
         'arrayofrevision'          => 'tns:ArrayOfRevision',
         'arrayofcommiter'          => 'tns:ArrayOfCommiter',
         'arrayofsvnpathinfo'       => 'tns:ArrayOfSvnPathInfo',
+        'arrayofsvnpathdetails'    => 'tns:ArrayOfSvnPathDetails',
         'arrayofuserinfo'          => 'tns:ArrayOfUserInfo',
         'arrayofdescfields'        => 'tns:ArrayOfDescFields',
         'arrayofdescfieldsvalues'  => 'tns:ArrayOfDescFieldsValues',

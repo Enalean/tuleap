@@ -46,7 +46,9 @@ class SVN_RepositoryListing {
     public function getSvnPaths(PFUser $user, Project $project, $svn_path) {
         $paths            = array();
         $content          = $this->svnlook->getDirectoryListing($project, $svn_path);
+        
         foreach ($content as $line) {
+            
             if ($this->svn_permissions_manager->userCanRead($user, $project, $line)) {
                 $paths[]= $this->extractDirectoryContent($line, $svn_path);
             }
@@ -57,15 +59,16 @@ class SVN_RepositoryListing {
     /**
      * Returns array of svn paths with log details
      *
-     * @param PFUser $user
+     * @param PFUser  $user
      * @param Project $project
-     * @param string $svn_path
+     * @param string  $svn_path
+     * @param String  $sort        The type of sort wanted: ASC or DESC
      *
      * @throws SVN_SvnlookException when parameters are invalid
      *
      * @return SVN_RevisionPathInfo[]
      */
-    public function getSvnPathsWithLogDetails(PFUser $user, Project $project, $svn_path) {
+    public function getSvnPathsWithLogDetails(PFUser $user, Project $project, $svn_path, $sort) {
         $data = array();
         $paths = $this->getSvnPaths($user, $project, $svn_path);
 
@@ -73,12 +76,20 @@ class SVN_RepositoryListing {
             return $data;
         }
 
-        foreach ($paths as $svn_path) {
-            $data[] = $this->getSvnSinglePathWithLogDetails($project, $svn_path);
+        foreach ($paths as $path) {
+            $path_info = $this->getSvnSinglePathWithLogDetails($project, $svn_path.'/'.$path);
+            $data[$path_info->getTimestamp()] = $path_info;
+        }
+
+        if ($sort == 'DESC') {
+            krsort($data);
+        } else {
+            ksort($data);
         }
 
         return $data;
     }
+
 
     private function getSvnSinglePathWithLogDetails(Project $project, $svn_path) {
         $history = $this->splitHistory($this->svnlook->getPathLastHistory($project, $svn_path));
@@ -115,7 +126,8 @@ class SVN_RepositoryListing {
     }
 
     private function extractDirectoryContent($line, $svn_path) {
-        $match_path_regex = "%^$svn_path/%";
+        $match_path_regex = (substr($svn_path, -1) == '/') ? "%^$svn_path%" : "%^$svn_path/%";
+
         if (preg_match($match_path_regex, $line)) {
             return trim(preg_replace($match_path_regex, '', $line), '/');
         }

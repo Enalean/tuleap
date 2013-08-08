@@ -69,6 +69,7 @@ class SVN_RepositoryListing_getSvnPathWithLogDetailsTest extends TuleapTestCase 
 
     public function setUp() {
         parent::setUp();
+        $this->order = 'ASC';
         $this->svnlook = mock('SVN_Svnlook');
         $this->svn_perms_mgr = mock('SVN_PermissionsManager');
         $this->user_manager  = mock('UserManager');
@@ -105,12 +106,12 @@ class SVN_RepositoryListing_getSvnPathWithLogDetailsTest extends TuleapTestCase 
         stub($this->user_manager)->getUserByUserName($author_1)->returns($author_1_user);
         stub($this->user_manager)->getUserByUserName($author_2)->returns($author_2_user);
 
-        stub($this->svnlook)->getPathLastHistory($this->project, '1.0')->returns(array(
+        stub($this->svnlook)->getPathLastHistory($this->project, '/my/Project/tags/1.0')->returns(array(
             'REVISION   PATH',
             '--------   ----',
             '       8  /my/Project/tags/1.0/',
         ));
-        stub($this->svnlook)->getPathLastHistory($this->project, '2.0')->returns(array(
+        stub($this->svnlook)->getPathLastHistory($this->project, '/my/Project/tags/2.0')->returns(array(
             'REVISION   PATH',
             '--------   ----',
             '       19   /my/Project/tags/2.0/',
@@ -128,12 +129,12 @@ class SVN_RepositoryListing_getSvnPathWithLogDetailsTest extends TuleapTestCase 
             $log_message_2,
         ));
 
-        $last_revision = $this->svn_repo_listing->getSvnPathsWithLogDetails($this->user, $this->project, $path);
+        $last_revision = $this->svn_repo_listing->getSvnPathsWithLogDetails($this->user, $this->project, $path, $this->order);
 
-        $path_info_1 = $last_revision[0];
+        $path_info_1 = $last_revision[$timestamp_1];
         $path_info_soap_1 = $path_info_1->exportToSoap();
 
-        $path_info_2 = $last_revision[1];
+        $path_info_2 = $last_revision[$timestamp_2];
         $path_info_soap_2 = $path_info_2->exportToSoap();
 
         $this->assertEqual($path_info_soap_1['author'], $author_1_id);
@@ -154,7 +155,7 @@ class SVN_RepositoryListing_getSvnPathWithLogDetailsTest extends TuleapTestCase 
         $content = array('/');
         stub($svnlook)->getDirectoryListing($this->project, '/')->returns($content);
 
-        $last_revision = $svn_repo_listing->getSvnPathsWithLogDetails($this->user, $this->project, '/');
+        $last_revision = $svn_repo_listing->getSvnPathsWithLogDetails($this->user, $this->project, '/', $this->order);
 
         $this->assertTrue(is_array($last_revision));
         $this->assertCount($last_revision, 0);

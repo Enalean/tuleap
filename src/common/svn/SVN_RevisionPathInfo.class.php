@@ -44,5 +44,9 @@ class SVN_RevisionPathInfo {
             'message'   => $this->commit_message,
         );
     }
+
+    public function getTimestamp() {
+        return $this->timestamp;
+    }
 }
 ?>

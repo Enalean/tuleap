@@ -120,6 +120,29 @@ $server->wsdl->addComplexType(
     'tns:SvnPathInfo'
 );
 
-}
+$server->wsdl->addComplexType(
+    'SvnPathDetails',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'path'      => array('name'=> 'path',       'type' => 'xsd:string'),
+        'author'    => array('name'=> 'author',     'type' => 'xsd:int'),
+        'message'   => array('name'=> 'message',    'type' => 'xsd:string'),
+        'timestamp' => array('name'=> 'timestamp',  'type' => 'xsd:int'),
+    )
+);
 
+$server->wsdl->addComplexType(
+    'ArrayOfSvnPathDetails',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:SvnPathDetails[]')),
+    'tns:SvnPathDetails'
+);
+}
 ?>
