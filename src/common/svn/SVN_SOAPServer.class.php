@@ -66,7 +66,57 @@ class SVN_SOAPServer {
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSVNPath');
             $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
             
-            return $this->svn_repository_listing->getSvnPath($current_user, $project, $path);
+            return $this->svn_repository_listing->getSvnPaths($current_user, $project, $path);
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
+    }
+
+    /**
+     * Returns the detailed content of a directory in Subversion according to user permissions
+     *
+     * <ul>
+     *   <li>If user cannot see the content it gets an empty array.</li>
+     *   <li>The returned content is relative (/project/tags) gives
+     *      array(
+     *          0 => array(
+     *              'path' => '/tags',
+     *              'author => 169,
+     *              'timestamp' => 1545265465,
+     *              'message' => 'some commit message'),
+     *          1 => array(
+     *              'path' => '/tags',
+     *              'author => 587,
+     *              'timestamp' => 11545824,
+     *              'message' => 'some other commit message'),
+     *      ).</li>
+     * </ul>
+     *
+     * Error codes:
+     * * 3001, Invalid session (wrong $sessionKey)
+     * * 3002, User do not have access to the project
+     *
+     * @param String  $sessionKey Session key of the desired project admin
+     * @param Integer $group_id    ID of the project the subversion repository belongs to
+     * @param String  $path        Path to the directory to list (eg. '/tags')
+     * @param String  $sort        The type of sort wanted: ASC or DESC
+     *
+     * @return ArrayOfSvnPathDetails The detailed list of directories
+     */
+    public function getSvnPathsWithLogDetails($sessionKey, $group_id, $path, $sort) {
+        try {
+            $data = array();
+            $current_user = $this->soap_request_validator->continueSession($sessionKey);
+            $project      = $this->soap_request_validator->getProjectById($group_id, 'getSVNPath');
+            $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
+
+            $path_logs = $this->svn_repository_listing->getSvnPathsWithLogDetails($current_user, $project, $path, $sort);
+
+            foreach ($path_logs as $path_log) {
+                $data[] = $path_log->exportToSoap();
+            }
+            
+            return $data;
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }

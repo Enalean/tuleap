@@ -1,1 +1,6 @@
-No changes yet
+1.1 - Tuleap 6.4
+
+	What's new?
+	===========
+	* getSvnPathsWithLogDetails: Returns the detailed content of a directory
+	in Subversion according to user permissions

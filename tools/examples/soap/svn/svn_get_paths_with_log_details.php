@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-if ($argc != 3) {
-    die("Usage: ".$argv[0]." project_id svn_path\n");
+if ($argc != 4) {
+    die("Usage: ".$argv[0]." project_id svn_path sort_order\n");
 }
 
 $server_url = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://sonde.cro.enalean.com';
@@ -33,7 +33,7 @@ $requesterSessionHash = $soapLogin->login($login, $password)->session_hash;
 
 $svn_client = new SoapClient($server_url.'/soap/svn/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
 
-var_dump($svn_client->getSvnPath($requesterSessionHash, $argv[1], $argv[2]));
+var_dump($svn_client->getSvnPathsWithLogDetails($requesterSessionHash, $argv[1], $argv[2], $argv[3]));
 
 $soapLogin->logout($requesterSessionHash);
 
