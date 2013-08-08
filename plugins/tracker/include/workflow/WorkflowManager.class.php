@@ -45,13 +45,13 @@ class WorkflowManager {
             ));
             $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_BASE_DIR.'/../templates');
 
-            $action = new Tracker_Workflow_Action_Triggers_EditTriggers($this->tracker, $token, $renderer, $this->getTriggerRuleManager());
+            $action = new Tracker_Workflow_Action_Triggers_EditTriggers($this->tracker, $token, $renderer, $this->tracker->getTriggerRulesManager());
         } else if ($request->get('func') == Workflow::FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA) {
             $action = new Tracker_Workflow_Action_Triggers_GetTriggersRulesBuilderData($this->tracker, Tracker_FormElementFactory::instance());
         } else if ($request->get('func') == Workflow::FUNC_ADMIN_ADD_TRIGGER) {
-            $action = new Tracker_Workflow_Action_Triggers_AddTrigger($this->tracker, Tracker_FormElementFactory::instance(), $this->getTriggerRuleManager());
+            $action = new Tracker_Workflow_Action_Triggers_AddTrigger($this->tracker, Tracker_FormElementFactory::instance(), $this->tracker->getTriggerRulesManager());
         } else if ($request->get('func') == Workflow::FUNC_ADMIN_DELETE_TRIGGER) {
-            $action = new Tracker_Workflow_Action_Triggers_DeleteTrigger($this->tracker, $this->getTriggerRuleManager());
+            $action = new Tracker_Workflow_Action_Triggers_DeleteTrigger($this->tracker, $this->tracker->getTriggerRulesManager());
         } else if ($request->get('create')) {
             $action = new Tracker_Workflow_Action_Transitions_Create($this->tracker, WorkflowFactory::instance());
         } else if ($request->get('edit_transition')) {
@@ -66,15 +66,6 @@ class WorkflowManager {
             $action = new Tracker_Workflow_Action_Transitions_DefineWorkflow($this->tracker, WorkflowFactory::instance(), Tracker_FormElementFactory::instance());
         }
         $action->process($engine, $request, $current_user);
-    }
-
-    private function getTriggerRuleManager() {
-        return new Tracker_Workflow_Trigger_RulesManager(
-            new Tracker_Workflow_Trigger_RulesDao(),
-            Tracker_FormElementFactory::instance(),
-            new Tracker_Workflow_Trigger_RulesProcessor(),
-            new WorkflowBackendLogger()
-        );
     }
 }
 ?>

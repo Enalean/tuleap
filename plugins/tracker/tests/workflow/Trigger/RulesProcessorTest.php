@@ -48,7 +48,7 @@ abstract class Tracker_Workflow_Trigger_RulesProcessor_BaseTest  extends TuleapT
         $this->artifact = anArtifact()->withParentWithoutPermissionChecking($this->parent)->withTracker($this->task_tracker)->build();
         $this->user = aUser()->build();
 
-        $this->rules_processor = new Tracker_Workflow_Trigger_RulesProcessor();
+        $this->rules_processor = new Tracker_Workflow_Trigger_RulesProcessor(new Tracker_Workflow_WorkflowUser());
 
         $this->target_field_id = 569;
         $this->target_field    = aSelectBoxField()->withId($this->target_field_id)->withTracker($this->story_tracker)->build();
@@ -94,7 +94,7 @@ class Tracker_Workflow_Trigger_RulesProcessorTest extends TuleapTestCase {
         $this->parent = mock('Tracker_Artifact');
         $this->artifact = anArtifact()->withParentWithoutPermissionChecking($this->parent)->build();
         $this->user = aUser()->build();
-        $this->rules_processor = new Tracker_Workflow_Trigger_RulesProcessor();
+        $this->rules_processor = new Tracker_Workflow_Trigger_RulesProcessor(new Tracker_Workflow_WorkflowUser());
 
         $this->target_field_id = 569;
         $this->target_field    = aSelectBoxField()->withId($this->target_field_id)->build();
@@ -120,7 +120,7 @@ class Tracker_Workflow_Trigger_RulesProcessorTest extends TuleapTestCase {
         $email = '';
         $send_notification = true;
 
-        expect($this->parent)->createNewChangeset($fields_data, $comment, $this->user, $email, $send_notification)->once();
+        expect($this->parent)->createNewChangeset($fields_data, $comment, new IsAWorkflowUserExpectation(), $email, $send_notification)->once();
 
         $this->rules_processor->process($this->user, $this->artifact, $this->rule);
     }
@@ -129,6 +129,16 @@ class Tracker_Workflow_Trigger_RulesProcessorTest extends TuleapTestCase {
         stub($this->parent)->getValue($this->target_field)->returns(aChangesetValueList()->withValues(array($this->target_value))->build());
         expect($this->parent)->createNewChangeset()->never();
         $this->rules_processor->process($this->user, $this->artifact, $this->rule);
+    }
+}
+
+class IsAWorkflowUserExpectation extends SimpleExpectation {
+    public function test($compare) {
+        return $compare instanceof Tracker_Workflow_WorkflowUser;
+    }
+
+    public function testMessage($compare) {
+        return 'Tracker_Workflow_WorkflowUser expected, '.get_class($compare).' given';
     }
 }
 

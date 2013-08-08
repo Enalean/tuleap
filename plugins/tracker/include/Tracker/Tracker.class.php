@@ -1970,7 +1970,9 @@ EOS;
         return new Tracker_Workflow_Trigger_RulesManager(
             new Tracker_Workflow_Trigger_RulesDao(),
             $this->getFormElementFactory(),
-            new Tracker_Workflow_Trigger_RulesProcessor(),
+            new Tracker_Workflow_Trigger_RulesProcessor(
+                UserManager::instance()->getUserById(Tracker_Workflow_WorkflowUser::ID)
+            ),
             new WorkflowBackendLogger()
         );
     }

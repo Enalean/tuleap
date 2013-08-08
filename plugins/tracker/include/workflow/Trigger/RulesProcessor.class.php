@@ -23,6 +23,13 @@
  */
 class Tracker_Workflow_Trigger_RulesProcessor {
 
+    /** @var Tracker_Workflow_WorkflowUser */
+    private $workflow_user;
+
+    public function __construct(Tracker_Workflow_WorkflowUser $workflow_user) {
+        $this->workflow_user = $workflow_user;
+    }
+
     /**
      * Apply $rule that was triggered by a change on $artifact
      *
@@ -36,7 +43,13 @@ class Tracker_Workflow_Trigger_RulesProcessor {
             $processor_strategy = $this->getRuleStrategy($artifact, $rule);
             if ($processor_strategy->allPrecondtionsAreMet()) {
                 $target = $rule->getTarget();
-                $parent->createNewChangeset($target->getFieldData(), '', $user, '', true);
+                $parent->createNewChangeset(
+                    $target->getFieldData(),
+                    '',
+                    $this->workflow_user,
+                    '',
+                    true
+                );
             }
         }
     }
