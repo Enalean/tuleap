@@ -25,9 +25,17 @@ class Tracker_Workflow_Trigger_RulesManager {
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
 
-    public function __construct(Tracker_Workflow_Trigger_RulesDao $dao, Tracker_FormElementFactory $formelement_factory) {
-        $this->dao = $dao;
+    /** @var Tracker_Workflow_Trigger_RulesProcessor */
+    private $rules_processor;
+
+    public function __construct(
+        Tracker_Workflow_Trigger_RulesDao $dao,
+        Tracker_FormElementFactory $formelement_factory,
+        Tracker_Workflow_Trigger_RulesProcessor $rules_processor
+    ) {
+        $this->dao                 = $dao;
         $this->formelement_factory = $formelement_factory;
+        $this->rules_processor     = $rules_processor;
     }
 
     /**
@@ -140,22 +148,13 @@ class Tracker_Workflow_Trigger_RulesManager {
         }
     }
 
-    public function processTriggers(Tracker_Artifact_Changeset $changeset) {
+    public function processTriggers(PFUser $user, Tracker_Artifact_Changeset $changeset) {
         $dar_rules = $this->dao->searchForInvolvedRulesIdsByChangesetId($changeset->getId());
-        $rules     = $this->getRulesFromDar($dar_rules);
-
-        return $rules;
-
-    }
-
-    private function getRulesFromDar(DataAccessResult $dar_rules){
-        $rules = array();
 
         foreach ($dar_rules as $row) {
-            $rules[] = $this->getRuleById($row['rule_id']);
+            $rule = $this->getRuleById($row['rule_id']);
+            $this->rules_processor->process($user, $changeset->getArtifact(), $rule);
         }
-
-        return $rules;
     }
 }
 

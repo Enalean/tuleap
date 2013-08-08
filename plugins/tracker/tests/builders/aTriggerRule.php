@@ -32,6 +32,15 @@ class Test_Tracker_Workflow_Trigger_TriggerRuleBuilder {
     private $condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
     private $triggering_fields = array();
 
+    public function withId($id) {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function __construct() {
+        $this->target = mock('Tracker_Workflow_Trigger_FieldValue');
+    }
+
     /**
      * @param Tracker_Workflow_Trigger_FieldValue $target
      * @return Test_Tracker_Workflow_Trigger_TriggerRuleBuilder
