@@ -25,6 +25,9 @@ Version 6.4 (NOT RELEASED YET)
 	== Themes ==
 	* Experimental: 0.2
 
+	== API ==
+	* SOAP svn: 1.1
+
 Version 6.3 (Thursday, July 25th 2013)
 	== Plugins ==
 	* graphontrackersv5: 5.2
