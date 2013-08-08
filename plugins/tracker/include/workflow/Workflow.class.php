@@ -298,13 +298,14 @@ class Workflow {
     /**
      * Execute actions after transition happens (if there is one)
      *
+     * @param PFUser                     $user               The user who changed things
      * @param Array                      $fields_data        Request field data (array[field_id] => data)
      * @param Tracker_Artifact_Changeset $new_changeset      The changeset that has just been created
      * @param Tracker_Artifact_Changeset $previous_changeset The changeset just before (null for a new artifact)
      *
      * @return void
      */
-    public function after(array $fields_data, Tracker_Artifact_Changeset $new_changeset, Tracker_Artifact_Changeset $previous_changeset = null) {
+    public function after(PFUser $user, array $fields_data, Tracker_Artifact_Changeset $new_changeset, Tracker_Artifact_Changeset $previous_changeset = null) {
         if (isset($fields_data[$this->getFieldId()])) {
             $transition = $this->getCurrentTransition($fields_data, $previous_changeset);
             if ($transition) {
@@ -312,7 +313,7 @@ class Workflow {
             }
         }
 
-        $this->getTracker()->getTriggerRulesManager()->processTriggers($new_changeset);
+        $this->getTracker()->getTriggerRulesManager()->processTriggers($user, $new_changeset);
     }
 
     public function validate($fields_data, Tracker_Artifact $artifact) {

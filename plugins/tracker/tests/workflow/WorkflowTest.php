@@ -306,7 +306,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         );
         expect($this->transition_null_to_open)->after()->never();
         expect($this->transition_open_to_close)->after($new_changeset)->once();
-        $this->workflow->after($fields_data, $new_changeset, $previous_changeset);
+        $this->workflow->after($this->current_user, $fields_data, $new_changeset, $previous_changeset);
     }
 
     function testAfterShouldTriggerTransitionActionsForNewArtifact() {
@@ -318,7 +318,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         );
         expect($this->transition_null_to_open)->after($new_changeset)->once();
         expect($this->transition_open_to_close)->after()->never();
-        $this->workflow->after($fields_data, $new_changeset, $previous_changeset);
+        $this->workflow->after($this->current_user, $fields_data, $new_changeset, $previous_changeset);
     }
 
     public function itShouldProcessTriggers() {
@@ -326,9 +326,9 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         $new_changeset      = mock('Tracker_Artifact_Changeset');
         $fields_data        = array();
 
-        expect($this->trigger_rules_manager)->processTriggers($new_changeset)->once();
+        expect($this->trigger_rules_manager)->processTriggers($this->current_user, $new_changeset)->once();
 
-        $this->workflow->after($fields_data, $new_changeset, $previous_changeset);
+        $this->workflow->after($this->current_user, $fields_data, $new_changeset, $previous_changeset);
 
     }
 }

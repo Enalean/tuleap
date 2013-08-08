@@ -1967,8 +1967,11 @@ EOS;
      * @return Tracker_Workflow_Trigger_RulesManager
      */
     public function getTriggerRulesManager() {
-        $dao = new Tracker_Workflow_Trigger_RulesDao();
-        return new Tracker_Workflow_Trigger_RulesManager($dao, $this->formelement_factory);
+        return new Tracker_Workflow_Trigger_RulesManager(
+            new Tracker_Workflow_Trigger_RulesDao(),
+            $this->getFormElementFactory(),
+            new Tracker_Workflow_Trigger_RulesProcessor()
+        );
     }
     /**
      * @return Tracker_RulesManager
