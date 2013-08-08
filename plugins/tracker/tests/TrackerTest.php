@@ -1718,14 +1718,14 @@ class Tracker_WorkflowTest extends TuleapTestCase {
     }
 
     public function itHasADefaultWorkflow() {
+        $workflow = aWorkflow()->withTrackerId($this->tracker_id)->build();
         stub($this->workflow_factory)->getWorkflowByTrackerId()->returns(false);
-        $workflow   = $this->tracker->getWorkflow();
-        $this->assertIsA($workflow, 'Workflow');
-        $this->assertEqual($workflow->getTrackerId(), $this->tracker_id);
+        stub($this->workflow_factory)->getNullWorkflow()->returns($workflow);
+        $this->assertIdentical($this->tracker->getWorkflow(), $workflow);
     }
 
     public function itHasAWorkflowFromTheFactoryWhenThereAreTransitions() {
-        $workflow = new Workflow(1, $this->tracker_id, 34, true);
+        $workflow = aWorkflow()->withTrackerId($this->tracker_id)->build();
         stub($this->workflow_factory)->getWorkflowByTrackerId($this->tracker_id)->returns($workflow);
         $this->assertIdentical($this->tracker->getWorkflow(), $workflow);
     }

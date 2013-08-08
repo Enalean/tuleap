@@ -1860,7 +1860,7 @@ class Tracker_Artifact_getWorkflowTest extends TuleapTestCase {
 
     public function setUp() {
         $tracker_id = 123;
-        $this->workflow = new Workflow(1, $tracker_id, 0, 0);
+        $this->workflow = aWorkflow()->withTrackerId($tracker_id)->build();
         $tracker = aMockTracker()->withId($tracker_id)->build();
         stub($tracker)->getWorkflow()->returns($this->workflow);
         $this->artifact = anArtifact()->build();

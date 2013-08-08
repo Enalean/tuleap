@@ -72,6 +72,13 @@ class WorkflowFactory {
 
 
     /**
+     * @return NullWorkflow
+     */
+    public function getNullWorkflow(Tracker $tracker) {
+        return new NullWorkflow($tracker->getId());
+    }
+
+    /**
      * Create a workflow
      *
      * @param Tracker $tracker_id The tracker the workflow refers to
