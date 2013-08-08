@@ -1004,7 +1004,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     protected function ugroupsCanRead($ugroups) {
       $pm = PermissionsManager::instance();
-      $ok = $pm->userHasPermission($this->id, 'PLUGIN_TRACKER_FIELD_READ', $ugroups);
+      $ok = $pm->userHasPermission($this->id, self::PERMISSION_READ, $ugroups);
       return $ok;
     }
 
@@ -1017,7 +1017,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     protected function ugroupsCanUpdate($ugroups) {
       $pm = PermissionsManager::instance();
-      $ok = $pm->userHasPermission($this->id, 'PLUGIN_TRACKER_FIELD_UPDATE', $ugroups);
+      $ok = $pm->userHasPermission($this->id, self::PERMISSION_UPDATE, $ugroups);
       return $ok;
     }
 
@@ -1030,7 +1030,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     protected function ugroupsCanSubmit($ugroups) {
       $pm = PermissionsManager::instance();
-      $ok = $pm->userHasPermission($this->id, 'PLUGIN_TRACKER_FIELD_SUBMIT', $ugroups);
+      $ok = $pm->userHasPermission($this->id, self::PERMISSION_SUBMIT, $ugroups);
       return $ok;
     }
 
@@ -1045,13 +1045,13 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     protected function getPermissionForUgroups($ugroups) {
         $perms = array();
         if ($this->ugroupsCanRead($ugroups)) {
-            $perms[] = 'PLUGIN_TRACKER_FIELD_READ';
+            $perms[] = self::PERMISSION_READ;
         }
         if ($this->ugroupsCanUpdate($ugroups)) {
-            $perms[] = 'PLUGIN_TRACKER_FIELD_UPDATE';
+            $perms[] = self::PERMISSION_UPDATE;
         }
         if ($this->ugroupsCanSubmit($ugroups)) {
-            $perms[] = 'PLUGIN_TRACKER_FIELD_SUBMIT';
+            $perms[] = self::PERMISSION_SUBMIT;
         }
         return $perms;
     }
