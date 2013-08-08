@@ -76,6 +76,24 @@ class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject {
                 WHERE rule_id = $rule_id";
         return $this->update($sql);
     }
+
+    public function searchForInvolvedRulesIdsByChangesetId($changeset_id) {
+        $changeset_id = $this->da->escapeInt($changeset_id);
+
+        $sql = "SELECT field_value.field_id, trig.*
+                    FROM tracker_workflow_trigger_rule_trg_field_static_value AS trig
+                      INNER JOIN tracker_field_list_bind_static_value AS field_value
+                            ON trig.value_id = field_value.id
+                      INNER JOIN tracker_changeset_value AS cv
+                            ON (cv.field_id = field_value.field_id
+                                    AND cv.has_changed = 1
+                                    AND cv.changeset_id = $changeset_id)
+                      INNER JOIN tracker_changeset_value_list AS cvl
+                            ON (cvl.changeset_value_id = cv.id
+                                    AND cvl.bindvalue_id = field_value.id)";
+
+        return $this->retrieve($sql);
+    }
 }
 
 ?>

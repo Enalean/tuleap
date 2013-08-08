@@ -47,6 +47,11 @@ class Workflow {
      */
     protected $field_values = null;
 
+    /**
+     * @var Tracker_Workflow_Trigger_RulesManager
+     */
+    private $trigger_rules_manager;
+
     public function __construct($workflow_id, $tracker_id, $field_id, $is_used, $transitions = null) {
         $this->workflow_id      = $workflow_id;
         $this->tracker_id = $tracker_id;
@@ -306,6 +311,8 @@ class Workflow {
                 $transition->after($new_changeset);
             }
         }
+
+        $this->getTracker()->getTriggerRulesManager()->processTriggers($new_changeset);
     }
 
     public function validate($fields_data, Tracker_Artifact $artifact) {

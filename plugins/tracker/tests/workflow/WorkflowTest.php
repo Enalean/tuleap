@@ -225,6 +225,8 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
     private $transition_open_to_close;
     private $open_value_id = 801;
     private $close_value_id = 802;
+    private $trigger_rules_manager;
+
     public function setUp() {
         parent::setUp();
 
@@ -246,18 +248,16 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         stub($this->transition_open_to_close)->getFieldValueFrom()->returns($open_value);
         stub($this->transition_open_to_close)->getFieldValueTo()->returns($close_value);
 
+        $this->trigger_rules_manager = mock('Tracker_Workflow_Trigger_RulesManager');
+        $tracker = stub('Tracker')->getTriggerRulesManager()->returns($this->trigger_rules_manager);
+
         $workflow_id = 1;
         $tracker_id  = 2;
         $field_id    = 103;
         $is_used     = 1;
         $transitions = array($this->transition_null_to_open, $this->transition_open_to_close);
-        $this->workflow    = aWorkflow()
-            ->withId($workflow_id)
-            ->withTrackerId($tracker_id)
-            ->withFieldId($field_id)
-            ->withIsUsed($is_used)
-            ->withTransitions($transitions)
-            ->build();
+        $this->workflow = partial_mock('Workflow', array('getTracker'), array($workflow_id, $tracker_id, $field_id, $is_used, $transitions));
+        stub($this->workflow)->getTracker()->returns($tracker);
         $this->workflow->setField($this->status_field);
 
         $this->artifact = new MockTracker_Artifact();
@@ -319,6 +319,17 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         expect($this->transition_null_to_open)->after($new_changeset)->once();
         expect($this->transition_open_to_close)->after()->never();
         $this->workflow->after($fields_data, $new_changeset, $previous_changeset);
+    }
+
+    public function itShouldProcessTriggers() {
+        $previous_changeset = null;
+        $new_changeset      = mock('Tracker_Artifact_Changeset');
+        $fields_data        = array();
+
+        expect($this->trigger_rules_manager)->processTriggers($new_changeset)->once();
+
+        $this->workflow->after($fields_data, $new_changeset, $previous_changeset);
+
     }
 }
 

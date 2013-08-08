@@ -255,4 +255,25 @@ class Tracker_Workflow_Trigger_RulesManager_deleteByRuleIdTest extends Tracker_W
     }
 }
 
+
+class Tracker_Workflow_Trigger_RulesManager_processTriggersTest extends Tracker_Workflow_Trigger_RulesManagerTest {
+
+    public function itBuildsTheInvolvedTriggerRules() {
+        $this->dao             = mock('Tracker_Workflow_Trigger_RulesDao');
+        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        $this->manager         = partial_mock('Tracker_Workflow_Trigger_RulesManager',array('getRuleById'), array($this->dao, $this->formelement_factory));
+
+        $trigger_1 = stub('Tracker_Workflow_Trigger_TriggerRule')->getId()->returns(1);
+        $trigger_2 = stub('Tracker_Workflow_Trigger_TriggerRule')->getId()->returns(2);
+        $changeset = stub('Tracker_Artifact_Changeset')->getId()->returns(3);
+
+        stub($this->dao)->searchForInvolvedRulesIdsByChangesetId(3)->returnsDar(array('rule_id' => 1),array('rule_id' => 2));
+        stub($this->manager)->getRuleById(1)->returns($trigger_1);
+        stub($this->manager)->getRuleById(2)->returns($trigger_2);
+
+        $expected = array($trigger_1, $trigger_2);
+        $result   = $this->manager->processTriggers($changeset);
+        $this->assertEqual($result, $expected);
+    }
+}
 ?>

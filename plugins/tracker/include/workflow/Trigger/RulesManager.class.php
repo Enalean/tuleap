@@ -139,6 +139,24 @@ class Tracker_Workflow_Trigger_RulesManager {
             }
         }
     }
+
+    public function processTriggers(Tracker_Artifact_Changeset $changeset) {
+        $dar_rules = $this->dao->searchForInvolvedRulesIdsByChangesetId($changeset->getId());
+        $rules     = $this->getRulesFromDar($dar_rules);
+
+        return $rules;
+
+    }
+
+    private function getRulesFromDar(DataAccessResult $dar_rules){
+        $rules = array();
+
+        foreach ($dar_rules as $row) {
+            $rules[] = $this->getRuleById($row['rule_id']);
+        }
+
+        return $rules;
+    }
 }
 
 ?>
