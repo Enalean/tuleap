@@ -8,7 +8,7 @@ Version 6.4 (NOT RELEASED YET)
 	* statistics: 0.30
 
 	== Bug fix ==
-	* File release system: fix bug that might affect php53 deployment when
+	* fix sla #4627: fix bug that might affect php53 deployment when
 	  downloading big files (200MB or more). Requires to install RPM
 	  php53-pear-HTTP-Download too. (Will be added as a dependency in
 	  future)
