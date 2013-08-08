@@ -21,6 +21,7 @@
 require_once 'DataAccess.class.php';
 require_once 'DataAccessResult.class.php';
 require_once 'DataAccessResultEmpty.class.php';
+require_once 'DataAccessQueryException.class.php';
 
 /**
  *  Base class for data access objects
@@ -32,6 +33,11 @@ class DataAccessObject {
      * @var DataAccess
      */
     var $da;
+
+    /**
+     * @var Boolean
+     */
+    private $throw_exception_on_errors = false;
 
     //! A constructor
     /**
@@ -48,6 +54,13 @@ class DataAccessObject {
 
     public function startTransaction() {
         $this->da->startTransaction();
+    }
+
+    /**
+     * After having called this method, all DB errors will be converted to exception
+     */
+    public function enableExceptionsOnError() {
+        $this->throw_exception_on_errors = true;
     }
 
     public function commit() {
@@ -70,16 +83,14 @@ class DataAccessObject {
      * For SELECT queries
      *
      * @param $sql the query string
+     * @throws DataAccessQueryException
      *
-     * @return mixed either false if error or object DataAccessResult
+     * @return DataAccessResult|false
      */
     public function retrieve($sql, $params = array()) {
         $result = $this->da->query($sql, $params);
-        if ($error = $result->isError()) {
-            $trace = debug_backtrace();
-            $i = isset($trace[1]) ? 1 : 0;
-            trigger_error($error .' ==> '. $sql ." @@ ". $trace[$i]['file'] .' at line '. $trace[$i]['line']);
-            $result = false;
+        if (! $this->handleError($result, $sql)) {
+            return false;
         }
         return $result;
     }
@@ -124,21 +135,34 @@ class DataAccessObject {
      * For INSERT, UPDATE and DELETE queries
      *
      * @param $sql the query string
+     * @throws DataAccessQueryException
      *
      * @return boolean true if success
      */
     public function update($sql, $params = array()) {
         $result = $this->da->query($sql, $params);
-        if ($error = $result->isError()) {
-            $trace = debug_backtrace();
-            $i = isset($trace[1]) ? 1 : 0;
-            trigger_error($error .' ==> '. $sql ." @@ ". $trace[$i]['file'] .' at line '. $trace[$i]['line']);
-            return false;
+        return $this->handleError($result, $sql);
+    }
+
+    private function handleError(DataAccessResult $dar, $sql) {
+        if ($dar->isError()) {
+            if ($this->throw_exception_on_errors) {
+                throw new DataAccessQueryException($this->getErrorMessage($dar, $sql));
+            } else {
+                trigger_error($this->getErrorMessage($dar, $sql));
+                return false;
+            }
         } else {
             return true;
         }
     }
-    
+
+    private function getErrorMessage(DataAccessResult $dar, $sql) {
+        $trace = debug_backtrace();
+        $i     = isset($trace[1]) ? 1 : 0;
+        return $dar->isError() .' ==> '. $sql ." @@ ". $trace[$i]['file'] .' at line '. $trace[$i]['line'];
+    }
+
     /**
      * execute and get the last insert id
      *

@@ -25,6 +25,7 @@ abstract class Tracker_Workflow_Action {
 
     const PANE_RULES       = 'rules';
     const PANE_TRANSITIONS = 'transitions';
+    const PANE_CROSS_TRACKER_TRIGGERS = 'triggers';
 
     /** @var Tracker */
     protected $tracker;
@@ -64,6 +65,10 @@ abstract class Tracker_Workflow_Action {
             self::PANE_TRANSITIONS => array(
                 'func'  => Workflow::FUNC_ADMIN_TRANSITIONS,
                 'title' => $GLOBALS['Language']->getText('workflow_admin', 'tab_transitions'),
+            ),
+            self::PANE_CROSS_TRACKER_TRIGGERS => array(
+                'func'  => Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS,
+                'title' => $GLOBALS['Language']->getText('workflow_admin', 'tab_triggers'),
             ),
         );
     }

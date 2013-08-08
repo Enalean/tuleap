@@ -2258,5 +2258,19 @@ class Layout extends Response {
     protected function getEventManager() {
         return EventManager::instance();
     }
+
+    /**
+     * Create a new Javascript variable in page flow (footer) with given object
+     *
+     * object is json encoded beforehand
+     *
+     * @param String $js_variable_name
+     * @param Mixed $object
+     */
+    public function appendJsonEncodedVariable($js_variable_name, $object) {
+        $this->includeFooterJavascriptSnippet(
+            $js_variable_name.' = '.json_encode($object).';'
+        );
+    }
 }
 ?>

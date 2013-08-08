@@ -1,3 +1,6 @@
+Version 0.9.41 - Tuleap 6.4
+    * Development: renaming caption element to label for consistency concerns
+
 Version 0.9.40 - Tuleap 6.3
     * Development: adding support for AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_INFO_ON_MILESTONE event
 

@@ -140,7 +140,19 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 ORDER BY rank";
         return $this->retrieve($sql);
     }
-    
+
+    public function searchUsedStaticSbFieldByTrackerId($tracker_id) {
+        $tracker_id  = $this->da->escapeInt($tracker_id);
+        $sql = "SELECT f.*
+                FROM $this->table_name f
+                  INNER JOIN tracker_field_list fl ON (fl.field_id = f.id AND fl.bind_type = 'static')
+                WHERE f.tracker_id = $tracker_id
+                  AND use_it = 1
+                  AND formElement_type IN ('sb', 'msb')
+                ORDER BY rank";
+        return $this->retrieve($sql);
+    }
+
     public function searchByParentId($parent_id) {
         $parent_id  = $this->da->escapeInt($parent_id);
         $sql = "SELECT *

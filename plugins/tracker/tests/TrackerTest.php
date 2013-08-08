@@ -1731,4 +1731,70 @@ class Tracker_WorkflowTest extends TuleapTestCase {
     }
 }
 
+
+class Tracker_getParentTest extends TuleapTestCase {
+
+    private $tracker;
+    private $tracker_factory;
+
+    public function setUp() {
+        parent::setUp();
+        $this->tracker_factory = mock('TrackerFactory');
+        $this->tracker = partial_mock('Tracker', array('getParentId', 'getTrackerFactory'));
+        stub($this->tracker)->getTrackerFactory()->returns($this->tracker_factory);
+    }
+
+    public function itReturnsNullWhenItHasNoParentFromAccessor() {
+        $tracker = aTracker()->build();
+        $tracker->setParent(null);
+        $this->assertIdentical($tracker->getParent(), null);
+    }
+
+    public function itReturnsParentWhenParentWasSetByAccessor() {
+        $parent  = aTracker()->build();
+        $tracker = aTracker()->build();
+        $tracker->setParent($parent);
+        $this->assertIdentical($tracker->getParent(), $parent);
+    }
+
+    public function itReturnsNullWhenItHasNoParentFromDb() {
+        stub($this->tracker)->getParentId()->returns(null);
+        $this->assertIdentical($this->tracker->getParent(), null);
+    }
+
+    public function itReturnsNullWhenParentNotFoundInDb() {
+        stub($this->tracker_factory)->getTrackerById(15)->returns(null);
+        stub($this->tracker)->getParentId()->returns(15);
+        $this->assertIdentical($this->tracker->getParent(), null);
+    }
+
+    public function itReturnsParentWhenFetchedFromDb() {
+        $parent  = aTracker()->build();
+        stub($this->tracker_factory)->getTrackerById(15)->returns($parent);
+        stub($this->tracker)->getParentId()->returns(15);
+        $this->assertIdentical($this->tracker->getParent(), $parent);
+    }
+
+    public function itDoesntFetchParentTwiceWhenThereIsParent() {
+        $parent  = aTracker()->build();
+        stub($this->tracker_factory)->getTrackerById(15)->returns($parent);
+        stub($this->tracker)->getParentId()->returns(15);
+
+        expect($this->tracker_factory)->getTrackerById(15)->once();
+
+        $this->tracker->getParent();
+        $this->tracker->getParent();
+    }
+
+    public function itDoesntFetchParentTwiceWhenOrphan() {
+        stub($this->tracker_factory)->getTrackerById(15)->returns(null);
+        stub($this->tracker)->getParentId()->returns(15);
+
+        expect($this->tracker_factory)->getTrackerById(15)->once();
+
+        $this->tracker->getParent();
+        $this->tracker->getParent();
+    }
+}
+
 ?>

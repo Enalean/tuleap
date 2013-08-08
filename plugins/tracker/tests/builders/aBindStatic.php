@@ -38,7 +38,7 @@ class Test_Tracker_FormElement_List_Bind_Static_Builder {
     }
 
     /**
-     * @param Array of Tracker_FormElement_Field_List_Bind_StaticValue $values
+     * @param Tracker_FormElement_Field_List_Bind_StaticValue[] $values
      * @return Test_Tracker_FormElement_List_Bind_Static_Builder
      */
     public function withValues(array $values) {

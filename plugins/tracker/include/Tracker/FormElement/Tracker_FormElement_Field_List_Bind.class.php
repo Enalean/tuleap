@@ -20,7 +20,7 @@
 
 require_once 'common/layout/ColorHelper.class.php';
 
-abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElement_Field_Shareable {
+abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElement_Field_Shareable, Tracker_IProvideJsonFormatOfMyself {
 
     /**
      * @var Tracker_FormElement_Field_List_Bind_DefaultvalueDao
@@ -54,6 +54,14 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @return Tracker_FormElement_Field_List_BindValue[]
      */
     public abstract function getAllValues();
+
+    public function fetchFormattedForJson() {
+        $values = array();
+        foreach($this->getAllValues() as $value) {
+            $values[$value->getId()] = $value->fetchFormattedForJson();
+        }
+        return $values;
+    }
 
     /**
      * Get available values of this field for SOAP usage

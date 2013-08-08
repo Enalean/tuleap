@@ -25,7 +25,7 @@ require_once('json.php');
 /**
  * Base class for all fields in trackers, from fieldsets to selectboxes
  */
-abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tracker_FormElement_IProvideFactoryButtonInformation {
+abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tracker_FormElement_IProvideFactoryButtonInformation, Tracker_IProvideJsonFormatOfMyself {
     const PERMISSION_READ   = 'PLUGIN_TRACKER_FIELD_READ';
     const PERMISSION_UPDATE = 'PLUGIN_TRACKER_FIELD_UPDATE';
     const PERMISSION_SUBMIT = 'PLUGIN_TRACKER_FIELD_SUBMIT';
@@ -367,6 +367,14 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             'id'   => $this->id,
             'name' => $this->getLabel(),
             'rank' => $this->rank,
+        );
+    }
+
+    public function fetchFormattedForJson() {
+        return array(
+            'id'    => $this->id,
+            'name'  => $this->getName(),
+            'label' => $this->getLabel(),
         );
     }
 

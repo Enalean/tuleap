@@ -29,17 +29,20 @@ class FRSFile extends Error {
     const EVT_DELETE  = 303;
     const EVT_RESTORE = 304;
 
-    const HARD_CODED_200MB_MEMORY_LIMIT = 205520896;
-
-    /*
-     * This value can seems a bit arbitrary. After investigations we
-     * noticed that a file download would only work with a pear_buffer_size
-     * under 8KB (8192B)but we can't figure out why for now. If you put a value
-     * equal or greater to 8KB the download hangs under wget or generate an error
-     * at the end of the downloaded file under browsers. So this is a fix until
-     * we can find out why it behaves this way.
+    /**
+     * This is an arbitrary chosen hard coded limit in order to avoid
+     * download of files that exceed the php memory_limit
+     * set to 196M using the standard download mechanism
+     * which places these files in the memory causing overflows.
+     * It will use php-pear-HTTP-download instead if it is installed
+     * on the system.
      */
-    const PEAR_BUFFER_SIZE = 8191;
+    const HARD_CODED_150MB_MEMORY_LIMIT = 157286400;
+
+    /**
+     * A 8 kb buffer size
+     */
+    const PEAR_BUFFER_SIZE = 8192;
 
 	/**
      * @var int $file_id the ID of this FRSFile
@@ -466,7 +469,7 @@ class FRSFile extends Error {
      */
     function download() {
         $file_location = $this->getFileLocation();
-        if ( $this->fileSizeExceedsMemoryLimit() && $this->phpPearHttpDownloadExtensionIsInstalled()) {
+        if ($this->fileSizeExceedsMemoryLimit() && $this->phpPearHttpDownloadExtensionIsInstalled()) {
             return !PEAR::isError(Codendi_HTTP_Download::staticSend(array(
                 'file'               => $this->getFileLocation(),
                 'cache'              => false,
@@ -515,7 +518,7 @@ class FRSFile extends Error {
     }
 
     private function fileSizeExceedsMemoryLimit() {
-        return $this->getFileSize() > self::HARD_CODED_200MB_MEMORY_LIMIT;
+        return $this->getFileSize() > self::HARD_CODED_150MB_MEMORY_LIMIT;
     }
 
     private function phpPearHttpDownloadExtensionIsInstalled() {

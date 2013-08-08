@@ -93,6 +93,18 @@ if (!$error && $request->exist('export')) {
     $csv_exporter->buildDatas($dao->getAdministratorsEMails(), "Created by (Email)");
     $csv_exporter->buildDatas($dao->getNumberOfUserAddedBetweenStartDateAndEndDate(), "Users added");
 
+    //Custom Descriptions
+    $custom_description_factory = new Project_CustomDescription_CustomDescriptionFactory(
+        new Project_CustomDescription_CustomDescriptionDao()
+    );
+    $custom_description_value_dao = new Project_CustomDescription_CustomDescriptionValueDao();
+    foreach ($custom_description_factory->getCustomDescriptions() as $custom_description) {
+        $csv_exporter->buildDatas(
+            $custom_description_value_dao->getAllDescriptionValues($custom_description->getId()),
+            $custom_description->getLabel()
+        );
+    }
+
     //CVS & SVN
     $csv_exporter->buildDatas($dao->getCVSActivities(), "CVS activities");
     $csv_exporter->buildDatas($dao->getSVNActivities(), "SVN activities");

@@ -68,6 +68,7 @@ class BackendTest extends UnitTestCase {
     function tearDown() {
         //clear the cache between each tests
         Backend::clearInstances();
+        EventManager::clearInstance();
     }
     
     function testFactory_core() {

@@ -1,0 +1,11 @@
+{
+    "target": {
+        "field_id": "30",
+        "field_value_id": "250"
+    },
+    "condition": "all_of",
+    "triggering_fields": [{
+            "field_id": "369",
+            "field_value_id": "852"
+    }]
+}
