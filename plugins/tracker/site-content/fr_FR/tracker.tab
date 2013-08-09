@@ -996,6 +996,7 @@ plugin_tracker_artifact	mail_followup_date	Date :
 plugin_tracker_artifact	mail_followup_by	Par :
 plugin_tracker_artifact	not_logged_in	<strong><span class="highlight">Vous n'êtes PAS connecté<br />Veuillez <a href="$1">vous connecter,</a> de façon à ce que les notifications de mise à jour puissent vous être envoyées.</span></strong><br />Si vous ne possédez pas de compte utilisateur, veuillez entrer votre adresse e-mail à la place&nbsp;:
 plugin_tracker_artifact	email_required	Votre adresse email est obligatoire si vous n'êtes pas connecté.
+plugin_tracker_artifact	global_rules_not_valid	Règles globales non respectées
 
 plugin_tracker_artifact	edit_title	Artefact
 plugin_tracker_artifact	hierarchy_title	Enfants

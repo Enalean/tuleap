@@ -484,7 +484,7 @@ class Workflow_validateTest extends TuleapTestCase {
     }
 }
 
-class Workflow_validateGlobalRulesTest extends TuleapTestCase {
+class Workflow_checkGlobalRulesTest extends TuleapTestCase {
 
     private $tracker_id  = 123;
 
@@ -510,7 +510,12 @@ class Workflow_validateGlobalRulesTest extends TuleapTestCase {
 
         expect($this->rules_manager)->validate($this->tracker_id, $fields_data)->once()->returns(true);
         $workflow = aWorkflow()->withTrackerId($this->tracker_id)->build();
-        $this->assertTrue($workflow->validateGlobalRules($fields_data));
+
+        try {
+            $workflow->checkGlobalRules($fields_data);
+        } catch (Exception $e) {
+            $this->fail('Should not throw an exception');
+        }
     }
 }
 ?>

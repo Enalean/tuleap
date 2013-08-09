@@ -800,7 +800,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 if ($workflow) {
                     $workflow->before($fields_data, $submitter, $this);
                     $augmented_data = $this->addDatesToRequestData($fields_data);
-                    if (! $workflow->validateGlobalRules($augmented_data, $this->getFormElementFactory())) {
+                    try {
+                        $workflow->checkGlobalRules($augmented_data, $this->getFormElementFactory());
+                    } catch (Tracker_Workflow_GlobalRulesViolationException $e) {
                         return false;
                     }
                 }
@@ -982,6 +984,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return boolean
      * @throws Tracker_Exception
      * @throws Tracker_NoChangeException
+     * @throws Tracker_Workflow_GlobalRulesViolationException
      */
     private function validateNewChangeset($fields_data, $comment, $submitter, $email = null) {
         if ($submitter->isAnonymous() && ($email == null || $email == '')) {
@@ -1008,9 +1011,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
              * We need to run the post actions to validate the data
              */
             $workflow->before($fields_data, $submitter, $this);
-            if (! $workflow->validateGlobalRules($fields_data, $this->getFormElementFactory())) {
-                throw new Tracker_Exception();
-            }
+            $workflow->checkGlobalRules($fields_data, $this->getFormElementFactory());
+            //$GLOBALS['Language']->getText('plugin_tracker_artifact', 'global_rules_not_valid');
         }
 
         return true;

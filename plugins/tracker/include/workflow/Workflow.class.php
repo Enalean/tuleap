@@ -352,9 +352,13 @@ class Workflow {
         return null;
     }
 
-    /** @return bool */
-    public function validateGlobalRules(array $fields_data) {
-        return $this->getTracker()->getRulesManager()->validate($this->tracker_id, $fields_data);
+    /**
+     * @throws Tracker_Workflow_GlobalRulesViolationException
+     */
+    public function checkGlobalRules(array $fields_data) {
+        if (! $this->getTracker()->getRulesManager()->validate($this->tracker_id, $fields_data)) {
+            throw new Tracker_Workflow_GlobalRulesViolationException();
+        }
     }
 
     /** @return array of Tracker_Rule */

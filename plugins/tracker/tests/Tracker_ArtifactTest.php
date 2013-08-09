@@ -154,7 +154,6 @@ class Tracker_ArtifactTest extends TuleapTestCase {
 
         $workflow = new MockWorkflow();
         $workflow->setReturnValue('validate', true);
-        $workflow->setReturnValue('validateGlobalRules', true);
 
         $this->artifact->setReturnReference('getWorkflow', $workflow);
         $this->artifact_update = new Tracker_ArtifactTestVersion();
@@ -224,7 +223,6 @@ class Tracker_ArtifactTest extends TuleapTestCase {
         $factory->setReturnValue('getAllFormElementsForTracker', array());
         $workflow = new MockWorkflow();
         $workflow->setReturnValue('validate', true);
-        $workflow->setReturnValue('validateGlobalRules', true);
 
         $artifact = new Tracker_ArtifactTestVersion();
         $artifact->setReturnReference('getFormElementFactory', $factory);
@@ -383,7 +381,6 @@ class Tracker_ArtifactTest extends TuleapTestCase {
 
         $workflow = new MockWorkflow();
         $workflow->setReturnValue('validate', true);
-        $workflow->setReturnValue('validateGlobalRules', true);
 
         $artifact->setReturnReference('getWorkflow', $workflow);
         // field 101 and 102 are missing
@@ -439,7 +436,6 @@ class Tracker_ArtifactTest extends TuleapTestCase {
 
         $workflow = new MockWorkflow();
         $workflow->setReturnValue('validate', true);
-        $workflow->setReturnValue('validateGlobalRules', true);
 
         $artifact->setReturnReference('getWorkflow', $workflow);
 
@@ -490,7 +486,6 @@ class Tracker_ArtifactTest extends TuleapTestCase {
 
         $workflow = new MockWorkflow();
         $workflow->setReturnValue('validate', true);
-        $workflow->setReturnValue('validateGlobalRules', true);
 
         $artifact->setReturnReference('getWorkflow', $workflow);
 
@@ -534,7 +529,6 @@ class Tracker_ArtifactTest extends TuleapTestCase {
 
         $workflow = new MockWorkflow();
         $workflow->setReturnValue('validate', true);
-        $workflow->setReturnValue('validateGlobalRules', true);
 
         $artifact->setReturnReference('getWorkflow', $workflow);
 
@@ -578,7 +572,6 @@ class Tracker_ArtifactTest extends TuleapTestCase {
 
         $workflow = new MockWorkflow();
         $workflow->setReturnValue('validate', true);
-        $workflow->setReturnValue('validateGlobalRules', true);
 
         $artifact->setReturnReference('getWorkflow', $workflow);
 
@@ -653,7 +646,6 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
 
         $workflow = new MockWorkflow();
         $workflow->setReturnValue('validate', true);
-        $workflow->setReturnValue('validateGlobalRules', true);
 
         $artifact->setReturnReference('getWorkflow', $workflow);
 
@@ -746,7 +738,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
             101 => '123',
             102 => '456'
         );
-        stub($workflow)->validateGlobalRules($updated_fields_data_by_workflow, $factory)->once()->returns(false);
+        stub($workflow)->checkGlobalRules($updated_fields_data_by_workflow, $factory)->once()->throws(new Tracker_Workflow_GlobalRulesViolationException());
         $this->assertFalse($artifact->createInitialChangeset($fields_data, $user, $email));
     }
 
@@ -856,7 +848,6 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
 
         $workflow = new MockWorkflow();
         $workflow->setReturnValue('validate', true);
-        $workflow->setReturnValue('validateGlobalRules', true);
 
         $artifact->setReturnReference('getWorkflow', $workflow);
 
@@ -894,7 +885,6 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $workflow = new MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields();
         $workflow->expectOnce('before');
         $workflow->setReturnValue('validate', true);
-        $workflow->setReturnValue('validateGlobalRules', true);
         $artifact->setReturnValue('getWorkflow', $workflow);
 
         $field1  = new MockTracker_FormElement_Field();
@@ -980,7 +970,6 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $workflow = new MockWorkflow();
         $workflow->expectCallCount('before', 2);
         $workflow->setReturnValue('validate', true);
-        $workflow->setReturnValue('validateGlobalRules', true);
         $artifact->setReturnValue('getWorkflow', $workflow);
 
         $field1  = new MockTracker_FormElement_Field();
@@ -1134,7 +1123,6 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $workflow = new MockWorkflow();
         $workflow->expectCallCount('before', 2);
         $workflow->setReturnValue('validate', true);
-        $workflow->setReturnValue('validateGlobalRules', true);
         $artifact->setReturnValue('getWorkflow', $workflow);
 
         // Valid
@@ -1255,7 +1243,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
             101 => '123',
             102 => '456'
         );
-        stub($workflow)->validateGlobalRules($updated_fields_data_by_workflow, $factory)->once()->returns(false);
+        stub($workflow)->checkGlobalRules($updated_fields_data_by_workflow, $factory)->once()->throws(new Tracker_Workflow_GlobalRulesViolationException());
         
         $this->expectException('Tracker_Exception');
         $artifact->createNewChangeset($fields_data, $comment, $user, $email);
@@ -1350,7 +1338,6 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $workflow = new MockWorkflow();
         $workflow->expectCallCount('before', 2);
         $workflow->setReturnValue('validate', true);
-        $workflow->setReturnValue('validateGlobalRules', true);
         $artifact->setReturnValue('getWorkflow', $workflow);
 
         // Valid
@@ -1429,7 +1416,6 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $workflow = new MockWorkflow();
         $workflow->expectNever('before');
         $workflow->setReturnValue('validate', true);
-        $workflow->setReturnValue('validateGlobalRules', true);
         $artifact->setReturnValue('getWorkflow', $workflow);
 
         $email   = null; //not annonymous user
@@ -2063,7 +2049,6 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
 
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
         $this->workflow = mock('Workflow');
-        stub($this->workflow)->validateGlobalRules()->returns(true);
         $this->changeset_dao  = mock('Tracker_Artifact_ChangesetDao');
         stub($this->changeset_dao)->searchByArtifactIdAndChangesetId()->returnsDar(array(
             'id'           => 123,
