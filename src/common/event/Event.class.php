@@ -232,7 +232,18 @@ class Event {
      * No expected results
      */
     const USER_RENAME = 'user_rename';
-    
+
+    /**
+     * Instanciate a new PFUser object from a row (probably DB)
+     *
+     * Parameters:
+     *     'row' => DB row
+     *
+     * Expected results:
+     *     'user' => a PFUser object
+     */
+    const USER_MANAGER_GET_USER_INSTANCE = 'user_manager_get_user_instance';
+
     const COMPUTE_MD5SUM = 'compute_md5sum';
     
     /**
