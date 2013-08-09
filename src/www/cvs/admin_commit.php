@@ -16,7 +16,7 @@ if (!$group_id) {
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 commits_header(array ('title'=>$Language->getText('cvs_admin_commit', 'title'),
-		      'help' => 'CVSWebInterface.html#CVSAdministration'));
+		      'help' => 'cvs.html#cvs-administration'));
 
 // get project name
 $sql = "SELECT unix_group_name, cvs_tracker, cvs_watch_mode, cvs_events_mailing_list, cvs_events_mailing_header, cvs_preamble, cvs_is_private from groups where group_id=$group_id";

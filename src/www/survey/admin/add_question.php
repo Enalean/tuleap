@@ -16,7 +16,7 @@ $is_admin_page='y';
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	survey_header(array('title'=>$Language->getText('survey_admin_add_question','add_q'),
-		    'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));
+		    'help'=>'survey.html#creating-or-editing-questions'));
 	echo '<H1>'.$Language->getText('survey_admin_add_question','perm_denied').'</H1>';
 	survey_footer(array());
 	exit;
@@ -32,7 +32,7 @@ if (isset($post_changes) && $post_changes) {
 }
 
 survey_header(array('title'=>$Language->getText('survey_admin_add_question','add_q'),
-		    'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));
+		    'help'=>'survey.html#creating-or-editing-questions'));
 
 
 ?>

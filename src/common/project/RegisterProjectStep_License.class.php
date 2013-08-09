@@ -27,7 +27,7 @@ class RegisterProjectStep_License extends RegisterProjectStep {
     function RegisterProjectStep_License() {
         $this->RegisterProjectStep(
             $GLOBALS['Language']->getText('register_title', 'license', array($GLOBALS['sys_name'])),
-            'CreatingANewProject.html'
+            'new-project.html'
         );
     }
     function display() {

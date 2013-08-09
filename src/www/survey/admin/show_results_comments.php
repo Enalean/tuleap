@@ -13,7 +13,7 @@ require_once('www/survey/survey_utils.php');
 
 $is_admin_page='y';
 survey_header(array('title'=>$Language->getText('survey_admin_show_r_aggregate','agg_res'),
-		    'help'=>'AdministeringSurveys.html#ReviewingSurveyResults'));
+		    'help'=>'survey.html#reviewing-survey-results'));
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	echo '<H1>'.$Language->getText('survey_admin_add_question','perm_denied').'</H1>';

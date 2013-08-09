@@ -178,7 +178,7 @@ $descfieldsvalue=$currentproject->getProjectsDescFieldsValue();
 
 
 project_admin_header(array('title'=>$Language->getText('project_admin_editgroupinfo','editing_g_info'),'group'=>$group_id,
-			   'help' => 'ProjectPublicInformation.html'));
+			   'help' => 'project-admin.html#project-public-information'));
 
 print '<P><h3>'.$Language->getText('project_admin_editgroupinfo','editing_g_info_for',$row_grp['group_name']).'</h3>';
 

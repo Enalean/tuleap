@@ -93,7 +93,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
     }
 
 	news_header(array('title'=>$Language->getText('news_admin_index','title'),
-			  'help'=>'NewsService.html'));
+			  'help'=>'communication.html#news-service'));
     
     echo '<H3>'.$Language->getText('news_admin_index','news_admin').'</H3>';
     

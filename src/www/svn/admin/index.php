@@ -53,8 +53,11 @@ if($request->valid($vFunc)) {
        exit_no_group();
    }
 
-   svn_header_admin(array ('title'=>$Language->getText('svn_admin_index','admin'),
-		      'help' => 'SubversionAdministrationInterface.html'));
+   svn_header_admin(array(
+        'title'=> $Language->getText('svn_admin_index','admin'),
+        'help' => 'svn.html#subversion-administration-interface'
+       )
+    );
 
    echo '<H2>'.$Language->getText('svn_admin_index','admin').'</H2>';
    echo '<H3><a href="/svn/admin/?func=general_settings&group_id='.$group_id.'">'.$Language->getText('svn_admin_index','gen_sett').'</a></H3>';

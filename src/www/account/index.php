@@ -143,7 +143,7 @@ foreach($entry_label as $key => $label) {
 // Shell Account
 $keys = $user->getAuthorizedKeys(true);
 
-echo '<fieldset><legend>'. $Language->getText('account_options', 'shell_account_title').' '.help_button('OtherServices.html#ShellAccount') .'</legend>';
+echo '<fieldset><legend>'. $Language->getText('account_options', 'shell_account_title').' '.help_button('other-services.html#shell-account') .'</legend>';
 echo $Language->getText('account_options', 'shell_shared_keys').': <strong>'.count($keys).'</strong><ol>';
 foreach ($keys as $key) {
     echo '<li>'.substr($key, 0, 20).'...'.substr($key, -20).'</li>';

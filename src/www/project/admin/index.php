@@ -101,7 +101,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
 }
 
 project_admin_header(array('title'=>$Language->getText('project_admin_index','p_admin',$group->getPublicName()),'group'=>$group_id,
-			   'help' => 'ProjectAdministration.html'));
+			   'help' => 'project-admin.html'));
 
 /*
 	Show top box listing trove and other info
@@ -163,7 +163,7 @@ print '
 if (user_is_super_user()) {
     print '<TABLE WIDTH="100%" BORDER="0">
  <TR>
-  <TD><B>'.$Language->getText('project_admin_index','group_type').' '.help_button('ProjectType.html').' : </B>
+  <TD><B>'.$Language->getText('project_admin_index','group_type').' '.help_button('project-admin.html#project-type').' : </B>
       <FORM action="?" method="post">
       <INPUT TYPE="HIDDEN" NAME="func" VALUE="change_group_type">
       <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'"></TD>
@@ -174,7 +174,7 @@ if (user_is_super_user()) {
 </TABLE>
 ';
 } else {
-    print '<B>'.$Language->getText('project_admin_index','group_type').' '.help_button('ProjectType.html').' : '.$template->getLabel($group->getType()).'</B>';
+    print '<B>'.$Language->getText('project_admin_index','group_type').' '.help_button('project-admin.html#project-type').' : '.$template->getLabel($group->getType()).'</B>';
 }
 
 $template_group = $pm->getProject($group->getTemplate());
@@ -237,7 +237,7 @@ echo '
 </TD><TD>&nbsp;</TD><TD width=50%>';
 
 
-$HTML->box1_top($Language->getText('project_admin_editugroup','proj_members')."&nbsp;".help_button('UserPermissions.html'));
+$HTML->box1_top($Language->getText('project_admin_editugroup','proj_members')."&nbsp;".help_button('project-admin.html#user-permissions'));
 
 /*
 
@@ -339,7 +339,7 @@ echo '</TD></TR>
 	Links to Services administration pages
 */
 
-$HTML->box1_top($Language->getText('project_admin_index','s_admin').'&nbsp;'.help_button('ServicesAdministration.html'));
+$HTML->box1_top($Language->getText('project_admin_index','s_admin').'&nbsp;'.help_button('project-admin.html#services-administration'));
 
 
 echo '

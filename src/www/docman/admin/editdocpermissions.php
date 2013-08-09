@@ -31,8 +31,7 @@ $query = "select * from doc_data,doc_groups "
 $result = db_query($query);
 $row = db_fetch_array($result);
 
-docman_header_admin(array('title'=>$Language->getText('docman_admin_editdocpermissions','title'), 
-                          'help' => 'DocumentAdministration.html#DocAccessPermissions'));
+docman_header_admin(array('title'=>$Language->getText('docman_admin_editdocpermissions','title')));
 
 echo '<H3>'.$Language->getText('docman_admin_editdocpermissions','doc_title').': <a href="/docman/display_doc.php?docid='.$docid.'&group_id='.$group_id.'">'.
      $row['title'].

@@ -718,6 +718,15 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         return $this->locale;
     }
 
+    /**
+     * Return an abreviated local of the user. Ex: en, fr
+     *
+     * @return string
+     */
+    function getShortLocale() {
+        return substr($this->locale, 0, 2);
+    }
+
     /** 
      * @return String Clear user password
      */

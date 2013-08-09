@@ -37,7 +37,7 @@ class Docman_View_Docman extends Docman_View_ProjectHeader {
             }
         }
         
-        $tools[] = help_button('DocumentManagerPlugin.html',false,$GLOBALS['Language']->getText('global','help'));
+        $tools[] = help_button('doc.html',false,$GLOBALS['Language']->getText('global','help'));
         
         echo implode(' | ', $tools);
         echo "\n";

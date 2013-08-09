@@ -80,8 +80,11 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
 $hp = Codendi_HTMLPurifier::instance();
 
 // Display the form
-svn_header_admin(array ('title'=>$Language->getText('svn_admin_general_settings','gen_settings'),
-		                  'help' => 'SubversionAdministrationInterface.html#SubversionEmailNotification'));
+svn_header_admin(array(
+    'title'=> $Language->getText('svn_admin_general_settings','gen_settings'),
+    'help' => 'svn.html#subversion-email-notification'
+    )
+);
 $project = $pm->getProject($group_id);
 $svn_mailing_header = $project->getSVNMailingHeader();
 

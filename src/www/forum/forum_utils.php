@@ -28,7 +28,7 @@ function forum_header($params) {
   
 	$params['group']=$group_id;
 	$params['toptab']='forum';
-    $params['help'] = 'WebForums.html';
+    $params['help'] = 'communication.html#web-forums';
 
 	/*
 

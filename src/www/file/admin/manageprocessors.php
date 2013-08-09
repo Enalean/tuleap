@@ -46,7 +46,7 @@ if ($request->valid($vMode) && $request->existAndNonEmpty('mode')) {
 }
 }
 
-file_utils_admin_header(array('title'=>$Language->getText('file_admin_manageprocessors','manage_proclist'), 'help' => 'ManageProcessorsList.html'));
+file_utils_admin_header(array('title'=>$Language->getText('file_admin_manageprocessors','manage_proclist'), 'help' => 'frs.html#processor-list-administration'));
 
 $vAdd      = new Valid_String('add');
 $vProcName = new Valid_String('procname');

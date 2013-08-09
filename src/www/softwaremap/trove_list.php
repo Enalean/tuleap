@@ -36,7 +36,7 @@ $row_trove_cat = db_fetch_array($res_trove_cat);
 
 $HTML->header(array('title'=>$Language->getText('softwaremap_trove_list','map')));
 echo'
-	<h2>'.$Language->getText('softwaremap_trove_list','map').' '.help_button('TheMainMenu.html#SoftwareMap').'</h2>
+	<h2>'.$Language->getText('softwaremap_trove_list','map').' '.help_button('overview.html#software-map-or-project-tree').'</h2>
 	<HR NoShade>
 ';
 

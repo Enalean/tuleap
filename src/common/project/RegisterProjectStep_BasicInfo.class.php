@@ -30,7 +30,7 @@ class RegisterProjectStep_BasicInfo extends RegisterProjectStep {
     function RegisterProjectStep_BasicInfo() {
         $this->RegisterProjectStep(
             $GLOBALS['Language']->getText('register_title', 'basic'),
-            'CreatingANewProject.html'
+            'new-project.html'
         );
     }
     function display($data) {

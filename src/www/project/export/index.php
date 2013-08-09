@@ -132,14 +132,14 @@ switch ($export) {
         break;
 
     default:
-     project_admin_header(array('title'=>$pg_title, 'help' => 'ProjectDataExport.html'));
+     project_admin_header(array('title'=>$pg_title, 'help' => 'project-admin.html#project-data-export'));
      // Display the welcome screen
 
      echo '
-<p> '.$Language->getText('project_export_index','export_to_csv_or_db',array(help_button('ProjectDataExport.html',false,$Language->getText('project_export_index','online_help')))).'</p>';
+<p> '.$Language->getText('project_export_index','export_to_csv_or_db',array(help_button('project-admin.html#project-data-export',false,$Language->getText('project_export_index','online_help')))).'</p>';
 
      echo '
-<h3> '.$Language->getText('project_export_index','export_to_csv_hdr',array(help_button('ProjectDataExport.html#TextFileExport'))).'</h3>';
+<h3> '.$Language->getText('project_export_index','export_to_csv_hdr',array(help_button('project-admin.html#text-file-export'))).'</h3>';
 
      echo '
 <p> '.$Language->getText('project_export_index','export_to_csv_msg').'</p>';
@@ -271,7 +271,7 @@ switch ($export) {
     echo '</TABLE>';
     echo '
 <br>
-<h3>'.$Language->getText('project_export_index','direct_db_access').' '.help_button('ProjectDataExport.html#DirectDatabaseAccess').'</h3>';
+<h3>'.$Language->getText('project_export_index','direct_db_access').' '.help_button('project-admin.html#direct-database-access').'</h3>';
 
     if ($project->usesSurvey() || $project->usesTracker()) {
         echo '<ol>';

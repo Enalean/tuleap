@@ -1060,7 +1060,7 @@ if ( $func == 'gotoid' ) {
         $params['pagename']='trackers';
         $params['title']=$Language->getText('tracker_index','trackers_for',$group->getPublicName());
         $params['sectionvals']=array($group->getPublicName());
-        $params['help']='TrackerService.html';
+        $params['help']='tracker-v3.html';
         $params['pv']  = $pv ? $pv : '';
 
         echo site_project_header($params);

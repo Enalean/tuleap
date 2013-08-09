@@ -88,6 +88,7 @@ function display_groups($group_id) {
         }
         echo '</table>';
     }
+    $params = array();
     docman_footer($params);
 }
 
@@ -272,12 +273,6 @@ function docman_header($params) {
                 echo "<a href=\"/docman/admin/index.php?group_id=".$group_id."\">".$Language->getText('docman_doc_utils','admin')."</a>";
             }
             echo "</b>";
-            if ($params['help'] && (user_ismember($group_id, 'A')  || user_ismember($group_id, 'D1') || user_ismember($group_id, 'D2'))) {
-                echo ' | ';
-            }
-            if ($params['help']) {
-                echo '<b>  '.help_button($params['help'],false,$Language->getText('global','help')).'</b>';
-            }
         }
 }
 
@@ -297,10 +292,6 @@ function docman_header_admin($params) {
     
     print "<b><a href=\"/docman/admin/index.php?group_id=".$group_id."\">".$Language->getText('docman_doc_utils','admin')."</a></b>"; 
     print "<b>  | <a href=\"/docman/admin/index.php?mode=editgroups&group_id=".$group_id." \">".$Language->getText('docman_doc_utils','edit_groups')."</a></b>";
-    
-    if ($params['help']) {
-	echo ' | <b>  '.help_button($params['help'],false,$Language->getText('global','help')).'</b>';
-    }
 }
 
 function docman_footer($params) {

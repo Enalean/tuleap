@@ -29,7 +29,7 @@ class RegisterProjectStep_Name extends RegisterProjectStep {
     function RegisterProjectStep_Name() {
         $this->RegisterProjectStep(
             $GLOBALS['Language']->getText('register_title', 'name', array($GLOBALS['sys_name'])),
-            'CreatingANewProject.html'
+            'new-project.html'
         );
     }
     function display($data) {

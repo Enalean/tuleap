@@ -26,7 +26,7 @@ if($request->valid(new Valid_Pv())) {
 
 $pm = ProjectManager::instance();
 $params=array('title'=>$Language->getText('forum_index','forums_for',$pm->getProject($group_id)->getPublicName()),
-              'help' => 'WebForums.html',
+              'help' => 'communication.html#web-forums',
               'pv'   => isset($pv)?$pv:false);
 forum_header($params);
 

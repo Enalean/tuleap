@@ -86,7 +86,7 @@ if ($pv) {
     echo '<h3>' . $Language->getText('file_showfiles', 'p_releases') . ':</h3>';
 } else {
     echo "<TABLE width='100%'><TR><TD>";
-    echo '<h3>' . $Language->getText('file_showfiles', 'p_releases') . ' ' . help_button('FileReleaseJargon.html') . '</h3>';
+    echo '<h3>' . $Language->getText('file_showfiles', 'p_releases') . ' ' . help_button('frs.html#delivery-manager-jargon') . '</h3>';
     echo "</TD>";
     echo "<TD align='left'> ( <A HREF='showfiles.php?group_id=$group_id&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> ) </TD>";
     echo "</TR></TABLE>";

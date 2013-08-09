@@ -12,7 +12,7 @@ require_once('../survey/survey_utils.php');
 
 
 survey_header(array('title'=>$Language->getText('survey_index','s'),
-		    'help'=>'SurveyManager.html'));
+		    'help'=>'survey.html'));
 
 if (!$group_id) {
 	echo "<H1>".$Language->getText('survey_index','g_id_err')."</H1>";

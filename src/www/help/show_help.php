@@ -11,7 +11,7 @@
 
 require_once('pre.php');
 
-$lang = $current_user->getLocale();
+$lang = $current_user->getShortLocale();
 
 // Retrieve the user language if not guest
 // TODO
@@ -21,7 +21,7 @@ if ( !isset($section) ) {
     $section = "index.html";
 }
 
-$help_url = get_server_url().'/documentation/user_guide/html/'.$lang."/".$section;
+$help_url = get_server_url().'/doc/'.$lang."/user-guide/".$section;
 
 // Check if the file exist - Don't use fopen because it doesn't
 // understand the https protocol

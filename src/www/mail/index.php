@@ -44,7 +44,7 @@ if ($group_id) {
 
     $pm = ProjectManager::instance();
     $params=array('title'=>$Language->getText('mail_index','mail_list_for').$pm->getProject($group_id)->getPublicName(),
-              'help'=>'CommunicationServices.html#MailingLists',
+              'help'=>'communication.html#mailing-lists',
                   'pv'   => isset($pv)?$pv:false);
     mail_header($params);
 	
@@ -123,7 +123,7 @@ if ($group_id) {
 
 } else {
     $params=array('title'=>$Language->getText('mail_index','choose_group_first'),
-                  'help'=>'CommunicationServices.html#MailingLists',
+                  'help'=>'communication.html#mailing-lists',
                   'pv'   => $pv);
     mail_header($params);
     require('../mail/mail_nav.php');

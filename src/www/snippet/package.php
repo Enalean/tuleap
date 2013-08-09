@@ -99,7 +99,7 @@ function show_add_snippet_box() {
     }
     snippet_header(array('title'=>$Language->getText('snippet_addversion','submit_p'),
 			     'header'=>$Language->getText('snippet_package','create_p'),
-			     'help' => 'TheMainMenu.html#GroupingCodeSnippets'));
+			     'help' => 'overview.html#grouping-code-snippets'));
 
 
     echo '

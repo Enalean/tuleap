@@ -29,7 +29,7 @@ require_once('../survey_utils.php');
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	survey_header(array('title'=>$Language->getText('survey_admin_update_radio','update_r'),
-		    'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));
+		    'help'=>'survey.html#creating-or-editing-questions'));
 	echo '<H1>'.$Language->getText('survey_admin_add_question','perm_denied').'</H1>';
 	survey_footer(array());
 	exit;
@@ -61,7 +61,7 @@ if (array_key_exists('cancel', $_POST) && isset($_POST['cancel'])) {
 }
 
 survey_header(array('title'=>$Language->getText('survey_admin_update_radio','update_r'),
-		    'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));
+		    'help'=>'survey.html#creating-or-editing-questions'));
 
 // fetch question and associated radio button from DB, and check for integrity IDs
 $qry="SELECT * FROM survey_questions WHERE question_id='$question_id'";

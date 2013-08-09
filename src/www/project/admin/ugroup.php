@@ -69,7 +69,7 @@ if ($request->existAndNonEmpty('func')) {
 
 
 project_admin_header(array('title'=>$Language->getText('project_admin_ugroup','manage_ug'),'group'=>$group_id,
-			   'help' => 'UserGroups.html'));
+			   'help' => 'project-admin.html#user-groups'));
 $pm = ProjectManager::instance();
 $project=$pm->getProject($group_id);
 

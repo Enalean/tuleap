@@ -67,7 +67,7 @@ if (user_isloggedin()) {
              Show the submit form
         */
         news_header(array('title'=>$Language->getText('news_index','news'),
-              'help'=>'NewsService.html'));
+              'help'=>'communication.html#news-service'));
 
         $pm = ProjectManager::instance();
         /*

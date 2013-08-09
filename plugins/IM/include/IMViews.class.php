@@ -48,11 +48,8 @@ class IMViews extends Views {
         }
     }
     
-    function _getHelp($section = '') {
-        if (trim($section) !== '' && $section{0} !== '#') {
-            $section = '#'.$section;
-        }
-        return '<b><a href="javascript:help_window(\''.get_server_url().'/documentation/user_guide/html/'.UserManager::instance()->getCurrentUser()->getLocale().'/IMPlugin.html'.$section.'\');">'.$GLOBALS['Language']->getText('global', 'help').'</a></b>';
+    function _getHelp() {
+        return help_button('communication.html#instant-messaging-plug-in', false, $GLOBALS['Language']->getText('global', 'help'));
     }
     
     function _getTitle() {

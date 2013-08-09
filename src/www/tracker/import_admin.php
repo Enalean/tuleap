@@ -42,7 +42,7 @@ if ($group_id && $mode == "admin") {
   
   
   project_admin_header(array('title'=>$pg_title,
-			     'help' => 'ArtifactImport.html'));
+			     'help' => 'tracker.html#tracker-artifact-import'));
 
   $pm = ProjectManager::instance();
   $project=$pm->getProject($group_id);

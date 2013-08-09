@@ -218,7 +218,7 @@ class tracker_date_reminderPlugin extends Plugin {
                 }
             }
             $params['ath']->adminHeader(array ('title'=>$GLOBALS['Language']->getText('plugin_tracker_date_reminder','admin_date_field_notif'),
-           'help' => 'TrackerAdministration.html#TrackerEmailNotificationSettings'));
+           'help' => 'tracker.html#email-notification-settings'));
              
             echo '<H2>'.$GLOBALS['Language']->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.$params['ath']->Group->getID().'&atid='.$params['ath']->getID().'">'.$params['ath']->getName().'</a>\' - '.$GLOBALS['Language']->getText('tracker_include_type','mail_notif').'</h2>';
 

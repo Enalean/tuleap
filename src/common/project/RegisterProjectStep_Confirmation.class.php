@@ -27,7 +27,7 @@ class RegisterProjectStep_Confirmation extends RegisterProjectStep {
     function RegisterProjectStep_Confirmation() {
         $this->RegisterProjectStep(
             $GLOBALS['Language']->getText('register_title', 'confirm', array($GLOBALS['sys_name'])),
-            'CreatingANewProject.html'
+            'new-project.html'
         );
     }
     function display($data) {

@@ -38,7 +38,7 @@ if (! $group_id) {
         project_admin_header(array(
             'title' => $Language->getText('project_admin_index','p_admin', $project->getPublicName()),
             'group' => $group_id,
-            'help'  => 'ProjectAdministration.html'
+            'help'  => 'project-admin.html'
         ));
         echo '<h2>'. $GLOBALS['Language']->getText('project_admin_index', 'show_projects') .'</h2>';
     }

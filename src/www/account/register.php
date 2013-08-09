@@ -358,7 +358,7 @@ $HTML->header(array('title'=>$Language->getText('account_register', 'title') ));
 
 <h2><?php print $Language->getText('account_register', 'title').' ';
 if($page != 'admin_creation'){
-    print help_button('UserRegistration.html');
+    print help_button('citizen.html#user-registration');
 }
 ?></h2>
 <?php

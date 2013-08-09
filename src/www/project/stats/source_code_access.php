@@ -61,7 +61,7 @@ if (isset($_REQUEST['SUBMIT'])) {
 $pm = ProjectManager::instance();
 project_admin_header(array('title'=>$Language->getText('project_admin_index','p_admin',$pm->getProject($group_id)->getPublicName()),
 			   'group'=>$group_id,
-			   'help' => 'SourceCodeAccessLogs.html'));
+			   'help' => 'project-admin.html#access-logs'));
 
 //
 // BEGIN PAGE CONTENT CODE

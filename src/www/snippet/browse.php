@@ -13,7 +13,7 @@ $by = $request->get('by');
 
 snippet_header(array('title'=>$Language->getText('snippet_browse','s_library'), 
 		     'header'=>$Language->getText('snippet_browse','s_browsing'),
-		     'help' => 'TheMainMenu.html#CodeSnippetBrowsing'));
+		     'help' => 'overview.html#code-snippet-library'));
 
 if ($by=='lang') {
 

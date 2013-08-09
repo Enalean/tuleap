@@ -236,7 +236,7 @@ $pm = ProjectManager::instance();
 $project=$pm->getProject($group_id);
 
 project_admin_header(array('title'=>$Language->getText('project_admin_editservice','edit_s'),'group'=>$group_id,
-			   'help' => 'ServiceConfiguration.html'));
+			   'help' => 'project-admin.html#service-configuration'));
 
 // $func is either: 
 // 'create' -> blank form that allow service creation (-> do_create)

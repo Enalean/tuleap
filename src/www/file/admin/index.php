@@ -21,7 +21,7 @@ if (!user_ismember($group_id,'R2')) {
     exit_permission_denied();
 }
 
-file_utils_admin_header(array('title'=>$Language->getText('file_admin_editpackages','release_edit_f_rel'), 'help' => 'FileReleaseDelivery.html'));
+file_utils_admin_header(array('title'=>$Language->getText('file_admin_editpackages','release_edit_f_rel'), 'help' => 'frs.html#delivery-manager-administration'));
 
 ?><h2>Files Administration</h2>
 <h3><a href="manageprocessors.php?group_id=<?=$group_id?>"><?=$GLOBALS['Language']->getText('file_admin_manageprocessors', 'manage_proclist')?></a></h3>

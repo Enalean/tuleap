@@ -99,8 +99,7 @@ if($group_id) {
 	
         $res_insert = db_query($query); 
         if (db_affected_rows($res_insert) < 1) {
-            docman_header(array('title'=>$Language->getText('docman_new','title_new'),
-                                'help'=>'DocumentSubmission.html'));
+            docman_header(array('title'=>$Language->getText('docman_new','title_new')));
             echo '<p>'.$Language->getText('docman_new','error_dbinsert').':</p><h3><span class="feedback">'. db_error() .'</span></h3>';
             docman_footer(array());
         } else {
@@ -109,8 +108,7 @@ if($group_id) {
         }
                 
     } else {
-        docman_header(array('title'=>$Language->getText('docman_new','title_add'),
-                            'help'=>'DocumentSubmission.html'));
+        docman_header(array('title'=>$Language->getText('docman_new','title_add')));
 
         echo '<h2>'.$Language->getText('docman_new','header_add').'</h2>';
         if ($user == 100) {

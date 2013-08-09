@@ -69,7 +69,7 @@ project_admin_header(
     array(
         'title' => $title,
         'group' => $group_id,
-        'help'  => 'ProjectAdministration.html'
+        'help'  => 'project-admin.html'
     )
 );
 

@@ -4,7 +4,7 @@
 <h3>Access Tuleap documentation</a></h3>
 If you have a question about Tuleap usage or are stumped by an issue, you should first take a look at the documentation:
 <ul>
-	<li><a href="/documentation/user_guide/html/en_US/User_Guide.html">User Guide</a></li>
+	<li><a href="/doc/en/index.html">User Guide</a></li>
 	<li><a href="/plugins/docman/?group_id=1">User Guide in french and Other resources</li></a>
 </ul>
 

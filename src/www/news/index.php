@@ -32,7 +32,7 @@ if ($group_id) {
     $title = $Language->getText('news_index','news');
 }
 $params=array('title'=>$title,
-              'help'=>'NewsService.html',
+              'help'=>'communication.html#news-service',
               'pv'=>$pv);
 
 news_header($params);

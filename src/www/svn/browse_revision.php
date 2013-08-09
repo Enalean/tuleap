@@ -17,7 +17,7 @@ if (!$request->valid($vGroupId)) {
     $hp =& Codendi_HTMLPurifier::instance();
 
     svn_header(array ('title'=>$Language->getText('svn_browse_revision','browsing'),
-                      'help' => 'SubversionBrowsingInterface.html'));
+                      'help' => 'svn.html#the-subversion-browsing-interface'));
 
     $vOffset = new Valid_UInt('offset');
     $vOffset->required();

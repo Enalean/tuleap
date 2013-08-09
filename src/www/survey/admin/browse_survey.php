@@ -10,7 +10,7 @@
 
 
 survey_header(array('title'=>$Language->getText('survey_admin_browse_survey','edit_s'),
-		    'help'=>'AdministeringSurveys.html#CreatingorEditingaSurvey'));
+		    'help'=>'survey.html#creating-or-editing-a-survey'));
 
 
 /*

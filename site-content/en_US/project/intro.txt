@@ -48,7 +48,7 @@ graphic images on your site with a link back to <?php print $GLOBALS['sys_name']
 either link to the main <?php print $GLOBALS['sys_name']; ?> site or to your project page on
 <?php print $GLOBALS['sys_name']; ?>. We will leave placement up to you.  For information about how
 to insert a <?php print $GLOBALS['sys_name']; ?> logo which will track your page views, please read
-the <a href="/documentation/user_guide/html/en_US/ReferencingtheCodendiSite.html" target="side_window"><?php print $GLOBALS['sys_name']; ?> Logo display documentation</a>.
+the <a href="/doc/en/user-guide/project-website.html#referencing-the-tuleap-site" target="side_window"><?php print $GLOBALS['sys_name']; ?> Logo display documentation</a>.
 </p>
 
 <p>

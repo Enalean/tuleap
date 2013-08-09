@@ -13,7 +13,7 @@ if (!$group_id) {
 
 
 commits_header(array ('title'=>$Language->getText('cvs_browse_commit', 'title'),
-		      'help' => 'CVSWebInterface.html#QueryingCVS'));
+		      'help' => 'cvs.html#querying-cvs'));
 
 if (!isset($offset) || $offset < 0) {
 	$offset=0;

@@ -37,7 +37,7 @@ $params=array('title'=>$group->getPublicName().' '.$ath->getName().' '.$Language
               'atid'=>$ath->getID(),
               'sectionvals'=>array($group->getPublicName()),
               'pv'=>$pv,
-              'help' => 'ArtifactMassChange.html');
+              'help' => 'tracker-v3.html#artifact-mass-change');
 
 $ath->header($params);
 echo '<div id="tracker_toolbar_clear"></div>';

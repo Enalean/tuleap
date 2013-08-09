@@ -23,6 +23,7 @@ require_once('common/include/HTTPRequest.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('common/project/ProjectManager.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
+require_once 'www/include/help.php';
 
 require_once('HudsonJob.class.php');
 
@@ -50,7 +51,7 @@ class hudsonViews extends Views {
         } else {
             $help_label = $GLOBALS['Language']->getText('global', 'help');
         }
-        return '<b><a href="javascript:help_window(\''.get_server_url().'/documentation/user_guide/html/'.UserManager::instance()->getCurrentUser()->getLocale().'/ContinuousIntegrationWithHudson.html'.$section.'\');">'.$help_label.'</a></b>';
+        return help_button('ci.html'.$section, false, $help_label);
     }
     function footer() {
         $GLOBALS['HTML']->footer(array());
@@ -429,7 +430,7 @@ class hudsonViews extends Views {
         
         // function toggle_addurlform is in script plugins/hudson/www/hudson_tab.js
         echo '<a href="#" onclick="toggle_addurlform(); return false;">' . $GLOBALS["HTML"]->getimage("ic/add.png") . ' '.$GLOBALS['Language']->getText('plugin_hudson','addjob_title').'</a>';
-        echo ' '.$this->_getHelp('HudsonService', true);
+        echo ' '.$this->_getHelp('hudson-service', true);
         echo '<div id="hudson_add_job">';
         echo ' <form>';
         echo '   <label for="hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_url').'</label>';
