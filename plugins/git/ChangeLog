@@ -1,3 +1,6 @@
+Version 3.36 - Tuleap 6.4
+    * Fix request #1561 : git references are now correctly imported from template
+
 Version 3.35 - Tuleap 6.4
     * story #3636 - disable permission setting when I migrate a repository.
 
