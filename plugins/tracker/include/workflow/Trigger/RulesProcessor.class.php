@@ -50,22 +50,28 @@ class Tracker_Workflow_Trigger_RulesProcessor {
             $processor_strategy = $this->getRuleStrategy($artifact, $rule);
             if ($processor_strategy->allPrecondtionsAreMet()) {
                 $this->logger->debug('All preconditions are met…');
-                $this->updateParent($user, $parent, $rule);
+                $this->updateParent($parent, $artifact, $rule);
             }
         }
 
         $this->logger->end(__METHOD__, $user->getId(), $artifact->getId(), $rule->getId());
     }
 
-    private function updateParent(PFUser $user, Tracker_Artifact $parent, Tracker_Workflow_Trigger_TriggerRule $rule) {
+    private function updateParent(Tracker_Artifact $parent, Tracker_Artifact $child, Tracker_Workflow_Trigger_TriggerRule $rule) {
         $target = $rule->getTarget();
         try {
+            $comment = '<p>'.$GLOBALS['Language']->getText('workflow_trigger_rules_processor', 'parent_update', array(
+                'art #'.$child->getId(),
+                $child->getLastChangeset()->getUri()
+            )).'</p>';
+            $comment .= '<p>'.$rule->getAsChangesetComment().'</p>';
             $parent->createNewChangeset(
                 $target->getFieldData(),
-                '',
+                $comment,
                 $this->workflow_user,
                 '',
-                true
+                true,
+                Tracker_Artifact_Changeset_Comment::HTML_COMMENT
             );
             $this->logger->debug('Parent successfully updated.');
         } catch (Tracker_Exception $e) {

@@ -80,6 +80,25 @@ class Tracker_Workflow_Trigger_FieldValue {
         }
         return false;
     }
+
+    /**
+     * Format the rule to be presented to user as a followup comment
+     *
+     * @param String $condition
+     *
+     * @return String
+     */
+    public function getAsChangesetComment($condition) {
+        return $GLOBALS['Language']->getText(
+            'workflow_trigger_rules_processor',
+            'rule_comment_'.$condition,
+            array(
+                $this->getField()->getTracker()->getName(),
+                $this->getField()->getLabel(),
+                $this->getValue()->getLabel(),
+            )
+        );
+    }
 }
 
 ?>

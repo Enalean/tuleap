@@ -1403,6 +1403,13 @@ workflow_postaction	ci_build_succeeded	Job build launch succeeded ($1)
 
 workflow_condition	invalid_condition	Invalid condition: the field '$1'must not be empty
 
+workflow_trigger_rules_processor	parent_update	Automatic change triggered by an update of <a href="$2">$1</a>.
+workflow_trigger_rules_processor	rule_comment	Current artifact children satisfy the following condition(s):
+workflow_trigger_rules_processor	rule_comment_all_of	all of <strong>$1 $2</strong> are set to <strong>$3</strong>
+workflow_trigger_rules_processor	rule_comment_at_least_one	at least one <strong>$1 $2</strong> equals <strong>$3</strong>
+workflow_trigger_rules_processor	condition_operator_all_of	and
+workflow_trigger_rules_processor	condition_operator_at_least_one	or
+
 plugin_tracker_permissions	plugin_tracker_artifact_access	Access to an artifact
 plugin_tracker_permissions	plugin_tracker_full_access	Access to all tracker artifacts
 plugin_tracker_permissions	plugin_tracker_submitter_access	Access to tracker artifacts submitted by group

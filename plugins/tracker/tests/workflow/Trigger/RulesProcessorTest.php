@@ -45,7 +45,7 @@ abstract class Tracker_Workflow_Trigger_RulesProcessor_BaseTest  extends TuleapT
         $this->parent = mock('Tracker_Artifact');
         stub($this->parent)->getTracker()->returns($this->story_tracker);
 
-        $this->artifact = anArtifact()->withParentWithoutPermissionChecking($this->parent)->withTracker($this->task_tracker)->build();
+        $this->artifact = anArtifact()->withChangesets(array(mock('Tracker_Artifact_Changeset')))->withParentWithoutPermissionChecking($this->parent)->withTracker($this->task_tracker)->build();
         $this->user = aUser()->build();
 
         $this->rules_processor = new Tracker_Workflow_Trigger_RulesProcessor(
@@ -96,7 +96,7 @@ class Tracker_Workflow_Trigger_RulesProcessorTest extends TuleapTestCase {
         parent::setUp();
         $this->parent = mock('Tracker_Artifact');
         $this->task_tracker = aTracker()->withId(899)->build();
-        $this->artifact = anArtifact()->withParentWithoutPermissionChecking($this->parent)->withTracker($this->task_tracker)->build();
+        $this->artifact = anArtifact()->withChangesets(array(mock('Tracker_Artifact_Changeset')))->withParentWithoutPermissionChecking($this->parent)->withTracker($this->task_tracker)->build();
         $this->user = aUser()->build();
         $this->rules_processor = new Tracker_Workflow_Trigger_RulesProcessor(
             new Tracker_Workflow_WorkflowUser(),
@@ -123,11 +123,10 @@ class Tracker_Workflow_Trigger_RulesProcessorTest extends TuleapTestCase {
         $fields_data = array(
             $this->target_field_id => $this->target_value_id
         );
-        $comment = '';
         $email = '';
         $send_notification = true;
 
-        expect($this->parent)->createNewChangeset($fields_data, $comment, new IsAWorkflowUserExpectation(), $email, $send_notification)->once();
+        expect($this->parent)->createNewChangeset($fields_data, '*', new IsAWorkflowUserExpectation(), $email, $send_notification, Tracker_Artifact_Changeset_Comment::HTML_COMMENT)->once();
 
         $this->rules_processor->process($this->user, $this->artifact, $this->rule);
     }
