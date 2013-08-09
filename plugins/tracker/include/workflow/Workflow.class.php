@@ -316,7 +316,7 @@ class Workflow {
         }
         $this->getTracker()->getTriggerRulesManager()->processTriggers($user, $new_changeset);
 
-        $this->getLogger()->start(__METHOD__, $user->getId(), '[…]', $new_changeset->getId(), ($previous_changeset ? $previous_changeset->getId() : 'null'));
+        $this->getLogger()->end(__METHOD__, $user->getId(), '[…]', $new_changeset->getId(), ($previous_changeset ? $previous_changeset->getId() : 'null'));
     }
 
     public function validate($fields_data, Tracker_Artifact $artifact) {
