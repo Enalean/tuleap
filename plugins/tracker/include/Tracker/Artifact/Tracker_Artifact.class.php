@@ -919,15 +919,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             return false;
         }
 
-        $new_changeset = new Tracker_Artifact_Changeset(
-            $changeset_id,
-            $this,
-            $submitter->getId(),
-            $_SERVER['REQUEST_TIME'],
-            $email
-        );
-        $this->changesets[$changeset_id] = $new_changeset;
-
         $comment = trim($comment);
         $comment_format = Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
         $workflow = $this->getWorkflow();
@@ -959,6 +950,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $field->saveNewChangeset($this, $previous_changeset, $changeset_id, null, $submitter, $is_submission);
             }
         }
+
+        $new_changeset = new Tracker_Artifact_Changeset(
+            $changeset_id,
+            $this,
+            $submitter->getId(),
+            $_SERVER['REQUEST_TIME'],
+            $email
+        );
+        $this->changesets[$changeset_id] = $new_changeset;
 
         //Save the artifact
         if ($this->getArtifactFactory()->save($this)) {
