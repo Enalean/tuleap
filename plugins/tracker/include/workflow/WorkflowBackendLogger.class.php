@@ -23,8 +23,21 @@
  */
 class WorkflowBackendLogger extends BackendLogger {
 
+    private static $indentation_prefix    = '';
+    private static $indentation_start     = '┌ ';
+    private static $indentation_increment = '│ ';
+    private static $indentation_end       = '└ ';
+
+    private static function indent() {
+        self::$indentation_prefix .= self::$indentation_increment;
+    }
+
+    private static function unindent() {
+        self::$indentation_prefix = mb_substr(self::$indentation_prefix, 0, -mb_strlen(self::$indentation_increment, 'UTF-8'), 'UTF-8');
+    }
+
     public function log($message, $level = 'info') {
-        parent::log("[WF] $message", $level);
+        parent::log('[WF] '. self::$indentation_prefix . $message, $level);
     }
 
     /**
@@ -36,7 +49,9 @@ class WorkflowBackendLogger extends BackendLogger {
     public function start($calling_method) {
         $arguments = func_get_args();
         array_unshift($arguments, __FUNCTION__);
+        array_unshift($arguments, self::$indentation_start);
         call_user_func_array(array($this, 'logMethodAndItsArguments'), $arguments);
+        self::indent();
     }
 
     /**
@@ -46,16 +61,19 @@ class WorkflowBackendLogger extends BackendLogger {
      * @param mixed  ...              Parameters of the calling method
      */
     public function end($calling_method) {
+        self::unindent();
         $arguments = func_get_args();
         array_unshift($arguments, __FUNCTION__);
+        array_unshift($arguments, self::$indentation_end);
         call_user_func_array(array($this, 'logMethodAndItsArguments'), $arguments);
     }
 
     private function logMethodAndItsArguments() {
         $arguments      = func_get_args();
+        $prefix         = array_shift($arguments);
         $method         = ucfirst(array_shift($arguments));
         $calling_method = array_shift($arguments);
         $arguments      = implode(', ', $arguments);
-        $this->debug("$method $calling_method($arguments)");
+        $this->debug("$prefix$method $calling_method($arguments)");
     }
 }

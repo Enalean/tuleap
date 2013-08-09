@@ -28,17 +28,17 @@ class WorkflowBackendLogger_StartEndTest extends TuleapTestCase {
     }
 
     public function itLogsMethod() {
-        expect($this->logger)->log('Start theMethod()', 'debug')->once();
+        expect($this->logger)->log('┌ Start theMethod()', 'debug')->once();
         $this->logger->start('theMethod');
     }
 
     public function itLogsOptionalArgument() {
-        expect($this->logger)->log('Start theMethod(1, a)', 'debug')->once();
+        expect($this->logger)->log('┌ Start theMethod(1, a)', 'debug')->once();
         $this->logger->start('theMethod', 1, 'a');
     }
 
     public function itWorksAlsoWorksForEndMethod() {
-        expect($this->logger)->log('End theMethod(1, a)', 'debug')->once();
+        expect($this->logger)->log('└ End theMethod(1, a)', 'debug')->once();
         $this->logger->end('theMethod', 1, 'a');
     }
 }
