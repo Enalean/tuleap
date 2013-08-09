@@ -26,8 +26,12 @@ class Tracker_Workflow_Trigger_RulesProcessor {
     /** @var Tracker_Workflow_WorkflowUser */
     private $workflow_user;
 
-    public function __construct(Tracker_Workflow_WorkflowUser $workflow_user) {
+    /** @var WorkflowBackendLogger */
+    private $logger;
+
+    public function __construct(Tracker_Workflow_WorkflowUser $workflow_user, WorkflowBackendLogger $logger) {
         $this->workflow_user = $workflow_user;
+        $this->logger        = $logger;
     }
 
     /**
@@ -38,19 +42,39 @@ class Tracker_Workflow_Trigger_RulesProcessor {
      * @param Tracker_Workflow_Trigger_TriggerRule $rule
      */
     public function process(PFUser $user, Tracker_Artifact $artifact, Tracker_Workflow_Trigger_TriggerRule $rule) {
+        $this->logger->start(__METHOD__, $user->getId(), $artifact->getXRef(), $rule->getId());
+
         $parent = $artifact->getParentWithoutPermissionChecking();
         if (! $this->parentAlreadyHasTargetValue($parent, $rule)) {
+            $this->logger->debug('Parent '. $parent->getXRef() .' does not have target value…');
             $processor_strategy = $this->getRuleStrategy($artifact, $rule);
             if ($processor_strategy->allPrecondtionsAreMet()) {
-                $target = $rule->getTarget();
-                $parent->createNewChangeset(
-                    $target->getFieldData(),
-                    '',
-                    $this->workflow_user,
-                    '',
-                    true
-                );
+                $this->logger->debug('All preconditions are met…');
+                $this->updateParent($user, $parent, $rule);
             }
+        }
+
+        $this->logger->end(__METHOD__, $user->getId(), $artifact->getId(), $rule->getId());
+    }
+
+    private function updateParent(PFUser $user, Tracker_Artifact $parent, Tracker_Workflow_Trigger_TriggerRule $rule) {
+        $target = $rule->getTarget();
+        try {
+            $parent->createNewChangeset(
+                $target->getFieldData(),
+                '',
+                $this->workflow_user,
+                '',
+                true
+            );
+            $this->logger->debug('Parent successfully updated.');
+        } catch (Tracker_Exception $e) {
+            $this->logger->debug('Error while updating the parent artifact: '. $e->getMessage());
+            $GLOBALS['Response']->addFeedback(
+                'error',
+                $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_processor_update', array($parent->fetchDirectLinkToArtifact(), $e->getMessage())),
+                CODENDI_PURIFIER_DISABLED
+            );
         }
     }
 
