@@ -943,6 +943,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @return bool
      */
     protected function userHasPermission($permission_type, PFUser $user = null) {
+        if ($user instanceof Tracker_Workflow_WorkflowUser) {
+            return true;
+        }
+
         if (! $user) {
             $user = $this->getCurrentUser();
         }
@@ -966,9 +970,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @return bool
      */
     public function userCanRead(PFUser $user = null) {
-        $ok = $this->userHasPermission('PLUGIN_TRACKER_FIELD_READ', $user)
-              || $this->userHasPermission('PLUGIN_TRACKER_FIELD_UPDATE', $user);
-        return $ok;
+        return $this->userHasPermission(self::PERMISSION_READ, $user)
+              || $this->userHasPermission(self::PERMISSION_UPDATE, $user);
     }
 
     /**
@@ -979,8 +982,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @return bool
      */
     public function userCanUpdate(PFUser $user = null) {
-        $ok = $this->isUpdateable() && $this->userHasPermission('PLUGIN_TRACKER_FIELD_UPDATE', $user);
-        return $ok;
+        return $this->isUpdateable() && $this->userHasPermission(self::PERMISSION_UPDATE, $user);
     }
 
     /**
@@ -991,8 +993,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @return bool
      */
     public function userCanSubmit(PFUser $user = null) {
-        $ok = $this->isSubmitable() && $this->userHasPermission('PLUGIN_TRACKER_FIELD_SUBMIT', $user);
-        return $ok;
+        return $this->isSubmitable() && $this->userHasPermission(self::PERMISSION_SUBMIT, $user);
     }
 
     /**

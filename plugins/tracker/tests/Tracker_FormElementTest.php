@@ -178,4 +178,31 @@ class Tracker_FormElementJsonTest extends TuleapTestCase {
     }
 }
 
+class Tracker_FormElement_UserPermissionsTest extends TuleapTestCase {
+    
+    private $user;
+    private $form_element;
+    private $workflow_user;
+
+    public function setUp() {
+        parent::setUp();
+        $this->form_element = aStringField()->withId(300)->withLabel("My field")->withName('my_field')->build();
+
+        $this->user = aUser()->build();
+        $this->workflow_user = new Tracker_Workflow_WorkflowUser();
+    }
+
+    public function itGrantsReadAccessToWorkflowUser() {
+        $this->assertTrue($this->form_element->userCanRead($this->workflow_user));
+    }
+
+    public function itGrantsUpdateAccessToWorkflowUser() {
+        $this->assertTrue($this->form_element->userCanUpdate($this->workflow_user));
+    }
+
+    public function itGrantsSubmitAccessToWorkflowUser() {
+        $this->assertTrue($this->form_element->userCanSubmit($this->workflow_user));
+    }
+}
+
 ?>
