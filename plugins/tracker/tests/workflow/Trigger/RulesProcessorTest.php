@@ -48,7 +48,10 @@ abstract class Tracker_Workflow_Trigger_RulesProcessor_BaseTest  extends TuleapT
         $this->artifact = anArtifact()->withParentWithoutPermissionChecking($this->parent)->withTracker($this->task_tracker)->build();
         $this->user = aUser()->build();
 
-        $this->rules_processor = new Tracker_Workflow_Trigger_RulesProcessor(new Tracker_Workflow_WorkflowUser());
+        $this->rules_processor = new Tracker_Workflow_Trigger_RulesProcessor(
+            new Tracker_Workflow_WorkflowUser(),
+            mock('WorkflowBackendLogger')
+        );
 
         $this->target_field_id = 569;
         $this->target_field    = aSelectBoxField()->withId($this->target_field_id)->withTracker($this->story_tracker)->build();
@@ -92,9 +95,13 @@ class Tracker_Workflow_Trigger_RulesProcessorTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->parent = mock('Tracker_Artifact');
-        $this->artifact = anArtifact()->withParentWithoutPermissionChecking($this->parent)->build();
+        $this->task_tracker = aTracker()->withId(899)->build();
+        $this->artifact = anArtifact()->withParentWithoutPermissionChecking($this->parent)->withTracker($this->task_tracker)->build();
         $this->user = aUser()->build();
-        $this->rules_processor = new Tracker_Workflow_Trigger_RulesProcessor(new Tracker_Workflow_WorkflowUser());
+        $this->rules_processor = new Tracker_Workflow_Trigger_RulesProcessor(
+            new Tracker_Workflow_WorkflowUser(),
+            mock('WorkflowBackendLogger')
+        );
 
         $this->target_field_id = 569;
         $this->target_field    = aSelectBoxField()->withId($this->target_field_id)->build();

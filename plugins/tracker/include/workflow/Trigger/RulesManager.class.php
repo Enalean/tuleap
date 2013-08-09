@@ -28,14 +28,14 @@ class Tracker_Workflow_Trigger_RulesManager {
     /** @var Tracker_Workflow_Trigger_RulesProcessor */
     private $rules_processor;
 
-    /** @var Logger */
+    /** @var WorkflowBackendLogger */
     private $logger;
 
     public function __construct(
         Tracker_Workflow_Trigger_RulesDao $dao,
         Tracker_FormElementFactory $formelement_factory,
         Tracker_Workflow_Trigger_RulesProcessor $rules_processor,
-        Logger $logger
+        WorkflowBackendLogger $logger
     ) {
         $this->dao                 = $dao;
         $this->formelement_factory = $formelement_factory;

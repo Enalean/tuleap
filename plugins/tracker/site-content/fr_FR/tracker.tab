@@ -688,6 +688,7 @@ plugin_tracker_common_artifact	error_artifactlink_value	$1 : $2 n'est pas un id 
 plugin_tracker_common_artifact	error_artifactlink_choose_parent	Vous devez lier cet artefact à un parent existant ou en créer un nouveau.
 plugin_tracker_common_artifact	error_date_value	$1 n'est pas une valeur du type date.
 plugin_tracker_common_artifact	error_text_value	$1 n'est pas une valeur du type texte.
+plugin_tracker_common_artifact	error_processor_update	Erreur lors de la mise à jour de l'artefact $1 : $2
 
 #
 #-----------------------------------------------

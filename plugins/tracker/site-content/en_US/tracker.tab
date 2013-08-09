@@ -697,6 +697,7 @@ plugin_tracker_common_artifact	error_artifactlink_value	$1: $2 is not an artifac
 plugin_tracker_common_artifact	error_artifactlink_choose_parent	You must choose to link to an existing parent artifact or to create a new one.
 plugin_tracker_common_artifact	error_date_value	$1 is not a date.
 plugin_tracker_common_artifact	error_text_value	$1 is not a text.
+plugin_tracker_common_artifact	error_processor_update	Error while updating the parent artifact $1: $2
 
 #
 #-----------------------------------------------
