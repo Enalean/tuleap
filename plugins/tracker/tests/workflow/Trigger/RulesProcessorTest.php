@@ -160,7 +160,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfTest extends Tracker_Workflow
     }
 
     public function itSetTheValueIfArtifactHasNoSiblings() {
-        $this->artifact->setSiblingsWithoutPermissionChecking(array());
+        $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator());
         expect($this->parent)->createNewChangeset()->once();
 
         $this->rules_processor->process($this->user, $this->artifact, $this->rule);
@@ -168,7 +168,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfTest extends Tracker_Workflow
 
     public function itDoesntSetTheValueIfOneSiblingHasNoValue() {
         $sibling = aMockArtifact()->withTracker($this->task_tracker)->build();
-        $this->artifact->setSiblingsWithoutPermissionChecking(array($sibling));
+        $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator(array($sibling)));
 
         expect($this->parent)->createNewChangeset()->never();
 
@@ -180,7 +180,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfTest extends Tracker_Workflow
         stub($sibling)->getId()->returns(112);
         stub($sibling)->getTracker()->returns($this->task_tracker);
         stub($sibling)->getValue($this->trigger_field)->returns(aChangesetValueList()->withValues(array($this->trigger_value))->build());
-        $this->artifact->setSiblingsWithoutPermissionChecking(array($sibling));
+        $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator(array($sibling)));
 
         expect($this->parent)->createNewChangeset()->once();
 
@@ -198,7 +198,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfTest extends Tracker_Workflow
         stub($sibling_2)->getTracker()->returns($this->task_tracker);
         stub($sibling_2)->getValue($this->trigger_field)->returns(aChangesetValueList()->withValues(array(aBindStaticValue()->withId('whatever')->build()))->build());
 
-        $this->artifact->setSiblingsWithoutPermissionChecking(array($sibling_1, $sibling_2));
+        $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator(array($sibling_1, $sibling_2)));
 
         expect($this->parent)->createNewChangeset()->never();
 
@@ -252,7 +252,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfWithSeveralRulesTest extends 
         stub($sibling_1)->getTracker()->returns($this->bug_tracker);
         stub($sibling_2)->getValue($this->trigger_field)->returns(aChangesetValueList()->withValues(array($this->trigger_value_2))->build());
 
-        $this->artifact->setSiblingsWithoutPermissionChecking(array($sibling_1, $sibling_2));
+        $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator(array($sibling_1, $sibling_2)));
 
         expect($this->parent)->createNewChangeset()->once();
 
@@ -270,7 +270,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfWithSeveralRulesTest extends 
         stub($sibling_2)->getTracker()->returns($this->bug_tracker);
         stub($sibling_2)->getValue($this->trigger_field)->returns(aChangesetValueList()->withValues(array(aBindStaticValue()->withId('whatever')->build()))->build());
 
-        $this->artifact->setSiblingsWithoutPermissionChecking(array($sibling_1, $sibling_2));
+        $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator(array($sibling_1, $sibling_2)));
 
         expect($this->parent)->createNewChangeset()->never();
 

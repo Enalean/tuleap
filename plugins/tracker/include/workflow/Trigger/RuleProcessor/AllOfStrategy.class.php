@@ -45,7 +45,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy implements Tracker_W
         return true;
     }
 
-    private function allOfSiblingsHaveTriggeringValue(array $siblings) {
+    private function allOfSiblingsHaveTriggeringValue(Iterator $siblings) {
         $update_parent = true;
         foreach ($siblings as $sibling) {
             $update_parent &= $this->artifactMatchRulesValue($sibling);

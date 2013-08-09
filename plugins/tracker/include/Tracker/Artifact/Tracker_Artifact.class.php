@@ -1491,7 +1491,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $this->siblings_without_permission_checking;
     }
 
-    public function setSiblingsWithoutPermissionChecking(array $siblings) {
+    public function setSiblingsWithoutPermissionChecking($siblings) {
         $this->siblings_without_permission_checking = $siblings;
     }
 
