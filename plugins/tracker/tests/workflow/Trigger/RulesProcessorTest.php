@@ -78,6 +78,43 @@ abstract class Tracker_Workflow_Trigger_RulesProcessor_BaseTest  extends TuleapT
 
 }
 
+class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends TuleapTestCase {
+
+    private $parent;
+    private $artifact;
+    private $user;
+    private $rules_processor;
+    private $target_field_id;
+    private $target_value_id;
+    private $rule;
+    private $target_field;
+    private $target_value;
+
+    public function setUp() {
+        parent::setUp();
+        $this->parent = mock('Tracker_Artifact');
+        $this->task_tracker = aTracker()->withId(899)->build();
+        $this->artifact = anArtifact()->withChangesets(array(mock('Tracker_Artifact_Changeset')))->withParentWithoutPermissionChecking($this->parent)->withTracker($this->task_tracker)->build();
+        $this->user = aUser()->build();
+        $this->rules_processor = new Tracker_Workflow_Trigger_RulesProcessor(
+            new Tracker_Workflow_WorkflowUser(),
+            mock('WorkflowBackendLogger')
+        );
+
+        $this->target_field_id = 569;
+        $this->target_field    = aSelectBoxField()->withId($this->target_field_id)->build();
+        $this->target_value_id = 7;
+        $this->target_value    = aBindStaticValue()->withId($this->target_value_id)->build();
+        $this->rule = mock('Tracker_Workflow_Trigger_TriggerRule');
+    }
+
+    public function itDoesNothingWhenArtifactHasNoParents() {
+        $artifact = anArtifact()->withTracker($this->task_tracker)->withoutParentWithoutPermissionChecking()->build();
+
+        $this->rules_processor->process($artifact, $this->rule);
+    }
+}
+
 class Tracker_Workflow_Trigger_RulesProcessorTest extends TuleapTestCase {
 
     private $parent;

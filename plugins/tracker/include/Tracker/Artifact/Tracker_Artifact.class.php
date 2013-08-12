@@ -27,6 +27,7 @@ require_once 'common/project/UGroupLiteralizer.class.php';
 require_once 'common/project/ProjectManager.class.php';
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
+    const NO_PARENT         = -1;
     const PERMISSION_ACCESS = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
     const REFERENCE_NATURE  = 'plugin_tracker_artifact';
 
@@ -77,6 +78,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     /** @var Tracker_Artifact[] */
     private $siblings_without_permission_checking;
+
+    /** @var Tracker_Artifact */
+    private $parent_without_permission_checking;
 
     /**
      * Constructor
@@ -1442,19 +1446,24 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * Note: even if there are several parents, only the first one is returned
      *
-     * @return Tracker_Artifact
+     * @return Tracker_Artifact|null
      */
     public function getParentWithoutPermissionChecking() {
-        if (! isset($this->parent_without_permission_checking)) {
-             $dar = $this->getDao()->getParents(array($this->getId()));
-             if ($dar && count($dar) == 1) {
-                 $this->parent_without_permission_checking = $this->getArtifactFactory()->getInstanceFromRow($dar->current());
-             }
+        if ($this->parent_without_permission_checking !== self::NO_PARENT && ! isset($this->parent_without_permission_checking)) {
+            $dar = $this->getDao()->getParents(array($this->getId()));
+            if ($dar && count($dar) == 1) {
+                $this->parent_without_permission_checking = $this->getArtifactFactory()->getInstanceFromRow($dar->current());
+            } else {
+                $this->parent_without_permission_checking = self::NO_PARENT;
+            }
+        }
+        if ($this->parent_without_permission_checking === self::NO_PARENT) {
+            return null;
         }
         return $this->parent_without_permission_checking;
     }
 
-    public function setParentWithoutPermissionChecking(Tracker_Artifact $parent) {
+    public function setParentWithoutPermissionChecking($parent) {
         $this->parent_without_permission_checking = $parent;
     }
 

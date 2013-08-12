@@ -82,6 +82,11 @@ class Test_Artifact_Builder {
         return $this;
     }
 
+    public function withoutParentWithoutPermissionChecking() {
+        $this->parent_without_permission_checking = Tracker_Artifact::NO_PARENT;
+        return $this;
+    }
+
     public function withoutParent() {
         $this->ancestors = array();
         return $this;

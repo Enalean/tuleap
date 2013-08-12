@@ -44,7 +44,7 @@ class Tracker_Workflow_Trigger_RulesProcessor {
         $this->logger->start(__METHOD__, $artifact->getXRef(), $rule->getId());
 
         $parent = $artifact->getParentWithoutPermissionChecking();
-        if (! $this->parentAlreadyHasTargetValue($parent, $rule)) {
+        if ($parent && ! $this->parentAlreadyHasTargetValue($parent, $rule)) {
             $this->logger->debug('Parent '. $parent->getXRef() .' does not have target value…');
             $processor_strategy = $this->getRuleStrategy($artifact, $rule);
             if ($processor_strategy->allPrecondtionsAreMet()) {
