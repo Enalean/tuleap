@@ -756,8 +756,9 @@ class ReferenceManager {
 
         $value=$match[3];
         if ($ref_gid=="") $ref_gid=100; // use system references only
-        $num_args=substr_count($value,'/')+1; // Count number of arguments in detected reference
-        $ref = $this->_getReferenceFromKeywordAndNumArgs($key,$ref_gid,$num_args);
+
+        $ref = $this->getReference($key, $value, $ref_gid);
+
         $refInstance = null;
         if ($ref) {
             $refInstance= new ReferenceInstance($match[1]." #".$match[2].$match[3],$ref,$match[3]);
@@ -767,7 +768,30 @@ class ReferenceManager {
         return $refInstance;
     }
 
-        
+    private function getReference($key, $value, $ref_gid) {
+        $reference       = null;
+        $project_manager = ProjectManager::instance();
+        $project         = $project_manager->getProject($ref_gid);
+
+        $this->eventManager->processEvent(
+            Event::GET_REFERENCE,
+            array(
+                'reference_manager' => $this,
+                'project'           => $project,
+                'keyword'           => $key,
+                'value'             => $value,
+                'group_id'          => $ref_gid,
+                'reference'         => &$reference,
+            )
+        );
+
+        if (! $reference) {
+            $num_args  = substr_count($value,'/')+1;
+            $reference = $this->_getReferenceFromKeywordAndNumArgs($key,$ref_gid,$num_args);
+        }
+
+        return $reference;
+    }
 
     function _getReferenceFromKeywordAndNumArgs($keyword,$group_id,$num_args) {
         $this->_initProjectReferences($group_id);

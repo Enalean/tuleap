@@ -25,6 +25,7 @@ class ReferenceManagerTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         EventManager::setInstance(mock('EventManager'));
+        ProjectManager::setInstance(mock('ProjectManager'));
         $this->rm = partial_mock('ReferenceManager', array(
             '_getReferenceDao',
             '_getCrossReferenceDao',
@@ -38,6 +39,7 @@ class ReferenceManagerTest extends TuleapTestCase {
     public function tearDown() {
         parent::tearDown();
         EventManager::clearInstance();
+        ProjectManager::clearInstance();
     }
     
     function testSingleton() {
@@ -106,7 +108,7 @@ class ReferenceManagerTest extends TuleapTestCase {
         $dar2->setReturnValueAt(1, 'getRow', false);
 
         //The Reference manager
-        
+
         $this->rm->setReturnReference('_getReferenceDao', $dao);
         $this->assertTrue(count($this->rm->extractReferences("art #123", 0)) == 1, "Art is a shared keyword for all projects");
         $this->assertTrue(count($this->rm->extractReferences("arto #123", 0)) == 0, "Should not extract a reference on unknown keyword");
