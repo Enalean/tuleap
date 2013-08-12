@@ -24,7 +24,6 @@ abstract class Tracker_Workflow_Trigger_RulesProcessor_BaseTest  extends TuleapT
 
     protected $parent;
     protected $artifact;
-    protected $user;
     protected $rules_processor;
     protected $target_field_id;
     protected $target_value_id;
@@ -46,7 +45,6 @@ abstract class Tracker_Workflow_Trigger_RulesProcessor_BaseTest  extends TuleapT
         stub($this->parent)->getTracker()->returns($this->story_tracker);
 
         $this->artifact = anArtifact()->withChangesets(array(mock('Tracker_Artifact_Changeset')))->withParentWithoutPermissionChecking($this->parent)->withTracker($this->task_tracker)->build();
-        $this->user = aUser()->build();
 
         $this->rules_processor = new Tracker_Workflow_Trigger_RulesProcessor(
             new Tracker_Workflow_WorkflowUser(),
@@ -128,13 +126,13 @@ class Tracker_Workflow_Trigger_RulesProcessorTest extends TuleapTestCase {
 
         expect($this->parent)->createNewChangeset($fields_data, '*', new IsAWorkflowUserExpectation(), $email, $send_notification, Tracker_Artifact_Changeset_Comment::HTML_COMMENT)->once();
 
-        $this->rules_processor->process($this->user, $this->artifact, $this->rule);
+        $this->rules_processor->process($this->artifact, $this->rule);
     }
 
     public function itDoesntSetTargetValueIfAlreadySet() {
         stub($this->parent)->getValue($this->target_field)->returns(aChangesetValueList()->withValues(array($this->target_value))->build());
         expect($this->parent)->createNewChangeset()->never();
-        $this->rules_processor->process($this->user, $this->artifact, $this->rule);
+        $this->rules_processor->process($this->artifact, $this->rule);
     }
 }
 
@@ -162,14 +160,14 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfTest extends Tracker_Workflow
     public function itDoesntSetTargetValueIfAlreadySet() {
         stub($this->parent)->getValue($this->target_field)->returns(aChangesetValueList()->withValues(array($this->target_value))->build());
         expect($this->parent)->createNewChangeset()->never();
-        $this->rules_processor->process($this->user, $this->artifact, $this->rule);
+        $this->rules_processor->process($this->artifact, $this->rule);
     }
 
     public function itSetTheValueIfArtifactHasNoSiblings() {
         $this->artifact->setSiblingsWithoutPermissionChecking(new ArrayIterator());
         expect($this->parent)->createNewChangeset()->once();
 
-        $this->rules_processor->process($this->user, $this->artifact, $this->rule);
+        $this->rules_processor->process($this->artifact, $this->rule);
     }
 
     public function itDoesntSetTheValueIfOneSiblingHasNoValue() {
@@ -178,7 +176,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfTest extends Tracker_Workflow
 
         expect($this->parent)->createNewChangeset()->never();
 
-        $this->rules_processor->process($this->user, $this->artifact, $this->rule);
+        $this->rules_processor->process($this->artifact, $this->rule);
     }
 
     public function itSetTheValueIfOneSameTypeSiblingHasCorrectValue() {
@@ -190,7 +188,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfTest extends Tracker_Workflow
 
         expect($this->parent)->createNewChangeset()->once();
 
-        $this->rules_processor->process($this->user, $this->artifact, $this->rule);
+        $this->rules_processor->process($this->artifact, $this->rule);
     }
 
     public function itDoesntSetTheValueIfOneSameTypeSiblingHasIncorrectValue() {
@@ -208,7 +206,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfTest extends Tracker_Workflow
 
         expect($this->parent)->createNewChangeset()->never();
 
-        $this->rules_processor->process($this->user, $this->artifact, $this->rule);
+        $this->rules_processor->process($this->artifact, $this->rule);
     }
 }
 
@@ -262,7 +260,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfWithSeveralRulesTest extends 
 
         expect($this->parent)->createNewChangeset()->once();
 
-        $this->rules_processor->process($this->user, $this->artifact, $this->complex_rule);
+        $this->rules_processor->process($this->artifact, $this->complex_rule);
     }
 
     public function itDoesntSetTheValueIfOneOfTheChildDoesntApply() {
@@ -280,7 +278,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfWithSeveralRulesTest extends 
 
         expect($this->parent)->createNewChangeset()->never();
 
-        $this->rules_processor->process($this->user, $this->artifact, $this->complex_rule);
+        $this->rules_processor->process($this->artifact, $this->complex_rule);
     }
 }
 

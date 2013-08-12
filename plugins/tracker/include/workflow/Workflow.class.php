@@ -305,8 +305,8 @@ class Workflow {
      *
      * @return void
      */
-    public function after(PFUser $user, array $fields_data, Tracker_Artifact_Changeset $new_changeset, Tracker_Artifact_Changeset $previous_changeset = null) {
-        $this->getLogger()->start(__METHOD__, $user->getId(), '[…]', $new_changeset->getId(), ($previous_changeset ? $previous_changeset->getId() : 'null'));
+    public function after(array $fields_data, Tracker_Artifact_Changeset $new_changeset, Tracker_Artifact_Changeset $previous_changeset = null) {
+        $this->getLogger()->start(__METHOD__, $new_changeset->getId(), ($previous_changeset ? $previous_changeset->getId() : 'null'));
 
         if (isset($fields_data[$this->getFieldId()])) {
             $transition = $this->getCurrentTransition($fields_data, $previous_changeset);
@@ -314,9 +314,9 @@ class Workflow {
                 $transition->after($new_changeset);
             }
         }
-        $this->getTracker()->getTriggerRulesManager()->processTriggers($user, $new_changeset);
+        $this->getTracker()->getTriggerRulesManager()->processTriggers($new_changeset);
 
-        $this->getLogger()->end(__METHOD__, $user->getId(), '[…]', $new_changeset->getId(), ($previous_changeset ? $previous_changeset->getId() : 'null'));
+        $this->getLogger()->end(__METHOD__, $new_changeset->getId(), ($previous_changeset ? $previous_changeset->getId() : 'null'));
     }
 
     public function validate($fields_data, Tracker_Artifact $artifact) {

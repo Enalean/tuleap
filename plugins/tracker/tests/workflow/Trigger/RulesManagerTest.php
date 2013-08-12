@@ -271,7 +271,6 @@ class Tracker_Workflow_Trigger_RulesManager_processTriggersTest extends Tracker_
             array($this->dao, $this->formelement_factory, $this->rules_processor, mock('WorkflowBackendLogger'))
         );
 
-        $user      = mock('PFUser');
         $artifact  = mock('Tracker_Artifact');
         $trigger_1 = aTriggerRule()->withId(1)->build();
         $trigger_2 = aTriggerRule()->withId(2)->build();
@@ -285,9 +284,9 @@ class Tracker_Workflow_Trigger_RulesManager_processTriggersTest extends Tracker_
         stub($manager)->getRuleById(1)->returns($trigger_1);
         stub($manager)->getRuleById(2)->returns($trigger_2);
 
-        expect($this->rules_processor)->process($user, $artifact, $trigger_1)->at(1);
-        expect($this->rules_processor)->process($user, $artifact, $trigger_2)->at(2);
-        $manager->processTriggers($user, $changeset);
+        expect($this->rules_processor)->process($artifact, $trigger_1)->at(1);
+        expect($this->rules_processor)->process($artifact, $trigger_2)->at(2);
+        $manager->processTriggers($changeset);
     }
 }
 ?>

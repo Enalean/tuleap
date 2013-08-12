@@ -153,17 +153,17 @@ class Tracker_Workflow_Trigger_RulesManager {
         }
     }
 
-    public function processTriggers(PFUser $user, Tracker_Artifact_Changeset $changeset) {
-        $this->logger->start(__METHOD__, $user->getId(), $changeset->getId());
+    public function processTriggers(Tracker_Artifact_Changeset $changeset) {
+        $this->logger->start(__METHOD__, $changeset->getId());
 
         $dar_rules = $this->dao->searchForInvolvedRulesIdsByChangesetId($changeset->getId());
         foreach ($dar_rules as $row) {
             $rule = $this->getRuleById($row['rule_id']);
             $this->logger->debug("Found matching rule ". json_encode($rule->fetchFormattedForJson()));
-            $this->rules_processor->process($user, $changeset->getArtifact(), $rule);
+            $this->rules_processor->process($changeset->getArtifact(), $rule);
         }
 
-        $this->logger->end(__METHOD__, $user->getId(), $changeset->getId());
+        $this->logger->end(__METHOD__, $changeset->getId());
     }
 }
 

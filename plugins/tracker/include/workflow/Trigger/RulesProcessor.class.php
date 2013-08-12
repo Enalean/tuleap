@@ -37,12 +37,11 @@ class Tracker_Workflow_Trigger_RulesProcessor {
     /**
      * Apply $rule that was triggered by a change on $artifact
      *
-     * @param PFUser $user
      * @param Tracker_Artifact $artifact
      * @param Tracker_Workflow_Trigger_TriggerRule $rule
      */
-    public function process(PFUser $user, Tracker_Artifact $artifact, Tracker_Workflow_Trigger_TriggerRule $rule) {
-        $this->logger->start(__METHOD__, $user->getId(), $artifact->getXRef(), $rule->getId());
+    public function process(Tracker_Artifact $artifact, Tracker_Workflow_Trigger_TriggerRule $rule) {
+        $this->logger->start(__METHOD__, $artifact->getXRef(), $rule->getId());
 
         $parent = $artifact->getParentWithoutPermissionChecking();
         if (! $this->parentAlreadyHasTargetValue($parent, $rule)) {
@@ -54,7 +53,7 @@ class Tracker_Workflow_Trigger_RulesProcessor {
             }
         }
 
-        $this->logger->end(__METHOD__, $user->getId(), $artifact->getId(), $rule->getId());
+        $this->logger->end(__METHOD__, $artifact->getId(), $rule->getId());
     }
 
     private function updateParent(Tracker_Artifact $parent, Tracker_Artifact $child, Tracker_Workflow_Trigger_TriggerRule $rule) {

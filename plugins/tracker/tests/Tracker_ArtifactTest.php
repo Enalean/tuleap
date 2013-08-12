@@ -2073,7 +2073,7 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
     public function itCallsTheAfterMethodOnWorkflowWhenCreateInitialChangeset() {
         stub($this->changeset_dao)->create()->returns(5667);
         stub($this->artifact_factory)->save()->returns(true);
-        expect($this->workflow)->after($this->submitter, $this->fields_data, new IsAExpectation('Tracker_Artifact_Changeset'), null)->once();
+        expect($this->workflow)->after($this->fields_data, new IsAExpectation('Tracker_Artifact_Changeset'), null)->once();
 
         $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->email);
     }
@@ -2096,7 +2096,7 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
     public function itCallsTheAfterMethodOnWorkflowWhenCreateNewChangeset() {
         stub($this->changeset_dao)->create()->returns(true);
         stub($this->artifact_factory)->save()->returns(true);
-        expect($this->workflow)->after($this->submitter, $this->fields_data, new IsAExpectation('Tracker_Artifact_Changeset'), end($this->changesets))->once();
+        expect($this->workflow)->after($this->fields_data, new IsAExpectation('Tracker_Artifact_Changeset'), end($this->changesets))->once();
 
         $this->artifact->createNewChangeset($this->fields_data, '', $this->submitter, $this->email, false);
     }
