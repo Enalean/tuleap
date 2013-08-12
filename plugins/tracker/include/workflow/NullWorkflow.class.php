@@ -24,10 +24,23 @@
  */
 class NullWorkflow extends Workflow {
 
-    public function __construct($tracker_id) {
+    public function __construct(
+        Tracker_RulesManager $global_rules_manager,
+        Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
+        WorkflowBackendLogger $logger,
+        $tracker_id
+    ) {
         $workflow_id = 0;
         $field_id    = 0;
         $is_used     = false;
-        parent::__construct($workflow_id, $tracker_id, $field_id, $is_used);
+        parent::__construct(
+            $global_rules_manager,
+            $trigger_rules_manager,
+            $logger,
+            $workflow_id,
+            $tracker_id,
+            $field_id,
+            $is_used
+        );
     }
 }

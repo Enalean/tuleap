@@ -188,8 +188,12 @@ class WorkflowTest extends UnitTestCase {
         $transitions = array($t1, $t2, $t3);
         $ugroups_transition = array('ugroup' => 'UGROUP_PROJECT_MEMBERS');
 
+        $global_rules_manager  = mock('Tracker_RulesManager');
+        $trigger_rules_manager = mock('Tracker_Workflow_Trigger_RulesManager');
+        $logger                = mock('WorkflowBackendLogger');
+
         $workflow = TestHelper::getPartialMock('Workflow', array('getPermissionsManager'));
-        $workflow->__construct(1, 2, 103, 1, $transitions);
+        $workflow->__construct($global_rules_manager, $trigger_rules_manager, $logger, 1, 2, 103, 1, $transitions);
 
         $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('getAuthorizedUgroups', $ugroups_transition);
@@ -249,7 +253,6 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         stub($this->transition_open_to_close)->getFieldValueTo()->returns($close_value);
 
         $this->trigger_rules_manager = mock('Tracker_Workflow_Trigger_RulesManager');
-        $tracker = stub('Tracker')->getTriggerRulesManager()->returns($this->trigger_rules_manager);
 
         $workflow_id = 1;
         $tracker_id  = 2;
@@ -258,11 +261,9 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         $transitions = array($this->transition_null_to_open, $this->transition_open_to_close);
         $this->workflow = partial_mock(
             'Workflow',
-            array('getTracker', 'getLogger'),
-            array($workflow_id, $tracker_id, $field_id, $is_used, $transitions)
+            array('getTracker'),
+            array(mock('Tracker_RulesManager'), $this->trigger_rules_manager, mock('WorkflowBackendLogger'), $workflow_id, $tracker_id, $field_id, $is_used, $transitions)
         );
-        stub($this->workflow)->getTracker()->returns($tracker);
-        stub($this->workflow)->getLogger()->returns(mock('WorkflowBackendLogger'));
         $this->workflow->setField($this->status_field);
 
         $this->artifact = new MockTracker_Artifact();
@@ -358,7 +359,6 @@ class Workflow_ExportToSOAP_BaseTest extends TuleapTestCase {
 
         $this->rules_manager = mock('Tracker_RulesManager');
         stub($this->rules_manager)->exportToSOAP()->returns('rules in soap format');
-        stub($this->tracker)->getRulesManager()->returns($this->rules_manager);
 
         $field_list_value1 = aFieldListStaticValue()->withId(0)->build();
         $field_list_value2 = aFieldListStaticValue()->withId(11)->build();
@@ -380,12 +380,14 @@ class Workflow_ExportToSOAP_BaseTest extends TuleapTestCase {
         stub($unreadable_field)->userCanRead()->returns(false);
 
         $this->workflow = aWorkflow()
+            ->withGlobalRulesManager($this->rules_manager)
             ->withTrackerId($this->tracker_id)
             ->withTransitions(array($transition1, $transition2, $transition3))
             ->build();
         $this->workflow->setField($this->field);
 
         $this->unreadable_workflow = aWorkflow()
+            ->withGlobalRulesManager($this->rules_manager)
             ->withTrackerId($this->tracker_id)
             ->withTransitions(array($transition1, $transition2, $transition3))
             ->build();
@@ -490,31 +492,22 @@ class Workflow_checkGlobalRulesTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-
-        $tracker         = mock('Tracker');
-        $tracker_factory = mock('TrackerFactory');
-        TrackerFactory::setInstance($tracker_factory);
-        stub($tracker_factory)->getTrackerByid($this->tracker_id)->returns($tracker);
-
         $this->rules_manager = mock ('Tracker_RulesManager');
-        stub($tracker)->getRulesManager()->returns($this->rules_manager);
-    }
-
-    public function tearDown() {
-        TrackerFactory::clearInstance();
-        parent::tearDown();
     }
 
     public function itDelegatesValidationToRulesManager() {
         $fields_data = array();
 
         expect($this->rules_manager)->validate($this->tracker_id, $fields_data)->once()->returns(true);
-        $workflow = aWorkflow()->withTrackerId($this->tracker_id)->build();
+        $workflow = aWorkflow()
+            ->withGlobalRulesManager($this->rules_manager)
+            ->withTrackerId($this->tracker_id)
+            ->build();
 
         try {
             $workflow->checkGlobalRules($fields_data);
         } catch (Exception $e) {
-            $this->fail('Should not throw an exception');
+            $this->fail('Should not throw an exception: '. get_class($e));
         }
     }
 }

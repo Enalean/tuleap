@@ -110,13 +110,6 @@ Mock::generate('ReferenceManager');
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 Mock::generate('Tracker_ArtifactFactory');
-Mock::generate('Tracker_RulesManager');
-/*Mock::generatePartial('Tracker_RulesManager', 'MockTracker_RulesManager', array(
-        'validate'
-    )
-);*/
-
-
 
 Mock::generate('Tracker_FormElement_Field_ArtifactLink');
 
@@ -164,10 +157,6 @@ class Tracker_ArtifactTest extends TuleapTestCase {
         $this->changeset_value = new MockTracker_Artifact_ChangesetValue();
         $this->changeset->setReturnReference('getValue', $this->changeset_value, array($this->field));
         $this->artifact_update->setReturnReference('getLastChangeset', $this->changeset); // changeset => artifact modification
-
-        $rules_manager = new MockTracker_RulesManager();
-        $rules_manager->setReturnValue('validate', true);
-        $tracker->setReturnReference('getRulesManager', $rules_manager);
     }
 
     function tearDown() {
@@ -205,10 +194,6 @@ class Tracker_ArtifactTest extends TuleapTestCase {
     function testValidateFields_basicvalid() {
         $tracker = new MockTracker();
         $factory = new MockTracker_FormElementFactory();
-
-        $rules_manager = new MockTracker_RulesManager();
-        $rules_manager->setReturnValue('validate', true);
-        $tracker->setReturnReference('getRulesManager', $rules_manager);
 
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
@@ -346,10 +331,6 @@ class Tracker_ArtifactTest extends TuleapTestCase {
         $tracker = new MockTracker();
         $factory = new MockTracker_FormElementFactory();
 
-        $rules_manager = new MockTracker_RulesManager();
-        $rules_manager->setReturnValue('validate', true);
-        $tracker->setReturnReference('getRulesManager', $rules_manager);
-
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
         $field1->setReturnValue('isValid', true);
@@ -397,10 +378,6 @@ class Tracker_ArtifactTest extends TuleapTestCase {
     function testValidateFields_missing_fields_on_update() {
         $tracker = new MockTracker();
         $factory = new MockTracker_FormElementFactory();
-
-        $rules_manager = new MockTracker_RulesManager();
-        $rules_manager->setReturnValue('validate', true);
-        $tracker->setReturnReference('getRulesManager', $rules_manager);
 
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
@@ -450,10 +427,6 @@ class Tracker_ArtifactTest extends TuleapTestCase {
         $tracker = new MockTracker();
         $factory = new MockTracker_FormElementFactory();
 
-        $rules_manager = new MockTracker_RulesManager();
-        $rules_manager->setReturnValue('validate', true);
-        $tracker->setReturnReference('getRulesManager', $rules_manager);
-
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
         $field1->setReturnValue('isValid', true);
@@ -500,10 +473,6 @@ class Tracker_ArtifactTest extends TuleapTestCase {
         $tracker = new MockTracker();
         $factory = new MockTracker_FormElementFactory();
 
-        $rules_manager = new MockTracker_RulesManager();
-        $rules_manager->setReturnValue('validate', true);
-        $tracker->setReturnReference('getRulesManager', $rules_manager);
-
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
         $field1->setReturnValue('isValid', true);
@@ -542,10 +511,6 @@ class Tracker_ArtifactTest extends TuleapTestCase {
     function testValidateFields_valid() {
         $tracker = new MockTracker();
         $factory = new MockTracker_FormElementFactory();
-
-        $rules_manager = new MockTracker_RulesManager();
-        $rules_manager->setReturnValue('validate', true);
-        $tracker->setReturnReference('getRulesManager', $rules_manager);
 
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
@@ -606,9 +571,6 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $tracker = new MockTracker();
         $factory = new MockTracker_FormElementFactory();
 
-        $rules_manager = new MockTracker_RulesManager();
-        $rules_manager->setReturnValue('validate', true);
-        $tracker->setReturnReference('getRulesManager', $rules_manager);
         $tracker->setReturnValue('getFormElements', array());
         
         $field1  = new MockTracker_FormElement_Field();
@@ -683,9 +645,6 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $tracker = new MockTracker();
         $factory = new MockTracker_FormElementFactory();
 
-        $rules_manager = new MockTracker_RulesManager();
-        $rules_manager->setReturnValue('validate', true);
-        $tracker->setReturnReference('getRulesManager', $rules_manager);
         $tracker->setReturnValue('getFormElements', array());
 
         $field1  = new MockTracker_FormElement_Field();
@@ -809,9 +768,6 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $factory = new MockTracker_FormElementFactory();
         $factory->setReturnValue('getAllFormElementsForTracker', array());
 
-        $rules_manager = new MockTracker_RulesManager();
-        $rules_manager->setReturnValue('validate', true);
-        $tracker->setReturnReference('getRulesManager', $rules_manager);
         $tracker->setReturnValue('getFormElements', array());
 
         $field1  = new MockTracker_FormElement_Field();
@@ -876,9 +832,6 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $tracker = new MockTracker();
         $factory = new MockTracker_FormElementFactory();
 
-        $rules_manager = new MockTracker_RulesManager();
-        $rules_manager->setReturnValue('validate', true);
-        $tracker->setReturnReference('getRulesManager', $rules_manager);
         $tracker->setReturnValue('getFormElements', array());
 
         $artifact = new Tracker_ArtifactTestVersion();
@@ -946,10 +899,6 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $tracker->setReturnValue('getFormElements', array());
 
         $factory = new MockTracker_FormElementFactory();
-
-        $rules_manager = new MockTracker_RulesManager();
-        $rules_manager->setReturnValue('validate', true);
-        $tracker->setReturnReference('getRulesManager', $rules_manager);
 
         $artifact = partial_mock('Tracker_Artifact', array(
             'getChangesetDao',
@@ -1059,10 +1008,6 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
 
         $factory = new MockTracker_FormElementFactory();
 
-        $rules_manager = new MockTracker_RulesManager();
-        $rules_manager->setReturnValue('validate', true);
-        $tracker->setReturnReference('getRulesManager', $rules_manager);
-
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
         $field1->setReturnValue('isValid', true);
@@ -1168,10 +1113,6 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
 
         $factory = new MockTracker_FormElementFactory();
         
-        $rules_manager = new MockTracker_RulesManager();
-        $rules_manager->setReturnValue('validate', true);
-        $tracker->setReturnReference('getRulesManager', $rules_manager);
-
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
         $field1->setReturnValue('isValid', true);
@@ -1274,10 +1215,6 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
 
         $factory = new MockTracker_FormElementFactory();
 
-        $rules_manager = new MockTracker_RulesManager();
-        $rules_manager->setReturnValue('validate', true);
-        $tracker->setReturnReference('getRulesManager', $rules_manager);
-
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
         $field1->setReturnValue('isValid', true);
@@ -1372,10 +1309,6 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $tracker = new MockTracker();
         $tracker->setReturnValue('getFormElements', array());
         $factory = new MockTracker_FormElementFactory();
-
-        $rules_manager = new MockTracker_RulesManager();
-        $rules_manager->setReturnValue('validate', true);
-        $tracker->setReturnReference('getRulesManager', $rules_manager);
 
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
