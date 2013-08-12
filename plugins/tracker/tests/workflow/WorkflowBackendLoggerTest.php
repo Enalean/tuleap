@@ -56,4 +56,19 @@ class WorkflowBackendLogger_StartEndTest extends TuleapTestCase {
         $logger->end('subMethod');
         $logger->end('method');
     }
+
+    public function itIncludesTheFingerprint() {
+        $logger = new WorkflowBackendLogger($this->backend_logger);
+        expect($this->backend_logger)->log('[WF] [12345] toto', Feedback::DEBUG)->once();
+        $logger->defineFingerprint(12345);
+        $logger->debug('toto');
+    }
+
+    public function itDoesNotChangeTheFingerprint() {
+        $logger = new WorkflowBackendLogger($this->backend_logger);
+        expect($this->backend_logger)->log('[WF] [12345] toto', Feedback::DEBUG)->once();
+        $logger->defineFingerprint(12345);
+        $logger->defineFingerprint(67890);
+        $logger->debug('toto');
+    }
 }

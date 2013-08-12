@@ -41,6 +41,9 @@ class WorkflowBackendLogger implements Logger {
     /** @var BackendLogger */
     private $backend_logger;
 
+    /** @var string */
+    private $fingerprint = '';
+
     public function __construct(BackendLogger $backend_logger) {
         $this->backend_logger = $backend_logger;
     }
@@ -68,7 +71,12 @@ class WorkflowBackendLogger implements Logger {
 
     /** @see Logger::log() */
     public function log($message, $level = Feedback::INFO) {
-        $this->backend_logger->log(self::WF_PREFIX. $this->indentation_prefix . $message, $level);
+        $prefix  = self::WF_PREFIX;
+        if ($this->fingerprint) {
+            $prefix .= "[{$this->fingerprint}] ";
+        }
+        $prefix .= $this->indentation_prefix;
+        $this->backend_logger->log($prefix . $message, $level);
     }
 
     /**
@@ -97,6 +105,19 @@ class WorkflowBackendLogger implements Logger {
         array_unshift($arguments, __FUNCTION__);
         array_unshift($arguments, self::INDENTATION_END);
         call_user_func_array(array($this, 'logMethodAndItsArguments'), $arguments);
+    }
+
+    /**
+     * Define the fingerprint of the logger.
+     *
+     * At the name implies, once defined, a fingerprint cannot be changed.
+     *
+     * @param string $the_fingerprint
+     */
+    public function defineFingerprint($fingerprint) {
+        if (! $this->fingerprint) {
+            $this->fingerprint = $fingerprint;
+        }
     }
 
     private function logMethodAndItsArguments() {
