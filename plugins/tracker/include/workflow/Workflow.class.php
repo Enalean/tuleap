@@ -322,6 +322,7 @@ class Workflow {
      * @return void
      */
     public function after(array $fields_data, Tracker_Artifact_Changeset $new_changeset, Tracker_Artifact_Changeset $previous_changeset = null) {
+        $this->logger->defineFingerprint($new_changeset->getArtifact()->getId());
         $this->logger->start(__METHOD__, $new_changeset->getId(), ($previous_changeset ? $previous_changeset->getId() : 'null'));
 
         if (isset($fields_data[$this->getFieldId()])) {
