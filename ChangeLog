@@ -21,6 +21,7 @@ Version 6.4 (NOT RELEASED YET)
 	* Better error handling on SQL errors
 	* Methods to fetch and update the description fields of a project through SOAP
 	* Fix lxc_fix_uid script
+	* Add docman soap call example
 
 	== Themes ==
 	* Experimental: 0.2
