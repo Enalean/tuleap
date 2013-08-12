@@ -989,7 +989,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         //Save the artifact
         if ($this->getArtifactFactory()->save($this)) {
             foreach ($used_fields as $field) {
-                $field->postSaveNewChangeset($this, $submitter);
+                $field->postSaveNewChangeset($this, $submitter, $new_changeset, $previous_changeset);
             }
 
             $this->getWorkflow()->after($fields_data, $new_changeset, $previous_changeset);

@@ -68,31 +68,17 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
      * @return string The difference between another $changeset_value, false if no differences
      */
     public function diff($changeset_value, $format = 'html') {
-        $previous = $changeset_value->getValue();
-        $next     = $this->getValue();
         $changes = false;
-        if ($previous != $next) {
-            $removed_elements = array_diff(array_keys($previous), array_keys($next));
-            $removed_arr = array();
-            $method = 'getLabel';
-            if ($format === 'html') {
-                $method = 'getUrl';
-            }
-            foreach ($removed_elements as $key) {
-                $removed_arr[] = $previous[$key]->$method();
-            }
-            $removed = implode(', ', $removed_arr);
-            $added_elements = array_diff(array_keys($next), array_keys($previous));
-            $added_arr = array();
-            foreach ($added_elements as $key) {
-                $added_arr[] = $next[$key]->$method();
-            }
-            $added   = implode(', ', $added_arr);
-            if (empty($next)) {
+        $diff = $this->getArtifactLinkInfoDiff($changeset_value);
+        if ($diff->hasChanges()) {
+            $removed = $diff->getRemovedFormatted($format);
+            $added   = $diff->getAddedFormatted($format);
+
+            if ($diff->isCleared()) {
                 $changes = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','cleared');
-            } else if (empty($previous)) {
+            } else if ($diff->isInitialized()) {
                 $changes = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$added;
-            } else if (count($previous) == 1 && count($next) == 1) {
+            } else if ($diff->isReplace()) {
                 $changes = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from'). ' '.$removed .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','to').' '.$added;
             } else {
                 if ($removed) {
@@ -108,7 +94,21 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
         }
         return $changes;
     }
-    
+
+    /**
+     * Return diff between 2 changeset values
+     *
+     * @param Tracker_Artifact_ChangesetValue_ArtifactLink $old_changeset_value
+     *
+     * @return Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
+     */
+    public function getArtifactLinkInfoDiff(Tracker_Artifact_ChangesetValue_ArtifactLink $old_changeset_value) {
+        return new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff(
+            $old_changeset_value->getValue(),
+            $this->getValue()
+        );
+    }
+
     /**
      * Returns the "set to" for field added later
      *
@@ -150,4 +150,5 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
         return array_keys($this->artifact_links);
     }
 }
+
 ?>

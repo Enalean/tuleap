@@ -1060,9 +1060,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         return Tracker_HierarchyFactory::instance();
     }
 
-    public function postSaveNewChangeset(Tracker_Artifact $artifact, PFUser $submitter) {
+    public function postSaveNewChangeset(Tracker_Artifact $artifact, PFUser $submitter, Tracker_Artifact_Changeset $new_changeset, Tracker_Artifact_Changeset $previous_changeset = null) {
         foreach ($this->source_of_association as $source_artifact) {
             $source_artifact->linkArtifact($artifact->getId(), $submitter);
+        }
+        $diff = $new_changeset->getValue($this)->getArtifactLinkInfoDiff($previous_changeset->getValue($this));
+        if ($diff->hasChanges()) {
+            $GLOBALS['Response']->addFeedback('info', $artifact->getId().' added: '.$diff->getAddedFormatted('text'));
+            $GLOBALS['Response']->addFeedback('info', $artifact->getId().' removed: '.$diff->getRemovedFormatted('text'));
         }
     }
 

@@ -388,8 +388,12 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         expect($this->artifact_123)->linkArtifact($this->modified_artifact_id, $this->submitter)->once();
         stub($this->artifact_123)->linkArtifact()->returns(true);
 
+        $changeset_value    = stub('Tracker_Artifact_ChangesetValue_ArtifactLink')->getArtifactLinkInfoDiff()->returns(mock('Tracker_Artifact_ChangesetValue_ArtifactLinkDiff'));
+        $new_changeset      = stub('Tracker_Artifact_Changeset')->getValue()->returns($changeset_value);
+        $previous_changeset = mock('Tracker_Artifact_Changeset');
+
         $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter);
-        $this->field->postSaveNewChangeset($this->modified_artifact, $this->submitter);
+        $this->field->postSaveNewChangeset($this->modified_artifact, $this->submitter, $new_changeset, $previous_changeset);
     }
 
     public function itRemovesFromSubmittedValuesArtifactsThatWereUpdatedByDirectionChecking() {
