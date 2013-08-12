@@ -390,7 +390,7 @@ class Workflow {
      * @return WorkflowBackendLogger
      */
     protected function getLogger() {
-        return new WorkflowBackendLogger();
+        return new WorkflowBackendLogger(new BackendLogger());
     }
 }
 ?>

@@ -42,24 +42,24 @@ class BackendLogger implements Logger {
      *
      * @return boolean true on success or false on failure
      */
-    public function log($message, $level = 'info') {
+    public function log($message, $level = Feedback::INFO) {
         return error_log(date('c')." [$level] $message\n", 3, $this->filepath);
     }
 
     public function debug($message) {
-        $this->log($message, 'debug');
+        $this->log($message, Feedback::DEBUG);
     }
 
     public function info($message) {
-        $this->log($message, 'info');
+        $this->log($message, Feedback::INFO);
     }
 
     public function error($message, Exception $e = null) {
-        $this->log($this->generateLogWithException($message, $e), 'error');
+        $this->log($this->generateLogWithException($message, $e), Feedback::ERROR);
     }
 
     public function warn($message, Exception $e = null) {
-        $this->log($this->generateLogWithException($message, $e), 'warning');
+        $this->log($this->generateLogWithException($message, $e), Feedback::WARN);
 
     }
 

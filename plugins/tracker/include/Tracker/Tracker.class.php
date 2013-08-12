@@ -1967,7 +1967,8 @@ EOS;
      * @return Tracker_Workflow_Trigger_RulesManager
      */
     public function getTriggerRulesManager() {
-        $logger = new WorkflowBackendLogger();
+        $logger = new WorkflowBackendLogger(new BackendLogger());
+
         return new Tracker_Workflow_Trigger_RulesManager(
             new Tracker_Workflow_Trigger_RulesDao(),
             $this->getFormElementFactory(),
