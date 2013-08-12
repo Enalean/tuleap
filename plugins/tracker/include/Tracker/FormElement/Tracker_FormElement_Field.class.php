@@ -1181,6 +1181,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $artifact->getValue($this);
     }
 
+    /**
+     * Do something after *all* fields are saved as new changset
+     */
+    public function postSaveNewChangeset(Tracker_Artifact $artifact, PFUser $submitter) {
+    }
 }
 
 ?>

@@ -372,10 +372,8 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         stub($this->field)->getArtifactsFromChangesetValue($this->submitted_value, $this->old_changeset)->returns($this->all_artifacts);        
     }
     
-    public function itSavesChangesetInSourceArtifact() {
-        // First reverse link the artifact
-        $this->artifact_123->expectOnce('linkArtifact', array($this->modified_artifact_id, $this->submitter));
-        stub($this->artifact_123)->linkArtifact()->returns(true);
+    public function itPostponeSavesChangesetInSourceArtifact() {
+        expect($this->artifact_123)->linkArtifact()->never();
         
         // Then update the artifact with other links
         $remaining_submitted_value = array('new_values' => '124',
@@ -385,7 +383,15 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         
         $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter);
     }
-    
+
+    public function itSavesChangesetInSourceArtifact() {
+        expect($this->artifact_123)->linkArtifact($this->modified_artifact_id, $this->submitter)->once();
+        stub($this->artifact_123)->linkArtifact()->returns(true);
+
+        $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter);
+        $this->field->postSaveNewChangeset($this->modified_artifact, $this->submitter);
+    }
+
     public function itRemovesFromSubmittedValuesArtifactsThatWereUpdatedByDirectionChecking() {
         $submitted_value  = array('new_values' => '123, 124');
         $artifact_id_already_linked = array(123);
@@ -413,6 +419,7 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         $this->assertEqual($submitted_value, array('new_values' => '124'));
     }
 }
+
 
 class Tracker_FormElement_Field_ArtifactLink_TestUpdateCrossRef extends Tracker_FormElement_Field_ArtifactLink {
     public function updateCrossReferences($artifact, $values) {

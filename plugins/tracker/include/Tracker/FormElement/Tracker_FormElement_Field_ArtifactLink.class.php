@@ -27,6 +27,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     private $artifact_factory;
     
     /**
+     * @var Tracker_Artifact|null
+     */
+    private $source_of_association = array();
+
+    /**
      * Display the html form in the admin ui
      *
      * @return string html
@@ -1054,7 +1059,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     protected function getHierarchyFactory() {
         return Tracker_HierarchyFactory::instance();
     }
-    
+
+    public function postSaveNewChangeset(Tracker_Artifact $artifact, PFUser $submitter) {
+        foreach ($this->source_of_association as $source_artifact) {
+            $source_artifact->linkArtifact($artifact->getId(), $submitter);
+        }
+    }
+
     /**
      * Return true if $artifact_to_check is "parent of" $artifact_reference
      * 
@@ -1115,9 +1126,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $artifact_id_already_linked = array();
         foreach ($artifacts as $artifact_to_add) {
             if ($this->isSourceOfAssociation($artifact_to_add, $artifact)) {
-                if ($artifact_to_add->linkArtifact($artifact->getId(), $submitter)) {
-                    $artifact_id_already_linked[] = $artifact_to_add->getId();
-                }
+                $this->source_of_association[] = $artifact_to_add;
+                $artifact_id_already_linked[] = $artifact_to_add->getId();
             }
         }
         

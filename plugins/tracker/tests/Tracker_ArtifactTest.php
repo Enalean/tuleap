@@ -603,6 +603,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getTracker', $tracker);
         $artifact->setReturnValue('getId', 66);
         $artifact->setReturnValue('getLastChangeset', mock('Tracker_Artifact_Changeset_Null'));
+        $artifact->setReturnValue('getChangeset', mock('Tracker_Artifact_Changeset_Null'));
         
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
 
@@ -801,6 +802,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnValue('getId', 66);
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
         $artifact->setReturnValue('getLastChangeset', mock('Tracker_Artifact_Changeset_Null'));
+        $artifact->setReturnValue('getChangeset', mock('Tracker_Artifact_Changeset_Null'));
 
         $workflow = new MockWorkflow();
         $workflow->setReturnValue('validate', true);
@@ -864,6 +866,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnValue('getId', 66);
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
         $artifact->setReturnValue('getLastChangeset', mock('Tracker_Artifact_Changeset_Null'));
+        $artifact->setReturnValue('getChangeset', mock('Tracker_Artifact_Changeset_Null'));
 
         $art_factory->expectOnce('save');
 

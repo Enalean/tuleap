@@ -825,11 +825,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                             $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
                         }
                     }
-                    //Save the artifact
-                    if ($this->getArtifactFactory()->save($this)) {
-                        $previous_changeset = null;
-                        $workflow->after($fields_data, $this->getChangeset($changeset_id), $previous_changeset);
-                    }
+
+                    $this->saveArtifactAfterNewChangeset(
+                        $fields_data,
+                        $used_fields,
+                        $submitter,
+                        $this->getChangeset($changeset_id)
+                    );
 
                     // Clear fake changeset so subsequent call to getChangesets will load a fresh & complete one from the DB
                     $this->changesets = null;
@@ -966,10 +968,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         );
         $this->changesets[$changeset_id] = $new_changeset;
 
-        //Save the artifact
-        if ($this->getArtifactFactory()->save($this)) {
-            $this->getWorkflow()->after($fields_data, $new_changeset, $previous_changeset);
-        }
+
+        $this->saveArtifactAfterNewChangeset(
+            $fields_data,
+            $used_fields,
+            $submitter,
+            $new_changeset,
+            $previous_changeset
+        );
 
         if ($send_notification) {
             // Send notifications
@@ -977,6 +983,17 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
 
         return true;
+    }
+
+    private function saveArtifactAfterNewChangeset(array $fields_data, array $used_fields, PFUser $submitter, Tracker_Artifact_Changeset $new_changeset, Tracker_Artifact_Changeset $previous_changeset = null) {
+        //Save the artifact
+        if ($this->getArtifactFactory()->save($this)) {
+            foreach ($used_fields as $field) {
+                $field->postSaveNewChangeset($this, $submitter);
+            }
+
+            $this->getWorkflow()->after($fields_data, $new_changeset, $previous_changeset);
+        }
     }
 
     /**
