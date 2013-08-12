@@ -306,6 +306,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         stub($previous_changeset)->getValue($this->status_field)->returns($changeset_value_list);
 
         $new_changeset = mock('Tracker_Artifact_Changeset');
+        stub($new_changeset)->getArtifact()->returns(mock('Tracker_Artifact'));
 
         $fields_data = array(
             '103' => "$this->close_value_id",
@@ -318,6 +319,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
     function testAfterShouldTriggerTransitionActionsForNewArtifact() {
         $previous_changeset = null;
         $new_changeset      = mock('Tracker_Artifact_Changeset');
+        stub($new_changeset)->getArtifact()->returns(mock('Tracker_Artifact'));
 
         $fields_data = array(
             '103' => "$this->open_value_id",
@@ -330,6 +332,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
     public function itShouldProcessTriggers() {
         $previous_changeset = null;
         $new_changeset      = mock('Tracker_Artifact_Changeset');
+        stub($new_changeset)->getArtifact()->returns(mock('Tracker_Artifact'));
         $fields_data        = array();
 
         expect($this->trigger_rules_manager)->processTriggers($new_changeset)->once();
