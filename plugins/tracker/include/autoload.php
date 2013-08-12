@@ -8,7 +8,7 @@ function autoload2bbae7f45ff44b880a6498f1a5768466($class) {
         $classes = array(
             'artifactnode' => '/Tracker/CrossSearch/ArtifactNode.class.php',
             'nulltracker' => '/Tracker/NullTracker.class.php',
-            'nullworkflow' => '/workflow/NullWorkflow.class.php',
+            'WorkflowWithoutTransition' => '/workflow/WorkflowWithoutTransition.class.php',
             'servicetracker' => '/ServiceTracker.class.php',
             'tracker' => '/Tracker/Tracker.class.php',
             'tracker_action_createartifact' => '/Tracker/Action/CreateArtifact.class.php',

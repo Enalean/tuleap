@@ -136,10 +136,10 @@ class WorkflowFactory {
 
 
     /**
-     * @return NullWorkflow
+     * @return WorkflowWithoutTransition
      */
-    public function getNullWorkflow(Tracker $tracker) {
-        return new NullWorkflow(
+    public function getWorkflowWithoutTransition(Tracker $tracker) {
+        return new WorkflowWithoutTransition(
             $this->getGlobalRulesManager($tracker),
             $this->trigger_rules_manager,
             $this->logger,
