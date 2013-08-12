@@ -1405,7 +1405,7 @@ workflow_condition	invalid_condition	Condition invalide : le champ '$1' doit êt
 workflow_trigger_rules_processor	parent_update	Changement provoqué par la mise à jour de <a href="$2">$1</a>.
 workflow_trigger_rules_processor	rule_comment	Les enfants de l'artefact courant satisfont la(les) condition(s) suivantes:
 workflow_trigger_rules_processor	rule_comment_all_of	tou(te)s les <strong>$1</strong> ont <strong>$2</strong> valué(e) à <strong>$3</strong>
-workflow_trigger_rules_processor	rule_comment_at_least_one	au moins un(e) <strong>$1</strong> à <strong>$2</strong> valué(e) à <strong>$3</strong>
+workflow_trigger_rules_processor	rule_comment_at_least_one	au moins un(e) <strong>$1</strong> dont <strong>$2</strong> est à <strong>$3</strong>
 workflow_trigger_rules_processor	condition_operator_all_of	et
 workflow_trigger_rules_processor	condition_operator_at_least_one	ou
 
