@@ -94,6 +94,29 @@ class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    public function searchForInvolvedRulesForChildrenLastChangeset($parent_id) {
+        $parent_id = $this->da->escapeInt($parent_id);
+
+        $sql = "SELECT trig.rule_id, art_children.*
+                FROM tracker_artifact AS parent_art
+                  -- get children
+                  INNER JOIN tracker_field                        f_children            ON (f_children.tracker_id = parent_art.tracker_id AND f_children.formElement_type = 'art_link' AND f_children.use_it = 1)
+                  INNER JOIN tracker_changeset_value              cv_children           ON (cv_children.changeset_id = parent_art.last_changeset_id AND cv_children.field_id = f_children.id)
+                  INNER JOIN tracker_changeset_value_artifactlink artlink_children      ON (artlink_children.changeset_value_id = cv_children.id)
+                  INNER JOIN tracker_artifact                     art_children          ON (art_children.id = artlink_children.artifact_id)
+                  INNER JOIN tracker_hierarchy                    hierarchy_children    ON (hierarchy_children.child_id = art_children.tracker_id AND hierarchy_children.parent_id = parent_art.tracker_id)
+
+                  -- get rules
+                  INNER JOIN tracker_changeset_value                               cv          ON (cv.changeset_id = art_children.last_changeset_id)
+                  INNER JOIN tracker_changeset_value_list                          cvl         ON (cvl.changeset_value_id = cv.id)
+                  INNER JOIN tracker_field_list_bind_static_value                  field_value ON (field_value.id = cvl.bindvalue_id)
+                  INNER JOIN tracker_workflow_trigger_rule_trg_field_static_value  trig        ON (trig.value_id = field_value.id)
+
+                WHERE parent_art.id = $parent_id
+                GROUP BY trig.rule_id";
+        return $this->retrieve($sql);
+    }
 }
 
 ?>

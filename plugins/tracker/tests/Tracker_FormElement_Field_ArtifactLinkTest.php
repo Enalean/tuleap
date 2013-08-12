@@ -423,6 +423,22 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
     }
 }
 
+class Tracker_FormElement_Field_ArtifactLink_postSaveNewChangesetTest extends TuleapTestCase {
+
+    public function itExecutesProcessChildrenTriggersCommand() {
+        $artifact           = anArtifact()->build();
+        $user               = aUser()->build();
+        $new_changeset      = mock('Tracker_Artifact_Changeset');
+        $previous_changeset = null;
+        $command            = mock('Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand');
+        $field              = partial_mock('Tracker_FormElement_Field_ArtifactLink', array('getProcessChildrenTriggersCommand'));
+        stub($field)->getProcessChildrenTriggersCommand()->returns($command);
+
+        expect($command)->execute($artifact, $user, $new_changeset, $previous_changeset)->once();
+
+        $field->postSaveNewChangeset($artifact, $user, $new_changeset, $previous_changeset);
+    }
+}
 
 class Tracker_FormElement_Field_ArtifactLink_TestUpdateCrossRef extends Tracker_FormElement_Field_ArtifactLink {
     public function updateCrossReferences($artifact, $values) {

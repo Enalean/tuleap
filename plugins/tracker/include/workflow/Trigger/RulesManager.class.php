@@ -153,6 +153,20 @@ class Tracker_Workflow_Trigger_RulesManager {
         }
     }
 
+    public function processChildrenTriggers(Tracker_Artifact $parent) {
+        $this->logger->start(__METHOD__, $parent->getId());
+
+        $dar_rules = $this->dao->searchForInvolvedRulesForChildrenLastChangeset($parent->getId());
+        foreach ($dar_rules as $row) {
+            $artifact = Tracker_ArtifactFactory::instance()->getInstanceFromRow($row);
+            $rule = $this->getRuleById($row['rule_id']);
+            $this->logger->debug("Found matching rule ". json_encode($rule->fetchFormattedForJson()));
+            $this->rules_processor->process($artifact, $rule);
+        }
+
+        $this->logger->end(__METHOD__, $parent->getId());
+    }
+
     public function processTriggers(Tracker_Artifact_Changeset $changeset) {
         $this->logger->start(__METHOD__, $changeset->getId());
 

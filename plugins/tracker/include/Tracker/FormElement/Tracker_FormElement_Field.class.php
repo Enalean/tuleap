@@ -743,8 +743,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return boolean returns true if the field is used in workflow, false otherwise
      */
     public function isUsedInWorkflow() {
-        $wf = WorkflowFactory::instance();
-        return $wf->isFieldUsedInWorkflow($this);
+        return $this->getWorkflowFactory()->isFieldUsedInWorkflow($this);
+    }
+
+    /** @return WorkflowFactory */
+    protected function getWorkflowFactory() {
+        return WorkflowFactory::instance();
     }
 
     /**

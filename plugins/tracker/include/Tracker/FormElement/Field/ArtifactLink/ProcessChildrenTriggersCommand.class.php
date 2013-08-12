@@ -29,8 +29,15 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand impl
     /** @var Tracker_FormElement_Field_ArtifactLink */
     private $field;
 
-    public function __construct(Tracker_FormElement_Field_ArtifactLink $field) {
-        $this->field = $field;
+    /** @var Tracker_Workflow_Trigger_RulesManager */
+    private $trigger_rules_manager;
+
+    public function __construct(
+        Tracker_FormElement_Field_ArtifactLink $field,
+        Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager
+    ) {
+        $this->field                 = $field;
+        $this->trigger_rules_manager = $trigger_rules_manager;
     }
 
     /**
@@ -42,13 +49,24 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand impl
         Tracker_Artifact_Changeset $new_changeset,
         Tracker_Artifact_Changeset $previous_changeset = null
     ) {
+        if ($this->hasChanges($new_changeset, $previous_changeset)) {
+            $this->trigger_rules_manager->processChildrenTriggers($artifact);
+        }
+    }
+
+    private function hasChanges(
+        Tracker_Artifact_Changeset $new_changeset,
+        Tracker_Artifact_Changeset $previous_changeset = null
+    ) {
+        if (! $previous_changeset) {
+            return true;
+        }
+
         $new_value      = $new_changeset->getValue($this->field);
         $previous_value = $previous_changeset->getValue($this->field);
 
         $diff = $new_value->getArtifactLinkInfoDiff($previous_value);
-        if ($diff->hasChanges()) {
-            $GLOBALS['Response']->addFeedback('info', $artifact->getId().' added: '.$diff->getAddedFormatted('text'));
-            $GLOBALS['Response']->addFeedback('info', $artifact->getId().' removed: '.$diff->getRemovedFormatted('text'));
-        }
+        return $diff->hasChanges();
+
     }
 }

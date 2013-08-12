@@ -1079,7 +1079,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @protected for testing purpose
      */
     protected function getProcessChildrenTriggersCommand() {
-        return new Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand($this);
+        return new Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand(
+            $this,
+            $this->getWorkflowFactory()->getTriggerRulesManager()
+        );
     }
 
     private function getUpdateLinkingDirectionCommand() {
