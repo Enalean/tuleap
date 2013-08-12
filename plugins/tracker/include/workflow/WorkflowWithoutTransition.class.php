@@ -19,10 +19,12 @@
  */
 
 /**
- * NullObject pattern for the Workflow. This is typically the case when there is
- * no workflow defined(aka no transition) for a given tracker.
+ * A Workflow without transition.
+ *
+ * This is typically the case when there is no workflow defined(aka no transition)
+ * for a given tracker.
  */
-class NullWorkflow extends Workflow {
+class WorkflowWithoutTransition extends Workflow {
 
     public function __construct(
         Tracker_RulesManager $global_rules_manager,

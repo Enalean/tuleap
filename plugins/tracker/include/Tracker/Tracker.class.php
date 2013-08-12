@@ -3144,7 +3144,7 @@ EOS;
     public function getWorkflow() {
         $workflow = $this->getWorkflowFactory()->getWorkflowByTrackerId($this->getId());
         if (! $workflow) {
-            $workflow = $this->getWorkflowFactory()->getNullWorkflow($this);
+            $workflow = $this->getWorkflowFactory()->getWorkflowWithoutTransition($this);
         }
         return $workflow;
     }
