@@ -21,23 +21,54 @@
 /**
  * A BackendLogger dedicated to the workflow. It prefix all message by [WF] tag.
  */
-class WorkflowBackendLogger extends BackendLogger {
+class WorkflowBackendLogger implements Logger {
 
-    private static $indentation_prefix    = '';
-    private static $indentation_start     = '┌ ';
-    private static $indentation_increment = '│ ';
-    private static $indentation_end       = '└ ';
+    /** @var string */
+    const WF_PREFIX = '[WF] ';
 
-    private static function indent() {
-        self::$indentation_prefix .= self::$indentation_increment;
+    /** @var string */
+    const INDENTATION_START     = '┌ ';
+
+    /** @var string */
+    const INDENTATION_INCREMENT = '│ ';
+
+    /** @var string */
+    const INDENTATION_END       = '└ ';
+
+    /** @var string */
+    private $indentation_prefix    = '';
+
+    /** @var BackendLogger */
+    private $backend_logger;
+
+    public function __construct(BackendLogger $backend_logger) {
+        $this->backend_logger = $backend_logger;
     }
 
-    private static function unindent() {
-        self::$indentation_prefix = mb_substr(self::$indentation_prefix, 0, -mb_strlen(self::$indentation_increment, 'UTF-8'), 'UTF-8');
+    /** @see Logger::debug() */
+    public function debug($message) {
+        $this->log($message, Feedback::DEBUG);
     }
 
-    public function log($message, $level = 'info') {
-        parent::log('[WF] '. self::$indentation_prefix . $message, $level);
+    /** @see Logger::info() */
+    public function info($message) {
+        $this->log($message, Feedback::INFO);
+    }
+
+    /** @see Logger::error() */
+    public function error($message, Exception $e = null) {
+        $this->log($this->backend_logger->generateLogWithException($message, $e), Feedback::ERROR);
+    }
+
+    /** @see Logger::warn() */
+    public function warn($message, Exception $e = null) {
+        $this->log($this->backend_logger->generateLogWithException($message, $e), Feedback::WARN);
+
+    }
+
+    /** @see Logger::log() */
+    public function log($message, $level = Feedback::INFO) {
+        $this->backend_logger->log(self::WF_PREFIX. $this->indentation_prefix . $message, $level);
     }
 
     /**
@@ -49,9 +80,9 @@ class WorkflowBackendLogger extends BackendLogger {
     public function start($calling_method) {
         $arguments = func_get_args();
         array_unshift($arguments, __FUNCTION__);
-        array_unshift($arguments, self::$indentation_start);
+        array_unshift($arguments, self::INDENTATION_START);
         call_user_func_array(array($this, 'logMethodAndItsArguments'), $arguments);
-        self::indent();
+        $this->indent();
     }
 
     /**
@@ -61,10 +92,10 @@ class WorkflowBackendLogger extends BackendLogger {
      * @param mixed  ...              Parameters of the calling method
      */
     public function end($calling_method) {
-        self::unindent();
+        $this->unindent();
         $arguments = func_get_args();
         array_unshift($arguments, __FUNCTION__);
-        array_unshift($arguments, self::$indentation_end);
+        array_unshift($arguments, self::INDENTATION_END);
         call_user_func_array(array($this, 'logMethodAndItsArguments'), $arguments);
     }
 
@@ -75,5 +106,18 @@ class WorkflowBackendLogger extends BackendLogger {
         $calling_method = array_shift($arguments);
         $arguments      = implode(', ', $arguments);
         $this->debug("$prefix$method $calling_method($arguments)");
+    }
+
+    private function indent() {
+        $this->indentation_prefix .= self::INDENTATION_INCREMENT;
+    }
+
+    private function unindent() {
+        $this->indentation_prefix = mb_substr(
+            $this->indentation_prefix,
+            0,
+            - mb_strlen(self::INDENTATION_INCREMENT, 'UTF-8'),
+            'UTF-8'
+        );
     }
 }
