@@ -30,6 +30,23 @@ class Test_Workflow_Builder {
     private $field_id    = 3;
     private $is_used     = 1;
     private $transitions = null;
+    private $global_rules_manager;
+    private $trigger_rules_manager;
+
+    public function __construct() {
+        $this->global_rules_manager = mock('Tracker_RulesManager');
+        $this->trigger_rules_manager = mock('Tracker_Workflow_Trigger_RulesManager');
+    }
+
+    public function withGlobalRulesManager(Tracker_RulesManager $global_rules_manager) {
+        $this->global_rules_manager  = $global_rules_manager;
+        return $this;
+    }
+
+    public function withTriggerRulesManager(Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager) {
+        $this->trigger_rules_manager = $trigger_rules_manager;
+        return $this;
+    }
 
     public function withId($id) {
         $this->id = $id;
@@ -58,6 +75,9 @@ class Test_Workflow_Builder {
 
     public function build() {
         return new Workflow(
+            $this->global_rules_manager,
+            $this->trigger_rules_manager,
+            mock('WorkflowBackendLogger'),
             $this->id,
             $this->tracker_id,
             $this->field_id,

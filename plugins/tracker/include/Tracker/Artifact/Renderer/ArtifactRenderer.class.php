@@ -139,7 +139,7 @@ abstract class Tracker_Artifact_ArtifactRenderer {
 
 
     protected function fetchRulesAsJavascript() {
-        return $this->tracker->getRulesManager()->displayRulesAsJavascript();
+        return $this->tracker->displayRulesAsJavascript();
     }
 
     protected function enhanceRedirect(Codendi_Request $request) {
