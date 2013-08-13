@@ -358,7 +358,8 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
                 'saveValue',
                 'getChangesetValueDao',
                 'userCanUpdate',
-                'isValid'
+                'isValid',
+                'getProcessChildrenTriggersCommand'
             )
         );
         $changeset_value_dao = stub('Tracker_Artifact_Changeset_ValueDao')->save()->returns($this->new_changeset_value_id);
@@ -369,7 +370,9 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         stub($this->field)->isSourceOfAssociation($this->artifact_123, $this->modified_artifact)->returns(true);
         stub($this->field)->isSourceOfAssociation($this->artifact_124, $this->modified_artifact)->returns(false);
         
-        stub($this->field)->getArtifactsFromChangesetValue($this->submitted_value, $this->old_changeset)->returns($this->all_artifacts);        
+        stub($this->field)->getArtifactsFromChangesetValue($this->submitted_value, $this->old_changeset)->returns($this->all_artifacts);
+
+        stub($this->field)->getProcessChildrenTriggersCommand()->returns(mock('Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand'));
     }
     
     public function itPostponeSavesChangesetInSourceArtifact() {
@@ -388,12 +391,8 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         expect($this->artifact_123)->linkArtifact($this->modified_artifact_id, $this->submitter)->once();
         stub($this->artifact_123)->linkArtifact()->returns(true);
 
-        $changeset_value    = stub('Tracker_Artifact_ChangesetValue_ArtifactLink')->getArtifactLinkInfoDiff()->returns(mock('Tracker_Artifact_ChangesetValue_ArtifactLinkDiff'));
-        $new_changeset      = stub('Tracker_Artifact_Changeset')->getValue()->returns($changeset_value);
-        $previous_changeset = mock('Tracker_Artifact_Changeset');
-
         $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter);
-        $this->field->postSaveNewChangeset($this->modified_artifact, $this->submitter, $new_changeset, $previous_changeset);
+        $this->field->postSaveNewChangeset($this->modified_artifact, $this->submitter, mock('Tracker_Artifact_Changeset'));
     }
 
     public function itRemovesFromSubmittedValuesArtifactsThatWereUpdatedByDirectionChecking() {
