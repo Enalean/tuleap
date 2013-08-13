@@ -1,3 +1,6 @@
+Version 2.6.14 - Tuleap 6.4
+    * Update help to refer to the new documentation based on sphinx
+
 Version 2.6.13 - Tuleap 6.3
     * Fix forumml installation documentation
 

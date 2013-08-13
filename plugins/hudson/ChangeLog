@@ -1,3 +1,6 @@
+Version 1.10 - Tuleap 6.4
+    * Update help to refer to the new documentation based on sphinx
+
 Version 1.9 - Tuleap 5.4
     * Continue PHP 5.3 compat (Contrib Philippe Goetz)
 

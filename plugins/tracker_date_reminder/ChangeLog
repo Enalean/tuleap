@@ -1,3 +1,6 @@
+Version 1.2.4 - Tuleap 6.4
+    * Update help to refer to the new documentation based on sphinx
+
 Version 1.2.3 - Tuleap 6.3
     * Make DB schema compatible with mysql 5.5.x
 

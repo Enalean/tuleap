@@ -1,3 +1,6 @@
+Version 2.26.21 - Tuleap 6.4
+    * Update help to refer to the new documentation based on sphinx
+
 Version 2.26.20 - Tuleap 6.3
     * Fix initial documentation setup
 

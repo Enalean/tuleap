@@ -1,3 +1,6 @@
+Version 3.33 - Tuleap 6.4
+    * Update help to refer to the new documentation based on sphinx
+
 Version 3.32 - Tuleap 6.4
     * update the description fields of my project through SOAP
 

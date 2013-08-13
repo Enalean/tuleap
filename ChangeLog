@@ -1,11 +1,23 @@
 Version 6.4 (NOT RELEASED YET)
+	* Switch documentation to sphinx for easier contrib, better look'n feel
+	  and improved help experience (search, table of content, etc).
+	  This includes helps on latest developed features: agile dashboard,
+	  gerrit, tracker SOAP api, etc.
+
 	== Plugins ==
-	* git: 3.36
-	* tracker: 5.145
-	* ldap: 3.32
+	* git: 3.37
+	* tracker: 5.146
+	* ldap: 3.33
 	* tests: 5.18
 	* cardwall: 0.9.41
 	* statistics: 0.30
+	* IM: 1.5.11
+	* docman: 2.26.21
+	* forumml: 2.6.14
+	* graphontrackers: 1.8
+	* hudson: 1.10
+	* projectlinks: 2.3
+	* tracker_date_reminder: 1.2.4
 
 	== Bug fix ==
 	* fix sla #4627: fix bug that might affect php53 deployment when

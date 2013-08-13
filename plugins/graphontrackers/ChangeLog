@@ -1,3 +1,6 @@
+Version 1.8 - Tuleap 6.4
+    * Update help to refer to the new documentation based on sphinx
+
 Version 1.7 - Tuleap 5.9
     * Fix graphontrackers display on trackers v3
 
