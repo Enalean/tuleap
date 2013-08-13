@@ -55,7 +55,7 @@ if (db_numrows($result) > 0) {
         exit_error('Error',$Language->getText('cvs_detail_commit', 'error_notfound',array($commit_id)));
 
     commits_header(array ('title'=>$Language->getText('cvs_detail_commit', 'title',array($commit_id)),
-			  'help' => 'CVSWebInterface.html#QueryingCVS'));
+			  'help' => 'cvs.html#querying-cvs'));
     show_commit_details($result);
     commits_footer(array());
 } else {

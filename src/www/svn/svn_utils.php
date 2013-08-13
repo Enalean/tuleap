@@ -52,10 +52,10 @@ function svn_header($params) {
         }
     }
     if (!isset($params['help']) || !$params['help']) {
-        $params['help'] = "VersionControlWithSubversion.html";
+        $params['help'] = "svn.html";
     }
     $toolbar[] = array('title' => $Language->getText('global','help'),
-                       'url'   => 'javascript:help_window(\''.get_server_url().'/documentation/user_guide/html/'.UserManager::instance()->getCurrentUser()->getLocale().'/'.$params['help'].'\');');
+                       'url'   => 'javascript:help_window(\''.get_server_url().'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/'.$params['help'].'\');');
 
     $service->displayHeader($params['title'], array(array('title' => $params['title'], 'url' => '/svn/?group_id='.$group_id)), $toolbar);
 }
@@ -84,10 +84,10 @@ function svn_header_admin($params) {
                        'url'   => '/svn/admin/?func=notification&group_id='.$group_id);
 
     if (!$params['help']) { 
-        $params['help'] = "SubversionAdministrationInterface.html";
+        $params['help'] = "svn.html#subversion-administration-interface";
     }
     $toolbar[] = array('title' => $Language->getText('global','help'),
-                       'url' => 'javascript:help_window(\''.get_server_url().'/documentation/user_guide/html/'.UserManager::instance()->getCurrentUser()->getLocale().'/'.$params['help'].'\');');
+                       'url' => 'javascript:help_window(\''.get_server_url().'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/'.$params['help'].'\');');
     
     $service->displayHeader($params['title'], array(array('title' => $params['title'], 'url' => '/svn/?group_id='.$group_id)), $toolbar);
 }

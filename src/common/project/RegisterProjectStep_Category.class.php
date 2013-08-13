@@ -30,7 +30,7 @@ class RegisterProjectStep_Category extends RegisterProjectStep {
     function RegisterProjectStep_Category() {
         $this->RegisterProjectStep(
             $GLOBALS['Language']->getText('register_title', 'category', array($GLOBALS['sys_name'])),
-            'CreatingANewProject.html'
+            'new-project.html'
         );
     }
     function display($data) {

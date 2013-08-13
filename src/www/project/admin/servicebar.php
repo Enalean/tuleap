@@ -320,7 +320,7 @@ if ($func=='do_update') {
 }
 
 project_admin_header(array('title'=>$Language->getText('project_admin_servicebar','edit_s_bar'),'group'=>$group_id,
-			   'help' => 'ServiceConfiguration.html'));
+			   'help' => 'project-admin.html#service-configuration'));
 
 if ($group_id==100) {
     print '<P><h2>'.$Language->getText('project_admin_servicebar','edit_system_s').'</B></h2>';

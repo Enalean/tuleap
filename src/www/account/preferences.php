@@ -202,7 +202,7 @@ echo html_get_language_popup($Language,'language_id',UserManager::instance()->ge
                  <table>
                   <tr>
                    <td>
-<?php echo $Language->getText('account_options', 'csv_separator').' '.help_button('AccountMaintenance'); ?>:
+<?php echo $Language->getText('account_options', 'csv_separator').' '.help_button('citizen.html#account-maintenance'); ?>:
                    </td>
                    <td>
 <?php
@@ -226,7 +226,7 @@ print "</select>\n";
                   </tr>
                   <tr>
                    <td>
-<?php echo $Language->getText('account_preferences', 'csv_dateformat').' '.help_button('AccountMaintenance'); ?>:
+<?php echo $Language->getText('account_preferences', 'csv_dateformat').' '.help_button('citizen.html#account-maintenance'); ?>:
                    </td>
                    <td>
 <?php

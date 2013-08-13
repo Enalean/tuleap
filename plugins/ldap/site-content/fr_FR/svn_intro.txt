@@ -31,7 +31,7 @@ if (user_isloggedin()) {
     $username='<I>nom_utilisateur</I>';
 }
 
-echo '<h2>Accès Subversion '.help_button('VersionControlWithSubversion.html').'</h2>
+echo '<h2>Accès Subversion '.help_button('svn.html').'</h2>
 
 <p><strong>IMPORTANT:</strong> l\'accès à ce dépôt Subversion <strong>nécessite un compte LDAP valide</strong>.</p>
 
@@ -46,7 +46,7 @@ echo ' Donnez votre mot passe LDAP quand il vous est demandé.</p>';
 
 echo '<p><span class="command">svn list --username '.$username.' '.$svn_url .'</span></p>';
 
-echo '<p>'.help_button('VersionControlWithSubversion.html',false,'[Plus d\'information sur l\'utilisation de Subversion &hellip;]').'</p>';
+echo '<p>'.help_button('svn.html',false,'[Plus d\'information sur l\'utilisation de Subversion &hellip;]').'</p>';
 
 // Local Variables:
 // mode: php

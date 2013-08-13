@@ -128,7 +128,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
     }
 	$params['group'] = $group_id;
 	$params['toptab']='mail';
-	$params['help'] = "CommunicationServices.html#MailingLists";
+	$params['help'] = "communication.html#mailing-lists";
 	if ($request->valid(new Valid_Pv('pv'))) {
 		$params['pv'] = $request->get('pv');
 	}

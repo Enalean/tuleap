@@ -4,7 +4,7 @@
 Vous avez une question sur Tuleap ou êtes bloqué?  
 Nous vous suggérons de commencer par regarder dans la documentation:
 <ul>
-	<li><a href="/documentation/user_guide/html/fr_FR/User_Guide.html">Guide Utilisateur</a></li>
+	<li><a href="/doc/fr/index.html">Guide Utilisateur</a></li>
 	<li><a href="/plugins/docman/?group_id=1">Autre documentation</li></a>
 </ul>
 

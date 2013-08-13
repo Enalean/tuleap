@@ -27,7 +27,7 @@ class RegisterProjectStep_Intro extends RegisterProjectStep {
     function RegisterProjectStep_Intro() {
         $this->RegisterProjectStep(
             $GLOBALS['Language']->getText('register_title', 'intro'),
-            'CreatingANewProject.html'
+            'new-project.html'
         );
     }
     function display($data) {

@@ -29,7 +29,7 @@ $HTML->header(array('title'=>$Language->getText('account_editsshkeys', 'title'))
 
 ?>
 
-<h2><?php echo $Language->getText('account_editsshkeys', 'title').' '.help_button('OtherServices.html#ShellAccount'); ?></h2>
+<h2><?php echo $Language->getText('account_editsshkeys', 'title').' '.help_button('other-services.html#shell-account'); ?></h2>
 <?php
         echo $Language->getText('account_editsshkeys', 'message');
 ?>

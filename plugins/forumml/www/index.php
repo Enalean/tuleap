@@ -84,7 +84,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 	$params['title'] = 'ForumML';
 	$params['group'] = $group_id;
 	$params['toptab'] = 'mail';
-	$params['help'] = "CommunicationServices.html#MailingLists";
+	$params['help'] = "communication.html#mailing-lists";
 	mail_header($params);
 
         if ($message_posted) {

@@ -60,7 +60,7 @@ class UserImportHtml extends UserImport {
             $this->displayInput();
         } else {
             project_admin_header(array('title'=>$GLOBALS['Language']->getText('project_admin_userimport','import_members'),
-                 'help' => 'AddingRemovingUsers.html'));
+                 'help' => 'project-admin.html#adding-removing-users'));
             echo '<h2>'.$GLOBALS['Language']->getText('project_admin_userimport','parse_report').'</h2>';
             $this->showParseResults($parsed_users);
             project_admin_footer(array());
@@ -145,9 +145,9 @@ class UserImportHtml extends UserImport {
         global $Language;
     
         project_admin_header(array('title'=>$Language->getText('project_admin_userimport','import_members'),
-                 'help' => 'AddingRemovingUsers.html'));
+                 'help' => 'project-admin.html#adding-removing-users'));
         
-        echo '<h2>'.$Language->getText('project_admin_userimport','import_members', array(help_button('AddingRemovingUsers.html'))).'</h2>';
+        echo '<h2>'.$Language->getText('project_admin_userimport','import_members', array(help_button('project-admin.html#adding-removing-users'))).'</h2>';
         echo $Language->getText('project_admin_userimport','import_welcome',array('/project/admin/userimport.php?group_id='.$this->group_id.'&mode=showformat&func=import'));
 
         echo '<FORM NAME="importdata" action="?" method="POST" enctype="multipart/form-data">

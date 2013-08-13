@@ -148,7 +148,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 			Show page for deleting messages
 		*/
 		forum_header(array('title'=>$Language->getText('forum_admin_index','del_a_msg'),
-				   'help' => 'WebForums.html'));
+				   'help' => 'communication.html#web-forums'));
 
 		echo '
 			<H2>'.$Language->getText('forum_admin_index','del_a_msg').'</H2>
@@ -170,7 +170,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 			Show the form for adding forums
 		*/
 		forum_header(array('title'=>$Language->getText('forum_admin_index','add_a_forum'),
-				   'help' => 'WebForums.html'));
+				   'help' => 'communication.html#web-forums'));
 
 		$sql="SELECT forum_name FROM forum_group_list WHERE group_id=".db_ei($group_id);
 		$result=db_query($sql);
@@ -209,7 +209,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 			Change a forum to public/private
 		*/
 		forum_header(array('title'=>$Language->getText('forum_admin_index','change_status'),
-				   'help' => 'WebForums.html'));
+				   'help' => 'communication.html#web-forums'));
 
 		$sql="SELECT * FROM forum_group_list WHERE group_id=".db_ei($group_id);
 		$result=db_query($sql);
@@ -270,7 +270,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 			either moderotor or delete
 		*/
 		forum_header(array('title'=>$Language->getText('forum_admin_index','forum_admin'),
-				   'help' => 'WebForums.html'));
+				   'help' => 'communication.html#web-forums'));
 
 		echo '
 			<H2>'.$Language->getText('forum_admin_index','forum_admin').'</H2>

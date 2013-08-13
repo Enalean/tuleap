@@ -44,7 +44,7 @@ $params=array('title'=>$group->getPublicName().' '.$ath->getName().' #'.$ah->get
               'atid'=>$ath->getID(),
               'sectionvals'=>array($group->getPublicName()),
               'pv'=>$pv,
-              'help' => 'ArtifactSubmission.html' );
+              'help' => 'tracker-v3.html#new-artifact-submission' );
 
 $ath->header($params);
 

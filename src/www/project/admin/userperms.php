@@ -211,7 +211,7 @@ while($row = db_fetch_array($res_ugrp)) {
 }
 
 project_admin_header(array('title'=>$Language->getText('project_admin_utils','user_perms'),'group'=>$group_id,
-		     'help' => 'UserPermissions.html'));
+		     'help' => 'project-admin.html#user-permissions'));
 
 echo '
 <h2>'.$Language->getText('project_admin_utils','user_perms').'</h2>';

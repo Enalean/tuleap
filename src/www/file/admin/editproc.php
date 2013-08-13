@@ -45,7 +45,7 @@ if ($request->valid($vProcId)) {
     $GLOBALS['Response']->redirect('manageprocessors.php?group_id='.$group_id);
 }
 
-file_utils_admin_header(array('title'=>$Language->getText('file_admin_manageprocessors','update_proc'), 'help' => 'ManageProcessorsList.html'));
+file_utils_admin_header(array('title'=>$Language->getText('file_admin_manageprocessors','update_proc'), 'help' => 'frs.html#processor-list-administration'));
 
 $sql = "SELECT name,rank FROM frs_processor WHERE group_id=".db_ei($group_id)." AND processor_id=".db_ei($proc_id);
 $result = db_query($sql);

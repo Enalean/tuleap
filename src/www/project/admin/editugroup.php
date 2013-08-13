@@ -51,7 +51,7 @@ if ($request->isPost() && $func == 'do_create') {
 }
 
 if ($func=='create') {
-    project_admin_header(array('title' => $Language->getText('project_admin_editugroup', 'create_ug'), 'group' => $group_id, 'help' => 'UserGroups.html#UGroupCreation'));
+    project_admin_header(array('title' => $Language->getText('project_admin_editugroup', 'create_ug'), 'group' => $group_id, 'help' => 'project-admin.html#creating-a-user-group'));
     echo '<p>'.$Language->getText('project_admin_editugroup', 'fill_ug_desc').'</p>';
     echo '<form method="post" name="form_create" action="/project/admin/editugroup.php?group_id='.$group_id.'">
     <input type="hidden" name="func" value="do_create">

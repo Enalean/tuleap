@@ -53,7 +53,7 @@ function commits_header($params) {
 	if (user_ismember($group_id, 'A')) {
         echo ' | <A HREF="/cvs/?func=admin&group_id='.$group_id.'">'.$Language->getText('cvs_commit_utils', 'menu_admin').'</A>';
     }
-	if (!isset($params['help'])) { $params['help'] = "VersionControlWithCVS.html";}
+	if (!isset($params['help'])) { $params['help'] = "cvs.html";}
 	echo ' | '.help_button($params['help'],false,$Language->getText('global', 'help'));
 
 	echo '</B>';

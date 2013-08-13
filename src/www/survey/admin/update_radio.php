@@ -24,7 +24,7 @@
 
 
 survey_header(array('title'=>$Language->getText('survey_admin_update_radio','update_r'),
-		    'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));
+		    'help'=>'survey.html#creating-or-editing-questions'));
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	echo '<H1>'.$Language->getText('survey_admin_add_question','perm_denied').'</H1>';

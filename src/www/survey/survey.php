@@ -22,7 +22,7 @@ if (!$valid->validate($survey_id)) {
 }
 
 survey_header(array('title'=>$Language->getText('survey_s','s'),
-		    'help'=>'SurveyManager.html#PublishingaSurvey'));
+		    'help'=>'survey.html#publishing-a-survey'));
 
 if (!$survey_id || !$group_id) {
 	echo "<H1>".$Language->getText('survey_index','g_id_err')."</H1>";

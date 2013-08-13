@@ -76,7 +76,7 @@ class Project_Admin_UGroup_PaneManagement {
     public function display() {
         project_admin_header(array(
             'title' => $GLOBALS['Language']->getText('project_admin_editugroup', 'edit_ug'),
-            'group' => $this->ugroup->getProjectId(), 'help' => 'UserGroups.html#UGroupCreation'));
+            'group' => $this->ugroup->getProjectId(), 'help' => 'project-admin.html#creating-a-user-group'));
         echo '<h1><a href="/project/admin/ugroup.php?group_id='.$this->ugroup->getProjectId().'">'.
                 $GLOBALS['Language']->getText('project_admin_utils','ug_admin').
                 '</a> - '.$this->ugroup->getName().'</h1>';

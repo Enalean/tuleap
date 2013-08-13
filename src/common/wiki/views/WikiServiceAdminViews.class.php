@@ -125,7 +125,7 @@ class WikiServiceAdminViews extends WikiViews {
 		       <li><a href="'.$this->wikiAdminLink.'&view=wikiPages">Pages Wiki</a>&nbsp;|&nbsp;</li>
 		       <li><a href="'.$this->wikiAdminLink.'&view=wikiAttachments">Fichiers joints</a>&nbsp;|&nbsp;</li>
 		       <li><a href="'.$this->wikiAdminLink.'&view=wikiPerms">Permissions Wiki</a>&nbsp;|&nbsp;</li>
-		       <li>'.help_button('WikiService.html',false,'Aide').'</li>
+		       <li>'.help_button('wiki.html',false,'Aide').'</li>
 		     </ul>';
 		     break;
 	case 'en_US':
@@ -137,7 +137,7 @@ class WikiServiceAdminViews extends WikiViews {
 		       <li><a href="'.$this->wikiAdminLink.'&view=wikiPages">Wiki Pages</a>&nbsp;|&nbsp;</li>
 		       <li><a href="'.$this->wikiAdminLink.'&view=wikiAttachments">Wiki Attachments</a>&nbsp;|&nbsp;</li>
 		       <li><a href="'.$this->wikiAdminLink.'&view=wikiPerms">Wiki Permissions</a>&nbsp;|&nbsp;</li>
-		       <li>'.help_button('WikiService.html',false,'help').'</li>
+		       <li>'.help_button('wiki.html',false,'help').'</li>
 		     </ul>';
     }
   }

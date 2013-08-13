@@ -19,7 +19,8 @@ if ( !user_ismember($group_id,'A') ) {
 	return;
 }
 
-$ath->adminTrackersHeader(array('title'=>$Language->getText('tracker_admin_trackers','all_admin'),'help' => 'TrackerAdministration.html'));
+$ath->adminTrackersHeader(array('title'=>$Language->getText('tracker_admin_trackers','all_admin'),
+    'help' => 'tracker-v3.html#tracker-administration'));
 echo $ath->displayAdminTrackers();
 $ath->footer(array());
 

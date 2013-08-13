@@ -7,7 +7,7 @@
 
 <fieldset><legend style="font-size:1.2em;">Choisissez le type de projet</legend>
 <p>Attention, le type ne peut être changé a posteriori.</p>
-<B>Type du projet <?php echo help_button('ProjectAdministration.html#ProjectType'); ?> : </B>
+<B>Type du projet <?php echo help_button('project-admin.html#project-type'); ?> : </B>
 <select name="is_test"><option value="0" selected="selected">Projet</option>
 <option value="1">Projet de test</option>
 </select>

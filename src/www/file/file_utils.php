@@ -27,7 +27,7 @@ function file_utils_header($params) {
         if (user_ismember($group_id,"R2")) {
             echo '<strong>'
                 .'<a href="/file/admin/?group_id='.$group_id.'">'.$Language->getText('file_file_utils','admin').'</a>';
-            if (!isset($params['help'])) { $params['help'] = "FileRelease.html";}
+            if (!isset($params['help'])) { $params['help'] = "frs.html";}
             echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
             echo "</strong><p>";
         }
@@ -69,7 +69,7 @@ function file_utils_admin_header($params) {
         echo '<a href="/file/?group_id='.$group_id.'">'. $p->services['file']->getLabel() .'</a>';
         echo ' | <a href="/file/admin/?group_id='.$group_id.'">'.$Language->getText('file_file_utils','admin').'</a>';
 	echo ' | <a href="/file/admin/manageprocessors.php?group_id='.$group_id.'">'.$Language->getText('file_file_utils','manage_proc').'</a>';
-	if (!isset($params['help'])) { $params['help'] = "FileRelease.html";}
+	if (!isset($params['help'])) { $params['help'] = "frs.html";}
 	echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
         echo "</strong><br><hr>";
     }
@@ -329,7 +329,7 @@ function file_utils_delete_proc ($pid) {
 function frs_display_package_form(&$package, $title, $url, $siblings) {
 	$hp =& Codendi_HTMLPurifier::instance();
     $group_id = $package->getGroupId();
-    file_utils_admin_header(array('title'=>$GLOBALS['Language']->getText('file_admin_editpackages','edit_package'), 'help' => 'FileReleaseDelivery.html'));
+    file_utils_admin_header(array('title'=>$GLOBALS['Language']->getText('file_admin_editpackages','edit_package'), 'help' => 'frs.html#delivery-manager-administration'));
     echo '<h3>'. $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML) .'</h3>
     <P>
     <form action="'. $url .'" method="post">
@@ -391,7 +391,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     file_utils_admin_header(array (
         'title' => $GLOBALS['Language']->getText('file_admin_editreleases',
         'release_new_file_version'
-    ), 'help' => 'FileReleaseDelivery.html'));
+    ), 'help' => 'frs.html#delivery-manager-administration'));
     echo '<H3>'.$hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML).'</H3>';
     $sql = "SELECT * FROM frs_processor WHERE (group_id = 100 OR group_id = ".db_ei($group_id).") ORDER BY rank";
     $result = db_query($sql);

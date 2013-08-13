@@ -288,7 +288,7 @@ class GraphOnTrackersPlugin extends Plugin {
                 }
                 
                 $GLOBALS['ath']->adminHeader(array ('title'=> $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','report_mgmt'),
-                    'help' => 'TrackerAdministration.html#GraphTrackerReportSetting'));
+                    'help' => 'tracker-v3.html#tracker-graphical-report-setting'));
                 
                 if ($request->exist('new_report_graphic')) {
                     $geh->createReportForm();

@@ -31,8 +31,7 @@ if (!(user_ismember($group_id,"D2"))) {
 
 function main_page($group_id) {
     global $Language;
-    docman_header_admin(array('title'=>$Language->getText('docman_admin_index','title'),
-			      'help'=>'DocumentAdministration.html'));
+    docman_header_admin(array('title'=>$Language->getText('docman_admin_index','title')));
     echo '<h2>'.$Language->getText('docman_admin_index','header_doc_mgt').'</h2>';
     display_docs($group_id);
     docman_footer(array());	
@@ -41,8 +40,7 @@ function main_page($group_id) {
 
 function group_main_page($group_id) {
     global $Language;
-    docman_header_admin(array('title'=>$Language->getText('docman_admin_index','title_group_mgt'),
-			      'help'=>'DocumentAdministration.html#DocumentGroupManagement'));
+    docman_header_admin(array('title'=>$Language->getText('docman_admin_index','title_group_mgt')));
     echo '<h2>'.$Language->getText('docman_admin_index','header_group_mgt').'</h2>
 	    <h3>'.$Language->getText('docman_admin_index','create_doc_group').'</h3>
 	    <form name="addgroup" action="index.php?mode=groupadd&group_id='.$group_id.'" method="POST">
@@ -80,8 +78,7 @@ if (strstr($mode,"docedit")) {
     $result = db_query($query);
     $row = db_fetch_array($result);
     
-    docman_header_admin(array('title'=>$Language->getText('docman_admin_index','title_edit'),
-                              'help'=>'DocumentAdministration.html#DocumentUpdate'));
+    docman_header_admin(array('title'=>$Language->getText('docman_admin_index','title_edit')));
     
     echo '
 	
@@ -155,8 +152,7 @@ if (strstr($mode,"docedit")) {
      }
     
  } elseif (strstr($mode,"groupedit")) {
-     docman_header_admin(array('title'=>$Language->getText('docman_admin_index','title_group_edit'),
-                               'help'=>'DocumentAdministration.html#DocumentGroupManagement'));
+     docman_header_admin(array('title'=>$Language->getText('docman_admin_index','title_group_edit')));
      $query = "select * "
          ."from doc_groups "
          ."where doc_group = '$doc_group' "
@@ -174,6 +170,7 @@ if (strstr($mode,"docedit")) {
 			<tr><td> <input type="submit" name="submit" value="'.$Language->getText('global','btn_submit').'"></td></tr></table>	
 			</form>	
 			';
+     $params = array();
      docman_footer($params);
     
  } elseif (strstr($mode,"groupdoedit")) {

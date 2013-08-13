@@ -115,7 +115,7 @@ class ProjectLinksPlugin extends Plugin {
         project_admin_header(array(
             'title' => $Language->getText('project_admin_servicebar',
                 'edit_s_bar'),
-            'group' => $group_id, 'help' => 'ProjectLinks.html'));
+            'group' => $group_id, 'help' => 'project-links.html'));
         if (isset($_REQUEST['disp'])) {
             $disp = $_REQUEST['disp'];
             switch ($disp) {

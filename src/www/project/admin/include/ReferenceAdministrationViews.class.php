@@ -37,7 +37,7 @@ class ReferenceAdministrationViews extends Views {
     function header() {
         project_admin_header(array('title'=>$GLOBALS['Language']->getText('project_reference','edit_reference'),
                                    'group'=>$GLOBALS['group_id'],
-                                   'help' => 'ReferenceConfiguration.html'));
+                                   'help' => 'project-admin.html#reference-pattern-configuration'));
 
     }
     function footer() {
@@ -225,7 +225,7 @@ class ReferenceAdministrationViews extends Views {
         echo '
 <tr><td><a href="#" title="'.$Language->getText('project_reference','url').'">'.$Language->getText('project_reference','r_link').'</a>:&nbsp;<font color="red">*</font></td>
 <td><input type="text" name="link" size="70" maxlength="255"> ';
-            echo  help_button('ReferenceConfiguration.html#ReferenceCreation');
+            echo  help_button('project-admin.html#reference-pattern-configuration');
             echo '</td></tr>';
         if (($group_id==100)&&($su)) {
             echo '
@@ -352,7 +352,7 @@ class ReferenceAdministrationViews extends Views {
             echo $ref->getLink();
         } else {
             echo '<input type="text" name="link" size="70" maxlength="255" value="'.$ref->getLink().'"> ';
-            echo  help_button('ReferenceConfiguration.html#ReferenceCreation');
+            echo  help_button('project-admin.html#creating-or-updating-a-reference-pattern');
         }
         echo '</td></tr>';
         if ($group_id==100) {

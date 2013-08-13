@@ -43,7 +43,7 @@ $hp =& Codendi_HTMLPurifier::instance();
 
 // Display the form
 svn_header_admin(array ('title'=>$Language->getText('svn_admin_access_control','access_ctrl'),
-		      'help' => 'SubversionAdministrationInterface.html#SubversionAccessControl'));
+                        'help' => 'svn.html#subversion-access-control'));
 
 echo '
        <H2>'.$Language->getText('svn_admin_access_control','access_ctrl').'</H2>';
@@ -57,7 +57,7 @@ if (svn_utils_svn_repo_exists($gname)) {
        <INPUT TYPE="HIDDEN" NAME="func" VALUE="access_control">
        <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
       <p>'.$Language->getText('svn_admin_access_control','def_policy',$GLOBALS['sys_name']).' 
-      <h3>'.$Language->getText('svn_admin_access_control','access_ctrl_file').' '. help_button('SubversionAdministrationInterface.html#SubversionAccessControl').':</h3> 
+      <h3>'.$Language->getText('svn_admin_access_control','access_ctrl_file').' '. help_button('svn.html#subversion-access-control').':</h3>
       <p>'.str_replace("\n","<br>",svn_utils_read_svn_access_file_defaults($gname,true)).'
        <TEXTAREA cols="70" rows="20" wrap="virtual" name="form_accessfile">'.$hp->purify($svn_accessfile).'</TEXTAREA>
         </p>

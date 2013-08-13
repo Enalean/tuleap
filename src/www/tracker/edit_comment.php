@@ -37,7 +37,7 @@ $params=array('title'=>$group->getPublicName().' '.$ath->getName().' #'.$ah->get
               'pagename'=>'tracker',
               'atid'=>$ath->getID(),
               'sectionvals'=>array($group->getPublicName()),              
-              'help' => 'FollowupCommentUpdate.html');
+              'help' => 'tracker-v3.html#comments');
 // Display header page
 $ath->header($params);
 echo '<div id="tracker_toolbar_clear"></div>';

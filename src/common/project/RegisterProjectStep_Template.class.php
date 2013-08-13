@@ -30,7 +30,7 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
     function RegisterProjectStep_Template() {
         $this->RegisterProjectStep(
             $GLOBALS['Language']->getText('register_title', 'template'),
-            'CreatingANewProject.html'
+            'new-project.html'
         );
         $template =& TemplateSingleton::instance();
         $this->db_templates = $template->getTemplates();
