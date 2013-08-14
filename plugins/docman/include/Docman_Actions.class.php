@@ -32,7 +32,7 @@ require_once('Docman_MetadataValueFactory.class.php');
 require_once('Docman_ExpandAllHierarchyVisitor.class.php');
 require_once('Docman_ApprovalTableFactory.class.php');
 require_once('Docman_LockFactory.class.php');
-
+require_once('Docman_MIMETypeDetector.class.php');
 require_once('view/Docman_View_Browse.class.php');
 
 require_once('common/permission/PermissionsManager.class.php');
@@ -215,6 +215,12 @@ class Docman_Actions extends Actions {
                     $_filetype = $_FILES['file']['type']; //TODO detect mime type server side
                 }
             }
+
+            $mime_type_detector = new Docman_MIMETypeDetector();
+            if ($path && $mime_type_detector->isAnOfficeFile($_filename)) {
+                $_filetype = $mime_type_detector->getRightOfficeType($_filename);
+            }
+
             break;
         case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
             if ($path = $fs->store($request->get('content'), $item->getGroupId(), $item->getId(), $number)) {
