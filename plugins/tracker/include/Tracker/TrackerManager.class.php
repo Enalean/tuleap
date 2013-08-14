@@ -910,11 +910,15 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * @return Void
      */
     public function sendDateReminder() {
+        $logger = new BackendLogger();
+        $logger->debug("[TDR] Start processing date reminders");
         $trackers       = $this->getTrackersHavingDateReminders();
         foreach ($trackers as $tracker) {
+            $logger->debug("[TDR] Processing date reminders for tracker ".$tracker->getProject()->getUnixName()." / ".$tracker->getItemName()." (id: ".$tracker->getId().")");
             $dateReminderManager = new Tracker_DateReminderManager($tracker);
             $dateReminderManager->process();
         }
+        $logger->debug("[TDR] End processing date reminders");
     }
 
     public function exportToXml($group_id, SimpleXMLElement $xml_content) {

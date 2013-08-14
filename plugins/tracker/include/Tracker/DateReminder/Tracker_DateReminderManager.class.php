@@ -49,11 +49,17 @@ class Tracker_DateReminderManager {
      * @return Void
      */
     public function process() {
+        $logger = new BackendLogger();
         $remiderFactory = $this->getDateReminderRenderer()->getDateReminderFactory();
         $reminders      = $remiderFactory->getTrackerReminders(false);
         foreach ($reminders as $reminder) {
+            $logger->debug("[TDR] Processing reminder on ".$reminder->getField()->getName()." (id: ".$reminder->getId().")");
             $artifacts = $this->getArtifactsByreminder($reminder);
+            if (count($artifacts) == 0) {
+                $logger->debug("[TDR] No artifact match");
+            }
             foreach ($artifacts as $artifact) {
+                $logger->debug("[TDR] Artifact #".$artifact->getId()." match");
                 $this->sendReminderNotification($reminder, $artifact);
             }
         }

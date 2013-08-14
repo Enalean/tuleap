@@ -49,7 +49,7 @@ class Tracker_DateReminderFactory {
      *
      * @param boolean $allReminders Retrieve enabled and disabled reminders (optional)
      *
-     * @return Array
+     * @return Tracker_DateReminder[]
      */
     public function getTrackerReminders($allReminders = false) {
         $reminders = array();

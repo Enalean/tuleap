@@ -537,6 +537,8 @@ class trackerPlugin extends Plugin {
     public function codendi_daily_start($params) {
         include_once 'Tracker/TrackerManager.class.php';
         $trackerManager = new TrackerManager();
+        $logger = new BackendLogger();
+        $logger->debug("[TDR] Tuleap daily start event: launch date reminder");
         return $trackerManager->sendDateReminder();
     }
 
