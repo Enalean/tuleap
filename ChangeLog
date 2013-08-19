@@ -6,7 +6,7 @@ Version 6.4 (NOT RELEASED YET)
 
 	== Plugins ==
 	* git: 3.37
-	* tracker: 5.146
+	* tracker: 5.147
 	* ldap: 3.33
 	* tests: 5.18
 	* cardwall: 0.9.41
@@ -28,6 +28,7 @@ Version 6.4 (NOT RELEASED YET)
 	* Fix the issue of custom fields not displayed in the project admin area
 
 	== Development ==
+	* Cross-trackers triggers fully implemented
 	* Adding a method to add JSON content to a request
 	* Adding a method to get the content of a request when posted as JSON
 	* Better error handling on SQL errors
