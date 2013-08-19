@@ -59,6 +59,7 @@ class trackerPlugin extends Plugin {
         $this->_addHook(Event::SOAP_DESCRIPTION,               'soap_description',                  false);
         $this->_addHook(Event::EXPORT_XML_PROJECT);
         $this->_addHook(Event::IMPORT_XML_PROJECT);
+        $this->addHook(Event::USER_MANAGER_GET_USER_INSTANCE);
     }
     
     public function getHooksAndCallbacks() {
@@ -592,6 +593,12 @@ class trackerPlugin extends Plugin {
         );
 
         $tracker_xml_import->import($params['xml_content']);
+    }
+
+    public function user_manager_get_user_instance(array $params) {
+        if ($params['row']['user_id'] == Tracker_Workflow_WorkflowUser::ID) {
+            $params['user'] = new Tracker_Workflow_WorkflowUser($params['row']);
+        }
     }
 }
 

@@ -298,41 +298,6 @@ class Tracker_HierarchyFactoryGetAllAncestorsTest extends TuleapTestCase {
     }
 }
 
-class Tracker_HierarchyFactoryGetSiblingsTest extends TuleapTestCase {
-    private $hierarchy_factory;
-    private $user;
-    private $sprint_1;
-    private $sprint_2;
-    private $release_1;
-
-    public function setUp() {
-        parent::setUp();
-        $this->user              = aUser()->build();
-        $this->hierarchy_factory = partial_mock('Tracker_HierarchyFactory', array('getParentArtifact'));
-        $this->sprint_1          = anArtifact()->withId(1)->build();
-        $this->sprint_2          = anArtifact()->withId(2)->build();
-        $this->release_1         = aMockArtifact()->withId(101)->build();
-    }
-
-    public function itReturnsEmptyArrayWhenNoParent() {
-        stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->sprint_1)->returns(null);
-        
-        $this->assertEqual(array(), $this->hierarchy_factory->getSiblings($this->user, $this->sprint_1));
-    }
-    
-    public function itReturnsTheGivenArtifactWhenParentHasNoOtherChildren() {
-        stub($this->release_1)->getHierarchyLinkedArtifacts($this->user)->returns(array($this->sprint_1));
-        stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->sprint_1)->returns($this->release_1);
-        $this->assertEqual(array($this->sprint_1), $this->hierarchy_factory->getSiblings($this->user, $this->sprint_1));
-    }
-    
-    public function itReturnsTheGivenArtifactAndTheBroWhenThereIsOneBro() {
-        stub($this->release_1)->getHierarchyLinkedArtifacts($this->user)->returns(array($this->sprint_1, $this->sprint_2));
-        stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->sprint_1)->returns($this->release_1);
-        $this->assertEqual(array($this->sprint_1, $this->sprint_2), $this->hierarchy_factory->getSiblings($this->user, $this->sprint_1));
-    }
-}
-
 class Tracker_HierarchyFactory_getParentTest extends TuleapTestCase {
 
     public function setUp() {

@@ -566,7 +566,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 break;
             case 'admin-dependencies':
                 if ($this->userIsAdmin($current_user)) {
-                    $this->getRulesManager()->process($layout, $request, $current_user);
+                    $this->getGlobalRulesManager()->process($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
@@ -1961,13 +1961,21 @@ EOS;
     public function getWorkflowManager() {
         return new WorkflowManager($this);
     }
-    
+
     /**
      * @return Tracker_RulesManager
      */
-    public function getRulesManager() {
-        return new Tracker_RulesManager($this, $this->getFormElementFactory());
+    private function getGlobalRulesManager() {
+        return $this->getWorkflowFactory()->getGlobalRulesManager($this);
     }
+
+    /**
+     * @return string
+     */
+    public function displayRulesAsJavascript() {
+        return $this->getGlobalRulesManager()->displayRulesAsJavascript();
+    }
+
     /**
      * Determine if the user can view this tracker.
      * Note that if there is no group explicitely auhtorized, access is denied (don't check default values)
@@ -2237,9 +2245,8 @@ EOS;
         $tsm->exportToXML($child, $xmlMapping);
         
         // rules
-        $trm = $this->getRulesManager();
         $child = $xmlElem->addChild('rules');
-        $trm->exportToXML($child, $xmlMapping);
+        $this->getGlobalRulesManager()->exportToXML($child, $xmlMapping);
         
         // only the reports with project scope are exported
         $reports = $this->getReportFactory()->getReportsByTrackerId($this->id, null);
@@ -3137,10 +3144,7 @@ EOS;
     public function getWorkflow() {
         $workflow = $this->getWorkflowFactory()->getWorkflowByTrackerId($this->getId());
         if (! $workflow) {
-            $workflow_id = 0;
-            $field_id    = 0;
-            $is_used     = false;
-            $workflow    = new Workflow($workflow_id, $this->getId(), $field_id, $is_used);
+            $workflow = $this->getWorkflowFactory()->getWorkflowWithoutTransition($this);
         }
         return $workflow;
     }

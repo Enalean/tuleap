@@ -27,10 +27,16 @@ abstract class Tracker_Workflow_Trigger_RulesManagerTest extends TuleapTestCase 
 
     public function setUp() {
         parent::setUp();
-        $this->dao             = mock('Tracker_Workflow_Trigger_RulesDao');
+        $this->target_value_id     = 789;
+        $this->dao                 = mock('Tracker_Workflow_Trigger_RulesDao');
         $this->formelement_factory = mock('Tracker_FormElementFactory');
-        $this->manager         = new Tracker_Workflow_Trigger_RulesManager($this->dao, $this->formelement_factory);
-        $this->target_value_id = 789;
+        $this->rules_processor     = mock('Tracker_Workflow_Trigger_RulesProcessor');
+        $this->manager             = new Tracker_Workflow_Trigger_RulesManager(
+            $this->dao,
+            $this->formelement_factory,
+            $this->rules_processor,
+            mock('WorkflowBackendLogger')
+        );
     }
 }
 
@@ -255,4 +261,32 @@ class Tracker_Workflow_Trigger_RulesManager_deleteByRuleIdTest extends Tracker_W
     }
 }
 
+
+class Tracker_Workflow_Trigger_RulesManager_processTriggersTest extends Tracker_Workflow_Trigger_RulesManagerTest {
+
+    public function itProcessTheInvolvedTriggerRules() {
+        $manager = partial_mock(
+            'Tracker_Workflow_Trigger_RulesManager',
+            array('getRuleById'),
+            array($this->dao, $this->formelement_factory, $this->rules_processor, mock('WorkflowBackendLogger'))
+        );
+
+        $artifact  = mock('Tracker_Artifact');
+        $trigger_1 = aTriggerRule()->withId(1)->build();
+        $trigger_2 = aTriggerRule()->withId(2)->build();
+        $changeset = stub('Tracker_Artifact_Changeset')->getId()->returns(3);
+        stub($changeset)->getArtifact()->returns($artifact);
+
+        stub($this->dao)->searchForInvolvedRulesIdsByChangesetId(3)->returnsDar(
+            array('rule_id' => 1),
+            array('rule_id' => 2)
+        );
+        stub($manager)->getRuleById(1)->returns($trigger_1);
+        stub($manager)->getRuleById(2)->returns($trigger_2);
+
+        expect($this->rules_processor)->process($artifact, $trigger_1)->at(1);
+        expect($this->rules_processor)->process($artifact, $trigger_2)->at(2);
+        $manager->processTriggers($changeset);
+    }
+}
 ?>

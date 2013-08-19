@@ -27,6 +27,7 @@ require_once 'common/project/UGroupLiteralizer.class.php';
 require_once 'common/project/ProjectManager.class.php';
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
+    const NO_PARENT         = -1;
     const PERMISSION_ACCESS = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
     const REFERENCE_NATURE  = 'plugin_tracker_artifact';
 
@@ -69,8 +70,17 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     private $status;
 
-    /**@var Tracker_ArtifactFactory */
+    /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
+
+    /** @var Tracker_Artifact[] */
+    private $siblings;
+
+    /** @var Tracker_Artifact[] */
+    private $siblings_without_permission_checking;
+
+    /** @var Tracker_Artifact */
+    private $parent_without_permission_checking;
 
     /**
      * Constructor
@@ -794,7 +804,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 if ($workflow) {
                     $workflow->before($fields_data, $submitter, $this);
                     $augmented_data = $this->addDatesToRequestData($fields_data);
-                    if (! $workflow->validateGlobalRules($augmented_data, $this->getFormElementFactory())) {
+                    try {
+                        $workflow->checkGlobalRules($augmented_data, $this->getFormElementFactory());
+                    } catch (Tracker_Workflow_GlobalRulesViolationException $e) {
                         return false;
                     }
                 }
@@ -813,11 +825,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                             $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
                         }
                     }
-                    //Save the artifact
-                    if ($this->getArtifactFactory()->save($this)) {
-                        $previous_changeset = null;
-                        $workflow->after($fields_data, $this->getChangeset($changeset_id), $previous_changeset);
-                    }
+
+                    $this->saveArtifactAfterNewChangeset(
+                        $fields_data,
+                        $used_fields,
+                        $submitter,
+                        $this->getChangeset($changeset_id)
+                    );
 
                     // Clear fake changeset so subsequent call to getChangesets will load a fresh & complete one from the DB
                     $this->changesets = null;
@@ -914,7 +928,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
 
         $comment = trim($comment);
-        $new_changeset = $this->getLastChangeset();
         $comment_format = Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
         $workflow = $this->getWorkflow();
 
@@ -937,19 +950,32 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         foreach ($used_fields as $field) {
             if (isset($fields_data[$field->getId()]) && $field->userCanUpdate()) {
 
-                $field->saveNewChangeset($this, $new_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
+                $field->saveNewChangeset($this, $previous_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
             } else if ($workflow && isset($fields_data[$field->getId()]) && !$field->userCanUpdate() && $workflow->bypassPermissions($field)) {
                 $bypass_perms  = true;
-                $field->saveNewChangeset($this, $new_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
+                $field->saveNewChangeset($this, $previous_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
             } else {
-                $field->saveNewChangeset($this, $new_changeset, $changeset_id, null, $submitter, $is_submission);
+                $field->saveNewChangeset($this, $previous_changeset, $changeset_id, null, $submitter, $is_submission);
             }
         }
 
-        //Save the artifact
-        if ($this->getArtifactFactory()->save($this)) {
-            $this->getWorkflow()->after($fields_data, $new_changeset, $previous_changeset);
-        }
+        $new_changeset = new Tracker_Artifact_Changeset(
+            $changeset_id,
+            $this,
+            $submitter->getId(),
+            $_SERVER['REQUEST_TIME'],
+            $email
+        );
+        $this->changesets[$changeset_id] = $new_changeset;
+
+
+        $this->saveArtifactAfterNewChangeset(
+            $fields_data,
+            $used_fields,
+            $submitter,
+            $new_changeset,
+            $previous_changeset
+        );
 
         if ($send_notification) {
             // Send notifications
@@ -957,6 +983,17 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
 
         return true;
+    }
+
+    private function saveArtifactAfterNewChangeset(array $fields_data, array $used_fields, PFUser $submitter, Tracker_Artifact_Changeset $new_changeset, Tracker_Artifact_Changeset $previous_changeset = null) {
+        //Save the artifact
+        if ($this->getArtifactFactory()->save($this)) {
+            foreach ($used_fields as $field) {
+                $field->postSaveNewChangeset($this, $submitter, $new_changeset, $previous_changeset);
+            }
+
+            $this->getWorkflow()->after($fields_data, $new_changeset, $previous_changeset);
+        }
     }
 
     /**
@@ -968,6 +1005,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return boolean
      * @throws Tracker_Exception
      * @throws Tracker_NoChangeException
+     * @throws Tracker_Workflow_GlobalRulesViolationException
      */
     private function validateNewChangeset($fields_data, $comment, $submitter, $email = null) {
         if ($submitter->isAnonymous() && ($email == null || $email == '')) {
@@ -994,9 +1032,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
              * We need to run the post actions to validate the data
              */
             $workflow->before($fields_data, $submitter, $this);
-            if (! $workflow->validateGlobalRules($fields_data, $this->getFormElementFactory())) {
-                throw new Tracker_Exception();
-            }
+            $workflow->checkGlobalRules($fields_data, $this->getFormElementFactory());
+            //$GLOBALS['Language']->getText('plugin_tracker_artifact', 'global_rules_not_valid');
         }
 
         return true;
@@ -1422,14 +1459,68 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
-     * Get artifacts
+     * Get parent artifact regartheless if user can access it
+     *
+     * Note: even if there are several parents, only the first one is returned
+     *
+     * @return Tracker_Artifact|null
+     */
+    public function getParentWithoutPermissionChecking() {
+        if ($this->parent_without_permission_checking !== self::NO_PARENT && ! isset($this->parent_without_permission_checking)) {
+            $dar = $this->getDao()->getParents(array($this->getId()));
+            if ($dar && count($dar) == 1) {
+                $this->parent_without_permission_checking = $this->getArtifactFactory()->getInstanceFromRow($dar->current());
+            } else {
+                $this->parent_without_permission_checking = self::NO_PARENT;
+            }
+        }
+        if ($this->parent_without_permission_checking === self::NO_PARENT) {
+            return null;
+        }
+        return $this->parent_without_permission_checking;
+    }
+
+    public function setParentWithoutPermissionChecking($parent) {
+        $this->parent_without_permission_checking = $parent;
+    }
+
+    /**
+     * Get artifacts that share same parent that mine (sista & bro)
      *
      * @param PFUser $user
      *
-     * @return Array of Tracker_Artifact
+     * @return Tracker_Artifact[]
      */
     public function getSiblings(PFUser $user) {
-        return $this->getHierarchyFactory()->getSiblings($user, $this);
+        if (! isset($this->siblings)) {
+            $this->siblings = array();
+            foreach ($this->getSiblingsWithoutPermissionChecking() as $artifact) {
+                if ($artifact->userCanView($user)) {
+                    $this->siblings[] = $artifact;
+                }
+            }
+        }
+        return $this->siblings;
+    }
+
+    public function setSiblings(array $artifacts) {
+        $this->siblings = $artifacts;
+    }
+
+    /**
+     * Get all sista & bro regartheless if user can access them
+     *
+     * @return Tracker_Artifact[]
+     */
+    public function getSiblingsWithoutPermissionChecking() {
+        if (! isset($this->siblings_without_permission_checking)) {
+            $this->siblings_without_permission_checking = $this->getDao()->getSiblings($this->getId())->instanciateWith(array($this->getArtifactFactory(), 'getInstanceFromRow'));
+        }
+        return $this->siblings_without_permission_checking;
+    }
+
+    public function setSiblingsWithoutPermissionChecking($siblings) {
+        $this->siblings_without_permission_checking = $siblings;
     }
 
     /**

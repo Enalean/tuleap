@@ -35,6 +35,7 @@ class Feedback {
     const INFO =  'info';
     const WARN  = 'warning';
     const ERROR = 'error';
+    const DEBUG = 'debug';
 
     function __construct() {
         $this->logs = array();

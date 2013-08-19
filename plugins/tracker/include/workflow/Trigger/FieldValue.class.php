@@ -55,6 +55,50 @@ class Tracker_Workflow_Trigger_FieldValue {
             'field_value_label' => $this->getValue()->getLabel(),
         );
     }
+
+    /**
+     * Returns the value formated as needed for changeset creation/update
+     *
+     * @return Array
+     */
+    public function getFieldData() {
+        return array(
+            $this->getField()->getId() => $this->getValue()->getId()
+        );
+    }
+
+    /**
+     * Return true if given artifact has the same value than current object
+     *
+     * @param Tracker_Artifact $artifact
+     * @return boolean
+     */
+    public function isSetForArtifact(Tracker_Artifact $artifact) {
+        $artifact_value = $artifact->getValue($this->getField());
+        if ($artifact_value && $artifact_value->getValue() == array($this->getValue()->getId())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Format the rule to be presented to user as a followup comment
+     *
+     * @param String $condition
+     *
+     * @return String
+     */
+    public function getAsChangesetComment($condition) {
+        return $GLOBALS['Language']->getText(
+            'workflow_trigger_rules_processor',
+            'rule_comment_'.$condition,
+            array(
+                $this->getField()->getTracker()->getName(),
+                $this->getField()->getLabel(),
+                $this->getValue()->getLabel(),
+            )
+        );
+    }
 }
 
 ?>

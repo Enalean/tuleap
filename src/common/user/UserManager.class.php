@@ -29,7 +29,12 @@ require_once('SessionNotCreatedException.class.php');
 require_once('User_SSHKeyValidator.class.php');
 
 class UserManager {
-    
+    /**
+     * User with id lower than 100 are considered specials (siteadmin, null,
+     * etc).
+     */
+    const SPECIAL_USERS_LIMIT = 100;
+
     var $_users           = array();
     var $_userid_bynames  = array();
     var $_userid_byldapid = array();
@@ -129,8 +134,14 @@ class UserManager {
     }
 
     public function getUserInstanceFromRow($row) {
-        $u = new PFUser($row);
-        return $u;
+        if (isset($row['user_id']) && $row['user_id'] < self::SPECIAL_USERS_LIMIT) {
+            $user = null;
+            EventManager::instance()->processEvent(Event::USER_MANAGER_GET_USER_INSTANCE, array('row' => $row, 'user' => &$user));
+            if ($user) {
+                return $user;
+            }
+        }
+        return new PFUser($row);
     }
     
     /**

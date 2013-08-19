@@ -37,6 +37,7 @@ class Test_Artifact_Builder {
     private $hierarchy_factory;
     private $ancestors;
     private $title;
+    private $parent_without_permission_checking;
 
     public function withId($id) {
         $this->id = $id;
@@ -65,6 +66,24 @@ class Test_Artifact_Builder {
 
     public function withHierarchyFactory($hierarchy_factory) {
         $this->hierarchy_factory = $hierarchy_factory;
+        return $this;
+    }
+
+    public function withParent(Tracker_Artifact $parent) {
+        if (!isset($this->ancestors)) {
+            $this->ancestors = array();
+        }
+        $this->ancestors[] = $parent;
+        return $this;
+    }
+
+    public function withParentWithoutPermissionChecking(Tracker_Artifact $parent) {
+        $this->parent_without_permission_checking = $parent;
+        return $this;
+    }
+
+    public function withoutParentWithoutPermissionChecking() {
+        $this->parent_without_permission_checking = Tracker_Artifact::NO_PARENT;
         return $this;
     }
 
@@ -97,6 +116,9 @@ class Test_Artifact_Builder {
         }
         if ($this->title) {
             $artifact->setTitle($this->title);
+        }
+        if ($this->parent_without_permission_checking) {
+            $artifact->setParentWithoutPermissionChecking($this->parent_without_permission_checking);
         }
         return $artifact;
     }

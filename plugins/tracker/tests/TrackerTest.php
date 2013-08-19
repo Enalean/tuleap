@@ -42,7 +42,6 @@ Mock::generatePartial('Tracker',
                           'getPermissions',
                           'getFormELements',
                           'getId',
-                          'getRulesManager',
                           'sendXML',
                           'isUsed',
                           'getAllFormElements',
@@ -394,6 +393,9 @@ class TrackerTest extends TuleapTestCase {
         stub($hierarchy_factory)->getHierarchy()->returns($this->hierarchy);
         $this->tracker->setReturnValue('getHierarchyFactory', $hierarchy_factory);
 
+        $this->workflow_factory = mock('WorkflowFactory');
+        WorkflowFactory::setInstance($this->workflow_factory);
+
         $GLOBALS['Response'] = new MockLayout();
 
         $GLOBALS['UGROUPS'] = array(
@@ -404,7 +406,9 @@ class TrackerTest extends TuleapTestCase {
             'UGROUP_5' => 5,
         );
     }
+
     public function tearDown() {
+        WorkflowFactory::clearInstance();
         unset($this->site_admin_user);
         unset($this->project_admin_user);
         unset($this->all_trackers_admin_user);
@@ -1445,9 +1449,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->setReturnValue('getAllFormElements', array($f1, $f2));
         $this->formelement_factory->setReturnValue('getAllFormElementsForTracker', array($f1, $f2));
 
-        $rules_manager = mock('Tracker_RulesManager');
-
-        $this->tracker->setReturnValue('getRulesManager', $rules_manager);
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
@@ -1488,7 +1490,7 @@ class TrackerTest extends TuleapTestCase {
 
     public function itExportsTheTrackerID() {
         $this->tracker->setReturnValue('getAllFormElements', array());
-        $this->tracker->setReturnValue('getRulesManager', mock('Tracker_RulesManager'));
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
@@ -1499,7 +1501,7 @@ class TrackerTest extends TuleapTestCase {
 
     public function itExportsNoParentIfNotInAHierarchy() {
         $this->tracker->setReturnValue('getAllFormElements', array());
-        $this->tracker->setReturnValue('getRulesManager', mock('Tracker_RulesManager'));
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
@@ -1510,7 +1512,7 @@ class TrackerTest extends TuleapTestCase {
 
     public function itExportsTheParentId() {
         $this->tracker->setReturnValue('getAllFormElements', array());
-        $this->tracker->setReturnValue('getRulesManager', mock('Tracker_RulesManager'));
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
         $this->hierarchy->addRelationship(9001, 110);
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
@@ -1559,8 +1561,7 @@ class TrackerTest extends TuleapTestCase {
 
         $af->setReturnReference('getInstanceFromRow', $artifact);
 
-        $this->rules_manager = mock('Tracker_RulesManager');
-        stub($this->tracker)->getRulesManager()->returns($this->rules_manager);
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
 
         $GLOBALS['Response']->expectNever('addFeedback');
         $this->assertFalse($this->tracker->hasError($header, $lines));
@@ -1718,14 +1719,14 @@ class Tracker_WorkflowTest extends TuleapTestCase {
     }
 
     public function itHasADefaultWorkflow() {
+        $workflow = aWorkflow()->withTrackerId($this->tracker_id)->build();
         stub($this->workflow_factory)->getWorkflowByTrackerId()->returns(false);
-        $workflow   = $this->tracker->getWorkflow();
-        $this->assertIsA($workflow, 'Workflow');
-        $this->assertEqual($workflow->getTrackerId(), $this->tracker_id);
+        stub($this->workflow_factory)->getWorkflowWithoutTransition()->returns($workflow);
+        $this->assertIdentical($this->tracker->getWorkflow(), $workflow);
     }
 
     public function itHasAWorkflowFromTheFactoryWhenThereAreTransitions() {
-        $workflow = new Workflow(1, $this->tracker_id, 34, true);
+        $workflow = aWorkflow()->withTrackerId($this->tracker_id)->build();
         stub($this->workflow_factory)->getWorkflowByTrackerId($this->tracker_id)->returns($workflow);
         $this->assertIdentical($this->tracker->getWorkflow(), $workflow);
     }

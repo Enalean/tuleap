@@ -66,7 +66,13 @@ class WorkflowFactoryTest extends TuleapTestCase {
         stub($transition_factory)->getInstanceFromXML($xml->transitions->transition[1], $mapping)->at(1)->returns(mock('Transition'));
         stub($transition_factory)->getInstanceFromXML($xml->transitions->transition[2], $mapping)->at(2)->returns($third_transition);
 
-        $workflow_factory   = new WorkflowFactory($transition_factory);
+        $workflow_factory   = new WorkflowFactory(
+            $transition_factory,
+            mock('TrackerFactory'),
+            mock('Tracker_FormElementFactory'),
+            mock('Tracker_Workflow_Trigger_RulesManager'),
+            mock('WorkflowBackendLogger')
+        );
 
         $workflow = $workflow_factory->getInstanceFromXML($xml, $mapping, $tracker);
 
@@ -125,7 +131,17 @@ class WorkflowFactory_IsFieldUsedInWorkflowTest extends TuleapTestCase {
         stub($this->transition_factory)->isFieldUsedInTransitions($this->field_start_date)->returns(false);
         stub($this->transition_factory)->isFieldUsedInTransitions($this->field_close_date)->returns(true);
 
-        $this->workflow_factory = partial_mock('WorkflowFactory', array('getWorkflowByTrackerId'), array($this->transition_factory));
+        $this->workflow_factory = partial_mock(
+            'WorkflowFactory',
+            array('getWorkflowByTrackerId'),
+            array(
+                $this->transition_factory,
+                mock('TrackerFactory'),
+                mock('Tracker_FormElementFactory'),
+                mock('Tracker_Workflow_Trigger_RulesManager'),
+                mock('WorkflowBackendLogger')
+            )
+        );
         stub($this->workflow_factory)->getWorkflowByTrackerId($tracker->getId())->returns($workflow);
     }
 

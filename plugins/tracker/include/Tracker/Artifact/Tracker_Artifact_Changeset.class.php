@@ -828,5 +828,14 @@ class Tracker_Artifact_Changeset {
             return $comment->exportToSOAP();
         }
     }
+
+    /**
+     * Link to changeset in interface
+     *
+     * @return String
+     */
+    public function getUri() {
+        return  TRACKER_BASE_URL.'?aid='.$this->getArtifact()->getId().'#followup_'.$this->getId();
+    }
 }
 ?>

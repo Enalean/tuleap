@@ -688,6 +688,7 @@ plugin_tracker_common_artifact	error_artifactlink_value	$1 : $2 n'est pas un id 
 plugin_tracker_common_artifact	error_artifactlink_choose_parent	Vous devez lier cet artefact à un parent existant ou en créer un nouveau.
 plugin_tracker_common_artifact	error_date_value	$1 n'est pas une valeur du type date.
 plugin_tracker_common_artifact	error_text_value	$1 n'est pas une valeur du type texte.
+plugin_tracker_common_artifact	error_processor_update	Erreur lors de la mise à jour de l'artefact $1 : $2
 
 #
 #-----------------------------------------------
@@ -995,6 +996,7 @@ plugin_tracker_artifact	mail_followup_date	Date :
 plugin_tracker_artifact	mail_followup_by	Par :
 plugin_tracker_artifact	not_logged_in	<strong><span class="highlight">Vous n'êtes PAS connecté<br />Veuillez <a href="$1">vous connecter,</a> de façon à ce que les notifications de mise à jour puissent vous être envoyées.</span></strong><br />Si vous ne possédez pas de compte utilisateur, veuillez entrer votre adresse e-mail à la place&nbsp;:
 plugin_tracker_artifact	email_required	Votre adresse email est obligatoire si vous n'êtes pas connecté.
+plugin_tracker_artifact	global_rules_not_valid	Règles globales non respectées
 
 plugin_tracker_artifact	edit_title	Artefact
 plugin_tracker_artifact	hierarchy_title	Enfants
@@ -1399,6 +1401,13 @@ workflow_postaction	ci_build	Lancer un build de l'intégration continue
 workflow_postaction	ci_build_succeeded	Le build d'intégration continue a été lancé ($1)
 
 workflow_condition	invalid_condition	Condition invalide : le champ '$1' doit être rempli
+
+workflow_trigger_rules_processor	parent_update	Changement provoqué par la mise à jour de <a href="$2">$1</a>.
+workflow_trigger_rules_processor	rule_comment	Les enfants de l'artefact courant satisfont la(les) condition(s) suivantes:
+workflow_trigger_rules_processor	rule_comment_all_of	tou(te)s les <strong>$1</strong> ont <strong>$2</strong> valué(e) à <strong>$3</strong>
+workflow_trigger_rules_processor	rule_comment_at_least_one	au moins un(e) <strong>$1</strong> dont <strong>$2</strong> est à <strong>$3</strong>
+workflow_trigger_rules_processor	condition_operator_all_of	et
+workflow_trigger_rules_processor	condition_operator_at_least_one	ou
 
 plugin_tracker_permissions	plugin_tracker_artifact_access	Accès à un artefact
 plugin_tracker_permissions	plugin_tracker_full_access	Accès à tous les artefacts du tracker

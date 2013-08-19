@@ -358,7 +358,8 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
                 'saveValue',
                 'getChangesetValueDao',
                 'userCanUpdate',
-                'isValid'
+                'isValid',
+                'getProcessChildrenTriggersCommand'
             )
         );
         $changeset_value_dao = stub('Tracker_Artifact_Changeset_ValueDao')->save()->returns($this->new_changeset_value_id);
@@ -369,13 +370,13 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         stub($this->field)->isSourceOfAssociation($this->artifact_123, $this->modified_artifact)->returns(true);
         stub($this->field)->isSourceOfAssociation($this->artifact_124, $this->modified_artifact)->returns(false);
         
-        stub($this->field)->getArtifactsFromChangesetValue($this->submitted_value, $this->old_changeset)->returns($this->all_artifacts);        
+        stub($this->field)->getArtifactsFromChangesetValue($this->submitted_value, $this->old_changeset)->returns($this->all_artifacts);
+
+        stub($this->field)->getProcessChildrenTriggersCommand()->returns(mock('Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand'));
     }
     
-    public function itSavesChangesetInSourceArtifact() {
-        // First reverse link the artifact
-        $this->artifact_123->expectOnce('linkArtifact', array($this->modified_artifact_id, $this->submitter));
-        stub($this->artifact_123)->linkArtifact()->returns(true);
+    public function itPostponeSavesChangesetInSourceArtifact() {
+        expect($this->artifact_123)->linkArtifact()->never();
         
         // Then update the artifact with other links
         $remaining_submitted_value = array('new_values' => '124',
@@ -385,7 +386,15 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         
         $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter);
     }
-    
+
+    public function itSavesChangesetInSourceArtifact() {
+        expect($this->artifact_123)->linkArtifact($this->modified_artifact_id, $this->submitter)->once();
+        stub($this->artifact_123)->linkArtifact()->returns(true);
+
+        $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter);
+        $this->field->postSaveNewChangeset($this->modified_artifact, $this->submitter, mock('Tracker_Artifact_Changeset'));
+    }
+
     public function itRemovesFromSubmittedValuesArtifactsThatWereUpdatedByDirectionChecking() {
         $submitted_value  = array('new_values' => '123, 124');
         $artifact_id_already_linked = array(123);
@@ -411,6 +420,23 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         $artifact_id_already_linked = array(123);
         $submitted_value = $this->field->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
         $this->assertEqual($submitted_value, array('new_values' => '124'));
+    }
+}
+
+class Tracker_FormElement_Field_ArtifactLink_postSaveNewChangesetTest extends TuleapTestCase {
+
+    public function itExecutesProcessChildrenTriggersCommand() {
+        $artifact           = anArtifact()->build();
+        $user               = aUser()->build();
+        $new_changeset      = mock('Tracker_Artifact_Changeset');
+        $previous_changeset = null;
+        $command            = mock('Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand');
+        $field              = partial_mock('Tracker_FormElement_Field_ArtifactLink', array('getProcessChildrenTriggersCommand'));
+        stub($field)->getProcessChildrenTriggersCommand()->returns($command);
+
+        expect($command)->execute($artifact, $user, $new_changeset, $previous_changeset)->once();
+
+        $field->postSaveNewChangeset($artifact, $user, $new_changeset, $previous_changeset);
     }
 }
 

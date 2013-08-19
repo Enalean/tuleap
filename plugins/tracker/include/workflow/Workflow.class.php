@@ -47,12 +47,33 @@ class Workflow {
      */
     protected $field_values = null;
 
-    public function __construct($workflow_id, $tracker_id, $field_id, $is_used, $transitions = null) {
-        $this->workflow_id      = $workflow_id;
-        $this->tracker_id = $tracker_id;
-        $this->field_id   = $field_id;
-        $this->is_used = $is_used;
-        $this->transitions   = $transitions;
+    /** @var Tracker_RulesManager */
+    private $global_rules_manager;
+
+    /** @var Tracker_Workflow_Trigger_RulesManager */
+    private $trigger_rules_manager;
+
+    /** @var WorkflowBackendLogger */
+    private $logger;
+
+    public function __construct(
+        Tracker_RulesManager $global_rules_manager,
+        Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
+        WorkflowBackendLogger $logger,
+        $workflow_id,
+        $tracker_id,
+        $field_id,
+        $is_used,
+        $transitions = null
+    ) {
+        $this->workflow_id           = $workflow_id;
+        $this->tracker_id            = $tracker_id;
+        $this->field_id              = $field_id;
+        $this->is_used               = $is_used;
+        $this->transitions           = $transitions;
+        $this->global_rules_manager  = $global_rules_manager;
+        $this->trigger_rules_manager = $trigger_rules_manager;
+        $this->logger                = $logger;
     }
 
     /**
@@ -228,8 +249,8 @@ class Workflow {
      *
      * @return void
      */
-    public function setTracker($tracker) {
-        $this->tracker_id = $tracker;
+    public function setTracker(Tracker $tracker) {
+        $this->tracker_id = $tracker->getId();
     }
 
     /**
@@ -252,7 +273,7 @@ class Workflow {
 
     public function exportToSOAP(PFUser $user) {
         $user_can_read_workflow_field = ($this->isUsed()) ? $this->getField()->userCanRead($user) : false;
-        $rules = $this->getTracker()->getRulesManager()->exportToSOAP($user_can_read_workflow_field);
+        $rules = $this->global_rules_manager->exportToSOAP($user_can_read_workflow_field);
 
         $soap_result = array(
             'field_id'    => 0,
@@ -293,6 +314,7 @@ class Workflow {
     /**
      * Execute actions after transition happens (if there is one)
      *
+     * @param PFUser                     $user               The user who changed things
      * @param Array                      $fields_data        Request field data (array[field_id] => data)
      * @param Tracker_Artifact_Changeset $new_changeset      The changeset that has just been created
      * @param Tracker_Artifact_Changeset $previous_changeset The changeset just before (null for a new artifact)
@@ -300,12 +322,18 @@ class Workflow {
      * @return void
      */
     public function after(array $fields_data, Tracker_Artifact_Changeset $new_changeset, Tracker_Artifact_Changeset $previous_changeset = null) {
+        $this->logger->defineFingerprint($new_changeset->getArtifact()->getId());
+        $this->logger->start(__METHOD__, $new_changeset->getId(), ($previous_changeset ? $previous_changeset->getId() : 'null'));
+
         if (isset($fields_data[$this->getFieldId()])) {
             $transition = $this->getCurrentTransition($fields_data, $previous_changeset);
             if ($transition) {
                 $transition->after($new_changeset);
             }
         }
+        $this->trigger_rules_manager->processTriggers($new_changeset);
+
+        $this->logger->end(__METHOD__, $new_changeset->getId(), ($previous_changeset ? $previous_changeset->getId() : 'null'));
     }
 
     public function validate($fields_data, Tracker_Artifact $artifact) {
@@ -341,15 +369,18 @@ class Workflow {
         return null;
     }
 
-    /** @return bool */
-    public function validateGlobalRules(array $fields_data) {
-        return $this->getTracker()->getRulesManager()->validate($this->tracker_id, $fields_data);
+    /**
+     * @throws Tracker_Workflow_GlobalRulesViolationException
+     */
+    public function checkGlobalRules(array $fields_data) {
+        if (! $this->global_rules_manager->validate($this->tracker_id, $fields_data)) {
+            throw new Tracker_Workflow_GlobalRulesViolationException();
+        }
     }
 
     /** @return array of Tracker_Rule */
     public function getGlobalRules() {
-        $tracker = $this->getTracker();
-        return $tracker->getRulesManager()->getRules($tracker);
+        return $this->global_rules_manager->getRules($tracker);
     }
 
    /**

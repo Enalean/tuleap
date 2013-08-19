@@ -27,6 +27,7 @@ class WorkflowManager {
     }
 
     public function process(TrackerManager $engine, Codendi_Request $request, PFUser $current_user) {
+        $workflow_factory = WorkflowFactory::instance();
         if ($request->get('func') == Workflow::FUNC_ADMIN_RULES) {
             $token = new CSRFSynchronizerToken(TRACKER_BASE_URL. '/?'. http_build_query(
                 array(
@@ -45,34 +46,27 @@ class WorkflowManager {
             ));
             $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_BASE_DIR.'/../templates');
 
-            $action = new Tracker_Workflow_Action_Triggers_EditTriggers($this->tracker, $token, $renderer, $this->getTriggerRuleManager());
+            $action = new Tracker_Workflow_Action_Triggers_EditTriggers($this->tracker, $token, $renderer, $workflow_factory->getTriggerRulesManager());
         } else if ($request->get('func') == Workflow::FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA) {
             $action = new Tracker_Workflow_Action_Triggers_GetTriggersRulesBuilderData($this->tracker, Tracker_FormElementFactory::instance());
         } else if ($request->get('func') == Workflow::FUNC_ADMIN_ADD_TRIGGER) {
-            $action = new Tracker_Workflow_Action_Triggers_AddTrigger($this->tracker, Tracker_FormElementFactory::instance(), $this->getTriggerRuleManager());
+            $action = new Tracker_Workflow_Action_Triggers_AddTrigger($this->tracker, Tracker_FormElementFactory::instance(), $workflow_factory->getTriggerRulesManager());
         } else if ($request->get('func') == Workflow::FUNC_ADMIN_DELETE_TRIGGER) {
-            $action = new Tracker_Workflow_Action_Triggers_DeleteTrigger($this->tracker, $this->getTriggerRuleManager());
+            $action = new Tracker_Workflow_Action_Triggers_DeleteTrigger($this->tracker, $workflow_factory->getTriggerRulesManager());
         } else if ($request->get('create')) {
-            $action = new Tracker_Workflow_Action_Transitions_Create($this->tracker, WorkflowFactory::instance());
+            $action = new Tracker_Workflow_Action_Transitions_Create($this->tracker, $workflow_factory);
         } else if ($request->get('edit_transition')) {
             $action = new Tracker_Workflow_Action_Transitions_EditTransition($this->tracker, TransitionFactory::instance(), new Transition_PostActionFactory());
         } else if ($request->get('delete')) {
-            $action = new Tracker_Workflow_Action_Transitions_Delete($this->tracker, WorkflowFactory::instance());
+            $action = new Tracker_Workflow_Action_Transitions_Delete($this->tracker, $workflow_factory);
         } else if ($request->get('transitions')) {
-            $action = new Tracker_Workflow_Action_Transitions_CreateMatrix($this->tracker, WorkflowFactory::instance(), Tracker_FormElementFactory::instance());
+            $action = new Tracker_Workflow_Action_Transitions_CreateMatrix($this->tracker, $workflow_factory, Tracker_FormElementFactory::instance());
         } else if ($request->get('workflow_details')) {
             $action = new Tracker_Workflow_Action_Transitions_Details($this->tracker, TransitionFactory::instance());
         } else {
             $action = new Tracker_Workflow_Action_Transitions_DefineWorkflow($this->tracker, WorkflowFactory::instance(), Tracker_FormElementFactory::instance());
         }
         $action->process($engine, $request, $current_user);
-    }
-
-    private function getTriggerRuleManager() {
-        return new Tracker_Workflow_Trigger_RulesManager(
-            new Tracker_Workflow_Trigger_RulesDao(),
-            Tracker_FormElementFactory::instance()
-        );
     }
 }
 ?>

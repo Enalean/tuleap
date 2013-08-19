@@ -228,25 +228,6 @@ class Tracker_HierarchyFactory {
     }
 
     /**
-     * Get artifacts that share the same parent than given artifact
-     *
-     * @param PFUser $user
-     * @param Tracker_Artifact $artifact
-     *
-     * @return Array of Tracker_Artifact
-     */
-    public function getSiblings(PFUser $user, Tracker_Artifact $artifact) {
-        $siblings = array();
-        $parent   = $this->getParentArtifact($user, $artifact);
-        if ($parent) {
-            foreach ($parent->getHierarchyLinkedArtifacts($user) as $child) {
-                $siblings[] = $child;
-            }
-        }
-        return $siblings;
-    }
-
-    /**
      * Duplicate a tracker hierarchy
      *
      * @param Array   $tracker_mapping the trackers mapping during project creation based on a template
