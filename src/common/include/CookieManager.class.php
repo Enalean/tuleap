@@ -45,8 +45,7 @@ class CookieManager {
         }
         $secure = (bool)Config::get('sys_force_ssl');
         if($this->isPhpHttpOnlyCompatible() == true) {
-            $httpOnly = true;
-            return setcookie($this->getInternalCookieName($name), $value, $expire, '/', $cookie_host, $secure, $httpOnly);
+            return setcookie($this->getInternalCookieName($name), $value, $expire, '/', $cookie_host, $secure, true);
         } else { //This is a workaround to enable HttpOnly on cookie
             return setcookie($this->getInternalCookieName($name), $value, $expire, '/', $cookie_host. '; HttpOnly', $secure);
         }
