@@ -29,6 +29,7 @@ Version 6.4 (NOT RELEASED YET)
 	* Database server can be on a non standard port
 	* Fix the issue of custom fields not displayed in the project admin area
 	* sla #4564: Missing HttpOnly Attribute in Session Cookie (Contrib STMicroelectronics)
+	* Fix issue with change email confirmation
 
 	== Development ==
 	* Cross-trackers triggers fully implemented
