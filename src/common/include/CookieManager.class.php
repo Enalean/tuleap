@@ -44,7 +44,11 @@ class CookieManager {
             $cookie_host=".".$host;
         }
         $secure = (bool)Config::get('sys_force_ssl');
-        return setcookie($this->getInternalCookieName($name), $value, $expire, '/', $cookie_host, $secure);
+        if($this->isPhpHttpOnlyCompatible() == true) {
+            return setcookie($this->getInternalCookieName($name), $value, $expire, '/', $cookie_host, $secure, true);
+        } else { //This is a workaround to enable HttpOnly on cookie
+            return setcookie($this->getInternalCookieName($name), $value, $expire, '/', $cookie_host. '; HttpOnly', $secure);
+        }
     }
     
     function getCookie($name) {
@@ -65,6 +69,16 @@ class CookieManager {
     
     function getInternalCookieName($name) {
         return $GLOBALS['sys_cookie_prefix'] .'_'. $name;
+    }
+
+    /**
+     * Check if PHP version support HttpOnly option.
+     *
+     * HttpOnly is an additional flag included in Cookie.
+     * Using the HttpOnly flag when generating a cookie helps mitigate the risk of client side script accessing the protected cookie.
+     */
+    function isPhpHttpOnlyCompatible() {
+        return server_is_php_version_equal_or_greater_than_53();
     }
 }
 ?>
