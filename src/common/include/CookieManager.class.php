@@ -78,7 +78,7 @@ class CookieManager {
      * Using the HttpOnly flag when generating a cookie helps mitigate the risk of client side script accessing the protected cookie.
      */
     function isPhpHttpOnlyCompatible() {
-        return isPhpVersionEqualOrGreaterTo53();
+        return util_is_php_version_equal_or_greater_than_53();
     }
 }
 ?>
