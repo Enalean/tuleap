@@ -8,14 +8,14 @@
 //
 // 
 
-//various utilities that need to be included in top of this script.
-require_once('utilities.php');
+//various server utilities.
+require_once('server.php');
 
 if (version_compare(phpversion(), '5.1.6', '<')) {
     die('Tuleap must be run on a PHP 5.1.6 (or greater) engine');
 }
 
-if (util_is_php_version_equal_or_greater_than_53() == true) {
+if (server_is_php_version_equal_or_greater_than_53() == true) {
     if (!ini_get('date.timezone')) {
         date_default_timezone_set('Europe/Paris');
     }
@@ -198,7 +198,7 @@ if(!IS_SCRIPT) {
 
 */
 if ($current_user->isLoggedIn()) {
-    if (util_is_php_version_equal_or_greater_than_53() == true) {
+    if (server_is_php_version_equal_or_greater_than_53() == true) {
         date_default_timezone_set($current_user->getTimezone());
     } else {
         putenv('TZ='.$current_user->getTimezone());
