@@ -1,4 +1,6 @@
 Version 6.4 (NOT RELEASED YET)
+
+	== Enhancement ==
 	* Switch documentation to sphinx for easier contrib, better look'n feel
 	  and improved help experience (search, table of content, etc).
 	  This includes helps on latest developed features: agile dashboard,
@@ -26,6 +28,7 @@ Version 6.4 (NOT RELEASED YET)
 	  future)
 	* Database server can be on a non standard port
 	* Fix the issue of custom fields not displayed in the project admin area
+	* sla #4564: Missing HttpOnly Attribute in Session Cookie
 
 	== Development ==
 	* Cross-trackers triggers fully implemented
