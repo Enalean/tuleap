@@ -2,7 +2,7 @@
 
 require_once('pre.php');
 
-define('CODENDI_WS_API_VERSION', '6.0');
+define('CODENDI_WS_API_VERSION', '6.1');
 
 define('LOG_SOAP_REQUESTS', false);
 
