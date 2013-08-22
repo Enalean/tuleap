@@ -128,8 +128,8 @@ tuleap.trackers.trigger = Class.create({
         }
 
         function makeTargetFieldValuesDynamic(child_trackers) {
-            Event.observe($('trigger_target_field_name'), 'change', function(event) {
-                var field_id = event.currentTarget.value,
+            Event.observe($('trigger_target_field_name'), 'change', function(evt) {
+                var field_id = Event.element(evt).value,
                     field_values;
 
                 removeExistingValues();
@@ -339,9 +339,9 @@ tuleap.trackers.trigger.triggering_field = Class.create({
     makeChildTrackerFieldsDynamic : function() {
         var self = this;
 
-        Event.observe($$('.trigger_triggering_field_child_tracker_name').last(), 'change', function(event) {
-            var tracker_id          = event.currentTarget.value,
-                select_box_element  = event.currentTarget;
+        Event.observe($$('.trigger_triggering_field_child_tracker_name').last(), 'change', function(evt) {
+            var select_box_element  = Event.element(evt),
+                tracker_id          = select_box_element.value;
 
             self.removeAllOptions();
             self.addTrackerFieldsData(tracker_id, select_box_element);
@@ -367,8 +367,8 @@ tuleap.trackers.trigger.triggering_field = Class.create({
         var container   = this.container,
             self        = this;
 
-        Event.observe($$('.trigger_triggering_field_child_tracker_field_name').last(), 'change', function(event) {
-            var field_id    = event.currentTarget.value,
+        Event.observe($$('.trigger_triggering_field_child_tracker_field_name').last(), 'change', function(evt) {
+            var field_id    = Event.element(evt).value,
                 tracker_id  = container.down('.trigger_triggering_field_child_tracker_name').value;
 
             self.removeExistingFieldValues();
