@@ -8,7 +8,7 @@ Version 6.4 (NOT RELEASED YET)
 
 	== Plugins ==
 	* git: 3.37
-	* tracker: 5.148
+	* tracker: 5.149
 	* ldap: 3.33
 	* tests: 5.18
 	* cardwall: 0.9.41

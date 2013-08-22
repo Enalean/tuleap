@@ -1,3 +1,6 @@
+Version 5.149 - Tuleap 6.4
+    * Fix request #4819: [IE8] Triggers in workflow
+
 Version 5.148 - Tuleap 6.4
     * Integrate date reminder log messages
 
