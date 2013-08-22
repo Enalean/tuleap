@@ -37,7 +37,6 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         parent::__construct($da);
         $this->start_date = strtotime($start_date);
         $this->end_date   = strtotime($end_date);
-
     }
 
     public function getNameOfActiveProjectsBeforeEndDate() {
@@ -112,13 +111,20 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getCVSActivities() {
+        $cvs_format_start_date = $this->formatDateForCVS($this->start_date);
+        $cvs_format_end_date   = $this->formatDateForCVS($this->end_date);
+
         $sql = "SELECT group_id, SUM(cvs_commits) AS result
                 FROM group_cvs_full_history
-                WHERE day <= $this->end_date
-                    AND day >= $this->start_date
+                WHERE day <= $cvs_format_end_date
+                    AND day >= $cvs_format_start_date
                 GROUP BY group_id";
 
         return $this->retrieve($sql);
+    }
+
+    private function formatDateForCVS($timestamp) {
+        return strftime("%Y%m%d", $timestamp);
     }
 
     public function getSVNActivities() {
