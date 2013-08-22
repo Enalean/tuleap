@@ -245,5 +245,5 @@ tuleap.artifact.HierarchyViewer.Item = Class.create({
 
     useHideIcon: function () {
         this.icon.src = this.icon.src.sub(/right.png$/, 'down.png');
-    },
+    }
 });
