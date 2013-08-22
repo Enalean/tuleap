@@ -108,6 +108,11 @@ class Git_Admin {
                 rows="5">'.$server->getReplicationKey().'</textarea>
             </td></tr>';
 
+        $html .= '<tr>
+                    <td> <label> Use SSL </label> </td>
+                    <td> <input type="checkbox" name="use_ssl" /> </td>
+                  </tr>';
+
         if ($id && ! $this->gerrit_server_factory->isServerUsed($server)) {
             $html .= '<td><label>'. 'Delete?' .'<br /><input type="checkbox" name="gerrit_servers['. $id .'][delete]" value="1" /></label></td>';
         } else {
