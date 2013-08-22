@@ -1,3 +1,6 @@
+Version 0.31 - Tuleap 6.4
+    * Fix request #4823: Issues on CVS activities result in 'services usage' Statistics
+
 Version 0.30 - Tuleap 6.4
     * story #4592 - Add project description fields in the service usage stats
 
