@@ -108,9 +108,14 @@ class Git_Admin {
                 rows="5">'.$server->getReplicationKey().'</textarea>
             </td></tr>';
 
+        $checked = '';
+        if ($server->usesSSL()) {
+            $checked = 'checked = "checked"';
+        }
+
         $html .= '<tr>
                     <td> <label> Use SSL </label> </td>
-                    <td> <input type="checkbox" name="use_ssl" /> </td>
+                    <td> <input type="checkbox" name="gerrit_servers['. $id .'][use_ssl]" '.$checked.'/> </td>
                   </tr>';
 
         if ($id && ! $this->gerrit_server_factory->isServerUsed($server)) {
@@ -150,13 +155,16 @@ class Git_Admin {
             $login                  = isset($settings['login'])             ? $settings['login']            : '';
             $identity_file          = isset($settings['identity_file'])     ? $settings['identity_file']    : '';
             $replication_ssh_key    = isset($settings['replication_key'])   ? $settings['replication_key']  : '';
+            $use_ssl                = isset($settings['use_ssl'])                                               ;
+
             if ($host &&
                 $host != $server->getHost() ||
                 $ssh_port != $server->getSSHPort() ||
                 $http_port != $server->getHTTPPort() ||
                 $login != $server->getLogin() ||
                 $identity_file != $server->getIdentityFile() ||
-                $replication_ssh_key != $server->getReplicationKey()
+                $replication_ssh_key != $server->getReplicationKey() ||
+                $use_ssl != $server->usesSSL()
             ) {
                 $server
                     ->setHost($host)
@@ -164,7 +172,8 @@ class Git_Admin {
                     ->setHTTPPort($http_port)
                     ->setLogin($login)
                     ->setIdentityFile($identity_file)
-                    ->setReplicationKey($replication_ssh_key)  ;
+                    ->setReplicationKey($replication_ssh_key)
+                    ->setUseSSL($use_ssl);
                 $this->gerrit_server_factory->save($server);
                 $this->servers[$server->getId()] = $server;
             }

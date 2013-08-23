@@ -198,7 +198,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
 
     public function itSavesAnExistingServer() {
         $this->main_gerrit_server->setLogin('new_login');
-        expect($this->dao)->save($this->server_id, $this->host, $this->ssh_port, $this->http_port, 'new_login', $this->identity_file, $this->replication_key)->once();
+        expect($this->dao)->save($this->server_id, $this->host, $this->ssh_port, $this->http_port, 'new_login', $this->identity_file, $this->replication_key, $this->use_ssl)->once();
         $this->factory->save($this->main_gerrit_server);
     }
 

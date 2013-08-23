@@ -118,7 +118,8 @@ class Git_RemoteServer_GerritServerFactory {
             $server->getHTTPPort(),
             $server->getLogin(),
             $server->getIdentityFile(),
-            $server->getReplicationKey()
+            $server->getReplicationKey(),
+            $server->usesSSL()
         );
         if ($server->getId() == 0) {
             $server->setId($id);
