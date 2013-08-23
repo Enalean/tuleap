@@ -33,8 +33,10 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     private $login;
     private $identity_file;
     private $replication_key;
+    /** @var Boolean */
+    private $use_ssl;
 
-    public function __construct($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key) {
+    public function __construct($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key, $use_ssl) {
         $this->id               = $id;
         $this->host             = $host;
         $this->ssh_port         = $ssh_port;
@@ -42,6 +44,7 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         $this->login            = $login;
         $this->identity_file    = $identity_file;
         $this->replication_key  = $replication_key;
+        $this->use_ssl          = $use_ssl;
     }
 
     public function getId() {
@@ -66,6 +69,10 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
 
     public function getHTTPPort() {
         return $this->http_port;
+    }
+
+    public function usesSSL() {
+        return $this->use_ssl;
     }
 
     public function setId($id) {
@@ -139,11 +146,19 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
      * @return string The base url of the server. Eg: http://gerrit.example.com:8080/
      */
     public function getBaseUrl() {
-        $url = "http://$this->host";
+        $url = $this->getHTTPProtocol() . $this->host;
         if ($this->http_port != self::DEFAULT_HTTP_PORT) {
             $url .= ":$this->http_port";
         }
         return $url;
+    }
+
+    private function getHTTPProtocol() {
+        if ($this->usesSSL()) {
+            return 'https://';
+        }
+
+        return 'http://';
     }
 }
 ?>

@@ -30,8 +30,9 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
         $login              = 'le_login';
         $identity_file      = 'le_identity_file';
         $replication_key    = '';
+        $use_ssl            = false;
 
-        $server = new Git_RemoteServer_GerritServer($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key);
+        $server = new Git_RemoteServer_GerritServer($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key, $use_ssl);
 
         $expected = 'ext::ssh -p le_ssh_port -i le_identity_file le_login@le_host %S le_project';
         $this->assertEqual($expected, $server->getCloneSSHUrl("le_project"));
@@ -45,8 +46,9 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
         $login              = 'le_login';
         $identity_file      = 'le_identity_file';
         $replication_key    = '';
+        $use_ssl            = false;
 
-        $server = new Git_RemoteServer_GerritServer($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key);
+        $server = new Git_RemoteServer_GerritServer($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key, $use_ssl);
 
         $this->assertEqual($server->getProjectAdminUrl('gerrit_project_name'), 'http://le_host/#/admin/projects/gerrit_project_name');
     }
@@ -59,8 +61,9 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
         $login              = 'le_login';
         $identity_file      = 'le_identity_file';
         $replication_key    = '';
+        $use_ssl            = false;
 
-        $server = new Git_RemoteServer_GerritServer($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key);
+        $server = new Git_RemoteServer_GerritServer($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key, $use_ssl);
 
         $this->assertEqual($server->getProjectAdminUrl('gerrit_project_name'), 'http://le_host:8080/#/admin/projects/gerrit_project_name');
     }
@@ -73,10 +76,26 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
         $login              = 'le_login';
         $identity_file      = 'le_identity_file';
         $replication_key    = '';
+        $use_ssl            = false;
 
-        $server = new Git_RemoteServer_GerritServer($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key);
+        $server = new Git_RemoteServer_GerritServer($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key, $use_ssl);
 
         $this->assertEqual($server->getProjectUrl('gerrit_project_name'), 'http://le_host:8080/#/q/project:gerrit_project_name,n,z');
+    }
+
+     public function itGivesTheUrlWithHTTPSToProjectRequestsIfWeUseSSL() {
+        $id                 = 1;
+        $host               = 'le_host';
+        $http_port          = '8080';
+        $ssh_port           = 'le_ssh_port';
+        $login              = 'le_login';
+        $identity_file      = 'le_identity_file';
+        $replication_key    = '';
+        $use_ssl            = true;
+
+        $server = new Git_RemoteServer_GerritServer($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key, $use_ssl);
+
+        $this->assertEqual($server->getProjectUrl('gerrit_project_name'), 'https://le_host:8080/#/q/project:gerrit_project_name,n,z');
     }
 
     public function itGivesTheReplicationKeyToProjectRequests() {
@@ -87,8 +106,9 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
         $login              = 'le_login';
         $identity_file      = 'le_identity_file';
         $replication_key    = '';
+        $use_ssl            = false;
 
-        $server = new Git_RemoteServer_GerritServer($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key);
+        $server = new Git_RemoteServer_GerritServer($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key, $use_ssl);
 
         $this->assertEqual($server->getReplicationKey('gerrit_project_name'), $replication_key);
     }
@@ -106,8 +126,9 @@ class Git_RemoteServer_GerritServer_EndUserCloneUrlTest extends TuleapTestCase {
         $login              = 'le_login';
         $identity_file      = 'le_identity_file';
         $replication_key    = '';
+        $use_ssl            = false;
 
-        $this->server = new Git_RemoteServer_GerritServer($id, $this->host, $ssh_port, $http_port, $login, $identity_file, $replication_key);
+        $this->server = new Git_RemoteServer_GerritServer($id, $this->host, $ssh_port, $http_port, $login, $identity_file, $replication_key, $use_ssl);
 
         $this->user = aUser()->build();
     }

@@ -55,6 +55,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
         $this->event->setParameters("$gerrit_server_id");
 
         $replication_key = 'ssh-rsa blablabla';
+        $use_ssl         = false;
 
         $gerrit_server = new Git_RemoteServer_GerritServer(
             $gerrit_server_id,
@@ -63,7 +64,8 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
             '$http_port',
             '$login',
             '$identity_file',
-            $replication_key
+            $replication_key,
+            $use_ssl
         );
         stub($this->gerrit_server_factory)->getServerById()->returns($gerrit_server);
 
