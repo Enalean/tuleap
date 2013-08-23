@@ -58,6 +58,7 @@ class cardwallPlugin extends Plugin {
             $this->_addHook(Event::JAVASCRIPT);
             $this->addHook(Event::EXPORT_XML_PROJECT);
             $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
+            $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -183,6 +184,18 @@ class cardwallPlugin extends Plugin {
                 'CardsEditInPlace.js',
             ));
         }
+    }
+
+     /**
+     * @see Event::TRACKER_EVENT_MANAGE_SEMANTICS
+     */
+    public function tracker_event_manage_semantics($parameters) {
+        $tracker   = $parameters['tracker'];
+        /* @var $semantics Tracker_SemanticCollection */
+        $semantics = $parameters['semantics'];
+
+        $card_fields_semantic = Cardwall_Semantic_CardFields::load($tracker);
+        $semantics->add($card_fields_semantic->getShortName(), $card_fields_semantic);
     }
 
     private function getJavascriptIncludesForScripts(array $script_names) {
