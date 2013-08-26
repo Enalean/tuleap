@@ -38,3 +38,11 @@ CREATE TABLE IF NOT EXISTS plugin_cardwall_on_top_column_mapping_field_value(
     column_id INT(11) NOT NULL,
     PRIMARY KEY idx(cardwall_tracker_id, tracker_id, field_id, value_id)
 );
+
+DROP TABLE IF EXISTS plugin_cardwall_semantic_cardfields;
+CREATE TABLE IF NOT EXISTS plugin_cardwall_semantic_cardfields(
+    tracker_id int(11) NOT NULL,
+    field_id int(11) NOT NULL,
+    rank int(11) NOT NULL,
+    PRIMARY KEY id_cardfields(tracker_id, field_id)
+) ENGINE=InnoDB;
