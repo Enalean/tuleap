@@ -55,7 +55,10 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic {
         echo $html;
     }
 
-    private function getFields() {
+    /**
+     * @return Tracker_FormElement_Field[]
+     */
+    public function getFields() {
         if (! $this->card_fields) {
             $this->loadFieldsFromTracker($this->tracker);
         }
