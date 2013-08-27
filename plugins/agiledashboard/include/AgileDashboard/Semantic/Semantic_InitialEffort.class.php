@@ -29,6 +29,9 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      */
     protected $initial_effort_field;
 
+    protected static $_instances;
+
+
     /**
      * Constructor
      *
@@ -196,8 +199,6 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
         $dao = new AgileDashboard_Semantic_Dao_InitialEffortDao();
         return $dao->save($this->tracker->getId(), $this->getFieldId());
     }
-
-    protected static $_instances;
 
     /**
      * Load an instance of a Tracker_Semantic_InitialEffort
