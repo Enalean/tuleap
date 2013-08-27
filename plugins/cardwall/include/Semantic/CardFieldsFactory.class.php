@@ -73,10 +73,10 @@ class Cardwall_Semantic_CardFieldsFactory implements Tracker_Semantic_IRetrieveS
     /**
      * Return the Dao
      *
-     * @return Cardwall_Semantic_Dao_CardFields The dao
+     * @return Cardwall_Semantic_Dao_CardFieldsDao The dao
      */
     public function getDao() {
-        return new Cardwall_Semantic_CardFieldsDao();
+        return new Cardwall_Semantic_Dao_CardFieldsDao();
     }
 
     /**
@@ -89,7 +89,8 @@ class Cardwall_Semantic_CardFieldsFactory implements Tracker_Semantic_IRetrieveS
      * @return void
      */
     public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
-        // later
+        $duplicator = new Tracker_Semantic_CollectionOfFieldsDuplicator($this->getDao());
+        $duplicator->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }
 
 }

@@ -60,6 +60,7 @@ class cardwallPlugin extends Plugin {
             $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
             $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
+            $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -211,6 +212,13 @@ class cardwallPlugin extends Plugin {
         if ($type == Cardwall_Semantic_CardFields::NAME) {
             $params['semantic'] = Cardwall_Semantic_CardFieldsFactory::instance()->getInstanceFromXML($xml, $xml_mapping, $tracker);
         }
+    }
+
+    /**
+     * @see TRACKER_EVENT_GET_SEMANTIC_FACTORIES
+     */
+    public function tracker_event_get_semantic_factories($params) {
+        $params['factories'][] = Cardwall_Semantic_CardFieldsFactory::instance();
     }
 
     private function getJavascriptIncludesForScripts(array $script_names) {
