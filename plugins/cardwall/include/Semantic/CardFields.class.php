@@ -121,7 +121,11 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic {
     }
 
     public function save() {
-
+        $dao = $this->getDao();
+        foreach ($this->card_fields as $field) {
+            $dao->add($this->tracker->getId(), $field->getId(), 'end');
+        }
+        $this->card_fields = array();
     }
 
     /**
@@ -138,9 +142,13 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic {
     }
 
     private function loadFieldsFromTracker(Tracker $tracker) {
-        $dao      = new Cardwall_Semantic_Dao_CardFieldsDao();
+        $this->card_fields = $this->getDao()
+            ->searchByTrackerId($tracker->getId())
+            ->instanciateWith(array($this, 'instantiateFieldFromRow'));
+    }
 
-        $this->card_fields = $dao->searchByTrackerId($tracker->getId())->instanciateWith(array($this, 'instantiateFieldFromRow'));
+    private function getDao() {
+        return new Cardwall_Semantic_Dao_CardFieldsDao();
     }
 
     /**
