@@ -165,14 +165,33 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic {
 
     public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         if ( $request->get('add') && (int) $request->get('field')) {
-            $field = Tracker_FormElementFactory::instance()->getUsedFormElementById($request->get('field'));
-            $this->getDao()->add($this->tracker->id, $field->id);
+            $this->addField($request->get('field'));
         } else if ( (int) $request->get('remove') ) {
-            $field = Tracker_FormElementFactory::instance()->getUsedFormElementById($request->get('remove'));
-            $this->getDao()->remove($this->tracker->id, $field->id);
+            $this->removeField($request->get('remove'));
         }
         $this->displayAdmin($semantic_manager, $tracker_manager, $request, $current_user);
     }
+
+    private function addField($field_id) {
+        $field = Tracker_FormElementFactory::instance()->getUsedFormElementById($field_id);
+
+        if (! $field) {
+            return;
+        }
+
+        $this->getDao()->add($this->tracker->getId(), $field->getId());
+    }
+
+    private function removeField($field_id) {
+        $field = Tracker_FormElementFactory::instance()->getUsedFormElementById($field_id);
+
+        if (! $field) {
+            return;
+        }
+
+        $this->getDao()->remove($this->tracker->getId(), $field->getId());
+    }
+
 
     public function save() {
         $dao = $this->getDao();
