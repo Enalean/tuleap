@@ -22,7 +22,7 @@
 */
 
 class Cardwall_Semantic_CardFields extends Tracker_Semantic {
-    const NAME = 'card_fields';
+    const NAME = 'plugin_cardwall_card_fields';
 
     /** @var array */
     private $card_fields = array();
@@ -63,10 +63,30 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic {
         return $this->card_fields;
     }
 
+    /**
+     * @param Tracker_FormElement_Field[] $fields
+     */
+    public function setFields(array $fields) {
+        $this->card_fields = $fields;
+    }
+
     public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
     }
 
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
+    /**
+     * Transforms CardFields into a SimpleXMLElement
+     *
+     * @param SimpleXMLElement $root        the node to which the semantic is attached
+     * @param array            $xml_mapping correspondance between real field ids and xml IDs
+     *
+     * @return void
+     */
+    public function exportToXml(SimpleXMLElement $root, $xml_mapping) {
+        $child = $root->addChild('semantic');
+        $child->addAttribute('type', $this->getShortName());
+        foreach($this->getFields() as $field) {
+            $child->addChild('field')->addAttribute('REF', array_search($field->getId(), $xml_mapping));
+        }
     }
 
     public function getDescription() {
