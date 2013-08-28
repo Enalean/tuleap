@@ -45,11 +45,13 @@ class Cardwall_CardControllerBuilder {
         $config          = $this->getConfig($request);
         $field_retriever = $this->getFieldRetriever($config);
         $columns         = $config->getDashboardColumns();
+        $user_manager    = UserManager::instance();
+        $factory         = Tracker_FormElementFactory::instance();
 
         return new Cardwall_CardController(
             $request,
             $card_artifact,
-            new Tracker_CardFields(),
+            new Cardwall_CardFields($user_manager, $factory),
             new Cardwall_UserPreferences_UserPreferencesDisplayUser(Cardwall_UserPreferences_UserPreferencesDisplayUser::DISPLAY_AVATARS),
             $config,
             $field_retriever,

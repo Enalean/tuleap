@@ -53,7 +53,7 @@ class Cardwall_CardControllerTest extends TuleapTestCase {
         $artifact = aMockArtifact()->withId($artifact_id)->build();
         $config = mock('Cardwall_OnTop_Config');
         $field_retriever = mock('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact');
-        $card_fields = mock('Tracker_CardFields');
+        $card_fields = mock('Cardwall_CardFields');
 
         $card_controller = partial_mock(
             'Cardwall_CardController',

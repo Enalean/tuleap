@@ -45,8 +45,11 @@ class Cardwall_BoardFactory {
     }
 
     private function transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection, PFUser $user, Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences) {
-        
-        $card_presenter_mapper      = new TreeNodeMapper(new Cardwall_CreateCardPresenterCallback(new Tracker_CardFields(), $user, $display_preferences));
+        $user_manager               = UserManager::instance();
+        $factory                    = Tracker_FormElementFactory::instance();
+        $fields                     = new Cardwall_CardFields($user_manager, $factory);
+
+        $card_presenter_mapper      = new TreeNodeMapper(new Cardwall_CreateCardPresenterCallback($fields, $user, $display_preferences));
         $forests_of_card_presenters = $card_presenter_mapper->map($forests_of_artifacts);
 
         $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($field_retriever, $mapping_collection);

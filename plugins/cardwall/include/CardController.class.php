@@ -26,7 +26,7 @@ class Cardwall_CardController extends MVC2_PluginController {
     /** @var Tracker_Artifact */
     private $artifact;
 
-    /** @var Tracker_CardFields */
+    /** @var Cardwall_CardFields */
     private $card_fields;
 
     /** @var Cardwall_UserPreferences_UserPreferencesDisplayUser */
@@ -47,7 +47,7 @@ class Cardwall_CardController extends MVC2_PluginController {
     public function __construct(
         Codendi_Request $request,
         Tracker_Artifact $artifact,
-        Tracker_CardFields $card_fields,
+        Cardwall_CardFields $card_fields,
         Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
         Cardwall_OnTop_Config $config,
         Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_retriever,
