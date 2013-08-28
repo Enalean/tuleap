@@ -28,7 +28,7 @@ require_once('common/reference/CrossReference.class.php');
 require_once('common/dao/CrossReferenceDao.class.php');
 require_once('common/event/EventManager.class.php');
 require_once('common/dao/ArtifactDao.class.php');
-
+require_once('server.php');
 /**
  * Reference Manager
  * Performs all operations on references, including DB access (through ReferenceDAO)
@@ -61,6 +61,12 @@ class ReferenceManager {
         "tag", "thread", "im", "project", "folder", "plugin", "img", "commit", "rev", "revision", "patch", "bug",
         "sr", "task", "proj", "dossier"); //should be elsewhere?
 
+    private $php_supported_encoding_types = array(
+        'UTF-8',
+        'ISO-8859-15',
+        'ISO-8859-5',
+        'ISO-8859-1',
+    );
     /**
      * @var EventManager
      */
@@ -440,14 +446,35 @@ class ReferenceManager {
         $this->tmpGroupIdForCallbackFunction = $group_id;
         $locale = setlocale(LC_CTYPE, null);
         setlocale(LC_CTYPE, 'fr_FR.ISO-8859-1');
+
         if (!preg_match('/[^\s]{5000,}/', $html)) {             
             $exp = $this->_getExpForRef();
-            $html = preg_replace_callback($exp,
-                                      array(&$this,"_insertRefCallback"), // method _insertRefCallback of this class
-                                      $html);
+
+            $html = $this->convertToUTF8($html);
+            $html = preg_replace_callback($exp, array($this,"_insertRefCallback"), $html);
         }
         setlocale(LC_CTYPE, $locale);
         $this->tmpGroupIdForCallbackFunction = null;
+    }
+
+    /**
+     * Takes a string and tries to convert all special characters to UTF-8.
+     * Any characters that are not recognised will be removed from the string.
+     *
+     * This is done since for php >= 5.2 the method preg_replace_callback() cannot process non-utf-8 strings.
+     *
+     * Note: We need to know if the version is greater than 5.3.0 since the htmlentities()
+     * parameter ENT_IGNORE only exists for php > 5.3.0
+     */
+    private function convertToUTF8($string) {
+        if (! server_is_php_version_equal_or_greater_than_53()) {
+            return $string;;
+        }
+
+        $encoding = mb_detect_encoding($string, implode(',', $this->php_supported_encoding_types));
+        $string   = htmlentities($string, ENT_IGNORE, $encoding);
+
+        return html_entity_decode($string, ENT_IGNORE, 'UTF-8');
     }
 
     /**
