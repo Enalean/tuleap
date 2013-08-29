@@ -1,3 +1,6 @@
+Version 5.150 - Tuleap 6.5
+    * Development: introduce MailGatewayRecipient management
+
 Version 5.149 - Tuleap 6.4
     * Fix request #4819: [IE8] Triggers in workflow
 
