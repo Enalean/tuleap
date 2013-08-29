@@ -496,8 +496,9 @@ class Project_SOAPServer {
      * @return ArrayOfServicesValues
      */
     public function getProjectServicesUsage($session_key, $group_id) {
+        $project         = $this->getProjectIfUserIsAdmin($group_id, $session_key);
         $soap_return     = array();
-        $services_usages = $this->service_usage_factory->getServicesUsage($group_id);
+        $services_usages = $this->service_usage_factory->getServicesUsage($project);
 
         foreach ($services_usages as $services_usage) {
              $soap_return[] = $this->extractServicesUsageSOAPDatas($services_usage);

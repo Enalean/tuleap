@@ -394,7 +394,8 @@ class Project_SOAPServerProjectServicesUsageTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->project                    = stub('Project')->getId()->returns(101);
+        $this->group_id                   = 101;
+        $this->project                    = stub('Project')->getId()->returns($this->group_id);
         $this->session_key                = 'abcde123';
         $this->project_manager            = stub('ProjectManager')->getProject()->returns($this->project);
         $this->project_creator            = new MockProjectCreator();
@@ -417,12 +418,42 @@ class Project_SOAPServerProjectServicesUsageTest extends TuleapTestCase {
             $this->description_value_factory,
             $this->service_usage_factory
         );
+
+        $this->user       = stub('PFUser')->isLoggedIn()->returns(true);
+        $this->user_admin = stub('PFUser')->isLoggedIn()->returns(true);
+        stub($this->user_admin)->isMember(101, 'A')->returns(true);
+        stub($this->user)->isMember(101)->returns(true);
+        stub($this->user)->getUserName()->returns('User 01');
+    }
+
+    public function itThrowsAnExceptionIfTheUserIsNotProjectAdmin() {
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user);
+
+        $this->expectException();
+        $this->server->getProjectServicesUsage($this->session_key, $this->group_id);
+    }
+
+    public function itThrowsAnExceptionIfProjectDoesNotExist() {
+        $project_manager = stub('ProjectManager')->getProject()->returns(null);
+        $server          = new Project_SOAPServer(
+            $project_manager,
+            $this->project_creator,
+            $this->user_manager,
+            $this->generic_user_factory,
+            $this->limitator,
+            $this->description_factory,
+            $this->description_manager,
+            $this->description_value_factory,
+            $this->service_usage_factory
+        );
+
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
+
+        $this->expectException();
+        $server->getProjectServicesUsage($this->session_key, $this->group_id);
     }
 
     public function itReturnsTheServicesUsage() {
-        $session_key = 'abcdef123';
-        $group_id    = 104;
-
         $service_usage1 = stub('Project_Service_ServiceUsage')->getId()->returns(170);
         stub($service_usage1)->getShortName()->returns('git');
         stub($service_usage1)->isUsed()->returns(true);
@@ -449,9 +480,10 @@ class Project_SOAPServerProjectServicesUsageTest extends TuleapTestCase {
           )
         );
 
-        stub($this->service_usage_factory)->getServicesUsage(104)->returns($services_usages);
+        stub($this->service_usage_factory)->getServicesUsage($this->project)->returns($services_usages);
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
 
-        $this->assertIdentical($this->server->getProjectServicesUsage($session_key, $group_id), $expected);
+        $this->assertIdentical($this->server->getProjectServicesUsage($this->session_key, $this->group_id), $expected);
     }
 }
 ?>

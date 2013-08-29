@@ -34,13 +34,13 @@ class Project_Service_ServiceUsageFactory {
     }
 
     /**
-     * @param int $group_id
+     * @param Project $project
      *
      * @return Project_Service_ServiceUsage[]
      */
-    public function getServicesUsage($group_id) {
+    public function getServicesUsage(Project $project) {
         $services_usages = array();
-        $res = $this->dao->getServicesUsage($group_id);
+        $res = $this->dao->getServicesUsage($project->getID());
         while ($row = $res->getRow()) {
             $services_usages[] = $this->getInstanceFromRow($row);
         }
