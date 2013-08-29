@@ -28,13 +28,49 @@ class Project_Service_ServiceUsageDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function getServicesUsage($group_id) {
+    public function getAllServicesUsage($group_id) {
         $group_id = $this->da->escapeInt($group_id);
 
         $sql = "SELECT service_id, short_name, is_used
                 FROM service
                 WHERE group_id = $group_id
                 ORDER BY rank";
+
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * @param int $group_id
+     * @param int $service_id
+     *
+     * @return Boolean
+     */
+    public function activateService($group_id, $service_id) {
+        $group_id   = $this->da->escapeInt($group_id);
+        $service_id = $this->da->escapeInt($service_id);
+
+        $sql = "UPDATE service
+                SET is_used = 1
+                WHERE group_id = $group_id
+                  AND service_id = $service_id";
+
+        return $this->update($sql);
+    }
+
+    /**
+     * @param int $group_id
+     * @param int $service_id
+     *
+     * @return DataAccessResult
+     */
+    public function getServiceUsage($group_id, $service_id) {
+        $group_id   = $this->da->escapeInt($group_id);
+        $service_id = $this->da->escapeInt($service_id);
+
+        $sql = "SELECT service_id, short_name, is_used
+                FROM service
+                WHERE group_id = $group_id
+                  AND service_id = $service_id";
 
         return $this->retrieve($sql);
     }

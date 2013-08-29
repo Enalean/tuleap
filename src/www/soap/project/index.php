@@ -29,6 +29,7 @@ require_once 'common/project/CustomDescription/CustomDescriptionDao.class.php';
 require_once 'common/project/CustomDescription/CustomDescriptionValueDao.class.php';
 require_once 'common/project/CustomDescription/CustomDescriptionValueFactory.class.php';
 require_once 'common/project/Service/ServiceUsageFactory.class.php';
+require_once 'common/project/Service/ServiceUsageManager.class.php';
 
 // Check if we the server is in secure mode or not.
 if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
@@ -66,6 +67,7 @@ if ($request->exist('wsdl')) {
 
     $service_usage_dao     = new Project_Service_ServiceUsageDao();
     $service_usage_factory = new Project_Service_ServiceUsageFactory($service_usage_dao);
+    $service_usage_manager = new Project_Service_ServiceUsageManager($service_usage_dao);
 
     $server = new SoapServer($uri.'/?wsdl',
                              array('cache_wsdl' => WSDL_CACHE_NONE));
@@ -79,7 +81,8 @@ if ($request->exist('wsdl')) {
         $custom_project_description_factory,
         $custom_project_description_manager,
         $custom_project_description_value_factory,
-        $service_usage_factory
+        $service_usage_factory,
+        $service_usage_manager
     );
     $server->handle();
 }

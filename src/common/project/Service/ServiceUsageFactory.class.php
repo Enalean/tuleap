@@ -38,13 +38,29 @@ class Project_Service_ServiceUsageFactory {
      *
      * @return Project_Service_ServiceUsage[]
      */
-    public function getServicesUsage(Project $project) {
+    public function getAllServicesUsage(Project $project) {
         $services_usages = array();
-        $res = $this->dao->getServicesUsage($project->getID());
+        $res = $this->dao->getAllServicesUsage($project->getID());
         while ($row = $res->getRow()) {
             $services_usages[] = $this->getInstanceFromRow($row);
         }
         return $services_usages;
+    }
+
+    /**
+     * @param Project $project
+     * @param int     $service_id
+     *
+     * @return Project_Service_ServiceUsage
+     */
+    public function getServiceUsage(Project $project, $service_id) {
+        $query_result = $this->dao->getServiceUsage($project->getID(), $service_id);
+        $row          = $query_result->getRow();
+        if ($row) {
+            return $this->getInstanceFromRow($row);
+        }
+
+        return null;
     }
 
     /**

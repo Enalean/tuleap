@@ -152,6 +152,7 @@ class Project_SOAPServerTest extends TuleapTestCase {
         $this->description_manager       = mock('Project_CustomDescription_CustomDescriptionValueManager');
         $this->description_value_factory = mock('Project_CustomDescription_CustomDescriptionValueFactory');
         $this->service_usage_factory     = mock('Project_Service_ServiceUsageFactory');
+        $this->service_usage_manager     = mock('Project_Service_ServiceUsageManager');
 
         $server = new Project_SOAPServer(
                 $this->pm,
@@ -162,7 +163,8 @@ class Project_SOAPServerTest extends TuleapTestCase {
                 $this->description_factory,
                 $this->description_manager,
                 $this->description_value_factory,
-                $this->service_usage_factory
+                $this->service_usage_factory,
+                $this->service_usage_manager
         );
 
         return $server;
@@ -206,6 +208,7 @@ class Project_SOAPServerGenericUserTest extends TuleapTestCase {
         $description_manager        = mock('Project_CustomDescription_CustomDescriptionValueManager');
         $description_value_factory  = mock('Project_CustomDescription_CustomDescriptionValueFactory');
         $service_usage_factory      = mock('Project_Service_ServiceUsageFactory');
+        $service_usage_manager      = mock('Project_Service_ServiceUsageManager');
 
         $this->server = partial_mock(
                 'Project_SOAPServerObjectTest',
@@ -219,7 +222,8 @@ class Project_SOAPServerGenericUserTest extends TuleapTestCase {
                     $description_factory,
                     $description_manager,
                     $description_value_factory,
-                    $service_usage_factory
+                    $service_usage_factory,
+                    $service_usage_manager
                 )
         );
 
@@ -280,6 +284,7 @@ class Project_SOAPServerProjectDescriptionFieldsTest extends TuleapTestCase {
         $this->description_manager        = mock('Project_CustomDescription_CustomDescriptionValueManager');
         $this->description_value_factory  = mock('Project_CustomDescription_CustomDescriptionValueFactory');
         $this->service_usage_factory      = mock('Project_Service_ServiceUsageFactory');
+        $this->service_usage_manager      = mock('Project_Service_ServiceUsageManager');
 
         $this->server = new Project_SOAPServer(
             $this->project_manager,
@@ -290,7 +295,8 @@ class Project_SOAPServerProjectDescriptionFieldsTest extends TuleapTestCase {
             $this->description_factory,
             $this->description_manager,
             $this->description_value_factory,
-            $this->service_usage_factory
+            $this->service_usage_factory,
+            $this->service_usage_manager
         );
 
         $this->user       = stub('PFUser')->isLoggedIn()->returns(true);
@@ -406,6 +412,7 @@ class Project_SOAPServerProjectServicesUsageTest extends TuleapTestCase {
         $this->description_manager        = mock('Project_CustomDescription_CustomDescriptionValueManager');
         $this->description_value_factory  = mock('Project_CustomDescription_CustomDescriptionValueFactory');
         $this->service_usage_factory      = mock('Project_Service_ServiceUsageFactory');
+        $this->service_usage_manager      = mock('Project_Service_ServiceUsageManager');
 
         $this->server = new Project_SOAPServer(
             $this->project_manager,
@@ -416,7 +423,8 @@ class Project_SOAPServerProjectServicesUsageTest extends TuleapTestCase {
             $this->description_factory,
             $this->description_manager,
             $this->description_value_factory,
-            $this->service_usage_factory
+            $this->service_usage_factory,
+            $this->service_usage_manager
         );
 
         $this->user       = stub('PFUser')->isLoggedIn()->returns(true);
@@ -444,7 +452,8 @@ class Project_SOAPServerProjectServicesUsageTest extends TuleapTestCase {
             $this->description_factory,
             $this->description_manager,
             $this->description_value_factory,
-            $this->service_usage_factory
+            $this->service_usage_factory,
+            $this->service_usage_manager
         );
 
         stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
@@ -480,10 +489,28 @@ class Project_SOAPServerProjectServicesUsageTest extends TuleapTestCase {
           )
         );
 
-        stub($this->service_usage_factory)->getServicesUsage($this->project)->returns($services_usages);
+        stub($this->service_usage_factory)->getAllServicesUsage($this->project)->returns($services_usages);
         stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
 
         $this->assertIdentical($this->server->getProjectServicesUsage($this->session_key, $this->group_id), $expected);
+    }
+
+    public function itActivatesAService() {
+        $service = stub('Project_Service_ServiceUsage')->getId()->returns(179);
+
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
+        stub($this->service_usage_factory)->getServiceUsage($this->project, 179)->returns($service);
+        stub($this->service_usage_manager)->activateService($this->project, $service)->returns(true);
+
+        $this->assertTrue($this->server->activateService($this->session_key, $this->group_id, 179));
+    }
+
+    public function itThrowsAnExceptionIfTheServiceDoesNotExist() {
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
+        stub($this->service_usage_factory)->getServiceUsage($this->project, 179)->returns(null);
+
+        $this->expectException();
+        $this->assertTrue($this->server->activateService($this->session_key, $this->group_id, 179));
     }
 }
 ?>
