@@ -61,6 +61,24 @@ class Project_Service_ServiceUsageDao extends DataAccessObject {
      * @param int $group_id
      * @param int $service_id
      *
+     * @return Boolean
+     */
+    public function deactivateService($group_id, $service_id) {
+        $group_id   = $this->da->escapeInt($group_id);
+        $service_id = $this->da->escapeInt($service_id);
+
+        $sql = "UPDATE service
+                SET is_used = 0
+                WHERE group_id = $group_id
+                  AND service_id = $service_id";
+
+        return $this->update($sql);
+    }
+
+    /**
+     * @param int $group_id
+     * @param int $service_id
+     *
      * @return DataAccessResult
      */
     public function getServiceUsage($group_id, $service_id) {

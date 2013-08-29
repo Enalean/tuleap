@@ -42,5 +42,15 @@ class Project_Service_ServiceUsageManager {
     public function activateService(Project $project, Project_Service_ServiceUsage $service) {
         return $this->dao->activateService($project->getID(), $service->getId());
     }
+
+    /**
+     * @param Project                      $project
+     * @param Project_Service_ServiceUsage $service
+     *
+     * @return Boolean
+     */
+    public function deactivateService(Project $project, Project_Service_ServiceUsage $service) {
+        return $this->dao->deactivateService($project->getID(), $service->getId());
+    }
 }
 ?>

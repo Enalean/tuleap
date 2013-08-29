@@ -545,6 +545,31 @@ class Project_SOAPServer {
     }
 
     /**
+     * Deactivate a service in a given project
+     *
+     * * Error codes:
+     *   * 3000, Invalid project id
+     *   * 3019, The service does not exist
+     *   * 3203, Permission denied: need to be project admin
+     *
+     * @param String  $session_key        The project admin session hash
+     * @param int     $group_id           The Id of the project
+     * @param int     $service_id         The Id of the service
+     *
+     * @return Boolean
+     */
+    public function deactivateService($session_key, $group_id, $service_id) {
+        $project = $this->getProjectIfUserIsAdmin($group_id, $session_key);
+        $service = $this->service_usage_factory->getServiceUsage($project, $service_id);
+
+        if (! $service) {
+            throw new SoapFault('3019', "The service does not exist");
+        }
+
+        return $this->service_usage_manager->deactivateService($project, $service);
+    }
+
+    /**
      * Return a user member of project
      * 
      * @param Project $project

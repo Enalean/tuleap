@@ -505,12 +505,30 @@ class Project_SOAPServerProjectServicesUsageTest extends TuleapTestCase {
         $this->assertTrue($this->server->activateService($this->session_key, $this->group_id, 179));
     }
 
-    public function itThrowsAnExceptionIfTheServiceDoesNotExist() {
+    public function itThrowsAnExceptionIfTheServiceDoesNotExistDuringActivation() {
         stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
         stub($this->service_usage_factory)->getServiceUsage($this->project, 179)->returns(null);
 
         $this->expectException();
         $this->assertTrue($this->server->activateService($this->session_key, $this->group_id, 179));
+    }
+
+    public function itDeactivatesAService() {
+        $service = stub('Project_Service_ServiceUsage')->getId()->returns(179);
+
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
+        stub($this->service_usage_factory)->getServiceUsage($this->project, 179)->returns($service);
+        stub($this->service_usage_manager)->deactivateService($this->project, $service)->returns(true);
+
+        $this->assertTrue($this->server->deactivateService($this->session_key, $this->group_id, 179));
+    }
+
+    public function itThrowsAnExceptionIfTheServiceDoesNotExistDuringDeactivation() {
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
+        stub($this->service_usage_factory)->getServiceUsage($this->project, 179)->returns(null);
+
+        $this->expectException();
+        $this->assertTrue($this->server->deactivateService($this->session_key, $this->group_id, 179));
     }
 }
 ?>
