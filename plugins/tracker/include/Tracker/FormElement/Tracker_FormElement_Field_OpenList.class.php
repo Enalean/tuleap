@@ -497,7 +497,15 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         $html = implode(', ', $arr);
         return $html;
     }
-    
+
+    /**
+     * @see Tracker_FormElement_Field::fetchCardValue()
+     */
+    public function fetchCardValue(Tracker_Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences) {
+        $value = $artifact->getLastChangeset()->getValue($this);
+        return $this->fetchTooltipValue($artifact, $value);
+    }
+
     /**
      * Display the field for CSV data export
      * Used in CSV data export
