@@ -151,8 +151,22 @@ class Project_SOAPServerTest extends TuleapTestCase {
         $this->description_factory       = mock('Project_CustomDescription_CustomDescriptionFactory');
         $this->description_manager       = mock('Project_CustomDescription_CustomDescriptionValueManager');
         $this->description_value_factory = mock('Project_CustomDescription_CustomDescriptionValueFactory');
+        $this->service_usage_factory     = mock('Project_Service_ServiceUsageFactory');
+        $this->service_usage_manager     = mock('Project_Service_ServiceUsageManager');
 
-        $server = new Project_SOAPServer($this->pm, $this->pc, $this->um, $this->guf, $this->limitator, $this->description_factory, $this->description_manager, $this->description_value_factory);
+        $server = new Project_SOAPServer(
+                $this->pm,
+                $this->pc,
+                $this->um,
+                $this->guf,
+                $this->limitator,
+                $this->description_factory,
+                $this->description_manager,
+                $this->description_value_factory,
+                $this->service_usage_factory,
+                $this->service_usage_manager
+        );
+
         return $server;
     }
 }
@@ -193,11 +207,24 @@ class Project_SOAPServerGenericUserTest extends TuleapTestCase {
         $description_factory        = mock('Project_CustomDescription_CustomDescriptionFactory');
         $description_manager        = mock('Project_CustomDescription_CustomDescriptionValueManager');
         $description_value_factory  = mock('Project_CustomDescription_CustomDescriptionValueFactory');
+        $service_usage_factory      = mock('Project_Service_ServiceUsageFactory');
+        $service_usage_manager      = mock('Project_Service_ServiceUsageManager');
 
         $this->server = partial_mock(
                 'Project_SOAPServerObjectTest',
                 array('isRequesterAdmin', 'addProjectMember', 'removeProjectMember'),
-                array($project_manager, $project_creator, $user_manager, $this->generic_user_factory, $limitator, $description_factory, $description_manager, $description_value_factory)
+                array(
+                    $project_manager,
+                    $project_creator,
+                    $user_manager,
+                    $this->generic_user_factory,
+                    $limitator,
+                    $description_factory,
+                    $description_manager,
+                    $description_value_factory,
+                    $service_usage_factory,
+                    $service_usage_manager
+                )
         );
 
         stub($this->server)->isRequesterAdmin($this->session_key, $this->group_id)->returns(true);
@@ -256,6 +283,8 @@ class Project_SOAPServerProjectDescriptionFieldsTest extends TuleapTestCase {
         $this->description_factory        = mock('Project_CustomDescription_CustomDescriptionFactory');
         $this->description_manager        = mock('Project_CustomDescription_CustomDescriptionValueManager');
         $this->description_value_factory  = mock('Project_CustomDescription_CustomDescriptionValueFactory');
+        $this->service_usage_factory      = mock('Project_Service_ServiceUsageFactory');
+        $this->service_usage_manager      = mock('Project_Service_ServiceUsageManager');
 
         $this->server = new Project_SOAPServer(
             $this->project_manager,
@@ -265,7 +294,9 @@ class Project_SOAPServerProjectDescriptionFieldsTest extends TuleapTestCase {
             $this->limitator,
             $this->description_factory,
             $this->description_manager,
-            $this->description_value_factory
+            $this->description_value_factory,
+            $this->service_usage_factory,
+            $this->service_usage_manager
         );
 
         $this->user       = stub('PFUser')->isLoggedIn()->returns(true);
@@ -361,6 +392,143 @@ class Project_SOAPServerProjectDescriptionFieldsTest extends TuleapTestCase {
 
         $result = $this->server->getProjectDescriptionFieldsValue($this->session_key, $group_id);
         $this->assertEqual($result, $expected);
+    }
+}
+
+class Project_SOAPServerProjectServicesUsageTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->group_id                   = 101;
+        $this->project                    = stub('Project')->getId()->returns($this->group_id);
+        $this->session_key                = 'abcde123';
+        $this->project_manager            = stub('ProjectManager')->getProject()->returns($this->project);
+        $this->project_creator            = new MockProjectCreator();
+        $this->user_manager               = new MockUserManager();
+        $this->generic_user_factory       = mock('GenericUserFactory');
+        $this->limitator                  = new MockSOAP_RequestLimitator();
+        $this->description_factory        = mock('Project_CustomDescription_CustomDescriptionFactory');
+        $this->description_manager        = mock('Project_CustomDescription_CustomDescriptionValueManager');
+        $this->description_value_factory  = mock('Project_CustomDescription_CustomDescriptionValueFactory');
+        $this->service_usage_factory      = mock('Project_Service_ServiceUsageFactory');
+        $this->service_usage_manager      = mock('Project_Service_ServiceUsageManager');
+
+        $this->server = new Project_SOAPServer(
+            $this->project_manager,
+            $this->project_creator,
+            $this->user_manager,
+            $this->generic_user_factory,
+            $this->limitator,
+            $this->description_factory,
+            $this->description_manager,
+            $this->description_value_factory,
+            $this->service_usage_factory,
+            $this->service_usage_manager
+        );
+
+        $this->user       = stub('PFUser')->isLoggedIn()->returns(true);
+        $this->user_admin = stub('PFUser')->isLoggedIn()->returns(true);
+        stub($this->user_admin)->isMember(101, 'A')->returns(true);
+        stub($this->user)->isMember(101)->returns(true);
+        stub($this->user)->getUserName()->returns('User 01');
+    }
+
+    public function itThrowsAnExceptionIfTheUserIsNotProjectAdmin() {
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user);
+
+        $this->expectException();
+        $this->server->getProjectServicesUsage($this->session_key, $this->group_id);
+    }
+
+    public function itThrowsAnExceptionIfProjectDoesNotExist() {
+        $project_manager = stub('ProjectManager')->getProject()->returns(null);
+        $server          = new Project_SOAPServer(
+            $project_manager,
+            $this->project_creator,
+            $this->user_manager,
+            $this->generic_user_factory,
+            $this->limitator,
+            $this->description_factory,
+            $this->description_manager,
+            $this->description_value_factory,
+            $this->service_usage_factory,
+            $this->service_usage_manager
+        );
+
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
+
+        $this->expectException();
+        $server->getProjectServicesUsage($this->session_key, $this->group_id);
+    }
+
+    public function itReturnsTheServicesUsage() {
+        $service_usage1 = stub('Project_Service_ServiceUsage')->getId()->returns(170);
+        stub($service_usage1)->getShortName()->returns('git');
+        stub($service_usage1)->isUsed()->returns(true);
+
+        $service_usage2 = stub('Project_Service_ServiceUsage')->getId()->returns(171);
+        stub($service_usage2)->getShortName()->returns('tracker');
+        stub($service_usage2)->isUsed()->returns(false);
+
+        $services_usages = array(
+            $service_usage1,
+            $service_usage2
+        );
+
+        $expected = array(
+          0 => array (
+              'id'         => 170,
+              'short_name' => 'git',
+              'is_used'    => 1
+          ),
+          1 => array (
+              'id'         => 171,
+              'short_name' => 'tracker',
+              'is_used'    => 0
+          )
+        );
+
+        stub($this->service_usage_factory)->getAllServicesUsage($this->project)->returns($services_usages);
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
+
+        $this->assertIdentical($this->server->getProjectServicesUsage($this->session_key, $this->group_id), $expected);
+    }
+
+    public function itActivatesAService() {
+        $service = stub('Project_Service_ServiceUsage')->getId()->returns(179);
+
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
+        stub($this->service_usage_factory)->getServiceUsage($this->project, 179)->returns($service);
+        stub($this->service_usage_manager)->activateService($this->project, $service)->returns(true);
+
+        $this->assertTrue($this->server->activateService($this->session_key, $this->group_id, 179));
+    }
+
+    public function itThrowsAnExceptionIfTheServiceDoesNotExistDuringActivation() {
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
+        stub($this->service_usage_factory)->getServiceUsage($this->project, 179)->returns(null);
+
+        $this->expectException();
+        $this->assertTrue($this->server->activateService($this->session_key, $this->group_id, 179));
+    }
+
+    public function itDeactivatesAService() {
+        $service = stub('Project_Service_ServiceUsage')->getId()->returns(179);
+
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
+        stub($this->service_usage_factory)->getServiceUsage($this->project, 179)->returns($service);
+        stub($this->service_usage_manager)->deactivateService($this->project, $service)->returns(true);
+
+        $this->assertTrue($this->server->deactivateService($this->session_key, $this->group_id, 179));
+    }
+
+    public function itThrowsAnExceptionIfTheServiceDoesNotExistDuringDeactivation() {
+        stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);
+        stub($this->service_usage_factory)->getServiceUsage($this->project, 179)->returns(null);
+
+        $this->expectException();
+        $this->assertTrue($this->server->deactivateService($this->session_key, $this->group_id, 179));
     }
 }
 ?>

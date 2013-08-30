@@ -63,6 +63,12 @@ class Project_SOAPServer {
     /** @var Project_CustomDescription_CustomDescriptionValueFactory */
     private $description_value_factory;
 
+    /** @var Project_Service_ServiceUsageFactory */
+    private $service_usage_factory;
+
+    /** @var Project_Service_ServiceUsageManager */
+    private $service_usage_manager;
+
     public function __construct(
         ProjectManager $projectManager,
         ProjectCreator $projectCreator,
@@ -71,7 +77,9 @@ class Project_SOAPServer {
         SOAP_RequestLimitator $limitator,
         Project_CustomDescription_CustomDescriptionFactory $description_factory,
         Project_CustomDescription_CustomDescriptionValueManager $description_manager,
-        Project_CustomDescription_CustomDescriptionValueFactory $description_value_factory
+        Project_CustomDescription_CustomDescriptionValueFactory $description_value_factory,
+        Project_Service_ServiceUsageFactory $service_usage_factory,
+        Project_Service_ServiceUsageManager $service_usage_manager
     ) {
         $this->projectManager             = $projectManager;
         $this->projectCreator             = $projectCreator;
@@ -81,6 +89,8 @@ class Project_SOAPServer {
         $this->description_factory        = $description_factory;
         $this->description_manager        = $description_manager;
         $this->description_value_factory  = $description_value_factory;
+        $this->service_usage_factory      = $service_usage_factory;
+        $this->service_usage_manager      = $service_usage_manager;
     }
 
     /**
@@ -476,6 +486,89 @@ class Project_SOAPServer {
 
         return $this->description_value_factory->getDescriptionFieldsValue($project);
     }
+
+    /**
+     * get all the services uage value for a
+     * given project
+     *
+     * * Error codes:
+     *   * 3000, Invalid project id
+     *   * 3203, Permission denied: need to be project admin
+     *
+     * @param String  $session_key        The project admin session hash
+     * @param int     $group_id           The Id of the project
+     *
+     * @return ArrayOfServicesValues
+     */
+    public function getProjectServicesUsage($session_key, $group_id) {
+        $project         = $this->getProjectIfUserIsAdmin($group_id, $session_key);
+        $soap_return     = array();
+        $services_usages = $this->service_usage_factory->getAllServicesUsage($project);
+
+        foreach ($services_usages as $services_usage) {
+             $soap_return[] = $this->extractServicesUsageSOAPDatas($services_usage);
+        }
+        return $soap_return;
+    }
+
+    private function extractServicesUsageSOAPDatas(Project_Service_ServiceUsage $service_usage) {
+        $field_datas = array();
+        $field_datas['id']         = $service_usage->getId();
+        $field_datas['short_name'] = $service_usage->getShortName();
+        $field_datas['is_used']    = (int) $service_usage->isUsed();
+        return $field_datas;
+    }
+
+    /**
+     * Activate a service in a given project
+     *
+     * * Error codes:
+     *   * 3000, Invalid project id
+     *   * 3019, The service does not exist
+     *   * 3203, Permission denied: need to be project admin
+     *
+     * @param String  $session_key        The project admin session hash
+     * @param int     $group_id           The Id of the project
+     * @param int     $service_id         The Id of the service
+     *
+     * @return Boolean
+     */
+    public function activateService($session_key, $group_id, $service_id) {
+        $project = $this->getProjectIfUserIsAdmin($group_id, $session_key);
+        $service = $this->service_usage_factory->getServiceUsage($project, $service_id);
+
+        if (! $service) {
+            throw new SoapFault('3019', "The service does not exist");
+        }
+
+        return $this->service_usage_manager->activateService($project, $service);
+    }
+
+    /**
+     * Deactivate a service in a given project
+     *
+     * * Error codes:
+     *   * 3000, Invalid project id
+     *   * 3019, The service does not exist
+     *   * 3203, Permission denied: need to be project admin
+     *
+     * @param String  $session_key        The project admin session hash
+     * @param int     $group_id           The Id of the project
+     * @param int     $service_id         The Id of the service
+     *
+     * @return Boolean
+     */
+    public function deactivateService($session_key, $group_id, $service_id) {
+        $project = $this->getProjectIfUserIsAdmin($group_id, $session_key);
+        $service = $this->service_usage_factory->getServiceUsage($project, $service_id);
+
+        if (! $service) {
+            throw new SoapFault('3019', "The service does not exist");
+        }
+
+        return $this->service_usage_manager->deactivateService($project, $service);
+    }
+
     /**
      * Return a user member of project
      * 
