@@ -168,6 +168,37 @@ class ReferenceManagerTest extends TuleapTestCase {
         $this->rm->updateProjectReferenceShortName($group_id, $from, $to);
     }
 
+    public function testInsertReferencesConvertsToUTF8ForRightPHPVersion() {
+        if ((version_compare(PHP_VERSION, '5.3.0') >= 0)) {
+            $html = 'g&=+}éàùœ';
+            $encoded = htmlentities($html, ENT_IGNORE, "UTF-8");
+            $decoded = html_entity_decode($encoded, ENT_IGNORE, "ISO-8859-15" );
+
+            $pre_encoding = mb_detect_encoding($decoded, 'UTF-8,ISO-8859-15');
+            $this->assertEqual($pre_encoding, 'ISO-8859-15');
+
+            $this->rm->insertReferences($decoded, 45);
+
+            $post_encoding = mb_detect_encoding($decoded, 'UTF-8,ISO-8859-15');
+            $this->assertEqual($post_encoding, 'UTF-8');
+        }
+    }
+
+     public function testInsertReferencesDoesNotConvertToUTF8ForRightPHPVersion() {
+        if (! (version_compare(PHP_VERSION, '5.3.0') >= 0)) {
+            $html = 'g&=+}éàùœ';
+            $encoded = htmlentities($html, ENT_NOQUOTES, "UTF-8");
+            $decoded = html_entity_decode($encoded, ENT_NOQUOTES, "ISO-8859-15" );
+
+            $pre_encoding =  mb_detect_encoding($decoded, 'UTF-8,ISO-8859-15');
+            $this->assertEqual($pre_encoding, 'ISO-8859-15');
+
+            $this->rm->insertReferences($decoded, 45);
+
+            $post_encoding = mb_detect_encoding($decoded, 'UTF-8,ISO-8859-15');
+            $this->assertEqual($post_encoding, 'ISO-8859-15');
+        }
+    }
 }
 
 ?>
