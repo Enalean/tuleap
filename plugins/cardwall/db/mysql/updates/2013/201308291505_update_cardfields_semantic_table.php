@@ -32,7 +32,7 @@ EOT;
 
     public function up() {
         $sql = "ALTER TABLE plugin_cardwall_semantic_cardfields
-                DROP KEY PRIMARY,
+                DROP KEY `PRIMARY`,
                 ADD id int(11) AUTO_INCREMENT NOT NULL FIRST,
                 ADD PRIMARY KEY (id)";
 
