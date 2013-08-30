@@ -27,6 +27,7 @@ class Cardwall_Semantic_Dao_CardFieldsDao extends DataAccessObject implements Tr
 
     public function __construct() {
         parent::__construct();
+        $this->table_name = 'plugin_cardwall_semantic_cardfields';
     }
 
     /**
@@ -37,7 +38,8 @@ class Cardwall_Semantic_Dao_CardFieldsDao extends DataAccessObject implements Tr
 
         $sql = "SELECT *
                 FROM plugin_cardwall_semantic_cardfields
-                WHERE tracker_id = $tracker_id";
+                WHERE tracker_id = $tracker_id
+                ORDER BY rank";
 
         return $this->retrieve($sql);
     }
@@ -45,11 +47,10 @@ class Cardwall_Semantic_Dao_CardFieldsDao extends DataAccessObject implements Tr
     /**
      * @return boolean true if success
      */
-    public function add($tracker_id, $field_id) {
+    public function add($tracker_id, $field_id, $rank) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $field_id   = $this->da->escapeInt($field_id);
-        $rank       = 0;
-
+        $rank       = $this->da->escapeInt($this->prepareRanking(0, $tracker_id, $rank, 'id', 'tracker_id'));
         $sql = "REPLACE INTO plugin_cardwall_semantic_cardfields (tracker_id, field_id, rank)
                 VALUES ($tracker_id, $field_id, $rank)";
 

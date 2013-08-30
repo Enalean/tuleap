@@ -179,7 +179,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic {
             return;
         }
 
-        $this->getDao()->add($this->tracker->getId(), $field->getId());
+        $this->getDao()->add($this->tracker->getId(), $field->getId(), 'end');
     }
 
     private function removeField($field_id) {
