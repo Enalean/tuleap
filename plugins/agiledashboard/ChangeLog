@@ -1,3 +1,7 @@
+Version 0.94 - Tuleap 6.5
+    * configure fields displayed on cards
+    * fix sla initial effort semantic not inherited
+
 Version 0.93 - Tuleap 6.3
     * Fix sla #4551 - Initial effort value in content and planning panes can
     use a selectbox field defined in semantic
