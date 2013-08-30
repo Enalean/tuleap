@@ -290,6 +290,21 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     }
 
     /**
+     * @see Tracker_FormElement_Field::fetchTooltipValue()
+     */
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        return $this->fetchArtifactValueReadOnly($artifact, $value);
+    }
+
+    /**
+     * @see Tracker_FormElement_Field::fetchCardValue()
+     */
+    public function fetchCardValue(Tracker_Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences) {
+        $value = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getSubmittedBy());
+        return $value->fetchCard($display_preferences);
+    }
+
+    /**
      * Display the field for CSV
      * Used in CSV data export
      *
