@@ -29,8 +29,7 @@ class Cardwall_FieldProviders_SemanticStatusFieldRetriever implements Cardwall_F
      * 
      * @return Tracker_FormElement_Field_Selectbox
      */
-    public function getField(Tracker_Artifact $artifact) {
-        $tracker = $artifact->getTracker();
+    public function getField(Tracker $tracker) {
         return Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
     }
 }

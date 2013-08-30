@@ -27,17 +27,18 @@ class CardInCellPresenterFactoryTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
+        $tracker        = mock('Tracker');
         $this->field_id = 77777;
         $this->field    = stub('Tracker_FormElement_Field_MultiselectBox')->getId()->returns($this->field_id);
-        $this->artifact = mock('Tracker_Artifact');
+        $this->artifact = aMockArtifact()->withTracker($tracker)->build();
 
         $this->card_presenter       = stub('Cardwall_CardPresenter')->getArtifact()->returns($this->artifact);
 
-        $this->field_retriever = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($this->artifact)->returns($this->field);
+        $this->field_provider = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($tracker)->returns($this->field);
     }
 
     public function itHasACardInCellPresenterWithASemanticStatusFieldId() {
-        $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_retriever, new Cardwall_MappingCollection());
+        $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_provider, new Cardwall_MappingCollection());
         $cell_presenter = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
 
         $this->assertIdentical(
@@ -52,7 +53,7 @@ class CardInCellPresenterFactoryTest extends TuleapTestCase {
 
         $mapping_collection = new Cardwall_MappingCollection();
 
-        $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_retriever, $mapping_collection);
+        $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_provider, $mapping_collection);
         $cell_presenter = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
 
         $this->assertEqual(
@@ -67,7 +68,7 @@ class CardInCellPresenterFactoryTest extends TuleapTestCase {
 
         $mapping_collection = stub('Cardwall_MappingCollection')->getSwimLineValues($this->field_id)->returns(array(123, 456));
 
-        $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_retriever, $mapping_collection);
+        $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_provider, $mapping_collection);
         $cell_presenter = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
 
         $this->assertEqual(

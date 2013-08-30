@@ -60,8 +60,8 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
     
     public function itCopiesAllTreeNodesIntoCardPresenterNodes() {
         $root_node    = aNode()->withChildren(
-                                   aNode()->withObject(anArtifact()->withTracker(mock('Tracker'))->withoutParent()->build()),
-                                   aNode()->withObject(anArtifact()->withTracker(mock('Tracker'))->withoutParent()->build()))
+                                   aNode()->withObject(aMockArtifact()->withTracker(mock('Tracker'))->build()),
+                                   aNode()->withObject(aMockArtifact()->withTracker(mock('Tracker'))->build()))
                                ->build();
         
         $card_mapper  = new TreeNodeMapper(new Planning_ItemCardPresenterCallback(mock('Planning'), mock('Tracker_CardFields'), mock('PFUser'), 'whatever-class'));

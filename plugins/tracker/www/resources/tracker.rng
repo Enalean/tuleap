@@ -688,6 +688,18 @@
           </attribute>
         </element>
       </zeroOrMore>
+      <group>
+        <attribute name="type">
+          <value>plugin_cardwall_card_fields</value>
+        </attribute>
+        <zeroOrMore>
+          <element name="field">
+            <attribute name="REF">
+              <data type="IDREF"/>
+            </attribute>
+          </element>
+        </zeroOrMore>
+      </group>
     </choice>
   </define>
   <define name="reportContent">

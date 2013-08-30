@@ -44,13 +44,13 @@ class Cardwall_OnTop_Config_MappedFieldProvider implements Cardwall_FieldProvide
         $this->config                   = $config;
     }
 
-    public function getField(Tracker_Artifact $artifact) {
+    public function getField(Tracker $tracker) {
 
-        $mapping = $this->config->getMappingFor($artifact->getTracker());
+        $mapping = $this->config->getMappingFor($tracker);
         if ($mapping) {
             return $mapping->getField();
         }
-        return $this->semantic_status_provider->getField($artifact);
+        return $this->semantic_status_provider->getField($tracker);
     }
 
 }

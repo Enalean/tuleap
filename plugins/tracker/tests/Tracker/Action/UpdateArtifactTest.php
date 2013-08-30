@@ -55,6 +55,7 @@ class Tracker_Artifact_Update_BaseTest extends TuleapTestCase {
         $this->request             = aRequest()->with('func', 'artifact-update')->build();
         $this->user                = mock('PFUser');
         $this->formelement_factory = mock('Tracker_FormElementFactory');
+        $this->hierarchy_factory   = mock('Tracker_HierarchyFactory');
         $this->computed_field      = mock('Tracker_FormElement_Field_Computed');
         $this->us_computed_field   = mock('Tracker_FormElement_Field_Computed');
         $this->user_story          = mock('Tracker_Artifact');
@@ -69,6 +70,7 @@ class Tracker_Artifact_Update_BaseTest extends TuleapTestCase {
             array('createNewChangeset'),
             array($this->artifact_id, $this->tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)
         );
+        $this->task->setHierarchyFactory($this->hierarchy_factory);
         $this->task->setTracker($tracker);
         $this->task->setFormElementFactory($this->formelement_factory);
         stub($this->task)->createNewChangeset()->returns(true);
@@ -105,7 +107,7 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends T
     }
 
     public function itDoesNotSendAnythingIfNoRemainingEffortFieldIsDefinedOnTask() {
-        $this->task->setAllAncestors(array());
+        stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns(null);
 
         $expected = array();
         expect($GLOBALS['Response'])->sendJSON($expected)->once();
@@ -114,7 +116,7 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends T
     }
 
     public function itSendsParentsRemainingEffortEvenIfTaskDontHaveOne() {
-        $this->task->setAllAncestors(array($this->user_story));
+        stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns($this->user_story);
 
         $user_story_id = $this->user_story->getId();
         $expected = array($user_story_id => array('remaining_effort' => 23));
@@ -131,7 +133,7 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends T
 
         stub($user_story)->getTracker()->returns($tracker_user_story);
         stub($user_story)->getId()->returns($user_story_id);
-        $this->task->setAllAncestors(array($user_story));
+        stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns($user_story);
 
         $user_story_id = $this->user_story->getId();
         $expected      = array();
@@ -156,7 +158,7 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
     }
 
     public function itSendsTheRemainingEffortOfTheArtifactAndItsParent() {
-        $this->task->setAllAncestors(array($this->user_story));
+        stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns($this->user_story);
 
         $user_story_id = $this->user_story->getId();
         $expected      = array(
@@ -169,7 +171,7 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
     }
 
     public function itDoesNotSendParentsRemainingEffortWhenThereIsNoParent() {
-        $this->task->setAllAncestors(array());
+        stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns(null);
 
         $expected = array(
             $this->artifact_id => array('remaining_effort' => 42),
@@ -187,7 +189,7 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
 
         stub($user_story)->getTracker()->returns($tracker_user_story);
         stub($user_story)->getId()->returns($user_story_id);
-        $this->task->setAllAncestors(array($user_story));
+        stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns($user_story);
 
         $expected = array(
             $this->artifact_id => array('remaining_effort' => 42),
@@ -202,7 +204,7 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
 class Tracker_Artifact_UpdateActionFromOverlay extends Tracker_Artifact_Update_BaseTest {
 
     public function itCreatesAChangeset() {
-        $this->task->setAllAncestors(array());
+        stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns(null);
         $request      = aRequest()->with('func', 'artifact-update')->with('from_overlay', '1')->build();
 
         expect($this->task)->createNewChangeset()->once();
@@ -211,7 +213,7 @@ class Tracker_Artifact_UpdateActionFromOverlay extends Tracker_Artifact_Update_B
     }
 
     public function itReturnsTheScriptBaliseIfRequestIsFromOverlay() {
-        $this->task->setAllAncestors(array());
+        stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns($this->user_story);
         $request      = aRequest()->with('func', 'artifact-update')->with('from_overlay', '1')->build();
 
         $from_overlay = $this->getProccesAndCaptureOutput($this->layout, $request, $this->user);
@@ -221,7 +223,7 @@ class Tracker_Artifact_UpdateActionFromOverlay extends Tracker_Artifact_Update_B
 
     public function itDoesntReturnScriptWhenInAjax() {
         $this->setUpAjaxRequestHeaders();
-        $this->task->setAllAncestors(array());
+        stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->task)->returns(null);
         $request      = aRequest()->with('func', 'artifact-update')->with('from_overlay', '1')->build();
 
         $from_overlay = $this->getProccesAndCaptureOutput($this->layout, $request, $this->user);

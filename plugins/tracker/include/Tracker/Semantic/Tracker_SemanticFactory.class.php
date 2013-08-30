@@ -148,11 +148,26 @@ class Tracker_SemanticFactory {
      * @return void
      */
     public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
-        $this->getSemanticTitleFactory()->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
-        $this->getSemanticStatusFactory()->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
-        $this->getSemanticContributorFactory()->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
-        $this->getSemanticTooltipFactory()->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
+        foreach ($this->getSubFactories() as $factory) {
+            $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
+        }
     }
 
+    /** @return Tracker_Semantic_IRetrieveSemantic[] */
+    private function getSubFactories() {
+        $factories = array(
+            $this->getSemanticTitleFactory(),
+            $this->getSemanticStatusFactory(),
+            $this->getSemanticContributorFactory(),
+            $this->getSemanticTooltipFactory()
+        );
+
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_GET_SEMANTIC_FACTORIES,
+            array('factories' => &$factories)
+        );
+
+        return $factories;
+    }
 }
 ?>

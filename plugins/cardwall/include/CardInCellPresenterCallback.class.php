@@ -26,24 +26,26 @@ require_once 'common/TreeNode/TreeNodeCallback.class.php';
  */
 class Cardwall_CardInCellPresenterCallback implements TreeNodeCallback {
 
-    /** @var Cardwall_CardInCellPresenterFactory */
-    private $card_in_cell_presenter_factory;
+    /** @var Cardwall_CardInCellPresenterNodeFactory */
+    private $node_factory;
 
-    public function __construct(Cardwall_CardInCellPresenterFactory $card_in_cell_presenter_factory) {
-        $this->card_in_cell_presenter_factory = $card_in_cell_presenter_factory;
+    public function __construct(Cardwall_CardInCellPresenterNodeFactory $node_factory) {
+        $this->node_factory = $node_factory;
     }
-    
+
     /**
      * @see TreeNodeCallback and class comment
      */
     public function apply(TreeNode $node) {
-        if (!$node instanceof Tracker_TreeNode_CardPresenterNode) {
+        if (! $node instanceof ArtifactNode) {
             return clone $node;
         }
-        return new Cardwall_CardInCellPresenterNode(
-            $node,
-            $this->card_in_cell_presenter_factory->getCardInCellPresenter($node->getCardPresenter())
-        );
+
+        return $this->node_factory->getCardInCellPresenterNode($node->getArtifact(), $this->getSwimlineId($node));
+    }
+
+    private function getSwimlineId(TreeNode $node) {
+        return $node->getParentNode() ? $node->getParentNode()->getId() : 0;
     }
 }
 

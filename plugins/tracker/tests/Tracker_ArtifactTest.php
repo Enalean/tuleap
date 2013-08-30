@@ -1710,21 +1710,22 @@ class Tracker_Artifact_ParentAndAncestorsTest extends TuleapTestCase {
 
         $this->sprint = anArtifact()->build();
         $this->sprint->setHierarchyFactory($this->hierarchy_factory);
+
+        $this->user = aUser()->build();
     }
 
     public function itReturnsTheParentArtifactFromAncestors() {
         $release = anArtifact()->withId(1)->build();
-        $product = anArtifact()->withId(2)->build();
 
-        stub($this->hierarchy_factory)->getAllAncestors()->returns(array($release, $product));
+        stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->sprint)->returns($release);
 
-        $this->assertEqual($release, $this->sprint->getParent(aUser()->build()));
+        $this->assertEqual($release, $this->sprint->getParent($this->user));
     }
 
     public function itReturnsNullWhenNoAncestors() {
-        stub($this->hierarchy_factory)->getAllAncestors()->returns(array());
+        stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->sprint)->returns(null);
 
-        $this->assertEqual(null, $this->sprint->getParent(aUser()->build()));
+        $this->assertEqual(null, $this->sprint->getParent($this->user));
     }
 }
 

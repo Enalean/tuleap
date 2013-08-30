@@ -23,13 +23,14 @@ require_once dirname(__FILE__) .'/../bootstrap.php';
 class Cardwall_OnTop_MappedFieldProviderTest extends TuleapTestCase {
     
     public function itProvidesTheStatusFieldIfNoMapping() {
-        $artifact = aMockArtifact()->build();
+        $tracker  = mock('Tracker');
+        $artifact = aMockArtifact()->withTracker($tracker)->build();
         
         $status_field = mock('Tracker_FormElement_Field_OpenList');
         $status_retriever = stub('Cardwall_FieldProviders_SemanticStatusFieldRetriever')->getField()->returns($status_field);
         $provider = new Cardwall_OnTop_Config_MappedFieldProvider(mock('Cardwall_OnTop_Config'), $status_retriever);
         
-        $this->assertEqual($status_field, $provider->getField($artifact));
+        $this->assertEqual($status_field, $provider->getField($tracker));
     }
     
     public function itProvidesTheMappedFieldIfThereIsAMapping() {
@@ -42,7 +43,7 @@ class Cardwall_OnTop_MappedFieldProviderTest extends TuleapTestCase {
         $config = stub('Cardwall_OnTop_Config')->getMappingFor($tracker)->returns($mapping);
         $provider = new Cardwall_OnTop_Config_MappedFieldProvider($config, $status_retriever);
         
-        $this->assertEqual($mapped_field, $provider->getField($artifact));
+        $this->assertEqual($mapped_field, $provider->getField($tracker));
     }
     
     public function itReturnsNullIfThereIsACustomMappingButNoFieldChoosenYet() {
@@ -55,7 +56,7 @@ class Cardwall_OnTop_MappedFieldProviderTest extends TuleapTestCase {
         $config = stub('Cardwall_OnTop_Config')->getMappingFor($tracker)->returns($mapping);
         $provider = new Cardwall_OnTop_Config_MappedFieldProvider($config, $status_retriever);
         
-        $this->assertEqual(null, $provider->getField($artifact));
+        $this->assertEqual(null, $provider->getField($tracker));
     }
     
 }

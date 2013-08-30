@@ -36,11 +36,9 @@ class Cardwall_FieldProviders_CustomFieldRetriever implements Cardwall_FieldProv
     }
 
     /**
-     * @param Tracker_Artifact $artifact is ignored!
-     * 
      * @return Tracker_FormElement_Field_Selectbox
      */
-    public function getField(Tracker_Artifact $artifact) {
+    public function getField(Tracker $tracker) {
         return $this->field;
     }
 }

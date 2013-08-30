@@ -90,7 +90,7 @@ class Planning_Controller extends MVC2_PluginController {
     }
     
     public function edit() {
-        $planning  = $this->planning_factory->getPlanningWithTrackers($this->request->get('planning_id'));
+        $planning  = $this->planning_factory->getPlanning($this->request->get('planning_id'));
         $presenter = $this->getFormPresenter($planning);
         
         $this->render('edit', $presenter);

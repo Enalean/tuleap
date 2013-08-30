@@ -74,7 +74,7 @@ class Planning_MilestoneFactory {
      * @return Planning_NoMilestone
      */
     public function getNoMilestone(Project $project, $planning_id) {
-        $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
+        $planning = $this->planning_factory->getPlanning($planning_id);
         return new Planning_NoMilestone($project, $planning);
     }
 
@@ -83,12 +83,9 @@ class Planning_MilestoneFactory {
      */
     public function getLastOpenMilestones(PFUser $user, Planning $planning, $offset, $number_to_fetch) {
         $artifacts           = $this->getLastOpenArtifacts($user, $planning, $offset, $number_to_fetch);
-        $number_of_artifacts = count($artifacts);
-        $current_index       = 0;
         $milestones          = array();
         foreach ($artifacts as $artifact) {
-            $planned_artifacts = $this->getPlannedArtifactsForLatestMilestone($user, $artifact, ++$current_index, $number_of_artifacts);
-            $milestones[] = $this->getMilestoneFromArtifact($artifact, $planned_artifacts);
+            $milestones[] = $this->getMilestoneFromArtifact($artifact);
         }
         return $milestones;
     }
@@ -123,7 +120,7 @@ class Planning_MilestoneFactory {
      * @throws Planning_NoPlanningsException
      */
     public function getBareMilestone(PFUser $user, Project $project, $planning_id, $artifact_id) {
-        $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
+        $planning = $this->planning_factory->getPlanning($planning_id);
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
 
         if ($artifact && $artifact->userCanView($user)) {
@@ -529,7 +526,7 @@ class Planning_MilestoneFactory {
      */
     public function getCurrentMilestone(PFUser $user, $planning_id) {
         
-        $planning  = $this->planning_factory->getPlanningWithTrackers($planning_id);
+        $planning  = $this->planning_factory->getPlanning($planning_id);
         $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         if (count($artifacts) > 0) {
             return $this->getMilestoneFromArtifact(array_shift($artifacts));

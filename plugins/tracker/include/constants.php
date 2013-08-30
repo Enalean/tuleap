@@ -160,4 +160,11 @@ define('TRACKER_EVENT_SEMANTIC_FROM_XML', 'tracker_event_semantic_from_xml');
  */
 define('TRACKER_EVENT_SOAP_SEMANTICS', 'tracker_event_soap_semantics');
 
+/**
+ * Get the various factories that can retrieve semantics
+ *
+ * Parameters:
+ *  'factories' => All semantic factories
+ */
+define('TRACKER_EVENT_GET_SEMANTIC_FACTORIES', 'tracker_event_get_semantic_factories');
 ?>
