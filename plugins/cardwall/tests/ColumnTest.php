@@ -35,7 +35,7 @@ class Cardwall_Column_isInColumnTest extends TuleapTestCase {
         stub($this->artifact)->getLastChangeset()->returns($changset);
 
         $this->field = mock('Tracker_FormElement_Field_MultiSelectbox');
-        $this->field_provider = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($this->artifact)->returns($this->field);
+        $this->field_provider = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($tracker)->returns($this->field);
         $dao = mock('Cardwall_OnTop_Dao');
         $column_factory = mock('Cardwall_OnTop_Config_ColumnFactory');
         $tracker_mapping_factory = mock('Cardwall_OnTop_Config_TrackerMappingFactory');

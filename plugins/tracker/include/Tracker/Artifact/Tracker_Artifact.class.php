@@ -1455,7 +1455,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Tracker_Artifact
      */
     public function getParent(PFUser $user) {
-        return array_shift($this->getAllAncestors($user));
+        return $this->getHierarchyFactory()->getParentArtifact($user, $this);
     }
 
     /**

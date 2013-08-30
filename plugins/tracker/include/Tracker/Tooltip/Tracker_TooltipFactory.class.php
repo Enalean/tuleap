@@ -90,19 +90,8 @@ class Tracker_TooltipFactory {
      * @return void
      */
     public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
-        $dao = $this->getDao();
-        $i = 1; // for tootip field rank
-        foreach ($dao->searchByTrackerId($from_tracker_id) as $row) {
-            $from_field_id = $row['field_id'];
-            foreach ($field_mapping as $mapping) {
-                if ($mapping['from'] == $from_field_id) {
-                    $to_field_id = $mapping['to'];
-                    $dao->add($to_tracker_id, $to_field_id, $i);
-                }
-            }
-            $i++;
-        }
+        $duplicator = new Tracker_Semantic_CollectionOfFieldsDuplicator($this->getDao());
+        $duplicator->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }
-    
 }
 ?>

@@ -751,7 +751,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             foreach($artifact_links as $artifact_link_info) {
                 $html .= '<li>' . $artifact_link_info->getLabel() . '</li>';
             }
-            $html = '</ul>';
+            $html .= '</ul>';
         }
         return $html;
     }

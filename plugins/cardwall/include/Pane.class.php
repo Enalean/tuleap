@@ -70,6 +70,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $this->config         = $config;
         $this->user           = $user;
         $this->milestone_factory = $milestone_factory;
+        $this->artifact_factory = Tracker_ArtifactFactory::instance();
     }
 
     public function getIdentifier() {
@@ -108,10 +109,8 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     private function getPresenterUsingMappedFields(Cardwall_OnTop_Config_ColumnCollection $columns) {
         $board_factory       = new Cardwall_BoardFactory();
         $planning            = $this->milestone->getPlanning();
-        $this->milestone_factory->updateMilestoneWithPlannedArtifacts($this->user, $this->milestone);
-        $planned_artifacts   = $this->milestone->getPlannedArtifacts();
 
-        $field_retriever     = new Cardwall_OnTop_Config_MappedFieldProvider($this->config,
+        $field_provider     = new Cardwall_OnTop_Config_MappedFieldProvider($this->config,
                                 new Cardwall_FieldProviders_SemanticStatusFieldRetriever());
 
         $display_preferences = $this->getDisplayPreferences();
@@ -119,9 +118,21 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $column_autostack    = new Cardwall_UserPreferences_UserPreferencesAutostackFactory();
         $column_autostack->setAutostack($columns, $column_preferences);
 
-        $board               = $board_factory->getBoard($field_retriever, $columns, $planned_artifacts, $this->config, $this->user, $display_preferences);
+        $mapping_collection = $this->getMappingCollection($planning, $columns, $field_provider);
+        $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($field_provider, $mapping_collection);
+        $node_factory = new Cardwall_CardInCellPresenterNodeFactory(
+            new Cardwall_CardInCellPresenterFactory($field_provider, $mapping_collection),
+            new Cardwall_CardFields(UserManager::instance(), Tracker_FormElementFactory::instance()),
+            $display_preferences,
+            $this->user
+        );
+        $planned_artifacts   = $this->getPlannedArtifacts($this->user, $this->milestone->getArtifact(), $node_factory);
+
+        $board               = $board_factory->getBoard($field_provider, $columns, $planned_artifacts, $this->config, $this->user, $display_preferences, $mapping_collection);
         $backlog_title       = $this->milestone->getPlanning()->getBacklogTracker()->getName();
         $redirect_parameter  = 'cardwall[agile]['. $planning->getId() .']='. $this->milestone->getArtifactId();
+
+
 
         return new Cardwall_PaneContentPresenter(
             $board,
@@ -134,6 +145,60 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             $planning
         );
     }
+
+        /**
+     * Retrieves the artifacts planned for the given milestone artifact.
+     *
+     * @param PFUser             $user
+     * @param Planning         $planning
+     * @param Tracker_Artifact $milestone_artifact
+     *
+     * @return TreeNode
+     */
+    private function getPlannedArtifacts(
+        PFUser $user,
+        Tracker_Artifact $milestone_artifact,
+        Cardwall_CardInCellPresenterNodeFactory $node_factory
+    ) {
+
+        $root = new ArtifactNode($milestone_artifact);
+        $dao  = new AgileDashboard_BacklogItemDao();
+        foreach($dao->getBacklogArtifacts($milestone_artifact->getId()) as $row) {
+            $swimline_artifact = $this->artifact_factory->getInstanceFromRow($row);
+            if ($swimline_artifact->userCanView($user)) {
+                $swimline_node = $node_factory->getCardInCellPresenterNode($swimline_artifact);
+                foreach ($swimline_artifact->getChildrenForUser($user) as $child) {
+                    $swimline_node->addChild($node_factory->getCardInCellPresenterNode($child, $swimline_node->getId()));
+                }
+                $root->addChild($swimline_node);
+            }
+        }
+        return $root;
+    }
+
+    private function getMappingCollection(Planning $planning, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
+        $trackers_used_on_cardwall = $planning->getBacklogTracker()->getChildren();
+
+        return $this->config->getCardwallMappings(
+            $this->getIndexedStatusFieldsOf($trackers_used_on_cardwall, $field_provider),
+            $columns
+        );
+    }
+
+    private function getIndexedStatusFieldsOf(array $trackers, $field_provider) {
+        $status_fields          = array_filter(array_map(array($field_provider, 'getField'), $trackers));
+        $indexed_status_fields  = $this->indexById($status_fields);
+        return $indexed_status_fields;
+    }
+
+    private function indexById(array $fields) {
+        $indexed_array = array();
+        foreach ($fields as $field) {
+            $indexed_array[$field->getId()] = $field;
+        }
+        return $indexed_array;
+    }
+
 
     private function getDisplayPreferences() {
         $pref_name = Cardwall_UserPreferences_UserPreferencesDisplayUser::ASSIGNED_TO_USERNAME_PREFERENCE_NAME . $this->milestone->getTrackerId();

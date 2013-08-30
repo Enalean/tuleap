@@ -31,7 +31,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter {
     private $parent;
     
     /**
-     * @var Tracker_CardFields
+     * @var Cardwall_CardFields
      */
     private $card_fields;
 
@@ -40,7 +40,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter {
 
     private $swimline_id;
 
-    public function __construct(Tracker_Artifact $artifact, Tracker_CardFields $card_fields, $accent_color, Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences, $swimline_id, Tracker_Artifact $parent = null) {
+    public function __construct(Tracker_Artifact $artifact, Cardwall_CardFields $card_fields, $accent_color, Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences, $swimline_id, Tracker_Artifact $parent = null) {
         $this->artifact            = $artifact;
         $this->parent              = $parent;
         $this->details             = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
@@ -67,7 +67,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter {
     public function getFields() {
         $diplayed_fields_presenter = array();
         $displayed_fields = $this->card_fields->getFields($this->getArtifact());
-        
+
         foreach ($displayed_fields as $displayed_field) {
             $diplayed_fields_presenter[] = new Cardwall_CardFieldPresenter($displayed_field, $this->artifact, $this->display_preferences);
         }

@@ -32,7 +32,7 @@ abstract class PlanningFactoryTest extends TuleapTestCase {
     }
 }
 
-class PlanningFactoryTest_getPlanningWithTrackersTest extends PlanningFactoryTest {
+class PlanningFactoryTest_getPlanningTest extends PlanningFactoryTest {
 
     public function itCanRetrieveBothAPlanningAndItsTrackers() {
         $group_id            = 42;
@@ -65,7 +65,7 @@ class PlanningFactoryTest_getPlanningWithTrackersTest extends PlanningFactoryTes
 
         stub($planning_dao)->searchBacklogTrackerById($planning_id)->returns($backlog_row);
 
-        $planning = $planning_factory->getPlanningWithTrackers($planning_id);
+        $planning = $planning_factory->getPlanning($planning_id);
 
         $this->assertIsA($planning, 'Planning');
         $this->assertEqual($planning->getPlanningTracker(), $planning_tracker);

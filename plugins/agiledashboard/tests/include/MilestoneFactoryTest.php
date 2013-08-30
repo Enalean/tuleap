@@ -79,7 +79,7 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
         stub($this->artifact)->getTracker()->returns($this->milestone_tracker);
         stub($this->artifact)->userCanView()->returns(true);
         stub($this->artifact)->getAllAncestors()->returns(array());
-        stub($this->planning_factory)->getPlanningWithTrackers($this->planning_id)->returns($this->planning);
+        stub($this->planning_factory)->getPlanning($this->planning_id)->returns($this->planning);
     }
 }
 
@@ -599,7 +599,7 @@ class MilestoneFactory_GetCurrentMilestonesTest extends TuleapTestCase {
         $this->planning_tracker_id = 123;
         $this->planning_tracker = aTracker()->withId($this->planning_tracker_id)->withProject(mock('Project'))->build();
         $this->planning    = aPlanning()->withId($this->planning_id)->withPlanningTracker($this->planning_tracker)->build();
-        stub($this->planning_factory)->getPlanningWithTrackers($this->planning_id)->returns($this->planning);
+        stub($this->planning_factory)->getPlanning($this->planning_id)->returns($this->planning);
     }
     
     public function itReturnsEmptyMilestoneWhenNothingMatches() {

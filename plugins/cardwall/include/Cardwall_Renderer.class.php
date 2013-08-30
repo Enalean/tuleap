@@ -110,8 +110,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         }
 
         $artifact_ids     = explode(',', $matching_ids['id']);
-        $artifacts = $this->getForestsOfArtifacts($artifact_ids, Tracker_ArtifactFactory::instance());
-        $presenter = $this->getPresenter($artifacts, $user, $form);
+        $presenter = $this->getPresenter($artifact_ids, $user, $form);
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
         
@@ -121,31 +120,46 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     /**
      * @return TreeNode
      */
-    public function getForestsOfArtifacts(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory) {
-        $provider = new Cardwall_ArtifactNodeTreeProvider();
-        return $provider->flatForestOfArtifacts($artifact_ids, $artifact_factory, self::FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER);
+    public function getForestsOfArtifacts(
+        array $artifact_ids,
+        Cardwall_CardInCellPresenterNodeFactory $node_factory,
+        Tracker_ArtifactFactory $artifact_factory
+    ) {
+        $provider = new Cardwall_ArtifactNodeTreeProvider($node_factory, $artifact_factory);
+        return $provider->flatForestOfArtifacts($artifact_ids, self::FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER);
     }
     
     /**
      * @return Cardwall_RendererPresenter
      */
-    private function getPresenter(TreeNode $forest_of_artifacts, PFUser $user, $form = null) {
+    private function getPresenter(array $artifact_ids, PFUser $user, $form = null) {
         $redirect_parameter = 'cardwall[renderer]['. $this->report->id .']='. $this->id;
-        
         $field              = $this->getField();
         
         if (! $field) {
             $board = new Cardwall_Board(array(), new Cardwall_OnTop_Config_ColumnCollection(), new Cardwall_MappingCollection());
         } else {
+
             $board_factory       = new Cardwall_BoardFactory();
-            $field_retriever     = new Cardwall_FieldProviders_CustomFieldRetriever($field);
+            $field_provider      = new Cardwall_FieldProviders_CustomFieldRetriever($field);
             $column_preferences  = new Cardwall_UserPreferences_Autostack_AutostackRenderer($user, $this->report);
             $columns             = $this->config->getRendererColumns($field, $column_preferences);
 
             $column_autostack    = new Cardwall_UserPreferences_UserPreferencesAutostackFactory();
             $column_autostack->setAutostack($columns, $column_preferences);
             $display_preferences = new Cardwall_UserPreferences_UserPreferencesDisplayUser(Cardwall_UserPreferences_UserPreferencesDisplayUser::DISPLAY_AVATARS);
-            $board               = $board_factory->getBoard($field_retriever, $columns, $forest_of_artifacts, $this->config, $user, $display_preferences);
+            $mapping_collection  = $this->config->getCardwallMappings(
+                array($field->getId() => $field),
+                $columns
+            );
+            $node_factory = new Cardwall_CardInCellPresenterNodeFactory(
+                new Cardwall_CardInCellPresenterFactory($field_provider, $mapping_collection),
+                new Cardwall_CardFields(UserManager::instance(), Tracker_FormElementFactory::instance()),
+                $display_preferences,
+                $user
+            );
+            $forest_of_artifacts = $this->getForestsOfArtifacts($artifact_ids, $node_factory, Tracker_ArtifactFactory::instance());
+            $board               = $board_factory->getBoard($field_provider, $columns, $forest_of_artifacts, $this->config, $user, $display_preferences, $mapping_collection);
         }
 
         return new Cardwall_RendererPresenter($board, $this->getQrCode(), $redirect_parameter, $field, $form);

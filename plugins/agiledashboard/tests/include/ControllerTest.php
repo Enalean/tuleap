@@ -274,7 +274,7 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
         $planning_factory = mock('PlanningFactory');
         $controller       = new MockPlanning_Controller();
 
-        stub($planning_factory)->getPlanningWithTrackers($planning_id)->returns($planning);
+        stub($planning_factory)->getPlanning($planning_id)->returns($planning);
         stub($planning_factory)->getAvailableTrackers($group_id)->returns(array());
         stub($planning_factory)->getAvailablePlanningTrackers($planning)->returns(array());
 

@@ -53,6 +53,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_MANAGE_SEMANTICS, 'tracker_event_manage_semantics', false);
             $this->_addHook(TRACKER_EVENT_SEMANTIC_FROM_XML, 'tracker_event_semantic_from_xml');
             $this->_addHook(TRACKER_EVENT_SOAP_SEMANTICS, 'tracker_event_soap_semantics');
+            $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
 
             $this->_addHook(Event::SYSTRAY);
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
@@ -435,6 +436,13 @@ class AgileDashboardPlugin extends Plugin {
         if ($type == AgileDashBoard_Semantic_InitialEffort::NAME) {
             $parameters['semantic'] = $this->getSemanticInitialEffortFactory()->getInstanceFromXML($xml, $xmlMapping, $tracker);
         }
+    }
+
+    /**
+     * @see TRACKER_EVENT_GET_SEMANTIC_FACTORIES
+     */
+    public function tracker_event_get_semantic_factories($params) {
+        $params['factories'][] = $this->getSemanticInitialEffortFactory();
     }
 
     protected function getSemanticInitialEffortFactory() {

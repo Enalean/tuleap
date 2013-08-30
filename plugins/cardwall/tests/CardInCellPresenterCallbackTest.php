@@ -27,32 +27,41 @@ class CardInCellPresenterCallbackTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
+        $tracker        = mock('Tracker');
         $this->field_id = 77777;
         $this->field    = stub('Tracker_FormElement_Field_MultiselectBox')->getId()->returns($this->field_id);
-        $this->artifact = mock('Tracker_Artifact');
+        $this->artifact = aMockArtifact()->withId(4444)->withTracker($tracker)->build();
 
-        $this->node                 = aNode()->withId(4444)->build();
-        $this->card_presenter       = stub('Cardwall_CardPresenter')->getArtifact()->returns($this->artifact);
-        $this->card_presenter_node  = new Tracker_TreeNode_CardPresenterNode($this->node, $this->card_presenter);
+        $this->node           = aNode()->withId(4444)->build();
+        $this->card_presenter = stub('Cardwall_CardPresenter')->getArtifact()->returns($this->artifact);
+        $this->artifact_node  = new ArtifactNode($this->artifact);
 
-        $this->field_retriever = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($this->artifact)->returns($this->field);
+        $this->field_provider = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($tracker)->returns($this->field);
 
-        $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_retriever, new Cardwall_MappingCollection());
-        $this->callback        = new Cardwall_CardInCellPresenterCallback($card_in_cell_presenter_factory);
+        $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_provider, new Cardwall_MappingCollection());
+
+        $node_factory = new Cardwall_CardInCellPresenterNodeFactory(
+            $card_in_cell_presenter_factory,
+            mock('Cardwall_CardFields'),
+            mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'),
+            mock('PFUser')
+        );
+
+        $this->callback = new Cardwall_CardInCellPresenterCallback($node_factory);
     }
 
-    public function itJustClonesTheNodeIfItIsNotAPresenterNode() {
+    public function itJustClonesTheNodeIfItIsNotAnArtifactNode() {
         $cardincell_presenter_node = $this->callback->apply($this->node);
         $this->assertIdentical($this->node, $cardincell_presenter_node);
     }
 
     public function itCreatesACardInCellPresenterNode() {
-        $cardincell_presenter_node = $this->callback->apply($this->card_presenter_node);
+        $cardincell_presenter_node = $this->callback->apply($this->artifact_node);
         $this->assertIsA($cardincell_presenter_node, 'Cardwall_CardInCellPresenterNode');
     }
 
     public function itHasTheSameIdAsTheGivenNode() {
-        $cardincell_presenter_node = $this->callback->apply($this->card_presenter_node);
+        $cardincell_presenter_node = $this->callback->apply($this->artifact_node);
         $this->assertEqual($this->node->getId(), $cardincell_presenter_node->getId());
     }
 }

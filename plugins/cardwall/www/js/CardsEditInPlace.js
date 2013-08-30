@@ -26,6 +26,7 @@ var tuleap = tuleap || {};
 tuleap.cardwall = tuleap.cardwall || { };
 
 (function ($) {
+    var specific_fields = ['assigned_to','remaining_effort'];
     var overlay_window;
 
     function displayOverlay(event) {
@@ -72,6 +73,13 @@ tuleap.cardwall = tuleap.cardwall || { };
     }
 
     function updateCardContent($card, artifact_json) {
+        updateNonSpecificFields($card, artifact_json);
+
+        updateSpecificFields($card, artifact_json);
+    }
+
+    function updateSpecificFields($card, artifact_json) {
+
         if (artifact_json.title || artifact_json.title === "") {
             updateCardTitle($card, artifact_json.title);
         }
@@ -84,13 +92,26 @@ tuleap.cardwall = tuleap.cardwall || { };
             updateCardAssignTo($card, artifact_json.fields.assigned_to);
         }
 
-        if (artifact_json.html_fields.impediment || artifact_json.html_fields.impediment === "") {
-            updateCardImpediment($card, artifact_json.html_fields.impediment);
-        }
-
         if (artifact_json.accent_color || artifact_json.accent_color === null) {
             updateColorOnCard($card, artifact_json.accent_color);
         }
+
+    }
+
+    function isSpecificField(field_name) {
+        return $.inArray(field_name, specific_fields) > -1;
+    }
+
+    function updateNonSpecificFields($card, json) {
+        for (var html_field in json.html_fields) {
+            if (json.html_fields.hasOwnProperty(html_field) && ! isSpecificField(html_field)) {
+                updateNonSpecificField($card, html_field, json.html_fields);
+            }
+        }
+    }
+
+    function updateNonSpecificField($card, html_field, json) {
+        $card.find('div.card-details td.valueOf_' + html_field).html(json[html_field]);
     }
 
     function updateColorOnCard($card, color) {
@@ -100,10 +121,6 @@ tuleap.cardwall = tuleap.cardwall || { };
 
     function setEmptyPlaceHolder($element) {
         $element.html("-");
-    }
-
-    function updateCardImpediment($card, impediment) {
-        $card.find('div.card-details td.valueOf_impediment').html(impediment);
     }
 
     function updateCardAssignTo($card, assigned_to) {

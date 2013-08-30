@@ -25,13 +25,13 @@ require_once 'common/TreeNode/NodeDuplicator.class.php';
 /**
  * A TreeNode holding a CardInCellPresenter
  */
-class Cardwall_CardInCellPresenterNode extends NodeDuplicator {
+class Cardwall_CardInCellPresenterNode extends TreeNode {
 
     /** @var Cardwall_CardInCellPresenter */
     private $presenter;
     
-    function __construct(TreeNode $node, Cardwall_CardInCellPresenter $presenter) {
-        parent::__construct($node);
+    function __construct(Cardwall_CardInCellPresenter $presenter) {
+        parent::__construct(null, $presenter->getId());
         $this->presenter = $presenter;
     }
     
