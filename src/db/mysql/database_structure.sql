@@ -798,6 +798,7 @@ CREATE TABLE frs_file (
   computed_md5 varchar(32),
   reference_md5 varchar(32),
   user_id int(11),
+  comment TEXT NULL,
   PRIMARY KEY  (file_id),
   KEY idx_frs_file_release_id (release_id),
   KEY idx_frs_file_type (type_id),
