@@ -190,6 +190,7 @@ file_admin_editreleases	md5sum	md5 Checksum
 file_admin_editreleases	user	Owner
 file_admin_editreleases	fileforge_error	An error occured while moving file to destination (was the file $1 already deleted?)
 file_admin_editreleases	db_error	An error occured while adding file into the database
+file_admin_editreleases	comment	Comment
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php

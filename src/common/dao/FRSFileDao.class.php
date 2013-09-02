@@ -199,7 +199,7 @@ class FRSFileDao extends DataAccessObject {
     function createFromArray($data_array) {
         $arg    = array();
         $values = array();
-        $cols   = array('filename', 'filepath', 'release_id', 'type_id', 'processor_id', 'file_size', 'status', 'computed_md5', 'reference_md5', 'user_id');
+        $cols   = array('filename', 'filepath', 'release_id', 'type_id', 'processor_id', 'file_size', 'status', 'computed_md5', 'reference_md5', 'user_id', 'comment');
         foreach ($data_array as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]    = $key;
