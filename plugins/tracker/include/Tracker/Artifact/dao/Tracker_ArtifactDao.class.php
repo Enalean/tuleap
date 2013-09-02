@@ -242,6 +242,37 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchSubmittedArtifactBetweenTwoDates($start_date, $end_date) {
+        $start_date = $this->da->escapeInt($start_date);
+        $end_date   = $this->da->escapeInt($end_date);
+
+        $sql = "SELECT group_id, count(distinct(a.id)) AS result
+                    FROM tracker_artifact AS a
+                    INNER JOIN tracker AS t ON (a.tracker_id = t.id)
+                WHERE a.submitted_on >= $start_date AND a.submitted_on <= $end_date
+                    GROUP BY group_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function searchClosedArtifactBetweenTwoDates($start_date, $end_date) {
+        $start_date = $this->da->escapeInt($start_date);
+        $end_date   = $this->da->escapeInt($end_date);
+
+        $sql = "SELECT group_id, count(distinct(a.id)) AS result
+                FROM tracker_artifact AS a
+                    INNER JOIN tracker AS t ON (a.tracker_id = t.id)
+                    INNER JOIN tracker_semantic_status AS ss USING(tracker_id)
+                    INNER JOIN tracker_changeset_value AS cv ON(cv.field_id = ss.field_id AND a.last_changeset_id = cv.changeset_id)
+                    INNER JOIN tracker_changeset_value_list AS cvl ON(cvl.changeset_value_id = cv.id)
+                    INNER JOIN tracker_changeset AS tc ON (tc.artifact_id = a.id)
+                    LEFT JOIN tracker_semantic_status AS open_values ON (cvl.bindvalue_id = open_values.open_value_id AND open_values.tracker_id = t.id)
+                WHERE tc.submitted_on >= $start_date AND tc.submitted_on <= $end_date
+                    AND open_values.open_value_id IS NULL
+                GROUP BY group_id";
+
+        return $this->retrieve($sql);
+    }
 
     public function quote_keyword($keyword) {
         return $this->da->quoteSmart('%'. $keyword .'%');
