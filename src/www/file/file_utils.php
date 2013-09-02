@@ -915,7 +915,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             $reference_md5 = array();
         }
 
-        if ($request->validArray(new Valid_String('release_comment'))) {
+        if ($request->validArray(new Valid_Text('release_comment'))) {
             $release_comment = $request->get('release_comment');
         } else {
             $release_comment = array();

@@ -349,7 +349,15 @@ while (list ($package_id, $package) = each($packages)) {
                             print '<TD>' . (isset ($processor[$file_release['processor']]) ?  $hp->purify($processor[$file_release['processor']], CODENDI_PURIFIER_CONVERT_HTML) : "") . '</TD>';
                             print '<TD>' . (isset ($file_type[$file_release['type']]) ? $file_type[$file_release['type']] : "") . '</TD>' . '<TD>' . format_date("Y-m-d", $file_release['release_time']) . '</TD>'. 
                                   '<TD>' . (isset ($file_release['computed_md5'])? $file_release['computed_md5']: ""). '</TD>' .
-                                  '<TD>' . (isset ($file_release['user_id'])? $owner->getRealName(): ""). '</TD>' .'</TR>' . "\n";
+                                  '<TD>' . (isset ($file_release['user_id'])? $owner->getRealName(): ""). '</TD>'
+                            .'</TR>
+                             <TR>
+                                <TD class="frs_comment">
+                                    <p class="help-block">'.
+                                        $hp->purify($file_release['comment'], CODENDI_PURIFIER_BASIC, $group_id).'
+                                    </p>
+                                </TD>
+                            </TR>';
                                  if (!isset ($proj_stats['size']))
                                 $proj_stats['size'] = 0;
                             $proj_stats['size'] += $file_release['file_size'];
