@@ -1,0 +1,121 @@
+<ul class="nav nav-tabs">
+  <li class="active"><a href="/plugins/testing/?group_id=1&resource=campaign">Campaigns</a></li>
+  <li><a href="/plugins/testing/?group_id=1&resource=requirement">Requirements</a></li>
+</ul>
+<h2>New</h2>
+<form action="/plugins/testing/?group_id=1" method="POST">
+    <input type="hidden" name="resource" value="campaign" />
+    <input type="hidden" name="action" value="create" />
+    <p>
+        <label for="name">Name</label>
+        <input type="text" name="campaign[name]" id="name" required />
+    </p>
+    <p>
+        <label for="version">Version</label>
+        <select>
+            <option>6.2 :: Sprint 50</option>
+            <option>6.3 :: Sprint 51</option>
+            <option>6.3 :: Sprint 52</option>
+            <option selected>6.4 :: Sprint 53</option>
+        </select>
+    </p>
+    <div class="tabbable">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#Testcases" data-toggle="tab">Test cases</a></li>
+            <li class=""><a href="#Exigences" data-toggle="tab">Requirements</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="Testcases">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th width="16"></th>
+                            <th>Test case</th>
+                            <th>Version</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td>Add user to project</td>
+                            <td>7</td>
+                        </tr>
+                            <td><input type="checkbox"></td>
+                            <td>Delete file via webdav</td>
+                            <td>3</td>
+                        </tr>
+                        </tr>
+                            <td><input type="checkbox"></td>
+                            <td>Import CSV file into tracker v3</td>
+                            <td>4</td>
+                        </tr>
+                        </tr>
+                            <td>…</td>
+                            <td>…</td>
+                            <td>…</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="Exigences">
+                <p>Automatically select all tests belonging to selected requirements</p>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th width="16"></th>
+                            <th>N°</th>
+                            <th>Exigence</th>
+                            <th>Version</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td>1.1.1.23</td>
+                            <td>Field accepts numeric data entry</td>
+                            <td>7</td>
+                        </tr>
+                            <td><input type="checkbox"></td>
+                            <td>1.1.1.24</td>
+                            <td>Field only accepts dates before the current date</td>
+                            <td>3</td>
+                        </tr>
+                        </tr>
+                            <td><input type="checkbox"></td>
+                            <td>1.1.1.25</td>
+                            <td>Screen can print on-screen data to the printer</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td>1.1.2.1</td>
+                            <td>Data must be entered before a request can approved</td>
+                            <td>6</td>
+                        </tr>
+                            <td><input type="checkbox"></td>
+                            <td>1.1.2.2</td>
+                            <td>Clicking the Approve Button moves the request to the Approval Workflow</td>
+                            <td>4</td>
+                        </tr>
+                        </tr>
+                            <td><input type="checkbox"></td>
+                            <td>1.2.1.32</td>
+                            <td>All personnel using the system will be trained according to internal SOP AA-101</td>
+                            <td>4</td>
+                        </tr>
+                        </tr>
+                            <td>…</td>
+                            <td>…</td>
+                            <td>…</td>
+                            <td>…</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Create new campaign</button>
+        <a class="btn" href="/plugins/testing/?group_id=1">Cancel</a>
+    </div>
+</form>

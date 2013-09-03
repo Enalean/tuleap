@@ -1,0 +1,34 @@
+<ul class="nav nav-tabs">
+  <li class="active"><a href="/plugins/testing/?group_id=1&resource=campaign">Campaigns</a></li>
+  <li><a href="/plugins/testing/?group_id=1&resource=requirement">Requirements</a></li>
+</ul>
+<h2>Active test campaigns</h2>
+<p>
+    <a href="/plugins/testing/?group_id=1&resource=campaign&action=new" class="btn"><i class="icon-plus"></i> Create new campaign</a>
+</p>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><a href="/plugins/testing/?group_id=1&resource=campaign&action=show&id=123">Tuleap 6.3 / PHP 5.1.6</a></td>
+            <td>
+                <span class="badge" title="Not run">0</span>
+                <span class="badge badge-success" title="Passed">193</span>
+                <span class="badge badge-important" title="Failed">10</span>
+            </td>
+        </tr>
+            <td><a href="/plugins/testing/?group_id=1&resource=campaign&action=show&id=456">Tuleap 6.3 / PHP 5.3</a></td>
+            <td>
+                <span class="badge" title="Not run">203</span>
+                <span class="badge badge-success" title="Passed">0</span>
+                <span class="badge badge-important" title="Failed">0</span>
+            </td>
+        </tr>
+    </tbody>
+</table>

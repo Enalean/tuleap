@@ -1,0 +1,68 @@
+<ul class="nav nav-tabs">
+  <li class="active"><a href="/plugins/testing/?group_id=1&resource=campaign">Campaigns</a></li>
+  <li><a href="/plugins/testing/?group_id=1&resource=requirement">Requirements</a></li>
+</ul>
+
+<h2><a href="/plugins/testing/?group_id=1&resource=campaign&action=show&id=123">Tuleap 6.3 / PHP 5.3</a> »
+    Add user to project <span class="label label-success" title="Passed">Passed</span>
+</h2>
+
+<h3>Specification</h3>
+<p><label>Execution type:</label> manual</p>
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Step</th>
+            <th>Expected result</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>Go in project admin and type a user name in "Login Name" in project members part</li>
+                </ol>
+            </td>
+            <td>The autocompleter displays matching users</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>
+                Click on "Add User"
+            </td>
+            <td>
+                <ul>
+                    <li>the user to be added is in the list of project members</li>
+                    <li>feedback info tells one new user is added "User added"</li>
+                    <li>The new project-member receives a notification: Welcome to the project_name.</li>
+                </ul>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Results</h3>
+<form action="/plugins/testing/?group_id=1">
+    <div class="form-actions">
+        <table><tr>
+            <td>
+                <textarea placeholder="Notes, description, …" rows="10" cols="60"></textarea>
+            </td>
+            <td>
+                <ul class="result_choices">
+                    <li><label><input type="radio" name="result"> <span class="label" title="Passed">Not run</span></label></li>
+                    <li><label><input type="radio" name="result" checked="checked"> <span class="label label-success" title="Passed">Passed</label></li>
+                    <li><label class="result_choice"><input type="radio" name="result"> <span class="label label-important" title="Passed">Failed</label></li>
+                </ul>
+                <p><a href="#submit-new-artifact" class="tracker-submit-new"> log a bug</a></p>
+                <p>
+                    <button type="button" class="btn">Save</button>
+                    <button type="button" class="btn">Save and continue</button>
+                </p>
+            </td>
+        </tr></table>
+    </div>
+</form>
+
+<h3>History</h3>
+…

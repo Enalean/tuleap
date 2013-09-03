@@ -22,6 +22,7 @@
 */
 
 require_once 'common/plugin/Plugin.class.php';
+require_once 'autoload.php';
 
 class testingPlugin extends Plugin {
 
@@ -63,7 +64,13 @@ class testingPlugin extends Plugin {
             );
         }
         $service->displayHeader($GLOBALS['Language']->getText('plugin_testing', 'descriptor_name'), array(), array());
-        echo 'Hello world';
+        echo '<div id="plugin_testing">';
+        echo '<h1>Test management</h1>';
+
+        $router = new TestingRouter();
+        $router->route($request);
+
+        echo '</div>';
         $service->displayFooter();
     }
 }
