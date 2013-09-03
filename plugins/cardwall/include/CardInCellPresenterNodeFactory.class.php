@@ -67,6 +67,7 @@ class Cardwall_CardInCellPresenterNodeFactory {
             $color,
             $this->display_preferences,
             $swimline_id,
+            $artifact->getAllowedChildrenTypesForUser($this->user),
             $artifact->getParent($this->user)
         );
     }

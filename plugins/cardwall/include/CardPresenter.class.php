@@ -38,15 +38,19 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter {
     /** @var string */
     private $accent_color;
 
+    /** @var Tracker[] */
+    private $allowed_children;
+
     private $swimline_id;
 
-    public function __construct(Tracker_Artifact $artifact, Cardwall_CardFields $card_fields, $accent_color, Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences, $swimline_id, Tracker_Artifact $parent = null) {
+    public function __construct(Tracker_Artifact $artifact, Cardwall_CardFields $card_fields, $accent_color, Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences, $swimline_id, array $allowed_children, Tracker_Artifact $parent = null) {
         $this->artifact            = $artifact;
         $this->parent              = $parent;
         $this->details             = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
         $this->card_fields         = $card_fields;
         $this->accent_color        = $accent_color;
         $this->display_preferences = $display_preferences;
+        $this->allowed_children    = $allowed_children;
         $this->swimline_id         = $swimline_id;
     }
 
@@ -144,9 +148,11 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter {
 
     /**
      * @see Tracker_CardPresenter
+     *
+     * @return Tracker[]
      */
     public function allowedChildrenTypes() {
-        return $this->artifact->getAllowedChildrenTypes();
+        return $this->allowed_children;
     }
 }
 ?>

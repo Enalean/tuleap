@@ -40,7 +40,6 @@ class Cardwall_CardInCellPresenterCallback implements TreeNodeCallback {
         if (! $node instanceof ArtifactNode) {
             return clone $node;
         }
-
         return $this->node_factory->getCardInCellPresenterNode($node->getArtifact(), $this->getSwimlineId($node));
     }
 

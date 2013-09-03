@@ -25,6 +25,8 @@ plugin_tracker_crosssearch	no_matching_artifact	No artifact matches the query
 
 plugin_tracker_crosssearch	please_select_criterion	Please select at least one criterion to filter on
 
+plugin_tracker	submit_no_anonymous	You should be logged in to submit artifacts
+
 #/**
 #  *
 #  * Tracker scripts message catalog (English)

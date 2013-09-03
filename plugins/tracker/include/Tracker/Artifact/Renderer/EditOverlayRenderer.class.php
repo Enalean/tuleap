@@ -28,7 +28,7 @@ class Tracker_Artifact_EditOverlayRenderer extends Tracker_Artifact_EditAbstract
         $html  = '';
         $html .= $this->fetchFields($this->artifact, $request->get('artifact'));
         $html .= '<input type="hidden" name="from_overlay" value="1">';
-        $html .= $this->fetchSubmitAndCancelButtons();
+        $html .= $this->fetchSubmitAndCancelButtons($current_user);
         return $html;
     }
 
@@ -37,11 +37,13 @@ class Tracker_Artifact_EditOverlayRenderer extends Tracker_Artifact_EditAbstract
      *
      * @return string The HTML code for submit and cancel buttons in the Overlay
      */
-    private function fetchSubmitAndCancelButtons() {
-        return '<p style="text-align:center;">
-                  <input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />
-                  <button type="button" name="cancel"> '. $GLOBALS['Language']->getText('global', 'btn_cancel') .' </button>
-                </p>';
+    private function fetchSubmitAndCancelButtons(PFUser $current_user) {
+        if ($this->artifact->userCanUpdate($current_user)) {
+            return '<p style="text-align:center;">
+                      <input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />
+                      <button type="button" name="cancel"> '. $GLOBALS['Language']->getText('global', 'btn_cancel') .' </button>
+                    </p>';
+        }
     }
 
     protected function enhanceRedirect(Codendi_Request $request) {

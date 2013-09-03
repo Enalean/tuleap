@@ -218,6 +218,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return false;
     }
 
+    public function userCanUpdate(PFUser $user) {
+        if ($user->isAnonymous()) {
+            return false;
+        }
+        return true;
+    }
+
     public function permission_db_authorized_ugroups( $permission_type ) {
         $result = array();
         $res    = permission_db_authorized_ugroups($permission_type, $this->getId());
@@ -1401,10 +1408,23 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
-     * @return array of Tracker
+     * @return Tracker[]
      */
     public function getAllowedChildrenTypes() {
         return $this->getHierarchyFactory()->getChildren($this->getTrackerId());
+    }
+
+    /**
+     * @return Tracker[]
+     */
+    public function getAllowedChildrenTypesForUser(PFUser $user) {
+        $allowed_children = array();
+        foreach ($this->getAllowedChildrenTypes() as $tracker) {
+            if ($tracker->userCanSubmitArtifact($user)) {
+                $allowed_children[] = $tracker;
+            }
+        }
+        return $allowed_children;
     }
 
     /**
