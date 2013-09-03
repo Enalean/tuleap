@@ -1,0 +1,14 @@
+Test Management
+===============
+
+A powerful testing system:
+
+ - Allow project admins to set up the testing service
+
+Roadmap:
+
+ - Create and execute test campaign
+ - Run manual and/or automatic tests
+ - Create bugs for failing test cases
+ - Manage tests/requirements coverage
+ - See reports that knock you sock off
