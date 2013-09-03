@@ -40,12 +40,18 @@ class FRSFileFactory extends Error {
         $this->fileforge = $fileforge;
     }
 
+    /**
+     * @return FRSFile
+     */
     function &getFRSFileFromArray(&$array) {
         $frs_file = null;
         $frs_file = new FRSFile($array);
         return $frs_file;
     }
 
+    /**
+     * @return FRSFile | null
+     */
     function &getFRSFileFromDb($file_id, $group_id=null) {
         $_id = (int) $file_id;
         $dao =& $this->_getFRSFileDao();

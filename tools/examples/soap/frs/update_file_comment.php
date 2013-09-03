@@ -17,14 +17,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-if ($argc < 5) {
-    die("Usage: ".$argv[0]." project_id package_id release_id file_id");
+if ($argc < 6) {
+    die("Usage: ".$argv[0]." project_id package_id release_id file_id comment");
 }
 
 $project_id = $argv[1];
 $package_id = $argv[2];
 $release_id = $argv[3];
 $file_id    = $argv[4];
+$comment    = $argv[5];
 
 $server_url = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://sonde.cro.enalean.com';
 $login     = isset($_SERVER['TULEAP_USER']) ? $_SERVER['TULEAP_USER'] : 'testman';
@@ -38,7 +39,7 @@ $requesterSessionHash = $soapLogin->login($login, $password)->session_hash;
 
 $svn_client = new SoapClient($server_url.'/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
 
-var_dump($svn_client->getFileInfo($requesterSessionHash, $project_id, $package_id, $release_id, $file_id));
+var_dump($svn_client->updateFileComment($requesterSessionHash, $project_id, $package_id, $release_id, $file_id, $comment));
 
 $soapLogin->logout($requesterSessionHash);
 

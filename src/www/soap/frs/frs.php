@@ -411,6 +411,31 @@ $server->register(
     Returns the list of deleted releases if succeed, or a soap fault if an error occured.'
 );
 
+$server->register(
+    'updateFileComment',
+    array(
+        'sessionKey'        => 'xsd:string',
+        'group_id'          => 'xsd:int',
+        'package_id'        => 'xsd:int',
+        'release_id'        => 'xsd:int',
+        'file_id'           => 'xsd:int',
+        'comment'           => 'xsd:string',
+        ),
+    array('updateFileCommentResponse'=>'xsd:boolean'),
+    $uri,
+    $uri.'#updateFileComment',
+    'rpc',
+    'encoded',
+    'Update the comment of a File in a release with the values given by
+     group_id, package_id, release_id, file_id and comment.
+     Returns boolean if the update succeed.
+     Returns a soap fault if the group_id is not a valid one,
+     if the package does not match with the group ID,
+     if the release does not match with the package ID,
+     if the file does not match with the file ID,
+     or if the update failed.'
+);
+
 } else {
 
 /**
@@ -1023,6 +1048,72 @@ function addFile($sessionKey, $group_id, $package_id, $release_id, $filename, $b
 }
 
 /**
+ * updateFileComment - Update the comment of a File in a release with the values given by
+ *  group_id, package_id, release_id, file_id and comment.
+ *
+ * @param string    $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int       $group_id the ID of the group we want to add the file
+ * @param int       $package_id the ID of the package we want to add the file
+ * @param int       $release_id the ID of the release we want to add the file
+ * @param int       $file_id the ID of the file we want to retrieve the content
+ * @param string    $comment A comment/description of the uploaded file
+ * @return boolean true if the file was updated, or a soap fault if:
+ *      - group_id does not match with a valid project,
+ *      - the package_id, release_id, file_id does not match
+ *      - the user does not have permissions to delete this file
+ *      - the system was not able to update the file.
+ */
+    function updateFileComment($sessionKey, $group_id, $package_id, $release_id, $file_id, $comment) {
+        if (session_continue($sessionKey)) {
+            try {
+                $project_manager = ProjectManager::instance();
+                $project_manager->getGroupByIdForSoap($group_id, 'updateFileComment');
+            } catch (SoapFault $e) {
+                return $e;
+            }
+
+            // retieve the package
+            $pkg_fact = new FRSPackageFactory();
+            $package =& $pkg_fact->getFRSPackageFromDb($package_id);
+            if (!$package || $package->getGroupID() != $group_id) {
+                return new SoapFault(invalid_package_fault,'Invalid Package','updateFileComment');
+            }
+
+            // retrieve the release
+            $release_fact = new FRSReleaseFactory();
+            $release =& $release_fact->getFRSReleaseFromDb($release_id);
+            if (!$release || $release->getPackageID() != $package_id) {
+                return new SoapFault(invalid_release_fault,'Invalid Release','updateFileComment');
+            }
+
+            // retrieve the file
+            $file_factory = new FRSFileFactory();
+
+            if (! $file_factory->userCanAdd($group_id)) {
+                return new SoapFault(invalid_file_fault, 'User is not allowed to update file', 'updateFileComment');
+            }
+
+            $file = $file_factory->getFRSFileFromDb($file_id);
+            if (! $file) {
+                return new SoapFault(invalid_file_fault,'Invalid File','updateFileComment');
+            }
+
+            $data_array = array(
+                'comment'   => $comment,
+                'file_id'   => $file_id
+            );
+            try {
+                $file_factory->update($data_array);
+            } catch (Exception $e) {
+                return new SoapFault(invalid_file_fault,'Unable to update: ' . $e->getMessage(),'updateFileComment');
+            }
+        } else {
+            return new SoapFault(invalid_session_fault,'Invalid Session','updateFileComment');
+        }
+
+        return true;
+    }
+/**
  * addFileChunk - add a chunk of a file in the incoming directory.
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
@@ -1358,7 +1449,8 @@ $server->addFunction(
             'getUploadedFiles',
             'deleteFile',
             'deleteEmptyPackage',
-            'deleteEmptyRelease'
+            'deleteEmptyRelease',
+            'updateFileComment',
             ));
 
 }
