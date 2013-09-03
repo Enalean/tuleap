@@ -270,15 +270,16 @@ $server->register(
 $server->register(
     'addFile',
     array(
-        'sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int',
-        'package_id'=>'xsd:int',
-        'release_id'=>'xsd:int',
-        'filename'=>'xsd:string',
-        'base64_contents'=>'xsd:string',
-        'type_id'=>'xsd:int',
-        'processor_id'=>'xsd:int',
-        'reference_md5'=>'xsd:string'
+        'sessionKey'        => 'xsd:string',
+        'group_id'          => 'xsd:int',
+        'package_id'        => 'xsd:int',
+        'release_id'        => 'xsd:int',
+        'filename'          => 'xsd:string',
+        'base64_contents'   => 'xsd:string',
+        'type_id'           => 'xsd:int',
+        'processor_id'      => 'xsd:int',
+        'reference_md5'     => 'xsd:string',
+        'comment'           => 'xsd:string'
         ),
     array('addFile'=>'xsd:int'),
     $uri,
@@ -286,7 +287,7 @@ $server->register(
     'rpc',
     'encoded',
     'Add a File to the File Release Manager of the project group_id with the values given by 
-     package_id, release_id, filename, base64_contents, type_id, processor_id and reference_md5.
+     package_id, release_id, filename, base64_contents, type_id, processor_id, reference_md5 and comment.
      The content of the file must be encoded in base64.
      Returns the ID of the created file if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, 
@@ -318,14 +319,15 @@ $server->register(
 $server->register(
     'addUploadedFile',
     array(
-        'sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int',
-        'package_id'=>'xsd:int',
-        'release_id'=>'xsd:int',
-        'filename'=>'xsd:string',
-        'type_id'=>'xsd:int',
-        'processor_id'=>'xsd:int',
-        'reference_md5'=>'xsd:string'
+        'sessionKey'    =>'xsd:string',
+        'group_id'      =>'xsd:int',
+        'package_id'    =>'xsd:int',
+        'release_id'    =>'xsd:int',
+        'filename'      =>'xsd:string',
+        'type_id'       =>'xsd:int',
+        'processor_id'  =>'xsd:int',
+        'reference_md5' =>'xsd:string',
+        'comment'       => 'xsd:string'
         ),
     array('addUploadedFile'=>'xsd:int'),
     $uri,
@@ -333,7 +335,7 @@ $server->register(
     'rpc',
     'encoded',
     'Add a File to the File Release Manager of the project group_id with the values given by 
-     package_id, release_id, filename, type_id, processor_id and reference_md5.
+     package_id, release_id, filename, type_id, processor_id, reference_md5 and comment.
      The file must already be present in the incoming directory.
      Returns the ID of the created file if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, 
@@ -958,7 +960,8 @@ function getFileChunk($sessionKey,$group_id,$package_id,$release_id,$file_id,$of
  * @param string $base64_contents the content of the file, encoded in base64
  * @param int $type_id the ID of the type of the file
  * @param int $processor_id the ID of the processor of the file
- * @param string reference_md5 the md5sum of the file calculated in client side
+ * @param string $reference_md5 the md5sum of the file calculated in client side
+ * @param string $comment A comment/description of the uploaded file
  * @return int the ID of the new created file, 
  *              or a soap fault if :
  *              - group_id does not match with a valid project, 
@@ -969,9 +972,8 @@ function getFileChunk($sessionKey,$group_id,$package_id,$release_id,$file_id,$of
  *              - the user does not have the permissions to create a file
  *              - the file creation failed.
  */
-function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64_contents,$type_id,$processor_id,$reference_md5) {
+function addFile($sessionKey, $group_id, $package_id, $release_id, $filename, $base64_contents, $type_id, $processor_id, $reference_md5, $comment) {
     if (session_continue($sessionKey)) {
-
         try {
             $pm = ProjectManager::instance();
             $pm->getGroupByIdForSoap($group_id, 'addFile');
@@ -1010,7 +1012,7 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
             
             // call addUploadedFile function
             $uploaded_filename = basename($filename);
-            return addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$uploaded_filename,$type_id,$processor_id,$reference_md5);
+            return addUploadedFile($sessionKey, $group_id, $package_id, $release_id, $uploaded_filename, $type_id, $processor_id, $reference_md5, $comment);
             
         } else {
             return new SoapFault(invalid_file_fault, 'User is not allowed to add a file', 'addFile');
@@ -1065,7 +1067,8 @@ function addFileChunk($sessionKey, $filename, $contents, $first_chunk) {
  * @param string $filename the name of the file we want to add (only file name, not directory)
  * @param int $type_id the ID of the type of the file
  * @param int $processor_id the ID of the processor of the file
- * @param string reference_md5 the md5sum of the file calculated in client side
+ * @param string $reference_md5 the md5sum of the file calculated in client side
+ * @param string $comment A comment/description of the uploaded file
  * @return int the ID of the new created file, 
  *              or a soap fault if :
  *              - group_id does not match with a valid project, 
@@ -1077,7 +1080,7 @@ function addFileChunk($sessionKey, $filename, $contents, $first_chunk) {
  *              - the md5 comparison failed
  *              - the file creation failed.
  */
-function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename,$type_id,$processor_id,$reference_md5) {
+function addUploadedFile($sessionKey, $group_id, $package_id, $release_id, $filename, $type_id, $processor_id, $reference_md5, $comment) {
     if (session_continue($sessionKey)) {
 
         try {
@@ -1112,6 +1115,7 @@ function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename
             $file->setProcessorID($processor_id);
             $file->setReferenceMd5($reference_md5);
             $file->setUserID($user->getId());
+            $file->setComment($comment);
             try {
                 $file_fact->createFile($file);
                 $release_fact->emailNotification($release);
