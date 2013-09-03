@@ -94,6 +94,7 @@ $server->wsdl->addComplexType(
         'computed_md5'  => array('name'=>'computed_md5',  'type' => 'xsd:string'),
         'reference_md5' => array('name'=>'reference_md5', 'type' => 'xsd:string'),
         'user_id'       => array('name'=>'user_id',       'type' => 'xsd:int'),
+        'comment'       => array('name'=>'comment',       'type' => 'xsd:string'),
     )
 );
 
@@ -285,7 +286,7 @@ $server->register(
     'rpc',
     'encoded',
     'Add a File to the File Release Manager of the project group_id with the values given by 
-     package_id, release_id, filename, base64_contents, type_id, processor_id and reference_md5. 
+     package_id, release_id, filename, base64_contents, type_id, processor_id and reference_md5.
      The content of the file must be encoded in base64.
      Returns the ID of the created file if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, 
@@ -332,7 +333,7 @@ $server->register(
     'rpc',
     'encoded',
     'Add a File to the File Release Manager of the project group_id with the values given by 
-     package_id, release_id, filename, type_id, processor_id and reference_md5. 
+     package_id, release_id, filename, type_id, processor_id and reference_md5.
      The file must already be present in the incoming directory.
      Returns the ID of the created file if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, 
@@ -778,7 +779,7 @@ function getFileInfo($sessionKey, $group_id, $package_id, $release_id, $file_id)
  * @param Object{FRSFile} $file the file to convert.
  * @return array the SOAPFRSFile corresponding to the FRSFile Object
  */
-function file_to_soap($file) {
+function file_to_soap(FRSFile $file) {
     $return = null;
     if ($file->isError()) {
         //skip if error
@@ -796,6 +797,7 @@ function file_to_soap($file) {
             'computed_md5'  => $file->getComputedMd5(),
             'reference_md5' => $file->getReferenceMd5(),
             'user_id'       => $file->getUserID(),
+            'comment'       => $file->getComment(),
         );
     }
     return $return;
