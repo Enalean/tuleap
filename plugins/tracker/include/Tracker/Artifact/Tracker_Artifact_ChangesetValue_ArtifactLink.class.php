@@ -102,9 +102,13 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
      *
      * @return Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
      */
-    public function getArtifactLinkInfoDiff(Tracker_Artifact_ChangesetValue_ArtifactLink $old_changeset_value) {
+    public function getArtifactLinkInfoDiff(Tracker_Artifact_ChangesetValue_ArtifactLink $old_changeset_value = null) {
+        $previous = array();
+        if ($old_changeset_value !== null) {
+            $previous = $old_changeset_value->getValue();
+        }
         return new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff(
-            $old_changeset_value->getValue(),
+            $previous,
             $this->getValue()
         );
     }
