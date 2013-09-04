@@ -25,11 +25,11 @@ require_once 'autoload.php';
  * trackerPlugin
  */
 class trackerPlugin extends Plugin {
-    
+
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
-        
+
         $this->_addHook('cssfile',                             'cssFile',                           false);
         $this->_addHook('javascript_file',                     'javascript_file',                   false);
         $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures',   false);
@@ -49,7 +49,7 @@ class trackerPlugin extends Plugin {
         $this->_addHook('permissions_for_ugroup',              'permissions_for_ugroup',            false);
 
         $this->_addHook('url_verification_instance',           'url_verification_instance',         false);
-        
+
         $this->_addHook('widget_instance',                     'widget_instance',                   false);
         $this->_addHook('widgets',                             'widgets',                           false);
         $this->_addHook('project_is_deleted',                  'project_is_deleted',                false);
@@ -60,8 +60,9 @@ class trackerPlugin extends Plugin {
         $this->_addHook(Event::EXPORT_XML_PROJECT);
         $this->_addHook(Event::IMPORT_XML_PROJECT);
         $this->addHook(Event::USER_MANAGER_GET_USER_INSTANCE);
+        $this->_addHook('plugin_statistics_service_usage');
     }
-    
+
     public function getHooksAndCallbacks() {
         if (defined('AGILEDASHBOARD_BASE_DIR')) {
             $this->_addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -69,7 +70,7 @@ class trackerPlugin extends Plugin {
         }
         return parent::getHooksAndCallbacks();
     }
-    
+
     public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'trackerPluginInfo')) {
             include_once('trackerPluginInfo.class.php');
@@ -77,8 +78,8 @@ class trackerPlugin extends Plugin {
         }
         return $this->pluginInfo;
     }
-    
-    public function javascript_file() {        
+
+    public function javascript_file() {
         if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0) {
             echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerSearchTreeView.js"></script>'."\n";
             // Cannot be moved in combined (it conflicts with same implementation in tracker v3)
@@ -88,7 +89,7 @@ class trackerPlugin extends Plugin {
             echo '<script type="text/javascript" src="/plugins/tracker/scripts/load-artifactChildren.js"></script>'."\n";
         }
     }
-    
+
     public function cssFile($params) {
         $include_tracker_css_file = false;
         EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, array('include_tracker_css_file' => &$include_tracker_css_file));
@@ -104,12 +105,12 @@ class trackerPlugin extends Plugin {
             echo '<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/ieStyle.css" /><![endif]-->';
         }
     }
-    
+
     public function service_classnames($params) {
         include_once 'ServiceTracker.class.php';
         $params['classnames']['plugin_tracker'] = 'ServiceTracker';
     }
-    
+
     public function combined_scripts($params) {
         $params['scripts'] = array_merge(
             $params['scripts'],
@@ -128,7 +129,7 @@ class trackerPlugin extends Plugin {
             )
         );
     }
-    
+
     public function javascript($params) {
         // TODO: Move this in ServiceTracker::displayHeader()
         include $GLOBALS['Language']->getContent('script_locale', null, 'tracker');
@@ -136,7 +137,7 @@ class trackerPlugin extends Plugin {
         echo "codendi.tracker = codendi.tracker || { };".PHP_EOL;
         echo "codendi.tracker.base_url = '". TRACKER_BASE_URL ."/';".PHP_EOL;
     }
-    
+
     public function toggle($params) {
         if ($params['id'] === 'tracker_report_query_0') {
             Toggler::togglePreference($params['user'], $params['id']);
@@ -201,7 +202,7 @@ class trackerPlugin extends Plugin {
         $tm->duplicate($params['template_id'], $params['group_id'], $params['ugroupsMapping']);
 
     }
-    
+
     function permission_get_name($params) {
         if (!$params['name']) {
             switch($params['permission_type']) {
@@ -237,14 +238,14 @@ class trackerPlugin extends Plugin {
             }
         }
     }
-    
+
     function permission_get_object_type($params) {
         $type = $this->getObjectTypeFromPermissions($params);
         if ($type != false) {
             $params['object_type'] = $type;
         }
     }
-    
+
     function getObjectTypeFromPermissions($params) {
         switch($params['permission_type']) {
             case 'PLUGIN_TRACKER_FIELD_SUBMIT':
@@ -263,7 +264,7 @@ class trackerPlugin extends Plugin {
         }
         return false;
     }
-    
+
     function permission_get_object_name($params) {
         if (!$params['object_name']) {
             $type = $this->getObjectTypeFromPermissions($params);
@@ -298,36 +299,36 @@ class trackerPlugin extends Plugin {
             }
         }
     }
-    
+
     function permission_get_object_fullname($params) {
         $this->permission_get_object_name($params);
     }
-    
+
     function permissions_for_ugroup($params) {
         if (!$params['results']) {
-            
+
             $group_id = $params['group_id'];
             $hp = Codendi_HTMLPurifier::instance();
             $atid = $params['object_id'];
             $objname = $params['objname'];
-            
+
             if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ADMIN', 'PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS', 'PLUGIN_TRACKER_WORKFLOW_TRANSITION'))) {
                 if (strpos($params['permission_type'], 'PLUGIN_TRACKER_ACCESS') === 0 || $params['permission_type'] === 'PLUGIN_TRACKER_ADMIN') {
-                    $params['results'] = $GLOBALS['Language']->getText('project_admin_editugroup','tracker') 
+                    $params['results'] = $GLOBALS['Language']->getText('project_admin_editugroup','tracker')
                     .' <a href="'.TRACKER_BASE_URL.'/?tracker='.$atid.'&func=admin-perms-tracker">'
                     .$objname.'</a>';
-                    
+
                 } else if (strpos($params['permission_type'], 'PLUGIN_TRACKER_FIELD') === 0) {
                     $field = Tracker_FormElementFactory::instance()->getFormElementById($atid);
                     $tracker_id = $field->getTrackerId();
-                    
-                    $params['results'] = $GLOBALS['Language']->getText('project_admin_editugroup','tracker') 
+
+                    $params['results'] = $GLOBALS['Language']->getText('project_admin_editugroup','tracker')
                     .' <a href="'.TRACKER_BASE_URL.'/?tracker='.$tracker_id.'&func=admin-perms-fields">'
                     .$objname.'</a>';
-                    
+
                 } else if ($params['permission_type'] == 'PLUGIN_TRACKER_ARTIFACT_ACCESS') {
                     $params['results'] = $hp->purify($objname, CODENDI_PURIFIER_BASIC);
-                    
+
                 } else if ($params['permission_type'] == 'PLUGIN_TRACKER_WORKFLOW_TRANSITION') {
                     $transition = TransitionFactory::instance()->getTransition($atid);
                     $tracker_id = $transition->getWorkflow()->getTrackerId();
@@ -343,18 +344,18 @@ class trackerPlugin extends Plugin {
             }
         }
     }
-    
+
     var $_cached_permission_user_allowed_to_change;
     function permission_user_allowed_to_change($params) {
         if (!$params['allowed']) {
             $allowed = array(
-                'PLUGIN_TRACKER_ADMIN', 
-                'PLUGIN_TRACKER_ACCESS_FULL', 
-                'PLUGIN_TRACKER_ACCESS_SUBMITTER', 
-                'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 
-                'PLUGIN_TRACKER_FIELD_SUBMIT', 
-                'PLUGIN_TRACKER_FIELD_READ', 
-                'PLUGIN_TRACKER_FIELD_UPDATE', 
+                'PLUGIN_TRACKER_ADMIN',
+                'PLUGIN_TRACKER_ACCESS_FULL',
+                'PLUGIN_TRACKER_ACCESS_SUBMITTER',
+                'PLUGIN_TRACKER_ACCESS_ASSIGNEE',
+                'PLUGIN_TRACKER_FIELD_SUBMIT',
+                'PLUGIN_TRACKER_FIELD_READ',
+                'PLUGIN_TRACKER_FIELD_UPDATE',
                 'PLUGIN_TRACKER_ARTIFACT_ACCESS',
                 'PLUGIN_TRACKER_WORKFLOW_TRANSITION',
             );
@@ -392,27 +393,27 @@ class trackerPlugin extends Plugin {
             }
         }
     }
-    
+
     public function get_available_reference_natures($params) {
         $natures = array(Tracker_Artifact::REFERENCE_NATURE => array('keyword' => 'artifact',
                                                                      'label'   => 'Artifact Tracker v5'));
         $params['natures'] = array_merge($params['natures'], $natures);
     }
-    
-    public function get_artifact_reference_group_id($params) {        
+
+    public function get_artifact_reference_group_id($params) {
         $artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($params['artifact_id']);
         if ($artifact) {
             $tracker = $artifact->getTracker();
             $params['group_id'] = $tracker->getGroupId();
         }
     }
-    
+
     public function build_reference($params) {
         $row = $params['row'];
         $params['ref'] = new Reference($params['ref_id'],$row['keyword'],$row['description'],'/plugins'.$row['link'],
                                     $row['scope'],'plugin_tracker', Tracker_Artifact::REFERENCE_NATURE, $row['is_active'],$row['group_id']);
     }
-    
+
     public function ajax_reference_tooltip($params) {
         if ($params['reference']->getServiceShortName() == 'plugin_tracker') {
             if ($params['reference']->getNature() == Tracker_Artifact::REFERENCE_NATURE) {
@@ -428,7 +429,7 @@ class trackerPlugin extends Plugin {
             }
         }
     }
-    
+
     public function url_verification_instance($params) {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             include_once 'Tracker/Tracker_URLVerification.class.php';
@@ -438,14 +439,14 @@ class trackerPlugin extends Plugin {
 
     /**
      * Hook: event raised when widget are instanciated
-     * 
+     *
      * @param Array $params
      */
     public function widget_instance($params) {
         include_once 'Tracker/Widget/Tracker_Widget_MyArtifacts.class.php';
         include_once 'Tracker/Widget/Tracker_Widget_MyRenderer.class.php';
         include_once 'Tracker/Widget/Tracker_Widget_ProjectRenderer.class.php';
-        
+
         switch ($params['widget']) {
             case Tracker_Widget_MyArtifacts::ID:
                 $params['instance'] = new Tracker_Widget_MyArtifacts();
@@ -469,26 +470,26 @@ class trackerPlugin extends Plugin {
         include_once 'Tracker/Widget/Tracker_Widget_MyArtifacts.class.php';
         include_once 'Tracker/Widget/Tracker_Widget_MyRenderer.class.php';
         include_once 'Tracker/Widget/Tracker_Widget_ProjectRenderer.class.php';
-        
+
         switch ($params['owner_type']) {
             case WidgetLayoutManager::OWNER_TYPE_USER:
                 $params['codendi_widgets'][] = Tracker_Widget_MyArtifacts::ID;
                 $params['codendi_widgets'][] = Tracker_Widget_MyRenderer::ID;
                 break;
-            
+
             case WidgetLayoutManager::OWNER_TYPE_GROUP:
                 $params['codendi_widgets'][] = Tracker_Widget_ProjectRenderer::ID;
                 break;
         }
     }
-    
+
     function service_public_areas($params) {
         if ($params['project']->usesService('plugin_tracker')) {
             $tf = TrackerFactory::instance();
-            
+
             // Get the artfact type list
             $trackers = $tf->getTrackersByGroupId($params['project']->getGroupId());
-            
+
             if ($trackers) {
                 $entries  = array();
                 $purifier = Codendi_HTMLPurifier::instance();
@@ -504,7 +505,7 @@ class trackerPlugin extends Plugin {
                     $area .= $GLOBALS['HTML']->getImage('ic/clipboard-list.png');
                     $area .= ' '. $GLOBALS['Language']->getText('plugin_tracker', 'service_lbl_key');
                     $area .= '</a>';
-                    
+
                     $area .= '<ul><li>'. implode('</li><li>', $entries) .'</li></ul>';
                     $params['areas'][] = $area;
                 }
@@ -601,6 +602,19 @@ class trackerPlugin extends Plugin {
         if ($params['row']['user_id'] == Tracker_Workflow_WorkflowUser::ID) {
             $params['user'] = new Tracker_Workflow_WorkflowUser($params['row']);
         }
+    }
+    public function plugin_statistics_service_usage($params) {
+
+        $dao             = new Tracker_ArtifactDao();
+
+        $start_date      = strtotime($params['start_date']);
+        $end_date        = strtotime($params['end_date']);
+
+        $number_of_open_artifacts_between_two_dates   = $dao->searchSubmittedArtifactBetweenTwoDates($start_date, $end_date);
+        $number_of_closed_artifacts_between_two_dates = $dao->searchClosedArtifactBetweenTwoDates($start_date, $end_date);
+
+        $params['csv_exporter']->buildDatas($number_of_open_artifacts_between_two_dates, "Trackers v5 - Opened Artifacts");
+        $params['csv_exporter']->buildDatas($number_of_closed_artifacts_between_two_dates, "Trackers v5 - Closed Artifacts");
     }
 }
 
