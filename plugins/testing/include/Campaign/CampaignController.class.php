@@ -31,9 +31,17 @@ class Testing_Campaign_CampaignController extends MVC2_PluginController {
     /** @var Testing_Campaign_CampaignPresenterCollectionFactory */
     private $presenter_collection_factory;
 
-    public function __construct(Codendi_Request $request, Testing_Campaign_CampaignPresenterCollectionFactory $presenter_collection_factory) {
+    /** @var Testing_Campaign_CampaignCreator */
+    private $creator;
+
+    public function __construct(
+        Codendi_Request $request,
+        Testing_Campaign_CampaignPresenterCollectionFactory $presenter_collection_factory,
+        Testing_Campaign_CampaignCreator $creator
+    ) {
         parent::__construct('testing', $request);
         $this->presenter_collection_factory = $presenter_collection_factory;
+        $this->creator                      = $creator;
     }
 
     /**
@@ -52,7 +60,9 @@ class Testing_Campaign_CampaignController extends MVC2_PluginController {
     }
 
     public function create() {
-        $GLOBALS['Response']->addFeedback('info', 'The milestone has been successfuly created');
+        $data = $this->request->get('campaign');
+        $this->creator->create($this->request->getProject(), $data['name']);
+        $GLOBALS['Response']->addFeedback('info', 'The campaign has been successfuly created');
         $GLOBALS['Response']->redirect('/plugins/testing/?group_id=1');
     }
 }
