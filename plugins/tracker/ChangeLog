@@ -1,3 +1,6 @@
+Version 5.153 - Tuleap 6.5
+    * Fix bug when updating after csv import
+
 Version 5.152 - Tuleap 6.5
     * Have statistics on Tracker v5
 
