@@ -36,6 +36,9 @@ class Git_Driver_Gerrit {
 
     const DEFAULT_PARENT_PROJECT = 'All-Projects';
 
+    const DELETEPROJECT_PLUGIN_NAME = 'deleteproject';
+    const GERRIT_PLUGIN_ENABLED_VALUE = 'ENABLED';
+
     /**
      * @var Git_Driver_Gerrit_RemoteSSHCommand
      */
@@ -383,6 +386,28 @@ class Git_Driver_Gerrit {
         $query = self::COMMAND .' set-project-parent '. $project_name .' --parent '. self::DEFAULT_PARENT_PROJECT;
         $this->ssh->execute($server, $query);
 
+    }
+
+    /**
+     * @param Git_RemoteServer_GerritServer $server
+     * @return boolean
+     */
+    public function isDeletePluginEnabled(Git_RemoteServer_GerritServer $server) {
+        $query = self::COMMAND . ' plugin ls';
+        $plugins_list = $this->ssh->execute($server, $query);
+
+        if (! $this->isDeletePluginInstalled($plugins_list)) {
+            return false;
+        }
+
+        $plugin     = preg_quote(self::DELETEPROJECT_PLUGIN_NAME);
+        $is_enabled = preg_quote(self::GERRIT_PLUGIN_ENABLED_VALUE);
+
+        return preg_match("/\s$plugin\s+[^\s]+\s+$is_enabled/", $plugins_list);
+    }
+
+    private function isDeletePluginInstalled($plugins_list) {
+        return strstr($plugins_list, self::DELETEPROJECT_PLUGIN_NAME);
     }
 }
 ?>

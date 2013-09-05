@@ -23,6 +23,7 @@ require_once 'common/include/Config.class.php';
 class Git_Driver_Gerrit_RemoteSSHCommand {
 
     const SUCCESS = 0;
+    const STD_OUT_GLUE = PHP_EOL;
     
     /** Logger */
     private $logger;
@@ -66,7 +67,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
         unlink($filename);
         return array(
             'exit_code' => $exit_code,
-            'std_out'   => implode(PHP_EOL, $output),
+            'std_out'   => implode(self::STD_OUT_GLUE, $output),
             'std_err'   => $stderr
         );
     }
