@@ -21,18 +21,10 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_Campaign_CampaignPresenter {
+class Testing_Campaign_CampaignPresenterFactory {
 
-    /** @var string */
-    public $name;
-
-    /** @var Testing_Campaign_CampaignStatPresenter */
-    public $stat;
-
-    public function __construct(Testing_Campaign_Campaign $campaign, Testing_Campaign_CampaignStatPresenter $stat) {
-        $this->name = $campaign->getName();
-        $this->stat = $stat;
-        $this->show_uri = '/plugins/testing/?group_id='. $campaign->getProjectId() .'&resource=campaign&action=show&id='. $campaign->getId();
-        $this->edit_uri = '/plugins/testing/?group_id='. $campaign->getProjectId() .'&resource=campaign&action=edit&id='. $campaign->getId();
+    public function getPresenter(Testing_Campaign_Campaign $campaign) {
+        $stat = new Testing_Campaign_CampaignStatPresenter(rand(0, 2), rand(190, 200), rand(0, 10));
+        return new Testing_Campaign_CampaignPresenter($campaign, $stat);
     }
 }

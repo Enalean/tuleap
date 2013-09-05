@@ -28,6 +28,8 @@ require_once 'common/mvc2/PluginController.class.php';
  */
 class Testing_Campaign_CampaignController extends MVC2_PluginController {
 
+    const RENDER_PREFIX = 'Campaign/';
+
     /** @var Testing_Campaign_CampaignPresenterCollectionFactory */
     private $presenter_collection_factory;
 
@@ -37,11 +39,15 @@ class Testing_Campaign_CampaignController extends MVC2_PluginController {
     public function __construct(
         Codendi_Request $request,
         Testing_Campaign_CampaignPresenterCollectionFactory $presenter_collection_factory,
-        Testing_Campaign_CampaignCreator $creator
+        Testing_Campaign_CampaignCreator $creator,
+        Testing_Campaign_CampaignManager $manager,
+        Testing_Campaign_CampaignPresenterFactory $presenter_factory
     ) {
         parent::__construct('testing', $request);
         $this->presenter_collection_factory = $presenter_collection_factory;
         $this->creator                      = $creator;
+        $this->manager                      = $manager;
+        $this->presenter_factory            = $presenter_factory;
     }
 
     /**
@@ -49,14 +55,20 @@ class Testing_Campaign_CampaignController extends MVC2_PluginController {
      */
     public function __call($name, $arguments) {
         $presenter = new stdClass;
-        $this->render('Campaign/'. $name, $presenter);
+        $this->render(self::RENDER_PREFIX . $name, $presenter);
     }
 
     public function index() {
         $presenter = new Testing_Campaign_CampaignCollectionPresenter(
             $this->presenter_collection_factory->getListOfCampaignPresenters($this->request->getProject())
         );
-        $this->render('Campaign/index', $presenter);
+        $this->render(self::RENDER_PREFIX .'index', $presenter);
+    }
+
+    public function show() {
+        $campaign  = $this->manager->getCampaign($this->request->getProject(), $this->request->get('id'));
+        $presenter = $this->presenter_factory->getPresenter($campaign);
+        $this->render(self::RENDER_PREFIX .'show', $presenter);
     }
 
     public function create() {

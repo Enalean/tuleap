@@ -50,9 +50,10 @@ class TestingRouter {
                 $dao     = new Testing_Campaign_CampaignDao();
                 $factory = new Testing_Campaign_CampaignFactory();
                 $manager = new Testing_Campaign_CampaignManager($dao, $factory);
-                $presenter_collection_factory = new Testing_Campaign_CampaignPresenterCollectionFactory($manager);
+                $presenter_factory = new Testing_Campaign_CampaignPresenterFactory($presenter_factory);
+                $presenter_collection_factory = new Testing_Campaign_CampaignPresenterCollectionFactory($manager, $presenter_factory);
                 $creator = new Testing_Campaign_CampaignCreator($dao);
-                return new Testing_Campaign_CampaignController($request, $presenter_collection_factory, $creator);
+                return new Testing_Campaign_CampaignController($request, $presenter_collection_factory, $creator, $manager, $presenter_factory);
         }
     }
 

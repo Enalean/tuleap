@@ -45,4 +45,11 @@ class Testing_Campaign_CampaignManager {
         }
         return $list_of_campaigns;
     }
+
+    public function getCampaign(Project $project, $id) {
+        return $this->factory->getInstanceFromRow(
+            $project,
+            $this->dao->searchById($id)->getRow()
+        );
+    }
 }

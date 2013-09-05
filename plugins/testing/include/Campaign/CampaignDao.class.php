@@ -33,6 +33,14 @@ class Testing_Campaign_CampaignDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchById($id) {
+        $id = $this->da->escapeInt($id);
+
+        $sql = "SELECT * FROM plugin_testing_campaign WHERE id = $id";
+
+        return $this->retrieve($sql);
+    }
+
     public function create($project_id, $name) {
         $project_id = $this->da->escapeInt($project_id);
         $name       = $this->da->quoteSmart($name);

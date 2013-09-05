@@ -28,17 +28,16 @@ class Testing_Campaign_CampaignPresenterCollectionFactory {
     /** @var Testing_Campaign_CampaignManager */
     private $manager;
 
-    public function __construct(Testing_Campaign_CampaignManager $manager) {
-        $this->manager = $manager;
+    /** @var Testing_Campaign_CampaignPresenterFactory */
+    private $presenter_factory;
+
+    public function __construct(Testing_Campaign_CampaignManager $manager, Testing_Campaign_CampaignPresenterFactory $presenter_factory) {
+        $this->manager           = $manager;
+        $this->presenter_factory = $presenter_factory;
     }
 
     public function getListOfCampaignPresenters(Project $project) {
         $list_of_campaigns = $this->manager->getListOfCampaignsForProject($project);
-        return array_map(array($this, 'convertCampaignToPresenter'), $list_of_campaigns);
-    }
-
-    private function convertCampaignToPresenter(Testing_Campaign_Campaign $campaign) {
-        $stat = new Testing_Campaign_CampaignStatPresenter(rand(0, 2), rand(190, 200), rand(0, 10));
-        return new Testing_Campaign_CampaignPresenter($campaign, $stat);
+        return array_map(array($this->presenter_factory, 'getPresenter'), $list_of_campaigns);
     }
 }

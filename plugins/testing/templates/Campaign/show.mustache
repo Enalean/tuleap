@@ -2,10 +2,10 @@
   <li class="active"><a href="/plugins/testing/?group_id=1&resource=campaign">Campaigns</a></li>
   <li><a href="/plugins/testing/?group_id=1&resource=requirement">Requirements</a></li>
 </ul>
-<h2>Tuleap 6.3 / PHP 5.3</h2>
+<h2>{{ name }}</h2>
 <p>
     <button type="button" class="btn btn-primary"><i class="icon-play"></i> Execute test cases assigned to me</button>
-    <a href="#" type="button" class="btn"><i class="icon-edit"></i> Edit campaign</a>
+    <a href="{{ edit_uri }}" type="button" class="btn disabled" onclick="return false;"><i class="icon-edit"></i> Edit campaign</a>
     <!-- a href="#" type="button" class="btn"><i class="icon-th-list"></i> Add/remove test cases</a -->
     <a href="/plugins/testing/?group_id=1&resource=campaign&action=report&id=123" type="button" class="btn"><i class="icon-bar-chart"></i> Reports</a>
 </p>
@@ -14,9 +14,12 @@
         <tr>
             <th>Test case</th>
             <th>Assigned to</th>
-            <th>Status <span class="badge" title="Not run">0</span>
-                <span class="badge badge-success" title="Passed">193</span>
-                <span class="badge badge-important" title="Failed">10</span>
+            <th>Status
+                {{# stat }}
+                <span class="badge" title="Not run">{{ nb_not_run }}</span>
+                <span class="badge badge-success" title="Passed">{{ nb_pass }}</span>
+                <span class="badge badge-important" title="Failed">{{ nb_fail }}</span>
+                {{/ stat }}
             </th>
         </tr>
     </thead>
