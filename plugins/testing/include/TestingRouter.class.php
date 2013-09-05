@@ -47,7 +47,11 @@ class TestingRouter {
                 break;
             case self::RESOURCE_CAMPAIGN:
             default:
-                return new Testing_Campaign_CampaignController($request);
+                $dao     = new Testing_Campaign_CampaignDao();
+                $factory = new Testing_Campaign_CampaignFactory();
+                $manager = new Testing_Campaign_CampaignManager($dao, $factory);
+                $presenter_collection_factory = new Testing_Campaign_CampaignPresenterCollectionFactory($manager);
+                return new Testing_Campaign_CampaignController($request, $presenter_collection_factory);
         }
     }
 

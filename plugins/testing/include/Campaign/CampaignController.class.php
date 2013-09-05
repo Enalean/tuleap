@@ -28,8 +28,12 @@ require_once 'common/mvc2/PluginController.class.php';
  */
 class Testing_Campaign_CampaignController extends MVC2_PluginController {
 
-    public function __construct(Codendi_Request $request) {
+    /** @var Testing_Campaign_CampaignPresenterCollectionFactory */
+    private $presenter_collection_factory;
+
+    public function __construct(Codendi_Request $request, Testing_Campaign_CampaignPresenterCollectionFactory $presenter_collection_factory) {
         parent::__construct('testing', $request);
+        $this->presenter_collection_factory = $presenter_collection_factory;
     }
 
     /**
@@ -38,6 +42,13 @@ class Testing_Campaign_CampaignController extends MVC2_PluginController {
     public function __call($name, $arguments) {
         $presenter = new stdClass;
         $this->render('Campaign/'. $name, $presenter);
+    }
+
+    public function index() {
+        $presenter = new Testing_Campaign_CampaignCollectionPresenter(
+            $this->presenter_collection_factory->getListOfCampaignPresenters($this->request->getProject())
+        );
+        $this->render('Campaign/index', $presenter);
     }
 
     public function create() {
