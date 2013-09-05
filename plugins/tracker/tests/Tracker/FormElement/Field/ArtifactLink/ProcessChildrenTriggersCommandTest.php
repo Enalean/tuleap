@@ -93,6 +93,25 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest 
         $this->command->execute($this->artifact, $this->user, $new_changeset, $previous_changeset);
     }
 
+    public function itDoesntFailWhenPreviousChangesetHasNoValue() {
+        $previous_changeset = mock('Tracker_Artifact_Changeset');
+        stub($previous_changeset)->getValue($this->field)->returns(null);
+
+        $new_changeset = mock('Tracker_Artifact_Changeset');
+        stub($new_changeset)->getValue($this->field)->returns(
+            aChangesetValueArtifactLink()
+                ->withArtifactLinks(
+                    array(
+                        123 => new Tracker_ArtifactLinkInfo(123, 'art', 101, 1, 12345)
+                    )
+                )->build()
+        );
+
+        expect($this->trigger_rules_manager)->processChildrenTriggers($this->artifact)->once();
+
+        $this->command->execute($this->artifact, $this->user, $new_changeset, $previous_changeset);
+    }
+
     public function itCallsProcessChildrenTriggersWhenNoPreviousChangeset() {
         $previous_changeset = null;
 
