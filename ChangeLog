@@ -1,4 +1,7 @@
 Version 6.5 (Not released yet)
+	== Enhancement ==
+	* Persist file attachments on file system rather than DB: So we stop cluttering the database with blob of datas
+
 	== Plugins ==
 	* docman: 2.26.22
 	* git: 3.38
