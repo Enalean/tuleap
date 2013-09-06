@@ -26,7 +26,7 @@ class Testing_TestExecution_TestExecutionInfoPresenter {
     public function __construct(Testing_TestExecution_TestExecution $test_execution) {
         $this->name     = $test_execution->getId();
         $this->assignee = $test_execution->getAssignee()->getRealName();
-        $project_id = 1; //$test_execution->getCampaign()->getProjectId()
+        $project_id     = $test_execution->getCampaign()->getProjectId();
         $this->show_uri = '/plugins/testing/?group_id='. $project_id .'&resource=testexecution&action=show&id='. $test_execution->getId();
 
         $last_result = $test_execution->getLastTestResult();

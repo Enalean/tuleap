@@ -30,10 +30,10 @@ class Testing_TestExecution_TestExecutionFactory {
         $this->user_manager = $user_manager;
     }
 
-    public function getInstanceFromRow($row) {
+    public function getInstanceFromRow(Testing_Campaign_Campaign $campaign, $row) {
         $user = $this->user_manager->getUserById($row['assigned_to']);
         $list_of_test_results = array(new Testing_TestResult_TestResultNotRun());
 
-        return new Testing_TestExecution_TestExecution($row['id'], $user, $list_of_test_results);
+        return new Testing_TestExecution_TestExecution($row['id'], $campaign, $user, $list_of_test_results);
     }
 }

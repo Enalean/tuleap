@@ -38,10 +38,7 @@ class Testing_Campaign_CampaignPresenterFactory {
     }
 
     public function getPresenter(Testing_Campaign_Campaign $campaign) {
-        $list_of_execution_presenters = array_map(
-            array($this->execution_info_presenter_factory, 'getPresenter'),
-            $campaign->getListOfTestExecutions()
-        );
+        $list_of_execution_presenters = $campaign->getListOfTestExecutions()->getPresenters($this->execution_info_presenter_factory);
         $stat = $this->stat_presenter_factory->getPresenter($campaign);
         return new Testing_Campaign_CampaignPresenter($campaign, $stat, $list_of_execution_presenters);
     }

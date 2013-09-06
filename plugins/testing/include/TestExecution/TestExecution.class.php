@@ -26,19 +26,24 @@ class Testing_TestExecution_TestExecution {
     /** @var int */
     private $id;
 
+    /** @var Testing_Campaign_Campaign */
+    private $campaign;
+
     /** @var PFUser */
     private $assignee;
 
     /** @var Testing_TestResult_TestResultCollection */
     private $list_of_test_results;
 
-    public function __construct($id, PFUser $assignee, array $list_of_test_results) {
+    public function __construct($id, Testing_Campaign_Campaign $campaign, PFUser $assignee, array $list_of_test_results) {
         $this->id                   = $id;
+        $this->campaign             = $campaign;
         $this->assignee             = $assignee;
         $this->list_of_test_results = $list_of_test_results;
     }
 
     public function getId() { return $this->id; }
     public function getAssignee() { return $this->assignee; }
+    public function getCampaign() { return $this->campaign; }
     public function getLastTestResult() { return end($this->list_of_test_results); }
 }

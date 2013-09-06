@@ -48,7 +48,7 @@ class TestingRouter {
             case self::RESOURCE_CAMPAIGN:
             default:
                 $dao     = new Testing_Campaign_CampaignDao();
-                $factory = new Testing_Campaign_CampaignFactory($this->getTestExecutionCollectionFactory());
+                $factory = new Testing_Campaign_CampaignFactory($this->getTestExecutionCollectionFeeder());
                 $manager = new Testing_Campaign_CampaignManager($dao, $factory);
                 $stat_presenter_factory = new Testing_Campaign_CampaignStatPresenterFactory();
                 $presenter_factory = new Testing_Campaign_CampaignPresenterFactory(
@@ -62,11 +62,11 @@ class TestingRouter {
         }
     }
 
-    private function getTestExecutionCollectionFactory() {
+    private function getTestExecutionCollectionFeeder() {
         $dao     = new Testing_TestExecution_TestExecutionDao();
         $factory = new Testing_TestExecution_TestExecutionFactory(UserManager::instance());
 
-        return new Testing_TestExecution_TestExecutionCollectionFactory($dao, $factory);
+        return new Testing_TestExecution_TestExecutionCollectionFeeder($dao, $factory);
     }
 
     private function getAction(Codendi_Request $request) {

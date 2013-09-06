@@ -21,7 +21,7 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_TestExecution_TestExecutionCollectionFactory {
+class Testing_TestExecution_TestExecutionCollectionFeeder {
 
     /** @var Testing_TestExecution_TestExecutionDao */
     private $dao;
@@ -34,12 +34,10 @@ class Testing_TestExecution_TestExecutionCollectionFactory {
         $this->factory = $factory;
     }
 
-    public function getTestExecutionCollection($campaign_id) {
-        $collection = array();
-        foreach ($this->dao->searchByCampaignId($campaign_id) as $row) {
-            $collection[] = $this->factory->getInstanceFromRow($row);
+    public function feedCollection(Testing_Campaign_Campaign $campaign, Testing_TestExecution_TestExecutionCollection $collection) {
+        foreach ($this->dao->searchByCampaignId($campaign->getId()) as $row) {
+            $execution = $this->factory->getInstanceFromRow($campaign, $row);
+            $collection->append($execution);
         }
-
-        return $collection;
     }
 }
