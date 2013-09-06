@@ -183,6 +183,7 @@ file_admin_editreleases	md5sum	md5 Checksum
 file_admin_editreleases	user	Propriétaire
 file_admin_editreleases	fileforge_error	Une erreur s'est produite lors du déplacement du fichier dans le répertoire de destination (le fichier $1 était-il déjà détruit?)
 file_admin_editreleases	db_error	Une erreur s'est produite lors de l'ajout du fichier dans la base de données
+file_admin_editreleases	comment	Commentaire
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php

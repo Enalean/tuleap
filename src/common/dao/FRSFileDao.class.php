@@ -94,12 +94,14 @@ class FRSFileDao extends DataAccessObject {
     }
     	
     	$sql = sprintf("SELECT frs_file.file_id AS file_id, frs_file.filename AS filename, frs_file.file_size AS file_size," 
-				 	. "frs_file.release_time AS release_time, frs_file.type_id AS type, frs_file.processor_id AS processor," 
-				 	. "frs_dlstats_filetotal_agg.downloads AS downloads , frs_file.computed_md5 AS computed_md5, frs_file.user_id AS user_id FROM frs_file " 
-				 	. "LEFT JOIN frs_dlstats_filetotal_agg ON frs_dlstats_filetotal_agg.file_id=frs_file.file_id " 
-				 	. "WHERE release_id=%s".$where_status , 	
-				 	$this->da->quoteSmart($_release_id));
-		return $this->retrieve($sql);
+                . "frs_file.release_time AS release_time, frs_file.type_id AS type, frs_file.processor_id AS processor,"
+                . "frs_dlstats_filetotal_agg.downloads AS downloads , frs_file.computed_md5 AS computed_md5, frs_file.user_id AS user_id,"
+                . "frs_file.comment AS comment "
+                . "FROM frs_file "
+                . "LEFT JOIN frs_dlstats_filetotal_agg ON frs_dlstats_filetotal_agg.file_id=frs_file.file_id "
+                . "WHERE release_id=%s".$where_status ,
+                $this->da->quoteSmart($_release_id));
+        return $this->retrieve($sql);
     }
    
     function _search($where, $group = '', $order = '', $from = array()) {
@@ -199,7 +201,7 @@ class FRSFileDao extends DataAccessObject {
     function createFromArray($data_array) {
         $arg    = array();
         $values = array();
-        $cols   = array('filename', 'filepath', 'release_id', 'type_id', 'processor_id', 'file_size', 'status', 'computed_md5', 'reference_md5', 'user_id');
+        $cols   = array('filename', 'filepath', 'release_id', 'type_id', 'processor_id', 'file_size', 'status', 'computed_md5', 'reference_md5', 'user_id', 'comment');
         foreach ($data_array as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]    = $key;

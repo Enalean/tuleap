@@ -1,3 +1,24 @@
+6.2 - Tuleap 6.5
+
+	What's new?
+	===========
+        Methods
+	-------
+	* updateFileComment: Update the comment of a File of the release manager.
+
+	What Changed?
+	============
+	Types
+	-----
+	* addFile has a new attribute
+	** xsd:string comment
+
+	* addUploadedFile has a new attribute
+	** xsd:string comment
+
+	* getFileInfo returns a new attribute
+	** xsd:string comment
+
 6.1 - Tuleap 6.4
 	What Changed?
 	=============

@@ -512,6 +512,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'processor');
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'file_type');
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'md5sum');
+    $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'comment');
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'user');
     if ($is_update) {
         $titles[] = $GLOBALS['Language']->getText('file_admin_editreleasepermissions', 'release');
@@ -542,6 +543,8 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                 $value = 'value = "'.$files[$i]->getComputedMd5().'" readonly="true"';
             }
             echo '<TD><INPUT TYPE="TEXT" NAME="release_reference_md5[]" '.$value.' SIZE="36" ></TD>';
+            $comment = $files[$i]->getComment();
+            echo '<TD><textarea NAME="release_comment[]" cols="20", rows="1" >'.$comment.'</textarea></TD>';
             echo '<TD><INPUT TYPE="TEXT" NAME="user" value = "'.$userName.'" readonly="true"></TD>';
             echo '<TD>' . frs_show_release_popup2($group_id, $name = 'new_release_id[]', $files[$i]->getReleaseID()) . '</TD>';
             echo '<TD><INPUT TYPE="TEXT" NAME="release_time[]" VALUE="' . format_date('Y-m-d', $files[$i]->getReleaseTime()) . '" SIZE="10" MAXLENGTH="10"></TD></TR>';
@@ -802,7 +805,13 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     } else {
         $reference_md5 = array();
     }
-    
+
+    if ($request->validArray(new Valid_String('comment'))) {
+        $comment = $request->get('comment');
+    } else {
+        $comment = array();
+    }
+
     if($request->validArray(new Valid_UInt('ftp_file_processor'))) {
         $ftp_file_processor = $request->get('ftp_file_processor');
     } else {
@@ -905,7 +914,13 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         } else {
             $reference_md5 = array();
         }
-        
+
+        if ($request->validArray(new Valid_Text('release_comment'))) {
+            $release_comment = $request->get('release_comment');
+        } else {
+            $release_comment = array();
+        }
+
         if($request->valid(new Valid_UInt('id'))) {
             $release['release_id'] = $request->get('id');
         } else {
@@ -1086,11 +1101,12 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                         $unix_release_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
                                     }
                                     $array = array (
-                                        'release_id' => $new_release_id[$index],
-                                        'release_time' => $unix_release_time,
-                                        'type_id' => $release_file_type[$index],
-                                        'processor_id' => $release_file_processor[$index],
-                                        'file_id' => $rel_file
+                                        'release_id'    => $new_release_id[$index],
+                                        'release_time'  => $unix_release_time,
+                                        'type_id'       => $release_file_type[$index],
+                                        'processor_id'  => $release_file_processor[$index],
+                                        'file_id'       => $rel_file,
+                                        'comment'       => $release_comment[$index],
                                     );
                                     if ($release_reference_md5[$index] && $release_reference_md5[$index] != '') {
                                         $array['reference_md5'] = $release_reference_md5[$index];
@@ -1119,21 +1135,23 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 // TODO : fix warnings due to array instead of string for "file_processor", "file_type" & "reference_md5"
                 if ($ftp_file[0] != -1) {
                     $ftp_files_processor_type_list[] = array (
-                        'name' => $ftp_file[0],
-                        'processor' => $file_processor,
-                        'type' => $file_type,
-                        'reference_md5' => $reference_md5
+                        'name'          => $ftp_file[0],
+                        'processor'     => $file_processor,
+                        'type'          => $file_type,
+                        'reference_md5' => $reference_md5,
+                        'comment'       => $comment,
                     );
 
                 } else
                     if (trim($_FILES['file']['name'][0]) != '') {
                         $http_files_processor_type_list[] = array (
-                            'error' => $_FILES['file']['error'][0],
-                            'name' => $_FILES['file']['name'][0],
-                            'tmp_name' => $_FILES['file']['tmp_name'][0],
-                            'processor' => $file_processor,
-                            'type' => $file_type,
-                            'reference_md5' => $reference_md5
+                            'error'         => $_FILES['file']['error'][0],
+                            'name'          => $_FILES['file']['name'][0],
+                            'tmp_name'      => $_FILES['file']['tmp_name'][0],
+                            'processor'     => $file_processor,
+                            'type'          => $file_type,
+                            'reference_md5' => $reference_md5,
+                            'comment'       => $comment,
                         );
                     }
             } else {
@@ -1142,12 +1160,13 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 for ($i = 0; $i < $nb_files; $i++) {
                     if (trim($_FILES['file']['name'][$i]) != '') {
                         $http_files_processor_type_list[] = array (
-                            'error' => $_FILES['file']['error'][$i],
-                            'name' => $_FILES['file']['name'][$i],
-                            'tmp_name' => $_FILES['file']['tmp_name'][$i],
-                            'processor' => $file_processor[$i],
-                            'type' => $file_type[$i],
-                            'reference_md5' => $reference_md5[$i]
+                            'error'         => $_FILES['file']['error'][$i],
+                            'name'          => $_FILES['file']['name'][$i],
+                            'tmp_name'      => $_FILES['file']['tmp_name'][$i],
+                            'processor'     => $file_processor[$i],
+                            'type'          => $file_type[$i],
+                            'reference_md5' => $reference_md5[$i],
+                            'comment'       => $comment[$i],
                         );
                     }
                 }
@@ -1211,6 +1230,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                 $newFile->setTypeID($file['type']);
                                 $newFile->setReferenceMd5($file['reference_md5']);
                                 $newFile->setUserId($user->getId());
+                                $newFile->setComment($file['comment']);
                                 try {
                                     $frsff->createFile($newFile);
                                     $addingFiles = true;
