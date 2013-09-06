@@ -21,29 +21,29 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_TestExecution_TestExecutionFactory {
+class Testing_TestResult_TestResultCollectionFeeder {
 
-    /** @var UserManager */
-    private $user_manager;
-
-    /** @var Testing_TestResult_TestResultCollectionFeeder */
-    private $collection_feeder;
+    /** @var Testing_TestResult_TestResultDao */
+    private $dao;
 
     public function __construct(
-        UserManager $user_manager,
-        Testing_TestResult_TestResultCollectionFeeder $collection_feeder
+        Testing_TestResult_TestResultDao $dao,
+        Testing_TestResult_TestResultFactory $factory
     ) {
-        $this->collection_feeder = $collection_feeder;
-        $this->user_manager      = $user_manager;
+        $this->dao     = $dao;
+        $this->factory = $factory;
     }
 
-    public function getInstanceFromRow(Testing_Campaign_Campaign $campaign, $row) {
-        $user            = $this->user_manager->getUserById($row['assigned_to']);
-        $list_of_results = new Testing_TestResult_TestResultCollection();
+    public function feedCollection(Testing_TestExecution_TestExecution $execution, Testing_TestResult_TestResultCollection $collection) {
+        $rows = $this->dao->searchByExecutionId($execution->getId());
+        if (! count($rows)) {
+            $collection->append(new Testing_TestResult_TestResultNotRun());
+            return;
+        }
 
-        $execution = new Testing_TestExecution_TestExecution($row['id'], $campaign, $user, $list_of_results);
-        $this->collection_feeder->feedCollection($execution, $list_of_results);
-
-        return $execution;
+        foreach ($rows as $row) {
+            $result = $this->factory->getInstanceFromRow($execution, $row);
+            $collection->append($result);
+        }
     }
 }

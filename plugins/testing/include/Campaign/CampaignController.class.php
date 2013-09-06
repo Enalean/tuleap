@@ -79,6 +79,9 @@ class Testing_Campaign_CampaignController extends MVC2_PluginController {
         $this->render(self::RENDER_PREFIX .'show', $presenter);
     }
 
+    /**
+     * @todo csrf
+     */
     public function create() {
         $data = $this->request->get('campaign');
         $this->creator->create($this->request->getProject(), $data['name']);

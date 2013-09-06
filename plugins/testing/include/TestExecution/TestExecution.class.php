@@ -35,7 +35,7 @@ class Testing_TestExecution_TestExecution {
     /** @var Testing_TestResult_TestResultCollection */
     private $list_of_test_results;
 
-    public function __construct($id, Testing_Campaign_Campaign $campaign, PFUser $assignee, array $list_of_test_results) {
+    public function __construct($id, Testing_Campaign_Campaign $campaign, PFUser $assignee, Testing_TestResult_TestResultCollection $list_of_test_results) {
         $this->id                   = $id;
         $this->campaign             = $campaign;
         $this->assignee             = $assignee;
@@ -45,5 +45,6 @@ class Testing_TestExecution_TestExecution {
     public function getId() { return $this->id; }
     public function getAssignee() { return $this->assignee; }
     public function getCampaign() { return $this->campaign; }
+    public function getListOfTestResults() { return $this->list_of_test_results; }
     public function getLastTestResult() { return end($this->list_of_test_results); }
 }

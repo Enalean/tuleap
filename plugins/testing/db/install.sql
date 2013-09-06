@@ -14,6 +14,16 @@ CREATE TABLE plugin_testing_testexecution(
   assigned_to int(11) NOT NULL,
 ) ENGINE='InnoDB';
 
+DROP TABLE IF EXISTS plugin_testing_testresult;
+CREATE TABLE plugin_testing_testresult(
+  id int(11) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  execution_id int(11) unsigned NOT NULL,
+  executed_by int(11) NOT NULL,
+  executed_on int(11) NOT NULL,
+  status tinyint(2) NOT NULL,
+  message TEXT NOT NULL
+) ENGINE='InnoDB';
+
 
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)

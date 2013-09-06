@@ -21,20 +21,5 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_TestExecution_TestExecutionPresenter {
-
-    public function __construct(
-        Testing_TestExecution_TestExecution $test_execution,
-        Testing_Campaign_CampaignInfoPresenter $campaign,
-        array $results /** @var Testing_TestResult_TestResultPresenter[] */
-    ) {
-        $this->campaign = $campaign;
-        $this->name     = $test_execution->getId();
-        $this->assignee = $test_execution->getAssignee()->getRealName();
-        $this->results  = $results;
-        $project_id     = $test_execution->getCampaign()->getProjectId();
-        $this->create_result_uri = '/plugins/testing/?group_id='. $project_id .'&resource=testresult&action=create&execution_id='. $test_execution->getId();
-
-        $this->last_result = end($results);
-    }
+class Testing_TestResult_TestResultCollection extends ArrayObject {
 }

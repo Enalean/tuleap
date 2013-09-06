@@ -29,6 +29,7 @@ class TestingRouter {
     const DEFAULT_ACTION         = 'index';
     const RESOURCE_CAMPAIGN      = 'campaign';
     const RESOURCE_TESTEXECUTION = 'testexecution';
+    const RESOURCE_TESTRESULT    = 'testresult';
     const RESOURCE_REQUIREMENT   = 'requirement';
 
     public function route(Codendi_Request $request) {
@@ -43,7 +44,9 @@ class TestingRouter {
         $campaign_dao     = new Testing_Campaign_CampaignDao();
         $campaign_factory = new Testing_Campaign_CampaignFactory($this->getTestExecutionCollectionFeeder());
         $campaign_manager = new Testing_Campaign_CampaignManager($campaign_dao, $campaign_factory);
-        switch ($request->getValidated('resource')) {
+
+        $requested_resource = $request->getValidated('resource');
+        switch ($requested_resource) {
             case self::RESOURCE_REQUIREMENT:
                 return new Testing_Requirement_RequirementController($request);
                 break;
@@ -52,8 +55,16 @@ class TestingRouter {
                 $manager = new Testing_TestExecution_TestExecutionManager($dao, $campaign_manager);
                 return new Testing_TestExecution_TestExecutionController($request, $manager, $info_presenter_factory);
                 break;
+            case self::RESOURCE_TESTRESULT:
+                $dao = new Testing_TestResult_TestResultDao();
+                return new Testing_TestResult_TestResultController($request, $dao);
+                break;
             case self::RESOURCE_CAMPAIGN:
             default:
+                if ($requested_resource && $requested_resource != self::RESOURCE_CAMPAIGN) {
+                    throw new Exception("Unknown resource '$requested_resource'");
+                }
+
                 $presenter_factory = new Testing_Campaign_CampaignPresenterFactory(
                     $stat_presenter_factory,
                     new Testing_TestExecution_TestExecutionInfoPresenterFactory()
@@ -66,9 +77,16 @@ class TestingRouter {
 
     private function getTestExecutionCollectionFeeder() {
         $dao     = new Testing_TestExecution_TestExecutionDao();
-        $factory = new Testing_TestExecution_TestExecutionFactory(UserManager::instance());
+        $factory = new Testing_TestExecution_TestExecutionFactory(UserManager::instance(), $this->getTestResultCollectionFeeder());
 
         return new Testing_TestExecution_TestExecutionCollectionFeeder($dao, $factory);
+    }
+
+    private function getTestResultCollectionFeeder() {
+        $dao = new Testing_TestResult_TestResultDao();
+        $factory = new Testing_TestResult_TestResultFactory(UserManager::instance());
+
+        return new Testing_TestResult_TestResultCollectionFeeder($dao, $factory);
     }
 
     private function getAction(Codendi_Request $request) {

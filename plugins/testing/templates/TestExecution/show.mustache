@@ -44,50 +44,65 @@
 </table>
 
 <h3>Results</h3>
-<form action="/plugins/testing/?group_id=1">
+<form action="{{ create_result_uri }}" method="POST">
     <div class="form-actions">
         <table><tr>
             <td>
-                <textarea placeholder="Notes, description, …" rows="10" cols="60"></textarea>
+                <textarea placeholder="Notes, description, …" rows="10" cols="60" name="message"></textarea>
             </td>
             <td>
                 <ul class="result_choices">
                     {{# last_result }}
-                    <li><label><input type="radio" name="result" {{# is_not_run }}checked="checked"{{/ is_not_run }}> <span class="label" title="Not run">Not run</span></label></li>
-                    <li><label><input type="radio" name="result" {{# is_passed }}checked="checked"{{/ is_passed }}> <span class="label label-success" title="Passed">Passed</label></li>
-                    <li><label class="result_choice"><input type="radio" name="result" {{# is_failed }}checked="checked"{{/ is_failed }}> <span class="label label-important" title="Failed">Failed</label></li>
+                    <li>
+                        <label>
+                            <input type="radio" name="status" value="{{ not_run_value }}" {{# is_not_run }}checked="checked"{{/ is_not_run }}>
+                            <span class="label" title="Not run">Not run</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" name="status" value="{{ passed_value }}" {{# is_passed }}checked="checked"{{/ is_passed }}>
+                            <span class="label label-success" title="Passed">Passed</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="result_choice">
+                            <input type="radio" name="status" value="{{ failed_value }}" {{# is_failed }}checked="checked"{{/ is_failed }}>
+                            <span class="label label-important" title="Failed">Failed</span>
+                        </label>
+                    </li>
                     {{/ last_result }}
                 </ul>
                 <p><a href="#submit-new-artifact" class="tracker-submit-new"> log a bug</a></p>
                 <p>
-                    <button type="button" class="btn">Save</button>
-                    <button type="button" class="btn">Save and continue</button>
+                    <button type="submit" name="save" class="btn">Save</button>
+                    <button type="button" name="save-and-continue" class="btn disabled">Save and continue</button>
                 </p>
             </td>
         </tr></table>
     </div>
 </form>
 
-{{# last_result }}
-    {{# executed_on }}
-    <h3>Last result</h3>
-    <table class="table table-hover table-bordered">
-        <thead>
-            <tr>
-                <th>Reporter</th>
-                <th>Date</th>
-                <th>Result</th>
-                <th>Message</th>
-            </tr>
-        </thead>
-        <tbody>
+<h3>Last results</h3>
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>Reporter</th>
+            <th>Date</th>
+            <th>Result</th>
+            <th>Message</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{# results }}
+            {{# executed_on }}
             <tr class="{{# is_passed}}success{{/ is_passed }}{{# is_failed}}error{{/ is_failed }}{{# is_not_run }}not_run_status_row{{/ is_not_run }}">
                 <td>{{ executed_by }}</td>
                 <td>{{ executed_on }}</td>
                 <td>{{> label-status }}</td>
                 <td class="span6">{{{ message }}}</td>
             </tr>
-        </tbody>
-    </table>
-    {{/ executed_on }}
-{{/ last_result }}
+            {{/ executed_on }}
+        {{/ results }}
+    </tbody>
+</table>

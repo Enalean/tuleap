@@ -21,29 +21,18 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_TestExecution_TestExecutionFactory {
+class Testing_TestResult_TestResultFactory {
 
     /** @var UserManager */
     private $user_manager;
 
-    /** @var Testing_TestResult_TestResultCollectionFeeder */
-    private $collection_feeder;
-
-    public function __construct(
-        UserManager $user_manager,
-        Testing_TestResult_TestResultCollectionFeeder $collection_feeder
-    ) {
-        $this->collection_feeder = $collection_feeder;
-        $this->user_manager      = $user_manager;
+    public function __construct(UserManager $user_manager) {
+        $this->user_manager = $user_manager;
     }
 
-    public function getInstanceFromRow(Testing_Campaign_Campaign $campaign, $row) {
-        $user            = $this->user_manager->getUserById($row['assigned_to']);
-        $list_of_results = new Testing_TestResult_TestResultCollection();
+    public function getInstanceFromRow(Testing_TestExecution_TestExecution $execution, $row) {
+        $user = $this->user_manager->getUserById($row['executed_by']);
 
-        $execution = new Testing_TestExecution_TestExecution($row['id'], $campaign, $user, $list_of_results);
-        $this->collection_feeder->feedCollection($execution, $list_of_results);
-
-        return $execution;
+        return new Testing_TestResult_TestResult($row['status'], $user, $row['executed_on'], $row['message']);
     }
 }

@@ -33,8 +33,13 @@ class Testing_TestResult_TestResultPresenter {
         }
         $project_id = 1; //TODO: get the real project
         $this->message     = $hp->purify($result->getMessage(), CODENDI_PURIFIER_BASIC, $project_id);
+
         $this->is_passed   = $result->getStatus() == Testing_TestResult_TestResult::PASS;
         $this->is_failed   = $result->getStatus() == Testing_TestResult_TestResult::FAIL;
         $this->is_not_run  = $result->getStatus() == Testing_TestResult_TestResult::NOT_RUN;
+
+        $this->passed_value  = Testing_TestResult_TestResult::PASS;
+        $this->failed_value  = Testing_TestResult_TestResult::FAIL;
+        $this->not_run_value = Testing_TestResult_TestResult::NOT_RUN;
     }
 }

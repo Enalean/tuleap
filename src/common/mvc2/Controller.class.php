@@ -109,5 +109,9 @@ abstract class MVC2_Controller {
     protected function getCurrentUser() {
         return $this->request->getCurrentUser();
     }
+
+    protected function getProject() {
+        return $this->request->getProject();
+    }
 }
 ?>
