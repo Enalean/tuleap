@@ -23,8 +23,17 @@
 
 class Testing_Campaign_CampaignInfoPresenterFactory {
 
+    /** @var Testing_Campaign_CampaignStatPresenterFactory */
+    private $stat_presenter_factory;
+
+    public function __construct(
+        Testing_Campaign_CampaignStatPresenterFactory $stat_presenter_factory
+    ) {
+        $this->stat_presenter_factory = $stat_presenter_factory;
+    }
+
     public function getPresenter(Testing_Campaign_Campaign $campaign) {
-        $stat = new Testing_Campaign_CampaignStatPresenter(rand(0, 2), rand(190, 200), rand(0, 10));
+        $stat = $this->stat_presenter_factory->getPresenter($campaign);
         return new Testing_Campaign_CampaignInfoPresenter($campaign, $stat);
     }
 }

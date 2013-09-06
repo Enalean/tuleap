@@ -50,8 +50,12 @@ class TestingRouter {
                 $dao     = new Testing_Campaign_CampaignDao();
                 $factory = new Testing_Campaign_CampaignFactory($this->getTestExecutionCollectionFactory());
                 $manager = new Testing_Campaign_CampaignManager($dao, $factory);
-                $presenter_factory = new Testing_Campaign_CampaignPresenterFactory(new Testing_TestExecution_TestExecutionInfoPresenterFactory());
-                $info_presenter_factory = new Testing_Campaign_CampaignInfoPresenterFactory();
+                $stat_presenter_factory = new Testing_Campaign_CampaignStatPresenterFactory();
+                $presenter_factory = new Testing_Campaign_CampaignPresenterFactory(
+                    $stat_presenter_factory,
+                    new Testing_TestExecution_TestExecutionInfoPresenterFactory()
+                );
+                $info_presenter_factory = new Testing_Campaign_CampaignInfoPresenterFactory($stat_presenter_factory);
                 $info_presenter_collection_factory = new Testing_Campaign_CampaignInfoPresenterCollectionFactory($manager, $info_presenter_factory);
                 $creator = new Testing_Campaign_CampaignCreator($dao);
                 return new Testing_Campaign_CampaignController($request, $info_presenter_collection_factory, $creator, $manager, $info_presenter_factory, $presenter_factory);

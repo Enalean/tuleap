@@ -23,10 +23,17 @@
 
 class Testing_Campaign_CampaignPresenterFactory {
 
+    /** @var Testing_Campaign_CampaignStatPresenterFactory */
+    private $stat_presenter_factory;
+
     /** @var Testing_TestExecution_TestExecutionInfoPresenterFactory */
     private $execution_info_presenter_factory;
 
-    public function __construct(Testing_TestExecution_TestExecutionInfoPresenterFactory $execution_info_presenter_factory) {
+    public function __construct(
+        Testing_Campaign_CampaignStatPresenterFactory $stat_presenter_factory,
+        Testing_TestExecution_TestExecutionInfoPresenterFactory $execution_info_presenter_factory
+    ) {
+        $this->stat_presenter_factory           = $stat_presenter_factory;
         $this->execution_info_presenter_factory = $execution_info_presenter_factory;
     }
 
@@ -35,7 +42,7 @@ class Testing_Campaign_CampaignPresenterFactory {
             array($this->execution_info_presenter_factory, 'getPresenter'),
             $campaign->getListOfTestExecutions()
         );
-        $stat = new Testing_Campaign_CampaignStatPresenter(rand(0, 2), rand(190, 200), rand(0, 10));
+        $stat = $this->stat_presenter_factory->getPresenter($campaign);
         return new Testing_Campaign_CampaignPresenter($campaign, $stat, $list_of_execution_presenters);
     }
 }
