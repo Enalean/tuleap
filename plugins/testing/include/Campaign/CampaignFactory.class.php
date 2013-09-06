@@ -23,10 +23,18 @@
 
 class Testing_Campaign_CampaignFactory {
 
+    /** @var Testing_TestExecution_TestExecutionCollectionFactory */
+    private $collection_factory;
+
+    public function __construct(Testing_TestExecution_TestExecutionCollectionFactory $collection_factory) {
+        $this->collection_factory = $collection_factory;
+    }
+
     /**
      * @return Testing_Campaign_Campaign
      */
     public function getInstanceFromRow(Project $project, $row) {
-        return new Testing_Campaign_Campaign($row['id'], $project, $row['name']);
+        $list_of_test_executions = $this->collection_factory->getTestExecutionCollection($row['id']);
+        return new Testing_Campaign_Campaign($row['id'], $project, $row['name'], $list_of_test_executions);
     }
 }

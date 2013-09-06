@@ -21,29 +21,18 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_Campaign_Campaign {
-
-    /** @var int */
-    private $id;
-
-    /** @var Project */
-    private $project;
+class Testing_Campaign_CampaignInfoPresenter {
 
     /** @var string */
-    private $name;
+    public $name;
 
-    /** @var Testing_TestExecution_TestExecutionCollection */
-    private $list_of_test_executions;
+    /** @var Testing_Campaign_CampaignStatPresenter */
+    public $stat;
 
-    public function __construct($id, Project $project, $name, array $list_of_test_executions) {
-        $this->id                      = $id;
-        $this->project                 = $project;
-        $this->name                    = $name;
-        $this->list_of_test_executions = $list_of_test_executions;
+    public function __construct(Testing_Campaign_Campaign $campaign, Testing_Campaign_CampaignStatPresenter $stat) {
+        $this->name = $campaign->getName();
+        $this->stat = $stat;
+        $this->show_uri = '/plugins/testing/?group_id='. $campaign->getProjectId() .'&resource=campaign&action=show&id='. $campaign->getId();
+        $this->edit_uri = '/plugins/testing/?group_id='. $campaign->getProjectId() .'&resource=campaign&action=edit&id='. $campaign->getId();
     }
-
-    public function getId() { return $this->id; }
-    public function getName() { return $this->name; }
-    public function getProjectId() { return $this->project->getId(); }
-    public function getListOfTestExecutions() { return $this->list_of_test_executions; }
 }

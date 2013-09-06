@@ -24,24 +24,16 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td><a href="/plugins/testing/?group_id=1&resource=testexecution&action=show&id=123">Add user to project</a></td>
-            <td>Nicolas Terray</td>
-            <td><span class="label label-important" title="Failed">Failed</span></td>
+        {{# list_of_execution_info_presenters }}
         </tr>
-            <td><a href="/plugins/testing/?group_id=1&resource=testexecution&action=show&id=456">Delete file via webdav</a></td>
-            <td>Nicolas Terray</td>
-            <td><span class="label label-success" title="Passed">Passed</span></td>
+            <td><a href="{{ show_uri }}">{{ name }}</a></td>
+            <td>{{ assignee }}</td>
+            <td>
+                {{# is_passed }}<span class="label label-success" title="Passed">Passed</span>{{/ is_passed }}
+                {{# is_failed }}<span class="label label-important" title="Passed">Failed</span>{{/ is_failed }}
+                {{# is_not_run }}<span class="label" title="Passed">Not run</span>{{/ is_not_run }}
+            </td>
         </tr>
-        </tr>
-            <td><a href="/plugins/testing/?group_id=1&resource=testexecution&action=show&id=456">Import CSV file into tracker v3</a></td>
-            <td>Sandra Echinard</td>
-            <td><span class="label label-success" title="Passed">Passed</span></td>
-        </tr>
-        </tr>
-            <td>…</td>
-            <td>…</td>
-            <td>…</td>
-        </tr>
+        {{/ list_of_execution_info_presenters }}
     </tbody>
 </table>

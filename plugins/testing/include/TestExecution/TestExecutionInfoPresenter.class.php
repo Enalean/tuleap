@@ -21,29 +21,17 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_Campaign_Campaign {
+class Testing_TestExecution_TestExecutionInfoPresenter {
 
-    /** @var int */
-    private $id;
+    public function __construct(Testing_TestExecution_TestExecution $test_execution) {
+        $this->name     = $test_execution->getId();
+        $this->assignee = $test_execution->getAssignee()->getRealName();
+        $project_id = 1; //$test_execution->getCampaign()->getProjectId()
+        $this->show_uri = '/plugins/testing/?group_id='. $project_id .'&resource=testexecution&action=show&id='. $test_execution->getId();
 
-    /** @var Project */
-    private $project;
-
-    /** @var string */
-    private $name;
-
-    /** @var Testing_TestExecution_TestExecutionCollection */
-    private $list_of_test_executions;
-
-    public function __construct($id, Project $project, $name, array $list_of_test_executions) {
-        $this->id                      = $id;
-        $this->project                 = $project;
-        $this->name                    = $name;
-        $this->list_of_test_executions = $list_of_test_executions;
+        $last_result = $test_execution->getLastTestResult();
+        $this->is_passed  = $last_result->getStatus() == Testing_TestResult_TestResult::PASS;
+        $this->is_failed  = $last_result->getStatus() == Testing_TestResult_TestResult::FAIL;
+        $this->is_not_run = $last_result->getStatus() == Testing_TestResult_TestResult::NOT_RUN;
     }
-
-    public function getId() { return $this->id; }
-    public function getName() { return $this->name; }
-    public function getProjectId() { return $this->project->getId(); }
-    public function getListOfTestExecutions() { return $this->list_of_test_executions; }
 }

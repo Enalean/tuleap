@@ -21,29 +21,15 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_Campaign_Campaign {
+class Testing_TestResult_TestResult {
 
-    /** @var int */
-    private $id;
+    const NOT_RUN = 0;
+    const PASS    = 1;
+    const FAIL    = 2;
 
-    /** @var Project */
-    private $project;
-
-    /** @var string */
-    private $name;
-
-    /** @var Testing_TestExecution_TestExecutionCollection */
-    private $list_of_test_executions;
-
-    public function __construct($id, Project $project, $name, array $list_of_test_executions) {
-        $this->id                      = $id;
-        $this->project                 = $project;
-        $this->name                    = $name;
-        $this->list_of_test_executions = $list_of_test_executions;
+    public function __construct($status) {
+        $this->status = $status;
     }
 
-    public function getId() { return $this->id; }
-    public function getName() { return $this->name; }
-    public function getProjectId() { return $this->project->getId(); }
-    public function getListOfTestExecutions() { return $this->list_of_test_executions; }
+    public function getStatus() { return $this->status; }
 }

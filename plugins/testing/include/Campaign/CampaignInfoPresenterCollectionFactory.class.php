@@ -21,29 +21,23 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_Campaign_Campaign {
+require_once 'common/mvc2/PluginController.class.php';
 
-    /** @var int */
-    private $id;
+class Testing_Campaign_CampaignInfoPresenterCollectionFactory {
 
-    /** @var Project */
-    private $project;
+    /** @var Testing_Campaign_CampaignManager */
+    private $manager;
 
-    /** @var string */
-    private $name;
+    /** @var Testing_Campaign_CampaignInfoPresenterFactory */
+    private $info_presenter_factory;
 
-    /** @var Testing_TestExecution_TestExecutionCollection */
-    private $list_of_test_executions;
-
-    public function __construct($id, Project $project, $name, array $list_of_test_executions) {
-        $this->id                      = $id;
-        $this->project                 = $project;
-        $this->name                    = $name;
-        $this->list_of_test_executions = $list_of_test_executions;
+    public function __construct(Testing_Campaign_CampaignManager $manager, Testing_Campaign_CampaignInfoPresenterFactory $info_presenter_factory) {
+        $this->manager                = $manager;
+        $this->info_presenter_factory = $info_presenter_factory;
     }
 
-    public function getId() { return $this->id; }
-    public function getName() { return $this->name; }
-    public function getProjectId() { return $this->project->getId(); }
-    public function getListOfTestExecutions() { return $this->list_of_test_executions; }
+    public function getListOfCampaignInfoPresenters(Project $project) {
+        $list_of_campaigns = $this->manager->getListOfCampaignsForProject($project);
+        return array_map(array($this->info_presenter_factory, 'getPresenter'), $list_of_campaigns);
+    }
 }

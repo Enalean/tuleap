@@ -21,29 +21,15 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_Campaign_Campaign {
+require_once 'common/dao/include/DataAccessObject.class.php';
 
-    /** @var int */
-    private $id;
+class Testing_TestExecution_TestExecutionDao extends DataAccessObject {
 
-    /** @var Project */
-    private $project;
+    public function searchByCampaignId($campaign_id) {
+        $campaign_id = $this->da->escapeInt($campaign_id);
 
-    /** @var string */
-    private $name;
+        $sql = "SELECT * FROM plugin_testing_testexecution WHERE campaign_id = $campaign_id";
 
-    /** @var Testing_TestExecution_TestExecutionCollection */
-    private $list_of_test_executions;
-
-    public function __construct($id, Project $project, $name, array $list_of_test_executions) {
-        $this->id                      = $id;
-        $this->project                 = $project;
-        $this->name                    = $name;
-        $this->list_of_test_executions = $list_of_test_executions;
+        return $this->retrieve($sql);
     }
-
-    public function getId() { return $this->id; }
-    public function getName() { return $this->name; }
-    public function getProjectId() { return $this->project->getId(); }
-    public function getListOfTestExecutions() { return $this->list_of_test_executions; }
 }

@@ -21,29 +21,16 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_Campaign_Campaign {
+require_once 'common/mvc2/PluginController.class.php';
 
-    /** @var int */
-    private $id;
+/**
+ * Controller for a campaign resource
+ */
+class Testing_Campaign_CampaignInfoCollectionPresenter {
 
-    /** @var Project */
-    private $project;
+    public $list_of_campaign_info_presenters;
 
-    /** @var string */
-    private $name;
-
-    /** @var Testing_TestExecution_TestExecutionCollection */
-    private $list_of_test_executions;
-
-    public function __construct($id, Project $project, $name, array $list_of_test_executions) {
-        $this->id                      = $id;
-        $this->project                 = $project;
-        $this->name                    = $name;
-        $this->list_of_test_executions = $list_of_test_executions;
+    public function __construct(array $list_of_campaign_info_presenters) {
+        $this->list_of_campaign_info_presenters = $list_of_campaign_info_presenters;
     }
-
-    public function getId() { return $this->id; }
-    public function getName() { return $this->name; }
-    public function getProjectId() { return $this->project->getId(); }
-    public function getListOfTestExecutions() { return $this->list_of_test_executions; }
 }

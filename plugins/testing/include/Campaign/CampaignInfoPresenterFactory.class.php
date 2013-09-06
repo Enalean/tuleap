@@ -21,29 +21,10 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_Campaign_Campaign {
+class Testing_Campaign_CampaignInfoPresenterFactory {
 
-    /** @var int */
-    private $id;
-
-    /** @var Project */
-    private $project;
-
-    /** @var string */
-    private $name;
-
-    /** @var Testing_TestExecution_TestExecutionCollection */
-    private $list_of_test_executions;
-
-    public function __construct($id, Project $project, $name, array $list_of_test_executions) {
-        $this->id                      = $id;
-        $this->project                 = $project;
-        $this->name                    = $name;
-        $this->list_of_test_executions = $list_of_test_executions;
+    public function getPresenter(Testing_Campaign_Campaign $campaign) {
+        $stat = new Testing_Campaign_CampaignStatPresenter(rand(0, 2), rand(190, 200), rand(0, 10));
+        return new Testing_Campaign_CampaignInfoPresenter($campaign, $stat);
     }
-
-    public function getId() { return $this->id; }
-    public function getName() { return $this->name; }
-    public function getProjectId() { return $this->project->getId(); }
-    public function getListOfTestExecutions() { return $this->list_of_test_executions; }
 }

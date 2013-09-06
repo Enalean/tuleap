@@ -30,24 +30,32 @@ class Testing_Campaign_CampaignController extends MVC2_PluginController {
 
     const RENDER_PREFIX = 'Campaign/';
 
-    /** @var Testing_Campaign_CampaignPresenterCollectionFactory */
-    private $presenter_collection_factory;
+    /** @var Testing_Campaign_CampaignInfoPresenterCollectionFactory */
+    private $pinfo_resenter_collection_factory;
+
+    /** @var Testing_Campaign_CampaignInfoPresenterFactory */
+    private $info_presenter_factory;
 
     /** @var Testing_Campaign_CampaignCreator */
     private $creator;
 
+    /** @var Testing_Campaign_CampaignManager */
+    private $manager;
+
     public function __construct(
         Codendi_Request $request,
-        Testing_Campaign_CampaignPresenterCollectionFactory $presenter_collection_factory,
+        Testing_Campaign_CampaignInfoPresenterCollectionFactory $info_presenter_collection_factory,
         Testing_Campaign_CampaignCreator $creator,
         Testing_Campaign_CampaignManager $manager,
+        Testing_Campaign_CampaignInfoPresenterFactory $info_presenter_factory,
         Testing_Campaign_CampaignPresenterFactory $presenter_factory
     ) {
         parent::__construct('testing', $request);
-        $this->presenter_collection_factory = $presenter_collection_factory;
-        $this->creator                      = $creator;
-        $this->manager                      = $manager;
-        $this->presenter_factory            = $presenter_factory;
+        $this->info_presenter_collection_factory = $info_presenter_collection_factory;
+        $this->creator                           = $creator;
+        $this->manager                           = $manager;
+        $this->info_presenter_factory            = $info_presenter_factory;
+        $this->presenter_factory                 = $presenter_factory;
     }
 
     /**
@@ -59,8 +67,8 @@ class Testing_Campaign_CampaignController extends MVC2_PluginController {
     }
 
     public function index() {
-        $presenter = new Testing_Campaign_CampaignCollectionPresenter(
-            $this->presenter_collection_factory->getListOfCampaignPresenters($this->request->getProject())
+        $presenter = new Testing_Campaign_CampaignInfoCollectionPresenter(
+            $this->info_presenter_collection_factory->getListOfCampaignInfoPresenters($this->request->getProject())
         );
         $this->render(self::RENDER_PREFIX .'index', $presenter);
     }
