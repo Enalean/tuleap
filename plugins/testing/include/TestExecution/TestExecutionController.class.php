@@ -28,8 +28,22 @@ require_once 'common/mvc2/PluginController.class.php';
  */
 class Testing_TestExecution_TestExecutionController extends MVC2_PluginController {
 
-    public function __construct(Codendi_Request $request) {
+    const RENDER_PREFIX = 'TestExecution/';
+
+    /** @var Testing_TestExecution_TestExecutionManager */
+    private $execution_manager;
+
+    /** @var Testing_Campaign_CampaignInfoPresenterFactory */
+    private $campaign_info_presenter_factory;
+
+    public function __construct(
+        Codendi_Request $request,
+        Testing_TestExecution_TestExecutionManager $execution_manager,
+        Testing_Campaign_CampaignInfoPresenterFactory $campaign_info_presenter_factory
+    ) {
         parent::__construct('testing', $request);
+        $this->execution_manager               = $execution_manager;
+        $this->campaign_info_presenter_factory = $campaign_info_presenter_factory;
     }
 
     /**
@@ -37,6 +51,13 @@ class Testing_TestExecution_TestExecutionController extends MVC2_PluginControlle
      */
     public function __call($name, $arguments) {
         $presenter = new stdClass;
-        $this->render('TestExecution/'. $name, $presenter);
+        $this->render(self::RENDER_PREFIX . $name, $presenter);
+    }
+
+    public function show() {
+        $execution = $this->execution_manager->getTestExecution($this->request->getProject(), $this->request->get('id'));
+        $campaign_info_presenter = $this->campaign_info_presenter_factory->getPresenter($execution->getCampaign());
+        $presenter = new Testing_TestExecution_TestExecutionPresenter($execution, $campaign_info_presenter);
+        $this->render(self::RENDER_PREFIX . 'show', $presenter);
     }
 }

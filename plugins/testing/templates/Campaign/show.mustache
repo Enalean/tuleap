@@ -28,11 +28,7 @@
         </tr>
             <td><a href="{{ show_uri }}">{{ name }}</a></td>
             <td>{{ assignee }}</td>
-            <td>
-                {{# is_passed }}<span class="label label-success" title="Passed">Passed</span>{{/ is_passed }}
-                {{# is_failed }}<span class="label label-important" title="Passed">Failed</span>{{/ is_failed }}
-                {{# is_not_run }}<span class="label" title="Passed">Not run</span>{{/ is_not_run }}
-            </td>
+            <td>{{> label-status }}</td>
         </tr>
         {{/ list_of_execution_info_presenters }}
     </tbody>

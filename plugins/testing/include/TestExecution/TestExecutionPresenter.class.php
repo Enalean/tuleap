@@ -21,23 +21,18 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'common/dao/include/DataAccessObject.class.php';
+class Testing_TestExecution_TestExecutionPresenter {
 
-class Testing_TestExecution_TestExecutionDao extends DataAccessObject {
+    public function __construct(Testing_TestExecution_TestExecution $test_execution, Testing_Campaign_CampaignInfoPresenter $campaign) {
+        $this->campaign = $campaign;
+        $this->name     = $test_execution->getId();
+        $this->assignee = $test_execution->getAssignee()->getRealName();
+        $project_id     = $test_execution->getCampaign()->getProjectId();
+        $this->create_uri = '/plugins/testing/?group_id='. $project_id .'&resource=testexecution&action=create';
 
-    public function searchByCampaignId($campaign_id) {
-        $campaign_id = $this->da->escapeInt($campaign_id);
-
-        $sql = "SELECT * FROM plugin_testing_testexecution WHERE campaign_id = $campaign_id";
-
-        return $this->retrieve($sql);
-    }
-
-    public function searchById($id) {
-        $id = $this->da->escapeInt($id);
-
-        $sql = "SELECT * FROM plugin_testing_testexecution WHERE id = $id";
-
-        return $this->retrieve($sql);
+        $last_result = $test_execution->getLastTestResult();
+        $this->is_passed  = $last_result->getStatus() == Testing_TestResult_TestResult::PASS;
+        $this->is_failed  = $last_result->getStatus() == Testing_TestResult_TestResult::FAIL;
+        $this->is_not_run = $last_result->getStatus() == Testing_TestResult_TestResult::NOT_RUN;
     }
 }

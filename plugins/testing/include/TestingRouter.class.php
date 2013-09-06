@@ -38,27 +38,29 @@ class TestingRouter {
     }
 
     private function getController(Codendi_Request $request) {
+        $stat_presenter_factory = new Testing_Campaign_CampaignStatPresenterFactory();
+        $info_presenter_factory = new Testing_Campaign_CampaignInfoPresenterFactory($stat_presenter_factory);
+        $campaign_dao     = new Testing_Campaign_CampaignDao();
+        $campaign_factory = new Testing_Campaign_CampaignFactory($this->getTestExecutionCollectionFeeder());
+        $campaign_manager = new Testing_Campaign_CampaignManager($campaign_dao, $campaign_factory);
         switch ($request->getValidated('resource')) {
             case self::RESOURCE_REQUIREMENT:
                 return new Testing_Requirement_RequirementController($request);
                 break;
             case self::RESOURCE_TESTEXECUTION:
-                return new Testing_TestExecution_TestExecutionController($request);
+                $dao     = new Testing_TestExecution_TestExecutionDao();
+                $manager = new Testing_TestExecution_TestExecutionManager($dao, $campaign_manager);
+                return new Testing_TestExecution_TestExecutionController($request, $manager, $info_presenter_factory);
                 break;
             case self::RESOURCE_CAMPAIGN:
             default:
-                $dao     = new Testing_Campaign_CampaignDao();
-                $factory = new Testing_Campaign_CampaignFactory($this->getTestExecutionCollectionFeeder());
-                $manager = new Testing_Campaign_CampaignManager($dao, $factory);
-                $stat_presenter_factory = new Testing_Campaign_CampaignStatPresenterFactory();
                 $presenter_factory = new Testing_Campaign_CampaignPresenterFactory(
                     $stat_presenter_factory,
                     new Testing_TestExecution_TestExecutionInfoPresenterFactory()
                 );
-                $info_presenter_factory = new Testing_Campaign_CampaignInfoPresenterFactory($stat_presenter_factory);
-                $info_presenter_collection_factory = new Testing_Campaign_CampaignInfoPresenterCollectionFactory($manager, $info_presenter_factory);
-                $creator = new Testing_Campaign_CampaignCreator($dao);
-                return new Testing_Campaign_CampaignController($request, $info_presenter_collection_factory, $creator, $manager, $info_presenter_factory, $presenter_factory);
+                $info_presenter_collection_factory = new Testing_Campaign_CampaignInfoPresenterCollectionFactory($campaign_manager, $info_presenter_factory);
+                $creator = new Testing_Campaign_CampaignCreator($campaign_dao);
+                return new Testing_Campaign_CampaignController($request, $info_presenter_collection_factory, $creator, $campaign_manager, $info_presenter_factory, $presenter_factory);
         }
     }
 

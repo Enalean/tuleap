@@ -3,9 +3,11 @@
   <li><a href="/plugins/testing/?group_id=1&resource=requirement">Requirements</a></li>
 </ul>
 
-<h2><a href="/plugins/testing/?group_id=1&resource=campaign&action=show&id=123">Tuleap 6.3 / PHP 5.3</a> »
-    Add user to project <span class="label label-success" title="Passed">Passed</span>
+<h2>{{# campaign }}<a href="{{ show_uri }}">{{ name }}</a> » {{/ campaign }}
+    {{ name }} {{> label-status }}
 </h2>
+
+<p><label>Assigned to:</label> {{ assignee }}</p>
 
 <h3>Specification</h3>
 <p><label>Execution type:</label> manual</p>

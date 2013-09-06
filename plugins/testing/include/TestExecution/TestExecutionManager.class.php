@@ -21,23 +21,29 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'common/dao/include/DataAccessObject.class.php';
+class Testing_TestExecution_TestExecutionManager {
 
-class Testing_TestExecution_TestExecutionDao extends DataAccessObject {
+    /** @var Testing_TestExecution_TestExecutionDao */
+    private $dao;
 
-    public function searchByCampaignId($campaign_id) {
-        $campaign_id = $this->da->escapeInt($campaign_id);
+    /** @var Testing_Campaign_CampaignManager */
+    private $campaign_manager;
 
-        $sql = "SELECT * FROM plugin_testing_testexecution WHERE campaign_id = $campaign_id";
-
-        return $this->retrieve($sql);
+    public function __construct(
+        Testing_TestExecution_TestExecutionDao $dao,
+        Testing_Campaign_CampaignManager $campaign_manager
+    ) {
+        $this->dao              = $dao;
+        $this->campaign_manager = $campaign_manager;
     }
 
-    public function searchById($id) {
-        $id = $this->da->escapeInt($id);
-
-        $sql = "SELECT * FROM plugin_testing_testexecution WHERE id = $id";
-
-        return $this->retrieve($sql);
+    public function getTestExecution(Project $project, $id) {
+        $row = $this->dao->searchById($id)->getRow();
+        $campaign = $this->campaign_manager->getCampaign($project, $row['campaign_id']);
+        foreach ($campaign->getListOfTestExecutions() as $execution) {
+            if ($execution->getId() == $id) {
+                return $execution;
+            }
+        }
     }
 }
