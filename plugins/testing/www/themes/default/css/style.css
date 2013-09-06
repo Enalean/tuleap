@@ -35,7 +35,10 @@
        -o-transition: border linear 0.2s, box-shadow linear 0.2s;
           transition: border linear 0.2s, box-shadow linear 0.2s;
 }
-
+#plugin_testing .error {
+    font-weight: inherit;
+    color: inherit;
+}
 #plugin_testing ul.result_choices {
     padding: 0;
     margin: 0 0 9px 0;
@@ -51,4 +54,7 @@
     background-color: #f2dede;
     color: #b94a48;
     text-align: center;
+}
+.not_run_status_row {
+    background-color: #f9f9f9;
 }

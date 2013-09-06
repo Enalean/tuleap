@@ -27,9 +27,15 @@ class Testing_TestResult_TestResult {
     const PASS    = 1;
     const FAIL    = 2;
 
-    public function __construct($status) {
-        $this->status = $status;
+    public function __construct($status, PFUser $executed_by, $executed_on, $message) {
+        $this->status      = $status;
+        $this->executed_by = $executed_by;
+        $this->executed_on = $executed_on;
+        $this->message     = $message;
     }
 
     public function getStatus() { return $this->status; }
+    public function getExecutedBy() { return $this->executed_by; }
+    public function getExecutedOn() { return $this->executed_on; }
+    public function getMessage() { return $this->message; }
 }

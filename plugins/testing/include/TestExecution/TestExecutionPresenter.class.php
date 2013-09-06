@@ -23,16 +23,17 @@
 
 class Testing_TestExecution_TestExecutionPresenter {
 
-    public function __construct(Testing_TestExecution_TestExecution $test_execution, Testing_Campaign_CampaignInfoPresenter $campaign) {
+    public function __construct(
+        Testing_TestExecution_TestExecution $test_execution,
+        Testing_Campaign_CampaignInfoPresenter $campaign,
+        Testing_TestResult_TestResultPresenter $last_result
+    ) {
         $this->campaign = $campaign;
         $this->name     = $test_execution->getId();
         $this->assignee = $test_execution->getAssignee()->getRealName();
         $project_id     = $test_execution->getCampaign()->getProjectId();
         $this->create_uri = '/plugins/testing/?group_id='. $project_id .'&resource=testexecution&action=create';
 
-        $last_result = $test_execution->getLastTestResult();
-        $this->is_passed  = $last_result->getStatus() == Testing_TestResult_TestResult::PASS;
-        $this->is_failed  = $last_result->getStatus() == Testing_TestResult_TestResult::FAIL;
-        $this->is_not_run = $last_result->getStatus() == Testing_TestResult_TestResult::NOT_RUN;
+        $this->last_result = $last_result;
     }
 }

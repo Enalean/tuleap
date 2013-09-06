@@ -24,6 +24,8 @@
 class Testing_TestResult_TestResultNotRun extends Testing_TestResult_TestResult {
 
     public function __construct() {
-        parent::__construct(Testing_TestResult_TestResult::NOT_RUN);
+        $date    = 0;
+        $message = '';
+        parent::__construct(Testing_TestResult_TestResult::NOT_RUN, UserManager::instance()->getUserById(100), $date, $message);
     }
 }

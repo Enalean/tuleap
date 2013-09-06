@@ -57,7 +57,8 @@ class Testing_TestExecution_TestExecutionController extends MVC2_PluginControlle
     public function show() {
         $execution = $this->execution_manager->getTestExecution($this->request->getProject(), $this->request->get('id'));
         $campaign_info_presenter = $this->campaign_info_presenter_factory->getPresenter($execution->getCampaign());
-        $presenter = new Testing_TestExecution_TestExecutionPresenter($execution, $campaign_info_presenter);
+        $last_result_presenter = new Testing_TestResult_TestResultPresenter($execution->getLastTestResult());
+        $presenter = new Testing_TestExecution_TestExecutionPresenter($execution, $campaign_info_presenter, $last_result_presenter);
         $this->render(self::RENDER_PREFIX . 'show', $presenter);
     }
 }
