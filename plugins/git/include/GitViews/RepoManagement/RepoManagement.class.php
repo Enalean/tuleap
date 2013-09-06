@@ -35,7 +35,7 @@ class GitViews_RepoManagement {
     private $request;
 
     /**
-     * @var array
+     * @var Git_RemoteServer_GerritServer[]
      */
     private $gerrit_servers;
 
@@ -43,12 +43,12 @@ class GitViews_RepoManagement {
     private $driver;
 
     public function __construct(GitRepository $repository, Codendi_Request $request, Git_Driver_Gerrit $driver, array $gerrit_servers) {
-        $this->repository     = $repository;
-        $this->request        = $request;
-        $this->driver         = $driver;
-        $this->gerrit_servers = $gerrit_servers;
-        $this->panes          = $this->buildPanes($repository);
-        $this->current_pane   = 'settings';
+        $this->repository       = $repository;
+        $this->request          = $request;
+        $this->driver           = $driver;
+        $this->gerrit_servers   = $gerrit_servers;
+        $this->panes            = $this->buildPanes($repository);
+        $this->current_pane     = 'settings';
         if (isset($this->panes[$request->get('pane')])) {
             $this->current_pane = $request->get('pane');
         }

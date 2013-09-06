@@ -514,11 +514,6 @@ class GitActions extends PluginActions {
         }
     }
 
-    public function disconnectFromGerrit(GitRepository $repository) {
-        $repository->getBackend()->disconnectFromGerrit($repository);
-        $this->git_system_event_manager->queueRepositoryUpdate($repository);
-    }
-
     private function redirectToRepo($projectId, $repoId) {
         $this->getController()->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
     }
@@ -526,8 +521,30 @@ class GitActions extends PluginActions {
     private function addError($error_key) {
         $this->getController()->addError($this->getText($error_key));
     }
-    
-    
+
+    public function disconnectFromGerrit(GitRepository $repository) {
+        $repository->getBackend()->disconnectFromGerrit($repository);
+        $this->git_system_event_manager->queueRepositoryUpdate($repository);
+
+        $delete_gerrit_project = $this->request->get(GitViews_RepoManagement_Pane_Gerrit::OPTION_DELETE_GERRIT_PROJECT);
+
+        if ($delete_gerrit_project) {
+            $this->deleteGerritproject($repository);
+        }
+    }
+
+    private function deleteGerritproject(GitRepository $repository) {
+        $project = $repository->getProject();
+        $server = $this->gerrit_server_factory->getServerById($repository->getRemoteServerId());
+        if ($project && $server) {
+            $this->driver->deleteProject($server, $project->getUnixName().'/'.$repository->getName());
+            $this->setGerritProjectAsDeleted($repository);
+        }
+    }
+
+    private function setGerritProjectAsDeleted($repository) {
+        $repository->getBackend()->setGerritProjectAsDeleted($repository);
+    }
 }
 
 ?>

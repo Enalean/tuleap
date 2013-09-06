@@ -380,7 +380,7 @@ class Git_Driver_Gerrit {
     /**
      * Reset the parent of a project
      * @param Git_RemoteServer_GerritServer $server
-     * @param type $project_name
+     * @param string $project_name
      */
     public function resetProjectInheritance(Git_RemoteServer_GerritServer $server, $project_name) {
         $query = self::COMMAND .' set-project-parent '. $project_name .' --parent '. self::DEFAULT_PARENT_PROJECT;
@@ -394,7 +394,12 @@ class Git_Driver_Gerrit {
      */
     public function isDeletePluginEnabled(Git_RemoteServer_GerritServer $server) {
         $query = self::COMMAND . ' plugin ls';
-        $plugins_list = $this->ssh->execute($server, $query);
+
+        try {
+            $plugins_list = $this->ssh->execute($server, $query);
+        } catch(Exception $e) {
+            return false;
+        }
 
         if (! $this->isDeletePluginInstalled($plugins_list)) {
             return false;
@@ -408,6 +413,16 @@ class Git_Driver_Gerrit {
 
     private function isDeletePluginInstalled($plugins_list) {
         return strstr($plugins_list, self::DELETEPROJECT_PLUGIN_NAME);
+    }
+
+    /**
+     * @param Git_RemoteServer_GerritServer $server
+     * @param string $project_name
+     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     */
+    public function deleteProject(Git_RemoteServer_GerritServer $server, $project_name) {
+        $query = ' deleteproject delete ' . $project_name . ' --yes-really-delete';
+        $this->ssh->execute($server, $query);
     }
 }
 ?>
