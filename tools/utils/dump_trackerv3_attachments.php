@@ -50,13 +50,27 @@ EOT;
 function get_all_attachment_ids() {
     $attachments = array();
 
+    $file_ids = array();
     $res = db_query('
-        SELECT id, group_artifact_id
+        SELECT id, artifact_id
         FROM artifact_file
-            INNER JOIN artifact USING (artifact_id)
     ');
     while ($row = db_fetch_array($res)) {
-        $attachments[$row['id']] = $row['group_artifact_id'];
+        $file_ids[$row['artifact_id']][] = $row['id'];
+        $attachments[$row['id']] = false;
+    }
+    db_free_result($res);
+
+    $sql = '
+        SELECT artifact_id, group_artifact_id
+        FROM artifact
+        WHERE artifact_id IN (' . implode(',', array_keys($file_ids)) . ')
+    ';
+    $res = db_query($sql);
+    while ($row = db_fetch_array($res)) {
+        foreach ($file_ids[$row['artifact_id']] as $file_id) {
+            $attachments[$file_id] = $row['group_artifact_id'];
+        }
     }
     db_free_result($res);
 
