@@ -102,6 +102,12 @@ class FRSFile extends Error {
     var $file_location;
 
     /**
+     *
+     * @var string comment/description of the file
+     */
+    private $comment;
+
+    /**
      * @var FRSRelease $release The release the file belongs to
      */
     protected $release;
@@ -121,6 +127,7 @@ class FRSFile extends Error {
         $this->reference_md5 = null;
         $this->user_id       = null;
         $this->file_location = null;
+        $this->comment       = null;
 
         if ($data_array) {
             $this->initFromArray($data_array);
@@ -304,6 +311,14 @@ class FRSFile extends Error {
         return $this->release;
     }
 
+    public function getComment() {
+        return $this->comment;
+    }
+
+    public function setComment($comment) {
+        $this->comment = $comment;
+    }
+
 	function initFromArray($array) {
 		if (isset($array['file_id']))       $this->setFileID($array['file_id']);
 		if (isset($array['filename']))      $this->setFileName($array['filename']);
@@ -318,6 +333,7 @@ class FRSFile extends Error {
         if (isset($array['computed_md5']))  $this->setComputedMd5($array['computed_md5']);
         if (isset($array['reference_md5'])) $this->setReferenceMd5($array['reference_md5']);
         if (isset($array['user_id']))       $this->setUserID($array['user_id']);
+        if (isset($array['comment']))       $this->setComment($array['comment']);
     }
 
     function toArray() {
@@ -336,6 +352,7 @@ class FRSFile extends Error {
         $array['computed_md5']  = $this->getComputedMd5();
         $array['reference_md5'] = $this->getReferenceMd5();
         $array['user_id']       = $this->getUserID();
+        $array['comment']       = $this->getComment();
         
         return $array;
     }

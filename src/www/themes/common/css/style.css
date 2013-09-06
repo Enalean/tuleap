@@ -313,6 +313,10 @@ td.artifact_spacer { width: 5%; }
 .frs_user_col {
     width: 8%;
 }
+td.frs_comment {
+    font-size: 0.9em;
+    padding-left: 20px;
+}
 fieldset.package {
     margin-bottom: 20px;
 }
@@ -4720,3 +4724,5 @@ input[type="submit"].btn {
     margin-left: 1em;
 }
 /* }}} */
+
+

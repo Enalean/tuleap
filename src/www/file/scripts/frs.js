@@ -143,6 +143,9 @@ function add_new_file() {
 	cell.appendChild(md5sum);	
 	row.appendChild(cell);
 
+        var comment_cell = Builder.node('textarea', { id:'comment_'+id, cols: 20, rows: 1, name:'comment'});
+        row.appendChild(comment_cell);
+
 	$('files_body').appendChild(row);
     current_select_number++;
 }
@@ -164,6 +167,7 @@ function onselectchange(select, number, id, cell_trash, image) {
         $('processor_'+id).name='file_processor[]';
         $('type_'+id).name='file_type[]';
         $('reference_md5_'+id).name = 'reference_md5[]';
+        $('comment_'+id).name = 'comment[]';
         cell_trash.appendChild(image);
     }else if(select.options[select.selectedIndex].value != '-1'){
         var h = {};

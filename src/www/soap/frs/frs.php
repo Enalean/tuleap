@@ -94,6 +94,7 @@ $server->wsdl->addComplexType(
         'computed_md5'  => array('name'=>'computed_md5',  'type' => 'xsd:string'),
         'reference_md5' => array('name'=>'reference_md5', 'type' => 'xsd:string'),
         'user_id'       => array('name'=>'user_id',       'type' => 'xsd:int'),
+        'comment'       => array('name'=>'comment',       'type' => 'xsd:string'),
     )
 );
 
@@ -292,15 +293,16 @@ $server->register(
 $server->register(
     'addFile',
     array(
-        'sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int',
-        'package_id'=>'xsd:int',
-        'release_id'=>'xsd:int',
-        'filename'=>'xsd:string',
-        'base64_contents'=>'xsd:string',
-        'type_id'=>'xsd:int',
-        'processor_id'=>'xsd:int',
-        'reference_md5'=>'xsd:string'
+        'sessionKey'        => 'xsd:string',
+        'group_id'          => 'xsd:int',
+        'package_id'        => 'xsd:int',
+        'release_id'        => 'xsd:int',
+        'filename'          => 'xsd:string',
+        'base64_contents'   => 'xsd:string',
+        'type_id'           => 'xsd:int',
+        'processor_id'      => 'xsd:int',
+        'reference_md5'     => 'xsd:string',
+        'comment'           => 'xsd:string'
         ),
     array('addFile'=>'xsd:int'),
     $uri,
@@ -308,7 +310,7 @@ $server->register(
     'rpc',
     'encoded',
     'Add a File to the File Release Manager of the project group_id with the values given by 
-     package_id, release_id, filename, base64_contents, type_id, processor_id and reference_md5. 
+     package_id, release_id, filename, base64_contents, type_id, processor_id, reference_md5 and comment.
      The content of the file must be encoded in base64.
      Returns the ID of the created file if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, 
@@ -340,14 +342,15 @@ $server->register(
 $server->register(
     'addUploadedFile',
     array(
-        'sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int',
-        'package_id'=>'xsd:int',
-        'release_id'=>'xsd:int',
-        'filename'=>'xsd:string',
-        'type_id'=>'xsd:int',
-        'processor_id'=>'xsd:int',
-        'reference_md5'=>'xsd:string'
+        'sessionKey'    =>'xsd:string',
+        'group_id'      =>'xsd:int',
+        'package_id'    =>'xsd:int',
+        'release_id'    =>'xsd:int',
+        'filename'      =>'xsd:string',
+        'type_id'       =>'xsd:int',
+        'processor_id'  =>'xsd:int',
+        'reference_md5' =>'xsd:string',
+        'comment'       => 'xsd:string'
         ),
     array('addUploadedFile'=>'xsd:int'),
     $uri,
@@ -355,7 +358,7 @@ $server->register(
     'rpc',
     'encoded',
     'Add a File to the File Release Manager of the project group_id with the values given by 
-     package_id, release_id, filename, type_id, processor_id and reference_md5. 
+     package_id, release_id, filename, type_id, processor_id, reference_md5 and comment.
      The file must already be present in the incoming directory.
      Returns the ID of the created file if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, 
@@ -429,6 +432,31 @@ $server->register(
     'encoded',
     'Delete a release or all empty releases in package package_id.
     Returns the list of deleted releases if succeed, or a soap fault if an error occured.'
+);
+
+$server->register(
+    'updateFileComment',
+    array(
+        'sessionKey'        => 'xsd:string',
+        'group_id'          => 'xsd:int',
+        'package_id'        => 'xsd:int',
+        'release_id'        => 'xsd:int',
+        'file_id'           => 'xsd:int',
+        'comment'           => 'xsd:string',
+        ),
+    array('updateFileCommentResponse'=>'xsd:boolean'),
+    $uri,
+    $uri.'#updateFileComment',
+    'rpc',
+    'encoded',
+    'Update the comment of a File in a release with the values given by
+     group_id, package_id, release_id, file_id and comment.
+     Returns boolean if the update succeed.
+     Returns a soap fault if the group_id is not a valid one,
+     if the package does not match with the group ID,
+     if the release does not match with the package ID,
+     if the file does not match with the file ID,
+     or if the update failed.'
 );
 
 } else {
@@ -862,7 +890,7 @@ function getFileInfo($sessionKey, $group_id, $package_id, $release_id, $file_id)
  * @param Object{FRSFile} $file the file to convert.
  * @return array the SOAPFRSFile corresponding to the FRSFile Object
  */
-function file_to_soap($file) {
+function file_to_soap(FRSFile $file) {
     $return = null;
     if ($file->isError()) {
         //skip if error
@@ -880,6 +908,7 @@ function file_to_soap($file) {
             'computed_md5'  => $file->getComputedMd5(),
             'reference_md5' => $file->getReferenceMd5(),
             'user_id'       => $file->getUserID(),
+            'comment'       => $file->getComment(),
         );
     }
     return $return;
@@ -1040,7 +1069,8 @@ function getFileChunk($sessionKey,$group_id,$package_id,$release_id,$file_id,$of
  * @param string $base64_contents the content of the file, encoded in base64
  * @param int $type_id the ID of the type of the file
  * @param int $processor_id the ID of the processor of the file
- * @param string reference_md5 the md5sum of the file calculated in client side
+ * @param string $reference_md5 the md5sum of the file calculated in client side
+ * @param string $comment A comment/description of the uploaded file
  * @return int the ID of the new created file, 
  *              or a soap fault if :
  *              - group_id does not match with a valid project, 
@@ -1051,9 +1081,8 @@ function getFileChunk($sessionKey,$group_id,$package_id,$release_id,$file_id,$of
  *              - the user does not have the permissions to create a file
  *              - the file creation failed.
  */
-function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64_contents,$type_id,$processor_id,$reference_md5) {
+function addFile($sessionKey, $group_id, $package_id, $release_id, $filename, $base64_contents, $type_id, $processor_id, $reference_md5, $comment) {
     if (session_continue($sessionKey)) {
-
         try {
             $pm = ProjectManager::instance();
             $pm->getGroupByIdForSoap($group_id, 'addFile');
@@ -1092,7 +1121,7 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
             
             // call addUploadedFile function
             $uploaded_filename = basename($filename);
-            return addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$uploaded_filename,$type_id,$processor_id,$reference_md5);
+            return addUploadedFile($sessionKey, $group_id, $package_id, $release_id, $uploaded_filename, $type_id, $processor_id, $reference_md5, $comment);
             
         } else {
             return new SoapFault(invalid_file_fault, 'User is not allowed to add a file', 'addFile');
@@ -1102,6 +1131,72 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
     }
 }
 
+/**
+ * updateFileComment - Update the comment of a File in a release with the values given by
+ *  group_id, package_id, release_id, file_id and comment.
+ *
+ * @param string    $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int       $group_id the ID of the group we want to add the file
+ * @param int       $package_id the ID of the package we want to add the file
+ * @param int       $release_id the ID of the release we want to add the file
+ * @param int       $file_id the ID of the file we want to retrieve the content
+ * @param string    $comment A comment/description of the uploaded file
+ * @return boolean true if the file was updated, or a soap fault if:
+ *      - group_id does not match with a valid project,
+ *      - the package_id, release_id, file_id does not match
+ *      - the user does not have permissions to delete this file
+ *      - the system was not able to update the file.
+ */
+    function updateFileComment($sessionKey, $group_id, $package_id, $release_id, $file_id, $comment) {
+        if (session_continue($sessionKey)) {
+            try {
+                $project_manager = ProjectManager::instance();
+                $project_manager->getGroupByIdForSoap($group_id, 'updateFileComment');
+            } catch (SoapFault $e) {
+                return $e;
+            }
+
+            // retieve the package
+            $pkg_fact = new FRSPackageFactory();
+            $package =& $pkg_fact->getFRSPackageFromDb($package_id);
+            if (!$package || $package->getGroupID() != $group_id) {
+                return new SoapFault(invalid_package_fault,'Invalid Package','updateFileComment');
+            }
+
+            // retrieve the release
+            $release_fact = new FRSReleaseFactory();
+            $release =& $release_fact->getFRSReleaseFromDb($release_id);
+            if (!$release || $release->getPackageID() != $package_id) {
+                return new SoapFault(invalid_release_fault,'Invalid Release','updateFileComment');
+            }
+
+            // retrieve the file
+            $file_factory = new FRSFileFactory();
+
+            if (! $file_factory->userCanAdd($group_id)) {
+                return new SoapFault(invalid_file_fault, 'User is not allowed to update file', 'updateFileComment');
+            }
+
+            $file = $file_factory->getFRSFileFromDb($file_id);
+            if (! $file) {
+                return new SoapFault(invalid_file_fault,'Invalid File','updateFileComment');
+            }
+
+            $data_array = array(
+                'comment'   => $comment,
+                'file_id'   => $file_id
+            );
+            try {
+                $file_factory->update($data_array);
+            } catch (Exception $e) {
+                return new SoapFault(invalid_file_fault,'Unable to update: ' . $e->getMessage(),'updateFileComment');
+            }
+        } else {
+            return new SoapFault(invalid_session_fault,'Invalid Session','updateFileComment');
+        }
+
+        return true;
+    }
 /**
  * addFileChunk - add a chunk of a file in the incoming directory.
  *
@@ -1147,7 +1242,8 @@ function addFileChunk($sessionKey, $filename, $contents, $first_chunk) {
  * @param string $filename the name of the file we want to add (only file name, not directory)
  * @param int $type_id the ID of the type of the file
  * @param int $processor_id the ID of the processor of the file
- * @param string reference_md5 the md5sum of the file calculated in client side
+ * @param string $reference_md5 the md5sum of the file calculated in client side
+ * @param string $comment A comment/description of the uploaded file
  * @return int the ID of the new created file, 
  *              or a soap fault if :
  *              - group_id does not match with a valid project, 
@@ -1159,7 +1255,7 @@ function addFileChunk($sessionKey, $filename, $contents, $first_chunk) {
  *              - the md5 comparison failed
  *              - the file creation failed.
  */
-function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename,$type_id,$processor_id,$reference_md5) {
+function addUploadedFile($sessionKey, $group_id, $package_id, $release_id, $filename, $type_id, $processor_id, $reference_md5, $comment) {
     if (session_continue($sessionKey)) {
 
         try {
@@ -1194,6 +1290,7 @@ function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename
             $file->setProcessorID($processor_id);
             $file->setReferenceMd5($reference_md5);
             $file->setUserID($user->getId());
+            $file->setComment($comment);
             try {
                 $file_fact->createFile($file);
                 $release_fact->emailNotification($release);
@@ -1438,6 +1535,7 @@ $server->addFunction(
             'deleteFile',
             'deleteEmptyPackage',
             'deleteEmptyRelease',
+            'updateFileComment',
             ));
 
 }
