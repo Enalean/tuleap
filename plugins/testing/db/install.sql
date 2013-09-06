@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS plugin_testing_testexecution;
 CREATE TABLE plugin_testing_testexecution(
   id int(11) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
   campaign_id int(11) unsigned NOT NULL,
+  test_case_id int(11) unsigned NULL,
   test_version_id int(11) unsigned NULL,
   assigned_to int(11) NOT NULL,
 ) ENGINE='InnoDB';

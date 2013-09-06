@@ -21,22 +21,21 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_TestExecution_TestExecutionPresenter {
+class Testing_TestCase_TestCase {
 
-    public function __construct(
-        Testing_TestExecution_TestExecution $test_execution,
-        Testing_Campaign_CampaignInfoPresenter $campaign,
-        array $results /** @var Testing_TestResult_TestResultPresenter[] */,
-        $specification
-    ) {
-        $this->campaign = $campaign;
-        $this->name     = $test_execution->getName();
-        $this->assignee = $test_execution->getAssignee()->getRealName();
-        $this->results  = $results;
-        $project_id     = $test_execution->getCampaign()->getProjectId();
-        $this->create_result_uri = '/plugins/testing/?group_id='. $project_id .'&resource=testresult&action=create&execution_id='. $test_execution->getId();
+    private $id;
 
-        $this->last_result   = end($results);
-        $this->specification = $specification;
+    public function __construct($id) {
+        $this->id = $id;
+    }
+
+    public function getId() { return $this->id; }
+
+    public function getName() {
+        return $this->getArtifact()->getTitle();
+    }
+
+    private function getArtifact() {
+        return Tracker_ArtifactFactory::instance()->getArtifactById($this->id);
     }
 }

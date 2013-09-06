@@ -61,7 +61,8 @@ class Testing_TestExecution_TestExecutionController extends MVC2_PluginControlle
         foreach ($execution->getListOfTestResults() as $result) {
             $list_of_result_presenter[] = new Testing_TestResult_TestResultPresenter($result);
         }
-        $presenter = new Testing_TestExecution_TestExecutionPresenter($execution, $campaign_info_presenter, $list_of_result_presenter);
+        $specification = $execution->getSpecification();
+        $presenter = new Testing_TestExecution_TestExecutionPresenter($execution, $campaign_info_presenter, $list_of_result_presenter, $specification);
         $this->render(self::RENDER_PREFIX . 'show', $presenter);
     }
 }
