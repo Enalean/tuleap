@@ -21,11 +21,12 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_Campaign_CampaignCollectionPresenter {
+class Testing_Requirement_RequirementInfoCollectionPresenter {
 
-    public $list_of_campaign_presenters;
+    public $list_of_requirement_versions;
 
-    public function __construct(array $list_of_campaign_presenters) {
-        $this->list_of_campaign_presenters = $list_of_campaign_presenters;
+    public function __construct(Project $project, array $list_of_requirement_versions) {
+        $this->list_of_requirement_versions = $list_of_requirement_versions;
+        $this->new_uri  = '/plugins/testing/?group_id='. $project->getId() .'&resource=requirement&action=new';
     }
 }

@@ -28,6 +28,8 @@ require_once 'common/mvc2/PluginController.class.php';
  */
 class Testing_Requirement_RequirementController extends MVC2_PluginController {
 
+    const RENDER_PREFIX = 'Requirement/';
+
     public function __construct(Codendi_Request $request) {
         parent::__construct('testing', $request);
     }
@@ -37,7 +39,37 @@ class Testing_Requirement_RequirementController extends MVC2_PluginController {
      */
     public function __call($name, $arguments) {
         $presenter = new stdClass;
-        $this->render('Requirement/'. $name, $presenter);
+        $this->render(self::RENDER_PREFIX . $name, $presenter);
+    }
+
+    public function index() {
+        $presenter = new Testing_Requirement_RequirementInfoCollectionPresenter($this->getProject(), $this->getListOfRequirementInfoPresenters());
+        $this->render(self::RENDER_PREFIX . __FUNCTION__, $presenter);
+    }
+
+    public function show() {
+        $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($this->request->get('id'));
+        $requirement = new Testing_Requirement_Requirement($artifact->getId());
+        $i = 1;
+        foreach ($artifact->getChildrenForUser($this->getCurrentUser()) as $subartifact) {
+            $requirement_version = new Testing_Requirement_RequirementVersion($subartifact->getId(), $requirement, $i++);
+        }
+        $presenter = new Testing_Requirement_RequirementVersionPresenter($this->getProject(), $requirement_version, array());
+
+        $this->render(self::RENDER_PREFIX . __FUNCTION__, $presenter);
+    }
+
+    private function getListOfRequirementInfoPresenters() {
+        $list_of_requirement_info_presenters = array();
+        foreach(Tracker_ArtifactFactory::instance()->getArtifactsByTrackerId(223) as $artifact) {
+            $requirement = new Testing_Requirement_Requirement($artifact->getId());
+            $i = 1;
+            foreach ($artifact->getChildrenForUser($this->getCurrentUser()) as $subartifact) {
+                $requirement_version = new Testing_Requirement_RequirementVersion($subartifact->getId(), $requirement, $i++);
+            }
+            $list_of_requirement_info_presenters[] = new Testing_Requirement_RequirementVersionInfoPresenter($this->getProject(), $requirement_version);
+        }
+        return $list_of_requirement_info_presenters;
     }
 
     public function create() {

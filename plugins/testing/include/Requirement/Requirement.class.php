@@ -21,11 +21,16 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_Campaign_CampaignCollectionPresenter {
+class Testing_Requirement_Requirement {
 
-    public $list_of_campaign_presenters;
+    public function __construct($id) {
+        $this->id = $id;
+    }
 
-    public function __construct(array $list_of_campaign_presenters) {
-        $this->list_of_campaign_presenters = $list_of_campaign_presenters;
+    public function getId() { return $this->id; }
+    public function getName() { return $this->getArtifact()->getTitle(); }
+
+    private function getArtifact() {
+        return Tracker_ArtifactFactory::instance()->getArtifactById($this->id);
     }
 }
