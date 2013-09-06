@@ -2679,7 +2679,7 @@ function getArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artif
         } elseif (! $a->userCanView()) {
             return new SoapFault(get_artifact_fault,'Permissions denied','getArtifactAttachedFile');
         }
-        $file = artifactfile_to_soap($file_id, $a->getAttachedFiles(), true);
+        $file = artifactfile_to_soap($file_id, $a, true);
         if ($file != null) {
         	   return $file;
         } else {
@@ -2710,18 +2710,24 @@ function artifactfiles_to_soap($attachedfiles_arr, $set_bin_data = false) {
     return $return;
 }
 
-function artifactfile_to_soap($file_id, $attachedfiles_arr, $set_bin_data) {
+function artifactfile_to_soap($file_id, Artifact $artifact, $set_bin_data) {
     $return = null;
+    $attachedfiles_arr = $artifact->getAttachedFiles();
     $rows = db_numrows($attachedfiles_arr);
     for ($i=0; $i<$rows; $i++) {
         $file = array();
-        $file['id'] = db_result($attachedfiles_arr, $i, 'id');
+        $attachment_id = db_result($attachedfiles_arr, $i, 'id');
+        $file['id'] = $attachment_id;
         $file['artifact_id'] = db_result($attachedfiles_arr, $i, 'artifact_id');
         $file['filename'] = db_result($attachedfiles_arr, $i, 'filename');
         $file['description'] = SimpleSanitizer::unsanitize(db_result($attachedfiles_arr, $i, 'description'));
         if ($set_bin_data) {
-            $bin_data = db_result($attachedfiles_arr, $i, 'bin_data');
-            $file['bin_data'] = $bin_data;
+            $attachment_path = ArtifactFile::getPathOnFilesystem($artifact, $attachment_id);
+            if (is_file($attachment_path)) {
+                $file['bin_data'] = file_get_contents($attachment_path);
+            } else {
+                $file['bin_data'] = db_result($attachedfiles_arr, $i, 'bin_data');
+            }
         }
         $file['filesize'] = db_result($attachedfiles_arr, $i, 'filesize');
         $file['filetype'] = db_result($attachedfiles_arr, $i, 'filetype');

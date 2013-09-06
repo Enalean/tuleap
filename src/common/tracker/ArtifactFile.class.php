@@ -13,6 +13,8 @@
 
 class ArtifactFile extends Error {
 
+    const ROOT_DIRNAME = 'trackerv3';
+
 	/** 
 	 * The artifact object.
 	 *
@@ -104,7 +106,7 @@ class ArtifactFile extends Error {
 		$res=db_query("INSERT INTO artifact_file
 			(artifact_id,description,bin_data,filename,filesize,filetype,adddate,submitted_by)
 			VALUES 
-			('". db_ei($this->Artifact->getID()) ."','". db_es($description) ."','".  db_es($bin_data)  ."','". db_es($filename) ."',
+			('". db_ei($this->Artifact->getID()) ."','". db_es($description) ."','','". db_es($filename) ."',
 			'".  db_ei($filesize)  ."','".  db_es($filetype)  ."','". time() ."','".  db_ei($userid)  ."')"); 
 
 		$id=db_insertid($res,'artifact_file','id');
@@ -114,6 +116,7 @@ class ArtifactFile extends Error {
 			return false;
 		} else {
 			$this->clearError();
+                        $this->createOnFileSystem($id, $bin_data);
 
 			$changes['attach']['description'] = $description;
 			$changes['attach']['name'] = $filename;
@@ -133,7 +136,31 @@ class ArtifactFile extends Error {
 		}
 	}
 
-	/**
+        private function createOnFileSystem($id, $bin_data) {
+            $parent_directory = $this->getParentDirectory();
+            if (! is_dir($parent_directory)) {
+                mkdir($parent_directory, 0750, true);
+            }
+            file_put_contents($parent_directory . DIRECTORY_SEPARATOR . $id, $bin_data);
+        }
+
+        public function getParentDirectory() {
+            return self::getParentDirectoryForArtifact($this->Artifact);
+        }
+
+        public static function getParentDirectoryForArtifact(Artifact $artifact) {
+            return self::getParentDirectoryForArtifactTypeId($artifact->getArtifactType()->getID());
+        }
+
+        public static function getParentDirectoryForArtifactTypeId($artifact_type_id) {
+            return Config::get('sys_data_dir') . DIRECTORY_SEPARATOR . self::ROOT_DIRNAME . DIRECTORY_SEPARATOR . $artifact_type_id;
+        }
+
+        public static function getPathOnFilesystem(Artifact $artifact, $attachment_id) {
+            return self::getParentDirectoryForArtifact($artifact) . DIRECTORY_SEPARATOR . $attachment_id;
+        }
+
+        /**
 	 *	delete - delete this artifact file from the db.
 	 *
 	 *	@return	boolean	success.
@@ -149,11 +176,35 @@ class ArtifactFile extends Error {
 			$this->setError('ArtifactFile: '.$Language->getText('tracker_common_file','del_err'));
 			return false;
 		} else {
+                    $this->deleteOnFileSystem();
 			$new_value = $this->Artifact->getAttachedFileNames();
 			$this->Artifact->addHistory('attachment',$old_value,$new_value);
 			return true;
 		}
 	}
+
+        private function deleteOnFileSystem() {
+            $attachement_path = self::getPathOnFilesystem($this->Artifact, $this->getID());
+            if (is_file($attachement_path)) {
+                unlink($attachement_path);
+            }
+        }
+
+        public static function deleteAllByArtifactType($artifact_type_id) {
+            $parent_path = self::getParentDirectoryForArtifactTypeId($artifact_type_id);
+            if (is_dir($parent_path)) {
+                try {
+                    $iterator = new DirectoryIterator($parent_path);
+                    foreach ($iterator as $file) {
+                        if (! $file->isDot()) {
+                            unlink($file->getPathname());
+                        }
+                    }
+                } catch (Exception $exception) {
+                }
+                rmdir($parent_path);
+            }
+        }
 
 	/**
 	 *	fetchData - re-fetch the data for this ArtifactFile from the database.

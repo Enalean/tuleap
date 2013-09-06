@@ -350,6 +350,9 @@ class ArtifactTypeFactory extends Error {
 
 		} // while        
 
+                // Delete file attachments
+                ArtifactFile::deleteAllByArtifactType($atid);
+
 		// Delete artifact_group_list
 		$sql = "DELETE FROM artifact_group_list
 			    WHERE group_artifact_id=". db_ei($atid);

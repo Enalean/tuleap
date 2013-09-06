@@ -51,7 +51,12 @@ if (db_numrows($result)>0) {
                     header('Content-Disposition: filename="'.$http->purify(db_result($result,0,'filename')).'"');
                     header('Content-Description: '. $http->purify(db_result($result,0,'description')));
                 
-                    echo db_result($result,0,'bin_data');
+                    $attachment_path = ArtifactFile::getPathOnFilesystem($a, $id);
+                    if (is_file($attachment_path)) {
+                        readfile($attachment_path);
+                    } else {
+                        echo db_result($result,0,'bin_data');
+                    }
                     exit();
                 }
             }
