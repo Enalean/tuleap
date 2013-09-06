@@ -669,19 +669,23 @@ class GitActions_disconnectFromGerritTest extends TuleapTestCase {
         );
     }
 
-    public function itDelegatesToGitoliteBackend() {
+    public function itDelegatesToEventManager() {
         expect($this->backend)->disconnectFromGerrit()->once();
         expect($this->system_event_manager)->queueRepositoryUpdate($this->repo)->once();
         $this->actions->disconnectFromGerrit($this->repo);
     }
 
-    public function itDeletesGerritprojectIfOptionChosen() {
+    public function itDeletesGerritProjectIfOptionChosen() {
         stub($this->request)->get(GitViews_RepoManagement_Pane_Gerrit::OPTION_DELETE_GERRIT_PROJECT)->returns(true);
-        stub($this->repo)->getProject()->returns(mock('Project'));
-        stub($this->gerrit_server_factory)->getServerById()->returns(4545);
 
-        expect($this->driver)->deleteProject()->once();
+        expect($this->system_event_manager)->queueRemoteProjectDeletion($this->repo, $this->driver)->once();
+        $this->actions->disconnectFromGerrit($this->repo);
+    }
 
+    public function itDoesNotDeletesGerritProjectIfOptionNotChosen() {
+        stub($this->request)->get(GitViews_RepoManagement_Pane_Gerrit::OPTION_DELETE_GERRIT_PROJECT)->returns(false);
+
+        expect($this->system_event_manager)->queueRemoteProjectDeletion($this->repo, $this->driver)->never();
         $this->actions->disconnectFromGerrit($this->repo);
     }
 }

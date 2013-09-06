@@ -417,11 +417,12 @@ class Git_Driver_Gerrit {
 
     /**
      * @param Git_RemoteServer_GerritServer $server
-     * @param string $project_name
+     * @param string $gerrit_project_full_name E.g. bugs or bugs/repository1
+     * 
      * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
      */
-    public function deleteProject(Git_RemoteServer_GerritServer $server, $project_name) {
-        $query = ' deleteproject delete ' . $project_name . ' --yes-really-delete';
+    public function deleteProject(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name) {
+        $query = ' deleteproject delete ' . $gerrit_project_full_name . ' --yes-really-delete';
         $this->ssh->execute($server, $query);
     }
 }

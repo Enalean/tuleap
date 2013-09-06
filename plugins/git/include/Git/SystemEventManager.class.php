@@ -55,6 +55,15 @@ class Git_SystemEventManager {
         );
     }
 
+    public function queueRemoteProjectDeletion(GitRepository $repository) {
+        $this->system_event_manager->createEvent(
+            SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME,
+            $repository->getId(). SystemEvent::PARAMETER_SEPARATOR . $repository->getRemoteServerId(),
+            SystemEvent::PRIORITY_HIGH,
+            SystemEvent::OWNER_APP
+        );
+    }
+
     public function queueRepositoryFork(GitRepository $old_repository, GitRepository $new_repository) {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_REPO_FORK::NAME,
@@ -102,6 +111,7 @@ class Git_SystemEventManager {
             SystemEvent_GIT_REPO_ACCESS::NAME,
             SystemEvent_GIT_GERRIT_MIGRATION::NAME,
             SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME,
+            SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME
         );
     }
 }
