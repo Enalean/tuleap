@@ -5,6 +5,7 @@
         Methods
 	-------
 	* updateFileComment: Update the comment of a File of the release manager.
+	* updateRelease: Update the properites of a release in the release manager.
 
 	What Changed?
 	============
