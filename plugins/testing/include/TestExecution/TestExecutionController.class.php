@@ -60,7 +60,19 @@ class Testing_TestExecution_TestExecutionController extends TestingController {
             $list_of_result_presenter[] = new Testing_TestResult_TestResultPresenter($result);
         }
         $specification = $execution->getSpecification();
-        $presenter = new Testing_TestExecution_TestExecutionPresenter($execution, $campaign_info_presenter, $list_of_result_presenter, $specification);
+
+        $list_of_defect_presenters = new Testing_Defect_DefectPresenterCollection();
+        foreach ($execution->getListOfDefects() as $defect) {
+            $list_of_defect_presenters->append(new Testing_Defect_DefectPresenter($defect));
+        }
+
+        $presenter = new Testing_TestExecution_TestExecutionPresenter(
+            $execution,
+            $campaign_info_presenter, 
+            $list_of_result_presenter, 
+            $specification, 
+            $list_of_defect_presenters
+        );
         $this->render(self::RENDER_PREFIX . 'show', $presenter);
     }
 }

@@ -42,7 +42,7 @@
                     </li>
                     {{/ last_result }}
                 </ul>
-                <p><a href="#submit-new-artifact" class="tracker-submit-new"> log a bug</a></p>
+                <p><a href="#submit-new-artifact" class="tracker-submit-new"> log a defect</a></p>
                 <p>
                     <button type="submit" name="save" class="btn">Save</button>
                     <button type="button" name="save-and-continue" class="btn disabled">Save and continue</button>
@@ -53,27 +53,52 @@
 </form>
 
 {{# has_results }}
-<h3>Last results</h3>
-<table class="table table-hover table-bordered">
-    <thead>
-        <tr>
-            <th>Reporter</th>
-            <th>Date</th>
-            <th>Result</th>
-            <th>Message</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{# results }}
-            {{# executed_on }}
-            <tr class="{{# is_passed}}success{{/ is_passed }}{{# is_failed}}error{{/ is_failed }}{{# is_not_run }}not_run_status_row{{/ is_not_run }}">
-                <td>{{ executed_by }}</td>
-                <td>{{ executed_on }}</td>
-                <td>{{> label-status }}</td>
-                <td class="span6">{{{ message }}}</td>
-            </tr>
-            {{/ executed_on }}
-        {{/ results }}
-    </tbody>
-</table>
+<div class="row-fluid">
+    {{# has_defects }}
+    <div class="span6">
+        <h3>Defects</h3>
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>Defect</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{# defects }}
+                    <tr>
+                        <td>{{{ link }}}</td>
+                        <td>{{ status }}</td>
+                    </tr>
+                {{/ defects }}
+            </tbody>
+        </table>
+    </div>
+    {{/ has_defects }}
+    <div class="span{{# has_defects }}6{{/has_defects}}{{^ has_defects}}12{{/ has_defects}}">
+        <h3>Last results</h3>
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>Reporter</th>
+                    <th>Date</th>
+                    <th>Result</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{# results }}
+                    {{# executed_on }}
+                    <tr class="{{# is_passed}}success{{/ is_passed }}{{# is_failed}}error{{/ is_failed }}{{# is_not_run }}not_run_status_row{{/ is_not_run }}">
+                        <td>{{ executed_by }}</td>
+                        <td>{{ executed_on }}</td>
+                        <td>{{> label-status }}</td>
+                        <td class="span6">{{{ message }}}</td>
+                    </tr>
+                    {{/ executed_on }}
+                {{/ results }}
+            </tbody>
+        </table>
+    </div>
+</div>
 {{/ has_results }}

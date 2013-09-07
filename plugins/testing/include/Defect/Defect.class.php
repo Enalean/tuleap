@@ -21,30 +21,21 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_TestExecution_TestExecutionManager {
+class Testing_Defect_Defect {
 
-    /** @var Testing_TestExecution_TestExecutionDao */
-    private $dao;
-
-    /** @var Testing_Campaign_CampaignManager */
-    private $campaign_manager;
-
-    public function __construct(
-        Testing_TestExecution_TestExecutionDao $dao,
-        Testing_Campaign_CampaignManager $campaign_manager
-    ) {
-        $this->dao              = $dao;
-        $this->campaign_manager = $campaign_manager;
+    public function __construct($id) {
+        $this->id = $id;
     }
 
-    /** @return Testing_TestExecution_TestExecution */
-    public function getTestExecution(Project $project, $id) {
-        $row = $this->dao->searchById($id)->getRow();
-        $campaign = $this->campaign_manager->getCampaign($project, $row['campaign_id']);
-        foreach ($campaign->getListOfTestExecutions() as $execution) {
-            if ($execution->getId() == $id) {
-                return $execution;
-            }
-        }
+    public function getLink() {
+        return $this->getArtifact()->fetchDirectLinkToArtifactWithTitle();
+    }
+
+    public function getStatus() {
+        return $this->getArtifact()->getStatus();
+    }
+
+    private function getArtifact() {
+        return Tracker_ArtifactFactory::instance()->getArtifactById($this->id);
     }
 }

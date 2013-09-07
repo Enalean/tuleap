@@ -77,9 +77,20 @@ class TestingRouter {
 
     private function getTestExecutionCollectionFeeder() {
         $dao     = new Testing_TestExecution_TestExecutionDao();
-        $factory = new Testing_TestExecution_TestExecutionFactory(UserManager::instance(), $this->getTestResultCollectionFeeder());
+        $factory = new Testing_TestExecution_TestExecutionFactory(
+            UserManager::instance(),
+            $this->getTestResultCollectionFeeder(),
+            $this->getTestExecutionDefectCollectionFeeder()
+        );
 
         return new Testing_TestExecution_TestExecutionCollectionFeeder($dao, $factory);
+    }
+
+    private function getTestExecutionDefectCollectionFeeder() {
+        $dao     = new Testing_Defect_DefectDao();
+        $factory = new Testing_Defect_DefectFactory();
+
+        return new Testing_Defect_DefectCollectionFeeder($dao, $factory);
     }
 
     private function getTestResultCollectionFeeder() {

@@ -27,7 +27,8 @@ class Testing_TestExecution_TestExecutionPresenter {
         Testing_TestExecution_TestExecution $test_execution,
         Testing_Campaign_CampaignInfoPresenter $campaign,
         array $results /** @var Testing_TestResult_TestResultPresenter[] */,
-        $specification
+        $specification,
+        Testing_Defect_DefectPresenterCollection $defects
     ) {
         $this->campaign = $campaign;
         $this->name     = $test_execution->getName();
@@ -39,5 +40,7 @@ class Testing_TestExecution_TestExecutionPresenter {
         $this->last_result   = end($results);
         $this->has_results   = (bool)$this->last_result->executed_on;
         $this->specification = $specification;
+        $this->defects       = $defects;
+        $this->has_defects   = count($this->defects);
     }
 }

@@ -21,30 +21,23 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_TestExecution_TestExecutionManager {
+class Testing_Defect_DefectCollectionFeeder {
 
-    /** @var Testing_TestExecution_TestExecutionDao */
+    /** @var Testing_Defect_DefectDao */
     private $dao;
 
-    /** @var Testing_Campaign_CampaignManager */
-    private $campaign_manager;
-
     public function __construct(
-        Testing_TestExecution_TestExecutionDao $dao,
-        Testing_Campaign_CampaignManager $campaign_manager
+        Testing_Defect_DefectDao $dao,
+        Testing_Defect_DefectFactory $factory
     ) {
-        $this->dao              = $dao;
-        $this->campaign_manager = $campaign_manager;
+        $this->dao     = $dao;
+        $this->factory = $factory;
     }
 
-    /** @return Testing_TestExecution_TestExecution */
-    public function getTestExecution(Project $project, $id) {
-        $row = $this->dao->searchById($id)->getRow();
-        $campaign = $this->campaign_manager->getCampaign($project, $row['campaign_id']);
-        foreach ($campaign->getListOfTestExecutions() as $execution) {
-            if ($execution->getId() == $id) {
-                return $execution;
-            }
+    public function feedCollection(Testing_TestExecution_TestExecution $execution, Testing_Defect_DefectCollection $collection) {
+        foreach ($this->dao->searchByExecutionId($execution->getId()) as $row) {
+            $execution = $this->factory->getInstanceFromRow($execution, $row);
+            $collection->append($execution);
         }
     }
 }

@@ -35,18 +35,23 @@ class Testing_TestExecution_TestExecution {
     /** @var Testing_TestResult_TestResultCollection */
     private $list_of_test_results;
 
+    /** @var Testing_Defect_DefectCollection */
+    private $list_of_defects;
+
     public function __construct(
         $id,
         Testing_Campaign_Campaign $campaign,
         Testing_TestCase_TestCaseVersion $test_version,
         PFUser $assignee,
-        Testing_TestResult_TestResultCollection $list_of_test_results
+        Testing_TestResult_TestResultCollection $list_of_test_results,
+        Testing_Defect_DefectCollection $list_of_defects
     ) {
         $this->id                   = $id;
         $this->campaign             = $campaign;
         $this->assignee             = $assignee;
         $this->test_version         = $test_version;
         $this->list_of_test_results = $list_of_test_results;
+        $this->list_of_defects      = $list_of_defects;
     }
 
     public function getId() { return $this->id; }
@@ -56,4 +61,5 @@ class Testing_TestExecution_TestExecution {
     public function getLastTestResult() { return end($this->list_of_test_results); }
     public function getSpecification() { return $this->test_version->getSpecification(); }
     public function getName() { return $this->test_version->getName(); }
+    public function getListOfDefects() { return $this->list_of_defects; }
 }
