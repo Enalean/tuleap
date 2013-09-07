@@ -36,11 +36,20 @@ class Testing_TestExecution_TestExecutionPresenter {
         $this->results  = $results;
         $project_id     = $test_execution->getCampaign()->getProjectId();
         $this->create_result_uri = '/plugins/testing/?group_id='. $project_id .'&resource=testresult&action=create&execution_id='. $test_execution->getId();
+        $this->create_defect_uri = '/plugins/testing/?group_id='. $project_id .'&resource=defect&action=create&execution_id='. $test_execution->getId();
 
         $this->last_result   = end($results);
         $this->has_results   = (bool)$this->last_result->executed_on;
         $this->specification = $specification;
         $this->defects       = $defects;
         $this->has_defects   = count($this->defects);
+
+        $tracker = TrackerFactory::instance()->getTrackerById(133);
+        $html = '<table><tr><td>';
+        foreach($tracker->getFormElements() as $form_element) {
+            $html .= $form_element->fetchSubmit(array());
+        }
+        $html .= '</td></tr></table>';
+        $this->create_defect_form = $html;
     }
 }

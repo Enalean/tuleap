@@ -36,8 +36,8 @@ class Testing_Defect_DefectCollectionFeeder {
 
     public function feedCollection(Testing_TestExecution_TestExecution $execution, Testing_Defect_DefectCollection $collection) {
         foreach ($this->dao->searchByExecutionId($execution->getId()) as $row) {
-            $execution = $this->factory->getInstanceFromRow($execution, $row);
-            $collection->append($execution);
+            $defect = $this->factory->getInstanceFromRow($execution, $row);
+            $collection->append($defect);
         }
     }
 }

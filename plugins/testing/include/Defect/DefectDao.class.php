@@ -32,4 +32,14 @@ class Testing_Defect_DefectDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    public function create($testexecution_id, $defect_id) {
+        $testexecution_id = $this->da->escapeInt($testexecution_id);
+        $defect_id        = $this->da->escapeInt($defect_id);
+
+        $sql = "REPLACE INTO plugin_testing_testexecution_defects(testexecution_id, defect_id)
+                VALUES ($testexecution_id, $defect_id)";
+
+        return $this->update($sql);
+    }
 }
