@@ -37,6 +37,7 @@ class Testing_TestExecution_TestExecutionPresenter {
         $this->create_result_uri = '/plugins/testing/?group_id='. $project_id .'&resource=testresult&action=create&execution_id='. $test_execution->getId();
 
         $this->last_result   = end($results);
+        $this->has_results   = (bool)$this->last_result->executed_on;
         $this->specification = $specification;
     }
 }

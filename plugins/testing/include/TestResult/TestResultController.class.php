@@ -21,12 +21,10 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'common/mvc2/PluginController.class.php';
-
 /**
  * Controller for a test result resource
  */
-class Testing_TestResult_TestResultController extends MVC2_PluginController {
+class Testing_TestResult_TestResultController extends TestingController {
 
     /** @var Testing_TestResult_TestResultDao */
     private $dao;
@@ -43,14 +41,23 @@ class Testing_TestResult_TestResultController extends MVC2_PluginController {
      * @todo csrf
      */
     public function create() {
+        $execution_id = $this->request->get('execution_id');
         $this->dao->create(
-            $this->request->get('execution_id'),
+            $execution_id,
             $this->request->getCurrentUser()->getId(),
             $_SERVER['REQUEST_TIME'],
             $this->request->get('status'),
             $this->request->get('message')
         );
         $GLOBALS['Response']->addFeedback('info', 'The test result has been successfuly created');
-        $GLOBALS['Response']->redirect('/plugins/testing/?group_id='. $this->getProject()->getId() .'&resource=testexecution&action=show&id='. $this->request->get('execution_id'));
+
+        $this->redirect(
+            array(
+                'group_id' => $this->getProject()->getId(),
+                'resource' => 'testexecution',
+                'action'   => 'show',
+                'id'       => $execution_id,
+            )
+        );
     }
 }

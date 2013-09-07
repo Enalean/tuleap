@@ -63,14 +63,8 @@ class testingPlugin extends Plugin {
                     $GLOBALS['Language']->getText('plugin_testing', 'descriptor_name'))
             );
         }
-        $service->displayHeader($GLOBALS['Language']->getText('plugin_testing', 'descriptor_name'), array(), array());
-        echo '<div id="plugin_testing">';
-        echo '<h1>Test management</h1>';
 
         $router = new TestingRouter();
         $router->route($request);
-
-        echo '</div>';
-        $service->displayFooter();
     }
 }

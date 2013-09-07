@@ -21,12 +21,10 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'common/mvc2/PluginController.class.php';
-
 /**
  * Controller for a Requirement resource
  */
-class Testing_Requirement_RequirementController extends MVC2_PluginController {
+class Testing_Requirement_RequirementController extends TestingController {
 
     const RENDER_PREFIX = 'Requirement/';
 
@@ -73,7 +71,7 @@ class Testing_Requirement_RequirementController extends MVC2_PluginController {
     }
 
     public function create() {
-        $GLOBALS['Response']->addFeedback('info', 'The milestone has been successfuly created');
-        $GLOBALS['Response']->redirect('/plugins/testing/?group_id=1&resource=requirement');
+        $GLOBALS['Response']->addFeedback('error', 'The requirement has been successfuly created');
+        $this->redirect(array('group_id' => $this->getProject()->getId(), 'resource' => 'requirement'));
     }
 }

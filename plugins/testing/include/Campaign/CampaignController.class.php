@@ -21,12 +21,10 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'common/mvc2/PluginController.class.php';
-
 /**
  * Controller for a campaign resource
  */
-class Testing_Campaign_CampaignController extends MVC2_PluginController {
+class Testing_Campaign_CampaignController extends TestingController {
 
     const RENDER_PREFIX = 'Campaign/';
 
@@ -84,8 +82,8 @@ class Testing_Campaign_CampaignController extends MVC2_PluginController {
      */
     public function create() {
         $data = $this->request->get('campaign');
-        $this->creator->create($this->request->getProject(), $data['name']);
+        $this->creator->create($this->getProject(), $data['name']);
         $GLOBALS['Response']->addFeedback('info', 'The campaign has been successfuly created');
-        $GLOBALS['Response']->redirect('/plugins/testing/?group_id=1');
+        $this->redirect(array('group_id' => $this->getProject()->getId()));
     }
 }
