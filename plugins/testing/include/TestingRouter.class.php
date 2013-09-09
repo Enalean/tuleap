@@ -41,16 +41,26 @@ class TestingRouter {
     }
 
     private function getController(Codendi_Request $request) {
+        $project = $request->getProject();
+        $conf = new TestingConfiguration($project);
+
         $stat_presenter_factory = new Testing_Campaign_CampaignStatPresenterFactory();
         $info_presenter_factory = new Testing_Campaign_CampaignInfoPresenterFactory($stat_presenter_factory);
         $campaign_dao     = new Testing_Campaign_CampaignDao();
         $campaign_factory = new Testing_Campaign_CampaignFactory($this->getTestExecutionCollectionFeeder());
         $campaign_manager = new Testing_Campaign_CampaignManager($campaign_dao, $campaign_factory);
 
+        $testcase_association_dao = new Testing_Requirement_TestCaseAssociationDao();
+        $requirement_info_collection_presenter_factory = new Testing_Requirement_RequirementInfoCollectionPresenterFactory(
+            $project,
+            $conf->getRequirementTracker(),
+            $testcase_association_dao
+        );
+
         $requested_resource = $request->getValidated('resource');
         switch ($requested_resource) {
             case self::RESOURCE_REQUIREMENT:
-                return new Testing_Requirement_RequirementController($request);
+                return new Testing_Requirement_RequirementController($request, $testcase_association_dao, $requirement_info_collection_presenter_factory);
                 break;
             case self::RESOURCE_TESTEXECUTION:
                 $dao     = new Testing_TestExecution_TestExecutionDao();
@@ -80,7 +90,15 @@ class TestingRouter {
                 );
                 $info_presenter_collection_factory = new Testing_Campaign_CampaignInfoPresenterCollectionFactory($campaign_manager, $info_presenter_factory);
                 $creator = new Testing_Campaign_CampaignCreator($campaign_dao);
-                return new Testing_Campaign_CampaignController($request, $info_presenter_collection_factory, $creator, $campaign_manager, $info_presenter_factory, $presenter_factory);
+                return new Testing_Campaign_CampaignController(
+                    $request,
+                    $info_presenter_collection_factory,
+                    $creator,
+                    $campaign_manager,
+                    $info_presenter_factory,
+                    $presenter_factory,
+                    $requirement_info_collection_presenter_factory
+                );
         }
     }
 

@@ -28,9 +28,14 @@ class Testing_Requirement_RequirementController extends TestingController {
 
     const RENDER_PREFIX = 'Requirement/';
 
-    public function __construct(Codendi_Request $request) {
+    public function __construct(
+        Codendi_Request $request,
+        Testing_Requirement_TestCaseAssociationDao $dao,
+        Testing_Requirement_RequirementInfoCollectionPresenterFactory $collection_presenter_factory
+    ) {
         parent::__construct('testing', $request);
-        $this->testcase_association_dao = new Testing_Requirement_TestCaseAssociationDao();
+        $this->testcase_association_dao     = $dao;
+        $this->collection_presenter_factory = $collection_presenter_factory;
     }
 
     /**
@@ -42,14 +47,7 @@ class Testing_Requirement_RequirementController extends TestingController {
     }
 
     public function index() {
-        $tracker = $this->getTracker();
-        $create_requirement_form = new TestingFacadeTrackerCreationPresenter($tracker);
-
-        $presenter = new Testing_Requirement_RequirementInfoCollectionPresenter(
-            $this->getProject(),
-            $this->getListOfRequirementInfoPresenters($tracker),
-            $create_requirement_form
-        );
+        $presenter = $this->collection_presenter_factory->getPresenter();
         $this->render(self::RENDER_PREFIX . __FUNCTION__, $presenter);
     }
 
@@ -165,14 +163,5 @@ class Testing_Requirement_RequirementController extends TestingController {
     private function getTestCaseTracker() {
         $conf = new TestingConfiguration($this->getProject());
         return $conf->getTestCaseTracker();
-    }
-
-    private function getListOfRequirementInfoPresenters(Tracker $tracker) {
-        $list_of_requirement_info_presenters = array();
-        foreach(Tracker_ArtifactFactory::instance()->getArtifactsByTrackerId($tracker->getId()) as $artifact) {
-            $requirement = new Testing_Requirement_Requirement($artifact->getId());
-            $list_of_requirement_info_presenters[] = new Testing_Requirement_RequirementInfoPresenter($this->getProject(), $requirement);
-        }
-        return $list_of_requirement_info_presenters;
     }
 }

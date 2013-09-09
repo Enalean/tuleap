@@ -4,9 +4,7 @@
   <li><a href="/plugins/testing/?group_id=1&resource=report">Reports</a></li>
 </ul>
 <h2>New test campaign</h2>
-<form action="/plugins/testing/?group_id=1" method="POST">
-    <input type="hidden" name="resource" value="campaign" />
-    <input type="hidden" name="action" value="create" />
+<form action="{{ create_uri }}" method="POST">
     <p>
         <label for="name">Name</label>
         <input type="text" name="campaign[name]" id="name" required />
@@ -66,50 +64,18 @@
                             <th width="16"></th>
                             <th>N°</th>
                             <th>Exigence</th>
-                            <th>Version</th>
+                            <th>Nb of linked test cases</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {{# list_of_requirements }}
                         <tr>
                             <td><input type="checkbox"></td>
-                            <td>1.1.1.23</td>
-                            <td>Field accepts numeric data entry</td>
-                            <td>7</td>
+                            <td>{{ id }}</td>
+                            <td>{{ name }}</td>
+                            <td>{{ nb_of_tests }}</td>
                         </tr>
-                            <td><input type="checkbox"></td>
-                            <td>1.1.1.24</td>
-                            <td>Field only accepts dates before the current date</td>
-                            <td>3</td>
-                        </tr>
-                        </tr>
-                            <td><input type="checkbox"></td>
-                            <td>1.1.1.25</td>
-                            <td>Screen can print on-screen data to the printer</td>
-                            <td>4</td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox"></td>
-                            <td>1.1.2.1</td>
-                            <td>Data must be entered before a request can approved</td>
-                            <td>6</td>
-                        </tr>
-                            <td><input type="checkbox"></td>
-                            <td>1.1.2.2</td>
-                            <td>Clicking the Approve Button moves the request to the Approval Workflow</td>
-                            <td>4</td>
-                        </tr>
-                        </tr>
-                            <td><input type="checkbox"></td>
-                            <td>1.2.1.32</td>
-                            <td>All personnel using the system will be trained according to internal SOP AA-101</td>
-                            <td>4</td>
-                        </tr>
-                        </tr>
-                            <td>…</td>
-                            <td>…</td>
-                            <td>…</td>
-                            <td>…</td>
-                        </tr>
+                        {{/ list_of_requirements }}
                     </tbody>
                 </table>
             </div>
