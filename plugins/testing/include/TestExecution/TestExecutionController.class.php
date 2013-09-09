@@ -68,9 +68,9 @@ class Testing_TestExecution_TestExecutionController extends TestingController {
 
         $presenter = new Testing_TestExecution_TestExecutionPresenter(
             $execution,
-            $campaign_info_presenter, 
-            $list_of_result_presenter, 
-            $specification, 
+            $campaign_info_presenter,
+            $list_of_result_presenter,
+            $specification,
             $list_of_defect_presenters,
             $this->getCreateDefectForm()
         );
@@ -79,12 +79,8 @@ class Testing_TestExecution_TestExecutionController extends TestingController {
 
     private function getCreateDefectForm() {
         $conf    = new TestingConfiguration($this->getProject());
-        $tracker = $conf->getRequirementTracker();
-        $html = '<table><tr><td>';
-        foreach($tracker->getFormElements() as $form_element) {
-            $html .= $form_element->fetchSubmit(array());
-        }
-        $html .= '</td></tr></table>';
-        return $html;
+        $tracker = $conf->getDefectTracker();
+
+        return new TestingFacadeTrackerCreationPresenter($tracker);
     }
 }

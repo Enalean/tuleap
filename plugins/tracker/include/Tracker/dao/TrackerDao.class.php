@@ -40,7 +40,8 @@ class TrackerDao extends DataAccessObject {
         $sql = "SELECT *
                 FROM $this->table_name
                 WHERE group_id  = $group_id
-                  AND item_name = $item_name";
+                  AND item_name = $item_name
+                  AND deletion_date IS NULL";
 
         return $this->retrieve($sql);
     }
