@@ -1,5 +1,6 @@
 Version 6.5 (Not released yet)
 	== Enhancement ==
+	* story #3826 - update a release in FRS through SOAP
 	* Persist file attachments on file system rather than DB: So we stop cluttering the database with blob of datas
 	* story #3825 - have a "Comments/Description" field in FRS
 	* Script to purge artifact_file: Run it with /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/tools/utils/dump_trackerv3_attachments.php
