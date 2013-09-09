@@ -1,3 +1,6 @@
+Version 5.154 - Tuleap 6.5
+    * Forbid anonymous user to add and/or update artifacts
+
 Version 5.153 - Tuleap 6.5
     * Fix bug when updating after csv import
 

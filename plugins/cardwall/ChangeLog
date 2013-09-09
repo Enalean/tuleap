@@ -1,3 +1,6 @@
+Version 0.9.44 - Tuleap 6.5
+    * Forbid anonymous user to add and/or update artifacts
+
 Version 0.9.43 - Tuleap 6.5
     * Adding boomerang plugin
 
