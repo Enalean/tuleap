@@ -45,6 +45,7 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
             FROM       tracker           AS t
             INNER JOIN tracker_hierarchy AS h ON (h.child_id  = t.id AND
                                                   h.parent_id = $tracker_id)
+            WHERE t.deletion_date IS NULL
         ";
         
         return $this->retrieve($sql);

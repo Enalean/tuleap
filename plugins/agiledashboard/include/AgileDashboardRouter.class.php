@@ -253,8 +253,10 @@ class AgileDashboardRouter {
                                                     $action_name,
                                     Codendi_Request $request,
                                     array           $args = array()) {
+        $content = $this->executeAction($controller, $action_name, $args);
+
         $this->displayHeader($controller, $request, $this->getHeaderTitle($action_name));
-        $this->executeAction($controller, $action_name, $args);
+        echo $content;
         $this->displayFooter($request);
     }
 
@@ -270,7 +272,7 @@ class AgileDashboardRouter {
                                                      $action_name,
                                      array           $args = array()) {
 
-        call_user_func_array(array($controller, $action_name), $args);
+        return call_user_func_array(array($controller, $action_name), $args);
     }
 
     /**

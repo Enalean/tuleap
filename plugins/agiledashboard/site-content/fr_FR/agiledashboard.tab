@@ -19,6 +19,7 @@ plugin_agiledashboard	planning_index	Plannings
 plugin_agiledashboard	planning_new	Nouveau Planning
 plugin_agiledashboard	planning_show	Vue du Planning
 plugin_agiledashboard	planning_artifact_new	Nouveau
+plugin_agiledashboard	planning_invalidconf_deletedtracker	La configuration $1 est invalide. Le tracker $2 a été supprimé. Merci de mettre à jour votre configuration de planning.
 plugin_agiledashboard	create_new_item_to_plan	Créer un(e) nouveau(lle) $1
 plugin_agiledashboard	edit_item	Éditer
 plugin_agiledashboard	add_subitem	Ajouter un(e) nouveau(lle) $1

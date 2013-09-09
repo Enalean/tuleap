@@ -29,12 +29,6 @@ class AgileDashboard_XMLController extends MVC2_PluginController {
 
     /**
      *
-     * @var int
-     */
-    protected $group_id;
-
-    /**
-     *
      * @var Planning_MilestoneFactory
      */
     private $milestone_factory;

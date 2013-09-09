@@ -70,7 +70,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
 
     public function show() {
         $this->generateBareMilestone();
-        $this->render(
+        return $this->renderToString(
             'show',
             $this->getMilestonePresenter()
         );
