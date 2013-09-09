@@ -25,8 +25,8 @@ CREATE TABLE plugin_testing_testresult(
   message TEXT NOT NULL
 ) ENGINE='InnoDB';
 
-DROP TABLE IF EXISTS plugin_testing_testexecution_defects;
-CREATE TABLE plugin_testing_testexecution_defects (
+DROP TABLE IF EXISTS plugin_testing_testexecution_defect;
+CREATE TABLE plugin_testing_testexecution_defect(
       testexecution_id int(11) unsigned NOT NULL,
       defect_id int(11) NOT NULL,
       KEY defect_id (defect_id),
@@ -37,6 +37,22 @@ CREATE TABLE plugin_testing_testexecution_defects (
         ON DELETE NO ACTION ON UPDATE NO ACTION,
       CONSTRAINT plugin_testing_testexecution_defects_ibfk_defect
         FOREIGN KEY (defect_id)
+        REFERENCES tracker_artifact (id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE='InnoDB';
+
+DROP TABLE IF EXISTS plugin_testing_requirement_testversion;
+CREATE TABLE plugin_testing_requirement_testversion(
+      requirement_id int(11) NOT NULL,
+      testversion_id int(11) NOT NULL,
+      KEY requirement_id (requirement_id),
+      KEY testversion_id (testversion_id),
+      CONSTRAINT plugin_testing_requirement_testversion_ibfk_test
+        FOREIGN KEY (testversion_id)
+        REFERENCES tracker_artifact (id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+      CONSTRAINT plugin_testing_requirement_testversion_ibfk_req
+        FOREIGN KEY (requirement_id)
         REFERENCES tracker_artifact (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE='InnoDB';

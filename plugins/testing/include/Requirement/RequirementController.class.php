@@ -30,6 +30,7 @@ class Testing_Requirement_RequirementController extends TestingController {
 
     public function __construct(Codendi_Request $request) {
         parent::__construct('testing', $request);
+        $this->testcase_association_dao = new Testing_Requirement_TestCaseAssociationDao();
     }
 
     /**
@@ -59,8 +60,15 @@ class Testing_Requirement_RequirementController extends TestingController {
         foreach ($artifact->getChildrenForUser($this->getCurrentUser()) as $subartifact) {
             $requirement_version = new Testing_Requirement_RequirementVersion($subartifact->getId(), $requirement, $i++);
         }
-        $presenter = new Testing_Requirement_RequirementVersionPresenter($this->getProject(), $requirement_version, array());
 
+        $list_of_test_cases = array();
+        foreach ($this->testcase_association_dao->searchByRequirementId($artifact->getId()) as $row) {
+            $testcase = new Testing_TestCase_TestCase($row['testversion_id']);
+            $testcase_version = new Testing_TestCase_TestCaseVersion($row['testversion_id'], $testcase);
+            $list_of_test_cases[] = new Testing_Requirement_TestCaseVersionPresenter($this->getProject(), $testcase_version);
+        }
+
+        $presenter = new Testing_Requirement_RequirementVersionPresenter($this->getProject(), $requirement_version, $list_of_test_cases);
         $this->render(self::RENDER_PREFIX . __FUNCTION__, $presenter);
     }
 

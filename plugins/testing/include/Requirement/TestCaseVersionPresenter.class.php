@@ -21,25 +21,11 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'common/dao/include/DataAccessObject.class.php';
+class Testing_Requirement_TestCaseVersionPresenter {
 
-class Testing_Defect_DefectDao extends DataAccessObject {
+    public function __construct(Project $project, Testing_TestCase_TestCaseVersion $testcase_version) {
+        $this->name = $testcase_version->getName();
 
-    public function searchByExecutionId($id) {
-        $id = $this->da->escapeInt($id);
-
-        $sql = "SELECT * FROM plugin_testing_testexecution_defect WHERE testexecution_id = $id";
-
-        return $this->retrieve($sql);
-    }
-
-    public function create($testexecution_id, $defect_id) {
-        $testexecution_id = $this->da->escapeInt($testexecution_id);
-        $defect_id        = $this->da->escapeInt($defect_id);
-
-        $sql = "REPLACE INTO plugin_testing_testexecution_defect(testexecution_id, defect_id)
-                VALUES ($testexecution_id, $defect_id)";
-
-        return $this->update($sql);
+        $this->show_uri = '/plugins/testing/?group_id='. $project->getId() .'&resource=testcase&action=show&id='. $testcase_version->getId();
     }
 }
