@@ -35,6 +35,10 @@ class Testing_TestCase_TestCase {
         return $this->getArtifact()->getTitle();
     }
 
+    public function getSpecification() {
+        return Tracker_ArtifactFactory::instance()->getArtifactById($this->id)->fetchTooltip(UserManager::instance()->getCurrentUser());
+    }
+
     private function getArtifact() {
         return Tracker_ArtifactFactory::instance()->getArtifactById($this->id);
     }

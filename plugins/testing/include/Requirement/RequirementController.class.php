@@ -56,19 +56,14 @@ class Testing_Requirement_RequirementController extends TestingController {
     public function show() {
         $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($this->request->get('id'));
         $requirement = new Testing_Requirement_Requirement($artifact->getId());
-        $i = 1;
-        foreach ($artifact->getChildrenForUser($this->getCurrentUser()) as $subartifact) {
-            $requirement_version = new Testing_Requirement_RequirementVersion($subartifact->getId(), $requirement, $i++);
-        }
 
         $list_of_test_cases = array();
         foreach ($this->testcase_association_dao->searchByRequirementId($artifact->getId()) as $row) {
             $testcase = new Testing_TestCase_TestCase($row['testversion_id']);
-            $testcase_version = new Testing_TestCase_TestCaseVersion($row['testversion_id'], $testcase);
-            $list_of_test_cases[] = new Testing_Requirement_TestCaseVersionPresenter($this->getProject(), $testcase_version);
+            $list_of_test_cases[] = new Testing_Requirement_TestCasePresenter($this->getProject(), $testcase);
         }
 
-        $presenter = new Testing_Requirement_RequirementVersionPresenter($this->getProject(), $requirement_version, $list_of_test_cases);
+        $presenter = new Testing_Requirement_RequirementPresenter($this->getProject(), $requirement, $list_of_test_cases);
         $this->render(self::RENDER_PREFIX . __FUNCTION__, $presenter);
     }
 
@@ -103,11 +98,7 @@ class Testing_Requirement_RequirementController extends TestingController {
         $list_of_requirement_info_presenters = array();
         foreach(Tracker_ArtifactFactory::instance()->getArtifactsByTrackerId($tracker->getId()) as $artifact) {
             $requirement = new Testing_Requirement_Requirement($artifact->getId());
-            $i = 1;
-            foreach ($artifact->getChildrenForUser($this->getCurrentUser()) as $subartifact) {
-                $requirement_version = new Testing_Requirement_RequirementVersion($subartifact->getId(), $requirement, $i++);
-            }
-            $list_of_requirement_info_presenters[] = new Testing_Requirement_RequirementVersionInfoPresenter($this->getProject(), $requirement_version);
+            $list_of_requirement_info_presenters[] = new Testing_Requirement_RequirementInfoPresenter($this->getProject(), $requirement);
         }
         return $list_of_requirement_info_presenters;
     }

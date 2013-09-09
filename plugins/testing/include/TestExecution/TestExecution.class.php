@@ -41,7 +41,7 @@ class Testing_TestExecution_TestExecution {
     public function __construct(
         $id,
         Testing_Campaign_Campaign $campaign,
-        Testing_TestCase_TestCaseVersion $test_version,
+        Testing_TestCase_TestCase $testcase,
         PFUser $assignee,
         Testing_TestResult_TestResultCollection $list_of_test_results,
         Testing_Defect_DefectCollection $list_of_defects
@@ -49,7 +49,7 @@ class Testing_TestExecution_TestExecution {
         $this->id                   = $id;
         $this->campaign             = $campaign;
         $this->assignee             = $assignee;
-        $this->test_version         = $test_version;
+        $this->testcase             = $testcase;
         $this->list_of_test_results = $list_of_test_results;
         $this->list_of_defects      = $list_of_defects;
     }
@@ -59,7 +59,7 @@ class Testing_TestExecution_TestExecution {
     public function getCampaign() { return $this->campaign; }
     public function getListOfTestResults() { return $this->list_of_test_results; }
     public function getLastTestResult() { return end($this->list_of_test_results); }
-    public function getSpecification() { return $this->test_version->getSpecification(); }
-    public function getName() { return $this->test_version->getName(); }
+    public function getSpecification() { return $this->testcase->getSpecification(); }
+    public function getName() { return $this->testcase->getName(); }
     public function getListOfDefects() { return $this->list_of_defects; }
 }

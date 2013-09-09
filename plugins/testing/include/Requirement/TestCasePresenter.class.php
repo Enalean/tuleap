@@ -21,23 +21,11 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_TestCase_TestCaseVersion {
+class Testing_Requirement_TestCasePresenter {
 
-    private $id;
-    private $test_case;
+    public function __construct(Project $project, Testing_TestCase_TestCase $testcase) {
+        $this->name = $testcase->getName();
 
-    public function __construct($id, Testing_TestCase_TestCase $test_case) {
-        $this->test_case = $test_case;
-        $this->id = $id;
-    }
-
-    public function getId() { return $this->id; }
-
-    public function getName() {
-        return $this->test_case->getName();
-    }
-
-    public function getSpecification() {
-        return Tracker_ArtifactFactory::instance()->getArtifactById($this->id)->fetchTooltip(UserManager::instance()->getCurrentUser());
+        $this->show_uri = '/plugins/testing/?group_id='. $project->getId() .'&resource=testcase&action=show&id='. $testcase->getId();
     }
 }

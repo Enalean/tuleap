@@ -46,10 +46,9 @@ class Testing_TestExecution_TestExecutionFactory {
         $user              = $this->user_manager->getUserById($row['assigned_to']);
         $list_of_results   = new Testing_TestResult_TestResultCollection();
         $test_case         = new Testing_TestCase_TestCase($row['test_case_id']);
-        $test_case_version = new Testing_TestCase_TestCaseVersion($row['test_version_id'], $test_case);
         $list_of_defects   = new Testing_Defect_DefectCollection();
 
-        $execution = new Testing_TestExecution_TestExecution($row['id'], $campaign, $test_case_version, $user, $list_of_results, $list_of_defects);
+        $execution = new Testing_TestExecution_TestExecution($row['id'], $campaign, $test_case, $user, $list_of_results, $list_of_defects);
         $this->result_collection_feeder->feedCollection($execution, $list_of_results);
         $this->defect_collection_feeder->feedCollection($execution, $list_of_defects);
 

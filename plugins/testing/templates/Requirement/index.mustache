@@ -30,16 +30,14 @@
         <tr>
             <th>Identifier</th>
             <th>Requirement</th>
-            <th>Version</th>
         </tr>
     </thead>
     <tbody>
-        {{# list_of_requirement_versions }}
+        {{# list_of_requirements }}
         <tr>
             <td><a href="{{ show_uri }}">{{ id }}</a></td>
             <td>{{ name }}</td>
-            <td>{{ version }}</td>
         </tr>
-        {{/ list_of_requirement_versions }}
+        {{/ list_of_requirements }}
     </tbody>
 </table>
