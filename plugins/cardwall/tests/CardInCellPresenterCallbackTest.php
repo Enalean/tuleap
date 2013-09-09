@@ -31,6 +31,7 @@ class CardInCellPresenterCallbackTest extends TuleapTestCase {
         $this->field_id = 77777;
         $this->field    = stub('Tracker_FormElement_Field_MultiselectBox')->getId()->returns($this->field_id);
         $this->artifact = aMockArtifact()->withId(4444)->withTracker($tracker)->build();
+        stub($this->artifact)->getAllowedChildrenTypesForUser()->returns(array());
 
         $this->node           = aNode()->withId(4444)->build();
         $this->card_presenter = stub('Cardwall_CardPresenter')->getArtifact()->returns($this->artifact);

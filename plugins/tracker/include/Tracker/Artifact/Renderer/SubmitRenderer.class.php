@@ -34,6 +34,15 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
         $this->layout = $layout;
     }
 
+    public function display(Codendi_Request $request, PFUser $current_user) {
+        if ($this->tracker->userCanSubmitArtifact($current_user)) {
+            parent::display($request, $current_user);
+        } else {
+            $GLOBALS['Response']->addFeedback(Feedback::WARN, $GLOBALS['Language']->getText('plugin_tracker', 'submit_no_anonymous'));
+            $GLOBALS['Response']->redirect($this->tracker->getUri());
+        }
+    }
+
     protected function fetchFormContent(Codendi_Request $request, PFUser $current_user) {
         return $this->fetchNewArtifactForm($request, $current_user);
     }

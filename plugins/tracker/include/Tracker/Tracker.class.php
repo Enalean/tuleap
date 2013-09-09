@@ -2123,10 +2123,9 @@ EOS;
             $user = $um->getCurrentUser();
         }
 
-
-        // TODO : return the real value
-
-
+        if ($user->isAnonymous()) {
+            return false;
+        }
         return true;
     }
 
@@ -3147,6 +3146,13 @@ EOS;
             $workflow = $this->getWorkflowFactory()->getWorkflowWithoutTransition($this);
         }
         return $workflow;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUri() {
+        return TRACKER_BASE_URL . '/?tracker=' . $this->getId();
     }
 }
 ?>

@@ -48,9 +48,6 @@ abstract class Tracker_Artifact_SubmitAbstractRenderer extends Tracker_Artifact_
         }
         $html .= '</td></tr></table>';
 
-        if ($current_user->isAnonymous()) {
-            $html .= $this->tracker->fetchAnonymousEmailForm();
-        }
         return $html;
     }
 }

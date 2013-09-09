@@ -30,7 +30,10 @@ class ArtifactNode extends TreeNode {
         parent::__construct($data, $artifact->getId());
         $this->setObject($artifact);
     }
-    
+
+    /**
+     * @return Tracker_Artifact
+     */
     public function getArtifact() {
         return $this->getObject();
     }

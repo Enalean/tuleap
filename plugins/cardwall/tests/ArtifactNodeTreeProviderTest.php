@@ -77,9 +77,9 @@ class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
         $artifact5 = aMockArtifact()->withId(5)->build();
         $artifact6 = aMockArtifact()->withId(6)->build();
 
-        $node4 = new Cardwall_CardInCellPresenterNode(new Cardwall_CardInCellPresenter(new Cardwall_CardPresenter($artifact4, mock('Cardwall_CardFields'), '*', mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'), 0), 4));
-        $node5 = new Cardwall_CardInCellPresenterNode(new Cardwall_CardInCellPresenter(new Cardwall_CardPresenter($artifact5, mock('Cardwall_CardFields'), '*', mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'), 0), 5));
-        $node6 = new Cardwall_CardInCellPresenterNode(new Cardwall_CardInCellPresenter(new Cardwall_CardPresenter($artifact6, mock('Cardwall_CardFields'), '*', mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'), 0), 6));
+        $node4 = new Cardwall_CardInCellPresenterNode(new Cardwall_CardInCellPresenter(new Cardwall_CardPresenter($artifact4, mock('Cardwall_CardFields'), '*', mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'), 0, array()), 4));
+        $node5 = new Cardwall_CardInCellPresenterNode(new Cardwall_CardInCellPresenter(new Cardwall_CardPresenter($artifact5, mock('Cardwall_CardFields'), '*', mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'), 0, array()), 5));
+        $node6 = new Cardwall_CardInCellPresenterNode(new Cardwall_CardInCellPresenter(new Cardwall_CardPresenter($artifact6, mock('Cardwall_CardFields'), '*', mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'), 0, array()), 6));
 
         stub($this->artifact_factory)->getArtifactById(4)->returns($artifact4);
         stub($this->artifact_factory)->getArtifactById(5)->returns($artifact5);

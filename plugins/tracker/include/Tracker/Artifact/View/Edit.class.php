@@ -67,7 +67,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
     private function fetchFollowUps($submitted_comment = '') {
         $html = '';
 
-        $html .= $this->renderer->fetchSubmitButton();
+        $html .= $this->fetchSubmitButton();
 
         $html .= '<fieldset id="tracker_artifact_followup_comments"><legend
                           class="'. Toggler::getClassName('tracker_artifact_followups', true, true) .'"
@@ -99,23 +99,29 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
             $html .= '<noscript> javascript must be enabled to use this feature! </noscript>';
             $html .= '</p>';
         }
-        $html .= '<b>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'add_comment') .'</b><br />';
-        $html .= '<textarea id="tracker_followup_comment_new" wrap="soft" rows="12" cols="80" style="width:99%;" name="artifact_followup_comment" id="artifact_followup_comment">'. $hp->purify($submitted_comment, CODENDI_PURIFIER_CONVERT_HTML).'</textarea>';
-        $html .= '</div>';
 
-        if ($this->user->isAnonymous()) {
-            $html .= $this->renderer->fetchAnonymousEmailForm();
+        if ($this->artifact->userCanUpdate($this->user)) {
+            $html .= '<b>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'add_comment') .'</b><br />';
+            $html .= '<textarea id="tracker_followup_comment_new" wrap="soft" rows="12" cols="80" style="width:99%;" name="artifact_followup_comment" id="artifact_followup_comment">'. $hp->purify($submitted_comment, CODENDI_PURIFIER_CONVERT_HTML).'</textarea>';
+            $html .= '</div>';
         }
+
         $html .= '</li>';
 
         $html .= '</ul>';
         $html .= '</fieldset>';
 
-        $html .= $this->renderer->fetchSubmitButton();
+        $html .= $this->fetchSubmitButton();
 
         $html .= '</td></tr></table>'; //see fetchFields
 
         return $html;
+    }
+
+    private function fetchSubmitButton() {
+        if ($this->artifact->userCanUpdate($this->user)) {
+            return $this->renderer->fetchSubmitButton();
+        }
     }
 }
 ?>
