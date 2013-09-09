@@ -32,6 +32,7 @@ class TestingRouter {
     const RESOURCE_TESTRESULT    = 'testresult';
     const RESOURCE_REQUIREMENT   = 'requirement';
     const RESOURCE_DEFECT        = 'defect';
+    const RESOURCE_REPORT        = 'report';
 
     public function route(Codendi_Request $request) {
         $controller = $this->getController($request);
@@ -63,6 +64,9 @@ class TestingRouter {
             case self::RESOURCE_DEFECT:
                 $dao = new Testing_Defect_DefectDao();
                 return new Testing_Defect_DefectController($request, $dao);
+                break;
+            case self::RESOURCE_REPORT:
+                return new Testing_Report_ReportController($request);
                 break;
             case self::RESOURCE_CAMPAIGN:
             default:
