@@ -164,6 +164,29 @@ $server->register(
 );
 
 $server->register(
+    'updateRelease',
+    array(
+        'sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int',
+        'package_id'=>'xsd:int',
+        'release_id'=>'xsd:int',
+        'notes'=>'xsd:string',
+        'changes'=>'xsd:string',
+        'status_id'=>'xsd:int',),
+    array('updateRelease'=>'xsd:boolean'),
+    $uri,
+    $uri.'#updateRelease',
+    'rpc',
+    'encoded',
+    'Updates a Release in the File Release Manager of the project group_id with
+     the values given by package_id, release_id, name, notes, changes and status_id.
+     Returns true if the update succeed.
+     Returns a soap fault if the group_id is not a valid one, if the package does
+     not match with the group ID, if the release does not exist or access to it
+     is not permiited or if the update failed.'
+);
+
+$server->register(
     'addRelease',
     array(
         'sessionKey'=>'xsd:string',
@@ -694,6 +717,67 @@ function addRelease($sessionKey,$group_id,$package_id,$name,$notes,$changes,$sta
     } else {
         return new SoapFault(invalid_session_fault,'Invalid Session','addRelease');
     }
+}
+
+/**
+ * updateRelease - update a release in the file release manager, in the package $package_id of the project $group_id with given values
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group the release is in
+ * @param int $package_id the ID of the package the release is in
+ * @param int $release_id the ID of the release we want to update
+ * @param string $notes the notes of the release
+ * @param string $changes the changes of the release
+ * @param int $status_id the ID of the status of the release
+ *
+ * @return bool true if release updated
+ *              or a soap fault if :
+ *              - group_id does not match with a valid project,
+ *              - package_id does not match with a valid package,
+ *              - package_id does not belong to the project group_id,
+ *              - the user does not have the permissions to update a release
+ *              - the release creation failed.
+ */
+function updateRelease($sessionKey, $group_id, $package_id, $release_id, $notes, $changes, $status_id) {
+    if (! session_continue($sessionKey)) {
+        return new SoapFault(invalid_session_fault,'Invalid Session','updateRelease');
+    }
+
+    $project_manager = ProjectManager::instance();
+    try {
+        $project_manager->getGroupByIdForSoap($group_id, 'updateRelease');
+    } catch (SoapFault $e) {
+        return $e;
+    }
+
+    $pkg_fact = new FRSPackageFactory();
+    $package = $pkg_fact->getFRSPackageFromDb($package_id);
+    if (!$package || $package->getGroupID() != $group_id) {
+        return new SoapFault(invalid_package_fault,'Invalid Package','updateRelease');
+    }
+
+    $release_factory = new FRSReleaseFactory();
+    if (! $release_factory->userCanUpdate($group_id, $release_id)) {
+        return new SoapFault(invalid_release_fault, 'User is not allowed to update a release', 'updateRelease');
+    }
+
+    if (! $release = $release_factory->getFRSReleaseFromDb($release_id)) {
+        return new SoapFault(invalid_release_fault, 'Release does not exist', 'updateRelease');
+    }
+
+    $release_array = array (
+        'package_id'    => $package_id,
+        'notes'         => $notes,
+        'changes'       => $changes,
+        'status_id'     => $status_id,
+        'release_id'    => $release_id
+    );
+
+    if (! $release_factory->update($release_array)) {
+        return new SoapFault(invalid_release_fault, 'Update Failed', 'updateRelease');
+    }
+
+    return true;
 }
 
 /**
@@ -1439,6 +1523,7 @@ $server->addFunction(
             'addPackage',
             'getReleases',
             'addRelease',
+            'updateRelease',
             'getFiles',
             'getFileInfo',
             'getFile',
