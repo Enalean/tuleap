@@ -25,8 +25,10 @@ class Testing_Requirement_RequirementInfoCollectionPresenter {
 
     public $list_of_requirement_versions;
 
-    public function __construct(Project $project, array $list_of_requirement_versions) {
+    public function __construct(Project $project, array $list_of_requirement_versions, TestingFacadeTrackerCreationPresenter $create_requirement_form) {
         $this->list_of_requirement_versions = $list_of_requirement_versions;
-        $this->new_uri  = '/plugins/testing/?group_id='. $project->getId() .'&resource=requirement&action=new';
+        $this->create_uri  = '/plugins/testing/?group_id='. $project->getId() .'&resource=requirement&action=create';
+
+        $this->create_requirement_form = $create_requirement_form;
     }
 }

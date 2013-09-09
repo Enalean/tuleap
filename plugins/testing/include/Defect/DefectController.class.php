@@ -41,8 +41,10 @@ class Testing_Defect_DefectController extends TestingController {
      * @todo csrf
      */
     public function create() {
+        $conf    = new TestingConfiguration($this->getProject());
+        $tracker = $conf->getDefectTracker();
+
         $execution_id = $this->request->get('execution_id');
-        $tracker = TrackerFactory::instance()->getTrackerById(133);
         $user = $this->getCurrentUser();
         $email = null;
         $fields_data = $this->request->get('artifact');

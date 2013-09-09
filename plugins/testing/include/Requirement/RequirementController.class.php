@@ -41,7 +41,14 @@ class Testing_Requirement_RequirementController extends TestingController {
     }
 
     public function index() {
-        $presenter = new Testing_Requirement_RequirementInfoCollectionPresenter($this->getProject(), $this->getListOfRequirementInfoPresenters());
+        $tracker = $this->getTracker();
+        $create_requirement_form = new TestingFacadeTrackerCreationPresenter($tracker);
+
+        $presenter = new Testing_Requirement_RequirementInfoCollectionPresenter(
+            $this->getProject(),
+            $this->getListOfRequirementInfoPresenters($tracker),
+            $create_requirement_form
+        );
         $this->render(self::RENDER_PREFIX . __FUNCTION__, $presenter);
     }
 
@@ -57,10 +64,35 @@ class Testing_Requirement_RequirementController extends TestingController {
         $this->render(self::RENDER_PREFIX . __FUNCTION__, $presenter);
     }
 
-    private function getListOfRequirementInfoPresenters() {
-        $list_of_requirement_info_presenters = array();
+    public function create() {
+        $tracker = $this->getTracker();
+        $user = $this->getCurrentUser();
+        $email = null;
+        $fields_data = $this->request->get('artifact');
+        $tracker->augmentDataFromRequest($fields_data);
+
+        $artifact = Tracker_ArtifactFactory::instance()->createArtifact($tracker, $fields_data, $user, $email);
+        if ($artifact) {
+            $GLOBALS['Response']->addFeedback('info', 'The requirement has been successfuly created');
+        } else {
+            $GLOBALS['Response']->addFeedback('error', 'Error while creating the requirement. Please try again.');
+        }
+
+        $this->redirect(
+            array(
+                'group_id' => $this->getProject()->getId(),
+                'resource' => 'requirement'
+            )
+        );
+    }
+
+    private function getTracker() {
         $conf = new TestingConfiguration($this->getProject());
-        $tracker = $conf->getRequirementTracker();
+        return $conf->getRequirementTracker();
+    }
+
+    private function getListOfRequirementInfoPresenters(Tracker $tracker) {
+        $list_of_requirement_info_presenters = array();
         foreach(Tracker_ArtifactFactory::instance()->getArtifactsByTrackerId($tracker->getId()) as $artifact) {
             $requirement = new Testing_Requirement_Requirement($artifact->getId());
             $i = 1;
@@ -70,10 +102,5 @@ class Testing_Requirement_RequirementController extends TestingController {
             $list_of_requirement_info_presenters[] = new Testing_Requirement_RequirementVersionInfoPresenter($this->getProject(), $requirement_version);
         }
         return $list_of_requirement_info_presenters;
-    }
-
-    public function create() {
-        $GLOBALS['Response']->addFeedback('error', 'The requirement has been successfuly created');
-        $this->redirect(array('group_id' => $this->getProject()->getId(), 'resource' => 'requirement'));
     }
 }

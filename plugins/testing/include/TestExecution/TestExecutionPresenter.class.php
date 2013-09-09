@@ -29,7 +29,7 @@ class Testing_TestExecution_TestExecutionPresenter {
         array $results /** @var Testing_TestResult_TestResultPresenter[] */,
         $specification,
         Testing_Defect_DefectPresenterCollection $defects,
-        $create_defect_form
+        TestingFacadeTrackerCreationPresenter $create_defect_form
     ) {
         $this->campaign = $campaign;
         $this->name     = $test_execution->getName();

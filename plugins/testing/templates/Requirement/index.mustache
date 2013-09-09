@@ -3,8 +3,27 @@
   <li class="active"><a href="/plugins/testing/?group_id=1&resource=requirement">Requirements</a></li>
 </ul>
 <p>
-    <a href="{{ new_uri }}" class="btn"><i class="icon-plus"></i> Create new requirement</a>
+    <a href="#submit-new-requirement" class="btn" data-toggle="modal"><i class="icon-plus"></i> Create new requirement</a>
 </p>
+
+<script type="text/javascript" src="/plugins/tracker/scripts/TrackerFieldDependencies.js"></script>
+<div id="submit-new-requirement" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <form action="{{ create_uri }}" method="POST" enctype="multipart/form-data">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3 id="myModalLabel">Create new requirement</h3>
+        </div>
+        <div class="modal-body">
+            {{# create_requirement_form }}
+                {{{ fields }}}
+            {{/ create_requirement_form }}
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+    </form>
+</div>
 
 <table class="table table-striped table-bordered table-hover">
     <thead>
