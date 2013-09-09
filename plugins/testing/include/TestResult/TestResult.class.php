@@ -23,9 +23,10 @@
 
 class Testing_TestResult_TestResult {
 
-    const NOT_RUN = 0;
-    const PASS    = 1;
-    const FAIL    = 2;
+    const NOT_RUN       = 0;
+    const PASS          = 1;
+    const FAIL          = 2;
+    const NOT_COMPLETED = 3;
 
     public function __construct($status, PFUser $executed_by, $executed_on, $message) {
         $this->status      = $status;

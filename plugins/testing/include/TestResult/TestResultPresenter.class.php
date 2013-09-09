@@ -32,14 +32,16 @@ class Testing_TestResult_TestResultPresenter {
             $this->executed_on = false;
         }
         $project_id = 1; //TODO: get the real project
-        $this->message     = $hp->purify($result->getMessage(), CODENDI_PURIFIER_BASIC, $project_id);
+        $this->message = $hp->purify($result->getMessage(), CODENDI_PURIFIER_BASIC, $project_id);
 
-        $this->is_passed   = $result->getStatus() == Testing_TestResult_TestResult::PASS;
-        $this->is_failed   = $result->getStatus() == Testing_TestResult_TestResult::FAIL;
-        $this->is_not_run  = $result->getStatus() == Testing_TestResult_TestResult::NOT_RUN;
+        $this->is_passed        = $result->getStatus() == Testing_TestResult_TestResult::PASS;
+        $this->is_failed        = $result->getStatus() == Testing_TestResult_TestResult::FAIL;
+        $this->is_not_run       = $result->getStatus() == Testing_TestResult_TestResult::NOT_RUN;
+        $this->is_not_completed = $result->getStatus() == Testing_TestResult_TestResult::NOT_COMPLETED;
 
-        $this->passed_value  = Testing_TestResult_TestResult::PASS;
-        $this->failed_value  = Testing_TestResult_TestResult::FAIL;
-        $this->not_run_value = Testing_TestResult_TestResult::NOT_RUN;
+        $this->passed_value        = Testing_TestResult_TestResult::PASS;
+        $this->failed_value        = Testing_TestResult_TestResult::FAIL;
+        $this->not_run_value       = Testing_TestResult_TestResult::NOT_RUN;
+        $this->not_completed_value = Testing_TestResult_TestResult::NOT_COMPLETED;
     }
 }

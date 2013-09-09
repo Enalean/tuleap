@@ -16,9 +16,7 @@
             <th>Assigned to</th>
             <th>Status
                 {{# stat }}
-                <span class="badge" title="Not run">{{ nb_not_run }}</span>
-                <span class="badge badge-success" title="Passed">{{ nb_pass }}</span>
-                <span class="badge badge-important" title="Failed">{{ nb_fail }}</span>
+                    {{> badge-status }}
                 {{/ stat }}
             </th>
         </tr>

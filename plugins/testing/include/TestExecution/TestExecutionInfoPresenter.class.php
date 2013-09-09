@@ -30,8 +30,9 @@ class Testing_TestExecution_TestExecutionInfoPresenter {
         $this->show_uri = '/plugins/testing/?group_id='. $project_id .'&resource=testexecution&action=show&id='. $test_execution->getId();
 
         $last_result = $test_execution->getLastTestResult();
-        $this->is_passed  = $last_result->getStatus() == Testing_TestResult_TestResult::PASS;
-        $this->is_failed  = $last_result->getStatus() == Testing_TestResult_TestResult::FAIL;
-        $this->is_not_run = $last_result->getStatus() == Testing_TestResult_TestResult::NOT_RUN;
+        $this->is_passed        = $last_result->getStatus() == Testing_TestResult_TestResult::PASS;
+        $this->is_failed        = $last_result->getStatus() == Testing_TestResult_TestResult::FAIL;
+        $this->is_not_run       = $last_result->getStatus() == Testing_TestResult_TestResult::NOT_RUN;
+        $this->is_not_completed = $last_result->getStatus() == Testing_TestResult_TestResult::NOT_COMPLETED;
     }
 }

@@ -32,9 +32,13 @@ class Testing_Campaign_CampaignStatPresenter {
     /** @var int */
     public $nb_fail;
 
-    public function __construct($nb_not_run, $nb_pass, $nb_fail) {
-        $this->nb_not_run = $nb_not_run;
-        $this->nb_pass    = $nb_pass;
-        $this->nb_fail    = $nb_fail;
+    /** @var int */
+    public $nb_not_completed;
+
+    public function __construct($nb_not_run, $nb_pass, $nb_fail, $nb_not_completed) {
+        $this->nb_not_run       = $nb_not_run;
+        $this->nb_pass          = $nb_pass;
+        $this->nb_fail          = $nb_fail;
+        $this->nb_not_completed = $nb_not_completed;
     }
 }

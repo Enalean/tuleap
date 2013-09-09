@@ -25,14 +25,20 @@ class Testing_Campaign_CampaignStatPresenterFactory {
 
     /** @return Testing_Campaign_CampaignStatPresenter */
     public function getPresenter(Testing_Campaign_Campaign $campaign) {
-        $nb_not_run   = 0;
-        $nb_pass      = 0;
-        $nb_fail      = 0;
-        $sum_statuses = array('not_run' => &$nb_not_run, 'pass' => &$nb_pass, 'fail' => &$nb_fail);
+        $nb_not_run       = 0;
+        $nb_pass          = 0;
+        $nb_fail          = 0;
+        $nb_not_completed = 0;
+        $sum_statuses = array(
+            'not_run'       => &$nb_not_run,
+            'pass'          => &$nb_pass,
+            'fail'          => &$nb_fail,
+            'not_completed' => &$nb_not_completed
+        );
 
         array_walk($campaign->getListOfTestExecutions(), array($this, 'sumStatus'), $sum_statuses);
 
-        return new Testing_Campaign_CampaignStatPresenter($nb_not_run, $nb_pass, $nb_fail);
+        return new Testing_Campaign_CampaignStatPresenter($nb_not_run, $nb_pass, $nb_fail, $nb_not_completed);
     }
 
     private function sumStatus(Testing_TestExecution_TestExecution $execution, $index, $sum_statuses) {
@@ -46,6 +52,9 @@ class Testing_Campaign_CampaignStatPresenterFactory {
                 break;
             case Testing_TestResult_TestResult::NOT_RUN:
                 $sum_statuses['not_run']++;
+                break;
+            case Testing_TestResult_TestResult::NOT_COMPLETED:
+                $sum_statuses['not_completed']++;
                 break;
             default:
                 break;

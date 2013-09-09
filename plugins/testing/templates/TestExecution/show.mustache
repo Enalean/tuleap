@@ -40,6 +40,12 @@
                             <span class="label label-important" title="Failed">Failed</span>
                         </label>
                     </li>
+                    <li>
+                        <label class="result_choice">
+                            <input type="radio" name="status" value="{{ not_completed_value }}" {{# is_not_completed }}checked="checked"{{/ is_not_completed }}>
+                            <span class="label label-info" title="Not completed">Not completed</span>
+                        </label>
+                    </li>
                     {{/ last_result }}
                 </ul>
                 <p><a href="#submit-new-artifact" class="tracker-submit-new" data-toggle="modal" > log a defect</a></p>
@@ -106,7 +112,7 @@
             <tbody>
                 {{# results }}
                     {{# executed_on }}
-                    <tr class="{{# is_passed}}success{{/ is_passed }}{{# is_failed}}error{{/ is_failed }}{{# is_not_run }}not_run_status_row{{/ is_not_run }}">
+                    <tr class="{{# is_passed}}success{{/ is_passed }}{{# is_failed}}error{{/ is_failed }}{{# is_not_run }}not_run_status_row{{/ is_not_run }}{{# is_not_completed }}info{{/ is_not_completed}}">
                         <td>{{ executed_by }}</td>
                         <td>{{ executed_on }}</td>
                         <td>{{> label-status }}</td>

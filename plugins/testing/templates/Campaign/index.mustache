@@ -20,9 +20,7 @@
             <td><a href="{{ show_uri }}">{{ name }}</a></td>
             <td>
                 {{# stat }}
-                <span class="badge" title="Not run">{{ nb_not_run }}</span>
-                <span class="badge badge-success" title="Passed">{{ nb_pass }}</span>
-                <span class="badge badge-important" title="Failed">{{ nb_fail }}</span>
+                    {{> badge-status }}
                 {{/ stat }}
             </td>
         </tr>
