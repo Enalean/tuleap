@@ -23,11 +23,22 @@
 
 class Testing_Requirement_RequirementPresenter {
 
-    public function __construct(Project $project, Testing_Requirement_Requirement $requirement, array $list_of_test_cases) {
-        $this->id                 = $requirement->getId();
-        $this->name               = $requirement->getName();
-        $this->list_of_test_cases = $list_of_test_cases;
-        $this->has_test_cases     = count($list_of_test_cases) > 0;
-        $this->edit_uri = '/plugins/testing/?group_id='. $project->getId() .'&resource=requirement&action=edit&id='. $this->id;
+    public function __construct(
+        Project $project,
+        Testing_Requirement_Requirement $requirement,
+        array $list_of_test_cases,
+        array $list_of_available_test_cases,
+        TestingFacadeTrackerCreationPresenter $create_testcase_form
+    ) {
+        $this->id                           = $requirement->getId();
+        $this->name                         = $requirement->getName();
+        $this->list_of_test_cases           = $list_of_test_cases;
+        $this->has_test_cases               = count($list_of_test_cases) > 0;
+        $this->list_of_available_test_cases = $list_of_available_test_cases;
+        $this->has_available_test_cases     = count($this->list_of_available_test_cases) > 0;
+        $this->edit_uri           = '/plugins/testing/?group_id='. $project->getId() .'&resource=requirement&action=edit&id='. $this->id;
+        $this->link_test_case_uri = '/plugins/testing/?group_id='. $project->getId() .'&resource=requirement&action=link-test-case&id='. $this->id;
+        $this->add_test_case_uri  = '/plugins/testing/?group_id='. $project->getId() .'&resource=requirement&action=add-test-case&id='. $this->id;
+        $this->create_testcase_form = $create_testcase_form;
     }
 }

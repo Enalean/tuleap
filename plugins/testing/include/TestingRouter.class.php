@@ -111,6 +111,11 @@ class TestingRouter {
             return self::DEFAULT_ACTION;
         }
 
-        return $action;
+        return $this->toCamelCase($action);
+    }
+
+    private function toCamelCase($string) {
+        $str = str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
+        return strtolower(substr($str, 0, 1)) . substr($str, 1);
     }
 }

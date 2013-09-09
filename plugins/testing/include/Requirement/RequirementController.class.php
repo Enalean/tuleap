@@ -58,12 +58,20 @@ class Testing_Requirement_RequirementController extends TestingController {
         $requirement = new Testing_Requirement_Requirement($artifact->getId());
 
         $list_of_test_cases = array();
-        foreach ($this->testcase_association_dao->searchByRequirementId($artifact->getId()) as $row) {
+        foreach ($this->testcase_association_dao->searchByRequirementId($requirement->getId()) as $row) {
             $testcase = new Testing_TestCase_TestCase($row['testversion_id']);
-            $list_of_test_cases[] = new Testing_Requirement_TestCasePresenter($this->getProject(), $testcase);
+            $list_of_test_cases[] = new Testing_Requirement_TestCasePresenter($this->getProject(), $testcase, $requirement);
         }
 
-        $presenter = new Testing_Requirement_RequirementPresenter($this->getProject(), $requirement, $list_of_test_cases);
+        $tracker = $this->getTestCaseTracker();
+        $list_of_available_test_cases = array();
+        foreach ($this->testcase_association_dao->searchForAvailablesByRequirementId($tracker->getId(), $requirement->getId()) as $row) {
+            $testcase = new Testing_TestCase_TestCase($row['testversion_id']);
+            $list_of_available_test_cases[] = new Testing_Requirement_TestCasePresenter($this->getProject(), $testcase, $requirement);
+        }
+        $create_requirement_form = new TestingFacadeTrackerCreationPresenter($tracker);
+
+        $presenter = new Testing_Requirement_RequirementPresenter($this->getProject(), $requirement, $list_of_test_cases, $list_of_available_test_cases, $create_requirement_form);
         $this->render(self::RENDER_PREFIX . __FUNCTION__, $presenter);
     }
 
@@ -89,9 +97,74 @@ class Testing_Requirement_RequirementController extends TestingController {
         );
     }
 
+    public function linkTestCase() {
+        $requirement_id = $this->request->get('id');
+        $testcase_id    = $this->request->get('testcase_id');
+        $this->testcase_association_dao->create($requirement_id, $testcase_id);
+        $GLOBALS['Response']->addFeedback('info', 'The testcase has been successfuly linked to the current requirement');
+        $this->redirect(
+            array(
+                'group_id' => $this->getProject()->getId(),
+                'resource' => 'requirement',
+                'action'   => 'show',
+                'id'       => $requirement_id
+            )
+        );
+    }
+
+    /**
+     * Both create a new test case and link it to the current requirement
+     */
+    public function addTestCase() {
+        $tracker = $this->getTestCaseTracker();
+        $user = $this->getCurrentUser();
+        $email = null;
+        $fields_data = $this->request->get('artifact');
+        $tracker->augmentDataFromRequest($fields_data);
+
+        $artifact = Tracker_ArtifactFactory::instance()->createArtifact($tracker, $fields_data, $user, $email);
+        if ($artifact) {
+            $GLOBALS['Response']->addFeedback('info', 'The testcase has been successfuly created');
+            $requirement_id = $this->request->get('id');
+            $this->testcase_association_dao->create($requirement_id, $artifact->getId());
+            $GLOBALS['Response']->addFeedback('info', 'The testcase has been successfuly linked to the current requirement');
+        } else {
+            $GLOBALS['Response']->addFeedback('error', 'Error while creating the requirement. Please try again.');
+        }
+
+        $this->redirect(
+            array(
+                'group_id' => $this->getProject()->getId(),
+                'resource' => 'requirement',
+                'action'   => 'show',
+                'id'       => $requirement_id
+            )
+        );
+    }
+
+    public function unlinkTestCase() {
+        $requirement_id = $this->request->get('id');
+        $testcase_id    = $this->request->get('testcase_id');
+        $this->testcase_association_dao->delete($requirement_id, $testcase_id);
+        $GLOBALS['Response']->addFeedback('info', 'The testcase has been successfuly unlinked to the current requirement');
+        $this->redirect(
+            array(
+                'group_id' => $this->getProject()->getId(),
+                'resource' => 'requirement',
+                'action'   => 'show',
+                'id'       => $requirement_id
+            )
+        );
+    }
+
     private function getTracker() {
         $conf = new TestingConfiguration($this->getProject());
         return $conf->getRequirementTracker();
+    }
+
+    private function getTestCaseTracker() {
+        $conf = new TestingConfiguration($this->getProject());
+        return $conf->getTestCaseTracker();
     }
 
     private function getListOfRequirementInfoPresenters(Tracker $tracker) {

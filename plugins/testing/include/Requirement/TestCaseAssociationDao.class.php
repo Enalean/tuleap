@@ -30,4 +30,40 @@ class Testing_Requirement_TestCaseAssociationDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    public function searchForAvailablesByRequirementId($tracker_id, $requirement_id) {
+        $tracker_id     = $this->da->escapeInt($tracker_id);
+        $requirement_id = $this->da->escapeInt($requirement_id);
+
+        $sql = "SELECT id AS testversion_id
+                FROM tracker_artifact
+                    LEFT JOIN
+                    ( SELECT testversion_id FROM plugin_testing_requirement_testversion WHERE requirement_id = $requirement_id ) as R
+                    ON (testversion_id = id)
+                WHERE tracker_artifact.tracker_id = $tracker_id
+                    AND R.testversion_id IS NULL";
+
+        return $this->retrieve($sql);
+    }
+
+    public function create($requirement_id, $testversion_id) {
+        $requirement_id = $this->da->escapeInt($requirement_id);
+        $testversion_id = $this->da->escapeInt($testversion_id);
+
+        $sql = "REPLACE INTO plugin_testing_requirement_testversion(requirement_id, testversion_id)
+                VALUES ($requirement_id, $testversion_id)";
+
+        return $this->update($sql);
+    }
+
+    public function delete($requirement_id, $testversion_id) {
+        $requirement_id = $this->da->escapeInt($requirement_id);
+        $testversion_id = $this->da->escapeInt($testversion_id);
+
+        $sql = "DELETE FROM plugin_testing_requirement_testversion
+                WHERE requirement_id = $requirement_id
+                  AND testversion_id = $testversion_id";
+
+        return $this->update($sql);
+    }
 }

@@ -23,9 +23,11 @@
 
 class Testing_Requirement_TestCasePresenter {
 
-    public function __construct(Project $project, Testing_TestCase_TestCase $testcase) {
+    public function __construct(Project $project, Testing_TestCase_TestCase $testcase, Testing_Requirement_Requirement $requirement) {
+        $this->id   = $testcase->getId();
         $this->name = $testcase->getName();
 
-        $this->show_uri = '/plugins/testing/?group_id='. $project->getId() .'&resource=testcase&action=show&id='. $testcase->getId();
+        $this->show_uri   = '/plugins/testing/?group_id='. $project->getId() .'&resource=testcase&action=show&id='. $this->id;
+        $this->unlink_uri = '/plugins/testing/?group_id='. $project->getId() .'&resource=requirement&action=unlink-test-case&id='. $requirement->getId() .'&testcase_id='. $this->id;
     }
 }
