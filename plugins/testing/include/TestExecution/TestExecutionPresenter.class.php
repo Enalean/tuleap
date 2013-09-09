@@ -28,7 +28,8 @@ class Testing_TestExecution_TestExecutionPresenter {
         Testing_Campaign_CampaignInfoPresenter $campaign,
         array $results /** @var Testing_TestResult_TestResultPresenter[] */,
         $specification,
-        Testing_Defect_DefectPresenterCollection $defects
+        Testing_Defect_DefectPresenterCollection $defects,
+        $create_defect_form
     ) {
         $this->campaign = $campaign;
         $this->name     = $test_execution->getName();
@@ -44,12 +45,6 @@ class Testing_TestExecution_TestExecutionPresenter {
         $this->defects       = $defects;
         $this->has_defects   = count($this->defects);
 
-        $tracker = TrackerFactory::instance()->getTrackerById(133);
-        $html = '<table><tr><td>';
-        foreach($tracker->getFormElements() as $form_element) {
-            $html .= $form_element->fetchSubmit(array());
-        }
-        $html .= '</td></tr></table>';
-        $this->create_defect_form = $html;
+        $this->create_defect_form = $create_defect_form;
     }
 }

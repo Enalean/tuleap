@@ -83,6 +83,16 @@ class TrackerFactory {
     }
 
     /**
+     * @return Tracker|null
+     */
+    public function getTrackerByItemName(Project $project, $item_name) {
+        $row = $this->getDao()->searchByItemName($project->getId(), $item_name)->getRow();
+        if ($row) {
+            return $this->getCachedInstanceFromRow($row);
+        }
+    }
+
+    /**
      * @param int $group_id the project id the trackers to retrieve belong to
      *
      * @return Array of Tracker

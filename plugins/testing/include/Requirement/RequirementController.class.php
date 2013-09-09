@@ -59,7 +59,9 @@ class Testing_Requirement_RequirementController extends TestingController {
 
     private function getListOfRequirementInfoPresenters() {
         $list_of_requirement_info_presenters = array();
-        foreach(Tracker_ArtifactFactory::instance()->getArtifactsByTrackerId(223) as $artifact) {
+        $conf = new TestingConfiguration($this->getProject());
+        $tracker = $conf->getRequirementTracker();
+        foreach(Tracker_ArtifactFactory::instance()->getArtifactsByTrackerId($tracker->getId()) as $artifact) {
             $requirement = new Testing_Requirement_Requirement($artifact->getId());
             $i = 1;
             foreach ($artifact->getChildrenForUser($this->getCurrentUser()) as $subartifact) {

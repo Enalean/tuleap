@@ -34,6 +34,17 @@ class TrackerDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    function searchByItemName($group_id, $item_name) {
+        $item_name = $this->da->quoteSmart($item_name);
+
+        $sql = "SELECT *
+                FROM $this->table_name
+                WHERE group_id  = $group_id
+                  AND item_name = $item_name";
+
+        return $this->retrieve($sql);
+    }
+
     function searchByGroupId($group_id) {
         $group_id = $this->da->escapeInt($group_id);
         $sql = "SELECT *
