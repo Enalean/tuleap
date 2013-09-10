@@ -220,7 +220,7 @@ plugin_git	logsdaily_title	Git pushes
 plugin_git	delegated_to_gerrit	The management of this Git repository has been delegated to the Gerrit platform:
 plugin_git	waiting_for_repo_creation	The repository is in queue for creation. Please check back here in a few minutes
 
-plugin_git	gerrit_cannot_migrate_error_msg	This repository cannot be migrated. This is because it was alreapy migrated in the past and cannot anymore be migrated again.
+plugin_git	gerrit_cannot_migrate_error_msg	This repository cannot be migrated. This is because it has already been migrated previously and cannot be migrated again.
 
 plugin_git	push_ssh_keys_error	Error pushing SSH Keys. Please add them manually.
 plugin_git	push_ssh_keys_button_value	Manually push SSH keys
