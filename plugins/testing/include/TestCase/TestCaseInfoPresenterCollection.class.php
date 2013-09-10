@@ -21,15 +21,5 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_Campaign_CampaignCreationPresenter {
-
-    public function __construct(
-        Project $project,
-        Testing_TestCase_TestCaseInfoPresenterCollection $list_of_test_cases,
-        array $list_of_requirements
-    ) {
-        $this->list_of_requirements = $list_of_requirements;
-        $this->list_of_test_cases   = $list_of_test_cases;
-        $this->create_uri = '/plugins/testing/?group_id='. $project->getId() .'&resource=campaign&action=create';
-    }
+class Testing_TestCase_TestCaseInfoPresenterCollection extends ArrayObject {
 }

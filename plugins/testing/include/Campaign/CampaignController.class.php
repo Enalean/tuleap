@@ -47,6 +47,7 @@ class Testing_Campaign_CampaignController extends TestingController {
         Testing_Campaign_CampaignManager $manager,
         Testing_Campaign_CampaignInfoPresenterFactory $info_presenter_factory,
         Testing_Campaign_CampaignPresenterFactory $presenter_factory,
+        Testing_TestCase_TestCaseInfoPresenterCollectionFactory $test_case_info_presenter_collection_factory,
         Testing_Requirement_RequirementInfoCollectionPresenterFactory $requirement_info_collection_presenter_factory
     ) {
         parent::__construct('testing', $request);
@@ -55,6 +56,7 @@ class Testing_Campaign_CampaignController extends TestingController {
         $this->manager                           = $manager;
         $this->info_presenter_factory            = $info_presenter_factory;
         $this->presenter_factory                 = $presenter_factory;
+        $this->test_case_info_presenter_collection_factory   = $test_case_info_presenter_collection_factory;
         $this->requirement_info_collection_presenter_factory = $requirement_info_collection_presenter_factory;
     }
 
@@ -82,6 +84,7 @@ class Testing_Campaign_CampaignController extends TestingController {
     public function neue() {
         $presenter = new Testing_Campaign_CampaignCreationPresenter(
             $this->getProject(),
+            $this->test_case_info_presenter_collection_factory->getPresenter(),
             $this->requirement_info_collection_presenter_factory->getListOfRequirementInfoPresenters()
         );
         $this->render(self::RENDER_PREFIX .'neue', $presenter);

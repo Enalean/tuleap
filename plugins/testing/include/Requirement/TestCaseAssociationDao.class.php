@@ -78,4 +78,16 @@ class Testing_Requirement_TestCaseAssociationDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    public function searchForRequirementsSum($tracker_id) {
+        $tracker_id     = $this->da->escapeInt($tracker_id);
+
+        $sql = "SELECT testversion_id, COUNT(requirement_id) as nb
+                FROM plugin_testing_requirement_testversion
+                    INNER JOIN tracker_artifact ON (testversion_id = id)
+                WHERE tracker_artifact.tracker_id = $tracker_id
+                GROUP BY testversion_id";
+
+        return $this->retrieve($sql);
+    }
 }

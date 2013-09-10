@@ -29,30 +29,20 @@
                     <thead>
                         <tr>
                             <th width="16"></th>
+                            <th>Identifier</th>
                             <th>Test case</th>
-                            <th>Version</th>
+                            <th>Nb of linked requirements</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {{# list_of_test_cases }}
                         <tr>
-                            <td><input type="checkbox"></td>
-                            <td>Add user to project</td>
-                            <td>7</td>
+                            <td><input type="checkbox" name="test_cases[]" value="{{ id }}" /></td>
+                            <td>{{ id }}</td>
+                            <td>{{ name }}</td>
+                            <td>{{ nb_of_requirements }}</td>
                         </tr>
-                            <td><input type="checkbox"></td>
-                            <td>Delete file via webdav</td>
-                            <td>3</td>
-                        </tr>
-                        </tr>
-                            <td><input type="checkbox"></td>
-                            <td>Import CSV file into tracker v3</td>
-                            <td>4</td>
-                        </tr>
-                        </tr>
-                            <td>…</td>
-                            <td>…</td>
-                            <td>…</td>
-                        </tr>
+                        {{/ list_of_test_cases }}
                     </tbody>
                 </table>
             </div>
@@ -63,14 +53,14 @@
                         <tr>
                             <th width="16"></th>
                             <th>N°</th>
-                            <th>Exigence</th>
+                            <th>Requirement</th>
                             <th>Nb of linked test cases</th>
                         </tr>
                     </thead>
                     <tbody>
                         {{# list_of_requirements }}
                         <tr>
-                            <td><input type="checkbox"></td>
+                            <td><input type="checkbox" name="requirements[]" value="{{ id }}" /></td>
                             <td>{{ id }}</td>
                             <td>{{ name }}</td>
                             <td>{{ nb_of_tests }}</td>

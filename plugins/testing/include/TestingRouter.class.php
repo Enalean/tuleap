@@ -57,6 +57,12 @@ class TestingRouter {
             $testcase_association_dao
         );
 
+        $test_case_info_presenter_collection_factory = new Testing_TestCase_TestCaseInfoPresenterCollectionFactory(
+            $project,
+            $conf->getTestCaseTracker(),
+            $testcase_association_dao
+        );
+
         $requested_resource = $request->getValidated('resource');
         switch ($requested_resource) {
             case self::RESOURCE_REQUIREMENT:
@@ -97,6 +103,7 @@ class TestingRouter {
                     $campaign_manager,
                     $info_presenter_factory,
                     $presenter_factory,
+                    $test_case_info_presenter_collection_factory,
                     $requirement_info_collection_presenter_factory
                 );
         }
