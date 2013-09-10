@@ -35,10 +35,16 @@ class Testing_Campaign_CampaignStatPresenter {
     /** @var int */
     public $nb_not_completed;
 
+    /** @var int */
+    public $percent_complete;
+
     public function __construct($nb_not_run, $nb_pass, $nb_fail, $nb_not_completed) {
         $this->nb_not_run       = $nb_not_run;
         $this->nb_pass          = $nb_pass;
         $this->nb_fail          = $nb_fail;
         $this->nb_not_completed = $nb_not_completed;
+        $total  = $nb_not_run + $nb_pass + $nb_fail + $nb_not_completed;
+        $nb_run = $total - $nb_not_run;
+        $this->percent_complete = floor($nb_run * 100 / $total);
     }
 }

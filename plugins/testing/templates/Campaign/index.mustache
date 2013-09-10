@@ -13,6 +13,7 @@
         <tr>
             <th>Name</th>
             <th>Status</th>
+            <th>Progress</th>
             <th class="span1">Delete?</th>
         </tr>
     </thead>
@@ -23,6 +24,15 @@
             <td>
                 {{# stat }}
                     {{> badge-status }}
+                {{/ stat }}
+            </td>
+            <td>
+                {{# stat }}
+                <div class="progress">
+                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ percent_complete }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ percent_complete }}%;">
+                        <span>{{ percent_complete }}% Complete</span>
+                    </div>
+                </div>
                 {{/ stat }}
             </td>
             <td><a href="{{ delete_uri }}" title="Delete permanently this campaign"><i class="icon-trash"></i></a></td>
