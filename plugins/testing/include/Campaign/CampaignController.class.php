@@ -50,7 +50,8 @@ class Testing_Campaign_CampaignController extends TestingController {
         Testing_Campaign_CampaignPresenterFactory $presenter_factory,
         Testing_Release_ReleaseInfoPresenterCollectionFactory $release_info_presenter_collection_factory,
         Testing_TestCase_TestCaseInfoPresenterCollectionFactory $test_case_info_presenter_collection_factory,
-        Testing_Requirement_RequirementInfoCollectionPresenterFactory $requirement_info_collection_presenter_factory
+        Testing_Requirement_RequirementInfoCollectionPresenterFactory $requirement_info_collection_presenter_factory,
+        Testing_Campaign_MatrixRowPresenterCollectionFactory $matrix_row_presenter_collection_factory
     ) {
         parent::__construct('testing', $request);
         $this->info_presenter_collection_factory = $info_presenter_collection_factory;
@@ -62,6 +63,7 @@ class Testing_Campaign_CampaignController extends TestingController {
         $this->release_info_presenter_collection_factory     = $release_info_presenter_collection_factory;
         $this->test_case_info_presenter_collection_factory   = $test_case_info_presenter_collection_factory;
         $this->requirement_info_collection_presenter_factory = $requirement_info_collection_presenter_factory;
+        $this->matrix_row_presenter_collection_factory       = $matrix_row_presenter_collection_factory;
     }
 
     /**
@@ -83,6 +85,15 @@ class Testing_Campaign_CampaignController extends TestingController {
         $campaign  = $this->manager->getCampaign($this->request->getProject(), $this->request->get('id'));
         $presenter = $this->presenter_factory->getPresenter($campaign);
         $this->render(self::RENDER_PREFIX .'show', $presenter);
+    }
+
+    public function report() {
+        $campaign  = $this->manager->getCampaign($this->request->getProject(), $this->request->get('id'));
+        $presenter = new Testing_Campaign_CampaignReportPresenter(
+            $this->info_presenter_factory->getPresenter($campaign),
+            $this->matrix_row_presenter_collection_factory->getCollection($campaign)
+        );
+        $this->render(self::RENDER_PREFIX .__FUNCTION__, $presenter);
     }
 
     public function neue() {

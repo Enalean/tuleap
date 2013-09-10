@@ -36,7 +36,8 @@ class Testing_Campaign_CampaignPresenter {
         $this->name                              = $campaign->getName();
         $this->stat                              = $stat;
         $this->list_of_execution_info_presenters = $list_of_execution_info_presenters;
-        $this->show_uri = '/plugins/testing/?group_id='. $campaign->getProjectId() .'&resource=campaign&action=show&id='. $campaign->getId();
-        $this->edit_uri = '/plugins/testing/?group_id='. $campaign->getProjectId() .'&resource=campaign&action=edit&id='. $campaign->getId();
+        $this->show_uri   = '/plugins/testing/?group_id='. $campaign->getProjectId() .'&resource=campaign&action=show&id='. $campaign->getId();
+        $this->edit_uri   = '/plugins/testing/?group_id='. $campaign->getProjectId() .'&resource=campaign&action=edit&id='. $campaign->getId();
+        $this->report_uri = '/plugins/testing/?group_id='. $campaign->getProjectId() .'&resource=campaign&action=report&id='. $campaign->getId();
     }
 }

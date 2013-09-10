@@ -51,10 +51,16 @@ class TestingRouter {
         $campaign_manager = new Testing_Campaign_CampaignManager($campaign_dao, $campaign_factory);
 
         $testcase_association_dao = new Testing_Requirement_TestCaseAssociationDao();
-        $requirement_info_collection_presenter_factory = new Testing_Requirement_RequirementInfoCollectionPresenterFactory(
+        $requirement_info_presenter_factory = new Testing_Requirement_RequirementInfoPresenterFactory(
             $project,
             $conf->getRequirementTracker(),
             $testcase_association_dao
+        );
+
+        $requirement_info_collection_presenter_factory = new Testing_Requirement_RequirementInfoCollectionPresenterFactory(
+            $project,
+            $conf->getRequirementTracker(),
+            $requirement_info_presenter_factory
         );
 
         $test_case_info_presenter_collection_factory = new Testing_TestCase_TestCaseInfoPresenterCollectionFactory(
@@ -100,6 +106,14 @@ class TestingRouter {
                 $info_presenter_collection_factory = new Testing_Campaign_CampaignInfoPresenterCollectionFactory($campaign_manager, $info_presenter_factory);
                 $creator = new Testing_Campaign_CampaignCreator($campaign_dao, new Testing_TestExecution_TestExecutionDao());
                 $deletor = new Testing_Campaign_CampaignDeletor($campaign_dao, new Testing_TestExecution_TestExecutionDao());
+
+                $matrix_row_presenter_collection_factory = new Testing_Campaign_MatrixRowPresenterCollectionFactory(
+                    $project,
+                    $this->getTestExecutionFactory(),
+                    new Testing_TestExecution_TestExecutionInfoPresenterFactory(),
+                    new Testing_TestExecution_TestExecutionDao()
+                );
+
                 return new Testing_Campaign_CampaignController(
                     $request,
                     $info_presenter_collection_factory,
@@ -110,20 +124,25 @@ class TestingRouter {
                     $presenter_factory,
                     $release_info_presenter_collection_factory,
                     $test_case_info_presenter_collection_factory,
-                    $requirement_info_collection_presenter_factory
+                    $requirement_info_collection_presenter_factory,
+                    $matrix_row_presenter_collection_factory
                 );
         }
     }
 
     private function getTestExecutionCollectionFeeder() {
         $dao     = new Testing_TestExecution_TestExecutionDao();
-        $factory = new Testing_TestExecution_TestExecutionFactory(
+        $factory = $this->getTestExecutionFactory();
+
+        return new Testing_TestExecution_TestExecutionCollectionFeeder($dao, $factory);
+    }
+
+    private function getTestExecutionFactory() {
+        return new Testing_TestExecution_TestExecutionFactory(
             UserManager::instance(),
             $this->getTestResultCollectionFeeder(),
             $this->getTestExecutionDefectCollectionFeeder()
         );
-
-        return new Testing_TestExecution_TestExecutionCollectionFeeder($dao, $factory);
     }
 
     private function getTestExecutionDefectCollectionFeeder() {

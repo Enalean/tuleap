@@ -58,4 +58,19 @@ class Testing_TestExecution_TestExecutionDao extends DataAccessObject {
 
         return $this->update($sql);
     }
+
+    public function searchByCampaignIdGroupByRequirement($campaign_id) {
+        $campaign_id = $this->da->escapeInt($campaign_id);
+
+        $sql = "SELECT requirement.id as requirement_id, execution.*
+                FROM plugin_testing_campaign AS campaign
+                    INNER JOIN plugin_testing_testexecution AS execution ON (campaign.id = execution.campaign_id)
+                    INNER JOIN tracker_artifact AS testcase ON (testcase.id = execution.test_version_id)
+                    INNER JOIN plugin_testing_requirement_testversion ON (testversion_id = testcase.id)
+                    INNER JOIN tracker_artifact AS requirement ON (requirement_id = requirement.id)
+                WHERE campaign.id = $campaign_id
+                ORDER BY requirement_id, execution.id";
+
+        return $this->retrieve($sql);
+    }
 }
