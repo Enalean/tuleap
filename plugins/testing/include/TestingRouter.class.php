@@ -62,6 +62,9 @@ class TestingRouter {
             $conf->getTestCaseTracker(),
             $testcase_association_dao
         );
+        $release_info_presenter_collection_factory = new Testing_Release_ReleaseInfoPresenterCollectionFactory(
+            $conf->getReleaseTracker()
+        );
 
         $requested_resource = $request->getValidated('resource');
         switch ($requested_resource) {
@@ -105,6 +108,7 @@ class TestingRouter {
                     $campaign_manager,
                     $info_presenter_factory,
                     $presenter_factory,
+                    $release_info_presenter_collection_factory,
                     $test_case_info_presenter_collection_factory,
                     $requirement_info_collection_presenter_factory
                 );

@@ -10,12 +10,12 @@
         <input type="text" name="campaign[name]" id="name" required />
     </p>
     <p>
-        <label for="version">Version</label>
-        <select>
-            <option>6.2 :: Sprint 50</option>
-            <option>6.3 :: Sprint 51</option>
-            <option>6.3 :: Sprint 52</option>
-            <option selected>6.4 :: Sprint 53</option>
+        <label>Release</label>
+        <select name="campaign[release]">
+            <option value="">-- Please select a release</option>
+            {{# list_of_releases }}
+            <option value="{{ id }}">{{ name }}</option>
+            {{/ list_of_releases }}
         </select>
     </p>
     <div class="tabbable">

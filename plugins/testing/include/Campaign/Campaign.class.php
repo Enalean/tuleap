@@ -32,18 +32,29 @@ class Testing_Campaign_Campaign {
     /** @var string */
     private $name;
 
+    /** @var Testing_Release_Release */
+    private $release;
+
     /** @var Testing_TestExecution_TestExecutionCollection */
     private $list_of_test_executions;
 
-    public function __construct($id, Project $project, $name, Testing_TestExecution_TestExecutionCollection $list_of_test_executions) {
+    public function __construct(
+        $id,
+        Project $project,
+        $name,
+        Testing_Release_Release $release,
+        Testing_TestExecution_TestExecutionCollection $list_of_test_executions
+    ) {
         $this->id                      = $id;
         $this->project                 = $project;
         $this->name                    = $name;
+        $this->release                 = $release;
         $this->list_of_test_executions = $list_of_test_executions;
     }
 
     public function getId() { return $this->id; }
     public function getName() { return $this->name; }
+    public function getRelease() { return $this->release; }
     public function getProjectId() { return $this->project->getId(); }
     public function getListOfTestExecutions() { return $this->list_of_test_executions; }
 }

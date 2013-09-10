@@ -35,7 +35,12 @@ class Testing_Campaign_CampaignFactory {
      */
     public function getInstanceFromRow(Project $project, $row) {
         $list_of_test_executions = new Testing_TestExecution_TestExecutionCollection();
-        $campaign = new Testing_Campaign_Campaign($row['id'], $project, $row['name'], $list_of_test_executions);
+        if ($row['product_version_id']) {
+            $release = new Testing_Release_ArtifactRelease($row['product_version_id']);
+        } else {
+            $release = new Testing_Release_NullRelease();
+        }
+        $campaign = new Testing_Campaign_Campaign($row['id'], $project, $row['name'], $release, $list_of_test_executions);
         $this->collection_feeder->feedCollection($campaign, $list_of_test_executions);
 
         return $campaign;

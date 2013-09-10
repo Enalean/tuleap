@@ -37,14 +37,16 @@ class Testing_Campaign_CampaignCreator {
     /**
      * @return bool truthy if success
      */
-    public function create(Project $project, $name, $from_test_cases) {
-        $campaign_id = $this->dao->create($project->getId(), $name);
+    public function create(Project $project, $name, $release_id, $from_test_cases) {
+        $campaign_id = $this->dao->create($project->getId(), $name, $release_id);
         if (! $campaign_id) {
             return false;
         }
 
-        foreach ($from_test_cases as $test_case_id) {
-            $this->test_execution_dao->create($campaign_id, $test_case_id);
+        if ($from_test_cases) {
+            foreach ($from_test_cases as $test_case_id) {
+                $this->test_execution_dao->create($campaign_id, $test_case_id);
+            }
         }
         return true;
     }

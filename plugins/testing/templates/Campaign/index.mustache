@@ -12,6 +12,7 @@
     <thead>
         <tr>
             <th>Name</th>
+            <th>Release</th>
             <th>Status</th>
             <th>Progress</th>
             <th class="span1">Delete?</th>
@@ -21,6 +22,7 @@
         {{# list_of_campaign_info_presenters }}
         <tr>
             <td><a href="{{ show_uri }}">{{ name }}</a></td>
+            <td>{{# release }}{{ name }}{{/ release }}</td>
             <td>
                 {{# stat }}
                     {{> badge-status }}

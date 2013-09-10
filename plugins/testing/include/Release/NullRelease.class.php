@@ -21,17 +21,9 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_Campaign_CampaignCreationPresenter {
+class Testing_Release_NullRelease implements Testing_Release_Release {
 
-    public function __construct(
-        Project $project,
-        Testing_Release_ReleaseInfoPresenterCollection $list_of_releases,
-        Testing_TestCase_TestCaseInfoPresenterCollection $list_of_test_cases,
-        array $list_of_requirements
-    ) {
-        $this->list_of_requirements = $list_of_requirements;
-        $this->list_of_test_cases   = $list_of_test_cases;
-        $this->list_of_releases     = $list_of_releases;
-        $this->create_uri = '/plugins/testing/?group_id='. $project->getId() .'&resource=campaign&action=create';
-    }
+    public function getId() { return 0; }
+
+    public function getName() { return ''; }
 }

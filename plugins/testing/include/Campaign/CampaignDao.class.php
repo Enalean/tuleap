@@ -41,12 +41,17 @@ class Testing_Campaign_CampaignDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function create($project_id, $name) {
+    public function create($project_id, $name, $release_id) {
         $project_id = $this->da->escapeInt($project_id);
         $name       = $this->da->quoteSmart($name);
+        $release_id = $this->da->escapeInt($release_id);
 
-        $sql = "INSERT INTO plugin_testing_campaign(project_id, name)
-                VALUES ($project_id, $name)";
+        if (! $release_id) {
+            $release_id = 'NULL';
+        }
+
+        $sql = "INSERT INTO plugin_testing_campaign(project_id, name, product_version_id)
+                VALUES ($project_id, $name, $release_id)";
 
         return $this->updateAndGetLastId($sql);
     }

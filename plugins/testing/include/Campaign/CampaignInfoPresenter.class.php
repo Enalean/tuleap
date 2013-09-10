@@ -29,9 +29,13 @@ class Testing_Campaign_CampaignInfoPresenter {
     /** @var Testing_Campaign_CampaignStatPresenter */
     public $stat;
 
-    public function __construct(Testing_Campaign_Campaign $campaign, Testing_Campaign_CampaignStatPresenter $stat) {
-        $this->name = $campaign->getName();
-        $this->stat = $stat;
+    /** @var Testing_Release_ReleaseInfoPresenter */
+    public $release;
+
+    public function __construct(Testing_Campaign_Campaign $campaign, Testing_Release_ReleaseInfoPresenter $release, Testing_Campaign_CampaignStatPresenter $stat) {
+        $this->name       = $campaign->getName();
+        $this->stat       = $stat;
+        $this->release    = $release;
         $this->show_uri   = '/plugins/testing/?group_id='. $campaign->getProjectId() .'&resource=campaign&action=show&id='. $campaign->getId();
         $this->edit_uri   = '/plugins/testing/?group_id='. $campaign->getProjectId() .'&resource=campaign&action=edit&id='. $campaign->getId();
         $this->delete_uri = '/plugins/testing/?group_id='. $campaign->getProjectId() .'&resource=campaign&action=delete&id='. $campaign->getId();
