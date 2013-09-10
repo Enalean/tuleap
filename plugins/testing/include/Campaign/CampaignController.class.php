@@ -44,6 +44,7 @@ class Testing_Campaign_CampaignController extends TestingController {
         Codendi_Request $request,
         Testing_Campaign_CampaignInfoPresenterCollectionFactory $info_presenter_collection_factory,
         Testing_Campaign_CampaignCreator $creator,
+        Testing_Campaign_CampaignDeletor $deletor,
         Testing_Campaign_CampaignManager $manager,
         Testing_Campaign_CampaignInfoPresenterFactory $info_presenter_factory,
         Testing_Campaign_CampaignPresenterFactory $presenter_factory,
@@ -53,6 +54,7 @@ class Testing_Campaign_CampaignController extends TestingController {
         parent::__construct('testing', $request);
         $this->info_presenter_collection_factory = $info_presenter_collection_factory;
         $this->creator                           = $creator;
+        $this->deletor                           = $deletor;
         $this->manager                           = $manager;
         $this->info_presenter_factory            = $info_presenter_factory;
         $this->presenter_factory                 = $presenter_factory;
@@ -95,8 +97,21 @@ class Testing_Campaign_CampaignController extends TestingController {
      */
     public function create() {
         $data = $this->request->get('campaign');
-        $this->creator->create($this->getProject(), $data['name']);
+        $this->creator->create(
+            $this->getProject(),
+            $data['name'],
+            $this->request->get('test_cases')
+        );
         $GLOBALS['Response']->addFeedback('info', 'The campaign has been successfuly created');
+        $this->redirect(array('group_id' => $this->getProject()->getId()));
+    }
+
+    /**
+     * @todo csrf, check project, ...
+     */
+    public function delete() {
+        $this->deletor->delete($this->request->get('id'));
+        $GLOBALS['Response']->addFeedback('info', 'The campaign has been successfuly deleted');
         $this->redirect(array('group_id' => $this->getProject()->getId()));
     }
 }

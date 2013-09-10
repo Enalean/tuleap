@@ -26,14 +26,26 @@ class Testing_Campaign_CampaignCreator {
     /** @var Testing_Campaign_CampaignDao */
     private $dao;
 
-    public function __construct(Testing_Campaign_CampaignDao $dao) {
-        $this->dao = $dao;
+    public function __construct(
+        Testing_Campaign_CampaignDao $dao,
+        Testing_TestExecution_TestExecutionDao $test_execution_dao
+    ) {
+        $this->dao                = $dao;
+        $this->test_execution_dao = $test_execution_dao;
     }
 
     /**
      * @return bool truthy if success
      */
-    public function create(Project $project, $name) {
-        return $this->dao->create($project->getId(), $name);
+    public function create(Project $project, $name, $from_test_cases) {
+        $campaign_id = $this->dao->create($project->getId(), $name);
+        if (! $campaign_id) {
+            return false;
+        }
+
+        foreach ($from_test_cases as $test_case_id) {
+            $this->test_execution_dao->create($campaign_id, $test_case_id);
+        }
+        return true;
     }
 }

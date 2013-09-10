@@ -40,4 +40,22 @@ class Testing_TestExecution_TestExecutionDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    public function create($campaign_id, $test_version_id) {
+        $campaign_id     = $this->da->escapeInt($campaign_id);
+        $test_version_id = $this->da->escapeInt($test_version_id);
+
+        $sql = "INSERT INTO plugin_testing_testexecution(campaign_id, test_case_id, test_version_id, assigned_to)
+                VALUES ($campaign_id, $test_version_id, $test_version_id, 101)";
+
+        return $this->update($sql);
+    }
+
+    public function deleteByCampaignId($campaign_id) {
+        $campaign_id     = $this->da->escapeInt($campaign_id);
+
+        $sql = "DELETE FROM plugin_testing_testexecution WHERE campaign_id = $campaign_id";
+
+        return $this->update($sql);
+    }
 }

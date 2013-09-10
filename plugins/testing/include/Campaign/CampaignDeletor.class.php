@@ -21,19 +21,24 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_Campaign_CampaignInfoPresenter {
+class Testing_Campaign_CampaignDeletor {
 
-    /** @var string */
-    public $name;
+    /** @var Testing_Campaign_CampaignDao */
+    private $dao;
 
-    /** @var Testing_Campaign_CampaignStatPresenter */
-    public $stat;
+    /** @var Testing_TestExecution_TestExecutionDao */
+    private $test_execution_dao;
 
-    public function __construct(Testing_Campaign_Campaign $campaign, Testing_Campaign_CampaignStatPresenter $stat) {
-        $this->name = $campaign->getName();
-        $this->stat = $stat;
-        $this->show_uri   = '/plugins/testing/?group_id='. $campaign->getProjectId() .'&resource=campaign&action=show&id='. $campaign->getId();
-        $this->edit_uri   = '/plugins/testing/?group_id='. $campaign->getProjectId() .'&resource=campaign&action=edit&id='. $campaign->getId();
-        $this->delete_uri = '/plugins/testing/?group_id='. $campaign->getProjectId() .'&resource=campaign&action=delete&id='. $campaign->getId();
+    public function __construct(
+        Testing_Campaign_CampaignDao $dao,
+        Testing_TestExecution_TestExecutionDao $test_execution_dao
+    ) {
+        $this->dao                = $dao;
+        $this->test_execution_dao = $test_execution_dao;
+    }
+
+    public function delete($campaign_id) {
+        $this->test_execution_dao->deleteByCampaignId($campaign_id);
+        $this->dao->deleteById($campaign_id);
     }
 }

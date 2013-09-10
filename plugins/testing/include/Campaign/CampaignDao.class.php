@@ -50,4 +50,12 @@ class Testing_Campaign_CampaignDao extends DataAccessObject {
 
         return $this->updateAndGetLastId($sql);
     }
+
+    public function deleteById($id) {
+        $id = $this->da->escapeInt($id);
+
+        $sql = "DELETE FROM plugin_testing_campaign WHERE id = $id";
+
+        return $this->update($sql);
+    }
 }

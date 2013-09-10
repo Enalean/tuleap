@@ -95,11 +95,13 @@ class TestingRouter {
                     new Testing_TestExecution_TestExecutionInfoPresenterFactory()
                 );
                 $info_presenter_collection_factory = new Testing_Campaign_CampaignInfoPresenterCollectionFactory($campaign_manager, $info_presenter_factory);
-                $creator = new Testing_Campaign_CampaignCreator($campaign_dao);
+                $creator = new Testing_Campaign_CampaignCreator($campaign_dao, new Testing_TestExecution_TestExecutionDao());
+                $deletor = new Testing_Campaign_CampaignDeletor($campaign_dao, new Testing_TestExecution_TestExecutionDao());
                 return new Testing_Campaign_CampaignController(
                     $request,
                     $info_presenter_collection_factory,
                     $creator,
+                    $deletor,
                     $campaign_manager,
                     $info_presenter_factory,
                     $presenter_factory,
