@@ -103,6 +103,10 @@ class Git_SystemEventManager {
         return $this->system_event_manager->isThereAnEventAlreadyOnGoing(SystemEvent_GIT_GERRIT_MIGRATION::NAME, $repository->getId());
     }
 
+    public function isProjectDeletionOnGerritOnGoing(GitRepository $repository) {
+        return $this->system_event_manager->isThereAnEventAlreadyOnGoing(SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME, $repository->getId());
+    }
+
     public function getTypes() {
         return array(
             SystemEvent_GIT_REPO_UPDATE::NAME,

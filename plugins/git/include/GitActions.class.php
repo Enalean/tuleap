@@ -191,14 +191,22 @@ class GitActions extends PluginActions {
 
     public function repoManagement(GitRepository $repository) {
         $this->addData(array('repository'=>$repository));
-        if ($this->git_system_event_manager->isRepositoryMigrationToGerritOnGoing($repository)) {
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, $this->getText('gerrit_migration_ongoing'));
-        }
+        $this->displayFeedbacksOnRepoManagement($repository);
         $this->addData(array(
             'gerrit_servers' => $this->gerrit_server_factory->getServers(),
             'driver'         => $this->driver,
         ));
         return true;
+    }
+
+    private function displayFeedbacksOnRepoManagement(GitRepository $repository) {
+        if ($this->git_system_event_manager->isRepositoryMigrationToGerritOnGoing($repository)) {
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $this->getText('gerrit_migration_ongoing'));
+        }
+
+        if ($this->git_system_event_manager->isProjectDeletionOnGerritOnGoing($repository)) {
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $this->getText('gerrit_deletion_ongoing'));
+        }
     }
 
     public function notificationUpdatePrefix($projectId, $repositoryId, $mailPrefix, $pane) {
