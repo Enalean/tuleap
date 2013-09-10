@@ -157,7 +157,7 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         $html .= '<h4>'. $GLOBALS['Language']->getText('global', 'warning!') .'</h4>';
         $html .= '<p>'. $GLOBALS['Language']->getText('plugin_git', 'disconnect_gerrit_msg') .'</p>';
         $html .= '<p>';
-        $html .= '<input type="hidden" name="' . self::OPTION_DELETE_GERRIT_PROJECT . '" value="' . $this->request->get(self::OPTION_DELETE_GERRIT_PROJECT) . '"/>';
+        $html .= '<input type="hidden" name="' . self::OPTION_DELETE_GERRIT_PROJECT . '" value="' . $this->hp->purify($this->request->get(self::OPTION_DELETE_GERRIT_PROJECT)) . '"/>';
         $html .= '<button type="submit" name="disconnect" value="1" class="btn btn-danger">'. $GLOBALS['Language']->getText('plugin_git', 'disconnect_gerrit_yes') .'</button> ';
         $html .= '<button type="button" class="btn" onclick="window.location=window.location;">'. $GLOBALS['Language']->getText('plugin_git', 'no') .'</button> ';
         $html .= '</p>';
