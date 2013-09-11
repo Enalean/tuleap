@@ -112,8 +112,8 @@ class Cardwall_CardController extends MVC2_PluginController {
             $this->card_fields,
             $this->artifact->getCardAccentColor($user),
             $this->display_preferences,
-            $this->artifact->getAllowedChildrenTypesForUser($user),
             $swimline_id,
+            $this->artifact->getAllowedChildrenTypesForUser($user),
             $parent_artifact
         );
     }
