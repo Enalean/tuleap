@@ -643,23 +643,50 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
 
 class GitActions_disconnectFromGerritTest extends TuleapTestCase {
 
-    public function itDelegatesToGitoliteBackend() {
-        $system_event_manager = mock('Git_SystemEventManager');
-        $backend = mock('Git_Backend_Gitolite');
-        $repo    = stub('GitRepository')->getBackend()->returns($backend);
-        $actions = new GitActions(
-            mock('Git'),
-            $system_event_manager,
+
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->backend = mock('Git_Backend_Gitolite');
+        $this->repo    = stub('GitRepository')->getBackend()->returns($this->backend);
+        $this->request = mock('Codendi_Request');
+        $this->system_event_manager = mock('Git_SystemEventManager');
+        $this->controller = mock('Git');
+        $this->driver = mock('Git_Driver_Gerrit');
+        $this->gerrit_server_factory = mock('Git_RemoteServer_GerritServerFactory');
+
+        stub($this->controller)->getRequest()->returns($this->request);
+
+        $this->actions = new GitActions(
+            $this->controller,
+            $this->system_event_manager,
             mock('GitRepositoryFactory'),
             mock('GitRepositoryManager'),
-            mock('Git_RemoteServer_GerritServerFactory'),
-            mock('Git_Driver_Gerrit'),
+            $this->gerrit_server_factory,
+            $this->driver,
             mock('Git_Driver_Gerrit_UserAccountManager')
         );
+    }
 
-        expect($backend)->disconnectFromGerrit()->once();
-        expect($system_event_manager)->queueRepositoryUpdate($repo)->once();
-        $actions->disconnectFromGerrit($repo);
+    public function itDelegatesToEventManager() {
+        expect($this->backend)->disconnectFromGerrit()->once();
+        expect($this->system_event_manager)->queueRepositoryUpdate($this->repo)->once();
+        $this->actions->disconnectFromGerrit($this->repo);
+    }
+
+    public function itDeletesGerritProjectIfOptionChosen() {
+        stub($this->request)->get(GitViews_RepoManagement_Pane_Gerrit::OPTION_DELETE_GERRIT_PROJECT)->returns(true);
+
+        expect($this->system_event_manager)->queueRemoteProjectDeletion($this->repo, $this->driver)->once();
+        $this->actions->disconnectFromGerrit($this->repo);
+    }
+
+    public function itDoesNotDeletesGerritProjectIfOptionNotChosen() {
+        stub($this->request)->get(GitViews_RepoManagement_Pane_Gerrit::OPTION_DELETE_GERRIT_PROJECT)->returns(false);
+
+        expect($this->system_event_manager)->queueRemoteProjectDeletion($this->repo, $this->driver)->never();
+        $this->actions->disconnectFromGerrit($this->repo);
     }
 }
 ?>

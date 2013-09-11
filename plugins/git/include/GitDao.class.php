@@ -553,6 +553,18 @@ class GitDao extends DataAccessObject {
     /**
      * @return bool
      */
+    public function setGerritProjectAsDeleted($repository_id) {
+        $repository_id = $this->da->escapeInt($repository_id);
+        $sql = "UPDATE plugin_git
+                SET remote_project_deleted = 1,
+                    remote_project_deleted_date = UNIX_TIMESTAMP()
+                WHERE repository_id = $repository_id";
+        return $this->update($sql);
+    }
+
+    /**
+     * @return bool
+     */
     public function isRemoteServerUsed($remote_server_id) {
         $remote_server_id = $this->da->escapeInt($remote_server_id);
         $sql = "SELECT NULL

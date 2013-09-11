@@ -22,46 +22,42 @@
 require_once dirname(__FILE__).'/../../../../bootstrap.php';
 
 class GitViews_RepoManagement_Pane_GerritTest extends TuleapTestCase {
-    
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->repository             = new GitRepository();
+        $this->request                = mock('Codendi_Request');
+        $this->driver = mock('Git_Driver_Gerrit');
+    }
+
     public function testCanBeDisplayedReturnsFalseIfAuthTypeNotLdapAndGerritServersSet() {
         //set of type not ldap
         Config::set('sys_auth_type', 'not_ldap');
-                
-        $repository = new GitRepository();
-        $request = mock('Codendi_Request');
-        $driver = mock('Git_Driver_Gerrit');
-        $gerrit_servers = array('IAmAServer');
-        
-        $pane = new GitViews_RepoManagement_Pane_Gerrit($repository, $request, $driver, $gerrit_servers);
-        
+
+        $gerrit_servers         = array('IAmAServer');
+        $pane = new GitViews_RepoManagement_Pane_Gerrit($this->repository, $this->request, $this->driver, $gerrit_servers);
+
         $this->assertFalse($pane->canBeDisplayed());
     }
-    
+
     public function testCanBeDisplayedReturnsFalseIfAuthTypeLdapAndGerritServersNotSet() {
         //set of type ldap
         Config::set('sys_auth_type', Config::AUTH_TYPE_LDAP);
-                
-        $repository = new GitRepository();
-        $request = mock('Codendi_Request');
-        $driver = mock('Git_Driver_Gerrit');
+
         $gerrit_servers = array();
-        
-        $pane = new GitViews_RepoManagement_Pane_Gerrit($repository, $request, $driver, $gerrit_servers);
-        
+        $pane = new GitViews_RepoManagement_Pane_Gerrit($this->repository, $this->request, $this->driver, $gerrit_servers);
+
         $this->assertFalse($pane->canBeDisplayed());
     }
-    
+
     public function testCanBeDisplayedReturnsTrueIfAuthTypeLdapAndGerritServersSet() {
         //set of type ldap
         Config::set('sys_auth_type', Config::AUTH_TYPE_LDAP);
-                
-        $repository = new GitRepository();
-        $request = mock('Codendi_Request');
-        $driver = mock('Git_Driver_Gerrit');
+
         $gerrit_servers = array('IAmAServer');
-        
-        $pane = new GitViews_RepoManagement_Pane_Gerrit($repository, $request, $driver, $gerrit_servers);
-        
+        $pane = new GitViews_RepoManagement_Pane_Gerrit($this->repository, $this->request, $this->driver, $gerrit_servers);
+
         $this->assertTrue($pane->canBeDisplayed());
     }
 }

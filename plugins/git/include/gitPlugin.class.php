@@ -199,6 +199,14 @@ class GitPlugin extends Plugin {
                     $this->getGitoliteSSHKeyDumper(),
                 );
                 break;
+            case SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME:
+                $params['class'] = 'SystemEvent_GIT_GERRIT_PROJECT_DELETE';
+                $params['dependencies'] = array(
+                    $this->getRepositoryFactory(),
+                    $this->getGerritServerFactory(),
+                    $this->getGerritDriver()
+                );
+                break;
             default:
                 break;
         }

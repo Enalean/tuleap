@@ -72,6 +72,8 @@ plugin_git	dao_error_remove_notification	Mail not removed
 plugin_git	dao_child_params	Repository child search failed : missing repository id
 
 plugin_git	disconnect_gerrit_title	Disconnect from Gerrit
+plugin_git	disconnect_gerrit_button	Disconnect
+plugin_git	gerrit_project_delete	Also Delete project on Gerrit
 plugin_git	disconnect_gerrit_msg	This operation <strong>cannot</strong> be undone. This repository will never again be managed by a gerrit server. Do you confirm the disconnection?
 plugin_git	disconnect_gerrit_yes	Yes, I want to disconnect from Gerrit
 
@@ -228,3 +230,4 @@ plugin_git	push_ssh_keys_button_title	Push SSH keys to remote servers
 plugin_git	push_ssh_keys_info	Old keys need to be pushed manually. All new keys are automatically pushed to the following Gerrit servers:
 
 plugin_git	gerrit_remote_exception	An error occured while trying to access Gerrit server, maybe the server is down, please check with administrators: $1
+plugin_git	gerrit_deletion_ongoing	The deletion of the project under Gerrit is on going, please wait for a few minutes.

@@ -340,4 +340,11 @@ a.btn.plugin_git_admin_button {
     color: #333;
     margin-left: 1em;
 }
+legend.gerrit_disconnect {
+    font-weight: bold;
+}
 
+fieldset.gerrit_disconnect {
+    width: 680px;
+    border-color: lightgrey;
+}

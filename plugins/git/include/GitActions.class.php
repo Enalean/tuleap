@@ -191,14 +191,22 @@ class GitActions extends PluginActions {
 
     public function repoManagement(GitRepository $repository) {
         $this->addData(array('repository'=>$repository));
-        if ($this->git_system_event_manager->isRepositoryMigrationToGerritOnGoing($repository)) {
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, $this->getText('gerrit_migration_ongoing'));
-        }
+        $this->displayFeedbacksOnRepoManagement($repository);
         $this->addData(array(
             'gerrit_servers' => $this->gerrit_server_factory->getServers(),
             'driver'         => $this->driver,
         ));
         return true;
+    }
+
+    private function displayFeedbacksOnRepoManagement(GitRepository $repository) {
+        if ($this->git_system_event_manager->isRepositoryMigrationToGerritOnGoing($repository)) {
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $this->getText('gerrit_migration_ongoing'));
+        }
+
+        if ($this->git_system_event_manager->isProjectDeletionOnGerritOnGoing($repository)) {
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $this->getText('gerrit_deletion_ongoing'));
+        }
     }
 
     public function notificationUpdatePrefix($projectId, $repositoryId, $mailPrefix, $pane) {
@@ -514,11 +522,6 @@ class GitActions extends PluginActions {
         }
     }
 
-    public function disconnectFromGerrit(GitRepository $repository) {
-        $repository->getBackend()->disconnectFromGerrit($repository);
-        $this->git_system_event_manager->queueRepositoryUpdate($repository);
-    }
-
     private function redirectToRepo($projectId, $repoId) {
         $this->getController()->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
     }
@@ -526,8 +529,16 @@ class GitActions extends PluginActions {
     private function addError($error_key) {
         $this->getController()->addError($this->getText($error_key));
     }
-    
-    
-}
 
+    public function disconnectFromGerrit(GitRepository $repository) {
+        $repository->getBackend()->disconnectFromGerrit($repository);
+        $this->git_system_event_manager->queueRepositoryUpdate($repository);
+
+        $delete_gerrit_project = $this->request->get(GitViews_RepoManagement_Pane_Gerrit::OPTION_DELETE_GERRIT_PROJECT);
+
+        if ($delete_gerrit_project) {
+            $this->git_system_event_manager->queueRemoteProjectDeletion($repository, $this->driver);
+        }
+    }
+}
 ?>

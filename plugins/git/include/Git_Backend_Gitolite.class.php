@@ -441,6 +441,10 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     public function disconnectFromGerrit(GitRepository $repository) {
         $this->getDao()->disconnectFromGerrit($repository->getId());
     }
+
+    public function setGerritProjectAsDeleted(GitRepository $repository) {
+        $this->getDao()->setGerritProjectAsDeleted($repository->getId());
+    }
 }
 
 ?>

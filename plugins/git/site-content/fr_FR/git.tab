@@ -59,6 +59,8 @@ plugin_git	dao_error_remove_notification	L'adresse mail n'a pas été supprimée
 plugin_git	dao_child_params	Paramètres invalides
 
 plugin_git	disconnect_gerrit_title	Déconnexion de Gerrit
+plugin_git	disconnect_gerrit_button	Déconnexion
+plugin_git	gerrit_project_delete	Supprimer le projet sur Gerrit
 plugin_git	disconnect_gerrit_msg	Cette opération est <strong>irréversible</strong>. Ce dépôt ne pourra plus être géré de nouveau par un serveur gerrit. Êtes vous certain de vouloir continuer ?
 plugin_git	disconnect_gerrit_yes	Oui, je veux déconnecter ce dépôt de Gerrit
 
@@ -225,3 +227,4 @@ plugin_git	push_ssh_keys_info	Vos anciennes clés ne sont pas poussées automati
 plugin_git	gerrit_cannot_migrate_error_msg	Ce dépôt ne peux pas être migré. Ceci est dû au fait qu'il a déjà été migré par le passé et ne peut plus être migré de nouveau.
 
 plugin_git	gerrit_remote_exception	Une erreur est survenue lors d'une tentative de connexion à un serveur Gerrit. Peut-être est-il arreté? Merci de vérifier avec les administrateurs: $1
+plugin_git	gerrit_deletion_ongoing	La supression du projet sous Gerrit est en cours, veuillez patienter quelques minutes.

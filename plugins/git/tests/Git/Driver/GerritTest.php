@@ -497,4 +497,57 @@ class Git_Driver_Gerrit_RemoveIncludedGroupTest extends TuleapTestCase {
         $this->driver->removeAllIncludedGroups($this->gerrit_server, $group_name);
     }
 }
+
+class Git_Driver_Gerrit_isDeletePluginEnabledTest extends TuleapTestCase {
+    /**
+     * @var Git_Driver_Gerrit
+     */
+    private $driver;
+
+    /**
+     * @var Git_RemoteServer_GerritServer
+     */
+    private $gerrit_server;
+
+    /**
+     * @var Git_Driver_Gerrit_RemoteSSHCommand
+     */
+    private $ssh;
+
+    public function setUp() {
+        parent::setUp();
+        $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
+
+        $this->ssh    = mock('Git_Driver_Gerrit_RemoteSSHCommand');
+        $this->logger = mock('BackendLogger');
+        $this->driver = partial_mock('Git_Driver_Gerrit', array(), array($this->ssh, $this->logger));
+    }
+
+    public function itReturnsFalseIfPluginIsNotInstalled() {
+        stub($this->ssh)->execute()->returns("");
+        $enabled = $this->driver->isDeletePluginEnabled($this->gerrit_server);
+
+        $this->assertFalse($enabled);
+    }
+
+    public function itReturnsFalseIfPluginIsInstalledAndNotEnabled() {
+        stub($this->ssh)->execute()->returns("Name                           Version    Status
+                                        ----------------------------------------------------
+                                        deleteproject                  1.1-SNAPSHOT DISABLED
+                                        replication                    1.0        ENABLED");
+        $enabled = $this->driver->isDeletePluginEnabled($this->gerrit_server);
+
+        $this->assertFalse($enabled);
+    }
+
+    public function itReturnsTrueIfPluginIsInstalledAndEnabled() {
+        stub($this->ssh)->execute()->returns("Name                           Version    Status
+                                        ----------------------------------------------------
+                                        deleteproject                  1.1-SNAPSHOT ENABLED
+                                        replication                    1.0        ENABLED");
+        $enabled = $this->driver->isDeletePluginEnabled($this->gerrit_server);
+
+        $this->assertTrue($enabled);
+    }
+}
 ?>

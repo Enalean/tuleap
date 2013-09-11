@@ -36,6 +36,9 @@ class Git_Driver_Gerrit {
 
     const DEFAULT_PARENT_PROJECT = 'All-Projects';
 
+    const DELETEPROJECT_PLUGIN_NAME = 'deleteproject';
+    const GERRIT_PLUGIN_ENABLED_VALUE = 'ENABLED';
+
     /**
      * @var Git_Driver_Gerrit_RemoteSSHCommand
      */
@@ -377,12 +380,50 @@ class Git_Driver_Gerrit {
     /**
      * Reset the parent of a project
      * @param Git_RemoteServer_GerritServer $server
-     * @param type $project_name
+     * @param string $project_name
      */
     public function resetProjectInheritance(Git_RemoteServer_GerritServer $server, $project_name) {
         $query = self::COMMAND .' set-project-parent '. $project_name .' --parent '. self::DEFAULT_PARENT_PROJECT;
         $this->ssh->execute($server, $query);
 
+    }
+
+    /**
+     * @param Git_RemoteServer_GerritServer $server
+     * @return boolean
+     */
+    public function isDeletePluginEnabled(Git_RemoteServer_GerritServer $server) {
+        $query = self::COMMAND . ' plugin ls';
+
+        try {
+            $plugins_list = $this->ssh->execute($server, $query);
+        } catch(Exception $e) {
+            return false;
+        }
+
+        if (! $this->isDeletePluginInstalled($plugins_list)) {
+            return false;
+        }
+
+        $plugin     = preg_quote(self::DELETEPROJECT_PLUGIN_NAME);
+        $is_enabled = preg_quote(self::GERRIT_PLUGIN_ENABLED_VALUE);
+
+        return preg_match("/\s$plugin\s+[^\s]+\s+$is_enabled/", $plugins_list);
+    }
+
+    private function isDeletePluginInstalled($plugins_list) {
+        return strstr($plugins_list, self::DELETEPROJECT_PLUGIN_NAME);
+    }
+
+    /**
+     * @param Git_RemoteServer_GerritServer $server
+     * @param string $gerrit_project_full_name E.g. bugs or bugs/repository1
+     * 
+     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     */
+    public function deleteProject(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name) {
+        $query = ' deleteproject delete ' . $gerrit_project_full_name . ' --yes-really-delete';
+        $this->ssh->execute($server, $query);
     }
 }
 ?>
