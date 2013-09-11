@@ -82,7 +82,7 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     }
 
     public function add_new_backlog_item() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'add_subitem', array($this->backlog_item_type));
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'add_subitem', array($this->parent_item_type));
     }
 
     public function can_add_subbacklog_items() {
