@@ -1,0 +1,2 @@
+plugin_openid	descriptor_name	OpenID
+plugin_openid	descriptor_description	Plugin OpenID, permet aux utilisateurs de s'authentifier avec leurs comptes OpenIDs.

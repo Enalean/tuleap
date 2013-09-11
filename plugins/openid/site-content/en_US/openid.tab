@@ -1,0 +1,2 @@
+plugin_openid	descriptor_name	OpenID
+plugin_openid	descriptor_description	OpenID plugin, provides OpenID authentication for users.
