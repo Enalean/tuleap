@@ -1,3 +1,6 @@
+Version 0.9.45 - Tuleap 6.5
+    * Fix regression introduced by 0.9.44
+
 Version 0.9.44 - Tuleap 6.5
     * Forbid anonymous user to add and/or update artifacts
 
