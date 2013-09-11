@@ -35,7 +35,11 @@ class DateHelper {
     public static function timeAgoInWords($time, $include_seconds = false, $with_title = false) {
         $str = '-';
         if ($time) {
-            $str = $GLOBALS['Language']->getText('include_utils', 'time_ago', self::distanceOfTimeInWords($time, $_SERVER['REQUEST_TIME'], $include_seconds));
+            $string_key = 'time_ago';
+            if ($time > $_SERVER['REQUEST_TIME']) {
+                $string_key = 'time_in_future';
+            }
+            $str = $GLOBALS['Language']->getText('include_utils', $string_key, self::distanceOfTimeInWords($time, $_SERVER['REQUEST_TIME'], $include_seconds));
             if ($with_title) {
                 $str = '<span title="'. date($GLOBALS['Language']->getText('system', 'datefmt'), $time) .'">'. $str .'</span>';
             }

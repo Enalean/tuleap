@@ -130,6 +130,32 @@ class DateHelperTest extends UnitTestCase {
     }
 }
 
+class DateHelp_FutureOrPastTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $GLOBALS['Language'] = mock('BaseLanguage');
+    }
+
+    public function tearDown() {
+        unset($GLOBALS['Language']);
+        parent::tearDown();
+    }
+
+    public function testDateInPast() {
+        expect($GLOBALS['Language'])->getText()->count(2);
+        expect($GLOBALS['Language'])->getText('include_utils', 'time_ago', '*')->at(1);
+        DateHelper::timeAgoInWords($_SERVER['REQUEST_TIME'] - 500);
+    }
+
+    public function testDateInFuture() {
+        expect($GLOBALS['Language'])->getText()->count(2);
+        expect($GLOBALS['Language'])->getText('include_utils', 'time_in_future', '*')->at(1);
+        DateHelper::timeAgoInWords($_SERVER['REQUEST_TIME'] + 500);
+    }
+
+}
+
 class DateHelper_DistanceTest extends TuleapTestCase {
     private $today_at_midnight;
 
