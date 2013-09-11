@@ -36,6 +36,12 @@
           transition: border linear 0.2s, box-shadow linear 0.2s;
 }
 
+.list_of_releases_for_requirement span:after {
+    content: ", ";
+}
+.list_of_releases_for_requirement span:last-child:after {
+    content: none;
+}
 
 .controls-row {
   *zoom: 1;

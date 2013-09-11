@@ -25,10 +25,20 @@ class Testing_Requirement_RequirementInfoCollectionPresenter {
 
     public $list_of_requirements;
 
-    public function __construct(Project $project, array $list_of_requirements, TestingFacadeTrackerCreationPresenter $create_requirement_form) {
+    public function __construct(
+        Project $project,
+        Testing_Release_ReleaseInfoPresenterCollection $list_of_releases,
+        array $list_of_requirements,
+        TestingFacadeTrackerCreationPresenter $create_requirement_form
+    ) {
+        $this->list_of_releases     = $list_of_releases;
+        $this->has_releases         = count($list_of_releases) > 0;
         $this->list_of_requirements = $list_of_requirements;
         $this->create_uri  = '/plugins/testing/?group_id='. $project->getId() .'&resource=requirement&action=create';
+        $this->filter_uri  = '/plugins/testing/';
 
+        $this->group_id = $project->getId();
         $this->create_requirement_form = $create_requirement_form;
+        $this->current_release = HTTPRequest::instance()->get('release');
     }
 }

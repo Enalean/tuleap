@@ -57,6 +57,22 @@ CREATE TABLE plugin_testing_requirement_testversion(
         ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE='InnoDB';
 
+DROP TABLE IF EXISTS plugin_testing_requirement_release;
+CREATE TABLE plugin_testing_requirement_release(
+      requirement_id int(11) NOT NULL,
+      release_id int(11) NOT NULL,
+      KEY requirement_id (requirement_id),
+      KEY release_id (release_id),
+      CONSTRAINT plugin_testing_requirement_release_ibfk_test
+        FOREIGN KEY (release_id)
+        REFERENCES tracker_artifact (id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+      CONSTRAINT plugin_testing_requirement_release_ibfk_rel
+        FOREIGN KEY (requirement_id)
+        REFERENCES tracker_artifact (id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE='InnoDB';
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
        VALUES      ( 100, 'plugin_testing:descriptor_name', 'plugin_testing:descriptor_description', 'plugin_testing', '/plugins/testing/?group_id=$group_id', 1, 1, 'system', 240);

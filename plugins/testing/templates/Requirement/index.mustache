@@ -1,5 +1,5 @@
 <ul class="nav nav-tabs">
-  <li class="active"><a href="/plugins/testing/?group_id=1&resource=requirement">Requirements</a></li>
+  <li class="active"><a href="/plugins/testing/?group_id=1&resource=requirement">Tests Specification</a></li>
   <li><a href="/plugins/testing/?group_id=1&resource=campaign">Campaigns</a></li>
   <li><a href="/plugins/testing/?group_id=1&resource=report">Reports</a></li>
 </ul>
@@ -7,6 +7,28 @@
     <a href="#submit-new-requirement" class="btn" data-toggle="modal"><i class="icon-plus"></i> Create new requirement</a>
 </p>
 
+<p>
+    {{# has_releases }}
+        Release filter:
+        <select id="release" name="release">
+            <option value="">any</option>
+            {{# list_of_releases }}
+            <option value="{{ id }}">{{ name }}</option>
+            {{/ list_of_releases }}
+        </select>
+        <script type="text/javascript">
+        $('release').observe('change', function () {
+            if (! $F('release')) {
+                $$('#requirements > tbody > tr').invoke('show');
+                return;
+            }
+
+            $$('#requirements > tbody > tr').invoke('hide');
+            $$('.release-' + $F('release')).collect(function (span) { return span.up('tr'); }).invoke('show');
+        });
+        </script>
+    {{/ has_releases }}
+</p>
 <script type="text/javascript" src="/plugins/tracker/scripts/TrackerFieldDependencies.js"></script>
 <div id="submit-new-requirement" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <form action="{{ create_uri }}" method="POST" enctype="multipart/form-data">
@@ -26,11 +48,15 @@
     </form>
 </div>
 
-<table class="table table-striped table-bordered table-hover">
+<table id="requirements" class="table table-bordered table-hover">
     <thead>
         <tr>
-            <th>Identifier</th>
+            <th class="span1">Identifier</th>
             <th>Requirement</th>
+            <th class="span2">Nb of test cases</th>
+            {{# has_releases }}
+            <th>Releases</th>
+            {{/ has_releases }}
         </tr>
     </thead>
     <tbody>
@@ -38,6 +64,10 @@
         <tr>
             <td><a href="{{ show_uri }}">{{ id }}</a></td>
             <td>{{ name }}</td>
+            <td>{{ nb_of_tests }}</td>
+            {{# has_releases }}
+            <td class="list_of_releases_for_requirement">{{# list_of_releases }}<span class="release-{{ id }}">{{ name }}</span>{{/ list_of_releases }}</td>
+            {{/ has_releases }}
         </tr>
         {{/ list_of_requirements }}
     </tbody>

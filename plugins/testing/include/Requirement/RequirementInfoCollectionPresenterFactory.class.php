@@ -26,11 +26,13 @@ class Testing_Requirement_RequirementInfoCollectionPresenterFactory {
     public function __construct(
         Project $project,
         Tracker $requirement_tracker,
-        Testing_Requirement_RequirementInfoPresenterFactory $factory
+        Testing_Requirement_RequirementInfoPresenterFactory $factory,
+        Testing_Release_ReleaseInfoPresenterCollectionFactory $release_collection_factory
     ) {
-        $this->project             = $project;
-        $this->requirement_tracker = $requirement_tracker;
-        $this->factory             = $factory;
+        $this->project                    = $project;
+        $this->requirement_tracker        = $requirement_tracker;
+        $this->factory                    = $factory;
+        $this->release_collection_factory = $release_collection_factory;
     }
 
     public function getPresenter() {
@@ -38,6 +40,7 @@ class Testing_Requirement_RequirementInfoCollectionPresenterFactory {
 
         return new Testing_Requirement_RequirementInfoCollectionPresenter(
             $this->project,
+            $this->release_collection_factory->getPresenter(),
             $this->getListOfRequirementInfoPresenters(),
             $create_requirement_form
         );

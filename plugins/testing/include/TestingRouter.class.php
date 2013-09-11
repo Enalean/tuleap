@@ -50,26 +50,30 @@ class TestingRouter {
         $campaign_factory = new Testing_Campaign_CampaignFactory($this->getTestExecutionCollectionFeeder());
         $campaign_manager = new Testing_Campaign_CampaignManager($campaign_dao, $campaign_factory);
 
+        $release_info_presenter_collection_factory = new Testing_Release_ReleaseInfoPresenterCollectionFactory(
+            $conf->getReleaseTracker()
+        );
+
         $testcase_association_dao = new Testing_Requirement_TestCaseAssociationDao();
+        $release_association_dao  = new Testing_Requirement_ReleaseAssociationDao();
         $requirement_info_presenter_factory = new Testing_Requirement_RequirementInfoPresenterFactory(
             $project,
             $conf->getRequirementTracker(),
-            $testcase_association_dao
+            $testcase_association_dao,
+            $release_association_dao
         );
 
         $requirement_info_collection_presenter_factory = new Testing_Requirement_RequirementInfoCollectionPresenterFactory(
             $project,
             $conf->getRequirementTracker(),
-            $requirement_info_presenter_factory
+            $requirement_info_presenter_factory,
+            $release_info_presenter_collection_factory
         );
 
         $test_case_info_presenter_collection_factory = new Testing_TestCase_TestCaseInfoPresenterCollectionFactory(
             $project,
             $conf->getTestCaseTracker(),
             $testcase_association_dao
-        );
-        $release_info_presenter_collection_factory = new Testing_Release_ReleaseInfoPresenterCollectionFactory(
-            $conf->getReleaseTracker()
         );
 
         $requested_resource = $request->getValidated('resource');

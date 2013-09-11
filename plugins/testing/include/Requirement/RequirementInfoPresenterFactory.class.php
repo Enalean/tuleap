@@ -28,11 +28,13 @@ class Testing_Requirement_RequirementInfoPresenterFactory {
     public function __construct(
         Project $project,
         Tracker $requirement_tracker,
-        Testing_Requirement_TestCaseAssociationDao $dao
+        Testing_Requirement_TestCaseAssociationDao $dao,
+        Testing_Requirement_ReleaseAssociationDao $release_dao
     ) {
         $this->project             = $project;
         $this->requirement_tracker = $requirement_tracker;
         $this->dao                 = $dao;
+        $this->release_dao         = $release_dao;
     }
 
     public function getPresenter(Testing_Requirement_Requirement $requirement) {
@@ -41,7 +43,14 @@ class Testing_Requirement_RequirementInfoPresenterFactory {
         if (isset($test_cases_sum[$requirement->getId()])) {
             $nb_of_test_cases = $test_cases_sum[$requirement->getId()];
         }
-        return new Testing_Requirement_RequirementInfoPresenter($this->project, $requirement, $nb_of_test_cases);
+
+        $list_of_releases = array();
+        foreach ($this->release_dao->searchByRequirementId($requirement->getId()) as $row) {
+            $list_of_releases[] = new Testing_Release_ReleaseInfoPresenter(
+                new Testing_Release_ArtifactRelease($row['release_id'])
+            );
+        }
+        return new Testing_Requirement_RequirementInfoPresenter($this->project, $requirement, $list_of_releases, $nb_of_test_cases);
     }
 
     private function getTestCasesSum() {
