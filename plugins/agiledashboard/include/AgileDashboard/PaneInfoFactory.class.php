@@ -26,9 +26,6 @@ class AgileDashboard_PaneInfoFactory {
     /** @var PFUser */
     private $user;
 
-    /** @var Planning_MilestoneLegacyPlanningPaneFactory */
-    private $legacy_planning_pane_factory;
-
     /** @var AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder */
     private $submilestone_finder;
 
@@ -37,39 +34,24 @@ class AgileDashboard_PaneInfoFactory {
 
     public function __construct(
         PFUser $user,
-        Planning_MilestoneLegacyPlanningPaneFactory $legacy_planning_pane_factory,
         AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder,
         $theme_path
     ) {
         $this->user                         = $user;
-        $this->legacy_planning_pane_factory = $legacy_planning_pane_factory;
         $this->submilestone_finder          = $submilestone_finder;
         $this->theme_path                   = $theme_path;
     }
 
     /** @return AgileDashboard_PaneInfo[] */
     public function getListOfPaneInfo(Planning_Milestone $milestone) {
-        return array_values(array_filter(array_merge(
-            array(
-                $this->getLegacyPaneInfo($milestone)
-            ),
-            $this->getListOfPaneInfoWithoutLegacyOne($milestone)
-        )));
-    }
+        $panes_info = array(
+            $this->getContentPaneInfo($milestone),
+            $this->getPlanningPaneInfo($milestone),
+        );
 
-    /** @return AgileDashboard_PaneInfo[] */
-    public function getListOfPaneInfoWithoutLegacyOne(Planning_Milestone $milestone) {
-        $panes_info = array();
-
-        $panes_info[] = $this->getContentPaneInfo($milestone);
-        $panes_info[] = $this->getPlanningPaneInfo($milestone);
         $this->buildAdditionnalPanesInfo($milestone, $panes_info);
 
         return array_values(array_filter($panes_info));
-    }
-
-    public function getLegacyPaneInfo(Planning_Milestone $milestone) {
-        return $this->legacy_planning_pane_factory->getPaneInfo($milestone);
     }
 
     public function getContentPaneInfo(Planning_Milestone $milestone) {
