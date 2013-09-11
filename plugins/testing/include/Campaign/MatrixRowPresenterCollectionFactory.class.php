@@ -55,16 +55,45 @@ class Testing_Campaign_MatrixRowPresenterCollectionFactory {
             $requirement_id = $row['requirement_id'];
             $execution_id   = $row['id'];
 
-            $requirement_info_presenter = null;
             if ($last_requirement_id !== $requirement_id) {
                 $requirement = new Testing_Requirement_Requirement($requirement_id);
-                $requirement_info_presenter = new Testing_Requirement_RequirementInfoPresenter($this->project, $requirement, $nb_of_tests[$requirement_id]);
+                $requirement_result_presenter = new Testing_Requirement_RequirementResultPresenter(
+                    $this->project,
+                    $requirement,
+                    $nb_of_tests[$requirement_id] + 1 // +1 for the supplementary rowspan
+                );
             }
 
-            $exec_info_presenter = $this->exec_presenter_factory->getPresenter($this->exec_factory->getInstanceFromRow($campaign, $row));
-            $collection->append(
-                new Testing_Campaign_MatrixRowPresenter($exec_info_presenter, $requirement_info_presenter)
-            );
+            $execution = $this->exec_factory->getInstanceFromRow($campaign, $row);
+            $exec_info_presenter = $this->exec_presenter_factory->getPresenter($execution);
+
+            if ($last_requirement_id !== $requirement_id) {
+                $requirement_row_presenter = new Testing_Campaign_MatrixRowRequirementPresenter($requirement_result_presenter);
+                $collection->append($requirement_row_presenter);
+            }
+            $presenter = new Testing_Campaign_MatrixRowTestExecutionPresenter($exec_info_presenter);
+            $collection->append($presenter);
+
+            switch ($execution->getLastTestResult()->getStatus()) {
+            case Testing_TestResult_TestResult::NOT_RUN:
+                $requirement_result_presenter->has_one_not_run = 1;
+                break;
+            case Testing_TestResult_TestResult::PASS:
+                $requirement_result_presenter->has_one_passed = 1;
+                break;
+            case Testing_TestResult_TestResult::FAIL:
+                $requirement_result_presenter->has_one_failed = 1;
+                var_dump(
+                    $requirement_result_presenter->is_failed(),
+                    $requirement_result_presenter->is_not_completed(),
+                    $requirement_result_presenter->is_not_run(),
+                    $requirement_result_presenter->is_passed()
+                );
+                break;
+            case Testing_TestResult_TestResult::NOT_COMPLETED:
+                $requirement_result_presenter->has_one_not_completed = 1;
+                break;
+            }
             $last_requirement_id = $requirement_id;
         }
         return $collection;

@@ -14,6 +14,7 @@
     <tbody>
         <tr>
             <td>Overall progress</td>
+            <td span="span1"></td>
             <td class="span6">
                 <div class="progress">
                     <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ percent_complete }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ percent_complete }}%;">
@@ -24,7 +25,8 @@
         </tr>
         <tr>
             <td>Nb not run</td>
-            <td>{{ nb_not_run }}
+            <td>{{ nb_not_run }}</td>
+            <td>
                 <div class="progress-bar progress-bar-not-run" role="progressbar" aria-valuenow="{{ percent_pass }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ percent_not_run }}%;">
                     <span>&nbsp;</span>
                 </div>
@@ -32,7 +34,8 @@
         </tr>
         <tr>
             <td>Nb passed</td>
-            <td>{{ nb_pass }}
+            <td>{{ nb_pass }}</td>
+            <td>
                 <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ percent_pass }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ percent_pass }}%;">
                     <span>&nbsp;</span>
                 </div>
@@ -40,7 +43,8 @@
         </tr>
         <tr>
             <td>Nb failed</td>
-            <td>{{ nb_fail }}
+            <td>{{ nb_fail }}</td>
+            <td>
                 <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ percent_fail }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ percent_fail }}%;">
                     <span>&nbsp;</span>
                 </div>
@@ -48,7 +52,8 @@
         </tr>
         <tr>
             <td>Nb not completed</td>
-            <td>{{ nb_not_completed }}
+            <td>{{ nb_not_completed }}</td>
+            <td>
                 <div class="progress-bar" role="progressbar" aria-valuenow="{{ percent_not_completed }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ percent_not_completed }}%;">
                     <span>&nbsp;</span>
                 </div>
@@ -62,9 +67,8 @@
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>Requirement</th>
-            <th>Test Case</th>
-            <th>Result</th>
+            <th colspan="2">Requirement</th>
+            <th colspan="2">Test Case</th>
         </tr>
     </thead>
     <tbody>
@@ -72,6 +76,7 @@
         <tr>
             {{# requirement }}
             <td rowspan="{{ nb_of_tests }}">{{ name }}</th>
+            <td rowspan="{{ nb_of_tests }}">{{> label-status }}</th>
             {{/ requirement }}
             {{# testexecution }}
             <td>{{ name }}</td>

@@ -21,5 +21,12 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-interface Testing_Campaign_MatrixRowPresenter {
+class Testing_Campaign_MatrixRowRequirementPresenter implements Testing_Campaign_MatrixRowPresenter {
+
+    public function __construct(
+        Testing_Requirement_RequirementInfoPresenter $requirement
+    ) {
+        $this->requirement   = $requirement;
+        $this->testexecution = false;
+    }
 }
