@@ -23,8 +23,13 @@
 
 class Testing_Campaign_CampaignReportPresenter {
 
-    public function __construct(Testing_Campaign_CampaignInfoPresenter $campaign, Testing_Campaign_MatrixRowPresenterCollection $matrix) {
+    public function __construct(
+        Testing_Campaign_CampaignInfoPresenter $campaign,
+        Testing_Campaign_CampaignStatPresenter $stat,
+        Testing_Campaign_MatrixRowPresenterCollection $matrix
+    ) {
         $this->campaign = $campaign;
         $this->matrix   = $matrix;
+        $this->stat     = $stat;
     }
 }

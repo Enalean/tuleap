@@ -8,13 +8,55 @@
     Reports
 </h2>
 
-<h3>Pie chart pass/fail</h3>
-<canvas id="myChart" width="200" height="200"></canvas>
-
-<script type="text/javascript">
-    var ctx = $("myChart").getContext("2d");
-    var myNewChart = new Chart(ctx).Pie([{value:193, color: '#5bb75b'}, {value:10, color: '#da4f49'}],{animation: false});
-</script>
+<h3>Result bar chart</h3>
+{{# stat }}
+<table class="table" style="width: auto;">
+    <tbody>
+        <tr>
+            <td>Overall progress</td>
+            <td class="span6">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ percent_complete }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ percent_complete }}%;">
+                        <span>{{ percent_complete }}% Complete</span>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Nb not run</td>
+            <td>{{ nb_not_run }}
+                <div class="progress-bar progress-bar-not-run" role="progressbar" aria-valuenow="{{ percent_pass }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ percent_not_run }}%;">
+                    <span>&nbsp;</span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Nb passed</td>
+            <td>{{ nb_pass }}
+                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ percent_pass }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ percent_pass }}%;">
+                    <span>&nbsp;</span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Nb failed</td>
+            <td>{{ nb_fail }}
+                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ percent_fail }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ percent_fail }}%;">
+                    <span>&nbsp;</span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Nb not completed</td>
+            <td>{{ nb_not_completed }}
+                <div class="progress-bar" role="progressbar" aria-valuenow="{{ percent_not_completed }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ percent_not_completed }}%;">
+                    <span>&nbsp;</span>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{{/ stat }}
 
 <h3>Tracability matrix</h3>
 <table class="table table-bordered">

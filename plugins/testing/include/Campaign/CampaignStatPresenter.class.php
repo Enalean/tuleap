@@ -45,6 +45,10 @@ class Testing_Campaign_CampaignStatPresenter {
         $this->nb_not_completed = $nb_not_completed;
         $total  = $nb_not_run + $nb_pass + $nb_fail + $nb_not_completed;
         $nb_run = $total - $nb_not_run;
-        $this->percent_complete = $total ? floor($nb_run * 100 / $total) : 0;
+        $this->percent_complete      = $total ? floor($nb_run * 100 / $total) : 0;
+        $this->percent_not_run       = $total ? floor($nb_not_run * 100 / $total) : 0;
+        $this->percent_fail          = $total ? floor($nb_fail * 100 / $total) : 0;
+        $this->percent_pass          = $total ? floor($nb_pass * 100 / $total) : 0;
+        $this->percent_not_completed = $total ? floor($nb_not_completed * 100 / $total) : 0;
     }
 }

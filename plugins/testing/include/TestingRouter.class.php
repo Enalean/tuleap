@@ -122,6 +122,7 @@ class TestingRouter {
                     $campaign_manager,
                     $info_presenter_factory,
                     $presenter_factory,
+                    $stat_presenter_factory,
                     $release_info_presenter_collection_factory,
                     $test_case_info_presenter_collection_factory,
                     $requirement_info_collection_presenter_factory,

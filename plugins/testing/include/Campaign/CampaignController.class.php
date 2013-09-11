@@ -48,6 +48,7 @@ class Testing_Campaign_CampaignController extends TestingController {
         Testing_Campaign_CampaignManager $manager,
         Testing_Campaign_CampaignInfoPresenterFactory $info_presenter_factory,
         Testing_Campaign_CampaignPresenterFactory $presenter_factory,
+        Testing_Campaign_CampaignStatPresenterFactory $stat_presenter_factory,
         Testing_Release_ReleaseInfoPresenterCollectionFactory $release_info_presenter_collection_factory,
         Testing_TestCase_TestCaseInfoPresenterCollectionFactory $test_case_info_presenter_collection_factory,
         Testing_Requirement_RequirementInfoCollectionPresenterFactory $requirement_info_collection_presenter_factory,
@@ -55,11 +56,12 @@ class Testing_Campaign_CampaignController extends TestingController {
     ) {
         parent::__construct('testing', $request);
         $this->info_presenter_collection_factory = $info_presenter_collection_factory;
-        $this->creator                           = $creator;
-        $this->deletor                           = $deletor;
-        $this->manager                           = $manager;
-        $this->info_presenter_factory            = $info_presenter_factory;
-        $this->presenter_factory                 = $presenter_factory;
+        $this->creator                = $creator;
+        $this->deletor                = $deletor;
+        $this->manager                = $manager;
+        $this->info_presenter_factory = $info_presenter_factory;
+        $this->presenter_factory      = $presenter_factory;
+        $this->stat_presenter_factory = $stat_presenter_factory;
         $this->release_info_presenter_collection_factory     = $release_info_presenter_collection_factory;
         $this->test_case_info_presenter_collection_factory   = $test_case_info_presenter_collection_factory;
         $this->requirement_info_collection_presenter_factory = $requirement_info_collection_presenter_factory;
@@ -91,6 +93,7 @@ class Testing_Campaign_CampaignController extends TestingController {
         $campaign  = $this->manager->getCampaign($this->request->getProject(), $this->request->get('id'));
         $presenter = new Testing_Campaign_CampaignReportPresenter(
             $this->info_presenter_factory->getPresenter($campaign),
+            $this->stat_presenter_factory->getPresenter($campaign),
             $this->matrix_row_presenter_collection_factory->getCollection($campaign)
         );
         $this->render(self::RENDER_PREFIX .__FUNCTION__, $presenter);

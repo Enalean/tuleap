@@ -40,7 +40,6 @@ class Combined {
             '/scripts/bootstrap/bootstrap-button.js',
             '/scripts/bootstrap/bootstrap-tab.js',
             '/scripts/bootstrap/bootstrap-modal.js',
-            '/scripts/Chart.min.js',
             '/scripts/AZHU/storage.js',
             '/scripts/codendi/common.js',
             '/scripts/tuleap/systray.js',
