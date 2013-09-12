@@ -28,8 +28,15 @@ class Testing_Report_ReportController extends TestingController {
 
     const RENDER_PREFIX = 'Report/';
 
-    public function __construct(Codendi_Request $request) {
+    public function __construct(
+        Codendi_Request $request,
+        Testing_Defect_DefectDao $defects_dao,
+        TestingConfiguration $conf
+    ) {
         parent::__construct('testing', $request);
+        $this->defects_dao     = $defects_dao;
+        $this->defect_tracker  = $conf->getDefectTracker();
+        $this->release_tracker = $conf->getReleaseTracker();
     }
 
     /**
@@ -38,5 +45,30 @@ class Testing_Report_ReportController extends TestingController {
     public function __call($name, $arguments) {
         $presenter = new stdClass;
         $this->render(self::RENDER_PREFIX . $name, $presenter);
+    }
+
+    public function index() {
+        $presenter = new Testing_Report_ReportPresenter(
+            $this->getReleaseDefectCollectionPresenter()
+        );
+        $this->render(self::RENDER_PREFIX . __FUNCTION__, $presenter);
+    }
+
+    private function getReleaseDefectCollectionPresenter() {
+        $collection = new Testing_Report_ReleaseDefectPresenterCollection();
+        foreach ($this->defects_dao->searchDefectsAndReleases($this->defect_tracker->getId(), $this->release_tracker->getId()) as $row) {
+            $collection->append(
+                new Testing_Report_ReleaseDefectPresenter(
+                    new Testing_Release_ReleaseInfoPresenter(
+                        $this->getProject(),
+                        new Testing_Release_ArtifactRelease($row['release_id'])
+                    ),
+                    new Testing_Defect_DefectPresenter(
+                        new Testing_Defect_Defect($row['defect_id'])
+                    )
+                )
+            );
+        }
+        return $collection;
     }
 }

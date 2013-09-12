@@ -4,3 +4,31 @@
   <li class="active"><a href="/plugins/testing/?group_id=1&resource=report">Reports</a></li>
 </ul>
 <h2>Reports</h2>
+
+<h3>Defects by releases</h3>
+{{# has_defects }}
+<table class="table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Release</th>
+            <th>Defect</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{# list_of_defects }}
+        <tr>
+            {{# release }}<td>{{ name }}</td>{{/ release }}
+            {{# defect }}<td>{{{ link }}}</td>
+            <td>{{ status }}</td>{{/ defect }}
+        </tr>
+        {{/ list_of_defects }}
+    </tbody>
+</table>
+{{/ has_defects }}
+{{^ has_defects }}
+<div class="alert alert-info">
+    <strong>Well done!</strong>
+    There isn't any defects reported for your releases under test. Congratulations!
+</div>
+{{/ has_defects }}

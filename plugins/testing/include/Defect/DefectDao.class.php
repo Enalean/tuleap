@@ -42,4 +42,22 @@ class Testing_Defect_DefectDao extends DataAccessObject {
 
         return $this->update($sql);
     }
+
+    public function searchDefectsAndReleases($defect_tracker_id, $release_tracker_id) {
+        $defect_tracker_id  = $this->da->escapeInt($defect_tracker_id);
+        $release_tracker_id = $this->da->escapeInt($release_tracker_id);
+
+        $sql = "SELECT product_version.id AS release_id, defect.id AS defect_id
+                FROM
+                    tracker_artifact AS defect
+                    INNER JOIN plugin_testing_testexecution_defect ON (defect_id = defect.id)
+                    INNER JOIN plugin_testing_testexecution AS execution ON (testexecution_id = execution.id)
+                    INNER JOIN plugin_testing_campaign AS campaign ON (campaign_id = campaign.id)
+                    INNER JOIN tracker_artifact AS product_version ON (product_version.id = product_version_id)
+                WHERE defect.tracker_id = $defect_tracker_id
+                  AND product_version.tracker_id = $release_tracker_id
+                ORDER BY product_version.id";
+
+        return $this->retrieve($sql);
+    }
 }

@@ -98,7 +98,8 @@ class TestingRouter {
                 return new Testing_Defect_DefectController($request, $dao);
                 break;
             case self::RESOURCE_REPORT:
-                return new Testing_Report_ReportController($request);
+                $defect_dao = new Testing_Defect_DefectDao();
+                return new Testing_Report_ReportController($request, $defect_dao, $conf);
                 break;
             case self::RESOURCE_RELEASE:
                 return new Testing_Release_ReleaseController($request, $release_association_dao, $conf);
