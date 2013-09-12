@@ -622,6 +622,45 @@ $GLOBALS['server']->wsdl->addComplexType(
     'tns:ArtifactComments'
 );
 
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArtifactFollowupComment',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'submitted_by'  => array('name'=>'submitted_by', 'type' => 'xsd:int'),
+        'submitted_on'  => array('name'=>'submitted_on', 'type' => 'xsd:int'),
+        'format'        => array('name'=>'body',         'type' => 'xsd:string'),
+        'body'          => array('name'=>'fields',       'type' => 'xsd:string'),
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArtifactHistory',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'submitted_by'  => array('name'=>'submitted_by', 'type' => 'xsd:int'),
+        'email'         => array('name'=>'email',        'type' => 'xsd:string'),
+        'submitted_on'  => array('name'=>'submitted_on', 'type' => 'xsd:int'),
+        'last_comment'  => array('name'=>'comment',      'type' => 'tns:ArtifactFollowupComment'),
+        'fields'        => array('name'=>'fields',       'type' => 'tns:ArrayOfArtifactFieldValue'),
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArrayOfArtifactHistory',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactHistory[]')),
+    'tns:ArtifactHistory'
+);
 
 //
 // Function definition
@@ -862,5 +901,18 @@ $GLOBALS['server']->register(
     'rpc',
     'encoded',
     'Returns the comments of an artifact.'
+);
+
+$GLOBALS['server']->register(
+    'getArtifactHistory',
+    array('sessionKey'=>'xsd:string',
+          'artifact_id'=>'xsd:int',
+    ),
+    array('return'=>'tns:ArrayOfArtifactHistory'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#getArtifactHistory',
+    'rpc',
+    'encoded',
+    'Returns history (all changesets and comments) of an artifact.'
 );
 ?>

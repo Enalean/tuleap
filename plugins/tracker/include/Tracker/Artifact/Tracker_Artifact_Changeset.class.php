@@ -825,7 +825,39 @@ class Tracker_Artifact_Changeset {
     public function exportCommentToSOAP() {
         $comment = $this->getComment();
         if ($comment) {
-            return $comment->exportToSOAP();
+            $soap = $this->getSoapMetadata();
+            return $comment->exportToSOAP($soap);
+        }
+    }
+
+    private function getSoapMetadata() {
+        $soap = array(
+            'submitted_by' => $this->getSubmittedBy(),
+            'email'        => $this->getEmailForUndefinedSubmitter(),
+            'submitted_on' => $this->getSubmittedOn(),
+        );
+        return $soap;
+    }
+
+    public function getSoapValue(PFUser $user) {
+        $soap    = $this->getSoapMetadata();
+        $comment = $this->getComment();
+        if (! $comment) {
+            $comment = new Tracker_Artifact_Changeset_CommentNull($this);
+        }
+        $soap['last_comment'] = $comment->getSoapValue();
+        $factory = $this->getFormElementFactory();
+        foreach ($this->getValueDao()->searchById($this->id) as $row) {
+            if ($field = $factory->getFieldById($row['field_id'])) {
+                $soap['fields'][] = $field->getSoapValue($user, $this);
+            }
+        }
+        return $soap;
+    }
+
+    private function getEmailForUndefinedSubmitter() {
+        if (! $this->getSubmittedBy()) {
+            return $this->getEmail();
         }
     }
 
