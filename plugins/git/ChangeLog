@@ -1,3 +1,6 @@
+Version 3.40 - Tuleap 6.5
+    * Fix typo in git plugin messages
+
 Version 3.39 - Tuleap 6.5
     * story #4720: allow to delete a gerrit project on disconnect
 
