@@ -47,7 +47,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterFactor
             $milestone,
             $redirect_to_self,
             $user,
-            $this->icon_factory->getIconLinkPresenterCollectionWithoutLegacyOne($milestone)
+            $this->icon_factory->getIconLinkPresenterCollection($milestone)
         );
     }
 }

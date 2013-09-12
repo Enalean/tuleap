@@ -233,12 +233,10 @@ class AgileDashboardPlugin extends Plugin {
         $planning_factory             = $this->getPlanningFactory();
         $milestone_factory            = $this->getMilestoneFactory();
         $hierarchy_factory            = $this->getHierarchyFactory();
-        $legacy_planning_pane_factory = $this->getLegacyPlanningPaneFactory($request, $planning_factory, $milestone_factory, $hierarchy_factory);
         $submilestone_finder          = new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder($hierarchy_factory, $planning_factory);
 
         $pane_info_factory = new AgileDashboard_PaneInfoFactory(
             $request->getCurrentUser(),
-            $legacy_planning_pane_factory,
             $submilestone_finder,
             $this->getThemePath()
         );
@@ -249,7 +247,6 @@ class AgileDashboardPlugin extends Plugin {
             $request,
             $milestone_factory,
             $pane_presenter_builder_factory,
-            $legacy_planning_pane_factory,
             $submilestone_finder,
             $pane_info_factory
         );
@@ -277,26 +274,11 @@ class AgileDashboardPlugin extends Plugin {
         $router->route($request);
     }
 
-    private function getLegacyPlanningPaneFactory(
-        Codendi_Request $request,
-        PlanningFactory $planning_factory,
-        Planning_MilestoneFactory $milestone_factory,
-        Tracker_HierarchyFactory $hierarchy_factory
-    ) {
-        return new Planning_MilestoneLegacyPlanningPaneFactory(
-            $request,
-            $milestone_factory,
-            $hierarchy_factory,
-            new Planning_ViewBuilderFactory($request, $planning_factory),
-            $this->getThemePath()
-        );
-    }
     /** @return Planning_MilestonePaneFactory */
     private function getPaneFactory(
         Codendi_Request $request,
         Planning_MilestoneFactory $milestone_factory,
         AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
-        Planning_MilestoneLegacyPlanningPaneFactory $legacy_planning_pane_factory,
         AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder,
         AgileDashboard_PaneInfoFactory $pane_info_factory
     ) {
@@ -304,7 +286,6 @@ class AgileDashboardPlugin extends Plugin {
             $request,
             $milestone_factory,
             $pane_presenter_builder_factory,
-            $legacy_planning_pane_factory,
             $submilestone_finder,
             $pane_info_factory,
             $this->getThemePath()
