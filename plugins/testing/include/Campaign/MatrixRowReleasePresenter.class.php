@@ -21,14 +21,13 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_Report_ReportPresenter {
+class Testing_Campaign_MatrixRowReleasePresenter implements Testing_Campaign_MatrixRowPresenter {
 
     public function __construct(
-        Testing_Report_ReleaseDefectPresenterCollection $list_of_defects,
-        Testing_Campaign_MatrixRowPresenterCollection $matrix
+        Testing_Release_ReleaseResultPresenter $release
     ) {
-        $this->matrix          = $matrix;
-        $this->list_of_defects = $list_of_defects;
-        $this->has_defects     = count($list_of_defects) > 0;
+        $this->requirement   = false;
+        $this->testexecution = false;
+        $this->release       = $release;
     }
 }

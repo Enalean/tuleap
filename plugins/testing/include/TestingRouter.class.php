@@ -79,6 +79,14 @@ class TestingRouter {
             $testcase_association_dao
         );
 
+        $matrix_row_presenter_collection_factory = new Testing_Campaign_MatrixRowPresenterCollectionFactory(
+            $project,
+            $this->getTestExecutionFactory(),
+            new Testing_TestExecution_TestExecutionInfoPresenterFactory(),
+            new Testing_TestExecution_TestExecutionDao(),
+            $campaign_manager
+        );
+
         $requested_resource = $request->getValidated('resource');
         switch ($requested_resource) {
             case self::RESOURCE_REQUIREMENT:
@@ -99,7 +107,7 @@ class TestingRouter {
                 break;
             case self::RESOURCE_REPORT:
                 $defect_dao = new Testing_Defect_DefectDao();
-                return new Testing_Report_ReportController($request, $defect_dao, $conf);
+                return new Testing_Report_ReportController($request, $defect_dao, $conf, $matrix_row_presenter_collection_factory);
                 break;
             case self::RESOURCE_RELEASE:
                 return new Testing_Release_ReleaseController($request, $release_association_dao, $conf);
@@ -120,13 +128,6 @@ class TestingRouter {
                 $info_presenter_collection_factory = new Testing_Campaign_CampaignInfoPresenterCollectionFactory($campaign_manager, $info_presenter_factory);
                 $creator = new Testing_Campaign_CampaignCreator($campaign_dao, new Testing_TestExecution_TestExecutionDao());
                 $deletor = new Testing_Campaign_CampaignDeletor($campaign_dao, new Testing_TestExecution_TestExecutionDao());
-
-                $matrix_row_presenter_collection_factory = new Testing_Campaign_MatrixRowPresenterCollectionFactory(
-                    $project,
-                    $this->getTestExecutionFactory(),
-                    new Testing_TestExecution_TestExecutionInfoPresenterFactory(),
-                    new Testing_TestExecution_TestExecutionDao()
-                );
 
                 return new Testing_Campaign_CampaignController(
                     $request,

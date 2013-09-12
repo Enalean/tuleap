@@ -31,12 +31,15 @@ class Testing_Report_ReportController extends TestingController {
     public function __construct(
         Codendi_Request $request,
         Testing_Defect_DefectDao $defects_dao,
-        TestingConfiguration $conf
+        TestingConfiguration $conf,
+        Testing_Campaign_MatrixRowPresenterCollectionFactory $matrix_factory
     ) {
         parent::__construct('testing', $request);
-        $this->defects_dao     = $defects_dao;
-        $this->defect_tracker  = $conf->getDefectTracker();
-        $this->release_tracker = $conf->getReleaseTracker();
+        $this->defects_dao      = $defects_dao;
+        $this->matrix_factory   = $matrix_factory;
+        $this->defect_tracker   = $conf->getDefectTracker();
+        $this->release_tracker  = $conf->getReleaseTracker();
+        $this->testcase_tracker = $conf->getTestCaseTracker();
     }
 
     /**
@@ -49,7 +52,8 @@ class Testing_Report_ReportController extends TestingController {
 
     public function index() {
         $presenter = new Testing_Report_ReportPresenter(
-            $this->getReleaseDefectCollectionPresenter()
+            $this->getReleaseDefectCollectionPresenter(),
+            $this->matrix_factory->getReleasePresenter($this->testcase_tracker, $this->release_tracker)
         );
         $this->render(self::RENDER_PREFIX . __FUNCTION__, $presenter);
     }

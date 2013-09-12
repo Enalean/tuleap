@@ -28,5 +28,6 @@ class Testing_Campaign_MatrixRowRequirementPresenter implements Testing_Campaign
     ) {
         $this->requirement   = $requirement;
         $this->testexecution = false;
+        $this->release       = false;
     }
 }
