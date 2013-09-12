@@ -21,11 +21,25 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_Release_ReleaseInfoPresenter {
+class Testing_Release_ReleasePresenter {
 
-    public function __construct(Project $project, Testing_Release_Release $release) {
+    public function __construct(
+        Project $project,
+        Testing_Release_Release $release,
+        array $list_of_requirements,
+        array $list_of_available_requirements,
+        TestingFacadeTrackerCreationPresenter $create_requirement_form
+    ) {
         $this->id   = $release->getId();
         $this->name = $release->getName();
+
+        $this->list_of_requirements           = $list_of_requirements;
+        $this->has_requirements               = count($list_of_requirements) > 0;
+        $this->list_of_available_requirements = $list_of_available_requirements;
+        $this->has_available_requirements     = count($this->list_of_available_requirements) > 0;
+        $this->link_requirement_uri = '/plugins/testing/?group_id='. $project->getId() .'&resource=release&action=link-requirement&id='. $this->id;
+        $this->add_requirement_uri  = '/plugins/testing/?group_id='. $project->getId() .'&resource=release&action=add-requirement&id='. $this->id;
+        $this->create_requirement_form = $create_requirement_form;
 
         $this->show_uri = '/plugins/testing/?group_id='. $project->getId() .'&resource=release&action=show&id='. $this->id;
     }

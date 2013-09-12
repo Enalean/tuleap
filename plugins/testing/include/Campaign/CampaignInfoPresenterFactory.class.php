@@ -34,7 +34,7 @@ class Testing_Campaign_CampaignInfoPresenterFactory {
 
     public function getPresenter(Testing_Campaign_Campaign $campaign) {
         $stat = $this->stat_presenter_factory->getPresenter($campaign);
-        $release = new Testing_Release_ReleaseInfoPresenter($campaign->getRelease());
+        $release = new Testing_Release_ReleaseInfoPresenter($campaign->getProject(), $campaign->getRelease());
         return new Testing_Campaign_CampaignInfoPresenter($campaign, $release, $stat);
     }
 }

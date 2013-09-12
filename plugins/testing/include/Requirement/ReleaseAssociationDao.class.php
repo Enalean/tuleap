@@ -46,6 +46,29 @@ class Testing_Requirement_ReleaseAssociationDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchByReleaseId($id) {
+        $id = $this->da->escapeInt($id);
+
+        $sql = "SELECT * FROM plugin_testing_requirement_release WHERE release_id = $id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function searchForAvailablesByReleaseId($tracker_id, $release_id) {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        $release_id = $this->da->escapeInt($release_id);
+
+        $sql = "SELECT id AS requirement_id
+                FROM tracker_artifact
+                    LEFT JOIN
+                    ( SELECT requirement_id FROM plugin_testing_requirement_release WHERE release_id = $release_id ) as R
+                    ON (requirement_id = id)
+                WHERE tracker_artifact.tracker_id = $tracker_id
+                    AND R.requirement_id IS NULL";
+
+        return $this->retrieve($sql);
+    }
+
     public function create($requirement_id, $release_id) {
         $requirement_id = $this->da->escapeInt($requirement_id);
         $release_id = $this->da->escapeInt($release_id);

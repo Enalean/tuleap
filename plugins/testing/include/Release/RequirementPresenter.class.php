@@ -21,25 +21,17 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_Release_ReleaseInfoPresenterCollectionFactory {
-
-    /** @var Tracker */
-    private $release_tracker;
+class Testing_Release_RequirementPresenter {
 
     public function __construct(
         Project $project,
-        Tracker $release_tracker
+        Testing_Requirement_Requirement $requirement,
+        Testing_Release_Release $release
     ) {
-        $this->project         = $project;
-        $this->release_tracker = $release_tracker;
-    }
+        $this->id               = $requirement->getId();
+        $this->name             = $requirement->getName();
 
-    public function getPresenter() {
-        $collection = new Testing_Release_ReleaseInfoPresenterCollection();
-        foreach(Tracker_ArtifactFactory::instance()->getArtifactsByTrackerId($this->release_tracker->getId()) as $artifact) {
-            $release = new Testing_Release_ArtifactRelease($artifact->getId());
-            $collection->append(new Testing_Release_ReleaseInfoPresenter($this->project, $release));
-        }
-        return $collection;
+        $this->show_uri   = '/plugins/testing/?group_id='. $project->getId() .'&resource=requirement&action=show&id='. $this->id;
+        $this->unlink_uri = '/plugins/testing/?group_id='. $project->getId() .'&resource=release&action=unlink-requirement&id='. $release->getId() .'&requirement_id='. $this->id;
     }
 }

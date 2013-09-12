@@ -82,7 +82,7 @@ class Testing_Requirement_RequirementController extends TestingController {
             $testcase = new Testing_TestCase_TestCase($row['testversion_id']);
             $list_of_available_test_cases[] = new Testing_Requirement_TestCasePresenter($this->getProject(), $testcase, $requirement);
         }
-        $create_requirement_form = new TestingFacadeTrackerCreationPresenter($tracker);
+        $create_testcase_form = new TestingFacadeTrackerCreationPresenter($tracker);
 
         $presenter = new Testing_Requirement_RequirementPresenter(
             $this->getProject(),
@@ -91,7 +91,7 @@ class Testing_Requirement_RequirementController extends TestingController {
             $list_of_releases,
             $list_of_available_test_cases,
             $list_of_available_releases,
-            $create_requirement_form
+            $create_testcase_form
         );
         $this->render(self::RENDER_PREFIX . __FUNCTION__, $presenter);
     }

@@ -26,7 +26,7 @@ class Testing_Requirement_ReleasePresenter {
     public function __construct(Project $project, Testing_Release_Release $release, Testing_Requirement_Requirement $requirement) {
         $this->id   = $release->getId();
         $this->name = $release->getName();
-        $this->show_uri   = '/plugins/testing/?group_id='. $project->getId() .'&resource=release&id='. $this->id;
+        $this->show_uri   = '/plugins/testing/?group_id='. $project->getId() .'&resource=release&action=show&id='. $this->id;
         $this->unlink_uri = '/plugins/testing/?group_id='. $project->getId() .'&resource=requirement&action=unlink-release&id='. $requirement->getId() .'&release_id='. $this->id;
     }
 }

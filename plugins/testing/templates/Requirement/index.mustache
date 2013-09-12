@@ -66,7 +66,11 @@
             <td>{{ name }}</td>
             <td>{{ nb_of_tests }}</td>
             {{# has_releases }}
-            <td class="list_of_releases_for_requirement">{{# list_of_releases }}<span class="release-{{ id }}">{{ name }}</span>{{/ list_of_releases }}</td>
+            <td class="list_of_releases_for_requirement">
+                {{# list_of_releases }}
+                    <span class="release-{{ id }}"><a href="{{ show_uri }}">{{ name }}</a></span>
+                {{/ list_of_releases }}
+            </td>
             {{/ has_releases }}
         </tr>
         {{/ list_of_requirements }}

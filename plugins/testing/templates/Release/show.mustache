@@ -1,0 +1,57 @@
+<ul class="nav nav-tabs">
+  <li class="active"><a href="/plugins/testing/?group_id=1&resource=requirement">Tests Specification</a></li>
+  <li><a href="/plugins/testing/?group_id=1&resource=campaign">Campaigns</a></li>
+  <li><a href="/plugins/testing/?group_id=1&resource=report">Reports</a></li>
+</ul>
+<h2>{{ name }}</h2>
+
+<h3>Releases</h3>
+<table class="table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Requirement</th>
+            <th class="span1">Unlink</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{# list_of_requirements }}
+        <tr>
+            <td><a href="{{ show_uri }}">{{ name }}</a></td>
+            <td><a href="{{ unlink_uri }}" title="Unlink"><i class="icon-unlink"></i></a></td>
+        </tr>
+        {{/ list_of_requirements }}
+    </tbody>
+</table>
+<form action="{{ link_requirement_uri }}" method="POST">
+    <div class="controls controls-row">
+        {{# has_available_requirements }}
+        <select name="requirement_id" class="span6" required>
+            <option value="">-- Select an existing requirement to link</option>
+            {{# list_of_available_requirements }}
+            <option value="{{ id }}">{{ name }}</option>
+            {{/ list_of_available_requirements }}
+        </select>
+        <button class="btn" style="float:left; margin-right:20px;"><i class="icon-link"></i> Link requirement</button>
+        {{/ has_available_requirements }}
+        <button type="button" class="btn" style="float:left;" data-target="#submit-new-requirement" data-toggle="modal"><i class="icon-plus"></i> Create new requirement</button>
+    </div>
+</form>
+
+<script type="text/javascript" src="/plugins/tracker/scripts/TrackerFieldDependencies.js"></script>
+<div id="submit-new-requirement" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <form action="{{ add_requirement_uri }}" method="POST" enctype="multipart/form-data">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3 id="myModalLabel">Create new requirement</h3>
+        </div>
+        <div class="modal-body">
+            {{# create_requirement_form }}
+                {{{ fields }}}
+            {{/ create_requirement_form }}
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+    </form>
+</div>

@@ -47,6 +47,7 @@ class Testing_Requirement_RequirementInfoPresenterFactory {
         $list_of_releases = array();
         foreach ($this->release_dao->searchByRequirementId($requirement->getId()) as $row) {
             $list_of_releases[] = new Testing_Release_ReleaseInfoPresenter(
+                $this->project,
                 new Testing_Release_ArtifactRelease($row['release_id'])
             );
         }

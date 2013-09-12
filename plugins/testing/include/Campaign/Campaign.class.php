@@ -55,6 +55,7 @@ class Testing_Campaign_Campaign {
     public function getId() { return $this->id; }
     public function getName() { return $this->name; }
     public function getRelease() { return $this->release; }
+    public function getProject() { return $this->project; }
     public function getProjectId() { return $this->project->getId(); }
     public function getListOfTestExecutions() { return $this->list_of_test_executions; }
 }

@@ -33,6 +33,7 @@ class TestingRouter {
     const RESOURCE_REQUIREMENT   = 'requirement';
     const RESOURCE_DEFECT        = 'defect';
     const RESOURCE_REPORT        = 'report';
+    const RESOURCE_RELEASE       = 'release';
 
     public function route(Codendi_Request $request) {
         $controller = $this->getController($request);
@@ -51,6 +52,7 @@ class TestingRouter {
         $campaign_manager = new Testing_Campaign_CampaignManager($campaign_dao, $campaign_factory);
 
         $release_info_presenter_collection_factory = new Testing_Release_ReleaseInfoPresenterCollectionFactory(
+            $project,
             $conf->getReleaseTracker()
         );
 
@@ -96,6 +98,9 @@ class TestingRouter {
                 break;
             case self::RESOURCE_REPORT:
                 return new Testing_Report_ReportController($request);
+                break;
+            case self::RESOURCE_RELEASE:
+                return new Testing_Release_ReleaseController($request, $release_association_dao, $conf);
                 break;
             case self::RESOURCE_CAMPAIGN:
             default:
