@@ -12,5 +12,5 @@ test:
 autoload:
 	@for path in $(AUTOLOADED_PATH); do \
 	     echo "Generate $$path"; \
-	     (cd "$$path"; phpab --compat -o autoload.php .) \
+	     (cd "$$path"; phpab --compat -q -o autoload.php .) \
         done;

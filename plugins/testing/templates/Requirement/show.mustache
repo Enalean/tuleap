@@ -3,7 +3,7 @@
   <li><a href="/plugins/testing/?group_id=1&resource=campaign">Campaigns</a></li>
   <li><a href="/plugins/testing/?group_id=1&resource=report">Reports</a></li>
 </ul>
-<h2>{{ name }}</h2>
+<h2>Requirement: {{ name }}</h2>
 <em>Here comes the definition of the requirement</em>
 <p>
     <a href="{{ edit_uri }}" class="btn disabled" onclick="return false;"><i class="icon-edit"></i> Create new version</a>
@@ -12,7 +12,7 @@
 <div class="row-fluid">
     {{# uses_releases }}
     <div class="span6">
-        <h3>Releases</h3>
+        <h3>Linked releases</h3>
         <table class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>
