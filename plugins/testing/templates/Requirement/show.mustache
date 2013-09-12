@@ -4,52 +4,91 @@
   <li><a href="/plugins/testing/?group_id=1&resource=report">Reports</a></li>
 </ul>
 <h2>{{ name }}</h2>
-<em>Here come the definition of the requirement</em>
+<em>Here comes the definition of the requirement</em>
 <p>
     <a href="{{ edit_uri }}" class="btn disabled" onclick="return false;"><i class="icon-edit"></i> Create new version</a>
 </p>
 
-<h3>Test coverage</h3>
-{{# has_test_cases }}
-<table class="table table-striped table-bordered table-hover">
-    <thead>
-        <tr>
-            <th>Test case</th>
-            <th class="span1">Unlink</th>
-        </tr>
-    </thead>
-    <tbody>
-    {{# list_of_test_cases }}
-        <tr>
-            <td><a href="{{ show_uri }}">{{ name }}</td>
-            <td><a href="{{ unlink_uri }}" title="Unlink"><i class="icon-unlink"></i></td>
-        </tr>
-    {{/ list_of_test_cases }}
-    </tbody>
-</table>
-{{/ has_test_cases }}
-{{^ has_test_cases }}
-<div class="alert alert-warning">
-    <h4>Warning!</h4>
-    This requirement is not covered by any test.
-</div>
-{{/ has_test_cases }}
-<form action="{{ link_test_case_uri }}" method="POST">
-    <div class="controls controls-row">
-        {{# has_available_test_cases }}
-        <select name="testcase_id" class="span6" required>
-            <option value="">-- Select an existing test case to link</option>
-            {{# list_of_available_test_cases }}
-            <option value="{{ id }}">{{ name }}</option>
-            {{/ list_of_available_test_cases }}
-        </select>
-        <button class="btn" style="float:left; margin-right:20px;"><i class="icon-link"></i> Link test case</button>
-        {{/ has_available_test_cases }}
-        <button type="button" class="btn" style="float:left;" data-target="#submit-new-testcase" data-toggle="modal"><i class="icon-plus"></i> Create new test case</button>
+<div class="row-fluid">
+    {{# uses_releases }}
+    <div class="span6">
+        <h3>Releases</h3>
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Release</th>
+                    <th class="span1">Unlink</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{# list_of_releases }}
+                <tr>
+                    <td><a href="{{ show_uri }}">{{ name }}</a></td>
+                    <td><a href="{{ unlink_uri }}" title="Unlink"><i class="icon-unlink"></i></a></td>
+                </tr>
+                {{/ list_of_releases }}
+            </tbody>
+        </table>
+        <form action="{{ link_release_uri }}" method="POST">
+            <div class="controls controls-row">
+                {{# has_available_releases }}
+                <select name="release_id" class="span6" required>
+                    <option value="">-- Select an existing release case to link</option>
+                    {{# list_of_available_releases }}
+                    <option value="{{ id }}">{{ name }}</option>
+                    {{/ list_of_available_releases }}
+                </select>
+                <button class="btn" style="float:left; margin-right:20px;"><i class="icon-link"></i> Link release</button>
+                {{/ has_available_releases }}
+            </div>
+        </form>
     </div>
-</form>
+    {{/ uses_releases }}
 
-<script type="text/javascript" src="/plugins/tracker/scripts/TrackerFieldDependencies.js"></script>
+    <div class="span{{# uses_releases }}6{{/ uses_releases }}{{^ uses_releases }}12{{/ uses_releases }}">
+        <h3>Test coverage</h3>
+        {{# has_test_cases }}
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Test case</th>
+                    <th class="span1">Unlink</th>
+                </tr>
+            </thead>
+            <tbody>
+            {{# list_of_test_cases }}
+                <tr>
+                    <td><a href="{{ show_uri }}">{{ name }}</a></td>
+                    <td><a href="{{ unlink_uri }}" title="Unlink"><i class="icon-unlink"></i></a></td>
+                </tr>
+            {{/ list_of_test_cases }}
+            </tbody>
+        </table>
+        {{/ has_test_cases }}
+        {{^ has_test_cases }}
+        <div class="alert alert-warning">
+            <h4>Warning!</h4>
+            This requirement is not covered by any test.
+        </div>
+        {{/ has_test_cases }}
+        <form action="{{ link_test_case_uri }}" method="POST">
+            <div class="controls controls-row">
+                {{# has_available_test_cases }}
+                <select name="testcase_id" class="span6" required>
+                    <option value="">-- Select an existing test case to link</option>
+                    {{# list_of_available_test_cases }}
+                    <option value="{{ id }}">{{ name }}</option>
+                    {{/ list_of_available_test_cases }}
+                </select>
+                <button class="btn" style="float:left; margin-right:20px;"><i class="icon-link"></i> Link test case</button>
+                {{/ has_available_test_cases }}
+                <button type="button" class="btn" style="float:left;" data-target="#submit-new-testcase" data-toggle="modal"><i class="icon-plus"></i> Create new test case</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+    <script type="text/javascript" src="/plugins/tracker/scripts/TrackerFieldDependencies.js"></script>
 <div id="submit-new-testcase" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <form action="{{ add_test_case_uri }}" method="POST" enctype="multipart/form-data">
         <div class="modal-header">

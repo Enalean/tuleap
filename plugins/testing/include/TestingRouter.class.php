@@ -79,7 +79,7 @@ class TestingRouter {
         $requested_resource = $request->getValidated('resource');
         switch ($requested_resource) {
             case self::RESOURCE_REQUIREMENT:
-                return new Testing_Requirement_RequirementController($request, $testcase_association_dao, $requirement_info_collection_presenter_factory);
+                return new Testing_Requirement_RequirementController($request, $testcase_association_dao, $release_association_dao, $requirement_info_collection_presenter_factory);
                 break;
             case self::RESOURCE_TESTEXECUTION:
                 $dao     = new Testing_TestExecution_TestExecutionDao();
