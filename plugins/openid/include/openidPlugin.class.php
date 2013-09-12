@@ -18,8 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'autoload.php';
+require_once 'constants.php';
 require_once 'common/plugin/Plugin.class.php';
-require_once 'OpenidPluginInfo.class.php';
 
 class OpenidPlugin extends Plugin {
 
@@ -29,17 +30,34 @@ class OpenidPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
+
+        $this->addHook('account_pi_entry');
     }
 
-    public function getHooksAndCallbacks() {
-        return parent::getHooksAndCallbacks();
+    public function account_pi_entry(array $params) {
+        $dao = new Openid_Dao();
+        $dar = $dao->searchOpenidUrlsForUserId($params['user_id']);
+        $params['entry_label'][$this->getId()] = 'OpenId';
+        if ($dar->count()) {
+            $row = $dar->getRow();
+            $params['entry_value'][$this->getId()] = $row['connexion_string'];
+            $params['entry_change'][$this->getId()] = '<a href="'.OPENID_BASE_URL.'/?func='.OpenId_OpenIdRouter::REMOVE_PAIR.'">[Remove OpenId]</a>';
+        } else {
+            $params['entry_value'][$this->getId()]  = '';
+            $params['entry_change'][$this->getId()] = '<a href="'.OPENID_BASE_URL.'/?func=pair_accounts&return_to='.urlencode(OPENID_BASE_URL.'/update_link.php').'">[Link an OpenId account]</a>';
+        }
     }
 
-    /**
-     * @see Plugin::getDependencies()
-     */
-    public function getDependencies() {
-        return array();
+    public function process(HTTPRequest $request, Layout $response) {
+        $this->loadPhpOpenId();
+        $router = new OpenId_OpenIdRouter();
+        $router->route($request, $response);
+    }
+
+    private function loadPhpOpenId() {
+        $phpopenid_path = '/usr/share/php-openid';
+        ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . $phpopenid_path);
+        include_once 'openid_includes.php';
     }
 
     /**

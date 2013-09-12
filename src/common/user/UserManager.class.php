@@ -541,6 +541,28 @@ class UserManager {
         return $this->createSession($user_login_as);
     }
 
+    /**
+     * Open a session for user
+     *
+     * @param PFUser $user
+     * @return type
+     * @throws UserNotExistException
+     * @throws UserNotActiveException
+     */
+    function openSessionForUser(PFUser $user) {
+        if (!$user) {
+            throw new UserNotExistException();
+        }
+        if (!$this->checkUserStatus($user->getStatus())) {
+            throw new UserNotActiveException();
+        }
+        $now = $_SERVER['REQUEST_TIME'];
+        $expire = $now + $this->_getSessionLifetime();
+        $session_hash = $this->createSession($user);
+        $user->setSessionHash($session_hash);
+        $this->_getCookieManager()->setCookie('session_hash', $session_hash, $expire);
+    }
+
     private function createSession(PFUser $user) {
         $now = $_SERVER['REQUEST_TIME'];
         $session_hash = $this->getDao()->createSession($user->getId(), $now);
