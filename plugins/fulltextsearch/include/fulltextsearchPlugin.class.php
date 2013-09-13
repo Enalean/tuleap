@@ -61,7 +61,7 @@ class fulltextsearchPlugin extends Plugin {
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
 
         // Search
-        $this->_addHook('search_type_entry', 'search_type_entry', false);
+        $this->_addHook(Event::LAYOUT_SEARCH_ENTRY);
         $this->_addHook('search_type', 'search_type', false);
     }
 
@@ -69,14 +69,13 @@ class fulltextsearchPlugin extends Plugin {
         return UserManager::instance()->getCurrentUser();
     }
 
-    public function search_type_entry($params) {
+    public function layout_search_entry($params) {
         if ($this->getCurrentUser()->useLabFeatures()) {
-            $params['output'] .= '<option value="'. self::SEARCH_TYPE .'" ';
-            if ($params['type_of_search'] == self::SEARCH_TYPE) {
-                $params['output'] .= 'selected="selected"';
-            }
-            $params['output'] .= '>'. 'Fulltext';
-            $params['output'] .= '</option>';
+            $params['search_entries'][] = array(
+                'value'    => self::SEARCH_TYPE,
+                'label'    => 'Fulltext',
+                'selected' => $params['type_of_search'] == self::SEARCH_TYPE,
+            );
         }
     }
 

@@ -559,5 +559,15 @@ class Event {
      *     Void
      */
     const PROJECT_UNSET_PARENT_PROJECT= 'project_unset_parent_project';
+
+    /**
+     * Build search entries in Layout
+     *
+     * Parameters:
+     *     'type_of_search' => String type of search (wiki, snippet, etc)
+     *     'search_entries' => Array (OUT) where to add entries
+     *     'hidden_fields'  => Array (OUT) add extra info on search
+     */
+    const LAYOUT_SEARCH_ENTRY = 'layout_search_entry';
 }
 ?>

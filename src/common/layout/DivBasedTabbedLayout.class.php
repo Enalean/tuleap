@@ -74,8 +74,11 @@ NB: Original OsdnNavBar has been removed from first cell. <td align="center">'.$
                 $html .= '<li><a href="/project/register.php">'.$GLOBALS['Language']->getText('include_menu','register_new_proj').'</a></li>';
             } 
             if (!HTTPRequest::instance()->isPost()) {
-                $bookmark_title = urlencode( str_replace($GLOBALS['sys_name'].': ', '', $params['title']));
-                $html .= '<li class="bookmarkpage"><a href="/my/bookmark_add.php?bookmark_url='.urlencode($_SERVER['REQUEST_URI']).'&bookmark_title='.$bookmark_title.'">'.$GLOBALS['Language']->getText('include_menu','bookmark_this_page').'</a></li>';
+                $add_bookmark_url = http_build_query(array(
+                    'bookmark_url'   => $_SERVER['REQUEST_URI'],
+                    'bookmark_title' => str_replace($GLOBALS['sys_name'].': ', '', $params['title'])
+                ));
+                $html .= '<li class="bookmarkpage"><a href="/my/bookmark_add.php?'.$add_bookmark_url.'">'.$GLOBALS['Language']->getText('include_menu','bookmark_this_page').'</a></li>';
             }
         } else {
             $html .= '<li class="header_actions_nolink highlight">'.$GLOBALS['Language']->getText('include_menu','not_logged_in').'</li>';
@@ -439,106 +442,9 @@ echo $this->outerTabs($params);
     return $return;    
 	}
 
-	function getSearchBox() {
-        global $words,$forum_id,$group_id,$list,$is_bug_page,$is_support_page,$Language,
-            $is_pm_page,$is_snippet_page,$exact,$type_of_search,$atid, $is_wiki_page;
-
-		// if there is no search currently, set the default
-		if ( ! isset($type_of_search) ) {
-			$exact = 1;
-		}
-
-        $em =& EventManager::instance();
-
-		$output = '
-		<form action="/search/" method="post"><table style="text-align:left;float:right"><tr style="vertical-align:top;"><td>
-		';
-		$output .= '<select style="font-size: x-small" name="type_of_search">';
-        if ($is_bug_page && $group_id) {
-            $output .= "\t<OPTION value=\"bugs\"".( $type_of_search == "bugs" ? " SELECTED" : "" ).">".$Language->getText('include_menu','bugs')."</OPTION>\n";
-        } else if ($is_pm_page && $group_id) {
-            $output .= "\t<OPTION value=\"tasks\"".( $type_of_search == "tasks" ? " SELECTED" : "" ).">".$Language->getText('include_menu','tasks')."</OPTION>\n";
-        } else if ($is_support_page && $group_id) {
-            $output .= "\t<OPTION value=\"support\"".( $type_of_search == "support" ? " SELECTED" : "" ).">".$Language->getText('include_menu','supp_requ')."</OPTION>\n";
-        } else if ($group_id && $forum_id) {
-            $output .= "\t<OPTION value=\"forums\"".( $type_of_search == "forums" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_forum')."</OPTION>\n";
-        } else if ($group_id && $atid) {
-            $output .= "\t<OPTION value=\"tracker\"".( $type_of_search == "tracker" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_tracker')."</OPTION>\n";
-        } else if ($group_id && $is_wiki_page) {
-            $output .= "\t<OPTION value=\"wiki\"".( $type_of_search == "wiki" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_wiki')."</OPTION>\n";
-        }           
-
-        $em->processEvent('layout_searchbox_options', array('option_html' => &$output,
-                                                        'type_of_search' => $type_of_search
-                                                    ));
-
-        $output .= "\t<OPTION value=\"soft\"".( $type_of_search == "soft" ? " SELECTED" : "" ).">".$Language->getText('include_menu','software_proj')."</OPTION>\n";
-        if ($GLOBALS['sys_use_snippet'] != 0) {
-            $output .= "\t<OPTION value=\"snippets\"".( ($type_of_search == "snippets" || $is_snippet_page) ? " SELECTED" : "" ).">".$Language->getText('include_menu','code_snippets')."</OPTION>\n";
-        }
-        $output .= "\t<OPTION value=\"people\"".( $type_of_search == "people" ? " SELECTED" : "" ).">".$Language->getText('include_menu','people')."</OPTION>\n";
-
-        $search_type_entry_output = '';
-        $eParams = array('type_of_search' => $type_of_search,
-                         'output'         => &$search_type_entry_output);
-        $em->processEvent('search_type_entry', $eParams);      
-        $output .= $search_type_entry_output;
-       
-        $output .= "\t</select></td><td>";
-        
-
-		if ( isset($atid) ) {
-            $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$atid\" NAME=\"atid\">\n";
-        } 
-        if ( isset($forum_id) ) {
-            $forum_id = $this->purifier->purify($forum_id, CODENDI_PURIFIER_CONVERT_HTML);
-            $output  .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$forum_id\" NAME=\"forum_id\">\n";
-        } 
-        if ( isset($is_bug_page) ) {
-           $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_bug_page\" NAME=\"is_bug_page\">\n";
-        }
-        if ( isset($is_support_page) ) {
-           $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_support_page\" NAME=\"is_support_page\">\n";
-        }
-        if ( isset($is_pm_page) ) {
-           $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_pm_page\" NAME=\"is_pm_page\">\n";
-        }
-        if ( isset($is_snippet_page) ) {
-            $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_snippet_page\" NAME=\"is_snippet_page\">\n";
-        }
-		if ( isset($list) ) {
-			require_once('common/plugin/PluginManager.class.php');
-        	$plugin_manager =& PluginManager::instance();
-        	$forumml =& $plugin_manager->getPluginByName('forumml');
-        	if ($forumml && $plugin_manager->isPluginAvailable($forumml)) {
-			    $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$list\" NAME=\"list\">\n";
-        	}    
-        }        
-        if ( isset($group_id) ) {
-           $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$group_id\" NAME=\"group_id\">\n";
-        }
-
-        $em->processEvent('layout_searchbox_hiddenInputs', array('input_html' => &$output));
-
-		$output .= '';
-        
-		$output .= '<input style="font-size:0.8em" type="text" size="22" name="words" value="'. $this->purifier->purify($words, CODENDI_PURIFIER_CONVERT_HTML).'" /><br />';
-        $output .= '<input type="CHECKBOX" name="exact" value="1"'.( $exact ? ' CHECKED' : ' UNCHECKED' ).'><span style="font-size:0.8em">'.$Language->getText('include_menu','require_all_words').'</span>';
-
-		$output .= '</td><td>';
-		$output .= '<input style="font-size:0.8em" type="submit" name="Search" value="'.$Language->getText('searchbox','search').'" />';
-		$output .= '</td></tr></table></form>';
-        return $output;
-    }   
-
     //diplaying search box in body
     function bodySearchBox() {
-       //do nothing
     }
-    
-    /*    function getOsdnNavBar() {
-        return '&nbsp;';
-    }*/
 }
 
 ?>
