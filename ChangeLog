@@ -5,6 +5,7 @@ Version 6.5 (Not released yet)
 	* story #3825 - have a "Comments/Description" field in FRS
 	* Script to purge artifact_file: Run it with /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/tools/utils/dump_trackerv3_attachments.php
 	* request #4962 - fix date display when date is in future
+	* Improvement of internal API. ~5% speed boost on most pages.
 
 	== Plugins ==
 	* docman: 2.26.22
