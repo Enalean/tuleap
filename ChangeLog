@@ -10,8 +10,8 @@ Version 6.5 (Not released yet)
 	== Plugins ==
 	* docman: 2.26.22
 	* git: 3.40
-	* tracker: 5.154
-	* agiledashboard: 0.96
+	* tracker: 5.155
+	* agiledashboard: 0.97
 	* cardwall: 0.9.45
 
 	== Bug Fix ==

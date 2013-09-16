@@ -1,3 +1,6 @@
+Version 5.155 - Tuleap 6.5
+    * Fix request #4937: do not allow AgileDashboard with deleted trackers
+
 Version 5.154 - Tuleap 6.5
     * Forbid anonymous user to add and/or update artifacts
 

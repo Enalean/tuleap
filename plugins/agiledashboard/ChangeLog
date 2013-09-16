@@ -1,3 +1,6 @@
+Version 0.97 - Tuleap 6.5
+    * Fix request #4937: do not allow AgileDashboard with deleted trackers
+
 Version 0.96 - Tuleap 6.5
     * Remove legacy planning view
 
