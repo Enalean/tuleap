@@ -43,32 +43,13 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterBuilder {
         $backlog_strategy     = $this->strategy_factory->getBacklogStrategy($milestone);
         $redirect_to_self     = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_Content_ContentPaneInfo::IDENTIFIER);
 
-        $can_add_backlog_item = $this->canAddBacklogItem($user, $milestone);
-
-        $item_tracker         = $backlog_strategy->getItemTracker();
-        $new_backlog_item_url = $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($item_tracker).'&'.$redirect_to_self;
-
-        $todo_collection = $this->collection_factory->getTodoCollection($user, $milestone, $backlog_strategy, $redirect_to_self);
-
-        $content_presenter = new AgileDashboard_Milestone_Pane_Content_ContentPresenter(
-            $todo_collection,
+        return $backlog_strategy->getPresenter(
+            $user,
+            $milestone,
+            $this->collection_factory->getTodoCollection($user, $milestone, $backlog_strategy, $redirect_to_self),
             $this->collection_factory->getDoneCollection($user, $milestone, $backlog_strategy, $redirect_to_self),
-            $todo_collection->getParentItemName(),
-            $backlog_strategy->getBacklogItemName(),
-            $can_add_backlog_item,
-            $new_backlog_item_url
+            $redirect_to_self
         );
-        $content_presenter->setBacklogParentElements($backlog_strategy->getBacklogParentElements($user, $redirect_to_self));
-
-        return $content_presenter;
-    }
-
-    private function canAddBacklogItem(PFUser $user, Planning_ArtifactMilestone $milestone) {
-        $backlog_tracker = $milestone->getPlanning()->getBacklogTracker();
-        if ($backlog_tracker->userCanSubmitArtifact($user)) {
-            return true;
-        }
-        return false;
     }
 }
 ?>
