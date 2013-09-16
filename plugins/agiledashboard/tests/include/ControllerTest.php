@@ -28,7 +28,7 @@ Mock::generate('Tracker_Artifact');
 Mock::generate('Tracker_HierarchyFactory');
 Mock::generate('PlanningFactory');
 Mock::generate('Planning');
-Mock::generatePartial('Planning_Controller', 'MockPlanning_Controller', array('render'));
+Mock::generatePartial('Planning_Controller', 'MockPlanning_Controller', array('renderToString'));
 Mock::generate('ProjectManager');
 Mock::generate('Project');
 Mock::generate('Tracker_CrossSearch_Search');
@@ -91,9 +91,7 @@ abstract class Planning_ControllerAdminTest extends Planning_Controller_BaseTest
         $this->planning_factory->expectOnce('getPlannings', array($this->current_user, $this->group_id));
         $this->planning_factory->setReturnValue('getPlannings', $this->plannings);
 
-        ob_start();
-        $this->controller->admin();
-        $this->output = ob_get_clean();
+        $this->output = $this->controller->admin();
     }
 
     public function itHasALinkToCreateANewPlanning() {
@@ -187,9 +185,7 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         stub($this->tracker_factory)->getTrackersByGroupId($this->group_id)->returns($this->available_backlog_trackers);
         stub($this->dao)->searchNonPlanningTrackersByGroupId($this->group_id)->returns(array());
 
-        ob_start();
-        $this->controller->new_();
-        $this->output = ob_get_clean();
+        $this->output = $this->controller->new_();
     }
 
     public function itHasATextFieldForTheName() {
@@ -272,21 +268,23 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
         $request          = aRequest()->with('planning_id', $planning_id)
                                       ->with('action', 'edit')->build();
         $planning_factory = mock('PlanningFactory');
-        $controller       = new MockPlanning_Controller();
-
         stub($planning_factory)->getPlanning($planning_id)->returns($planning);
         stub($planning_factory)->getAvailableTrackers($group_id)->returns(array());
         stub($planning_factory)->getAvailablePlanningTrackers($planning)->returns(array());
 
-        $controller->__construct(
-            $request,
-            $planning_factory,
-            mock('Planning_ShortAccessFactory'),
-            mock('Planning_MilestoneFactory'),
-            '/path/to/theme'
+        $controller = partial_mock(
+            'Planning_Controller',
+            array('renderToString'),
+            array(
+                $request,
+                $planning_factory,
+                mock('Planning_ShortAccessFactory'),
+                mock('Planning_MilestoneFactory'),
+                '/path/to/theme'
+            )
         );
 
-        $controller->expectOnce('render', array('edit', new IsAExpectation('Planning_FormPresenter')));
+        $controller->expectOnce('renderToString', array('edit', new IsAExpectation('Planning_FormPresenter')));
         $controller->edit();
     }
 }

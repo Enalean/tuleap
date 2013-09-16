@@ -53,7 +53,13 @@ class Planning_ShortAccessFactory {
         $plannings    = $this->planning_factory->getPlannings($user, $group_id);
         $short_access = array();
         foreach ($plannings as $planning) {
-            $short_access[] = $this->getShortAccessForPlanning($planning, $user, $milestone_factory, $theme_path, 0);
+            if ($planning->getBacklogTracker()->isDeleted()) {
+                throw new Planning_InvalidConfigurationException($GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_invalidconf_deletedtracker', array($planning->getPlanTitle(), $planning->getBacklogTracker()->getName())));
+            } elseif($planning->getPlanningTracker()->isDeleted()) {
+                throw new Planning_InvalidConfigurationException($GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_invalidconf_deletedtracker', array($planning->getPlanTitle(), $planning->getPlanningTracker()->getName())));
+            } else {
+                $short_access[] = $this->getShortAccessForPlanning($planning, $user, $milestone_factory, $theme_path, 0);
+            }
         }
         if (!empty($short_access)) {
             end($short_access)->setIsLatest();
