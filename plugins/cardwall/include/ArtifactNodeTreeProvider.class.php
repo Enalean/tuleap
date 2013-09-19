@@ -39,7 +39,7 @@ class Cardwall_ArtifactNodeTreeProvider {
      * @return TreeNode
      */
     public function flatForestOfArtifacts(array $artifact_ids, $swimline_id) {
-        $cards = $this->getCards($artifact_ids);
+        $cards = $this->getCards($artifact_ids, $swimline_id);
         return $this->wrapInAThreeLevelArtifactTree($cards, $swimline_id);
     }
 
@@ -58,11 +58,11 @@ class Cardwall_ArtifactNodeTreeProvider {
     /**
      * @return Cardwall_CardInCellPresenterNode[]
      */
-    protected function getCards(array $artifact_ids) {
+    protected function getCards(array $artifact_ids, $swimline_id) {
         $cards = array();
         foreach ($artifact_ids as $id) {
             $artifact = $this->artifact_factory->getArtifactById($id);
-            $cards[]  = $this->node_factory->getCardInCellPresenterNode($artifact);
+            $cards[]  = $this->node_factory->getCardInCellPresenterNode($artifact, $swimline_id);
         }
         return $cards;
     }

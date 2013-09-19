@@ -23,8 +23,8 @@ require_once dirname(__FILE__) .'/bootstrap.php';
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 
 class Cardwall_ArtifactNodeTreeProvider4Tests extends Cardwall_ArtifactNodeTreeProvider {
-    public function getCards(array $artifact_ids) {
-        return parent::getCards($artifact_ids);
+    public function getCards(array $artifact_ids, $swimline_id) {
+        return parent::getCards($artifact_ids, $swimline_id);
     }
 
     public function wrapInAThreeLevelArtifactTree(array $cards, $swimline_id) {
@@ -73,6 +73,8 @@ class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
     }
 
     public function itCreatesAnArtifactNodeForEveryArtifactId() {
+        $swmiline_id = 7;
+
         $artifact4 = aMockArtifact()->withId(4)->build();
         $artifact5 = aMockArtifact()->withId(5)->build();
         $artifact6 = aMockArtifact()->withId(6)->build();
@@ -85,11 +87,11 @@ class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
         stub($this->artifact_factory)->getArtifactById(5)->returns($artifact5);
         stub($this->artifact_factory)->getArtifactById(6)->returns($artifact6);
 
-        stub($this->node_factory)->getCardInCellPresenterNode($artifact4)->returns($node4);
-        stub($this->node_factory)->getCardInCellPresenterNode($artifact5)->returns($node5);
-        stub($this->node_factory)->getCardInCellPresenterNode($artifact6)->returns($node6);
+        stub($this->node_factory)->getCardInCellPresenterNode($artifact4, $swmiline_id)->returns($node4);
+        stub($this->node_factory)->getCardInCellPresenterNode($artifact5, $swmiline_id)->returns($node5);
+        stub($this->node_factory)->getCardInCellPresenterNode($artifact6, $swmiline_id)->returns($node6);
 
-        $cards = $this->provider->getCards(array(4, 5, 6));
+        $cards = $this->provider->getCards(array(4, 5, 6), $swmiline_id);
 
         $this->assertEqual(3, count($cards));
         foreach ($cards as $card) {
