@@ -1,3 +1,6 @@
+Version 3.41 - Tuleap 6.5
+    * Fix request #5031: Fatal error when adding a group in an umbrella parent project
+
 Version 3.40 - Tuleap 6.5
     * Fix typo in git plugin messages
 
