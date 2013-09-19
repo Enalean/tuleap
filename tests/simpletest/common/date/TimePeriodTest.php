@@ -17,30 +17,31 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+require_once 'common/date/TimePeriodWithWeekEnd.class.php';
+require_once 'common/date/TimePeriodWithoutWeekEnd.class.php';
 
-class Tracker_Chart_Data_BurndownTimePeriodWithWeekEndTest extends TuleapTestCase {
-    
+class TimePeriodWithWeekEndTest extends TuleapTestCase {
+
     public function itComputesDateBasedOnStartDate() {
         $start_date    = mktime(0, 0, 0, 7, 4, 2012);
-        $time_period   = new Tracker_Chart_Data_BurndownTimePeriodWithWeekEnd($start_date, 2);
-        
+        $time_period   = new TimePeriodWithWeekEnd($start_date, 2);
+
         $this->assertEqual($time_period->getHumanReadableDates(), array('Wed 04', 'Thu 05', 'Fri 06'));
     }
-    
+
     public function itProvidesAListOfTheDayOffsetsInTheTimePeriod() {
         $start_date    = mktime(0, 0, 0, 7, 4, 2012);
-        $time_period   = new Tracker_Chart_Data_BurndownTimePeriodWithWeekEnd($start_date, 2);
-        
+        $time_period   = new TimePeriodWithWeekEnd($start_date, 2);
+
         $this->assertEqual($time_period->getDayOffsets(), array(0, 1, 2));
     }
 }
 
-class Tracker_Chart_Data_BurndownTimePeriodWithoutWeekEndTest extends TuleapTestCase {
+class TimePeriodWithoutWeekEndTest extends TuleapTestCase {
 
     public function itProvidesAListOfDaysWhileExcludingWeekends() {
         $start_date    = mktime(0, 0, 0, 7, 4, 2012);
-        $time_period   = new Tracker_Chart_Data_BurndownTimePeriodWithoutWeekEnd($start_date, 4);
+        $time_period   = new TimePeriodWithoutWeekEnd($start_date, 4);
 
         $this->assertEqual($time_period->getHumanReadableDates(), array('Wed 04', 'Thu 05', 'Fri 06', 'Mon 09', 'Tue 10'));
     }

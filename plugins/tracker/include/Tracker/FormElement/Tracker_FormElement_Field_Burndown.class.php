@@ -19,6 +19,8 @@
  */
 
 require_once 'common/chart/ErrorChart.class.php';
+require_once 'common/date/TimePeriodWithWeekEnd.class.php';
+require_once 'common/date/TimePeriodWithoutWeekEnd.class.php';
 
 class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {
 
@@ -167,9 +169,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
         $field         = $this->getBurndownRemainingEffortField($artifact, $user);
         if ($this->includeWeekends()) {
-            $time_period   = new Tracker_Chart_Data_BurndownTimePeriodWithWeekEnd($start_date, $duration);
+            $time_period   = new TimePeriodWithWeekEnd($start_date, $duration);
         } else {
-            $time_period   = new Tracker_Chart_Data_BurndownTimePeriodWithoutWeekEnd($start_date, $duration);
+            $time_period   = new TimePeriodWithoutWeekEnd($start_date, $duration);
         }
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
         $tonight       = mktime(23, 59, 59, date('n'), date('j'), date('Y'));

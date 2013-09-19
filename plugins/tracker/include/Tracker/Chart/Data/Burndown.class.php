@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/date/TimePeriod.class.php';
 
 /**
  * Storage data for Burndown display via JPgraph
@@ -25,7 +26,7 @@
 class Tracker_Chart_Data_Burndown {
 
     /**
-     * @var Tracker_Chart_Data_IProvideBurndownTimePeriod
+     * @var TimePeriod
      */
     private $time_period;
 
@@ -33,7 +34,7 @@ class Tracker_Chart_Data_Burndown {
     private $ideal_effort     = array();
     private $capacity         = null;
 
-    public function __construct(Tracker_Chart_Data_IProvideBurndownTimePeriod $time_period, $capacity = null) {
+    public function __construct(TimePeriod $time_period, $capacity = null) {
         $this->time_period = $time_period;
         $this->capacity    = $capacity;
     }

@@ -18,7 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Chart_Data_BurndownTimePeriodWithoutWeekEnd  implements Tracker_Chart_Data_IProvideBurndownTimePeriod {
+require_once 'TimePeriod.class.php';
+
+/**
+ * A time period, starting at a given date, and with a given duration.
+ */
+class TimePeriodWithWeekEnd implements TimePeriod {
+
     /**
      * @var int The time period start date, as a Unix timestamp.
      */
@@ -53,41 +59,22 @@ class Tracker_Chart_Data_BurndownTimePeriodWithoutWeekEnd  implements Tracker_Ch
      */
     public function getHumanReadableDates() {
         $dates = array();
-        $day_offset = 0;
-        while (count($dates)-1 != $this->duration) {
-            $day = $this->getNextDay($day_offset, $this->start_date);
-            $day_offset++;
-            if ( $this->isNotWeekendDay($day)) {
-                $dates[] = date('D d', $day);
-            }
+
+        foreach($this->getDayOffsets() as $day_offset) {
+            $day     = strtotime("+$day_offset days", $this->start_date);
+            $dates[] = date('D d', $day);
         }
+
         return $dates;
     }
 
     /**
-     * To be used to iterate consistently over burndown time period
+     * To be used to iterate consistently over the time period
      *
      * @return array of int
      */
     public function getDayOffsets() {
-        $day_offsets_excluding_we = array();
-        $day_offset = 0;
-        while (count($day_offsets_excluding_we)-1 != $this->duration) {
-            $day = $this->getNextDay($day_offset, $this->start_date);
-            if ( $this->isNotWeekendDay($day)) {
-                $day_offsets_excluding_we[] = $day_offset;
-            }
-            $day_offset++;
-       }
-       return $day_offsets_excluding_we;
-    }
-
-    private function getNextDay($next_day_number, $date) {
-        return strtotime("+$next_day_number days", $date);
-    }
-
-    private function isNotWeekendDay($day) {
-        return ! (date('D', $day) == 'Sat' || date('D', $day) == 'Sun');
+        return range(0, $this->duration);
     }
 }
 
