@@ -50,6 +50,13 @@ class TimePeriodWithWeekEnd implements TimePeriod {
     /**
      * @return int
      */
+    public function getEndDate() {
+        return strtotime("+{$this->duration} days", $this->start_date);
+    }
+
+    /**
+     * @return int
+     */
     public function getDuration() {
         return $this->duration;
     }

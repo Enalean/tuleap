@@ -22,28 +22,43 @@ require_once 'common/date/TimePeriodWithoutWeekEnd.class.php';
 
 class TimePeriodWithWeekEndTest extends TuleapTestCase {
 
-    public function itComputesDateBasedOnStartDate() {
-        $start_date    = mktime(0, 0, 0, 7, 4, 2012);
-        $time_period   = new TimePeriodWithWeekEnd($start_date, 2);
+    public function setUp() {
+        $start_date        = mktime(0, 0, 0, 7, 4, 2012);
+        $this->time_period = new TimePeriodWithWeekEnd($start_date, 3);
+    }
 
-        $this->assertEqual($time_period->getHumanReadableDates(), array('Wed 04', 'Thu 05', 'Fri 06'));
+    public function itComputesDateBasedOnStartDate() {
+        $this->assertEqual(
+            $this->time_period->getHumanReadableDates(),
+            array('Wed 04', 'Thu 05', 'Fri 06', 'Sat 07')
+        );
     }
 
     public function itProvidesAListOfTheDayOffsetsInTheTimePeriod() {
-        $start_date    = mktime(0, 0, 0, 7, 4, 2012);
-        $time_period   = new TimePeriodWithWeekEnd($start_date, 2);
+        $this->assertEqual($this->time_period->getDayOffsets(), array(0, 1, 2, 3));
+    }
 
-        $this->assertEqual($time_period->getDayOffsets(), array(0, 1, 2));
+    public function itProvidesTheEndDate() {
+        $this->assertEqual(date('D d', $this->time_period->getEndDate()), 'Sat 07');
     }
 }
 
 class TimePeriodWithoutWeekEndTest extends TuleapTestCase {
 
-    public function itProvidesAListOfDaysWhileExcludingWeekends() {
-        $start_date    = mktime(0, 0, 0, 7, 4, 2012);
-        $time_period   = new TimePeriodWithoutWeekEnd($start_date, 4);
+    public function setUp() {
+        $start_date        = mktime(0, 0, 0, 7, 4, 2012);
+        $this->time_period = new TimePeriodWithoutWeekEnd($start_date, 4);
+    }
 
-        $this->assertEqual($time_period->getHumanReadableDates(), array('Wed 04', 'Thu 05', 'Fri 06', 'Mon 09', 'Tue 10'));
+    public function itProvidesAListOfDaysWhileExcludingWeekends() {
+        $this->assertEqual(
+            $this->time_period->getHumanReadableDates(),
+            array('Wed 04', 'Thu 05', 'Fri 06', 'Mon 09', 'Tue 10')
+        );
+    }
+
+    public function itProvidesTheEndDate() {
+        $this->assertEqual(date('D d', $this->time_period->getEndDate()), 'Tue 10');
     }
 }
 ?>

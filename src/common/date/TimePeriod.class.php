@@ -38,6 +38,11 @@ interface TimePeriod {
     function getDuration();
 
     /**
+     * @return int
+     */
+    function getEndDate();
+
+    /**
      * @return array of string
      */
     function getHumanReadableDates();

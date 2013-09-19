@@ -51,6 +51,14 @@ class TimePeriodWithoutWeekEnd  implements TimePeriod {
     }
 
     /**
+     * @return int
+     */
+    public function getEndDate() {
+        $last_offset = end($this->getDayOffsets());
+        return strtotime("+$last_offset days", $this->start_date);
+    }
+
+    /**
      * @return array of string
      */
     public function getHumanReadableDates() {
