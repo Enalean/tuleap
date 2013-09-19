@@ -232,9 +232,10 @@ class MilestoneFactory_MilestoneComesWithEndDateTest extends MilestoneFactory_Mi
     }
 
     public function itRetrievesMilestoneWithEndDate() {
-        $duration          = 20;
-        $start_date        = '10/01/2013';
-        $expected_end_date = '10/21/2013';
+        // Sprint 10 days, from `Monday, Jul 1, 2013` to `Monday, Jul 15, 2013`
+        $duration          = 10;
+        $start_date        = '07/01/2013';
+        $expected_end_date = '07/15/2013';
 
         $start_date_changeset = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns(strtotime($start_date));
         $start_date_field     = stub('Tracker_FormElement_Field_Date')->getLastChangesetValue($this->artifact)->returns($start_date_changeset);

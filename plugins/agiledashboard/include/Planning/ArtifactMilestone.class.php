@@ -253,9 +253,9 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
             return null;
         }
 
-        $end_date   = strtotime("+".floor($this->duration)." days", $this->start_date);
+        $time_period = new TimePeriodWithoutWeekEnd($this->start_date, $this->duration);
 
-        return $end_date;
+        return $time_period->getEndDate();
     }
 
     public function getCapacity() {
