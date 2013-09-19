@@ -364,7 +364,7 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
     }
 }
 
-class Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest extends TuleapTestCase {
+abstract class Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest extends TuleapTestCase {
     /** @var Git_Driver_Gerrit */
     protected $driver;
 
@@ -397,7 +397,6 @@ class Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest extends TuleapT
         $this->project_manager     = mock('ProjectManager');
 
         $this->ugroup_manager = mock('UGroupManager');
-        stub($this->project_manager)->getChildProjects()->returns(array());
 
         $this->membership_manager = partial_mock(
             'Git_Driver_Gerrit_MembershipManager',
@@ -439,6 +438,11 @@ class Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest extends TuleapT
 
 class Git_Driver_Gerrit_MembershipManagerProjectAdminsIsDaOwnerOfAllAndEverythingTest extends Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest {
 
+    public function setUp() {
+        parent::setUp();
+        stub($this->project_manager)->getChildProjects()->returns(array());
+    }
+
     public function itCheckIfProjectAdminsGroupExist() {
         stub($this->ugroup)->getMembers()->returns(array());
 
@@ -459,6 +463,56 @@ class Git_Driver_Gerrit_MembershipManagerProjectAdminsIsDaOwnerOfAllAndEverythin
     }
 }
 
+/**
+ * Fix for request #5031 - Fatal error when adding a group in an umbrella parent project
+ * @see https://tuleap.net/plugins/tracker/?aid=5031
+ */
+class Git_Driver_Gerrit_MembershipManager_CreateGroupForUmbrellaTest extends Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest {
+    private $child_project;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->remote_server_factory  = mock('Git_RemoteServer_GerritServerFactory');
+        $this->git_repository_factory = mock('GitRepositoryFactory');
+        $this->logger = mock('Logger');
+        $this->dao    = mock('Git_Driver_Gerrit_MembershipDao');
+        $this->user1 = mock('PFUser');
+        $this->user2 = mock('PFUser');
+
+        $this->membership_manager = partial_mock(
+            'Git_Driver_Gerrit_MembershipManager',
+            array(
+                'addUGroupBinding',
+                'addUserToGroupWithoutFlush',
+                'doesGroupExistOnServer'
+            ),
+            array(
+                $this->dao,
+                $this->driver,
+                $this->gerrit_user_manager,
+                $this->remote_server_factory,
+                $this->logger,
+                $this->ugroup_manager,
+                $this->project_manager
+            )
+        );
+
+        stub($this->membership_manager)->doesGroupExistOnServer()->returns(true);
+
+        $child_project = aMockProject()->withId(112)->build();
+
+        stub($this->project_manager)->getChildProjects()->returns(array($child_project));
+    }
+
+    public function itCreateGroupOnAllGerritServersTheProjectAndItsChildrenUse() {
+        stub($this->ugroup)->getMembers()->returns(array());
+        expect($this->remote_server_factory)->getServersForProject($this->project)->count(2);
+        stub($this->remote_server_factory)->getServersForProject()->returnsAt(0, array(aGerritServer()->withId(3)->build()));
+        stub($this->remote_server_factory)->getServersForProject()->returnsAt(1, array(aGerritServer()->withId(5)->build()));
+        $this->membership_manager->createGroupOnProjectsServers($this->ugroup);
+    }
+}
 
 class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest {
     private $logger;
@@ -492,6 +546,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Ger
             )
         );
 
+        stub($this->project_manager)->getChildProjects()->returns(array());
         stub($this->membership_manager)->doesGroupExistOnServer()->returns(true);
     }
 
@@ -778,7 +833,5 @@ class Git_Driver_Gerrit_MembershipManagerListGroupsCacheTest extends Git_Driver_
         $this->membership_manager->doesGroupExistOnServer($remote_server2, $this->u_group);
     }
 }
-
-
 
 ?>

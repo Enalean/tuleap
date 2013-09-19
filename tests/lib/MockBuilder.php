@@ -143,6 +143,14 @@ class OngoingIntelligentStub {
     }
 
     /**
+     * @return the configured mock
+     */
+    public function returnsAt($timing, $value) {
+        $this->mock->setReturnValueAt($timing, $this->method, $value);
+        return $this->mock;
+    }
+
+    /**
      * Ease return of DatabaseAccessResult objects:
      *
      * Example:
