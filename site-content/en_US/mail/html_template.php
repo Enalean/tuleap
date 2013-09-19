@@ -29,7 +29,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         
-        <title><?= $title ?></title>
+        <title><?php echo $title; ?></title>
 <style type="text/css">
 /* Client-specific Styles */
 #outlook a{padding:0;} /* Force Outlook to provide a "view in browser" button. */
@@ -340,10 +340,10 @@ height:auto;
 
 .bodyContent .tracker_artifact_followup_avatar,
 .bodyContent .tracker_artifact_followup.boxitemalt .tracker_artifact_followup_avatar {
-    background: url(<?= $http_url ?>/plugins/tracker/themes/default/images/tracker_artifact_comment_alt.png) right top no-repeat;
+    background: url(<?php echo $http_url ?>/plugins/tracker/themes/default/images/tracker_artifact_comment_alt.png) right top no-repeat;
 }
 .bodyContent .tracker_artifact_followup.boxitem .tracker_artifact_followup_avatar {
-    background: url(<?= $http_url ?>/plugins/tracker/themes/default/images/tracker_artifact_comment.png) right top no-repeat;
+    background: url(<?php echo $http_url ?>/plugins/tracker/themes/default/images/tracker_artifact_comment.png) right top no-repeat;
 }
 .bodyContent .tracker_artifact_followup_header,
 .bodyContent .tracker_artifact_followup_content,
@@ -356,7 +356,7 @@ height:auto;
     background-color: #f0f0f0;
 }
 .bodyContent div.avatar {
-    background: transparent url(<?= $img_path ?>/avatar_default.png) 1px 1px no-repeat;
+    background: transparent url(<?php echo $img_path ?>/avatar_default.png) 1px 1px no-repeat;
     width:50px;
     height:50px;
     border:1px solid #ccc;
@@ -521,12 +521,12 @@ display:inline;
                                    <tr>
                                       <td valign="bottom">
                                          <div>
-                                             <img src="<?= $img_path ?>/organization_logo_mail.png" alt="<?= $GLOBALS['sys_name'] ?>" />
+                                             <img src="<?php echo $img_path ?>/organization_logo_mail.png" alt="<?php echo $GLOBALS['sys_name'] ?>" />
                                          </div>
                                       </td>
                                       <td valign="bottom" width="300">
                                          <div style="float:right;">
-                                             <?= $txt_display_not_correct ?><br /><a href="<?= get_server_url() ?>/account/preferences.php" target="_blank"><?= $txt_update_prefs ?></a>.
+                                             <?php echo $txt_display_not_correct ?><br /><a href="<?php echo get_server_url() ?>/account/preferences.php" target="_blank"><?php echo $txt_update_prefs ?></a>.
                                          </div>
                                       </td>
                                     </tr>
@@ -548,8 +548,8 @@ display:inline;
                                             <table border="0" cellpadding="20" cellspacing="0" width="100%">
                                                 <tr>
                                                     <td valign="top">
-                                                        <?= !empty($breadcrumbs) ? '<div class="breadcrumbs">'. implode(' &raquo; ', $breadcrumbs) .'</div>' : ''; ?>
-                                                        <?= $body ?>
+                                                        <?php echo !empty($breadcrumbs) ? '<div class="breadcrumbs">'. implode(' &raquo; ', $breadcrumbs) .'</div>' : ''; ?>
+                                                        <?php echo $body ?>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -572,8 +572,8 @@ display:inline;
                                                     <tr>
                                                         <td colspan="2" valign="middle" id="social">
                                                             <div>
-                                                                <?= !empty($additional_footer_link) ? '&nbsp;'. $additional_footer_link . '&nbsp; |' : '' ?>
-                                                                &nbsp;<a href="<?= get_server_url() ?>/account/preferences.php" target="_blank"><?= $txt_can_update_prefs ?></a>&nbsp;
+                                                                <?php echo !empty($additional_footer_link) ? '&nbsp;'. $additional_footer_link . '&nbsp; |' : '' ?>
+                                                                &nbsp;<a href="<?php echo get_server_url() ?>/account/preferences.php" target="_blank"><?php echo $txt_can_update_prefs ?></a>&nbsp;
                                                             </div>
                                                         </td>
                                                     </tr>
