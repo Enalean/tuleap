@@ -16,6 +16,7 @@ Version 6.5 (Not released yet)
 
 	== Bug Fix ==
 	* Fix request #4895: SVN file content not displayed, hence converting buffer file data to utf-8 before inserting cross-references.
+	* Fix request #5032: PHP code in tracker date reminder email for PHP 5.3 platforms.
 
 Version 6.4 (Thursday, August 22nd 2013)
 
