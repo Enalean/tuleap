@@ -12,7 +12,7 @@ Version 6.5 (Not released yet)
 	* git: 3.40
 	* tracker: 5.155
 	* agiledashboard: 0.97
-	* cardwall: 0.9.45
+	* cardwall: 0.9.46
 
 	== Bug Fix ==
 	* Fix request #4895: SVN file content not displayed, hence converting buffer file data to utf-8 before inserting cross-references.
