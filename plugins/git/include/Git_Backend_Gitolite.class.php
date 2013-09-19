@@ -63,7 +63,19 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         $this->driver->dumpProjectRepoConf($repository->getProject());
         return $this->driver->push();
     }
-    
+
+    /**
+     * @param GitRepository[] $project
+     * @return boolean
+     */
+    public function updateAllRepoConf(array $repositories) {
+        foreach($repositories as $repository) {
+            $this->driver->dumpProjectRepoConf($repository->getProject());
+        }
+
+        return $this->driver->push();
+    }
+
     /**
      * Verify if the repository as already some content within
      *
@@ -445,6 +457,29 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     public function setGerritProjectAsDeleted(GitRepository $repository) {
         $this->getDao()->setGerritProjectAsDeleted($repository->getId());
     }
-}
 
+    /**
+     * @param GitRepository $repository
+     * @param array $repositor_ids
+     * @return array
+     */
+    public function searchOtherRepositoriesInSameProjectFromRepositoryList(GitRepository $repository, $repositor_ids) {
+        $project_repositories = array();
+
+        $result = $this->getDao()->searchRepositoriesInSameProjectFromRepositoryList($repositor_ids, $repository->getProjectId());
+        if(! $result) {
+            return $project_repositories;
+        }
+
+        foreach ($result as $repo) {
+            if ($repo['repository_id'] == $repository->getId()) {
+                continue;
+            }
+
+            $project_repositories[] = $repo['repository_id'];
+        }
+
+        return $project_repositories;
+    }
+}
 ?>

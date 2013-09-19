@@ -143,5 +143,47 @@ class SystemEventDao extends DataAccessObject {
                 WHERE id = $id";
         return $this->update($sql);
     }
+
+    /**
+     * @return array of event id and parameters
+     */
+    public function searchNewGitRepoUpdateEvents() {
+        $sql = "SELECT id, parameters FROM system_event
+            WHERE status = 'NEW'
+            AND type = 'GIT_REPO_UPDATE'";
+
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * @param array $event_ids
+     * @return boolean
+     */
+    public function markAsDone($event_ids) {
+        $event_ids = $this->da->escapeIntImplode($event_ids);
+
+        $sql = "UPDATE system_event
+            SET status = 'DONE',
+                log = 'OK',
+                end_date = NOW()
+            WHERE id IN ($event_ids)";
+
+        return $this->update($sql);
+    }
+
+    /**
+     * @param array $event_ids
+     * @return boolean
+     */
+    public function markAsRunning($event_ids) {
+        $event_ids = $this->da->escapeIntImplode($event_ids);
+
+        $sql = "UPDATE system_event
+            SET status = 'RUNNING',
+                process_date = NOW()
+            WHERE id IN ($event_ids)";
+
+        return $this->update($sql);
+    }
 }
 ?>
