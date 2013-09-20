@@ -54,6 +54,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_SEMANTIC_FROM_XML, 'tracker_event_semantic_from_xml');
             $this->_addHook(TRACKER_EVENT_SOAP_SEMANTICS, 'tracker_event_soap_semantics');
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
+            $this->addHook(TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA);
 
             $this->_addHook(Event::SYSTRAY);
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
@@ -78,6 +79,30 @@ class AgileDashboardPlugin extends Plugin {
         if ($planning = $planning_factory->getPlanningByPlanningTracker($params['tracker'])) {
             $params['tracker'] = $planning->getBacklogTracker();
         }
+    }
+
+    /**
+     * @see TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA
+     */
+    public function tracker_event_report_display_additional_criteria($params) {
+        $backlog_tracker = $params['tracker'];
+
+        //$selected_milestone_id = $request->getValidated('agiledashboard_milestone', 'uint');
+
+        $provider = new AgileDashboard_Milestone_MilestoneReportCriterionProvider(
+            new AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider(
+                new AgileDashboard_Planning_NearestPlanningTrackerProvider($this->getPlanningFactory()),
+                new AgileDashboard_Milestone_MilestoneDao(),
+                Tracker_HierarchyFactory::instance()
+            )
+        );
+        $additional_criterion = $provider->getCriterion($backlog_tracker);
+
+        if (! $additional_criterion) {
+            return;
+        }
+
+        $params['array_of_html_criteria'][] = $additional_criterion;
     }
 
     public function event_artifact_parents_selector($params) {

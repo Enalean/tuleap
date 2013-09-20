@@ -532,8 +532,14 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
 
         $array_of_html_criteria = array();
-        $params = array('array_of_html_criteria' => &$array_of_html_criteria, 'tracker' => $this->getTracker());
-        EventManager::instance()->processEvent(TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA, $params);
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA,
+            array(
+                'array_of_html_criteria' => &$array_of_html_criteria,
+                'tracker'                => $this->getTracker(),
+                'user'                   => $current_user,
+            )
+        );
         foreach ($array_of_html_criteria as $additional_criteria) {
             $criteria_fetched[] = '<li>'. $additional_criteria .'</li>';
         }
