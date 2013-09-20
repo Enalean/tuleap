@@ -74,7 +74,7 @@ class OpenId_LoginController {
     }
 
     private function startAuthentication($finish_url) {
-        $openid_url = "https://www.google.com/accounts/o8/id";
+        $openid_url = $this->request->getValidated('openid_url', 'string', '');
         $return_url = get_server_url().'/my';
         if ($this->request->existAndNonEmpty('return_to')) {
             $return_url = $this->request->getValidated('return_to', 'string', '');

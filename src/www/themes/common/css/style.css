@@ -53,17 +53,17 @@ img { border: none; }
 PRE,TT { font-family: "Courier New", courier,sans-serif; }
 
 /********   links    **********/
-a:link, a:visited { 
-    text-decoration:none; 
-    color: #8b4020 
+a:link, a:visited {
+    text-decoration:none;
+    color: #8b4020
 }
-a:active { 
-    text-decoration:none; 
-    color: #000000 
+a:active {
+    text-decoration:none;
+    color: #000000
 }
-a:hover { 
-    text-decoration:underline; 
-    color:#ff0000; 
+a:hover {
+    text-decoration:underline;
+    color:#ff0000;
 }
 
 fieldset {
@@ -90,7 +90,7 @@ fieldset {
 .footer {
     width: 100%;
     padding-top: 1.5em;
-} 
+}
 .standardtable { width: 99%; border-spacing: 0; border: 0; color: #333333; }
 
 /* content frame specific */
@@ -98,7 +98,7 @@ fieldset {
 .row_below_outertabs,
 .outer_body_row,
 .end_inner_body_row,
-.below_tabs_selected_toptab{ 
+.below_tabs_selected_toptab{
     background:#e8e8e0;
 }
 .start_main_body_row,
@@ -127,8 +127,8 @@ fieldset {
 .boxitemalt { text-align: left; background-color: #ffffff; }
 .boxitemgrey{ text-align: left; background-color: #efefef; }
 .boxhighlight { background-color: #e8e8e0; text-align: left; color: #333333; }
-.additional { 
-    background: #FFFFCC !important; 
+.additional {
+    background: #FFFFCC !important;
 }
 td.matrix_cell.matrix_highlight_col,
 tr.boxitem:hover {
@@ -159,7 +159,7 @@ tr.boxitemalt:hover {
 
 .tabs { color: #000000; }
 .tabs:visited { color: #000000; }
-.tabs:hover { color:#FF0000; } 
+.tabs:hover { color:#FF0000; }
 .tabselect { color: #000000; font-weight: bold; }
 .tabselect:visited { color: #000000; font-weight: bold; }
 .tabselect:hover { color:#FF0000; font-weight: bold; }
@@ -177,7 +177,7 @@ tr.boxitemalt:hover {
 .calendar_day { background-color: #FFE6B5; }
 .calendar_currentday { background-color: #FFFFA3; }
 .calendar_nextmonth { background-color: #DBEAF5; }
-.calendar_daymonth { background-color: white; } 
+.calendar_daymonth { background-color: white; }
 .calendar_font_othermonth { color: gray; }
 .calendar_font { color: black; }
 .calendar_font_month { color: black; }
@@ -284,7 +284,7 @@ td.artifact_spacer { width: 5%; }
         color:yellow;
         font-weight:normal;
         background-color:black;
-        display:none; 
+        display:none;
 }
 /* }}} */
 
@@ -378,10 +378,10 @@ table.release tr td img {
     margin:0;
 }
 .widget_titlebar {
-    background: #E0DDD2 url(../images/widget-header.png) left top repeat-x; 
-    font-weight: bold; 
-    text-align: left; 
-     
+    background: #E0DDD2 url(../images/widget-header.png) left top repeat-x;
+    font-weight: bold;
+    text-align: left;
+
     color: #555;
     height:18px;
     padding-left:40px;
@@ -641,8 +641,8 @@ table.release tr td img {
 .lists_users_autocomplete ul li {
     padding:0px 4px 4px 4px;
 }
-.lists_users_autocomplete ul li.selected { 
-    background-color: #ffb; 
+.lists_users_autocomplete ul li.selected {
+    background-color: #ffb;
 }
 /* }}} */
 
@@ -710,16 +710,16 @@ table.release tr td img {
     float:left;
 }
 .followup_comment_title_user {
-    font-size:1.1em; 
-    font-weight:bold; 
+    font-size:1.1em;
+    font-weight:bold;
     color:#999;
 }
 .followup_comment_title_edited_user {
-    font-weight:bold; 
+    font-weight:bold;
     color:#999;
 }
 .followup_comment_title_date {
-    font-size:0.95em; 
+    font-size:0.95em;
     color:#666;
 }
 .followup_comment_title_toolbar {
@@ -769,7 +769,7 @@ div.datePicker
 
         /* Change the font-size to suit your design's CSS. The following line is for the demo that has a 12px font-size defined on the body tag */
         font: 0.8em/0.8em Verdana, Sans-Serif;
-        
+
         /* For Example: If using the YUI font CSS, uncomment the following line to get a 10px font-size within the datePicker */
         /* font:900 77%/77% Verdana; */
 
@@ -1048,12 +1048,12 @@ table.reorderable th.boxtitle a {
 
 /* {{{ Tooltip */
 .codendi-tooltip {
-    z-index:1000; 
-    font-size:0.8em; 
-    background-color:#ffffcc; 
-    border:1px solid gray; 
-    position:absolute; 
-    padding:4px 8px; 
+    z-index:1000;
+    font-size:0.8em;
+    background-color:#ffffcc;
+    border:1px solid gray;
+    position:absolute;
+    padding:4px 8px;
 }
 /* }}} */
 
@@ -1082,7 +1082,7 @@ td.layout-manager-column-add {
     font-size:0.8em;
     text-align:center;
 }
-div.layout-manager-row-add { 
+div.layout-manager-row-add {
     margin:5px 5px;
 }
 div.layout-manager-row-add_hover,
@@ -1128,7 +1128,7 @@ ul.cross_reference_list {
     list-style-type: none;
     padding-left: 0;
 }
-	
+
 td.forum_reference_separator {
 	border-top: thin dotted grey;
 	padding-top: 10px;
@@ -1148,7 +1148,7 @@ td.forum_reference_separator {
 .system_event_status_RUNNING,
 .system_event_status_DONE   ,
 .system_event_status_WARNING,
-.system_event_status_ERROR  
+.system_event_status_ERROR
 {
     font-weight:bold;
     color:white;
@@ -1181,7 +1181,7 @@ table.ServiceMenu {
 
 ul.ServiceMenu    {
   margin-top: 0px;
-  list-style-type: none; 
+  list-style-type: none;
   padding: 0px;
 }
 
@@ -1316,7 +1316,7 @@ input.inputMessage { color: #ccc; font-size: 11px; }
     margin: 1em;
 }
 .site_admin_user_status_A {
-    background-color: #00aa00; 
+    background-color: #00aa00;
 }
 .site_admin_user_status_R {
     background-color: #ddff55;
@@ -1500,7 +1500,7 @@ table.admin_permissions {
 	#lbPrev.green:hover, #lbPrev.green:visited:hover { background: url(../images/lytebox/prev_green.gif) left 15% no-repeat; }
 	#lbPrev.blue:hover, #lbPrev.blue:visited:hover { background: url(../images/lytebox/prev_blue.gif) left 15% no-repeat; }
 	#lbPrev.gold:hover, #lbPrev.gold:visited:hover { background: url(../images/lytebox/prev_gold.gif) left 15% no-repeat; }
-	
+
 #lbNext { width: 49%; height: 100%; background: transparent url(../images/lytebox/blank.gif) no-repeat; display: block; right: 0; float: right; }
 	#lbNext.grey:hover, #lbNext.grey:visited:hover { background: url(../images/lytebox/next_grey.gif) right 15% no-repeat; }
 	#lbNext.red:hover, #lbNext.red:visited:hover { background: url(../images/lytebox/next_red.gif) right 15% no-repeat; }
@@ -1514,14 +1514,14 @@ table.admin_permissions {
 	#lbPrev2.green, #lbNext2.green, #lbSpacer.green { color: #003300; }
 	#lbPrev2.blue, #lbNext2.blue, #lbSpacer.blue { color: #01379E; }
 	#lbPrev2.gold, #lbNext2.gold, #lbSpacer.gold { color: #666600; }
-	
+
 #lbPrev2_Off, #lbNext2_Off { font-weight: bold; }
 	#lbPrev2_Off.grey, #lbNext2_Off.grey { color: #CCCCCC; }
 	#lbPrev2_Off.red, #lbNext2_Off.red { color: #FFCCCC; }
 	#lbPrev2_Off.green, #lbNext2_Off.green { color: #82FF82; }
 	#lbPrev2_Off.blue, #lbNext2_Off.blue { color: #B7CAEE; }
 	#lbPrev2_Off.gold, #lbNext2_Off.gold { color: #E1E100; }
-	
+
 #lbDetailsData { padding: 0 10px; }
 	#lbDetailsData.grey { color: #333333; }
 	#lbDetailsData.red { color: #620000; }
@@ -1547,7 +1547,7 @@ table.admin_permissions {
 	#lbPlay.green { background: url(../images/lytebox/play_green.png) no-repeat; }
 	#lbPlay.blue { background: url(../images/lytebox/play_blue.png) no-repeat; }
 	#lbPlay.gold { background: url(../images/lytebox/play_gold.png) no-repeat; }
-	
+
 #lbPause { width: 64px; height: 28px; float: right; margin-bottom: 1px; }
 	#lbPause.grey { background: url(../images/lytebox/pause_grey.png) no-repeat; }
 	#lbPause.red { background: url(../images/lytebox/pause_red.png) no-repeat; }
@@ -1617,7 +1617,7 @@ table.admin_permissions {
 		position: relative;
 		border: 10px solid #ffffff;
 		background-color: #ffffff;
-	}		
+	}
 
 #lightwindow_loading {
 	/* REQUIRED */
@@ -1632,12 +1632,12 @@ table.admin_permissions {
 	padding: 10px;
 }
 
-	#lightwindow_loading_shim { 
+	#lightwindow_loading_shim {
 		display: none;
-		left: 0px; 
-		position: absolute; 
+		left: 0px;
+		position: absolute;
 		top: 0px;
-		width: 100%; 
+		width: 100%;
 		height: 100%;
 	}
 
@@ -1650,7 +1650,7 @@ table.admin_permissions {
 	}
 
 	#lightwindow_loading span a,
-	#lightwindow_loading span a:link, 
+	#lightwindow_loading span a:link,
 	#lightwindow_loading span a:visited {
 		color: #09F;
 		text-decoration: none;
@@ -1683,13 +1683,13 @@ table.admin_permissions {
 	/* REQUIRED */
 }
 	/* We need to shim the navigation for IE, though its more of a sub-floor */
-	#lightwindow_navigation_shim { 
+	#lightwindow_navigation_shim {
 		/* REQUIRED */
 		display: none;
-		left: 0px; 
-		position: absolute; 
+		left: 0px;
+		position: absolute;
 		top: 0px;
-		width: 100%; 
+		width: 100%;
 		height: 100%;
 		/* REQUIRED */
 	}
@@ -1698,49 +1698,49 @@ table.admin_permissions {
 	#lightwindow_navigation a:link,
 	#lightwindow_navigation a:visited,
 	#lightwindow_navigation a:hover,
-	#lightwindow_navigation a:active { 
+	#lightwindow_navigation a:active {
 		/* REQUIRED */
 		outline: none;
 		/* REQUIRED */
 	}
 
-	#lightwindow_previous, 
+	#lightwindow_previous,
 	#lightwindow_next {
 		width: 49%;
 		height: 100%;
 		background: transparent url(../images/lightwindow/blank.gif) no-repeat; /* Trick IE into showing hover */
 		display: block;
 	}
-	
-	#lightwindow_previous { 
+
+	#lightwindow_previous {
 		float: left;
 		left: 0px;
 	}
 
-	#lightwindow_next { 
+	#lightwindow_next {
 		float: right;
 		right: 0px;
 	}
 
-	#lightwindow_previous:hover, 
-	#lightwindow_previous:active { 
-		background: url(../images/lightwindow/prevlabel.gif) left 15% no-repeat; 
+	#lightwindow_previous:hover,
+	#lightwindow_previous:active {
+		background: url(../images/lightwindow/prevlabel.gif) left 15% no-repeat;
 	}
 
-	#lightwindow_next:hover, 
-	#lightwindow_next:active { 
-		background: url(../images/lightwindow/nextlabel.gif) right 15% no-repeat; 
+	#lightwindow_next:hover,
+	#lightwindow_next:active {
+		background: url(../images/lightwindow/nextlabel.gif) right 15% no-repeat;
 	}
-	
+
 	#lightwindow_previous_title,
 	#lightwindow_next_title {
 		display: none;
 	}
-	 	
+
 #lightwindow_galleries {
 	width: 100%;
 	position: absolute;
-	z-index: 50; 
+	z-index: 50;
 	display: none;
 	overflow: hidden;
 	margin: 0 0 0 10px;
@@ -1754,7 +1754,7 @@ table.admin_permissions {
 		overflow: hidden;
 	}
 
-	a#lightwindow_galleries_tab,		
+	a#lightwindow_galleries_tab,
 	a:link#lightwindow_galleries_tab,
 	a:visited#lightwindow_galleries_tab {
 		display: block;
@@ -1770,10 +1770,10 @@ table.admin_permissions {
 		color: #ffffbe;
 		background: url(../images/lightwindow/black-70.png) repeat 0 0 transparent;
 	}
-	
-	* html a#lightwindow_galleries_tab,		
+
+	* html a#lightwindow_galleries_tab,
 	* html a:link#lightwindow_galleries_tab,
-	* html a:visited#lightwindow_galleries_tab {	
+	* html a:visited#lightwindow_galleries_tab {
 		background: none;
 		background-color: #000000;
 		opacity: .70;
@@ -1792,7 +1792,7 @@ table.admin_permissions {
 		width: 63px;
 		padding: 0 7px 0 7px;
 	}
-	
+
 	#lightwindow_galleries_tab .up	{
 		background: url(../images/lightwindow/arrow-up.gif) no-repeat 60px 5px transparent;
 	}
@@ -1812,7 +1812,7 @@ table.admin_permissions {
 		background-color: #000000;
 		opacity: .70;
 		filter: alpha(opacity=70);
-	}	
+	}
 
 	.lightwindow_galleries_list {
 		width: 200px;
@@ -1821,7 +1821,7 @@ table.admin_permissions {
 		padding: 10px;
 	}
 
-	.lightwindow_galleries_list h1 {	
+	.lightwindow_galleries_list h1 {
 		color: #09F;
 		text-decoration: none;
 		font-weight: bold;
@@ -1835,8 +1835,8 @@ table.admin_permissions {
 		list-style-type: none;
 	}
 
-	.lightwindow_galleries_list a, 
-	.lightwindow_galleries_list a:link, 
+	.lightwindow_galleries_list a,
+	.lightwindow_galleries_list a:link,
 	.lightwindow_galleries_list a:visited {
 		display: block;
 		line-height: 22px;
@@ -1848,14 +1848,14 @@ table.admin_permissions {
 		font-size: 11px;
 	}
 
-	.lightwindow_galleries_list a:hover, 
+	.lightwindow_galleries_list a:hover,
 	.lightwindow_galleries_list a:active {
 		background: #000000;
 		color: #ffffbe;
 		border-left: 3px solid #ffffbe;
 		padding: 0 0 0 7px;
 	}
-		
+
 #lightwindow_data {
 	/* REQUIRED */
 	position: absolute;
@@ -1886,7 +1886,7 @@ table.admin_permissions {
 		padding: 0 10px 0 10px;
 		height: 20px;
 	}
-	
+
 	#lightwindow_data_author_container {
 		width: 40%;
 		text-align: right;
@@ -1897,7 +1897,7 @@ table.admin_permissions {
 		float: right;
 		overflow: hidden;
 	}
-	
+
 	#lightwindow_data_gallery_container {
 		font-size: 10px;
 		width: 40%;
@@ -1907,10 +1907,10 @@ table.admin_permissions {
 		float: left;
 		overflow: hidden;
 	}
-	
+
 #lightwindow_title_bar {
 	height: 25px;
-	overflow: hidden;		
+	overflow: hidden;
 }
 
 	#lightwindow_title_bar_title {
@@ -1921,18 +1921,18 @@ table.admin_permissions {
 		float: left;
 	}
 
-	a#lightwindow_title_bar_close_link,	
+	a#lightwindow_title_bar_close_link,
 	a:link#lightwindow_title_bar_close_link,
 	a:visited#lightwindow_title_bar_close_link {
 		float: right;
-		text-align: right;		
+		text-align: right;
 		cursor: pointer;
 		color: #ffffbe;
 		line-height: 25px;
 		padding: 0;
 		margin: 0;
 	}
-	
+
 	a:hover#lightwindow_title_bar_close_link,
 	a:active#lightwindow_title_bar_close_link {
 		color: #ffffff;
@@ -1940,7 +1940,7 @@ table.admin_permissions {
 
 /*-----------------------------------------------------------------------------------------------
 	Theme styling stuff
------------------------------------------------------------------------------------------------*/	
+-----------------------------------------------------------------------------------------------*/
 
 #lightwindow p {
 	color: #000000;
@@ -1953,9 +1953,9 @@ table.admin_permissions {
 #lightwindow_title_bar {
     position: relative;
 }
-a#lightwindow_title_bar_close_link, 
-a#lightwindow_title_bar_close_link:link, 
-a#lightwindow_title_bar_close_link:visited, 
+a#lightwindow_title_bar_close_link,
+a#lightwindow_title_bar_close_link:link,
+a#lightwindow_title_bar_close_link:visited,
 a#lightwindow_title_bar_close_link:hover {
     float:none;
     position:absolute;
@@ -2086,7 +2086,7 @@ h3.toggler-hide-noajax {
     display: inline-block;
     background-image: url('../images/TreeNodeSprites.png');
     background-repeat: repeat-y;
-    
+
     /*Dirty IE Hack*/
       zoom: 1;
       *display: inline;
@@ -3255,9 +3255,9 @@ table th[class*="span"],
     width: 100%;
     min-height: 28px;
     /* Make inputs at least the height of their button counterpart */
-  
+
     /* Makes inputs behave like true block-level elements */
-  
+
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
@@ -4725,4 +4725,106 @@ input[type="submit"].btn {
 }
 /* }}} */
 
+/* {{{ LOGIN */
 
+.container.login input[type="text"],
+.container.login input[type="password"],
+.container.login textarea {
+    display: inline-block;
+    padding: 4px 6px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #555555;
+    vertical-align: middle;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+    -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+    -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+    transition: border linear 0.2s, box-shadow linear 0.2s;
+}
+.container.login input[type="text"]:focus,
+.container.login input[type="password"]:focus,
+.container.login textarea:focus {
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+.container.login input:focus:invalid:focus,
+.container.login textarea:focus:invalid:focus {
+    border-color: #e9322d;
+    -webkit-box-shadow: 0 0 6px #f8b9b7;
+    -moz-box-shadow: 0 0 6px #f8b9b7;
+    box-shadow: 0 0 6px #f8b9b7;
+}
+.container.login input[type="checkbox"] {
+    vertical-align: middle;
+}
+
+.container.login div.controls span.help-block {
+    color: #595959;
+    display: block;
+}
+
+#login-title {
+    text-align: center;
+    font-size: 2.5em;
+    padding: 20px 0 0 0;
+}
+
+.login {
+    width: 850px;
+    padding: 40px 0;
+}
+
+.login h3 {
+    text-align: center;
+    margin: 0 0 30px 0;
+}
+
+.login-tuleap > div {
+    border-left: 1px solid #eee;
+}
+
+.login form {
+    width: 200px;
+    margin: 0 auto;
+}
+
+.login .form-label {
+    margin: 10px 0 0;
+}
+
+.login .form-input {
+    margin: 5px 0 15px;
+}
+
+.login input[type="text"],
+.login input[type="password"]{
+    width: 186px;
+}
+
+.login input[type="submit"] {
+    height: 40px;
+    width: 200px;
+    margin-top: 10px;
+}
+
+.login label {
+    display: block;
+}
+
+.login #login-footer {
+    text-align: center;
+    padding: 40px 0 0 0;
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* }}} */

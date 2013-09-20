@@ -22,6 +22,7 @@ require_once 'autoload.php';
 require_once 'constants.php';
 require_once 'common/plugin/Plugin.class.php';
 
+
 class OpenidPlugin extends Plugin {
 
     /**
@@ -32,6 +33,9 @@ class OpenidPlugin extends Plugin {
         $this->setScope(self::SCOPE_SYSTEM);
 
         $this->addHook('account_pi_entry');
+        $this->addHook('login_presenter');
+        $this->addHook('cssfile');
+        $this->addHook('javascript_file');
     }
 
     public function account_pi_entry(array $params) {
@@ -60,6 +64,20 @@ class OpenidPlugin extends Plugin {
         include_once 'driver/openid_includes.php';
     }
 
+    public function login_presenter(array $params) {
+        if (! $params['authoritative']) {
+            $params['presenter'] = new OpenId_LoginPresenter($params['presenter']);
+        }
+    }
+
+    public function javascript_file($params) {
+        echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/openid.js"></script>'."\n";
+    }
+
+    public function cssfile($params) {
+        echo '<link rel="stylesheet" type="text/css" href="'. $this->getPluginPath() .'/css/openid.css" />'."\n";
+    }
+
     /**
      * @return OpenidPluginInfo
      */
@@ -70,4 +88,5 @@ class OpenidPlugin extends Plugin {
         return $this->pluginInfo;
     }
 }
+
 ?>

@@ -1,6 +1,5 @@
 plugin_ldap	descriptor_description	Plugin LDAP. Permet l'affichage des information LDAP des utilisateurs, ainsi que l'authentification LDAP.
 plugin_ldap	people_ldap	Annuaire d'entreprise
-plugin_ldap	ldap_login_help	Merci d'entrer votre nom d'utilisateur et mot de passe de l'annuaire d'entreprise.<br /><br /><em> Si vous avez un problème pour vous authentifier, merci d'envoyer un email aux <a href="mailto:$1?Subject=Impossible de se connecter sur $2">administrateurs $2</a></em>.
 plugin_ldap	err_account_creation	Impossible de créer le compte. Merci de contacter un administrateur.
 plugin_ldap	more_from_directory	Plus d'info de l'annuaire $1
 plugin_ldap	directory	Annuaire

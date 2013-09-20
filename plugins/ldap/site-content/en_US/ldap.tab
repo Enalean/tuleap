@@ -1,6 +1,5 @@
 plugin_ldap	descriptor_description	LDAP Plugin. Provides LDAP information as well as LDAP authentication.
 plugin_ldap	people_ldap	Enterprise Directory
-plugin_ldap	ldap_login_help	Please enter your Enterprise Directory username and password.<br /><br /><em> If you encounter any problem to login, please send a email to <a href="mailto:$1?Subject=Unable to login under $2">$2 administrators</a></em>.
 plugin_ldap	err_account_creation	Unable to create a user account. Please contact an administrators.
 plugin_ldap	more_from_directory	More from the $1 Directory
 plugin_ldap	directory	Directory
