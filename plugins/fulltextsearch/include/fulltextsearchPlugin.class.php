@@ -34,7 +34,9 @@ class fulltextsearchPlugin extends Plugin {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->allowed_for_project = array();
+    }
 
+    public function getHooksAndCallbacks() {
         // docman
         $this->_addHook('plugin_docman_after_new_document', 'plugin_docman_after_new_document', false);
         $this->_addHook('plugin_docman_event_del', 'plugin_docman_event_del', false);
@@ -43,11 +45,13 @@ class fulltextsearchPlugin extends Plugin {
         $this->_addHook('plugin_docman_event_new_version', 'plugin_docman_event_new_version', false);
 
         // tracker
-        $this->_addHook('tracker_report_followup_search', 'tracker_report_followup_search', false);
-        $this->_addHook('tracker_report_followup_search_process', 'tracker_report_followup_search_process', false);
-        $this->_addHook('tracker_followup_event_add', 'tracker_followup_event_add', false);
-        $this->_addHook('tracker_followup_event_update', 'tracker_followup_event_update', false);
-        $this->_addHook('tracker_report_followup_warning', 'tracker_report_followup_warning', false);
+        if (defined('TRACKER_BASE_URL')) {
+            $this->_addHook(TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA);
+            $this->_addHook('tracker_report_followup_search_process', 'tracker_report_followup_search_process', false);
+            $this->_addHook('tracker_followup_event_add', 'tracker_followup_event_add', false);
+            $this->_addHook('tracker_followup_event_update', 'tracker_followup_event_update', false);
+            $this->_addHook('tracker_report_followup_warning', 'tracker_report_followup_warning', false);
+        }
 
         // site admin
         $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
@@ -63,6 +67,8 @@ class fulltextsearchPlugin extends Plugin {
         // Search
         $this->_addHook('search_type_entry', 'search_type_entry', false);
         $this->_addHook('search_type', 'search_type', false);
+
+        return parent::getHooksAndCallbacks();
     }
 
     private function getCurrentUser() {
@@ -202,17 +208,20 @@ class fulltextsearchPlugin extends Plugin {
      *
      * @return Void
      */
-    public function tracker_report_followup_search($params) {
-        if ($this->tracker_followup_check_preconditions($params['group_id'])) {
-            $request = new HTTPRequest();
+    public function tracker_event_report_display_additional_criteria($params) {
+        if ($this->tracker_followup_check_preconditions($params['tracker']->getGroupId())) {
+            $request = HTTPRequest::instance();
             $hp      = Codendi_HTMLPurifier::instance();
             $filter  = $hp->purify($request->getValidated('search_followups', 'string', ''));
-            $params['html'] .='<span class ="lab_features">';
-            $params['html'] .= '<label title="'.$GLOBALS['Language']->getText('plugin_fulltextsearch', 'search_followup_comments').'" for="tracker_report_crit_followup_search">';
-            $params['html'] .= $GLOBALS['Language']->getText('plugin_fulltextsearch', 'followups_search');
-            $params['html'] .= '</label><br>';
-            $params['html'] .= '<input id="tracker_report_crit_followup_search" type="text" name="search_followups" value="'.$filter.'" />';
-            $params['html'] .= '</span>';
+
+            $additional_criteria  = '';
+            $additional_criteria .='<span class ="lab_features">';
+            $additional_criteria .= '<label title="'.$GLOBALS['Language']->getText('plugin_fulltextsearch', 'search_followup_comments').'" for="tracker_report_crit_followup_search">';
+            $additional_criteria .= $GLOBALS['Language']->getText('plugin_fulltextsearch', 'followups_search');
+            $additional_criteria .= '</label><br>';
+            $additional_criteria .= '<input id="tracker_report_crit_followup_search" type="text" name="search_followups" value="'.$filter.'" />';
+            $additional_criteria .= '</span>';
+            $params['array_of_html_criteria'][] = $additional_criteria;
         }
     }
 

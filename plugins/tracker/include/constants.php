@@ -167,4 +167,13 @@ define('TRACKER_EVENT_SOAP_SEMANTICS', 'tracker_event_soap_semantics');
  *  'factories' => All semantic factories
  */
 define('TRACKER_EVENT_GET_SEMANTIC_FACTORIES', 'tracker_event_get_semantic_factories');
+
+/**
+ * Get the various criteria that may enhance a report
+ *
+ * Parameters:
+ *  'array_of_html_criteria' => (OUT) html code to be included in the criteria list
+ *  'tracker'                => (IN)  the current tracker
+ */
+define('TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA', 'tracker_event_report_display_additional_criteria');
 ?>

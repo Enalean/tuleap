@@ -531,11 +531,11 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $html .= '<div id="tracker_report_addcriteria_panel">' . $this->_fetchAddCriteria($used) . '</div>';
         }
 
-        $followupSearchForm = '';
-        $params = array('html' => &$followupSearchForm, 'group_id' => $this->getProjectId());
-        EventManager::instance()->processEvent('tracker_report_followup_search', $params);
-        if (!empty($followupSearchForm)) {
-            $criteria_fetched[] = '<li id="tracker_report_crit_followup_search">' . $followupSearchForm. '</li>';
+        $array_of_html_criteria = array();
+        $params = array('array_of_html_criteria' => &$array_of_html_criteria, 'tracker' => $this->getTracker());
+        EventManager::instance()->processEvent(TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA, $params);
+        foreach ($array_of_html_criteria as $additional_criteria) {
+            $criteria_fetched[] = '<li>'. $additional_criteria .'</li>';
         }
         $html .= '<ul id="tracker_query">' . implode('', $criteria_fetched).'</ul>';
  
