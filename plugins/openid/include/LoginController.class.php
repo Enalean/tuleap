@@ -41,18 +41,15 @@ class OpenId_LoginController {
         $dao    = new Openid_Dao();
 
         try {
-            $manager = new Openid_ConnexionManager($dao, $driver);
+            $account_manager   = new OpenId_AccountManager($dao);
+            $connexion_manager = new Openid_ConnexionManager($dao, $driver);
 
-            $connexion_string = $manager->finishAuthentication($return_to_url);
-            if ($dao->addConnexionStringForUserId($connexion_string, $this->request->getCurrentUser()->getId())) {
-                $this->response->addFeedback(Feedback::INFO, 'OpenID updated');
-            } else {
-                $this->response->addFeedback(Feedback::ERROR, 'OpenId not update, something failed');
-            }
+            $connexion_string = $connexion_manager->finishAuthentication($return_to_url);
+            $account_manager->pairWithIdentityUrl($this->request->getCurrentUser(), $connexion_string);
+            $this->response->addFeedback(Feedback::INFO, 'OpenID updated');
         } catch(OpenId_OpenIdException $exception) {
             $this->response->addFeedback(Feedback::ERROR, $exception->getMessage());
         }
-
         $this->response->redirect('/account/');
     }
 
@@ -109,12 +106,8 @@ class OpenId_LoginController {
 
     public function remove_pair() {
         $dao    = new Openid_Dao();
-        $user_id = $this->request->getCurrentUser()->getId();
-        $dar = $dao->searchOpenidUrlsForUserId($user_id);
-        if ($dar && $dar->count()) {
-            $row = $dar->getRow();
-            $dao->removeConnexionStringForUserId($row['connexion_string'], $user_id);
-        }
+        $account_manager   = new OpenId_AccountManager($dao);
+        $account_manager->removePair($this->request->getCurrentUser());
         $this->response->redirect('/account/');
     }
 }

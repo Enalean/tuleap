@@ -4,3 +4,5 @@ plugin_openid	descriptor_description	OpenID plugin, provides OpenID authenticati
 plugin_openid	error_no_matching_user	No $1 user match OpenId account. You must first pair a valid $1 account to an OpenId url (see user preferences).
 plugin_openid	error_openid_connect	An error occured while trying to connect to openid provide
 plugin_openid	error_openid_store	OpenId plugin configuration error, please contact $1 administrators
+plugin_openid	error_identity_url_update	OpenId update of identity url failed
+plugin_openid	error_already_paired	OpenId identity url already associated with another $1 user account
