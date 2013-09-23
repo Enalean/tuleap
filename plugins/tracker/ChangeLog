@@ -1,3 +1,6 @@
+Version 5.157 - Tuleap 6.6
+    * Add getArtifactHistory SOAP method
+
 Version 5.156 - Tuleap 6.6
     * Fix request #5050: Performance issue when report uses cross-references field
 
