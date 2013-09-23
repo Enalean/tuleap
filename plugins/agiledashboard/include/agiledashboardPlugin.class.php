@@ -55,6 +55,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_SOAP_SEMANTICS, 'tracker_event_soap_semantics');
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
             $this->addHook(TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA);
+            $this->addHook(TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY);
 
             $this->_addHook(Event::SYSTRAY);
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
@@ -104,6 +105,27 @@ class AgileDashboardPlugin extends Plugin {
         }
 
         $params['array_of_html_criteria'][] = $additional_criterion;
+    }
+
+    /**
+     * @see TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY
+     */
+    public function tracker_event_report_process_additional_query($params) {
+        $backlog_tracker = $params['tracker'];
+        $milestone_id    = $params['request']->get(AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME);
+        $provider        = new AgileDashboard_BacklogItem_SubBacklogItemProvider(
+            new AgileDashboard_BacklogItem_SubBacklogItemDao(),
+            new AgileDashboard_Planning_ParentBacklogTrackerCollectionProvider()
+        );
+        $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($milestone_id);
+
+        if (! $artifact) {
+            return;
+        }
+
+        $milestone                  = $this->getMilestoneFactory()->getMilestoneFromArtifact($artifact);
+        $params['result'][]         = $provider->getMatchingIds($milestone, $backlog_tracker);
+        $params['search_performed'] = true;
     }
 
     public function event_artifact_parents_selector($params) {

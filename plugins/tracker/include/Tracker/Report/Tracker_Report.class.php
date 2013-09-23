@@ -837,19 +837,25 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
      * @return array
      */
     private function joinResults($request) {
-        $result          = array();
-        $searchPerformed = false;
-        $params          = array('request' => $request, 'result' => &$result, 'search_performed' => &$searchPerformed, 'group_id' => $this->getProjectId());
-        EventManager::instance()->processEvent('tracker_report_followup_search_process', $params);
-        $matchingIds = $this->getLastChangesetIdByArtifactId($request, false);
-        if ($searchPerformed && is_array($params['result']) && $params['search_performed']) {
-            foreach ($matchingIds as $artifactId => $lastChangesetId) {
-                if (!array_key_exists($artifactId, $params['result'])) {
-                    unset($matchingIds[$artifactId]);
-                }
-            }
+        $matching_ids = $this->getLastChangesetIdByArtifactId($request, false);
+
+        $result           = array();
+        $search_performed = false;
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY,
+            array(
+                'request'          => $request,
+                'result'           => &$result,
+                'search_performed' => &$search_performed,
+                'tracker'          => $this->getTracker()
+            )
+        );
+        if ($search_performed) {
+            $joiner       = new Tracker_Report_ResultJoiner();
+            $matching_ids = $joiner->joinResults($matching_ids, $result);
         }
-        return $this->implodeMatchingIds($matchingIds);
+
+        return $this->implodeMatchingIds($matching_ids);
     }
 
     public function getRenderers() {

@@ -47,7 +47,7 @@ class fulltextsearchPlugin extends Plugin {
         // tracker
         if (defined('TRACKER_BASE_URL')) {
             $this->_addHook(TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA);
-            $this->_addHook('tracker_report_followup_search_process', 'tracker_report_followup_search_process', false);
+            $this->_addHook(TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY);
             $this->_addHook('tracker_followup_event_add', 'tracker_followup_event_add', false);
             $this->_addHook('tracker_followup_event_update', 'tracker_followup_event_update', false);
             $this->_addHook('tracker_report_followup_warning', 'tracker_report_followup_warning', false);
@@ -267,12 +267,13 @@ class fulltextsearchPlugin extends Plugin {
      *
      * @return Void
      */
-    public function tracker_report_followup_search_process($params) {
-        if ($this->tracker_followup_check_preconditions($params['group_id'])) {
+    public function tracker_event_report_process_additional_query($params) {
+        $group_id = $params['tracker']->getGroupId();
+        if ($this->tracker_followup_check_preconditions($group_id)) {
             $filter = $params['request']->get('search_followups');
             if (!empty($filter)) {
-                $controller       = $this->getSearchController('tracker');
-                $params['result'] = $controller->search($params['request']);
+                $controller         = $this->getSearchController('tracker');
+                $params['result'][] = $controller->search($params['request']);
                 $params['search_performed'] = true;
             }
         }

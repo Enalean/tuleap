@@ -177,4 +177,15 @@ define('TRACKER_EVENT_GET_SEMANTIC_FACTORIES', 'tracker_event_get_semantic_facto
  *  'user'                   PFUser   (IN)  the current user
  */
 define('TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA', 'tracker_event_report_display_additional_criteria');
+
+/**
+ * We are searching the matching ids, therefore let folks hach the additional from/where statements
+ *
+ * Parameters:
+ * 'request'                CodendiRequest
+ * 'result'                 array
+ * 'search_performed'       Boolean
+ * 'tracker'                Tracker  (IN)     the current tracker
+ */
+define('TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY', 'tracker_event_report_process_additional_query');
 ?>
