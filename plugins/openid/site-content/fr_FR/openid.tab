@@ -1,6 +1,9 @@
 plugin_openid	descriptor_name	OpenID
 plugin_openid	descriptor_description	Plugin OpenID, permet aux utilisateurs de s'authentifier avec leurs comptes OpenIDs.
 
+plugin_openid	remove_openid	Supprimer OpenId
+plugin_openid	add_openid	Lier avec un fournisseur OpenId
+
 plugin_openid	error_no_matching_user	Aucun compte $1 ne correspond à cet URL OpenId. Veuillez tout d'abord associer votre compte $1 et votre compte OpenId (préférences utilisateur).
 plugin_openid	error_openid_connect	Une erreur s'est produite lors de la connexion au fournisseur OpenId. Veuillez ré-essayer un peu plus tard.
 plugin_openid	error_openid_store	Le plugin OpenId n'est pas correctement configuré. Veuillez entrer en contact avec les administrateurs $1.

@@ -35,7 +35,7 @@ class Openid_ConnexionManagerTest extends TuleapTestCase {
         parent::setUp();
         $this->dao               = mock('Openid_Dao');
         $this->driver            = mock('Openid_Driver_ConnexionDriver');
-        $this->connexion_manager = new Openid_ConnexionManager($this->dao, $this->driver);
+        $this->connexion_manager = new Openid_ConnexionManager($this->driver);
     }
 
     public function itCallsTheDriverForConnexion() {

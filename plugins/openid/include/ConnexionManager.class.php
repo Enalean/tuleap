@@ -18,18 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'account.php';
-
 class Openid_ConnexionManager {
-
-    /** @var Openid_Dao */
-    private $dao;
 
     /** @var Openid_Driver_ConnexionDriver */
     private $connexion_driver;
 
-    public function __construct(Openid_Dao $dao, Openid_Driver_ConnexionDriver $connexion_driver) {
-        $this->dao              = $dao;
+    public function __construct(Openid_Driver_ConnexionDriver $connexion_driver) {
         $this->connexion_driver = $connexion_driver;
     }
 
@@ -38,11 +32,19 @@ class Openid_ConnexionManager {
      *
      * @param openid_url String The openid_url given by the user
      * @param return_to_url String The url to reach after authentication successful finished
+     * @throws OpenId_OpenIdException
      */
     public function startAuthentication($openid_url, $return_to_url) {
         $this->connexion_driver->connect($openid_url, $return_to_url);
     }
 
+    /**
+     * Ensure OpenId correspond to an exiting authentication request
+     *
+     * @param String $return_to_url
+     * @return String
+     * @throws OpenId_AuthenticationFailedException
+     */
     public function finishAuthentication($return_to_url) {
         $consumer        = $this->connexion_driver->getConsumer();
         $return_to_url   = $this->connexion_driver->getReturnTo($return_to_url);
@@ -52,28 +54,6 @@ class Openid_ConnexionManager {
         }
 
         return $openid_response->identity_url;
-    }
-
-    /**
-     *
-     * @param String $identity_url
-     * @return PFUser
-     */
-    public function authenticateCorrespondingUser($identity_url) {
-        $user_manager = UserManager::instance();
-        $user_ids     = $this->dao->searchUsersForConnexionString($identity_url);
-        $users        = $user_ids->instanciateWith(array($this, "instanciateFromRow"));
-
-        foreach ($users as $user) {
-            $user_manager->openSessionForUser($user);
-            return $user;
-        }
-        throw new OpenId_UserNotFoundException($GLOBALS['Language']->getText('plugin_openid', 'error_no_matching_user', Config::get('sys_name')));
-    }
-
-    public function instanciateFromRow(array $row) {
-        $user_manager = UserManager::instance();
-        return $user_manager->getUserById($row['user_id']);
     }
 
     private function isAuthenticationSuccess(Auth_OpenID_ConsumerResponse $response) {

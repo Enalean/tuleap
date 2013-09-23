@@ -35,9 +35,18 @@ class OpenId_OpenIdRouter {
     public function route(HTTPRequest $request, Layout $response) {
         $reflection   = new ReflectionClass(__CLASS__);
         $valid_route  = new Valid_WhiteList('func', $reflection->getConstants());
+        $valid_route->required();
         if ($request->valid($valid_route)) {
             $route = $request->get('func');
-            $controller = new OpenId_LoginController($this->logger, $request, $response);
+            $controller = new OpenId_LoginController(
+                $this->logger,
+                new OpenId_AccountManager(
+                    new Openid_Dao(),
+                    UserManager::instance()
+                ),
+                $request,
+                $response
+            );
             $controller->$route();
         } else {
             $response->addFeedback(Feedback::ERROR, 'Invalid request for '.__CLASS__.': ('.implode(', ', $reflection->getConstants()).')');

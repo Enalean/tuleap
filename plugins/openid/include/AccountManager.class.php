@@ -22,8 +22,12 @@ class OpenId_AccountManager {
     /** @var OpenId_Dao */
     private $dao;
 
-    public function __construct(Openid_Dao $dao) {
-        $this->dao = $dao;
+    /** @var type */
+    private $user_manager;
+
+    public function __construct(Openid_Dao $dao, UserManager $user_manager) {
+        $this->dao          = $dao;
+        $this->user_manager = $user_manager;
     }
 
     /**
@@ -62,6 +66,20 @@ class OpenId_AccountManager {
             $row = $dar->getRow();
             $this->dao->removeConnexionStringForUserId($row['connexion_string'], $user_id);
         }
+    }
+
+    /**
+     *
+     * @param String $identity_url
+     * @return PFUser
+     */
+    public function authenticateCorrespondingUser($identity_url) {
+        $users = $this->dao->searchUsersForConnexionString($identity_url)->instanciateWith(array($this->user_manager, 'getUserInstanceFromRow'));
+        foreach ($users as $user) {
+            $this->user_manager->openSessionForUser($user);
+            return $user;
+        }
+        throw new OpenId_UserNotFoundException($GLOBALS['Language']->getText('plugin_openid', 'error_no_matching_user', Config::get('sys_name')));
     }
 }
 

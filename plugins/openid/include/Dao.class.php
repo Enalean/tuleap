@@ -25,7 +25,7 @@ class Openid_Dao extends DataAccessObject {
     public function searchUsersForConnexionString($connexion_string) {
         $connexion_string = $this->da->quoteSmart($connexion_string);
 
-        $sql = "SELECT *
+        $sql = "SELECT user.*
                 FROM user
                 JOIN plugin_openid_user_mapping
                     ON user.user_id=plugin_openid_user_mapping.user_id

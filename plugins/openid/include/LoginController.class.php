@@ -23,29 +23,31 @@ class OpenId_LoginController {
     /** @var Logger */
     private $logger;
 
+    /** @var OpenId_AccountManager */
+    private $account_manager;
+
     /** @var HTTPRequest */
     private $request;
 
     /** @var Layout */
     private $response;
 
-    public function __construct(Logger $logger, HTTPRequest $request, Layout $response) {
-        $this->logger   = $logger;
-        $this->request  = $request;
-        $this->response = $response;
+    public function __construct(Logger $logger, OpenId_AccountManager $account_manager, HTTPRequest $request, Layout $response) {
+        $this->logger          = $logger;
+        $this->account_manager = $account_manager;
+        $this->request         = $request;
+        $this->response        = $response;
     }
 
     public function finish_pair_accounts() {
         $return_to_url = "http://google.fr";
-        $driver = new Openid_Driver_ConnexionDriver($this->logger, '?func=finish_auth_pair_accounts');
-        $dao    = new Openid_Dao();
+        $driver = new Openid_Driver_ConnexionDriver($this->logger, '?func='.OpenId_OpenIdRouter::FINISH_PAIR_ACCOUNTS);
 
         try {
-            $account_manager   = new OpenId_AccountManager($dao);
-            $connexion_manager = new Openid_ConnexionManager($dao, $driver);
+            $connexion_manager = new Openid_ConnexionManager($driver);
 
             $connexion_string = $connexion_manager->finishAuthentication($return_to_url);
-            $account_manager->pairWithIdentityUrl($this->request->getCurrentUser(), $connexion_string);
+            $this->account_manager->pairWithIdentityUrl($this->request->getCurrentUser(), $connexion_string);
             $this->response->addFeedback(Feedback::INFO, 'OpenID updated');
         } catch(OpenId_OpenIdException $exception) {
             $this->response->addFeedback(Feedback::ERROR, $exception->getMessage());
@@ -55,7 +57,7 @@ class OpenId_LoginController {
 
     public function pair_accounts() {
         try {
-            $this->startAuthentication('?func=finish_pair_accounts');
+            $this->startAuthentication('?func='.OpenId_OpenIdRouter::FINISH_PAIR_ACCOUNTS);
         } catch(OpenId_OpenIdException $exception) {
             $this->response->addFeedback(Feedback::ERROR, $exception->getMessage());
             $this->response->redirect('/account/');
@@ -64,7 +66,7 @@ class OpenId_LoginController {
 
     public function login() {
         try {
-            $this->startAuthentication('?func=finish_login');
+            $this->startAuthentication('?func='.OpenId_OpenIdRouter::FINISH_LOGIN);
         } catch(OpenId_OpenIdException $exception) {
             $this->response->addFeedback(Feedback::ERROR, $exception->getMessage());
             $this->response->redirect('/account/login');
@@ -78,9 +80,8 @@ class OpenId_LoginController {
             $return_url = $this->request->getValidated('return_to', 'string', '');
         }
 
-        $dao    = new Openid_Dao();
         $driver = new Openid_Driver_ConnexionDriver($this->logger, $finish_url);
-        $manager = new Openid_ConnexionManager($dao, $driver);
+        $manager = new Openid_ConnexionManager($driver);
         $manager->startAuthentication($openid_url, $return_url);
     }
 
@@ -90,13 +91,12 @@ class OpenId_LoginController {
             if ($this->request->existAndNonEmpty('return_to')) {
                 $return_url = $this->request->getValidated('return_to', 'string', '');
             }
-            $driver = new Openid_Driver_ConnexionDriver($this->logger, '?func=finish_auth');
-            $dao    = new Openid_Dao();
+            $driver = new Openid_Driver_ConnexionDriver($this->logger, '?func='.OpenId_OpenIdRouter::FINISH_LOGIN);
 
-            $manager = new Openid_ConnexionManager($dao, $driver);
+            $connexion_manager = new Openid_ConnexionManager($driver);
 
-            $identity_url = $manager->finishAuthentication($return_url);
-            $manager->authenticateCorrespondingUser($identity_url);
+            $identity_url = $connexion_manager->finishAuthentication($return_url);
+            $this->account_manager->authenticateCorrespondingUser($identity_url);
             $this->response->redirect($return_url);
         } catch(OpenId_OpenIdException $exception) {
             $this->response->addFeedback(Feedback::ERROR, $exception->getMessage());
@@ -105,9 +105,7 @@ class OpenId_LoginController {
     }
 
     public function remove_pair() {
-        $dao    = new Openid_Dao();
-        $account_manager   = new OpenId_AccountManager($dao);
-        $account_manager->removePair($this->request->getCurrentUser());
+        $this->account_manager->removePair($this->request->getCurrentUser());
         $this->response->redirect('/account/');
     }
 }
