@@ -50,7 +50,7 @@ class OpenidPlugin extends Plugin {
 
     public function process(HTTPRequest $request, Layout $response) {
         $this->loadPhpOpenId();
-        $router = new OpenId_OpenIdRouter();
+        $router = new OpenId_OpenIdRouter($this->getBackendLogger());
         $router->route($request, $response);
     }
 

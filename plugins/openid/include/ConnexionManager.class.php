@@ -48,10 +48,7 @@ class Openid_ConnexionManager {
         $return_to_url   = $this->connexion_driver->getReturnTo($return_to_url);
         $openid_response = $consumer->complete($return_to_url);
         if (! $this->isAuthenticationSuccess($openid_response)) {
-            // TODO: user feedback and redirection
-            var_dump($openid_response);
-            die('you shall not pass');
-            return;
+            throw new OpenId_AuthenticationFailedException($openid_response->message);
         }
 
         return $openid_response->identity_url;
@@ -71,7 +68,7 @@ class Openid_ConnexionManager {
             $user_manager->openSessionForUser($user);
             return $user;
         }
-        throw new Exception('No User');
+        throw new OpenId_UserNotFoundException($GLOBALS['Language']->getText('plugin_openid', 'error_no_matching_user', Config::get('sys_name')));
     }
 
     public function instanciateFromRow(array $row) {

@@ -25,22 +25,33 @@ require_once 'common/include/Config.class.php';
  * authentication process through OpenID protocol.
  */
 class Openid_Driver_ConnexionDriver {
+    /** @var Logger */
+    private $logger;
+
     private $finish_auth_path;
 
     const OPENID_STORE_PATH = "/var/tmp/codendi_cache/tuleap_openid_consumer_store";
     const FINISH_AUTH_PATH  = "update_link.php";
 
-    public function __construct($finish_auth_path) {
+    public function __construct(Logger $logger, $finish_auth_path) {
+        $this->logger = $logger;
         $this->finish_auth_path = $finish_auth_path;
     }
 
+    /**
+     * Connect to an OpenId provider
+     *
+     * @param String $openid_url
+     * @param String $redirect_url
+     *
+     * @throws OpenId_OpenIdException
+     */
     public function connect($openid_url, $redirect_url) {
         $openid_consumer = $this->getConsumer();
         $auth_request    = $openid_consumer->begin($openid_url);
 
-        if (!$auth_request) {
-            // TODO: feedback display
-            die('You shall not pass');
+        if (! $auth_request) {
+            throw new OpenId_OpenIdException($GLOBALS['Language']->getText('plugin_openid', 'error_openid_connect'));
         }
 
         if ($this->isOpenid1($auth_request)) {
@@ -54,9 +65,7 @@ class Openid_Driver_ConnexionDriver {
         $redirect_url = $auth_request->redirectURL($this->getTrustRoot(), $this->getReturnTo($redirect_url));
 
         if (Auth_OpenID::isFailure($redirect_url)) {
-            // TODO: feedback display
-            die('You shall not pass');
-            return;
+            throw new OpenId_OpenIdException($GLOBALS['Language']->getText('plugin_openid', 'error_openid_connect'));
         }
 
         header("Location: ".$redirect_url);
@@ -67,12 +76,10 @@ class Openid_Driver_ConnexionDriver {
         $form_html = $auth_request->htmlMarkup($this->getTrustRoot(), $this->getReturnTo($redirect_url), false, array('id' => $form_id));
 
         if (Auth_OpenID::isFailure($form_html)) {
-            // TODO: feedback display
-            die('You shall not pass');
-            return;
+            throw new OpenId_OpenIdException($GLOBALS['Language']->getText('plugin_openid', 'error_openid_connect'));
         }
 
-        print $form_html;
+        echo $form_html;
     }
 
     private function isOpenid1(Auth_OpenID_AuthRequest $auth_request) {
@@ -80,10 +87,10 @@ class Openid_Driver_ConnexionDriver {
     }
 
     private function getStore() {
-        //$store_path = Config::get('codendi_cache_dir').self::OPENID_STORE_PATH;
         $store_path = self::OPENID_STORE_PATH;
         if (!file_exists($store_path) && !mkdir($store_path)) {
-            error_log("OPENID DRIVER - Unable to create Filestore self::OPENID_STORE_PATH unsufficient permissions"); // TODO: i18n
+            $this->logger->error("OPENID DRIVER - Unable to create Filestore self::OPENID_STORE_PATH unsufficient permissions");
+            throw new OpenId_OpenIdException($GLOBALS['Language']->getText('plugin_openid', 'error_openid_store', Config::get('sys_name')));
         }
 
         return new Auth_OpenID_FileStore($store_path);
