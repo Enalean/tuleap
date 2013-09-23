@@ -2017,97 +2017,131 @@ class Layout extends Response {
         }
         return $tabs;
     }
-    
+
+    protected function getSearchEntries() {
+        $em      = EventManager::instance();
+        $request = HTTPRequest::instance();
+
+        $type_of_search = $request->get('type_of_search');
+        $group_id       = $request->get('group_id');
+
+        $search_entries = array();
+        $hidden = array();
+
+        if ($group_id) {
+            $hidden[] = array(
+                'name'  => 'group_id',
+                'value' => $group_id
+            );
+
+            if ($request->exist('forum_id')) {
+                $search_entries[] = array(
+                    'value'    => 'forums',
+                    'label'    => $GLOBALS['Language']->getText('include_menu', 'this_forum'),
+                    'selected' => true,
+                );
+                $hidden[] = array(
+                    'name'  => 'forum_id',
+                    'value' => $this->purifier->purify($request->get('forum_id'))
+                );
+            }
+            if ($request->exist('atid')) {
+                $search_entries[] = array(
+                    'value'    => 'tracker',
+                    'label'    => $GLOBALS['Language']->getText('include_menu', 'this_tracker'),
+                    'selected' => true,
+                );
+                $hidden[] = array(
+                    'name'  => 'atid',
+                    'value' => $this->purifier->purify($request->get('atid'))
+                );
+            }
+            if (strpos($_SERVER['REQUEST_URI'], '/wiki/') === 0) {
+                $search_entries[] = array(
+                    'value'    => 'wiki',
+                    'label'    => $GLOBALS['Language']->getText('include_menu', 'this_wiki'),
+                    'selected' => true,
+                );
+            }
+        }
+
+        if (Config::get('sys_use_trove')) {
+            $search_entries[] = array(
+                'value' => 'soft',
+                'label' => $GLOBALS['Language']->getText('include_menu', 'software_proj')
+            );
+        }
+
+        if (Config::get('sys_use_snippet')) {
+            $search_entries[] = array(
+                'value'    => 'snippets',
+                'label'    => $GLOBALS['Language']->getText('include_menu', 'code_snippets'),
+                'selected' => strpos($_SERVER['REQUEST_URI'], '/snippet/') === 0
+            );
+        }
+
+        $search_entries[] = array(
+            'value' => 'people',
+            'label' => $GLOBALS['Language']->getText('include_menu', 'people')
+        );
+
+        $em->processEvent(
+            Event::LAYOUT_SEARCH_ENTRY,
+            array(
+                'type_of_search' => $type_of_search,
+                'search_entries' => &$search_entries,
+                'hidden_fields'  => &$hidden,
+            )
+        );
+
+        return array($search_entries, $hidden);
+    }
+
+    public function getSearchBox() {
+        $request = HTTPRequest::instance();
+
+        $type_of_search = $request->get('type_of_search');
+        $words          = $request->get('words');
+
+        // if there is no search currently, set the default
+        $exact = 1;
+        if (isset($type_of_search)) {
+            $exact = 0;
+        }
+
+        list($search_entries, $hidden_fields) = $this->getSearchEntries();
+
+        $output = '
+                <form action="/search/" method="post"><table style="text-align:left;float:right"><tr style="vertical-align:top;"><td>
+        ';
+        $output .= '<select style="font-size: x-small" name="type_of_search">';
+        foreach ($search_entries as $entry) {
+            $selected = '';
+            if (isset($entry['selected']) && $entry['selected'] == true) {
+                $selected = ' selected="selected"';
+            }
+            $output .= '<option value="'.$entry['value'].'"'.$selected.'>'.$entry['label'].'</option>';
+        }
+        $output .= '</select>';
+
+        foreach ($hidden_fields as $hidden) {
+            $output .= '<input type="hidden" name="'.$hidden['name'].'" value="'.$hidden['value'].'" />';
+        }
+
+        $output .= '<input style="font-size:0.8em" type="text" size="22" name="words" value="' . $this->purifier->purify($words, CODENDI_PURIFIER_CONVERT_HTML) . '" /><br />';
+        $output .= '<input type="CHECKBOX" name="exact" value="1"' . ( $exact ? ' CHECKED' : ' UNCHECKED' ) . '><span style="font-size:0.8em">' . $GLOBALS['Language']->getText('include_menu', 'require_all_words') . '</span>';
+
+        $output .= '</td><td>';
+        $output .= '<input style="font-size:0.8em" type="submit" name="Search" value="' . $GLOBALS['Language']->getText('searchbox', 'search') . '" />';
+        $output .= '</td></tr></table></form>';
+        return $output;
+    }
+
     /**
      * Echo the search box
      */
     function searchBox() {
-        global $words,$forum_id,$group_id,$is_bug_page,$is_support_page,$Language,
-            $is_pm_page,$is_snippet_page,$exact,$type_of_search,$atid, $is_wiki_page;
-        // if there is no search currently, set the default
-        if ( ! isset($type_of_search) ) {
-            $exact = 1;
-        }
-        
-        $em =& EventManager::instance();
-        
-        $output = "\t<CENTER>\n";
-        $output .= "\t<FORM action=\"/search/\" method=\"post\">\n";
-        
-        $output .= "\t<SELECT name=\"type_of_search\">\n";
-        if ($is_bug_page && $group_id) {
-            $output .= "\t<OPTION value=\"bugs\"".( $type_of_search == "bugs" ? " SELECTED" : "" ).">".$Language->getText('include_menu','bugs')."</OPTION>\n";
-        } else if ($is_pm_page && $group_id) {
-            $output .= "\t<OPTION value=\"tasks\"".( $type_of_search == "tasks" ? " SELECTED" : "" ).">".$Language->getText('include_menu','tasks')."</OPTION>\n";
-        } else if ($is_support_page && $group_id) {
-            $output .= "\t<OPTION value=\"support\"".( $type_of_search == "support" ? " SELECTED" : "" ).">".$Language->getText('include_menu','supp_requ')."</OPTION>\n";
-        } else if ($group_id && $forum_id) {
-            $output .= "\t<OPTION value=\"forums\"".( $type_of_search == "forums" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_forum')."</OPTION>\n";
-        } else if ($group_id && $atid) {
-            $output .= "\t<OPTION value=\"tracker\"".( $type_of_search == "tracker" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_tracker')."</OPTION>\n";
-        } else if ($group_id && $is_wiki_page) {
-            $output .= "\t<OPTION value=\"wiki\"".( $type_of_search == "wiki" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_wiki')."</OPTION>\n";
-        }
-
-        $em->processEvent('layout_searchbox_options', array('option_html' => &$output,
-                                                        'type_of_search' => $type_of_search
-                                                    ));
-
-        if ($group_id) {
-            $output .= "\t<OPTION value=\"all_trackers\"".( $type_of_search == "all_trackers" ? " SELECTED" : "" ).">".$Language->getText('include_menu','all_trackers')."</OPTION>\n";
-        }
-        $output .= "\t<OPTION value=\"soft\"".( $type_of_search == "soft" ? " SELECTED" : "" ).">".$Language->getText('include_menu','software_proj')."</OPTION>\n";
-        if ($GLOBALS['sys_use_snippet'] != 0) {
-            $output .= "\t<OPTION value=\"snippets\"".( ($type_of_search == "snippets" || $is_snippet_page) ? " SELECTED" : "" ).">".$Language->getText('include_menu','code_snippets')."</OPTION>\n";
-        }
-        $output .= "\t<OPTION value=\"people\"".( $type_of_search == "people" ? " SELECTED" : "" ).">".$Language->getText('include_menu','people')."</OPTION>\n";
-
-        $search_type_entry_output = '';
-
-        $eParams = array('type_of_search' => $type_of_search,
-                         'output'         => &$search_type_entry_output);
-        $em->processEvent('search_type_entry', $eParams);      
-        $output .= $search_type_entry_output;
-
-        $output .= "\t</SELECT>\n";
-        
-        $output .= "\t<BR>\n";
-        $output .= "\t<INPUT TYPE=\"CHECKBOX\" NAME=\"exact\" VALUE=\"1\"".( $exact ? " CHECKED" : " UNCHECKED" )."> ".$Language->getText('include_menu','require_all_words')." \n";
-        
-        $output .= "\t<BR>\n";
-        if ( isset($atid) ) {
-            $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$atid\" NAME=\"atid\">\n";
-        } 
-        if ( isset($forum_id) ) {
-            $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$forum_id\" NAME=\"forum_id\">\n";
-        } 
-        if ( isset($is_bug_page) ) {
-           $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_bug_page\" NAME=\"is_bug_page\">\n";
-        }
-        if ( isset($is_support_page) ) {
-           $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_support_page\" NAME=\"is_support_page\">\n";
-        }
-        if ( isset($is_pm_page) ) {
-           $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_pm_page\" NAME=\"is_pm_page\">\n";
-        }
-        if ( isset($is_snippet_page) ) {
-            $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_snippet_page\" NAME=\"is_snippet_page\">\n";
-        }
-    if ( isset($is_wiki_page) ) {
-            $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_wiki_page\" NAME=\"is_wiki_page\">\n";
-        }
-        if ( isset($group_id) ) {
-           $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$group_id\" NAME=\"group_id\">\n";
-        }
-
-        $em->processEvent('layout_searchbox_hiddenInputs', array('input_html' => &$output));
-        
-        $output .= '<INPUT TYPE="text" SIZE="16" NAME="words" VALUE="'. htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8') .'">';
-        $output .= "\t<BR>\n";
-        $output .= "\t<INPUT TYPE=\"submit\" NAME=\"Search\" VALUE=\"".$Language->getText('include_menu','search')."\">\n";
-        $output .= "\t</FORM>\n";
-        $output .= "\t</CENTER>\n";
-        echo $output;
+        echo "\t<CENTER>\n".$this->getSearchBox()."\t</CENTER>\n";
     }
     
     //diplaying search box in body

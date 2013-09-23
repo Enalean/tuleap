@@ -50,7 +50,7 @@ class LdapPlugin extends Plugin {
         $this->_addHook('display_newaccount', 'forbidIfLdapAuth', false);
         
         // Search
-        $this->_addHook('search_type_entry', 'ldapSearchEntry', false);
+        $this->_addHook(Event::LAYOUT_SEARCH_ENTRY);
         $this->_addHook('search_type', 'ldapSearch', false);
 
         // Authentication
@@ -169,8 +169,12 @@ class LdapPlugin extends Plugin {
      * 
      * @return void
      */
-    function ldapSearchEntry($params) {
-        $params['output'] .= "\t<OPTION value=\"people_ldap\"".( $params['type_of_search'] == "people_ldap" ? " SELECTED" : "" ).">".$GLOBALS['Language']->getText('plugin_ldap', 'people_ldap')."</OPTION>\n";
+    function layout_search_entry($params) {
+        $params['search_entries'][] = array(
+            'value'    => 'people_ldap',
+            'label'    => $GLOBALS['Language']->getText('plugin_ldap', 'people_ldap'),
+            'selected' => $params['type_of_search'] == 'people_ldap',
+        );
     }
 
     /**

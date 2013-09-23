@@ -29,9 +29,8 @@ class ForumMLPlugin extends Plugin {
         $this->_addHook('cssfile','cssFile',false);
         $this->_addHook('javascript_file',                   'jsFile',                            false);
         $this->_addHook('search_type', 'search_type', false);
-        $this->_addHook('layout_searchbox_options', 'forumml_searchbox_option', false);
-        $this->_addHook('layout_searchbox_hiddenInputs', 'forumml_searchbox_hiddenInput', false);
         $this->_addHook('plugins_powered_search', 'forumml_search', false);
+        $this->addHook(Event::LAYOUT_SEARCH_ENTRY);
 
         // Stat plugin
         $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
@@ -64,17 +63,19 @@ class ForumMLPlugin extends Plugin {
         return $this->allowedForProject[$group_id];
     }
 
-    function forumml_searchbox_option($params) {
-        $request =& HTTPRequest::instance();
+    function layout_search_entry($params) {
+        $request = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
-        if(isset($_REQUEST['list']) && isset($group_id)) {
-            $params['option_html'] .= "\t<OPTION value=\"mail\"".( $params['type_of_search'] == "mail" ? " SELECTED" : "" ).">".$GLOBALS['Language']->getText('plugin_forumml','this_list')."</OPTION>\n";
-        }
-    }
-    
-    function forumml_searchbox_hiddenInput($params) {
-        if(isset($_REQUEST['list'])) {
-            $params['input_html'] .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"". $_REQUEST['list'] ."\" NAME=\"list\">\n";
+        if($group_id && $request->exist('list')) {
+            $params['search_entries'][] = array(
+                'value' => 'mail',
+                'label' => $GLOBALS['Language']->getText('plugin_forumml','this_list'),
+                'selected' => true,
+            );
+            $params['hidden_fields'][] = array(
+                'name'  => 'list',
+                'value' => $request->getValidated('list', 'uint'),
+            );
         }
     }
 
