@@ -1,3 +1,6 @@
+Version 0.98 - Tuleap 6.6
+    * Follow-up to request #4965: Caption on button in release content misleading
+
 Version 0.97 - Tuleap 6.5
     * Fix request #4937: do not allow AgileDashboard with deleted trackers
 
