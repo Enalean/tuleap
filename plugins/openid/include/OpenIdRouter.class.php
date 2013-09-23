@@ -28,13 +28,20 @@ class OpenId_OpenIdRouter {
     const FINISH_PAIR_ACCOUNTS = 'finish_pair_accounts';
     const REMOVE_PAIR          = 'remove_pair';
 
+    private $routes = array(
+        self::LOGIN,
+        self::FINISH_LOGIN,
+        self::PAIR_ACCOUNTS,
+        self::FINISH_PAIR_ACCOUNTS,
+        self::REMOVE_PAIR,
+    );
+
     public function __construct(Logger $logger) {
         $this->logger = $logger;
     }
 
     public function route(HTTPRequest $request, Layout $response) {
-        $reflection   = new ReflectionClass(__CLASS__);
-        $valid_route  = new Valid_WhiteList('func', $reflection->getConstants());
+        $valid_route  = new Valid_WhiteList('func', $this->routes);
         $valid_route->required();
         if ($request->valid($valid_route)) {
             $route = $request->get('func');
@@ -49,7 +56,7 @@ class OpenId_OpenIdRouter {
             );
             $controller->$route();
         } else {
-            $response->addFeedback(Feedback::ERROR, 'Invalid request for '.__CLASS__.': ('.implode(', ', $reflection->getConstants()).')');
+            $response->addFeedback(Feedback::ERROR, 'Invalid request for '.__CLASS__);
             $response->redirect('/');
         }
     }

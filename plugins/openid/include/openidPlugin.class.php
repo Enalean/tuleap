@@ -57,7 +57,7 @@ class OpenidPlugin extends Plugin {
     private function loadPhpOpenId() {
         $phpopenid_path = '/usr/share/php-openid';
         ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . $phpopenid_path);
-        include_once 'openid_includes.php';
+        include_once 'driver/openid_includes.php';
     }
 
     /**
