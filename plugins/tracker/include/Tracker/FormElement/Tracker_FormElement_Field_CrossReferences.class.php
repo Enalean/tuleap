@@ -54,18 +54,24 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     
     public function getQuerySelect() {
         $R1 = 'R1_'. $this->id;
-        return "$R1.id AS `". $this->name . "`";
+        $R2 = 'R101_'. $this->id;
+
+        return "CONCAT(ifnull($R1.id, ''), ifnull($R2.id, '')) AS `". $this->name . "`";
     }
     
     public function getQueryFrom() {
         $R1 = 'R1_'. $this->id;
-        return " LEFT JOIN (
-                     cross_references AS $R1
-                 ) ON (a.id = $R1.source_id AND $R1.source_type = '".Tracker_Artifact::REFERENCE_NATURE."' 
-                       OR
-                       a.id = $R1.target_id AND $R1.target_type = '".Tracker_Artifact::REFERENCE_NATURE."'
-                 )
-        ";
+        $R2 = 'R101_'. $this->id;
+
+        return
+        "LEFT JOIN (cross_references AS $R1)
+            ON
+                (CAST(a.id AS CHAR) = $R1.source_id AND $R1.source_type = '"
+                    .Tracker_Artifact::REFERENCE_NATURE."')
+        LEFT JOIN (cross_references AS $R2)
+            ON
+                (CAST(a.id AS CHAR) = $R2.target_id AND $R2.target_type = '"
+                    .Tracker_Artifact::REFERENCE_NATURE."')";
     }
     
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
