@@ -1,0 +1,36 @@
+{{> pane-content-initial-effort-warning}}
+
+<h3>{{open_items_title}}</h3>
+
+{{#initial_effort_not_defined}}
+    <div class="alert alert-info">
+        <br /><span>{{{initial_effort_warning}}}</span>
+    </div>
+{{/initial_effort_not_defined}}
+
+{{#can_add_parent_backlog_item}}
+<div class="btn-group">
+    <a href="{{add_new_parent_backlog_url}}" class="btn">{{add_new_parent_backlog_item}}</a>
+</div>
+{{/can_add_parent_backlog_item}}
+
+{{#can_add_subbacklog_items}}
+{{allow_other_create}}
+<div class="btn-group dropdown">
+    <a class="dropdown-toggle btn" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
+        {{add_in_descendant_title}}
+        <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+        {{#backlog_elements}}
+        <li>
+            <a href="{{url}}">{{title}}</a>
+        </li>
+        {{/backlog_elements}}
+    </ul>
+</div>
+{{/can_add_subbacklog_items}}
+
+{{> pane-content-openitems}}
+
+{{> pane-content-closeditems}}

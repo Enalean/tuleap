@@ -1,0 +1,13 @@
+{{> pane-content-initial-effort-warning}}
+
+<h3>{{open_items_title}}</h3>
+
+{{#can_add_backlog_item}}
+<div class="btn-group">
+    <a href="{{add_new_backlog_url}}" class="btn">{{add_new_backlog_item}}</a>
+</div>
+{{/can_add_backlog_item}}
+
+{{> pane-content-openitems}}
+
+{{> pane-content-closeditems}}

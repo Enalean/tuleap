@@ -61,7 +61,7 @@ class AgileDashboard_Milestone_Pane_Content_ContentPane extends AgileDashboard_P
 
     private function getPaneContent() {
         $renderer  = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
-        return $renderer->renderToString('pane-content', $this->presenter);
+        return $renderer->renderToString($this->presenter->getTemplateName(), $this->presenter);
     }
 }
 
