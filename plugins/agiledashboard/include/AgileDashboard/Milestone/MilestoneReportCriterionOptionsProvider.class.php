@@ -32,14 +32,19 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider extends D
     /** @var Tracker_HierarchyFactory */
     private $hierarchy_factory;
 
+    /** @var PlanningFactory */
+    private $planning_factory;
+
     public function __construct(
         AgileDashboard_Planning_NearestPlanningTrackerProvider $nearest_planning_tracker_provider,
         AgileDashboard_Milestone_MilestoneDao $dao,
-        Tracker_HierarchyFactory $hierarchy_factory
+        Tracker_HierarchyFactory $hierarchy_factory,
+        PlanningFactory $planning_factory
     ) {
         $this->nearest_planning_tracker_provider = $nearest_planning_tracker_provider;
         $this->hierarchy_factory                 = $hierarchy_factory;
         $this->dao                               = $dao;
+        $this->planning_factory                  = $planning_factory;
     }
 
     /**
@@ -95,14 +100,27 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider extends D
 
     /** @return Tracker[] */
     private function getPlanningTrackersIds(Tracker $nearest_planning_tracker) {
-        $parents = $this->getParentsOrderedFromTopToBottom($nearest_planning_tracker);
+        $parents = $this->getParentsWithPlanningAndOrderedFromTopToBottom($nearest_planning_tracker);
 
         return array_map(array($this, 'extractTrackerId'), $parents);
     }
 
     /** @return Tracker[] */
-    private function getParentsOrderedFromTopToBottom(Tracker $nearest_planning_tracker) {
+    private function keepsTrackersUntilThereIsNoPlanning(array $list_of_trackers) {
+        $trackers = array();
+        foreach ($list_of_trackers as $tracker) {
+            if (! $this->planning_factory->getPlanningByPlanningTracker($tracker)) {
+                break;
+            }
+            $trackers[] = $tracker;
+        }
+        return $trackers;
+    }
+
+    /** @return Tracker[] */
+    private function getParentsWithPlanningAndOrderedFromTopToBottom(Tracker $nearest_planning_tracker) {
         $parents = $this->hierarchy_factory->getAllParents($nearest_planning_tracker);
+        $parents = $this->keepsTrackersUntilThereIsNoPlanning($parents);
         $parents = array_reverse($parents);
         $parents[] = $nearest_planning_tracker;
 

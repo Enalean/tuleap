@@ -87,14 +87,14 @@ class AgileDashboardPlugin extends Plugin {
     public function tracker_event_report_display_additional_criteria($params) {
         $backlog_tracker = $params['tracker'];
 
-        //$selected_milestone_id = $request->getValidated('agiledashboard_milestone', 'uint');
-
+        $planning_factory = $this->getPlanningFactory();
         $provider = new AgileDashboard_Milestone_MilestoneReportCriterionProvider(
             HTTPRequest::instance(),
             new AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider(
-                new AgileDashboard_Planning_NearestPlanningTrackerProvider($this->getPlanningFactory()),
+                new AgileDashboard_Planning_NearestPlanningTrackerProvider($planning_factory),
                 new AgileDashboard_Milestone_MilestoneDao(),
-                Tracker_HierarchyFactory::instance()
+                Tracker_HierarchyFactory::instance(),
+                $planning_factory
             )
         );
         $additional_criterion = $provider->getCriterion($backlog_tracker);
