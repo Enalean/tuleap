@@ -47,7 +47,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider extends D
      *
      * @return string[]
      */
-    public function getSelectboxOptions(Tracker $backlog_tracker) {
+    public function getSelectboxOptions(Tracker $backlog_tracker, $selected_milestone_id) {
         $nearest_planning_tracker = $this->nearest_planning_tracker_provider->getNearestPlanningTracker($backlog_tracker);
         if (! $nearest_planning_tracker) {
             return array();
@@ -55,11 +55,11 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider extends D
 
         $planning_trackers_ids = $this->getPlanningTrackersIds($nearest_planning_tracker);
 
-        return $this->formatAllMilestonesAsSelectboxOptions($planning_trackers_ids);
+        return $this->formatAllMilestonesAsSelectboxOptions($planning_trackers_ids, $selected_milestone_id);
     }
 
     /** @return string[] */
-    private function formatAllMilestonesAsSelectboxOptions(array $planning_trackers_ids) {
+    private function formatAllMilestonesAsSelectboxOptions(array $planning_trackers_ids, $selected_milestone_id) {
         $hp = Codendi_HTMLPurifier::instance();
         $options = array();
         $current_milestone = array();
@@ -78,7 +78,11 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider extends D
                     continue;
                 }
 
-                $option  = '<option value="'. $milestone_id .'">';
+                $selected = '';
+                if ($milestone_id == $selected_milestone_id) {
+                    $selected = 'selected="selected"';
+                }
+                $option  = '<option value="'. $milestone_id .'" '. $selected .'>';
                 $option .= str_pad('', $index, '-') .' '. $hp->purify($milestone_title);
                 $option .= '</option>';
                 $options[] = $option;

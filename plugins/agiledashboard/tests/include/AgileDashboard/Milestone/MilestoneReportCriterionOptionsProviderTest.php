@@ -72,19 +72,19 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest exten
 
     public function itReturnsEmptyArrayWhenNoNearestPlanningTracker() {
         stub($this->nearest_planning_tracker_provider)->getNearestPlanningTracker($this->task_tracker)->returns(null);
-        $this->assertEqual($this->provider->getSelectboxOptions($this->task_tracker), array());
+        $this->assertEqual($this->provider->getSelectboxOptions($this->task_tracker, '*'), array());
     }
 
     public function itReturnsTheListOfOptions() {
         stub($this->nearest_planning_tracker_provider)->getNearestPlanningTracker($this->task_tracker)->returns($this->sprint_tracker);
         $this->assertEqual(
-            $this->provider->getSelectboxOptions($this->task_tracker),
+            $this->provider->getSelectboxOptions($this->task_tracker, 124),
             array(
-                '<option value="123"> Tuleap 6.5</option>',
-                '<option value="1231">- Sprint 31</option>',
-                '<option value="1232">- Sprint 32</option>',
-                '<option value="124"> Tuleap 6.6</option>',
-                '<option value="1241">- Sprint 33</option>',
+                '<option value="123" > Tuleap 6.5</option>',
+                '<option value="1231" >- Sprint 31</option>',
+                '<option value="1232" >- Sprint 32</option>',
+                '<option value="124" selected="selected"> Tuleap 6.6</option>',
+                '<option value="1241" >- Sprint 33</option>',
             )
         );
     }

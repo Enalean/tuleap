@@ -23,12 +23,19 @@
  */
 class AgileDashboard_Milestone_MilestoneReportCriterionProvider extends DataAccessObject {
 
+    const FIELD_NAME = 'agiledashboard_milestone';
+
     /** @var AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider */
     private $options_provider;
 
+    /** @var Codendi_Request */
+    private $request;
+
     public function __construct(
+        Codendi_Request $request,
         AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider $options_provider
     ) {
+        $this->request          = $request;
         $this->options_provider = $options_provider;
     }
 
@@ -36,7 +43,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionProvider extends DataAcce
      * @return string
      */
     public function getCriterion(Tracker $backlog_tracker) {
-        $options = $this->options_provider->getSelectboxOptions($backlog_tracker);
+        $options = $this->options_provider->getSelectboxOptions($backlog_tracker, $this->request->get(self::FIELD_NAME));
         if (! $options) {
             return null;
         }
@@ -45,7 +52,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionProvider extends DataAcce
         $criterion .= '<label for="tracker_report_crit_agiledashboard_milestone">';
         $criterion .= $GLOBALS['Language']->getText('plugin_agiledashboard', 'report_criteria_label');
         $criterion .= '</label><br>';
-        $criterion .= '<select name="agiledashboard_milestone" id="tracker_report_crit_agiledashboard_milestone">';
+        $criterion .= '<select name="'. self::FIELD_NAME .'" id="tracker_report_crit_agiledashboard_milestone">';
         $criterion .= implode('', $options);
         $criterion .= '</select>';
 

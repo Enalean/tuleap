@@ -25,19 +25,29 @@ class AgileDashboard_Milestone_MilestoneReportCriterionProviderTest extends Tule
         parent::setUp();
         $this->task_tracker     = aTracker()->withId('task')->build();
         $this->options_provider = mock('AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider');
+        $this->request          = aRequest()->build();
 
         $this->provider = new AgileDashboard_Milestone_MilestoneReportCriterionProvider(
+            $this->request,
             $this->options_provider
         );
     }
 
     public function itReturnsNullWhenNoOptions() {
-        stub($this->options_provider)->getSelectboxOptions($this->task_tracker)->returns(array());
+        stub($this->options_provider)->getSelectboxOptions($this->task_tracker, '*')->returns(array());
         $this->assertEqual($this->provider->getCriterion($this->task_tracker), null);
     }
 
     public function itReturnsASelectBox() {
-        stub($this->options_provider)->getSelectboxOptions($this->task_tracker)->returns(array('<option>1','<option>2'));
+        stub($this->options_provider)->getSelectboxOptions($this->task_tracker, '*')->returns(array('<option>1','<option>2'));
         $this->assertPattern('/<select name="agiledashboard_milestone"/', $this->provider->getCriterion($this->task_tracker));
+    }
+
+    public function itSelectsTheGivenMilestone() {
+        $this->request->set(AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME, 'whatever');
+
+        expect($this->options_provider)->getSelectboxOptions($this->task_tracker, 'whatever')->once();
+
+        $this->provider->getCriterion($this->task_tracker);
     }
 }

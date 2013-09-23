@@ -90,6 +90,7 @@ class AgileDashboardPlugin extends Plugin {
         //$selected_milestone_id = $request->getValidated('agiledashboard_milestone', 'uint');
 
         $provider = new AgileDashboard_Milestone_MilestoneReportCriterionProvider(
+            HTTPRequest::instance(),
             new AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider(
                 new AgileDashboard_Planning_NearestPlanningTrackerProvider($this->getPlanningFactory()),
                 new AgileDashboard_Milestone_MilestoneDao(),
