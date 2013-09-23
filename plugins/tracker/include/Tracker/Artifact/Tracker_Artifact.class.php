@@ -1232,6 +1232,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $soap_comments;
     }
 
+    public function exportHistoryToSOAP(PFUser $user) {
+        $soap_comments = array();
+        foreach ($this->getChangesets() as $changeset) {
+            $soap_comments[] = $changeset->getSoapValue($user);
+        }
+        return $soap_comments;
+    }
+
     /**
      * Get the Id of this artifact
      *

@@ -249,23 +249,20 @@ class Tracker_Artifact_Changeset_Comment {
         return $comment_format;
     }
 
-    public function exportToSOAP() {
-        if (! $this->body) {
-            return null;
+    public function exportToSOAP(array &$soap) {
+        if ($this->body) {
+            $soap['body'] = $this->body;
+            return $soap;
         }
-
-        return array(
-            'submitted_by' => $this->changeset->getSubmittedBy(),
-            'email'        => $this->getEmailForUndefinedSubmitter(),
-            'submitted_on' => $this->submitted_on,
-            'body'         => $this->body,
-        );
     }
 
-    private function getEmailForUndefinedSubmitter() {
-        if (! $this->changeset->getSubmittedBy()) {
-            return $this->changeset->getEmail();
-        }
+    public function getSoapValue() {
+        return array(
+            'submitted_by' => $this->submitted_by,
+            'submitted_on' => $this->submitted_on,
+            'format'       => $this->bodyFormat,
+            'body'         => $this->body
+        );
     }
 
     private function fetchFormattedMailComment() {

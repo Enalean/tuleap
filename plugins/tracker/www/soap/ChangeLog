@@ -1,5 +1,8 @@
 All the documentation can be found at http://doc-en.tuleap.net/en/latest/soap/tracker.html
 
+2.1 - Tuleap 6.5
+    * New method: getArtifactHistory returns all the artifact history (changeset + field values).
+
 2.0.10 - Tuleap 6.3
     * WSDL change: Type AgileDashBoardSemanticInitialEffort added; Type TrackerSemantic modified.
     * The SOAP method "getTrackerSemantic" now also exports the agile dashboard initial effort semantic.
