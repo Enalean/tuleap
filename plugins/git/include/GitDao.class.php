@@ -615,6 +615,19 @@ class GitDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
-}
 
+    /**
+     * @param array $repository_ids
+     */
+    public function searchRepositoriesInSameProjectFromRepositoryList(array $repository_ids, $project_id) {
+        $repository_list = $this->da->escapeIntImplode($repository_ids);
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT repository_id FROM plugin_git
+                WHERE repository_id IN ($repository_list)
+                AND project_id = $project_id";
+
+        return $this->retrieve($sql);
+    }
+}
 ?>
