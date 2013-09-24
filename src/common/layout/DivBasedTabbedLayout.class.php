@@ -82,7 +82,13 @@ NB: Original OsdnNavBar has been removed from first cell. <td align="center">'.$
             }
         } else {
             $html .= '<li class="header_actions_nolink highlight">'.$GLOBALS['Language']->getText('include_menu','not_logged_in').'</li>';
-            $html .= '<li><a href="/account/login.php">'.$GLOBALS['Language']->getText('include_menu','login').'</a></li>';
+
+            $login_url = '/account/login.php';
+            if ($_SERVER['REQUEST_URI'] != $login_url) {
+                $login_url .= '?return_to='.urlencode($_SERVER['REQUEST_URI']);
+            }
+
+            $html .= '<li><a href="'.$this->purifier->purify($login_url).'">'.$GLOBALS['Language']->getText('include_menu','login').'</a></li>';
             $em =& EventManager::instance();
             $display_new_user = true;
             $em->processEvent('display_newaccount', array('allow' => &$display_new_user));
