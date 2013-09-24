@@ -23,6 +23,7 @@ require_once 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_ServicesUsageDao.class.php';
 require_once dirname(__FILE__).'/../include/Statistics_Services_UsageFormatter.class.php';
 require_once dirname(__FILE__).'/../include/Statistics_Formatter.class.php';
+require_once dirname(__FILE__).'/../include/Statistics_DiskUsageHtml.class.php';
 
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
@@ -153,6 +154,10 @@ if (!$error && $request->exist('export')) {
         $csv_exporter->buildDatas($dao->getNumberOfCIJobs(), "Continuous integration jobs");
     }
 
+    //Disk usage
+    exportDiskUsageForDate($csv_exporter, $startDate, "Disk usage at start date (MB)");
+    exportDiskUsageForDate($csv_exporter, $endDate, "Disk usage at end date (MB)");
+
     // Let plugins add their own data
     EventManager::instance()->processEvent(
         'plugin_statistics_service_usage',
@@ -195,4 +200,12 @@ if (!$error && $request->exist('export')) {
     echo '</form>';
     $GLOBALS['HTML']->footer(array());
 }
+
+function exportDiskUsageForDate(Statistics_Services_UsageFormatter $csv_exporter, $date, $column_name) {
+    $disk_usage_manager = new Statistics_DiskUsageManager();
+    $disk_usage = $disk_usage_manager->returnTotalSizeOfProjects($date);
+    $disk_usage = $csv_exporter->formatSizeInMegaBytes($disk_usage);
+    $csv_exporter->buildDatas($disk_usage, $column_name);
+}
+
 ?>

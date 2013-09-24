@@ -54,6 +54,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_SEMANTIC_FROM_XML, 'tracker_event_semantic_from_xml');
             $this->_addHook(TRACKER_EVENT_SOAP_SEMANTICS, 'tracker_event_soap_semantics');
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
+            $this->addHook('plugin_statistics_service_usage');
 
             $this->_addHook(Event::SYSTRAY);
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
@@ -463,6 +464,12 @@ class AgileDashboardPlugin extends Plugin {
         $params['action'] = 'import';
         $request          = new Codendi_Request($params);
         $this->process($request);
+    }
+
+    public function plugin_statistics_service_usage($params) {
+        $dao = new AgileDashboard_Dao();
+
+        $params['csv_exporter']->buildDatas($dao->getProjectsWithADActivated(), "Agile Dashboard activated");
     }
 }
 
