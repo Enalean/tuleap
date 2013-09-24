@@ -2,7 +2,7 @@
 #  *
 #  * Account scripts message catalog (English)
 #  *
-#  * Codendi 
+#  * Codendi
 #  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #  * http://www.codendi.com
 #  *
@@ -111,7 +111,7 @@ account_change_email-complete	message	Welcome, $1.<P>Your email change is comple
 # Script: SF/www/account/change_pw.php
 #
 account_change_pw	title_success	Successfully Changed Password
-account_change_pw	message	Congratulations. You have changed your $1 password. 
+account_change_pw	message	Congratulations. You have changed your $1 password.
 account_change_pw	title	Password Change
 account_change_pw	old_password	Old Password
 account_change_pw	new_password	New Password
@@ -168,7 +168,6 @@ account_first	message	You are now a registered user on $1. As a registered user,
 #-----------------------------------------------
 # Script: SF/www/account/login.php
 #
-account_login	title	Site Login
 account_login	secure	Secure
 account_login	error_can_t_update_passwd	Internal error: Could not update passwords.
 account_login	pending_title	Pending Account
@@ -179,11 +178,17 @@ account_login	resend_btn	Resend Confirmation Email
 account_login	cookies	Cookies must be enabled past this point
 account_login	name	Login Name
 account_login	password	Password
-account_login	stay_ssl	Stay in secure connection mode after login<br><em>&nbsp;&nbsp;&nbsp;(You will be connected with a secure Web server and all your web pages will travel encrypted over the network).</em>
-account_login	msie_pb	<B>Internet Explorer </B> users (prior to 5.1) will have intermittent SSL problems, so they should leave SSL after login. Visit <A HREF="http://www.microsoft.com/">Microsoft</A> for more information about this known problem.
+account_login	stay_ssl	Stay in HTTPS after login
 account_login	login_btn	Login
-account_login	lost_pw	<b><A href="lostpw.php">[Lost your password?]</A></b><BR> If you have lost your password please do not create another account but follow us and we'll help you <a href="lostpw.php">remember your lost password</a>. If it fails then contact the <a href="mailto:$1"><b>$2 site administrators</b></a>.
+account_login	lost_pw	Lost your password?
 account_login	create_acct	<b><A HREF="register.php">[Create a new Account]</A></b><BR> If it's your first time on the <b>$1</b> site you can become a member right now ! The creation of a <a href="register.php">new account</a> takes a few seconds and you can take advantage of the services offered by the $1 site.
+account_login	login_with_tuleap	Login with $1 credentials
+account_login	login_with_openid	... or directly with
+account_login	page_title	$1 login
+account_login	openid_submit	Login
+account_login	pair_openid_title	Account pairing
+account_login	pair_openid	Pair your account with one of these providers:
+account_login	help	If you encounter any problem to login, please send a email to <a href="mailto:$1?Subject=Unable to login under $2">$2 administrators</a>
 #
 #-----------------------------------------------
 # Script: SF/www/account/lostlogin.php
@@ -254,7 +259,7 @@ account_register	ldap_email_help	<em><strong>Remark:</strong> This email address
 account_register	codendi_login_help	This login was generated from your email address. You may change it if needed.
 account_register	login_directions	<strong>(Lower case only!)</strong>
 account_register	passwd	Password
-account_register	passwd_directions	(minimum 6 chars)	
+account_register	passwd_directions	(minimum 6 chars)
 account_register	passwd2	Password (repeat)
 account_register	passwd2_directions	&nbsp;
 account_register	realname	Full/Real Name
@@ -263,12 +268,12 @@ account_register	email	Email Address
 account_register	email_directions	<em><strong>Remark:</strong> This email address will be verified before account activation. Please use approved email address only.</em>
 account_register	expiry_date	Expiration Date
 account_register	expiry_date_directions	<em><strong>Remark:</strong> The account will be suspended when the date is reached. Leave blank if you don't want an expiration date.</em>
-account_register	data_not_parsed	       Sorry - Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format. 
+account_register	data_not_parsed	       Sorry - Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format.
 account_register	tz	Timezone
 account_register	mandatory	Fields marked with $1 are mandatory.
 account_register	siteupdate	Receive Email about Site Updates <span style="color:#666">(Very low traffic and includes security notices. Highly Recommended.)</span>
 account_register	communitymail	Receive additional community mailings. <span style="color:#666">(Low traffic.)</span>
-account_register	purpose	Purpose 
+account_register	purpose	Purpose
 account_register	purpose_directions	<em>Please explain why you are applying for registration on this site</em><br>
 account_register	purpose_directions_admin	<em>You can add a comment on this user registration</em><br>
 account_register	btn_register	Register

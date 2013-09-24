@@ -1,0 +1,62 @@
+/**
+ * Copyright (c) Enalean SAS, 2013. All rights reserved
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
+ *
+ * Originally written by Nicolas Terray, 2008
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *
+ */
+
+.openid-provider {
+    display: block;
+    margin: 0 auto 10px;
+    height: 40px;
+    width: 100px;
+}
+
+#login-google {
+    background: url('../themes/default/images/login-google.png') no-repeat center top;
+}
+#login-google:hover {
+    background: url('../themes/default/images/login-google.png') no-repeat center -40px;
+}
+
+#login-yahoo {
+    background: url('../themes/default/images/login-yahoo.png') no-repeat center top;
+}
+#login-yahoo:hover {
+    background: url('../themes/default/images/login-yahoo.png') no-repeat center -40px;
+}
+
+#login-openid {
+    background: url('../themes/default/images/login-openid.png') no-repeat center top;
+}
+#login-openid:hover {
+    background: url('../themes/default/images/login-openid.png') no-repeat center -40px;
+}
+
+#login-openid-form {
+    display: none;
+    text-align: center;
+}
+
+#login-openid-input {
+    margin-bottom: 0;
+}
+

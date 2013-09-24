@@ -12,6 +12,7 @@ header("Cache-Control: no-cache, no-store, must-revalidate");
 require_once('pre.php');
 require_once('account.php');
 require_once('common/include/CookieManager.class.php');
+require_once('common/user/LoginController.class.php');
 
 
 $em =& EventManager::instance();
@@ -95,30 +96,6 @@ if ($user->isLoggedIn()) {
 //
 $purifier =& Codendi_HTMLPurifier::instance();
 
-$userStatusBox = '';
-switch($status) {
- case 'P':
-     $userStatusBox .= "<p><strong>".$GLOBALS['Language']->getText('account_login', 'pending_title')."</strong>";
-     if ($GLOBALS['sys_user_approval'] != 0) {
-         $userStatusBox .= "<p>".$GLOBALS['Language']->getText('account_login', 'need_approval');
-     } else {
-         $userStatusBox .= "<p>".$GLOBALS['Language']->getText('account_login', 'pending_msg');
-         $userStatusBox .= "<p><a href=\"pending-resend.php?form_user=".$purifier->purify($_rVar['form_loginname'])." \">[".$GLOBALS['Language']->getText('account_login', 'resend_btn')."]</a></p>";
-     }
-     break;
-
- case 'V':
- case 'W':
-     $userStatusBox .= "<p>".$GLOBALS['Language']->getText('account_login', 'validation_msg')."</p>";
-     $userStatusBox .= "<p><a href=\"pending-resend.php?form_user=".$purifier->purify($_rVar['form_loginname'])." \">[".$GLOBALS['Language']->getText('account_login', 'resend_btn')."]</a></p>";
-        break;
-
- case 'S':
-     $userStatusBox .= "<p><strong>".$GLOBALS['Language']->getText('account_suspended', 'title')."</strong>";
-     $userStatusBox .= "<p>".$GLOBALS['Language']->getText('account_suspended', 'message', array($GLOBALS['sys_email_contact']))."</p>";
-     break;
-}
-
 // Display mode
 $pvMode = false;
 if($_cVar['pv'] == 2) {
@@ -130,104 +107,44 @@ $_useHttps = false;
 if (isset($GLOBALS['sys_https_host']) && $GLOBALS['sys_https_host']) {
     $_useHttps = true;
 }
-$form_url = '/account/login.php';
-
-// Page title
-$pageTitle = $GLOBALS['Language']->getText('account_login', 'title');
 
 //
 // Start output
 //
 
-if($pvMode) {
-    $GLOBALS['HTML']->pv_header(array('title'=>$pageTitle));
-} else {
-    $GLOBALS['HTML']->header(array('title'=>$pageTitle));
-}
-
-if($userStatusBox != '') {
-    echo $userStatusBox;
-    echo "<hr />";
-}
-
-?>
-
-<h2><?php echo $pageTitle ?></h2>
-
-<p>
-<span class="highlight"><strong><?php echo $GLOBALS['Language']->getText('account_login', 'cookies'); ?></strong></span>
-</p>
-
-<form action="<?php echo $form_url; ?>" method="post" name="form_login" autocomplete="off">
-<input type="hidden" name="return_to" value="<?php echo $purifier->purify($_rVar['return_to']); ?>">
-<input type="hidden" name="pv" value="<?php echo $_cVar['pv']; ?>">
-
-<p>
-<?php print $GLOBALS['Language']->getText('account_login', 'name'); ?>:
-<br>
-<input type="text" name="form_loginname" value="<?php echo $purifier->purify($_rVar['form_loginname']); ?>">
-</p>
-
-<p>
-<?php print $GLOBALS['Language']->getText('account_login', 'password'); ?>:
-<br>
-<input type="password" name="form_pw" value="">
-</p>
-
-<?php
 // Only show the stay in SSL mode if the server is SSL enabled
 // and it is not forced to operate in SSL mode
+$toggle_ssl = false;
 if ($_useHttps && $GLOBALS['sys_force_ssl'] == 0 ) {
-    $checked = '';
-    $ieMsg = '';
-    if(session_issecure()) {
-        $checked = ' checked="checked"';
-        if((browser_is_ie() && browser_get_version() < '5.1')) {
-            $checked = '';
-            $ieMsg = $GLOBALS['Language']->getText('account_login', 'msie_pb');
-        }
-    }
-
-    echo '<p>';
-    echo '<input type="checkbox" name="stay_in_ssl" value="1"'.$checked.'>';
-    echo $GLOBALS['Language']->getText('account_login', 'stay_ssl');
-    echo '</p>';
-
-    if($ieMsg) {
-        echo '<p>'.$ieMsg.'</p>';
-    }
-}
-?>
-
-<p>
-<input type="submit" name="login" value="<?php echo $GLOBALS['Language']->getText('account_login', 'login_btn'); ?>">
-</p>
-
-</form>
-
-<?php
-$display_lostpw_createaccount = true;
-$em->processEvent('display_lostpw_createaccount', array('allow' => &$display_lostpw_createaccount));
-if ($display_lostpw_createaccount) {
-    echo '<p>';
-    echo $GLOBALS['Language']->getText('account_login', 'lost_pw',array($GLOBALS['sys_email_admin'],$GLOBALS['sys_name']));
-    echo '</p>';
-    echo '<p>';
-    echo $GLOBALS['Language']->getText('account_login', 'create_acct',array($GLOBALS['sys_name'],$GLOBALS['sys_org_name']));
-    echo '</p>';
+    $toggle_ssl = true;
 }
 
-$em->processEvent('login_after_form', array());
+$presenter = new User_LoginPresenter(
+    $purifier,
+    $_rVar['return_to'],
+    $_cVar['pv'],
+    $_rVar['form_loginname'],
+    $toggle_ssl
+);
 
-?>
+$authoritative = false;
 
-<script type="text/javascript">
-<!--
-    document.form_login.form_loginname.focus();
-//-->
-</script>
+$em->processEvent(
+    'login_presenter',
+    array(
+        'presenter'     => &$presenter,
+        'authoritative' => &$authoritative,
+    )
+);
 
-<?php
+if($pvMode) {
+    $GLOBALS['HTML']->pv_header(array('title'=>$presenter->account_login_page_title()));
+} else {
+    $GLOBALS['HTML']->header(array('title'=>$presenter->account_login_page_title()));
+}
+
+$login_controller = new User_LoginController($request);
+$login_controller->index($presenter);
 
 if ($pvMode) {
     $GLOBALS['HTML']->pv_footer(array());
@@ -236,3 +153,5 @@ if ($pvMode) {
 }
 
 ?>
+
+

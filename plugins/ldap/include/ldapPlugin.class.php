@@ -58,8 +58,8 @@ class LdapPlugin extends Plugin {
         $this->_addHook('session_after_login', 'allowCodendiLogin', false);
 
         // Login
+        $this->addHook('login_presenter');
         $this->_addHook('display_lostpw_createaccount', 'forbidIfLdapAuth', false);
-        $this->_addHook('login_after_form', 'loginAfterForm', false);
         $this->_addHook('account_redirect_after_login', 'account_redirect_after_login', false);
 
         // User finder
@@ -386,15 +386,6 @@ class LdapPlugin extends Plugin {
             else {
                 $params['allow_codendi_login'] = true;
             }
-        }
-    }
-
-    /**
-     * Hook
-     */
-    function loginAfterForm($params) {
-        if($GLOBALS['sys_auth_type'] == 'ldap') {
-            echo $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login_help', array($GLOBALS['sys_email_admin'], $GLOBALS['sys_name']));
         }
     }
 
@@ -930,6 +921,14 @@ class LdapPlugin extends Plugin {
     public function get_ldap_login_name_for_user($params) {
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
             $params['ldap_user'] = $this->_getLdapUserManager()->getLDAPUserFromUser($params['user']);
+        }
+    }
+
+    public function login_presenter($params) {
+        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+            include_once dirname(__FILE__).'/LoginPresenter.class.php';
+            $params['authoritative'] = true;
+            $params['presenter']     = new LDAP_LoginPresenter($params['presenter']);
         }
     }
 }

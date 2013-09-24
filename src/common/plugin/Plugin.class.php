@@ -26,7 +26,9 @@ require_once('PluginManager.class.php');
  * Plugin
  */
 class Plugin implements PFO_Plugin {
-    
+    /** @var BackendLogger */
+    private $backend_logger;
+
     var $id;
     var $pluginInfo;
     /** @var Map */
@@ -270,6 +272,16 @@ class Plugin implements PFO_Plugin {
 
     public function isCustom() {
         return $this->is_custom;
+    }
+
+    /**
+     * @return BackendLogger
+     */
+    protected function getBackendLogger() {
+        if (! $this->backend_logger) {
+            $this->backend_logger = new BackendLogger();
+        }
+        return $this->backend_logger;
     }
 }
 ?>
