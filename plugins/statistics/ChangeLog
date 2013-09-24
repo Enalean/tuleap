@@ -1,3 +1,6 @@
+Version 0.32 - Tuleap 6.6
+    * story #4923. Per project site wide statistics: Include statistics on project web page disk usage.
+
 Version 0.31 - Tuleap 6.4
     * Fix request #4823: Issues on CVS activities result in 'services usage' Statistics
 
