@@ -36,16 +36,25 @@ class OpenId_LoginPresenter extends User_LoginPresenter {
         return dirname(dirname(__FILE__)) . '/templates/';
     }
 
-    private function getPairingBaseUrl() {
-        return OPENID_BASE_URL.'/index.php?func='.OpenId_OpenIdRouter::LOGIN.'&openid_url=';
+    private function returnLoginUrl($openid_url) {
+        $query_parts = array(
+            'func'       => OpenId_OpenIdRouter::LOGIN,
+            'openid_url' => $openid_url,
+        );
+
+        if ($this->getReturnTo()) {
+            $query_parts['return_to'] = $this->getReturnTo();
+        }
+
+        return OPENID_BASE_URL.'/index.php?'.http_build_query($query_parts);
     }
 
     public function openid_google() {
-        return $this->getPairingBaseUrl().urlencode('https://www.google.com/accounts/o8/id');
+        return $this->returnLoginUrl('https://www.google.com/accounts/o8/id');
     }
 
     public function openid_yahoo() {
-        return $this->getPairingBaseUrl().urlencode('https://me.yahoo.com/');
+        return $this->returnLoginUrl('https://me.yahoo.com/');
     }
 
     public function openid_generic_action() {

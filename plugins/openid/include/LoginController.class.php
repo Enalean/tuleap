@@ -39,7 +39,7 @@ class OpenId_LoginController extends MVC2_PluginController {
     }
 
     public function finish_pair_accounts() {
-        $return_to_url = "http://google.fr";
+        $return_to_url = get_server_url().'/account';
         $driver = new Openid_Driver_ConnexionDriver($this->logger, '?func='.OpenId_OpenIdRouter::FINISH_PAIR_ACCOUNTS);
 
         try {
@@ -76,7 +76,7 @@ class OpenId_LoginController extends MVC2_PluginController {
         $openid_url = $this->request->getValidated('openid_url', 'string', '');
         $return_url = get_server_url().'/my';
         if ($this->request->existAndNonEmpty('return_to')) {
-            $return_url = $this->request->getValidated('return_to', 'string', '');
+            $return_url = urlencode($this->request->getValidated('return_to', 'string', ''));
         }
 
         $driver = new Openid_Driver_ConnexionDriver($this->logger, $finish_url);

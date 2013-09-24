@@ -52,7 +52,6 @@ class Openid_ConnexionManager {
         if (! $this->isAuthenticationSuccess($openid_response)) {
             throw new OpenId_AuthenticationFailedException($openid_response->message);
         }
-
         return $openid_response->identity_url;
     }
 
