@@ -2,17 +2,11 @@
 
 <h3>{{open_items_title}}</h3>
 
-{{#initial_effort_not_defined}}
-    <div class="alert alert-info">
-        <br /><span>{{{initial_effort_warning}}}</span>
-    </div>
-{{/initial_effort_not_defined}}
-
-{{#can_add_parent_backlog_item}}
+{{#can_add_backlog_item}}
 <div class="btn-group">
     <a href="{{add_new_parent_backlog_url}}" class="btn">{{add_new_parent_backlog_item}}</a>
 </div>
-{{/can_add_parent_backlog_item}}
+{{/can_add_backlog_item}}
 
 {{#can_add_subbacklog_items}}
 {{allow_other_create}}
