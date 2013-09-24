@@ -58,12 +58,6 @@ abstract class AgileDashboard_Milestone_Backlog_BacklogStrategy {
     public abstract function getBacklogItemName();
 
     /**
-     * Return parent elements to create from (if any)
-     * @return AgileDashboard_Milestone_Pane_Content_ContentNewPresenter[]
-     */
-    public abstract function getBacklogParentElements(PFUser $user, $redirect_to_self);
-
-    /**
      * @return Tracker the Tracker to which the artifacts belong
      */
     public abstract function getMilestoneBacklogArtifactsTracker();

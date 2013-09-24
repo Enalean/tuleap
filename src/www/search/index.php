@@ -15,6 +15,9 @@ require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/Artifact.class.php');
 require_once('common/tracker/ArtifactFieldFactory.class.php');
 
+$type_of_search = $request->get('type_of_search');
+$words = $request->get('words');
+$offset = $request->get('offset');
 
 $em =& EventManager::instance();   
 $plugins_powered_search = false;   

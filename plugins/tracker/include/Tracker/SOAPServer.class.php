@@ -638,7 +638,22 @@ class Tracker_SOAPServer {
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
+    }
 
+    /**
+     * Returns full history of artifact with values at each changeset
+     *
+     * @param String $session_key
+     * @param int $artifact_id
+     */
+    public function getArtifactHistory($session_key, $artifact_id) {
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $artifact     = $this->getArtifactById($artifact_id, $current_user, __FUNCTION__);
+            return $artifact->exportHistoryToSOAP($current_user);
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
     }
 
     private function getProjectById($group_id, $method_name) {

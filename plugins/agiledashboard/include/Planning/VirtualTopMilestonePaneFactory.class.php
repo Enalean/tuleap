@@ -101,7 +101,7 @@ class Planning_VirtualTopMilestonePaneFactory {
 
     /** @return string */
     public function getDefaultPaneIdentifier() {
-        return AgileDashboard_MilestonePlanningPaneInfo::IDENTIFIER;
+        return AgileDashboard_Milestone_Pane_Content_ContentPaneInfo::IDENTIFIER;
     }
 
     private function buildListOfPaneInfo(Planning_Milestone $milestone) {

@@ -1,3 +1,6 @@
+Version 0.19 - Tuleap 6.6
+    * sla #4968: Fix XSS in search enties building
+
 Version 0.18 - Tuleap 5.12
     * Development: SystemEvents can now be processed by application owner instead of root
 

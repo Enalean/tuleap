@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
+abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
     private $todo_collection;
 
@@ -30,82 +30,29 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     private $done_collection;
 
     /** @var String */
-    private $backlog_item_type;
-
-    /** @var Boolean */
-    private $can_add_backlog_item_type;
-
-    /** @var String */
-    private $submit_url;
-
-    /** @var Array */
-    private $backlog_parent_elements = array();
+    protected $backlog_item_type;
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done,
-        $parent_item_type,
-        $backlog_item_type,
-        $can_add_backlog_item_type,
-        $submit_url
+        $backlog_item_type
     ) {
         $this->todo_collection           = $todo;
         $this->done_collection           = $done;
-        $this->parent_item_type          = $parent_item_type;
-        $this->backlog_item_type         = $backlog_item_type;
-        $this->can_add_backlog_item_type = $can_add_backlog_item_type;
-        $this->submit_url                = $submit_url;
-    }
-
-    public function setTodoCollection(AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo) {
-        $this->todo_collection = $todo;
-    }
-
-    public function setDoneCollection(AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done) {
-        $this->done_collection = $done;
-    }
-
-    public function setBacklogParentElements($backlog_parent_elements) {
-        $this->backlog_parent_elements = $backlog_parent_elements;
-    }
-
-    public function backlog_item_type() {
-        return $this->backlog_item_type;
-    }
-
-    public function can_add_backlog_item() {
-        return $this->can_add_backlog_item_type;
-    }
-
-    public function add_new_backlog_url() {
-        return $this->submit_url;
-    }
-
-    public function add_new_backlog_item() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'add_subitem', array($this->backlog_item_type));
-    }
-
-    public function can_add_subbacklog_items() {
-        if (count($this->backlog_parent_elements)) {
-            return true;
+        if ($this->todo_collection) {
+            $this->parent_item_type = $todo->getParentItemName();
         }
+        $this->backlog_item_type         = $backlog_item_type;
     }
 
-    public function allow_other_create() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'allow_other_create');
-    }
+    /**
+     * Return the template name that match the presenter
+     *
+     * @return String
+     */
+    abstract public function getTemplateName();
 
-    public function add_in_descendant_title() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'add_in_descendant_title', array($this->backlog_item_type, $this->parent_item_type));
-    }
-
-    public function backlog_elements() {
-        return $this->backlog_parent_elements;
-    }
-
-    public function can_prioritize() {
-        return $this->can_add_backlog_item_type;
-    }
+    abstract public function can_prioritize();
 
     public function title() {
         return $this->backlog_item_type;

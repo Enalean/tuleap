@@ -195,6 +195,7 @@ class PlanningFactoryTest_getPlanningByPlanningTrackerTest extends PlanningFacto
     }
 
 }
+
 class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
 
     private $project_id                  = 123;
@@ -220,14 +221,21 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
     private function setUpTrackers(TrackerFactory $tracker_factory, Tracker_Hierarchy_Dao $hierarchy_dao) {
         $this->epic_tracker  = aMockTracker()->withId(104)->build();
         $this->story_tracker = aMockTracker()->withId(103)->build();
+        $this->release_tracker  = aMockTracker()->withId(107)->build();
+        $this->sprint_tracker = aMockTracker()->withId(108)->build();
 
         $tracker_factory->setCachedInstances(array(
             104 => $this->epic_tracker,
             103 => $this->story_tracker,
+            107 => $this->release_tracker,
+            108 => $this->sprint_tracker,
         ));
 
         stub($hierarchy_dao)->searchTrackerHierarchy(array(103, 104))->returnsDar(
             array('parent_id' => '104', 'child_id' => '103')
+        );
+        stub($hierarchy_dao)->searchTrackerHierarchy(array(108, 107))->returnsDar(
+            array('parent_id' => '107', 'child_id' => '108')
         );
         stub($hierarchy_dao)->searchTrackerHierarchy()->returnsEmptyDar();
     }
@@ -239,7 +247,7 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
                 'id'                  => 1,
                 'name'                => 'Sprint Planning',
                 'group_id'            => 123,
-                'planning_tracker_id' => 103,
+                'planning_tracker_id' => 108,
                 'backlog_title'       => 'Release Backlog',
                 'plan_title'          => 'Sprint Plan'
             ),
@@ -247,11 +255,13 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
                 'id'                  => 2,
                 'name'                => 'Release Planning',
                 'group_id'            => 123,
-                'planning_tracker_id' => 104,
+                'planning_tracker_id' => 107,
                 'backlog_title'       => 'Product Backlog',
                 'plan_title'          => 'Release Plan'
             )
         );
+        stub($dao)->searchBacklogTrackerById(1)->returns(array('tracker_id' => 103));
+        stub($dao)->searchBacklogTrackerById(2)->returns(array('tracker_id' => 104));
         stub($dao)->searchPlannings($this->project_id_without_planning)->returnsEmptyDar();
 
         $this->factory = aPlanningFactory()
@@ -259,8 +269,12 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
             ->withTrackerFactory($tracker_factory)
             ->build();
 
-        $this->release_planning = new Planning(2, 'Release Planning', 123, 'Product Backlog', 'Release Plan', null, $this->epic_tracker->getId());
-        $this->sprint_planning  = new Planning(1, 'Sprint Planning', 123, 'Release Backlog', 'Sprint Plan', null, $this->story_tracker->getId());
+        $this->release_planning = new Planning(2, 'Release Planning', 123, 'Product Backlog', 'Release Plan', null, $this->release_tracker->getId());
+        $this->release_planning->setBacklogTracker($this->epic_tracker);
+        $this->release_planning->setPlanningTracker($this->release_tracker);
+        $this->sprint_planning  = new Planning(1, 'Sprint Planning', 123, 'Release Backlog', 'Sprint Plan', null, $this->sprint_tracker->getId());
+        $this->sprint_planning->setBacklogTracker($this->story_tracker);
+        $this->sprint_planning->setPlanningTracker($this->sprint_tracker);
     }
 
     public function itReturnAnEmptyArrayIfThereIsNoPlanningDefinedForAProject() {
@@ -268,8 +282,8 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
     }
 
     public function itReturnAllDefinedPlanningsForAProjectInTheOrderDefinedByTheHierarchy() {
-        stub($this->epic_tracker)->userCanView($this->user)->returns(true);
-        stub($this->story_tracker)->userCanView($this->user)->returns(true);
+        stub($this->release_tracker)->userCanView($this->user)->returns(true);
+        stub($this->sprint_tracker)->userCanView($this->user)->returns(true);
 
         $this->assertEqual(
             $this->factory->getPlannings($this->user, $this->project_id),
@@ -278,8 +292,8 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
     }
 
     public function itReturnOnlyPlanningsWhereTheUserCanViewTrackers() {
-        stub($this->epic_tracker)->userCanView($this->user)->returns(true);
-        stub($this->story_tracker)->userCanView($this->user)->returns(false);
+        stub($this->release_tracker)->userCanView($this->user)->returns(true);
+        stub($this->sprint_tracker)->userCanView($this->user)->returns(false);
 
         $this->assertEqual(
             $this->factory->getPlannings($this->user, $this->project_id),

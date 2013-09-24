@@ -101,6 +101,10 @@ abstract class MVC2_Controller {
     protected function render($template_name, $presenter) {
         $this->renderer->renderToPage($template_name, $presenter);
     }
+
+    protected function renderToString($template_name, $presenter) {
+        return $this->renderer->renderToString($template_name, $presenter);
+    }
     
     protected function addFeedback($type, $message) {
         $GLOBALS['Response']->addFeedback('error', 'All fields are mandatory');

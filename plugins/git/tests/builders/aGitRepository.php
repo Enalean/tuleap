@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/GitRepository.class.php';
-
 function aGitRepository() {
     return new Test_Git_RepositoryBuilder();
 }

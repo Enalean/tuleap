@@ -1,20 +1,32 @@
-Version 6.5 (Not released yet)
+Version 6.6 (Not released yet)
+	== Plugins ==
+	* tracker: 5.157
+	* git: 3.42
+	* forumml: 2.6.15
+	* fulltextsearch: 0.19
+	* ldap: 3.34
+	* mediawiki: 0.13
+	* agiledashboard: 0.98
+
+Version 6.5 (Thursday, September 19th 2013)
+
 	== Enhancement ==
 	* story #3826 - update a release in FRS through SOAP
 	* Persist file attachments on file system rather than DB: So we stop cluttering the database with blob of datas
 	* story #3825 - have a "Comments/Description" field in FRS
-	* Script to purge artifact_file: Run it with /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/tools/utils/dump_trackerv3_attachments.php
 	* request #4962 - fix date display when date is in future
+	* Improvement of internal API. ~5% speed boost on most pages.
 
 	== Plugins ==
 	* docman: 2.26.22
-	* git: 3.39
-	* tracker: 5.154
-	* agiledashboard: 0.94
-	* cardwall: 0.9.45
+	* git: 3.41
+	* tracker: 5.155
+	* agiledashboard: 0.97
+	* cardwall: 0.9.46
 
 	== Bug Fix ==
 	* Fix request #4895: SVN file content not displayed, hence converting buffer file data to utf-8 before inserting cross-references.
+	* Fix request #5032: PHP code in tracker date reminder email for PHP 5.3 platforms.
 
 Version 6.4 (Thursday, August 22nd 2013)
 

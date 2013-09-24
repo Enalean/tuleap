@@ -23,6 +23,7 @@ require_once 'constants.php';
 require_once 'autoload.php';
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
+require_once 'common/dao/SystemEventDao.class.php';
 
 /**
  * GitPlugin
@@ -167,7 +168,8 @@ class GitPlugin extends Plugin {
             case SystemEvent_GIT_REPO_UPDATE::NAME:
                 $params['class'] = 'SystemEvent_GIT_REPO_UPDATE';
                 $params['dependencies'] = array(
-                    $this->getRepositoryFactory()
+                    $this->getRepositoryFactory(),
+                    $this->getSystemEventDao(),
                 );
                 break;
             case SystemEvent_GIT_REPO_DELETE::NAME:
@@ -210,6 +212,10 @@ class GitPlugin extends Plugin {
             default:
                 break;
         }
+    }
+
+    private function getSystemEventDao() {
+        return new SystemEventDao();
     }
 
     public function getReferenceKeywords($params) {

@@ -200,41 +200,6 @@ class Planning_MilestoneFactory {
     }
 
     /**
-     * Return a MilestonePlan object properly configured
-     *
-     * @param PFUser               $user
-     * @param Planning_Milestone $milestone
-     *
-     * @return Planning_MilestonePlan
-     */
-    public function getMilestonePlan(PFUser $user, Planning_Milestone $milestone) {
-        $this->updateMilestoneWithPlannedArtifacts($user, $milestone);
-        return new Planning_MilestonePlan(
-            $milestone,
-            $this->getSubMilestones($user, $milestone),
-            $this->getComputedFieldValue($user, $milestone, Planning_Milestone::CAPACITY_FIELD_NAME),
-            $this->getComputedFieldValue($user, $milestone, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME)
-        );
-    }
-
-    /**
-     * Removes the sub-milestone artifacts from an artifacts tree.
-     *
-     * @param PFUser             $user               The user accessing the data
-     * @param Tracker_Artifact $milestone_artifact The parent artifact of sub-milestones artifacts
-     * @param TreeNode         $artifacts_tree     The artifacts tree to clean up
-     */
-    private function removeSubMilestones(PFUser $user, Tracker_Artifact $milestone_artifact, TreeNode $artifacts_tree) {
-        $hierarchy_children_ids = $this->getSubMilestonesArtifactIds($user, $milestone_artifact);
-
-        foreach ($artifacts_tree->getChildren() as $node) {
-            if (in_array($node->getId(), $hierarchy_children_ids)) {
-                $artifacts_tree->removeChild(null, $node);
-            }
-        }
-    }
-
-    /**
      * Retrieves the artifacts planned for the given milestone artifact.
      *
      * @param PFUser             $user
@@ -363,30 +328,6 @@ class Planning_MilestoneFactory {
      */
     private function getSubMilestonesArtifacts(PFUser $user, Tracker_Artifact $milestone_artifact) {
         return array_values($milestone_artifact->getHierarchyLinkedArtifacts($user));
-    }
-
-    /**
-     * Retrieves the sub-milestones aids of a given parent milestone artifact.
-     *
-     * @param PFUser             $user
-     * @param Tracker_Artifact $milestone_artifact
-     *
-     * @return array of int
-     */
-    private function getSubMilestonesArtifactIds(PFUser $user, Tracker_Artifact $milestone_artifact) {
-        return array_map(array($this, 'getArtifactId'),
-                         $this->getSubMilestonesArtifacts($user, $milestone_artifact));
-    }
-
-    /**
-     * TODO: Make it a Tracker_Artifact static method ?
-     *
-     * @param Tracker_Artifact $artifact
-     *
-     * @return int
-     */
-    private function getArtifactId(Tracker_Artifact $artifact) {
-        return $artifact->getId();
     }
 
     /**

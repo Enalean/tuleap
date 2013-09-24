@@ -1,3 +1,6 @@
+Version 0.13 - Tuleap 6.6
+    * sla #4968: Fix XSS in search enties building
+
 Version 0.12 - Tuleap 6.2
     * Extract mediawiki stats in the plugin
 

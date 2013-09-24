@@ -1,3 +1,15 @@
+Version 0.98 - Tuleap 6.6
+    * Follow-up to request #4965: Caption on button in release content misleading
+
+Version 0.97 - Tuleap 6.5
+    * Fix request #4937: do not allow AgileDashboard with deleted trackers
+
+Version 0.96 - Tuleap 6.5
+    * Remove legacy planning view
+
+Version 0.95 - Tuleap 6.5
+    * Request #4965: Caption on button in release content misleading
+
 Version 0.94 - Tuleap 6.5
     * configure fields displayed on cards
     * fix sla initial effort semantic not inherited

@@ -27,12 +27,19 @@ require_once 'common/mvc2/PluginController.class.php';
  * other classes. 
  */
 class Planning_Controller extends MVC2_PluginController {
-    
-    /**
-     * @var PlanningFactory
-     */
+
+    /** @var PlanningFactory */
     private $planning_factory;
-    
+
+    /** @var Planning_ShortAccessFactory */
+    private $planning_shortaccess_factory;
+
+    /** @var Planning_MilestoneFactory */
+    private $milestone_factory;
+
+    /** @var String*/
+    private $plugin_theme_path;
+
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
@@ -52,25 +59,30 @@ class Planning_Controller extends MVC2_PluginController {
     public function admin() {
         $plannings = $this->planning_factory->getPlannings($this->getCurrentUser(), $this->group_id);
         $presenter = new Planning_ListPresenter($plannings, $this->group_id);
-        $this->render('admin', $presenter);
+        return $this->renderToString('admin', $presenter);
     }
     
     public function index() {
-        $project_id = $this->request->getProject()->getID();
-        $plannings = $this->getPlanningsShortAccess($this->group_id);
+        try {
+            $project_id = $this->request->getProject()->getID();
+            $plannings = $this->getPlanningsShortAccess($this->group_id);
+        } catch (Planning_InvalidConfigurationException $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+            $plannings = array();
+        }
         $presenter = new Planning_IndexPresenter(
             $plannings,
             $this->plugin_theme_path,
             $project_id
         );
-        $this->render('index', $presenter);
+        return $this->renderToString('index', $presenter);
     }
     
     public function new_() {
         $planning  = $this->planning_factory->buildNewPlanning($this->group_id);
         $presenter = $this->getFormPresenter($planning);
         
-        $this->render('new', $presenter);
+        return $this->renderToString('new', $presenter);
     }
     
     public function create() {
@@ -93,7 +105,7 @@ class Planning_Controller extends MVC2_PluginController {
         $planning  = $this->planning_factory->getPlanning($this->request->get('planning_id'));
         $presenter = $this->getFormPresenter($planning);
         
-        $this->render('edit', $presenter);
+        return $this->renderToString('edit', $presenter);
     }
     
     public function update() {
@@ -117,7 +129,7 @@ class Planning_Controller extends MVC2_PluginController {
     public function delete() {
         $this->checkUserIsAdmin();
         $this->planning_factory->deletePlanning($this->request->get('planning_id'));
-        $this->redirect(array('group_id' => $this->group_id));
+        return $this->redirect(array('group_id' => $this->group_id));
     }
 
     /**

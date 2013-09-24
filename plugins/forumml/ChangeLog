@@ -1,3 +1,6 @@
+Version 2.6.15 - Tuleap 6.6
+    * sla #4968: Fix XSS in search enties building
+
 Version 2.6.14 - Tuleap 6.4
     * Update help to refer to the new documentation based on sphinx
 

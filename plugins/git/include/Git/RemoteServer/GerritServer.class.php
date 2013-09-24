@@ -47,6 +47,10 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         $this->use_ssl          = $use_ssl;
     }
 
+    public function __toString() {
+        return __CLASS__ . '#' . $this->id;
+    }
+
     public function getId() {
         return $this->id;
     }

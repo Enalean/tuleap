@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -18,14 +17,32 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once dirname(__FILE__).'/../bootstrap.php';
-class Planning_ItemPresenterTest extends TuleapTestCase {
-    
-    public function itDelegatesToPlanningItem() {
-        $trackers      = array(mock('Tracker'), mock('Tracker'));
-        $planning_item = stub('Planning_Item')->getAllowedChildrenTypes()->returns($trackers);
-        $presenter     = new Planning_ItemPresenter($planning_item, mock('Tracker_CardFields'), mock('Planning_CardDisplayPreferences'), '*');
-        $this->assertEqual($trackers, $presenter->allowedChildrenTypes());
+
+function aGerritServer() {
+    return new Test_GerritServer_Builder();
+}
+
+class Test_GerritServer_Builder {
+    private $id;
+
+    public function withId($id) {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function build() {
+        $host = $ssh_port = $http_port = $login = $identity_file = $replication_key = $use_ssl = 0;
+        return new Git_RemoteServer_GerritServer(
+            $this->id,
+            $host,
+            $ssh_port,
+            $http_port,
+            $login,
+            $identity_file,
+            $replication_key,
+            $use_ssl
+        );
     }
 }
+
 ?>

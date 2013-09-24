@@ -1,3 +1,12 @@
+Version 5.157 - Tuleap 6.6
+    * Add getArtifactHistory SOAP method
+
+Version 5.156 - Tuleap 6.6
+    * Fix request #5050: Performance issue when report uses cross-references field
+
+Version 5.155 - Tuleap 6.5
+    * Fix request #4937: do not allow AgileDashboard with deleted trackers
+
 Version 5.154 - Tuleap 6.5
     * Forbid anonymous user to add and/or update artifacts
 

@@ -51,7 +51,7 @@ class MediaWikiPlugin extends Plugin {
                 $this->_addHook(Event::SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK);
 
                 // Search
-                $this->_addHook('search_type_entry', 'search_type_entry', false);
+                $this->_addHook(Event::LAYOUT_SEARCH_ENTRY);
                 $this->_addHook('search_type', 'search_type', false);
         $this->_addHook('plugin_statistics_service_usage');
 	}
@@ -76,13 +76,12 @@ class MediaWikiPlugin extends Plugin {
             }
         }
 
-        public function search_type_entry($params) {
-                $params['output'] .= '<option value="'. $this->name .'" ';
-                if ($params['type_of_search'] == $this->name) {
-                    $params['output'] .= 'selected="selected"';
-                }
-                $params['output'] .= '>'. 'Mediawiki';
-                $params['output'] .= '</option>';
+        public function layout_search_entry($params) {
+            $params['search_entries'][] = array(
+                'value' => $this->name,
+                'label' => 'Mediawiki',
+                'selected' => $params['type_of_search'] == $this->name,
+            );
         }
 
         public function search_type($params) {

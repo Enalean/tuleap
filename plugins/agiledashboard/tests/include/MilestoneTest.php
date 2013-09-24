@@ -178,31 +178,4 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
     }
 }
 
-class Planning_Milestone_WhenFirstCreatedTest extends TuleapTestCase {
-    private $milestone;
-
-    public function setUp() {
-        $this->project  = stub('Project')->getID()->returns(123);
-        $this->planning  = mock('Planning');
-        $this->artifact  = mock('Tracker_Artifact');
-        $this->milestone = new Planning_ArtifactMilestone($this->project,
-                                                  $this->planning,
-                                                  $this->artifact);
-    }
-    
-    public function itHasNoSubMilestones() {
-        $milestone_plan = new Planning_MilestonePlan($this->milestone, array(), 0, 0);
-        $this->assertIdentical($milestone_plan->getSubMilestones(), array());
-    }
-    
-    public function itAcceptsNewSubMilestones() {
-        $sub_milestone_1 = aMilestone()->withinTheSameProjectAs($this->milestone)->build();
-        $sub_milestone_2 = aMilestone()->withinTheSameProjectAs($this->milestone)->build();
-        
-        $milestone_plan = new Planning_MilestonePlan($this->milestone, array($sub_milestone_1, $sub_milestone_2), 0, 0);
-        $this->assertIdentical($milestone_plan->getSubMilestones(),
-                               array($sub_milestone_1, $sub_milestone_2));
-    }
-}
-
 ?>
