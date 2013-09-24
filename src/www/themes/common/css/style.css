@@ -4792,31 +4792,31 @@ input[type="submit"].btn {
     border-left: 1px solid #eee;
 }
 
-.login form {
+.login-tuleap form {
     width: 200px;
     margin: 0 auto;
 }
 
-.login .form-label {
+.login-tuleap .form-label {
     margin: 10px 0 0;
 }
 
-.login .form-input {
+.login-tuleap .form-input {
     margin: 5px 0 15px;
 }
 
-.login input[type="text"],
-.login input[type="password"]{
+.login-tuleap input[type="text"],
+.login-tuleap input[type="password"]{
     width: 186px;
 }
 
-.login input[type="submit"] {
+.login-tuleap input[type="submit"] {
     height: 40px;
     width: 200px;
     margin-top: 10px;
 }
 
-.login label {
+.login-tuleap label {
     display: block;
 }
 

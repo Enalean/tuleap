@@ -51,7 +51,7 @@
     background: url('../themes/default/images/login-openid.png') no-repeat center -40px;
 }
 
-#login-openid-field {
+#login-openid-form {
     display: none;
     text-align: center;
 }
@@ -59,3 +59,4 @@
 #login-openid-input {
     margin-bottom: 0;
 }
+

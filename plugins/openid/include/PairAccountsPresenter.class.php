@@ -32,6 +32,14 @@ class OpenId_PairAccountsPresenter {
         return $this->getPairingBaseUrl().urlencode('https://me.yahoo.com/');
     }
 
+    public function openid_generic_action() {
+        return OPENID_BASE_URL.'/index.php';
+    }
+
+    public function openid_generic_function() {
+        return OpenId_OpenIdRouter::PAIR_ACCOUNTS;
+    }
+
     public function openid_submit() {
         return $GLOBALS['Language']->getText('account_login', 'openid_submit');
     }

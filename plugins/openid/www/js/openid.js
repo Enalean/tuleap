@@ -18,27 +18,16 @@
   */
 
 (function ($) {
-    var OPENID_KEYBOARD_ENTER_KEY = 13;
+    function openid_transition(event) {
+        event.preventDefault();
+
+        $('#login-openid').fadeOut(200);
+        $(this).replaceWith($('#login-openid-form'));
+        $('#login-openid-form').fadeIn(200);
+        $('#login-openid-input').focus();
+    }
 
     $(document).ready(function () {
-
-        $('#login-openid').on('click', function (event) {
-            event.preventDefault();
-
-            $('#login-openid').fadeOut(200);
-            $(this).replaceWith($('#login-openid-field'));
-            $('#login-openid-field').fadeIn(200);
-            $('#login-openid-input').focus();
-        });
-
-        $('#login-openid-field > a').attr('href', '/plugins/openid/?func=login&openid_url=' + $('#login-openid-input').val());
-        $('#login-openid-input').on(
-            'keyup', function (event) {
-                $('#login-openid-field > a').attr('href', '/plugins/openid/?func=login&openid_url=' + $(this).val());
-
-                if (event.which == OPENID_KEYBOARD_ENTER_KEY) {
-                    document.location = $('#login-openid-field > a').attr('href');
-                }
-            });
+        $('#login-openid').on('click', openid_transition);
     });
 })(jQuery);

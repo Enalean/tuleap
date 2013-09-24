@@ -4,8 +4,9 @@
     <a href="{{{openid_google}}}" class="openid-provider" id="login-google"></a>
     <a href="{{{openid_yahoo}}}" class="openid-provider" id="login-yahoo"></a>
     <a href="#" class="openid-provider" id="login-openid"></a>
-    <div id="login-openid-field">
-        <input id="login-openid-input" type="text">
-        <a class="btn" href="#">{{openid_submit}}</a>
-    </div>
+    <form id="login-openid-form" action="{{{openid_generic_action}}}" method="get">
+        <input type="hidden" name="func" value="{{openid_generic_function}}">
+        <input id="login-openid-input" name="openid_url" type="text">
+        <input type="submit" class="btn" value="{{openid_submit}}">
+    </form>
 </div>
