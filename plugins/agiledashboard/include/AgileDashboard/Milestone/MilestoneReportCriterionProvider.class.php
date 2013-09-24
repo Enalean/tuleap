@@ -53,6 +53,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionProvider extends DataAcce
         $criterion .= $GLOBALS['Language']->getText('plugin_agiledashboard', 'report_criteria_label');
         $criterion .= '</label><br>';
         $criterion .= '<select name="'. self::FIELD_NAME .'" id="tracker_report_crit_agiledashboard_milestone">';
+        $criterion .= '<option value="" >'. $GLOBALS['Language']->getText('global','any') .'</option>';
         $criterion .= implode('', $options);
         $criterion .= '</select>';
 
