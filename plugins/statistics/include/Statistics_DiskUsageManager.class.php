@@ -351,6 +351,36 @@ class Statistics_DiskUsageManager {
         return false;
     }
 
+    public function returnTotalSizeOfProjects($date) {
+        $dao            = $this->_getDao();
+        $projects_sizes = array();
+        $projects       = $dao->searchAllGroups();
+
+        if ($projects && !$projects->isError()) {
+            foreach ($projects as $project) {
+                $projects_sizes[] = $this->returnTotalSizeOfProjectNearDate($project['group_id'], $date);
+            }
+        }
+        return $projects_sizes;
+    }
+
+    public function returnTotalSizeOfProjectNearDate($group_id, $date) {
+        $dao    = $this->_getDao();
+        $result = array();
+
+        $project_size_dar = $dao->returnTotalSizeProjectNearDate($group_id, $date);
+        if ($project_size_dar && !$project_size_dar->isError()) {
+            $project_row  = $project_size_dar->getRow();
+            $project_size = $project_row['size'];
+            $result       = array(
+                'group_id' => $group_id,
+                'result'   => $project_size
+            );
+        }
+
+        return $result;
+    }
+
     /**
      * Get the disk cunsumption per service for a given project
      *

@@ -298,6 +298,13 @@ class Statistics_DiskUsageDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+    public function returnTotalSizeProjectNearDate($group_id, $date) {
+        $sql = 'SELECT sum(size) as size'.
+            ' FROM plugin_statistics_diskusage_group '.
+            ' WHERE '.$this->findFirstDateLowerThan($date, 'plugin_statistics_diskusage_group').
+            ' AND group_id = '.$this->da->escapeInt($group_id);
+        return $this->retrieve($sql);
+    }
      /**
      * Compute evolution size of  project for a given period
      * 
