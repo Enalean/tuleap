@@ -76,8 +76,6 @@ if (!$error && $request->exist('export')) {
     $startDate = $request->get('start');
     $endDate   = $request->get('end');
 
-    $disk_usage_manager = new Statistics_DiskUsageManager();
-
     header('Content-Type: text/csv');
     header('Content-Disposition: filename=services_usage_'.$startDate.'_'.$endDate.'.csv');
     echo "Start date : $startDate \n";
@@ -157,8 +155,8 @@ if (!$error && $request->exist('export')) {
     }
 
     //Disk usage
-    $csv_exporter->buildDatas($disk_usage_manager->returnTotalSizeOfProjects($startDate), "Disk usage at start date");
-    $csv_exporter->buildDatas($disk_usage_manager->returnTotalSizeOfProjects($endDate), "Disk usage at end date");
+    exportDiskUsageForDate($csv_exporter, $startDate, "Disk usage at start date (MB)");
+    exportDiskUsageForDate($csv_exporter, $endDate, "Disk usage at end date (MB)");
 
     // Let plugins add their own data
     EventManager::instance()->processEvent(
@@ -202,4 +200,12 @@ if (!$error && $request->exist('export')) {
     echo '</form>';
     $GLOBALS['HTML']->footer(array());
 }
+
+function exportDiskUsageForDate(Statistics_Services_UsageFormatter $csv_exporter, $date, $column_name) {
+    $disk_usage_manager = new Statistics_DiskUsageManager();
+    $disk_usage = $disk_usage_manager->returnTotalSizeOfProjects($date);
+    $disk_usage = $csv_exporter->formatSizeInMegaBytes($disk_usage);
+    $csv_exporter->buildDatas($disk_usage, $column_name);
+}
+
 ?>
