@@ -103,7 +103,7 @@ account_change_email-complete	message	Bienvenue, $1.<P>Votre changement d'adress
 # Script: SF/www/account/change_pw.php
 #
 account_change_pw	title_success	Mot de passe modifié avec succès
-account_change_pw	message	Félicitations ! Vous venez de changer votre mot de passe. 
+account_change_pw	message	Félicitations ! Vous venez de changer votre mot de passe.
 account_change_pw	title	Changement du mot de passe
 account_change_pw	old_password	Ancien mot de passe
 account_change_pw	new_password	Nouveau mot de passe
@@ -175,7 +175,7 @@ account_login	stay_ssl	Rester en HTTPS après la connexion
 account_login	login_btn	Se connecter
 account_login	lost_pw	Mot de passe perdu ?
 account_login	create_acct	<b><A HREF="register.php">[Créer un nouveau compte]</A></b><BR> Si vous visitez le site <b>$1</b> pour la première fois vous pouvez créer votre compte dès maintenant ! La création d'un <a href="register.php">nouveau compte</a> ne prend que quelques secondes et vous pourrez ensuite tirer parti de tous les avantages offerts par le site $1.
-account_login	login_with_tuleap	Avec vos identifiants $1 ...
+account_login	login_with_tuleap	Avec vos identifiants $1
 account_login	login_with_openid	... ou directement avec
 account_login	openid_submit	Se connecter
 account_login	pair_openid_title	Lier votre compte
@@ -216,7 +216,7 @@ account_myprojectlist	grp_list	Liste de projets pour <B>$1</B>
 #-----------------------------------------------
 # Script: SF/www/account/pending-resend.php
 #
-account_pending-resend	title	Vérification de compte utilisateur en attente 
+account_pending-resend	title	Vérification de compte utilisateur en attente
 account_pending-resend	message	<B>Compte utilisateur en attente</B><P>Votre e-mail de confirmation vient d'être envoyé à nouveau. Visitez le lien inclus dans cet e-mail pour terminer le processus d'enregistrement.
 account_pending-resend	notpending	Ce compte utilisateur n'est pas en attente de vérification.
 account_pending-resend	needapproval	Ce compte doit être approuvé par un administrateur.
@@ -251,7 +251,7 @@ account_register	ldap_email_help	<em><strong>Remarque&nbsp;:</strong> Cette adre
 account_register	codendi_login_help	Ce nom de login a été généré à partir de votre adresse e-mail. Vous pouvez le changer si vous le souhaitez.
 account_register	login_directions	<strong>(minuscules uniquement !)</strong>
 account_register	passwd	Mot de passe
-account_register	passwd_directions	(6 caractères minimum)	
+account_register	passwd_directions	(6 caractères minimum)
 account_register	passwd2	Mot de passe (confirmez)
 account_register	passwd2_directions	&nbsp;
 account_register	realname	Nom Complet
@@ -259,8 +259,8 @@ account_register	realname_directions	&nbsp;
 account_register	email	Adresse e-mail
 account_register	email_directions	<em><strong>Remarque&nbsp;:</strong>Cette adresse e-mail sera vérifiée avant l'activation du compte. Merci de n'utiliser que des adresses e-mails autorisées.</em>
 account_register	expiry_date	Date d'expiration
-account_register	expiry_date_directions	<em><strong>Remarque&nbsp;:</strong> Une fois cette date passée, le compte sera suspendu.</em>	 
-account_register	data_not_parsed		Désolé, le format de la date du d'expiration est incorrect. Il doit suivre le format AAAA-MM-JJ.	 
+account_register	expiry_date_directions	<em><strong>Remarque&nbsp;:</strong> Une fois cette date passée, le compte sera suspendu.</em>
+account_register	data_not_parsed		Désolé, le format de la date du d'expiration est incorrect. Il doit suivre le format AAAA-MM-JJ.
 account_register	tz	Fuseau Horaire
 account_register	mandatory	Les champs marqués $1 sont obligatoires.
 account_register	siteupdate	Recevoir du courrier électronique à propos des mises à jour du site <span style="color:#666">(Faible trafic et informations relatives à la sécurité. Fortement recommandé.)</span>
