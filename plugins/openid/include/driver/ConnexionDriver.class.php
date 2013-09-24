@@ -30,8 +30,7 @@ class Openid_Driver_ConnexionDriver {
 
     private $finish_auth_path;
 
-    const OPENID_STORE_PATH = "/var/tmp/codendi_cache/tuleap_openid_consumer_store";
-    const FINISH_AUTH_PATH  = "update_link.php";
+    const OPENID_STORE_PATH = "openid_consumer_store";
 
     public function __construct(Logger $logger, $finish_auth_path) {
         $this->logger = $logger;
@@ -86,8 +85,12 @@ class Openid_Driver_ConnexionDriver {
         return $auth_request->shouldSendRedirect();
     }
 
+    private function getStorePath() {
+        return Config::get('codendi_cache_dir') . DIRECTORY_SEPARATOR . self::OPENID_STORE_PATH;
+    }
+
     private function getStore() {
-        $store_path = self::OPENID_STORE_PATH;
+        $store_path = $this->getStorePath();
         if (!file_exists($store_path) && !mkdir($store_path)) {
             $this->logger->error("OPENID DRIVER - Unable to create Filestore self::OPENID_STORE_PATH unsufficient permissions");
             throw new OpenId_OpenIdException($GLOBALS['Language']->getText('plugin_openid', 'error_openid_store', Config::get('sys_name')));

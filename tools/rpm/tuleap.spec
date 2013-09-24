@@ -407,6 +407,7 @@ Release: 1%{?dist}
 Allow performances evaluation in Tuleap.
 
 %if %{php_base} == php53
+
 %package plugin-mediawiki
 Summary: Mediawiki plugin
 Group: Development/Tools
@@ -416,6 +417,16 @@ Requires: %{PKG_NAME}-plugin-fusionforge_compat
 Requires: php53-mediawiki-tuleap
 %description plugin-mediawiki
 This plugin provides Mediawiki integration in Tuleap.
+
+%package plugin-openid
+Summary: OpenId consumer plugin
+Group: Development/Tools
+Version: @@PLUGIN_OPENID_VERSION@@
+Release: 1%{?dist}
+Requires: php53-openid
+%description plugin-openid
+Connect to Tuleap using an OpenId provider
+
 %endif
 
 #
@@ -603,14 +614,19 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 # Plugin tracker
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
 
-# Plugin mediawiki
 %if %{php_base} == php53
+# Plugin mediawiki
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/projects
 %{__install} plugins/mediawiki/etc/mediawiki.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
+
+# OpenId
+%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/openid_consumer_store
 %else
+# Plugin mediawiki
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openid
 %endif
 
 #Plugin boomerang
@@ -1044,6 +1060,7 @@ fi
 %dir %{APP_DATA_DIR}/boomerang
 
 %if %{php_base} == php53
+
 %files plugin-mediawiki
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/mediawiki
@@ -1051,6 +1068,12 @@ fi
 %dir %{APP_DATA_DIR}/mediawiki/master
 %dir %{APP_DATA_DIR}/mediawiki/projects
 %attr(644,%{APP_USER},%{APP_USER}) /etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
+
+%files plugin-openid
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/openid
+%{APP_CACHE_DIR}/openid_consumer_store
+
 %endif
 
 #

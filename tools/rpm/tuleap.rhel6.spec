@@ -338,6 +338,15 @@ Release: 1%{?dist}
 %description plugin-boomerang
 Allow performances evaluation in Tuleap.
 
+%package plugin-openid
+Summary: OpenId consumer plugin
+Group: Development/Tools
+Version: @@PLUGIN_OPENID_VERSION@@
+Release: 1%{?dist}
+Requires: php53-openid
+%description plugin-openid
+Connect to Tuleap using an OpenId provider
+
 #
 ## Themes
 #
@@ -532,6 +541,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/projects
 %{__install} plugins/mediawiki/etc/mediawiki.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
+
+# Plugin OpenId
+%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/openid_consumer_store
 
 #Plugin boomerang
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/boomerang
@@ -973,6 +985,11 @@ fi
 %dir %{APP_DATA_DIR}/mediawiki/master
 %dir %{APP_DATA_DIR}/mediawiki/projects
 %attr(644,%{APP_USER},%{APP_USER}) /etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
+
+%files plugin-openid
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/openid
+%{APP_CACHE_DIR}/openid_consumer_store
 
 #
 # Themes
