@@ -27,6 +27,7 @@ class OpenId_OpenIdRouter {
     const PAIR_ACCOUNTS        = 'pair_accounts';
     const FINISH_PAIR_ACCOUNTS = 'finish_pair_accounts';
     const REMOVE_PAIR          = 'remove_pair';
+    const SHOW_PAIR_ACCOUNTS   = 'show_pair_accounts';
 
     private $routes = array(
         self::LOGIN,
@@ -34,6 +35,7 @@ class OpenId_OpenIdRouter {
         self::PAIR_ACCOUNTS,
         self::FINISH_PAIR_ACCOUNTS,
         self::REMOVE_PAIR,
+        self::SHOW_PAIR_ACCOUNTS,
     );
 
     public function __construct(Logger $logger) {

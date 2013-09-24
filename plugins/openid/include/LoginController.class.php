@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class OpenId_LoginController {
+require_once 'common/mvc2/PluginController.class.php';
+
+class OpenId_LoginController extends MVC2_PluginController {
 
     /** @var Logger */
     private $logger;
@@ -26,16 +28,13 @@ class OpenId_LoginController {
     /** @var OpenId_AccountManager */
     private $account_manager;
 
-    /** @var HTTPRequest */
-    private $request;
-
     /** @var Layout */
     private $response;
 
     public function __construct(Logger $logger, OpenId_AccountManager $account_manager, HTTPRequest $request, Layout $response) {
+        parent::__construct('openid', $request);
         $this->logger          = $logger;
         $this->account_manager = $account_manager;
-        $this->request         = $request;
         $this->response        = $response;
     }
 
@@ -107,6 +106,12 @@ class OpenId_LoginController {
     public function remove_pair() {
         $this->account_manager->removePair($this->request->getCurrentUser());
         $this->response->redirect('/account/');
+    }
+
+    public function show_pair_accounts() {
+        $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('account_login', 'pair_openid_title')));
+        $this->render('show_pair_accounts', new OpenId_PairAccountsPresenter());
+        $GLOBALS['HTML']->footer(array());
     }
 }
 

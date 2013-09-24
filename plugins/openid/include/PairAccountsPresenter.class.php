@@ -18,26 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/user/LoginPresenter.class.php';
-
-class OpenId_LoginPresenter extends User_LoginPresenter {
-
-    public function __construct(User_LoginPresenter $login_presenter) {
-        parent::__construct(
-            $login_presenter->getPurifier(),
-            $login_presenter->getReturnTo(),
-            $login_presenter->getPv(),
-            $login_presenter->getFormLoginName(),
-            $login_presenter->getToggleSsl()
-        );
-    }
-
-    public function getTemplateDir() {
-        return dirname(dirname(__FILE__)) . '/templates/';
-    }
+class OpenId_PairAccountsPresenter {
 
     private function getPairingBaseUrl() {
-        return OPENID_BASE_URL.'/index.php?func='.OpenId_OpenIdRouter::LOGIN.'&openid_url=';
+        return OPENID_BASE_URL.'/index.php?func='.OpenId_OpenIdRouter::PAIR_ACCOUNTS.'&openid_url=';
     }
 
     public function openid_google() {
@@ -52,8 +36,12 @@ class OpenId_LoginPresenter extends User_LoginPresenter {
         return $GLOBALS['Language']->getText('account_login', 'openid_submit');
     }
 
+    public function account_login_pair_openid_title() {
+        return $GLOBALS['Language']->getText('account_login', 'pair_openid_title');
+    }
+
     public function account_login_login_with_openid() {
-        return $GLOBALS['Language']->getText('account_login', 'login_with_openid');
+        return $GLOBALS['Language']->getText('account_login', 'pair_openid');
     }
 }
 

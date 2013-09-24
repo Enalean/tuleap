@@ -44,17 +44,7 @@
         </div>
 
         <div class="span6">
-            <div>
-            <h3>{{account_login_login_with_openid}}</h3>
-
-            <a href="/plugins/openid/index.php?func=login&openid_url={{{openid_google}}}" class="openid-provider" id="login-google"></a>
-            <a href="/plugins/openid/index.php?func=login&openid_url={{{openid_yahoo}}}" class="openid-provider" id="login-yahoo"></a>
-            <a href="#" class="openid-provider" id="login-openid"></a>
-            <div id="login-openid-field">
-              <input id="login-openid-input" type="text">
-              <a class="btn" href="#">{{openid_submit}}</a>
-            </div>
-            </div>
+            {{> openid_selectors }}
         </div>
     </div>
 

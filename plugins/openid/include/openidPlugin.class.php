@@ -48,7 +48,7 @@ class OpenidPlugin extends Plugin {
             $params['entry_change'][$this->getId()] = '<a href="'.OPENID_BASE_URL.'/?func='.OpenId_OpenIdRouter::REMOVE_PAIR.'">['.$GLOBALS['Language']->getText('plugin_openid', 'remove_openid').']</a>';
         } else {
             $params['entry_value'][$this->getId()]  = '';
-            $params['entry_change'][$this->getId()] = '<a href="'.OPENID_BASE_URL.'/?func='.OpenId_OpenIdRouter::PAIR_ACCOUNTS.'">['.$GLOBALS['Language']->getText('plugin_openid', 'add_openid').']</a>';
+            $params['entry_change'][$this->getId()] = '<a href="'.OPENID_BASE_URL.'/?func='.OpenId_OpenIdRouter::SHOW_PAIR_ACCOUNTS.'">['.$GLOBALS['Language']->getText('plugin_openid', 'add_openid').']</a>';
         }
     }
 

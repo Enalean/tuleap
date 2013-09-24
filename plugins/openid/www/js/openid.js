@@ -18,6 +18,8 @@
   */
 
 (function ($) {
+    var OPENID_KEYBOARD_ENTER_KEY = 13;
+
     $(document).ready(function () {
 
         $('#login-openid').on('click', function (event) {
@@ -29,12 +31,12 @@
             $('#login-openid-input').focus();
         });
 
-
+        $('#login-openid-field > a').attr('href', '/plugins/openid/?func=login&openid_url=' + $('#login-openid-input').val());
         $('#login-openid-input').on(
-            'keypress', function (event) {
+            'keyup', function (event) {
                 $('#login-openid-field > a').attr('href', '/plugins/openid/?func=login&openid_url=' + $(this).val());
 
-                if (event.which == 13) {
+                if (event.which == OPENID_KEYBOARD_ENTER_KEY) {
                     document.location = $('#login-openid-field > a').attr('href');
                 }
             });

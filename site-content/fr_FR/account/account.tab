@@ -178,6 +178,8 @@ account_login	create_acct	<b><A HREF="register.php">[Créer un nouveau compte]</
 account_login	login_with_tuleap	Avec vos identifiants $1 ...
 account_login	login_with_openid	... ou directement avec
 account_login	openid_submit	Se connecter
+account_login	pair_openid_title	Lier votre compte
+account_login	pair_openid	Lier votre compte à un de ces fournisseurs OpenID :
 account_login	help	Si vous avez un problème pour vous authentifier, merci d'envoyer un email aux <a href="mailto:$1?Subject=Impossible de se connecter sur $2">administrateurs $2</a>
 #
 #-----------------------------------------------

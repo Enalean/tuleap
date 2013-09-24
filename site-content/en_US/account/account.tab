@@ -186,6 +186,8 @@ account_login	login_with_tuleap	Login with $1 credentials...
 account_login	login_with_openid	...or directly with
 account_login	page_title	$1 login
 account_login	openid_submit	Login
+account_login	pair_openid_title	Account pairing
+account_login	pair_openid	Pair your account with one of these providers:
 account_login	help	If you encounter any problem to login, please send a email to <a href="mailto:$1?Subject=Unable to login under $2">$2 administrators</a>
 #
 #-----------------------------------------------
