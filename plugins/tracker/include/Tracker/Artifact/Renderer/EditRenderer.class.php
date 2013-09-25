@@ -64,8 +64,20 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
     protected function fetchFormContent(Codendi_Request $request, PFUser $current_user) {
         $html  = '';
+        $html .= $this->fetchArtifactInformations($this->artifact);
         $html .= $this->fetchTitleInHierarchy($this->hierarchy);
         $html .= $this->fetchView($request, $current_user);
+        return $html;
+    }
+
+    private function fetchArtifactInformations(Tracker_Artifact $artifact) {
+        $html          = "";
+        $html_purifier = Codendi_HTMLPurifier::instance();
+        $artifact_id   = $html_purifier->purify($artifact->getId());
+        $changeset_id  = $html_purifier->purify($artifact->getLastChangeset()->getId());
+
+        $html .= '<input type="hidden" id="artifact_informations" data-artifact-id="'.$artifact_id.'" data-changeset-id="'.$changeset_id.'">';
+
         return $html;
     }
 
