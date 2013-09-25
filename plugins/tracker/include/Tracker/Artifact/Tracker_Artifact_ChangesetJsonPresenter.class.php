@@ -41,6 +41,10 @@ class Tracker_Artifact_ChangesetJsonPresenter {
     public function diff() {
         return $this->changeset->diffToPrevious();
     }
+
+    public function got_it() {
+        return $GLOBALS['Language']->getText('plugin_tracker', 'artifact_update_popup_got_it');
+    }
 }
 
 ?>

@@ -1793,6 +1793,11 @@ class Layout extends Response {
         echo $this->getToolbar();
         echo $this->_getFeedback();
         $this->_feedback->display();
+        echo $this->getNotificationPlaceholder();
+    }
+
+    public function getNotificationPlaceholder() {
+        return '<div id="notification-placeholder"></div>';
     }
 
     function feedback($feedback) {
