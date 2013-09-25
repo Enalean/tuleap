@@ -634,6 +634,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $renderer = new Tracker_Artifact_EditOverlayRenderer($this, $this->getEventManager());
                 $renderer->display($request, $current_user);
                 break;
+            case 'get-new-changesets':
+                $changeset_id = $request->getValidated('changeset_id', 'uint', 0);
+                $changeset_factory = $this->getChangesetFactory();
+                $GLOBALS['Response']->sendJSON($changeset_factory->getNewChangesetsFormattedForJson($this, $changeset_id));
+                break;
             default:
                 if ($request->isAjax()) {
                     echo $this->fetchTooltip($current_user);
@@ -1124,14 +1129,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getChangesets() {
         if (!$this->changesets) {
-            $this->changesets = array();
-            foreach ($this->getChangesetDao()->searchByArtifactId($this->id) as $row) {
-                $this->changesets[$row['id']] = new Tracker_Artifact_Changeset($row['id'],
-                                                            $this,
-                                                            $row['submitted_by'],
-                                                            $row['submitted_on'],
-                                                            $row['email']);
-            }
+            $this->changesets = $this->getChangesetFactory()->getChangesetsForArtifact($this);
         }
         return $this->changesets;
     }
@@ -1172,6 +1170,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
+     * @return Tracker_Artifact_ChangesetFactory
+     */
+    protected function getChangesetFactory() {
+        return new Tracker_Artifact_ChangesetFactory($this->getChangesetDao());
+    }
+
+    /**
      * Return the ChangesetCommentDao
      *
      * @return Tracker_Artifact_Changeset_CommentDao The Dao
@@ -1188,20 +1193,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Tracker_Artifact_Changeset The changeset, or null if not found
      */
     public function getChangeset($changeset_id) {
-        $c = null;
-        if ($this->changesets && isset($this->changesets[$changeset_id])) {
-            $c = $this->changesets[$changeset_id];
-        } else {
-            if ($row = $this->getChangesetDao()->searchByArtifactIdAndChangesetId($this->id, $changeset_id)->getRow()) {
-                $c = new Tracker_Artifact_Changeset($row['id'],
-                                           $this,
-                                           $row['submitted_by'],
-                                           $row['submitted_on'],
-                                           $row['email']);
-                $this->changesets[$changeset_id] = $c;
-            }
+        if (! isset($this->changesets[$changeset_id])) {
+            $this->changesets[$changeset_id] = $this->getChangesetFactory()->getChangeset($this, $changeset_id);
         }
-        return $c;
+        return $this->changesets[$changeset_id];
     }
 
     /**

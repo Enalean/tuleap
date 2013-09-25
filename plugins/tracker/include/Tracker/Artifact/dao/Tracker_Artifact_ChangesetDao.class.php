@@ -92,6 +92,27 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     * We need both artifact_id and changset_id so we ensure we fetch the changeset of an artifact we are allowed to see
+     *
+     * @param Integer $artifact_id
+     * @param Integer $changeset_id
+     *
+     * @return DataAccessResult
+     */
+    public function searchChangesetNewerThan($artifact_id, $changeset_id) {
+        $artifact_id  = $this->da->escapeInt($artifact_id);
+        $changeset_id = $this->da->escapeInt($changeset_id);
+
+        $sql = "SELECT c_new.*
+                FROM tracker_changeset c_new
+                    JOIN tracker_changeset c_ref ON (c_ref.artifact_id = c_new.artifact_id)
+                WHERE c_ref.id = $changeset_id
+                    AND c_ref.artifact_id = $artifact_id
+                    AND c_new.id > c_ref.id
+                ORDER BY c_new.id ASC";
+        return $this->retrieve($sql);
+    }
 }
 
 ?>

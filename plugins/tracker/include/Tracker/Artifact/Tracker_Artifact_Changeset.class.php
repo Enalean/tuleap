@@ -24,7 +24,7 @@ require_once('common/mail/MailManager.class.php');
 require_once('common/language/BaseLanguageFactory.class.php');
 require_once('utils.php');
 
-class Tracker_Artifact_Changeset {
+class Tracker_Artifact_Changeset implements Tracker_IProvideJsonFormatOfMyself {
     public $id;
     public $artifact;
     public $submitted_by;
@@ -868,6 +868,17 @@ class Tracker_Artifact_Changeset {
      */
     public function getUri() {
         return  TRACKER_BASE_URL.'?aid='.$this->getArtifact()->getId().'#followup_'.$this->getId();
+    }
+
+    public function fetchFormattedForJson() {
+        return array(
+            'id' => $this->getId(),
+            'submitted_by' => $this->getSubmittedBy(),
+            'submitted_on' => date('c', $this->getSubmittedOn()),
+            'email' => $this->getEmail(),
+            'body_html'  => $this->getComment()->fetchFollowUp(),
+            'diff_html' => $this->diffToPrevious(),
+        );
     }
 }
 ?>

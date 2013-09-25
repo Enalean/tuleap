@@ -412,4 +412,33 @@ class Tracker_Artifact_ChangesetDeleteTest extends TuleapTestCase {
     }
 }
 
+class Tracker_Artifact_ChangesetJsonTest extends TuleapTestCase {
+
+    public function itHasJsonRepresentation() {
+        $timestamp = mktime(1,1,1,9,25,2013);
+        $changeset = new Tracker_Artifact_Changeset(
+            15,
+            aMockArtifact()->build(),
+            45,
+            $timestamp,
+            ''
+        );
+        $comment = mock('Tracker_Artifact_Changeset_Comment');
+        stub($comment)->fetchFollowUp()->returns('body');
+        $changeset->setLatestComment($comment);
+
+        $this->assertEqual(
+            $changeset->fetchFormattedForJson(),
+            array(
+                'id'           => 15,
+                'submitted_by' => 45,
+                'submitted_on' => date('c', $timestamp),
+                'email'        => '',
+                'body_html'    => 'body',
+                'diff_html'    => '',
+            )
+        );
+    }
+}
+
 ?>

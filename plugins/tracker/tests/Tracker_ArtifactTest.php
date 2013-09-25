@@ -1972,6 +1972,7 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
 }
 
 class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
+    private $changeset_dao;
 
     public function setUp() {
         parent::setUp();
@@ -1979,6 +1980,7 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         $this->submitter   = aUser()->build();
         $this->email       = 'toto@example.net';
 
+        $this->changeset_dao  = mock('Tracker_Artifact_ChangesetDao');
         $this->changesets  = array(new Tracker_Artifact_Changeset_Null());
         $factory     = mock('Tracker_FormElementFactory');
         stub($factory)->getAllFormElementsForTracker()->returns(array());
@@ -1986,15 +1988,16 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
 
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
         $this->workflow = mock('Workflow');
-        $this->changeset_dao  = mock('Tracker_Artifact_ChangesetDao');
-        stub($this->changeset_dao)->searchByArtifactIdAndChangesetId()->returnsDar(array(
-            'id'           => 123,
-            'submitted_by' => 12,
-            'submitted_on' => 21,
-            'email'        => ''
+        $this->changeset_factory  = mock('Tracker_Artifact_ChangesetFactory');
+        stub($this->changeset_factory)->getChangeset()->returns(new Tracker_Artifact_Changeset(
+            123,
+            aMockArtifact()->build(),
+            12,
+            21,
+            ''
         ));
         $tracker        = stub('Tracker')->getWorkflow()->returns($this->workflow);
-        $this->artifact = partial_mock('Tracker_Artifact', array('validateFields','getChangesetDao','getChangesetCommentDao', 'getReferenceManager'));
+        $this->artifact = partial_mock('Tracker_Artifact', array('validateFields','getChangesetDao','getChangesetCommentDao', 'getReferenceManager', 'getChangesetFactory'));
         $this->artifact->setId(42);
         $this->artifact->setTracker($tracker);
         $this->artifact->setChangesets($this->changesets);
@@ -2002,6 +2005,7 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         $this->artifact->setArtifactFactory($this->artifact_factory);
         stub($this->artifact)->validateFields()->returns(true);
         stub($this->artifact)->getChangesetDao()->returns($this->changeset_dao);
+        stub($this->artifact)->getChangesetFactory()->returns($this->changeset_factory);
         stub($this->artifact)->getChangesetCommentDao()->returns(mock('Tracker_Artifact_Changeset_CommentDao'));
         stub($this->artifact)->getReferenceManager()->returns(mock('ReferenceManager'));
 
