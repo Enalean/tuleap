@@ -21,29 +21,33 @@
 /**
  * I am a helper to provide a selectbox as a criterion in the tracker report to choose a milestone for a given tracker
  */
-class AgileDashboard_Milestone_MilestoneReportCriterionProvider extends DataAccessObject {
+class AgileDashboard_Milestone_MilestoneReportCriterionProvider {
 
     const FIELD_NAME = 'agiledashboard_milestone';
+    const ANY        = '';
 
     /** @var AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider */
     private $options_provider;
 
-    /** @var Codendi_Request */
-    private $request;
+    /** @var AgileDashboard_Milestone_SelectedMilestoneIdProvider */
+    private $milestone_id_provider;
 
     public function __construct(
-        Codendi_Request $request,
+        AgileDashboard_Milestone_SelectedMilestoneIdProvider $milestone_id_provider,
         AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider $options_provider
     ) {
-        $this->request          = $request;
-        $this->options_provider = $options_provider;
+        $this->milestone_id_provider = $milestone_id_provider;
+        $this->options_provider      = $options_provider;
     }
 
     /**
      * @return string
      */
     public function getCriterion(Tracker $backlog_tracker) {
-        $options = $this->options_provider->getSelectboxOptions($backlog_tracker, $this->request->get(self::FIELD_NAME));
+        $options = $this->options_provider->getSelectboxOptions(
+            $backlog_tracker,
+            $this->milestone_id_provider->getMilestoneId()
+        );
         if (! $options) {
             return null;
         }
@@ -52,7 +56,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionProvider extends DataAcce
         $criterion .= '<label for="tracker_report_crit_agiledashboard_milestone">';
         $criterion .= $GLOBALS['Language']->getText('plugin_agiledashboard', 'report_criteria_label');
         $criterion .= '</label><br>';
-        $criterion .= '<select name="'. self::FIELD_NAME .'" id="tracker_report_crit_agiledashboard_milestone">';
+        $criterion .= '<select name="additional_criteria['.self::FIELD_NAME.']" id="tracker_report_crit_agiledashboard_milestone">';
         $criterion .= '<option value="" >'. $GLOBALS['Language']->getText('global','any') .'</option>';
         $criterion .= implode('', $options);
         $criterion .= '</select>';

@@ -172,9 +172,10 @@ define('TRACKER_EVENT_GET_SEMANTIC_FACTORIES', 'tracker_event_get_semantic_facto
  * Get the various criteria that may enhance a report
  *
  * Parameters:
- *  'array_of_html_criteria' string[] (OUT) html code to be included in the criteria list
- *  'tracker'                Tracker  (IN)  the current tracker
- *  'user'                   PFUser   (IN)  the current user
+ *  'array_of_html_criteria' string[]                (OUT) html code to be included in the criteria list
+ *  'tracker'                Tracker                 (IN)  the current tracker
+ *  'additional_criteria'    Tracker_Report_AdditionalCriteria[]  (IN)
+ *  'user'                   PFUser                  (IN)  the current user
  */
 define('TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA', 'tracker_event_report_display_additional_criteria');
 
@@ -186,6 +187,7 @@ define('TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA', 'tracker_event_report
  * 'result'                 array
  * 'search_performed'       Boolean
  * 'tracker'                Tracker  (IN)     the current tracker
+ * 'additional_criteria'    Tracker_Report_AdditionalCriteria[]  (IN)
  */
 define('TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY', 'tracker_event_report_process_additional_query');
 ?>

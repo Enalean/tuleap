@@ -90,7 +90,7 @@ class AgileDashboardPlugin extends Plugin {
 
         $planning_factory = $this->getPlanningFactory();
         $provider = new AgileDashboard_Milestone_MilestoneReportCriterionProvider(
-            HTTPRequest::instance(),
+            new AgileDashboard_Milestone_SelectedMilestoneIdProvider($params['additional_criteria']),
             new AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider(
                 new AgileDashboard_Planning_NearestPlanningTrackerProvider($planning_factory),
                 new AgileDashboard_Milestone_MilestoneDao(),
@@ -112,7 +112,13 @@ class AgileDashboardPlugin extends Plugin {
      */
     public function tracker_event_report_process_additional_query($params) {
         $backlog_tracker = $params['tracker'];
-        $milestone_id    = $params['request']->get(AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME);
+
+        $milestone_id_provider = new AgileDashboard_Milestone_SelectedMilestoneIdProvider($params['additional_criteria']);
+        $milestone_id = $milestone_id_provider->getMilestoneId();
+        if (! $milestone_id) {
+            return;
+        }
+
         $provider        = new AgileDashboard_BacklogItem_SubBacklogItemProvider(
             new AgileDashboard_BacklogItem_SubBacklogItemDao(),
             new AgileDashboard_Planning_ParentBacklogTrackerCollectionProvider()

@@ -498,7 +498,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $i;
     }
     
-    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, PFUser $current_user) {
+    public function fetchDisplayQuery(array $criteria, array $additional_criteria, $report_can_be_modified, PFUser $current_user) {
         $hp              = Codendi_HTMLPurifier::instance();
         $user_can_update = $this->userCanUpdate($current_user);
 
@@ -537,6 +537,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             array(
                 'array_of_html_criteria' => &$array_of_html_criteria,
                 'tracker'                => $this->getTracker(),
+                'additional_criteria'    => $additional_criteria,
                 'user'                   => $current_user,
             )
         );
@@ -623,7 +624,15 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     }
                 }
             }
-            $html .= $this->fetchDisplayQuery($registered_criteria, $report_can_be_modified, $current_user);
+            $additional_criteria_values = $this->report_session->getAdditionalCriteria();
+            $additional_criteria        = array();
+            if ($additional_criteria_values) {
+                foreach ($additional_criteria_values as $key => $additional_criterion_value) {
+                    $additional_criterion      = new Tracker_Report_AdditionalCriterion($key, $additional_criterion_value['value']);
+                    $additional_criteria[$key] = $additional_criterion;
+                }
+            }
+            $html .= $this->fetchDisplayQuery($registered_criteria, $additional_criteria, $report_can_be_modified, $current_user);
             
             //Display Renderers
             $html .= '<div>';
@@ -816,7 +825,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 EventManager::instance()->processEvent('tracker_report_followup_warning', $params);
                 $html .= $fts_warning;
 
-                $html .= $current_renderer->fetch($this->joinResults($request), $request, $report_can_be_modified, $current_user);
+                $html .= $current_renderer->fetch($this->joinResults($request, $additional_criteria), $request, $report_can_be_modified, $current_user);
                 $html .= '</div>';
             }
             $html .= '</div>';
@@ -836,7 +845,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
      *
      * @return array
      */
-    private function joinResults($request) {
+    private function joinResults($request, $additional_criteria) {
         $matching_ids = $this->getLastChangesetIdByArtifactId($request, false);
 
         $result           = array();
@@ -844,10 +853,11 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         EventManager::instance()->processEvent(
             TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY,
             array(
-                'request'          => $request,
-                'result'           => &$result,
-                'search_performed' => &$search_performed,
-                'tracker'          => $this->getTracker()
+                'request'             => $request,
+                'result'              => &$result,
+                'search_performed'    => &$search_performed,
+                'tracker'             => $this->getTracker(),
+                'additional_criteria' => $additional_criteria
             )
         );
         if ($search_performed) {
@@ -1012,7 +1022,14 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             }
         }        
     }
-    
+
+    public function updateAdditionalCriteriaValues($additional_criteria_values) {
+        foreach($additional_criteria_values as $key => $new_value) {
+            $additional_criterion = new Tracker_Report_AdditionalCriterion($key, $new_value);
+            $this->report_session->storeAdditionalCriterion($additional_criterion);
+        }
+    }
+
     /**
      * Process the request for the specified renderer
      * @param int $renderer_id
@@ -1306,6 +1323,9 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 if ($request->get('tracker_query_submit') && is_array($request->get('criteria'))) {
                     $criteria_values = $request->get('criteria');
                     $this->updateCriteriaValues($criteria_values);
+
+                    $additional_criteria_values = $request->get('additional_criteria');
+                    $this->updateAdditionalCriteriaValues($additional_criteria_values);
                 }
                 $this->display($layout, $request, $current_user);
                 break;
@@ -1339,7 +1359,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $session_criteria = $this->report_session->getCriteria();
         if (is_array($session_criteria)) {
             foreach($session_criteria as $key=>$session_criterion) {
-                if ( !empty($session_criterion['is_removed']) ) {
+                if ( !empty($session_criterion['is_removed']) || $key =='agiledashboard_milestone' ) {
                     continue;
                 }
                 $c  = $this->criteria[$key];

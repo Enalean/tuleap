@@ -4,12 +4,13 @@ require_once('bootstrap.php');
 //Mock::generatePartial('Tracker_Report_Session', 'Mock_Tracker_Report_Session', array('getSessionNamespace') );
 
 
-class Tracker_Report_SessionTest extends UnitTestCase {
+class Tracker_Report_SessionTest extends TuleapTestCase {
 
     protected $report_id;
     protected $tracker_report_session;
 
     public function setUp() {
+        parent::setUp();
         $this->report_id = 111;
         //$this->tracker_report_session = new Mock_Tracker_Report_Session($this);
         $this->tracker_report_session = new Tracker_Report_Session($this->report_id);
@@ -21,6 +22,7 @@ class Tracker_Report_SessionTest extends UnitTestCase {
     public function tearDown() {
         unset($_SESSION['Tracker_Report_SessionTest']);
         unset($this->tracker_report_session);
+        parent::tearDown();
     }
     
     public function test_removeCriterion() {
@@ -53,6 +55,16 @@ class Tracker_Report_SessionTest extends UnitTestCase {
         $this->assertTrue(isset($session['criteria']['4']['is_advanced']));
         $this->assertEqual($session['criteria']['4']['is_advanced'], 1 );
         $this->assertEqual($session['criteria']['4']['is_removed'], 0);
+    }
+
+    public function itStoresAdditionalCriterion() {
+        $session = &$this->tracker_report_session->getSessionNamespace();
+        $additional_criterion = new Tracker_Report_AdditionalCriterion('agiledashboard_milestone', array('tintin'=>'lachipo', 'kiki'=>'labrouette'));
+        $this->tracker_report_session->storeAdditionalCriterion($additional_criterion);
+        $this->assertEqual(
+            $session['additional_criteria']['agiledashboard_milestone']['value'],
+            $additional_criterion->getValue()
+        );
     }
 
     public function test_getCriterion() {
