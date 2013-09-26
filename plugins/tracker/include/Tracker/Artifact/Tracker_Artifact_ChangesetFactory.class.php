@@ -19,10 +19,15 @@
  */
 
 class Tracker_Artifact_ChangesetFactory {
+    /** Tracker_Artifact_ChangesetDao */
     private $dao;
 
-    public function __construct(Tracker_Artifact_ChangesetDao $dao) {
+    /** @var Tracker_Artifact_ChangesetJsonFormatter */
+    private $json_formatter;
+
+    public function __construct(Tracker_Artifact_ChangesetDao $dao, Tracker_Artifact_ChangesetJsonFormatter $json_formatter) {
         $this->dao = $dao;
+        $this->json_formatter = $json_formatter;
     }
 
     /**
@@ -64,7 +69,7 @@ class Tracker_Artifact_ChangesetFactory {
     public function getNewChangesetsFormattedForJson(Tracker_Artifact $artifact, $changeset_id) {
         $changesets = array();
         foreach ($this->dao->searchChangesetNewerThan($artifact->getId(), $changeset_id) as $row) {
-            $changesets[] = $this->getChangesetFromRow($artifact, $row)->fetchFormattedForJson();
+            $changesets[] = $this->json_formatter->format($this->getChangesetFromRow($artifact, $row));
         }
         return $changesets;
     }
