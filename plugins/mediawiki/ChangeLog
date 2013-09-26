@@ -1,3 +1,6 @@
+Version 0.14 - Tuleap 6.6
+    * Fix request #5185: Wrong color for links in mediawiki pages
+
 Version 0.13 - Tuleap 6.6
     * sla #4968: Fix XSS in search enties building
 
