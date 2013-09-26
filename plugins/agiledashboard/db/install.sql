@@ -32,8 +32,7 @@ CREATE TABLE plugin_cardwall_semantic_cardfields (
 
 DROP TABLE IF EXISTS plugin_agiledashboard_criteria;
 CREATE TABLE IF NOT EXISTS plugin_agiledashboard_criteria (
-    id INT(11) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    report_id INT(11) NOT NULL,
+    report_id INT(11) PRIMARY KEY,
     milestone_id INT(11) NOT NULL
 );
 

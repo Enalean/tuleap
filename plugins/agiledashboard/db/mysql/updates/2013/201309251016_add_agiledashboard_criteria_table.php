@@ -35,8 +35,7 @@ EOT;
 
     public function up() {
         $sql = "CREATE TABLE IF NOT EXISTS plugin_agiledashboard_criteria (
-                    id INT(11) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-                    report_id INT(11) NOT NULL,
+                    report_id INT(11) PRIMARY KEY,
                     milestone_id INT(11) NOT NULL
                 )";
         $this->db->createTable('plugin_agiledashboard_criteria', $sql);

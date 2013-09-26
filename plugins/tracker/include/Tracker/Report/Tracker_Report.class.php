@@ -624,14 +624,8 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     }
                 }
             }
-            $additional_criteria_values = $this->report_session->getAdditionalCriteria();
-            $additional_criteria        = array();
-            if ($additional_criteria_values) {
-                foreach ($additional_criteria_values as $key => $additional_criterion_value) {
-                    $additional_criterion      = new Tracker_Report_AdditionalCriterion($key, $additional_criterion_value['value']);
-                    $additional_criteria[$key] = $additional_criterion;
-                }
-            }
+            $additional_criteria = $this->getAdditionalCriteria();
+
             $html .= $this->fetchDisplayQuery($registered_criteria, $additional_criteria, $report_can_be_modified, $current_user);
             
             //Display Renderers
@@ -1248,6 +1242,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             case self::ACTION_SAVE:
                 Tracker_ReportFactory::instance()->save($this);
                 $this->saveCriteria();
+                $this->saveAdditionalCriteria();
                 $this->saveRenderers();
                 //Clean session
                 $this->report_session->cleanNamespace();
@@ -1275,6 +1270,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     $this->report_session->cleanNamespace();
                     //save session content into db
                     $new_report->saveCriteria();
+                    $new_report->saveAdditionalCriteria();
                     $new_report->saveRenderers();
                     $new_report->report_session->cleanNamespace();
                 }
@@ -1368,6 +1364,17 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 $c->updateValue($session_criterion['value']);
             }
         }
+    }
+
+    public function saveAdditionalCriteria() {
+        $additional_criteria = $this->getAdditionalCriteria();
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA,
+            array(
+                'additional_criteria'    => $additional_criteria,
+                'report'                 => $this,
+            )
+        );
     }
 
     /**
@@ -1501,6 +1508,41 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $this->dao = new Tracker_ReportDao();
         }
         return $this->dao;
+    }
+
+    public function getId() {
+        return $this->id;
+    }
+
+    private function getAdditionalCriteria() {
+        $session_additional_criteria = null;
+        if (isset($this->report_session)) {
+            $session_additional_criteria = &$this->report_session->getAdditionalCriteria();
+        }
+
+        $additional_criteria = array();
+        if ($session_additional_criteria) {
+            foreach ($session_additional_criteria as $key => $additional_criterion_value) {
+                $additional_criterion      = new Tracker_Report_AdditionalCriterion($key, $additional_criterion_value['value']);
+                $additional_criteria[$key] = $additional_criterion;
+            }
+        } else {
+            $additional_criteria_values = array();
+            EventManager::instance()->processEvent(
+                TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA,
+                array(
+                    'additional_criteria_values' => &$additional_criteria_values,
+                    'report'                     => $this,
+                )
+            );
+            foreach ($additional_criteria_values as $key => $additional_criterion_value) {
+                $additional_criterion      = new Tracker_Report_AdditionalCriterion($key, $additional_criterion_value['value']);
+                $additional_criteria[$key] = $additional_criterion;
+                $this->report_session->storeAdditionalCriterion($additional_criterion);
+            }
+        }
+
+        return $additional_criteria;
     }
 }
 
