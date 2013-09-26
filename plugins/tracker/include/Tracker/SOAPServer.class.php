@@ -393,6 +393,8 @@ class Tracker_SOAPServer {
             $this->checkUserCanViewTracker($tracker, $user);
 
             $fields_data = $this->getArtifactDataFromSoapRequest($tracker, $value);
+            $fields_data = $this->formelement_factory->getUsedFieldsWithDefaultValueForSoap($tracker, $fields_data);
+
             if ($artifact = $this->artifact_factory->createArtifact($tracker, $fields_data, $user, null)) {
                 return $artifact->getId();
             } else {
@@ -435,9 +437,7 @@ class Tracker_SOAPServer {
                 }
             }
         }
-        //We augment fields_data with fields which have a default value defined
-        $fields_data = $this->formelement_factory->getUsedFieldsWithDefaultValueForSoap($tracker, $fields_data);
-
+        
         return $fields_data;
     }
 
