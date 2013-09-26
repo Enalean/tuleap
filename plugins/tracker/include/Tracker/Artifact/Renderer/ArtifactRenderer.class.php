@@ -108,9 +108,13 @@ abstract class Tracker_Artifact_ArtifactRenderer {
      * @return string The HTML code for submit buttons
      */
     public function fetchSubmitButton() {
-        return '<p style="text-align:center;">
+        return '<p class="artifact-submit-button">
                   <input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />
                   <input type="submit" name="submit_and_stay" value="'. $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') .'" />
+                  <div id="artifact-submit-keeper-message">
+                  <span class="help_title">'. $GLOBALS['Language']->getText('plugin_tracker_artifact', 'submission_keeper_warning_title') .'</span>
+                  '. $GLOBALS['Language']->getText('plugin_tracker_artifact', 'submission_keeper_warning_msg') .'
+                  </div>
                 </p>';
     }
 

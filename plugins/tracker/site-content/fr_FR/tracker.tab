@@ -1003,6 +1003,9 @@ plugin_tracker_artifact	global_rules_not_valid	Règles globales non respectées
 plugin_tracker_artifact	edit_title	Artefact
 plugin_tracker_artifact	hierarchy_title	Enfants
 
+plugin_tracker_artifact	submission_keeper_warning_title	Attention: édition concurrente
+plugin_tracker_artifact	submission_keeper_warning_msg	<p>Quelqu'un a modifié l'artefact pendant que vous l'éditiez.</p><p>Merci d'accuser réception des notifications.</p><p>Attention, lors de la mise à jour, vos modifications seront appliquées par dessus les autres changements.</p>
+
 plugin_tracker_artifactlink	go_to_tracker	Aller voir cet outil de suivi
 plugin_tracker_artifactlink	manual_panel_desc	Si vous connaissez l'id de l'artefact, entrez-le manuellement dans le champs texte ci-dessous. Le champs attends une liste d'ids séparés par des virgules.
 plugin_tracker_artifactlink	manual_panel_label	Artefact id(s)

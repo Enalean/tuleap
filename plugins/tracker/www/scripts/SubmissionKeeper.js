@@ -79,6 +79,7 @@ tuleap.trackers = tuleap.trackers || {};
         $(".artifact-event-popup button").click(detachPopup);
 
         disableSubmitButtons();
+        displayInfoMessage();
     }
 
     function reenableSubmitButtonsIfNeeded() {
@@ -93,6 +94,10 @@ tuleap.trackers = tuleap.trackers || {};
         $("form p input[type='submit']").each(function() {
             $(this).attr('disabled','disabled');
         });
+    }
+
+    function displayInfoMessage() {
+        $('#artifact-submit-keeper-message').show();
     }
 
     function detachPopup() {

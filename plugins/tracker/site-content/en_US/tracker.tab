@@ -1004,6 +1004,9 @@ plugin_tracker_artifact	global_rules_not_valid	Global rules are not respected
 plugin_tracker_artifact	edit_title	Artifact
 plugin_tracker_artifact	hierarchy_title	Children
 
+plugin_tracker_artifact	submission_keeper_warning_title	Warning: concurrent edit
+plugin_tracker_artifact	submission_keeper_warning_msg	<p>Someone updated this artifact while you were editing it.</p><p>Please acknowledge all notifications before submit.</p><p>Beware, on submit, your modifications will be applied on top of previous changes.</p>
+
 plugin_tracker_artifactlink	go_to_tracker	Go see this tracker
 plugin_tracker_artifactlink	manual_panel_desc	If you know the artifact id, feel free to enter it manually in the text field below. Use a comma to separate each ids if you have more than one.
 plugin_tracker_artifactlink	manual_panel_label	Artifact id(s)
