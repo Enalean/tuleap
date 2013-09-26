@@ -25,7 +25,7 @@
 class Tracker_Artifact_EditOverlayRenderer extends Tracker_Artifact_EditAbstractRenderer {
 
     protected function fetchFormContent(Codendi_Request $request, PFUser $current_user) {
-        $html  = '';
+        $html  = parent::fetchFormContent($request, $current_user);
         $html .= $this->fetchFields($this->artifact, $request->get('artifact'));
         $html .= '<input type="hidden" name="from_overlay" value="1">';
         $html .= $this->fetchSubmitAndCancelButtons($current_user);
@@ -39,9 +39,10 @@ class Tracker_Artifact_EditOverlayRenderer extends Tracker_Artifact_EditAbstract
      */
     private function fetchSubmitAndCancelButtons(PFUser $current_user) {
         if ($this->artifact->userCanUpdate($current_user)) {
-            return '<p style="text-align:center;">
+            return '<p class="artifact-submit-button">
                       <input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />
                       <button type="button" name="cancel"> '. $GLOBALS['Language']->getText('global', 'btn_cancel') .' </button>
+                      '. $this->getConcurrentEditMessage() .'
                     </p>';
         }
     }

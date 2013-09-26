@@ -31,6 +31,14 @@ class Tracker_Artifact_ChangesetJsonPresenter {
         return $GLOBALS['Language']->getText('plugin_tracker', 'artifact_update_popup_title', array($user_str));
     }
 
+    public function time() {
+        return DateHelper::timeAgoInWords($this->changeset->getSubmittedOn());
+    }
+
+    public function there_are_comments_and_diff() {
+        return $this->changeset->getComment() && $this->changeset->diffToPrevious();
+    }
+
     public function comment() {
         $comment = $this->changeset->getComment();
         if ($comment) {

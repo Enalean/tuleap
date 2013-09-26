@@ -1499,3 +1499,4 @@ plugin_tracker	missing_ugroups	The selected template set permissions on user gro
 
 plugin_tracker	artifact_update_popup_title	$1 has just updated the artifact
 plugin_tracker	artifact_update_popup_got_it	OK, got it!
+
