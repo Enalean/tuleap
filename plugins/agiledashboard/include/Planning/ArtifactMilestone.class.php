@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/date/TimePeriodWithoutWeekEnd.class.php';
+
 /**
  * A planning milestone (e.g.: Sprint, Release...)
  */
