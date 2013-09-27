@@ -23,30 +23,34 @@
  */
 
 /**
- * Data formated for JPGraph rendering
+ * A time period that has a start date and a duration
  */
-interface Tracker_Chart_Data_IProvideBurndownTimePeriod {
-    /**
-     * @return int
-     */
-    public function getStartDate();
+interface TimePeriod {
 
     /**
      * @return int
      */
-    public function getDuration();
+    function getStartDate();
+
+    /**
+     * @return int
+     */
+    function getDuration();
+
+    /**
+     * @return int
+     */
+    function getEndDate();
 
     /**
      * @return array of string
      */
-    public function getHumanReadableDates();
+    function getHumanReadableDates();
 
     /**
-     * To be used to iterate consistently over burndown time period
+     * To be used to iterate consistently over the time period
      *
      * @return array of int
      */
-    public function getDayOffsets();
+    function getDayOffsets();
 }
-
-?>

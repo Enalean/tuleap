@@ -19,6 +19,8 @@
  */
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+require_once 'common/date/TimePeriodWithWeekEnd.class.php';
+
 class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
     private $start_date;
     private $time_period;
@@ -26,11 +28,11 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->start_date  = mktime(0, 0, 0, 7, 4, 2011);
-        $this->time_period = new Tracker_Chart_Data_BurndownTimePeriodWithWeekEnd($this->start_date, 5);
+        $this->time_period = new TimePeriodWithWeekEnd($this->start_date, 5);
     }
 
     public function itAddsRemainingEffort() {
-        $time_period   = new Tracker_Chart_Data_BurndownTimePeriodWithWeekEnd($this->start_date, 2);
+        $time_period   = new TimePeriodWithWeekEnd($this->start_date, 2);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
         $burndown_data->addEffortAt(0, 14);
         $burndown_data->addEffortAt(1, 13);
@@ -62,7 +64,7 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
     public function testWhenRemainingEffortValuesDoesntStartInTheSameTimeThanStartDate2() {
         $start_date       = strtotime('-2 day', $_SERVER['REQUEST_TIME']);
         $duration         = 5;
-        $time_period      = new Tracker_Chart_Data_BurndownTimePeriodWithWeekEnd($start_date, $duration);
+        $time_period      = new TimePeriodWithWeekEnd($start_date, $duration);
         $burndown_data    = new Tracker_Chart_Data_Burndown($time_period);
         $burndown_data->addEffortAt(0, null);
         $burndown_data->addEffortAt(1, null);
@@ -74,7 +76,7 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
     public function itShouldNotResetPreviousValuesWhenPushingNullAfterHavingPushAnActualNumber() {
         $start_date       = strtotime('-4 day', $_SERVER['REQUEST_TIME']);
         $duration         = 5;
-        $time_period      = new Tracker_Chart_Data_BurndownTimePeriodWithWeekEnd($start_date, $duration);
+        $time_period      = new TimePeriodWithWeekEnd($start_date, $duration);
         $burndown_data    = new Tracker_Chart_Data_Burndown($time_period);
         $burndown_data->addEffortAt(0, null);
         $burndown_data->addEffortAt(1, null);
@@ -88,7 +90,7 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
     public function itDoesNotCompleteRemainingEffortValuesInTheFuture() {
         $start_date       = strtotime('-1 day', $_SERVER['REQUEST_TIME']);
         $duration         = 5;
-        $time_period      = new Tracker_Chart_Data_BurndownTimePeriodWithWeekEnd($start_date, $duration);
+        $time_period      = new TimePeriodWithWeekEnd($start_date, $duration);
         $burndown_data    = new Tracker_Chart_Data_Burndown($time_period);
         $burndown_data->addEffortAt(0, 14);
 
@@ -98,7 +100,7 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
     public function itDoesNotCompleteRemainingEffortValuesInTheFuture2() {
         $start_date    = strtotime('-2 day', $_SERVER['REQUEST_TIME']);
         $duration      = 5;
-        $time_period   = new Tracker_Chart_Data_BurndownTimePeriodWithWeekEnd($start_date, $duration);
+        $time_period   = new TimePeriodWithWeekEnd($start_date, $duration);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
         $burndown_data->addEffortAt(0, 14);
         $burndown_data->addEffortAt(1, 13);
@@ -107,7 +109,7 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
     }
 
     public function itReturnsRemainingEffortsWithNonLinearDayOffsets() {
-        $time_period = mock('Tracker_Chart_Data_IProvideBurndownTimePeriod');
+        $time_period = mock('TimePeriod');
         stub($time_period)->getStartDate()->returns($this->start_date);
         stub($time_period)->getDayOffsets()->returns(array(0, 1, 4, 5, 6, 7));
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
@@ -167,7 +169,7 @@ class Tracker_Chart_Data_EmptyBurndownTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->start_date  = mktime(0, 0, 0, 7, 4, 2011);
-        $this->time_period = new Tracker_Chart_Data_BurndownTimePeriodWithWeekEnd($this->start_date, 2);
+        $this->time_period = new TimePeriodWithWeekEnd($this->start_date, 2);
     }
     
     public function itHasNoRemainingEffort() {

@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Chart_Data_BurndownTimePeriodWithoutWeekEnd  implements Tracker_Chart_Data_IProvideBurndownTimePeriod {
+require_once 'TimePeriod.class.php';
+
+class TimePeriodWithoutWeekEnd  implements TimePeriod {
     /**
      * @var int The time period start date, as a Unix timestamp.
      */
@@ -49,6 +51,14 @@ class Tracker_Chart_Data_BurndownTimePeriodWithoutWeekEnd  implements Tracker_Ch
     }
 
     /**
+     * @return int
+     */
+    public function getEndDate() {
+        $last_offset = end($this->getDayOffsets());
+        return strtotime("+$last_offset days", $this->start_date);
+    }
+
+    /**
      * @return array of string
      */
     public function getHumanReadableDates() {
@@ -65,7 +75,7 @@ class Tracker_Chart_Data_BurndownTimePeriodWithoutWeekEnd  implements Tracker_Ch
     }
 
     /**
-     * To be used to iterate consistently over burndown time period
+     * To be used to iterate consistently over the time period
      *
      * @return array of int
      */
