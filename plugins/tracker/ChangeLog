@@ -1,3 +1,6 @@
+Version 5.159 - Tuleap 6.6
+    * Enhancement. story #4995: see sprint/release end date without week end
+
 Version 5.158 - Tuleap 6.6
     * request #5184: Partial update of artifact via SOAP no longer working
 
