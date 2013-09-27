@@ -1355,7 +1355,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $session_criteria = $this->report_session->getCriteria();
         if (is_array($session_criteria)) {
             foreach($session_criteria as $key=>$session_criterion) {
-                if ( !empty($session_criterion['is_removed']) || $key =='agiledashboard_milestone' ) {
+                if ( !empty($session_criterion['is_removed'])) {
                     continue;
                 }
                 $c  = $this->criteria[$key];

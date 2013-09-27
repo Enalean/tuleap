@@ -41,7 +41,7 @@ plugin_agiledashboard	top_planning_link	Planification Générale
 
 plugin_agiledashboard	display_five_more	En afficher $1 de plus
 
-plugin_agiledashboard	report_criteria_label	Jalons de l'agile dashboard
+plugin_agiledashboard	report_criteria_label	Dans le jalon
 
 plugin_agiledashboard_contentpane	lab	Ceci est une fonctionnalité expérimentale qui est sujette à évolution prochainement. N'hésitez pas à <a href="mailto:tuleap-devel@tuleap.net">nous contater pour nous transmettre vos impressions</a> et retours d'expérience afin d'améliorer la fonctionnalité, merci!
 plugin_agiledashboard_contentpane	closed_items_title	$1 fermées
