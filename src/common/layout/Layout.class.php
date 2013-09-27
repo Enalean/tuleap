@@ -1691,6 +1691,7 @@ class Layout extends Response {
                      <body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">
                        <div class="main_body_row">
                            <div class="contenttable">';
+        echo $this->getNotificationPlaceholder();
     }
 
     function header($params) {
@@ -1793,6 +1794,11 @@ class Layout extends Response {
         echo $this->getToolbar();
         echo $this->_getFeedback();
         $this->_feedback->display();
+        echo $this->getNotificationPlaceholder();
+    }
+
+    public function getNotificationPlaceholder() {
+        return '<div id="notification-placeholder"></div>';
     }
 
     function feedback($feedback) {

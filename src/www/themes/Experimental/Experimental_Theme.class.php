@@ -77,6 +77,7 @@ class Experimental_Theme extends DivBasedTabbedLayout {
         $html .= $nav->render();
         $html .= $this->_getFeedback();
         $this->_feedback->display();
+        $html .= $this->getNotificationPlaceholder();
         $html .= $this->container($params, $project_manager, $current_user);
         return $html;
     }

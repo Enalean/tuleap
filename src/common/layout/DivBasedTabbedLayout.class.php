@@ -140,6 +140,7 @@ echo $this->outerTabs($params);
         echo $this->getToolbar();
       echo $this->_getFeedback();
       $this->_feedback->display();
+      echo $this->getNotificationPlaceholder();
 	}
 
 	function footer($params) {

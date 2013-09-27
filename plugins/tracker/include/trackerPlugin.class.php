@@ -126,6 +126,7 @@ class trackerPlugin extends Plugin {
                 '/plugins/tracker/scripts/TrackerFormElementFieldPermissions.js',
                 '/plugins/tracker/scripts/TrackerDateReminderForms.js',
                 '/plugins/tracker/scripts/TrackerTriggers.js',
+                '/plugins/tracker/scripts/SubmissionKeeper.js',
             )
         );
     }

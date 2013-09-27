@@ -63,7 +63,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     }
 
     protected function fetchFormContent(Codendi_Request $request, PFUser $current_user) {
-        $html  = '';
+        $html  = parent::fetchFormContent($request, $current_user);
         $html .= $this->fetchTitleInHierarchy($this->hierarchy);
         $html .= $this->fetchView($request, $current_user);
         return $html;

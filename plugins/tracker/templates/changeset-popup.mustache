@@ -1,0 +1,18 @@
+<div class="artifact-event-popup">
+    <p class="artifact-event-popup-title">
+        {{author_updated}}
+        <span class="artifact-event-popup-time">({{time}})</span>
+    </p>
+    <div class="artifact-event-popup-content">
+        {{{comment}}}
+        {{^there_are_comments_and_diff}}
+        <hr />
+        {{/there_are_comments_and_diff}}
+        <ul>
+            {{{diff}}}
+        </ul>
+    </div>
+    <div class="artifact-event-popup-actions">
+        <button class="btn btn-small" href="#">{{got_it}}</button>
+    </div>
+</div>

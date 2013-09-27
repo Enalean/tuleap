@@ -174,6 +174,7 @@ if (isset($params['group']) && $params['group']) {
         echo $this->getBreadCrumbs();
         echo $this->getToolbar();
         $this->_feedback->display();
+        echo $this->getNotificationPlaceholder();
 	}
 
 	function footer($params) {
