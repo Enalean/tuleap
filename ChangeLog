@@ -3,15 +3,18 @@ Version 6.6 (Not released yet)
 	* Improvement of login interface. Adding support for multiple type of login sources (tuleap/openID).
 
 	== Plugins ==
-	* tracker: 5.157
+	* tracker: 5.160
 	* git: 3.42
 	* forumml: 2.6.15
-	* fulltextsearch: 0.19
+	* fulltextsearch: 0.20
 	* ldap: 3.35
-	* mediawiki: 0.13
-	* agiledashboard: 0.99
+	* mediawiki: 0.15
+	* agiledashboard: 0.102
 	* openid: 0.2
 	* statistics: 0.32
+
+	== Bux Fix ==
+	* Fix request #5207: Typo in access denied message
 
 Version 6.5 (Thursday, September 19th 2013)
 

@@ -498,7 +498,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $i;
     }
     
-    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, PFUser $current_user) {
+    public function fetchDisplayQuery(array $criteria, array $additional_criteria, $report_can_be_modified, PFUser $current_user) {
         $hp              = Codendi_HTMLPurifier::instance();
         $user_can_update = $this->userCanUpdate($current_user);
 
@@ -531,11 +531,18 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $html .= '<div id="tracker_report_addcriteria_panel">' . $this->_fetchAddCriteria($used) . '</div>';
         }
 
-        $followupSearchForm = '';
-        $params = array('html' => &$followupSearchForm, 'group_id' => $this->getProjectId());
-        EventManager::instance()->processEvent('tracker_report_followup_search', $params);
-        if (!empty($followupSearchForm)) {
-            $criteria_fetched[] = '<li id="tracker_report_crit_followup_search">' . $followupSearchForm. '</li>';
+        $array_of_html_criteria = array();
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA,
+            array(
+                'array_of_html_criteria' => &$array_of_html_criteria,
+                'tracker'                => $this->getTracker(),
+                'additional_criteria'    => $additional_criteria,
+                'user'                   => $current_user,
+            )
+        );
+        foreach ($array_of_html_criteria as $additional_criteria) {
+            $criteria_fetched[] = '<li>'. $additional_criteria .'</li>';
         }
         $html .= '<ul id="tracker_query">' . implode('', $criteria_fetched).'</ul>';
  
@@ -617,7 +624,9 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     }
                 }
             }
-            $html .= $this->fetchDisplayQuery($registered_criteria, $report_can_be_modified, $current_user);
+            $additional_criteria = $this->getAdditionalCriteria();
+
+            $html .= $this->fetchDisplayQuery($registered_criteria, $additional_criteria, $report_can_be_modified, $current_user);
             
             //Display Renderers
             $html .= '<div>';
@@ -810,7 +819,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 EventManager::instance()->processEvent('tracker_report_followup_warning', $params);
                 $html .= $fts_warning;
 
-                $html .= $current_renderer->fetch($this->joinResults($request), $request, $report_can_be_modified, $current_user);
+                $html .= $current_renderer->fetch($this->joinResults($request, $additional_criteria), $request, $report_can_be_modified, $current_user);
                 $html .= '</div>';
             }
             $html .= '</div>';
@@ -830,20 +839,27 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
      *
      * @return array
      */
-    private function joinResults($request) {
-        $result          = array();
-        $searchPerformed = false;
-        $params          = array('request' => $request, 'result' => &$result, 'search_performed' => &$searchPerformed, 'group_id' => $this->getProjectId());
-        EventManager::instance()->processEvent('tracker_report_followup_search_process', $params);
-        $matchingIds = $this->getLastChangesetIdByArtifactId($request, false);
-        if ($searchPerformed && is_array($params['result']) && $params['search_performed']) {
-            foreach ($matchingIds as $artifactId => $lastChangesetId) {
-                if (!array_key_exists($artifactId, $params['result'])) {
-                    unset($matchingIds[$artifactId]);
-                }
-            }
+    private function joinResults($request, $additional_criteria) {
+        $matching_ids = $this->getLastChangesetIdByArtifactId($request, false);
+
+        $result           = array();
+        $search_performed = false;
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY,
+            array(
+                'request'             => $request,
+                'result'              => &$result,
+                'search_performed'    => &$search_performed,
+                'tracker'             => $this->getTracker(),
+                'additional_criteria' => $additional_criteria
+            )
+        );
+        if ($search_performed) {
+            $joiner       = new Tracker_Report_ResultJoiner();
+            $matching_ids = $joiner->joinResults($matching_ids, $result);
         }
-        return $this->implodeMatchingIds($matchingIds);
+
+        return $this->implodeMatchingIds($matching_ids);
     }
 
     public function getRenderers() {
@@ -1000,7 +1016,14 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             }
         }        
     }
-    
+
+    public function updateAdditionalCriteriaValues($additional_criteria_values) {
+        foreach($additional_criteria_values as $key => $new_value) {
+            $additional_criterion = new Tracker_Report_AdditionalCriterion($key, $new_value);
+            $this->report_session->storeAdditionalCriterion($additional_criterion);
+        }
+    }
+
     /**
      * Process the request for the specified renderer
      * @param int $renderer_id
@@ -1219,6 +1242,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             case self::ACTION_SAVE:
                 Tracker_ReportFactory::instance()->save($this);
                 $this->saveCriteria();
+                $this->saveAdditionalCriteria();
                 $this->saveRenderers();
                 //Clean session
                 $this->report_session->cleanNamespace();
@@ -1246,6 +1270,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     $this->report_session->cleanNamespace();
                     //save session content into db
                     $new_report->saveCriteria();
+                    $new_report->saveAdditionalCriteria();
                     $new_report->saveRenderers();
                     $new_report->report_session->cleanNamespace();
                 }
@@ -1294,6 +1319,9 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 if ($request->get('tracker_query_submit') && is_array($request->get('criteria'))) {
                     $criteria_values = $request->get('criteria');
                     $this->updateCriteriaValues($criteria_values);
+
+                    $additional_criteria_values = $request->get('additional_criteria');
+                    $this->updateAdditionalCriteriaValues($additional_criteria_values);
                 }
                 $this->display($layout, $request, $current_user);
                 break;
@@ -1327,7 +1355,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $session_criteria = $this->report_session->getCriteria();
         if (is_array($session_criteria)) {
             foreach($session_criteria as $key=>$session_criterion) {
-                if ( !empty($session_criterion['is_removed']) ) {
+                if ( !empty($session_criterion['is_removed'])) {
                     continue;
                 }
                 $c  = $this->criteria[$key];
@@ -1336,6 +1364,17 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 $c->updateValue($session_criterion['value']);
             }
         }
+    }
+
+    public function saveAdditionalCriteria() {
+        $additional_criteria = $this->getAdditionalCriteria();
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA,
+            array(
+                'additional_criteria'    => $additional_criteria,
+                'report'                 => $this,
+            )
+        );
     }
 
     /**
@@ -1469,6 +1508,41 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $this->dao = new Tracker_ReportDao();
         }
         return $this->dao;
+    }
+
+    public function getId() {
+        return $this->id;
+    }
+
+    private function getAdditionalCriteria() {
+        $session_additional_criteria = null;
+        if (isset($this->report_session)) {
+            $session_additional_criteria = &$this->report_session->getAdditionalCriteria();
+        }
+
+        $additional_criteria = array();
+        if ($session_additional_criteria) {
+            foreach ($session_additional_criteria as $key => $additional_criterion_value) {
+                $additional_criterion      = new Tracker_Report_AdditionalCriterion($key, $additional_criterion_value['value']);
+                $additional_criteria[$key] = $additional_criterion;
+            }
+        } else {
+            $additional_criteria_values = array();
+            EventManager::instance()->processEvent(
+                TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA,
+                array(
+                    'additional_criteria_values' => &$additional_criteria_values,
+                    'report'                     => $this,
+                )
+            );
+            foreach ($additional_criteria_values as $key => $additional_criterion_value) {
+                $additional_criterion      = new Tracker_Report_AdditionalCriterion($key, $additional_criterion_value['value']);
+                $additional_criteria[$key] = $additional_criterion;
+                $this->report_session->storeAdditionalCriterion($additional_criterion);
+            }
+        }
+
+        return $additional_criteria;
     }
 }
 

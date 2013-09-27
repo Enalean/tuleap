@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/date/TimePeriodWithoutWeekEnd.class.php';
+
 /**
  * A planning milestone (e.g.: Sprint, Release...)
  */
@@ -253,9 +255,9 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
             return null;
         }
 
-        $end_date   = strtotime("+".floor($this->duration)." days", $this->start_date);
+        $time_period = new TimePeriodWithoutWeekEnd($this->start_date, $this->duration);
 
-        return $end_date;
+        return $time_period->getEndDate();
     }
 
     public function getCapacity() {

@@ -26,32 +26,12 @@ class Tracker_FormElement_View_Admin_Field_Burndown extends Tracker_FormElement_
         //required
         $html .= $this->fetchRequired();
 
-        $html .= $this->fetchIncludeWeekEnds();
-
         return $html;
     }
     
     protected function fetchRequired() {
         return '';
     }
-    
-    /**
-     * Fetch "exclude week ends" part of field admin
-     * 
-     * @return string the HTML for the checkbox part
-     */
-    protected function fetchIncludeWeekEnds() {
-        $key  = 'include_weekends';
-        $html = '';
-        $html .= '<p>';
-        $html .= '<input type="hidden" name="formElement_data[specific_properties]['. $key .']" value="0" />';
-        $html .= '<input type="checkbox" name="formElement_data[specific_properties]['. $key .']" id="formElement_properties_'. $key .'" value="1" '. ($this->formElement->includeWeekends() ? 'checked="checked"' : '') .'" />';
-        $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label>';
-        $html .= '</p>';
-        return $html;
-    }
-
-
 }
 
 ?>

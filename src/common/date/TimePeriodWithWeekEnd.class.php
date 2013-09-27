@@ -18,10 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'TimePeriod.class.php';
+
 /**
- * A burndown time period, starting at a given date, and with a given duration.
+ * A time period, starting at a given date, and with a given duration.
  */
-class Tracker_Chart_Data_BurndownTimePeriodWithWeekEnd implements Tracker_Chart_Data_IProvideBurndownTimePeriod {
+class TimePeriodWithWeekEnd implements TimePeriod {
 
     /**
      * @var int The time period start date, as a Unix timestamp.
@@ -48,6 +50,13 @@ class Tracker_Chart_Data_BurndownTimePeriodWithWeekEnd implements Tracker_Chart_
     /**
      * @return int
      */
+    public function getEndDate() {
+        return strtotime("+{$this->duration} days", $this->start_date);
+    }
+
+    /**
+     * @return int
+     */
     public function getDuration() {
         return $this->duration;
     }
@@ -67,7 +76,7 @@ class Tracker_Chart_Data_BurndownTimePeriodWithWeekEnd implements Tracker_Chart_
     }
 
     /**
-     * To be used to iterate consistently over burndown time period
+     * To be used to iterate consistently over the time period
      *
      * @return array of int
      */

@@ -54,6 +54,8 @@ abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
 
     abstract public function can_prioritize();
 
+    abstract public function can_add_backlog_item();
+
     public function title() {
         return $this->backlog_item_type;
     }

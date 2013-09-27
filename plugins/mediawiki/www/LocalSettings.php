@@ -282,17 +282,28 @@ function SetupPermissionsFromRoles () {
 		$roles[] = $rbac_engine->getRoleById($rid);
 	}
 
-	$wgGroupPermissions['*']['read']       = true;
-        $wgGroupPermissions['*']['edit']       = true;
-        $wgGroupPermissions['*']['createpage'] = true;
+	$wgGroupPermissions['*']['read']            = true;
+        $wgGroupPermissions['*']['edit']            = true;
+        $wgGroupPermissions['*']['minoredit']       = true;
+        $wgGroupPermissions['*']['createpage']      = true;
+        $wgGroupPermissions['*']['createtalk']      = true;
+        $wgGroupPermissions['*']['upload']          = true;
+        $wgGroupPermissions['*']['reupload-own']    = true;
+        $wgGroupPermissions['*']['reupload']        = true;
 
         $user = UserManager::instance()->getCurrentUser();
 
         if ($user->isMember($group->getID(), 'A')) {
-            $wgGroupPermissions['*']['editinterface'] = true;
-            $wgGroupPermissions['*']['import']        = true;
-            $wgGroupPermissions['*']['importupload']  = true;
-            $wgGroupPermissions['*']['siteadmin']     = true;
+            $wgGroupPermissions['*']['editinterface']      = true;
+            $wgGroupPermissions['*']['import']             = true;
+            $wgGroupPermissions['*']['importupload']       = true;
+            $wgGroupPermissions['*']['siteadmin']          = true;
+            $wgGroupPermissions['*']['move']               = true;
+            $wgGroupPermissions['*']['delete']             = true;
+            $wgGroupPermissions['*']['undelete']           = true;
+            $wgGroupPermissions['*']['editinterface']      = true;
+            $wgGroupPermissions['*']['move-subpages']      = true;
+            $wgGroupPermissions['*']['move-rootuserpages'] = true;
         }
 
         if ($user->isAnonymous() || ! $user->isMember($group->getID())) {

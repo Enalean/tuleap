@@ -101,12 +101,11 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($this->form_element_factory)->getUsedFieldByNameForUser($this->sprint_tracker_id, 'duration', $this->current_user)->returns($this->duration_field);
         Tracker_FormElementFactory::setInstance($this->form_element_factory);
         
-        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage', 'userCanRead', 'getProperty', 'includeWeekends'));
+        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage', 'userCanRead', 'getProperty'));
         
         $this->burndown_view = mock('Tracker_Chart_Burndown');
         stub($this->field)->getBurndown()->returns($this->burndown_view);
         stub($this->field)->userCanRead()->returns(true);
-        stub($this->field)->includeWeekends()->returns(true);
     }
     
     public function tearDown() {
@@ -153,7 +152,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     }
 
     public function itCreatesABurndownWithArtifactLinkedArtifactsAStartDateAndADuration() {
-        $time_period    = new Tracker_Chart_Data_BurndownTimePeriodWithWeekEnd($this->timestamp, $this->duration);
+        $time_period    = new TimePeriodWithWeekEnd($this->timestamp, $this->duration);
         $burndown_data  = new Tracker_Chart_Data_Burndown($time_period);
         $this->field    = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage', 'userCanRead', 'getBurndownData'));
         $this->burndown_view = mock('Tracker_Chart_BurndownView');

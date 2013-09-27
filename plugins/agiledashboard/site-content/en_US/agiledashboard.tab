@@ -41,6 +41,8 @@ plugin_agiledashboard	top_planning_link	Top Backlog Planning
 
 plugin_agiledashboard	display_five_more	Display $1 more
 
+plugin_agiledashboard	report_criteria_label	In milestone
+
 plugin_agiledashboard_contentpane	lab	This is a lab feature that is subjected to change in a near future. Please get in touch with us to <a href="mailto:tuleap-devel@tuleap.net">provide any feedback</a> about this work in progress, thanks!
 plugin_agiledashboard_contentpane	closed_items_title	Closed $1
 plugin_agiledashboard_contentpane	closed_items_intro	Please find below the items that are closed. You cannot change the priorities.

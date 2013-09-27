@@ -1,3 +1,9 @@
+Version 0.15 - Tuleap 6.6
+    * Enhancement (request #5209): sensible mediawiki permissions are missing
+
+Version 0.14 - Tuleap 6.6
+    * Fix request #5185: Wrong color for links in mediawiki pages
+
 Version 0.13 - Tuleap 6.6
     * sla #4968: Fix XSS in search enties building
 

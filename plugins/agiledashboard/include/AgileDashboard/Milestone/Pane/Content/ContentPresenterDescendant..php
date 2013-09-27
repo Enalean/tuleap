@@ -59,7 +59,7 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant extends A
         return $this->can_submit_descendant;
     }
 
-    public function can_add_parent_backlog_item() {
+    public function can_add_backlog_item() {
         return $this->can_add_parent_backlog_item;
     }
 
