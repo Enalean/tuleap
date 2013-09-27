@@ -1,3 +1,6 @@
+Version 0.102 - Tuleap 6.6
+    * [Enhancement] story #4994: Can now filter in a report the task in a given milestone
+
 Version 0.101 - Tuleap 6.6
     * Enhancement. story #4995: see sprint/release end date without week end
 

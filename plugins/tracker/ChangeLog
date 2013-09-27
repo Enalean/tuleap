@@ -1,3 +1,6 @@
+Version 5.160 - Tuleap 6.6
+    * Refactoring to let plugins add their own additional criteria in a report query
+
 Version 5.159 - Tuleap 6.6
     * Enhancement. story #4995: see sprint/release end date without week end
 
