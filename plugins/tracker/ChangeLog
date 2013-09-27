@@ -1,3 +1,6 @@
+Version 5.161 - Tuleap 6.6
+    * story #4991 - Inform user of concurrent edition when submitting artifact update on Tracker
+
 Version 5.160 - Tuleap 6.6
     * Refactoring to let plugins add their own additional criteria in a report query
 
