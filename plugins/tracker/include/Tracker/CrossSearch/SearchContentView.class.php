@@ -76,9 +76,10 @@ class Tracker_CrossSearch_SearchContentView {
     
     public function fetch() {
         $report_can_be_modified = false;
-        
+        $additional_criteria    = array();
+
         $html  = '';
-        $html .= $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified, $this->user);
+        $html .= $this->report->fetchDisplayQuery($this->criteria, $additional_criteria, $report_can_be_modified, $this->user);
         $html .= $this->fetchResults();
         
         return $html;

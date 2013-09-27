@@ -127,6 +127,12 @@ class Tracker_Report_Session extends Codendi_Session {
             $this->set("criteria.$field_id.is_removed", 0);
         }
     }
+
+    public function storeAdditionalCriterion(Tracker_Report_AdditionalCriterion $additional_criterion) {
+        $key = $additional_criterion->getKey();
+        $this->set("additional_criteria.{$key}.value", $additional_criterion->getValue());
+    }
+
     /**
      * Update a criterion
      * NOTICE: Do not set value if empty
@@ -147,6 +153,10 @@ class Tracker_Report_Session extends Codendi_Session {
     public function &getCriteria() {
         $criteria = &$this->get('criteria');
         return $criteria;
+    }
+
+    public function getAdditionalCriteria() {
+        return $this->get('additional_criteria');
     }
 
     /**

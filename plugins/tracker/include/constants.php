@@ -167,4 +167,45 @@ define('TRACKER_EVENT_SOAP_SEMANTICS', 'tracker_event_soap_semantics');
  *  'factories' => All semantic factories
  */
 define('TRACKER_EVENT_GET_SEMANTIC_FACTORIES', 'tracker_event_get_semantic_factories');
+
+/**
+ * Get the various criteria that may enhance a report
+ *
+ * Parameters:
+ *  'array_of_html_criteria' string[]                (OUT) html code to be included in the criteria list
+ *  'tracker'                Tracker                 (IN)  the current tracker
+ *  'additional_criteria'    Tracker_Report_AdditionalCriteria[]  (IN)
+ *  'user'                   PFUser                  (IN)  the current user
+ */
+define('TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA', 'tracker_event_report_display_additional_criteria');
+
+/**
+ * We are searching the matching ids
+ *
+ * Parameters:
+ * 'request'                CodendiRequest
+ * 'result'                 array
+ * 'search_performed'       Boolean
+ * 'tracker'                Tracker  (IN)     the current tracker
+ * 'additional_criteria'    Tracker_Report_AdditionalCriteria[]  (IN)
+ */
+define('TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY', 'tracker_event_report_process_additional_query');
+
+/**
+ * We want to save in database additional criteria
+ *
+ * Parameters:
+ * 'additional_criteria'    Tracker_Report_AdditionalCriteria[]  (IN)
+ * 'report'                 Tracker_Report                       (IN)
+ */
+define('TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA', 'tracker_event_report_save_additional_criteria');
+
+/**
+ * We want to save in database additional criteria
+ *
+ * Parameters:
+ * 'additional_criteria_values'    array($key => $value) (OUT)
+ * 'report'                        Tracker_Report        (IN)
+ */
+define('TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA', 'tracker_event_report_load_additional_criteria');
 ?>

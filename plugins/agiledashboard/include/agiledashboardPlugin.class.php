@@ -55,6 +55,10 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_SOAP_SEMANTICS, 'tracker_event_soap_semantics');
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
             $this->addHook('plugin_statistics_service_usage');
+            $this->addHook(TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA);
+            $this->addHook(TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY);
+            $this->addHook(TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA);
+            $this->addHook(TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA);
 
             $this->_addHook(Event::SYSTRAY);
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
@@ -78,6 +82,87 @@ class AgileDashboardPlugin extends Plugin {
         $planning_factory = $this->getPlanningFactory();
         if ($planning = $planning_factory->getPlanningByPlanningTracker($params['tracker'])) {
             $params['tracker'] = $planning->getBacklogTracker();
+        }
+    }
+
+    /**
+     * @see TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA
+     */
+    public function tracker_event_report_display_additional_criteria($params) {
+        $backlog_tracker = $params['tracker'];
+
+        $planning_factory = $this->getPlanningFactory();
+        $provider = new AgileDashboard_Milestone_MilestoneReportCriterionProvider(
+            new AgileDashboard_Milestone_SelectedMilestoneIdProvider($params['additional_criteria']),
+            new AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider(
+                new AgileDashboard_Planning_NearestPlanningTrackerProvider($planning_factory),
+                new AgileDashboard_Milestone_MilestoneDao(),
+                Tracker_HierarchyFactory::instance(),
+                $planning_factory
+            )
+        );
+        $additional_criterion = $provider->getCriterion($backlog_tracker);
+
+        if (! $additional_criterion) {
+            return;
+        }
+
+        $params['array_of_html_criteria'][] = $additional_criterion;
+    }
+
+    /**
+     * @see TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY
+     */
+    public function tracker_event_report_process_additional_query($params) {
+        $backlog_tracker = $params['tracker'];
+
+        $milestone_id_provider = new AgileDashboard_Milestone_SelectedMilestoneIdProvider($params['additional_criteria']);
+        $milestone_id = $milestone_id_provider->getMilestoneId();
+        if (! $milestone_id) {
+            return;
+        }
+
+        $provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider(
+            new AgileDashboard_BacklogItem_SubBacklogItemDao(),
+            new AgileDashboard_Planning_ParentBacklogTrackerCollectionProvider()
+        );
+        $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($milestone_id);
+
+        if (! $artifact) {
+            return;
+        }
+
+        $milestone                  = $this->getMilestoneFactory()->getMilestoneFromArtifact($artifact);
+        $params['result'][]         = $provider->getMatchingIds($milestone, $backlog_tracker);
+        $params['search_performed'] = true;
+    }
+
+    /**
+     * @see TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA
+     */
+    public function tracker_event_report_save_additional_criteria($params) {
+        $dao                   = new MilestoneReportCriterionDao();
+        $milestone_id_provider = new AgileDashboard_Milestone_SelectedMilestoneIdProvider($params['additional_criteria']);
+
+        $milestone_id = $milestone_id_provider->getMilestoneId();
+        if ($milestone_id) {
+            $dao->save($params['report']->getId(), $milestone_id);
+        } else {
+            $dao->delete($params['report']->getId());
+        }
+    }
+
+    /**
+     * @see TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA
+     */
+    public function tracker_event_report_load_additional_criteria($params) {
+        $dao        = new MilestoneReportCriterionDao();
+        $report_id  = $params['report']->getId();
+        $field_name = AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME;
+
+        $row = $dao->searchByReportId($report_id)->getRow();
+        if ($row){
+            $params['additional_criteria_values'][$field_name]['value'] = $row['milestone_id'];
         }
     }
 
