@@ -126,31 +126,6 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->assertEqual($data->getRemainingEffort(), array(10,9,8,7,6));
     }
 
-    public function itDoesNotFetchDataInTheFutureWhenIncludingWeekend() {
-        stub($this->field)->getProperty('include_weekends')->returns(true);
-        $field = mock('Tracker_FormElement_Field_Float');
-
-        $today = mktime(23, 59, 59);
-        stub($field)->getComputedValue($this->current_user, $this->sprint, strtotime('-2 days', $today))->returns(10);
-        stub($field)->getComputedValue($this->current_user, $this->sprint, strtotime('-1 day', $today))->returns(9);
-        stub($field)->getComputedValue($this->current_user, $this->sprint, strtotime('+0 day', $today))->returns(8);
-        stub($field)->getComputedValue($this->current_user, $this->sprint, strtotime('+1 day', $today))->returns(7);
-        stub($field)->getComputedValue($this->current_user, $this->sprint, strtotime('+2 days', $today))->returns(6);
-        stub($this->form_element_factory)->getComputableFieldByNameForUser($this->sprint_tracker_id, 'remaining_effort', $this->current_user)->returns($field);
-
-        $start_date = strtotime('-2 days', mktime(0, 0, 0));
-
-        $data = $this->field->getBurndownData(
-            $this->sprint,
-            $this->current_user,
-            $start_date,
-            $this->duration
-        );
-
-        $remaining_effort = $data->getRemainingEffort();
-        $this->assertEqual($remaining_effort, array(10, 9, 8, null, null, null));
-    }
-
     public function itCreatesABurndownWithArtifactLinkedArtifactsAStartDateAndADuration() {
         $time_period    = new TimePeriodWithWeekEnd($this->timestamp, $this->duration);
         $burndown_data  = new Tracker_Chart_Data_Burndown($time_period);
