@@ -1,3 +1,6 @@
+Version 5.163 - Tuleap 6.6
+    * Fix request #5223: Fatal error on getArtifactsFromReport()
+
 Version 5.162 - Tuleap 6.6
     * Remove useless test that raises an error w/ excluding of weekends in burndown
 
