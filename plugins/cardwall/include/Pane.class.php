@@ -131,7 +131,9 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             $display_preferences,
             $this->user
         );
-        $planned_artifacts   = $this->getPlannedArtifacts($this->user, $this->milestone->getArtifact(), $node_factory);
+
+        $pane_builder = new Cardwall_PaneBuilder($node_factory, $this->artifact_factory, new AgileDashboard_BacklogItemDao());
+        $planned_artifacts   = $pane_builder->getPlannedArtifacts($this->user, $this->milestone->getArtifact());
 
         $board               = $board_factory->getBoard($field_provider, $columns, $planned_artifacts, $this->config, $this->user, $display_preferences, $mapping_collection);
         $backlog_title       = $this->milestone->getPlanning()->getBacklogTracker()->getName();
@@ -149,36 +151,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             $display_preferences->shouldDisplayAvatars(),
             $planning
         );
-    }
-
-        /**
-     * Retrieves the artifacts planned for the given milestone artifact.
-     *
-     * @param PFUser             $user
-     * @param Planning         $planning
-     * @param Tracker_Artifact $milestone_artifact
-     *
-     * @return TreeNode
-     */
-    private function getPlannedArtifacts(
-        PFUser $user,
-        Tracker_Artifact $milestone_artifact,
-        Cardwall_CardInCellPresenterNodeFactory $node_factory
-    ) {
-
-        $root = new ArtifactNode($milestone_artifact);
-        $dao  = new AgileDashboard_BacklogItemDao();
-        foreach($dao->getBacklogArtifacts($milestone_artifact->getId()) as $row) {
-            $swimline_artifact = $this->artifact_factory->getInstanceFromRow($row);
-            if ($swimline_artifact->userCanView($user)) {
-                $swimline_node = $node_factory->getCardInCellPresenterNode($swimline_artifact);
-                foreach ($swimline_artifact->getChildrenForUser($user) as $child) {
-                    $swimline_node->addChild($node_factory->getCardInCellPresenterNode($child, $swimline_node->getId()));
-                }
-                $root->addChild($swimline_node);
-            }
-        }
-        return $root;
     }
 
     private function getMappingCollection(Planning $planning, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {

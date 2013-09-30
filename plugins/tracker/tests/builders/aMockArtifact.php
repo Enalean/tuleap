@@ -36,6 +36,7 @@ class MockArtifactBuilder {
         $this->value    = null;
         $this->parent   = null;
         $this->lastChangeset = null;
+        $this->userCanView = false;
     }
 
     /** @return \MockArtifactBuilder */
@@ -109,6 +110,11 @@ class MockArtifactBuilder {
         return $this;
     }
 
+    public function allUsersCanView() {
+        $this->userCanView = true;
+        return $this;
+    }
+
     /** @return \Tracker_Artifact */
     public function build() {
         $this->artifact->setReturnValue('getId', $this->id);
@@ -121,6 +127,7 @@ class MockArtifactBuilder {
         $this->artifact->setReturnValue('getAllowedChildrenTypes', $this->allowedChildrenTypes);
         $this->artifact->setReturnValue('getValue', $this->value);
         $this->artifact->setReturnValue('getParent', $this->parent);
+        $this->artifact->setReturnValue('userCanView', $this->userCanView);
         $this->artifact->setReturnValue('getLastChangeset', $this->lastChangeset);
 
         return $this->artifact;
