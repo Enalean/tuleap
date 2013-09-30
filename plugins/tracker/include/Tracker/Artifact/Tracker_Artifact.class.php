@@ -25,6 +25,7 @@ require_once('www/project/admin/permissions.php');
 require_once('common/include/Recent_Element_Interface.class.php');
 require_once 'common/project/UGroupLiteralizer.class.php';
 require_once 'common/project/ProjectManager.class.php';
+require_once 'common/templating/TemplateRendererFactory.class.php';
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
     const NO_PARENT         = -1;
