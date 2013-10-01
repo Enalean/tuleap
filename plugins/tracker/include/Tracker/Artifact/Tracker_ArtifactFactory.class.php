@@ -389,5 +389,29 @@ class Tracker_ArtifactFactory {
             }
         }
     }
+
+    /**
+     * Filters a list of artifact IDs.
+     * For each artifact, checks if it is linked by another artifact belonging
+     * to a set of trackers.
+     *
+     * @param array $artifact_ids
+     * @param array $tracker_ids
+     * @return array Hash array where keys are artifact IDs
+     */
+    public function getArtifactIdsLinkedToTrackers($artifact_ids, $tracker_ids) {
+        $filtered_ids = array();
+        
+        $result = $this->getDao()->getArtifactIdsLinkedToTrackers($artifact_ids, $tracker_ids);
+        if (! $result) {
+            return $filtered_ids;
+        }
+
+        foreach ($result as $row) {
+            $filtered_ids[$row['id']] = true;
+        }
+
+        return $filtered_ids;
+    }
 }
 ?>

@@ -471,6 +471,38 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     * Filters a list of artifact IDs.
+     * For each artifact, checks if it is linked by another artifact belonging
+     * to a set of trackers.
+     *
+     * @param array $artifact_ids
+     * @param array $tracker_ids
+     * @return DataAccessResult | false
+     */
+    public function getArtifactIdsLinkedToTrackers($artifact_ids, $tracker_ids) {
+        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
+        $tracker_ids  = $this->da->escapeIntImplode($tracker_ids);
+
+         $sql = "SELECT
+                    back_item.id
+                FROM tracker_artifact AS milestone
+                    INNER JOIN tracker_changeset_value
+                        ON tracker_changeset_value.changeset_id = milestone.last_changeset_id
+                    INNER JOIN tracker_changeset_value_artifactlink
+                        ON tracker_changeset_value_artifactlink.changeset_value_id = tracker_changeset_value.id
+                    INNER JOIN tracker_artifact AS back_item
+                        ON tracker_changeset_value_artifactlink.artifact_id = back_item.id
+                    INNER JOIN tracker_field
+                        ON (tracker_field.tracker_id = milestone.tracker_id AND tracker_field.formElement_type = 'art_link' AND use_it = 1 AND tracker_changeset_value.field_id = tracker_field.id)
+                WHERE
+                    back_item.id IN ($artifact_ids)
+                AND
+                    milestone.tracker_id IN ($tracker_ids)";
+
+        return $this->retrieve($sql);
+    }
+
 }
 
 ?>

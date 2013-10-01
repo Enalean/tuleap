@@ -122,7 +122,7 @@ class Tracker_Action_CreateArtifact {
         if ($parent_tracker && count($artifact->getAllAncestors($current_user)) == 0) {
             $art_link    = $this->formelement_factory->getAnArtifactLinkField($current_user, $parent_tracker);
 
-            if ($art_link && $this->isParentCreationIsRequested($request, $current_user)) {
+            if ($art_link && $this->isParentCreationRequested($request, $current_user)) {
                 $art_link_key = 'artifact['.$art_link->getId().'][new_values]';
                 $redirect_params = array(
                     'tracker'     => $parent_tracker->getId(),
@@ -135,7 +135,7 @@ class Tracker_Action_CreateArtifact {
         }
     }
 
-    private function isParentCreationIsRequested(Codendi_Request $request, PFUser $current_user) {
+    private function isParentCreationRequested(Codendi_Request $request, PFUser $current_user) {
         $request_data           = $request->get('artifact');
         $artifact_link_field    = $this->formelement_factory->getAnArtifactLinkField($current_user, $this->tracker);
 

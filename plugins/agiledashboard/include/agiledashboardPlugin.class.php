@@ -429,7 +429,8 @@ class AgileDashboardPlugin extends Plugin {
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
             Tracker_FormElementFactory::instance(),
-            $milestone_factory
+            $milestone_factory,
+            $this->getPlanningFactory()
         );
     }
 

@@ -47,11 +47,15 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
     /** @var String */
     private $status;
 
+    /** @var Tracker_Artifact */
+    private $artifact;
+
     public function __construct(Tracker_Artifact $artifact, $redirect_to_self) {
         $this->id    = $artifact->getId();
         $this->title = $artifact->getTitle();
         $this->url   = $artifact->getUri();
         $this->redirect_to_self = $redirect_to_self;
+        $this->artifact         = $artifact;
     }
 
     public function setParent(Tracker_Artifact $parent) {
@@ -100,6 +104,13 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
             return $url.'&'.$this->redirect_to_self;
         }
         return $url;
+    }
+
+    /**
+     * @return Tracker_Artifact
+     */
+    public function getArtifact() {
+        return $this->artifact;
     }
 }
 

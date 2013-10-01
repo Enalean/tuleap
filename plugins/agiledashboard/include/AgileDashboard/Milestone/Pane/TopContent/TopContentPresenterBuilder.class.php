@@ -38,7 +38,6 @@ class AgileDashboard_Milestone_Pane_TopContent_TopContentPresenterBuilder {
         $this->collection_factory = $collection_factory;
     }
 
-
     public function getMilestoneContentPresenter(PFUser $user, Planning_Milestone $milestone) {
         $redirect_paremeter   = new Planning_MilestoneRedirectParameter();
         $backlog_strategy     = $this->strategy_factory->getSelfBacklogStrategy($milestone);
@@ -48,7 +47,7 @@ class AgileDashboard_Milestone_Pane_TopContent_TopContentPresenterBuilder {
         $can_add_backlog_item = $this->canAddBacklogItem($user, $milestone);
         $new_backlog_item_url = $item_tracker->getSubmitUrl().'&'.$redirect_to_self;
 
-        $todo_collection = $this->collection_factory->getUnplannedOpenCollection($user, $milestone, $backlog_strategy, $redirect_to_self);
+        $todo_collection = $this->collection_factory->getUnassignedOpenCollection($user, $milestone, $backlog_strategy, $redirect_to_self);
         $done_collection = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
 
         $content_presenter = new AgileDashboard_Milestone_Pane_Content_ContentPresenterSelf(
