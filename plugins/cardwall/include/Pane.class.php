@@ -112,7 +112,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      * @return Cardwall_PaneContentPresenter
      */
     private function getPresenterUsingMappedFields(Cardwall_OnTop_Config_ColumnCollection $columns) {
-        $board_factory       = new Cardwall_BoardFactory();
         $planning            = $this->milestone->getPlanning();
 
         $field_provider     = new Cardwall_OnTop_Config_MappedFieldProvider($this->config,
@@ -124,18 +123,17 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $column_autostack->setAutostack($columns, $column_preferences);
 
         $mapping_collection = $this->getMappingCollection($planning, $columns, $field_provider);
-        $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($field_provider, $mapping_collection);
-        $node_factory = new Cardwall_CardInCellPresenterNodeFactory(
+        $presenter_builder = new Cardwall_CardInCellPresenterBuilder(
             new Cardwall_CardInCellPresenterFactory($field_provider, $mapping_collection),
             new Cardwall_CardFields(UserManager::instance(), Tracker_FormElementFactory::instance()),
             $display_preferences,
             $this->user
         );
 
-        $pane_builder = new Cardwall_PaneBuilder($node_factory, $this->artifact_factory, new AgileDashboard_BacklogItemDao());
-        $planned_artifacts   = $pane_builder->getPlannedArtifacts($this->user, $this->milestone->getArtifact());
+        $swimline_factory       = new Cardwall_SwimlineFactory($this->config, $field_provider);
+        $pane_board_builder     = new Cardwall_PaneBoardBuilder($presenter_builder, $this->artifact_factory, new AgileDashboard_BacklogItemDao(), $swimline_factory);
+        $board                  = $pane_board_builder->getBoard($this->user, $this->milestone->getArtifact(), $columns, $mapping_collection);
 
-        $board               = $board_factory->getBoard($field_provider, $columns, $planned_artifacts, $this->config, $this->user, $display_preferences, $mapping_collection);
         $backlog_title       = $this->milestone->getPlanning()->getBacklogTracker()->getName();
         $redirect_parameter  = 'cardwall[agile]['. $planning->getId() .']='. $this->milestone->getArtifactId();
 

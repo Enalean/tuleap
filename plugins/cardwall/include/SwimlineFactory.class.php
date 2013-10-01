@@ -32,37 +32,11 @@ class Cardwall_SwimlineFactory {
     
     /** @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact */
     private $field_provider;
-    
+
     public function __construct(Cardwall_OnTop_Config $config, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
         $this->config = $config;
         $this->field_provider = $field_provider;
     }
-    
-    /**
-     * @return array of Cardwall_Swimline
-     */
-    public function getSwimlines(Cardwall_OnTop_Config_ColumnCollection $columns, array $nodes) {
-        $swimlines = array();
-        foreach ($nodes as $child) {
-            $swimlines[] = $this->getSwimline($columns, $child);
-        }
-        return $swimlines;
-    }
-
-    private function getSwimline(Cardwall_OnTop_Config_ColumnCollection $columns, TreeNode $child) {
-        $potential_presenters = $this->extractPresentersFrom($child->getChildren());
-        $cells = $this->getCells($columns, $potential_presenters);
-        return new Cardwall_Swimline($child, $cells);
-    }
-
-    private function extractPresentersFrom(array $nodes) {
-        $presenters = array();
-        foreach ($nodes as $node) {
-            $presenters[] = $node->getCardInCellPresenter();
-        }
-        return $presenters;
-    }
-
 
     /**
      * public for testing
