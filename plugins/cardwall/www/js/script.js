@@ -147,7 +147,7 @@ document.observe('dom:loaded', function () {
 
             function onUpdate(text_field) {
                 var swimlines     = cardwall.childElements(),
-                    all_cards     = cardwall.select('.card'),
+                    all_cards     = cardwall.select('.cardwall_board_postit'),
                     cards_to_hide = selectCardsToHide(all_cards, text_field.value);
 
                 all_cards.invoke('show');
