@@ -13,6 +13,7 @@ Version 6.6 (Not released yet)
 	* openid: 0.2
 	* statistics: 0.32
 	* tests: 5.19
+	* cardwall: 0.9.47
 
 	== Bux Fix ==
 	* Fix request #5207: Typo in access denied message
