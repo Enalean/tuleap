@@ -1,3 +1,6 @@
+Version 5.164 - Tuleap 6.6
+    * Fix charts and widget rendering when filtering with a milestone
+
 Version 5.163 - Tuleap 6.6
     * Fix request #5223: Fatal error on getArtifactsFromReport()
 

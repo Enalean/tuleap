@@ -1,3 +1,6 @@
+Version 0.21 - Tuleap 6.6
+    * Fix charts and widget rendering when filtering with a milestone
+
 Version 0.20 - Tuleap 6.6
     * Refactoring
 

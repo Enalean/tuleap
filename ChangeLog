@@ -3,10 +3,10 @@ Version 6.6 (Not released yet)
 	* Improvement of login interface. Adding support for multiple type of login sources (tuleap/openID).
 
 	== Plugins ==
-	* tracker: 5.163
+	* tracker: 5.164
 	* git: 3.42
 	* forumml: 2.6.15
-	* fulltextsearch: 0.20
+	* fulltextsearch: 0.21
 	* ldap: 3.35
 	* mediawiki: 0.15
 	* agiledashboard: 0.102
