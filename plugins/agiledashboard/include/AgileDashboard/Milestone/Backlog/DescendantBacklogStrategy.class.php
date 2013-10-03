@@ -30,57 +30,29 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
     /** @var AgileDashboard_BacklogItemDao */
     private $dao;
 
-    /** @var Tracker */
-    private $descendant_tracker;
+    /** @var Tracker[] */
+    private $descendant_trackers;
 
-    /** @var AgileDashboard_Milestone_Backlog_SelfBacklogStrategy */
-    private $self_strategy;
-
-    public function __construct($milestone_backlog_artifacts, Tracker $item_name, Tracker $descendant_tracker, AgileDashboard_BacklogItemDao $dao, AgileDashboard_Milestone_Backlog_SelfBacklogStrategy $self_strategy) {
+    public function __construct($milestone_backlog_artifacts, Tracker $item_name, array $descendant_trackers, AgileDashboard_BacklogItemDao $dao) {
         parent::__construct($milestone_backlog_artifacts, $item_name);
         $this->dao = $dao;
-        $this->descendant_tracker = $descendant_tracker;
-        $this->self_strategy = $self_strategy;
+        $this->descendant_trackers = $descendant_trackers;
     }
 
     public function getDescendantTracker() {
-        return $this->descendant_tracker;
+        return $this->descendant_trackers[0];
     }
 
     /** @return Tracker_Artifact[] */
     public function getArtifacts(PFUser $user) {
-        $backlog = array();
-        foreach ($this->milestone_backlog_artifacts as $artifact) {
-            /* @var $artifact Tracker_Artifact */
-            $backlog = array_merge($backlog, $artifact->getChildrenForUser($user));
-        }
-        $backlog = array_filter($backlog);
-        return $this->sortByPriority($backlog);
-    }
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+        $artifacts_finder = new AgileDashboard_Milestone_Backlog_ArtifactsFinder(
+            $artifact_factory,
+            $this->milestone_backlog_artifacts,
+            $this->descendant_trackers
+        );
 
-    private function sortByPriority(array $artifacts) {
-        if (! $artifacts) {
-            return $artifacts;
-        }
-
-        $sorted_artifacts = array();
-        $ids              = array_map(array($this, 'extractId'), $artifacts);
-
-        if($ids) {
-            $artifacts        = array_combine($ids, $artifacts);
-            $sorted_ids       = $this->dao->getIdsSortedByPriority($ids);
-            $sorted_artifacts = array_flip($sorted_ids);
-        }
-
-        foreach ($sorted_artifacts as $id => $nop) {
-            $sorted_artifacts[$id] = $artifacts[$id];
-        }
-
-        return $sorted_artifacts;
-    }
-
-    private function extractId($artifact) {
-        return $artifact->getId();
+        return $artifacts_finder->getArtifacts($user);
     }
 
     public function getBacklogItemName() {
@@ -89,7 +61,7 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
 
     private function getBacklogParentElements(PFUser $user, $redirect_to_self) {
         $create_new = array();
-        foreach ($this->self_strategy->getArtifacts($user) as $artifact) {
+        foreach ($this->milestone_backlog_artifacts as $artifact) {
             /* @var Tracker_Artifact $artifact */
             $create_new[] = new AgileDashboard_Milestone_Pane_Content_ContentNewPresenter(
                 $artifact->getTitle(),
@@ -117,8 +89,10 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
             $this->backlogitem_tracker->userCanSubmitArtifact($user),
             $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($this->getItemTracker()).'&'.$redirect_to_self,
             $this->getBacklogParentElements($user, $redirect_to_self),
-            $this->descendant_tracker->userCanSubmitArtifact($user)
+            $this->descendant_trackers[0]->userCanSubmitArtifact($user)
         );
     }
 }
+
+
 ?>

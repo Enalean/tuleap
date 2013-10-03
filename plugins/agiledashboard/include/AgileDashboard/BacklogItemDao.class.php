@@ -78,20 +78,6 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
         return array();
     }
 
-    /** @return array */
-    public function getIdsSortedByPriority(array $artifact_ids) {
-        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
-        $sql = "SELECT GROUP_CONCAT(curr_id) as sorted_ids
-                FROM (
-                    SELECT curr_id
-                    FROM tracker_artifact_priority
-                    WHERE curr_id IN ($artifact_ids)
-                    ORDER BY rank ASC
-                    ) AS R";
-        $row = $this->retrieve($sql)->getRow();
-        return explode(',', $row['sorted_ids']);
-    }
-
     public function getArtifactsSemantics(array $artifact_ids, array $semantics) {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
 
