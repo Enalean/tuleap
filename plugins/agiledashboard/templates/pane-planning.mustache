@@ -27,6 +27,7 @@
                 <thead>
                     <tr>
                         <th>Id</th>
+                        <th>{{type}}</th>
                         <th>{{title}}</th>
                         <th>{{points}}</th>
                         <th>{{parent}}</th>
@@ -38,6 +39,7 @@
                     {{#backlog_collection}}
                         <tr data-artifact-id="{{id}}" class="submilestone-element">
                             <td><a href="{{url}}">{{id}}</a></td>
+                            <td><span class="label">Type</span></td>
                             <td>{{title}}</td>
                             <td class="submilestone-element-remaining-effort">{{points}}</td>
                             <td><a href="{{parent_url}}">{{parent_title}}</a></td>
@@ -88,6 +90,7 @@
                                     <thead>
                                         <tr>
                                             <th>Id</th>
+                                            <th>{{type}}</th>
                                             <th>{{title}}</th>
                                             <th>{{points_label}}</th>
                                             <th>{{parent}}</th>
@@ -95,7 +98,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="">
-                                        <tr class="empty-table-placeholder"><td colspan="5">{{empty_element_tip}}</td></tr>
+                                        <tr class="empty-table-placeholder"><td colspan="6">{{empty_element_tip}}</td></tr>
                                     </tbody>
                                 </table>
                             </div>

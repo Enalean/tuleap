@@ -3217,6 +3217,24 @@ table th[class*="span"],
   background-color: #c4e3f3;
 }
 
+tbody.ui-sortable tr > td:first-child {
+    background-image: url('../images/sortable-table-left.png');
+    background-image: url('../images/sortable-table.png')\9;
+    background-repeat: repeat-y;
+    background-position: right top;
+}
+
+tbody.ui-sortable tr > td:nth-child(2) {
+    border-left: 0;
+    background-image: url('../images/sortable-table-right.png');
+    background-repeat: repeat-y;
+    background-position: left top;
+}
+
+tbody.ui-sortable tr > td:last-child {
+    background-image: none;
+}
+
 /* ************** Responsive */
 
 @media (max-width: 767px) {

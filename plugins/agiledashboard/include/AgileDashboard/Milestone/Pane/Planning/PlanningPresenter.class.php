@@ -113,10 +113,11 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
     }
 
     public function title() {
-        if ($this->descendant_item_name) {
-            return $this->descendant_item_name;
-        }
-        return $this->backlog_item_type;
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_title');
+    }
+
+    public function type() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_type');
     }
 
     public function points() {
