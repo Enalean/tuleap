@@ -55,6 +55,11 @@
 			div.setStyle({
 				height: (jQuery(window).height() - 80) + 'px'
 			});
+
+            div.down('.scroll_to_first_selected').observe('click', function (evt) {
+                div.scrollTop = div.down('input[type=checkbox][checked]').offsetTop - 80;
+                Event.stop(evt);
+            });
 		});
 	}
 	Event.observe(window, 'load', init, true);

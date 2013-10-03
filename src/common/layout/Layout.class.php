@@ -1681,6 +1681,7 @@ class Layout extends Response {
      * This method generates header for pages embbeded in overlay like LiteWindow
      */
     public function overlay_header() {
+        $this->includeCalendarScripts();
         echo '<html>
               <head>
                  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';

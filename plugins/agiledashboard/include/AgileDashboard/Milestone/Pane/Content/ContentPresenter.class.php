@@ -57,11 +57,15 @@ abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     abstract public function can_add_backlog_item();
 
     public function title() {
-        return $this->backlog_item_type;
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_title');
     }
 
     public function points() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_points');
+    }
+
+    public function type() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_type');
     }
 
     public function parent() {
@@ -132,6 +136,14 @@ abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
 
     public function initial_effort_warning() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'initial_effort_warning', $this->backlog_item_type);
+    }
+
+    public function inconsistent_items_title() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'inconsistent_items_title', $this->backlog_item_type);
+    }
+
+    public function inconsistent_items_intro() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'inconsistent_items_intro');
     }
 }
 

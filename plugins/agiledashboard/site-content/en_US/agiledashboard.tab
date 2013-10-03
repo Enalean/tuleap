@@ -33,10 +33,11 @@ plugin_agiledashboard	backlog_destination_help	Use right arrow on item to move i
 plugin_agiledashboard	capacity	Capacity:
 plugin_agiledashboard	available	Available $1
 
-plugin_agiledashboard	content_head_title	Title
+plugin_agiledashboard	content_head_title	Item
 plugin_agiledashboard	content_head_points	Initial Effort
 plugin_agiledashboard	content_head_points_pane	Initial Effort:
 plugin_agiledashboard	content_head_parent	Parent
+plugin_agiledashboard	content_head_type	Type
 plugin_agiledashboard	top_planning_link	Top Backlog Planning
 
 plugin_agiledashboard	display_five_more	Display $1 more
@@ -56,6 +57,8 @@ plugin_agiledashboard_contentpane	open_unplanned_items_intro	Here are the items 
 plugin_agiledashboard_contentpane	allow_other_create	or
 plugin_agiledashboard_contentpane	add_in_descendant_title	Add $1 in existing $2
 plugin_agiledashboard_contentpane	initial_effort_warning	There doesn't apear to be an <em>Initial Effort</em> semantic defined for the Tracker <em>$1</em>!
+plugin_agiledashboard_contentpane	inconsistent_items_title	Inconsistent $1
+plugin_agiledashboard_contentpane	inconsistent_items_intro	Here are the items that have been created inside a sub-milestone. You cannot change the priorities.
 
 plugin_agiledashboard_milestone_planning	help_intro	This section allows to do $1 planning:
 plugin_agiledashboard_milestone_planning	help_left	On the left side, you have the $2 backlog with all open elements, not already scheduled for a $1.

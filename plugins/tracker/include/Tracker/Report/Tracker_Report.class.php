@@ -218,37 +218,59 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 $criteria = $this->getCriteria();
             }
             $this->matching_ids = $this->getMatchingIdsInDb($this->getDao(), $this->getPermissionsManager(), $this->getTracker(), $user, $criteria);
-       }
-       return $this->matching_ids;
+
+            $additional_criteria = $this->getAdditionalCriteria();
+            $result              = array();
+            $search_performed    = false;
+            EventManager::instance()->processEvent(
+                TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY,
+                array(
+                    'request'             => $request,
+                    'result'              => &$result,
+                    'search_performed'    => &$search_performed,
+                    'tracker'             => $this->getTracker(),
+                    'additional_criteria' => $additional_criteria
+                )
+            );
+            if ($search_performed) {
+                $joiner = new Tracker_Report_ResultJoiner();
+
+                $this->matching_ids = $this->implodeMatchingIds(
+                    $joiner->joinResults(
+                        $this->getLastChangesetIdByArtifactId($this->matching_ids),
+                        $result
+                    )
+                );
+            }
+        }
+
+        return $this->matching_ids;
     }
 
     /**
      * Given the output of getMatchingIds() which returns an array containing 'artifacts ids' and  'Last changeset ids'
      * as two strings with comma separated values, this method would format such output to an array with artifactIds in keys
      * and last changeset ids in values.
-     * @see Tracker_Report::joinResults() for usage
-     *
-     * @param HTTPRequest $request       @see getMatchingIds()
-     * @param Boolean     $useDataFromDb @see getMatchingIds()
+     * @see Tracker_Report::getMatchingIds() for usage
      *
      * @return Array
      */
-    private function getLastChangesetIdByArtifactId($request = null, $useDataFromDb = false) {
-        $matchingIds          = $this->getMatchingIds($request, $useDataFromDb);
-        $artifactIds          = explode(',', $matchingIds['id']);
-        $lastChangesetIds     = explode(',', $matchingIds['last_changeset_id']);
-        $formattedMatchingIds = array();
-        foreach ($artifactIds as $key => $artifactId) {
-            $formattedMatchingIds[$artifactId] = $lastChangesetIds[$key];
+    private function getLastChangesetIdByArtifactId($matching_ids) {
+        $artifact_ids       = explode(',', $matching_ids['id']);
+        $last_changeset_ids = explode(',', $matching_ids['last_changeset_id']);
+
+        $formatted_matching_ids = array();
+        foreach ($artifact_ids as $key => $artifactId) {
+            $formatted_matching_ids[$artifactId] = $last_changeset_ids[$key];
         }
-        return $formattedMatchingIds;
+        return $formatted_matching_ids;
     }
 
     /**
      * This method is the opposite of getLastChangesetIdByArtifactId().
      * Given an array with artifactIds in keys and lastChangesetIds on values it would return and array with two elements of type string
      * the first contains comma separated "artifactIds" and the second contains comma separated "lastChangesetIds".
-     * @see Tracker_Report::joinResults() for usage
+     * @see Tracker_Report::getMatchingIds() for usage
      *
      * @param Array $formattedMatchingIds Matching Id's that will get converted in that format
      *
@@ -819,7 +841,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 EventManager::instance()->processEvent('tracker_report_followup_warning', $params);
                 $html .= $fts_warning;
 
-                $html .= $current_renderer->fetch($this->joinResults($request, $additional_criteria), $request, $report_can_be_modified, $current_user);
+                $html .= $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified, $current_user);
                 $html .= '</div>';
             }
             $html .= '</div>';
@@ -830,36 +852,6 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 exit();
             }
         }
-    }
-
-    /**
-     * Join search results from plugins with matching id's
-     *
-     * @param HTTPRequest $request HTTP request
-     *
-     * @return array
-     */
-    private function joinResults($request, $additional_criteria) {
-        $matching_ids = $this->getLastChangesetIdByArtifactId($request, false);
-
-        $result           = array();
-        $search_performed = false;
-        EventManager::instance()->processEvent(
-            TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY,
-            array(
-                'request'             => $request,
-                'result'              => &$result,
-                'search_performed'    => &$search_performed,
-                'tracker'             => $this->getTracker(),
-                'additional_criteria' => $additional_criteria
-            )
-        );
-        if ($search_performed) {
-            $joiner       = new Tracker_Report_ResultJoiner();
-            $matching_ids = $joiner->joinResults($matching_ids, $result);
-        }
-
-        return $this->implodeMatchingIds($matching_ids);
     }
 
     public function getRenderers() {

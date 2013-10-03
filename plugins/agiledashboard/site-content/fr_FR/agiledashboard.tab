@@ -33,10 +33,11 @@ plugin_agiledashboard	backlog_destination_help	Utiliser la flèche droite d'un �
 plugin_agiledashboard	capacity	Capacité :
 plugin_agiledashboard	available	$1 disponible(s)
 
-plugin_agiledashboard	content_head_title	Titre
+plugin_agiledashboard	content_head_title	Element
 plugin_agiledashboard	content_head_points	Effort estimé
 plugin_agiledashboard	content_head_points_pane	Effort estimé :
 plugin_agiledashboard	content_head_parent	Parent
+plugin_agiledashboard	content_head_type	Type
 plugin_agiledashboard	top_planning_link	Planification Générale
 
 plugin_agiledashboard	display_five_more	En afficher $1 de plus
@@ -44,10 +45,10 @@ plugin_agiledashboard	display_five_more	En afficher $1 de plus
 plugin_agiledashboard	report_criteria_label	Dans le jalon
 
 plugin_agiledashboard_contentpane	lab	Ceci est une fonctionnalité expérimentale qui est sujette à évolution prochainement. N'hésitez pas à <a href="mailto:tuleap-devel@tuleap.net">nous contater pour nous transmettre vos impressions</a> et retours d'expérience afin d'améliorer la fonctionnalité, merci!
-plugin_agiledashboard_contentpane	closed_items_title	$1 fermées
+plugin_agiledashboard_contentpane	closed_items_title	$1 fermé(e)s
 plugin_agiledashboard_contentpane	closed_items_intro	Ci-dessous se trouvent les éléments qui sont fermés. Vous ne pouvez pas changer leur priorité.
 plugin_agiledashboard_contentpane	closed_items_nothing_yet	Rien de fermé actuellement
-plugin_agiledashboard_contentpane	open_items_title	$1 ouvertes
+plugin_agiledashboard_contentpane	open_items_title	$1 ouvert(e)s
 plugin_agiledashboard_contentpane	open_items_title-no_more	Il n'y a plus de $1 ouvertes, bravo !
 plugin_agiledashboard_contentpane	open_items_title-not_yet	Pas encore de $1
 plugin_agiledashboard_contentpane	open_items_title-not_yet-can_add	Pas de $1, commencez à en ajouter dès maintenant
@@ -56,6 +57,8 @@ plugin_agiledashboard_contentpane	open_unplanned_items_intro	Voici les élément
 plugin_agiledashboard_contentpane	allow_other_create	ou
 plugin_agiledashboard_contentpane	add_in_descendant_title	Ajouter un(e) $1 dans un(e) $2
 plugin_agiledashboard_contentpane	initial_effort_warning	La sémantique <em>Effort Estimé</em> pour le Tracker <em>$1</em> ne semble pas être définie !
+plugin_agiledashboard_contentpane	inconsistent_items_title	$1 inconsistent(e)s
+plugin_agiledashboard_contentpane	inconsistent_items_intro	Voici les éléments qui ont été créés directement à partir des sous-milestones. Vous ne pouvez pas changer leur priorité.
 
 plugin_agiledashboard_milestone_planning	help_intro	Cette section vous permet de faire votre planning de $1:
 plugin_agiledashboard_milestone_planning	help_left	Sur la gauche, le backlog de $2, avec tous les éléments ouverts, non encore plannifiés dans un $1

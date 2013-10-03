@@ -268,14 +268,22 @@ class fulltextsearchPlugin extends Plugin {
      */
     public function tracker_event_report_process_additional_query($params) {
         $group_id = $params['tracker']->getGroupId();
-        if ($this->tracker_followup_check_preconditions($group_id)) {
-            $filter = $params['request']->get('search_followups');
-            if (!empty($filter)) {
-                $controller         = $this->getSearchController('tracker');
-                $params['result'][] = $controller->search($params['request']);
-                $params['search_performed'] = true;
-            }
+        if (! $this->tracker_followup_check_preconditions($group_id)) {
+            return;
         }
+
+        if (! $params['request']) {
+            return;
+        }
+
+        $filter = $params['request']->get('search_followups');
+        if (empty($filter)) {
+            return;
+        }
+
+        $controller         = $this->getSearchController('tracker');
+        $params['result'][] = $controller->search($params['request']);
+        $params['search_performed'] = true;
     }
 
     /**
