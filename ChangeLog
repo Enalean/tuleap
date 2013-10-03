@@ -3,7 +3,7 @@ Version 6.6 (Not released yet)
 	* Improvement of login interface. Adding support for multiple type of login sources (tuleap/openID).
 
 	== Plugins ==
-	* tracker: 5.164
+	* tracker: 5.165
 	* git: 3.42
 	* forumml: 2.6.15
 	* fulltextsearch: 0.21
@@ -13,7 +13,7 @@ Version 6.6 (Not released yet)
 	* openid: 0.2
 	* statistics: 0.32
 	* tests: 5.19
-	* cardwall: 0.9.47
+	* cardwall: 0.9.48
 
 	== Bux Fix ==
 	* Fix request #5207: Typo in access denied message
