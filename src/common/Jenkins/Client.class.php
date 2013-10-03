@@ -65,12 +65,10 @@ class Jenkins_Client {
         $options = array(
             CURLOPT_URL             => $this->getBuildUrl($job_url),
             CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_POST            => true,
         );
         
-        if (count($build_parameters) === 0) {
-            $options[CURLOPT_HTTPGET] = true;
-        } else {
-            $options[CURLOPT_POST] = true;
+        if (count($build_parameters) > 0) {
             $options[CURLOPT_POSTFIELDS] = $this->generateBuildParameters($build_parameters);
         }
 
