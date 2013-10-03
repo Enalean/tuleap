@@ -1,3 +1,8 @@
+Version 0.16 - Tuleap 6.6
+    * Fix request #5279 : Error on mediawiki search
+      Now, the Mediawiki option on the top search bar is only available if the user is in a projet which has activated
+the Mediawiki service.
+
 Version 0.15 - Tuleap 6.6
     * Enhancement (request #5209): sensible mediawiki permissions are missing
 
