@@ -42,12 +42,10 @@ class Cardwall_Swimline {
      * @param string $title
      * @param array  $cells
      */
-    public function __construct(TreeNode $node, array $cells) {
-        if ($node instanceof Cardwall_CardInCellPresenterNode) {
-            $this->card_presenter = $node->getCardInCellPresenter()->getCardPresenter();
-        }
-        $this->cells       = $cells;
-        $this->swimline_id = $node->getId();
+    public function __construct(Cardwall_CardInCellPresenter $swimline_artifact_presenter, array $cells) {
+        $this->cells          = $cells;
+        $this->card_presenter = $swimline_artifact_presenter->getCardPresenter();
+        $this->swimline_id    = $swimline_artifact_presenter->getId();
     }
 
     /**

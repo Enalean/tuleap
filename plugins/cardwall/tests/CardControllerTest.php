@@ -44,7 +44,7 @@ class Cardwall_CardControllerTest extends TuleapTestCase {
         $edit_url       = 'edit';
         $accent_color   = 'rgb(12,12,12)';
         $swimline_id    = 215;
-        $drop_into      = array('drop-into-1234-5', 'drop-into-1234-7');
+        $drop_into      = array('5', '7');
 
         $column1 = new Cardwall_Column(7922, 'New', 'white', 'black');
         $column2 = new Cardwall_Column(1111, 'Verified', 'white', 'black');
@@ -95,7 +95,7 @@ class Cardwall_CardControllerTest extends TuleapTestCase {
 
         $card_in_cell_presenter = mock('Cardwall_CardInCellPresenter');
         stub($card_in_cell_presenter)->getCardPresenter()->returns($card_presenter);
-        stub($card_in_cell_presenter)->getDropIntoClasses()->returns($drop_into);
+        stub($card_in_cell_presenter)->getDropIntoIds()->returns($drop_into);
 
         stub($card_controller)->getCardInCellPresenter()->returns($card_in_cell_presenter);
 
@@ -108,7 +108,6 @@ class Cardwall_CardControllerTest extends TuleapTestCase {
                 'xref'         => $cross_ref,
                 'edit_url'     => $edit_url,
                 'accent_color' => $accent_color,
-                'swimline_id'  => $swimline_id,
                 'column_id'    => 1111,
                 'drop_into'    => $drop_into,
                 'fields'       => array(

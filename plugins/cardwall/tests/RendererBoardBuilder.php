@@ -22,7 +22,7 @@
 require_once dirname(__FILE__) .'/bootstrap.php';
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 
-class Cardwall_ArtifactNodeTreeProvider4Tests extends Cardwall_ArtifactNodeTreeProvider {
+class Cardwall_ArtifactNodeTreeProvider4Tests extends Cardwall_RendererBoardBuilder {
     public function getCards(array $artifact_ids, $swimline_id) {
         return parent::getCards($artifact_ids, $swimline_id);
     }
