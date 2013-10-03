@@ -43,21 +43,12 @@ class Cardwall_OnTop_Config_ColumnFactory {
     }
 
     /**
-     * Get Frestyle columns for Cardwall_OnTop, or status columns if none
+     * Get columns for Cardwall_OnTop
      * 
-     * @param Tracker $tracker
      * @return Cardwall_OnTop_Config_ColumnCollection
      */
-    public function getDashboardColumns(Tracker $tracker, Tracker $swimline_tracker) {
-        $columns = $this->getColumnsFromDao($tracker);
-
-        if (!$this->on_top_dao->isFreestyleEnabled($tracker->getId())) {
-            $status_columns = $this->getColumnsFromStatusField($swimline_tracker);
-            if (count($status_columns)) {
-                $columns = $status_columns;
-            }
-        }
-        return $columns;
+    public function getDashboardColumns(Tracker $tracker) {
+        return $this->getColumnsFromDao($tracker);
     }
 
     /**

@@ -45,13 +45,12 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
     private $tracker_mapping_factory;
 
     /**
-     * @var array
+     * @var Cardwall_OnTop_Config_TrackerMapping[]
      */
     private $cached_mappings = array();
 
     public function __construct(
         Tracker $tracker,
-        Tracker $swimline_tracker,
         Cardwall_OnTop_Dao $dao,
         Cardwall_OnTop_Config_ColumnFactory $column_factory,
         Cardwall_OnTop_Config_TrackerMappingFactory $tracker_mapping_factory
@@ -60,7 +59,6 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
         $this->dao                     = $dao;
         $this->column_factory          = $column_factory;
         $this->tracker_mapping_factory = $tracker_mapping_factory;
-        $this->swimline_tracker        = $swimline_tracker;
     }
 
     public function getTracker() {
@@ -90,7 +88,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
      * @return Cardwall_OnTop_Config_ColumnCollection
      */
     public function getDashboardColumns() {
-        return $this->column_factory->getDashboardColumns($this->tracker, $this->swimline_tracker);
+        return $this->column_factory->getDashboardColumns($this->tracker);
     }
 
     /**
@@ -101,11 +99,15 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
         return $this->column_factory->getRendererColumns($cardwall_field);
     }
 
+    /**
+     *
+     * @return Cardwall_OnTop_Config_TrackerMapping[]
+     */
     public function getMappings() {
-        if (!isset($this->cached_mappings[$this->tracker->getId()][$this->swimline_tracker->getId()])) {
-            $this->cached_mappings[$this->tracker->getId()][$this->swimline_tracker->getId()] = $this->tracker_mapping_factory->getMappings($this->tracker, $this->getDashboardColumns());
+        if (! isset($this->cached_mappings[$this->tracker->getId()])) {
+            $this->cached_mappings[$this->tracker->getId()] = $this->tracker_mapping_factory->getMappings($this->tracker, $this->getDashboardColumns());
         }
-        return $this->cached_mappings[$this->tracker->getId()][$this->swimline_tracker->getId()];
+        return $this->cached_mappings[$this->tracker->getId()];
     }
 
     public function getTrackers() {

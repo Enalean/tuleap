@@ -44,13 +44,12 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
      * @param Cardwall_Board  $board              The board
      * @param Cardwall_QrCode $qrcode             QrCode to display. false if no qrcode (thus no typehinting)
      * @param string          $redirect_parameter the redirect paramter to add to various url
-     * @param string          $swimline_title     The title to display on top of swimline headers
      * @param Planning        $planning           The concerned planning
      */
-    public function __construct(Cardwall_Board $board, $qrcode, $redirect_parameter, $swimline_title, $switch_display_username_url, $is_display_avatar_selected, Planning $planning) {
+    public function __construct(Cardwall_Board $board, $qrcode, $redirect_parameter, $switch_display_username_url, $is_display_avatar_selected, Planning $planning) {
         parent::__construct($board, $qrcode, $redirect_parameter);
         $this->nifty                        = '';
-        $this->swimline_title               = $swimline_title;
+        $this->swimline_title               = $GLOBALS['Language']->getText('plugin_cardwall', 'swimline_title');
         $this->has_swimline_header          = true;
         $this->switch_display_username_url  = $switch_display_username_url;
         $this->is_display_avatar_selected   = $is_display_avatar_selected;

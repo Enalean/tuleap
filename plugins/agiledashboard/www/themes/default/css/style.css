@@ -303,3 +303,13 @@
 .empty-table-placeholder {
     display: none;
 }
+
+.control-group.info .help-inline {
+    color: #3A87AD;
+    font-style: italic;
+}
+
+.btn-primary .caret {
+    border-top: 4px solid #FFFFFF;
+    opacity: 1;
+}

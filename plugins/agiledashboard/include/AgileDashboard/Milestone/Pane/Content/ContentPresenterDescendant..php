@@ -23,32 +23,28 @@
  */
 
 class AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant extends AgileDashboard_Milestone_Pane_Content_ContentPresenter {
-    /** @var Array */
-    private $backlog_parent_elements = array();
+    /** @var Tracker[] */
+    private $trackers = array();
 
-    /** @var String */
-    private $add_new_parent_backlog_url;
-
-    /** @var Boolean */
-    private $can_add_parent_backlog_item;
+    /** @var String[] */
+    private $add_new_backlog_items_urls;
 
     /** @var Boolean */
-    private $can_submit_descendant;
+    private $can_prioritize;
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done,
         $backlog_item_type,
-        $can_add_backlog_item_type,
-        $submit_url,
-        $backlog_parent_elements,
-        $can_submit_descendant
+        $add_new_backlog_items_urls,
+        $trackers,
+        $can_prioritize,
+        $trackers_without_initial_effort_defined
     ) {
-        parent::__construct($todo, $done, $backlog_item_type);
-        $this->can_add_parent_backlog_item = $can_add_backlog_item_type;
-        $this->add_new_parent_backlog_url  = $submit_url;
-        $this->backlog_parent_elements     = $backlog_parent_elements;
-        $this->can_submit_descendant       = $can_submit_descendant;
+        parent::__construct($todo, $done, $backlog_item_type, $trackers_without_initial_effort_defined);
+        $this->add_new_backlog_items_urls  = $add_new_backlog_items_urls;
+        $this->trackers                    = $trackers;
+        $this->can_prioritize              = $can_prioritize;
     }
 
     public function getTemplateName() {
@@ -56,37 +52,31 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant extends A
     }
 
     public function can_prioritize() {
-        return $this->can_submit_descendant;
+        return $this->can_prioritize;
     }
 
     public function can_add_backlog_item() {
-        return $this->can_add_parent_backlog_item;
+        return count($this->add_new_backlog_items_urls) > 0;
     }
 
-    public function add_new_parent_backlog_url() {
-        return $this->add_new_parent_backlog_url;
+    public function add_new_backlog_items_urls() {
+        return $this->add_new_backlog_items_urls;
     }
 
-    public function add_new_parent_backlog_item() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'add_subitem', array($this->parent_item_type));
+    public function trackers() {
+        return $this->trackers;
     }
 
-    public function can_add_subbacklog_items() {
-        if (count($this->backlog_parent_elements)) {
-            return true;
+    public function create_new_item() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'create_new_item');
+    }
+
+    public function create_new_item_help() {
+        $trackers = array();
+        foreach($this->add_new_backlog_items_urls as $backlog_entry) {
+            array_push($trackers, $backlog_entry['tracker_type']);
         }
-    }
-
-    public function allow_other_create() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'allow_other_create');
-    }
-
-    public function add_in_descendant_title() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'add_in_descendant_title', array($this->backlog_item_type, $this->parent_item_type));
-    }
-
-    public function backlog_elements() {
-        return $this->backlog_parent_elements;
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'create_new_item_help', implode(', ', $trackers));
     }
 }
 

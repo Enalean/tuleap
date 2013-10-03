@@ -36,7 +36,7 @@ plugin_agiledashboard	available	Available $1
 plugin_agiledashboard	content_head_title	Item
 plugin_agiledashboard	content_head_points	Initial Effort
 plugin_agiledashboard	content_head_points_pane	Initial Effort:
-plugin_agiledashboard	content_head_parent	Parent
+plugin_agiledashboard	content_head_parent	Parent item
 plugin_agiledashboard	content_head_type	Type
 plugin_agiledashboard	top_planning_link	Top Backlog Planning
 
@@ -54,9 +54,10 @@ plugin_agiledashboard_contentpane	open_items_title-not_yet	No $1 yet
 plugin_agiledashboard_contentpane	open_items_title-not_yet-can_add	No $1, start adding now
 plugin_agiledashboard_contentpane	open_items_intro	Here are the items that are still open. You can prioritize by drag 'n dropping them.
 plugin_agiledashboard_contentpane	open_unplanned_items_intro	Here are the items that are still open and unplanned. You can prioritize by drag 'n dropping them.
-plugin_agiledashboard_contentpane	allow_other_create	or
-plugin_agiledashboard_contentpane	add_in_descendant_title	Add $1 in existing $2
-plugin_agiledashboard_contentpane	initial_effort_warning	There doesn't apear to be an <em>Initial Effort</em> semantic defined for the Tracker <em>$1</em>!
+plugin_agiledashboard_contentpane	create_new_item	Add a new item
+plugin_agiledashboard_contentpane	create_new_specific_item	Add a new $1
+plugin_agiledashboard_contentpane	create_new_item_help	As per configuration, you can create and manage: $1.
+plugin_agiledashboard_contentpane	initial_effort_warning	There doesn't appear to be an <em>Initial Effort</em> semantic defined for the Tracker(s) <em>$1</em>!
 plugin_agiledashboard_contentpane	inconsistent_items_title	Inconsistent $1
 plugin_agiledashboard_contentpane	inconsistent_items_intro	Here are the items that have been created inside a sub-milestone. You cannot change the priorities.
 

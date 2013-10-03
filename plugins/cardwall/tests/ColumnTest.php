@@ -39,7 +39,7 @@ class Cardwall_Column_isInColumnTest extends TuleapTestCase {
         $dao = mock('Cardwall_OnTop_Dao');
         $column_factory = mock('Cardwall_OnTop_Config_ColumnFactory');
         $tracker_mapping_factory = mock('Cardwall_OnTop_Config_TrackerMappingFactory');
-        $this->config = new Cardwall_OnTop_Config($tracker, $swimline_tracker, $dao, $column_factory, $tracker_mapping_factory);
+        $this->config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);
     }
     
     public function itIsInTheCellIfTheLabelMatches() {

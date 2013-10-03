@@ -56,7 +56,7 @@ class Planning_FormPresenter extends PlanningPresenter {
         $this->available_planning_trackers = $this->getPlanningTrackerPresenters($available_planning_trackers);
         $this->cardwall_admin              = $cardwall_admin;
     }
-    
+
     public function getPlanningTrackerPresenters(array $trackers) {
         return array_map(array($this, 'getPlanningTrackerPresenter'), $trackers);
     }

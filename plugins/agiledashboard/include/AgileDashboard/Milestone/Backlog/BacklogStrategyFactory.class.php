@@ -50,25 +50,25 @@ class AgileDashboard_Milestone_Backlog_BacklogStrategyFactory {
      * @return AgileDashboard_Milestone_Backlog_BacklogStrategy
      */
     public function getBacklogStrategy(Planning_Milestone $milestone) {
-        $backlog_tracker_children_can_manage = array();
-        $first_child_backlog_tracker = $this->getFirstChildBacklogTracker($milestone);
-        if ($first_child_backlog_tracker) {
-            $backlog_tracker_children_can_manage[] = $first_child_backlog_tracker;
+        $backlog_trackers_children_can_manage = array();
+        $first_child_backlog_trackers = $this->getFirstChildBacklogTracker($milestone);
+        if ($first_child_backlog_trackers) {
+            $backlog_trackers_children_can_manage = array_merge($backlog_trackers_children_can_manage, $first_child_backlog_trackers);
         } else {
-            $backlog_tracker_children_can_manage[] = $milestone->getPlanning()->getBacklogTracker();
+            $backlog_trackers_children_can_manage = array_merge($backlog_trackers_children_can_manage, $milestone->getPlanning()->getBacklogTrackers());
         }
-        return $this->getDescendantBacklogStrategy($milestone, $backlog_tracker_children_can_manage);
+        return $this->getDescendantBacklogStrategy($milestone, $backlog_trackers_children_can_manage);
     }
 
     public function getSelfBacklogStrategy(Planning_Milestone $milestone) {
-        return $this->getDescendantBacklogStrategy($milestone, array($milestone->getPlanning()->getBacklogTracker()));
+        return $this->getDescendantBacklogStrategy($milestone, $milestone->getPlanning()->getBacklogTrackers());
     }
 
-    private function getDescendantBacklogStrategy(Planning_Milestone $milestone, array $backlog_tracker_children_can_manage) {
+    private function getDescendantBacklogStrategy(Planning_Milestone $milestone, array $backlog_trackers_children_can_manage) {
         return new AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy(
             $this->getBacklogArtifacts($milestone),
-            $milestone->getPlanning()->getBacklogTracker(),
-            $backlog_tracker_children_can_manage,
+            $milestone->getPlanning()->getBacklogTrackers(),
+            $backlog_trackers_children_can_manage,
             $this->dao
         );
     }
@@ -79,7 +79,7 @@ class AgileDashboard_Milestone_Backlog_BacklogStrategyFactory {
             $first_child_tracker  = current($backlog_tracker_children);
             $first_child_planning = $this->planning_factory->getPlanningByPlanningTracker($first_child_tracker);
             if ($first_child_planning) {
-                return $first_child_planning->getBacklogTracker();
+                return $first_child_planning->getBacklogTrackers();
             }
         }
         return null;
@@ -88,7 +88,7 @@ class AgileDashboard_Milestone_Backlog_BacklogStrategyFactory {
     private function getBacklogArtifacts(Planning_Milestone $milestone) {
         if ($milestone instanceof Planning_VirtualTopMilestone) {
             return $this->dao
-                ->getTopBacklogArtifacts($milestone->getPlanning()->getBacklogTrackerId())
+                ->getTopBacklogArtifacts($milestone->getPlanning()->getBacklogTrackersIds())
                 ->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
         }
 

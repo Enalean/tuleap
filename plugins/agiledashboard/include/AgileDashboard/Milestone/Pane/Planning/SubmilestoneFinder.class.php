@@ -45,23 +45,27 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder {
             return null;
         }
 
-        $milestone_backlog_tracker = $milestone->getPlanning()->getBacklogTracker();
+        $milestone_backlog_trackers = $milestone->getPlanning()->getBacklogTrackers();
+        foreach ($milestone_backlog_trackers as $milestone_backlog_tracker) {
 
-        foreach ($children as $tracker) {
-            $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
+            foreach ($children as $tracker) {
+                $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
 
-            if (! $planning) {
-                continue;
-            }
+                if (!$planning) {
+                    continue;
+                }
 
-            $planning_backlog_tracker  = $planning->getBacklogTracker();
-            if ($milestone_backlog_tracker == $planning_backlog_tracker) {
-                return $tracker;
-            }
+                $planning_backlog_trackers = $planning->getBacklogTrackers();
+                foreach ($planning_backlog_trackers as $planning_backlog_tracker) {
+                    if ($milestone_backlog_tracker == $planning_backlog_tracker) {
+                        return $tracker;
+                    }
 
-            $backlog_tracker_ancestors = $this->hierarchy_factory->getAllParents($planning_backlog_tracker);
-            if (in_array($milestone_backlog_tracker, $backlog_tracker_ancestors)) {
-                return $tracker;
+                    $backlog_tracker_ancestors = $this->hierarchy_factory->getAllParents($planning_backlog_tracker);
+                    if (in_array($milestone_backlog_tracker, $backlog_tracker_ancestors)) {
+                        return $tracker;
+                    }
+                }
             }
         }
     }

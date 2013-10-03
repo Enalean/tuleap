@@ -23,7 +23,6 @@
  */
 
 class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
-    private $backlog_item_type = '';
     private $parent_item_type  = '';
     private $backlog_collection;
     private $submilestone_collection;
@@ -38,22 +37,24 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
     /** @var String */
     private $descendant_item_name;
 
+    /** @var String[] */
+    private $trackers_without_initial_effort_field = array();
+
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $backlog_collection,
         AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection $submilestone_collection,
         Planning_Milestone $milestone,
         $parent_item_type,
-        $backlog_item_type,
         $submilestone_item_type,
         $add_new_submilestone_url,
         $can_add_submilestone,
         $can_plan,
-        $redirect_to_self
+        $redirect_to_self,
+        array $trackers_without_initial_effort
     ) {
         $this->backlog_collection       = $backlog_collection;
         $this->submilestone_collection  = $submilestone_collection;
         $this->parent_item_type         = $parent_item_type;
-        $this->backlog_item_type        = $backlog_item_type;
         $this->submilestone_item_type   = $submilestone_item_type;
         $this->add_new_submilestone_url = $add_new_submilestone_url;
         $this->can_add_submilestone     = $can_add_submilestone;
@@ -62,6 +63,10 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
         $this->milestone_id             = $milestone->getArtifactId();
         $this->milestone_planning_id    = $milestone->getPlanningId();
         $this->milestone_item_type      = $milestone->getArtifactTitle();
+
+        foreach ($trackers_without_initial_effort as $tracker_without_initial_effort) {
+            $this->trackers_without_initial_effort_field[] = $tracker_without_initial_effort->getName();
+        }
     }
 
     public function milestone_id() {
@@ -125,11 +130,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
     }
 
     public function parent() {
-        if ($this->parent_item_type) {
-            return $this->parent_item_type;
-        } else {
-            return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_parent');
-        }
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_parent');
     }
 
     public function header_status() {
@@ -153,11 +154,11 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
     }
 
     public function initial_effort_not_defined() {
-        return ! $this->backlog_collection->getInitialEffortSemanticIsDefined();
+        return count($this->trackers_without_initial_effort_field) > 0;
     }
 
     public function initial_effort_warning() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'initial_effort_warning', $this->backlog_item_type);
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'initial_effort_warning', implode(', ', $this->trackers_without_initial_effort_field));
     }
 }
 

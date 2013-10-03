@@ -82,7 +82,7 @@ class Planning_ArtifactLinker {
         if ($source_artifact) {
             foreach ($source_artifact->getAllAncestors($user) as $ancestor) {
                 $planning = $this->planning_factory->getPlanningByPlanningTracker($ancestor->getTracker());
-                if ($planning && $planning->getBacklogTracker() == $artifact->getTracker()) {
+                if ($planning && in_array($artifact->getTracker(), $planning->getBacklogTrackers())) {
                     $ancestor->linkArtifact($artifact->getId(), $user);
                     $last_ancestor = $ancestor;
                 }

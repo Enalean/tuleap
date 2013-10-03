@@ -52,9 +52,9 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase {
         $theme_tracker   = aTracker()->build();
         $faq_tracker     = aTracker()->build();
 
-        $corp_planning    = stub('Planning')->getBacklogTracker()->returns($theme_tracker);
-        $product_planning = stub('Planning')->getBacklogTracker()->returns($epic_tracker);
-        $release_planning = stub('Planning')->getBacklogTracker()->returns($epic_tracker);
+        $corp_planning    = stub('Planning')->getBacklogTrackers()->returns(array($theme_tracker));
+        $product_planning = stub('Planning')->getBacklogTrackers()->returns(array($epic_tracker));
+        $release_planning = stub('Planning')->getBacklogTrackers()->returns(array($epic_tracker));
 
         $planning_factory = mock('PlanningFactory');
         stub($planning_factory)->getPlanningByPlanningTracker($corp_tracker)->returns($corp_planning);

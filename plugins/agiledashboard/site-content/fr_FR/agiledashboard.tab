@@ -33,10 +33,10 @@ plugin_agiledashboard	backlog_destination_help	Utiliser la flèche droite d'un �
 plugin_agiledashboard	capacity	Capacité :
 plugin_agiledashboard	available	$1 disponible(s)
 
-plugin_agiledashboard	content_head_title	Element
+plugin_agiledashboard	content_head_title	Elément
 plugin_agiledashboard	content_head_points	Effort estimé
 plugin_agiledashboard	content_head_points_pane	Effort estimé :
-plugin_agiledashboard	content_head_parent	Parent
+plugin_agiledashboard	content_head_parent	Elément parent
 plugin_agiledashboard	content_head_type	Type
 plugin_agiledashboard	top_planning_link	Planification Générale
 
@@ -54,9 +54,10 @@ plugin_agiledashboard_contentpane	open_items_title-not_yet	Pas encore de $1
 plugin_agiledashboard_contentpane	open_items_title-not_yet-can_add	Pas de $1, commencez à en ajouter dès maintenant
 plugin_agiledashboard_contentpane	open_items_intro	Voici les éléments qui sont ouverts. Vous pouvez les ordonner en les glissant-déposant.
 plugin_agiledashboard_contentpane	open_unplanned_items_intro	Voici les éléments qui sont ouverts et non encore plannifiés. Vous pouvez les ordonner en les glissant-déposant.
-plugin_agiledashboard_contentpane	allow_other_create	ou
-plugin_agiledashboard_contentpane	add_in_descendant_title	Ajouter un(e) $1 dans un(e) $2
-plugin_agiledashboard_contentpane	initial_effort_warning	La sémantique <em>Effort Estimé</em> pour le Tracker <em>$1</em> ne semble pas être définie !
+plugin_agiledashboard_contentpane	create_new_item	Ajouter un nouvel élément
+plugin_agiledashboard_contentpane	create_new_specific_item	Ajouter un(e) nouvel(le) $1
+plugin_agiledashboard_contentpane	create_new_item_help	Selon la configuration, vous ne pouvez créer que : $1.
+plugin_agiledashboard_contentpane	initial_effort_warning	La sémantique <em>Effort Estimé</em> pour le(s) Tracker(s) <em>$1</em> ne semble pas être définie !
 plugin_agiledashboard_contentpane	inconsistent_items_title	$1 inconsistent(e)s
 plugin_agiledashboard_contentpane	inconsistent_items_intro	Voici les éléments qui ont été créés directement à partir des sous-milestones. Vous ne pouvez pas changer leur priorité.
 

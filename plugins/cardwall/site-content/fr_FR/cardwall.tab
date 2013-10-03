@@ -7,6 +7,8 @@ plugin_cardwall	warn_no_values	Il n'y a pas de valeur pour le champ $1. Choisiss
 plugin_cardwall	warn_please_choose	Sélectionnez un champ pour grouper les artefacts en colonnes.
 plugin_cardwall	nifty_view	affichage proche de la vraie vie
 
+plugin_cardwall	swimline_title	Éléments du backlog
+
 plugin_cardwall	on_top_short_title	Card Wall
 plugin_cardwall	on_top_title	Card Wall
 plugin_cardwall	on_top_description	Gérer les options pour le card wall

@@ -33,14 +33,14 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
     /** @var Tracker[] */
     private $descendant_trackers;
 
-    public function __construct($milestone_backlog_artifacts, Tracker $item_name, array $descendant_trackers, AgileDashboard_BacklogItemDao $dao) {
-        parent::__construct($milestone_backlog_artifacts, $item_name);
+    public function __construct($milestone_backlog_artifacts, array $item_names, array $descendant_trackers, AgileDashboard_BacklogItemDao $dao) {
+        parent::__construct($milestone_backlog_artifacts, $item_names);
         $this->dao = $dao;
         $this->descendant_trackers = $descendant_trackers;
     }
 
-    public function getDescendantTracker() {
-        return $this->descendant_trackers[0];
+    public function getDescendantTrackers() {
+        return $this->descendant_trackers;
     }
 
     /** @return Tracker_Artifact[] */
@@ -56,7 +56,13 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
     }
 
     public function getBacklogItemName() {
-        return $this->getDescendantTracker()->getName();
+        $descendant_trackers_names = array();
+
+        foreach ($this->getDescendantTrackers() as $descendant_tracker) {
+            $descendant_trackers_names[] = $descendant_tracker->getName();
+        }
+
+        return implode(', ', $descendant_trackers_names);
     }
 
     private function getBacklogParentElements(PFUser $user, $redirect_to_self) {
@@ -65,14 +71,50 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
             /* @var Tracker_Artifact $artifact */
             $create_new[] = new AgileDashboard_Milestone_Pane_Content_ContentNewPresenter(
                 $artifact->getTitle(),
-                $artifact->getSubmitNewArtifactLinkedToMeUri($this->getDescendantTracker()).'&'.$redirect_to_self
+                $artifact->getSubmitNewArtifactLinkedToMeUri($this->getDescendantTrackers()).'&'.$redirect_to_self
             );
         }
         return $create_new;
     }
 
     public function getMilestoneBacklogArtifactsTracker() {
-        return $this->getDescendantTracker();
+        return $this->getDescendantTrackers();
+    }
+
+    private function getAddItemsToBacklogUrls(PFUser $user, Planning_ArtifactMilestone $milestone, $redirect_to_self) {
+        $submit_urls = array();
+
+        foreach ($this->getDescendantTrackers() as $descendant_tracker) {
+            if ($descendant_tracker->userCanSubmitArtifact($user)) {
+                $submit_urls[] = array(
+                    'tracker_type' => $descendant_tracker->getName(),
+                    'submit_url'   => $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($descendant_tracker).'&'.$redirect_to_self
+                );
+            }
+        }
+
+        return $submit_urls;
+    }
+
+    private function canUserPrioritizeBacklog(PFUser $user) {
+        $can_prioritize = true;
+
+        foreach ($this->descendant_trackers as $descendant_tracker) {
+            $can_prioritize = $can_prioritize && $descendant_tracker->userCanSubmitArtifact($user);
+        }
+
+        return $can_prioritize;
+    }
+
+    public function getTrackersWithoutInitialEffort() {
+        $trackers_without_initial_effort_defined = array();
+        foreach ($this->descendant_trackers as $descendant) {
+            if (! AgileDashBoard_Semantic_InitialEffort::load($descendant)->getField()) {
+                $trackers_without_initial_effort_defined[] = $descendant;
+            }
+        }
+
+        return $trackers_without_initial_effort_defined;
     }
 
     public function getPresenter(
@@ -86,10 +128,10 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
             $todo,
             $done,
             $this->getBacklogItemName(),
-            $this->backlogitem_tracker->userCanSubmitArtifact($user),
-            $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($this->getItemTracker()).'&'.$redirect_to_self,
-            $this->getBacklogParentElements($user, $redirect_to_self),
-            $this->descendant_trackers[0]->userCanSubmitArtifact($user)
+            $this->getAddItemsToBacklogUrls($user, $milestone, $redirect_to_self),
+            $this->descendant_trackers,
+            $this->canUserPrioritizeBacklog($user),
+            $this->getTrackersWithoutInitialEffort()
         );
     }
 }

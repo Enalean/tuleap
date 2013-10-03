@@ -7,6 +7,8 @@ plugin_cardwall	warn_no_values	There is no values in the field $1. Please choose
 plugin_cardwall	warn_please_choose	Please select a field to group artifacts in columns.
 plugin_cardwall	nifty_view	free-hand drawing view
 
+plugin_cardwall	swimline_title	Backlog items
+
 plugin_cardwall	on_top_short_title	Card Wall
 plugin_cardwall	on_top_title	Card Wall
 plugin_cardwall	on_top_description	Manage card wall options

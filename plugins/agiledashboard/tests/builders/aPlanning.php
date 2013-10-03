@@ -35,10 +35,10 @@ class Test_Planning_Builder {
     private $backlog_title      = 'Release Backlog';
     private $plan_title         = 'Sprint Plan';
     private $group_id           = '102';
-    private $backlog_tracker_id;
     private $planning_tracker_id;
     private $planning_tracker;
-    private $backlog_tracker;
+    private $backlog_tracker_ids = array();
+    private $backlog_trackers = array();
 
     public function withId($id) {
         $this->id = $id;
@@ -51,7 +51,7 @@ class Test_Planning_Builder {
     }
     
     public function withBacklogTrackerId($backlog_tracker_id) {
-        $this->backlog_tracker_id = $backlog_tracker_id;
+        $this->backlog_tracker_ids[] = $backlog_tracker_id;
         return $this;
     }
 
@@ -72,8 +72,8 @@ class Test_Planning_Builder {
     }
 
     public function withBacklogTracker($backlog_tracker) {
-        $this->backlog_tracker_id = $backlog_tracker->getId();
-        $this->backlog_tracker    = $backlog_tracker;
+        $this->backlog_tracker_ids[] = $backlog_tracker->getId();
+        $this->backlog_trackers[]    = $backlog_tracker;
         return $this;
     }
 
@@ -83,14 +83,14 @@ class Test_Planning_Builder {
                                  $this->group_id,
                                  $this->backlog_title,
                                  $this->plan_title,
-                                 $this->backlog_tracker_id,
+                                 $this->backlog_tracker_ids,
                                  $this->planning_tracker_id);
         
         if ($this->planning_tracker) {
             $planning->setPlanningTracker($this->planning_tracker);
         }
-        if ($this->backlog_tracker) {
-            $planning->setBacklogTracker($this->backlog_tracker);
+        if ($this->backlog_trackers) {
+            $planning->setBacklogTrackers($this->backlog_trackers);
         }
         
         return $planning;

@@ -39,9 +39,9 @@ class PlanningDao extends DataAccessObject {
                     (name, group_id, planning_tracker_id, backlog_title, plan_title)
                     VALUES ($planning_name, $group_id, $planning_tracker_id, $backlog_title, $plan_title)";
         
-        $last_id = $this->updateAndGetLastId($sql);
+        $planning_id = $this->updateAndGetLastId($sql);
         
-        $this->createBacklogTracker($last_id, $planning_parameters->backlog_tracker_id);
+        $this->createBacklogTrackers($planning_id, $planning_parameters);
     }
     
     function createBacklogTracker($planning_id, $backlog_tracker_id) {
@@ -110,13 +110,13 @@ class PlanningDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchBacklogTrackerById($planning_id){
+    function searchBacklogTrackersById($planning_id){
         $planning_id = $this->da->escapeInt($planning_id);
         // TODO: Merge table 'plugin_agiledashboard_planning_backlog_tracker' into 'plugin_agiledashboard_planning'
         $sql = "SELECT *
                 FROM plugin_agiledashboard_planning_backlog_tracker
                 WHERE planning_id = $planning_id";
-        return $this->retrieveFirstRow($sql);
+        return $this->retrieve($sql);
     }
     
     function searchPlanningTrackerIdsByGroupId($group_id) {
@@ -158,21 +158,31 @@ class PlanningDao extends DataAccessObject {
                     plan_title          = $plan_title
                 WHERE id = $planning_id";
         $this->update($sql);
-        
-        $this->deletePlanningBacklogTracker($planning_id);
-        $this->createBacklogTracker($planning_id, $planning_parameters->backlog_tracker_id);
+
+        $this->updateBacklogTrackers($planning_id, $planning_parameters);
     }
-    
+
+    private function updateBacklogTrackers($planning_id, PlanningParameters $planning_parameters) {
+        $this->deletePlanningBacklogTrackers($planning_id);
+        $this->createBacklogTrackers($planning_id, $planning_parameters);
+    }
+
+    private function createBacklogTrackers($planning_id, PlanningParameters $planning_parameters) {
+        foreach ($planning_parameters->backlog_tracker_ids as $backlog_tracker_id) {
+            $this->createBacklogTracker($planning_id, $backlog_tracker_id);
+        }
+    }
+
     function deletePlanning($planning_id) {
         $planning_id = $this->da->escapeInt($planning_id);
         $sql = "DELETE FROM plugin_agiledashboard_planning
                 WHERE id=$planning_id";
         $this->update($sql);
         
-        $this->deletePlanningBacklogTracker($planning_id);
+        $this->deletePlanningBacklogTrackers($planning_id);
     }
     
-    function deletePlanningBacklogTracker($planning_id) {
+    function deletePlanningBacklogTrackers($planning_id) {
         $planning_id = $this->da->escapeInt($planning_id);
         $sql = "DELETE FROM plugin_agiledashboard_planning_backlog_tracker
                 WHERE planning_id=$planning_id";

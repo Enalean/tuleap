@@ -32,10 +32,14 @@ abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     /** @var String */
     protected $backlog_item_type;
 
+    /** @var String[] */
+    private $trackers_without_initial_effort_field;
+
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done,
-        $backlog_item_type
+        $backlog_item_type,
+        array $trackers_without_initial_effort_field
     ) {
         $this->todo_collection           = $todo;
         $this->done_collection           = $done;
@@ -43,6 +47,9 @@ abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
             $this->parent_item_type = $todo->getParentItemName();
         }
         $this->backlog_item_type         = $backlog_item_type;
+        foreach ($trackers_without_initial_effort_field as $tracker) {
+            $this->trackers_without_initial_effort_field[] = $tracker->getName();
+        }
     }
 
     /**
@@ -69,11 +76,7 @@ abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     }
 
     public function parent() {
-        if ($this->parent_item_type) {
-            return $this->parent_item_type;
-        } else {
-            return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_parent');
-        }
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'content_head_parent');
     }
 
     public function todo_collection() {
@@ -131,11 +134,11 @@ abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     }
 
     public function initial_effort_not_defined() {
-        return ! $this->todo_collection->getInitialEffortSemanticIsDefined();
+        return count($this->trackers_without_initial_effort_field) > 0;
     }
 
     public function initial_effort_warning() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'initial_effort_warning', $this->backlog_item_type);
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'initial_effort_warning', implode(', ', $this->trackers_without_initial_effort_field));
     }
 
     public function inconsistent_items_title() {

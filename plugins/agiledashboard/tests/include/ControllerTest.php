@@ -193,7 +193,7 @@ class Planning_ControllerNewTest extends TuleapTestCase {
     }
 
     public function itHasASelectBoxListingBacklogTrackers() {
-        $this->assertPattern('/\<select name="planning\[backlog_tracker_id\]"/', $this->output);
+        $this->assertPattern('/\<select name="planning\['.PlanningParameters::BACKLOG_TRACKER_IDS.'\]\[\]"/', $this->output);
         foreach ($this->available_backlog_trackers as $tracker) {
             $this->assertPattern('/\<option value="'.$tracker->getId().'".*\>'.$tracker->getName().'/', $this->output);
         }
@@ -221,7 +221,7 @@ class Planning_ControllerCreateWithInvalidParamsTest extends Planning_Controller
         parent::setUp();
 
         $this->request->set('planning[name]', '');
-        $this->request->set('planning[backlog_tracker_id]', '');
+        $this->request->set('planning['.PlanningParameters::BACKLOG_TRACKER_IDS.'][]', '');
         $this->request->set('planning[planning_tracker_id]', '');
     }
 
@@ -237,11 +237,15 @@ class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCr
     public function setUp() {
         parent::setUp();
 
-        $this->planning_parameters = array('name'                => 'Release Planning',
-                                           'backlog_tracker_id'  => '2',
-                                           'planning_tracker_id' => '3',
-                                           'backlog_title'       => 'Release Backlog',
-                                           'plan_title'          => 'Sprint Plan');
+        $this->planning_parameters = array(
+            PlanningParameters::NAME                => 'Release Planning',
+            PlanningParameters::PLANNING_TRACKER_ID => '3',
+            PlanningParameters::BACKLOG_TITLE       => 'Release Backlog',
+            PlanningParameters::PLANNING_TITLE          => 'Sprint Plan',
+            PlanningParameters::BACKLOG_TRACKER_IDS => array(
+                '2'
+            )
+        );
         $this->request->set('planning', $this->planning_parameters);
     }
 
@@ -296,8 +300,8 @@ class Planning_Controller_Update_BaseTest extends Planning_Controller_BaseTest {
         'name'                => 'Foo',
         'backlog_title'       => 'Bar',
         'plan_title'          => 'Baz',
-        'backlog_tracker_id'  => 43875,
-        'planning_tracker_id' => 654823
+        'planning_tracker_id' => 654823,
+        PlanningParameters::BACKLOG_TRACKER_IDS  => array(43875),
     );
 
     public function setUp() {

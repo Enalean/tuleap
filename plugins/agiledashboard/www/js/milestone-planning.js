@@ -255,7 +255,9 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                             } else if (typeof(to_submilestone_id) === "undefined" && typeof(from_submilestone_id) === "undefined") {
                                 sort();
                             } else if (typeof(to_submilestone_id) === "undefined") {
+                                var to_milestone_id = self.getMilestoneId();
                                 updateArtifactlink("unassociate-artifact-to", from_submilestone_id, sort)
+                                updateArtifactlink("associate-artifact-to", to_milestone_id)
                             } else if (typeof(from_submilestone_id) === "undefined") {
                                 updateArtifactlink("associate-artifact-to", to_submilestone_id, sort)
                             } else {

@@ -60,7 +60,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
         $this->user = mock('PFUser');
 
         $planning        = mock('Planning');
-        stub($planning)->getBacklogTracker()->returns(mock('Tracker'));
+        stub($planning)->getBacklogTrackers()->returns(array(mock('Tracker')));
         stub($planning)->getPlanningTracker()->returns(mock('Tracker'));
 
         $artifact        = aMockArtifact()->build();
