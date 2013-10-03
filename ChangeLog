@@ -18,6 +18,7 @@ Version 6.6 (Not released yet)
 	== Bux Fix ==
 	* Fix request #5207: Typo in access denied message
 	* Fix request #5134 - Calendar is not displayed when creating a Release or Sprint
+	* Fix request #4815 - Double update of release
 
 Version 6.5 (Thursday, September 19th 2013)
 
