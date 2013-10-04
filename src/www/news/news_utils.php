@@ -238,7 +238,7 @@ function get_news_name_from_forum_id($id) {
 	}
 }
 
-function news_submit($group_id,$summary,$details,$private_news, $promote_news = 0) {
+function news_submit($group_id, $summary, $details, $private_news, $send_news_to, $promote_news = 0) {
         
     /*
 		Takes Summary and Details, and submit the corresponding news, in the right project, with the right permissions
@@ -265,6 +265,9 @@ function news_submit($group_id,$summary,$details,$private_news, $promote_news = 
             news_notify_promotion_request($group_id,$news_bytes_id,$summary,$details);
         }
         
+        if ($send_news_to) {
+            news_send_to_ugroups($send_news_to, $summary, $details, $group_id);
+        }
         // extract cross references           
         $reference_manager =& ReferenceManager::instance();
         $reference_manager->extractCrossRef($summary, $new_id, ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
@@ -382,14 +385,56 @@ function news_notify_promotion_request($group_id,$news_bytes_id,$summary,$detail
     }
 }
 
-function news_fetch_ugroups($project) {
-
+function news_send_to_ugroups($ugroups, $summary, $details, $group_id) {
+    $hp      = Codendi_HTMLPurifier::instance();
+    $pm      = ProjectManager::instance();
+    $project = $pm->getProject($group_id);
+    $user    = HTTPRequest::instance()->getCurrentUser();
     $ugroup_manager = new UGroupManager();
-    $hp             = Codendi_HTMLPurifier::instance();
 
-    $ugroups = $ugroup_manager->getUGroups($project, array(UGroup::NONE, UGroup::ANONYMOUS, UGroup::REGISTERED));
+    $summary = util_unconvert_htmlspecialchars($summary);
+    $details = util_unconvert_htmlspecialchars($details);
+
+    $users = array();
+    foreach ($ugroups as $ugroup_id) {
+        $ugroup = $ugroup_manager->getUGroupWithMembers($project, $ugroup_id);
+        foreach ($ugroup->getMembers() as $member) {
+            $users[] = $member;
+        }
+    }
+
+    $mail = new Codendi_Mail();
+    $mail->setFrom($user->getEmail());
+    $mail->setTo($user->getEmail());
+    $mail->setBccUser($users);
+    $mail->setSubject("[".$GLOBALS['sys_name']."] [".$project->getPublicName(). "] ". $summary);
+    $mail->setBodyText($details);
+
+    $html_body = '<h1>'. $hp->purify($summary, CODENDI_PURIFIER_BASIC) .'</h1>';
+    $html_body .= '<p>'. $hp->purify($details, CODENDI_PURIFIER_BASIC) .'</p>';
+    $mail->setBodyHtml($html_body);
+
+    $is_sent = $mail->send();
+    if ($is_sent) {
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('news_utils','news_sent'));
+    } else {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('news_utils','news_not_sent'));
+    }
+}
+
+function news_fetch_ugroups($project) {
+    $ugroup_manager   = new UGroupManager();
+    $hp               = Codendi_HTMLPurifier::instance();
+    $excluded_ugroups = array(
+        UGroup::NONE,
+        UGroup::ANONYMOUS,
+        UGroup::REGISTERED,
+        UGroup::TRACKER_ADMIN
+    );
+
+    $ugroups = $ugroup_manager->getUGroups($project, $excluded_ugroups);
     $html  = '';
-    $html .= '<select multiple="multiple" name="send_news_to">';
+    $html .= '<select multiple="multiple" name="send_news_to[]">';
 
     foreach ($ugroups as $ugroup) {
         $html .= '<option value="'. $ugroup->getId() .'">';

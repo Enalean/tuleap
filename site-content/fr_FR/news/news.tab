@@ -70,6 +70,8 @@ news_utils	news_request_mail_details	Détail de l'annonce : $1
 news_utils	news_request_mail_approve_link	Merci de cliquer sur le lien ci-dessous pour approuver (ou rejeter) l'annonce :
 news_utils	news_request_sent	La demande de promotion a été transmise aux administrateur du site.
 news_utils	news_request_not_sent	La demande de promotion n'a pas pu être transmise aux administrateur du site.
+news_utils	news_sent	L'annonce a été envoyée aux membres des groupes sélectionnés.
+news_utils	news_not_sent	L'annonce n'a pas pu être envoyée aux membres des groupes sélectionnés.
 #
 #-----------------------------------------------
 # Script: SF/www/news/submit.php

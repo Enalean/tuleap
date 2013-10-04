@@ -59,7 +59,7 @@ if (user_isloggedin()) {
                     $promote_news = "0";
                 }
                 
-                news_submit($group_id, $request->get('summary'), $request->get('details'), $request->get('private_news'), $promote_news);
+                news_submit($group_id, $request->get('summary'), $request->get('details'), $request->get('private_news'), $request->get('send_news_to'), $promote_news);
             }
         }
         
