@@ -23,28 +23,14 @@
  */
 
 /**
- * Control process to be run by SystemEventProcessorMutex
+ * A process
  */
-interface IRunInAMutex {
+interface SystemEventProcess {
 
     /**
-     * The method to be executed by the mutex
+     * Return the path to the process identifier
      *
-     * @return void
+     * @return string
      */
-    public function execute();
-
-    /**
-     * The unix user who should run the code
-     *
-     * @return String
-     */
-    public function getProcessOwner();
-
-    /**
-     * The process
-     *
-     * @return SystemEventProcess
-     */
-    public function getProcess();
+    function getPidFile();
 }
