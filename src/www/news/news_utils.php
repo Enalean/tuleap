@@ -382,5 +382,22 @@ function news_notify_promotion_request($group_id,$news_bytes_id,$summary,$detail
     }
 }
 
+function news_fetch_ugroups($project) {
 
+    $ugroup_manager = new UGroupManager();
+    $hp             = Codendi_HTMLPurifier::instance();
+
+    $ugroups = $ugroup_manager->getUGroups($project, array(UGroup::NONE, UGroup::ANONYMOUS, UGroup::REGISTERED));
+    $html  = '';
+    $html .= '<select multiple="multiple" name="send_news_to">';
+
+    foreach ($ugroups as $ugroup) {
+        $html .= '<option value="'. $ugroup->getId() .'">';
+        $html .= $hp->purify($ugroup->getTranslatedName());
+        $html .= '</option>';
+    }
+    $html .= '</select>';
+
+    return $html;
+}
 ?>

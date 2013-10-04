@@ -70,18 +70,19 @@ if (user_isloggedin()) {
               'help'=>'communication.html#news-service'));
 
         $pm = ProjectManager::instance();
+        $project = $pm->getProject($group_id);
         /*
          create a new discussion forum without a default msg
          if one isn't already there
         */
         echo '
-        <H3>'.$Language->getText('news_submit','submit_news_for',$pm->getProject($group_id)->getPublicName()).'</H3>
+        <H3>'.$Language->getText('news_submit','submit_news_for',$project->getPublicName()).'</H3>
         <P>
         '.$Language->getText('news_submit','post_explain',$GLOBALS['sys_name']).'
         <P>
         <FORM ACTION="" METHOD="POST">
         <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-        <B>'.$Language->getText('news_submit','for_project',$pm->getProject($group_id)->getPublicName()) .'</B>
+        <B>'.$Language->getText('news_submit','for_project',$project->getPublicName()) .'</B>
         <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="1">
         <P>
         <B>'.$Language->getText('news_admin_index','subject').':</B><BR>
@@ -99,6 +100,8 @@ if (user_isloggedin()) {
         <TD><INPUT TYPE="RADIO" NAME="promote_news" VALUE="3">'.$Language->getText('global','yes').'
         <INPUT TYPE="RADIO" NAME="promote_news" VALUE="0" CHECKED>'.$Language->getText('global','no').'</TD>
         </TR></TABLE>'. $Language->getText('news_submit','promote_warn',$GLOBALS['sys_name']) .'<p>
+        <p><b>'. $Language->getText('news_submit','send_news_by_email',$GLOBALS['sys_name']).' : </b><br>
+        ' . news_fetch_ugroups($project).'</p>
         <INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
         </FORM>';
 
