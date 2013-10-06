@@ -99,6 +99,9 @@ class maillogPlugin extends Plugin {
                 $dar2->next();
             }
             echo "</div>\n";
+            $input = preg_replace("/=\r?\n/", '', $row['html_body']);
+            $input = preg_replace('/=([a-f0-9]{2})/ie', "chr(hexdec('\\1'))", $input);
+            echo $input;
             echo '<div style="width: 80em; font-family: monospace; margin-bottom: 0.5em;">'."\n";
             echo $hp->purify($row['body'], CODENDI_PURIFIER_BASIC);
             echo "</div>\n";

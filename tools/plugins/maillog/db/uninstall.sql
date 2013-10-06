@@ -23,6 +23,6 @@
 -- Sql Uninstall Script
 --
 
-DROP TABLE plugin_maillog_header;
-DROP TABLE plugin_maillog_message;
-DROP TABLE plugin_maillog_messageheader;
+DROP TABLE IF EXISTS plugin_maillog_header;
+DROP TABLE IF EXISTS plugin_maillog_message;
+DROP TABLE IF EXISTS plugin_maillog_messageheader;
