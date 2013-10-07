@@ -444,5 +444,10 @@ $sys_display_project_privacy_in_service_bar = 1;
 // chars, etc)
 $sys_generic_user_suffix = '';
 
+// Hard limit to number of emailed people when the news admin choose to send a news
+// by email.
+// Only used in news service for now
+$sys_max_number_of_emailed_people = 100;
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>
