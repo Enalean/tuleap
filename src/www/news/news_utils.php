@@ -29,6 +29,7 @@ require_once('www/forum/forum_utils.php');
 require_once('common/mail/Mail.class.php');
 require_once('common/user/UserHelper.class.php');
 require_once('common/reference/ReferenceManager.class.php');
+require_once 'common/mail/MassmailSender.class.php';
 
 
 function news_header($params) {
@@ -395,6 +396,9 @@ function news_send_to_ugroups($ugroups, $summary, $details, $group_id) {
     $summary = util_unconvert_htmlspecialchars($summary);
     $details = util_unconvert_htmlspecialchars($details);
 
+    $html_body = '<h1>'. $hp->purify($summary, CODENDI_PURIFIER_BASIC) .'</h1>';
+    $html_body .= '<p>'. $hp->purify($details, CODENDI_PURIFIER_BASIC) .'</p>';
+
     $users = array();
     foreach ($ugroups as $ugroup_id) {
         $ugroup = $ugroup_manager->getUGroupWithMembers($project, $ugroup_id);
@@ -403,29 +407,8 @@ function news_send_to_ugroups($ugroups, $summary, $details, $group_id) {
         }
     }
 
-    $sys_max_number_of_emailed_people = Config::get('sys_max_number_of_emailed_people');
-    if (count($users) > $sys_max_number_of_emailed_people) {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('news_submit','news_not_sent_max_users', $sys_max_number_of_emailed_people));
-        return;
-    }
-
-    $mail = new Codendi_Mail();
-    $mail->setFrom($user->getEmail());
-    $mail->setTo($user->getEmail());
-    $mail->setBccUser($users);
-    $mail->setSubject("[".$GLOBALS['sys_name']."] [".$project->getPublicName(). "] ". $summary);
-    $mail->setBodyText($details);
-
-    $html_body = '<h1>'. $hp->purify($summary, CODENDI_PURIFIER_BASIC) .'</h1>';
-    $html_body .= '<p>'. $hp->purify($details, CODENDI_PURIFIER_BASIC) .'</p>';
-    $mail->setBodyHtml($html_body);
-
-    $is_sent = $mail->send();
-    if ($is_sent) {
-        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('news_utils','news_sent'));
-    } else {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('news_utils','news_not_sent'));
-    }
+    $massmail_sender = new MassmailSender();
+    $massmail_sender->sendMassmail($project, $user, $summary, $html_body, $users);
 }
 
 function news_fetch_ugroups($project) {
