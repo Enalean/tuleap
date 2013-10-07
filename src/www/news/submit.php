@@ -99,10 +99,15 @@ if (user_isloggedin()) {
         <TR><TD><B>'.$Language->getText('news_submit','news_promote',$GLOBALS['sys_name']).' : </B></TD>
         <TD><INPUT TYPE="RADIO" NAME="promote_news" VALUE="3">'.$Language->getText('global','yes').'
         <INPUT TYPE="RADIO" NAME="promote_news" VALUE="0" CHECKED>'.$Language->getText('global','no').'</TD>
-        </TR></TABLE>'. $Language->getText('news_submit','promote_warn',$GLOBALS['sys_name']) .'<p>
-        <p><b>'. $Language->getText('news_submit','send_news_by_email',$GLOBALS['sys_name']).' : </b><br>
-        ' . news_fetch_ugroups($project).'</p>
-        <INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
+        </TR></TABLE>'. $Language->getText('news_submit','promote_warn',$GLOBALS['sys_name']) .'<p>';
+
+        if ($project->getId() != Project::SITE_NEWS_PROJECT_ID) {
+            echo '<p><b>'. $Language->getText('news_submit','send_news_by_email',$GLOBALS['sys_name']).' : </b><br>';
+            echo news_fetch_ugroups($project);
+            echo '</p>';
+        }
+
+        echo '<INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
         </FORM>';
 
         news_footer(array());
