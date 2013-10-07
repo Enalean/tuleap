@@ -86,7 +86,7 @@ if (user_isloggedin()) {
         <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="1">
         <P>
         <B>'.$Language->getText('news_admin_index','subject').':</B><BR>
-        <INPUT TYPE="TEXT" NAME="summary" VALUE="" CLASS="textfield_medium">
+        <INPUT TYPE="TEXT" NAME="summary" VALUE="" CLASS="textfield_medium" required>
         <P>
         <B>'.$Language->getText('news_admin_index','details').':</B><BR>
         <TEXTAREA NAME="details" ROWS="8" COLS="50" WRAP="SOFT"></TEXTAREA>

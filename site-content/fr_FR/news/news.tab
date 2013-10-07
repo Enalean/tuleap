@@ -90,3 +90,4 @@ news_submit	news_perm_create_success	Permissions créées avec succès.
 news_submit	news_promote	Demander la promotion en première page de $1 ?
 news_submit	promote_warn	<b>ATTENTION :</b> Les nouvelles privées ne sont pas présentes en première page de $1
 news_submit	send_news_by_email	Envoyer l'annonce par email à
+news_submit	news_not_sent_max_users	Vous excedez le nombre maximum ($1) de personnes à qui envoyer le message. The email is not sent.

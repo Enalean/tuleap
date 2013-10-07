@@ -97,3 +97,4 @@ news_submit	news_perm_create_success	Permissions created successfully.
 news_submit	news_promote	Request promotion to $1 front page ?
 news_submit	promote_warn	<b>WARNING:</b> Private news are not promoted to $1 front page
 news_submit	send_news_by_email	Send news by email to
+news_submit	news_not_sent_max_users	You exceed the maximum number ($1) of persons to send the message. The email is not sent.

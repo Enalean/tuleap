@@ -403,6 +403,12 @@ function news_send_to_ugroups($ugroups, $summary, $details, $group_id) {
         }
     }
 
+    $sys_max_number_of_emailed_people = Config::get('sys_max_number_of_emailed_people');
+    if (count($users) > $sys_max_number_of_emailed_people) {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('news_submit','news_not_sent_max_users', $sys_max_number_of_emailed_people));
+        return;
+    }
+
     $mail = new Codendi_Mail();
     $mail->setFrom($user->getEmail());
     $mail->setTo($user->getEmail());
