@@ -169,6 +169,17 @@ Provides: tuleap-core-cvs
 %description core-cvs
 Manage dependencies for Tuleap CVS integration
 
+%if %{php_base} == php53
+%package core-rest
+Summary: REST component for Tuleap
+Group: Development/Tools
+Version: @@CORE_REST_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}, php53-restler
+%description core-rest
+Provides REST api to Tuleap
+%endif
+
 #
 ## Plugins
 #
@@ -627,6 +638,14 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 # Plugin mediawiki
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openid
+
+# REST
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/VERSION
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/.htaccess
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/index.php
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/common/REST
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/common/project/REST
+
 %endif
 
 #Plugin boomerang
@@ -864,7 +883,8 @@ fi
 %{APP_DIR}/src/www/*.php
 %{APP_DIR}/src/www/account
 %{APP_DIR}/src/www/admin
-%{APP_DIR}/src/www/api
+%dir %{APP_DIR}/src/www/api
+%{APP_DIR}/src/www/api/reference
 %{APP_DIR}/src/www/codendi.css
 %{APP_DIR}/src/www/cvs
 %{APP_DIR}/src/www/docman
@@ -964,6 +984,16 @@ fi
 %files core-cvs
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/src/CORE_CVS_VERSION
+
+%if %{php_base} == php53
+%files core-rest
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/api/VERSION
+%{APP_DIR}/src/www/api/.htaccess
+%{APP_DIR}/src/www/api/index.php
+%{APP_DIR}/src/www/common/REST
+%{APP_DIR}/src/www/common/project/REST
+%endif
 
 #
 # Plugins
