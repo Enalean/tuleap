@@ -39,6 +39,8 @@ class ProjectResource {
      *
      * @param int $id The id of the project
      *
+     * @access protected
+     *
      * @throws 404
      *
      * @return ProjectInfoRepresentation
@@ -53,6 +55,8 @@ class ProjectResource {
      * @url OPTIONS {id}
      *
      * @param int $id The id of the project
+     *
+     * @access protected
      *
      * @throws 404
      */

@@ -23,7 +23,7 @@ use \Luracast\Restler\RestException;
 use Project;
 
 /**
- * Wrapper for project related REST methods
+ * Basic representation of a project
  */
 class ProjectInfoRepresentation {
 

@@ -17,19 +17,26 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'pre.php';
-require_once '/usr/share/restler-3.0-rc4/vendor/restler.php';
-require_once 'common/project/REST/ProjectResource.class.php';
-require_once 'common/REST/BasicAuthentication.class.php';
+namespace Tuleap\REST;
 
-use Luracast\Restler\Restler;
+use \Luracast\Restler\iAuthenticate;
+use \Luracast\Restler\RestException;
 
-$r = new Restler();
-// comment the line above and uncomment the line below for production mode
-// $r = new Restler(true);
+use UserManager;
 
-$r->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource', \Tuleap\Project\REST\ProjectResource::PATH);
-$r->addAPIClass('Resources');
+class BasicAuthentication implements iAuthenticate {
 
-$r->addAuthenticationClass('\\Tuleap\\REST\\BasicAuthentication');
-$r->handle();
+    const REALM = 'Restricted Tuleap API';
+
+    public function __isAllowed() {
+        if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
+            $current_user = UserManager::instance()->login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+
+            if ($current_user->isLoggedIn()) {
+                return true;
+            }
+        }
+        header('WWW-Authenticate: Basic realm="' . self::REALM . '"');
+        throw new RestException(401, 'Basic Authentication Required');
+    }
+}
