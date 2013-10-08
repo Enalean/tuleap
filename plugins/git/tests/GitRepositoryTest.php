@@ -185,6 +185,7 @@ class GitRepositoryTest extends TuleapTestCase {
     public function itIsMigratableIfItIsAGitoliteRepo() {
         $repo = new GitRepository();
         $repo->setBackendType(GitDao::BACKEND_GITOLITE);
+        $repo->setRemoteProjectIsDeleted(false);
         $this->assertTrue($repo->canMigrateToGerrit());
     }
     
@@ -201,11 +202,24 @@ class GitRepositoryTest extends TuleapTestCase {
         $this->assertFalse($repo->canMigrateToGerrit());
     }
 
-    public function itIsNotMigratableIfItHasAlreadyBeenAGerritRepoInThePast() {
+    public function itIsMigratableIfItHasAlreadyBeenAGerritRepoInThePastAndRemoteProjectIsNotDeleted() {
         $repo = new GitRepository();
         $repo->setBackendType(GitDao::BACKEND_GITOLITE);
         $repo->setRemoteServerDisconnectDate(12345677890);
-        $this->assertFalse($repo->canMigrateToGerrit());
+        $repo->setRemoteProjectDeletionDate(null);
+        $repo->setRemoteServerId(4154);
+        $repo->setRemoteProjectIsDeleted(false);
+        $this->assertTrue($repo->canMigrateToGerrit());
+    }
+
+    public function itIsMigratableIfItHasAlreadyBeenAGerritRepoInThePastAndRemoteProjectIsDeleted() {
+        $repo = new GitRepository();
+        $repo->setBackendType(GitDao::BACKEND_GITOLITE);
+        $repo->setRemoteServerDisconnectDate(12345677890);
+        $repo->setRemoteProjectDeletionDate(12345677890);
+        $repo->setRemoteServerId(4154);
+        $repo->setRemoteProjectIsDeleted(true);
+        $this->assertTrue($repo->canMigrateToGerrit());
     }
 }
 

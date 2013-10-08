@@ -260,7 +260,10 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
                 'repository_namespace'             => '',
                 'repository_events_mailing_prefix' => "[SCM]",
                 'repository_description'           => '',
-                'remote_server_id'                 => null
+                'remote_server_id'                 => null,
+                'remote_project_deleted'           => 0,
+                'remote_project_deleted_date'      => null,
+                'remote_server_disconnect_date'    => null
             ),
             array(
                 'repository_id'                    => 5,
@@ -268,7 +271,10 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
                 'repository_namespace'             => '',
                 'repository_events_mailing_prefix' => "[SCM]",
                 'repository_description'           => '',
-                'remote_server_id'                 => 1
+                'remote_server_id'                 => 1,
+                'remote_project_deleted'           => 0,
+                'remote_project_deleted_date'      => null,
+                'remote_server_disconnect_date'    => null
             )
         );
         $driver->setReturnValue('getDao', $dao);

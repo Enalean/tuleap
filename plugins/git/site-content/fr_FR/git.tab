@@ -86,6 +86,7 @@ plugin_git	actions_name_not_available	Un fichier existe déjà avec ce nom sous 
 plugin_git	actions_create_repo_exists	Le dépôt $1 existe déjà ou le chemin est en conflit avec un dépôt existant
 plugin_git	actions_delete_ok	Le dépôt a été supprimé
 plugin_git	actions_no_repository_forked	Aucun dépôt n'a été forké.
+plugin_git	gerrit_project_exists	Un projet Gerrit du même nom existe déjà sur ce serveur
 
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Crée par
@@ -223,8 +224,6 @@ plugin_git	push_ssh_keys_error	Impossible de copier les clés SSH. Ajoutez-les d
 plugin_git	push_ssh_keys_button_value	Pousser les clés SSH
 plugin_git	push_ssh_keys_button_title	Pousser les clés SSH sur les serveurs externes
 plugin_git	push_ssh_keys_info	Vos anciennes clés ne sont pas poussées automatiquement. Toute nouvelle clé sera automatiquement poussée sur les serveurs suivants :
-
-plugin_git	gerrit_cannot_migrate_error_msg	Ce dépôt ne peux pas être migré. Ceci est dû au fait qu'il a déjà été migré par le passé et ne peut plus être migré de nouveau.
 
 plugin_git	gerrit_remote_exception	Une erreur est survenue lors d'une tentative de connexion à un serveur Gerrit. Peut-être est-il arreté? Merci de vérifier avec les administrateurs: $1
 plugin_git	gerrit_deletion_ongoing	La supression du projet sous Gerrit est en cours, veuillez patienter quelques minutes.

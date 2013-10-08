@@ -55,7 +55,7 @@ abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase 
                                                   array($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log));
         $this->event->setParameters("$this->repository_id::$this->remote_server_id::true");
         $this->logger = mock('Logger');
-        $this->event->injectDependencies($this->dao, $factory, $this->server_factory, $this->logger, $this->project_creator);
+        $this->event->injectDependencies($this->dao, $factory, $this->server_factory, $this->logger, $this->project_creator, mock('Git_Driver_Gerrit'));
     }
 }
 

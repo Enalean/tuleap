@@ -943,13 +943,20 @@ class GitPlugin extends Plugin {
     }
 
     private function getGitController() {
+        $project_manager = ProjectManager::instance();
+
         return new Git(
             $this,
             $this->getGerritServerFactory(),
             $this->getGerritDriver(),
             $this->getRepositoryManager(),
             $this->getGitSystemEventManager(),
-            new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory())
+            new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory()),
+            new GitRepositoryFactory(new GitDao(), $project_manager),
+            UserManager::instance(),
+            $project_manager,
+            PluginManager::instance(),
+            HTTPRequest::instance()
         );
     }
 

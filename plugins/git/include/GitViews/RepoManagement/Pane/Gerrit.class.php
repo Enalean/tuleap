@@ -64,10 +64,8 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
      * @see GitViews_RepoManagement_Pane::getContent()
      */
     public function getContent() {
-        if ($this->repository->getRemoteServerId()) {
+        if ($this->repository->isMigratedToGerrit()) {
             return $this->getContentAlreadyMigrated();
-        } else if (! $this->repository->canMigrateToGerrit()) {
-            return $this->getContentCannotMigrate();
         }
 
         $html  = '';
@@ -103,13 +101,6 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         $html .= '</label>';
         $html .= '<p><input type="submit" name="save" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_to') .'" /></p>';
         $html .= '</form>';
-        return $html;
-    }
-
-    private function getContentCannotMigrate() {
-        $html  = '';
-        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_title') .'</h3>';
-        $html .= '<p class="alert alert-block">'.  $GLOBALS['Language']->getText('plugin_git', 'gerrit_cannot_migrate_error_msg') .'</p>';
         return $html;
     }
 

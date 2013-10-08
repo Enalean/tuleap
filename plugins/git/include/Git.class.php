@@ -89,25 +89,34 @@ class Git extends PluginController {
     /** @var Git_Driver_Gerrit_UserAccountManager */
     private $gerrit_usermanager;
 
+    /** @var PluginManager */
+    private $plugin_manager;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         Git_Driver_Gerrit $driver,
         GitRepositoryManager $repository_manager,
         Git_SystemEventManager $system_event_manager,
-        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager
+        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
+        GitRepositoryFactory $git_repository_factory,
+        UserManager $user_manager,
+        ProjectManager $project_manager,
+        PluginManager $plugin_manager,
+        Codendi_Request $request
     ) {
-        parent::__construct();
-        
-        $this->userManager           = UserManager::instance();
-        $this->projectManager        = ProjectManager::instance();
-        $this->factory               = new GitRepositoryFactory(new GitDao(), $this->projectManager);
+        parent::__construct($user_manager, $request);
+
+        $this->userManager           = $user_manager;
+        $this->projectManager        = $project_manager;
+        $this->factory               = $git_repository_factory;
         $this->gerrit_server_factory = $gerrit_server_factory;
         $this->driver                = $driver;
         $this->repository_manager    = $repository_manager;
         $this->git_system_event_manager = $system_event_manager;
         $this->gerrit_usermanager       = $gerrit_usermanager;
-        
+        $this->plugin_manager           = $plugin_manager;
+
         $matches = array();
         if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
             $this->request->set('group_id', $matches[1][0]);
@@ -125,7 +134,7 @@ class Git extends PluginController {
                    $repo->load();
                } catch (Exception $e) {                   
                    $this->addError('Bad request');
-                   $this->redirect('/');                   
+                   $this->redirect('/');
                }
                $repo_id = $repo->getId();               
             }
@@ -152,7 +161,7 @@ class Git extends PluginController {
         }
       
         $this->projectName      = $this->projectManager->getProject($this->groupId)->getUnixName();
-        if ( !PluginManager::instance()->isPluginAllowedForProject($this->plugin, $this->groupId) ) {
+        if ( !$this->plugin_manager->isPluginAllowedForProject($this->plugin, $this->groupId) ) {
             $this->addError( $this->getText('project_service_not_available') );
             $this->redirect('/projects/'.$this->projectName.'/');
         }
@@ -167,7 +176,7 @@ class Git extends PluginController {
     public function setFactory(GitRepositoryFactory $factory) {
         $this->factory = $factory;
     }
-    
+
     public function setRequest(Codendi_Request $request) {
         $this->request = $request;
     }
@@ -467,6 +476,10 @@ class Git extends PluginController {
                 if (empty($repo) || empty($remote_server_id)) {
                     $this->addError($this->getText('actions_params_error'));
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
+                } elseif ($this->gerritProjectAlreadyExists($remote_server_id, $repo)) {
+                    $this->addError($this->getText('gerrit_project_exists'));
+                    $this->addAction('repoManagement', array($repo));
+                    $this->addView('repoManagement');
                 } else {
                     $migrate_access_right = $this->request->existAndNonEmpty('migrate_access_right');
                     $this->addAction('migrateToGerrit', array($repo, $remote_server_id, $migrate_access_right));
@@ -497,6 +510,13 @@ class Git extends PluginController {
                 $this->addView('index');
                 break;
         }
+    }
+
+    private function gerritProjectAlreadyExists($remote_server_id, GitRepository $repo) {
+        $gerrit_server         = $this->gerrit_server_factory->getServerById($remote_server_id);
+        $gerrit_project_name   = $this->driver->getGerritProjectName($repo);
+
+        return $this->driver->doesTheProjectExist($gerrit_server, $gerrit_project_name);
     }
 
     private function processRepoManagementNotifications($pane, $repoId, $repositoryName, $user) {

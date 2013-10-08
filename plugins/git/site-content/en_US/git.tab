@@ -94,6 +94,7 @@ plugin_git	actions_create_repo_process	Repository will be created in a few secon
 plugin_git	actions_create_repo_exists	Repository $1 already exists or would override an existing path
 plugin_git	actions_delete_ok	Repository has been deleted
 plugin_git	actions_no_repository_forked	No repository has been forked.
+plugin_git	gerrit_project_exists	A Gerrit project with that name already exists on that server
 
 plugin_git	actions_repo_not_found	The repository does not exist
 plugin_git	actions_repo_access	Repository access permissions are going to be modified in a few seconds
@@ -221,8 +222,6 @@ plugin_git	logsdaily_title	Git pushes
 
 plugin_git	delegated_to_gerrit	The management of this Git repository has been delegated to the Gerrit platform:
 plugin_git	waiting_for_repo_creation	The repository is in queue for creation. Please check back here in a few minutes
-
-plugin_git	gerrit_cannot_migrate_error_msg	This repository cannot be migrated. This is because it has already been migrated previously and cannot be migrated again.
 
 plugin_git	push_ssh_keys_error	Error pushing SSH Keys. Please add them manually.
 plugin_git	push_ssh_keys_button_value	Manually push SSH keys
