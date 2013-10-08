@@ -17,16 +17,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'pre.php';
-require_once '/usr/share/restler-3.0-rc4/vendor/restler.php';
-require_once 'common/project/REST/ProjectResource.class.php';
+namespace Tuleap\Project\REST;
 
-use Luracast\Restler\Restler;
+use \Luracast\Restler\RestException;
+use Project;
 
-$r = new Restler();
-// comment the line above and uncomment the line below for production mode
-// $r = new Restler(true);
+/**
+ * Wrapper for project related REST methods
+ */
+class ProjectInfoRepresentation {
 
-$r->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource', \Tuleap\Project\REST\ProjectResource::PATH);
-$r->addAPIClass('Resources');
-$r->handle();
+    /** @var int */
+    public $id;
+
+    /** @var string */
+    public $label;
+
+    public function __construct(Project $project) {
+        $this->id    = $project->getId();
+        $this->label = $project->getPublicName();
+    }
+}
