@@ -7,7 +7,13 @@ grammar {
         element trackers  {
 
             element tracker {
-                attribute id { xsd:string }
+                attribute id { xsd:string },
+
+                element columns {
+                    element column {
+                        attribute label { xsd:string }
+                    }*
+                }?
             }*
 
         }

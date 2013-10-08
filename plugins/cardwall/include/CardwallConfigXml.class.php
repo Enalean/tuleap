@@ -15,14 +15,19 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class CardwallFromXmlInputNotWellFormedException extends Exception {
-    public function __construct($errors = array()) {
-        $message = 'The cardwall XML input is not well formed '.PHP_EOL.implode(PHP_EOL, $errors);
-        parent::__construct($message);
-    }
+class CardwallConfigXml {
+    const NODE_CARDWALL = 'cardwall';
+    const NODE_TRACKERS = 'trackers';
+    const NODE_TRACKER  = 'tracker';
+    const NODE_COLUMNS  = 'columns';
+    const NODE_COLUMN   = 'column';
+
+    const ATTRIBUTE_COLUMN_LABEL = 'label';
+
+    const ATTRIBUTE_TRACKER_ID = 'id';
 }
+
 ?>

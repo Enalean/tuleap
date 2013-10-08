@@ -395,7 +395,14 @@ class cardwallPlugin extends Plugin {
      */
     public function import_xml_project_tracker_done($params) {
         include_once 'common/XmlValidator/XmlValidator.class.php';
-        $cardwall_ontop_import = new CardwallConfigXmlImport($params['project_id'], $params['mapping'], new Cardwall_OnTop_Dao, EventManager::instance(), new XmlValidator());
+        $cardwall_ontop_import = new CardwallConfigXmlImport(
+            $params['project_id'],
+            $params['mapping'],
+            new Cardwall_OnTop_Dao,
+            new Cardwall_OnTop_ColumnDao,
+            EventManager::instance(),
+            new XmlValidator()
+        );
         $cardwall_ontop_import->import($params['xml_content']);
     }
 
