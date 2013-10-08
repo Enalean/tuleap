@@ -44,11 +44,42 @@ class ProjectResource {
      * @return ProjectInfoRepresentation
      */
     public function get($id) {
+        $project = $this->getProject($id);
+
+        return new ProjectInfoRepresentation($project);
+    }
+
+    /**
+     * @url OPTIONS {id}
+     *
+     * @param int $id The id of the project
+     *
+     * @throws 404
+     */
+    public function optionsId($id) {
+        $this->getProject($id);
+
+        header('Allow: GET, OPTIONS');
+    }
+
+    /**
+     * @url OPTIONS
+     */
+    public function options() {
+        header('Allow: GET, OPTIONS');
+    }
+
+    /**
+     * @throws 404
+     *
+     * @return Project
+     */
+    private function getProject($id) {
         $project = ProjectManager::instance()->getProject($id);
         if ($project->isError()) {
             throw new RestException(404);
         }
 
-        return new ProjectInfoRepresentation($project);
+        return $project;
     }
 }
