@@ -144,7 +144,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             $this->getQrCode(),
             $redirect_parameter,
             $backlog_title,
-            $this->canConfigure(),
             $this->getSwitchDisplayAvatarsURL(),
             $display_preferences->shouldDisplayAvatars(),
             $planning
@@ -210,15 +209,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $display_avatars = $this->user->isAnonymous() || ! $this->user->getPreference($pref_name);
 
         return new Cardwall_UserPreferences_UserPreferencesDisplayUser($display_avatars);
-    }
-
-    private function canConfigure() {
-        $project = $this->milestone->getProject();
-        if ($project->userIsAdmin($this->user)){
-            $configure_url      = TRACKER_BASE_URL .'/?tracker='. $this->milestone->getTrackerId() .'&func=admin-cardwall';
-            return $configure_url;
-        }
-        return false;
     }
 
     /**

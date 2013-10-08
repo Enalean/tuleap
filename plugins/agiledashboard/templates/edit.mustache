@@ -1,24 +1,25 @@
 <h2>{{adminTitle}}</h2>
-<div class="agiledashboard">
-    <h3>{{editPlanning}} {{planningName}}</h3>
+    <div class="agiledashboard">
+        <h3>{{editPlanning}} {{planningName}}</h3>
     <form method="post" action="/plugins/agiledashboard/?group_id={{group_id}}&amp;planning_id={{planningId}}&amp;action=update">
-        <p>
-            <label for="planning_name">{{planningNameFieldLabel}}</label><br />
-            <input type="text" name="planning[name]" id="planning_name" value="{{planningName}}" />
-        </p>
-        <p>
-            <label for="planning_backlog_title">{{planningBacklogTitleFieldLabel}}</label><br />
-            <input type="text" name="planning[backlog_title]" id="planning_backlog_title" value="{{planningBacklogTitle}}" />
-        </p>
-        <p>
-            <label for="planning_plan_title">{{planningPlanTitleFieldLabel}}</label><br />
-            <input type="text" name="planning[plan_title]" id="planning_plan_title" value="{{planningPlanTitle}}" />
-        </p>
-        <p>
-            {{#__}}planning-allows-assignment|{{> select-backlog}}|{{> select-planning}}{{/__}}
-        </p>
+            <p>
+                <label for="planning_name">{{planningNameFieldLabel}}</label><br />
+                <input type="text" name="planning[name]" id="planning_name" value="{{planningName}}" />
+            </p>
+            <p>
+                <label for="planning_backlog_title">{{planningBacklogTitleFieldLabel}}</label><br />
+                <input type="text" name="planning[backlog_title]" id="planning_backlog_title" value="{{planningBacklogTitle}}" />
+            </p>
+            <p>
+                <label for="planning_plan_title">{{planningPlanTitleFieldLabel}}</label><br />
+                <input type="text" name="planning[plan_title]" id="planning_plan_title" value="{{planningPlanTitle}}" />
+            </p>
+            <p>
+                {{#__}}planning-allows-assignment|{{> select-backlog}}|{{> select-planning}}{{/__}}
+            </p>
+            {{{cardwall_admin}}}
         <p>
             <input type="submit" value="{{btnSubmit}}"/>
         </p>
     </form>
-</div>
+    </div>

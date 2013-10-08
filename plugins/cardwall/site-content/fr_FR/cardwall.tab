@@ -13,12 +13,11 @@ plugin_cardwall	on_top_description	Gérer les options pour le card wall
 plugin_cardwall	on_top_enabled	Un cardwall existe maintenant au dessus de l'outil de suivi
 plugin_cardwall	on_top_disabled	Cardwall désactivé
 plugin_cardwall	on_top_use_freestyle	Définir librement les colonnes
-plugin_cardwall	on_top_label	Activer un cardwall au dessus de l'outil de suivi
 plugin_cardwall	on_top_miss_status	L'outil de suivi doit avoir une semantic status définie
-plugin_cardwall	configure_cardwall_label	Configurer
 plugin_cardwall	display_avatar_label	Afficher l'avatar
 plugin_cardwall	display_avatar_title	Basculer vers l'affichage des utilisateurs ou des avatars
 plugin_cardwall	details	détails
+plugin_cardwall	on_top_label	Activer un cardwall au dessus du planning
 plugin_cardwall	on_top_new_column	Nouvelle colonne :
 plugin_cardwall	on_top_column_placeholders	A Faire|En Cours|Fini|Terminé
 plugin_cardwall	on_top_column_placeholder_default	En Cours

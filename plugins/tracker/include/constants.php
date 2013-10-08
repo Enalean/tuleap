@@ -56,44 +56,6 @@ define('TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE', 'tracker_even
 define('TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION', 'tracker_event_build_artifact_form_action');
 
 /**
- * Get the admin items to display in the admin menu of a tracker
- *
- * Parameters:
- * 'tracker' => The current tracker object
- * 'items'   => The items to display. Inject your own items in this array to 
- *            display them in the menu. Each item is an associated array. Eg:
- *            'item_key' => array(
- *              'url',          => // The url to the admin subpage
- *              'short_title',  => // The short title of the item (in toolbar)
- *              'title',        => // The title (on the main admin page)
- *              'description'   => // Displayed in main admin page
- *              'img'           => // The src of the icon. As of today, 48x48px
- *            )
- *
- * No expected results than the query_parameters modified if needed 
- */
-define('TRACKER_EVENT_ADMIN_ITEMS', 'tracker_event_admin_items');
-
-/**
- * Let someone process the request on a given tracker.
- *
- * Parameters:
- * 'tracker'               => The current tracker object
- * 'func'                  => The action requested by the user
- * 'layout'                => Tracker_IDisplayTrackerLayout
- * 'request'               => The request object
- * 'user'                  => The user who made the request
- * 'nothing_has_been_done' => flag default to true
- *
- * Expected results:
- *  The action is handled by the listener and the flag nothing_has_been_done 
- *  is set to false.
- *  Or nothing has been done (flag untouched) and the core continue with the 
- *  default processing (eg: display the tracker)
- */
-define('TRACKER_EVENT_PROCESS', 'tracker_event_process');
-
-/**
  * An artifact has just been (un)associated to another one
  *
  * Parameters:

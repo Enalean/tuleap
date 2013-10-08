@@ -307,6 +307,7 @@ class Planning_Controller_Update_BaseTest extends Planning_Controller_BaseTest {
 
         // TODO: Inject validator into controller so that we can mock it and test it in isolation.
         stub($this->planning_factory)->getPlanningTrackerIdsByGroupId($this->group_id)->returns(array());
+        stub($this->planning_factory)->getPlanning()->returns(mock('Planning'));
     }
 }
 
@@ -315,7 +316,7 @@ class Planning_Controller_ValidUpdateTest extends Planning_Controller_Update_Bas
     public function itUpdatesThePlanningAndRedirectToTheIndex() {
         $this->userIsAdmin();
         $this->planning_factory->expectOnce('updatePlanning', array($this->planning_id, PlanningParameters::fromArray($this->planning_parameters)));
-        $this->expectRedirectTo("/plugins/agiledashboard/?group_id={$this->group_id}&action=index");
+        $this->expectRedirectTo("/plugins/agiledashboard/?group_id={$this->group_id}&planning_id={$this->planning_id}&action=edit");
         $this->controller->update();
     }
 
