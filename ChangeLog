@@ -4,7 +4,7 @@ Version 6.6 (Not released yet)
 	* story #5162: send an email when a news is published
 
 	== Plugins ==
-	* tracker: 5.165
+	* tracker: 5.166
 	* git: 3.42
 	* forumml: 2.6.15
 	* fulltextsearch: 0.21
