@@ -158,6 +158,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
 
     public function itRaisesAnExceptionTheXmlDoesNotMatchTheRNG() {
         $xml_validator = stub('XmlValidator')->nodeIsValid()->returns(false);
+        stub($xml_validator)->getValidationErrors()->returns(array());
         $tracker_xml_importer = new TrackerXmlImportTestInstance($this->group_id, $this->tracker_factory, $this->event_manager, $this->hierarchy_dao, $xml_validator);
 
         $this->expectException('trackerFromXmlInputNotWellFormedException');
