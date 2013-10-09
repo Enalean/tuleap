@@ -19,20 +19,24 @@
 
 require_once 'pre.php';
 require_once '/usr/share/restler/vendor/restler.php';
-require_once 'common/project/REST/ProjectResource.class.php';
 require_once 'common/REST/BasicAuthentication.class.php';
 
 use Luracast\Restler\Restler;
 use Luracast\Restler\Resources;
+use Luracast\Restler\Defaults;
 
 // Do not put .json at the end of the resource
 Resources::$useFormatAsExtension = false;
+
+// Use /api/v1/projects uri
+Defaults::$useUrlBasedVersioning = true;
 
 $r = new Restler();
 // comment the line above and uncomment the line below for production mode
 // $r = new Restler(true);
 
-$r->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource', \Tuleap\Project\REST\ProjectResource::PATH);
+$r->setAPIVersion(file_get_contents(__DIR__ .'/VERSION'));
+$r->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource', 'projects');
 EventManager::instance()->processEvent(Event::REST_RESOURCES, array('restler' => $r));
 $r->addAPIClass('Resources');
 

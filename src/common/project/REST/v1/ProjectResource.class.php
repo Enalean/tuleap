@@ -17,20 +17,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Project\REST;
-
-require_once __DIR__ .'/../ProjectManager.class.php';
-require_once __DIR__ .'/ProjectInfoRepresentation.class.php';
+namespace Tuleap\Project\REST\v1;
 
 use ProjectManager;
 use \Luracast\Restler\RestException;
+use \Tuleap\Project\REST\ProjectInfoRepresentation;
 
 /**
  * Wrapper for project related REST methods
  */
 class ProjectResource {
-
-    const PATH = 'projects';
 
     /**
      * Method to handle GET /projects/:id

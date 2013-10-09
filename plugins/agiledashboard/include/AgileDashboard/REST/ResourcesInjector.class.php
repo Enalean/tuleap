@@ -24,6 +24,6 @@
 class AgileDashboard_REST_ResourcesInjector {
 
     public function populate(Luracast\Restler\Restler $restler) {
-        $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\MilestoneResource', \Tuleap\AgileDashboard\REST\MilestoneResource::PATH);
+        $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\MilestoneResource', 'milestones');
     }
 }

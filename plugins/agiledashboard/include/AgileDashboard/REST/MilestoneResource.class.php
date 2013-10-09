@@ -24,8 +24,6 @@ namespace Tuleap\AgileDashboard\REST;
  */
 class MilestoneResource {
 
-    const PATH = 'milestones';
-
     public function get() {
         return 'hello world';
     }
