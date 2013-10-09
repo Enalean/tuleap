@@ -19,6 +19,7 @@
  */
 
 require_once('common/dao/include/DataAccess.class.php');
+require_once('common/dao/include/DataAccessCredentials.class.php');
 Mock::generatePartial('DataAccess', 'DataAccessTestVersion', array('connect'));
 
 /**
@@ -35,7 +36,8 @@ class DataAccessTest extends UnitTestCase {
         $this->expectException('DataAccessException');
         $this->expectError();
         $da = new DataAccessTestVersion($this);
-        $da->DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
+        $data_access_credentials = new DataAccessCredentials($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
+        $da->DataAccess($data_access_credentials);
     }
     
     function testQuoteSmart() {

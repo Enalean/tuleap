@@ -21,6 +21,7 @@
  */
 
 require_once('include/DataAccess.class.php');
+require_once('include/DataAccessCredentials.class.php');
 
 class CodendiDataAccess extends DataAccess {
     
@@ -29,7 +30,15 @@ class CodendiDataAccess extends DataAccess {
       if(isset($GLOBALS['sys_enablessl']) && $GLOBALS['sys_enablessl']) {
           $conn_opt = MYSQL_CLIENT_SSL;
       }
-      $this->DataAccess($GLOBALS['sys_dbhost'], $GLOBALS['sys_dbuser'], $GLOBALS['sys_dbpasswd'], $GLOBALS['sys_dbname'], $conn_opt);
+
+      $credentials = new DataAccessCredentials(
+        $GLOBALS['sys_dbhost'],
+        $GLOBALS['sys_dbuser'],
+        $GLOBALS['sys_dbpasswd'],
+        $GLOBALS['sys_dbname']
+      );
+
+      $this->DataAccess($credentials, $conn_opt);
     }
     
     protected static $_instance;
