@@ -1,3 +1,6 @@
+Version 3.43 - Tuleap 6.6
+    * Preventing repo deletion whilst repo is migrated to Gerrit
+
 Version 3.42 - Tuleap 6.6
     * Fix request #5051: Merge all gitolite updates during process_system_event
 
