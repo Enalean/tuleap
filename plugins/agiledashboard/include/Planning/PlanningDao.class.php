@@ -81,17 +81,9 @@ class PlanningDao extends DataAccessObject {
     function searchByPlanningTrackerIds(array $planning_tracker_ids) {
         $planning_tracker_ids = $this->da->escapeIntImplode($planning_tracker_ids);
         
-        $sql = "
-            SELECT p.*,
-                   b.tracker_id AS backlog_tracker_id
-            
-            FROM      plugin_agiledashboard_planning                 AS p
-            LEFT JOIN plugin_agiledashboard_planning_backlog_tracker AS b ON p.id = b.planning_id
-            
-            WHERE planning_tracker_id IN ($planning_tracker_ids)
-            GROUP BY p.id;
-        ";
-        
+        $sql = "SELECT *
+                FROM plugin_agiledashboard_planning
+                WHERE planning_tracker_id IN ($planning_tracker_ids)";
         return $this->retrieve($sql);
     }
 

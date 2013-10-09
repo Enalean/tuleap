@@ -102,11 +102,15 @@ class PlanningFactory_duplicationTest extends PlanningFactoryTest {
                   'group_id'            => 101,
                   'backlog_title'       => 'Backlog',
                   'plan_title'          => 'Plan',
-                  'planning_tracker_id' => $sprint_tracker_id,
-                  'backlog_tracker_id'  => $story_tracker_id)
+                  'planning_tracker_id' => $sprint_tracker_id)
         );
 
         stub($dao)->searchByPlanningTrackerIds(array_keys($tracker_mapping))->returns($rows);
+
+        stub($dao)->searchBacklogTrackersById(1)->returnsDar(array(
+            'planning_id' => 1,
+            'tracker_id'  => $story_tracker_id
+        ));
 
         $expected_paramters = PlanningParameters::fromArray(array(
             'id'                  => 1,
@@ -115,7 +119,7 @@ class PlanningFactory_duplicationTest extends PlanningFactoryTest {
             'backlog_title'       => 'Backlog',
             'plan_title'          => 'Plan',
             'planning_tracker_id' => $sprint_tracker_copy_id,
-            'backlog_tracker_id'  => $story_tracker_copy_id
+            'backlog_tracker_ids' => array($story_tracker_copy_id)
         ));
 
         $dao->expectOnce('createPlanning', array($group_id,
