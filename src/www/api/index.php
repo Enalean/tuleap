@@ -18,7 +18,7 @@
  */
 
 require_once 'pre.php';
-require_once '/usr/share/restler-3.0-rc4/vendor/restler.php';
+require_once '/usr/share/restler/vendor/restler.php';
 require_once 'common/project/REST/ProjectResource.class.php';
 require_once 'common/REST/BasicAuthentication.class.php';
 
