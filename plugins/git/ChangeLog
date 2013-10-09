@@ -1,3 +1,6 @@
+Version 3.44 - Tuleap 6.6
+    * Fix community #5237 : Git repo are now fully created
+
 Version 3.43 - Tuleap 6.6
     * Preventing repo deletion whilst repo is migrated to Gerrit
 
