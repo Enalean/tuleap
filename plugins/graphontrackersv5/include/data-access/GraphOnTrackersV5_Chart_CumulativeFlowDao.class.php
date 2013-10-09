@@ -56,7 +56,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlowDao extends DataAccessObject {
         $from_chart_id = $this->da->escapeInt($from_chart_id);
         $to_chart_id   = $this->da->escapeInt($to_chart_id);
         $sql = "INSERT INTO $this->table_name (id, field_id, start_date, stop_date, scale)
-                SELECT $to_chart_id, id, field_id, start_date, stop_date, scale
+                SELECT $to_chart_id, field_id, start_date, stop_date, scale
                 FROM $this->table_name
                 WHERE id = $from_chart_id";
 
