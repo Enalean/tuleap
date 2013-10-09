@@ -18,6 +18,15 @@
  */
 
 require_once 'pre.php';
+
+if (! session_issecure()) {
+    header("HTTP/1.0 403 Forbidden");
+    $GLOBALS['Response']->sendJSON(array(
+        'error' => 'The API is only accessible over HTTPS.'
+    ));
+    die();
+}
+
 require_once '/usr/share/restler/vendor/restler.php';
 require_once 'common/REST/BasicAuthentication.class.php';
 
