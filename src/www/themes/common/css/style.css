@@ -4629,6 +4629,14 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
   background-color: #003399 \9;
 }
 
+a.btn-primary {
+    color: #fff;
+}
+.btn-primary .caret {
+    border-top: 4px solid #FFFFFF;
+    opacity: 1;
+}
+
 .btn-danger {
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);

@@ -240,11 +240,41 @@
     border-spacing: 0;
 }
 
+#topblcontent table th, #topblcontent table td,
+#topplanning table th, #topplanning table td,
+#planning table th, #planning table td,
+#blcontent table th, #blcontent table td {
+    white-space: nowrap;
+}
+
+#topblcontent table td.milestone-element-title, #topblcontent table td.submilestone-element-title,
+#topplanning table td.milestone-element-title, #topplanning table td.submilestone-element-title,
+#planning table td.milestone-element-title, #planning table td.submilestone-element-title,
+#blcontent table td.milestone-element-title, #blcontent table td.submilestone-element-title {
+    width: 100%;
+    white-space: normal;
+}
+
+#topblcontent table td.milestone-element-parent, #topblcontent table td.submilestone-element-parent,
+#blcontent table td.milestone-element-parent, #blcontent table td.submilestone-element-parent {
+    min-width: 300px;
+    max-width: 300px;
+    white-space: normal;
+}
+
+#topplanning table td.milestone-element-parent, #topplanning table td.submilestone-element-parent,
+#planning table td.milestone-element-parent, #planning table td.submilestone-element-parent {
+    min-width: 150px;
+    max-width: 150px;
+    white-space: normal;
+}
+
 #topblcontent table td:first-child,
 #topplanning table td:first-child,
 #planning table td:first-child,
 #blcontent table td:first-child {
-    width: 55px;
+    min-width: 35px;
+    max-width: 60px;
 }
 
 #topblcontent table,
@@ -307,9 +337,4 @@
 .control-group.info .help-inline {
     color: #3A87AD;
     font-style: italic;
-}
-
-.btn-primary .caret {
-    border-top: 4px solid #FFFFFF;
-    opacity: 1;
 }

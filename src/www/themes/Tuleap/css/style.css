@@ -967,6 +967,10 @@ a:hover {
     text-decoration: underline;
 }
 
+a.btn-primary {
+    color: #fff;
+}
+
 .main_body_row {
     margin: 0 1em;
     background: white;

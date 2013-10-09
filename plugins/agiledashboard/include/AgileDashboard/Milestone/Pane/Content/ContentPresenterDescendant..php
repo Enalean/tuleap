@@ -59,12 +59,20 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant extends A
         return count($this->add_new_backlog_items_urls) > 0;
     }
 
+    public function only_one_new_backlog_items_urls() {
+        return count($this->add_new_backlog_items_urls) == 1;
+    }
+
     public function add_new_backlog_items_urls() {
         return $this->add_new_backlog_items_urls;
     }
 
     public function trackers() {
         return $this->trackers;
+    }
+
+    public function create_new_specific_item() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'create_new_specific_item', $this->add_new_backlog_items_urls[0]['tracker_type']);
     }
 
     public function create_new_item() {
