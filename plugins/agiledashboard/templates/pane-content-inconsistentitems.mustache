@@ -1,8 +1,7 @@
-{{#has_something}}
-    {{#has_something_done}}
-        <h3 class="inconsistent-items-title">{{inconsistent_items_title}}</h3>
-        <p>{{inconsistent_items_intro}}</p>
-        <div class="row-fluid">
+{{#has_something_inconsistent}}
+    <h3 class="inconsistent-items-title">{{inconsistent_items_title}}</h3>
+    <p>{{inconsistent_items_intro}}</p>
+    <div class="row-fluid">
         <table class="table table-striped table-hover table-bordered span8">
             <thead>
                 <tr>
@@ -13,16 +12,15 @@
                 </tr>
             </thead>
             <tbody>
-                {{#done_collection}}
+                {{#inconsistent_collection}}
                     <tr data-artifact-id="{{id}}">
                         <td><a href="{{url}}">{{id}}</a></td>
                         <td><span class="label">{{type}}</span></td>
                         <td class="milestone-element-title">{{title}}</td>
                         <td class="milestone-element-parent"><a href="{{parent_url}}">{{parent_title}}</a></td>
                     </tr>
-                {{/done_collection}}
+                {{/inconsistent_collection}}
             </tbody>
         </table>
-        </div>
-    {{/has_something_done}}
-{{/has_something}}
+    </div>
+{{/has_something_inconsistent}}

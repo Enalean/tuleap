@@ -29,6 +29,9 @@ abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
     private $done_collection;
 
+    /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
+    private $inconsistent_collection;
+
     /** @var String */
     protected $backlog_item_type;
 
@@ -43,9 +46,7 @@ abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     ) {
         $this->todo_collection           = $todo;
         $this->done_collection           = $done;
-        if ($this->todo_collection) {
-            $this->parent_item_type = $todo->getParentItemName();
-        }
+        $this->inconsistent_collection   = $done;
         $this->backlog_item_type         = $backlog_item_type;
         foreach ($trackers_without_initial_effort_field as $tracker) {
             $this->trackers_without_initial_effort_field[] = $tracker->getName();
@@ -148,6 +149,16 @@ abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     public function inconsistent_items_intro() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'inconsistent_items_intro');
     }
+
+    public function has_something_inconsistent() {
+        return count($this->inconsistent_collection) > 0;
+    }
+
+    public function inconsistent_collection() {
+        return $this->inconsistent_collection;
+    }
+
+
 }
 
 ?>
