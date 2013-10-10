@@ -1,3 +1,9 @@
+Version 5.167 - Tuleap 6.6
+    * Fix Sla #5870 : Be able to remove tracker admin access right
+
+Version 5.166 - Tuleap 6.6
+    * Fix community #5279 : remove call to an unexisting Dao
+
 Version 5.165 - Tuleap 6.6
     * Enabling solo elements on cardwall
 

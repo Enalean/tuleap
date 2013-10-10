@@ -45,10 +45,14 @@ class GitViews_RepoManagement_Pane_Delete extends GitViews_RepoManagement_Pane {
         $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
         $html .= '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
 
-        if ($this->request->get('confirm_deletion')) {
-            $html .= $this->fetchConfirmDeletionButton();
+        if (! $this->repository->isMigratedToGerrit()) {
+            if ($this->request->get('confirm_deletion')) {
+                $html .= $this->fetchConfirmDeletionButton();
+            } else {
+                $html .= $this->fetchDeleteButton();
+            }
         } else {
-            $html .= $this->fetchDeleteButton();
+            $html .= $this->fetchGerritMigtatedInfo();
         }
         $html .= '</form>';
         return $html;
@@ -86,5 +90,12 @@ class GitViews_RepoManagement_Pane_Delete extends GitViews_RepoManagement_Pane {
         $html .= '</div>';
         return $html;
     }
+
+    private function fetchGerritMigtatedInfo() {
+        $html = '<div class="alert alert-info">'. $GLOBALS['Language']->getText('plugin_git', 'deletion_gerrit_no') .'</div>';
+
+        return $html;
+    }
+
 }
 ?>

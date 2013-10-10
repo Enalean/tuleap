@@ -1,24 +1,29 @@
 Version 6.6 (Not released yet)
 	== Enhancement ==
 	* Improvement of login interface. Adding support for multiple type of login sources (tuleap/openID).
+	* story #5162: send an email when a news is published
 
 	== Plugins ==
-	* tracker: 5.165
-	* git: 3.42
+	* tracker: 5.167
+	* git: 3.45
 	* forumml: 2.6.15
 	* fulltextsearch: 0.21
 	* ldap: 3.35
-	* mediawiki: 0.16
+	* mediawiki: 0.17
 	* agiledashboard: 0.102
 	* openid: 0.2
 	* statistics: 0.32
 	* tests: 5.19
 	* cardwall: 0.9.48
+	* IM: 1.5.12
 
 	== Bux Fix ==
 	* Fix request #5207: Typo in access denied message
 	* Fix request #5134 - Calendar is not displayed when creating a Release or Sprint
 	* Fix request #4815 - Double update of release
+	* Fix Sla #5868 : Fix old TV3 wrong help link
+	* Fix Sla #5906 : Fix stack trace
+	* Fix request #5174: Always use POST to trigger jenkins jobs
 
 Version 6.5 (Thursday, September 19th 2013)
 

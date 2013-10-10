@@ -77,6 +77,8 @@ news_utils	news_request_mail_details	News Details: $1
 news_utils	news_request_mail_approve_link	Please click on the following URL to promote (or reject) the news:
 news_utils	news_request_sent	Promotion request has been sent to site administrators.
 news_utils	news_request_not_sent	Promotion request couldn't have been sent to site administrators.
+news_utils	news_sent	News has been sent to members of selected groups.
+news_utils	news_not_sent	News couldn't be sent to members of selected groups.
 #
 #-----------------------------------------------
 # Script: SF/www/news/submit.php
@@ -94,3 +96,5 @@ news_submit	news_perm_update_success	Permissions updated successfully.
 news_submit	news_perm_create_success	Permissions created successfully.
 news_submit	news_promote	Request promotion to $1 front page ?
 news_submit	promote_warn	<b>WARNING:</b> Private news are not promoted to $1 front page
+news_submit	send_news_by_email	Send news by email to
+news_submit	news_not_sent_max_users	You exceed the maximum number ($1) of persons to send the message. The email is not sent.

@@ -34,6 +34,8 @@ $refname         = $argv[5];
 $git_exec = new Git_Exec($repository_path, $repository_path);
 $git_dao  = new GitDao();
 
+$logger   = new BackendLogger();
+
 $post_receive = new Git_Hook_PostReceive(
     new Git_Hook_LogAnalyzer(
         $git_exec
@@ -51,7 +53,8 @@ $post_receive = new Git_Hook_PostReceive(
         new Jenkins_Client(
             new Http_Client()
         ),
-        new Git_Ci_Dao()
+        new Git_Ci_Dao(),
+        $logger
     ),
     new Git_Hook_LogPushes(
         $git_dao

@@ -37,7 +37,7 @@ class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase {
         $this->repository_factory = mock('GitRepositoryFactory');
         $this->system_event_dao   = mock('SystemEventDao');
 
-        $this->event = partial_mock('SystemEvent_GIT_REPO_UPDATE', array('done', 'warning', 'error'));
+        $this->event = partial_mock('SystemEvent_GIT_REPO_UPDATE', array('done', 'warning', 'error', 'getId'));
         $this->event->setParameters("$this->repository_id");
         $this->event->injectDependencies($this->repository_factory, $this->system_event_dao);
     }
@@ -69,6 +69,7 @@ class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase {
     public function itSkipsAllEvents() {
         $project_id = 456;
         stub($this->repository)->getProjectId()->returns($project_id);
+        stub($this->event)->getId()->returns(001);
 
         $all_events = array(
             array( 'id' => 111, 'parameters' => '33'),
@@ -77,12 +78,12 @@ class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase {
             array( 'id' => 444, 'parameters' => '7')
         );
 
-        $all_event_ids = array(111, 222, 333, 444);
+        $all_event_ids = array(111, 222, 333, 444, 001);
 
         stub($this->repository_factory)->getRepositoryById()->returns($this->repository);
         stub($this->system_event_dao)->searchNewGitRepoUpdateEvents()->returns($all_events);
 
-        expect($this->repository_factory)->getRepositoryById()->count(2);
+        expect($this->repository_factory)->getRepositoryById()->count(3);
 
         $same_project_repositories = array(1, 5555, 458, 66, 7);
         stub($this->backend)->searchOtherRepositoriesInSameProjectFromRepositoryList()->returns($same_project_repositories);

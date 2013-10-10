@@ -34,6 +34,7 @@ DROP TABLE IF EXISTS plugin_maillog_message;
 CREATE TABLE plugin_maillog_message (
   id_message INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
   body TEXT NULL,
+  html_body TEXT NULL,
   PRIMARY KEY(id_message)
 );
 

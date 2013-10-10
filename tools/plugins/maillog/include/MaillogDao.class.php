@@ -67,13 +67,16 @@ class MaillogDao extends DataAccessObject {
     function insertBody($mail) {
         if (is_a($mail, 'Codendi_Mail')) {
             $body = $mail->getBodyText()."\n".$mail->getBodyHTML();
+            $html_body = $mail->getBodyHTML();
         } else {
-            $body = $mail->getBody();
+            $body      = $mail->getBody();
+            $html_body = '';
         }
 
         $qry = sprintf('INSERT INTO plugin_maillog_message'.
-                       ' (body)'.
-                       ' VALUES ("%s")',
+                       ' (body, html_body)'.
+                       ' VALUES ("%s", "%s")',
+                       db_escape_string($html_body),
                        db_escape_string($body));
         $this->update($qry);
         if(!$this->da->isError()) {
@@ -91,6 +94,7 @@ class MaillogDao extends DataAccessObject {
     function insertMail($mail) {
         $id_message = $this->insertBody($mail);
         if($id_message !== false) {
+            $this->insertMessageHeader($id_message, PLUGIN_MAILLOG_FROM, $mail->getFrom());
             $this->insertMessageHeader($id_message, PLUGIN_MAILLOG_SUBJECT, $mail->getSubject());
             $this->insertMessageHeader($id_message, PLUGIN_MAILLOG_DATE, date('r'));
             $this->insertMessageHeader($id_message, PLUGIN_MAILLOG_TO, $mail->getTo());
