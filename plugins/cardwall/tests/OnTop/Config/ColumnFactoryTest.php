@@ -64,9 +64,9 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
         $this->assertEqual(2, count($columns));
         $this->assertEqual("On Going", $columns[1]->getLabel());
         $this->assertEqual("rgb(123, 12, 10)", $columns[0]->getBgcolor());
-        $this->assertEqual("white", $columns[0]->getFgcolor());
-        $this->assertEqual("white", $columns[1]->getBgcolor());
-        $this->assertEqual("black", $columns[1]->getFgcolor());
+        $this->assertEqual("rgb(255,255,255)", $columns[0]->getFgcolor());
+        $this->assertEqual("rgb(248,248,248)", $columns[1]->getBgcolor());
+        $this->assertEqual("rgb(0,0,0)", $columns[1]->getFgcolor());
     }
 
     public function itBuildsAnEmptyFreestyleCollection() {

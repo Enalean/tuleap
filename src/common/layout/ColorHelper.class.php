@@ -29,6 +29,12 @@ class ColorHelper {
         return sprintf('#%02X%02X%02X', $r, $g, $b);
     }
 
+    /** @return string like '#efdabc' from a string like 'rgb(123,12,1)' */
+    public static function CssRGBToHexa($rgb) {
+        preg_match_all('/\d{1,3}/', $rgb, $out);
+        return self::RGBToHexa($out[0][0], $out[0][1], $out[0][2]);
+    }
+
     /** @return array like {232, 123, 312} */
     public static function HexatoRGB($hex) {
         $delta = strlen($hex) == 4 ? 1 : 2;

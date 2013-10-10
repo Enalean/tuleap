@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/layout/ColorHelper.class.php';
+
 class Cardwall_OnTop_Config_View_ColumnDefinition {
 
     /**
@@ -48,10 +50,11 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
 
     private function fetchMappings() {
         $html  = '';
-        $html .= '<table class="cardwall_admin_ontop_mappings"><thead><tr valign="bottom">';
+        $html .= '<table class="cardwall_admin_ontop_mappings"><thead><tr valign="top">';
         $html .= '<td></td>';
         foreach ($this->config->getDashboardColumns() as $column) {
-            $html .= '<th style="background-color: '. $column->bgcolor .'; color: '. $column->fgcolor .';">';
+            $html .= '<th>';
+            $html .= '<div class="cardwall-column-header-color" style="background-color: '. $column->bgcolor .'; color: '. $column->fgcolor .';"></div>';
             $html .= $this->fetchColumnHeader($column);
             $html .= '</th>';
         }
@@ -197,7 +200,33 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
     }
 
     protected function fetchColumnHeader(Cardwall_Column $column) {
-        return '<input type="text" name="column['. $column->id .'][label]" value="'. $this->purify($column->label) .'" />';
+        $html  = '<input type="text" name="column['. $column->id .'][label]" value="'. $this->purify($column->label) .'" />';
+        $html .= $this->decorateEdit($column);
+
+        return $html;
+    }
+
+    private function decorateEdit($column) {
+        $id   = 'column_'. $column->id .'_field';
+        $hexa = ColorHelper::CssRGBToHexa($column->bgcolor);
+        $html = $this->fetchSquareColor('column_'.$column->id, $column->bgcolor, 'colorpicker');
+        $html .= '<input id="'.$id .'" type="text" size="6" autocomplete="off" name="column['. $column->id .'][bgcolor]" value="'. $hexa .'" />';
+        return $html;
+    }
+
+    private function fetchSquareColor($id, $title, $classname, $img = 'blank16x16.png') {
+        $html = '';
+        $bgcolor = "background-color:$title;";
+
+        $html .= $GLOBALS['HTML']->getImage($img, array(
+            'id'     => $id,
+            'width'  => '16px',
+            'height' => '16px',
+            'style'  => 'margin-left: 5px; border: 1px solid black; vertical-align:middle; '. $bgcolor,
+            'title'  => $title,
+            'class'  => $classname,
+        ));
+        return $html;
     }
 
     protected function fetchAdditionalColumnHeader() {

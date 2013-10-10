@@ -36,12 +36,12 @@ class Cardwall_OnTop_Config_Command_UpdateColumnsTest extends TuleapTestCase {
 
     public function itUpdatesAllColumns() {
         $request = aRequest()->with('column', array(
-            12 => array('label' => 'Todo'),
+            12 => array('label' => 'Todo', 'bgcolor' => '#000000'),
             13 => array('label' => ''),
-            14 => array('label' => 'Done'))
+            14 => array('label' => 'Done', 'bgcolor' => '#16ed9d'))
         )->build();
-        stub($this->dao)->save($this->tracker_id, 12, 'Todo')->at(0);
-        stub($this->dao)->save($this->tracker_id, 14, 'Done')->at(1);
+        stub($this->dao)->save($this->tracker_id, 12, 'Todo', 0, 0, 0)->at(0);
+        stub($this->dao)->save($this->tracker_id, 14, 'Done', 22, 237, 157)->at(1);
         stub($this->dao)->save()->count(2);
         $this->command->execute($request);
     }

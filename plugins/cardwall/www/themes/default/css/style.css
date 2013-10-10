@@ -9,6 +9,10 @@
     clear:both;
     border-collapse: collapse;
 }
+.cardwall_admin_ontop_mappings th > .cardwall-column-header-color {
+    height: 5px;
+    margin-bottom: 7px;
+}
 #cardwall_board-nifty {
     float: right;
     color: #999;
