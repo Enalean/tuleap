@@ -32,6 +32,9 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant extends A
     /** @var Boolean */
     private $can_prioritize;
 
+    /** @var String */
+    private $solve_inconsistencies_url;
+
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done,
@@ -40,12 +43,14 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant extends A
         $add_new_backlog_items_urls,
         $trackers,
         $can_prioritize,
-        $trackers_without_initial_effort_defined
+        $trackers_without_initial_effort_defined,
+        $solve_inconsistencies_url
     ) {
         parent::__construct($todo, $done, $inconsistent_collection, $backlog_item_type, $trackers_without_initial_effort_defined);
         $this->add_new_backlog_items_urls  = $add_new_backlog_items_urls;
         $this->trackers                    = $trackers;
         $this->can_prioritize              = $can_prioritize;
+        $this->solve_inconsistencies_url   = $solve_inconsistencies_url;
     }
 
     public function getTemplateName() {
@@ -87,6 +92,15 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant extends A
         }
         return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'create_new_item_help', implode(', ', $trackers));
     }
+
+    public function solve_inconsistencies_button() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'solve_inconsistencies');
+    }
+
+    public function solve_inconsistencies_url() {
+        return $this->solve_inconsistencies_url;
+    }
+
 }
 
 ?>

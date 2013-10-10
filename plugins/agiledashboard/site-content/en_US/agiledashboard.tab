@@ -49,6 +49,9 @@ plugin_agiledashboard	display_five_more	Display $1 more
 
 plugin_agiledashboard	report_criteria_label	In milestone
 
+plugin_agiledashboard	error_on_inconsistencies_solving	An error occurred while trying to solve inconsistencies.
+plugin_agiledashboard	successful_inconsistencies_solving	Inconsistencies successfully solved!
+
 plugin_agiledashboard_contentpane	lab	This is a lab feature that is subjected to change in a near future. Please get in touch with us to <a href="mailto:tuleap-devel@tuleap.net">provide any feedback</a> about this work in progress, thanks!
 plugin_agiledashboard_contentpane	closed_items_title	Closed $1
 plugin_agiledashboard_contentpane	closed_items_intro	Please find below the items that are closed. You cannot change the priorities.
@@ -65,6 +68,7 @@ plugin_agiledashboard_contentpane	create_new_item_help	As per configuration, you
 plugin_agiledashboard_contentpane	initial_effort_warning	There doesn't appear to be an <em>Initial Effort</em> semantic defined for the Tracker(s) <em>$1</em>!
 plugin_agiledashboard_contentpane	inconsistent_items_title	Inconsistent $1
 plugin_agiledashboard_contentpane	inconsistent_items_intro	Here are the items that have been created inside a sub-milestone. You cannot change the priorities.
+plugin_agiledashboard_contentpane	solve_inconsistencies	Add them to current backlog
 
 plugin_agiledashboard_milestone_planning	help_intro	This section allows to do $1 planning:
 plugin_agiledashboard_milestone_planning	help_left	On the left side, you have the $2 backlog with all open elements, not already scheduled for a $1.

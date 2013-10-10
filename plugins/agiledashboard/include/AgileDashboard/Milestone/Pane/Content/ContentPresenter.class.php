@@ -158,8 +158,6 @@ abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     public function inconsistent_collection() {
         return $this->inconsistent_collection;
     }
-
-
 }
 
 ?>

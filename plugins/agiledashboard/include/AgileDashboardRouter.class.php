@@ -132,6 +132,10 @@ class AgileDashboardRouter {
             case 'get-more-milestones':
                 $this->executeAction($controller, 'getMoreMilestones');
                 break;
+            case 'solve-inconsistencies':
+                $milestone_controller = $this->milestone_controller_factory->getMilestoneController($request);
+                $this->executeAction($milestone_controller, 'solveInconsistencies');
+                break;
             case 'index':
             default:
                 $this->renderAction($controller, 'index', $request);

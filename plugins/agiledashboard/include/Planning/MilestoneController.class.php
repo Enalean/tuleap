@@ -112,6 +112,40 @@ class Planning_MilestoneController extends MVC2_PluginController {
         $this->render('submilestone-content', $this->getSubmilestonePresenter());
     }
 
+    public function solveInconsistencies() {
+        $milestone_artifact = Tracker_ArtifactFactory::instance()->getArtifactById($this->request->get('aid'));
+        $milestone          = $this->milestone_factory->getMilestoneFromArtifact($milestone_artifact);
+        $artifact_ids       = $this->request->get('inconsistent-artifacts-ids');
+        $extractor          = new AgileDashboard_PaneRedirectionExtractor();
+
+        if (! ($this->inconsistentArtifactsIdsAreValid($artifact_ids) && $milestone->solveInconsistencies($this->getCurrentUser(), $artifact_ids)) ) {
+            $this->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_agiledashboard', 'error_on_inconsistencies_solving'));
+        }
+
+        $this->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_agiledashboard', 'successful_inconsistencies_solving'));
+
+        if (! $request_has_redirect = $extractor->getRedirectToParameters($this->request, $this->project)) {
+            $this->redirect(array(
+                'group_id' => $this->project->getGroupId()
+            ));
+        }
+
+        $this->redirect($extractor->getRedirectToParameters($this->request, $this->project));
+    }
+
+    private function inconsistentArtifactsIdsAreValid(array $artifact_ids) {
+        $validator        = new Valid_UInt();
+        $validator->required();
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+
+        foreach ($artifact_ids as $artifact_id) {
+            if (! ($validator->validate($artifact_id) && $artifact_factory->getArtifactById($artifact_id)) ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private function getSubmilestonePresenter() {
         $presenter_builder = $this->pane_presenter_builder_factory->getSubmilestonePresenterBuilder();
         

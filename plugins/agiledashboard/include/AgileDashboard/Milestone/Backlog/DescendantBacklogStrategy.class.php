@@ -133,8 +133,17 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
             $this->getAddItemsToBacklogUrls($user, $milestone, $redirect_to_self),
             $this->descendant_trackers,
             $this->canUserPrioritizeBacklog($user),
-            $this->getTrackersWithoutInitialEffort()
+            $this->getTrackersWithoutInitialEffort(),
+            $this->getSolveInconsistenciesUrl($milestone, $redirect_to_self)
         );
+    }
+
+    private function getSolveInconsistenciesUrl(Planning_ArtifactMilestone $milestone, $redirect_to_self) {
+        return  AGILEDASHBOARD_BASE_URL.
+                "/?group_id=".$milestone->getGroupId().
+                "&aid=".$milestone->getArtifactId().
+                "&action=solve-inconsistencies".
+                "&".$redirect_to_self;
     }
 }
 
