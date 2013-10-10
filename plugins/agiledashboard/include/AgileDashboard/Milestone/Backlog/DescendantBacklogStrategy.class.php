@@ -122,11 +122,13 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
         Planning_ArtifactMilestone $milestone,
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done,
+        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $inconsistent_collection,
         $redirect_to_self) {
 
         return new AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant(
             $todo,
             $done,
+            $inconsistent_collection,
             $this->getBacklogItemName(),
             $this->getAddItemsToBacklogUrls($user, $milestone, $redirect_to_self),
             $this->descendant_trackers,

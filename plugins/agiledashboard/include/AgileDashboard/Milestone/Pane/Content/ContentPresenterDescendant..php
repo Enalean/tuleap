@@ -35,13 +35,14 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant extends A
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done,
+        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $inconsistent_collection,
         $backlog_item_type,
         $add_new_backlog_items_urls,
         $trackers,
         $can_prioritize,
         $trackers_without_initial_effort_defined
     ) {
-        parent::__construct($todo, $done, $backlog_item_type, $trackers_without_initial_effort_defined);
+        parent::__construct($todo, $done, $inconsistent_collection, $backlog_item_type, $trackers_without_initial_effort_defined);
         $this->add_new_backlog_items_urls  = $add_new_backlog_items_urls;
         $this->trackers                    = $trackers;
         $this->can_prioritize              = $can_prioritize;

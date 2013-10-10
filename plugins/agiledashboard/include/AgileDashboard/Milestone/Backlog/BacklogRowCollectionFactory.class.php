@@ -48,6 +48,9 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
     /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection[] */
     private $unplanned_open_collection;
 
+    /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection[] */
+    private $inconsistent_collection;
+
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
 
@@ -117,6 +120,17 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
         return $this->unplanned_open_collection[$milestone->getArtifactId()];
     }
 
+    public function getInconsistentCollection(
+        PFUser $user,
+        Planning_Milestone $milestone,
+        AgileDashboard_Milestone_Backlog_BacklogStrategy $backlog_strategy,
+        $redirect_to_self
+    ) {
+        $this->initCollections($user, $milestone, $backlog_strategy, $redirect_to_self);
+
+        return $this->inconsistent_collection[$milestone->getArtifactId()];
+    }
+
     public function getAllCollection(
         PFUser $user,
         Planning_Milestone $milestone,
@@ -144,6 +158,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
         $this->todo_collection[$id]           = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
         $this->done_collection[$id]           = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
         $this->unplanned_open_collection[$id] = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
+        $this->inconsistent_collection[$id] = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
         $artifacts            = array();
         $backlog_item_ids     = array();
 
@@ -166,6 +181,8 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
                 $redirect_to_self
             );
         }
+
+        $this->initInconsistentItems($user, $milestone, $redirect_to_self, $planned);
     }
 
     private function getParentArtifacts(Planning_Milestone $milestone, PFUser $user, array $backlog_item_ids) {
@@ -432,6 +449,16 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
         }
 
         return $ids;
+    }
+
+    private function initInconsistentItems(PFUser $user, Planning_Milestone $milestone, $redirect_to_self, array $planned) {
+        foreach ($planned as $planned_artifact_id) {
+            if (! $this->all_collection[$milestone->getArtifactId()]->containsId($planned_artifact_id)) {
+                $this->inconsistent_collection[$milestone->getArtifactId()]->push(
+                    new AgileDashboard_BacklogItem($this->artifact_factory->getArtifactByIdUserCanView($user, $planned_artifact_id), $redirect_to_self)
+                );
+            }
+        }
     }
 }
 ?>

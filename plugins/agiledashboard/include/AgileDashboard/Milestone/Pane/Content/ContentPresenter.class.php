@@ -41,12 +41,13 @@ abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done,
+        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $inconsistent_collection,
         $backlog_item_type,
         array $trackers_without_initial_effort_field
     ) {
         $this->todo_collection           = $todo;
         $this->done_collection           = $done;
-        $this->inconsistent_collection   = $done;
+        $this->inconsistent_collection   = $inconsistent_collection;
         $this->backlog_item_type         = $backlog_item_type;
         foreach ($trackers_without_initial_effort_field as $tracker) {
             $this->trackers_without_initial_effort_field[] = $tracker->getName();
