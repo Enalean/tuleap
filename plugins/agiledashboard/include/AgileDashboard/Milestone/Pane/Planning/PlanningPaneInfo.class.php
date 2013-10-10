@@ -51,7 +51,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo extends AgileDashb
      * @see string eg: '/themes/common/images/ic/duck.png'
      */
     protected function getIcon() {
-        return $this->theme_path.'/images/sticky-notes-pin.png';
+        return $this->theme_path.'/images/planning.png';
     }
 
     /**

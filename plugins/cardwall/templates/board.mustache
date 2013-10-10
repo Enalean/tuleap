@@ -3,7 +3,7 @@
         {{#mappings}}
             <input type="hidden" id="cardwall_column_mapping_{{column_id}}_{{field_id}}" value="{{value_id}}" />
         {{/mappings}}
-        <table width="100%" border="1" bordercolor="#ccc" cellspacing="2" cellpadding="0">
+        <table width="100%" border="0" bordercolor="#ccc" cellspacing="0" cellpadding="0">
             <colgroup>
                 {{#has_swimline_header}}
                     <col width="{{column_width}}%" />
@@ -16,10 +16,11 @@
             <thead>
                 <tr>
                     {{#has_swimline_header}}
-                        <th>{{swimline_title}}</th>
+                        <th class="cardwall-column-header">{{swimline_title}}</th>
                     {{/has_swimline_header}}
                     {{#columns}}
-                        <th class="cardwall-column-header" style="background-color: {{bgcolor}}; color: {{fgcolor}}">
+                        <th class="cardwall-column-header">
+                            <div class="cardwall-column-header-color" style="background-color: {{bgcolor}}; color: {{fgcolor}}"></div>
                             <div class="cardwall-column-header-container">
                                 {{label}}
                                 <div class="cardwall-column-header-controls">
@@ -39,7 +40,7 @@
                 {{#swimlines}}
                     <tr valign="top" id="swimline-{{swimline_id}}" data-row-id="{{swimline_id}}">
                         {{#has_swimline_header}}
-                            <td class="cardwall-cell">
+                            <td class="cardwall-cell cardwall-cell-header">
                                 <div class="cardwall-cell-container">
                                     <ul class="nodrag">
                                         <li id="cardwall_board_postit-{{swimline_id}}">

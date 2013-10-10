@@ -1,13 +1,21 @@
 #cardwall {
     padding-bottom: 1em;
+
 }
 .cardwall_board-actions {
     text-align: right;
     margin-bottom: 1em;
 }
-.cardwall_board table {
+
+.cardwall_board > table {
     clear:both;
-    border-collapse: collapse;
+    border-color: #D8D8D8;
+    border-top: 1px solid #D8D8D8;
+    border-left: 1px solid #D8D8D8;
+}
+.cardwall_board > table > thead > tr > th, .cardwall > tr > td {
+  border-right: 1px solid #D8D8D8;
+  border-bottom: 1px solid #D8D8D8;
 }
 #cardwall_board-nifty {
     float: right;
@@ -33,11 +41,15 @@
 }
 
 .cardwall_board .card {
-  cursor: move;
-  -moz-box-shadow:1px 1px 3px rgba(33,33,33,.3);
-  -webkit-box-shadow: 1px 1px 3px rgba(33,33,33,.3);
-  box-shadow: 1px 1px 3px rgba(33,33,33,.3);
-  background: #ffe;
+    cursor: move;
+    -webkit-border-radius:  5px;
+        -moz-border-radius: 5px;
+            border-radius:  5px;
+    background: #FFF7C2;
+    border: 1px solid #CACACA;
+    -moz-box-shadow:    0px 1px 0px 0px rgba(217,217,217,0.50);
+    -webkit-box-shadow: 0px 1px 0px 0px rgba(217,217,217,0.50);
+    box-shadow:         0px 1px 0px 0px rgba(217,217,217,0.50);
 }
 .cardwall_board .nodrag .card {
   cursor: auto;
@@ -47,9 +59,16 @@
   -webkit-box-shadow: none;
   box-shadow: none;
 }
+
 .cardwall_board .nodrag .card,
 .cardwall_board .nodrag .card > .card-container {
-    background: #f9f9f9;
+    background: #FFF7C2;
+    -webkit-border-top-right-radius: 3px;
+    -webkit-border-bottom-right-radius: 3px;
+    -moz-border-radius-topright: 3px;
+    -moz-border-radius-bottomright: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
 .widget .cardwall_board .card {
@@ -134,17 +153,17 @@
 */
 
 .cardwall_board_column_hover {
-  background: #fcfcfc;
-  -moz-box-shadow:1px 1px 3px rgba(33,33,33, .7) inset;
-  -webkit-box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
-  box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
+  /*background: #fcfcfc;*/
+  -moz-box-shadow:    0 0 20px 0px rgba(0,0,0,0.1) inset;
+  -webkit-box-shadow: 0 0 20px 0px rgba(0,0,0,0.1) inset;
+  box-shadow:         0 0 20px 0px rgba(0,0,0,0.1) inset;
 }
 
 #tracker_report_renderers li.tracker_report_renderer_tab_plugin_cardwall a {
-    background-image: url(../images/ic/sticky-note-pin-faded.png);
+    background-image: url(../images/ic/sticky-note-faded.png);
 }
 #tracker_report_renderers li.tracker_report_renderer_tab_plugin_cardwall.tracker_report_renderers-current a {
-    background-image: url(../images/ic/sticky-note-pin.png);
+    background-image: url(../images/ic/sticky-note.png);
 }
 
 #plugin_cardwall_qrcode_toggler {
@@ -223,6 +242,19 @@
           box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
 }
 
+.cardwall-column-header {
+    text-transform: uppercase;
+}
+
+.cardwall-column-header, .cardwall-cell-header {
+    background-color: #F8F8F8;
+    color: #595959;
+}
+
+.cardwall-column-header-color {
+    height: 5px;
+}
+
 .cardwall-column-header-container,
 .cardwall-cell-container {
     position: relative;
@@ -244,6 +276,12 @@
     top: 10px;
 }
 
+.cardwall_board_postit_flying {
+    -moz-box-shadow:    -1px 13px 11px 0px rgba(203,203,203,0.70);
+    -webkit-box-shadow: -1px 13px 11px 0px rgba(203,203,203,0.70);
+    box-shadow:         -1px 13px 11px 0px rgba(203,203,203,0.70);
+}
+
 .cardwall-cell-stacked > .cardwall-cell-container > ul > .cardwall_board_postit:nth-child(1) {
     top: 0px;
 }
@@ -261,7 +299,17 @@
     display: none;
 }
 
-.cardwall-column-header-controls,
+
+.cardwall-column-header-controls {
+    position:absolute;
+    top: 9px;
+    right: 0;
+    cursor: pointer;
+    padding: 2px 4px;
+    color: #ccc;
+    font-size: 1.5em;
+}
+
 .cardwall-cell-controls {
     position:absolute;
     top: 0;
