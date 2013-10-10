@@ -457,7 +457,16 @@ class MediaWikiPlugin extends Plugin {
 	}
 
     public function register_project_creation($params) {
-        $this->createWiki($params['group_id']);
+        if ($this->serviceIsUsedInTemplate($params['template_id'])) {
+            $this->createWiki($params['group_id']);
+        }
+    }
+
+    private function serviceIsUsedInTemplate($project_id) {
+        $project_manager = ProjectManager::instance();
+        $project         = $project_manager->getProject($project_id);
+
+        return $project->usesService(self::SERVICE_SHORTNAME);
     }
 
     public function service_is_used($params) {
