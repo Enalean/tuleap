@@ -54,6 +54,8 @@ plugin_git	gerrit_migration_description	You are about to migrate your repository
 plugin_git	gerrit_migration_more_description	The management of the repository (permissions, ...) will be delegated to Gerrit: <ul><li>A project <em>$1</em> will be created on the chosen server.</li><li>The current repository will become a mirror of the Gerrit reference.</li></ul>
 plugin_git	gerrit_migrated_more_description	As a reminder, the management of the repository (permissions, ...) has been delegated to Gerrit: <ul><li>A project <em>$1</em> has been created on the server $2.</li><li>The current repository is now a mirror of the Gerrit reference.</li></ul>
 plugin_git	gerrit_migrate_to	Migrate repo to Gerrit
+plugin_git	gerrit_past_project_warn	This repository was migrated to the server in the past. You cannot migrate again without deleting the project on the Gerrit server
+plugin_git	gerrit_past_project_delete	Delete gerrit project
 plugin_git	gerrit_server_already_migrated	The repository <em>$1</em> has already been migrated to the Gerrit project: <a href="$3">$2</a>.
 plugin_git	permissions_on_remote_server	You can only change <strong>READ</strong> permissions since this repository is managed by a remote Gerrit server. Please note that those modifications are local to $1 <strong>ARE NOT propagated to Gerrit</strong>.
 plugin_git	gerrit_migration_ongoing	The migration of this repository to Gerrit server is on going, please wait for a few minutes.

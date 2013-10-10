@@ -133,5 +133,23 @@ document.observe('dom:loaded', function () {
 
     })();
 
+    $('gerrit_past_project_delete').hide();
+    $('gerrit_url').observe('change', toggleMigrateDeleteRemote);
+
+    function toggleMigrateDeleteRemote() {
+        var must_delete = $('gerrit_url').options[$('gerrit_url').selectedIndex].readAttribute('x-repo-previously-migrated');
+
+        if (! must_delete) {
+            $('gerrit_past_project_delete').hide();
+            $('migrate_access_right').show();
+            $('action').value = 'migrate_to_gerrit';
+            return;
+        }
+
+        $('gerrit_past_project_delete').show();
+        $('migrate_access_right').hide();
+        $('action').value = 'delete_gerrit_project';
+    }
+
 });
 

@@ -847,6 +847,14 @@ class GitRepository implements DVCSRepository {
         return false;
     }
 
+    public function wasPreviouslyMigratedButNotDeleted() {
+        return (
+            $this->remote_server_id &&
+            $this->remote_server_disconnect_date != false &&
+            $this->remote_project_deletion_date == false &&
+            ! $this->remote_project_is_deleted);
+    }
+
     public function setRemoteServerDisconnectDate($date) {
         $this->remote_server_disconnect_date = $date;
     }

@@ -84,9 +84,11 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         $html .= '<p>';
         $html .= '<label for="gerrit_url">'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_url') .'</label>';
         $html .= '<select name="remote_server_id" id="gerrit_url">';
-        $html .= '<option value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
+        $html .= '<option value="" selected="selected">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
         foreach ($this->gerrit_servers as $server) {
-            $html .= '<option value="'. (int)$server->getId() .'">'. $this->hp->purify($server->getHost()) .'</option>';
+            $previous_migration = ($this->doesRemoteGerritProjectNeedDeleting($server));
+            $html .= '<option x-repo-previously-migrated="'.$previous_migration.
+                '" value="'. (int)$server->getId() .'">'. $this->hp->purify($server->getHost()) .'</option>';
         }
         $html .= '</select>';
         $html .= '</p>';
@@ -99,9 +101,32 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
 
         $html .= '<input type="checkbox" name="migrate_access_right" '.$checked.'"> '.$GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_access_right');
         $html .= '</label>';
-        $html .= '<p><input type="submit" name="save" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_to') .'" /></p>';
+        $html .= '<p id="migrate_access_right"><input type="submit" name="save" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_to') .'" /></p>';
+        $html .= '<p id="gerrit_past_project_delete" class="alert alert-info">
+                    '. $GLOBALS['Language']->getText('plugin_git', 'gerrit_past_project_warn') .'
+                    <br />
+                    <br />
+                    <input type="submit" name="submit" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_past_project_delete') .'" />
+                </p>';
         $html .= '</form>';
         return $html;
+    }
+
+    private function doesRemoteGerritProjectNeedDeleting(Git_RemoteServer_GerritServer $server) {
+        if ($server->getId() != $this->repository->getRemoteServerId()) {
+            return false;
+        }
+
+        if (! $this->repository->wasPreviouslyMigratedButNotDeleted()) {
+            return false;
+        }
+
+        $project_name = $this->driver->getGerritProjectName($this->repository);
+        if ($this->driver->doesTheProjectExist($server, $project_name)) {
+            return true;
+        }
+
+        return false;
     }
 
     private function getContentAlreadyMigrated() {

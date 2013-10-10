@@ -230,6 +230,7 @@ class Git extends PluginController {
                                             'view_last_git_pushes',
                                             'migrate_to_gerrit',
                                             'disconnect_gerrit',
+                                            'delete_gerrit_project',
             );
         } else {
             $this->addPermittedAction('index');
@@ -476,13 +477,13 @@ class Git extends PluginController {
                 if (empty($repo) || empty($remote_server_id)) {
                     $this->addError($this->getText('actions_params_error'));
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
-                } elseif ($this->gerritProjectAlreadyExists($remote_server_id, $repo)) {
-                    $this->addError($this->getText('gerrit_project_exists'));
-                    $this->addAction('repoManagement', array($repo));
-                    $this->addView('repoManagement');
                 } else {
-                    $migrate_access_right = $this->request->existAndNonEmpty('migrate_access_right');
-                    $this->addAction('migrateToGerrit', array($repo, $remote_server_id, $migrate_access_right));
+                    if ($this->gerritProjectAlreadyExists($remote_server_id, $repo)) {
+                        $this->addError($this->getText('gerrit_project_exists'));
+                    } else {
+                        $migrate_access_right = $this->request->existAndNonEmpty('migrate_access_right');
+                        $this->addAction('migrateToGerrit', array($repo, $remote_server_id, $migrate_access_right));
+                    }
                     $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repoId, $pane, $migrate_access_right));
                 }
                 break;
@@ -495,6 +496,16 @@ class Git extends PluginController {
                     $this->addAction('disconnectFromGerrit', array($repo));
                     $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
                 }
+                break;
+            case 'delete_gerrit_project':
+                $repo                = $this->factory->getRepositoryById($repoId);
+                $project_gerrit_name = $this->driver->getGerritProjectName($repo);
+                $server              = $this->gerrit_server_factory->getServerById($repo->getRemoteServerId());
+
+                $this->driver->deleteProject($server, $project_gerrit_name);
+
+                $migrate_access_right = $this->request->existAndNonEmpty('migrate_access_right');
+                $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repoId, $pane, $migrate_access_right));
                 break;
             #LIST
             default:
