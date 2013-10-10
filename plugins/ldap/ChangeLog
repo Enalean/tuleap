@@ -1,3 +1,6 @@
+Version 3.36 - Tuleap 6.6
+    * Fix fatal error when user is not LDAP but do browse a gerrit git repo
+
 Version 3.35 - Tuleap 6.6
     * Modifying the login form presented by LDAP plugin
 
