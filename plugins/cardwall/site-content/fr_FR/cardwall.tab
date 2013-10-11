@@ -8,6 +8,7 @@ plugin_cardwall	warn_please_choose	Sélectionnez un champ pour grouper les artef
 plugin_cardwall	nifty_view	affichage proche de la vraie vie
 
 plugin_cardwall	swimline_title	Éléments du backlog
+plugin_cardwall	cells_not_displayed	L'élément du backlog <a href="$3"><u>$1</u></a> ne peut être affiché. Il n'y a pas de correspondance de colonnes définie entre <b>$2</b> et ce planning
 
 plugin_cardwall	on_top_short_title	Card Wall
 plugin_cardwall	on_top_title	Card Wall

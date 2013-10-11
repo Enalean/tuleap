@@ -37,6 +37,11 @@ class Cardwall_Swimline {
      * @var int
      */
     public $swimline_id;
+
+    /**
+     * @var bool
+     */
+    public $is_no_matching_column = false;
     
     /**
      * @param string $title
