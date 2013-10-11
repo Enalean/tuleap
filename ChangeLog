@@ -2,6 +2,7 @@ Version 6.6 (Not released yet)
 	== Enhancement ==
 	* Improvement of login interface. Adding support for multiple type of login sources (tuleap/openID).
 	* story #5162: send an email when a news is published
+	* story #5181: a project member can send an email to all project members
 
 	== Plugins ==
 	* tracker: 5.167
