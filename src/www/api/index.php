@@ -29,6 +29,7 @@ if (! session_issecure()) {
 
 require_once '/usr/share/restler/vendor/restler.php';
 require_once 'common/REST/BasicAuthentication.class.php';
+require_once 'common/REST/ResourcesInjector.class.php';
 
 use Luracast\Restler\Restler;
 use Luracast\Restler\Resources;
@@ -40,14 +41,17 @@ Resources::$useFormatAsExtension = false;
 // Use /api/v1/projects uri
 Defaults::$useUrlBasedVersioning = true;
 
-$r = new Restler();
+$restler = new Restler();
 // comment the line above and uncomment the line below for production mode
-// $r = new Restler(true);
+// $restler = new Restler(true);
 
-$r->setAPIVersion(file_get_contents(__DIR__ .'/VERSION'));
-$r->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource', 'projects');
-EventManager::instance()->processEvent(Event::REST_RESOURCES, array('restler' => $r));
-$r->addAPIClass('Resources');
+$restler->setAPIVersion(file_get_contents(__DIR__ .'/VERSION'));
 
-$r->addAuthenticationClass('\\Tuleap\\REST\\BasicAuthentication');
-$r->handle();
+$core_resources_injector = new Tuleap\REST\ResourcesInjector();
+$core_resources_injector->populate($restler);
+
+EventManager::instance()->processEvent(Event::REST_RESOURCES, array('restler' => $restler));
+$restler->addAPIClass('Resources');
+
+$restler->addAuthenticationClass('\\Tuleap\\REST\\BasicAuthentication');
+$restler->handle();

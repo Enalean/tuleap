@@ -2,8 +2,6 @@
 /**
  * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
- * This file is a part of Tuleap.
- *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -15,17 +13,22 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
- /**
- * Inject resource into restler
- */
-class AgileDashboard_REST_ResourcesInjector {
+namespace Tuleap\REST;
 
-    public function populate(Luracast\Restler\Restler $restler) {
-        $milestone_api_class_name    = '\\Tuleap\\AgileDashboard\\REST\\MilestoneResource';
-        $milestone_api_resource_path = 'milestones';
-        $restler->addAPIClass($milestone_api_class_name, $milestone_api_resource_path);
+use Luracast\Restler\Restler;
+
+/**
+ * Inject core resources into restler
+ */
+class ResourcesInjector {
+
+    public function populate(Restler $restler) {
+        $project_api_class_name    = '\\Tuleap\\Project\\REST\\ProjectResource';
+        $project_api_resource_path = 'projects';
+        $restler->addAPIClass($project_api_class_name, $project_api_resource_path);
     }
 }
