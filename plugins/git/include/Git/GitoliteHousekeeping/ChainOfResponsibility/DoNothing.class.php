@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,29 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/backend/BackendService.class.php';
+
 /**
- * Control process to be run by SystemEventProcessorMutex
+ * A command that do nothing
  */
-interface IRunInAMutex {
+class Git_GitoliteHousekeeping_ChainOfResponsibility_DoNothing extends Git_GitoliteHousekeeping_ChainOfResponsibility_Command {
 
-    /**
-     * The method to be executed by the mutex
-     *
-     * @return void
-     */
-    public function execute();
+    public function __construct() {
+    }
 
-    /**
-     * The unix user who should run the code
-     *
-     * @return String
-     */
-    public function getProcessOwner();
-
-    /**
-     * The process
-     *
-     * @return SystemEventProcess
-     */
-    public function getProcess();
+    public function execute() {
+        // do nothing
+    }
 }

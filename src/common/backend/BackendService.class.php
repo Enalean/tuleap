@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,28 +19,17 @@
  */
 
 /**
- * Control process to be run by SystemEventProcessorMutex
+ * I manage the service that runs the system events and such.
+ *
+ * @note I should be called by root user
  */
-interface IRunInAMutex {
+class BackendService {
 
-    /**
-     * The method to be executed by the mutex
-     *
-     * @return void
-     */
-    public function execute();
+    public function start() {
+        exec('service codendi start');
+    }
 
-    /**
-     * The unix user who should run the code
-     *
-     * @return String
-     */
-    public function getProcessOwner();
-
-    /**
-     * The process
-     *
-     * @return SystemEventProcess
-     */
-    public function getProcess();
+    public function stop() {
+        exec('service codendi stop');
+    }
 }

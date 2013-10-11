@@ -25,16 +25,6 @@
 
 require_once 'common/system_event/SystemEventProcessorMutex.class.php';
 
-class SystemEventProcessorMutex4Tests extends SystemEventProcessorMutex {
-    public function createPidFile() {
-        parent::createPidFile();
-    }
-    public function deletePidFile() {
-        parent::deletePidFile();
-    }
-}
-
-
 class SystemEventProcessorMutex_ProcessingTest extends TuleapTestCase {
     private $mutex;
     private $object;
@@ -42,20 +32,21 @@ class SystemEventProcessorMutex_ProcessingTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->object = mock('IRunInAMutex');
+        $this->process_manager = mock('SystemEventProcessManager');
         $this->mutex  = partial_mock(
             'SystemEventProcessorMutex',
-            array('checkCurrentUserProcessOwner', 'createPidFile', 'deletePidFile', 'isAlreadyRunning'),
-            array($this->object)
+            array('checkCurrentUserProcessOwner'),
+            array($this->process_manager, $this->object)
         );
     }
 
     public function itChecksIfAlreadyRunning() {
-        expect($this->mutex)->isAlreadyRunning()->once();
+        expect($this->process_manager)->isAlreadyRunning()->once();
         $this->mutex->execute();
     }
 
     public function itCreatesPidFile() {
-        expect($this->mutex)->createPidFile()->once();
+        expect($this->process_manager)->createPidFile()->once();
         $this->mutex->execute();
     }
 
@@ -65,72 +56,25 @@ class SystemEventProcessorMutex_ProcessingTest extends TuleapTestCase {
     }
 
     public function itDeletesPidFile() {
-        expect($this->mutex)->deletePidFile()->once();
+        expect($this->process_manager)->deletePidFile()->once();
         $this->mutex->execute();
     }
 
     public function itStopsIfAlreadyRunning() {
-        stub($this->mutex)->isAlreadyRunning()->returns(true);
-        expect($this->mutex)->createPidFile()->never();
+        stub($this->process_manager)->isAlreadyRunning()->returns(true);
+        expect($this->process_manager)->createPidFile()->never();
         expect($this->object)->execute()->never();
-        expect($this->mutex)->deletePidFile()->never();
+        expect($this->process_manager)->deletePidFile()->never();
         $this->mutex->execute();
     }
 
     public function itStopsIfCurrentUserIsNotTheOneThatShouldRun() {
         $this->expectException();
         stub($this->mutex)->checkCurrentUserProcessOwner()->throws(new Exception('whatever'));
-        expect($this->mutex)->isAlreadyRunning()->never();
-        expect($this->mutex)->createPidFile()->never();
+        expect($this->process_manager)->isAlreadyRunning()->never();
+        expect($this->process_manager)->createPidFile()->never();
         expect($this->object)->execute()->never();
-        expect($this->mutex)->deletePidFile()->never();
+        expect($this->process_manager)->deletePidFile()->never();
         $this->mutex->execute();
     }
 }
-
-class SystemEventProcessorMutex_FileTest extends TuleapTestCase {
-    private $mutex;
-    private $fixtures_dir;
-    private $fixture_file;
-
-    public function setUp() {
-        parent::setUp();
-        $this->fixtures_dir = dirname(__FILE__).'/_fixtures';
-        mkdir($this->fixtures_dir);
-        $this->fixture_file = $this->fixtures_dir.'/tuleap_process_system_event.pid';
-        $processor = stub('IRunInAMutex')->getPidFilePath()->returns($this->fixture_file);
-        $this->mutex = new SystemEventProcessorMutex4Tests($processor);
-    }
-
-    public function tearDown() {
-        parent::tearDown();
-        $this->recurseDeleteInDir($this->fixtures_dir);
-        rmdir($this->fixtures_dir);
-    }
-
-    public function itWritesPidFileOnStart() {
-        $this->assertFileDoesntExist($this->fixtures_dir.'/tuleap_process_system_event.pid');
-        $this->mutex->createPidFile();
-        $this->assertFileExists($this->fixtures_dir.'/tuleap_process_system_event.pid');
-    }
-
-    public function itWritesProcessPid() {
-        $this->mutex->createPidFile();
-        $this->assertEqual(file_get_contents($this->fixtures_dir.'/tuleap_process_system_event.pid'), getmypid());
-    }
-
-    public function itThrowAnExceptionWhenCannotWritePidFile() {
-        $this->mutex = new SystemEventProcessorMutex4Tests(stub('IRunInAMutex')->getPidFilePath()->returns('/root'));
-        $this->expectException();
-        $this->mutex->createPidFile();
-    }
-
-    public function itRemovesPidFileOnEnd() {
-        $this->mutex->createPidFile();
-        $this->mutex->deletePidFile();
-        $this->assertFileDoesntExist($this->fixtures_dir.'/tuleap_process_system_event.pid');
-
-    }
-}
-
-?>

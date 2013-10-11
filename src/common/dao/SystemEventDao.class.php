@@ -83,6 +83,18 @@ class SystemEventDao extends DataAccessObject {
         return null;
     }
 
+    /** @return bool */
+    public function hasThereAnyEventsRunning() {
+        $status = $this->da->quoteSmart(SystemEvent::STATUS_RUNNING);
+
+        $sql = "SELECT NULL
+                FROM system_event
+                WHERE status = $status
+                LIMIT 1";
+
+        return count($this->retrieve($sql)) > 0;
+    }
+
     /**
      * Search n last status
      */

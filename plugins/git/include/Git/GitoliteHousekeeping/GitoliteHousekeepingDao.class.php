@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,29 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Control process to be run by SystemEventProcessorMutex
- */
-interface IRunInAMutex {
+class Git_GitoliteHousekeeping_GitoliteHousekeepingDao extends DataAccessObject {
 
-    /**
-     * The method to be executed by the mutex
-     *
-     * @return void
-     */
-    public function execute();
+    /** @return bool */
+    public function isGitGcEnabled() {
+        $sql = "SELECT allow_git_gc FROM plugin_git_housekeeping";
 
-    /**
-     * The unix user who should run the code
-     *
-     * @return String
-     */
-    public function getProcessOwner();
+        $result = $this->retrieve($sql)->getRow();
 
-    /**
-     * The process
-     *
-     * @return SystemEventProcess
-     */
-    public function getProcess();
+        return (bool)$result['allow_git_gc'];
+    }
+
+    public function enableGitGc() {
+        $sql = "UPDATE plugin_git_housekeeping SET allow_git_gc = 1";
+
+        return $this->update($sql);
+    }
 }

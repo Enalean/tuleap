@@ -22,29 +22,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Control process to be run by SystemEventProcessorMutex
- */
-interface IRunInAMutex {
+require_once 'SystemEventProcess.class.php';
+
+class SystemEventProcessRoot implements SystemEventProcess {
 
     /**
-     * The method to be executed by the mutex
-     *
-     * @return void
+     * @see SystemEventProcess::getPidFile()
      */
-    public function execute();
-
-    /**
-     * The unix user who should run the code
-     *
-     * @return String
-     */
-    public function getProcessOwner();
-
-    /**
-     * The process
-     *
-     * @return SystemEventProcess
-     */
-    public function getProcess();
+    public function getPidFile() {
+        return '/var/run/tuleap_process_system_events.pid';
+    }
 }

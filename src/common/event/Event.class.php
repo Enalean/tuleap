@@ -457,6 +457,9 @@ class Event {
     /**
      * Event launched during the system check event
      *
+     * Parameters:
+     *   'logger' => Logger
+     *
      * Expected results:
      *    An exception is raised if the system check is in error
      */

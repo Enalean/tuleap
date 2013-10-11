@@ -34,6 +34,7 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
             'SystemEventProcessor_Root',
             array('launchAs'),
             array(
+                new SystemEventProcessRoot(),
                 $this->system_event_manager,
                 $this->system_event_dao,
                 mock('Logger'),
