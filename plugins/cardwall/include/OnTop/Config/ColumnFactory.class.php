@@ -23,9 +23,9 @@ require_once dirname(__FILE__). '/../../constants.php';
 
 class Cardwall_OnTop_Config_ColumnFactory {
 
-    const DEFAULT_BGCOLOR = 'white';
-    const LIGHT_FGCOLOR   = 'white';
-    const DARK_FGCOLOR    = 'black';
+    const DEFAULT_BGCOLOR = 'rgb(248,248,248)';
+    const LIGHT_FGCOLOR   = 'rgb(255,255,255)';
+    const DARK_FGCOLOR    = 'rgb(0,0,0)';
 
     /**
      * @var Cardwall_OnTop_ColumnDao
