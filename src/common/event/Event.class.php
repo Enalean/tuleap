@@ -572,5 +572,13 @@ class Event {
      *     'hidden_fields'  => Array (OUT) add extra info on search
      */
     const LAYOUT_SEARCH_ENTRY = 'layout_search_entry';
+
+    /**
+     * Register REST resources
+     *
+     * Parameters:
+     *  'restler' => \Luracast\Restler\Restler
+     */
+    const REST_RESOURCES = 'rest_resources';
 }
 ?>
