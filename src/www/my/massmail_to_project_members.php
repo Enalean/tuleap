@@ -26,20 +26,26 @@ require_once('common/include/CSRFSynchronizerToken.class.php');
 $csrf = new CSRFSynchronizerToken('massmail_to_project_members.php');
 $csrf->check('/my/');
 
-$request    = HTTPRequest::instance();
-$pm         = ProjectManager::instance();
+$request        = HTTPRequest::instance();
+$pm             = ProjectManager::instance();
 
-$user       = $request->getCurrentUser();
-$group_id   = $request->get('group_id');
-$subject    = $request->get('subject');
-$body       = $request->get('body');
+$user           = $request->getCurrentUser();
+$group_id       = $request->get('group_id');
+$subject        = $request->get('subject');
+$body           = $request->get('body');
 
-$project    = $pm->getProject($group_id);
-$members    = $project->getMembers();
-
+$project        = $pm->getProject($group_id);
+$members        = $project->getMembers();
+$project_name   = $project->getPublicName();
 
 $massmail_sender = new MassmailSender();
-$massmail_sender->sendMassmail($project, $user, $subject, $body, $members);
+$is_sent = $massmail_sender->sendMassmail($project, $user, $subject, $body, $members);
+if ($is_sent) {
+    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('my_index','mail_sent', array($project_name)));
+} else {
+    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('my_index','mail_not_sent', array($project_name)));
+}
+
 $GLOBALS['Response']->redirect("/my");
 
 ?>

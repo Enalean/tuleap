@@ -408,7 +408,13 @@ function news_send_to_ugroups($ugroups, $summary, $details, $group_id) {
     }
 
     $massmail_sender = new MassmailSender();
-    $massmail_sender->sendMassmail($project, $user, $summary, $html_body, $users);
+    $is_sent = $massmail_sender->sendMassmail($project, $user, $summary, $html_body, $users);
+
+    if ($is_sent) {
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('news_utils','news_sent'));
+    } else {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('news_utils','news_not_sent'));
+    }
 }
 
 function news_fetch_ugroups($project) {
