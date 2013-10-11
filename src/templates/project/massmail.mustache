@@ -2,7 +2,7 @@
     <form id="massmail_form{{ project_id }}" name="massmail_form" action="massmail_to_project_members.php" method="POST">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3 id="myModalLabel{{ project_id }}">Send mail to all project members</h3>
+            <h3 id="myModalLabel{{ project_id }}">{{ title }}</h3>
         </div>
         <div class="modal-body">
             <input type="hidden" name="group_id" value="{{ project_id }}" />

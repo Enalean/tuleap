@@ -54,11 +54,7 @@ class MassmailSender {
         $mail->setBodyHtml($html_body);
 
         $is_sent = $mail->send();
-        if ($is_sent) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('my_index','mail_sent', array($project_name)));
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('my_index','mail_not_sent', array($project_name)));
-        }
+        return $is_sent;
     }
 }
 

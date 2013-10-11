@@ -28,7 +28,7 @@ class MassmailFormPresenter {
     public $subject_label;
     public $body_label;
     public $csrf_token;
-
+    public $title;
 
     public function __construct($project_id, CSRFSynchronizerToken $token) {
         $this->project_id       = $project_id;
@@ -36,6 +36,7 @@ class MassmailFormPresenter {
         $this->close_button     = $GLOBALS['Language']->getText('global','btn_cancel');
         $this->subject_label    = $GLOBALS['Language']->getText('my_index','subject_label');
         $this->body_label       = $GLOBALS['Language']->getText('my_index','body_label');
+        $this->title            = $GLOBALS['Language']->getText('my_index','massmail_form_title');
 
         $this->csrf_token       = $token->fetchHTMLInput();
     }
