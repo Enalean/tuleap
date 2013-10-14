@@ -80,10 +80,7 @@ class ElasticSearch_ClientFactory {
         //todo use installation dir defined by elasticsearch rpm
         $client_path = $path_to_elasticsearch_client .'/ElasticSearchClient.php';
         if (! file_exists($client_path)) {
-            $error_message = $GLOBALS['Language']->getText('plugin_fulltextsearch', 'client_library_not_found');
-            $GLOBALS['Response']->addFeedback('error', $error_message);
-            $GLOBALS['HTML']->redirect('/');
-            die();
+            throw new ElasticSearch_ClientNotFoundException();
         }
 
         require_once $client_path;
