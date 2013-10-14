@@ -255,54 +255,54 @@ echo '<FORM action="userperms.php" name= "form_update" method="post">
 <INPUT type="hidden" name="group_id" value="'.$group_id.'">
 <INPUT type="hidden" name="offset" value="'.$offset.'">';
 
-echo '<TABLE width="100%" cellspacing=1 cellpadding=2 border=0>';
+echo '<TABLE class="table">';
 
-$head = '<TR class="boxtable">';
+$head = '<thead><tr>';
 $i = 0;
 
 function userperms_add_header($header) {
     global $i, $head, $Language;
     if ($i++ % 10 == 0) {
-        $head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','user_name').'</TD>';
+        $head .= '<th>'.$Language->getText('project_admin_userperms','user_name').'</th>';
     }
     $head .= $header;
 }
 
-$head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','user_name').'</TD>';
-$head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','proj_admin').'</TD>';
+$head .= '<th>'.$Language->getText('project_admin_userperms','user_name').'</th>';
+$head .= '<th>'.$Language->getText('project_admin_userperms','proj_admin').'</th>';
 
 if ($project->usesCVS()) {
-    $head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','cvs_write').'</TD>';
+    $head .= '<th>'.$Language->getText('project_admin_userperms','cvs_write').'</th>';
 }
 if ($project->usesSVN()) {
-    $head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','svn').'</TD>';
+    $head .= '<th>'.$Language->getText('project_admin_userperms','svn').'</th>';
 }
 if ($project->usesForum()) {    
-    $head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','forums').'</TD>';
+    $head .= '<th>'.$Language->getText('project_admin_userperms','forums').'</th>';
 }                               
 if ($project->usesWiki()) {     
-    $head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','wiki').'</TD>';
+    $head .= '<th>'.$Language->getText('project_admin_userperms','wiki').'</th>';
 }                               
 if ($project->usesNews()) {     
-    $head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','news').'</TD>';
+    $head .= '<th>'.$Language->getText('project_admin_userperms','news').'</th>';
 }                               
 if ($project->usesDocman()) {   
-    $head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','doc_man').'</TD>';
+    $head .= '<th>'.$Language->getText('project_admin_userperms','doc_man').'</th>';
 }
 
 if ($project->usesFile()) {
-    $head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','file_man').'</TD>';
+    $head .= '<th>'.$Language->getText('project_admin_userperms','file_man').'</th>';
 }
 
 if ( $project->usesTracker()&&$at_arr ) {
 	for ($j = 0; $j < count($at_arr); $j++) {
-        userperms_add_header('<TD class="boxtitle">'.$Language->getText('project_admin_userperms','tracker',$at_arr[$j]->getName()).'</TD>');
+        userperms_add_header('<th>'.$Language->getText('project_admin_userperms','tracker',$at_arr[$j]->getName()).'</th>');
 	}
 }
 
-$head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','member_ug').'</TD>';
+$head .= '<th>'.$Language->getText('project_admin_userperms','member_ug').'</th>';
 
-$head .= '</tr>';
+$head .= '</tr></thead><tbody>';
 
 echo $head;
 
@@ -334,62 +334,62 @@ echo $head;
      // svn
         if ($project->usesSVN()) {
             $cell = '';
-            $cell .= '<TD><FONT size="-1"><SELECT name="svn_user_'.$row_dev['user_id'].'">';
+            $cell .= '<TD><SELECT name="svn_user_'.$row_dev['user_id'].'">';
             $cell .= '<OPTION value="0"'.(($row_dev['svn_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
             $cell .= '<OPTION value="2"'.(($row_dev['svn_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_index','admin');
-            $cell .= '</SELECT></FONT></TD>';
+            $cell .= '</SELECT></TD>';
             echo $cell;
         }
         
         // forums
         if ($project->usesForum()) {
             $cell = '';
-            $cell .= '<TD><FONT size="-1"><SELECT name="forums_user_'.$row_dev['user_id'].'">';
+            $cell .= '<TD><SELECT name="forums_user_'.$row_dev['user_id'].'">';
             $cell .= '<OPTION value="0"'.(($row_dev['forum_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
             $cell .= '<OPTION value="2"'.(($row_dev['forum_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_userperms','moderator');
-            $cell .= '</SELECT></FONT></TD>';
+            $cell .= '</SELECT></TD>';
             echo $cell;
         }
        // wiki
         if ($project->usesWiki()) {
             $cell = '';
-            $cell .= '<TD><FONT size="-1"><SELECT name="wiki_user_'.$row_dev['user_id'].'">';
+            $cell .= '<TD><SELECT name="wiki_user_'.$row_dev['user_id'].'">';
             $cell .= '<OPTION value="0"'.(($row_dev['wiki_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
             $cell .= '<OPTION value="2"'.(($row_dev['wiki_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_index','admin');
-            $cell .= '</SELECT></FONT></TD>';
+            $cell .= '</SELECT></TD>';
             echo $cell;
         }
 
         // News
         if ($project->usesNews()) {
             $cell = '';
-            $cell .= '<TD><FONT size="-1"><SELECT name="news_user_'.$row_dev['user_id'].'">';
+            $cell .= '<TD><SELECT name="news_user_'.$row_dev['user_id'].'">';
             $cell .= '<OPTION value="0"'.(($row_dev['news_flags']==0)?" selected":"").'>'.$Language->getText('project_admin_userperms','read_perms');
             $cell .= '<OPTION value="1"'.(($row_dev['news_flags']==1)?" selected":"").'>'.$Language->getText('project_admin_userperms','write_perms');
             $cell .= '<OPTION value="2"'.(($row_dev['news_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_index','admin');
-            $cell .= '</SELECT></FONT></TD>';
+            $cell .= '</SELECT></TD>';
             echo $cell;
         }
 	
         //documentation states
         if ($project->usesDocman()) {
             $cell = '';
-            $cell .= '<TD><FONT size="-1"><SELECT name="doc_user_'.$row_dev['user_id'].'">';
+            $cell .= '<TD><SELECT name="doc_user_'.$row_dev['user_id'].'">';
             $cell .= '<OPTION value="0"'.(($row_dev['doc_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
             $cell .= '<OPTION value="1"'.(($row_dev['doc_flags']==1)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech_only');
             $cell .= '<OPTION value="2"'.(($row_dev['doc_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech&admin');
             $cell .= '<OPTION value="3"'.(($row_dev['doc_flags']==3)?" selected":"").'>'.$Language->getText('project_admin_userperms','admin_only');
-            $cell .= '</SELECT></FONT></TD>';
+            $cell .= '</SELECT></TD>';
             echo $cell;
         }
         
         // File release manager: nothing or admin
         if ($project->usesFile()) {
             $cell = '';
-            $cell .= '<TD><FONT size="-1"><SELECT name="file_user_'.$row_dev['user_id'].'">';
+            $cell .= '<TD><SELECT name="file_user_'.$row_dev['user_id'].'">';
             $cell .= '<OPTION value="0"'.(($row_dev['file_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
             $cell .= '<OPTION value="2"'.(($row_dev['file_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_index','admin');
-            $cell .= '</SELECT></FONT></TD>';
+            $cell .= '</SELECT></TD>';
             echo $cell;
         }
         
@@ -400,15 +400,15 @@ echo $head;
                 $atid = $at_arr[$j]->getID();
                 $perm = $row_dev['perm_level_' . $atid];
                 $cell = '';
-                $cell .= '<TD><FONT size="-1"><SELECT name="tracker_user_'.$row_dev['user_id'].'_'.$atid.'">';
+                $cell .= '<TD><SELECT name="tracker_user_'.$row_dev['user_id'].'_'.$atid.'">';
                 $cell .= '<OPTION value="0"'.(($perm==0)?" selected":"").'>'.$Language->getText('global','none');
                 $cell .= '<OPTION value="3"'.(($perm==3 || $perm==2)?" selected":"").'>'.$Language->getText('project_admin_userperms','admin');
-                $cell .= '</SELECT></FONT></TD>';
+                $cell .= '</SELECT></TD>';
                 userperms_add_cell($user_name, $cell);
             }
         }
 
-        print '<TD><FONT size="-1">';
+        print '<TD>';
         if (isset($ugroups[$row_dev['user_id']])) {
             $is_first=true;
             foreach($ugroups[$row_dev['user_id']] as $row) {
@@ -422,7 +422,7 @@ echo $head;
         } else {
             print '-';
         }
-        print '</FONT></TD>';
+        print '</TD>';
 
         print '</TR>';
         if ($i % 10 == 0) {
@@ -432,7 +432,8 @@ echo $head;
 
 
 
-echo '</TABLE>';
+echo '</tbody>
+    </table>';
 if ($num_total_rows && $number_per_page < $num_total_rows) {
     //Jump to page
     $nb_of_pages = ceil($num_total_rows / $number_per_page);

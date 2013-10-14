@@ -230,7 +230,7 @@ var Codendi_RTE_Send_HTML_MAIL = Class.create(Codendi_RTE_Light, {
                                                  'checked'  : 'checked',
                                                  'id'       : 'body_format_text'});
         div.appendChild(text_button);
-        div.appendChild(document.createTextNode('Text'));
+        div.appendChild(document.createTextNode('Text '));
 
         // Add a radio button that tells that the content format is HTML
         // The value is defined in sensmessage.php (FORMAT_HTML).

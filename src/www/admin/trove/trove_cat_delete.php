@@ -28,12 +28,13 @@ function listallchilds($nodeid, &$list) {
 // ########################################################
 // FORM SUBMISSION: Delete or Cancel
 //
-if ($request->get("Delete") && $request->existAndNonEmpty('form_trove_cat_id')) {
+$trove_cat_id = (int)$request->get('trove_cat_id');
+if ($request->get("Delete") && $trove_cat_id) {
     $res_cat = db_query("SELECT trove_cat_id, parent, root_parent, shortname "
 		       ."FROM trove_cat "
-		       ." WHERE trove_cat_id =".db_ei($request->get('form_trove_cat_id')));
+		       ." WHERE trove_cat_id =". $trove_cat_id);
     if (!$res_cat || db_numrows($res_cat) < 1) {
-        $GLOBALS['Response']->addFeedback(Feedback::ERROR, "**ERROR** Category '".$request->get('form_shortname')."' could not be found in database");
+	$feedback .= "**ERROR** Category could not be found in database";
 	session_redirect("/admin/trove/trove_cat_list.php");
     }
 
@@ -60,9 +61,9 @@ if ($request->get("Delete") && $request->existAndNonEmpty('form_trove_cat_id')) 
     // Delete the category and all childs
     $result = db_query('DELETE FROM trove_cat WHERE trove_cat_id IN ('.  db_ei_implode($list_child).')');
     if (!$result || db_affected_rows($result) < 1) {
-        $GLOBALS['Response']->addFeedback(Feedback::ERROR, "**ERROR** Category '".$request->get('form_shortname')."' could not be  deleted");
+	$feedback .= "**ERROR** Category could not be  deleted";
     } else {
-	$GLOBALS['Response']->addFeedback(Feedback::INFO, "Category '".$request->get('form_shortname')."' (and childs) succesfully deleted");
+	$feedback .= "Category (and childs) succesfully deleted";
     }
     session_redirect("/admin/trove/trove_cat_list.php");
 } 
@@ -87,15 +88,12 @@ $HTML->header(array('title'=>$Language->getText('admin_trove_cat_delete','title'
 
 <P><b><?php echo $Language->getText('admin_trove_cat_delete','warning'); ?></b>
 <form action="trove_cat_delete.php" method="post">
-<input type="hidden" name="form_trove_cat_id" value="<?php
-  print $request->get('trove_cat_id', 'uint', 0); ?>">
-<input type="hidden" name="form_shortname" value="<?php
-  print $row_cat['shortname']; ?>">
+<input type="hidden" name="trove_cat_id" value="<?= $trove_cat_id; ?>">
 
-<table border="1" cellpadding="2">
-<tr><td><?php echo $Language->getText('admin_trove_cat_add','short_name'); ?></td><td> <?php print $row_cat["shortname"]; ?></td></tr>
-<tr><td><?php echo $Language->getText('admin_trove_cat_add','full_name'); ?></td><td> <?php print $row_cat["fullname"]; ?></td></tr>
-<tr><td><?php echo $Language->getText('admin_trove_cat_add','description'); ?></td><td> <?php print $row_cat["description"]; ?></td></tr>
+<table class="table table-bordered" style="width: auto;">
+<tr><th><?php echo $Language->getText('admin_trove_cat_add','short_name'); ?></th><td> <?php print $row_cat["shortname"]; ?></td></tr>
+<tr><th><?php echo $Language->getText('admin_trove_cat_add','full_name'); ?></th><td> <?php print $row_cat["fullname"]; ?></td></tr>
+<tr><th><?php echo $Language->getText('admin_trove_cat_add','description'); ?></th><td> <?php print $row_cat["description"]; ?></td></tr>
 </table>
 
 <?php
@@ -110,7 +108,7 @@ if (($nb_child = count($child_list)) > 0) {
 }
 
 // See if projects are using this category or one of his child
-$child_list[] = $request->get('trove_cat_id', 'uint', 0);
+$child_list[] = $trove_cat_id;
 $res_proj = db_query("SELECT DISTINCT group_id FROM trove_group_link "
 		     ."WHERE trove_cat_id IN (".join(',',$child_list).")");
 $nb_proj = db_numrows($res_proj);
@@ -123,9 +121,8 @@ if ($nb_proj > 0) {
 ?>
 
 <p>
-<br><input type="submit" name="Delete" value="<?php echo $Language->getText('global','btn_delete'); ?>">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type="submit" name="Cancel" value="<?php echo $Language->getText('global','btn_cancel'); ?>">
+<br><input type="submit" name="Delete" class="btn btn-danger" value="<?php echo $Language->getText('global','btn_delete'); ?>">
+<input type="submit" name="Cancel" class="btn" value="<?php echo $Language->getText('global','btn_cancel'); ?>">
 </form>
 
 <?php

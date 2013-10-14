@@ -95,13 +95,10 @@ echo '
        <form action="" method="post">
            <input type="hidden" name="group_id" value="'.$group_id.'">
            <input type="hidden" name="post_changes" value="subject_header">
-           <table>
-               <th align="left">'.$Language->getText('svn_admin_notification','header').'</th>
-               <tr>
-                   <td><input type="text" name="form_mailing_header" value="'.$hp->purify($svn_mailing_header).'"></td>
-                   <td><input type="submit" name="submit" value="'.$Language->getText('global','btn_submit').'"></td>
-               </tr>
-           </table>
+           <label>'.$Language->getText('svn_admin_notification','header').'</label>
+           <input type="text" name="form_mailing_header" value="'.$hp->purify($svn_mailing_header).'">
+           <br/>
+           <input type="submit" name="submit" value="'.$Language->getText('global','btn_submit').'" class="btn">
        </form>';
 
 // List of paths & mail addresses (+delete)
@@ -120,7 +117,7 @@ if ($svnNotificationsDetails) {
         $content .= '<input type="checkbox" value="'. $hp->purify($item['path']) .'" name="paths_to_delete[]" >';
         $content .= '</td></tr>';
     }
-    $content .= '<tr align="right"><td colspan="3"><input type="submit" value="'.$Language->getText('global','delete').'"></td></tr></tbody>';
+    $content .= '<tr align="right"><td colspan="3"><input type="submit" value="'.$Language->getText('global','delete').'" class="btn"></td></tr></tbody>';
 }
 $content .= '</table>';
 echo '
@@ -130,23 +127,19 @@ echo '
 // Add a path & mail addresses
 $svnMailingList = $svnNotification->getSvnMailingList($group_id, $path);
 echo '
-       <br/>
        <form action="" method="post">
            <input type="hidden" name="group_id" value="'.$group_id.'">
            <input type="hidden" name="post_changes" value="path_mailing_list">
-           <table width="100%">
-               <tr>
-                   <td width="10"><b>'.$Language->getText('svn_admin_notification','notification_path').'</b></td>
-                   <td><input type="text" size="50%" name="form_path" value="'.$hp->purify($path).'"></td>
-               </tr>
-               <tr>
-                   <td width="10"><b>'.$Language->getText('svn_admin_notification','mail_to').'</b></td>
-                   <td><input type="text" size="50%" name="form_mailing_list" value="'.$hp->purify($svnMailingList).'"></td>
-               </tr>
-               <tr>
-                   <td><input type="submit" name="submit" value="'.$Language->getText('global','btn_submit').'"></td>
-               </tr>
-           </table>
+
+           <label>'.$Language->getText('svn_admin_notification','notification_path').'</label>
+           <input type="text" name="form_path" value="'.$hp->purify($path).'" />
+
+           <label>'.$Language->getText('svn_admin_notification','mail_to').'</label>
+           <input type="text" size="50%" name="form_mailing_list" value="'.$hp->purify($svnMailingList).'" />
+
+           <br />
+
+           <input type="submit" name="submit" value="'.$Language->getText('global','btn_submit').'" class="btn" />
        </form>';
 
 svn_footer(array());

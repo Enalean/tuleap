@@ -239,7 +239,7 @@ class PluginsAdministrationViews extends Views {
                 
                 $output  = '<h3>'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_plugin', array($name)).'</h3>';
                 $output .= '<form action="'. $_SERVER['REQUEST_URI'] .'" method="POST"><div><input type="hidden" name="plugin_id" value="'.$request->get('plugin_id').'" /></div>';
-                $output .= '<table border="0" cellpadding="0" cellspacing="2" class="pluginsadministration_plugin_properties">';
+                $output .= '<table border="0" cellpadding="0" cellspacing="2" class="pluginsadministration_plugin_properties table table-striped table-bordered table-condensed">';
                 $output .= '<tbody>';
                 $output .=   '<tr>';
                 $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_name:').' </td>';
@@ -345,11 +345,10 @@ EOS;
                     
                 }
                 if ($props !== '') {
-                    $output .=   '<tr><td colspan="2"><hr /></td></tr>';
                     $output .=   $props;
                 }
                 if(($props !== '') || ($plugin->getScope() == Plugin::SCOPE_PROJECT)) {
-                    $output .=   '<tr><td>&nbsp;</td><td><input type="hidden" name="action" value="change_plugin_properties" /><input type="submit" value="Change Properties" /></td></tr>';
+                    $output .=   '<tr><td>&nbsp;</td><td><input type="hidden" name="action" value="change_plugin_properties" /><input type="submit" class="btn btn-primary" value="Change Properties" /></td></tr>';
                 }
                 $output .= '</tbody>';
                 $output .= '</table>';
@@ -455,12 +454,16 @@ EOS;
         $Language =& $GLOBALS['Language'];
         $output = '';
         $output .= '<fieldset class="pluginsadministration"><legend>'.$Language->getText('plugin_pluginsadministration','plugins').'&nbsp;'.$this->_getHelp('manage').'</legend><form>';
-        $titles = array();
-        $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Plugin');
-        $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Available?');
-        $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Scope');
-        $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Actions');
-        $output .= html_build_list_table_top($titles);
+        $output .= '<table class="table table-striped table-bordered table- table-hover">';
+        $output .= '<thead>';
+        $output .= '<tr>';
+        $output .= '<th>'. $GLOBALS['Language']->getText('plugin_pluginsadministration','Plugin') .'</th>';
+        $output .= '<th>'. $GLOBALS['Language']->getText('plugin_pluginsadministration','Available?') .'</th>';
+        $output .= '<th>'. $GLOBALS['Language']->getText('plugin_pluginsadministration','Scope') .'</th>';
+        $output .= '<th>'. $GLOBALS['Language']->getText('plugin_pluginsadministration','Actions') .'</th>';
+        $output .= '</tr>';
+        $output .= '</thead>';
+        $output .= '<tbody>';
         usort($this->_plugins, create_function('$a, $b', 'return strcasecmp($a["name"] , $b["name"]);'));
         for($i = 0; $i < count($this->_plugins) ; $i++) {
             $output .= '<tr class="'.util_get_alt_row_color($i).'">';

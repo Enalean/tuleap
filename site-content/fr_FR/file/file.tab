@@ -132,7 +132,7 @@ file_admin_editreleases	file_type	Type de fichier
 file_admin_editreleases	update_refresh	Soumettre/rafraîchir
 file_admin_editreleases	delete_file	Détruire le fichier
 file_admin_editreleases	im_sure	Je suis sûr.
-file_admin_editreleases	mail_file_rel_notice	Notification par e-mail de la nouvelle version
+file_admin_editreleases	mail_file_rel_notice	Notification par e-mail de la nouvelle version : 
 file_admin_editreleases	send_notice	Envoyer la notification
 file_admin_editreleases	users_monitor	$1 utilisateur(s) surveillent ce paquet. Envoyez-leur une notification de cette nouvelle version.
 file_admin_editreleases	create_auto_news	Créer automatiquement une annonce

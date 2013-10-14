@@ -32,11 +32,8 @@ html {
 	background: #D8E7EE;
 }
 body {
-    font-family: "Lucida Grande", sans-serif;
-    font-size: 13px;
 	margin: 0;
 	background: #D8E7EE;
-	color: black;
 	padding: 3px 10px 0 10px;
 }
 
@@ -56,8 +53,6 @@ body {
 .subdomain { color: green; }
 .bg_confirmdownload { background-color: gray; }
 
-PRE,TT { font-family: "Courier New", courier, sans-serif; }
-
 /********   links    **********/
 a:link, a:visited { 
 	text-decoration:none; 
@@ -71,11 +66,6 @@ a:hover {
 	text-decoration:bold; 
 	color: #877956; 
 
-}
-
-fieldset {
-    border: 1px solid gray;
-    margin-bottom: 1em;
 }
 
 /******** priorities **********/
@@ -220,12 +210,6 @@ a.sortbutton { font-size: 90%; color: white; }
   background-color: #ffffff;
 }
 
-/* text with tooltips (e.g. artifact fields) */
-.tooltip { text-decoration:none; color: #000000}
-.tooltip:hover { text-decoration:none; color: #ff0000}
-
-
-
 /************* Tabs *************/
 a.tabsellink, a.tabsellink:visited, 
 a.tablink, a.tablink:visited {
@@ -295,25 +279,25 @@ a.tabsellink:hover {
 	padding: 0; margin: 0;
 }
 
-.header_actions ul {
+.header_actions > ul {
     white-space: nowrap;
 	list-style-type:none;
 	margin:0;
 	padding:0;
 }
-.header_actions ul li {
+.header_actions > ul li {
 	display:inline;
 	padding: 0 1em 0 1em;
 }
-.header_actions ul li a {
+.header_actions > ul li a {
 	border: 0px solid gray;
 	text-decoration:none;
 }
-.header_actions ul li a:hover {
+.header_actions > ul li a:hover {
 	background: white;
 }
 
-.header_actions ul li.header_actions_nolink {
+.header_actions > ul li.header_actions_nolink {
 	font-weight:bold;
 }
 
@@ -595,14 +579,6 @@ td.artifact {
 	padding: 2em;
     border: 1px solid #bcbcad;
 width: 100%;
-}
-
-.artifact fieldset {
-    margin-bottom:10px;
-}
-.artifact fieldset legend {
-    font-size:1.2em;
-    font-weight: bold;
 }
 
 /* {{{ Date Picker */
@@ -942,15 +918,7 @@ body {
     vertical-align: top;
 }
 
-div.header_searchbox select {
-    visibility: hidden;
-}
-
-div.header_searchbox:hover select {
-    visibility: visible;
-}
-
-.header_searchbox input[type=checkbox],.header_searchbox span {
+.header_searchbox input[type=checkbox]{
     display: none;
 }
 

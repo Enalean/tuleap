@@ -153,11 +153,16 @@ if (isset($params['group']) && $params['group']) {
             'WHITE', //deprecated
             '');
 
+
         ?>
         </td>
         <td>&nbsp;</td>
     </tr>
     <?php
+}
+$main_body_class = '';
+if (isset($params['toptab']) && is_string($params['toptab'])) {
+    $main_body_class = 'service-' . $params['toptab'];
 }
 ?>
 			<tr class="start_main_body_row">
@@ -168,7 +173,7 @@ if (isset($params['group']) && $params['group']) {
 
 			<tr class="main_body_row">
 				<td><img src="<?php echo $this->imgroot; ?>clear.png" width="10" height="1" alt="" /></td>
-				<td valign="top" width="99%" class="contenttable">
+                                <td valign="top" width="99%" class="contenttable <?=$main_body_class;?>">
 
 	<?php
         echo $this->getBreadCrumbs();
@@ -507,7 +512,7 @@ if (isset($params['group']) && $params['group']) {
 		<!-- end tabs -->
 ';
 	}
-    
+
 	function searchBox() {
         print $this->getSearchBox();
 	}

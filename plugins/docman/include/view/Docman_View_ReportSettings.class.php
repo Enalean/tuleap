@@ -228,7 +228,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
         
         // Select project
         $html .= '<tr>';
-        $html .= '<td valign="bottom">'.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_import_sel_prj').'</td>';
+        $html .= '<td valign="top">'.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_import_sel_prj').'</td>';
         // Group id selector
         $html .= '<td>';
         $html .= '<input type="text" id="import_search_report_from_group" name="import_search_report_from_group" size="60" value="';
@@ -239,7 +239,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
 
         // Select report
         $html .= '<tr>';
-        $html .= '<td valign="bottom">'.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_import_sel_rpt').'('.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_import_sel_rpt_id').')'.'</td>';
+        $html .= '<td valign="top">'.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_import_sel_rpt').'('.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_import_sel_rpt_id').')'.'</td>';
         $html .= '<td>';
         $html .= '<input type="text" name="import_report_id" value="" />';
         $html .= '</td>';       

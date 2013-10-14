@@ -69,8 +69,8 @@ if (register_valid($request)) {
 ?>
 <h3><?php echo $Language->getText('admin_user_changepw','header'); ?></h3>
 <form action="user_changepw.php" method="post">
-<?php user_display_choose_password('', $request->getValidated('user_id', 'uint', 0)); ?>
-<p><input type="submit" name="Update" value="<?php echo $Language->getText('global','btn_update'); ?>">
+<?php user_display_choose_password('',$user_id); ?>
+<p><input type="submit" class="btn btn-primary" name="Update" value="<?php echo $Language->getText('global','btn_update'); ?>">
 </form>
 
 <?php

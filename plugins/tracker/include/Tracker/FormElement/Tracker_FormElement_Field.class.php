@@ -361,7 +361,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
             $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'">';
             $html .= '<label id="tracker_artifact_'. $this->id .'" for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'" class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
-            $html .= '<br />';
             $html .= $html_value;
             $html .= '</div>';
         }
@@ -420,7 +419,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'">';
             $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'"  class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
 
-            $html .= '<br />';
             $html .= $this->fetchSubmitValue($submitted_values);
             $html .= $this->fetchSubmitAdditionnalInfo();
             $html .= '</div>';
@@ -441,7 +439,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'">';
             $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'"  class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
 
-            $html .= '<br />';
             $html .= $this->fetchSubmitValueMasschange();
             $html .= $this->fetchSubmitAdditionnalInfo();
             $html .= '</div>';
@@ -641,7 +638,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $html .= '</div>';
 
         $html .= '<label title="'. $hp->purify($this->description, CODENDI_PURIFIER_LIGHT) .'" class="tracker_formelement_label">'. $this->getLabel() . $required .'</label>';
-        $html .= '<br />';
         $html .= $this->fetchAdminFormElement();
         $html .= '</div>';
 

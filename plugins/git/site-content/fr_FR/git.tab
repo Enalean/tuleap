@@ -24,7 +24,7 @@ plugin_git	tree_title_available_repo	Dépôts du projet
 plugin_git	tree_msg_no_available_repo	Aucun dépôt trouvé
 
 plugin_git	admin_reference_creation_title	Création d'une référence
-plugin_git	admin_reference_creation_input_name	Nom
+plugin_git	admin_reference_creation_input_name	Nom :
 plugin_git	admin_reference_creation_submit	Créer
 plugin_git	admin_reference_creation_textarea_name	Description
 plugin_git	admin_reference_creation_input_type	Activer la gestion fine des permissions sur ce dépôt <em>(EXPÉRIMENTAL)</em>.
@@ -195,7 +195,7 @@ plugin_git	missing_parameter_to_project	Aucun projet sélectionné pour le fork
 plugin_git	missing_parameter_repos	Aucun dépôt sélectionné pour le fork
 
 plugin_git	ci_trigger	Evénement Git
-plugin_git	ci_repo_id	Dépot Git 
+plugin_git	ci_repo_id	dépot
 plugin_git	ci_field_description	Déclencher un build après un push Git dans le dépot 
 plugin_git	ci_trigger_not_saved	L'evénement Git n'a pas été sauvegardé
 plugin_git	ci_bad_repo_id	Id du dépot Git non valide

@@ -221,6 +221,7 @@ class hudsonViews extends Views {
             $project_manager = ProjectManager::instance();
             $project = $project_manager->getProject($group_id);
             
+            $em      = EventManager::instance();
             $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
             $dar = $job_dao->searchByJobID($job_id);
             if ($dar->valid()) {
@@ -229,73 +230,14 @@ class hudsonViews extends Views {
                 echo '<a href="/plugins/hudson/?group_id='.$group_id.'">'.$GLOBALS['Language']->getText('plugin_hudson','back_to_jobs').'</a>';
                 
                 echo '<h3>'.$GLOBALS['Language']->getText('plugin_hudson','editjob_title').'</h3>';
-                echo ' <form method="post">';
-                echo '  <p>';
-                echo '   <label for="new_hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_url').'</label>';
-                echo '   <input id="new_hudson_job_url" name="new_hudson_job_url" type="text" value="'.$row['job_url'].'" size="64" />';
-                echo '  </p>';
-                echo '  <p>';
-                echo '   <span class="legend">'.$GLOBALS['Language']->getText('plugin_hudson','form_joburl_example').'</span>';
-                echo '  </p>';
-                echo '  <p>';
-                echo '   <label for="new_hudson_job_name">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_name').'</label>';
-                echo '   <input id="new_hudson_job_name" name="new_hudson_job_name" type="text" value="'.$row['name'].'" size="32" />';
-                echo '  </p>';
-                echo '  <p>';
-                echo '   <span class="legend">'.$GLOBALS['Language']->getText('plugin_hudson','form_jobname_help', array($row['name'])).'</span>';
-                echo '  </p>';
-                if ($project->usesSVN()) {
-                    echo '  <p>';
-                    echo '   <label for="new_hudson_use_svn_trigger">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_use_svn_trigger').'</label>';
-                    if ($row['use_svn_trigger'] == 1) {
-                        $checked = ' checked="checked" ';
-                    } else {
-                        $checked = '';
-                    }
-                    echo '   <input id="new_hudson_use_svn_trigger" name="new_hudson_use_svn_trigger" type="checkbox" '.$checked.' />';
-                    echo '  </p>';
-                }
-                if ($project->usesCVS()) {
-                    echo '  <p>';
-                    echo '   <label for="new_hudson_use_cvs_trigger">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_use_cvs_trigger').'</label>';
-                    if ($row['use_cvs_trigger'] == 1) {
-                        $checked = ' checked="checked" ';
-                    } else {
-                        $checked = '';
-                    }
-                    echo '   <input id="new_hudson_use_cvs_trigger" name="new_hudson_use_cvs_trigger" type="checkbox" '.$checked.' />';
-                    echo '  </p>';
-                }
-                $em       = EventManager::instance();
+
                 $services = array();
                 $params   = array('group_id' => $group_id, 'job_id' => $job_id, 'services' => &$services);
                 $em->processEvent('collect_ci_triggers', $params);
-                if (!empty($services)) {
-                    foreach ($services as $service) {
-                        echo '  <p>';
-                        echo $service['edit_form'];
-                        echo '  </p>';
-                    }
-                }
-                if ($project->usesSVN() || $project->usesCVS() || !empty($services)) {
-                    echo '  <p>';
-                    echo '   <label for="new_hudson_trigger_token">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_with_token').'</label>';
-                    echo '   <input id="new_hudson_trigger_token" name="new_hudson_trigger_token" type="text" value="'.$row['token'].'" size="32" />';
-                    echo '  </p>';
-                }
-                echo '  <p>';
-                echo '   <input type="hidden" name="group_id" value="'.$group_id.'" />';
-                echo '   <input type="hidden" name="job_id" value="'.$job_id.'" />';
-                echo '   <input type="hidden" name="action" value="update_job" />';
-                echo '   <input type="submit" value="'.$GLOBALS['Language']->getText('plugin_hudson','form_editjob_button').'" />';
-                echo '  </p>';
-                echo ' </form>';
-                
-            } else {
-                
+
+                $button = $GLOBALS['Language']->getText('plugin_hudson','form_editjob_button');
+                $this->displayForm($project, $services, 'edit', 'update', $button, $job_id, $row['job_url'], $row['name'], $row['use_svn_trigger'], $row['use_cvs_trigger'], $row['token']);
             }
-        } else {
-            
         }
     }
     // }}}
@@ -312,42 +254,43 @@ class hudsonViews extends Views {
             $project_manager = ProjectManager::instance();
             $project = $project_manager->getProject($group_id);
             
-            echo '<table id="jobs_table">';
-            echo ' <tr class="boxtable">';
-            echo '  <th class="boxtitle">&nbsp;</th>';
-            echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_job').'</th>';
-            echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_lastsuccess').'</th>';
-            echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_lastfailure').'</th>';
-            echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_rss').'</th>';
+            echo '<table id="jobs_table" class="table table-bordered table-striped">';
+            echo ' <thead><tr>';
+            echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_job').'</th>';
+            echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_lastsuccess').'</th>';
+            echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_lastfailure').'</th>';
+            echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_rss').'</th>';
             if ($project->usesSVN()) {
-                echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_svn_trigger').'</th>';
+                echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_svn_trigger').'</th>';
             }
             if ($project->usesCVS()) {
-                echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_cvs_trigger').'</th>';
+                echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_cvs_trigger').'</th>';
             }
             if (!empty($services)) {
                 foreach ($services as $service) {
-                    echo '  <th class="boxtitle">'.$service['title'].'</th>';
+                    echo '  <th>'.$service['title'].'</th>';
                 }
             }
             if ($user->isMember($request->get('group_id'), 'A')) {
-                echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_actions').'</th>';
+                echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_actions').'</th>';
             }
-            echo ' </tr>';
-            
+            echo ' </tr></thead>';
+            echo '<tbody>';
             $cpt = 1;
             while ($dar->valid()) {
                 $row = $dar->current();
                 $job_id = $row['job_id'];
 
-                echo ' <tr class="'. util_get_alt_row_color($cpt) .'">';
+                echo ' <tr>';
                 
                 try {
                     $job = new HudsonJob($row['job_url']);
                     
-                    echo '  <td><img src="'.$job->getStatusIcon().'" alt="'.$job->getStatus().'" title="'.$job->getStatus().'" /></td>';
                     // function toggle_iframe is in script plugins/hudson/www/hudson_tab.js
-                    echo '  <td class="boxitem"><a href="'.$job->getUrl().'" onclick="toggle_iframe(this); return false;" title="'.$GLOBALS['Language']->getText('plugin_hudson','show_job', array($row['name'])).'">'.$row['name'].'</a></td>';
+                    echo '<td>';
+                    echo '<img src="'.$job->getStatusIcon().'" alt="'.$job->getStatus().'" title="'.$job->getStatus().'" /> ';
+                    echo '<a href="'.$job->getUrl().'" onclick="toggle_iframe(this); return false;" title="'.$GLOBALS['Language']->getText('plugin_hudson','show_job', array($row['name'])).'">'.$row['name'].'</a>';
+                    echo '</td>';
                     if ($job->getLastSuccessfulBuildNumber() != '') {
                         echo '  <td><a href="'.$job->getLastSuccessfulBuildUrl().'" onclick="toggle_iframe(this); return false;" title="'.$GLOBALS['Language']->getText('plugin_hudson','show_build', array($job->getLastSuccessfulBuildNumber(), $row['name'])).'">'.$GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastSuccessfulBuildNumber().'</a></td>';
                     } else {
@@ -432,45 +375,74 @@ class hudsonViews extends Views {
         echo '<a href="#" onclick="toggle_addurlform(); return false;">' . $GLOBALS["HTML"]->getimage("ic/add.png") . ' '.$GLOBALS['Language']->getText('plugin_hudson','addjob_title').'</a>';
         echo ' '.$this->_getHelp('hudson-service', true);
         echo '<div id="hudson_add_job">';
-        echo ' <form>';
-        echo '   <label for="hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_url').'</label>';
-        echo '   <input id="hudson_job_url" name="hudson_job_url" type="text" size="64" />';
-        echo '   <input type="hidden" name="group_id" value="'.$group_id.'" />';
-        echo '   <input type="hidden" name="action" value="add_job" />';
-        echo '   <br />';
-        echo '   <span class="legend">'.$GLOBALS['Language']->getText('plugin_hudson','form_joburl_example').'</span>';
-        echo '   <br />';
-        //echo '  <p>';
-        if ($project->usesSVN() || $project->usesCVS() || !empty($services)) {
-            echo $GLOBALS['Language']->getText('plugin_hudson','form_job_use_trigger');
-            if ($project->usesSVN()) {
-                echo '  <p>';
-                echo '   <label for="hudson_use_svn_trigger">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_scm_svn').'</label>';
-                echo '   <input id="hudson_use_svn_trigger" name="hudson_use_svn_trigger" type="checkbox" />';
-                echo '  </p>';
-            }
-            if ($project->usesCVS()) {
-                echo '  <p>';
-                echo '   <label for="hudson_use_cvs_trigger">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_scm_cvs').'</label>';
-                echo '   <input id="hudson_use_cvs_trigger" name="hudson_use_cvs_trigger" type="checkbox" />';
-                echo '  </p>';
-            }
-            foreach ($services as $service) {
-                echo $service['add_form'];
-            }
-            //echo '  </p>';
-            //echo '  <p>';
-            echo '   <label for="hudson_trigger_token">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_with_token').'</label>';
-            echo '   <input id="hudson_trigger_token" name="hudson_trigger_token" type="text" size="32" />';
-            //echo '  </p>';
-            echo '   <br />';
-        }
-        echo '   <input type="submit" value="Add job" />';
-        echo ' </form>';
+        $this->displayForm($project, $services, 'add', 'add', 'Add job', null, null, null, null, null, null);
         echo '</div>';
         echo "<script>Element.toggle('hudson_add_job', 'slide');</script>";
     }
-    
+
+    private function displayForm($project, $services, $add_or_edit, $action, $button, $job_id, $job_url, $name, $use_svn_trigger, $use_cvs_trigger, $token) {
+        echo '  <form class="form-horizontal">
+                    <input type="hidden" name="group_id" value="'.$project->getId().'" />
+                    <input type="hidden" name="job_id" value="'. $job_id .'" />
+                    <input type="hidden" name="action" value="'. $action .'_job" />
+                    <div class="control-group">
+                        <label class="control-label" for="hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_url').'</label>
+                        <div class="controls">
+                            <input id="hudson_job_url" name="hudson_job_url" type="text" size="64" value="'. $job_url .'" />
+                            <div class="help">'. $GLOBALS['Language']->getText('plugin_hudson','form_joburl_example') .'</div>
+                        </div>
+                    </div>';
+        if ($name !== null) {
+            echo '  <div class="control-group">
+                        <label class="control-label" for="hudson_job_name">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_name').'</label>
+                        <div class="controls">
+                            <input id="hudson_job_name" name="hudson_job_name" type="text" size="64" value="'. $name .'" />
+                            <div class="help">'. $GLOBALS['Language']->getText('plugin_hudson', 'form_jobname_help', $name) .'</div>
+                        </div>
+                    </div>';
+        }
+        if ($project->usesSVN() || $project->usesCVS() || !empty($services)) {
+            echo '  <div class="control-group">
+                        <label class="control-label" for="hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_use_trigger').'</label>
+                            <div class="controls">';
+            if ($project->usesSVN()) {
+                $checked = '';
+                if ($use_svn_trigger) {
+                    $checked = ' checked="checked" ';
+                }
+                echo '<label class="checkbox">
+                        <input id="hudson_use_svn_trigger" name="hudson_use_svn_trigger" type="checkbox" '. $checked .'/>
+                        '. $GLOBALS['Language']->getText('plugin_hudson','form_job_scm_svn') .'
+                        </label>';
+            }
+            if ($project->usesCVS()) {
+                $checked = '';
+                if ($use_cvs_trigger) {
+                    $checked = ' checked="checked" ';
+                }
+                echo '<label class="checkbox">
+                        <input id="hudson_use_cvs_trigger" name="hudson_use_cvs_trigger" type="checkbox" '. $checked .'/>
+                        '. $GLOBALS['Language']->getText('plugin_hudson','form_job_scm_cvs') .'
+                        </label>';
+            }
+            foreach ($services as $service) {
+                echo $service[$add_or_edit .'_form'];
+            }
+            echo '          <label>
+                                '.$GLOBALS['Language']->getText('plugin_hudson','form_job_with_token').'
+                                <input id="hudson_trigger_token" name="hudson_trigger_token" type="text" size="32" value="'. $token .'" />
+                            </label>
+                        </div>
+                  </div>';
+        }
+        echo '    <div class="control-group">
+                    <div class="controls">
+                        <input type="submit" class="btn btn-primary" value="'. $button .'" />
+                    </div>
+                  </div>
+                </form>';
+    }
+
     function _display_iframe($url = '') {
         echo '<div id="hudson_iframe_div">';
         $GLOBALS['HTML']->iframe($url, array('id' => 'hudson_iframe', 'class' => 'iframe_service'));

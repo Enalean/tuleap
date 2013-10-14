@@ -123,21 +123,23 @@ if (db_numrows($res_grp) < 1) {
         print "<br><u>".$Language->getText('admin_groupedit','built_from_template').'</u>: <br> <A href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_group->getPublicname().' </B></A>';
 
         ?>
-                    <TABLE WIDTH="70%">
+        <TABLE>
             <TR>
-            <TD style="text-align:center">
-        <FORM action="?" method="POST">
+            <TD>
+        <FORM action="<?php echo $PHP_SELF; ?>" method="POST">
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
         <INPUT TYPE="HIDDEN" NAME="list_of_groups" VALUE="<?php print $row_grp['group_id']; ?>">
-        <INPUT type="submit" name="submit" value="<?php echo $Language->getText('admin_approve_pending','approve'); ?>">
+        <INPUT type="submit" name="submit" class="btn" value="<?php echo $Language->getText('admin_approve_pending','approve'); ?>">
         </FORM>
         </TD>
     
+            <TD>&nbsp;</TD>
+
             <TD> 
         <FORM action="?" method="POST">
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="delete">
         <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php print $row_grp['group_id']; ?>">
-        <INPUT type="submit" name="submit" value="<?php echo $Language->getText('admin_approve_pending','delete'); ?>">
+        <INPUT type="submit" name="submit" class="btn" value="<?php echo $Language->getText('admin_approve_pending','delete'); ?>">
         </FORM>
             </TD>
             </TR>
@@ -156,7 +158,7 @@ if (db_numrows($res_grp) < 1) {
         <FORM action="?" method="POST">
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
         <INPUT TYPE="HIDDEN" NAME="list_of_groups" VALUE="'.$group_list.'">
-        <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending','approve_all').'">
+        <INPUT type="submit" name="submit" class="btn btn-primary" value="'.$Language->getText('admin_approve_pending','approve_all').'">
         </FORM>
         </center>
         ';

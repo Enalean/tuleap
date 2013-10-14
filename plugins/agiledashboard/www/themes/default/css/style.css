@@ -286,3 +286,8 @@
 .empty-table-placeholder {
     display: none;
 }
+
+.backlog-planning-search-title {
+    margin: 0px;
+    margin-bottom: 10px;
+}

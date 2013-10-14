@@ -409,21 +409,28 @@ class SystemEventManager {
     public function fetchLastEventsStatus($offset = 0, $limit = 10, $full = false, $filter_status = false, $filter_type = false, CSRFSynchronizerToken $csrf = null) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
-        $html .= '<table width="100%">';
+
+        $classname = 'table table-striped';
+        if ($full) {
+            $classname .= ' table-hover table-bordered';
+        } else {
+            $classname .= ' table-condensed';
+        }
+        $html .= '<table class="'. $classname .'">';
         
         if ($full) {
             $html .= '<thead><tr>';
-            $html .= '<th class="boxtitle">'. 'id' .'</td>';
-            $html .= '<th class="boxtitle">'. 'type' .'</td>';
-            $html .= '<th class="boxtitle">'. 'owner' .'</td>';
-            $html .= '<th class="boxtitle" style="text-align:center">'. 'status' .'</th>';
-            $html .= '<th class="boxtitle" style="text-align:center">'. 'priority' .'</th>';
-            $html .= '<th class="boxtitle">'. 'parameters' .'</th>';
-            $html .= '<th class="boxtitle">'. 'create_date' .'</th>';
-            $html .= '<th class="boxtitle">'. 'process_date' .'</th>';
-            $html .= '<th class="boxtitle">'. 'end_date' .'</th>';
-            $html .= '<th class="boxtitle">'. 'log' .'</th>';
-            $html .= '<th class="boxtitle">'. 'actions' .'</th>';
+            $html .= '<th>'. 'id' .'</td>';
+            $html .= '<th>'. 'type' .'</td>';
+            $html .= '<th>'. 'owner' .'</td>';
+            $html .= '<th>'. 'status' .'</th>';
+            $html .= '<th>'. 'priority' .'</th>';
+            $html .= '<th>'. 'parameters' .'</th>';
+            $html .= '<th>'. 'create_date' .'</th>';
+            $html .= '<th>'. 'process_date' .'</th>';
+            $html .= '<th>'. 'end_date' .'</th>';
+            $html .= '<th>'. 'log' .'</th>';
+            $html .= '<th>'. 'actions' .'</th>';
             
             $html .= '</tr></thead>';
             
@@ -449,7 +456,7 @@ class SystemEventManager {
         $i = 0;
         foreach($this->dao->searchLastEvents($offset, $limit, $filter_status, $filter_type) as $row) {
             if ($sysevent = $this->getInstanceFromRow($row)) {
-                $html .= '<tr class="'. html_get_alt_row_color($i++) .'">';
+                $html .= '<tr>';
                 
                 //id
                 $html .= '<td>'. $sysevent->getId() .'</td>';
@@ -496,27 +503,31 @@ class SystemEventManager {
             
             $nb_of_pages = ceil($num_total_rows / $limit);
             $current_page = round($offset / $limit);
-            $html .= '<div style="font-family:Verdana">Page: ';
+            $html .= '<div class="pagination"><ul>';
             $width = 10;
             for ($i = 0 ; $i < $nb_of_pages ; ++$i) {
                 if ($i == 0 || $i == $nb_of_pages - 1 || ($current_page - $width / 2 <= $i && $i <= $width / 2 + $current_page)) {
+                    $class = '';
+                    if ($i == $current_page) {
+                        $class = 'class="active"';
+                    }
+                    $html .= '<li '. $class .'>';
                     $html .= '<a href="?'. http_build_query(array(
                             'offset'        => (int)($i * $limit),
                             'filter_status' => $filter_status,
                             'filter_type'   => $filter_type,
                         )).
                         '">';
-                    if ($i == $current_page) {
-                        $html .= '<b>'. ($i + 1) .'</b>';
-                    } else {
-                        $html .= $i + 1;
-                    }
-                    $html .= '</a>&nbsp;';
+                    $html .= $i + 1;
+                    $html .= '</a>';
+                    $html .= '</li>';
                 } else if ($current_page - $width / 2 - 1 == $i || $current_page + $width / 2 + 1 == $i) {
-                    $html .= '...&nbsp;';
+                    $html .= '<li class="disabled">';
+                    $html .= '<a href="#">...</a>';
+                    $html .= '<li>';
                 }
             }
-            echo '</div>';
+            $html .= '</ul></div>';
         
         }
         return $html;

@@ -59,7 +59,6 @@ class Widget_ProjectMembers extends Widget {
                 }
                 echo '<a href="/users/'.$row_admin['user_name'].'/">'. $display_name .'</a><br />';
             }
-            echo '<hr width="100%" size="1" NoShade>';                   
         }
         echo '<span class="develtitle">' . $GLOBALS['Language']->getText('include_project_home','devels') . ':</span><br />';
         // count of developers on this project

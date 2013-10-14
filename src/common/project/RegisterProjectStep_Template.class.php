@@ -42,13 +42,10 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
         
         $rows=db_numrows($this->db_templates);
         if ($rows > 0) {
-            //echo '<h3>From templates</h3><blockquote>';
-            
-          $GLOBALS['HTML']->box1_top($GLOBALS['Language']->getText('register_template','choose'));
-          print '
-          <TABLE width="100%">';
-        
-          for ($i=0; $i<$rows; $i++) {
+            print '<table class="table table-striped table-bordered">
+                <thead><tr><th colspan="2">'. $GLOBALS['Language']->getText('register_template','choose') .'</th></tr></thead>
+                <tbody>';
+            for ($i=0; $i<$rows; $i++) {
                 $this->_displayProject(
                     db_result($this->db_templates,$i,'group_id'),
                     db_result($this->db_templates,$i,'group_name'),
@@ -56,12 +53,8 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
                     db_result($this->db_templates,$i,'unix_group_name'),
                     db_result($this->db_templates,$i,'short_description')
                 );
-          }
-        
-          print '</TABLE>';
-          $GLOBALS['HTML']->box1_bottom();
-          //echo '</blockquote>';
-          
+            }
+            print '</tbody></table>';
         }
 
         //{{{ Projects where current user is admin
@@ -79,9 +72,10 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
         $rows = db_numrows($result);
         if ($result && $rows) {
             include($GLOBALS['Language']->getContent('project/template_my'));
-            echo '<br />';
-            $GLOBALS['HTML']->box1_top($GLOBALS['Language']->getText('register_template','choose_admin'));
-            print '<TABLE width="100%">';
+            $GLOBALS['HTML']->box1_bottom();
+            print '<table class="table table-striped table-bordered">
+                <thead><tr><th colspan="2">'. $GLOBALS['Language']->getText('register_template','choose_admin') .'</th></tr></thead>
+                <tbody>';
             for ($i=0; $i<$rows; $i++) {
                 $this->_displayProject(
                     db_result($result,$i,'group_id'),
@@ -91,8 +85,7 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
                     db_result($result,$i,'short_description')
                 );
             }
-            print '</TABLE>';
-            $GLOBALS['HTML']->box1_bottom();
+            print '</tbody></table>';
         }
         //}}}
         
@@ -119,7 +112,7 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
     
     function _displayProject($group_id, $group_name, $register_time, $unix_group_name, $short_description) {
         $hp = Codendi_HTMLPurifier::instance();
-        print '<TR>';
+        print '<TR valign="top">';
         $check = "";
         $title = '<B>'.  $hp->purify(util_unconvert_htmlspecialchars($group_name), CODENDI_PURIFIER_CONVERT_HTML)  .
         '</B> (' . date($GLOBALS['Language']->getText('system', 'datefmt_short'), $register_time) . ')';
@@ -130,10 +123,9 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
         }
         
         print '
-        <TD><input type="radio" name="built_from_template" value="'.$group_id.'" '.$check.'></TD>
-        <TD>'.$title.'</td>
-        <TD rowspan="2" align="left" valign="top"><I>'.  $hp->purify(util_unconvert_htmlspecialchars($short_description), CODENDI_PURIFIER_LIGHT, $group_id)  .'</I></TD>
-        </TR>
+        <TD width="16"><input type="radio" name="built_from_template" value="'.$group_id.'" '.$check.'></TD>
+        <TD>'.$title.'
+        <p>'.  $hp->purify(util_unconvert_htmlspecialchars($short_description), CODENDI_PURIFIER_LIGHT, $group_id)  .'</p>
         ';
         
         // Get Project admin as contacts
@@ -152,11 +144,7 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
             $admins[] = '<A href="/users/'.$row_admin['user_name'].'/">'.$row_admin['user_name'].'</A>';
         }
         print '
-        <TR>
-        <TD> &nbsp</TD>
-        <TD><I>'.$GLOBALS['Language']->getText('new_index','contact').': '.join(',',$admins).'</I></TD>
-        </TR>
-        <TR><TD colspan="3"><HR></TD></TR>';
+        <p><I>'.$GLOBALS['Language']->getText('new_index','contact').': '.join(',',$admins).'</I></p></TR>';
     }
 }
 

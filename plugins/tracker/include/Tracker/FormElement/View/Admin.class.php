@@ -42,7 +42,7 @@ class Tracker_FormElement_View_Admin {
     
     public function fetchTypeNotModifiable() {
         $html = '';
-        $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label><br />';
+        $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label>';
         $html .= '<img width="16" height="16" alt="" src="'. $this->formElement->getFactoryIconUseIt() .'" style="vertical-align:middle"/> '. $this->formElement->getFactoryLabel();
         $html .= '</p>';
         $html .= '<p>'.$this->formElement->getFactoryDescription().'</p>';
@@ -51,7 +51,7 @@ class Tracker_FormElement_View_Admin {
     
     public function fetchTypeForUpdate() {
         $html = '';
-        $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label><br />';
+        $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label>';
         $html .= '<img width="16" height="16" alt="" src="'. $this->formElement->getFactoryIconUseIt() .'" style="vertical-align:middle"/> '. $this->formElement->getFactoryLabel();
         $html .= '<p>'.$this->formElement->getFactoryDescription().'</p>';
         $html .= '</p>';
@@ -62,7 +62,7 @@ class Tracker_FormElement_View_Admin {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<p>';
-        $html .= '<label for="formElement_name">' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'name') . ': </label><br />';
+        $html .= '<label for="formElement_name">' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'name') . ': </label>';
         $html .= '<input type="text" id="formElement_name" name="formElement_data[name]" value="' . $hp->purify($this->formElement->getName(), CODENDI_PURIFIER_CONVERT_HTML) . '" />';
         $html .= '</p>';
         return $html;
@@ -77,7 +77,6 @@ class Tracker_FormElement_View_Admin {
         $html = '';
         $html .= '<p>';
         $html .= '<label for="formElement_label">'.$GLOBALS['Language']->getText('plugin_tracker_include_report', 'field_label').': <font color="red">*</font></label> ';
-        $html .= '<br />';
         $html .= '<input type="text" name="formElement_data[label]" id="formElement_label" value="'. $this->formElement->getLabel() .'" size="40" />';
         $html .= '<input type="hidden" name="formElement_data[use_it]" value="1" />';
         $html .= '</p>';
@@ -96,7 +95,6 @@ class Tracker_FormElement_View_Admin {
         $html .= '<p>';
         
         $html .= '<label for="formElement_description">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'fieldset_desc').':</label>';
-        $html .= '<br />';
         $html .= '<textarea name="formElement_data[description]" id="formElement_description" cols="40">'.  $hp->purify($this->formElement->description, CODENDI_PURIFIER_CONVERT_HTML)  .'</textarea>';
 
         $html .= '</p>';
@@ -107,8 +105,7 @@ class Tracker_FormElement_View_Admin {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<p>';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_type', 'name') . ': ';
-        $html .= '<br />';
+        $html .= '<label>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'name') . '</label>';
         $html .= $hp->purify($this->formElement->getName(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</p>';
         return $html;
@@ -122,8 +119,7 @@ class Tracker_FormElement_View_Admin {
     public function fetchLabelForShared() {
         $html = '';
         $html .= '<p>';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_report', 'field_label').': ';
-        $html .= '<br />';
+        $html .= '<label>'.$GLOBALS['Language']->getText('plugin_tracker_include_report', 'field_label').'</label>';
         $html .= $this->formElement->getLabel();
         $html .= '<input type="hidden" name="formElement_data[use_it]" value="1" />';
         $html .= '</p>';
@@ -140,8 +136,7 @@ class Tracker_FormElement_View_Admin {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<p>';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_type', 'fieldset_desc').': ';
-        $html .= '<br />';
+        $html .= '<label>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'fieldset_desc').'</label>';
         $html .= $hp->purify($this->formElement->description, CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</p>';
         return $html;
@@ -167,7 +162,6 @@ class Tracker_FormElement_View_Admin {
         $html = '';
         $html .= '<p>';
         $html .= '<label for="formElement_rank">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'rank_screen').': <font color="red">*</font></label>';
-        $html .= '<br />';
         $items = array();
         foreach ($this->allUsedElements as $field) {
             $items[] = $field->getRankSelectboxDefinition();
@@ -203,8 +197,7 @@ class Tracker_FormElement_View_Admin {
         $html = '';
         foreach ($this->formElement->getProperties() as $key => $property) {
             $html .= '<p>';
-            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label>: ';
-            $html .= '<br />';
+            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label> ';
             $html .= $this->fetchAdminSpecificProperty($key, $property);
             $html .= '</p>';
         }
@@ -249,18 +242,17 @@ class Tracker_FormElement_View_Admin {
                 if ($this->formElement->getProperty($key) == $choice['radio_value']) {
                     $checked = 'checked="checked"';
                 }
-                $html .= '<input type="radio" 
+                $html .= '<div class="form-inline"><input type="radio"
                                  name="formElement_data[specific_properties]['. $key .']" 
                                  value="'. $choice['radio_value'] .'" 
                                  id="formElement_properties_'. $key_choice .'" 
                                  '. $checked .' />';
-                $html .= $this->fetchAdminSpecificProperty($key_choice, $choice);
-                $html .= '<br />';
+                $html .= '&nbsp;'.$this->fetchAdminSpecificProperty($key_choice, $choice);
+                $html .= '</div>';
             }
             break;
         case 'label':
             $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label>';
-
             
         default:
             //Unknown type. raise exception?

@@ -37,8 +37,6 @@ if (user_isloggedin()) {
 
     $lm = new WidgetLayoutManager();
     $lm->displayLayout(user_getid(), WidgetLayoutManager::OWNER_TYPE_USER);
-    
-    echo show_priority_colors_key();
     ?>
     </span>
 <?php
