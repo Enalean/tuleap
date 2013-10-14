@@ -634,7 +634,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 
 # OpenId
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/openid_consumer_store
+
 %else
+
 # Plugin mediawiki
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openid
@@ -643,8 +645,8 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/VERSION
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/.htaccess
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/index.php
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/common/REST
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/common/project/REST
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/common/REST
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/common/project/REST
 
 %endif
 
@@ -991,8 +993,8 @@ fi
 %{APP_DIR}/src/www/api/VERSION
 %{APP_DIR}/src/www/api/.htaccess
 %{APP_DIR}/src/www/api/index.php
-%{APP_DIR}/src/www/common/REST
-%{APP_DIR}/src/www/common/project/REST
+%{APP_DIR}/src/common/REST
+%{APP_DIR}/src/common/project/REST
 %endif
 
 #
