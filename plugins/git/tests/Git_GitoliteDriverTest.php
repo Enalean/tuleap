@@ -100,8 +100,12 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
     }
 
     public function itAddsTheDescriptionToTheConfFile() {
-        $driver = partial_mock('Git_GitoliteDriver', array('getDao', 'getPostReceiveMailManager'), array($this->_glAdmDir));
-        //$driver->setAdminPath($this->_glAdmDir);
+        $driver = new Git_GitoliteDriver(
+            $this->_glAdmDir,
+            $this->gitExec,
+            $this->repository_factory
+        );
+
         $repo_description = 'Vive tuleap';
         $repo_name        = 'test_default';
         $project_name     = 'project1';
@@ -110,23 +114,23 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         $prj->setReturnValue('getUnixName', $project_name);
 
         // List all repo
-        $dao = stub('GitDao')->getAllGitoliteRespositories()->returnsDar(array('repository_id' => 4, 
-                    'repository_name' => $repo_name, 
-                    'repository_namespace' => '', 
-                    'repository_events_mailing_prefix' => "[SCM]", 
-                    'repository_description' => $repo_description,
-                    'remote_server_id' => null));
-        $driver->setReturnValue('getDao', $dao);
+        stub($this->repository_factory)->getAllRepositoriesOfProject($prj)->returns(
+            array(
+                aGitRepository()
+                    ->withId(4)
+                    ->withName($repo_name)
+                    ->withNamespace('')
+                    ->withDescription($repo_description)
+                    ->build()
+            )
+        );
+        //$driver->setReturnValue('getDao', $dao);
         
         $permissions_manager = $this->permissions_manager;
         // Repo 4 (test_default): R = registered_users | W = project_members | W+ = none
         $permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('2'),   array(4, 'PLUGIN_GIT_READ'));
         $permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('3'),   array(4, 'PLUGIN_GIT_WRITE'));
         $permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(),      array(4, 'PLUGIN_GIT_WPLUS'));
-
-
-        // Notified emails
-        $driver->setReturnValue('getPostReceiveMailManager', new MockGit_PostReceiveMailManager());
 
         $driver->dumpProjectRepoConf($prj);
 
@@ -139,9 +143,13 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
     }
     
     public function itReplacesNewlinesBySpaces() {
-        $driver = partial_mock('Git_GitoliteDriver', array('getDao', 'getPostReceiveMailManager'), array($this->_glAdmDir));
-        //$driver->setAdminPath($this->_glAdmDir);
-        $repo_description = 'Vive 
+        $driver = new Git_GitoliteDriver(
+            $this->_glAdmDir,
+            $this->gitExec,
+            $this->repository_factory
+        );
+
+        $repo_description = 'Vive
             tuleap';
         $repo_name        = 'test_default';
         $project_name     = 'project1';
@@ -150,23 +158,22 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         $prj->setReturnValue('getUnixName', $project_name);
 
         // List all repo
-        $dao = stub('GitDao')->getAllGitoliteRespositories()->returnsDar(array('repository_id' => 4, 
-                    'repository_name' => $repo_name, 
-                    'repository_namespace' => '', 
-                    'repository_events_mailing_prefix' => "[SCM]", 
-                    'repository_description' => $repo_description,
-                    'remote_server_id' => null));
-        $driver->setReturnValue('getDao', $dao);
+        stub($this->repository_factory)->getAllRepositoriesOfProject($prj)->returns(
+            array(
+                aGitRepository()
+                    ->withId(4)
+                    ->withName($repo_name)
+                    ->withNamespace('')
+                    ->withDescription($repo_description)
+                    ->build()
+            )
+        );
         
         $permissions_manager = $this->permissions_manager;
         // Repo 4 (test_default): R = registered_users | W = project_members | W+ = none
         $permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('2'),   array(4, 'PLUGIN_GIT_READ'));
         $permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('3'),   array(4, 'PLUGIN_GIT_WRITE'));
         $permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(),      array(4, 'PLUGIN_GIT_WPLUS'));
-
-
-        // Notified emails
-        $driver->setReturnValue('getPostReceiveMailManager', new MockGit_PostReceiveMailManager());
 
         $driver->dumpProjectRepoConf($prj);
 
@@ -184,33 +191,36 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
     // 4 has defaults
     // 5 has pimped perms
     public function testDumpProjectRepoPermissions() {
-        $driver = partial_mock('Git_GitoliteDriver', array('getDao', 'getPostReceiveMailManager'), array($this->_glAdmDir));
-        //$driver->setAdminPath($this->_glAdmDir);
+        $driver = new Git_GitoliteDriver(
+            $this->_glAdmDir,
+            $this->gitExec,
+            $this->repository_factory
+        );
 
         $prj = new MockProject($this);
         $prj->setReturnValue('getUnixName', 'project1');
         $prj->setReturnValue('getId', 404);
 
         // List all repo
-        $dao = stub('GitDao')->getAllGitoliteRespositories()->once()->returnsDar(
+        stub($this->repository_factory)->getAllRepositoriesOfProject($prj)->once()->returns(
             array(
-                'repository_id'                    => 4,
-                'repository_name'                  => 'test_default',
-                'repository_namespace'             => '',
-                'repository_events_mailing_prefix' => "[SCM]",
-                'repository_description'           => '',
-                'remote_server_id'                 => null
-            ),
-            array(
-                'repository_id'                    => 5,
-                'repository_name'                  => 'test_pimped',
-                'repository_namespace'             => '',
-                'repository_events_mailing_prefix' => "[KOIN] ",
-                'repository_description'           => '',
-                'remote_server_id'                 => null
+                aGitRepository()
+                    ->withProject($prj)
+                    ->withId(4)
+                    ->withName('test_default')
+                    ->withNamespace('')
+                    ->withMailPrefix('[SCM]')
+                    ->withNotifiedEmails(array('john.doe@enalean.com', 'mme.michue@enalean.com'))
+                    ->build(),
+                aGitRepository()
+                    ->withId(5)
+                    ->withProject($prj)
+                    ->withName('test_pimped')
+                    ->withNamespace('')
+                    ->withMailPrefix('[KOIN] ')
+                    ->build()
             )
         );
-        $driver->setReturnValue('getDao', $dao);
         
         $permissions_manager = $this->permissions_manager;
         // Repo 4 (test_default): R = registered_users | W = project_members | W+ = none
@@ -222,12 +232,6 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         $permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('3'),   array(5, 'PLUGIN_GIT_READ'));
         $permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('4'),   array(5, 'PLUGIN_GIT_WRITE'));
         $permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('125'), array(5, 'PLUGIN_GIT_WPLUS'));
-
-        // Notified emails
-        $notifMgr = new MockGit_PostReceiveMailManager();
-        $notifMgr->setReturnValue('getNotificationMailsByRepositoryId', array('john.doe@enalean.com', 'mme.michue@enalean.com'), array(4));
-        $notifMgr->setReturnValue('getNotificationMailsByRepositoryId', array(), array(5));
-        $driver->setReturnValue('getPostReceiveMailManager', $notifMgr);
 
         $driver->dumpProjectRepoConf($prj);
 
@@ -246,48 +250,41 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
     }
 
     public function testRewindAccessRightsToGerritUserWhenRepoIsMigratedToGerrit() {
-        $driver = partial_mock('Git_GitoliteDriver', array('getDao', 'getPostReceiveMailManager'), array($this->_glAdmDir));
+        $driver = new Git_GitoliteDriver(
+            $this->_glAdmDir,
+            $this->gitExec,
+            $this->repository_factory
+        );
 
         $prj = new MockProject($this);
         $prj->setReturnValue('getUnixName', 'project1');
         $prj->setReturnValue('getId', 404);
 
         // List all repo
-        $dao = stub('GitDao')->getAllGitoliteRespositories()->once()->returnsDar(
+        stub($this->repository_factory)->getAllRepositoriesOfProject($prj)->once()->returns(
             array(
-                'repository_id'                    => 4,
-                'repository_name'                  => 'before_migration_to_gerrit',
-                'repository_namespace'             => '',
-                'repository_events_mailing_prefix' => "[SCM]",
-                'repository_description'           => '',
-                'remote_server_id'                 => null,
-                'remote_project_deleted_date'      => null,
-                'remote_server_disconnect_date'    => null
-            ),
-            array(
-                'repository_id'                    => 5,
-                'repository_name'                  => 'after_migration_to_gerrit',
-                'repository_namespace'             => '',
-                'repository_events_mailing_prefix' => "[SCM]",
-                'repository_description'           => '',
-                'remote_server_id'                 => 1,
-                'remote_project_deleted_date'      => null,
-                'remote_server_disconnect_date'    => null
+                aGitRepository()
+                    ->withProject($prj)
+                    ->withId(4)
+                    ->withName('before_migration_to_gerrit')
+                    ->withNamespace('')
+                    ->build(),
+                aGitRepository()
+                    ->withId(5)
+                    ->withProject($prj)
+                    ->withName('after_migration_to_gerrit')
+                    ->withNamespace('')
+                    ->withRemoteServerId(1)
+                    ->build()
             )
         );
-        $driver->setReturnValue('getDao', $dao);
 
-        $permissions_manager = $this->permissions_manager;
         stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_READ')->returns(array('2'));
         stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_WRITE')->returns(array('3'));
         stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_WPLUS')->returns(array('125'));
         stub($this->permissions_manager)->getAuthorizedUgroupIds(5, 'PLUGIN_GIT_READ')->returns(array('2'));
         stub($this->permissions_manager)->getAuthorizedUgroupIds(5, 'PLUGIN_GIT_WRITE')->returns(array('3'));
         stub($this->permissions_manager)->getAuthorizedUgroupIds(5, 'PLUGIN_GIT_WPLUS')->returns(array('125'));
-
-        // Notified emails
-        $notifMgr = new MockGit_PostReceiveMailManager();
-        $driver->setReturnValue('getPostReceiveMailManager', $notifMgr);
 
         $driver->dumpProjectRepoConf($prj);
 

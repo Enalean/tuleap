@@ -218,6 +218,15 @@ class GitRepositoryTest extends TuleapTestCase {
         $repo->setRemoteServerId(4154);
         $this->assertTrue($repo->canMigrateToGerrit());
     }
+
+    public function itIsNotMigratedIfItWasDisconnected() {
+        $repository = new GitRepository();
+        $repository->setDeletionDate(null);
+        $repository->setRemoteServerDisconnectDate(12345677890);
+        $repository->setRemoteServerId(1);
+
+        $this->assertFalse($repository->isMigratedToGerrit());
+    }
 }
 
 class GitRepository_CanDeletedTest extends TuleapTestCase {
@@ -253,7 +262,6 @@ class GitRepository_CanDeletedTest extends TuleapTestCase {
         $this->repo->setPath('perms/coincoin.git.git');
         $this->assertFalse($this->repo->canBeDeleted());
     }
-    
 }
 
 class GitRepository_GetAccessUrlTest extends TuleapTestCase {
