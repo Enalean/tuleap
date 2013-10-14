@@ -42,9 +42,18 @@
                             <td class="cardwall-cell">
                                 <div class="cardwall-cell-container">
                                     <ul class="nodrag">
-                                        <li id="cardwall_board_postit-{{swimline_id}}">
-                                            {{> card}}
-                                        </li>
+                                        {{#is_no_matching_column}}
+                                            <li>
+                                                <div class="alert-info alert">
+                                                    {{{getErrorMessage}}}
+                                                </div>
+                                            </li>
+                                        {{/is_no_matching_column}}
+                                        {{^is_no_matching_column}}
+                                            <li id="cardwall_board_postit-{{swimline_id}}">
+                                                {{> card}}
+                                            </li>
+                                        {{/is_no_matching_column}}
                                     </ul>
                                 </div>
                             </td>
