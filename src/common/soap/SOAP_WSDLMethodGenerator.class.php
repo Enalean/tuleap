@@ -48,6 +48,7 @@ class SOAP_WSDLMethodGenerator {
         'arrayofdescfields'        => 'tns:ArrayOfDescFields',
         'arrayofdescfieldsvalues'  => 'tns:ArrayOfDescFieldsValues',
         'arrayofservicesvalues'    => 'tns:ArrayOfServicesValues',
+        'userinfo'                 => 'tns:UserInfo',
     );
     
     public function __construct(ReflectionMethod $method) {

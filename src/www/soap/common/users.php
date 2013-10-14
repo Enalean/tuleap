@@ -75,18 +75,16 @@ function getUserInfo($sessionKey, $user_id) {
     
     $user_manager = UserManager::instance();
     $current_user = $user_manager->getCurrentUser();
-    $user_info    = array();
     
     try {
         $user      = $user_manager->getUserById($user_id);
-        $user_info = user_to_soap($user, $current_user);
-        
-        if ($user_info) {
-            $user_info['identifier'] = $user_id;
-            return $user_info;
-        } else {
+        $user_info = user_to_soap($user_id, $user, $current_user);
+
+        if (! $user_info) {
             return new SoapFault('0', "Invalid user id: $user_id", 'getUserInfo');
         }
+
+        return $user_info;
     } catch (Exception $e) {
         return new SoapFault('0', $e->getMessage(), 'getUserInfo');
     }
@@ -101,11 +99,10 @@ function checkUsersExistence($sessionKey, $users) {
 
             foreach ($users as $userIdentifier) {
                 $userObj  = $um->getUserByIdentifier($userIdentifier);
-                $userInfo = user_to_soap($userObj, $currentUser);
+                $userInfo = user_to_soap($userIdentifier, $userObj, $currentUser);
 
                 if ($userInfo) {
-                    $userInfo['identifier'] = $userIdentifier;
-                    $existingUsers[]        = $userInfo;
+                    $existingUsers[] = $userInfo;
                 }
             }
 
