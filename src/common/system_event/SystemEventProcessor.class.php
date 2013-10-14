@@ -22,6 +22,12 @@ require_once 'SystemEventManager.class.php';
 require_once 'IRunInAMutex.php';
 
 abstract class SystemEventProcessor implements IRunInAMutex {
+
+    /**
+     * @var SystemEventProcess
+     */
+    protected $process;
+
     /**
      * @var SystemEventManager
      */
@@ -37,10 +43,20 @@ abstract class SystemEventProcessor implements IRunInAMutex {
      */
     protected $logger;
 
-    public function __construct(SystemEventManager $system_event_manager, SystemEventDao $dao, Logger $logger) {
+    public function __construct(
+        SystemEventProcess $process,
+        SystemEventManager $system_event_manager,
+        SystemEventDao $dao,
+        Logger $logger
+    ) {
+        $this->process              = $process;
         $this->system_event_manager = $system_event_manager;
         $this->dao                  = $dao;
         $this->logger               = $logger;
+    }
+
+    public function getProcess() {
+        return $this->process;
     }
 
     public function execute() {
@@ -64,7 +80,6 @@ abstract class SystemEventProcessor implements IRunInAMutex {
         return null;
     }
 
-
     private function executeSystemEvent(SystemEvent $sysevent) {
         $this->logger->info("Processing event #".$sysevent->getId()." ".$sysevent->getType()."(".$sysevent->getParameters().")");
         try {
@@ -81,6 +96,5 @@ abstract class SystemEventProcessor implements IRunInAMutex {
     abstract protected function getOwner();
 
     abstract protected function postEventsActions();
-}
 
-?>
+}

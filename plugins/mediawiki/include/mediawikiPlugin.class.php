@@ -26,35 +26,38 @@
 require_once 'common/plugin/Plugin.class.php';
 
 class MediaWikiPlugin extends Plugin {
-	function __construct ($id=0) {
-		$this->Plugin($id) ;
-		$this->name = "mediawiki" ;
-		$this->text = "Mediawiki" ; // To show in the tabs, use...
-		$this->_addHook("groupmenu") ;	// To put into the project tabs
-		$this->_addHook("groupisactivecheckbox") ; // The "use ..." checkbox in editgroupinfo
-		$this->_addHook("groupisactivecheckboxpost") ; //
-		$this->_addHook("project_public_area");
-		$this->_addHook("role_get");
-		$this->_addHook("role_normalize");
-		$this->_addHook("role_translate_strings");
-		$this->_addHook("role_has_permission");
-		$this->_addHook("role_get_setting");
-		$this->_addHook("list_roles_by_permission");
-		$this->_addHook("project_admin_plugins"); // to show up in the admin page for group
-		$this->_addHook("clone_project_from_template") ;
-		$this->_addHook('group_delete');
-                $this->_addHook('cssfile');
 
-		$this->_addHook('service_is_used');
-		$this->_addHook('register_project_creation');
+    const SERVICE_SHORTNAME = 'plugin_mediawiki';
 
-                $this->_addHook(Event::SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK);
+    function __construct ($id=0) {
+            $this->Plugin($id) ;
+            $this->name = "mediawiki" ;
+            $this->text = "Mediawiki" ; // To show in the tabs, use...
+            $this->_addHook("groupmenu") ;	// To put into the project tabs
+            $this->_addHook("groupisactivecheckbox") ; // The "use ..." checkbox in editgroupinfo
+            $this->_addHook("groupisactivecheckboxpost") ; //
+            $this->_addHook("project_public_area");
+            $this->_addHook("role_get");
+            $this->_addHook("role_normalize");
+            $this->_addHook("role_translate_strings");
+            $this->_addHook("role_has_permission");
+            $this->_addHook("role_get_setting");
+            $this->_addHook("list_roles_by_permission");
+            $this->_addHook("project_admin_plugins"); // to show up in the admin page for group
+            $this->_addHook("clone_project_from_template") ;
+            $this->_addHook('group_delete');
+            $this->_addHook('cssfile');
 
-                // Search
-                $this->_addHook(Event::LAYOUT_SEARCH_ENTRY);
-                $this->_addHook('search_type', 'search_type', false);
-        $this->_addHook('plugin_statistics_service_usage');
-	}
+            $this->_addHook('service_is_used');
+            $this->_addHook('register_project_creation');
+
+            $this->_addHook(Event::SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK);
+
+            // Search
+            $this->_addHook(Event::LAYOUT_SEARCH_ENTRY);
+            $this->_addHook('search_type', 'search_type', false);
+            $this->_addHook('plugin_statistics_service_usage');
+    }
 
     /**
      * @see Plugin::getDependencies()
@@ -77,11 +80,32 @@ class MediaWikiPlugin extends Plugin {
         }
 
         public function layout_search_entry($params) {
-            $params['search_entries'][] = array(
-                'value' => $this->name,
-                'label' => 'Mediawiki',
-                'selected' => $params['type_of_search'] == $this->name,
-            );
+            if($this->isSearchEntryAvailable($params['hidden_fields'])) {
+                $params['search_entries'][] = array(
+                    'value' => $this->name,
+                    'label' => 'Mediawiki',
+                    'selected' => $params['type_of_search'] == $this->name,
+                );
+            }
+        }
+
+        private function isSearchEntryAvailable(array $hidden_fields) {
+            $group_id = $this->getGroupIdFromRequest($hidden_fields);
+            if (! $group_id) {
+                return false;
+            }
+
+            $project_manager = ProjectManager::instance();
+            $project         = $project_manager->getProject($group_id);
+            return $project->usesService(self::SERVICE_SHORTNAME);
+        }
+
+        private function getGroupIdFromRequest(array $hidden_fields) {
+            foreach ($hidden_fields as $field) {
+                if ($field['name'] == 'group_id') {
+                    return $field['value'];
+                }
+            }
         }
 
         public function search_type($params) {
@@ -433,7 +457,16 @@ class MediaWikiPlugin extends Plugin {
 	}
 
     public function register_project_creation($params) {
-        $this->createWiki($params['group_id']);
+        if ($this->serviceIsUsedInTemplate($params['template_id'])) {
+            $this->createWiki($params['group_id']);
+        }
+    }
+
+    private function serviceIsUsedInTemplate($project_id) {
+        $project_manager = ProjectManager::instance();
+        $project         = $project_manager->getProject($project_id);
+
+        return $project->usesService(self::SERVICE_SHORTNAME);
     }
 
     public function service_is_used($params) {

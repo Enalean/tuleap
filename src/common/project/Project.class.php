@@ -80,8 +80,9 @@ class Project extends Group implements PFO_Project {
      * The project is public
      */
     const IS_PUBLIC = 1;
-    
-    
+
+    const SITE_NEWS_PROJECT_ID = 46;
+
     var $project_data_array;
 
     // All data concerning services for this project

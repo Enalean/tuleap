@@ -490,6 +490,10 @@ function plugin_tracker_permission_process_update_tracker_permissions($group_id,
                             permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_ACCESS_SUBMITTER', $ugroup_id, $atid);
                             $add_submitter_to_history = true;
                         }
+                        if ($ugroup_already_admin) {
+                            permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_ADMIN', $ugroup_id, $atid);
+                            $add_submitter_to_history = true;
+                        }
                         break;
                     default:
                         //do nothing

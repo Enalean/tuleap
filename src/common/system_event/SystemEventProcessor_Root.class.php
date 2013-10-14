@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'SystemEventProcessRoot.class.php';
+require_once 'SystemEventProcessApplicationOwner.class.php';
 require_once 'SystemEventProcessor.class.php';
 require_once 'common/backend/BackendAliases.class.php';
 require_once 'common/backend/BackendCVS.class.php';
@@ -51,14 +53,16 @@ class SystemEventProcessor_Root extends SystemEventProcessor {
     protected $backend_system;
 
     public function __construct(
-            SystemEventManager $system_event_manager,
-            SystemEventDao     $dao,
-            Logger             $logger,
-            BackendAliases     $backend_aliases,
-            BackendCVS         $backend_cvs,
-            BackendSVN         $backend_svn,
-            BackendSystem      $backend_system) {
-        parent::__construct($system_event_manager, $dao, $logger);
+        SystemEventProcessRoot $process,
+        SystemEventManager $system_event_manager,
+        SystemEventDao     $dao,
+        Logger             $logger,
+        BackendAliases     $backend_aliases,
+        BackendCVS         $backend_cvs,
+        BackendSVN         $backend_svn,
+        BackendSystem      $backend_system
+    ) {
+        parent::__construct($process, $system_event_manager, $dao, $logger);
         $this->backend_aliases      = $backend_aliases;
         $this->backend_cvs          = $backend_cvs;
         $this->backend_svn          = $backend_svn;
@@ -97,7 +101,7 @@ class SystemEventProcessor_Root extends SystemEventProcessor {
     }
 
     protected function triggerApplicationOwnerEventsProcessing() {
-        $app = new SystemEventProcessor_ApplicationOwner($this->system_event_manager, $this->dao, $this->logger);
+        $app = new SystemEventProcessor_ApplicationOwner(new SystemEventProcessApplicationOwner(), $this->system_event_manager, $this->dao, $this->logger);
         $command   = Config::get('codendi_dir').'/src/utils/php-launcher.sh '.Config::get('codendi_dir').'/src/utils/process_system_events.php '.SystemEvent::OWNER_APP;
         $this->launchAs($app->getProcessOwner(), $command);
     }
@@ -118,10 +122,4 @@ class SystemEventProcessor_Root extends SystemEventProcessor {
     public function getProcessOwner() {
         return 'root';
     }
-
-    public function getPidFilePath() {
-        return '/var/run/tuleap_process_system_events.pid';
-    }
 }
-
-?>

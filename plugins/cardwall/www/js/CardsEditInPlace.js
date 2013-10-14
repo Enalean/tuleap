@@ -160,23 +160,27 @@ tuleap.cardwall = tuleap.cardwall || { };
         }
 
         if (cardHasToBeMoved($card, artifact_json)) {
-            var $element = $card.parent().detach();
-            var $cell    = getConcernedCell(artifact_json);
+            var swimline_id = getSwimlineId($card);
+            var $cell       = getConcernedCell(artifact_json, swimline_id);
+            var $element    = $card.parent().detach();
             $cell.append($element);
 
-            updateDroppableAreas($card, artifact_json);
+            updateDroppableAreas($card, artifact_json, swimline_id);
         }
     }
 
-    function getConcernedCell(artifact_json) {
-        return $('tbody.cardwall tr[data-row-id='+artifact_json['swimline_id']+'] td.cardwall-cell[data-column-id='+artifact_json['column_id']+'] ul');
+    function getConcernedCell(artifact_json, swimline_id) {
+        return $('tbody.cardwall tr[data-row-id='+swimline_id+'] td.cardwall-cell[data-column-id='+artifact_json['column_id']+'] ul');
+    }
+
+    function getSwimlineId($card) {
+        return $card.parents('tr[data-row-id]').attr('data-row-id');
     }
 
     function cardHasToBeMoved($card, artifact_json) {
-        var current_parent_id = $card.parents('tr[data-row-id]').attr('data-row-id');
         var current_status_id = $card.parents('td[data-column-id]').attr('data-column-id');
 
-        return current_parent_id !== artifact_json['swimline_id'] || current_status_id !== artifact_json['column_id'];
+        return current_status_id !== artifact_json['column_id'];
     }
 
     function isAnAncestor($card) {
@@ -186,11 +190,11 @@ tuleap.cardwall = tuleap.cardwall || { };
         return false;
     }
 
-    function updateDroppableAreas($card, artifact_json) {
+    function updateDroppableAreas($card, artifact_json, swimline_id) {
         removeAllDropIntoClassesFromCard($card);
 
-        artifact_json.drop_into.each(function(drop_class){
-            $card.parent().addClass(drop_class);
+        artifact_json.drop_into.each(function(cell_id){
+            $card.parent().addClass('drop-into-' + swimline_id + '-' + cell_id);
         });
     }
 

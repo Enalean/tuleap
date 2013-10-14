@@ -373,7 +373,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @return Array;
      */
     function setBccUser($bcc) {
-        $arrayBcc = $this->_validateRecipient($cc);
+        $arrayBcc = $this->_validateRecipient($bcc);
         $arrayBccRealName = array();
         foreach ($arrayBcc as $user) {
             $this->mail->addBcc($user['email'], $user['real_name']);

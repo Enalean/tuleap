@@ -21,7 +21,7 @@
 /**
  * Builds instances of CardInCellPresenterNode
  */
-class Cardwall_CardInCellPresenterNodeFactory {
+class Cardwall_CardInCellPresenterBuilder {
 
     /** @var Cardwall_CardInCellPresenterFactory */
     private $card_in_cell_presenter_factory;
@@ -48,14 +48,25 @@ class Cardwall_CardInCellPresenterNodeFactory {
     }
 
     /**
-     * @return Cardwall_CardInCellPresenterNode
+     * @return Cardwall_CardInCellPresenter
      */
-    public function getCardInCellPresenterNode(Tracker_Artifact $artifact, $swimline_id = 0) {
-        $presenter = $this->card_in_cell_presenter_factory->getCardInCellPresenter(
+    public function getCardInCellPresenter(Tracker_Artifact $artifact, $swimline_id = 0) {
+        return $this->card_in_cell_presenter_factory->getCardInCellPresenter(
             $this->getCardPresenter($artifact, $swimline_id)
         );
+    }
 
-        return new Cardwall_CardInCellPresenterNode($presenter);
+    /**
+     * @return Cardwall_CardInCellPresenter[]
+     */
+    public function getCardInCellPresenters(array $artifacts, $swimline_id = 0) {
+        $presenters = array();
+
+        foreach ($artifacts as $artifact) {
+            $presenters[] = $this->getCardInCellPresenter($artifact, $swimline_id);
+        }
+
+        return $presenters;
     }
 
     private function getCardPresenter(Tracker_Artifact $artifact, $swimline_id) {

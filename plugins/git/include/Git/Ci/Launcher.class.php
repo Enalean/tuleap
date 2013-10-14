@@ -37,9 +37,13 @@ class Git_Ci_Launcher {
     /** @var Git_Ci_Dao */
     private $dao;
 
-    public function __construct(Jenkins_Client $jenkins_client, Git_Ci_Dao $dao) {
+    /** @var Logger */
+    private $logger;
+
+    public function __construct(Jenkins_Client $jenkins_client, Git_Ci_Dao $dao, Logger $logger) {
         $this->jenkins_client     = $jenkins_client;
         $this->dao                = $dao;
+        $this->logger             = $logger;
     }
 
     /**
@@ -60,7 +64,7 @@ class Git_Ci_Launcher {
                 try {
                     $this->jenkins_client->setToken($row['token'])->launchJobBuild($row['job_url']);
                 } catch(Exception $exception) {
-                    // Would be better to log it somewhere but no places for dat today
+                    $this->logger->error(__CLASS__.'['.$repository->getId().'] '.$exception->getMessage());
                 }
             }
         }
