@@ -1,3 +1,6 @@
+Version 3.47 - Tuleap 6.6
+    * story #4722 - Remigrate a previously deleted gerrit repo
+
 Version 3.46 - Tuleap 6.6
     * story #5034: automated gitolite housekeeping
 
