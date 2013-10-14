@@ -63,6 +63,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(Event::SYSTRAY);
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
             $this->_addHook(Event::EXPORT_XML_PROJECT);
+            $this->addHook(Event::REST_RESOURCES);
 
             if (defined('CARDWALL_BASE_DIR')) {
                 $this->_addHook(CARDWALL_EVENT_GET_SWIMLINE_TRACKER, 'cardwall_event_get_swimline_tracker', false);
@@ -555,6 +556,14 @@ class AgileDashboardPlugin extends Plugin {
         $dao = new AgileDashboard_Dao();
 
         $params['csv_exporter']->buildDatas($dao->getProjectsWithADActivated(), "Agile Dashboard activated");
+    }
+
+    /**
+     * @see REST_RESOURCES
+     */
+    public function rest_resources($params) {
+        $injector = new AgileDashboard_REST_ResourcesInjector();
+        $injector->populate($params['restler']);
     }
 }
 

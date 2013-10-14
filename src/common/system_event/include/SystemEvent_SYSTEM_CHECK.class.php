@@ -167,7 +167,9 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         try {
             EventManager::instance()->processEvent(
                 Event::PROCCESS_SYSTEM_CHECK,
-                null
+                array(
+                    'logger' => $logger
+                )
             );
         } catch(Exception $exception) {
             $this->error($exception->getMessage());

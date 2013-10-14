@@ -84,7 +84,7 @@ class LDAP_UserManager {
     function getLdapFromLdapId($ldapId) {
         if (!isset($this->ldapResultCache[$ldapId])) {
             $lri = $this->getLdap()->searchEdUid($ldapId);
-            if ($lri->count() == 1) {
+            if ($lri && $lri->count() == 1) {
                 $this->ldapResultCache[$ldapId] = $lri->current();
             } else {
                 $this->ldapResultCache[$ldapId] = false;

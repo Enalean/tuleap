@@ -71,6 +71,8 @@ Requires: forgeupgrade >= 1.2
 Requires: shared-mime-info
 # Documentation
 Requires: tuleap-documentation
+# Rest API
+Requires: php53-restler
 
 %description
 Tuleap is a web based application that address all the aspects of product development.

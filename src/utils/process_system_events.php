@@ -22,10 +22,12 @@
 
 require_once 'pre.php';
 require_once 'common/system_event/SystemEventProcessorMutex.class.php';
+require_once 'common/system_event/SystemEventProcessApplicationOwner.class.php';
 
 if (isset($argv[1]) && $argv[1] == SystemEvent::OWNER_APP) {
     require_once 'common/system_event/SystemEventProcessor_ApplicationOwner.class.php';
     $processor = new SystemEventProcessor_ApplicationOwner(
+        new SystemEventProcessApplicationOwner(),
         $system_event_manager,
         new SystemEventDao(),
         new BackendLogger()
@@ -33,6 +35,7 @@ if (isset($argv[1]) && $argv[1] == SystemEvent::OWNER_APP) {
 } else {
     require_once 'common/system_event/SystemEventProcessor_Root.class.php';
     $processor = new SystemEventProcessor_Root(
+        new SystemEventProcessRoot(),
         $system_event_manager,
         new SystemEventDao(),
         new BackendLogger(),
@@ -43,7 +46,7 @@ if (isset($argv[1]) && $argv[1] == SystemEvent::OWNER_APP) {
     );
 }
 
-$mutex = new SystemEventProcessorMutex($processor);
+$mutex = new SystemEventProcessorMutex(new SystemEventProcessManager(), $processor);
 $mutex->execute();
 
 ?>

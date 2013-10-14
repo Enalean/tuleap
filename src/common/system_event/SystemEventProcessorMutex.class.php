@@ -23,6 +23,7 @@
  */
 
 require_once 'IRunInAMutex.php';
+require_once 'SystemEventProcessManager.class.php';
 
 /**
  * Process stored events.
@@ -39,22 +40,22 @@ require_once 'IRunInAMutex.php';
  * we simply exit.
  */
 class SystemEventProcessorMutex {
-    private $pid_file;
     private $process_owner;
     private $runnable;
 
-    public function __construct(IRunInAMutex $runnable) {
-        $this->pid_file      = $runnable->getPidFilePath();
+    public function __construct(SystemEventProcessManager $process_manager, IRunInAMutex $runnable) {
         $this->process_owner = $runnable->getProcessOwner();
-        $this->runnable      = $runnable;
+        $this->runnable        = $runnable;
+        $this->process_manager = $process_manager;
     }
 
     public function execute() {
+        $process = $this->runnable->getProcess();
         $this->checkCurrentUserProcessOwner();
-        if (!$this->isAlreadyRunning()) {
-            $this->createPidFile();
+        if (!$this->process_manager->isAlreadyRunning($process)) {
+            $this->process_manager->createPidFile($process);
             call_user_func(array($this->runnable, 'execute'));
-            $this->deletePidFile();
+            $this->process_manager->deletePidFile($process);
         }
     }
 
@@ -70,36 +71,4 @@ class SystemEventProcessorMutex {
         $process_user = posix_getpwuid(posix_geteuid());
         return $process_user['name'];
     }
-
-    /**
-     * @see http://www.php.net/manual/en/function.posix-kill.php#49596
-     * @return boolean
-     */
-    protected function isAlreadyRunning() {
-        if (file_exists($this->pid_file)) {
-            $prev_pid = file_get_contents($this->pid_file);
-            if (($prev_pid !== FALSE) && posix_kill(trim($prev_pid), 0)) {
-                // A program using this PID is currently running
-                // It might be a PID number collision: check the program name
-                $result = shell_exec('/bin/ps -A -o pid,command | grep "' . $prev_pid . '" | grep process_system_events.php | grep -v "grep"');
-                if ($result != '') {
-                    //echo "Error: Server is already running with PID: $prev_pid\n";
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    protected function createPidFile() {
-        if (@file_put_contents($this->pid_file, getmypid()) === false) {
-            throw new Exception('Cannot write pid file, aborting');
-        }
-    }
-
-    protected function deletePidFile() {
-        unlink($this->pid_file);
-    }
 }
-
-?>

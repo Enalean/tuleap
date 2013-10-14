@@ -626,10 +626,17 @@ class GitPlugin extends Plugin {
             $params['allowed'] = $this->_cached_permission_user_allowed_to_change;
         }
     }
-    
+
     public function proccess_system_check($params) {
+        $gitgc = new Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc(
+            new Git_GitoliteHousekeeping_GitoliteHousekeepingDao(),
+            $params['logger'],
+            $this->getGitoliteAdminPath()
+        );
         $gitolite_driver = new Git_GitoliteDriver();
+
         $gitolite_driver->checkAuthorizedKeys();
+        $gitgc->cleanUpGitoliteAdminWorkingCopy();
     }
 
     /**
@@ -1036,11 +1043,15 @@ class GitPlugin extends Plugin {
     }
 
     private function getGitoliteSSHKeyDumper() {
-        $gitolite_admin_path = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
+        $gitolite_admin_path = $this->getGitoliteAdminPath();
         return new Git_Gitolite_SSHKeyDumper(
             $gitolite_admin_path,
             new Git_Exec($gitolite_admin_path)
         );
+    }
+
+    private function getGitoliteAdminPath() {
+        return $GLOBALS['sys_data_dir'] . '/gitolite/admin';
     }
 
     private function getUGroupManager() {

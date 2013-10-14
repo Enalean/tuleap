@@ -1,3 +1,9 @@
+Version 0.22 - Tuleap 6.6
+    * Fix tuleap rendering itself in widgets
+
+
+Fix bug introduced at commit #dce4aef25e52c8c3b77f14a085b935e217b00529
+
 Version 0.21 - Tuleap 6.6
     * Fix charts and widget rendering when filtering with a milestone
 

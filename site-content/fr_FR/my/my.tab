@@ -53,6 +53,13 @@ my_index	my_latest_svn_commit_desc	Affiche les commits que vous avez réalisés,
 my_index	my_latest_svn_commit_on	le
 my_index	my_latest_svn_commit_by	par
 my_index	my_latest_svn_commit_nb_prefs	Nombre maximum de commits SVN à afficher par projet
+my_index	send_mail	Envoyer un email aux membres du projet $1
+my_index	mail_sent	Email envoyé aux membres du projet $1
+my_index	mail_not_sent	Echec de l'envoi de mail aux membres du projet $1
+my_index	subject_label	Sujet
+my_index	body_label	Corps du message
+my_index	massmail_not_sent_max_users	Vous avez dépassé le nombre maximum ($1) de personnes à qui envoyer le message. L'email n'est pas envoyé.
+my_index	massmail_form_title	Envoi d'un email aux membres du projet
 
 #-----------------------------------------------
 # Script: SF/www/my/my_utils.php

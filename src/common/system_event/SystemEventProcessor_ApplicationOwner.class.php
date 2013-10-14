@@ -35,10 +35,4 @@ class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor {
     public function getProcessOwner() {
         return Config::get('sys_http_user');
     }
-
-    public function getPidFilePath() {
-        return '/var/tmp/tuleap_process_system_event_'.SystemEvent::OWNER_APP.'.pid';
-    }
 }
-
-?>

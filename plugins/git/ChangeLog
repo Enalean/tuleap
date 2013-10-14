@@ -1,3 +1,6 @@
+Version 3.46 - Tuleap 6.6
+    * story #5034: automated gitolite housekeeping
+
 Version 3.45 - Tuleap 6.6
     * request #5276 - Log jenkins job failures
 

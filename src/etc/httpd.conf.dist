@@ -317,7 +317,7 @@ DocumentRoot "/usr/share/codendi/src/www"
 # Currently, the risk is low, so we only filter on UserAgent string (which can be easily forged)
 # For better security, you can filter on the server IP address
 SetEnvIf User-Agent ^Codendi let_me_in
-<Directory "/usr/share/codendi/src/www/api">
+<Directory "/usr/share/codendi/src/www/api/reference">
     # API scrips do not end with ".php"
     ForceType application/x-httpd-php
     Order Deny,Allow
