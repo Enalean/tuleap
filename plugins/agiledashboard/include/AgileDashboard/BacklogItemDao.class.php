@@ -70,7 +70,7 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
                     WHERE parent_art.id IN ($milestone_artifact_ids)
                     ) AS R";
         $row = $this->retrieve($sql)->getRow();
-        if ($row) {
+        if ($row && $row['ids'] != null) {
             return explode(',', $row['ids']);
         }
         return array();
