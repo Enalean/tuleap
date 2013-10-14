@@ -41,6 +41,7 @@ plugin_git	admin_repolist_selectbox_forks	Forks
 plugin_git	admin_deletion_title	Repository deletion
 plugin_git	admin_deletion_submit	Delete this repository
 plugin_git	admin_deletion_input_name	Delete
+plugin_git	deletion_gerrit_no	The repository cannot be deleted until it is disconnected from Gerrit
 plugin_git	admin_save_submit	Save
 
 plugin_git	admin_mail	Notifications

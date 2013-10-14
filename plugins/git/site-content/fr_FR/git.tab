@@ -41,6 +41,7 @@ plugin_git	admin_repolist_selectbox_forks	Forks
 plugin_git	admin_deletion_title	Suppression d'un dépôt
 plugin_git	admin_deletion_submit	Supprimer ce dépôt
 plugin_git	admin_deletion_input_name	Supprimer ce dépôt
+plugin_git	deletion_gerrit_no	Le dépôt ne peut être supprimé avant d'être déconnecté de Gerrit
 plugin_git	admin_save_submit	Enregistrer
 
 plugin_git	admin_mail	Notifications

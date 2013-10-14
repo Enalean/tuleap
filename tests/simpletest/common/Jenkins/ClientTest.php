@@ -67,7 +67,7 @@ class Jenkins_ClientTest extends TuleapTestCase {
         $expected_options = array(
             CURLOPT_URL             => $job_url . '/build?token=thou+shall+not+pass',
             CURLOPT_SSL_VERIFYPEER  => false,
-            CURLOPT_HTTPGET         => true,
+            CURLOPT_POST            => true,
         );
 
         stub($this->http_client)->addOptions($expected_options)->once();

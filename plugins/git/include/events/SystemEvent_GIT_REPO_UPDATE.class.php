@@ -60,11 +60,10 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
         }
 
         $events_to_repos = $this->getAllEvents();
-        $event_ids       = $this->getOtherEventIds($events_to_repos);
+        $event_ids       = $this->getEventIds($events_to_repos);
 
         $this->system_event_dao->markAsRunning($event_ids);
-
-        $repositories = $this->getOneRepoPerProject($events_to_repos);
+        $repositories   = $this->getOneRepoPerProject($events_to_repos);
 
         $repository->getBackend()->updateAllRepoConf($repositories);
         $this->system_event_dao->markAsDone($event_ids);
@@ -99,7 +98,11 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
             }
         }
 
-        return $event_repositories;
+        return $this->getEventRepositoriesWithCurrentEvent($event_repositories);
+    }
+
+    private function getEventRepositoriesWithCurrentEvent(array $event_repositories){
+        return $event_repositories + array($this->getId() => $this->getRepositoryIdFromParameters());
     }
 
     private function getRepositoryIdFromEvent($event) {
@@ -108,8 +111,8 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
         return $parameters[0];
     }
 
-    private function getOtherEventIds($events_to_repos) {
-        return array_diff(array_keys($events_to_repos), array($this->id));
+    private function getEventIds($events_to_repos) {
+        return array_keys($events_to_repos);
     }
 
     /**

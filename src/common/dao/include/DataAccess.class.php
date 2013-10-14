@@ -21,6 +21,7 @@
 require_once('common/include/Config.class.php');
 require_once('DataAccessResult.class.php');
 require_once('DataAccessException.class.php');
+require_once('DataAccessCredentials.class.php');
 
 $GLOBALS['DEBUG_DAO_QUERY_COUNT'] = 0;
 
@@ -41,15 +42,12 @@ class DataAccess {
      * $db stores a database resource
      */
     var $db;
-    
+
     /**
      * store the database name used to instantiate the connection
      */
     public $db_name;
-    
-    protected $host;
-    protected $user;
-    protected $pass;
+
     protected $opt;
 
     /**
@@ -58,31 +56,29 @@ class DataAccess {
      */
     protected $nbReco = 0;
 
+    /** @var DataAccessCredentials */
+    private $credentials;
+
     /**
      * Constucts a new DataAccess object
-     * 
-     * @param $host string hostname for dbserver
-     * @param $user string dbserver user
-     * @param $pass string dbserver user password
-     * @param $db   string database name
+     *
+     * @param DataAccessCredentials $credentials
      */
-    function DataAccess($host, $user, $pass, $db, $opt=0) {
-        $this->host    = $host;
-        $this->user    = $user;
-        $this->pass    = $pass;
-        $this->opt     = $opt;
-        $this->db_name = $db;
-        $this->store   = array();
+    function DataAccess(DataAccessCredentials $credentials, $opt=0) {
+        $this->credentials = $credentials;
+        $this->db_name     = $credentials->getDatabaseName();
+        $this->opt         = $opt;
+        $this->store       = array();
         $this->reconnect();
     }
-    
+
     /**
      * Connect to Mysql server
      *
      * @throws DataAccessException
      */
     protected function reconnect() {
-        $this->db = $this->connect($this->host, $this->user, $this->pass, $this->opt);
+        $this->db = $this->connect();
         if ($this->db) {
             $this->nbReco = 0;
             mysql_query("SET NAMES 'utf8'", $this->db);
@@ -93,21 +89,19 @@ class DataAccess {
             throw new DataAccessException('Unable to access the database ('. mysql_error($this->db) .' - '. mysql_errno() .'). Please contact your administrator.');
         }
     }
-    
+
     /**
      * Open a *new* connection to a RDBMS
-     * 
-     * @param string $host         The server
-     * @param string $user         The username
-     * @param string $pass         The password
-     * @param int    $client_flags The client_flags  parameter
      *
-     * @return resource Returns a link identifier on success, or FALSE on failure. 
+     * @return resource Returns a link identifier on success, or FALSE on failure.
      */
-    protected function connect($host, $user, $pass, $opt) {
-        return mysql_connect($host, $user, $pass, true, $opt);
+    protected function connect() {
+        $host = $this->credentials->getHost();
+        $user = $this->credentials->getUser();
+        $pass = $this->credentials->getPassword();
+        return mysql_connect($host, $user, $pass, true, $this->opt);
     }
-    
+
     var $store;
     
     /**
