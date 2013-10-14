@@ -23,9 +23,9 @@ require_once dirname(__FILE__). '/../../constants.php';
 
 class Cardwall_OnTop_Config_ColumnFactory {
 
-    const DEFAULT_BGCOLOR = 'white';
-    const LIGHT_FGCOLOR   = 'white';
-    const DARK_FGCOLOR    = 'black';
+    const DEFAULT_BGCOLOR = 'rgb(248,248,248)';
+    const LIGHT_FGCOLOR   = 'rgb(255,255,255)';
+    const DARK_FGCOLOR    = 'rgb(0,0,0)';
 
     /**
      * @var Cardwall_OnTop_ColumnDao
@@ -43,21 +43,12 @@ class Cardwall_OnTop_Config_ColumnFactory {
     }
 
     /**
-     * Get Frestyle columns for Cardwall_OnTop, or status columns if none
+     * Get columns for Cardwall_OnTop
      * 
-     * @param Tracker $tracker
      * @return Cardwall_OnTop_Config_ColumnCollection
      */
-    public function getDashboardColumns(Tracker $tracker, Tracker $swimline_tracker) {
-        $columns = $this->getColumnsFromDao($tracker);
-
-        if (!$this->on_top_dao->isFreestyleEnabled($tracker->getId())) {
-            $status_columns = $this->getColumnsFromStatusField($swimline_tracker);
-            if (count($status_columns)) {
-                $columns = $status_columns;
-            }
-        }
-        return $columns;
+    public function getDashboardColumns(Tracker $tracker) {
+        return $this->getColumnsFromDao($tracker);
     }
 
     /**

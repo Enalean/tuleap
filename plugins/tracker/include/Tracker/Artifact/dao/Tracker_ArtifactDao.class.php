@@ -401,9 +401,13 @@ class Tracker_ArtifactDao extends DataAccessObject {
      * It does not check permissions
      */
     public function getChildren($artifact_id) {
-        $artifact_id = $this->da->escapeInt($artifact_id);
+        return $this->getChildrenForArtifacts(array($artifact_id));
+    }
 
-        $sql = "SELECT child_art.*
+    public function getChildrenForArtifacts(array $artifact_ids) {
+        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
+
+        $sql = "SELECT child_art.*, parent_art.id as parent_id
                 FROM tracker_artifact parent_art
                     INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
@@ -411,7 +415,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
                     INNER JOIN tracker_hierarchy                    hierarchy  ON (hierarchy.child_id = child_art.tracker_id AND hierarchy.parent_id = parent_art.tracker_id)
                     INNER JOIN tracker_artifact_priority                       ON (tracker_artifact_priority.curr_id = child_art.id)
-                WHERE parent_art.id = $artifact_id
+                WHERE parent_art.id IN ($artifact_ids)
                 ORDER BY tracker_artifact_priority.rank ASC";
         return $this->retrieve($sql);
     }
@@ -471,6 +475,54 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     * Filters a list of artifact IDs.
+     * For each artifact, checks if it is linked by another artifact belonging
+     * to a set of trackers.
+     *
+     * @param array $artifact_ids
+     * @param array $tracker_ids
+     * @return DataAccessResult | false
+     */
+    public function getArtifactIdsLinkedToTrackers($artifact_ids, $tracker_ids) {
+        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
+        $tracker_ids  = $this->da->escapeIntImplode($tracker_ids);
+
+         $sql = "SELECT
+                    back_item.id
+                FROM tracker_artifact AS milestone
+                    INNER JOIN tracker_changeset_value
+                        ON tracker_changeset_value.changeset_id = milestone.last_changeset_id
+                    INNER JOIN tracker_changeset_value_artifactlink
+                        ON tracker_changeset_value_artifactlink.changeset_value_id = tracker_changeset_value.id
+                    INNER JOIN tracker_artifact AS back_item
+                        ON tracker_changeset_value_artifactlink.artifact_id = back_item.id
+                    INNER JOIN tracker_field
+                        ON (tracker_field.tracker_id = milestone.tracker_id AND tracker_field.formElement_type = 'art_link' AND use_it = 1 AND tracker_changeset_value.field_id = tracker_field.id)
+                WHERE
+                    back_item.id IN ($artifact_ids)
+                AND
+                    milestone.tracker_id IN ($tracker_ids)";
+
+        return $this->retrieve($sql);
+    }
+
+    /** @return array */
+    public function getIdsSortedByPriority(array $artifact_ids) {
+        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
+        $sql = "SELECT GROUP_CONCAT(curr_id) as sorted_ids
+                FROM (
+                    SELECT curr_id
+                    FROM tracker_artifact_priority
+                    WHERE curr_id IN ($artifact_ids)
+                    ORDER BY rank ASC
+                    ) AS R";
+        $row = $this->retrieve($sql)->getRow();
+        if ($row && $row['sorted_ids'] != null) {
+            return explode(',', $row['sorted_ids']);
+        }
+        return array();
+    }
 }
 
 ?>

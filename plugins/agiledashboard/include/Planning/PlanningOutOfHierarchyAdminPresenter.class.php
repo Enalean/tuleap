@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,19 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+class Planning_PlanningOutOfHierarchyAdminPresenter extends Planning_PlanningAdminPresenter {
+    private $root_planning_name;
 
-class Cardwall_OnTop_Config_View_SemanticStatusColumnDefinition extends Cardwall_OnTop_Config_View_ColumnDefinition {
-
-    protected function fetchSpeech() {
-        return $this->translate('plugin_cardwall', 'on_top_semantic_status_column_definition_speech');
+    public function __construct(Planning $planning, $root_planning_name) {
+        parent::__construct($planning);
+        $this->root_planning_name = $root_planning_name;
     }
 
-    protected function fetchColumnHeader(Cardwall_Column $column) {
-        return $this->purify($column->label);
+    public function li_class() {
+        return 'alert alert-error';
     }
 
-    protected function fetchAdditionalColumnHeader() {
-        return '';
+    public function extra_message() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_out_of_hierarchy', array(
+            $this->root_planning_name
+        ));
     }
 }
+
 ?>

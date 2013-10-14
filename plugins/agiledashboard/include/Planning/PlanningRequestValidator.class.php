@@ -58,11 +58,11 @@ class Planning_RequestValidator {
         if (! $planning_parameters) {
             $planning_parameters = array();
         }
-        
+
         $planning_parameters = PlanningParameters::fromArray($planning_parameters);
         
         return $this->nameIsPresent($planning_parameters)
-            && $this->backlogTrackerIdIsPresentAndIsAPositiveIntegers($planning_parameters)
+            && $this->backlogTrackerIdsArePresentAndArePositiveIntegers($planning_parameters)
             && $this->planningTrackerIdIsPresentAndIsAPositiveInteger($planning_parameters)
             && $this->planningTrackerIsNotThePlanningTrackerOfAnotherPlanningInTheSameProject($group_id, $planning_id, $planning_parameters);
     }
@@ -89,11 +89,17 @@ class Planning_RequestValidator {
      * 
      * @return bool
      */
-    private function backlogTrackerIdIsPresentAndIsAPositiveIntegers(PlanningParameters $planning_parameters) {
+    private function backlogTrackerIdsArePresentAndArePositiveIntegers(PlanningParameters $planning_parameters) {
         $backlog_tracker_id = new Valid_UInt();
         $backlog_tracker_id->required();
-        
-        return $backlog_tracker_id->validate($planning_parameters->backlog_tracker_id);
+        $are_present = count($planning_parameters->backlog_tracker_ids) > 0;
+        $are_valid   = true;
+
+        foreach ($planning_parameters->backlog_tracker_ids as $tracker_id) {
+            $are_valid = $are_valid && $backlog_tracker_id->validate($tracker_id);
+        }
+
+        return $are_present && $are_valid;
     }
     
     /**

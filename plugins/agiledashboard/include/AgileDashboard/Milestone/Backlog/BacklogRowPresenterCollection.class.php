@@ -23,13 +23,14 @@
  */
 
 class AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection implements Iterator, Countable {
+    /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenter[] */
     private $rows = array();
+
+    /** @var Integer[] */
+    private $index = array();
 
     /** @var string */
     private $parent_item_name = '';
-
-    /** @var bool */
-    private $initial_effort_semantic_is_defined;
 
     public function getParentItemName() {
         return $this->parent_item_name;
@@ -41,6 +42,11 @@ class AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection implements 
 
     public function push(AgileDashboard_Milestone_Backlog_BacklogRowPresenter $row) {
         $this->rows[] = $row;
+        $this->index[$row->id()] = true;
+    }
+
+    public function containsId($id) {
+        return isset($this->index[$id]);
     }
 
     public function current() {
@@ -65,14 +71,6 @@ class AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection implements 
 
     public function count() {
         return count($this->rows);
-    }
-
-    public function setInitialEffortSemanticIsDefined($bool) {
-        $this->initial_effort_semantic_is_defined = $bool;
-    }
-
-    public function getInitialEffortSemanticIsDefined() {
-        return $this->initial_effort_semantic_is_defined ;
     }
 }
 ?>

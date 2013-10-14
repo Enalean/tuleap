@@ -669,7 +669,7 @@
           </element>
         </zeroOrMore>
       </group>
-      <zeroOrMore>
+      <group>
         <attribute name="type">
           <value>initial_effort</value>
         </attribute>
@@ -687,7 +687,7 @@
             <data type="IDREF"/>
           </attribute>
         </element>
-      </zeroOrMore>
+      </group>
       <group>
         <attribute name="type">
           <value>plugin_cardwall_card_fields</value>
@@ -998,6 +998,31 @@
                     <optional>
                       <attribute name="duration">
                         <data type="int"/>
+                      </attribute>
+                    </optional>
+                    <optional>
+                      <attribute name="effort_field">
+                        <data type="IDREF"/>
+                      </attribute>
+                    </optional>
+                  </group>
+                  <group>
+                    <attribute name="type">
+                      <value>cumulative_flow</value>
+                    </attribute>
+                    <optional>
+                      <attribute name="start_date">
+                        <data type="string"/>
+                      </attribute>
+                    </optional>
+                    <optional>
+                      <attribute name="stop_date">
+                        <data type="string"/>
+                      </attribute>
+                    </optional>
+                    <optional>
+                      <attribute name="scale">
+                        <data type="string"/>
                       </attribute>
                     </optional>
                     <optional>

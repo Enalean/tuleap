@@ -36,6 +36,32 @@ class XmlValidator {
     }
 
     /**
+     * Validate XML using Jing to get "meaningful" error messages
+     *
+     * @param SimpleXMLElement $xml_node
+     * @param String           $rng_path
+     *
+     * @return String[]
+     */
+    public function getValidationErrors(SimpleXMLElement $xml_node, $rng_path) {
+        $dom = $this->simpleXmlElementToDomDocument($xml_node);
+        $indent   = $GLOBALS['codendi_utils_prefix'] .'/xml/indent.xsl';
+        $jing     = $GLOBALS['codendi_utils_prefix'] .'/xml/jing.jar';
+        $temp     = tempnam($GLOBALS['tmp_dir'], 'xml');
+        $xml_file = tempnam($GLOBALS['tmp_dir'], 'xml_src_');
+        file_put_contents($xml_file, $dom->saveXML());
+        $cmd_indent = "xsltproc -o $temp $indent $xml_file";
+        `$cmd_indent`;
+
+        $output = array();
+        $cmd_valid = "java -jar $jing $rng_path $temp";
+        exec($cmd_valid, $output);
+        unlink($temp);
+        unlink($xml_file);
+        return $output;
+    }
+
+    /**
      * Create a dom document based on a SimpleXMLElement
      *
      * @param SimpleXMLElement $xml_element

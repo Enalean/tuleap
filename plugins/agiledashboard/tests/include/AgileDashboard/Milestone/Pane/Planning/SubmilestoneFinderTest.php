@@ -69,7 +69,7 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
      * user_story  ----> sprint*
      */
     public function itReturnsNullIfThereIsNoChildTracker() {
-        stub($this->sprint_planning)->getBacklogTracker()->returns($this->user_story_tracker);
+        stub($this->sprint_planning)->getBacklogTrackers()->returns(array($this->user_story_tracker));
         stub($this->tracker_hierarchy_factory)->getChildren($this->sprint_tracker_id)->returns(array());
 
         $tracker = $this->finder->findFirstSubmilestoneTracker($this->sprint_milestone);
@@ -82,8 +82,8 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
      *              `-->  ` sprint
      */
     public function itReturnsSprintWhenBothPlanningsHaveSameBacklogTracker() {
-        stub($this->release_planning)->getBacklogTracker()->returns($this->user_story_tracker);
-        stub($this->sprint_planning)->getBacklogTracker()->returns($this->user_story_tracker);
+        stub($this->release_planning)->getBacklogTrackers()->returns(array($this->user_story_tracker));
+        stub($this->sprint_planning)->getBacklogTrackers()->returns(array($this->user_story_tracker));
         stub($this->tracker_hierarchy_factory)->getChildren($this->release_tracker_id)->returns(array($this->sprint_tracker));
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->sprint_tracker)->returns($this->sprint_planning);
 
@@ -97,7 +97,7 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
      *                    ` sprint
      */
     public function itReturnsNullWhenChildHaveNoPlanning() {
-        stub($this->release_planning)->getBacklogTracker()->returns($this->user_story_tracker);
+        stub($this->release_planning)->getBacklogTrackers()->returns(array($this->user_story_tracker));
         stub($this->tracker_hierarchy_factory)->getChildren($this->release_tracker_id)->returns(array($this->sprint_tracker));
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->sprint_tracker)->returns(null);
 
@@ -111,8 +111,8 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
      *  ` user_story  `-->  ` sprint
      */
     public function itReturnsSprintWhenTheBacklogTrackerIsParent() {
-        stub($this->release_planning)->getBacklogTracker()->returns($this->epic_tracker);
-        stub($this->sprint_planning)->getBacklogTracker()->returns($this->user_story_tracker);
+        stub($this->release_planning)->getBacklogTrackers()->returns(array($this->epic_tracker));
+        stub($this->sprint_planning)->getBacklogTrackers()->returns(array($this->user_story_tracker));
         stub($this->tracker_hierarchy_factory)->getChildren($this->release_tracker_id)->returns(array($this->sprint_tracker));
         stub($this->tracker_hierarchy_factory)->getAllParents($this->user_story_tracker)->returns(array($this->epic_tracker));
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->sprint_tracker)->returns($this->sprint_planning);
@@ -129,8 +129,8 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
      * (no hierarchy between epic and team)
      */
     public function itReturnsNullWhenTheBacklogTrackerIsNotRelated() {
-        stub($this->release_planning)->getBacklogTracker()->returns($this->epic_tracker);
-        stub($this->requirement_planning)->getBacklogTracker()->returns($this->team_tracker);
+        stub($this->release_planning)->getBacklogTrackers()->returns(array($this->epic_tracker));
+        stub($this->requirement_planning)->getBacklogTrackers()->returns(array($this->team_tracker));
         stub($this->tracker_hierarchy_factory)->getChildren($this->release_tracker_id)->returns(array($this->requirement_tracker));
         stub($this->tracker_hierarchy_factory)->getAllParents($this->team_tracker)->returns(array());
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->requirement_tracker)->returns($this->requirement_planning);
@@ -146,8 +146,8 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
      *     ` user_story -'
       */
     public function itReturnsSprintWhenTheBacklogTrackerIsAncestor() {
-        stub($this->release_planning)->getBacklogTracker()->returns($this->theme_tracker);
-        stub($this->sprint_planning)->getBacklogTracker()->returns($this->user_story_tracker);
+        stub($this->release_planning)->getBacklogTrackers()->returns(array($this->theme_tracker));
+        stub($this->sprint_planning)->getBacklogTrackers()->returns(array($this->user_story_tracker));
         stub($this->tracker_hierarchy_factory)->getChildren($this->release_tracker_id)->returns(array($this->sprint_tracker));
         stub($this->tracker_hierarchy_factory)->getAllParents($this->user_story_tracker)->returns(array($this->epic_tracker, $this->theme_tracker));
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->sprint_tracker)->returns($this->sprint_planning);
@@ -166,9 +166,9 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
      * (requirement and sprint are siblings)
      */
     public function itReturnsSprintEvenIfThereIsSiblingWithoutMatchingBacklogTracker() {
-        stub($this->release_planning)->getBacklogTracker()->returns($this->user_story_tracker);
-        stub($this->requirement_planning)->getBacklogTracker()->returns($this->team_tracker);
-        stub($this->sprint_planning)->getBacklogTracker()->returns($this->user_story_tracker);
+        stub($this->release_planning)->getBacklogTrackers()->returns(array($this->user_story_tracker));
+        stub($this->requirement_planning)->getBacklogTrackers()->returns(array($this->team_tracker));
+        stub($this->sprint_planning)->getBacklogTrackers()->returns(array($this->user_story_tracker));
         stub($this->tracker_hierarchy_factory)->getChildren($this->release_tracker_id)->returns(array($this->requirement_tracker, $this->sprint_tracker));
         stub($this->tracker_hierarchy_factory)->getAllParents($this->team_tracker)->returns(array());
         stub($this->tracker_hierarchy_factory)->getAllParents($this->user_story_tracker)->returns(array());

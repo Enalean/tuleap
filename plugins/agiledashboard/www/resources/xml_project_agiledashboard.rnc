@@ -11,10 +11,11 @@ grammar {
                 attribute plan_title { xsd:string },
                 attribute planning_tracker_id { xsd:string },
                 attribute backlog_title { xsd:string },
-                attribute backlog_tracker_id { xsd:string }
 
+                element backlogs {
+                    element backlog { xsd:string }+
+                }
             }*
-
         }
     }
 }

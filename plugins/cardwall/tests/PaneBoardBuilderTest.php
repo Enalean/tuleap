@@ -61,7 +61,7 @@ class Cardwall_PaneBuilderTest extends TuleapTestCase {
         stub($this->artifact_factory)->getInstanceFromRow($row)->returns($swimline_artifact);
         stub($this->dao)->getBacklogArtifacts()->returnsDar($row);
 
-        stub($this->swimline_factory)->getCells()->returns(array());
+        stub($this->swimline_factory)->getCells()->returns(array(array('cardincell_presenters' => 'something')));
         stub($this->card_in_cell_presenter_builder)->getCardInCellPresenter($swimline_artifact, $swimline_artifact->getId())->returns(mock('Cardwall_CardInCellPresenter'));
 
         $pane_builder = new Cardwall_PaneBoardBuilder($this->card_in_cell_presenter_builder, $this->artifact_factory, $this->dao, $this->swimline_factory);

@@ -3240,6 +3240,25 @@ table th[class*="span"],
   background-color: #c4e3f3;
 }
 
+
+tbody.ui-sortable tr > td:first-child {
+    background-image: url('../images/sortable-table-left.png');
+    background-image: url('../images/sortable-table.png')\9;
+    background-repeat: repeat-y;
+    background-position: right top;
+}
+
+tbody.ui-sortable tr > td:nth-child(2) {
+    border-left: 0;
+    background-image: url('../images/sortable-table-right.png');
+    background-repeat: repeat-y;
+    background-position: left top;
+}
+
+tbody.ui-sortable tr > td:last-child {
+    background-image: none;
+}
+
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -4804,6 +4823,14 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
 .btn-primary:active,
 .btn-primary.active {
   background-color: #003399 \9;
+}
+
+a.btn-primary {
+    color: #fff;
+}
+.btn-primary .caret {
+    border-top: 4px solid #FFFFFF;
+    opacity: 1;
 }
 
 .btn-danger {

@@ -48,18 +48,6 @@ class Cardwall_OnTop_ConfigFactory {
 
     /**
      * @param Tracker $tracker
-     * @return \Tracker
-     */
-    private function getSwimlineTracker(Tracker $tracker) {
-        EventManager::instance()->processEvent(CARDWALL_EVENT_GET_SWIMLINE_TRACKER, array(
-            'tracker_factory' => $this->tracker_factory,
-            'tracker'         => &$tracker
-        ));
-        return $tracker;
-    }
-
-    /**
-     * @param Tracker $tracker
      * 
      * @return \Cardwall_OnTop_Config
      */
@@ -79,11 +67,8 @@ class Cardwall_OnTop_ConfigFactory {
             $value_mapping_factory
         );
 
-        $swimline_tracker = $this->getSwimlineTracker($tracker);
-
         $config = new Cardwall_OnTop_Config(
             $tracker,
-            $swimline_tracker,
             $this->getOnTopDao(),
             $column_factory,
             $tracker_mapping_factory

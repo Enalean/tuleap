@@ -22,8 +22,8 @@ require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class Tracker_Action_CreateArtifact_ProtectedToPublic extends Tracker_Action_CreateArtifact {
 
-    public function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect) {
-        parent::redirectToParentCreationIfNeeded($artifact, $current_user, $redirect);
+    public function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect, Codendi_Request $request) {
+        parent::redirectToParentCreationIfNeeded($artifact, $current_user, $redirect, $request);
     }
 
     public function redirectUrlAfterArtifactSubmission(Codendi_Request $request, $tracker_id, $artifact_id) {
@@ -38,6 +38,7 @@ abstract class Tracker_Action_CreateArtifactTest extends TuleapTestCase {
     protected $formelement_factory;
     protected $action;
     protected $event_manager;
+    protected $request;
 
     public function setUp() {
         parent::setUp();
@@ -49,6 +50,7 @@ abstract class Tracker_Action_CreateArtifactTest extends TuleapTestCase {
         $this->artifact_factory    = mock('Tracker_ArtifactFactory');
         $this->tracker_factory     = mock('TrackerFactory');
         $this->formelement_factory = mock('Tracker_FormElementFactory');
+        $this->request             = mock('Codendi_Request');
 
         $this->action = new Tracker_Action_CreateArtifact_ProtectedToPublic(
             $this->tracker,
@@ -118,17 +120,21 @@ class Tracker_Action_CreateArtifact_RedirectToParentCreationTest extends Tracker
 
         stub($this->tracker)->getId()->returns($this->tracker_id);
 
-        $this->parent_tracker = aTracker()->withId(666)->build();
-        $this->art_link_field = mock('Tracker_FormElement_Field_ArtifactLink');
+        $this->parent_tracker        = aTracker()->withId(666)->build();
+        $this->parent_art_link_field = mock('Tracker_FormElement_Field_ArtifactLink');
+        $this->art_link_field        = mock('Tracker_FormElement_Field_ArtifactLink');
 
         $this->redirect = new Tracker_Artifact_Redirect();
     }
 
     public function itDoesRedirectWhenPackageIsComplete() {
         stub($this->tracker)->getParent()->returns($this->parent_tracker);
-        stub($this->formelement_factory)->getAnArtifactLinkField($this->current_user, $this->parent_tracker)->returns($this->art_link_field);
+        stub($this->formelement_factory)->getAnArtifactLinkField($this->current_user, $this->parent_tracker)->returns($this->parent_art_link_field);
+        stub($this->formelement_factory)->getAnArtifactLinkField($this->current_user, $this->tracker)->returns($this->art_link_field);
+        stub($this->art_link_field)->getId()->returns(333);
+        stub($this->request)->get('artifact')->returns(array(333 => array('parent' => Tracker_FormElement_Field_ArtifactLink::CREATE_NEW_PARENT_VALUE)));
 
-        $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect);
+        $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect, $this->request);
         $this->assertNotNull($this->redirect->query_parameters);
     }
 
@@ -136,14 +142,14 @@ class Tracker_Action_CreateArtifact_RedirectToParentCreationTest extends Tracker
         stub($this->new_artifact)->getAllAncestors()->returns(array(aMockArtifact()->build()));
 
         stub($this->tracker)->getParent()->returns($this->parent_tracker);
-        stub($this->formelement_factory)->getAnArtifactLinkField()->returns($this->art_link_field);
+        stub($this->formelement_factory)->getAnArtifactLinkField()->returns($this->parent_art_link_field);
 
-        $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect);
+        $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect, $this->request);
         $this->assertNull($this->redirect->query_parameters);
     }
 
     public function itDoesntRedirectIfThereAreNoHierarchy() {
-        $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect);
+        $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect, $this->request);
         $this->assertNull($this->redirect->query_parameters);
     }
 }

@@ -169,14 +169,6 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $this->assertFalse($f->isValid($a, array('new_values' => '123, toto')));
         $this->assertFalse($f->isValid($a, null));
     }
-
-    function itRaisesAnErrorWhenTheSelectedParentIsInvalid() {
-        $field = partial_mock('Tracker_FormElement_Field_ArtifactLink', array('isRequired'));
-        stub($field)->isRequired()->returns(false);
-
-        $artifact = anArtifact()->build();
-        $this->assertFalse($field->isValid($artifact, array('new_values' => '', 'parent' => '')));
-    }
     
     function testIsValidNotRequiredField() {
         $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();

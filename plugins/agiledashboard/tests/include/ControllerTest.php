@@ -54,7 +54,11 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             mock('Planning_MilestoneFactory'),
             '/path/to/theme'
         );
-    
+
+        stub($this->planning_factory)->getPotentialPlanningTrackers()->returns(array());
+        stub($this->planning_factory)->getAvailablePlanningTrackers()->returns(array(1));
+        stub($this->planning_factory)->getPlanningsOutOfRootPlanningHierarchy()->returns(array());
+
         if (!defined('IS_SCRIPT')) {
             define('IS_SCRIPT', false);
         }  
@@ -91,23 +95,13 @@ abstract class Planning_ControllerAdminTest extends Planning_Controller_BaseTest
         $this->planning_factory->expectOnce('getPlannings', array($this->current_user, $this->group_id));
         $this->planning_factory->setReturnValue('getPlannings', $this->plannings);
 
+        stub($this->planning_factory)->getRootPlanning()->returns(aPlanning()->withPlanningTracker(aMockTracker()->build())->build());
+
         $this->output = $this->controller->admin();
     }
 
     public function itHasALinkToCreateANewPlanning() {
         $this->assertPattern('/action=new/', $this->output);
-    }
-}
-
-class Planning_ControllerEmptyAdminTest extends Planning_ControllerAdminTest {
-    function setUp() {
-        parent::setUp();
-        $this->plannings = array();
-        $this->renderAdmin();
-    }
-
-    public function itListsNothing() {
-        $this->assertNoPattern('/<ul>/', $this->output);
     }
 }
 
@@ -150,9 +144,8 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         Config::set('codendi_dir', TRACKER_BASE_DIR .'/../../..');
         $this->group_id         = 123;
         $this->request          = aRequest()->with('group_id', "$this->group_id")->build();
-        $this->dao              = mock('PlanningDao');
-        $this->planning_factory = aPlanningFactory()->withDao($this->dao)->build();
-        $this->tracker_factory  = $this->planning_factory->getTrackerFactory();
+        $this->planning_factory = mock('PlanningFactory');
+        $this->tracker_factory  = mock('TrackerFactory');
         $this->controller       = new Planning_Controller(
             $this->request,
             $this->planning_factory,
@@ -163,15 +156,17 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         $GLOBALS['Language']    = new MockBaseLanguage_Planning_ControllerNewTest();
 
         $this->available_backlog_trackers = array(
-            101 => aTracker()->withId(101)->withName('Stories')->build(),
-            102 => aTracker()->withId(102)->withName('Releases')->build(),
-            103 => aTracker()->withId(103)->withName('Sprints')->build()
+            aTracker()->withId(101)->withName('Stories')->build(),
+            aTracker()->withId(102)->withName('Releases')->build(),
+            aTracker()->withId(103)->withName('Sprints')->build()
         );
 
         $this->available_planning_trackers = array(
-            101 => aTracker()->withId(101)->withName('Stories')->build(),
-            103 => aTracker()->withId(103)->withName('Sprints')->build()
+            aTracker()->withId(101)->withName('Stories')->build(),
+            aTracker()->withId(103)->withName('Sprints')->build()
         );
+
+        stub($this->planning_factory)->buildNewPlanning($this->group_id)->returns(aPlanning()->withGroupId($this->group_id)->build());
 
         $this->renderNew();
     }
@@ -182,8 +177,8 @@ class Planning_ControllerNewTest extends TuleapTestCase {
     }
 
     protected function renderNew() {
-        stub($this->tracker_factory)->getTrackersByGroupId($this->group_id)->returns($this->available_backlog_trackers);
-        stub($this->dao)->searchNonPlanningTrackersByGroupId($this->group_id)->returns(array());
+        stub($this->planning_factory)->getAvailablePlanningTrackers()->returns($this->available_planning_trackers);
+        stub($this->planning_factory)->getAvailableBacklogTrackers()->returns($this->available_backlog_trackers);
 
         $this->output = $this->controller->new_();
     }
@@ -193,7 +188,7 @@ class Planning_ControllerNewTest extends TuleapTestCase {
     }
 
     public function itHasASelectBoxListingBacklogTrackers() {
-        $this->assertPattern('/\<select name="planning\[backlog_tracker_id\]"/', $this->output);
+        $this->assertPattern('/\<select name="planning\['.PlanningParameters::BACKLOG_TRACKER_IDS.'\]\[\]"/', $this->output);
         foreach ($this->available_backlog_trackers as $tracker) {
             $this->assertPattern('/\<option value="'.$tracker->getId().'".*\>'.$tracker->getName().'/', $this->output);
         }
@@ -211,7 +206,7 @@ abstract class Planning_ControllerCreateTest extends Planning_Controller_BaseTes
     public function setUp() {
         parent::setUp();
 
-        $this->planning_factory->setReturnValue('getAvailableTrackers', array());
+        $this->planning_factory->setReturnValue('getAvailableBacklogTrackers', array());
         $this->planning_factory->setReturnValue('getPlanningTrackerIdsByGroupId', array());
     }
 }
@@ -221,7 +216,7 @@ class Planning_ControllerCreateWithInvalidParamsTest extends Planning_Controller
         parent::setUp();
 
         $this->request->set('planning[name]', '');
-        $this->request->set('planning[backlog_tracker_id]', '');
+        $this->request->set('planning['.PlanningParameters::BACKLOG_TRACKER_IDS.'][]', '');
         $this->request->set('planning[planning_tracker_id]', '');
     }
 
@@ -237,18 +232,22 @@ class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCr
     public function setUp() {
         parent::setUp();
 
-        $this->planning_parameters = array('name'                => 'Release Planning',
-                                           'backlog_tracker_id'  => '2',
-                                           'planning_tracker_id' => '3',
-                                           'backlog_title'       => 'Release Backlog',
-                                           'plan_title'          => 'Sprint Plan');
+        $this->planning_parameters = array(
+            PlanningParameters::NAME                => 'Release Planning',
+            PlanningParameters::PLANNING_TRACKER_ID => '3',
+            PlanningParameters::BACKLOG_TITLE       => 'Release Backlog',
+            PlanningParameters::PLANNING_TITLE          => 'Sprint Plan',
+            PlanningParameters::BACKLOG_TRACKER_IDS => array(
+                '2'
+            )
+        );
         $this->request->set('planning', $this->planning_parameters);
     }
 
     public function itCreatesThePlanningAndRedirectsToTheIndex() {
         $this->userIsAdmin();
         $this->planning_factory->expectOnce('createPlanning', array($this->group_id, PlanningParameters::fromArray($this->planning_parameters)));
-        $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id);
+        $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id.'&action=admin');
         $this->controller->create();
     }
 
@@ -269,8 +268,8 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
                                       ->with('action', 'edit')->build();
         $planning_factory = mock('PlanningFactory');
         stub($planning_factory)->getPlanning($planning_id)->returns($planning);
-        stub($planning_factory)->getAvailableTrackers($group_id)->returns(array());
-        stub($planning_factory)->getAvailablePlanningTrackers($planning)->returns(array());
+        stub($planning_factory)->getAvailableBacklogTrackers('*', $group_id)->returns(array());
+        stub($planning_factory)->getAvailablePlanningTrackers('*', $group_id)->returns(array());
 
         $controller = partial_mock(
             'Planning_Controller',
@@ -296,8 +295,8 @@ class Planning_Controller_Update_BaseTest extends Planning_Controller_BaseTest {
         'name'                => 'Foo',
         'backlog_title'       => 'Bar',
         'plan_title'          => 'Baz',
-        'backlog_tracker_id'  => 43875,
-        'planning_tracker_id' => 654823
+        'planning_tracker_id' => 654823,
+        PlanningParameters::BACKLOG_TRACKER_IDS  => array(43875),
     );
 
     public function setUp() {
@@ -307,6 +306,7 @@ class Planning_Controller_Update_BaseTest extends Planning_Controller_BaseTest {
 
         // TODO: Inject validator into controller so that we can mock it and test it in isolation.
         stub($this->planning_factory)->getPlanningTrackerIdsByGroupId($this->group_id)->returns(array());
+        stub($this->planning_factory)->getPlanning()->returns(mock('Planning'));
     }
 }
 
@@ -315,7 +315,7 @@ class Planning_Controller_ValidUpdateTest extends Planning_Controller_Update_Bas
     public function itUpdatesThePlanningAndRedirectToTheIndex() {
         $this->userIsAdmin();
         $this->planning_factory->expectOnce('updatePlanning', array($this->planning_id, PlanningParameters::fromArray($this->planning_parameters)));
-        $this->expectRedirectTo("/plugins/agiledashboard/?group_id={$this->group_id}&action=index");
+        $this->expectRedirectTo("/plugins/agiledashboard/?group_id={$this->group_id}&planning_id={$this->planning_id}&action=edit");
         $this->controller->update();
     }
 
@@ -359,7 +359,7 @@ class Planning_ControllerDeleteTest extends Planning_Controller_BaseTest {
         $this->request->set('planning_id', $this->planning_id);
 
         stub($this->planning_factory)->deletePlanning($this->planning_id)->once();
-        $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id);
+        $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id.'&action=admin');
         $this->controller->delete();
     }
 

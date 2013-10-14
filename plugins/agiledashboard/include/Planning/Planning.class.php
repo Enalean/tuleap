@@ -51,9 +51,9 @@ class Planning {
     private $plan_title;
     
     /**
-     * @var int
+     * @var int[]
      */
-    private $backlog_tracker_id;
+    private $backlog_trackers_ids;
     
     /**
      * @var int
@@ -66,20 +66,19 @@ class Planning {
     private $planning_tracker;
     
     /**
-     * @var Tracker
+     * @var Tracker[]
      */
-    private $backlog_tracker;
+    private $backlog_trackers;
     
-    function __construct($id, $name, $group_id, $backlog_title, $plan_title, $backlog_tracker_id = null, $planning_tracker_id = null) {
-        $this->id                  = $id;
-        $this->name                = $name;
-        $this->group_id            = $group_id;
-        $this->plan_title          = $plan_title;
-        $this->backlog_title       = $backlog_title;
-        $this->backlog_tracker_id  = $backlog_tracker_id;
-        $this->planning_tracker_id = $planning_tracker_id;
-        $this->backlog_tracker     = new NullTracker();
-        $this->planning_tracker    = new NullTracker();
+    function __construct($id, $name, $group_id, $backlog_title, $plan_title, array $backlog_trackers_ids = array(), $planning_tracker_id = null) {
+        $this->id                   = $id;
+        $this->name                 = $name;
+        $this->group_id             = $group_id;
+        $this->plan_title           = $plan_title;
+        $this->backlog_title        = $backlog_title;
+        $this->backlog_trackers_ids = $backlog_trackers_ids;
+        $this->planning_tracker_id  = $planning_tracker_id;
+        $this->planning_tracker     = new NullTracker();
     }
     
     /**
@@ -118,10 +117,10 @@ class Planning {
     }
     
     /**
-     * @return int The id as the tracker used as backlog
+     * @return int[] The id as the tracker used as backlog
      */
-    public function getBacklogTrackerId() {
-        return $this->backlog_tracker_id;
+    public function getBacklogTrackersIds() {
+        return $this->backlog_trackers_ids;
     }
     
     /**
@@ -144,16 +143,21 @@ class Planning {
      * @param Tracker $planning_tracker The tracker used as planning destination
      */
     public function setPlanningTracker(Tracker $planning_tracker) {
-        $this->planning_tracker = $planning_tracker;
+        $this->planning_tracker    = $planning_tracker;
+        $this->planning_tracker_id = $planning_tracker->getId();
         return $this;
     }
     
     /**
-     * @param Tracker $backlog_tracker The tracker used as a backlog
+     * @param Tracker[] $backlog_tracker The trackers used as a backlog
      */
-    public function setBacklogTracker(Tracker $backlog_tracker) {
-        $this->backlog_tracker = $backlog_tracker;
-        $this->backlog_tracker_id = $backlog_tracker->getId();
+    public function setBacklogTrackers(array $backlog_trackers) {
+        $this->backlog_trackers = $backlog_trackers;
+        $this->backlog_trackers_ids = array();
+
+        foreach ($this->backlog_trackers as $backlog_tracker) {
+            $this->backlog_trackers_ids[] = $backlog_tracker->getId();
+        }
 
         return $this;
     }
@@ -161,8 +165,8 @@ class Planning {
     /**
      * @return Tracker
      */
-    public function getBacklogTracker() {
-        return $this->backlog_tracker;
+    public function getBacklogTrackers() {
+        return $this->backlog_trackers;
     }
 }
 

@@ -84,7 +84,7 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
     }
 
     public function getTrackerId() {
-        return $this->planning->getBacklogTrackerId();
+        return $this->planning->getBacklogTrackersIds();
     }
 
     public function getArtifactTitle() {

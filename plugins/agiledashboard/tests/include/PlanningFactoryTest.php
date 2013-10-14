@@ -55,7 +55,6 @@ class PlanningFactoryTest_getPlanningTest extends PlanningFactoryTest {
                                'planning_tracker_id' => $planning_tracker_id,
                                'backlog_title'       => 'Release Backlog',
                                'plan_title'          => 'Sprint Plan');
-        $backlog_row   = array('tracker_id'          => $backlog_tracker_id);
 
         stub($tracker_factory)->getTrackerById($planning_tracker_id)->returns($planning_tracker);
         stub($tracker_factory)->getTrackerById($backlog_tracker_id)->returns($backlog_tracker);
@@ -63,13 +62,13 @@ class PlanningFactoryTest_getPlanningTest extends PlanningFactoryTest {
         stub($planning_dao)->searchById($planning_id)->returns($planning_rows);
         stub($planning_rows)->getRow()->returns($planning_row);
 
-        stub($planning_dao)->searchBacklogTrackerById($planning_id)->returns($backlog_row);
+        stub($planning_dao)->searchBacklogTrackersById($planning_id)->returnsDar(array('tracker_id' => $backlog_tracker_id));
 
         $planning = $planning_factory->getPlanning($planning_id);
 
         $this->assertIsA($planning, 'Planning');
         $this->assertEqual($planning->getPlanningTracker(), $planning_tracker);
-        $this->assertEqual($planning->getBacklogTracker(), $backlog_tracker);
+        $this->assertEqual($planning->getBacklogTrackers(), array($backlog_tracker));
     }
 }
 
@@ -103,11 +102,15 @@ class PlanningFactory_duplicationTest extends PlanningFactoryTest {
                   'group_id'            => 101,
                   'backlog_title'       => 'Backlog',
                   'plan_title'          => 'Plan',
-                  'planning_tracker_id' => $sprint_tracker_id,
-                  'backlog_tracker_id'  => $story_tracker_id)
+                  'planning_tracker_id' => $sprint_tracker_id)
         );
 
         stub($dao)->searchByPlanningTrackerIds(array_keys($tracker_mapping))->returns($rows);
+
+        stub($dao)->searchBacklogTrackersById(1)->returnsDar(array(
+            'planning_id' => 1,
+            'tracker_id'  => $story_tracker_id
+        ));
 
         $expected_paramters = PlanningParameters::fromArray(array(
             'id'                  => 1,
@@ -116,7 +119,7 @@ class PlanningFactory_duplicationTest extends PlanningFactoryTest {
             'backlog_title'       => 'Backlog',
             'plan_title'          => 'Plan',
             'planning_tracker_id' => $sprint_tracker_copy_id,
-            'backlog_tracker_id'  => $story_tracker_copy_id
+            'backlog_tracker_ids' => array($story_tracker_copy_id)
         ));
 
         $dao->expectOnce('createPlanning', array($group_id,
@@ -139,6 +142,36 @@ class PlanningFactory_duplicationTest extends PlanningFactoryTest {
 }
 
 class PlanningFactoryTest_getPlanningByPlanningTrackerTest extends PlanningFactoryTest {
+
+    public function setUp() {
+        parent::setUp();
+        $this->tracker   = aMockTracker()->withId(99)->build();
+        $dao             = stub('PlanningDao')->searchByPlanningTrackerId()->returnsDar(
+            array(
+                'id' => 1,
+                'name' => 'Release Planning',
+                'group_id' => 102,
+                'planning_tracker_id' => 103,
+                'backlog_title' => 'Release Backlog',
+                'plan_title' => 'Sprint Plan'
+            )
+        );
+        stub($dao)->searchBacklogTrackersById(1)->returnsDar(
+            array(
+                'planning_id' => 1,
+                'tracker_id'  => 104,
+            )
+        );
+
+        $this->planning_tracker = aMockTracker()->withId(103)->build();
+        $this->backlog_tracker  = aMockTracker()->withId(104)->build();
+        $tracker_factory  = mock('TrackerFactory');
+        stub($tracker_factory)->getTrackerById(103)->returns($this->planning_tracker);
+        stub($tracker_factory)->getTrackerById(104)->returns($this->backlog_tracker);
+
+        $this->factory   = aPlanningFactory()->withDao($dao)->withTrackerFactory($tracker_factory)->build();
+    }
+
     public function itReturnsNothingIfThereIsNoAssociatedPlanning() {
         $tracker   = aMockTracker()->withId(99)->build();
         $empty_dar = TestHelper::arrayToDar();
@@ -148,50 +181,17 @@ class PlanningFactoryTest_getPlanningByPlanningTrackerTest extends PlanningFacto
     }
 
     public function itReturnsAPlanning() {
-        $tracker   = aMockTracker()->withId(99)->build();
-        $dar       = TestHelper::arrayToDar(
-                        array('id' => 1, 'name' => 'Release Planning', 'group_id' => 102,
-                              'planning_tracker_id' => 103, 'backlog_title' => 'Release Backlog', 'plan_title' => 'Sprint Plan',
-                              'backlog_tracker_id'  => 104));
-        $dao       = stub('PlanningDao')->searchByPlanningTrackerId()->returns($dar);
+        $planning  = new Planning(1, 'Release Planning', 102, 'Release Backlog', 'Sprint Plan', array());
+        $planning->setPlanningTracker($this->planning_tracker);
+        $planning->setBacklogTrackers(array($this->backlog_tracker));
 
-        $planning_tracker = mock('Tracker');
-        $backlog_tracker  = mock('Tracker');
-        $tracker_factory  = mock('TrackerFactory');
-        stub($tracker_factory)->getTrackerById(103)->returns($planning_tracker);
-        stub($tracker_factory)->getTrackerById('*')->returns($backlog_tracker);
-
-        $factory   = aPlanningFactory()->withDao($dao)->withTrackerFactory($tracker_factory)->build();
-        $planning  = new Planning(1, 'Release Planning', 102, 'Release Backlog', 'Sprint Plan', 104, 103);
-        $planning->setPlanningTracker($planning_tracker);
-        $planning->setBacklogTracker($backlog_tracker);
-
-        $this->assertEqual($planning, $factory->getPlanningByPlanningTracker($tracker));
+        $this->assertEqual($planning, $this->factory->getPlanningByPlanningTracker($this->tracker));
     }
 
     public function itAddsThePlanningAndTheBacklogTrackers() {
-        $tracker   = aMockTracker()->withId(99)->build();
-        $dar       = TestHelper::arrayToDar(
-                        array('id' => 1, 'name' => 'Release Planning', 'group_id' => 102,
-                              'planning_tracker_id' => 103, 'backlog_title' => 'Release Backlog', 'plan_title' => 'Sprint Plan',
-                              'backlog_tracker_id'  => 104));
-        $backlog_tracker_row = array('tracker_id' => 104);
-
-        $dao       = mock('PlanningDao');
-        stub($dao)->searchByPlanningTrackerId(99)->returns($dar);
-        stub($dao)->searchBacklogTrackerById(1)->returns($backlog_tracker_row);
-
-        $planning_tracker = aTracker()->withName('planning tracker')->withId(103)->build();
-        $backlog_tracker  = aTracker()->withName('backlog  tracker')->withId(104)->build();
-
-        $tracker_factory  = mock('TrackerFactory');
-        stub($tracker_factory)->getTrackerById(103)->returns($planning_tracker);
-        stub($tracker_factory)->getTrackerById(104)->returns($backlog_tracker);
-        $factory   = aPlanningFactory()->withDao($dao)->withTrackerFactory($tracker_factory)->build();
-
-        $actual_planning = $factory->getPlanningByPlanningTracker($tracker);
-        $this->assertEqual($planning_tracker, $actual_planning->getPlanningTracker());
-        $this->assertEqual($backlog_tracker, $actual_planning->getBacklogTracker());
+        $actual_planning = $this->factory->getPlanningByPlanningTracker($this->tracker);
+        $this->assertEqual($this->planning_tracker, $actual_planning->getPlanningTracker());
+        $this->assertEqual(array($this->backlog_tracker), $actual_planning->getBacklogTrackers());
     }
 
 }
@@ -260,8 +260,8 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
                 'plan_title'          => 'Release Plan'
             )
         );
-        stub($dao)->searchBacklogTrackerById(1)->returns(array('tracker_id' => 103));
-        stub($dao)->searchBacklogTrackerById(2)->returns(array('tracker_id' => 104));
+        stub($dao)->searchBacklogTrackersById(1)->returnsDar(array('tracker_id' => 103));
+        stub($dao)->searchBacklogTrackersById(2)->returnsDar(array('tracker_id' => 104));
         stub($dao)->searchPlannings($this->project_id_without_planning)->returnsEmptyDar();
 
         $this->factory = aPlanningFactory()
@@ -269,11 +269,11 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
             ->withTrackerFactory($tracker_factory)
             ->build();
 
-        $this->release_planning = new Planning(2, 'Release Planning', 123, 'Product Backlog', 'Release Plan', null, $this->release_tracker->getId());
-        $this->release_planning->setBacklogTracker($this->epic_tracker);
+        $this->release_planning = new Planning(2, 'Release Planning', 123, 'Product Backlog', 'Release Plan');
+        $this->release_planning->setBacklogTrackers(array($this->epic_tracker));
         $this->release_planning->setPlanningTracker($this->release_tracker);
-        $this->sprint_planning  = new Planning(1, 'Sprint Planning', 123, 'Release Backlog', 'Sprint Plan', null, $this->sprint_tracker->getId());
-        $this->sprint_planning->setBacklogTracker($this->story_tracker);
+        $this->sprint_planning  = new Planning(1, 'Sprint Planning', 123, 'Release Backlog', 'Sprint Plan');
+        $this->sprint_planning->setBacklogTrackers(array($this->story_tracker));
         $this->sprint_planning->setPlanningTracker($this->sprint_tracker);
     }
 
@@ -323,36 +323,27 @@ class PlanningFactoryTest_getAvailablePlanningTrackersTest extends PlanningFacto
         $group_id         = 789;
         $planning_dao     = mock('PlanningDao');
         $tracker_factory  = mock('TrackerFactory');
-        $planning_factory = aPlanningFactory()->withDao($planning_dao)
-                                              ->withTrackerFactory($tracker_factory)
-                                              ->build();
+        $planning_factory = partial_mock(
+            'PlanningFactory',
+            array(
+                'getPotentialPlanningTrackerIds',
+                'getPlanningTrackerIdsByGroupId'
+            ),
+            array(
+                $planning_dao,
+                $tracker_factory
+            )
+        );
 
-        $sprints_tracker_row = array('id' => 1, 'name' => 'Sprints');
-        $stories_tracker_row = array('id' => 2, 'name' => 'Stories');
+        stub($planning_factory)->getPotentialPlanningTrackerIds()->returns(array(1, 2, 3));
+        stub($planning_factory)->getPlanningTrackerIdsByGroupId()->returns(array(1, 3));
 
-        $tracker_rows = array($sprints_tracker_row, $stories_tracker_row);
+        $releases_tracker = aTracker()->withId(2)->withName('Releases')->build();
 
-        $sprints_tracker  = aTracker()->withId(1)->withName('Sprints')->build();
-        $stories_tracker  = aTracker()->withId(2)->withName('Stories')->build();
-        $releases_tracker = aTracker()->withId(3)->withName('Releases')->build();
+        stub($tracker_factory)->getTrackerById(2)->returns($releases_tracker);
 
-        stub($tracker_factory)->getInstanceFromRow($sprints_tracker_row)->returns($sprints_tracker);
-        stub($tracker_factory)->getInstanceFromRow($stories_tracker_row)->returns($stories_tracker);
-        stub($planning_dao)->searchNonPlanningTrackersByGroupId($group_id)->returns($tracker_rows);
-
-        $planning = aPlanning()->withGroupId($group_id)
-                               ->withPlanningTracker($releases_tracker)
-                               ->build();
-
-        $actual_trackers = $planning_factory->getAvailablePlanningTrackers($planning);
-        $this->assertEqual(count($actual_trackers), 3);
-        list($releases_tracker, $sprints_tracker, $stories_tracker) = $actual_trackers;
-        $this->assertEqual($releases_tracker->getId(), 3);
-        $this->assertEqual($sprints_tracker->getId(), 1);
-        $this->assertEqual($stories_tracker->getId(), 2);
-        $this->assertEqual($releases_tracker->getName(), 'Releases');
-        $this->assertEqual($sprints_tracker->getName(), 'Sprints');
-        $this->assertEqual($stories_tracker->getName(), 'Stories');
+        $actual_trackers = $planning_factory->getAvailablePlanningTrackers(aUser()->build(), $group_id);
+        $this->assertEqual($actual_trackers, array($releases_tracker));
     }
 }
 
@@ -382,9 +373,10 @@ class PlanningFactoryTest_getVirtualTopPlanningTest extends TuleapTestCase {
         $planning_tracker = mock('Tracker');
 
         stub($backlog_tracker)->getId()->returns(78);
+        stub($planning_tracker)->getId()->returns(45);
 
-        $my_planning = new Planning(null, null, null, null, null, 78, 45);
-        $my_planning->setBacklogTracker($backlog_tracker)
+        $my_planning = new Planning(null, null, null, null, null, array(78), 45);
+        $my_planning->setBacklogTrackers(array($backlog_tracker))
                 ->setPlanningTracker($planning_tracker);
 
         stub($this->planning_factory)->getRootPlanning()->returns($my_planning);
@@ -395,8 +387,9 @@ class PlanningFactoryTest_getVirtualTopPlanningTest extends TuleapTestCase {
         $planning = $this->planning_factory->getVirtualTopPlanning($this->user, 56);
 
         $this->assertIsA($planning, 'Planning');
-        $this->assertIsA($planning->getBacklogTracker(), 'Tracker');
         $this->assertIsA($planning->getPlanningTracker(), 'Tracker');
+        $backlog_trackers = $planning->getBacklogTrackers();
+        $this->assertIsA($backlog_trackers[0], 'Tracker');
     }
 }
 

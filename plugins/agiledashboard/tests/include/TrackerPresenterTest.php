@@ -52,7 +52,7 @@ class Planning_TrackerPresenter_TestCase extends TuleapTestCase {
 class Planning_TrackerPresenter_BacklogTrackerTest extends Planning_TrackerPresenter_TestCase {
     public function setUp() {
         parent::setUp();
-        stub($this->planning)->getBacklogTrackerId()->returns($this->tracker_id);
+        stub($this->planning)->getBacklogTrackersIds()->returns(array($this->tracker_id));
         stub($this->planning)->getPlanningTrackerId()->returns($this->other_tracker_id);
     }
     
@@ -68,7 +68,7 @@ class Planning_TrackerPresenter_BacklogTrackerTest extends Planning_TrackerPrese
 class Planning_TrackerPresenter_PlanningTrackerTest extends Planning_TrackerPresenter_TestCase {
     public function setUp() {
         parent::setUp();
-        stub($this->planning)->getBacklogTrackerId()->returns($this->other_tracker_id);
+        stub($this->planning)->getBacklogTrackersIds()->returns(array($this->other_tracker_id));
         stub($this->planning)->getPlanningTrackerId()->returns($this->tracker_id);
     }
     
@@ -84,7 +84,7 @@ class Planning_TrackerPresenter_PlanningTrackerTest extends Planning_TrackerPres
 class Planning_TrackerPresenter_NonBacklogNorPlanningTrackerTest extends Planning_TrackerPresenter_TestCase {
     public function setUp() {
         parent::setUp();
-        stub($this->planning)->getBacklogTrackerId()->returns($this->other_tracker_id);
+        stub($this->planning)->getBacklogTrackersIds()->returns(array($this->other_tracker_id));
         stub($this->planning)->getPlanningTrackerId()->returns($this->other_tracker_id);
     }
     public function itIsNotSelectedAsABacklogTracker() {

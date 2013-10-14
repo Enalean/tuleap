@@ -29,6 +29,8 @@ class AgileDashboard_XMLExporter {
     const NODE_AGILEDASHBOARD = 'agiledashboard';
     const NODE_PLANNINGS      = 'plannings';
     const NODE_PLANNING       = 'planning';
+    const NODE_BACKLOGS       = 'backlogs';
+    const NODE_BACKLOG        = 'backlog';
 
     /**
      * @todo move me to tracker class
@@ -56,14 +58,12 @@ class AgileDashboard_XMLExporter {
             $planning_title                 = $planning->getPlanTitle();
             $planning_tracker_id            = $this->getFormattedTrackerId($planning->getPlanningTrackerId());
             $planning_backlog_title         = $planning->getBacklogTitle();
-            $planning_backlog_tracker_id    = $this->getFormattedTrackerId($planning->getBacklogTracker()->getId());
             
             $this->checkString($planning_name, PlanningParameters::NAME);
             $this->checkString($planning_title, PlanningParameters::PLANNING_TITLE);
             $this->checkString($planning_backlog_title, PlanningParameters::BACKLOG_TITLE);
             
             $this->checkId($planning_tracker_id, PlanningParameters::PLANNING_TRACKER_ID);
-            $this->checkId($planning_backlog_tracker_id, PlanningParameters::BACKLOG_TRACKER_ID);
 
             $planning_node = $plannings_node->addChild(self::NODE_PLANNING);
 
@@ -71,12 +71,22 @@ class AgileDashboard_XMLExporter {
             $planning_node->addAttribute(PlanningParameters::PLANNING_TITLE, $planning_title);
             $planning_node->addAttribute(PlanningParameters::PLANNING_TRACKER_ID, $planning_tracker_id);
             $planning_node->addAttribute(PlanningParameters::BACKLOG_TITLE, $planning_backlog_title);
-            $planning_node->addAttribute(PlanningParameters::BACKLOG_TRACKER_ID, $planning_backlog_tracker_id);
+
+            $this->exportBacklogTrackers($planning_node, $planning);
         }
 
         $rng_path = realpath(AGILEDASHBOARD_BASE_DIR.'/../www/resources/xml_project_agiledashboard.rng');
         if (! $this->xml_validator->nodeIsValid($agiledashboard_node, $rng_path)) {
             throw new AgileDashboard_XMLExporterNodeNotValidException();
+        }
+    }
+
+    private function exportBacklogTrackers(SimpleXMLElement $planning_node, Planning $planning) {
+        $backlog_nodes = $planning_node->addChild(self::NODE_BACKLOGS);
+        foreach ($planning->getBacklogTrackers() as $backlog_tracker) {
+            $planning_backlog_tracker_id    = $this->getFormattedTrackerId($backlog_tracker->getId());
+            $this->checkId($planning_backlog_tracker_id, self::NODE_BACKLOG);
+            $backlog_nodes->addChild(self::NODE_BACKLOG, $this->getFormattedTrackerId($backlog_tracker->getId()));
         }
     }
 

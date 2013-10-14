@@ -30,7 +30,7 @@ class TestPlanningCreationRequestBuilder {
         $this->planning_id = null;
         $this->planning    = array('name'                => 'My Planning',
                                    'planning_tracker_id' => '1',
-                                   'backlog_tracker_id'  => '2');
+                                   PlanningParameters::BACKLOG_TRACKER_IDS  => array('2'));
     }
     
     public function withGroupId($group_id) {
@@ -49,7 +49,7 @@ class TestPlanningCreationRequestBuilder {
     }
     
     public function withBacklogTrackerId($backlog_tracker_id) {
-        $this->planning['backlog_tracker_id'] = $backlog_tracker_id;
+        $this->planning[PlanningParameters::BACKLOG_TRACKER_IDS][] = $backlog_tracker_id;
         return $this;
     }
     

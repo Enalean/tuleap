@@ -1,24 +1,39 @@
 <h2>{{adminTitle}}</h2>
+
+{{#can_create_planning}}
 <p>
     <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;action=new" id="planning_create">
         <img border="0" alt="add" src="/themes/Tuleap/images/ic/add.png" style="vertical-align:middle"> 
         {{createPlanning}}
     </a>
 </p>
-{{#hasPlannings}}
+{{/can_create_planning}}
+{{^can_create_planning}}
+<div class="alert alert-info">
+   {{cannot_create_planning}}
+   <ul>
+       <li>{{cannot_create_planning_no_trackers}}</li>
+       <li>{{cannot_create_planning_hierarchy}}</li>
+   </ul>
+   {{{cannot_create_planning_config}}}
+</div>
+{{/can_create_planning}}
+
+{{#has_plannings}}
 <ul>
-    {{#getPlannings}}
-    <li>
-        <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;planning_id={{getId}}&amp;action=show">
-            {{getName}}
+    {{#plannings}}
+    <li class="{{li_class}}">
+        <a href="{{edit_url}}">
+            {{name}}
         </a>
-        <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;planning_id={{getId}}&amp;action=edit">
-            <img src="{{getEditIconPath}}" alt="{{getEditActionLabel}}" />
+        <a href="{{edit_url}}">
+            <img src="{{edit_icon_path}}" alt="{{edit_action_label}}" />
         </a>
-        <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;planning_id={{getId}}&amp;action=delete">
-            <img src="{{getDeleteImagePath}}" alt="delete" />
+        <a href="{{delete_url}}">
+            <img src="{{delete_icon_path}}" alt="delete" />
         </a>
+        {{extra_message}}
     </li>
-    {{/getPlannings}}
+    {{/plannings}}
 </ul>
-{{/hasPlannings}}
+{{/has_plannings}}

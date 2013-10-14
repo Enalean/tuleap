@@ -64,10 +64,6 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
             $this->_addHook(Event::EXPORT_XML_PROJECT);
             $this->addHook(Event::REST_RESOURCES);
-
-            if (defined('CARDWALL_BASE_DIR')) {
-                $this->_addHook(CARDWALL_EVENT_GET_SWIMLINE_TRACKER, 'cardwall_event_get_swimline_tracker', false);
-            }
         }
         return parent::getHooksAndCallbacks();
     }
@@ -82,7 +78,7 @@ class AgileDashboardPlugin extends Plugin {
     public function cardwall_event_get_swimline_tracker($params) {
         $planning_factory = $this->getPlanningFactory();
         if ($planning = $planning_factory->getPlanningByPlanningTracker($params['tracker'])) {
-            $params['tracker'] = $planning->getBacklogTracker();
+            $params['backlog_trackers'] = $planning->getBacklogTrackers();
         }
     }
 
@@ -192,9 +188,10 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function tracker_event_redirect_after_artifact_creation_or_update($params) {
+        $params_extractor        = new AgileDashboard_PaneRedirectionExtractor();
         $artifact_linker         = new Planning_ArtifactLinker($this->getArtifactFactory(), PlanningFactory::build());
         $last_milestone_artifact = $artifact_linker->linkBacklogWithPlanningItems($params['request'], $params['artifact']);
-        $requested_planning      = $this->extractPlanningAndArtifactFromRequest($params['request']);
+        $requested_planning      = $params_extractor->extractParametersFromRequest($params['request']);
 
         if ($requested_planning) {
             $this->redirectOrAppend($params['request'], $params['artifact'], $params['redirect'], $requested_planning, $last_milestone_artifact);
@@ -218,7 +215,7 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     private function redirectToPlanning(Tracker_Artifact $artifact, $requested_planning, Planning $planning, Tracker_Artifact_Redirect $redirect) {
-        $redirect_to_artifact = $requested_planning['artifact_id'];
+        $redirect_to_artifact = $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID];
         if ($redirect_to_artifact == -1) {
             $redirect_to_artifact = $artifact->getId();
         }
@@ -228,7 +225,7 @@ class AgileDashboardPlugin extends Plugin {
             'planning_id' => $planning->getId(),
             'action'      => 'show',
             'aid'         => $redirect_to_artifact,
-            'pane'        => $requested_planning['pane_identifier'],
+            'pane'        => $requested_planning[AgileDashboard_PaneRedirectionExtractor::PANE],
         );
     }
 
@@ -243,7 +240,7 @@ class AgileDashboardPlugin extends Plugin {
         $redirect->query_parameters = array(
             'group_id'    => $group_id,
             'action'      => 'show-top',
-            'pane'        => $requested_planning['pane_identifier'],
+            'pane'        => $requested_planning['pane'],
         );
     }
 
@@ -255,27 +252,12 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     private function setQueryParametersFromRequest(Codendi_Request $request, Tracker_Artifact_Redirect $redirect) {
-        $requested_planning = $this->extractPlanningAndArtifactFromRequest($request);
+        $params_extractor   = new AgileDashboard_PaneRedirectionExtractor();
+        $requested_planning = $params_extractor->extractParametersFromRequest($request);
         if ($requested_planning) {
-            $key   = 'planning['. $requested_planning['pane_identifier'] .']['. $requested_planning['planning_id'] .']';
-            $value = $requested_planning['artifact_id'];
+            $key   = 'planning['. $requested_planning[AgileDashboard_PaneRedirectionExtractor::PANE] .']['. $requested_planning[AgileDashboard_PaneRedirectionExtractor::PLANNING_ID] .']';
+            $value = $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID];
             $redirect->query_parameters[$key] = $value;
-        }
-    }
-
-    private function extractPlanningAndArtifactFromRequest(Codendi_Request $request) {
-        $planning = $request->get('planning');
-        if (! is_array($planning) || ! count($planning)) {
-            return;
-        }
-        list($pane_identifier, $from_planning) = each($planning);
-        if (is_array($from_planning) && count($from_planning)) {
-            list($planning_id, $planning_artifact_id) = each($from_planning);
-            return array(
-                'pane_identifier' => $pane_identifier,
-                'planning_id'     => $planning_id,
-                'artifact_id'     => $planning_artifact_id
-            );
         }
     }
 
@@ -430,7 +412,8 @@ class AgileDashboardPlugin extends Plugin {
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
             Tracker_FormElementFactory::instance(),
-            $milestone_factory
+            $milestone_factory,
+            $this->getPlanningFactory()
         );
     }
 

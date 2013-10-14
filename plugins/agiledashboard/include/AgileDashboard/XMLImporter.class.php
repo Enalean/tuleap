@@ -52,10 +52,6 @@ class AgileDashboard_XMLImporter {
         foreach ($xml_object->$plannings_node_name->children() as $planning) {
             $attributes = $planning->attributes();
 
-            $backlog_tracker_id  = $this->getTrackerIdFromMappings(
-                (string) $attributes[PlanningParameters::BACKLOG_TRACKER_ID],
-                $tracker_mappings
-            );
             $planning_tracker_id = $this->getTrackerIdFromMappings(
                 (string) $attributes[PlanningParameters::PLANNING_TRACKER_ID],
                 $tracker_mappings
@@ -65,12 +61,23 @@ class AgileDashboard_XMLImporter {
                 PlanningParameters::NAME                => (string) $attributes[PlanningParameters::NAME],
                 PlanningParameters::BACKLOG_TITLE       => (string) $attributes[PlanningParameters::BACKLOG_TITLE],
                 PlanningParameters::PLANNING_TITLE      => (string) $attributes[PlanningParameters::PLANNING_TITLE],
-                PlanningParameters::BACKLOG_TRACKER_ID  => (string) $backlog_tracker_id,
                 PlanningParameters::PLANNING_TRACKER_ID => (string) $planning_tracker_id,
+                PlanningParameters::BACKLOG_TRACKER_IDS => $this->toArrayBacklogIds($planning, $tracker_mappings),
             );
         }
 
         return $plannings;
+    }
+
+    private function toArrayBacklogIds(SimpleXMLElement $planning_node, array $tracker_mappings) {
+        $backlog_tracker_ids = array();
+        foreach ($planning_node->{AgileDashboard_XMLExporter::NODE_BACKLOGS}->children() as $backlog) {
+            $backlog_tracker_ids[]  = $this->getTrackerIdFromMappings(
+                (string) $backlog,
+                $tracker_mappings
+            );
+        }
+        return $backlog_tracker_ids;
     }
 
     /**

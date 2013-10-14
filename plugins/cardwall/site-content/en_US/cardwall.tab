@@ -7,18 +7,20 @@ plugin_cardwall	warn_no_values	There is no values in the field $1. Please choose
 plugin_cardwall	warn_please_choose	Please select a field to group artifacts in columns.
 plugin_cardwall	nifty_view	free-hand drawing view
 
+plugin_cardwall	swimline_title	Backlog items
+plugin_cardwall	cells_not_displayed	The backlog item <a href="$3"><u>$1</u></a> cannot be displayed since the column matchings have not be defined between <b>$2</b> and this planning
+
 plugin_cardwall	on_top_short_title	Card Wall
 plugin_cardwall	on_top_title	Card Wall
 plugin_cardwall	on_top_description	Manage card wall options
 plugin_cardwall	on_top_enabled	Now a cardwall exists on top of the tracker
 plugin_cardwall	on_top_disabled	Cardwall disabled
 plugin_cardwall	on_top_use_freestyle	Use a custom set of columns
-plugin_cardwall	on_top_label	Enable cardwall on top of this tracker
 plugin_cardwall	on_top_miss_status	The tracker must have a status semantic
-plugin_cardwall	configure_cardwall_label	Configure
 plugin_cardwall	display_avatar_label	Display Avatar
 plugin_cardwall	display_avatar_title	Toggle the avatar or username display
 plugin_cardwall	details	details
+plugin_cardwall	on_top_label	Enable cardwall on top of this planning
 plugin_cardwall	on_top_new_column	New column:
 plugin_cardwall	on_top_column_placeholders	Todo|On Going|Done|Done-Done
 plugin_cardwall	on_top_column_placeholder_default	On Going

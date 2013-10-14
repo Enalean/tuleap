@@ -1,0 +1,32 @@
+{{#has_something_inconsistent}}
+    <h3 class="inconsistent-items-title">{{inconsistent_items_title}}</h3>
+    <form method="POST" action="{{solve_inconsistencies_url}}">
+        {{#inconsistent_collection}}
+            <input type="hidden" name="inconsistent-artifacts-ids[]" value="{{id}}"/>
+        {{/inconsistent_collection}}
+        <input type="submit" class="btn" value="{{solve_inconsistencies_button}}"/>
+        <p>{{inconsistent_items_intro}}</p>
+        <div class="row-fluid">
+            <table class="table table-striped table-hover table-bordered span8">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>{{type}}</th>
+                    <th>{{title}}</th>
+                    <th>{{parent}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#inconsistent_collection}}
+                    <tr data-artifact-id="{{id}}">
+                        <td><a href="{{url}}">{{id}}</a></td>
+                        <td><span class="label">{{type}}</span></td>
+                        <td class="milestone-element-title">{{title}}</td>
+                        <td class="milestone-element-parent"><a href="{{parent_url}}">{{parent_title}}</a></td>
+                    </tr>
+                {{/inconsistent_collection}}
+                </tbody>
+            </table>
+        </div>
+    </form>
+{{/has_something_inconsistent}}

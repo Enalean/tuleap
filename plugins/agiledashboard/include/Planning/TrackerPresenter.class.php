@@ -47,7 +47,7 @@ class Planning_TrackerPresenter {
     }
     
     public function selectedIfBacklogTracker() {
-        if ($this->tracker->getId() == $this->planning->getBacklogTrackerId()) {
+        if (in_array($this->tracker->getId(), $this->planning->getBacklogTrackersIds())) {
             return 'selected';
         }
     }

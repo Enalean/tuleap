@@ -53,8 +53,12 @@ class Planning_ShortAccessFactory {
         $plannings    = $this->planning_factory->getPlannings($user, $group_id);
         $short_access = array();
         foreach ($plannings as $planning) {
-            if ($planning->getBacklogTracker()->isDeleted()) {
-                throw new Planning_InvalidConfigurationException($GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_invalidconf_deletedtracker', array($planning->getPlanTitle(), $planning->getBacklogTracker()->getName())));
+            if (! $this->thereIsAtLeastOneBacklogTrackerNotDeleted($planning)) {
+                $backlog_tracker_names = array();
+                foreach ($planning->getBacklogTrackers() as $tracker) {
+                    $backlog_tracker_names[] = $tracker->getName();
+                }
+                throw new Planning_InvalidConfigurationException($GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_invalidconf_deletedtracker', array($planning->getPlanTitle(), implode(',', $backlog_tracker_names))));
             } elseif($planning->getPlanningTracker()->isDeleted()) {
                 throw new Planning_InvalidConfigurationException($GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_invalidconf_deletedtracker', array($planning->getPlanTitle(), $planning->getPlanningTracker()->getName())));
             } else {
@@ -65,6 +69,16 @@ class Planning_ShortAccessFactory {
             end($short_access)->setIsLatest();
         }
         return $short_access;
+    }
+
+    private function thereIsAtLeastOneBacklogTrackerNotDeleted(Planning $planning) {
+        $there_is_an_active_tracker = false;
+
+        foreach ($planning->getBacklogTrackers() as $backlog_tracker) {
+            $there_is_an_active_tracker = $there_is_an_active_tracker || !$backlog_tracker->isDeleted();
+        }
+
+        return $there_is_an_active_tracker;
     }
 
     /**

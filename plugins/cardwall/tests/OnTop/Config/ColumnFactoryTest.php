@@ -35,16 +35,14 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
         stub($this->status_field)->getVisibleValuesPlusNoneIfAny()->returns($values);
 
         $this->tracker      = aMockTracker()->withId(42)->build();
-        $this->swimline_tracker = aMockTracker()->build();
         $this->dao          = mock('Cardwall_OnTop_ColumnDao');
         $this->on_top_dao   = mock('Cardwall_OnTop_Dao');
         $this->factory      = new Cardwall_OnTop_Config_ColumnFactory($this->dao, $this->on_top_dao);
     }
 
-    public function itBuildColumnsFromTheDataStorageIfFreestyleEnabledEvenIfStatus() {
-        stub($this->on_top_dao)->isFreestyleEnabled()->returns(true);
+    public function itBuildColumnsFromTheDataStorage() {
         stub($this->tracker)->getStatusField()->returns($this->status_field);
-        stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::arrayToDar(
+        stub($this->dao)->searchColumnsByTrackerId(42)->returnsDar(
             array(
                 'id'       => 1,
                 'label'    => 'Todo',
@@ -59,33 +57,22 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
                 'bg_green' => null,
                 'bg_blue'  => null,
             )
-        ));
-        $columns = $this->factory->getDashboardColumns($this->tracker, $this->swimline_tracker);
+        );
+        $columns = $this->factory->getDashboardColumns($this->tracker);
 
         $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnFreestyleCollection');
         $this->assertEqual(2, count($columns));
         $this->assertEqual("On Going", $columns[1]->getLabel());
         $this->assertEqual("rgb(123, 12, 10)", $columns[0]->getBgcolor());
-        $this->assertEqual("white", $columns[0]->getFgcolor());
-        $this->assertEqual("white", $columns[1]->getBgcolor());
-        $this->assertEqual("black", $columns[1]->getFgcolor());
+        $this->assertEqual("rgb(255,255,255)", $columns[0]->getFgcolor());
+        $this->assertEqual("rgb(248,248,248)", $columns[1]->getBgcolor());
+        $this->assertEqual("rgb(0,0,0)", $columns[1]->getFgcolor());
     }
 
-    public function itBuildColumnsFromTheStatusValuesIfFreestyleNotEnabled() {
-        stub($this->on_top_dao)->isFreestyleEnabled()->returns(false);
-        stub($this->swimline_tracker)->getStatusField()->returns($this->status_field);
-        stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::emptyDar());
-        $columns = $this->factory->getDashboardColumns($this->tracker, $this->swimline_tracker);
-
-        $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnStatusCollection');
-        $this->assertEqual(3, count($columns));
-        $this->assertEqual("Verified", $columns[1]->getLabel());
-    }
-
-    public function itBuildsAnEmptyFreestyleCollectionIfThereIsNothingInTheDaoAndNoStatus() {
+    public function itBuildsAnEmptyFreestyleCollection() {
         stub($this->tracker)->getStatusField()->returns(null);
-        stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::emptyDar());
-        $columns = $this->factory->getDashboardColumns($this->tracker, $this->swimline_tracker);
+        stub($this->dao)->searchColumnsByTrackerId(42)->returnsEmptyDar();
+        $columns = $this->factory->getDashboardColumns($this->tracker);
 
         $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnFreestyleCollection');
         $this->assertEqual(0, count($columns));

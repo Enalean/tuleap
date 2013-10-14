@@ -57,11 +57,54 @@ class Planning_Controller extends MVC2_PluginController {
     }
     
     public function admin() {
-        $plannings = $this->planning_factory->getPlannings($this->getCurrentUser(), $this->group_id);
-        $presenter = new Planning_ListPresenter($plannings, $this->group_id);
-        return $this->renderToString('admin', $presenter);
+        return $this->renderToString(
+            'admin',
+            $this->getListPresenter(
+                $this->getCurrentUser(),
+                $this->group_id
+            )
+        );
     }
-    
+
+    private function getListPresenter(PFUser $user, $group_id) {
+        $can_create_planning         = true;
+        $tracker_uri                 = '';
+        $root_planning_name          = '';
+        $potential_planning_trackers = array();
+        $root_planning               = $this->planning_factory->getRootPlanning($user, $group_id);
+        if ($root_planning) {
+            $can_create_planning         = count($this->planning_factory->getAvailablePlanningTrackers($user, $group_id)) > 0;
+            $tracker_uri                 = $root_planning->getPlanningTracker()->getUri();
+            $root_planning_name          = $root_planning->getName();
+            $potential_planning_trackers = $this->planning_factory->getPotentialPlanningTrackers($user, $group_id);
+        }
+
+        return new Planning_ListPresenter(
+            $this->getPlanningAdminPresenterList($user, $group_id, $root_planning_name),
+            $group_id,
+            $can_create_planning,
+            $tracker_uri,
+            $root_planning_name,
+            $potential_planning_trackers
+        );
+    }
+
+    private function getPlanningAdminPresenterList(PFUser $user, $group_id, $root_planning_name) {
+        $plannings                 = array();
+        $planning_out_of_hierarchy = array();
+        foreach ($this->planning_factory->getPlanningsOutOfRootPlanningHierarchy($user, $group_id) as $planning) {
+            $planning_out_of_hierarchy[$planning->getId()] = true;
+        }
+        foreach ($this->planning_factory->getPlannings($user, $group_id) as $planning) {
+            if (isset($planning_out_of_hierarchy[$planning->getId()])) {
+                $plannings[] = new Planning_PlanningOutOfHierarchyAdminPresenter($planning, $root_planning_name);
+            } else {
+                $plannings[] = new Planning_PlanningAdminPresenter($planning);
+            }
+        }
+        return $plannings;
+    }
+
     public function index() {
         try {
             $project_id = $this->request->getProject()->getID();
@@ -80,8 +123,8 @@ class Planning_Controller extends MVC2_PluginController {
     
     public function new_() {
         $planning  = $this->planning_factory->buildNewPlanning($this->group_id);
-        $presenter = $this->getFormPresenter($planning);
-        
+        $presenter = $this->getFormPresenter($this->request->getCurrentUser(), $planning);
+
         return $this->renderToString('new', $presenter);
     }
     
@@ -93,7 +136,7 @@ class Planning_Controller extends MVC2_PluginController {
             $this->planning_factory->createPlanning($this->group_id,
                                                     PlanningParameters::fromArray($this->request->get('planning')));
             
-            $this->redirect(array('group_id' => $this->group_id));
+            $this->redirect(array('group_id' => $this->group_id, 'action' => 'admin'));
         } else {
             // TODO: Error message should reflect validation detail
             $this->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory'));
@@ -103,11 +146,37 @@ class Planning_Controller extends MVC2_PluginController {
     
     public function edit() {
         $planning  = $this->planning_factory->getPlanning($this->request->get('planning_id'));
-        $presenter = $this->getFormPresenter($planning);
+        $presenter = $this->getFormPresenter($this->request->getCurrentUser(), $planning);
         
         return $this->renderToString('edit', $presenter);
     }
     
+    private function getFormPresenter(PFUser $user, Planning $planning) {
+        $group_id = $planning->getGroupId();
+
+        $available_trackers          = $this->planning_factory->getAvailableBacklogTrackers($user, $group_id);
+        $available_planning_trackers = $this->planning_factory->getAvailablePlanningTrackers($user, $group_id);
+        $cardwall_admin              = $this->getCardwallConfiguration($planning);
+        $available_planning_trackers[] = $planning->getPlanningTracker();
+
+        return new Planning_FormPresenter($planning, $available_trackers, $available_planning_trackers, $cardwall_admin);
+    }
+
+    private function getCardwallConfiguration(Planning $planning) {
+        $tracker  = $planning->getPlanningTracker();
+        $view     = null;
+
+        EventManager::instance()->processEvent(
+            AGILEDASHBOARD_EVENT_PLANNING_CONFIG,
+            array(
+                'tracker' => $tracker,
+                'view'    => &$view,
+            )
+        );
+
+        return $view;
+    }
+
     public function update() {
         $this->checkUserIsAdmin();
         $validator = new Planning_RequestValidator($this->planning_factory);
@@ -115,21 +184,33 @@ class Planning_Controller extends MVC2_PluginController {
         if ($validator->isValid($this->request)) {
             $this->planning_factory->updatePlanning($this->request->get('planning_id'),
                                                     PlanningParameters::fromArray($this->request->get('planning')));
-        
-            $this->redirect(array('group_id' => $this->request->get('group_id'),
-                                  'action'   => 'index'));
         } else {
             $this->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory'));
-            $this->redirect(array('group_id'    => $this->group_id,
-                                  'planning_id' => $this->request->get('planning_id'),
-                                  'action'      => 'edit'));
         }
+
+        $this->updateCardwallConfig();
+
+        $this->redirect(array('group_id'    => $this->group_id,
+                              'planning_id' => $this->request->get('planning_id'),
+                              'action'      => 'edit'));
     }
-    
+
+    private function updateCardwallConfig() {
+        $tracker = $this->getPlanning()->getPlanningTracker();
+
+        EventManager::instance()->processEvent(
+            AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE,
+            array(
+                'request' => $this->request,
+                'tracker' => $tracker,
+            )
+        );
+    }
+
     public function delete() {
         $this->checkUserIsAdmin();
         $this->planning_factory->deletePlanning($this->request->get('planning_id'));
-        return $this->redirect(array('group_id' => $this->group_id));
+        return $this->redirect(array('group_id' => $this->group_id, 'action' => 'admin'));
     }
 
     /**
@@ -183,15 +264,6 @@ class Planning_Controller extends MVC2_PluginController {
             $this->milestone_factory,
             $this->plugin_theme_path
         );
-    }
-
-    private function getFormPresenter(Planning $planning) {
-        $group_id = $planning->getGroupId();
-        
-        $available_trackers          = $this->planning_factory->getAvailableTrackers($group_id);
-        $available_planning_trackers = $this->planning_factory->getAvailablePlanningTrackers($planning);
-        
-        return new Planning_FormPresenter($planning, $available_trackers, $available_planning_trackers);
     }
     
     private function getPlanning() {

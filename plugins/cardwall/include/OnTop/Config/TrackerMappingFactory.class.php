@@ -67,7 +67,7 @@ class Cardwall_OnTop_Config_TrackerMappingFactory {
      * @param Tracker $tracker The tracker
      * @param array   $columns array of Cardwall_Column
      *
-     * @return array of Cardwall_OnTop_Config_TrackerMapping
+     * @return Cardwall_OnTop_Config_TrackerMapping[]
      */
     public function getMappings(Tracker $tracker, Cardwall_OnTop_Config_ColumnCollection $columns) {
         $mappings = array();

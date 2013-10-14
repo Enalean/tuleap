@@ -5,6 +5,11 @@ plugin_agiledashboard	service_lbl_key	Agile Dashboard
 plugin_agiledashboard	service_desc_key	Agile Dashboard
 
 plugin_agiledashboard	Admin	Agile Dashboard Administration
+plugin_agiledashboard	cannot_create_planning	You cannot create new planning because either:
+plugin_agiledashboard	cannot_create_planning_no_trackers	there is no trackers in tracker service
+plugin_agiledashboard	cannot_create_planning_hierarchy	all potential planning trackers ($1) are already used by a planning configuration (see below).
+plugin_agiledashboard	cannot_create_planning_config	The potential planning trackers are computed out of $1 configuration and its <a href="$2">hierarchy</a>.
+plugin_agiledashboard	planning_out_of_hierarchy	This planning doesn't belong to root planning ($1) hierarchy. This configuration is not supported. You should remove this planning.
 plugin_agiledashboard	planning_destination_help	Use left arrow on item to move it on backlog or bottom/up arrow to rank items.
 plugin_agiledashboard	planning_title	Plannings
 plugin_agiledashboard	planning_create	Create a new planning
@@ -33,15 +38,19 @@ plugin_agiledashboard	backlog_destination_help	Use right arrow on item to move i
 plugin_agiledashboard	capacity	Capacity:
 plugin_agiledashboard	available	Available $1
 
-plugin_agiledashboard	content_head_title	Title
+plugin_agiledashboard	content_head_title	Item
 plugin_agiledashboard	content_head_points	Initial Effort
 plugin_agiledashboard	content_head_points_pane	Initial Effort:
-plugin_agiledashboard	content_head_parent	Parent
+plugin_agiledashboard	content_head_parent	Parent item
+plugin_agiledashboard	content_head_type	Type
 plugin_agiledashboard	top_planning_link	Top Backlog Planning
 
 plugin_agiledashboard	display_five_more	Display $1 more
 
 plugin_agiledashboard	report_criteria_label	In milestone
+
+plugin_agiledashboard	error_on_inconsistencies_solving	An error occurred while trying to solve inconsistencies.
+plugin_agiledashboard	successful_inconsistencies_solving	Inconsistencies successfully solved!
 
 plugin_agiledashboard_contentpane	lab	This is a lab feature that is subjected to change in a near future. Please get in touch with us to <a href="mailto:tuleap-devel@tuleap.net">provide any feedback</a> about this work in progress, thanks!
 plugin_agiledashboard_contentpane	closed_items_title	Closed $1
@@ -53,9 +62,13 @@ plugin_agiledashboard_contentpane	open_items_title-not_yet	No $1 yet
 plugin_agiledashboard_contentpane	open_items_title-not_yet-can_add	No $1, start adding now
 plugin_agiledashboard_contentpane	open_items_intro	Here are the items that are still open. You can prioritize by drag 'n dropping them.
 plugin_agiledashboard_contentpane	open_unplanned_items_intro	Here are the items that are still open and unplanned. You can prioritize by drag 'n dropping them.
-plugin_agiledashboard_contentpane	allow_other_create	or
-plugin_agiledashboard_contentpane	add_in_descendant_title	Add $1 in existing $2
-plugin_agiledashboard_contentpane	initial_effort_warning	There doesn't apear to be an <em>Initial Effort</em> semantic defined for the Tracker <em>$1</em>!
+plugin_agiledashboard_contentpane	create_new_item	Add a new item
+plugin_agiledashboard_contentpane	create_new_specific_item	Add a new $1
+plugin_agiledashboard_contentpane	create_new_item_help	As per configuration, you can create and manage: $1.
+plugin_agiledashboard_contentpane	initial_effort_warning	There doesn't appear to be an <em>Initial Effort</em> semantic defined for the Tracker(s) <em>$1</em>!
+plugin_agiledashboard_contentpane	inconsistent_items_title	Inconsistent $1
+plugin_agiledashboard_contentpane	inconsistent_items_intro	Here are the items that have been created inside a sub-milestone. You cannot change the priorities.
+plugin_agiledashboard_contentpane	solve_inconsistencies	Add them to current backlog
 
 plugin_agiledashboard_milestone_planning	help_intro	This section allows to do $1 planning:
 plugin_agiledashboard_milestone_planning	help_left	On the left side, you have the $2 backlog with all open elements, not already scheduled for a $1.

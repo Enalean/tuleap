@@ -79,8 +79,13 @@ class TrackerXmlImport {
 
         foreach ($this->getAllXmlTrackers($xml_input) as $xml_tracker_id => $xml_tracker) {
 
-            if (! $this->xml_validator->nodeIsValid($xml_tracker, realpath(TRACKER_BASE_DIR.'/../www/resources/tracker.rng'))) {
-                throw new TrackerFromXmlInputNotWellFormedException();
+            if (! $this->xml_validator->nodeIsValid($xml_tracker, $this->getRngPath())) {
+                throw new TrackerFromXmlInputNotWellFormedException(
+                    $this->xml_validator->getValidationErrors(
+                        $xml_tracker,
+                        $this->getRngPath()
+                    )
+                );
             }
 
             $created_tracker       = $this->instanciateTrackerFromXml($xml_tracker_id, $xml_tracker);
@@ -95,6 +100,10 @@ class TrackerXmlImport {
         );
 
         return $created_trackers_list;
+    }
+
+    private function getRngPath() {
+        return realpath(TRACKER_BASE_DIR.'/../www/resources/tracker.rng');
     }
 
     private function importHierarchy(SimpleXMLElement $xml_input, array $created_trackers_list) {

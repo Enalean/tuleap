@@ -107,7 +107,7 @@ abstract class MVC2_Controller {
     }
     
     protected function addFeedback($type, $message) {
-        $GLOBALS['Response']->addFeedback('error', 'All fields are mandatory');
+        $GLOBALS['Response']->addFeedback($type, $message);
     }
     
     protected function getCurrentUser() {

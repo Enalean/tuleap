@@ -56,11 +56,13 @@ class PlanningFactory {
         $planning_rows = $this->dao->searchByPlanningTrackerIds(array_keys($tracker_mapping));
 
         foreach($planning_rows as $row) {
-            if(isset($tracker_mapping[$row['backlog_tracker_id']]) && 
-                    isset($tracker_mapping[$row['backlog_tracker_id']])) {
-                $row['backlog_tracker_id']  = $tracker_mapping[$row['backlog_tracker_id']];
+            if(isset($tracker_mapping[$row['planning_tracker_id']])) {
                 $row['planning_tracker_id'] = $tracker_mapping[$row['planning_tracker_id']];
-                
+                $row['backlog_tracker_ids'] = array();
+                foreach ($this->dao->searchBacklogTrackersById($row['id']) as $backlog_row) {
+                    $row['backlog_tracker_ids'][] = $tracker_mapping[$backlog_row['tracker_id']];
+                }
+
                 $this->dao->createPlanning($group_id, PlanningParameters::fromArray($row));
             }
         }
@@ -116,16 +118,20 @@ class PlanningFactory {
      * @throws Planning_NoPlanningsException
      */
     public function getVirtualTopPlanning(PFUser $user, $group_id) {
+        $backlog_trackers = array();
         $first_planning   = $this->getRootPlanning($user, $group_id);
         if (! $first_planning) {
             throw new Planning_NoPlanningsException('No Root Plannings Exist');
         }
 
-        $planning_tracker_id = $first_planning->getPlanningTrackerId();
-        $backlog_tracker_id  = $first_planning->getBacklogTrackerId();
+        $planning_tracker_id  = $first_planning->getPlanningTrackerId();
+        $backlog_tracker_ids  = $first_planning->getBacklogTrackersIds();
 
         $planning_tracker = $this->tracker_factory->getTrackerById($planning_tracker_id);
-        $backlog_tracker = $this->tracker_factory->getTrackerById($backlog_tracker_id);
+
+        foreach ($backlog_tracker_ids as $backlog_tracker_id) {
+            $backlog_trackers[] = $this->tracker_factory->getTrackerById($backlog_tracker_id);
+        }
 
         $planning = new Planning(
             null,
@@ -133,13 +139,13 @@ class PlanningFactory {
             $group_id,
             null,
             null,
-            $backlog_tracker_id,
+            $backlog_tracker_ids,
             $planning_tracker_id
         );
 
         $planning
             ->setPlanningTracker($planning_tracker)
-            ->setBacklogTracker($backlog_tracker);
+            ->setBacklogTrackers($backlog_trackers);
 
         return $planning;
     }
@@ -174,7 +180,7 @@ class PlanningFactory {
         $plannings = $this->getPlannings($user, $group_id);
 
         foreach ($plannings as $planning) {
-            $planning->setBacklogTracker($this->getBacklogTracker($planning));
+            $planning->setBacklogTrackers($this->getBacklogTrackers($planning));
         }
         if ($plannings) {
             $this->sortPlanningsAccordinglyToHierarchy($plannings);
@@ -229,10 +235,10 @@ class PlanningFactory {
             $row['group_id'],
             $row['backlog_title'],
             $row['plan_title'],
-            null,
+            array(),
             $row['planning_tracker_id']
         );
-        $planning->setBacklogTracker($this->getBacklogTracker($planning));
+        $planning->setBacklogTrackers($this->getBacklogTrackers($planning));
         $planning->setPlanningTracker($this->getPlanningTracker($planning));
 
         return $planning;
@@ -258,10 +264,10 @@ class PlanningFactory {
                               $planning['group_id'],
                               $planning['backlog_title'],
                               $planning['plan_title'],
-                              null,
+                              array(),
                               $planning['planning_tracker_id']);
             $p->setPlanningTracker($this->getPlanningTracker($p));
-            $p->setBacklogTracker($this->getBacklogTracker($p));
+            $p->setBacklogTrackers($this->getBacklogTrackers($p));
             return $p;
         }
     }
@@ -289,10 +295,10 @@ class PlanningFactory {
                 $planning['group_id'],
                 $planning['backlog_title'],
                 $planning['plan_title'],
-                $backlog_tracker->getId(),
+                array($backlog_tracker->getId()),
                 $planning['planning_tracker_id']
             );
-            $p->setBacklogTracker($backlog_tracker);
+            $p->setBacklogTrackers(array($backlog_tracker));
             $p->setPlanningTracker($this->getPlanningTracker($p));
             $plannings[] = $p;
         }
@@ -326,9 +332,14 @@ class PlanningFactory {
      *
      * @return array of tracker id
      */
-    public function getBacklogTrackerId($planning_id) {
-        $row = $this->dao->searchBacklogTrackerById($planning_id);
-        return $row['tracker_id'];
+    public function getBacklogTrackersIds($planning_id) {
+        $tracker_ids = array();
+        $rows = $this->dao->searchBacklogTrackersById($planning_id);
+        foreach ($rows as $row) {
+            $tracker_ids[] = $row['tracker_id'];
+        }
+        
+        return $tracker_ids;
     }
 
     /**
@@ -345,12 +356,16 @@ class PlanningFactory {
      *
      * @return array of Tracker
      */
-    private function getBacklogTracker(Planning $planning) {
-        $planning_id     = $planning->getId();
-        $row             = $this->dao->searchBacklogTrackerById($planning_id);
-        $backlog_tracker = $this->tracker_factory->getTrackerById($row['tracker_id']);
+    private function getBacklogTrackers(Planning $planning) {
+        $backlog_trackers = array();
+        $planning_id      = $planning->getId();
+        $rows             = $this->dao->searchBacklogTrackersById($planning_id);
 
-        return $backlog_tracker;
+        foreach ($rows as $row) {
+            $backlog_trackers[] = $this->tracker_factory->getTrackerById($row['tracker_id']);
+        }
+
+        return $backlog_trackers;
     }
 
     public function getPlanningTrackerIdsByGroupId($group_id) {
@@ -397,8 +412,15 @@ class PlanningFactory {
      *
      * @return Array of Tracker
      */
-    public function getAvailableTrackers($group_id) {
-        return array_values($this->tracker_factory->getTrackersByGroupId($group_id));
+    public function getAvailableBacklogTrackers(PFUser $user, $group_id) {
+        $potential_planning_trackers = $this->getPotentialPlanningTrackerIds($user, $group_id);
+        $backlog_trackers = array();
+        foreach($this->dao->searchNonPlanningTrackersByGroupId($group_id) as $row) {
+            if (! in_array($row['id'], $potential_planning_trackers)) {
+                $backlog_trackers[] = $this->tracker_factory->getInstanceFromRow($row);
+            }
+        }
+        return $backlog_trackers;
     }
 
     /**
@@ -408,14 +430,79 @@ class PlanningFactory {
      *
      * @return Array of Tracker
      */
-    public function getAvailablePlanningTrackers(Planning $planning) {
-        $planning_trackers = array($planning->getPlanningTracker());
-
-        foreach($this->dao->searchNonPlanningTrackersByGroupId($planning->getGroupId()) as $row) {
-            $planning_trackers[] = $this->tracker_factory->getInstanceFromRow($row);
+    public function getAvailablePlanningTrackers(PFUser $user, $group_id) {
+        $potential_planning_trackers = $this->getPotentialPlanningTrackerIds($user, $group_id);
+        if (count($potential_planning_trackers) > 0) {
+            $existing_plannings = $this->getPlanningTrackerIdsByGroupId($group_id);
+            $trackers = array();
+            foreach ($potential_planning_trackers as $tracker_id) {
+                if (! in_array($tracker_id, $existing_plannings)) {
+                    $trackers[] = $this->tracker_factory->getTrackerById($tracker_id);
+                }
+            }
+            return $trackers;
+        } else {
+            return array_values($this->tracker_factory->getTrackersByGroupId($group_id));
         }
+    }
 
-        return $planning_trackers;
+    /**
+     * Return trackers that could be used as planning tracker
+     *
+     * We know a tracker can be used as a planning tracker if there is already
+     * a planning defined so we get the whole planning tracker family (children
+     * and parents)
+     *
+     * @param PFUser $user
+     * @param Integer $group_id
+     *
+     * @return Tracker[]
+     */
+    public function getPotentialPlanningTrackers(PFUser $user, $group_id) {
+        $trackers = array();
+        foreach ($this->getPotentialPlanningTrackerIds($user, $group_id) as $tracker_id) {
+            $trackers[] = $this->tracker_factory->getTrackerById($tracker_id);
+        }
+        return $trackers;
+    }
+
+    /**
+     * Return ids of tracker that could be used as planning tracker
+     *
+     * We know a tracker can be used as a planning tracker if there is already
+     * a planning defined so we get the whole planning tracker family (children
+     * and parents)
+     *
+     * @param PFUser $user
+     * @param Integer $group_id
+     *
+     * @return Integer[]
+     */
+    protected function getPotentialPlanningTrackerIds(PFUser $user, $group_id) {
+        $root_planning = $this->getRootPlanning($user, $group_id);
+        if ($root_planning) {
+            return $this->tracker_factory->getHierarchyFactory()->getHierarchy(
+                array($root_planning->getPlanningTracker()->getId())
+            )->flatten();
+        } else {
+            return array();
+        }
+    }
+
+    public function getPlanningsOutOfRootPlanningHierarchy(PFUser $user, $group_id) {
+        $plannings = array();
+        $potential_planning_trackers = $this->getPotentialPlanningTrackerIds($user, $group_id);
+        if ($potential_planning_trackers) {
+            $existing_planning_tracker_ids = $this->getPlanningTrackerIdsByGroupId($group_id);
+            foreach ($existing_planning_tracker_ids as $tracker_id) {
+                if (! in_array($tracker_id, $potential_planning_trackers)) {
+                    $plannings[] = $this->getPlanningByPlanningTracker(
+                        $this->tracker_factory->getTrackerById($tracker_id)
+                    );
+                }
+            }
+        }
+        return $plannings;
     }
 
     /**

@@ -80,7 +80,7 @@
     min-height: 1.5em;
 }
 
-.backlog-actions, 
+.backlog-actions,
 .card-actions {
     float:right;
 }
@@ -129,7 +129,7 @@
 /* }}} */
 
 .agiledashboard hr {
-    border:0px; 
+    border:0px;
     border-top:1px solid #ccc;
 }
 
@@ -187,13 +187,13 @@
 .ad_index_planning {
     margin-right: 1em;
     text-align: left;
-    
+
     background: #fcfcfc;
     min-width: 100px;
     border:1px solid #ccc;
     padding: 0.25em 0em;
     border-radius: 0.5em;
-    
+
     display: inline-block;
     zoom: 1;
     *display: inline;
@@ -240,10 +240,57 @@
     border-spacing: 0;
 }
 
+#topblcontent table th, #topblcontent table td,
+#topplanning table th, #topplanning table td,
+#planning table th, #planning table td,
+#blcontent table th, #blcontent table td {
+    white-space: nowrap;
+}
+
+#topblcontent table td.milestone-element-title, #topblcontent table td.submilestone-element-title,
+#topplanning table td.milestone-element-title, #topplanning table td.submilestone-element-title,
+#planning table td.milestone-element-title, #planning table td.submilestone-element-title,
+#blcontent table td.milestone-element-title, #blcontent table td.submilestone-element-title {
+    width: 100%;
+    white-space: normal;
+}
+
+#topblcontent table td.milestone-element-parent, #topblcontent table td.submilestone-element-parent,
+#blcontent table td.milestone-element-parent, #blcontent table td.submilestone-element-parent {
+    min-width: 300px;
+    max-width: 300px;
+    white-space: normal;
+}
+
+#topplanning table td.milestone-element-parent, #topplanning table td.submilestone-element-parent,
+#planning table td.milestone-element-parent, #planning table td.submilestone-element-parent {
+    min-width: 150px;
+    max-width: 150px;
+    white-space: normal;
+}
+
+#topblcontent table td:first-child,
+#topplanning table td:first-child,
+#planning table td:first-child,
+#blcontent table td:first-child {
+    min-width: 35px;
+    max-width: 60px;
+}
+
 #topblcontent table,
 #blcontent table {
-    width: auto;
+    /*width: auto;*/
+    margin-bottom: 40px;
 }
+
+.inconsistent-items-title {
+    color: #E99424;
+}
+
+.closed-items-title {
+    color: #8E8E8E;
+}
+
 .submilestone-element-rows > tbody > tr,
 .milestone-content-open-rows > tr {
     cursor: move;
@@ -285,4 +332,9 @@
 
 .empty-table-placeholder {
     display: none;
+}
+
+.control-group.info .help-inline {
+    color: #3A87AD;
+    font-style: italic;
 }
