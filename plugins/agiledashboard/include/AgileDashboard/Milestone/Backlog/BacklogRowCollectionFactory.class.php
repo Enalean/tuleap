@@ -454,9 +454,13 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
     private function initInconsistentItems(PFUser $user, Planning_Milestone $milestone, $redirect_to_self, array $planned) {
         foreach ($planned as $planned_artifact_id) {
             if (! $this->all_collection[$milestone->getArtifactId()]->containsId($planned_artifact_id)) {
-                $this->inconsistent_collection[$milestone->getArtifactId()]->push(
-                    new AgileDashboard_BacklogItem($this->artifact_factory->getArtifactByIdUserCanView($user, $planned_artifact_id), $redirect_to_self)
-                );
+                $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $planned_artifact_id);
+
+                if ($artifact) {
+                    $this->inconsistent_collection[$milestone->getArtifactId()]->push(
+                        new AgileDashboard_BacklogItem($artifact, $redirect_to_self)
+                    );
+                }
             }
         }
     }
