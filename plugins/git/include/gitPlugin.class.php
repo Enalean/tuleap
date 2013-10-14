@@ -209,6 +209,14 @@ class GitPlugin extends Plugin {
                     $this->getGerritDriver()
                 );
                 break;
+            case SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME:
+                $params['class'] = 'SystemEvent_GIT_GERRIT_PROJECT_READONLY';
+                $params['dependencies'] = array(
+                    $this->getRepositoryFactory(),
+                    $this->getGerritServerFactory(),
+                    $this->getGerritDriver()
+                );
+                break;
             default:
                 break;
         }

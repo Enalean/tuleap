@@ -20,7 +20,9 @@
 
 class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
 
-    const OPTION_DELETE_GERRIT_PROJECT = 'gerrit_project_delete';
+    const OPTION_DISCONNECT_GERRIT_PROJECT = 'gerrit_project_delete';
+    const OPTION_DELETE_GERRIT_PROJECT     = 'delete';
+    const OPTION_READONLY_GERRIT_PROJECT   = 'read';
 
     /**
      * @var Git_RemoteServer_GerritServer[]
@@ -85,11 +87,7 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         $html .= '<label for="gerrit_url">'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_url') .'</label>';
         $html .= '<select name="remote_server_id" id="gerrit_url">';
         $html .= '<option value="" selected="selected">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
-        foreach ($this->gerrit_servers as $server) {
-            $previous_migration = ($this->doesRemoteGerritProjectNeedDeleting($server));
-            $html .= '<option x-repo-previously-migrated="'.$previous_migration.
-                '" value="'. (int)$server->getId() .'">'. $this->hp->purify($server->getHost()) .'</option>';
-        }
+        $html .= $this->getServers();
         $html .= '</select>';
         $html .= '</p>';
         $html .= '<label>';
@@ -102,13 +100,34 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         $html .= '<input type="checkbox" name="migrate_access_right" '.$checked.'"> '.$GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_access_right');
         $html .= '</label>';
         $html .= '<p id="migrate_access_right"><input type="submit" name="save" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_to') .'" /></p>';
-        $html .= '<p id="gerrit_past_project_delete" class="alert alert-info">
+        $html .= '<div id="gerrit_past_project_delete" class="alert alert-info">
+                    <p>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_past_project_warn') .'
+                    </p>
+                    <p>
+                        <input type="submit" name="submit" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_past_project_delete') .'" />
+                    </p>
+                </div>';
+        $html .= '<p id="gerrit_past_project_delete_plugin_diasabled" class="alert alert-info">
                     '. $GLOBALS['Language']->getText('plugin_git', 'gerrit_past_project_warn') .'
-                    <br />
-                    <br />
-                    <input type="submit" name="submit" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_past_project_delete') .'" />
                 </p>';
         $html .= '</form>';
+        return $html;
+    }
+
+    private function getServers() {
+        $html = '';
+        foreach ($this->gerrit_servers as $server) {
+            $plugin_enabled = (int) $this->driver->isDeletePluginEnabled($server);
+            $should_delete  = (int) $this->doesRemoteGerritProjectNeedDeleting($server);
+
+            $html .= '<option
+                        data-repo-delete="'.(int) $should_delete.'"
+                        value="'.(int) $server->getId().'"
+                        data-repo-delete-plugin-enabled="'.(int) $plugin_enabled.'">'
+                    .$this->hp->purify($server->getHost()) .
+                    '</option>';
+        }
+
         return $html;
     }
 
@@ -122,11 +141,15 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         }
 
         $project_name = $this->driver->getGerritProjectName($this->repository);
-        if ($this->driver->doesTheProjectExist($server, $project_name)) {
-            return true;
+        try {
+            if (! $this->driver->doesTheProjectExist($server, $project_name)) {
+                return false;
+            }
+        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     private function getContentAlreadyMigrated() {
@@ -173,7 +196,7 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         $html .= '<h4>'. $GLOBALS['Language']->getText('global', 'warning!') .'</h4>';
         $html .= '<p>'. $GLOBALS['Language']->getText('plugin_git', 'disconnect_gerrit_msg') .'</p>';
         $html .= '<p>';
-        $html .= '<input type="hidden" name="' . self::OPTION_DELETE_GERRIT_PROJECT . '" value="' . $this->hp->purify($this->request->get(self::OPTION_DELETE_GERRIT_PROJECT)) . '"/>';
+        $html .= '<input type="hidden" name="' . self::OPTION_DISCONNECT_GERRIT_PROJECT . '" value="' . $this->hp->purify($this->request->get(self::OPTION_DISCONNECT_GERRIT_PROJECT)) . '"/>';
         $html .= '<button type="submit" name="disconnect" value="1" class="btn btn-danger">'. $GLOBALS['Language']->getText('plugin_git', 'disconnect_gerrit_yes') .'</button> ';
         $html .= '<button type="button" class="btn" onclick="window.location=window.location;">'. $GLOBALS['Language']->getText('plugin_git', 'no') .'</button> ';
         $html .= '</p>';
@@ -186,14 +209,23 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
 
     private function getDisconnectFromGerritOptions() {
         $gerrit_server  = $this->gerrit_servers[$this->repository->getRemoteServerId()];
-        if (! $this->driver->isDeletePluginEnabled($gerrit_server)) {
-            return '';
+        $html = '';
+
+        if ($this->driver->isDeletePluginEnabled($gerrit_server)) {
+            $html .= '<input type="radio" name="' . self::OPTION_DISCONNECT_GERRIT_PROJECT . '" value="'.self::OPTION_DELETE_GERRIT_PROJECT.'"/>'
+                . $GLOBALS['Language']->getText('plugin_git', 'gerrit_project_delete')
+                . '<br />';
         }
 
-        return '<input type="checkbox" name="' . self::OPTION_DELETE_GERRIT_PROJECT . '" value="1"/>'
-            . $GLOBALS['Language']->getText('plugin_git', 'gerrit_project_delete')
+        $html .='<input type="radio" name="' . self::OPTION_DISCONNECT_GERRIT_PROJECT . '" value="'.self::OPTION_READONLY_GERRIT_PROJECT.'"/>'
+            . $GLOBALS['Language']->getText('plugin_git', 'gerrit_project_readonly')
+            . '<br />'
+            . '<input type="radio" name="' . self::OPTION_DISCONNECT_GERRIT_PROJECT . '"/>'
+            . $GLOBALS['Language']->getText('plugin_git', 'gerrit_project_leave')
             . '<br />'
             . '<br />';
+
+        return $html;
     }
 }
 ?>

@@ -835,16 +835,10 @@ class GitRepository implements DVCSRepository {
     }
 
     public function isMigratedToGerrit() {
-        if (
+        return (
             $this->remote_server_id &&
             $this->remote_server_disconnect_date == false &&
-            $this->remote_project_deletion_date == false &&
-            ! $this->remote_project_is_deleted
-            ) {
-            return true;
-        }
-
-        return false;
+            $this->remote_project_deletion_date == false);
     }
 
     public function wasPreviouslyMigratedButNotDeleted() {
@@ -861,10 +855,6 @@ class GitRepository implements DVCSRepository {
 
     public function setRemoteProjectDeletionDate($date) {
         $this->remote_project_deletion_date = $date;
-    }
-
-    public function setRemoteProjectIsDeleted($bool) {
-        $this->remote_project_is_deleted = $bool;
     }
 
     /**

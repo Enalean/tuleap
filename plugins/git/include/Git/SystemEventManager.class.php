@@ -64,6 +64,15 @@ class Git_SystemEventManager {
         );
     }
 
+    public function queueRemoteProjectReadOnly(GitRepository $repository) {
+        $this->system_event_manager->createEvent(
+            SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME,
+            $repository->getId(). SystemEvent::PARAMETER_SEPARATOR . $repository->getRemoteServerId(),
+            SystemEvent::PRIORITY_HIGH,
+            SystemEvent::OWNER_APP
+        );
+    }
+
     public function queueRepositoryFork(GitRepository $old_repository, GitRepository $new_repository) {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_REPO_FORK::NAME,
@@ -107,6 +116,10 @@ class Git_SystemEventManager {
         return $this->system_event_manager->isThereAnEventAlreadyOnGoing(SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME, $repository->getId());
     }
 
+    public function isProjectSetReadOnlyOnGerritOnGoing(GitRepository $repository) {
+        return $this->system_event_manager->isThereAnEventAlreadyOnGoing(SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME, $repository->getId());
+    }
+
     public function getTypes() {
         return array(
             SystemEvent_GIT_REPO_UPDATE::NAME,
@@ -115,7 +128,8 @@ class Git_SystemEventManager {
             SystemEvent_GIT_REPO_ACCESS::NAME,
             SystemEvent_GIT_GERRIT_MIGRATION::NAME,
             SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME,
-            SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME
+            SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME,
+            SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME
         );
     }
 }

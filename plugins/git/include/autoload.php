@@ -106,6 +106,7 @@ function autoload10021107ddc1500dd95264ead9af0362($class) {
             'systemevent_git_gerrit_admin_key_dump' => '/events/SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP.class.php',
             'systemevent_git_gerrit_migration' => '/events/SystemEvent_GIT_GERRIT_MIGRATION.class.php',
             'systemevent_git_gerrit_project_delete' => '/events/SystemEvent_GIT_GERRIT_PROJECT_DELETE.class.php',
+            'systemevent_git_gerrit_project_readonly' => '/events/SystemEvent_GIT_GERRIT_PROJECT_READONLY.class.php',
             'systemevent_git_repo_access' => '/events/SystemEvent_GIT_REPO_ACCESS.class.php',
             'systemevent_git_repo_delete' => '/events/SystemEvent_GIT_REPO_DELETE.class.php',
             'systemevent_git_repo_fork' => '/events/SystemEvent_GIT_REPO_FORK..php',

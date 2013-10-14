@@ -62,6 +62,8 @@ plugin_git	dao_child_params	Paramètres invalides
 plugin_git	disconnect_gerrit_title	Déconnexion de Gerrit
 plugin_git	disconnect_gerrit_button	Déconnexion
 plugin_git	gerrit_project_delete	Supprimer le projet sur Gerrit
+plugin_git	gerrit_project_readonly	Mettre le projet sur Gerrit en lecture-seule
+plugin_git	gerrit_project_leave	Laisser le projet sur Gerrit
 plugin_git	disconnect_gerrit_msg	Cette opération est <strong>irréversible</strong>. Ce dépôt ne pourra plus être géré de nouveau par un serveur gerrit. Êtes vous certain de vouloir continuer ?
 plugin_git	disconnect_gerrit_yes	Oui, je veux déconnecter ce dépôt de Gerrit
 
@@ -88,6 +90,7 @@ plugin_git	actions_create_repo_exists	Le dépôt $1 existe déjà ou le chemin e
 plugin_git	actions_delete_ok	Le dépôt a été supprimé
 plugin_git	actions_no_repository_forked	Aucun dépôt n'a été forké.
 plugin_git	gerrit_project_exists	Un projet Gerrit du même nom existe déjà sur ce serveur
+plugin_git	gerrit_server_down	Impossible de se connecter au serveur Gerrit
 
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Crée par
@@ -230,3 +233,4 @@ plugin_git	push_ssh_keys_info	Vos anciennes clés ne sont pas poussées automati
 
 plugin_git	gerrit_remote_exception	Une erreur est survenue lors d'une tentative de connexion à un serveur Gerrit. Peut-être est-il arreté? Merci de vérifier avec les administrateurs: $1
 plugin_git	gerrit_deletion_ongoing	La supression du projet sous Gerrit est en cours, veuillez patienter quelques minutes.
+plugin_git	gerrit_readonly_ongoing	La mise en lecture-seule du projet sous Gerrit est en cours, veuillez patienter quelques minutes.

@@ -52,7 +52,6 @@ class GitDao extends DataAccessObject {
     const REMOTE_SERVER_ID              = 'remote_server_id';
     const REMOTE_SERVER_DISCONNECT_DATE = 'remote_server_disconnect_date';
     const REMOTE_SERVER_DELETE_DATE     = 'remote_project_deleted_date';
-    const REMOTE_SERVER_IS_DELETED      = 'remote_project_deleted';
 
     public function __construct() {
         parent::__construct( CodendiDataAccess::instance() );
@@ -482,7 +481,6 @@ class GitDao extends DataAccessObject {
         $repository->setRemoteServerId($result[self::REMOTE_SERVER_ID]);
         $repository->setRemoteServerDisconnectDate($result[self::REMOTE_SERVER_DISCONNECT_DATE]);
         $repository->setRemoteProjectDeletionDate($result[self::REMOTE_SERVER_DELETE_DATE]);
-        $repository->setRemoteProjectIsDeleted($result[self::REMOTE_SERVER_IS_DELETED]);
         $repository->loadNotifiedMails();
     }
 
@@ -561,8 +559,7 @@ class GitDao extends DataAccessObject {
     public function setGerritProjectAsDeleted($repository_id) {
         $repository_id = $this->da->escapeInt($repository_id);
         $sql = "UPDATE plugin_git
-                SET remote_project_deleted = 1,
-                    remote_project_deleted_date = UNIX_TIMESTAMP()
+                SET remote_project_deleted_date = UNIX_TIMESTAMP()
                 WHERE repository_id = $repository_id";
         return $this->update($sql);
     }

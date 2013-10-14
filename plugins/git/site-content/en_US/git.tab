@@ -77,6 +77,8 @@ plugin_git	dao_child_params	Repository child search failed : missing repository 
 plugin_git	disconnect_gerrit_title	Disconnect from Gerrit
 plugin_git	disconnect_gerrit_button	Disconnect
 plugin_git	gerrit_project_delete	Also Delete project on Gerrit
+plugin_git	gerrit_project_readonly	Make project on Gerrit Read-Only
+plugin_git	gerrit_project_leave	Leave project on Gerrit
 plugin_git	disconnect_gerrit_msg	This operation <strong>cannot</strong> be undone. This repository will never again be managed by a gerrit server. Do you confirm the disconnection?
 plugin_git	disconnect_gerrit_yes	Yes, I want to disconnect from Gerrit
 
@@ -98,6 +100,7 @@ plugin_git	actions_create_repo_exists	Repository $1 already exists or would over
 plugin_git	actions_delete_ok	Repository has been deleted
 plugin_git	actions_no_repository_forked	No repository has been forked.
 plugin_git	gerrit_project_exists	A Gerrit project with that name already exists on that server
+plugin_git	gerrit_server_down	Cannot connect to remote Gerrit server
 
 plugin_git	actions_repo_not_found	The repository does not exist
 plugin_git	actions_repo_access	Repository access permissions are going to be modified in a few seconds
@@ -233,3 +236,4 @@ plugin_git	push_ssh_keys_info	Old keys need to be pushed manually. All new keys 
 
 plugin_git	gerrit_remote_exception	An error occured while trying to access Gerrit server, maybe the server is down, please check with administrators: $1
 plugin_git	gerrit_deletion_ongoing	The deletion of the project under Gerrit is on going, please wait for a few minutes.
+plugin_git	gerrit_readonly_ongoing	The setting of the project under Gerrit to read-only is on going, please wait for a few minutes.

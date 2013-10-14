@@ -478,11 +478,16 @@ class Git extends PluginController {
                     $this->addError($this->getText('actions_params_error'));
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
                 } else {
-                    if ($this->gerritProjectAlreadyExists($remote_server_id, $repo)) {
-                        $this->addError($this->getText('gerrit_project_exists'));
-                    } else {
-                        $migrate_access_right = $this->request->existAndNonEmpty('migrate_access_right');
-                        $this->addAction('migrateToGerrit', array($repo, $remote_server_id, $migrate_access_right));
+                    try {
+                        $project_exists = $this->gerritProjectAlreadyExists($remote_server_id, $repo);
+                        if ($project_exists) {
+                            $this->addError($this->getText('gerrit_project_exists'));
+                        } else {
+                            $migrate_access_right = $this->request->existAndNonEmpty('migrate_access_right');
+                            $this->addAction('migrateToGerrit', array($repo, $remote_server_id, $migrate_access_right));
+                        }
+                    } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+                        $this->addError($this->getText('gerrit_server_down'));
                     }
                     $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repoId, $pane, $migrate_access_right));
                 }
@@ -502,8 +507,11 @@ class Git extends PluginController {
                 $project_gerrit_name = $this->driver->getGerritProjectName($repo);
                 $server              = $this->gerrit_server_factory->getServerById($repo->getRemoteServerId());
 
-                $this->driver->deleteProject($server, $project_gerrit_name);
-
+                try {
+                    $this->driver->deleteProject($server, $project_gerrit_name);
+                } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+                    $this->addError($this->getText('gerrit_server_down'));
+                }
                 $migrate_access_right = $this->request->existAndNonEmpty('migrate_access_right');
                 $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repoId, $pane, $migrate_access_right));
                 break;

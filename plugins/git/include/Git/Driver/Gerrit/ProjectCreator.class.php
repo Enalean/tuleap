@@ -65,6 +65,9 @@ class Git_Driver_Gerrit_ProjectCreator {
      * @param GitRepository $repository
      * @param Boolean $migrate_access_rights
      * @return string Gerrit project name
+     *
+     * @throws Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyexistsException
+     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
      */
     public function createGerritProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository, $migrate_access_rights) {
         $project          = $repository->getProject();

@@ -261,7 +261,6 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
                 'repository_events_mailing_prefix' => "[SCM]",
                 'repository_description'           => '',
                 'remote_server_id'                 => null,
-                'remote_project_deleted'           => 0,
                 'remote_project_deleted_date'      => null,
                 'remote_server_disconnect_date'    => null
             ),
@@ -272,7 +271,6 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
                 'repository_events_mailing_prefix' => "[SCM]",
                 'repository_description'           => '',
                 'remote_server_id'                 => 1,
-                'remote_project_deleted'           => 0,
                 'remote_project_deleted_date'      => null,
                 'remote_server_disconnect_date'    => null
             )
