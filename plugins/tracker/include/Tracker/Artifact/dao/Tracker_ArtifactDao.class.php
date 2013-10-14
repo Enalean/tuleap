@@ -518,7 +518,10 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     ORDER BY rank ASC
                     ) AS R";
         $row = $this->retrieve($sql)->getRow();
-        return explode(',', $row['sorted_ids']);
+        if ($row && $row['sorted_ids'] != null) {
+            return explode(',', $row['sorted_ids']);
+        }
+        return array();
     }
 }
 
