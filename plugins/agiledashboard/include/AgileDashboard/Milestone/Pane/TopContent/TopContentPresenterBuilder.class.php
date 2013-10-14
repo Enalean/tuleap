@@ -53,6 +53,7 @@ class AgileDashboard_Milestone_Pane_TopContent_TopContentPresenterBuilder {
         $content_presenter = new AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant(
             $todo_collection,
             $done_collection,
+            new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection(),
             $backlog_strategy->getBacklogItemName(),
             $new_backlog_item_url,
             $item_trackers,

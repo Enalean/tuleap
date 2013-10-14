@@ -5,6 +5,11 @@ plugin_agiledashboard	service_lbl_key	Agile Dashboard
 plugin_agiledashboard	service_desc_key	Agile Dashboard
 
 plugin_agiledashboard	Admin	Agile Dashboard Administration
+plugin_agiledashboard	cannot_create_planning	You cannot create new planning because either:
+plugin_agiledashboard	cannot_create_planning_no_trackers	there is no trackers in tracker service
+plugin_agiledashboard	cannot_create_planning_hierarchy	all potential planning trackers ($1) are already used by a planning configuration (see below).
+plugin_agiledashboard	cannot_create_planning_config	The potential planning trackers are computed out of $1 configuration and its <a href="$2">hierarchy</a>.
+plugin_agiledashboard	planning_out_of_hierarchy	This planning doesn't belong to root planning ($1) hierarchy. This configuration is not supported. You should remove this planning.
 plugin_agiledashboard	planning_destination_help	Use left arrow on item to move it on backlog or bottom/up arrow to rank items.
 plugin_agiledashboard	planning_title	Plannings
 plugin_agiledashboard	planning_create	Create a new planning
