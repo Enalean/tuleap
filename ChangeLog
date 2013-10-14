@@ -6,18 +6,19 @@ Version 6.6 (Not released yet)
 	* story #5181: allow a user to send an email to all project members of a given project
 
 	== Plugins ==
-	* tracker: 5.167
+	* tracker: 5.168
 	* git: 3.47
 	* forumml: 2.6.15
 	* fulltextsearch: 0.22
 	* ldap: 3.36
 	* mediawiki: 0.17
-	* agiledashboard: 0.103
+	* agiledashboard: 1.0
 	* openid: 0.2
 	* statistics: 0.32
 	* tests: 5.19
-	* cardwall: 0.9.48
+	* cardwall: 1.0
 	* IM: 1.5.12
+	* graphontrackersv5: 5.3
 
 	== Bux Fix ==
 	* Fix request #5207: Typo in access denied message

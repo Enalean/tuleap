@@ -1,3 +1,9 @@
+Version 1.0 - Tuleap 6.6
+    * story #5166: Allow several type of backlog items
+    * allow to identify inconsistent items in backlog
+    * restrict planning configuration to what agile dashboard can manage
+    * better styling of content view
+
 Version 0.103 - Tuleap 6.6
     * story #5224: introduce building blocks of a Tuleap REST API. **Note to Tuleap Administrators**: We changed an apache configuration; instead of restricting /api, we now restrict /api/reference. Please adjust your /etc/httpd/conf/httpd.conf accordingly. For more details: http://gerrit.tuleap.net/1062
 

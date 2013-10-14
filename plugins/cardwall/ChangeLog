@@ -1,3 +1,12 @@
+Version 1.0 - Tuleap 6.6
+    * story #5168: manipulate solo elements on carwall
+    * Remove automatic columns based on backlog status.
+      Now all columns must be explicitely defined by admin
+    * Cardwall admin is now displayed in agile dashboard rather than
+      tracker admin
+    * Admin can select column color
+    * XML import/export: freestyle columns are taken into account
+
 Version 0.9.48 - Tuleap 6.6
     * Enabling solo elements on cardwall
 
