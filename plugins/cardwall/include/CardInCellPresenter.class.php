@@ -48,6 +48,14 @@ class Cardwall_CardInCellPresenter {
         return implode(' ', $this->getDropIntoClasses());
     }
 
+    public function getDropIntoIds() {
+        $ids = array();
+        foreach (array_unique($this->swimline_field_values) as $id) {
+            $ids[] = $id;
+        }
+        return $ids;
+    }
+
     public function getCardFieldId() {
         return $this->card_field_id;
     }

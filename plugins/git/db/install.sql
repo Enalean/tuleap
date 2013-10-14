@@ -63,6 +63,10 @@ CREATE TABLE IF NOT EXISTS plugin_git_remote_ugroups (
     FOREIGN KEY remote_server_idx (remote_server_id) REFERENCES plugin_git_remote_servers (id)
 );
 
+CREATE TABLE IF NOT EXISTS plugin_git_housekeeping(
+    allow_git_gc TINYINT(1) NOT NULL
+);
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) 
        VALUES      ( 100, 'plugin_git:service_lbl_key', 'plugin_git:service_desc_key', 'plugin_git', '/plugins/git/?group_id=$group_id', 1, 0, 'system', 230 );
@@ -93,3 +97,6 @@ VALUES ('PLUGIN_GIT_READ', 2, 1),
        ('PLUGIN_GIT_WPLUS', 2, 0),
        ('PLUGIN_GIT_WPLUS', 3, 0),
        ('PLUGIN_GIT_WPLUS', 4, 0);
+
+-- Enable git gc
+INSERT INTO plugin_git_housekeeping VALUES (1);

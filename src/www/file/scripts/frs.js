@@ -422,10 +422,10 @@ document.observe('dom:loaded', function () {
     if (create_release_btn) {
         create_release_btn.observe('click', function check_parameters(evt){
 
+            Event.stop(evt);
             // Yay Promises!
             checkFileUploadSize(checkParametersOnServer);
 
-            Event.stop(evt);
             return false;
         });
     }

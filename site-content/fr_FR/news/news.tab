@@ -70,6 +70,8 @@ news_utils	news_request_mail_details	Détail de l'annonce : $1
 news_utils	news_request_mail_approve_link	Merci de cliquer sur le lien ci-dessous pour approuver (ou rejeter) l'annonce :
 news_utils	news_request_sent	La demande de promotion a été transmise aux administrateur du site.
 news_utils	news_request_not_sent	La demande de promotion n'a pas pu être transmise aux administrateur du site.
+news_utils	news_sent	L'annonce a été envoyée aux membres des groupes sélectionnés.
+news_utils	news_not_sent	L'annonce n'a pas pu être envoyée aux membres des groupes sélectionnés.
 #
 #-----------------------------------------------
 # Script: SF/www/news/submit.php
@@ -86,4 +88,6 @@ news_submit	private_news	<b>privée</b> (membres du projet seulement)
 news_submit	news_perm_update_success	Permissions mises à jour avec succès.
 news_submit	news_perm_create_success	Permissions créées avec succès.
 news_submit	news_promote	Demander la promotion en première page de $1 ?
-news_submit	promote_warn	<b>ATTENTION :</b> Les nouvelles privées ne sont pas présentes en première page de $1
+news_submit	promote_warn	<b>ATTENTION :</b> Les annonces privées ne sont pas présentes en première page de $1
+news_submit	send_news_by_email	Envoyer l'annonce par email à
+news_submit	news_not_sent_max_users	Vous excédez le nombre maximum ($1) de personnes à qui envoyer le message. L'email n'a pas été envoyé.

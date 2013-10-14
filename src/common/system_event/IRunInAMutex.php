@@ -42,12 +42,9 @@ interface IRunInAMutex {
     public function getProcessOwner();
 
     /**
-     * The file path where the mutex will be stored
+     * The process
      *
-     * @return String
+     * @return SystemEventProcess
      */
-    public function getPidFilePath();
-
+    public function getProcess();
 }
-
-?>

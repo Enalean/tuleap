@@ -347,7 +347,7 @@ if ($pv != 2) {
         $_help = 'ArtifactMassChange.html';
     } else {
         $_title .= $Language->getText('tracker_browse', 'search_report');
-        $_help = 'ArtifactBrowsing.html';   
+        $_help = 'tracker-v3.html#artifact-browsing';
     }
 } else {
     $_help = ''; // printer version without help

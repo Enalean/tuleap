@@ -20,10 +20,12 @@
 
 require_once('Widget.class.php');
 require_once('common/rss/RSS.class.php');
+require_once 'common/templating/TemplateRendererFactory.class.php';
+require_once 'common/mail/MassmailFormPresenter.class.php';
 
 /**
 * Widget_MyProjects
-* 
+*
 * PROJECT LIST
 */
 class Widget_MyProjects extends Widget {
@@ -55,6 +57,7 @@ class Widget_MyProjects extends Widget {
             $html .= '<table cellspacing="0" class="widget_my_projects">';
             $i     = 0;
             $prevIsPublic = -1;
+            $token = new CSRFSynchronizerToken('massmail_to_project_members.php');
             while ($row = db_fetch_array($result)) {
                 $tdClass = '';
                 if ($display_privacy && $prevIsPublic == 0 && $row['is_public'] == 1) {
@@ -87,6 +90,12 @@ class Widget_MyProjects extends Widget {
                 }
                 $html .= '</td>';
 
+                // Mailing tool
+                $html .= '<td class="'.$tdClass.'">';
+                $html .= '<a href="#massmail_'.$row['group_id'].'" title="'.$GLOBALS['Language']->getText('my_index','send_mail',$row['group_name']).'" data-toggle="modal"><span class="icon-envelope-alt"></span></a>';
+                $html .= $this->fetchMassMailForm($row['group_id'], $token);
+                $html .= '</td>';
+
                 // Remove from project
                 $html .= '<td class="widget_my_projects_remove'.$tdClass.'">';
                 if ($row['admin_flags'] != 'A') {
@@ -104,7 +113,7 @@ class Widget_MyProjects extends Widget {
             if ($display_privacy) {
                 // Legend
                 $html .= '<tr>';
-                $html .= '<td colspan="4" class="widget_my_projects_legend">';
+                $html .= '<td colspan="5" class="widget_my_projects_legend">';
                 $html .= '<span class="widget_my_projects_legend_title">'.$GLOBALS['Language']->getText('my_index', 'my_projects_legend').'</span>';
                 $html .= '<span class="project_privacy_private">&nbsp;'.$GLOBALS['Language']->getText('project_privacy', 'private').'</span>';
                 $html .= '<span class="project_privacy_public">&nbsp;'.$GLOBALS['Language']->getText('project_privacy', 'public').'</span>';
@@ -164,12 +173,12 @@ class Widget_MyProjects extends Widget {
                 if ( db_result($result,$i,'is_public') == 0 ) {
                     $title .= ' (*)';
                 }
-                
+
                 $desc = 'Project: '. get_server_url() .'/project/admin/?group_id='.db_result($result,$i,'group_id') ."<br />\n";
                 if ( db_result($result,$i,'admin_flags') == 'A' ) {
                     $desc .= 'Admin: '. get_server_url() .'/project/admin/?group_id='.db_result($result,$i,'group_id');
                 }
-                
+
                 $rss->addItem(array(
                     'title'       => $title,
                     'description' => $desc,
@@ -181,6 +190,13 @@ class Widget_MyProjects extends Widget {
     }
     function getDescription() {
         return $GLOBALS['Language']->getText('widget_description_my_projects','description');
+    }
+
+    private function fetchMassMailForm($group_id, CSRFSynchronizerToken $token) {
+        $presenter          = new MassmailFormPresenter($group_id,$token);
+        $template_factory   = TemplateRendererFactory::build();
+        $renderer           = $template_factory->getRenderer($presenter->getTemplateDir());
+        return $renderer->renderToString('massmail',$presenter);
     }
 }
 ?>

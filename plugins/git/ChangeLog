@@ -1,3 +1,15 @@
+Version 3.46 - Tuleap 6.6
+    * story #5034: automated gitolite housekeeping
+
+Version 3.45 - Tuleap 6.6
+    * request #5276 - Log jenkins job failures
+
+Version 3.44 - Tuleap 6.6
+    * Fix community #5237 : Git repo are now fully created
+
+Version 3.43 - Tuleap 6.6
+    * Preventing repo deletion whilst repo is migrated to Gerrit
+
 Version 3.42 - Tuleap 6.6
     * Fix request #5051: Merge all gitolite updates during process_system_event
 
