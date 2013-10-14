@@ -48,12 +48,13 @@ class AgileDashboard_Milestone_Pane_TopContent_TopContentPresenterBuilder {
 
         $todo_collection = $this->collection_factory->getUnassignedOpenCollection($user, $milestone, $backlog_strategy, $redirect_to_self);
         $done_collection = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
+        $inconsistent_collection = $this->collection_factory->getInconsistentCollection($user, $milestone, $backlog_strategy, $redirect_to_self);
         $trackers_without_initial_effort_semantic_defined = $this->getTrackersWithoutInitialEffortSemanticDefined($item_trackers);
 
         $content_presenter = new AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant(
             $todo_collection,
             $done_collection,
-            new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection(),
+            $inconsistent_collection,
             $backlog_strategy->getBacklogItemName(),
             $new_backlog_item_url,
             $item_trackers,
