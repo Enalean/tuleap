@@ -38,6 +38,8 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
     protected $gitExec;
     /** @var Git_Gitolite_SSHKeyDumper */
     protected $dumper;
+    /** @var GitRepositoryFactory */
+    protected $repository_factory;
 
     public function setUp() {
         parent::setUp();
@@ -66,8 +68,10 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
         
         $this->user_manager = mock('UserManager');
         $this->dumper = new Git_Gitolite_SSHKeyDumper($this->_glAdmDir, $this->gitExec);
-        
-        $this->driver = new Git_GitoliteDriver($this->_glAdmDir, $this->gitExec);
+
+        $this->repository_factory = mock('GitRepositoryFactory');
+
+        $this->driver = new Git_GitoliteDriver($this->_glAdmDir, $this->gitExec, $this->repository_factory);
     }
     
     public function tearDown() {

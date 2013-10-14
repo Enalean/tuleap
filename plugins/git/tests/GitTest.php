@@ -25,6 +25,7 @@ Mock::generate('UserManager');
 Mock::generate('Project');
 Mock::generate('ProjectManager');
 Mock::generate('GitRepositoryFactory');
+require_once 'common/plugin/PluginManager.class.php';
 
 class GitTest extends TuleapTestCase  {
 
@@ -110,10 +111,41 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
         $this->user         = mock('PFUser');
         $this->admin        = stub('PFUser')->isMember($this->group_id, 'A')->returns(true);
         $this->user_manager = mock('UserManager');
+        $this->project_manager = mock('ProjectManager');
+        $this->plugin_manager  = mock('PluginManager');
+
+        $this->previous_request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/plugins/tests/';
+
+        $project = mock('Project');
+        stub($project)->getId()->returns($this->group_id);
+
+        stub($this->project_manager)->getProject()->returns($project);
+        stub($this->plugin_manager)->isPluginAllowedForProject()->returns(true);
+
+        $_SERVER['REQUEST_URI'] = '/plugins/tests/';
+    }
+
+    public function tearDown() {
+        $_SERVER['REQUEST_URI'] = $this->previous_request_uri;
     }
 
     protected function getGit($request, $factory) {
-        $git = TestHelper::getPartialMock('Git', array('_informAboutPendingEvents', 'addAction', 'addView', 'addError', 'checkSynchronizerToken', 'redirect'));
+        $git = partial_mock('Git',
+                array('_informAboutPendingEvents', 'addAction', 'addView', 'addError', 'checkSynchronizerToken', 'redirect'),
+                array(
+                    mock('GitPlugin'),
+                    mock('Git_RemoteServer_GerritServerFactory'),
+                    mock('Git_Driver_Gerrit'),
+                    mock('GitRepositoryManager'),
+                    mock('Git_SystemEventManager'),
+                    mock('Git_Driver_Gerrit_UserAccountManager'),
+                    mock('GitRepositoryFactory'),
+                    $this->user_manager,
+                    $this->project_manager,
+                    $this->plugin_manager,
+                    aRequest()->with('group_id', $this->group_id)->build()
+                )
+            );
         $git->setRequest($request);
         $git->setUserManager($this->user_manager);
         $git->setGroupId($this->group_id);
@@ -257,7 +289,7 @@ class Gittest_MigrateToGerritRouteTest extends Git_RouteBaseTestCase {
         Config::set('sys_auth_type', Config::AUTH_TYPE_LDAP);
         $factory = stub('GitRepositoryFactory')->getRepositoryById()->returns(mock('GitRepository'));
         stub($this->user_manager)->getCurrentUser()->returns($this->admin);
-        $request     = new HTTPRequest();
+        $request     = aRequest()->with('group_id', $this->group_id)->build();
         $repo_id     = 999;
         $server_id   = 111;
         $request->set('repo_id', $repo_id);

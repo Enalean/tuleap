@@ -177,7 +177,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     public function savePermissions(GitRepository $repository, $perms) {
         $ok = true;
         $ok &= $this->savePermission($repository, Git::PERM_READ, $perms);
-        if (! $repository->getRemoteServerId()) {
+        if (! $repository->isMigratedToGerrit()) {
             if ($ok) {
                 $ok &= $this->savePermission($repository, Git::PERM_WRITE, $perms);
             }

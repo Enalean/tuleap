@@ -60,6 +60,8 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
 
             $this->done("Created project $gerrit_project on ". $server->getHost());
             return true;
+        } catch (Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyExistsException $e) {
+            $this->logError("gerrit: ", "Gerrit failure: ", $e);
         } catch (Git_Driver_Gerrit_Exception $e) {
             $this->logError("gerrit: ", "Gerrit failure: ", $e);
         } catch (Exception $e) {

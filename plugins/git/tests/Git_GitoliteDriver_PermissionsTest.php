@@ -35,6 +35,8 @@ class Git_GitoliteDriver_PermissionsTest extends TuleapTestCase {
     protected $admin_dir     = '/tmp/gitolite-admin-permissions';
     protected $admin_ref_dir = '/tmp/gitolite-admin-permissions-ref';
     protected $oldCwd;
+    protected $repository_factory;
+
     public function setUp() {
         parent::setUp();
         
@@ -52,8 +54,10 @@ class Git_GitoliteDriver_PermissionsTest extends TuleapTestCase {
         PermissionsManager::setInstance(new MockPermissionsManager());
         $this->permissions_manager = PermissionsManager::instance();
 
+        $this->repository_factory = mock('GitRepositoryFactory');
+
         mkdir($this->admin_dir);
-        $this->driver     = new Git_GitoliteDriver($this->admin_dir);
+        $this->driver     = new Git_GitoliteDriver($this->admin_dir, mock('Git_Exec'), $this->repository_factory);
         
     }
 

@@ -68,6 +68,8 @@ class GitRepository implements DVCSRepository {
     private $scope;
     private $remote_server_id;
     private $remote_server_disconnect_date;
+    private $remote_project_deletion_date;
+    private $remote_project_is_deleted;
 
     protected $backendType;
 
@@ -821,8 +823,7 @@ class GitRepository implements DVCSRepository {
     
     public function canMigrateToGerrit() {
         return $this->getBackendType() == GitDao::BACKEND_GITOLITE && 
-               $this->getRemoteServerId() == false &&
-               $this->remote_server_disconnect_date == false;
+               ! $this->isMigratedToGerrit();
     }
 
     public function setRemoteServerId($id) {
@@ -834,15 +835,26 @@ class GitRepository implements DVCSRepository {
     }
 
     public function isMigratedToGerrit() {
-        if ($this->remote_server_id) {
-            return true;
-        }
+        return (
+            $this->remote_server_id &&
+            $this->remote_server_disconnect_date == false &&
+            $this->remote_project_deletion_date == false);
+    }
 
-        return false;
+    public function wasPreviouslyMigratedButNotDeleted() {
+        return (
+            $this->remote_server_id &&
+            $this->remote_server_disconnect_date != false &&
+            $this->remote_project_deletion_date == false &&
+            ! $this->remote_project_is_deleted);
     }
 
     public function setRemoteServerDisconnectDate($date) {
         $this->remote_server_disconnect_date = $date;
+    }
+
+    public function setRemoteProjectDeletionDate($date) {
+        $this->remote_project_deletion_date = $date;
     }
 
     /**

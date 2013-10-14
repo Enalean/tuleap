@@ -63,7 +63,23 @@ class Test_Git_RepositoryBuilder {
         $this->repository->setRemoteServerId($id);
         return $this;
     }
-    
+
+    public function withDescription($description) {
+        $this->repository->setDescription($description);
+        return $this;
+    }
+
+    public function withMailPrefix($prefix) {
+        $this->repository->setMailPrefix($prefix);
+        return $this;
+    }
+
+    public function withNotifiedEmails($emails) {
+        $this->repository->setNotifiedMails($emails);
+        return $this;
+    }
+
+
     public function build() {
         return $this->repository;
     }

@@ -62,6 +62,8 @@ plugin_git	dao_child_params	Paramètres invalides
 plugin_git	disconnect_gerrit_title	Déconnexion de Gerrit
 plugin_git	disconnect_gerrit_button	Déconnexion
 plugin_git	gerrit_project_delete	Supprimer le projet sur Gerrit
+plugin_git	gerrit_project_readonly	Mettre le projet sur Gerrit en lecture-seule
+plugin_git	gerrit_project_leave	Laisser le projet sur Gerrit
 plugin_git	disconnect_gerrit_msg	Cette opération est <strong>irréversible</strong>. Ce dépôt ne pourra plus être géré de nouveau par un serveur gerrit. Êtes vous certain de vouloir continuer ?
 plugin_git	disconnect_gerrit_yes	Oui, je veux déconnecter ce dépôt de Gerrit
 
@@ -87,6 +89,8 @@ plugin_git	actions_name_not_available	Un fichier existe déjà avec ce nom sous 
 plugin_git	actions_create_repo_exists	Le dépôt $1 existe déjà ou le chemin est en conflit avec un dépôt existant
 plugin_git	actions_delete_ok	Le dépôt a été supprimé
 plugin_git	actions_no_repository_forked	Aucun dépôt n'a été forké.
+plugin_git	gerrit_project_exists	Un projet Gerrit du même nom existe déjà sur ce serveur
+plugin_git	gerrit_server_down	Impossible de se connecter au serveur Gerrit
 
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Crée par
@@ -119,6 +123,8 @@ plugin_git	gerrit_migration_description	Vous vous apprêtez à effectuer la migr
 plugin_git	gerrit_migration_more_description	La gestion du dépôt (permissions, ...) sera déléguée à Gerrit : <ul><li>Un projet <em>$1</em> sera créé sur le serveur sélectionné.</li><li>Le dépot courant deviendra un miroir de la référence sur Gerrit.</li></ul>
 plugin_git	gerrit_migrated_more_description	Pour rappel, la gestion du dépôt (permissions, ...) à été déléguée à Gerrit : <ul><li>Un projet <em>$1</em> a été créé sur le serveur $2.</li><li>Le dépot courant est maintenant un miroir de la référence sur Gerrit.</li></ul>
 plugin_git	gerrit_migrate_to	Migrer repo vers Gerrit
+plugin_git	gerrit_past_project_warn	Ce dépôt a déjà été migré sur Gerrit et existe encore. Il n'est pas possible de migrer ce dépôt sur ce même serveur avant de l'avoir supprimé.
+plugin_git	gerrit_past_project_delete	Supprimer ce projet sur Gerrit
 plugin_git	gerrit_server_already_migrated	Le dépôt <em>$1</em> a déjà été migré sur le projet Gerrit : <a href="$3">$2</a>.
 plugin_git	permissions_on_remote_server	Vous ne pouvez modifier QUE les permissions en <strong>LECTURE</strong>, car elles sont gérés par un serveur Gerrit distant. Ces modifications affectent uniquement $1 et <strong>NE SONT PAS propagées vers Gerrit</strong>.
 plugin_git	gerrit_migration_ongoing	La migration de ce dépôt vers le serveur Gerrit est en cours, merci de patienter quelques minutes.
@@ -225,7 +231,6 @@ plugin_git	push_ssh_keys_button_value	Pousser les clés SSH
 plugin_git	push_ssh_keys_button_title	Pousser les clés SSH sur les serveurs externes
 plugin_git	push_ssh_keys_info	Vos anciennes clés ne sont pas poussées automatiquement. Toute nouvelle clé sera automatiquement poussée sur les serveurs suivants :
 
-plugin_git	gerrit_cannot_migrate_error_msg	Ce dépôt ne peux pas être migré. Ceci est dû au fait qu'il a déjà été migré par le passé et ne peut plus être migré de nouveau.
-
 plugin_git	gerrit_remote_exception	Une erreur est survenue lors d'une tentative de connexion à un serveur Gerrit. Peut-être est-il arreté? Merci de vérifier avec les administrateurs: $1
 plugin_git	gerrit_deletion_ongoing	La supression du projet sous Gerrit est en cours, veuillez patienter quelques minutes.
+plugin_git	gerrit_readonly_ongoing	La mise en lecture-seule du projet sous Gerrit est en cours, veuillez patienter quelques minutes.

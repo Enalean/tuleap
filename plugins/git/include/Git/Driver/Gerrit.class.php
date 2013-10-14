@@ -100,11 +100,31 @@ class Git_Driver_Gerrit {
     /**
      *
      * @param Git_RemoteServer_GerritServer $server
-     * @param type $project_name
+     * @param string $project_name
      * @return true if the gerrit project exists, else return false
      */
     public function doesTheParentProjectExist(Git_RemoteServer_GerritServer $server, $project_name) {
         return in_array($project_name, $this->listParentProjects($server));
+    }
+
+    /**
+     * @param Git_RemoteServer_GerritServer $server
+     * @param string $project_name
+     * @return true if the gerrit project exists, else return false
+     *
+     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     */
+    public function doesTheProjectExist(Git_RemoteServer_GerritServer $server, $project_name) {
+        return in_array($project_name, $this->listProjects($server));
+    }
+
+    /**
+     * @param Git_RemoteServer_GerritServer $server
+     * @return array : the list of the projects created in the gerrit server
+     */
+    private function listProjects(Git_RemoteServer_GerritServer $server) {
+        $command = self::COMMAND . ' ls-projects';
+        return explode(PHP_EOL, $this->ssh->execute($server, $command));
     }
 
     /**
@@ -423,6 +443,17 @@ class Git_Driver_Gerrit {
      */
     public function deleteProject(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name) {
         $query = ' deleteproject delete ' . $gerrit_project_full_name . ' --yes-really-delete';
+        $this->ssh->execute($server, $query);
+    }
+
+    /**
+     * @param Git_RemoteServer_GerritServer $server
+     * @param string $gerrit_project_full_name
+     *
+     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     */
+    public function makeGerritProjectReadOnly(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name) {
+        $query = self::COMMAND . ' set-project --ps READ_ONLY ' . $gerrit_project_full_name;
         $this->ssh->execute($server, $query);
     }
 }

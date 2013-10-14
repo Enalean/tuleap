@@ -214,10 +214,21 @@ class GitRepositoryFactory {
         return null;
     }
 
-    protected function instanciateFromRow(array $row) {
+    public function instanciateFromRow(array $row) {
         $repository = new GitRepository();
         $this->dao->hydrateRepositoryObject($repository, $row);
         return $repository;
+    }
+
+    /**
+     * Get the list of all repositories of a project
+     *
+     * @param Project $project
+     *
+     * @return GitRepository[]
+     */
+    public function getAllRepositoriesOfProject(Project $project) {
+        return $this->dao->getAllGitoliteRespositories($project->getId())->instanciateWith(array($this, 'instanciateFromRow'));
     }
 }
 

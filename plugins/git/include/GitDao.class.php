@@ -51,6 +51,7 @@ class GitDao extends DataAccessObject {
 
     const REMOTE_SERVER_ID              = 'remote_server_id';
     const REMOTE_SERVER_DISCONNECT_DATE = 'remote_server_disconnect_date';
+    const REMOTE_SERVER_DELETE_DATE     = 'remote_project_deleted_date';
 
     public function __construct() {
         parent::__construct( CodendiDataAccess::instance() );
@@ -479,6 +480,7 @@ class GitDao extends DataAccessObject {
         $repository->setScope($result[self::REPOSITORY_SCOPE]);
         $repository->setRemoteServerId($result[self::REMOTE_SERVER_ID]);
         $repository->setRemoteServerDisconnectDate($result[self::REMOTE_SERVER_DISCONNECT_DATE]);
+        $repository->setRemoteProjectDeletionDate($result[self::REMOTE_SERVER_DELETE_DATE]);
         $repository->loadNotifiedMails();
     }
 
@@ -536,7 +538,9 @@ class GitDao extends DataAccessObject {
         $repository_id    = $this->da->escapeInt($repository_id);
         $remote_server_id = $this->da->escapeInt($remote_server_id);
         $sql = "UPDATE plugin_git
-                SET remote_server_id = $remote_server_id
+                SET remote_server_id = $remote_server_id,
+                    remote_server_disconnect_date = NULL,
+                    remote_project_deleted_date = NULL
                 WHERE repository_id = $repository_id";
         return $this->update($sql);
     }
@@ -544,8 +548,7 @@ class GitDao extends DataAccessObject {
     public function disconnectFromGerrit($repository_id) {
         $repository_id = $this->da->escapeInt($repository_id);
         $sql = "UPDATE plugin_git
-                SET remote_server_id = 0,
-                    remote_server_disconnect_date = UNIX_TIMESTAMP()
+                SET remote_server_disconnect_date = UNIX_TIMESTAMP()
                 WHERE repository_id = $repository_id";
         return $this->update($sql);
     }
@@ -556,8 +559,7 @@ class GitDao extends DataAccessObject {
     public function setGerritProjectAsDeleted($repository_id) {
         $repository_id = $this->da->escapeInt($repository_id);
         $sql = "UPDATE plugin_git
-                SET remote_project_deleted = 1,
-                    remote_project_deleted_date = UNIX_TIMESTAMP()
+                SET remote_project_deleted_date = UNIX_TIMESTAMP()
                 WHERE repository_id = $repository_id";
         return $this->update($sql);
     }
