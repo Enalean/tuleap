@@ -1,0 +1,35 @@
+{{#can_add_backlog_item}}
+    {{#only_one_new_backlog_items_urls}}
+        {{#add_new_backlog_items_urls}}
+        <div class="control-group info">
+            <div class="controls">
+                <a href="{{{submit_url}}}" class="btn btn-primary">{{create_new_specific_item}}</a>
+                <span class="help-inline">{{create_new_item_help}}</span>
+            </div>
+        </div>
+        {{/add_new_backlog_items_urls}}
+    {{/only_one_new_backlog_items_urls}}
+
+    {{^only_one_new_backlog_items_urls}}
+    <div class="control-group info">
+        <div class="controls">
+            <div class="btn-group dropdown">
+                <span class="dropdown-toggle btn btn-primary" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
+                    {{create_new_item}}
+                    <b class="caret"></b>
+                </span>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    {{#add_new_backlog_items_urls}}
+                    <li>
+                        <a href="{{{submit_url}}}">{{tracker_type}}</a>
+                    </li>
+                    {{/add_new_backlog_items_urls}}
+                </ul>
+            </div>
+            <span class="help-inline">{{create_new_item_help}}</span>
+        </div>
+    </div>
+    {{/only_one_new_backlog_items_urls}}
+
+    <br />
+{{/can_add_backlog_item}}

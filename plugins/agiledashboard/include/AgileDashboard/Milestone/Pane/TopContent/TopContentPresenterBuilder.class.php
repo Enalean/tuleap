@@ -42,27 +42,20 @@ class AgileDashboard_Milestone_Pane_TopContent_TopContentPresenterBuilder {
         $redirect_paremeter   = new Planning_MilestoneRedirectParameter();
         $backlog_strategy     = $this->strategy_factory->getSelfBacklogStrategy($milestone);
         $item_trackers        = $backlog_strategy->getItemTrackers();
-        $identifier           = AgileDashboard_Milestone_Pane_TopContent_TopContentPaneInfo::IDENTIFIER;
-        $redirect_to_self     = $redirect_paremeter->getPlanningRedirectToSelf($milestone, $identifier);
-        $new_backlog_item_url = $this->getAddItemsToBacklogUrls($user, $item_trackers, $redirect_to_self);
-
-        $todo_collection = $this->collection_factory->getUnassignedOpenCollection($user, $milestone, $backlog_strategy, $redirect_to_self);
-        $done_collection = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
-        $inconsistent_collection = $this->collection_factory->getInconsistentCollection($user, $milestone, $backlog_strategy, $redirect_to_self);
-        $trackers_without_initial_effort_semantic_defined = $this->getTrackersWithoutInitialEffortSemanticDefined($item_trackers);
-
-        $content_presenter = new AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant(
-            $todo_collection,
-            $done_collection,
-            $inconsistent_collection,
-            $backlog_strategy->getBacklogItemName(),
-            $new_backlog_item_url,
-            $item_trackers,
-            $this->canUserPrioritizeBacklog($user, $item_trackers),
-            $trackers_without_initial_effort_semantic_defined
+        $redirect_to_self     = $redirect_paremeter->getPlanningRedirectToSelf(
+            $milestone,
+            AgileDashboard_Milestone_Pane_TopContent_TopContentPaneInfo::IDENTIFIER
         );
 
-        return $content_presenter;
+
+        return new AgileDashboard_Milestone_Pane_Content_TopContentPresenter(
+            $this->collection_factory->getUnassignedOpenCollection($user, $milestone, $backlog_strategy, $redirect_to_self),
+            $backlog_strategy->getBacklogItemName(),
+            $this->getAddItemsToBacklogUrls($user, $item_trackers, $redirect_to_self),
+            $item_trackers,
+            $this->canUserPrioritizeBacklog($user, $item_trackers),
+            $this->getTrackersWithoutInitialEffortSemanticDefined($item_trackers)
+        );
     }
 
     private function getTrackersWithoutInitialEffortSemanticDefined(array $item_trackers) {
