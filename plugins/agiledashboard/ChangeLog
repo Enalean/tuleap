@@ -1,3 +1,6 @@
+Version 1.1 - Tuleap 6.6
+    * Do not attempt to display inconsistent items on TopContent
+
 Version 1.0 - Tuleap 6.6
     * story #5166: Allow several type of backlog items
     * allow to identify inconsistent items in backlog
