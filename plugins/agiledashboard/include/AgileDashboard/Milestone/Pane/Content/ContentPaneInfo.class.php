@@ -47,7 +47,7 @@ class AgileDashboard_Milestone_Pane_Content_ContentPaneInfo extends AgileDashboa
      * @see string eg: '/themes/common/images/ic/duck.png'
      */
     protected function getIcon() {
-        return $this->theme_path.'/images/sticky-notes-stack.png';
+        return $this->theme_path.'/images/content-list.png';
     }
 
     /**
