@@ -1,0 +1,21 @@
+<?php
+
+// Please specify your database details here:
+$sys_dbhost="localhost";
+$sys_dbname="integration_test";
+$sys_dbuser="integration_test";
+$sys_dbpasswd="welcome0";
+
+
+// If set to 1 (one) connexions to DB are made through SSL.
+// Note: Mysql server must be properly configured to accept SSL
+// connexions (GRANT ... REQUIRE SSL). This is the only way to
+// guaranty that communications are encrypted.
+$sys_enablessl="0";
+
+// for phpWiki
+$sys_server="mysql";
+$sys_server_join="30";
+
+// End of customizations -- place nothing after the closing PHP tag!
+?>

@@ -8,3 +8,5 @@ documentation/user_guide/html/*
 *.box
 nbproject
 plugins/maillog
+vendor/*
+composer.*
