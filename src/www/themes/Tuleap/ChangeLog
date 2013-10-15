@@ -1,3 +1,6 @@
+2.8 - Tuleap 6.6
+	* Change primary button link color
+
 2.7 - Tuleap 5.13
 	* Remove border on wiki pages
 
@@ -5,7 +8,7 @@
 	* Fix typo
 
 2.5 - Tuleap 5.9
-        * FontAwesome 3
+	* FontAwesome 3
 
 2.4 - Tuleap 5.8
 	* Fix font compatibility with IE9 (Contrib STMicroelectronics)
