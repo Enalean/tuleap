@@ -47,7 +47,6 @@ class AgileDashboard_Milestone_Pane_TopContent_TopContentPresenterBuilder {
             AgileDashboard_Milestone_Pane_TopContent_TopContentPaneInfo::IDENTIFIER
         );
 
-
         return new AgileDashboard_Milestone_Pane_Content_TopContentPresenter(
             $this->collection_factory->getUnassignedOpenCollection($user, $milestone, $backlog_strategy, $redirect_to_self),
             $backlog_strategy->getBacklogItemName(),

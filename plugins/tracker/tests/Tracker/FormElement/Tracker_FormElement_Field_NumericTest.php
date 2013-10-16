@@ -21,15 +21,16 @@ require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends TuleapTestCase {
 
-    public function itReturnsTheArtifactCurrentValueWhenNoTimestampGiven() {
+    public function itDelegatesRetrievalOfTheOldValueToTheDaoWhenNoTimestampGiven() {
         $user           = aUser()->build();
-        $artifact_value = stub('Tracker_Artifact_ChangesetValue_Float')->getValue()->returns(123.45);
-        $artifact       = aMockArtifact()->withValue($artifact_value)->build();
-        $field          = TestHelper::getPartialMock('Tracker_FormElement_Field_Float', array('userCanRead'));
+        $value_dao      = stub('Tracker_FormElement_Field_Value_FloatDao')->getLastValue()->returns(array('value' => '123.45'));
+        $artifact       = aMockArtifact()->build();
+        $field          = partial_mock('Tracker_FormElement_Field_Float', array('getId', 'userCanRead', 'getValueDao'));
         stub($field)->userCanRead($user)->returns(true);
+        stub($field)->getValueDao()->returns($value_dao);
 
         $actual_value   = $field->getComputedValue($user, $artifact);
-        $this->assertEqual(123.45, $actual_value);
+        $this->assertEqual('123.45', $actual_value);
     }
 
     public function itDelegatesRetrievalOfTheOldValueToTheDaoWhenGivenATimestamp() {

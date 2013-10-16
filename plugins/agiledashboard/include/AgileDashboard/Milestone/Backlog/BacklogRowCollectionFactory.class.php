@@ -57,6 +57,15 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
     /** @var PlanningFactory */
     private $planning_factory;
 
+    /** @var Boolean[] */
+    private $cache_read_title;
+
+    /** @var Boolean[] */
+    private $cache_read_status;
+
+    /** @var Boolean[] */
+    private $cache_initial_effort;
+
     public function __construct(
         AgileDashboard_BacklogItemDao $dao,
         Tracker_ArtifactFactory $artifact_factory,
@@ -158,7 +167,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
         $this->todo_collection[$id]           = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
         $this->done_collection[$id]           = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
         $this->unplanned_open_collection[$id] = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
-        $this->inconsistent_collection[$id] = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
+        $this->inconsistent_collection[$id]   = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
         $artifacts            = array();
         $backlog_item_ids     = array();
 
@@ -229,6 +238,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
             Tracker_Semantic_Title::NAME,
             Tracker_Semantic_Status::NAME,
         );
+
         foreach ($this->dao->getArtifactsSemantics($backlog_item_ids, $allowed_semantics) as $row) {
             $artifact = $artifacts[$row['id']];
             $tracker  = $artifact->getTracker();
@@ -257,8 +267,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
 
     private function setInitialEffortSemantic(PFUser $user, Tracker_Artifact $artifact, Tracker $tracker, array $row, array &$semantics) {
         $semantics[$artifact->getId()][AgileDashBoard_Semantic_InitialEffort::NAME] = '';
-        $field = $this->getInitialEffortField($tracker);
-        if ($field && $field->userCanRead($user)) {
+        if ($this->userCanReadInitialEffortField($user, $tracker)) {
             $semantics[$artifact->getId()][AgileDashBoard_Semantic_InitialEffort::NAME] = $this->getSemanticEffortValue($user, $artifact);
         }
     }
@@ -278,43 +287,38 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
     }
 
     protected function userCanReadBacklogTitleField(PFUser $user, Tracker $tracker) {
-        $field = Tracker_Semantic_Title::load($tracker)->getField();
-        if (! $field) {
-            return false;
+        if (! isset($this->cache_read_title[$tracker->getId()])) {
+            $field = Tracker_Semantic_Title::load($tracker)->getField();
+            if (! $field) {
+                $this->cache_read_title[$tracker->getId()] = false;
+            } else {
+                $this->cache_read_title[$tracker->getId()] = $field->userCanRead($user);
+            }
         }
-
-        return $field->userCanRead($user);
+        return $this->cache_read_title[$tracker->getId()];
     }
 
     protected function userCanReadBacklogStatusField(PFUser $user, Tracker $tracker) {
-        $field = Tracker_Semantic_Status::load($tracker)->getField();
-        if (! $field) {
-            return false;
+        if (! isset($this->cache_read_status[$tracker->getId()])) {
+            $this->cache_read_status[$tracker->getId()] = false;
+            $field = Tracker_Semantic_Status::load($tracker)->getField();
+            if ($field) {
+                $this->cache_read_status[$tracker->getId()] = $field->userCanRead($user);
+            }
         }
-        return $field->userCanRead($user);
+        return $this->cache_read_status[$tracker->getId()];
     }
 
-    /**
-     *
-     * @param PFUser $user
-     * @param Tracker_Artifact[] $artifacts
-     * @return boolean
-     */
-    private function userCanReadInitialEffortField(PFUser $user, array $artifacts) {
-        $an_artifact = array_pop($artifacts);
-        if (! $an_artifact) {
-            return false;
+    protected function userCanReadInitialEffortField(PFUser $user, Tracker $tracker) {
+        if (! isset($this->cache_initial_effort[$tracker->getId()])) {
+            $this->cache_read_initial_effort[$tracker->getId()] = false;
+            $field = $this->getInitialEffortField($tracker);
+            if ($field && $field->userCanRead($user)) {
+                $this->cache_read_initial_effort[$tracker->getId()] = true;
+            }
         }
-
-        $field = $this->getInitialEffortField($an_artifact->getTracker());
-        if (! $field) {
-            return false;
-        }
-
-        return $field->userCanRead($user);
+        return $this->cache_read_initial_effort[$tracker->getId()];
     }
-
-
 
     /**
      * @param Tracker $tracker
