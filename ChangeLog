@@ -6,13 +6,13 @@ Version 6.6 (Not released yet)
 	* story #5181: allow a user to send an email to all project members of a given project
 
 	== Plugins ==
-	* tracker: 5.171
+	* tracker: 5.172
 	* git: 3.48
 	* forumml: 2.6.15
 	* fulltextsearch: 0.22
 	* ldap: 3.36
 	* mediawiki: 0.17
-	* agiledashboard: 1.3
+	* agiledashboard: 1.4
 	* openid: 0.2
 	* statistics: 0.32
 	* tests: 5.19
