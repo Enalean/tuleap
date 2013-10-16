@@ -65,7 +65,7 @@
 }
 .planning-item > .card,
 .planning-item > .card > .card-container {
-    background: #FFF7C2;
+    background: #FFF;
     -webkit-border-top-right-radius: 3px;
     -webkit-border-bottom-right-radius: 3px;
     -moz-border-radius-topright: 3px;
