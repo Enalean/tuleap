@@ -41,7 +41,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc {
     ) {
         $this->dao                         = $dao;
         $this->logger                      = $logger;
-        $this->gitolite_admin_working_copy = $logger;
+        $this->gitolite_admin_working_copy = $gitolite_admin_working_copy;
     }
 
     public function cleanUpGitoliteAdminWorkingCopy() {
