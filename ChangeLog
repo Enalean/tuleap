@@ -6,7 +6,7 @@ Version 6.6 (Not released yet)
 	* story #5181: allow a user to send an email to all project members of a given project
 
 	== Plugins ==
-	* tracker: 5.169
+	* tracker: 5.170
 	* git: 3.48
 	* forumml: 2.6.15
 	* fulltextsearch: 0.22
