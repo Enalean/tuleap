@@ -411,7 +411,7 @@ class trackerPlugin extends Plugin {
 
     public function build_reference($params) {
         $row = $params['row'];
-        $params['ref'] = new Reference($params['ref_id'],$row['keyword'],$row['description'],'/plugins'.$row['link'],
+        $params['ref'] = new Reference($params['ref_id'],$row['keyword'],$row['description'], $row['link'],
                                     $row['scope'],'plugin_tracker', Tracker_Artifact::REFERENCE_NATURE, $row['is_active'],$row['group_id']);
     }
 
