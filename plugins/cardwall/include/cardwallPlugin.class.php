@@ -59,14 +59,14 @@ class cardwallPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
-            $this->addHook(AGILEDASHBOARD_EVENT_PLANNING_CONFIG);
-            $this->addHook(AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_INFO_ON_MILESTONE);
                 $this->addHook(AGILEDASHBOARD_EVENT_INDEX_PAGE);
                 $this->addHook(AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT);
+                $this->addHook(AGILEDASHBOARD_EVENT_PLANNING_CONFIG);
+                $this->addHook(AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE);
             }
         }
         return parent::getHooksAndCallbacks();
