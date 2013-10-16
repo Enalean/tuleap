@@ -1,3 +1,6 @@
+Version 5.171 - Tuleap 6.6
+    * Fixing bug request #5377. X-refs for trackers have wrong urls.
+
 Version 5.170 - Tuleap 6.6
     * Fix top backlog content display
 
