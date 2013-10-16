@@ -177,14 +177,7 @@ class Tracker_ReportDao extends DataAccessObject {
         if (count($sqls) == 0) {
             return new DataAccessResultEmpty();
         } else {
-            ////optimize the query execution by using GROUP_CONCAT
-            //// see http://dev.mysql.com/doc/refman/5.1/en/group-by-functions.html#function_group-concat
-            //// Warning group_concat is truncated by group_concat_max_len system variable
-            //// Please adjust the settings in /etc/my.cnf to be sure to retrieve all matching artifacts.
-            //// The default is 1024 (1K) wich is not enough. For example 50000 matching artifacts take ~ 500K
-            $sql = "SET SESSION group_concat_max_len = 134217728";
-            $this->retrieve($sql);
-
+            $this->setGroupConcatLimit();
             $sql = " SELECT GROUP_CONCAT(DISTINCT id) AS id, GROUP_CONCAT(DISTINCT last_changeset_id) AS last_changeset_id ";
             $sql .= " FROM (". implode(' UNION ', $sqls) .") AS R ";
 

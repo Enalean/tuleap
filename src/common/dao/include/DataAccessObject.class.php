@@ -346,5 +346,18 @@ class DataAccessObject {
             return false;
         }
     }
+
+    /**
+     * Optimize the query execution by using GROUP_CONCAT
+     *
+     * see http://dev.mysql.com/doc/refman/5.1/en/group-by-functions.html#function_group-concat
+     * Warning group_concat is truncated by group_concat_max_len system variable
+     * Please adjust the settings in /etc/my.cnf to be sure to retrieve all matching artifacts.
+     * The default is 1024 (1K) wich is not enough. For example 50000 matching artifacts take ~ 500K
+     *
+     */
+    public function setGroupConcatLimit() {
+        $this->retrieve("SET SESSION group_concat_max_len = 134217728");
+    }
 }
 ?>
