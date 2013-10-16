@@ -510,6 +510,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
     /** @return array */
     public function getIdsSortedByPriority(array $artifact_ids) {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
+
+        $this->setGroupConcatLimit();
         $sql = "SELECT GROUP_CONCAT(curr_id) as sorted_ids
                 FROM (
                     SELECT curr_id
