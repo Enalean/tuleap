@@ -1,4 +1,4 @@
-AUTOLOADED_PATH=src/common/PFO plugins/agiledashboard/include plugins/cardwall/include plugins/fulltextsearch/include plugins/tracker/include plugins/git/include src/common/project src/common/user plugins/boomerang/include plugins/openid/include
+AUTOLOADED_PATH=src/common/PFO plugins/agiledashboard/include plugins/cardwall/include plugins/fulltextsearch/include plugins/tracker/include plugins/git/include src/common/project src/common/user plugins/boomerang/include plugins/openid/include src/common/REST
 
 default:
 	@echo "possible targets: 'doc' 'test' 'autoload'"
