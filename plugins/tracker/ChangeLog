@@ -1,3 +1,6 @@
+Version 5.174 - Tuleap 6.6
+    * Fix: AgileDashboard edit in place bug and UI: card title margins
+
 Version 5.173 - Tuleap 6.6
     * Fixing UI bug : cardwall header cells line color were not well displayed on small screen resolution
 
