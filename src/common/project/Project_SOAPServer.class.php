@@ -326,7 +326,7 @@ class Project_SOAPServer {
      * @param Integer $group_id    The Project id where the User Group is defined
      * @param String  $password    The password of the generic user about to be created
      *
-     * @return ArrayOfUserInfo
+     * @return UserInfo
      */
     public function setProjectGenericUser($session_key, $group_id, $password) {
         if (! $this->isRequesterAdmin($session_key, $group_id)) {
@@ -346,7 +346,7 @@ class Project_SOAPServer {
         }
 
         $this->addGenericUserInProject($user, $session_key, $group_id);
-        return user_to_soap($user, $this->userManager->getCurrentUser());
+        return user_to_soap($user->getId(), $user, $this->userManager->getCurrentUser());
     }
 
     private function addGenericUserInProject(PFUser $user, $session_key, $group_id) {
@@ -377,7 +377,7 @@ class Project_SOAPServer {
      * @param String  $sessionKey The project admin session hash
      * @param Integer $groupId    The Project id where the User Group is defined
      *
-     * @return ArrayOfUserInfo
+     * @return UserInfo
      */
     public function getProjectGenericUser($sessionKey, $groupId) {
         if (! $this->isRequesterAdmin($sessionKey, $groupId)) {
@@ -389,7 +389,7 @@ class Project_SOAPServer {
         if (! $user) {
             throw new SoapFault('3106', "Generic User does not exist");
         }
-        return user_to_soap($user, $this->userManager->getCurrentUser());
+        return user_to_soap($user->getId(), $user, $this->userManager->getCurrentUser());
     }
 
     /**
