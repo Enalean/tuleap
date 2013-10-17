@@ -1,3 +1,6 @@
+Version 5.173 - Tuleap 6.6
+    * Fixing UI bug : cardwall header cells line color were not well displayed on small screen resolution
+
 Version 5.172 - Tuleap 6.6
     * Fix performance issue with computed fields
 
