@@ -3,42 +3,6 @@
 require_once('user.php');
 
 if (defined('NUSOAP')) {
-    
-//
-// Type definition
-//
-
-$GLOBALS['server']->wsdl->addComplexType(
-    'UserInfo',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
-        'identifier' => array('name'=>'identifier', 'type' => 'xsd:string'),
-        'username' => array('name'=>'username', 'type' => 'xsd:string'),
-        'id' => array('name'=>'id', 'type' => 'xsd:string'),
-        'real_name' => array('name'=>'real_name', 'type' => 'xsd:string'),
-        'email' => array('name'=>'email', 'type' => 'xsd:string'),
-        'ldap_id' => array('name'=>'ldap_id', 'type' => 'xsd:string'),
-    )
-);
-
-$GLOBALS['server']->wsdl->addComplexType(
-    'ArrayOfUserInfo',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:UserInfo[]')),
-    'tns:UserInfo'
-);
-
-//
-// Function definition
-//
-
 
 $server->register(
     'checkUsersExistence',

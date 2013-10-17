@@ -1,6 +1,4 @@
 <?php
-
-if (defined('NUSOAP')) {
 	
 //
 // Type definition
@@ -144,5 +142,101 @@ $server->wsdl->addComplexType(
     array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:SvnPathDetails[]')),
     'tns:SvnPathDetails'
 );
-}
-?>
+
+$server->wsdl->addComplexType(
+    'UserInfo',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'identifier' => array('name'=>'identifier', 'type' => 'xsd:string'),
+        'username' => array('name'=>'username', 'type' => 'xsd:string'),
+        'id' => array('name'=>'id', 'type' => 'xsd:string'),
+        'real_name' => array('name'=>'real_name', 'type' => 'xsd:string'),
+        'email' => array('name'=>'email', 'type' => 'xsd:string'),
+        'ldap_id' => array('name'=>'ldap_id', 'type' => 'xsd:string'),
+    )
+);
+
+$server->wsdl->addComplexType(
+    'ArrayOfUserInfo',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:UserInfo[]')),
+    'tns:UserInfo'
+);
+
+$server->wsdl->addComplexType(
+    'DescField',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'id'           => array('name' => 'id',           'type' => 'xsd:int'),
+        'name'         => array('name' => 'name',         'type' => 'xsd:string'),
+        'is_mandatory' => array('name' => 'is_mandatory', 'type' => 'xsd:int'),
+    )
+);
+
+$server->wsdl->addComplexType(
+    'ArrayOfDescFields',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:DescField[]')),
+    'tns:DescField'
+);
+
+$server->wsdl->addComplexType(
+    'DescFieldValue',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'id'    => array('name' => 'id',    'type' => 'xsd:int'),
+        'value' => array('name' => 'value', 'type' => 'xsd:string'),
+    )
+);
+
+$server->wsdl->addComplexType(
+    'ArrayOfDescFieldsValues',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:DescFieldValue[]')),
+    'tns:DescFieldValue'
+);
+
+$server->wsdl->addComplexType(
+    'ServiceValue',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'id'         => array('name' => 'id',         'type' => 'xsd:int'),
+        'short_name' => array('name' => 'short_name', 'type' => 'xsd:string'),
+        'is_used'    => array('name' => 'is_used',    'type' => 'xsd:int'),
+    )
+);
+
+$server->wsdl->addComplexType(
+    'ArrayOfServicesValues',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ServiceValue[]')),
+    'tns:ServiceValue'
+);
