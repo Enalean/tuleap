@@ -46,7 +46,6 @@ class User_LoginManager {
      *
      * @param String $name
      * @param String $password
-     * @param Boolean $allowpending
      * @return PFUser
      * @throws User_Exception_InvalidPasswordWithUserException
      * @throws User_Exception_InvalidPasswordException

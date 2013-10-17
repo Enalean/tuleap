@@ -17,10 +17,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Token\REST;
 
-class Rest_Exception_InvalidTokenException extends Exception {
-    public function __construct() {
-        parent::__construct("Invalid Token");
-    }
+class TokenUserAuthRepresentation {
+    /**
+     * @var string {@from body}
+     * Login of the user {@required true}
+     */
+    public $username;
+
+    /**
+     * @var string {@from body}
+     * Password of the user {@required true}
+     */
+    public $password;
 }
-?>

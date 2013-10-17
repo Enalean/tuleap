@@ -21,4 +21,5 @@
 require_once 'PFO/autoload.php';
 require_once 'project/autoload.php';
 require_once 'user/autoload.php';
+require_once 'Token/autoload.php';
 require_once 'REST/autoload.php';

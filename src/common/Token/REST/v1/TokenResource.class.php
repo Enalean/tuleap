@@ -1,0 +1,106 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+namespace Tuleap\Token\REST\v1;
+
+use \Luracast\Restler\RestException;
+use \Tuleap\Token\REST\TokenRepresentation;
+use \Tuleap\Token\REST\TokenUserAuthRepresentation;
+
+use UserManager;
+use EventManager;
+use User_LoginManager;
+
+/**
+ * Wrapper for token related REST methods
+ */
+class TokenResource {
+
+    /** @var UserManager */
+    private $user_manager;
+
+    public function __construct() {
+        $this->user_manager = UserManager::instance();
+    }
+
+    /**
+     * Generate a token for authentication
+     *
+     * @param TokenUserAuthRepresentation $authentication {@from body}
+     *
+     * @return TokenRepresentation
+     */
+    public function post(TokenUserAuthRepresentation $authentication) {
+        try {
+            $user_login = new User_LoginManager(
+                EventManager::instance(),
+                $this->user_manager
+            );
+
+            $user  = $user_login->authenticate($authentication->username, $authentication->password);
+            $token = new \Rest_Token(
+                $user->getId(),
+                'my token'
+            );
+
+            $token_manager = $this->getTokenManager();
+            $token_manager->addToken($token);
+            return new TokenRepresentation(
+                $token,
+                '/????'
+            );
+        } catch(\Exception $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+    }
+
+    /**
+     * Expire a token
+     *
+     * @param string $id Token ID
+     */
+    protected function delete($id) {
+        try {
+            $token = new \Rest_Token(
+                $this->user_manager->getCurrentUser()->getId(),
+                $id
+            );
+            $this->getTokenManager()->expireToken($token);
+        } catch(\Exception $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+    }
+
+
+    /**
+     * @url OPTIONS
+     */
+    public function options() {
+        header('Allow: POST, OPTIONS, DELETE');
+    }
+
+    private function getTokenManager() {
+        $token_dao = new \Rest_TokenDao();
+        return new \Rest_TokenManager(
+            $token_dao,
+            new \Rest_TokenFactory($token_dao),
+            $this->user_manager
+        );
+    }
+}

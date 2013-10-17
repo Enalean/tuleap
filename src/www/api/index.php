@@ -21,7 +21,7 @@ define('IS_SCRIPT', true);
 
 require_once 'pre.php';
 
-if (! session_issecure()) {
+if (! session_issecure() && ! Config::get('DEBUG_MODE')) {
     header("HTTP/1.0 403 Forbidden");
     $GLOBALS['Response']->sendJSON(array(
         'error' => 'The API is only accessible over HTTPS.'
@@ -30,8 +30,6 @@ if (! session_issecure()) {
 }
 
 require_once '/usr/share/restler/vendor/restler.php';
-require_once 'common/REST/BasicAuthentication.class.php';
-require_once 'common/REST/ResourcesInjector.class.php';
 
 use Luracast\Restler\Restler;
 use Luracast\Restler\Resources;
@@ -55,5 +53,5 @@ $core_resources_injector->populate($restler);
 EventManager::instance()->processEvent(Event::REST_RESOURCES, array('restler' => $restler));
 $restler->addAPIClass('Resources');
 
-$restler->addAuthenticationClass('\\Tuleap\\REST\\BasicAuthentication');
+$restler->addAuthenticationClass('\\Tuleap\\REST\\TokenAuthentication');
 $restler->handle();

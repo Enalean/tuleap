@@ -19,7 +19,6 @@
 
 namespace Tuleap\Project\REST;
 
-use \Luracast\Restler\RestException;
 use Project;
 
 /**
