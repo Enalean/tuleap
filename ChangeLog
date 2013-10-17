@@ -27,6 +27,7 @@ Version 6.6 (Not released yet)
 	* Fix Sla #5868 : Fix old TV3 wrong help link
 	* Fix Sla #5906 : Fix stack trace
 	* Fix request #5174: Always use POST to trigger jenkins jobs
+	* Fix request #5341: Missing types in the SOAP project API
 
 Version 6.5 (Thursday, September 19th 2013)
 
