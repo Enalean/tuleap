@@ -392,134 +392,118 @@ class UserManager {
 
     /**
      * Login the user
+     *
+     * @deprected
      * @param $name string The login name submitted by the user
      * @param $pwd string The password submitted by the user
      * @param $allowpending boolean True if pending users are allowed (for verify.php). Default is false
      * @return PFUser Registered user or anonymous if the authentication failed
      */
     function login($name, $pwd, $allowpending = false) {
-        $logged_in = false;
-        $now = $_SERVER['REQUEST_TIME'];
-        
-        $auth_success     = false;
-        $auth_user_id     = null;
-        $auth_user_status = null;
-        
-        $params = array();
-        $params['loginname']        = $name;
-        $params['passwd']           = $pwd;
-        $params['auth_success']     =& $auth_success;
-        $params['auth_user_id']     =& $auth_user_id;
-        $params['auth_user_status'] =& $auth_user_status;
-        $em = EventManager::instance();
-        $em->processEvent('session_before_login', $params);
-        
-        //If nobody answer success, look for the user into the db
-        if ($auth_success || ($dar = $this->getDao()->searchByUserName($name))) {
-            if ($auth_success || ($row = $dar->getRow())) {
-                if ($auth_success) {
-                    $this->_currentuser = $this->getUserById($auth_user_id);
-                } else {
-                    $this->_currentuser = $this->getUserInstanceFromRow($row);
-                    if ($this->_currentuser->getUserPw() == md5($pwd)) {
-                        //We have the good user, but check that he is allowed to connect
-                        $auth_success = true;
-                        $params = array('user'                => $this->_currentuser,
-                                        'allow_codendi_login' => &$auth_success);
-                        $em->processEvent('session_after_login', $params);
-                    }
-                }
-                //We retrieve the user access information  to test on it
-                $accessInfo = $this->getUserAccessInfo($this->_currentuser);
-                if ($auth_success) {
-                    //Check the status
-                    $status  = $this->_currentuser->getStatus();
-                    $allowed = $this->checkUserStatus($status, $allowpending);
-                    
-                    if ($allowed) {
-                        //Check that password is not expired
-                        if ($password_lifetime = $this->_getPasswordLifetime()) {
-                            $expired = false;
-                            $expiration_date = $now - 3600 * 24 * $password_lifetime;
-                            $warning_date = $expiration_date + 3600 * 24 * 10; //Warns 10 days before
-                            
-                            if ($this->_currentuser->getLastPwdUpdate() < $expiration_date) {
-                                $expired = true;
-                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session', 'expired_password'));
-                            } else {
-                                //warn the user that its password will expire
-                                if ($this->_currentuser->getLastPwdUpdate() < $warning_date) {
-                                    $GLOBALS['Response']->addFeedback(
-                                        'warning', 
-                                        $GLOBALS['Language']->getText(
-                                            'include_session', 
-                                            'password_will_expire', 
-                                            ceil(($this->_currentuser->getLastPwdUpdate() - $expiration_date) / ( 3600 * 24 ))
-                                        )
-                                    );
-                                }
-                            }
-                            //The password is expired. Redirect the user.
-                            if ($expired) {
-                                $GLOBALS['Response']->redirect('/account/change_pw.php?user_id='.$this->_currentuser->getId());
-                            }
-                        }
-                        //Create the session
-                        if ($session_hash = $this->getDao()->createSession($this->_currentuser->getId(), $now)) {
-                            $logged_in = true;
-                            $this->_currentuser->setSessionHash($session_hash);
-                            
-                            // If permanent login configured then cookie expires in one year from now
-                            $expire = 0;
-                            if ($this->_currentuser->getStickyLogin()) {
-                                $expire = $now + $this->_getSessionLifetime();
-                            }
-                            $this->_getCookieManager()->setCookie('session_hash', $session_hash, $expire);
-                            
-                            // Populate response with details about login attempts.
-                            //
-                            // Always display the last succefull log-in. But if there was errors (number of
-                            // bad attempts > 0) display the number of bad attempts and the last
-                            // error. Moreover, in case of errors, messages are displayed as warning
-                            // instead of info.
-                            $level = 'info';
-                            if($accessInfo['nb_auth_failure'] > 0) {
-                                $level = 'warning';
-                                $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_last_failure').' '.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $accessInfo['last_auth_failure']));
-                                $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_nb_failure').' '.$accessInfo['nb_auth_failure']);
-                            }
-                            // Display nothing if no previous record.
-                            if($accessInfo['last_auth_success'] > 0) {
-                                $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_prev_success').' '.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $accessInfo['last_auth_success']));
-                            }
-                        }
-                    }
-                } else {
-                    //invalid password or user_name
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','invalid_pwd'));
-                    $this->getDao()->storeLoginFailure($name, $now);
-                    //Add a delay when use login fail.
-                    //The delay is 2 sec/nb of bad attempt.
-                    sleep(2 * $accessInfo['nb_auth_failure']);
-                }
+        try {
+            $login_manager = new User_LoginManager(
+                EventManager::instance(),
+                $this
+            );
+            $status_manager = new User_UserStatusManager();
+
+            $user = $login_manager->login($name, $pwd);
+            if ($allowpending) {
+                $status_manager->checkStatusOnVerifyPage($user);
             } else {
-                //invalid user_name
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','invalid_pwd'));
-                
+                $status_manager->checkStatus($user);
             }
+
+            $this->openWebSession($user);
+            $this->warnUserAboutPasswordExpiration($user);
+            $this->warnUserAboutAuthenticationAttempts($user);
+
+            $this->_currentuser = $user;
+            return $this->_currentuser;
+
+        } catch (User_Exception_InvalidPasswordWithUserException $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+            $accessInfo = $this->getUserAccessInfo($exception->getUser());
+            $this->getDao()->storeLoginFailure($name, $_SERVER['REQUEST_TIME']);
+            //Add a delay when use login fail.
+            //The delay is 2 sec/nb of bad attempt.
+            sleep(2 * $accessInfo['nb_auth_failure']);
+
+        } catch (User_Exception_InvalidPasswordException $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+
+        } catch (User_Exception_PasswordExpiredException $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+            $GLOBALS['Response']->redirect('/account/change_pw.php?user_id=' . $exception->getUser()->getId());
+
+        } catch (User_Exception_StatusInvalidException $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+
+        } catch (SessionNotCreatedException $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+
+        } catch(User_Exception_LoginException $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         }
 
-        if (!$logged_in) {
-            $this->_currentuser = $this->_getUserInstanceFromRow(array('user_id' => 0));
-        }
-        
-        //cache the user
-        $this->_users[$this->_currentuser->getId()] = $this->_currentuser;
-        $this->_userid_bynames[$this->_currentuser->getUserName()] = $this->_currentuser->getId();
+        // Current user is anonymous
+        $this->_currentuser = $this->_getUserInstanceFromRow(array('user_id' => 0));
+
         return $this->_currentuser;
     }
-    
-   /**
+
+    private function openWebSession(PFUser $user) {
+        $session_hash = $this->createSession($user);
+        $user->setSessionHash($session_hash);
+
+        // If permanent login configured then cookie expires in one year from now
+        $expire = 0;
+        if ($user->getStickyLogin()) {
+            $expire = $_SERVER['REQUEST_TIME'] + $this->_getSessionLifetime();
+        }
+        $this->_getCookieManager()->setCookie('session_hash', $session_hash, $expire);
+    }
+
+    /**
+     * Populate response with details about login attempts.
+     *
+     * Always display the last succefull log-in. But if there was errors (number of
+     * bad attempts > 0) display the number of bad attempts and the last
+     * error. Moreover, in case of errors, messages are displayed as warning
+     * instead of info.
+     *
+     * @param PFUser $user
+     */
+    private function warnUserAboutAuthenticationAttempts(PFUser $user) {
+        $access_info = $this->getUserAccessInfo($user);
+        $level = 'info';
+        if ($access_info['nb_auth_failure'] > 0) {
+            $level = 'warning';
+            $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_last_failure') . ' ' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $access_info['last_auth_failure']));
+            $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_nb_failure') . ' ' . $access_info['nb_auth_failure']);
+        }
+        // Display nothing if no previous record.
+        if ($access_info['last_auth_success'] > 0) {
+            $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_prev_success') . ' ' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $access_info['last_auth_success']));
+        }
+    }
+
+    private function warnUserAboutPasswordExpiration(PFUser $user) {
+        $password_lifetime = $this->_getPasswordLifetime();
+        if ($password_lifetime) {
+            $expiration_date = $_SERVER['REQUEST_TIME'] - DateHelper::SECONDS_IN_A_DAY * $password_lifetime;
+            $warning_date = $expiration_date + DateHelper::SECONDS_IN_A_DAY * 10; //Warns 10 days before
+            if ($user->getLastPwdUpdate() < $warning_date) {
+                $expiration_delay = ceil(($user->getLastPwdUpdate() - $expiration_date) / ( DateHelper::SECONDS_IN_A_DAY ));
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::WARN,
+                    $GLOBALS['Language']->getText('include_session', 'password_will_expire', $expiration_delay)
+                );
+            }
+        }
+    }
+
+    /**
     * loginAs allows the siteadmin to log as someone else
     *
     * @param string $username
@@ -535,10 +519,13 @@ class UserManager {
         if (!$user_login_as) {
             throw new UserNotExistException();
         }
-        if (!$this->checkUserStatus($user_login_as->getStatus())) {
+        $status_manager = new User_UserStatusManager();
+        try {
+            $status_manager->checkStatus($user_login_as);
+            return $this->createSession($user_login_as);
+        } catch (User_Exception_StatusInvalidException $exception) {
             throw new UserNotActiveException();
-        }        
-        return $this->createSession($user_login_as);
+        }
     }
 
     /**
@@ -548,21 +535,27 @@ class UserManager {
      * @return type
      * @throws UserNotExistException
      * @throws UserNotActiveException
+     * @throws SessionNotCreatedException
      */
-    function openSessionForUser(PFUser $user) {
+    public function openSessionForUser(PFUser $user) {
         if (!$user) {
             throw new UserNotExistException();
         }
-        if (!$this->checkUserStatus($user->getStatus())) {
+        try {
+            $status_manager = new User_UserStatusManager();
+            $status_manager->checkStatus($user);
+            $this->openWebSession($user);
+        } catch (User_Exception_StatusInvalidException $exception) {
             throw new UserNotActiveException();
         }
-        $now = $_SERVER['REQUEST_TIME'];
-        $expire = $now + $this->_getSessionLifetime();
-        $session_hash = $this->createSession($user);
-        $user->setSessionHash($session_hash);
-        $this->_getCookieManager()->setCookie('session_hash', $session_hash, $expire);
     }
 
+    /**
+     *
+     * @param PFUser $user
+     * @return String
+     * @throws SessionNotCreatedException
+     */
     private function createSession(PFUser $user) {
         $now = $_SERVER['REQUEST_TIME'];
         $session_hash = $this->getDao()->createSession($user->getId(), $now);
@@ -571,40 +564,7 @@ class UserManager {
         }
         return $session_hash;
     }
-    
-    function checkUserStatus($status, $allowpending = false) {
-        
-        $allowed = false;
-        if (($status == 'A') || ($status == 'R') ||
-            ($allowpending && ($status == 'V' || $status == 'W' ||
-                ($GLOBALS['sys_user_approval']==0 && $status == 'P')))) {
-            $allowed =  true;
-        } else {
-            if ($status == 'S') {
-                //acount suspended
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_suspended'));
-                $allowed =  false;
-            }
-            if (($GLOBALS['sys_user_approval']==0 && ($status == 'P' || $status == 'V' || $status == 'W'))||
-                ($GLOBALS['sys_user_approval']==1 && ($status == 'V' || $status == 'W'))) {
-                //account pending
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_pending'));
-                $allowed =  false;
-            }
-            if ($status == 'D') {
-                //account deleted
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_deleted'));
-                $allowed =  false;
-            }
-            if (($status != 'A')&&($status != 'R')) {
-                //unacceptable account flag
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_not_active'));
-                $allowed =  false;
-            }
-        }
-        return $allowed;
-    }
-    
+
     /**
      * Force the login of the user.
      *

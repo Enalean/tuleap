@@ -62,6 +62,21 @@ class UserTestBuilder {
         return $this;
     }
 
+    function withPassword($hashed_password) {
+        $this->params['user_pw'] = md5($hashed_password);
+        return $this;
+    }
+
+    function withStatus($status) {
+        $this->params['status'] = $status;
+        return $this;
+    }
+
+    function withLastPasswordUpdate($timestamp) {
+        $this->params['last_pwd_update'] = $timestamp;
+        return $this;
+    }
+
     function build() {
         return new PFUser($this->params);
     }
