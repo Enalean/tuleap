@@ -217,7 +217,7 @@ class fulltextsearchPlugin extends Plugin {
             $additional_criteria .='<span class ="lab_features">';
             $additional_criteria .= '<label title="'.$GLOBALS['Language']->getText('plugin_fulltextsearch', 'search_followup_comments').'" for="tracker_report_crit_followup_search">';
             $additional_criteria .= $GLOBALS['Language']->getText('plugin_fulltextsearch', 'followups_search');
-            $additional_criteria .= '</label><br>';
+            $additional_criteria .= '</label>';
             $additional_criteria .= '<input id="tracker_report_crit_followup_search" type="text" name="search_followups" value="'.$filter.'" />';
             $additional_criteria .= '</span>';
             $params['array_of_html_criteria'][] = $additional_criteria;

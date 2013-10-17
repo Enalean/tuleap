@@ -479,24 +479,24 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             }
             $update_report .= '<ul>';
             if ($this->userCanUpdate($current_user)) {
-                    $update_report .= '<li><label><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SAVE  .'" id="tracker_report_updater_save"  />'. $GLOBALS['Language']->getText('plugin_tracker_report', 'save') .'</label></li>';
+                    $update_report .= '<li><label class="radio"><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SAVE  .'" id="tracker_report_updater_save"  />'. $GLOBALS['Language']->getText('plugin_tracker_report', 'save') .'</label></li>';
             }
             if (!$current_user->isAnonymous()) {
-                $update_report .= '<li><label><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SAVEAS  .'" id="tracker_report_updater_saveas"  />'. $GLOBALS['Language']->getText('plugin_tracker_report', 'save_as') .'</label> <input type="text" name="report_copy_name" value="Copy of '.  $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML)  .'" /></li>';
+                $update_report .= '<li><label class="radio"><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SAVEAS  .'" id="tracker_report_updater_saveas"  />'. $GLOBALS['Language']->getText('plugin_tracker_report', 'save_as') .'</label> <input type="text" name="report_copy_name" value="Copy of '.  $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML)  .'" /></li>';
             }
             if ($this->getTracker()->userIsAdmin($current_user)) {
                 $h = new HTML_Element_Input_Checkbox('Public', 'report_scope_public', ($this->user_id ? 0 : 1));
-                $update_report .= '<li><label><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SCOPE  .'" id="tracker_report_updater_scope"  />'. $GLOBALS['Language']->getText('plugin_tracker_report', 'change_visibility') .'</label> '. $h->render() .'</li>';
+                $update_report .= '<li><label class="radio"><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SCOPE  .'" id="tracker_report_updater_scope"  />'. $GLOBALS['Language']->getText('plugin_tracker_report', 'change_visibility') .'</label> '. $h->render() .'</li>';
             }
             
             if(count($reports) > 1 && $this->getTracker()->userIsAdmin($current_user)) { 
                 $h = new HTML_Element_Input_Checkbox('Default', 'report_default', ($this->is_default ? 1 : 0));
-                $update_report .= '<li><label><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_DEFAULT  .'" id="tracker_report_updater_default"  />'. $GLOBALS['Language']->getText('plugin_tracker_report', 'set_default_report') .'</label> '. $h->render() .'</li>';
+                $update_report .= '<li><label class="radio"><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_DEFAULT  .'" id="tracker_report_updater_default"  />'. $GLOBALS['Language']->getText('plugin_tracker_report', 'set_default_report') .'</label> '. $h->render() .'</li>';
             }
             
             if (count($reports) > 1) { 
                 if ($this->user_id || ($this->user_id == null && $this->getTracker()->userIsAdmin($current_user) && $this->nbPublicReport($reports) >1)) {
-                        $update_report .= '<li><label><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_DELETE  .'" id="tracker_report_updater_delete"  />'. $GLOBALS['Language']->getText('global', 'delete') .'</label></li>';
+                        $update_report .= '<li><label class="radio"><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_DELETE  .'" id="tracker_report_updater_delete"  />'. $GLOBALS['Language']->getText('global', 'delete') .'</label></li>';
                 }
             }
             $update_report .= '</ul>';
@@ -726,7 +726,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     $update_renderer .= '<input type="hidden" name="report" value="'. $this->id .'" />';
                     $update_renderer .= '<input type="hidden" name="renderer" value="'. (int)$current_renderer->id .'" />';
                     $update_renderer .= '<ul>';
-                    $update_renderer .= '<li><input type="radio" name="func" value="rename-renderer" id="tracker_renderer_updater_rename" /> <label for="tracker_renderer_updater_rename">'. $GLOBALS['Language']->getText('plugin_tracker_report','update') .'</label><br />
+                    $update_renderer .= '<li><input type="radio" name="func" value="rename-renderer" id="tracker_renderer_updater_rename" /> <label for="tracker_renderer_updater_rename">'. $GLOBALS['Language']->getText('plugin_tracker_report','update') .'</label><br /><br />
                                          <blockquote>
                                             <label for="tracker_renderer_updater_rename_name">'. $GLOBALS['Language']->getText('plugin_tracker_report','name') .'</label><br />
                                             <input type="text" 
@@ -770,7 +770,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                         $update_renderer .= '</li>';
                     }
                     $update_renderer .= '<li><input type="radio" name="func" value="delete-renderer" id="tracker_renderer_updater_delete" /> <label for="tracker_renderer_updater_delete">'. $GLOBALS['Language']->getText('plugin_tracker_report', 'delete') .'</label></li>';
-                    $update_renderer .= '</ul>';
+                    $update_renderer .= '</ul><br/>';
                     $update_renderer .= '<input type="submit" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_submit'), CODENDI_PURIFIER_CONVERT_HTML)  .'" onclick="if ($(\'tracker_renderer_updater_delete\').checked) return confirm(\''. $GLOBALS['Language']->getText('plugin_tracker_report', 'confirm_delete_renderer') .'\');"/> ';
                     $update_renderer .= '<input type="reset" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_cancel'), CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
                     $update_renderer .= '</form>';

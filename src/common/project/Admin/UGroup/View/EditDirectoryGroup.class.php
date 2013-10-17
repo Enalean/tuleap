@@ -83,16 +83,16 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
         if ($this->ldap_user_group_manager->isMembersPreserving($this->ugroup->getId()) || $this->bindOption === LDAP_GroupManager::PRESERVE_MEMBERS_OPTION) {
             $preservingChecked = 'checked';
         }
-        $content .= '<p><input type="checkbox" id="preserve_members" name="preserve_members" '.$preservingChecked.'/>';
+        $content .= '<p>';
 
-        $content .= '<label for="preserve_members">'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_info').')</label></p>';
+        $content .= '<label class="checkbox" for="preserve_members"><input type="checkbox" id="preserve_members" name="preserve_members" '.$preservingChecked.'/>'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_info').')</label></p>';
 
         $synchroChecked = '';
         if ($this->ldap_user_group_manager->isSynchronizedUgroup($this->ugroup->getId()) || $this->synchro === LDAP_GroupManager::AUTO_SYNCHRONIZATION) {
             $synchroChecked = 'checked';
         }
-        $content .= '<p><input type="checkbox" id="synchronize" name="synchronize" '.$synchroChecked.'/>';
-        $content .= '<label for="synchronize">'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_synchronize_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_synchronize_info').')</label></p>';
+        $content .= '<p>';
+        $content .= '<label class="checkbox" for="synchronize"><input type="checkbox" id="synchronize" name="synchronize" '.$synchroChecked.'/>'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_synchronize_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_synchronize_info').')</label></p>';
 
         $content .= '<input type="submit" name="submit" value="'.$btn_update.'" />';
         if($ldapGroup !== null) {

@@ -38,6 +38,15 @@ caption {
   width: 100%;
 }
 
+blockquote {
+  padding: 0 0 0 15px;
+  margin: 0 0 20px;
+  border-left: 0;
+}
+
+blockquote p {
+  font-size: 1em;
+}
 
 /**
  * Wiki
@@ -68,7 +77,6 @@ div.wikitext {
   padding: 0.5ex 0.8em;
   background: white;
   clear: both;
-  font-size: 105%;
   text-align: justify;
 }
 /* .interwiki-map thead td { text-decoration: underline; } */

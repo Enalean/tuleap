@@ -215,9 +215,10 @@ project_admin_header(array('title'=>$Language->getText('project_admin_utils','us
 
 echo '
 <h2>'.$Language->getText('project_admin_utils','user_perms').'</h2>';
-echo '<FORM action="userperms.php" name = "form_search" method="post">';
+echo '<FORM action="userperms.php" name = "form_search" method="post" class="form-inline">';
 echo $Language->getText('project_admin_utils','search_user');
 echo '&nbsp;';
+echo '<div class="input-append">';
 echo '<INPUT type="text" name="search" value="'.$pattern.'" id="search_user">
 <INPUT type="hidden" name="group_id" value="'.$group_id.'">';
 $js = "new UserAutoCompleter('search_user',
@@ -225,7 +226,7 @@ $js = "new UserAutoCompleter('search_user',
                           true);";
 $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 
-echo '<INPUT type="submit" name ="searchUser" value="'.$Language->getText('admin_main', 'search').'">';
+echo '<INPUT class="btn" type="submit" name ="searchUser" value="'.$Language->getText('admin_main', 'search').'"></div>';
 echo '</FORM>';
 /*
 $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');

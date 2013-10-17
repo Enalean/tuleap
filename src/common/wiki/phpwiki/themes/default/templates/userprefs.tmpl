@@ -151,7 +151,7 @@ if ($errmsg) $msg = HTML(HTML::h4(array('class' => 'errors'), $errmsg),HTML::hr(
    <tr><td colspan="2">
     <?=_("Get an email notification at changes of the following pages:")?><br />
     <?php if ($isForm) { ?>
-      <blockquote><textarea name="pref[notifyPages]" cols="50" rows="4"><?=$pref->get('notifyPages')?></textarea></blockquote></td>
+      <textarea name="pref[notifyPages]" cols="50" rows="4"><?=$pref->get('notifyPages')?></textarea></td>
     <td><p class="hint"><?=_("Enter pages seperated by space or comma. Wildcards (fileglobbing) allowed.")?></p></td>
     <?php } else { ?>
      <td><?=$pref->get('notifyPages')?></td><td></td>

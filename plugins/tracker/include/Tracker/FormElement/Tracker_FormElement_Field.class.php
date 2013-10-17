@@ -180,7 +180,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $html .= '<input type="hidden" id="tracker_report_criteria_'. $this->id .'_parent" value="'. $this->parent_id .'" />';
         $html .= '</label>';
 
-        $html .= '<br />';
         if ($advanced_criteria) {
             $html .=  '<div class="tracker_report_criteria">';
         }
