@@ -72,7 +72,7 @@ Requires: shared-mime-info
 # Documentation
 Requires: tuleap-documentation
 # Rest API
-Requires: php53-restler
+Requires: %{php_base}-restler
 
 %description
 Tuleap is a web based application that address all the aspects of product development.
@@ -345,7 +345,7 @@ Summary: OpenId consumer plugin
 Group: Development/Tools
 Version: @@PLUGIN_OPENID_VERSION@@
 Release: 1%{?dist}
-Requires: php53-openid
+Requires: %{php_base}-openid
 %description plugin-openid
 Connect to Tuleap using an OpenId provider
 
