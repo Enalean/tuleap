@@ -1,3 +1,30 @@
+Version 1.7 - Tuleap 6.7
+    * Fixing cardwall cards color
+
+Version 1.6 - Tuleap 6.7
+    * Fix request 5424: Cross Tracker Search gives a blank page
+
+Version 1.5 - Tuleap 6.6
+    * Fixing UI bug : cardwall header cells line color were not well displayed on small screen resolution
+
+Version 1.4 - Tuleap 6.6
+    * Fix performance issue with computed fields
+
+Version 1.3 - Tuleap 6.6
+    * no draggable items are now distinct from draggable ones
+
+Version 1.2 - Tuleap 6.6
+    * Enhancement: Add some polish on the cardwall
+
+Version 1.1 - Tuleap 6.6
+    * Do not attempt to display inconsistent items on TopContent
+
+Version 1.0 - Tuleap 6.6
+    * story #5166: Allow several type of backlog items
+    * allow to identify inconsistent items in backlog
+    * restrict planning configuration to what agile dashboard can manage
+    * better styling of content view
+
 Version 0.103 - Tuleap 6.6
     * story #5224: introduce building blocks of a Tuleap REST API. **Note to Tuleap Administrators**: We changed an apache configuration; instead of restricting /api, we now restrict /api/reference. Please adjust your /etc/httpd/conf/httpd.conf accordingly. For more details: http://gerrit.tuleap.net/1062
 

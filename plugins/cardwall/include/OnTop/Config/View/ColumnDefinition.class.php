@@ -19,17 +19,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/layout/ColorHelper.class.php';
 
-abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View {
+class Cardwall_OnTop_Config_View_ColumnDefinition {
 
     /**
      * @var array of Cardwall_OnTop_Config
      */
     protected $config;
 
+    /**
+     * @var Codendi_HTMLPurifier
+     */
+    private $hp;
+
     public function __construct(Cardwall_OnTop_Config $config) {
-        parent::__construct();
         $this->config = $config;
+        $this->hp     = Codendi_HTMLPurifier::instance();
     }
 
     /**
@@ -42,27 +48,13 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
         return $html;
     }
 
-    /**
-     * @return string
-     */
-    protected abstract function fetchSpeech();
-
-    /**
-     * @return string
-     */
-    protected abstract function fetchColumnHeader(Cardwall_Column $column);
-
-    /**
-     * @return string
-     */
-    protected abstract function fetchAdditionalColumnHeader();
-
     private function fetchMappings() {
         $html  = '';
-        $html .= '<table class="cardwall_admin_ontop_mappings"><thead><tr valign="bottom">';
+        $html .= '<table class="cardwall_admin_ontop_mappings"><thead><tr valign="top">';
         $html .= '<td></td>';
         foreach ($this->config->getDashboardColumns() as $column) {
-            $html .= '<th style="background-color: '. $column->bgcolor .'; color: '. $column->fgcolor .';">';
+            $html .= '<th>';
+            $html .= '<div class="cardwall-column-header-color" style="background-color: '. $column->bgcolor .'; color: '. $column->fgcolor .';"></div>';
             $html .= $this->fetchColumnHeader($column);
             $html .= '</th>';
         }
@@ -197,6 +189,81 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
 
         return $html;
 
+    }
+
+    protected function fetchSpeech() {
+        if (! count($this->config->getDashboardColumns())) {
+            return $this->translate('plugin_cardwall', 'on_top_semantic_freestyle_column_definition_speech_no_column');
+        } else {
+            return $this->translate('plugin_cardwall', 'on_top_semantic_freestyle_column_definition_speech_with_columns');
+        }
+    }
+
+    protected function fetchColumnHeader(Cardwall_Column $column) {
+        $html  = '<input type="text" name="column['. $column->id .'][label]" value="'. $this->purify($column->label) .'" />';
+        $html .= $this->decorateEdit($column);
+
+        return $html;
+    }
+
+    private function decorateEdit($column) {
+        $id   = 'column_'. $column->id .'_field';
+        $hexa = ColorHelper::CssRGBToHexa($column->bgcolor);
+        $html = $this->fetchSquareColor('column_'.$column->id, $column->bgcolor, 'colorpicker');
+        $html .= '<input id="'.$id .'" type="text" size="6" autocomplete="off" name="column['. $column->id .'][bgcolor]" value="'. $hexa .'" />';
+        return $html;
+    }
+
+    private function fetchSquareColor($id, $title, $classname, $img = 'blank16x16.png') {
+        $html = '';
+        $bgcolor = "background-color:$title;";
+
+        $html .= $GLOBALS['HTML']->getImage($img, array(
+            'id'     => $id,
+            'width'  => '16px',
+            'height' => '16px',
+            'style'  => 'margin-left: 5px; border: 1px solid black; vertical-align:middle; '. $bgcolor,
+            'title'  => $title,
+            'class'  => $classname,
+        ));
+        return $html;
+    }
+
+    protected function fetchAdditionalColumnHeader() {
+        $suggestion = $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_placeholder_suggestion', $this->getPlaceholderSuggestion());
+        return '<label>'. $this->translate('plugin_cardwall', 'on_top_new_column') . '<br /><input type="text" name="new_column" value="" placeholder="'. $suggestion  .'" /></label>';
+    }
+
+    /**
+     * @return string
+     */
+    private function getPlaceholderSuggestion() {
+        $placeholders = explode('|', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_placeholders'));
+        foreach ($this->config->getDashboardColumns() as $column) {
+            array_walk($placeholders, array($this, 'removeUsedColumns'), $column->getLabel());
+        }
+        $suggestion = array_shift(array_filter($placeholders));
+        return $suggestion ? $suggestion : $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_placeholder_default');
+    }
+
+    private function removeUsedColumns(&$placeholder, $key, $column_label) {
+        if (! levenshtein(soundex($column_label), soundex($placeholder))) {
+            $placeholder = '';
+        }
+    }
+
+    /**
+     * @return string
+     */
+    protected function purify($value) {
+        return $this->hp->purify($value);
+    }
+
+    /**
+     * @return string
+     */
+    protected function translate($page, $category, $args = "") {
+        return $GLOBALS['Language']->getText($page, $category, $args);
     }
 }
 ?>

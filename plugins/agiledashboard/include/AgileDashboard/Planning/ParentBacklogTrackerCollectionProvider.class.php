@@ -38,20 +38,20 @@ class AgileDashboard_Planning_ParentBacklogTrackerCollectionProvider {
     /** @return Tracker[] */
     public function getParentBacklogTrackerCollection(Tracker $backlog_tracker, Planning_Milestone $milestone) {
         $trackers                  = array($backlog_tracker);
-        $milestone_backlog_tracker = $milestone->getPlanning()->getBacklogTracker();
+        $milestone_backlog_tracker_ids = $milestone->getPlanning()->getBacklogTrackersIds();
         $current_backlog_tracker   = $backlog_tracker;
-        if ($current_backlog_tracker == $milestone_backlog_tracker) {
-            return array($milestone_backlog_tracker);
+        if (in_array($current_backlog_tracker->getId(), $milestone_backlog_tracker_ids)) {
+            return array($current_backlog_tracker);
         }
 
-        while (($parent = $current_backlog_tracker->getParent()) && $parent != $milestone_backlog_tracker) {
+        while (($parent = $current_backlog_tracker->getParent()) && ! in_array($parent->getId(), $milestone_backlog_tracker_ids)) {
             $trackers[] = $parent;
             $current_backlog_tracker = $parent;
         }
         if (! $parent) {
             return array();
         }
-        if ($parent == $milestone_backlog_tracker) {
+        if (in_array($parent->getId(), $milestone_backlog_tracker_ids)) {
             $trackers[] = $parent;
         }
 

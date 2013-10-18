@@ -652,23 +652,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 break;
 
             default:
-                $nothing_has_been_done = true;
-                EventManager::instance()->processEvent(
-                    TRACKER_EVENT_PROCESS,
-                    array(
-                        'func'                  => $func,
-                        'tracker'               => $this,
-                        'layout'                => $layout,
-                        'request'               => $request,
-                        'user'                  => $current_user,
-                        'nothing_has_been_done' => &$nothing_has_been_done,
-                    )
-                );
-                if ($nothing_has_been_done) {
-                    //If there is nothing to do, display a report
-                    if ($this->userCanView($current_user)) {
-                        $this->displayAReport($layout, $request, $current_user);
-                    }
+                if ($this->userCanView($current_user)) {
+                    $this->displayAReport($layout, $request, $current_user);
                 }
                 break;
         }
@@ -1111,13 +1096,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-delete.png'),
                 ),
         );
-        EventManager::instance()->processEvent(
-            TRACKER_EVENT_ADMIN_ITEMS, 
-            array(
-                'tracker' => $this,
-                'items'   => &$items
-            )
-        );
+
         return $items;
     }
 

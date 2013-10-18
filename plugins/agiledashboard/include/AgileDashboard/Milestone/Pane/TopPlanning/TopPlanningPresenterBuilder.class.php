@@ -51,12 +51,19 @@ class AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningPresenterBuilder {
         $this->submilestone_presenter_factory = $submilestone_presenter_factory;
     }
 
+    /**
+     *
+     * @param PFUser $user
+     * @param Planning_Milestone $milestone
+     * @param Tracker $milestone_tracker
+     * @return AgileDashboard_Milestone_Pane_Planning_PlanningPresenter
+     */
     public function getMilestoneTopPlanningPresenter(PFUser $user, Planning_Milestone $milestone, Tracker $milestone_tracker) {
         $redirect_paremeter     = new Planning_MilestoneRedirectParameter();
         $backlog_strategy       = $this->strategy_factory->getSelfBacklogStrategy($milestone);
         $redirect_to_self       = $redirect_paremeter->getPlanningRedirectToSelf($milestone, AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningPaneInfo::IDENTIFIER);
 
-        $backlog_collection = $this->collection_factory->getUnplannedOpenCollection(
+        $backlog_collection = $this->collection_factory->getUnassignedOpenCollection(
             $user,
             $milestone,
             $backlog_strategy,
@@ -70,12 +77,12 @@ class AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningPresenterBuilder {
             $milestone_collection,
             $milestone,
             $backlog_collection->getParentItemName(),
-            $backlog_strategy->getItemTracker()->getName(),
             $milestone_collection->getName(),
             $milestone_collection->getSubmitNewUrlLinkedToTracker($milestone_tracker),
             $milestone_collection->canCreateNew($user),
             $this->can_plan,
-            $redirect_to_self
+            $redirect_to_self,
+            $backlog_strategy->getTrackersWithoutInitialEffort()
         );
     }
 

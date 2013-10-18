@@ -92,7 +92,7 @@ class Tracker_Action_CreateArtifact {
     
     private function getRedirect(Codendi_Request $request, PFUser $current_user, Tracker_Artifact $artifact) {
         $redirect = $this->redirectUrlAfterArtifactSubmission($request, $this->tracker->getId(), $artifact->getId());
-        $this->redirectToParentCreationIfNeeded($artifact, $current_user, $redirect);
+        $this->redirectToParentCreationIfNeeded($artifact, $current_user, $redirect, $request);
         $artifact->summonArtifactRedirectors($request, $redirect);
         return $redirect;
     }
@@ -117,23 +117,39 @@ class Tracker_Action_CreateArtifact {
         return false;
     }
 
-    protected function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect) {
+    protected function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect, Codendi_Request $request) {
         $parent_tracker = $this->tracker->getParent();
-        if ($parent_tracker) {
-            if (count($artifact->getAllAncestors($current_user)) == 0) {
-                $art_link = $this->formelement_factory->getAnArtifactLinkField($current_user, $parent_tracker);
-                if ($art_link) {
-                    $art_link_key = 'artifact['.$art_link->getId().'][new_values]';
-                    $redirect_params = array(
-                        'tracker'     => $parent_tracker->getId(),
-                        'func'        => 'new-artifact',
-                        $art_link_key => $artifact->getId()
-                    );
-                    $redirect->mode             = Tracker_Artifact_Redirect::STATE_CREATE_PARENT;
-                    $redirect->query_parameters = $redirect_params;
-                }
+        if ($parent_tracker && count($artifact->getAllAncestors($current_user)) == 0) {
+            $art_link    = $this->formelement_factory->getAnArtifactLinkField($current_user, $parent_tracker);
+
+            if ($art_link && $this->isParentCreationRequested($request, $current_user)) {
+                $art_link_key = 'artifact['.$art_link->getId().'][new_values]';
+                $redirect_params = array(
+                    'tracker'     => $parent_tracker->getId(),
+                    'func'        => 'new-artifact',
+                    $art_link_key => $artifact->getId()
+                );
+                $redirect->mode             = Tracker_Artifact_Redirect::STATE_CREATE_PARENT;
+                $redirect->query_parameters = $redirect_params;
             }
         }
+    }
+
+    private function isParentCreationRequested(Codendi_Request $request, PFUser $current_user) {
+        $request_data           = $request->get('artifact');
+        $artifact_link_field    = $this->formelement_factory->getAnArtifactLinkField($current_user, $this->tracker);
+
+        if (! $artifact_link_field) {
+            return false;
+        }
+
+        $art_link_id  = $artifact_link_field->getId();
+
+        if (isset($request_data[$art_link_id]) && isset($request_data[$art_link_id]['parent'])) {
+            return $request_data[$art_link_id]['parent'] == Tracker_FormElement_Field_ArtifactLink::CREATE_NEW_PARENT_VALUE;
+        }
+
+        return false;
     }
 
     protected function redirectUrlAfterArtifactSubmission(Codendi_Request $request, $tracker_id, $artifact_id) {

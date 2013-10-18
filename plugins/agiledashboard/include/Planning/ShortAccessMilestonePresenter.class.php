@@ -80,7 +80,7 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
         return '';
     }
 
-    public function getBacklogTrackerId() {
+    public function getBacklogTrackersIds() {
         return $this->milestone->getTrackerId();
     }
 

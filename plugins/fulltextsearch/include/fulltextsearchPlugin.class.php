@@ -88,10 +88,14 @@ class fulltextsearchPlugin extends Plugin {
     public function search_type($params) {
         if ($this->getCurrentUser()->useLabFeatures()) {
             if ($params['type_of_search'] === self::SEARCH_TYPE) {
-                $params['search_type']        = true;
-                $params['pagination_handled'] = true;
+                try {
+                    $this->getSearchController()->search();
 
-                $this->getSearchController()->search();
+                    $params['search_type']        = true;
+                    $params['pagination_handled'] = true;
+                } catch (ElasticSearch_ClientNotFoundException $exception) {
+                    $this->clientIsNotFound($exception);
+                }
             }
         }
     }
@@ -208,6 +212,10 @@ class fulltextsearchPlugin extends Plugin {
      * @return Void
      */
     public function tracker_event_report_display_additional_criteria($params) {
+        if (! $params['tracker']) {
+            return;
+        }
+
         if ($this->tracker_followup_check_preconditions($params['tracker']->getGroupId())) {
             $request = HTTPRequest::instance();
             $hp      = Codendi_HTMLPurifier::instance();
@@ -255,7 +263,10 @@ class fulltextsearchPlugin extends Plugin {
             $index_status = $this->getAdminController()->getIndexStatus();
         } catch (ElasticSearchTransportHTTPException $e) {
             return false;
+        } catch (ElasticSearch_ClientNotFoundException $exception) {
+            return false;
         }
+
         return $this->isAllowed($group_id) && $this->getCurrentUser()->useLabFeatures();
     }
 
@@ -281,9 +292,13 @@ class fulltextsearchPlugin extends Plugin {
             return;
         }
 
-        $controller         = $this->getSearchController('tracker');
-        $params['result'][] = $controller->search($params['request']);
-        $params['search_performed'] = true;
+        try {
+            $controller         = $this->getSearchController('tracker');
+            $params['result'][] = $controller->search($params['request']);
+            $params['search_performed'] = true;
+        } catch (ElasticSearch_ClientNotFoundException $exception) {
+            // do nothing
+        }
     }
 
     /**
@@ -434,10 +449,16 @@ class fulltextsearchPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
+    /**
+     * @throws ElasticSearch_ClientNotFoundException
+     */
     private function getSearchController($type = self::SEARCH_DOCMAN_TYPE) {
         return new FullTextSearch_Controller_Search($this->getRequest(), $this->getSearchClient($type));
     }
 
+    /**
+     * @throws ElasticSearch_ClientNotFoundException
+     */
     private function getAdminController() {
         return new FullTextSearch_Controller_Admin($this->getRequest(), $this->getSearchAdminClient());
     }
@@ -457,12 +478,22 @@ class fulltextsearchPlugin extends Plugin {
             header('Location: ' . get_server_url());
         }
 
-        $controller = $this->getAdminController();
-        if ($request->get('words')) {
+        try {
+            $controller = $this->getAdminController();
+            if ($request->get('words')) {
                 $controller->search();
-        } else {
+            } else {
                 $controller->index();
+            }
+        } catch (ElasticSearch_ClientNotFoundException $exception) {
+            $this->clientIsNotFound($exception);
         }
+    }
+
+    private function clientIsNotFound(ElasticSearch_ClientNotFoundException $exception) {
+        $GLOBALS['Response']->addFeedback('error', $exception->getMessage());
+        $GLOBALS['HTML']->redirect('/');
+        die();
     }
 }
 

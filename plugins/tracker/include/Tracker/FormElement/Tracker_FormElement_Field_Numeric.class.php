@@ -76,11 +76,11 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      * @return mixed
      */
     private function getCurrentComputedValue(Tracker_Artifact $artifact) {
-        $value = $artifact->getValue($this);
-        if ($value) {
-            return $value->getValue();
+        $row = $this->getValueDao()->getLastValue($artifact->getId(), $this->getId());
+        if ($row) {
+            return $row['value'];
         }
-        return null;
+        return 0;
     }
 
     public function getQuerySelect() {

@@ -1,3 +1,31 @@
+Version 5.175 - Tuleap 6.7
+    * Fixing cardwall cards color
+
+Version 5.174 - Tuleap 6.6
+    * Fix: AgileDashboard edit in place bug and UI: card title margins
+
+Version 5.173 - Tuleap 6.6
+    * Fixing UI bug : cardwall header cells line color were not well displayed on small screen resolution
+
+Version 5.172 - Tuleap 6.6
+    * Fix performance issue with computed fields
+
+Version 5.171 - Tuleap 6.6
+    * Fixing bug request #5377. X-refs for trackers have wrong urls.
+
+Version 5.170 - Tuleap 6.6
+    * Fix top backlog content display
+
+Version 5.169 - Tuleap 6.6
+    * Enhancement: Add some polish on the cardwall
+
+Version 5.168 - Tuleap 6.6
+    * Fix XML import/export
+    * Various internal refactoring to support several backlog types in
+      agile dashboard
+    * Move cardwall configuration out of tracker admin (now in agile
+      dashboard itself)
+
 Version 5.167 - Tuleap 6.6
     * Fix Sla #5870 : Be able to remove tracker admin access right
 

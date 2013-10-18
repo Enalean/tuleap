@@ -209,6 +209,14 @@ class GitPlugin extends Plugin {
                     $this->getGerritDriver()
                 );
                 break;
+            case SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME:
+                $params['class'] = 'SystemEvent_GIT_GERRIT_PROJECT_READONLY';
+                $params['dependencies'] = array(
+                    $this->getRepositoryFactory(),
+                    $this->getGerritServerFactory(),
+                    $this->getGerritDriver()
+                );
+                break;
             default:
                 break;
         }
@@ -950,13 +958,20 @@ class GitPlugin extends Plugin {
     }
 
     private function getGitController() {
+        $project_manager = ProjectManager::instance();
+
         return new Git(
             $this,
             $this->getGerritServerFactory(),
             $this->getGerritDriver(),
             $this->getRepositoryManager(),
             $this->getGitSystemEventManager(),
-            new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory())
+            new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory()),
+            new GitRepositoryFactory(new GitDao(), $project_manager),
+            UserManager::instance(),
+            $project_manager,
+            PluginManager::instance(),
+            HTTPRequest::instance()
         );
     }
 

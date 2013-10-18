@@ -83,7 +83,7 @@ class GitViews_ShowRepo_Content {
         $html  = '';
         $html .= '<div id="plugin_git_reference" class="plugin_git_repo_type_'. $this->repository->getBackendType() .'">';
         $html .= $this->getHeader();
-        if ($this->repository->getRemoteServerId()) {
+        if ($this->repository->isMigratedToGerrit()) {
             $html .= $this->getRemoteRepositoryInfo();
         }
         $html .= $this->getCloneUrl();
@@ -190,7 +190,7 @@ class GitViews_ShowRepo_Content {
 
     private function getAccessURLs() {
         $urls = $this->repository->getAccessURL();
-        if ($this->repository->getRemoteServerId()) {
+        if ($this->repository->isMigratedToGerrit()) {
             $gerrit_user = $this->gerrit_usermanager->getGerritUser($this->current_user);
             $gerrit_server  = $this->gerrit_servers[$this->repository->getRemoteServerId()];
             $gerrit_project = $this->driver->getGerritProjectName($this->repository);

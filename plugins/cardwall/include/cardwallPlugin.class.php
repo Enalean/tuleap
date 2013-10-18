@@ -50,8 +50,6 @@ class cardwallPlugin extends Plugin {
             $this->addHook('javascript_file');
             $this->addHook('tracker_report_renderer_types');
             $this->addHook('tracker_report_renderer_instance');
-            $this->addHook(TRACKER_EVENT_ADMIN_ITEMS);
-            $this->addHook(TRACKER_EVENT_PROCESS);
             $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
             $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION);
             $this->addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE);
@@ -67,6 +65,8 @@ class cardwallPlugin extends Plugin {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_INFO_ON_MILESTONE);
                 $this->addHook(AGILEDASHBOARD_EVENT_INDEX_PAGE);
                 $this->addHook(AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT);
+                $this->addHook(AGILEDASHBOARD_EVENT_PLANNING_CONFIG);
+                $this->addHook(AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE);
             }
         }
         return parent::getHooksAndCallbacks();
@@ -242,53 +242,9 @@ class cardwallPlugin extends Plugin {
         echo PHP_EOL;
     }
 
-    function tracker_event_admin_items($params) {
-        $params['items']['plugin_cardwall'] = array(
-            'url'         => TRACKER_BASE_URL.'/?tracker='. $params['tracker']->getId() .'&amp;func=admin-cardwall',
-            'short_title' => $GLOBALS['Language']->getText('plugin_cardwall','on_top_short_title'),
-            'title'       => $GLOBALS['Language']->getText('plugin_cardwall','on_top_title'),
-            'description' => $GLOBALS['Language']->getText('plugin_cardwall','on_top_description'),
-            'img'         => $this->getThemePath() .'/images/ic/48/sticky-note.png',
-        );
-    }
-
-    function tracker_event_process($params) {
-        $tracker          = $params['tracker'];
-        $tracker_id       = $tracker->getId();
-        if (strpos($params['func'], 'admin-cardwall') !== false && ! $tracker->userIsAdmin($params['user'])) {
-            $this->denyAccess($tracker_id);
-        }
-
-        $token            = $this->getCSRFToken($tracker_id);
-        switch ($params['func']) {
-            case 'admin-cardwall':
-
-                $admin_view = new Cardwall_View_Admin();
-                $config     = $this->getConfigFactory()->getOnTopConfig($tracker);
-                $admin_view->displayAdminOnTop($params['layout'], $token, $config);
-                $params['nothing_has_been_done'] = false;
-                break;
-            case 'admin-cardwall-update':
-                $token->check();
-                $this->getConfigFactory()->getOnTopConfigUpdater($tracker)
-                        ->process($params['request']);
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&func=admin-cardwall');
-                break;
-        }
-    }
-
     private function denyAccess($tracker_id) {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
         $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id);
-    }
-
-
-    /**
-     * @return CSRFSynchronizerToken
-     */
-    private function getCSRFToken($tracker_id) {
-        require_once 'common/include/CSRFSynchronizerToken.class.php';
-        return new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update');
     }
 
     public function agiledashboard_event_additional_panes_on_milestone($params) {
@@ -425,10 +381,7 @@ class cardwallPlugin extends Plugin {
         $cardwall_xml_export = new CardwallConfigXmlExport(
             $params['project'],
             $tracker_factory,
-            new Cardwall_OnTop_ConfigFactory(
-                $tracker_factory,
-                Tracker_FormElementFactory::instance()
-            ),
+            $this->getConfigFactory(),
             new XmlValidator()
         );
 
@@ -442,8 +395,47 @@ class cardwallPlugin extends Plugin {
      */
     public function import_xml_project_tracker_done($params) {
         include_once 'common/XmlValidator/XmlValidator.class.php';
-        $cardwall_ontop_import = new CardwallConfigXmlImport($params['project_id'], $params['mapping'], new Cardwall_OnTop_Dao, EventManager::instance(), new XmlValidator());
+        $cardwall_ontop_import = new CardwallConfigXmlImport(
+            $params['project_id'],
+            $params['mapping'],
+            new Cardwall_OnTop_Dao,
+            new Cardwall_OnTop_ColumnDao,
+            EventManager::instance(),
+            new XmlValidator()
+        );
         $cardwall_ontop_import->import($params['xml_content']);
+    }
+
+    /**
+     * Fetches HTML
+     *
+     * @param array $params parameters sent by Event
+     *
+     * Parameters:
+     *  'tracker' => The planning tracker
+     *  'view'    => A string of HTML
+     */
+    public function agiledashboard_event_planning_config($params) {
+        $tracker = $params['tracker'];
+        $config  = $this->getConfigFactory()->getOnTopConfig($tracker);
+
+        $admin_view = new Cardwall_OnTop_Config_View_Admin();
+        $params['view'] = $admin_view->displayAdminOnTop($config);
+    }
+
+    /**
+     * @param array $params parameters sent by Event
+     *
+     * Parameters:
+     *  'tracker' => The planning tracker
+     *  'request' => The Request
+     */
+    public function agiledashboard_event_planning_config_update($params) {
+        $request = $params['request'];
+        $request->set('use_freestyle_columns', 1);
+
+        $this->getConfigFactory()->getOnTopConfigUpdater($params['tracker'])
+                ->process($request);
     }
 
     /**

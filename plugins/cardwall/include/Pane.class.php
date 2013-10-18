@@ -134,7 +134,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $pane_board_builder     = new Cardwall_PaneBoardBuilder($presenter_builder, $this->artifact_factory, new AgileDashboard_BacklogItemDao(), $swimline_factory);
         $board                  = $pane_board_builder->getBoard($this->user, $this->milestone->getArtifact(), $columns, $mapping_collection);
 
-        $backlog_title       = $this->milestone->getPlanning()->getBacklogTracker()->getName();
         $redirect_parameter  = 'cardwall[agile]['. $planning->getId() .']='. $this->milestone->getArtifactId();
 
 
@@ -143,8 +142,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             $board,
             $this->getQrCode(),
             $redirect_parameter,
-            $backlog_title,
-            $this->canConfigure(),
             $this->getSwitchDisplayAvatarsURL(),
             $display_preferences->shouldDisplayAvatars(),
             $planning
@@ -152,7 +149,11 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     }
 
     private function getMappingCollection(Planning $planning, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
-        $trackers_used_on_cardwall = $planning->getBacklogTracker()->getChildren();
+        $trackers_used_on_cardwall = array();
+
+        foreach ($planning->getBacklogTrackers() as $backlog_tracker) {
+            $trackers_used_on_cardwall[] = $backlog_tracker->getChildren();
+        }
 
         return $this->config->getCardwallMappings(
             $this->getIndexedStatusFieldsOf($trackers_used_on_cardwall, $field_provider),
@@ -161,7 +162,11 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     }
 
     private function getIndexedStatusFieldsOf(array $trackers, $field_provider) {
-        $status_fields          = array_filter(array_map(array($field_provider, 'getField'), $trackers));
+        $status_fields = array();
+
+        foreach ($trackers as $tracker) {
+            $status_fields = array_merge($status_fields, array_filter(array_map(array($field_provider, 'getField'), $tracker)));
+        }
         $indexed_status_fields  = $this->indexById($status_fields);
         return $indexed_status_fields;
     }
@@ -180,15 +185,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $display_avatars = $this->user->isAnonymous() || ! $this->user->getPreference($pref_name);
 
         return new Cardwall_UserPreferences_UserPreferencesDisplayUser($display_avatars);
-    }
-
-    private function canConfigure() {
-        $project = $this->milestone->getProject();
-        if ($project->userIsAdmin($this->user)){
-            $configure_url      = TRACKER_BASE_URL .'/?tracker='. $this->milestone->getTrackerId() .'&func=admin-cardwall';
-            return $configure_url;
-        }
-        return false;
     }
 
     /**

@@ -63,10 +63,10 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
         stub($hierarchy_factory)->getParent($this->epic_tracker)->returns($this->theme_tracker);
         stub($hierarchy_factory)->getParent($this->story_tracker)->returns($this->epic_tracker);
 
-        $corp_planning    = stub('Planning')->getBacklogTracker()->returns($this->theme_tracker);
-        $product_planning = stub('Planning')->getBacklogTracker()->returns($this->epic_tracker);
-        $release_planning = stub('Planning')->getBacklogTracker()->returns($this->epic_tracker);
-        $sprint_planning  = stub('Planning')->getBacklogTracker()->returns($this->story_tracker);
+        $corp_planning    = stub('Planning')->getBacklogTrackers()->returns(array($this->theme_tracker));
+        $product_planning = stub('Planning')->getBacklogTrackers()->returns(array($this->epic_tracker));
+        $release_planning = stub('Planning')->getBacklogTrackers()->returns(array($this->epic_tracker));
+        $sprint_planning  = stub('Planning')->getBacklogTrackers()->returns(array($this->story_tracker));
 
         $planning_factory = mock('PlanningFactory');
         stub($planning_factory)->getPlanningByPlanningTracker($this->corp_tracker)->returns($corp_planning);

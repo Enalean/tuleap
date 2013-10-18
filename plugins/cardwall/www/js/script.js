@@ -36,10 +36,23 @@ document.observe('dom:loaded', function () {
         })();
 
         (function defineDraggableCards(){
+
             board.select('.cardwall_board_postit').each(function (postit) {
+                function start_effect(element) {
+                    Draggable._dragging[element] = true;
+                    element.addClassName('cardwall_board_postit_flying');
+                }
+
+                function end_effect(element) {
+                    Draggable._dragging[element] = false;
+                    element.removeClassName('cardwall_board_postit_flying');
+                }
+
                 new Draggable(postit, {
                     revert: 'failure',
-                    delay: 175
+                    delay: 175,
+                    starteffect: start_effect,
+                    endeffect: end_effect
                 });
             });
         })();

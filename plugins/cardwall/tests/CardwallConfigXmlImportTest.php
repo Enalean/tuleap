@@ -22,13 +22,6 @@
 require_once dirname(__FILE__) .'/bootstrap.php';
 require_once 'common/XmlValidator/XmlValidator.class.php';
 
-class CardwallConfigXmlImportTestInstance extends CardwallConfigXmlImport {
-
-    public function getAllTrackersId($xml) {
-        return parent::getAllTrackersId($xml);
-    }
-}
-
 class CardwallConfigXmlImportTest extends TuleapTestCase {
 
     public function setUp() {
@@ -55,7 +48,14 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
               <cardwall>
                 <trackers>
                     <tracker id="T101"/>
-                    <tracker id="T102"/>
+                    <tracker id="T102">
+                        <columns>
+                            <column label="Todo"/>
+                            <column label="On going"/>
+                            <column label="Review"/>
+                            <column label="Done"/>
+                        </columns>
+                    </tracker>
                 </trackers>
               </cardwall>
               <agiledashboard/>
@@ -63,21 +63,32 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
 
         $this->mapping                    = array("T101" => 444, "T102" => 555, "T103" => 666);
         $this->cardwall_ontop_dao         = stub('Cardwall_OnTop_Dao')->enable()->returns(true);
+        $this->column_dao                 = mock('Cardwall_OnTop_ColumnDao');
         $this->group_id                   = 145;
         $this->event_manager              = mock('EventManager');
         $this->xml_validator              = stub('XmlValidator')->nodeIsValid()->returns(true);
-        $this->cardwall_config_xml_import = new CardwallConfigXmlImportTestInstance($this->group_id, $this->mapping, $this->cardwall_ontop_dao, $this->event_manager, $this->xml_validator);
-    }
-
-    public function itReturnsAllTrackersIdWithACardwall() {
-        $expected    = array(444,555);
-        $tracker_ids = $this->cardwall_config_xml_import->getAllTrackersId($this->xml_input);
-
-        $this->assertEqual($tracker_ids, $expected);
+        $this->cardwall_config_xml_import = new CardwallConfigXmlImport(
+            $this->group_id,
+            $this->mapping,
+            $this->cardwall_ontop_dao,
+            $this->column_dao,
+            $this->event_manager,
+            $this->xml_validator
+        );
     }
 
     public function itStoresAllTheCardwallOnTop() {
-        $this->cardwall_ontop_dao->expectCallCount('enable', 2);
+        expect($this->cardwall_ontop_dao)->enable()->count(2);
+        expect($this->cardwall_ontop_dao)->enableFreestyleColumns()->count(2);
+        $this->cardwall_config_xml_import->import($this->xml_input);
+    }
+
+    public function itCreatesTheFreestyleColumns() {
+        expect($this->column_dao)->create()->count(4);
+        expect($this->column_dao)->create(555, 'Todo')->at(0);
+        expect($this->column_dao)->create(555, 'On going')->at(1);
+        expect($this->column_dao)->create(555, 'Review')->at(2);
+        expect($this->column_dao)->create(555, 'Done')->at(3);
         $this->cardwall_config_xml_import->import($this->xml_input);
     }
 
@@ -97,7 +108,7 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
 
     public function itDoesNotProcessAnEventIfAtLeastOneCardwallCannotBeEnabledAndThrowsAnException() {
         $cardwall_ontop_dao         = stub('Cardwall_OnTop_Dao')->enable()->returns(false);
-        $cardwall_config_xml_import = new CardwallConfigXmlImportTestInstance($this->group_id, $this->mapping, $cardwall_ontop_dao, $this->event_manager, $this->xml_validator);
+        $cardwall_config_xml_import = new CardwallConfigXmlImport($this->group_id, $this->mapping, $cardwall_ontop_dao, $this->column_dao, $this->event_manager, $this->xml_validator);
 
         expect($this->event_manager)->processEvent(
             Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
@@ -115,7 +126,7 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
 
     public function itThrowsAnExceptionIfXmlDoesNotMatchRNG() {
          $xml_validator              = stub('XmlValidator')->nodeIsValid()->returns(false);
-         $cardwall_config_xml_import = new CardwallConfigXmlImportTestInstance($this->group_id, $this->mapping, $this->cardwall_ontop_dao, $this->event_manager, $xml_validator);
+         $cardwall_config_xml_import = new CardwallConfigXmlImport($this->group_id, $this->mapping, $this->cardwall_ontop_dao, $this->column_dao, $this->event_manager, $xml_validator);
 
          $this->expectException('CardwallFromXmlInputNotWellFormedException');
          $cardwall_config_xml_import->import($this->xml_input);

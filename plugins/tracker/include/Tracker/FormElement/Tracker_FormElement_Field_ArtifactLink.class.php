@@ -21,6 +21,8 @@
 
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
+    const CREATE_NEW_PARENT_VALUE = -1;
+
     /**
      * @var Tracker_ArtifactFactory
      */
@@ -298,7 +300,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_choose_parent', $parent_tracker->getItemName());
             $html .= '<select name="'. $name .'[parent]">';
             $html .= '<option value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
-            $html .= '<option value="-1">'. $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_create_new_parent') .'</option>';
+            $html .= '<option value="'.self::CREATE_NEW_PARENT_VALUE.'">'. $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_create_new_parent') .'</option>';
             $html .= $this->fetchArtifactParentsOptions($prefill_parent, $label, $possible_parents, $hp);
             $html .= '</select>';
             $html .= '</label>';
@@ -1020,10 +1022,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 }
             }
         }
-        if (isset($value['parent']) && empty($value['parent'])) {
-            $is_valid = false;
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_choose_parent'));
-        }
+
         return $is_valid;
     }
     

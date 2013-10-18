@@ -49,7 +49,7 @@ class Cardwall_PaneInfo extends AgileDashboard_PaneInfo {
      * @see AgileDashboard_Pane::getIcon()
      */
     protected function getIcon() {
-        return $this->plugin_theme_path .'/images/ic/sticky-note-pin.png';
+        return $this->plugin_theme_path .'/images/ic/sticky-note.png';
     }
 
     /**

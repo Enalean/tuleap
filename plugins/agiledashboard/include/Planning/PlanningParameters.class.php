@@ -26,27 +26,27 @@ class PlanningParameters {
     const NAME                  = 'name';
     const BACKLOG_TITLE         = 'backlog_title';
     const PLANNING_TITLE        = 'plan_title';
-    const BACKLOG_TRACKER_ID    = 'backlog_tracker_id';
+    const BACKLOG_TRACKER_IDS   = 'backlog_tracker_ids';
     const PLANNING_TRACKER_ID   = 'planning_tracker_id';
-    
+
     public $name;
     public $backlog_title;
     public $plan_title;
-    public $backlog_tracker_id;
+    public $backlog_tracker_ids;
     public $planning_tracker_id;
-    
+
     public static function fromArray(array $array) {
         $parameters = new PlanningParameters();
-        
+
         $parameters->name                = PlanningParameters::get($array, self::NAME);
         $parameters->backlog_title       = PlanningParameters::get($array, self::BACKLOG_TITLE);
         $parameters->plan_title          = PlanningParameters::get($array, self::PLANNING_TITLE);
-        $parameters->backlog_tracker_id  = PlanningParameters::get($array, self::BACKLOG_TRACKER_ID);
+        $parameters->backlog_tracker_ids = PlanningParameters::get($array, self::BACKLOG_TRACKER_IDS);
         $parameters->planning_tracker_id = PlanningParameters::get($array, self::PLANNING_TRACKER_ID);
-        
+
         return $parameters;
     }
-    
+
     private static function get($array, $key) {
         return array_key_exists($key, $array) ? $array[$key] : '';
     }

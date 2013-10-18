@@ -348,6 +348,62 @@ class Tracker_ArtifactFactory {
     }
 
     /**
+     * Return children of all given artifacts.
+     *
+     * @param PFUser $user
+     * @param Tracker_Artifact[] $artifacts
+     * @return Tracker_Artifact[]
+     */
+    public function getChildrenForArtifacts(PFUser $user, array $artifacts) {
+        $children = array();
+        if (count($artifacts) > 1) {
+            foreach ($this->getDao()->getChildrenForArtifacts($this->getArtifactIds($artifacts))->instanciateWith(array($this, 'getInstanceFromRow')) as $artifact) {
+                if ($artifact->userCanView($user)) {
+                    $children[] = $artifact;
+                }
+            }
+        }
+        return $children;
+    }
+
+    private function getArtifactIds(array $artifacts) {
+        return array_map(array($this, 'getArtifactId'), $artifacts);
+    }
+
+    private function getArtifactId(Tracker_Artifact $artifact) {
+        return $artifact->getId();
+    }
+
+    /**
+     * Sort an array of artifact according to their priority
+     *
+     * Nota: it's better to do it directly in SQL.
+     *
+     * @param Tracker_Artifact[] $artifacts
+     * @return Tracker_Artifact[]
+     */
+    public function sortByPriority(array $artifacts) {
+        if (! $artifacts) {
+            return $artifacts;
+        }
+
+        $sorted_artifacts = array();
+        $ids              = array_map(array($this, 'getArtifactId'), $artifacts);
+
+        if($ids) {
+            $artifacts        = array_combine($ids, $artifacts);
+            $sorted_ids       = $this->getDao()->getIdsSortedByPriority($ids);
+            $sorted_artifacts = array_flip($sorted_ids);
+        }
+
+        foreach ($sorted_artifacts as $id => $nop) {
+            $sorted_artifacts[$id] = $artifacts[$id];
+        }
+
+        return $sorted_artifacts;
+    }
+
+    /**
      * Build the list of parents according to a list of artifact ids
      *
      * @param int[] $artifact_ids
@@ -388,6 +444,30 @@ class Tracker_ArtifactFactory {
                 }
             }
         }
+    }
+
+    /**
+     * Filters a list of artifact IDs.
+     * For each artifact, checks if it is linked by another artifact belonging
+     * to a set of trackers.
+     *
+     * @param array $artifact_ids
+     * @param array $tracker_ids
+     * @return array Hash array where keys are artifact IDs
+     */
+    public function getArtifactIdsLinkedToTrackers($artifact_ids, $tracker_ids) {
+        $filtered_ids = array();
+
+        $result = $this->getDao()->getArtifactIdsLinkedToTrackers($artifact_ids, $tracker_ids);
+        if (! $result) {
+            return $filtered_ids;
+        }
+
+        foreach ($result as $row) {
+            $filtered_ids[$row['id']] = true;
+        }
+
+        return $filtered_ids;
     }
 }
 ?>

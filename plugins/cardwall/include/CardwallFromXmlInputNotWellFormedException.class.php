@@ -20,8 +20,8 @@
  */
 
 class CardwallFromXmlInputNotWellFormedException extends Exception {
-    public function __construct() {
-        $message = 'The cardwall XML input is not well formed';
+    public function __construct($errors = array()) {
+        $message = 'The cardwall XML input is not well formed '.PHP_EOL.implode(PHP_EOL, $errors);
         parent::__construct($message);
     }
 }

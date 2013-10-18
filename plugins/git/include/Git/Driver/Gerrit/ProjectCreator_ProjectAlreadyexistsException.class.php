@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,18 +20,10 @@
  */
 
 
-class Cardwall_OnTop_Config_View_SemanticStatusColumnDefinition extends Cardwall_OnTop_Config_View_ColumnDefinition {
+class Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyExistsException extends Exception {
 
-    protected function fetchSpeech() {
-        return $this->translate('plugin_cardwall', 'on_top_semantic_status_column_definition_speech');
-    }
-
-    protected function fetchColumnHeader(Cardwall_Column $column) {
-        return $this->purify($column->label);
-    }
-
-    protected function fetchAdditionalColumnHeader() {
-        return '';
+    public function __construct($project_name, $server_name) {
+        parent::__construct('Gerrit Project '.$project_name.' already exists on ' . $server_name);
     }
 }
 ?>

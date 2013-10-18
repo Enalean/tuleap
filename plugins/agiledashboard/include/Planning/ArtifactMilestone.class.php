@@ -269,5 +269,21 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         return $this;
     }
 
+    /**
+     * @param array $artifacts_ids
+     * @param PFUser $user
+     * @return Boolean True if nothing went wrong
+     */
+    public function solveInconsistencies(PFUser $user, array $artifacts_ids) {
+        $success  = true;
+        $artifact = $this->getArtifact();
+
+        foreach ($artifacts_ids as $artifact_id){
+            $success = $success && $artifact->linkArtifact($artifact_id, $user);
+        }
+
+        return $success;
+    }
+
 }
 ?>

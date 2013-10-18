@@ -85,4 +85,40 @@ class Tracker_ArtifactFactoryTest extends TuleapTestCase {
     }
 }
 
+class Tracker_ArtifactFactory_GetChildrenTest extends TuleapTestCase {
+    /** @var Tracker_ArtifactDao */
+    private $dao;
+
+    /** @var Tracker_ArtifactFactory */
+    private $artifact_factory;
+
+    /** @var PFUser */
+    private $user;
+
+    public function setUp() {
+        parent::setUp();
+        $this->dao = mock('Tracker_ArtifactDao');
+        $this->artifact_factory = partial_mock('Tracker_ArtifactFactory', array('getDao'));
+        stub($this->artifact_factory)->getDao()->returns($this->dao);
+
+        $this->user = mock('PFUser');
+        // Needed to by pass Tracker_Artifact::userCanView
+        stub($this->user)->isSuperUser()->returns(true);
+    }
+
+    public function itFetchAllChildren() {
+        $artifacts = array(
+            anArtifact()->withId(11)->build(),
+            anArtifact()->withId(12)->build(),
+        );
+
+        stub($this->dao)->getChildrenForArtifacts(array(11, 12))->returnsDar(
+            anArtifactDar()->withId(55)->build(),
+            anArtifactDar()->withId(56)->build()
+        );
+
+        $this->artifact_factory->getChildrenForArtifacts($this->user, $artifacts);
+    }
+}
+
 ?>

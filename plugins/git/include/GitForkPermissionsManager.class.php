@@ -23,6 +23,9 @@
  */
 class GitForkPermissionsManager {
 
+    /** @var GitRepository */
+    private $repository;
+
     public function __construct($repository) {
         $this->repository  = $repository;
     }
@@ -122,7 +125,7 @@ class GitForkPermissionsManager {
      */
     public function displayAccessControl($projectId = NULL) {
         $html  = '';
-        $disabled = $this->repository->getRemoteServerId() ? true : false;
+        $disabled = $this->repository->isMigratedToGerrit() ? true : false;
         if ($disabled) {
             $html .= '<div class="alert-message block-message warning">';
             $html .=  $GLOBALS['Language']->getText('plugin_git', 'permissions_on_remote_server');

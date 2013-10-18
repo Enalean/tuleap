@@ -22,46 +22,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Pane_Content_ContentPresenterSelf extends AgileDashboard_Milestone_Pane_Content_ContentPresenter {
-
-    /** @var Boolean */
-    private $can_add_backlog_item_type;
-
-    /** @var String */
-    private $add_new_backlog_url;
+class AgileDashboard_Milestone_Pane_Content_TopContentPresenter extends AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant {
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
-        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done,
         $backlog_item_type,
-        $can_add_backlog_item_type,
-        $submit_url
+        $add_new_backlog_items_urls,
+        $trackers,
+        $can_prioritize,
+        $trackers_without_initial_effort_defined
     ) {
-        parent::__construct($todo, $done, $backlog_item_type);
-        $this->add_new_backlog_url       = $submit_url;
-        $this->can_add_backlog_item_type = $can_add_backlog_item_type;
+        parent::__construct(
+            $todo,
+            new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection(),
+            new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection(),
+            $backlog_item_type,
+            $add_new_backlog_items_urls,
+            $trackers,
+            $can_prioritize,
+            $trackers_without_initial_effort_defined,
+            ''
+        );
     }
 
     public function getTemplateName() {
-        return 'pane-content-self-strategy';
+        return 'pane-topcontent';
     }
-
-    public function can_prioritize() {
-        return $this->can_add_backlog_item_type;
-    }
-
-    public function can_add_backlog_item() {
-        return $this->can_add_backlog_item_type;
-    }
-
-    public function add_new_backlog_url() {
-        return $this->add_new_backlog_url;
-    }
-
-    public function add_new_backlog_item() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'add_subitem', array($this->backlog_item_type));
-     }
-
 }
-
 ?>

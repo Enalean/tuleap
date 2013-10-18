@@ -147,7 +147,7 @@ tuleap.cardwall = tuleap.cardwall || { };
     }
 
     function updateCardTitle($card, title) {
-        $card.find('span.card-title').html(title);
+        $card.find('div.card-title').html(title);
     }
 
     function getCardArtifact(artifact_id) {

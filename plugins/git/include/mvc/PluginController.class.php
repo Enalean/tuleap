@@ -35,17 +35,17 @@ class PluginController {
      * List of PluginViews method name to execute
      * @var Array
      */
-    protected $views;
+    protected $views = array('header'=> array(), 'footer'=> array());
     /**
      * List of PluginActions method name to execute
      * @var Array
      */
-    protected $actions;
+    protected $actions = array();
     /**
      * This array allows data storage and sharing between Actions and Views
      * @var Array
      */
-    protected $actionResultData;
+    protected $actionResultData = array('dummy'=>'dummy');
     /**
      * Logical actions, they allow one to control execution of user stories which usually call several PluginActions at one time
      * @var Array
@@ -53,12 +53,9 @@ class PluginController {
     protected $permittedActions;
 
     
-    public function __construct() {
-        $this->views            = array('header'=> array(), 'footer'=> array());
-        $this->actions          = array();
-        $this->actionResultData = array('dummy'=>'dummy');
-        $this->user             = UserManager::instance()->getCurrentUser();        
-        $this->request          = HTTPRequest::instance();
+    public function __construct(UserManager $user_manager, Codendi_Request $request) {
+        $this->user             = $user_manager->getCurrentUser();
+        $this->request          = $request;
     }
 
     public function getRequest() {
@@ -78,7 +75,7 @@ class PluginController {
      * Wrapper of global redirect method
      * @param String url
      */
-    public function redirect($url) {     
+    public function redirect($url) {
         $GLOBALS['HTML']->redirect($url);
     }
 

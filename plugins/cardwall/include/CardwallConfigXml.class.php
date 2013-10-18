@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,29 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Cardwall_View {
+class CardwallConfigXml {
+    const NODE_CARDWALL = 'cardwall';
+    const NODE_TRACKERS = 'trackers';
+    const NODE_TRACKER  = 'tracker';
+    const NODE_COLUMNS  = 'columns';
+    const NODE_COLUMN   = 'column';
 
-    /**
-     * @var Codendi_HTMLPurifier
-     */
-    private $hp;
+    const ATTRIBUTE_COLUMN_LABEL = 'label';
 
-    public function __construct() {
-        $this->hp = Codendi_HTMLPurifier::instance();
-    }
-
-    /**
-     * @return string
-     */
-    protected function purify($value) {
-        return $this->hp->purify($value);
-    }
-
-    /**
-     * @return string
-     */
-    protected function translate($page, $category, $args = "") {
-        return $GLOBALS['Language']->getText($page, $category, $args);
-    }
+    const ATTRIBUTE_TRACKER_ID = 'id';
 }
+
 ?>

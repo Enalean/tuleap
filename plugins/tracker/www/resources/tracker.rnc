@@ -308,7 +308,7 @@ grammar {
                 element field {
                     attribute REF { xsd:IDREF }
                 }
-            )*
+            )
          |
             (
                 attribute type { "plugin_cardwall_card_fields" },
@@ -420,6 +420,14 @@ grammar {
                                 attribute type { "burndown" },
                                 attribute start_date { xsd:string }?,
                                 attribute duration { xsd:int }?,
+                                attribute effort_field{ xsd:IDREF }?
+                            )
+                        |
+                            (
+                                attribute type { "cumulative_flow" },
+                                attribute start_date { xsd:string }?,
+                                attribute stop_date { xsd:string }?,
+                                attribute scale { xsd:string }?,
                                 attribute effort_field{ xsd:IDREF }?
                             )
                         )

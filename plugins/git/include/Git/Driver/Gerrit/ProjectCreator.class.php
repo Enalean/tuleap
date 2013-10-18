@@ -65,11 +65,19 @@ class Git_Driver_Gerrit_ProjectCreator {
      * @param GitRepository $repository
      * @param Boolean $migrate_access_rights
      * @return string Gerrit project name
+     *
+     * @throws Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyexistsException
+     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
      */
     public function createGerritProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository, $migrate_access_rights) {
         $project          = $repository->getProject();
         $project_name     = $project->getUnixName();
         $ugroups          = $this->ugroup_manager->getUGroups($project);
+
+        $name = $this->driver->getGerritProjectName($repository);
+        if ($this->driver->doesTheProjectExist($gerrit_server, $name)) {
+             throw new Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyexistsException($name, $gerrit_server->getHost());
+        }
 
         $migrated_ugroups = $this->membership_manager->createArrayOfGroupsForServer($gerrit_server, $ugroups);
 

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/layout/ColorHelper.class.php';
 
 /**
  * Update a column for a cardwall on top of a tracker
@@ -40,8 +41,15 @@ class Cardwall_OnTop_Config_Command_UpdateColumns extends Cardwall_OnTop_Config_
     public function execute(Codendi_Request $request) {
         if ($request->get('column')) {
             foreach ($request->get('column') as $id => $column_definition) {
-                $column_label = $column_definition['label'];
-                if ( !empty($column_label) && $this->dao->save($this->tracker->getId(), $id, $column_label)) {
+                $column_label    = $column_definition['label'];
+                $column_bg_red   = 255;
+                $column_bg_green = 255;
+                $column_bg_blue  = 255;
+                if ( !empty($column_definition['bgcolor'])) {
+                    list($column_bg_red, $column_bg_green, $column_bg_blue) = ColorHelper::HexatoRGB($column_definition['bgcolor']);
+                }
+
+                if ( !empty($column_label) && $this->dao->save($this->tracker->getId(), $id, $column_label, $column_bg_red, $column_bg_green, $column_bg_blue)) {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_changed', array($column_label)));
                 }
             }

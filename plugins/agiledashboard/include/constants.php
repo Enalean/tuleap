@@ -72,4 +72,22 @@ define('AGILEDASHBOARD_EVENT_INDEX_PAGE', 'agiledashboard_event_index_page');
  * 'redirect_parameters' => Input/Output parameter, array of 'key' => 'value'
  */
 define('AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT', 'agiledashboard_event_milestone_selector_redirect');
+
+/**
+ * Fetch the cardwall configuration html
+ *
+ * Parameters:
+ * 'tracker' => The Planning Tracker of the planning that is being configured
+ * 'view'    => The HTML to be fetched
+ */
+define('AGILEDASHBOARD_EVENT_PLANNING_CONFIG', 'agiledashboard_event_planning_config');
+
+/**
+ * Update a planning
+ *
+ * Parameters:
+ * 'tracker' => The Planning Tracker of the planning that is being configured
+ * 'request' => The standard request object
+ */
+define('AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE', 'agiledashboard_event_planning_config_update');
 ?>

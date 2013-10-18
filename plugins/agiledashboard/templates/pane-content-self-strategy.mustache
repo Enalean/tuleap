@@ -1,6 +1,22 @@
 {{> pane-content-initial-effort-warning}}
 
-<h3>{{open_items_title}}</h3>
+{{#can_add_backlog_item}}
+<div class="control-group info">
+    <div class="controls">
+        <div class="btn-group dropdown">
+            <span class="dropdown-toggle btn btn-primary" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
+                {{create_new_item}}
+                <b class="caret"></b>
+            </span>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+
+            </ul>
+        </div>
+        <span class="help-inline">{{create_new_item_help}}</span>
+    </div>
+</div>
+<br />
+{{/can_add_backlog_item}}
 
 {{#can_add_backlog_item}}
 <div class="btn-group">
@@ -9,5 +25,7 @@
 {{/can_add_backlog_item}}
 
 {{> pane-content-openitems}}
+
+{{> pane-content-inconsistentitems}}
 
 {{> pane-content-closeditems}}

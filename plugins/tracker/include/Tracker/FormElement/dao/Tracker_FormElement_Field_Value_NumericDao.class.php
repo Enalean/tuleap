@@ -45,6 +45,25 @@ abstract class Tracker_FormElement_Field_Value_NumericDao extends Tracker_FormEl
                   AND c2.id          IS NULL";
         return $this->retrieveFirstRow($sql);
     }
+
+    /**
+     * Return the last value for given artifact/field
+     *
+     * @param Integer $artifact_id
+     * @param Integer $field_id
+     * @return Array
+     */
+    public function getLastValue($artifact_id, $field_id) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $field_id    = $this->da->escapeInt($field_id);
+
+        $sql = "SELECT cvi.value
+                FROM tracker_artifact art
+                  JOIN tracker_changeset_value cv  ON (cv.changeset_id = art.last_changeset_id AND cv.field_id = $field_id)
+                  JOIN $this->table_name       cvi ON (cvi.changeset_value_id = cv.id)
+                WHERE art.id  = $artifact_id";
+        return $this->retrieveFirstRow($sql);
+    }
 }
 
 ?>

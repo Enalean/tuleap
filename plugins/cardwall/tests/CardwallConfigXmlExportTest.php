@@ -96,4 +96,55 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
         $xml_exporter->export(new SimpleXMLElement('<empty/>'));
     }
 }
+
+class CardwallConfigXmlExport_ColumnsTest extends TuleapTestCase {
+
+    /** @var CardwallConfigXmlExport **/
+    private $xml_exporter;
+
+    /** @var SimpleXMLElement **/
+    private $root;
+
+    /** @var Cardwall_OnTop_ConfigFactory **/
+    private $config_factory;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->project  = stub('Project')->getId()->returns(140);
+        $this->tracker1 = aTracker()->withId(214)->build();
+        $this->root     = new SimpleXMLElement('<projects/>');
+
+        $this->cardwall_config = mock('Cardwall_OnTop_Config');
+        stub($this->cardwall_config)->isEnabled()->returns(true);
+
+        $this->tracker_factory = stub('TrackerFactory')->getTrackersByGroupId(140)->returns(array(214 => $this->tracker1));
+
+        $this->config_factory = mock('Cardwall_OnTop_ConfigFactory');
+        stub($this->config_factory)->getOnTopConfig($this->tracker1)->returns($this->cardwall_config);
+
+        $this->xml_validator = stub('XmlValidator')->nodeIsValid()->returns(true);
+
+        $this->xml_exporter = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory, $this->xml_validator);
+    }
+
+    public function itDumpsNoColumnsWhenNoColumnsDefined() {
+        stub($this->cardwall_config)->getDashboardColumns()->returns(new Cardwall_OnTop_Config_ColumnCollection(array()));
+
+        $this->xml_exporter->export($this->root);
+        $this->assertEqual(count($this->root->cardwall->trackers->tracker->children()), 0);
+    }
+
+    public function itDumpsColumnsAsDefined() {
+        stub($this->cardwall_config)->getDashboardColumns()->returns(new Cardwall_OnTop_Config_ColumnCollection(array(
+            new Cardwall_Column(112, "Todo", "red", "green", "blue"),
+            new Cardwall_Column(113, "On going", "axelle", "red", "est raide")
+        )));
+
+        $this->xml_exporter->export($this->root);
+        $column_xml = $this->root->cardwall->trackers->tracker->columns->column;
+        $this->assertCount($column_xml, 2);
+    }
+}
+
 ?>

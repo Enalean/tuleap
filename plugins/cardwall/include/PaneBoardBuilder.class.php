@@ -85,10 +85,26 @@ class Cardwall_PaneBoardBuilder {
     }
 
     private function buildSwimlineSolo(Tracker_Artifact $artifact, Cardwall_CardInCellPresenter $artifact_presenter, Cardwall_OnTop_Config_ColumnCollection $columns) {
+        $cells = $this->swimline_factory->getCells($columns, array($artifact_presenter));
+
+        if ($this->areSwimlineCellsEmpty($cells)) {
+            return $this->buildSwimlineSoloNoMatchingColumns($artifact_presenter, $artifact, $cells);
+        }
+
         return new Cardwall_SwimlineSolo(
             $artifact->getId(),
-            $this->swimline_factory->getCells($columns, array($artifact_presenter))
+            $cells
         );
+    }
+
+    private function areSwimlineCellsEmpty(array $cells) {
+        foreach ($cells as $cell) {
+            if ($cell['cardincell_presenters']) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private function buildSwimline(Cardwall_CardInCellPresenter $artifact_presenter, Cardwall_OnTop_Config_ColumnCollection $columns, array $children_presenters) {
@@ -96,7 +112,14 @@ class Cardwall_PaneBoardBuilder {
             $artifact_presenter,
             $this->swimline_factory->getCells($columns, $children_presenters)
         );
+    }
 
+    private function buildSwimlineSoloNoMatchingColumns(Cardwall_CardInCellPresenter $artifact_presenter, Tracker_Artifact $artifact, array $cells) {
+        return new Cardwall_SwimlineSoloNoMatchingColumns(
+            $artifact_presenter,
+            $artifact,
+            $cells
+        );
     }
 }
 

@@ -207,6 +207,10 @@ class GitActions extends PluginActions {
         if ($this->git_system_event_manager->isProjectDeletionOnGerritOnGoing($repository)) {
             $GLOBALS['Response']->addFeedback(Feedback::INFO, $this->getText('gerrit_deletion_ongoing'));
         }
+
+        if ($this->git_system_event_manager->isProjectSetReadOnlyOnGerritOnGoing($repository)) {
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $this->getText('gerrit_readonly_ongoing'));
+        }
     }
 
     public function notificationUpdatePrefix($projectId, $repositoryId, $mailPrefix, $pane) {
@@ -534,10 +538,14 @@ class GitActions extends PluginActions {
         $repository->getBackend()->disconnectFromGerrit($repository);
         $this->git_system_event_manager->queueRepositoryUpdate($repository);
 
-        $delete_gerrit_project = $this->request->get(GitViews_RepoManagement_Pane_Gerrit::OPTION_DELETE_GERRIT_PROJECT);
+        $disconnect_option = $this->request->get(GitViews_RepoManagement_Pane_Gerrit::OPTION_DISCONNECT_GERRIT_PROJECT);
 
-        if ($delete_gerrit_project) {
+        if ($disconnect_option == GitViews_RepoManagement_Pane_Gerrit::OPTION_DELETE_GERRIT_PROJECT) {
             $this->git_system_event_manager->queueRemoteProjectDeletion($repository, $this->driver);
+        }
+
+        if ($disconnect_option == GitViews_RepoManagement_Pane_Gerrit::OPTION_READONLY_GERRIT_PROJECT) {
+            $this->git_system_event_manager->queueRemoteProjectReadOnly($repository, $this->driver);
         }
     }
 }

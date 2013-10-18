@@ -38,36 +38,60 @@ class AgileDashboard_Milestone_Pane_TopContent_TopContentPresenterBuilder {
         $this->collection_factory = $collection_factory;
     }
 
-
     public function getMilestoneContentPresenter(PFUser $user, Planning_Milestone $milestone) {
         $redirect_paremeter   = new Planning_MilestoneRedirectParameter();
         $backlog_strategy     = $this->strategy_factory->getSelfBacklogStrategy($milestone);
-        $item_tracker         = $backlog_strategy->getItemTracker();
-        $identifier           = AgileDashboard_Milestone_Pane_TopContent_TopContentPaneInfo::IDENTIFIER;
-        $redirect_to_self     = $redirect_paremeter->getPlanningRedirectToSelf($milestone, $identifier);
-        $can_add_backlog_item = $this->canAddBacklogItem($user, $milestone);
-        $new_backlog_item_url = $item_tracker->getSubmitUrl().'&'.$redirect_to_self;
-
-        $todo_collection = $this->collection_factory->getUnplannedOpenCollection($user, $milestone, $backlog_strategy, $redirect_to_self);
-        $done_collection = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
-
-        $content_presenter = new AgileDashboard_Milestone_Pane_Content_ContentPresenterSelf(
-            $todo_collection,
-            $done_collection,
-            $backlog_strategy->getBacklogItemName(),
-            $can_add_backlog_item,
-            $new_backlog_item_url
+        $item_trackers        = $backlog_strategy->getItemTrackers();
+        $redirect_to_self     = $redirect_paremeter->getPlanningRedirectToSelf(
+            $milestone,
+            AgileDashboard_Milestone_Pane_TopContent_TopContentPaneInfo::IDENTIFIER
         );
 
-        return $content_presenter;
+        return new AgileDashboard_Milestone_Pane_Content_TopContentPresenter(
+            $this->collection_factory->getUnassignedOpenCollection($user, $milestone, $backlog_strategy, $redirect_to_self),
+            $backlog_strategy->getBacklogItemName(),
+            $this->getAddItemsToBacklogUrls($user, $item_trackers, $redirect_to_self),
+            $item_trackers,
+            $this->canUserPrioritizeBacklog($user, $item_trackers),
+            $this->getTrackersWithoutInitialEffortSemanticDefined($item_trackers)
+        );
     }
 
-    private function canAddBacklogItem(PFUser $user, Planning_Milestone $milestone) {
-        $backlog_tracker = $milestone->getPlanning()->getBacklogTracker();
-        if ($backlog_tracker->userCanSubmitArtifact($user)) {
-            return true;
+    private function getTrackersWithoutInitialEffortSemanticDefined(array $item_trackers) {
+        $trackers_without_initial_effort_defined = array();
+
+        foreach ($item_trackers as $item_tracker) {
+            if (!AgileDashBoard_Semantic_InitialEffort::load($item_tracker)->getField()) {
+                $trackers_without_initial_effort_defined[] = $item_tracker;
+            }
         }
-        return false;
+
+        return $trackers_without_initial_effort_defined;
+    }
+
+    private function canUserPrioritizeBacklog(PFUser $user, array $item_trackers) {
+        $can_prioritize = true;
+
+        foreach ($item_trackers as $item_tracker) {
+            $can_prioritize = $can_prioritize && $item_tracker->userCanSubmitArtifact($user);
+        }
+
+        return $can_prioritize;
+    }
+
+    private function getAddItemsToBacklogUrls(PFUser $user, array $item_trackers, $redirect_to_self) {
+        $submit_urls = array();
+
+        foreach ($item_trackers as $item_tracker) {
+            if ($item_tracker->userCanSubmitArtifact($user)) {
+                $submit_urls[] = array(
+                    'tracker_type' => $item_tracker->getName(),
+                    'submit_url'   => $item_tracker->getSubmitUrl().'&'.$redirect_to_self
+                );
+            }
+        }
+
+        return $submit_urls;
     }
 }
 ?>

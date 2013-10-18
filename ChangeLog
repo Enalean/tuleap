@@ -1,4 +1,11 @@
-Version 6.6 (Not released yet)
+Version 6.7 (Not released yet)
+	== Plugins ==
+	* agiledashboard: 1.7
+	* fulltextsearch: 0.23
+	* cardwall: 1.6
+	* tracker: 5.175
+
+Version 6.6 (Thursday, October 17th 2013)
 	== Enhancement ==
 	* Improvement of login interface. Adding support for multiple type of login sources (tuleap/openID).
 	* story #5162: send an email when a news is published
@@ -6,18 +13,19 @@ Version 6.6 (Not released yet)
 	* story #5181: allow a user to send an email to all project members of a given project
 
 	== Plugins ==
-	* tracker: 5.167
-	* git: 3.46
+	* tracker: 5.174
+	* git: 3.48
 	* forumml: 2.6.15
-	* fulltextsearch: 0.21
+	* fulltextsearch: 0.22
 	* ldap: 3.36
 	* mediawiki: 0.17
-	* agiledashboard: 0.103
+	* agiledashboard: 1.5
 	* openid: 0.2
 	* statistics: 0.32
 	* tests: 5.19
-	* cardwall: 0.9.48
+	* cardwall: 1.5
 	* IM: 1.5.12
+	* graphontrackersv5: 5.3
 
 	== Bux Fix ==
 	* Fix request #5207: Typo in access denied message
@@ -26,6 +34,7 @@ Version 6.6 (Not released yet)
 	* Fix Sla #5868 : Fix old TV3 wrong help link
 	* Fix Sla #5906 : Fix stack trace
 	* Fix request #5174: Always use POST to trigger jenkins jobs
+	* Fix request #5341: Missing types in the SOAP project API
 
 Version 6.5 (Thursday, September 19th 2013)
 

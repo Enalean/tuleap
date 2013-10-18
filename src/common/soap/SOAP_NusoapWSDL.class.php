@@ -40,7 +40,8 @@ class SOAP_NusoapWSDL {
         $server->configureWSDL($this->serviceName, $this->uri, false, 'rpc', 'http://schemas.xmlsoap.org/soap/http', $this->uri);
     
         $this->appendMethods($server);
-        
+        $this->appendTypes($server);
+
         // Call the service method to initiate the transaction and send the response
         $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
         $server->service($HTTP_RAW_POST_DATA);
@@ -69,6 +70,10 @@ class SOAP_NusoapWSDL {
             'encoded',
             $wsdlGen->getHTMLFormattedComment()
         );
+    }
+
+    private function appendTypes($server) {
+        include 'www/soap/common/types.php';
     }
 }
 

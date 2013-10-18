@@ -5,6 +5,11 @@ plugin_agiledashboard	service_lbl_key	Agile Dashboard
 plugin_agiledashboard	service_desc_key	Dashboard agile
 
 plugin_agiledashboard	Admin	Administration du dashboard agile
+plugin_agiledashboard	cannot_create_planning	Vous ne pouvez plus créer de planning soit:
+plugin_agiledashboard	cannot_create_planning_no_trackers	parce qu'il n'y a pas de trackers
+plugin_agiledashboard	cannot_create_planning_hierarchy	ou alors tous les trackers "planning" potentiels ($1) sont déjà utilisés par une configuration (ci-dessous).
+plugin_agiledashboard	cannot_create_planning_config	Les trackers "planning" potentiels sont déterminés à partir de la configuration de $1 et de sa <a href="$2">hiérarchie</a>.
+plugin_agiledashboard	planning_out_of_hierarchy	Ce planning n'appartient pas à la hierarchie du planning racine ($1). Cette configuration n'est pas supportée. Vous devriez supprimer ce planning.
 plugin_agiledashboard	planning_destination_help	Utiliser la flèche gauche d'un élément pour le déplacer dans le backlog ou les flèches haut/bas pour prioriser les éléments entre eux.
 plugin_agiledashboard	planning_title	Plannings
 plugin_agiledashboard	planning_create	Créer un nouveau planning
@@ -33,29 +38,37 @@ plugin_agiledashboard	backlog_destination_help	Utiliser la flèche droite d'un �
 plugin_agiledashboard	capacity	Capacité :
 plugin_agiledashboard	available	$1 disponible(s)
 
-plugin_agiledashboard	content_head_title	Titre
+plugin_agiledashboard	content_head_title	Elément
 plugin_agiledashboard	content_head_points	Effort estimé
 plugin_agiledashboard	content_head_points_pane	Effort estimé :
-plugin_agiledashboard	content_head_parent	Parent
+plugin_agiledashboard	content_head_parent	Elément parent
+plugin_agiledashboard	content_head_type	Type
 plugin_agiledashboard	top_planning_link	Planification Générale
 
 plugin_agiledashboard	display_five_more	En afficher $1 de plus
 
 plugin_agiledashboard	report_criteria_label	Dans le jalon
 
+plugin_agiledashboard	error_on_inconsistencies_solving	Une erreur s'est produite pendant la résolution des inconsistences.
+plugin_agiledashboard	successful_inconsistencies_solving	Les inconsistences ont été résolues avec succès!
+
 plugin_agiledashboard_contentpane	lab	Ceci est une fonctionnalité expérimentale qui est sujette à évolution prochainement. N'hésitez pas à <a href="mailto:tuleap-devel@tuleap.net">nous contater pour nous transmettre vos impressions</a> et retours d'expérience afin d'améliorer la fonctionnalité, merci!
-plugin_agiledashboard_contentpane	closed_items_title	$1 fermées
+plugin_agiledashboard_contentpane	closed_items_title	$1 fermé(e)s
 plugin_agiledashboard_contentpane	closed_items_intro	Ci-dessous se trouvent les éléments qui sont fermés. Vous ne pouvez pas changer leur priorité.
 plugin_agiledashboard_contentpane	closed_items_nothing_yet	Rien de fermé actuellement
-plugin_agiledashboard_contentpane	open_items_title	$1 ouvertes
+plugin_agiledashboard_contentpane	open_items_title	$1 ouvert(e)s
 plugin_agiledashboard_contentpane	open_items_title-no_more	Il n'y a plus de $1 ouvertes, bravo !
 plugin_agiledashboard_contentpane	open_items_title-not_yet	Pas encore de $1
 plugin_agiledashboard_contentpane	open_items_title-not_yet-can_add	Pas de $1, commencez à en ajouter dès maintenant
 plugin_agiledashboard_contentpane	open_items_intro	Voici les éléments qui sont ouverts. Vous pouvez les ordonner en les glissant-déposant.
 plugin_agiledashboard_contentpane	open_unplanned_items_intro	Voici les éléments qui sont ouverts et non encore plannifiés. Vous pouvez les ordonner en les glissant-déposant.
-plugin_agiledashboard_contentpane	allow_other_create	ou
-plugin_agiledashboard_contentpane	add_in_descendant_title	Ajouter un(e) $1 dans un(e) $2
-plugin_agiledashboard_contentpane	initial_effort_warning	La sémantique <em>Effort Estimé</em> pour le Tracker <em>$1</em> ne semble pas être définie !
+plugin_agiledashboard_contentpane	create_new_item	Ajouter un nouvel élément
+plugin_agiledashboard_contentpane	create_new_specific_item	Ajouter un(e) nouvel(le) $1
+plugin_agiledashboard_contentpane	create_new_item_help	Selon la configuration, vous ne pouvez créer que : $1.
+plugin_agiledashboard_contentpane	initial_effort_warning	La sémantique <em>Effort Estimé</em> pour le(s) Tracker(s) <em>$1</em> ne semble pas être définie !
+plugin_agiledashboard_contentpane	inconsistent_items_title	$1 inconsistent(e)s
+plugin_agiledashboard_contentpane	inconsistent_items_intro	Voici les éléments qui ont été créés directement à partir des sous-milestones. Vous ne pouvez pas changer leur priorité.
+plugin_agiledashboard_contentpane	solve_inconsistencies	Importer dans le backlog
 
 plugin_agiledashboard_milestone_planning	help_intro	Cette section vous permet de faire votre planning de $1:
 plugin_agiledashboard_milestone_planning	help_left	Sur la gauche, le backlog de $2, avec tous les éléments ouverts, non encore plannifiés dans un $1

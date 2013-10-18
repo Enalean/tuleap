@@ -46,6 +46,11 @@ class Git_GitoliteDriver {
      */
     private $gitExec;
 
+    /**
+     * @var GitRepositoryFactory
+     */
+    private $repository_factory;
+
     protected $oldCwd;
     protected $confFilePath;
     protected $adminPath;
@@ -59,18 +64,23 @@ class Git_GitoliteDriver {
     CONST OLD_AUTHORIZED_KEYS_PATH = "/usr/com/gitolite/.ssh/authorized_keys";
     CONST NEW_AUTHORIZED_KEYS_PATH = "/var/lib/gitolite/.ssh/authorized_keys";
 
+
     /**
      * Constructor
      *
      * @param string $adminPath The path to admin folder of gitolite. 
      *                          Default is $sys_data_dir . "/gitolite/admin"
      */
-    public function __construct($adminPath = null, Git_Exec $gitExec = null) {
+    public function __construct($adminPath = null, Git_Exec $gitExec = null, GitRepositoryFactory $repository_factory = null) {
         if (!$adminPath) {
             $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
         }
         $this->setAdminPath($adminPath);
         $this->gitExec = $gitExec ? $gitExec : new Git_Exec($adminPath);
+        $this->repository_factory = $repository_factory ? $repository_factory : new GitRepositoryFactory(
+            $this->getDao(),
+            ProjectManager::instance()
+        );
     }
 
     public function repoFullName(GitRepository $repo, $unix_name) {
@@ -174,15 +184,9 @@ class Git_GitoliteDriver {
      * @param Project $project
      */
     public function dumpProjectRepoConf($project) {
-        $dar = $this->getDao()->getAllGitoliteRespositories($project->getId());
-        if (!$dar || $dar->isError()) {
-            return;
-        }
         $project_config   = '';
-        $notification_manager = $this->getPostReceiveMailManager();
-        foreach ($dar as $row) {
-            $repository      = $this->buildRepositoryFromRow($row, $project, $notification_manager);
-            $project_config .= $this->fetchReposConfig($project, $repository);  
+        foreach ($this->repository_factory->getAllRepositoriesOfProject($project) as $repository) {
+            $project_config .= $this->fetchReposConfig($project, $repository);
         }
         
         $config_file = $this->getProjectPermissionConfFile($project);
@@ -190,26 +194,8 @@ class Git_GitoliteDriver {
             return $this->commitConfigFor($project);
         }
     }
-    
-    protected function buildRepositoryFromRow($row, $project, $notification_manager = null) {
-        $repository_id = $row[GitDao::REPOSITORY_ID];
-        $repository = new GitRepository();
-        $repository->setId($repository_id);
-        $repository->setName($row[GitDao::REPOSITORY_NAME]);
-        $repository->setProject($project);
-        if (! $notification_manager ) {
-            $notification_manager = $this->getPostReceiveMailManager();
-        }
-        $notified_mails = $notification_manager->getNotificationMailsByRepositoryId($repository_id);
-        $repository->setNotifiedMails($notified_mails);
-        $repository->setDescription($row[GitDao::REPOSITORY_DESCRIPTION]);
-        $repository->setMailPrefix($row[GitDao::REPOSITORY_MAIL_PREFIX]);
-        $repository->setNamespace($row[GitDao::REPOSITORY_NAMESPACE]);
-        $repository->setRemoteServerId($row[GitDao::REMOTE_SERVER_ID]);
-        return $repository;
-    }
-    
-    protected function fetchReposConfig(Project $project, $repository) {
+
+    protected function fetchReposConfig(Project $project, GitRepository $repository) {
         $repo_full_name   = $this->repoFullName($repository, $project->getUnixName());
         $repo_config  = 'repo '. $repo_full_name . PHP_EOL;
         $repo_config .= $this->fetchMailHookConfig($project, $repository);

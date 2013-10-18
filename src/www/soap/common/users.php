@@ -3,42 +3,6 @@
 require_once('user.php');
 
 if (defined('NUSOAP')) {
-    
-//
-// Type definition
-//
-
-$GLOBALS['server']->wsdl->addComplexType(
-    'UserInfo',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
-        'identifier' => array('name'=>'identifier', 'type' => 'xsd:string'),
-        'username' => array('name'=>'username', 'type' => 'xsd:string'),
-        'id' => array('name'=>'id', 'type' => 'xsd:string'),
-        'real_name' => array('name'=>'real_name', 'type' => 'xsd:string'),
-        'email' => array('name'=>'email', 'type' => 'xsd:string'),
-        'ldap_id' => array('name'=>'ldap_id', 'type' => 'xsd:string'),
-    )
-);
-
-$GLOBALS['server']->wsdl->addComplexType(
-    'ArrayOfUserInfo',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:UserInfo[]')),
-    'tns:UserInfo'
-);
-
-//
-// Function definition
-//
-
 
 $server->register(
     'checkUsersExistence',
@@ -75,18 +39,16 @@ function getUserInfo($sessionKey, $user_id) {
     
     $user_manager = UserManager::instance();
     $current_user = $user_manager->getCurrentUser();
-    $user_info    = array();
     
     try {
         $user      = $user_manager->getUserById($user_id);
-        $user_info = user_to_soap($user, $current_user);
-        
-        if ($user_info) {
-            $user_info['identifier'] = $user_id;
-            return $user_info;
-        } else {
+        $user_info = user_to_soap($user_id, $user, $current_user);
+
+        if (! $user_info) {
             return new SoapFault('0', "Invalid user id: $user_id", 'getUserInfo');
         }
+
+        return $user_info;
     } catch (Exception $e) {
         return new SoapFault('0', $e->getMessage(), 'getUserInfo');
     }
@@ -101,11 +63,10 @@ function checkUsersExistence($sessionKey, $users) {
 
             foreach ($users as $userIdentifier) {
                 $userObj  = $um->getUserByIdentifier($userIdentifier);
-                $userInfo = user_to_soap($userObj, $currentUser);
+                $userInfo = user_to_soap($userIdentifier, $userObj, $currentUser);
 
                 if ($userInfo) {
-                    $userInfo['identifier'] = $userIdentifier;
-                    $existingUsers[]        = $userInfo;
+                    $existingUsers[] = $userInfo;
                 }
             }
 

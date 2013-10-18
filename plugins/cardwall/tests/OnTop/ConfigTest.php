@@ -30,10 +30,10 @@ class Cardwall_OnTop_ConfigTest extends TuleapTestCase {
         $tracker_mapping_factory = mock('Cardwall_OnTop_Config_TrackerMappingFactory');
 
         $columns = array('of', 'columns');
-        stub($column_factory)->getDashboardColumns($tracker, $swimline_tracker)->returns($columns);
+        stub($column_factory)->getDashboardColumns($tracker)->returns($columns);
         stub($tracker_mapping_factory)->getMappings($tracker, $columns)->once()->returns('whatever');
 
-        $config = new Cardwall_OnTop_Config($tracker, $swimline_tracker, $dao, $column_factory, $tracker_mapping_factory);
+        $config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);
         $this->assertEqual('whatever', $config->getMappings());
     }
 }
@@ -43,25 +43,23 @@ class Cardwall_OnTop_Config_getMappingForTest extends TuleapTestCase {
     public function itReturnsNullIfThereIsNoMapping() {
         $tracker                 = aTracker()->withId(1)->build();
         $mapping_tracker         = aTracker()->withId(2)->build();
-        $swimline_tracker        = aTracker()->build();
 
         $dao                     = mock('Cardwall_OnTop_Dao');
         $column_factory          = mock('Cardwall_OnTop_Config_ColumnFactory');
         $tracker_mapping_factory = mock('Cardwall_OnTop_Config_TrackerMappingFactory');
-        $config = new Cardwall_OnTop_Config($tracker, $swimline_tracker, $dao, $column_factory, $tracker_mapping_factory);
+        $config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);
         $this->assertNull($config->getMappingFor($mapping_tracker));
     }
 
     public function itReturnsTheCorrespondingMapping() {
         $tracker                 = aTracker()->withId(1)->build();
         $mapping_tracker         = aTracker()->withId(99)->build();
-        $swimline_tracker        = aTracker()->build();
         
         $dao                     = mock('Cardwall_OnTop_Dao');
         $column_factory          = mock('Cardwall_OnTop_Config_ColumnFactory');
         $mapping = mock('Cardwall_OnTop_Config_TrackerMapping');
         $tracker_mapping_factory = stub('Cardwall_OnTop_Config_TrackerMappingFactory')->getMappings()->returns(array(99 => $mapping));
-        $config = new Cardwall_OnTop_Config($tracker, $swimline_tracker, $dao, $column_factory, $tracker_mapping_factory);
+        $config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);
         $this->assertEqual($mapping, $config->getMappingFor($mapping_tracker));
     }
 }

@@ -38,12 +38,18 @@ class Cardwall_OnTop_ColumnDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function save($tracker_id, $id, $label) {
+    public function save($tracker_id, $id, $label, $red, $green, $blue) {
         $id         = $this->da->escapeInt($id);
         $tracker_id = $this->da->escapeInt($tracker_id);
         $label      = $this->da->quoteSmart($label);
+        $red        = $this->da->escapeInt($red);
+        $green      = $this->da->escapeInt($green);
+        $blue       = $this->da->escapeInt($blue);
         $sql = "UPDATE plugin_cardwall_on_top_column
-                SET label = $label
+                SET label = $label,
+                    bg_red = $red,
+                    bg_green = $green,
+                    bg_blue = $blue
                 WHERE tracker_id = $tracker_id
                   AND id = $id";
         if ($this->update($sql)) {
