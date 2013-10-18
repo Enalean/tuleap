@@ -580,5 +580,26 @@ class Event {
      *  'restler' => \Luracast\Restler\Restler
      */
     const REST_RESOURCES = 'rest_resources';
+
+    /**
+     * Allow plugin to deal with authentication
+     *
+     * Parameters:
+     * 'loginname'        => String  (IN)
+     * 'passwd'           => String  (IN)
+     * 'auth_success'     => Boolean (OUT)
+     * 'auth_user_id'     => Boolean (OUT)
+     * 'auth_user_status' => String  (OUT)
+     */
+    const SESSION_BEFORE_LOGIN = 'session_before_login';
+
+    /**
+     * Allow plugin to deal after authentication
+     *
+     * Parameters:
+     * 'user'                => PFUser  (IN)
+     * 'allow_codendi_login' => Boolean (OUT)
+     */
+    const SESSION_AFTER_LOGIN = 'session_after_login';
 }
 ?>

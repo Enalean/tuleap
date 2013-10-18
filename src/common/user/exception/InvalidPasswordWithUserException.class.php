@@ -1,8 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
- *
- * This file is a part of Tuleap.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +13,20 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'PFO/autoload.php';
-require_once 'project/autoload.php';
-require_once 'user/autoload.php';
+class User_Exception_InvalidPasswordWithUserException extends User_Exception_LoginException {
+    /** @var PFUser */
+    private $user;
+
+    public function __construct(PFUser $user) {
+        $this->user = $user;
+        parent::__construct($GLOBALS['Language']->getText('include_session','invalid_pwd'));
+    }
+
+    public function getUser() {
+        return $this->user;
+    }
+}
