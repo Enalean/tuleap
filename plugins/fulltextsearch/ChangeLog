@@ -1,3 +1,6 @@
+Version 0.23 - Tuleap 6.7
+    * Fix request 5424: Cross Tracker Search gives a blank page
+
 Version 0.22 - Tuleap 6.6
     * Fix tuleap rendering itself in widgets
 
