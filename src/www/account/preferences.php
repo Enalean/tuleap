@@ -17,7 +17,7 @@ $user = UserManager::instance()->getCurrentUser();
 // ############################# Preferences
 echo '<h3>'. $Language->getText('account_options', 'preferences') .'</h3>';
 ?>
-<FORM action="updateprefs.php" method="post">
+<FORM action="updateprefs.php" method="post" class="form-horizontal">
 <?php 
     $csrf = new CSRFSynchronizerToken('/account/preferences.php');
     echo $csrf->fetchHTMLInput();
@@ -197,7 +197,7 @@ echo html_get_language_popup($Language,'language_id',UserManager::instance()->ge
                 $em->processEvent('user_preferences_appearance', array('preferences' => &$plugins_prefs));
                 if (is_array($plugins_prefs)) {
                     foreach($plugins_prefs as $pref) {
-                        echo '<tr><td>'. $pref['name'] .'</td><td>'. $pref['value'] .'</td></tr>';
+                        echo '<tr class="user_preferences_appearance"><td>'. $pref['name'] .'</td><td>'. $pref['value'] .'</td></tr>';
                     }
                 }
                 ?>

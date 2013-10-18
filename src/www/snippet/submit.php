@@ -83,7 +83,7 @@ if (user_isloggedin()) {
 	<P>
 	<span class="highlight"><B>'.$Language->getText('snippet_submit','note').'</B></span>'.$Language->getText('snippet_submit','submit_s_v').'
 	<P>
-	<FORM ACTION="?" METHOD="POST" enctype="multipart/form-data">
+	<FORM ACTION="?" METHOD="POST" enctype="multipart/form-data" class="add-snippet">
     <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_upload.'">
 	<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 	<INPUT TYPE="HIDDEN" NAME="changes" VALUE="'.$Language->getText('snippet_package','first_posted_v').'">
@@ -123,19 +123,18 @@ if (user_isloggedin()) {
 	</TD></TR>
   
 	<TR><TD COLSPAN="2">
-	 <br><B>'.$Language->getText('snippet_addversion','upload_s').'</B>
-		<P>
-		<input type="file" name="uploaded_data"  size="40">
+	 <B>'.$Language->getText('snippet_addversion','upload_s').'</B><br>
+		<input type="file" name="uploaded_data" size="40">
         <br><span class="smaller"><i>'.$Language->getText('snippet_addversion','max_size',formatByteToMb($sys_max_size_upload)).'</i></span>
-		<P>
+		<br><br><P>
                 <B>'.$Language->getText('snippet_addversion','paste_code').'</B><BR>
 		<TEXTAREA NAME="code" ROWS="20" COLS="85" WRAP="SOFT"></TEXTAREA>
 	</TD></TR>
  
-	<TR><TD COLSPAN="2" ALIGN="center">
+	<TR><TD COLSPAN="2">
 		<B>'.$Language->getText('snippet_add_snippet_to_package','all_info_complete').'</B>
-		<BR>
-		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
+		<BR><BR>
+		<INPUT CLASS="btn btn-primary" TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 	</TD></TR>
 	</FORM>
 	</TABLE>';

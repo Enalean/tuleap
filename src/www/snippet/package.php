@@ -134,10 +134,10 @@ function show_add_snippet_box() {
 		<INPUT TYPE="TEXT" NAME="version" SIZE="10" MAXLENGTH="15">
 	</TD></TR>
   
-	<TR><TD COLSPAN="2" ALIGN="center">
+	<TR><TD COLSPAN="2">
 		<B>'.$Language->getText('snippet_add_snippet_to_package','all_info_complete').'</B>
-		<BR>
-		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
+		<BR><BR>
+		<INPUT CLASS="btn btn-primary" TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 	</TD></TR>
 
 	</TABLE>';

@@ -918,7 +918,7 @@ body {
     vertical-align: top;
 }
 
-.header_searchbox input[type=checkbox]{
+.header_searchbox input[type=checkbox], .header_searchbox span {
     display: none;
 }
 

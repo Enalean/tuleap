@@ -39,7 +39,7 @@ if ($request->isPost()) {
 $HTML->header(array('title'=>$Language->getText('account_change_timezone', 'title')));
 
 ?>
-<H3><?php echo $Language->getText('account_change_timezone', 'title2'); ?></h3>
+<h2><?php echo $Language->getText('account_change_timezone', 'title2'); ?></h2>
 <P>
 <?php echo $Language->getText('account_change_timezone', 'message', array($GLOBALS['sys_name'])); ?>
 <P>
@@ -49,7 +49,8 @@ echo $csrf->fetchHTMLInput();
 echo html_get_timezone_popup ('timezone',user_get_timezone());
 
 ?>
-<input type="submit" name="submit" value="<?php echo $Language->getText('global', 'btn_update'); ?>">
+<br>
+<input type="submit" class="btn btn-primary" name="submit" value="<?php echo $Language->getText('global', 'btn_update'); ?>">
 </form>
 
 <?php

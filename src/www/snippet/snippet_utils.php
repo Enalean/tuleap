@@ -208,10 +208,10 @@ function snippet_edit_package_details($id) {
 	<TR><TD COLSPAN="2">&nbsp;<BR><B>'.$Language->getText('snippet_package','description').'</B><BR>
 	    <TEXTAREA NAME="snippet_description" ROWS="5" COLS="45" WRAP="SOFT">'.db_result($result,0,'description').'</TEXTAREA>
 	</TD></TR>
-	<TR><TD COLSPAN="2" ALIGN="center">
+	<TR><TD COLSPAN="2">
 		<B>'.$Language->getText('snippet_add_snippet_to_package','all_info_complete').'</B>
-		<BR>
-		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
+		<BR><BR>
+		<INPUT CLASS="btn btn-primary" TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 	</TD></TR>
 	</TABLE>
 	</FORM>
@@ -255,10 +255,10 @@ function snippet_edit_snippet_details($id) {
 	    <TEXTAREA NAME="snippet_description" ROWS="5" COLS="45" WRAP="SOFT">'.db_result($result,0,'description').'</TEXTAREA>
 	</TD></TR>
 
-	<TR><TD COLSPAN="2" ALIGN="center">
+	<TR><TD COLSPAN="2">
 		<B>'.$Language->getText('snippet_add_snippet_to_package','all_info_complete').'</B>
-		<BR>
-		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
+		<BR><BR>
+		<INPUT CLASS="btn btn-primary" type="submit" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 	</TD></TR>
 	</TABLE>
 	</FORM>

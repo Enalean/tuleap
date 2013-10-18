@@ -160,7 +160,7 @@ class ArtifactHtml extends Artifact {
             );
 			
             if (!$ro) {
-                echo '<div style="text-align:center"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'"></div>';
+                echo '<div style="text-align:center"><INPUT CLASS="btn btn-primary" TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'"></div>';
             }
             //
             // Followups comments
@@ -326,9 +326,9 @@ class ArtifactHtml extends Artifact {
                 }
                 $html = '';
                 $html .= '<p>';
-                $html .= '<input type="hidden" name="use_artifact_permissions_name" value="0" />';
+                $html .= '<label class="checkbox" for="use_artifact_permissions"><input type="hidden" name="use_artifact_permissions_name" value="0" />';
                 $html .= '<input type="checkbox" name="use_artifact_permissions_name" id="use_artifact_permissions" value="1" '. $checked .' />';
-                $html .= '<label for="use_artifact_permissions">'. $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label') .'</label>';
+                $html .= $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label') .'</label>';
                 $html .= '</p>';
                 $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', $this->getId(), $group_id);
                 $html .= '<script type="text/javascript">';
@@ -370,7 +370,7 @@ class ArtifactHtml extends Artifact {
             // Final submit button
             //
             if ( $pv == 0) {
-                echo '<div style="text-align:center"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'"></div>';
+                echo '<div style="text-align:center"><INPUT CLASS="btn btn-primary" TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'"></div>';
             }
             echo '</td></tr>';
             echo '</table>';
@@ -716,7 +716,7 @@ class ArtifactHtml extends Artifact {
         // Final submit button
         //
         echo '<p><B><span class="highlight">'.$Language->getText('tracker_include_artifact','check_already_submitted').'</b></p>';
-        echo '<div style="text-align:center"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'"></div>';
+        echo '<div style="text-align:center"><INPUT CLASS="btn btn-primary" TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'"></div>';
         echo '</td></tr>';
         echo '</table>';
         echo '</form>';
@@ -1050,9 +1050,9 @@ class ArtifactHtml extends Artifact {
             }
             $html = '';
             $html .= '<p>';
-            $html .= '<input type="hidden" name="use_artifact_permissions_name" value="0" />';
+            $html .= '<label class="checkbox" for="use_artifact_permissions"><input type="hidden" name="use_artifact_permissions_name" value="0" />';
             $html .= '<input type="checkbox" name="use_artifact_permissions_name" id="use_artifact_permissions" value="1" '. $checked .' />';
-            $html .= '<label for="use_artifact_permissions">'. $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label') .'</label>';
+            $html .= $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label') .'</label>';
             $html .= '</p>';
             $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', $this->getId(), $group_id);
             $html .= '<script type="text/javascript">';
@@ -1083,7 +1083,7 @@ class ArtifactHtml extends Artifact {
         // Final submit button
         //
         echo '<p><B><span class="highlight">'.$Language->getText('tracker_include_artifact','check_already_submitted').'</b></p>';
-        echo '<div style="text-align:center"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'"></div>';
+        echo '<div style="text-align:center"><INPUT CLASS="btn btn-primary" TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'"></div>';
         echo '</td></tr>';
         echo '</table>';
         echo '</form>';
@@ -1121,7 +1121,7 @@ class ArtifactHtml extends Artifact {
         <INPUT TYPE="hidden" NAME="artifact_history_id" VALUE="'.(int)$comment_id.'">
         <INPUT TYPE="hidden" NAME="artifact_id" VALUE="'.(int)$this->getID().'">
         <P><DIV ID="followup_update_label"></DIV><TEXTAREA NAME="followup_update" ID="followup_update" ROWS="10"  style="width:100%" WRAP="SOFT">'. $hp->purify(util_unconvert_htmlspecialchars($followUp['new_value']), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
-        <P><INPUT TYPE="submit" VALUE="'. $GLOBALS['Language']->getText('global', 'btn_submit').'">
+        <P><INPUT CLASS="btn btn-primary" TYPE="submit" VALUE="'. $GLOBALS['Language']->getText('global', 'btn_submit').'">
         </FORM>';
         
         if ($followUp['format'] == self::FORMAT_HTML) {

@@ -2023,6 +2023,18 @@ a#lightwindow_title_bar_close_link:hover {
 }
 /* }}} */
 
+/* {{{ User Preferences Appearance */
+.user_preferences_appearance label.checkbox {
+    padding: 0px 0 0 0;
+    margin: 0px;
+}
+
+.user_preferences_appearance input[type="checkbox"] {
+    margin-left: 0;
+    margin-right: 5px;
+}
+/* }}} */
+
 /* {{{ Toggler */
 h3.toggler,
 h3.toggler-noajax,
@@ -2705,52 +2717,6 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
 /* }}} */
 
 /* {{{ LOGIN */
-
-.container.login input[type="text"],
-.container.login input[type="password"],
-.container.login textarea {
-    display: inline-block;
-    padding: 4px 6px;
-    margin-bottom: 10px;
-    font-size: 14px;
-    color: #555555;
-    vertical-align: middle;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    background-color: #ffffff;
-    border: 1px solid #cccccc;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
-    -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
-    -o-transition: border linear 0.2s, box-shadow linear 0.2s;
-    transition: border linear 0.2s, box-shadow linear 0.2s;
-}
-.container.login input[type="text"]:focus,
-.container.login input[type="password"]:focus,
-.container.login textarea:focus {
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
-}
-.container.login input:focus:invalid:focus,
-.container.login textarea:focus:invalid:focus {
-    border-color: #e9322d;
-    -webkit-box-shadow: 0 0 6px #f8b9b7;
-    -moz-box-shadow: 0 0 6px #f8b9b7;
-    box-shadow: 0 0 6px #f8b9b7;
-}
-.container.login input[type="checkbox"] {
-    vertical-align: middle;
-}
-
-.container.login div.controls span.help-block {
-    color: #595959;
-    display: block;
-}
-
 #login-title {
     text-align: center;
     font-size: 2.5em;
@@ -2805,10 +2771,9 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
     font-size: 0.9em;
     color: #666;
 }
-
 /* }}} */
 
-/* {{{  */
+/* {{{ Notification Placeholder */
 #notification-placeholder {
     position: fixed;
     top: 10px;
@@ -2823,6 +2788,15 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
     width: 20px;
 }
 /* }}} */
+
+
+/* {{{ Snippets */
+
+.add-snippet input[type="file"] {
+    margin-top: 15px;
+}
+/* }}} */
+
 
 
 /* {{{ BOOTSTRAP OVERRIDES */

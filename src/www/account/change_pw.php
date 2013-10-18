@@ -84,14 +84,14 @@ if (register_valid($user_id, $csrf)) {
 	$HTML->header(array('title'=>$Language->getText('account_options', 'change_password')));
 
 ?>
-<p><b><? echo $Language->getText('account_change_pw', 'title'); ?></b>
+<h2><? echo $Language->getText('account_change_pw', 'title'); ?></h2>
 <form action="change_pw.php" method="post" autocomplete="off" >
 <p><?
 echo $csrf->fetchHTMLInput();
 echo $Language->getText('account_change_pw', 'old_password'); ?>:
 <br><input type="password" value="" name="form_oldpw">
 <?php user_display_choose_password('',is_numeric($request->get('user_id')) ? $request->get('user_id') : 0); ?>
-<p><input type="submit" name="Update" value="<? echo $Language->getText('global', 'btn_update'); ?>">
+<p><input type="submit" class="btn btn-primary" name="Update" value="<? echo $Language->getText('global', 'btn_update'); ?>">
 </form>
 
 <?php
