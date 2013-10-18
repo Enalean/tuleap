@@ -98,9 +98,11 @@ class Git_Ci {
                                      '.$selectBox.'
                                  </div>
                                  <div id="hudson_use_plugin_git_trigger_checkbox">
-                                     Git
+                                     <label class="checkbox">
                                      <input name="hudson_use_plugin_git_trigger_checkbox" type="hidden" value="0" />
                                      <input name="hudson_use_plugin_git_trigger_checkbox" onclick="toggle_checkbox()" type="checkbox" '.$checked.' value="1" />
+                                        Git
+                                     </label>
                                  </div>
                                  <script>
                                      function toggle_checkbox() {

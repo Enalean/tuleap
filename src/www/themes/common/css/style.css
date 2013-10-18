@@ -345,6 +345,14 @@ table.release tr td img {
 .files_table {
     margin-bottom: 20px;
 }
+#files_body td {
+    padding: 5px;
+}
+#files_body td input[type="file"] {
+    margin: 2px 0 0 0;
+    line-height: 0;
+    height: 18px;
+}
 /* }}} */
 
 .iframe_service {

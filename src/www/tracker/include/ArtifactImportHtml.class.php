@@ -352,25 +352,24 @@ function showErrors() {
     }
 
     echo '
-	    <FORM NAME="importdata" action="" method="POST" enctype="multipart/form-data">
+	    <FORM NAME="importdata" id="tracker-import-data" action="" method="POST" enctype="multipart/form-data">
             <INPUT TYPE="hidden" name="group_id" value="'.(int)$this->group->group_id.'">            
             <INPUT TYPE="hidden" name="atid" value="'.(int)$atid.'">            
             <INPUT TYPE="hidden" name="func" value="import">
             <INPUT TYPE="hidden" name="mode" value="parse">
 
-			<table border="0" width="75%">
+			<table border="0">
 			<tr>
 			<th> ';//<input type="checkbox" name="file_upload" value="1"> 
     echo '<B>'.$Language->getText('tracker_import','upload_file').'</B></th>
-			<td> <input type="file" name="csv_filename" size="50">
-                 <br><span class="smaller"><i>'.$Language->getText('tracker_import','max_upload_size',formatByteToMb($sys_max_size_upload)).'</i></span>
-			</td>
+			<td> <input type="file" name="csv_filename" size="50"> </td>
+      <td> <span class="help"><i>'.$Language->getText('tracker_import','max_upload_size',formatByteToMb($sys_max_size_upload)).'</i></span> </td>
 			</tr>
             <tr>
               <th>
                 '.$Language->getText('tracker_import','send_notifications').'
               </th>
-              <td>
+              <td colspan="2">
                 <input type="checkbox" name="notify" value="ok" "'.$notifychecked.'"/>
               </td>
             </tr>';
@@ -381,8 +380,8 @@ function showErrors() {
     //</tr>
     echo '
                         </table>
-
-			<input type="submit" value="'.$Language->getText('tracker_import','submit_info').'">
+      <br>
+			<input class="btn btn-primary" type="submit" value="'.$Language->getText('tracker_import','submit_info').'">
 
 	    </FORM> '; 
     $this->ath->footer(array());

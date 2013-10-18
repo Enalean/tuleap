@@ -389,7 +389,7 @@ class hudsonViews extends Views {
                         <label class="control-label" for="hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_url').'</label>
                         <div class="controls">
                             <input id="hudson_job_url" name="hudson_job_url" type="text" size="64" value="'. $job_url .'" />
-                            <div class="help">'. $GLOBALS['Language']->getText('plugin_hudson','form_joburl_example') .'</div>
+                            <span class="help help-inline">'. $GLOBALS['Language']->getText('plugin_hudson','form_joburl_example') .'</span>
                         </div>
                     </div>';
         if ($name !== null) {
@@ -397,7 +397,7 @@ class hudsonViews extends Views {
                         <label class="control-label" for="hudson_job_name">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_name').'</label>
                         <div class="controls">
                             <input id="hudson_job_name" name="hudson_job_name" type="text" size="64" value="'. $name .'" />
-                            <div class="help">'. $GLOBALS['Language']->getText('plugin_hudson', 'form_jobname_help', $name) .'</div>
+                            <span class="help help-inline">'. $GLOBALS['Language']->getText('plugin_hudson', 'form_jobname_help', $name) .'</span>
                         </div>
                     </div>';
         }

@@ -581,6 +581,13 @@ ul.tracker_function_aggregate_results {
 .tracker_artifact_remove_attachment span {
     display: none;
 }
+.tracker-search legend {
+    font-size:1.2em;
+    font-weight: bold;
+    background-color: #f5f5f5;
+    padding-left: 5px;
+    background-position: 7px center;
+}
 .tracker_artifact_fieldset legend {
     font-size:1.2em;
     font-weight: bold;
@@ -1521,6 +1528,29 @@ tr.artifact-children-table-head {
     text-align: center;
 }
 
+#artifacts_query td {
+    padding: 0 10px 0 0;
+}
 #date_field_reminder_form input, #date_field_reminder_form select {
     width: auto;
+}
+
+#edit_rule_form label {
+    margin: 0 0 0 5px;
+}
+#edit_rule_form input[type="checkbox"] {
+    margin: 0;
+}
+#save_panel td {
+    padding: 10px 0 0 0;
+}
+#tracker-import-data th {
+    text-align: right;
+    padding: 0 10px 0 0;
+}
+#tracker-import-data th, #tracker-import-data td {
+    padding: 10px 5px;
+}
+#tracker-import-data input[type="checkbox"] {
+    margin: 0;
 }
