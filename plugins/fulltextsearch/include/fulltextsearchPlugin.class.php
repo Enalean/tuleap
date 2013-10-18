@@ -212,6 +212,10 @@ class fulltextsearchPlugin extends Plugin {
      * @return Void
      */
     public function tracker_event_report_display_additional_criteria($params) {
+        if (! $params['tracker']) {
+            return;
+        }
+
         if ($this->tracker_followup_check_preconditions($params['tracker']->getGroupId())) {
             $request = HTTPRequest::instance();
             $hp      = Codendi_HTMLPurifier::instance();

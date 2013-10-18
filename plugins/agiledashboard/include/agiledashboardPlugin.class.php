@@ -87,6 +87,9 @@ class AgileDashboardPlugin extends Plugin {
      */
     public function tracker_event_report_display_additional_criteria($params) {
         $backlog_tracker = $params['tracker'];
+        if (! $backlog_tracker) {
+            return;
+        }
 
         $planning_factory = $this->getPlanningFactory();
         $provider = new AgileDashboard_Milestone_MilestoneReportCriterionProvider(
