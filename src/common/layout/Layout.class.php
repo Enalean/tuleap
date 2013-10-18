@@ -1691,7 +1691,8 @@ class Layout extends Response {
      */
     public function overlay_header() {
         $this->includeCalendarScripts();
-        echo '<html>
+        echo '<!DOCTYPE html>
+              <html>
               <head>
                  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
         echo $this->displayJavascriptElements();

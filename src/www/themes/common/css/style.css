@@ -2826,12 +2826,6 @@ h3 {
 blockquote p {
     font-size: 1em;
 }
-textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
-    /*padding: 2px 4px;*/
-}
-select, input[type="file"] {
-    /*height: 26px;*/
-}
 input[type="file"] {
     margin-top: -13px;
 }
