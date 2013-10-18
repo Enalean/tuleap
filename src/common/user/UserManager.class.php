@@ -310,6 +310,11 @@ class UserManager {
         }
     }
 
+    public function setCurrentUser(PFUser $user) {
+        $this->_currentuser = $user;
+        return $user;
+    }
+
     /**
      * @param $session_hash string Optional parameter. If given, this will force 
      *                             the load of the user with the given session_hash. 
@@ -407,7 +412,7 @@ class UserManager {
             );
             $status_manager = new User_UserStatusManager();
 
-            $user = $login_manager->login($name, $pwd);
+            $user = $login_manager->authenticate($name, $pwd);
             if ($allowpending) {
                 $status_manager->checkStatusOnVerifyPage($user);
             } else {
@@ -418,8 +423,7 @@ class UserManager {
             $this->warnUserAboutPasswordExpiration($user);
             $this->warnUserAboutAuthenticationAttempts($user);
 
-            $this->_currentuser = $user;
-            return $this->_currentuser;
+            return $this->setCurrentUser($user);
 
         } catch (User_Exception_InvalidPasswordWithUserException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
@@ -446,10 +450,14 @@ class UserManager {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         }
 
-        // Current user is anonymous
-        $this->_currentuser = $this->_getUserInstanceFromRow(array('user_id' => 0));
+        return $this->setCurrentUser($this->createAnonymousUser());
+    }
 
-        return $this->_currentuser;
+    /**
+     * @return PFUser
+     */
+    private function createAnonymousUser() {
+        return $this->_getUserInstanceFromRow(array('user_id' => 0));
     }
 
     private function openWebSession(PFUser $user) {

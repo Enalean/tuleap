@@ -31,7 +31,18 @@ class User_LoginManager {
     }
 
     /**
-     * Get login
+     * Set user as a current if they are valid
+     *
+     * @param PFUser $user
+     */
+    public function validateAndSetCurrentUser(PFUser $user) {
+        $status_manager = new User_UserStatusManager();
+        $status_manager->checkStatus($user);
+        $this->user_manager->setCurrentUser($user);
+    }
+
+    /**
+     * Authenticate user but doesn't verify if they are valid
      *
      * @param String $name
      * @param String $password
@@ -41,7 +52,7 @@ class User_LoginManager {
      * @throws User_Exception_InvalidPasswordException
      * @throws User_Exception_PasswordExpiredException
      */
-    public function login($name, $password) {
+    public function authenticate($name, $password) {
         $auth_success     = false;
         $auth_user_id     = null;
         $auth_user_status = null;

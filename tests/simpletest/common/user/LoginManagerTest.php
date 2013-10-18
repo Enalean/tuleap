@@ -52,7 +52,7 @@ class User_LoginManagerTest extends TuleapTestCase {
             )
         )->at(0);
 
-        $this->login_manager->login('john', 'password');
+        $this->login_manager->authenticate('john', 'password');
     }
 
     public function itUsesDbAuthIfPluginDoesntAnswer() {
@@ -61,19 +61,19 @@ class User_LoginManagerTest extends TuleapTestCase {
         );
 
         expect($this->user_manager)->getUserByUserName('john')->once();
-        $this->login_manager->login('john', 'password');
+        $this->login_manager->authenticate('john', 'password');
     }
 
     public function itThrowsAnExceptionWhenUserIsNotFound() {
         $this->expectException('User_Exception_InvalidPasswordException');
         stub($this->user_manager)->getUserByUserName()->returns(null);
-        $this->login_manager->login('john', 'password');
+        $this->login_manager->authenticate('john', 'password');
     }
 
     public function itThrowsAnExceptionWhenPasswordIsWrong() {
         $this->expectException('User_Exception_InvalidPasswordWithUserException');
         stub($this->user_manager)->getUserByUserName()->returns(aUser()->withPassword('pa')->build());
-        $this->login_manager->login('john', 'password');
+        $this->login_manager->authenticate('john', 'password');
     }
 
     public function itThrowsAnExceptionWithUserWhenPasswordIsWrong() {
@@ -81,7 +81,7 @@ class User_LoginManagerTest extends TuleapTestCase {
         $user = aUser()->withPassword('pa')->build();
         stub($this->user_manager)->getUserByUserName()->returns($user);
         try {
-            $this->login_manager->login('john', 'password');
+            $this->login_manager->authenticate('john', 'password');
         } catch(User_Exception_InvalidPasswordWithUserException $exception) {
             $this->assertEqual($exception->getUser(), $user);
             $exception_catched = true;
@@ -102,14 +102,14 @@ class User_LoginManagerTest extends TuleapTestCase {
             )
         )->at(1);
 
-        $this->login_manager->login('john', 'password');
+        $this->login_manager->authenticate('john', 'password');
     }
 
     public function itReturnsTheUserOnSuccess() {
         $user = aUser()->withPassword('password')->withStatus(PFUser::STATUS_ACTIVE)->build();
         stub($this->user_manager)->getUserByUserName()->returns($user);
         $this->assertEqual(
-            $this->login_manager->login('john', 'password'),
+            $this->login_manager->authenticate('john', 'password'),
             $user
         );
     }
@@ -124,7 +124,7 @@ class User_LoginManagerTest extends TuleapTestCase {
                 ->withLastPasswordUpdate(strtotime('15 days ago'))
                 ->build()
         );
-        $this->login_manager->login('john', 'password');
+        $this->login_manager->authenticate('john', 'password');
     }
 
     public function itThrowsAnExceptionWithUserWhenPasswordExpired() {
@@ -137,12 +137,48 @@ class User_LoginManagerTest extends TuleapTestCase {
             ->build();
         stub($this->user_manager)->getUserByUserName()->returns($user);
         try {
-            $this->login_manager->login('john', 'password');
+            $this->login_manager->authenticate('john', 'password');
         } catch(User_Exception_PasswordExpiredException $exception) {
             $this->assertEqual($exception->getUser(), $user);
             $exception_catched = true;
         }
         $this->assertTrue($exception_catched);
+    }
+}
+
+class User_LoginManager_validateAndSetCurrentUserTest extends TuleapTestCase {
+    private $event_manager;
+    private $user_manager;
+    private $login_manager;
+
+    public function setUp() {
+        parent::setUp();
+        Config::store();
+        $this->event_manager = mock('EventManager');
+        $this->user_manager  = mock('UserManager');
+        $this->login_manager = new User_LoginManager($this->event_manager, $this->user_manager);
+    }
+
+    public function tearDown() {
+        Config::restore();
+        parent::tearDown();
+    }
+
+    public function itPersistsValidUser() {
+        $user = aUser()->withStatus(PFUser::STATUS_ACTIVE)->build();
+
+        expect($this->user_manager)->setCurrentUser($user)->once();
+
+        $this->login_manager->validateAndSetCurrentUser($user);
+    }
+
+    public function itDoesntPersistUserWithInvalidStatus() {
+        $this->expectException();
+        $user = aUser()->withStatus(PFUser::STATUS_DELETED)->build();
+
+        expect($this->user_manager)->setCurrentUser($user)->never();
+
+        $this->login_manager->validateAndSetCurrentUser($user);
     }
 }
 
@@ -177,7 +213,7 @@ class User_LoginManagerPluginsTest extends TuleapTestCase {
         );
 
         expect($this->user_manager)->getUserByUserName()->never();
-        $this->login_manager->login('john', 'password');
+        $this->login_manager->authenticate('john', 'password');
     }
 
     public function itInstanciateTheUserWithPluginId() {
@@ -194,7 +230,7 @@ class User_LoginManagerPluginsTest extends TuleapTestCase {
         );
 
         expect($this->user_manager)->getUserByUserName()->never();
-        $this->login_manager->login('john', 'password');
+        $this->login_manager->authenticate('john', 'password');
     }
 
     public function itRaisesAnExceptionIfPluginForbidLogin() {
@@ -210,7 +246,7 @@ class User_LoginManagerPluginsTest extends TuleapTestCase {
             0
         );
 
-        $this->login_manager->login('john', 'password');
+        $this->login_manager->authenticate('john', 'password');
     }
 
     public function refuseLogin(array $params) {
