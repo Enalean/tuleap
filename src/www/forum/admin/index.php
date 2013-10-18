@@ -153,14 +153,17 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 		echo '
 			<H2>'.$Language->getText('forum_admin_index','del_a_msg').'</H2>
 
-			<h2><span class="highlight">'.$Language->getText('forum_admin_index','delete_warn').'</span></h2>
+			<div class="alert">'.$Language->getText('forum_admin_index','delete_warn').'</div>
 			<FORM METHOD="POST" ACTION="?">
 			<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="delete" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-			<B>'.$Language->getText('forum_admin_index','enter_msg_id').'</B><BR>
-			<INPUT TYPE="TEXT" NAME="msg_id" VALUE="">
-			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
+			<div class="control-group">
+                <label for="msg_id">'.$Language->getText('forum_admin_index','enter_msg_id').'</label>
+			    <div class="controls">
+                    <INPUT TYPE="TEXT" NAME="msg_id" id="msg_id" VALUE=""><BR>
+                </div>
+			<INPUT CLASS="btn" TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 			</FORM>';
 
 		forum_footer(array());

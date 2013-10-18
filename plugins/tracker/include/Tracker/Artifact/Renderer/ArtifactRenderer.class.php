@@ -109,8 +109,8 @@ abstract class Tracker_Artifact_ArtifactRenderer {
      */
     public function fetchSubmitButton() {
         return '<p class="artifact-submit-button">
-                  <input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />
-                  <input type="submit" name="submit_and_stay" value="'. $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') .'" />
+                  <input class="btn btn-primary" type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />
+                  <input class="btn btn-primary" type="submit" name="submit_and_stay" value="'. $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') .'" />
                   '. $this->getConcurrentEditMessage() .'
                 </p>';
     }
