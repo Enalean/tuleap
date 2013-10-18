@@ -5,6 +5,9 @@ Version 6.7 (Not released yet)
 	* cardwall: 1.6
 	* tracker: 5.175
 
+    == Bug Fix ==
+	* Fix request #5406: Unable to install Tuleap on CentOs 6
+
 Version 6.6 (Thursday, October 17th 2013)
 	== Enhancement ==
 	* Improvement of login interface. Adding support for multiple type of login sources (tuleap/openID).
