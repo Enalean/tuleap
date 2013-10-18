@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/autoload.php';
+require_once 'www/include/server.php';
 
 class Rest_TokenManagerTest extends TuleapTestCase {
 
@@ -29,6 +29,11 @@ class Rest_TokenManagerTest extends TuleapTestCase {
 
     /** @var  Rest_TokenFactory */
     private $token_factory;
+
+
+    public function skip() {
+        $this->skipUnless(server_is_php_version_equal_or_greater_than_53());
+    }
 
     public function setUp() {
         parent::setUp();
@@ -42,14 +47,6 @@ class Rest_TokenManagerTest extends TuleapTestCase {
         $this->token_value = 'whateverSha1Token';
         $this->token       = new Rest_Token($this->user_id, $this->token_value);
         $this->user        = aUser()->withId($this->user_id)->build();
-    }
-
-    public function itAddsATokenToDatabase() {
-        stub($this->token_dao)->addTokenForUserId()->returns(true);
-
-        expect($this->token_dao)->addTokenForUserId($this->user_id, $this->token_value, '*')->once();
-
-        $this->token_manager->addToken($this->token);
     }
 
     public function itReturnsTheUserIfTokenIsValid() {
@@ -68,7 +65,6 @@ class Rest_TokenManagerTest extends TuleapTestCase {
     }
 
     public function itExpiresATokenIfItBelongsToUser() {
-
         stub($this->user_manager)->getUserById($this->user_id)->returns($this->user);
 
         stub($this->token_dao)->checkTokenExistenceForUserId($this->user_id, $this->token_value)->returnsDar(array());
@@ -86,6 +82,20 @@ class Rest_TokenManagerTest extends TuleapTestCase {
         $this->expectException("Rest_Exception_InvalidTokenException");
 
         $this->token_manager->expireToken($this->token);
+    }
+
+    public function itAddsATokenToDatabase() {
+        stub($this->token_dao)->addTokenForUserId()->returns(true);
+
+        expect($this->token_dao)->addTokenForUserId($this->user_id, '*', '*')->once();
+
+        $this->token_manager->generateTokenForUser($this->user);
+    }
+
+    public function _itGeneratesAProperToken() {
+        stub($this->token_dao)->addTokenForUserId()->returns(true);
+        $result = $this->token_manager->generateTokenForUser($this->user);
+        var_dump($result);
     }
 
 }

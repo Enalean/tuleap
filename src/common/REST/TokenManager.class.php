@@ -17,12 +17,25 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once '/usr/share/php-password-compat/lib/password.php';
+
 /**
  * Class Rest_TokenManager
  * I Deal with Rest_Token
  */
-
 class Rest_TokenManager {
+
+    /**
+     * Produce enough entropy to avoid bruteforce attacks
+     * see http://www.php.net/manual/en/function.openssl-random-pseudo-bytes.php#101947
+     */
+    const RANDOM_BYTES_LENGTH = 64;
+
+    /**
+     * Empirically found value: We found that 2 seconds seems acceptable
+     * for a strong enough token generation
+     */
+    const CPU_COST_ALGORITHM  = 15;
 
     /** @var Rest_TokenDao */
     private $token_dao;
@@ -37,10 +50,6 @@ class Rest_TokenManager {
         $this->token_dao     = $token_dao;
         $this->token_factory = $token_factory;
         $this->user_manager  = $user_manager;
-    }
-
-    public function addToken(Rest_Token $token) {
-        $this->token_dao->addTokenForUserId($token->getUserId(), $token->getTokenValue(), $_SERVER['REQUEST_TIME']);
     }
 
     public function checkToken(Rest_Token $token) {
@@ -58,6 +67,29 @@ class Rest_TokenManager {
         }
 
         throw new Rest_Exception_InvalidTokenException();
+    }
+
+    public function generateTokenForUser(PFUser $user) {
+        $generated_hash = $this->generateNewToken();
+        $this->token_dao->addTokenForUserId($user->getId(), $generated_hash, $_SERVER['REQUEST_TIME']);
+
+        return new Rest_Token(
+            $user->getId(),
+            $generated_hash
+        );
+    }
+
+    private function generateNewToken() {
+        $random_bytes = openssl_random_pseudo_bytes(self::RANDOM_BYTES_LENGTH);
+        $token_value  = password_hash(
+            $random_bytes,
+            PASSWORD_BCRYPT,
+            array(
+                "cost" => self::CPU_COST_ALGORITHM
+            )
+        );
+
+        return $token_value;
     }
 
 }
