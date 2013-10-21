@@ -17,8 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once '/usr/share/php-password-compat/lib/password.php';
-
 /**
  * Class Rest_TokenManager
  * I Deal with Rest_Token
@@ -36,6 +34,11 @@ class Rest_TokenManager {
      * for a strong enough token generation
      */
     const CPU_COST_ALGORITHM  = 15;
+
+    /**
+     * Expiration time for tokens in seconds (24 hours)
+     */
+    const TOKENS_EXPIRATION_TIME = 86400;
 
     /** @var Rest_TokenDao */
     private $token_dao;
@@ -69,6 +72,15 @@ class Rest_TokenManager {
         throw new Rest_Exception_InvalidTokenException();
     }
 
+    public function expireOldTokens() {
+        $timestamp = $this->computeExpirationTimestamp();
+        return $this->token_dao->deleteTokensOlderThan($timestamp);
+    }
+
+    private function computeExpirationTimestamp() {
+        return $_SERVER['REQUEST_TIME'] - self::TOKENS_EXPIRATION_TIME;
+    }
+
     public function generateTokenForUser(PFUser $user) {
         $generated_hash = $this->generateNewToken();
         $this->token_dao->addTokenForUserId($user->getId(), $generated_hash, $_SERVER['REQUEST_TIME']);
@@ -80,6 +92,8 @@ class Rest_TokenManager {
     }
 
     private function generateNewToken() {
+        include_once '/usr/share/php-password-compat/lib/password.php';
+
         $random_bytes = openssl_random_pseudo_bytes(self::RANDOM_BYTES_LENGTH);
         $token_value  = password_hash(
             $random_bytes,
