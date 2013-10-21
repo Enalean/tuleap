@@ -559,21 +559,32 @@ class AgileDashboardPlugin extends Plugin {
      */
     public function rest_get_project_plannings($params) {
         $user              = UserManager::instance()->getCurrentUser();
-        $planning_resource = $this->buildRightVerisonOfProjectPlanningsResource($params['version']);
+        $planning_resource = $this->buildRightVersionOfProjectPlanningsResource($params['version']);
 
-        $params['result'] = $planning_resource->get($user, $params['project']);
+        $params['result'] = $planning_resource->get(
+            $user,
+            $params['project'],
+            $params['limit'],
+            $params['offset']
+        );
     }
 
     /**
      * @see REST_OPTIONS_PROJECT_PLANNINGS
      */
     public function rest_options_project_plannings($params) {
-        $planning_resource = $this->buildRightVerisonOfProjectPlanningsResource($params['version']);
+        $user              = UserManager::instance()->getCurrentUser();
+        $planning_resource = $this->buildRightVersionOfProjectPlanningsResource($params['version']);
 
-        $params['result'] = $planning_resource->options();
+        $params['result'] = $planning_resource->options(
+            $user,
+            $params['project'],
+            $params['limit'],
+            $params['offset']
+        );
     }
 
-    private function buildRightVerisonOfProjectPlanningsResource($version) {
+    private function buildRightVersionOfProjectPlanningsResource($version) {
         $class_with_right_namespace = '\\Tuleap\\AgileDashboard\\REST\\'.$version.'\\ProjectPlanningsResource';
         return new $class_with_right_namespace;
     }

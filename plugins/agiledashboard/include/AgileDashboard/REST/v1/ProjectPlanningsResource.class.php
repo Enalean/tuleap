@@ -22,25 +22,51 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use PlanningFactory;
 use PFUser;
 use Project;
+use \Luracast\Restler\RestException;
 
 /**
  * Wrapper for milestone related REST methods
  */
 class ProjectPlanningsResource {
+    const MAX_LIMIT = 50;
 
-    public function get(PFUser $user, Project $project) {
+    public function get(PFUser $user, Project $project, $limit, $offset) {
+
+        if (! $this->limitValueIsAcceptable($limit)) {
+             throw new RestException(406, 'Maximum value for limit exceeded');
+        }
+
         $planning_representations = array();
         $project_id               = $project->getId();
 
-        $plannings = PlanningFactory::build()->getPlannings($user, $project_id);
+        $all_plannings = PlanningFactory::build()->getPlannings($user, $project_id);
+        $plannings     = array_slice($all_plannings, $offset, $limit);
+
         foreach($plannings as $planning) {
             $planning_representations[] = new PlanningRepresentation($planning);
         }
+
+        $this->sendPaginationHeaders($limit, $offset, count($all_plannings));
+
         return $planning_representations;
     }
 
-    public function options() {
+    private function limitValueIsAcceptable($limit) {
+        return $limit <= self::MAX_LIMIT;
+    }
+
+    public function options(PFUser $user, Project $project, $limit, $offset) {
+        $all_plannings = PlanningFactory::build()->getPlannings($user, $project->getID());
+
         header('Allow: GET, OPTIONS');
+        $this->sendPaginationHeaders($limit, $offset, count($all_plannings));
+    }
+
+    private function sendPaginationHeaders($limit, $offset, $size) {
+        header('X-PAGINATION-LIMIT: '. $limit);
+        header('X-PAGINATION-OFFSET: '. $offset);
+        header('X-PAGINATION-SIZE: '. $size);
+        header('X-PAGINATION-LIMIT-MAX: '. self::MAX_LIMIT);
     }
 }
 ?>

@@ -59,9 +59,10 @@ class PlanningDao extends DataAccessObject {
         $sql = "SELECT * 
                 FROM plugin_agiledashboard_planning
                 WHERE group_id = $group_id";
+
         return $this->retrieve($sql);
     }
-    
+
     function searchById($planning_id){
         $planning_id = $this->da->escapeInt($planning_id);
         $sql = "SELECT * 

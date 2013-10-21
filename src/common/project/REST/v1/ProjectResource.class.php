@@ -97,12 +97,14 @@ class ProjectResource {
     /**
      * @url GET {id}/plannings
      *
-     * @param int $id The id of the project
+     * @param int $id     The id of the project
+     * @param int $limit  The number of element displayed per page {@from path}
+     * @param int $offset The id of the first element to display {@from path}
      *
      * @return array of ProjectPlanningResource
      */
-    public function getPlannings($id) {
-        return $this->plannings($id, Event::REST_GET_PROJECT_PLANNINGS);
+    public function getPlannings($id, $limit = 10, $offset = 0) {
+        return $this->plannings($id, $limit, $offset, Event::REST_GET_PROJECT_PLANNINGS);
     }
 
     /**
@@ -111,10 +113,10 @@ class ProjectResource {
      * @param int $id The id of the project
      */
     public function optionsPlannings($id) {
-        return $this->plannings($id, Event::REST_OPTIONS_PROJECT_PLANNINGS);
+        return $this->plannings($id, 10, 0, Event::REST_OPTIONS_PROJECT_PLANNINGS);
     }
 
-    private function plannings($id, $event) {
+    private function plannings($id, $limit, $offset, $event) {
         $project = $this->getProject($id);
         $result  = array();
 
@@ -123,6 +125,8 @@ class ProjectResource {
             array(
                 'version' => 'v1',
                 'project' => $project,
+                'limit'   => $limit,
+                'offset'  => $offset,
                 'result'  => &$result,
             )
         );

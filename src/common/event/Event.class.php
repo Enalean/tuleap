@@ -587,7 +587,9 @@ class Event {
      * Parameters:
      *     'version' => String
      *     'project' => Project
-     *     'result'  => String
+     *     'limit'   => int
+     *     'offset'  => int
+     *     'result'  => array
      */
     const REST_GET_PROJECT_PLANNINGS = 'rest_get_project_plannings';
 
@@ -597,7 +599,9 @@ class Event {
      * Parameters:
      *     'version' => String
      *     'project' => Project
-     *     'result'  => String
+     *     'limit'   => int
+     *     'offset'  => int
+     *     'result'  => array
      */
     const REST_OPTIONS_PROJECT_PLANNINGS = 'rest_options_project_plannings';
 }
