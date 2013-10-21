@@ -874,9 +874,15 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     }
                     if (!$only_one_column) {
                         if ($from_aid != null) {
-                            $html .= '<td width="16"><a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'&from_aid='.$from_aid.'" title="Display artifact #'. $row['id'] .'">'. $GLOBALS['HTML']->getImage('ic/artifact-arrow.png', array('alt' => '#'.$row['id'])) .'</a></td>';
+                            $html .= '<td><a class="direct-link-to-artifact icon-eye-open" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'&from_aid='.$from_aid.'" title="Display artifact #'. $row['id'] .'"> '.
+                                    $GLOBALS['Language']->getText('plugin_tracker_include_report' ,'show').'</a>';
+                            $html .= ' <a class="direct-link-to-artifact icon-pencil" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'&from_aid='.$from_aid.'" title="Display artifact #'. $row['id'] .'"> '.
+                                    $GLOBALS['Language']->getText('plugin_tracker_include_report' ,'edit') .'</a></td>';
                         } else {
-                            $html .= '<td width="16"><a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'" title="Display artifact #'. $row['id'] .'">'. $GLOBALS['HTML']->getImage('ic/artifact-arrow.png', array('alt' => '#'.$row['id'])) .'</a></td>';
+                            $html .= '<td><a class="direct-link-to-artifact icon-eye-open" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'" title="Display artifact #'. $row['id'] .'"> '.
+                                    $GLOBALS['Language']->getText('plugin_tracker_include_report' ,'show') .'</a>';
+                            $html .= ' <a class="direct-link-to-artifact icon-pencil" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'" title="Display artifact #'. $row['id'] .'"> '.
+                                    $GLOBALS['Language']->getText('plugin_tracker_include_report' ,'edit') .'</a></td>';
                         }
                     }
                     foreach($columns as $column) {
