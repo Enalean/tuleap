@@ -352,6 +352,7 @@ table.release tr td img {
     margin: 2px 0 0 0;
     line-height: 0;
     height: 18px;
+    padding: 7px 2px;
 }
 /* }}} */
 
@@ -2121,10 +2122,6 @@ h3.toggler-hide-noajax {
 }
 .dropdown_panel label {
     display: inline;
-}
-.dropdown_panel select,
-.dropdown_panel input {
-    width: auto;
 }
 /* }}} */
 /* {{{ TreeNode */
