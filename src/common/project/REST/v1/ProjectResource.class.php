@@ -20,6 +20,8 @@
 namespace Tuleap\Project\REST\v1;
 
 use ProjectManager;
+use EventManager;
+use Event;
 use URLVerification;
 use \Luracast\Restler\RestException;
 use \Tuleap\Project\REST\ProjectInfoRepresentation;
@@ -90,5 +92,41 @@ class ProjectResource {
         }
 
         return $project;
+    }
+
+    /**
+     * @url GET {id}/plannings
+     *
+     * @param int $id The id of the project
+     *
+     * @return array of ProjectPlanningResource
+     */
+    public function getPlannings($id) {
+        return $this->plannings($id, Event::REST_GET_PROJECT_PLANNINGS);
+    }
+
+    /**
+     * @url OPTIONS {id}/plannings
+     *
+     * @param int $id The id of the project
+     */
+    public function optionsPlannings($id) {
+        return $this->plannings($id, Event::REST_OPTIONS_PROJECT_PLANNINGS);
+    }
+
+    private function plannings($id, $event) {
+        $project = $this->getProject($id);
+        $result  = array();
+
+        EventManager::instance()->processEvent(
+            $event,
+            array(
+                'version' => 'v1',
+                'project' => $project,
+                'result'  => &$result,
+            )
+        );
+
+        return $result;
     }
 }

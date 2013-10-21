@@ -580,5 +580,25 @@ class Event {
      *  'restler' => \Luracast\Restler\Restler
      */
     const REST_RESOURCES = 'rest_resources';
+
+    /**
+     * Event raised to get plannings from a project with REST
+     *
+     * Parameters:
+     *     'version' => String
+     *     'project' => Project
+     *     'result'  => String
+     */
+    const REST_GET_PROJECT_PLANNINGS = 'rest_get_project_plannings';
+
+    /**
+     * Event raised to get plannings options from a project with REST
+     *
+     * Parameters:
+     *     'version' => String
+     *     'project' => Project
+     *     'result'  => String
+     */
+    const REST_OPTIONS_PROJECT_PLANNINGS = 'rest_options_project_plannings';
 }
 ?>
