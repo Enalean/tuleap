@@ -42,13 +42,9 @@ class TokenAuthentication implements iAuthenticate {
 
     public function __isAllowed() {
         try {
-            $login_manager = new User_LoginManager(
-                EventManager::instance(),
-                $this->user_manager
-            );
-            $login_manager->validateAndSetCurrentUser(
-                $this->getUserFromToken()
-            );
+            if (! $this->cookieBasedAuthentication()) {
+                $this->tokenBasedAuthentication();
+            }
             return true;
         } catch (\User_Exception_LoginException $exception) {
             throw new RestException(403, $exception->getMessage());
@@ -56,6 +52,27 @@ class TokenAuthentication implements iAuthenticate {
             throw new RestException(401, $exception->getMessage());
         }
         throw new RestException(401, 'Authentication required (headers: ' .self::HTTP_TOKEN_HEADER. ', ' .self::HTTP_USER_HEADER. ')');
+    }
+
+    /**
+     * We need it to browse the API as we are logged in through the Web UI
+     */
+    private function cookieBasedAuthentication() {
+        $current_user = $this->user_manager->getCurrentUser();
+        if (! $current_user->isAnonymous()) {
+            return true;
+        }
+        return false;
+    }
+
+    private function tokenBasedAuthentication() {
+        $login_manager = new User_LoginManager(
+            EventManager::instance(),
+            $this->user_manager
+        );
+        $login_manager->validateAndSetCurrentUser(
+            $this->getUserFromToken()
+        );
     }
 
     /**
