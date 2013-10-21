@@ -22,7 +22,7 @@ echo '<h3>'. $Language->getText('account_options', 'preferences') .'</h3>';
     $csrf = new CSRFSynchronizerToken('/account/preferences.php');
     echo $csrf->fetchHTMLInput();
 ?>
-<div class="row">
+<div class="row-fluid">
     <div class="span6">
             <fieldset>
                 <legend><?php echo $Language->getText('account_preferences', 'email_settings'); ?></legend>
@@ -259,11 +259,12 @@ print "</select>\n";
             </fieldset>
     </div>
 </div>
-    <div class="row">
-        <div class="span12">
-            <INPUT type="submit" name="Submit" class="btn btn-primary" value="<?php echo $Language->getText('global', 'btn_submit'); ?>">
-        </div>
+<br/>
+<div class="row-fluid">
+    <div class="span12">
+        <INPUT type="submit" name="Submit" class="btn btn-primary" value="<?php echo $Language->getText('global', 'btn_submit'); ?>">
     </div>
+</div>
 </FORM>
 <?php 
 $HTML->footer(array());

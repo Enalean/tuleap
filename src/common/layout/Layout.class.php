@@ -1268,16 +1268,8 @@ class Layout extends Response {
      */
     public function displayStylesheetElements($params) {
         $this->displayCommonStylesheetElements($params);
+        
         // Stylesheet external files
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-2.3.0.min.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-responsive-2.3.0.min.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/font-awesome.css" />';
-        echo '<!--[if IE 7]><link rel="stylesheet" href="/themes/common/css/font-awesome-ie7.css"><![endif]-->';
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/print.css" media="print" />';
-        $css = $GLOBALS['sys_user_theme'] . $this->getFontSizeName($GLOBALS['sys_user_font_size']) .'.css';
-        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme($css) .'" />';
-        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
         if(isset($params['stylesheet']) && is_array($params['stylesheet'])) {
             foreach($params['stylesheet'] as $css) {
                 print '<link rel="stylesheet" type="text/css" href="'.$css.'" />';
@@ -1303,11 +1295,16 @@ class Layout extends Response {
     }
     
     protected function displayCommonStylesheetElements($params) {
+        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-2.3.0.min.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-responsive-2.3.0.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
         $this->displayFontAwesomeStylesheetElements();
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/print.css" media="print" />';
         $css = $GLOBALS['sys_user_theme'] . $this->getFontSizeName($GLOBALS['sys_user_font_size']) .'.css';
-        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme($css) .'" />';
+        if (file_exists($GLOBALS['codendi_dir'].'/src/www'.$this->getStylesheetTheme($css))) {
+            echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme($css) .'" />';
+        }
+        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('style.css') .'" />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
     }
 
@@ -2150,7 +2147,7 @@ class Layout extends Response {
             $output .= '<input type="hidden" name="'.$hidden['name'].'" value="'.$hidden['value'].'" />';
         }
 
-        $output .= '<input style="font-size:0.8em" type="text" size="22" name="words" value="' . $this->purifier->purify($words, CODENDI_PURIFIER_CONVERT_HTML) . '" /><br />';
+        $output .= '<input style="font-size:0.8em" type="text" class="input-medium" size="22" name="words" value="' . $this->purifier->purify($words, CODENDI_PURIFIER_CONVERT_HTML) . '" /><br />';
         $output .= '<input type="CHECKBOX" name="exact" value="1"' . ( $exact ? ' CHECKED' : ' UNCHECKED' ) . '><span style="font-size:0.8em">' . $GLOBALS['Language']->getText('include_menu', 'require_all_words') . '</span>';
 
         $output .= '</td><td>';
