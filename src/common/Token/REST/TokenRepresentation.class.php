@@ -22,6 +22,7 @@ namespace Tuleap\Token\REST;
 use Rest_Token;
 
 class TokenRepresentation {
+    const ROUTE = 'token';
 
     /** @var int */
     public $user_id;
@@ -32,9 +33,9 @@ class TokenRepresentation {
     /** @var string */
     public $uri;
 
-    public function __construct(Rest_Token $token, $uri) {
+    public function __construct(Rest_Token $token) {
         $this->user_id = $token->getUserId();
         $this->token   = $token->getTokenValue();
-        $this->uri     = $uri;
+        $this->uri     = self::ROUTE.'/'.$this->token;
     }
 }

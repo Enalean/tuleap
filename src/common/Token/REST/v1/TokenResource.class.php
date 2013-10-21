@@ -54,16 +54,8 @@ class TokenResource {
             );
 
             $user  = $user_login->authenticate($authentication->username, $authentication->password);
-            $token = new \Rest_Token(
-                $user->getId(),
-                'my token'
-            );
-
-            $token_manager = $this->getTokenManager();
-            $token_manager->addToken($token);
             return new TokenRepresentation(
-                $token,
-                '/????'
+                $this->getTokenManager()->generateTokenForUser($user)
             );
         } catch(\Exception $exception) {
             throw new RestException(400, $exception->getMessage());
