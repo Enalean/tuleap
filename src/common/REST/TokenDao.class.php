@@ -39,11 +39,21 @@ class Rest_TokenDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+
     public function deleteTokensOlderThan($date_timestamp) {
         $date_timestamp = $this->da->escapeInt($date_timestamp);
 
         $sql = "DELETE FROM rest_authentication_token
                 WHERE created_on < $date_timestamp";
+
+        return $this->update($sql);
+    }
+
+    public function deleteAllTokensForUser($user_id) {
+        $user_id = $this->da->escapeInt($user_id);
+
+        $sql = "DELETE FROM rest_authentication_token
+                WHERE user_id = $user_id";
 
         return $this->update($sql);
     }

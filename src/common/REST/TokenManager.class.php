@@ -81,6 +81,10 @@ class Rest_TokenManager {
         return $_SERVER['REQUEST_TIME'] - self::TOKENS_EXPIRATION_TIME;
     }
 
+    public function expireAllTokensForUser(PFUser $user) {
+        return $this->token_dao->deleteAllTokensForUser($user->getId());
+    }
+
     public function generateTokenForUser(PFUser $user) {
         $generated_hash = $this->generateNewToken();
         $this->token_dao->addTokenForUserId($user->getId(), $generated_hash, $_SERVER['REQUEST_TIME']);

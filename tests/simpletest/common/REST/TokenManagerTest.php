@@ -75,6 +75,12 @@ class Rest_TokenManagerTest extends TuleapTestCase {
         $this->token_manager->expireToken($this->token);
     }
 
+    public function itExpiresAllTokensForAUser() {
+        expect($this->token_dao)->deleteAllTokensForUser($this->user_id)->once();
+
+        $this->token_manager->expireAllTokensForUser($this->user);
+    }
+
     public function itDoesNotExpireATokenIfItDoesNotBelongToUser() {
         stub($this->token_dao)->checkTokenExistenceForUserId($this->user_id, $this->token_value)->returnsEmptyDar();
 

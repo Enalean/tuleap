@@ -65,20 +65,32 @@ class TokenResource {
     /**
      * Expire a token
      *
+     * @url DELETE tokens/{id}
      * @param string $id Token ID
      */
     protected function delete($id) {
         try {
-            $token = new \Rest_Token(
-                $this->user_manager->getCurrentUser()->getId(),
-                $id
+            $this->getTokenManager()->expireToken(
+                new \Rest_Token(
+                    $this->user_manager->getCurrentUser()->getId(),
+                    $id
+                )
             );
-            $this->getTokenManager()->expireToken($token);
         } catch(\Exception $exception) {
             throw new RestException(400, $exception->getMessage());
         }
     }
 
+    /**
+     * Expire all tokens for a user
+     *
+     * @url DELETE tokens
+     */
+    protected function deleteAll() {
+        $this->getTokenManager()->expireAllTokensForUser(
+            $this->user_manager->getCurrentUser()
+        );
+    }
 
     /**
      * @url OPTIONS
