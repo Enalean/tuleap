@@ -876,12 +876,12 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         if ($from_aid != null) {
                             $html .= '<td><a class="direct-link-to-artifact icon-eye-open" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'&from_aid='.$from_aid.'" title="Display artifact #'. $row['id'] .'"> '.
                                     $GLOBALS['Language']->getText('plugin_tracker_include_report' ,'show').'</a>';
-                            $html .= ' <a class="direct-link-to-artifact icon-pencil" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'&from_aid='.$from_aid.'" title="Display artifact #'. $row['id'] .'"> '.
+                            $html .= '&nbsp;&nbsp;&nbsp;<a class="direct-link-to-artifact icon-edit" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'&from_aid='.$from_aid.'&func=edit" title="Display artifact #'. $row['id'] .'"> '.
                                     $GLOBALS['Language']->getText('plugin_tracker_include_report' ,'edit') .'</a></td>';
                         } else {
                             $html .= '<td><a class="direct-link-to-artifact icon-eye-open" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'" title="Display artifact #'. $row['id'] .'"> '.
                                     $GLOBALS['Language']->getText('plugin_tracker_include_report' ,'show') .'</a>';
-                            $html .= ' <a class="direct-link-to-artifact icon-pencil" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'" title="Display artifact #'. $row['id'] .'"> '.
+                            $html .= '&nbsp;&nbsp;&nbsp;<a class="direct-link-to-artifact icon-edit" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'&func=edit" title="Display artifact #'. $row['id'] .'"> '.
                                     $GLOBALS['Language']->getText('plugin_tracker_include_report' ,'edit') .'</a></td>';
                         }
                     }

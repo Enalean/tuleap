@@ -413,7 +413,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $html = '';
         $html .= '<a class="direct-link-to-artifact icon-eye-open" href="'.TRACKER_BASE_URL.'/?aid='. $this->id .'" title="Display artifact #'. $this->id .'"> '.
                 $GLOBALS['Language']->getText('plugin_tracker_include_report' ,'show') .'</a> ';
-        $html .= ' <a class="direct-link-to-artifact icon-pencil" href="'.TRACKER_BASE_URL.'/?aid='. $this->id .'" title="Display artifact #'. $this->id .'"> '.
+        $html .= ' <a class="direct-link-to-artifact icon-edit" href="'.TRACKER_BASE_URL.'/?aid='. $this->id .'&func=edit" title="Display artifact #'. $this->id .'"> '.
                 $GLOBALS['Language']->getText('plugin_tracker_include_report' ,'edit') .'</a> ';
         $html .= '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid=' . $this->id . '">';
         $html .= $hp->purify($item_name, CODENDI_PURIFIER_CONVERT_HTML);
@@ -643,11 +643,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $changeset_factory = $this->getChangesetFactory();
                 $GLOBALS['Response']->sendJSON($changeset_factory->getNewChangesetsFormattedForJson($this, $changeset_id));
                 break;
-            default:
+            case 'edit':
                 if ($request->isAjax()) {
                     echo $this->fetchTooltip($current_user);
                 } else {
                     $renderer = new Tracker_Artifact_EditRenderer($this->getEventManager(), $this, $this->getFormElementFactory(), $layout);
+                    $renderer->display($request, $current_user);
+                }
+                break;
+            default:
+                if ($request->isAjax()) {
+                    echo $this->fetchTooltip($current_user);
+                } else {
+                    $renderer = new Tracker_Artifact_ReadOnlyRenderer($this->getEventManager(), $this, $this->getFormElementFactory(), $layout);
                     $renderer->display($request, $current_user);
                 }
                 break;
