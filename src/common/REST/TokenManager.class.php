@@ -107,7 +107,7 @@ class Rest_TokenManager {
             )
         );
 
-        return $token_value;
+        return base64_encode($token_value);
     }
 
 }
