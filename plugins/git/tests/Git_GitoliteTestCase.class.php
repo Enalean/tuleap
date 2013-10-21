@@ -58,8 +58,6 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
 
         mkdir($this->repoDir);
 
-        $this->httpsHost = $GLOBALS['sys_https_host'];
-
         $GLOBALS['sys_https_host'] = 'localhost';
         PermissionsManager::setInstance(new MockPermissionsManager());
         $this->permissions_manager = PermissionsManager::instance();
@@ -78,7 +76,7 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
         parent::tearDown();
         chdir($this->cwd);
     
-        $GLOBALS['sys_https_host'] = $this->httpsHost;
+        unset($GLOBALS['sys_https_host']);
         PermissionsManager::clearInstance();
     }
     

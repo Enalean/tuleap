@@ -27,9 +27,18 @@ Mock::generatePartial(
 
 class Webdav_URLVerificationTest extends UnitTestCase {
 
+    public function tearDown() {
+        parent::tearDown();
+        unset($GLOBALS['sys_force_ssl']);
+        unset($GLOBALS['sys_default_domain']);
+        unset($GLOBALS['sys_https_host']);
+    }
+
     function testAssertValidUrlHTTPAndForceSslEquals0() {
         $server = array('HTTP_HOST' => 'webdav.codendi.org');
 
+        $GLOBALS['sys_default_domain'] = 'example.com';
+        $GLOBALS['sys_https_host']     = 'example.com';
         $GLOBALS['sys_force_ssl'] = 0;
 
         $WebdavURLVerification = new Webdav_URLVerificationTestVersion($this);
@@ -45,7 +54,9 @@ class Webdav_URLVerificationTest extends UnitTestCase {
         $server = array('HTTP_HOST' => 'webdav.codendi.org',
                         'HTTPS'     => 'on');
 
-        $GLOBALS['sys_force_ssl'] = 0;
+        $GLOBALS['sys_default_domain'] = 'example.com';
+        $GLOBALS['sys_https_host']     = 'example.com';
+        $GLOBALS['sys_force_ssl']      = 0;
 
         $WebdavURLVerification = new Webdav_URLVerificationTestVersion($this);
         $WebdavURLVerification->setReturnValue('getWebDAVHost', 'webdav.codendi.org');
@@ -59,7 +70,9 @@ class Webdav_URLVerificationTest extends UnitTestCase {
     function testAssertValidUrlHTTPAndForceSslEquals1() {
         $server = array('HTTP_HOST' => 'webdav.codendi.org');
 
-        $GLOBALS['sys_force_ssl'] = 1;
+        $GLOBALS['sys_default_domain'] = 'example.com';
+        $GLOBALS['sys_https_host']     = 'example.com';
+        $GLOBALS['sys_force_ssl']      = 1;
 
         $WebdavURLVerification = new Webdav_URLVerificationTestVersion($this);
         $WebdavURLVerification->setReturnValue('getWebDAVHost', 'webdav.codendi.org');
@@ -74,6 +87,8 @@ class Webdav_URLVerificationTest extends UnitTestCase {
         $server = array('HTTP_HOST' => 'webdav.codendi.org',
                         'HTTPS'     => 'on');
 
+        $GLOBALS['sys_default_domain'] = 'example.com';
+        $GLOBALS['sys_https_host']     = 'example.com';
         $GLOBALS['sys_force_ssl'] = 1;
 
         $WebdavURLVerification = new Webdav_URLVerificationTestVersion($this);
@@ -117,7 +132,8 @@ class Webdav_URLVerificationTest extends UnitTestCase {
     function testAssertValidUrlButWebdavHostIsHttpsHost() {
         $server = array('HTTP_HOST' => 'b.codendi.org');
 
-        $GLOBALS['sys_https_host'] = 'b.codendi.org';
+        $GLOBALS['sys_default_domain'] = 'example.com';
+        $GLOBALS['sys_https_host']     = 'b.codendi.org';
 
         $WebdavURLVerification = new Webdav_URLVerificationTestVersion($this);
         $WebdavURLVerification->setReturnValue('getWebDAVHost', 'b.codendi.org');

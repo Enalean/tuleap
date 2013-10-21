@@ -56,11 +56,15 @@ Mock::generate('BaseLanguageFactory');
 class Tracker_Artifact_ChangesetTest extends UnitTestCase {
     
     function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage();
+        $GLOBALS['Language']           = new MockBaseLanguage();
+        $GLOBALS['sys_default_domain'] = 'localhost';
+        $GLOBALS['sys_force_ssl']      = 0;
     }
     
-    function tearDrop() {
+    function tearDown() {
         unset($GLOBALS['Language']);
+        unset($GLOBALS['sys_default_domain']);
+        unset($GLOBALS['sys_force_ssl']);
     }
     
     function _testGetValue() {

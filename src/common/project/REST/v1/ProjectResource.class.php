@@ -20,6 +20,7 @@
 namespace Tuleap\Project\REST\v1;
 
 use ProjectManager;
+use UserManager;
 use URLVerification;
 use \Luracast\Restler\RestException;
 use \Tuleap\Project\REST\ProjectInfoRepresentation;
@@ -79,16 +80,16 @@ class ProjectResource {
      * @return Project
      */
     private function getProject($id) {
-        $project = ProjectManager::instance()->getProject($id);
-        if ($project->isError()) {
+        try {
+            $project          = ProjectManager::instance()->getProject($id);
+            $user             = UserManager::instance()->getCurrentUser();
+            $url_verification = new URLVerification();
+            $url_verification->userCanAccessProject($user, $project);
+            return $project;
+        } catch (\Project_AccessProjectNotFoundException $exception) {
             throw new RestException(404);
+        } catch (\Project_AccessException $exception) {
+            throw new RestException(403, $exception->getMessage());
         }
-
-        $url_verification = new URLVerification();
-        if (! $url_verification->userCanAccessProject($project)) {
-            throw new RestException(403);
-        }
-
-        return $project;
     }
 }
