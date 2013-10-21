@@ -4,7 +4,8 @@ codendi.locales['tracker'] = {
 codendi.locales['tracker_formelement_admin'] = {
     cancel: 'annuler',
     add_another_file: 'Ajouter un autre fichier',
-    unique_field: 'Ce type de champ ne peut être présent qu\'une fois par tracker.'
+    unique_field: 'Ce type de champ ne peut être présent qu\'une fois par tracker.',
+    lose_follows: 'Votre commentaire sera perdu. Voulez-vous continuer ?'
 };
 codendi.locales['tracker_artifact'] = {
     masschange: 'Mise à jour massive',

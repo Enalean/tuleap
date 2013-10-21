@@ -33,6 +33,7 @@ class Tracker_Artifact_ReadOnlyRenderer extends Tracker_Artifact_EditRenderer {
      */
     public function fetchFields(Tracker_Artifact $artifact, $submitted_values = array()) {
         return '<div class="tabForStory1693" id="fieldsFetchedChangeMe">
+            <input type="hidden" id="artifact-read-only-page" value="" />
             <p>
                 <a href="'.TRACKER_BASE_URL.'/?aid='. $artifact->getId() .'&func=edit" class="icon-edit btn btn-primary"> '.
                     $GLOBALS['Language']->getText('plugin_tracker_include_report' ,'edit').
