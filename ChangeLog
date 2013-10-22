@@ -7,6 +7,7 @@ Version 6.7 (Not released yet)
 
     == Bug Fix ==
 	* Fix request #5406: Unable to install Tuleap on CentOs 6
+	* Fix javascript typo to not make IE crying
 
 Version 6.6 (Thursday, October 17th 2013)
 	== Enhancement ==
