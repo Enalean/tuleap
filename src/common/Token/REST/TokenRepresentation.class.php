@@ -22,7 +22,7 @@ namespace Tuleap\Token\REST;
 use Rest_Token;
 
 class TokenRepresentation {
-    const ROUTE = 'token';
+    const ROUTE = 'tokens';
 
     /** @var int */
     public $user_id;

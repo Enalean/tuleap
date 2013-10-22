@@ -43,7 +43,7 @@ class TokenResource {
      * Generate a token for authentication
      *
      * @param TokenUserAuthRepresentation $authentication {@from body}
-     *
+     * @url POST
      * @return TokenRepresentation
      */
     public function post(TokenUserAuthRepresentation $authentication) {
@@ -65,7 +65,7 @@ class TokenResource {
     /**
      * Expire a token
      *
-     * @url DELETE tokens/{id}
+     * @url DELETE {id}
      * @param string $id Token ID
      */
     protected function delete($id) {
@@ -84,7 +84,7 @@ class TokenResource {
     /**
      * Expire all tokens for a user
      *
-     * @url DELETE tokens
+     * @url DELETE
      */
     protected function deleteAll() {
         $this->getTokenManager()->expireAllTokensForUser(

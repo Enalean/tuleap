@@ -28,6 +28,6 @@ class ResourcesInjector {
 
     public function populate(Restler $restler) {
         $restler->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource', 'projects');
-        $restler->addAPIClass('\\Tuleap\\Token\\REST\\TokenResource',     'token');
+        $restler->addAPIClass('\\Tuleap\\Token\\REST\\TokenResource',     'tokens');
     }
 }
