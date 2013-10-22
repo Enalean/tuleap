@@ -229,12 +229,16 @@ class Planning_Controller extends MVC2_PluginController {
                 continue;
             }
 
-            $plannings = $this->getPlanningsShortAccess($project->getID());
+            try {
+                $plannings = $this->getPlanningsShortAccess($project->getID());
 
-            /* @var $links Systray_LinksCollection */
-            $links->append(
-                new Systray_AgileDashboardLink($project, $plannings)
-            );
+                /* @var $links Systray_LinksCollection */
+                $links->append(
+                    new Systray_AgileDashboardLink($project, $plannings)
+                );
+            } catch (Planning_InvalidConfigurationException $e) {
+                //do nothing if the project configuration is invalid
+            }
         }
     }
 
