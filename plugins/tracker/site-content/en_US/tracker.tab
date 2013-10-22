@@ -435,8 +435,8 @@ plugin_tracker_include_report	export_only_report_fields	Export only report field
 plugin_tracker_include_report	export_all_columns	Export all columns
 plugin_tracker_include_report	export_only_report_columns	Export all report columns
 plugin_tracker_include_report	query	Query
-plugin_tracker_include_report	show	Show
 plugin_tracker_include_report	edit	Edit
+plugin_tracker_include_report	show	Show
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactTrackerHtml.class.php
