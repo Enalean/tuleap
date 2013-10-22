@@ -75,7 +75,7 @@ Dual licensed under the MIT or GPL licenses.
 					return div.XMLDocument.documentElement.attributes[ key ];
 				}
 
-			},
+			};
 		
 			// convert invalid characters to dashes
 			// http://www.w3.org/TR/REC-xml/#NT-Name
