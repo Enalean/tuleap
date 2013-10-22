@@ -129,6 +129,10 @@ class User_LoginPresenter {
     public function getToggleSsl() {
         return $this->toggle_ssl;
     }
+
+    public function login_intro() {
+        return file_get_contents($GLOBALS['Language']->getContent('account/login_intro', null, null, '.html'));
+    }
 }
 
 ?>
