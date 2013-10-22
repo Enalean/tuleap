@@ -1,3 +1,6 @@
+Version 1.8 - Tuleap 6.7
+    * Fix request #5447: Fatal error in error logs but no visual effect
+
 Version 1.7 - Tuleap 6.7
     * Fixing cardwall cards color
 
