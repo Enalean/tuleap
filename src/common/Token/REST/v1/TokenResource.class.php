@@ -99,6 +99,25 @@ class TokenResource {
         header('Allow: POST, OPTIONS, DELETE');
     }
 
+    /**
+     * @url OPTIONS {id}
+     * @param string $id Token ID
+     */
+    protected function optionsForToken($id) {
+        try {
+            $this->getTokenManager()->checkToken(
+                new \Rest_Token(
+                    $this->user_manager->getCurrentUser()->getId(),
+                    $id
+                )
+            );
+        } catch(\Rest_Exception_InvalidTokenException $exception) {
+            throw new RestException(404, $exception->getMessage());
+        }
+
+        header('Allow: OPTIONS, DELETE');
+    }
+
     private function getTokenManager() {
         $token_dao = new \Rest_TokenDao();
         return new \Rest_TokenManager(
