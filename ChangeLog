@@ -4,10 +4,12 @@ Version 6.7 (Not released yet)
 	* fulltextsearch: 0.23
 	* cardwall: 1.6
 	* tracker: 5.175
+	* openid: 0.3
 
     == Bug Fix ==
 	* Fix request #5406: Unable to install Tuleap on CentOs 6
 	* Fix javascript typo to not make IE crying
+	* Fix request #5450: login page customisation broken
 
 Version 6.6 (Thursday, October 17th 2013)
 	== Enhancement ==
