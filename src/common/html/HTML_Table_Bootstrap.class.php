@@ -1,7 +1,10 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
  * This file is a part of Tuleap.
  *
@@ -19,11 +22,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../tools/continuous_integration/singletons/SingletonCounter.class.php';
+require_once 'HTML_Table.class.php';
 
-/**
- * Avoid contaminating new classes with singleton lookup
- */
-class NoMoreSingletonitusTest extends TuleapTestCase {
+class HTML_Table_Bootstrap extends HTML_Table {
+
+    public function __construct() {
+        parent::__construct();
+        $this->setTableClasses(array('table'));
+    }
+
 }
+
 ?>

@@ -53,7 +53,7 @@ class GitViews_RepoManagement_Pane_GeneralSettings extends GitViews_RepoManageme
         $html .= '</textarea>';
         $html .= '</p>';
 
-        $html .= '<p><input type="submit" name="save" value="'. $GLOBALS['Language']->getText('plugin_git', 'admin_save_submit') .'" /></p>';
+        $html .= '<p><input type="submit" name="save" class="btn" value="'. $GLOBALS['Language']->getText('plugin_git', 'admin_save_submit') .'" /></p>';
         $html .= '</form>';
         return $html;
     }

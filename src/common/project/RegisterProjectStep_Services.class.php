@@ -37,13 +37,20 @@ class RegisterProjectStep_Services extends RegisterProjectStep {
 
         $pm = ProjectManager::instance();
         $p = $pm->getProject($data['project']['built_from_template']);
-        $title_arr=array();
-        $title_arr[]=''; //$GLOBALS['Language']->getText('project_admin_editservice','enabled');
-        $title_arr[]=$GLOBALS['Language']->getText('project_admin_editservice','s_label');
-        $title_arr[]=$GLOBALS['Language']->getText('project_admin_editservice','s_desc');
-
-        echo html_build_list_table_top($title_arr);
-        $row_num = 0;
+        $server_head = '';
+        if ($can_display_servers) {
+            $server_head = '<th>'. $GLOBALS['Language']->getText('register_services','server') .'</th>';
+        }
+        echo '<table class="table table-striped table-bordered table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>'. $GLOBALS['Language']->getText('project_admin_editservice','s_label') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('project_admin_editservice','s_desc') .'</th>
+                    '. $server_head .'
+                </tr>
+            </thead>
+            <tbody>';
         
         foreach($p->services as $key => $nop) {
             if (!in_array($p->services[$key]->getShortName(), array('summary', 'admin')) && $p->services[$key]->isActive() && !$p->services[$key]->isRestricted()) {
@@ -69,7 +76,7 @@ class RegisterProjectStep_Services extends RegisterProjectStep {
                     $label = $GLOBALS['Language']->getText($matches[1], $matches[2]);
                 }
                 
-                echo '<tr class="'. util_get_alt_row_color($row_num++) .'">';
+                echo '<tr>';
                 //{{{ is_used
                 echo '<td>';
                 $field_name = 'services['. $id .'][is_used]';
@@ -84,7 +91,7 @@ class RegisterProjectStep_Services extends RegisterProjectStep {
                 echo '</tr>';
             }
         }
-        echo '</table>';
+        echo '</tbody></table>';
     }
     function onEnter($request, &$data) {
         return isset($data['project']['built_from_template']);

@@ -80,8 +80,8 @@ class Tracker_NotificationsManager {
             echo '
                 <p>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','toggle_notif_note').'<br>
                 <br><input type="hidden" name="stop_notification" value="0" /> 
-                <input id="toggle_stop_notification" type="checkbox" name="stop_notification" value="1" '.(($this->tracker->stop_notification)?'checked="checked"':'').' /> '.
-                '<label for="toggle_stop_notification">'. $GLOBALS['Language']->getText('plugin_tracker_include_type','stop_notification') .'</label>';     
+                <label class="checkbox"><input id="toggle_stop_notification" type="checkbox" name="stop_notification" value="1" '.(($this->tracker->stop_notification)?'checked="checked"':'').' /> '.
+                $GLOBALS['Language']->getText('plugin_tracker_include_type','stop_notification') .'</label>';
         } else if ($this->tracker->stop_notification) {
             echo '<h3><a name="ToggleEmailNotification"></a>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','notification_suspended').' '.
             help_button('tracker.html#e-mail-notification').'</h3>';

@@ -79,7 +79,7 @@ class hudson extends Controler {
                         case 'update_job':
                             if ($user->isMember($group_id,'A')) {
                                 if ($request->exist('job_id')) {
-                                    if ($request->exist('new_hudson_job_url') && $request->get('new_hudson_job_url') != '') {
+                                    if ($request->exist('hudson_job_url') && $request->get('hudson_job_url') != '') {
                                         $this->action = 'updateJob';
                                     } else {
                                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson','job_url_missing'));

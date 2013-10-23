@@ -44,6 +44,7 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
     public function fetchColumnDefinition() {
         $html  = '';
         $html .= $this->fetchSpeech();
+        $html .= '<br>';
         $html .= $this->fetchMappings();
         return $html;
     }

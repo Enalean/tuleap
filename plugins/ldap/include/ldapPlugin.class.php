@@ -769,12 +769,15 @@ class LdapPlugin extends Plugin {
             }
 
             $html = '<hr />'.PHP_EOL;
-            $html .= '<strong>'.$GLOBALS['Language']->getText('plugin_ldap', 'project_admin_add_ugroup').'</strong>'.PHP_EOL;
-            $html .= '<form method="post" action="'.$this->getPluginPath().'/admin.php?group_id='.$params['groupId'].'">'.PHP_EOL;
-            $html .= '<input type="text" value="'.$groupName.'" name="ldap_group" id="project_admin_add_ldap_group" size="60" />'.PHP_EOL;
-            $html .= '<br />'.PHP_EOL;
-            $html .= '<input type="checkbox" id="preserve_members" name="preserve_members" checked="checked" />'.PHP_EOL;
-            $html .= '<label for="preserve_members">'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_info').')</label>'.PHP_EOL;
+
+            $html .= '<form method="post" class="link-with-ldap" action="'.$this->getPluginPath().'/admin.php?group_id='.$params['groupId'].'">'.PHP_EOL;
+            $html .= '<div class="control-group">
+                        <label class="control-label" for="add_user">'.$GLOBALS['Language']->getText('plugin_ldap', 'project_admin_add_ugroup').'</label>
+                        <div class="controls">
+                            <input type="text" value="'.$groupName.'" name="ldap_group" id="project_admin_add_ldap_group" size="60" />
+                        </div>
+                    </div>';
+            $html .= '<label class="checkbox" for="preserve_members"><input type="checkbox" id="preserve_members" name="preserve_members" checked="checked" />'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_info').')</label>'.PHP_EOL;
             $html .= '<br />'.PHP_EOL;
             $html .= '<input type="submit" name="delete" value="'.$GLOBALS['Language']->getText('global', 'btn_delete').'" />'.PHP_EOL;
             $html .= '<input type="submit" name="check" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'" />'.PHP_EOL;

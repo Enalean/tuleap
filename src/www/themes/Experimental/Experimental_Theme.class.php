@@ -108,14 +108,6 @@ class Experimental_Theme extends DivBasedTabbedLayout {
         $this->generic_footer($params);
     }
 
-    public function displayCommonStylesheetElements($params) {
-        //echo '<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">';
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
-        $this->displayFontAwesomeStylesheetElements();
-        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('style.css') .'"  />';
-        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
-    }
-
     public function getBreadCrumbs() {
         $html = '';
         $nb = count($this->breadcrumbs);

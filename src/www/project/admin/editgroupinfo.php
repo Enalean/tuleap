@@ -283,7 +283,7 @@ foreach ($children as $child) {
 }
 
 echo '
-<P><INPUT type="submit" name="Update" value="'.$Language->getText('global','btn_update').'">
+<P><br><INPUT type="submit" name="Update" value="'.$Language->getText('global','btn_update').'"></P>
 </FORM>
 ';
 

@@ -74,8 +74,10 @@ class Tracker_FormElement_View_Admin_Field extends Tracker_FormElement_View_Admi
         $html = '';
         $html .= '<p>';
         $html .= '<input type="hidden" name="formElement_data[required]" value="0" />';
+        $html .= '<label class="checkbox">';
         $html .= '<input type="checkbox" name="formElement_data[required]" id="formElement_required" value="1" '. ($this->formElement->required ? 'checked="checked"' : '') .'" />';
-        $html .= '<label for="formElement_required">'.$GLOBALS['Language']->getText('plugin_tracker_common_field', 'required');
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_common_field', 'required');
+        $html .= '</label>';
         $html .= '</p>';
         return $html;
     }   

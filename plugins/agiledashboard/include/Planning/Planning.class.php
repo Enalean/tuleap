@@ -69,7 +69,7 @@ class Planning {
      * @var Tracker[]
      */
     private $backlog_trackers;
-    
+
     function __construct($id, $name, $group_id, $backlog_title, $plan_title, array $backlog_trackers_ids = array(), $planning_tracker_id = null) {
         $this->id                   = $id;
         $this->name                 = $name;

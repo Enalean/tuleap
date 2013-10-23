@@ -111,7 +111,7 @@ class Tracker_CannedResponseManager {
         echo '<textarea name="body" rows="20" cols="65" wrap="hard"></textarea>';
         echo '<p>';
         echo '<input type="submit" name="create" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        echo '</from>';
+        echo '</form>';
 
         $this->tracker->displayFooter($tracker_manager);
     }
@@ -144,7 +144,7 @@ class Tracker_CannedResponseManager {
             echo '<textarea name="body" rows="20" cols="65" wrap="hard">'. $hp->purify($response->body, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>';
             echo '<p>';
             echo '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-            echo '</from>';
+            echo '</form>';
             echo '<p><a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                             'tracker' => (int)$this->tracker->id,
                                                             'func'    => 'admin-canned')) .'">&laquo; Go back to canned responses</a></p>';

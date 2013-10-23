@@ -179,14 +179,13 @@ if($update_fields_desc_id){
 	echo "<INPUT TYPE='CHECKBOX' NAME='form_required' VALUE='1'";
 	echo (($row_update['desc_required']==1) ? " CHECKED" : "" )."></p>";
 
-	echo "<HR>";
-		echo "<INPUT type='submit' name='Update' value='".$Language->getText('global','btn_update')."'>";
+		echo "<INPUT type='submit' name='Update' class='btn btn-primary' value='".$Language->getText('global','btn_update')."'>";
 	echo "</form>";
 }else{
 
 	$descfieldsinfos = getProjectsDescFieldsInfos();
 	
-	echo "<HR><TABLE width='100%' cellspacing=0 cellpadding=3 border=0>";
+	echo "<HR>";
 	$title_arr=array();
 	$title_arr[]=$Language->getText('admin_desc_fields','desc_name');
 	$title_arr[]=$Language->getText('admin_desc_fields','desc_description');
@@ -222,20 +221,20 @@ if($update_fields_desc_id){
 	
 		echo "<TR class='".util_get_alt_row_color($i)."'>";
 	
-		echo "<TD align='center'><a href='desc_fields_edit.php?update_fields_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'>".$hp->purify($desc_name_inst,CODENDI_PURIFIER_BASIC)."</a></TD>";
-		echo "<TD align='center'>".$hp->purify($desc_desc,CODENDI_PURIFIER_LIGHT)."</TD>";
+		echo "<TD><a href='desc_fields_edit.php?update_fields_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'>".$hp->purify($desc_name_inst,CODENDI_PURIFIER_BASIC)."</a></TD>";
+		echo "<TD>".$hp->purify($desc_desc,CODENDI_PURIFIER_LIGHT)."</TD>";
 		if($descfieldsinfos[$i]['desc_required']==0){
-			echo "<TD align='center'><a href='desc_fields_edit.php?make_required_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'>".$Language->getText('admin_desc_fields','desc_no')."</a></TD>";
+			echo "<TD><a href='desc_fields_edit.php?make_required_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'>".$Language->getText('admin_desc_fields','desc_no')."</a></TD>";
 		}else{
-			echo "<TD align='center'><a href='desc_fields_edit.php?remove_required_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'>".$Language->getText('admin_desc_fields','desc_yes')."</a></TD>";
+			echo "<TD><a href='desc_fields_edit.php?remove_required_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'>".$Language->getText('admin_desc_fields','desc_yes')."</a></TD>";
 		}
 		if($descfieldsinfos[$i]['desc_type']=='line'){
-			echo "<TD align='center'>".$Language->getText('admin_desc_fields','desc_line')."</TD>";
+			echo "<TD>".$Language->getText('admin_desc_fields','desc_line')."</TD>";
 		}else{
-			echo "<TD align='center'>".$Language->getText('admin_desc_fields','desc_text')."</TD>";
+			echo "<TD>".$Language->getText('admin_desc_fields','desc_text')."</TD>";
 		}
-		echo "<TD align='center'>".$hp->purify($descfieldsinfos[$i]['desc_rank'],CODENDI_PURIFIER_LIGHT)."</TD>";
-		echo "<TD align='center'><a href='desc_fields_edit.php?delete_group_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'><IMG SRC='".util_get_image_theme("ic/trash.png")."' HEIGHT='16' WIDTH='16' BORDER='0' ALT='DELETE'></IMG></a></TD>";
+		echo "<TD>".$hp->purify($descfieldsinfos[$i]['desc_rank'],CODENDI_PURIFIER_LIGHT)."</TD>";
+		echo "<TD><a href='desc_fields_edit.php?delete_group_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'><IMG SRC='".util_get_image_theme("ic/trash.png")."' HEIGHT='16' WIDTH='16' BORDER='0' ALT='DELETE'></IMG></a></TD>";
 		echo "</TR>";
 	}
 	
@@ -274,7 +273,7 @@ if($update_fields_desc_id){
 	echo (($desc_required==1) ? " CHECKED" : "" )."></p>";
 	
 	echo "<HR>
-		  <p><input type='submit' name='Add_desc' value=".$Language->getText('global','btn_submit')."></p>";
+		  <p><input type='submit' name='Add_desc' class='btn btn-primary' value=".$Language->getText('global','btn_submit')."></p>";
 	echo "</form>";
 }
 $HTML->footer(array());

@@ -342,8 +342,3 @@
 .empty-table-placeholder {
     display: none;
 }
-
-.control-group.info .help-inline {
-    color: #3A87AD;
-    font-style: italic;
-}

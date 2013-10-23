@@ -135,7 +135,6 @@ class GitViews extends PluginViews {
     public function repoManagement() {
         $params = $this->getData();
         $repository   = $params['repository'];
-        echo "<br/>";
         $this->_getBreadCrumb();
         echo '<h2>'. $repository->getHTMLLink() .' - '. $GLOBALS['Language']->getText('global', 'Settings') .'</h2>';
 
@@ -230,13 +229,13 @@ class GitViews extends PluginViews {
 <h3><?php echo $this->getText('admin_reference_creation_title');
         ?><a href="#" onclick="$('help_create').toggle();$('help_init').toggle()"> [?]</a></h3>
 <p>
-<form id="addRepository" action="/plugins/git/?group_id=<?php echo $this->groupId ?>" method="POST">
+<form id="addRepository" action="/plugins/git/?group_id=<?php echo $this->groupId ?>" method="POST" class="form-inline">
     <input type="hidden" id="action" name="action" value="add" />
     
     <label for="repo_name"><?= $this->getText('admin_reference_creation_input_name'); ?></label>
     <input id="repo_name" name="repo_name" class="" type="text" value=""/>
 
-    <input type="submit" id="repo_add" name="repo_add" value="<?php echo $this->getText('admin_reference_creation_submit')?>">
+    <input type="submit" id="repo_add" name="repo_add" value="<?php echo $this->getText('admin_reference_creation_submit')?>" class="btn">
 </form>
 </p>
         <?php
@@ -311,7 +310,7 @@ class GitViews extends PluginViews {
             }
             echo '<div>
                 <input id="choose_personal" type="radio" name="choose_destination" value="'. Git::SCOPE_PERSONAL .'" '.$options.' />
-                <label for="choose_personal">'.$this->getText('fork_choose_destination_personal').'</label>
+                <label class="radio" for="choose_personal">'.$this->getText('fork_choose_destination_personal').'</label>
             </div>';
 
             echo $this->fetchCopyToAnotherProject();
@@ -325,7 +324,7 @@ class GitViews extends PluginViews {
             echo '</td>';
 
             echo '<td class="last">';
-            echo '<input type="submit" value="'. $this->getText('fork_repositories') .'" />';
+            echo '<input type="submit" class="btn" value="'. $this->getText('fork_repositories') .'" />';
             echo '</td>';
 
             echo '</tr></tbody></table>';
@@ -370,8 +369,9 @@ class GitViews extends PluginViews {
                 $options = '';
             }
             $html .= '<div>
+            <label class="radio">
                 <input id="choose_project" type="radio" name="choose_destination" value="project" '.$options.' />
-                <label for="choose_project">'.$this->getText('fork_choose_destination_project').'</label>
+                '.$this->getText('fork_choose_destination_project').'</label>
             </div>';
             
             $html .= '<select name="to_project" id="fork_destination">';

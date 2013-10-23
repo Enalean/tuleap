@@ -38,6 +38,11 @@ caption {
   width: 100%;
 }
 
+blockquote {
+  padding: 0 0 0 15px;
+  margin: 0 0 20px;
+  border-left: 0;
+}
 
 /**
  * Wiki

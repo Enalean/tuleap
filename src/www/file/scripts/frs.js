@@ -143,8 +143,10 @@ function add_new_file() {
 	cell.appendChild(md5sum);	
 	row.appendChild(cell);
 
-        var comment_cell = Builder.node('textarea', { id:'comment_'+id, cols: 20, rows: 1, name:'comment'});
-        row.appendChild(comment_cell);
+    cell = Builder.node('td');
+    var comment_cell = Builder.node('textarea', { id:'comment_'+id, cols: 20, rows: 1, name:'comment'});
+    cell.appendChild(comment_cell);
+    row.appendChild(cell);
 
 	$('files_body').appendChild(row);
     current_select_number++;

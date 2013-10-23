@@ -1081,8 +1081,8 @@ class Layout extends Response {
                 $this->warning_for_services_which_configuration_is_not_inherited($GLOBALS['group_id'], $params['toptab']);
             }
         }
-        echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'."\n";
-        echo '<html xmlns="http://www.w3.org/1999/xhtml">
+        echo '<!DOCTYPE html>'."\n";
+        echo '<html lang="'. $GLOBALS['Language']->getText('conf', 'language_code') .'">
                 <head>
                     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
                     <title>'. ($params['title'] ? $params['title'] . ' - ' : '') . $GLOBALS['sys_name'] .'</title>
@@ -1268,6 +1268,7 @@ class Layout extends Response {
      */
     public function displayStylesheetElements($params) {
         $this->displayCommonStylesheetElements($params);
+        
         // Stylesheet external files
         if(isset($params['stylesheet']) && is_array($params['stylesheet'])) {
             foreach($params['stylesheet'] as $css) {
@@ -1294,11 +1295,16 @@ class Layout extends Response {
     }
     
     protected function displayCommonStylesheetElements($params) {
+        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-2.3.0.min.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-responsive-2.3.0.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
         $this->displayFontAwesomeStylesheetElements();
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/print.css" media="print" />';
         $css = $GLOBALS['sys_user_theme'] . $this->getFontSizeName($GLOBALS['sys_user_font_size']) .'.css';
-        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme($css) .'" />';
+        if (file_exists($GLOBALS['codendi_dir'].'/src/www'.$this->getStylesheetTheme($css))) {
+            echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme($css) .'" />';
+        }
+        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('style.css') .'" />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
     }
 
@@ -1682,7 +1688,8 @@ class Layout extends Response {
      */
     public function overlay_header() {
         $this->includeCalendarScripts();
-        echo '<html>
+        echo '<!DOCTYPE html>
+              <html>
               <head>
                  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
         echo $this->displayJavascriptElements();
@@ -1734,7 +1741,7 @@ class Layout extends Response {
         <div align="left">
         <table style=menus cellpadding="0" cellspacing="0" border="0" width="100%">
 
-                <tr>
+                <tr valign="top">
                     <td class="menuframe">
 
         <!-- VA Linux Stats Counter -->
@@ -1743,6 +1750,11 @@ class Layout extends Response {
                 print '<IMG src="'.util_get_image_theme("clear.png").'" width=140 height=1 alt="'.$Language->getText('include_layout','counter').'"><BR>';
         } else {
                 print html_blankimage(1,140) . '<br>';
+        }
+
+        $main_body_class = '';
+        if (isset($params['toptab']) && is_string($params['toptab'])) {
+            $main_body_class = 'service-' . $params['toptab'];
         }
         ?>
 
@@ -1763,7 +1775,7 @@ class Layout extends Response {
 
         <td width="15" background="<? echo util_get_image_theme("fade.png"); ?>" nowrap>&nbsp;</td>
     
-        <td class="contenttable">
+        <td class="contenttable <?=$main_body_class?>">
         <BR>
 <?php
         if (isset($params['group']) && $params['group']) {
@@ -2135,11 +2147,11 @@ class Layout extends Response {
             $output .= '<input type="hidden" name="'.$hidden['name'].'" value="'.$hidden['value'].'" />';
         }
 
-        $output .= '<input style="font-size:0.8em" type="text" size="22" name="words" value="' . $this->purifier->purify($words, CODENDI_PURIFIER_CONVERT_HTML) . '" /><br />';
+        $output .= '<input style="font-size:0.8em" type="text" class="input-medium" size="22" name="words" value="' . $this->purifier->purify($words, CODENDI_PURIFIER_CONVERT_HTML) . '" /><br />';
         $output .= '<input type="CHECKBOX" name="exact" value="1"' . ( $exact ? ' CHECKED' : ' UNCHECKED' ) . '><span style="font-size:0.8em">' . $GLOBALS['Language']->getText('include_menu', 'require_all_words') . '</span>';
 
         $output .= '</td><td>';
-        $output .= '<input style="font-size:0.8em" type="submit" name="Search" value="' . $GLOBALS['Language']->getText('searchbox', 'search') . '" />';
+        $output .= '<input class="btn" style="font-size:0.8em" type="submit" name="Search" value="' . $GLOBALS['Language']->getText('searchbox', 'search') . '" />';
         $output .= '</td></tr></table></form>';
         return $output;
     }

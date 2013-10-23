@@ -623,13 +623,13 @@ class IMPlugin extends Plugin {
         }
 
         function user_preferences_appearance($params) {
-            $input = '<input type="hidden" name="plugin_im_display_users_presence" value="0" />';
+            $input = '<label class="checkbox" for="plugin_im_display_users_presence">';
+            $input .= '<input type="hidden" name="plugin_im_display_users_presence" value="0" />';
             $input .= '<input type="checkbox" id="plugin_im_display_users_presence" name="plugin_im_display_users_presence" value="1" ';
             if ( ! $this->getUserManager()->getCurrentUser()->getPreference('plugin_im_hide_users_presence')) {
                 $input .= 'checked="checked"';
             }
-            $input .= ' style="margin-left:0px;" />';
-            $input .= '<label for="plugin_im_display_users_presence">';
+            $input .= '/>';
             $input .= $GLOBALS['Language']->getText('plugin_im', 'user_appearance_pref_display_users_presence');
             $input .= '</label>';
             

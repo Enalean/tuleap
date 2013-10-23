@@ -285,7 +285,7 @@ while ($row_memb=db_fetch_array($res_memb)) {
     print '<FORM ACTION="?" METHOD="POST"><INPUT TYPE="HIDDEN" NAME="func" VALUE="rmuser">'.
 	'<INPUT TYPE="HIDDEN" NAME="rm_id" VALUE="'.$row_memb['user_id'].'">'.
 	'<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'. $group_id .'">'.
-	'<TR><TD ALIGN="center"><INPUT TYPE="IMAGE" NAME="DELETE" SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></TD></FORM>'.
+	'<TR><TD class="delete-project-member"><INPUT TYPE="IMAGE" NAME="DELETE" SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></TD></FORM>'.
 	'<TD><A href="/users/'.$row_memb['user_name'].'/">'. $display_name .' </A>'. $edit_settings .'</TD></TR>';
 }
 
@@ -296,11 +296,17 @@ print '</TABLE></div> <HR NoShade SIZE="1">';
 */
 
 echo '
-          <FORM ACTION="?" METHOD="POST">
-          <INPUT TYPE="hidden" NAME="func" VALUE="adduser">
-          <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'. $group_id .'">
-          <TABLE WIDTH="100%" BORDER="0">
-          <TR><TD><B>'.$Language->getText('project_admin_index','login_name').'</B></TD><TD><INPUT TYPE="TEXT" NAME="form_unix_name" VALUE="" id="add_user"></TD></TR>
+        <FORM ACTION="?" METHOD="POST" class="add-user">
+        <INPUT TYPE="hidden" NAME="func" VALUE="adduser">
+        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'. $group_id .'">
+
+        <div class="control-group">
+            <label class="control-label" for="add_user">'.$Language->getText('project_admin_index','login_name').'</label>
+            <div class="input-append">
+                <INPUT TYPE="TEXT" NAME="form_unix_name" VALUE="" id="add_user">
+                <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('project_admin_index','add_user').'" class="btn">
+            </div>
+        </div>
 ';
 
 // JS code for autocompletion on "add_user" field defined on top.
@@ -309,9 +315,7 @@ $js = "new UserAutoCompleter('add_user',
                           false);";
 $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 
-echo '
-          <TR><TD COLSPAN="2" ALIGN="CENTER"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('project_admin_index','add_user').'"></TD></TR></FORM>
-          </TABLE>
+echo '      </FORM>
 ';
 
 $em->processEvent('project_admin_add_user_form', array('groupId' => $group_id));

@@ -362,7 +362,8 @@ function frs_display_package_form(&$package, $title, $url, $siblings) {
          permission_display_selection_frs('PACKAGE_READ', $package->getPackageID(), $package->getGroupID());
          echo '</td></tr>';
      }
-     echo '<tr><td> <input type="submit" NAME="submit" VALUE="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /><input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global','btn_cancel') .'" /></td></tr></table>	
+     echo '<tr><td></td><td> <br><input class="btn btn-primary" type="submit" NAME="submit" VALUE="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /> ';
+     echo '<input class="btn" type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global','btn_cancel') .'" /></td></tr></table>
      </FORM>';
      
      file_utils_footer(array());
@@ -443,7 +444,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     }
     ?>
     
-    <FORM id="frs_form" NAME="frsRelease" ENCTYPE="multipart/form-data" METHOD="POST" ACTION="<?php echo $url; ?>">
+    <FORM id="frs_form" NAME="frsRelease" ENCTYPE="multipart/form-data" METHOD="POST" ACTION="<?php echo $url; ?>" CLASS="form-inline">
         <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="<? echo $GLOBALS['sys_max_size_upload']; ?>">
         <input type="hidden" name="postReceived" value="" />
         <?php

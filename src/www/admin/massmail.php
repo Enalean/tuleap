@@ -37,47 +37,49 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 <P>'.$Language->getText('admin_massmail','warning').'
 
  <FORM ID="massmail_form" NAME="massmail_form" ACTION="massmail_execute.php" METHOD="POST">
-<TABLE width=50% cellpadding=0 cellspacing=0 border=0>
-<TR><TD>
-<SPAN name="'.$count_comm.'"><INPUT type="radio" name="destination" value="comm"></SPAN>
-'.$Language->getText('admin_massmail','to_additional').' ('
-.$count_comm
-.' users)<BR><SPAN name="'.$count_sf.'"><INPUT type="radio" name="destination" value="sf"></SPAN>
-'.$Language->getText('admin_massmail','to_update').' ('
-.$count_sf
-.' users)<BR><SPAN name="'.$count_devel.'"><INPUT type="radio" name="destination" value="devel"></SPAN>
-'.$Language->getText('admin_massmail','to_devel').' ('
-.$count_devel
-.' users)<BR><SPAN name="'.$count_admin.'"><INPUT type="radio" name="destination" value="admin"></SPAN>
-'.$Language->getText('admin_massmail','to_proj_admin').' ('
-.$count_admin
-.' users)<BR><SPAN name="'.$count_sfadmin.'"><INPUT type="radio" name="destination" value="sfadmin"></SPAN>
-'.$Language->getText('admin_massmail','to_site_admin').' ('
-.$count_sfadmin
-.' users)<BR><SPAN name="'.$count_all.'"><INPUT type="radio" name="destination" value="all"></SPAN>
+<label class="radio"><INPUT type="radio" name="destination" value="comm">
+    '.$Language->getText('admin_massmail','to_additional').' ('
+    .$count_comm
+    .' users)</label>
+<label class="radio"><INPUT type="radio" name="destination" value="sf">
+    '.$Language->getText('admin_massmail','to_update').' ('
+    .$count_sf
+    .' users)</label>
+<label class="radio"><INPUT type="radio" name="destination" value="devel">
+    '.$Language->getText('admin_massmail','to_devel').' ('
+    .$count_devel
+    .' users)</label>
+<label class="radio"><INPUT type="radio" name="destination" value="admin">
+    '.$Language->getText('admin_massmail','to_proj_admin').' ('
+    .$count_admin
+    .' users)</label>
+<label class="radio"><INPUT type="radio" name="destination" value="sfadmin">
+    '.$Language->getText('admin_massmail','to_site_admin').' ('
+    .$count_sfadmin
+    .' users)</label>
+<label class="radio"><INPUT type="radio" name="destination" value="all">
 '.$Language->getText('admin_massmail','to_all').' ('
 .$count_all
-.' users)
-</TD></TR>
-<TR><TD>
-<P>'.$Language->getText('admin_massmail','subject').'
-<BR><INPUT type="text" id="mail_subject" name="mail_subject" value="'.$GLOBALS['sys_name'].': "size="40">
+.' users)</label>
 
-<P>'.$Language->getText('admin_massmail','text').'
-<PRE>
+<TABLE cellpadding=0 cellspacing=0 border=0>
+<TR><TD>
+<label><strong>'.$Language->getText('admin_massmail','subject').'</strong></label>
+<INPUT type="text" id="mail_subject" name="mail_subject" value="'.$GLOBALS['sys_name'].': "size="40">
+
+<label><strong>'.$Language->getText('admin_massmail','text').'</strong></label>
 <div id="mail_message_label"></div>
 <TEXTAREA id="mail_message" name="mail_message" cols="75" rows="40" wrap="physical">
 '.stripcslashes($Language->getText('admin_massmail','footer',array($GLOBALS['sys_default_domain'],$GLOBALS['sys_email_admin']))).'
 </TEXTAREA>
-</PRE>
 </TD></TR><TR><TD>
-<P><NOSCRIPT><INPUT type="radio" name="destination" value="preview" CHECKED></NOSCRIPT>
+<P class="form-inline"><NOSCRIPT><INPUT type="radio" name="destination" value="preview" CHECKED></NOSCRIPT>
 '.$Language->getText('admin_massmail','to_preview').'
 <INPUT type="text" id="preview_destination" name="preview_destination" size="50" >
 <SPAN ID="preview_button"></SPAN>
 <DIV id="preview_result"></DIV>
 </P>
-<P><INPUT type="submit" name="Submit" value="'.$Language->getText('global','btn_submit').'">
+<P><INPUT type="submit" name="Submit" class="btn btn-primary" value="'.$Language->getText('global','btn_submit').'">
 </TD></TR></TABLE>
 </FORM>
 ';
@@ -97,6 +99,7 @@ document.observe('dom:loaded', function() {
                                                 'name'    : 'Submit',
                                                 'type'    : 'button',
                                                 'value'   : 'Preview'});
+            button.addClassName('btn');
             $('preview_button').appendChild(button);
 
             //launching initialize function on MassMail instance will observe Events on the  input built above

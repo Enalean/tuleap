@@ -584,7 +584,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 }
                 
                 $html_result .= '
-                          <FORM ACTION="" METHOD="GET" NAME="artifact_form">
+                          <FORM ACTION="" METHOD="GET" CLASS="form-inline" NAME="artifact_form">
                           <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$this->group_artifact_id.'">
                           <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$group_id.'">';
                 if ($masschange) {
@@ -597,6 +597,7 @@ class ArtifactReportHtml extends ArtifactReport {
                           <INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
                           <INPUT TYPE="HIDDEN" NAME="advsrch" VALUE="'. $hp->purify($advsrch, CODENDI_PURIFIER_CONVERT_HTML) .'">
                           <INPUT TYPE="HIDDEN" NAME="msort" VALUE="'. $hp->purify($msort, CODENDI_PURIFIER_CONVERT_HTML) .'">
+                          <BR>
                           <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="5">
                           <TR><TD colspan="'.(int)$this->fields_per_line.'" nowrap>';
 
@@ -607,7 +608,7 @@ class ArtifactReportHtml extends ArtifactReport {
                     $box_name = 'report_id" onChange="document.artifact_form.go_report.click()';
                         $html_result .= '<b>'.$Language->getText('tracker_include_report','using_report');
                         $html_result .= html_build_select_box($res_report,$box_name,$report_id,false,'',false,'',false,'', CODENDI_PURIFIER_CONVERT_HTML);
-                        $html_result .= '<input VALUE="'.$Language->getText('tracker_include_report','btn_go').'" NAME="go_report" type="submit">'.'</b>';
+                        $html_result .= ' <input class="btn" VALUE="'.$Language->getText('tracker_include_report','btn_go').'" NAME="go_report" type="submit">'.'</b>';
                 }
                 
                 // Start building the URL that we use to for hyperlink in the form
@@ -653,7 +654,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 // Display query fields
                 if ($pv != 2) {
                     $html_result .= '<A name="query"></A>';
-                    $html_result .= '<h3>';
+                    $html_result .= '<fieldset class="tracker-search"><legend>';
                     $onclick = '';
                     $onclick .= "if ($('artifacts_query').empty()) { return true }";
                     if (!$current_user->isAnonymous()) {
@@ -668,15 +669,15 @@ class ArtifactReportHtml extends ArtifactReport {
                     } else {
                         $image = 'ic/toggle_minus.png';
                     }
-                    $html_result .= $GLOBALS['HTML']->getimage($image, array('style' => 'vertical-align:bottom; padding-right:5px;'));
+                    $html_result .= $GLOBALS['HTML']->getimage($image);
                     $html_result .= '</a>';
-                    $html_result .= $Language->getText('tracker_include_report','query') .'</h3>';
+                    $html_result .= $Language->getText('tracker_include_report','query') .'</legend>';
                     $html_result .= '<div id="artifacts_query" style="padding-left:16px;">';
                     if (!$user_dont_want_to_see_query) {
                         $html_result .= $this->displayQueryFields($prefs,$advsrch,$pv);
-                        $html_result .= '<div style="text-align:left"><input type="submit" value="'.$Language->getText('global','btn_submit').'" /></div>';
+                        $html_result .= '<div style="text-align:left"><br><input class="btn" type="submit" value="'.$Language->getText('global','btn_submit').'" /></div>';
                     }
-                    $html_result .= '</div>';
+                    $html_result .= '</div></fieldset><br>';
                 }
                 
                 //
@@ -697,7 +698,7 @@ class ArtifactReportHtml extends ArtifactReport {
                         }
                         
                         $html_result .= '<A name="results"></A>';
-                        $html_result .= '<h3>';
+                        $html_result .= '<fieldset class="tracker-search"><legend>';
                         if ($pv == 0) {
                             $onclick = '';
                             $onclick .= "if ($('artifacts_result').empty()) { return true }";
@@ -713,16 +714,16 @@ class ArtifactReportHtml extends ArtifactReport {
                             } else {
                                 $image = 'ic/toggle_minus.png';
                             }
-                            $html_result .= $GLOBALS['HTML']->getimage($image, array('style' => 'vertical-align:bottom; padding-right:5px;'));
+                            $html_result .= $GLOBALS['HTML']->getimage($image);
                             $html_result .= '</a>';
                         }
-                        $html_result .= (int)$totalrows.' '.$Language->getText('tracker_include_report','matching').' '. $order_statement .'</h3>';
+                        $html_result .= (int)$totalrows.' '.$Language->getText('tracker_include_report','matching').' '. $order_statement .'</legend>';
                         $html_result .= '<div id="artifacts_result" style="padding-left:16px;">';
                     }
                     if ($pv != 2 && !$user_dont_want_to_see_results) {
                         if ($pv == 0) {
                                 $html_result .= '<p> '.$Language->getText('global','btn_browse') .
-                                    ' <input TYPE="text" name="chunksz" size="3" MAXLENGTH="5" '.
+                                    ' <input TYPE="text" class="input-mini" name="chunksz" size="3" MAXLENGTH="5" '.
                                     'VALUE="'. (int)$chunksz.'">&nbsp;'. $hp->purify($ath->getItemName(), CODENDI_PURIFIER_CONVERT_HTML) .$Language->getText('tracker_include_report','at_once');
                                 $html_result .= '<P>'.$Language->getText('tracker_include_report','sort_results').' ';
                                 $field = $art_field_fact->getFieldFromName('severity');
@@ -767,7 +768,7 @@ class ArtifactReportHtml extends ArtifactReport {
                     $html_result .= db_error();
                 
                 }
-                $html_result .= '</div>';
+                $html_result .= '</div></fieldset>';
                 echo $html_result;
                 
                 $em =& EventManager::instance();

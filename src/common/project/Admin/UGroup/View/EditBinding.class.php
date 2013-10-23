@@ -45,20 +45,21 @@ class Project_Admin_UGroup_View_EditBinding extends Project_Admin_UGroup_View_Bi
         $html .= $this->getCurrentBindingHTML($currentProject, $currentSource);
 
         $html .= '<h3>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding').'</h3>';
-        $html .= '<table>';
-        $html .= '<tr><td>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'source_project').'</td><td><form action="" method="post">'
-            .$this->getProjectsSelect($this->ugroup->getProjectId(), $this->source_project_id).'</td>';
-        $html .= '<td><noscript><input type="submit" value="Select Project"/></noscript></form></td></tr>';
+        $html .= '<form action="" method="post" class="form-inline">';
+        $html .= '<label>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'source_project').'&nbsp;';
+        $html .= $this->getProjectsSelect($this->ugroup->getProjectId(), $this->source_project_id).'</label>';
+        $html .= '<noscript><input type="submit" value="Select Project"/></noscript></form>';
 
         $sourceProject = $this->project_manager->getProject($this->source_project_id);
         if ($this->source_project_id && $sourceProject->userIsAdmin()) {
-            $html .= '<tr><td>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'source_ugroup').'</td>';
-            $html .= '<td><form action="" method="post">';
+            $html .= '<form action="" method="post" class="form-inline">';
             $html .= '<input type="hidden" name="source_project" value="'.$this->source_project_id.'" />';
-            $html .= '<input type="hidden" name="action" value="add_binding" />'.$this->getUgroupSelect($this->source_project_id, $currentSource).'</td>';
-            $html .= '<td><input type="submit" value="'.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding').'"/></form></td></tr>';
+            $html .= '<input type="hidden" name="action" value="add_binding" />';
+            $html .= '<label>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'source_ugroup').'&nbsp;';
+            $html .= $this->getUgroupSelect($this->source_project_id, $currentSource).'</label>&nbsp;';
+            $html .= '<input class="btn" type="submit" value="'.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding').'"/></form>';
         }
-        $html .= '</table>';
+
         return $html;
     }
 

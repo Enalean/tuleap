@@ -168,8 +168,8 @@ echo $template->showTypeBox('group_type',$group->getType());
 <BR><?php echo $Language->getText('admin_groupedit','home_box'); ?>:
 <INPUT type="text" name="form_box" value="<?php print $group->getUnixBox(); ?>">
 <BR><?php echo $Language->getText('admin_groupedit','http_domain'); ?>:
-<INPUT size=40 type="text" name="form_domain" value="<?php print $group->getHTTPDomain() ?>">
-<BR><INPUT type="submit" name="Update" value="<?php echo $Language->getText('global','btn_update'); ?>">
+<INPUT size=40 type="text" name="form_domain" value="<?php print $row_grp['http_domain']; ?>">
+<BR><INPUT type="submit" name="Update" class="btn btn-primary" value="<?php echo $Language->getText('global','btn_update'); ?>">
 </FORM>
 
 <P><A href="newprojectmail.php?group_id=<?php print $group_id; ?>">
@@ -182,11 +182,11 @@ echo $template->showTypeBox('group_type',$group->getType());
 print "<h3>".$Language->getText('admin_groupedit','other_info')."</h3>";
 print $Language->getText('admin_groupedit','unix_grp').": ".$group->getUnixName();
 ?>
-<FORM action="?" method="POST">
+<FORM action="?" method="POST" class="form-inline">
 <INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
 <?php echo $Language->getText('admin_groupedit','rename_project_label'); ?>:
-<INPUT type="text" name="new_name" value="" id="new_name">
-<INPUT type="submit" name="Rename" value="<?php echo $Language->getText('global','btn_update'); ?>">
+<INPUT type="text" name="new_name" value="<?php $new_name; ?>" id="new_name">
+<INPUT type="submit" name="Rename" class="btn" value="<?php echo $Language->getText('global','btn_update'); ?>">
 </FORM>
 
 <?php 

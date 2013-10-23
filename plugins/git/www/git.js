@@ -140,7 +140,7 @@ document.observe('dom:loaded', function () {
     function toggleMigrateDeleteRemote() {
         var should_delete  = $('gerrit_url').options[$('gerrit_url').selectedIndex].readAttribute('data-repo-delete'),
             plugin_enabled = $('gerrit_url').options[$('gerrit_url').selectedIndex].readAttribute('data-repo-delete-plugin-enabled');
-    
+
         if (should_delete == 0) {
             $('gerrit_past_project_delete_plugin_diasabled').hide();
             $('gerrit_past_project_delete').hide();

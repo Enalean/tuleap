@@ -103,8 +103,22 @@ class Widget_MyArtifacts extends Widget {
         }
         $html_my_artifacts .= '<TR><TD COLSPAN="3">'.(($this->_artifact_show == 'N' || db_numrows($my_artifacts) > 0)?'&nbsp;':$GLOBALS['Language']->getText('global', 'none')).'</TD></TR>';
         $html_my_artifacts .= '</table>';
+        $html_my_artifacts .= $this->getPriorityColorsKey();
         return $html_my_artifacts;
     }
+
+    private function getPriorityColorsKey() {
+        $html = '<P class="small"><B>' . $GLOBALS['Language']->getText('include_utils', 'prio_colors') . '</B><BR>
+		<table border=0><tr>';
+
+        for ($i = 1; $i < 10; $i++) {
+            $html .= '
+			<TD class="' . $GLOBALS['HTML']->getPriorityColor($i) . '">' . $i . '</TD>';
+        }
+        $html .= '</tr></table>';
+        return $html;
+    }
+
     function _display_artifacts($list_trackers, $print_box_begin) {
         $request = HTTPRequest::instance();
 

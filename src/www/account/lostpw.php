@@ -19,13 +19,14 @@ $HTML->header(array('title'=>$Language->getText('account_lostpw', 'title')));
 
 ?>
 
-<P><?php echo $Language->getText('account_lostpw', 'message'); ?>
+<h2><?php echo $Language->getText('account_lostpw', 'title'); ?></h2>
+<P><?php echo $Language->getText('account_lostpw', 'message'); ?></P>
 
-<FORM action="lostpw-confirm.php" method="post">
+<FORM action="lostpw-confirm.php" method="post" class="form-inline">
 <P>
 Login Name:
 <INPUT type="text" name="form_loginname">
-<INPUT type="submit" name="Send Lost Password Hash" value="<?php echo $Language->getText('account_lostpw', 'send_hash'); ?>">
+<INPUT class="btn btn-primary" type="submit" name="Send Lost Password Hash" value="<?php echo $Language->getText('account_lostpw', 'send_hash'); ?>">
 </FORM>
 
 <P><A href="/">[<?php echo $Language->getText('global', 'back_home'); ?>]</A>

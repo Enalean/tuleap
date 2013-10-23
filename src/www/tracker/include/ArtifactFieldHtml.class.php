@@ -69,7 +69,7 @@ class ArtifactFieldHtml extends ArtifactField {
         if (!$ascii) {
             $output =  $hp->purify($output, CODENDI_PURIFIER_CONVERT_HTML) ;
             if ($tooltip) {
-                $output = '<a class="tooltip" href="#" title="'. $hp->purify(SimpleSanitizer::unsanitize($this->description), CODENDI_PURIFIER_CONVERT_HTML) .'">'. $output .'</a>';
+                $output = '<a class="artifact_field_tooltip" href="#" title="'. $hp->purify(SimpleSanitizer::unsanitize($this->description), CODENDI_PURIFIER_CONVERT_HTML) .'">'. $output .'</a>';
             }
             $output = '<B>'. $output .'</B>';
         }

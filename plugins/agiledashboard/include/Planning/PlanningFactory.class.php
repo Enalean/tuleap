@@ -338,7 +338,7 @@ class PlanningFactory {
         foreach ($rows as $row) {
             $tracker_ids[] = $row['tracker_id'];
         }
-        
+
         return $tracker_ids;
     }
 

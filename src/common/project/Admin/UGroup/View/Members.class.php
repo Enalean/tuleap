@@ -102,13 +102,13 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
             $content .= '<h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','add_users_to').' '.  $hp->purify($this->ugroup->getName(), CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
 
             $content .= '
-                <form method="post" action="">
+                <form method="post" class="form-inline" action="">
                     <input type="hidden" name="func" value="edit" />
                     <input type="hidden" name="action" value="edit_ugroup_members" />
                     <input type="hidden" name="ugroup_id" value="'.$this->ugroup->getId().'" />
                     <input type="hidden" name="group_id" value="'.$this->ugroup->getProjectId().'" />
                     <label> ' . $GLOBALS['Language']->getText('project_ugroup_user', 'add_username') . ' <input type="text" name="add_user_name" id="ugroup_add_user" value="" /></label>
-                    <input type="submit" value="'.$GLOBALS['Language']->getText('global', 'add').'" />
+                    <input class="btn" type="submit" value="'.$GLOBALS['Language']->getText('global', 'add').'" />
                 </form>
             ';
             $GLOBALS['HTML']->addUserAutocompleteOn('ugroup_add_user', true);
@@ -154,7 +154,7 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
             $content .= '</select> ';
             $content .= $GLOBALS['Language']->getText('project_admin_editugroup','users_per_page').' ';
 
-            $content .= '<input type="submit" name="browse" value="Browse" /></span>';
+            $content .= '<input class="btn" type="submit" name="browse" value="Browse" /></span>';
             $content .= '</p>';
 
             $dao          = new UGroupUserDao();
@@ -214,7 +214,7 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
         $hp         = Codendi_HTMLPurifier::instance();
         $nbCols     = 3;
         if ($res->rowCount()) {
-            $output = '<table><tr>';
+            $output = '<table style="width: 100%"><tr>';
             $i      = 0;
             foreach ($res as $data) {
                 if ($i++ % $nbCols == 0) {

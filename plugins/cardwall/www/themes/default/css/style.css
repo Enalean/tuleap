@@ -30,6 +30,9 @@
   font-weight:normal;
   margin: 0;
 }
+
+
+
 .cardwall_board ul, .cardwall_board li{
   list-style:none;
 }
@@ -259,6 +262,9 @@
     vertical-align: top;
 }
 
+.cardwall-cell ul, .cardwall-cell ol {
+    margin: 14px 0;
+}
 .cardwall-column-header, .cardwall-cell-header {
     background-color: #F8F8F8;
     color: #595959;

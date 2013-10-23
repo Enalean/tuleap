@@ -57,7 +57,7 @@ class GitViews_GitPhpViewer {
         $_REQUEST['git_root_path'] = $this->repository->getGitRootPath();
         $_REQUEST['action']        = 'view';
         if ( empty($_REQUEST['noheader']) ) {
-            echo '<div id="gitphp">';
+            echo '<div id="gitphp" class="plugin_git_gitphp">';
         }
 
         include($this->getGitPhpIndexPath());

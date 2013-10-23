@@ -159,8 +159,9 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $html = '';
         $html .= '<p class="tracker_field_permissionsonartifact">';
         $html .= '<input type="hidden" name="use_artifact_permissions" value="0" />';
+        $html .= '<label class="checkbox" for="artifact_'.$this->getId().'_use_artifact_permissions">';
         $html .= '<input type="checkbox" name="artifact['.$this->getId().'][use_artifact_permissions]" id="artifact_'.$this->getId().'_use_artifact_permissions" value="1" '.$checked.'/>';
-        $html .= '<label for="artifact_'.$this->getId().'_use_artifact_permissions">'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') .'</label>';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') . '</label>';
         $html .= '</p>';
         
         if (is_array($value)) {
@@ -185,8 +186,9 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $html = '';
         $html .= '<p class="tracker_field_permissionsonartifact">';
         $html .= '<input type="hidden" name="use_artifact_permissions" value="0" />';
+        $html .= '<label class="checkbox" for="artifact_'.$this->getId().'_use_artifact_permissions">';
         $html .= '<input type="checkbox" name="artifact['.$this->getId().'][use_artifact_permissions]" id="artifact_'.$this->getId().'_use_artifact_permissions" value="1"/>';
-        $html .= '<label for="artifact_'.$this->getId().'_use_artifact_permissions">'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') .'</label>';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') . '</label>';
         $html .= '</p>';
         $html .= plugin_tracker_permission_fetch_selection_field('PLUGIN_TRACKER_ARTIFACT_ACCESS', 0, $this->getTracker()->getGroupId(), 'artifact['.$this->getId().'][u_groups][]');
         return $html;
@@ -264,11 +266,12 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $html  = '';
         $html .= '<p class="tracker_field_permissionsonartifact">';
         $html .= '<input type="hidden" name="use_artifact_permissions" value="0" />';
+        $html .= '<label class="checkbox" for="artifact_' . $field_id . '_use_artifact_permissions">';
         $html .= '<input type="checkbox"
                                  name="artifact[' . $field_id . '][use_artifact_permissions]"
                                  id="artifact_' . $field_id . '_use_artifact_permissions" 
                                  value="1"' . $checked . $readonly . '/>';
-        $html .= '<label for="artifact_' . $field_id . '_use_artifact_permissions">' . $permissions_label . '</label>';
+        $html .= $permissions_label . '</label>';
         $html .= '</p>';
                 
         $html .= plugin_tracker_permission_fetch_selection_field('PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact_id, $this->getTracker()->getGroupId(), $element_name , $is_read_only, $selected_values);
@@ -333,8 +336,9 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         }
         $html .= '<p class="tracker_field_permissionsonartifact">';
         $html .= '<input type="hidden" name="use_artifact_permissions" value="0" />';
+        $html .= '<label class="checkbox" for="artifact_'.$this->getId().'_use_artifact_permissions">';
         $html .= '<input type="checkbox" name="artifact['.$this->getId().'][use_artifact_permissions]" id="artifact_'.$this->getId().'_use_artifact_permissions" value="1"/>';
-        $html .= '<label for="artifact_'.$this->getId().'_use_artifact_permissions">'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') .'</label>';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') .'</label>';
         $html .= '</p>';
         $html .= plugin_tracker_permission_fetch_selection_field('PLUGIN_TRACKER_ARTIFACT_ACCESS', 0, 0, 'artifact['.$this->getId().'][u_groups][]');
         return $html;
