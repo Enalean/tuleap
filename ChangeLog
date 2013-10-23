@@ -3,8 +3,15 @@ Version 6.7 (Not released yet)
 	* agiledashboard: 1.8
 	* fulltextsearch: 0.23
 	* cardwall: 1.6
-	* tracker: 5.175
+	* tracker: 5.176
 	* openid: 0.3
+	* git: 3.49
+	* ldap: 3.37
+	* webdav: 1.9.3
+
+
+    == API ==
+    * RESt: story #5332 - use a token to authenticate against the server
 
     == Bug Fix ==
 	* Fix request #5406: Unable to install Tuleap on CentOs 6

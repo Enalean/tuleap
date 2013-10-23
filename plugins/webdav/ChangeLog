@@ -1,3 +1,6 @@
+Version 1.9.3 - Tuleap 6.7
+    * Fix test environment
+
 Version 1.9.2 - Tuleap 5.12
     * Rename User class to PFUser to allow integration of mediawiki
 
