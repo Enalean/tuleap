@@ -54,11 +54,6 @@ a:hover {
 	color: blue; 
 }
 
-fieldset {
-    border: 1px solid rgb(196,196,196);
-    margin-bottom: 1em;
-}
-
 /******** priorities **********/
 .priora { background-color: #dadada; }
 .priorb { background-color: #dad0d0; }
@@ -180,12 +175,6 @@ tr.boxitemalt:hover {
 .bg_help {
   background-color: #ffffff;
 }
-
-/* text with tooltips (e.g. artifact fields) */
-.tooltip { text-decoration:none; color: #000000}
-.tooltip:hover { text-decoration:none; color: #ff0000}
-
-
 
 /************* Tabs *************/
 a.tabsellink, a.tabsellink:visited, 

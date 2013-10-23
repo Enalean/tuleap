@@ -48,13 +48,14 @@ if (register_valid($csrf)) {
     $user = $um->getCurrentUser();
     $hp = Codendi_HTMLPurifier::instance();
 ?>
-<p><b><?php $Language->getText('account_change_realname', 'title'); ?></b>
+<h2><?php echo $Language->getText('account_change_realname', 'title'); ?></h2>
 <form action="change_realname.php" method="post">
-<p><?php 
+<?php
 echo $csrf->fetchHTMLInput();
 echo $Language->getText('account_change_realname', 'new_name'); ?>:
 <br><input type="text" name="form_realname" class="textfield_medium" value="<?php echo $hp->purify($user->getRealname(), CODENDI_PURIFIER_CONVERT_HTML) ?>" />
-<p><input type="submit" name="Update" value="<?php echo $Language->getText('global', 'btn_update'); ?>">
+<br>
+<input class="btn btn-primary" type="submit" name="Update" value="<?php echo $Language->getText('global', 'btn_update'); ?>">
 </form>
 
 <?php

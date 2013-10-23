@@ -247,7 +247,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
         stub($this->artifact_factory)->getArtifactIdsLinkedToTrackers()->returns(array(12 => true));
 
         $cleaned_collection = $factory->getUnassignedOpenCollection($this->user, $this->milestone, $this->backlog_strategy, $this->redirect_to_self);
-    
+
         $this->assertEqual($cleaned_collection->count(), 2);
     }
 }

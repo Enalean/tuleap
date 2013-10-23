@@ -31,10 +31,11 @@ class HTML_Element_Input_Checkbox extends HTML_Element_Input {
         }
     }
     public function render() {
-        $html  = '';
+        $hp = Codendi_HTMLPurifier::instance();
+        $html  = '<label class="checkbox inline">';
         $html .= $this->renderValue();
-        $html .= ' ';
-        $html .= $this->renderLabel();
+        $html .= ' '.$hp->purify($this->label, CODENDI_PURIFIER_CONVERT_HTML);
+        $html .= '</label>';
         return $html;
     }
     public function renderValue() {

@@ -150,7 +150,7 @@ $tech_box=commits_technician_box($projectname, '_commiter', $_commiter, 'Any');
 	Show the new pop-up boxes to select assigned to and/or status
 */
 echo '<H3>'.$Language->getText('cvs_browse_commit', 'browse_by').':</H3>'; 
-echo '<FORM name="commit_form" ACTION="?" METHOD="GET">
+echo '<FORM class="form-inline" name="commit_form" ACTION="?" METHOD="GET">
         <TABLE WIDTH="10%" BORDER="0">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="browse">
@@ -161,14 +161,15 @@ echo '<FORM name="commit_form" ACTION="?" METHOD="GET">
                       <TD><b>'.$Language->getText('cvs_browse_commit', 'who').'</b></TD>
                       <TD><b>'.$Language->getText('cvs_browse_commit', 'keyword').'</b></TD>'.
         '</TR>'.
-        '<TR><TD><INPUT TYPE="TEXT" SIZE=5 NAME=_commit_id VALUE='.$_commit_id.'></TD><TD><FONT SIZE="-1">'. commits_branches_box($group_id,'_branch',$_branch, 'Any') .'</TD>
-	<TD><FONT SIZE="-1">'. $tech_box .
+        '<TR><TD><INPUT TYPE="TEXT" CLASS="input-mini" SIZE=5 NAME=_commit_id VALUE='.$_commit_id.'></TD>'.
+        '<TD><FONT SIZE="-1">'. commits_branches_box($group_id,'_branch',$_branch, 'Any') .'</TD>'.
+	    '<TD><FONT SIZE="-1">'. $tech_box .
         '</TD><TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_srch value='.$_srch.
         '></TD>'.
        '</TR></TABLE>'.
 	
-'<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global', 'btn_browse').'">'.
-' <input TYPE="text" name="chunksz" size="3" MAXLENGTH="5" '.
+'<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" CLASS="btn" NAME="SUBMIT" VALUE="'.$Language->getText('global', 'btn_browse').'">'.
+' <input CLASS="input-mini" TYPE="text" name="chunksz" size="3" MAXLENGTH="5" '.
 'VALUE="'.$chunksz.'">'.$Language->getText('cvs_browse_commit', 'nb_at_once').'.'.
 '</FORM>';
 

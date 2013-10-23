@@ -188,12 +188,6 @@ a.sortbutton { font-size: 90%; color: white; }
   background-color: #ffffff;
 }
 
-/* text with tooltips (e.g. artifact fields) */
-.tooltip { text-decoration:none; color: #000000}
-.tooltip:hover { text-decoration:none; color: #ff0000}
-
-
-
 /************* Tabs *************/
 a.tabsellink, a.tabsellink:visited, 
 a.tablink, a.tablink:visited {
@@ -572,14 +566,6 @@ td.artifact {
 	padding: 2em;
     border: 1px solid #bcbcad;
 width: 100%;
-}
-
-.artifact fieldset {
-    margin-bottom:10px;
-}
-.artifact fieldset legend {
-    font-size:1.2em;
-    font-weight: bold;
 }
 
 /* {{{ Date Picker */

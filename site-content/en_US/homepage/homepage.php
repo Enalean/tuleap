@@ -25,10 +25,9 @@ if ($Language->hasText('homepage', 'introduction')) {
 }
 
 $main_content_span = 'span12';
-$login_input_span  = 'span3';
+$login_input_span  = 'span6';
 if ($display_homepage_news) {
     $main_content_span = 'span8';
-    $login_input_span  = 'span2';
 }
 
 ?>

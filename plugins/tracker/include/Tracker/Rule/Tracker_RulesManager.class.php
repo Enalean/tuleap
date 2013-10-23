@@ -413,7 +413,7 @@ class Tracker_RulesManager {
         echo '</select>';
 
         echo ' <input type="submit" name="choose_source" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        echo '</from>';
+        echo '</form>';
 
         //Shortcut
         $sources_targets = $this->getRuleFactory()->getInvolvedFieldsByTrackerId($this->tracker->id);

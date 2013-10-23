@@ -219,7 +219,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
                     $this->umbrella_manager
         );
         $this->expectException('Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyExistsException');
-        
+
         $project_creator->createGerritProject($this->server, $this->repository, $this->migrate_access_rights);
     }
 

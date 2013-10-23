@@ -24,17 +24,20 @@ require_once('HTML_Element_Input_Hidden.class.php');
  * Define a html input Radio field
  */
 class HTML_Element_Input_Radio extends HTML_Element_Input {
+
     public function  __construct($label, $name, $value, $checked) {
         parent::__construct($label, $name, $value);
         if ($checked) {
             $this->params['checked'] = 'checked';
         }
     }
+
     public function render() {
-        $html  = '';
+        $hp = Codendi_HTMLPurifier::instance();
+        $html  = '<label class="radio">';
         $html .= $this->renderValue();
-        $html .= ' ';
-        $html .= $this->renderLabel();
+        $html .= ' '.$hp->purify($this->label, CODENDI_PURIFIER_CONVERT_HTML);
+        $html .= '</label>';
         return $html;
     }
     

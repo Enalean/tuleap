@@ -128,7 +128,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         echo '<noscript class="error">'. $GLOBALS['Language']->getText('tracker_field_dependencies','noscript') .'</noscript>';
         echo '<form action="'. $this->href .'" method="post" id="edit_rule_form"><div id="edit_rule">';
         /**/
-        echo '<table border=0><thead><tr class="boxtable"><td class="boxtitle">';
+        echo '<table border=0><thead><tr><td>';
         echo $GLOBALS['Language']->getText('tracker_field_dependencies','source');
         
         $onchange = '$(\'source_field_hidden\').value = $(\'source_field\').value;'.
@@ -151,7 +151,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
             echo '</option>';
         }
         echo '</select>';
-        echo '</td><td class="boxtitle">';
+        echo '</td><td>';
         echo $GLOBALS['Language']->getText('tracker_field_dependencies','target');
         echo '<select id="target_field" name="target_field" onchange="'. $onchange .'">';
         echo '<option value="-1">'. $GLOBALS['Language']->getText('tracker_field_dependencies','choose_field') .'</option>';
@@ -224,10 +224,10 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
             echo '</td><td>';
         }
         echo '</td></tr>';
-        echo '<tr id="save_panel" class="boxtitle">';
-        echo '<td colspan="2" style="text-align: center;">';
-        echo '<input type="submit" value="'. $GLOBALS['Language']->getText('global','btn_submit') .'" id="save_btn"/>';
-        echo '<button id="reset_btn">'. $GLOBALS['Language']->getText('global','btn_reset') .'</button>';
+        echo '<tr id="save_panel">';
+        echo '<td colspan="2">';
+        echo '<input type="submit" class="btn btn-primary" value="'. $GLOBALS['Language']->getText('global','btn_submit') .'" id="save_btn"/> ';
+        echo '<button class="btn" id="reset_btn">'. $GLOBALS['Language']->getText('global','btn_reset') .'</button>';
         echo '</td>';
         echo '</tr>';
         echo '</tbody>';

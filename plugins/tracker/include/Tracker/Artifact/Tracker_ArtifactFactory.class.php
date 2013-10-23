@@ -457,7 +457,7 @@ class Tracker_ArtifactFactory {
      */
     public function getArtifactIdsLinkedToTrackers($artifact_ids, $tracker_ids) {
         $filtered_ids = array();
-        
+
         $result = $this->getDao()->getArtifactIdsLinkedToTrackers($artifact_ids, $tracker_ids);
         if (! $result) {
             return $filtered_ids;

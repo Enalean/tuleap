@@ -275,11 +275,11 @@ class Tracker implements Tracker_Dispatchable_Interface {
      */
     public function fetchAdminFormElements() {
         $html = '';
-        $html .= '<table width="20%"><tr><td id="tracker-admin-fields" class="tracker-admin-group">';
+        $html .= '<div id="tracker-admin-fields" class="tracker-admin-group">';
         foreach($this->getFormElements() as $formElement) {
             $html .= $formElement->fetchAdmin($this);
         }
-        $html .= '</td></tr></table>';
+        $html .= '</div>';
         return $html;
     }
 
@@ -1629,8 +1629,21 @@ EOS;
         echo '<h2>'. $title .'</h2>';
         echo '<form name="form1" method="POST" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&amp;func=admin-formElements">';
         
+        echo '  <div class="container-fluid">
+                  <div class="row-fluid">
+                    <div class="span3">';
+        $this->fetchAdminPalette();
+        echo '      </div>
+                    <div class="span9">';
+        echo $this->fetchAdminFormElements();
+        echo '      </div>
+                  </div>
+                </div>
+              </form>';
+        $this->displayFooter($layout);
+    }
 
-        echo '<table cellspacing="4" cellpadding="0"><tr valign="top"><td>';
+    private function fetchAdminPalette() {
         echo '<div class="tracker-admin-palette">';
 
         $this->formElementFactory->displayFactories($this);
@@ -1647,14 +1660,6 @@ EOS;
         $w->display();
 
         echo '</div>';
-        echo '</td><td>';
-
-        echo $this->fetchAdminFormElements();
-
-        echo '</td></tr></table>';
-
-        echo '</form>';
-        $this->displayFooter($layout);
     }
 
     public function displayAdminCSVImportHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs) {

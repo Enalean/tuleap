@@ -186,7 +186,7 @@ ul.tracker_function_aggregate_results {
 
 #tracker_query {
     list-style-type:none;
-    margin:0px;
+    margin:10px 0 0;
     padding:0px;
 }
 /*
@@ -208,6 +208,15 @@ ul.tracker_function_aggregate_results {
 }
 #tracker_query tr {
     vertical-align:top
+}
+
+#tracker_report_form select {
+    width: auto;
+}
+
+#tracker_report_query_form h4 {
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .tracker_report_criteria_advanced_toggle {
@@ -311,6 +320,16 @@ ul.tracker_function_aggregate_results {
 #tracker_report_updater_handle img {
     vertical-align:middle;
 }
+#tracker_report_updater li {
+    margin-left: 25px;
+    height: 30px;
+}
+#tracker_report_updater li label:first-child {
+    padding-left: 0;
+}
+#tracker_report_updater li input {
+    margin-bottom: 0;
+}
 .tracker_decorator,
 .tracker_nodecorator {
     width:1em;
@@ -377,6 +396,9 @@ ul.tracker_function_aggregate_results {
 }
 .tracker_report_renderer h3 {
 }
+#tracker_report_table .boxtable {
+    border: 0;
+}
 #tracker_report_table_addcolumn_panel {
     text-align:right;
 }
@@ -395,6 +417,11 @@ ul.tracker_function_aggregate_results {
 .tracker_report_table_sort_controls a:link,
 .tracker_report_table_sort_controls a:visited {
     color:gray;
+}
+
+/* Disable bootrap width for elements controled by tracker config  */
+#tracker_artifact input, #tracker_artifact select {
+    width: auto;
 }
 
 #tracker_artifact_tabs {
@@ -554,9 +581,19 @@ ul.tracker_function_aggregate_results {
 .tracker_artifact_remove_attachment span {
     display: none;
 }
+.tracker-search legend {
+    font-size:1.2em;
+    font-weight: bold;
+    background-color: #f5f5f5;
+    padding-left: 5px;
+    background-position: 7px center;
+}
 .tracker_artifact_fieldset legend {
     font-size:1.2em;
     font-weight: bold;
+    background-color: #f5f5f5;
+    padding-left: 25px;
+    background-position: 7px center;
 }
 .tracker_artifact_field {
     margin-bottom:1em;
@@ -782,6 +819,10 @@ a.tracker_report_table_column_title:hover span {
     cursor: pointer;
 }
 
+#renderer_table_chunksz_input {
+    width: auto;
+}
+
 div.tracker_report_table_hide_masschange #tracker_report_table_masschange_form,
 div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
     display:none;
@@ -790,6 +831,11 @@ div.tracker_report_table_show_masschange #tracker_report_table_next_previous_for
 div.tracker_report_table_show_masschange #tracker_report_table_masschange_form,
 div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([class~=boxtitle]) {
     background: #ffC;
+}
+
+/* bootstrap: avoid wrapping between toggler and ['details'] in workflow */
+.pc_checkbox {
+    display: inline;
 }
 
 #tracker_workflow_matrix .pc_check_unchecked,
@@ -944,6 +990,7 @@ ul.plugin_tracker_my_artifacts_list {
 #tracker_admin_menu {
     border:none;
     border-spacing:2em;
+    border-collapse: inherit;
 }
 
 #tracker_admin_menu td {
@@ -973,6 +1020,16 @@ ul.plugin_tracker_my_artifacts_list {
     padding-left: 56px;
 }
 
+/* {{{ fix bootstrap width on form elements and rendering on fieldset */
+.tracker-admin-group input,
+.tracker-admin-group select {
+    width: auto;
+}
+.tracker-admin-group legend label {
+    display: inline;
+}
+/* }}} */
+
 .widget-preview-plugin_tracker_myartifacts-en_US,
 .widget-preview-plugin_tracker_myartifacts-fr_FR {
     background-image: url(../images/widget-preview-myartifact.png);
@@ -985,49 +1042,6 @@ ul.plugin_tracker_my_artifacts_list {
     background-image: url(../images/widget-preview-renderer.png);
 }
 
-/* {{{ Bootstrap rules */
-.alert-message {
-    background-color: #EEDC94;
-    background-image: -moz-linear-gradient(center top , #FCEEC1, #EEDC94);
-    background-repeat: repeat-x;
-    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-    border-radius: 4px 4px 4px 4px;
-    border-style: solid;
-    border-width: 1px;
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
-    color: #404040;
-    margin-bottom: 18px;
-    padding: 7px 15px;
-    position: relative;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-.alert-message p {
-    margin-bottom: 0;
-}
-.alert-message div {
-    line-height: 28px;
-    margin-bottom: 2px;
-    margin-top: 5px;
-}.alert-message.block-message {
-    background-color: #FDF5D9;
-    background-image: none;
-    border-color: #FCEEC1;
-    box-shadow: none;
-    padding: 14px;
-}
-.alert-message.block-message ul, .alert-message.block-message p {
-    margin-right: 30px;
-}
-.alert-message.block-message ul {
-    margin-bottom: 0;
-}
-.alert-message.block-message li {
-    color: #404040;
-}
-.alert-message.block-message .alert-actions {
-    margin-top: 5px;
-}
-/* }}} */
 .tracker-hierarchy,
 .tracker-hierarchy ul,
 .tracker-hierarchy li
@@ -1544,4 +1558,31 @@ tr.artifact-children-table-head {
 
 .artifact-submit-button {
     text-align: center;
+}
+
+#artifacts_query td {
+    padding: 0 10px 0 0;
+}
+#date_field_reminder_form input, #date_field_reminder_form select {
+    width: auto;
+}
+
+#edit_rule_form label {
+    margin: 0 0 0 5px;
+}
+#edit_rule_form input[type="checkbox"] {
+    margin: 0;
+}
+#save_panel td {
+    padding: 10px 0 0 0;
+}
+#tracker-import-data th {
+    text-align: right;
+    padding: 0 10px 0 0;
+}
+#tracker-import-data th, #tracker-import-data td {
+    padding: 10px 5px;
+}
+#tracker-import-data input[type="checkbox"] {
+    margin: 0;
 }

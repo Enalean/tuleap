@@ -225,21 +225,21 @@ if (!$request->valid($vGroupId)) {
      Show the new pop-up boxes to select assigned to and/or status
     */
     echo '<H3>'.$Language->getText('svn_browse_revision','browse_commit').'</H3>'; 
-    echo '<FORM name="commit_form" ACTION="" METHOD="GET">
+    echo '<FORM class="form-inline" name="commit_form" ACTION="" METHOD="GET">
         <TABLE BORDER="0">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="browse">
 	<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
         <TR align="center"><TD><b>'.$Language->getText('svn_browse_revision','rev').'</b></TD><TD><b>'.$Language->getText('svn_browse_revision','commiter').'</b></TD><TD><b>'.$Language->getText('svn_browse_revision','path').'</b></TD><TD><b>'.$Language->getText('svn_browse_revision','search').'</b></TD>'.
         '</TR>'.
-        '<TR><TD><INPUT TYPE="TEXT" SIZE=5 NAME=_rev_id VALUE='.$hp->purify($_rev_id).'></TD>'.
-        '<TD><FONT SIZE="-1">'. $tech_box .'</TD>'.
-        '<TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_path value='.$hp->purify($_path).'></TD>'.
-        '<TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_srch value='.$hp->purify($_srch).'></TD>'.
+        '<TR><TD><INPUT TYPE="TEXT" SIZE=5 CLASS="input-mini" NAME=_rev_id VALUE='.$hp->purify($_rev_id).'></TD>'.
+        '<TD>'. $tech_box .'</TD>'.
+        '<TD>'. '<INPUT type=text size=35 name=_path value='.$hp->purify($_path).'></TD>'.
+        '<TD>'. '<INPUT type=text size=35 name=_srch value='.$hp->purify($_srch).'></TD>'.
         '</TR></TABLE>'.
 	
-        '<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_browse').'">'.
-        ' <input TYPE="text" name="chunksz" size="3" MAXLENGTH="5" '.
+        '<br><INPUT TYPE="SUBMIT" CLASS="btn" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_browse').'">'.
+        ' <input TYPE="text" name="chunksz" CLASS="input-mini" size="3" MAXLENGTH="5" '.
         'VALUE="'.$hp->purify($chunksz).'">'.$Language->getText('svn_browse_revision','commit_at_once').
         '</FORM>';
 
@@ -261,8 +261,7 @@ if (!$request->valid($vGroupId)) {
 		<H3>'.$statement.'</H3>
 		<P>
 		<P>';
-        echo '
-		<H1>'.$Language->getText('svn_browse_revision','no_match').'</H1>';
+        echo $Language->getText('svn_browse_revision','no_match');
         echo db_error();
     }
     svn_footer(array());

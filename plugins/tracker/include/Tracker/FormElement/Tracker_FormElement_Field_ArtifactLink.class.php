@@ -371,13 +371,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         }
         $hp = Codendi_HTMLPurifier::instance();
         if (!$read_only) {
-            $html .= '<div><input type="text" 
+            $html .= '<div><span class="input-append" style="display:inline;"><input type="text"
                              '. $html_name_new .'
                              class="tracker-form-element-artifactlink-new"
                              size="40"
                              value="'.  $hp->purify($prefill_new_values, CODENDI_PURIFIER_CONVERT_HTML)  .'" 
                              title="' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_help') . '" />';
-            $html .= '</div>';
+            $html .= '</span></div>';
 
             $parent_tracker = $this->getTracker()->getParent();
             $is_submit      = $artifact->getId() == -1;

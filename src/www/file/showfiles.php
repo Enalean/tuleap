@@ -255,7 +255,7 @@ while (list ($package_id, $package) = each($packages)) {
                             print '     <a href="admin/release.php?func=edit&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML)  .'">'
                             . $GLOBALS['HTML']->getImage('ic/edit.png',array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) )) .'</a>';
                         }
-                        print ' &nbsp; ';
+                        print '&nbsp;';
                         print '     <a href="shownotes.php?release_id=' . $package_release->getReleaseID() . '"><img src="'.util_get_image_theme("ic/text.png").'" alt="'.$Language->getText('file_showfiles', 'read_notes').'" title="'.$Language->getText('file_showfiles', 'read_notes').'" /></a>';
                     }
                     print '  </td>';

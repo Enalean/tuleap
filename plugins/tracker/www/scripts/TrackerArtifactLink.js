@@ -489,16 +489,20 @@ document.observe('dom:loaded', function () {
                 var link = new Element('button', {
                     title: codendi.locales.tracker_artifact_link.select
                 })
-                .addClassName('tracker-form-element-artifactlink-selector')
+                .addClassName('tracker-form-element-artifactlink-selector btn')
                 .update('<img src="'+ codendi.imgroot +'ic/clipboard-search-result.png" />');
                 
                 var link_create = new Element('button', {
                     title: codendi.locales.tracker_artifact_link.create,
                     href: '#'
                 })
-                .addClassName('tracker-form-element-artifactlink-selector')
-                .update('<img src="'+ codendi.imgroot +'ic/artifact-plus.png" style="vertical-align: middle;"/> ' + codendi.locales.tracker_artifact_link.create);
-                input.up().insert(link).insert(codendi.locales.tracker_artifact_link.or).insert(link_create).insert('<br /><em style="color:#666; font-size: 0.9em;">'+ input.title +'</em>');
+                .addClassName('tracker-form-element-artifactlink-selector btn')
+                .update('<img src="'+ codendi.imgroot +'ic/artifact-plus.png" style="vertical-align: middle;"/> ');
+                input.up()
+                    .insert(link)
+                    .insert(link_create)
+                    .up()
+                        .insert('<br /><em style="color:#666; font-size: 0.9em;">'+ input.title +'</em>');
             }
         }
         

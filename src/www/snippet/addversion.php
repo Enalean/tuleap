@@ -96,10 +96,10 @@ if (user_isloggedin()) {
 	        	<TEXTAREA NAME="code" ROWS="30" COLS="85" WRAP="SOFT"></TEXTAREA>
 	        </TD></TR>
  
-	        <TR><TD COLSPAN="2" ALIGN="center">
+	        <TR><TD COLSPAN="2">
 			<B>'.$Language->getText('snippet_add_snippet_to_package','all_info_complete').'</B>
 			<BR>
-			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
+			<INPUT CLASS="btn btn-primary" TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 	        </TD></TR>
 	        </FORM>
 	        </TABLE>';
@@ -205,10 +205,10 @@ function show_add_snippet_box() {
 			<TEXTAREA NAME="changes" ROWS="5" COLS="45"></TEXTAREA>
 		</TD></TR>
 
-		<TR><TD COLSPAN="2" ALIGN="center">
+		<TR><TD COLSPAN="2">
 			<B>'.$Language->getText('snippet_add_snippet_to_package','all_info_complete').'</B>
-			<BR>
-			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
+			<BR><BR>
+			<INPUT CLASS="btn btn-primary" TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 		</TD></TR>
 	        </FORM>
 	        </TABLE>

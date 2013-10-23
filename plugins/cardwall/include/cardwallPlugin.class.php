@@ -410,7 +410,7 @@ class cardwallPlugin extends Plugin {
      * Fetches HTML
      *
      * @param array $params parameters sent by Event
-     * 
+     *
      * Parameters:
      *  'tracker' => The planning tracker
      *  'view'    => A string of HTML

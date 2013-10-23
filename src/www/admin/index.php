@@ -145,9 +145,9 @@ $wUser->setContent('
 <ul>
   <li>'.$Language->getText('admin_main', 'all_users',array("userlist.php")).'</li>
   <li>'.$Language->getText('admin_main', 'search_user').'
-    <form name="usersrch" action="userlist.php" method="get" style="display: inline;">
-      <input type="text" name="user_name_search">
-      <input type="submit" value="'.$Language->getText('admin_main', 'search').'">
+    <form name="usersrch" action="userlist.php" method="get" class="form-inline">
+      <input type="text" name="user_name_search" class="user_name_search" />
+      <input type="submit" class="btn" value="'.$Language->getText('admin_main', 'search').'">
     </form>
   </li>
   <li>'.$Language->getText('admin_main', 'pending_user',array("approve_pending_users.php?page=pending")).' '.$user_approval.'</li>
@@ -171,9 +171,9 @@ $wProject->setContent('
 <ul>
   <li>'.$Language->getText('admin_main', 'all_groups', array("grouplist.php")).'</li>
   <li>'.$Language->getText('admin_main', 'search_group').'
-    <form name="gpsrch" action="grouplist.php" method="get" style="display: inline;">
-      <input type="text" name="group_name_search">
-      <input type="submit" value="'.$Language->getText('admin_main', 'search').'">
+    <form name="gpsrch" action="grouplist.php" method="get" class="form-inline">
+      <input type="text" name="group_name_search" class="group_name_search" />
+      <input type="submit" class="btn" value="'.$Language->getText('admin_main', 'search').'">
     </form>
   </li>
   <li>'.$Language->getText('admin_main', 'incomplete_group', array("grouplist.php?status=I")).'</li>
@@ -253,28 +253,31 @@ $wPlugins->setContent('<ul>'.$pluginsContent.'</ul>');
 
 // Start output
 site_admin_header(array('title'=>$Language->getText('admin_main', 'title')));
+echo '<div class="container-fluid site_admin">';
 
 echo "<p><i>".$Language->getText('admin_main', 'message')."</i></p>";
 
-echo '<table id="site_admin_main_table"><tr>';
+echo '<div class="row-fluid">';
 
-echo '<td>';
+echo '<div class="span4">';
 $wUser->display();
 $wProject->display();
-echo "</td>";
+echo '</div>';
 
-echo '<td>';
+echo '<div class="span4">';
 $wUtils->display();
 $wConf->display();
-echo "</td>";
+echo '</div>';
 
-echo '<td>';
+echo '<div class="span4">';
 $wDoc->display();
 $wStats->display();
 $wPlugins->display();
-echo "</td>";
+echo '</div>';
 
-echo "</tr></table>";
+echo '</div>';
+
+echo '</div>';
 
 site_admin_footer(array());
 ?>

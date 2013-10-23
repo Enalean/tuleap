@@ -68,12 +68,12 @@ $title = $Language->getText('account_change_avatar', 'title');
 $HTML->header(array('title' => $title));
 
 echo '<h2>'. $title .'</h2>';
+echo $user->fetchHtmlAvatar();
 echo '<form action="/account/change_avatar.php" method="POST" enctype="multipart/form-data">';
 echo '<input type="hidden" name="MAX_FILE_SIZE" value="300000" />';
 echo $csrf->fetchHTMLInput();
-echo $user->fetchHtmlAvatar();
-echo '<input type="file" name="avatar" />';
-echo '<p><input type="submit" value="'. $Language->getText('global', 'btn_update') .'" /></p>';
+echo '<input type="file" name="avatar" /><br>';
+echo '<input class="btn btn-primary" type="submit" value="'. $Language->getText('global', 'btn_update') .'" /></p>';
 echo '</form>';
 $HTML->footer(array());
 

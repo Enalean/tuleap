@@ -576,8 +576,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             
             $chunk = $GLOBALS['Language']->getText('global','btn_browse');
             if ($report_can_be_modified) {
+                $chunk .= ' <span class="input-append">';
                 $chunk .= ' <input id="renderer_table_chunksz_input" type="text" name="renderer_table[chunksz]" size="1" maxlength="5" value="'. (int)$this->chunksz.'" />';
-                $chunk .= ' <input type="submit" id="renderer_table_chunksz_btn" value="Ok" /> ';
+                $chunk .= ' <button type="submit" class="btn" id="renderer_table_chunksz_btn">Ok</button> ';
+                $chunk .= ' </span> ';
             } else {
                 $chunk .= ' '. (int)$this->chunksz .' ';
             }

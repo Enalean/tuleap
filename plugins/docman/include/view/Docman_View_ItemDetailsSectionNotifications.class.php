@@ -47,9 +47,9 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $checked  = !$user->isAnonymous() && $this->notificationsManager->exist($user->getId(), $this->item->getId()) ? 'checked="checked"' : '';
         $disabled = $user->isAnonymous() ? 'disabled="disabled"' : '';
         $content .= '<input type="hidden" name="monitor" value="0" />';
-        $content .= '<input type="checkbox" name="monitor" value="1" id="plugin_docman_monitor_item" '. $checked .' '. $disabled .' />';
-        $content .= '<label for="plugin_docman_monitor_item">'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_sendemail') .'</label>';
-        $content .= '</p>';
+        $content .= '<label class="checkbox" for="plugin_docman_monitor_item">';
+        $content .= '<input type="checkbox" name="monitor" value="1" id="plugin_docman_monitor_item" '. $checked .' '. $disabled .' />'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_sendemail');
+        $content .= '</label></p>';
         $content .= $this->item->accept($this, array('user' => &$user));
         $content .= '<p><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></p>';
         $content .= '</form>';
@@ -121,9 +121,10 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $content .= '<tr><td><textarea name="listeners_to_add" value="" id="listeners_to_add" rows="2" cols="50"></textarea></td></tr>';
 
         //checkbox to enable cascade monitoring
-        $content .= '<tr><td><input type="checkbox" name="monitor_cascade" value="1" id="plugin_docman_monitor_add_user_cascade" />';
-        $content .= '<label for="plugin_docman_monitor_add_user_cascade">'. $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user_cascade') .'</label></td></tr>';
-        $content .= '</table>';
+        $content .= '<tr><td>';
+        $content .= '<label class="checkbox" for="plugin_docman_monitor_add_user_cascade">';
+        $content .= '<input type="checkbox" name="monitor_cascade" value="1" id="plugin_docman_monitor_add_user_cascade" />'. $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user_cascade');
+        $content .= '</label></td></tr></table>';
 
         //autocompletion on "add_user" field.
         $autocomplete = "new UserAutoCompleter('listeners_to_add','".

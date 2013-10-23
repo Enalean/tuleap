@@ -36,20 +36,20 @@ class Widget_ProjectPublicAreas extends Widget {
         $pm = ProjectManager::instance();
         $project = $pm->getProject($group_id);
         if ($project->usesHomePage()) {
-            print "<A ";
+            print "<p><a ";
             if (substr($project->getHomePage(), 0, 1)!="/") {
                 // Absolute link -> open new window on click
                 print "target=_blank ";
             }
             print 'href="' . $project->getHomePage() . '">';
             html_image("ic/home16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','homepage')));
-            print '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','proj_home').'</A>';
+            print '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','proj_home').'</a></p>';
         }
         
         // ################## forums
         
         if ($project->usesForum()) {
-            print '<HR SIZE="1" width="99%" NoShade><A href="'.$project->getForumPage().'">';
+            print '<p><a href="'.$project->getForumPage().'">';
             html_image("ic/notes16.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','public_forums'))); 
             print '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','public_forums').'</A>';
             
@@ -65,52 +65,32 @@ class Widget_ProjectPublicAreas extends Widget {
                 $row_count = db_fetch_array($res_count);
                 print $GLOBALS['Language']->getText('include_project_home','forums',$row_count['count'])." )\n";
             }
-        /*
-            $sql="SELECT * FROM forum_group_list WHERE group_id='$group_id' AND is_public=1";
-            $res2 = db_query ($sql);
-            $rows = db_numrows($res2);
-            for ($j = 0; $j < $rows; $j++) {
-                echo '<BR> &nbsp; - <A HREF="forum.php?forum_id='.db_result($res2, $j, 'group_forum_id').'&et=0">'.
-                    db_result($res2, $j, 'forum_name').'</A> ';
-                //message count
-                echo '('.db_result(db_query("SELECT count(*) FROM forum WHERE group_forum_id='".db_result($res2, $j, 'group_forum_id')."'"),0,0).' msgs)';
-            }
-        */
+            echo '</p>';
         }
 
         // ##################### Doc Manager (only for Active)
         
         if ($project->usesDocman()) {
-            print '
-            <HR SIZE="1" width="99%" NoShade>
-            <A href="/docman/?group_id='.$group_id.'">';
+            print '<p><a href="/docman/?group_id='.$group_id.'">';
             html_image("ic/docman16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','doc')));
-            print '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','doc_man').'</A>';
-        /*
-            $res_count = db_query("SELECT count(*) AS count FROM support WHERE group_id=$group_id");
-            $row_count = db_fetch_array($res_count);
-            $res_count = db_query("SELECT count(*) AS count FROM support WHERE group_id=$group_id AND support_status_id='1'");
-            $row_count2 = db_fetch_array($res_count);
-            print " ( <B>$row_count2[count]</B>";
-            print " open requests, <B>$row_count[count]</B> total )";
-        */
+            print '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','doc_man').'</a></p>';
         }
         
         // ##################### Mailing lists (only for Active)
         
         if ($project->usesMail()) {
-            print '<HR SIZE="1" width="99%" NoShade><A href="'.$project->getMailPage().'">';
+            print '<p><a href="'.$project->getMailPage().'">';
             html_image("ic/mail16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','mail_lists'))); 
             print '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','mail_lists').'</A>';
             $res_count = db_query("SELECT count(*) AS count FROM mail_group_list WHERE group_id=$group_id AND is_public=1");
             $row_count = db_fetch_array($res_count);
-            print ' ( '.$GLOBALS['Language']->getText('include_project_home','public_mail_lists',$row_count['count']).' )';
+            print ' ( '.$GLOBALS['Language']->getText('include_project_home','public_mail_lists',$row_count['count']).' )</p>';
         }
         
         // ######################### Wiki (only for Active)
         
         if ($project->usesWiki()) {
-            print '<HR SIZE="1" width="99%" NoShade><A href="'.$project->getWikiPage().'">';
+            print '<p><a href="'.$project->getWikiPage().'">';
             html_image("ic/wiki.png",array('width'=>'18', 'height'=>'12', 'alt'=>$GLOBALS['Language']->getText('include_project_home','wiki')));
             print ' '.$GLOBALS['Language']->getText('include_project_home','wiki').'</A>';
                 $wiki=new Wiki($group_id);
@@ -118,61 +98,68 @@ class Widget_ProjectPublicAreas extends Widget {
             if ($pos === 0) {
                 echo ' ( '.$GLOBALS['Language']->getText('include_project_home','nb_wiki_pages',$wiki->getProjectPageCount()).' )';
             }
+            echo '</p>';
         }
         
         // ######################### Surveys (only for Active)
         
         if ($project->usesSurvey()) {
-            print '<HR SIZE="1" width="99%" NoShade><A href="/survey/?group_id='.$group_id.'">';
+            print '<p><a href="/survey/?group_id='.$group_id.'">';
             html_image("ic/survey16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','surveys')));
-            print ' '.$GLOBALS['Language']->getText('include_project_home','surveys').'</A>';
+            print ' '.$GLOBALS['Language']->getText('include_project_home','surveys').'</a>';
             $sql="SELECT count(*) from surveys where group_id='$group_id' AND is_active='1'";
             $result=db_query($sql);
-            echo ' ( '.$GLOBALS['Language']->getText('include_project_home','nb_surveys',db_result($result,0,0)).' )';
+            echo ' ( '.$GLOBALS['Language']->getText('include_project_home','nb_surveys',db_result($result,0,0)).' )</p>';
         }
         
         // ######################### CVS (only for Active)
         
         if ($project->usesCVS()) {
-            print '<HR SIZE="1" width="99%" NoShade><A href="'.$project->getCvsPage().'">';
-            html_image("ic/cvs16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'CVS'));
-            print ' '.$GLOBALS['Language']->getText('include_project_home','cvs_repo').'</A>';
-        // LJ Cvs checkouts added 
+            print '<p><a href="' . $project->getCvsPage() . '">';
+            html_image("ic/cvs16b.png", array('width' => '20', 'height' => '20', 'alt' => 'CVS'));
+            print ' ' . $GLOBALS['Language']->getText('include_project_home', 'cvs_repo') . '</a>';
+            // LJ Cvs checkouts added
             $sql = "SELECT SUM(cvs_commits) AS commits, SUM(cvs_adds) AS adds, SUM(cvs_checkouts) AS checkouts from stats_project where group_id='$group_id'";
             $result = db_query($sql);
-                $cvs_commit_num=db_result($result,0,0);
-                $cvs_add_num=db_result($result,0,1);
-                $cvs_co_num=db_result($result,0,2);
-                if (!$cvs_commit_num) $cvs_commit_num=0;
-                if (!$cvs_add_num) $cvs_add_num=0;
-                if (!$cvs_co_num) $cvs_co_num=0;
-            $uri = session_make_url('/cvs/viewvc.php/?root='.$project->getUnixName(false).'&roottype=cvs');
-        
-                echo ' ( '.$GLOBALS['Language']->getText('include_project_home','commits',$cvs_commit_num).', '.$GLOBALS['Language']->getText('include_project_home','adds',$cvs_add_num).', '.$GLOBALS['Language']->getText('include_project_home','co',$cvs_co_num).' )';
-                if ($cvs_commit_num || $cvs_add_num || $cvs_co_num) {
-        
-                    echo '<br> &nbsp; - <a href="'.$uri.'">'.$GLOBALS['Language']->getText('include_project_home','browse_cvs').'</a>';
-                }
+            $cvs_commit_num = db_result($result, 0, 0);
+            $cvs_add_num = db_result($result, 0, 1);
+            $cvs_co_num = db_result($result, 0, 2);
+            if (!$cvs_commit_num)
+                $cvs_commit_num = 0;
+            if (!$cvs_add_num)
+                $cvs_add_num = 0;
+            if (!$cvs_co_num)
+                $cvs_co_num = 0;
+            $uri = session_make_url('/cvs/viewvc.php/?root=' . $project->getUnixName(false) . '&roottype=cvs');
+
+            echo ' ( ' . $GLOBALS['Language']->getText('include_project_home', 'commits', $cvs_commit_num) . ', ' . $GLOBALS['Language']->getText('include_project_home', 'adds', $cvs_add_num) . ', ' . $GLOBALS['Language']->getText('include_project_home', 'co', $cvs_co_num) . ' )';
+            if ($cvs_commit_num || $cvs_add_num || $cvs_co_num) {
+
+                echo '<br> &nbsp; - <a href="' . $uri . '">' . $GLOBALS['Language']->getText('include_project_home', 'browse_cvs') . '</a>';
+            }
+            echo '</p>';
         }
         
         // ######################### Subversion (only for Active)
         
         if ($project->usesService('svn')) {
-            print '<HR SIZE="1" width="99%" NoShade><A href="'.$project->getSvnPage().'">';
-            html_image("ic/svn16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'Subversion'));
-            print ' '.$GLOBALS['Language']->getText('include_project_home','svn_repo').'</A>';
+            print '<p><a href="' . $project->getSvnPage() . '">';
+            html_image("ic/svn16b.png", array('width' => '20', 'height' => '20', 'alt' => 'Subversion'));
+            print ' ' . $GLOBALS['Language']->getText('include_project_home', 'svn_repo') . '</a>';
             $sql = "SELECT SUM(svn_access_count) AS accesses from group_svn_full_history where group_id='$group_id'";
             $result = db_query($sql);
-                $svn_accesses = db_result($result,0,0);
-                if (!$svn_accesses) $svn_accesses=0;
-        
-                echo ' ( '.$GLOBALS['Language']->getText('include_project_home','accesses',$svn_accesses).' )';
-                if ($svn_accesses) {
-                $uri = session_make_url('/svn/viewvc.php/?root='.$project->getUnixName(false).'&roottype=svn');
-                    echo '<br> &nbsp; - <a href="'.$uri.'">'.$GLOBALS['Language']->getText('include_project_home','browse_svn').'</a>';
-                }
+            $svn_accesses = db_result($result, 0, 0);
+            if (!$svn_accesses)
+                $svn_accesses = 0;
+
+            echo ' ( ' . $GLOBALS['Language']->getText('include_project_home', 'accesses', $svn_accesses) . ' )';
+            if ($svn_accesses) {
+                $uri = session_make_url('/svn/viewvc.php/?root=' . $project->getUnixName(false) . '&roottype=svn');
+                echo '<br> &nbsp; - <a href="' . $uri . '">' . $GLOBALS['Language']->getText('include_project_home', 'browse_svn') . '</a>';
+            }
+            echo '</p>';
         }
-        
+
         // ######################### File Releases (only for Active)
         
         if ($project->usesFile()) {
@@ -181,9 +168,9 @@ class Widget_ProjectPublicAreas extends Widget {
         
         // ######################### Trackers (only for Active)
         if ( $project->usesTracker() ) {
-            print '<HR SIZE="1" width="99%" NoShade><A href="'.$project->getTrackerPage().'">';
+            print '<p><a href="'.$project->getTrackerPage().'">';
             html_image("ic/tracker20w.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','trackers')));
-            print ' '.$GLOBALS['Language']->getText('include_project_home','trackers').'</A>';
+            print ' '.$GLOBALS['Language']->getText('include_project_home','trackers').'</a>';
             //	  
             //  get the Group object
             //	  
@@ -201,34 +188,37 @@ class Widget_ProjectPublicAreas extends Widget {
             $at_arr = $atf->getArtifactTypes();
             
             if (!$at_arr || count($at_arr) < 1) {
-                echo '<br><i>'.$GLOBALS['Language']->getText('include_project_home','no_trackers_accessible').'</i>';
+                echo '<br><i>' . $GLOBALS['Language']->getText('include_project_home', 'no_trackers_accessible') . '</i>';
             } else {
+                echo '<ul>';
                 for ($j = 0; $j < count($at_arr); $j++) {
-                            if ($at_arr[$j]->userCanView()) {
-                    echo '<br><i>-&nbsp;
-                    <a href="/tracker/?atid='. $at_arr[$j]->getID() .
-                                    '&group_id='.$group_id.'&func=browse">' .
-                                    $at_arr[$j]->getName() .'</a></i>';
-                            }
+                    if ($at_arr[$j]->userCanView()) {
+                        echo '<li>
+                        <a href="/tracker/?atid=' . $at_arr[$j]->getID().'&group_id=' . $group_id . '&func=browse">' .
+                        $at_arr[$j]->getName() . '</a></li>';
+                    }
                 }
+                echo '</ul>';
             }
+            echo '</p>';
         }
         
         
         // ######################## AnonFTP (only for Active)
         
         if ($project->isActive()) {
-            print '<HR SIZE="1" width="99%" NoShade>';
+            print '<p>';
         
-            list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+            list($host) = explode(':',$GLOBALS['sys_default_domain']);
             if ($GLOBALS['sys_disable_subdomains']) {
             	$ftp_subdomain = "";	
             } else {
             	$ftp_subdomain = $project->getUnixName() . ".";
             }
-            print "<A href=\"ftp://" . $ftp_subdomain . $host ."/pub/". $project->getUnixName(false) ."/\">";    // keep the first occurence in lower case
+            print "<a href=\"ftp://" . $ftp_subdomain . $host ."/pub/". $project->getUnixName(false) ."/\">";    // keep the first occurence in lower case
             print html_image("ic/ftp16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','anon_ftp_space')));
-            print $GLOBALS['Language']->getText('include_project_home','anon_ftp_space').'</A>';
+            print $GLOBALS['Language']->getText('include_project_home','anon_ftp_space').'</a>';
+            echo '</p>';
         }
         
         // ######################## Plugins
@@ -240,8 +230,7 @@ class Widget_ProjectPublicAreas extends Widget {
         $em->processEvent(Event::SERVICE_PUBLIC_AREAS, $params);
         
         foreach($areas as $area) {
-            print '<HR SIZE="1" width="99%" NoShade>';
-            print $area;
+            echo '<p>'.$area.'</p>';
         }
     }
     function canBeUsedByProject(&$project) {

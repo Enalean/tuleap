@@ -51,9 +51,9 @@ echo '<FORM ACTION="?" METHOD="GET">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="setAdmin">
 	<h3>'.$Language->getText('cvs_admin_commit', 'private_hdr').'</h3>
     <p>
-    <input type="hidden" name="private" '. $checked .' '. $readonly .' value="0" />
+    <label class="checkbox" for="cvs_private"><input type="hidden" name="private" '. $checked .' '. $readonly .' value="0" />
     <input type="checkbox" name="private" '. $checked .' '. $readonly .' value="1" id="cvs_private" />
-    <label for="cvs_private">'. $GLOBALS['Language']->getText('cvs_admin_commit', 'private_lbl') .'</label>';
+    '. $GLOBALS['Language']->getText('cvs_admin_commit', 'private_lbl') .'</label>';
     if (!$project->isPublic()) {
         echo '<br /><em>'. $GLOBALS['Language']->getText('cvs_admin_commit', 'private_private_msg') .'</em>';
     }
