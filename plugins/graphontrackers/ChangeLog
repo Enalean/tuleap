@@ -1,3 +1,6 @@
+Version 1.9 - Tuleap 6.7
+    * Story #5280: Integrate bootstrap to continue interface overhaul
+
 Version 1.8 - Tuleap 6.4
     * Update help to refer to the new documentation based on sphinx
 

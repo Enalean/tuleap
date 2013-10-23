@@ -1,3 +1,6 @@
+Version 3.38 - Tuleap 6.7
+    * Story #5280: Integrate bootstrap to continue interface overhaul
+
 Version 3.37 - Tuleap 6.7
     * Internal API: normalize Events
 

@@ -1,3 +1,6 @@
+Version 1.5.13 - Tuleap 6.7
+    * Story #5280: Integrate bootstrap to continue interface overhaul
+
 Version 1.5.12 - Tuleap 6.6
     * Fix fatal error on project creation
 

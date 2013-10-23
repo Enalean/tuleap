@@ -1,3 +1,6 @@
+Version 1.4 - Tuleap 6.7
+    * Story #5280: Integrate bootstrap to continue interface overhaul
+
 Version 1.3 - Tuleap 5.13
     * Add a plugin dependency solver to force installation of needed plugins
 
