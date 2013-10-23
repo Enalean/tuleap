@@ -1,3 +1,6 @@
+Version 1.9 - Tuleap 6.7
+    * story #5346 - have a read-only view of my artifacts
+
 Version 1.8 - Tuleap 6.7
     * Fix request #5447: Fatal error in error logs but no visual effect
 
