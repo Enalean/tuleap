@@ -1,5 +1,5 @@
-Alias /api/explorer/ "/usr/share/restler-3.0-rc4/vendor/luracast/explorer/dist/"
-<Directory "/usr/share/restler-3.0-rc4/vendor/luracast/explorer/dist/">
+Alias /api/explorer/ "/usr/share/restler-api-explorer/dist/"
+<Directory "/usr/share/restler-api-explorer/dist/">
     Options FollowSymLinks
     AllowOverride None
     Order allow,deny
