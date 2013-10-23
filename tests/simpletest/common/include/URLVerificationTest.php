@@ -66,12 +66,23 @@ Mock::generate('URL');
 
 class URLVerificationTest extends TuleapTestCase {
 
+    private $user_manager;
+    private $user;
+
     function setUp() {
+        parent::setUp();
         $this->fixtures = dirname(__FILE__).'/_fixtures';
         $GLOBALS['Language'] = new MockBaseLanguage($this);
+
+        $user = mock('PFUser');
+        $this->user_manager = mock('UserManager');
+        stub($this->user_manager)->getCurrentUser()->returns($user);
+
+        UserManager::setInstance($this->user_manager);
     }
 
     function tearDown() {
+        UserManager::clearInstance();
         unset($GLOBALS['Language']);
         $GLOBALS['sys_allow_anon'] = 1;
         $GLOBALS['sys_default_domain'] = 1;
@@ -79,6 +90,7 @@ class URLVerificationTest extends TuleapTestCase {
         $GLOBALS['sys_https_host'] = 1;
         unset($GLOBALS['group_id']);
         unset($_REQUEST['type_of_search']);
+        parent::tearDown();
     }
 
     function testIsScriptAllowedForAnonymous() {
@@ -436,39 +448,39 @@ class URLVerificationTest extends TuleapTestCase {
 
         $this->assertEqual($chunks['script'], null);
     }
-    
+
     function testGetRedirectionProtocolModified() {
         $server = array('HTTP_HOST' => 'example.com',
                         'REQUEST_URI' => '');
         $chunks =  array('protocol'=> 'https');
-        
+
         $urlVerification = new URLVerificationTestVersion2($this);
-        
+
         $urlVerification->setReturnValue('getUrlChunks', $chunks);
 
         $this->assertEqual($urlVerification->getRedirectionURL($server), 'https://example.com');
     }
-    
+
     function testGetRedirectionProtocolAndHostModified() {
         $server = array('HTTP_HOST' => 'test.example.com',
                         'REQUEST_URI' => '/user.php');
         $chunks =  array('protocol'=> 'http', 'host' =>'secure.example.com');
-        
+
         $urlVerification = new URLVerificationTestVersion2($this);
-        
+
         $urlVerification->setReturnValue('getUrlChunks', $chunks);
 
         $this->assertEqual($urlVerification->getRedirectionURL($server), 'http://secure.example.com/user.php');
     }
-    
+
     function testGetRedirectionRequestModified() {
         $server = array('HTTP_HOST' => 'secure.example.com',
                         'REQUEST_URI' => '/user.php',
                         'HTTPS'       => 'on',);
         $chunks =  array('script'=> '/project.php');
-        
+
         $urlVerification = new URLVerificationTestVersion2($this);
-        
+
         $urlVerification->setReturnValue('getUrlChunks', $chunks);
 
         $this->assertEqual($urlVerification->getRedirectionURL($server), 'https://secure.example.com/project.php');
@@ -489,7 +501,9 @@ class URLVerificationTest extends TuleapTestCase {
         $urlVerification->setReturnValue('getUrlChunks', null);
 
         $urlVerification->expectNever('header');
-        $server = array();
+        $server = array(
+            'REQUEST_URI' => '/'
+        );
         $urlVerification->assertValidUrl($server);
     }
 
@@ -499,141 +513,87 @@ class URLVerificationTest extends TuleapTestCase {
         $urlVerification->setReturnValue('getUrlChunks', array('protocol' => 'https', 'host' => 'secure.example.com'));
 
         $urlVerification->expectOnce('header');
-        $server = array();
+        $server = array(
+            'REQUEST_URI' => '/'
+        );
         $urlVerification->assertValidUrl($server);
     }
 
-    function testUserCanAccessProjectActive() {
-        $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
-        $project = new MockProject();
-        $project->setReturnValue('isActive', true);
-        $this->assertTrue($urlVerification->userCanAccessProject($project));
-    }
-
-    function testUserCanAccessProjectSuperUser() {
-        $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
-        $project = new MockProject();
-        $project->setReturnValue('isActive', false);
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', true);
-        $urlVerification->setReturnValue('getCurrentUser', $user);
-        $this->assertTrue($urlVerification->userCanAccessProject($project));
-    }
-
-    function testUserCanAccessProjectAccessDenied() {
-        $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
-        $project = new MockProject();
-        $project->setReturnValue('isActive', false);
-        $user = mock('PFUser');
-        $user->setReturnValue('isSuperUser', false);
-        $urlVerification->setReturnValue('getCurrentUser', $user);
-        $this->assertFalse($urlVerification->userCanAccessProject($project));
-    }
-
     function testCheckNotActiveProjectApi() {
-        $urlVerification = new URLVerificationTestVersion2();
+        $urlVerification = partial_mock('URLVerification', array('getProjectManager', 'exitError', 'displayRestrictedUserError', 'displayPrivateProjectError'));
         $GLOBALS['group_id'] = 1;
         $project = new MockProject();
         $projectManager = new MockProjectManager();
         $projectManager->setReturnValue('getProject', $project);
         $urlVerification->setReturnValue('getProjectManager', $projectManager);
-        $urlVerification->setReturnValue('userCanAccessProject', true);
-        $urlVerification->checkNotActiveProject(array('SCRIPT_NAME' => '/api/'));
-        $urlVerification->expectOnce('getProjectManager');
+
         $urlVerification->expectNever('exitError');
+        $urlVerification->expectNever('displayRestrictedUserError');
+        $urlVerification->expectNever('displayPrivateProjectError');
+
+        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/api/'));
     }
 
     function testCheckNotActiveProjectError() {
-        $urlVerification = new URLVerificationTestVersion2();
+        $urlVerification = partial_mock('URLVerification', array('getProjectManager', 'exitError', 'displayRestrictedUserError', 'displayPrivateProjectError'));
         $GLOBALS['group_id'] = 1;
         $project = new MockProject();
+        stub($project)->isActive()->returns(false);
+        stub($project)->isPublic()->returns(true);
         $projectManager = new MockProjectManager();
         $projectManager->setReturnValue('getProject', $project);
         $urlVerification->setReturnValue('getProjectManager', $projectManager);
-        $urlVerification->setReturnValue('userCanAccessProject', false);
-        $urlVerification->checkNotActiveProject(array('SCRIPT_NAME' => '/my/'));
-        $urlVerification->expectOnce('getProjectManager');
-        $urlVerification->expectNever('exitError');
+
+        $urlVerification->expectOnce('exitError');
+        $urlVerification->expectNever('displayRestrictedUserError');
+        $urlVerification->expectNever('displayPrivateProjectError');
+
+        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'));
     }
 
     function testCheckNotActiveProjectNoError() {
-        $urlVerification = new URLVerificationTestVersion2();
+        $urlVerification = partial_mock('URLVerification', array('getProjectManager', 'exitError', 'displayRestrictedUserError', 'displayPrivateProjectError'));
         $GLOBALS['group_id'] = 1;
         $project = new MockProject();
+        stub($project)->isPublic()->returns(true);
+        stub($project)->isActive()->returns(true);
         $projectManager = new MockProjectManager();
         $projectManager->setReturnValue('getProject', $project);
         $urlVerification->setReturnValue('getProjectManager', $projectManager);
-        $urlVerification->setReturnValue('userCanAccessProject', true);
-        $urlVerification->checkNotActiveProject(array('SCRIPT_NAME' => '/my/'));
-        $urlVerification->expectOnce('getProjectManager');
+
         $urlVerification->expectNever('exitError');
+        $urlVerification->expectNever('displayRestrictedUserError');
+        $urlVerification->expectNever('displayPrivateProjectError');
+
+        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'));
     }
-    
+
     function testUserCanAccessPrivateShouldLetUserPassWhenNotInAProject() {
-        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getProjectManager', 'getCurrentUser'));
-        $GLOBALS['group_id'] = -1;
-        $project = new MockProject();
-        $project->setReturnValue('isError', true);
-        $projectManager = new MockProjectManager();
-        $projectManager->setReturnValue('getProject', $project);
-        $urlVerification->setReturnValue('getProjectManager', $projectManager);
-        
-        $this->assertTrue($urlVerification->userCanAccessPrivate(new MockUrl(), 'stuff'));
-    }
-    
-    function testUserCanAccessPrivateShouldLetUserPassWhenProjectIsNotAnObject() {
-        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getProjectManager', 'getCurrentUser'));
-        $GLOBALS['group_id'] = -1;
-        $projectManager = new MockProjectManager();
-        $projectManager->setReturnValue('getProject', false);
-        $urlVerification->setReturnValue('getProjectManager', $projectManager);
-        
-        $this->assertTrue($urlVerification->userCanAccessPrivate(new MockUrl(), 'stuff'));
+        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getProjectManager', 'exitError', 'displayRestrictedUserError', 'displayPrivateProjectError'));
+
+        $urlVerification->expectNever('exitError');
+        $urlVerification->expectNever('displayRestrictedUserError');
+        $urlVerification->expectNever('displayPrivateProjectError');
+
+        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'));
     }
 
     function testUserCanAccessPrivateShouldLetUserPassWhenProjectIsPublic() {
-        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getProjectManager', 'getCurrentUser'));
+        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getProjectManager', 'exitError', 'displayRestrictedUserError', 'displayPrivateProjectError'));
         $GLOBALS['group_id'] = 120;
         $project = new MockProject();
-        $project->setReturnValue('isError', true);
+        $project->setReturnValue('isError', false);
+        $project->setReturnValue('isActive', true);
         $project->setReturnValue('isPublic', true);
         $projectManager = new MockProjectManager();
         $projectManager->setReturnValue('getProject', $project);
         $urlVerification->setReturnValue('getProjectManager', $projectManager);
-        
-        $this->assertTrue($urlVerification->userCanAccessPrivate(new MockUrl(), 'stuff'));
-    }
-    
-    function testUserCanAccessPrivateShouldLetUserPassWhenUserIsMemberOfPrivateProject() {
-        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getProjectManager', 'getCurrentUser'));
-        $GLOBALS['group_id'] = 120;
-        $project = new MockProject();
-        $project->setReturnValue('isError', false);
-        $project->setReturnValue('isPublic', false);
-        $projectManager = new MockProjectManager();
-        $projectManager->setReturnValue('getProject', $project, array(120));
-        $urlVerification->setReturnValue('getProjectManager', $projectManager);
-        $user = mock('PFUser');
-        $user->setReturnValue('isMember', true, array(120));
-        $urlVerification->setReturnValue('getCurrentUser', $user);
-        
-        $this->assertTrue($urlVerification->userCanAccessPrivate(new MockUrl(), 'stuff'));
-    }
-    
-    function testUserCanAccessPrivateShouldBlockWhenUserIsNotMemberOfPrivateProject() {
-        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getProjectManager', 'getCurrentUser'));
-        $GLOBALS['group_id'] = 120;
-        $project = new MockProject();
-        $project->setReturnValue('isError', false);
-        $project->setReturnValue('isPublic', false);
-        $projectManager = new MockProjectManager();
-        $projectManager->setReturnValue('getProject', $project, array(120));
-        $urlVerification->setReturnValue('getProjectManager', $projectManager);
-        $user = mock('PFUser');
-        $user->setReturnValue('isMember', false);
-        $urlVerification->setReturnValue('getCurrentUser', $user);
-        
-        $this->assertFalse($urlVerification->userCanAccessPrivate(new MockUrl(), 'stuff'));
+
+        $urlVerification->expectNever('exitError');
+        $urlVerification->expectNever('displayRestrictedUserError');
+        $urlVerification->expectNever('displayPrivateProjectError');
+
+        $urlVerification->assertValidUrl(array('SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'));
     }
 
     function testRestrictedUserCanAccessSearchOnTracker() {
@@ -654,7 +614,7 @@ class URLVerificationTest extends TuleapTestCase {
 
         stub($urlVerification)->displayRestrictedUserError()->never();
         stub($GLOBALS['Language'])->getContent()->returns(dirname(__FILE__) . '/_fixtures/empty.txt');
-        
+
         $urlVerification->checkRestrictedAccess($server, 'stuff');
     }
 
@@ -679,7 +639,7 @@ class URLVerificationTest extends TuleapTestCase {
 
         $urlVerification->checkRestrictedAccess($server, 'stuff');
     }
-    
+
     function testRestrictedUserCanNotAccessSearchOnLdapPeople() {
         $_REQUEST['type_of_search'] = 'people_ldap';
         $urlVerification = TestHelper::getPartialMock('URLVerification', array('getUrl', 'getCurrentUser', 'displayRestrictedUserError'));
@@ -744,6 +704,115 @@ class URLVerificationTest extends TuleapTestCase {
         stub($GLOBALS['Language'])->getContent()->returns(dirname(__FILE__) . '/_fixtures/empty.txt');
 
         $urlVerification->checkRestrictedAccess($server, 'stuff');
+    }
+}
+
+class URLVerification_PrivateRestrictedTest extends TuleapTestCase {
+
+    private $url_verification;
+    private $user;
+    private $project;
+
+    public function setUp() {
+        parent::setUp();
+        $this->url_verification = new URLVerification();
+        $this->user             = mock('PFUser');
+        $this->project          = mock('Project');
+    }
+
+    public function itGrantsAccessToProjectMembers() {
+        stub($this->project)->getID()->returns(110);
+        stub($this->user)->isMember(110)->returns(true);
+        stub($this->project)->isActive()->returns(true);
+
+        $this->assertTrue(
+            $this->url_verification->userCanAccessProject($this->user, $this->project)
+        );
+    }
+
+    public function itGrantsAccessToNonProjectMembersForPublicProjects() {
+        stub($this->project)->getID()->returns(110);
+        stub($this->user)->isMember()->returns(false);
+        stub($this->project)->isPublic()->returns(true);
+        stub($this->project)->isActive()->returns(true);
+
+        $this->assertTrue(
+            $this->url_verification->userCanAccessProject($this->user, $this->project)
+        );
+    }
+
+    public function itForbidsAccessToRestrictedUsersNotProjectMembers() {
+        stub($this->project)->getID()->returns(110);
+        stub($this->user)->isMember()->returns(false);
+        stub($this->user)->isRestricted()->returns(true);
+        stub($this->project)->isActive()->returns(true);
+
+        $this->expectException('Project_AccessRestrictedException');
+        $this->url_verification->userCanAccessProject($this->user, $this->project);
+    }
+
+    public function itGrantsAccessToRestrictedUsersThatAreProjectMembers() {
+        stub($this->project)->getID()->returns(110);
+        stub($this->user)->isMember()->returns(true);
+        stub($this->user)->isRestricted()->returns(true);
+        stub($this->project)->isActive()->returns(true);
+
+        $this->assertTrue(
+            $this->url_verification->userCanAccessProject($this->user, $this->project)
+        );
+    }
+
+    public function itForbidsAccessToActiveUsersThatAreNotPrivateProjectMembers() {
+        stub($this->project)->getID()->returns(110);
+        stub($this->project)->isPublic()->returns(false);
+        stub($this->user)->isRestricted()->returns(false);
+        stub($this->project)->isActive()->returns(true);
+
+        $this->expectException('Project_AccessPrivateException');
+        $this->url_verification->userCanAccessProject($this->user, $this->project);
+    }
+
+    public function itForbidsRestrictedUsersToAccessProjectsTheyAreNotMemberOf() {
+        stub($this->project)->getID()->returns(110);
+        stub($this->user)->isMember()->returns(false);
+        stub($this->project)->isPublic()->returns(true);
+        stub($this->user)->isRestricted()->returns(true);
+        stub($this->project)->isActive()->returns(true);
+
+        $this->expectException('Project_AccessRestrictedException');
+        $this->url_verification->userCanAccessProject($this->user, $this->project);
+    }
+
+    public function itForbidsAccessToDeletedProjects() {
+        stub($this->project)->getID()->returns(110);
+        stub($this->user)->isMember()->returns(true);
+        stub($this->project)->isPublic()->returns(true);
+        stub($this->project)->isActive()->returns(false);
+
+        $this->expectException('Project_AccessDeletedException');
+        $this->url_verification->userCanAccessProject($this->user, $this->project);
+    }
+
+    public function itForbidsAccessToNonExistantProject() {
+        stub($this->project)->getID()->returns(110);
+        stub($this->project)->isError()->returns(true);
+        stub($this->project)->isPublic()->returns(true);
+        stub($this->project)->isActive()->returns(true);
+
+        $this->expectException('Project_AccessProjectNotFoundException');
+        $this->url_verification->userCanAccessProject($this->user, $this->project);
+    }
+
+    public function itBlindlyGrantAccessForSiteAdmin() {
+        stub($this->project)->getID()->returns(110);
+        stub($this->user)->isSuperUser()->returns(true);
+        stub($this->user)->isMember()->returns(false);
+        stub($this->project)->isPublic()->returns(false);
+        stub($this->project)->isActive()->returns(false);
+
+        $this->assertTrue(
+            $this->url_verification->userCanAccessProject($this->user, $this->project)
+        );
     }
 }
 

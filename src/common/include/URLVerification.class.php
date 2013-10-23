@@ -1,21 +1,22 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('common/error/Error_PermissionDenied_PrivateProject.class.php');
@@ -418,21 +419,11 @@ class URLVerification {
             $user_is_allowed=true;
         }
 
-        // Now check group_id
-        if (isset($group_id)) { 
-            if (!$user_is_allowed) { 
-                if ((!$user->isMember($group_id))
-                    &&(!isset($public_projects[$group_id]))) {
-                    return false;
-                }
+        if ($group_id && !$user_is_allowed) {
+            if (isset($public_projects[$group_id])) {
+                return true;
             }
-        } elseif (array_key_exists('group_id', $_REQUEST)) {
-            if (!$user_is_allowed) {
-                if ((!$user->isMember($_REQUEST['group_id']))
-                    &&(!isset($public_projects[$_REQUEST['group_id']])))  {
-                    return false;
-                }
-            }
+            return false;
         }
         return true;
     }
@@ -450,42 +441,6 @@ class URLVerification {
         exit;
     }
     
-    /**
-     * Checks that registreded users but not members of a private project can't access to it.
-     *
-     * @param Array $server
-     *
-     * @return void
-     */
-    function checkPrivateAccess($server) {
-        $url = $this->getUrl();
-        if ((strcmp(substr($server['SCRIPT_NAME'], 0, 5), '/api/') !=0) && !$this->userCanAccessPrivate($url, $server['REQUEST_URI'])) {
-            $this->displayPrivateProjectError($url);
-        }
-    }
-
-    /**
-     * Check if current user can access the given URL if it's a private project
-     *
-     * @param URL    $url         URL to check
-     * @param String $request_uri is the original REQUEST_URI
-     *
-     * @return Boolean False if it's a private project and user is not member of
-     */
-    function userCanAccessPrivate($url, $requestUri) {
-        $group_id = (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($requestUri);
-        if ($group_id) {
-            $project = $this->getProjectManager()->getProject($group_id);
-            $user    = $this->getCurrentUser();
-            if($project && !$project->isError() && !$project->isPublic()) {
-                if (!$user->isMember($group_id)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     /**
      * Display error message for restricted project
      *
@@ -523,45 +478,67 @@ class URLVerification {
                 $location = $this->getRedirectionURL($server);
                 $this->header($location);
             }
-            $this->checkNotActiveProject($server);
-            $this->checkRestrictedAccess($server);
-            $this->checkPrivateAccess($server);
-        }
-    }
 
-    /**
-     * Checks that only super users can access to not active projects.
-     *
-     * @param Array $server $_SERVER
-     *
-     * @return void
-     */
-    function checkNotActiveProject($server) {
-        $url = $this->getUrl();
-        $group_id = (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($server['REQUEST_URI']);
-        if ($group_id) {
-            $project = $this->getProjectManager()->getProject($group_id);
-            if (!$project->isError()) {
-                if ((strcmp(substr($server['SCRIPT_NAME'], 0, 5), '/api/') !=0) && !$this->userCanAccessProject($project)) {
-                    $this->exitError($GLOBALS['Language']->getText('include_session','insufficient_g_access'),$GLOBALS['Language']->getText('include_exit', 'project_status_'.$project->getStatus()));
+            $user = $this->getCurrentUser();
+            $url  = $this->getUrl();
+            try {
+                $group_id = (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($server['REQUEST_URI']);
+                if ($group_id) {
+                    $project = $this->getProjectManager()->getProject($group_id);
+                    $this->userCanAccessProject($user, $project);
+                } else {
+                    $this->checkRestrictedAccess($server);
                 }
+                return true;
+
+            } catch (Project_AccessRestrictedException $exception) {
+                if (! $this->restrictedUserCanAccessUrl($user, $url, $server['REQUEST_URI'], $server['SCRIPT_NAME'])) {
+                    $this->displayRestrictedUserError($url);
+                }
+
+            } catch (Project_AccessPrivateException $exception) {
+                $this->displayPrivateProjectError($url);
+
+            } catch (Project_AccessProjectNotFoundException $exception) {
+                $this->exitError(
+                    $GLOBALS['Language']->getText('include_html','g_not_exist'),
+                    $exception->getMessage()
+                );
+            } catch (Project_AccessDeletedException $exception) {
+                $this->exitError(
+                    $GLOBALS['Language']->getText('include_session','insufficient_g_access'),
+                    $exception->getMessage()
+                );
             }
         }
     }
 
     /**
-     * Check if current user can access the given project
+     * Ensure given user can access given project
      *
-     * @param Project $project The project to be checked
-     *
-     * @return Boolean False if project is not active and user in not super user
+     * @param PFUser  $user
+     * @param Project $project
+     * @return boolean
+     * @throws Project_AccessProjectNotFoundException
+     * @throws Project_AccessDeletedException
+     * @throws Project_AccessRestrictedException
+     * @throws Project_AccessPrivateException
      */
-    function userCanAccessProject($project) {
-        $user = $this->getCurrentUser();
-        if(!$project->isActive() && !$user->isSuperUser()) {
-            return false;
+    public function userCanAccessProject(PFUser $user, Project $project) {
+        if ($user->isSuperUser()) {
+            return true;
+        } elseif ($project->isError()) {
+            throw new Project_AccessProjectNotFoundException();
+        } elseif (! $project->isActive()) {
+            throw new Project_AccessDeletedException($project);
+        } elseif ($user->isMember($project->getID())) {
+            return true;
+        } elseif ($user->isRestricted()) {
+            throw new Project_AccessRestrictedException();
+        } elseif ($project->isPublic()) {
+            return true;
         }
-        return true;
+        throw new Project_AccessPrivateException();
     }
 
     /**
