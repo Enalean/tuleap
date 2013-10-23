@@ -64,7 +64,7 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
     }
 
     public function itRaisesAnExceptionWhenUserIsDeleted() {
-        $this->expectException('User_Exception_StatusDeletedException');
+        $this->expectException('User_StatusDeletedException');
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_DELETED)->build()
         );
@@ -72,7 +72,7 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
     }
 
     public function itRaisesAnExceptionWhenUserIsSuspended() {
-        $this->expectException('User_Exception_StatusSuspendedException');
+        $this->expectException('User_StatusSuspendedException');
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_SUSPENDED)->build()
         );
@@ -80,7 +80,7 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
     }
 
     public function itRaisesAnExceptionWhenStatusIsUnknown() {
-        $this->expectException('User_Exception_StatusInvalidException');
+        $this->expectException('User_StatusInvalidException');
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus('dsfd')->build()
         );
@@ -88,7 +88,7 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
     }
 
     public function itRaisesAnExceptionIfAllowPendingAndStatusIsUnknown() {
-        $this->expectException('User_Exception_StatusInvalidException');
+        $this->expectException('User_StatusInvalidException');
         $this->user_status_manager->checkStatusOnVerifyPage(
             aUser()->withPassword('password')->withStatus('dfd')->build()
         );
@@ -96,7 +96,7 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
     }
 
     public function itRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsPending() {
-        $this->expectException('User_Exception_StatusPendingException');
+        $this->expectException('User_StatusPendingException');
         Config::set('sys_user_approval', 1);
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_PENDING)->build()
@@ -105,7 +105,7 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
     }
 
     public function itRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsValidated() {
-        $this->expectException('User_Exception_StatusPendingException');
+        $this->expectException('User_StatusPendingException');
         Config::set('sys_user_approval', 1);
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_VALIDATED)->build()
@@ -114,7 +114,7 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
     }
 
     public function itRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsValidated() {
-        $this->expectException('User_Exception_StatusPendingException');
+        $this->expectException('User_StatusPendingException');
         Config::set('sys_user_approval', 0);
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_VALIDATED)->build()
@@ -123,7 +123,7 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
     }
 
     public function itRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsValidatedRestricted() {
-        $this->expectException('User_Exception_StatusPendingException');
+        $this->expectException('User_StatusPendingException');
         Config::set('sys_user_approval', 1);
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_VALIDATED_RESTRICTED)->build()
@@ -132,7 +132,7 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
     }
 
     public function itRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsValidatedRestricted() {
-        $this->expectException('User_Exception_StatusPendingException');
+        $this->expectException('User_StatusPendingException');
         Config::set('sys_user_approval', 0);
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_VALIDATED_RESTRICTED)->build()
@@ -141,7 +141,7 @@ class User_LoginManagerStatusTest extends TuleapTestCase {
     }
 
     public function itRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsPending() {
-        $this->expectException('User_Exception_StatusPendingException');
+        $this->expectException('User_StatusPendingException');
         Config::set('sys_user_approval', 0);
         $this->user_status_manager->checkStatus(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_PENDING)->build()

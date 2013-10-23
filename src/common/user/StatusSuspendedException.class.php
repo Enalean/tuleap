@@ -17,8 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class User_Exception_InvalidPasswordException extends User_Exception_LoginException {
+class User_StatusSuspendedException extends User_StatusInvalidException {
     public function __construct() {
-        parent::__construct($GLOBALS['Language']->getText('include_session','invalid_pwd'));
+        parent::__construct($GLOBALS['Language']->getText('include_session', 'account_suspended'));
     }
 }

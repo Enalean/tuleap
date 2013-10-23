@@ -17,4 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-abstract class User_Exception_LoginException extends Exception {}
+class User_InvalidPasswordException extends User_LoginException {
+    public function __construct() {
+        parent::__construct($GLOBALS['Language']->getText('include_session','invalid_pwd'));
+    }
+}

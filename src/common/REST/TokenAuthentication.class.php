@@ -46,7 +46,7 @@ class TokenAuthentication implements iAuthenticate {
                 $this->tokenBasedAuthentication();
             }
             return true;
-        } catch (\User_Exception_LoginException $exception) {
+        } catch (\User_LoginException $exception) {
             throw new RestException(403, $exception->getMessage());
         } catch (\Rest_Exception_InvalidTokenException $exception) {
             throw new RestException(401, $exception->getMessage());

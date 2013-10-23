@@ -425,7 +425,7 @@ class UserManager {
 
             return $this->setCurrentUser($user);
 
-        } catch (User_Exception_InvalidPasswordWithUserException $exception) {
+        } catch (User_InvalidPasswordWithUserException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
             $accessInfo = $this->getUserAccessInfo($exception->getUser());
             $this->getDao()->storeLoginFailure($name, $_SERVER['REQUEST_TIME']);
@@ -433,20 +433,20 @@ class UserManager {
             //The delay is 2 sec/nb of bad attempt.
             sleep(2 * $accessInfo['nb_auth_failure']);
 
-        } catch (User_Exception_InvalidPasswordException $exception) {
+        } catch (User_InvalidPasswordException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
 
-        } catch (User_Exception_PasswordExpiredException $exception) {
+        } catch (User_PasswordExpiredException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
             $GLOBALS['Response']->redirect('/account/change_pw.php?user_id=' . $exception->getUser()->getId());
 
-        } catch (User_Exception_StatusInvalidException $exception) {
+        } catch (User_StatusInvalidException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
 
         } catch (SessionNotCreatedException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
 
-        } catch(User_Exception_LoginException $exception) {
+        } catch(User_LoginException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         }
 
@@ -531,7 +531,7 @@ class UserManager {
         try {
             $status_manager->checkStatus($user_login_as);
             return $this->createSession($user_login_as);
-        } catch (User_Exception_StatusInvalidException $exception) {
+        } catch (User_StatusInvalidException $exception) {
             throw new UserNotActiveException();
         }
     }
@@ -553,7 +553,7 @@ class UserManager {
             $status_manager = new User_UserStatusManager();
             $status_manager->checkStatus($user);
             $this->openWebSession($user);
-        } catch (User_Exception_StatusInvalidException $exception) {
+        } catch (User_StatusInvalidException $exception) {
             throw new UserNotActiveException();
         }
     }

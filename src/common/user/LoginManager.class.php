@@ -47,9 +47,9 @@ class User_LoginManager {
      * @param String $name
      * @param String $password
      * @return PFUser
-     * @throws User_Exception_InvalidPasswordWithUserException
-     * @throws User_Exception_InvalidPasswordException
-     * @throws User_Exception_PasswordExpiredException
+     * @throws User_InvalidPasswordWithUserException
+     * @throws User_InvalidPasswordException
+     * @throws User_PasswordExpiredException
      */
     public function authenticate($name, $password) {
         $auth_success     = false;
@@ -88,9 +88,9 @@ class User_LoginManager {
             return $user;
         } else {
             if ($user) {
-                throw new User_Exception_InvalidPasswordWithUserException($user);
+                throw new User_InvalidPasswordWithUserException($user);
             } else {
-                throw new User_Exception_InvalidPasswordException();
+                throw new User_InvalidPasswordException();
             }
         }
     }
@@ -98,11 +98,11 @@ class User_LoginManager {
     /**
      *
      * @param PFUser $user
-     * @throws User_Exception_PasswordExpiredException
+     * @throws User_PasswordExpiredException
      */
     private function checkPasswordLifetime(PFUser $user) {
         if ($this->userPasswordHasExpired($user)) {
-            throw new User_Exception_PasswordExpiredException($user);
+            throw new User_PasswordExpiredException($user);
         }
     }
 

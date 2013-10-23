@@ -17,8 +17,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class User_Exception_StatusDeletedException extends User_Exception_StatusInvalidException {
-    public function __construct() {
-        parent::__construct($GLOBALS['Language']->getText('include_session', 'account_deleted'));
+class User_PasswordExpiredException extends User_LoginException {
+    /** @var PFUser */
+    private $user;
+
+    public function __construct(PFUser $user) {
+        $this->user = $user;
+        parent::__construct($GLOBALS['Language']->getText('include_session', 'expired_password'));
+    }
+
+    public function getUser() {
+        return $this->user;
     }
 }

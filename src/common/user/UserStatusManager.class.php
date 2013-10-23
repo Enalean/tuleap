@@ -23,10 +23,10 @@ class User_UserStatusManager {
      * Ensure user can use the platform
      *
      * @param PFUser $user
-     * @throws User_Exception_StatusDeletedException
-     * @throws User_Exception_StatusSuspendedException
-     * @throws User_Exception_StatusInvalidException
-     * @throws User_Exception_StatusPendingException
+     * @throws User_StatusDeletedException
+     * @throws User_StatusSuspendedException
+     * @throws User_StatusInvalidException
+     * @throws User_StatusPendingException
      */
     public function checkStatus(PFUser $user) {
         if (! $this->isFinalStatus($user)) {
@@ -34,10 +34,10 @@ class User_UserStatusManager {
                 case PFUser::STATUS_VALIDATED:
                 case PFUser::STATUS_VALIDATED_RESTRICTED:
                 case PFUser::STATUS_PENDING:
-                    throw new User_Exception_StatusPendingException();
+                    throw new User_StatusPendingException();
                     break;
                 default:
-                    throw new User_Exception_StatusInvalidException();
+                    throw new User_StatusInvalidException();
             }
         }
     }
@@ -49,10 +49,10 @@ class User_UserStatusManager {
      *
      * @param PFUser $user
      *
-     * @throws User_Exception_StatusDeletedException
-     * @throws User_Exception_StatusSuspendedException
-     * @throws User_Exception_StatusInvalidException
-     * @throws User_Exception_StatusPendingException
+     * @throws User_StatusDeletedException
+     * @throws User_StatusSuspendedException
+     * @throws User_StatusInvalidException
+     * @throws User_StatusPendingException
      */
     public function checkStatusOnVerifyPage(PFUser $user) {
         if (! $this->isFinalStatus($user)) {
@@ -65,7 +65,7 @@ class User_UserStatusManager {
                         break;
                     }
                 default:
-                    throw new User_Exception_StatusInvalidException();
+                    throw new User_StatusInvalidException();
             }
         }
     }
@@ -76,8 +76,8 @@ class User_UserStatusManager {
      * @param PFUser $user
      * @param Boolean $allowpending
      * @return Boolean
-     * @throws User_Exception_StatusDeletedException
-     * @throws User_Exception_StatusSuspendedException
+     * @throws User_StatusDeletedException
+     * @throws User_StatusSuspendedException
      */
     private function isFinalStatus(PFUser $user) {
         $status = $user->getStatus();
@@ -87,9 +87,9 @@ class User_UserStatusManager {
                 return true;
                 break;
             case PFUser::STATUS_DELETED:
-                throw new User_Exception_StatusDeletedException();
+                throw new User_StatusDeletedException();
             case PFUser::STATUS_SUSPENDED:
-                throw new User_Exception_StatusSuspendedException();
+                throw new User_StatusSuspendedException();
             default:
                 return false;
         }

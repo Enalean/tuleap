@@ -65,13 +65,13 @@ class User_LoginManagerTest extends TuleapTestCase {
     }
 
     public function itThrowsAnExceptionWhenUserIsNotFound() {
-        $this->expectException('User_Exception_InvalidPasswordException');
+        $this->expectException('User_InvalidPasswordException');
         stub($this->user_manager)->getUserByUserName()->returns(null);
         $this->login_manager->authenticate('john', 'password');
     }
 
     public function itThrowsAnExceptionWhenPasswordIsWrong() {
-        $this->expectException('User_Exception_InvalidPasswordWithUserException');
+        $this->expectException('User_InvalidPasswordWithUserException');
         stub($this->user_manager)->getUserByUserName()->returns(aUser()->withPassword('pa')->build());
         $this->login_manager->authenticate('john', 'password');
     }
@@ -82,7 +82,7 @@ class User_LoginManagerTest extends TuleapTestCase {
         stub($this->user_manager)->getUserByUserName()->returns($user);
         try {
             $this->login_manager->authenticate('john', 'password');
-        } catch(User_Exception_InvalidPasswordWithUserException $exception) {
+        } catch(User_InvalidPasswordWithUserException $exception) {
             $this->assertEqual($exception->getUser(), $user);
             $exception_catched = true;
         }
@@ -115,7 +115,7 @@ class User_LoginManagerTest extends TuleapTestCase {
     }
 
     public function itRaisesAnExceptionWhenPasswordExpired() {
-        $this->expectException('User_Exception_PasswordExpiredException');
+        $this->expectException('User_PasswordExpiredException');
         Config::set('sys_password_lifetime', 10);
         stub($this->user_manager)->getUserByUserName()->returns(
             aUser()
@@ -138,7 +138,7 @@ class User_LoginManagerTest extends TuleapTestCase {
         stub($this->user_manager)->getUserByUserName()->returns($user);
         try {
             $this->login_manager->authenticate('john', 'password');
-        } catch(User_Exception_PasswordExpiredException $exception) {
+        } catch(User_PasswordExpiredException $exception) {
             $this->assertEqual($exception->getUser(), $user);
             $exception_catched = true;
         }
@@ -234,7 +234,7 @@ class User_LoginManagerPluginsTest extends TuleapTestCase {
     }
 
     public function itRaisesAnExceptionIfPluginForbidLogin() {
-        $this->expectException('User_Exception_InvalidPasswordWithUserException');
+        $this->expectException('User_InvalidPasswordWithUserException');
         $user = aUser()->withPassword('password')->withStatus(PFUser::STATUS_ACTIVE)->build();
         stub($this->user_manager)->getUserByUserName()->returns($user);
 

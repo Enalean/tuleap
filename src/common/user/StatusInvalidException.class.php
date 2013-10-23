@@ -17,16 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class User_Exception_PasswordExpiredException extends User_Exception_LoginException {
-    /** @var PFUser */
-    private $user;
+class User_StatusInvalidException extends User_LoginException {
 
-    public function __construct(PFUser $user) {
-        $this->user = $user;
-        parent::__construct($GLOBALS['Language']->getText('include_session', 'expired_password'));
-    }
-
-    public function getUser() {
-        return $this->user;
-    }
 }
