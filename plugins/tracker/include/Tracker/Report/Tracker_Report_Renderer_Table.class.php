@@ -874,9 +874,19 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     }
                     if (!$only_one_column) {
                         if ($from_aid != null) {
-                            $html .= '<td width="16"><a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'&from_aid='.$from_aid.'" title="Display artifact #'. $row['id'] .'">'. $GLOBALS['HTML']->getImage('ic/artifact-arrow.png', array('alt' => '#'.$row['id'])) .'</a></td>';
+                            $html .= '<td><a class="direct-link-to-artifact icon-eye-open" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'&from_aid='.$from_aid.'" title="'.
+                                $GLOBALS['Language']->getText('plugin_tracker_include_report','show')
+                                .' artifact #'. $row['id'] .'"></a>';
+                            $html .= '&nbsp;&nbsp;&nbsp;<a class="direct-link-to-artifact icon-edit" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'&from_aid='.$from_aid.'&func=edit" title="'.
+                                $GLOBALS['Language']->getText('plugin_tracker_include_report','edit')
+                                .' artifact #'. $row['id'] .'"></a></td>';
                         } else {
-                            $html .= '<td width="16"><a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'" title="Display artifact #'. $row['id'] .'">'. $GLOBALS['HTML']->getImage('ic/artifact-arrow.png', array('alt' => '#'.$row['id'])) .'</a></td>';
+                            $html .= '<td><a class="direct-link-to-artifact icon-eye-open" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'" title="'.
+                                $GLOBALS['Language']->getText('plugin_tracker_include_report','show')
+                                .' artifact #'. $row['id'] .'"></a>';
+                            $html .= '&nbsp;&nbsp;&nbsp;<a class="direct-link-to-artifact icon-edit" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'&func=edit" title="'.
+                                $GLOBALS['Language']->getText('plugin_tracker_include_report','edit')
+                                .' artifact #'. $row['id'] .'"></a></td>';
                         }
                     }
                     foreach($columns as $column) {

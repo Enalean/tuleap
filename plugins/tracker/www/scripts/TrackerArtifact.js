@@ -274,6 +274,27 @@ document.observe('dom:loaded', function () {
         toggle_tracker_artifact_attachment_delete(elem);
         elem.observe('click', function (evt) { toggle_tracker_artifact_attachment_delete(elem); });
     });
+
+    $$("p.artifact-submit-button > input").each(function (elem) {
+        elem.observe('click', disableWarnOnPageLeave);
+    });
+
+    // We know it is crappy, but you know what?
+    // IE/Chrome/Firefox don't behave the same way!
+    // So if you have a better solution…
+
+    window.onbeforeunload = warnOnPageLeave;
+
+    function disableWarnOnPageLeave() {
+        window.onbeforeunload = function(){};
+    }
+
+    function warnOnPageLeave() {
+        if ( $('artifact-read-only-page') != null && $('tracker_followup_comment_new').value != '' ) {
+            return codendi.locales.tracker_formelement_admin.lose_follows;
+        }
+    }
+
 });
 
 codendi.Tooltip.selectors.push('a[class=direct-link-to-artifact]');
