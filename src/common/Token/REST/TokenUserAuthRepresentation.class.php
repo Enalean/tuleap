@@ -17,23 +17,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Project\REST;
+namespace Tuleap\Token\REST;
 
-use Project;
+class TokenUserAuthRepresentation {
+    /**
+     * @var string {@from body}
+     * Login of the user {@required true}
+     */
+    public $username;
 
-/**
- * Basic representation of a project
- */
-class ProjectInfoRepresentation {
-
-    /** @var int */
-    public $id;
-
-    /** @var string */
-    public $label;
-
-    public function __construct(Project $project) {
-        $this->id    = $project->getId();
-        $this->label = $project->getPublicName();
-    }
+    /**
+     * @var string {@from body}
+     * Password of the user {@required true}
+     */
+    public $password;
 }

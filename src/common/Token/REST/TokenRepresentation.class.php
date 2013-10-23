@@ -17,23 +17,25 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Project\REST;
+namespace Tuleap\Token\REST;
 
-use Project;
+use Rest_Token;
 
-/**
- * Basic representation of a project
- */
-class ProjectInfoRepresentation {
+class TokenRepresentation {
+    const ROUTE = 'tokens';
 
     /** @var int */
-    public $id;
+    public $user_id;
 
     /** @var string */
-    public $label;
+    public $token;
 
-    public function __construct(Project $project) {
-        $this->id    = $project->getId();
-        $this->label = $project->getPublicName();
+    /** @var string */
+    public $uri;
+
+    public function __construct(Rest_Token $token) {
+        $this->user_id = $token->getUserId();
+        $this->token   = $token->getTokenValue();
+        $this->uri     = self::ROUTE.'/'.$this->token;
     }
 }

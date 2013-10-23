@@ -17,23 +17,4 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Project\REST;
-
-use Project;
-
-/**
- * Basic representation of a project
- */
-class ProjectInfoRepresentation {
-
-    /** @var int */
-    public $id;
-
-    /** @var string */
-    public $label;
-
-    public function __construct(Project $project) {
-        $this->id    = $project->getId();
-        $this->label = $project->getPublicName();
-    }
-}
+class Project_AccessRestrictedException extends Project_AccessException {}

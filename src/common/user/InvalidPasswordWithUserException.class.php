@@ -17,23 +17,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Project\REST;
+class User_InvalidPasswordWithUserException extends User_LoginException {
+    /** @var PFUser */
+    private $user;
 
-use Project;
+    public function __construct(PFUser $user) {
+        $this->user = $user;
+        parent::__construct($GLOBALS['Language']->getText('include_session','invalid_pwd'));
+    }
 
-/**
- * Basic representation of a project
- */
-class ProjectInfoRepresentation {
-
-    /** @var int */
-    public $id;
-
-    /** @var string */
-    public $label;
-
-    public function __construct(Project $project) {
-        $this->id    = $project->getId();
-        $this->label = $project->getPublicName();
+    public function getUser() {
+        return $this->user;
     }
 }

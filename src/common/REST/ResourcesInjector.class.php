@@ -27,8 +27,7 @@ use Luracast\Restler\Restler;
 class ResourcesInjector {
 
     public function populate(Restler $restler) {
-        $project_api_class_name    = '\\Tuleap\\Project\\REST\\ProjectResource';
-        $project_api_resource_path = 'projects';
-        $restler->addAPIClass($project_api_class_name, $project_api_resource_path);
+        $restler->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource', 'projects');
+        $restler->addAPIClass('\\Tuleap\\Token\\REST\\TokenResource',     'tokens');
     }
 }

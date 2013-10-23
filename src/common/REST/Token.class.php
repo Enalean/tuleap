@@ -17,23 +17,29 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Project\REST;
-
-use Project;
-
 /**
- * Basic representation of a project
+ * Class Rest_Token
+ * I'm a token for Rest authentication
  */
-class ProjectInfoRepresentation {
+
+class Rest_Token {
 
     /** @var int */
-    public $id;
+    private $user_id;
 
-    /** @var string */
-    public $label;
+    /** @var  string */
+    private $token_value;
 
-    public function __construct(Project $project) {
-        $this->id    = $project->getId();
-        $this->label = $project->getPublicName();
+    public function __construct($user_id, $token_value) {
+        $this->user_id     = $user_id;
+        $this->token_value = $token_value;
+    }
+
+    public function getUserId() {
+        return $this->user_id;
+    }
+
+    public function getTokenValue() {
+        return $this->token_value;
     }
 }

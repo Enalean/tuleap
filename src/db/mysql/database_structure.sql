@@ -3449,12 +3449,24 @@ CREATE TABLE IF NOT EXISTS project_parent (
 );
 
 #
-# Table structure for Project parent relationship
+# Table structure for Generic Users
 #
 
 CREATE TABLE IF NOT EXISTS generic_user (
     group_id INT(11) PRIMARY KEY,
     user_id INT(11) NOT NULL
+);
+
+#
+# Table structure for rest authentication tokens
+#
+
+CREATE TABLE IF NOT EXISTS rest_authentication_token (
+    token VARCHAR(255) NOT NULL,
+    user_id INT(11) NOT NULL,
+    created_on INT(11) NOT NULL,
+    INDEX idx_rest_authentication_token_token (token(10)),
+    INDEX idx_rest_authentication_token_userid (user_id)
 );
 
 #

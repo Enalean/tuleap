@@ -54,8 +54,8 @@ class LdapPlugin extends Plugin {
         $this->_addHook('search_type', 'ldapSearch', false);
 
         // Authentication
-        $this->_addHook('session_before_login', 'authenticate', false);
-        $this->_addHook('session_after_login', 'allowCodendiLogin', false);
+        $this->_addHook(Event::SESSION_BEFORE_LOGIN, 'authenticate', false);
+        $this->_addHook(Event::SESSION_AFTER_LOGIN, 'allowCodendiLogin', false);
 
         // Login
         $this->addHook('login_presenter');

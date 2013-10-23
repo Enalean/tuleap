@@ -175,9 +175,19 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
             $this->error($exception->getMessage());
             return false;
         }
+
+        $this->expireRestTokens($user_manager);
         
         $this->done();
         return true;
+    }
+
+    function expireRestTokens(UserManager $user_manager) {
+        $token_dao     = new Rest_TokenDao();
+        $token_factory = new Rest_TokenFactory($token_dao);
+        $token_manager = new Rest_TokenManager($token_dao, $token_factory, $user_manager);
+
+        $token_manager->expireOldTokens();
     }
 
 }
