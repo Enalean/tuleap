@@ -643,10 +643,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 
 # REST
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/VERSION
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/ChangeLog
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/.htaccess
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/index.php
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/common/REST
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/common/project/REST
 
 %endif
 
