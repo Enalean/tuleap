@@ -1,5 +1,6 @@
-AUTOLOADED_PATH=src/common/PFO plugins/agiledashboard/include plugins/cardwall/include plugins/fulltextsearch/include plugins/tracker/include plugins/git/include src/common/project src/common/user src/common/Token src/common/REST plugins/boomerang/include plugins/openid/include
+AUTOLOADED_PATH=plugins/agiledashboard/include plugins/cardwall/include plugins/fulltextsearch/include plugins/tracker/include plugins/git/include plugins/boomerang/include plugins/openid/include
 LESS_PATH=plugins src
+
 
 default:
 	@echo "possible targets: 'doc' 'test' 'autoload' 'less'"
@@ -11,6 +12,8 @@ test:
 	@php tests/bin/simpletest tests/simpletest plugins
 
 autoload:
+	@echo "Generate core"
+	@(cd src/common; phpab  --compat -o autoload.php --exclude "./wiki/phpwiki/*" .)
 	@for path in $(AUTOLOADED_PATH); do \
 	     echo "Generate $$path"; \
 	     (cd "$$path"; phpab --compat -o autoload.php .) \
