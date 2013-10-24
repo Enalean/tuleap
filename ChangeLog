@@ -13,6 +13,7 @@ Version 6.7 (Not released yet)
 	* graphontrackers: 1.9
 	* hudson: 1.11
 	* pluginsadministration: 1.4
+	* mediawiki: 0.18
 
     == API ==
     * rest: 1.1

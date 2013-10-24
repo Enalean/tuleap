@@ -1,3 +1,6 @@
+Version 0.18 - Tuleap 6.7
+    * Restyle level1 and level2 navigation bar on Mediawiki service
+
 Version 0.17 - Tuleap 6.6
     * Fix request #5326 : Cloning a project without Mediawiki service enabled does not create the Mediawiki database
 
