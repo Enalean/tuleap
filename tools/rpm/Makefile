@@ -108,6 +108,7 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: less
 			 -name ".git" -o\
 			 -name ".gitignore" -o\
 			 -name ".gitmodules" -o\
+			 -path "*/.DS_Store" -o\
 			 -path $(PKG_NAME)-$(version)/plugins/tests -o\
 			 -path $(PKG_NAME)-$(version)/plugins/maillog \)\
 			-prune -o -print |\
