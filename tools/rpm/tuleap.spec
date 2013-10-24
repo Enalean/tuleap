@@ -991,6 +991,7 @@ fi
 %files core-rest
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/src/www/api/VERSION
+%{APP_DIR}/src/www/api/ChangeLog
 %{APP_DIR}/src/www/api/.htaccess
 %{APP_DIR}/src/www/api/index.php
 %endif

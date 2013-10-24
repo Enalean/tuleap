@@ -45,7 +45,7 @@ $restler = new Restler();
 // comment the line above and uncomment the line below for production mode
 // $restler = new Restler(true);
 
-$restler->setAPIVersion(file_get_contents(__DIR__ .'/VERSION'));
+$restler->setAPIVersion(floor(file_get_contents(__DIR__ .'/VERSION')));
 
 $core_resources_injector = new Tuleap\REST\ResourcesInjector();
 $core_resources_injector->populate($restler);

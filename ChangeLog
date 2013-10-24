@@ -8,7 +8,6 @@ Version 6.7 (Not released yet)
 	* git: 3.50
 	* ldap: 3.38
 	* webdav: 1.9.3
-
 	* IM: 1.5.13
 	* docman: 2.26.23
 	* graphontrackers: 1.9
@@ -16,7 +15,7 @@ Version 6.7 (Not released yet)
 	* pluginsadministration: 1.4
 
     == API ==
-    * RESt: story #5332 - use a token to authenticate against the server
+    * rest: 1.1
 
     == Bug Fix ==
 	* Fix request #5406: Unable to install Tuleap on CentOs 6

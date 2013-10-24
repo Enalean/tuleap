@@ -1,0 +1,5 @@
+1.1 - Tuleap 6.7
+    story #5332 - use a token to authenticate against the server
+    Replace basic auth by a token based authentication
+    Add /tokens endpoint
+    Fix permission issue for private projects on /projects
