@@ -1,2 +1,5 @@
+1.3 - Tuleap 6.7
+	* Switch css stylesheets to less format
+
 1.2 - Tuleap 5.8
 	* Fix font compatibility with IE9 (Contrib STMicroelectronics)
