@@ -96,11 +96,18 @@ $(RPM_TMP):
 
 tarball: rpmprep $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
 
-$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz:
+less:
+	$(MAKE) -C ../.. less
+
+$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: less
 	[ -h $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
 	cd $(RPM_TMP)/SOURCES && \
 		find $(PKG_NAME)-$(version)/ \(\
 			 -path '*/.svn' -o\
+			 -name '*.less' -o\
+			 -name ".git" -o\
+			 -name ".gitignore" -o\
+			 -name ".gitmodules" -o\
 			 -path $(PKG_NAME)-$(version)/plugins/tests -o\
 			 -path $(PKG_NAME)-$(version)/plugins/maillog \)\
 			-prune -o -print |\
