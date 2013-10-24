@@ -993,8 +993,6 @@ fi
 %{APP_DIR}/src/www/api/VERSION
 %{APP_DIR}/src/www/api/.htaccess
 %{APP_DIR}/src/www/api/index.php
-%{APP_DIR}/src/common/REST
-%{APP_DIR}/src/common/project/REST
 %endif
 
 #
