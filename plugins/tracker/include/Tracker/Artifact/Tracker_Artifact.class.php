@@ -414,10 +414,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $html .= '<a class="direct-link-to-artifact icon-eye-open" href="'.TRACKER_BASE_URL.'/?aid='. $this->id .'" title="'.
             $GLOBALS['Language']->getText('plugin_tracker_include_report','show')
             .' artifact #'. $this->id .'"></a>';
-        $html .= '<a class="direct-link-to-artifact icon-edit" href="'.TRACKER_BASE_URL.'/?aid='. $this->id .'&func=edit" title="'.
+        $html .= ' <a class="direct-link-to-artifact icon-edit" href="'.TRACKER_BASE_URL.'/?aid='. $this->id .'&func=edit" title="'.
             $GLOBALS['Language']->getText('plugin_tracker_include_report','edit')
             .' artifact #'. $this->id .'"></a>';
-        $html .= '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid=' . $this->id . '">';
+        $html .= ' <a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid=' . $this->id . '">';
         $html .= $hp->purify($item_name, CODENDI_PURIFIER_CONVERT_HTML);
         $html .= ' #';
         $html .= $this->id;
