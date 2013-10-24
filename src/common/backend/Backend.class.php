@@ -19,14 +19,6 @@
  *
  * 
  */
-require_once('common/event/Event.class.php');
-require_once('common/event/EventManager.class.php');
-require_once('common/backend/BackendSystem.class.php');
-require_once('common/backend/BackendAliases.class.php');
-require_once('common/backend/BackendSVN.class.php');
-require_once('common/backend/BackendCVS.class.php');
-require_once('common/backend/BackendMailingList.class.php');
-require_once('common/backend/BackendLogger.class.php');
 
 /**
  * Base class to work on Codendi backend

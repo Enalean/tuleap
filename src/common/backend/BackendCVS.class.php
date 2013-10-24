@@ -20,10 +20,6 @@
  *
  */
 
-require_once('common/backend/Backend.class.php');
-require_once('common/dao/ServiceDao.class.php');
-
-
 class BackendCVS extends Backend {
 
     protected $CVSRootListNeedUpdate;

@@ -21,9 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/plugin/Plugin.class.php';
-require_once 'Statistics_DiskUsageManager.class.php';
-require_once 'ProjectQuotaManager.class.php';
+require_once 'autoload.php';
 
 class StatisticsPlugin extends Plugin {
 

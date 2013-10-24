@@ -18,16 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-require_once('common/dao/ReferenceDao.class.php');
-require_once('common/dao/CodendiDataAccess.class.php');
-require_once('common/reference/Reference.class.php');
-require_once('common/reference/ReferenceInstance.class.php');
-require_once('common/include/GroupFactory.class.php');
-require_once('common/reference/CrossReference.class.php');
-require_once('common/dao/CrossReferenceDao.class.php');
-require_once('common/event/EventManager.class.php');
-require_once('common/dao/ArtifactDao.class.php');
 require_once('server.php');
 /**
  * Reference Manager

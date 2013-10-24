@@ -19,8 +19,6 @@
  */
 
 require_once('browser.php');
-require_once('common/include/Codendi_Request.class.php');
-require_once('common/valid/Valid.class.php');
 
 /**
  * @package Codendi

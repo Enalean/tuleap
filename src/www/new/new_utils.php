@@ -5,7 +5,6 @@
 // http://sourceforge.net
 //
 // 
-require_once ('common/frs/FRSReleaseFactory.class.php');
 
 function new_utils_get_new_projects ($start_time,$offset,$limit) {
   $query = "SELECT group_id,unix_group_name,group_name,short_description,register_time FROM groups " .

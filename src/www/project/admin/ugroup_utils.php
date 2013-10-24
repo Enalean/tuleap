@@ -9,9 +9,6 @@
 // Originally written by Nicolas Guerin 2004, Codendi Team, Xerox
 //
 
-require_once('common/user/UserHelper.class.php');
-require_once('common/project/UGroup.class.php');
-
 //
 // Define various functions for user group management
 //

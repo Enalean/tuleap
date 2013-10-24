@@ -17,16 +17,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/event/EventManager.class.php');
-
-// Backends
-require_once('common/backend/Backend.class.php');
-require_once('common/backend/BackendSystem.class.php');
-require_once('common/backend/BackendAliases.class.php');
-require_once('common/backend/BackendSVN.class.php');
-require_once('common/backend/BackendCVS.class.php');
-require_once('common/backend/BackendMailingList.class.php');
-
 class BackendFactory {
 
     /**

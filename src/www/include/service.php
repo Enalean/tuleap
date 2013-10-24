@@ -6,7 +6,6 @@
 * 
 * 
 */
-require_once 'common/project/ProjectManager.class.php';
 
 function service_create_service($arr, $group_id, $template, $force_enable = false) {
     // Convert link to real values

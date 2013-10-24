@@ -20,15 +20,7 @@
  * 
  */
 
-require_once('common/backend/Backend.class.php');
-require_once('common/dao/UGroupDao.class.php');
-require_once('common/project/UGroup.class.php');
-require_once('common/dao/ServiceDao.class.php');
-require_once('common/svn/SVNAccessFile.class.php');
-require_once('common/include/Error.class.php');
 require_once('www/svn/svn_utils.php');
-require_once('common/svn/SVN_Apache_SvnrootConf.class.php');
-require_once('common/include/Config.class.php');
 
 /**
  * Backend class to work on subversion repositories

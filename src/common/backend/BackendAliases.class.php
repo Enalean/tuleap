@@ -20,9 +20,6 @@
  * 
  */
 
-require_once('common/backend/Backend.class.php');
-require_once('common/dao/MailingListDao.class.php');
-
 class BackendAliases extends Backend {
 
     protected $need_update=false;   

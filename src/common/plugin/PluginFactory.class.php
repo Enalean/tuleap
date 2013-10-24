@@ -18,10 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/PluginDao.class.php');
-require_once('common/dao/CodendiDataAccess.class.php');
-require_once('Plugin.class.php');
-
 /**
  * PluginFactory
  */

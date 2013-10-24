@@ -22,8 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/reference/ReferenceManager.class.php';
-
 /**
  * I'm able to understand cross reference grammar related to git commits and to
  * create Reference objects that correspond to a literal reference.

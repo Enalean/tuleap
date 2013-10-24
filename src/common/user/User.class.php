@@ -18,11 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/UserPreferencesDao.class.php');
-require_once('common/dao/UserGroupDao.class.php');
-require_once('common/include/Recent_Element_Interface.class.php');
-require_once('common/language/BaseLanguageFactory.class.php');
-require_once('IHaveAnSSHKey.php');
 /**
  *
  * User object

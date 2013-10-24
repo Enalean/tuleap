@@ -6,8 +6,6 @@
 //
 // 
 //
-require_once('common/include/CookieManager.class.php');
-require_once('common/user/UserManager.class.php');
 
 
 $G_SESSION=array();

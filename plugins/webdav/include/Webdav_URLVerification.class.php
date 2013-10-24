@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/include/URLVerification.class.php');
-
 /**
  * Check the URL validity for WebDAV plugin
  */
