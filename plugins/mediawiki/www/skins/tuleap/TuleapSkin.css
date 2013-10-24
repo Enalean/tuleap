@@ -1,3 +1,7 @@
 #p-navigation {
-        margin-top : -139px;
+    margin-top : -139px;
+}
+
+#level_1 > ul, #level_2 > ul {
+    line-height: 2em;
 }
