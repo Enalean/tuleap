@@ -601,5 +601,29 @@ class Event {
      * 'allow_codendi_login' => Boolean (OUT)
      */
     const SESSION_AFTER_LOGIN = 'session_after_login';
+
+    /**
+     * Event raised to get plannings from a project with REST
+     *
+     * Parameters:
+     *     'version' => String
+     *     'project' => Project
+     *     'limit'   => int
+     *     'offset'  => int
+     *     'result'  => array
+     */
+    const REST_GET_PROJECT_PLANNINGS = 'rest_get_project_plannings';
+
+    /**
+     * Event raised to get plannings options from a project with REST
+     *
+     * Parameters:
+     *     'version' => String
+     *     'project' => Project
+     *     'limit'   => int
+     *     'offset'  => int
+     *     'result'  => array
+     */
+    const REST_OPTIONS_PROJECT_PLANNINGS = 'rest_options_project_plannings';
 }
 ?>

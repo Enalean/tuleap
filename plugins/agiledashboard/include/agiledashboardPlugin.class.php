@@ -64,6 +64,8 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
             $this->_addHook(Event::EXPORT_XML_PROJECT);
             $this->addHook(Event::REST_RESOURCES);
+            $this->addHook(Event::REST_GET_PROJECT_PLANNINGS);
+            $this->addHook(Event::REST_OPTIONS_PROJECT_PLANNINGS);
         }
         return parent::getHooksAndCallbacks();
     }
@@ -550,6 +552,41 @@ class AgileDashboardPlugin extends Plugin {
     public function rest_resources($params) {
         $injector = new AgileDashboard_REST_ResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    /**
+     * @see REST_GET_PROJECT_PLANNINGS
+     */
+    public function rest_get_project_plannings($params) {
+        $user              = UserManager::instance()->getCurrentUser();
+        $planning_resource = $this->buildRightVersionOfProjectPlanningsResource($params['version']);
+
+        $params['result'] = $planning_resource->get(
+            $user,
+            $params['project'],
+            $params['limit'],
+            $params['offset']
+        );
+    }
+
+    /**
+     * @see REST_OPTIONS_PROJECT_PLANNINGS
+     */
+    public function rest_options_project_plannings($params) {
+        $user              = UserManager::instance()->getCurrentUser();
+        $planning_resource = $this->buildRightVersionOfProjectPlanningsResource($params['version']);
+
+        $params['result'] = $planning_resource->options(
+            $user,
+            $params['project'],
+            $params['limit'],
+            $params['offset']
+        );
+    }
+
+    private function buildRightVersionOfProjectPlanningsResource($version) {
+        $class_with_right_namespace = '\\Tuleap\\AgileDashboard\\REST\\'.$version.'\\ProjectPlanningsResource';
+        return new $class_with_right_namespace;
     }
 }
 

@@ -260,6 +260,7 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
                 'plan_title'          => 'Release Plan'
             )
         );
+
         stub($dao)->searchBacklogTrackersById(1)->returnsDar(array('tracker_id' => 103));
         stub($dao)->searchBacklogTrackersById(2)->returnsDar(array('tracker_id' => 104));
         stub($dao)->searchPlannings($this->project_id_without_planning)->returnsEmptyDar();
@@ -277,11 +278,11 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
         $this->sprint_planning->setPlanningTracker($this->sprint_tracker);
     }
 
-    public function itReturnAnEmptyArrayIfThereIsNoPlanningDefinedForAProject() {
+    public function itReturnsAnEmptyArrayIfThereIsNoPlanningDefinedForAProject() {
         $this->assertEqual(array(), $this->factory->getPlannings($this->user, $this->project_id_without_planning));
     }
 
-    public function itReturnAllDefinedPlanningsForAProjectInTheOrderDefinedByTheHierarchy() {
+    public function itReturnsAllDefinedPlanningsForAProjectInTheOrderDefinedByTheHierarchy() {
         stub($this->release_tracker)->userCanView($this->user)->returns(true);
         stub($this->sprint_tracker)->userCanView($this->user)->returns(true);
 
@@ -291,7 +292,7 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
         );
     }
 
-    public function itReturnOnlyPlanningsWhereTheUserCanViewTrackers() {
+    public function itReturnsOnlyPlanningsWhereTheUserCanViewTrackers() {
         stub($this->release_tracker)->userCanView($this->user)->returns(true);
         stub($this->sprint_tracker)->userCanView($this->user)->returns(false);
 

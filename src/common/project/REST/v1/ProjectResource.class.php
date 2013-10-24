@@ -21,6 +21,8 @@ namespace Tuleap\Project\REST\v1;
 
 use ProjectManager;
 use UserManager;
+use EventManager;
+use Event;
 use URLVerification;
 use \Luracast\Restler\RestException;
 use \Tuleap\Project\REST\ProjectInfoRepresentation;
@@ -91,5 +93,45 @@ class ProjectResource {
         } catch (\Project_AccessException $exception) {
             throw new RestException(403, $exception->getMessage());
         }
+    }
+
+    /**
+     * @url GET {id}/plannings
+     *
+     * @param int $id     The id of the project
+     * @param int $limit  The number of element displayed per page {@from path}
+     * @param int $offset The id of the first element to display {@from path}
+     *
+     * @return array of ProjectPlanningResource
+     */
+    public function getPlannings($id, $limit = 10, $offset = 0) {
+        return $this->plannings($id, $limit, $offset, Event::REST_GET_PROJECT_PLANNINGS);
+    }
+
+    /**
+     * @url OPTIONS {id}/plannings
+     *
+     * @param int $id The id of the project
+     */
+    public function optionsPlannings($id) {
+        return $this->plannings($id, 10, 0, Event::REST_OPTIONS_PROJECT_PLANNINGS);
+    }
+
+    private function plannings($id, $limit, $offset, $event) {
+        $project = $this->getProject($id);
+        $result  = array();
+
+        EventManager::instance()->processEvent(
+            $event,
+            array(
+                'version' => 'v1',
+                'project' => $project,
+                'limit'   => $limit,
+                'offset'  => $offset,
+                'result'  => &$result,
+            )
+        );
+
+        return $result;
     }
 }
