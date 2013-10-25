@@ -1,0 +1,62 @@
+This document explains how to migrate from gitolite2 to gitolite3 on Tuleap
+
+This document inspired from:
+* gitolite3-README-fedora in EPEL package
+* http://gitolite.com/gitolite/migr.html
+* http://gitolite.com/gitolite/g2migr.html
+
+Pre-requisite
+=============
+
+Upgrade will not work if there are bad ssh keys in your configuration.
+You should run the following commands before any upgrade:
+
+/usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/tools/utils/purge_bad_sshkeys.php
+
+=> if there is any output wait for night run of daily compute (so keys are dumped again) 
+   or run the daily cron by hand
+
+Upgrade
+=======
+
+# as root, service codendi stop
+# su - gitolite
+# git clone /var/lib/codendi/gitolite/repositories/gitolite-admin.git
+# su to root
+# yum install gitolite3
+# yum remove gitolite
+# cp ~codendiadm/.ssh/id_rsa_gl-adm.pub /tmp
+# su - gitolite
+# ln -s /var/lib/codendi/gitolite/repositories
+# cp -a .gitolite.rc gitolite2.rc
+# cp -a /usr/share/codendi/plugins/git/etc/gitolite3.rc.dist .gitolite.rc
+# tar -czf gitolite2-logs.tgz ~/.gitolite/logs
+# rm -rf repositories/gitolite-admin.git
+# gitolite setup -pk /tmp/id_rsa_gl-adm.pub
+# cd gitolite-admin
+# gitolite push -f
+# install -g gitolite -o gitolite -m 00755 /usr/share/codendi/plugins/git/hooks/post-receive-gitolite /usr/com/gitolite/.gitolite/hooks/common/post-receive
+# edit ~/.gitolite.rc and uncomment GROUPLIST_PGM line
+# as root, service codendi start
+
+HTTP Users
+==========
+
+Pre-requisite: you were already running HTTP integration on top of gitolite2 (see README-http.txt)
+
+install -g codendiadm -o codendiadm -m 00755 /usr/share/codendi/plugins/git/bin/gitolite3-suexec-wrapper.sh /usr/lib/codendi/bin/gitolite-suexec-wrapper.sh
+install -g root -o root -m 00700 /usr/share/codendi/plugins/git/etc/sudoers.d/gitolite3-http /etc/sudoers.d/gitolite3-http
+
+Developers info
+===============
+To compare changes needed to make gitolite3 work with Tuleap, you can dump the
+default configuration with:
+gitolite print-default-rc > default-gitolite-rc
+
+Hence:
+diff -bu default-gitolite-rc ~/.gitolite.rc
+
+We modified the gitolite package to make it works (build on centos5 and deploy
+gitolite-shell needed by HTTP bridge)
+In addition to that we bumped to the last gitolite version.
+https://tuleap.net/plugins/git/index.php/101/view/154/
