@@ -162,24 +162,27 @@ var Codendi_RTE_Light_Tracker_FollowUp = Class.create(Codendi_RTE_Light, {
         bold.appendChild(document.createTextNode("Comment format : "));
         div.appendChild(bold);
 
-        // Add a radio button that tells that the content format is text
-        // The value is defined in Artifact class.
-        var text_button = Builder.node('input', {'name'     : 'comment_format',
-                                                 'type'     : 'radio',
-                                                 'value'    : '0',
-                                                 'checked'  : 'checked',
-                                                 'id'       : 'comment_format_text'});
-        div.appendChild(text_button);
-        div.appendChild(document.createTextNode('Text'));
+        var selectbox = Builder.node('select', {'name' : 'comment_format'});
+        div.appendChild(selectbox);
 
-        // Add a radio button that tells that the content format is HTML
+        // Add an option that tells that the content format is text
         // The value is defined in Artifact class.
-        var html_button = Builder.node('input', {'name' : 'comment_format',
-                                                 'type' : 'radio',
-                                                 'value': '1',
-                                                 'id'   : 'comment_format_html'});
-        div.appendChild(html_button);
-        div.appendChild(document.createTextNode('HTML'));
+
+        var text_option = Builder.node(
+            'option',
+            {'value' : '0', 'id' : 'comment_format_text', 'selected' : 'selected'},
+            "Text"
+        );
+        selectbox.appendChild(text_option);
+
+        // Add an option that tells that the content format is HTML
+        // The value is defined in Artifact class.
+        var html_option = Builder.node(
+            'option',
+            {'value': '1', 'id' : 'comment_format_html'},
+            "HTML"
+        );
+        selectbox.appendChild(html_option);
 
         label.appendChild(div);
 
@@ -190,7 +193,7 @@ var Codendi_RTE_Light_Tracker_FollowUp = Class.create(Codendi_RTE_Light, {
         if (format == 'html') {
             this.switchButtonToHtml();
         } else {
-            $('comment_format_text').checked = true;
+            $('comment_format_text').selected = true;
         }
         
     },
@@ -201,12 +204,12 @@ var Codendi_RTE_Light_Tracker_FollowUp = Class.create(Codendi_RTE_Light, {
     },
 
     /**
-     * Disable the radio button that tells that the content is text
-     * Check the radio button that tells that the content is HTML
+     * Disable the option that tells that the content is text
+     * Select the option that tells that the content is HTML
      */
     switchButtonToHtml: function () {
         $('comment_format_text').disabled = true;
-        $('comment_format_html').checked  = true;
+        $('comment_format_html').selected  = true;
     }
 });
 
@@ -288,6 +291,6 @@ var Codendi_RTE_Send_HTML_MAIL = Class.create(Codendi_RTE_Light, {
      */
     switchButtonToHtml: function () {
         $('body_format_text').disabled = true;
-        $('body_format_html').checked  = true;
+        $('body_format_html').selected  = true;
     }
 });

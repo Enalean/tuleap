@@ -143,7 +143,7 @@ document.observe('dom:loaded', function () {
                         } else {
                             var content = $('tracker_followup_comment_edit_'+id).getValue();
                         }
-                        var format = document.getElementsByName('comment_format'+id)[0].checked? 'text' : 'html';
+                        var format = document.getElementsByName('comment_format'+id)[0].selected? 'text' : 'html';
                         var req = new Ajax.Request(location.href, {
                             parameters: {
                                 func:           'update-comment',

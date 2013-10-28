@@ -30,24 +30,26 @@ tuleap.trackers.followup.RTE = Class.create(codendi.RTE, {
         bold.appendChild(document.createTextNode("Format : "));
         div.appendChild(bold);
 
-        // Add a radio button that tells that the content format is text
-        // The value is defined in Artifact class.
-        var text_button = Builder.node('input', {'name'     : 'comment_format'+this.options.id,
-                                                 'type'     : 'radio',
-                                                 'value'    : 'text',
-                                                 'checked'  : 'checked',
-                                                 'id'       : 'comment_format_text'+this.options.id});
-        div.appendChild(text_button);
-        div.appendChild(document.createTextNode('Text'));
+        var selectbox = Builder.node('select', {'id' : 'rte_format_selectbox', 'name' : 'comment_format'+this.options.id});
+        div.appendChild(selectbox);
 
-        // Add a radio button that tells that the content format is HTML
+        // Add an option that tells that the content format is text
         // The value is defined in Artifact class.
-        var html_button = Builder.node('input', {'name' : 'comment_format'+this.options.id,
-                                                 'type' : 'radio',
-                                                 'value': 'html',
-                                                 'id'   : 'comment_format_html'+this.options.id});
-        div.appendChild(html_button);
-        div.appendChild(document.createTextNode('HTML'));
+        var text_option = Builder.node(
+            'option',
+            {'value' : 'text', 'id' : 'comment_format_text'+this.options.id, 'selected' : 'selected'},
+            "Text"
+        );
+        selectbox.appendChild(text_option);
+
+        // Add an option that tells that the content format is HTML
+        // The value is defined in Artifact class.
+        var html_option = Builder.node(
+            'option',
+            {'value': 'html', 'id' : 'comment_format_html'+this.options.id},
+            "HTML"
+        );
+        selectbox.appendChild(html_option);
 
         Element.insert(this.element, {before: div});
 
@@ -58,7 +60,7 @@ tuleap.trackers.followup.RTE = Class.create(codendi.RTE, {
         if (options.htmlFormat == true) {
             this.switchButtonToHtml();
         } else {
-            $('comment_format_text'+this.options.id).checked = true;
+            $('comment_format_text'+this.options.id).selected = true;
         }
     },
 
@@ -68,12 +70,12 @@ tuleap.trackers.followup.RTE = Class.create(codendi.RTE, {
     },
 
     /**
-     * Disable the radio button that tells that the content is text
-     * Check the radio button that tells that the content is HTML
+     * Disable the option that tells that the content is text
+     * Select the option that tells that the content is HTML
      */
     switchButtonToHtml: function () {
         $('comment_format_text'+this.options.id).disabled = true;
-        $('comment_format_html'+this.options.id).checked  = true;
+        $('comment_format_html'+this.options.id).selected  = true;
     }
 });
 
