@@ -28,6 +28,7 @@ require_once 'common/project/ProjectManager.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
+    const REST_ROUTE        = 'artifacts';
     const NO_PARENT         = -1;
     const PERMISSION_ACCESS = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
     const REFERENCE_NATURE  = 'plugin_tracker_artifact';
@@ -730,6 +731,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function fetchDirectLinkToArtifactWithoutXRef() {
         $hp = Codendi_HTMLPurifier::instance();
         return '<a class="direct-link-to-artifact" href="'. $this->getUri() . '">' . $hp->purify($this->getTitle()) . '</a>';
+    }
+
+    public function getRestUri() {
+        return self::REST_ROUTE . '/' . $this->getId();
     }
 
     /**

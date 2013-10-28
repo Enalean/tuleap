@@ -228,6 +228,10 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         return $this->parent_milestones;
     }
 
+    public function getParent() {
+        return array_shift(array_values($this->parent_milestones));
+    }
+
     public function setAncestors(array $parents) {
         $this->parent_milestones = $parents;
     }
@@ -283,6 +287,23 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         }
 
         return $success;
+    }
+
+    /**
+     * Get the timestamp of the last modification of the milestone
+     *
+     * @return Integer
+     */
+    public function getLastModifiedDate() {
+        return $this->getArtifact()->getLastChangeset()->getSubmittedOn();
+    }
+
+    /**
+     * @see Planning_Milestone::getDuration()
+     * @return float
+     */
+    public function getDuration() {
+        return $this->duration;
     }
 
 }

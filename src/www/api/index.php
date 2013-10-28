@@ -41,9 +41,11 @@ Resources::$useFormatAsExtension = false;
 // Use /api/v1/projects uri
 Defaults::$useUrlBasedVersioning = true;
 
-$restler = new Restler();
-// comment the line above and uncomment the line below for production mode
-// $restler = new Restler(true);
+if (Config::get('DEBUG_MODE')) {
+    $restler = new Restler(false, true);
+} else {
+    $restler = new Restler();
+}
 
 $restler->setAPIVersion(floor(file_get_contents(__DIR__ .'/VERSION')));
 
