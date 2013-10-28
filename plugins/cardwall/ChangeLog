@@ -1,3 +1,13 @@
+Version 1.8 - Tuleap 6.7
+    * Fix UI: bootstrap issues
+
+
+* cardwall card actions margin
+* a.btn text-color
+* crossref icons
+* cardwall searchbox
+* Tracker FormElement Checkbox
+
 Version 1.7 - Tuleap 6.7
     * Story #5280: Integrate bootstrap to continue interface overhaul
 
