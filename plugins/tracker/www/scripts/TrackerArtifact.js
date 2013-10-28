@@ -107,7 +107,12 @@ document.observe('dom:loaded', function () {
             after: div
         });
     });
-    
+
+    $$('.tracker_artifact_field  textarea').each(function (element) {
+        var id = element.id;
+        new tuleap.trackers.followup.RTE(element, {toggle: true, default_in_html: false, id : id, htmlFormat: false});
+    });
+
     $$('.tracker_artifact_followup_comment_controls_edit').each(function (edit) {
         var id = edit.up('.tracker_artifact_followup').id;
         if (id && id.match(/_\d+$/)) {

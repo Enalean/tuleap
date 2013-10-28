@@ -154,7 +154,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         $html  = '';
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $hp    = Codendi_HTMLPurifier::instance();
-        $html .= '<textarea name="artifact['. $this->id .']" 
+        $html .= '<textarea id = field_'.$this->id.'
+                            name="artifact['. $this->id .']"
                             rows="'. $this->getProperty('rows') .'" 
                             cols="'. $this->getProperty('cols') .'" 
                             '. ($this->isRequired() ? 'required' : '') .' 
@@ -179,7 +180,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
             $html .= '<textarea readonly="readonly" title="'.$GLOBALS['Language']->getText('plugin_tracker_artifact_masschange', 'cannot_masschange_title').'">'.$value.'</textarea>';
         } else {
             $hp = Codendi_HTMLPurifier::instance();
-            $html .= '<textarea name="artifact['. $this->id .']" 
+            $html .= '<textarea id = field_'.$this->id.'
+                                name="artifact['. $this->id .']"
                                 rows="'. $this->getProperty('rows') .'" 
                                 cols="'. $this->getProperty('cols') .'">';
             $html .= $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML);
@@ -207,7 +209,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
             }
         }
         $hp = Codendi_HTMLPurifier::instance();
-        $html .= '<textarea name="artifact['. $this->id .']" 
+        $html .= '<textarea id = field_'.$this->id.'
+                            name="artifact['. $this->id .']"
                             rows="'. $this->getProperty('rows') .'" 
                             cols="'. $this->getProperty('cols') .'" 
                             '. ($this->isRequired() ? 'required' : '') .' 
