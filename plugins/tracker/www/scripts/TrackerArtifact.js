@@ -134,12 +134,14 @@ document.observe('dom:loaded', function () {
                     var edit_panel = new Element('div', { style: 'text-align: right;'}).update(rteSpan);
                     comment_panel.insert({before: edit_panel});
                     new tuleap.trackers.followup.RTE(textarea, {toggle: true, default_in_html: false, id: id, htmlFormat: htmlFormat});
-                    while (textarea.offsetWidth < comment_panel.offsetWidth) {
-                        textarea.cols++;
+
+                    var nb_rows_displayed = 5;
+                    var nb_rows_content   = textarea.value.split(/\n/).length;
+                    if (nb_rows_content > nb_rows_displayed) {
+                        nb_rows_displayed = nb_rows_content;
                     }
-                    while (textarea.offsetHeight < textarea.scrollHeight) {
-                        textarea.rows++;
-                    }
+                    textarea.rows = nb_rows_displayed;
+
                     comment_panel.hide();
                     textarea.focus();
                     var button = new Element('button').update('Ok').observe('click', function (evt) {

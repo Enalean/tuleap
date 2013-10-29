@@ -59,10 +59,12 @@ tuleap.trackers.followup.RTE = Class.create(codendi.RTE, {
 
         if (options.htmlFormat == true) {
             this.switchButtonToHtml();
-        } else if ($('comment_format_html'+this.options.id).selected == true) {
-            this.init_rte();
         } else {
             $('comment_format_text'+this.options.id).selected = true;
+        }
+
+        if ($('comment_format_html'+this.options.id).selected == true) {
+            this.init_rte();
         }
 
         if (this.options.toggle) {

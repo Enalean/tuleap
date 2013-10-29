@@ -74,8 +74,8 @@ codendi.RTE = Class.create(
                 }
             }.bind(this));
         },
-        toggle: function (evt) {
-            if (!this.rte) {
+        toggle: function (evt, option) {
+            if (option == 'html' && !this.rte) {
                 this.init_rte();
             } else {
                 this.rte.destroy();
@@ -137,13 +137,11 @@ var Codendi_RTE_Light = Class.create({
         });
         this.rte = true;
     },
-    toggle: function(event, option) {
-        var optionValueIsHtmlOrOptionIsNotPassed = (undefined == option || option == 'html');
-
-        if (optionValueIsHtmlOrOptionIsNotPassed && !this.rte) {
+    toggle: function(event) {
+        if (!this.rte) {
             this.init_rte();
         } else {
-            if (!tinyMCE.get(this.element.id) && optionValueIsHtmlOrOptionIsNotPassed) {
+            if (!tinyMCE.get(this.element.id)) {
                 tinyMCE.execCommand("mceAddControl", false, this.element.id);
             } else {
                 tinyMCE.execCommand("mceRemoveControl", false, this.element.id);
