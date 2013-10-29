@@ -371,6 +371,13 @@ class Transition {
         );
     }
 
+    public function exportToREST() {
+        return new Tracker_REST_WorkflowTransitionRepresentation(
+            $this->getIdFrom(),
+            $this->getIdTo()
+        );
+    }
+
     private function getIdFrom() {
         $from = $this->getFieldValueFrom();
         if ($from) {

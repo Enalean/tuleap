@@ -49,6 +49,15 @@ class Tracker_Rule_List extends Tracker_Rule {
         );
     }
 
+    public function exportToREST() {
+        return new Tracker_REST_WorkflowRuleListRepresentation(
+            $this->getSourceFieldId(),
+            $this->getSourceValue(),
+            $this->getTargetFieldId(),
+            $this->getTargetValue()
+        );
+    }
+
     /**
     * Returns if a rule can be applied to a tuple
     *

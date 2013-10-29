@@ -52,6 +52,14 @@ class Tracker_Rule_Date extends Tracker_Rule {
         );
     }
 
+    public function exportToREST() {
+        return new Tracker_REST_WorkflowRuleDateRepresentation(
+            $this->getSourceFieldId(),
+            $this->getTargetFieldId(),
+            $this->getComparator()
+        );
+    }
+
     /**
      *
      * @var string

@@ -21,6 +21,10 @@
 require_once 'common/layout/ColorHelper.class.php';
 
 abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElement_Field_Shareable, Tracker_IProvideJsonFormatOfMyself {
+    const SOAP_ID_KEY    = 'bind_value_id';
+    const SOAP_LABEL_KEY = 'bind_value_label';
+    const SOAP_TYPE_KEY  = 'bind_type';
+    const SOAP_LIST_KEY  = 'bind_list';
 
     /**
      * @var Tracker_FormElement_Field_List_Bind_DefaultvalueDao
@@ -79,8 +83,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
 
     private function getSoapBindValue($value) {
         return array(
-            'bind_value_id'    => $value->getId(),
-            'bind_value_label' => $value->getSoapValue()
+            self::SOAP_ID_KEY    => $value->getId(),
+            self::SOAP_LABEL_KEY => $value->getSoapValue()
         );
     }
 
@@ -88,8 +92,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
         $bind_factory = new Tracker_FormElement_Field_List_BindFactory();
         $bind_type = $bind_factory->getType($this);
         return array(
-            'bind_type' => $bind_type,
-            'bind_list' => $this->getSoapBindingList()
+            self::SOAP_TYPE_KEY => $bind_type,
+            self::SOAP_LIST_KEY => $this->getSoapBindingList()
         );
     }
 

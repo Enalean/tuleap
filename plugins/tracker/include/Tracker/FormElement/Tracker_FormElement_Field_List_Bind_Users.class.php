@@ -21,6 +21,11 @@
 
 class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind {
 
+    const REGISTERED_USERS_UGROUP_NAME = 'ugroup_2';
+
+    const SOAP_BINDING_LIST_ID         = 'ugroup_id';
+    const SOAP_BINDING_LIST_LABEL      = 'name';
+
     /** @var UserManager */
     protected $userManager;
     protected $value_function = array();
@@ -28,7 +33,6 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /** @var UserHelper */
     private $user_helper;
 
-    const REGISTERED_USERS_UGROUP_NAME = 'ugroup_2';
 
     public function __construct($field, $value_function, $default_values, $decorators) {
         parent::__construct($field, $default_values, $decorators);
@@ -157,11 +161,11 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
     private function getSoapBindValue($value) {
         return array(
-            'bind_value_id'    => $value->getId(),
-            'bind_value_label' => $value->getSoapValue()
+            self::SOAP_ID_KEY    => $value->getId(),
+            self::SOAP_LABEL_KEY => $value->getSoapValue()
         );
     }
-    
+
     /**
      * Get the list of of ugroups used in this field     * 
      * 
@@ -174,21 +178,21 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                 switch ($ugroup) {
                     case 'group_members':
                         $ugroups[] = array(
-                                    'ugroup_id' => $GLOBALS['UGROUP_PROJECT_MEMBERS'],
-                                    'name'      => util_translate_name_ugroup(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_MEMBERS']))
-                            );
+                            self::SOAP_BINDING_LIST_ID    => $GLOBALS['UGROUP_PROJECT_MEMBERS'],
+                            self::SOAP_BINDING_LIST_LABEL => util_translate_name_ugroup(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_MEMBERS']))
+                        );
                         break;
                     case 'group_admins':
                         $ugroups[] = array(
-                                    'ugroup_id' => $GLOBALS['UGROUP_PROJECT_ADMIN'],
-                                    'name'      => util_translate_name_ugroup(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN']))
-                            );
+                            self::SOAP_BINDING_LIST_ID    => $GLOBALS['UGROUP_PROJECT_ADMIN'],
+                            self::SOAP_BINDING_LIST_LABEL => util_translate_name_ugroup(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN']))
+                        );
                         break;
                     case 'artifact_submitters':
                         $ugroups[] = array(
-                                    'ugroup_id' => 0,
-                                    'name'      => $ugroup
-                            );
+                            self::SOAP_BINDING_LIST_ID    => 0,
+                            self::SOAP_BINDING_LIST_LABEL => $ugroup
+                        );
                         break;
                     default:
                         if (preg_match('/ugroup_([0-9]+)/', $ugroup, $matches)) {
@@ -196,8 +200,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                             $user_group = new UGroup($ugroup_data);
 
                             $ugroups[] = array(
-                                    'ugroup_id' => $matches[1],
-                                    'name'      => $user_group->getNormalizedName(),//util_translate_name_ugroup(ugroup_get_name_from_id($matches[1]))
+                                self::SOAP_BINDING_LIST_ID    => $matches[1],
+                                self::SOAP_BINDING_LIST_LABEL => $user_group->getNormalizedName(),//util_translate_name_ugroup(ugroup_get_name_from_id($matches[1]))
                             );
                         }
                         break;

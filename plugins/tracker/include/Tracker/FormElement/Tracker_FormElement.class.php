@@ -30,6 +30,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     const PERMISSION_UPDATE = 'PLUGIN_TRACKER_FIELD_UPDATE';
     const PERMISSION_SUBMIT = 'PLUGIN_TRACKER_FIELD_SUBMIT';
 
+    const SOAP_PERMISSION_READ   = 'read';
+    const SOAP_PERMISSION_UPDATE = 'update';
+    const SOAP_PERMISSION_SUBMIT = 'submit';
+
     /**
      * The field id
      */
@@ -1142,15 +1146,15 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $permissions = array();
 
         if ($this->userCanRead($user)) {
-            $permissions[] = 'read';
+            $permissions[] = self::SOAP_PERMISSION_READ;
         }
 
         if ($this->userCanUpdate($user)) {
-            $permissions[] = 'update';
+            $permissions[] = self::SOAP_PERMISSION_UPDATE;
         }
 
         if ($this->userCanSubmit($user)) {
-            $permissions[] = 'submit';
+            $permissions[] = self::SOAP_PERMISSION_SUBMIT;
         }
         return $permissions;
     }
