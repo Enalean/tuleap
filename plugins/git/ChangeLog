@@ -1,3 +1,6 @@
+Version 3.52 - Tuleap 6.7
+    * Dev: remove a bunch of explicit require_once
+
 Version 3.51 - Tuleap 6.7
     * story #5351: upgrade to gitolite3 (continued)
 

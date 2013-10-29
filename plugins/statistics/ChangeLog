@@ -1,3 +1,6 @@
+Version 0.33 - Tuleap 6.7
+    * Dev: remove a bunch of explicit require_once
+
 Version 0.32 - Tuleap 6.6
     * story #4923. Per project site wide statistics: Include statistics on project web page disk usage.
 
