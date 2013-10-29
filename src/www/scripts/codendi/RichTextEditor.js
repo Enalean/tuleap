@@ -25,7 +25,7 @@ codendi.RTE = Class.create(
         initialize: function (element, options) {
             this.element = $(element);
             this.options = Object.extend({
-                toolbar: 'basic', //basic | full | minimal
+                toolbar: 'tuleap', //basic | full | minimal | tuleap
                 onLoad: Prototype.emptyFunction,
                 toggle: false,
                 default_in_html: true
@@ -62,6 +62,13 @@ codendi.RTE = Class.create(
                                   ['Bold', 'Italic', 'Underline'],
                                   ['NumberedList', 'BulletedList', '-', 'Blockquote', 'Format'],
                                   ['Link', 'Unlink', 'Anchor', 'Image']
+                              ];
+            } else if (this.options.toolbar == 'tuleap') {
+                var toolbar = [
+                                  ['Bold', 'Italic', 'Underline'],
+                                  ['NumberedList', 'BulletedList', '-', 'Blockquote', 'Format'],
+                                  ['Link', 'Unlink', 'Anchor', 'Image'],
+                                  ['Source']
                               ];
             } else {
                 var toolbar = 'Full'
