@@ -19,10 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once ('common/plugin/Plugin.class.php');
-require_once ('ResolvPHP-5.1.6-Compatibility.php');
-require_once ('WebDAVAuthentication.class.php');
-require_once ('Webdav_URLVerification.class.php');
+require_once 'autoload.php';
 
 class WebDAVPlugin extends Plugin {
 

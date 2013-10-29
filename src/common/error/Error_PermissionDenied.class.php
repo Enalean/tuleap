@@ -18,12 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/include/URL.class.php');
-require_once('common/mail/Mail.class.php');
-require_once('common/project/Project.class.php');
-require_once('common/user/User.class.php');
-require_once('common/include/URLRedirect.class.php');
-
 /**
  * It allows the management of permission denied error.
  * It offres to user the possibility to request the project membership directly.

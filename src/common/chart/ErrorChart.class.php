@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Chart.class.php';
+require_once 'jpgraph.php';
 require_once 'jpgraph_canvas.php';
 
 /**

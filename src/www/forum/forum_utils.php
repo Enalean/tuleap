@@ -16,10 +16,6 @@
 */
 
 require_once('www/news/news_utils.php');
-require_once('common/mail/Mail.class.php');
-require_once('common/include/HTTPRequest.class.php');
-require_once('common/user/UserHelper.class.php');
-require_once('common/reference/ReferenceManager.class.php');
 
 function forum_header($params) {
     global $HTML,$group_id,$forum_name,$thread_id,$msg_id,$forum_id,$et,$et_cookie,$Language;

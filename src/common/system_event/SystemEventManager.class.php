@@ -19,34 +19,6 @@
  *
  * 
  */
-require_once('common/dao/SystemEventDao.class.php');
-require_once('common/dao/CodendiDataAccess.class.php');
-require_once('common/event/EventManager.class.php');
-
-// Events
-require_once('common/system_event/include/SystemEvent_SYSTEM_CHECK.class.php');
-require_once('common/system_event/include/SystemEvent_PROJECT_CREATE.class.php');
-require_once('common/system_event/include/SystemEvent_PROJECT_DELETE.class.php');
-require_once('common/system_event/include/SystemEvent_PROJECT_RENAME.class.php');
-require_once('common/system_event/include/SystemEvent_MEMBERSHIP_CREATE.class.php');
-require_once('common/system_event/include/SystemEvent_MEMBERSHIP_DELETE.class.php');
-require_once('common/system_event/include/SystemEvent_USER_CREATE.class.php');
-require_once('common/system_event/include/SystemEvent_USER_DELETE.class.php');
-require_once('common/system_event/include/SystemEvent_USER_EMAIL_CHANGED.class.php');
-require_once('common/system_event/include/SystemEvent_USER_RENAME.class.php');
-require_once('common/system_event/include/SystemEvent_MAILING_LIST_CREATE.class.php');
-require_once('common/system_event/include/SystemEvent_MAILING_LIST_DELETE.class.php');
-require_once('common/system_event/include/SystemEvent_CVS_IS_PRIVATE.class.php');
-require_once('common/system_event/include/SystemEvent_PROJECT_IS_PRIVATE.class.php');
-require_once('common/system_event/include/SystemEvent_SERVICE_USAGE_SWITCH.class.php');
-require_once('common/system_event/include/SystemEvent_UGROUP_MODIFY.class.php');
-require_once('common/system_event/include/SystemEvent_EDIT_SSH_KEYS.class.php');
-require_once('common/system_event/include/SystemEvent_ROOT_DAILY.class.php');
-require_once('common/system_event/include/SystemEvent_COMPUTE_MD5SUM.class.php');
-require_once('common/system_event/include/SystemEvent_SVN_UPDATE_HOOKS.class.php');
-
-// Backends
-require_once('common/backend/Backend.class.php');
 
 /**
 * Manager of system events

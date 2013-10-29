@@ -22,10 +22,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/tracker/ArtifactFile.class.php');
-require_once('common/mail/MailManager.class.php');
-require_once('common/include/Codendi_Diff.class.php');
-
 /**
  *
  * Artifact.class.php - Main Artifact class

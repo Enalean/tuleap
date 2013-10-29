@@ -1,7 +1,6 @@
 <?php
 
 require_once('user.php');
-require_once('common/include/GroupFactory.class.php');
 
 
 function groups_to_soap($groups) {

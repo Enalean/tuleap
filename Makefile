@@ -1,6 +1,5 @@
-AUTOLOADED_PATH=plugins/agiledashboard/include plugins/cardwall/include plugins/fulltextsearch/include plugins/tracker/include plugins/git/include plugins/boomerang/include plugins/openid/include tests/lib
+AUTOLOAD_EXCLUDES=mediawiki|tests|template
 LESS_PATH=plugins src
-
 
 default:
 	@echo "possible targets: 'doc' 'test' 'autoload' 'less' 'api_test' 'api_test_group'"
@@ -14,9 +13,9 @@ test:
 autoload:
 	@echo "Generate core"
 	@(cd src/common; phpab  --compat -o autoload.php --exclude "./wiki/phpwiki/*" .)
-	@for path in $(AUTOLOADED_PATH); do \
+	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
 	     echo "Generate $$path"; \
-	     (cd "$$path"; phpab --compat -o autoload.php .) \
+	     (cd "plugins/$$path/include"; phpab --compat -o autoload.php .) \
         done;
 
 less:

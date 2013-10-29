@@ -20,11 +20,6 @@
  * 
  */
 
-require_once('common/backend/Backend.class.php');
-require_once('common/dao/UserDao.class.php');
-require_once('common/wiki/lib/WikiAttachment.class.php');
-require_once('common/user/User_SSHKeyDumper.class.php');
-
 class BackendSystem extends Backend {
 
 

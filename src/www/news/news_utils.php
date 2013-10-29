@@ -26,10 +26,6 @@
 require_once('www/project/admin/permissions.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('www/forum/forum_utils.php');
-require_once('common/mail/Mail.class.php');
-require_once('common/user/UserHelper.class.php');
-require_once('common/reference/ReferenceManager.class.php');
-require_once 'common/mail/MassmailSender.class.php';
 
 
 function news_header($params) {

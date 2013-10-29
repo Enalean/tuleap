@@ -20,10 +20,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/CodendiDataAccess.class.php');
-
-require_once('common/wiki/lib/WikiAttachmentRevisionDao.class.php');
-
 /**
  *
  *<pre>

@@ -20,9 +20,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/system_event/SystemEventManager.class.php');
-require_once('common/project/ProjectManager.class.php');
-
 /**
  * @package Codendi
  */

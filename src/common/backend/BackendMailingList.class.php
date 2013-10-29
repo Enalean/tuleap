@@ -20,11 +20,6 @@
  *
  */
 
-require_once('common/backend/Backend.class.php');
-require_once('common/dao/MailingListDao.class.php');
-require_once('common/dao/CodendiDataAccess.class.php');
-require_once('common/mailing_list/MailingList.class.php');
-
 class BackendMailingList extends Backend {
 
     protected $_mailinglistdao = null;

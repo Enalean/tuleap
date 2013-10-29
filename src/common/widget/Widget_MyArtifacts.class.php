@@ -18,18 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Widget.class.php');
-require_once('common/tracker/ArtifactTypeFactory.class.php');
-require_once('common/tracker/Artifact.class.php');
-require_once('common/tracker/ArtifactFile.class.php');
-require_once('common/tracker/ArtifactType.class.php');
-require_once('common/tracker/ArtifactCanned.class.php');
-require_once('common/tracker/ArtifactField.class.php');
-require_once('common/tracker/ArtifactFieldFactory.class.php');
-require_once('common/tracker/ArtifactReportFactory.class.php');
-require_once('common/tracker/ArtifactReport.class.php');
-require_once('common/tracker/ArtifactReportField.class.php');
-require_once('common/tracker/ArtifactFactory.class.php');
 require_once('www/my/my_utils.php');
 
 /**

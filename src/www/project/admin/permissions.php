@@ -30,12 +30,6 @@
 
 require_once('www/project/admin/ugroup_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
-require_once('common/tracker/Artifact.class.php');
-require_once('common/tracker/ArtifactType.class.php');
-require_once('common/tracker/ArtifactFieldFactory.class.php');
-require_once('common/tracker/ArtifactField.class.php');
-#require_once('common/wiki/lib/WikiPage.class.php');
-require_once('common/event/EventManager.class.php');
 
 
 /**

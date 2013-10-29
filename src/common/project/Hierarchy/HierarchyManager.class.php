@@ -18,11 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-require_once 'HierarchyManagerNoChangeException.class.php';
-require_once 'HierarchyManagerAlreadyAncestorException.class.php';
-require_once 'HierarchyManagerAncestorIsSelfException.class.php';
-
 class Project_HierarchyManager {
 
     /**

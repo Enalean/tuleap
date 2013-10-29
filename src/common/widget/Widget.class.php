@@ -18,37 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/widget/WidgetLayoutManager.class.php');
-
-require_once('common/widget/Widget_MySurveys.class.php');
-require_once('common/widget/Widget_MyProjects.class.php');
-require_once('common/widget/Widget_MyBookmarks.class.php');
-require_once('common/widget/Widget_MyMonitoredForums.class.php');
-require_once('common/widget/Widget_MyMonitoredFp.class.php');
-require_once('common/widget/Widget_MyLatestSvnCommits.class.php');
-require_once('common/widget/Widget_MyArtifacts.class.php');
-require_once('common/widget/Widget_MyRss.class.php');
-require_once('common/widget/Widget_MyAdmin.class.php');
-require_once('common/widget/Widget_MyTwitterFollow.class.php');
-require_once('common/widget/Widget_MySystemEvent.class.php');
-//require_once('common/widget/Widget_MyWikiPage.class.php');
-require_once('common/widget/Widget_MyImageViewer.class.php');
-
-require_once('common/widget/Widget_ProjectDescription.class.php');
-require_once('common/widget/Widget_ProjectClassification.class.php');
-require_once('common/widget/Widget_ProjectMembers.class.php');
-require_once('common/widget/Widget_ProjectLatestFileReleases.class.php');
-require_once('common/widget/Widget_ProjectLatestNews.class.php');
-require_once('common/widget/Widget_ProjectPublicAreas.class.php');
-require_once('common/widget/Widget_ProjectRss.class.php');
-require_once('common/widget/Widget_ProjectLatestSvnCommits.class.php');
-require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
-require_once('common/widget/Widget_ProjectTwitterFollow.class.php');
-//require_once('common/widget/Widget_ProjectWikiPage.class.php');
-require_once('common/widget/Widget_ProjectSvnStats.class.php');
-require_once('common/widget/Widget_ProjectImageViewer.class.php');
-
-
 /**
 * Widget
 */

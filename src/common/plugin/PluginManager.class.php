@@ -18,16 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/event/EventManager.class.php');
-
-require_once('common/plugin/PluginFactory.class.php');
-require_once('common/plugin/PluginHookPriorityManager.class.php');
-
-require_once('common/dao/DBTablesDao.class.php');
-require_once('common/dao/CodendiDataAccess.class.php');
-
-require_once('common/include/ForgeUpgradeConfig.class.php');
-
 /**
  * PluginManager
  */

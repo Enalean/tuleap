@@ -17,10 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('Project.class.php');
-require_once('common/dao/ProjectDao.class.php');
-require_once('common/dao/ProjectHierarchyDao.class.php');
-require_once('common/project/Hierarchy/HierarchyManager.class.php');
 
 /**
  * Provide access to projects
