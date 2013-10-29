@@ -2,7 +2,7 @@ AUTOLOAD_EXCLUDES=mediawiki|tests|template
 LESS_PATH=plugins src
 
 default:
-	@echo "possible targets: 'doc' 'test' 'autoload' 'less' 'api_test' 'api_test_group'"
+	@echo "possible targets: 'doc' 'test' 'autoload' 'less' 'less-dev' 'api_test' 'api_test_group'"
 
 doc:
 	$(MAKE) -C documentation all
@@ -25,10 +25,13 @@ less:
 		filename="$${filename%.*}"; \
 		path=$$(dirname "$$file"); \
 		# Comments are striped by plessc from css files but we need to keep the license comment at the top of the file \
-		head -n 200 $$file | grep -iP '^/\*\*(\n|.)*?copyright(\n|.)*?\n\s?\*/' > "$$path/$$filename.css"; \
+		head -n 100 $$file | grep -iP '^/\*\*(\n|.)*?copyright(\n|.)*?\n\s?\*/' > "$$path/$$filename.css"; \
 		# Append the compiled css after the license comment \
 		plessc "$$path/$$filename.less" >> "$$path/$$filename.css"; \
 	done;
+
+less-dev:
+	@tools/utils/less-dev.sh `pwd`
 
 api_test_setup:
 	cp tests/rest/bin/composer.json .
