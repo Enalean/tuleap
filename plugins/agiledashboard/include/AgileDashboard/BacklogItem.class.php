@@ -71,6 +71,10 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
         $this->initial_effort = $value;
     }
 
+    public function getInitialEffort() {
+        return $this->initial_effort;
+    }
+
     public function setStatus($status) {
         $this->status = $status;
     }

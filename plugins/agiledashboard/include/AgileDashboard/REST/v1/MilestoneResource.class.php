@@ -35,7 +35,9 @@ use \URLVerification;
  */
 class MilestoneResource {
 
-    /** @var Planning_MilestoneFactory */
+    const MAX_LIMIT = 100;
+
+    /** @var \Planning_MilestoneFactory */
     private $milestone_factory;
 
     public function __construct() {
@@ -92,30 +94,93 @@ class MilestoneResource {
     }
 
     /**
+     * Return milestone datas by id if exists
      *
-     * @param type $id
-     * @return type
+     * @url GET {id}/backlog_items
+     * @param int $id ID of the planning
+     * @param int $limit The number of element displayed per page
+     * @param int $offset The id of the first element to display
+     * @return array array of \MilestoneInfoRepresentation
      * @throws 403
      * @throws 404
      */
-    private function getMilestoneById(\PFUser $user, $id) {
-        try {
-            $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($user, $id);
-            if ($milestone) {
-                $project = $milestone->getProject();
-                $url_verification = new URLVerification();
-                $url_verification->userCanAccessProject($user, $project);
-                return $milestone;
-            }
-        } catch (Project_AccessProjectNotFoundException $exception) {
-            throw new RestException(404);
-        } catch (Project_AccessException $exception) {
-            throw new RestException(403, $exception->getMessage());
+    protected function getBacklogItems($id, $limit = 10, $offset = 0) {
+        $this->checkContentLimit($limit);
+
+        $milestone = $this->getMilestoneById($this->getCurrentUser(), $id);
+
+        $backlog_items = $this->getMilestoneBacklogItems($milestone);
+        $backlog_items_representation = array();
+
+        foreach ($backlog_items as $backlog_item) {
+            $backlog_items_representation[] = new BacklogItemRepresentation($backlog_item);
         }
-        throw new RestException(404);
+
+        return array_slice($backlog_items_representation, $offset, $limit);
+    }
+
+    /**
+     * @url OPTIONS {id}/backlog_items
+     * @param int $id ID of the planning
+     * @throws 403
+     * @throws 404
+     */
+    protected function optionsBacklogItems($id) {
+        $this->getMilestoneById($this->getCurrentUser(), $id);
+        header('Allow: GET, OPTIONS');
+    }
+
+
+    private function getMilestoneById(\PFUser $user, $id) {
+        $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($user, $id);
+
+        if (! $milestone) {
+            throw new RestException(404);
+        }
+
+        if (! $milestone->getArtifact()->userCanView()) {
+            throw new RestException(403);
+        }
+
+        return $milestone;
     }
 
     private function getCurrentUser() {
         return UserManager::instance()->getCurrentUser();
+    }
+
+    private function getMilestoneBacklogItems($milestone) {
+        $backlog_collection_factory = new \AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory(
+            new \AgileDashboard_BacklogItemDao(),
+            \Tracker_ArtifactFactory::instance(),
+            \Tracker_FormElementFactory::instance(),
+            $this->milestone_factory,
+            \PlanningFactory::build()
+        );
+
+        $strategy_factory = new \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
+            new \AgileDashboard_BacklogItemDao(),
+            \Tracker_ArtifactFactory::instance(),
+            \PlanningFactory::build()
+        );
+
+        $backlog_strategy = $strategy_factory->getSelfBacklogStrategy($milestone);
+
+        return $backlog_collection_factory->getAllCollection(
+            $this->getCurrentUser(),
+            $milestone,
+            $backlog_strategy,
+            ''
+        );
+    }
+
+    private function checkContentLimit($limit) {
+        if (! $this->limitValueIsAcceptable($limit)) {
+             throw new RestException(406, 'Maximum value for limit exceeded');
+        }
+    }
+
+    private function limitValueIsAcceptable($limit) {
+        return $limit <= self::MAX_LIMIT;
     }
 }
