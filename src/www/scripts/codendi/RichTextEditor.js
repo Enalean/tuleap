@@ -32,13 +32,7 @@ codendi.RTE = Class.create(
             }, options || { });
             
             this.rte = false;
-            if (this.options.toggle) {
-                var div = new Element('div');
-                var a = new Element('a', {href: "#"}).update("Toggle rich text formatting");
-                a.observe('click', this.toggle.bindAsEventListener(this));
-                div.appendChild(a);
-                Element.insert(this.element, {before: div});
-            }
+
             if (!this.options.toggle || this.options.default_in_html) {
                 this.init_rte();
             }
@@ -143,11 +137,13 @@ var Codendi_RTE_Light = Class.create({
         });
         this.rte = true;
     },
-    toggle: function(event) {
-        if (!this.rte) {
+    toggle: function(event, option) {
+        var optionValueIsHtmlOrOptionIsNotPassed = (undefined == option || option == 'html');
+
+        if (optionValueIsHtmlOrOptionIsNotPassed && !this.rte) {
             this.init_rte();
         } else {
-            if (!tinyMCE.get(this.element.id)) {
+            if (!tinyMCE.get(this.element.id) && optionValueIsHtmlOrOptionIsNotPassed) {
                 tinyMCE.execCommand("mceAddControl", false, this.element.id);
             } else {
                 tinyMCE.execCommand("mceRemoveControl", false, this.element.id);

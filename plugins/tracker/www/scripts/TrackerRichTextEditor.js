@@ -30,7 +30,7 @@ tuleap.trackers.followup.RTE = Class.create(codendi.RTE, {
         bold.appendChild(document.createTextNode("Format : "));
         div.appendChild(bold);
 
-        var selectbox = Builder.node('select', {'id' : 'rte_format_selectbox', 'name' : 'comment_format'+this.options.id});
+        var selectbox = Builder.node('select', {'id' : 'rte_format_selectbox'+this.options.id, 'name' : 'comment_format'+this.options.id});
         div.appendChild(selectbox);
 
         // Add an option that tells that the content format is text
@@ -59,23 +59,27 @@ tuleap.trackers.followup.RTE = Class.create(codendi.RTE, {
 
         if (options.htmlFormat == true) {
             this.switchButtonToHtml();
+        } else if ($('comment_format_html'+this.options.id).selected == true) {
+            this.init_rte();
         } else {
             $('comment_format_text'+this.options.id).selected = true;
         }
+
+        if (this.options.toggle) {
+           selectbox.observe('change', this.toggle.bindAsEventListener(this, selectbox));
+        }
     },
 
-    toggle: function ($super, event) {
-        this.switchButtonToHtml();
-        $super(event);
+    toggle: function ($super, event, selectbox) {
+        var option = selectbox.options[selectbox.selectedIndex].value;
+        $super(event, option);
     },
 
     /**
-     * Disable the option that tells that the content is text
      * Select the option that tells that the content is HTML
      */
     switchButtonToHtml: function () {
-        $('comment_format_text'+this.options.id).disabled = true;
-        $('comment_format_html'+this.options.id).selected  = true;
+        $('comment_format_html'+this.options.id).selected = true;
     }
 });
 
