@@ -28,6 +28,9 @@ Version 6.7 (Not released yet)
 	* Story #5280: Integrate Bootstrap to continue interface overhaul
 	* Story #5281: Switch css stylesheets to less format
 
+	== Developments ==
+	* Add framework for RESt API test automation (see tests/rest)
+
 Version 6.6 (Thursday, October 17th 2013)
 	== Enhancement ==
 	* Improvement of login interface. Adding support for multiple type of login sources (tuleap/openID).
