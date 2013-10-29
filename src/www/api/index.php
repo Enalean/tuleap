@@ -21,7 +21,7 @@ define('IS_SCRIPT', true);
 
 require_once 'pre.php';
 
-if (! session_issecure() && ! Config::get('DEBUG_MODE')) {
+if (! session_issecure() && ! Config::get('DEBUG_MODE') && ! isset($GLOBALS['DEBUG_MODE'])) {
     header("HTTP/1.0 403 Forbidden");
     $GLOBALS['Response']->sendJSON(array(
         'error' => 'The API is only accessible over HTTPS.'

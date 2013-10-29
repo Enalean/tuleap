@@ -1,9 +1,9 @@
-AUTOLOADED_PATH=plugins/agiledashboard/include plugins/cardwall/include plugins/fulltextsearch/include plugins/tracker/include plugins/git/include plugins/boomerang/include plugins/openid/include
+AUTOLOADED_PATH=plugins/agiledashboard/include plugins/cardwall/include plugins/fulltextsearch/include plugins/tracker/include plugins/git/include plugins/boomerang/include plugins/openid/include tests/lib
 LESS_PATH=plugins src
 
 
 default:
-	@echo "possible targets: 'doc' 'test' 'autoload' 'less'"
+	@echo "possible targets: 'doc' 'test' 'autoload' 'less' 'api_test' 'api_test_group'"
 
 doc:
 	$(MAKE) -C documentation all
@@ -30,3 +30,16 @@ less:
 		# Append the compiled css after the license comment \
 		plessc "$$path/$$filename.less" >> "$$path/$$filename.css"; \
 	done;
+
+api_test_setup:
+	cp tests/rest/bin/composer.json .
+	curl -sS https://getcomposer.org/installer | php
+	php composer.phar install
+	cp tests/rest/bin/integration_tests.inc.dist /etc/codendi/conf/integration_tests.inc
+	cp tests/rest/bin/dbtest.inc.dist /etc/codendi/conf/dbtest.inc
+
+api_test:
+	src/utils/php-launcher.sh vendor/phpunit/phpunit/phpunit.php --bootstrap tests/lib/rest/bootstrap.php tests/rest
+
+api_test_group:
+	src/utils/php-launcher.sh vendor/phpunit/phpunit/phpunit.php --group $g tests/rest

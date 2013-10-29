@@ -1,0 +1,29 @@
+<?php
+$db_config_file = dirname(__FILE__).'/dbtest.inc';
+
+// The location of your Tuleap sources
+$codendi_dir = '/usr/share/codendi';
+
+$sys_cookie_prefix = 'TLP';
+$codendi_cache_dir = '/tmp/run_tests';
+$sys_lang = 'en_US';
+$sys_supported_languages = 'en_US';
+$sys_themedefault = 'Tuleap';
+$sys_custom_themeroot = '/tmp/run_tests';
+$sys_themeroot = $codendi_dir . '/src/www/themes';
+$sys_custom_dir = '/tmp/run_tests';
+$sys_force_ssl  = 0;
+$sys_allow_anon = 1;
+$sys_custompluginsroot = $sys_custom_dir . "/plugins/";
+
+$sys_password_lifetime = 10000000000000;
+$sys_default_domain = 'localhost:8089';
+
+$sys_incdir = $codendi_dir . '/site-content';
+$sys_custom_incdir = '/tmp/run_tests';
+$sys_pluginsroot = $codendi_dir . '/plugins';
+
+$htmlpurifier_dir = '/usr/share/htmlpurifier';
+$jpgraph_dir = '/usr/share/jpgraph';
+
+$DEBUG_MODE = 1;
