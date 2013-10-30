@@ -7,6 +7,7 @@
 // 
 //
 //
+require_once 'browser.php';
 
 // Read the user preferences
 $theme = $current_user->getTheme();
