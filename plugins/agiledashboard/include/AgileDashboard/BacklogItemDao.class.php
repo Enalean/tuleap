@@ -34,11 +34,27 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
                     INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
+                    INNER JOIN plugin_agiledashboard_planning       planning   ON (planning.planning_tracker_id = parent_art.tracker_id)
+                    INNER JOIN plugin_agiledashboard_planning_backlog_tracker backlog ON (backlog.planning_id = planning.id AND child_art.tracker_id = backlog.tracker_id)
+                    INNER JOIN tracker_artifact_priority                       ON (tracker_artifact_priority.curr_id = child_art.id)
+                WHERE parent_art.id = $milestone_artifact_id
+                ORDER BY tracker_artifact_priority.rank ASC";
+
+        return $this->retrieve($sql);
+    }
+
+    public function getLinkedArtifacts($milestone_artifact_id) {
+        $milestone_artifact_id = $this->da->escapeInt($milestone_artifact_id);
+        $sql = "SELECT child_art.*
+                FROM tracker_artifact parent_art
+                    INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                    INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                    INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
+                    INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
                 WHERE parent_art.id = $milestone_artifact_id";
 
 
         return $this->retrieve($sql);
-
     }
 
     public function getTopBacklogArtifacts(array $milestone_tracker_ids) {

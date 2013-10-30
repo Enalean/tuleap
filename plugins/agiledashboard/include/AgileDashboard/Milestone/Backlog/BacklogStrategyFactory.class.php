@@ -93,7 +93,7 @@ class AgileDashboard_Milestone_Backlog_BacklogStrategyFactory {
         }
 
         return $this->dao
-                ->getBacklogArtifacts($milestone->getArtifactId())
+                ->getLinkedArtifacts($milestone->getArtifactId())
                 ->instanciateWith(array($this->artifact_factory, 'getInstanceFromRow'));
     }
 }
