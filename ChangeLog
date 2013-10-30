@@ -25,12 +25,13 @@ Version 6.7 (Not released yet)
 	* Fix request #5450: login page customisation broken
 
 	== Enhancement ==
-        * Contribution: Autoload all core
+    * Contribution: Autoload all core
 	* Story #5280: Integrate Bootstrap to continue interface overhaul
 	* Story #5281: Switch css stylesheets to less format
 
 	== Developments ==
 	* Add framework for RESt API test automation (see tests/rest)
+	* Now stylesheets are written in [LESS](http://lesscss.org/) format.  Please see [Development environment/How to deal with LESS files](https://tuleap.net/wiki/index.php?pagename=Development%20environment%2FHow%20to%20deal%20with%20LESS%20files&group_id=101) to update your developpement environment. tl;dr: `make less` or `make less-dev`.
 
 Version 6.6 (Thursday, October 17th 2013)
 	== Enhancement ==
