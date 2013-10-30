@@ -135,13 +135,38 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
         $f = new Tracker_FormElement_Field_TextTestVersion();
         $f->setReturnValue('isRequired', false);
         $f->setReturnReference('getRuleString', $rule_string);
-        
+
+        $value_1 = array(
+            'content' => 'This is a text',
+            'format'  => 'text'
+        );
+
+        $value_2 = array(
+            'content' => '2009-08-45',
+            'format'  => 'text'
+        );
+
+        $value_3 = array(
+            'content' => 25,
+            'format'  => 'text'
+        );
+
+        $value_4 = array(
+            'content' => '',
+            'format'  => 'text'
+        );
+
+        $value_5 = array(
+            'content' => null,
+            'format'  => 'text'
+        );
+
         $a = new MockTracker_Artifact();
-        $f->isValid($a, 'This is a text');
-        $f->isValid($a, '2009-08-45');
-        $f->isValid($a, 25);
-        $f->isValid($a, '');
-        $f->isValid($a, null);
+        $f->isValid($a, $value_1);
+        $f->isValid($a, $value_2);
+        $f->isValid($a, $value_3);
+        $f->isValid($a, $value_4);
+        $f->isValid($a, $value_5);
     }
     
     function testSoapAvailableValues() {

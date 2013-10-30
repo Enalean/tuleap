@@ -30,7 +30,11 @@ tuleap.trackers.followup.RTE = Class.create(codendi.RTE, {
         bold.appendChild(document.createTextNode("Format : "));
         div.appendChild(bold);
 
-        var selectbox = Builder.node('select', {'id' : 'rte_format_selectbox'+this.options.id, 'name' : 'comment_format'+this.options.id});
+        if (undefined == this.options.name) {
+            this.options.name = 'comment_format'+this.options.id;
+        }
+
+        var selectbox = Builder.node('select', {'id' : 'rte_format_selectbox'+this.options.id, 'name' : this.options.name});
         div.appendChild(selectbox);
 
         // Add an option that tells that the content format is text

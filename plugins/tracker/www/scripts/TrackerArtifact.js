@@ -109,8 +109,10 @@ document.observe('dom:loaded', function () {
     });
 
     $$('.tracker_artifact_field  textarea').each(function (element) {
-        var id = element.id;
-        new tuleap.trackers.followup.RTE(element, {toggle: true, default_in_html: false, id : id, htmlFormat: false});
+        var html_id = element.id;
+        var id = html_id.match(/_(\d+)$/)[1];
+        var name = 'artifact['+ id +'][format]';
+        new tuleap.trackers.followup.RTE(element, {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: false});
     });
 
     $$('.tracker_artifact_followup_comment_controls_edit').each(function (edit) {
@@ -133,7 +135,8 @@ document.observe('dom:loaded', function () {
                     var rteSpan    = new Element('span', { style: 'text-align: left;'}).update(textarea);
                     var edit_panel = new Element('div', { style: 'text-align: right;'}).update(rteSpan);
                     comment_panel.insert({before: edit_panel});
-                    new tuleap.trackers.followup.RTE(textarea, {toggle: true, default_in_html: false, id: id, htmlFormat: htmlFormat});
+                    var name = 'comment_format'+id;
+                    new tuleap.trackers.followup.RTE(textarea, {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat});
 
                     var nb_rows_displayed = 5;
                     var nb_rows_content   = textarea.value.split(/\n/).length;

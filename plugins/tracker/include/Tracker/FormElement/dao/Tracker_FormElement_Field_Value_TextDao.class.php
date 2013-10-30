@@ -28,8 +28,21 @@ class Tracker_FormElement_Field_Value_TextDao extends Tracker_FormElement_Field_
     public function create($changeset_value_id, $value) {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $value              = $this->da->quoteSmart($value);
+
         $sql = "INSERT INTO $this->table_name(changeset_value_id, value)
                 VALUES ($changeset_value_id, $value)";
+
+        return $this->updateAndGetLastId($sql);
+    }
+
+    public function createWithBodyFormat($changeset_value_id, $value, $body_format) {
+        $changeset_value_id = $this->da->escapeInt($changeset_value_id);
+        $value              = $this->da->quoteSmart($value);
+        $body_format        = $this->da->quoteSmart($body_format);
+
+        $sql = "INSERT INTO $this->table_name(changeset_value_id, value, body_format)
+                VALUES ($changeset_value_id, $value, $body_format)";
+
         return $this->updateAndGetLastId($sql);
     }
 

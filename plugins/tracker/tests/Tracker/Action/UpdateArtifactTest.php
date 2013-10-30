@@ -81,7 +81,11 @@ class Tracker_Artifact_Update_BaseTest extends TuleapTestCase {
 
         $this->event_manager = mock('EventManager');
 
-        $this->action = new Tracker_Action_UpdateArtifact($this->task, $this->formelement_factory, $this->event_manager);
+        $this->action = new Tracker_Action_UpdateArtifact(
+            $this->task,
+            $this->formelement_factory,
+            $this->event_manager
+        );
     }
 
     protected function setUpAjaxRequestHeaders() {
@@ -282,7 +286,11 @@ class Tracker_Artifact_RedirectUrlTest extends Tracker_Artifact_Update_BaseTest 
 
     private function getRedirectUrlFor($request_data) {
         $request  = new Codendi_Request($request_data);
-        $action   = new Tracker_Artifact_RedirectUrlTestVersion($this->task, $this->formelement_factory, $this->event_manager);
+        $action   = new Tracker_Artifact_RedirectUrlTestVersion(
+            $this->task,
+            $this->formelement_factory,
+            $this->event_manager
+        );
         return $action->getRedirectUrlAfterArtifactUpdate($request);
 
     }

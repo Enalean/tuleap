@@ -130,7 +130,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
     protected function getDao() {
         return new Tracker_FormElement_Field_TextDao();
     }
-    
+
     /**
      * Return true if this field is the semantic title field of the tracker, 
      * false otherwise if not or if there is no title field defined.
@@ -155,7 +155,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $hp    = Codendi_HTMLPurifier::instance();
         $html .= '<textarea id = field_'.$this->id.'
-                            name="artifact['. $this->id .']"
+                            name="artifact['. $this->id .'][content]"
                             rows="'. $this->getProperty('rows') .'" 
                             cols="'. $this->getProperty('cols') .'" 
                             '. ($this->isRequired() ? 'required' : '') .' 
@@ -181,7 +181,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         } else {
             $hp = Codendi_HTMLPurifier::instance();
             $html .= '<textarea id = field_'.$this->id.'
-                                name="artifact['. $this->id .']"
+                                name="artifact['. $this->id .'][content]"
                                 rows="'. $this->getProperty('rows') .'" 
                                 cols="'. $this->getProperty('cols') .'">';
             $html .= $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML);
@@ -210,7 +210,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         }
         $hp = Codendi_HTMLPurifier::instance();
         $html .= '<textarea id = field_'.$this->id.'
-                            name="artifact['. $this->id .']"
+                            name="artifact['. $this->id .'][content]"
                             rows="'. $this->getProperty('rows') .'" 
                             cols="'. $this->getProperty('cols') .'" 
                             '. ($this->isRequired() ? 'required' : '') .' 
@@ -397,8 +397,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return bool true if the value is considered ok
      */
     protected function validate(Tracker_Artifact $artifact, $value) {
-        $r = $this->getRuleString();
-        if (!($is_valid = $r->isValid($value))) {
+        $rule = $this->getRuleString();
+        if (!($is_valid = $rule->isValid($value['content']))) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_text_value', array($this->getLabel())));
         }
         return $is_valid;
@@ -449,8 +449,22 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return int or array of int
      */
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
-        parent::saveValue($artifact, $changeset_value_id, $value, $previous_changesetvalue);
-        ReferenceManager::instance()->extractCrossRef($value, $artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupID(), UserManager::instance()->getCurrentUser()->getId(), $this->getTracker()->getItemName());
+        $content     = $value['content'];
+        $body_format = $value['format'];
+
+        $this->getValueDao()->createWithBodyFormat($changeset_value_id, $content, $body_format);
+        $this->extractCrossRefs($artifact, $content);
+    }
+
+    protected function extractCrossRefs($artifact, $content) {
+        ReferenceManager::instance()->extractCrossRef(
+            $content,
+            $artifact->getId(),
+            Tracker_Artifact::REFERENCE_NATURE,
+            $this->getTracker()->getGroupID(),
+            UserManager::instance()->getCurrentUser()->getId(),
+            $this->getTracker()->getItemName()
+        );
     }
 }
 ?>

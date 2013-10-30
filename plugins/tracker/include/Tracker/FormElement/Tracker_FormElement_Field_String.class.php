@@ -218,5 +218,10 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
     protected function getRuleNoCr() {
         return new Rule_NoCr();
     }
+
+    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+        $this->getValueDao()->create($changeset_value_id, $value);
+        $this->extractCrossRefs($artifact, $value);
+    }
 }
 ?>

@@ -605,7 +605,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $GLOBALS['Response']->redirect('?aid='. $this->id);
                 break;
             case 'artifact-update':
-                $action = new Tracker_Action_UpdateArtifact($this, $this->getFormElementFactory(), $this->getEventManager());
+                $action = new Tracker_Action_UpdateArtifact(
+                    $this,
+                    $this->getFormElementFactory(),
+                    $this->getEventManager()
+                );
                 $action->process($layout, $request, $current_user);
                 break;
             case 'unassociate-artifact-to':

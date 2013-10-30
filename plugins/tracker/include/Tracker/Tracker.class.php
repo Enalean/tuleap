@@ -577,7 +577,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $this,
                     $this->getTrackerArtifactFactory(),
                     $this->getTrackerFactory(),
-                    $this->getFormElementFactory()
+                    $this->getFormElementFactory(),
+                    new Tracker_Action_FieldDatasExtractor()
                 );
                 $action->process($layout, $request, $current_user);
                 break;
