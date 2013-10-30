@@ -23,9 +23,10 @@ Version 6.7 (Not released yet)
 	* Fix request #5406: Unable to install Tuleap on CentOs 6
 	* Fix javascript typo to not make IE crying
 	* Fix request #5450: login page customisation broken
+	* Fix plugin autoload: Autoload of some plugins fails because of mix between include paths
 
 	== Enhancement ==
-    * Contribution: Autoload all core
+        * Contribution: Autoload all core
 	* Story #5280: Integrate Bootstrap to continue interface overhaul
 	* Story #5281: Switch css stylesheets to less format
 
