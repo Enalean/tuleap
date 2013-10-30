@@ -10,6 +10,7 @@ require_once('vars.php');
 require_once('www/news/news_utils.php');
 require_once('trove.php');
 require_once('www/project/admin/permissions.php');
+require_once('common/wiki/lib/Wiki.class.php');
 
 $hp =& Codendi_HTMLPurifier::instance();
 
