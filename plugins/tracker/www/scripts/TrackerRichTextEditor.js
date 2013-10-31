@@ -17,9 +17,9 @@
 
 var tuleap                   = tuleap || {};
 tuleap.trackers              = tuleap.trackers || {};
-tuleap.trackers.followup     = tuleap.trackers.followup || {};
+tuleap.trackers.textarea     = tuleap.trackers.textarea || {};
 
-tuleap.trackers.followup.RTE = Class.create(codendi.RTE, {
+tuleap.trackers.textarea.RTE = Class.create(codendi.RTE, {
     initialize: function ($super, element, options) {
         options = Object.extend({toolbar: 'tuleap'}, options || { });
         this.options = Object.extend({htmlFormat : false, id : 0}, options || { });
@@ -94,10 +94,10 @@ tuleap.trackers.followup.RTE = Class.create(codendi.RTE, {
 document.observe('dom:loaded', function () {
     var newFollowup = $('tracker_followup_comment_new');
     if (newFollowup) {
-        new tuleap.trackers.followup.RTE(newFollowup, {toggle: true, default_in_html: false, id : 'new'});
+        new tuleap.trackers.textarea.RTE(newFollowup, {toggle: true, default_in_html: false, id : 'new'});
     }
     var massChangeFollowup = $('artifact_masschange_followup_comment');
     if (massChangeFollowup) {
-        new tuleap.trackers.followup.RTE(massChangeFollowup, {toggle: true, default_in_html: false, id: 'mass_change'});
+        new tuleap.trackers.textarea.RTE(massChangeFollowup, {toggle: true, default_in_html: false, id: 'mass_change'});
     }
 });

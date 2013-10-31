@@ -118,7 +118,7 @@ document.observe('dom:loaded', function () {
             htmlFormat = true;
         }
 
-        new tuleap.trackers.followup.RTE(element, {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat});
+        new tuleap.trackers.textarea.RTE(element, {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat});
     });
 
     $$('.tracker_artifact_followup_comment_controls_edit').each(function (edit) {
@@ -142,7 +142,7 @@ document.observe('dom:loaded', function () {
                     var edit_panel = new Element('div', { style: 'text-align: right;'}).update(rteSpan);
                     comment_panel.insert({before: edit_panel});
                     var name = 'comment_format'+id;
-                    new tuleap.trackers.followup.RTE(textarea, {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat});
+                    new tuleap.trackers.textarea.RTE(textarea, {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat});
 
                     var nb_rows_displayed = 5;
                     var nb_rows_content   = textarea.value.split(/\n/).length;
