@@ -356,11 +356,12 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return string The html code to display the field value in tooltip
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        $hp = Codendi_HTMLPurifier::instance();
         $html = '';
+
         if ($value) {
-            $html .= nl2br($hp->purify($value->getText(), CODENDI_PURIFIER_CONVERT_HTML));
+            $html .= $value->getValue();
         }
+
         return $html;
     }
     
