@@ -67,12 +67,21 @@ codendi.RTE = Class.create(
             } else {
                 var toolbar = 'Full'
             }
+
             this.rte = CKEDITOR.replace(this.element.id, {toolbar: toolbar});
+
             CKEDITOR.on('instanceCreated', function (evt) {
                 if (evt.editor === this.rte) {
                     this.options.onLoad();
                 }
             }.bind(this));
+
+            CKEDITOR.on('instanceReady', function (evt) {
+                if (evt.editor === this.rte) {
+                    evt.editor.resize(this.element.getWidth(), this.element.getHeight(), true);
+                }
+            }.bind(this));
+
         },
         toggle: function (evt, option) {
             if (option == 'html' && !this.rte) {

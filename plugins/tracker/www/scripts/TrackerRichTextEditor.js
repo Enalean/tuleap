@@ -25,17 +25,21 @@ tuleap.trackers.followup.RTE = Class.create(codendi.RTE, {
         this.options = Object.extend({htmlFormat : false, id : 0}, options || { });
         $super(element, options);
         // This div contains comment format selection buttons
-        var div = Builder.node('div', {'class' : 'rte_format'});
-        var bold = document.createElement("b");
-        bold.appendChild(document.createTextNode("Format : "));
-        div.appendChild(bold);
+        var div = Builder.node('div');
+        div.style.width = this.element.getWidth()+'px';
+        var select_container = Builder.node('div', {'class' : 'rte_format'});
+        select_container.appendChild(document.createTextNode("Format : "));
+        div.appendChild(select_container);
+
+        var div_clear = Builder.node('div', {'class' : 'rte_clear'});
+        div.appendChild(div_clear)
 
         if (undefined == this.options.name) {
             this.options.name = 'comment_format'+this.options.id;
         }
 
-        var selectbox = Builder.node('select', {'id' : 'rte_format_selectbox'+this.options.id, 'name' : this.options.name});
-        div.appendChild(selectbox);
+        var selectbox = Builder.node('select', {'id' : 'rte_format_selectbox'+this.options.id, 'name' : this.options.name, 'class' : 'input-small'});
+        select_container.appendChild(selectbox);
 
         // Add an option that tells that the content format is text
         // The value is defined in Artifact class.
@@ -57,9 +61,7 @@ tuleap.trackers.followup.RTE = Class.create(codendi.RTE, {
 
         Element.insert(this.element, {before: div});
 
-        // This div is used to clear the CSS of the pervious div
-        var div_clear = Builder.node('div', {'class' : 'rte_clear'});
-        Element.insert(this.element, {before: div_clear});
+        div.appendChild(this.element);
 
         if (options.htmlFormat == true) {
             this.switchButtonToHtml();
