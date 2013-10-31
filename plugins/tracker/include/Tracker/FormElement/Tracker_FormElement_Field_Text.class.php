@@ -200,22 +200,30 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return string
      */
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        $html = '';        
+        $html    = '';
+        $format  = $value->getFormat();
+        $content = '';
+
         if (is_array($submitted_values[0])) {
-            $value=$submitted_values[0][$this->getId()];
+            $content = $submitted_values[0][$this->getId()];
         } else {
             if ($value != null) {
-                $value = $value->getText();
+                $content = $value->getText();
             }
         }
         $hp = Codendi_HTMLPurifier::instance();
+
+        $html .= '<input type="hidden"
+                         id="artifact['. $this->id .']_body_format"
+                         name="artifact['. $this->id .']_body_format"
+                         value="'.$format.'" />';
         $html .= '<textarea id = field_'.$this->id.'
                             name="artifact['. $this->id .'][content]"
                             rows="'. $this->getProperty('rows') .'" 
                             cols="'. $this->getProperty('cols') .'" 
                             '. ($this->isRequired() ? 'required' : '') .' 
                             >';
-        $html .= $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML);
+        $html .= $hp->purify($content, CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</textarea>';
         return $html;
     }
@@ -254,9 +262,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        $value = $value ? $value->getText() : '';
-        $hp = Codendi_HTMLPurifier::instance();
-        return $hp->purify($value, CODENDI_PURIFIER_BASIC, $this->getTracker()->getGroupId());
+        $value = $value ? $value->getValue() : '';
+        return $value;
     }
     
     /**
@@ -421,7 +428,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         
         $changeset_value = null;
         if ($row = $this->getValueDao()->searchById($value_id, $this->id)->getRow()) {
-            $changeset_value = new Tracker_Artifact_ChangesetValue_Text($value_id, $this, $has_changed, $row['value']);
+            $changeset_value = new Tracker_Artifact_ChangesetValue_Text($value_id, $this, $has_changed, $row['value'], $row['body_format']);
         }
         return $changeset_value;
     }

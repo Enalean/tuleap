@@ -112,7 +112,13 @@ document.observe('dom:loaded', function () {
         var html_id = element.id;
         var id = html_id.match(/_(\d+)$/)[1];
         var name = 'artifact['+ id +'][format]';
-        new tuleap.trackers.followup.RTE(element, {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: false});
+        var htmlFormat = false;
+
+        if ($('artifact['+id+']_body_format').value == 'html') {
+            htmlFormat = true;
+        }
+
+        new tuleap.trackers.followup.RTE(element, {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat});
     });
 
     $$('.tracker_artifact_followup_comment_controls_edit').each(function (edit) {

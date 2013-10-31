@@ -59,7 +59,7 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
     function testGetChangesetValue() {
         $value_dao = new MockTracker_FormElement_Field_Value_TextDao();
         $dar = new MockDataAccessResult();
-        $dar->setReturnValueAt(0, 'getRow', array('id' => 123, 'field_id' => 1, 'value' => 'My Text'));
+        $dar->setReturnValueAt(0, 'getRow', array('id' => 123, 'field_id' => 1, 'value' => 'My Text', 'body_format' => 'text'));
         $dar->setReturnValue('getRow', false);
         $value_dao->setReturnReference('searchById', $dar);
         
