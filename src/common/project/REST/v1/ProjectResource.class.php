@@ -32,6 +32,8 @@ use \Tuleap\Project\REST\ProjectInfoRepresentation;
  */
 class ProjectResource {
 
+    const ROUTE = 'projects';
+
     /**
      * Method to handle GET /projects/:id
      *

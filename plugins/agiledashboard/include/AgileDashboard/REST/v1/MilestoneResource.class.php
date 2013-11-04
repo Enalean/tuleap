@@ -19,6 +19,7 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use \Tuleap\REST\Header;
 use \Luracast\Restler\RestException;
 use \PlanningFactory;
 use \Tracker_ArtifactFactory;
@@ -29,6 +30,7 @@ use \Project_AccessProjectNotFoundException;
 use \Project_AccessException;
 use \UserManager;
 use \URLVerification;
+use \Planning_Milestone;
 
 /**
  * Wrapper for milestone related REST methods
@@ -53,7 +55,7 @@ class MilestoneResource {
      * @url OPTIONS
      */
     public function options() {
-        header('Allow: GET, OPTIONS');
+        header(Header::getAllow(array(Header::OPTIONS)));
     }
 
     /**
@@ -70,11 +72,8 @@ class MilestoneResource {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
         $date      = $milestone->getLastModifiedDate();
-        header('Last-Modified: ' . date('c', $date));
-        return new MilestoneRepresentation(
-            $milestone,
-            $this->milestone_factory->getSubMilestones($user, $milestone)
-        );
+        header(Header::getLastModified($date));
+        return new MilestoneRepresentation($milestone);
     }
 
     /**
@@ -89,8 +88,42 @@ class MilestoneResource {
     protected function optionsId($id) {
         $milestone = $this->getMilestoneById($this->getCurrentUser(), $id);
         $date      = $milestone->getLastModifiedDate();
-        header('Allow: GET, OPTIONS');
-        header('Last-Modified: ' . date('c', $date));
+        header(Header::getAllow(array(Header::GET, Header::OPTIONS)));
+        header(Header::getLastModified($date));
+    }
+
+    /**
+     * @url OPTIONS {id}/milestones
+     * @param int $id ID of the milestone
+     * @throws 403
+     * @throws 404
+     */
+    protected function optionsSubmilestones($id) {
+        $this->getMilestoneById($this->getCurrentUser(), $id);
+        header(Header::getAllow(array(Header::GET, Header::OPTIONS)));
+    }
+
+    /**
+     * Returns all sub milestones of a given one
+     *
+     * A sub milestone is a decomposition of a milestone (for instance a Release
+     * has Sprints as submilestones)
+     *
+     * @url GET {id}/milestones
+     * @param int $id ID of the milestone
+     * @throws 403
+     * @throws 404
+     */
+    protected function getSubmilestones($id) {
+        $user      = $this->getCurrentUser();
+        $milestone = $this->getMilestoneById($user, $id);
+
+        return array_map(
+            function (Planning_Milestone $milestone) {
+                return new MilestoneRepresentation($milestone);
+            },
+            $this->milestone_factory->getSubMilestones($user, $milestone)
+        );
     }
 
     /**
@@ -127,7 +160,7 @@ class MilestoneResource {
      */
     protected function optionsBacklogItems($id) {
         $this->getMilestoneById($this->getCurrentUser(), $id);
-        header('Allow: GET, OPTIONS');
+        header(Header::getAllow(array(Header::GET, Header::OPTIONS)));
     }
 
 
