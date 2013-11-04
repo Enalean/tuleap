@@ -27,6 +27,9 @@ use \Project_AccessProjectNotFoundException;
 use \Project_AccessException;
 use \URLVerification;
 use \UserManager;
+use \PFUser;
+use \Tracker_REST_Artifact_ArtifactRepresentationBuilder;
+use \Tracker_FormElementFactory;
 
 class ArtifactsResource {
     /** @var Tracker_ArtifactFactory */
@@ -37,18 +40,31 @@ class ArtifactsResource {
     }
 
     /**
+     * Return the content of an artifact
+     *
+     * In addition of the artifact representation, it sets Last-Modified header
+     * with the last update date of the element
+     *
      * @url GET {id}
-     * @param Integer $id Id of the artifact
+     * @param int $id Id of the artifact
      */
     protected function getId($id) {
+        $user     = UserManager::instance()->getCurrentUser();
+        $artifact = $this->getArtifactById($user, $id);
+        $builder  = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
+            Tracker_FormElementFactory::instance()
+        );
 
+        header(Header::getLastModified($artifact->getLastUpdateDate()));
+        return $builder->getArtifactRepresentation($user, $artifact);
     }
 
     /**
      * @url OPTIONS {id}
      */
     protected function optionsId($id) {
-        $artifact = $this->getArtifactById($id);
+        $user     = UserManager::instance()->getCurrentUser();
+        $artifact = $this->getArtifactById($user, $id);
         header(Header::getLastModified($artifact->getLastUpdateDate()));
         header(Header::getAllow(array(Header::GET, Header::OPTIONS)));
     }
@@ -57,9 +73,8 @@ class ArtifactsResource {
      * @param Integer $id
      * @return Tracker_Artifact
      */
-    private function getArtifactById($id) {
+    private function getArtifactById(PFUser $user, $id) {
         try {
-            $user = UserManager::instance()->getCurrentUser();
             $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
             if ($artifact) {
                 $url_verification = new URLVerification();

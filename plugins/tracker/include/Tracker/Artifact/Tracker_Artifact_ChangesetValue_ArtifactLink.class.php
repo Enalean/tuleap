@@ -140,7 +140,19 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     public function getSoapValue() {
         return $this->encapsulateRawSoapValue(implode(', ', $this->getArtifactIds()));
     }
-    
+
+    public function getRESTValue() {
+        $values = array();
+        foreach ($this->getArtifactIds() as $id) {
+            $values[] = new Tracker_REST_Artifact_ArtifactReferenceRepresentation($id);
+        }
+        return new Tracker_REST_Artifact_ArtifactFieldValueArtifactLinksRepresentation(
+            $this->field->getId(),
+            $this->field->getLabel(),
+            $values
+        );
+    }
+
     /**
      * Returns the value of this changeset value
      *

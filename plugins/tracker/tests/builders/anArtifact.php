@@ -38,6 +38,8 @@ class Test_Artifact_Builder {
     private $ancestors;
     private $title;
     private $parent_without_permission_checking;
+    private $submitted_by;
+    private $submitted_on;
 
     public function withId($id) {
         $this->id = $id;
@@ -51,6 +53,16 @@ class Test_Artifact_Builder {
 
     public function withTrackerId($tracker_id) {
         $this->tracker_id = $tracker_id;
+        return $this;
+    }
+
+    public function withSubmittedBy($submitted_by) {
+        $this->submitted_by = $submitted_by;
+        return $this;
+    }
+
+    public function withSubmittedOn($submitted_on) {
+        $this->submitted_on = $submitted_on;
         return $this;
     }
 
@@ -98,7 +110,7 @@ class Test_Artifact_Builder {
     }
 
     public function build() {
-        $artifact = new Tracker_Artifact($this->id, $this->tracker_id, null, null, null);
+        $artifact = new Tracker_Artifact($this->id, $this->tracker_id, $this->submitted_by, $this->submitted_on, null);
         if ($this->tracker) {
             $artifact->setTracker($this->tracker);
         }

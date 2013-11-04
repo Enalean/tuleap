@@ -154,7 +154,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     /**
      * Get the files infos
      *
-     * @return array of Tracker_FileInfo the files
+     * @return Tracker_FileInfo[]
      */
     public function getFiles() {
         return $this->files;
@@ -173,7 +173,19 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
         }
         return array('file_info' => $soap_array);
     }
-    
+
+    public function getRESTValue() {
+        $values = array();
+        foreach ($this->getFiles() as $file_info) {
+            $values[] = $file_info->getRESTValue();
+        }
+        return new Tracker_REST_Artifact_ArtifactFieldValueFileRepresentation(
+            $this->field->getId(),
+            $this->field->getLabel(),
+            $values
+        );
+    }
+
     /**
      * Returns the value of this changeset value
      *

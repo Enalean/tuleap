@@ -62,6 +62,10 @@ class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_Changeset
     public function getSoapValue() {
         return $this->encapsulateRawSoapValue($this->getInteger());
     }
+
+    public function getRESTValue() {
+        return $this->getSimpleRESTRepresentation($this->getInteger());
+    }
 }
 
 ?>

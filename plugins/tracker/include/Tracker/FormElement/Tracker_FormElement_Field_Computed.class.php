@@ -155,6 +155,14 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
         return null;
     }
 
+    public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        return new Tracker_REST_Artifact_ArtifactFieldValueRepresentation(
+            $this->getId(),
+            $this->getLabel(),
+            $this->getComputedValue($user, $changeset->getArtifact())
+        );
+    }
+
     /**
      * Display the html field in the admin ui
      * @return string html

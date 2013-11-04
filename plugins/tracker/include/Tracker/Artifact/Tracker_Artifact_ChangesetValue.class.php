@@ -87,7 +87,14 @@ abstract class Tracker_Artifact_ChangesetValue {
      * @return string The value of this artifact changeset value for Soap API
      */
     public abstract function getSoapValue();
-    
+
+    /**
+     * Return the REST value of this changeset value
+     *
+     * @return Tracker_REST_Artifact_ArtifactFieldValueRepresentation
+     */
+    public abstract function getRESTValue();
+
     /**
      * Returns the Json value of this changeset value
      *
@@ -109,6 +116,14 @@ abstract class Tracker_Artifact_ChangesetValue {
      */
     protected function encapsulateRawSoapValue($value) {
         return array('value' => (string)$value);
+    }
+
+    protected function getSimpleRESTRepresentation($value) {
+        return new Tracker_REST_Artifact_ArtifactFieldValueRepresentation(
+            $this->field->getId(),
+            $this->field->getLabel(),
+            $value
+        );
     }
 }
 ?>

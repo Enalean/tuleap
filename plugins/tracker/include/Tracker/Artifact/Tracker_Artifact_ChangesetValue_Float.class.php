@@ -66,6 +66,10 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
         return $this->encapsulateRawSoapValue($this->getFloat());
     }
 
+    public function getRESTValue() {
+        return $this->getSimpleRESTRepresentation($this->getFloat());
+    }
+
     /**
      * Get the Json value
      *

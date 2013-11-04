@@ -59,7 +59,11 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     public function getSoapValue() {
         return $this->encapsulateRawSoapValue($this->getText());
     }
-    
+
+    public function getRESTValue() {
+        return $this->getSimpleRESTRepresentation($this->getText());
+    }
+
     /**
      * Get the value (string)
      *
