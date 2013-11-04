@@ -20,15 +20,57 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
+use \Tuleap\REST\Header;
 use \Luracast\Restler\RestException;
+use \Tracker_ArtifactFactory;
+use \Project_AccessProjectNotFoundException;
+use \Project_AccessException;
+use \URLVerification;
+use \UserManager;
 
 class ArtifactsResource {
+    /** @var Tracker_ArtifactFactory */
+    private $artifact_factory;
+
+    public function __construct() {
+        $this->artifact_factory = Tracker_ArtifactFactory::instance();
+    }
 
     /**
      * @url GET {id}
      * @param Integer $id Id of the artifact
      */
-    public function getId($id) {
+    protected function getId($id) {
 
+    }
+
+    /**
+     * @url OPTIONS {id}
+     */
+    protected function optionsId($id) {
+        $artifact = $this->getArtifactById($id);
+        header(Header::getLastModified($artifact->getLastUpdateDate()));
+        header(Header::getAllow(array(Header::GET, Header::OPTIONS)));
+    }
+
+    /**
+     * @param Integer $id
+     * @return Tracker_Artifact
+     */
+    private function getArtifactById($id) {
+        try {
+            $user = UserManager::instance()->getCurrentUser();
+            $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
+            if ($artifact) {
+                $url_verification = new URLVerification();
+                $url_verification->userCanAccessProject($user, $artifact->getTracker()->getProject());
+                return $artifact;
+            }
+            throw new RestException(404);
+        } catch (Project_AccessProjectNotFoundException $exception) {
+            throw new RestException(404);
+        } catch (Project_AccessException $exception) {
+            throw new RestException(403, $exception->getMessage());
+        }
     }
 }

@@ -1105,6 +1105,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
+     * Returns the last modified date of the artifact
+     *
+     * @return Integer The timestamp (-1 if no date)
+     */
+    public function getLastUpdateDate() {
+        $last_changeset = $this->getLastChangeset();
+        if ($last_changeset) {
+            return $last_changeset->getSubmittedOn();
+        }
+        return -1;
+    }
+
+    /**
      * Returns the latest changeset of this artifact
      *
      * @return Tracker_Artifact_Changeset The latest changeset of this artifact, or null if no latest changeset
