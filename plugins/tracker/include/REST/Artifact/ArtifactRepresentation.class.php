@@ -45,19 +45,23 @@ class Tracker_REST_Artifact_ArtifactRepresentation {
     /** @var string URL to access the artifact with the Web UI */
     public $html_url;
 
+    /** @var string URI to access the artifact history */
+    public $changesets_uri;
+
     /** @var array Field values */
     public $values = array();
 
     public function __construct(Tracker_Artifact $artifact, array $values) {
-        $this->id           = $artifact->getId();
-        $this->uri          = self::ROUTE . '/' . $artifact->getId();
-        $this->tracker_id   = $artifact->getTrackerId();
-        $this->tracker_uri  = Tracker_REST_TrackerRepresentation::ROUTE . '/' . $artifact->getTrackerId();
-        $this->project_id   = $artifact->getTracker()->getProject()->getID();
-        $this->submitted_by = $artifact->getSubmittedBy();
-        $this->submitted_on = date('c', $artifact->getSubmittedOn());
-        $this->html_url     = $artifact->getUri();
-        $this->values       = $values;
+        $this->id             = $artifact->getId();
+        $this->uri            = self::ROUTE . '/' . $artifact->getId();
+        $this->tracker_id     = $artifact->getTrackerId();
+        $this->tracker_uri    = Tracker_REST_TrackerRepresentation::ROUTE . '/' . $artifact->getTrackerId();
+        $this->project_id     = $artifact->getTracker()->getProject()->getID();
+        $this->submitted_by   = $artifact->getSubmittedBy();
+        $this->submitted_on   = date('c', $artifact->getSubmittedOn());
+        $this->html_url       = $artifact->getUri();
+        $this->changesets_uri = self::ROUTE . '/' .  $this->id . '/'. Tracker_REST_ChangesetRepresentation::ROUTE;
+        $this->values         = $values;
     }
 }
 

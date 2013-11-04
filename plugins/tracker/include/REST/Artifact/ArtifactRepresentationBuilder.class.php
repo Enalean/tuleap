@@ -26,6 +26,13 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
         $this->formelement_factory = $formelement_factory;
     }
 
+    /**
+     * Return an artifact snapshot representation
+     *
+     * @param PFUser $user
+     * @param Tracker_Artifact $artifact
+     * @return Tracker_REST_Artifact_ArtifactRepresentation
+     */
     public function getArtifactRepresentation(PFUser $user, Tracker_Artifact $artifact) {
         return new Tracker_REST_Artifact_ArtifactRepresentation(
             $artifact,
@@ -35,11 +42,26 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
 
     private function getFieldsValues(PFUser $user, Tracker_Artifact $artifact) {
         $changeset = $artifact->getLastChangeset();
+        return $this->mapAndFilter(
+            $this->formelement_factory->getUsedFieldsForSoap($artifact->getTracker()),
+            $this->getFieldsValuesFilter($user, $changeset)
+        );
+    }
+
+    /**
+     * Given a collection and a closure, apply on all elements, filter out the
+     * empty results and normalize the array
+     *
+     * @param array $collection
+     * @param Closure $function
+     * @return array
+     */
+    private function mapAndFilter(array $collection, Closure $function) {
         return array_values(
             array_filter(
                 array_map(
-                    $this->getFieldsValuesFilter($user, $changeset),
-                    $this->formelement_factory->getUsedFieldsForSoap($artifact->getTracker())
+                    $function,
+                    $collection
                 )
             )
         );
@@ -52,5 +74,22 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
             }
             return false;
         };
+    }
+
+    /**
+     * Returns REST representation of artifact history
+     *
+     * @param PFUser $user
+     * @param Tracker_Artifact $artifact
+     *
+     * @return Tracker_REST_ChangesetRepresentation[]
+     */
+    public function getArtifactChangesetsRepresentation(PFUser $user, Tracker_Artifact $artifact) {
+        return $this->mapAndFilter(
+            $artifact->getChangesets(),
+            function (Tracker_Artifact_Changeset $changeset) use ($user) {
+                return $changeset->getRESTValue($user);
+            }
+        );
     }
 }

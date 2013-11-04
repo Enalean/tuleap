@@ -37,6 +37,9 @@ class ArtifactsResource {
 
     public function __construct() {
         $this->artifact_factory = Tracker_ArtifactFactory::instance();
+        $this->builder          = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
+            Tracker_FormElementFactory::instance()
+        );
     }
 
     /**
@@ -51,16 +54,28 @@ class ArtifactsResource {
     protected function getId($id) {
         $user     = UserManager::instance()->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
-        $builder  = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
-            Tracker_FormElementFactory::instance()
-        );
 
         header(Header::getLastModified($artifact->getLastUpdateDate()));
-        return $builder->getArtifactRepresentation($user, $artifact);
+        return $this->builder->getArtifactRepresentation($user, $artifact);
+    }
+
+    /**
+     * Returns the changesets of an artifact
+     *
+     * @url GET {id}/changesets
+     * @param int $id
+     */
+    protected function getArtifactChangesets($id) {
+        $user     = UserManager::instance()->getCurrentUser();
+        $artifact = $this->getArtifactById($user, $id);
+
+        header(Header::getLastModified($artifact->getLastUpdateDate()));
+        return $this->builder->getArtifactChangesetsRepresentation($user, $artifact);
     }
 
     /**
      * @url OPTIONS {id}
+     * @param int $id Id of the artifact
      */
     protected function optionsId($id) {
         $user     = UserManager::instance()->getCurrentUser();
