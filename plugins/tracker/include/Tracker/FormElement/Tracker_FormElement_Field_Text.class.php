@@ -21,7 +21,7 @@
 require_once('common/include/Codendi_Diff.class.php');
 
 class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum {
-    
+
     public $default_properties = array(
         'rows'      => array(
             'value' => 10,
@@ -154,13 +154,19 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         $html  = '';
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $hp    = Codendi_HTMLPurifier::instance();
+
+        $html .= '<input type="hidden"
+                         id="artifact['. $this->id .']_body_format"
+                         name="artifact['. $this->id .']_body_format"
+                         value="'.Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT.'" />';
+
         $html .= '<textarea id = field_'.$this->id.'
                             name="artifact['. $this->id .'][content]"
                             rows="'. $this->getProperty('rows') .'" 
                             cols="'. $this->getProperty('cols') .'" 
                             '. ($this->isRequired() ? 'required' : '') .' 
                             >';
-        $html .= $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML);
+        $html .= $hp->purify($value['content'], CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</textarea>';
         return $html;
     }
@@ -472,6 +478,25 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
             $this->getTracker()->getGroupID(),
             UserManager::instance()->getCurrentUser()->getId(),
             $this->getTracker()->getItemName()
+        );
+    }
+
+    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
+        return array(
+            'format'  => Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+            'content' => $soap_value->field_value->value,
+        );
+    }
+
+    /**
+     * Returns the default value for this field, or nullif no default value defined
+     *
+     * @return mixed The default value for this field, or null if no default value defined
+     */
+    public function getDefaultValue() {
+        return array(
+            'format'  => Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+            'content' => $this->getProperty('default_value'),
         );
     }
 }

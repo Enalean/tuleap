@@ -79,6 +79,9 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     }
 
     public function getFormat() {
+        if ($this->format == NULL) {
+            return self::TEXT_CONTENT;
+        }
         return $this->format;
     }
     
@@ -100,11 +103,11 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     public function getValue() {
         $hp = Codendi_HTMLPurifier::instance();
 
-        if ($this->format == self::HTML_CONTENT) {
-            return $hp->purify($this->getText(), self::$PURIFIER_LEVEL_IN_HTML[$this->format]);
+        if ($this->getFormat() == self::HTML_CONTENT) {
+            return $hp->purify($this->getText(), self::$PURIFIER_LEVEL_IN_HTML[$this->getFormat()]);
         }
 
-        return $hp->purify($this->getText(), self::$PURIFIER_LEVEL_IN_TEXT[$this->format]);
+        return $hp->purify($this->getText(), self::$PURIFIER_LEVEL_IN_TEXT[$this->getFormat()]);
     }
 
     /**

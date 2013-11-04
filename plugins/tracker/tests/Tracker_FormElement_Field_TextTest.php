@@ -53,7 +53,10 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
         $str_field = new Tracker_FormElement_Field_TextTestVersion();
         $str_field->setReturnValue('getProperty', 'foo bar long text with nice stories', array('default_value'));
         $this->assertTrue($str_field->hasDefaultValue());
-        $this->assertEqual($str_field->getDefaultValue(), 'foo bar long text with nice stories');
+        $this->assertEqual($str_field->getDefaultValue(), array(
+            'content' => 'foo bar long text with nice stories',
+            'format'  => 'text'
+        ));
     }
     
     function testGetChangesetValue() {
