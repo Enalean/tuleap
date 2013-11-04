@@ -31,7 +31,7 @@ class Tracker_REST_FieldRepresentation {
     const PERM_SUBMIT = 'submit';
 
     /** @var int */
-    public $id;
+    public $field_id;
 
     /** @var string */
     public $label;
@@ -52,7 +52,7 @@ class Tracker_REST_FieldRepresentation {
     public $permissions = array();
 
     public function __construct(Tracker_FormElement_Field $field, $type, array $permissions) {
-        $this->id    = $field->getId();
+        $this->field_id    = $field->getId();
         $this->name  = $field->getName();
         $this->label = $field->getLabel();
         $this->type  = $type;

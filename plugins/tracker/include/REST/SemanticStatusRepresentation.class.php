@@ -23,10 +23,10 @@ class Tracker_REST_SemanticStatusRepresentation {
     public $field_id;
 
     /** @var array {@type int}*/
-    public $values = array();
+    public $value_ids = array();
 
     public function __construct($id, array $values) {
-        $this->field_id = $id;
-        $this->values   = $values;
+        $this->field_id  = $id;
+        $this->value_ids = $values;
     }
 }

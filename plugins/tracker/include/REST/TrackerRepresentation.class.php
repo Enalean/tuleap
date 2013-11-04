@@ -27,6 +27,9 @@ class Tracker_REST_TrackerRepresentation {
     /** @var string */
     public $uri;
 
+    /** @var string */
+    public $html_url;
+
     /** @var int */
     public $project_id;
 
@@ -48,9 +51,10 @@ class Tracker_REST_TrackerRepresentation {
     /** @var Tracker_REST_WorkflowRepresentation */
     public $workflow;
 
-    public function __construct(Tracker $tracker, array $tracker_fields, array $semantics, Tracker_REST_WorkflowRepresentation $worflow) {
+    public function __construct(Tracker $tracker, array $tracker_fields, array $semantics, Tracker_REST_WorkflowRepresentation $worflow = null) {
         $this->id          = $tracker->getId();
         $this->uri         = self::ROUTE . '/' . $this->id;
+        $this->html_url    = $tracker->getUri();
         $this->project_id  = $tracker->getProject()->getID();
         $this->label       = $tracker->getName();
         $this->description = $tracker->getDescription();

@@ -33,7 +33,7 @@ class Tracker_REST_WorkflowRepresentation {
 
     public function __construct($id, $is_used, Tracker_REST_WorkflowRulesRepresentation $rules, array $transitions) {
         $this->field_id = $id;
-        $this->is_used  = $is_used;
+        $this->is_used  = (boolean)$is_used;
         $this->rules    = $rules;
         $this->transitions = $transitions;
     }
