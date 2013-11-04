@@ -56,9 +56,6 @@ class MilestoneRepresentation {
     public $end_date;
 
     /** @var float */
-    public $duration;
-
-    /** @var float */
     public $capacity;
 
     /** @var MilestoneInfoRepresentation|null */
@@ -82,7 +79,6 @@ class MilestoneRepresentation {
         if ($milestone->getEndDate()) {
             $this->end_date           = date('c', $milestone->getEndDate());
         }
-        $this->duration           = $milestone->getDuration();
         $this->capacity           = $milestone->getCapacity();
         $parent                   = $milestone->getParent();
         if ($parent) {
