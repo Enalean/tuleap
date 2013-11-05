@@ -572,6 +572,7 @@ class GitDao extends DataAccessObject {
         $sql = "SELECT NULL
                 FROM plugin_git
                 WHERE remote_server_id = $remote_server_id
+                    AND remote_server_disconnect_date IS NULL
                 LIMIT 1";
         return count($this->retrieve($sql)) > 0;
     }
