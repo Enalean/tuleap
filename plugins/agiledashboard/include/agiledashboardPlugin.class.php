@@ -66,6 +66,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::REST_RESOURCES);
             $this->addHook(Event::REST_GET_PROJECT_PLANNINGS);
             $this->addHook(Event::REST_OPTIONS_PROJECT_PLANNINGS);
+            $this->addHook(Event::REST_PROJECT_RESOURCES);
         }
         return parent::getHooksAndCallbacks();
     }
@@ -588,6 +589,14 @@ class AgileDashboardPlugin extends Plugin {
         $class_with_right_namespace = '\\Tuleap\\AgileDashboard\\REST\\'.$version.'\\ProjectPlanningsResource';
         return new $class_with_right_namespace;
     }
+
+    /**
+     * @see Event::REST_PROJECT_RESOURCES
+     */
+    public function rest_project_resources(array $params) {
+        $injector = new AgileDashboard_REST_ResourcesInjector();
+        $params['resources'][] = $injector->getProjectPlanningResource($params['project'], $params['version']);
+    }    
 }
 
 ?>

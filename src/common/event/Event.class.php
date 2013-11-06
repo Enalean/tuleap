@@ -625,5 +625,15 @@ class Event {
      *     'result'  => array
      */
     const REST_OPTIONS_PROJECT_PLANNINGS = 'rest_options_project_plannings';
+
+    /**
+     * Event raised to get the list of resources associated with a project
+     *
+     * Parameters:
+     *     'version'   => String
+     *     'project'   => Project
+     *     'resources' => array
+     */
+    const REST_PROJECT_RESOURCES = 'rest_project_resources';
 }
 ?>

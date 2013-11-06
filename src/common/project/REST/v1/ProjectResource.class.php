@@ -26,13 +26,14 @@ use Event;
 use URLVerification;
 use \Luracast\Restler\RestException;
 use \Tuleap\Project\REST\ProjectInfoRepresentation;
+use \Tuleap\REST\Header;
 
 /**
  * Wrapper for project related REST methods
  */
 class ProjectResource {
 
-    const ROUTE = 'projects';
+    const ROUTE           = 'projects';
 
     const ROUTE_PLANNINGS = 'plannings';
 
@@ -53,7 +54,17 @@ class ProjectResource {
     public function get($id) {
         $project = $this->getProject($id);
 
-        return new ProjectInfoRepresentation($project);
+        $resources = array();
+        EventManager::instance()->processEvent(
+            Event::REST_PROJECT_RESOURCES,
+            array(
+                'version'   => 'v1',
+                'project'   => $project,
+                'resources' => &$resources
+            )
+        );
+
+        return new ProjectInfoRepresentation($project, $resources);
     }
 
     /**
@@ -69,14 +80,14 @@ class ProjectResource {
     public function optionsId($id) {
         $this->getProject($id);
 
-        header('Allow: GET, OPTIONS');
+        header(Header::getAllow(array(Header::GET, Header::OPTIONS)));
     }
 
     /**
      * @url OPTIONS
      */
     public function options() {
-        header('Allow: GET, OPTIONS');
+        header(Header::getAllow(array(Header::OPTIONS)));
     }
 
     /**

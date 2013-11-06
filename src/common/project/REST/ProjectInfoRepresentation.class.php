@@ -32,8 +32,12 @@ class ProjectInfoRepresentation {
     /** @var string */
     public $label;
 
-    public function __construct(Project $project) {
-        $this->id    = $project->getId();
-        $this->label = $project->getPublicName();
+    /** @var array */
+    public $resources;
+
+    public function __construct(Project $project, array $resources) {
+        $this->id        = $project->getId();
+        $this->label     = $project->getPublicName();
+        $this->resources = $resources;
     }
 }

@@ -19,13 +19,23 @@
  */
 
  /**
- * Inject resource into restler
- */
+  * Inject resource into restler
+  */
 class AgileDashboard_REST_ResourcesInjector {
 
     public function populate(Luracast\Restler\Restler $restler) {
         $milestone_api_class_name    = '\\Tuleap\\AgileDashboard\\REST\\v1\\MilestoneResource';
         $milestone_api_resource_path = 'milestones';
         $restler->addAPIClass($milestone_api_class_name, $milestone_api_resource_path);
+    }
+
+    public function getProjectPlanningResource(Project $project, $version) {
+        $project_resource = $this->buildRightVersionOfProjectResource($version);
+
+        return $project_resource::ROUTE . '/' . $project->getId() . '/' . $project_resource::ROUTE_PLANNINGS;
+    }
+
+    private function buildRightVersionOfProjectResource($version) {
+        return '\\Tuleap\\Project\\REST\\'.$version.'\\ProjectResource';
     }
 }
