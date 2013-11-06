@@ -28,6 +28,8 @@ use \Tracker_REST_TrackerRepresentation;
  */
 class PlanningRepresentation {
 
+    const ROUTE = 'plannings';
+
     /** @var int */
     public $id;
 
@@ -46,11 +48,14 @@ class PlanningRepresentation {
     /** @var Rest_ResourceReference[] */
     public $backlog_trackers;
 
+    /** @var string */
+    public $milestones_uri;
+
     public function __construct(Planning $planning) {
         $this->id                = $planning->getId();
         $this->uri               = Rest_ResourceReference::NO_ROUTE;
         $this->label             = $planning->getName();
-        $this->project_id        = $planning->getGroupId();
+        $this->milestones_uri    = self::ROUTE .'/'. $this->id .'/'. MilestoneRepresentation::ROUTE;
         $this->milestone_tracker = new Rest_ResourceReference($planning->getPlanningTrackerId(), Tracker_REST_TrackerRepresentation::ROUTE);
         $this->project           = new Rest_ResourceReference($planning->getGroupId(), ProjectResource::ROUTE);
         $this->backlog_trackers  = array_map(
