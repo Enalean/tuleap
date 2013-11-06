@@ -78,7 +78,9 @@ codendi.RTE = Class.create(
 
             CKEDITOR.on('instanceReady', function (evt) {
                 if (evt.editor === this.rte) {
-                    evt.editor.resize(this.element.getWidth(), this.element.getHeight(), true);
+                    if (this.element.getWidth() > 0) {
+                        evt.editor.resize(this.element.getWidth(), this.element.getHeight(), true);
+                    }
                 }
             }.bind(this));
 
@@ -172,7 +174,7 @@ var Codendi_RTE_Light_Tracker_FollowUp = Class.create(Codendi_RTE_Light, {
         bold.appendChild(document.createTextNode("Comment format : "));
         div.appendChild(bold);
 
-        var selectbox = Builder.node('select', {'name' : 'comment_format'});
+        var selectbox = Builder.node('select', {'name' : 'comment_format', 'class' : 'input-small'});
         div.appendChild(selectbox);
 
         // Add an option that tells that the content format is text
@@ -235,24 +237,27 @@ var Codendi_RTE_Send_HTML_MAIL = Class.create(Codendi_RTE_Light, {
         bold.appendChild(document.createTextNode("Body format : "));
         div.appendChild(bold);
 
-        // Add a radio button that tells that the content format is text
-        // The value is defined in sendmessage.php (FORMAT_TEXT).
-        var text_button = Builder.node('input', {'name'     : 'body_format',
-                                                 'type'     : 'radio',
-                                                 'value'    : '0',
-                                                 'checked'  : 'checked',
-                                                 'id'       : 'body_format_text'});
-        div.appendChild(text_button);
-        div.appendChild(document.createTextNode('Text '));
+        var selectbox = Builder.node('select', {'name' : 'body_format', 'class' : 'input-small'});
+        div.appendChild(selectbox);
 
-        // Add a radio button that tells that the content format is HTML
-        // The value is defined in sensmessage.php (FORMAT_HTML).
-        var html_button = Builder.node('input', {'name' : 'body_format',
-                                                 'type' : 'radio',
-                                                 'value': '1',
-                                                 'id'   : 'body_format_html'});
-        div.appendChild(html_button);
-        div.appendChild(document.createTextNode('HTML'));
+        // Add an option that tells that the content format is text
+        // The value is defined in Artifact class.
+
+        var text_option = Builder.node(
+            'option',
+            {'value' : '0', 'id' : 'body_format_text', 'selected' : 'selected'},
+            "Text"
+        );
+        selectbox.appendChild(text_option);
+
+        // Add an option that tells that the content format is HTML
+        // The value is defined in Artifact class.
+        var html_option = Builder.node(
+            'option',
+            {'value': '1', 'id' : 'body_format_html'},
+            "HTML"
+        );
+        selectbox.appendChild(html_option);
 
         label.appendChild(div);
 
@@ -292,8 +297,8 @@ var Codendi_RTE_Send_HTML_MAIL = Class.create(Codendi_RTE_Light, {
         this.rte = true;
     },
     toggle: function ($super, event) {
-    this.switchButtonToHtml();
-    $super(event);
+        this.switchButtonToHtml();
+        $super(event);
     },
     /**
      * Disable the radio button that tells that the content is text
