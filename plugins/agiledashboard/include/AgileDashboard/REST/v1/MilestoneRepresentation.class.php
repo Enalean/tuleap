@@ -57,6 +57,9 @@ class MilestoneRepresentation {
     /** @var float */
     public $capacity;
 
+    /** @var string */
+    public $status_value;
+
     /** @var Rest_ResourceReference|null */
     public $parent;
 
@@ -73,18 +76,19 @@ class MilestoneRepresentation {
         $this->id                 = $milestone->getArtifactId();
         $this->uri                = self::ROUTE . '/' . $this->id;
         $this->label              = $milestone->getArtifactTitle();
+        $this->status_value       = $milestone->getArtifact()->getStatus();
         $this->submitted_by       = $milestone->getArtifact()->getFirstChangeset()->getSubmittedBy();
         $this->submitted_on       = date('c', $milestone->getArtifact()->getFirstChangeset()->getSubmittedOn());
         $this->capacity           = $milestone->getCapacity();
         $this->project            = new Rest_ResourceReference($milestone->getProject()->getID(), ProjectResource::ROUTE);
         $this->artifact           = new Rest_ResourceReference($milestone->getArtifactId(), Tracker_REST_Artifact_ArtifactRepresentation::ROUTE);
         if ($milestone->getStartDate()) {
-            $this->start_date         = date('c', $milestone->getStartDate());
+            $this->start_date = date('c', $milestone->getStartDate());
         }
         if ($milestone->getEndDate()) {
-            $this->end_date           = date('c', $milestone->getEndDate());
+            $this->end_date = date('c', $milestone->getEndDate());
         }
-        $parent                   = $milestone->getParent();
+        $parent = $milestone->getParent();
         if ($parent) {
             $this->parent = new Rest_ResourceReference($parent->getArtifactId(), self::ROUTE);
         }

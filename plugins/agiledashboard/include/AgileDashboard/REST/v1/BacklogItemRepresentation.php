@@ -35,6 +35,9 @@ class BacklogItemRepresentation {
     public $label;
 
     /** @var String */
+    public $type;
+
+    /** @var String */
     public $status;
 
     /** @var int */
@@ -50,10 +53,11 @@ class BacklogItemRepresentation {
     public $parent;
 
     public function __construct(AgileDashBoard_BacklogItem $backlog_item) {
-        $this->id                = $backlog_item->id();
-        $this->label             = $backlog_item->title();
-        $this->status            = $backlog_item->status();
-        $this->initial_effort    = $backlog_item->getInitialEffort();
+        $this->id             = $backlog_item->id();
+        $this->label          = $backlog_item->title();
+        $this->status         = $backlog_item->status();
+        $this->type           = $backlog_item->type();
+        $this->initial_effort = $backlog_item->getInitialEffort();
         $this->tracker = new Rest_ResourceReference(
             $backlog_item->getArtifact()->getTrackerId(),
             Tracker_REST_TrackerRepresentation::ROUTE
