@@ -19,9 +19,10 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use PlanningFactory;
+use \PlanningFactory;
 use \Luracast\Restler\RestException;
-use Planning;
+use \Planning;
+use \Tuleap\REST\Header;
 
 class PlanningResource {
 
@@ -68,14 +69,14 @@ class PlanningResource {
         } catch (\Project_AccessException $exception) {
             throw new RestException(403, $exception->getMessage());
         }
-        throw new RestException(404);
+        throw new RestException(404, 'Planning not found');
     }
 
     /**
      * @url OPTIONS
      */
     protected function options() {
-        header('Allow: GET, OPTIONS');
+        header(Header::getAllow(array(Header::OPTIONS)));
     }
 
     private function limitValueIsAcceptable($limit) {

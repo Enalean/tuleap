@@ -18,7 +18,10 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use Planning;
+use \Planning;
+use \Rest_ResourceReference;
+use \Tuleap\Project\REST\v1\ProjectResource;
+use \Tracker_REST_TrackerRepresentation;
 
 /**
  * Basic representation of a planning
@@ -28,31 +31,33 @@ class PlanningRepresentation {
     /** @var int */
     public $id;
 
+    /** @var string */
+    public $uri;
+
     /** @var String */
     public $label;
 
-    /** @var int */
-    public $project_id;
+    /** @var Rest_ResourceReference */
+    public $project;
 
-    /** @var int */
-    public $milestone_type_id;
+    /** @var Rest_ResourceReference */
+    public $milestone_tracker;
 
-    /** @var array */
-    public $backlog_item_types_id;
-
-    /** @var String */
-    public $milestones_title;
-
-    /** @var String */
-    public $backlog_items_title;
+    /** @var Rest_ResourceReference[] */
+    public $backlog_trackers;
 
     public function __construct(Planning $planning) {
-        $this->id                    = $planning->getId();
-        $this->label                 = $planning->getName();
-        $this->project_id            = $planning->getGroupId();
-        $this->milestone_type_id     = $planning->getPlanningTrackerId();
-        $this->backlog_item_types_id = $planning->getBacklogTrackersIds();
-        $this->milestones_title      = $planning->getPlanTitle();
-        $this->backlog_items_title   = $planning->getBacklogTitle();
+        $this->id                = $planning->getId();
+        $this->uri               = Rest_ResourceReference::NO_ROUTE;
+        $this->label             = $planning->getName();
+        $this->project_id        = $planning->getGroupId();
+        $this->milestone_tracker = new Rest_ResourceReference($planning->getPlanningTrackerId(), Tracker_REST_TrackerRepresentation::ROUTE);
+        $this->project           = new Rest_ResourceReference($planning->getGroupId(), ProjectResource::ROUTE);
+        $this->backlog_trackers  = array_map(
+            function ($id) {
+                return new Rest_ResourceReference($id, Tracker_REST_TrackerRepresentation::ROUTE);
+            },
+            $planning->getBacklogTrackersIds()
+        );
     }
 }

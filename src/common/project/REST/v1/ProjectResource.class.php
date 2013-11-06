@@ -34,6 +34,8 @@ class ProjectResource {
 
     const ROUTE = 'projects';
 
+    const ROUTE_PLANNINGS = 'plannings';
+
     /**
      * Method to handle GET /projects/:id
      *

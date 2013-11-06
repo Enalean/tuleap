@@ -20,6 +20,7 @@
 namespace Tuleap\REST;
 
 use Luracast\Restler\Restler;
+use \Tuleap\Project\REST\v1\ProjectResource;
 
 /**
  * Inject core resources into restler
@@ -27,8 +28,8 @@ use Luracast\Restler\Restler;
 class ResourcesInjector {
 
     public function populate(Restler $restler) {
-        $restler->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource', 'projects');
+        $restler->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource', ProjectResource::ROUTE);
         $restler->addAPIClass('\\Tuleap\\Token\\REST\\TokenResource',     'tokens');
-        $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\PlanningResource', 'planning');
+        $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\PlanningResource', ProjectResource::ROUTE_PLANNINGS);
     }
 }

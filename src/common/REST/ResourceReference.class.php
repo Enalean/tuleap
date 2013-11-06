@@ -18,6 +18,10 @@
  */
 
 class Rest_ResourceReference {
+
+    /** Use this variable as a placeholder for future route implementation */
+    const NO_ROUTE = 'route-not-yet-implemented';
+
     /** @var int ID of the resource */
     public $id;
 
