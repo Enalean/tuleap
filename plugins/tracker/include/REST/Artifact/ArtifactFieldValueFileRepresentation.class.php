@@ -26,11 +26,11 @@ class Tracker_REST_Artifact_ArtifactFieldValueFileRepresentation {
     public $label;
 
     /** @var Tracker_REST_Artifact_FileInfoRepresentation[] */
-    public $values = array();
+    public $file_descriptions = array();
 
     public function __construct($id, $label, array $values) {
-        $this->field_id = $id;
-        $this->label    = $label;
-        $this->values   = $values;
+        $this->field_id          = $id;
+        $this->label             = $label;
+        $this->file_descriptions = $values;
     }
 }

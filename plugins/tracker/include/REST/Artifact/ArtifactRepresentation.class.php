@@ -27,11 +27,8 @@ class Tracker_REST_Artifact_ArtifactRepresentation {
     /** @var string URI of the artifact */
     public $uri;
 
-    /** @var int ID of the tracker the artifact belongs to */
-    public $tracker_id;
-
-    /** @var string URI of the tracker the artifact belongs to */
-    public $tracker_uri;
+    /** @var Rest_ResourceReference Reference to tracker the artifact belongs to */
+    public $tracker;
 
     /** @var int ID of the project the artifact belongs to */
     public $project_id;
@@ -54,8 +51,7 @@ class Tracker_REST_Artifact_ArtifactRepresentation {
     public function __construct(Tracker_Artifact $artifact, array $values) {
         $this->id             = $artifact->getId();
         $this->uri            = self::ROUTE . '/' . $artifact->getId();
-        $this->tracker_id     = $artifact->getTrackerId();
-        $this->tracker_uri    = Tracker_REST_TrackerRepresentation::ROUTE . '/' . $artifact->getTrackerId();
+        $this->tracker        = new Rest_ResourceReference($artifact->getTrackerId(), Tracker_REST_TrackerRepresentation::ROUTE);
         $this->project_id     = $artifact->getTracker()->getProject()->getID();
         $this->submitted_by   = $artifact->getSubmittedBy();
         $this->submitted_on   = date('c', $artifact->getSubmittedOn());

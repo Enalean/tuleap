@@ -29,20 +29,20 @@ class Tracker_REST_Artifact_FileInfoRepresentation {
     public $description;
 
     /** @var string Name of the file */
-    public $filename;
+    public $name;
 
     /** @var int Size of the file in bytes */
-    public $filesize;
+    public $size;
 
     /** @var string Mime type */
-    public $filetype;
+    public $type;
 
-    public function __construct($id, $submitted_by, $description, $filename, $filesize, $filetype) {
+    public function __construct($id, $submitted_by, $description, $name, $filesize, $filetype) {
         $this->id           = $id;
         $this->submitted_by = $submitted_by;
         $this->description  = $description;
-        $this->filename     = $filename;
-        $this->filesize     = $filesize;
-        $this->filetype     = $filetype;
+        $this->name     = $name;
+        $this->size     = $filesize;
+        $this->type     = $filetype;
     }
 }

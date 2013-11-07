@@ -51,8 +51,8 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_BasicTest extends Tule
 
         $this->assertEqual($representation->id, 12);
         $this->assertEqual($representation->uri, Tracker_REST_Artifact_ArtifactRepresentation::ROUTE . '/' . 12);
-        $this->assertEqual($representation->tracker_id, 888);
-        $this->assertEqual($representation->tracker_uri, Tracker_REST_TrackerRepresentation::ROUTE . '/' . 888);
+        $this->assertEqual($representation->tracker->id, 888);
+        $this->assertEqual($representation->tracker->uri, Tracker_REST_TrackerRepresentation::ROUTE . '/' . 888);
         $this->assertEqual($representation->project_id, 1478);
         $this->assertEqual($representation->submitted_by, 777);
         $this->assertEqual($representation->submitted_on, '2177-06-14T06:09:14+01:00');

@@ -30,8 +30,8 @@ class Tracker_REST_TrackerRepresentation {
     /** @var string */
     public $html_url;
 
-    /** @var int */
-    public $project_id;
+    /** @var Rest_ResourceReference */
+    public $project;
 
     /** @var string */
     public $label;
@@ -55,7 +55,7 @@ class Tracker_REST_TrackerRepresentation {
         $this->id          = $tracker->getId();
         $this->uri         = self::ROUTE . '/' . $this->id;
         $this->html_url    = $tracker->getUri();
-        $this->project_id  = $tracker->getProject()->getID();
+        $this->project     = new Rest_ResourceReference($tracker->getProject()->getID(), \Tuleap\Project\REST\v1\ProjectResource::ROUTE);
         $this->label       = $tracker->getName();
         $this->description = $tracker->getDescription();
         $this->item_name   = $tracker->getItemName();

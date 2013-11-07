@@ -26,11 +26,11 @@ class Tracker_REST_Artifact_ArtifactFieldValueArtifactLinksRepresentation {
     public $label;
 
     /** @var Tracker_REST_Artifact_ArtifactReferenceRepresentation[]  */
-    public $values;
+    public $links;
 
     public function __construct($id, $label, array $values) {
         $this->field_id = $id;
         $this->label    = $label;
-        $this->values   = $values;
+        $this->links    = $values;
     }
 }
