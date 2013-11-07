@@ -23,11 +23,37 @@ require_once('common/include/Codendi_HTMLPurifier.class.php');
  * Manage values in changeset for string fields
  */
 class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetValue {
-    
     /**
-     * @var string
+     * @const Changeset comment format is text.
      */
+    const TEXT_CONTENT = 'text';
+
+    /**
+     * @const Changeset comment format is HTML
+     */
+    const HTML_CONTENT = 'html';
+
+    /** @var string */
     protected $text;
+
+    /** @var string */
+    private $format;
+
+    /**
+     * @var array of purifier levels to be used when the content is displayed in text/plain context
+     */
+    public static $PURIFIER_LEVEL_IN_TEXT = array(
+        'html' => CODENDI_PURIFIER_STRIP_HTML,
+        'text' => CODENDI_PURIFIER_BASIC,
+    );
+
+    /**
+     * @var array of purifier levels to be used when the content is displayed in text/html context
+     */
+    public static $PURIFIER_LEVEL_IN_HTML = array(
+        'html' => CODENDI_PURIFIER_FULL,
+        'text' => CODENDI_PURIFIER_BASIC,
+    );
     
     /**
      * Constructor
@@ -35,10 +61,12 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      * @param Tracker_FormElement_Field_String $field       The field of the value
      * @param boolean                          $has_changed If the changeset value has chnged from the previous one
      * @param string                           $text        The string
+     * @param string                           $format      The format
      */
-    public function __construct($id, $field, $has_changed, $text) {
+    public function __construct($id, $field, $has_changed, $text, $format) {
         parent::__construct($id, $field, $has_changed);
-        $this->text = $text;
+        $this->text   = $text;
+        $this->format = $format;
     }
     
     /**
@@ -48,6 +76,13 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      */
     public function getText() {
         return $this->text;
+    }
+
+    public function getFormat() {
+        if ($this->format == NULL) {
+            return self::TEXT_CONTENT;
+        }
+        return $this->format;
     }
     
     /**
@@ -66,9 +101,15 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      * @return string The value of this artifact changeset value
      */
     public function getValue() {
-         return $this->getText();
+        $hp = Codendi_HTMLPurifier::instance();
+
+        if ($this->getFormat() == self::HTML_CONTENT) {
+            return $hp->purify($this->getText(), self::$PURIFIER_LEVEL_IN_HTML[$this->getFormat()]);
+        }
+
+        return $hp->purify($this->getText(), self::$PURIFIER_LEVEL_IN_TEXT[$this->getFormat()]);
     }
-    
+
     /**
      * Get the diff between this changeset value and the one passed in param
      *

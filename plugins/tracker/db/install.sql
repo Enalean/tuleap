@@ -295,7 +295,8 @@ CREATE TABLE tracker_changeset_value_float(
 DROP TABLE IF EXISTS tracker_changeset_value_text;
 CREATE TABLE tracker_changeset_value_text(
     changeset_value_id INT(11) NOT NULL PRIMARY KEY,
-    value TEXT NOT NULL
+    value TEXT NOT NULL,
+    body_format varchar(16) NOT NULL default 'text'
 ) ENGINE=InnoDB AUTO_INCREMENT=101;
 
 DROP TABLE IF EXISTS tracker_changeset_value_date;

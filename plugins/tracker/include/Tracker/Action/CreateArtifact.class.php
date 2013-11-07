@@ -25,10 +25,10 @@ class Tracker_Action_CreateArtifact {
     private $formelement_factory;
 
     public function __construct(
-        Tracker                    $tracker,
-        Tracker_ArtifactFactory    $artifact_factory,
-        TrackerFactory             $tracker_factory,
-        Tracker_FormElementFactory $formelement_factory
+        Tracker                            $tracker,
+        Tracker_ArtifactFactory            $artifact_factory,
+        TrackerFactory                     $tracker_factory,
+        Tracker_FormElementFactory         $formelement_factory
     ) {
         $this->tracker             = $tracker;
         $this->artifact_factory    = $artifact_factory;
@@ -60,7 +60,7 @@ class Tracker_Action_CreateArtifact {
      *
      * @param Tracker_IDisplayTrackerLayout  $layout
      * @param Codendi_Request                $request
-     * @param PFUser                           $user
+     * @param PFUser                         $user
      *
      * @return Tracker_Artifact the new artifact
      */

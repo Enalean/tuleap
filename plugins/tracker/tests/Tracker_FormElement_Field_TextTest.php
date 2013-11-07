@@ -53,13 +53,16 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
         $str_field = new Tracker_FormElement_Field_TextTestVersion();
         $str_field->setReturnValue('getProperty', 'foo bar long text with nice stories', array('default_value'));
         $this->assertTrue($str_field->hasDefaultValue());
-        $this->assertEqual($str_field->getDefaultValue(), 'foo bar long text with nice stories');
+        $this->assertEqual($str_field->getDefaultValue(), array(
+            'content' => 'foo bar long text with nice stories',
+            'format'  => 'text'
+        ));
     }
     
     function testGetChangesetValue() {
         $value_dao = new MockTracker_FormElement_Field_Value_TextDao();
         $dar = new MockDataAccessResult();
-        $dar->setReturnValueAt(0, 'getRow', array('id' => 123, 'field_id' => 1, 'value' => 'My Text'));
+        $dar->setReturnValueAt(0, 'getRow', array('id' => 123, 'field_id' => 1, 'value' => 'My Text', 'body_format' => 'text'));
         $dar->setReturnValue('getRow', false);
         $value_dao->setReturnReference('searchById', $dar);
         
@@ -135,13 +138,38 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
         $f = new Tracker_FormElement_Field_TextTestVersion();
         $f->setReturnValue('isRequired', false);
         $f->setReturnReference('getRuleString', $rule_string);
-        
+
+        $value_1 = array(
+            'content' => 'This is a text',
+            'format'  => 'text'
+        );
+
+        $value_2 = array(
+            'content' => '2009-08-45',
+            'format'  => 'text'
+        );
+
+        $value_3 = array(
+            'content' => 25,
+            'format'  => 'text'
+        );
+
+        $value_4 = array(
+            'content' => '',
+            'format'  => 'text'
+        );
+
+        $value_5 = array(
+            'content' => null,
+            'format'  => 'text'
+        );
+
         $a = new MockTracker_Artifact();
-        $f->isValid($a, 'This is a text');
-        $f->isValid($a, '2009-08-45');
-        $f->isValid($a, 25);
-        $f->isValid($a, '');
-        $f->isValid($a, null);
+        $f->isValid($a, $value_1);
+        $f->isValid($a, $value_2);
+        $f->isValid($a, $value_3);
+        $f->isValid($a, $value_4);
+        $f->isValid($a, $value_5);
     }
     
     function testSoapAvailableValues() {

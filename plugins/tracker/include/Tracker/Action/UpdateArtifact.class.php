@@ -29,7 +29,11 @@ class Tracker_Action_UpdateArtifact {
     /** @var EventManager */
     private $event_manager;
 
-    public function __construct(Tracker_Artifact $artifact, Tracker_FormElementFactory $form_element_factory, EventManager $event_manager) {
+    public function __construct(
+        Tracker_Artifact $artifact,
+        Tracker_FormElementFactory $form_element_factory,
+        EventManager $event_manager
+    ) {
         $this->artifact             = $artifact;
         $this->form_element_factory = $form_element_factory;
         $this->event_manager        = $event_manager;
@@ -41,7 +45,6 @@ class Tracker_Action_UpdateArtifact {
         $this->artifact->setUseArtifactPermissions( $request->get('use_artifact_permissions') ? 1 : 0 );
 
         $fields_data = $request->get('artifact');
-
         $fields_data['request_method_called'] = 'artifact-update';
         $this->artifact->getTracker()->augmentDataFromRequest($fields_data);
         unset($fields_data['request_method_called']);

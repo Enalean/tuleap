@@ -1320,8 +1320,19 @@ td.first-column {
 .card-details tr td {
     font-size: 0.8em;
 }
-.card-details tr td:first-child {
-    text-align: right;
+.card-details tr td {
+    &:first-child {
+        text-align: right;
+        vertical-align: top;
+    }
+
+    ul, ol {
+        margin: 0 20px;
+
+        li {
+            list-style: disc outside none;
+        }
+    }
 }
 
 .card-details .avatar {
@@ -1585,4 +1596,8 @@ tr.artifact-children-table-head {
 }
 #tracker-import-data input[type="checkbox"] {
     margin: 0;
+}
+
+.tracker_artifact_followup_content textarea {
+    width : 100%;
 }

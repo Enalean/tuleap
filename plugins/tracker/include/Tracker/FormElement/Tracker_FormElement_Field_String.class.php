@@ -218,5 +218,23 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
     protected function getRuleNoCr() {
         return new Rule_NoCr();
     }
+
+    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+        $this->getValueDao()->create($changeset_value_id, $value);
+        $this->extractCrossRefs($artifact, $value);
+    }
+
+    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
+        return $this->getFieldData($soap_value->field_value->value);
+    }
+
+    /**
+     * Returns the default value for this field, or nullif no default value defined
+     *
+     * @return mixed The default value for this field, or null if no default value defined
+     */
+    public function getDefaultValue() {
+        return $this->getProperty('default_value');
+    }
 }
 ?>

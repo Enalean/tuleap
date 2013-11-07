@@ -21,7 +21,7 @@
 require_once('common/include/Codendi_Diff.class.php');
 
 class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum {
-    
+
     public $default_properties = array(
         'rows'      => array(
             'value' => 10,
@@ -130,7 +130,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
     protected function getDao() {
         return new Tracker_FormElement_Field_TextDao();
     }
-    
+
     /**
      * Return true if this field is the semantic title field of the tracker, 
      * false otherwise if not or if there is no title field defined.
@@ -154,12 +154,19 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         $html  = '';
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $hp    = Codendi_HTMLPurifier::instance();
-        $html .= '<textarea name="artifact['. $this->id .']" 
+
+        $html .= '<input type="hidden"
+                         id="artifact['. $this->id .']_body_format"
+                         name="artifact['. $this->id .']_body_format"
+                         value="'.Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT.'" />';
+
+        $html .= '<textarea id = field_'.$this->id.'
+                            name="artifact['. $this->id .'][content]"
                             rows="'. $this->getProperty('rows') .'" 
                             cols="'. $this->getProperty('cols') .'" 
                             '. ($this->isRequired() ? 'required' : '') .' 
                             >';
-        $html .= $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML);
+        $html .= $hp->purify($value['content'], CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</textarea>';
         return $html;
     }
@@ -179,7 +186,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
             $html .= '<textarea readonly="readonly" title="'.$GLOBALS['Language']->getText('plugin_tracker_artifact_masschange', 'cannot_masschange_title').'">'.$value.'</textarea>';
         } else {
             $hp = Codendi_HTMLPurifier::instance();
-            $html .= '<textarea name="artifact['. $this->id .']" 
+            $html .= '<textarea id = field_'.$this->id.'
+                                name="artifact['. $this->id .'][content]"
                                 rows="'. $this->getProperty('rows') .'" 
                                 cols="'. $this->getProperty('cols') .'">';
             $html .= $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML);
@@ -198,21 +206,30 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return string
      */
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        $html = '';        
+        $html    = '';
+        $format  = $value->getFormat();
+        $content = '';
+
         if (is_array($submitted_values[0])) {
-            $value=$submitted_values[0][$this->getId()];
+            $content = $submitted_values[0][$this->getId()];
         } else {
             if ($value != null) {
-                $value = $value->getText();
+                $content = $value->getText();
             }
         }
         $hp = Codendi_HTMLPurifier::instance();
-        $html .= '<textarea name="artifact['. $this->id .']" 
+
+        $html .= '<input type="hidden"
+                         id="artifact['. $this->id .']_body_format"
+                         name="artifact['. $this->id .']_body_format"
+                         value="'.$format.'" />';
+        $html .= '<textarea id = field_'.$this->id.'
+                            name="artifact['. $this->id .'][content]"
                             rows="'. $this->getProperty('rows') .'" 
                             cols="'. $this->getProperty('cols') .'" 
                             '. ($this->isRequired() ? 'required' : '') .' 
                             >';
-        $html .= $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML);
+        $html .= $hp->purify($content, CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</textarea>';
         return $html;
     }
@@ -251,9 +268,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        $value = $value ? $value->getText() : '';
-        $hp = Codendi_HTMLPurifier::instance();
-        return $hp->purify($value, CODENDI_PURIFIER_BASIC, $this->getTracker()->getGroupId());
+        $value = $value ? $value->getValue() : '';
+        return $value;
     }
     
     /**
@@ -346,11 +362,12 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return string The html code to display the field value in tooltip
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        $hp = Codendi_HTMLPurifier::instance();
         $html = '';
+
         if ($value) {
-            $html .= nl2br($hp->purify($value->getText(), CODENDI_PURIFIER_CONVERT_HTML));
+            $html .= $value->getValue();
         }
+
         return $html;
     }
     
@@ -394,8 +411,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return bool true if the value is considered ok
      */
     protected function validate(Tracker_Artifact $artifact, $value) {
-        $r = $this->getRuleString();
-        if (!($is_valid = $r->isValid($value))) {
+        $rule = $this->getRuleString();
+        if (!($is_valid = $rule->isValid($value['content']))) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_text_value', array($this->getLabel())));
         }
         return $is_valid;
@@ -418,7 +435,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         
         $changeset_value = null;
         if ($row = $this->getValueDao()->searchById($value_id, $this->id)->getRow()) {
-            $changeset_value = new Tracker_Artifact_ChangesetValue_Text($value_id, $this, $has_changed, $row['value']);
+            $changeset_value = new Tracker_Artifact_ChangesetValue_Text($value_id, $this, $has_changed, $row['value'], $row['body_format']);
         }
         return $changeset_value;
     }
@@ -446,8 +463,41 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return int or array of int
      */
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
-        parent::saveValue($artifact, $changeset_value_id, $value, $previous_changesetvalue);
-        ReferenceManager::instance()->extractCrossRef($value, $artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupID(), UserManager::instance()->getCurrentUser()->getId(), $this->getTracker()->getItemName());
+        $content     = $value['content'];
+        $body_format = $value['format'];
+
+        $this->getValueDao()->createWithBodyFormat($changeset_value_id, $content, $body_format);
+        $this->extractCrossRefs($artifact, $content);
+    }
+
+    protected function extractCrossRefs($artifact, $content) {
+        ReferenceManager::instance()->extractCrossRef(
+            $content,
+            $artifact->getId(),
+            Tracker_Artifact::REFERENCE_NATURE,
+            $this->getTracker()->getGroupID(),
+            UserManager::instance()->getCurrentUser()->getId(),
+            $this->getTracker()->getItemName()
+        );
+    }
+
+    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
+        return array(
+            'format'  => Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+            'content' => $soap_value->field_value->value,
+        );
+    }
+
+    /**
+     * Returns the default value for this field, or nullif no default value defined
+     *
+     * @return mixed The default value for this field, or null if no default value defined
+     */
+    public function getDefaultValue() {
+        return array(
+            'format'  => Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+            'content' => $this->getProperty('default_value'),
+        );
     }
 }
 ?>
