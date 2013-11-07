@@ -115,7 +115,7 @@ class ProjectResource {
      *
      * @return array of ProjectPlanningResource
      */
-    public function getPlannings($id, $limit = 10, $offset = 0) {
+    protected function getPlannings($id, $limit = 10, $offset = 0) {
         return $this->plannings($id, $limit, $offset, Event::REST_GET_PROJECT_PLANNINGS);
     }
 
@@ -124,7 +124,7 @@ class ProjectResource {
      *
      * @param int $id The id of the project
      */
-    public function optionsPlannings($id) {
+    protected function optionsPlannings($id) {
         return $this->plannings($id, 10, 0, Event::REST_OPTIONS_PROJECT_PLANNINGS);
     }
 
