@@ -26,8 +26,13 @@ use Project;
  */
 class ProjectInfoRepresentation {
 
+    const ROUTE = 'projects';
+
     /** @var int */
     public $id;
+
+    /** @var string */
+    public $uri;
 
     /** @var string */
     public $label;
@@ -37,6 +42,7 @@ class ProjectInfoRepresentation {
 
     public function __construct(Project $project, array $resources) {
         $this->id        = $project->getId();
+        $this->uri       = self::ROUTE . '/' . $this->id;
         $this->label     = $project->getPublicName();
         $this->resources = $resources;
     }

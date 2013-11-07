@@ -20,7 +20,7 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use \Planning;
 use \Rest_ResourceReference;
-use \Tuleap\Project\REST\v1\ProjectResource;
+use \Tuleap\Project\REST\ProjectReference;
 use \Tracker_REST_TrackerRepresentation;
 
 /**
@@ -57,7 +57,7 @@ class PlanningRepresentation {
         $this->label             = $planning->getName();
         $this->milestones_uri    = self::ROUTE .'/'. $this->id .'/'. MilestoneRepresentation::ROUTE;
         $this->milestone_tracker = new Rest_ResourceReference($planning->getPlanningTrackerId(), Tracker_REST_TrackerRepresentation::ROUTE);
-        $this->project           = new Rest_ResourceReference($planning->getGroupId(), ProjectResource::ROUTE);
+        $this->project           = new ProjectReference($planning->getGroupId());
         $this->backlog_trackers  = array_map(
             function ($id) {
                 return new Rest_ResourceReference($id, Tracker_REST_TrackerRepresentation::ROUTE);

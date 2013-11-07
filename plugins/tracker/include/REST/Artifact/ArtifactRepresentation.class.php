@@ -31,7 +31,7 @@ class Tracker_REST_Artifact_ArtifactRepresentation {
     public $tracker;
 
     /** @var int ID of the project the artifact belongs to */
-    public $project_id;
+    public $project;
 
     /** @var int ID of the user who created the first version of the artifact */
     public $submitted_by;
@@ -52,7 +52,7 @@ class Tracker_REST_Artifact_ArtifactRepresentation {
         $this->id             = $artifact->getId();
         $this->uri            = self::ROUTE . '/' . $artifact->getId();
         $this->tracker        = new Rest_ResourceReference($artifact->getTrackerId(), Tracker_REST_TrackerRepresentation::ROUTE);
-        $this->project_id     = $artifact->getTracker()->getProject()->getID();
+        $this->project        = new \Tuleap\Project\REST\ProjectReference($artifact->getTracker()->getProject());
         $this->submitted_by   = $artifact->getSubmittedBy();
         $this->submitted_on   = date('c', $artifact->getSubmittedOn());
         $this->html_url       = $artifact->getUri();

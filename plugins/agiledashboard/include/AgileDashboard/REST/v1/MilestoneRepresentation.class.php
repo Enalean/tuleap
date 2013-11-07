@@ -19,7 +19,7 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use \Rest_ResourceReference;
-use \Tuleap\Project\REST\v1\ProjectResource;
+use \Tuleap\Project\REST\ProjectReference;
 use \Planning_Milestone;
 use \Tracker_REST_Artifact_ArtifactRepresentation;
 
@@ -80,7 +80,7 @@ class MilestoneRepresentation {
         $this->submitted_by       = $milestone->getArtifact()->getFirstChangeset()->getSubmittedBy();
         $this->submitted_on       = date('c', $milestone->getArtifact()->getFirstChangeset()->getSubmittedOn());
         $this->capacity           = $milestone->getCapacity();
-        $this->project            = new Rest_ResourceReference($milestone->getProject()->getID(), ProjectResource::ROUTE);
+        $this->project            = new ProjectReference($milestone->getProject());
         $this->artifact           = new Rest_ResourceReference($milestone->getArtifactId(), Tracker_REST_Artifact_ArtifactRepresentation::ROUTE);
         if ($milestone->getStartDate()) {
             $this->start_date = date('c', $milestone->getStartDate());

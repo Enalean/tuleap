@@ -18,24 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
- /**
-  * Inject resource into restler
-  */
+use \Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
+use \Tuleap\AgileDashboard\REST\v1\PlanningRepresentation;
+
+/**
+ * Inject resource into restler
+ */
 class AgileDashboard_REST_ResourcesInjector {
 
     public function populate(Luracast\Restler\Restler $restler) {
-        $milestone_api_class_name    = '\\Tuleap\\AgileDashboard\\REST\\v1\\MilestoneResource';
-        $milestone_api_resource_path = 'milestones';
-        $restler->addAPIClass($milestone_api_class_name, $milestone_api_resource_path);
+        $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\MilestoneResource', MilestoneRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\PlanningResource',  PlanningRepresentation::ROUTE);
     }
 
     public function getProjectPlanningResource(Project $project, $version) {
-        $project_resource = $this->buildRightVersionOfProjectResource($version);
+        $project_representation  = $this->buildProjectRepresentation();
+        $planning_representation = $this->buildPlanningRepresentation();
 
-        return $project_resource::ROUTE . '/' . $project->getId() . '/' . $project_resource::ROUTE_PLANNINGS;
+        return $project_representation::ROUTE . '/' . $project->getId() . '/' . $planning_representation::ROUTE;
     }
 
-    private function buildRightVersionOfProjectResource($version) {
-        return '\\Tuleap\\Project\\REST\\'.$version.'\\ProjectResource';
+    private function buildProjectRepresentation() {
+        return '\\Tuleap\\Project\\REST\\ProjectInfoRepresentation';
+    }
+
+    private function buildPlanningRepresentation() {
+        return '\\Tuleap\\AgileDashboard\\REST\\v1\\PlanningRepresentation';
     }
 }

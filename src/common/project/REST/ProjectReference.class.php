@@ -17,19 +17,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\REST;
+namespace Tuleap\Project\REST;
 
-use Luracast\Restler\Restler;
-use \Tuleap\Project\REST\ProjectInfoRepresentation;
-use \Tuleap\Token\REST\TokenRepresentation;
+use Project;
 
-/**
- * Inject core resources into restler
- */
-class ResourcesInjector {
+class ProjectReference {
 
-    public function populate(Restler $restler) {
-        $restler->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource', ProjectInfoRepresentation::ROUTE);
-        $restler->addAPIClass('\\Tuleap\\Token\\REST\\TokenResource',     TokenRepresentation::ROUTE);
+    /** @var int ID of the project */
+    public $id;
+
+    /** @var string URI of the project */
+    public $uri;
+
+    public function __construct($project) {
+        if ($project instanceof Project) {
+            $this->id = $project->getId();
+        } else {
+            $this->id = $project;
+        }
+        $this->uri = ProjectInfoRepresentation::ROUTE . '/' . $this->id;
     }
 }
