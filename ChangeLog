@@ -3,7 +3,7 @@ Version 6.7 (Not released yet)
 	* agiledashboard: 1.13
 	* fulltextsearch: 0.24
 	* cardwall: 1.8
-	* tracker: 5.180
+	* tracker: 5.181
 	* openid: 0.3
 	* git: 3.53
 	* ldap: 3.39
@@ -30,7 +30,7 @@ Version 6.7 (Not released yet)
 	* Story #5280: Integrate Bootstrap to continue interface overhaul
 	* Story #5281: Switch css stylesheets to less format
         * Story #5283: Use recess instead of phpless & use boostrap*.less
- 
+
 	== Developments ==
 	* Add framework for RESt API test automation (see tests/rest)
 	* Now stylesheets are written in [LESS](http://lesscss.org/) format.  Please see [Development environment/How to deal with LESS files](https://tuleap.net/wiki/index.php?pagename=Development%20environment%2FHow%20to%20deal%20with%20LESS%20files&group_id=101) to update your developpement environment. tl;dr: `make less` or `make less-dev`.
