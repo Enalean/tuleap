@@ -1,3 +1,6 @@
+Version 3.53 - Tuleap 6.7
+    * fix request #5531 - Problem deleting Gerrit Server
+
 Version 3.52 - Tuleap 6.7
     * Dev: remove a bunch of explicit require_once
 
