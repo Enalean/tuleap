@@ -21,9 +21,6 @@
 
 require_once 'constants.php';
 require_once 'autoload.php';
-require_once('common/plugin/Plugin.class.php');
-require_once('common/system_event/SystemEvent.class.php');
-require_once 'common/dao/SystemEventDao.class.php';
 
 /**
  * GitPlugin

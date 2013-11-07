@@ -22,16 +22,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/include/Response.class.php');
-
-require_once('common/event/EventManager.class.php');
-
-require_once('common/include/Codendi_HTMLPurifier.class.php');
-
-require_once('common/include/Combined.class.php');
-
-require_once('common/include/Toggler.class.php');
-
 /** 
  *
  * Extends the basic Response class to add HTML functions for displaying all site dependent HTML, while allowing extendibility/overriding by themes via the Theme class.
@@ -1295,8 +1285,8 @@ class Layout extends Response {
     }
     
     protected function displayCommonStylesheetElements($params) {
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-2.3.0.min.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-responsive-2.3.0.min.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-2.3.2.min.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-responsive-2.3.2.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
         $this->displayFontAwesomeStylesheetElements();
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/print.css" media="print" />';

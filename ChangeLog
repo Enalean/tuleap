@@ -1,32 +1,39 @@
 Version 6.7 (Not released yet)
 	== Plugins ==
-	* agiledashboard: 1.11
+	* agiledashboard: 1.13
 	* fulltextsearch: 0.24
 	* cardwall: 1.8
-	* tracker: 5.179
+	* tracker: 5.181
 	* openid: 0.3
-	* git: 3.51
-	* ldap: 3.38
-	* webdav: 1.9.3
+	* git: 3.53
+	* ldap: 3.39
+	* webdav: 1.9.4
 	* IM: 1.5.13
-	* docman: 2.26.23
-	* graphontrackers: 1.9
-	* hudson: 1.11
+	* docman: 2.26.24
+	* graphontrackers: 1.10
+	* hudson: 1.12
 	* pluginsadministration: 1.4
 	* mediawiki: 0.18
+	* statistics: 0.33
 
         == API ==
-       * rest: 1.1
+        * rest: 1.1
 
         == Bug Fix ==
 	* Fix request #5406: Unable to install Tuleap on CentOs 6
 	* Fix javascript typo to not make IE crying
 	* Fix request #5450: login page customisation broken
+	* Fix plugin autoload: Autoload of some plugins fails because of mix between include paths
 
 	== Enhancement ==
         * Contribution: Autoload all core
 	* Story #5280: Integrate Bootstrap to continue interface overhaul
 	* Story #5281: Switch css stylesheets to less format
+        * Story #5283: Use recess instead of phpless & use boostrap*.less
+
+	== Developments ==
+	* Add framework for RESt API test automation (see tests/rest)
+	* Now stylesheets are written in [LESS](http://lesscss.org/) format.  Please see [Development environment/How to deal with LESS files](https://tuleap.net/wiki/index.php?pagename=Development%20environment%2FHow%20to%20deal%20with%20LESS%20files&group_id=101) to update your developpement environment. tl;dr: `make less` or `make less-dev`.
 
 Version 6.6 (Thursday, October 17th 2013)
 	== Enhancement ==

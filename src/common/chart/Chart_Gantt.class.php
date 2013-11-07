@@ -17,9 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('Chart.class.php');
-require_once('Chart_GanttBar.class.php');
-require_once('Chart_GanttMilestone.class.php');
+
+require_once 'jpgraph.php';
 require_once($GLOBALS['jpgraph_dir'].'/jpgraph_gantt.php');
 
 /**

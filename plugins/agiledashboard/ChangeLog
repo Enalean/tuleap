@@ -1,3 +1,10 @@
+Version 1.13 - Tuleap 6.7
+    * fix request #5987 - Show correct list of Milestone in the report filter
+
+Version 1.12 - Tuleap 6.7
+    * request #5478 - Release cardwall displays a message related to a Sprint which should not be displayed
+    * request #5432 - The rank order in the Sprint Content view is not reflected on the cardwall
+
 Version 1.11 - Tuleap 6.7
     * Story 5334: introduce projects/:id/plannings REST route
 

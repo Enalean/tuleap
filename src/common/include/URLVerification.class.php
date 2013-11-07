@@ -19,9 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/error/Error_PermissionDenied_PrivateProject.class.php');
-require_once('common/error/Error_PermissionDenied_RestrictedUser.class.php');
-
 /**
  * Check the URL validity (protocol, host name, query) regarding server constraints
  * (anonymous, user status, project privacy, ...) and manage redirection when needed  

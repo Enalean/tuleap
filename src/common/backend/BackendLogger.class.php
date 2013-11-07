@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/log/Logger.class.php';
-
 class BackendLogger implements Logger {
     const FILENAME = 'codendi_syslog';
     private $filepath;

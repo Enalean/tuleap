@@ -53,10 +53,6 @@ define('TTF_DIR',isset($GLOBALS['ttf_font_dir']) ? $GLOBALS['ttf_font_dir'] : '/
 
 require_once('common/autoload_zend.php');
 require_once('common/autoload.php');
-require_once('common/include/CookieManager.class.php');
-require_once('common/include/HTTPRequest.class.php');
-require_once('common/include/SimpleSanitizer.class.php');
-require_once('common/include/URL.class.php');
 
 
 // Detect whether this file is called by a script running in cli mode, or in normal web mode
@@ -133,11 +129,9 @@ if (!file_exists($GLOBALS['codendi_cache_dir'])) {
 }
 
 // Instantiate System Event listener
-require_once('common/system_event/SystemEventManager.class.php');
 $system_event_manager = SystemEventManager::instance();
 
 //Load plugins
-require_once('common/plugin/PluginManager.class.php');
 $plugin_manager =& PluginManager::instance();
 $plugin_manager->loadPlugins();
 
@@ -146,14 +140,12 @@ $feedback=''; // Initialize global var
 //library to determine browser settings
 if(!IS_SCRIPT) {
     require_once('browser.php');
-    require_once('common/valid/ValidFactory.class.php');
 }
 
 //Language
 if (!$GLOBALS['sys_lang']) {
     $GLOBALS['sys_lang']="en_US";
 }
-require('common/language/BaseLanguage.class.php');
 $Language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
 
 //various html utilities
@@ -168,11 +160,8 @@ require_once('session.php');
 
 //user functions like get_name, logged_in, etc
 require_once('user.php');
-require_once('common/user/User.class.php');
 $current_user = UserManager::instance()->getCurrentUser();
 
-//group functions like get_name, etc
-require_once('common/project/Group.class.php');
 
 //library to set up context help
 require_once('help.php');
@@ -239,10 +228,6 @@ $root_for_theme = ($GLOBALS['sys_is_theme_custom']?'/custom/':'/themes/').$GLOBA
 $HTML = new $name_of_theme_class($root_for_theme);
 $GLOBALS['Response'] =& $HTML;
 
-
-//Project extends Group and includes preference accessors
-require_once('common/project/Project.class.php');
-
 // If the Codendi Software license was declined by the site admin
 // so stop all accesses to the site. Use exlicit path to avoid
 // loading the license.php file in the register directory when
@@ -268,13 +253,10 @@ print "<p>DBG: SCRIPT_NAME = ".$_SERVER['SCRIPT_NAME'];
 // Check URL for valid hostname and valid protocol
 
 if (!IS_SCRIPT) {
-    require_once('common/include/URLVerificationFactory.class.php');
     $urlVerifFactory = new URLVerificationFactory();
     $urlVerif = $urlVerifFactory->getURLVerification($_SERVER);
     $urlVerif->assertValidUrl($_SERVER);
 }
-
-require_once('common/include/URL.class.php');
 $request = HTTPRequest::instance();
 
 //Check post max size

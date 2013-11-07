@@ -1,3 +1,6 @@
+Version 1.12 - Tuleap 6.7
+    * Dev: remove a bunch of explicit require_once
+
 Version 1.11 - Tuleap 6.7
     * Story #5280: Integrate bootstrap to continue interface overhaul
 

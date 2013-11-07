@@ -7,18 +7,6 @@
 //
 // 
 
-
-//require_once('common/include/Error.class.php');
-require_once('Group.class.php');
-require_once('common/project/Service.class.php');
-require_once('common/frs/ServiceFile.class.php');
-require_once('common/svn/ServiceSVN.class.php');
-
-require_once('ProjectManager.class.php');
-require_once('ServiceNotAllowedForProjectException.class.php');
-
-require_once 'UGroupManager.class.php';
-
 /*
 
 	An object wrapper for project data

@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/PriorityPluginHookDao.class.php');
-
 /**
  * PluginHookPriorityManager
  */

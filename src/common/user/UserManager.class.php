@@ -18,16 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/user/User.class.php');
-require_once('common/dao/UserDao.class.php');
-require_once('common/dao/WikiDao.class.php');
-require_once('common/session/Codendi_Session.class.php');
-require_once('UserNotExistException.class.php');
-require_once('UserNotAuthorizedException.class.php');
-require_once('UserNotActiveException.class.php');
-require_once('SessionNotCreatedException.class.php');
-require_once('User_SSHKeyValidator.class.php');
-
 class UserManager {
     /**
      * User with id lower than 100 are considered specials (siteadmin, null,

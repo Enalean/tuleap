@@ -41,8 +41,8 @@ var MassMail = Class.create({
         previewDestination = encodeURIComponent($('preview_destination').value);
         if (previewDestination != '') {
              $('body_format_text', 'body_format_html').each(function(node){
-                if (node.checked) {
-                    bodyFormat = encodeURIComponent(node.getValue());
+                if (node.selected) {
+                    bodyFormat = encodeURIComponent(node.value);
                 }
             });
             //Once toggled, TinyMCE will inlay an amount of html so the content of the mass_mail textarea must be updated.
@@ -78,7 +78,7 @@ var MassMail = Class.create({
         users = false;
         $$('*[name^="destination"]').each(function(node) {
             if (node.checked) {
-                users = node.up('span').readAttribute('name');
+                users = node.up('label').readAttribute('name');
             }
         });
         if (!users) {

@@ -47,8 +47,8 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest exten
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->release_tracker)->returns($release_planning);
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->sprint_tracker)->returns($sprint_planning);
 
-        $hierarchy_factory = mock('Tracker_HierarchyFactory');
-        stub($hierarchy_factory)->getAllParents($this->sprint_tracker)->returns(array($this->release_tracker, $this->product_tracker));
+        $this->hierarchy_factory = mock('Tracker_HierarchyFactory');
+        stub($this->hierarchy_factory)->getAllParents($this->sprint_tracker)->returns(array($this->release_tracker, $this->product_tracker));
 
         $this->dao = mock('AgileDashboard_Milestone_MilestoneDao');
         stub($this->dao)->getAllMilestoneByTrackers(array($this->release_tracker_id, $this->sprint_tracker_id))->returnsDar(
@@ -75,19 +75,19 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest exten
         $this->provider = new AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider(
             $this->nearest_planning_tracker_provider,
             $this->dao,
-            $hierarchy_factory,
+            $this->hierarchy_factory,
             $this->planning_factory
         );
     }
 
     public function itReturnsEmptyArrayWhenNoNearestPlanningTracker() {
-        stub($this->nearest_planning_tracker_provider)->getNearestPlanningTracker($this->task_tracker)->returns(null);
+        stub($this->nearest_planning_tracker_provider)->getNearestPlanningTracker($this->task_tracker, $this->hierarchy_factory)->returns(null);
 
         $this->assertEqual($this->provider->getSelectboxOptions($this->task_tracker, '*'), array());
     }
 
     public function itDoesNotSearchOnProductTrackerSinceThereIsNoPlanning() {
-        stub($this->nearest_planning_tracker_provider)->getNearestPlanningTracker($this->task_tracker)->returns($this->sprint_tracker);
+        stub($this->nearest_planning_tracker_provider)->getNearestPlanningTracker($this->task_tracker, $this->hierarchy_factory)->returns($this->sprint_tracker);
 
         expect($this->dao)->getAllMilestoneByTrackers(array($this->release_tracker_id, $this->sprint_tracker_id))->once();
 

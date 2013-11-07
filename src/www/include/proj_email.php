@@ -6,10 +6,6 @@
 //
 // 
 
-//require_once('pre.php');
-require_once('common/mail/Mail.class.php');
-require_once('common/include/URL.class.php');
-
 
 function send_new_project_email(Project $project) {
     $ugroup_manager = new UGroupManager();

@@ -18,9 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/widget/WidgetLayout.class.php');
-require_once('common/widget/Widget.class.php');
-
 /**
 * WidgetLayoutManager
 * 

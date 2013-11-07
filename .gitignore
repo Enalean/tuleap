@@ -30,3 +30,5 @@ plugins/maillog
 !tools/plugins/datagenerator/*.css
 !tools/plugins/languages/*.css
 !tools/plugins/plugincreationwizard/*.css
+vendor/*
+composer.*

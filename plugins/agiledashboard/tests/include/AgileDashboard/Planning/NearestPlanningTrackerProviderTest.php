@@ -35,9 +35,16 @@ class AgileDashboard_Planning_NearestPlanningTrackerProviderTest extends TuleapT
         $this->sprint_tracker  = aTracker()->withId('sprint')->withParent($this->epic_tracker)->build();
 
         $release_planning = stub('Planning')->getPlanningTracker()->returns($this->release_tracker);
+        stub($release_planning)->getPlanningTrackerId()->returns('release');
         $sprint_planning  = stub('Planning')->getPlanningTracker()->returns($this->sprint_tracker);
+        stub($sprint_planning)->getPlanningTrackerId()->returns('sprint');
 
-        $this->planning_factory = mock('PlanningFactory');
+        $this->hierarchy         = mock('Tracker_Hierarchy');
+        stub($this->hierarchy)->sortTrackerIds()->returns(array('release', 'sprint'));
+        $this->hierarchy_factory = mock('Tracker_HierarchyFactory');
+        stub($this->hierarchy_factory)->getHierarchy()->returns($this->hierarchy);
+
+        $this->planning_factory  = mock('PlanningFactory');
         stub($this->planning_factory)->getPlanningsByBacklogTracker($this->task_tracker)->returns(array());
         stub($this->planning_factory)->getPlanningsByBacklogTracker($this->story_tracker)->returns(array($sprint_planning, $release_planning));
         stub($this->planning_factory)->getPlanningsByBacklogTracker($this->epic_tracker)->returns(array());
@@ -46,10 +53,10 @@ class AgileDashboard_Planning_NearestPlanningTrackerProviderTest extends TuleapT
     }
 
     public function itRetrievesTheNearestPlanningTracker() {
-        $this->assertEqual($this->provider->getNearestPlanningTracker($this->task_tracker), $this->sprint_tracker);
+        $this->assertEqual($this->provider->getNearestPlanningTracker($this->task_tracker, $this->hierarchy_factory), $this->sprint_tracker);
     }
 
     public function itReturnsNullWhenNoPlanningMatches() {
-        $this->assertEqual($this->provider->getNearestPlanningTracker($this->epic_tracker), null);
+        $this->assertEqual($this->provider->getNearestPlanningTracker($this->epic_tracker, $this->hierarchy_factory), null);
     }
 }

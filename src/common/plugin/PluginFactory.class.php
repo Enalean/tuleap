@@ -18,10 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/PluginDao.class.php');
-require_once('common/dao/CodendiDataAccess.class.php');
-require_once('Plugin.class.php');
-
 /**
  * PluginFactory
  */
@@ -133,14 +129,11 @@ class PluginFactory {
         if (!class_exists($class_name)) {
             $file_name = '/'.$name.'/include/'.$class_name.'.class.php';
             //Custom ?
-            if (file_exists($this->_getCustomPluginsRoot().$file_name)) {
-                require_once($this->_getCustomPluginsRoot().$file_name);
+            if ($this->loadClass($this->_getCustomPluginsRoot().$file_name)) {
                 $custom = true;
             } else {
                 // Official !!!
-                if (file_exists($this->_getOfficialPluginsRoot().$file_name)) {
-                    require_once($this->_getOfficialPluginsRoot().$file_name);
-                }
+                $this->loadClass($this->_getOfficialPluginsRoot().$file_name);
             }
         }
         if (!class_exists($class_name)) {
@@ -148,7 +141,24 @@ class PluginFactory {
         }
         return array('class' => $class_name, 'custom' => $custom);
     }
-    
+
+    private function loadClass($class_path) {
+        if ($this->includeIfExists($class_path)) {
+            $autoload_path = dirname($class_path) . DIRECTORY_SEPARATOR . 'autoload.php';
+            $this->includeIfExists($autoload_path);
+            return true;
+        }
+        return false;
+    }
+
+    private function includeIfExists($file_path) {
+        if (file_exists($file_path)) {
+            require_once($file_path);
+            return true;
+        }
+        return false;
+    }
+
     function _getOfficialPluginsRoot() {
         if (isset($GLOBALS['sys_pluginsroot']))
             return $GLOBALS['sys_pluginsroot'];

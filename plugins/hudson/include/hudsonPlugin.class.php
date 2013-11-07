@@ -9,9 +9,7 @@
  * HudsonPlugin
  */
 
-require_once('common/plugin/Plugin.class.php');
-require_once('PluginHudsonJobDao.class.php');
-require_once('HudsonJobFactory.class.php');
+require_once 'autoload.php';
 
 class hudsonPlugin extends Plugin {
 

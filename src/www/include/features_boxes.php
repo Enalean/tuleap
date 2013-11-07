@@ -9,9 +9,6 @@
 require_once('www/project/admin/permissions.php');
 require_once('www/new/new_utils.php');
 require_once('www/stats/site_stats_utils.php');
-require_once('common/frs/FRSPackageFactory.class.php');
-require_once('common/frs/FRSReleaseFactory.class.php');
-require_once('common/widget/Widget_Static.class.php');
 
 function show_features_boxes() {
     GLOBAL $HTML,$Language;

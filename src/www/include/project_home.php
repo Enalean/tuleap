@@ -9,14 +9,8 @@
 require_once('vars.php');
 require_once('www/news/news_utils.php');
 require_once('trove.php');
-require_once('common/tracker/ArtifactType.class.php');
-require_once('common/tracker/ArtifactTypeFactory.class.php');
-require_once('common/frs/FileModuleMonitorFactory.class.php');
-require_once('common/wiki/lib/Wiki.class.php');
 require_once('www/project/admin/permissions.php');
-require_once('common/event/EventManager.class.php');
-require_once('common/widget/WidgetLayoutManager.class.php');
-require_once('common/include/Codendi_HTMLPurifier.class.php');
+require_once('common/wiki/lib/Wiki.class.php');
 
 $hp =& Codendi_HTMLPurifier::instance();
 

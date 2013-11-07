@@ -9,10 +9,6 @@
 // Originally written by Nicolas Guerin 2004, Codendi Team, Xerox
 //
 
-// Provide various functions for file manager
-require_once('common/frs/FRSPackageFactory.class.php');
-require_once('common/frs/FRSReleaseFactory.class.php');
-require_once('common/reference/ReferenceManager.class.php');
 require_once('www/news/news_utils.php');
 
 function file_utils_header($params) {

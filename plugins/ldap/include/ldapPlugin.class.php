@@ -20,17 +20,8 @@
  * along with Codendi; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once 'common/plugin/Plugin.class.php';
-require_once 'common/dao/CodendiDataAccess.class.php';
-require_once 'LdapPluginInfo.class.php';
-require_once 'LDAP_UserManager.class.php';
-require_once 'LDAP_UserDao.class.php';
-require_once 'LDAP_GroupManager.class.php';
-require_once 'LDAP_UserGroupManager.class.php';
-require_once 'LDAP_ProjectGroupManager.class.php';
-require_once 'LDAP.class.php';
-require_once 'LDAP_BackendSVN.class.php';
-require_once 'LDAP_DirectorySynchronization.class.php';
+
+require_once 'autoload.php';
 
 class LdapPlugin extends Plugin {
     /**

@@ -22,8 +22,8 @@
  *
  * 
  */
-require_once('common/plugin/Plugin.class.php');
-require_once('Docman_ApprovalTableReminder.class.php');
+
+require_once 'autoload.php';
 
 class DocmanPlugin extends Plugin {
     /**

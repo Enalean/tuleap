@@ -107,7 +107,20 @@ document.observe('dom:loaded', function () {
             after: div
         });
     });
-    
+
+    $$('.tracker_artifact_field  textarea').each(function (element) {
+        var html_id = element.id;
+        var id = html_id.match(/_(\d+)$/)[1];
+        var name = 'artifact['+ id +'][format]';
+        var htmlFormat = false;
+
+        if ($('artifact['+id+']_body_format').value == 'html') {
+            htmlFormat = true;
+        }
+
+        new tuleap.trackers.textarea.RTE(element, {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat});
+    });
+
     $$('.tracker_artifact_followup_comment_controls_edit').each(function (edit) {
         var id = edit.up('.tracker_artifact_followup').id;
         if (id && id.match(/_\d+$/)) {
@@ -128,13 +141,16 @@ document.observe('dom:loaded', function () {
                     var rteSpan    = new Element('span', { style: 'text-align: left;'}).update(textarea);
                     var edit_panel = new Element('div', { style: 'text-align: right;'}).update(rteSpan);
                     comment_panel.insert({before: edit_panel});
-                    new tuleap.trackers.followup.RTE(textarea, {toggle: true, default_in_html: false, id: id, htmlFormat: htmlFormat});
-                    while (textarea.offsetWidth < comment_panel.offsetWidth) {
-                        textarea.cols++;
+                    var name = 'comment_format'+id;
+                    new tuleap.trackers.textarea.RTE(textarea, {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat});
+
+                    var nb_rows_displayed = 5;
+                    var nb_rows_content   = textarea.value.split(/\n/).length;
+                    if (nb_rows_content > nb_rows_displayed) {
+                        nb_rows_displayed = nb_rows_content;
                     }
-                    while (textarea.offsetHeight < textarea.scrollHeight) {
-                        textarea.rows++;
-                    }
+                    textarea.rows = nb_rows_displayed;
+
                     comment_panel.hide();
                     textarea.focus();
                     var button = new Element('button').update('Ok').observe('click', function (evt) {
@@ -143,7 +159,7 @@ document.observe('dom:loaded', function () {
                         } else {
                             var content = $('tracker_followup_comment_edit_'+id).getValue();
                         }
-                        var format = document.getElementsByName('comment_format'+id)[0].checked? 'text' : 'html';
+                        var format = document.getElementsByName('comment_format'+id)[0].selected? 'text' : 'html';
                         var req = new Ajax.Request(location.href, {
                             parameters: {
                                 func:           'update-comment',

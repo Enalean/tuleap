@@ -19,8 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('common/include/HTTPRequest.class.php');
-require_once('common/plugin/Plugin.class.php');
 
 class GraphOnTrackersPlugin extends Plugin {
 

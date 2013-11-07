@@ -9,16 +9,6 @@
 // adduser.php - All the forms and functions to manage unix users
 //
 
-require_once('common/mail/Mail.class.php');
-require_once('common/password/PasswordStrategy.class.php');
-require_once('common/password/PasswordRegexpValidator.class.php');
-require_once('common/widget/WidgetLayoutManager.class.php');
-require_once('common/event/EventManager.class.php');
-require_once('common/valid/Rule.class.php');
-
-
-
-
 // ***** function account_pwvalid()
 // ***** check for valid password
 function account_pwvalid($pw, &$errors) {

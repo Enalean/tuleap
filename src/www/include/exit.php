@@ -6,11 +6,6 @@
 //
 // 
 
-
-
-require_once('common/error/Error_PermissionDenied_PrivateProject.class.php');
-require_once('common/error/Error_PermissionDenied_RestrictedUser.class.php');
-
 function exit_error($title,$text) {
     global $HTML,$Language;
     $GLOBALS['feedback'] .= $title;
