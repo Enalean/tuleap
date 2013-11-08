@@ -39,4 +39,5 @@ $ vi /etc/codendi/conf/dbtest.inc
 If you have used anything other than the default values, change as necessary.
 
 # Running the tests:
-$/usr/share/codendi/src/utils/php-launcher.sh vendor/phpunit/phpunit/phpunit.php tests/rest
+$ make api_test_bootstrap
+$ make api_test

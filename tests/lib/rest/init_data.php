@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-date_default_timezone_set('Europe/London');
 
-require_once 'common/autoload.php';
+require_once 'pre.php';
 require_once dirname(__FILE__).'/../autoload.php';
 
-$data_builder = new DataBuilder();
+$data_builder = new TestDataBuilder();
 $data_builder
-    ->setUpDatabase()
+    ->activatePlugins()
     ->generateUser()
+    ->generateProject()
+    ->importAgileTemplate()
     ->activateDebug();
-?>

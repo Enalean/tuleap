@@ -26,11 +26,29 @@ use \Tracker_FormElementFactory;
 use \TrackerFactory;
 use \URLVerification;
 use \UserManager;
+use \Tuleap\REST\Header;
 
 /**
  * Wrapper for Tracker related REST methods
  */
 class TrackersResource {
+
+    /**
+     * @url OPTIONS
+     */
+    public function options() {
+        header(Header::getAllow(array(Header::OPTIONS)));
+    }
+
+    /**
+     * @url OPTIONS {id}
+     * @param string $id Id of the tracker
+     */
+    protected function optionsId($id) {
+        $user    = UserManager::instance()->getCurrentUser();
+        $this->getTrackerById($user, $id);
+        header(Header::getAllow(array(Header::OPTIONS, Header::GET)));
+    }
 
     /**
      * Return the definition of the tracker
@@ -44,13 +62,6 @@ class TrackersResource {
         $user    = UserManager::instance()->getCurrentUser();
         $tracker = $this->getTrackerById($user, $id);
         return $builder->getTrackerRepresentation($user, $tracker);
-    }
-
-    /**
-     * @url OPTIONS
-     */
-    public function options() {
-        header('Allow: GET, OPTIONS');
     }
 
     private function getTrackerById(\PFUser $user, $id) {
@@ -70,7 +81,6 @@ class TrackersResource {
         } catch (\Project_AccessException $exception) {
             throw new RestException(403, $exception->getMessage());
         }
-        throw new RestException(404);
     }
 }
 

@@ -21,37 +21,19 @@ require_once 'common/dao/CodendiDataAccess.class.php';
 require_once 'database.php';
 
 class DBTestAccess {
-    protected $mysqli;
 
     public function __construct() {
         $this->loadConfiguration();
-        $this->mysqli = mysqli_init();
-        if (! $this->mysqli->real_connect($GLOBALS['sys_dbhost'], $GLOBALS['sys_dbuser'], $GLOBALS['sys_dbpasswd'])) {
-            $this->mysqli = false;
-        }
     }
 
     public function setUp() {
         Config::set('DEBUG_MODE', true);
 
-        $this->initDb();
-        $this->mysqli->select_db(Config::get('sys_dbname'));
         db_connect();
     }
 
     protected function truncateTable($table) {
         $this->mysqli->query("TRUNCATE TABLE $table");
-    }
-
-    /**
-     * Execute all statements of given file (bulk imports)
-     *
-     * @param String $file
-     */
-    protected function mysqlLoadFile($file) {
-        $mysql_cmd = 'mysql -h '.$GLOBALS['sys_dbhost'].' -u'.$GLOBALS['sys_dbuser'].' -p'.$GLOBALS['sys_dbpasswd'].' '.$GLOBALS['sys_dbname'];
-        $cmd = $mysql_cmd.' < '.$file;
-        system($cmd);
     }
 
     private function loadConfiguration() {
@@ -67,23 +49,4 @@ class DBTestAccess {
     private function getLocalIncPath() {
         return getenv('CODENDI_LOCAL_INC') ? getenv('CODENDI_LOCAL_INC') : '/etc/codendi/conf/local.inc';
     }
-
-    private function foraceCreateDatabase() {
-        $this->mysqli->query("DROP DATABASE IF EXISTS ".$GLOBALS['sys_dbname']);
-        $this->mysqli->query("CREATE DATABASE ".$GLOBALS['sys_dbname']);
-    }
-
-    private function initDb() {
-        $this->foraceCreateDatabase();
-        $this->mysqlLoadFile('src/db/mysql/database_structure.sql');
-        $this->mysqlLoadFile('src/db/mysql/database_initvalues.sql');
-        $this->mysqlLoadFile('src/db/mysql/trackerv3values.sql');
-        $this->mysqlLoadFile('plugins/tracker_date_reminder/db/install.sql');
-        $this->mysqlLoadFile('plugins/tracker_date_reminder/db/examples.sql');
-        $this->mysqlLoadFile('plugins/graphontrackers/db/install.sql');
-        $this->mysqlLoadFile('plugins/graphontrackers/db/initvalues.sql');
-        $this->mysqlLoadFile('plugins/tracker/db/install.sql');
-        $this->mysqlLoadFile('plugins/graphontrackersv5/db/install.sql');
-    }
 }
-?>

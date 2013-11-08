@@ -12,8 +12,10 @@ test:
 autoload:
 	@echo "Generate core"
 	@(cd src/common; phpab  --compat -o autoload.php --exclude "./wiki/phpwiki/*" .)
+	@echo "Generate tests"
+	@(cd tests/lib; phpab  --compat -o autoload.php .)
 	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
-	     echo "Generate $$path"; \
+	     echo "Generate plugin $$path"; \
 	     (cd "plugins/$$path/include"; phpab --compat -o autoload.php .) \
         done;
 
@@ -30,8 +32,9 @@ api_test_setup:
 	cp tests/rest/bin/integration_tests.inc.dist /etc/codendi/conf/integration_tests.inc
 	cp tests/rest/bin/dbtest.inc.dist /etc/codendi/conf/dbtest.inc
 
-api_test:
-	src/utils/php-launcher.sh vendor/phpunit/phpunit/phpunit.php --bootstrap tests/lib/rest/bootstrap.php tests/rest
+api_test_bootstrap:
+	php tests/lib/rest/init_db.php
+	TULEAP_LOCAL_INC=/etc/codendi/conf/integration_tests.inc src/utils/php-launcher.sh tests/lib/rest/init_data.php
 
-api_test_group:
-	src/utils/php-launcher.sh vendor/phpunit/phpunit/phpunit.php --group $g tests/rest
+api_test:
+	src/utils/php-launcher.sh vendor/phpunit/phpunit/phpunit.php tests/rest

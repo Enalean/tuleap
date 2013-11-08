@@ -22,11 +22,18 @@ require_once dirname(__FILE__).'/../autoload.php';
 require_once 'common/autoload.php';
 require_once dirname(__FILE__).'/../../../vendor/autoload.php';
 
-class RestBase extends PHPUnit_Framework_TestCase {
+use Guzzle\Http\Client;
+use Guzzle\Http\Exception\BadResponseException;
 
-    protected $base_url  = 'http://localhost:8089';
+class RestBase extends PHPUnit_Framework_TestCase {
+    protected $base_url  = 'http://localhost:8089/api/v1';
 
     private $user_manager;
+
+    /**
+     * @var Client
+     */
+    protected $client;
 
     public function __construct() {
         parent::__construct();
@@ -37,6 +44,30 @@ class RestBase extends PHPUnit_Framework_TestCase {
 
     public function setUp() {
         parent::setUp();
+
+        $this->client = new Client($this->base_url);
+    }
+
+    protected function getResponseByName($name, $request) {
+        return $this->getResponseByToken(
+            $this->generateToken(
+                $this->getUserByName($name)
+            ),
+            $request
+        );
+    }
+
+    protected function getResponseByToken(Rest_Token $token, $request) {
+        $request->setHeader('X-Auth-Token', $token->getTokenValue())
+                ->setHeader('Content-Type', 'application/json')
+                ->setHeader('X-Auth-UserId', $token->getUserId());
+        return $request->send();
+    }
+
+    protected function getTokenForUserName($user_name) {
+        return $this->generateToken(
+            $this->getUserByName($user_name)
+        );
     }
 
     /**
