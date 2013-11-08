@@ -32,8 +32,13 @@ class PlanningTest extends RestBase {
         );
     }
 
-    public function testPlanningsContainsAReleasePlanning() {
-        $response = $this->getResponse($this->client->get(self::API_BASE . '/projects/101/plannings'));
+    public function testOptionsPlannings() {
+        $response = $this->getResponse($this->client->options('projects/101/plannings'));
+        $this->assertEquals(array('GET', 'OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGetPlanningsContainsAReleasePlanning() {
+        $response = $this->getResponse($this->client->get('projects/101/plannings'));
 
         $plannings = $response->json();
 
@@ -53,7 +58,7 @@ class PlanningTest extends RestBase {
     }
 
     public function testReleasePlanningHasNoMilestone() {
-        $response = $this->getResponse($this->client->get(self::API_BASE.'/'.$this->getMilestonesUri()));
+        $response = $this->getResponse($this->client->get($this->getMilestonesUri()));
 
         $this->assertCount(0, $response->json());
 
@@ -61,7 +66,7 @@ class PlanningTest extends RestBase {
     }
 
     private function getMilestonesUri() {
-        $response_plannings = $this->getResponse($this->client->get(self::API_BASE.'/projects/101/plannings'))->json();
+        $response_plannings = $this->getResponse($this->client->get('projects/101/plannings'))->json();
         return $response_plannings[0]['milestones_uri'];
     }
 }

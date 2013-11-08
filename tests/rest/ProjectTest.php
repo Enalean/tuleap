@@ -26,7 +26,7 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
 class ProjectTest extends RestBase {
 
     public function testGETbyIdForAdmin() {
-        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->get(self::API_BASE . '/projects/101'));
+        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/101'));
 
         $this->assertEquals($response->json(), array(
             'id'        => '101',
@@ -40,7 +40,7 @@ class ProjectTest extends RestBase {
     }
 
     public function testOPTIONSbyIdForAdmin() {
-        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->options(self::API_BASE . '/projects/101'));
+        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/101'));
 
         $this->assertEquals(array('GET', 'OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
@@ -50,7 +50,7 @@ class ProjectTest extends RestBase {
         // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
-            $this->getResponseByName(TestDataBuilder::TEST_USER_NAME, $this->client->options(self::API_BASE . '/projects/100'));
+            $this->getResponseByName(TestDataBuilder::TEST_USER_NAME, $this->client->options('projects/100'));
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 403);
             $exception = true;

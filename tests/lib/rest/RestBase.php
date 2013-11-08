@@ -26,10 +26,7 @@ use Guzzle\Http\Client;
 use Guzzle\Http\Exception\BadResponseException;
 
 class RestBase extends PHPUnit_Framework_TestCase {
-
-    const API_BASE = 'api/v1';
-
-    protected $base_url  = 'http://localhost:8089';
+    protected $base_url  = 'http://localhost:8089/api/v1';
 
     private $user_manager;
 
