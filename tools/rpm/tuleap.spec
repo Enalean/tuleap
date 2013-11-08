@@ -443,23 +443,6 @@ Connect to Tuleap using an OpenId provider
 #
 ## Themes
 #
-%package theme-codex
-Summary: Codex theme for Tuleap
-Group: Development/Tools
-Version: @@THEME_CODEX_VERSION@@
-Release: 1%{?dist}
-Requires: %{PKG_NAME}
-%description theme-codex
-Original theme for Tuleap
-
-%package theme-codextab
-Summary: CodexTab theme for Tuleap
-Group: Development/Tools
-Version: @@THEME_CODEXTAB_VERSION@@
-Release: 1%{?dist}
-Requires: %{PKG_NAME}
-%description theme-codextab
-CodexTab theme for Tuleap
 
 %package theme-dawn
 Summary: Dawn theme for Tuleap
@@ -1109,13 +1092,6 @@ fi
 #
 # Themes
 #
-%files theme-codex
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/src/www/themes/CodeX
-
-%files theme-codextab
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/src/www/themes/CodeXTab
 
 %files theme-dawn
 %defattr(-,%{APP_USER},%{APP_USER},-)

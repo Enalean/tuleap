@@ -64,7 +64,7 @@ remoteinstall:
 	touch remoteinstall
 
 remoteinstall2:
-	ssh root@$(BUILDHOST) yum -y install tuleap.noarch tuleap-all-deps.noarch tuleap-core-cvs.noarch tuleap-core-mailman.noarch tuleap-core-subversion.noarch tuleap-customization-default.noarch tuleap-plugin-cvstodimensions.noarch tuleap-plugin-docmanwatermark.noarch tuleap-plugin-eclipse.noarch tuleap-plugin-forumml.noarch tuleap-plugin-git.noarch tuleap-plugin-hudson.noarch tuleap-plugin-im.noarch tuleap-plugin-jri.noarch tuleap-plugin-ldap.noarch tuleap-plugin-soapproject.noarch tuleap-plugin-svntodimensions.noarch tuleap-plugin-webdav.noarch tuleap-theme-codex.noarch tuleap-theme-codexstn.noarch tuleap-theme-codextab.noarch tuleap-theme-dawn.noarch tuleap-theme-savannah.noarch tuleap-theme-steerforge.noarch tuleap-theme-sttab.noarch tuleap-theme-tuleap.noarch
+	ssh root@$(BUILDHOST) yum -y install tuleap.noarch tuleap-all-deps.noarch tuleap-core-cvs.noarch tuleap-core-mailman.noarch tuleap-core-subversion.noarch tuleap-customization-default.noarch tuleap-plugin-cvstodimensions.noarch tuleap-plugin-docmanwatermark.noarch tuleap-plugin-eclipse.noarch tuleap-plugin-forumml.noarch tuleap-plugin-git.noarch tuleap-plugin-hudson.noarch tuleap-plugin-im.noarch tuleap-plugin-jri.noarch tuleap-plugin-ldap.noarch tuleap-plugin-soapproject.noarch tuleap-plugin-svntodimensions.noarch tuleap-plugin-webdav.noarch tuleap-theme-codexstn.noarch tuleap-theme-dawn.noarch tuleap-theme-savannah.noarch tuleap-theme-steerforge.noarch tuleap-theme-sttab.noarch tuleap-theme-tuleap.noarch
 
 getepel: yum/epel/5/x86_64 $(EPEL64PKGS)
 	rsync -av yum/ builder@$(BUILDHOST):yum/
