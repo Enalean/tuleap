@@ -23,6 +23,8 @@ require_once dirname(__FILE__).'/../autoload.php';
 
 $data_builder = new TestDataBuilder();
 $data_builder
+    ->activatePlugins()
     ->generateUser()
     ->generateProject()
+    ->importAgileTemplate()
     ->activateDebug();

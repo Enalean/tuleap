@@ -42,7 +42,7 @@ class ProjectTest extends RestBase {
         $user    = $this->getUserByName(TestDataBuilder::ADMIN_USER_NAME);
         $token   = $this->generateToken($user);
 
-        $request = $this->client->get('/api/v1/projects/100')
+        $request = $this->client->get('/api/v1/projects/101')
                 ->setHeader('X-Auth-Token', $token->getTokenValue())
                 ->setHeader('Content-Type', 'application/json')
                 ->setHeader('X-Auth-UserId', $token->getUserId());
@@ -50,10 +50,11 @@ class ProjectTest extends RestBase {
         $response = $request->send();
 
         $this->assertEquals($response->json(), array(
-            'id'        => '100',
-            'uri'       => 'projects/100',
-            'label'     => 'Default Site Template',
+            'id'        => '101',
+            'uri'       => 'projects/101',
+            'label'     => TestDataBuilder::TEST_PROJECT_LONG_NAME,
             'resources' => array(
+                'projects/101/plannings'
             ))
         );
         $this->assertEquals($response->getStatusCode(), 200);

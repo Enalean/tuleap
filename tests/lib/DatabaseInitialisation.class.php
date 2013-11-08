@@ -52,6 +52,8 @@ class DatabaseInitialization {
         $this->mysqlLoadFile('plugins/graphontrackers/db/initvalues.sql');
         $this->mysqlLoadFile('plugins/tracker/db/install.sql');
         $this->mysqlLoadFile('plugins/graphontrackersv5/db/install.sql');
+        $this->mysqlLoadFile('plugins/agiledashboard/db/install.sql');
+        $this->mysqlLoadFile('plugins/cardwall/db/install.sql');
     }
 
     private function forceCreateDatabase() {

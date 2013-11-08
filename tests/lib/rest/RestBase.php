@@ -24,6 +24,8 @@ require_once dirname(__FILE__).'/../../../vendor/autoload.php';
 
 class RestBase extends PHPUnit_Framework_TestCase {
 
+    const API_BASE = 'api/v1';
+
     protected $base_url  = 'http://localhost:8089';
 
     private $user_manager;

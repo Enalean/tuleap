@@ -26,6 +26,10 @@ class TestDataBuilder {
     const TEST_USER_PASS   = 'welcome0';
     const ADMIN_PROJECT_ID = 100;
 
+    const TEST_PROJECT_LONG_NAME = 'Long name';
+    const TEST_PROJECT_SHORT_NAME = 'short-name';
+
+
     /** @var ProjectManager */
     private $project_manager;
 
@@ -36,6 +40,20 @@ class TestDataBuilder {
         $this->project_manager = ProjectManager::instance();
         $this->user_manager    = UserManager::instance();
         $GLOBALS['Language']   = new BaseLanguage('en_US', 'en_US');
+    }
+
+    public function activatePlugins() {
+        $this->activatePlugin('tracker');
+        $this->activatePlugin('agiledashboard');
+        $this->activatePlugin('cardwall');
+        PluginManager::instance()->loadPlugins();
+        return $this;
+    }
+
+    private function activatePlugin($name) {
+        $plugin_factory = PluginFactory::instance();
+        $plugin = $plugin_factory->createPlugin($name);
+        $plugin_factory->availablePlugin($plugin);
     }
 
     public function activateDebug() {
@@ -67,8 +85,10 @@ class TestDataBuilder {
         $user = $this->user_manager->getUserByUserName(self::TEST_USER_NAME);
         $this->user_manager->setCurrentUser($user);
 
+        echo "Create project\n";
+
         $projectCreator = new ProjectCreator($this->project_manager, new Rule_ProjectName(), new Rule_ProjectFullName());
-        $projectCreator->create('short-name', 'Long name', array(
+        $project = $projectCreator->create(self::TEST_PROJECT_SHORT_NAME, self::TEST_PROJECT_LONG_NAME, array(
             'project' => array(
                 'form_license'           => 'xrx',
                 'form_license_other'     => '',
@@ -79,6 +99,7 @@ class TestDataBuilder {
                 'built_from_template'    => 100,
             )
         ));
+        $this->project_manager->activate($project);
 
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['cvs_prefix']);
@@ -88,6 +109,19 @@ class TestDataBuilder {
         unset($GLOBALS['sys_default_domain']);
         unset($GLOBALS['sys_cookie_prefix']);
         unset($GLOBALS['sys_force_ssl']);
+
+        return $this;
+    }
+
+    public function importAgileTemplate() {
+        echo "Create import XML\n";
+
+        $xml_importer = new ProjectXMLImporter(
+            EventManager::instance(),
+            $this->user_manager,
+            $this->project_manager
+        );
+        $xml_importer->import(101, 'admin', dirname(__FILE__).'/../../rest/_fixtures/tuleap_agiledashboard_template.xml');
 
         return $this;
     }
