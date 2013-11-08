@@ -17,12 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-date_default_timezone_set('Europe/London');
 
-require_once 'common/autoload.php';
-require_once dirname(__FILE__).'/../autoload.php';
-
-class DataBuilder {
+class TestDataBuilder {
 
     const ADMIN_USER_NAME  = 'admin';
     const ADMIN_USER_PASS  = 'siteadmin';
@@ -30,16 +26,16 @@ class DataBuilder {
     const TEST_USER_PASS   = 'welcome0';
     const ADMIN_PROJECT_ID = 100;
 
-    /** @var DBTestAccess */
-    private $db;
+    /** @var ProjectManager */
+    private $project_manager;
+
+    /** @var UserManager */
+    private $user_manager;
 
     public function __construct() {
-        $this->db = new DBTestAccess();
-    }
-
-    public function setUpDatabase() {
-        $this->db->setUp();
-        return $this;
+        $this->project_manager = ProjectManager::instance();
+        $this->user_manager    = UserManager::instance();
+        $GLOBALS['Language']   = new BaseLanguage('en_US', 'en_US');
     }
 
     public function activateDebug() {
@@ -48,16 +44,50 @@ class DataBuilder {
     }
 
     public function generateUser() {
-        $language = new BaseLanguage('en_US', 'en_US');
-        $GLOBALS['Language'] = $language;
-
         $user = new PFUser();
-        $user->setUserName('rest_api_tester');
-        $user->setPassword('welcome0');
-        $user->setLanguage($language);
+        $user->setUserName(self::TEST_USER_NAME);
+        $user->setPassword(self::TEST_USER_PASS);
+        $user->setLanguage($GLOBALS['Language']);
 
-        $account_manager = UserManager::instance();
-        $account_manager->createAccount($user);
+        $this->user_manager->createAccount($user);
+
+        return $this;
+    }
+
+    public function generateProject() {
+        $GLOBALS['svn_prefix'] = '/tmp';
+        $GLOBALS['cvs_prefix'] = '/tmp';
+        $GLOBALS['grpdir_prefix'] = '/tmp';
+        $GLOBALS['ftp_frs_dir_prefix'] = '/tmp';
+        $GLOBALS['ftp_anon_dir_prefix'] = '/tmp';
+        $GLOBALS['sys_default_domain'] = '';
+        $GLOBALS['sys_cookie_prefix'] = '';
+        $GLOBALS['sys_force_ssl'] = 0;
+
+        $user = $this->user_manager->getUserByUserName(self::TEST_USER_NAME);
+        $this->user_manager->setCurrentUser($user);
+
+        $projectCreator = new ProjectCreator($this->project_manager, new Rule_ProjectName(), new Rule_ProjectFullName());
+        $projectCreator->create('short-name', 'Long name', array(
+            'project' => array(
+                'form_license'           => 'xrx',
+                'form_license_other'     => '',
+                'form_short_description' => '',
+                'is_test'                => false,
+                'is_public'              => false,
+                'services'               => array(),
+                'built_from_template'    => 100,
+            )
+        ));
+
+        unset($GLOBALS['svn_prefix']);
+        unset($GLOBALS['cvs_prefix']);
+        unset($GLOBALS['grpdir_prefix']);
+        unset($GLOBALS['ftp_frs_dir_prefix']);
+        unset($GLOBALS['ftp_anon_dir_prefix']);
+        unset($GLOBALS['sys_default_domain']);
+        unset($GLOBALS['sys_cookie_prefix']);
+        unset($GLOBALS['sys_force_ssl']);
 
         return $this;
     }

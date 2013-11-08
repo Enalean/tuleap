@@ -39,7 +39,7 @@ class ProjectTest extends RestBase {
     }
 
     public function testGETbyIdForAdmin() {
-        $user    = $this->getUserByName(DataBuilder::ADMIN_USER_NAME);
+        $user    = $this->getUserByName(TestDataBuilder::ADMIN_USER_NAME);
         $token   = $this->generateToken($user);
 
         $request = $this->client->get('/api/v1/projects/100')
@@ -49,12 +49,18 @@ class ProjectTest extends RestBase {
 
         $response = $request->send();
 
-        $this->assertEquals($response->json(), array('id' => '100', 'label' => 'Default Site Template'));
+        $this->assertEquals($response->json(), array(
+            'id'        => '100',
+            'uri'       => 'projects/100',
+            'label'     => 'Default Site Template',
+            'resources' => array(
+            ))
+        );
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
     public function testGETbyIdForForbiddenUser() {
-        $user    = $this->getUserByName(DataBuilder::TEST_USER_NAME);
+        $user    = $this->getUserByName(TestDataBuilder::TEST_USER_NAME);
         $token   = $this->generateToken($user);
 
         $request = $this->client->get('/api/v1/projects/100')
