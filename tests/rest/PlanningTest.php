@@ -19,34 +19,21 @@
  */
 
 require_once dirname(__FILE__).'/../lib/autoload.php';
-use Guzzle\Http\Client;
-use Guzzle\Http\Exception\BadResponseException;
 
 /**
- * @group ProjectTests
+ * @group PlanningTests
  */
 class PlanningTest extends RestBase {
 
-    /**
-     * @var Client
-     */
-    private $client;
-
-    public function setUp() {
-        parent::setUp();
-
-        $this->client = new Client($this->base_url);
-        $user    = $this->getUserByName(TestDataBuilder::ADMIN_USER_NAME);
-        $this->token   = $this->generateToken($user);
+    protected function getResponse($request) {
+        return $this->getResponseByToken(
+            $this->getTokenForUserName(TestDataBuilder::TEST_USER_NAME),
+            $request
+        );
     }
 
     public function testPlanningsContainsAReleasePlanning() {
-        $request = $this->client->get('/api/v1/projects/101/plannings')
-                ->setHeader('X-Auth-Token', $this->token->getTokenValue())
-                ->setHeader('Content-Type', 'application/json')
-                ->setHeader('X-Auth-UserId', $this->token->getUserId());
-
-        $response = $request->send();
+        $response = $this->getResponse($this->client->get(self::API_BASE . '/projects/101/plannings'));
 
         $plannings = $response->json();
 
@@ -66,11 +53,7 @@ class PlanningTest extends RestBase {
     }
 
     public function testReleasePlanningHasNoMilestone() {
-        $request = $this->client->get(self::API_BASE.'/'.$this->getMilestonesUri())
-                ->setHeader('X-Auth-Token', $this->token->getTokenValue())
-                ->setHeader('Content-Type', 'application/json')
-                ->setHeader('X-Auth-UserId', $this->token->getUserId());
-        $response = $request->send();
+        $response = $this->getResponse($this->client->get(self::API_BASE.'/'.$this->getMilestonesUri()));
 
         $this->assertCount(0, $response->json());
 
@@ -78,12 +61,7 @@ class PlanningTest extends RestBase {
     }
 
     private function getMilestonesUri() {
-        $request_planning = $this->client->get(self::API_BASE.'/projects/101/plannings')
-                ->setHeader('X-Auth-Token', $this->token->getTokenValue())
-                ->setHeader('Content-Type', 'application/json')
-                ->setHeader('X-Auth-UserId', $this->token->getUserId());
-
-        $response_plannings = $request_planning->send()->json();
+        $response_plannings = $this->getResponse($this->client->get(self::API_BASE.'/projects/101/plannings'))->json();
         return $response_plannings[0]['milestones_uri'];
     }
 }

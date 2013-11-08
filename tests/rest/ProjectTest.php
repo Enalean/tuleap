@@ -19,35 +19,14 @@
  */
 
 require_once dirname(__FILE__).'/../lib/autoload.php';
-use Guzzle\Http\Client;
-use Guzzle\Http\Exception\BadResponseException;
 
 /**
  * @group ProjectTests
  */
 class ProjectTest extends RestBase {
 
-    /**
-     * @var Client
-     */
-    private $client;
-
-    public function setUp() {
-        parent::setUp();
-
-        $this->client = new Client($this->base_url);
-    }
-
     public function testGETbyIdForAdmin() {
-        $user    = $this->getUserByName(TestDataBuilder::ADMIN_USER_NAME);
-        $token   = $this->generateToken($user);
-
-        $request = $this->client->get('/api/v1/projects/101')
-                ->setHeader('X-Auth-Token', $token->getTokenValue())
-                ->setHeader('Content-Type', 'application/json')
-                ->setHeader('X-Auth-UserId', $token->getUserId());
-
-        $response = $request->send();
+        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->get(self::API_BASE . '/projects/101'));
 
         $this->assertEquals($response->json(), array(
             'id'        => '101',
@@ -60,19 +39,18 @@ class ProjectTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
+    public function testOPTIONSbyIdForAdmin() {
+        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->options(self::API_BASE . '/projects/101'));
+
+        $this->assertEquals(array('GET', 'OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
     public function testGETbyIdForForbiddenUser() {
-        $user    = $this->getUserByName(TestDataBuilder::TEST_USER_NAME);
-        $token   = $this->generateToken($user);
-
-        $request = $this->client->get('/api/v1/projects/100')
-                ->setHeader('X-Auth-Token', $token->getTokenValue())
-                ->setHeader('Content-Type', 'application/json')
-                ->setHeader('X-Auth-UserId', $token->getUserId());
-
-        //not very nice for a test but that's how guzzle works.
+        // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
-            $request->send();
+            $this->getResponseByName(TestDataBuilder::TEST_USER_NAME, $this->client->options(self::API_BASE . '/projects/100'));
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 403);
             $exception = true;
