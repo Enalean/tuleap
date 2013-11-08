@@ -81,7 +81,15 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
     public function getSoapValue() {
         return $this->encapsulateRawSoapValue($this->getTimestamp());
     }
-    
+
+    public function getRESTValue() {
+        $date = null;
+        if ($this->getTimestamp()) {
+            $date = date('c', $this->getTimestamp());
+        }
+        return $this->getSimpleRESTRepresentation($date);
+    }
+
     /**
      * Returns the value of this changeset value (human readable)
      *

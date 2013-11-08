@@ -58,7 +58,9 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
         $this->artifact_id = 56;
         
         $this->milestone_tracker_id = 112;
-        $this->milestone_tracker    = stub('Tracker')->getId()->returns($this->milestone_tracker_id);
+        $this->milestone_tracker    = mock('Tracker');
+        stub($this->milestone_tracker)->getId()->returns($this->milestone_tracker_id);
+        stub($this->milestone_tracker)->getProject()->returns($this->project);
 
         $this->user                = mock('PFUser');
         $this->planning            = aPlanning()->withId($this->planning_id)->build();
@@ -79,6 +81,7 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
         stub($this->artifact)->getTracker()->returns($this->milestone_tracker);
         stub($this->artifact)->userCanView()->returns(true);
         stub($this->artifact)->getAllAncestors()->returns(array());
+
         stub($this->planning_factory)->getPlanning($this->planning_id)->returns($this->planning);
     }
 }
@@ -638,4 +641,72 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         $this->assertEqual($milestone_1->getArtifact(), $artifact_2);
     }
 }
+
+class MilestoneFactory_GetBareMilestoneByArtifactIdTest extends TuleapTestCase {
+    /** @var Planning_MilestoneFactory */
+    private $milestone_factory;
+    private $planning_factory;
+    private $artifact_factory;
+    private $user;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->planning_factory  = mock('PlanningFactory');
+        $this->artifact_factory  = mock('Tracker_ArtifactFactory');
+        $this->milestone_factory = new Planning_MilestoneFactory(
+            $this->planning_factory,
+            $this->artifact_factory,
+            mock('Tracker_FormElementFactory'),
+            mock('TrackerFactory')
+        );
+        $this->user = aUser()->build();
+        $this->artifact_id = 112;
+    }
+
+    public function itReturnsNullIfArtifactDoesntExist() {
+        $this->assertNull(
+            $this->milestone_factory->getBareMilestoneByArtifactId($this->user, $this->artifact_id)
+        );
+    }
+
+    public function itReturnsAMilestone() {
+        $planning_tracker = aTracker()->withId(12)->withProject(mock('Project'))->build();
+        stub($this->planning_factory)->getPlanningByPlanningTracker($planning_tracker)->returns(aPlanning()->withId(4)->build());
+
+        $artifact = anArtifact()->withTracker($planning_tracker)->build();
+        stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($artifact);
+
+        $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($this->user, $this->artifact_id);
+        $this->assertEqual($milestone->getArtifact(), $artifact);
+    }
+
+    public function itReturnsNullWhenArtifactIsNotAMilestone() {
+
+        $planning_tracker = aTracker()->withId(12)->withProject(mock('Project'))->build();
+        stub($this->planning_factory)->getPlanningByPlanningTracker()->returns(false);
+
+        $artifact = anArtifact()->withTracker($planning_tracker)->build();
+        stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($artifact);
+
+        $this->assertNull(
+            $this->milestone_factory->getBareMilestoneByArtifactId($this->user, $this->artifact_id)
+        );
+    }
+
+    public function __only__itReturnsNullWhenUserCannotSeeArtifacts() {
+
+        $planning_tracker = aTracker()->withId(12)->withProject(mock('Project'))->build();
+        stub($this->planning_factory)->getPlanningByPlanningTracker()->returns(aPlanning()->withId(4)->build());
+
+        $artifact = aMockArtifact()->build();
+        stub($artifact)->userCanView($this->user)->returns(false);
+        stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($artifact);
+
+        $this->assertNull(
+            $this->milestone_factory->getBareMilestoneByArtifactId($this->user, $this->artifact_id)
+        );
+    }
+}
+
 ?>

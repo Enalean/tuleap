@@ -151,13 +151,28 @@ abstract class Tracker_Semantic {
     */
     public function exportToSOAP(PFUser $user) {
         $field_name = "";
-        $field      = $this->getField();
-        if ($field && $field->userCanRead($user)) {
+        $field = $this->getFieldUserCanRead($user);
+        if ($field) {
             $field_name = $field->getName();
         }
 
         return array('field_name' => $field_name);
     }
 
+    protected function getFieldUserCanRead(PFUser $user) {
+        $field      = $this->getField();
+        if ($field && $field->userCanRead($user)) {
+            return $field;
+        }
+        return null;
+    }
+
+    public function exportToREST(PFUser $user) {
+        $field = $this->getFieldUserCanRead($user);
+        if ($field) {
+            return new Tracker_REST_SemanticRepresentation($field->getId());
+        }
+        return false;
+    }
 }
 ?>

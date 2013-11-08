@@ -61,6 +61,7 @@ class trackerPlugin extends Plugin {
         $this->_addHook(Event::IMPORT_XML_PROJECT);
         $this->addHook(Event::USER_MANAGER_GET_USER_INSTANCE);
         $this->_addHook('plugin_statistics_service_usage');
+        $this->addHook(Event::REST_RESOURCES);
     }
 
     public function getHooksAndCallbacks() {
@@ -616,6 +617,14 @@ class trackerPlugin extends Plugin {
 
         $params['csv_exporter']->buildDatas($number_of_open_artifacts_between_two_dates, "Trackers v5 - Opened Artifacts");
         $params['csv_exporter']->buildDatas($number_of_closed_artifacts_between_two_dates, "Trackers v5 - Closed Artifacts");
+    }
+
+    /**
+     * @see REST_RESOURCES
+     */
+    public function rest_resources($params) {
+        $injector = new Tracker_REST_ResourcesInjector();
+        $injector->populate($params['restler']);
     }
 }
 

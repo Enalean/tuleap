@@ -70,7 +70,12 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     public function getSoapValue() {
         return $this->encapsulateRawSoapValue(implode(",", $this->getPerms()));
     }
-    
+
+    public function getRESTValue() {
+        // Not implemented yet
+        // Should reference a /groups/:id URI
+    }
+
     /**
      * Returns the value of this changeset value (human readable)
      *

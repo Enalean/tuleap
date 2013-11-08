@@ -20,6 +20,8 @@
 namespace Tuleap\REST;
 
 use Luracast\Restler\Restler;
+use \Tuleap\Project\REST\ProjectInfoRepresentation;
+use \Tuleap\Token\REST\TokenRepresentation;
 
 /**
  * Inject core resources into restler
@@ -27,7 +29,7 @@ use Luracast\Restler\Restler;
 class ResourcesInjector {
 
     public function populate(Restler $restler) {
-        $restler->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource', 'projects');
-        $restler->addAPIClass('\\Tuleap\\Token\\REST\\TokenResource',     'tokens');
+        $restler->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource', ProjectInfoRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\Token\\REST\\TokenResource',     TokenRepresentation::ROUTE);
     }
 }

@@ -87,6 +87,13 @@ abstract class TuleapTestCase extends UnitTestCase {
         set_time_limit(0);
     }
 
+    /**
+     * Use this with skip method to avoid some tests if not in php53
+     */
+    protected function skipIfNotPhp53() {
+        $this->skipUnless(version_compare(phpversion(), '5.3', '>='));
+    }
+
     function getTests() {
         $methods = array();
         foreach (get_class_methods(get_class($this)) as $method) {

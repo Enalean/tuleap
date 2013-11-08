@@ -39,12 +39,6 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
     private $initial_effort;
 
     /** @var String */
-    private $parent_url;
-
-    /** @var String */
-    private $parent_title;
-
-    /** @var String */
     private $redirect_to_self;
 
     /** @var String */
@@ -52,6 +46,9 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
 
     /** @var Tracker_Artifact */
     private $artifact;
+
+    /** @var Tracker_Artifact */
+    private $parent;
 
     public function __construct(Tracker_Artifact $artifact, $redirect_to_self) {
         $this->id               = $artifact->getId();
@@ -63,12 +60,22 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
     }
 
     public function setParent(Tracker_Artifact $parent) {
-        $this->parent_title = $parent->getTitle();
-        $this->parent_url   = $this->getUrlWithRedirect($parent->getUri());
+        $this->parent = $parent;
+    }
+
+    /**
+     * @return Tracker_Artifact
+     */
+    public function getParent() {
+        return $this->parent;
     }
 
     public function setInitialEffort($value) {
         $this->initial_effort = $value;
+    }
+
+    public function getInitialEffort() {
+        return $this->initial_effort;
     }
 
     public function setStatus($status) {
@@ -96,11 +103,15 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
     }
 
     public function parent_title() {
-        return $this->parent_title;
+        if ($this->parent) {
+            return $this->parent->getTitle();
+        }
     }
 
     public function parent_url() {
-        return $this->parent_url;
+        if ($this->parent) {
+            return $this->getUrlWithRedirect($this->parent->getUri());
+        }
     }
 
     public function status() {

@@ -104,6 +104,53 @@ class Planning_MilestoneFactory {
     }
 
     /**
+     * Create a milestone corresponding to an artifact
+     *
+     * @param  PFUser $user
+     * @param  Integer $artifact_id
+     *
+     * @return Planning_Milestone|null
+     */
+    public function getBareMilestoneByArtifactId(PFUser $user, $artifact_id) {
+        $artifact = $this->artifact_factory->getArtifactById($artifact_id);
+        if ($artifact && $artifact->userCanView($user)) {
+            return $this->getBareMilestoneByArtifact($user, $artifact);
+        }
+        return null;
+    }
+
+    /**
+     * @param PFUser $user
+     * @param Tracker_Artifact $artifact
+     * @return Planning_Milestone|null
+     */
+    private function getBareMilestoneByArtifact(PFUser $user, Tracker_Artifact $artifact) {
+        $tracker  = $artifact->getTracker();
+        $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
+        if ($planning) {
+            return $this->getBareMilestoneByArtifactAndPlanning($user, $artifact, $planning);
+        }
+        return null;
+    }
+
+    /**
+     * @param PFUser $user
+     * @param Tracker_Artifact $artifact
+     * @param Planning $planning
+     * @return Planning_Milestone
+     */
+    private function getBareMilestoneByArtifactAndPlanning(PFUser $user, Tracker_Artifact $artifact, Planning $planning) {
+        $milestone = new Planning_ArtifactMilestone(
+            $artifact->getTracker()->getProject(),
+            $planning,
+            $artifact
+        );
+        $milestone->setAncestors($this->getMilestoneAncestors($user, $milestone));
+        $this->updateMilestoneContextualInfo($user, $milestone);
+        return $milestone;
+    }
+
+    /**
      * A Bare Milestone is a milestone with minimal information to display (ie. without planned artifacts).
      *
      * It would deserve a dedicated object but it's a bit complex to setup today due to
@@ -124,10 +171,7 @@ class Planning_MilestoneFactory {
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
 
         if ($artifact && $artifact->userCanView($user)) {
-            $milestone = new Planning_ArtifactMilestone($project, $planning, $artifact);
-            $milestone->setAncestors($this->getMilestoneAncestors($user, $milestone));
-            $this->updateMilestoneContextualInfo($user, $milestone);
-            return $milestone;
+            return $this->getBareMilestoneByArtifactAndPlanning($user, $artifact, $planning);
         } else {
             return new Planning_NoMilestone($project, $planning);
         }
@@ -254,7 +298,7 @@ class Planning_MilestoneFactory {
      *
      * @param Planning_Milestone $milestone
      *
-     * @return array of Planning_Milestone
+     * @return Planning_Milestone[]
      */
     public function getSubMilestones(PFUser $user, Planning_Milestone $milestone) {
         if ($milestone instanceof Planning_VirtualTopMilestone) {

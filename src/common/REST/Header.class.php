@@ -2,8 +2,6 @@
 /**
  * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
- * This file is a part of Tuleap.
- *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -15,23 +13,27 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-namespace Tuleap\AgileDashboard\REST;
 
-/**
- * Wrapper for milestone related REST methods
- */
-class MilestoneResource {
+namespace Tuleap\REST;
 
-    public function get() {
-        return 'hello world';
+class Header {
+    const GET     = 'GET';
+    const OPTIONS = 'OPTIONS';
+    const PUT     = 'PUT';
+    const POST    = 'POST';
+    const DELETE  = 'DELETE';
+
+    const ALLOW          = 'Allow';
+    const LAST_MODIFIED  = 'Last-Modified';
+
+    public static function getLastModified($timestamp) {
+        return self::LAST_MODIFIED . ': '.date('c', $timestamp);
     }
 
-    /**
-     * @url OPTIONS
-     */
-    public function options() {
-        header('Allow: GET, OPTIONS');
+    public static function getAllow(array $verbs) {
+        return self::ALLOW . ':' . implode(', ', $verbs);
     }
 }

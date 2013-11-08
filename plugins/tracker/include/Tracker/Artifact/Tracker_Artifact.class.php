@@ -28,6 +28,7 @@ require_once 'common/project/ProjectManager.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
+    const REST_ROUTE        = 'artifacts';
     const NO_PARENT         = -1;
     const PERMISSION_ACCESS = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
     const REFERENCE_NATURE  = 'plugin_tracker_artifact';
@@ -736,6 +737,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return '<a class="direct-link-to-artifact" href="'. $this->getUri() . '">' . $hp->purify($this->getTitle()) . '</a>';
     }
 
+    public function getRestUri() {
+        return self::REST_ROUTE . '/' . $this->getId();
+    }
+
     /**
      * @return string
      */
@@ -1104,6 +1109,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
+     * Returns the last modified date of the artifact
+     *
+     * @return Integer The timestamp (-1 if no date)
+     */
+    public function getLastUpdateDate() {
+        $last_changeset = $this->getLastChangeset();
+        if ($last_changeset) {
+            return $last_changeset->getSubmittedOn();
+        }
+        return -1;
+    }
+
+    /**
      * Returns the latest changeset of this artifact
      *
      * @return Tracker_Artifact_Changeset The latest changeset of this artifact, or null if no latest changeset
@@ -1145,7 +1163,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return array of Tracker_Artifact_Changeset The changesets of this artifact
      */
     public function getChangesets() {
-        if (!$this->changesets) {
+        if ($this->changesets === null) {
             $this->changesets = $this->getChangesetFactory()->getChangesetsForArtifact($this);
         }
         return $this->changesets;

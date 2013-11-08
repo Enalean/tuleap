@@ -116,5 +116,21 @@ class Planning_NoMilestone implements Planning_Milestone {
     public function getEndDate() {
         return null;
     }
+
+    public function getLastModifiedDate() {
+        return null;
+    }
+
+    public function getCapacity() {
+        return null;
+    }
+
+    public function getDuration() {
+        return null;
+    }
+
+    public function getParent() {
+        return null;
+    }
 }
 ?>

@@ -855,6 +855,30 @@ class Tracker_Artifact_Changeset {
         return $soap;
     }
 
+    public function getRESTValue(PFUser $user) {
+        $comment = $this->getComment();
+        if (! $comment) {
+            $comment = new Tracker_Artifact_Changeset_CommentNull($this);
+        }
+        return new Tracker_REST_ChangesetRepresentation(
+            $this,
+            $comment,
+            $this->getRESTFieldValues($user)
+        );
+    }
+
+    private function getRESTFieldValues(PFUser $user) {
+        $values = array();
+        $factory = $this->getFormElementFactory();
+        foreach ($this->getValueDao()->searchById($this->id) as $row) {
+            $field = $factory->getFieldById($row['field_id']);
+            if ($field && $field->userCanRead($user)) {
+                $values[] = $field->getRESTValue($user, $this);
+            }
+        }
+        return array_filter($values);
+    }
+
     private function getEmailForUndefinedSubmitter() {
         if (! $this->getSubmittedBy()) {
             return $this->getEmail();

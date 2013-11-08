@@ -153,18 +153,28 @@ class Tracker_SemanticManager {
         }
     }
 
+    public function exportToREST(PFUser $user) {
+        return array_filter(
+            $this->exportTo($user, 'exportToREST')
+        );
+    }
+
     /**
      * Export the semantic to SOAP format
      * @return array the SOAPification of the semantic
      */
     public function exportToSOAP(PFUser $user) {
+        return $this->exportTo($user, 'exportToSOAP');
+    }
+
+    private function exportTo(PFUser $user, $method) {
         $semantic_order = $this->getSemanticOrder();
         $semantics      = $this->getSemantics();
         $soap_result    = array();
 
         foreach ($semantic_order as $semantic_key) {
             if (isset($semantics[$semantic_key])){
-                $soap_result[$semantic_key] = $semantics[$semantic_key]->exportToSOAP($user);
+                $soap_result[$semantic_key] = $semantics[$semantic_key]->$method($user);
             }
         }
 

@@ -390,5 +390,12 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         return $SOAP_array;
     }
 
+    public function exportToREST(PFUser $user) {
+        $field = $this->getFieldUserCanRead($user);
+        if ($field) {
+            return new Tracker_REST_SemanticStatusRepresentation($field->getId(), $this->getOpenValues());
+        }
+        return false;
+    }
 }
 ?>

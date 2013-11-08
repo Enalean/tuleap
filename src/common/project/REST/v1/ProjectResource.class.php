@@ -26,6 +26,7 @@ use Event;
 use URLVerification;
 use \Luracast\Restler\RestException;
 use \Tuleap\Project\REST\ProjectInfoRepresentation;
+use \Tuleap\REST\Header;
 
 /**
  * Wrapper for project related REST methods
@@ -49,7 +50,17 @@ class ProjectResource {
     public function get($id) {
         $project = $this->getProject($id);
 
-        return new ProjectInfoRepresentation($project);
+        $resources = array();
+        EventManager::instance()->processEvent(
+            Event::REST_PROJECT_RESOURCES,
+            array(
+                'version'   => 'v1',
+                'project'   => $project,
+                'resources' => &$resources
+            )
+        );
+
+        return new ProjectInfoRepresentation($project, $resources);
     }
 
     /**
@@ -65,14 +76,14 @@ class ProjectResource {
     public function optionsId($id) {
         $this->getProject($id);
 
-        header('Allow: GET, OPTIONS');
+        header(Header::getAllow(array(Header::GET, Header::OPTIONS)));
     }
 
     /**
      * @url OPTIONS
      */
     public function options() {
-        header('Allow: GET, OPTIONS');
+        header(Header::getAllow(array(Header::OPTIONS)));
     }
 
     /**
@@ -104,7 +115,7 @@ class ProjectResource {
      *
      * @return array of ProjectPlanningResource
      */
-    public function getPlannings($id, $limit = 10, $offset = 0) {
+    protected function getPlannings($id, $limit = 10, $offset = 0) {
         return $this->plannings($id, $limit, $offset, Event::REST_GET_PROJECT_PLANNINGS);
     }
 
@@ -113,7 +124,7 @@ class ProjectResource {
      *
      * @param int $id The id of the project
      */
-    public function optionsPlannings($id) {
+    protected function optionsPlannings($id) {
         return $this->plannings($id, 10, 0, Event::REST_OPTIONS_PROJECT_PLANNINGS);
     }
 

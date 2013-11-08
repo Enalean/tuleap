@@ -146,7 +146,19 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
         return null;
     }
 
-    public function getCapacity(PFUser $user) {
+    public function getCapacity() {
+        return null;
+    }
+
+    public function getLastModifiedDate() {
+        return null;
+    }
+
+    public function getDuration() {
+        return null;
+    }
+
+    public function getParent() {
         return null;
     }
 }

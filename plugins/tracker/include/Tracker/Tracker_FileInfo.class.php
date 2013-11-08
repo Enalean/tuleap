@@ -70,6 +70,20 @@ class Tracker_FileInfo {
     }
 
     /**
+     * @return Tracker_REST_Artifact_FileInfoRepresentation
+     */
+    public function getRESTValue() {
+        return new Tracker_REST_Artifact_FileInfoRepresentation(
+            $this->id,
+            $this->submitted_by,
+            $this->description,
+            $this->filename,
+            $this->filesize,
+            $this->filetype
+        );
+    }
+
+    /**
      * Returns SOAP encoded content chunk of file
      *
      * @param Integer $offset Where to start reading

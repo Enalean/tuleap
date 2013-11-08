@@ -17,8 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'www/include/server.php';
-
 class Rest_TokenManagerTest extends TuleapTestCase {
 
     /** @var  Rest_TokenManager */
@@ -32,7 +30,7 @@ class Rest_TokenManagerTest extends TuleapTestCase {
 
 
     public function skip() {
-        $this->skipUnless(server_is_php_version_equal_or_greater_than_53());
+        $this->skipIfNotPhp53();
     }
 
     public function setUp() {

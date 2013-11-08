@@ -211,6 +211,18 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         );
     }
 
+    public function getRESTValue() {
+        return new Tracker_REST_Artifact_ArtifactFieldValueListRepresentation(
+            $this->field->getId(),
+            $this->field->getLabel(),
+            array_values(array_map(array($this, 'getRESTBindValue'), $this->getListValues()))
+        );
+    }
+
+    private function getRESTBindValue(Tracker_FormElement_Field_List_BindValue $value) {
+        return $value->getId();
+    }
+
     /**
      * Get the diff between this changeset value and the one passed in param
      *

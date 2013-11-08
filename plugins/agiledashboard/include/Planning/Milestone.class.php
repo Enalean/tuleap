@@ -108,6 +108,13 @@ interface Planning_Milestone {
     public function getAncestors();
 
     /**
+     * Return first parent of current milestone
+     *
+     * @return Planning_Milestone | null
+     */
+    public function getParent();
+
+    /**
      * Set parents of current milestone
      *
      * @param Array of Planning_Milestone
@@ -127,6 +134,27 @@ interface Planning_Milestone {
      * @return int the timestamp value of the duration field
      */
     public function getEndDate();
+
+    /**
+     * Get the timestamp of the last modification of the milestone
+     *
+     * @return int timestamp
+     */
+    public function getLastModifiedDate();
+
+    /**
+     * Return milestone duration in days
+     *
+     * @return float
+     */
+    public function getDuration();
+
+    /**
+     * Return capacity
+     *
+     * @return float
+     */
+    public function getCapacity();
 }
 
 ?>
