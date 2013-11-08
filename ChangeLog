@@ -1,9 +1,9 @@
 Version 6.7 (Not released yet)
 	== Plugins ==
-	* agiledashboard: 1.13
+	* agiledashboard: 1.14
 	* fulltextsearch: 0.24
 	* cardwall: 1.8
-	* tracker: 5.181
+	* tracker: 5.182
 	* openid: 0.3
 	* git: 3.53
 	* ldap: 3.39

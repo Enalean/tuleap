@@ -1,3 +1,8 @@
+Version 5.182 - Tuleap 6.7
+    * story #5442: Agile Dashboard REST planning routes
+      RESt: GET|OPTIONS /trackers/:id
+      RESt: GET|OPTIONS /artifacts/:id
+
 Version 5.181 - Tuleap 6.7
     * Use a rich text editor in text area fields
 
