@@ -30,6 +30,7 @@ Version 6.7 (Not released yet)
 	* Story #5280: Integrate Bootstrap to continue interface overhaul
 	* Story #5281: Switch css stylesheets to less format
         * Story #5283: Use recess instead of phpless & use boostrap*.less
+	* Removed CodeX and CodeXTab themes
 
 	== Developments ==
 	* Add framework for RESt API test automation (see tests/rest)
