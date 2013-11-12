@@ -1,3 +1,6 @@
+Version 5.184 - Tuleap 6.7
+    * Keep old textarea format and display in HTML on tracker report
+
 Version 5.183 - Tuleap 6.7
     * RESt automated tests
 
