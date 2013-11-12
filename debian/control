@@ -193,18 +193,6 @@ Depends: tuleap (= ${source:Version}), elasticsearch, ${misc:Depends}
 Description: Full-Text Search for Tuleap
  Allows documents of the docman to be searched in a full-text manner.
 
-Package: tuleap-theme-codex
-Architecture: all
-Depends: tuleap (= ${source:Version}), ${misc:Depends}
-Description: Codex theme for Tuleap
- This package provides the Codex theme for Tuleap.
-
-Package: tuleap-theme-codextab
-Architecture: all
-Depends: tuleap (= ${source:Version}), ${misc:Depends}
-Description: CodexTab theme for Tuleap
- This package provides the CodexTab theme for Tuleap.
-
 Package: tuleap-theme-dawn
 Architecture: all
 Depends: tuleap (= ${source:Version}), ${misc:Depends}

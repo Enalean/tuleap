@@ -33,12 +33,12 @@ class Layout extends Response {
 
     
     /**
-     * The root location for the current theme : '/themes/CodeXTab/'
+     * The root location for the current theme : '/themes/Tuleap/'
      */
     public $root;
 
     /**
-     * The root location for images : '/themes/CodeXTab/images/'
+     * The root location for images : '/themes/Tuleap/images/'
      */
     public $imgroot;
 
@@ -91,7 +91,7 @@ class Layout extends Response {
     
     /**
      * Constuctor
-     * @param string $root the root of the theme : '/themes/CodeXTab/'
+     * @param string $root the root of the theme : '/themes/Tuleap/'
      */
     public function __construct($root) {
         // Constructor for parent class...
@@ -2240,7 +2240,7 @@ class Layout extends Response {
      *
      * @param string $src The src of the image "trash.png"
      * @param array $args The optionnal arguments for the tag ['alt' => 'Beautiful image']
-     * @return string <img src="/themes/CodeXTab/images/trash.png" alt="Beautiful image" />
+     * @return string <img src="/themes/Tuleap/images/trash.png" alt="Beautiful image" />
      */
     function getImage($src, $args = array()) {
         return $this->getAbsoluteImage($this->getImagePath($src), $args);

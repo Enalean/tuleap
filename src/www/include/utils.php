@@ -27,30 +27,41 @@ define("FONT_SIZE_LARGE", 3);
 $csv_dateformats = array("month_day_year", "day_month_year");
 
 function util_get_theme_list() {
+    $excludes          = array('.', '..', 'CVS', 'custom', '.svn');
+    $deprecated_themes = array('CodeX', 'CodeXTab');
+
     $user = UserManager::instance()->getCurrentUser();
     // Build the theme list from directories in css and css/custom
-    //$dir = opendir($GLOBALS['sys_themeroot']);
     $theme_list = array();
     $theme_dirs = array($GLOBALS['sys_themeroot'], $GLOBALS['sys_custom_themeroot']);
     while (list(,$dirname) = each($theme_dirs)) {
-        // before scanning the directory make sure it exists to avoid warning messages
-        if (is_dir($dirname)) {
-            $dir = opendir($dirname);
-            while ($file = readdir($dir)) {
-                if (is_dir("$dirname/$file") && $file != "." && $file != ".." && $file != "CVS" && $file != "custom" && $file != ".svn") {
-                    $path = $dirname.DIRECTORY_SEPARATOR.$file.DIRECTORY_SEPARATOR.$file.'_Theme.class.php';
-                    if (is_file($path)) {
-                        require_once $path;
-                        $class = $file.'_Theme';
-                        $theme = new $class(($GLOBALS['sys_is_theme_custom'] ? '/custom/' : '/themes/') . $file);
-                        if (! $theme->isLabFeature() || $user->useLabFeatures()) {
-                            $theme_list[] = $file;
-                        }
-                    }
-                }
-            }
-            closedir($dir);
+        if (! is_dir($dirname)) {
+            continue;
         }
+
+        $dir = opendir($dirname);
+        while ($file = readdir($dir)) {
+            if (! is_dir("$dirname/$file") || in_array($file, $excludes)) {
+                continue;
+            }
+
+            if ($dirname == $GLOBALS['sys_themeroot'] && in_array($file, $deprecated_themes)) {
+                continue;
+            }
+
+            $path = $dirname.DIRECTORY_SEPARATOR.$file.DIRECTORY_SEPARATOR.$file.'_Theme.class.php';
+            if (! is_file($path)) {
+                continue;
+            }
+
+            require_once $path;
+            $class = $file.'_Theme';
+            $theme = new $class(($GLOBALS['sys_is_theme_custom'] ? '/custom/' : '/themes/') . $file);
+            if (! $theme->isLabFeature() || $user->useLabFeatures()) {
+                $theme_list[] = $file;
+            }
+        }
+        closedir($dir);
     }
     return $theme_list;
 }
