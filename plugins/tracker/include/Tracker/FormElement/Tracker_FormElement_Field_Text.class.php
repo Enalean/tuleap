@@ -116,7 +116,13 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
     }
     
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+        $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
+        $format   = $this->getRightBodyFormat($artifact, $value);
         $hp = Codendi_HTMLPurifier::instance();
+
+        if ($format == Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
+            return $hp->purify($value, CODENDI_PURIFIER_FULL, $this->getTracker()->getGroupId());
+        }
         return $hp->purify($value, CODENDI_PURIFIER_BASIC, $this->getTracker()->getGroupId());
     }
     
@@ -314,14 +320,15 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return string html
      */
     protected function fetchAdminFormElement() {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
-        $value = '';
+        $hp      = Codendi_HTMLPurifier::instance();
+        $html    = '';
+        $content = '';
         if ($this->hasDefaultValue()) {
             $value = $this->getDefaultValue();
+            $content = $value['content'];
         }
         $html .= '<textarea rows="'. $this->getProperty('rows') .'" cols="'. $this->getProperty('cols') .'" autocomplete="off">';
-        $html .=  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) ;
+        $html .=  $hp->purify($content, CODENDI_PURIFIER_CONVERT_HTML) ;
         $html .= '</textarea>';
         return $html;
     }
@@ -412,7 +419,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      */
     protected function validate(Tracker_Artifact $artifact, $value) {
         $rule = $this->getRuleString();
-        if (!($is_valid = $rule->isValid($value['content']))) {
+        $content = $this->getRightContent($value);
+        if (!($is_valid = $rule->isValid($content))) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_text_value', array($this->getLabel())));
         }
         return $is_valid;
@@ -463,11 +471,21 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return int or array of int
      */
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
-        $content     = $value['content'];
-        $body_format = $value['format'];
+        $content     = $this->getRightContent($value);
+        $body_format = $this->getRightBodyFormat($artifact, $value);
 
         $this->getValueDao()->createWithBodyFormat($changeset_value_id, $content, $body_format);
         $this->extractCrossRefs($artifact, $content);
+    }
+
+    private function getRightContent($value) {
+        return is_array($value) ? $value['content'] : $value;
+    }
+
+    private function getRightBodyFormat(Tracker_Artifact $artifact, $value) {
+        $last_changeset_value = $this->getLastChangesetValue($artifact);
+        $old_format           = $last_changeset_value ? $last_changeset_value->getFormat() : null;
+        return is_array($value) ? $value['format'] : $old_format;
     }
 
     protected function extractCrossRefs($artifact, $content) {
@@ -483,7 +501,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
 
     public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
         return array(
-            'format'  => Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+            'format'  => $artifact ? $this->getRightBodyFormat($artifact, $soap_value) : null,
             'content' => $soap_value->field_value->value,
         );
     }
@@ -498,6 +516,22 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
             'format'  => Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
             'content' => $this->getProperty('default_value'),
         );
+    }
+
+    public function getFieldDataForCSVPreview($data_cell) {
+        $purifier = Codendi_HTMLPurifier::instance();
+        return $purifier->purify($data_cell, CODENDI_PURIFIER_FULL);
+    }
+
+    /**
+     * Get data from CSV value in order to be saved in DB (create/update DB)
+     *
+     * @param string $csv_value
+     *
+     * @return mixed
+     */
+    public function getFieldDataFromCSVValue($csv_value) {
+        return $this->getFieldData($csv_value);
     }
 }
 ?>
