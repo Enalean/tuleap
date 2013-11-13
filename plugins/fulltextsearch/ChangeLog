@@ -1,3 +1,6 @@
+Version 0.25 - Tuleap 6.7
+    * Fix request #5559: Fatal error with elastic search in system events
+
 Version 0.24 - Tuleap 6.7
     * Story #5280: Integrate bootstrap to continue interface overhaul
 
