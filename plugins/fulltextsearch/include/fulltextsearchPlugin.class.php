@@ -114,13 +114,17 @@ class fulltextsearchPlugin extends Plugin {
      * This callback make SystemEvent manager knows about fulltext plugin System Events
      */
     public function get_system_event_class($params) {
-        if (strpos($params['type'], 'FULLTEXTSEARCH_DOCMAN') !== false) {
-            $params['class']        = 'SystemEvent_'. $params['type'];
-            $params['dependencies'] = array($this->getActions(), new Docman_ItemFactory(), new Docman_VersionFactory());
-        }
-        if (strpos($params['type'], 'FULLTEXTSEARCH_TRACKER') !== false) {
-            $params['class']        = 'SystemEvent_'. $params['type'];
-            $params['dependencies'] = array($this->getTrackerActions());
+        try {
+            if (strpos($params['type'], 'FULLTEXTSEARCH_DOCMAN') !== false) {
+                $params['class']        = 'SystemEvent_'. $params['type'];
+                $params['dependencies'] = array($this->getActions(), new Docman_ItemFactory(), new Docman_VersionFactory());
+            }
+            if (strpos($params['type'], 'FULLTEXTSEARCH_TRACKER') !== false) {
+                $params['class']        = 'SystemEvent_'. $params['type'];
+                $params['dependencies'] = array($this->getTrackerActions());
+            }
+        } catch (ElasticSearch_ClientNotFoundException $exception) {
+            // do nothing
         }
     }
 
