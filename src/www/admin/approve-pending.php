@@ -126,7 +126,7 @@ if (db_numrows($res_grp) < 1) {
         <TABLE>
             <TR>
             <TD>
-        <FORM action="<?php echo $PHP_SELF; ?>" method="POST">
+        <FORM action="" method="POST">
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
         <INPUT TYPE="HIDDEN" NAME="list_of_groups" VALUE="<?php print $row_grp['group_id']; ?>">
         <INPUT type="submit" name="submit" class="btn" value="<?php echo $Language->getText('admin_approve_pending','approve'); ?>">
