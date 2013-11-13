@@ -17,12 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once 'common/plugin/Plugin.class.php';
 
-require_once 'TrackerDateReminder_ArtifactFieldFactory.class.php';
-require_once 'TrackerDateReminder_ArtifactFieldHtml.class.php';
-require_once 'TrackerDateReminder_ArtifactType.class.php';
-require_once 'ArtifactDateReminder.class.php';
+require_once 'autoload.php';
 
 class tracker_date_reminderPlugin extends Plugin {
 
