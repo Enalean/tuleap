@@ -1,3 +1,6 @@
+Version 2.26.25 - Tuleap 6.7
+    * Fix request #5556: Incorrect icons for MS Office documents with macros
+
 Version 2.26.24 - Tuleap 6.7
     * Dev: remove a bunch of explicit require_once
 
