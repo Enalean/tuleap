@@ -1,10 +1,29 @@
 <?php
+/**
+ * Copyright (c) Enalean, 2011, 2012, 2013. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi 2001-2009.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+require_once 'www/svn/svn_utils.php';
 
 /**
 * Widget_MyLatestSvnCommits
 * 
-* Copyright (c) Xerox Corporation, Codendi 2001-2009.
-*
 * @author  marc.nazarian@xrce.xerox.com
 */
 class Widget_MyLatestSvnCommits extends Widget {

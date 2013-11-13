@@ -7,6 +7,7 @@
 // 
 
 require_once('pre.php');
+require_once('utils.php');
 require_once('common/include/CookieManager.class.php');
 require_once('common/include/CSRFSynchronizerToken.class.php');
 
