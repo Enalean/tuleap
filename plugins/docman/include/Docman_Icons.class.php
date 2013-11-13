@@ -94,7 +94,7 @@ class Docman_Icons {
     * @see http://filext.com/
     */
     function getIconForMimeType($mime_type) {
-        $parts = split('/', $mime_type);
+        $parts = split('/', strtolower($mime_type));
         switch ($parts[0]) {
             case 'audio':
             case 'video':
@@ -126,10 +126,10 @@ class Docman_Icons {
                         case 'rtf':
                         case 'msword':
                         case 'vnd.ms-works':
-                        //word office 2007: docx
                         case 'vnd.openxmlformats-officedocument.wordprocessingml.document':
                         case 'word':
                         case 'wordperfect5.1':
+                        case 'vnd.ms-word.document.macroenabled.12':
                         case 'vnd.oasis.opendocument.text':
                         case 'vnd.oasis.opendocument.text-template':
                         case 'vnd.oasis.opendocument.text-web':
@@ -146,7 +146,7 @@ class Docman_Icons {
                             break;
                         case 'powerpoint':
                         case 'vnd.ms-powerpoint':
-                        //powerpoint office 2007: pptx
+                        case 'vnd.ms-powerpoint.presentation.macroenabled.12':
                         case 'vnd.openxmlformats-officedocument.presentationml.presentation':
                         case 'vnd.sun.xml.impress':
                         case 'vnd.sun.xml.impress.template':
@@ -159,7 +159,7 @@ class Docman_Icons {
                             break;
                         case 'excel':
                         case 'vnd.ms-excel':
-                        //Excel office 2007: xlsx
+                        case 'vnd.ms-excel.sheet.macroenabled.12':
                         case 'vnd.openxmlformats-officedocument.spreadsheetml.sheet':
                         case 'vnd.sun.xml.calc':
                         case 'vnd.sun.xml.calc.template':
