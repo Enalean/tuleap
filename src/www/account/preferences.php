@@ -1,6 +1,7 @@
 <?php
 
 require_once('pre.php');
+require_once('utils.php');
 require_once('common/event/EventManager.class.php');
 require_once('www/my/my_utils.php');
 require_once('common/include/CSRFSynchronizerToken.class.php');

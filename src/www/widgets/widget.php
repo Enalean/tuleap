@@ -1,6 +1,7 @@
 <?php
 
 require_once('pre.php');
+require_once('www/my/my_utils.php');
 require_once('common/widget/Widget.class.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
 require_once('common/widget/Valid_Widget.class.php');

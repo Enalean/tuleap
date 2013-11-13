@@ -27,6 +27,17 @@
 if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 $fusionforge_plugin_mediawiki_LocalSettings_included = true;
 
+// Force include of HTTPRequest here instead of relying on autoload for this
+// very specific class. Problems come from mediawiki inclusion: mediawiki also
+// have an HttpRequest class (but no longer used, in a .old file) and in MW,
+// But this class is referenced in MW autoloader (loaded before Tuleap one)
+// so when tuleap stuff in pre.php instanciate HTTPRequest (like logger) it instanciate
+// mediawiki HttpRequest instead of the Tuleap one.
+// This is a short term hack, in a longer term we should namespace tuleap HTTPRequest
+// But wait for PHP5.3 min compat.
+require_once('common/include/Codendi_Request.class.php');
+require_once('common/include/HTTPRequest.class.php');
+
 require_once 'pre.php';
 require_once 'plugins_utils.php';
 require_once 'common/user/UserManager.class.php';
@@ -36,7 +47,6 @@ require_once dirname(__FILE__) .'/../include/MediawikiDao.class.php';
 sysdebug_lazymode(true);
 
 $IP = forge_get_config('src_path', 'mediawiki');
-
 if (!isset ($fusionforgeproject)) {
 	$gr=new Group(1);
 	$fusionforgeproject=$gr->getUnixName();
