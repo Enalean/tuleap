@@ -13,13 +13,15 @@ Version 6.7 (Not released yet)
 	* graphontrackers: 1.10
 	* hudson: 1.12
 	* pluginsadministration: 1.4
-	* mediawiki: 0.18
+	* mediawiki: 0.19
 	* statistics: 0.33
 
         == API ==
         * rest: 1.1
 
         == Bug Fix ==
+	* Fix request #5544: Fatal error on the widget my monitored forums
+	* Fix request #5554: Cannot select CSV preference in use prefs page
 	* Fix request #5406: Unable to install Tuleap on CentOs 6
 	* Fix javascript typo to not make IE crying
 	* Fix request #5450: login page customisation broken

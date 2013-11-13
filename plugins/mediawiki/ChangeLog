@@ -1,3 +1,6 @@
+Version 0.19 - Tuleap 6.7
+    * Fix a couple of file inclusion & autoload errors
+
 Version 0.18 - Tuleap 6.7
     * Restyle level1 and level2 navigation bar on Mediawiki service
 
