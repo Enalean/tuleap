@@ -26,6 +26,7 @@ Version 6.7 (Not released yet)
 	* Fix javascript typo to not make IE crying
 	* Fix request #5450: login page customisation broken
 	* Fix plugin autoload: Autoload of some plugins fails because of mix between include paths
+	* Fix request #5543 - Unable to approve a project
 
 	== Enhancement ==
         * Contribution: Autoload all core
