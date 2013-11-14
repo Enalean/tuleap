@@ -20,6 +20,7 @@ Version 6.7 (Not released yet)
         * rest: 1.1
 
         == Bug Fix ==
+	* Fix request #5535: Suspsended users appears like normal users on webui so SOAP should give same level of information
 	* Fix request #5544: Fatal error on the widget my monitored forums
 	* Fix request #5554: Cannot select CSV preference in use prefs page
 	* Fix request #5406: Unable to install Tuleap on CentOs 6
