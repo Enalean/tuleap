@@ -1,3 +1,6 @@
+Version 5.185 - Tuleap 6.7
+    * Fix inaccurate selectbox value on artifact submission when User can't submit
+
 Version 5.184 - Tuleap 6.7
     * Keep old textarea format and display in HTML on tracker report
 
