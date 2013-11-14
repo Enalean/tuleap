@@ -79,8 +79,19 @@ function ugroups_to_soap($ugroups) {
     return $return;
 }
 
+/**
+ * User can get information about other users if they are active, retricted or suspended
+ *
+ * Suspended is needed to be coherent with the GUI where the suspended users are displayed
+ * like active users to people (otherwise it breaks Mylyn on trackers due to workflow manager)
+ *
+ * @param string $identifier
+ * @param PFUser $user
+ * @param PFUser $current_user
+ * @return array
+ */
 function user_to_soap($identifier, PFUser $user = null, PFUser $current_user) {
-    if ($user !== null && ($user->isActive() || $user->isRestricted())) {
+    if ($user !== null && ($user->isActive() || $user->isRestricted() || $user->isSuspended())) {
         if ($current_user->canSee($user)) {
             return array(
                 'identifier' => $identifier,
