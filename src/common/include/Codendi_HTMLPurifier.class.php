@@ -268,6 +268,22 @@ class Codendi_HTMLPurifier {
         return $clean;
     }
 
+    /**
+     * Purify HTML and insert references
+     *
+     * @param String  $html Content to filter
+     * @param Integer $group_id
+     *
+     * @return String
+     */
+    public function purifyHTMLWithReferences($html, $group_id) {
+        return $this->makeLinks($this->purify($html, CODENDI_PURIFIER_FULL), $group_id);
+    }
+
+    public function purifyTextWithReferences($html, $group_id) {
+        return $this->makeLinks($this->purify($html, CODENDI_PURIFIER_BASIC), $group_id);
+    }
+
     function purifyMap($array, $level=0, $groupId=0) {
         return array_map(array(&$this, "purify"), $array, array($level), array($groupId));
     }

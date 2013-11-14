@@ -38,22 +38,6 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
     /** @var string */
     private $format;
-
-    /**
-     * @var array of purifier levels to be used when the content is displayed in text/plain context
-     */
-    public static $PURIFIER_LEVEL_IN_TEXT = array(
-        'html' => CODENDI_PURIFIER_STRIP_HTML,
-        'text' => CODENDI_PURIFIER_BASIC,
-    );
-
-    /**
-     * @var array of purifier levels to be used when the content is displayed in text/html context
-     */
-    public static $PURIFIER_LEVEL_IN_HTML = array(
-        'html' => CODENDI_PURIFIER_FULL,
-        'text' => CODENDI_PURIFIER_BASIC,
-    );
     
     /**
      * Constructor
@@ -108,10 +92,9 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         $hp = Codendi_HTMLPurifier::instance();
 
         if ($this->getFormat() == self::HTML_CONTENT) {
-            return $hp->purify($this->getText(), self::$PURIFIER_LEVEL_IN_HTML[$this->getFormat()]);
+            return $hp->purifyHTMLWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
         }
-
-        return $hp->purify($this->getText(), self::$PURIFIER_LEVEL_IN_TEXT[$this->getFormat()]);
+        return $hp->purifyTextWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
     }
 
     /**
