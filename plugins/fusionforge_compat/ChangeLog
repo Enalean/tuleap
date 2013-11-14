@@ -1,3 +1,6 @@
+Version 0.5 - Tuleap 6.7
+    * autoloaded
+
 Version 0.4 - Tuleap 6.2
     * Add missing group_get_object() function.
 

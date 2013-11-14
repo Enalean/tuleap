@@ -1,2 +1,4 @@
+Version 0.3 - Tuleap 6.7
+    * Autoloaded
 Version 0.2 - Tuleap 5.13
     * Add a plugin dependency solver to force installation of needed plugins

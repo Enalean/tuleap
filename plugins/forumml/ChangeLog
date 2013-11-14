@@ -1,3 +1,6 @@
+Version 2.6.16 - Tuleap 6.7
+    * autoloaded
+
 Version 2.6.15 - Tuleap 6.6
     * sla #4968: Fix XSS in search enties building
 
