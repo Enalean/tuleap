@@ -1,0 +1,101 @@
+/* {{{ Site admin */
+/* {{{ Rules  used for the section "Show pending documents" for site admin */
+.onglet {
+    display: inline-block;
+    margin-left: 3px;
+    margin-right: 3px;
+    padding: 3px;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+.onglet_0 {
+    background: #bbbbbb;
+    border-bottom: 1px solid black;
+}
+
+.onglet_1 {
+    background: #dddddd;
+    border-bottom: 0px solid black;
+    padding-bottom: 4px;
+}
+
+.contenu_onglet {
+    background-color: #dddddd;
+    border: 1px solid black;
+    margin-top: -1px;
+    padding: 5px;
+    display: none;
+}
+/* }}}*/
+
+.site_admin_user_status_A,
+.site_admin_user_status_R,
+.site_admin_user_status_S,
+.site_admin_user_status_D,
+.site_admin_user_status_P,
+.site_admin_user_status_V,
+.site_admin_user_status_W {
+    border: 1px solid black;
+    padding-left: 1em;
+    margin: 1em;
+}
+.site_admin_user_status_A {
+    background-color: #00aa00;
+}
+.site_admin_user_status_R {
+    background-color: #ddff55;
+}
+.site_admin_user_status_D {
+    background-color: #ffaa00;
+}
+.site_admin_user_status_S {
+    background-color: blue;
+}
+
+.site_admin_project_status_A {
+    padding-left: 1em;
+    background-image:url('../images/ic/tick.png');
+}
+
+.site_admin .widget {
+    margin-bottom: 20px;
+}
+.site_admin .user_name_search,
+.site_admin .group_name_search {
+    width: auto;
+}
+
+.admin_delegation {
+    font-family: monospace;
+}
+
+.admin_group_members, .admin_delegation {
+    /* LESS/Bootstrap: .well; */
+    display: inline-block;
+    min-height: 20px;
+    padding: 19px;
+    margin-bottom: 1em;
+    background-color: #f5f5f5;
+    border: 1px solid #e3e3e3;
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+       -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.admin_group_members > ul {
+    list-style: none;
+    padding-left: 0;
+    margin-left: 0;
+}
+
+table.admin_permissions {
+  width: inherit;
+  max-width: 100%;
+  background-color: transparent;
+  border-spacing: 0;
+}
+/* }}}*/

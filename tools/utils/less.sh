@@ -35,7 +35,7 @@ compile_less()
     path=$(dirname "$1")
 
     if [[ 'less' == $extension ]]; then
-        basename "$path" | grep -q "bootstrap-2.3.2"
+        basename "$path" | grep -qE "bootstrap|utils"
         can_compile_to_css=$?
 
         if [[ $can_compile_to_css == 1 ]]; then
