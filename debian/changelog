@@ -1,3 +1,10 @@
+tuleap (6.7) unstable; urgency=low
+
+  * Release of Tuleap 6.7
+  * Find Release note here: http://tuleap.com/sites/default/files/release/6.7/release-notes.html
+
+-- Martin Goyot (Martin Goyot Enalean) <martin.goyot@enalean.com> Thu, 14 Nov 2013 18:00:08 +0100
+
 tuleap (6.6) unstable; urgency=low
 
   * Release of Tuleap 6.6
