@@ -827,6 +827,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function createInitialChangeset($fields_data, $submitter, $email) {
         $changeset_id = null;
         $is_submission = true;
+        $bypass_perms  = true;
 
         if ( ! $submitter->isAnonymous() || $email != null) {
             if ($this->validateFields($fields_data, true)) {
@@ -852,14 +853,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         if (isset($fields_data[$field->getId()]) && $field->userCanSubmit()) {
                             $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
                         } else if ($workflow && isset($fields_data[$field->getId()]) && !$field->userCanSubmit() && $workflow->bypassPermissions($field)) {
-                            $bypass_perms  = true;
                             $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
-                        } else if (!isset($fields_data[$field->getId()]) && !$field->userCanSubmit() && $field->isRequired()) {
+                        } else if (!isset($fields_data[$field->getId()]) && !$field->userCanSubmit()) {
                             $fields_data[$field->getId()] = $field->getDefaultValue();
-                            $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
+                            $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
                         }
                     }
-
                     $this->saveArtifactAfterNewChangeset(
                         $fields_data,
                         $used_fields,

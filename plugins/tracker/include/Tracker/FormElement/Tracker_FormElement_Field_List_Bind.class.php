@@ -26,6 +26,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     const SOAP_TYPE_KEY  = 'bind_type';
     const SOAP_LIST_KEY  = 'bind_list';
 
+    const NONE_VALUE = 100;
+
     /**
      * @var Tracker_FormElement_Field_List_Bind_DefaultvalueDao
      */
@@ -166,7 +168,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @return string
      */
     public function formatArtifactValue($value_id) {
-        if ($value_id != 100) {
+        if ($value_id != self::NONE_VALUE) {
             return $this->formatCriteriaValue($value_id);
         } else {
             return '-';
