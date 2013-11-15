@@ -26,14 +26,37 @@ class Header {
     const POST    = 'POST';
     const DELETE  = 'DELETE';
 
-    const ALLOW          = 'Allow';
-    const LAST_MODIFIED  = 'Last-Modified';
+    const CORS_ALLOW_METHODS = 'Access-Control-Allow-Methods';
+    const ALLOW              = 'Allow';
+    const LAST_MODIFIED      = 'Last-Modified';
 
-    public static function getLastModified($timestamp) {
-        return self::LAST_MODIFIED . ': '.date('c', $timestamp);
+    public static function lastModified($timestamp) {
+        self::sendHeader(self::LAST_MODIFIED, date('c', $timestamp));
     }
 
-    public static function getAllow(array $verbs) {
-        return self::ALLOW . ':' . implode(', ', $verbs);
+    public static function allowOptions() {
+        self::sendAllowHeaders(array(self::OPTIONS));
+    }
+
+    public static function allowOptionsGet() {
+        self::sendAllowHeaders(array(self::OPTIONS, self::GET));
+    }
+
+    public static function allowOptionsPostDelete() {
+        self::sendAllowHeaders(array(self::OPTIONS, self::POST, self::DELETE));
+    }
+
+    public static function allowOptionsDelete() {
+        self::sendAllowHeaders(array(self::OPTIONS, self::DELETE));
+    }
+
+    private static function sendAllowHeaders($methods) {
+        $methods = implode(', ', $methods);
+        self::sendHeader(self::ALLOW, $methods);
+        self::sendHeader(self::CORS_ALLOW_METHODS, $methods);
+    }
+
+    private static function sendHeader($name, $value) {
+        header($name .': '. $value);
     }
 }

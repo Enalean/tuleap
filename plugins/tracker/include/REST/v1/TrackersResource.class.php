@@ -37,7 +37,7 @@ class TrackersResource {
      * @url OPTIONS
      */
     public function options() {
-        header(Header::getAllow(array(Header::OPTIONS)));
+        Header::allowOptions();
     }
 
     /**
@@ -47,7 +47,7 @@ class TrackersResource {
     protected function optionsId($id) {
         $user    = UserManager::instance()->getCurrentUser();
         $this->getTrackerById($user, $id);
-        header(Header::getAllow(array(Header::OPTIONS, Header::GET)));
+        $this->sendAllowHeaderForTracker();
     }
 
     /**
@@ -61,6 +61,8 @@ class TrackersResource {
         $builder = new Tracker_REST_TrackerRestBuilder(Tracker_FormElementFactory::instance());
         $user    = UserManager::instance()->getCurrentUser();
         $tracker = $this->getTrackerById($user, $id);
+        $this->sendAllowHeaderForTracker();
+
         return $builder->getTrackerRepresentation($user, $tracker);
     }
 
@@ -81,6 +83,10 @@ class TrackersResource {
         } catch (\Project_AccessException $exception) {
             throw new RestException(403, $exception->getMessage());
         }
+    }
+
+    private function sendAllowHeaderForTracker() {
+        Header::allowOptionsGet();
     }
 }
 

@@ -55,7 +55,7 @@ class MilestoneResource {
      * @url OPTIONS
      */
     public function options() {
-        header(Header::getAllow(array(Header::OPTIONS)));
+        Header::allowOptions();
     }
 
     /**
@@ -71,8 +71,8 @@ class MilestoneResource {
     protected function getId($id) {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
-        $date      = $milestone->getLastModifiedDate();
-        header(Header::getLastModified($date));
+        $this->sendAllowHeadersForMilestone($milestone);
+
         return new MilestoneRepresentation($milestone);
     }
 
@@ -87,9 +87,7 @@ class MilestoneResource {
      */
     protected function optionsId($id) {
         $milestone = $this->getMilestoneById($this->getCurrentUser(), $id);
-        $date      = $milestone->getLastModifiedDate();
-        header(Header::getAllow(array(Header::GET, Header::OPTIONS)));
-        header(Header::getLastModified($date));
+        $this->sendAllowHeadersForMilestone($milestone);
     }
 
     /**
@@ -100,7 +98,7 @@ class MilestoneResource {
      */
     protected function optionsSubmilestones($id) {
         $this->getMilestoneById($this->getCurrentUser(), $id);
-        header(Header::getAllow(array(Header::GET, Header::OPTIONS)));
+        $this->sendAllowHeaderForSubmilestones();
     }
 
     /**
@@ -117,6 +115,7 @@ class MilestoneResource {
     protected function getSubmilestones($id) {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
+        $this->sendAllowHeaderForSubmilestones();
 
         return array_map(
             function (Planning_Milestone $milestone) {
@@ -141,6 +140,7 @@ class MilestoneResource {
         $this->checkContentLimit($limit);
 
         $milestone = $this->getMilestoneById($this->getCurrentUser(), $id);
+        $this->sendAllowHeaderForBacklogItems();
 
         $backlog_items = $this->getMilestoneBacklogItems($milestone);
         $backlog_items_representation = array();
@@ -160,9 +160,8 @@ class MilestoneResource {
      */
     protected function optionsBacklogItems($id) {
         $this->getMilestoneById($this->getCurrentUser(), $id);
-        header(Header::getAllow(array(Header::GET, Header::OPTIONS)));
+        $this->sendAllowHeaderForBacklogItems();
     }
-
 
     private function getMilestoneById(\PFUser $user, $id) {
         $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($user, $id);
@@ -215,5 +214,19 @@ class MilestoneResource {
 
     private function limitValueIsAcceptable($limit) {
         return $limit <= self::MAX_LIMIT;
+    }
+
+    private function sendAllowHeaderForBacklogItems() {
+        Header::allowOptionsGet();
+    }
+
+    private function sendAllowHeaderForSubmilestones() {
+        Header::allowOptionsGet();
+    }
+
+    private function sendAllowHeadersForMilestone($milestone) {
+        $date = $milestone->getLastModifiedDate();
+        Header::allowOptionsGet();
+        Header::lastModified($date);
     }
 }

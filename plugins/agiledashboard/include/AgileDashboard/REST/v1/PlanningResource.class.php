@@ -59,24 +59,43 @@ class PlanningResource {
         if (! $this->limitValueIsAcceptable($limit)) {
              throw new RestException(406, 'Maximum value for limit exceeded');
         }
-        try {
-            $planning = \PlanningFactory::build()->getPlanning($id);
-            if ($planning) {
-                return $this->getMilestonesByPlanning($planning, $limit, $offset);
-            }
-        } catch (\Project_AccessProjectNotFoundException $exception) {
-            throw new RestException(404);
-        } catch (\Project_AccessException $exception) {
-            throw new RestException(403, $exception->getMessage());
-        }
-        throw new RestException(404, 'Planning not found');
+
+        return $this->getMilestonesByPlanning($this->getPlanning($id), $limit, $offset);
     }
 
     /**
      * @url OPTIONS
      */
     protected function options() {
-        header(Header::getAllow(array(Header::OPTIONS)));
+        $this->sendAllowHeaders();
+    }
+
+    /**
+     * @url OPTIONS {id}/milestones
+     */
+    protected function optionsForMilestones($id) {
+        $this->getPlanning($id);
+        $this->sendAllowHeadersForMilestones();
+    }
+
+    /**
+     * @param integer $id
+     *
+     * @return Planning
+     */
+    private function getPlanning($id) {
+        try {
+            $planning = \PlanningFactory::build()->getPlanning($id);
+        } catch (\Project_AccessProjectNotFoundException $exception) {
+            throw new RestException(404);
+        } catch (\Project_AccessException $exception) {
+            throw new RestException(403, $exception->getMessage());
+        }
+        if (! $planning) {
+            throw new RestException(404, 'Planning not found');
+        }
+
+        return $planning;
     }
 
     private function limitValueIsAcceptable($limit) {
@@ -94,6 +113,7 @@ class PlanningResource {
             $all_milestones[] = new MilestoneInfoRepresentation($milestone);
         }
         $milestones_representations = array_slice($all_milestones, $offset, $limit);
+        $this->sendAllowHeadersForMilestones();
         $this->sendPaginationHeaders($limit, $offset, count($milestones_representations));
         return $milestones_representations;
     }
@@ -105,6 +125,13 @@ class PlanningResource {
         header('X-PAGINATION-LIMIT-MAX: '. self::MAX_LIMIT);
     }
 
+    private function sendAllowHeaders() {
+        Header::allowOptions();
+    }
+
+    private function sendAllowHeadersForMilestones() {
+        Header::allowOptionsGet();
+    }
 }
 
 ?>
