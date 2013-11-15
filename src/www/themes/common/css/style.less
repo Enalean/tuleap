@@ -215,44 +215,7 @@ tr.boxitemalt:hover {
 .fieldset_separator { text-align: center; background-color: #CCCCCC; }
 td.artifact_spacer { width: 5%; }
 
-/* {{{ Feedback */
-.feedback_error, .feedback_warning, .feedback_info, .feedback_debug {
-        font-family:sans-serif;
-        background-color: #f7f7f7;
-        background-position: 20px 50%;
-        background-repeat:no-repeat;
-        margin-left:0px;
-        margin-bottom:10px;
-        list-style:none;
-        padding:10px 50px;
-}
 
-.feedback_error {
-        border:thick solid #ff0000;
-        color:#ff0000;
-        font-weight:bold;
-        background-image: url(../images/ic/error.png)
-}
-.feedback_warning {
-        border:thin solid darkorange;
-        color:peru;
-        font-weight:normal;
-        background-image: url(../images/ic/warning.png)
-}
-.feedback_info {
-        border:thin solid darkblue;
-        color:darkblue;
-        font-weight:normal;
-        background-image: url(../images/ic/info.png)
-}
-.feedback_debug {
-        font-family:monospace;
-        color:yellow;
-        font-weight:normal;
-        background-color:black;
-        display:none;
-}
-/* }}} */
 
 .iframe_service {
     width:100%;
@@ -264,143 +227,11 @@ td.artifact_spacer { width: 5%; }
     font-size:0.85em;
 }
 
-/* {{{ Lists & users autocomplete */
-.lists_users_autocomplete {
-    max-height:200px;
-    overflow:auto;
-    background:white;
-    border:1px solid #CCC;
-}
-.lists_users_autocomplete ul {
-    margin:0;
-    padding:0;
-    list-style-type:none;
-}
-.lists_users_autocomplete ul li {
-    padding:0px 4px 4px 4px;
-}
-.lists_users_autocomplete ul li.selected {
-    background-color: #ffb;
-}
-/* }}} */
-
-
-/* {{{ Password validator */
-.password_strategy {
-    margin-left: 1em;
-}
-.password_validator_ok,
-.password_validator_ko {
-    background:transparent url(../images/ic/tick.png) left top no-repeat;
-    padding-left:20px;
-}
-.password_validator_ko {
-    background-image:url(../images/ic/cross.png);
-}
-.password_strategy_bad {
-    color:red;
-    font-weight:bold;
-}
-.password_strategy_good {
-    color:green;
-    font-weight:bold;
-}
-/* }}} */
-
-/* {{{ tablekit */
-th.resize-handle-active {
-    cursor: e-resize;
-}
-
-div.resize-handle {
-    cursor: e-resize;
-    width: 2px;
-    border-right: 1px dashed #1E90FF;
-    position:absolute;
-    top:0;
-    left:0;
-}
-
-th.drop-over {
-    background-color: #eeeef0;
-}
-table.reorderable th.boxtitle a {
-    padding-left:10px;
-    background-image: url(../images/drag.png);
-    background-repeat: no-repeat;
-    background-position: center left;
-}
-/* }}} */
-
 
 /* {{{ defaultValueActsAshint */
 .hint {
     color:#666;
     font-style:italic;
-}
-/* }}} */
-
-
-/* {{{ searchAsYouType */
-.searchAsYouType {
-    background:white;
-}
-.searchAsYouType ul {
-    margin: 0;
-    padding: 0;
-    list-style:none;
-}
-.searchAsYouType ul li.selected {
-    background:#eef;
-}
-/* }}}*/
-
-
-/* {{{ Target */
-:target {
-    border:1px solid red;
-}
-/* }}} */
-
-
-/* {{{ Avatars */
-div.avatar {
-    background: white url(/themes/common/images/avatar_default.png) 0px 0px no-repeat;
-    background-size: cover;
-    width:52px;
-    height:52px;
-    border:1px solid #ccc;
-}
-div.avatar > img {
-    margin: 1px;
-}
-/* }}} */
-
-
-/* {{{ Projects privacy highlighting */
-.project_privacy_private, .project_privacy_public {
-    padding-left: 24px;
-    background-repeat: no-repeat;
-    background-position: 2px 1px;
-}
-.project_privacy_private {
-    background-image:url('../images/ic/lock.png');
-}
-.project_privacy_public {
-    background-image:url('../images/ic/lock-unlock.png');
-}
-/* }}}*/
-
-
-/* {{{ User Preferences Appearance */
-.user_preferences_appearance label.checkbox {
-    padding: 0px 0 0 0;
-    margin: 0px;
-}
-
-.user_preferences_appearance input[type="checkbox"] {
-    margin-left: 0;
-    margin-right: 5px;
 }
 /* }}} */
 
@@ -480,14 +311,6 @@ div.avatar > img {
     color: #666;
 }
 /* }}} */
-
-
-/* {{{ Snippets */
-.add-snippet input[type="file"] {
-    margin-top: 15px;
-}
-/* }}} */
-
 
 /* {{{ BOOTSTRAP OVERRIDES */
 h2 {
