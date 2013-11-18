@@ -32,16 +32,26 @@ class KASS_ContainerPresenter {
     /** @var string */
     private $project_tabs;
 
+    /** @var Feedback */
+    private $feedback;
+
+    /** @var string */
+    private $feedback_content;
+
     function __construct(
         $breadcrumbs,
         $toolbar,
         $project_name,
-        $project_tabs
+        $project_tabs,
+        $feedback,
+        $feedback_content
     ) {
-        $this->breadcrumbs  = $breadcrumbs;
-        $this->toolbar      = $toolbar;
-        $this->project_name = $project_name;
-        $this->project_tabs = $project_tabs;
+        $this->breadcrumbs      = $breadcrumbs;
+        $this->toolbar          = $toolbar;
+        $this->project_name     = $project_name;
+        $this->project_tabs     = $project_tabs;
+        $this->feedback         = $feedback;
+        $this->feedback_content = $feedback_content;
     }
 
     public function hasBreadcrumbs() {
@@ -71,6 +81,13 @@ class KASS_ContainerPresenter {
     public function projectName() {
         $hp = Codendi_HTMLPurifier::instance();
         return $hp->purify($this->project_name);
+    }
+
+    public function feedback() {
+        $html  = $this->feedback->htmlContent();
+        $html .= $this->feedback_content;
+
+        return $html;
     }
 }
 

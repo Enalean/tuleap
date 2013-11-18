@@ -35,12 +35,6 @@ class KASS_BodyPresenter {
     /** @var string or boolean */
     private $selected_top_tab;
 
-    /** @var Feedback */
-    private $feedback;
-
-    /** @var string */
-    private $feedback_content;
-
     /** @var string */
     private $notifications_placeholder;
 
@@ -49,24 +43,13 @@ class KASS_BodyPresenter {
         $title,
         $img_root,
         $selected_top_tab,
-        $feedback,
-        $feedback_content,
         $notifications_placeholder
     ) {
         $this->request                   = $request;
         $this->title                     = $title;
         $this->img_root                  = $img_root;
         $this->selected_top_tab          = $selected_top_tab;
-        $this->feedback                  = $feedback;
-        $this->feedback_content          = $feedback_content;
         $this->notifications_placeholder = $notifications_placeholder;
-    }
-
-    public function feedback() {
-        $html  = $this->feedback->display();
-        $html .= $this->feedback_content;
-
-        return $html;
     }
 
     public function notificationsPlaceholder() {

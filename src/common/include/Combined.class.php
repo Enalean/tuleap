@@ -39,6 +39,8 @@ class Combined {
             '/scripts/bootstrap/bootstrap-dropdown.js',
             '/scripts/bootstrap/bootstrap-button.js',
             '/scripts/bootstrap/bootstrap-modal.js',
+            '/scripts/bootstrap/bootstrap-tooltip.js',
+            '/scripts/bootstrap/bootstrap-tooltip-fix-prototypejs-conflict.js',
             '/scripts/AZHU/storage.js',
             '/scripts/codendi/common.js',
             '/scripts/tuleap/systray.js',

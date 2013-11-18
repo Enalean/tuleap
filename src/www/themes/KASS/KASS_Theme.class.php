@@ -37,6 +37,7 @@ class KASS_Theme extends DivBasedTabbedLayout {
     function __construct($root) {
         parent::__construct($root);
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
+        $this->includeJavascriptFile('/themes/KASS/js/sidebar.js');
     }
 
     private function render($template_name, $presenter) {
@@ -95,8 +96,6 @@ class KASS_Theme extends DivBasedTabbedLayout {
             $params['title'],
             $this->imgroot,
             $selected_top_tab,
-            $this->_feedback,
-            $this->_getFeedback(),
             $this->getNotificationPlaceholder()
         ));
 
@@ -117,7 +116,7 @@ class KASS_Theme extends DivBasedTabbedLayout {
             )
         );
 
-         $this->container($params, ProjectManager::instance(), $current_user);
+        $this->container($params, ProjectManager::instance(), $current_user);
     }
 
     private function container(array $params, ProjectManager $project_manager, PFUser $current_user) {
@@ -133,7 +132,9 @@ class KASS_Theme extends DivBasedTabbedLayout {
             $this->breadcrumbs,
             $this->toolbar,
             $project_name,
-            $project_tabs
+            $project_tabs,
+            $this->_feedback,
+            $this->_getFeedback()
         ));
     }
 

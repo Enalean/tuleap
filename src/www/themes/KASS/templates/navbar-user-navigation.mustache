@@ -1,10 +1,9 @@
 <ul class="nav pull-right">
     {{# user_is_logged_in }}
         <li class="dropdown {{ nav_user_class }}">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <span class="logged-in">Logged in as </span>
-            {{ user_real_name }}
-            <b class="caret"></b>
+            <a href="#" class="dropdown-toggle username" data-toggle="dropdown">
+                {{ user_real_name }}
+                <b class="caret"></b>
             </a>
             {{> navbar-user-logged-in }}
         </li>

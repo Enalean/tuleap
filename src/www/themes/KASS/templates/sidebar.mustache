@@ -1,14 +1,13 @@
-{{#hasSidebar}}
-    <div class="well sidebar-nav">
-        <div style="text-align:center">
-            <h5>{{projectName}}</h5>
-        </div>
-        <ul class="nav nav-list">
-            {{#sidebar}}
-                <li {{#enabled}}class="active"{{/enabled}}>
-                    <a href="{{{link}}}">{{{label}}}</a>
-                </li>
-            {{/sidebar}}
-        </ul>
+<div class="sidebar-nav">
+    <div class="project-title">
+        {{projectName}}
     </div>
-{{/hasSidebar}}
+    <ul class="nav nav-list">
+        {{#sidebar}}
+            <li {{#enabled}}class="active"{{/enabled}}>
+                <a href="{{{link}}}" title="{{name}}"><i class="{{icon}}"></i> {{{label}}}</a>
+            </li>
+        {{/sidebar}}
+    </ul>
+    <i class="icon-chevron-left sidebar-collapse"></i>
+</div>
