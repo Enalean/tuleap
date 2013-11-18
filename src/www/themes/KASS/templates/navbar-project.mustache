@@ -1,0 +1,37 @@
+<li class="dropdown {{ nav_project_class }}">
+    {{# user_is_logged_in }}
+        {{^ nav_project_anonymous }}
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            Projects
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+            {{# user_projects }}
+            <li>
+                <a href="/projects/{{ getUnixName }}/">
+                {{ getPublicName }}
+                </a>
+            </li>
+            <li class="divider"></li>
+            {{/ user_projects }}
+            <li>
+                <a href="/softwaremap/">Browse all projects
+                </a>
+            </li>
+            {{# project_registration }}
+            <li>
+                <a href="/project/register.php">
+                    {{ include_menu_register_new_proj_text }}
+                </a>
+            </li>
+            {{/ project_registration }}
+        </ul>
+        {{/ nav_project_anonymous }}
+        {{# nav_project_anonymous }}
+            <a href="/softwaremap/">Projects</a>
+        {{/ nav_project_anonymous }}
+    {{/ user_is_logged_in }}
+    {{^ user_is_logged_in }}
+        <a href="/softwaremap/">Projects</a>
+    {{/ user_is_logged_in }}
+</li>

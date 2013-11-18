@@ -25,7 +25,7 @@ require_once 'KASS_HeaderPresenter.class.php';
 require_once 'KASS_BodyPresenter.class.php';
 require_once 'KASS_ContainerPresenter.class.php';
 require_once 'KASS_FooterPresenter.class.php';
-require_once 'KASS_NavBarBuilder.class.php';
+require_once 'KASS_NavBarPresenter.class.php';
 
 class KASS_Theme extends DivBasedTabbedLayout {
 
@@ -100,7 +100,24 @@ class KASS_Theme extends DivBasedTabbedLayout {
             $this->getNotificationPlaceholder()
         ));
 
-        $this->container($params, ProjectManager::instance(), UserManager::instance()->getCurrentUser());
+        $current_user = UserManager::instance()->getCurrentUser();
+
+        $this->navbar($params, $current_user, $selected_top_tab);
+
+    }
+
+    private function navbar($params, PFUser $current_user, $selected_top_tab) {
+        $this->render('navbar', new KASS_NavBarPresenter(
+                $this->imgroot,
+                $current_user,
+                $_SERVER['REQUEST_URI'],
+                $selected_top_tab,
+                HTTPRequest::instance(),
+                $params['title']
+            )
+        );
+
+         $this->container($params, ProjectManager::instance(), $current_user);
     }
 
     private function container(array $params, ProjectManager $project_manager, PFUser $current_user) {

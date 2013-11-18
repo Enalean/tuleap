@@ -1,0 +1,40 @@
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a class="brand" href="/">
+                <img src="{{ imgroot }}organization_logo.png" alt="Tuleap" />
+            </a>
+            <ul class="nav">
+                <li class={{ nav_home_class }}>
+                    <a href="/">
+                        {{ menu_home_text }}
+                    </a>
+                </li>
+                {{# user_is_logged_in }}
+                <li class={{ nav_my_class }}>
+                    <a href="/my/">
+                        {{ menu_my_personnal_page_text }}
+                    </a>
+                </li>
+                {{/ user_is_logged_in }}
+
+                {{> navbar-project }}
+
+                {{# user_is_admin }}
+                    <li class={{ nav_admin_class }}>
+                        <a href="/admin/">
+                            Admin
+                        </a>
+                    </li>
+                {{/ user_is_admin }}
+                <li class={{ nav_help_class }}>
+                    <a href="/site/">
+                        Help
+                    </a>
+                </li>
+            </ul>
+            {{> navbar-search-form }}
+            {{> navbar-user-navigation }}
+        </div>
+    </div>
+</div>

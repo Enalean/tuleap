@@ -60,26 +60,6 @@ class KASS_BodyPresenter {
         $this->feedback                  = $feedback;
         $this->feedback_content          = $feedback_content;
         $this->notifications_placeholder = $notifications_placeholder;
-
-        $this->initNavigationBar();
-    }
-
-    private function initNavigationBar() {
-        $this->nav = new KASS_NavBarBuilder(
-            ProjectManager::instance(),
-            EventManager::instance(),
-            $GLOBALS['Language'],
-            HTTPRequest::instance(),
-            UserManager::instance()->getCurrentUser(),
-            $this->title,
-            $this->img_root,
-            $this->request,
-            $this->selected_top_tab
-        );
-    }
-
-    public function navigationBar() {
-        return $this->nav->render();
     }
 
     public function feedback() {
