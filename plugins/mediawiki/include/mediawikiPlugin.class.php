@@ -56,6 +56,8 @@ class MediaWikiPlugin extends Plugin {
             // Search
             $this->_addHook(Event::LAYOUT_SEARCH_ENTRY);
             $this->_addHook('search_type', 'search_type', false);
+            $this->_addHook('plugins_powered_search', 'plugins_powered_search', false);
+
             $this->_addHook('plugin_statistics_service_usage');
     }
 
@@ -80,38 +82,59 @@ class MediaWikiPlugin extends Plugin {
         }
 
         public function layout_search_entry($params) {
-            if($this->isSearchEntryAvailable($params['hidden_fields'])) {
+            $project = $this->getProjectFromRequest();
+            if ($this->isSearchEntryAvailable($project)) {
                 $params['search_entries'][] = array(
-                    'value' => $this->name,
-                    'label' => 'Mediawiki',
-                    'selected' => $params['type_of_search'] == $this->name,
+                    'value'    => $this->name,
+                    'label'    => 'Mediawiki',
+                    'selected' => $this->isSearchEntrySelected($params['type_of_search']),
+                );
+                $params['hidden_fields'][] = array(
+                    'name'  => 'group_id',
+                    'value' => $project->getID()
                 );
             }
         }
 
-        private function isSearchEntryAvailable(array $hidden_fields) {
-            $group_id = $this->getGroupIdFromRequest($hidden_fields);
-            if (! $group_id) {
-                return false;
+        private function isSearchEntryAvailable(Project $project = null) {
+            if ($project && ! $project->isError()) {
+                return $project->usesService(self::SERVICE_SHORTNAME);
             }
-
-            $project_manager = ProjectManager::instance();
-            $project         = $project_manager->getProject($group_id);
-            return $project->usesService(self::SERVICE_SHORTNAME);
+            return false;
         }
 
-        private function getGroupIdFromRequest(array $hidden_fields) {
-            foreach ($hidden_fields as $field) {
-                if ($field['name'] == 'group_id') {
-                    return $field['value'];
+        private function isSearchEntrySelected($type_of_search) {
+            return ($type_of_search == $this->name) || $this->isMediawikiUrl();
+        }
+
+        private function isMediawikiUrl() {
+            return preg_match('%'.$this->getPluginPath().'/wiki/.*%', $_SERVER['REQUEST_URI']);
+        }
+
+        private function getProjectFromRequest() {
+            $matches = array();
+            preg_match('%'.$this->getPluginPath().'/wiki/([^/]+)/.*%', $_SERVER['REQUEST_URI'], $matches);
+            if (isset($matches[1])) {
+                $project = ProjectManager::instance()->getProjectByUnixName($matches[1]);
+                if (! $project->isError()) {
+                    return $project;
                 }
             }
+            return null;
         }
 
         public function search_type($params) {
             if ($params['type_of_search'] == $this->name) {
                 $project = group_get_object($params['group_id']);
-                util_return_to('/plugins/mediawiki/wiki/'. $project->getUnixName() .'/index.php?title=Special%3ASearch&search=' . urlencode($params['words']) . '&go=Go');
+                if (! $project->isError()) {
+                    util_return_to('/plugins/mediawiki/wiki/'. $project->getUnixName() .'/index.php?title=Special%3ASearch&search=' . urlencode($params['words']) . '&go=Go');
+                }
+            }
+        }
+
+        public function plugins_powered_search($params) {
+            if ($params['type_of_search'] == $this->name) {
+                $params['plugins_powered_search'] = true;
             }
         }
 
