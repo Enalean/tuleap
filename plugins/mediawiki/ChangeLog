@@ -1,3 +1,6 @@
+Version 0.20 - Tuleap 6.8
+    * Fix request #5586 - Search no longer available in mediawiki
+
 Version 0.19 - Tuleap 6.7
     * Fix a couple of file inclusion & autoload errors
 
