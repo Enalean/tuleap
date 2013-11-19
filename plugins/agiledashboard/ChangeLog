@@ -1,3 +1,6 @@
+Version 1.16 - Tuleap 6.8
+    * story #5577: have CORS headers in REST responses.
+
 Version 1.15 - Tuleap 6.7
     * RESt automated tests
 
