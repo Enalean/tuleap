@@ -161,6 +161,15 @@ class GitActions extends PluginActions {
         ));
         return true;
     }
+
+    public function generateGerritRepositoryList(Project $project, PFUser $user) {
+        $repos = $this->factory->getAllGerritRepositoriesFromProject($project, $user);
+
+        $this->addData(array(
+            'repository_list' => $repos
+        ));
+        return true;
+    }
     
     protected function getDao() {
         return new GitDao();

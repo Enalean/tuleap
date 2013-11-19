@@ -254,6 +254,9 @@ class GitViews extends PluginViews {
         echo ' | ';
 
         echo $this->linkTo( '<b>'.$this->getText('bread_crumb_help').'</b>', 'javascript:help_window(\'/doc/'.$this->user->getShortLocale().'/user-guide/git.html\')');
+        echo ' | ';
+        
+        echo $this->linkTo( '<b>'.$this->getText('bread_crumb_admin').'</b>', '/plugins/git/?group_id='.$this->groupId .'&action=admin', 'class=""');
     }
     
     /**
@@ -332,6 +335,15 @@ class GitViews extends PluginViews {
             echo '</form>';
         }
         echo '<br />';
+    }
+
+    protected function adminView() {
+        $params = $this->getData();
+        $this->_getBreadCrumb();
+
+        $presenter = new GitPresenters_AdminPresenter();
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+        echo $renderer->renderToString('admin',$presenter);
     }
 
     /**

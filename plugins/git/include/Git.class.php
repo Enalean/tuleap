@@ -225,6 +225,7 @@ class Git extends PluginController {
                                             'set_private',
                                             'confirm_private',
                                             'fork_repositories',
+                                            'admin',
                                             'fork_repositories_permissions',
                                             'do_fork_repositories',
                                             'view_last_git_pushes',
@@ -401,6 +402,11 @@ class Git extends PluginController {
             case 'fork_repositories':
                 $this->addAction('getProjectRepositoryList', array($this->groupId));
                 $this->addView('forkRepositories');
+                break;
+            case 'admin':
+                $project = $this->projectManager->getProject($this->groupId);
+                $this->addAction('generateGerritRepositoryList', array($project, $user));
+                $this->addView('adminView');
                 break;
             case 'fork_repositories_permissions':
                 $scope = self::SCOPE_PERSONAL;
