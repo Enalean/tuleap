@@ -41,7 +41,10 @@ class KASS_FooterPresenter {
     public function footer() {
         global $Language;
         $version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
+        ob_start();
         include($GLOBALS['Language']->getContent('layout/footer'));
+
+        return ob_get_clean();
     }
 }
 
