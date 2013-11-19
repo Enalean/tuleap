@@ -3,21 +3,21 @@ tuleap (6.7) unstable; urgency=low
   * Release of Tuleap 6.7
   * Find Release note here: http://tuleap.com/sites/default/files/release/6.7/release-notes.html
 
--- Martin Goyot (Martin Goyot Enalean) <martin.goyot@enalean.com> Thu, 14 Nov 2013 18:00:08 +0100
+ -- Thomas Cottier (Thomas Cottier Enalean) <thomas.cottier@enalean.com>  Thu, 14 Nov 2013 18:00:08 +0100
 
 tuleap (6.6) unstable; urgency=low
 
   * Release of Tuleap 6.6
   * Find Release note here: http://tuleap.com/sites/default/files/release/6.6/release-notes.html
 
--- Thomas Cottier (Thomas Cottier Enalean) <thomas.cottier@enalean.com> Thu, 17 Oct 2013 13:48:16 +0200
+ -- Thomas Cottier (Thomas Cottier Enalean) <thomas.cottier@enalean.com>  Thu, 17 Oct 2013 13:48:16 +0200
 
 tuleap (6.5) unstable; urgency=low
 
   * Release of tuleap 6.5
   * Find Release note here: http://tuleap.com/sites/default/files/release/6.5/release-notes.html
 
- -- Thomas Cottier (Thomas Cottier Enalean) <thomas.cottier@enalean.com> Thu, 19 Sep 2013 14:21:58 +0200
+ -- Thomas Cottier (Thomas Cottier Enalean) <thomas.cottier@enalean.com>  Thu, 19 Sep 2013 14:21:58 +0200
 
 
 tuleap (6.4) unstable; urgency=low
@@ -25,7 +25,7 @@ tuleap (6.4) unstable; urgency=low
   * Release of tuleap 6.4
   * Find Release note here: http://tuleap.com/sites/default/files/release/6.4/release-notes.html
 
- -- Dylan Bowden (Dylan Bowden Enalean) <dylan.bowden@enalean.com> Thu, 22 Aug 2013 14:52:37 +0200
+ -- Dylan Bowden (Dylan Bowden Enalean) <dylan.bowden@enalean.com>  Thu, 22 Aug 2013 14:52:37 +0200
 
 
 tuleap (6.3) unstable; urgency=low
