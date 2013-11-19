@@ -235,3 +235,11 @@ plugin_git	push_ssh_keys_info	Vos anciennes clés ne sont pas poussées automati
 plugin_git	gerrit_remote_exception	Une erreur est survenue lors d'une tentative de connexion à un serveur Gerrit. Peut-être est-il arreté? Merci de vérifier avec les administrateurs: $1
 plugin_git	gerrit_deletion_ongoing	La supression du projet sous Gerrit est en cours, veuillez patienter quelques minutes.
 plugin_git	gerrit_readonly_ongoing	La mise en lecture-seule du projet sous Gerrit est en cours, veuillez patienter quelques minutes.
+
+plugin_git	view_admin_title	Administration de Git
+plugin_git	view_admin_repos_list	Configurations
+plugin_git	view_admin_edit_configuration_label	Editer la configuration
+plugin_git	view_admin_file_name_label	Nom du fichier de template
+plugin_git	view_admin_submit_button	Sauvegarder
+plugin_git	view_admin_template_section_title	Templates de configuration de permissions git
+plugin_git	view_admin_template_section_description	Cette section permet de créer des templates de configuration de permission réutilisables à partir de configurations de dépôts git existants.

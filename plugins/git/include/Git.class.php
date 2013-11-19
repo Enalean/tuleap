@@ -404,7 +404,7 @@ class Git extends PluginController {
                 $this->addView('forkRepositories');
                 break;
             case 'admin':
-                if($user->isAdmin($group_id)) {
+                if($user->isAdmin($this->groupId)) {
                     $project = $this->projectManager->getProject($this->groupId);
                     $this->addAction('generateGerritRepositoryList', array($project, $user));
                     $this->addView('adminView');
@@ -539,6 +539,17 @@ class Git extends PluginController {
                 $this->addView('index');
                 break;
         }
+    }
+
+    private function getParentProjects(Project $project) {
+        $list = array();
+
+        while ($parent = $this->projectManager->getParentProject($project->getID())){
+            $project = $parent;
+            $list[] = $project;
+        }
+
+        return $list;
     }
 
     private function gerritProjectAlreadyExists($remote_server_id, GitRepository $repo) {

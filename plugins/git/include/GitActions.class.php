@@ -162,13 +162,20 @@ class GitActions extends PluginActions {
         return true;
     }
 
+    /**
+     * Generates a list of GitRepositoryWithPermissions which are migrated to a 
+     * gerrit server and belong to the project or the project's parent.
+     *
+     * @param Project $project
+     * @param PFUser $user
+     * @param Project[] $parent_projects
+     */
     public function generateGerritRepositoryList(Project $project, PFUser $user) {
         $repos = $this->factory->getAllGerritRepositoriesFromProject($project, $user);
 
         $this->addData(array(
             'repository_list' => $repos
         ));
-        return true;
     }
     
     protected function getDao() {

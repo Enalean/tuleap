@@ -1,0 +1,44 @@
+<h2>{{git_admin}}</h2>
+
+
+<h3>{{template_section_title}}</h3>
+
+<p>{{template_section_description}}</p>
+
+<form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label" for="git_admin_config_list">
+            {{choose_text}}
+        </label>
+        <div class="controls">
+            <select id="git_admin_config_list">
+                {{#config_option}}
+                    {{#getRepository}}
+                        <option value="{{getId}}">{{getPath}}</option>
+                    {{/getRepository}}
+                {{/config_option}}
+            </select>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="git_admin_config_data">
+            {{edit_text}}
+        </label>
+        <div class="controls">
+            <textarea id="git_admin_config_data"></textarea>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="git_admin_file_name">
+            {{file_name_text}}
+        </label>
+        <div class="controls">
+            <input type="text" id="git_admin_file_name"/>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <input type="submit" value="{{save_text}}"/>
+        </div>
+    </div>
+</form>

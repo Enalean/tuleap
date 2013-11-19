@@ -19,5 +19,48 @@
  */
 
 class GitPresenters_AdminPresenter {
+
+    /**
+     * List of repositories belonging to the project or the parent project
+     *
+     * @var array
+     */
+    private $repository_list;
+
+    public function __construct($repository_list) {
+        $this->repository_list = $repository_list;
+    }
+
+    public function git_admin() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_title');
+    }
+
+    public function choose_text() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_repos_list');
+    }
+
+    public function edit_text() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_edit_configuration_label');
+    }
+
+    public function file_name_text() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_file_name_label');
+    }
+
+    public function save_text() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_submit_button');
+    }
+
+    public function config_option() {
+        return array_values($this->repository_list);
+    }
+
+    public function template_section_title() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_section_title');
+    }
+
+    public function template_section_description() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_section_description');
+    }
 }
 ?>

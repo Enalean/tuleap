@@ -238,3 +238,11 @@ plugin_git	push_ssh_keys_info	Old keys need to be pushed manually. All new keys 
 plugin_git	gerrit_remote_exception	An error occured while trying to access Gerrit server, maybe the server is down, please check with administrators: $1
 plugin_git	gerrit_deletion_ongoing	The deletion of the project under Gerrit is on going, please wait for a few minutes.
 plugin_git	gerrit_readonly_ongoing	The setting of the project under Gerrit to read-only is on going, please wait for a few minutes.
+
+plugin_git	view_admin_title	Git Administration
+plugin_git	view_admin_repos_list	Configurations
+plugin_git	view_admin_edit_configuration_label	Edit configuration
+plugin_git	view_admin_file_name_label	Template file name
+plugin_git	view_admin_submit_button	Save
+plugin_git	view_admin_template_section_title	Git permission configuration templates
+plugin_git	view_admin_template_section_description	This section allows you to choose a Gerrit project configuration and create a reusable template from it
