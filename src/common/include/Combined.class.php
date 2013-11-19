@@ -46,6 +46,7 @@ class Combined {
             '/scripts/tuleap/systray.js',
             '/scripts/tuleap/load-systray.js',
             '/scripts/tuleap/massmail_initialize_ckeditor.js',
+            '/scripts/tuleap/is-at-top.js',
             '/scripts/codendi/feedback.js',
             '/scripts/codendi/CreateProject.js',
             '/scripts/codendi/cross_references.js',

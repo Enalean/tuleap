@@ -18,6 +18,8 @@
  */
 
 @import '../../common/css/utils/utils.less';
+@import '../../common/css/bootstrap-2.3.2/variables.less';
+@import '../../common/css/bootstrap-2.3.2/mixins.less';
 
 /* {{{ VARIABLES */
 @white: #FFFFFF;
@@ -72,6 +74,17 @@ body > .wrapper {
         position: fixed;
     }
 }
+
+.navbar-fixed-top,
+.navbar-static-top {
+  .navbar-inner {
+    box-shadow: 0 1px 10px rgba(0,0,0,.3);
+  }
+}
+.is-at-top .navbar-inner {
+    .box-shadow(none);
+}
+
 .navbar .navbar-inner {
     font-family: 'Source Sans Pro', Arial;
     font-size: 1.3em;
