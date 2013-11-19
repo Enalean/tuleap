@@ -26,6 +26,7 @@ require_once 'KASS_BodyPresenter.class.php';
 require_once 'KASS_ContainerPresenter.class.php';
 require_once 'KASS_FooterPresenter.class.php';
 require_once 'KASS_NavBarPresenter.class.php';
+require_once 'KASS_SearchFormPresenter.class.php';
 
 class KASS_Theme extends DivBasedTabbedLayout {
 
@@ -58,17 +59,14 @@ class KASS_Theme extends DivBasedTabbedLayout {
            $title = $params['title'] .' - '. $title;
         }
 
-        $javascript_elements  = $this->displayJavascriptElements();
-        $stylesheet_elements  = $this->displayStylesheetElements($params);
-        $syndication_elements = $this->displaySyndicationElements();
-
         $this->render('header', new KASS_HeaderPresenter(
             $title,
-            $this->imgroot,
-            $javascript_elements,
-            $stylesheet_elements,
-            $syndication_elements
+            $this->imgroot
         ));
+
+        $this->displayJavascriptElements();
+        $this->displayStylesheetElements($params);
+        $this->displaySyndicationElements();
 
         $this->body($params);
     }
@@ -106,13 +104,17 @@ class KASS_Theme extends DivBasedTabbedLayout {
     }
 
     private function navbar($params, PFUser $current_user, $selected_top_tab) {
+        list($search_options, $hidden_fields) = $this->getSearchEntries();
+        $search_form_presenter                = new KASS_SearchFormPresenter($search_options, $hidden_fields);
+
         $this->render('navbar', new KASS_NavBarPresenter(
                 $this->imgroot,
                 $current_user,
                 $_SERVER['REQUEST_URI'],
                 $selected_top_tab,
                 HTTPRequest::instance(),
-                $params['title']
+                $params['title'],
+                $search_form_presenter
             )
         );
 

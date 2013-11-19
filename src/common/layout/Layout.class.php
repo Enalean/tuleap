@@ -1159,7 +1159,7 @@ class Layout extends Response {
     public function displayJavascriptElements() {
         $c = new Combined();
         echo $c->getScripts(array('/scripts/codendi/common.js'));
-        
+
         //Javascript i18n
         echo '<script type="text/javascript">'."\n";
         include $GLOBALS['Language']->getContent('scripts/locale');
@@ -1167,17 +1167,17 @@ class Layout extends Response {
         codendi.imgroot = \''. $this->imgroot .'\';
         '. $this->changeColorpickerPalette() .'
         </script>';
-        
+
         if (Config::get('DEBUG_MODE') && (Config::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')) ) {
             echo '<script type="text/javascript" src="/scripts/codendi/debug_reserved_names.js"></script>';
         }
         if (Config::get('DEBUG_MODE')) {
             echo '<!--[if IE]><script type="text/javascript" src="http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js"></script><![endif]-->';
         }
-        
+
         $em =& EventManager::instance();
         $em->processEvent("javascript_file", null);
-        
+
         foreach ($this->javascript as $js) {
             if (isset($js['file'])) {
                 if (!$c->isCombined($js['file'])) {
@@ -2112,7 +2112,19 @@ class Layout extends Response {
             )
         );
 
+        $search_entries = $this->forceSelectedOption($search_entries);
+
         return array($search_entries, $hidden);
+    }
+
+    private function forceSelectedOption(array $search_entries) {
+        foreach ($search_entries as $key => $search_entry) {
+            if (! isset($search_entry['selected'])) {
+                $search_entries[$key]['selected'] = false;
+            }
+        }
+
+        return $search_entries;
     }
 
     public function getSearchBox() {

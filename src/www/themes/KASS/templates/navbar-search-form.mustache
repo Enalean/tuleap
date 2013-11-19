@@ -1,3 +1,13 @@
-<form action="" class="navbar-search pull-left">
-    <input type="text" placeholder="Search" class="search-query" />
-</form>
+{{# search_form_presenter}}
+    <form action="/search/" method="post" class="navbar-search pull-left">
+        <select style="font-size: x-small" name="type_of_search">
+        {{# search_options }}
+            <option {{# selected }} selected='selected' {{/ selected }} value={{ value }}>{{ label }}</option>
+        {{/ search_options }}
+        </select>
+        {{# hidden_fields }}
+            <input type="hidden" name={{ name }} value={{ value }}/>
+        {{/ hidden_fields }}
+        <input type="text" name="words" placeholder="Search" class="search-query" />
+    </form>
+{{/ search_form_presenter}}

@@ -32,19 +32,23 @@ class KASS_NavBarPresenter {
 
     private $title;
 
+    /** @var KASS_SearchFormPresenter */
+    private $search_form_presenter;
+
     private $selected_top_tab;
 
     private $project_manager;
 
-    public function __construct($imgroot, PFUser $user, $request_uri, $selected_top_tab, HTTPRequest $request, $title) {
-        $this->imgroot          = $imgroot;
-        $this->user             = $user;
-        $this->request_uri      = $request_uri;
-        $this->request          = $request;
-        $this->selected_top_tab = $selected_top_tab;
-        $this->title            = $title;
-        $this->project_manager  = ProjectManager::instance();
-        $this->event_manager    = EventManager::instance();
+    public function __construct($imgroot, PFUser $user, $request_uri, $selected_top_tab, HTTPRequest $request, $title, $search_form_presenter) {
+        $this->imgroot               = $imgroot;
+        $this->user                  = $user;
+        $this->request_uri           = $request_uri;
+        $this->request               = $request;
+        $this->selected_top_tab      = $selected_top_tab;
+        $this->title                 = $title;
+        $this->search_form_presenter = $search_form_presenter;
+        $this->project_manager       = ProjectManager::instance();
+        $this->event_manager         = EventManager::instance();
     }
 
     public function imgroot() {
@@ -65,6 +69,10 @@ class KASS_NavBarPresenter {
 
     public function selected_top_tab() {
         return $this->selected_top_tab;
+    }
+
+    public function search_form_presenter() {
+        return $this->search_form_presenter;
     }
 
     public function user_projects() {

@@ -18,29 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class KASS_HeaderPresenter {
+class KASS_SearchFormPresenter {
 
-    /** @var string */
-    private $title;
+    private $search_options;
 
-    /** @var string */
-    private $img_root;
+    private $hidden_fields;
 
-    function __construct(
-        $title,
-        $img_root
-    ) {
-        $this->title                = $title;
-        $this->img_root             = $img_root;
+    public function __construct($search_options, $hidden_fields) {
+        $this->search_options = $search_options;
+        $this->hidden_fields  = $hidden_fields;
     }
 
-    public function title() {
-        return $this->title;
+    public function search_options() {
+        return $this->search_options;
     }
 
-    public function imgRoot() {
-        return $this->img_root;
+    public function hidden_fields() {
+        return $this->hidden_fields;
     }
 }
-
-?>
