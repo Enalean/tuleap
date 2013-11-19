@@ -22,7 +22,7 @@ namespace Tuleap\Token\REST\v1;
 use \Luracast\Restler\RestException;
 use \Tuleap\Token\REST\TokenRepresentation;
 use \Tuleap\Token\REST\TokenUserAuthRepresentation;
-
+use \Tuleap\REST\Header;
 use UserManager;
 use EventManager;
 use User_LoginManager;
@@ -54,6 +54,8 @@ class TokenResource {
             );
 
             $user  = $user_login->authenticate($authentication->username, $authentication->password);
+            $this->sendAllowHeaders();
+
             return new TokenRepresentation(
                 $this->getTokenManager()->generateTokenForUser($user)
             );
@@ -69,6 +71,7 @@ class TokenResource {
      * @param string $id Token ID
      */
     protected function delete($id) {
+        $this->sendAllowHeadersForToken();
         try {
             $this->getTokenManager()->expireToken(
                 new \Rest_Token(
@@ -87,6 +90,7 @@ class TokenResource {
      * @url DELETE
      */
     protected function deleteAll() {
+        $this->sendAllowHeaders();
         $this->getTokenManager()->expireAllTokensForUser(
             $this->user_manager->getCurrentUser()
         );
@@ -96,7 +100,7 @@ class TokenResource {
      * @url OPTIONS
      */
     public function options() {
-        header('Allow: POST, OPTIONS, DELETE');
+        $this->sendAllowHeaders();
     }
 
     /**
@@ -115,7 +119,7 @@ class TokenResource {
             throw new RestException(404, $exception->getMessage());
         }
 
-        header('Allow: OPTIONS, DELETE');
+        $this->sendAllowHeadersForToken();
     }
 
     private function getTokenManager() {
@@ -125,5 +129,13 @@ class TokenResource {
             new \Rest_TokenFactory($token_dao),
             $this->user_manager
         );
+    }
+
+    private function sendAllowHeaders() {
+        Header::allowOptionsPostDelete();
+    }
+
+    private function sendAllowHeadersForToken() {
+        Header::allowOptionsDelete();
     }
 }

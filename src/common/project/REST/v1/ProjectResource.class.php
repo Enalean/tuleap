@@ -59,6 +59,7 @@ class ProjectResource {
                 'resources' => &$resources
             )
         );
+        $this->sendAllowHeadersForProject();
 
         return new ProjectInfoRepresentation($project, $resources);
     }
@@ -75,15 +76,14 @@ class ProjectResource {
      */
     public function optionsId($id) {
         $this->getProject($id);
-
-        header(Header::getAllow(array(Header::GET, Header::OPTIONS)));
+        $this->sendAllowHeadersForProject();
     }
 
     /**
      * @url OPTIONS
      */
     public function options() {
-        header(Header::getAllow(array(Header::OPTIONS)));
+        Header::allowOptions();
     }
 
     /**
@@ -116,7 +116,10 @@ class ProjectResource {
      * @return array of ProjectPlanningResource
      */
     protected function getPlannings($id, $limit = 10, $offset = 0) {
-        return $this->plannings($id, $limit, $offset, Event::REST_GET_PROJECT_PLANNINGS);
+        $plannings = $this->plannings($id, $limit, $offset, Event::REST_GET_PROJECT_PLANNINGS);
+        $this->sendAllowHeadersForProject();
+
+        return $plannings;
     }
 
     /**
@@ -125,7 +128,8 @@ class ProjectResource {
      * @param int $id The id of the project
      */
     protected function optionsPlannings($id) {
-        return $this->plannings($id, 10, 0, Event::REST_OPTIONS_PROJECT_PLANNINGS);
+        $this->plannings($id, 10, 0, Event::REST_OPTIONS_PROJECT_PLANNINGS);
+        $this->sendAllowHeadersForProject();
     }
 
     private function plannings($id, $limit, $offset, $event) {
@@ -144,5 +148,9 @@ class ProjectResource {
         );
 
         return $result;
+    }
+
+    private function sendAllowHeadersForProject() {
+        Header::allowOptionsGet();
     }
 }

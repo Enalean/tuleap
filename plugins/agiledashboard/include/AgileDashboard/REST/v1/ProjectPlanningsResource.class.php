@@ -23,6 +23,7 @@ use PlanningFactory;
 use PFUser;
 use Project;
 use \Luracast\Restler\RestException;
+use \Tuleap\REST\Header;
 
 /**
  * Wrapper for milestone related REST methods
@@ -46,6 +47,7 @@ class ProjectPlanningsResource {
             $planning_representations[] = new PlanningRepresentation($planning);
         }
 
+        $this->sendAllowHeaders();
         $this->sendPaginationHeaders($limit, $offset, count($all_plannings));
 
         return $planning_representations;
@@ -58,7 +60,7 @@ class ProjectPlanningsResource {
     public function options(PFUser $user, Project $project, $limit, $offset) {
         $all_plannings = PlanningFactory::build()->getPlannings($user, $project->getID());
 
-        header('Allow: GET, OPTIONS');
+        $this->sendAllowHeaders();
         $this->sendPaginationHeaders($limit, $offset, count($all_plannings));
     }
 
@@ -67,6 +69,10 @@ class ProjectPlanningsResource {
         header('X-PAGINATION-OFFSET: '. $offset);
         header('X-PAGINATION-SIZE: '. $size);
         header('X-PAGINATION-LIMIT-MAX: '. self::MAX_LIMIT);
+    }
+
+    private function sendAllowHeaders() {
+        Header::allowOptionsGet();
     }
 }
 ?>

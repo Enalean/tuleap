@@ -54,8 +54,8 @@ class ArtifactsResource {
     protected function getId($id) {
         $user     = UserManager::instance()->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
+        $this->sendAllowHeadersForArtifact($artifact);
 
-        header(Header::getLastModified($artifact->getLastUpdateDate()));
         return $this->builder->getArtifactRepresentation($user, $artifact);
     }
 
@@ -68,8 +68,8 @@ class ArtifactsResource {
     protected function getArtifactChangesets($id) {
         $user     = UserManager::instance()->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
+        $this->sendAllowHeadersForArtifact($artifact);
 
-        header(Header::getLastModified($artifact->getLastUpdateDate()));
         return $this->builder->getArtifactChangesetsRepresentation($user, $artifact);
     }
 
@@ -80,8 +80,7 @@ class ArtifactsResource {
     protected function optionsId($id) {
         $user     = UserManager::instance()->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
-        header(Header::getLastModified($artifact->getLastUpdateDate()));
-        header(Header::getAllow(array(Header::GET, Header::OPTIONS)));
+        $this->sendAllowHeadersForArtifact($artifact);
     }
 
     /**
@@ -102,5 +101,11 @@ class ArtifactsResource {
         } catch (Project_AccessException $exception) {
             throw new RestException(403, $exception->getMessage());
         }
+    }
+
+    private function sendAllowHeadersForArtifact(Tracker_Artifact $artifact) {
+        $date = $artifact->getLastUpdateDate();
+        Header::allowOptionsGet();
+        Header::lastModified($date);
     }
 }
