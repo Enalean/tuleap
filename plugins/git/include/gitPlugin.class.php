@@ -968,7 +968,8 @@ class GitPlugin extends Plugin {
             UserManager::instance(),
             $project_manager,
             PluginManager::instance(),
-            HTTPRequest::instance()
+            HTTPRequest::instance(),
+            $this->getProjectCreator()
         );
     }
 

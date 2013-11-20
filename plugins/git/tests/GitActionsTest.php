@@ -58,7 +58,8 @@ class GitActionsTest extends TuleapTestCase {
                 mock('GitRepositoryManager'),
                 mock('Git_RemoteServer_GerritServerFactory'),
                 mock('Git_Driver_Gerrit'),
-                mock('Git_Driver_Gerrit_UserAccountManager')
+                mock('Git_Driver_Gerrit_UserAccountManager'),
+                mock('Git_Driver_Gerrit_ProjectCreator')
             )
         );
     }
@@ -455,7 +456,8 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             mock('GitRepositoryManager'),
             mock('Git_RemoteServer_GerritServerFactory'),
             mock('Git_Driver_Gerrit'),
-            mock('Git_Driver_Gerrit_UserAccountManager')
+            mock('Git_Driver_Gerrit_UserAccountManager'),
+            mock('Git_Driver_Gerrit_ProjectCreator')
         );
     }
 
@@ -499,7 +501,8 @@ class GitActions_ForkTests extends TuleapTestCase {
             $this->manager,
             mock('Git_RemoteServer_GerritServerFactory'),
             mock('Git_Driver_Gerrit'),
-            mock('Git_Driver_Gerrit_UserAccountManager')
+            mock('Git_Driver_Gerrit_UserAccountManager'),
+            mock('Git_Driver_Gerrit_ProjectCreator')
         );
     }
 
@@ -543,7 +546,7 @@ class GitActions_ProjectPrivacyTest extends TuleapTestCase {
         stub($this->factory)->getRepositoryById($repo_id)->returns($repo);
         $this->changeProjectRepositoriesAccess($project_id, $is_private);
     }
-    
+
     public function itMakesRepositoriesPrivateWhenProjectBecomesPrivate() {
         $project_id = 99;
         $is_private = true;
@@ -554,7 +557,7 @@ class GitActions_ProjectPrivacyTest extends TuleapTestCase {
         $this->changeProjectRepositoriesAccess($project_id, $is_private);
 
     }
-    
+
     public function itDoesNothingIfThePermissionsAreAlreadyCorrect() {
         $project_id = 99;
         $is_private = true;
@@ -566,7 +569,7 @@ class GitActions_ProjectPrivacyTest extends TuleapTestCase {
         stub($this->factory)->getRepositoryById($repo_id)->returns($repo);
         $this->changeProjectRepositoriesAccess($project_id, $is_private);
     }
-    
+
     public function itHandlesAllRepositoriesOfTheProject() {
         $project_id = 99;
         $is_private = true;
@@ -579,7 +582,7 @@ class GitActions_ProjectPrivacyTest extends TuleapTestCase {
         stub($this->factory)->getRepositoryById($repo_id2)->returns($repo2);
         $this->changeProjectRepositoriesAccess($project_id, $is_private);
     }
-    
+
     private function changeProjectRepositoriesAccess($project_id, $is_private) {
         return GitActions::changeProjectRepositoriesAccess($project_id, $is_private, $this->dao, $this->factory);
     }
@@ -615,7 +618,8 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
             $this->manager,
             $this->gerrit_factory,
             mock('Git_Driver_Gerrit'),
-            mock('Git_Driver_Gerrit_UserAccountManager')
+            mock('Git_Driver_Gerrit_UserAccountManager'),
+            mock('Git_Driver_Gerrit_ProjectCreator')
         );
     }
 
@@ -665,7 +669,8 @@ class GitActions_disconnectFromGerritTest extends TuleapTestCase {
             mock('GitRepositoryManager'),
             $this->gerrit_server_factory,
             $this->driver,
-            mock('Git_Driver_Gerrit_UserAccountManager')
+            mock('Git_Driver_Gerrit_UserAccountManager'),
+            mock('Git_Driver_Gerrit_ProjectCreator')
         );
     }
 
@@ -687,6 +692,101 @@ class GitActions_disconnectFromGerritTest extends TuleapTestCase {
 
         expect($this->system_event_manager)->queueRemoteProjectDeletion($this->repo, $this->driver)->never();
         $this->actions->disconnectFromGerrit($this->repo);
+    }
+}
+
+class GitActions_fetchGitConfig extends TuleapTestCase {
+
+    /**
+     * @var GitActions
+     */
+    private $actions;
+
+     public function setUp() {
+        parent::setUp();
+
+        $this->backend = mock('Git_Backend_Gitolite');
+
+        $this->project_id = 458;
+        $this->project    = mock('Project');
+        stub($this->project)->getId()->returns($this->project_id);
+
+        $this->repo_id = 14;
+        $this->repo    = mock('GitRepository');
+        stub($this->repo)->getId()->returns($this->repo_id);
+        stub($this->repo)->belongsToProject($this->project)->returns(true);
+
+        $this->user    = mock('PFUser');
+
+        $this->request = mock('Codendi_Request');
+        $this->system_event_manager = mock('Git_SystemEventManager');
+        $this->controller = mock('Git');
+        $this->driver = mock('Git_Driver_Gerrit');
+
+        $gerrit_server = mock('Git_RemoteServer_GerritServer');
+
+        $this->gerrit_server_factory = mock('Git_RemoteServer_GerritServerFactory');
+        stub($this->gerrit_server_factory)->getServerById()->returns($gerrit_server);
+
+        $this->factory = stub('GitRepositoryFactory')->getRepositoryById(14)->returns($this->repo);
+
+        $this->project_creator = mock('Git_Driver_Gerrit_ProjectCreator');
+
+        stub($this->controller)->getRequest()->returns($this->request);
+
+        $this->actions = new GitActions(
+            $this->controller,
+            $this->system_event_manager,
+            $this->factory,
+            mock('GitRepositoryManager'),
+            $this->gerrit_server_factory,
+            $this->driver,
+            mock('Git_Driver_Gerrit_UserAccountManager'),
+            $this->project_creator
+        );
+
+    }
+
+    public function itReturnsAnErrorIfRepoDoesNotExist() {
+        stub($this->factory)->getRepositoryById()->returns(null);
+        $repo_id = 458;
+
+        $GLOBALS['Response']->expectOnce('sendStatusCode', array(404));
+
+        $this->actions->fetchGitConfig($repo_id, $this->user, $this->project);
+    }
+
+    public function itReturnsAnErrorIfRepoDoesNotBelongToProject() {
+        $project = mock('Project');
+        stub($this->repo)->belongsToProject($project)->returns(false);
+
+        $GLOBALS['Response']->expectOnce('sendStatusCode', array(403));
+
+        $this->actions->fetchGitConfig($this->repo_id, $this->user, $project);
+    }
+
+    public function itReturnsAnErrorIfUserIsNotProjectAdmin() {
+        stub($this->user)->isMember($this->project_id, 'A')->returns(false);
+        $GLOBALS['Response']->expectOnce('sendStatusCode', array(401));
+
+        $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
+    }
+
+    public function itReturnsAnErrorIfRepoIsNotMigratedToGerrit() {
+        stub($this->user)->isMember($this->project_id, 'A')->returns(true);
+        stub($this->repo)->isMigratedToGerrit()->returns(false);
+        $GLOBALS['Response']->expectOnce('sendStatusCode', array(500));
+
+        $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
+    }
+
+    public function itReturnsAnErrorIfRepoIsGerritServerIsDown() {
+        stub($this->user)->isMember($this->project_id, 'A')->returns(true);
+        stub($this->repo)->isMigratedToGerrit()->returns(true);
+        stub($this->project_creator)->getGerritConfig()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure('', '', ''));
+        $GLOBALS['Response']->expectOnce('sendStatusCode', array(500));
+
+        $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
     }
 }
 ?>

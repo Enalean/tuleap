@@ -92,6 +92,9 @@ class Git extends PluginController {
     /** @var PluginManager */
     private $plugin_manager;
 
+    /** @var Git_Driver_Gerrit_ProjectCreator */
+    private $project_creator;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -103,7 +106,8 @@ class Git extends PluginController {
         UserManager $user_manager,
         ProjectManager $project_manager,
         PluginManager $plugin_manager,
-        Codendi_Request $request
+        Codendi_Request $request,
+        Git_Driver_Gerrit_ProjectCreator $project_creator
     ) {
         parent::__construct($user_manager, $request);
 
@@ -116,6 +120,7 @@ class Git extends PluginController {
         $this->git_system_event_manager = $system_event_manager;
         $this->gerrit_usermanager       = $gerrit_usermanager;
         $this->plugin_manager           = $plugin_manager;
+        $this->project_creator          = $project_creator;
 
         $matches = array();
         if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
@@ -226,6 +231,7 @@ class Git extends PluginController {
                                             'confirm_private',
                                             'fork_repositories',
                                             'admin',
+                                            'fetch_git_config',
                                             'fork_repositories_permissions',
                                             'do_fork_repositories',
                                             'view_last_git_pushes',
@@ -290,7 +296,7 @@ class Git extends PluginController {
 
     }
     
-    public function _dispatchActionAndView($action, $repoId, $repositoryName, $user) { 
+    public function _dispatchActionAndView($action, $repoId, $repositoryName, $user) {
         $pane = $this->request->get('pane');
         switch ($action) {
             #CREATE REF
@@ -411,6 +417,11 @@ class Git extends PluginController {
                 } else {
                     $this->addError($this->getText('controller_access_denied'));
                 }
+                break;
+            case 'fetch_git_config':
+                $project = $this->projectManager->getProject($this->groupId);
+                $this->setDefaultPageRendering(false);
+                $this->addAction('fetchGitConfig', array($repoId, $user, $project));
                 break;
             case 'fork_repositories_permissions':
                 $scope = self::SCOPE_PERSONAL;
@@ -650,7 +661,8 @@ class Git extends PluginController {
             $this->repository_manager,
             $this->gerrit_server_factory,
             $this->driver,
-            $this->gerrit_usermanager
+            $this->gerrit_usermanager,
+            $this->project_creator
         );
     }
 

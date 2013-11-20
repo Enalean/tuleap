@@ -1,3 +1,6 @@
+codendi.git = codendi.git || {};
+codendi.git.base_url = '/plugins/git/';
+
 document.observe('dom:loaded', function () {
     var fork_repositories_prefix = $('fork_repositories_prefix');
 
@@ -31,14 +34,14 @@ document.observe('dom:loaded', function () {
         var submit = fork_repositories_prefix.up('form').down('input[type=submit]');
 
         var tpl = new Template('<div>#{dest}/#{path}#{repo}</div>');
-        
+
         function getPreviewUpdater(table, previewPos) {
             table.down('thead > tr > td', previewPos).update('<label style="font-weight: bold;">'+ codendi.locales.git.preview +'</label>');
             var preview = new Element('div', {
                     style: 'color: #999; border-bottom: 1px solid #EEE; margin-bottom:0.5em; padding-bottom:0.5em;'
             });
             table.down('tbody > tr > td', previewPos).insert({top: preview});
-            
+
             function getForkDestination() {
                 if (fork_destination.disabled) {
                     return $F('fork_repositories_prefix');
@@ -55,7 +58,7 @@ document.observe('dom:loaded', function () {
                 }
                 var tplVars = {
                     path: '',
-                    repo: '...', 
+                    repo: '...',
                     dest: getForkDestination()
                 };
                 if (fork_destination.disabled && $F('fork_repositories_path').strip()) {
@@ -77,11 +80,11 @@ document.observe('dom:loaded', function () {
                 }
             };
         }
-        
+
         // Keep status of the submitted form
         var submitted = false;
         var table     = fork_repositories_prefix.up('table');
-        
+
         var periodicalExecuter = new PeriodicalExecuter(getPreviewUpdater(table, 3), 0.5);
 
         // On fork, disable submit button
@@ -95,21 +98,21 @@ document.observe('dom:loaded', function () {
             if (optionBox.checked) {
                 fork_destination.enable();
                 fork_path.disable();
-                fork_path.placeholder = codendi.locales.git.path_placeholder_disabled; 
-                fork_path.title       = codendi.locales.git.path_placeholder_disabled; 
+                fork_path.placeholder = codendi.locales.git.path_placeholder_disabled;
+                fork_path.title       = codendi.locales.git.path_placeholder_disabled;
             } else {
                 fork_destination.disable();
                 fork_path.enable();
-                fork_path.placeholder = codendi.locales.git.path_placeholder_enabled; 
-                fork_path.title       = codendi.locales.git.path_placeholder_enabled; 
+                fork_path.placeholder = codendi.locales.git.path_placeholder_enabled;
+                fork_path.title       = codendi.locales.git.path_placeholder_enabled;
             }
         }
-        
+
         fork_destination.disable();
         toggleDestination();
-        $('choose_project').observe('change', toggleDestination); 
+        $('choose_project').observe('change', toggleDestination);
         $('choose_personal').observe('change', toggleDestination);
-        $('choose_project').observe('click', toggleDestination); 
+        $('choose_project').observe('click', toggleDestination);
         $('choose_personal').observe('click', toggleDestination);
     }
 
@@ -131,6 +134,25 @@ document.observe('dom:loaded', function () {
             });
         }
 
+    })();
+
+    (function loadGerritConfig() {
+        var list = $('git_admin_config_list');
+        list.observe('change', function() {
+            var remote_repository = $F(list),
+                group_id = $F('project_id'),
+                query    = '?group_id='+group_id+'&action=fetch_git_config&repo_id='+remote_repository;
+
+            new Ajax.Request(codendi.git.base_url + query, {
+                onFailure: function() {
+                    alert(codendi.locales['git'].cannot_get_gerrit_config)
+                },
+                onSuccess: function (transport) {
+                    $('git_admin_config_data').innerHTML = transport.responseText;
+                }
+            });
+
+        });
     })();
 
     $('gerrit_past_project_delete').hide();

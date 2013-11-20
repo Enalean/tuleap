@@ -20,6 +20,8 @@
 
 class GitPresenters_AdminPresenter {
 
+    public $project_id;
+
     /**
      * List of repositories belonging to the project or the parent project
      *
@@ -27,8 +29,9 @@ class GitPresenters_AdminPresenter {
      */
     private $repository_list;
 
-    public function __construct($repository_list) {
+    public function __construct($repository_list, $project_id) {
         $this->repository_list = $repository_list;
+        $this->project_id      = $project_id;
     }
 
     public function git_admin() {

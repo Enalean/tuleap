@@ -132,6 +132,21 @@ class Git_Driver_Gerrit_ProjectCreator {
         `cd $this->dir; git checkout FETCH_HEAD`;
     }
 
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $gerrit_server
+     * @param string $gerrit_project_url
+     * @return string file contents
+     *
+     * @throw Git_Driver_Gerrit_RemoteSSHCommandFailure
+     */
+    public function getGerritConfig(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url) {
+        $this->driver->ping($gerrit_server);
+        $this->cloneGerritProjectConfig($gerrit_server, $gerrit_project_url);
+
+        return file_get_contents($this->dir . '/project.config');
+    }
+
     private function setUpCommitter(Git_RemoteServer_GerritServer $gerrit_server) {
         $name  = escapeshellarg($gerrit_server->getLogin());
         $email = escapeshellarg('codendiadm@'. Config::get('sys_default_domain'));

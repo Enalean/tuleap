@@ -54,6 +54,9 @@ class GitActions extends PluginActions {
     /** @var Git_Driver_Gerrit_UserAccountManager */
     private $gerrit_usermanager;
 
+    /** @var Git_Driver_Gerrit_ProjectCreator */
+    private $project_creator;
+
     /**
      * Constructor
      *
@@ -69,7 +72,8 @@ class GitActions extends PluginActions {
         GitRepositoryManager $manager,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         Git_Driver_Gerrit $driver,
-        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager
+        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
+        Git_Driver_Gerrit_ProjectCreator $project_creator
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager    = $system_event_manager;
@@ -78,7 +82,7 @@ class GitActions extends PluginActions {
         $this->gerrit_server_factory = $gerrit_server_factory;
         $this->driver                = $driver;
         $this->gerrit_usermanager    = $gerrit_usermanager;
-
+        $this->project_creator       = $project_creator;
     }
 
     protected function getText($key, $params = array()) {
@@ -181,7 +185,61 @@ class GitActions extends PluginActions {
     protected function getDao() {
         return new GitDao();
     }
-    
+
+    /**
+     * Displays the contents of the config file of a repository migrated to gerrit.
+     *
+     * @param int $repo_id
+     * @param PFUser $user
+     * @param Project $project
+     * @return void if error
+     */
+    public function fetchGitConfig($repo_id, PFUser $user, Project $project) {
+        $git_repo = $this->getGitRepository($repo_id);
+
+        try {
+            $this->checkRepoValidity($git_repo, $project, $user);
+        } catch (Exception $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, get_class($e).$e->getTraceAsString());
+            $GLOBALS['Response']->sendStatusCode($e->getCode());
+            return;
+        }
+
+        $gerrit_server           = $this->gerrit_server_factory->getServerById($git_repo->getRemoteServerId());
+        $git_repo_name_on_gerrit = $this->driver->getGerritProjectName($git_repo);
+        $url                     = $gerrit_server->getCloneSSHUrl($git_repo_name_on_gerrit);
+
+        try {
+            echo $this->project_creator->getGerritConfig($gerrit_server, $url);
+        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'Cannot access Gerrit ' . $e->getTraceAsString());
+            $GLOBALS['Response']->sendStatusCode(500);
+            return;
+        }
+    }
+
+    private function checkRepoValidity($git_repo, $project, $user) {
+        if($project->isError()) {
+            throw new Git_ProjectNotFoundException('unable to get config', 404);
+        }
+
+        if(! $git_repo) {
+            throw new GitRepoNotFoundException('unable to get config', 404);
+        }
+
+        if(! $git_repo->belongsToProject($project)) {
+            throw new GitRepoNotInProjectException('unable to get config', 403);
+        }
+
+        if(! $user->isMember($project->getID(), 'A')) {
+             throw new GitUserNotAdminException('unable to get config', 401);
+        }
+
+        if(! $git_repo->isMigratedToGerrit()) {
+            throw new GitRepoNotOnGerritException('unable to get config', 500);
+        }
+    }
+
     public function getRepositoryDetails($projectId, $repositoryId) {
         $c = $this->getController();
         $projectId    = intval($projectId);
