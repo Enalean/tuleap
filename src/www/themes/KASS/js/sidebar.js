@@ -1,3 +1,22 @@
+/**
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 !function($) {
     var width_collapsed = '40px';
     var width_expanded  = '260px';
@@ -11,17 +30,23 @@
     }
 
     function updateSidebarWidth(new_width, duration) {
+        var logo_size = '';
+        if (new_width == width_collapsed || $(document).width() <= 1210) {
+            logo_size = '-small';
+        }
+
         $('.sidebar-nav').animate({
-            width:        new_width,
-            maxnew_width: new_width
+            width:           new_width,
+            maxnew_width:    new_width
         }, duration);
         $('.main').animate({
-            marginLeft:   new_width
+            marginLeft:      new_width
         }, duration);
         $('.logo').animate({
-            width:        new_width,
-            maxnew_width: new_width
+            width:           new_width,
+            maxnew_width:    new_width
         }, duration);
+        $('.logo').removeClass('logo-background logo-background-small').addClass('logo-background'+logo_size);
     }
 
     function updateSidebarIcon(direction) {

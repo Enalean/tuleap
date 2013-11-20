@@ -40,39 +40,42 @@ html, body {
 }
 
 body {
-    padding: 52px 0 0 0;
-}
-
-@media screen and (max-width: 883px) {
-    body {
-        padding: 105px 0 0 0;
-    }
+    padding: 0;
 }
 
 body > .wrapper {
-    min-height:100%;
-    position:relative;
+    min-height: 100%;
+    position: relative;
 }
 
 /* {{{ NAVBAR */
 .logo {
     max-width: @sidebar-width;
     width: @sidebar-width;
+    height: 52px;
     float: left;
+    .logo-background;
+}
+.logo-background {
+    background: url('../images/organization_logo.png') no-repeat center center;
+}
+.logo-background-small {
+    background: url('../images/organization_logo_small.png') no-repeat center center;
 }
 
 @media screen and (max-width: 1320px) {
     .logo {
-        max-width: 128px;
-        width:  128px;
+        max-width: 155px;
+        width:  155px;
         float: left;
     }
 }
-@media screen and (max-width: 1160px) {
+@media screen and (max-width: 1210px) {
     .logo {
-        max-width: 32px;
-        width:  32px;
+        max-width: 42px;
+        width: 42px;
         float: left;
+        .logo-background-small;
     }
 }
 
@@ -265,6 +268,13 @@ body > .wrapper {
     width: @sidebar-width;
     max-width: @sidebar-width;
     overflow: hidden;
+    padding: 52px 0 0 0;
+    &.big-nav {
+        padding: 105px 0 0 0;
+    }
+    &.huge-nav {
+        padding: 157px 0 0 0;
+    }
 
     .project-title {
         color: @white;
@@ -298,6 +308,7 @@ body > .wrapper {
         font-size: 1em;
         display: block;
         padding: 10px 0;
+        margin: 20px 0 0 0;
         cursor: pointer;
 
         &:hover {
@@ -310,7 +321,13 @@ body > .wrapper {
 /* {{{ CONTENT */
 .main {
     margin: 0 0 0 @sidebar-width;
-    padding: 0;
+    padding: 52px 0 0 0;
+    &.big-nav {
+        padding: 105px 0 0 0;
+    }
+    &.huge-nav {
+        padding: 157px 0 0 0;
+    }
 
     &.full {
         margin: 0;
@@ -399,9 +416,10 @@ footer {
 
 #footer_debug {
     background: #222;
-    margin: 30px 0 0 @sidebar-width;
     padding: 20px;
     color: #0F0;
+    z-index: 3;
+    position: absolute;
 
     fieldset legend {
         color: #0F0;

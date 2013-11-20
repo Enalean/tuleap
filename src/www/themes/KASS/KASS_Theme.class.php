@@ -39,6 +39,7 @@ class KASS_Theme extends DivBasedTabbedLayout {
         parent::__construct($root);
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
         $this->includeJavascriptFile('/themes/KASS/js/sidebar.js');
+        $this->includeJavascriptFile('/themes/KASS/js/resize-window.js');
     }
 
     private function render($template_name, $presenter) {
