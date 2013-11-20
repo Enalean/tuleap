@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@import '../../common/css/bootstrap-2.3.2/bootstrap.less';
+@import '../../common/css/bootstrap-2.3.2/responsive.less';
 @import '../../common/css/utils/utils.less';
 @import '../../common/css/bootstrap-2.3.2/variables.less';
 @import '../../common/css/bootstrap-2.3.2/mixins.less';
@@ -53,14 +55,14 @@ body > .wrapper {
     float: left;
 }
 
-@media screen and (max-width: 1280px) {
+@media screen and (max-width: 1430px) {
     .logo {
         max-width: 128px;
         width:  128px;
         float: left;
     }
 }
-@media screen and (max-width: 1170px) {
+@media screen and (max-width: 1300px) {
     .logo {
         max-width: 32px;
         width:  32px;
@@ -107,16 +109,6 @@ body > .wrapper {
 
     .brand {
         padding: 0;
-    }
-
-    .navbar-search .search-query {
-        border-radius: 0;
-        border: 1px solid @dark-orange;
-        margin: 5px 0 0 0;
-
-        &:focus {
-            box-shadow: none;
-        }
     }
 
     .nav {
@@ -195,6 +187,64 @@ body > .wrapper {
 
         }
     }
+
+    .navbar-search {
+        margin: 11px 25px 0 0;
+
+        .dropdown-toggle .caret {
+            margin: -2px 0 0 0;
+        }
+
+        input[type="text"] {
+            border: 1px solid @dark-orange;
+
+            &:focus {
+                box-shadow: none;
+                z-index: 0;
+            }
+        }
+
+        .bootstrap-select {
+            width: 55px;
+
+            .btn:focus {
+                outline: none;
+            }
+
+            ul.dropdown-menu {
+                background-color: @white;
+
+                a {
+                    color: @dark-grey;
+                    font-weight: normal;
+
+                    &:hover, &:focus {
+                        background-color: @light-grey;
+                        color: @dark-grey;
+                    }
+
+                    i:first-child {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        div.filter-option {
+            font-family: 'Source Sans Pro', Arial;
+            font-weight: lighter;
+            font-size: 1em;
+            text-shadow: 0 1px 2px lighten(@dark-grey, 20%);
+        }
+
+        .btn-search-bar {
+            .btn-warning;
+        }
+
+        .input-append {
+            margin-bottom: 0;
+        }
+    }
 }
 /* }}} */
 
@@ -255,6 +305,10 @@ body > .wrapper {
 .main {
     margin: 0 0 0 @sidebar-width;
     padding: 0;
+
+    &.full {
+        margin: 0;
+    }
 
     #feedback ul {
         margin: 12px;
@@ -335,6 +389,24 @@ footer {
     width: 100%;
     height: 150px;
     padding: 0;
+}
+
+#footer_debug {
+    background: #222;
+    margin: 30px 0 0 @sidebar-width;
+    padding: 20px;
+    color: #0F0;
+
+    fieldset legend {
+        color: #0F0;
+        padding-left: 1em;
+    }
+    td {
+        color: #0F0;
+    }
+    pre {
+        color: #404040;
+    }
 }
 /* }}} */
 

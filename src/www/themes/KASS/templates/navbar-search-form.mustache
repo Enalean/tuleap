@@ -1,13 +1,20 @@
 {{# search_form_presenter}}
     <form action="/search/" method="post" class="navbar-search pull-left">
-        <select style="font-size: x-small" name="type_of_search">
-        {{# search_options }}
-            <option {{# selected }} selected='selected' {{/ selected }} value={{ value }}>{{ label }}</option>
-        {{/ search_options }}
-        </select>
         {{# hidden_fields }}
             <input type="hidden" name={{ name }} value={{ value }}/>
         {{/ hidden_fields }}
-        <input type="text" name="words" placeholder="Search" class="search-query" />
+        <div class="input-append">
+            <input type="text" name="words" class="span2" placeholder="Search" />
+            <div class="btn-group">
+                <select style="font-size: x-small" class="selectpicker show-tick" data-style="btn-search-bar" id="type_of_search" name="type_of_search">
+                {{# search_options }}
+                    <option data-icon="icon-search" {{# selected }} selected='selected' {{/ selected }} value={{ value }}>&nbsp;{{ label }}</option>
+                {{/ search_options }}
+                </select>
+            </div>
+            <script type="text/javascript">
+                jQuery('#type_of_search').selectpicker();
+            </script>
+        </div>
     </form>
 {{/ search_form_presenter}}

@@ -72,9 +72,6 @@ class KASS_Theme extends DivBasedTabbedLayout {
     }
 
     protected function displayCommonStylesheetElements($params) {
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-2.3.2.min.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-responsive-2.3.2.min.css" />';
-
         $this->displayFontAwesomeStylesheetElements();
 
         $css = $GLOBALS['sys_user_theme'] . $this->getFontSizeName($GLOBALS['sys_user_font_size']) .'.css';
@@ -82,6 +79,7 @@ class KASS_Theme extends DivBasedTabbedLayout {
             echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme($css) .'" />';
         }
 
+        echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-select/bootstrap-select.css" />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('style.css') .'" />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
     }
@@ -142,6 +140,21 @@ class KASS_Theme extends DivBasedTabbedLayout {
 
     public function footer($params) {
         $this->render('footer', new KASS_FooterPresenter($this));
+
+        $this->endOfPage();
+    }
+
+    private function endOfPage() {
+        $this->displayFooterJavascriptElements();
+        if ($this->isInDebugMode()) {
+            $this->showDebugInfo();
+        }
+
+        $this->render('end-of-page', null);
+    }
+
+    private function isInDebugMode() {
+        return (Config::get('DEBUG_MODE') && (Config::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')));
     }
 }
 

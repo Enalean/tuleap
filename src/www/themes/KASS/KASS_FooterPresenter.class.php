@@ -20,24 +20,6 @@
 
 class KASS_FooterPresenter {
 
-    private $theme;
-
-    function __construct($theme) {
-        $this->theme = $theme;
-    }
-
-    public function isInDebugMode() {
-        return (Config::get('DEBUG_MODE') && (Config::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')));
-    }
-
-    public function debugMode() {
-        return $this->theme->showDebugInfo();
-    }
-
-    public function javascriptElements() {
-        return $this->theme->displayFooterJavascriptElements();
-    }
-
     public function footer() {
         global $Language;
         $version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));

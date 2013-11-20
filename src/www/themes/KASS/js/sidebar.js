@@ -78,25 +78,28 @@
 
     $(document).ready(function() {
         var current_size = getSidebarUserPreference();
-        $('.sidebar-nav li a').tooltip({
-            placement: 'right',
-            container: 'body'
-        });
 
-        if (current_size == null || current_size == width_expanded) {
-            updateSidebarTitle(false);
-            updateSidebarWidth(width_expanded, 0);
-            updateSidebarIcon('left');
-            updateSidebarServices(false);
-        } else {
-            updateSidebarTitle(true);
-            updateSidebarWidth(width_collapsed, 0);
-            updateSidebarIcon('right');
-            updateSidebarServices(true);
+        if ($('.sidebar-nav').length > 0) {
+            $('.sidebar-nav li a').tooltip({
+                placement: 'right',
+                container: 'body'
+            });
+
+            if (current_size == null || current_size == width_expanded) {
+                updateSidebarTitle(false);
+                updateSidebarWidth(width_expanded, 0);
+                updateSidebarIcon('left');
+                updateSidebarServices(false);
+            } else {
+                updateSidebarTitle(true);
+                updateSidebarWidth(width_collapsed, 0);
+                updateSidebarIcon('right');
+                updateSidebarServices(true);
+            }
+
+            $('.sidebar-collapse').click(function() {
+                sidebarCollapseEvent(150);
+            });
         }
-
-        $('.sidebar-collapse').click(function() {
-            sidebarCollapseEvent(150);
-        });
     });
 }(window.jQuery);

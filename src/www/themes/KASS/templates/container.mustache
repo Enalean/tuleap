@@ -1,8 +1,10 @@
 {{#hasSidebar}}
     {{> sidebar}}
+    <div class="main container-fluid">
 {{/hasSidebar}}
-
-<div class="main container-fluid">
+{{^hasSidebar}}
+    <div class="main full container-fluid">
+{{/hasSidebar}}
     {{{feedback}}}
 
     <div class="row-fluid">
