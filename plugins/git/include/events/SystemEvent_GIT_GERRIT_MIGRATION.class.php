@@ -57,6 +57,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
             $gerrit_project        = $this->project_creator->createGerritProject($server, $repository, $migrate_access_rights);
             $this->project_creator->removeTemporaryDirectory();
             $repository->getBackend()->updateRepoConf($repository);
+            $this->project_creator->finalizeGerritProjectCreation($server, $repository);
 
             $this->done("Created project $gerrit_project on ". $server->getHost());
             return true;
