@@ -3,7 +3,7 @@ Version 6.8 (Not Released Yet)
 	* tracker_date_reminder: 1.2.6
 	* agiledashboard: 1.17
 	* tracker: 5.187
-	* mediawiki: 0.20
+	* mediawiki: 0.21
 
 	== Bug Fix ==
 	* Fix request #5604: ViewVC download broken when file start with 0x00
