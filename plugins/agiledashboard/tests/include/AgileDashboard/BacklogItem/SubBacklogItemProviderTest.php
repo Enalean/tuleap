@@ -26,35 +26,26 @@ class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCa
     public function setUp() {
         parent::setUp();
         $this->milestone       = aMilestone()->withArtifact(anArtifact()->withId(3)->build())->build();
-        $this->backlog_tracker = aTracker()->build();
-        $this->dao             = mock('AgileDashboard_BacklogItem_SubBacklogItemDao');
+        $this->backlog_tracker = aTracker()->withId(35)->build();
+        $this->dao             = mock('Tracker_ArtifactDao');
 
-        $this->epic_tracker  = aTracker()->withId(25)->build();
-        $this->story_tracker = aTracker()->withId(29)->build();
-        $this->task_tracker  = aTracker()->withId(28)->build();
-        $this->parent_backlog_tracker_collection_provider = mock('AgileDashboard_Planning_ParentBacklogTrackerCollectionProvider');
-        stub($this->parent_backlog_tracker_collection_provider)
-            ->getParentBacklogTrackerCollection($this->backlog_tracker, $this->milestone)
-            ->returns(array($this->epic_tracker, $this->story_tracker, $this->task_tracker));
-
-        $this->provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider(
-            $this->dao,
-            $this->parent_backlog_tracker_collection_provider
-        );
+        $this->provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider($this->dao);
     }
+
     public function itReturnsTheMatchingIds() {
-        stub($this->dao)->getAllBacklogItemIdInMilestone(3, array(25,29,28))->returnsDar(
-            array('list_of_ids' => '7,8,11')
+        stub($this->dao)->getLinkedArtifactsByIds(array(3), array(3))->returnsDar(
+            array('id' => 7,  'tracker_id' => 35),
+            array('id' => 8,  'tracker_id' => 35),
+            array('id' => 11, 'tracker_id' => 35)
         );
+        stub($this->dao)->getLinkedArtifactsByIds(array(7, 8, 11), array(3, 7, 8, 11))->returnsEmptyDar();
 
         $result = $this->provider->getMatchingIds($this->milestone, $this->backlog_tracker);
         $this->assertEqual(array_keys($result), array(7, 8, 11));
     }
 
     public function itReturnsAnEmptyResultIfThereIsNoMatchingId() {
-        stub($this->dao)->getAllBacklogItemIdInMilestone(3, array(25,29,28))->returnsDar(
-            array('list_of_ids' => NULL)
-        );
+        stub($this->dao)->getLinkedArtifactsByIds()->returnsEmptyDar();
 
         $result = $this->provider->getMatchingIds($this->milestone, $this->backlog_tracker);
         $this->assertEqual($result, array());

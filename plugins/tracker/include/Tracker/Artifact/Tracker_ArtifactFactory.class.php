@@ -343,6 +343,13 @@ class Tracker_ArtifactFactory {
     /**
      * @return Tracker_Artifact[]
      */
+    public function getLinkedArtifacts(Tracker_Artifact $artifact) {
+        return $this->getDao()->getLinkedArtifacts($artifact->getId())->instanciateWith(array($this, 'getInstanceFromRow'));
+    }
+
+    /**
+     * @return Tracker_Artifact[]
+     */
     public function getChildren(Tracker_Artifact $artifact) {
         return $this->getDao()->getChildren($artifact->getId())->instanciateWith(array($this, 'getInstanceFromRow'));
     }
