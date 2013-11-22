@@ -254,9 +254,10 @@ class GitViews extends PluginViews {
         echo ' | ';
 
         echo $this->linkTo( '<b>'.$this->getText('bread_crumb_help').'</b>', 'javascript:help_window(\'/doc/'.$this->user->getShortLocale().'/user-guide/git.html\')');
-        echo ' | ';
-        
-        echo $this->linkTo( '<b>'.$this->getText('bread_crumb_admin').'</b>', '/plugins/git/?group_id='.$this->groupId .'&action=admin', 'class=""');
+        if($this->user->isAdmin($this->groupId)) {
+            echo ' | ';
+            echo $this->linkTo( '<b>'.$this->getText('bread_crumb_admin').'</b>', '/plugins/git/?group_id='.$this->groupId .'&action=admin', 'class=""');
+        }
     }
     
     /**
