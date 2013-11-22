@@ -137,8 +137,7 @@ class GitViews extends PluginViews {
         $repository   = $params['repository'];
         $this->_getBreadCrumb();
         echo '<h2>'. $repository->getHTMLLink() .' - '. $GLOBALS['Language']->getText('global', 'Settings') .'</h2>';
-
-        $repo_management_view  = new GitViews_RepoManagement($repository, $this->controller->getRequest(), $params['driver'], $params['gerrit_servers']);
+        $repo_management_view = new GitViews_RepoManagement($repository, $this->controller->getRequest(), $params['driver'], $params['gerrit_servers'], $params['gerrit_templates']);
         $repo_management_view->display();
     }
     

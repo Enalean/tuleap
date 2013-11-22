@@ -45,6 +45,9 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
     protected $another_ugroup_gerrit_name  = 'mozilla/another_ugroup';
     protected $project_admins_gerrit_name  = 'mozilla/project_admins';
 
+    protected $tmpdir;
+    protected $fixtures;
+
     /** @var Git_RemoteServer_GerritServer */
     protected $server;
 
@@ -77,7 +80,9 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         Config::set('sys_default_domain', $this->tuleap_instance);
         Config::set('tmp_dir', '/var/tmp');
         $this->fixtures = dirname(__FILE__) .'/_fixtures';
-        $this->tmpdir   = Config::get('tmp_dir') .'/'. md5(uniqid(rand(), true));
+        do {
+            $this->tmpdir   = Config::get('tmp_dir') .'/'. md5(uniqid(rand(), true));
+        } while (is_dir($this->tmpdir));
         `unzip $this->fixtures/firefox.zip -d $this->tmpdir`;
         `tar -xzf $this->fixtures/gitolite_firefox.git.tgz --directory $this->tmpdir`;
 

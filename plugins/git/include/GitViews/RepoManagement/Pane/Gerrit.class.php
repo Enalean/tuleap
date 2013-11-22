@@ -34,10 +34,16 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
      */
     private $driver;
 
-    public function __construct(GitRepository $repository, Codendi_Request $request, Git_Driver_Gerrit $driver, array $gerrit_servers) {
+    /**
+     * @var Git_Drive_Gerrit_Template_Template[]
+     */
+    private $templates;
+
+    public function __construct(GitRepository $repository, Codendi_Request $request, Git_Driver_Gerrit $driver, array $gerrit_servers, array $gerrit_config_templates) {
         parent::__construct($repository, $request);
         $this->gerrit_servers = $gerrit_servers;
         $this->driver         = $driver;
+        $this->templates      = $gerrit_config_templates;
     }
 
     /**
@@ -90,15 +96,14 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         $html .= $this->getServers();
         $html .= '</select>';
         $html .= '</p>';
-        $html .= '<label>';
+        $html .= '<p>';
+        $html .= '<label for="gerrit_template">'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_template') .'</label>';
+        $html .= '<select name="gerrit_template_id" id="gerrit_template">';
+        $html .= '<option value="" selected="selected">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
+        $html .= $this->getTemplates();
+        $html .= '</select>';
+        $html .= '</p>';
 
-        $checked = 'checked = "checked"';
-        if ($this->request->exist('migrate_access_right') && $this->request->get('migrate_access_right') == 0) {
-            $checked = "";
-        }
-
-        $html .= '<input type="checkbox" name="migrate_access_right" '.$checked.'"> '.$GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_access_right');
-        $html .= '</label>';
         $html .= '<p id="migrate_access_right"><input type="submit" name="save" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_to') .'" /></p>';
         $html .= '<div id="gerrit_past_project_delete" class="alert alert-info">
                     <p>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_past_project_warn') .'
@@ -125,6 +130,26 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
                         value="'.(int) $server->getId().'"
                         data-repo-delete-plugin-enabled="'.(int) $plugin_enabled.'">'
                     .$this->hp->purify($server->getHost()) .
+                    '</option>';
+        }
+
+        return $html;
+    }
+
+    private function getTemplates() {
+        $html = '<option
+                        value="none">'
+                .$GLOBALS['Language']->getText('plugin_git','none_gerrit_template') .
+                '</option>
+                 <option
+                        value="default">'
+                .$GLOBALS['Language']->getText('plugin_git','default_gerrit_template') .
+                '</option>';
+
+        foreach ($this->templates as $template) {
+            $html .= '<option
+                        value="'.(int) $template->getId().'">'
+                    .$this->hp->purify($template->getName()) .
                     '</option>';
         }
 

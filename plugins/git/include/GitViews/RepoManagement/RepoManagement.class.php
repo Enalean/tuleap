@@ -42,13 +42,17 @@ class GitViews_RepoManagement {
     /** @var Git_Driver_Gerrit */
     private $driver;
 
-    public function __construct(GitRepository $repository, Codendi_Request $request, Git_Driver_Gerrit $driver, array $gerrit_servers) {
-        $this->repository       = $repository;
-        $this->request          = $request;
-        $this->driver           = $driver;
-        $this->gerrit_servers   = $gerrit_servers;
-        $this->panes            = $this->buildPanes($repository);
-        $this->current_pane     = 'settings';
+    /** @var Git_Driver_Gerrit_Template_Template[] */
+    private $gerrit_config_templates;
+
+    public function __construct(GitRepository $repository, Codendi_Request $request, Git_Driver_Gerrit $driver, array $gerrit_servers, array $gerrit_config_templates) {
+        $this->repository              = $repository;
+        $this->request                 = $request;
+        $this->driver                  = $driver;
+        $this->gerrit_servers          = $gerrit_servers;
+        $this->gerrit_config_templates = $gerrit_config_templates;
+        $this->panes                   = $this->buildPanes($repository);
+        $this->current_pane            = 'settings';
         if (isset($this->panes[$request->get('pane')])) {
             $this->current_pane = $request->get('pane');
         }
@@ -60,7 +64,7 @@ class GitViews_RepoManagement {
     private function buildPanes(GitRepository $repository) {
         $panes = array(
             new GitViews_RepoManagement_Pane_GeneralSettings($repository, $this->request),
-            new GitViews_RepoManagement_Pane_Gerrit($repository, $this->request, $this->driver, $this->gerrit_servers),
+            new GitViews_RepoManagement_Pane_Gerrit($repository, $this->request, $this->driver, $this->gerrit_servers, $this->gerrit_config_templates),
             new GitViews_RepoManagement_Pane_AccessControl($repository, $this->request),
             new GitViews_RepoManagement_Pane_Notification($repository, $this->request),
             new GitViews_RepoManagement_Pane_Delete($repository, $this->request),

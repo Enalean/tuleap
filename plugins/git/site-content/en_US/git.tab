@@ -64,6 +64,9 @@ plugin_git	gerrit_server_already_migrated	The repository <em>$1</em> has already
 plugin_git	permissions_on_remote_server	You can only change <strong>READ</strong> permissions since this repository is managed by a remote Gerrit server. Please note that those modifications are local to $1 <strong>ARE NOT propagated to Gerrit</strong>.
 plugin_git	gerrit_migration_ongoing	The migration of this repository to Gerrit server is on going, please wait for a few minutes.
 plugin_git	gerrit_migrate_access_right	Migrate to Gerrit the access rights defined in the Git plugin.
+plugin_git	gerrit_template	Please choose a permission's configuration template for the migration,<br />they will be applied to the migrated repository on Gerrit:
+plugin_git	default_gerrit_template	Permissions defined in Git
+plugin_git	none_gerrit_template	No pre-set permissions
 
 plugin_git	controller_access_denied	You are not allowed to access this page
 
@@ -250,6 +253,7 @@ plugin_git	view_admin_file_name_label	Template file name
 plugin_git	view_admin_submit_button	Save
 plugin_git	view_admin_template_section_title	Git permission configuration templates
 plugin_git	view_admin_template_section_description	This section allows you to choose a Gerrit project configuration and create a reusable template from it
+
 plugin_git	view_admin_template_table_action	Action
 plugin_git	view_admin_template_table_name	Template name
 plugin_git	view_admin_create_new_template_text	Create new

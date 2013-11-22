@@ -310,8 +310,9 @@ class GitActions extends PluginActions {
         $this->addData(array('repository'=>$repository));
         $this->displayFeedbacksOnRepoManagement($repository);
         $this->addData(array(
-            'gerrit_servers' => $this->gerrit_server_factory->getServers(),
-            'driver'         => $this->driver,
+            'gerrit_servers'   => $this->gerrit_server_factory->getServers(),
+            'driver'           => $this->driver,
+            'gerrit_templates' => $this->template_factory->getTemplatesAvailableForRepository($repository)
         ));
         return true;
     }

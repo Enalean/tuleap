@@ -38,11 +38,39 @@ class Git_Driver_Gerrit_Template_TemplateFactory {
      * Get all templates of a project
      *
      * @param Project
+     *
      * @return Git_Driver_Gerrit_Template_Template[]
      */
     public function getAllTemplatesOfProject(Project $project) {
-        $templates = $this->dao->getAllTemplatesOfProject($project->getId())
-            ->instanciateWith(array($this, 'instantiateTemplateFromRow'));
+        $templates      = array();
+        $templates_rows = $this->dao->getAllTemplatesOfProject($project->getId());
+
+        foreach ($templates_rows as $row) {
+            $templates[] = $this->instantiateTemplateFromRow($row);
+        }
+
+        return $templates;
+    }
+
+
+    /**
+     * Get All templates for a repository
+     *
+     * @param GitRepository the concerned repo
+     *
+     * @return Git_Driver_Gerrit_Template_Template[] the templates
+     */
+    public function getTemplatesAvailableForRepository(GitRepository $repository) {
+        $templates       = array();
+        $current_project = $repository->getProject();
+        $project_manager = ProjectManager::instance();
+
+        $projects   = $project_manager->getAllParentsProjects($current_project->getId());
+        $projects[] = $current_project;
+
+        foreach ($projects as $project) {
+            $templates = array_merge($templates, $this->getAllTemplatesOfProject($project));
+        }
 
         return $templates;
     }
@@ -68,7 +96,7 @@ class Git_Driver_Gerrit_Template_TemplateFactory {
      * @param array
      * @return Git_Driver_Gerrit_Template_Template[] | false -where the array is in DAR format
      */
-    public function instantiateTemplateFromRow(array $row) {
+    private function instantiateTemplateFromRow(array $row) {
         return new Git_Driver_Gerrit_Template_Template(
             $row['id'],
             $row['group_id'],

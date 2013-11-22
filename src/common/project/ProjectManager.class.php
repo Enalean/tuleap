@@ -545,6 +545,21 @@ class ProjectManager {
     }
 
     /**
+     * Get all parents of a project
+     * @return Project[]
+     */
+    public function getAllParentsProjects($group_id) {
+        $projects   = array();
+        $parent_ids = $this->getHierarchyManager()->getAllParents($group_id);
+
+        foreach ($parent_ids as $parent_id) {
+            $projects[] = $this->getProject($parent_id);
+        }
+
+        return $projects;
+    }
+
+    /**
      *
      * @param int $group_id
      * @return Project[]
