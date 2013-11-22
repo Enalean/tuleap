@@ -45,11 +45,17 @@ class GitPresenters_AdminPresenter {
      */
     private $parent_templates_list;
 
-    public function __construct($repository_list, $templates_list, $parent_templates_list, $project_id) {
-        $this->repository_list = $repository_list;
-        $this->templates_list  = $templates_list;
-        $this->project_id      = $project_id;
-        $this->parent_templates_list = $parent_templates_list;
+    /** @var bool */
+    public $has_gerrit_servers_set_up;
+
+    public $git_siteadmin_url = '/plugins/git/admin/';
+
+    public function __construct($repository_list, $templates_list, $parent_templates_list, $project_id, $has_gerrit_servers_set_up) {
+        $this->repository_list           = $repository_list;
+        $this->templates_list            = $templates_list;
+        $this->project_id                = $project_id;
+        $this->parent_templates_list     = $parent_templates_list;
+        $this->has_gerrit_servers_set_up = $has_gerrit_servers_set_up;
 
         $this->form_action = '/plugins/git/?group_id='.$project_id.'&action=admin';
     }
@@ -136,6 +142,10 @@ class GitPresenters_AdminPresenter {
 
     public function template_from_scratch_text() {
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_from_scratch_text');
+    }
+
+    public function no_gerrit_servers() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_no_gerrit_server', array($this->git_siteadmin_url));
     }
 }
 ?>

@@ -192,7 +192,8 @@ class GitActions extends PluginActions {
         $this->addData(array(
             'repository_list'        => $repos,
             'templates_list'         => $templates,
-            'parent_templates_list'  => $parent_templates
+            'parent_templates_list'  => $parent_templates,
+            'has_gerrit_servers_set_up' => $this->gerrit_server_factory->hasRemotesSetUp()
         ));
     }
     

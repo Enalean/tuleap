@@ -345,8 +345,16 @@ class GitViews extends PluginViews {
         $templates_list  = (isset($params['templates_list'])) ? $params['templates_list'] : array();
         $parent_templates_list  = (isset($params['parent_templates_list'])) ? $params['parent_templates_list'] : array();
 
-        $presenter = new GitPresenters_AdminPresenter($repository_list, $templates_list, $parent_templates_list, $this->groupId);
+        $presenter = new GitPresenters_AdminPresenter(
+            $repository_list,
+            $templates_list,
+            $parent_templates_list,
+            $this->groupId,
+            $params['has_gerrit_servers_set_up']
+        );
+
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+
         echo $renderer->renderToString('admin', $presenter);
     }
 

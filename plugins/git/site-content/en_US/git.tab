@@ -267,3 +267,4 @@ plugin_git	view_admin_template_invalid_project	Invalid Project ID
 plugin_git	view_admin_template_invalid_template_id	Invalid Template ID
 plugin_git	view_admin_template_cannot_update	Unable to update template
 plugin_git	view_admin_template_cannot_create	Unable to create template
+plugin_git	view_admin_no_gerrit_server	There do not appear to be any <em><a href="$1">gerrit servers</a></em> set-up for this platform! Please contact your site administrator

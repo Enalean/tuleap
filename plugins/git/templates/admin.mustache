@@ -3,115 +3,121 @@
 <h3>{{template_section_title}}</h3>
 
 <p>{{template_section_description}}</p>
-<div class="control-group info">
-    <div class="controls">
-        <div class="btn-group dropdown" id="git_admin_config_btn_create">
-             <span class="dropdown-toggle btn btn-primary" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
-                    {{create_new_template_text}}
-                    <b class="caret"></b>
-            </span>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                <li role="menuitem" id="git_admin_config_from_gerrit">
-                    <a href="">{{template_from_gerrit_text}}</a>
-                </li>
-                <li role="menuitem" id="git_admin_config_from_template">
-                    <a href="">{{template_from_template_text}}</a>
-                </li>
-                <li role="menuitem" id="git_admin_config_from_scratch">
-                    <a href="">{{template_from_scratch_text}}</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
-<br />
-<div class="row-fluid" id="git_admin_config_templates_list">
-    <div class="span6">
-        <table id ="git_admin_config_templates" class="table table-striped table-bordered">
-            <thead>
-                <th>{{template_name_text}}</th>
-                <th class="git_admin_config_template_action">{{template_action_text}}</th>
-            </thead>
-            <tbody>
-                {{#templates_option}}
-                    <tr>
-                        <td>{{getName}}</td>
-                        <td><a href="" class="icon-edit git_admin_config_edit_template" data-template-id="{{getId}}" data-template-name="{{getName}}"> {{edit}}</a></td>
-                    </tr>
-                {{/templates_option}}
-                {{#parent_templates_option}}
-                    <tr>
-                        <td>{{getName}}</td>
-                        <td><a href="" class="icon-eye-open git_admin_config_view_template" data-template-id="{{getId}}" data-template-name="{{getName}}"> {{view}}</a></td>
-                    </tr>
-                {{/parent_templates_option}}
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<form class="form-horizontal" id="git_admin_config_form" style="display: none" method="POST" action="{{form_action}}">
-    <input type="hidden" value="{{project_id}}" id="project_id"/>
-    <div id="git_admin_config_list_area" style="display: none;">
-        <div class="control-group">
-            <label class="control-label" for="git_admin_config_list">
-                {{configurations_text}}
-            </label>
-            <div class="controls">
-                <select id="git_admin_config_list">
-                    <option value="" selected="selected">{{please_choose}}</option>
-                    {{#config_option}}
-                        {{#getRepository}}
-                            <option value="{{getId}}">{{getPath}}</option>
-                        {{/getRepository}}
-                    {{/config_option}}
-                </select>
+{{#has_gerrit_servers_set_up}}
+    <div class="control-group info">
+        <div class="controls">
+            <div class="btn-group dropdown" id="git_admin_config_btn_create">
+                 <span class="dropdown-toggle btn btn-primary" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
+                        {{create_new_template_text}}
+                        <b class="caret"></b>
+                </span>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li role="menuitem" id="git_admin_config_from_gerrit">
+                        <a href="">{{template_from_gerrit_text}}</a>
+                    </li>
+                    <li role="menuitem" id="git_admin_config_from_template">
+                        <a href="">{{template_from_template_text}}</a>
+                    </li>
+                    <li role="menuitem" id="git_admin_config_from_scratch">
+                        <a href="">{{template_from_scratch_text}}</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
-    <div id="git_admin_template_list_area" style="display: none;">
-        <div class="control-group">
-            <label class="control-label" for="git_admin_template_list">
-                {{templates_text}}
-            </label>
-            <div class="controls">
-                <select id="git_admin_template_list">
-                    <option value="" selected="selected">{{please_choose}}</option>
+    <br />
+    <div class="row-fluid" id="git_admin_config_templates_list">
+        <div class="span6">
+            <table id ="git_admin_config_templates" class="table table-striped table-bordered">
+                <thead>
+                    <th>{{template_name_text}}</th>
+                    <th class="git_admin_config_template_action">{{template_action_text}}</th>
+                </thead>
+                <tbody>
                     {{#templates_option}}
-                            <option value="{{getId}}">{{getName}}</option>
+                        <tr>
+                            <td>{{getName}}</td>
+                            <td><a href="" class="icon-edit git_admin_config_edit_template" data-template-id="{{getId}}" data-template-name="{{getName}}"> {{edit}}</a></td>
+                        </tr>
                     {{/templates_option}}
                     {{#parent_templates_option}}
-                            <option value="{{getId}}">{{getName}}</option>
+                        <tr>
+                            <td>{{getName}}</td>
+                            <td><a href="" class="icon-eye-open git_admin_config_view_template" data-template-id="{{getId}}" data-template-name="{{getName}}"> {{view}}</a></td>
+                        </tr>
                     {{/parent_templates_option}}
-                </select>
-            </div>
+                </tbody>
+            </table>
         </div>
     </div>
-    <div id="git_admin_config_edit_area" style="display: none;">
-        <div class="control-group">
-            <label class="control-label" for="git_admin_config_data" id="git_admin_config_data_label">
-                {{edit_text}}
-            </label>
-            <div class="controls">
-                <textarea id="git_admin_config_data" name="git_admin_config_data" rows="15" cols="65"></textarea>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="git_admin_file_name">
-                {{file_name_text}}
-            </label>
-            <div class="controls">
-                <input type="text" id="git_admin_file_name" name="git_admin_file_name"/>
-                <b><span id="git_admin_config_template_name"></span></b>
-                <input type="hidden" id="git_admin_template_id" name="git_admin_template_id"/>
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <input type="submit" value="{{save_text}}" class="btn btn-primary" name="save" id="git_admin_save_button"/>
-                <input type="button" value="{{cancel}}" id="git_admin_config_cancel" class="btn btn-primary"/>
-            </div>
-        </div>
-    </div>
-</form>
 
+    <form class="form-horizontal" id="git_admin_config_form" style="display: none" method="POST" action="{{form_action}}">
+        <input type="hidden" value="{{project_id}}" id="project_id"/>
+        <div id="git_admin_config_list_area" style="display: none;">
+            <div class="control-group">
+                <label class="control-label" for="git_admin_config_list">
+                    {{configurations_text}}
+                </label>
+                <div class="controls">
+                    <select id="git_admin_config_list">
+                        <option value="" selected="selected">{{please_choose}}</option>
+                        {{#config_option}}
+                            {{#getRepository}}
+                                <option value="{{getId}}">{{getPath}}</option>
+                            {{/getRepository}}
+                        {{/config_option}}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div id="git_admin_template_list_area" style="display: none;">
+            <div class="control-group">
+                <label class="control-label" for="git_admin_template_list">
+                    {{templates_text}}
+                </label>
+                <div class="controls">
+                    <select id="git_admin_template_list">
+                        <option value="" selected="selected">{{please_choose}}</option>
+                        {{#templates_option}}
+                                <option value="{{getId}}">{{getName}}</option>
+                        {{/templates_option}}
+                        {{#parent_templates_option}}
+                                <option value="{{getId}}">{{getName}}</option>
+                        {{/parent_templates_option}}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div id="git_admin_config_edit_area" style="display: none;">
+            <div class="control-group">
+                <label class="control-label" for="git_admin_config_data" id="git_admin_config_data_label">
+                    {{edit_text}}
+                </label>
+                <div class="controls">
+                    <textarea id="git_admin_config_data" name="git_admin_config_data" rows="15" cols="65"></textarea>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="git_admin_file_name">
+                    {{file_name_text}}
+                </label>
+                <div class="controls">
+                    <input type="text" id="git_admin_file_name" name="git_admin_file_name"/>
+                    <b><span id="git_admin_config_template_name"></span></b>
+                    <input type="hidden" id="git_admin_template_id" name="git_admin_template_id"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <input type="submit" value="{{save_text}}" class="btn btn-primary" name="save" id="git_admin_save_button"/>
+                    <input type="button" value="{{cancel}}" id="git_admin_config_cancel" class="btn btn-primary"/>
+                </div>
+            </div>
+        </div>
+    </form>
+{{/has_gerrit_servers_set_up}}
+{{^has_gerrit_servers_set_up}}
+    <div class="alert alert-info">
+        <span>{{{no_gerrit_servers}}}</span>
+    </div>
+{{/has_gerrit_servers_set_up}}
