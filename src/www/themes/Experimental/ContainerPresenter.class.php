@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class KASS_ContainerPresenter {
+class Experimental_ContainerPresenter {
 
     /** @var array */
     private $breadcrumbs;

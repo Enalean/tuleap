@@ -18,22 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class KASS_SearchFormPresenter {
+class Experimental_FooterPresenter {
 
-    private $search_options;
+    public function footer() {
+        global $Language;
+        $version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
+        ob_start();
+        include($GLOBALS['Language']->getContent('layout/footer'));
 
-    private $hidden_fields;
-
-    public function __construct($search_options, $hidden_fields) {
-        $this->search_options = $search_options;
-        $this->hidden_fields  = $hidden_fields;
-    }
-
-    public function search_options() {
-        return $this->search_options;
-    }
-
-    public function hidden_fields() {
-        return $this->hidden_fields;
+        return ob_get_clean();
     }
 }
+
+?>

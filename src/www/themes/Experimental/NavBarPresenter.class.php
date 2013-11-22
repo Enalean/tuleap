@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class KASS_NavBarPresenter {
+class Experimental_NavBarPresenter {
 
     private $imgroot;
 
@@ -32,7 +32,7 @@ class KASS_NavBarPresenter {
 
     private $title;
 
-    /** @var KASS_SearchFormPresenter */
+    /** @var Experimental_SearchFormPresenter */
     private $search_form_presenter;
 
     private $selected_top_tab;

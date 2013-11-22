@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class KASS_HeaderPresenter {
+class Experimental_HeaderPresenter {
 
     /** @var string */
     private $title;

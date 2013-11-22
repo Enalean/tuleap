@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class KASS_BodyPresenter {
+class Experimental_BodyPresenter {
 
     /** @var string */
     private $nav;

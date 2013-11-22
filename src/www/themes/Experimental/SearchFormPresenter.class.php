@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
@@ -17,32 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../common/css/utils/utils.less';
+class Experimental_SearchFormPresenter {
 
-body {
-    padding: 0;
-}
+    private $search_options;
 
-/* {{{ NAVBAR */
-.navbar .navbar-inner {
-    display: none;
-}
-/* }}} */
+    private $hidden_fields;
 
-/* {{{ SIDEBAR */
-.sidebar-nav {
-    display: none;
-}
-/* }}} */
+    public function __construct($search_options, $hidden_fields) {
+        $this->search_options = $search_options;
+        $this->hidden_fields  = $hidden_fields;
+    }
 
-/* {{{ CONTENT */
-.main {
-    margin: 0
-}
-/* }}} */
+    public function search_options() {
+        return $this->search_options;
+    }
 
-/* {{{ FOOTER */
-footer {
-    display: none;
+    public function hidden_fields() {
+        return $this->hidden_fields;
+    }
 }
-/* }}} */
