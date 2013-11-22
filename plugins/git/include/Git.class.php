@@ -404,9 +404,13 @@ class Git extends PluginController {
                 $this->addView('forkRepositories');
                 break;
             case 'admin':
-                $project = $this->projectManager->getProject($this->groupId);
-                $this->addAction('generateGerritRepositoryList', array($project, $user));
-                $this->addView('adminView');
+                if($user->isAdmin($group_id)) {
+                    $project = $this->projectManager->getProject($this->groupId);
+                    $this->addAction('generateGerritRepositoryList', array($project, $user));
+                    $this->addView('adminView');
+                } else {
+                    $this->addError($this->getText('controller_access_denied'));
+                }
                 break;
             case 'fork_repositories_permissions':
                 $scope = self::SCOPE_PERSONAL;
