@@ -30,11 +30,6 @@
     }
 
     function updateSidebarWidth(new_width, duration) {
-        var logo_size = '';
-        if (new_width == width_collapsed || $(document).width() <= 1210) {
-            logo_size = '-small';
-        }
-
         $('.sidebar-nav').animate({
             width:           new_width,
             maxnew_width:    new_width
@@ -42,11 +37,6 @@
         $('.main').animate({
             marginLeft:      new_width
         }, duration);
-        $('.logo').animate({
-            width:           new_width,
-            maxnew_width:    new_width
-        }, duration);
-        $('.logo').removeClass('logo-background logo-background-small').addClass('logo-background'+logo_size);
     }
 
     function updateSidebarIcon(direction) {

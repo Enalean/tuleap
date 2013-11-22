@@ -18,15 +18,6 @@
  */
 
 !function($) {
-    function resizeLogo() {
-        var logo_size = '';
-        if ($('.sidebar-nav').width() == 40 || $(document).width() <= 1210) {
-            logo_size = '-small';
-        }
-
-        $('.logo').removeClass('logo-background logo-background-small').addClass('logo-background'+logo_size);
-    }
-
     function headerResized() {
         $('.main').removeClass('big-nav huge-nav');
         $('.sidebar-nav').removeClass('big-nav huge-nav');
@@ -40,13 +31,8 @@
         }
     }
 
-    function windowResized() {
-        resizeLogo();
-        headerResized();
-    }
+    $(window).resize(headerResized);
 
-    $(window).resize(windowResized);
-
-    $(document).ready(windowResized);
+    $(document).ready(headerResized);
 
 }(window.jQuery);
