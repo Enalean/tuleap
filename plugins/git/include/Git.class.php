@@ -107,7 +107,8 @@ class Git extends PluginController {
         ProjectManager $project_manager,
         PluginManager $plugin_manager,
         Codendi_Request $request,
-        Git_Driver_Gerrit_ProjectCreator $project_creator
+        Git_Driver_Gerrit_ProjectCreator $project_creator,
+        Git_Driver_Gerrit_Template_TemplateFactory $template_factory
     ) {
         parent::__construct($user_manager, $request);
 
@@ -121,6 +122,7 @@ class Git extends PluginController {
         $this->gerrit_usermanager       = $gerrit_usermanager;
         $this->plugin_manager           = $plugin_manager;
         $this->project_creator          = $project_creator;
+        $this->template_factory         = $template_factory;
 
         $matches = array();
         if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
@@ -232,6 +234,7 @@ class Git extends PluginController {
                                             'fork_repositories',
                                             'admin',
                                             'fetch_git_config',
+                                            'fetch_git_template',
                                             'fork_repositories_permissions',
                                             'do_fork_repositories',
                                             'view_last_git_pushes',
@@ -412,7 +415,7 @@ class Git extends PluginController {
             case 'admin':
                 if($user->isAdmin($this->groupId)) {
                     $project = $this->projectManager->getProject($this->groupId);
-                    $this->addAction('generateGerritRepositoryList', array($project, $user));
+                    $this->addAction('generateGerritRepositoryAndTemplateList', array($project, $user));
                     $this->addView('adminView');
                 } else {
                     $this->addError($this->getText('controller_access_denied'));
@@ -422,6 +425,12 @@ class Git extends PluginController {
                 $project = $this->projectManager->getProject($this->groupId);
                 $this->setDefaultPageRendering(false);
                 $this->addAction('fetchGitConfig', array($repoId, $user, $project));
+                break;
+            case 'fetch_git_template':
+                $project = $this->projectManager->getProject($this->groupId);
+                $template_id = $this->request->get('template_id');
+                $this->setDefaultPageRendering(false);
+                $this->addAction('fetchGitTemplate', array($template_id, $user, $project));
                 break;
             case 'fork_repositories_permissions':
                 $scope = self::SCOPE_PERSONAL;
@@ -662,7 +671,9 @@ class Git extends PluginController {
             $this->gerrit_server_factory,
             $this->driver,
             $this->gerrit_usermanager,
-            $this->project_creator
+            $this->project_creator,
+            $this->template_factory,
+            $this->projectManager
         );
     }
 

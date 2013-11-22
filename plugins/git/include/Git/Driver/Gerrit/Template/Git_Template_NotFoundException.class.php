@@ -22,44 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * I'm a refs/meta/config template for Gerrit
- */
-class Git_Driver_Gerrit_Template_Template {
-
-    /** @var int */
-    private $id;
-
-    /** @var int */
-    private $group_id;
-
-    /** @var String */
-    private $name;
-
-    /** @var String */
-    private $content;
-
-    public function __construct($id ,$group_id, $name, $content=null) {
-        $this->id       = $id;
-        $this->group_id = $group_id;
-        $this->name     = $name;
-        $this->content  = $content;
-    }
-
-    public function getId() {
-        return $this->id;
-    }
-
-    public function getName() {
-        return $this->name;
-    }
-
-    public function getContent() {
-        return $this->content;
-    }
-
-    public function getProjectId() {
-        return $this->group_id;
-    }
+class Git_Template_NotFoundException extends Exception {
 }
 ?>

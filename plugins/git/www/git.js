@@ -141,15 +141,19 @@ document.observe('dom:loaded', function () {
 
         if( gerrit_option) {
             gerrit_option.observe('click', function(event) {
+                cleanTemplateForm();
                 $('git_admin_config_list_area').hide();
+                $('git_admin_config_list_area').hide();
+                $('git_admin_config_templates_list').hide();
+                $('git_admin_config_template_name').hide();
                 $('git_admin_config_form').show();
                 $('git_admin_template_list_area').show();
                 $('git_admin_config_edit_area').show();
+                $('git_admin_file_name').show();
                 $('git_admin_config_btn_create').removeClassName('open');
                 event.stop();
             });
         }
-
     })();
 
     (function useGerritConfig() {
@@ -157,10 +161,14 @@ document.observe('dom:loaded', function () {
 
         if (gerrit_option) {
             gerrit_option.observe('click', function(event) {
+                cleanTemplateForm();
                 $('git_admin_template_list_area').hide();
+                $('git_admin_config_templates_list').hide();
+                $('git_admin_config_template_name').hide();
                 $('git_admin_config_form').show();
                 $('git_admin_config_list_area').show();
                 $('git_admin_config_edit_area').show();
+                $('git_admin_file_name').show();
                 $('git_admin_config_btn_create').removeClassName('open');
                 event.stop();
             });
@@ -172,10 +180,14 @@ document.observe('dom:loaded', function () {
 
         if (gerrit_option) {
             gerrit_option.observe('click', function(event) {
+                cleanTemplateForm();
                 $('git_admin_template_list_area').hide();
                 $('git_admin_config_list_area').hide();
+                $('git_admin_config_templates_list').hide();
+                $('git_admin_config_template_name').hide();
                 $('git_admin_config_edit_area').show();
                 $('git_admin_config_form').show();
+                $('git_admin_file_name').show();
                 $('git_admin_config_btn_create').removeClassName('open');
                 event.stop();
             });
@@ -197,7 +209,7 @@ document.observe('dom:loaded', function () {
                     alert(codendi.locales['git'].cannot_get_gerrit_config)
                 },
                 onSuccess: function (transport) {
-                    $('git_admin_config_data').innerHTML = transport.responseText;
+                    $('git_admin_config_data').value = transport.responseText;
                     $('git_admin_config_edit_area').show();
                     }
                 });
@@ -205,6 +217,83 @@ document.observe('dom:loaded', function () {
             });
         }
     })();
+
+    (function loadConfigTemplate() {
+        var list = $('git_admin_template_list');
+        if (list) {
+            list.observe('change', function() {
+                var template = $F(list),
+                    group_id = $F('project_id'),
+                    query    = '?group_id='+group_id+'&action=fetch_git_template&template_id='+template;
+
+                if (template == '') {
+                    return;
+                }
+                new Ajax.Request(codendi.git.base_url + query, {
+                    onFailure: function() {
+                        alert(codendi.locales['git'].cannot_get_template)
+                    },
+                    onSuccess: function (transport) {
+                        $('git_admin_config_data').value = transport.responseText;
+                    }
+                });
+
+            });
+        }
+    })();
+    
+    (function cancelTemplateConfig() {
+        var cancel = $('git_admin_config_cancel');
+        if (cancel) {
+            cancel.observe('click', function() {
+                cleanTemplateForm();
+                $('git_admin_template_list_area').hide();
+                $('git_admin_config_list_area').hide();
+                $('git_admin_config_edit_area').hide();
+                $('git_admin_config_form').hide();
+                $('git_admin_config_btn_create').show();
+                $('git_admin_config_templates_list').show();
+            });
+        }
+    })();
+
+    (function editTemplateConfig() {
+        $$('.git_admin_config_edit_template').each(function (edit_link) {
+            edit_link.observe('click', function (event) {
+                var template_id = edit_link.readAttribute('data-template-id'),
+                    group_id = $F('project_id'),
+                    query    = '?group_id='+group_id+'&action=fetch_git_template&template_id='+template_id;
+
+                event.stop();
+                cleanTemplateForm();
+                
+                new Ajax.Request(codendi.git.base_url + query, {
+                    onFailure: function() {
+                        alert(codendi.locales['git'].cannot_get_template)
+                    },
+                    onSuccess: function (transport) {
+                        $('git_admin_config_data').value = transport.responseText;
+                        $('git_admin_config_templates_list').hide();
+                        $('git_admin_config_btn_create').hide();
+                        $('git_admin_file_name').hide();
+                        $('git_admin_config_edit_area').show();
+                        $('git_admin_config_form').show();
+                        $('git_admin_config_template_name').show();
+                        $('git_admin_config_template_name').innerHTML = edit_link.readAttribute('data-template-name');
+                    }
+                });
+            });
+         });
+    })();
+
+    function cleanTemplateForm() {
+        $('git_admin_config_data').value = '';
+        $('git_admin_file_name').value = '';
+        $('git_admin_config_template_name').innerHTML = '';
+        $$('#git_admin_config_form select').each(function(selectbox) {
+            selectbox.selectedIndex = 0;
+        });
+    }
 
     $('gerrit_past_project_delete').hide();
     $('gerrit_past_project_delete_plugin_diasabled').hide();

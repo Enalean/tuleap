@@ -57,6 +57,12 @@ class GitActions extends PluginActions {
     /** @var Git_Driver_Gerrit_ProjectCreator */
     private $project_creator;
 
+    /** @var Git_Driver_Gerrit_Template_TemplateFactory */
+    private $template_factory;
+
+    /** @var ProjectManager */
+    private $project_manager;
+
     /**
      * Constructor
      *
@@ -73,7 +79,9 @@ class GitActions extends PluginActions {
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         Git_Driver_Gerrit $driver,
         Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
-        Git_Driver_Gerrit_ProjectCreator $project_creator
+        Git_Driver_Gerrit_ProjectCreator $project_creator,
+        Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
+        ProjectManager $project_manager
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager    = $system_event_manager;
@@ -83,6 +91,8 @@ class GitActions extends PluginActions {
         $this->driver                = $driver;
         $this->gerrit_usermanager    = $gerrit_usermanager;
         $this->project_creator       = $project_creator;
+        $this->template_factory      = $template_factory;
+        $this->project_manager       = $project_manager;
     }
 
     protected function getText($key, $params = array()) {
@@ -174,11 +184,13 @@ class GitActions extends PluginActions {
      * @param PFUser $user
      * @param Project[] $parent_projects
      */
-    public function generateGerritRepositoryList(Project $project, PFUser $user) {
-        $repos = $this->factory->getAllGerritRepositoriesFromProject($project, $user);
+    public function generateGerritRepositoryAndTemplateList(Project $project, PFUser $user) {
+        $repos     = $this->factory->getAllGerritRepositoriesFromProject($project, $user);
+        $templates = $this->template_factory->getAllTemplatesOfProject($project);
 
         $this->addData(array(
-            'repository_list' => $repos
+            'repository_list' => $repos,
+            'templates_list'  => $templates
         ));
     }
     
@@ -199,6 +211,7 @@ class GitActions extends PluginActions {
 
         try {
             $this->checkRepoValidity($git_repo, $project, $user);
+            $this->checkUserIsAdmin($project, $user);
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, get_class($e).$e->getTraceAsString());
             $GLOBALS['Response']->sendStatusCode($e->getCode());
@@ -231,13 +244,43 @@ class GitActions extends PluginActions {
             throw new GitRepoNotInProjectException('unable to get config', 403);
         }
 
-        if(! $user->isMember($project->getID(), 'A')) {
-             throw new GitUserNotAdminException('unable to get config', 401);
-        }
-
         if(! $git_repo->isMigratedToGerrit()) {
             throw new GitRepoNotOnGerritException('unable to get config', 500);
         }
+    }
+
+    public function fetchGitTemplate($template_id, PFUser $user, Project $project) {
+        try {
+            $template = $this->template_factory->getTemplate($template_id);
+            $this->checkTemplateIsAccessible($template, $project, $user);
+        } catch (Exception $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, get_class($e).$e->getTraceAsString());
+            $GLOBALS['Response']->sendStatusCode($e->getCode());
+            return;
+        }
+        
+        echo $template->getContent();
+    }
+
+    private function checkUserIsAdmin(Project $project, PFUser $user) {
+        if(! $user->isAdmin($project->getID())) {
+             throw new GitUserNotAdminException('unable to get template', 401);
+        }
+    }
+
+    private function checkTemplateIsAccessible(Git_Driver_Gerrit_Template_Template $template, Project $project, PFUser $user) {
+        $template_project_id = $template->getProjectId();
+        $project_id          = $project->getID();
+
+        while ($template_project_id != $project_id) {
+            $project = $this->project_manager->getParentProject($project_id);
+            if (! $project) {
+                throw new Git_ProjectNotInHierarchyException('Project not in hierarchy', 404);
+            }
+            $project_id = $project->getID();
+        }
+
+        $this->checkUserIsAdmin($project, $user);
     }
 
     public function getRepositoryDetails($projectId, $repositoryId) {

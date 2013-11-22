@@ -59,7 +59,9 @@ class GitActionsTest extends TuleapTestCase {
                 mock('Git_RemoteServer_GerritServerFactory'),
                 mock('Git_Driver_Gerrit'),
                 mock('Git_Driver_Gerrit_UserAccountManager'),
-                mock('Git_Driver_Gerrit_ProjectCreator')
+                mock('Git_Driver_Gerrit_ProjectCreator'),
+                mock('Git_Driver_Gerrit_Template_TemplateFactory'),
+                mock('ProjectManager')
             )
         );
     }
@@ -457,7 +459,9 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             mock('Git_RemoteServer_GerritServerFactory'),
             mock('Git_Driver_Gerrit'),
             mock('Git_Driver_Gerrit_UserAccountManager'),
-            mock('Git_Driver_Gerrit_ProjectCreator')
+            mock('Git_Driver_Gerrit_ProjectCreator'),
+            mock('Git_Driver_Gerrit_Template_TemplateFactory'),
+            mock('ProjectManager')
         );
     }
 
@@ -502,7 +506,9 @@ class GitActions_ForkTests extends TuleapTestCase {
             mock('Git_RemoteServer_GerritServerFactory'),
             mock('Git_Driver_Gerrit'),
             mock('Git_Driver_Gerrit_UserAccountManager'),
-            mock('Git_Driver_Gerrit_ProjectCreator')
+            mock('Git_Driver_Gerrit_ProjectCreator'),
+            mock('Git_Driver_Gerrit_Template_TemplateFactory'),
+            mock('ProjectManager')
         );
     }
 
@@ -619,7 +625,9 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
             $this->gerrit_factory,
             mock('Git_Driver_Gerrit'),
             mock('Git_Driver_Gerrit_UserAccountManager'),
-            mock('Git_Driver_Gerrit_ProjectCreator')
+            mock('Git_Driver_Gerrit_ProjectCreator'),
+            mock('Git_Driver_Gerrit_Template_TemplateFactory'),
+            mock('ProjectManager')
         );
     }
 
@@ -670,7 +678,9 @@ class GitActions_disconnectFromGerritTest extends TuleapTestCase {
             $this->gerrit_server_factory,
             $this->driver,
             mock('Git_Driver_Gerrit_UserAccountManager'),
-            mock('Git_Driver_Gerrit_ProjectCreator')
+            mock('Git_Driver_Gerrit_ProjectCreator'),
+            mock('Git_Driver_Gerrit_Template_TemplateFactory'),
+            mock('ProjectManager')
         );
     }
 
@@ -742,7 +752,9 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
             $this->gerrit_server_factory,
             $this->driver,
             mock('Git_Driver_Gerrit_UserAccountManager'),
-            $this->project_creator
+            $this->project_creator,
+            mock('Git_Driver_Gerrit_Template_TemplateFactory'),
+            mock('ProjectManager')
         );
 
     }
@@ -766,14 +778,16 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
     }
 
     public function itReturnsAnErrorIfUserIsNotProjectAdmin() {
-        stub($this->user)->isMember($this->project_id, 'A')->returns(false);
+        stub($this->user)->isAdmin($this->project_id)->returns(false);
+        stub($this->repo)->isMigratedToGerrit()->returns(true);
         $GLOBALS['Response']->expectOnce('sendStatusCode', array(401));
+
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
     }
 
     public function itReturnsAnErrorIfRepoIsNotMigratedToGerrit() {
-        stub($this->user)->isMember($this->project_id, 'A')->returns(true);
+        stub($this->user)->isAdmin($this->project_id)->returns(true);
         stub($this->repo)->isMigratedToGerrit()->returns(false);
         $GLOBALS['Response']->expectOnce('sendStatusCode', array(500));
 
@@ -781,7 +795,7 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
     }
 
     public function itReturnsAnErrorIfRepoIsGerritServerIsDown() {
-        stub($this->user)->isMember($this->project_id, 'A')->returns(true);
+        stub($this->user)->isAdmin($this->project_id)->returns(true);
         stub($this->repo)->isMigratedToGerrit()->returns(true);
         stub($this->project_creator)->getGerritConfig()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure('', '', ''));
         $GLOBALS['Response']->expectOnce('sendStatusCode', array(500));

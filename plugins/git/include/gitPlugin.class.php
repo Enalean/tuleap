@@ -969,7 +969,8 @@ class GitPlugin extends Plugin {
             $project_manager,
             PluginManager::instance(),
             HTTPRequest::instance(),
-            $this->getProjectCreator()
+            $this->getProjectCreator(),
+            new Git_Driver_Gerrit_Template_TemplateFactory(new Git_Driver_Gerrit_Template_TemplateDao())
         );
     }
 

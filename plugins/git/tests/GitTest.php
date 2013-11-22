@@ -111,9 +111,10 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
         $this->user         = mock('PFUser');
         $this->admin        = stub('PFUser')->isMember($this->group_id, 'A')->returns(true);
         $this->user_manager = mock('UserManager');
-        $this->project_manager = mock('ProjectManager');
-        $this->plugin_manager  = mock('PluginManager');
-        $this->project_creator = mock('Git_Driver_Gerrit_ProjectCreator');
+        $this->project_manager  = mock('ProjectManager');
+        $this->plugin_manager   = mock('PluginManager');
+        $this->project_creator  = mock('Git_Driver_Gerrit_ProjectCreator');
+        $this->template_factory = mock('Git_Driver_Gerrit_Template_TemplateFactory');
 
         $this->previous_request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/plugins/tests/';
 
@@ -145,7 +146,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                     $this->project_manager,
                     $this->plugin_manager,
                     aRequest()->with('group_id', $this->group_id)->build(),
-                    $this->project_creator
+                    $this->project_creator,
+                    $this->template_factory
                 )
             );
         $git->setRequest($request);

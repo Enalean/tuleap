@@ -31,7 +31,7 @@ class Git_Driver_Gerrit_Template_TemplateFactory {
     private $dao;
 
     public function __construct(Git_Driver_Gerrit_Template_TemplateDao $template_dao) {
-        $this->$dao = $template_dao;
+        $this->dao = $template_dao;
     }
 
     /**
@@ -48,10 +48,25 @@ class Git_Driver_Gerrit_Template_TemplateFactory {
     }
 
     /**
+     *
+     * @param int $template_id
+     * @return Git_Driver_Gerrit_Template_Template
+     * @throws Git_Template_NotFoundException
+     */
+    public function getTemplate($template_id) {
+        $row = $this->dao->getTemplate($template_id)->getRow();
+        if ($row) {
+            return $this->instantiateTemplateFromRow($row);
+        }
+
+        throw new Git_Template_NotFoundException($template_id);
+    }
+
+    /**
      * Instatiate a Template from a SQL row
      *
      * @param array
-     * @return Git_Driver_Gerrit_Template_Template
+     * @return Git_Driver_Gerrit_Template_Template[] | false -where the array is in DAR format
      */
     public function instantiateTemplateFromRow(array $row) {
         return new Git_Driver_Gerrit_Template_Template(

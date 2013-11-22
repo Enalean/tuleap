@@ -23,14 +23,22 @@ class GitPresenters_AdminPresenter {
     public $project_id;
 
     /**
-     * List of repositories belonging to the project or the parent project
+     * List of repositories belonging to the project
      *
      * @var array
      */
     private $repository_list;
 
-    public function __construct($repository_list, $project_id) {
+    /**
+     * List of templates belonging to the project or the parent project
+     *
+     * @var array
+     */
+    private $templates_list;
+
+    public function __construct($repository_list, $templates_list, $project_id) {
         $this->repository_list = $repository_list;
+        $this->templates_list  = $templates_list;
         $this->project_id      = $project_id;
     }
 
@@ -62,6 +70,22 @@ class GitPresenters_AdminPresenter {
         return array_values($this->repository_list);
     }
 
+    public function templates_option() {
+        return $this->templates_list;
+    }
+
+    public function template_action_text() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_table_action');
+    }
+
+    public function template_name_text() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_table_name');
+    }
+
+    public function edit() {
+        return $GLOBALS['Language']->getText('plugin_git', 'edit');
+    }
+
     public function template_section_title() {
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_section_title');
     }
@@ -72,6 +96,10 @@ class GitPresenters_AdminPresenter {
 
     public function please_choose() {
         return $GLOBALS['Language']->getText('plugin_git', 'please_choose');
+    }
+
+    public function cancel() {
+        return $GLOBALS['Language']->getText('plugin_git', 'cancel');
     }
 
     public function create_new_template_text() {
@@ -89,6 +117,5 @@ class GitPresenters_AdminPresenter {
     public function template_from_scratch_text() {
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_from_scratch_text');
     }
-
 }
 ?>

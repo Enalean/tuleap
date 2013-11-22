@@ -343,9 +343,11 @@ class GitViews extends PluginViews {
         $this->_getBreadCrumb();
 
         $repository_list = (isset($params['repository_list'])) ? $params['repository_list'] : array();
-        $presenter = new GitPresenters_AdminPresenter($repository_list, $this->groupId);
+        $templates_list  = (isset($params['templates_list'])) ? $params['templates_list'] : array();
+
+        $presenter = new GitPresenters_AdminPresenter($repository_list, $templates_list, $this->groupId);
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
-        echo $renderer->renderToString('admin',$presenter);
+        echo $renderer->renderToString('admin', $presenter);
     }
 
     /**
