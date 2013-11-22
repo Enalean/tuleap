@@ -35,6 +35,20 @@
 @sidebar-width: 260px;
 /* }}} */
 
+/* {{{ FONTS */
+@font-face {
+    font-family: 'SourceSansPro';
+    src: url('../fonts/SourceSansPro-Regular.eot');
+    src: url('../fonts/SourceSansPro-Regular.ttf.woff') format('truetype');
+}
+@font-face {
+    font-family: 'SourceSansPro';
+    src: url('../fonts/SourceSansPro-Light.eot');
+    src: url('../fonts/SourceSansPro-Light.ttf.woff') format('truetype');
+    font-weight: 100;
+}
+/* }}} */
+
 html, body {
     height:100%;
 }
@@ -78,7 +92,6 @@ body > .wrapper {
         .logo-background-small;
     }
 }
-
 @media screen and (max-width: 980px) {
     .navbar-fixed-top {
         margin: 0;
@@ -86,24 +99,29 @@ body > .wrapper {
     }
 }
 
-.navbar-fixed-top,
-.navbar-static-top {
-  .navbar-inner {
-    box-shadow: 0 1px 10px rgba(0,0,0,.3);
-  }
+.is-at-top .navbar {
+    .box-shadow(none);
 }
-.is-at-top .navbar-inner {
+
+.navbar {
+    background: @orange;
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
+}
+
+.is-at-top .navbar {
     .box-shadow(none);
 }
 
 .navbar .navbar-inner {
-    font-family: 'Source Sans Pro', Arial;
+    font-family: 'SourceSansPro', Arial;
     font-size: 1.3em;
-    font-weight: lighter;
+    font-weight: 100;
     background: @orange;
+    filter: none;
     border-bottom: 1px solid @dark-orange;
     color: @white;
     padding: 0;
+    .box-shadow(none);
 
     @media screen and (max-width: 1070px) {
         font-size: 1.1em;
@@ -180,7 +198,7 @@ body > .wrapper {
 
             li > a {
                 color: @white;
-                font-weight: lighter;
+                font-weight: 100;
                 font-size: 0.9em;
                 line-height: 1.7em;
             }
@@ -240,8 +258,8 @@ body > .wrapper {
         }
 
         div.filter-option {
-            font-family: 'Source Sans Pro', Arial;
-            font-weight: lighter;
+            font-family: 'SourceSansPro', Arial;
+            font-weight: 100;
             font-size: 1em;
             text-shadow: 0 1px 2px lighten(@dark-grey, 20%);
         }
@@ -255,14 +273,15 @@ body > .wrapper {
         }
     }
 }
+
 /* }}} */
 
 
 /* {{{ SIDEBAR */
 .sidebar-nav {
     background: @dark-grey;
-    font-family: 'Source Sans Pro', Arial;
-    font-weight: lighter;
+    font-family: 'SourceSansPro', Arial;
+    font-weight: 100;
     position: fixed;
     height: 100%;
     width: @sidebar-width;
@@ -340,8 +359,8 @@ body > .wrapper {
     /* {{{ BREADCRUMB */
     .breadcrumb {
         background-color: @dark-grey;
-        font-family: 'Source Sans Pro', Arial;
-        font-weight: lighter;
+        font-family: 'SourceSansPro', Arial;
+        font-weight: 100;
         font-size: 1em;
         color: @grey;
         text-shadow: 0 1px 0 darken(@grey, 50%);
@@ -372,8 +391,8 @@ body > .wrapper {
     /* {{{ TOOLBAR */
     .toolbar.nav-pills {
         background: @light-grey;
-        font-family: 'Source Sans Pro', Arial;
-        font-weight: lighter;
+        font-family: 'SourceSansPro', Arial;
+        font-weight: 100;
         font-size: 1em;
         border-bottom: 1px solid darken(@light-grey, 10%);
         margin: 0;
