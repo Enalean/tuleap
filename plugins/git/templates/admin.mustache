@@ -3,42 +3,80 @@
 <h3>{{template_section_title}}</h3>
 
 <p>{{template_section_description}}</p>
+<div class="control-group info">
+    <div class="controls">
+        <div class="btn-group dropdown" id="git_admin_config_btn_create">
+             <span class="dropdown-toggle btn btn-primary" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
+                    {{create_new_template_text}}
+                    <b class="caret"></b>
+            </span>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                <li role="menuitem" id="git_admin_config_from_gerrit">
+                    <a href="">{{template_from_gerrit_text}}</a>
+                </li>
+                <li role="menuitem" id="git_admin_config_from_template">
+                    <a href="">{{template_from_template_text}}</a>
+                </li>
+                <li role="menuitem" id="git_admin_config_from_scratch">
+                    <a href="">{{template_from_scratch_text}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 
-<form class="form-horizontal">
+<form class="form-horizontal" id="git_admin_config_form" style="display: none">
     <input type="hidden" value="{{project_id}}" id="project_id"/>
-    <div class="control-group">
-        <label class="control-label" for="git_admin_config_list">
-            {{choose_text}}
-        </label>
-        <div class="controls">
-            <select id="git_admin_config_list">
-                {{#config_option}}
-                    {{#getRepository}}
-                        <option value="{{getId}}">{{getPath}}</option>
-                    {{/getRepository}}
-                {{/config_option}}
-            </select>
+    <div id="git_admin_config_list_area" style="display: none;">
+        <div class="control-group">
+            <label class="control-label" for="git_admin_config_list">
+                {{configurations_text}}
+            </label>
+            <div class="controls">
+                <select id="git_admin_config_list">
+                    <option value="">{{please_choose}}</option>
+                    {{#config_option}}
+                        {{#getRepository}}
+                            <option value="{{getId}}">{{getPath}}</option>
+                        {{/getRepository}}
+                    {{/config_option}}
+                </select>
+            </div>
         </div>
     </div>
-    <div class="control-group">
-        <label class="control-label" for="git_admin_config_data">
-            {{edit_text}}
-        </label>
-        <div class="controls">
-            <textarea id="git_admin_config_data"></textarea>
+    <div id="git_admin_template_list_area" style="display: none;">
+        <div class="control-group">
+            <label class="control-label" for="git_admin_template_list">
+                {{templates_text}}
+            </label>
+            <div class="controls">
+                <select id="git_admin_template_list">
+                    <option value="">{{please_choose}}</option>
+                </select>
+            </div>
         </div>
     </div>
-    <div class="control-group">
-        <label class="control-label" for="git_admin_file_name">
-            {{file_name_text}}
-        </label>
-        <div class="controls">
-            <input type="text" id="git_admin_file_name"/>
+    <div id="git_admin_config_edit_area" style="display: none;">
+        <div class="control-group">
+            <label class="control-label" for="git_admin_config_data">
+                {{edit_text}}
+            </label>
+            <div class="controls">
+                <textarea id="git_admin_config_data" rows="15" cols="65"></textarea>
+            </div>
         </div>
-    </div>
-    <div class="control-group">
-        <div class="controls">
-            <input type="submit" value="{{save_text}}"/>
+        <div class="control-group">
+            <label class="control-label" for="git_admin_file_name">
+                {{file_name_text}}
+            </label>
+            <div class="controls">
+                <input type="text" id="git_admin_file_name"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <input type="submit" value="{{save_text}}"/>
+            </div>
         </div>
     </div>
 </form>

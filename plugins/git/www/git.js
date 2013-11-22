@@ -136,23 +136,74 @@ document.observe('dom:loaded', function () {
 
     })();
 
+    (function useTemplateConfig() {
+        var gerrit_option = $('git_admin_config_from_template');
+
+        if( gerrit_option) {
+            gerrit_option.observe('click', function(event) {
+                $('git_admin_config_list_area').hide();
+                $('git_admin_config_form').show();
+                $('git_admin_template_list_area').show();
+                $('git_admin_config_edit_area').show();
+                $('git_admin_config_btn_create').removeClassName('open');
+                event.stop();
+            });
+        }
+
+    })();
+
+    (function useGerritConfig() {
+        var gerrit_option = $('git_admin_config_from_gerrit');
+
+        if (gerrit_option) {
+            gerrit_option.observe('click', function(event) {
+                $('git_admin_template_list_area').hide();
+                $('git_admin_config_form').show();
+                $('git_admin_config_list_area').show();
+                $('git_admin_config_edit_area').show();
+                $('git_admin_config_btn_create').removeClassName('open');
+                event.stop();
+            });
+        }
+    })();
+
+    (function useEmptyConfig() {
+        var gerrit_option = $('git_admin_config_from_scratch');
+
+        if (gerrit_option) {
+            gerrit_option.observe('click', function(event) {
+                $('git_admin_template_list_area').hide();
+                $('git_admin_config_list_area').hide();
+                $('git_admin_config_edit_area').show();
+                $('git_admin_config_form').show();
+                $('git_admin_config_btn_create').removeClassName('open');
+                event.stop();
+            });
+        }
+    })();
+
     (function loadGerritConfig() {
         var list = $('git_admin_config_list');
-        list.observe('change', function() {
+        if (list) {
+            list.observe('change', function() {
             var remote_repository = $F(list),
                 group_id = $F('project_id'),
                 query    = '?group_id='+group_id+'&action=fetch_git_config&repo_id='+remote_repository;
-
+            if (remote_repository == '') {
+                return;
+            }
             new Ajax.Request(codendi.git.base_url + query, {
                 onFailure: function() {
                     alert(codendi.locales['git'].cannot_get_gerrit_config)
                 },
                 onSuccess: function (transport) {
                     $('git_admin_config_data').innerHTML = transport.responseText;
-                }
-            });
+                    $('git_admin_config_edit_area').show();
+                    }
+                });
 
-        });
+            });
+        }
     })();
 
     $('gerrit_past_project_delete').hide();

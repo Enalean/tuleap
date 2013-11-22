@@ -38,8 +38,12 @@ class GitPresenters_AdminPresenter {
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_title');
     }
 
-    public function choose_text() {
+    public function configurations_text() {
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_repos_list');
+    }
+
+    public function templates_text() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_templates_list');
     }
 
     public function edit_text() {
@@ -65,5 +69,26 @@ class GitPresenters_AdminPresenter {
     public function template_section_description() {
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_section_description');
     }
+
+    public function please_choose() {
+        return $GLOBALS['Language']->getText('plugin_git', 'please_choose');
+    }
+
+    public function create_new_template_text() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_create_new_template_text');
+    }
+
+    public function template_from_gerrit_text() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_from_gerrit_text');
+    }
+
+    public function template_from_template_text() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_from_template_text');
+    }
+
+    public function template_from_scratch_text() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_from_scratch_text');
+    }
+
 }
 ?>
