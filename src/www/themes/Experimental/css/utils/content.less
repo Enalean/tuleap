@@ -1,0 +1,79 @@
+/* {{{ CONTENT */
+.main {
+    margin: 0 0 0 @sidebar-width;
+    padding: 52px 0 0 0;
+    &.big-nav {
+        padding: 105px 0 0 0;
+    }
+    &.huge-nav {
+        padding: 157px 0 0 0;
+    }
+
+    &.full {
+        margin: 0;
+    }
+
+    #feedback ul {
+        margin: 12px;
+    }
+
+    /* {{{ BREADCRUMB */
+    .breadcrumb {
+        background-color: @dark-grey;
+        font-family: 'SourceSansPro', Arial;
+        font-size: 1em;
+        color: @grey;
+        text-shadow: 0 1px 0 darken(@grey, 50%);
+        border-radius: 0;
+        padding: 10px 10px;
+
+        li > a, li > .divider {
+            color: @grey;
+            text-shadow: 0 1px 0 darken(@grey, 50%);
+        }
+
+        li > a:hover {
+            text-decoration: none;
+            color: @white;
+        }
+
+        li:first-child > .divider {
+            display: none;
+        }
+
+        li:last-child > a {
+            color: @white;
+            font-weight: normal;
+        }
+    }
+    /* }}} */
+
+    /* {{{ TOOLBAR */
+    .toolbar.nav-pills {
+        background: @light-grey;
+        font-family: 'SourceSansPro', Arial;
+        font-size: 1em;
+        border-bottom: 1px solid darken(@light-grey, 10%);
+        margin: 0;
+        padding: 2px 0px;
+
+        li > a {
+            color: @medium-grey;
+            font-weight: normal;
+            background: none;
+        }
+        li > a:hover, li > a:focus {
+            color: @dark-grey;
+            font-weight: normal;
+            background: none;
+        }
+    }
+    /* }}} */
+
+    /* {{{ TOOLBAR */
+    .content {
+        padding: 12px 12px 150px 12px;
+    }
+    /* }}} */
+}
+/* }}} */

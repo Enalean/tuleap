@@ -1,0 +1,211 @@
+
+/* {{{ NAVBAR */
+.logo {
+    max-width: @sidebar-width;
+    width: @sidebar-width;
+    height: 52px;
+    float: left;
+    .logo-background;
+}
+.logo-background {
+    background: url('../images/organization_logo.png') no-repeat center center;
+}
+.logo-background-small {
+    background: url('../images/organization_logo_small.png') no-repeat center center;
+}
+
+@media screen and (max-width: 1320px) {
+    .logo {
+        max-width: 155px;
+        width:  155px;
+        float: left;
+    }
+}
+@media screen and (max-width: 1210px) {
+    .logo {
+        max-width: 42px;
+        width: 42px;
+        float: left;
+        .logo-background-small;
+    }
+}
+@media screen and (max-width: 980px) {
+    .navbar-fixed-top {
+        margin: 0;
+        position: fixed;
+    }
+}
+
+.is-at-top .navbar {
+    .box-shadow(none);
+}
+
+.navbar {
+    background: @orange;
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
+}
+
+.is-at-top .navbar {
+    .box-shadow(none);
+}
+
+.navbar .navbar-inner {
+    font-family: 'SourceSansPro', Arial;
+    font-size: 1.3em;
+    background: @orange;
+    filter: none;
+    border-bottom: 1px solid @dark-orange;
+    color: @white;
+    padding: 0;
+    .box-shadow(none);
+
+    @media screen and (max-width: 1070px) {
+        font-size: 1.1em;
+    }
+    @media screen and (max-width: 980px) {
+        font-size: 0.9em;
+    }
+
+    .container-fluid {
+        padding: 0;
+    }
+
+    .brand {
+        padding: 0;
+    }
+
+    .nav {
+        height: 52px;
+
+        & > li {
+            height: 52px;
+        }
+
+        & > li > a {
+            color: @white;
+            height: 52px - 15px - 5px;
+            text-shadow: 0 1px 2px lighten(@dark-grey, 20%);
+            padding: 15px 25px 5px;
+            text-align: center;
+        }
+
+        li:hover > a, li:hover > a:hover, li:hover > a:focus,
+        li.active > a, li.active > a:hover, li.active > a:focus,
+        li.dropdown.active > .dropdown-toggle {
+            color: @white;
+            background-color: @dark-orange;
+            box-shadow: none;
+        }
+
+        li.dropdown > a .caret, li.dropdown > a:hover .caret, li.dropdown > a:focus .caret,
+        li.dropdown.open > .dropdown-toggle .caret, li.dropdown.active > .dropdown-toggle .caret, li.dropdown.open.active > .dropdown-toggle .caret {
+            border-top-color: @white;
+            border-bottom-color: @white;
+        }
+
+        li.dropdown.open > .dropdown-toggle, li.dropdown.open.active > .dropdown-toggle {
+            color: @white;
+            background-color: @dark-grey;
+            box-shadow: none;
+        }
+
+        li > a.username {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            max-width: 250px;
+        }
+        @media screen and (max-width: 1070px) {
+            li > a.username {
+                max-width: 150px;
+            }
+        }
+
+        ul.dropdown-menu {
+            top: 50px;
+            background-color: @dark-grey;
+            border-radius: 0;
+            border: none;
+            min-width: 100%;
+
+            &:before, &:after {
+                content: none;
+            }
+
+            li > a {
+                color: @white;
+                font-size: 0.9em;
+                line-height: 1.7em;
+            }
+
+            li > a:hover, li > a:focus, .dropdown-submenu:hover > a, .dropdown-submenu:focus > a {
+                background: lighten(@dark-grey, 10%);
+            }
+
+            .divider {
+                background-color: darken(@dark-grey, 5%);
+                border: 0;
+            }
+
+        }
+    }
+
+    .navbar-search {
+        margin: 11px 25px 0 0;
+
+        .dropdown-toggle .caret {
+            margin: -2px 0 0 0;
+        }
+
+        input[type="text"] {
+            border: 1px solid @dark-orange;
+
+            &:focus {
+                box-shadow: none;
+                z-index: 0;
+            }
+        }
+
+        .bootstrap-select {
+            width: 55px;
+
+            .btn:focus {
+                outline: none;
+            }
+
+            ul.dropdown-menu {
+                background-color: @white;
+
+                a {
+                    color: @dark-grey;
+                    font-weight: normal;
+
+                    &:hover, &:focus {
+                        background-color: @light-grey;
+                        color: @dark-grey;
+                    }
+
+                    i:first-child {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        div.filter-option {
+            font-family: 'SourceSansPro', Arial;
+            font-size: 1em;
+            text-shadow: 0 1px 2px lighten(@dark-grey, 20%);
+        }
+
+        .btn-search-bar {
+            .btn-warning;
+        }
+
+        .input-append {
+            margin-bottom: 0;
+        }
+    }
+}
+
+/* }}} */
