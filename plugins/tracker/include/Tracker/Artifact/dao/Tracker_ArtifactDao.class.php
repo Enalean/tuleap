@@ -507,6 +507,40 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     * Retrieve all artifacts linked by the given one
+     *
+     * @param Integer $artifact_id
+     * @return DataAccessResult
+     */
+    public function getLinkedArtifacts($artifact_id) {
+        return $this->getLinkedArtifactsByIds(array($artifact_id));
+    }
+
+    /**
+     * Return all artifacts linked by the given artifact (possible exclusion)
+     *
+     * @param array $artifact_ids Artifact ids to inspect
+     * @param array $excluded_ids Exclude those ids from the results
+     * @return DataAccessResult
+     */
+    public function getLinkedArtifactsByIds(array $artifact_ids, array $excluded_ids = array()) {
+        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
+        $exclude      = '';
+        if (count($excluded_ids) > 0) {
+            $exclude = 'AND linked_art.id NOT IN ('.$this->da->escapeIntImplode($excluded_ids).')';
+        }
+        $sql = "SELECT linked_art.*
+                FROM tracker_artifact parent_art
+                    INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                    INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                    INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
+                    INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id $exclude)
+                WHERE parent_art.id IN ($artifact_ids)";
+
+        return $this->retrieve($sql);
+    }
+
     /** @return array */
     public function getIdsSortedByPriority(array $artifact_ids) {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);

@@ -25,6 +25,42 @@ class Git_Driver_Gerrit_ProjectCreator {
     const GROUP_REPLICATION = 'replication';
     const GROUP_REGISTERED_USERS = 'Registered Users';
 
+    /** @var array */
+    static $MIGRATION_MINIMAL_PERMISSIONS = array(
+        array(
+            'reference'  => 'refs/tags',
+            'permission' => 'pushTag',
+            'group'      => 'group Administrators'
+        ),
+        array(
+            'reference'  => 'refs/tags',
+            'permission' => 'create',
+            'group'      => 'group Administrators'
+        ),
+        array(
+            'reference'  => 'refs/tags',
+            'permission' => 'forgeCommitter',
+            'group'      => 'group Administrators'
+        ),
+        array(
+            'reference'  => 'refs/heads',
+            'permission' => 'create',
+            'group'      => 'group Administrators'
+        ),
+        array(
+            'reference'  => 'refs/heads',
+            'permission' => 'forgeCommitter',
+            'group'      => 'group Administrators'
+        ),
+        // To be able to push merge commit on master, we need pushMerge on refs/for/*
+        // http://code.google.com/p/gerrit/issues/detail?id=1072
+        array(
+            'reference'  => 'refs/for',
+            'permission' => 'pushMerge',
+            'group'      => 'group Administrators'
+        )
+    );
+
     /** @var Git_Driver_Gerrit */
     private $driver;
 
@@ -88,7 +124,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->initiateGerritPermissions(
                 $repository,
                 $gerrit_server,
-                $gerrit_server->getCloneSSHUrl($gerrit_project_name),
+                $this->getGerritProjectUrl($gerrit_server, $repository),
                 $migrated_ugroups,
                 Config::get('sys_default_domain') .'-'. self::GROUP_REPLICATION,
                 $migrate_access_rights
@@ -97,6 +133,18 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->exportGitBranches($gerrit_server, $gerrit_project_name, $repository);
 
         return $gerrit_project_name;
+    }
+
+    public function finalizeGerritProjectCreation(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
+        $gerrit_project_url = $this->getGerritProjectUrl($gerrit_server, $repository);
+
+        $this->cloneGerritProjectConfig($gerrit_server, $gerrit_project_url);
+        $this->removeMinimalPermissions();
+        $this->pushToServer();
+    }
+
+    private function getGerritProjectUrl(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
+        return $gerrit_server->getCloneSSHUrl($this->driver->getGerritProjectName($repository));
     }
 
     private function exportGitBranches(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project, GitRepository $repository) {
@@ -245,26 +293,26 @@ class Git_Driver_Gerrit_ProjectCreator {
         }
     }
 
+    private function removeMinimalPermissions() {
+        foreach (self::$MIGRATION_MINIMAL_PERMISSIONS as $permission) {
+            $this->removeFromSection($permission['reference'], $permission['permission'], $permission['group']);
+        }
+    }
+
     private function addMinimalPermissionsToMigrateTuleapRepoOnGerritWithoutTuleapAccessRigths() {
-        $this->addToSection('refs/tags', 'pushTag', "group Administrators");
-        $this->addToSection('refs/tags', 'create', "group Administrators");
-        $this->addToSection('refs/tags', 'forgeCommitter', "group Administrators");
-
-        $this->addToSection('refs/heads', 'create', "group Administrators");
-        $this->addToSection('refs/heads', 'forgeCommitter', "group Administrators");
-
-        $this->addToSection('refs/heads', 'create', "group Administrators");
-        $this->addToSection('refs/heads', 'forgeCommitter', "group Administrators");
-
-        // To be able to push merge commit on master, we need pushMerge on refs/for/*
-        // http://code.google.com/p/gerrit/issues/detail?id=1072
-        $this->addToSection('refs/for', 'pushMerge', "group Administrators");
+        foreach (self::$MIGRATION_MINIMAL_PERMISSIONS as $permission) {
+            $this->addToSection($permission['reference'], $permission['permission'], $permission['group']);
+        }
     }
 
     private function shouldAddRegisteredUsersToGroup(GitRepository $repository, $permission, $group) {
         return array_intersect(array(UGroup::ANONYMOUS, UGroup::REGISTERED), $group) &&
             $repository->getProject()->isPublic() &&
             $this->user_finder->areRegisteredUsersAllowedTo($permission, $repository);
+    }
+
+    private function removeFromSection($section, $permission, $value) {
+        `cd $this->dir; git config -f project.config --unset access.$section/*.$permission '$value'`;
     }
 
     private function addToSection($section, $permission, $value) {

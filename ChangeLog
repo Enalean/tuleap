@@ -1,9 +1,17 @@
 Version 6.8 (Not Released Yet)
 	== Plugins ==
 	* tracker_date_reminder: 1.2.6
-	* agiledashboard: 1.16
-	* tracker: 5.186
-	* mediawiki: 0.20
+	* agiledashboard: 1.17
+	* tracker: 5.187
+	* mediawiki: 0.21
+	* git: 3.54
+
+	== Bug Fix ==
+	* Fix request #5604: ViewVC download broken when file start with 0x00
+        * Fix XSS vulnerabilities on bookmarks
+
+	== Themes ==
+	* Experimental: 0.5
 
 Version 6.7 (Thursday, November 14th 2013)
 	== Plugins ==
@@ -597,7 +605,7 @@ Version 5.0 (Thursday, April 26th 2012)
    == Bug fix ==
    * Ensure NSCD and internal FS cache are properly flushed before doing something related to filesystem. Fix bugs related to directory ownership of users.
    * Fix sla #711 - Can't commit in CVS when the project is private.
-   
+
    == Plugins ==
    * AgileDashoard 0.13
    * Cardwall v0.4
@@ -622,10 +630,10 @@ Version 4.0.28.1 (Friday, April 6th 2012)
   * Fix sla #674 - SVN notifications by path: mails were sent to people monitoring the same path at different projects
   * Fix sla #656 - Not able to create Tracker from the template
   * Fix sla #664 - Lack of visibility in Dawn theme
-  
+
   == Plugins ==
   * Tracker v5.4.8
-  
+
 Version 4.0.28 (Friday, March 30th 2012)
    == Bug Fix ==
    * homepage: three feature boxes displayed the same content
@@ -699,7 +707,7 @@ Version 4.0.26.1 (Wednesday, February 8th 2012)
 
 Version 4.0.26 (Friday, February 3rd 2012)
     == Enhancement ==
-    * Mailing list names enhancement: allow siteadmin to configure the prefered 
+    * Mailing list names enhancement: allow siteadmin to configure the prefered
       format of mailing list through the following configuration variables:
       - sys_lists_domain
       - sys_lists_name_min_length
@@ -707,17 +715,17 @@ Version 4.0.26 (Friday, February 3rd 2012)
       - sys_lists_suffix
       => see local.inc for usage. (Contrib Orange)
     * Display much more lastlogins entries in siteadmin. (Contrib Orange)
-    * svn-commit.pl script allows one to issue commit-email.pl on all loaded 
+    * svn-commit.pl script allows one to issue commit-email.pl on all loaded
       commits (from svnadmin load) that are not into the tuleap database. (Contrib Xerox)
-    * Add script to change the name of authors in a svndump (to be run before 
+    * Add script to change the name of authors in a svndump (to be run before
       the import into tuleap). (Contrib Xerox)
     * Regenerate a .SVNAcccessFile if it is not present during System Check. (Contrib Xerox)
     * Use site-content to add extra tabs in the tob bar services (only in div based themes)
-    
+
     == Bug Fix ==
     * Update codendi_aliases.conf to resolve some issues in customization of images in themes
     * Set the default php value of session.save_path in php.conf
-    * When going to http://example.com/projects/gpig/, display the first active 
+    * When going to http://example.com/projects/gpig/, display the first active
       service if "summary" is disabled. (Contrib Xerox)
     * Fix memory leaks and performance issues on big subversion checkouts. (Contrib Xerox)
     ** See sys_auth_svn_mod in local.inc to switch the apache subversion authentication mod.
@@ -728,7 +736,7 @@ Version 4.0.26 (Friday, February 3rd 2012)
     * Re-add SurveyManager in the user guide (inadvertently removed)
     * Fix project db export(Contrib STMicroelectronics)
     * Fix Security issue (Contrib STMicroelectronics)
-    
+
     == Plugins ==
     * Git v1.25. See separated Changelog
     * Tracker v0.8.12. See separated Changelog
@@ -740,19 +748,19 @@ Version 4.0.26 (Friday, February 3rd 2012)
     * IM v1.5. See separated Changelog
     * Ldap v3.11. See separated Changelog
     * Statistics v0.9. See separated Changelog
-    
+
     == Tuleap Development ==
     * Allow randomization of execution of unit tests (to be sure that there is no inter dependencies)
     * Add a color reporter for tests execution in cli
     * Incorporate fusionforge stuff to be able to ease FF/Tuleap plugins compatibility. (Contrib Orange)
-    * Add migration scripts to convert a Codendi 4.0 plateform (+ local 
+    * Add migration scripts to convert a Codendi 4.0 plateform (+ local
       customization) to a Tuleap one.
     * Add a plugin google_analytics which helps to track visits on a Tuleap instance. (Contrib Xerox)
     * Add a plugin orange that contains Orange specificities.
     * The default rpm package name is now Tuleap.
     * Add cgi-bin script for various statistics purpose. (Contrib Orange)
     * Cucumber now run some of our testlink test cases
-    
+
     == SOAP ==
     * SOAP API update to version 4.3, see src/www/soap/ChangeLog for details.
 
@@ -781,10 +789,10 @@ Version 4.0.24.1 (Friday, December 2nd 2011)
     == Bug Fix ==
     * Fix json issue following upgrade to Prototype v1.7 and Scriptaculous v1.9
     * Fix viewvc display issues (css where missing)
-    
+
     == Plugins ==
     * GraphOnTrackersv5 v0.5.1 See separated Changelog
-    
+
 Version 4.0.24 - Wednesday, November 23rd 2011
 
     == Bug Fix ==
@@ -868,7 +876,7 @@ Version 4.0.22 - Friday, September 20th 2011
     * Request Help plugin v1.2. See separated ChangeLog
     * Docman v2.14. See separated ChangeLog
     * Hudson v1.3. See separated Changelog
-   
+
     == Development ==
     * Add lxc script utilities to unit-test, build, install and functional-test a Tuleap (thanks to Christian Bayle).
     * First boostrap of a Selenium test suite (thanks to STMicroelectronics)
@@ -897,8 +905,8 @@ Version 4.0.21 - Thuesday, September 1st 2011
     * Add a Config class to read configuration files (replaces $GLOBALS['sys_blabla'] usage)
     * DAO constructor paramaeter is now optionnal: The default DataAccess is CodendiDataAccess
     * DAO offers now updateAndGetLastId() which execute the sql statement and return the last inserted id
-    
-    
+
+
 Version 4.0.20 - Wednesday, 10th August 2011
 	== Enhancement ==
 	* Centralize "Code exchange policy link" in site configuration.
@@ -993,7 +1001,7 @@ Version 4.0.17 - Monday, 4th April 2011 (Canceled)
         backlog #113547: GIT hook to send a mail when pushing
         backlog #113546: Disk statistics per project visible at project level
         backlog #123246: Allow upload of the same deleted file
-	
+
         == Bugfix ==
         backlog #103794: Fix issue related to "item type" filter
         backlog #121173: URLVerification failures with anonymous URLs and webdav misconfiguration.
@@ -1006,7 +1014,7 @@ Version 4.0.17 - Monday, 4th April 2011 (Canceled)
         backlog #121636: Issue in fields dependencies
         backlog #123243: Browse svn for project with "." in short name
 
-Version 4.0.16 - Tuesday, 18th January 2011 
+Version 4.0.16 - Tuesday, 18th January 2011
         == New Features ==
         backlog #113540: Support of <pre> in tracker follow-up comment
                          * Follow-up comments can be submitted with usage of a subset
@@ -1021,17 +1029,17 @@ Version 4.0.16 - Tuesday, 18th January 2011
                          * Fix wrong behaviour in CSV import/export that was leading to comments duplication.
                            Known limitations: It's not possible to import follow-up comments in HTML format yet.
 
-                         * Improvement of Artifact edition UI: 
+                         * Improvement of Artifact edition UI:
                            * reduce space "lost" between tracker's toolbar and artifact info.
                            * rework of follow-up comments layout to improve readability.
 
 	backlog #114221: File Release System provides means to check files consistency through md5 sums.
 	                 * Codendi automatically computes md5 sum on files submitted in File Release System.
 	                   If you submit a reference md5 sum, Codendi compares with the computed one and raise
-	                   an error if it fails. Enhance the notification mail received while monitoring a package. 
+	                   an error if it fails. Enhance the notification mail received while monitoring a package.
 
 	                 * CLI update to 1.4.0, see cli/ChangeLog for details.
-	
+
 	                 * SOAP API update to version 4.1, see src/www/soap/ChangeLog for details.
 
         backlog #119336: Enlarge the project name field in Widget Show project admins
@@ -1047,7 +1055,7 @@ Version 4.0.16 - Tuesday, 18th January 2011
 
 Version 4.0.15 - Friday, 19th november 2010
         == Bugfix ==
-        backlog #114802: Bad display of some codex pages 
+        backlog #114802: Bad display of some codex pages
 
 Version 4.0.14 - Monday, 8th November 2010
         == New features ==
@@ -1074,7 +1082,7 @@ Version 4.0.13 - Wednesday, 29th September 2010
         backlog #106752: Fix bugs in RPM installation (munin, mailman, openfire)
         backlog #105989: Site admin cannot remove user's LDAP id
         backlog #97573 : After a document is moved, Codex shows a blank page
-        backlog #107125: Error stack trace may disclose credentials 
+        backlog #107125: Error stack trace may disclose credentials
         backlog #99967 : Issue in tracker creation when shortname contains '_'
         backlog #106110: Reduce load on user table
         backlog #108287: LDAP synchro must take LDAP server down into account
@@ -1083,13 +1091,13 @@ Version 4.0.13 - Wednesday, 29th September 2010
 
 Version 4.0.12 - Tuesday, 14th September(Just to fix a bug regression)
         == Bugfix==
-        backlog #108647: Assigned to shows None and unkown value 
+        backlog #108647: Assigned to shows None and unkown value
 
-Version 4.0.11 - Monday, 9th August 2010 
+Version 4.0.11 - Monday, 9th August 2010
         == Bugfix==
         backlog #106228: Bad dispaly of privacy icon except with 'Dawn' theme
- 
-Version 4.0.10 - Thursday, 5th August 2010 (Canceled) 
+
+Version 4.0.10 - Thursday, 5th August 2010 (Canceled)
         == New features ==
         backlog #103963: Permission denied improvement: docman items
 	backlog #104505: Installation based RPM
@@ -1140,4 +1148,4 @@ Version 4.0.9 - Friday, 2nd July 2010
 	* backlog #97577:  Cannot remove project admin right
 	* backlog #101500: Artifact permissions section disabled when using IE
 	* backlog #101176: MS office 2007 documents are not supported with IE
-        * backlog #103085: Impossible to set user to restricted 
+        * backlog #103085: Impossible to set user to restricted

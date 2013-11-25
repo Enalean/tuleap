@@ -1,3 +1,6 @@
+Version 3.54 - Tuleap 6.8
+    * story #4959 - Get Gerrit migration to remove special rights attributed to Administrators group
+
 Version 3.53 - Tuleap 6.7
     * fix request #5531 - Problem deleting Gerrit Server
 

@@ -87,6 +87,7 @@ bookmark_add	edit	Edit this bookmark
 bookmark_add	bkm_url	Bookmark Address
 bookmark_add	bkm_title	Bookmark Title
 bookmark_add	favorite	My Favorite Site
+bookmark_add	invalid_uri	The URL is invalid.
 #
 #-----------------------------------------------
 # Script: SF/www/my/bookmark_delete.php

@@ -1503,4 +1503,22 @@ function util_negociate_alternate_content_types($script, $default_content_type) 
 	return $content_type;
 }
 
+/**
+ * Split an HTTP request in 2 parts: headers and body
+ *
+ * Header/body separator is CRLF
+ * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html
+ *
+ * @param string $content
+ * @return array
+ */
+function http_split_header_body($content) {
+    $body_header_separator = "\r\n\r\n";
+    $end_of_headers        = strpos($content, $body_header_separator);
+    $beginning_of_body     = $end_of_headers + strlen($body_header_separator);
+    $headers               = substr($content, 0, $end_of_headers);
+    $body                  = substr($content, $beginning_of_body);
+    return array($headers, $body);
+}
+
 ?>

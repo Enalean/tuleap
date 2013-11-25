@@ -1,0 +1,13 @@
+<div class="sidebar-nav">
+    <div class="project-title">
+        {{projectName}}
+    </div>
+    <ul class="nav nav-list">
+        {{#sidebar}}
+            <li {{#enabled}}class="active"{{/enabled}}>
+                <a href="{{{link}}}" title="{{name}}"><i class="{{icon}}"></i> {{{label}}}</a>
+            </li>
+        {{/sidebar}}
+    </ul>
+    <i class="icon-chevron-left sidebar-collapse"></i>
+</div>

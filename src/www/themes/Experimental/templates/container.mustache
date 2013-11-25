@@ -1,0 +1,14 @@
+{{#hasSidebar}}
+    {{> sidebar}}
+    <div class="main container-fluid">
+{{/hasSidebar}}
+{{^hasSidebar}}
+    <div class="main full container-fluid">
+{{/hasSidebar}}
+    {{{feedback}}}
+
+    <div class="row-fluid">
+        <div class="span12">
+            {{> breadcrumbs}}
+            {{> toolbar}}
+            <div class="content">

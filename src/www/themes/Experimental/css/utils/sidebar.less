@@ -1,0 +1,58 @@
+/* {{{ SIDEBAR */
+.sidebar-nav {
+    background: @dark-grey;
+    font-family: 'SourceSansPro', Arial;
+    position: fixed;
+    height: 100%;
+    width: @sidebar-width;
+    max-width: @sidebar-width;
+    overflow: hidden;
+    padding: 52px 0 0 0;
+    &.big-nav {
+        padding: 105px 0 0 0;
+    }
+    &.huge-nav {
+        padding: 157px 0 0 0;
+    }
+
+    .project-title {
+        color: @white;
+        text-align: center;
+        font-size: 1.8em;
+        line-height: 1.5em;
+        box-shadow: inset 0 -10px 30px -10px darken(@dark-grey, 10%);
+        margin: 0 0 20px 0;
+        padding: 20px 0;
+    }
+
+    li > a {
+        font-size: 1.1em;
+        color: @grey;
+        text-shadow: 0 1px 0 darken(@grey, 50%);
+    }
+
+    .nav-list > .active > a, .nav-list > .active > a:hover, .nav-list > .active > a:focus {
+        background: none;
+        font-weight: normal;
+    }
+
+    .nav > li > a:hover, .nav > li > a:focus {
+        background: none;
+        color: @white;
+    }
+
+    i.sidebar-collapse {
+        color: @grey;
+        text-align: center;
+        font-size: 1em;
+        display: block;
+        padding: 10px 0;
+        margin: 20px 0 0 0;
+        cursor: pointer;
+
+        &:hover {
+            color: @white;
+        }
+    }
+}
+/* }}} */

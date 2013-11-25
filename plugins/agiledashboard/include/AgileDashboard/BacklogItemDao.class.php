@@ -43,20 +43,6 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getLinkedArtifacts($milestone_artifact_id) {
-        $milestone_artifact_id = $this->da->escapeInt($milestone_artifact_id);
-        $sql = "SELECT child_art.*
-                FROM tracker_artifact parent_art
-                    INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
-                    INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
-                    INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
-                    INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
-                WHERE parent_art.id = $milestone_artifact_id";
-
-
-        return $this->retrieve($sql);
-    }
-
     public function getTopBacklogArtifacts(array $milestone_tracker_ids) {
         $milestone_tracker_ids = $this->da->escapeIntImplode($milestone_tracker_ids);
 

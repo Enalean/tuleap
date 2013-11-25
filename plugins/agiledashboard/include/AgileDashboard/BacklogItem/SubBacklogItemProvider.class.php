@@ -22,42 +22,62 @@
 /**
  * Returns all tasks id in a Release
  *
- * Example of planning configuration:
+ * It leverage on ArtifactLink information and will recrusively inspect the
+ * milestone links (from top to bottom) and keep all artifacts that belongs to
+ * the backlog tracker.
  *
- * Release  --------- Epic
- *    Sprint  --------- Story
- *                        Task
+ * This is the same type of algorithm than used in AgileDashboard_Milestone_Backlog_ArtifactsFinder
  */
 class AgileDashboard_BacklogItem_SubBacklogItemProvider {
 
-    /** @var AgileDashboard_BacklogItem_SubBacklogItemDao */
+    /** @var Tracker_ArtifactDao */
     private $dao;
 
-    /** @var AgileDashboard_Planning_ParentBacklogTrackerCollectionProvider */
-    private $provider;
+    /** @var Integer[] */
+    private $backlog_ids = array();
 
-    public function __construct(
-        AgileDashboard_BacklogItem_SubBacklogItemDao $dao,
-        AgileDashboard_Planning_ParentBacklogTrackerCollectionProvider $parent_backlog_tracker_collection_provider
-    ) {
-        $this->dao      = $dao;
-        $this->provider = $parent_backlog_tracker_collection_provider;
+    /** @var Integer[] */
+    private $inspected_ids = array();
+
+    public function __construct(Tracker_ArtifactDao $dao) {
+        $this->dao = $dao;
     }
 
+    /**
+     * Return all indexed ids of artifacts linked on milestone that belong to backlog tracker
+     *
+     * @param Planning_Milestone $milestone
+     * @param Tracker $backlog_tracker
+     * @return array
+     */
     public function getMatchingIds(Planning_Milestone $milestone, Tracker $backlog_tracker) {
-        $milestone_id               = $milestone->getArtifactId();
-        $parent_backlog_trackers    = $this->provider->getParentBacklogTrackerCollection($backlog_tracker, $milestone);
-        $parent_backlog_tracker_ids = array_map(array($this, 'extractTrackerId'), $parent_backlog_trackers);
+        $milestone_id_seed = array($milestone->getArtifactId());
 
-        $row = $this->dao->getAllBacklogItemIdInMilestone($milestone_id, $parent_backlog_tracker_ids)->getRow();
-        if (! $row['list_of_ids']) {
-            return array();
-        }
+        $this->inspected_ids = $milestone_id_seed;
+        $this->filterBacklogIds($backlog_tracker->getId(), $milestone_id_seed);
 
-        return array_flip(explode(',', $row['list_of_ids']));
+        return $this->backlog_ids;
     }
 
-    private function extractTrackerId(Tracker $tracker) {
-        return $tracker->getId();
+    /**
+     * Retrieve all linked artifacts and keep only those that belong to backlog tracker
+     *
+     * We need to keep list of ids we already looked at so we avoid cycles.
+     *
+     * @param int $backlog_tracker_id
+     * @param array $artifacts
+     */
+    private function filterBacklogIds($backlog_tracker_id, array $artifacts) {
+        $artifacts_to_inspect = array();
+        foreach ($this->dao->getLinkedArtifactsByIds($artifacts, $this->inspected_ids) as $artifact_row) {
+            $artifacts_to_inspect[] = $artifact_row['id'];
+            if ($artifact_row['tracker_id'] == $backlog_tracker_id) {
+                $this->backlog_ids[$artifact_row['id']] = true;
+            }
+            $this->inspected_ids[] = $artifact_row['id'];
+        }
+        if (count($artifacts_to_inspect) > 0) {
+            $this->filterBacklogIds($backlog_tracker_id, $artifacts_to_inspect);
+        }
     }
 }

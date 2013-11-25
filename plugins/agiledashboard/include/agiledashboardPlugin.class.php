@@ -120,24 +120,17 @@ class AgileDashboardPlugin extends Plugin {
         $backlog_tracker = $params['tracker'];
 
         $milestone_id_provider = new AgileDashboard_Milestone_SelectedMilestoneIdProvider($params['additional_criteria']);
-        $milestone_id = $milestone_id_provider->getMilestoneId();
-        if (! $milestone_id) {
-            return;
-        }
-
-        $provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider(
-            new AgileDashboard_BacklogItem_SubBacklogItemDao(),
-            new AgileDashboard_Planning_ParentBacklogTrackerCollectionProvider()
+        $milestone_id          = $milestone_id_provider->getMilestoneId();
+        $milestone             = $this->getMilestoneFactory()->getBareMilestoneByArtifactId(
+            UserManager::instance()->getCurrentUser(),
+            $milestone_id
         );
-        $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($milestone_id);
 
-        if (! $artifact) {
-            return;
+        if ($milestone) {
+            $provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider(new Tracker_ArtifactDao());
+            $params['result'][]         = $provider->getMatchingIds($milestone, $backlog_tracker);
+            $params['search_performed'] = true;
         }
-
-        $milestone                  = $this->getMilestoneFactory()->getMilestoneFromArtifact($artifact);
-        $params['result'][]         = $provider->getMatchingIds($milestone, $backlog_tracker);
-        $params['search_performed'] = true;
     }
 
     /**
