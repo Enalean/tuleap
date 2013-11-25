@@ -7,7 +7,7 @@
 
 require_once('pre.php');
 require_once('bookmarks.php');
-
+require_once('my_utils.php');
 
 $request =& HTTPRequest::instance();
 
@@ -34,7 +34,9 @@ if ($request->isPost() &&
     $bookmark_url   = $request->get('bookmark_url');
     $bookmark_title = $request->get('bookmark_title');
 
-	bookmark_edit($bookmark_id, $bookmark_url, $bookmark_title);
+    my_check_bookmark_URL($bookmark_url, '/my/bookmark_edit.php?bookmark_id='.$bookmark_id);
+
+    bookmark_edit($bookmark_id, $bookmark_url, $bookmark_title);
     $GLOBALS['Response']->redirect('/my');
 }
 
