@@ -130,7 +130,7 @@ class Project extends Group implements PFO_Project {
                     $res_row['label'] = $GLOBALS['Language']->getText($matches[1], $matches[2]);
                 }
             }
-            
+
             // Init Service object corresponding to given service
             try {
                 $classname = $this->getServiceClassName($short_name);

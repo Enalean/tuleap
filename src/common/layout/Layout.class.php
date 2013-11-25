@@ -1159,7 +1159,7 @@ class Layout extends Response {
     public function displayJavascriptElements() {
         $c = new Combined();
         echo $c->getScripts(array('/scripts/codendi/common.js'));
-        
+
         //Javascript i18n
         echo '<script type="text/javascript">'."\n";
         include $GLOBALS['Language']->getContent('scripts/locale');
@@ -1167,17 +1167,17 @@ class Layout extends Response {
         codendi.imgroot = \''. $this->imgroot .'\';
         '. $this->changeColorpickerPalette() .'
         </script>';
-        
+
         if (Config::get('DEBUG_MODE') && (Config::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')) ) {
             echo '<script type="text/javascript" src="/scripts/codendi/debug_reserved_names.js"></script>';
         }
         if (Config::get('DEBUG_MODE')) {
             echo '<!--[if IE]><script type="text/javascript" src="http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js"></script><![endif]-->';
         }
-        
+
         $em =& EventManager::instance();
         $em->processEvent("javascript_file", null);
-        
+
         foreach ($this->javascript as $js) {
             if (isset($js['file'])) {
                 if (!$c->isCombined($js['file'])) {
@@ -1296,6 +1296,7 @@ class Layout extends Response {
         }
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('style.css') .'" />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
+        echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-select/bootstrap-select.css" />';
     }
 
     protected function displayFontAwesomeStylesheetElements() {
@@ -1988,7 +1989,7 @@ class Layout extends Response {
             $hp =& Codendi_HTMLPurifier::instance();
             if ($short_name == 'summary') {
 
-                $label = '';
+                $label = '<span>';
                 if (Config::get('sys_display_project_privacy_in_service_bar')) {
                     // Add a default tab to explain project privacy
                     if ($project->isPublic()) {
@@ -2013,13 +2014,22 @@ class Layout extends Response {
 
                     $label .= '&nbsp;';
                 }
-                $label .= $hp->purify(util_unconvert_htmlspecialchars($project->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML).'&nbsp;&raquo;';
+                $label .= $hp->purify(util_unconvert_htmlspecialchars($project->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML).'&nbsp;&raquo;</span>';
             } else {
                 $label  = '<span title="'.$hp->purify($service_data['description']).'">';
                 $label .= $hp->purify($service_data['label']).'</span>';
             }
+
+            $name = $hp->purify($service_data['label']);
+
+            $icon = 'icon-double-angle-right';
+            if (isset($service_data['icon'])) {
+                $icon = $service_data['icon'];
+            }
+            
             $tabs[] = array('link'        => $link,
-                            'icon'        => null,
+                            'icon'        => $icon,
+                            'name'        => $name,
                             'label'       => $label,
                             'enabled'     => $enabled,
                             'description' => $hp->purify($service_data['description']));
@@ -2103,7 +2113,19 @@ class Layout extends Response {
             )
         );
 
+        $search_entries = $this->forceSelectedOption($search_entries);
+
         return array($search_entries, $hidden);
+    }
+
+    private function forceSelectedOption(array $search_entries) {
+        foreach ($search_entries as $key => $search_entry) {
+            if (! isset($search_entry['selected'])) {
+                $search_entries[$key]['selected'] = false;
+            }
+        }
+
+        return $search_entries;
     }
 
     public function getSearchBox() {

@@ -68,8 +68,13 @@ class Feedback {
     }
     
     function display() {
-        echo '<div id="feedback">'.$this->fetch().'</div>';
+        echo $this->htmlContent();
     }
+
+    public function htmlContent() {
+        return '<div id="feedback">'.$this->fetch().'</div>';
+    }
+
     function hasWarningsOrErrors() {
     	   $found = false;
        reset($this->logs);
