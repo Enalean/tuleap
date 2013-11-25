@@ -67,6 +67,8 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::REST_GET_PROJECT_PLANNINGS);
             $this->addHook(Event::REST_OPTIONS_PROJECT_PLANNINGS);
             $this->addHook(Event::REST_PROJECT_RESOURCES);
+            $this->addHook(Event::REST_GET_PROJECT_MILESTONES);
+            $this->addHook(Event::REST_OPTIONS_PROJECT_MILESTONES);
         }
         return parent::getHooksAndCallbacks();
     }
@@ -589,7 +591,42 @@ class AgileDashboardPlugin extends Plugin {
     public function rest_project_resources(array $params) {
         $injector = new AgileDashboard_REST_ResourcesInjector();
         $params['resources'][] = $injector->getProjectPlanningResource($params['project'], $params['version']);
-    }    
+    }
+
+    /**
+     * @see REST_GET_PROJECT_MILESTONES
+     */
+    public function rest_get_project_milestones($params) {
+        $user               = UserManager::instance()->getCurrentUser();
+        $milestone_resource = $this->buildRightVersionOfProjectMilestonesResource($params['version']);
+
+        $params['result'] = $milestone_resource->get(
+            $user,
+            $params['project'],
+            $params['limit'],
+            $params['offset']
+        );
+    }
+
+    /**
+     * @see REST_OPTIONS_PROJECT_MILESTONES
+     */
+    public function rest_options_project_milestones($params) {
+        $user               = UserManager::instance()->getCurrentUser();
+        $milestone_resource = $this->buildRightVersionOfProjectMilestonesResource($params['version']);
+
+        $params['result'] = $milestone_resource->options(
+            $user,
+            $params['project'],
+            $params['limit'],
+            $params['offset']
+        );
+    }
+
+    private function buildRightVersionOfProjectMilestonesResource($version) {
+        $class_with_right_namespace = '\\Tuleap\\AgileDashboard\\REST\\'.$version.'\\ProjectMilestonesResource';
+        return new $class_with_right_namespace;
+    }
 }
 
 ?>

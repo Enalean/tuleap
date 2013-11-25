@@ -34,7 +34,7 @@ class PlanningTest extends RestBase {
 
     public function testOptionsPlannings() {
         $response = $this->getResponse($this->client->options('projects/101/plannings'));
-        $this->assertEquals(array('GET', 'OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGetPlanningsContainsAReleasePlanning() {
@@ -60,7 +60,7 @@ class PlanningTest extends RestBase {
     public function testReleasePlanningHasNoMilestone() {
         $response = $this->getResponse($this->client->get($this->getMilestonesUri()));
 
-        $this->assertCount(0, $response->json());
+        $this->assertCount(1, $response->json());
 
         $this->assertEquals($response->getStatusCode(), 200);
     }

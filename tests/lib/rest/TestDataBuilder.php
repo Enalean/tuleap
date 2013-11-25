@@ -125,5 +125,20 @@ class TestDataBuilder {
 
         return $this;
     }
+
+    public function generateMilestones() {
+        echo "Create milestones\n";
+
+        $user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
+
+        $fields_data = array(
+            Tracker_FormElementFactory::instance()->getFormElementByName(6, 'name')->getId() => 'Release 1.0',
+            Tracker_FormElementFactory::instance()->getFormElementByName(6, 'status')->getId()  => '126'
+        );
+
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(6), $fields_data, $user, '');
+
+        return $this;
+    }
 }
 ?>
