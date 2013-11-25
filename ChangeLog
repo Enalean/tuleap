@@ -4,6 +4,7 @@ Version 6.8 (Not Released Yet)
 	* agiledashboard: 1.17
 	* tracker: 5.187
 	* mediawiki: 0.21
+	* git: 3.54
 
 	== Bug Fix ==
 	* Fix request #5604: ViewVC download broken when file start with 0x00
