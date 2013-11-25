@@ -150,6 +150,54 @@ class ProjectResource {
         return $result;
     }
 
+    /**
+     * Get trackers
+     *
+     * Get the trackers of a given project
+     *
+     * @url GET {id}/trackers
+     *
+     * @param int $id     Id of the project
+     * @param int $limit  Number of elements displayed per page {@from path}
+     * @param int $offset Position of the first element to display {@from path}
+     *
+     * @return array ProjectTrackerResource
+     */
+    protected function getTrackers($id, $limit = 10, $offset = 0) {
+        $trackers = $this->trackers($id, $limit, $offset, Event::REST_GET_PROJECT_TRACKERS);
+        $this->sendAllowHeadersForProject();
+
+        return $trackers;
+    }
+
+    /**
+     * @url OPTIONS {id}/trackers
+     *
+     * @param int $id Id of the project
+     */
+    protected function optionsTrackers($id) {
+        $this->trackers($id, 10, 0, Event::REST_OPTIONS_PROJECT_TRACKERS);
+        $this->sendAllowHeadersForProject();
+    }
+
+    private function trackers($id, $limit, $offset, $event) {
+        $project = $this->getProject($id);
+        $result  = array();
+
+        EventManager::instance()->processEvent(
+            $event,
+            array(
+                'version' => 'v1',
+                'project' => $project,
+                'limit'   => $limit,
+                'offset'  => $offset,
+                'result'  => &$result,
+            )
+        );
+
+        return $result;
+    }
+
     private function sendAllowHeadersForProject() {
         Header::allowOptionsGet();
     }

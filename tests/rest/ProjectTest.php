@@ -58,5 +58,47 @@ class ProjectTest extends RestBase {
 
         $this->assertTrue($exception);
     }
+
+    public function testOPTIONStrackers() {
+        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/101/trackers'));
+
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testGETtrackers() {
+        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/101/trackers'));
+
+        $trackers = $response->json();
+
+        $this->assertCount(5, $trackers);
+
+        $epics_tracker = $trackers[0];
+        $this->assertArrayHasKey('id', $epics_tracker);
+        $this->assertEquals($epics_tracker['label'], "Epics");
+        $this->assertEquals($epics_tracker['project'], array('id' => '101', 'uri' => 'projects/101'));
+
+        $releases_tracker = $trackers[1];
+        $this->assertArrayHasKey('id', $releases_tracker);
+        $this->assertEquals($releases_tracker['label'], "Releases");
+        $this->assertEquals($releases_tracker['project'], array('id' => '101', 'uri' => 'projects/101'));
+
+        $sprints_tracker = $trackers[2];
+        $this->assertArrayHasKey('id', $sprints_tracker);
+        $this->assertEquals($sprints_tracker['label'], "Sprints");
+        $this->assertEquals($sprints_tracker['project'], array('id' => '101', 'uri' => 'projects/101'));
+
+        $tasks_tracker = $trackers[3];
+        $this->assertArrayHasKey('id', $tasks_tracker);
+        $this->assertEquals($tasks_tracker['label'], "Tasks");
+        $this->assertEquals($tasks_tracker['project'], array('id' => '101', 'uri' => 'projects/101'));
+
+        $userstories_tracker = $trackers[4];
+        $this->assertArrayHasKey('id', $userstories_tracker);
+        $this->assertEquals($userstories_tracker['label'], "User Stories");
+        $this->assertEquals($userstories_tracker['project'], array('id' => '101', 'uri' => 'projects/101'));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
 }
 ?>

@@ -635,5 +635,29 @@ class Event {
      *     'resources' => array
      */
     const REST_PROJECT_RESOURCES = 'rest_project_resources';
+
+    /**
+     * Event raised to get trackers from a project with REST
+     *
+     * Parameters:
+     *     'version' => String
+     *     'project' => Project
+     *     'limit'   => int
+     *     'offset'  => int
+     *     'result'  => array
+     */
+    const REST_GET_PROJECT_TRACKERS = 'rest_get_project_trackers';
+
+    /**
+     * Event raised to get trackers options from a project with REST
+     *
+     * Parameters:
+     *     'version' => String
+     *     'project' => Project
+     *     'limit'   => int
+     *     'offset'  => int
+     *     'result'  => array
+     */
+    const REST_OPTIONS_PROJECT_TRACKERS = 'rest_options_project_trackers';
 }
 ?>
