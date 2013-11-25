@@ -67,6 +67,14 @@ class Experimental_NavBarPresenter {
         return $this->user->getRealName();
     }
 
+    public function has_user_avatar() {
+        return $this->user->hasAvatar();
+    }
+
+    public function user_avatar() {
+        return $this->user->getAvatarUrl();
+    }
+
     public function selected_top_tab() {
         return $this->selected_top_tab;
     }

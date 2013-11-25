@@ -1309,15 +1309,30 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
                         data-user-id = "' . $user_id . '"
                     >';
 
-         if ($this->isAnonymous()) {
-             $html .= '<img src="http://www.gravatar.com/avatar/'. md5($this->getEmail()) .'.jpg?s='. $width .'&amp;d=wavatar" />';
-         } else {
-             if ($this->hasAvatar()) {
-                 $html .= '<img src="'. get_server_url() .'/users/'. $purifier->purify($this->getUserName()) .'/avatar.png" width="'. $width .'" />';
-             }
+         $url = $this->getAvatarUrl();
+
+         if ($url) {
+             $html .= '<img src="'. $url .'" width="'. $width .'" />';
          }
+
          $html .= '</div>';
          return $html;
+     }
+
+     /**
+      * Return the user avatar url
+      * @return string url
+      */
+     public function getAvatarUrl() {
+         $purifier = Codendi_HTMLPurifier::instance();
+
+         if ($this->isAnonymous()) {
+             return 'http://www.gravatar.com/avatar/'. md5($this->getEmail()) .'.jpg?s='. $width .'&amp;d=wavatar';
+         } else {
+             if ($this->hasAvatar()) {
+                return get_server_url() .'/users/'. $purifier->purify($this->getUserName()) .'/avatar.png';
+             }
+         }
      }
 
      /**
