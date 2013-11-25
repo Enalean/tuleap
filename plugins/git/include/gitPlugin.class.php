@@ -219,6 +219,10 @@ class GitPlugin extends Plugin {
         }
     }
 
+    private function getTemplateFactory() {
+        return new Git_Driver_Gerrit_Template_TemplateFactory(new Git_Driver_Gerrit_Template_TemplateDao());
+    }
+
     private function getSystemEventDao() {
         return new SystemEventDao();
     }
@@ -933,7 +937,8 @@ class GitPlugin extends Plugin {
             $this->getGerritUserFinder(),
             $this->getUGroupManager(),
             $this->getGerritMembershipManager(),
-            $this->getGerritUmbrellaProjectManager()
+            $this->getGerritUmbrellaProjectManager(),
+            $this->getTemplateFactory()
         );
     }
 

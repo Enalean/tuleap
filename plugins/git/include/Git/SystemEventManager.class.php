@@ -90,10 +90,10 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueMigrateToGerrit(GitRepository $repository, $remote_server_id, $migrate_access_right) {
+    public function queueMigrateToGerrit(GitRepository $repository, $remote_server_id, $gerrit_template_id) {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_GERRIT_MIGRATION::NAME,
-            $repository->getId() . SystemEvent::PARAMETER_SEPARATOR . $remote_server_id . SystemEvent::PARAMETER_SEPARATOR . $migrate_access_right,
+            $repository->getId() . SystemEvent::PARAMETER_SEPARATOR . $remote_server_id . SystemEvent::PARAMETER_SEPARATOR . $gerrit_template_id,
             SystemEvent::PRIORITY_HIGH,
             SystemEvent::OWNER_APP
         );

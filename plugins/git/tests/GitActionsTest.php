@@ -608,6 +608,9 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        Config::store();
+        Config::set('codendi_log','/var/tmp');
+
         $this->manager        = mock('GitRepositoryManager');
         $this->git_system_event_manager             = mock('Git_SystemEventManager');
         $this->gerrit_factory = mock('Git_RemoteServer_GerritServerFactory');
@@ -629,6 +632,11 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
             mock('ProjectManager')
         );
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+        Config::restore();
     }
 
     public function itDoesNothingWhenGivenServerDoesNotExist() {

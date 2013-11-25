@@ -25,6 +25,9 @@ class Git_Driver_Gerrit_ProjectCreator {
     const GROUP_REPLICATION = 'replication';
     const GROUP_REGISTERED_USERS = 'Registered Users';
 
+    const NO_PERMISSIONS_MIGRATION      = 'none';
+    const DEFAULT_PERMISSIONS_MIGRATION = 'default';
+
     /** @var array */
     static $MIGRATION_MINIMAL_PERMISSIONS = array(
         array(
@@ -79,13 +82,17 @@ class Git_Driver_Gerrit_ProjectCreator {
     /** @var Git_Driver_Gerrit_UmbrellaProjectManager */
     private $umbrella_manager;
 
+    /** @var Git_Driver_Gerrit_Template_TemplateFactory */
+    private $template_factory;
+
     public function __construct(
         $dir,
         Git_Driver_Gerrit $driver,
         Git_Driver_Gerrit_UserFinder $user_finder,
         UGroupManager $ugroup_manager,
         Git_Driver_Gerrit_MembershipManager $membership_manager,
-        Git_Driver_Gerrit_UmbrellaProjectManager $umbrella_manager
+        Git_Driver_Gerrit_UmbrellaProjectManager $umbrella_manager,
+        Git_Driver_Gerrit_Template_TemplateFactory $template_factory
     ) {
         $this->dir                = $dir;
         $this->driver             = $driver;
@@ -93,6 +100,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->ugroup_manager     = $ugroup_manager;
         $this->membership_manager = $membership_manager;
         $this->umbrella_manager   = $umbrella_manager;
+        $this->template_factory   = $template_factory;
     }
 
     /**
@@ -105,7 +113,7 @@ class Git_Driver_Gerrit_ProjectCreator {
      * @throws Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyexistsException
      * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
      */
-    public function createGerritProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository, $migrate_access_rights) {
+    public function createGerritProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository, $template_id) {
         $project          = $repository->getProject();
         $project_name     = $project->getUnixName();
         $ugroups          = $this->ugroup_manager->getUGroups($project);
@@ -127,7 +135,7 @@ class Git_Driver_Gerrit_ProjectCreator {
                 $this->getGerritProjectUrl($gerrit_server, $repository),
                 $migrated_ugroups,
                 Config::get('sys_default_domain') .'-'. self::GROUP_REPLICATION,
-                $migrate_access_rights
+                $template_id
         );
 
         $this->exportGitBranches($gerrit_server, $gerrit_project_name, $repository);
@@ -135,12 +143,55 @@ class Git_Driver_Gerrit_ProjectCreator {
         return $gerrit_project_name;
     }
 
-    public function finalizeGerritProjectCreation(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
+    public function finalizeGerritProjectCreation(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository, $template_id) {
         $gerrit_project_url = $this->getGerritProjectUrl($gerrit_server, $repository);
 
         $this->cloneGerritProjectConfig($gerrit_server, $gerrit_project_url);
         $this->removeMinimalPermissions();
+        $this->applyTemplateIfAnySelected($template_id);
         $this->pushToServer();
+    }
+
+
+    public function checkTemplateIsAvailableForProject($template_id, GitRepository $repository) {
+        $available_templates = $this->template_factory->getTemplatesAvailableForRepository($repository);
+
+        foreach ($available_templates as $template) {
+            if ($template->getId() == $template_id) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function applyTemplateIfAnySelected($template_id) {
+        if ($this->noFurtherPermissionsToApply($template_id)) {
+            return;
+        }
+
+        $this->applyTemplate($this->template_factory->getTemplate($template_id));
+    }
+
+    private function noFurtherPermissionsToApply($template_id) {
+        return $this->noAccessRightsMigrationRequested($template_id) || $this->defaultPermissionsMigrationRequested($template_id);
+    }
+
+    private function applyTemplate(Git_Driver_Gerrit_Template_Template $template) {
+        $this->removeProjectConfig();
+        $this->dumpTemplateContent($template);
+    }
+
+    private function removeProjectConfig() {
+        `cd $this->dir; rm project.config`;
+    }
+
+    private function dumpTemplateContent(Git_Driver_Gerrit_Template_Template $template) {
+        file_put_contents($this->dir.'/project.config', $template->getContent());
+    }
+
+    private function noAccessRightsMigrationRequested($template_id) {
+        return $template_id == self::NO_PERMISSIONS_MIGRATION;
     }
 
     private function getGerritProjectUrl(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
@@ -153,7 +204,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         `$cmd`;
     }
 
-    private function initiateGerritPermissions(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, array $ugroups, $replication_group, $migrate_access_rights) {
+    private function initiateGerritPermissions(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, array $ugroups, $replication_group, $template_id) {
         $this->cloneGerritProjectConfig($gerrit_server, $gerrit_project_url);
         foreach ($ugroups as $ugroup) {
             $this->addGroupToGroupFile($gerrit_server, $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName());
@@ -163,11 +214,15 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->addRegisteredUsersGroupToGroupFile();
         $this->addMinimalPermissionsToMigrateTuleapRepoOnGerritWithoutTuleapAccessRigths();
 
-        if ($migrate_access_rights) {
-            $this->addPermissionsToProjectConf($repository, $ugroups, $replication_group, $migrate_access_rights);
+        if ($this->defaultPermissionsMigrationRequested($template_id)) {
+            $this->addPermissionsToProjectConf($repository, $ugroups, $replication_group);
         }
 
         $this->pushToServer();
+    }
+
+    private function defaultPermissionsMigrationRequested($template_id) {
+        return $template_id == self::DEFAULT_PERMISSIONS_MIGRATION;
     }
 
     private function cloneGerritProjectConfig(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url) {
@@ -220,7 +275,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         file_put_contents("$this->dir/groups", "$uuid\t$group_name\n", FILE_APPEND);
     }
 
-    private function addPermissionsToProjectConf(GitRepository $repository, array $ugroups, $replication_group, $migrate_access_rights) {
+    private function addPermissionsToProjectConf(GitRepository $repository, array $ugroups, $replication_group) {
         // https://groups.google.com/d/msg/repo-discuss/jTAY2ApcTGU/DPZz8k0ZoUMJ
         // Project owners are those who own refs/* within that project... which
         // means they can modify the permissions for any reference in the

@@ -514,10 +514,12 @@ class Git extends PluginController {
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
                     break;
                 }
-                
-                $repo = $this->factory->getRepositoryById($repoId);
-                $remote_server_id = $this->request->getValidated('remote_server_id', 'uint');
-                if (empty($repo) || empty($remote_server_id)) {
+
+                $repo                  = $this->factory->getRepositoryById($repoId);
+                $remote_server_id      = $this->request->getValidated('remote_server_id', 'uint');
+                $gerrit_template_id    = $this->getValidatedGerritTemplateId($repo);
+
+                if (empty($repo) || empty($remote_server_id) || empty($gerrit_template_id)) {
                     $this->addError($this->getText('actions_params_error'));
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
                 } else {
@@ -526,13 +528,12 @@ class Git extends PluginController {
                         if ($project_exists) {
                             $this->addError($this->getText('gerrit_project_exists'));
                         } else {
-                            $migrate_access_right = $this->request->existAndNonEmpty('migrate_access_right');
-                            $this->addAction('migrateToGerrit', array($repo, $remote_server_id, $migrate_access_right));
+                            $this->addAction('migrateToGerrit', array($repo, $remote_server_id, $gerrit_template_id));
                         }
                     } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
                         $this->addError($this->getText('gerrit_server_down'));
                     }
-                    $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repoId, $pane, $migrate_access_right));
+                    $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repoId, $pane));
                 }
                 break;
             case 'disconnect_gerrit':
@@ -556,7 +557,7 @@ class Git extends PluginController {
                     $this->addError($this->getText('gerrit_server_down'));
                 }
                 $migrate_access_right = $this->request->existAndNonEmpty('migrate_access_right');
-                $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repoId, $pane, $migrate_access_right));
+                $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repoId, $pane));
                 break;
             #LIST
             default:
@@ -574,15 +575,31 @@ class Git extends PluginController {
         }
     }
 
-    private function getParentProjects(Project $project) {
-        $list = array();
+    private function getValidatedGerritTemplateId($repository) {
+        if (empty($repository)) {
+            return null;
+        }
+        $template_id = $this->request->getValidated('gerrit_template_id', 'string');
 
-        while ($parent = $this->projectManager->getParentProject($project->getID())){
-            $project = $parent;
-            $list[] = $project;
+        if ($template_id && ($template_id == Git_Driver_Gerrit_ProjectCreator::NO_PERMISSIONS_MIGRATION || $template_id == Git_Driver_Gerrit_ProjectCreator::DEFAULT_PERMISSIONS_MIGRATION)) {
+            return $template_id;
         }
 
-        return $list;
+        $template_id = $this->request->getValidated('gerrit_template_id', 'uint');
+
+        if ($template_id) {
+            try {
+                $this->template_factory->getTemplate($template_id);
+            } catch (Git_Template_NotFoundException $e) {
+                return null;
+            }
+        }
+
+        if ($this->project_creator->checkTemplateIsAvailableForProject($template_id, $repository)) {
+            return $template_id;
+        }
+
+        return null;
     }
 
     private function gerritProjectAlreadyExists($remote_server_id, GitRepository $repo) {

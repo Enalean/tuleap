@@ -116,6 +116,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
         $this->project_creator  = mock('Git_Driver_Gerrit_ProjectCreator');
         $this->template_factory = mock('Git_Driver_Gerrit_Template_TemplateFactory');
 
+        stub($this->template_factory)->getTemplatesAvailableForRepository()->returns(array());
+
         $this->previous_request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/plugins/tests/';
 
         $project = mock('Project');
@@ -124,6 +126,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
         stub($this->project_manager)->getProject()->returns($project);
         stub($this->plugin_manager)->isPluginAllowedForProject()->returns(true);
 
+        stub($this->project_creator)->checkTemplateIsAvailableForProject()->returns(true);
+
         $_SERVER['REQUEST_URI'] = '/plugins/tests/';
     }
 
@@ -131,7 +135,9 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
         $_SERVER['REQUEST_URI'] = $this->previous_request_uri;
     }
 
-    protected function getGit($request, $factory) {
+    protected function getGit($request, $factory, $template_factory = null) {
+        $template_factory = $template_factory?$template_factory:$this->template_factory;
+
         $git = partial_mock('Git',
                 array('_informAboutPendingEvents', 'addAction', 'addView', 'addError', 'checkSynchronizerToken', 'redirect'),
                 array(
@@ -147,7 +153,7 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                     $this->plugin_manager,
                     aRequest()->with('group_id', $this->group_id)->build(),
                     $this->project_creator,
-                    $this->template_factory
+                    $template_factory
                 )
             );
         $git->setRequest($request);
@@ -228,18 +234,18 @@ class Gittest_MigrateToGerritRouteTest extends Git_RouteBaseTestCase {
 
     public function itDispatchesTo_migrateToGerrit_withRepoManagementView() {
         stub($this->user_manager)->getCurrentUser()->returns($this->admin);
-        $request     = new HTTPRequest();
-        $repo_id     = 999;
-        $server_id   = 111;
-        $migrate_access_right = true;
+        $request            = new HTTPRequest();
+        $repo_id            = 999;
+        $server_id          = 111;
+        $gerrit_template_id = 'default';
         $request->set('repo_id', $repo_id);
         $request->set('remote_server_id', $server_id);
-        $request->set('migrate_access_right', $migrate_access_right);
+        $request->set('gerrit_template_id', $gerrit_template_id);
         $repo        = mock('GitRepository');
         $factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns($repo);
         $git = $this->getGit($request, $factory);
 
-        expect($git)->addAction('migrateToGerrit', array($repo, $server_id, $migrate_access_right))->at(0);
+        expect($git)->addAction('migrateToGerrit', array($repo, $server_id, $gerrit_template_id))->at(0);
         expect($git)->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', '*')->at(1);
         $git->request();
     }
@@ -261,7 +267,7 @@ class Gittest_MigrateToGerritRouteTest extends Git_RouteBaseTestCase {
         $request->set('remote_server_id', $not_valid);
 
         // not necessary, but we specify it to make it clear why we don't want he action to be called
-        $factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns(mock('GitRepositoryFactory'));
+        $factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns(mock('GitRepository'));
 
         $git = $this->getGit($request, $factory);
 
@@ -293,20 +299,27 @@ class Gittest_MigrateToGerritRouteTest extends Git_RouteBaseTestCase {
         Config::set('sys_auth_type', Config::AUTH_TYPE_LDAP);
         $factory = stub('GitRepositoryFactory')->getRepositoryById()->returns(mock('GitRepository'));
         stub($this->user_manager)->getCurrentUser()->returns($this->admin);
+
+        $template_id      = 3;
+        $template         = stub('Git_Driver_Gerrit_Template_Template')->getId()->returns($template_id);
+        $template_factory = stub('Git_Driver_Gerrit_Template_TemplateFactory')->getTemplatesAvailableForRepository()->returns(array($template));
+        stub($template_factory)->getTemplate($template_id)->returns($template);
+
         $request     = aRequest()->with('group_id', $this->group_id)->build();
         $repo_id     = 999;
         $server_id   = 111;
         $request->set('repo_id', $repo_id);
         $request->set('remote_server_id', $server_id);
-        $git = $this->getGit($request, $factory);
+        $request->set('gerrit_template_id', $template_id);
+        $git = $this->getGit($request, $factory, $template_factory);
         $git->expectAtLeastOnce('addAction');
         $git->expectNever('redirect');
 
         $git->request();
     }
 
-    protected function getGit($request, $factory) {
-        $git = parent::getGit($request, $factory);
+    protected function getGit($request, $factory, $template_factory = null) {
+        $git = parent::getGit($request, $factory, $template_factory);
         $git->setAction('migrate_to_gerrit');
         return $git;
     }
