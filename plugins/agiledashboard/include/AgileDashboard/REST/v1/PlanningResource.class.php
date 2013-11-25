@@ -41,14 +41,15 @@ class PlanningResource {
     }
 
     /**
+     * Get milestones
      *
-     * Get the milestones identified by planning id
+     * Get the milestones of a given planning
      *
      * @url GET {id}/milestones
      *
-     * @param string $id ID of the planning
-     * @param string $limit The number of element displayed per page
-     * @param string $offset The id of the first element to display
+     * @param int $id Id of the planning
+     * @param int $limit Number of elements displayed per page
+     * @param int $offset Position of the first element to display
      *
      * @return array of milestones
      *

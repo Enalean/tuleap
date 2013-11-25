@@ -43,13 +43,16 @@ class ArtifactsResource {
     }
 
     /**
-     * Return the content of an artifact
+     * Get artifact
      *
-     * In addition of the artifact representation, it sets Last-Modified header
-     * with the last update date of the element
+     * Get the content of a given artifact. In addition of the artifact representation,
+     * it sets Last-Modified header with the last update date of the element
      *
      * @url GET {id}
+     *
      * @param int $id Id of the artifact
+     *
+     * @return ArtifactRepresentation
      */
     protected function getId($id) {
         $user     = UserManager::instance()->getCurrentUser();
@@ -60,10 +63,15 @@ class ArtifactsResource {
     }
 
     /**
-     * Returns the changesets of an artifact
+     * Get changesets
+     *
+     * Get the changesets of a given artifact
      *
      * @url GET {id}/changesets
-     * @param int $id
+     *
+     * @param int $id Id of the artifact
+     *
+     * @return array ArtifactChangesetsRepresentation
      */
     protected function getArtifactChangesets($id) {
         $user     = UserManager::instance()->getCurrentUser();
@@ -75,6 +83,7 @@ class ArtifactsResource {
 
     /**
      * @url OPTIONS {id}
+     *
      * @param int $id Id of the artifact
      */
     protected function optionsId($id) {
@@ -84,7 +93,8 @@ class ArtifactsResource {
     }
 
     /**
-     * @param Integer $id
+     * @param int $id
+     *
      * @return Tracker_Artifact
      */
     private function getArtifactById(PFUser $user, $id) {

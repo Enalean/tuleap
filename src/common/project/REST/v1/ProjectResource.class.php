@@ -34,11 +34,11 @@ use \Tuleap\REST\Header;
 class ProjectResource {
 
     /**
-     * Method to handle GET /projects/:id
+     * Get project
      *
-     * Get the project identified by its id
+     * Get the definition of a given project
      *
-     * @param int $id The id of the project
+     * @param int $id Id of the project
      *
      * @access protected
      *
@@ -67,7 +67,7 @@ class ProjectResource {
     /**
      * @url OPTIONS {id}
      *
-     * @param int $id The id of the project
+     * @param int $id Id of the project
      *
      * @access protected
      *
@@ -107,13 +107,17 @@ class ProjectResource {
     }
 
     /**
+     * Get plannings
+     *
+     * Get the plannings of a given project
+     *
      * @url GET {id}/plannings
      *
-     * @param int $id     The id of the project
-     * @param int $limit  The number of element displayed per page {@from path}
-     * @param int $offset The id of the first element to display {@from path}
+     * @param int $id     Id of the project
+     * @param int $limit  Number of elements displayed per page {@from path}
+     * @param int $offset Position of the first element to display {@from path}
      *
-     * @return array of ProjectPlanningResource
+     * @return array ProjectPlanningResource
      */
     protected function getPlannings($id, $limit = 10, $offset = 0) {
         $plannings = $this->plannings($id, $limit, $offset, Event::REST_GET_PROJECT_PLANNINGS);
@@ -125,7 +129,7 @@ class ProjectResource {
     /**
      * @url OPTIONS {id}/plannings
      *
-     * @param int $id The id of the project
+     * @param int $id Id of the project
      */
     protected function optionsPlannings($id) {
         $this->plannings($id, 10, 0, Event::REST_OPTIONS_PROJECT_PLANNINGS);

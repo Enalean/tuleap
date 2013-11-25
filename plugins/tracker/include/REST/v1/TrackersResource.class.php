@@ -42,6 +42,7 @@ class TrackersResource {
 
     /**
      * @url OPTIONS {id}
+     *
      * @param string $id Id of the tracker
      */
     protected function optionsId($id) {
@@ -51,11 +52,15 @@ class TrackersResource {
     }
 
     /**
-     * Return the definition of the tracker
+     * Get tracker
+     *
+     * Get the definition of the given tracker
      *
      * @url GET {id}
-     * @param string $id Id of the tracker
-     * -- no return defined as restler try to instanciate the corresponding object and it makes api-explorer cry --
+     *
+     * @param int $id Id of the tracker
+     *
+     * @return TrackerRepresentation
      */
     protected function getId($id) {
         $builder = new Tracker_REST_TrackerRestBuilder(Tracker_FormElementFactory::instance());

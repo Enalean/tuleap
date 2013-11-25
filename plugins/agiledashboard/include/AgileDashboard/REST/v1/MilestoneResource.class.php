@@ -59,10 +59,14 @@ class MilestoneResource {
     }
 
     /**
-     * Return milestone datas by id if exists
+     * Get milestone
+     *
+     * Get the definition of a given the milestone
      *
      * @url GET {id}
-     * @param string $id ID of the milestone
+     *
+     * @param int $id Id of the milestone
+     *
      * @return MilestoneRepresentation
      *
      * @throws 403
@@ -80,7 +84,8 @@ class MilestoneResource {
      * Return info about milestone if exists
      *
      * @url OPTIONS {id}
-     * @param string $id ID of the milestone
+     *
+     * @param string $id Id of the milestone
      *
      * @throws 403
      * @throws 404
@@ -92,7 +97,9 @@ class MilestoneResource {
 
     /**
      * @url OPTIONS {id}/milestones
+     *
      * @param int $id ID of the milestone
+     *
      * @throws 403
      * @throws 404
      */
@@ -102,13 +109,17 @@ class MilestoneResource {
     }
 
     /**
-     * Returns all sub milestones of a given one
+     * Get sub-milestones
      *
-     * A sub milestone is a decomposition of a milestone (for instance a Release
-     * has Sprints as submilestones)
+     * Get the sub-milestones of a given milestone.
+     * A sub-milestone is a decomposition of a milestone (for instance a Release has Sprints as submilestones)
      *
      * @url GET {id}/milestones
-     * @param int $id ID of the milestone
+     *
+     * @param int $id Id of the milestone
+     *
+     * @return array MilestoneRepresentation
+     *
      * @throws 403
      * @throws 404
      */
@@ -126,13 +137,18 @@ class MilestoneResource {
     }
 
     /**
-     * Return milestone datas by id if exists
+     * Get backlog items
+     *
+     * Get the backlog items of a given milestone
      *
      * @url GET {id}/backlog_items
-     * @param int $id ID of the planning
-     * @param int $limit The number of element displayed per page
-     * @param int $offset The id of the first element to display
-     * @return array array of \MilestoneInfoRepresentation
+     *
+     * @param int $id     Id of the planning
+     * @param int $limit  Number of elements displayed per page
+     * @param int $offset Position of the first element to display
+     *
+     * @return array MilestoneInfoRepresentation
+     *
      * @throws 403
      * @throws 404
      */
@@ -154,7 +170,9 @@ class MilestoneResource {
 
     /**
      * @url OPTIONS {id}/backlog_items
-     * @param int $id ID of the planning
+     *
+     * @param int $id Id of the planning
+     *
      * @throws 403
      * @throws 404
      */
