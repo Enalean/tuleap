@@ -36,10 +36,14 @@ class GitPresenters_AdminPresenter {
      */
     private $templates_list;
 
+    public $form_action;
+
     public function __construct($repository_list, $templates_list, $project_id) {
         $this->repository_list = $repository_list;
         $this->templates_list  = $templates_list;
         $this->project_id      = $project_id;
+
+        $this->form_action = '/plugins/git/?group_id='.$project_id.'&action=admin';
     }
 
     public function git_admin() {

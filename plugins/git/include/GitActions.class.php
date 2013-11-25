@@ -200,6 +200,7 @@ class GitActions extends PluginActions {
 
     /**
      * Displays the contents of the config file of a repository migrated to gerrit.
+     * (used in AJAX)
      *
      * @param int $repo_id
      * @param PFUser $user
@@ -210,7 +211,7 @@ class GitActions extends PluginActions {
         $git_repo = $this->getGitRepository($repo_id);
 
         try {
-            $this->checkRepoValidity($git_repo, $project, $user);
+            $this->checkRepoValidity($git_repo, $project);
             $this->checkUserIsAdmin($project, $user);
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, get_class($e).$e->getTraceAsString());
@@ -231,7 +232,16 @@ class GitActions extends PluginActions {
         }
     }
 
-    private function checkRepoValidity($git_repo, $project, $user) {
+    /**
+     *
+     * @param GitRepository $git_repo
+     * @param Project $project
+     * @throws Git_ProjectNotFoundException
+     * @throws GitRepoNotFoundException
+     * @throws GitRepoNotInProjectException
+     * @throws GitRepoNotOnGerritException
+     */
+    private function checkRepoValidity($git_repo, $project) {
         if($project->isError()) {
             throw new Git_ProjectNotFoundException('unable to get config', 404);
         }
@@ -249,6 +259,14 @@ class GitActions extends PluginActions {
         }
     }
 
+    /**
+     * Displays the content of a template (used in AJAX)
+     *
+     * @param int $template_id
+     * @param PFUser $user
+     * @param Project $project
+     * @return void
+     */
     public function fetchGitTemplate($template_id, PFUser $user, Project $project) {
         try {
             $template = $this->template_factory->getTemplate($template_id);
@@ -262,12 +280,25 @@ class GitActions extends PluginActions {
         echo $template->getContent();
     }
 
+    /**
+     * @param Project $project
+     * @param PFUser $user
+     * @throws GitUserNotAdminException
+     */
     private function checkUserIsAdmin(Project $project, PFUser $user) {
         if(! $user->isAdmin($project->getID())) {
              throw new GitUserNotAdminException('unable to get template', 401);
         }
+
+        return true;
     }
 
+    /**
+     * @param Git_Driver_Gerrit_Template_Template $template
+     * @param Project $project
+     * @param PFUser $user
+     * @throws Git_ProjectNotInHierarchyException
+     */
     private function checkTemplateIsAccessible(Git_Driver_Gerrit_Template_Template $template, Project $project, PFUser $user) {
         $template_project_id = $template->getProjectId();
         $project_id          = $project->getID();
@@ -281,6 +312,73 @@ class GitActions extends PluginActions {
         }
 
         $this->checkUserIsAdmin($project, $user);
+    }
+
+    /**
+     * @param Project $project
+     * @param PFUser $user
+     * @param string $template_content
+     * @param int $template_id
+     * @return void
+     */
+    public function updateTemplate(Project $project, PFUser $user, $template_content, $template_id) {
+        if ($project->isError() || ! $this->checkUserIsAdmin($project, $user)) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_invalid_project'));
+            return;
+        }
+
+        if (! $template_id) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_invalid_template_id'));
+            return;
+        }
+
+        try {
+            $template = $this->template_factory->getTemplate($template_id);
+        } catch (Exception $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'Unable to update template'));
+            return;
+        }
+
+        if ($template->getProjectId() != $project->getID()) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_invalid_template_id'));
+            return;
+        }
+
+        $template->setContent($template_content);
+
+        if ($this->template_factory->updateTemplate($template)) {
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_updated'));
+        } else {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'Unable to update template'));
+        }
+    }
+
+    /**
+     *
+     * @param Project $project
+     * @param PFUser $user
+     * @param string $template_content
+     * @param string $template_name
+     * @return void
+     */
+    public function createTemplate(Project $project, PFUser $user, $template_content, $template_name) {
+        if ($project->isError()) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_invalid_project'));
+            return;
+        }
+
+        try {
+            $this->checkUserIsAdmin($project, $user);
+        } catch (GitUserNotAdminException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_cannot_create'));
+            return;
+        }
+
+        if ($this->template_factory->createTemplate($project->getID(), $template_content, $template_name)) {
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_created'));
+        } else {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_cannot_create'));
+        }
     }
 
     public function getRepositoryDetails($projectId, $repositoryId) {

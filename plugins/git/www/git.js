@@ -280,6 +280,7 @@ document.observe('dom:loaded', function () {
                         $('git_admin_config_form').show();
                         $('git_admin_config_template_name').show();
                         $('git_admin_config_template_name').innerHTML = edit_link.readAttribute('data-template-name');
+                        $('git_admin_template_id').value = edit_link.readAttribute('data-template-id');
                     }
                 });
             });
@@ -289,6 +290,7 @@ document.observe('dom:loaded', function () {
     function cleanTemplateForm() {
         $('git_admin_config_data').value = '';
         $('git_admin_file_name').value = '';
+        $('git_admin_template_id').value = '';
         $('git_admin_config_template_name').innerHTML = '';
         $$('#git_admin_config_form select').each(function(selectbox) {
             selectbox.selectedIndex = 0;

@@ -260,3 +260,9 @@ plugin_git	view_admin_create_new_template_text	Create new
 plugin_git	view_admin_template_from_gerrit_text	from gerrit config
 plugin_git	view_admin_template_from_template_text	from template
 plugin_git	view_admin_template_from_scratch_text	from scratch
+plugin_git	view_admin_template_created	Template created
+plugin_git	view_admin_template_updated	Template updated
+plugin_git	view_admin_template_invalid_project	Invalid Project ID
+plugin_git	view_admin_template_invalid_template_id	Invalid Template ID
+plugin_git	view_admin_template_cannot_update	Unable to update template
+plugin_git	view_admin_template_cannot_create	Unable to create template

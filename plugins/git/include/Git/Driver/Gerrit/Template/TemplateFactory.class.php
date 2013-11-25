@@ -104,5 +104,24 @@ class Git_Driver_Gerrit_Template_TemplateFactory {
             $row['content']
         );
     }
+
+    /**
+     * @param Git_Driver_Gerrit_Template_Template $template
+     * @return bool
+     */
+    public function updateTemplate(Git_Driver_Gerrit_Template_Template $template) {
+        return $this->dao->updateTemplate($template->getId(), $template->getName(), $template->getContent());
+    }
+
+    /**
+     *
+     * @param int $project_id
+     * @param string $template_content
+     * @param string $template_name
+     * @return bool
+     */
+    public function createTemplate($project_id, $template_content, $template_name) {
+        return $this->dao->addTemplate($project_id, $template_name, $template_content);
+    }
 }
 ?>

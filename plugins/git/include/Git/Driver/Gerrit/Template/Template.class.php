@@ -58,6 +58,15 @@ class Git_Driver_Gerrit_Template_Template {
         return $this->content;
     }
 
+    /**
+     * @param string $content
+     * @return \Git_Driver_Gerrit_Template_Template
+     */
+    public function setContent($content) {
+        $this->content = (string) $content;
+        return $this;
+    }
+
     public function getProjectId() {
         return $this->group_id;
     }

@@ -241,6 +241,7 @@ class Git extends PluginController {
                                             'migrate_to_gerrit',
                                             'disconnect_gerrit',
                                             'delete_gerrit_project',
+                                            'submit_template_form',
             );
         } else {
             $this->addPermittedAction('index');
@@ -413,8 +414,20 @@ class Git extends PluginController {
                 $this->addView('forkRepositories');
                 break;
             case 'admin':
+                $project = $this->projectManager->getProject($this->groupId);
+
+                if ($this->request->get('save')) {
+                    $template_content = $this->request->get('git_admin_config_data');
+                    if ($this->request->get('git_admin_template_id')) {
+                        $template_id = $this->request->get('git_admin_template_id');
+                        $this->addAction('updateTemplate', array($project, $user, $template_content, $template_id));
+                    } else {
+                        $template_name = $this->request->get('git_admin_file_name');
+                        $this->addAction('createTemplate', array($project, $user, $template_content, $template_name));
+                    }
+                }
+
                 if($user->isAdmin($this->groupId)) {
-                    $project = $this->projectManager->getProject($this->groupId);
                     $this->addAction('generateGerritRepositoryAndTemplateList', array($project, $user));
                     $this->addView('adminView');
                 } else {

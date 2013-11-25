@@ -256,3 +256,9 @@ plugin_git	view_admin_create_new_template_text	Nouveau modèle
 plugin_git	view_admin_template_from_gerrit_text	à partir d'une configuration gerrit
 plugin_git	view_admin_template_from_template_text	à partir d'un modèle existant
 plugin_git	view_admin_template_from_scratch_text	vide
+plugin_git	view_admin_template_created	Modèle créé
+plugin_git	view_admin_template_updated	Modèle modifié
+plugin_git	view_admin_template_invalid_project	Projet ID Invalide
+plugin_git	view_admin_template_invalid_template_id	Modèle ID Invalide
+plugin_git	view_admin_template_cannot_update	Impossible de modifier le modèle
+plugin_git	view_admin_template_cannot_create	Impossible de créer le modèle

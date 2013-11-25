@@ -44,7 +44,7 @@
     </div>
 </div>
 
-<form class="form-horizontal" id="git_admin_config_form" style="display: none">
+<form class="form-horizontal" id="git_admin_config_form" style="display: none" method="POST" action="{{form_action}}">
     <input type="hidden" value="{{project_id}}" id="project_id"/>
     <div id="git_admin_config_list_area" style="display: none;">
         <div class="control-group">
@@ -84,7 +84,7 @@
                 {{edit_text}}
             </label>
             <div class="controls">
-                <textarea id="git_admin_config_data" rows="15" cols="65"></textarea>
+                <textarea id="git_admin_config_data" name="git_admin_config_data" rows="15" cols="65"></textarea>
             </div>
         </div>
         <div class="control-group">
@@ -92,13 +92,14 @@
                 {{file_name_text}}
             </label>
             <div class="controls">
-                <input type="text" id="git_admin_file_name"/>
+                <input type="text" id="git_admin_file_name" name="git_admin_file_name"/>
                 <b><span id="git_admin_config_template_name"></span></b>
+                <input type="hidden" id="git_admin_template_id" name="git_admin_template_id"/>
             </div>
         </div>
         <div class="control-group">
             <div class="controls">
-                <input type="submit" value="{{save_text}}" class="btn btn-primary"/>
+                <input type="submit" value="{{save_text}}" class="btn btn-primary" name="save"/>
                 <input type="button" value="{{cancel}}" id="git_admin_config_cancel" class="btn btn-primary"/>
             </div>
         </div>

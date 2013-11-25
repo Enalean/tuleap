@@ -24,7 +24,10 @@
  */
 class PluginActions {
 
-    protected $controller;    
+    protected $controller;
+
+    /** @var Codendi_Request*/
+    protected $request;
 
     public function __construct( $controller ) {
         $this->controller = $controller;
