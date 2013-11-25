@@ -149,4 +149,15 @@ function my_header($params) {
     echo ' ' . help_button('citizen.html#login-and-personal-page');
     echo '</h2>';
 }
+
+function my_check_bookmark_URL($bookmark_url, $redirect_url) {
+    if (my_has_URL_invalid_content($bookmark_url)) {
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('bookmark_add', 'invalid_uri'));
+        $GLOBALS['Response']->redirect($redirect_url);
+    }
+}
+
+function my_has_URL_invalid_content($bookmark_url) {
+    return URL::getScheme($bookmark_url) === 'javascript';
+}
 ?>

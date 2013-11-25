@@ -33,6 +33,10 @@ class URL {
         return $components[4];
     }
 
+    static function getScheme($url) {
+        $components = URL::parse($url);
+        return $components[2];
+    }
     /**
      *
      * Retreives the project name from svn request uri

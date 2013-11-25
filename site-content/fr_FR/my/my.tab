@@ -78,6 +78,8 @@ bookmark_add	edit	Modifier ce favori
 bookmark_add	bkm_url	Adresse du favori
 bookmark_add	bkm_title	Titre du favori
 bookmark_add	favorite	Ma page favorite...
+bookmark_add	invalid_uri	L'URL n'est pas valide.
+
 #
 #-----------------------------------------------
 # Script: SF/www/my/bookmark_delete.php

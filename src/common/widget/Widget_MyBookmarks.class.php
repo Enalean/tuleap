@@ -45,6 +45,9 @@ class Widget_MyBookmarks extends Widget {
             $html_my_bookmarks .= '<table style="width:100%">';
             for ($i=0; $i<$rows; $i++) {
                 $bookmark_url = $purifier->purify(db_result($result,$i,'bookmark_url'),CODENDI_PURIFIER_CONVERT_HTML);
+                if (my_has_URL_invalid_content($bookmark_url)) {
+                    $bookmark_url = '';
+                }
                 $bookmark_title = $purifier->purify(db_result($result,$i,'bookmark_title'),CODENDI_PURIFIER_CONVERT_HTML);
                 $html_my_bookmarks .= '<TR class="'. util_get_alt_row_color($i) .'"><TD>';
                 $html_my_bookmarks .= '<A HREF="'. $bookmark_url .'">'. $bookmark_title .'</A> ';
