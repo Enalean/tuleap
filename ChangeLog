@@ -8,6 +8,9 @@ Version 6.8 (Not Released Yet)
 	== Bug Fix ==
 	* Fix request #5604: ViewVC download broken when file start with 0x00
 
+	== Themes ==
+	* Experimental: 0.5
+
 Version 6.7 (Thursday, November 14th 2013)
 	== Plugins ==
 	* agiledashboard: 1.15

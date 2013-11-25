@@ -1,3 +1,6 @@
+0.5 - Tuleap 6.8
+	* Story #5285: The experimental theme is now usable: nice colors, collapsible sidebar, search box is working, support of different screen resolutions.
+
 0.4 - Tuleap 6.7
 	* Switch css stylesheets to less format
 
