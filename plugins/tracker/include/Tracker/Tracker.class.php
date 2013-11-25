@@ -30,6 +30,15 @@ class Tracker implements Tracker_Dispatchable_Interface {
     const PERMISSION_ASSIGNEE         = 'PLUGIN_TRACKER_ACCESS_ASSIGNEE';
     const PERMISSION_SUBMITTER        = 'PLUGIN_TRACKER_ACCESS_SUBMITTER';
     const PERMISSION_NONE             = 'PLUGIN_TRACKER_NONE';
+
+    const PERMISSION_ID_ADMIN                  = 'ADMIN';
+    const PERMISSION_ID_FULL                   = 'FULL';
+    const PERMISSION_ID_ASSIGNEE               = 'ASSIGNEE';
+    const PERMISSION_ID_SUBMITTER              = 'SUBMITTER';
+    const PERMISSION_ID_ASSIGNEE_AND_SUBMITTER = 'SUBMITTER_N_ASSIGNEE';
+    const PERMISSION_ID_NONE                   = 'NONE';
+
+
     const REMAINING_EFFORT_FIELD_NAME = "remaining_effort";
     const ASSIGNED_TO_FIELD_NAME      = "assigned_to";
     const IMPEDIMENT_FIELD_NAME       = "impediment";
@@ -401,8 +410,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
             case 'admin-perms-tracker':
                 if ($this->userIsAdmin($current_user)) {
                     if ($request->get('update')) {
-                        //TODO : really bad! _REQUEST must be processed before using it, or refactor: use request object
-                        plugin_tracker_permission_process_update_tracker_permissions($this->getGroupId(), $this->getId(), $_REQUEST);
+                        $action = new Tracker_Action_AdminUpdateTrackerPermissions($this);
+                        $action->process($layout, $request, $current_user);
                     }
                     $this->displayAdminPermsTracker($layout, $request, $current_user);
                 } else {
@@ -1295,10 +1304,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $hp = Codendi_HTMLPurifier::instance();
 
         $admin_permission     = 'PLUGIN_TRACKER_ADMIN';
-        $full_permission      = 'PLUGIN_TRACKER_ACCESS_FULL';
         $assignee_permission  = 'PLUGIN_TRACKER_ACCESS_ASSIGNEE';
         $submitter_permission = 'PLUGIN_TRACKER_ACCESS_SUBMITTER';
-        $none                 = 'PLUGIN_TRACKER_NONE';
 
         $html = '';
 
@@ -1338,15 +1345,15 @@ class Tracker implements Tracker_Dispatchable_Interface {
 
             $html .= '<select name="permissions_'. $ugroup['id'] .'">';
             $attributes_for_selected = 'selected="selected" style="background:#EEE;"'; //TODO: put style in stylesheet
-            $html .= '<option value="100" '.(count($permissions) == 0 ? $attributes_for_selected : "").' >'. $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $none) .'</option>';
-            $html .= '<option value="0" '.(isset($permissions[$full_permission]) ? $attributes_for_selected : "") .' >'. $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $full_permission) .'</option>';
+            $html .= '<option value="'.self::PERMISSION_ID_NONE.'" '.(count($permissions) == 0 ? $attributes_for_selected : "").' >'. $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', self::PERMISSION_NONE) .'</option>';
+            $html .= '<option value="'.self::PERMISSION_ID_FULL.'" '.(isset($permissions[self::PERMISSION_FULL]) ? $attributes_for_selected : "") .' >'. $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', self::PERMISSION_FULL) .'</option>';
 
             //We don't show specific access permissions for anonymous users and registered
             if ($ugroup['id'] != $GLOBALS['UGROUP_ANONYMOUS'] && $ugroup['id'] != $GLOBALS['UGROUP_REGISTERED']) {
-                $html .= '<option value="1" '.(isset($permissions[$assignee_permission]) && !isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $assignee_permission) .'</option>';
-                $html .= '<option value="2" '.(!isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $submitter_permission) .'</option>';
-                $html .= '<option value="3" '.(isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $assignee_permission .'_AND_'. $submitter_permission) .'</option>';
-                $html .= '<option value="4" '.(isset($permissions[$admin_permission]) && isset($permissions[$admin_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $admin_permission) .'</option>';
+                $html .= '<option value="'.self::PERMISSION_ID_ASSIGNEE.'" '.(isset($permissions[$assignee_permission]) && !isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $assignee_permission) .'</option>';
+                $html .= '<option value="'.self::PERMISSION_ID_SUBMITTER.'" '.(!isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $submitter_permission) .'</option>';
+                $html .= '<option value="'.self::PERMISSION_ID_ASSIGNEE_AND_SUBMITTER.'" '.(isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $assignee_permission .'_AND_'. $submitter_permission) .'</option>';
+                $html .= '<option value="'.self::PERMISSION_ID_ADMIN.'" '.(isset($permissions[$admin_permission]) && isset($permissions[$admin_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $admin_permission) .'</option>';
             }
             $html .= '</select></td>';
             $html .= '</tr>';
