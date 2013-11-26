@@ -31,14 +31,6 @@ class Tracker implements Tracker_Dispatchable_Interface {
     const PERMISSION_SUBMITTER        = 'PLUGIN_TRACKER_ACCESS_SUBMITTER';
     const PERMISSION_NONE             = 'PLUGIN_TRACKER_NONE';
 
-    const PERMISSION_ID_ADMIN                  = 'ADMIN';
-    const PERMISSION_ID_FULL                   = 'FULL';
-    const PERMISSION_ID_ASSIGNEE               = 'ASSIGNEE';
-    const PERMISSION_ID_SUBMITTER              = 'SUBMITTER';
-    const PERMISSION_ID_ASSIGNEE_AND_SUBMITTER = 'SUBMITTER_N_ASSIGNEE';
-    const PERMISSION_ID_NONE                   = 'NONE';
-
-
     const REMAINING_EFFORT_FIELD_NAME = "remaining_effort";
     const ASSIGNED_TO_FIELD_NAME      = "assigned_to";
     const IMPEDIMENT_FIELD_NAME       = "impediment";
@@ -409,11 +401,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 break;
             case 'admin-perms-tracker':
                 if ($this->userIsAdmin($current_user)) {
-                    if ($request->get('update')) {
-                        $action = new Tracker_Action_AdminUpdateTrackerPermissions($this);
-                        $action->process($layout, $request, $current_user);
-                    }
-                    $this->displayAdminPermsTracker($layout, $request, $current_user);
+                    $this->getPermissionController()->process($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
@@ -1260,7 +1248,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->displayFooter($layout);
     }
 
-    protected function displayAdminPermsHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs) {
+    public function displayAdminPermsHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs) {
         $items = $this->getAdminItems();
         $breadcrumbs = array_merge(array(
                 $items['editperms']
@@ -1268,7 +1256,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->displayAdminHeader($layout, $title, $breadcrumbs);
     }
 
-    protected function getPermsItems() {
+    public function getPermsItems() {
         return array(
                 'tracker' => array(
                         'url'         => TRACKER_BASE_URL.'/?tracker='.(int)$this->getId().'&amp;func=admin-perms-tracker',
@@ -1290,89 +1278,6 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->displayAdminPermsHeader($layout, $title, $breadcrumbs);
         echo '<h2>'. $title .'</h2>';
         echo $this->fetchAdminMenu($this->getPermsItems());
-        $this->displayFooter($layout);
-    }
-
-    public function displayAdminPermsTracker(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
-        $items = $this->getPermsItems();
-        $title = $items['tracker']['title'];
-        $breadcrumbs = array(
-                $items['tracker']
-        );
-        $this->displayAdminPermsHeader($layout, $title, $breadcrumbs);
-        echo '<h2>'. $title .'</h2>';
-        $hp = Codendi_HTMLPurifier::instance();
-
-        $admin_permission     = 'PLUGIN_TRACKER_ADMIN';
-        $assignee_permission  = 'PLUGIN_TRACKER_ACCESS_ASSIGNEE';
-        $submitter_permission = 'PLUGIN_TRACKER_ACCESS_SUBMITTER';
-
-        $html = '';
-
-        //form
-        $html .= '<form name="form_tracker_permissions" action="?tracker='.(int)$this->getId().'&amp;func=admin-perms-tracker" method="post">';
-        $html .= '<div>';
-
-        //intro
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'tracker_intro');
-
-        //header
-        $html .= html_build_list_table_top(array(
-                $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'ugroup'),
-                $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'permissions')));
-
-        //body
-        $ugroups_permissions = plugin_tracker_permission_get_tracker_ugroups_permissions($this->getGroupId(), $this->getId());
-        ksort($ugroups_permissions);
-        reset($ugroups_permissions);
-        $i = 0;
-        foreach($ugroups_permissions as $ugroup_permissions) {
-            $ugroup      = $ugroup_permissions['ugroup'];
-            $permissions = $ugroup_permissions['permissions'];
-            
-            $html .= '<tr class="'. util_get_alt_row_color($i++).'">';
-            $html .= '<td>';
-            $name  =  $hp->purify($ugroup['name'], CODENDI_PURIFIER_CONVERT_HTML) ;
-            if (isset($ugroup['link'])) {
-                $html .= '<a href="'.$ugroup['link'].'">';
-                $html .= $name;
-                $html .= '</a>';
-            } else {
-                $html .= $name;
-            }
-            $html .= '</td>';
-            $html .= '<td>';
-
-            $html .= '<select name="permissions_'. $ugroup['id'] .'">';
-            $attributes_for_selected = 'selected="selected" style="background:#EEE;"'; //TODO: put style in stylesheet
-            $html .= '<option value="'.self::PERMISSION_ID_NONE.'" '.(count($permissions) == 0 ? $attributes_for_selected : "").' >'. $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', self::PERMISSION_NONE) .'</option>';
-            $html .= '<option value="'.self::PERMISSION_ID_FULL.'" '.(isset($permissions[self::PERMISSION_FULL]) ? $attributes_for_selected : "") .' >'. $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', self::PERMISSION_FULL) .'</option>';
-
-            //We don't show specific access permissions for anonymous users and registered
-            if ($ugroup['id'] != $GLOBALS['UGROUP_ANONYMOUS'] && $ugroup['id'] != $GLOBALS['UGROUP_REGISTERED']) {
-                $html .= '<option value="'.self::PERMISSION_ID_ASSIGNEE.'" '.(isset($permissions[$assignee_permission]) && !isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $assignee_permission) .'</option>';
-                $html .= '<option value="'.self::PERMISSION_ID_SUBMITTER.'" '.(!isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $submitter_permission) .'</option>';
-                $html .= '<option value="'.self::PERMISSION_ID_ASSIGNEE_AND_SUBMITTER.'" '.(isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $assignee_permission .'_AND_'. $submitter_permission) .'</option>';
-                $html .= '<option value="'.self::PERMISSION_ID_ADMIN.'" '.(isset($permissions[$admin_permission]) && isset($permissions[$admin_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $admin_permission) .'</option>';
-            }
-            $html .= '</select></td>';
-            $html .= '</tr>';
-        }
-        //end of table
-        $html .= '</table>';
-        $html .= '<input type="submit" name="update" value="'. $GLOBALS['Language']->getText('project_admin_permissions','submit_perm') .'" />';
-
-        $html .= '</div></form>';
-        $html .= '<p>';
-        $html .= $GLOBALS['Language']->getText('project_admin_permissions',
-                'admins_create_modify_ug',
-                array(
-                '/project/admin/editugroup.php?func=create&group_id='.(int)$this->getGroupID(),
-                '/project/admin/ugroup.php?group_id='.(int)$this->getGroupID()
-                )
-        );
-        $html .= '</p>';
-        echo $html;
         $this->displayFooter($layout);
     }
 
@@ -1951,6 +1856,13 @@ EOS;
      */
     public function getWorkflowManager() {
         return new WorkflowManager($this);
+    }
+
+    /**
+     * @return Tracker_Permission_PermissionController
+     */
+    protected function getPermissionController() {
+        return new Tracker_Permission_PermissionController($this);
     }
 
     /**

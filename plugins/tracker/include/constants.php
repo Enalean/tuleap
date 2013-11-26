@@ -19,6 +19,8 @@
  */
 define('TRACKER_BASE_URL', '/plugins/tracker');
 define('TRACKER_BASE_DIR', dirname(__FILE__));
+define('TRACKER_TEMPLATE_DIR', realpath(dirname(__FILE__).'/../templates'));
+
 define('TRACKER_EVENT_INCLUDE_CSS_FILE', 'tracker_event_include_css_file');
 
 /**

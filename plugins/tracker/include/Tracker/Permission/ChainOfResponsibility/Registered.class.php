@@ -27,7 +27,7 @@ class Tracker_Permission_ChainOfResponsibility_Registered extends Tracker_Permis
 
     public function execute(Codendi_Request $request, Tracker_Permission_PermissionSetter $permission_setter) {
         switch($request->get(self::PERMISSION_PREFIX.UGroup::REGISTERED)) {
-        case Tracker::PERMISSION_ID_FULL:
+        case Tracker_Permission_Command::PERMISSION_FULL:
             if ($permission_setter->anonymousHaveFullAccess()) {
                 $anonymous_name  = $GLOBALS['Language']->getText('project_ugroup', ugroup_get_name_from_id(UGroup::ANONYMOUS));
                 $registered_name = $GLOBALS['Language']->getText('project_ugroup', ugroup_get_name_from_id(UGroup::REGISTERED));
@@ -44,7 +44,7 @@ class Tracker_Permission_ChainOfResponsibility_Registered extends Tracker_Permis
             }
             break;
 
-        case Tracker::PERMISSION_ID_NONE:
+        case Tracker_Permission_Command::PERMISSION_NONE:
             $permission_setter->revokeAccess(Tracker::PERMISSION_FULL, UGroup::REGISTERED);
             break;
         }

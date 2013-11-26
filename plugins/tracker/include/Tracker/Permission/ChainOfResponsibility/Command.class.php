@@ -27,6 +27,13 @@ abstract class Tracker_Permission_Command {
 
     const PERMISSION_PREFIX = 'permissions_';
 
+    const PERMISSION_ADMIN                  = 'ADMIN';
+    const PERMISSION_FULL                   = 'FULL';
+    const PERMISSION_ASSIGNEE               = 'ASSIGNEE';
+    const PERMISSION_SUBMITTER              = 'SUBMITTER';
+    const PERMISSION_ASSIGNEE_AND_SUBMITTER = 'SUBMITTER_N_ASSIGNEE';
+    const PERMISSION_NONE                   = 'NONE';
+
     /** @var Tracker_Permission_Command */
     private $next_command;
 

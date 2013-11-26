@@ -48,7 +48,8 @@ Mock::generatePartial('Tracker',
                           'getTrackerArtifactFactory',
                           'aidExists',
                           'getUserManager',
-                          'getHierarchyFactory'
+                          'getHierarchyFactory',
+                          'getPermissionController'
                       )
 );
 
@@ -388,6 +389,15 @@ class TrackerTest extends TuleapTestCase {
         $this->canned_response_factory = new MockTracker_CannedResponseFactory();
         $this->tracker->setReturnReference('getCannedResponseFactory', $this->canned_response_factory);
 
+        $this->permission_controller = mock('Tracker_Permission_PermissionController');
+        stub($this->tracker)->getPermissionController()->returns($this->permission_controller);
+
+        $this->permission_controller1 = mock('Tracker_Permission_PermissionController');
+        stub($this->tracker1)->getPermissionController()->returns($this->permission_controller1);
+
+        $this->permission_controller2 = mock('Tracker_Permission_PermissionController');
+        stub($this->tracker2)->getPermissionController()->returns($this->permission_controller2);
+
         $this->hierarchy = new Tracker_Hierarchy();
         $hierarchy_factory = mock('Tracker_HierarchyFactory');
         stub($hierarchy_factory)->getHierarchy()->returns($this->hierarchy);
@@ -722,7 +732,7 @@ class TrackerTest extends TuleapTestCase {
         $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
 
         // site admin can access tracker admin part
-        $this->tracker->expectOnce('displayAdminPermsTracker');
+        expect($this->permission_controller)->process()->once();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->site_admin_user);
     }
     public function testPermsAdminPermsTrackerTrackerProjectAdmin() {
@@ -730,7 +740,7 @@ class TrackerTest extends TuleapTestCase {
         $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
 
         // project admin can access tracker admin part
-        $this->tracker->expectOnce('displayAdminPermsTracker');
+        expect($this->permission_controller)->process()->once();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->project_admin_user);
     }
     public function testPermsAdminPermsTrackerTrackerTrackerAdmin() {
@@ -738,9 +748,9 @@ class TrackerTest extends TuleapTestCase {
         $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('displayAdminPermsTracker');
+        expect($this->permission_controller1)->process()->once();
         $this->tracker1->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->all_trackers_admin_user);
-        $this->tracker2->expectOnce('displayAdminPermsTracker');
+        expect($this->permission_controller2)->process()->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->all_trackers_admin_user);
     }
     public function testPermsAdminPermsTrackerTrackerTracker1Admin() {
@@ -748,9 +758,9 @@ class TrackerTest extends TuleapTestCase {
         $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('displayAdminPermsTracker');
+        expect($this->permission_controller1)->process()->once();
         $this->tracker1->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->tracker1_admin_user);
-        $this->tracker2->expectNever('displayAdminPermsTracker');
+        expect($this->permission_controller2)->process()->never();
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->tracker1_admin_user);
     }
     public function testPermsAdminPermsTrackerTrackerTracker2Admin() {
@@ -758,9 +768,9 @@ class TrackerTest extends TuleapTestCase {
         $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectNever('displayAdminPermsTracker');
+        expect($this->permission_controller1)->process()->never();
         $this->tracker1->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->tracker2_admin_user);
-        $this->tracker2->expectOnce('displayAdminPermsTracker');
+        expect($this->permission_controller2)->process()->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->tracker2_admin_user);
     }
     public function testPermsAdminPermsTrackerTrackerProjectMember() {
@@ -768,7 +778,7 @@ class TrackerTest extends TuleapTestCase {
         $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
 
         // project member can NOT access tracker admin part
-        $this->tracker->expectNever('displayAdminPermsTracker');
+        expect($this->permission_controller)->process()->never();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->project_member_user);
     }
     public function testPermsAdminPermsTrackerTrackerRegisteredUser() {
@@ -776,7 +786,7 @@ class TrackerTest extends TuleapTestCase {
         $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
 
         // registered user can NOT access tracker admin part
-        $this->tracker->expectNever('displayAdminPermsTracker');
+        expect($this->permission_controller)->process()->never();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->registered_user);
     }
 

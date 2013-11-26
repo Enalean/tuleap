@@ -32,28 +32,28 @@ class Tracker_Permission_ChainOfResponsibility_AllGroups extends Tracker_Permiss
 
     private function executeForGroup(Tracker_Permission_PermissionSetter $permission_setter, $ugroup_id, $permission_type) {
         switch($permission_type) {
-            case Tracker::PERMISSION_ID_FULL:
+            case Tracker_Permission_Command::PERMISSION_FULL:
                 if ($this->canSetFull($permission_setter, $ugroup_id)) {
                     $permission_setter->revokeAll($ugroup_id);
                     $permission_setter->grantAccess(Tracker::PERMISSION_FULL, $ugroup_id);
                 }
                 break;
 
-            case Tracker::PERMISSION_ID_ASSIGNEE:
+            case Tracker_Permission_Command::PERMISSION_ASSIGNEE:
                 if ($this->canSetAssignee($permission_setter, $ugroup_id)) {
                     $permission_setter->revokeAll($ugroup_id);
                     $permission_setter->grantAccess(Tracker::PERMISSION_ASSIGNEE, $ugroup_id);
                 }
                 break;
 
-            case Tracker::PERMISSION_ID_SUBMITTER:
+            case Tracker_Permission_Command::PERMISSION_SUBMITTER:
                  if ($this->canSetSubmitter($permission_setter, $ugroup_id)) {
                     $permission_setter->revokeAll($ugroup_id);
                     $permission_setter->grantAccess(Tracker::PERMISSION_SUBMITTER, $ugroup_id);
                 }
                 break;
 
-            case Tracker::PERMISSION_ID_ASSIGNEE_AND_SUBMITTER:
+            case Tracker_Permission_Command::PERMISSION_ASSIGNEE_AND_SUBMITTER:
                 if ($this->canSetSubmitterAndAssignee($permission_setter, $ugroup_id)) {
                     $permission_setter->revokeAll($ugroup_id);
                     $permission_setter->grantAccess(Tracker::PERMISSION_ASSIGNEE, $ugroup_id);
@@ -61,14 +61,14 @@ class Tracker_Permission_ChainOfResponsibility_AllGroups extends Tracker_Permiss
                 }
                 break;
 
-            case Tracker::PERMISSION_ID_ADMIN:
+            case Tracker_Permission_Command::PERMISSION_ADMIN:
                 if (! $permission_setter->groupHasPermission(Tracker::PERMISSION_ADMIN, $ugroup_id)) {
                     $permission_setter->revokeAll($ugroup_id);
                     $permission_setter->grantAccess(Tracker::PERMISSION_ADMIN, $ugroup_id);
                 }
                 break;
 
-            case Tracker::PERMISSION_ID_NONE:
+            case Tracker_Permission_Command::PERMISSION_NONE:
                  $permission_setter->revokeAll($ugroup_id);
                 break;
         }

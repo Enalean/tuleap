@@ -27,7 +27,7 @@ class Tracker_Permission_ChainOfResponsibility_Anonymous extends Tracker_Permiss
 
     public function execute(Codendi_Request $request, Tracker_Permission_PermissionSetter $permission_setter) {
         switch ($request->get(self::PERMISSION_PREFIX.UGroup::ANONYMOUS)) {
-            case Tracker::PERMISSION_ID_FULL:
+            case Tracker_Permission_Command::PERMISSION_FULL:
                 $permission_setter->grantAccess(Tracker::PERMISSION_FULL, UGroup::ANONYMOUS);
                 foreach ($permission_setter->getAllGroupIds() as $stored_ugroup_id) {
                     if ($stored_ugroup_id !== UGroup::ANONYMOUS) {
@@ -38,7 +38,7 @@ class Tracker_Permission_ChainOfResponsibility_Anonymous extends Tracker_Permiss
                 }
                 break;
 
-            case Tracker::PERMISSION_ID_NONE:
+            case Tracker_Permission_Command::PERMISSION_NONE:
                 $permission_setter->revokeAccess(Tracker::PERMISSION_FULL, UGroup::ANONYMOUS);
                 break;
         }

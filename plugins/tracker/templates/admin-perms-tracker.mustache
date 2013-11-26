@@ -1,0 +1,38 @@
+<h2>{{title}}</h2>
+
+<form name="form_tracker_permissions" action="{{form_url}}" method="post">
+    <div>
+        <table class="table table-striped">
+            <thead>
+                <th>{{ugroup_title}}</th>
+                <th>{{permissions_title}}</th>
+            </thead>
+
+            <tbody>
+                {{#ugroup_permissions}}
+                <tr>
+                    <td>
+                        {{#has_link}}
+                            <a href="{{url}}">{{name}}</a>
+                        {{/has_link}}
+                        {{^has_link}}
+                            {{name}}
+                        {{/has_link}}
+                    </td>
+                    <td>
+                        <select name="{{permission_name}}">
+                            {{#permissions_list}}
+                            <option value="{{value}}" {{selected}}>{{label}}</option>
+                            {{/permissions_list}}
+                        </select>
+                    </td>
+                </tr>
+                {{/ugroup_permissions}}
+            </tbody>
+        </table>
+
+        <input type="submit" name="update" value="{{submit_permissions}}" />
+    </div>
+</form>
+
+<p>{{{create_modify_ugroups}}}</p>
