@@ -26,5 +26,6 @@ class Testing_Defect_DefectPresenter {
     public function __construct(Testing_Defect_Defect $defect) {
         $this->link   = $defect->getLink();
         $this->status = $defect->getStatus();
+        $this->status = $this->status ? $this->status : '';
     }
 }
