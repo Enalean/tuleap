@@ -25,7 +25,7 @@ class Testing_Report_ReportPresenter {
 
     public function __construct(
         Testing_Report_ReleaseDefectPresenterCollection $list_of_defects,
-        Testing_Campaign_MatrixRowPresenterCollection $matrix
+        $matrix
     ) {
         $this->matrix          = $matrix;
         $this->list_of_defects = $list_of_defects;

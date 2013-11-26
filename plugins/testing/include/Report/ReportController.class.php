@@ -39,6 +39,7 @@ class Testing_Report_ReportController extends TestingController {
         $this->matrix_factory   = $matrix_factory;
         $this->defect_tracker   = $conf->getDefectTracker();
         $this->release_tracker  = $conf->getReleaseTracker();
+        $this->cycle_tracker    = $conf->getCycleTracker();
         $this->testcase_tracker = $conf->getTestCaseTracker();
     }
 
@@ -53,7 +54,7 @@ class Testing_Report_ReportController extends TestingController {
     public function index() {
         $presenter = new Testing_Report_ReportPresenter(
             $this->getReleaseDefectCollectionPresenter(),
-            $this->matrix_factory->getReleasePresenter($this->testcase_tracker, $this->release_tracker)
+            $this->matrix_factory->getReleasePresenter($this->testcase_tracker, $this->cycle_tracker)
         );
         $this->render(self::RENDER_PREFIX . __FUNCTION__, $presenter);
     }
