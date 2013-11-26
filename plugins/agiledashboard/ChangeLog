@@ -1,3 +1,6 @@
+Version 1.18 - Tuleap 6.8
+    * story #5589: improve the REST documentation in the explorer
+
 Version 1.17 - Tuleap 6.8
     * Fix request #5533: Bug not displayed in a report filtered by milestone
 
