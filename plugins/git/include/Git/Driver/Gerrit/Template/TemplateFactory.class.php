@@ -61,12 +61,46 @@ class Git_Driver_Gerrit_Template_TemplateFactory {
      * @return Git_Driver_Gerrit_Template_Template[] the templates
      */
     public function getTemplatesAvailableForRepository(GitRepository $repository) {
-        $templates       = array();
         $current_project = $repository->getProject();
-        $project_manager = ProjectManager::instance();
 
-        $projects   = $project_manager->getAllParentsProjects($current_project->getId());
-        $projects[] = $current_project;
+        return $this->getTemplatesAvailableForProject($current_project);
+    }
+
+    /**
+     * Get All templates for a project (and projects higher in hierarchy)
+     *
+     * @param GitRepository the concerned repo
+     *
+     * @return Git_Driver_Gerrit_Template_Template[] the templates
+     */
+    public function getTemplatesAvailableForProject(Project $project) {
+        if ($project->isError()) {
+            return array();
+        }
+
+        $templates = array_merge(
+            $this->getAllTemplatesOfProject($project),
+            $this->getTemplatesAvailableForParentProjects($project)
+        );
+
+        return $templates;
+    }
+
+    /**
+     * Get All templates for projects higher in hierarchy. Does not include
+     * templates for project itself.
+     *
+     * @param Project $project
+     * @return Git_Driver_Gerrit_Template_Template[]
+     */
+    public function getTemplatesAvailableForParentProjects(Project $project) {
+        if ($project->isError()) {
+            return array();
+        }
+
+        $templates       = array();
+        $project_manager = ProjectManager::instance();
+        $projects        = $project_manager->getAllParentsProjects($project->getId());
 
         foreach ($projects as $project) {
             $templates = array_merge($templates, $this->getAllTemplatesOfProject($project));

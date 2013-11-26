@@ -39,6 +39,12 @@
                         <td><a href="" class="icon-edit git_admin_config_edit_template" data-template-id="{{getId}}" data-template-name="{{getName}}"> {{edit}}</a></td>
                     </tr>
                 {{/templates_option}}
+                {{#parent_templates_option}}
+                    <tr>
+                        <td>{{getName}}</td>
+                        <td><a href="" class="icon-eye-open git_admin_config_view_template" data-template-id="{{getId}}" data-template-name="{{getName}}"> {{view}}</a></td>
+                    </tr>
+                {{/parent_templates_option}}
             </tbody>
         </table>
     </div>
@@ -74,13 +80,16 @@
                     {{#templates_option}}
                             <option value="{{getId}}">{{getName}}</option>
                     {{/templates_option}}
+                    {{#parent_templates_option}}
+                            <option value="{{getId}}">{{getName}}</option>
+                    {{/parent_templates_option}}
                 </select>
             </div>
         </div>
     </div>
     <div id="git_admin_config_edit_area" style="display: none;">
         <div class="control-group">
-            <label class="control-label" for="git_admin_config_data">
+            <label class="control-label" for="git_admin_config_data" id="git_admin_config_data_label">
                 {{edit_text}}
             </label>
             <div class="controls">
@@ -99,7 +108,7 @@
         </div>
         <div class="control-group">
             <div class="controls">
-                <input type="submit" value="{{save_text}}" class="btn btn-primary" name="save"/>
+                <input type="submit" value="{{save_text}}" class="btn btn-primary" name="save" id="git_admin_save_button"/>
                 <input type="button" value="{{cancel}}" id="git_admin_config_cancel" class="btn btn-primary"/>
             </div>
         </div>

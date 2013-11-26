@@ -185,12 +185,14 @@ class GitActions extends PluginActions {
      * @param Project[] $parent_projects
      */
     public function generateGerritRepositoryAndTemplateList(Project $project, PFUser $user) {
-        $repos     = $this->factory->getAllGerritRepositoriesFromProject($project, $user);
-        $templates = $this->template_factory->getAllTemplatesOfProject($project);
+        $repos            = $this->factory->getAllGerritRepositoriesFromProject($project, $user);
+        $templates        = $this->template_factory->getAllTemplatesOfProject($project);
+        $parent_templates = $this->template_factory->getTemplatesAvailableForParentProjects($project);
 
         $this->addData(array(
-            'repository_list' => $repos,
-            'templates_list'  => $templates
+            'repository_list'        => $repos,
+            'templates_list'         => $templates,
+            'parent_templates_list'  => $parent_templates
         ));
     }
     
@@ -300,18 +302,18 @@ class GitActions extends PluginActions {
      * @throws Git_ProjectNotInHierarchyException
      */
     private function checkTemplateIsAccessible(Git_Driver_Gerrit_Template_Template $template, Project $project, PFUser $user) {
-        $template_project_id = $template->getProjectId();
-        $project_id          = $project->getID();
+        $template_id = $template->getId();
 
-        while ($template_project_id != $project_id) {
-            $project = $this->project_manager->getParentProject($project_id);
-            if (! $project) {
-                throw new Git_ProjectNotInHierarchyException('Project not in hierarchy', 404);
+        foreach ($this->template_factory->getTemplatesAvailableForProject($project) as $available_template) {
+            if ($available_template->getId() == $template_id) {
+                $template_project = $this->project_manager->getProject($available_template->getProjectId());
+                $this->checkUserIsAdmin($template_project, $user);
+
+                return true;
             }
-            $project_id = $project->getID();
         }
 
-        $this->checkUserIsAdmin($project, $user);
+        throw new Git_TemplateNotInProjectHierarchyException('Project not in hierarchy', 404);
     }
 
     /**

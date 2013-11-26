@@ -30,7 +30,7 @@ class GitPresenters_AdminPresenter {
     private $repository_list;
 
     /**
-     * List of templates belonging to the project or the parent project
+     * List of templates belonging to the project
      *
      * @var array
      */
@@ -38,10 +38,18 @@ class GitPresenters_AdminPresenter {
 
     public $form_action;
 
-    public function __construct($repository_list, $templates_list, $project_id) {
+    /**
+     * List of templates belonging to the parent project hierarchy
+     *
+     * @var array
+     */
+    private $parent_templates_list;
+
+    public function __construct($repository_list, $templates_list, $parent_templates_list, $project_id) {
         $this->repository_list = $repository_list;
         $this->templates_list  = $templates_list;
         $this->project_id      = $project_id;
+        $this->parent_templates_list = $parent_templates_list;
 
         $this->form_action = '/plugins/git/?group_id='.$project_id.'&action=admin';
     }
@@ -78,6 +86,10 @@ class GitPresenters_AdminPresenter {
         return $this->templates_list;
     }
 
+    public function parent_templates_option() {
+        return $this->parent_templates_list;
+    }
+
     public function template_action_text() {
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_table_action');
     }
@@ -88,6 +100,10 @@ class GitPresenters_AdminPresenter {
 
     public function edit() {
         return $GLOBALS['Language']->getText('plugin_git', 'edit');
+    }
+
+    public function view() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view');
     }
 
     public function template_section_title() {

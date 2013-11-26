@@ -287,19 +287,52 @@ document.observe('dom:loaded', function () {
          });
     })();
 
+    (function viewTemplateConfig() {
+            $$('.git_admin_config_view_template').each(function (view_link) {
+                view_link.observe('click', function (event) {
+                    var template_id = view_link.readAttribute('data-template-id'),
+                        group_id = $F('project_id'),
+                        query    = '?group_id='+group_id+'&action=fetch_git_template&template_id='+template_id;
+
+                    event.stop();
+                    cleanTemplateForm();
+
+                    new Ajax.Request(codendi.git.base_url + query, {
+                        onFailure: function() {
+                            alert(codendi.locales['git'].cannot_get_template)
+                        },
+                        onSuccess: function (transport) {
+                            $('git_admin_config_data').value = transport.responseText;
+                            $('git_admin_config_templates_list').hide();
+                            $('git_admin_config_btn_create').hide();
+                            $('git_admin_file_name').hide();
+                            $('git_admin_save_button').hide();
+                            $('git_admin_config_data_label').hide();
+                            $('git_admin_config_edit_area').show();
+                            $('git_admin_config_form').show();
+                            $('git_admin_config_template_name').show();
+                            $('git_admin_config_template_name').innerHTML = view_link.readAttribute('data-template-name');
+                        }
+                    });
+                });
+             });
+        })();
+
     function cleanTemplateForm() {
         $('git_admin_config_data').value = '';
         $('git_admin_file_name').value = '';
         $('git_admin_template_id').value = '';
         $('git_admin_config_template_name').innerHTML = '';
+        $('git_admin_config_data_label').show();
+        $('git_admin_save_button').show();
         $$('#git_admin_config_form select').each(function(selectbox) {
             selectbox.selectedIndex = 0;
         });
     }
 
-    $('gerrit_past_project_delete').hide();
-    $('gerrit_past_project_delete_plugin_diasabled').hide();
-    $('gerrit_url').observe('change', toggleMigrateDeleteRemote);
+        $('gerrit_past_project_delete').hide();
+        $('gerrit_past_project_delete_plugin_diasabled').hide();
+        $('gerrit_url').observe('change', toggleMigrateDeleteRemote);
 
     function toggleMigrateDeleteRemote() {
         var should_delete  = $('gerrit_url').options[$('gerrit_url').selectedIndex].readAttribute('data-repo-delete'),

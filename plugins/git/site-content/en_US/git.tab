@@ -3,6 +3,7 @@ plugin_git	descriptor_name	Git Plugin
 plugin_git	please_choose	Please choose
 plugin_git	cancel	Cancel
 plugin_git	edit	edit
+plugin_git	view	view
 
 plugin_git	title	Git Plugin
 plugin_git	service_lbl_key	Git
