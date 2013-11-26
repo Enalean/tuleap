@@ -40,10 +40,14 @@ class TokenResource {
     }
 
     /**
-     * Generate a token for authentication
+     * Generate a token
+     *
+     * Generate a token for authentication for the current user
+     *
+     * @url POST
      *
      * @param TokenUserAuthRepresentation $authentication {@from body}
-     * @url POST
+     *
      * @return TokenRepresentation
      */
     public function post(TokenUserAuthRepresentation $authentication) {
@@ -67,8 +71,11 @@ class TokenResource {
     /**
      * Expire a token
      *
+     * Expire a given token of the current user
+     *
      * @url DELETE {id}
-     * @param string $id Token ID
+     *
+     * @param string $id Id of the token
      */
     protected function delete($id) {
         $this->sendAllowHeadersForToken();
@@ -85,7 +92,9 @@ class TokenResource {
     }
 
     /**
-     * Expire all tokens for a user
+     * Expire all tokens
+     *
+     * Expire all tokens of the current user
      *
      * @url DELETE
      */
@@ -105,7 +114,8 @@ class TokenResource {
 
     /**
      * @url OPTIONS {id}
-     * @param string $id Token ID
+     *
+     * @param string $id Id of the token
      */
     protected function optionsForToken($id) {
         try {
