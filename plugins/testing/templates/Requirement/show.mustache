@@ -10,9 +10,9 @@
 </p>
 
 <div class="row-fluid">
-    {{# uses_releases }}
+    {{# uses_cycles }}
     <div class="span6">
-        <h3>Linked releases</h3>
+        <h3>Linked cycles</h3>
         <table class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>
@@ -21,31 +21,31 @@
                 </tr>
             </thead>
             <tbody>
-                {{# list_of_releases }}
+                {{# list_of_cycles }}
                 <tr>
                     <td><a href="{{ show_uri }}">{{ name }}</a></td>
                     <td><a href="{{ unlink_uri }}" title="Unlink"><i class="icon-unlink"></i></a></td>
                 </tr>
-                {{/ list_of_releases }}
+                {{/ list_of_cycles }}
             </tbody>
         </table>
-        <form action="{{ link_release_uri }}" method="POST">
+        <form action="{{ link_cycle_uri }}" method="POST">
             <div class="controls controls-row">
-                {{# has_available_releases }}
-                <select name="release_id" class="span6" required>
-                    <option value="">-- Select an existing release case to link</option>
-                    {{# list_of_available_releases }}
+                {{# has_available_cycles }}
+                <select name="cycle_id" class="span6" required>
+                    <option value="">-- Select an existing cycle to link</option>
+                    {{# list_of_available_cycles }}
                     <option value="{{ id }}">{{ name }}</option>
-                    {{/ list_of_available_releases }}
+                    {{/ list_of_available_cycles }}
                 </select>
-                <button class="btn" style="float:left; margin-right:20px;"><i class="icon-link"></i> Link release</button>
-                {{/ has_available_releases }}
+                <button class="btn" style="float:left; margin-right:20px;"><i class="icon-link"></i> Link cycle</button>
+                {{/ has_available_cycles }}
             </div>
         </form>
     </div>
-    {{/ uses_releases }}
+    {{/ uses_cycles }}
 
-    <div class="span{{# uses_releases }}6{{/ uses_releases }}{{^ uses_releases }}12{{/ uses_releases }}">
+    <div class="span{{# uses_cycles }}6{{/ uses_cycles }}{{^ uses_cycles }}12{{/ uses_cycles }}">
         <h3>Test coverage</h3>
         {{# has_test_cases }}
         <table class="table table-striped table-bordered table-hover">

@@ -49,6 +49,10 @@ class TestingConfiguration {
         return $this->getTracker('releases');
     }
 
+    public function getCycleTracker() {
+        return $this->getTracker('cycle');
+    }
+
     private function getTracker($item_name) {
         $tracker = TrackerFactory::instance()->getTrackerByItemName($this->project, $item_name);
         if (! $tracker) {

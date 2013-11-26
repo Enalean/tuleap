@@ -10,11 +10,13 @@
         <input type="text" name="campaign[name]" id="name" required />
     </p>
     <p>
-        <label>Release</label>
-        <select name="campaign[release]">
-            <option value="">-- Please select a release</option>
+        <label>Cycle</label>
+        <select name="campaign[cycle]">
+            <option value="">-- Please select a cycle</option>
             {{# list_of_releases }}
-            <option value="{{ id }}">{{ name }}</option>
+            <optgroup label="{{ name }}">
+                {{! TODO: insert options for cycles }}
+            </optgroup>
             {{/ list_of_releases }}
         </select>
     </p>

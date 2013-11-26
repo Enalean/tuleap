@@ -26,13 +26,13 @@ class Testing_Requirement_RequirementInfoPresenter {
     public function __construct(
         Project $project,
         Testing_Requirement_Requirement $requirement,
-        array $list_of_releases,
+        array $list_of_cycles,
         $nb_of_tests
     ) {
         $this->id               = $requirement->getId();
         $this->name             = $requirement->getName();
         $this->nb_of_tests      = $nb_of_tests;
-        $this->list_of_releases = $list_of_releases;
+        $this->list_of_cycles   = $list_of_cycles;
 
         $this->show_uri    = '/plugins/testing/?group_id='. $project->getId() .'&resource=requirement&action=show&id='. $this->id;
     }

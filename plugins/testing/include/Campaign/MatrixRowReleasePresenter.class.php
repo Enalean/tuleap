@@ -24,10 +24,10 @@
 class Testing_Campaign_MatrixRowReleasePresenter implements Testing_Campaign_MatrixRowPresenter {
 
     public function __construct(
-        Testing_Release_ReleaseResultPresenter $release
+        Testing_Release_ReleaseResultPresenter $cycle
     ) {
         $this->requirement   = false;
         $this->testexecution = false;
-        $this->release       = $release;
+        $this->cycle         = $cycle;
     }
 }

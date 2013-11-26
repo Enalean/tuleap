@@ -8,26 +8,26 @@
 </p>
 
 <p>
-    {{# has_releases }}
-        Release filter:
-        <select id="release" name="release">
+    {{# has_cycles }}
+        Cycle filter:
+        <select id="cycle" name="cycle">
             <option value="">any</option>
-            {{# list_of_releases }}
+            {{# list_of_cycles }}
             <option value="{{ id }}">{{ name }}</option>
-            {{/ list_of_releases }}
+            {{/ list_of_cycles }}
         </select>
         <script type="text/javascript">
-        $('release').observe('change', function () {
-            if (! $F('release')) {
+        $('cycle').observe('change', function () {
+            if (! $F('cycle')) {
                 $$('#requirements > tbody > tr').invoke('show');
                 return;
             }
 
             $$('#requirements > tbody > tr').invoke('hide');
-            $$('.release-' + $F('release')).collect(function (span) { return span.up('tr'); }).invoke('show');
+            $$('.cycle-' + $F('cycle')).collect(function (span) { return span.up('tr'); }).invoke('show');
         });
         </script>
-    {{/ has_releases }}
+    {{/ has_cycles }}
 </p>
 <script type="text/javascript" src="/plugins/tracker/scripts/TrackerFieldDependencies.js"></script>
 <div id="submit-new-requirement" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
@@ -54,9 +54,9 @@
             <th class="span1">Identifier</th>
             <th>Requirement</th>
             <th class="span2">Nb of test cases</th>
-            {{# has_releases }}
-            <th>Releases</th>
-            {{/ has_releases }}
+            {{# has_cycles }}
+            <th>Cycles</th>
+            {{/ has_cycles }}
         </tr>
     </thead>
     <tbody>
@@ -65,13 +65,13 @@
             <td><a href="{{ show_uri }}">{{ id }}</a></td>
             <td>{{ name }}</td>
             <td>{{ nb_of_tests }}</td>
-            {{# has_releases }}
+            {{# has_cycles }}
             <td class="list_of_releases_for_requirement">
-                {{# list_of_releases }}
-                    <span class="release-{{ id }}"><a href="{{ show_uri }}">{{ name }}</a></span>
-                {{/ list_of_releases }}
+                {{# list_of_cycles }}
+                    <span class="cycle-{{ id }}"><a href="{{ show_uri }}">{{ name }}</a></span>
+                {{/ list_of_cycles }}
             </td>
-            {{/ has_releases }}
+            {{/ has_cycles }}
         </tr>
         {{/ list_of_requirements }}
     </tbody>

@@ -13,6 +13,7 @@
         <tr>
             <th>Name</th>
             <th>Release</th>
+            <th>Cycle</th>
             <th>Status</th>
             <th>Progress</th>
             <th class="span1">Delete?</th>
@@ -23,6 +24,7 @@
         <tr>
             <td><a href="{{ show_uri }}">{{ name }}</a></td>
             <td>{{# release }}{{ name }}{{/ release }}</td>
+            <td>{{# cycle }}{{ name }}{{/ cycle }}</td>
             <td>
                 {{# stat }}
                     {{> badge-status }}

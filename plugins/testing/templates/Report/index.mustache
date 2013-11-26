@@ -37,7 +37,7 @@
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th colspan="2">Release</th>
+            <th colspan="2">Cycle</th>
             <th colspan="2">Requirement</th>
             <th colspan="2">Test Case</th>
         </tr>
@@ -45,10 +45,10 @@
     <tbody>
         {{# matrix }}
         <tr>
-            {{# release }}
+            {{# cycle }}
             <td rowspan="{{ nb_of_tests }}">{{ name }}</th>
             <td rowspan="{{ nb_of_tests }}">{{> label-status }}</th>
-            {{/ release }}
+            {{/ cycle }}
             {{# requirement }}
             <td rowspan="{{ nb_of_tests }}">{{ name }}</th>
             <td rowspan="{{ nb_of_tests }}">{{> label-status }}</th>
