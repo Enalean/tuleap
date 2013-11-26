@@ -15,7 +15,9 @@
             <option value="">-- Please select a cycle</option>
             {{# list_of_releases }}
             <optgroup label="{{ name }}">
-                {{! TODO: insert options for cycles }}
+                {{# list_of_cycles }}
+                <option value="{{ id }}">{{ name }}</option>
+                {{/ list_of_cycles }}
             </optgroup>
             {{/ list_of_releases }}
         </select>

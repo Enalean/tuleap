@@ -16,7 +16,7 @@
         <table class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>
-                    <th>Release</th>
+                    <th>Cycles</th>
                     <th class="span1">Unlink</th>
                 </tr>
             </thead>
@@ -31,15 +31,19 @@
         </table>
         <form action="{{ link_cycle_uri }}" method="POST">
             <div class="controls controls-row">
-                {{# has_available_cycles }}
-                <select name="cycle_id" class="span6" required>
+                {{# has_available_releases }}
+                <select name="release_id" class="span6" required>
                     <option value="">-- Select an existing cycle to link</option>
-                    {{# list_of_available_cycles }}
-                    <option value="{{ id }}">{{ name }}</option>
-                    {{/ list_of_available_cycles }}
+                    {{# list_of_available_releases }}
+                    <optgroup label="{{ name }}">
+                        {{# list_of_cycles }}
+                        <option value="{{ id }}">{{ name }}</option>
+                        {{/ list_of_cycles }}
+                    </optgroup>
+                    {{/ list_of_available_releases }}
                 </select>
                 <button class="btn" style="float:left; margin-right:20px;"><i class="icon-link"></i> Link cycle</button>
-                {{/ has_available_cycles }}
+                {{/ has_available_releases }}
             </div>
         </form>
     </div>

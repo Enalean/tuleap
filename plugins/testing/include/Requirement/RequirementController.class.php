@@ -66,14 +66,38 @@ class Testing_Requirement_RequirementController extends TestingController {
         $list_of_releases = array();
         foreach ($this->release_association_dao->searchByRequirementId($requirement->getId()) as $row) {
             $release = new Testing_Release_ArtifactRelease($row['release_id']);
-            $list_of_releases[] = new Testing_Requirement_ReleasePresenter($this->getProject(), $release, $requirement);
+            $list_of_releases[] = new Testing_Requirement_ReleasePresenter($this->getProject(), $release, $requirement, array());
         }
 
-        $release_tracker = $this->getReleaseTracker();
+        $cycle_tracker = $this->getCycleTracker();
         $list_of_available_releases = array();
-        foreach ($this->release_association_dao->searchForAvailablesByRequirementId($release_tracker->getId(), $requirement->getId()) as $row) {
-            $release = new Testing_Release_ArtifactRelease($row['release_id']);
-            $list_of_available_releases[] = new Testing_Requirement_ReleasePresenter($this->getProject(), $release, $requirement);
+        $cycles_by_releases = array();
+        $available_releases_by_id = array();
+        foreach ($this->release_association_dao->searchForAvailablesByRequirementId($cycle_tracker->getId(), $requirement->getId()) as $row) {
+            $cycle = new Testing_Release_ArtifactRelease($row['cycle_id']);
+            $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($cycle->getId());
+            $parent = $artifact->getParent($this->request->getCurrentUser());
+            $release = new Testing_Release_ArtifactRelease($parent->getId());
+            $cycles_by_releases[$parent->getId()][] = new Testing_Requirement_ReleasePresenter(
+                $this->getProject(),
+                $cycle,
+                $requirement,
+                array()
+            );
+
+            if (isset($available_releases_by_id[$release->getId()])) {
+                continue;
+            }
+            $available_releases_by_id[$release->getId()] = true;
+            $list_of_available_releases[] = new Testing_Requirement_ReleasePresenter(
+                $this->getProject(),
+                $release,
+                $requirement,
+                array()
+            );
+        }
+        foreach ($list_of_available_releases as $release_presenter) {
+            $release_presenter->list_of_cycles = $cycles_by_releases[$release_presenter->id];
         }
 
         $tracker = $this->getTestCaseTracker();
@@ -213,9 +237,9 @@ class Testing_Requirement_RequirementController extends TestingController {
         return $conf->getRequirementTracker();
     }
 
-    private function getReleaseTracker() {
+    private function getCycleTracker() {
         $conf = new TestingConfiguration($this->getProject());
-        return $conf->getReleaseTracker();
+        return $conf->getCycleTracker();
     }
 
     private function getTestCaseTracker() {

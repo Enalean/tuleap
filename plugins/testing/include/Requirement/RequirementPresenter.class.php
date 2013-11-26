@@ -29,7 +29,7 @@ class Testing_Requirement_RequirementPresenter {
         array $list_of_test_cases,
         array $list_of_cycles,
         array $list_of_available_test_cases,
-        array $list_of_available_cycles,
+        array $list_of_available_releases,
         TestingFacadeTrackerCreationPresenter $create_testcase_form
     ) {
         $this->id                           = $requirement->getId();
@@ -39,9 +39,9 @@ class Testing_Requirement_RequirementPresenter {
         $this->has_test_cases               = count($list_of_test_cases) > 0;
         $this->list_of_available_test_cases = $list_of_available_test_cases;
         $this->has_available_test_cases     = count($this->list_of_available_test_cases) > 0;
-        $this->list_of_available_cycles     = $list_of_available_cycles;
-        $this->has_available_cycles         = count($this->list_of_available_cycles) > 0;
-        $this->uses_cycles                  = $this->has_available_cycles || count($this->list_of_cycles) > 0;
+        $this->list_of_available_releases     = $list_of_available_releases;
+        $this->has_available_releases         = count($this->list_of_available_releases) > 0;
+        $this->uses_cycles                  = $this->has_available_releases || count($this->list_of_cycles) > 0;
         $this->edit_uri                     = '/plugins/testing/?group_id='. $project->getId() .'&resource=requirement&action=edit&id='. $this->id;
         $this->link_test_case_uri           = '/plugins/testing/?group_id='. $project->getId() .'&resource=requirement&action=link-test-case&id='. $this->id;
         $this->link_cycle_uri               = '/plugins/testing/?group_id='. $project->getId() .'&resource=requirement&action=link-release&id='. $this->id;

@@ -129,6 +129,12 @@ class TestingRouter {
                 $creator = new Testing_Campaign_CampaignCreator($campaign_dao, new Testing_TestExecution_TestExecutionDao());
                 $deletor = new Testing_Campaign_CampaignDeletor($campaign_dao, new Testing_TestExecution_TestExecutionDao());
 
+                $release_parent_of_cycles_info_presenter_collection_factory = new Testing_Release_ReleaseParentOfCyclesInfoPresenterCollectionFactory(
+                    $project,
+                    $conf->getReleaseTracker(),
+                    $request->getCurrentUser()
+                );
+
                 return new Testing_Campaign_CampaignController(
                     $request,
                     $info_presenter_collection_factory,
@@ -138,7 +144,7 @@ class TestingRouter {
                     $info_presenter_factory,
                     $presenter_factory,
                     $stat_presenter_factory,
-                    $release_info_presenter_collection_factory,
+                    $release_parent_of_cycles_info_presenter_collection_factory,
                     $test_case_info_presenter_collection_factory,
                     $requirement_info_collection_presenter_factory,
                     $matrix_row_presenter_collection_factory

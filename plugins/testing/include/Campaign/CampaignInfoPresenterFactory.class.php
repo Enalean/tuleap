@@ -33,8 +33,22 @@ class Testing_Campaign_CampaignInfoPresenterFactory {
     }
 
     public function getPresenter(Testing_Campaign_Campaign $campaign) {
-        $stat = $this->stat_presenter_factory->getPresenter($campaign);
-        $release = new Testing_Release_ReleaseInfoPresenter($campaign->getProject(), $campaign->getRelease());
-        return new Testing_Campaign_CampaignInfoPresenter($campaign, $release, $stat);
+        $stat  = $this->stat_presenter_factory->getPresenter($campaign);
+        $cycle = $campaign->getRelease();
+        $release = new Testing_Release_NullRelease();
+        if ($cycle->getId()) {
+            $release = new Testing_Release_ArtifactRelease(
+                Tracker_ArtifactFactory::instance()
+                    ->getArtifactById($cycle->getId())
+                    ->getParent(UserManager::instance()->getCurrentUser())
+                    ->getId()
+            );
+        }
+        $release_presenter = new Testing_Release_ReleaseInfoPresenter(
+            $campaign->getProject(),
+            $release
+        );
+        $cycle_presenter = new Testing_Release_ReleaseInfoPresenter($campaign->getProject(), $cycle);
+        return new Testing_Campaign_CampaignInfoPresenter($campaign, $release_presenter, $cycle_presenter, $stat);
     }
 }

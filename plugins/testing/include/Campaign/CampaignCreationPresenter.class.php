@@ -25,7 +25,7 @@ class Testing_Campaign_CampaignCreationPresenter {
 
     public function __construct(
         Project $project,
-        Testing_Release_ReleaseInfoPresenterCollection $list_of_releases,
+        Testing_Release_ReleaseParentOfCyclesInfoPresenterCollection $list_of_releases,
         Testing_TestCase_TestCaseInfoPresenterCollection $list_of_test_cases,
         array $list_of_requirements
     ) {

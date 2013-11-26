@@ -21,19 +21,5 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Testing_Requirement_ReleasePresenter {
-
-    public function __construct(
-        Project $project,
-        Testing_Release_Release $release,
-        Testing_Requirement_Requirement $requirement,
-        array $list_of_cycles
-    ) {
-        $this->id             = $release->getId();
-        $this->name           = $release->getName();
-        $this->list_of_cycles = $list_of_cycles;
-
-        $this->show_uri   = '/plugins/testing/?group_id='. $project->getId() .'&resource=release&action=show&id='. $this->id;
-        $this->unlink_uri = '/plugins/testing/?group_id='. $project->getId() .'&resource=requirement&action=unlink-release&id='. $requirement->getId() .'&release_id='. $this->id;
-    }
+class Testing_Release_ReleaseParentOfCyclesInfoPresenterCollection extends ArrayObject {
 }

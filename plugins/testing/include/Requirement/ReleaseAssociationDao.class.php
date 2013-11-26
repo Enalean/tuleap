@@ -35,13 +35,13 @@ class Testing_Requirement_ReleaseAssociationDao extends DataAccessObject {
         $tracker_id     = $this->da->escapeInt($tracker_id);
         $requirement_id = $this->da->escapeInt($requirement_id);
 
-        $sql = "SELECT id AS release_id
+        $sql = "SELECT id AS cycle_id
                 FROM tracker_artifact
                     LEFT JOIN
-                    ( SELECT release_id FROM plugin_testing_requirement_release WHERE requirement_id = $requirement_id ) as R
-                    ON (release_id = id)
+                    ( SELECT release_id AS cycle_id FROM plugin_testing_requirement_release WHERE requirement_id = $requirement_id ) as R
+                    ON (cycle_id = id)
                 WHERE tracker_artifact.tracker_id = $tracker_id
-                    AND R.release_id IS NULL";
+                    AND R.cycle_id IS NULL";
 
         return $this->retrieve($sql);
     }
