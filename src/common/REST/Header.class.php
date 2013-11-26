@@ -30,6 +30,11 @@ class Header {
     const ALLOW              = 'Allow';
     const LAST_MODIFIED      = 'Last-Modified';
 
+    const X_PAGINATION_LIMIT     = 'X-PAGINATION-LIMIT';
+    const X_PAGINATION_OFFSET    = 'X-PAGINATION-OFFSET';
+    const X_PAGINATION_SIZE      = 'X-PAGINATION-SIZE';
+    const X_PAGINATION_LIMIT_MAX = 'X-PAGINATION-LIMIT-MAX';
+
     public static function lastModified($timestamp) {
         self::sendHeader(self::LAST_MODIFIED, date('c', $timestamp));
     }
@@ -54,6 +59,13 @@ class Header {
         $methods = implode(', ', $methods);
         self::sendHeader(self::ALLOW, $methods);
         self::sendHeader(self::CORS_ALLOW_METHODS, $methods);
+    }
+
+    public static function sendPaginationHeaders($limit, $offset, $size, $max_limit) {
+        self::sendHeader(self::X_PAGINATION_LIMIT, $limit);
+        self::sendHeader(self::X_PAGINATION_OFFSET, $offset);
+        self::sendHeader(self::X_PAGINATION_SIZE, $size);
+        self::sendHeader(self::X_PAGINATION_LIMIT_MAX, $max_limit);
     }
 
     private static function sendHeader($name, $value) {
