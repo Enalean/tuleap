@@ -92,7 +92,8 @@ class Git_Driver_Gerrit_ProjectCreator {
         UGroupManager $ugroup_manager,
         Git_Driver_Gerrit_MembershipManager $membership_manager,
         Git_Driver_Gerrit_UmbrellaProjectManager $umbrella_manager,
-        Git_Driver_Gerrit_Template_TemplateFactory $template_factory
+        Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
+        Git_Driver_Gerrit_Template_TemplateProcessor $template_processor
     ) {
         $this->dir                = $dir;
         $this->driver             = $driver;
@@ -101,6 +102,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->membership_manager = $membership_manager;
         $this->umbrella_manager   = $umbrella_manager;
         $this->template_factory   = $template_factory;
+        $this->template_processor = $template_processor;
     }
 
     /**
@@ -148,7 +150,7 @@ class Git_Driver_Gerrit_ProjectCreator {
 
         $this->cloneGerritProjectConfig($gerrit_server, $gerrit_project_url);
         $this->removeMinimalPermissions();
-        $this->applyTemplateIfAnySelected($template_id);
+        $this->applyTemplateIfAnySelected($template_id, $repository);
         $this->pushToServer();
     }
 
@@ -165,29 +167,29 @@ class Git_Driver_Gerrit_ProjectCreator {
         return false;
     }
 
-    private function applyTemplateIfAnySelected($template_id) {
+    private function applyTemplateIfAnySelected($template_id, GitRepository $repository) {
         if ($this->noFurtherPermissionsToApply($template_id)) {
             return;
         }
 
-        $this->applyTemplate($this->template_factory->getTemplate($template_id));
+        $this->applyTemplate($this->template_factory->getTemplate($template_id, $repository), $repository);
     }
 
     private function noFurtherPermissionsToApply($template_id) {
         return $this->noAccessRightsMigrationRequested($template_id) || $this->defaultPermissionsMigrationRequested($template_id);
     }
 
-    private function applyTemplate(Git_Driver_Gerrit_Template_Template $template) {
+    private function applyTemplate(Git_Driver_Gerrit_Template_Template $template, GitRepository $repository) {
         $this->removeProjectConfig();
-        $this->dumpTemplateContent($template);
+        $this->dumpTemplateContent($this->template_processor->processTemplate($template, $repository->getProject()));
     }
 
     private function removeProjectConfig() {
         `cd $this->dir; rm project.config`;
     }
 
-    private function dumpTemplateContent(Git_Driver_Gerrit_Template_Template $template) {
-        file_put_contents($this->dir.'/project.config', $template->getContent());
+    private function dumpTemplateContent($template_content) {
+        file_put_contents($this->dir.'/project.config', $template_content);
     }
 
     private function noAccessRightsMigrationRequested($template_id) {

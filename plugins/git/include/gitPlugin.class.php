@@ -938,8 +938,13 @@ class GitPlugin extends Plugin {
             $this->getUGroupManager(),
             $this->getGerritMembershipManager(),
             $this->getGerritUmbrellaProjectManager(),
-            $this->getTemplateFactory()
+            $this->getTemplateFactory(),
+            $this->getTemplateProcessor()
         );
+    }
+
+    private function getTemplateProcessor() {
+        return new Git_Driver_Gerrit_Template_TemplateProcessor();
     }
 
     private function getGerritUmbrellaProjectManager() {

@@ -81,6 +81,9 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
 
     protected $template;
 
+    /** @var Git_Driver_Gerrit_Template_TemplateProcessor */
+    protected $template_processor;
+
     public function setUp() {
         parent::setUp();
         Config::store();
@@ -141,8 +144,9 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
 
         $this->umbrella_manager = mock('Git_Driver_Gerrit_UmbrellaProjectManager');
 
-        $this->template         = stub('Git_Driver_Gerrit_Template_Template')->getId()->returns(12);
-        $this->template_factory = stub('Git_Driver_Gerrit_Template_TemplateFactory')->getTemplate(12)->returns($this->template);
+        $this->template           = stub('Git_Driver_Gerrit_Template_Template')->getId()->returns(12);
+        $this->template_processor = new Git_Driver_Gerrit_Template_TemplateProcessor();
+        $this->template_factory   = stub('Git_Driver_Gerrit_Template_TemplateFactory')->getTemplate(12)->returns($this->template);
         stub($this->template_factory)->getTemplatesAvailableForRepository()->returns(array($this->template));
 
         $this->project_creator = new Git_Driver_Gerrit_ProjectCreator(
@@ -152,7 +156,8 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
                     $this->ugroup_manager,
                     $this->membership_manager,
                     $this->umbrella_manager,
-                    $this->template_factory
+                    $this->template_factory,
+                    $this->template_processor
         );
 
         stub($this->repository)->getProject()->returns($this->project);
@@ -236,7 +241,8 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
                     $this->ugroup_manager,
                     $this->membership_manager,
                     $this->umbrella_manager,
-                    $this->template_factory
+                    $this->template_factory,
+                    $this->template_processor
         );
         $this->expectException('Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyExistsException');
 
