@@ -229,10 +229,23 @@ class PermissionsDao extends DataAccessObject {
         return $this->update($sql);
     }
     
-    function addPermission($permission_type, $object_id, $ugroup_id) {
-        $sql=sprintf("INSERT INTO permissions (object_id, permission_type, ugroup_id)".
-                     " VALUES ('%s', '%s', '%s')", 
-                     $object_id, $permission_type, $ugroup_id);
+    public function addPermission($permission_type, $object_id, $ugroup_id) {
+        $permission_type = $this->da->quoteSmart($permission_type);
+        $object_id       = $this->da->quoteSmart($object_id);
+        $ugroup_id       = $this->da->escapeInt($ugroup_id);
+        $sql = "INSERT INTO permissions (object_id, permission_type, ugroup_id)
+                VALUES ($object_id, $permission_type, $ugroup_id)";
+        return $this->update($sql);
+    }
+
+    public function removePermission($permission_type, $object_id, $ugroup_id) {
+        $permission_type = $this->da->quoteSmart($permission_type);
+        $object_id       = $this->da->quoteSmart($object_id);
+        $ugroup_id       = $this->da->escapeInt($ugroup_id);
+        $sql = "DELETE FROM permissions
+                WHERE permission_type = $permission_type
+                AND object_id = $object_id
+                AND ugroup_id = $ugroup_id";
         return $this->update($sql);
     }
 

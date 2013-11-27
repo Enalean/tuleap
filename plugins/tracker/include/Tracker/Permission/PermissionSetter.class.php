@@ -23,12 +23,16 @@ class Tracker_Permission_PermissionSetter {
     private $atid;
     private $stored_ugroups_permissions;
 
-    private $history_cache = array();
+    private $feedback_already_given = false;
 
-    public function __construct(Tracker $tracker, array $stored_ugroups_permissions) {
+    /** @var PermissionsManager */
+    private $permissions_manager;
+
+    public function __construct(Tracker $tracker, array $stored_ugroups_permissions, PermissionsManager $permissions_manager) {
         $this->group_id                   = $tracker->getGroupId();
         $this->atid                       = $tracker->getId();
         $this->stored_ugroups_permissions = $stored_ugroups_permissions;
+        $this->permissions_manager        = $permissions_manager;
     }
 
     public function getAllGroupIds() {
@@ -39,9 +43,28 @@ class Tracker_Permission_PermissionSetter {
         return $this->stored_ugroups_permissions[$ugroup_id]['ugroup']['name'];
     }
 
+    /**
+     * Clean set of one permission (will revoke all other perms before granting)
+     *
+     * @param String  $permission_type
+     * @param Integer $ugroup_id
+     */
+    public function grant($permission_type, $ugroup_id) {
+        if (! $this->groupHasPermission($permission_type, $ugroup_id)) {
+            $this->revokeAll($ugroup_id);
+            $this->grantAccess($permission_type, $ugroup_id);
+        }
+    }
+
+    /**
+     * Only grant a permission, no revoke before hand
+     *
+     * @param type $permission_type
+     * @param type $ugroup_id
+     */
     public function grantAccess($permission_type, $ugroup_id) {
         if (! $this->groupHasPermission($permission_type, $ugroup_id)) {
-            permission_add_ugroup($this->group_id, $permission_type, $this->atid, $ugroup_id);
+            $this->permissions_manager->addPermission($permission_type, $this->atid, $ugroup_id);
             $this->stored_ugroups_permissions[$ugroup_id]['permissions'][$permission_type] = 1;
             $this->addHistory($permission_type);
         }
@@ -49,17 +72,21 @@ class Tracker_Permission_PermissionSetter {
 
     public function revokeAccess($permission_type, $ugroup_id) {
         if ($this->groupHasPermission($permission_type, $ugroup_id)) {
-            permission_clear_ugroup_object($this->group_id, $permission_type, $ugroup_id, $this->atid);
+            $this->permissions_manager->revokePermissionForUGroup($permission_type, $this->atid, $ugroup_id);
             unset($this->stored_ugroups_permissions[$ugroup_id]['permissions'][$permission_type]);
             $this->addHistory($permission_type);
         }
     }
 
     private function addHistory($permission_type) {
-        if (! isset($this->history_cache[$permission_type])) {
-            permission_add_history($this->group_id, $permission_type, $this->atid);
+        $this->permissions_manager->addHistory($permission_type, $this->atid, $this->group_id);
+        $this->feedback();
+    }
+
+    private function feedback() {
+        if (! $this->feedback_already_given) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_userperms', 'perm_upd'));
-            $this->history_cache[$permission_type] = true;
+            $this->feedback_already_given = true;
         }
     }
 
@@ -79,6 +106,7 @@ class Tracker_Permission_PermissionSetter {
         $this->revokeAccess(Tracker::PERMISSION_FULL, $ugroup_id);
         $this->revokeAccess(Tracker::PERMISSION_ASSIGNEE, $ugroup_id);
         $this->revokeAccess(Tracker::PERMISSION_SUBMITTER, $ugroup_id);
+        $this->revokeAccess(Tracker::PERMISSION_SUBMITTER_ONLY, $ugroup_id);
         $this->revokeAccess(Tracker::PERMISSION_ADMIN, $ugroup_id);
     }
 }

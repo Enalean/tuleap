@@ -98,6 +98,16 @@ class Tracker_Permission_PermissionChecker {
                         }
                     }
                 break;
+
+                case Tracker::PERMISSION_SUBMITTER_ONLY:
+                    foreach ($ugroups as $ugroup) {
+                        if ($this->checkUserBelongToGroup($user, $artifact, $ugroup)) {
+                            if ($user->getId() == $artifact->getSubmittedBy()) {
+                                return true;
+                            }
+                        }
+                    }
+                    break;
             }
         }
         return false;

@@ -18,9 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Permission_ChainOfResponsibility_DoNothing extends Tracker_Permission_Command {
+class Tracker_Permission_PermissionRequest {
+    private $permissions = array();
 
-    public function __construct() {}
+    public function __construct(array $permissions) {
+        $this->permissions = $permissions;
+    }
 
-    public function execute(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permissions_setter) {}
+    public function setFromRequest(Codendi_Request $request, array $ugroup_ids) {
+        foreach ($ugroup_ids as $id) {
+            $this->permissions[$id] = $request->get(Tracker_Permission_Command::PERMISSION_PREFIX.$id);
+        }
+    }
+
+    public function get($id) {
+        if (isset($this->permissions[$id])) {
+            return $this->permissions[$id];
+        }
+        return null;
+    }
+
+    public function revoke($id) {
+        if (isset($this->permissions[$id])) {
+            unset($this->permissions[$id]);
+        }
+    }
 }

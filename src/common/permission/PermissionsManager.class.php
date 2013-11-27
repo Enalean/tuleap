@@ -327,6 +327,14 @@ class PermissionsManager {
         return $this->_permission_dao->addPermission($permission_type, $object_id, $ugroup_id);
     }
 
+    public function revokePermissionForUGroup($permission_type, $object_id, $ugroup_id) {
+        return $this->_permission_dao->removePermission($permission_type, $object_id, $ugroup_id);
+    }
+
+    public function addHistory($permission_type, $object_id, $group_id) {
+        permission_add_history($group_id, $permission_type, $object_id);
+    }
+
     /**
      * Clears permission for a given object
      * 

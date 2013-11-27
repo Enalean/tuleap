@@ -25,24 +25,36 @@
  */
 class Tracker_Permission_ChainOfResponsibility_Anonymous extends Tracker_Permission_Command {
 
-    public function execute(Codendi_Request $request, Tracker_Permission_PermissionSetter $permission_setter) {
-        switch ($request->get(self::PERMISSION_PREFIX.UGroup::ANONYMOUS)) {
+    public function execute(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter) {
+        switch ($request->get(UGroup::ANONYMOUS)) {
             case Tracker_Permission_Command::PERMISSION_FULL:
                 $permission_setter->grantAccess(Tracker::PERMISSION_FULL, UGroup::ANONYMOUS);
                 foreach ($permission_setter->getAllGroupIds() as $stored_ugroup_id) {
                     if ($stored_ugroup_id !== UGroup::ANONYMOUS) {
-                        $permission_setter->revokeAccess(Tracker::PERMISSION_FULL, $stored_ugroup_id);
-                        $permission_setter->revokeAccess(Tracker::PERMISSION_ASSIGNEE, $stored_ugroup_id);
-                        $permission_setter->revokeAccess(Tracker::PERMISSION_SUBMITTER, $stored_ugroup_id);
+                        $this->revokeAllButAdmin($request, $permission_setter, $stored_ugroup_id);
                     }
                 }
                 break;
 
             case Tracker_Permission_Command::PERMISSION_NONE:
-                $permission_setter->revokeAccess(Tracker::PERMISSION_FULL, UGroup::ANONYMOUS);
+                $permission_setter->revokeAll(UGroup::ANONYMOUS);
                 break;
         }
 
         $this->executeNextCommand($request, $permission_setter);
+    }
+
+    protected function warnAlreadyHaveFullAccess(Tracker_Permission_PermissionSetter $permission_setter, $ugroup_id) {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::WARN,
+            $GLOBALS['Language']->getText(
+                'tracker_admin_permissions',
+                'tracker_ignore_g_anon_full',
+                array(
+                    $permission_setter->getUGroupName($ugroup_id),
+                    $permission_setter->getUGroupName(UGroup::ANONYMOUS),
+                )
+            )
+        );
     }
 }

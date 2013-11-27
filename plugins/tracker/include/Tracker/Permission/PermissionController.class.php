@@ -86,31 +86,38 @@ class Tracker_Permission_PermissionController implements Tracker_Dispatchable_In
             isset($permissions[Tracker::PERMISSION_FULL])
         );
 
-        //We don't show specific access permissions for anonymous users and registered
-        if ($ugroup_id != UGroup::ANONYMOUS && $ugroup_id != UGroup::REGISTERED) {
+        if ($ugroup_id != UGroup::ANONYMOUS) {
             $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
-                Tracker_Permission_Command::PERMISSION_ASSIGNEE,
-                $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_ASSIGNEE),
-                (isset($permissions[Tracker::PERMISSION_ASSIGNEE]) && !isset($permissions[Tracker::PERMISSION_SUBMITTER]))
+                Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
+                $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_SUBMITTER_ONLY),
+                isset($permissions[Tracker::PERMISSION_SUBMITTER_ONLY])
             );
 
-            $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
-                Tracker_Permission_Command::PERMISSION_SUBMITTER,
-                $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_SUBMITTER),
-                !isset($permissions[Tracker::PERMISSION_ASSIGNEE]) && isset($permissions[Tracker::PERMISSION_SUBMITTER])
-            );
+            if ($ugroup_id != UGroup::REGISTERED) {
+                $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
+                    Tracker_Permission_Command::PERMISSION_ASSIGNEE,
+                    $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_ASSIGNEE),
+                    (isset($permissions[Tracker::PERMISSION_ASSIGNEE]) && !isset($permissions[Tracker::PERMISSION_SUBMITTER]))
+                );
 
-            $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
-                Tracker_Permission_Command::PERMISSION_ASSIGNEE_AND_SUBMITTER,
-                $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_ASSIGNEE .'_AND_'. Tracker::PERMISSION_SUBMITTER),
-                isset($permissions[Tracker::PERMISSION_ASSIGNEE]) && isset($permissions[Tracker::PERMISSION_SUBMITTER])
-            );
+                $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
+                    Tracker_Permission_Command::PERMISSION_SUBMITTER,
+                    $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_SUBMITTER),
+                    !isset($permissions[Tracker::PERMISSION_ASSIGNEE]) && isset($permissions[Tracker::PERMISSION_SUBMITTER])
+                );
 
-            $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
-                Tracker_Permission_Command::PERMISSION_ADMIN,
-                $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_ADMIN),
-                isset($permissions[Tracker::PERMISSION_ADMIN])
-            );
+                $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
+                    Tracker_Permission_Command::PERMISSION_ASSIGNEE_AND_SUBMITTER,
+                    $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_ASSIGNEE .'_AND_'. Tracker::PERMISSION_SUBMITTER),
+                    isset($permissions[Tracker::PERMISSION_ASSIGNEE]) && isset($permissions[Tracker::PERMISSION_SUBMITTER])
+                );
+
+                $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
+                    Tracker_Permission_Command::PERMISSION_ADMIN,
+                    $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_ADMIN),
+                    isset($permissions[Tracker::PERMISSION_ADMIN])
+                );
+            }
         }
 
         return $permission_type_list;
@@ -130,29 +137,14 @@ class Tracker_Permission_PermissionController implements Tracker_Dispatchable_In
     }
 
     private function save(Codendi_Request $request) {
-        $this->getChainOfResponsability()->execute(
-            $request,
-            $this->getPermissionSetter()
-        );
+        $permission_setter  = $this->getPermissionSetter();
+        $permission_request = new Tracker_Permission_PermissionRequest(array());
+        $permission_request->setFromRequest($request, $permission_setter->getAllGroupIds());
+
+        $permission_manager = new Tracker_Permission_PermissionManager();
+        $permission_manager->save($permission_request, $permission_setter);
 
         $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId().'&func=admin-perms-tracker');
-    }
-
-    /**
-     * Order matters as we have to deal with anonymous -> registered before
-     * going any further
-     *
-     * @return \Tracker_Permission_ChainOfResponsibility_Anonymous
-     */
-    private function getChainOfResponsability() {
-        $anonymous_command  = new Tracker_Permission_ChainOfResponsibility_Anonymous();
-        $registered_command = new Tracker_Permission_ChainOfResponsibility_Registered();
-        $ugroup_command     = new Tracker_Permission_ChainOfResponsibility_AllGroups();
-
-        $anonymous_command->setNextCommand($registered_command);
-        $registered_command->setNextCommand($ugroup_command);
-
-        return $anonymous_command;
     }
 
     private function getPermissionSetter() {
@@ -161,7 +153,8 @@ class Tracker_Permission_PermissionController implements Tracker_Dispatchable_In
             plugin_tracker_permission_get_tracker_ugroups_permissions(
                 $this->tracker->getGroupId(),
                 $this->tracker->getId()
-            )
+            ),
+            PermissionsManager::instance()
         );
     }
 }

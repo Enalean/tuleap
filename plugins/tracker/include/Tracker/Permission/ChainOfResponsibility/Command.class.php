@@ -33,6 +33,15 @@ abstract class Tracker_Permission_Command {
     const PERMISSION_SUBMITTER              = 'SUBMITTER';
     const PERMISSION_ASSIGNEE_AND_SUBMITTER = 'SUBMITTER_N_ASSIGNEE';
     const PERMISSION_NONE                   = 'NONE';
+    const PERMISSION_SUBMITTER_ONLY         = 'SUBMITTER_ONLY';
+
+    protected static $non_admin_permissions = array(
+        Tracker_Permission_Command::PERMISSION_FULL,
+        Tracker_Permission_Command::PERMISSION_ASSIGNEE,
+        Tracker_Permission_Command::PERMISSION_SUBMITTER,
+        Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
+        Tracker_Permission_Command::PERMISSION_ASSIGNEE_AND_SUBMITTER
+    );
 
     /** @var Tracker_Permission_Command */
     private $next_command;
@@ -49,9 +58,37 @@ abstract class Tracker_Permission_Command {
         return $this->next_command;
     }
 
-    public function executeNextCommand(Codendi_Request $request, Tracker_Permission_PermissionSetter $permissions_setter) {
+    public function executeNextCommand(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permissions_setter) {
         $this->next_command->execute($request, $permissions_setter);
     }
 
-    abstract public function execute(Codendi_Request $request, Tracker_Permission_PermissionSetter $permissions_setter);
+    abstract public function execute(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permissions_setter);
+
+    protected function revokeAllButAdmin(
+        Tracker_Permission_PermissionRequest $request,
+        Tracker_Permission_PermissionSetter $permission_setter,
+        $ugroup_id
+    ) {
+
+        if ($this->requestContainsNonAdminPermissions($request, $ugroup_id)) {
+            $this->warnAlreadyHaveFullAccess($permission_setter, $ugroup_id);
+            $request->revoke($ugroup_id);
+            $this->revokeNonAdmin($permission_setter, $ugroup_id);
+        }
+    }
+
+    private function requestContainsNonAdminPermissions(Tracker_Permission_PermissionRequest $request, $ugroup_id) {
+        return in_array($request->get($ugroup_id), self::$non_admin_permissions);
+    }
+
+    private function revokeNonAdmin(Tracker_Permission_PermissionSetter $permission_setter, $ugroup_id) {
+        $permission_setter->revokeAccess(Tracker::PERMISSION_FULL, $ugroup_id);
+        $permission_setter->revokeAccess(Tracker::PERMISSION_ASSIGNEE, $ugroup_id);
+        $permission_setter->revokeAccess(Tracker::PERMISSION_SUBMITTER, $ugroup_id);
+        $permission_setter->revokeAccess(Tracker::PERMISSION_SUBMITTER_ONLY, $ugroup_id);
+    }
+
+    protected function warnAlreadyHaveFullAccess(Tracker_Permission_PermissionSetter $permission_setter, $ugroup_id) {
+        // eventually do something here
+    }
 }

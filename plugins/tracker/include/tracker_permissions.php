@@ -21,7 +21,7 @@
  * @returns array the permissions for the ugroups
  */
 function plugin_tracker_permission_get_tracker_ugroups_permissions($group_id, $object_id) {
-  return permission_get_ugroups_permissions($group_id, $object_id, array('PLUGIN_TRACKER_ADMIN','PLUGIN_TRACKER_ACCESS_FULL','PLUGIN_TRACKER_ACCESS_ASSIGNEE','PLUGIN_TRACKER_ACCESS_SUBMITTER'), false);
+  return permission_get_ugroups_permissions($group_id, $object_id, array(Tracker::PERMISSION_ADMIN, Tracker::PERMISSION_FULL, Tracker::PERMISSION_ASSIGNEE, Tracker::PERMISSION_SUBMITTER, Tracker::PERMISSION_SUBMITTER_ONLY), false);
 }
 
 function plugin_tracker_permission_process_update_fields_permissions($group_id, $atid, $fields, $permissions_wanted_by_user) {

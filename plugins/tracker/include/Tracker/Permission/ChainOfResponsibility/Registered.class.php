@@ -25,30 +25,40 @@
  */
 class Tracker_Permission_ChainOfResponsibility_Registered extends Tracker_Permission_Command {
 
-    public function execute(Codendi_Request $request, Tracker_Permission_PermissionSetter $permission_setter) {
-        switch($request->get(self::PERMISSION_PREFIX.UGroup::REGISTERED)) {
+    public function execute(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter) {
+        switch($request->get(UGroup::REGISTERED)) {
         case Tracker_Permission_Command::PERMISSION_FULL:
-            if ($permission_setter->anonymousHaveFullAccess()) {
-                $anonymous_name  = $GLOBALS['Language']->getText('project_ugroup', ugroup_get_name_from_id(UGroup::ANONYMOUS));
-                $registered_name = $GLOBALS['Language']->getText('project_ugroup', ugroup_get_name_from_id(UGroup::REGISTERED));
-                $GLOBALS['Response']->addFeedback(Feedback::WARN, $GLOBALS['Language']->getText('tracker_admin_permissions', 'tracker_ignore_g_anon_full', array($registered_name, $anonymous_name)));
-            } else {
-                $permission_setter->grantAccess(Tracker::PERMISSION_FULL, UGroup::REGISTERED);
-                foreach ($permission_setter->getAllGroupIds() as $stored_ugroup_id) {
-                    if ($stored_ugroup_id !== UGroup::ANONYMOUS && $stored_ugroup_id !== UGroup::REGISTERED) {
-                        $permission_setter->revokeAccess(Tracker::PERMISSION_FULL, $stored_ugroup_id);
-                        $permission_setter->revokeAccess(Tracker::PERMISSION_ASSIGNEE, $stored_ugroup_id);
-                        $permission_setter->revokeAccess(Tracker::PERMISSION_SUBMITTER, $stored_ugroup_id);
-                    }
+            $permission_setter->grantAccess(Tracker::PERMISSION_FULL, UGroup::REGISTERED);
+            foreach ($permission_setter->getAllGroupIds() as $stored_ugroup_id) {
+                if ($stored_ugroup_id !== UGroup::ANONYMOUS && $stored_ugroup_id !== UGroup::REGISTERED) {
+                    $this->revokeAllButAdmin($request, $permission_setter, $stored_ugroup_id);
                 }
             }
             break;
 
         case Tracker_Permission_Command::PERMISSION_NONE:
-            $permission_setter->revokeAccess(Tracker::PERMISSION_FULL, UGroup::REGISTERED);
+            $permission_setter->revokeAll(UGroup::REGISTERED);
+            break;
+
+        case Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY:
+            $permission_setter->grant(Tracker::PERMISSION_SUBMITTER_ONLY, UGroup::REGISTERED);
             break;
         }
 
         $this->executeNextCommand($request, $permission_setter);
+    }
+
+    protected function warnAlreadyHaveFullAccess(Tracker_Permission_PermissionSetter $permission_setter, $ugroup_id) {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::WARN,
+            $GLOBALS['Language']->getText(
+                'tracker_admin_permissions',
+                'tracker_ignore_g_regis_full',
+                array(
+                    $permission_setter->getUGroupName($ugroup_id),
+                    $permission_setter->getUGroupName(UGroup::REGISTERED),
+                )
+            )
+        );
     }
 }

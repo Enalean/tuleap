@@ -96,7 +96,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
         // $submitter, $u_sub should have the right to see it.
         // $other, $assignee, $u_ass and $u should not have the right to see it
 
-        
+
         $permissions = array("PLUGIN_TRACKER_ACCESS_SUBMITTER" => array(0 => $ugroup_sub));
         $this->tracker->setReturnReference('getPermissionsAuthorizedUgroups', $permissions);
 
@@ -241,5 +241,108 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
         $this->assertFalse($permission_checker->userCanView($assignee, $artifact_subass));
         $this->assertFalse($permission_checker->userCanView($other, $artifact_subass));
         $this->assertTrue($permission_checker->userCanView($u, $artifact_subass));
+    }
+}
+
+abstract class Tracker_Permission_PermissionChecker_SubmitterOnlyBaseTest extends TuleapTestCase {
+    protected $user_manager;
+    protected $permission_checker;
+
+    protected $tracker;
+
+    protected $user;
+    protected $submitter;
+    protected $ugroup_id_submitter_only;
+    protected $artifact;
+
+    public function setUp() {
+        parent::setUp();
+        $this->user_manager       = mock('UserManager');
+        $this->permission_checker = new Tracker_Permission_PermissionChecker($this->user_manager);
+
+        $this->tracker = mock('Tracker');
+        $this->tracker->setReturnValue('getId', 666);
+        $this->tracker->setReturnValue('getGroupId', 222);
+
+        $this->ugroup_id_submitter_only = 112;
+
+        $this->user = mock('PFUser');
+        stub($this->user)->getId()->returns(120);
+
+        $this->submitter = mock('PFUser');
+        stub($this->submitter)->getId()->returns(250);
+        stub($this->submitter)->isMemberOfUgroup($this->ugroup_id_submitter_only, 222)->returns(true);
+
+
+        stub($this->user_manager)->getUserById(120)->returns($this->user);
+        stub($this->user_manager)->getUserById(250)->returns($this->submitter);
+
+        $this->artifact = mock('Tracker_Artifact');
+        stub($this->artifact)->getTracker()->returns($this->tracker);
+    }
+}
+
+class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends Tracker_Permission_PermissionChecker_SubmitterOnlyBaseTest {
+
+    public function setUp() {
+        parent::setUp();
+
+        stub($this->tracker)->getPermissionsAuthorizedUgroups()->returns(
+            array(
+                Tracker::PERMISSION_SUBMITTER_ONLY => array(
+                    0 => $this->ugroup_id_submitter_only
+                )
+            )
+        );
+
+
+        stub($this->artifact)->getSubmittedBy()->returns(250);
+    }
+
+    public function itDoesntSeeArtifactSubmittedByOthers() {
+        $this->assertFalse($this->permission_checker->userCanView($this->user, $this->artifact));
+    }
+
+    public function itSeesArtifactSubmittedByThemselves() {
+        $this->assertTrue($this->permission_checker->userCanView($this->submitter, $this->artifact));
+    }
+}
+
+class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends Tracker_Permission_PermissionChecker_SubmitterOnlyBaseTest {
+    protected $ugroup_id_maintainers = 111;
+
+    protected $maintainer;
+
+    public function setUp() {
+        parent::setUp();
+
+        stub($this->tracker)->getPermissionsAuthorizedUgroups()->returns(
+            array(
+                Tracker::PERMISSION_SUBMITTER_ONLY => array(
+                    $this->ugroup_id_submitter_only
+                ),
+                Tracker::PERMISSION_FULL => array(
+                    $this->ugroup_id_maintainers
+                )
+            )
+        );
+
+        $this->maintainer = mock('PFUser');
+        stub($this->maintainer)->getId()->returns(250);
+        stub($this->maintainer)->isMemberOfUgroup($this->ugroup_id_maintainers, 222)->returns(true);
+
+        stub($this->artifact)->getSubmittedBy()->returns(250);
+    }
+
+    public function itDoesntSeeArtifactSubmittedByOthers() {
+        $this->assertFalse($this->permission_checker->userCanView($this->user, $this->artifact));
+    }
+
+    public function itSeesArtifactSubmittedByThemselves() {
+        $this->assertTrue($this->permission_checker->userCanView($this->submitter, $this->artifact));
+    }
+
+    public function itSeesArtifactBecauseHeIsGrantedFullAccess() {
+        $this->assertTrue($this->permission_checker->userCanView($this->maintainer, $this->artifact));
     }
 }
