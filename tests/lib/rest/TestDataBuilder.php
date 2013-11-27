@@ -140,5 +140,43 @@ class TestDataBuilder {
 
         return $this;
     }
+
+    public function generateBacklogItems() {
+        echo "Create backlog items\n";
+
+        $user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
+
+        $fields_data = array(
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'summary_11')->getId() => 'First epic',
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '101'
+        );
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '');
+
+        $fields_data = array(
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'summary_11')->getId() => 'Second epic',
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '102'
+        );
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '');
+
+        $fields_data = array(
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'summary_11')->getId() => 'Third epic',
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '103'
+        );
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '');
+
+        $fields_data = array(
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'summary_11')->getId() => 'Fourth epic',
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '101'
+        );
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '');
+
+        $milestone = Tracker_ArtifactFactory::instance()->getArtifactById(1);
+        $milestone->linkArtifact(2, $user);
+        $milestone->linkArtifact(3, $user);
+        $milestone->linkArtifact(4, $user);
+        $milestone->linkArtifact(5, $user);
+
+        return $this;
+    }
 }
 ?>

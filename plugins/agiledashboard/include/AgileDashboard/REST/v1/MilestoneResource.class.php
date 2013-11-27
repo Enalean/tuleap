@@ -137,26 +137,26 @@ class MilestoneResource {
     }
 
     /**
-     * Get backlog items
+     * Get content
      *
      * Get the backlog items of a given milestone
      *
-     * @url GET {id}/backlog_items
+     * @url GET {id}/content
      *
-     * @param int $id     Id of the planning
+     * @param int $id     Id of the milestone
      * @param int $limit  Number of elements displayed per page
      * @param int $offset Position of the first element to display
      *
-     * @return array MilestoneInfoRepresentation
+     * @return array BacklogItemRepresentation
      *
      * @throws 403
      * @throws 404
      */
-    protected function getBacklogItems($id, $limit = 10, $offset = 0) {
+    protected function getContent($id, $limit = 10, $offset = 0) {
         $this->checkContentLimit($limit);
 
         $milestone = $this->getMilestoneById($this->getCurrentUser(), $id);
-        $this->sendAllowHeaderForBacklogItems();
+        $this->sendAllowHeaderForContent();
 
         $backlog_items = $this->getMilestoneBacklogItems($milestone);
         $backlog_items_representation = array();
@@ -169,16 +169,16 @@ class MilestoneResource {
     }
 
     /**
-     * @url OPTIONS {id}/backlog_items
+     * @url OPTIONS {id}/content
      *
      * @param int $id Id of the planning
      *
      * @throws 403
      * @throws 404
      */
-    protected function optionsBacklogItems($id) {
+    protected function optionsContent($id) {
         $this->getMilestoneById($this->getCurrentUser(), $id);
-        $this->sendAllowHeaderForBacklogItems();
+        $this->sendAllowHeaderForContent();
     }
 
     private function getMilestoneById(\PFUser $user, $id) {
@@ -234,7 +234,7 @@ class MilestoneResource {
         return $limit <= self::MAX_LIMIT;
     }
 
-    private function sendAllowHeaderForBacklogItems() {
+    private function sendAllowHeaderForContent() {
         Header::allowOptionsGet();
     }
 
