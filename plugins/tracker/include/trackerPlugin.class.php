@@ -62,6 +62,8 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::USER_MANAGER_GET_USER_INSTANCE);
         $this->_addHook('plugin_statistics_service_usage');
         $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(Event::REST_GET_PROJECT_TRACKERS);
+        $this->addHook(Event::REST_OPTIONS_PROJECT_TRACKERS);
     }
 
     public function getHooksAndCallbacks() {
@@ -625,6 +627,41 @@ class trackerPlugin extends Plugin {
     public function rest_resources($params) {
         $injector = new Tracker_REST_ResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    /**
+     * @see REST_GET_PROJECT_TRACKERS
+     */
+    public function rest_get_project_trackers($params) {
+        $user              = UserManager::instance()->getCurrentUser();
+        $planning_resource = $this->buildRightVersionOfProjectTrackersResource($params['version']);
+
+        $params['result'] = $planning_resource->get(
+            $user,
+            $params['project'],
+            $params['limit'],
+            $params['offset']
+        );
+    }
+
+    /**
+     * @see REST_OPTIONS_PROJECT_TRACKERS
+     */
+    public function rest_options_project_trackers($params) {
+        $user             = UserManager::instance()->getCurrentUser();
+        $tracker_resource = $this->buildRightVersionOfProjectTrackersResource($params['version']);
+
+        $params['result'] = $tracker_resource->options(
+            $user,
+            $params['project'],
+            $params['limit'],
+            $params['offset']
+        );
+    }
+
+    private function buildRightVersionOfProjectTrackersResource($version) {
+        $class_with_right_namespace = '\\Tuleap\\Tracker\\REST\\'.$version.'\\ProjectTrackersResource';
+        return new $class_with_right_namespace;
     }
 }
 

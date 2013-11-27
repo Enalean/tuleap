@@ -649,6 +649,18 @@ class Event {
     const REST_GET_PROJECT_MILESTONES = 'rest_get_project_milestones';
 
     /**
+     * Event raised to get trackers from a project with REST
+     *
+     * Parameters:
+     *     'version' => String
+     *     'project' => Project
+     *     'limit'   => int
+     *     'offset'  => int
+     *     'result'  => array
+     */
+    const REST_GET_PROJECT_TRACKERS = 'rest_get_project_trackers';
+
+    /**
      * Event raised to get top milestones options from a project with REST
      *
      * Parameters:
@@ -659,5 +671,17 @@ class Event {
      *     'result'  => array
      */
     const REST_OPTIONS_PROJECT_MILESTONES = 'rest_options_project_milestones';
+
+    /**
+     * Event raised to get trackers options from a project with REST
+     *
+     * Parameters:
+     *     'version' => String
+     *     'project' => Project
+     *     'limit'   => int
+     *     'offset'  => int
+     *     'result'  => array
+     */
+    const REST_OPTIONS_PROJECT_TRACKERS = 'rest_options_project_trackers';
 }
 ?>
