@@ -1,3 +1,6 @@
+Version 1.20 - Tuleap 6.8
+    * Add GET, OPTIONS route for milestones/:id/content
+
 Version 1.19 - Tuleap 6.8
     * Add GET and OPTIONS route for projects/:id/milestones
 
