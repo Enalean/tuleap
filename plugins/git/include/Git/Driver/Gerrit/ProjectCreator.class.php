@@ -376,9 +376,11 @@ class Git_Driver_Gerrit_ProjectCreator {
         `cd $this->dir; git config -f project.config --add access.$section/*.$permission '$value'`;
     }
     private function pushToServer() {
-        `cd $this->dir; git add project.config groups`;
-        `cd $this->dir; git commit -m 'Updated project config and access rights'`; //TODO: what about author name?
-        `cd $this->dir; git push origin HEAD:refs/meta/config`;
+        $exec = new Git_Exec($this->dir);
+        $exec->add($this->dir.'/project.config');
+        $exec->add($this->dir.'/groups');
+        $exec->commit('Updated project config and access rights');
+        $exec->push('origin HEAD:refs/meta/config');
     }
 
     public function removeTemporaryDirectory() {
