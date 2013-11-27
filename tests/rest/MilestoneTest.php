@@ -34,7 +34,7 @@ class MilestoneTest extends RestBase {
 
     public function testOPTIONSContent() {
         $response = $this->getResponse($this->client->options('milestones/1/content'));
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETContent() {
@@ -73,5 +73,48 @@ class MilestoneTest extends RestBase {
         $this->assertEquals($fourth_backlog_item['artifact'], array('id' => '5', 'uri' => 'artifacts/5'));
 
         $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testPUTContent() {
+        $response_put = $this->getResponse($this->client->put('milestones/1/content', null, '[2,5]'));
+
+        $this->assertEquals($response_put->getStatusCode(), 200);
+
+        $response_get = $this->getResponse($this->client->get('milestones/1/content'));
+        $backlog_items = $response_get->json();
+
+        $this->assertCount(2, $backlog_items);
+
+        $first_backlog_item = $backlog_items[0];
+        $this->assertArrayHasKey('id', $first_backlog_item);
+        $this->assertEquals($first_backlog_item['label'], "First epic");
+        $this->assertEquals($first_backlog_item['status'], "Open");
+        $this->assertEquals($first_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
+        $this->assertEquals($first_backlog_item['artifact'], array('id' => '2', 'uri' => 'artifacts/2'));
+
+        $second_backlog_item = $backlog_items[1];
+        $this->assertArrayHasKey('id', $second_backlog_item);
+        $this->assertEquals($second_backlog_item['label'], "Fourth epic");
+        $this->assertEquals($second_backlog_item['status'], "Open");
+        $this->assertEquals($second_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
+        $this->assertEquals($second_backlog_item['artifact'], array('id' => '5', 'uri' => 'artifacts/5'));
+    }
+
+    public function testPUTContentOnlyOneElement() {
+        $response_put = $this->getResponse($this->client->put('milestones/1/content', null, '[5]'));
+
+        $this->assertEquals($response_put->getStatusCode(), 200);
+
+        $response_get = $this->getResponse($this->client->get('milestones/1/content'));
+        $backlog_items = $response_get->json();
+
+        $this->assertCount(1, $backlog_items);
+
+        $first_backlog_item = $backlog_items[0];
+        $this->assertArrayHasKey('id', $first_backlog_item);
+        $this->assertEquals($first_backlog_item['label'], "Fourth epic");
+        $this->assertEquals($first_backlog_item['status'], "Open");
+        $this->assertEquals($first_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
+        $this->assertEquals($first_backlog_item['artifact'], array('id' => '5', 'uri' => 'artifacts/5'));
     }
 }

@@ -1395,6 +1395,23 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
     }
 
+    private function unlinkArtifact($artlink_fields, $linked_artifact_id, PFUser $current_user) {
+        $comment       = '';
+        $email         = '';
+        $artlink_field = $artlink_fields[0];
+        $fields_data   = array();
+        $fields_data[$artlink_field->getId()]['new_values'] = '';
+        $fields_data[$artlink_field->getId()]['removed_values'] = array($linked_artifact_id => 1);
+
+        try {
+            $this->createNewChangeset($fields_data, $comment, $current_user, $email);
+        } catch (Tracker_NoChangeException $e) {
+            $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+        } catch (Tracker_Exception $e) {
+            $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+        }
+    }
+
     /**
      * Get artifacts linked to the current artifact
      *
@@ -1633,23 +1650,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getABurndownField(PFUser $user) {
         return $this->getFormElementFactory()->getABurndownField($user, $this->getTracker());
-    }
-
-    private function unlinkArtifact($artlink_fields, $linked_artifact_id, PFUser $current_user) {
-        $comment       = '';
-        $email         = '';
-        $artlink_field = $artlink_fields[0];
-        $fields_data   = array();
-        $fields_data[$artlink_field->getId()]['new_values'] = '';
-        $fields_data[$artlink_field->getId()]['removed_values'] = array($linked_artifact_id => 1);
-
-        try {
-            $this->createNewChangeset($fields_data, $comment, $current_user, $email);
-        } catch (Tracker_NoChangeException $e) {
-            $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
-        } catch (Tracker_Exception $e) {
-            $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-        }
     }
 
     /**

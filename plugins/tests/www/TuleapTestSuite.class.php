@@ -36,10 +36,20 @@ class TuleapTestCollector extends SimpleCollector {
 class FilterTestCase extends FilterIterator {
     public function accept() {
         $file = $this->getInnerIterator()->current();
-        if (strpos($file->getPathname(), '/_') === false && preg_match('/Test.php$/', $file->getFilename())) {
+        if ($this->fileCanBeSelectedIntoTestSuite($file)) {
             return true;
         }
         return false;
+    }
+
+    private function fileCanBeSelectedIntoTestSuite($file) {
+        return (strpos($file->getPathname(), '/_') === false &&
+               (preg_match('/Test.php$/', $file->getFilename()) || ($this->phpVersionIsGreaterOrEqualThanPhp53() && preg_match('/TestPHP53.php$/', $file->getFilename())))
+        );
+    }
+
+    private function phpVersionIsGreaterOrEqualThanPhp53() {
+        return version_compare(phpversion(), '5.3', '>=');
     }
 }
 
