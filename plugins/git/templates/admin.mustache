@@ -90,11 +90,13 @@
         </div>
         <div id="git_admin_config_edit_area" style="display: none;">
             <div class="control-group">
-                <label class="control-label" for="git_admin_config_data" id="git_admin_config_data_label">
-                    {{edit_text}}
-                </label>
                 <div class="controls">
-                    <textarea id="git_admin_config_data" name="git_admin_config_data" rows="15" cols="65"></textarea>
+                    <span class="alert alert-warning span5" id="git_admin_config_data_label">{{{edit_text}}}</span>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <textarea id="git_admin_config_data" name="git_admin_config_data" rows="15" cols="70"></textarea>
                 </div>
             </div>
             <div class="control-group">

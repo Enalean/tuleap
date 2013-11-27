@@ -246,7 +246,7 @@ plugin_git	gerrit_readonly_ongoing	La mise en lecture-seule du projet sous Gerri
 plugin_git	view_admin_title	Administration de Git
 plugin_git	view_admin_repos_list	Configurations
 plugin_git	view_admin_templates_list	Modèles
-plugin_git	view_admin_edit_configuration_label	Editer
+plugin_git	view_admin_edit_configuration_label	Vous pouvez éditer le modèle. La variable <b>%projectname%</b> est mise à votre disposition; elle sera remplaçée par le nom du projet au moment de la migration:
 plugin_git	view_admin_file_name_label	Nom du fichier de template
 plugin_git	view_admin_submit_button	Sauvegarder
 plugin_git	view_admin_template_section_title	Modèles de configuration de permissions git

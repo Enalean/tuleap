@@ -249,7 +249,7 @@ plugin_git	gerrit_readonly_ongoing	The setting of the project under Gerrit to re
 plugin_git	view_admin_title	Git Administration
 plugin_git	view_admin_repos_list	Configurations
 plugin_git	view_admin_templates_list	Templates
-plugin_git	view_admin_edit_configuration_label	Edit
+plugin_git	view_admin_edit_configuration_label	You can edit the template. The <b>%projectname%</b> variable is available; it will be replaced by the project's name during the migration process:
 plugin_git	view_admin_file_name_label	Template file name
 plugin_git	view_admin_submit_button	Save
 plugin_git	view_admin_template_section_title	Git permission configuration templates
