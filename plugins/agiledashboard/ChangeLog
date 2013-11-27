@@ -1,3 +1,6 @@
+Version 1.19 - Tuleap 6.8
+    * Add GET and OPTIONS route for projects/:id/milestones
+
 Version 1.18 - Tuleap 6.8
     * story #5589: improve the REST documentation in the explorer
 

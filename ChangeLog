@@ -1,7 +1,7 @@
 Version 6.8 (Not Released Yet)
 	== Plugins ==
 	* tracker_date_reminder: 1.2.6
-	* agiledashboard: 1.18
+	* agiledashboard: 1.19
 	* tracker: 5.188
 	* mediawiki: 0.21
 	* git: 3.54
@@ -9,6 +9,9 @@ Version 6.8 (Not Released Yet)
 	== Bug Fix ==
 	* Fix request #5604: ViewVC download broken when file start with 0x00
         * Fix XSS vulnerabilities on bookmarks
+
+	== Enhancement ==
+	* Story #5580: Add GET and OPTIONS route for projects/:id/milestones
 
 	== Themes ==
 	* Experimental: 0.5
