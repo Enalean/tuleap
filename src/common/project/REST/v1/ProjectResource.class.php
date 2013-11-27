@@ -154,6 +154,54 @@ class ProjectResource {
         return $result;
     }
 
+    /**
+     * Get milestones
+     *
+     * Get the top milestones of a given project
+     *
+     * @url GET {id}/milestones
+     *
+     * @param int $id     Id of the project
+     * @param int $limit  Number of elements displayed per page {@from path}
+     * @param int $offset Position of the first element to display {@from path}
+     *
+     * @return array of ProjectMilestoneResource
+     */
+    protected function getMilestones($id, $limit = 10, $offset = 0) {
+        $milestones = $this->milestones($id, $limit, $offset, Event::REST_GET_PROJECT_MILESTONES);
+        $this->sendAllowHeadersForProject();
+
+        return $milestones;
+    }
+
+    /**
+     * @url OPTIONS {id}/milestones
+     *
+     * @param int $id The id of the project
+     */
+    protected function optionsMilestones($id) {
+        $this->milestones($id, 10, 0, Event::REST_OPTIONS_PROJECT_MILESTONES);
+        $this->sendAllowHeadersForProject();
+    }
+
+    private function milestones($id, $limit, $offset, $event) {
+        $project = $this->getProject($id);
+        $result  = array();
+
+        EventManager::instance()->processEvent(
+            $event,
+            array(
+                'version' => 'v1',
+                'project' => $project,
+                'limit'   => $limit,
+                'offset'  => $offset,
+                'result'  => &$result,
+            )
+        );
+
+        return $result;
+    }
+
     private function sendAllowHeadersForProject() {
         Header::allowOptionsGet();
     }

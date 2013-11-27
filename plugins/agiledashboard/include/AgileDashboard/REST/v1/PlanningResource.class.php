@@ -120,10 +120,7 @@ class PlanningResource {
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {
-        header('X-PAGINATION-LIMIT: '. $limit);
-        header('X-PAGINATION-OFFSET: '. $offset);
-        header('X-PAGINATION-SIZE: '. $size);
-        header('X-PAGINATION-LIMIT-MAX: '. self::MAX_LIMIT);
+        Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 
     private function sendAllowHeaders() {

@@ -42,7 +42,7 @@ class ProjectTest extends RestBase {
     public function testOPTIONSbyIdForAdmin() {
         $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/101'));
 
-        $this->assertEquals(array('GET', 'OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -57,6 +57,30 @@ class ProjectTest extends RestBase {
         }
 
         $this->assertTrue($exception);
+    }
+
+    public function testGETmilestones() {
+        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/101/milestones'));
+
+        $milestones = $response->json();
+        $this->assertCount(1, $milestones);
+
+        $release_milestone = $milestones[0];
+        $this->assertArrayHasKey('id', $release_milestone);
+        $this->assertEquals($release_milestone['label'], "Release 1.0");
+        $this->assertEquals($release_milestone['project'], array('id' => '101', 'uri' => 'projects/101'));
+        $this->assertArrayHasKey('id', $release_milestone['artifact']);
+        $this->assertArrayHasKey('uri', $release_milestone['artifact']);
+        $this->assertRegExp('%^artifacts/[0-9]+$%', $release_milestone['artifact']['uri']);
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testOPTIONSmilestones() {
+        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/101/milestones'));
+
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals($response->getStatusCode(), 200);
     }
 }
 ?>

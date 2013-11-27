@@ -27,4 +27,5 @@ $data_builder
     ->generateUser()
     ->generateProject()
     ->importAgileTemplate()
+    ->generateMilestones()
     ->activateDebug();
