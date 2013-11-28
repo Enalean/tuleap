@@ -307,10 +307,6 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $matching_ids = array();
         
         $group_id             = $tracker->getGroupId();
-        $instances            = array('artifact_type' => $tracker->getId());
-        $ugroups              = $user->getUgroups($group_id, $instances);
-        $static_ugroups       = $user->getStaticUgroups($group_id);
-        $dynamic_ugroups      = $user->getDynamicUgroups($group_id, $instances);
         $permissions          = $permissionManager->getPermissionsAndUgroupsByObjectid($tracker->getId());
         $contributor_field    = $tracker->getContributorField();
         $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
@@ -326,7 +322,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 $additional_where[] = $w;
             }
         }
-        $matching_ids = $dao->searchMatchingIds($group_id, $tracker->getId(), $additional_from, $additional_where, $user->isSuperUser(), $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id)->getRow();
+        $matching_ids = $dao->searchMatchingIds($group_id, $tracker->getId(), $additional_from, $additional_where, $user, $permissions, $contributor_field_id)->getRow();
         if ($matching_ids) {
             if (substr($matching_ids['id'], -1) === ',') {
                 $matching_ids['id'] = substr($matching_ids['id'], 0, -1);

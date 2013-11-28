@@ -153,8 +153,14 @@ class Tracker_ReportDao extends DataAccessObject {
      * @param int $contributor_field_id The field id corresponding to the contributor semantic
      * @return DataAccessResult
      */
-    public function searchMatchingIds($group_id, $tracker_id, $additional_from, $additional_where, $user_is_superuser, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
-        $tracker_id = $this->da->escapeInt($tracker_id);        
+    public function searchMatchingIds($group_id, $tracker_id, $additional_from, $additional_where, PFUser $user, $permissions, $contributor_field_id) {
+        $instances         = array('artifact_type' => $tracker_id);
+        $user_is_superuser = $user->isSuperUser();
+        $ugroups           = $user->getUgroups($group_id, $instances);
+        $static_ugroups    = $user->getStaticUgroups($group_id);
+        $dynamic_ugroups   = $user->getDynamicUgroups($group_id, $instances);
+
+        $tracker_id = $this->da->escapeInt($tracker_id);
         
         $from   = " FROM tracker_artifact AS artifact
                  INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)";
@@ -163,7 +169,11 @@ class Tracker_ReportDao extends DataAccessObject {
         $artifact_perms = $this->getSqlFragmentForArtifactPermissions($user_is_superuser, $ugroups);
         $from  .= $artifact_perms['from'];
         $where .= $artifact_perms['where'];
-        
+
+        if ($this->hasPermissionFor(Tracker::PERMISSION_SUBMITTER_ONLY, $permissions, $ugroups) && ! $this->hasPermissionFor(Tracker::PERMISSION_FULL, $permissions, $ugroups)) {
+            $where .= ' AND artifact.submitted_by = '.$user->getId().' ';
+        }
+
         if (count($additional_from)) {
             $from  .= implode("\n", $additional_from);
         }
@@ -190,7 +200,7 @@ class Tracker_ReportDao extends DataAccessObject {
     public function getSqlFragmentsAccordinglyToTrackerPermissions($user_is_superuser, $from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
         $sqls = array();
         //Does the user member of at least one group which has ACCESS_FULL or is super user?
-        if ($user_is_superuser || (isset($permissions['PLUGIN_TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['PLUGIN_TRACKER_ACCESS_FULL'])) > 0)) {
+        if ($user_is_superuser || $this->hasPermissionFor(Tracker::PERMISSION_FULL, $permissions, $ugroups) || $this->hasPermissionFor(Tracker::PERMISSION_SUBMITTER_ONLY, $permissions, $ugroups)) {
             $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ". $from ." ". $where;
         } else {
             $sqls = $this->getSqlFragmentsAccordinglyToAssigneeOrSubmitterAccessPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id);
@@ -204,7 +214,7 @@ class Tracker_ReportDao extends DataAccessObject {
             $ugroups = $this->da->quoteSmartImplode(',', $ugroups);
             $res['from']  = " LEFT JOIN permissions 
                               ON (permissions.object_id = CAST(c.artifact_id AS CHAR) 
-                                  AND permissions.permission_type = 'PLUGIN_TRACKER_ARTIFACT_ACCESS') 
+                                  AND permissions.permission_type = '".Tracker_Artifact::PERMISSION_ACCESS."')
                             ";
             $res['where'] = " AND (artifact.use_artifact_permissions = 0 
                                    OR (permissions.ugroup_id IN ($ugroups)))
@@ -215,15 +225,15 @@ class Tracker_ReportDao extends DataAccessObject {
     
     private function getSqlFragmentsAccordinglyToAssigneeOrSubmitterAccessPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
         $sqls = array();
-        
+
         //Does the user member of at least one group which has ACCESS_SUBMITTER ?
-        if ($this->hasPermissionFor('PLUGIN_TRACKER_ACCESS_SUBMITTER', $permissions, $ugroups)) {
-            $sqls = array_merge($sqls, $this->getSqlFragmentForAccessToArtifactSubmittedByGroup($from, $where, $group_id, $tracker_id, $permissions['PLUGIN_TRACKER_ACCESS_SUBMITTER'], $static_ugroups, $dynamic_ugroups));
+        if ($this->hasPermissionFor(Tracker::PERMISSION_SUBMITTER, $permissions, $ugroups)) {
+            $sqls = array_merge($sqls, $this->getSqlFragmentForAccessToArtifactSubmittedByGroup($from, $where, $group_id, $tracker_id, $permissions[Tracker::PERMISSION_SUBMITTER], $static_ugroups, $dynamic_ugroups));
         }
 
         //Does the user member of at least one group which has ACCESS_ASSIGNEE ?
-        if ($contributor_field_id && $this->hasPermissionFor('PLUGIN_TRACKER_ACCESS_ASSIGNEE', $permissions, $ugroups)) {
-            $sqls = array_merge($sqls, $this->getSqlFragmentForAccessToArtifactAssignedToGroup($from, $where, $group_id, $tracker_id, $permissions['PLUGIN_TRACKER_ACCESS_ASSIGNEE'], $static_ugroups, $dynamic_ugroups, $contributor_field_id));
+        if ($contributor_field_id && $this->hasPermissionFor(Tracker::PERMISSION_ASSIGNEE, $permissions, $ugroups)) {
+            $sqls = array_merge($sqls, $this->getSqlFragmentForAccessToArtifactAssignedToGroup($from, $where, $group_id, $tracker_id, $permissions[Tracker::PERMISSION_ASSIGNEE], $static_ugroups, $dynamic_ugroups, $contributor_field_id));
         }
         
         return $sqls;
@@ -240,7 +250,7 @@ class Tracker_ReportDao extends DataAccessObject {
                 $where";
         return $sql;
     }
-    
+
     private function getSqlFragmentForAccessToArtifactSubmittedByGroup($from, $where, $group_id, $tracker_id, $allowed_ugroups, $static_ugroups, $dynamic_ugroups) {
         $sqls = array();
         
@@ -258,7 +268,7 @@ class Tracker_ReportDao extends DataAccessObject {
         // }}}
 
         // {{{ tracker_admins
-        if ($this->hasPermissionForDynamicUgroup($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups, $allowed_ugroups)) {
+        if ($this->hasPermissionForDynamicUgroup(UGroup::TRACKER_ADMIN, $dynamic_ugroups, $allowed_ugroups)) {
             $join_user_constraint = " INNER JOIN tracker_perm AS p ON (
                                           artifact.submitted_by = p.user_id
                                           AND p.tracker_id = $tracker_id
@@ -268,7 +278,7 @@ class Tracker_ReportDao extends DataAccessObject {
         //}}}
         
         // {{{ project_members
-        if ($this->hasPermissionForDynamicUgroup($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups, $allowed_ugroups)) {
+        if ($this->hasPermissionForDynamicUgroup(UGroup::PROJECT_MEMBERS, $dynamic_ugroups, $allowed_ugroups)) {
             $join_user_constraint = " INNER JOIN user_group AS ug ON ( 
                                           artifact.submitted_by = ug.user_id 
                                           AND ug.group_id = $group_id) ";
@@ -277,7 +287,7 @@ class Tracker_ReportDao extends DataAccessObject {
         //}}}
         
         // {{{ project_admins
-        if ($this->hasPermissionForDynamicUgroup($GLOBALS['UGROUP_PROJECT_ADMIN'], $dynamic_ugroups, $allowed_ugroups)) {
+        if ($this->hasPermissionForDynamicUgroup(UGroup::PROJECT_ADMIN, $dynamic_ugroups, $allowed_ugroups)) {
             $join_user_constraint = " INNER JOIN user_group ug ON (
                                           artifact.submitted_by = ug.user_id 
                                           AND ug.group_id = $group_id
@@ -324,7 +334,7 @@ class Tracker_ReportDao extends DataAccessObject {
         // }}}
 
         // {{{ tracker_admins
-        if ($this->hasPermissionForDynamicUgroup($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups, $allowed_ugroups)) {
+        if ($this->hasPermissionForDynamicUgroup(UGroup::TRACKER_ADMIN, $dynamic_ugroups, $allowed_ugroups)) {
             $join_user_constraint = "
                 INNER JOIN tracker_perm AS p ON (
                     p.user_id = tcvl.bindvalue_id
@@ -337,7 +347,7 @@ class Tracker_ReportDao extends DataAccessObject {
         //}}}
         
         // {{{ project_members
-        if ($this->hasPermissionForDynamicUgroup($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups, $allowed_ugroups)) {
+        if ($this->hasPermissionForDynamicUgroup(UGroup::PROJECT_MEMBERS, $dynamic_ugroups, $allowed_ugroups)) {
             $join_user_constraint = "
                 INNER JOIN user_group AS ug ON (
                     ug.user_id = tcvl.bindvalue_id
@@ -349,7 +359,7 @@ class Tracker_ReportDao extends DataAccessObject {
         //}}}
         
         // {{{ project_admins
-        if ($this->hasPermissionForDynamicUgroup($GLOBALS['UGROUP_PROJECT_ADMIN'], $dynamic_ugroups, $allowed_ugroups)) {
+        if ($this->hasPermissionForDynamicUgroup(UGroup::PROJECT_ADMIN, $dynamic_ugroups, $allowed_ugroups)) {
             $join_user_constraint = "
                 INNER JOIN user_group AS ug ON (
                     ug.user_id = tcvl.bindvalue_id
