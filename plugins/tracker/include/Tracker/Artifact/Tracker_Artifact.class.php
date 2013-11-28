@@ -84,6 +84,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /** @var Tracker_Artifact */
     private $parent_without_permission_checking;
 
+    /** @var Boolean[] */
+    private $can_view_cache = array();
+
     /**
      * Constructor
      *
@@ -151,12 +154,18 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function userCanView(PFUser $user = null) {
         $um = $this->getUserManager();
-        if (!$user) {
+        if (! $user) {
             $user = $um->getCurrentUser();
         }
+        if (! isset($this->can_view_cache[$user->getId()])) {
+            $permission_checker = new Tracker_Permission_PermissionChecker($um);
+            $this->setUserCanView($user, $permission_checker->userCanView($user, $this));
+        }
+        return $this->can_view_cache[$user->getId()];
+    }
 
-        $permission_checker = new Tracker_Permission_PermissionChecker($um);
-        return $permission_checker->userCanView($user, $this);
+    public function setUserCanView(PFUser $user, $can_view) {
+        $this->can_view_cache[$user->getId()] = $can_view;
     }
 
     public function userCanUpdate(PFUser $user) {
