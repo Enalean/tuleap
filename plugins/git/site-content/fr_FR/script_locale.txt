@@ -3,5 +3,6 @@ codendi.locales['git'] = {
     path_placeholder_disabled: 'Chemin disponible uniquement en copie personnelle',
     path_placeholder_enabled: 'Entrer un chemin ou laissez vide',
     cannot_get_gerrit_config: 'Impossible de charger la configuration',
-    cannot_get_template: 'le modèle ne peut être chargé'
+    cannot_get_template: 'le modèle ne peut être chargé',
+    cannot_delete_template: 'le modèle n'a pas pu être détruit'
 };

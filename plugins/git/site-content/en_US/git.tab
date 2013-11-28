@@ -268,3 +268,7 @@ plugin_git	view_admin_template_invalid_template_id	Invalid Template ID
 plugin_git	view_admin_template_cannot_update	Unable to update template
 plugin_git	view_admin_template_cannot_create	Unable to create template
 plugin_git	view_admin_no_gerrit_server	There do not appear to be any <em><a href="$1">gerrit servers</a></em> set-up for this platform! Please contact your site administrator
+
+plugin_git	gerrit_template_delete	Delete
+plugin_git	gerrit_template_delete_error	An error occured while trying to delete the template.
+plugin_git	gerrit_template_delete_success	Template successfully deleted.

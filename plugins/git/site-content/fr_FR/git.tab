@@ -264,3 +264,7 @@ plugin_git	view_admin_template_invalid_template_id	Modèle ID Invalide
 plugin_git	view_admin_template_cannot_update	Impossible de modifier le modèle
 plugin_git	view_admin_template_cannot_create	Impossible de créer le modèle
 plugin_git	view_admin_no_gerrit_server	Il n'y a pas de <em><a href="$1">serveurs gerrit</a></em> de configuré sur ce plateforme! Veuillez contacter l'administrateur du site
+
+plugin_git	gerrit_template_delete	Supprimer
+plugin_git	gerrit_template_delete_error	Une erreur est survenue pendant la suppression du modèle.
+plugin_git	gerrit_template_delete_success	Modèle supprimé avec succès.

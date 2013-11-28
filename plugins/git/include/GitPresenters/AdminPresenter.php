@@ -147,5 +147,9 @@ class GitPresenters_AdminPresenter {
     public function no_gerrit_servers() {
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_no_gerrit_server', array($this->git_siteadmin_url));
     }
+
+    public function delete_label() {
+        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_template_delete');
+    }
 }
 ?>

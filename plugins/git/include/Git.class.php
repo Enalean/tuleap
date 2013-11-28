@@ -426,6 +426,13 @@ class Git extends PluginController {
                     }
                 }
 
+                if ($this->request->get('delete')) {
+                    if ($this->request->getValidated('git_admin_template_id','uint')) {
+                        $template_id = $this->request->get('git_admin_template_id');
+                        $this->addAction('deleteGerritTemplate', array($template_id, $project, $user));
+                    }
+                }
+
                 if($user->isAdmin($this->groupId)) {
                     $this->addAction('generateGerritRepositoryAndTemplateList', array($project, $user));
                     $this->addView('adminView');
@@ -440,7 +447,7 @@ class Git extends PluginController {
                 break;
             case 'fetch_git_template':
                 $project = $this->projectManager->getProject($this->groupId);
-                $template_id = $this->request->get('template_id');
+                $template_id = $this->request->getValidated('template_id','uint');
                 $this->setDefaultPageRendering(false);
                 $this->addAction('fetchGitTemplate', array($template_id, $user, $project));
                 break;

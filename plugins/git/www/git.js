@@ -142,6 +142,7 @@ document.observe('dom:loaded', function () {
         if( gerrit_option) {
             gerrit_option.observe('click', function(event) {
                 cleanTemplateForm();
+                $('git_admin_config_delete').hide();
                 $('git_admin_config_list_area').hide();
                 $('git_admin_config_list_area').hide();
                 $('git_admin_config_templates_list').hide();
@@ -162,6 +163,7 @@ document.observe('dom:loaded', function () {
         if (gerrit_option) {
             gerrit_option.observe('click', function(event) {
                 cleanTemplateForm();
+                $('git_admin_config_delete').hide();
                 $('git_admin_template_list_area').hide();
                 $('git_admin_config_templates_list').hide();
                 $('git_admin_config_template_name').hide();
@@ -181,6 +183,7 @@ document.observe('dom:loaded', function () {
         if (gerrit_option) {
             gerrit_option.observe('click', function(event) {
                 cleanTemplateForm();
+                $('git_admin_config_delete').hide();
                 $('git_admin_template_list_area').hide();
                 $('git_admin_config_list_area').hide();
                 $('git_admin_config_templates_list').hide();
@@ -307,6 +310,7 @@ document.observe('dom:loaded', function () {
                             $('git_admin_config_btn_create').hide();
                             $('git_admin_file_name').hide();
                             $('git_admin_save_button').hide();
+                            $('git_admin_config_delete').hide();
                             $('git_admin_config_data_label').hide();
                             $('git_admin_config_edit_area').show();
                             $('git_admin_config_form').show();
@@ -325,6 +329,7 @@ document.observe('dom:loaded', function () {
         $('git_admin_config_template_name').innerHTML = '';
         $('git_admin_config_data_label').show();
         $('git_admin_save_button').show();
+        $('git_admin_config_delete').show();
         $$('#git_admin_config_form select').each(function(selectbox) {
             selectbox.selectedIndex = 0;
         });
