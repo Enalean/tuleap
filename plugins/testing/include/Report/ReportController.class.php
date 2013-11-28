@@ -41,7 +41,8 @@ class Testing_Report_ReportController extends TestingController {
         $this->release_tracker  = $conf->getReleaseTracker();
         $this->cycle_tracker    = $conf->getCycleTracker();
         $this->testcase_tracker = $conf->getTestCaseTracker();
-    }
+        $this->need_tracker     = $conf->getNeedTracker();
+   }
 
     /**
      * Fallback to prevent us implement dummy methods for the poc
@@ -54,7 +55,7 @@ class Testing_Report_ReportController extends TestingController {
     public function index() {
         $presenter = new Testing_Report_ReportPresenter(
             $this->getReleaseDefectCollectionPresenter(),
-            $this->matrix_factory->getReleasePresenter($this->testcase_tracker, $this->cycle_tracker)
+            $this->matrix_factory->getReleasePresenter($this->testcase_tracker, $this->cycle_tracker, $this->need_tracker)
         );
         $this->render(self::RENDER_PREFIX . __FUNCTION__, $presenter);
     }

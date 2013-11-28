@@ -53,6 +53,10 @@ class TestingConfiguration {
         return $this->getTracker('cycle');
     }
 
+    public function getNeedTracker() {
+        return $this->getTracker('req_need');
+    }
+
     private function getTracker($item_name) {
         $tracker = TrackerFactory::instance()->getTrackerByItemName($this->project, $item_name);
         if (! $tracker) {

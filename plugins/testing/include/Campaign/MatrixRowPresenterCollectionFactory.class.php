@@ -95,16 +95,13 @@ class Testing_Campaign_MatrixRowPresenterCollectionFactory {
         return $collection;
     }
 
-    public function getReleasePresenter($testcase_tracker_id, $cycle_tracker) {
+    public function getReleasePresenter($testcase_tracker_id, $cycle_tracker, $need_tracker) {
         $testexecution_dar = $this->dao->searchAll($testcase_tracker_id->getId(), $cycle_tracker->getId());
-
-        $nb_of_tests_by_requirements = array();
-        $nb_of_tests_by_releases     = array();
-        $requirements_by_releases    = array();
 
         $release_nodes_by_id     = array();
         $cycle_nodes_by_id       = array();
         $requirement_nodes_by_id = array();
+        $need_nodes_by_id        = array();
         $execution_nodes_by_id   = array();
         $artifact_factory        = Tracker_ArtifactFactory::instance();
         $current_user            = UserManager::instance()->getCurrentUser();
@@ -131,29 +128,25 @@ class Testing_Campaign_MatrixRowPresenterCollectionFactory {
                 $release_nodes_by_id[$release->getId()]->addChild($cycle_nodes_by_id[$cycle->getId()]);
             }
 
-            if (! isset($requirement_nodes_by_id[$cycle->getId()][$requirement->getId()])) {
-                $requirement_nodes_by_id[$cycle->getId()][$requirement->getId()] = new TreeNode(array('label' => $requirement->getTitle()));
-                $cycle_nodes_by_id[$cycle->getId()]->addChild($requirement_nodes_by_id[$cycle->getId()][$requirement->getId()]);
+            foreach ($this->getNeedsForRequirement($requirement, $need_tracker, $current_user) as $need) {
+                if (! isset($need_nodes_by_id[$cycle->getId()][$need->getId()])) {
+                    $need_nodes_by_id[$cycle->getId()][$need->getId()] = new TreeNode(array('label' => $need->getTitle()));
+                    $cycle_nodes_by_id[$cycle->getId()]->addChild($need_nodes_by_id[$cycle->getId()][$need->getId()]);
+                }
+                if (! isset($requirement_nodes_by_id[$cycle->getId()][$need->getId()][$requirement->getId()])) {
+                    $requirement_nodes_by_id[$cycle->getId()][$need->getId()][$requirement->getId()] = new TreeNode(array('label' => $requirement->getTitle()));
+                    $need_nodes_by_id[$cycle->getId()][$need->getId()]->addChild($requirement_nodes_by_id[$cycle->getId()][$need->getId()][$requirement->getId()]);
+                }
+                $execution_nodes_by_id[$need->getId()][$execution_id] = new TreeNode(array(
+                    'label'            => $execution->getName(),
+                    'is_passed'        => $last_result->getStatus() == Testing_TestResult_TestResult::PASS,
+                    'is_failed'        => $last_result->getStatus() == Testing_TestResult_TestResult::FAIL,
+                    'is_not_run'       => $last_result->getStatus() == Testing_TestResult_TestResult::NOT_RUN,
+                    'is_not_completed' => $last_result->getStatus() == Testing_TestResult_TestResult::NOT_COMPLETED,
+                    'nb_of_results_to_display' => 1
+                ));
+                $requirement_nodes_by_id[$cycle->getId()][$need->getId()][$requirement->getId()]->addChild($execution_nodes_by_id[$need->getId()][$execution_id]);
             }
-            $execution_nodes_by_id[$execution_id] = new TreeNode(array(
-                'label'            => $execution->getName(),
-                'is_passed'        => $last_result->getStatus() == Testing_TestResult_TestResult::PASS,
-                'is_failed'        => $last_result->getStatus() == Testing_TestResult_TestResult::FAIL,
-                'is_not_run'       => $last_result->getStatus() == Testing_TestResult_TestResult::NOT_RUN,
-                'is_not_completed' => $last_result->getStatus() == Testing_TestResult_TestResult::NOT_COMPLETED,
-                'nb_of_results_to_display' => 1
-            ));
-            $requirement_nodes_by_id[$cycle->getId()][$requirement->getId()]->addChild($execution_nodes_by_id[$execution_id]);
-
-            if (! isset($nb_of_tests_by_requirements[$cycle_id][$requirement_id])) {
-                $nb_of_tests_by_requirements[$cycle_id][$requirement_id] = 0;
-            }
-            if (! isset($nb_of_tests_by_releases[$cycle_id])) {
-                $nb_of_tests_by_releases[$cycle_id] = 0;
-            }
-            $nb_of_tests_by_requirements[$cycle_id][$requirement_id]++;
-            $nb_of_tests_by_releases[$cycle_id]++;
-            $requirements_by_releases[$cycle_id][$requirement_id] = 1;
         }
         $this->fillUp($root);
         $stack = array();
@@ -196,7 +189,7 @@ class Testing_Campaign_MatrixRowPresenterCollectionFactory {
         return $data;
     }
 
-    public function convertToArray(TreeNode $root, array &$stack) {
+    private function convertToArray(TreeNode $root, array &$stack) {
         $data = $root->getData();
         if (isset($data['label'])) {
             $stack[] = $data;
@@ -205,4 +198,33 @@ class Testing_Campaign_MatrixRowPresenterCollectionFactory {
             $this->convertToArray($child, $stack);
         }
     }
+
+    /**
+     * @return Need[]
+     */
+    private function getNeedsForRequirement(Tracker_Artifact $requirement, Tracker $need_tracker, PFUser $user) {
+        $links = $requirement->getLinkedArtifacts($user);
+        $needs = array();
+        foreach ($requirement->getLinkedArtifacts($user) as $linked_artifact) {
+            if ($linked_artifact->getTrackerId() == $need_tracker->getId()) {
+                $needs[] = $linked_artifact;
+            }
+        }
+        if (! $needs) {
+            return array(new NullNeed());
+        }
+
+        return $needs;
+    }
+}
+
+interface Need {
+    public function getId();
+    public function getTitle();
+}
+
+class NullNeed implements Need {
+    public $id = 0;
+    public function getId() { return $this->id; }
+    public function getTitle() { return ""; }
 }
