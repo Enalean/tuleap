@@ -54,6 +54,15 @@ class GitActions extends PluginActions {
     /** @var Git_Driver_Gerrit_UserAccountManager */
     private $gerrit_usermanager;
 
+    /** @var Git_Driver_Gerrit_ProjectCreator */
+    private $project_creator;
+
+    /** @var Git_Driver_Gerrit_Template_TemplateFactory */
+    private $template_factory;
+
+    /** @var ProjectManager */
+    private $project_manager;
+
     /**
      * Constructor
      *
@@ -69,7 +78,10 @@ class GitActions extends PluginActions {
         GitRepositoryManager $manager,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         Git_Driver_Gerrit $driver,
-        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager
+        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
+        Git_Driver_Gerrit_ProjectCreator $project_creator,
+        Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
+        ProjectManager $project_manager
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager    = $system_event_manager;
@@ -78,7 +90,9 @@ class GitActions extends PluginActions {
         $this->gerrit_server_factory = $gerrit_server_factory;
         $this->driver                = $driver;
         $this->gerrit_usermanager    = $gerrit_usermanager;
-
+        $this->project_creator       = $project_creator;
+        $this->template_factory      = $template_factory;
+        $this->project_manager       = $project_manager;
     }
 
     protected function getText($key, $params = array()) {
@@ -161,11 +175,215 @@ class GitActions extends PluginActions {
         ));
         return true;
     }
+
+    /**
+     * Generates a list of GitRepositoryWithPermissions which are migrated to a 
+     * gerrit server and belong to the project or the project's parent.
+     *
+     * @param Project $project
+     * @param PFUser $user
+     * @param Project[] $parent_projects
+     */
+    public function generateGerritRepositoryAndTemplateList(Project $project, PFUser $user) {
+        $repos            = $this->factory->getAllGerritRepositoriesFromProject($project, $user);
+        $templates        = $this->template_factory->getAllTemplatesOfProject($project);
+        $parent_templates = $this->template_factory->getTemplatesAvailableForParentProjects($project);
+
+        $this->addData(array(
+            'repository_list'        => $repos,
+            'templates_list'         => $templates,
+            'parent_templates_list'  => $parent_templates,
+            'has_gerrit_servers_set_up' => $this->gerrit_server_factory->hasRemotesSetUp()
+        ));
+    }
     
     protected function getDao() {
         return new GitDao();
     }
-    
+
+    /**
+     * Displays the contents of the config file of a repository migrated to gerrit.
+     * (used in AJAX)
+     *
+     * @param int $repo_id
+     * @param PFUser $user
+     * @param Project $project
+     * @return void if error
+     */
+    public function fetchGitConfig($repo_id, PFUser $user, Project $project) {
+        $git_repo = $this->getGitRepository($repo_id);
+
+        try {
+            $this->checkRepoValidity($git_repo, $project);
+            $this->checkUserIsAdmin($project, $user);
+        } catch (Exception $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, get_class($e).$e->getTraceAsString());
+            $GLOBALS['Response']->sendStatusCode($e->getCode());
+            return;
+        }
+
+        $gerrit_server           = $this->gerrit_server_factory->getServerById($git_repo->getRemoteServerId());
+        $git_repo_name_on_gerrit = $this->driver->getGerritProjectName($git_repo);
+        $url                     = $gerrit_server->getCloneSSHUrl($git_repo_name_on_gerrit);
+
+        try {
+            echo $this->project_creator->getGerritConfig($gerrit_server, $url);
+        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'Cannot access Gerrit ' . $e->getTraceAsString());
+            $GLOBALS['Response']->sendStatusCode(500);
+            return;
+        }
+    }
+
+    /**
+     *
+     * @param GitRepository $git_repo
+     * @param Project $project
+     * @throws Git_ProjectNotFoundException
+     * @throws GitRepoNotFoundException
+     * @throws GitRepoNotInProjectException
+     * @throws GitRepoNotOnGerritException
+     */
+    private function checkRepoValidity($git_repo, $project) {
+        if($project->isError()) {
+            throw new Git_ProjectNotFoundException('unable to get config', 404);
+        }
+
+        if(! $git_repo) {
+            throw new GitRepoNotFoundException('unable to get config', 404);
+        }
+
+        if(! $git_repo->belongsToProject($project)) {
+            throw new GitRepoNotInProjectException('unable to get config', 403);
+        }
+
+        if(! $git_repo->isMigratedToGerrit()) {
+            throw new GitRepoNotOnGerritException('unable to get config', 500);
+        }
+    }
+
+    /**
+     * Displays the content of a template (used in AJAX)
+     *
+     * @param int $template_id
+     * @param PFUser $user
+     * @param Project $project
+     * @return void
+     */
+    public function fetchGitTemplate($template_id, PFUser $user, Project $project) {
+        try {
+            $template = $this->template_factory->getTemplate($template_id);
+            $this->checkTemplateIsAccessible($template, $project, $user);
+        } catch (Exception $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, get_class($e).$e->getTraceAsString());
+            $GLOBALS['Response']->sendStatusCode($e->getCode());
+            return;
+        }
+        
+        echo $template->getContent();
+    }
+
+    /**
+     * @param Project $project
+     * @param PFUser $user
+     * @throws GitUserNotAdminException
+     */
+    private function checkUserIsAdmin(Project $project, PFUser $user) {
+        if(! $user->isAdmin($project->getID())) {
+             throw new GitUserNotAdminException('unable to get template', 401);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param Git_Driver_Gerrit_Template_Template $template
+     * @param Project $project
+     * @param PFUser $user
+     * @throws Git_ProjectNotInHierarchyException
+     */
+    private function checkTemplateIsAccessible(Git_Driver_Gerrit_Template_Template $template, Project $project, PFUser $user) {
+        $template_id = $template->getId();
+
+        foreach ($this->template_factory->getTemplatesAvailableForProject($project) as $available_template) {
+            if ($available_template->getId() == $template_id) {
+                $template_project = $this->project_manager->getProject($available_template->getProjectId());
+                $this->checkUserIsAdmin($template_project, $user);
+
+                return true;
+            }
+        }
+
+        throw new Git_TemplateNotInProjectHierarchyException('Project not in hierarchy', 404);
+    }
+
+    /**
+     * @param Project $project
+     * @param PFUser $user
+     * @param string $template_content
+     * @param int $template_id
+     * @return void
+     */
+    public function updateTemplate(Project $project, PFUser $user, $template_content, $template_id) {
+        if ($project->isError() || ! $this->checkUserIsAdmin($project, $user)) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_invalid_project'));
+            return;
+        }
+
+        if (! $template_id) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_invalid_template_id'));
+            return;
+        }
+
+        try {
+            $template = $this->template_factory->getTemplate($template_id);
+        } catch (Exception $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'Unable to update template'));
+            return;
+        }
+
+        if ($template->getProjectId() != $project->getID()) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_invalid_template_id'));
+            return;
+        }
+
+        $template->setContent($template_content);
+
+        if ($this->template_factory->updateTemplate($template)) {
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_updated'));
+        } else {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'Unable to update template'));
+        }
+    }
+
+    /**
+     *
+     * @param Project $project
+     * @param PFUser $user
+     * @param string $template_content
+     * @param string $template_name
+     * @return void
+     */
+    public function createTemplate(Project $project, PFUser $user, $template_content, $template_name) {
+        if ($project->isError()) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_invalid_project'));
+            return;
+        }
+
+        try {
+            $this->checkUserIsAdmin($project, $user);
+        } catch (GitUserNotAdminException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_cannot_create'));
+            return;
+        }
+
+        if ($this->template_factory->createTemplate($project->getID(), $template_content, $template_name)) {
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_created'));
+        } else {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_cannot_create'));
+        }
+    }
+
     public function getRepositoryDetails($projectId, $repositoryId) {
         $c = $this->getController();
         $projectId    = intval($projectId);
@@ -193,8 +411,9 @@ class GitActions extends PluginActions {
         $this->addData(array('repository'=>$repository));
         $this->displayFeedbacksOnRepoManagement($repository);
         $this->addData(array(
-            'gerrit_servers' => $this->gerrit_server_factory->getServers(),
-            'driver'         => $this->driver,
+            'gerrit_servers'   => $this->gerrit_server_factory->getServers(),
+            'driver'           => $this->driver,
+            'gerrit_templates' => $this->template_factory->getTemplatesAvailableForRepository($repository)
         ));
         return true;
     }
@@ -291,14 +510,13 @@ class GitActions extends PluginActions {
         $this->getController()->redirect($redirect_url);
     }
 
-    public function redirectToRepoManagementWithMigrationAccessRightInformation($projectId, $repositoryId, $pane, $migrate_access_right) {
+    public function redirectToRepoManagementWithMigrationAccessRightInformation($projectId, $repositoryId, $pane) {
         $redirect_url = GIT_BASE_URL .'/?'. http_build_query(
             array(
                 'action'               => 'repo_management',
                 'group_id'             => $projectId,
                 'repo_id'              => $repositoryId,
                 'pane'                 => $pane,
-                'migrate_access_right' => $migrate_access_right,
             )
         );
         $this->getController()->redirect($redirect_url);
@@ -514,14 +732,17 @@ class GitActions extends PluginActions {
      * @param GitRepository $repository
      * @param int $remote_server_id the id of the server to which we want to migrate
      * @param Boolean $migrate_access_right if the acess right will be migrated or not
+     * @param int $gerrit_template_id the id of template if any chosen
      */
-    public function migrateToGerrit(GitRepository $repository, $remote_server_id, $migrate_access_right) {
+    public function migrateToGerrit(GitRepository $repository, $remote_server_id, $gerrit_template_id) {
         if ($repository->canMigrateToGerrit()) {
+
             try {
                 $this->gerrit_server_factory->getServerById($remote_server_id);
-                $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id, $migrate_access_right);
-            } catch (Git_RemoteServer_NotFoundException $e) {
-                // TODO log error to the syslog
+                $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id, $gerrit_template_id);
+            } catch (Exception $e) {
+                $logger = new BackendLogger();
+                $logger->log($e->getMessage(), Feedback::ERROR);
             }
         }
     }

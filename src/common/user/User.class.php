@@ -356,7 +356,16 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         }
         return $is_member;
     }
-    
+
+    /**
+     * Check if user is admin of a Project
+     * @param type $group_id
+     * @return boolean
+     */
+    public function isAdmin($group_id) {
+        return $this->isMember($group_id, 'A');
+    }
+
     /**
      * Check membership of the user to a specified ugroup
      * (call to old style ugroup_user_is_member in /src/www/project/admin ; here for unit tests purpose)

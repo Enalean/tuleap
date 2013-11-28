@@ -120,6 +120,16 @@ class Git_Driver_Gerrit {
 
     /**
      * @param Git_RemoteServer_GerritServer $server
+     *
+     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     */
+    public function ping(Git_RemoteServer_GerritServer $server) {
+        $command = self::COMMAND . ' version';
+        return explode(PHP_EOL, $this->ssh->execute($server, $command));
+    }
+
+    /**
+     * @param Git_RemoteServer_GerritServer $server
      * @return array : the list of the projects created in the gerrit server
      */
     private function listProjects(Git_RemoteServer_GerritServer $server) {

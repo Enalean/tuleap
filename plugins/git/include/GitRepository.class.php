@@ -296,6 +296,10 @@ class GitRepository implements DVCSRepository {
         return $this->getProject()->getId();
     }
 
+    public function belongsToProject(Project $project) {
+        return $this->project->getId() == $project->getID();
+    }
+
     /**
      * Retrieve Git repository ID knowing the repository name and its group name.
      *

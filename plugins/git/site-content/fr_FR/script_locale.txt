@@ -1,5 +1,7 @@
 codendi.locales['git'] = {
     preview: 'Aperçu',
     path_placeholder_disabled: 'Chemin disponible uniquement en copie personnelle',
-    path_placeholder_enabled: 'Entrer un chemin ou laissez vide' 
+    path_placeholder_enabled: 'Entrer un chemin ou laissez vide',
+    cannot_get_gerrit_config: 'Impossible de charger la configuration',
+    cannot_get_template: 'le modèle ne peut être chargé'
 };

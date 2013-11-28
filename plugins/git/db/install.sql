@@ -100,3 +100,13 @@ VALUES ('PLUGIN_GIT_READ', 2, 1),
 
 -- Enable git gc
 INSERT INTO plugin_git_housekeeping VALUES (1);
+
+-- Create table for Gerrit's refs/meta/config templates
+CREATE TABLE IF NOT EXISTS plugin_git_gerrit_config_template (
+    id INT(11) unsigned NOT NULL auto_increment,
+    group_id INT(11) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    content TEXT,
+    PRIMARY KEY (id),
+    INDEX idx_gerrit_config_template_by_project (group_id)
+);

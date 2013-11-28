@@ -1,5 +1,9 @@
 plugin_git	descriptor_description	Plugin qui implémente le support de Git
 plugin_git	descriptor_name	Plugin Git
+plugin_git	please_choose	Choisir
+plugin_git	cancel	Annuler
+plugin_git	edit	éditer
+plugin_git	view	aperçu
 
 plugin_git	title	Plugin Git
 plugin_git	service_lbl_key	Git
@@ -19,6 +23,7 @@ plugin_git	info_access_content	les dépôts sont accessibles via l'url ci-dessou
 
 plugin_git	bread_crumb_home	Liste des dépôts
 plugin_git	bread_crumb_help	Aide
+plugin_git	bread_crumb_admin	Admin
 
 plugin_git	tree_title_available_repo	Dépôts du projet
 plugin_git	tree_msg_no_available_repo	Aucun dépôt trouvé
@@ -129,6 +134,9 @@ plugin_git	gerrit_server_already_migrated	Le dépôt <em>$1</em> a déjà été 
 plugin_git	permissions_on_remote_server	Vous ne pouvez modifier QUE les permissions en <strong>LECTURE</strong>, car elles sont gérés par un serveur Gerrit distant. Ces modifications affectent uniquement $1 et <strong>NE SONT PAS propagées vers Gerrit</strong>.
 plugin_git	gerrit_migration_ongoing	La migration de ce dépôt vers le serveur Gerrit est en cours, merci de patienter quelques minutes.
 plugin_git	gerrit_migrate_access_right	Migrer sur Gerrit les permissions définies dans le plugin Git.
+plugin_git	gerrit_template	Choisissez un modèle de permissions pour la migration,<br /> elles seront appliquées au dépôt migré sur Gerrit:
+plugin_git	default_gerrit_template	Permissions définies dans Git
+plugin_git	none_gerrit_template	Pas de permissions prédéfinies
 
 plugin_git	mail_prefix_label	Préfixe de notification
 plugin_git	mail_prefix_title	Mettre a jour le préfixe du mail de notification
@@ -234,3 +242,25 @@ plugin_git	push_ssh_keys_info	Vos anciennes clés ne sont pas poussées automati
 plugin_git	gerrit_remote_exception	Une erreur est survenue lors d'une tentative de connexion à un serveur Gerrit. Peut-être est-il arreté? Merci de vérifier avec les administrateurs: $1
 plugin_git	gerrit_deletion_ongoing	La supression du projet sous Gerrit est en cours, veuillez patienter quelques minutes.
 plugin_git	gerrit_readonly_ongoing	La mise en lecture-seule du projet sous Gerrit est en cours, veuillez patienter quelques minutes.
+
+plugin_git	view_admin_title	Administration de Git
+plugin_git	view_admin_repos_list	Configurations
+plugin_git	view_admin_templates_list	Modèles
+plugin_git	view_admin_edit_configuration_label	Vous pouvez éditer le modèle. La variable <b>%projectname%</b> est mise à votre disposition; elle sera remplaçée par le nom du projet au moment de la migration:
+plugin_git	view_admin_file_name_label	Nom du fichier de template
+plugin_git	view_admin_submit_button	Sauvegarder
+plugin_git	view_admin_template_section_title	Modèles de configuration de permissions git
+plugin_git	view_admin_template_section_description	Cette section permet de créer des modèles de configuration de permission réutilisables à partir de configurations de dépôts git existants.
+plugin_git	view_admin_template_table_action	Action
+plugin_git	view_admin_template_table_name	Nom du modèle
+plugin_git	view_admin_create_new_template_text	Nouveau modèle
+plugin_git	view_admin_template_from_gerrit_text	à partir d'une configuration gerrit
+plugin_git	view_admin_template_from_template_text	à partir d'un modèle existant
+plugin_git	view_admin_template_from_scratch_text	vide
+plugin_git	view_admin_template_created	Modèle créé
+plugin_git	view_admin_template_updated	Modèle modifié
+plugin_git	view_admin_template_invalid_project	Projet ID Invalide
+plugin_git	view_admin_template_invalid_template_id	Modèle ID Invalide
+plugin_git	view_admin_template_cannot_update	Impossible de modifier le modèle
+plugin_git	view_admin_template_cannot_create	Impossible de créer le modèle
+plugin_git	view_admin_no_gerrit_server	Il n'y a pas de <em><a href="$1">serveurs gerrit</a></em> de configuré sur ce plateforme! Veuillez contacter l'administrateur du site

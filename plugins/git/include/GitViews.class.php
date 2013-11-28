@@ -137,8 +137,7 @@ class GitViews extends PluginViews {
         $repository   = $params['repository'];
         $this->_getBreadCrumb();
         echo '<h2>'. $repository->getHTMLLink() .' - '. $GLOBALS['Language']->getText('global', 'Settings') .'</h2>';
-
-        $repo_management_view  = new GitViews_RepoManagement($repository, $this->controller->getRequest(), $params['driver'], $params['gerrit_servers']);
+        $repo_management_view = new GitViews_RepoManagement($repository, $this->controller->getRequest(), $params['driver'], $params['gerrit_servers'], $params['gerrit_templates']);
         $repo_management_view->display();
     }
     
@@ -254,6 +253,10 @@ class GitViews extends PluginViews {
         echo ' | ';
 
         echo $this->linkTo( '<b>'.$this->getText('bread_crumb_help').'</b>', 'javascript:help_window(\'/doc/'.$this->user->getShortLocale().'/user-guide/git.html\')');
+        if($this->user->isAdmin($this->groupId)) {
+            echo ' | ';
+            echo $this->linkTo( '<b>'.$this->getText('bread_crumb_admin').'</b>', '/plugins/git/?group_id='.$this->groupId .'&action=admin', 'class=""');
+        }
     }
     
     /**
@@ -332,6 +335,27 @@ class GitViews extends PluginViews {
             echo '</form>';
         }
         echo '<br />';
+    }
+
+    protected function adminView() {
+        $params = $this->getData();
+        $this->_getBreadCrumb();
+
+        $repository_list = (isset($params['repository_list'])) ? $params['repository_list'] : array();
+        $templates_list  = (isset($params['templates_list'])) ? $params['templates_list'] : array();
+        $parent_templates_list  = (isset($params['parent_templates_list'])) ? $params['parent_templates_list'] : array();
+
+        $presenter = new GitPresenters_AdminPresenter(
+            $repository_list,
+            $templates_list,
+            $parent_templates_list,
+            $this->groupId,
+            $params['has_gerrit_servers_set_up']
+        );
+
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+
+        echo $renderer->renderToString('admin', $presenter);
     }
 
     /**

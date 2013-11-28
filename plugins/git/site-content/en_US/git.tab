@@ -1,5 +1,9 @@
 plugin_git	descriptor_description	Plugin which provides Git support for Tuleap
 plugin_git	descriptor_name	Git Plugin
+plugin_git	please_choose	Please choose
+plugin_git	cancel	Cancel
+plugin_git	edit	edit
+plugin_git	view	view
 
 plugin_git	title	Git Plugin
 plugin_git	service_lbl_key	Git
@@ -18,6 +22,7 @@ plugin_git	info_access_content	Repositories are accessible through the following
 
 plugin_git	bread_crumb_home	Repository list
 plugin_git	bread_crumb_help	Help
+plugin_git	bread_crumb_admin	Admin
 
 plugin_git	tree_title_available_repo	Project repositories
 plugin_git	tree_msg_no_available_repo	No repository found
@@ -60,6 +65,9 @@ plugin_git	gerrit_server_already_migrated	The repository <em>$1</em> has already
 plugin_git	permissions_on_remote_server	You can only change <strong>READ</strong> permissions since this repository is managed by a remote Gerrit server. Please note that those modifications are local to $1 <strong>ARE NOT propagated to Gerrit</strong>.
 plugin_git	gerrit_migration_ongoing	The migration of this repository to Gerrit server is on going, please wait for a few minutes.
 plugin_git	gerrit_migrate_access_right	Migrate to Gerrit the access rights defined in the Git plugin.
+plugin_git	gerrit_template	Please choose a permission's configuration template for the migration,<br />they will be applied to the migrated repository on Gerrit:
+plugin_git	default_gerrit_template	Permissions defined in Git
+plugin_git	none_gerrit_template	No pre-set permissions
 
 plugin_git	controller_access_denied	You are not allowed to access this page
 
@@ -237,3 +245,26 @@ plugin_git	push_ssh_keys_info	Old keys need to be pushed manually. All new keys 
 plugin_git	gerrit_remote_exception	An error occured while trying to access Gerrit server, maybe the server is down, please check with administrators: $1
 plugin_git	gerrit_deletion_ongoing	The deletion of the project under Gerrit is on going, please wait for a few minutes.
 plugin_git	gerrit_readonly_ongoing	The setting of the project under Gerrit to read-only is on going, please wait for a few minutes.
+
+plugin_git	view_admin_title	Git Administration
+plugin_git	view_admin_repos_list	Configurations
+plugin_git	view_admin_templates_list	Templates
+plugin_git	view_admin_edit_configuration_label	You can edit the template. The <b>%projectname%</b> variable is available; it will be replaced by the project's name during the migration process:
+plugin_git	view_admin_file_name_label	Template file name
+plugin_git	view_admin_submit_button	Save
+plugin_git	view_admin_template_section_title	Git permission configuration templates
+plugin_git	view_admin_template_section_description	This section allows you to choose a Gerrit project configuration and create a reusable template from it
+
+plugin_git	view_admin_template_table_action	Action
+plugin_git	view_admin_template_table_name	Template name
+plugin_git	view_admin_create_new_template_text	Create new
+plugin_git	view_admin_template_from_gerrit_text	from gerrit config
+plugin_git	view_admin_template_from_template_text	from template
+plugin_git	view_admin_template_from_scratch_text	from scratch
+plugin_git	view_admin_template_created	Template created
+plugin_git	view_admin_template_updated	Template updated
+plugin_git	view_admin_template_invalid_project	Invalid Project ID
+plugin_git	view_admin_template_invalid_template_id	Invalid Template ID
+plugin_git	view_admin_template_cannot_update	Unable to update template
+plugin_git	view_admin_template_cannot_create	Unable to create template
+plugin_git	view_admin_no_gerrit_server	There do not appear to be any <em><a href="$1">gerrit servers</a></em> set-up for this platform! Please contact your site administrator

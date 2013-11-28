@@ -174,5 +174,13 @@ class Git_RemoteServer_GerritServerFactory {
             $row['use_ssl']
         );
     }
+
+    /**
+     * Check if gerrit is enabled and has remotes set up.
+     * @return boolean
+     */
+    public function hasRemotesSetUp() {
+        return $this->dao->searchAll()->count() > 0;
+    }
 }
 ?>

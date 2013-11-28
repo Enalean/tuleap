@@ -263,7 +263,7 @@ class GitDao extends DataAccessObject {
         }
         return $list;
     }
-    
+
     /**
      * 
      * @return DataAccessResult

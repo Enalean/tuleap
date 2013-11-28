@@ -52,6 +52,12 @@ class PluginController {
      */
     protected $permittedActions;
 
+    /**
+     * Boolean to choose to add default page header and footer in the response.
+     *
+     * @var boolean
+     */
+    protected $default_page_rendering = true;
     
     public function __construct(UserManager $user_manager, Codendi_Request $request) {
         $this->user             = $user_manager->getCurrentUser();
@@ -173,7 +179,7 @@ class PluginController {
         $className = get_class($this).'Views';
         $wv        = new $className($this);
         //this allow to skip header
-        if ( !isset($_REQUEST['noheader']) ) {
+        if (! isset($_REQUEST['noheader']) && $this->default_page_rendering) {
             $wv->display('header', $this->views['header']);
         }        
         foreach ($this->views as $viewName=>$viewParams) {
@@ -181,7 +187,10 @@ class PluginController {
                 $wv->display($viewName, $viewParams);
             }
         }
-        $wv->display('footer', $this->views['footer']);
+
+        if ($this->default_page_rendering) {
+            $wv->display('footer', $this->views['footer']);
+        }
     }
 
     /**
@@ -224,6 +233,14 @@ class PluginController {
         $this->executeViews();
     }
 
+    /**
+     * Sets whether the default page header and footer are added to the response
+     * 
+     * @param boolean $bool
+     */
+    protected function setDefaultPageRendering($bool) {
+        $this->default_page_rendering = $bool;
+    }
 }
 
 ?>

@@ -92,6 +92,9 @@ class Git extends PluginController {
     /** @var PluginManager */
     private $plugin_manager;
 
+    /** @var Git_Driver_Gerrit_ProjectCreator */
+    private $project_creator;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -103,7 +106,9 @@ class Git extends PluginController {
         UserManager $user_manager,
         ProjectManager $project_manager,
         PluginManager $plugin_manager,
-        Codendi_Request $request
+        Codendi_Request $request,
+        Git_Driver_Gerrit_ProjectCreator $project_creator,
+        Git_Driver_Gerrit_Template_TemplateFactory $template_factory
     ) {
         parent::__construct($user_manager, $request);
 
@@ -116,6 +121,8 @@ class Git extends PluginController {
         $this->git_system_event_manager = $system_event_manager;
         $this->gerrit_usermanager       = $gerrit_usermanager;
         $this->plugin_manager           = $plugin_manager;
+        $this->project_creator          = $project_creator;
+        $this->template_factory         = $template_factory;
 
         $matches = array();
         if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
@@ -225,6 +232,9 @@ class Git extends PluginController {
                                             'set_private',
                                             'confirm_private',
                                             'fork_repositories',
+                                            'admin',
+                                            'fetch_git_config',
+                                            'fetch_git_template',
                                             'fork_repositories_permissions',
                                             'do_fork_repositories',
                                             'view_last_git_pushes',
@@ -289,7 +299,7 @@ class Git extends PluginController {
 
     }
     
-    public function _dispatchActionAndView($action, $repoId, $repositoryName, $user) { 
+    public function _dispatchActionAndView($action, $repoId, $repositoryName, $user) {
         $pane = $this->request->get('pane');
         switch ($action) {
             #CREATE REF
@@ -402,6 +412,38 @@ class Git extends PluginController {
                 $this->addAction('getProjectRepositoryList', array($this->groupId));
                 $this->addView('forkRepositories');
                 break;
+            case 'admin':
+                $project = $this->projectManager->getProject($this->groupId);
+
+                if ($this->request->get('save')) {
+                    $template_content = $this->request->getValidated('git_admin_config_data','text');
+                    if ($this->request->getValidated('git_admin_template_id','uint')) {
+                        $template_id = $this->request->get('git_admin_template_id');
+                        $this->addAction('updateTemplate', array($project, $user, $template_content, $template_id));
+                    } else {
+                        $template_name = $this->request->getValidated('git_admin_file_name','string');
+                        $this->addAction('createTemplate', array($project, $user, $template_content, $template_name));
+                    }
+                }
+
+                if($user->isAdmin($this->groupId)) {
+                    $this->addAction('generateGerritRepositoryAndTemplateList', array($project, $user));
+                    $this->addView('adminView');
+                } else {
+                    $this->addError($this->getText('controller_access_denied'));
+                }
+                break;
+            case 'fetch_git_config':
+                $project = $this->projectManager->getProject($this->groupId);
+                $this->setDefaultPageRendering(false);
+                $this->addAction('fetchGitConfig', array($repoId, $user, $project));
+                break;
+            case 'fetch_git_template':
+                $project = $this->projectManager->getProject($this->groupId);
+                $template_id = $this->request->get('template_id');
+                $this->setDefaultPageRendering(false);
+                $this->addAction('fetchGitTemplate', array($template_id, $user, $project));
+                break;
             case 'fork_repositories_permissions':
                 $scope = self::SCOPE_PERSONAL;
                 $valid = new Valid_UInt('repos');
@@ -471,10 +513,12 @@ class Git extends PluginController {
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
                     break;
                 }
-                
-                $repo = $this->factory->getRepositoryById($repoId);
-                $remote_server_id = $this->request->getValidated('remote_server_id', 'uint');
-                if (empty($repo) || empty($remote_server_id)) {
+
+                $repo                  = $this->factory->getRepositoryById($repoId);
+                $remote_server_id      = $this->request->getValidated('remote_server_id', 'uint');
+                $gerrit_template_id    = $this->getValidatedGerritTemplateId($repo);
+
+                if (empty($repo) || empty($remote_server_id) || empty($gerrit_template_id)) {
                     $this->addError($this->getText('actions_params_error'));
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
                 } else {
@@ -483,13 +527,12 @@ class Git extends PluginController {
                         if ($project_exists) {
                             $this->addError($this->getText('gerrit_project_exists'));
                         } else {
-                            $migrate_access_right = $this->request->existAndNonEmpty('migrate_access_right');
-                            $this->addAction('migrateToGerrit', array($repo, $remote_server_id, $migrate_access_right));
+                            $this->addAction('migrateToGerrit', array($repo, $remote_server_id, $gerrit_template_id));
                         }
                     } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
                         $this->addError($this->getText('gerrit_server_down'));
                     }
-                    $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repoId, $pane, $migrate_access_right));
+                    $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repoId, $pane));
                 }
                 break;
             case 'disconnect_gerrit':
@@ -513,7 +556,7 @@ class Git extends PluginController {
                     $this->addError($this->getText('gerrit_server_down'));
                 }
                 $migrate_access_right = $this->request->existAndNonEmpty('migrate_access_right');
-                $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repoId, $pane, $migrate_access_right));
+                $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repoId, $pane));
                 break;
             #LIST
             default:
@@ -529,6 +572,33 @@ class Git extends PluginController {
                 $this->addView('index');
                 break;
         }
+    }
+
+    private function getValidatedGerritTemplateId($repository) {
+        if (empty($repository)) {
+            return null;
+        }
+        $template_id = $this->request->getValidated('gerrit_template_id', 'string');
+
+        if ($template_id && ($template_id == Git_Driver_Gerrit_ProjectCreator::NO_PERMISSIONS_MIGRATION || $template_id == Git_Driver_Gerrit_ProjectCreator::DEFAULT_PERMISSIONS_MIGRATION)) {
+            return $template_id;
+        }
+
+        $template_id = $this->request->getValidated('gerrit_template_id', 'uint');
+
+        if ($template_id) {
+            try {
+                $this->template_factory->getTemplate($template_id);
+            } catch (Git_Template_NotFoundException $e) {
+                return null;
+            }
+        }
+
+        if ($this->project_creator->checkTemplateIsAvailableForProject($template_id, $repository)) {
+            return $template_id;
+        }
+
+        return null;
     }
 
     private function gerritProjectAlreadyExists($remote_server_id, GitRepository $repo) {
@@ -629,7 +699,10 @@ class Git extends PluginController {
             $this->repository_manager,
             $this->gerrit_server_factory,
             $this->driver,
-            $this->gerrit_usermanager
+            $this->gerrit_usermanager,
+            $this->project_creator,
+            $this->template_factory,
+            $this->projectManager
         );
     }
 
