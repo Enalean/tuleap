@@ -41,8 +41,32 @@ class Tracker_Permission_PermissionChecker {
             return true;
         }
 
+        if ($user->isMember($artifact->getTracker()->getGroupId(), 'A')) {
+            return true;
+        }
+
+        if ($this->isTrackerAdmin($user, $artifact)) {
+            return true;
+        }
+
         if ($this->checkArtifactPermissions($user, $artifact)) {
             return $this->checkTrackerPermissions($user, $artifact);
+        }
+        return false;
+    }
+
+    private function isTrackerAdmin(PFUser $user, Tracker_Artifact $artifact) {
+        $permissions = $artifact->getTracker()->getPermissionsAuthorizedUgroups();
+        foreach ($permissions  as $permission => $ugroups) {
+            switch($permission) {
+                case Tracker::PERMISSION_ADMIN:
+                    foreach ($ugroups as $ugroup) {
+                        if ($this->checkUserBelongToGroup($user, $artifact, $ugroup)) {
+                            return true;
+                        }
+                    }
+                break;
+            }
         }
         return false;
     }

@@ -310,8 +310,11 @@ class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends Tracker_Per
 
 class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends Tracker_Permission_PermissionChecker_SubmitterOnlyBaseTest {
     protected $ugroup_id_maintainers = 111;
+    protected $ugroup_id_admin       = 4;
 
     protected $maintainer;
+    protected $tracker_admin;
+    protected $project_admin;
 
     public function setUp() {
         parent::setUp();
@@ -323,13 +326,24 @@ class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends Tra
                 ),
                 Tracker::PERMISSION_FULL => array(
                     $this->ugroup_id_maintainers
+                ),
+                Tracker::PERMISSION_ADMIN => array(
+                    $this->ugroup_id_admin
                 )
             )
         );
 
         $this->maintainer = mock('PFUser');
-        stub($this->maintainer)->getId()->returns(250);
+        stub($this->maintainer)->getId()->returns(251);
         stub($this->maintainer)->isMemberOfUgroup($this->ugroup_id_maintainers, 222)->returns(true);
+
+        $this->tracker_admin = mock('PFUser');
+        stub($this->tracker_admin)->getId()->returns(252);
+        stub($this->tracker_admin)->isMemberOfUgroup($this->ugroup_id_admin, 222)->returns(true);
+
+        $this->project_admin = mock('PFUser');
+        stub($this->project_admin)->getId()->returns(253);
+        stub($this->project_admin)->isMember(222, 'A')->returns(true);
 
         stub($this->artifact)->getSubmittedBy()->returns(250);
     }
@@ -344,5 +358,13 @@ class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends Tra
 
     public function itSeesArtifactBecauseHeIsGrantedFullAccess() {
         $this->assertTrue($this->permission_checker->userCanView($this->maintainer, $this->artifact));
+    }
+
+    public function itSeesArtifactBecauseHeIsTrackerAdmin() {
+        $this->assertTrue($this->permission_checker->userCanView($this->tracker_admin, $this->artifact));
+    }
+    
+    public function itSeesArtifactBecauseHeIsProjectAdmin() {
+        $this->assertTrue($this->permission_checker->userCanView($this->project_admin, $this->artifact));
     }
 }
