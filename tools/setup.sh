@@ -96,7 +96,10 @@ PHP='/usr/bin/php'
 INSTALL='/usr/bin/install'
 
 CHCON='/usr/bin/chcon'
-SELINUX_CONTEXT="root:object_r:httpd_sys_content_t";
+SELINUX_CONTEXT="root:object_r:httpd_sys_content_t:s0";
+if [ "$INSTALL_PROFILE" = "rhel" -a "$RH_MAJOR_VERSION" = "5" ]; then
+    SELINUX_CONTEXT="root:object_r:httpd_sys_content_t";
+fi
 SELINUX_ENABLED=1
 if [ -e /etc/selinux/config ]
 then
@@ -1175,6 +1178,13 @@ if [ $SELINUX_ENABLED ]; then
     fi
     $CHCON -h $SELINUX_CONTEXT /svnroot
     $CHCON -h $SELINUX_CONTEXT /cvsroot
+
+    if [ $INSTALL_PROFILE = "rhel" ]; then
+	if [ "$RH_MAJOR_VERSION" = "6" ]; then
+            # request #3468 - SELinux forbids apache to send emails
+	    setsebool -P httpd_can_sendmail 1
+	fi
+    fi
 fi
 
 ##############################################
