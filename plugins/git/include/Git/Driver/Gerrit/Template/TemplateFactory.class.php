@@ -157,5 +157,14 @@ class Git_Driver_Gerrit_Template_TemplateFactory {
     public function createTemplate($project_id, $template_content, $template_name) {
         return $this->dao->addTemplate($project_id, $template_name, $template_content);
     }
+
+    /**
+     * @param int $template_id
+     *
+     * @return bool
+     */
+    public function deleteTemplate($template_id) {
+        return $this->dao->deleteTemplate($template_id);
+    }
 }
 ?>

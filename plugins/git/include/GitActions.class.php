@@ -236,6 +236,32 @@ class GitActions extends PluginActions {
     }
 
     /**
+     * Delete a given template
+     *
+     * @param int the $template_id
+     * @param Project $project
+     * @param PFUser $user
+     */
+    public function deleteGerritTemplate($template_id, Project $project, PFUser $user) {
+        if (! $user->isAdmin($project->getID())) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'gerrit_template_delete_error'));
+            return;
+        }
+
+        try {
+            $template = $this->template_factory->getTemplate($template_id);
+
+            if ($template->belongsToProject($project->getID())) {
+                $this->template_factory->deleteTemplate($template_id);
+                $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_git', 'gerrit_template_delete_success'));
+                return;
+            }
+        } catch (Exception $e) {}
+
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'gerrit_template_delete_error'));
+    }
+
+    /**
      *
      * @param GitRepository $git_repo
      * @param Project $project
@@ -342,7 +368,7 @@ class GitActions extends PluginActions {
             return;
         }
 
-        if ($template->getProjectId() != $project->getID()) {
+        if (! $template->belongsToProject($project->getID())) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_invalid_template_id'));
             return;
         }

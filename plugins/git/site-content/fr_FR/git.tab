@@ -249,7 +249,7 @@ plugin_git	view_admin_templates_list	Modèles
 plugin_git	view_admin_edit_configuration_label	Vous pouvez éditer le modèle. La variable <b>%projectname%</b> est mise à votre disposition; elle sera remplaçée par le nom du projet au moment de la migration:
 plugin_git	view_admin_file_name_label	Nom du fichier de template
 plugin_git	view_admin_submit_button	Sauvegarder
-plugin_git	view_admin_template_section_title	Modèles de configuration de permissions git
+plugin_git	view_admin_template_section_title	Modèles de configuration de permissions Gerrit
 plugin_git	view_admin_template_section_description	Cette section permet de créer des modèles de configuration de permission réutilisables à partir de configurations de dépôts git existants.
 plugin_git	view_admin_template_table_action	Action
 plugin_git	view_admin_template_table_name	Nom du modèle
@@ -264,3 +264,7 @@ plugin_git	view_admin_template_invalid_template_id	Modèle ID Invalide
 plugin_git	view_admin_template_cannot_update	Impossible de modifier le modèle
 plugin_git	view_admin_template_cannot_create	Impossible de créer le modèle
 plugin_git	view_admin_no_gerrit_server	Il n'y a pas de <em><a href="$1">serveurs gerrit</a></em> de configuré sur ce plateforme! Veuillez contacter l'administrateur du site
+
+plugin_git	gerrit_template_delete	Supprimer
+plugin_git	gerrit_template_delete_error	Une erreur est survenue pendant la suppression du modèle.
+plugin_git	gerrit_template_delete_success	Modèle supprimé avec succès.

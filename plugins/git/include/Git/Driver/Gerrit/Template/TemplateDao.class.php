@@ -76,5 +76,14 @@ class Git_Driver_Gerrit_Template_TemplateDao extends DataAccessObject {
 
         return $this->update($sql);
     }
+
+    public function deleteTemplate($template_id) {
+        $template_id = $this->da->escapeInt($template_id);
+
+        $sql = "DELETE FROM plugin_git_gerrit_config_template
+                WHERE id = $template_id";
+
+        return $this->update($sql);
+    }
 }
 ?>

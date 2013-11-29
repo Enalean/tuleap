@@ -187,8 +187,8 @@ class Git_Exec {
      * @return boolean
      * @throw Git_Command_Exception
      */
-    public function push() {
-        $cmd = 'push origin master';
+    public function push($origin='origin master') {
+        $cmd = 'push --porcelain '.$origin;
         return $this->gitCmd($cmd);
     }
 

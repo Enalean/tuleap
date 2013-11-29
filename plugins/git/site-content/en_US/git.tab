@@ -252,7 +252,7 @@ plugin_git	view_admin_templates_list	Templates
 plugin_git	view_admin_edit_configuration_label	You can edit the template. The <b>%projectname%</b> variable is available; it will be replaced by the project's name during the migration process:
 plugin_git	view_admin_file_name_label	Template file name
 plugin_git	view_admin_submit_button	Save
-plugin_git	view_admin_template_section_title	Git permission configuration templates
+plugin_git	view_admin_template_section_title	Gerrit permission configuration templates
 plugin_git	view_admin_template_section_description	This section allows you to choose a Gerrit project configuration and create a reusable template from it
 
 plugin_git	view_admin_template_table_action	Action
@@ -268,3 +268,7 @@ plugin_git	view_admin_template_invalid_template_id	Invalid Template ID
 plugin_git	view_admin_template_cannot_update	Unable to update template
 plugin_git	view_admin_template_cannot_create	Unable to create template
 plugin_git	view_admin_no_gerrit_server	There do not appear to be any <em><a href="$1">gerrit servers</a></em> set-up for this platform! Please contact your site administrator
+
+plugin_git	gerrit_template_delete	Delete
+plugin_git	gerrit_template_delete_error	An error occured while trying to delete the template.
+plugin_git	gerrit_template_delete_success	Template successfully deleted.

@@ -70,5 +70,14 @@ class Git_Driver_Gerrit_Template_Template {
     public function getProjectId() {
         return $this->group_id;
     }
+
+    /**
+     * @param int $group_id
+     *
+     * @return True if this template belongs to the given project
+     */
+    public function belongsToProject($group_id) {
+        return $this->group_id == $group_id;
+    }
 }
 ?>
