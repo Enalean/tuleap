@@ -118,6 +118,10 @@ class Testing_Campaign_MatrixRowPresenterCollectionFactory {
             $execution   = $this->exec_factory->getInstanceFromRow($campaign, $row);
             $last_result = $execution->getLastTestResult();
 
+            if (! $release) {
+                $release = new Testing_Release_NullRelease();
+            }
+
             if (! isset($release_nodes_by_id[$release->getId()])) {
                 $release_nodes_by_id[$release->getId()] = new TreeNode(array('label' => $release->getTitle()));
                 $root->addChild($release_nodes_by_id[$release->getId()]);

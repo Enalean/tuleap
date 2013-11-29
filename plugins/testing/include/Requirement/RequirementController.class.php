@@ -77,8 +77,12 @@ class Testing_Requirement_RequirementController extends TestingController {
             $cycle = new Testing_Release_ArtifactRelease($row['cycle_id']);
             $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($cycle->getId());
             $parent = $artifact->getParent($this->request->getCurrentUser());
-            $release = new Testing_Release_ArtifactRelease($parent->getId());
-            $cycles_by_releases[$parent->getId()][] = new Testing_Requirement_ReleasePresenter(
+
+            $release = new Testing_Release_NullRelease();
+            if ($parent) {
+                $release = new Testing_Release_ArtifactRelease($parent->getId());
+            }
+            $cycles_by_releases[$release->getId()][] = new Testing_Requirement_ReleasePresenter(
                 $this->getProject(),
                 $cycle,
                 $requirement,

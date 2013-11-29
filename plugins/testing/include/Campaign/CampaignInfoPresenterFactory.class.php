@@ -37,12 +37,12 @@ class Testing_Campaign_CampaignInfoPresenterFactory {
         $cycle = $campaign->getRelease();
         $release = new Testing_Release_NullRelease();
         if ($cycle->getId()) {
-            $release = new Testing_Release_ArtifactRelease(
-                Tracker_ArtifactFactory::instance()
+            $parent = Tracker_ArtifactFactory::instance()
                     ->getArtifactById($cycle->getId())
-                    ->getParent(UserManager::instance()->getCurrentUser())
-                    ->getId()
-            );
+                    ->getParent(UserManager::instance()->getCurrentUser());
+            if ($parent) {
+                $release = new Testing_Release_ArtifactRelease($parent->getId());
+            }
         }
         $release_presenter = new Testing_Release_ReleaseInfoPresenter(
             $campaign->getProject(),

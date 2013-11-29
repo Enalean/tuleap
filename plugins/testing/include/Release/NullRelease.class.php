@@ -26,4 +26,5 @@ class Testing_Release_NullRelease implements Testing_Release_Release {
     public function getId() { return 0; }
 
     public function getName() { return ''; }
+    public function getTitle() { return $this->getName(); }
 }
