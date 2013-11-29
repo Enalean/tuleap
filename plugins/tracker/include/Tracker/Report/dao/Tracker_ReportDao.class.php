@@ -170,7 +170,7 @@ class Tracker_ReportDao extends DataAccessObject {
         $from  .= $artifact_perms['from'];
         $where .= $artifact_perms['where'];
 
-        if ($this->hasPermissionFor(Tracker::PERMISSION_SUBMITTER_ONLY, $permissions, $ugroups) && ! $this->hasPermissionFor(Tracker::PERMISSION_FULL, $permissions, $ugroups)) {
+        if ($this->submitterOnlyApplies($user_is_superuser, $permissions, $ugroups)) {
             $where .= ' AND artifact.submitted_by = '.$user->getId().' ';
         }
 
@@ -196,11 +196,20 @@ class Tracker_ReportDao extends DataAccessObject {
             return $this->retrieve($sql);
         }
     }
-    
+
+    private function submitterOnlyApplies($user_is_superuser, $permissions, $ugroups) {
+            return $this->hasPermissionFor(Tracker::PERMISSION_SUBMITTER_ONLY, $permissions, $ugroups) &&
+                ! ($user_is_superuser ||
+                    $this->hasPermissionFor(Tracker::PERMISSION_FULL, $permissions, $ugroups) ||
+                    $this->hasPermissionFor(Tracker::PERMISSION_ADMIN, $permissions, $ugroups) ||
+                    $this->hasPermissionFor(Tracker::PERMISSION_SUBMITTER, $permissions, $ugroups) ||
+                    $this->hasPermissionFor(Tracker::PERMISSION_ASSIGNEE, $permissions, $ugroups));
+    }
+
     public function getSqlFragmentsAccordinglyToTrackerPermissions($user_is_superuser, $from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
         $sqls = array();
         //Does the user member of at least one group which has ACCESS_FULL or is super user?
-        if ($user_is_superuser || $this->hasPermissionFor(Tracker::PERMISSION_FULL, $permissions, $ugroups) || $this->hasPermissionFor(Tracker::PERMISSION_SUBMITTER_ONLY, $permissions, $ugroups)) {
+        if ($user_is_superuser || $this->hasPermissionFor(Tracker::PERMISSION_FULL, $permissions, $ugroups) || $this->submitterOnlyApplies($user_is_superuser, $permissions, $ugroups)) {
             $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ". $from ." ". $where;
         } else {
             $sqls = $this->getSqlFragmentsAccordinglyToAssigneeOrSubmitterAccessPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id);
