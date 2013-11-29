@@ -60,12 +60,8 @@ class Chart {
         if ($aWidth && $aHeight) {
             $this->jpgraph_instance->img->SetAntiAliasing();
         }
-        $this->jpgraph_instance->SetUserFont(
-            'dejavu-lgc/DejaVuLGCSans.ttf',  
-            'dejavu-lgc/DejaVuLGCSans-Bold.ttf', 
-            'dejavu-lgc/DejaVuLGCSans-Oblique.ttf', 
-            'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf'
-        );
+        Chart_TTFFactory::setUserFont($this->jpgraph_instance);
+
         //Fix margin
         $this->jpgraph_instance->img->SetMargin(70, 160, 30, 70);
         
@@ -226,12 +222,8 @@ class Chart {
     public function displayMessage($msg) {
         //ttf from jpgraph
         $ttf = new TTF();
-        $ttf->SetUserFont(
-            'dejavu-lgc/DejaVuLGCSans.ttf',
-            'dejavu-lgc/DejaVuLGCSans-Bold.ttf',
-            'dejavu-lgc/DejaVuLGCSans-Oblique.ttf',
-            'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf'
-        );
+        Chart_TTFFactory::setUserFont($ttf);
+
         //Calculate the baseline
         // @see http://www.php.net/manual/fr/function.imagettfbbox.php#75333
         //this should be above baseline
