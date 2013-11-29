@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\REST\v1;
 use \Tuleap\REST\Header;
 use \Luracast\Restler\RestException;
 use \Tracker_ArtifactFactory;
+use \Tracker_Artifact;
 use \Project_AccessProjectNotFoundException;
 use \Project_AccessException;
 use \URLVerification;
