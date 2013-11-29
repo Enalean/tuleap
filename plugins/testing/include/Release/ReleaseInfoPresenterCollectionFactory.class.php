@@ -24,19 +24,19 @@
 class Testing_Release_ReleaseInfoPresenterCollectionFactory {
 
     /** @var Tracker */
-    private $release_tracker;
+    private $cycle_tracker;
 
     public function __construct(
         Project $project,
-        Tracker $release_tracker
+        Tracker $cycle_tracker
     ) {
         $this->project         = $project;
-        $this->release_tracker = $release_tracker;
+        $this->cycle_tracker = $cycle_tracker;
     }
 
     public function getPresenter() {
         $collection = new Testing_Release_ReleaseInfoPresenterCollection();
-        foreach(Tracker_ArtifactFactory::instance()->getArtifactsByTrackerId($this->release_tracker->getId()) as $artifact) {
+        foreach(Tracker_ArtifactFactory::instance()->getArtifactsByTrackerId($this->cycle_tracker->getId()) as $artifact) {
             $release = new Testing_Release_ArtifactRelease($artifact->getId());
             $collection->append(new Testing_Release_ReleaseInfoPresenter($this->project, $release));
         }

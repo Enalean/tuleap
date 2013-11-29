@@ -54,7 +54,7 @@ class TestingRouter {
 
         $release_info_presenter_collection_factory = new Testing_Release_ReleaseInfoPresenterCollectionFactory(
             $project,
-            $conf->getReleaseTracker()
+            $conf->getCycleTracker()
         );
 
         $testcase_association_dao = new Testing_Requirement_TestCaseAssociationDao();
