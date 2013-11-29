@@ -902,7 +902,7 @@ class TrackerFactory {
             //tracker permissions
             if ($tracker->permissionsAreCached()) {
                 $pm = PermissionsManager::instance();
-                foreach ($tracker->getPermissions() as $ugroup => $permissions) {
+                foreach ($tracker->getPermissionsByUgroupId() as $ugroup => $permissions) {
                     foreach ($permissions as $permission) {
                         $pm->addPermission($permission, $tracker_id, $ugroup);
                     }

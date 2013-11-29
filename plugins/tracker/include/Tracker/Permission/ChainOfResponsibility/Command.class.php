@@ -20,6 +20,7 @@
 
 /**
  * I am a command in a chain of responsability
+ * I apply permissions on users or groups of users
  *
  * @see http://en.wikipedia.org/wiki/Chain-of-responsibility_pattern
  */
@@ -58,11 +59,11 @@ abstract class Tracker_Permission_Command {
         return $this->next_command;
     }
 
-    public function executeNextCommand(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permissions_setter) {
-        $this->next_command->execute($request, $permissions_setter);
+    public function applyNextCommand(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permissions_setter) {
+        $this->next_command->apply($request, $permissions_setter);
     }
 
-    abstract public function execute(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permissions_setter);
+    abstract public function apply(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permissions_setter);
 
     protected function revokeAllButAdmin(
         Tracker_Permission_PermissionRequest $request,
@@ -78,7 +79,7 @@ abstract class Tracker_Permission_Command {
     }
 
     private function requestContainsNonAdminPermissions(Tracker_Permission_PermissionRequest $request, $ugroup_id) {
-        return in_array($request->get($ugroup_id), self::$non_admin_permissions);
+        return in_array($request->getPermissionType($ugroup_id), self::$non_admin_permissions);
     }
 
     private function revokeNonAdmin(Tracker_Permission_PermissionSetter $permission_setter, $ugroup_id) {

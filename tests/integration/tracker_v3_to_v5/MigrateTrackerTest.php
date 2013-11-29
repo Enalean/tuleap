@@ -128,7 +128,7 @@ class MigrateTracker_DefectTrackerConfigTest extends MigrateDefaultTrackersTest 
     }
 
     public function itGivesFullAccessToAllUsers() {
-        $this->assertEqual($this->defect_tracker->getPermissions(), array(
+        $this->assertEqual($this->defect_tracker->getPermissionsByUgroupId(), array(
             UGroup::ANONYMOUS => array(
                 Tracker::PERMISSION_FULL
             )
@@ -142,7 +142,7 @@ class MigrateTracker_DefectTrackerConfigTest extends MigrateDefaultTrackersTest 
         $this->assertEqual($field->getLabel(), "Summary");
         $this->assertTrue($field->isRequired());
         $this->assertTrue($field->isUsed());
-        $this->assertEqual($field->getPermissions(), array(
+        $this->assertEqual($field->getPermissionsByUgroupId(), array(
             UGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
@@ -162,7 +162,7 @@ class MigrateTracker_DefectTrackerConfigTest extends MigrateDefaultTrackersTest 
         $this->assertEqual($field->getLabel(), "Status");
         $this->assertTrue($field->isRequired());
         $this->assertTrue($field->isUsed());
-        $this->assertEqual($field->getPermissions(), array(
+        $this->assertEqual($field->getPermissionsByUgroupId(), array(
             UGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
@@ -188,7 +188,7 @@ class MigrateTracker_DefectTrackerConfigTest extends MigrateDefaultTrackersTest 
         $this->assertFalse($field->isRequired());
         $this->assertTrue($field->isUsed());
         $this->assertFalse($field->isMultiple());
-        $this->assertEqual($field->getPermissions(), array(
+        $this->assertEqual($field->getPermissionsByUgroupId(), array(
             UGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
@@ -210,7 +210,7 @@ class MigrateTracker_DefectTrackerFieldsTest extends MigrateDefaultTrackersTest 
         $this->assertEqual($field->getLabel(), "Submitted by");
         $this->assertFalse($field->isRequired());
         $this->assertTrue($field->isUsed());
-        $this->assertEqual($field->getPermissions(), array(
+        $this->assertEqual($field->getPermissionsByUgroupId(), array(
             UGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
@@ -224,7 +224,7 @@ class MigrateTracker_DefectTrackerFieldsTest extends MigrateDefaultTrackersTest 
         $this->assertEqual($field->getLabel(), "Original Submission");
         $this->assertFalse($field->isRequired());
         $this->assertTrue($field->isUsed());
-        $this->assertEqual($field->getPermissions(), array(
+        $this->assertEqual($field->getPermissionsByUgroupId(), array(
             UGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
@@ -244,7 +244,7 @@ class MigrateTracker_DefectTrackerFieldsTest extends MigrateDefaultTrackersTest 
         $this->assertEqual($field->getLabel(), "Close Date");
         $this->assertFalse($field->isRequired());
         $this->assertFalse($field->isUsed());
-        $this->assertEqual($field->getPermissions(), array(
+        $this->assertEqual($field->getPermissionsByUgroupId(), array(
             UGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
@@ -377,7 +377,7 @@ class MigrateTracker_TaskTrackerConfigTest extends MigrateDefaultTrackersTest {
     }
 
     public function itGivesFullAccessToAllUsers() {
-        $this->assertEqual($this->task_tracker->getPermissions(), array(
+        $this->assertEqual($this->task_tracker->getPermissionsByUgroupId(), array(
             UGroup::ANONYMOUS => array(
                 Tracker::PERMISSION_FULL
             )
@@ -391,7 +391,7 @@ class MigrateTracker_TaskTrackerConfigTest extends MigrateDefaultTrackersTest {
         $this->assertEqual($field->getLabel(), "Summary");
         $this->assertTrue($field->isRequired());
         $this->assertTrue($field->isUsed());
-        $this->assertEqual($field->getPermissions(), array(
+        $this->assertEqual($field->getPermissionsByUgroupId(), array(
             UGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
@@ -409,7 +409,7 @@ class MigrateTracker_TaskTrackerConfigTest extends MigrateDefaultTrackersTest {
         $this->assertEqual($field->getLabel(), "Status");
         $this->assertTrue($field->isRequired());
         $this->assertTrue($field->isUsed());
-        $this->assertEqual($field->getPermissions(), array(
+        $this->assertEqual($field->getPermissionsByUgroupId(), array(
             UGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
@@ -435,7 +435,7 @@ class MigrateTracker_TaskTrackerConfigTest extends MigrateDefaultTrackersTest {
         $this->assertFalse($field->isRequired());
         $this->assertTrue($field->isUsed());
         $this->assertTrue($field->isMultiple());
-        $this->assertEqual($field->getPermissions(), array(
+        $this->assertEqual($field->getPermissionsByUgroupId(), array(
             UGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
@@ -456,7 +456,7 @@ class MigrateTracker_TaskTrackerFieldsTest extends MigrateDefaultTrackersTest {
         $this->assertEqual($field->getLabel(), "Submitted by");
         $this->assertFalse($field->isRequired());
         $this->assertTrue($field->isUsed());
-        $this->assertEqual($field->getPermissions(), array(
+        $this->assertEqual($field->getPermissionsByUgroupId(), array(
             UGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
@@ -470,7 +470,7 @@ class MigrateTracker_TaskTrackerFieldsTest extends MigrateDefaultTrackersTest {
         $this->assertEqual($field->getLabel(), "Original Submission");
         $this->assertFalse($field->isRequired());
         $this->assertTrue($field->isUsed());
-        $this->assertEqual($field->getPermissions(), array(
+        $this->assertEqual($field->getPermissionsByUgroupId(), array(
             UGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
@@ -488,7 +488,7 @@ class MigrateTracker_TaskTrackerFieldsTest extends MigrateDefaultTrackersTest {
         $this->assertEqual($field->getLabel(), "Start Date");
         $this->assertFalse($field->isRequired());
         $this->assertTrue($field->isUsed());
-        $this->assertEqual($field->getPermissions(), array(
+        $this->assertEqual($field->getPermissionsByUgroupId(), array(
             UGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),

@@ -1662,7 +1662,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 }
             }
         } else {
-            $permissions = $this->getTracker()->getPermissionsAuthorizedUgroups();
+            $permissions = $this->getTracker()->getAuthorizedUgroupsByPermissionType();
             foreach ($permissions  as $permission => $ugroups) {
                 switch($permission) {
                     // Full access

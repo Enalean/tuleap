@@ -45,8 +45,8 @@ class Tracker_Permission_PermissionRequestTest extends TuleapTestCase {
         $set_permission_request = new Tracker_Permission_PermissionRequest(array());
         $set_permission_request->setFromRequest($request, $this->minimal_ugroup_list);
 
-        $this->assertEqual($set_permission_request->get(UGroup::ANONYMOUS), Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY);
-        $this->assertEqual($set_permission_request->get(UGroup::REGISTERED), Tracker_Permission_Command::PERMISSION_FULL);
+        $this->assertEqual($set_permission_request->getPermissionType(UGroup::ANONYMOUS), Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY);
+        $this->assertEqual($set_permission_request->getPermissionType(UGroup::REGISTERED), Tracker_Permission_Command::PERMISSION_FULL);
     }
 
     public function itRevokesPermissions() {
@@ -64,6 +64,6 @@ class Tracker_Permission_PermissionRequestTest extends TuleapTestCase {
         $set_permission_request->setFromRequest($request, $this->minimal_ugroup_list);
 
         $set_permission_request->revoke(UGroup::REGISTERED);
-        $this->assertNull($set_permission_request->get(UGroup::REGISTERED));
+        $this->assertNull($set_permission_request->getPermissionType(UGroup::REGISTERED));
     }
 }

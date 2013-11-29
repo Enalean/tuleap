@@ -21,13 +21,13 @@
 class Tracker_Permission_PermissionManager {
 
     public function save(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter) {
-        $this->getChainOfResponsability()->execute($request, $permission_setter);
+        $this->getChainOfResponsability()->apply($request, $permission_setter);
     }
 
     private function getChainOfResponsability() {
-        $anonymous_command  = new Tracker_Permission_ChainOfResponsibility_Anonymous();
-        $registered_command = new Tracker_Permission_ChainOfResponsibility_Registered();
-        $ugroup_command     = new Tracker_Permission_ChainOfResponsibility_AllGroups();
+        $anonymous_command  = new Tracker_Permission_ChainOfResponsibility_PermissionsOfAnonymous();
+        $registered_command = new Tracker_Permission_ChainOfResponsibility_PermissionsOfRegistered();
+        $ugroup_command     = new Tracker_Permission_ChainOfResponsibility_PermissionsOfAllGroups();
 
         $anonymous_command->setNextCommand($registered_command);
         $registered_command->setNextCommand($ugroup_command);

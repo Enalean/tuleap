@@ -23,10 +23,10 @@
  * all permissions (except admin) to other groups (if anonymous has access it
  * makes no sense to remove permissions to some other authenticated users...)
  */
-class Tracker_Permission_ChainOfResponsibility_Anonymous extends Tracker_Permission_Command {
+class Tracker_Permission_ChainOfResponsibility_PermissionsOfAnonymous extends Tracker_Permission_Command {
 
-    public function execute(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter) {
-        switch ($request->get(UGroup::ANONYMOUS)) {
+    public function apply(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter) {
+        switch ($request->getPermissionType(UGroup::ANONYMOUS)) {
             case Tracker_Permission_Command::PERMISSION_FULL:
                 $permission_setter->grantAccess(Tracker::PERMISSION_FULL, UGroup::ANONYMOUS);
                 foreach ($permission_setter->getAllGroupIds() as $stored_ugroup_id) {
@@ -41,7 +41,7 @@ class Tracker_Permission_ChainOfResponsibility_Anonymous extends Tracker_Permiss
                 break;
         }
 
-        $this->executeNextCommand($request, $permission_setter);
+        $this->applyNextCommand($request, $permission_setter);
     }
 
     protected function warnAlreadyHaveFullAccess(Tracker_Permission_PermissionSetter $permission_setter, $ugroup_id) {

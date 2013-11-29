@@ -1889,7 +1889,7 @@ EOS;
      * @return boolean true if the user can view the tracker.
      */
     public function userCanView($user = 0) {
-        if (!($user instanceof PFUser)) {
+        if (! $user instanceof PFUser) {
             $um = UserManager::instance();
             if (!$user) {
                 $user = $um->getCurrentUser();
@@ -1898,34 +1898,37 @@ EOS;
             }
         }
 
-        // Super-user has all rights...
         if ($user->isSuperUser()) {
             return true;
-        } else {
-            //... so has tracker admin
-            if ($this->userIsAdmin($user)) {
+        }
+
+        if ($this->userIsAdmin($user)) {
+            return true;
+        }
+
+        foreach ($this->getPermissionsByUgroupId() as $ugroup_id => $permission_types) {
+            if ($user->isMemberOfUGroup($ugroup_id, $this->getGroupId())) {
                 return true;
-            } else {
-                foreach ($this->getPermissions() as $ugroup_id => $permission_types) {
-                    foreach ($permission_types as $permission_type) {
-                        if ($user->isMemberOfUGroup($ugroup_id, $this->getGroupId())) {
-                            return true;
-                        }
-                    }
-                }
             }
         }
+
         return false;
     }
 
     protected $cache_permissions = null;
+
     /**
      * get the permissions for this tracker
+     * E.g.
+     * array(
+     *     $ugroup_id_1 => array('PLUGIN_TRACKER_ADMIN'),
+     *     $ugroup_id_2 => array('PLUGIN_TRACKER_ACCESS')
+     * );
      *
      * @return array
      */
-    public function getPermissions() {
-        if (!$this->cache_permissions) {
+    public function getPermissionsByUgroupId() {
+        if (! $this->cache_permissions) {
             $this->cache_permissions = array();
             $perm_dao = new Tracker_PermDao();
             if ($dar = $perm_dao->searchAccessPermissionsByTrackerId($this->getId())) {
@@ -1966,13 +1969,20 @@ EOS;
 
     /**
      * Retreives the permissions set on a given tracker
+     * E.g.
+     * array(
+     *     Tracker::PERMISSION_ADMIN => array($ugroup_id_1, $ugroup_id_2)
+     *     Tracker::PERMISSION_NONE  => array($ugroup_id_1, $ugroup_id_2)
+     * );
      *
      * @return array
      */
-    public function getPermissionsAuthorizedUgroups() {
-        if (!$this->cached_permission_authorized_ugroups || empty($this->cached_permission_authorized_ugroups)) {
+    public function getAuthorizedUgroupsByPermissionType() {
+        if (! $this->cached_permission_authorized_ugroups || empty($this->cached_permission_authorized_ugroups)) {
+
             $this->cached_permission_authorized_ugroups = array();
             $perm_dao = new Tracker_PermDao();
+
             if ($dar = $perm_dao->searchAccessPermissionsByTrackerId($this->getId())) {
                 while ($row = $dar->getRow()) {
                     $this->cached_permission_authorized_ugroups[$row['permission_type']][] = $row['ugroup_id'];
@@ -1990,21 +2000,27 @@ EOS;
      * @return boolean True if the user is tracker admin, false otherwise
      */
     function userIsAdmin($user = false) {
-        if (!($user instanceof PFUser)) {
-            $um = UserManager::instance();
-            if (!$user) {
-                $user = $um->getCurrentUser();
+        if (! $user instanceof PFUser) {
+            $user_manager = UserManager::instance();
+            if (! $user) {
+                $user = $user_manager->getCurrentUser();
             } else {
-                $user = $um->getUserById((int)$user);
+                $user = $user_manager->getUserById((int) $user);
             }
         }
+
         if ($user->isSuperUser() || $user->isMember($this->getGroupId(), 'A')) {
             return true;
         }
-        $permissions = $this->getPermissions();
+
+        $permissions = $this->getPermissionsByUgroupId();
+
         foreach ($permissions as $ugroup_id => $permission_types) {
+
             foreach ( $permission_types as $permission_type ) {
+
                 if($permission_type == 'PLUGIN_TRACKER_ADMIN') {
+
                     if ($user->isMemberOfUGroup($ugroup_id, $this->getGroupId())) {
                         return true;
                     }
@@ -2063,7 +2079,7 @@ EOS;
         if ($user->isSuperUser() || $user->isMember($this->getGroupId(), 'A')) {
             return true;
         }  else {
-            $permissions = $this->getPermissions();
+            $permissions = $this->getPermissionsByUgroupId();
             foreach ($permissions as $ugroup_id => $permission_types) {
                 foreach ( $permission_types as $permission_type ) {
                     if($permission_type == 'PLUGIN_TRACKER_ACCESS_FULL' || $permission_type == 'PLUGIN_TRACKER_ADMIN') {
@@ -2170,7 +2186,7 @@ EOS;
         // permissions
         $node_perms = $xmlElem->addChild('permissions');
         // tracker permissions
-        if ($permissions = $this->getPermissions()) {
+        if ($permissions = $this->getPermissionsByUgroupId()) {
             foreach ($permissions as $ugroup_id => $permission_types) {
                 if (($ugroup = array_search($ugroup_id, $GLOBALS['UGROUPS'])) !== false && $ugroup_id < 100) {
                     foreach ( $permission_types as $permission_type) {
@@ -2186,7 +2202,7 @@ EOS;
         // fields permission
         if ($formelements = $this->getFormElementFactory()->getAllFormElementsForTracker($this)) {
             foreach ($formelements as $formelement) {
-                if ($permissions = $formelement->getPermissions()) {
+                if ($permissions = $formelement->getPermissionsByUgroupId()) {
                     foreach ($permissions as $ugroup_id => $permission_types) {
                         if (($ugroup = array_search($ugroup_id, $GLOBALS['UGROUPS'])) !== false && $ugroup_id < 100 && $formelement->isUsed()) {
                             foreach ($permission_types as $permission_type) {

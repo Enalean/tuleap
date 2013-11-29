@@ -98,7 +98,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
 
 
         $permissions = array("PLUGIN_TRACKER_ACCESS_SUBMITTER" => array(0 => $ugroup_sub));
-        $this->tracker->setReturnReference('getPermissionsAuthorizedUgroups', $permissions);
+        $this->tracker->setReturnReference('getAuthorizedUgroupsByPermissionType', $permissions);
 
         $artifact = mock('Tracker_Artifact');
         $artifact->setReturnReference('getTracker', $this->tracker);
@@ -122,7 +122,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
         // $assignee and $u_ass should have the right to see it.
         // $other, $submitter, $u_sub and $u should not have the right to see it
         $permissions = array("PLUGIN_TRACKER_ACCESS_ASSIGNEE" => array(0 => $ugroup_ass));
-        $this->tracker->setReturnReference('getPermissionsAuthorizedUgroups', $permissions);
+        $this->tracker->setReturnReference('getAuthorizedUgroupsByPermissionType', $permissions);
 
         $contributor_field = aMockField()->build();
         $this->tracker->setReturnReference('getContributorField', $contributor_field);
@@ -154,7 +154,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
         $permissions = array("PLUGIN_TRACKER_ACCESS_ASSIGNEE"  => array(0 => $ugroup_ass),
                              "PLUGIN_TRACKER_ACCESS_SUBMITTER" => array(0 => $ugroup_sub)
                             );
-        $this->tracker->setReturnReference('getPermissionsAuthorizedUgroups', $permissions);
+        $this->tracker->setReturnReference('getAuthorizedUgroupsByPermissionType', $permissions);
 
         $contributor_field = aMockField()->build();
         $this->tracker->setReturnReference('getContributorField', $contributor_field);
@@ -222,7 +222,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
         // $u should have the right to see it.
         // $other, $submitter and assigned should not have the right to see it
         $permissions = array("PLUGIN_TRACKER_ACCESS_FULL" => array(0 => $ugroup_ful));
-        $this->tracker->setReturnReference('getPermissionsAuthorizedUgroups', $permissions);
+        $this->tracker->setReturnReference('getAuthorizedUgroupsByPermissionType', $permissions);
 
         $contributor_field = aMockField()->build();
         $this->tracker->setReturnReference('getContributorField', $contributor_field);
@@ -287,7 +287,7 @@ class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends Tracker_Per
     public function setUp() {
         parent::setUp();
 
-        stub($this->tracker)->getPermissionsAuthorizedUgroups()->returns(
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
             array(
                 Tracker::PERMISSION_SUBMITTER_ONLY => array(
                     0 => $this->ugroup_id_submitter_only
@@ -319,7 +319,7 @@ class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends Tra
     public function setUp() {
         parent::setUp();
 
-        stub($this->tracker)->getPermissionsAuthorizedUgroups()->returns(
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
             array(
                 Tracker::PERMISSION_SUBMITTER_ONLY => array(
                     $this->ugroup_id_submitter_only

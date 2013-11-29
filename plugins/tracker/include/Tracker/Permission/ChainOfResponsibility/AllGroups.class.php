@@ -18,19 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Permission_ChainOfResponsibility_AllGroups extends Tracker_Permission_Command {
+class Tracker_Permission_ChainOfResponsibility_PermissionsOfAllGroups extends Tracker_Permission_Command {
 
-    public function execute(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter) {
+    public function apply(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter) {
         foreach($permission_setter->getAllGroupIds() as $ugroup_id) {
-            if ($ugroup_id != Ugroup::ANONYMOUS && $ugroup_id != UGroup::REGISTERED) {
-                $this->executeForGroup($permission_setter, $ugroup_id, $request->get($ugroup_id));
+            if ($this->ugroupHasOwnCommand($ugroup_id)) {
+                continue;
             }
+
+            $this->adjustPermissionsForGroup($permission_setter, $ugroup_id, $request->getPermissionType($ugroup_id));
         }
 
-        $this->executeNextCommand($request, $permission_setter);
+        $this->applyNextCommand($request, $permission_setter);
     }
 
-    private function executeForGroup(Tracker_Permission_PermissionSetter $permission_setter, $ugroup_id, $permission_type) {
+    private function ugroupHasOwnCommand($ugroup_id) {
+        return ($ugroup_id == Ugroup::ANONYMOUS || $ugroup_id == UGroup::REGISTERED);
+    }
+
+    private function adjustPermissionsForGroup(Tracker_Permission_PermissionSetter $permission_setter, $ugroup_id, $permission_type) {
         switch($permission_type) {
             case Tracker_Permission_Command::PERMISSION_FULL:
                 $permission_setter->grant(Tracker::PERMISSION_FULL, $ugroup_id);
