@@ -28,10 +28,11 @@ use \TrackerFactory;
 use \Planning_MilestoneFactory;
 use \AgileDashboard_BacklogItemDao;
 use \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
+use \AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
 use \UserManager;
 use \Planning_Milestone;
 use \PFUser;
-use \AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory;
+use \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use \MilestoneContentUpdater;
 
 /**
@@ -49,6 +50,9 @@ class MilestoneResource {
 
     /** @var MilestoneContentUpdater */
     private $milestone_content_updater;
+
+    /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
+    private $backlog_item_collection_factory;
 
     public function __construct() {
         $planning_factory             = PlanningFactory::build();
@@ -68,12 +72,13 @@ class MilestoneResource {
             $planning_factory
         );
 
-        $backlog_row_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory(
+        $this->backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
             new AgileDashboard_BacklogItemDao(),
             $tracker_artifact_factory,
             $tracker_form_element_factory,
             $this->milestone_factory,
-            $planning_factory
+            $planning_factory,
+            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
         );
 
         $this->milestone_validator = new MilestoneResourceValidator(
@@ -82,7 +87,7 @@ class MilestoneResource {
             $tracker_form_element_factory,
             $backlog_strategy_factory,
             $this->milestone_factory,
-            $backlog_row_collection_factory
+            $this->backlog_item_collection_factory
         );
 
         $this->milestone_content_updater = new MilestoneContentUpdater($tracker_form_element_factory);
@@ -268,14 +273,6 @@ class MilestoneResource {
     }
 
     private function getMilestoneBacklogItems($milestone) {
-        $backlog_collection_factory = new \AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory(
-            new \AgileDashboard_BacklogItemDao(),
-            \Tracker_ArtifactFactory::instance(),
-            \Tracker_FormElementFactory::instance(),
-            $this->milestone_factory,
-            \PlanningFactory::build()
-        );
-
         $strategy_factory = new \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
             new \AgileDashboard_BacklogItemDao(),
             \Tracker_ArtifactFactory::instance(),
@@ -284,7 +281,7 @@ class MilestoneResource {
 
         $backlog_strategy = $strategy_factory->getSelfBacklogStrategy($milestone);
 
-        return $backlog_collection_factory->getAllCollection(
+        return $this->backlog_item_collection_factory->getAllCollection(
             $this->getCurrentUser(),
             $milestone,
             $backlog_strategy,

@@ -27,12 +27,12 @@ class AgileDashboard_Milestone_Pane_TopContent_TopContentPresenterBuilder {
     /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
     private $strategy_factory;
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory */
+    /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $collection_factory;
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $strategy_factory,
-        AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory $collection_factory
+        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $collection_factory
     ) {
         $this->strategy_factory   = $strategy_factory;
         $this->collection_factory = $collection_factory;

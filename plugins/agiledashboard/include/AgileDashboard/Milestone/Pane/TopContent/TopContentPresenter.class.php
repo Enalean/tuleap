@@ -25,7 +25,7 @@
 class AgileDashboard_Milestone_Pane_Content_TopContentPresenter extends AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant {
 
     public function __construct(
-        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
+        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $todo,
         $backlog_item_type,
         $add_new_backlog_items_urls,
         $trackers,
@@ -34,8 +34,8 @@ class AgileDashboard_Milestone_Pane_Content_TopContentPresenter extends AgileDas
     ) {
         parent::__construct(
             $todo,
-            new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection(),
-            new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection(),
+            new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection(),
+            new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection(),
             $backlog_item_type,
             $add_new_backlog_items_urls,
             $trackers,

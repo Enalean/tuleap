@@ -24,8 +24,8 @@ use \TuleapTestCase;
 use \Planning_Milestone;
 use \PFUser;
 use \AgileDashboard_Milestone_Backlog_BacklogStrategy;
-use \AgileDashboard_BacklogItem;
-use \AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection;
+use \AgileDashboard_BacklogItemPresenter;
+use \AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection;
 
 require_once dirname(__FILE__).'/../../../../bootstrap.php';
 
@@ -49,17 +49,17 @@ class MilestoneResourceValidatorTest extends TuleapTestCase {
         $planning                             = stub('Planning')->getId()->returns(3);
         $this->artifact1                      = anArtifact()->withId(102)->withTrackerId(555)->build();
         $this->artifact2                      = anArtifact()->withId(174)->withTrackerId(666)->build();
-        $this->unplanned_item                 = stub('AgileDashboard_BacklogItem')->id()->returns(102);
-        $this->todo_item                      = stub('AgileDashboard_BacklogItem')->id()->returns(174);
-        $this->unplanned_collection           = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
-        $this->done_collection                = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
-        $this->todo_collection                = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
+        $this->unplanned_item                 = stub('AgileDashboard_BacklogItemPresenter')->id()->returns(102);
+        $this->todo_item                      = stub('AgileDashboard_BacklogItemPresenter')->id()->returns(174);
+        $this->unplanned_collection           = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
+        $this->done_collection                = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
+        $this->todo_collection                = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
         $this->planning_factory               = mock('PlanningFactory');
         $this->tracker_artifact_factory       = mock('Tracker_ArtifactFactory');
         $tracker_form_element_factory         = mock('Tracker_FormElementFactory');
         $backlog_strategy_factory       = mock('AgileDashboard_Milestone_Backlog_BacklogStrategyFactory');
         $milestone_factory                    = mock('Planning_MilestoneFactory');
-        $backlog_row_collection_factory       = mock('AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory');
+        $backlog_row_collection_factory       = mock('AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory');
 
         stub($this->unplanned_item)->getArtifact()->returns($this->artifact1);
         stub($this->todo_item)->getArtifact()->returns($this->artifact2);

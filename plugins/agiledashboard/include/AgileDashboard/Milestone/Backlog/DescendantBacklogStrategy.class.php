@@ -120,9 +120,9 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
     public function getPresenter(
         PFUser $user,
         Planning_ArtifactMilestone $milestone,
-        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
-        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done,
-        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $inconsistent_collection,
+        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $todo,
+        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $done,
+        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $inconsistent_collection,
         $redirect_to_self) {
 
         return new AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant(

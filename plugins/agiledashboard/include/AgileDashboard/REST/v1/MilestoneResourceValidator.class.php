@@ -29,10 +29,10 @@ use \PlanningFactory;
 use \Tracker_ArtifactFactory;
 use \Tracker_Artifact;
 use \Tracker_FormElementFactory;
-use \AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory;
+use \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
 use \AgileDashboard_Milestone_Backlog_BacklogStrategy;
-use \AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection;
+use \AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use \Planning_MilestoneFactory;
 use \Planning_Milestone;
 use \PFUser;
@@ -42,7 +42,7 @@ class MilestoneResourceValidator {
     /** @var \Planning_MilestoneFactory */
     private $milestone_factory;
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory */
+    /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $backlog_row_collection_factory;
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
@@ -63,7 +63,7 @@ class MilestoneResourceValidator {
         Tracker_FormElementFactory $tracker_form_element_factory,
         AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $backlog_strategy_factory,
         Planning_MilestoneFactory $milestone_factory,
-        AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory $backlog_row_collection_factory
+        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_row_collection_factory
     ) {
         $this->planning_factory               = $planning_factory;
         $this->tracker_artifact_factory       = $tracker_artifact_factory;
@@ -109,7 +109,13 @@ class MilestoneResourceValidator {
         return count($ids) == count($ids_unique);
     }
 
-    private function getArtifactsFromBodyContent(array $ids, array $backlog_tracker_ids, AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo, AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done, AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $open_unplanned) {
+    private function getArtifactsFromBodyContent(
+        array $ids,
+        array $backlog_tracker_ids,
+        AgileDashboard_Milestone_Backlog_IBacklogItemCollection $todo,
+        AgileDashboard_Milestone_Backlog_IBacklogItemCollection $done,
+        AgileDashboard_Milestone_Backlog_IBacklogItemCollection $open_unplanned
+    ) {
         $artifacts = array();
 
         foreach ($ids as $potential_backlog_item_id) {
@@ -143,11 +149,11 @@ class MilestoneResourceValidator {
         return $this->backlog_row_collection_factory->getTodoCollection($user, $milestone, $strategy, false);
     }
 
-    private function isArtifactInUnplannedParentMilestoneBacklogItems(Tracker_Artifact $artifact, AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $unplanned_backlog_items) {
+    private function isArtifactInUnplannedParentMilestoneBacklogItems(Tracker_Artifact $artifact, AgileDashboard_Milestone_Backlog_IBacklogItemCollection $unplanned_backlog_items) {
         return $unplanned_backlog_items->containsId($artifact->getId());
     }
 
-    private function isArtifactInPlannedMilestoneBacklogItems(Tracker_Artifact $artifact, AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done, AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo) {
+    private function isArtifactInPlannedMilestoneBacklogItems(Tracker_Artifact $artifact, AgileDashboard_Milestone_Backlog_IBacklogItemCollection $done, AgileDashboard_Milestone_Backlog_IBacklogItemCollection $todo) {
         return ($done->containsId($artifact->getId()) || $todo->containsId($artifact->getId()));
     }
 

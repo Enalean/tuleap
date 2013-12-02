@@ -24,7 +24,7 @@
 
 require_once dirname(__FILE__).'/../../../../common.php';
 
-class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends TuleapTestCase {
+class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends TuleapTestCase {
 
     /** @var AgileDashboard_BacklogItemDao */
     private $dao;
@@ -32,7 +32,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory */
+    /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $factory;
 
     /** @var Tracker_FormElementFactory */
@@ -56,6 +56,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
         $this->form_element_factory = mock('Tracker_FormElementFactory');
         $this->milestone_factory    = mock('Planning_MilestoneFactory');
         $this->planning_factory     = mock('PlanningFactory');
+        $this->backlog_item_builder = new AgileDashboard_Milestone_Backlog_BacklogItemBuilder();
 
         $this->user = mock('PFUser');
 
@@ -67,7 +68,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
         $this->milestone = aMilestone()->withArtifact($artifact)->withPlanning($planning)->build();
 
         $this->factory = partial_mock(
-            'AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory',
+            'AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory',
             array(
                 'userCanReadBacklogTitleField',
                 'userCanReadBacklogStatusField',
@@ -79,6 +80,7 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
                 $this->form_element_factory,
                 $this->milestone_factory,
                 $this->planning_factory,
+                $this->backlog_item_builder
             )
         );
         stub($this->factory)->userCanReadBacklogTitleField()->returns(true);
@@ -96,7 +98,6 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
         stub($this->backlog_strategy)->getMilestoneBacklogArtifactsTracker()->returns(mock('Tracker'));
 
         $this->redirect_to_self = 'whatever';
-
 
         stub($this->dao)->getArtifactsSemantics()->returnsDar(
             array(
@@ -127,7 +128,6 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
 
     public function itCreatesContentWithOneElementInTodo() {
         stub($this->dao)->getPlannedItemIds()->returns(array());
-
         stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
 
         $content = $this->factory->getTodoCollection(
@@ -143,7 +143,6 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
 
     public function itCreatesContentWithOneElementInDone() {
         stub($this->dao)->getPlannedItemIds()->returns(array());
-
         stub($this->form_element_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
 
         $content = $this->factory->getDoneCollection(
@@ -202,20 +201,20 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
             array($this->open_story_id)
         );
 
-        $collection = $this->factory->getUnplannedOpenCollection(
+        $unplanned_open_collection = $this->factory->getUnplannedOpenCollection(
             $this->user,
             $this->milestone,
             $this->backlog_strategy,
             $this->redirect_to_self
         );
 
-        $row = $collection->current();
+        $row = $unplanned_open_collection->current();
         $this->assertEqual($row->id(), $this->open_unplanned_story_id);
     }
 
     public function itCreatesACollectionForOpenAndUnassignedElements() {
         $factory = partial_mock(
-            'AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory',
+            'AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory',
             array('getUnplannedOpenCollection',),
             array(
                 $this->dao,
@@ -223,15 +222,16 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
                 $this->form_element_factory,
                 $this->milestone_factory,
                 $this->planning_factory,
+                $this->backlog_item_builder
             )
         );
 
         $redirect_to_self = 'tra la la';
-        $backlog_item1 = new AgileDashboard_BacklogItem($this->story1, $redirect_to_self);
-        $backlog_item2 = new AgileDashboard_BacklogItem($this->story2, $redirect_to_self);
-        $backlog_item3 = new AgileDashboard_BacklogItem($this->story3, $redirect_to_self);
+        $backlog_item1 = new AgileDashboard_BacklogItemPresenter($this->story1, $redirect_to_self);
+        $backlog_item2 = new AgileDashboard_BacklogItemPresenter($this->story2, $redirect_to_self);
+        $backlog_item3 = new AgileDashboard_BacklogItemPresenter($this->story3, $redirect_to_self);
 
-        $mixed_collection = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
+        $mixed_collection = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
         $mixed_collection->push($backlog_item1);
         $mixed_collection->push($backlog_item2);
         $mixed_collection->push($backlog_item3);
@@ -247,7 +247,6 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
         stub($this->artifact_factory)->getArtifactIdsLinkedToTrackers()->returns(array(12 => true));
 
         $cleaned_collection = $factory->getUnassignedOpenCollection($this->user, $this->milestone, $this->backlog_strategy, $this->redirect_to_self);
-
         $this->assertEqual($cleaned_collection->count(), 2);
     }
 }
