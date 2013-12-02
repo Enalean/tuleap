@@ -1,8 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
- *
- * This file is a part of Tuleap.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,20 +13,18 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-require_once 'pre.php';
-require_once dirname(__FILE__).'/../autoload.php';
+namespace Tuleap\AgileDashboard\REST\v1;
 
-$data_builder = new TestDataBuilder();
-$data_builder
-    ->activatePlugins()
-    ->generateUser()
-    ->generateProject()
-    ->importAgileTemplate()
-    ->generateMilestones()
-    ->generateContentItems()
-    ->generateBacklogItems()
-    ->generateTopBacklogItems()
-    ->activateDebug();
+use \Exception;
+
+class ArtifactIsNotInOpenAndUnassignedTopBacklogItemsException extends Exception {
+
+    public function __construct($id) {
+        parent::__construct('Artifact '. $id .' is not in open and unassigned top backlog items list');
+    }
+
+}

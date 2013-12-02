@@ -260,7 +260,7 @@ class MilestoneResource {
         foreach ($backlog_items as $backlog_item) {
             $backlog_item_representation = new BacklogItemRepresentation();
             $backlog_item_representation->build($backlog_item);
-            $backlog_items_representations[] = $backlog_item_representation;
+            $backlog_items_representation[] = $backlog_item_representation;
         }
 
         return array_slice($backlog_items_representation, $offset, $limit);

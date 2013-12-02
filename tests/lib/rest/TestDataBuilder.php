@@ -236,5 +236,31 @@ class TestDataBuilder {
         return $this;
     }
 
+    public function generateTopBacklogItems() {
+        echo "Create top backlog items\n";
+
+        $user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
+
+        $fields_data = array(
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'summary_11')->getId() => 'Epic pic',
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '101'
+        );
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '');
+
+        $fields_data = array(
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'summary_11')->getId() => "Epic c'est tout",
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '101'
+        );
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '');
+
+        $fields_data = array(
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'summary_11')->getId() => 'Epic epoc',
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '101'
+        );
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '');
+
+        return $this;
+    }
+
 }
 ?>

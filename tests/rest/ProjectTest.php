@@ -25,6 +25,13 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
  */
 class ProjectTest extends RestBase {
 
+    protected function getResponse($request) {
+        return $this->getResponseByToken(
+            $this->getTokenForUserName(TestDataBuilder::TEST_USER_NAME),
+            $request
+        );
+    }
+
     public function testGETbyIdForAdmin() {
         $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/101'));
 
@@ -122,6 +129,105 @@ class ProjectTest extends RestBase {
         $this->assertEquals($userstories_tracker['project'], array('id' => '101', 'uri' => 'projects/101'));
 
         $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testOPTIONSbacklog() {
+        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/101/backlog'));
+
+        $this->assertEquals(array('OPTIONS', 'GET', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGETbacklog() {
+        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/101/backlog'));
+
+        $backlog_items = $response->json();
+
+        $this->assertCount(3, $backlog_items);
+
+        $first_backlog_item = $backlog_items[0];
+        $this->assertArrayHasKey('id', $first_backlog_item);
+        $this->assertEquals($first_backlog_item['label'], "Epic pic");
+        $this->assertEquals($first_backlog_item['status'], "Open");
+        $this->assertEquals($first_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
+        $this->assertEquals($first_backlog_item['artifact'], array('id' => '12', 'uri' => 'artifacts/12'));
+
+        $second_backlog_item = $backlog_items[1];
+        $this->assertArrayHasKey('id', $second_backlog_item);
+        $this->assertEquals($second_backlog_item['label'], "Epic c'est tout");
+        $this->assertEquals($second_backlog_item['status'], "Open");
+        $this->assertEquals($first_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
+        $this->assertEquals($second_backlog_item['artifact'], array('id' => '13', 'uri' => 'artifacts/13'));
+
+        $third_backlog_item = $backlog_items[2];
+        $this->assertArrayHasKey('id', $third_backlog_item);
+        $this->assertEquals($third_backlog_item['label'], "Epic epoc");
+        $this->assertEquals($third_backlog_item['status'], "Open");
+        $this->assertEquals($first_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
+        $this->assertEquals($third_backlog_item['artifact'], array('id' => '14', 'uri' => 'artifacts/14'));
+    }
+
+    public function testPUTbacklog() {
+        $response_put = $this->getResponse($this->client->put('projects/101/backlog', null, '[14,12,13]'));
+
+        $this->assertEquals($response_put->getStatusCode(), 200);
+
+        $response_get = $this->getResponse($this->client->get('projects/101/backlog'));
+        $backlog_items = $response_get->json();
+
+        $this->assertCount(3, $backlog_items);
+
+        $first_backlog_item = $backlog_items[0];
+        $this->assertArrayHasKey('id', $first_backlog_item);
+        $this->assertEquals($first_backlog_item['label'], "Epic epoc");
+        $this->assertEquals($first_backlog_item['status'], "Open");
+        $this->assertEquals($first_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
+        $this->assertEquals($first_backlog_item['artifact'], array('id' => '14', 'uri' => 'artifacts/14'));
+
+        $second_backlog_item = $backlog_items[1];
+        $this->assertArrayHasKey('id', $second_backlog_item);
+        $this->assertEquals($second_backlog_item['label'], "Epic pic");
+        $this->assertEquals($second_backlog_item['status'], "Open");
+        $this->assertEquals($second_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
+        $this->assertEquals($second_backlog_item['artifact'], array('id' => '12', 'uri' => 'artifacts/12'));
+
+        $third_backlog_item = $backlog_items[2];
+        $this->assertArrayHasKey('id', $third_backlog_item);
+        $this->assertEquals($third_backlog_item['label'], "Epic c'est tout");
+        $this->assertEquals($third_backlog_item['status'], "Open");
+        $this->assertEquals($third_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
+        $this->assertEquals($third_backlog_item['artifact'], array('id' => '13', 'uri' => 'artifacts/13'));
+    }
+
+    public function testPUTbacklogOnlyTwoItems() {
+        $response_put = $this->getResponse($this->client->put('projects/101/backlog', null, '[13,14]'));
+
+        $this->assertEquals($response_put->getStatusCode(), 200);
+
+        $response_get = $this->getResponse($this->client->get('projects/101/backlog'));
+        $backlog_items = $response_get->json();
+
+        $this->assertCount(3, $backlog_items);
+
+        $first_backlog_item = $backlog_items[0];
+        $this->assertArrayHasKey('id', $first_backlog_item);
+        $this->assertEquals($first_backlog_item['label'], "Epic pic");
+        $this->assertEquals($first_backlog_item['status'], "Open");
+        $this->assertEquals($first_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
+        $this->assertEquals($first_backlog_item['artifact'], array('id' => '12', 'uri' => 'artifacts/12'));
+
+        $second_backlog_item = $backlog_items[1];
+        $this->assertArrayHasKey('id', $second_backlog_item);
+        $this->assertEquals($second_backlog_item['label'], "Epic c'est tout");
+        $this->assertEquals($second_backlog_item['status'], "Open");
+        $this->assertEquals($second_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
+        $this->assertEquals($second_backlog_item['artifact'], array('id' => '13', 'uri' => 'artifacts/13'));
+
+        $third_backlog_item = $backlog_items[2];
+        $this->assertArrayHasKey('id', $third_backlog_item);
+        $this->assertEquals($third_backlog_item['label'], "Epic epoc");
+        $this->assertEquals($third_backlog_item['status'], "Open");
+        $this->assertEquals($third_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
+        $this->assertEquals($third_backlog_item['artifact'], array('id' => '14', 'uri' => 'artifacts/14'));
     }
 }
 ?>

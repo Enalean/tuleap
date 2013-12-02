@@ -661,6 +661,18 @@ class Event {
     const REST_GET_PROJECT_TRACKERS = 'rest_get_project_trackers';
 
     /**
+     * Event raised to get top backlog items from a project with REST
+     *
+     * Parameters:
+     *     'version' => String
+     *     'project' => Project
+     *     'limit'   => int
+     *     'offset'  => int
+     *     'result'  => array
+     */
+    const REST_GET_PROJECT_BACKLOG = 'rest_get_project_backlog';
+
+    /**
      * Event raised to get top milestones options from a project with REST
      *
      * Parameters:
@@ -683,5 +695,29 @@ class Event {
      *     'result'  => array
      */
     const REST_OPTIONS_PROJECT_TRACKERS = 'rest_options_project_trackers';
+
+    /**
+     * Event raised to get top backlog items options from a project with REST
+     *
+     * Parameters:
+     *     'version' => String
+     *     'project' => Project
+     *     'limit'   => int
+     *     'offset'  => int
+     *     'result'  => array
+     */
+    const REST_OPTIONS_PROJECT_BACKLOG = 'rest_options_project_backlog';
+
+    /**
+     * Event raised to order top backlog items from a project with REST
+     *
+     * Parameters:
+     *     'version' => String
+     *     'project' => Project
+     *     'limit'   => int
+     *     'offset'  => int
+     *     'result'  => array
+     */
+    const REST_PUT_PROJECT_BACKLOG = 'rest_put_project_backlog';
 }
 ?>

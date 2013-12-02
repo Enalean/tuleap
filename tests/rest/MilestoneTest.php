@@ -176,5 +176,7 @@ class MilestoneTest extends RestBase {
         $this->assertEquals($first_backlog_item['status'], "Open");
         $this->assertEquals($first_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
         $this->assertEquals($first_backlog_item['artifact'], array('id' => '6', 'uri' => 'artifacts/6'));
+
+        $this->getResponse($this->client->put('milestones/1/content', null, '[3,6]'));
     }
 }
