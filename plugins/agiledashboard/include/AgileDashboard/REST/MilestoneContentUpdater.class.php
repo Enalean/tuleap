@@ -109,7 +109,9 @@ class MilestoneContentUpdater {
         $predecessor = null;
 
         foreach ($linked_artifact_ids as $linked_artifact_id) {
-            $dao->moveArtifactAfter($linked_artifact_id, $predecessor);
+            if (isset($predecessor)) {
+                $dao->moveArtifactAfter($linked_artifact_id, $predecessor);
+            }
             $predecessor = $linked_artifact_id;
         }
     }

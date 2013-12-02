@@ -77,6 +77,10 @@ class MilestoneResourceValidator {
         $strategy       = null;
         $open_unplanned = null;
 
+        if (! $this->idsAreUnique($ids)) {
+            throw new IdsFromBodyAreNotUniqueException();
+        }
+
         if ($milestone->getParent()) {
             $strategy = $this->backlog_strategy_factory->getBacklogStrategy($milestone);
 
@@ -100,6 +104,11 @@ class MilestoneResourceValidator {
         return count($artifacts) === count($ids);
     }
 
+    private function idsAreUnique(array $ids) {
+        $ids_unique = array_unique($ids);
+        return count($ids) == count($ids_unique);
+    }
+
     private function getArtifactsFromBodyContent(array $ids, array $backlog_tracker_ids, AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo, AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done, AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $open_unplanned) {
         $artifacts = array();
 
@@ -107,17 +116,17 @@ class MilestoneResourceValidator {
 
             $artifact = $this->tracker_artifact_factory->getArtifactById($potential_backlog_item_id);
             if (! $artifact) {
-                throw new ArtifactDoesNotExistException('Bad request - Artifact '. $potential_backlog_item_id .' does not exist');
+                throw new ArtifactDoesNotExistException($potential_backlog_item_id);
             }
 
             if (! in_array($artifact->getTrackerId(), $backlog_tracker_ids)) {
-                throw new ArtifactIsNotInBacklogTrackerException('Bad request - Artifact '. $potential_backlog_item_id .' is not in a backlog tracker');
+                throw new ArtifactIsNotInBacklogTrackerException($potential_backlog_item_id);
             }
 
             if (! $this->isArtifactInUnplannedParentMilestoneBacklogItems($artifact, $open_unplanned)
                 && ! $this->isArtifactInPlannedMilestoneBacklogItems($artifact, $done, $todo)
             ) {
-                throw new ArtifactIsClosedOrAlreadyPlannedInAnotherMilestone('Bad request - Artifact '. $potential_backlog_item_id .' is closed or already planned in another milestone');
+                throw new ArtifactIsClosedOrAlreadyPlannedInAnotherMilestone($potential_backlog_item_id);
             }
 
             $artifacts[$artifact->getId()] = $artifact;

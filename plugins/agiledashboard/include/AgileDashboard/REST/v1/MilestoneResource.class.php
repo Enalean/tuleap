@@ -240,6 +240,8 @@ class MilestoneResource {
             throw new RestException(500, $exception->getMessage());
         } catch (ArtifactIsClosedOrAlreadyPlannedInAnotherMilestone $exception) {
             throw new RestException(500, $exception->getMessage());
+        } catch (IdsFromBodyAreNotUniqueException $exception) {
+            throw new RestException(500, $exception->getMessage());
         }
 
         $this->milestone_content_updater->updateMilestoneContent($ids, $current_user, $milestone->getArtifact());

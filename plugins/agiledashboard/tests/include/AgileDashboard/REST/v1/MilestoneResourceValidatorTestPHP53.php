@@ -96,6 +96,14 @@ class MilestoneResourceValidatorTest extends TuleapTestCase {
         $this->assertTrue($validation);
     }
 
+    public function itThrowsAnExceptionIfArtifactIdIsPassedSeveralTime() {
+        $this->expectException('Tuleap\AgileDashboard\REST\v1\IdsFromBodyAreNotUniqueException');
+
+        $ids = array(102, 174, 102);
+
+        $this->milestone_resource_validator->validateArtifactsFromBodyContent($ids, $this->milestone, $this->user);
+    }
+
     public function itThrowsAnExceptionIfArtifactIdDoesNotExist() {
         $this->expectException('Tuleap\AgileDashboard\REST\v1\ArtifactDoesNotExistException');
 
