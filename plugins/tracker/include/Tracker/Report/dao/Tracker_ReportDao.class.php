@@ -145,7 +145,7 @@ class Tracker_ReportDao extends DataAccessObject {
      * @param int   $tracker_id       The id of the tracker
      * @param array $additional_from  If you have to join on some table put them here
      * @param array $additional_where If you have to select the results, help yourself!
-     * @param bool  $user_is_superuser True if the user is superuser
+     * @param bool  $user_is_admin True if the user is superuser
      * @param array $permissions
      * @param string $ugroups          Ugroups of the current user to check the permissions
      * @param array $static_ugroups
@@ -155,10 +155,10 @@ class Tracker_ReportDao extends DataAccessObject {
      */
     public function searchMatchingIds($group_id, $tracker_id, $additional_from, $additional_where, PFUser $user, $permissions, $contributor_field_id) {
         $instances         = array('artifact_type' => $tracker_id);
-        $user_is_superuser = $user->isSuperUser();
         $ugroups           = $user->getUgroups($group_id, $instances);
         $static_ugroups    = $user->getStaticUgroups($group_id);
         $dynamic_ugroups   = $user->getDynamicUgroups($group_id, $instances);
+        $user_is_admin     = $this->userIsAdmin($user, $group_id, $permissions, $ugroups);
 
         $tracker_id = $this->da->escapeInt($tracker_id);
         
@@ -166,11 +166,11 @@ class Tracker_ReportDao extends DataAccessObject {
                  INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)";
         $where  = " WHERE artifact.tracker_id = $tracker_id ";
         
-        $artifact_perms = $this->getSqlFragmentForArtifactPermissions($user_is_superuser, $ugroups);
+        $artifact_perms = $this->getSqlFragmentForArtifactPermissions($user_is_admin, $ugroups);
         $from  .= $artifact_perms['from'];
         $where .= $artifact_perms['where'];
 
-        if ($this->submitterOnlyApplies($user_is_superuser, $permissions, $ugroups)) {
+        if ($this->submitterOnlyApplies($user_is_admin, $permissions, $ugroups)) {
             $where .= ' AND artifact.submitted_by = '.$user->getId().' ';
         }
 
@@ -182,7 +182,7 @@ class Tracker_ReportDao extends DataAccessObject {
         }
         
         // $sqls => SELECT UNION SELECT UNION SELECT ...
-        $sqls = $this->getSqlFragmentsAccordinglyToTrackerPermissions($user_is_superuser, $from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id);
+        $sqls = $this->getSqlFragmentsAccordinglyToTrackerPermissions($user_is_admin, $from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id);
         
         if (count($sqls) == 0) {
             return new DataAccessResultEmpty();
@@ -197,19 +197,24 @@ class Tracker_ReportDao extends DataAccessObject {
         }
     }
 
-    private function submitterOnlyApplies($user_is_superuser, $permissions, $ugroups) {
+    private function userIsAdmin(PFUser $user, $group_id, $permissions, $ugroups) {
+        return $user->isSuperUser() ||
+               $user->isMember($group_id, 'A') ||
+               $this->hasPermissionFor(Tracker::PERMISSION_ADMIN, $permissions, $ugroups);
+    }
+
+    private function submitterOnlyApplies($user_is_admin, $permissions, $ugroups) {
             return $this->hasPermissionFor(Tracker::PERMISSION_SUBMITTER_ONLY, $permissions, $ugroups) &&
-                ! ($user_is_superuser ||
+                ! ($user_is_admin ||
                     $this->hasPermissionFor(Tracker::PERMISSION_FULL, $permissions, $ugroups) ||
-                    $this->hasPermissionFor(Tracker::PERMISSION_ADMIN, $permissions, $ugroups) ||
                     $this->hasPermissionFor(Tracker::PERMISSION_SUBMITTER, $permissions, $ugroups) ||
                     $this->hasPermissionFor(Tracker::PERMISSION_ASSIGNEE, $permissions, $ugroups));
     }
 
-    public function getSqlFragmentsAccordinglyToTrackerPermissions($user_is_superuser, $from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
+    public function getSqlFragmentsAccordinglyToTrackerPermissions($user_is_admin, $from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
         $sqls = array();
         //Does the user member of at least one group which has ACCESS_FULL or is super user?
-        if ($user_is_superuser || $this->hasPermissionFor(Tracker::PERMISSION_FULL, $permissions, $ugroups) || $this->submitterOnlyApplies($user_is_superuser, $permissions, $ugroups)) {
+        if ($user_is_admin || $this->hasPermissionFor(Tracker::PERMISSION_FULL, $permissions, $ugroups) || $this->submitterOnlyApplies($user_is_admin, $permissions, $ugroups)) {
             $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ". $from ." ". $where;
         } else {
             $sqls = $this->getSqlFragmentsAccordinglyToAssigneeOrSubmitterAccessPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id);
@@ -217,9 +222,9 @@ class Tracker_ReportDao extends DataAccessObject {
         return $sqls;
     }
     
-    public function getSqlFragmentForArtifactPermissions($user_is_superuser, array $ugroups) {
+    public function getSqlFragmentForArtifactPermissions($user_is_admin, array $ugroups) {
         $res = array('from' => '', 'where' => '');
-        if(!$user_is_superuser) {
+        if(!$user_is_admin) {
             $ugroups = $this->da->quoteSmartImplode(',', $ugroups);
             $res['from']  = " LEFT JOIN permissions 
                               ON (permissions.object_id = CAST(c.artifact_id AS CHAR) 

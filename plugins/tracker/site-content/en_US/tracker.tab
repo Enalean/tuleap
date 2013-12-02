@@ -863,7 +863,7 @@ plugin_tracker_common_types	event_COMMENT_CHANGE_desc	A followup comment has bee
 #
 #
 plugin_tracker_admin_permissions	fields_no_ugroups	<div><em>No user group has access to this tracker</em></div>
-plugin_tracker_admin_permissions	fields_tracker_intro	<div></div>
+plugin_tracker_admin_permissions	fields_tracker_intro	Please note that project administrators and tracker administrators are granted full access to the tracker.
 plugin_tracker_admin_permissions	fields_tracker_toggle_field	<div>You may <a href='$1'>switch to the 'field' view</a> by clicking on a field label in the table below.</div>
 plugin_tracker_admin_permissions	fields_tracker_toggle_group	<div>You may <a href='$1'>switch to the 'user group' view</a> by clicking on a group name in the table below.</div>
 plugin_tracker_admin_permissions	ignore_g_anon_read	Ignoring group '$1' because '$2' are allowed to read

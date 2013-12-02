@@ -167,10 +167,6 @@ class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends T
                 'ugroup'      => array('name' => 'whatever'),
                 'permissions' => array()
             ),
-            UGroup::PROJECT_ADMIN => array(
-                'ugroup'      => array('name' => 'whatever'),
-                'permissions' => array()
-            ),
         );
 
         $this->permission_setter  = new Tracker_Permission_PermissionSetter($this->tracker, $permissions, $this->permissions_manager);
@@ -190,9 +186,9 @@ class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends T
 
     public function itWarnsTwiceWhenAnonymousHaveFullAccess() {
         $request = new Tracker_Permission_PermissionRequest(array(
-            UGroup::ANONYMOUS     => Tracker_Permission_Command::PERMISSION_FULL,
-            UGroup::REGISTERED    => Tracker_Permission_Command::PERMISSION_SUBMITTER,
-            UGroup::PROJECT_ADMIN => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
+            UGroup::ANONYMOUS       => Tracker_Permission_Command::PERMISSION_FULL,
+            UGroup::REGISTERED      => Tracker_Permission_Command::PERMISSION_SUBMITTER,
+            UGroup::PROJECT_MEMBERS => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
         ));
 
         expect($GLOBALS['Response'])->addFeedback()->count(2);
@@ -308,17 +304,17 @@ class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends T
     public function itRevokesAdminPermission() {
         $request = new Tracker_Permission_PermissionRequest(array(
             UGroup::ANONYMOUS     => Tracker_Permission_Command::PERMISSION_FULL,
-            UGroup::PROJECT_ADMIN => Tracker_Permission_Command::PERMISSION_NONE,
+            UGroup::PROJECT_MEMBERS => Tracker_Permission_Command::PERMISSION_NONE,
         ));
         $this->permissions[UGroup::ANONYMOUS]['permissions'] = array(
             Tracker::PERMISSION_FULL => 1
         );
-        $this->permissions[UGroup::PROJECT_ADMIN]['permissions'] = array(
+        $this->permissions[UGroup::PROJECT_MEMBERS]['permissions'] = array(
             Tracker::PERMISSION_ADMIN => 1
         );
 
         expect($this->permissions_manager)->addPermission()->never();
-        expect($this->permissions_manager)->revokePermissionForUGroup(Tracker::PERMISSION_ADMIN, $this->tracker_id, UGroup::PROJECT_ADMIN)->once();
+        expect($this->permissions_manager)->revokePermissionForUGroup(Tracker::PERMISSION_ADMIN, $this->tracker_id, UGroup::PROJECT_MEMBERS)->once();
 
         $permission_setter = new Tracker_Permission_PermissionSetter($this->tracker, $this->permissions, $this->permissions_manager);
         $this->permission_manager->save($request, $permission_setter);
@@ -326,6 +322,7 @@ class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends T
 }
 
 class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest extends Tracker_Permission_PermissionManager_BaseTest {
+    private $some_ugroupid = 369;
 
     public function setUp() {
         parent::setUp();
@@ -346,6 +343,10 @@ class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest extends 
                 'permissions' => array()
             ),
             UGroup::PROJECT_ADMIN => array(
+                'ugroup'      => array('name' => 'whatever'),
+                'permissions' => array()
+            ),
+            $this->some_ugroupid => array(
                 'ugroup'      => array('name' => 'whatever'),
                 'permissions' => array()
             ),
@@ -372,7 +373,7 @@ class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest extends 
             UGroup::ANONYMOUS       => Tracker_Permission_Command::PERMISSION_NONE,
             UGroup::REGISTERED      => Tracker_Permission_Command::PERMISSION_FULL,
             UGroup::PROJECT_MEMBERS => Tracker_Permission_Command::PERMISSION_FULL,
-            UGroup::PROJECT_ADMIN   => Tracker_Permission_Command::PERMISSION_FULL,
+            $this->some_ugroupid    => Tracker_Permission_Command::PERMISSION_FULL,
         ));
 
         expect($GLOBALS['Response'])->addFeedback()->count(2);
@@ -448,7 +449,7 @@ class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest extends 
     }
 }
 
-class Tracker_Permission_PermissionManager_AssignedToGroupTest extends Tracker_Permission_PermissionManager_BaseTest {
+class Tracker_Permission_PermissionManager_CheckRequestValidityTest extends Tracker_Permission_PermissionManager_BaseTest {
 
     public function itDisplaysAFeedbackErrorIfAssignedToSemanticIsNotDefined() {
         stub($this->tracker)->getContributorField()->returns(null);
@@ -475,6 +476,19 @@ class Tracker_Permission_PermissionManager_AssignedToGroupTest extends Tracker_P
 
         expect($this->permissions_manager)->addPermission()->once();
         expect($GLOBALS['Response'])->addFeedback(Feedback::INFO, '*')->once();
+
+        $this->permission_manager->save($request, $this->permission_setter);
+    }
+
+    public function itDoesNotApplyPermissionsOnProjectAdmins() {
+        $request = new Tracker_Permission_PermissionRequest(array(
+            UGroup::ANONYMOUS        => Tracker_Permission_Command::PERMISSION_NONE,
+            UGroup::REGISTERED       => Tracker_Permission_Command::PERMISSION_NONE,
+            UGroup::PROJECT_ADMIN    => Tracker_Permission_Command::PERMISSION_FULL,
+        ));
+
+        expect($this->permissions_manager)->addPermission()->never();
+        expect($this->permissions_manager)->revokePermissionForUGroup()->never();
 
         $this->permission_manager->save($request, $this->permission_setter);
     }

@@ -34,12 +34,14 @@ class Tracker_Permission_PermissionPresenterBuilder {
             $ugroup      = $ugroup_permissions['ugroup'];
             $permissions = $ugroup_permissions['permissions'];
 
-            $ugroup_list[] = new Tracker_Permission_PermissionUgroupPresenter(
-                $ugroup['id'],
-                $ugroup['name'],
-                isset($ugroup['link']) ? $ugroup['link'] : '',
-                $this->getPermissionTypeList($ugroup['id'], $permissions)
-            );
+            if ($ugroup['id'] != UGroup::PROJECT_ADMIN) {
+                $ugroup_list[] = new Tracker_Permission_PermissionUgroupPresenter(
+                    $ugroup['id'],
+                    $ugroup['name'],
+                    isset($ugroup['link']) ? $ugroup['link'] : '',
+                    $this->getPermissionTypeList($ugroup['id'], $permissions)
+                );
+            }
         }
 
         return $ugroup_list;

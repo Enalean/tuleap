@@ -53,6 +53,9 @@ class Tracker_Permission_PermissionManager {
             );
             return false;
         }
+        if ($request->getPermissionType(UGroup::PROJECT_ADMIN)) {
+            return false;
+        }
         return true;
     }
 }

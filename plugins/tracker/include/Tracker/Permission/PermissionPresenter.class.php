@@ -31,6 +31,10 @@ class Tracker_Permission_PermissionPresenter {
         return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'manage_tracker_permissions');
     }
 
+    public function intro() {
+        return $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'fields_tracker_intro');
+    }
+
     public function form_url() {
         return '?'.http_build_query(array(
             'tracker' => $this->tracker->getId(),
