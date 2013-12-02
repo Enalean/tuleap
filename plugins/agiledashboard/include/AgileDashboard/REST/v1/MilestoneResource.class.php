@@ -66,7 +66,7 @@ class MilestoneResource {
             TrackerFactory::instance()
         );
 
-        $backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
+        $this->backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
             new AgileDashboard_BacklogItemDao(),
             $tracker_artifact_factory,
             $planning_factory
@@ -85,7 +85,7 @@ class MilestoneResource {
             $planning_factory,
             $tracker_artifact_factory,
             $tracker_form_element_factory,
-            $backlog_strategy_factory,
+            $this->backlog_strategy_factory,
             $this->milestone_factory,
             $this->backlog_item_collection_factory
         );
@@ -200,7 +200,7 @@ class MilestoneResource {
         $milestone = $this->getMilestoneById($this->getCurrentUser(), $id);
         $this->sendAllowHeaderForContent();
 
-        $backlog_items = $this->getMilestoneBacklogItems($milestone);
+        $backlog_items = $this->getMilestoneContentItems($milestone);
         $backlog_items_representation = array();
 
         foreach ($backlog_items as $backlog_item) {
@@ -221,6 +221,52 @@ class MilestoneResource {
     protected function optionsContent($id) {
         $this->getMilestoneById($this->getCurrentUser(), $id);
         $this->sendAllowHeaderForContent();
+    }
+
+    /**
+     * Get backlog
+     *
+     * Get the backlog items of a given milestone that can be planned in a sub-milestone
+     *
+     * @url GET {id}/backlog
+     *
+     * @param int $id     Id of the milestone
+     * @param int $limit  Number of elements displayed per page
+     * @param int $offset Position of the first element to display
+     *
+     * @return array BacklogItemRepresentation
+     *
+     * @throws 403
+     * @throws 404
+     */
+    protected function getBacklog($id, $limit = 10, $offset = 0) {
+        $this->checkContentLimit($limit);
+
+        $user = $this->getCurrentUser();
+        $milestone = $this->getMilestoneById($user, $id);
+        $this->sendAllowHeaderForBacklog();
+
+        $backlog_items = $this->getMilestoneBacklogItems($user, $milestone);
+        $backlog_items_representation = array();
+
+        foreach ($backlog_items as $backlog_item) {
+            $backlog_items_representation[] = new BacklogItemRepresentation($backlog_item);
+        }
+
+        return array_slice($backlog_items_representation, $offset, $limit);
+    }
+
+    /**
+     * @url OPTIONS {id}/backlog
+     *
+     * @param int $id Id of the milestone
+     *
+     * @throws 403
+     * @throws 404
+     */
+    protected function optionsBacklog($id) {
+        $this->getMilestoneById($this->getCurrentUser(), $id);
+        $this->sendAllowHeaderForBacklog();
     }
 
     /**
@@ -254,6 +300,35 @@ class MilestoneResource {
         $this->sendAllowHeaderForContent();
     }
 
+    /**
+     * Order backlog items
+     *
+     * Order backlog items in milestone
+     *
+     * @url PUT {id}/backlog
+     *
+     * @param int $id    Id of the milestone
+     * @param array $ids Ids of backlog items {@from body}
+     *
+     * @throws 500
+     */
+    protected function putBacklog($id, array $ids) {
+        $user      = $this->getCurrentUser();
+        $milestone = $this->getMilestoneById($user, $id);
+
+        try {
+            $this->milestone_validator->validateArtifactIdsAreInOpenAndUnplannedMilestone($ids, $milestone, $user);
+        } catch (ArtifactIsNotInOpenAndUnplannedBacklogItemsException $exception) {
+            throw new RestException(500, $exception->getMessage());
+        } catch (IdsFromBodyAreNotUniqueException $exception) {
+            throw new RestException(500, $exception->getMessage());
+        }
+
+        $this->milestone_content_updater->setOrder($ids);
+
+        $this->sendAllowHeaderForContent();
+    }
+
     private function getMilestoneById(PFUser $user, $id) {
         $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($user, $id);
 
@@ -272,7 +347,16 @@ class MilestoneResource {
         return UserManager::instance()->getCurrentUser();
     }
 
-    private function getMilestoneBacklogItems($milestone) {
+    private function getMilestoneBacklogItems(PFUser $user, $milestone) {
+        return $this->backlog_item_collection_factory->getUnplannedOpenCollection(
+            $user,
+            $milestone,
+            $this->backlog_strategy_factory->getBacklogStrategy($milestone),
+            false
+        );
+    }
+
+    private function getMilestoneContentItems($milestone) {
         $strategy_factory = new \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
             new \AgileDashboard_BacklogItemDao(),
             \Tracker_ArtifactFactory::instance(),
@@ -300,6 +384,10 @@ class MilestoneResource {
     }
 
     private function sendAllowHeaderForContent() {
+        Header::allowOptionsGetPut();
+    }
+
+    private function sendAllowHeaderForBacklog() {
         Header::allowOptionsGetPut();
     }
 

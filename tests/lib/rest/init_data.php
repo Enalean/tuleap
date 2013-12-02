@@ -28,5 +28,6 @@ $data_builder
     ->generateProject()
     ->importAgileTemplate()
     ->generateMilestones()
+    ->generateContentItems()
     ->generateBacklogItems()
     ->activateDebug();
