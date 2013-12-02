@@ -2019,7 +2019,7 @@ EOS;
 
             foreach ( $permission_types as $permission_type ) {
 
-                if($permission_type == 'PLUGIN_TRACKER_ADMIN') {
+                if($permission_type == self::PERMISSION_ADMIN) {
 
                     if ($user->isMemberOfUGroup($ugroup_id, $this->getGroupId())) {
                         return true;
@@ -2082,7 +2082,7 @@ EOS;
             $permissions = $this->getPermissionsByUgroupId();
             foreach ($permissions as $ugroup_id => $permission_types) {
                 foreach ( $permission_types as $permission_type ) {
-                    if($permission_type == 'PLUGIN_TRACKER_ACCESS_FULL' || $permission_type == 'PLUGIN_TRACKER_ADMIN') {
+                    if($permission_type == self::PERMISSION_FULL || $permission_type == self::PERMISSION_ADMIN) {
                         if ($user->isMemberOfUGroup($ugroup_id, $this->getGroupId())) {
                                 return true;
                         }

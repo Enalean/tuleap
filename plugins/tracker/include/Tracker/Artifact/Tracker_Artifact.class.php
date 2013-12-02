@@ -1665,12 +1665,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $permissions = $this->getTracker()->getAuthorizedUgroupsByPermissionType();
             foreach ($permissions  as $permission => $ugroups) {
                 switch($permission) {
-                    // Full access
-                    case 'PLUGIN_TRACKER_ACCESS_FULL':
-                    // 'submitter' access
-                    case 'PLUGIN_TRACKER_ACCESS_SUBMITTER':
-                    // 'assignee' access
-                    case 'PLUGIN_TRACKER_ACCESS_ASSIGNEE':
+                    case Tracker::PERMISSION_FULL:
+                    case Tracker::PERMISSION_SUBMITTER:
+                    case Tracker::PERMISSION_ASSIGNEE:
+                    case Tracker::PERMISSION_SUBMITTER_ONLY:
                         foreach ($ugroups as $ugroup) {
                             $ugroups[] = $ugroup['ugroup_id'];
                         }
