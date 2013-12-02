@@ -31,8 +31,13 @@ class Tracker_Permission_PermissionSetter {
     public function __construct(Tracker $tracker, array $stored_ugroups_permissions, PermissionsManager $permissions_manager) {
         $this->group_id                   = $tracker->getGroupId();
         $this->atid                       = $tracker->getId();
+        $this->tracker                    = $tracker;
         $this->stored_ugroups_permissions = $stored_ugroups_permissions;
         $this->permissions_manager        = $permissions_manager;
+    }
+
+    public function getTracker() {
+        return $this->tracker;
     }
 
     public function getAllGroupIds() {

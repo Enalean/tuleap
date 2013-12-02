@@ -893,6 +893,7 @@ plugin_tracker_admin_permissions	tracker_ignore_g_regis_submitter_assignee	Ignor
 plugin_tracker_admin_permissions	tracker_intro	<div></div>
 plugin_tracker_admin_permissions	ugroup	User Group
 plugin_tracker_admin_permissions	ug_may_have_no_access	<div>* denotes user groups that may not have access to the tracker (no <a href="$1">tracker permission</a> set).</div>
+plugin_tracker_admin_permissions	no_assignee_semantic	You should set a <a href="$1">$2 semantic</a> before defining 'assigned to group' permission
 #
 # Tracker field dependencies
 #

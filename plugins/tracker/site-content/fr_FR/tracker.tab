@@ -885,6 +885,7 @@ plugin_tracker_admin_permissions	tracker_ignore_g_regis_submitter_assignee	Le gr
 plugin_tracker_admin_permissions	tracker_intro	<div></div>
 plugin_tracker_admin_permissions	ugroup	Groupes d'utilisateurs
 plugin_tracker_admin_permissions	ug_may_have_no_access	<div>* il est possible que ces groupes n'aient pas accès au tracker (pas de <a href="$1">permission sur l'outil de suivi</a> définie).</div>
+plugin_tracker_admin_permissions	no_assignee_semantic	Vous devez définir la <a href="$1">sémantique $2</a> afin de pouvoir definir la permission 'confiés au groupe'
 #
 # Tracker field dependencies
 #

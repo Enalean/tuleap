@@ -31,6 +31,10 @@ class Tracker_Permission_PermissionRequest {
         }
     }
 
+    public function containsPermissionType($permission_type) {
+        return in_array($permission_type, $this->permissions);
+    }
+
     public function getPermissionType($id) {
         if (isset($this->permissions[$id])) {
             return $this->permissions[$id];

@@ -41,7 +41,9 @@ abstract class Tracker_Permission_PermissionManager_BaseTest extends TuleapTestC
 
         $this->tracker_id  = 112;
         $this->project_id  = 34;
-        $this->tracker     = aTracker()->withId($this->tracker_id)->withProjectId($this->project_id)->build();
+        $this->tracker = mock('Tracker');
+        stub($this->tracker)->getId()->returns($this->tracker_id);
+        stub($this->tracker)->getGroupId()->returns($this->project_id);
         $this->permissions = array(
             UGroup::ANONYMOUS => array(
                 'ugroup'      => array('name' => 'whatever'),
@@ -441,6 +443,38 @@ class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest extends 
 
         expect($this->permissions_manager)->addPermission()->never();
         expect($this->permissions_manager)->revokePermissionForUGroup()->never();
+
+        $this->permission_manager->save($request, $this->permission_setter);
+    }
+}
+
+class Tracker_Permission_PermissionManager_AssignedToGroupTest extends Tracker_Permission_PermissionManager_BaseTest {
+
+    public function itDisplaysAFeedbackErrorIfAssignedToSemanticIsNotDefined() {
+        stub($this->tracker)->getContributorField()->returns(null);
+        $request = new Tracker_Permission_PermissionRequest(array(
+            UGroup::ANONYMOUS        => Tracker_Permission_Command::PERMISSION_NONE,
+            UGroup::REGISTERED       => Tracker_Permission_Command::PERMISSION_NONE,
+            UGroup::PROJECT_MEMBERS  => Tracker_Permission_Command::PERMISSION_ASSIGNEE,
+        ));
+
+        expect($this->permissions_manager)->addPermission()->never();
+        expect($this->permissions_manager)->revokePermissionForUGroup()->never();
+        expect($GLOBALS['Response'])->addFeedback(Feedback::ERROR, '*', '*')->once();
+
+        $this->permission_manager->save($request, $this->permission_setter);
+    }
+
+    public function itDoesNotDisplayAFeedbackErrorIfAssignedToSemanticIsDefined() {
+        stub($this->tracker)->getContributorField()->returns(aMockField()->build());
+        $request = new Tracker_Permission_PermissionRequest(array(
+            UGroup::ANONYMOUS        => Tracker_Permission_Command::PERMISSION_NONE,
+            UGroup::REGISTERED       => Tracker_Permission_Command::PERMISSION_NONE,
+            UGroup::PROJECT_MEMBERS  => Tracker_Permission_Command::PERMISSION_ASSIGNEE,
+        ));
+
+        expect($this->permissions_manager)->addPermission()->once();
+        expect($GLOBALS['Response'])->addFeedback(Feedback::INFO, '*')->once();
 
         $this->permission_manager->save($request, $this->permission_setter);
     }

@@ -25,9 +25,13 @@ class Tracker_Permission_PermissionController implements Tracker_Dispatchable_In
     /** @var TemplateRenderer */
     private $renderer;
 
+    /** @var Tracker_Permission_PermissionPresenterBuilder */
+    private $presenter_builder;
+
     public function __construct(Tracker $tracker) {
-        $this->tracker  = $tracker;
-        $this->renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+        $this->tracker           = $tracker;
+        $this->renderer          = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+        $this->presenter_builder = new Tracker_Permission_PermissionPresenterBuilder();
     }
 
     public function getTracker() {
@@ -43,84 +47,10 @@ class Tracker_Permission_PermissionController implements Tracker_Dispatchable_In
     }
 
     private function view(Tracker_IDisplayTrackerLayout $layout) {
-        $presenter = new Tracker_Permission_PermissionPresenter($this->tracker, $this->getUGroupList());
-
+        $presenter = $this->presenter_builder->getPresenter($this->tracker);
         $this->displayHeader($layout, $presenter->title());
         $this->renderer->renderToPage('admin-perms-tracker', $presenter);
         $this->displayFooter($layout);
-    }
-
-    private function getUGroupList() {
-        $ugroup_list = array();
-
-        $ugroups_permissions = plugin_tracker_permission_get_tracker_ugroups_permissions($this->tracker->getGroupId(), $this->tracker->getId());
-        ksort($ugroups_permissions);
-        reset($ugroups_permissions);
-        foreach($ugroups_permissions as $ugroup_permissions) {
-            $ugroup      = $ugroup_permissions['ugroup'];
-            $permissions = $ugroup_permissions['permissions'];
-
-            $ugroup_list[] = new Tracker_Permission_PermissionUgroupPresenter(
-                $ugroup['id'],
-                $ugroup['name'],
-                isset($ugroup['link']) ? $ugroup['link'] : '',
-                $this->getPermissionTypeList($ugroup['id'], $permissions)
-            );
-        }
-
-        return $ugroup_list;
-    }
-
-    private function getPermissionTypeList($ugroup_id, $permissions) {
-        $permission_type_list = array();
-
-        $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
-            Tracker_Permission_Command::PERMISSION_NONE,
-            $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_NONE),
-            count($permissions) == 0
-        );
-
-        $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
-            Tracker_Permission_Command::PERMISSION_FULL,
-            $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_FULL),
-            isset($permissions[Tracker::PERMISSION_FULL])
-        );
-
-        if ($ugroup_id != UGroup::ANONYMOUS) {
-            $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
-                Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
-                $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_SUBMITTER_ONLY),
-                isset($permissions[Tracker::PERMISSION_SUBMITTER_ONLY])
-            );
-
-            if ($ugroup_id != UGroup::REGISTERED) {
-                $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
-                    Tracker_Permission_Command::PERMISSION_ASSIGNEE,
-                    $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_ASSIGNEE),
-                    (isset($permissions[Tracker::PERMISSION_ASSIGNEE]) && !isset($permissions[Tracker::PERMISSION_SUBMITTER]))
-                );
-
-                $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
-                    Tracker_Permission_Command::PERMISSION_SUBMITTER,
-                    $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_SUBMITTER),
-                    !isset($permissions[Tracker::PERMISSION_ASSIGNEE]) && isset($permissions[Tracker::PERMISSION_SUBMITTER])
-                );
-
-                $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
-                    Tracker_Permission_Command::PERMISSION_ASSIGNEE_AND_SUBMITTER,
-                    $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_ASSIGNEE .'_AND_'. Tracker::PERMISSION_SUBMITTER),
-                    isset($permissions[Tracker::PERMISSION_ASSIGNEE]) && isset($permissions[Tracker::PERMISSION_SUBMITTER])
-                );
-
-                $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
-                    Tracker_Permission_Command::PERMISSION_ADMIN,
-                    $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_ADMIN),
-                    isset($permissions[Tracker::PERMISSION_ADMIN])
-                );
-            }
-        }
-
-        return $permission_type_list;
     }
 
     private function displayHeader(Tracker_IDisplayTrackerLayout $layout, $title) {

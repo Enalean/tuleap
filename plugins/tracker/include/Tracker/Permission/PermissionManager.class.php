@@ -21,7 +21,9 @@
 class Tracker_Permission_PermissionManager {
 
     public function save(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter) {
-        $this->getChainOfResponsability()->apply($request, $permission_setter);
+        if ($this->checkPermissionValidity($request, $permission_setter->getTracker())) {
+            $this->getChainOfResponsability()->apply($request, $permission_setter);
+        }
     }
 
     private function getChainOfResponsability() {
@@ -33,5 +35,24 @@ class Tracker_Permission_PermissionManager {
         $registered_command->setNextCommand($ugroup_command);
 
         return $anonymous_command;
+    }
+
+    private function checkPermissionValidity(Tracker_Permission_PermissionRequest $request, Tracker $tracker) {
+        if ($request->containsPermissionType(Tracker_Permission_Command::PERMISSION_ASSIGNEE) != null && $tracker->getContributorField() === null) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText(
+                    'plugin_tracker_admin_permissions',
+                    'no_assignee_semantic',
+                    array(
+                        TRACKER_BASE_URL . '/?'.  http_build_query(array('func' => 'admin-semantic', 'tracker' => $tracker->getId())),
+                        $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_label')
+                    )
+                ),
+                CODENDI_PURIFIER_DISABLED
+            );
+            return false;
+        }
+        return true;
     }
 }
