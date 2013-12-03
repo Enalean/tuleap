@@ -104,7 +104,7 @@ class MilestoneContentUpdater {
         $this->setOrder($linked_artifact_ids);
     }
 
-    private function setOrder(array $linked_artifact_ids) {
+    public function setOrder(array $linked_artifact_ids) {
         $dao         = new Tracker_Artifact_PriorityDao();
         $predecessor = null;
 

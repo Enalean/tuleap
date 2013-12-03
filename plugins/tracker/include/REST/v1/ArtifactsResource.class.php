@@ -31,7 +31,6 @@ use \UserManager;
 use \PFUser;
 use \Tracker_REST_Artifact_ArtifactRepresentationBuilder;
 use \Tracker_FormElementFactory;
-use \Tracker_Artifact;
 
 class ArtifactsResource {
     /** @var Tracker_ArtifactFactory */

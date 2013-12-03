@@ -135,14 +135,22 @@ class TestDataBuilder {
             Tracker_FormElementFactory::instance()->getFormElementByName(6, 'name')->getId() => 'Release 1.0',
             Tracker_FormElementFactory::instance()->getFormElementByName(6, 'status')->getId()  => '126'
         );
-
         Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(6), $fields_data, $user, '');
+
+        $fields_data = array(
+            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'name')->getId() => 'Sprint A',
+            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'status')->getId()  => '150'
+        );
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(7), $fields_data, $user, '');
+
+        $release = Tracker_ArtifactFactory::instance()->getArtifactById(1);
+        $release->linkArtifact(2, $user);
 
         return $this;
     }
 
-    public function generateBacklogItems() {
-        echo "Create backlog items\n";
+    public function generateContentItems() {
+        echo "Create content items\n";
 
         $user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
 
@@ -170,13 +178,63 @@ class TestDataBuilder {
         );
         Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '');
 
-        $milestone = Tracker_ArtifactFactory::instance()->getArtifactById(1);
-        $milestone->linkArtifact(2, $user);
-        $milestone->linkArtifact(3, $user);
-        $milestone->linkArtifact(4, $user);
-        $milestone->linkArtifact(5, $user);
+        $release = Tracker_ArtifactFactory::instance()->getArtifactById(1);
+        $release->linkArtifact(3, $user);
+        $release->linkArtifact(4, $user);
+        $release->linkArtifact(5, $user);
+        $release->linkArtifact(6, $user);
 
         return $this;
     }
+
+    public function generateBacklogItems() {
+        echo "Create backlog items\n";
+
+        $user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
+
+        $fields_data = array(
+            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'i_want_to')->getId() => 'Believe',
+            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'status')->getId()  => '206'
+        );
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(9), $fields_data, $user, '');
+
+        $fields_data = array(
+            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'i_want_to')->getId() => 'Break Free',
+            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'status')->getId()  => '205'
+        );
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(9), $fields_data, $user, '');
+
+        $fields_data = array(
+            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'i_want_to')->getId() => 'Hughhhhhhh',
+            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'status')->getId()  => '205'
+        );
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(9), $fields_data, $user, '');
+
+        $fields_data = array(
+            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'i_want_to')->getId() => 'Kill you',
+            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'status')->getId()  => '205'
+        );
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(9), $fields_data, $user, '');
+
+        $fields_data = array(
+            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'i_want_to')->getId() => 'Back',
+            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'status')->getId()  => '205'
+        );
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(9), $fields_data, $user, '');
+
+        $release = Tracker_ArtifactFactory::instance()->getArtifactById(1);
+        $release->linkArtifact(7, $user);
+        $release->linkArtifact(8, $user);
+        $release->linkArtifact(9, $user);
+        $release->linkArtifact(10, $user);
+        $release->linkArtifact(11, $user);
+
+        $sprint = Tracker_ArtifactFactory::instance()->getArtifactById(2);
+        $sprint->linkArtifact(7, $user);
+        $sprint->linkArtifact(8, $user);
+
+        return $this;
+    }
+
 }
 ?>
