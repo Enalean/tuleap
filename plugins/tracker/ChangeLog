@@ -1,3 +1,6 @@
+Version 5.191 - Tuleap 6.8
+    * Story #5331 - user sees only artifacts he has submitted in a tracker
+
 Version 5.190 - Tuleap 6.8
     * Fix namespace error on /artifacts/:id routes
 

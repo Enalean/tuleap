@@ -1,3 +1,6 @@
+Version 1.21 - Tuleap 6.8
+    * Story #5331 - user sees only artifacts he has submitted in a tracker
+
 Version 1.20 - Tuleap 6.8
     * Add GET, OPTIONS route for milestones/:id/content
 
