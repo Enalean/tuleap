@@ -144,8 +144,12 @@ class Tracker_Permission_PermissionChecker {
     private function getAssigneeIds(Tracker_Artifact $artifact) {
         $contributor_field = $artifact->getTracker()->getContributorField();
         if ($contributor_field) {
-            return $artifact->getValue($contributor_field)->getValue();
+            $assignee = $artifact->getValue($contributor_field);
+            if ($assignee) {
+                return $assignee->getValue();
+            }
         }
+        
         return array();
     }
 
