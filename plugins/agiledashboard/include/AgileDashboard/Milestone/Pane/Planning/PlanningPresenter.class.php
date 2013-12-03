@@ -41,7 +41,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
     private $trackers_without_initial_effort_field = array();
 
     public function __construct(
-        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $backlog_collection,
+        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $backlog_collection,
         AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollection $submilestone_collection,
         Planning_Milestone $milestone,
         $parent_item_type,

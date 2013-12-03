@@ -21,7 +21,7 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use \Tracker_REST_Artifact_ArtifactRepresentation;
 use \Tracker_REST_TrackerRepresentation;
-use \AgileDashBoard_BacklogItem;
+use \AgileDashboard_BacklogItemPresenter;
 use \Rest_ResourceReference;
 
 class BacklogItemRepresentation {
@@ -52,7 +52,7 @@ class BacklogItemRepresentation {
     /** @var Rest_ResourceReference */
     public $parent;
 
-    public function __construct(AgileDashBoard_BacklogItem $backlog_item) {
+    public function __construct(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {
         $this->id             = $backlog_item->id();
         $this->label          = $backlog_item->title();
         $this->status         = $backlog_item->status();

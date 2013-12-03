@@ -36,9 +36,9 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant extends A
     private $solve_inconsistencies_url;
 
     public function __construct(
-        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
-        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done,
-        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $inconsistent_collection,
+        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $todo,
+        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $done,
+        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $inconsistent_collection,
         $backlog_item_type,
         $add_new_backlog_items_urls,
         $trackers,

@@ -22,17 +22,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface AgileDashboard_Milestone_Backlog_BacklogRowPresenter {
+/**
+ * I build BacklogItem{,Collection}
+ */
+class AgileDashboard_Milestone_Backlog_BacklogItemBuilder implements AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection {
 
-    public function title();
+    public function getCollection() {
+        return new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
+    }
 
-    public function url();
-
-    public function points();
-
-    public function parent_title();
-
-    public function parent_url();
+    public function getItem(Tracker_Artifact $artifact, $redirect_to_self) {
+        return new AgileDashboard_Milestone_Backlog_BacklogItem($artifact);
+    }
 }
-
-?>

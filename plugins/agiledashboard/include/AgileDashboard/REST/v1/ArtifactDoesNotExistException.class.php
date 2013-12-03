@@ -1,12 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
- *
- * This file is a part of Tuleap.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,20 +13,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-interface AgileDashboard_Milestone_Backlog_BacklogRowPresenter {
+namespace Tuleap\AgileDashboard\REST\v1;
 
-    public function title();
+use \Exception;
 
-    public function url();
+class ArtifactDoesNotExistException extends Exception {
 
-    public function points();
-
-    public function parent_title();
-
-    public function parent_url();
+    public function __construct($potential_backlog_item_id) {
+        parent::__construct('Artifact '. $potential_backlog_item_id .' does not exist');
+    }
 }
-
-?>

@@ -55,6 +55,10 @@ class Header {
         self::sendAllowHeaders(array(self::OPTIONS, self::DELETE));
     }
 
+    public static function allowOptionsGetPut() {
+        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT));
+    }
+
     private static function sendAllowHeaders($methods) {
         $methods = implode(', ', $methods);
         self::sendHeader(self::ALLOW, $methods);

@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_BacklogRowPresenter {
+class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Milestone_Backlog_IBacklogItem {
+
     /** @var Int */
     private $id;
 
@@ -39,9 +40,6 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
     private $initial_effort;
 
     /** @var String */
-    private $redirect_to_self;
-
-    /** @var String */
     private $status;
 
     /** @var Tracker_Artifact */
@@ -50,11 +48,10 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
     /** @var Tracker_Artifact */
     private $parent;
 
-    public function __construct(Tracker_Artifact $artifact, $redirect_to_self) {
+    public function __construct(Tracker_Artifact $artifact) {
         $this->id               = $artifact->getId();
         $this->title            = $artifact->getTitle();
         $this->url              = $artifact->getUri();
-        $this->redirect_to_self = $redirect_to_self;
         $this->artifact         = $artifact;
         $this->type             = $this->artifact->getTracker()->getName();
     }
@@ -94,10 +91,6 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
         return $this->type;
     }
 
-    public function url() {
-        return $this->getUrlWithRedirect($this->url);
-    }
-
     public function points() {
         return $this->initial_effort;
     }
@@ -108,21 +101,8 @@ class AgileDashboard_BacklogItem implements AgileDashboard_Milestone_Backlog_Bac
         }
     }
 
-    public function parent_url() {
-        if ($this->parent) {
-            return $this->getUrlWithRedirect($this->parent->getUri());
-        }
-    }
-
     public function status() {
         return $this->status;
-    }
-
-    private function getUrlWithRedirect($url) {
-        if ($this->redirect_to_self) {
-            return $url.'&'.$this->redirect_to_self;
-        }
-        return $url;
     }
 
     /**

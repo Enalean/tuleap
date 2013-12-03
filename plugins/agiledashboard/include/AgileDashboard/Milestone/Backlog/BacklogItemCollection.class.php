@@ -22,8 +22,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection implements Iterator, Countable {
-    /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenter[] */
+class AgileDashboard_Milestone_Backlog_BacklogItemCollection implements
+    AgileDashboard_Milestone_Backlog_IBacklogItemCollection,
+    Iterator,
+    Countable
+{
+    /** @var AgileDashboard_Milestone_Backlog_IBacklogItem[] */
     private $rows = array();
 
     /** @var Integer[] */
@@ -40,9 +44,9 @@ class AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection implements 
         $this->parent_item_name = $name;
     }
 
-    public function push(AgileDashboard_Milestone_Backlog_BacklogRowPresenter $row) {
-        $this->rows[] = $row;
-        $this->index[$row->id()] = true;
+    public function push(AgileDashboard_Milestone_Backlog_IBacklogItem $item) {
+        $this->rows[] = $item;
+        $this->index[$item->id()] = true;
     }
 
     public function containsId($id) {

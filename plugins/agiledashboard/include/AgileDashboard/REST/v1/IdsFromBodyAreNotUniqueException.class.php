@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,20 +15,18 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-interface AgileDashboard_Milestone_Backlog_BacklogRowPresenter {
+namespace Tuleap\AgileDashboard\REST\v1;
 
-    public function title();
+use \Exception;
 
-    public function url();
+class IdsFromBodyAreNotUniqueException extends Exception {
 
-    public function points();
+    public function __construct() {
+        parent::__construct('There are duplicated ids');
+    }
 
-    public function parent_title();
-
-    public function parent_url();
 }
-
-?>

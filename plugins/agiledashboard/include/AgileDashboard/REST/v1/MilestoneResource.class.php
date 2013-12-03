@@ -26,11 +26,14 @@ use \Tracker_ArtifactFactory;
 use \Tracker_FormElementFactory;
 use \TrackerFactory;
 use \Planning_MilestoneFactory;
-use \Project_AccessProjectNotFoundException;
-use \Project_AccessException;
+use \AgileDashboard_BacklogItemDao;
+use \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
+use \AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
 use \UserManager;
-use \URLVerification;
 use \Planning_Milestone;
+use \PFUser;
+use \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
+use \MilestoneContentUpdater;
 
 /**
  * Wrapper for milestone related REST methods
@@ -39,16 +42,55 @@ class MilestoneResource {
 
     const MAX_LIMIT = 100;
 
-    /** @var \Planning_MilestoneFactory */
+    /** @var Planning_MilestoneFactory */
     private $milestone_factory;
 
+    /** @var MilestoneResourceValidator */
+    private $milestone_validator;
+
+    /** @var MilestoneContentUpdater */
+    private $milestone_content_updater;
+
+    /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
+    private $backlog_item_collection_factory;
+
     public function __construct() {
+        $planning_factory             = PlanningFactory::build();
+        $tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
+        $tracker_form_element_factory = Tracker_FormElementFactory::instance();
+
         $this->milestone_factory = new Planning_MilestoneFactory(
-            PlanningFactory::build(),
-            Tracker_ArtifactFactory::instance(),
-            Tracker_FormElementFactory::instance(),
+            $planning_factory,
+            $tracker_artifact_factory,
+            $tracker_form_element_factory,
             TrackerFactory::instance()
         );
+
+        $backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
+            new AgileDashboard_BacklogItemDao(),
+            $tracker_artifact_factory,
+            $planning_factory
+        );
+
+        $this->backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
+            new AgileDashboard_BacklogItemDao(),
+            $tracker_artifact_factory,
+            $tracker_form_element_factory,
+            $this->milestone_factory,
+            $planning_factory,
+            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
+        );
+
+        $this->milestone_validator = new MilestoneResourceValidator(
+            $planning_factory,
+            $tracker_artifact_factory,
+            $tracker_form_element_factory,
+            $backlog_strategy_factory,
+            $this->milestone_factory,
+            $this->backlog_item_collection_factory
+        );
+
+        $this->milestone_content_updater = new MilestoneContentUpdater($tracker_form_element_factory);
     }
 
     /**
@@ -171,7 +213,7 @@ class MilestoneResource {
     /**
      * @url OPTIONS {id}/content
      *
-     * @param int $id Id of the planning
+     * @param int $id Id of the milestone
      *
      * @throws 403
      * @throws 404
@@ -181,7 +223,38 @@ class MilestoneResource {
         $this->sendAllowHeaderForContent();
     }
 
-    private function getMilestoneById(\PFUser $user, $id) {
+    /**
+     * Put content in a given milestone
+     *
+     * @url PUT {id}/content
+     *
+     * @param int $id    Id of the milestone
+     * @param array $ids Ids of backlog items {@from body}
+     *
+     * @throws 500
+     */
+    protected function putContent($id, array $ids) {
+        $current_user = $this->getCurrentUser();
+        $milestone    = $this->getMilestoneById($current_user, $id);
+
+        try {
+            $this->milestone_validator->validateArtifactsFromBodyContent($ids, $milestone, $current_user);
+        } catch (ArtifactDoesNotExistException $exception) {
+            throw new RestException(500, $exception->getMessage());
+        } catch (ArtifactIsNotInBacklogTrackerException $exception) {
+            throw new RestException(500, $exception->getMessage());
+        } catch (ArtifactIsClosedOrAlreadyPlannedInAnotherMilestone $exception) {
+            throw new RestException(500, $exception->getMessage());
+        } catch (IdsFromBodyAreNotUniqueException $exception) {
+            throw new RestException(500, $exception->getMessage());
+        }
+
+        $this->milestone_content_updater->updateMilestoneContent($ids, $current_user, $milestone->getArtifact());
+
+        $this->sendAllowHeaderForContent();
+    }
+
+    private function getMilestoneById(PFUser $user, $id) {
         $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($user, $id);
 
         if (! $milestone) {
@@ -200,14 +273,6 @@ class MilestoneResource {
     }
 
     private function getMilestoneBacklogItems($milestone) {
-        $backlog_collection_factory = new \AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory(
-            new \AgileDashboard_BacklogItemDao(),
-            \Tracker_ArtifactFactory::instance(),
-            \Tracker_FormElementFactory::instance(),
-            $this->milestone_factory,
-            \PlanningFactory::build()
-        );
-
         $strategy_factory = new \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
             new \AgileDashboard_BacklogItemDao(),
             \Tracker_ArtifactFactory::instance(),
@@ -216,7 +281,7 @@ class MilestoneResource {
 
         $backlog_strategy = $strategy_factory->getSelfBacklogStrategy($milestone);
 
-        return $backlog_collection_factory->getAllCollection(
+        return $this->backlog_item_collection_factory->getAllCollection(
             $this->getCurrentUser(),
             $milestone,
             $backlog_strategy,
@@ -235,7 +300,7 @@ class MilestoneResource {
     }
 
     private function sendAllowHeaderForContent() {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPut();
     }
 
     private function sendAllowHeaderForSubmilestones() {

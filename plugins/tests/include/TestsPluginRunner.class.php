@@ -133,7 +133,8 @@ class TestsPluginRunner {
 
     public function isTest($test) {
         $baseName = basename($test->getPathname());
-        return !in_array($baseName[0], array('_', '.')) && substr($baseName, -8) === 'Test.php';
+        return !in_array($baseName[0], array('_', '.')) &&
+               (substr($baseName, -8) === 'Test.php' || (version_compare(phpversion(), '5.3', '>=') &&  substr($baseName, -13) === 'TestPHP53.php'));
     }
 
     public function getPresenter($prefix, $name, $value) {

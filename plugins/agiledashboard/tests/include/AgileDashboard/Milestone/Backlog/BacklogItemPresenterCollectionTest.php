@@ -24,22 +24,22 @@
 
 require_once dirname(__FILE__).'/../../../../common.php';
 
-class BacklogRowPresenterCollectionTest extends TuleapTestCase {
+class BacklogItemPresenterCollectionTest extends TuleapTestCase {
 
     public function itReturnsFalseWhenCollectionIsEmpty() {
-        $collection = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
+        $collection = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
         $this->assertFalse($collection->containsId(5));
     }
 
     public function itReturnsTrueWhenItemBelongsToCollection() {
-        $collection = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
-        $collection->push(stub('AgileDashboard_Milestone_Backlog_BacklogRowPresenter')->id()->returns(5));
+        $collection = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
+        $collection->push(stub('AgileDashboard_Milestone_Backlog_IBacklogItem')->id()->returns(5));
         $this->assertTrue($collection->containsId(5));
     }
 
     public function itReturnsFalseWhenItemDoesntBelongToCollection() {
-        $collection = new AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection();
-        $collection->push(stub('AgileDashboard_Milestone_Backlog_BacklogRowPresenter')->id()->returns(5));
+        $collection = new AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection();
+        $collection->push(stub('AgileDashboard_Milestone_Backlog_IBacklogItem')->id()->returns(5));
         $this->assertFalse($collection->containsId(2));
     }
 }

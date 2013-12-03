@@ -23,13 +23,13 @@
  */
 
 abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
-    /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
+    /** @var AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection */
     private $todo_collection;
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
+    /** @var AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection */
     private $done_collection;
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection */
+    /** @var AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection */
     private $inconsistent_collection;
 
     /** @var String */
@@ -39,9 +39,9 @@ abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
     private $trackers_without_initial_effort_field;
 
     public function __construct(
-        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $todo,
-        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $done,
-        AgileDashboard_Milestone_Backlog_BacklogRowPresenterCollection $inconsistent_collection,
+        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $todo,
+        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $done,
+        AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $inconsistent_collection,
         $backlog_item_type,
         array $trackers_without_initial_effort_field
     ) {

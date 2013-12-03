@@ -408,13 +408,14 @@ class AgileDashboardPlugin extends Plugin {
         );
     }
 
-    private function getBacklogRowCollectionFactory($milestone_factory) {
-        return new AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory(
+    private function getBacklogItemPresenterCollectionFactory($milestone_factory) {
+        return new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
             Tracker_FormElementFactory::instance(),
             $milestone_factory,
-            $this->getPlanningFactory()
+            $this->getPlanningFactory(),
+            new AgileDashboard_Milestone_Backlog_BacklogItemPresenterBuilder()
         );
     }
 
@@ -423,7 +424,7 @@ class AgileDashboardPlugin extends Plugin {
 
         return new AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory(
             $this->getBacklogStrategyFactory(),
-            $this->getBacklogRowCollectionFactory($milestone_factory),
+            $this->getBacklogItemPresenterCollectionFactory($milestone_factory),
             $milestone_factory,
             new AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterFactory($milestone_factory, $icon_factory)
         );

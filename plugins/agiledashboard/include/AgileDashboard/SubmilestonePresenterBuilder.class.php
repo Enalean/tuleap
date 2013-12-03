@@ -24,14 +24,14 @@
 
 class AgileDashboard_SubmilestonePresenterBuilder {
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory */
+    /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $backlog_row_factory;
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory*/
     private $strategy_factory;
 
     public function __construct(
-            AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory $backlog_row_factory,
+            AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_row_factory,
             AgileDashboard_Milestone_Backlog_BacklogStrategyFactory      $strategy_factory) {
         $this->backlog_row_factory = $backlog_row_factory;
         $this->strategy_factory    = $strategy_factory;

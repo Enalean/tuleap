@@ -24,7 +24,7 @@
 
 class AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningPresenterBuilder {
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory */
+    /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $collection_factory;
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
@@ -41,7 +41,7 @@ class AgileDashboard_Milestone_Pane_TopPlanning_TopPlanningPresenterBuilder {
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $strategy_factory,
-        AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory $collection_factory,
+        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $collection_factory,
         Planning_MilestoneFactory $milestone_factory,
         AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterFactory $submilestone_presenter_factory
     ) {
