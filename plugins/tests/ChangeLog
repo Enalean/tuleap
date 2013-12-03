@@ -1,3 +1,6 @@
+Version 5.20 - Tuleap 6.8
+    * Add OPTION, GET and PUT REST routes for milestones/:id/content
+
 Version 5.19 - Tuleap 6.6
     * Scroll to the first selected test
 
