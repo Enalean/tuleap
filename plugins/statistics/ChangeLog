@@ -1,3 +1,6 @@
+Version 0.34 - Tuleap 6.8
+    * Fix request #3262: Jean Pierre Graph font configuration fails on centos6
+
 Version 0.33 - Tuleap 6.7
     * Dev: remove a bunch of explicit require_once
 
