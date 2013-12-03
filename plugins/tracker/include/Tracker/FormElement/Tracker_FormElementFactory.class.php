@@ -1079,7 +1079,7 @@ class Tracker_FormElementFactory {
             if ($success = $this->getDao()->save($form_element)) {
                 unset($this->formElements_by_parent[$form_element->parent_id]);
                 //Set permissions if no permission set
-                $perms = $form_element->getPermissions();
+                $perms = $form_element->getPermissionsByUgroupId();
                 //WARNING : here must be transformed the permissions array structure in order to pass it to the function that process form data permissions
                 //see this::createFormElement to know how to convert permissions data
                 if (empty($perms)) {
@@ -1424,7 +1424,7 @@ class Tracker_FormElementFactory {
                                     'required'      => $form_element->required,
                                     'notifications' => $form_element->notifications,
                                     'rank'          => $form_element->rank,
-                                    'permissions'   => $form_element->getPermissions(),
+                                    'permissions'   => $form_element->getPermissionsByUgroupId(),
                                     'specific_properties' => $properties
         );
         $type = $this->getType($form_element);

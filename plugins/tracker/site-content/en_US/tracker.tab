@@ -863,7 +863,7 @@ plugin_tracker_common_types	event_COMMENT_CHANGE_desc	A followup comment has bee
 #
 #
 plugin_tracker_admin_permissions	fields_no_ugroups	<div><em>No user group has access to this tracker</em></div>
-plugin_tracker_admin_permissions	fields_tracker_intro	<div></div>
+plugin_tracker_admin_permissions	fields_tracker_intro	Please note that project administrators and tracker administrators are granted full access to the tracker.
 plugin_tracker_admin_permissions	fields_tracker_toggle_field	<div>You may <a href='$1'>switch to the 'field' view</a> by clicking on a field label in the table below.</div>
 plugin_tracker_admin_permissions	fields_tracker_toggle_group	<div>You may <a href='$1'>switch to the 'user group' view</a> by clicking on a group name in the table below.</div>
 plugin_tracker_admin_permissions	ignore_g_anon_read	Ignoring group '$1' because '$2' are allowed to read
@@ -877,6 +877,7 @@ plugin_tracker_admin_permissions	ignore_ug_during_copy	Please note that some ori
 plugin_tracker_admin_permissions	permissions	Access Permissions
 plugin_tracker_admin_permissions	PLUGIN_TRACKER_ADMIN	are admin of the tracker
 plugin_tracker_admin_permissions	PLUGIN_TRACKER_ACCESS_FULL	have access to all artifacts
+plugin_tracker_admin_permissions	PLUGIN_TRACKER_ACCESS_SUBMITTER_ONLY	have access to artifacts they submitted
 plugin_tracker_admin_permissions	PLUGIN_TRACKER_ACCESS_ASSIGNEE	have access to artifacts assigned to group
 plugin_tracker_admin_permissions	PLUGIN_TRACKER_ACCESS_SUBMITTER	have access to artifacts submitted by group
 plugin_tracker_admin_permissions	PLUGIN_TRACKER_ACCESS_ASSIGNEE_AND_PLUGIN_TRACKER_ACCESS_SUBMITTER	have access to artifacts assigned to or submitted by group
@@ -892,6 +893,7 @@ plugin_tracker_admin_permissions	tracker_ignore_g_regis_submitter_assignee	Ignor
 plugin_tracker_admin_permissions	tracker_intro	<div></div>
 plugin_tracker_admin_permissions	ugroup	User Group
 plugin_tracker_admin_permissions	ug_may_have_no_access	<div>* denotes user groups that may not have access to the tracker (no <a href="$1">tracker permission</a> set).</div>
+plugin_tracker_admin_permissions	no_assignee_semantic	You should set a <a href="$1">$2 semantic</a> before defining 'assigned to group' permission
 #
 # Tracker field dependencies
 #
@@ -1422,6 +1424,7 @@ plugin_tracker_permissions	plugin_tracker_artifact_access	Access to an artifact
 plugin_tracker_permissions	plugin_tracker_full_access	Access to all tracker artifacts
 plugin_tracker_permissions	plugin_tracker_submitter_access	Access to tracker artifacts submitted by group
 plugin_tracker_permissions	plugin_tracker_assignee_access	Access to tracker artifacts assigned to group
+plugin_tracker_permissions	plugin_tracker_submitter_only_access	Access to tracker artifacts the user submitted
 plugin_tracker_permissions	plugin_tracker_field_submit	Can submit tracker field
 plugin_tracker_permissions	plugin_tracker_field_read	Can read tracker field
 plugin_tracker_permissions	plugin_tracker_field_update	Can update tracker field

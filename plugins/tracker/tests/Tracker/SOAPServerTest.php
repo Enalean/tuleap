@@ -214,19 +214,19 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     }
 
     private function setUpArtifactResults(Tracker_ReportDao $dao) {
-        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForIntegerBiggerThan3(), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
+        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForIntegerBiggerThan3(), '*', '*', '*', '*')->returnsDar(
             array('id' => '42,66,9001', 'last_changeset_id' => '421,661,90011')
         );
-        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForDateFieldEqualsTo(), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
+        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForDateFieldEqualsTo(), '*', '*', '*', '*')->returnsDar(
             array('id' => '9001', 'last_changeset_id' => '90011')
         );
-        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForDateFieldAdvanced(), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
+        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForDateFieldAdvanced(), '*', '*', '*', '*')->returnsDar(
             array('id' => '42,9001', 'last_changeset_id' => '421,90011')
         );
-        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForListField(), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
+        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForListField(), '*', '*', '*', '*')->returnsDar(
             array('id' => '42', 'last_changeset_id' => '421')
         );
-        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForListFieldAdvanced(), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
+        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForListFieldAdvanced(), '*', '*', '*', '*')->returnsDar(
             array('id' => '42,66', 'last_changeset_id' => '421,661')
         );
         stub($dao)->searchMatchingIds()->returnsDar(

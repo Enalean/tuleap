@@ -1110,7 +1110,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return array
      */
-    public function getPermissions() {
+    public function getPermissionsByUgroupId() {
         return array();
     }
 

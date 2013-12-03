@@ -84,6 +84,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /** @var Tracker_Artifact */
     private $parent_without_permission_checking;
 
+    /** @var Boolean[] */
+    private $can_view_cache = array();
+
     /**
      * Constructor
      *
@@ -151,73 +154,18 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function userCanView(PFUser $user = null) {
         $um = $this->getUserManager();
-        if (!$user) {
+        if (! $user) {
             $user = $um->getCurrentUser();
         }
+        if (! isset($this->can_view_cache[$user->getId()])) {
+            $permission_checker = new Tracker_Permission_PermissionChecker($um);
+            $this->setUserCanView($user, $permission_checker->userCanView($user, $this));
+        }
+        return $this->can_view_cache[$user->getId()];
+    }
 
-        // Super-user has all rights...
-        if ($user->isSuperUser()) {
-            return true;
-        }
-
-        //Individual artifact permission
-        $can_access = ! $this->useArtifactPermissions();
-        if (!$can_access) {
-            $rows = $this->permission_db_authorized_ugroups('PLUGIN_TRACKER_ARTIFACT_ACCESS');
-            if ( $rows !== false ) {
-                foreach ( $rows as $row ) {
-                    if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                        $can_access = true;
-                    }
-                }
-            }
-        }
-        if ($can_access) {
-            $permissions = $this->getTracker()->getPermissionsAuthorizedUgroups();
-            foreach ($permissions  as $permission => $ugroups) {
-                switch($permission) {
-                    // Full access
-                    case 'PLUGIN_TRACKER_ACCESS_FULL':
-                        foreach ($ugroups as $ugroup) {
-                            if ($user->isMemberOfUGroup($ugroup, $this->getTracker()->getGroupId())) {
-                                return true;
-                            }
-                        }
-                        break;
-                    // 'submitter' access
-                    case 'PLUGIN_TRACKER_ACCESS_SUBMITTER':
-                        foreach ($ugroups as $ugroup) {
-                            if ($user->isMemberOfUGroup($ugroup, $this->getTracker()->getGroupId())) {
-                                // check that submitter is also a member
-                                $user_subby = $um->getUserById($this->getSubmittedBy());
-                                if ($user_subby->isMemberOfUGroup($ugroup, $this->getTracker()->getGroupId())) {
-                                    return true;
-                                }
-                            }
-                        }
-                    break;
-                    // 'assignee' access
-                    case 'PLUGIN_TRACKER_ACCESS_ASSIGNEE':
-                        foreach ($ugroups as $ugroup) {
-                            if ($user->isMemberOfUGroup($ugroup, $this->getTracker()->getGroupId())) {
-                                $contributor_field = $this->getTracker()->getContributorField();
-                                if ($contributor_field) {
-                                    // check that one of the assignees is also a member
-                                    $assignees = $this->getValue($contributor_field)->getValue();
-                                    foreach ($assignees as $assignee) {
-                                        $user_assignee = $um->getUserById($assignee);
-                                        if ($user_assignee->isMemberOfUGroup( $ugroup, $this->getTracker()->getGroupId())) {
-                                            return true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    break;
-                }
-            }
-        }
-        return false;
+    public function setUserCanView(PFUser $user, $can_view) {
+        $this->can_view_cache[$user->getId()] = $can_view;
     }
 
     public function userCanUpdate(PFUser $user) {
@@ -1714,15 +1662,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 }
             }
         } else {
-            $permissions = $this->getTracker()->getPermissionsAuthorizedUgroups();
+            $permissions = $this->getTracker()->getAuthorizedUgroupsByPermissionType();
             foreach ($permissions  as $permission => $ugroups) {
                 switch($permission) {
-                    // Full access
-                    case 'PLUGIN_TRACKER_ACCESS_FULL':
-                    // 'submitter' access
-                    case 'PLUGIN_TRACKER_ACCESS_SUBMITTER':
-                    // 'assignee' access
-                    case 'PLUGIN_TRACKER_ACCESS_ASSIGNEE':
+                    case Tracker::PERMISSION_FULL:
+                    case Tracker::PERMISSION_SUBMITTER:
+                    case Tracker::PERMISSION_ASSIGNEE:
+                    case Tracker::PERMISSION_SUBMITTER_ONLY:
                         foreach ($ugroups as $ugroup) {
                             $ugroups[] = $ugroup['ugroup_id'];
                         }

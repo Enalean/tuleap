@@ -1153,7 +1153,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return array
      */
-    public function getPermissions() {
+    public function getPermissionsByUgroupId() {
         if (!$this->cache_permissions) {
             $this->cache_permissions = array();
             //berk... legacy permission code... legacy db functions... berk!

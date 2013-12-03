@@ -29,7 +29,7 @@ interface Tracker_FormElement_Interface extends Tracker_Dispatchable_Interface, 
      *
      * @return array
      */
-    public function getPermissions();
+    public function getPermissionsByUgroupId();
     
 
     /**

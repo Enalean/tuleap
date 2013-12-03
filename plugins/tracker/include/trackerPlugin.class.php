@@ -219,16 +219,19 @@ class trackerPlugin extends Plugin {
             case 'PLUGIN_TRACKER_FIELD_UPDATE':
                 $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_field_update');
                 break;
-            case 'PLUGIN_TRACKER_ACCESS_SUBMITTER':
+            case Tracker::PERMISSION_SUBMITTER_ONLY:
+                $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_submitter_only_access');
+                break;
+            case Tracker::PERMISSION_SUBMITTER:
                 $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_submitter_access');
                 break;
-            case 'PLUGIN_TRACKER_ACCESS_ASSIGNEE':
+            case Tracker::PERMISSION_ASSIGNEE:
                 $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_assignee_access');
                 break;
-            case 'PLUGIN_TRACKER_ACCESS_FULL':
+            case Tracker::PERMISSION_FULL:
                 $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_full_access');
                 break;
-            case 'PLUGIN_TRACKER_ADMIN':
+            case Tracker::PERMISSION_ADMIN:
                 $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_admin');
                 break;
             case 'PLUGIN_TRACKER_ARTIFACT_ACCESS':
@@ -256,10 +259,11 @@ class trackerPlugin extends Plugin {
             case 'PLUGIN_TRACKER_FIELD_READ':
             case 'PLUGIN_TRACKER_FIELD_UPDATE':
                 return 'field';
-            case 'PLUGIN_TRACKER_ACCESS_SUBMITTER':
-            case 'PLUGIN_TRACKER_ACCESS_ASSIGNEE':
-            case 'PLUGIN_TRACKER_ACCESS_FULL':
-            case 'PLUGIN_TRACKER_ADMIN':
+            case Tracker::PERMISSION_SUBMITTER_ONLY:
+            case Tracker::PERMISSION_SUBMITTER:
+            case Tracker::PERMISSION_ASSIGNEE:
+            case Tracker::PERMISSION_FULL:
+            case Tracker::PERMISSION_ADMIN:
                 return 'tracker';
             case 'PLUGIN_TRACKER_ARTIFACT_ACCESS':
                 return 'artifact';
@@ -272,7 +276,7 @@ class trackerPlugin extends Plugin {
     function permission_get_object_name($params) {
         if (!$params['object_name']) {
             $type = $this->getObjectTypeFromPermissions($params);
-            if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ADMIN', 'PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
+            if (in_array($params['permission_type'], array(Tracker::PERMISSION_ADMIN, Tracker::PERMISSION_FULL, Tracker::PERMISSION_SUBMITTER, Tracker::PERMISSION_ASSIGNEE, Tracker::PERMISSION_SUBMITTER_ONLY, 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
                 $object_id = $params['object_id'];
                 if ($type == 'tracker') {
                     $ret = (string)$object_id;
@@ -316,8 +320,8 @@ class trackerPlugin extends Plugin {
             $atid = $params['object_id'];
             $objname = $params['objname'];
 
-            if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ADMIN', 'PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS', 'PLUGIN_TRACKER_WORKFLOW_TRANSITION'))) {
-                if (strpos($params['permission_type'], 'PLUGIN_TRACKER_ACCESS') === 0 || $params['permission_type'] === 'PLUGIN_TRACKER_ADMIN') {
+            if (in_array($params['permission_type'], array(Tracker::PERMISSION_ADMIN, Tracker::PERMISSION_FULL, Tracker::PERMISSION_SUBMITTER, Tracker::PERMISSION_ASSIGNEE, Tracker::PERMISSION_SUBMITTER_ONLY, 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS', 'PLUGIN_TRACKER_WORKFLOW_TRANSITION'))) {
+                if (strpos($params['permission_type'], 'PLUGIN_TRACKER_ACCESS') === 0 || $params['permission_type'] === Tracker::PERMISSION_ADMIN) {
                     $params['results'] = $GLOBALS['Language']->getText('project_admin_editugroup','tracker')
                     .' <a href="'.TRACKER_BASE_URL.'/?tracker='.$atid.'&func=admin-perms-tracker">'
                     .$objname.'</a>';
@@ -353,10 +357,11 @@ class trackerPlugin extends Plugin {
     function permission_user_allowed_to_change($params) {
         if (!$params['allowed']) {
             $allowed = array(
-                'PLUGIN_TRACKER_ADMIN',
-                'PLUGIN_TRACKER_ACCESS_FULL',
-                'PLUGIN_TRACKER_ACCESS_SUBMITTER',
-                'PLUGIN_TRACKER_ACCESS_ASSIGNEE',
+                Tracker::PERMISSION_ADMIN,
+                Tracker::PERMISSION_FULL,
+                Tracker::PERMISSION_SUBMITTER,
+                Tracker::PERMISSION_SUBMITTER_ONLY,
+                Tracker::PERMISSION_ASSIGNEE,
                 'PLUGIN_TRACKER_FIELD_SUBMIT',
                 'PLUGIN_TRACKER_FIELD_READ',
                 'PLUGIN_TRACKER_FIELD_UPDATE',

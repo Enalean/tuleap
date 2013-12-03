@@ -280,7 +280,7 @@ class TrackerFactory {
 
         //set permissions
         if (isset($xml->permissions->permission)) {
-            $allowed_tracker_perms = array('PLUGIN_TRACKER_ADMIN', 'PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE');
+            $allowed_tracker_perms = array(Tracker::PERMISSION_ADMIN, Tracker::PERMISSION_FULL, Tracker::PERMISSION_SUBMITTER, Tracker::PERMISSION_ASSIGNEE, Tracker::PERMISSION_SUBMITTER_ONLY);
             $allowed_field_perms = array('PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_FIELD_SUBMIT');
             foreach ($xml->permissions->permission as $permission) {
                 switch ((string) $permission['scope']) {
@@ -540,7 +540,7 @@ class TrackerFactory {
     */
     public function duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping, $duplicate_type) {
         $pm = PermissionsManager::instance();
-        $permission_type_tracker = array('PLUGIN_TRACKER_ADMIN','PLUGIN_TRACKER_ACCESS_FULL','PLUGIN_TRACKER_ACCESS_ASSIGNEE','PLUGIN_TRACKER_ACCESS_SUBMITTER','PLUGIN_TRACKER_NONE');
+        $permission_type_tracker = array(Tracker::PERMISSION_ADMIN, Tracker::PERMISSION_SUBMITTER, Tracker::PERMISSION_SUBMITTER_ONLY, Tracker::PERMISSION_ASSIGNEE, Tracker::PERMISSION_FULL, Tracker::PERMISSION_NONE);
         //Duplicate tracker permissions
         $pm->duplicatePermissions($id_template, $id, $permission_type_tracker, $ugroup_mapping, $duplicate_type);
 
@@ -838,10 +838,7 @@ class TrackerFactory {
      */
     public function saveTrackerDefaultPermission($tracker_id) {
         $pm = PermissionsManager::instance();
-        $permission_type = 'PLUGIN_TRACKER_ACCESS_FULL';
-        $ugroup = 1; //all_users
-
-        if(!$pm->addPermission($permission_type, $tracker_id, $ugroup)) {
+        if(!$pm->addPermission(Tracker::PERMISSION_FULL, $tracker_id, UGroup::ANONYMOUS)) {
             return false;
         }
         return true;
@@ -902,7 +899,7 @@ class TrackerFactory {
             //tracker permissions
             if ($tracker->permissionsAreCached()) {
                 $pm = PermissionsManager::instance();
-                foreach ($tracker->getPermissions() as $ugroup => $permissions) {
+                foreach ($tracker->getPermissionsByUgroupId() as $ugroup => $permissions) {
                     foreach ($permissions as $permission) {
                         $pm->addPermission($permission, $tracker_id, $ugroup);
                     }

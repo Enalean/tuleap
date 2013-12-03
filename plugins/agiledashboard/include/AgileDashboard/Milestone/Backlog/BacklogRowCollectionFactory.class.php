@@ -172,8 +172,10 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactory {
         $backlog_item_ids     = array();
 
         foreach ($backlog_strategy->getArtifacts($user) as $artifact) {
-            $artifacts[$artifact->getId()] = $artifact;
-            $backlog_item_ids[] = $artifact->getId();
+            if ($artifact->userCanView($user)) {
+                $artifacts[$artifact->getId()] = $artifact;
+                $backlog_item_ids[] = $artifact->getId();
+            }
         }
 
         $parents   = $this->getParentArtifacts($milestone, $user, $backlog_item_ids);

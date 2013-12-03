@@ -39,7 +39,7 @@ Mock::generatePartial('Tracker',
                           'getWorkflowManager',
                           'getTrackerFactory',
                           'getGroupId',
-                          'getPermissions',
+                          'getPermissionsByUgroupId',
                           'getFormELements',
                           'getId',
                           'sendXML',
@@ -48,7 +48,8 @@ Mock::generatePartial('Tracker',
                           'getTrackerArtifactFactory',
                           'aidExists',
                           'getUserManager',
-                          'getHierarchyFactory'
+                          'getHierarchyFactory',
+                          'getPermissionController'
                       )
 );
 
@@ -73,7 +74,7 @@ Mock::generatePartial('Tracker',
                           'getWorkflowManager',
                           'getTrackerFactory',
                           'getGroupId',
-                          'getPermissions',
+                          'getPermissionsByUgroupId',
                           'getFormELements',
                           'getId',
                           'sendXML',
@@ -90,7 +91,7 @@ Mock::generatePartial('Tracker',
                       'TrackerTestVersionForAccessPerms',
                       array(
                           'getGroupId',
-                          'getPermissions',
+                          'getPermissionsByUgroupId',
                           'getId',
                           'getUserManager'
                       )
@@ -190,16 +191,16 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->setReturnValue('getId', 112);
 
 
-        $this->tracker->setReturnValue('getPermissions', array(
+        $this->tracker->setReturnValue('getPermissionsByUgroupId', array(
             1 => array('PERM_1'),
             3 => array('PERM_2'),
             5 => array('PERM_3'),
             115 => array('PERM_3'),
         ));
-        $this->tracker1->setReturnValue('getPermissions', array(
+        $this->tracker1->setReturnValue('getPermissionsByUgroupId', array(
             1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
         ));
-        $this->tracker2->setReturnValue('getPermissions', array(
+        $this->tracker2->setReturnValue('getPermissionsByUgroupId', array(
             1002 => array( 102 => 'PLUGIN_TRACKER_ADMIN'),
         ));
 
@@ -387,6 +388,15 @@ class TrackerTest extends TuleapTestCase {
 
         $this->canned_response_factory = new MockTracker_CannedResponseFactory();
         $this->tracker->setReturnReference('getCannedResponseFactory', $this->canned_response_factory);
+
+        $this->permission_controller = mock('Tracker_Permission_PermissionController');
+        stub($this->tracker)->getPermissionController()->returns($this->permission_controller);
+
+        $this->permission_controller1 = mock('Tracker_Permission_PermissionController');
+        stub($this->tracker1)->getPermissionController()->returns($this->permission_controller1);
+
+        $this->permission_controller2 = mock('Tracker_Permission_PermissionController');
+        stub($this->tracker2)->getPermissionController()->returns($this->permission_controller2);
 
         $this->hierarchy = new Tracker_Hierarchy();
         $hierarchy_factory = mock('Tracker_HierarchyFactory');
@@ -722,7 +732,7 @@ class TrackerTest extends TuleapTestCase {
         $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
 
         // site admin can access tracker admin part
-        $this->tracker->expectOnce('displayAdminPermsTracker');
+        expect($this->permission_controller)->process()->once();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->site_admin_user);
     }
     public function testPermsAdminPermsTrackerTrackerProjectAdmin() {
@@ -730,7 +740,7 @@ class TrackerTest extends TuleapTestCase {
         $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
 
         // project admin can access tracker admin part
-        $this->tracker->expectOnce('displayAdminPermsTracker');
+        expect($this->permission_controller)->process()->once();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->project_admin_user);
     }
     public function testPermsAdminPermsTrackerTrackerTrackerAdmin() {
@@ -738,9 +748,9 @@ class TrackerTest extends TuleapTestCase {
         $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('displayAdminPermsTracker');
+        expect($this->permission_controller1)->process()->once();
         $this->tracker1->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->all_trackers_admin_user);
-        $this->tracker2->expectOnce('displayAdminPermsTracker');
+        expect($this->permission_controller2)->process()->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->all_trackers_admin_user);
     }
     public function testPermsAdminPermsTrackerTrackerTracker1Admin() {
@@ -748,9 +758,9 @@ class TrackerTest extends TuleapTestCase {
         $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('displayAdminPermsTracker');
+        expect($this->permission_controller1)->process()->once();
         $this->tracker1->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->tracker1_admin_user);
-        $this->tracker2->expectNever('displayAdminPermsTracker');
+        expect($this->permission_controller2)->process()->never();
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->tracker1_admin_user);
     }
     public function testPermsAdminPermsTrackerTrackerTracker2Admin() {
@@ -758,9 +768,9 @@ class TrackerTest extends TuleapTestCase {
         $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectNever('displayAdminPermsTracker');
+        expect($this->permission_controller1)->process()->never();
         $this->tracker1->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->tracker2_admin_user);
-        $this->tracker2->expectOnce('displayAdminPermsTracker');
+        expect($this->permission_controller2)->process()->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->tracker2_admin_user);
     }
     public function testPermsAdminPermsTrackerTrackerProjectMember() {
@@ -768,7 +778,7 @@ class TrackerTest extends TuleapTestCase {
         $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
 
         // project member can NOT access tracker admin part
-        $this->tracker->expectNever('displayAdminPermsTracker');
+        expect($this->permission_controller)->process()->never();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->project_member_user);
     }
     public function testPermsAdminPermsTrackerTrackerRegisteredUser() {
@@ -776,7 +786,7 @@ class TrackerTest extends TuleapTestCase {
         $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
 
         // registered user can NOT access tracker admin part
-        $this->tracker->expectNever('displayAdminPermsTracker');
+        expect($this->permission_controller)->process()->never();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->registered_user);
     }
 
@@ -1276,7 +1286,7 @@ class TrackerTest extends TuleapTestCase {
                 1 => array( 101 => 'PLUGIN_TRACKER_ACCESS_FULL'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
-        $t_access_anonymous->setReturnReference('getPermissions', $perms);
+        $t_access_anonymous->setReturnReference('getPermissionsByUgroupId', $perms);
 
         $this->assertTrue($t_access_anonymous->userCanView($this->anonymous));
         $this->assertTrue($t_access_anonymous->userCanView($this->registered));
@@ -1297,7 +1307,7 @@ class TrackerTest extends TuleapTestCase {
                 2 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
-        $t_access_registered->setReturnReference('getPermissions', $perms);
+        $t_access_registered->setReturnReference('getPermissionsByUgroupId', $perms);
 
         $this->assertFalse($t_access_registered->userCanView($this->anonymous));
         $this->assertTrue($t_access_registered->userCanView($this->registered));
@@ -1318,7 +1328,7 @@ class TrackerTest extends TuleapTestCase {
                 3 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
-        $t_access_members->setReturnReference('getPermissions', $perms);
+        $t_access_members->setReturnReference('getPermissionsByUgroupId', $perms);
 
         $this->assertFalse($t_access_members->userCanView($this->anonymous));
         $this->assertFalse($t_access_members->userCanView($this->registered));
@@ -1339,7 +1349,7 @@ class TrackerTest extends TuleapTestCase {
                 4 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
                 );
-        $t_access_admin->setReturnReference('getPermissions', $perms);
+        $t_access_admin->setReturnReference('getPermissionsByUgroupId', $perms);
 
         $this->assertFalse($t_access_admin->userCanView($this->anonymous));
         $this->assertFalse($t_access_admin->userCanView($this->registered));
@@ -1361,7 +1371,7 @@ class TrackerTest extends TuleapTestCase {
                 138 => array(101=>'PLUGIN_TRACKER_ACCESS_SUBMITTER'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
-        $t_access_submitter->setReturnReference('getPermissions', $perms);
+        $t_access_submitter->setReturnReference('getPermissionsByUgroupId', $perms);
 
         $this->assertFalse($t_access_submitter->userCanView($this->anonymous));
         $this->assertFalse($t_access_submitter->userCanView($this->registered));
@@ -1383,7 +1393,7 @@ class TrackerTest extends TuleapTestCase {
                 196 => array(101=>'PLUGIN_TRACKER_ACCESS_ASSIGNEE'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
-        $t_access_assignee->setReturnReference('getPermissions', $perms);
+        $t_access_assignee->setReturnReference('getPermissionsByUgroupId', $perms);
 
         $this->assertFalse($t_access_assignee->userCanView($this->anonymous));
         $this->assertFalse($t_access_assignee->userCanView($this->registered));
@@ -1407,7 +1417,7 @@ class TrackerTest extends TuleapTestCase {
                 196 => array(101=>'PLUGIN_TRACKER_ACCESS_ASSIGNEE'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
-        $t_access_submitterassignee->setReturnReference('getPermissions', $perms);
+        $t_access_submitterassignee->setReturnReference('getPermissionsByUgroupId', $perms);
 
         $this->assertFalse($t_access_submitterassignee->userCanView($this->anonymous));
         $this->assertFalse($t_access_submitterassignee->userCanView($this->registered));
@@ -1427,7 +1437,7 @@ class TrackerTest extends TuleapTestCase {
         $f1 = new Tracker_FormElement_InterfaceTestVersion();
         $f1->setReturnValue('getId', 10);
         $f1->setReturnValue(
-            'getPermissions',
+            'getPermissionsByUgroupId',
             array(
                 2 => array('FIELDPERM_1'),
                 4 => array('FIELDPERM_2'),
@@ -1438,7 +1448,7 @@ class TrackerTest extends TuleapTestCase {
         $f2 = new Tracker_FormElement_InterfaceTestVersion();
         $f2->setReturnValue('getId', 20);
         $f2->setReturnValue(
-            'getPermissions',
+            'getPermissionsByUgroupId',
             array(
                 2 => array('FIELDPERM_2'),
                 4 => array('FIELDPERM_1'),

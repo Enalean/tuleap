@@ -88,9 +88,9 @@ class AgileDashboard_Milestone_Backlog_BacklogRowCollectionFactoryTest extends T
         $this->tracker2 = mock('Tracker');
         $this->tracker3 = mock('Tracker');
 
-        $this->story1 = anArtifact()->withTitle('story 1')->withId($this->open_story_id)->withTracker($this->tracker1)->build();
-        $this->story2 = anArtifact()->withTitle('story 2')->withId($this->open_unplanned_story_id)->withTracker($this->tracker2)->build();
-        $this->story3 = anArtifact()->withTitle('story 3')->withId($this->closed_story_id)->withTracker($this->tracker3)->build();
+        $this->story1 = anArtifact()->userCanView($this->user)->withTitle('story 1')->withId($this->open_story_id)->withTracker($this->tracker1)->build();
+        $this->story2 = anArtifact()->userCanView($this->user)->withTitle('story 2')->withId($this->open_unplanned_story_id)->withTracker($this->tracker2)->build();
+        $this->story3 = anArtifact()->userCanView($this->user)->withTitle('story 3')->withId($this->closed_story_id)->withTracker($this->tracker3)->build();
 
         $this->backlog_strategy = stub('AgileDashboard_Milestone_Backlog_BacklogStrategy')->getArtifacts($this->user)->returns(array($this->story1, $this->story2, $this->story3));
         stub($this->backlog_strategy)->getMilestoneBacklogArtifactsTracker()->returns(mock('Tracker'));
