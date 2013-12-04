@@ -18,20 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_REST_WorkflowRuleListRepresentation {
-    /** @var int */
+namespace Tuleap\Tracker\REST;
+
+class WorkflowRuleListRepresentation {
+
+    /**
+     * @var int
+     */
     public $source_field_id;
 
-    /** @var int */
+    /**
+     * @var int
+     */
     public $source_value_id;
 
-    /** @var int */
+    /**
+     * @var int
+     */
     public $target_field_id;
 
-    /** @var int */
+    /**
+     * @var int
+     */
     public $target_value_id;
 
-    public function __construct($source_field_id, $source_value_id, $target_field_id, $target_value_id) {
+    public function build($source_field_id, $source_value_id, $target_field_id, $target_value_id) {
         $this->source_field_id = $source_field_id;
         $this->source_value_id = $source_value_id;
         $this->target_field_id = $target_field_id;

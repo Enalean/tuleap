@@ -20,7 +20,7 @@
 namespace Tuleap\REST;
 
 use Luracast\Restler\Restler;
-use \Tuleap\Project\REST\ProjectInfoRepresentation;
+use \Tuleap\Project\REST\ProjectRepresentation;
 use \Tuleap\Token\REST\TokenRepresentation;
 
 /**
@@ -29,7 +29,7 @@ use \Tuleap\Token\REST\TokenRepresentation;
 class ResourcesInjector {
 
     public function populate(Restler $restler) {
-        $restler->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource', ProjectInfoRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource', ProjectRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\Token\\REST\\TokenResource',     TokenRepresentation::ROUTE);
     }
 }

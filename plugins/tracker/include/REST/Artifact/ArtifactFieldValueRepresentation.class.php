@@ -19,13 +19,19 @@
  */
 
 class Tracker_REST_Artifact_ArtifactFieldValueRepresentation {
-    /** @var int ID of the field */
+    /**
+     * @var int ID of the field
+     */
     public $field_id;
 
-    /** @var string Label of the field */
+    /**
+     * @var string Label of the field
+     */
     public $label;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $value;
 
     public function __construct($id, $label, $value) {

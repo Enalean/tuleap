@@ -18,41 +18,69 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_REST_Artifact_ArtifactRepresentation {
+namespace Tuleap\Tracker\REST\Artifact;
+
+use Tuleap\Tracker\REST\TrackerRepresentation;
+use Tuleap\REST\ResourceReference;
+use Tracker_Artifact;
+use Tuleap\Project\REST\ProjectReference;
+use Tracker_REST_ChangesetRepresentation;
+
+class ArtifactRepresentation {
+
     const ROUTE = 'artifacts';
 
-    /** @var int ID of the artifact */
+    /**
+     * @var int ID of the artifact
+     */
     public $id;
 
-    /** @var string URI of the artifact */
+    /**
+     * @var string URI of the artifact
+     */
     public $uri;
 
-    /** @var Rest_ResourceReference Reference to tracker the artifact belongs to */
+    /**
+     * @var Tuleap\REST\ResourceReference Reference to tracker the artifact belongs to
+     */
     public $tracker;
 
-    /** @var int ID of the project the artifact belongs to */
+    /**
+     * @var int ID of the project the artifact belongs to
+     */
     public $project;
 
-    /** @var int ID of the user who created the first version of the artifact */
+    /**
+     * @var int ID of the user who created the first version of the artifact
+     */
     public $submitted_by;
     
-    /** @var string Date, when the first version of the artifact was created */
+    /**
+     * @var string Date, when the first version of the artifact was created
+     */
     public $submitted_on;
 
-    /** @var string URL to access the artifact with the Web UI */
+    /**
+     * @var string URL to access the artifact with the Web UI
+     */
     public $html_url;
 
-    /** @var string URI to access the artifact history */
+    /**
+     * @var string URI to access the artifact history
+     */
     public $changesets_uri;
 
-    /** @var array Field values */
+    /**
+     * @var array Field values
+     */
     public $values = array();
 
-    public function __construct(Tracker_Artifact $artifact, array $values) {
+    public function build(Tracker_Artifact $artifact, array $values) {
         $this->id             = $artifact->getId();
         $this->uri            = self::ROUTE . '/' . $artifact->getId();
-        $this->tracker        = new Rest_ResourceReference($artifact->getTrackerId(), Tracker_REST_TrackerRepresentation::ROUTE);
-        $this->project        = new \Tuleap\Project\REST\ProjectReference($artifact->getTracker()->getProject());
+        $this->tracker        = new ResourceReference();
+        $this->tracker->build($artifact->getTrackerId(), TrackerRepresentation::ROUTE);
+        $this->project        = new ProjectReference($artifact->getTracker()->getProject());
         $this->submitted_by   = $artifact->getSubmittedBy();
         $this->submitted_on   = date('c', $artifact->getSubmittedOn());
         $this->html_url       = $artifact->getUri();

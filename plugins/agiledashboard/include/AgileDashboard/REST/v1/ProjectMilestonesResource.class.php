@@ -49,7 +49,9 @@ class ProjectMilestonesResource {
         $milestone_representations = array();
 
         foreach($milestones as $milestone) {
-            $milestone_representations[] = new MilestoneRepresentation($milestone);
+            $milestone_representation = new MilestoneRepresentation();
+            $milestone_representation->build($milestone);
+            $milestone_representations[] = $milestone_representation;
         }
 
         $this->sendAllowHeaders();

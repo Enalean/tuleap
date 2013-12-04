@@ -24,16 +24,22 @@ use Rest_Token;
 class TokenRepresentation {
     const ROUTE = 'tokens';
 
-    /** @var int */
+    /**
+     * @var int
+     */
     public $user_id;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $token;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $uri;
 
-    public function __construct(Rest_Token $token) {
+    public function build(Rest_Token $token) {
         $this->user_id = $token->getUserId();
         $this->token   = $token->getTokenValue();
         $this->uri     = self::ROUTE.'/'.$this->token;

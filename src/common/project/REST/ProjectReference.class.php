@@ -35,6 +35,6 @@ class ProjectReference {
         } else {
             $this->id = $project;
         }
-        $this->uri = ProjectInfoRepresentation::ROUTE . '/' . $this->id;
+        $this->uri = ProjectRepresentation::ROUTE . '/' . $this->id;
     }
 }

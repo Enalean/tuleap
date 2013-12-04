@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
+
 class Tracker_REST_Artifact_ArtifactReferenceRepresentation {
     /** @var int ID of the artifact */
     public $id;
@@ -33,6 +35,6 @@ class Tracker_REST_Artifact_ArtifactReferenceRepresentation {
         } else {
             throw new Exception('Unknown artifact reference');
         }
-        $this->uri = Tracker_REST_Artifact_ArtifactRepresentation::ROUTE . '/' . $this->id;
+        $this->uri = ArtifactRepresentation::ROUTE . '/' . $this->id;
     }
 }

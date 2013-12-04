@@ -21,7 +21,6 @@ namespace Tuleap\Token\REST\v1;
 
 use \Luracast\Restler\RestException;
 use \Tuleap\Token\REST\TokenRepresentation;
-use \Tuleap\Token\REST\TokenUserAuthRepresentation;
 use \Tuleap\REST\Header;
 use UserManager;
 use EventManager;
@@ -46,25 +45,31 @@ class TokenResource {
      *
      * @url POST
      *
-     * @param TokenUserAuthRepresentation $authentication {@from body}
+     * @throws 500
      *
-     * @return TokenRepresentation
+     * @param string $username The username of the user
+     * @param string $password The password of the user
+     *
+     * @return Tuleap\Token\REST\TokenRepresentation
      */
-    public function post(TokenUserAuthRepresentation $authentication) {
+    public function post($username, $password) {
         try {
             $user_login = new User_LoginManager(
                 EventManager::instance(),
                 $this->user_manager
             );
 
-            $user  = $user_login->authenticate($authentication->username, $authentication->password);
+            $user  = $user_login->authenticate($username, $password);
             $this->sendAllowHeaders();
 
-            return new TokenRepresentation(
+            $token = new TokenRepresentation();
+            $token->build(
                 $this->getTokenManager()->generateTokenForUser($user)
             );
+
+            return $token;
         } catch(\Exception $exception) {
-            throw new RestException(400, $exception->getMessage());
+            throw new RestException(500, $exception->getMessage());
         }
     }
 
@@ -74,6 +79,8 @@ class TokenResource {
      * Expire a given token of the current user
      *
      * @url DELETE {id}
+     *
+     * @throws 500
      *
      * @param string $id Id of the token
      */
@@ -87,7 +94,7 @@ class TokenResource {
                 )
             );
         } catch(\Exception $exception) {
-            throw new RestException(400, $exception->getMessage());
+            throw new RestException(500, $exception->getMessage());
         }
     }
 

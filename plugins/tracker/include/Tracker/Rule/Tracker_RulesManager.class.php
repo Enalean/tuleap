@@ -799,22 +799,5 @@ class Tracker_RulesManager {
         }
         return $soap;
     }
-
-    public function exportToREST() {
-        $dates = array();
-        foreach ($this->getAllDateRulesByTrackerId($this->tracker->getId()) as $rule) {
-            $dates[] = $rule->exportToREST();
-        }
-
-        $lists = array();
-        foreach ($this->getAllListRulesByTrackerWithOrder($this->tracker->getId()) as $rule) {
-            $lists[] = $rule->exportToREST();
-        }
-
-        return new Tracker_REST_WorkflowRulesRepresentation(
-            $dates,
-            $lists
-        );
-    }
 }
 ?>

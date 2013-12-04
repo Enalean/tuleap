@@ -18,14 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_REST_WorkflowRulesRepresentation {
-    /** @var array {@type Tracker_REST_WorkflowRuleDateRepresentation} */
+namespace Tuleap\Tracker\REST;
+
+class WorkflowRulesRepresentation {
+
+    /**
+     * @var array {@type Tuleap\Tracker\REST\WorkflowRuleDateRepresentation}
+     */
     public $dates;
 
-    /** @var array {@type Tracker_REST_WorkflowRuleListRepresentation} */
+    /**
+     * @var array {@type Tuleap\Tracker\REST\WorkflowRuleListRepresentation}
+     */
     public $lists;
 
-    public function __construct(array $dates, array $lists) {
+    public function build(array $dates, array $lists) {
         $this->dates = $dates;
         $this->lists = $lists;
     }

@@ -20,7 +20,6 @@
 namespace Tuleap\Tracker\REST\v1;
 
 use \TrackerFactory;
-use \Tracker_REST_TrackerRepresentation;
 use \Tracker_REST_TrackerRestBuilder;
 use \Tracker_FormElementFactory;
 use \PFUser;
