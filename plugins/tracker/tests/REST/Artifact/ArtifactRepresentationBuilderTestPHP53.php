@@ -58,7 +58,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_BasicTest extends Tule
         $this->assertEqual($representation->submitted_by, 777);
         $this->assertEqual($representation->submitted_on, '2177-06-14T06:09:14+01:00');
         $this->assertEqual($representation->html_url, '/plugins/tracker/?aid=12');
-        $this->assertEqual($representation->changesets_uri, Tuleap\Tracker\REST\Artifact\ArtifactRepresentation::ROUTE . '/' . 12 . '/' . Tracker_REST_ChangesetRepresentation::ROUTE);
+        $this->assertEqual($representation->changesets_uri, Tuleap\Tracker\REST\Artifact\ArtifactRepresentation::ROUTE . '/' . 12 . '/' . Tuleap\Tracker\REST\ChangesetRepresentation::ROUTE);
     }
 }
 

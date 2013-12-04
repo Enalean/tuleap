@@ -66,13 +66,14 @@ class PlanningRepresentation {
     public $milestones_uri;
 
     public function build(Planning $planning) {
-        $this->id                = $planning->getId();
+        $this->id                = (int)$planning->getId();
         $this->uri               = ResourceReference::NO_ROUTE;
         $this->label             = $planning->getName();
         $this->milestones_uri    = self::ROUTE .'/'. $this->id .'/'. MilestoneRepresentation::ROUTE;
         $this->milestone_tracker = new ResourceReference();
         $this->milestone_tracker->build($planning->getPlanningTrackerId(), TrackerRepresentation::ROUTE);
-        $this->project           = new ProjectReference($planning->getGroupId());
+        $this->project           = new ProjectReference();
+        $this->project->build($planning->getGroupId());
         $this->backlog_trackers  = array_map(
             function ($id) {
                 $reference = new ResourceReference();

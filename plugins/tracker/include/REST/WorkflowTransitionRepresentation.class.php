@@ -33,8 +33,8 @@ class WorkflowTransitionRepresentation {
     public $to_id;
 
     public function build($from_id, $to_id) {
-        $this->from_id = $from_id;
-        $this->to_id   = $to_id;
+        $this->from_id = (int)$from_id;
+        $this->to_id   = (int)$to_id;
     }
 }
 

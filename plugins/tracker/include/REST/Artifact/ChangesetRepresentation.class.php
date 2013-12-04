@@ -18,33 +18,48 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_REST_ChangesetRepresentation {
+namespace Tuleap\Tracker\REST;
+
+class ChangesetRepresentation {
     const ROUTE = 'changesets';
 
-    /** @var int ID of the changeset */
+    /**
+     * @var int ID of the changeset
+     */
     public $id;
 
-    /** @var int Who made the change */
+    /**
+     * @var int Who made the change
+     */
     public $submitted_by;
 
-    /** @var string Date of the change */
+    /**
+     * @var string Date of the change
+     */
     public $submitted_on;
 
-    /** @var string Email of the user who made the change (if anonymous) */
+    /**
+     * @var string Email of the user who made the change (if anonymous)
+     */
     public $email;
 
-    /** @var Tracker_REST_ChangesetCommentRepresentation Comment set by submitter (last version of the comment if several) */
+    /**
+     * @var Tuleap\Tracker\REST\ChangesetCommentRepresentation Comment set by submitter (last version of the comment if several)
+     */
     public $last_comment;
 
-    /** @var array Field values */
+    /**
+     * @var array Field values
+     */
     public $values = array();
 
-    public function __construct(Tracker_Artifact_Changeset $changeset, Tracker_Artifact_Changeset_Comment $last_comment, array $values) {
-        $this->id           = $changeset->getId();
-        $this->submitted_by = $changeset->getSubmittedBy();
+    public function build(Tracker_Artifact_Changeset $changeset, Tracker_Artifact_Changeset_Comment $last_comment, array $values) {
+        $this->id           = (int)$changeset->getId();
+        $this->submitted_by = (int)$changeset->getSubmittedBy();
         $this->submitted_on = date('c', $changeset->getSubmittedOn());
         $this->email        = $changeset->getEmail();
-        $this->last_comment = new Tracker_REST_ChangesetCommentRepresentation($last_comment);
+        $this->last_comment = new Tuleap\Tracker\REST\ChangesetCommentRepresentation();
+        $this->last_comment->build($last_comment);
         $this->values       = $values;
     }
 }

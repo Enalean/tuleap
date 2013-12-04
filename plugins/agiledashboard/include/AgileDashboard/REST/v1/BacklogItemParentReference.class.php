@@ -17,41 +17,34 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Project\REST;
+namespace Tuleap\AgileDashboard\REST\v1;
 
-use Project;
+use \Tuleap\Tracker\REST\TrackerReference;
+use \Tracker_Artifact;
 
-/**
- * Basic representation of a project
- */
-class ProjectRepresentation {
-
-    const ROUTE = 'projects';
+class BacklogItemParentReference {
 
     /**
-     * @var int
+     * @var int ID of the backlog item
      */
     public $id;
 
     /**
-     * @var string
+     * @var string URI of backlog item
      */
     public $uri;
 
     /**
-     * @var string
+     * @var \Tuleap\Tracker\REST\TrackerReference
      */
-    public $label;
+    public $tracker;
 
-    /**
-     * @var string[]
-     */
-    public $resources;
+    public function build(Tracker_Artifact $backlog_item) {
+        $this->id = (int)$backlog_item->getId();
 
-    public function build(Project $project, array $resources) {
-        $this->id        = (int)$project->getId();
-        $this->uri       = self::ROUTE . '/' . $this->id;
-        $this->label     = $project->getPublicName();
-        $this->resources = $resources;
+        $this->uri = BacklogItemRepresentation::ROUTE . '/' . $this->id;
+
+        $this->tracker = new TrackerReference();
+        $this->tracker->build($backlog_item->getTracker());
     }
 }

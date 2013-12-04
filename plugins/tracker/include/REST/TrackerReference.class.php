@@ -17,41 +17,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Project\REST;
+namespace Tuleap\Tracker\REST;
 
-use Project;
+use \Tracker;
 
-/**
- * Basic representation of a project
- */
-class ProjectRepresentation {
+class TrackerReference {
 
-    const ROUTE = 'projects';
-
-    /**
-     * @var int
-     */
+    /** @var int ID of the project */
     public $id;
 
-    /**
-     * @var string
-     */
+    /** @var string URI of the project */
     public $uri;
 
-    /**
-     * @var string
-     */
-    public $label;
+    public function build(Tracker $tracker) {
+        $this->id = (int)$tracker->getId();
 
-    /**
-     * @var string[]
-     */
-    public $resources;
-
-    public function build(Project $project, array $resources) {
-        $this->id        = (int)$project->getId();
-        $this->uri       = self::ROUTE . '/' . $this->id;
-        $this->label     = $project->getPublicName();
-        $this->resources = $resources;
+        $this->uri = TrackerRepresentation::ROUTE . '/' . $this->id;
     }
 }

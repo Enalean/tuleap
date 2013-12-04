@@ -17,16 +17,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Tracker_REST_ChangesetCommentRepresentation {
+namespace Tuleap\Tracker\REST;
 
-    /** @var string Content of the comment */
+class ChangesetCommentRepresentation {
+
+    /**
+     * @var string Content of the comment
+     */
     public $body;
 
-    /** @var string Type of the comment (text|html) */
+    /**
+     * @var string Type of the comment (text|html)
+     */
     public $format;
 
-    public function __construct(Tracker_Artifact_Changeset_Comment $comment) {
-        $this->body = $comment->body;
+    public function build(Tracker_Artifact_Changeset_Comment $comment) {
+        $this->body   = $comment->body;
         $this->format = $comment->bodyFormat;
     }
 

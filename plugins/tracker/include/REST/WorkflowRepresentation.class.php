@@ -43,9 +43,9 @@ class WorkflowRepresentation {
     public $transitions = array();
 
     public function build($id, $is_used, WorkflowRulesRepresentation $rules, array $transitions) {
-        $this->field_id = $id;
-        $this->is_used  = (boolean)$is_used;
-        $this->rules    = $rules;
+        $this->field_id    = (int)$id;
+        $this->is_used     = (boolean)$is_used;
+        $this->rules       = $rules;
         $this->transitions = $transitions;
     }
 }

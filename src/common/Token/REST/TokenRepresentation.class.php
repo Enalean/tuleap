@@ -40,7 +40,7 @@ class TokenRepresentation {
     public $uri;
 
     public function build(Rest_Token $token) {
-        $this->user_id = $token->getUserId();
+        $this->user_id = (int)$token->getUserId();
         $this->token   = $token->getTokenValue();
         $this->uri     = self::ROUTE.'/'.$this->token;
     }

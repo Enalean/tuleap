@@ -18,18 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_REST_Artifact_ArtifactFieldValueArtifactLinksRepresentation {
-    /** @var int ID of the field */
+namespace Tuleap\Tracker\REST\Artifact;
+
+class ArtifactFieldValueArtifactLinksRepresentation {
+    /**
+     * @var int ID of the field
+     */
     public $field_id;
 
-    /** @var string Label of the field */
+    /**
+     * @var string Label of the field
+     */
     public $label;
 
-    /** @var Tracker_REST_Artifact_ArtifactReferenceRepresentation[]  */
+    /**
+     * @var Tuleap\Tracker\REST\Artifact\ArtifactReferenceRepresentation[]
+     */
     public $links;
 
-    public function __construct($id, $label, array $values) {
-        $this->field_id = $id;
+    public function build($id, $label, array $values) {
+        $this->field_id = (int)$id;
         $this->label    = $label;
         $this->links    = $values;
     }

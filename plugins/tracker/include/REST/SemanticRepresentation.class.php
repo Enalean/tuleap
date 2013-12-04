@@ -18,11 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_REST_SemanticRepresentation {
-    /** @var int */
+namespace Tuleap\Tracker\REST;
+
+class SemanticRepresentation {
+    /**
+     * @var int
+     */
     public $field_id;
 
     public function build($id) {
-        $this->field_id = $id;
+        $this->field_id = (int)$id;
     }
 }

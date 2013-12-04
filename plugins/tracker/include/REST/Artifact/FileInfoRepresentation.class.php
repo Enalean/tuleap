@@ -18,31 +18,45 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_REST_Artifact_FileInfoRepresentation {
-    /** @var int ID of the file */
+namespace Tuleap\Tracker\REST\Artifact;
+
+class FileInfoRepresentation {
+    /**
+     * @var int ID of the file
+     */
     public $id;
 
-    /** @var int ID of the user who created the file */
+    /**
+     * @var int ID of the user who created the file
+     */
     public $submitted_by;
 
-    /** @var string Description of the file*/
+    /**
+     * @var string Description of the file
+     */
     public $description;
 
-    /** @var string Name of the file */
+    /**
+     * @var string Name of the file
+     */
     public $name;
 
-    /** @var int Size of the file in bytes */
+    /**
+     * @var int Size of the file in bytes
+     */
     public $size;
 
-    /** @var string Mime type */
+    /**
+     * @var string Mime type
+     */
     public $type;
 
-    public function __construct($id, $submitted_by, $description, $name, $filesize, $filetype) {
-        $this->id           = $id;
-        $this->submitted_by = $submitted_by;
+    public function build($id, $submitted_by, $description, $name, $filesize, $filetype) {
+        $this->id           = (int)$id;
+        $this->submitted_by = (int)$submitted_by;
         $this->description  = $description;
-        $this->name     = $name;
-        $this->size     = $filesize;
-        $this->type     = $filetype;
+        $this->name         = $name;
+        $this->size         = (int)$filesize;
+        $this->type         = $filetype;
     }
 }

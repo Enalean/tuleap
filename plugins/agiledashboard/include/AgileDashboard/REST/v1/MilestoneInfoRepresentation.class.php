@@ -38,7 +38,7 @@ class MilestoneInfoRepresentation {
     public $uri;
 
     public function __construct(\Planning_Milestone $milestone) {
-        $this->id                 = $milestone->getArtifactId();
+        $this->id                 = (int)$milestone->getArtifactId();
         $this->label              = $milestone->getArtifactTitle();
         $this->last_modified      = date('c', $milestone->getLastModifiedDate());
         $this->uri                = self::ROUTE.'/'.$this->id;

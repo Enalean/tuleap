@@ -24,7 +24,7 @@ use Tuleap\Tracker\REST\TrackerRepresentation;
 use Tuleap\REST\ResourceReference;
 use Tracker_Artifact;
 use Tuleap\Project\REST\ProjectReference;
-use Tracker_REST_ChangesetRepresentation;
+use Tuleap\Tracker\REST\ChangesetRepresentation;
 
 class ArtifactRepresentation {
 
@@ -46,7 +46,7 @@ class ArtifactRepresentation {
     public $tracker;
 
     /**
-     * @var int ID of the project the artifact belongs to
+     * @var \Tuleap\Project\REST\ProjectReference ID of the project the artifact belongs to
      */
     public $project;
 
@@ -76,15 +76,16 @@ class ArtifactRepresentation {
     public $values = array();
 
     public function build(Tracker_Artifact $artifact, array $values) {
-        $this->id             = $artifact->getId();
+        $this->id             = (int)$artifact->getId();
         $this->uri            = self::ROUTE . '/' . $artifact->getId();
         $this->tracker        = new ResourceReference();
         $this->tracker->build($artifact->getTrackerId(), TrackerRepresentation::ROUTE);
-        $this->project        = new ProjectReference($artifact->getTracker()->getProject());
-        $this->submitted_by   = $artifact->getSubmittedBy();
+        $this->project        = new ProjectReference();
+        $this->project->build($artifact->getTracker()->getProject());
+        $this->submitted_by   = (int)$artifact->getSubmittedBy();
         $this->submitted_on   = date('c', $artifact->getSubmittedOn());
         $this->html_url       = $artifact->getUri();
-        $this->changesets_uri = self::ROUTE . '/' .  $this->id . '/'. Tracker_REST_ChangesetRepresentation::ROUTE;
+        $this->changesets_uri = self::ROUTE . '/' .  $this->id . '/'. ChangesetRepresentation::ROUTE;
         $this->values         = $values;
     }
 }

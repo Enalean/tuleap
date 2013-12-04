@@ -24,14 +24,18 @@ class ResourceReference {
     /** Use this variable as a placeholder for future route implementation */
     const NO_ROUTE = 'route-not-yet-implemented';
 
-    /** @var int ID of the resource */
+    /**
+     * @var int ID of the resource
+     */
     public $id;
 
-    /** @var string URI of the resource */
+    /**
+     * @var string URI of the resource
+     */
     public $uri;
 
     public function build($id, $base_uri) {
-        $this->id  = $id;
+        $this->id  = (int)$id;
         $this->uri = $base_uri . '/' . $id;
     }
 }
