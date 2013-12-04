@@ -802,7 +802,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                             $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
                         } else if ($workflow && isset($fields_data[$field->getId()]) && !$field->userCanSubmit() && $workflow->bypassPermissions($field)) {
                             $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
-                        } else if (!isset($fields_data[$field->getId()]) && !$field->userCanSubmit()) {
+                        } else if (!isset($fields_data[$field->getId()]) && !$field->userCanSubmit() && $field->isSubmitable()) {
                             $fields_data[$field->getId()] = $field->getDefaultValue();
                             $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
                         }
