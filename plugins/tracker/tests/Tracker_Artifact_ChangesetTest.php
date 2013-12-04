@@ -19,16 +19,17 @@
  */
 require_once('bootstrap.php');
 Mock::generatePartial(
-    'Tracker_Artifact_Changeset', 
-    'Tracker_Artifact_ChangesetTestVersion', 
+    'Tracker_Artifact_Changeset',
+    'Tracker_Artifact_ChangesetTestVersion',
     array(
-        'getId', 
-        'getValueDao', 
-        'getFormElementFactory', 
+        'getId',
+        'getValueDao',
+        'getFormElementFactory',
         'getArtifact',
         'sendNotification',
         'getUserManager',
         'getTracker',
+        'getComment',
     )
 );
 
@@ -43,6 +44,7 @@ Mock::generate('Tracker_Artifact_ChangesetValue_List');
 Mock::generate('Tracker_FormElement_Field_Selectbox');
 Mock::generate('Tracker_Artifact');
 Mock::generate('Tracker');
+Mock::generate('Tracker_Artifact_Changeset_Comment');
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 
@@ -53,20 +55,20 @@ Mock::generate('UserHelper');
 Mock::generate('PFUser');
 Mock::generate('BaseLanguageFactory');
 
-class Tracker_Artifact_ChangesetTest extends UnitTestCase {
-    
+class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
+
     function setUp() {
         $GLOBALS['Language']           = new MockBaseLanguage();
         $GLOBALS['sys_default_domain'] = 'localhost';
         $GLOBALS['sys_force_ssl']      = 0;
     }
-    
+
     function tearDown() {
         unset($GLOBALS['Language']);
         unset($GLOBALS['sys_default_domain']);
         unset($GLOBALS['sys_force_ssl']);
     }
-    
+
     function _testGetValue() {
         $field = new MockTracker_FormElement_Field_Date();
         $value = new MockTracker_Artifact_ChangesetValue_Date();
@@ -75,25 +77,25 @@ class Tracker_Artifact_ChangesetTest extends UnitTestCase {
         $fact  = new MockTracker_FormElementFactory();
         $value = new MockTracker_Artifact_ChangesetValue_Date();
         $um    = new MockUserManager();
-        
+
         $dar->setReturnValue('current', array('changeset_id' => 1, 'field_id' => 2, 'id' => 3, 'has_changed' => 0));
         $dar->setReturnValueAt(0, 'valid', true);
         $dar->setReturnValue('valid', false);
         $dao->setReturnReference('searchById', $dar);
-        
+
         $fact->setReturnReference('getFieldById', $field);
-        
+
         $field->setReturnValue('getId', 2);
         $field->setReturnReference('getChangesetValue', $value);
-        
+
         $changeset = new Tracker_Artifact_ChangesetTestVersion();
         $changeset->setReturnReference('getValueDao', $dao);
         $changeset->setReturnReference('getFormElementFactory', $fact);
         $changeset->setReturnReference('getUserManager', $um);
-        
+
         $this->assertIsA($changeset->getValue($field), 'Tracker_Artifact_ChangesetValue_Date');
     }
-    
+
     function testDiffToPrevious() {
         $field1             = new MockTracker_FormElement_Field_Date();
         $value1_previous    = new MockTracker_Artifact_ChangesetValue_Date();
@@ -108,55 +110,55 @@ class Tracker_Artifact_ChangesetTest extends UnitTestCase {
         $artifact           = new MockTracker_Artifact();
         $previous_changeset = new MockTracker_Artifact_Changeset();
         $um                 = new MockUserManager();
-        
+
         $current_changeset = new Tracker_Artifact_ChangesetTestVersion();
-        
+
         $previous_changeset->setReturnValue('getId', 65);
         $previous_changeset->setReturnReference('getValue', $value1_previous, array($field1));
         $previous_changeset->setReturnReference('getValue', $value2_previous, array($field2));
         $previous_changeset->setReturnReference('getUserManager', $um);
-        
+
         $artifact->setReturnReference('getPreviousChangeset', $previous_changeset, array(66));
-        
+
         $dar->setReturnValueAt(0, 'current', array('changeset_id' => 66, 'field_id' => 1, 'id' => 11, 'has_changed' => 1));
         $dar->setReturnValueAt(1, 'current', array('changeset_id' => 66, 'field_id' => 2, 'id' => 21, 'has_changed' => 0));
         $dar->setReturnValue('valid', true);
         $dar->setReturnValueAt(2, 'valid', false);
         $dao->setReturnReference('searchById', $dar);
-        
+
         $fact->setReturnReference('getFieldById', $field1, array(1));
         $fact->setReturnReference('getFieldById', $field2, array(2));
-        
+
         $field1->setReturnValue('getId', 1);
         $field1->setReturnValue('getLabel', 'field1');
         $field1->setReturnValue('userCanRead', true);
         $field1->setReturnReference('getChangesetValue', $value1_current, array('*', 11, 1));
-        
+
         $value1_previous->expectNever('hasChanged');
         $value1_current->setReturnValue('hasChanged', true);
         $value1_current->setReturnValue('diff', 'has changed', array($value1_previous, '*'));
-        
+
         $field2->setReturnValue('getId', 2);
         $field2->setReturnValue('getLabel', 'field2');
         $field2->setReturnValue('userCanRead', true);
         $field2->setReturnReference('getChangesetValue', $value2_current, array('*', 21, 0));
-        
+
         $value2_previous->expectNever('hasChanged');
         $value2_current->setReturnValue('hasChanged', false);
-        $value2_current->expectNever('diff'); 
-        
-        
-        
+        $value2_current->expectNever('diff');
+
+
+
         $current_changeset->setReturnValue('getId', 66);
         $current_changeset->setReturnReference('getValueDao', $dao);
         $current_changeset->setReturnReference('getFormElementFactory', $fact);
         $current_changeset->setReturnReference('getArtifact', $artifact);
         $current_changeset->setReturnReference('getUserManager', $um);
-        
+
         $this->assertPattern('/field1/', $current_changeset->diffToprevious());
         $this->assertNoPattern('/field2/', $current_changeset->diffToprevious());
     }
-    
+
     function testNotify() {
         $defs = array(
             array(
@@ -190,23 +192,24 @@ class Tracker_Artifact_ChangesetTest extends UnitTestCase {
                 'recipients'               => array('multiple_users', 'email@example.com'),
             ),
         );
-        
+
         $fact     = new MockTracker_FormElementFactory();
         $dar      = new MockDataAccessResult();
         $dao      = new MockTracker_Artifact_Changeset_ValueDao();
         $artifact = new MockTracker_Artifact();
         $tracker  = new MockTracker();
         $um       = new MockUserManager();
-        
+        $comment  = new MockTracker_Artifact_Changeset_Comment();
+
         $i = 0;
         // try DRY in unit tests also... build mocks automatically
         foreach ($defs as $d) {
             $id = $i + 1;
             $changeset_value_id = 1000 + $id;
             $dar->setReturnValueAt($i++, 'current', array(
-                'changeset_id' => 66, 
-                'field_id'     => $id, 
-                'id'           => $changeset_value_id, 
+                'changeset_id' => 66,
+                'field_id'     => $id,
+                'id'           => $changeset_value_id,
                 'has_changed'  => $d['has_changed'],
             ));
             $f = new MockTracker_FormElement_Field_Selectbox();
@@ -216,7 +219,7 @@ class Tracker_Artifact_ChangesetTest extends UnitTestCase {
             $f->setReturnValue('isNotificationsSupported', $d['isNotificationsSupported']);
             $f->setReturnValue('hasNotifications', $d['hasNotifications']);
             $f->setReturnValue('getRecipients', $d['recipients']);
-            
+
             $p = new MockTracker_Artifact_ChangesetValue_List();
             $c = new MockTracker_Artifact_ChangesetValue_List();
             $c->setReturnValue('hasChanged', $d['has_changed']);
@@ -227,11 +230,11 @@ class Tracker_Artifact_ChangesetTest extends UnitTestCase {
         $dar->setReturnValue('valid', true);
         $dar->setReturnValueAt($i, 'valid', false);
         $dao->setReturnReference('searchById', $dar);
-        
+
         $artifact->setReturnReference('getTracker', $tracker);
         $artifact->setReturnValue('getCommentators', array('comment1', 'comment2'));
         $artifact->setReturnValue('getId', 666);
-        
+
         $tracker->setReturnValue('getItemName', 'story');
         $tracker->setReturnValue('isNotificationStopped', false);
         $tracker->setReturnValue('getRecipients', array(
@@ -260,39 +263,40 @@ class Tracker_Artifact_ChangesetTest extends UnitTestCase {
         $current_changeset->setReturnReference('getArtifact', $artifact);
         $current_changeset->setReturnReference('getUserManager', $um);
         $current_changeset->setReturnReference('getTracker', $tracker);
-        
+        $current_changeset->setReturnReference('getComment', $comment);
+
         $expected_body = <<<BODY
 story #666
 <http://{$GLOBALS['sys_default_domain']}/tracker/?aid=666>
 
 BODY;
         $current_changeset->expect(
-            'sendNotification', 
+            'sendNotification',
             array(
                 //the recipients
                 array(
-                    'a_user', 
-                    'multiple_users', 
-                    'email@example.com', 
-                    'dont_check_perms', 
+                    'a_user',
+                    'multiple_users',
+                    'email@example.com',
+                    'dont_check_perms',
                     'global3',
                     'comment1',
                     'comment2',
                 ),
-                
+
                 //the headers
                 array(),
-                
+
                 //the subject
                 '[story #666]',
-                
+
                 //the body
                 $expected_body
             )
         );
         $current_changeset->notify();
     }
-    
+
     function testNotifyStopped() {
         $changeset = new Tracker_Artifact_ChangesetTestVersion();
         $tracker  = new MockTracker();
@@ -302,7 +306,7 @@ BODY;
         $changeset->expectNever('sendNotification');
         $changeset->notify();
     }
-    
+
     function testChangesetShouldUseUserLanguageInGetBody() {
         $user = mock('PFUser');
         $userLanguage = new MockBaseLanguage();
@@ -311,35 +315,35 @@ BODY;
         $changeset = $this->buildChangeSet($user);
         $changeset->getBodyText(false, $user, $userLanguage, false);
     }
-    
+
     function testChangesetShouldUseUserLanguageInBuildMessage() {
         $GLOBALS['Language']->expectNever('getText');
         $userLanguage = new MockBaseLanguage();
         $userLanguage->expectAtLeastOnce('getText');
-        
+
         $user = mock('PFUser');
         $user->setReturnValue('getPreference', 'text', array('user_tracker_mailformat'));
         $user->setReturnValue('getLanguage', $userLanguage);
-        
+
         $changeset = $this->buildChangeSet($user);
-        
+
         $messages = array();
         $changeset->buildMessage($messages, true, $user, false);
     }
-    
+
     private function buildChangeSet($user) {
         $uh = new MockUserHelper();
-        
+
         $tracker = new MockTracker();
-        
+
         $a = new MockTracker_Artifact();
         $a->setReturnValue('getTracker', $tracker);
-        
+
         $um = new MockUserManager();
         $um->setReturnValue('getUserById', $user);
-        
+
         $languageFactory = new MockBaseLanguageFactory();
-        
+
         $changeset = TestHelper::getPartialMock('Tracker_Artifact_Changeset', array('getUserHelper', 'getUserManager', 'getArtifact', 'getComment', 'getLanguageFactory'));
         $changeset->setReturnValue('getUserHelper', $uh);
         $changeset->setReturnValue('getUserManager', $um);
@@ -347,7 +351,7 @@ BODY;
         $changeset->setReturnValue('getLanguageFactory', $languageFactory);
         return $changeset;
     }
-    
+
     public function testDisplayDiffShouldNotStripHtmlTagsInPlainTextFormat() {
         $diff   = "@@ -1 +1 @@
 - Quelle est la couleur <b> du <i> cheval blanc d'Henri IV?
@@ -355,12 +359,66 @@ BODY;
         $format = 'text';
         $field  = new MockTracker_FormElement_Field_Date();
         $field->setReturnValue('getLabel', 'Summary');
-        
+
         $changeset = new Tracker_Artifact_Changeset(null, null, null, null, null);
         $result    = $changeset->displayDiff($diff, $format, $field);
         $this->assertPattern('%Quelle est la couleur <b> du <i> <s> cheval blanc%', $result);
         $this->assertPattern('%Summary%', $result);
 
+    }
+
+    public function itCleansUserFromRecipientsWhenUserCantReadAtLeastOneChangedField() {
+        $field1             = new MockTracker_FormElement_Field_Date();
+        $value1_previous    = new MockTracker_Artifact_ChangesetValue_Date();
+        $value1_current     = new MockTracker_Artifact_ChangesetValue_Date();
+        $dao                = new MockTracker_Artifact_Changeset_ValueDao();
+        $dar                = new MockDataAccessResult();
+        $fact               = new MockTracker_FormElementFactory();
+        $artifact           = new MockTracker_Artifact();
+        $previous_changeset = new MockTracker_Artifact_Changeset();
+        $um                 = new MockUserManager();
+
+        $current_changeset = new Tracker_Artifact_ChangesetTestVersion();
+
+        $previous_changeset->setReturnValue('getId', 65);
+        $previous_changeset->setReturnReference('getValue', $value1_previous, array($field1));
+        $previous_changeset->setReturnReference('getUserManager', $um);
+
+        $artifact->setReturnReference('getPreviousChangeset', $previous_changeset, array(66));
+
+        $dar->setReturnValueAt(0, 'current', array('changeset_id' => 66, 'field_id' => 1, 'id' => 11, 'has_changed' => 1));
+        $dar->setReturnValue('valid', true);
+        $dar->setReturnValueAt(2, 'valid', false);
+        $dao->setReturnReference('searchById', $dar);
+
+        $fact->setReturnReference('getFieldById', $field1, array(1));
+
+        $field1->setReturnValue('getId', 1);
+        $field1->setReturnValue('getLabel', 'field1');
+        $field1->setReturnValue('userCanRead', false);
+        $field1->setReturnReference('getChangesetValue', $value1_current, array('*', 11, 1));
+
+        $value1_previous->expectNever('hasChanged');
+        $value1_current->setReturnValue('hasChanged', true);
+        $value1_current->setReturnValue('diff', 'has changed', array($value1_previous, '*'));
+
+        $current_changeset->setReturnValue('getId', 66);
+        $current_changeset->setReturnReference('getValueDao', $dao);
+        $current_changeset->setReturnReference('getFormElementFactory', $fact);
+        $current_changeset->setReturnReference('getArtifact', $artifact);
+        $current_changeset->setReturnReference('getUserManager', $um);
+
+        $recipients = array("recipient1" => true, "recipient2" => true, "recipient3" => true);
+
+        $user1 = stub('PFUser')->getUserName()->returns('recipient1');
+        $user2 = stub('PFUser')->getUserName()->returns('recipient2');
+        $user3 = stub('PFUser')->getUserName()->returns('recipient3');
+
+        $um->setReturnReference('getUserByUserName', $user1);
+        $um->setReturnReference('getUserByUserName', $user2);
+        $um->setReturnReference('getUserByUserName', $user3);
+
+        $this->assertEqual($current_changeset->cleanRecipients($recipients), array());
     }
 }
 
