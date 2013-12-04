@@ -24,7 +24,9 @@ use \Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use \Tuleap\Tracker\REST\TrackerRepresentation;
 use \AgileDashboard_BacklogItemPresenter;
 use \Tuleap\REST\ResourceReference;
-use Tuleap\Project\REST\ProjectReference;
+use \Tuleap\Project\REST\ProjectReference;
+use \Tuleap\Tracker\REST\TrackerReference;
+use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
 
 class BacklogItemRepresentation {
 
@@ -61,7 +63,7 @@ class BacklogItemRepresentation {
     public $tracker;
 
     /**
-     * @var Tuleap\REST\ResourceReference
+     * @var \Tuleap\Tracker\REST\Artifact\ArtifactReference
      */
     public $artifact;
 
@@ -88,11 +90,8 @@ class BacklogItemRepresentation {
             TrackerRepresentation::ROUTE
         );
 
-        $this->artifact = new ResourceReference();
-        $this->artifact->build(
-            $backlog_item->getArtifact()->getId(),
-            ArtifactRepresentation::ROUTE
-        );
+        $this->artifact = new ArtifactReference();
+        $this->artifact->build($backlog_item->getArtifact());
 
         $this->project = new ProjectReference();
         $this->project->build($backlog_item->getArtifact()->getTracker()->getProject());

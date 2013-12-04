@@ -22,6 +22,7 @@ use \Tuleap\REST\ResourceReference;
 use \Tuleap\Project\REST\ProjectReference;
 use \Planning_Milestone;
 use \Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
+use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use \Tuleap\REST\JsonCast;
 
 /**
@@ -87,7 +88,7 @@ class MilestoneRepresentation {
     public $parent;
 
     /**
-     * @var Tuleap\REST\ResourceReference
+     * @var \Tuleap\Tracker\REST\Artifact\ArtifactReference
      */
     public $artifact;
 
@@ -113,8 +114,8 @@ class MilestoneRepresentation {
         $this->project = new ProjectReference();
         $this->project->build($milestone->getProject());
 
-        $this->artifact = new ResourceReference();
-        $this->artifact->build($milestone->getArtifactId(), ArtifactRepresentation::ROUTE);
+        $this->artifact = new ArtifactReference();
+        $this->artifact->build($milestone->getArtifact());
 
         $this->start_date = null;
         if ($milestone->getStartDate()) {
@@ -135,6 +136,5 @@ class MilestoneRepresentation {
 
         $this->sub_milestones_uri = $this->uri . '/'. self::ROUTE;
         $this->backlog_items_uri  = $this->uri . '/'. BacklogItemRepresentation::ROUTE;
-
     }
 }
