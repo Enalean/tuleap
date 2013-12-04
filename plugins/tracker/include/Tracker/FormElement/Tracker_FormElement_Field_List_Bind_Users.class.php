@@ -806,7 +806,9 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function getRecipients(Tracker_Artifact_ChangesetValue_List $changeset_value) {
         $recipients = array();
         foreach ($changeset_value->getListValues() as $user_value) {
-            $recipients[] = $user_value->getUsername();
+            if ($user_value->getId() != 100) {
+                $recipients[] = $user_value->getUsername();
+            }
         }
         return $recipients;
     }
