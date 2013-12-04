@@ -39,7 +39,7 @@ class AgileDashboard_REST_ResourcesInjector {
     }
 
     private function buildProjectRepresentation() {
-        return '\\Tuleap\\Project\\REST\\ProjectInfoRepresentation';
+        return '\\Tuleap\\Project\\REST\\ProjectRepresentation';
     }
 
     private function buildPlanningRepresentation() {

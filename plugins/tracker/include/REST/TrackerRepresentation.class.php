@@ -18,40 +18,65 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_REST_TrackerRepresentation {
+namespace Tuleap\Tracker\REST;
+
+use Tracker;
+
+class TrackerRepresentation {
+
     const ROUTE = 'trackers';
 
-    /** @var int */
+    /**
+     * @var int
+     */
     public $id;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $uri;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $html_url;
 
-    /** @var Rest_ResourceReference */
+    /**
+     * @var Tuleap\REST\ResourceReference
+     */
     public $project;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $label;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $description;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $item_name;
 
-    /** @var array {@type Tracker_REST_FieldRepresentation} */
+    /**
+     * @var array {@type Tracker_REST_FieldRepresentation}
+     */
     public $fields    = array();
 
-    /** @var array {@type Tracker_REST_SemanticRepresentation} */
+    /**
+     * @var array {@type Tracker_REST_SemanticRepresentation}
+     */
     public $semantics = array();
 
-    /** @var Tracker_REST_WorkflowRepresentation */
+    /**
+     * @var Tuleap\Tracker\REST\WorkflowRepresentation
+     */
     public $workflow;
 
-    public function __construct(Tracker $tracker, array $tracker_fields, array $semantics, Tracker_REST_WorkflowRepresentation $worflow = null) {
+    public function build(Tracker $tracker, array $tracker_fields, array $semantics, WorkflowRepresentation $workflow = null) {
         $this->id          = $tracker->getId();
         $this->uri         = self::ROUTE . '/' . $this->id;
         $this->html_url    = $tracker->getUri();
@@ -61,6 +86,6 @@ class Tracker_REST_TrackerRepresentation {
         $this->item_name   = $tracker->getItemName();
         $this->fields      = $tracker_fields;
         $this->semantics   = $semantics;
-        $this->workflow    = $worflow;
+        $this->workflow    = $workflow;
     }
 }

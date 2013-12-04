@@ -25,7 +25,7 @@ use EventManager;
 use Event;
 use URLVerification;
 use \Luracast\Restler\RestException;
-use \Tuleap\Project\REST\ProjectInfoRepresentation;
+use \Tuleap\Project\REST\ProjectRepresentation;
 use \Tuleap\REST\Header;
 
 /**
@@ -45,7 +45,7 @@ class ProjectResource {
      * @throws 403
      * @throws 404
      *
-     * @return ProjectInfoRepresentation
+     * @return Tuleap\Project\REST\ProjectRepresentation
      */
     public function get($id) {
         $project = $this->getProject($id);
@@ -61,7 +61,10 @@ class ProjectResource {
         );
         $this->sendAllowHeadersForProject();
 
-        return new ProjectInfoRepresentation($project, $resources);
+        $project_representation = new ProjectRepresentation();
+        $project_representation->build($project, $resources);
+
+        return $project_representation;
     }
 
     /**
@@ -117,7 +120,7 @@ class ProjectResource {
      * @param int $limit  Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
      *
-     * @return array ProjectPlanningResource
+     * @return array {@type Tuleap\AgileDashboard\REST\v1\PlanningRepresentation}
      */
     protected function getPlannings($id, $limit = 10, $offset = 0) {
         $plannings = $this->plannings($id, $limit, $offset, Event::REST_GET_PROJECT_PLANNINGS);
@@ -165,7 +168,7 @@ class ProjectResource {
      * @param int $limit  Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
      *
-     * @return array of ProjectMilestoneResource
+     * @return array {@type Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation}
      */
     protected function getMilestones($id, $limit = 10, $offset = 0) {
         $milestones = $this->milestones($id, $limit, $offset, Event::REST_GET_PROJECT_MILESTONES);
@@ -212,7 +215,7 @@ class ProjectResource {
      * @param int $limit  Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
      *
-     * @return array ProjectTrackerResource
+     * @return array {@type Tuleap\Tracker\REST\TrackerRepresentation}
      */
     protected function getTrackers($id, $limit = 10, $offset = 0) {
         $trackers = $this->trackers($id, $limit, $offset, Event::REST_GET_PROJECT_TRACKERS);

@@ -60,7 +60,7 @@ class TrackersResource {
      *
      * @param int $id Id of the tracker
      *
-     * @return TrackerRepresentation
+     * @return Tuleap\Tracker\REST\TrackerRepresentation
      */
     protected function getId($id) {
         $builder = new Tracker_REST_TrackerRestBuilder(Tracker_FormElementFactory::instance());

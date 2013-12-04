@@ -109,7 +109,7 @@ class MilestoneResource {
      *
      * @param int $id Id of the milestone
      *
-     * @return MilestoneRepresentation
+     * @return Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation
      *
      * @throws 403
      * @throws 404
@@ -119,7 +119,10 @@ class MilestoneResource {
         $milestone = $this->getMilestoneById($user, $id);
         $this->sendAllowHeadersForMilestone($milestone);
 
-        return new MilestoneRepresentation($milestone);
+        $milestone_representation = new MilestoneRepresentation();
+        $milestone_representation->build($milestone);
+
+        return $milestone_representation;
     }
 
     /**
@@ -160,7 +163,7 @@ class MilestoneResource {
      *
      * @param int $id Id of the milestone
      *
-     * @return array MilestoneRepresentation
+     * @return Array {@type Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation}
      *
      * @throws 403
      * @throws 404
@@ -172,7 +175,10 @@ class MilestoneResource {
 
         return array_map(
             function (Planning_Milestone $milestone) {
-                return new MilestoneRepresentation($milestone);
+                $milestone_representation = new MilestoneRepresentation();
+                $milestone_representation->build($milestone);
+
+                return $milestone_representation;
             },
             $this->milestone_factory->getSubMilestones($user, $milestone)
         );
@@ -189,7 +195,7 @@ class MilestoneResource {
      * @param int $limit  Number of elements displayed per page
      * @param int $offset Position of the first element to display
      *
-     * @return array BacklogItemRepresentation
+     * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
      *
      * @throws 403
      * @throws 404
@@ -201,13 +207,15 @@ class MilestoneResource {
         $this->sendAllowHeaderForContent();
 
         $backlog_items = $this->getMilestoneContentItems($milestone);
-        $backlog_items_representation = array();
+        $backlog_items_representations = array();
 
         foreach ($backlog_items as $backlog_item) {
-            $backlog_items_representation[] = new BacklogItemRepresentation($backlog_item);
+            $backlog_item_representation = new BacklogItemRepresentation();
+            $backlog_item_representation->build($backlog_item);
+            $backlog_items_representations[] = $backlog_item_representation;
         }
 
-        return array_slice($backlog_items_representation, $offset, $limit);
+        return array_slice($backlog_items_representations, $offset, $limit);
     }
 
     /**
@@ -234,7 +242,7 @@ class MilestoneResource {
      * @param int $limit  Number of elements displayed per page
      * @param int $offset Position of the first element to display
      *
-     * @return array BacklogItemRepresentation
+     * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
      *
      * @throws 403
      * @throws 404
@@ -250,7 +258,9 @@ class MilestoneResource {
         $backlog_items_representation = array();
 
         foreach ($backlog_items as $backlog_item) {
-            $backlog_items_representation[] = new BacklogItemRepresentation($backlog_item);
+            $backlog_item_representation = new BacklogItemRepresentation();
+            $backlog_item_representation->build($backlog_item);
+            $backlog_items_representations[] = $backlog_item_representation;
         }
 
         return array_slice($backlog_items_representation, $offset, $limit);

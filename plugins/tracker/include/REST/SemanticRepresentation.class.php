@@ -22,7 +22,7 @@ class Tracker_REST_SemanticRepresentation {
     /** @var int */
     public $field_id;
 
-    public function __construct($id) {
+    public function build($id) {
         $this->field_id = $id;
     }
 }

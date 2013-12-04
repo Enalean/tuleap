@@ -17,7 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Rest_ResourceReference {
+namespace Tuleap\REST;
+
+class ResourceReference {
 
     /** Use this variable as a placeholder for future route implementation */
     const NO_ROUTE = 'route-not-yet-implemented';
@@ -28,7 +30,7 @@ class Rest_ResourceReference {
     /** @var string URI of the resource */
     public $uri;
 
-    public function __construct($id, $base_uri) {
+    public function build($id, $base_uri) {
         $this->id  = $id;
         $this->uri = $base_uri . '/' . $id;
     }

@@ -169,10 +169,14 @@ abstract class Tracker_Semantic {
 
     public function exportToREST(PFUser $user) {
         $field = $this->getFieldUserCanRead($user);
-        if ($field) {
-            return new Tracker_REST_SemanticRepresentation($field->getId());
+        if (! $field) {
+            return false;
         }
-        return false;
+
+        $semantic_representation = new Tracker_REST_SemanticRepresentation($field->getId());
+        $semantic_representation->build($field->getId());
+
+        return $semantic_representation;
     }
 }
 ?>

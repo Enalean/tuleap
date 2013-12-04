@@ -36,6 +36,9 @@ class ArtifactsResource {
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
+    /** @var Tracker_REST_Artifact_ArtifactRepresentationBuilder */
+    private $builder;
+
     public function __construct() {
         $this->artifact_factory = Tracker_ArtifactFactory::instance();
         $this->builder          = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
@@ -53,7 +56,7 @@ class ArtifactsResource {
      *
      * @param int $id Id of the artifact
      *
-     * @return ArtifactRepresentation
+     * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation
      */
     protected function getId($id) {
         $user     = UserManager::instance()->getCurrentUser();

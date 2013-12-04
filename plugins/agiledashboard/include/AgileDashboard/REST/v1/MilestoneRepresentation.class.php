@@ -18,10 +18,10 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \Rest_ResourceReference;
+use \Tuleap\REST\ResourceReference;
 use \Tuleap\Project\REST\ProjectReference;
 use \Planning_Milestone;
-use \Tracker_REST_Artifact_ArtifactRepresentation;
+use \Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 
 /**
  * Representation of a milestone
@@ -30,49 +30,77 @@ class MilestoneRepresentation {
 
     const ROUTE = 'milestones';
 
-    /** @var int */
+    /**
+     * @var int
+     */
     public $id;
 
-    /** @var String */
+    /**
+     * @var String
+     */
     public $uri;
 
-    /** @var String */
+    /**
+     * @var String
+     */
     public $label;
 
-    /** @var int */
+    /**
+     * @var int
+     */
     public $submitted_by;
 
-    /** @var String */
+    /**
+     * @var String
+     */
     public $submitted_on;
 
-    /** @var Rest_ResourceReference */
+    /**
+     * @var Tuleap\REST\ResourceReference
+     */
     public $project;
 
-    /** @var String */
+    /**
+     * @var String
+     */
     public $start_date;
 
-    /** @var String */
+    /**
+     * @var String
+     */
     public $end_date;
 
-    /** @var float */
+    /**
+     * @var float
+     */
     public $capacity;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $status_value;
 
-    /** @var Rest_ResourceReference|null */
+    /**
+     * @var Tuleap\REST\ResourceReference | null
+     */
     public $parent;
 
-    /** @var Rest_ResourceReference */
+    /**
+     * @var Tuleap\REST\ResourceReference
+     */
     public $artifact;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $sub_milestones_uri;
 
-    /** @var string*/
+    /**
+     * @var string
+     */
     public $backlog_items_uri;
 
-    public function __construct(Planning_Milestone $milestone) {
+    public function build(Planning_Milestone $milestone) {
         $this->id                 = $milestone->getArtifactId();
         $this->uri                = self::ROUTE . '/' . $this->id;
         $this->label              = $milestone->getArtifactTitle();
@@ -81,7 +109,8 @@ class MilestoneRepresentation {
         $this->submitted_on       = date('c', $milestone->getArtifact()->getFirstChangeset()->getSubmittedOn());
         $this->capacity           = $milestone->getCapacity();
         $this->project            = new ProjectReference($milestone->getProject());
-        $this->artifact           = new Rest_ResourceReference($milestone->getArtifactId(), Tracker_REST_Artifact_ArtifactRepresentation::ROUTE);
+        $this->artifact           = new ResourceReference();
+        $this->artifact->build($milestone->getArtifactId(), ArtifactRepresentation::ROUTE);
         if ($milestone->getStartDate()) {
             $this->start_date = date('c', $milestone->getStartDate());
         }
@@ -90,7 +119,8 @@ class MilestoneRepresentation {
         }
         $parent = $milestone->getParent();
         if ($parent) {
-            $this->parent = new Rest_ResourceReference($parent->getArtifactId(), self::ROUTE);
+            $this->parent = new ResourceReference();
+            $this->parent->build($parent->getArtifactId(), self::ROUTE);
         }
         $this->sub_milestones_uri = $this->uri . '/'. self::ROUTE;
         $this->backlog_items_uri  = $this->uri . '/'. BacklogItemRepresentation::ROUTE;

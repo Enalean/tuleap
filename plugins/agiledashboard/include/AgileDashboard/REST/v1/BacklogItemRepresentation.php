@@ -19,55 +19,74 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \Tracker_REST_Artifact_ArtifactRepresentation;
-use \Tracker_REST_TrackerRepresentation;
+use \Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
+use \Tuleap\Tracker\REST\TrackerRepresentation;
 use \AgileDashboard_BacklogItemPresenter;
-use \Rest_ResourceReference;
+use \Tuleap\REST\ResourceReference;
 
 class BacklogItemRepresentation {
 
     const ROUTE = 'backlog_items';
 
-    /** @var Int */
+    /**
+     * @var Int
+     */
     public $id;
 
-    /** @var String */
+    /**
+     * @var String
+     */
     public $label;
 
-    /** @var String */
+    /**
+     * @var String
+     */
     public $type;
 
-    /** @var String */
+    /**
+     * @var String
+     */
     public $status;
 
-    /** @var int */
+    /**
+     * @var int
+     */
     public $initial_effort;
 
-    /** @var Rest_ResourceReference */
+    /**
+     * @var Tuleap\REST\ResourceReference
+     */
     public $tracker;
 
-    /** @var Rest_ResourceReference */
+    /**
+     * @var Tuleap\REST\ResourceReference
+     */
     public $artifact;
 
-    /** @var Rest_ResourceReference */
+    /**
+     * @var Tuleap\REST\ResourceReference
+     */
     public $parent;
 
-    public function __construct(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {
+    public function build(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {
         $this->id             = $backlog_item->id();
         $this->label          = $backlog_item->title();
         $this->status         = $backlog_item->status();
         $this->type           = $backlog_item->type();
         $this->initial_effort = $backlog_item->getInitialEffort();
-        $this->tracker = new Rest_ResourceReference(
+        $this->tracker = new ResourceReference();
+        $this->tracker->build(
             $backlog_item->getArtifact()->getTrackerId(),
-            Tracker_REST_TrackerRepresentation::ROUTE
+            TrackerRepresentation::ROUTE
         ) ;
-        $this->artifact = new Rest_ResourceReference(
+        $this->artifact = new ResourceReference();
+        $this->artifact->build(
             $backlog_item->getArtifact()->getId(),
-            Tracker_REST_Artifact_ArtifactRepresentation::ROUTE
+            ArtifactRepresentation::ROUTE
         );
         if ($backlog_item->getParent()) {
-            $this->parent = new Rest_ResourceReference(
+            $this->parent = new ResourceReference();
+            $this->parent->build(
                 $backlog_item->getParent()->getId(),
                 self::ROUTE
             );

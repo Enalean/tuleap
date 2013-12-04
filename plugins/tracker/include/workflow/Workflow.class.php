@@ -293,27 +293,6 @@ class Workflow {
     }
 
     /**
-     * 
-     * @param PFUser $user
-     * @return Tracker_REST_WorkflowRepresentation | null
-     */
-    public function exportToREST(PFUser $user) {
-        if ($this->isUsed() && $this->getField()->userCanRead($user)) {
-            $transitions = array();
-            foreach ($this->getTransitions() as $transition) {
-                $transitions[] = $transition->exportToREST();
-            }
-
-            return new Tracker_REST_WorkflowRepresentation(
-                $this->getFieldId(),
-                $this->getIsUsed(),
-                $this->global_rules_manager->exportToREST(),
-                $transitions
-            );
-        }
-    }
-
-    /**
      * Execute actions before transition happens (if there is one)
      *
      * @param Array $fields_data  Request field data (array[field_id] => data)
@@ -402,6 +381,14 @@ class Workflow {
     /** @return array of Tracker_Rule */
     public function getGlobalRules() {
         return $this->global_rules_manager->getRules($tracker);
+    }
+
+    /**
+     *
+     * @return Tracker_RulesManager
+     */
+    public function getGlobalRulesManager() {
+        return $this->global_rules_manager;
     }
 
    /**

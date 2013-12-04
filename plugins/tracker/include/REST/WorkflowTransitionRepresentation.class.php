@@ -18,14 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_REST_WorkflowTransitionRepresentation {
-    /** @var int */
+namespace Tuleap\Tracker\REST;
+
+class WorkflowTransitionRepresentation {
+
+    /**
+     * @var int
+     */
     public $from_id;
 
-    /** @var int */
+    /**
+     * @var int
+     */
     public $to_id;
 
-    public function __construct($from_id, $to_id) {
+    public function build($from_id, $to_id) {
         $this->from_id = $from_id;
         $this->to_id   = $to_id;
     }

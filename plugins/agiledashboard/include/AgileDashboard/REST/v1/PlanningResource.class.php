@@ -51,7 +51,7 @@ class PlanningResource {
      * @param int $limit Number of elements displayed per page
      * @param int $offset Position of the first element to display
      *
-     * @return array of milestones
+     * @return array {@type Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation}
      *
      * @throws 403
      * @throws 404

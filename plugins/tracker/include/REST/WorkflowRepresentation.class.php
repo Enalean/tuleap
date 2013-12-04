@@ -18,20 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_REST_WorkflowRepresentation {
-    /** @var int */
+namespace Tuleap\Tracker\REST;
+
+class WorkflowRepresentation {
+
+    /**
+     * @var int
+     */
     public $field_id;
 
-    /** @var bool*/
+    /**
+     * @var bool
+     */
     public $is_used;
 
-    /** @var Tracker_REST_WorkflowRulesRepresentation */
+    /**
+     * @var Tuleap\Tracker\REST\WorkflowRulesRepresentation
+     */
     public $rules;
 
-    /** @var array {@type Tracker_REST_WorkflowTransitionRepresentation} */
+    /**
+     * @var Array[Tuleap\Tracker\REST\WorkflowTransitionRepresentation]
+     */
     public $transitions = array();
 
-    public function __construct($id, $is_used, Tracker_REST_WorkflowRulesRepresentation $rules, array $transitions) {
+    public function build($id, $is_used, WorkflowRulesRepresentation $rules, array $transitions) {
         $this->field_id = $id;
         $this->is_used  = (boolean)$is_used;
         $this->rules    = $rules;

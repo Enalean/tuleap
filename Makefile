@@ -27,7 +27,7 @@ less-dev:
 
 api_test_setup:
 	cp tests/rest/bin/composer.json .
-	curl -sS https://getcomposer.org/installer | php
+	curl -k -sS https://getcomposer.org/installer | php
 	php composer.phar install
 	cp tests/rest/bin/integration_tests.inc.dist /etc/codendi/conf/integration_tests.inc
 	cp tests/rest/bin/dbtest.inc.dist /etc/codendi/conf/dbtest.inc

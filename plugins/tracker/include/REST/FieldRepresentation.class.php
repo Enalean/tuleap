@@ -51,7 +51,7 @@ class Tracker_REST_FieldRepresentation {
     /** @var array {@type string} One of (read, update, submit) */
     public $permissions = array();
 
-    public function __construct(Tracker_FormElement_Field $field, $type, array $permissions) {
+    public function build(Tracker_FormElement_Field $field, $type, array $permissions) {
         $this->field_id    = $field->getId();
         $this->name  = $field->getName();
         $this->label = $field->getLabel();
