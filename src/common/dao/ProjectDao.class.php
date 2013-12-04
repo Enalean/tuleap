@@ -126,11 +126,20 @@ class ProjectDao extends DataAccessObject {
     }
 
     public function searchProjectsUserIsAdmin($user_id) {
+        return $this->searchActiveProjectsByUserStatus($user_id, "AND user_group.admin_flags = 'A'");
+    }
+
+    public function searchActiveProjectsForUser($user_id) {
+        return $this->searchActiveProjectsByUserStatus($user_id);
+    }
+
+    private function searchActiveProjectsByUserStatus($user_id, $where = '') {
+        $user_id = $this->da->escapeInt($user_id);
         $sql = "SELECT groups.*
             FROM groups
               JOIN user_group ON (user_group.group_id = groups.group_id)
-            WHERE user_group.user_id = '". $this->da->escapeInt($user_id) ."'
-              AND user_group.admin_flags = 'A'
+            WHERE user_group.user_id = $user_id
+              $where
               AND groups.status='A'
             ORDER BY group_name";
         return $this->retrieve($sql);

@@ -37,9 +37,11 @@ class Experimental_NavBarPresenter {
 
     private $selected_top_tab;
 
-    private $project_manager;
+    private $project_list;
 
-    public function __construct($imgroot, PFUser $user, $request_uri, $selected_top_tab, HTTPRequest $request, $title, $search_form_presenter) {
+    private $display_new_account;
+
+    public function __construct($imgroot, PFUser $user, $request_uri, $selected_top_tab, HTTPRequest $request, $title, $search_form_presenter, $project_list, $display_new_account) {
         $this->imgroot               = $imgroot;
         $this->user                  = $user;
         $this->request_uri           = $request_uri;
@@ -47,8 +49,8 @@ class Experimental_NavBarPresenter {
         $this->selected_top_tab      = $selected_top_tab;
         $this->title                 = $title;
         $this->search_form_presenter = $search_form_presenter;
-        $this->project_manager       = ProjectManager::instance();
-        $this->event_manager         = EventManager::instance();
+        $this->project_list          = $project_list;
+        $this->display_new_account   = $display_new_account;
     }
 
     public function imgroot() {
@@ -84,21 +86,11 @@ class Experimental_NavBarPresenter {
     }
 
     public function user_projects() {
-        $projects        = array();
-        $all_project_ids =  $this->user->getAllProjects();
-
-        foreach ($all_project_ids as $project_id) {
-            $projects[] = $this->project_manager->getProject($project_id);
-        }
-
-        return $projects;
+        return $this->project_list;
     }
 
     public function display_new_user() {
-        $display_new_user = true;
-        $this->event_manager->processEvent('display_newaccount', array('allow' => &$display_new_user));
-
-        return $display_new_user;
+        return $this->display_new_account;
     }
 
     public function bookmark_title() {

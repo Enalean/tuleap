@@ -106,6 +106,8 @@ class Experimental_Theme extends DivBasedTabbedLayout {
         list($search_options, $hidden_fields) = $this->getSearchEntries();
         $search_form_presenter                = new Experimental_SearchFormPresenter($search_options, $hidden_fields);
 
+        $project_manager = ProjectManager::instance();
+
         $this->render('navbar', new Experimental_NavBarPresenter(
                 $this->imgroot,
                 $current_user,
@@ -113,11 +115,19 @@ class Experimental_Theme extends DivBasedTabbedLayout {
                 $selected_top_tab,
                 HTTPRequest::instance(),
                 $params['title'],
-                $search_form_presenter
+                $search_form_presenter,
+                $project_manager->getActiveProjectsForUser($current_user),
+                $this->displayNewAccount()
             )
         );
 
-        $this->container($params, ProjectManager::instance(), $current_user);
+        $this->container($params, $project_manager, $current_user);
+    }
+
+    private function displayNewAccount() {
+        $display_new_user = true;
+        EventManager::instance()->processEvent('display_newaccount', array('allow' => &$display_new_user));
+        return $display_new_user;
     }
 
     private function container(array $params, ProjectManager $project_manager, PFUser $current_user) {
