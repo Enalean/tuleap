@@ -1,3 +1,6 @@
+Version 5.195 - Tuleap 6.8
+    * Fix request #5699: Cannot delete artifacts in Tuleap 6.7
+
 Version 5.194 - Tuleap 6.8
     * story #5589: read a meaningful api documentation
 
