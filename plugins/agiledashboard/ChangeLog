@@ -1,3 +1,6 @@
+Version 1.24 - Tuleap 6.8
+    * story #5589: read a meaningful api documentation
+
 Version 1.23 - Tuleap 6.8
     * story #5585: Add GET, OPTIONS and PUT routes for milestones/:id/backlog
 
