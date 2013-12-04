@@ -11,12 +11,12 @@ test:
 
 autoload:
 	@echo "Generate core"
-	@(cd src/common; phpab  --compat -o autoload.php --exclude "./wiki/phpwiki/*" .)
+	@(cd src/common; phpab -q --compat -o autoload.php --exclude "./wiki/phpwiki/*" .)
 	@echo "Generate tests"
-	@(cd tests/lib; phpab  --compat -o autoload.php .)
+	@(cd tests/lib; phpab  -q --compat -o autoload.php .)
 	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
 	     echo "Generate plugin $$path"; \
-	     (cd "plugins/$$path/include"; phpab --compat -o autoload.php .) \
+	     (cd "plugins/$$path/include"; phpab -q --compat -o autoload.php .) \
         done;
 
 less:
