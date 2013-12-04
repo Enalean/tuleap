@@ -604,6 +604,29 @@ class Tracker_Artifact_Changeset {
         $mail->send();
     }
 
+    public function cleanRecipients($recipients) {
+        $cleanRecipientsList = array();
+        foreach ($recipients as $recipient => $check_perms) {
+            $user = $this->getUserManager()->getUserByUserName($recipient);
+            if (!$check_perms || $this->userCanReadAtLeastOneChangedField($user)) {
+                $cleanRecipientsList[$recipient] = $check_perms;
+            }
+        }
+        return $cleanRecipientsList;
+    }
+
+    private function userCanReadAtLeastOneChangedField(PFUser $user) {
+        $factory = $this->getFormElementFactory();
+
+        foreach ($this->getValues() as $field_id => $current_changeset_value) {
+            $field = $factory->getFieldById($field_id);
+            if ($field && $field->userCanRead($user) && $current_changeset_value->hasChanged()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Get the recipients for notification
      *
@@ -629,6 +652,7 @@ class Tracker_Artifact_Changeset {
         // 2 Get from the commentators
         $recipients = array_merge($recipients, $this->getArtifact()->getCommentators());
         $recipients = array_values(array_unique($recipients));
+
         
         //now force check perms for all this people
         $tablo = array();
@@ -643,6 +667,10 @@ class Tracker_Artifact_Changeset {
                     $tablo[$recipient] = $r['check_permissions'];
                 }
             }
+        }
+
+        if ($is_update && $this->getComment()->hasEmptyBody()) {
+            $tablo = $this->cleanRecipients($tablo);
         }
         return $tablo;
     }
