@@ -1,3 +1,6 @@
+Version 5.196 - Tuleap 6.8
+    * Fix request #5698: remove "None" from recipients
+
 Version 5.195 - Tuleap 6.8
     * Fix request #5699: Cannot delete artifacts in Tuleap 6.7
 
