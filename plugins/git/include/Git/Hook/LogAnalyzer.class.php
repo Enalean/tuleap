@@ -32,8 +32,12 @@ class Git_Hook_LogAnalyzer {
     /** @var Git_Exec */
     private $exec_repo;
 
-    public function __construct(Git_Exec $git_exec) {
+    /** @var Logger */
+    private $logger;
+    
+    public function __construct(Git_Exec $git_exec, Logger $logger) {
         $this->exec_repo = $git_exec;
+        $this->logger    = $logger;
     }
 
     /**
@@ -45,28 +49,30 @@ class Git_Hook_LogAnalyzer {
      * @param type $oldrev
      * @param type $newrev
      * @param type $refname
-     * @return \Git_Hook_PushDetails
+     * @return Git_Hook_PushDetails
      */
     public function getPushDetails(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname) {
-        if ($oldrev == self::FAKE_EMPTY_COMMIT) {
-            $change_type   = Git_Hook_PushDetails::ACTION_CREATE;
-            $revision_list = $this->exec_repo->revListSinceStart($refname, $newrev);
-        } elseif ($newrev == self::FAKE_EMPTY_COMMIT) {
-            $change_type   = Git_Hook_PushDetails::ACTION_DELETE;
-            $revision_list = array();
-        } else {
-            $change_type   = Git_Hook_PushDetails::ACTION_UPDATE;
-            $revision_list = $this->exec_repo->revList($oldrev, $newrev);
-        }
-
+        $change_type   = Git_Hook_PushDetails::ACTION_ERROR;
+        $revision_list = array();
+        $rev_type      = '';
         try {
+            if ($oldrev == self::FAKE_EMPTY_COMMIT) {
+                $revision_list = $this->exec_repo->revListSinceStart($refname, $newrev);
+                $change_type   = Git_Hook_PushDetails::ACTION_CREATE;
+            } elseif ($newrev == self::FAKE_EMPTY_COMMIT) {
+                $change_type   = Git_Hook_PushDetails::ACTION_DELETE;
+            } else {
+                $revision_list = $this->exec_repo->revList($oldrev, $newrev);
+                $change_type   = Git_Hook_PushDetails::ACTION_UPDATE;
+            }
+
             if ($change_type == Git_Hook_PushDetails::ACTION_DELETE) {
                 $rev_type = $this->exec_repo->getObjectType($oldrev);
             } else {
                 $rev_type = $this->exec_repo->getObjectType($newrev);
             }
-        } catch(Git_Command_UnknownObjectTypeException $exception) {
-            $rev_type = '';
+        } catch (Git_Command_Exception $exception) {
+            $this->logger->error(__CLASS__." {$repository->getFullName()} $refname $oldrev $newrev ".$exception->getMessage());
         }
 
         return new Git_Hook_PushDetails(

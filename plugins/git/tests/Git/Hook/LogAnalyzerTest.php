@@ -22,11 +22,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../../bootstrap.php';
+
 class Git_Hook_LogAnalyzerTest extends TuleapTestCase {
 
     private $git_exec;
     private $user;
     private $repository;
+    private $logger;
 
     /** @var Git_Hook_LogAnalyzer */
     private $log_analyzer;
@@ -37,8 +40,9 @@ class Git_Hook_LogAnalyzerTest extends TuleapTestCase {
         $this->git_exec   = mock('Git_Exec');
         $this->repository = mock('GitRepository');
         $this->user       = mock('PFUser');
+        $this->logger     = mock('Logger');
 
-        $this->log_analyzer = new Git_Hook_LogAnalyzer($this->git_exec);
+        $this->log_analyzer = new Git_Hook_LogAnalyzer($this->git_exec, $this->logger);
     }
 
     public function itUpdatesBranch() {
@@ -124,6 +128,16 @@ class Git_Hook_LogAnalyzerTest extends TuleapTestCase {
 
         $push_details = $this->log_analyzer->getPushDetails($this->repository, $this->user, 'd8f1e57', '469eaa9', 'refs/remotes/bla');
         $this->assertEqual($push_details->getRefnameType(), Git_Hook_PushDetails::TYPE_TRACKING_BRANCH);
+    }
+
+    public function itGeneratesAnEmptyPushDetailWhenCannotExtactRevList() {
+        stub($this->git_exec)->revList()->throws(new Git_Command_Exception('cmd', array('stuff'), '233'));
+
+        expect($this->logger)->error()->once();
+        
+        $push_details = $this->log_analyzer->getPushDetails($this->repository, $this->user, 'd8f1e57', '469eaa9', 'refs/remotes/bla');
+        $this->assertEqual($push_details->getType(), Git_Hook_PushDetails::ACTION_ERROR);
+        $this->assertEqual($push_details->getRevisionList(), array());
     }
 }
 

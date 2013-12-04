@@ -42,11 +42,11 @@ class Git_Hook_ExtractCrossReferences {
         $this->reference_manager = $reference_manager;
     }
 
-    public function execute(GitRepository $repository, PFUser $user, $commit_sha1, $refname) {
-        $rev_id = $repository->getFullName().'/'.$commit_sha1;
+    public function execute(Git_Hook_PushDetails $push_details, $commit_sha1) {
+        $rev_id = $push_details->getRepository()->getFullName().'/'.$commit_sha1;
         $text   = $this->git_exec->catFile($commit_sha1);
-        $GLOBALS['group_id'] = $repository->getProject()->getId();
-        $this->reference_manager->extractCrossRef($text, $rev_id, Git::REFERENCE_NATURE, $repository->getProject()->getId(), $user->getId());
+        $GLOBALS['group_id'] = $push_details->getRepository()->getProject()->getId();
+        $this->reference_manager->extractCrossRef($text, $rev_id, Git::REFERENCE_NATURE, $push_details->getRepository()->getProject()->getId(), $push_details->getUser()->getId());
     }
 }
 

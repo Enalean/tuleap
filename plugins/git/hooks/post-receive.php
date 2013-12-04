@@ -25,42 +25,52 @@
 
 require_once 'pre.php';
 
+$logger = new BackendLogger();
+
 $repository_path = $argv[1];
 $user_name       = $argv[2];
 $old_rev         = $argv[3];
 $new_rev         = $argv[4];
 $refname         = $argv[5];
+try {
 
-$git_exec = new Git_Exec($repository_path, $repository_path);
-$git_dao  = new GitDao();
+    $git_exec = new Git_Exec($repository_path, $repository_path);
+    $git_dao  = new GitDao();
 
-$logger   = new BackendLogger();
 
-$post_receive = new Git_Hook_PostReceive(
-    new Git_Hook_LogAnalyzer(
-        $git_exec
-    ),
-    new GitRepositoryFactory(
-        $git_dao,
-        ProjectManager::instance()
-    ),
-    UserManager::instance(),
-    new Git_Hook_ExtractCrossReferences(
-        $git_exec,
-        ReferenceManager::instance()
-    ),
-    new Git_Ci_Launcher(
-        new Jenkins_Client(
-            new Http_Client()
+    $post_receive = new Git_Hook_PostReceive(
+        new Git_Hook_LogAnalyzer(
+            $git_exec,
+            $logger
         ),
-        new Git_Ci_Dao(),
-        $logger
-    ),
-    new Git_Hook_LogPushes(
-        $git_dao
-    )
-);
+        new GitRepositoryFactory(
+            $git_dao,
+            ProjectManager::instance()
+        ),
+        UserManager::instance(),
+        new Git_Ci_Launcher(
+            new Jenkins_Client(
+                new Http_Client()
+            ),
+            new Git_Ci_Dao(),
+            $logger
+        ),
+        new Git_Hook_ParseLog(
+            new Git_Hook_LogPushes(
+                $git_dao
+            ),
+            new Git_Hook_ExtractCrossReferences(
+                $git_exec,
+                ReferenceManager::instance()
+            ),
+            $logger
+        )
+    );
 
-$post_receive->execute($repository_path, $user_name, $old_rev, $new_rev, $refname);
+    $post_receive->execute($repository_path, $user_name, $old_rev, $new_rev, $refname);
+} catch (Exception $exception) {
+    $logger->error("[git post-receive] $repository_path $user_name $refname $old_rev $new_rev ".$exception->getMessage());
+    exit(1);
+}
 
 ?>
