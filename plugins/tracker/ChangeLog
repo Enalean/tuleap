@@ -1,3 +1,6 @@
+Version 5.197 - Tuleap 6.8
+    * Fix request #5700 - Text fields are cleared when condition is unmet
+
 Version 5.196 - Tuleap 6.8
     * Fix request #5698: remove "None" from recipients
 
