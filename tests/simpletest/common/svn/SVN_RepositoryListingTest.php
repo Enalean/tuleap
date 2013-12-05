@@ -131,10 +131,70 @@ class SVN_RepositoryListing_getSvnPathWithLogDetailsTest extends TuleapTestCase 
 
         $last_revision = $this->svn_repo_listing->getSvnPathsWithLogDetails($this->user, $this->project, $path, $this->order);
 
-        $path_info_1 = $last_revision[$timestamp_1];
+        $path_info_1 = $last_revision[0];
         $path_info_soap_1 = $path_info_1->exportToSoap();
 
-        $path_info_2 = $last_revision[$timestamp_2];
+        $path_info_2 = $last_revision[1];
+        $path_info_soap_2 = $path_info_2->exportToSoap();
+
+        $this->assertEqual($path_info_soap_1['author'], $author_1_id);
+        $this->assertEqual($path_info_soap_1['message'], $log_message_1);
+        $this->assertEqual($path_info_soap_1['timestamp'], $timestamp_1);
+        $this->assertEqual($path_info_soap_1['path'], '/my/Project/tags/1.0/');
+
+        $this->assertEqual($path_info_soap_2['author'], $author_2_id);
+        $this->assertEqual($path_info_soap_2['message'], $log_message_2);
+        $this->assertEqual($path_info_soap_2['timestamp'], $timestamp_2);
+        $this->assertEqual($path_info_soap_2['path'], '/my/Project/tags/2.0/');
+    }
+
+    public function itReturnsLastRevisionDetailsEvenWhenExactSameTimestamp() {
+        $path           = '/my/Project/tags';
+        $author_1       = 'rantanplan';
+        $author_1_id    = 458;
+        $author_1_user  = stub('PFUser')->getId()->returns($author_1_id);
+        $datestamp_1    = '2003-02-22 17:44:49 -0600 (Sat, 22 Feb 2003)';
+        $timestamp_1    = 1045957489;
+        $log_message_1  = 'Rearrange lunch.';
+        $author_2       = 'chucky';
+        $author_2_id    = 70;
+        $author_2_user  = stub('PFUser')->getId()->returns($author_2_id);
+        $datestamp_2    = '2003-02-22 17:44:49 -0600 (Sat, 22 Feb 2003)';
+        $timestamp_2    = 1045957489;
+        $log_message_2  = 'commit stuff';
+
+        stub($this->user_manager)->getUserByUserName($author_1)->returns($author_1_user);
+        stub($this->user_manager)->getUserByUserName($author_2)->returns($author_2_user);
+
+        stub($this->svnlook)->getPathLastHistory($this->project, '/my/Project/tags/1.0')->returns(array(
+            'REVISION   PATH',
+            '--------   ----',
+            '       8  /my/Project/tags/1.0/',
+        ));
+        stub($this->svnlook)->getPathLastHistory($this->project, '/my/Project/tags/2.0')->returns(array(
+            'REVISION   PATH',
+            '--------   ----',
+            '       19   /my/Project/tags/2.0/',
+        ));
+        stub($this->svnlook)->getInfo($this->project, '8')->returns(array(
+            $author_1,
+            $datestamp_1,
+            16,
+            $log_message_1,
+        ));
+        stub($this->svnlook)->getInfo($this->project, '19')->returns(array(
+            $author_2,
+            $datestamp_2,
+            16,
+            $log_message_2,
+        ));
+
+        $last_revision = $this->svn_repo_listing->getSvnPathsWithLogDetails($this->user, $this->project, $path, $this->order);
+
+        $path_info_1 = $last_revision[0];
+        $path_info_soap_1 = $path_info_1->exportToSoap();
+
+        $path_info_2 = $last_revision[1];
         $path_info_soap_2 = $path_info_2->exportToSoap();
 
         $this->assertEqual($path_info_soap_1['author'], $author_1_id);
