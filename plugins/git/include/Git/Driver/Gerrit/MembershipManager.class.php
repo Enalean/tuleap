@@ -73,6 +73,40 @@ class Git_Driver_Gerrit_MembershipManager {
     }
 
     /**
+     * @param PFUser $user
+     */
+    public function addUserToAllTheirGroups(PFUser $user) {
+        $static_user_groups  = $this->ugroup_manager->getByUserId($user);
+        $dynamic_user_groups = $this->getDynamicUgroupsForUser($user);
+
+        $user_groups =  array_merge($static_user_groups, $dynamic_user_groups);
+        foreach ($user_groups as $ugroup) {
+            $this->updateUserMembership(
+                new Git_Driver_Gerrit_MembershipCommand_AddUser($this, $this->driver, $this->gerrit_user_manager, $ugroup, $user)
+            );
+        }
+    }
+
+    /**
+     * @param PFUser $user
+     * @return UGroup[]
+     */
+    private function getDynamicUgroupsForUser(PFUser $user) {
+        $project_ids = $user->getProjects();
+        $ugroups     = array();
+
+        foreach ($project_ids as $group_id) {
+            $ugroups[] = new UGroup(array('ugroup_id' => UGroup::PROJECT_MEMBERS, 'group_id' => $group_id));
+
+            if ($user->isAdmin($group_id)) {
+                $ugroups[] = new UGroup(array('ugroup_id' => UGroup::PROJECT_ADMIN, 'group_id' => $group_id));
+            }
+        }
+
+        return $ugroups;
+    }
+
+    /**
      * Remove a user from a user group
      *
      * @param PFUser $user

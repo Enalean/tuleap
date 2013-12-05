@@ -158,7 +158,6 @@ if ($key_list_html !== '') {
 
 echo '</fieldset>';
 
-
 // Authentication attempts
 
 $accessInfo = $um->getUserAccessInfo($user);
@@ -186,6 +185,16 @@ echo '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $acc
 echo '</tr>';
 
 echo '</table>';
+echo '</fieldset>';
+
+echo '<br>';
+
+$third_paty_html = '';
+$em->processEvent(Event::MANAGE_THIRD_PARTY_APPS, array('user' => $user, 'html' => &$third_paty_html));
+echo '<fieldset><legend>'. 'Third party applications' .'</legend>';
+echo '<ul>';
+echo $third_paty_html;
+echo '</ul>';
 echo '</fieldset>';
 
 include $Language->getContent('account/user_legal');

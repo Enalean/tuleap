@@ -272,3 +272,7 @@ plugin_git	view_admin_no_gerrit_server	There do not appear to be any <em><a href
 plugin_git	gerrit_template_delete	Delete
 plugin_git	gerrit_template_delete_error	An error occured while trying to delete the template.
 plugin_git	gerrit_template_delete_success	Template successfully deleted.
+
+plugin_git	third_party_access_text	In order to make sure I have the correct access on Gerrit, it can be necessary to update my group and project membership
+plugin_git	third_party_synch_button	Update
+plugin_git	third_party_synch_warning	You may need to log into Gerrit first

@@ -82,6 +82,16 @@ class UGroupUserDao extends DataAccessObject {
     }
 
     /**
+     * @param int $user_id
+     * @param int $ugroup_id
+     * @param int $group_id
+     * @return bool
+     */
+    public function isDynamicUGroupMember($user_id, $ugroup_id, $group_id) {
+        return ugroup_user_is_member($user_id, $ugroup_id, $group_id);
+    }
+
+    /**
      * Search users to add to ugroup
      *
      * @param Integer $ugroupId Id of the uGroup

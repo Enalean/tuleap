@@ -121,10 +121,19 @@ class UGroupManager {
      *
      * @param PFUser $user The user
      *
-     * @return DataAccessResult
+     * @return UGroup[]
      */
     public function getByUserId($user) {
-        return $this->getDao()->searchByUserId($user->getId());
+        $ugroups = array();
+        $dar     = $this->getDao()->searchByUserId($user->getId());
+
+        if ($dar && ! $dar->isError()) {
+            foreach ($dar as $row) {
+                $ugroups [] = new UGroup($row);
+            }
+        }
+
+        return $ugroups;
     }
 
     /**
@@ -189,6 +198,18 @@ class UGroupManager {
             }
         }
         return $users;
+    }
+
+    /**
+     * @param PFUSer $user
+     * @param int $ugroup_id
+     * @param int $group_id
+     * @return boolean
+     */
+    public function isDynamicUGroupMember(PFUSer $user, $ugroup_id, $group_id) {
+        $dao = new UGroupUserDao();
+
+        return $dao->isDynamicUGroupMember($user->getId(), $ugroup_id, $group_id);
     }
 
     /**
