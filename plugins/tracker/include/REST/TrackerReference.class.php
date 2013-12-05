@@ -20,18 +20,22 @@
 namespace Tuleap\Tracker\REST;
 
 use \Tracker;
+use \Tuleap\REST\JsonCast;
 
 class TrackerReference {
 
-    /** @var int ID of the project */
+    /**
+     * @var int ID of the project
+     */
     public $id;
 
-    /** @var string URI of the project */
+    /**
+     * @var string URI of the project
+     */
     public $uri;
 
     public function build(Tracker $tracker) {
-        $this->id = (int)$tracker->getId();
-
+        $this->id  = JsonCast::toInt($tracker->getId());
         $this->uri = TrackerRepresentation::ROUTE . '/' . $this->id;
     }
 }

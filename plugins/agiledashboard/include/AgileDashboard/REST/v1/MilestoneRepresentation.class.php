@@ -22,6 +22,7 @@ use \Tuleap\REST\ResourceReference;
 use \Tuleap\Project\REST\ProjectReference;
 use \Planning_Milestone;
 use \Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
+use \Tuleap\REST\JsonCast;
 
 /**
  * Representation of a milestone
@@ -101,28 +102,37 @@ class MilestoneRepresentation {
     public $backlog_items_uri;
 
     public function build(Planning_Milestone $milestone) {
-        $this->id                 = (int)$milestone->getArtifactId();
-        $this->uri                = self::ROUTE . '/' . $this->id;
-        $this->label              = $milestone->getArtifactTitle();
-        $this->status_value       = $milestone->getArtifact()->getStatus();
-        $this->submitted_by       = (int)$milestone->getArtifact()->getFirstChangeset()->getSubmittedBy();
-        $this->submitted_on       = date('c', $milestone->getArtifact()->getFirstChangeset()->getSubmittedOn());
-        $this->capacity           = floatval($milestone->getCapacity());
-        $this->project            = new ProjectReference();
+        $this->id           = JsonCast::toInt($milestone->getArtifactId());
+        $this->uri          = self::ROUTE . '/' . $this->id;
+        $this->label        = $milestone->getArtifactTitle();
+        $this->status_value = $milestone->getArtifact()->getStatus();
+        $this->submitted_by = JsonCast::toInt($milestone->getArtifact()->getFirstChangeset()->getSubmittedBy());
+        $this->submitted_on = JsonCast::toDate($milestone->getArtifact()->getFirstChangeset()->getSubmittedOn());
+        $this->capacity     = JsonCast::toFloat($milestone->getCapacity());
+
+        $this->project = new ProjectReference();
         $this->project->build($milestone->getProject());
-        $this->artifact           = new ResourceReference();
+
+        $this->artifact = new ResourceReference();
         $this->artifact->build($milestone->getArtifactId(), ArtifactRepresentation::ROUTE);
+
+        $this->start_date = null;
         if ($milestone->getStartDate()) {
-            $this->start_date = date('c', $milestone->getStartDate());
+            $this->start_date = JsonCast::toDate($milestone->getStartDate());
         }
+
+        $this->end_date = null;
         if ($milestone->getEndDate()) {
-            $this->end_date = date('c', $milestone->getEndDate());
+            $this->end_date = JsonCast::toDate($milestone->getEndDate());
         }
-        $parent = $milestone->getParent();
+
+        $this->parent = null;
+        $parent       = $milestone->getParent();
         if ($parent) {
             $this->parent = new MilestoneParentReference();
             $this->parent->build($parent);
         }
+
         $this->sub_milestones_uri = $this->uri . '/'. self::ROUTE;
         $this->backlog_items_uri  = $this->uri . '/'. BacklogItemRepresentation::ROUTE;
 

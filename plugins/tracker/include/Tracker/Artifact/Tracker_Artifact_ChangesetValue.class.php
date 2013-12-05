@@ -120,6 +120,7 @@ abstract class Tracker_Artifact_ChangesetValue {
 
     protected function getSimpleRESTRepresentation($value) {
         $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation';
+
         $artifact_field_value_representation = new $classname_with_namespace;
         $artifact_field_value_representation->build(
             $this->field->getId(),

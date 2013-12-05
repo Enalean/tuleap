@@ -20,6 +20,8 @@
 
 namespace Tuleap\Tracker\REST\Artifact;
 
+use Tuleap\REST\JsonCast;
+
 class FileInfoRepresentation {
     /**
      * @var int ID of the file
@@ -52,11 +54,11 @@ class FileInfoRepresentation {
     public $type;
 
     public function build($id, $submitted_by, $description, $name, $filesize, $filetype) {
-        $this->id           = (int)$id;
-        $this->submitted_by = (int)$submitted_by;
+        $this->id           = JsonCast::toInt($id);
+        $this->submitted_by = JsonCast::toInt($submitted_by);
         $this->description  = $description;
         $this->name         = $name;
-        $this->size         = (int)$filesize;
+        $this->size         = JsonCast::toInt($filesize);
         $this->type         = $filetype;
     }
 }

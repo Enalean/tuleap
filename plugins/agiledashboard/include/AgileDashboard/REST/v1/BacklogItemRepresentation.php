@@ -19,6 +19,7 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use \Tuleap\REST\JsonCast;
 use \Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use \Tuleap\Tracker\REST\TrackerRepresentation;
 use \AgileDashboard_BacklogItemPresenter;
@@ -75,24 +76,28 @@ class BacklogItemRepresentation {
     public $project;
 
     public function build(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {
-        $this->id             = (int)$backlog_item->id();
+        $this->id             = JsonCast::toInt($backlog_item->id());
         $this->label          = $backlog_item->title();
         $this->status         = $backlog_item->status();
         $this->type           = $backlog_item->type();
-        $this->initial_effort = floatval($backlog_item->getInitialEffort());
+        $this->initial_effort = JsonCast::toFloat($backlog_item->getInitialEffort());
+
         $this->tracker = new ResourceReference();
         $this->tracker->build(
             $backlog_item->getArtifact()->getTrackerId(),
             TrackerRepresentation::ROUTE
         );
+
         $this->artifact = new ResourceReference();
         $this->artifact->build(
             $backlog_item->getArtifact()->getId(),
             ArtifactRepresentation::ROUTE
         );
+
         $this->project = new ProjectReference();
         $this->project->build($backlog_item->getArtifact()->getTracker()->getProject());
 
+        $this->parent = null;
         if ($backlog_item->getParent()) {
             $this->parent = new BacklogItemParentReference();
             $this->parent->build($backlog_item->getParent());

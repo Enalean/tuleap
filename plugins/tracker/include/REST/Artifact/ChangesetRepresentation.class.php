@@ -20,6 +20,8 @@
 
 namespace Tuleap\Tracker\REST;
 
+use Tuleap\REST\JsonCast;
+
 class ChangesetRepresentation {
     const ROUTE = 'changesets';
 
@@ -54,12 +56,14 @@ class ChangesetRepresentation {
     public $values = array();
 
     public function build(Tracker_Artifact_Changeset $changeset, Tracker_Artifact_Changeset_Comment $last_comment, array $values) {
-        $this->id           = (int)$changeset->getId();
-        $this->submitted_by = (int)$changeset->getSubmittedBy();
-        $this->submitted_on = date('c', $changeset->getSubmittedOn());
+        $this->id           = JsonCast::toInt($changeset->getId());
+        $this->submitted_by = JsonCast::toInt($changeset->getSubmittedBy());
+        $this->submitted_on = JsonCast::toDate($changeset->getSubmittedOn());
         $this->email        = $changeset->getEmail();
+
         $this->last_comment = new Tuleap\Tracker\REST\ChangesetCommentRepresentation();
         $this->last_comment->build($last_comment);
+
         $this->values       = $values;
     }
 }

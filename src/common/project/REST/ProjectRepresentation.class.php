@@ -20,6 +20,7 @@
 namespace Tuleap\Project\REST;
 
 use Project;
+use Tuleap\REST\JsonCast;
 
 /**
  * Basic representation of a project
@@ -49,7 +50,7 @@ class ProjectRepresentation {
     public $resources;
 
     public function build(Project $project, array $resources) {
-        $this->id        = (int)$project->getId();
+        $this->id        = JsonCast::toInt($project->getId());
         $this->uri       = self::ROUTE . '/' . $this->id;
         $this->label     = $project->getPublicName();
         $this->resources = $resources;

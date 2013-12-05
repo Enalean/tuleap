@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\REST\JsonCast;
+
 class Tracker_REST_FieldRepresentation {
 
     const BIND_TYPE  = 'type';
@@ -66,11 +68,12 @@ class Tracker_REST_FieldRepresentation {
     public $permissions = array();
 
     public function build(Tracker_FormElement_Field $field, $type, array $permissions) {
-        $this->field_id = (int)$field->getId();
+        $this->field_id = JsonCast::toInt($field->getId());
         $this->name     = $field->getName();
         $this->label    = $field->getLabel();
         $this->type     = $type;
 
+        $this->values   = null;
         if ($field->getSoapAvailableValues()) {
             foreach ($field->getSoapAvailableValues() as $value) {
                 $field_value_representation = new Tuleap\Tracker\REST\FieldValueRepresentation();

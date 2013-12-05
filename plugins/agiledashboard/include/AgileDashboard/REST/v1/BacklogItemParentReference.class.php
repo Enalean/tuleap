@@ -21,6 +21,7 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use \Tuleap\Tracker\REST\TrackerReference;
 use \Tracker_Artifact;
+use \Tuleap\REST\JsonCast;
 
 class BacklogItemParentReference {
 
@@ -40,7 +41,7 @@ class BacklogItemParentReference {
     public $tracker;
 
     public function build(Tracker_Artifact $backlog_item) {
-        $this->id = (int)$backlog_item->getId();
+        $this->id = JsonCast::toInt($backlog_item->getId());
 
         $this->uri = BacklogItemRepresentation::ROUTE . '/' . $this->id;
 

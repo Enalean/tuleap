@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\REST;
 
 use \Tracker_FormElement_Field_List_Bind;
+use Tuleap\REST\JsonCast;
 
 class FieldValueRepresentation {
     /**
@@ -34,7 +35,7 @@ class FieldValueRepresentation {
     public $label;
 
     public function build(array $value) {
-        $this->id    = (int)$value[Tracker_FormElement_Field_List_Bind::SOAP_ID_KEY];
+        $this->id    = JsonCast::toInt($value[Tracker_FormElement_Field_List_Bind::SOAP_ID_KEY]);
         $this->label = $value[Tracker_FormElement_Field_List_Bind::SOAP_LABEL_KEY];
     }
 }

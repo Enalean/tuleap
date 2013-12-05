@@ -19,6 +19,8 @@
 
 namespace Tuleap\REST;
 
+use \Tuleap\REST\JsonCast;
+
 class ResourceReference {
 
     /** Use this variable as a placeholder for future route implementation */
@@ -35,7 +37,7 @@ class ResourceReference {
     public $uri;
 
     public function build($id, $base_uri) {
-        $this->id  = (int)$id;
+        $this->id  = JsonCast::toInt($id);
         $this->uri = $base_uri . '/' . $id;
     }
 }

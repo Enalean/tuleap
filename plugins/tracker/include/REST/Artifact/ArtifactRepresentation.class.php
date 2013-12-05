@@ -25,6 +25,7 @@ use Tuleap\REST\ResourceReference;
 use Tracker_Artifact;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\REST\ChangesetRepresentation;
+use Tuleap\REST\JsonCast;
 
 class ArtifactRepresentation {
 
@@ -76,14 +77,17 @@ class ArtifactRepresentation {
     public $values = array();
 
     public function build(Tracker_Artifact $artifact, array $values) {
-        $this->id             = (int)$artifact->getId();
+        $this->id             = JsonCast::toInt($artifact->getId());
         $this->uri            = self::ROUTE . '/' . $artifact->getId();
+
         $this->tracker        = new ResourceReference();
         $this->tracker->build($artifact->getTrackerId(), TrackerRepresentation::ROUTE);
+
         $this->project        = new ProjectReference();
         $this->project->build($artifact->getTracker()->getProject());
-        $this->submitted_by   = (int)$artifact->getSubmittedBy();
-        $this->submitted_on   = date('c', $artifact->getSubmittedOn());
+
+        $this->submitted_by   = JsonCast::toInt($artifact->getSubmittedBy());
+        $this->submitted_on   = JsonCast::toDate($artifact->getSubmittedOn());
         $this->html_url       = $artifact->getUri();
         $this->changesets_uri = self::ROUTE . '/' .  $this->id . '/'. ChangesetRepresentation::ROUTE;
         $this->values         = $values;

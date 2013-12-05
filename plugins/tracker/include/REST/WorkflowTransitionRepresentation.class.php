@@ -20,6 +20,8 @@
 
 namespace Tuleap\Tracker\REST;
 
+use Tuleap\REST\JsonCast;
+
 class WorkflowTransitionRepresentation {
 
     /**
@@ -33,8 +35,8 @@ class WorkflowTransitionRepresentation {
     public $to_id;
 
     public function build($from_id, $to_id) {
-        $this->from_id = (int)$from_id;
-        $this->to_id   = (int)$to_id;
+        $this->from_id = JsonCast::toInt($from_id);
+        $this->to_id   = JsonCast::toInt($to_id);
     }
 }
 

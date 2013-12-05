@@ -21,6 +21,7 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use \Tuleap\Tracker\REST\TrackerReference;
 use \Planning_Milestone;
+use \Tuleap\REST\JsonCast;
 
 class MilestoneParentReference {
 
@@ -40,8 +41,7 @@ class MilestoneParentReference {
     public $tracker;
 
     public function build(Planning_Milestone $milestone) {
-        $this->id = (int)$milestone->getArtifactId();
-
+        $this->id  = JsonCast::toInt($milestone->getArtifactId());
         $this->uri = MilestoneRepresentation::ROUTE . '/' . $this->id;
 
         $this->tracker = new TrackerReference();

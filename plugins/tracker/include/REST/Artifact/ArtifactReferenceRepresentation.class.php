@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\REST\Artifact;
 
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
+use Tuleap\REST\JsonCast;
 
 class ArtifactReferenceRepresentation {
     /**
@@ -35,9 +36,9 @@ class ArtifactReferenceRepresentation {
 
     public function build($reference) {
         if ($reference instanceof Tracker_Artifact) {
-            $this->id  = (int)$reference->getId();
+            $this->id = JsonCast::toInt($reference->getId());
         } elseif (is_int($reference)) {
-            $this->id = (int)$reference;
+            $this->id = JsonCast::toInt($reference);
         } else {
             throw new Exception('Unknown artifact reference');
         }

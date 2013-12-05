@@ -20,6 +20,8 @@
 
 namespace Tuleap\Tracker\REST;
 
+use Tuleap\REST\JsonCast;
+
 class SemanticRepresentation {
     /**
      * @var int
@@ -27,6 +29,6 @@ class SemanticRepresentation {
     public $field_id;
 
     public function build($id) {
-        $this->field_id = (int)$id;
+        $this->field_id = JsonCast::toInt($id);
     }
 }
