@@ -217,7 +217,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         $content = '';
 
         if (is_array($submitted_values[0])) {
-            $content = $submitted_values[0][$this->getId()];
+            $content = $submitted_values[0][$this->getId()]['content'];
+            $format  = $submitted_values[0][$this->getId()]['format'] == Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT ? Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT : Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT;
         } else {
             if ($value != null) {
                 $content = $value->getText();
@@ -235,6 +236,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
                             cols="'. $this->getProperty('cols') .'" 
                             '. ($this->isRequired() ? 'required' : '') .' 
                             >';
+
         $html .= $hp->purify($content, CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</textarea>';
         return $html;
