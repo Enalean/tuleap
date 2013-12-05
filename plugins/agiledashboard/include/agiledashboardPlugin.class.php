@@ -69,6 +69,9 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::REST_PROJECT_RESOURCES);
             $this->addHook(Event::REST_GET_PROJECT_MILESTONES);
             $this->addHook(Event::REST_OPTIONS_PROJECT_MILESTONES);
+            $this->addHook(Event::REST_GET_PROJECT_BACKLOG);
+            $this->addHook(Event::REST_PUT_PROJECT_BACKLOG);
+            $this->addHook(Event::REST_OPTIONS_PROJECT_BACKLOG);
         }
         return parent::getHooksAndCallbacks();
     }
@@ -626,6 +629,55 @@ class AgileDashboardPlugin extends Plugin {
 
     private function buildRightVersionOfProjectMilestonesResource($version) {
         $class_with_right_namespace = '\\Tuleap\\AgileDashboard\\REST\\'.$version.'\\ProjectMilestonesResource';
+        return new $class_with_right_namespace;
+    }
+
+    /**
+     * @see REST_GET_PROJECT_BACKLOG
+     */
+    public function rest_get_project_backlog($params) {
+        $user                     = UserManager::instance()->getCurrentUser();
+        $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
+
+        $params['result'] = $project_backlog_resource->get(
+            $user,
+            $params['project'],
+            $params['limit'],
+            $params['offset']
+        );
+    }
+
+    /**
+     * @see REST_OPTIONS_PROJECT_BACKLOG
+     */
+    public function rest_options_project_backlog($params) {
+        $user                     = UserManager::instance()->getCurrentUser();
+        $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
+
+        $params['result'] = $project_backlog_resource->options(
+            $user,
+            $params['project'],
+            $params['limit'],
+            $params['offset']
+        );
+    }
+
+    /**
+     * @see REST_PUT_PROJECT_BACKLOG
+     */
+    public function rest_put_project_backlog($params) {
+        $user                     = UserManager::instance()->getCurrentUser();
+        $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
+
+        $params['result'] = $project_backlog_resource->put(
+            $user,
+            $params['project'],
+            $params['ids']
+        );
+    }
+
+    private function buildRightVersionOfProjectBacklogResource($version) {
+        $class_with_right_namespace = '\\Tuleap\\AgileDashboard\\REST\\'.$version.'\\ProjectBacklogResource';
         return new $class_with_right_namespace;
     }
 }

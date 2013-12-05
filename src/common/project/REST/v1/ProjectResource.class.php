@@ -204,6 +204,7 @@ class ProjectResource {
 
         return $result;
     }
+
     /**
      * Get trackers
      *
@@ -252,7 +253,90 @@ class ProjectResource {
         return $result;
     }
 
+    /**
+     * Get backlog
+     *
+     * Get the backlog items that can be planned in a top-milestone
+     *
+     * @url GET {id}/backlog
+     *
+     * @param int $id     Id of the project
+     * @param int $limit  Number of elements displayed per page {@from path}
+     * @param int $offset Position of the first element to display {@from path}
+     *
+     * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
+     *
+     * @throws 406
+     */
+    protected function getBacklog($id, $limit = 10, $offset = 0) {
+        $backlog_items = $this->backlogItems($id, $limit, $offset, Event::REST_GET_PROJECT_BACKLOG);
+        $this->sendAllowHeadersForBacklog();
+
+        return $backlog_items;
+    }
+
+    /**
+     * @url OPTIONS {id}/backlog
+     *
+     * @param int $id Id of the project
+     */
+    protected function optionsBacklog($id) {
+        $this->backlogItems($id, 10, 0, Event::REST_OPTIONS_PROJECT_BACKLOG);
+        $this->sendAllowHeadersForBacklog();
+    }
+
+    /**
+     * Order backlog items
+     *
+     * Order backlog items in top backlog
+     *
+     * @url PUT {id}/backlog
+     *
+     * @param int $id    Id of the project
+     * @param array $ids Ids of backlog items {@from body}
+     *
+     * @throws 500
+     */
+    protected function putBacklog($id, array $ids) {
+        $project = $this->getProject($id);
+        $result  = array();
+
+        EventManager::instance()->processEvent(
+            Event::REST_PUT_PROJECT_BACKLOG,
+            array(
+                'version' => 'v1',
+                'project' => $project,
+                'ids'     => $ids,
+                'result'  => &$result,
+            )
+        );
+
+        $this->sendAllowHeadersForBacklog();
+    }
+
+    private function backlogItems($id, $limit, $offset, $event) {
+        $project = $this->getProject($id);
+        $result  = array();
+
+        EventManager::instance()->processEvent(
+            $event,
+            array(
+                'version' => 'v1',
+                'project' => $project,
+                'limit'   => $limit,
+                'offset'  => $offset,
+                'result'  => &$result,
+            )
+        );
+
+        return $result;
+    }
+
     private function sendAllowHeadersForProject() {
         Header::allowOptionsGet();
+    }
+
+    private function sendAllowHeadersForBacklog() {
+        Header::allowOptionsGetPut();
     }
 }

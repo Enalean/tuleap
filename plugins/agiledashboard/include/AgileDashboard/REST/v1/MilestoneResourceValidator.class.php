@@ -36,6 +36,7 @@ use \AgileDashboard_Milestone_Backlog_IBacklogItemCollection;
 use \Planning_MilestoneFactory;
 use \Planning_Milestone;
 use \PFUser;
+use \Project;
 
 class MilestoneResourceValidator {
 
@@ -167,6 +168,24 @@ class MilestoneResourceValidator {
         foreach($ids as $id) {
             if (! $open_unplanned->containsId($id)) {
                 throw new ArtifactIsNotInOpenAndUnplannedBacklogItemsException($id);
+            }
+        }
+
+        return true;
+    }
+
+    public function validateArtifactIdsAreInOpenAndUnassignedTopBacklog(array $ids, PFUser $user, Project $project) {
+        if (! $this->idsAreUnique($ids)) {
+            throw new IdsFromBodyAreNotUniqueException();
+        }
+
+        $top_milestone       = $this->milestone_factory->getVirtualTopMilestone($user, $project);
+        $strategy_unassigned = $this->backlog_strategy_factory->getSelfBacklogStrategy($top_milestone);
+        $open_unassigned     = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $top_milestone, $strategy_unassigned, false);
+
+        foreach($ids as $id) {
+            if (! $open_unassigned->containsId($id)) {
+                throw new ArtifactIsNotInOpenAndUnassignedTopBacklogItemsException($id);
             }
         }
 
