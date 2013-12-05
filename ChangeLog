@@ -1,7 +1,7 @@
 Version 6.8 (Not Released Yet)
 	== Plugins ==
 	* tracker_date_reminder: 1.2.6
-	* agiledashboard: 1.24
+	* agiledashboard: 1.25
 	* tracker: 5.196
 	* mediawiki: 0.21
 	* git: 3.56
@@ -17,6 +17,7 @@ Version 6.8 (Not Released Yet)
 	* Story #5580: Add GET and OPTIONS route for projects/:id/milestones
 	* Story #5582: Add GET and OPTIONS route for projects/:id/trackers
 	* Story #5584: Add GET, OPTIONS route for milestones/:id/content
+	* Story #5579: Add GET, OPTIONS and PUT routes for projects/:id/backlog
 
 	== Themes ==
 	* Experimental: 0.5

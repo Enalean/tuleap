@@ -1,3 +1,6 @@
+Version 1.25 - Tuleap 6.8
+    * Add GET, OPTIONS and PUT routes for projects/:id/backlog
+
 Version 1.24 - Tuleap 6.8
     * story #5589: read a meaningful api documentation
 
