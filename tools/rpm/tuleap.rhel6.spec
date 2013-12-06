@@ -157,7 +157,7 @@ Summary: Git plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}, git > 1.6, %{php_base}-Smarty, gitolite = 2.3.1
+Requires: %{name} >= %{version}, git > 1.7.4, %{php_base}-Smarty, gitolite = 2.3.1
 Requires: geshi
 Provides: tuleap-plugin-git = %{version}
 %description plugin-git
