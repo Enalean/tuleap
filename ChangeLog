@@ -9,6 +9,7 @@ Version 6.8 (Not Released Yet)
 	* tests: 5.20
 
 	== Bug Fix ==
+	* Fix request #5641: Experimental theme show more projets than mine in "Projects" menu
 	* Fix request #3468: [CentOS 6] SELinux forbids apache to send emails
 	* Fix request #3467: [CentOS6] error setting SELinux context in setup.sh
 	* Fix request #5604: ViewVC download broken when file start with 0x00
