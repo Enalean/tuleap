@@ -25,7 +25,9 @@ use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
 
 class BacklogItemRepresentation {
 
-    const ROUTE = 'backlog_items';
+    const BACKLOG_ROUTE = 'backlog';
+
+    const CONTENT_ROUTE = 'content';
 
     /**
      * @var Int

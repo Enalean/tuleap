@@ -18,10 +18,8 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \Tuleap\REST\ResourceReference;
 use \Tuleap\Project\REST\ProjectReference;
 use \Planning_Milestone;
-use \Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use \Tuleap\REST\JsonCast;
 
@@ -100,7 +98,12 @@ class MilestoneRepresentation {
     /**
      * @var string
      */
-    public $backlog_items_uri;
+    public $backlog_uri;
+
+    /**
+     * @var string
+     */
+    public $content_uri;
 
     public function build(Planning_Milestone $milestone) {
         $this->id           = JsonCast::toInt($milestone->getArtifactId());
@@ -135,6 +138,7 @@ class MilestoneRepresentation {
         }
 
         $this->sub_milestones_uri = $this->uri . '/'. self::ROUTE;
-        $this->backlog_items_uri  = $this->uri . '/'. BacklogItemRepresentation::ROUTE;
+        $this->backlog_uri        = $this->uri . '/'. BacklogItemRepresentation::BACKLOG_ROUTE;
+        $this->content_uri        = $this->uri . '/'. BacklogItemRepresentation::CONTENT_ROUTE;
     }
 }
