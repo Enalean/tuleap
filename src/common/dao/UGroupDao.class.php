@@ -101,9 +101,14 @@ class UGroupDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function searchGroupByUserId($userId) {
-        $sql = 'SELECT group_id FROM ugroup 
-                JOIN ugroup_user USING (ugroup_id) 
-                WHERE user_id = '.$this->da->escapeInt($userId);
+        $user_id = $this->da->escapeInt($userId);
+        $sql = "SELECT groups.group_id
+                  FROM ugroup
+                  JOIN ugroup_user USING (ugroup_id)
+                  JOIN groups USING (group_id)
+                WHERE user_id = $user_id
+                AND status != 'D'
+                ORDER BY group_name";
         return $this->retrieve($sql);
     }
 

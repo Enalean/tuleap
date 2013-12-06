@@ -498,6 +498,15 @@ class ProjectManager {
     }
 
     /**
+     * @return Project[]
+     */
+    public function getActiveProjectsForUser(PFUser $user) {
+        return $this->_getDao()
+            ->searchActiveProjectsForUser($user->getId())
+            ->instanciateWith(array($this, 'getProjectFromDbRow'));
+    }
+
+    /**
      * @param int $group_id
      * @param int $parent_group_id
      * @return Boolean
