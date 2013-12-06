@@ -21,6 +21,8 @@
 namespace Tuleap\Tracker\REST;
 
 use Tuleap\REST\JsonCast;
+use \Tracker_Artifact_Changeset;
+use \Tracker_Artifact_Changeset_Comment;
 
 class ChangesetRepresentation {
     const ROUTE = 'changesets';
@@ -61,9 +63,10 @@ class ChangesetRepresentation {
         $this->submitted_on = JsonCast::toDate($changeset->getSubmittedOn());
         $this->email        = $changeset->getEmail();
 
-        $this->last_comment = new Tuleap\Tracker\REST\ChangesetCommentRepresentation();
+        $this->last_comment = new ChangesetCommentRepresentation();
         $this->last_comment->build($last_comment);
 
-        $this->values       = $values;
+        $this->values             = $values;
+        $this->last_modified_date = JsonCast::toDate($changeset->getComment()->getSubmittedOn());
     }
 }

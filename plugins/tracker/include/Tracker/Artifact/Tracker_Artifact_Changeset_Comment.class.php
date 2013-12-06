@@ -299,5 +299,9 @@ class Tracker_Artifact_Changeset_Comment {
 
         return $user_info;
     }
+
+    public function getSubmittedOn() {
+        return $this->submitted_on;
+    }
 }
 ?>

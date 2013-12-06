@@ -20,6 +20,7 @@
 namespace Tuleap\Tracker\REST;
 
 use Tuleap\REST\JsonCast;
+use \Tracker_Artifact_Changeset_Comment;
 
 class ChangesetCommentRepresentation {
 

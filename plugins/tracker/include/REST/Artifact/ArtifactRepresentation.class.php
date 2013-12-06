@@ -76,6 +76,11 @@ class ArtifactRepresentation {
      */
     public $values = array();
 
+    /**
+     * @var string Date, when the last modification occurs
+     */
+    public $last_modified_date;
+
     public function build(Tracker_Artifact $artifact, array $values) {
         $this->id             = JsonCast::toInt($artifact->getId());
         $this->uri            = self::ROUTE . '/' . $artifact->getId();
@@ -86,11 +91,12 @@ class ArtifactRepresentation {
         $this->project        = new ProjectReference();
         $this->project->build($artifact->getTracker()->getProject());
 
-        $this->submitted_by   = JsonCast::toInt($artifact->getSubmittedBy());
-        $this->submitted_on   = JsonCast::toDate($artifact->getSubmittedOn());
-        $this->html_url       = $artifact->getUri();
-        $this->changesets_uri = self::ROUTE . '/' .  $this->id . '/'. ChangesetRepresentation::ROUTE;
-        $this->values         = $values;
+        $this->submitted_by       = JsonCast::toInt($artifact->getSubmittedBy());
+        $this->submitted_on       = JsonCast::toDate($artifact->getSubmittedOn());
+        $this->html_url           = $artifact->getUri();
+        $this->changesets_uri     = self::ROUTE . '/' .  $this->id . '/'. ChangesetRepresentation::ROUTE;
+        $this->values             = $values;
+        $this->last_modified_date = JsonCast::toDate($artifact->getLastUpdateDate());
     }
 }
 
