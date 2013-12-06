@@ -1,3 +1,6 @@
+Version 5.199 - Tuleap 6.8
+    * Artifact notification is sent only if necessary
+
 Version 5.198 - Tuleap 6.8
     * Fix request 6185: Users cannot edit couple of artifacts after the upgrade
 
