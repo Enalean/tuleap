@@ -20,12 +20,7 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use \Tuleap\REST\JsonCast;
-use \Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
-use \Tuleap\Tracker\REST\TrackerRepresentation;
-use \AgileDashboard_BacklogItemPresenter;
-use \Tuleap\REST\ResourceReference;
 use \Tuleap\Project\REST\ProjectReference;
-use \Tuleap\Tracker\REST\TrackerReference;
 use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
 
 class BacklogItemRepresentation {
@@ -58,11 +53,6 @@ class BacklogItemRepresentation {
     public $initial_effort;
 
     /**
-     * @var Tuleap\REST\ResourceReference
-     */
-    public $tracker;
-
-    /**
      * @var \Tuleap\Tracker\REST\Artifact\ArtifactReference
      */
     public $artifact;
@@ -83,12 +73,6 @@ class BacklogItemRepresentation {
         $this->status         = $backlog_item->status();
         $this->type           = $backlog_item->type();
         $this->initial_effort = JsonCast::toFloat($backlog_item->getInitialEffort());
-
-        $this->tracker = new ResourceReference();
-        $this->tracker->build(
-            $backlog_item->getArtifact()->getTrackerId(),
-            TrackerRepresentation::ROUTE
-        );
 
         $this->artifact = new ArtifactReference();
         $this->artifact->build($backlog_item->getArtifact());
