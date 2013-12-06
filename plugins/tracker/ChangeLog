@@ -1,3 +1,6 @@
+Version 5.198 - Tuleap 6.8
+    * Fix request 6185: Users cannot edit couple of artifacts after the upgrade
+
 Version 5.197 - Tuleap 6.8
     * Fix request #5700 - Text fields are cleared when condition is unmet
 
