@@ -213,17 +213,22 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      */
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $html    = '';
-        $format  = $value->getFormat();
         $content = '';
+
+        if ($value) {
+            $format  = $value->getFormat();
+        } else {
+            $default_value = $this->getDefaultValue();
+            $format = $default_value['format'];
+        }
 
         if (is_array($submitted_values[0])) {
             $content = $submitted_values[0][$this->getId()]['content'];
             $format  = $submitted_values[0][$this->getId()]['format'] == Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT ? Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT : Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT;
-        } else {
-            if ($value != null) {
-                $content = $value->getText();
-            }
+        } elseif ($value != null) {
+            $content = $value->getText();
         }
+
         $hp = Codendi_HTMLPurifier::instance();
 
         $html .= '<input type="hidden"
