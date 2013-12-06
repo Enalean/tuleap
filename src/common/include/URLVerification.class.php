@@ -522,10 +522,10 @@ class URLVerification {
      * @throws Project_AccessPrivateException
      */
     public function userCanAccessProject(PFUser $user, Project $project) {
-        if ($user->isSuperUser()) {
-            return true;
-        } elseif ($project->isError()) {
+        if ($project->isError()) {
             throw new Project_AccessProjectNotFoundException();
+        } elseif ($user->isSuperUser()) {
+            return true;
         } elseif (! $project->isActive()) {
             throw new Project_AccessDeletedException($project);
         } elseif ($user->isMember($project->getID())) {
