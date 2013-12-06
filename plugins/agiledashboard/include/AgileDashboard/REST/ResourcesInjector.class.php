@@ -18,8 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use \Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
-use \Tuleap\AgileDashboard\REST\v1\PlanningRepresentation;
+use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation;
+use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
+use Tuleap\AgileDashboard\REST\v1\PlanningRepresentation;
+use Tuleap\Project\REST\ProjectResourceReference;
 
 /**
  * Inject resource into restler
@@ -31,18 +33,17 @@ class AgileDashboard_REST_ResourcesInjector {
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\PlanningResource',  PlanningRepresentation::ROUTE);
     }
 
-    public function getProjectPlanningResource(Project $project, $version) {
-        $project_representation  = $this->buildProjectRepresentation();
-        $planning_representation = $this->buildPlanningRepresentation();
+    public function declareProjectPlanningResource(array &$resources, Project $project) {
+        $routes = array(
+            BacklogItemRepresentation::BACKLOG_ROUTE,
+            MilestoneRepresentation::ROUTE,
+            PlanningRepresentation::ROUTE,
+        );
+        foreach ($routes as $route) {
+            $resource_reference = new ProjectResourceReference();
+            $resource_reference->build($project, $route);
 
-        return $project_representation::ROUTE . '/' . $project->getId() . '/' . $planning_representation::ROUTE;
-    }
-
-    private function buildProjectRepresentation() {
-        return '\\Tuleap\\Project\\REST\\ProjectRepresentation';
-    }
-
-    private function buildPlanningRepresentation() {
-        return '\\Tuleap\\AgileDashboard\\REST\\v1\\PlanningRepresentation';
+            $resources[] = $resource_reference;
+        }
     }
 }
