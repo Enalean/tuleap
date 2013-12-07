@@ -556,6 +556,7 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
     private $artifact_factory;
     private $top_milestone;
     private $user;
+    private $tracker;
 
     public function setUp() {
         parent::setUp();
@@ -576,6 +577,8 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         $project = mock('Project');
         stub($project)->getID()->returns(3233);
 
+        $this->tracker = aTracker()->withId(12)->withName('tracker')->build();
+
         $this->user = mock('PFUser');
 
         $this->top_milestone = mock('Planning_VirtualTopMilestone');
@@ -594,8 +597,11 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
     public function itReturnsMilestonePerArtifact() {
         $artifact_1 = stub('Tracker_Artifact')->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
         stub($artifact_1)->userCanView()->returns(true);
+        stub($artifact_1)->getTracker()->returns($this->tracker);
+
         $artifact_2 = stub('Tracker_Artifact')->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
         stub($artifact_2)->userCanView()->returns(true);
+        stub($artifact_2)->getTracker()->returns($this->tracker);
 
         $my_artifacts = array(
             $artifact_1,
@@ -621,8 +627,11 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         // artifacts but artifact creation fails because they have to write access to fields
         // the artifact creation is stopped half the way hence without changeset
         $artifact_1 = stub('Tracker_Artifact')->getLastChangeset()->returns(null);
+        stub($artifact_1)->getTracker()->returns($this->tracker);
+
         $artifact_2 = stub('Tracker_Artifact')->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
         stub($artifact_2)->userCanView()->returns(true);
+        stub($artifact_2)->getTracker()->returns($this->tracker);
 
         $my_artifacts = array(
             $artifact_1,

@@ -317,11 +317,13 @@ class Planning_MilestoneFactory {
                 $planning = $this->planning_factory->getPlanningByPlanningTracker($sub_milestone_artifact->getTracker());
 
                 if ($planning) {
-                    $sub_milestones[] = new Planning_ArtifactMilestone(
+                    $sub_milestone = new Planning_ArtifactMilestone(
                         $milestone->getProject(),
                         $planning,
                         $sub_milestone_artifact
                     );
+                    $this->updateMilestoneContextualInfo($user, $sub_milestone);
+                    $sub_milestones[] = $sub_milestone;
                 }
             }
         }
@@ -350,11 +352,13 @@ class Planning_MilestoneFactory {
         if ($milestone_planning_tracker_id) {
             foreach($artifacts as $artifact) {
                 if ($artifact->getLastChangeset() && $artifact->userCanView($user)) {
-                    $milestones[] = new Planning_ArtifactMilestone(
+                    $milestone = new Planning_ArtifactMilestone(
                         $top_milestone->getProject(),
                         $root_planning,
                         $artifact
                     );
+                    $this->updateMilestoneContextualInfo($user, $milestone);
+                    $milestones[] = $milestone;
                 }
             }
         }
