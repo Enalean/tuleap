@@ -1,3 +1,6 @@
+Version 5.201 - Tuleap 6.8
+    * Fix some glitches in existing API REST
+
 Version 5.200 - Tuleap 6.8
     * Revert "Notification is sent only if necessary. It means that if no comment, the user must have read access on at least one updated field."
 

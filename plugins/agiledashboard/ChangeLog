@@ -1,3 +1,6 @@
+Version 1.26 - Tuleap 6.8
+    * Fix some glitches in existing API REST
+
 Version 1.25 - Tuleap 6.8
     * Add GET, OPTIONS and PUT routes for projects/:id/backlog
 
