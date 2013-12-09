@@ -594,7 +594,7 @@ class AgileDashboardPlugin extends Plugin {
      */
     public function rest_project_resources(array $params) {
         $injector = new AgileDashboard_REST_ResourcesInjector();
-        $params['resources'][] = $injector->getProjectPlanningResource($params['project'], $params['version']);
+        $injector->declareProjectPlanningResource($params['resources'], $params['project']);
     }
 
     /**

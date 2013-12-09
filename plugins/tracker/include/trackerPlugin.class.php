@@ -64,6 +64,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_GET_PROJECT_TRACKERS);
         $this->addHook(Event::REST_OPTIONS_PROJECT_TRACKERS);
+        $this->addHook(Event::REST_PROJECT_RESOURCES);
     }
 
     public function getHooksAndCallbacks() {
@@ -490,6 +491,14 @@ class trackerPlugin extends Plugin {
                 $params['codendi_widgets'][] = Tracker_Widget_ProjectRenderer::ID;
                 break;
         }
+    }
+
+    /**
+     * @see Event::REST_PROJECT_RESOURCES
+     */
+    public function rest_project_resources(array $params) {
+        $injector = new Tracker_REST_ResourcesInjector();
+        $injector->declareProjectPlanningResource($params['resources'], $params['project']);
     }
 
     function service_public_areas($params) {
