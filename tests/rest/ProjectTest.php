@@ -75,7 +75,7 @@ class ProjectTest extends RestBase {
         $release_milestone = $milestones[0];
         $this->assertArrayHasKey('id', $release_milestone);
         $this->assertEquals($release_milestone['label'], "Release 1.0");
-        $this->assertEquals($release_milestone['project'], array('id' => '101', 'uri' => 'projects/101'));
+        $this->assertEquals($release_milestone['project'], array('id' => 101, 'uri' => 'projects/101'));
         $this->assertArrayHasKey('id', $release_milestone['artifact']);
         $this->assertArrayHasKey('uri', $release_milestone['artifact']);
         $this->assertRegExp('%^artifacts/[0-9]+$%', $release_milestone['artifact']['uri']);
@@ -106,27 +106,27 @@ class ProjectTest extends RestBase {
         $epics_tracker = $trackers[0];
         $this->assertArrayHasKey('id', $epics_tracker);
         $this->assertEquals($epics_tracker['label'], "Epics");
-        $this->assertEquals($epics_tracker['project'], array('id' => '101', 'uri' => 'projects/101'));
+        $this->assertEquals($epics_tracker['project'], array('id' => 101, 'uri' => 'projects/101'));
 
         $releases_tracker = $trackers[1];
         $this->assertArrayHasKey('id', $releases_tracker);
         $this->assertEquals($releases_tracker['label'], "Releases");
-        $this->assertEquals($releases_tracker['project'], array('id' => '101', 'uri' => 'projects/101'));
+        $this->assertEquals($releases_tracker['project'], array('id' => 101, 'uri' => 'projects/101'));
 
         $sprints_tracker = $trackers[2];
         $this->assertArrayHasKey('id', $sprints_tracker);
         $this->assertEquals($sprints_tracker['label'], "Sprints");
-        $this->assertEquals($sprints_tracker['project'], array('id' => '101', 'uri' => 'projects/101'));
+        $this->assertEquals($sprints_tracker['project'], array('id' => 101, 'uri' => 'projects/101'));
 
         $tasks_tracker = $trackers[3];
         $this->assertArrayHasKey('id', $tasks_tracker);
         $this->assertEquals($tasks_tracker['label'], "Tasks");
-        $this->assertEquals($tasks_tracker['project'], array('id' => '101', 'uri' => 'projects/101'));
+        $this->assertEquals($tasks_tracker['project'], array('id' => 101, 'uri' => 'projects/101'));
 
         $userstories_tracker = $trackers[4];
         $this->assertArrayHasKey('id', $userstories_tracker);
         $this->assertEquals($userstories_tracker['label'], "User Stories");
-        $this->assertEquals($userstories_tracker['project'], array('id' => '101', 'uri' => 'projects/101'));
+        $this->assertEquals($userstories_tracker['project'], array('id' => 101, 'uri' => 'projects/101'));
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
@@ -148,22 +148,19 @@ class ProjectTest extends RestBase {
         $this->assertArrayHasKey('id', $first_backlog_item);
         $this->assertEquals($first_backlog_item['label'], "Epic pic");
         $this->assertEquals($first_backlog_item['status'], "Open");
-        $this->assertEquals($first_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
-        $this->assertEquals($first_backlog_item['artifact'], array('id' => '12', 'uri' => 'artifacts/12'));
+        $this->assertEquals($first_backlog_item['artifact'], array('id' => 12, 'uri' => 'artifacts/12', 'tracker' => array('id' => 5, 'uri' => 'trackers/5')));
 
         $second_backlog_item = $backlog_items[1];
         $this->assertArrayHasKey('id', $second_backlog_item);
         $this->assertEquals($second_backlog_item['label'], "Epic c'est tout");
         $this->assertEquals($second_backlog_item['status'], "Open");
-        $this->assertEquals($first_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
-        $this->assertEquals($second_backlog_item['artifact'], array('id' => '13', 'uri' => 'artifacts/13'));
+        $this->assertEquals($second_backlog_item['artifact'], array('id' => 13, 'uri' => 'artifacts/13', 'tracker' => array('id' => 5, 'uri' => 'trackers/5')));
 
         $third_backlog_item = $backlog_items[2];
         $this->assertArrayHasKey('id', $third_backlog_item);
         $this->assertEquals($third_backlog_item['label'], "Epic epoc");
         $this->assertEquals($third_backlog_item['status'], "Open");
-        $this->assertEquals($first_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
-        $this->assertEquals($third_backlog_item['artifact'], array('id' => '14', 'uri' => 'artifacts/14'));
+        $this->assertEquals($third_backlog_item['artifact'], array('id' => 14, 'uri' => 'artifacts/14', 'tracker' => array('id' => 5, 'uri' => 'trackers/5')));
     }
 
     public function testPUTbacklog() {
@@ -180,22 +177,19 @@ class ProjectTest extends RestBase {
         $this->assertArrayHasKey('id', $first_backlog_item);
         $this->assertEquals($first_backlog_item['label'], "Epic epoc");
         $this->assertEquals($first_backlog_item['status'], "Open");
-        $this->assertEquals($first_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
-        $this->assertEquals($first_backlog_item['artifact'], array('id' => '14', 'uri' => 'artifacts/14'));
+        $this->assertEquals($first_backlog_item['artifact'], array('id' => 14, 'uri' => 'artifacts/14', 'tracker' => array('id' => 5, 'uri' => 'trackers/5')));
 
         $second_backlog_item = $backlog_items[1];
         $this->assertArrayHasKey('id', $second_backlog_item);
         $this->assertEquals($second_backlog_item['label'], "Epic pic");
         $this->assertEquals($second_backlog_item['status'], "Open");
-        $this->assertEquals($second_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
-        $this->assertEquals($second_backlog_item['artifact'], array('id' => '12', 'uri' => 'artifacts/12'));
+        $this->assertEquals($second_backlog_item['artifact'], array('id' => 12, 'uri' => 'artifacts/12', 'tracker' => array('id' => 5, 'uri' => 'trackers/5')));
 
         $third_backlog_item = $backlog_items[2];
         $this->assertArrayHasKey('id', $third_backlog_item);
         $this->assertEquals($third_backlog_item['label'], "Epic c'est tout");
         $this->assertEquals($third_backlog_item['status'], "Open");
-        $this->assertEquals($third_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
-        $this->assertEquals($third_backlog_item['artifact'], array('id' => '13', 'uri' => 'artifacts/13'));
+        $this->assertEquals($third_backlog_item['artifact'], array('id' => 13, 'uri' => 'artifacts/13', 'tracker' => array('id' => 5, 'uri' => 'trackers/5')));
     }
 
     public function testPUTbacklogOnlyTwoItems() {
@@ -212,22 +206,19 @@ class ProjectTest extends RestBase {
         $this->assertArrayHasKey('id', $first_backlog_item);
         $this->assertEquals($first_backlog_item['label'], "Epic pic");
         $this->assertEquals($first_backlog_item['status'], "Open");
-        $this->assertEquals($first_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
-        $this->assertEquals($first_backlog_item['artifact'], array('id' => '12', 'uri' => 'artifacts/12'));
+        $this->assertEquals($first_backlog_item['artifact'], array('id' => 12, 'uri' => 'artifacts/12', 'tracker' => array('id' => 5, 'uri' => 'trackers/5')));
 
         $second_backlog_item = $backlog_items[1];
         $this->assertArrayHasKey('id', $second_backlog_item);
         $this->assertEquals($second_backlog_item['label'], "Epic c'est tout");
         $this->assertEquals($second_backlog_item['status'], "Open");
-        $this->assertEquals($second_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
-        $this->assertEquals($second_backlog_item['artifact'], array('id' => '13', 'uri' => 'artifacts/13'));
+        $this->assertEquals($second_backlog_item['artifact'], array('id' => 13, 'uri' => 'artifacts/13', 'tracker' => array('id' => 5, 'uri' => 'trackers/5')));
 
         $third_backlog_item = $backlog_items[2];
         $this->assertArrayHasKey('id', $third_backlog_item);
         $this->assertEquals($third_backlog_item['label'], "Epic epoc");
         $this->assertEquals($third_backlog_item['status'], "Open");
-        $this->assertEquals($third_backlog_item['tracker'], array('id' => '5', 'uri' => 'trackers/5'));
-        $this->assertEquals($third_backlog_item['artifact'], array('id' => '14', 'uri' => 'artifacts/14'));
+        $this->assertEquals($third_backlog_item['artifact'], array('id' => 14, 'uri' => 'artifacts/14', 'tracker' => array('id' => 5, 'uri' => 'trackers/5')));
     }
 }
 ?>

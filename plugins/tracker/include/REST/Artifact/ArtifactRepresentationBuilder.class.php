@@ -85,7 +85,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
      * @param PFUser $user
      * @param Tracker_Artifact $artifact
      *
-     * @return Tracker_REST_ChangesetRepresentation[]
+     * @return Tuleap\Tracker\REST\ChangesetRepresentation[]
      */
     public function getArtifactChangesetsRepresentation(PFUser $user, Tracker_Artifact $artifact) {
         return $this->mapAndFilter(

@@ -18,15 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_REST_SemanticStatusRepresentation {
-    /** @var int */
+namespace Tuleap\Tracker\REST;
+
+use Tuleap\REST\JsonCast;
+
+class SemanticStatusRepresentation {
+    /**
+     * @var int
+     */
     public $field_id;
 
-    /** @var array {@type int}*/
+    /**
+     * @var array {@type int}
+     */
     public $value_ids = array();
 
-    public function __construct($id, array $values) {
-        $this->field_id  = $id;
+    public function build($id, array $values) {
+        $this->field_id  = JsonCast::toInt($id);
         $this->value_ids = $values;
     }
 }

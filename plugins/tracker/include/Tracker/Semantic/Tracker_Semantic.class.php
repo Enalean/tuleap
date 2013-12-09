@@ -173,7 +173,8 @@ abstract class Tracker_Semantic {
             return false;
         }
 
-        $semantic_representation = new Tracker_REST_SemanticRepresentation($field->getId());
+        $classname_with_namespace = 'Tuleap\Tracker\REST\SemanticRepresentation';
+        $semantic_representation = new $classname_with_namespace;
         $semantic_representation->build($field->getId());
 
         return $semantic_representation;

@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\REST\TrackerRepresentation;
+use Tuleap\Project\REST\ProjectResourceReference;
+
  /**
   * Inject resource into restler
   */
@@ -26,5 +29,12 @@ class Tracker_REST_ResourcesInjector {
     public function populate(Luracast\Restler\Restler $restler) {
         $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\TrackersResource', 'trackers');
         $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\ArtifactsResource', 'artifacts');
+    }
+
+    public function declareProjectPlanningResource(array &$resources, Project $project) {
+        $resource_reference = new ProjectResourceReference();
+        $resource_reference->build($project, TrackerRepresentation::ROUTE);
+
+        $resources[] = $resource_reference;
     }
 }

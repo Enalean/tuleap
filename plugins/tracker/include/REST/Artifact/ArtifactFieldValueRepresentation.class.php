@@ -18,7 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_REST_Artifact_ArtifactFieldValueRepresentation {
+namespace Tuleap\Tracker\REST\Artifact;
+
+use Tuleap\REST\JsonCast;
+
+class ArtifactFieldValueRepresentation {
     /**
      * @var int ID of the field
      */
@@ -34,8 +38,8 @@ class Tracker_REST_Artifact_ArtifactFieldValueRepresentation {
      */
     public $value;
 
-    public function __construct($id, $label, $value) {
-        $this->field_id = $id;
+    public function build($id, $label, $value) {
+        $this->field_id = JsonCast::toInt($id);
         $this->label    = $label;
         $this->value    = $value;
     }

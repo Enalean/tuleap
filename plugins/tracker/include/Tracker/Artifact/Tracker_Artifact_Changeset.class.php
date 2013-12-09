@@ -860,11 +860,14 @@ class Tracker_Artifact_Changeset {
         if (! $comment) {
             $comment = new Tracker_Artifact_Changeset_CommentNull($this);
         }
-        return new Tracker_REST_ChangesetRepresentation(
+        $classname_with_namespace = 'Tuleap\Tracker\REST\ChangesetRepresentation';
+        $changeset_representation = new $classname_with_namespace;
+        $changeset_representation->build(
             $this,
             $comment,
             $this->getRESTFieldValues($user)
         );
+        return $changeset_representation;
     }
 
     private function getRESTFieldValues(PFUser $user) {

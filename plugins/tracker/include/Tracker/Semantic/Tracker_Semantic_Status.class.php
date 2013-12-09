@@ -393,7 +393,10 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
     public function exportToREST(PFUser $user) {
         $field = $this->getFieldUserCanRead($user);
         if ($field) {
-            return new Tracker_REST_SemanticStatusRepresentation($field->getId(), $this->getOpenValues());
+            $classname_with_namespace = 'Tuleap\Tracker\REST\SemanticStatusRepresentation';
+            $semantic_status_representation = new $classname_with_namespace;
+            $semantic_status_representation->build($field->getId(), $this->getOpenValues());
+            return new $semantic_status_representation;
         }
         return false;
     }

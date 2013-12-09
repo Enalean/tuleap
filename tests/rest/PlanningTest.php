@@ -47,7 +47,7 @@ class PlanningTest extends RestBase {
         $release_planning = $plannings[0];
         $this->assertArrayHasKey('id', $release_planning);
         $this->assertEquals($release_planning['label'], "Release Planning");
-        $this->assertEquals($release_planning['project'], array('id' => '101', 'uri' => 'projects/101'));
+        $this->assertEquals($release_planning['project'], array('id' => 101, 'uri' => 'projects/101'));
         $this->assertArrayHasKey('id', $release_planning['milestone_tracker']);
         $this->assertArrayHasKey('uri', $release_planning['milestone_tracker']);
         $this->assertRegExp('%^trackers/[0-9]+$%', $release_planning['milestone_tracker']['uri']);

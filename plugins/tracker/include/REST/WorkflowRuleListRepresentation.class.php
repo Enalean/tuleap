@@ -20,6 +20,8 @@
 
 namespace Tuleap\Tracker\REST;
 
+use Tuleap\REST\JsonCast;
+
 class WorkflowRuleListRepresentation {
 
     /**
@@ -43,9 +45,9 @@ class WorkflowRuleListRepresentation {
     public $target_value_id;
 
     public function build($source_field_id, $source_value_id, $target_field_id, $target_value_id) {
-        $this->source_field_id = $source_field_id;
-        $this->source_value_id = $source_value_id;
-        $this->target_field_id = $target_field_id;
-        $this->target_value_id = $target_value_id;
+        $this->source_field_id = JsonCast::toInt($source_field_id);
+        $this->source_value_id = JsonCast::toInt($source_value_id);
+        $this->target_field_id = JsonCast::toInt($target_field_id);
+        $this->target_value_id = JsonCast::toInt($target_value_id);
     }
 }

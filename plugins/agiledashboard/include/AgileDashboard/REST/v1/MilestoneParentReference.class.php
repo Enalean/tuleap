@@ -17,32 +17,34 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Token\REST;
+namespace Tuleap\AgileDashboard\REST\v1;
 
-use Rest_Token;
-use Tuleap\REST\JsonCast;
+use \Tuleap\Tracker\REST\TrackerReference;
+use \Planning_Milestone;
+use \Tuleap\REST\JsonCast;
 
-class TokenRepresentation {
-    const ROUTE = 'tokens';
+class MilestoneParentReference {
 
     /**
-     * @var int
+     * @var int ID of the milestone
      */
-    public $user_id;
+    public $id;
 
     /**
-     * @var string
-     */
-    public $token;
-
-    /**
-     * @var string
+     * @var string URI of the milestone
      */
     public $uri;
 
-    public function build(Rest_Token $token) {
-        $this->user_id = JsonCast::toInt($token->getUserId());
-        $this->token   = $token->getTokenValue();
-        $this->uri     = self::ROUTE.'/'.$this->token;
+    /**
+     * @var \Tuleap\Tracker\REST\TrackerReference
+     */
+    public $tracker;
+
+    public function build(Planning_Milestone $milestone) {
+        $this->id  = JsonCast::toInt($milestone->getArtifactId());
+        $this->uri = MilestoneRepresentation::ROUTE . '/' . $this->id;
+
+        $this->tracker = new TrackerReference();
+        $this->tracker->build($milestone->getArtifact()->getTracker());
     }
 }

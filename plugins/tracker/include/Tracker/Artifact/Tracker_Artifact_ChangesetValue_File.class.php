@@ -179,11 +179,14 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
         foreach ($this->getFiles() as $file_info) {
             $values[] = $file_info->getRESTValue();
         }
-        return new Tracker_REST_Artifact_ArtifactFieldValueFileRepresentation(
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileRepresentation';
+        $field_value_file_representation = new $classname_with_namespace;
+        $field_value_file_representation->build(
             $this->field->getId(),
             $this->field->getLabel(),
             $values
         );
+        return $field_value_file_representation;
     }
 
     /**

@@ -91,7 +91,7 @@ abstract class Tracker_Artifact_ChangesetValue {
     /**
      * Return the REST value of this changeset value
      *
-     * @return Tracker_REST_Artifact_ArtifactFieldValueRepresentation
+     * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
      */
     public abstract function getRESTValue();
 
@@ -119,11 +119,16 @@ abstract class Tracker_Artifact_ChangesetValue {
     }
 
     protected function getSimpleRESTRepresentation($value) {
-        return new Tracker_REST_Artifact_ArtifactFieldValueRepresentation(
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation';
+
+        $artifact_field_value_representation = new $classname_with_namespace;
+        $artifact_field_value_representation->build(
             $this->field->getId(),
             $this->field->getLabel(),
             $value
         );
+
+        return $artifact_field_value_representation;
     }
 }
 ?>

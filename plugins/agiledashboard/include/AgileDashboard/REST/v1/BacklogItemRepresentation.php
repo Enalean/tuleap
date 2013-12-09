@@ -19,14 +19,15 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
-use \Tuleap\Tracker\REST\TrackerRepresentation;
-use \AgileDashboard_BacklogItemPresenter;
-use \Tuleap\REST\ResourceReference;
+use \Tuleap\REST\JsonCast;
+use \Tuleap\Project\REST\ProjectReference;
+use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
 
 class BacklogItemRepresentation {
 
-    const ROUTE = 'backlog_items';
+    const BACKLOG_ROUTE = 'backlog';
+
+    const CONTENT_ROUTE = 'content';
 
     /**
      * @var Int
@@ -49,47 +50,42 @@ class BacklogItemRepresentation {
     public $status;
 
     /**
-     * @var int
+     * @var Float
      */
     public $initial_effort;
 
     /**
-     * @var Tuleap\REST\ResourceReference
-     */
-    public $tracker;
-
-    /**
-     * @var Tuleap\REST\ResourceReference
+     * @var \Tuleap\Tracker\REST\Artifact\ArtifactReference
      */
     public $artifact;
 
     /**
-     * @var Tuleap\REST\ResourceReference
+     * @var Tuleap\AgileDashboard\REST\v1\BacklogItemParentReference
      */
     public $parent;
 
+    /**
+     * @var Tuleap\Project\REST\ProjectReference
+     */
+    public $project;
+
     public function build(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {
-        $this->id             = $backlog_item->id();
+        $this->id             = JsonCast::toInt($backlog_item->id());
         $this->label          = $backlog_item->title();
         $this->status         = $backlog_item->status();
         $this->type           = $backlog_item->type();
-        $this->initial_effort = $backlog_item->getInitialEffort();
-        $this->tracker = new ResourceReference();
-        $this->tracker->build(
-            $backlog_item->getArtifact()->getTrackerId(),
-            TrackerRepresentation::ROUTE
-        ) ;
-        $this->artifact = new ResourceReference();
-        $this->artifact->build(
-            $backlog_item->getArtifact()->getId(),
-            ArtifactRepresentation::ROUTE
-        );
+        $this->initial_effort = JsonCast::toFloat($backlog_item->getInitialEffort());
+
+        $this->artifact = new ArtifactReference();
+        $this->artifact->build($backlog_item->getArtifact());
+
+        $this->project = new ProjectReference();
+        $this->project->build($backlog_item->getArtifact()->getTracker()->getProject());
+
+        $this->parent = null;
         if ($backlog_item->getParent()) {
-            $this->parent = new ResourceReference();
-            $this->parent->build(
-                $backlog_item->getParent()->getId(),
-                self::ROUTE
-            );
+            $this->parent = new BacklogItemParentReference();
+            $this->parent->build($backlog_item->getParent());
         }
     }
 }

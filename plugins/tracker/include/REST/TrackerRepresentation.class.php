@@ -20,7 +20,9 @@
 
 namespace Tuleap\Tracker\REST;
 
-use Tracker;
+use Tuleap\REST\JsonCast;
+use \Tracker;
+use Tuleap\Project\REST\ProjectReference;
 
 class TrackerRepresentation {
 
@@ -64,10 +66,10 @@ class TrackerRepresentation {
     /**
      * @var array {@type Tracker_REST_FieldRepresentation}
      */
-    public $fields    = array();
+    public $fields = array();
 
     /**
-     * @var array {@type Tracker_REST_SemanticRepresentation}
+     * @var array {@type Tuleap\Tracker\REST\SemanticRepresentation}
      */
     public $semantics = array();
 
@@ -77,10 +79,13 @@ class TrackerRepresentation {
     public $workflow;
 
     public function build(Tracker $tracker, array $tracker_fields, array $semantics, WorkflowRepresentation $workflow = null) {
-        $this->id          = $tracker->getId();
+        $this->id          = JsonCast::toInt($tracker->getId());
         $this->uri         = self::ROUTE . '/' . $this->id;
         $this->html_url    = $tracker->getUri();
-        $this->project     = new \Tuleap\Project\REST\ProjectReference($tracker->getProject());
+
+        $this->project     = new ProjectReference();
+        $this->project->build($tracker->getProject());
+
         $this->label       = $tracker->getName();
         $this->description = $tracker->getDescription();
         $this->item_name   = $tracker->getItemName();

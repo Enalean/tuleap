@@ -18,18 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_REST_Artifact_ArtifactFieldValueListRepresentation {
-    /** @var int ID of the field */
+namespace Tuleap\Tracker\REST\Artifact;
+
+use Tuleap\REST\JsonCast;
+
+class ArtifactFieldValueListRepresentation {
+    /**
+     * @var int ID of the field
+     */
     public $field_id;
 
-    /** @var string Label of the field */
+    /**
+     * @var string Label of the field
+     */
     public $label;
 
-    /** @var int[] IDS of the field id */
+    /**
+     * @var int[] IDS of the field id
+     */
     public $bind_value_ids;
 
-    public function __construct($id, $label, array $values) {
-        $this->field_id       = $id;
+    public function build($id, $label, array $values) {
+        $this->field_id       = JsonCast::toInt($id);
         $this->label          = $label;
         $this->bind_value_ids = $values;
     }

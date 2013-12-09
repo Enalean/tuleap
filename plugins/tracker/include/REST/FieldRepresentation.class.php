@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\REST\JsonCast;
+
 class Tracker_REST_FieldRepresentation {
 
     const BIND_TYPE  = 'type';
@@ -28,38 +30,55 @@ class Tracker_REST_FieldRepresentation {
 
     const PERM_READ   = 'read';
     const PERM_UPDATE = 'update';
-    const PERM_SUBMIT = 'submit';
+    const PERM_CREATE = 'create';
 
-    /** @var int */
+    /**
+     * @var int
+     */
     public $field_id;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $label;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $name;
 
-    /** @var string (string|text|sb|msb|cb|date|file|int|float|tbl|art_link|perm|shared|aid|atid|lud|subby|subon|cross|burndown|computed) */
+    /**
+     * @var string (string|text|sb|msb|cb|date|file|int|float|tbl|art_link|perm|shared|aid|atid|lud|subby|subon|cross|burndown|computed)
+     */
     public $type;
 
-    /** @var array {@type Tracker_REST_FieldValueRepresentation }*/
+    /**
+     * @var array {@type Tuleap\Tracker\REST\FieldValueRepresentation }
+     */
     public $values      = array();
 
-    /** @var array */
+    /**
+     * @var array
+     */
     public $bindings    = array();
 
-    /** @var array {@type string} One of (read, update, submit) */
+    /**
+     * @var array {@type string} One of (read, update, submit)
+     */
     public $permissions = array();
 
     public function build(Tracker_FormElement_Field $field, $type, array $permissions) {
-        $this->field_id    = $field->getId();
-        $this->name  = $field->getName();
-        $this->label = $field->getLabel();
-        $this->type  = $type;
+        $this->field_id = JsonCast::toInt($field->getId());
+        $this->name     = $field->getName();
+        $this->label    = $field->getLabel();
+        $this->type     = $type;
 
+        $this->values   = null;
         if ($field->getSoapAvailableValues()) {
             foreach ($field->getSoapAvailableValues() as $value) {
-                $this->values[] = new Tracker_REST_FieldValueRepresentation($value);
+                $field_value_representation = new Tuleap\Tracker\REST\FieldValueRepresentation();
+                $field_value_representation->build($value);
+                $this->values[] = $field_value_representation;
             }
         }
 
@@ -85,7 +104,7 @@ class Tracker_REST_FieldRepresentation {
                     case Tracker_FormElement::SOAP_PERMISSION_UPDATE:
                         return Tracker_REST_FieldRepresentation::PERM_UPDATE;
                     case Tracker_FormElement::SOAP_PERMISSION_SUBMIT:
-                        return Tracker_REST_FieldRepresentation::PERM_SUBMIT;
+                        return Tracker_REST_FieldRepresentation::PERM_CREATE;
                 }
             },
             $permissions

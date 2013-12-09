@@ -18,15 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_REST_FieldValueRepresentation {
-    /** @var int */
+namespace Tuleap\Tracker\REST;
+
+use \Tracker_FormElement_Field_List_Bind;
+use Tuleap\REST\JsonCast;
+
+class FieldValueRepresentation {
+    /**
+     * @var int
+     */
     public $id;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $label;
 
-    public function __construct(array $value) {
-        $this->id    = $value[Tracker_FormElement_Field_List_Bind::SOAP_ID_KEY];
+    public function build(array $value) {
+        $this->id    = JsonCast::toInt($value[Tracker_FormElement_Field_List_Bind::SOAP_ID_KEY]);
         $this->label = $value[Tracker_FormElement_Field_List_Bind::SOAP_LABEL_KEY];
     }
 }

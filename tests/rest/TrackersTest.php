@@ -56,7 +56,7 @@ class TrackersTest extends RestBase {
         $this->assertEquals($tracker_uri, $tracker['uri']);
         $this->assertEquals('Releases', $tracker['label']);
         $this->assertEquals('rel', $tracker['item_name']);
-        $this->assertEquals('101', $tracker['project']['id']);
+        $this->assertEquals(101, $tracker['project']['id']);
         $this->assertEquals('projects/101', $tracker['project']['uri']);
         $this->assertArrayHasKey('fields', $tracker);
         $this->assertArrayHasKey('semantics', $tracker);

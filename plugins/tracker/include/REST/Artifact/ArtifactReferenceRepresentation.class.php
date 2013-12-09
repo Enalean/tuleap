@@ -18,20 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
+namespace Tuleap\Tracker\REST\Artifact;
 
-class Tracker_REST_Artifact_ArtifactReferenceRepresentation {
-    /** @var int ID of the artifact */
+use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
+use Tuleap\REST\JsonCast;
+
+class ArtifactReferenceRepresentation {
+    /**
+     * @var int ID of the artifact
+     */
     public $id;
 
-    /** @var string URI to the artifact */
+    /**
+     * @var string URI to the artifact
+     */
     public $uri;
 
-    public function __construct($reference) {
+    public function build($reference) {
         if ($reference instanceof Tracker_Artifact) {
-            $this->id  = $reference->getId();
+            $this->id = JsonCast::toInt($reference->getId());
         } elseif (is_int($reference)) {
-            $this->id = $reference;
+            $this->id = JsonCast::toInt($reference);
         } else {
             throw new Exception('Unknown artifact reference');
         }

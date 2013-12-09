@@ -17,32 +17,36 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Token\REST;
+namespace Tuleap\AgileDashboard\REST\v1;
 
-use Rest_Token;
-use Tuleap\REST\JsonCast;
+use \Tuleap\Tracker\REST\TrackerReference;
+use \Tuleap\REST\ResourceReference;
+use \Tracker_Artifact;
+use \Tuleap\REST\JsonCast;
 
-class TokenRepresentation {
-    const ROUTE = 'tokens';
+class BacklogItemParentReference {
 
     /**
-     * @var int
+     * @var int ID of the backlog item
      */
-    public $user_id;
+    public $id;
 
     /**
-     * @var string
-     */
-    public $token;
-
-    /**
-     * @var string
+     * @var string URI of backlog item
      */
     public $uri;
 
-    public function build(Rest_Token $token) {
-        $this->user_id = JsonCast::toInt($token->getUserId());
-        $this->token   = $token->getTokenValue();
-        $this->uri     = self::ROUTE.'/'.$this->token;
+    /**
+     * @var \Tuleap\Tracker\REST\TrackerReference
+     */
+    public $tracker;
+
+    public function build(Tracker_Artifact $backlog_item) {
+        $this->id = JsonCast::toInt($backlog_item->getId());
+
+        $this->uri = ResourceReference::NO_ROUTE;
+
+        $this->tracker = new TrackerReference();
+        $this->tracker->build($backlog_item->getTracker());
     }
 }

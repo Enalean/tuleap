@@ -144,13 +144,20 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     public function getRESTValue() {
         $values = array();
         foreach ($this->getArtifactIds() as $id) {
-            $values[] = new Tracker_REST_Artifact_ArtifactReferenceRepresentation($id);
+            $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactReferenceRepresentation';
+            $artifact_reference_representation = new $classname_with_namespace;
+            $artifact_reference_representation->build($id);
+            $values[] = $artifact_reference_representation;
         }
-        return new Tracker_REST_Artifact_ArtifactFieldValueArtifactLinksRepresentation(
+
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueArtifactLinksRepresentation';
+        $artifact_links_representation = new $classname_with_namespace;
+        $artifact_links_representation->build(
             $this->field->getId(),
             $this->field->getLabel(),
             $values
         );
+        return $artifact_links_representation;
     }
 
     /**

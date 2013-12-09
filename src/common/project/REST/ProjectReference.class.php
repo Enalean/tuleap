@@ -23,17 +23,21 @@ use Project;
 
 class ProjectReference {
 
-    /** @var int ID of the project */
+    /**
+     * @var int ID of the project
+     */
     public $id;
 
-    /** @var string URI of the project */
+    /**
+     * @var string URI of the project
+     */
     public $uri;
 
-    public function __construct($project) {
+    public function build($project) {
         if ($project instanceof Project) {
-            $this->id = $project->getId();
+            $this->id = (int)$project->getId();
         } else {
-            $this->id = $project;
+            $this->id = (int)$project;
         }
         $this->uri = ProjectRepresentation::ROUTE . '/' . $this->id;
     }

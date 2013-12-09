@@ -18,6 +18,8 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use Tuleap\REST\JsonCast;
+
 /**
  * Minimal representation of a milestone
  */
@@ -38,9 +40,9 @@ class MilestoneInfoRepresentation {
     public $uri;
 
     public function __construct(\Planning_Milestone $milestone) {
-        $this->id                 = $milestone->getArtifactId();
-        $this->label              = $milestone->getArtifactTitle();
-        $this->last_modified      = date('c', $milestone->getLastModifiedDate());
-        $this->uri                = self::ROUTE.'/'.$this->id;
+        $this->id            = JsonCast::toInt($milestone->getArtifactId());
+        $this->label         = $milestone->getArtifactTitle();
+        $this->last_modified = JsonCast::toDate($milestone->getLastModifiedDate());
+        $this->uri           = self::ROUTE.'/'.$this->id;
     }
 }

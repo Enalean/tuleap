@@ -70,10 +70,12 @@ class Tracker_FileInfo {
     }
 
     /**
-     * @return Tracker_REST_Artifact_FileInfoRepresentation
+     * @return Tuleap\Tracker\REST\Artifact\FileInfoRepresentation
      */
     public function getRESTValue() {
-        return new Tracker_REST_Artifact_FileInfoRepresentation(
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\FileInfoRepresentation';
+        $file_info_representation = new $classname_with_namespace;
+        $file_info_representation->build(
             $this->id,
             $this->submitted_by,
             $this->description,
@@ -81,6 +83,7 @@ class Tracker_FileInfo {
             $this->filesize,
             $this->filetype
         );
+        return $file_info_representation;
     }
 
     /**
