@@ -1,3 +1,6 @@
+Version 5.203 - Tuleap 6.8
+    * Fix hasChanges() on text fields
+
 Version 5.202 - Tuleap 6.8
     * Notification about artifact modification is sent to user only if necessary
 
