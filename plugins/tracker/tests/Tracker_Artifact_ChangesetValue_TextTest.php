@@ -31,7 +31,7 @@ Mock::generate('Codendi_HTMLPurifier');
 class Tracker_Artifact_ChangesetValue_TextTest extends TuleapTestCase {
     
     function testTexts() {
-        $field = new MockTracker_FormElement_Field_Text();
+        $field = aTextField()->withTracker(aTracker()->withProject(mock('Project'))->build())->build();
         $text = new Tracker_Artifact_ChangesetValue_Text(111, $field, false, 'Problems during installation', 'text');
         $this->assertEqual($text->getText(), 'Problems during installation');
         $this->assertEqual($text->getSoapValue(), array('value' => 'Problems during installation'));
