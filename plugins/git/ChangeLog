@@ -1,3 +1,6 @@
+Version 3.57 - Tuleap 6.8
+    * Fix request #5713 - Gerrit user provisionning doesn't work with MySQL backend
+
 Version 3.56 - Tuleap 6.8
     * story #5663 - be able to delete Gerrit templates
 
