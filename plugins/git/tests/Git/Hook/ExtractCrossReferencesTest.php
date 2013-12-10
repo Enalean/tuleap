@@ -31,6 +31,7 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase {
     private $repository_in_subpath;
     private $reference_manager;
     private $post_receive;
+    private $push_details;
 
     public function setUp() {
         parent::setUp();
@@ -51,13 +52,15 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase {
         $this->reference_manager = mock('ReferenceManager');
 
         $this->post_receive = new Git_Hook_ExtractCrossReferences($this->git_exec_repo, $this->reference_manager);
+
+        $this->push_details  = new Git_Hook_PushDetails($this->repository, $this->user, 'refs/heads/master', 'whatever', 'whatever', array());
     }
 
 
     public function itGetsEachRevisionContent() {
         expect($this->git_exec_repo)->catFile('469eaa9')->once();
 
-        $this->post_receive->execute($this->repository, $this->user, '469eaa9', 'refs/heads/master');
+        $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
     public function itExtractCrossReferencesForGivenUser() {
@@ -65,7 +68,7 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase {
 
         expect($this->reference_manager)->extractCrossRef('*', '*', '*', '*', 350)->once();
 
-        $this->post_receive->execute($this->repository, $this->user, '469eaa9', 'refs/heads/master');
+        $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
     public function itExtractCrossReferencesOnGitCommit() {
@@ -73,7 +76,7 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase {
 
         expect($this->reference_manager)->extractCrossRef('*', '*', Git::REFERENCE_NATURE, '*', '*')->once();
 
-        $this->post_receive->execute($this->repository, $this->user, '469eaa9', 'refs/heads/master');
+        $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
     public function itExtractCrossReferencesOnCommitMessage() {
@@ -81,7 +84,7 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase {
 
         expect($this->reference_manager)->extractCrossRef('bla bla bla', '*', '*', '*', '*')->once();
 
-        $this->post_receive->execute($this->repository, $this->user, '469eaa9', 'refs/heads/master');
+        $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
     public function itExtractCrossReferencesForProject() {
@@ -89,7 +92,7 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase {
 
         expect($this->reference_manager)->extractCrossRef('*', '*', '*', 101, '*')->once();
 
-        $this->post_receive->execute($this->repository, $this->user, '469eaa9', 'refs/heads/master');
+        $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
     public function itSetTheReferenceToTheRepository() {
@@ -97,7 +100,7 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase {
 
         expect($this->reference_manager)->extractCrossRef('*', 'dev/469eaa9', '*', '*', '*')->once();
 
-        $this->post_receive->execute($this->repository, $this->user, '469eaa9', 'refs/heads/master');
+        $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
     public function itSetTheReferenceToTheRepositoryWithSubRepo() {
@@ -105,7 +108,8 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase {
 
         expect($this->reference_manager)->extractCrossRef('*', 'arch/x86_64/dev/469eaa9', '*', '*', '*')->once();
 
-        $this->post_receive->execute($this->repository_in_subpath, $this->user, '469eaa9', 'refs/heads/master');
+        $push_details = new Git_Hook_PushDetails($this->repository_in_subpath, $this->user, 'refs/heads/master', 'whatever', 'whatever', array());
+        $this->post_receive->execute($push_details, '469eaa9');
     }
 }
 

@@ -26,6 +26,7 @@
  * Store informations about a push
  */
 class Git_Hook_PushDetails {
+    const ACTION_ERROR  = 'error';
     const ACTION_CREATE = 'create';
     const ACTION_DELETE = 'delete';
     const ACTION_UPDATE = 'update';

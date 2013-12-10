@@ -36,28 +36,23 @@ class Git_Hook_PostReceive {
     /** @var UserManager */
     private $user_manager;
 
-    /** @var Git_Hook_ExtractCrossReferences */
-    private $extract_cross_ref;
-
     /** @var Git_Ci_Launcher */
     private $ci_launcher;
 
-    /** @var Git_Hook_LogPushes */
-    private $log_pushes;
-
+    /** @var Git_Hook_ParseLog */
+    private $parse_log;
+    
     public function __construct(
             Git_Hook_LogAnalyzer $log_analyzer,
             GitRepositoryFactory $repository_factory,
             UserManager $user_manager,
-            Git_Hook_ExtractCrossReferences $extract_cross_ref,
             Git_Ci_Launcher $ci_launcher,
-            Git_Hook_LogPushes $log_pushes) {
+            Git_Hook_ParseLog $parse_log) {
         $this->log_analyzer       = $log_analyzer;
         $this->repository_factory = $repository_factory;
         $this->user_manager       = $user_manager;
-        $this->extract_cross_ref  = $extract_cross_ref;
         $this->ci_launcher        = $ci_launcher;
-        $this->log_pushes         = $log_pushes;
+        $this->parse_log          = $parse_log;
     }
 
     public function execute($repository_path, $user_name, $oldrev, $newrev, $refname) {
@@ -75,13 +70,6 @@ class Git_Hook_PostReceive {
         $this->ci_launcher->executeForRepository($repository);
 
         $push_details = $this->log_analyzer->getPushDetails($repository, $user, $oldrev, $newrev, $refname);
-
-        $this->log_pushes->executeForRepository($push_details);
-
-        foreach ($push_details->getRevisionList() as $commit) {
-            $this->extract_cross_ref->execute($repository, $user, $commit, $refname);
-        }
+        $this->parse_log->execute($push_details);
     }
 }
-
-?>
