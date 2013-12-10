@@ -14,6 +14,8 @@
 
 #. /usr/share/codendi/plugins/git/hooks/post-receive-email 2>/dev/null
 
+count_threshold=100
+
 push_timestamp=$(date +%s)
 
 git_dir_path=$(git rev-parse --git-dir 2>/dev/null)
@@ -28,9 +30,25 @@ else
     user_name="$GL_USER"
 fi
 
+count=0
 while read oldrev newrev refname
     do
-	echo $oldrev $newrev $refname | /usr/share/codendi/plugins/git/hooks/post-receive-email 2>/dev/null
-        /usr/lib/codendi/bin/git-post-receive.pl $repository_path $user_name $oldrev $newrev $refname 2>/dev/null
+        if [ $count -lt $count_threshold ]; then
+            count=$(($count+1))
+            echo $oldrev $newrev $refname | /usr/share/codendi/plugins/git/hooks/post-receive-email 2>/dev/null
+            /usr/lib/codendi/bin/git-post-receive.pl $repository_path $user_name $oldrev $newrev $refname 2>/dev/null
+        else
+            :
+        fi
     done
 
+if [ $count -ge $count_threshold ]; then
+    echo "*** info: More than $count_threshold references in push."
+    echo "*** info: further analysis skipped: email, reference extraction, "
+    echo "*** info: trigger of continuous integration, ..."
+else
+    :
+fi
+
+# Why those stupid colons?
+# http://stackoverflow.com/questions/3224878/what-is-the-purpose-of-the-colon-gnu-bash-builtin
