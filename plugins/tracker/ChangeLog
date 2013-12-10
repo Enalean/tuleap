@@ -1,3 +1,6 @@
+Version 5.202 - Tuleap 6.8
+    * Notification about artifact modification is sent to user only if necessary
+
 Version 5.201 - Tuleap 6.8
     * Fix some glitches in existing API REST
 
