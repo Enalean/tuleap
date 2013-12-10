@@ -719,5 +719,14 @@ class Event {
      *     'result'  => array
      */
     const REST_PUT_PROJECT_BACKLOG = 'rest_put_project_backlog';
+
+    /**
+     * Fetch interface html to manage 3rd party apps
+     *
+     * Parameters:
+     *     'user' => PFUser
+     *     'html' => string
+     */
+    const MANAGE_THIRD_PARTY_APPS = 'manage_third_party_apps';
 }
 ?>

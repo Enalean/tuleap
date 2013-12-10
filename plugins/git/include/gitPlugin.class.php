@@ -105,6 +105,9 @@ class GitPlugin extends Plugin {
         // Project hierarchy modification
         $this->_addHook(Event::PROJECT_SET_PARENT_PROJECT, 'project_admin_parent_project_modification');
         $this->_addHook(Event::PROJECT_UNSET_PARENT_PROJECT, 'project_admin_parent_project_modification');
+
+        //Gerrit user synch help
+        $this->_addHook(Event::MANAGE_THIRD_PARTY_APPS, 'manage_third_party_apps');
     }
 
     public function site_admin_option_hook() {
@@ -1066,6 +1069,41 @@ class GitPlugin extends Plugin {
     private function getUGroupManager() {
         return new UGroupManager();
     }
-}
 
+    /**
+     * @param array $params
+     * Parameters:
+     *     'user' => PFUser
+     *     'html' => string
+     */
+    public function manage_third_party_apps($params) {
+        $this->resynch_gerrit_groups_with_user($params);
+    }
+
+    /**
+     * @param array $params
+     * Parameters:
+     *     'user' => PFUser
+     *     'html' => string
+     */
+    private function resynch_gerrit_groups_with_user($params) {
+        if (! $this->getGerritServerFactory()->hasRemotesSetUp()) {
+            return;
+        }
+
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+        $presenter = new GitPresenters_GerritAsThirdPartyPresenter();
+        $params['html'] .= $renderer->renderToString('gerrit_as_third_party', $presenter);
+
+        $request = HTTPRequest::instance();
+        $action = $request->get('action');
+        if ($action && $action = $presenter->form_action) {
+            $this->addMissingGerritAccess($params['user']);
+        }
+    }
+
+    private function addMissingGerritAccess($user) {
+        $this->getGerritMembershipManager()->addUserToAllTheirGroups($user);
+    }
+}
 ?>
