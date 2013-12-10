@@ -1,3 +1,6 @@
+Version 5.204 - Tuleap 6.8
+    * fix request #5558 - Links not extracted in read-only view
+
 Version 5.203 - Tuleap 6.8
     * Fix hasChanges() on text fields
 
