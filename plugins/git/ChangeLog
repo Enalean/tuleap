@@ -1,3 +1,6 @@
+Version 3.60 - Tuleap 6.8
+    * request #5704 - Pushing GIT repo take a very long time
+
 Version 3.59 - Tuleap 6.8
     * First step fix request #5684 - Uncatched exception when running git push
 
