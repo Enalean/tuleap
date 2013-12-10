@@ -1,3 +1,6 @@
+Version 3.59 - Tuleap 6.8
+    * First step fix request #5684 - Uncatched exception when running git push
+
 Version 3.58 - Tuleap 6.8
     * Tiny improvements on gerrit's templates UI
 
