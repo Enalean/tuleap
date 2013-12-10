@@ -1,3 +1,6 @@
+Version 3.58 - Tuleap 6.8
+    * Tiny improvements on gerrit's templates UI
+
 Version 3.57 - Tuleap 6.8
     * Fix request #5713 - Gerrit user provisionning doesn't work with MySQL backend
 
