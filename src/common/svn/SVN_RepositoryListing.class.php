@@ -46,9 +46,9 @@ class SVN_RepositoryListing {
     public function getSvnPaths(PFUser $user, Project $project, $svn_path) {
         $paths            = array();
         $content          = $this->svnlook->getDirectoryListing($project, $svn_path);
-        
+
         foreach ($content as $line) {
-            
+
             if ($this->svn_permissions_manager->userCanRead($user, $project, $line)) {
                 $paths[]= $this->extractDirectoryContent($line, $svn_path);
             }
@@ -69,27 +69,30 @@ class SVN_RepositoryListing {
      * @return SVN_RevisionPathInfo[]
      */
     public function getSvnPathsWithLogDetails(PFUser $user, Project $project, $svn_path, $sort) {
-        $data = array();
         $paths = $this->getSvnPaths($user, $project, $svn_path);
 
         if (empty($paths)) {
-            return $data;
+            return array();
         }
 
+        return $this->sortSvnPathByTimestamp($project, $svn_path, $sort, $paths);
+    }
+
+    private function sortSvnPathByTimestamp(Project $project, $svn_path, $sort, array $paths) {
+        $date_based_path = array();
         foreach ($paths as $path) {
             $path_info = $this->getSvnSinglePathWithLogDetails($project, $svn_path.'/'.$path);
-            $data[$path_info->getTimestamp()] = $path_info;
+            $date_based_path[$path_info->getTimestamp()][] = $path_info;
         }
 
         if ($sort == 'DESC') {
-            krsort($data);
+            krsort($date_based_path);
         } else {
-            ksort($data);
+            ksort($date_based_path);
         }
 
-        return $data;
+        return $this->flattenTimestampBasedArrayOfPathInfo($date_based_path);
     }
-
 
     private function getSvnSinglePathWithLogDetails(Project $project, $svn_path) {
         $history = $this->splitHistory($this->svnlook->getPathLastHistory($project, $svn_path));
@@ -110,6 +113,14 @@ class SVN_RepositoryListing {
             }
         }
         return $history;
+    }
+
+    private function flattenTimestampBasedArrayOfPathInfo($date_based_path) {
+        $data = array();
+        foreach ($date_based_path as $list_of_path) {
+            $data = array_merge($data, $list_of_path);
+        }
+        return $data;
     }
 
     private function getRevisionInfo($revision, Project $project) {

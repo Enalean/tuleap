@@ -1,3 +1,6 @@
+6.4 - Tuleap 6.8
+	* Fix request #5701 - getSvnPathWithLogsDetails only returns one element
+
 6.3 - Tuleap 6.6
         * Add missing types in wsdl
 
