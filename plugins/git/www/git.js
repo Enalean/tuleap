@@ -151,7 +151,7 @@ document.observe('dom:loaded', function () {
                 $('git_admin_template_list_area').show();
                 $('git_admin_config_edit_area').show();
                 $('git_admin_file_name').show();
-                $('git_admin_config_btn_create').removeClassName('open');
+                $('git_admin_config_btn_create').hide();
                 event.stop();
             });
         }
@@ -171,7 +171,7 @@ document.observe('dom:loaded', function () {
                 $('git_admin_config_list_area').show();
                 $('git_admin_config_edit_area').show();
                 $('git_admin_file_name').show();
-                $('git_admin_config_btn_create').removeClassName('open');
+                $('git_admin_config_btn_create').hide();
                 event.stop();
             });
         }
@@ -191,7 +191,7 @@ document.observe('dom:loaded', function () {
                 $('git_admin_config_edit_area').show();
                 $('git_admin_config_form').show();
                 $('git_admin_file_name').show();
-                $('git_admin_config_btn_create').removeClassName('open');
+                $('git_admin_config_btn_create').hide();
                 event.stop();
             });
         }
