@@ -35,13 +35,31 @@ class ProjectTest extends RestBase {
     public function testGETbyIdForAdmin() {
         $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/101'));
 
-        $this->assertEquals($response->json(), array(
-            'id'        => '101',
-            'uri'       => 'projects/101',
-            'label'     => TestDataBuilder::TEST_PROJECT_LONG_NAME,
-            'resources' => array(
-                'projects/101/plannings'
-            ))
+        $this->assertEquals(
+            $response->json(),
+            array(
+                'id'        => 101,
+                'uri'       => 'projects/101',
+                'label'     => TestDataBuilder::TEST_PROJECT_LONG_NAME,
+                'resources' => array(
+                    array(
+                        'uri' => 'projects/101/trackers',
+                        'type' => 'trackers',
+                    ),
+                    array(
+                        'uri' => 'projects/101/backlog',
+                        'type' => 'backlog',
+                    ),
+                    array(
+                        'uri' => 'projects/101/milestones',
+                        'type' => 'milestones',
+                    ),
+                    array(
+                        'uri' => 'projects/101/plannings',
+                        'type' => 'plannings',
+                    ),
+                )
+            )
         );
         $this->assertEquals($response->getStatusCode(), 200);
     }
