@@ -27,12 +27,12 @@ document.observe('dom:loaded', function () {
                 if (checkbox.checked) {
                     //switch to "hidden"
                     checkbox.checked = false;
-                    checkbox.up('tr').addClassName('tracker_admin_static_value_hidden');
+                    checkbox.up('li').addClassName('tracker_admin_static_value_hidden');
                     img.src = img.src.gsub('eye.png', 'eye-half.png');
                 } else {
                     //switch to "shown"
                     checkbox.checked = true;
-                    checkbox.up('tr').removeClassName('tracker_admin_static_value_hidden');
+                    checkbox.up('li').removeClassName('tracker_admin_static_value_hidden');
                     img.src = img.src.gsub('eye-half.png', 'eye.png');
                 }
             });

@@ -1117,6 +1117,7 @@ plugin_tracker_formelement_admin	hide_value	Show/hide this value
 plugin_tracker_formelement_admin	checkbox	Checkbox
 plugin_tracker_formelement_admin	checkbox_desc	Checkbox
 plugin_tracker_formelement_admin	alpha_ranking_updated	Alpha Ranking updated
+plugin_tracker_formelement_admin	description_placeholder	Enter description…
 
 
 plugin_tracker_formelement_property	hint	Hint
