@@ -1,3 +1,6 @@
+Version 3.61 - Tuleap 6.8
+    * Fix lang typo
+
 Version 3.60 - Tuleap 6.8
     * request #5704 - Pushing GIT repo take a very long time
 
