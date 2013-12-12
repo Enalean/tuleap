@@ -76,6 +76,11 @@ class MilestoneRepresentation {
     public $capacity;
 
     /**
+     * @var float
+     */
+    public $remaining_effort;
+
+    /**
      * @var string
      */
     public $status_value;
@@ -111,13 +116,14 @@ class MilestoneRepresentation {
     public $last_modified_date;
 
     public function build(Planning_Milestone $milestone) {
-        $this->id           = JsonCast::toInt($milestone->getArtifactId());
-        $this->uri          = self::ROUTE . '/' . $this->id;
-        $this->label        = $milestone->getArtifactTitle();
-        $this->status_value = $milestone->getArtifact()->getStatus();
-        $this->submitted_by = JsonCast::toInt($milestone->getArtifact()->getFirstChangeset()->getSubmittedBy());
-        $this->submitted_on = JsonCast::toDate($milestone->getArtifact()->getFirstChangeset()->getSubmittedOn());
-        $this->capacity     = JsonCast::toFloat($milestone->getCapacity());
+        $this->id               = JsonCast::toInt($milestone->getArtifactId());
+        $this->uri              = self::ROUTE . '/' . $this->id;
+        $this->label            = $milestone->getArtifactTitle();
+        $this->status_value     = $milestone->getArtifact()->getStatus();
+        $this->submitted_by     = JsonCast::toInt($milestone->getArtifact()->getFirstChangeset()->getSubmittedBy());
+        $this->submitted_on     = JsonCast::toDate($milestone->getArtifact()->getFirstChangeset()->getSubmittedOn());
+        $this->capacity         = JsonCast::toFloat($milestone->getCapacity());
+        $this->remaining_effort = JsonCast::toFloat($milestone->getRemainingEffort());
 
         $this->project = new ProjectReference();
         $this->project->build($milestone->getProject());

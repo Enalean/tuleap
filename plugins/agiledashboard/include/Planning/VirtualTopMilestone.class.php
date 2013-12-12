@@ -150,6 +150,10 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
         return null;
     }
 
+    public function getRemainingEffort() {
+        return null;
+    }
+
     public function getLastModifiedDate() {
         return null;
     }

@@ -35,6 +35,25 @@ use \Tuleap\REST\Header;
 class ProjectMilestonesResource {
     const MAX_LIMIT = 50;
 
+    /** @var Tracker_FormElementFactory */
+    private $tracker_form_element_factory;
+
+    /** @var PlanningFactory */
+    private $planning_factory;
+
+    /** @var Tracker_ArtifactFactory */
+    private $tracker_artifact_factory;
+
+    /** @var TrackerFactory */
+    private $tracker_factory;
+
+    public function __construct() {
+        $this->tracker_form_element_factory = Tracker_FormElementFactory::instance();
+        $this->planning_factory             = PlanningFactory::build();
+        $this->tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
+        $this->tracker_factory              = TrackerFactory::instance();
+    }
+
     /**
      * Get the top milestones of a given project
      */
@@ -79,10 +98,10 @@ class ProjectMilestonesResource {
      */
     private function getTopMilestones(PFUser $user, Project $project) {
         $milestone_factory = new Planning_MilestoneFactory(
-            PlanningFactory::build(),
-            Tracker_ArtifactFactory::instance(),
-            Tracker_FormElementFactory::instance(),
-            TrackerFactory::instance()
+            $this->planning_factory,
+            $this->tracker_artifact_factory,
+            $this->tracker_form_element_factory,
+            $this->tracker_factory
         );
 
         $top_milestones = array();

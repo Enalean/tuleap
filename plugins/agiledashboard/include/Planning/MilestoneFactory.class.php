@@ -192,11 +192,20 @@ class Planning_MilestoneFactory {
         );
     }
 
+    /**
+     * Add some contextual information in the given milestone
+     *
+     * @param PFUser $user
+     * @param Planning_Milestone $milestone
+     *
+     * @return Planning_Milestone
+     */
     public function updateMilestoneContextualInfo(PFUser $user, Planning_Milestone $milestone) {
         return $milestone
             ->setStartDate($this->getTimestamp($user, $milestone, Planning_Milestone::START_DATE_FIELD_NAME))
             ->setDuration($this->getComputedFieldValue($user, $milestone, Planning_Milestone::DURATION_FIELD_NAME))
-            ->setCapacity($this->getComputedFieldValue($user, $milestone, Planning_Milestone::CAPACITY_FIELD_NAME));
+            ->setCapacity($this->getComputedFieldValue($user, $milestone, Planning_Milestone::CAPACITY_FIELD_NAME))
+            ->setRemainingEffort($this->getComputedFieldValue($user, $milestone, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME));
     }
 
     private function getTimestamp(PFUser $user, Planning_Milestone $milestone, $field_name) {
