@@ -67,6 +67,7 @@ class cardwallPlugin extends Plugin {
                 $this->addHook(AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT);
                 $this->addHook(AGILEDASHBOARD_EVENT_PLANNING_CONFIG);
                 $this->addHook(AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE);
+                $this->addHook(AGILEDASHBOARD_EVENT_REST_OPTIONS_CARDWALL);
             }
         }
         return parent::getHooksAndCallbacks();
@@ -404,6 +405,17 @@ class cardwallPlugin extends Plugin {
             new XmlValidator()
         );
         $cardwall_ontop_import->import($params['xml_content']);
+    }
+
+    public function agiledashboard_event_rest_options_cardwall($params) {
+        $milestones_cardwall = $this->buildRightVersionOfMilestonesCardwallResource($params['version']);
+
+        $milestones_cardwall->options($params['milestone']);
+    }
+
+    private function buildRightVersionOfMilestonesCardwallResource($version) {
+        $class_with_right_namespace = '\\Tuleap\\Cardwall\\REST\\'.$version.'\\MilestonesCardwallResource';
+        return new $class_with_right_namespace($this->getConfigFactory());
     }
 
     /**
