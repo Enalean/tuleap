@@ -45,7 +45,7 @@ tuleap.trackers.textarea.RTE = Class.create(codendi.RTE, {
         // The value is defined in Artifact class.
         var text_option = Builder.node(
             'option',
-            {'value' : 'text', 'id' : 'comment_format_text'+this.options.id, 'selected' : 'selected'},
+            {'value' : 'text', 'id' : 'comment_format_text'+this.options.id},
             "Text"
         );
         selectbox.appendChild(text_option);
@@ -66,7 +66,8 @@ tuleap.trackers.textarea.RTE = Class.create(codendi.RTE, {
         if (options.htmlFormat == true) {
             this.switchButtonToHtml();
         } else {
-            $('comment_format_text'+this.options.id).selected = true;
+            $('comment_format_text'+this.options.id).setAttribute('selected', 'selected');
+            $('comment_format_html'+this.options.id).removeAttribute('selected');
         }
 
         if ($('comment_format_html'+this.options.id).selected == true) {
@@ -87,7 +88,8 @@ tuleap.trackers.textarea.RTE = Class.create(codendi.RTE, {
      * Select the option that tells that the content is HTML
      */
     switchButtonToHtml: function () {
-        $('comment_format_html'+this.options.id).selected = true;
+        $('comment_format_text'+this.options.id).removeAttribute('selected');
+        $('comment_format_html'+this.options.id).setAttribute('selected', 'selected');
     }
 });
 

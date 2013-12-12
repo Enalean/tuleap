@@ -66,8 +66,8 @@ class Tracker_FormElement_Field_Value_TextDao extends Tracker_FormElement_Field_
     public function keep($from, $to) {
         $from = $this->da->escapeInt($from);
         $to   = $this->da->escapeInt($to);
-        $sql = "INSERT INTO $this->table_name(changeset_value_id, value)
-                SELECT $to, value
+        $sql = "INSERT INTO $this->table_name(changeset_value_id, value, body_format)
+                SELECT $to, value, body_format
                 FROM $this->table_name
                 WHERE changeset_value_id = $from";
         return $this->update($sql);
