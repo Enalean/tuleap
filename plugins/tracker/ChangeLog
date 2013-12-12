@@ -1,3 +1,6 @@
+Version 5.205 - Tuleap 6.8
+    * Fix request #5733 - Chosen format for text fields is lost on artifact update
+
 Version 5.204 - Tuleap 6.8
     * fix request #5558 - Links not extracted in read-only view
 
