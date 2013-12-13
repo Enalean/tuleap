@@ -459,9 +459,11 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         
         $h = new HTML_Element_Input_Checkbox( $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','alphabetically_sort'), 'bind[is_rank_alpha]', $this->is_rank_alpha);
         $h->setId('is_rank_alpha');
+        $h->addParam('class', 'is_rank_alpha');
         $html .= '<p>'. $h->render() .'</p>';
 
         $html .= '<table><tr><td>';
+        $html .= '<input type="hidden" name="bind[order]" class="bind_order_values" value="" />';
         $html .= '<ul class="tracker-admin-bindvalue_list">';
         foreach ($this->getAllValues() as $v) {
             $html .= $this->fetchAdminEditRowModifiable($v);
@@ -489,7 +491,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         
         $is_hidden = $v->isHidden();
 
-        $html .= '<li class="' . ($is_hidden ? 'tracker_admin_static_value_hidden' : '') . '">';
+        $html .= '<li id="staticvalue_'. $v->getId() .'" class="' . ($is_hidden ? 'tracker_admin_static_value_hidden' : '') . '">';
 
         $html .= '<span class="tracker-admin-bindvalue_grip">';
         $html .= $GLOBALS['HTML']->getImage('ic/grip.png');
@@ -626,6 +628,12 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                         $params['decorator'] = array((int)$value => null);
                         $redirect = true;
                         $GLOBALS['Response']->addFeedback('info', 'Value '.  $hp->purify($row['label'], CODENDI_PURIFIER_CONVERT_HTML)  .' deleted');
+                    }
+                    break;
+                case 'order':
+                    if (is_string($value)) {
+                        $ids_in_right_order = explode(',', $value);
+                        $value_dao->reorder($ids_in_right_order);
                     }
                     break;
                 case 'edit':

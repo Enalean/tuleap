@@ -24,11 +24,12 @@ codendi.tracker.bind = { };
 
 codendi.tracker.bind.Editor = Class.create({
     initialize: function (element) {
-        if (element) {
-            $(element).select('input[type=text][name^="bind[edit]"]').each(this.editStaticValues.bind(this));
-        } else {
-            $$('input[type=text][name^="bind[edit]"]').each(this.editStaticValues.bind(this));
+        if (! element) {
+            element = document.body;
         }
+
+        $(element).select('input[type=text][name^="bind[edit]"]').each(this.editStaticValues.bind(this));
+        $(element).select('.tracker-admin-bindvalue_list').each(this.sortFieldStaticValues.bind(this));
         this.accordionForBindTypes();
         this.addNew();
     },
@@ -74,6 +75,49 @@ codendi.tracker.bind.Editor = Class.create({
         tf_label.hide();
         ta_description.hide();
     },
+
+    setValuesOrderField: function (list) {
+        list.up('form').down('.bind_order_values').value = Sortable.sequence(list).join(',');
+    },
+
+    fixWidthOfDefaultValuesSelectbox: function (list) {
+        var new_width = list.getWidth();
+
+        list.up('form').down('.bind_default_values').setStyle({
+            width: new_width + 'px'
+        });
+    },
+
+    sortFieldStaticValues: function (list) {
+        var checkbox_rank_alpha = list.up('form').down('.is_rank_alpha');
+
+        this.fixWidthOfDefaultValuesSelectbox(list);
+
+        checkbox_rank_alpha.observe('click', function (evt) {
+            if (! Event.element(evt).checked) {
+                return;
+            }
+
+            list.childElements().sortBy(function (li) {
+                return li.down('.tracker-admin-bindvalue_label input[type=text]').value;
+            }).each(function (li) {
+                list.appendChild(li);
+            });
+            this.setValuesOrderField(list);
+        }.bind(this));
+
+        Sortable.create(
+            list,
+            {
+                handle: 'tracker-admin-bindvalue_grip',
+                onUpdate: function () {
+                    checkbox_rank_alpha.checked = false;
+                    this.setValuesOrderField(list);
+                }.bind(this)
+            }
+        );
+    },
+
     accordionForBindTypes: function () {
         if ($('tracker-bind-factory')) {
             $('tracker-bind-factory').select('input[name="formElement_data[bind-type]"]').each(function (selector) {
