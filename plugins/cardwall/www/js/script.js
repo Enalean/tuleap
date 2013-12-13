@@ -22,6 +22,83 @@
   * fields, etc).
   */
 document.observe('dom:loaded', function () {
+
+    jQuery('#go-to-fullscreen').on('click', function (evt) {
+        var isFullScreen = false;
+        var body = jQuery("body");
+        var main = jQuery(".main");
+        var info = jQuery(".cardwall_board-milestone-info");
+
+        function defineFullscreenClasses() {
+            if (isFullScreen) {
+                body.addClass('fullscreen');
+                info.removeClass('mini');
+
+            } else {
+                body.removeClass('fullscreen');
+                info.addClass('mini');
+                main.css('margin-left', localStorage.getItem('sidebar-size'));
+            }
+        }
+
+        /**
+         * Comes from http://www.sitepoint.com/html5-full-screen-api/
+         * Modified in December 2013 by the Enalean team
+         *
+         */
+        function RunPrefixMethod(obj, method) {
+            var prefix = ["webkit", "moz", "ms", "o", ""];
+            var position = 0;
+            var method_name;
+            var type;
+
+            while (position < prefix.length && !obj[method_name]) {
+                method_name = method;
+                if (prefix[position] == "") {
+                    method_name = method_name.substr(0,1).toLowerCase() + method_name.substr(1);
+                }
+                method_name = prefix[position] + method_name;
+                type = typeof obj[method_name];
+                if (type != "undefined") {
+                    prefix = [prefix[position]];
+                    return (type == "function" ? obj[method_name](Element.ALLOW_KEYBOARD_INPUT) : obj[method_name]);
+                }
+                position++;
+            }
+        }
+
+        function defineMilestoneInfoBlockSize() {
+            if (isFullScreen) {
+                main.css('margin-left', 0);
+                jQuery('.milestone-name').addClass('span3');
+                jQuery('.milestone-days').removeClass('span6').addClass('span5');
+                jQuery('.milestone-capacity').removeClass('span6').addClass('span4');
+
+            } else {
+                jQuery('.milestone-name').removeClass('span3');
+                jQuery('.milestone-days').removeClass('span5').addClass('span6');
+                jQuery('.milestone-capacity').removeClass('span4').addClass('span6');
+            }
+        }
+
+        (function fullscreen() {
+            if (RunPrefixMethod(document, "FullScreen") || RunPrefixMethod(document, "IsFullScreen")) {
+                isFullScreen = false;
+
+                RunPrefixMethod(document, "CancelFullScreen");
+                defineFullscreenClasses();
+                defineMilestoneInfoBlockSize();
+
+            } else {
+                isFullScreen = true;
+
+                RunPrefixMethod(body.get(0), "RequestFullScreen");
+                defineFullscreenClasses();
+                defineMilestoneInfoBlockSize();
+            }
+        })();
+    });
+
     $$('.cardwall_board').each(function ( board ) {
         (function checkForLatestCardWallVersion() {
             if ($('tracker_report_cardwall_to_be_refreshed')) {

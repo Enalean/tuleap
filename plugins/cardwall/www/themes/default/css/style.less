@@ -355,3 +355,123 @@ input[type="text"].search-in-cardwall {
 .cardwall-auto-stack-toggle {
     margin: 0;
 }
+
+body.fullscreen {
+    min-width: 100%;
+    min-height: 100%;
+    padding: 0;
+
+    footer, .sidebar-nav, .navbar, .breadcrumb, .toolbar, .agiledashboard > .dropdown, .agiledashboard > .nav {
+        display: none;
+    }
+
+    .main {
+        margin: 0;
+        padding: 0;
+    }
+
+    #cardwall {
+        min-width: 100%;
+        min-height: 100%;
+        background-color: #fff;
+
+        .cardwall_board-actions, .cardwall_board-fullscreen-bar {
+            padding: 20px 10px 0;
+        }
+    }
+}
+.cardwall_board-fullscreen-bar {
+    text-align: right;
+}
+.cardwall_board-milestone-info {
+    margin-bottom: 30px;
+
+    > div {
+        padding: 0 0 0 30px;
+        height: 100px;
+    }
+
+    .milestone-name {
+        a {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 2em;
+            line-height: 1em;
+            color: #444;
+
+            i {
+                font-size: 0.8em;
+                color: #888;
+            }
+
+            &:hover {
+                text-decoration: none;
+                color: #666;
+
+                i {
+                    color: #aaa;
+                }
+            }
+        }
+    }
+
+    .date-info, .points-info {
+        color: #888;
+        font-size: 0.9em;
+        margin: 0 0 10px 0;
+
+        span {
+            margin-right: 20px;
+        }
+    }
+
+    .progress-bar {
+        float: left;
+        width: 40%;
+        margin: 0 10% 0 0;
+
+        .progress {
+            height: 30px;
+
+            .bar {
+                padding: 5px 0 0 0;
+            }
+        }
+    }
+
+    .to-go {
+        float: left;
+        width: 50%;
+        font-size: 1.3em;
+        color: #444;
+
+        @media screen and (max-width: 1230px) {
+            font-size: 1.0em;
+        }
+
+        span {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .days, .points {
+            font-size: 3em;
+            @media screen and (max-width: 1230px) {
+                font-size: 2.5em;
+            }
+            font-weight: bold;
+            margin: 0 10px 0 0;
+        }
+    }
+
+    &.mini {
+        .milestone-name {
+            display: none;
+        }
+
+        > div:nth-child(2) {
+            border: none;
+            margin-left: 0 !important;
+        }
+    }
+}
