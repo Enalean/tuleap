@@ -159,7 +159,7 @@ document.observe('dom:loaded', function () {
                         } else {
                             var content = $('tracker_followup_comment_edit_'+id).getValue();
                         }
-                        var format = document.getElementsByName('comment_format'+id)[0].selected? 'text' : 'html';
+                        var format = $('rte_format_selectbox'+id).value;
                         var req = new Ajax.Request(location.href, {
                             parameters: {
                                 func:           'update-comment',
@@ -175,16 +175,19 @@ document.observe('dom:loaded', function () {
                                 }
                             }
                         });
+                        edit.show();
                         Event.stop(evt);
                         return false;
                     });
-                    
+
+                    edit.hide();
                     var cancel = new Element('a', {
                         href: '#cancel'
                     }).update('Cancel').observe('click', function (evt) {
                         edit_panel.remove();
                         comment_panel.show();
                         Event.stop(evt);
+                        edit.show();
                     });
                     
                     edit_panel.insert(new Element('br'))
