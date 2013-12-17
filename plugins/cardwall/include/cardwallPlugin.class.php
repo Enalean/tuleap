@@ -59,6 +59,7 @@ class cardwallPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
+            $this->addHook(Event::REST_RESOURCES);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -508,8 +509,23 @@ class cardwallPlugin extends Plugin {
 
             case 'get-card':
                 try {
-                    $controller_builder = new Cardwall_CardControllerBuilder($this->getConfigFactory());
-                    $controller = $controller_builder->getCardController($request);
+                    $single_card_builder = new Cardwall_SingleCardBuilder(
+                        $this->getConfigFactory(),
+                        new Cardwall_CardFields(
+                            UserManager::instance(),
+                            Tracker_FormElementFactory::instance()
+                        ),
+                        Tracker_ArtifactFactory::instance(),
+                        PlanningFactory::build()
+                    );
+                    $controller = new Cardwall_CardController(
+                        $request,
+                        $single_card_builder->getSingleCard(
+                            $request->getCurrentUser(),
+                            $request->getValidated('id', 'uint', 0),
+                            $request->getValidated('planning_id', 'uint', 0)
+                        )
+                    );
                     $controller->getCard();
                 } catch (Exception $exception) {
                     $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
@@ -520,6 +536,14 @@ class cardwallPlugin extends Plugin {
             default:
                 echo 'Hello !';
         }
+    }
+
+     /**
+     * @see REST_RESOURCES
+     */
+    public function rest_resources($params) {
+        $injector = new Cardwall_REST_ResourcesInjector();
+        $injector->populate($params['restler']);
     }
 }
 ?>
