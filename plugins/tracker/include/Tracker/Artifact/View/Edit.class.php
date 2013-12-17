@@ -20,6 +20,8 @@
 
 class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
+    const USER_PREFERENCE_DISPLAY_CHANGES = 'tracker_artifact_comment_display_changes';
+
     /**
      * @var Tracker_Artifact_ArtifactRenderer
      */
@@ -69,7 +71,12 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
         $html .= $this->fetchSubmitButton();
 
-        $html .= '<fieldset id="tracker_artifact_followup_comments"><legend
+        $classname = 'tracker_artifact_followup_comments-display_changes';
+        $user_preference = $this->user->getPreference(self::USER_PREFERENCE_DISPLAY_CHANGES);
+        if ($user_preference !== false && $user_preference == 0) {
+            $classname = '';
+        }
+        $html .= '<fieldset id="tracker_artifact_followup_comments" class="'. $classname .'"><legend
                           class="'. Toggler::getClassName('tracker_artifact_followups', true, true) .'"
                           id="tracker_artifact_followups">'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</legend>';
         $html .= '<ul class="tracker_artifact_followups">';
@@ -77,7 +84,9 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         $i = 0;
         foreach ($this->artifact->getChangesets() as $changeset) {
             if ($previous_changeset) {
-                $html .= '<li id="followup_'. $changeset->id .'" class="'. html_get_alt_row_color($i++) .' tracker_artifact_followup">';
+                $classnames  = html_get_alt_row_color($i++) .' tracker_artifact_followup ';
+                $classnames .= $changeset->getFollowUpClassnames();
+                $html .= '<li id="followup_'. $changeset->id .'" class="'. $classnames .'">';
                 $html .= $changeset->fetchFollowUp($previous_changeset);
                 $html .= '</li>';
             }
