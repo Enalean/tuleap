@@ -26,9 +26,19 @@ tuleap.agiledashboard.cardwall.cards.selectEditors = tuleap.agiledashboard.cardw
 
 tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
     var artifacts_modifications = $H(transport.responseJSON);
+    var milestone_id;
+    var rest_route_url;
 
     artifacts_modifications.each( function ( artifact ) {
         updateArtifact( artifact );
+    });
+
+    milestone_id   = $F('milestone_id');
+    rest_route_url = '/api/v1/milestones/' + milestone_id;
+
+    new Ajax.Request(rest_route_url, {
+        method : 'GET',
+        onComplete : updateRemainingEffortViewValue
     });
 
     function updateArtifact( artifact ) {
@@ -57,6 +67,18 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
         } else {
             element.update( value );
         }
+    }
+
+    function updateRemainingEffortViewValue(transport) {
+        var milestone_info;
+        var milestone_remaining_effort;
+        var element;
+
+        milestone_info             = transport.responseJSON;
+        milestone_remaining_effort = milestone_info["remaining_effort"];
+        element                    = $('milestone_remaining_effort');
+
+        element.update(milestone_remaining_effort);
     }
 };
 

@@ -69,6 +69,10 @@ class AgileDashboard_MilestonePresenter {
         return $this->milestone->getArtifactTitle();
     }
 
+    public function milestoneId() {
+        return $this->milestone->getArtifactId();
+    }
+
     /**
      * @return array of (id, title, selected)
      */
