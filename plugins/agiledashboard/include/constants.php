@@ -101,4 +101,13 @@ define('AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE', 'agiledashboard_event_plan
  */
 define('AGILEDASHBOARD_EVENT_REST_OPTIONS_CARDWALL', 'agiledashboard_event_rest_options_cardwall');
 
+
+/**
+ * RESt call for cardwall GET
+ *
+ * Parameters:
+ * 'version'   => API version
+ * 'milestone' => Milestone on which cardwall is requested
+ */
+define('AGILEDASHBOARD_EVENT_REST_GET_CARDWALL', 'agiledashboard_event_rest_get_cardwall');
 ?>

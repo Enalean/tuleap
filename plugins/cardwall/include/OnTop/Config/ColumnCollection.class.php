@@ -94,5 +94,15 @@ class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAgg
         }
     }
 
+    public function getRestValue() {
+        $column_representations = array();
+        foreach ($this->columns as $column) {
+            $column_representation = new AgileDashboard_ColumnRepresentation();
+            $column_representation->build($column);
+            $column_representations[] = $column_representation;
+        }
+        return $column_representations;
+    }
+
 }
 ?>

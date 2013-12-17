@@ -347,13 +347,11 @@ class MilestoneResource {
 
     /**
      * Carwall options
-     * 
-     * Carwall options
-     * 
+     *
      * @url OPTIONS {id}/cardwall
-     * 
+     *
      * @param int $id Id of the milestone
-     * 
+     *
      * @throws 403
      * @throws 404
      */
@@ -365,6 +363,32 @@ class MilestoneResource {
                 'milestone' => $this->getMilestoneById($this->getCurrentUser(), $id)
             )
         );
+    }
+
+    /**
+     * Get a Cardwall
+     *
+     * @url GET {id}/cardwall
+     *
+     * @param int $id Id of the milestone
+     *
+     *
+     *
+     * @throws 403
+     * @throws 404
+     */
+    protected function getCardwall($id) {
+        $cardwall = null;
+        $this->event_manager->processEvent(
+            AGILEDASHBOARD_EVENT_REST_GET_CARDWALL,
+            array(
+                'version'   => 'v1',
+                'milestone' => $this->getMilestoneById($this->getCurrentUser(), $id),
+                'cardwall'  => &$cardwall
+            )
+        );
+
+        return $cardwall;
     }
 
     private function getMilestoneById(PFUser $user, $id) {
