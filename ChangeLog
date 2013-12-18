@@ -5,6 +5,9 @@ Version 6.9 (Not released yet)
 	* cardwall: 1.9
 	* git: 3.62
 
+	== Enhancement ==
+	* Making the RESt API resource list public
+
 Version 6.8 (Thursday, December 12th 2013)
 	== Plugins ==
 	* tracker_date_reminder: 1.2.7
