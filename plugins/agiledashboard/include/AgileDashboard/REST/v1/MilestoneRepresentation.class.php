@@ -23,6 +23,8 @@ use \Planning_Milestone;
 use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use \Tuleap\REST\JsonCast;
 
+use \AgileDashboard_MilestonesCardwallRepresentation;
+
 /**
  * Representation of a milestone
  */
@@ -106,6 +108,11 @@ class MilestoneRepresentation {
     public $content_uri;
 
     /**
+     * @var string
+     */
+    public $cardwall_uri;
+
+    /**
      * @var string Date, when the last modification occurs
      */
     public $last_modified_date;
@@ -145,6 +152,7 @@ class MilestoneRepresentation {
         $this->sub_milestones_uri = $this->uri . '/'. self::ROUTE;
         $this->backlog_uri        = $this->uri . '/'. BacklogItemRepresentation::BACKLOG_ROUTE;
         $this->content_uri        = $this->uri . '/'. BacklogItemRepresentation::CONTENT_ROUTE;
+        $this->cardwall_uri       = $this->uri . '/'. AgileDashboard_MilestonesCardwallRepresentation::ROUTE;
         $this->last_modified_date = JsonCast::toDate($milestone->getLastModifiedDate());
     }
 }
