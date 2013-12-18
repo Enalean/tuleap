@@ -38,6 +38,8 @@ use Luracast\Restler\Defaults;
 // Do not put .json at the end of the resource
 Resources::$useFormatAsExtension = false;
 
+//Do not hide the API
+Resources::$hideProtected = false;
 // Use /api/v1/projects uri
 Defaults::$useUrlBasedVersioning = true;
 
