@@ -219,6 +219,18 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
         return new Rule_NoCr();
     }
 
+    /**
+     * Check if there are changes between old and new value for this field
+     *
+     * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data stored in the db
+     * @param mixed                           $new_value               May be string or array
+     *
+     * @return bool true if there are differences
+     */
+    public function hasChanges($previous_changesetvalue, $new_value) {
+        return $previous_changesetvalue->getText() != $new_value;
+    }
+
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         $this->getValueDao()->create($changeset_value_id, $value);
         $this->extractCrossRefs($artifact, $value);
