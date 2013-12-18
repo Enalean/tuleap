@@ -184,6 +184,7 @@ class cardwallPlugin extends Plugin {
                 'admin.js',
                 'select2.min.js',
                 'CardsEditInPlace.js',
+                'fullscreen.js',
             ));
         }
     }

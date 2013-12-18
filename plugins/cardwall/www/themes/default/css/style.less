@@ -361,7 +361,7 @@ body.fullscreen {
     min-height: 100%;
     padding: 0;
 
-    footer, .sidebar-nav, .navbar, .breadcrumb, .toolbar, .agiledashboard > .dropdown, .agiledashboard > .nav {
+    #feedback, footer, .sidebar-nav, .navbar, .breadcrumb, .toolbar, .agiledashboard > .dropdown, .agiledashboard > .nav, .agiledashboard > .release-date-info {
         display: none;
     }
 
@@ -384,11 +384,11 @@ body.fullscreen {
     text-align: right;
 }
 .cardwall_board-milestone-info {
-    margin-bottom: 30px;
+    margin: 30px 0;
 
     > div {
         padding: 0 0 0 30px;
-        height: 100px;
+        height: 60px;
     }
 
     .milestone-name {
@@ -465,6 +465,8 @@ body.fullscreen {
     }
 
     &.mini {
+        margin: 15px 0;
+
         .milestone-name {
             display: none;
         }
@@ -472,6 +474,28 @@ body.fullscreen {
         > div:nth-child(2) {
             border: none;
             margin-left: 0 !important;
+        }
+
+        .date-info, .points-info {
+            margin: 0 0 3px 0;
+        }
+
+        .progress-bar {
+            .progress {
+                height: 20px;
+
+                .bar {
+                    padding: 0;
+                }
+            }
+        }
+
+        .to-go {
+            font-size: 1em;
+
+            .days, .points {
+              font-size: 2.2em;
+            }
         }
     }
 }
