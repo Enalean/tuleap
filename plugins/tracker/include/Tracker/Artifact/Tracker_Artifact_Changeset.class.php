@@ -608,7 +608,10 @@ class Tracker_Artifact_Changeset {
         $cleanRecipientsList = array();
         foreach ($recipients as $recipient => $check_perms) {
             $user = $this->getUserManager()->getUserByUserName($recipient);
-            if (!$check_perms || $this->userCanReadAtLeastOneChangedField($user)) {
+            if (! $user) {
+                continue;
+            }
+            if (! $check_perms || $this->userCanReadAtLeastOneChangedField($user)) {
                 $cleanRecipientsList[$recipient] = $check_perms;
             }
         }
