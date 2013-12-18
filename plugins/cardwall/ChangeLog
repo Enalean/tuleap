@@ -1,3 +1,8 @@
+Version 1.9 - Tuleap 6.9
+    * Add GET /milestones/:id/cardwall
+Add OPTIONS /milestones/:id/cardwall
+
+
 Version 1.8 - Tuleap 6.7
     * Fix UI: bootstrap issues
 
