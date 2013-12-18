@@ -64,10 +64,9 @@ tuleap.trackers.textarea.RTE = Class.create(codendi.RTE, {
         div.appendChild(this.element);
 
         if (options.htmlFormat == true) {
-            this.switchButtonToHtml();
+            selectbox.selectedIndex = 1;
         } else {
-            $('comment_format_text'+this.options.id).setAttribute('selected', 'selected');
-            $('comment_format_html'+this.options.id).removeAttribute('selected');
+            selectbox.selectedIndex = 0;
         }
 
         if ($('comment_format_html'+this.options.id).selected == true) {
@@ -82,14 +81,6 @@ tuleap.trackers.textarea.RTE = Class.create(codendi.RTE, {
     toggle: function ($super, event, selectbox) {
         var option = selectbox.options[selectbox.selectedIndex].value;
         $super(event, option);
-    },
-
-    /**
-     * Select the option that tells that the content is HTML
-     */
-    switchButtonToHtml: function () {
-        $('comment_format_text'+this.options.id).removeAttribute('selected');
-        $('comment_format_html'+this.options.id).setAttribute('selected', 'selected');
     }
 });
 
