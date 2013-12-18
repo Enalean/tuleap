@@ -39,6 +39,10 @@ class Cardwall_CardFieldPresenter {
     public function getField() {
         return $this->field->fetchCard($this->artifact, $this->display_preferences);
     }
+
+    public function getTrackerField() {
+        return $this->field;
+    }
 }
 
 ?>
