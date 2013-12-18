@@ -24,5 +24,7 @@ codendi.locales['cardwall_field_validation'] = {
 };
 
 codendi.locales['cardwall'] = {
-    edit_card : 'Edit Card'
+    edit_card        : 'Edit Card',
+    go_to_fullscreen : 'Fullscreen',
+    exit_fullscreen  : 'Exit fullscreen'
 };

@@ -56,6 +56,26 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      */
     private $milestone_factory;
 
+    /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $tracker_form_element_factory;
+
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
+
+    /**
+     * @var PlanningFactory
+     */
+    private $planning_factory;
+
     public function __construct(
             Cardwall_PaneInfo $info,
             Planning_Milestone $milestone,
@@ -63,14 +83,17 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             Cardwall_OnTop_Config $config,
             PFUser $user,
             Planning_MilestoneFactory $milestone_factory
-            ) {
-        $this->info           = $info;
-        $this->milestone      = $milestone;
-        $this->enable_qr_code = $enable_qr_code;
-        $this->config         = $config;
-        $this->user           = $user;
-        $this->milestone_factory = $milestone_factory;
-        $this->artifact_factory = Tracker_ArtifactFactory::instance();
+    ) {
+        $this->info                         = $info;
+        $this->milestone                    = $milestone;
+        $this->enable_qr_code               = $enable_qr_code;
+        $this->config                       = $config;
+        $this->user                         = $user;
+        $this->milestone_factory            = $milestone_factory;
+        $this->artifact_factory             = Tracker_ArtifactFactory::instance();
+        $this->tracker_form_element_factory = Tracker_FormElementFactory::instance();
+        $this->user_manager                 = UserManager::instance();
+        $this->planning_factory             = PlanningFactory::build();
     }
 
     public function getIdentifier() {
@@ -125,7 +148,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $mapping_collection = $this->getMappingCollection($planning, $columns, $field_provider);
         $presenter_builder = new Cardwall_CardInCellPresenterBuilder(
             new Cardwall_CardInCellPresenterFactory($field_provider, $mapping_collection),
-            new Cardwall_CardFields(UserManager::instance(), Tracker_FormElementFactory::instance()),
+            new Cardwall_CardFields($this->user_manager , $this->tracker_form_element_factory),
             $display_preferences,
             $this->user
         );
@@ -136,7 +159,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
 
         $redirect_parameter  = 'cardwall[agile]['. $planning->getId() .']='. $this->milestone->getArtifactId();
 
-
+        $this->milestone = $this->milestone_factory->updateMilestoneContextualInfo($this->user, $this->milestone);
 
         return new Cardwall_PaneContentPresenter(
             $board,
@@ -144,7 +167,33 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             $redirect_parameter,
             $this->getSwitchDisplayAvatarsURL(),
             $display_preferences->shouldDisplayAvatars(),
-            $planning
+            $planning,
+            $this->milestone,
+            $this->getMilestoneContentItems()
+        );
+    }
+
+    private function getMilestoneContentItems() {
+        $backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
+            new AgileDashboard_BacklogItemDao(),
+            $this->artifact_factory,
+            $this->tracker_form_element_factory,
+            $this->milestone_factory,
+            $this->planning_factory,
+            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
+        );
+
+        $strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
+            new AgileDashboard_BacklogItemDao(),
+            $this->artifact_factory,
+            $this->planning_factory
+        );
+
+        return $backlog_item_collection_factory->getAllCollection(
+            $this->user_manager->getCurrentUser(),
+            $this->milestone,
+            $strategy_factory->getSelfBacklogStrategy($this->milestone),
+            ''
         );
     }
 

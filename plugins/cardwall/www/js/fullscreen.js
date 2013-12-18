@@ -29,6 +29,7 @@
         var body = $("body");
         var main = $(".main");
         var info = $(".cardwall_board-milestone-info");
+        var button = $("#go-to-fullscreen");
 
         function defineFullscreenClasses() {
             if (isFullScreen) {
@@ -90,20 +91,37 @@
             }
         }
 
+        function updateButtonLabel() {
+            if (isFullScreen) {
+                button.html('<i class="icon-resize-small"></i>' + codendi.locales.cardwall.exit_fullscreen);
+
+            } else {
+                button.html('<i class="icon-desktop"></i>' + codendi.locales.cardwall.go_to_fullscreen);
+            }
+        }
+
+        function scrollToTop() {
+            $('html, body').scrollTop(0);
+        }
+
         function exitFullScreen() {
             isFullScreen = false;
 
             RunPrefixMethod(document, "CancelFullScreen");
+            scrollToTop();
             defineFullscreenClasses();
             defineMilestoneInfoBlockSize();
+            updateButtonLabel();
         }
 
         function requestFullScreen() {
             isFullScreen = true;
 
             RunPrefixMethod(document.querySelector("html"), "RequestFullScreen");
+            scrollToTop();
             defineFullscreenClasses();
             defineMilestoneInfoBlockSize();
+            updateButtonLabel();
         }
 
         $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange', function (evt) {
@@ -114,8 +132,7 @@
             }
         });
 
-        $('#go-to-fullscreen').on('click', function (evt) {
-
+        button.on('click', function (evt) {
             (function fullscreen() {
                 if (RunPrefixMethod(document, "FullScreen") || RunPrefixMethod(document, "IsFullScreen")) {
                     exitFullScreen();

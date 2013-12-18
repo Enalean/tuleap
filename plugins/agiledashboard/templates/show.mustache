@@ -3,11 +3,11 @@
         <input type="hidden" id="milestone_id" value="{{milestoneId}}" />
         <h2 class="dropdown-toggle" data-toggle="dropdown">{{milestoneTitle}} <b class="caret"></b></h2>
         <ul class="dropdown-menu">
-            {{#selectableArtifacts}}
-            <li><a href="{{url}}">{{{title}}}</a></li>
-            {{/selectableArtifacts}}
+            <li><a href="{{editArtifactUrl}}">{{editArtifact}}</a></li>
             <li class="divider"></li>
-            <li><a href="{{createNewItemToPlanUrl}}">{{createNewItemToPlan}}</a></li>
+            {{#selectableArtifacts}}
+                <li><a href="{{url}}">{{{title}}}</a></li>
+            {{/selectableArtifacts}}
         </ul>
     </div>
 

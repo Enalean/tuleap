@@ -25,5 +25,7 @@ codendi.locales['cardwall_field_validation'] = {
 };
 
 codendi.locales['cardwall'] = {
-    edit_card : 'Éditer la carte'
+    edit_card        : 'Éditer la carte',
+    go_to_fullscreen : 'Plein écran',
+    exit_fullscreen  : 'Quitter le plein écran'
 };

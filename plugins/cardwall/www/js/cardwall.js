@@ -75,10 +75,28 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
         var element;
 
         milestone_info             = transport.responseJSON;
-        milestone_remaining_effort = milestone_info["remaining_effort"];
+        milestone_remaining_effort = parseFloat(milestone_info["remaining_effort"]);
         element                    = $('milestone_remaining_effort');
 
         element.update(milestone_remaining_effort);
+        updateInitialEffortProgressBar(milestone_remaining_effort);
+    }
+
+    function updateInitialEffortProgressBar(milestone_remaining_effort) {
+        var completion_bar;
+        var new_completion;
+        var milestone_initial_effort;
+
+        completion_bar = $('milestone_points_completion_bar');
+
+        if (completion_bar != null) {
+
+            milestone_initial_effort = parseFloat(completion_bar.readAttribute('data-initial-effort'));
+            new_completion           = Math.ceil((milestone_initial_effort - milestone_remaining_effort) / milestone_initial_effort * 100);
+
+            completion_bar.update(new_completion + '%');
+            completion_bar.style.width = new_completion + '%';
+        }
     }
 };
 

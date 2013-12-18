@@ -91,12 +91,12 @@ class AgileDashboard_MilestonePresenter {
         return $artifacts_data;
     }
 
-    public function createNewItemToPlan() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'create_new_item_to_plan', array($this->milestone->getPlanning()->getPlanningTracker()->getItemName()));
+    public function editArtifact() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item_dropdown', array($this->milestoneTitle()));
     }
 
-    public function createNewItemToPlanUrl() {
-        return '/plugins/tracker/?tracker='.$this->milestone->getPlanning()->getPlanningTrackerId().'&func=new-artifact-link&id='.$this->getParentArtifactId().'&immediate=1&'.$this->planning_redirect_to_new;
+    public function editArtifactUrl() {
+        return '/plugins/tracker/?aid='.$this->milestone->getArtifactId().'&func=edit';
     }
 
     private function getParentArtifactId() {
