@@ -1384,7 +1384,11 @@ function getArtifactType($sessionKey, $group_id, $group_artifact_id) {
         
     	if ($at->userCanView($user_id)) {
         	// The function getArtifactTypes returns only the trackers the user is allowed to view
-        	return artifacttype_to_soap($at);
+                $soap_art = artifacttype_to_soap($at);
+                if (empty($soap_art)) {
+                    return new SoapFault(get_artifact_type_fault, 'Permission denied.', 'getArtifactType');
+                }
+                return $soap_art;
         } else {
         	return new SoapFault(get_artifact_type_fault, 'Permission denied.', 'getArtifactType');
         }
