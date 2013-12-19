@@ -41,6 +41,7 @@ class Combined {
             '/scripts/bootstrap/bootstrap-modal.js',
             '/scripts/bootstrap/bootstrap-tooltip.js',
             '/scripts/bootstrap/bootstrap-tooltip-fix-prototypejs-conflict.js',
+            '/scripts/bootstrap/bootstrap-popover.js',
             '/scripts/bootstrap/bootstrap-select/bootstrap-select.js',
             '/scripts/AZHU/storage.js',
             '/scripts/codendi/common.js',

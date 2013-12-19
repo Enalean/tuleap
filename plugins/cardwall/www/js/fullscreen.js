@@ -124,6 +124,10 @@
             updateButtonLabel();
         }
 
+        function browserIsIE() {
+            return eval('/*@cc_on !@*/false');
+        }
+
         $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange', function (evt) {
             var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
 
@@ -132,14 +136,24 @@
             }
         });
 
-        button.on('click', function (evt) {
-            (function fullscreen() {
-                if (RunPrefixMethod(document, "FullScreen") || RunPrefixMethod(document, "IsFullScreen")) {
-                    exitFullScreen();
-                } else {
-                    requestFullScreen();
-                }
-            })();
-        });
+        if (browserIsIE()) {
+            button.popover({
+                trigger: 'hover',
+                placement: 'left',
+                html: true,
+                title: codendi.locales.cardwall.no_fullscreen_title,
+                content: codendi.locales.cardwall.no_fullscreen_content
+            });
+        } else {
+            button.on('click', function (evt) {
+                (function fullscreen() {
+                    if (RunPrefixMethod(document, "FullScreen") || RunPrefixMethod(document, "IsFullScreen")) {
+                        exitFullScreen();
+                    } else {
+                        requestFullScreen();
+                    }
+                })();
+            });
+        }
     });
  })(jQuery);
