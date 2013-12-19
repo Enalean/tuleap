@@ -84,7 +84,7 @@ class Docman_VersionFactory {
      * @param Integer $id    Id of the version
      * @param String  $table Table name
      *
-     * @return Docman_Version
+     * @return Docman_Version | null
      */
     function getSpecificVersionById($id, $table = 'plugin_docman_version_deleted') {
         $dao = $this->_getVersionDao();
