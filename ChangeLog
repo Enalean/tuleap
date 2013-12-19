@@ -4,6 +4,7 @@ Version 6.9 (Not released yet)
 	* agiledashboard: 1.27
 	* cardwall: 1.9
 	* git: 3.62
+	* docman: 2.26.26
 
 	== Enhancement ==
 	* Making the RESt API resource list public
