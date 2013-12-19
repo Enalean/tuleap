@@ -22,6 +22,7 @@ require_once 'SVN_LogDao.class.php';
 require_once 'common/project/Project.class.php';
 require_once 'common/user/User.class.php';
 require_once 'common/date/TimeInterval.class.php';
+require_once 'www/svn/svn_utils.php';
 
 /**
  * The SVN log of a project.
