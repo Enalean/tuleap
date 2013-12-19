@@ -8,6 +8,9 @@ Version 6.9 (Not released yet)
 	== Enhancement ==
 	* Making the RESt API resource list public
 
+	== Bug Fix ==
+	* Fix request #5779: Fatal error when using getSvnStatsFiles SOAP method
+
 Version 6.8 (Thursday, December 12th 2013)
 	== Plugins ==
 	* tracker_date_reminder: 1.2.7
