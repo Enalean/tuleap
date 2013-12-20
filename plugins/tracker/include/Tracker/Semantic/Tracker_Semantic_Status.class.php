@@ -107,9 +107,12 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
     }
 
     /**
+     * Get status label independent of language (hence english)
+     *
+     * @param Tracker_Artifact $artifact
      * @return string
      */
-    public function getStatus(Tracker_Artifact $artifact) {
+    public function getNormalizedStatusLabel(Tracker_Artifact $artifact) {
         $status = $artifact->getStatus();
         if (! $status) {
             return '';
@@ -119,7 +122,25 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         if (in_array($artifact->getStatus(), $this->getOpenLabels())) {
             $key = self::OPEN;
         }
-        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_'. $key);
+        return $key;
+    }
+
+    /**
+     * Get status label according to current user language preference
+     *
+     * @param Tracker_Artifact $artifact
+     * @return string
+     */
+    public function getLocalizedStatusLabel(Tracker_Artifact $artifact) {
+        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_'. $this->getNormalizedStatusLabel($artifact));
+    }
+
+    /**
+     * @deprecated in favor of getLocalizedStatusLabel
+     * @return string
+     */
+    public function getStatus(Tracker_Artifact $artifact) {
+        return $this->getLocalizedStatusLabel($artifact);
     }
 
     /**

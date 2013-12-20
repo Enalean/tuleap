@@ -20,6 +20,7 @@
  */
 
 use \PFUser;
+use \Tuleap\REST\JsonCast;
 
 class AgileDashboard_CardRepresentation {
 
@@ -68,14 +69,14 @@ class AgileDashboard_CardRepresentation {
         $this->project      = $this->getProjectReference($artifact->getTracker()->getProject());
         $this->artifact     = $this->getArtifactReference($artifact);
 
-        $this->planning_id  = $planning_id;
+        $this->planning_id  = JsonCast::toInt($planning_id);
         $this->status       = $this->getCardStatus($card);
         if ($card->getCardPresenter()->getAccentColor()) {
             $this->accent_color = ColorHelper::CssRGBToHexa($card->getCardPresenter()->getAccentColor());
         }
-        $this->column_id    = $column_id;
+        $this->column_id    = JsonCast::toInt($column_id);
         if($this->column_id) {
-            $this->allowed_column_ids = $card->getDropIntoIds();
+            $this->allowed_column_ids = array_map(function ($value) { return JsonCast::toInt($value); }, $card->getDropIntoIds());
         } else {
             $this->allowed_column_ids = array();
         }
@@ -128,7 +129,7 @@ class AgileDashboard_CardRepresentation {
     private function getCardStatus(Cardwall_CardInCellPresenter $card) {
         $semantic = Tracker_Semantic_Status::load($card->getArtifact()->getTracker());
 
-        return $semantic->getStatus($card->getArtifact());
+        return $semantic->getNormalizedStatusLabel($card->getArtifact());
     }
 
 }

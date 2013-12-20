@@ -110,7 +110,7 @@ class MilestoneRepresentation {
     /**
      * @var string
      */
-    public $cardwall_uri;
+    public $cardwall_uri = null;
 
     /**
      * @var string Date, when the last modification occurs
@@ -152,7 +152,10 @@ class MilestoneRepresentation {
         $this->sub_milestones_uri = $this->uri . '/'. self::ROUTE;
         $this->backlog_uri        = $this->uri . '/'. BacklogItemRepresentation::BACKLOG_ROUTE;
         $this->content_uri        = $this->uri . '/'. BacklogItemRepresentation::CONTENT_ROUTE;
-        $this->cardwall_uri       = $this->uri . '/'. AgileDashboard_MilestonesCardwallRepresentation::ROUTE;
         $this->last_modified_date = JsonCast::toDate($milestone->getLastModifiedDate());
+    }
+
+    public function enableCardwall() {
+        $this->cardwall_uri = $this->uri . '/'. AgileDashboard_MilestonesCardwallRepresentation::ROUTE;
     }
 }
