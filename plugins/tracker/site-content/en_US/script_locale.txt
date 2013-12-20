@@ -10,7 +10,8 @@ codendi.locales['tracker_formelement_admin'] = {
 codendi.locales['tracker_artifact'] = {
     masschange: 'Masschange',
     masschange_check_all: 'Check all',
-    masschange_uncheck_all: 'Uncheck all'
+    masschange_uncheck_all: 'Uncheck all',
+    display_changes: 'Display changes'
 };
 codendi.locales['tracker_renderer'] = {
     order_dragdrop: 'You can order tabs with drag \'n drop'

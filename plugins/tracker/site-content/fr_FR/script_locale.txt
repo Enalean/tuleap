@@ -10,7 +10,8 @@ codendi.locales['tracker_formelement_admin'] = {
 codendi.locales['tracker_artifact'] = {
     masschange: 'Mise à jour massive',
     masschange_check_all: 'Tout cocher',
-    masschange_uncheck_all: 'Décocher tout'
+    masschange_uncheck_all: 'Décocher tout',
+    display_changes: 'Afficher les changements'
 };
 codendi.locales['tracker_renderer'] = {
     order_dragdrop: 'Vous pouvez ordonner les onglets avec le glisser/déposer'

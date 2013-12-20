@@ -36,6 +36,8 @@ class Tracker_URLVerification extends URLVerification {
      */
     function isException($server) {
         $userRequestsDefaultTemplates = $server['REQUEST_URI'] == TRACKER_BASE_URL .'/index.php?group_id=100' && HTTPRequest::instance()->isAjax();
+        $userRequestsDefaultTemplates |= $server['REQUEST_URI'] == TRACKER_BASE_URL .'/invert_comments_order.php';
+        $userRequestsDefaultTemplates |= $server['REQUEST_URI'] == TRACKER_BASE_URL .'/invert_display_changes.php';
         return $userRequestsDefaultTemplates || parent::isException($server);
     }
 }

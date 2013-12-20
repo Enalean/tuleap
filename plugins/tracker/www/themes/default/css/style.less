@@ -469,6 +469,15 @@ ul.tracker_function_aggregate_results {
 
 #tracker_artifact_followup_comments {
     background: #fbfbfb;
+
+    &:not(.tracker_artifact_followup_comments-display_changes) {
+        .tracker_artifact_followup.tracker_artifact_followup-with_changes:not(.tracker_artifact_followup-with_comment),
+        .tracker_artifact_followup.tracker_artifact_followup-by_system_user,
+        .tracker_artifact_followup_changes,
+        .tracker_artifact_followup_content > hr {
+            display: none;
+        }
+    }
 }
 
 .tracker_artifact_followups {

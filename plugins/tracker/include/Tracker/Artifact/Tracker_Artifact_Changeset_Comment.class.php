@@ -130,7 +130,7 @@ class Tracker_Artifact_Changeset_Comment {
      * @return string the HTML code of this comment
      */
     public function fetchFollowUp() {
-        if (empty($this->body)) {
+        if ($this->hasEmptyBody()) {
             return null;
         }
 

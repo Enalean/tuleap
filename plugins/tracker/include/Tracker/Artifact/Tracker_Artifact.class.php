@@ -520,7 +520,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 exit;
                 break;
             case 'update-comment':
-                if ((int)$request->get('changeset_id') && $request->get('content')) {
+                if ((int)$request->get('changeset_id') && $request->exist('content')) {
                     if ($changeset = $this->getChangeset($request->get('changeset_id'))) {
                         $comment_format = $this->validateCommentFormat($request, 'comment_format');
                         $changeset->updateComment($request->get('content'), $current_user, $comment_format);
