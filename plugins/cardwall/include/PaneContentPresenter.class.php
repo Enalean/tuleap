@@ -163,7 +163,7 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
     }
 
     public function milestone_has_initial_effort() {
-        return ! is_null($this->milestone_initial_effort());
+        return $this->milestone_initial_effort() != 0;
     }
 
     /**
@@ -193,7 +193,7 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
     }
 
     public function milestone_remaining_effort() {
-        if ($this->milestone->getRemainingEffort() >= 0) {
+        if ($this->milestone->getRemainingEffort() > 0) {
             return $this->milestone->getRemainingEffort();
         }
 

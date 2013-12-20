@@ -404,7 +404,7 @@ body.fullscreen {
 
     > div {
         padding: 10px 0 0 30px;
-        height: 80px;
+        height: 90px;
         border-left: 1px solid #ddd;
     }
 
@@ -446,6 +446,11 @@ body.fullscreen {
         span {
             margin-right: 20px;
         }
+    }
+
+    .line-break {
+        font-size: 0.9em;
+        margin: 0;
     }
 
     .progress-bar {
@@ -496,10 +501,10 @@ body.fullscreen {
     }
 
     .no-data {
-      text-align: center;
-      font-style: italic;
-      font-size: 0.9em;
-      color: #aaa;
+        text-align: center;
+        font-style: italic;
+        font-size: 0.9em;
+        color: #aaa;
     }
 
     .milestone-capacity .no-data {
@@ -510,6 +515,10 @@ body.fullscreen {
 
     &.mini {
         margin: 15px 0;
+
+        > div {
+            height: 60px;
+        }
 
         .milestone-name {
             display: none;
