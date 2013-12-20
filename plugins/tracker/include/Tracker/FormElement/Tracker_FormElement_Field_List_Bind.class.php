@@ -402,7 +402,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
         //Select default values
         $html .= '<p>';
         $html .= '<strong>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','select_default_value'). '</strong><br />';
-        $html .= '<select name="bind[default][]" size="7" multiple="multiple">';
+        $html .= '<select name="bind[default][]" class="bind_default_values" size="7" multiple="multiple">';
         foreach ($this->getAllValues() as $v) {
             $selected = isset($this->default_values[$v->getId()]) ? 'selected="selected"' : '';
             $html .= '<option value="'. $v->getId() .'" '. $selected .'>'. $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  .'</option>';

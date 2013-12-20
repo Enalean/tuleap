@@ -1116,6 +1116,7 @@ plugin_tracker_formelement_admin	hide_value	Afficher/cacher cette valeur
 plugin_tracker_formelement_admin	checkbox	Case à cocher
 plugin_tracker_formelement_admin	checkbox_desc	Case à cocher
 plugin_tracker_formelement_admin	alpha_ranking_updated	Ordre alphabétique mis à jour
+plugin_tracker_formelement_admin	description_placeholder	Entrez la description…
 
 plugin_tracker_formelement_property	hint	Indication
 plugin_tracker_formelement_property	default_value_type	Valeur par défaut

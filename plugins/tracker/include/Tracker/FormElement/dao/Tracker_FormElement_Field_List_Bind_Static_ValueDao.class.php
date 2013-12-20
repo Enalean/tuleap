@@ -219,5 +219,20 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         
         return $this->update($sql);
     }
+
+    public function reorder($ids_in_right_order) {
+        $ids_in_right_order = array_filter($ids_in_right_order);
+        $ids = $this->da->escapeIntImplode($ids_in_right_order);
+
+        $when_conditions = '';
+        foreach ($ids_in_right_order as $rank => $id) {
+            $when_conditions .= " WHEN $id THEN $rank ";
+        }
+        $sql = "UPDATE tracker_field_list_bind_static_value
+                SET rank = CASE id $when_conditions END
+                WHERE id IN ($ids)";
+
+        return $this->update($sql);
+    }
 }
 ?>
