@@ -177,7 +177,7 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
      * @throws InitialEffortNotDefinedException
      */
     private function addInitialEffort($milestone_initial_effort, $backlog_item_initial_effort) {
-        if (! is_null($backlog_item_initial_effort) && $backlog_item_initial_effort !== '') {
+        if (! is_null($backlog_item_initial_effort) && $backlog_item_initial_effort !== '' && $backlog_item_initial_effort >= 0) {
             return $milestone_initial_effort + floatval($backlog_item_initial_effort);
         }
 
@@ -205,10 +205,12 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
             return 100;
         }
 
-        return ceil(
+        $completion = ceil(
             ($this->milestone->getDuration() - $this->getNumberOfDaysRemainingBetweenMilestoneStartDateAndNowExcludingWeekends())
             / $this->milestone->getDuration() * 100
         );
+
+        return $this->returnRelevantProgressBarValue($completion);
     }
 
     public function initial_effort_completion() {
@@ -216,9 +218,19 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
             return 100;
         }
 
-        return ceil(
+        $completion = ceil(
             ( $this->milestone_initial_effort() - $this->milestone->getRemainingEffort() ) / $this->milestone_initial_effort() * 100
         );
+
+        return $this->returnRelevantProgressBarValue($completion);
+    }
+
+    private function returnRelevantProgressBarValue($value) {
+        if ($value < 0) {
+            return 0;
+        }
+
+        return $value;
     }
 
     public function milestone_days_remaining() {

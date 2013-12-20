@@ -94,6 +94,10 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
             milestone_initial_effort = parseFloat(completion_bar.readAttribute('data-initial-effort'));
             new_completion           = Math.ceil((milestone_initial_effort - milestone_remaining_effort) / milestone_initial_effort * 100);
 
+            if (new_completion < 0) {
+                new_completion = 0;
+            }
+
             completion_bar.update(new_completion + '%');
             completion_bar.style.width = new_completion + '%';
         }
