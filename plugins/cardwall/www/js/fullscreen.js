@@ -81,13 +81,13 @@
             if (isFullScreen) {
                 main.css('margin-left', 0);
                 $('.milestone-name').addClass('span3');
-                $('.milestone-days').removeClass('span6').addClass('span5');
-                $('.milestone-capacity').removeClass('span6').addClass('span4');
+                $('.milestone-days').removeClass('span5').addClass('span4');
+                $('.milestone-capacity').removeClass('span5').addClass('span4');
 
             } else {
                 $('.milestone-name').removeClass('span3');
-                $('.milestone-days').removeClass('span5').addClass('span6');
-                $('.milestone-capacity').removeClass('span4').addClass('span6');
+                $('.milestone-days').removeClass('span4').addClass('span5');
+                $('.milestone-capacity').removeClass('span4').addClass('span5');
             }
         }
 

@@ -357,12 +357,25 @@ input[type="text"].search-in-cardwall {
 }
 
 body.fullscreen {
+    @cardwall-full-screen-top-color: #e6e6e6;
+    @cardwall-full-screen-bottom-color: #ffffff;
     min-width: 100%;
     min-height: 100%;
     padding: 0;
+    background: @cardwall-full-screen-top-color;
+    background: -moz-linear-gradient(top,  @cardwall-full-screen-top-color 0%, @cardwall-full-screen-bottom-color 20%, @cardwall-full-screen-bottom-color 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@cardwall-full-screen-top-color), color-stop(20%,@cardwall-full-screen-bottom-color), color-stop(100%,@cardwall-full-screen-bottom-color));
+    background: -webkit-linear-gradient(top,  @cardwall-full-screen-top-color 0%,@cardwall-full-screen-bottom-color 20%,@cardwall-full-screen-bottom-color 100%);
+    background: -o-linear-gradient(top,  @cardwall-full-screen-top-color 0%,@cardwall-full-screen-bottom-color 20%,@cardwall-full-screen-bottom-color 100%);
+    background: -ms-linear-gradient(top,  @cardwall-full-screen-top-color 0%,@cardwall-full-screen-bottom-color 20%,@cardwall-full-screen-bottom-color 100%);
+    background: linear-gradient(to bottom,  @cardwall-full-screen-top-color 0%,@cardwall-full-screen-bottom-color 20%,@cardwall-full-screen-bottom-color 100%);
 
-    #feedback, footer, .sidebar-nav, .navbar, .breadcrumb, .toolbar, .agiledashboard > .dropdown, .agiledashboard > .nav, .agiledashboard > .release-date-info {
+    #header, #navigation, .systray, #feedback, footer, .sidebar-nav, .navbar, .breadcrumb, .toolbar, .agiledashboard > .dropdown, .agiledashboard > .nav, .agiledashboard > .release-date-info {
         display: none;
+    }
+
+    .main_body_row {
+        margin: 0;
     }
 
     .main {
@@ -373,7 +386,6 @@ body.fullscreen {
     #cardwall {
         min-width: 100%;
         min-height: 100%;
-        background-color: #fff;
 
         .cardwall_board-actions, .cardwall_board-fullscreen-bar {
             padding: 20px 10px 0;
@@ -391,9 +403,16 @@ body.fullscreen {
     margin: 30px 0;
 
     > div {
-        padding: 0 0 0 30px;
-        height: 60px;
+        padding: 10px 0 0 30px;
+        height: 80px;
+        border-left: 1px solid #ddd;
     }
+
+    > div:first-child {
+        border-left: none;
+    }
+
+
 
     .milestone-name {
         a {

@@ -7,7 +7,7 @@
         <a href="{{milestone_edit_url}}">{{ milestone_title }} <i class="icon-edit"></i></a>
     </div>
 
-    <div class="span6 milestone-days">
+    <div class="span5 milestone-days">
         {{# milestone_has_dates_info }}
         <div class="date-info">
            {{ milestone_start_date }} <i class="icon-angle-right"></i> {{ milestone_end_date }}
@@ -26,7 +26,7 @@
         {{/ milestone_has_dates_info }}
     </div>
 
-    <div class="span6 milestone-capacity">
+    <div class="span5 milestone-capacity">
         {{# milestone_has_initial_effort }}
         <div class="points-info">
            <span id="milestone_initial_effort_value">{{ milestone_initial_effort_label }} {{ milestone_initial_effort }}</span>
