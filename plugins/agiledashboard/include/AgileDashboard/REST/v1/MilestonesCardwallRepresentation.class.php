@@ -23,6 +23,8 @@ use \PFUser;
 
 class AgileDashboard_MilestonesCardwallRepresentation {
 
+    const ROUTE = 'cardwall';
+
     /** @var array */
     public $columns;
 

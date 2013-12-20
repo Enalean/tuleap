@@ -69,6 +69,7 @@ class cardwallPlugin extends Plugin {
                 $this->addHook(AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE);
                 $this->addHook(AGILEDASHBOARD_EVENT_REST_OPTIONS_CARDWALL);
                 $this->addHook(AGILEDASHBOARD_EVENT_REST_GET_CARDWALL);
+                $this->addHook(AGILEDASHBOARD_EVENT_REST_GET_MILESTONE);
             }
         }
         return parent::getHooksAndCallbacks();
@@ -412,6 +413,13 @@ class cardwallPlugin extends Plugin {
         $milestones_cardwall = $this->buildRightVersionOfMilestonesCardwallResource($params['version']);
 
         $milestones_cardwall->options($params['milestone']);
+    }
+
+    public function agiledashboard_event_rest_get_milestone($params) {
+        $config = $this->getConfigFactory()->getOnTopConfig($params['milestone']->getPlanning()->getPlanningTracker());
+        if ($config && $config->isEnabled()) {
+            $params['milestone_representation']->enableCardwall();
+        }
     }
 
     private function buildRightVersionOfMilestonesCardwallResource($version) {

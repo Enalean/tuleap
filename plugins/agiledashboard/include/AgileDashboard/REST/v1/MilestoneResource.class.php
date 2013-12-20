@@ -128,6 +128,15 @@ class MilestoneResource {
         $milestone_representation = new MilestoneRepresentation();
         $milestone_representation->build($milestone);
 
+        $this->event_manager->processEvent(
+            AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,
+            array(
+                'user'                     => $user,
+                'milestone'                => $milestone,
+                'milestone_representation' => &$milestone_representation,
+            )
+        );
+
         return $milestone_representation;
     }
 
@@ -179,10 +188,20 @@ class MilestoneResource {
         $milestone = $this->getMilestoneById($user, $id);
         $this->sendAllowHeaderForSubmilestones();
 
+        $event_manager = $this->event_manager;
         return array_map(
-            function (Planning_Milestone $milestone) {
+            function (Planning_Milestone $milestone) use ($user, $event_manager) {
                 $milestone_representation = new MilestoneRepresentation();
                 $milestone_representation->build($milestone);
+
+                $event_manager->processEvent(
+                    AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,
+                    array(
+                        'user'                     => $user,
+                        'milestone'                => $milestone,
+                        'milestone_representation' => &$milestone_representation,
+                    )
+                );
 
                 return $milestone_representation;
             },

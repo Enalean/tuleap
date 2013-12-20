@@ -110,4 +110,15 @@ define('AGILEDASHBOARD_EVENT_REST_OPTIONS_CARDWALL', 'agiledashboard_event_rest_
  * 'milestone' => Milestone on which cardwall is requested
  */
 define('AGILEDASHBOARD_EVENT_REST_GET_CARDWALL', 'agiledashboard_event_rest_get_cardwall');
+
+/**
+ * Allow plugins to modify the milestone requested by a RESt call
+ *
+ * Parameters:
+ * 'user'                     => The user who requested
+ * 'milestone'                => The Milestone object
+ * 'milestone_representation' => The RESt representation of the milestone
+ */
+define('AGILEDASHBOARD_EVENT_REST_GET_MILESTONE', 'agiledashboard_event_rest_get_milestone');
+
 ?>
