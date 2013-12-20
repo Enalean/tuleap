@@ -1,3 +1,9 @@
+Version 1.28 - Tuleap 6.9
+    * Bug fixing RESt/Cardwall
+- Cast column ids to integer
+- Return status in english
+- Add Cardwall only when needed
+
 Version 1.27 - Tuleap 6.9
     * Add GET /milestones/:id/cardwall
 Add OPTIONS /milestones/:id/cardwall
