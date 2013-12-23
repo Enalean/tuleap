@@ -83,7 +83,7 @@ class Git_RemoteServer_Dao extends DataAccessObject {
         $id              = $this->da->escapeInt($id);
         $host            = $this->da->quoteSmart($host);
         $ssh_port        = $this->da->escapeInt($ssh_port);
-        $http_port       = $this->da->escapeInt($http_port);
+        $http_port       = $this->da->escapeInt($http_port, CODENDI_DB_NULL);
         $login           = $this->da->quoteSmart($login);
         $identity_file   = $this->da->quoteSmart($identity_file);
         $replication_key = $this->da->quoteSmart($replication_key);
