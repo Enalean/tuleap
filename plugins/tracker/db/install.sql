@@ -657,12 +657,17 @@ CREATE TABLE tracker_reminder (
     reminder_id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     tracker_id INT(11) NOT NULL,
     field_id INT(11) NOT NULL,
-    ugroups VARCHAR(255) NOT NULL,
+    ugroups VARCHAR(255) NULL,
     notification_type TINYINT(1) DEFAULT 0,
     distance INT( 11 ) DEFAULT 0,
     status TINYINT(1) DEFAULT 1,
-    PRIMARY KEY (reminder_id),
-    UNIQUE KEY (tracker_id, field_id, ugroups, notification_type, distance, status)
+    PRIMARY KEY (reminder_id)
+) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS tracker_reminder_notified_roles;
+CREATE TABLE tracker_reminder_notified_roles (
+    reminder_id INT(11) UNSIGNED NOT NULL,
+    role_id TINYINT(1) UNSIGNED NOT NULL
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_workflow_trigger_rule_static_value;
