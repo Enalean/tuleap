@@ -82,18 +82,25 @@ class Tracker_DateReminderFactory {
             $fieldId          = $reminderRenderer->validateFieldId($request);
             $notificationType = $reminderRenderer->validateNotificationType($request);
             $distance         = $reminderRenderer->validateDistance($request);
-            $ugroups          = $reminderRenderer->validateReminderUgroups($request);
-            $ugroups          = join(",", $ugroups);
-            $this->checkDuplicatedReminders($trackerId, $fieldId, $ugroups, $notificationType, $distance);
+            $notified         = $reminderRenderer->scindReminderNotifiedPeople($request);
+            $ugroups          = $reminderRenderer->validateReminderUgroups($notified[0]);
+            $roles            = $reminderRenderer->validateReminderRoles($notified[1]);
+            if (!empty ($ugroups)) {
+                $ugroups          = join(",", $ugroups);
+            } else {
+                $ugroups = "";
+            }
+            $this->checkDuplicatedReminders($trackerId, $fieldId, $notificationType, $distance);
             $this->isReminderBeforeOpenDate($fieldId, $notificationType);
         } catch (Tracker_DateReminderException $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->getId());
         }
-        $reminder = $this->getDao()->addDateReminder($trackerId, $fieldId, $ugroups, $notificationType, $distance);
+        $reminder = $this->getDao()->addDateReminder($trackerId, $fieldId, $ugroups, $roles, $notificationType, $distance);
         if ($reminder) {
+            $roles = implode("," , $roles);
             $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
-            $historyDao->groupAddHistory("tracker_date_reminder_add", $this->getTracker()->getName().":".$fieldId, $this->getTracker()->getGroupId(), array($distance.' Day(s), Type: '.$notificationType.' Ugroup(s): '.$ugroups));
+            $historyDao->groupAddHistory("tracker_date_reminder_add", $this->getTracker()->getName().":".$fieldId, $this->getTracker()->getGroupId(), array($distance.' Day(s), Type: '.$notificationType.' Ugroup(s): '.$ugroups. 'Tracker Role(s): '.$roles));
             return $reminder;
         } else {
             $errorMessage = $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_add_failure', array($trackerId, $fieldId));
@@ -102,18 +109,18 @@ class Tracker_DateReminderFactory {
     }
 
     /**
-     * Throws an excpetion when an enabled date reminder having same params already exist
+     * Throws an excpetion when an enabled date reminder having same params (field, notification Type and the distance) already exist
      *
      * @param Integer $trackerId        Id of the tracker
      * @param Integer $fieldId          Id of the date field
-     * @param String  $ugroups          Id of the user groups
      * @param Integer $notificationType 0 if before, 1 if after the value of the date field
      * @param Integer $distance         Distance from the value of the date fiels
+     * @param Integer $reminderId       Id of the reminder if it is an updated one Else 0
      *
      * @return Void
      */
-    protected function checkDuplicatedReminders($trackerId, $fieldId, $ugroups, $notificationType, $distance) {
-        $dupilcatedReminders = $this->getDao()->findReminders($trackerId, $fieldId, $ugroups, $notificationType, $distance);
+    protected function checkDuplicatedReminders($trackerId, $fieldId, $notificationType, $distance, $reminderId = 0) {
+        $dupilcatedReminders = $this->getDao()->findReminders($trackerId, $fieldId, $notificationType, $distance, $reminderId);
         if ($dupilcatedReminders && !$dupilcatedReminders->isError() && $dupilcatedReminders->rowCount() > 0) {
             $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_duplicated');
             throw new Tracker_DateReminderException($errorMessage);
@@ -151,23 +158,30 @@ class Tracker_DateReminderFactory {
         try {
             $reminderId       = $reminderRenderer->validateReminderId($request);
             $notificationType = $reminderRenderer->validateNotificationType($request);
-            $ugroups          = $reminderRenderer->validateReminderUgroups($request);
             $distance         = $reminderRenderer->validateDistance($request);
             $status           = $reminderRenderer->validateStatus($request);
-            $ugroups          = join(",", $ugroups);
+            $notified         = $reminderRenderer->scindReminderNotifiedPeople($request);
+            $ugroups          = $reminderRenderer->validateReminderUgroups($notified[0]);
+            $roles            = $reminderRenderer->validateReminderRoles($notified[1]);
+            if (!empty($ugroups)) {
+                $ugroups      = join(",", $ugroups);
+            } else {
+                $ugroups = "";
+            }
             $fieldId          = $reminderRenderer->validateFieldId($request);
             if ($status == 1) {
-                $this->checkDuplicatedReminders($this->getTracker()->getId(), $fieldId, $ugroups, $notificationType, $distance);
+                $this->checkDuplicatedReminders($this->getTracker()->getId(), $fieldId, $notificationType, $distance, $reminderId);
                 $this->isReminderBeforeOpenDate($fieldId, $notificationType);
             }
         } catch (Tracker_DateReminderException $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
         }
-        $updateReminder = $this->getDao()->updateDateReminder($reminderId, $ugroups, $notificationType, $distance, $status);
+        $updateReminder = $this->getDao()->updateDateReminder($reminderId, $ugroups, $roles, $notificationType, $distance, $status);
         if ($updateReminder) {
+            $roles = implode("," , $roles);
             $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
-            $historyDao->groupAddHistory("tracker_date_reminder_edit", $this->getTracker()->getName().":".$reminderId, $this->getTracker()->getGroupId(), array("Id: ".$reminderId.", Type: ".$notificationType.", Ugroup(s): ".$ugroups.", Day(s): ".$distance.", Status: ".$status));
+            $historyDao->groupAddHistory("tracker_date_reminder_edit", $this->getTracker()->getName().":".$reminderId, $this->getTracker()->getGroupId(), array("Id: ".$reminderId.", Type: ".$notificationType.", Ugroup(s): ".$ugroups.", Tracker Role(s): ".$roles.", Day(s): ".$distance.", Status: ".$status));
             return $updateReminder;
         } else {
             $errorMessage = $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_update_failure', array($reminderId));
@@ -183,10 +197,33 @@ class Tracker_DateReminderFactory {
      * @return Tracker_DateReminder
      */
     public function getInstanceFromRow($row) {
+        $roles = array();
+        $dar = $this->getDao()->getRolesByReminderId($row['reminder_id']);
+        if ($dar && !$dar->isError() && $dar->rowCount() >0) {
+            foreach ($dar as $da) {
+                switch ($da['role_id']) {
+                    case "1":
+                        $roles[] = new Tracker_DateReminder_Role_Submitter();
+                        break;
+
+                    case "2":
+                        $roles[] = new Tracker_DateReminder_Role_Assignee();
+                        break;
+
+                    case "3":
+                        $roles[] = new Tracker_DateReminder_Role_Commenter();
+                        break;
+
+                    default:
+                    break;
+                }
+            }
+        }
         return new Tracker_DateReminder($row['reminder_id'],
                                         $row['tracker_id'],
                                         $row['field_id'],
                                         $row['ugroups'],
+                                        $roles,
                                         $row['notification_type'],
                                         $row['distance'],
                                         $row['status']);

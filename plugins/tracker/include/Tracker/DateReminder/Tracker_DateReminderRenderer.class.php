@@ -63,7 +63,7 @@ class Tracker_DateReminderRenderer {
         $output .= '<input type="hidden" name="tracker_id" value="'.$this->tracker->id.'">';
         $output .= $this->dateReminderFactory->csrf->fetchHTMLInput();
         $output .= '<label>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_send_to').':
-                     '.$this->getUgroupsAllowedForTracker().'</label>
+                     '.$this->getAllowedNotifiedForTracker().'</label>
                     <label>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_when').':
                     <input type="text" name="distance" size="3"> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_distance_label').'
                     </label>
@@ -115,7 +115,7 @@ class Tracker_DateReminderRenderer {
                         <td colspan=2><label>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_when').':</label></td>
                         <td><label>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_field').':</label></td>
                         <td><label>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_status').':</label></td></tr>';
-            $output .= '<tr valign="top"><td>'.$this->getUgroupsAllowedForTracker($reminderId).'</td>';
+            $output .= '<tr valign="top"><td>'.$this->getAllowedNotifiedForTracker($reminderId).'</td>';
             $output .= '<td> <input type="text" name="distance" value="'.$reminder->getDistance().'" size="3"> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_distance_label').'</td>';
             $output .= '<td><select name="notif_type">
                             <option value="0" '.$before.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before').'
@@ -133,29 +133,53 @@ class Tracker_DateReminderRenderer {
     }
 
     /**
-     * Build a multi-select box of ugroup selectable to fill the new date field reminder.
-     * It contains: all dynamic ugroups plus project members and admins.
+     * Build a multi-select box of ugroups and roles selectable to fill the new date field reminder.
+     * It contains: all dynamic ugroups plus project members and admins and the defined tracker roles
      *
-     * @params Integer $reminderId Id of the date reminder we want to customize its notified ugroups
+     * @params Integer $reminderId Id of the date reminder we want to customize its notified
      *
      * @return String
      */
-    protected function getUgroupsAllowedForTracker($reminderId = Null) {
+    protected function getAllowedNotifiedForTracker($reminderId = Null) {
         $res = ugroup_db_get_existing_ugroups($this->tracker->group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'],
                                                                               $GLOBALS['UGROUP_PROJECT_ADMIN']));
         $selectedUgroups = '';
+        $ugroups         = array();
+        $roles           = array();
         if (!empty($reminderId)) {
-            $reminder        = $this->dateReminderFactory->getReminder($reminderId);
-            $selectedUgroups = $reminder->getUgroups(true);
-        }
-        $output  = '<select name="reminder_ugroup[]" multiple>';
-        while($row = db_fetch_array($res)) {
-            if ($selectedUgroups && in_array($row['ugroup_id'], $selectedUgroups)) {
-                $output .= '<option value="'.intval($row['ugroup_id']).'" selected>'.util_translate_name_ugroup($row['name']).'</option>';
-            } else {
-                $output .= '<option value="'.intval($row['ugroup_id']).'">'.util_translate_name_ugroup($row['name']).'</option>';
+            $reminder = $this->dateReminderFactory->getReminder($reminderId);
+            $ugroups  = $reminder->getUgroups(true);
+            $roles    = $reminder->getRoles();
+            if ($roles) {
+                foreach ($roles as $role) {
+                    $selected[] = $role->getIdentifier();
+                }
             }
         }
+        $output  = '<select name="reminder_notified[]" multiple size=7 >';
+        $output  .= '<optgroup label="'.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_optgroup_label_ugroup').'" >';
+        while($row = db_fetch_array($res)) {
+            if ($ugroups && in_array($row['ugroup_id'], $ugroups)) {
+                $output .= '<option value="u_'.intval($row['ugroup_id']).'" selected>'.util_translate_name_ugroup($row['name']).'</option>';
+            } else {
+                $output .= '<option value="u_'.intval($row['ugroup_id']).'">'.util_translate_name_ugroup($row['name']).'</option>';
+            }
+        }
+        $output  .= '</optgroup>';
+         $output  .= '<optgroup label="'.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_optgroup_label_role').'">';
+         $all_possible_roles = array(
+            new Tracker_DateReminder_Role_Submitter(),
+            new Tracker_DateReminder_Role_Assignee(),
+            new Tracker_DateReminder_Role_Commenter()
+        );
+        foreach ($all_possible_roles as $role) {
+            if ($roles && in_array($role, $roles)) {
+                $output .= '<option value="r_'.$role->getIdentifier().'" selected>'.$role->getLabel().'</option>';
+            } else {
+                $output .= '<option value="r_'.$role->getIdentifier().'">'.$role->getLabel().'</option>';
+            }
+        }
+        $output  .= '</optgroup>';
         $output  .= '</select>';
         return $output;
     }
@@ -288,11 +312,11 @@ class Tracker_DateReminderRenderer {
      * Validate ugroup list param used for tracker reminder.
      * @TODO write less, write better
      *
-     * @param HTTPRequest $request HTTP request
+     * @param Array $selectedUgroups Array of selected user group
      *
      * @return Array
      */
-    public function validateReminderUgroups(HTTPRequest $request) {
+    public function validateReminderUgroups(Array  $selectedUgroups) {
         $groupId = $this->getTracker()->getGroupId();
         $ugs       = ugroup_db_get_existing_ugroups($groupId, array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']));
         $ugroupIds = array();
@@ -300,7 +324,6 @@ class Tracker_DateReminderRenderer {
             $ugroupIds[] = intval($row['ugroup_id']);
         }
         $validUgroupIds  = array();
-        $selectedUgroups = $request->get('reminder_ugroup');
         if (!empty($selectedUgroups)) {
             foreach ($selectedUgroups as $ugroup) {
                 if (in_array($ugroup, $ugroupIds)) {
@@ -310,14 +333,69 @@ class Tracker_DateReminderRenderer {
                     throw new Tracker_DateReminderException($errorMessage);
                 }
             }
-            if (!empty($validUgroupIds)) {
-                return $validUgroupIds;
-            }
-        } else {
-            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_empty_ugroup_param');
-            throw new Tracker_DateReminderException($errorMessage);
         }
+        return $validUgroupIds;
     }
+
+    /**
+     * Validate roles list param used for tracker reminder.
+     *
+     * @param Array $selectedRoles Array of selected tracker roles
+     *
+     * @return Array
+     */
+    public function validateReminderRoles(Array $selectedRoles) {
+        $validRoles = array();
+        $all_possible_roles = array(
+            new Tracker_DateReminder_Role_Submitter(),
+            new Tracker_DateReminder_Role_Assignee(),
+            new Tracker_DateReminder_Role_Commenter()
+        );
+        foreach ($all_possible_roles as $possible_role) {
+            $roles[] = $possible_role->getIdentifier();
+        }
+        foreach ($selectedRoles as $role) {
+            if (in_array($role, $roles)) {
+                $validRoles[]= $role;
+            } else {
+                    $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_role_param', array($ugroup));
+                    throw new Tracker_DateReminderException($errorMessage);
+            }
+        }
+        return $validRoles;
+    }
+
+    /**
+     * Scind the notified people for tracker reminder into dedicated arrays.
+     * At least one list should be not empty
+     *
+     * @param HTTPRequest $request HTTP request
+     *
+     * @return Array
+     */
+    public function scindReminderNotifiedPeople(HTTPRequest $request) {
+        $vArray = new Valid_Array('reminder_notified');
+        $notified = $roles = $ugroups = array();
+        if($request->valid($vArray)) {
+            $people = $request->get('reminder_notified');
+            if ($people) {
+                foreach($people as $value) {
+                    if ($value[0] == "r") {
+                        $roles[] = substr($value, 2);
+                    } else {
+                        $ugroups[] = substr($value, 2);
+                    }
+                }
+            }
+            if (!empty($ugroups) || !empty($roles)){
+                $notified[] = $ugroups;
+                $notified[] = $roles;
+                return $notified;
+            }
+        }
+        $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_empty_people_param');
+        throw new Tracker_DateReminderException($errorMessage);
+        }
 
     /**
      * Display all reminders of the tracker
@@ -339,7 +417,8 @@ class Tracker_DateReminderRenderer {
                 } else {
                     $output .= '<tr class="tracker_date_reminder">';
                 }
-                $output .= '<td>'.$reminder->getUgroupsLabel().'</td>';
+                $output .= '<td>'.$reminder->getUgroupsLabel();
+                $output .= $reminder->getRolesLabel().'</td>';
                 $output .= '<td>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_details', array($reminder->getDistance(), $reminder->getNotificationTypeLabel())).'</td>';
                 $output .= '<td>'.$reminder->getField()->getLabel().'</td>';
                 $output .= '<td><span style="float:left;"><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;reminder_id='. (int)$reminder->getId().'&amp;action=update_reminder" id="update_reminder"> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_update_action').' '. $GLOBALS['Response']->getimage('ic/edit.png') .'</a></span>';
