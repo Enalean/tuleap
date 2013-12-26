@@ -57,7 +57,7 @@ Mock::generatePartial('BackendSVN', 'BackendSVNAccessTestVersion', array('update
                                                                          'getProjectManager',
                                                                         ));
                                                                    
-class BackendSVNTest extends UnitTestCase {
+class BackendSVNTest extends TuleapTestCase {
 
     function setUp() {
         $GLOBALS['svn_prefix']                = dirname(__FILE__) . '/_fixtures/svnroot';
@@ -67,14 +67,16 @@ class BackendSVNTest extends UnitTestCase {
         $GLOBALS['sys_name']                  = 'MyForge';
         $GLOBALS['sys_dbauth_user']           = 'dbauth_user';
         $GLOBALS['sys_dbauth_passwd']         = 'dbauth_passwd';
-        mkdir($GLOBALS['svn_prefix'] . '/' . 'toto', 0777, true);
+        mkdir($GLOBALS['svn_prefix'] . '/toto/hooks', 0777, true);
     }
-    
-    
+
+
     function tearDown() {
         //clear the cache between each tests
         Backend::clearInstances();
-        rmdir($GLOBALS['svn_prefix'] . '/' . 'toto');
+        $this->recurseDeleteInDir($GLOBALS['svn_prefix'] . '/toto/hooks');
+        rmdir($GLOBALS['svn_prefix'] . '/toto/hooks');
+        rmdir($GLOBALS['svn_prefix'] . '/toto');
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['tmp_dir']);
         unset($GLOBALS['svn_root_file']);
@@ -391,6 +393,20 @@ class BackendSVNTest extends UnitTestCase {
         $backend->expectAt(1, 'updateSVNAccess', array(101));
        
             
+    }
+
+    public function testItThrowsAnExceptionIfFileForSimlinkAlreadyExists() {
+        $this->expectException('BackendSVNFileForSimlinkAlreadyExistsException');
+
+        $project = stub('Project')->getUnixName()->returns('toto');
+        $backend = new BackendSVNTestVersion($this);
+        $path    = $GLOBALS['svn_prefix'] . '/toto/hooks';
+        $fp      = fopen($path.'/post-revprop-change', 'w');
+
+        stub($project)->isSVNTracked()->returns(true);
+        stub($project)->canChangeSVNLog()->returns(true);
+
+        $backend->updateHooks($project);
     }
 }
 ?>

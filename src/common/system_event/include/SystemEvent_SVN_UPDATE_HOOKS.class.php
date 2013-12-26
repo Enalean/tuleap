@@ -34,8 +34,12 @@ class SystemEvent_SVN_UPDATE_HOOKS extends SystemEvent {
         $group_id = $this->getIdFromParam();
         $project  = $this->getProject($group_id);
         if ($project) {
-            $this->backend_svn->updateHooks($project);
-            $this->done();
+            try {
+                $this->backend_svn->updateHooks($project);
+                $this->done();
+            } catch (BackendSVNFileForSimlinkAlreadyExistsException $exception) {
+                $this->warning($exception->getMessage());
+            }
         } else {
             $this->error("Unable to find project $group_id");
         }
