@@ -31,7 +31,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollec
     }
 
     public function getName() {
-        return $this->submilestone_tracker->getItemName();
+        return $this->submilestone_tracker->getName();
     }
 
     public function getSubmitNewUrlLinkedToTracker(Tracker $tracker) {
