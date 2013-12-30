@@ -135,21 +135,40 @@ document.observe('dom:loaded', function () {
         new tuleap.trackers.textarea.RTE(element, {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat});
     });
 
+    function getTextAreaValueAndHtmlFormat(comment_panel, id) {
+        var content;
+        var htmlFormat;
+
+        if ($('tracker_artifact_followup_comment_body_format_'+id).value == 'html') {
+            content    = comment_panel.down('.tracker_artifact_followup_comment_body').innerHTML;
+            htmlFormat = true;
+        } else {
+            content    = comment_panel.down('.tracker_artifact_followup_comment_body').innerHTML.stripTags();
+            htmlFormat = false;
+        }
+
+        return {value: content, htmlFormat: htmlFormat};
+    }
+
     $$('.tracker_artifact_followup_comment_controls_edit').each(function (edit) {
         var id = edit.up('.tracker_artifact_followup').id;
+        var data;
+
         if (id && id.match(/_\d+$/)) {
             id = id.match(/_(\d+)$/)[1];
             edit.observe('click', function (evt) {
                 var comment_panel = edit.up().next();
                 if (comment_panel.visible()) {
                     
-                    var textarea = new Element('textarea', {id: 'tracker_followup_comment_edit_'+id});
-                    if ($('tracker_artifact_followup_comment_body_format_'+id).value == 'html') {
-                        textarea.value = comment_panel.down('.tracker_artifact_followup_comment_body').innerHTML;
-                        var htmlFormat = true;
+                    var textarea   = new Element('textarea', {id: 'tracker_followup_comment_edit_'+id});
+                    var htmlFormat = false;
+
+                    if (comment_panel.empty()) {
+                        textarea.value = ''
                     } else {
-                        textarea.value = comment_panel.down('.tracker_artifact_followup_comment_body').innerHTML.stripTags();
-                        var htmlFormat = false;
+                       data           = getTextAreaValueAndHtmlFormat(comment_panel, id)
+                       textarea.value = data.value;
+                       htmlFormat     = data.htmlFormat;
                     }
                     
                     var rteSpan    = new Element('span', { style: 'text-align: left;'}).update(textarea);
@@ -182,11 +201,9 @@ document.observe('dom:loaded', function () {
                                 comment_format: format
                             },
                             onSuccess: function (transport) {
-                                if (transport.responseText) {
                                     edit_panel.remove();
                                     comment_panel.update(transport.responseText).show();
                                     var e = new Effect.Highlight(comment_panel);
-                                }
                             }
                         });
                         edit.show();
