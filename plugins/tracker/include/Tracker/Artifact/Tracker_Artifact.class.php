@@ -372,7 +372,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $html .= $this->id;
         if ($title) {
             $html .= ' - ';
-            $html .= $title;
+            $html .= $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML);
         }
 
         $html .= '</a>';
