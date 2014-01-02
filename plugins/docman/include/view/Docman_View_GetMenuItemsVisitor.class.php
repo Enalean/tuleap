@@ -50,6 +50,7 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
             if($this->dPm->userCanWrite($this->user, $item->getId())) {
                 $this->actions['canUnlock'] = true;
             }
+            $this->actions['isLocked'] = true;
         } else {
             $this->actions['canLock'] = true;
         }
