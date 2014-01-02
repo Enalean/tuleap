@@ -145,6 +145,25 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
 
     /**
+     * @see Tracker_FormElement_Field::getFieldDataFromRESTValue()
+     * @param array $value
+     * @param Tracker_Artifact $artifact
+     * @return array
+     * @throws Exception
+     */
+    public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
+        if (array_key_exists('links', $value) && is_array($value['links'])){
+            $link_ids = array();
+            foreach ($value['links'] as $link) {
+                if (array_key_exists('id', $link)) {
+                    $link_ids[] = $link['id'];
+                }
+            }
+            return $this->getFieldData(implode(',', $link_ids), $artifact);
+        }
+        throw new Tracker_FormElement_InvalidFieldValueException('Value should be \'links\' and an array of artifact ids (integers)');
+    }
+    /**
      * Get the field data (SOAP or CSV) for artifact submission
      *
      * @param string           $string_value The soap field value

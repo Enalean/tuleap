@@ -1061,6 +1061,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
          return $bind->getSoapBindingProperties();
      }
 
+     public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
+         if (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
+             return array_map('intval', $value['bind_value_ids']);
+         }
+         throw new Tracker_FormElement_InvalidFieldValueException('List fields values must be passed as an array of ids (integer) in \'bind_value_ids\'');
+     }
+
      public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
          if (isset($soap_value->field_value->bind_value)) {
              if ($this->isMultiple()) {

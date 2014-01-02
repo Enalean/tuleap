@@ -72,7 +72,8 @@ class Cardwall_SingleCardBuilder {
             $card_in_cell_presenter,
             $this->card_fields,
             $display_preferences,
-            $this->getColumnId($card_artifact, $columns, $config, $field_provider)
+            $this->getColumnId($card_artifact, $columns, $config, $field_provider),
+            $config->getMappingFor($card_artifact->getTracker())
         );
     }
 

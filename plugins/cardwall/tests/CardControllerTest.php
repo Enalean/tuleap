@@ -80,7 +80,7 @@ class Cardwall_CardControllerTest extends TuleapTestCase {
 
         stub($card_fields)->getFields()->returns(array($field1, $field2, $field3));
 
-        $single_card = new Cardwall_SingleCard($card_in_cell_presenter, $card_fields, mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'), 1111);
+        $single_card = new Cardwall_SingleCard($card_in_cell_presenter, $card_fields, mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'), 1111, mock('Cardwall_OnTop_Config_TrackerMapping'));
 
         $card_controller = new Cardwall_CardController(
             aRequest()->withUser(mock('PFUser'))->build(),

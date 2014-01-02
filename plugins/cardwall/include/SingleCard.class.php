@@ -41,17 +41,25 @@ class Cardwall_SingleCard {
     /** @var int */
     private $column_id;
 
+    /** @var Cardwall_OnTop_Config_TrackerMapping */
+    private $mapping;
+
+    /** @var array */
+    private $fields_cache = null;
+
     public function __construct(
         Cardwall_CardInCellPresenter $card_in_cell_presenter,
         Cardwall_CardFields $card_fields,
         Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
-        $column_id
+        $column_id,
+        Cardwall_OnTop_Config_TrackerMapping $mapping
     ) {
         $this->card_in_cell_presenter = $card_in_cell_presenter;
         $this->artifact               = $card_in_cell_presenter->getArtifact();
         $this->card_fields            = $card_fields;
         $this->display_preferences    = $display_preferences;
         $this->column_id              = $column_id;
+        $this->mapping                = $mapping;
     }
 
     /**
@@ -69,11 +77,41 @@ class Cardwall_SingleCard {
         return $this->card_fields->getFields($this->artifact);
     }
 
+    /**
+     * Return a field on the card based on the card
+     *
+     * @param Integer $id
+     *
+     * @return Tracker_FormElement_Field
+     */
+    public function getFieldById($id) {
+        if ($this->fields_cache === null) {
+            foreach ($this->getFields() as $field) {
+                $this->fields_cache[$field->getId()] = $field;
+            }
+        }
+        if (isset($this->fields_cache[$id])) {
+            return $this->fields_cache[$id];
+        }
+        throw new Cardwall_FieldNotOnCardException($id);
+    }
+
+    /**
+     * @return Tracker_Artifact
+     */
+    public function getArtifact() {
+        return $this->artifact;
+    }
+
     public function getFieldJsonValue(PFUser $user, Tracker_FormElement_Field $field) {
         return $field->getJsonValue($user, $this->artifact->getLastChangeset());
     }
 
     public function getFieldHTMLValue(PFUser $user, Tracker_FormElement_Field $field) {
         return $field->fetchCardValue($this->artifact, $this->display_preferences);
+    }
+
+    public function getMapping() {
+        return $this->mapping;
     }
 }

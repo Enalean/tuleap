@@ -768,6 +768,20 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     }
 
     /**
+     * Convert ISO8601 into internal date needed by createInitialChangeset and createNewChangeset
+     *
+     * @param array $value
+     * @param Tracker_Artifact $artifact
+     * @return type
+     */
+    public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
+        if ($value['value']) {
+            return date('Y-m-d', strtotime($value['value']));
+        }
+        return '';
+    }
+
+    /**
      * Return the field last value
      *
      * @param Tracker_Artifact $artifact
@@ -798,7 +812,6 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         }
         return $artifacts;
     }
-
 }
 
 ?>
