@@ -1,3 +1,6 @@
+Version 5.212 - Tuleap 6.9
+    * Fix request #5812: HTML interpreted in My Artifacts widget
+
 Version 5.211 - Tuleap 6.9
     * Bug fixing RESt/Cardwall
 - Cast column ids to integer
