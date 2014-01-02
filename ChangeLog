@@ -12,6 +12,7 @@ Version 6.9 (Not released yet)
 	== Bug Fix ==
 	* Fix request #5779: Fatal error when using getSvnStatsFiles SOAP method
 	* Fix request #5808: Package id in file download link is now correctly updated
+	* Fix request #4305 - Warnings when a plugin is installed
 
 Version 6.8 (Thursday, December 12th 2013)
 	== Plugins ==
