@@ -1,3 +1,6 @@
+Version 1.29 - Tuleap 6.9
+    * Fix request #5807: Long name is always displayed in Agile Dashboard planning pane
+
 Version 1.28 - Tuleap 6.9
     * Bug fixing RESt/Cardwall
 - Cast column ids to integer
