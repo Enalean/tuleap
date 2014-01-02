@@ -307,6 +307,8 @@ class MilestoneResource {
     /**
      * Put content in a given milestone
      *
+     * Put the new content of a given milestone.
+     *
      * @url PUT {id}/content
      *
      * @param int $id    Id of the milestone
@@ -330,7 +332,7 @@ class MilestoneResource {
             throw new RestException(500, $exception->getMessage());
         }
 
-        $this->milestone_content_updater->updateMilestoneContent($ids, $current_user, $milestone->getArtifact());
+        $this->milestone_content_updater->updateMilestoneContent($ids, $current_user, $milestone);
 
         $this->sendAllowHeaderForContent();
     }
