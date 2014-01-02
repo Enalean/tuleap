@@ -1,3 +1,6 @@
+Version 3.63 - Tuleap 6.9
+    * Fix request #5803: Not able to define an http_port for gerrit servers
+
 Version 3.62 - Tuleap 6.9
     * Fix request #5774: enable to delete a gerrit server as site admin. Foreign keys in db were preventing deletion.
 
