@@ -672,7 +672,11 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      public function getSoapAvailableValues() {
          return null;
      }
-     
+
+     public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
+        throw new Tracker_FormElement_NotImplementedForRESTException($this);
+    }
+
      /**
      * Get the field data for artifact submission
      *

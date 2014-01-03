@@ -23,6 +23,7 @@
  */
 
 require_once dirname(__FILE__) .'/bootstrap.php';
+require_once dirname(__FILE__) .'/../../agiledashboard/include/Planning/PlanningFactory.class.php';
 
 class Cardwall_CardControllerTest extends TuleapTestCase {
 
@@ -46,29 +47,8 @@ class Cardwall_CardControllerTest extends TuleapTestCase {
         $swimline_id    = 215;
         $drop_into      = array('5', '7');
 
-        $column1 = new Cardwall_Column(7922, 'New', 'white', 'black');
-        $column2 = new Cardwall_Column(1111, 'Verified', 'white', 'black');
-        $columns = new Cardwall_OnTop_Config_ColumnCollection(array($column1, $column2));
-
         $artifact = aMockArtifact()->withId($artifact_id)->build();
-        $config = mock('Cardwall_OnTop_Config');
-        $field_provider = mock('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact');
         $card_fields = mock('Cardwall_CardFields');
-
-        $card_controller = partial_mock(
-            'Cardwall_CardController',
-            array('getCardInCellPresenter'),
-            array(
-                mock('Codendi_Request'),
-                $artifact,
-                $card_fields,
-                mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'),
-                $config,
-                $field_provider,
-                mock('Cardwall_CardInCellPresenterFactory'),
-                $columns
-            )
-        );
 
         $field1 = mock('Tracker_FormElement_Field_Float');
         $field2 = mock('Tracker_FormElement_Field_Selectbox');
@@ -96,11 +76,16 @@ class Cardwall_CardControllerTest extends TuleapTestCase {
         $card_in_cell_presenter = mock('Cardwall_CardInCellPresenter');
         stub($card_in_cell_presenter)->getCardPresenter()->returns($card_presenter);
         stub($card_in_cell_presenter)->getDropIntoIds()->returns($drop_into);
+        stub($card_in_cell_presenter)->getArtifact()->returns($artifact);
 
-        stub($card_controller)->getCardInCellPresenter()->returns($card_in_cell_presenter);
-
-        stub($config)->isInColumn($artifact, $field_provider, $column2)->returns(true);
         stub($card_fields)->getFields()->returns(array($field1, $field2, $field3));
+
+        $single_card = new Cardwall_SingleCard($card_in_cell_presenter, $card_fields, mock('Cardwall_UserPreferences_UserPreferencesDisplayUser'), 1111, mock('Cardwall_OnTop_Config_TrackerMapping'));
+
+        $card_controller = new Cardwall_CardController(
+            aRequest()->withUser(mock('PFUser'))->build(),
+            $single_card
+        );
 
         $expected = array(
             $artifact_id => array(

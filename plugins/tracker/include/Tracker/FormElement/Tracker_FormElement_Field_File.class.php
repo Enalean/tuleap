@@ -872,6 +872,10 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return $this->getFieldData($soap_value->field_value);
     }
 
+    public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
+        throw new Tracker_FormElement_NotImplementedForRESTException($this);
+    }
+
     /**
      * Get the field data for artifact submission
      *

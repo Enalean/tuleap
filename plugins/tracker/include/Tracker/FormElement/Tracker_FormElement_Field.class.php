@@ -1072,6 +1072,18 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     }
 
     /**
+     * Transform REST representation of field into something that artifact createArtifact or updateArtifact can proceed
+     *
+     * @param array            $value    PHP representation of submitted Json value
+     * @param Tracker_Artifact $artifact Artifact to update if any (null during creation)
+     *
+     * @return mixed
+     */
+    public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
+        return $this->getFieldData($value['value']);
+    }
+
+    /**
      * Get data from SOAP value in order to be saved in DB (create/update DB)
      *
      * @param stdClass $soap_value

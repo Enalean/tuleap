@@ -36,5 +36,5 @@ api_test_bootstrap:
 	php tests/lib/rest/init_db.php
 	TULEAP_LOCAL_INC=/etc/codendi/conf/integration_tests.inc src/utils/php-launcher.sh tests/lib/rest/init_data.php
 
-api_test:
+api_test: api_test_bootstrap
 	src/utils/php-launcher.sh vendor/phpunit/phpunit/phpunit.php tests/rest

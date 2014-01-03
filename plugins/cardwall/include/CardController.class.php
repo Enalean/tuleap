@@ -23,111 +23,48 @@ require_once 'common/mvc2/PluginController.class.php';
 
 class Cardwall_CardController extends MVC2_PluginController {
 
-    /** @var Tracker_Artifact */
-    private $artifact;
-
-    /** @var Cardwall_CardFields */
-    private $card_fields;
-
-    /** @var Cardwall_UserPreferences_UserPreferencesDisplayUser */
-    private $display_preferences;
-
-    /** @var Cardwall_CardInCellPresenterFactory */
-    private $presenter_factory;
-
-    /** @var Cardwall_OnTop_Config_ColumnCollection */
-    private $columns;
-
-    /** @var Cardwall_OnTop_Config */
-    private $config;
-
-    /** @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact */
-    private $field_provider;
+    /** @var Cardwall_SingleCard */
+    private $single_card;
 
     public function __construct(
         Codendi_Request $request,
-        Tracker_Artifact $artifact,
-        Cardwall_CardFields $card_fields,
-        Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences,
-        Cardwall_OnTop_Config $config,
-        Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
-        Cardwall_CardInCellPresenterFactory $presenter_factory,
-        Cardwall_OnTop_Config_ColumnCollection $columns
+        Cardwall_SingleCard $single_card
     ) {
         parent::__construct('cardwall', $request);
-        $this->artifact            = $artifact;
-        $this->card_fields         = $card_fields;
-        $this->display_preferences = $display_preferences;
-        $this->config              = $config;
-        $this->field_provider      = $field_provider;
-        $this->presenter_factory   = $presenter_factory;
-        $this->columns             = $columns;
+        $this->single_card = $single_card;
     }
 
     public function getCard() {
-        $card_in_cell_presenter = $this->getCardInCellPresenter($this->artifact);
-        $card_presenter = $card_in_cell_presenter->getCardPresenter();
+        $card_in_cell_presenter = $this->single_card->getCardInCellPresenter();
+        $artifact_id            = $card_in_cell_presenter->getArtifact()->getId();
+        $card_presenter         = $card_in_cell_presenter->getCardPresenter();
 
         $json_format = array(
-            $this->artifact->getId() => array(
+            $artifact_id => array(
                 'title'        => $card_presenter->getTitle(),
                 'xref'         => $card_presenter->getXRef(),
                 'edit_url'     => $card_presenter->getEditUrl(),
                 'accent_color' => $card_presenter->getAccentColor(),
-                'column_id'    => $this->getColumnId(),
+                'column_id'    => $this->single_card->getColumnId(),
                 'drop_into'    => $card_in_cell_presenter->getDropIntoIds(),
                 'fields'       => array(),
                 'html_fields'  => array(),
             ),
         );
-        foreach ($this->card_fields->getFields($this->artifact) as $field) {
-            $this->addJsonFieldValues($json_format[$this->artifact->getId()], $field);
-            $this->addHTMLFieldValues($json_format[$this->artifact->getId()], $field);
+        foreach ($this->single_card->getFields() as $field) {
+            $this->addJsonFieldValues($json_format[$artifact_id], $field);
+            $this->addHTMLFieldValues($json_format[$artifact_id], $field);
         }
 
         $GLOBALS['Response']->sendJSON($json_format);
     }
 
     private function addJsonFieldValues(&$json_format, $field) {
-        $json_format['fields'][$field->getName()] = $field->getJsonValue($this->request->getCurrentUser(), $this->artifact->getLastChangeset());
+        $json_format['fields'][$field->getName()] = $this->single_card->getFieldJsonValue($this->request->getCurrentUser(), $field);
     }
 
     private function addHTMLFieldValues(&$json_format, $field) {
-        $json_format['html_fields'][$field->getName()] = $field->fetchCardValue($this->artifact, $this->display_preferences);
-    }
-
-    /**
-     * @return Cardwall_CardPresenter
-     */
-    protected function getCardPresenter() {
-        $user            = $this->request->getCurrentUser();
-        $parent_artifact = $this->artifact->getParent($user);
-
-        return new Cardwall_CardPresenter(
-            $this->artifact,
-            $this->card_fields,
-            $this->artifact->getCardAccentColor($user),
-            $this->display_preferences,
-            null,
-            $this->artifact->getAllowedChildrenTypesForUser($user),
-            $parent_artifact
-        );
-    }
-
-    /**
-     * @return Cardwall_CardInCellPresenter
-     */
-    protected function getCardInCellPresenter() {
-        return $this->presenter_factory->getCardInCellPresenter($this->getCardPresenter($this->artifact));
-    }
-
-    private function getColumnId() {
-        foreach ($this->columns as $column) {
-            if ($this->config->isInColumn($this->artifact, $this->field_provider, $column)) {
-                return $column->getId();
-            }
-        }
-        return -1;
+        $json_format['html_fields'][$field->getName()] = $this->single_card->getFieldHTMLValue($this->request->getCurrentUser(), $field);
     }
 }
 
