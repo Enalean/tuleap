@@ -1,3 +1,6 @@
+Version 1.31 - Tuleap 6.9
+    * story #5714 - a dedicated, fullscreen, stand-up view
+
 Version 1.30 - Tuleap 6.9
     * Fix request #5751 : PUT /milestones/123/content does not remove anymore links from other trackers than content trackers.
 

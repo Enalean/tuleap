@@ -1,3 +1,6 @@
+Version 1.11 - Tuleap 6.9
+    * story #5714 - a dedicated, fullscreen, stand-up view
+
 Version 1.10 - Tuleap 6.9
     * Bug fixing RESt/Cardwall
 - Cast column ids to integer
