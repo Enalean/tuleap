@@ -1,3 +1,6 @@
+Version 5.213 - Tuleap 6.9
+    * request #5816 - Textarea fixed size lost with 6.7 release
+
 Version 5.212 - Tuleap 6.9
     * Fix request #5812: HTML interpreted in My Artifacts widget
 
