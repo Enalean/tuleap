@@ -1,3 +1,6 @@
+Version 5.214 - Tuleap 6.9
+    * story #5649 - OPTIONS|PUT /cards/:id
+
 Version 5.213 - Tuleap 6.9
     * request #5816 - Textarea fixed size lost with 6.7 release
 

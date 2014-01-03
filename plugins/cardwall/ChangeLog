@@ -1,3 +1,6 @@
+Version 1.12 - Tuleap 6.9
+    * story #5649 - OPTIONS|PUT /cards/:id
+
 Version 1.11 - Tuleap 6.9
     * story #5714 - a dedicated, fullscreen, stand-up view
 
