@@ -469,6 +469,15 @@ ul.tracker_function_aggregate_results {
 
 #tracker_artifact_followup_comments {
     background: #fbfbfb;
+
+    &:not(.tracker_artifact_followup_comments-display_changes) {
+        .tracker_artifact_followup.tracker_artifact_followup-with_changes:not(.tracker_artifact_followup-with_comment),
+        .tracker_artifact_followup.tracker_artifact_followup-by_system_user,
+        .tracker_artifact_followup_changes,
+        .tracker_artifact_followup_content > hr {
+            display: none;
+        }
+    }
 }
 
 .tracker_artifact_followups {
@@ -1600,4 +1609,48 @@ tr.artifact-children-table-head {
 
 .tracker_artifact_followup_content textarea {
     width : 100%;
+}
+
+.tracker-admin-bindvalue_list {
+    list-style: none;
+    margin-left: 0px;
+    border: 1px solid #d5d5d5;
+}
+
+.tracker-admin-bindvalue_list > li {
+    border-bottom: 1px solid #d5d5d5;
+    padding: 4px;
+    padding-right: 8px;
+}
+
+.tracker-admin-bindvalue_list > li:last-child {
+    border-bottom: none;
+}
+
+.tracker-admin-bindvalue_actions {
+    padding-left: 8px;
+    float: right;
+}
+
+.tracker-admin-bindvalue_grip {
+    margin-right: 2px;
+    cursor: move;
+}
+
+.tracker-admin-bindvalue_decorator {
+    margin-right: 6px;
+}
+
+.tracker-admin-bindvalue_description {
+    margin-left: 40px;
+}
+
+.tracker-admin-bindvalue_description_field {
+    display: block;
+    margin-left: 40px;
+}
+
+.tracker_artifact_field > input[type=text],
+.tracker_artifact_field > textarea {
+    width: auto;
 }

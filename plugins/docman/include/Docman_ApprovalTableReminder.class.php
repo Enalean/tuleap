@@ -140,9 +140,14 @@ class Docman_ApprovalTableReminder {
         if ($table instanceof Docman_ApprovalTableFile) {
             $versionFactory = new Docman_VersionFactory();
             $version        = $versionFactory->getSpecificVersionById($table->getVersionId(), 'plugin_docman_version');
-            $itemId         = $version->getItemId();
-        } else {
+            if ($version) {
+                $itemId = $version->getItemId();
+            }
+        } elseif ($table) {
             $itemId = $table->getItemId();
+        }
+        if (! $itemId) {
+            return;
         }
         $itemFactory = new Docman_ItemFactory();
         $docmanItem  = $itemFactory->getItemFromDb($itemId);

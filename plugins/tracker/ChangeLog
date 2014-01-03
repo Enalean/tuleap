@@ -1,3 +1,33 @@
+Version 5.213 - Tuleap 6.9
+    * request #5816 - Textarea fixed size lost with 6.7 release
+
+Version 5.212 - Tuleap 6.9
+    * Fix request #5812: HTML interpreted in My Artifacts widget
+
+Version 5.211 - Tuleap 6.9
+    * Bug fixing RESt/Cardwall
+- Cast column ids to integer
+- Return status in english
+- Add Cardwall only when needed
+
+Version 5.210 - Tuleap 6.9
+    * story #5674 - hide history changes in follow-up comments
+
+Version 5.209 - Tuleap 6.9
+    * story #5514 - Order values in select boxes
+
+Version 5.208 - Tuleap 6.9
+    * Fix PHP notice when editing artifact
+
+Version 5.207 - Tuleap 6.9
+    * Fix JS behaviour on textarea and followup body_format selectbox on Firefox
+
+Version 5.206 - Tuleap 6.9
+    * Fix request #5758 - Fatal error when trying to update an artifact
+
+Version 5.205 - Tuleap 6.8
+    * Fix request #5733 - Chosen format for text fields is lost on artifact update
+
 Version 5.204 - Tuleap 6.8
     * fix request #5558 - Links not extracted in read-only view
 

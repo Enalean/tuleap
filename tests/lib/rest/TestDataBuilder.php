@@ -29,6 +29,9 @@ class TestDataBuilder {
     const TEST_PROJECT_LONG_NAME = 'Long name';
     const TEST_PROJECT_SHORT_NAME = 'short-name';
 
+    const RELEASE_ARTIFACT_ID = 1;
+    const SPRINT_ARTIFACT_ID  = 2;
+
 
     /** @var ProjectManager */
     private $project_manager;
@@ -143,8 +146,8 @@ class TestDataBuilder {
         );
         Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(7), $fields_data, $user, '');
 
-        $release = Tracker_ArtifactFactory::instance()->getArtifactById(1);
-        $release->linkArtifact(2, $user);
+        $release = Tracker_ArtifactFactory::instance()->getArtifactById(self::RELEASE_ARTIFACT_ID);
+        $release->linkArtifact(self::SPRINT_ARTIFACT_ID, $user);
 
         return $this;
     }
@@ -178,7 +181,7 @@ class TestDataBuilder {
         );
         Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '');
 
-        $release = Tracker_ArtifactFactory::instance()->getArtifactById(1);
+        $release = Tracker_ArtifactFactory::instance()->getArtifactById(self::RELEASE_ARTIFACT_ID);
         $release->linkArtifact(3, $user);
         $release->linkArtifact(4, $user);
         $release->linkArtifact(5, $user);
@@ -222,14 +225,14 @@ class TestDataBuilder {
         );
         Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(9), $fields_data, $user, '');
 
-        $release = Tracker_ArtifactFactory::instance()->getArtifactById(1);
+        $release = Tracker_ArtifactFactory::instance()->getArtifactById(self::RELEASE_ARTIFACT_ID);
         $release->linkArtifact(7, $user);
         $release->linkArtifact(8, $user);
         $release->linkArtifact(9, $user);
         $release->linkArtifact(10, $user);
         $release->linkArtifact(11, $user);
 
-        $sprint = Tracker_ArtifactFactory::instance()->getArtifactById(2);
+        $sprint = Tracker_ArtifactFactory::instance()->getArtifactById(self::SPRINT_ARTIFACT_ID);
         $sprint->linkArtifact(7, $user);
         $sprint->linkArtifact(8, $user);
 

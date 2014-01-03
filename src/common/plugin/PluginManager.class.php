@@ -242,7 +242,11 @@ class PluginManager {
             }
             $etcs = glob($GLOBALS['sys_pluginsroot'] .'/'. $name .'/etc/*');
             foreach($etcs as $etc) {
-                copy($etc, $GLOBALS['sys_custompluginsroot'] .'/'. $name . '/etc/' . basename($etc));
+                if(is_dir($etc)) {
+                    $this->copyDirectory($etc, $GLOBALS['sys_custompluginsroot'] .'/'. $name . '/etc/' . basename($etc));
+                } else {
+                    copy($etc, $GLOBALS['sys_custompluginsroot'] .'/'. $name . '/etc/' . basename($etc));
+                }
             }
             $incdists = glob($GLOBALS['sys_custompluginsroot'] .'/'. $name .'/etc/*.dist');
             foreach($incdists as $incdist) {
@@ -398,6 +402,24 @@ class PluginManager {
      */
     public function getPluginDuringInstall($name) {
         return $this->_getPluginFactory()->instantiatePlugin(0, $name);
+    }
+
+    private function copyDirectory($source, $destination) {
+
+        if(!is_dir($destination)) {
+            if(!mkdir($destination)) {
+                return false;
+            }
+        }
+
+        $iterator = new DirectoryIterator($source);
+        foreach($iterator as $file) {
+            if($file->isFile()) {
+                copy($file->getRealPath(), "$destination/" . $file->getFilename());
+            } else if(!$file->isDot() && $file->isDir()) {
+                $this->copyDirectory($file->getRealPath(), "$destination/$file");
+            }
+        }
     }
 }
 ?>

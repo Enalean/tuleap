@@ -474,4 +474,59 @@ class Tracker_Artifact_ChangesetDeleteTest extends TuleapTestCase {
     }
 }
 
-?>
+class Tracker_Artifact_Changeset_classnamesTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->changeset_with_changes = partial_mock('Tracker_Artifact_Changeset', array('diffToPrevious', 'getComment'), array('*', '*', 101, '*', '*'));
+        $this->changeset_with_both_changes_and_comment = partial_mock('Tracker_Artifact_Changeset', array('diffToPrevious', 'getComment'), array('*', '*', 101, '*', '*'));
+        $this->changeset_with_comment = partial_mock('Tracker_Artifact_Changeset', array('diffToPrevious', 'getComment'), array('*', '*', 101, '*', '*'));
+        $this->changeset_by_workflowadmin = partial_mock('Tracker_Artifact_Changeset', array('diffToPrevious', 'getComment'), array('*', '*', 90, '*', '*'));
+        $this->changeset_by_anonymous = partial_mock('Tracker_Artifact_Changeset', array('diffToPrevious', 'getComment'), array('*', '*', null, '*', 'email'));
+
+        $comment = mock('Tracker_Artifact_Changeset_Comment');
+        $empty_comment = stub('Tracker_Artifact_Changeset_Comment')->hasEmptyBody()->returns(true);
+
+        stub($this->changeset_with_changes)->getComment()->returns($empty_comment);
+        stub($this->changeset_with_both_changes_and_comment)->getComment()->returns($comment);
+        stub($this->changeset_with_comment)->getComment()->returns($comment);
+        stub($this->changeset_by_workflowadmin)->getComment()->returns($comment);
+        stub($this->changeset_by_anonymous)->getComment()->returns($comment);
+
+        stub($this->changeset_with_changes)->diffToPrevious()->returns('The changes');
+        stub($this->changeset_with_both_changes_and_comment)->diffToPrevious()->returns('The changes');
+        stub($this->changeset_with_comment)->diffToPrevious()->returns(false);
+        stub($this->changeset_by_workflowadmin)->diffToPrevious()->returns('The changes');
+        stub($this->changeset_by_anonymous)->diffToPrevious()->returns('The changes');
+    }
+
+    public function itContainsChanges() {
+        $pattern = '/'. preg_quote('tracker_artifact_followup-with_changes') .'/';
+        $this->assertPattern($pattern, $this->changeset_with_changes->getFollowUpClassnames());
+        $this->assertPattern($pattern, $this->changeset_with_both_changes_and_comment->getFollowUpClassnames());
+        $this->assertPattern($pattern, $this->changeset_by_workflowadmin->getFollowUpClassnames());
+        $this->assertPattern($pattern, $this->changeset_by_anonymous->getFollowUpClassnames());
+
+        $this->assertNoPattern($pattern, $this->changeset_with_comment->getFollowUpClassnames());
+    }
+
+    public function itContainsComment() {
+        $pattern = '/'. preg_quote('tracker_artifact_followup-with_comment') .'/';
+        $this->assertPattern($pattern, $this->changeset_with_comment->getFollowUpClassnames());
+        $this->assertPattern($pattern, $this->changeset_with_both_changes_and_comment->getFollowUpClassnames());
+        $this->assertPattern($pattern, $this->changeset_by_workflowadmin->getFollowUpClassnames());
+        $this->assertPattern($pattern, $this->changeset_by_anonymous->getFollowUpClassnames());
+
+        $this->assertNoPattern($pattern, $this->changeset_with_changes->getFollowUpClassnames());
+    }
+
+    public function itContainsSystemUser() {
+        $pattern = '/'. preg_quote('tracker_artifact_followup-by_system_user') .'/';
+        $this->assertNoPattern($pattern, $this->changeset_with_comment->getFollowUpClassnames());
+        $this->assertNoPattern($pattern, $this->changeset_with_both_changes_and_comment->getFollowUpClassnames());
+        $this->assertNoPattern($pattern, $this->changeset_with_changes->getFollowUpClassnames());
+        $this->assertNoPattern($pattern, $this->changeset_by_anonymous->getFollowUpClassnames());
+
+        $this->assertPattern($pattern, $this->changeset_by_workflowadmin->getFollowUpClassnames());
+    }
+}

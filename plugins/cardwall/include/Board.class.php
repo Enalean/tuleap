@@ -48,5 +48,14 @@ class Cardwall_Board {
         $this->columns   = $columns;
         $this->mappings  = $mappings;
     }
+
+    public function getColumns() {
+        return $this->columns;
+    }
+
+    public function getSwimlines() {
+        return $this->swimlines;
+    }
+
 }
 ?>

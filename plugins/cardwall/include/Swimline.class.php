@@ -24,9 +24,9 @@
 class Cardwall_Swimline {
 
     /**
-     * @var Tracker_CardPresenter 
+     * @var Cardwall_CardInCellPresenter
      */
-    private $card_presenter;
+    private $card_in_cell_presenter;
 
     /**
      * @var array
@@ -48,16 +48,24 @@ class Cardwall_Swimline {
      * @param array  $cells
      */
     public function __construct(Cardwall_CardInCellPresenter $swimline_artifact_presenter, array $cells) {
-        $this->cells          = $cells;
-        $this->card_presenter = $swimline_artifact_presenter->getCardPresenter();
-        $this->swimline_id    = $swimline_artifact_presenter->getId();
+        $this->cells                  = $cells;
+        $this->card_in_cell_presenter = $swimline_artifact_presenter;
+        $this->swimline_id            = $swimline_artifact_presenter->getId();
     }
 
     /**
      * @return Tracker_CardPresenter
      */
     public function getCardPresenter() {
-        return $this->card_presenter;
+        return $this->card_in_cell_presenter->getCardPresenter();
+    }
+
+    /**
+     *
+     * @return Cardwall_CardInCellPresenter
+     */
+    public function getCardInCellPresenter() {
+        return $this->card_in_cell_presenter;
     }
 
     public function stack_cards_title() {
@@ -66,6 +74,10 @@ class Cardwall_Swimline {
 
     public function expand_cards_title() {
         return $GLOBALS['Language']->getText('plugin_cardwall', 'cell_unstack');
+    }
+
+    public function getCells() {
+        return $this->cells;
     }
 }
 ?>

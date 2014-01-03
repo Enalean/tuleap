@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS plugin_git_remote_servers (
     id INT(11) UNSIGNED NOT NULL auto_increment,
     host VARCHAR(255) NOT NULL,
-    http_port INT(11) UNSIGNED NOT NULL,
+    http_port INT(11) UNSIGNED DEFAULT 80,
     ssh_port INT(11) UNSIGNED NOT NULL,
     login VARCHAR(255) NOT NULL,
     identity_file VARCHAR(255) NOT NULL,
@@ -29,8 +29,7 @@ CREATE TABLE IF NOT EXISTS `plugin_git` (
   `remote_project_deleted` TINYINT DEFAULT '0',
   `remote_project_deleted_date` INT(11) NULL,
   PRIMARY KEY  (`repository_id`),
-  KEY `project_id` (`project_id`),
-  FOREIGN KEY  remote_server_idx (remote_server_id) REFERENCES plugin_git_remote_servers (id)
+  KEY `project_id` (`project_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `plugin_git_post_receive_mail` (
@@ -59,8 +58,7 @@ CREATE TABLE IF NOT EXISTS plugin_git_remote_ugroups (
     group_id int(11) NOT NULL,
     ugroup_id int(11) NOT NULL,
     remote_server_id INT(11) UNSIGNED NOT NULL,
-    PRIMARY KEY (group_id, ugroup_id, remote_server_id),
-    FOREIGN KEY remote_server_idx (remote_server_id) REFERENCES plugin_git_remote_servers (id)
+    PRIMARY KEY (group_id, ugroup_id, remote_server_id)
 );
 
 CREATE TABLE IF NOT EXISTS plugin_git_housekeeping(

@@ -1,10 +1,29 @@
-Version 6.8 (Not Released Yet)
+Version 6.9 (Not released yet)
 	== Plugins ==
-	* tracker_date_reminder: 1.2.6
+	* tracker: 5.213
+	* agiledashboard: 1.30
+	* cardwall: 1.10
+	* git: 3.63
+	* docman: 2.26.27
+
+	== Enhancement ==
+	* Making the RESt API resource list public
+
+	== Bug Fix ==
+	* Fix request #5779: Fatal error when using getSvnStatsFiles SOAP method
+	* Fix request #5808: Package id in file download link is now correctly updated
+	* Fix request #4305 - Warnings when a plugin is installed
+
+	== API ==
+	* SOAP core: 6.4.1
+
+Version 6.8 (Thursday, December 12th 2013)
+	== Plugins ==
+	* tracker_date_reminder: 1.2.7
 	* agiledashboard: 1.26
-	* tracker: 5.204
+	* tracker: 5.205
 	* mediawiki: 0.21
-	* git: 3.60
+	* git: 3.61
 	* statistics: 0.34
 	* tests: 5.20
 

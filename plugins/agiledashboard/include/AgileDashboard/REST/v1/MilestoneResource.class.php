@@ -34,6 +34,7 @@ use \Planning_Milestone;
 use \PFUser;
 use \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use \MilestoneContentUpdater;
+use \EventManager;
 
 /**
  * Wrapper for milestone related REST methods
@@ -53,6 +54,9 @@ class MilestoneResource {
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $backlog_item_collection_factory;
+
+    /** @var EventManager */
+    private $event_manager;
 
     public function __construct() {
         $planning_factory             = PlanningFactory::build();
@@ -91,6 +95,8 @@ class MilestoneResource {
         );
 
         $this->milestone_content_updater = new MilestoneContentUpdater($tracker_form_element_factory);
+
+        $this->event_manager = EventManager::instance();
     }
 
     /**
@@ -121,6 +127,15 @@ class MilestoneResource {
 
         $milestone_representation = new MilestoneRepresentation();
         $milestone_representation->build($milestone);
+
+        $this->event_manager->processEvent(
+            AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,
+            array(
+                'user'                     => $user,
+                'milestone'                => $milestone,
+                'milestone_representation' => &$milestone_representation,
+            )
+        );
 
         return $milestone_representation;
     }
@@ -173,10 +188,20 @@ class MilestoneResource {
         $milestone = $this->getMilestoneById($user, $id);
         $this->sendAllowHeaderForSubmilestones();
 
+        $event_manager = $this->event_manager;
         return array_map(
-            function (Planning_Milestone $milestone) {
+            function (Planning_Milestone $milestone) use ($user, $event_manager) {
                 $milestone_representation = new MilestoneRepresentation();
                 $milestone_representation->build($milestone);
+
+                $event_manager->processEvent(
+                    AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,
+                    array(
+                        'user'                     => $user,
+                        'milestone'                => $milestone,
+                        'milestone_representation' => &$milestone_representation,
+                    )
+                );
 
                 return $milestone_representation;
             },
@@ -282,6 +307,8 @@ class MilestoneResource {
     /**
      * Put content in a given milestone
      *
+     * Put the new content of a given milestone.
+     *
      * @url PUT {id}/content
      *
      * @param int $id    Id of the milestone
@@ -305,7 +332,7 @@ class MilestoneResource {
             throw new RestException(500, $exception->getMessage());
         }
 
-        $this->milestone_content_updater->updateMilestoneContent($ids, $current_user, $milestone->getArtifact());
+        $this->milestone_content_updater->updateMilestoneContent($ids, $current_user, $milestone);
 
         $this->sendAllowHeaderForContent();
     }
@@ -337,6 +364,52 @@ class MilestoneResource {
         $this->milestone_content_updater->setOrder($ids);
 
         $this->sendAllowHeaderForContent();
+    }
+
+    /**
+     * Carwall options
+     *
+     * @url OPTIONS {id}/cardwall
+     *
+     * @param int $id Id of the milestone
+     *
+     * @throws 403
+     * @throws 404
+     */
+    protected function optionsCardwall($id) {
+        $this->event_manager->processEvent(
+            AGILEDASHBOARD_EVENT_REST_OPTIONS_CARDWALL,
+            array(
+                'version'   => 'v1',
+                'milestone' => $this->getMilestoneById($this->getCurrentUser(), $id)
+            )
+        );
+    }
+
+    /**
+     * Get a Cardwall
+     *
+     * @url GET {id}/cardwall
+     *
+     * @param int $id Id of the milestone
+     *
+     *
+     *
+     * @throws 403
+     * @throws 404
+     */
+    protected function getCardwall($id) {
+        $cardwall = null;
+        $this->event_manager->processEvent(
+            AGILEDASHBOARD_EVENT_REST_GET_CARDWALL,
+            array(
+                'version'   => 'v1',
+                'milestone' => $this->getMilestoneById($this->getCurrentUser(), $id),
+                'cardwall'  => &$cardwall
+            )
+        );
+
+        return $cardwall;
     }
 
     private function getMilestoneById(PFUser $user, $id) {

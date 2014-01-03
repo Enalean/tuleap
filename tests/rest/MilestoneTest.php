@@ -169,4 +169,65 @@ class MilestoneTest extends RestBase {
 
         $this->getResponse($this->client->put('milestones/1/content', null, '[3,6]'));
     }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testOPTIONSCardwallOnReleaseGives404() {
+        $this->getResponse($this->client->options('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/cardwall'));
+    }
+
+    public function testOPTIONSCardwallOnSprintGivesOPTIONSandGET() {
+        $response = $this->getResponse($this->client->options('milestones/'.TestDataBuilder::SPRINT_ARTIFACT_ID.'/cardwall'));
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGETCardwall() {
+        $response = $this->getResponse($this->client->get('milestones/'.TestDataBuilder::SPRINT_ARTIFACT_ID.'/cardwall'));
+
+        $cardwall = $response->json();
+
+        $this->assertArrayHasKey('columns', $cardwall);
+        $columns = $cardwall['columns'];
+        $this->assertCount(4,$columns);
+
+        $first_column = $columns[0];
+        $this->assertEquals($first_column['id'], 1);
+        $this->assertEquals($first_column['label'], "To be done");
+        $this->assertEquals($first_column['color'], "#F8F8F8");
+
+        $third_column = $columns[2];
+        $this->assertEquals($third_column['id'], 3);
+        $this->assertEquals($third_column['label'], "Review");
+        $this->assertEquals($third_column['color'], "#F8F8F8");
+
+        $this->assertArrayHasKey('swimlanes', $cardwall);
+        $swimlanes = $cardwall['swimlanes'];
+        $this->assertCount(2,$swimlanes);
+
+        $first_swimlane = $swimlanes[0];
+
+        $first_swimlane_card = $first_swimlane['cards'][0];
+        $this->assertEquals("2_7", $first_swimlane_card['id']);
+        $this->assertEquals("Believe", $first_swimlane_card['label']);
+        $this->assertEquals("cards/2_7", $first_swimlane_card['uri']);
+        $this->assertEquals(2, $first_swimlane_card['planning_id']);
+        $this->assertEquals("Open", $first_swimlane_card['status']);
+        $this->assertEquals(null, $first_swimlane_card['accent_color']);
+        $this->assertEquals("2", $first_swimlane_card['column_id']);
+        $this->assertEquals(array(1,2,4), $first_swimlane_card['allowed_column_ids']);
+        $this->assertEquals(array(), $first_swimlane_card['values']);
+
+        $first_swimlane_card_project_reference = $first_swimlane_card['project'];
+        $this->assertEquals(101, $first_swimlane_card_project_reference['id']);
+        $this->assertEquals("projects/101", $first_swimlane_card_project_reference['uri']);
+
+        $first_swimlane_card_artifact_reference = $first_swimlane_card['artifact'];
+        $this->assertEquals(7, $first_swimlane_card_artifact_reference['id']);
+        $this->assertEquals("artifacts/7", $first_swimlane_card_artifact_reference['uri']);
+
+        $first_swimlane_card_artifact_tracker_reference = $first_swimlane_card_artifact_reference['tracker'];
+        $this->assertEquals(9, $first_swimlane_card_artifact_tracker_reference['id']);
+        $this->assertEquals("trackers/9", $first_swimlane_card_artifact_tracker_reference['uri']);
+    }
 }

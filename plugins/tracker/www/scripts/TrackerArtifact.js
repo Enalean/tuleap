@@ -84,12 +84,13 @@ document.observe('dom:loaded', function () {
                 }
             }
         });
-        var div = new Element('div').setStyle({
+        var display_changes_classname = 'tracker_artifact_followup_comments-display_changes',
+            div = new Element('div').setStyle({
                     textAlign: 'right'
                 }).insert(new Element('a', {
                     href: '#invert-order',
                     title: 'invert order of follow-up comments'
-                }).update('<img src="' + codendi.imgroot + '/ic/reorder-followups.png" alt="invert order of follow-up comments" />')
+                }).update('<img src="' + codendi.imgroot + '/ic/reorder-followups.png" alt="invert order of follow-up comments" /> ')
                 .observe('click', function (evt) {
                     invertFollowups(followup_section);
                     new Ajax.Request(codendi.tracker.base_url + "invert_comments_order.php", {
@@ -99,7 +100,20 @@ document.observe('dom:loaded', function () {
                     });
                     Event.stop(evt);
                     return false;
-                }));
+                })).insert(
+                    new Element(
+                        'button',
+                        {
+                            'data-toggle': 'button',
+                            'class': 'btn ' + (followup_section.hasClassName(display_changes_classname) ? 'active' : ''),
+                            'type': 'button',
+                            'autocomplete': 'off'
+                        }
+                    ).update('<i class="icon-exchange"></i> ' + codendi.locales.tracker_artifact.display_changes)
+                    .observe('click', function (evt) {
+                        followup_section.toggleClassName(display_changes_classname);
+                        new Ajax.Request(codendi.tracker.base_url + "invert_display_changes.php");
+                    }));
         if (followup_section.down('.tracker_artifact_followups').childElements().size() < 2) {
             div.hide();
         }
@@ -159,7 +173,7 @@ document.observe('dom:loaded', function () {
                         } else {
                             var content = $('tracker_followup_comment_edit_'+id).getValue();
                         }
-                        var format = document.getElementsByName('comment_format'+id)[0].selected? 'text' : 'html';
+                        var format = $('rte_format_selectbox'+id).value;
                         var req = new Ajax.Request(location.href, {
                             parameters: {
                                 func:           'update-comment',
@@ -175,16 +189,19 @@ document.observe('dom:loaded', function () {
                                 }
                             }
                         });
+                        edit.show();
                         Event.stop(evt);
                         return false;
                     });
-                    
+
+                    edit.hide();
                     var cancel = new Element('a', {
                         href: '#cancel'
                     }).update('Cancel').observe('click', function (evt) {
                         edit_panel.remove();
                         comment_panel.show();
                         Event.stop(evt);
+                        edit.show();
                     });
                     
                     edit_panel.insert(new Element('br'))

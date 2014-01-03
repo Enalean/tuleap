@@ -1,3 +1,20 @@
+Version 1.30 - Tuleap 6.9
+    * Fix request #5751 : PUT /milestones/123/content does not remove anymore links from other trackers than content trackers.
+
+Version 1.29 - Tuleap 6.9
+    * Fix request #5807: Long name is always displayed in Agile Dashboard planning pane
+
+Version 1.28 - Tuleap 6.9
+    * Bug fixing RESt/Cardwall
+- Cast column ids to integer
+- Return status in english
+- Add Cardwall only when needed
+
+Version 1.27 - Tuleap 6.9
+    * Add GET /milestones/:id/cardwall
+Add OPTIONS /milestones/:id/cardwall
+
+
 Version 1.26 - Tuleap 6.8
     * Fix some glitches in existing API REST
 

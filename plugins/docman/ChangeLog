@@ -1,3 +1,9 @@
+Version 2.26.27 - Tuleap 6.9
+    * Fix request #5022 : Lock icon for document writers
+
+Version 2.26.26 - Tuleap 6.9
+    * Fix fatal error on docman notifications. A consequence of this error is that date reminders are not sent-out.
+
 Version 2.26.25 - Tuleap 6.7
     * Fix request #5556: Incorrect icons for MS Office documents with macros
 

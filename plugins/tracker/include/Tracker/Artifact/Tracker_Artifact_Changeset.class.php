@@ -266,6 +266,26 @@ class Tracker_Artifact_Changeset {
     }
 
     /**
+     * @return string
+     */
+    public function getFollowUpClassnames() {
+        $classnames = '';
+        $changes = $this->diffToPrevious();
+        if ($changes) {
+            $classnames .= ' tracker_artifact_followup-with_changes ';
+        }
+        $comment = $this->getComment();
+        if ($comment && ! $comment->hasEmptyBody()) {
+            $classnames .= ' tracker_artifact_followup-with_comment ';
+        }
+        if ($this->submitted_by && $this->submitted_by < 100) {
+            $classnames .= ' tracker_artifact_followup-by_system_user ';
+        }
+
+        return $classnames;
+    }
+
+    /**
      * Say if a user can permanently (no restore) delete a changeset
      *
      * @param PFUser $user The user who does the delete
@@ -608,7 +628,10 @@ class Tracker_Artifact_Changeset {
         $cleanRecipientsList = array();
         foreach ($recipients as $recipient => $check_perms) {
             $user = $this->getUserManager()->getUserByUserName($recipient);
-            if (!$check_perms || $this->userCanReadAtLeastOneChangedField($user)) {
+            if (! $user) {
+                continue;
+            }
+            if (! $check_perms || $this->userCanReadAtLeastOneChangedField($user)) {
                 $cleanRecipientsList[$recipient] = $check_perms;
             }
         }
