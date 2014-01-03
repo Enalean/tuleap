@@ -1,3 +1,6 @@
+6.4.1 - Tuleap 6.9
+	* request #5814 - [tv3] Soap function getArtifactType returns an error
+
 6.4 - Tuleap 6.8
 	* Fix request #5701 - getSvnPathWithLogsDetails only returns one element
 

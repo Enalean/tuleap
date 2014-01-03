@@ -14,6 +14,9 @@ Version 6.9 (Not released yet)
 	* Fix request #5808: Package id in file download link is now correctly updated
 	* Fix request #4305 - Warnings when a plugin is installed
 
+	== API ==
+	* SOAP core: 6.4.1
+
 Version 6.8 (Thursday, December 12th 2013)
 	== Plugins ==
 	* tracker_date_reminder: 1.2.7
