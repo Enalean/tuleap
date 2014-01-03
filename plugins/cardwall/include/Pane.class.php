@@ -56,6 +56,26 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      */
     private $milestone_factory;
 
+    /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $tracker_form_element_factory;
+
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
+
+    /**
+     * @var PlanningFactory
+     */
+    private $planning_factory;
+
     public function __construct(
             Cardwall_PaneInfo $info,
             Planning_Milestone $milestone,
@@ -63,14 +83,17 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             Cardwall_OnTop_Config $config,
             PFUser $user,
             Planning_MilestoneFactory $milestone_factory
-            ) {
-        $this->info           = $info;
-        $this->milestone      = $milestone;
-        $this->enable_qr_code = $enable_qr_code;
-        $this->config         = $config;
-        $this->user           = $user;
-        $this->milestone_factory = $milestone_factory;
-        $this->artifact_factory = Tracker_ArtifactFactory::instance();
+    ) {
+        $this->info                         = $info;
+        $this->milestone                    = $milestone;
+        $this->enable_qr_code               = $enable_qr_code;
+        $this->config                       = $config;
+        $this->user                         = $user;
+        $this->milestone_factory            = $milestone_factory;
+        $this->artifact_factory             = Tracker_ArtifactFactory::instance();
+        $this->tracker_form_element_factory = Tracker_FormElementFactory::instance();
+        $this->user_manager                 = UserManager::instance();
+        $this->planning_factory             = PlanningFactory::build();
     }
 
     public function getIdentifier() {
@@ -114,9 +137,15 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     private function getPresenterUsingMappedFields(Cardwall_OnTop_Config_ColumnCollection $columns) {
         $planning            = $this->milestone->getPlanning();
 
+        $raw_board_builder   = new Cardwall_RawBoardBuilder();
+        $display_preferences = $raw_board_builder->getDisplayPreferences($this->milestone, $this->user);
+        $column_preferences  = new Cardwall_UserPreferences_Autostack_AutostackDashboard($this->user, $this->config->getTracker());
+        $column_autostack    = new Cardwall_UserPreferences_UserPreferencesAutostackFactory();
+        $column_autostack->setAutostack($columns, $column_preferences);
+
         $redirect_parameter  = 'cardwall[agile]['. $planning->getId() .']='. $this->milestone->getArtifactId();
 
-        $raw_board_builder = new Cardwall_RawBoardBuilder();
+        $this->milestone = $this->milestone_factory->updateMilestoneContextualInfo($this->user, $this->milestone);
         $board = $raw_board_builder->buildBoardUsingMappedFields($this->user, $this->artifact_factory,$this->milestone, $this->config, $columns);
 
         return new Cardwall_PaneContentPresenter(
@@ -124,8 +153,34 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             $this->getQrCode(),
             $redirect_parameter,
             $this->getSwitchDisplayAvatarsURL(),
-            $raw_board_builder->getDisplayPreferences($this->milestone, $this->user)->shouldDisplayAvatars(),
-            $planning
+            $display_preferences->shouldDisplayAvatars(),
+            $planning,
+            $this->milestone,
+            $this->getMilestoneContentItems()
+        );
+    }
+
+    private function getMilestoneContentItems() {
+        $backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
+            new AgileDashboard_BacklogItemDao(),
+            $this->artifact_factory,
+            $this->tracker_form_element_factory,
+            $this->milestone_factory,
+            $this->planning_factory,
+            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
+        );
+
+        $strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
+            new AgileDashboard_BacklogItemDao(),
+            $this->artifact_factory,
+            $this->planning_factory
+        );
+
+        return $backlog_item_collection_factory->getAllCollection(
+            $this->user_manager->getCurrentUser(),
+            $this->milestone,
+            $strategy_factory->getSelfBacklogStrategy($this->milestone),
+            ''
         );
     }
 

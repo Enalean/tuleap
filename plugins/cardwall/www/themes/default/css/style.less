@@ -355,3 +355,200 @@ input[type="text"].search-in-cardwall {
 .cardwall-auto-stack-toggle {
     margin: 0;
 }
+
+body.fullscreen {
+    @cardwall-full-screen-top-color: #e6e6e6;
+    @cardwall-full-screen-bottom-color: #ffffff;
+    min-width: 100%;
+    min-height: 100%;
+    padding: 0;
+    background: @cardwall-full-screen-top-color;
+    background: -moz-linear-gradient(top,  @cardwall-full-screen-top-color 0%, @cardwall-full-screen-bottom-color 20%, @cardwall-full-screen-bottom-color 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@cardwall-full-screen-top-color), color-stop(20%,@cardwall-full-screen-bottom-color), color-stop(100%,@cardwall-full-screen-bottom-color));
+    background: -webkit-linear-gradient(top,  @cardwall-full-screen-top-color 0%,@cardwall-full-screen-bottom-color 20%,@cardwall-full-screen-bottom-color 100%);
+    background: -o-linear-gradient(top,  @cardwall-full-screen-top-color 0%,@cardwall-full-screen-bottom-color 20%,@cardwall-full-screen-bottom-color 100%);
+    background: -ms-linear-gradient(top,  @cardwall-full-screen-top-color 0%,@cardwall-full-screen-bottom-color 20%,@cardwall-full-screen-bottom-color 100%);
+    background: linear-gradient(to bottom,  @cardwall-full-screen-top-color 0%,@cardwall-full-screen-bottom-color 20%,@cardwall-full-screen-bottom-color 100%);
+
+    #header, #navigation, .systray, #feedback, footer, .sidebar-nav, .navbar, .breadcrumb, .toolbar, .agiledashboard > .dropdown, .agiledashboard > .nav, .agiledashboard > .release-date-info {
+        display: none;
+    }
+
+    .main_body_row {
+        margin: 0;
+    }
+
+    .main {
+        margin: 0;
+        padding: 0;
+    }
+
+    #cardwall {
+        min-width: 100%;
+        min-height: 100%;
+
+        .cardwall_board-actions, .cardwall_board-fullscreen-bar {
+            padding: 20px 10px 0;
+        }
+    }
+}
+.cardwall_board-fullscreen-bar {
+    text-align: right;
+
+    i {
+      margin-right: 10px;
+    }
+}
+.cardwall_board-milestone-info {
+    margin: 30px 0;
+
+    > div {
+        padding: 10px 0 0 30px;
+        height: 90px;
+        border-left: 1px solid #ddd;
+    }
+
+    > div:first-child {
+        border-left: none;
+    }
+
+
+
+    .milestone-name {
+        a {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 2em;
+            line-height: 1em;
+            color: #444;
+
+            i {
+                font-size: 0.8em;
+                color: #888;
+            }
+
+            &:hover {
+                text-decoration: none;
+                color: #666;
+
+                i {
+                    color: #aaa;
+                }
+            }
+        }
+    }
+
+    .date-info, .points-info {
+        color: #888;
+        font-size: 0.9em;
+        margin: 0 0 10px 0;
+
+        span {
+            margin-right: 20px;
+        }
+    }
+
+    .line-break {
+        font-size: 0.9em;
+        margin: 0;
+    }
+
+    .progress-bar {
+        float: left;
+        width: 40%;
+        margin: 0 10% 0 0;
+
+        .progress {
+            height: 30px;
+
+            .bar {
+                padding: 5px 0 0 0;
+            }
+        }
+    }
+
+    .to-go {
+        float: left;
+        width: 50%;
+        font-size: 1.3em;
+        color: #444;
+
+        @media screen and (max-width: 1230px) {
+            font-size: 1.0em;
+        }
+
+        span {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .days, .points {
+            font-size: 3em;
+            @media screen and (max-width: 1230px) {
+                font-size: 2.5em;
+            }
+            font-weight: bold;
+            margin: 0 10px 0 0;
+        }
+
+        .days {
+            color: #0989C8;
+        }
+
+        .points {
+            color: #5AAF5A;
+        }
+    }
+
+    .no-data {
+        text-align: center;
+        font-style: italic;
+        font-size: 0.9em;
+        color: #aaa;
+    }
+
+    .milestone-capacity .no-data {
+        float: left;
+        width: 40%;
+        margin-right: 10%;
+    }
+
+    &.mini {
+        margin: 15px 0;
+
+        > div {
+            height: 60px;
+        }
+
+        .milestone-name {
+            display: none;
+        }
+
+        > div:nth-child(2) {
+            border: none;
+            margin-left: 0 !important;
+        }
+
+        .date-info, .points-info {
+            margin: 0 0 3px 0;
+        }
+
+        .progress-bar {
+            .progress {
+                height: 20px;
+
+                .bar {
+                    padding: 0;
+                }
+            }
+        }
+
+        .to-go {
+            font-size: 1em;
+
+            .days, .points {
+              font-size: 2.2em;
+            }
+        }
+    }
+}

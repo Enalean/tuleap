@@ -22,6 +22,7 @@
   * fields, etc).
   */
 document.observe('dom:loaded', function () {
+
     $$('.cardwall_board').each(function ( board ) {
         (function checkForLatestCardWallVersion() {
             if ($('tracker_report_cardwall_to_be_refreshed')) {

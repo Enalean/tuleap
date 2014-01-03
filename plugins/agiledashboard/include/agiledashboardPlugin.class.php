@@ -435,8 +435,14 @@ class AgileDashboardPlugin extends Plugin {
 
     public function tracker_event_artifact_association_edited($params) {
         if ($params['request']->isAjax()) {
-            $capacity         = $this->getFieldValue($params['form_element_factory'], $params['user'], $params['artifact'], Planning_Milestone::CAPACITY_FIELD_NAME);
-            $remaining_effort = $this->getFieldValue($params['form_element_factory'], $params['user'], $params['artifact'], Planning_Milestone::REMAINING_EFFORT_FIELD_NAME);
+
+            $milestone_factory = $this->getMilestoneFactory();
+            $milestone = $milestone_factory->getBareMilestoneByArtifact($params['user'], $params['artifact']);
+
+            $milestone_with_contextual_info = $milestone_factory->updateMilestoneContextualInfo($params['user'], $milestone);
+
+            $capacity         = $milestone_with_contextual_info->getCapacity();
+            $remaining_effort = $milestone_with_contextual_info->getRemainingEffort();
 
             header('Content-type: application/json');
             echo json_encode(array(
@@ -444,18 +450,6 @@ class AgileDashboardPlugin extends Plugin {
                 'is_over_capacity' => $capacity !== null && $remaining_effort !== null && $capacity < $remaining_effort,
             ));
         }
-    }
-
-    private function getFieldValue(Tracker_FormElementFactory $form_element_factory, PFUser $user, Tracker_Artifact $artifact, $field_name) {
-        $field = $form_element_factory->getComputableFieldByNameForUser(
-            $artifact->getTracker()->getId(),
-            $field_name,
-            $user
-        );
-        if ($field) {
-            return $field->getComputedValue($user, $artifact);
-        }
-        return 0;
     }
 
     /**

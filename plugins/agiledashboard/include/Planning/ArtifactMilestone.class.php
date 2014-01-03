@@ -94,6 +94,13 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
      */
      private $capacity = null;
 
+     /**
+     * The remaining effort of the milestone
+     *
+     * @var float
+     */
+     private $remaining_effort = null;
+
     /**
      * @param Project $project
      * @param Planning $planning
@@ -270,6 +277,15 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
 
     public function setCapacity($capacity) {
         $this->capacity = $capacity;
+        return $this;
+    }
+
+    public function getRemainingEffort() {
+        return $this->remaining_effort;
+    }
+
+    public function setRemainingEffort($remaining_effort) {
+        $this->remaining_effort = $remaining_effort;
         return $this;
     }
 

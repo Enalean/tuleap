@@ -50,3 +50,12 @@ plugin_cardwall	semantic_cardFields_fields	The following fields are added to the
 plugin_cardwall	semantic_card_fields_add_field	Add a field to the cards:
 plugin_cardwall	semantic_card_fields_no_more_field	There is no more field that can be added to the cards.
 plugin_cardwall	semantic_card_fields_remove_field	Remove this field from the cards.
+plugin_cardwall	milestone_go_to_fullscreen	Fullscreen
+plugin_cardwall	milestone_no_date_info	The start date and the duration are not defined
+plugin_cardwall	milestone_no_initial_effort_info	There is no initial effort
+plugin_cardwall	milestone_days_to_go	days to go
+plugin_cardwall	milestone_day_to_go	day to go
+plugin_cardwall	milestone_points_to_go	points remaining
+plugin_cardwall	milestone_point_to_go	point remaining
+plugin_cardwall	milestone_capacity	Capacity:
+plugin_cardwall	milestone_initial_effort	Initial effort:

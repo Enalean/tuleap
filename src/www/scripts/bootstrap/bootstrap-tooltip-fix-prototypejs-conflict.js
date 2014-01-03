@@ -25,9 +25,6 @@
     $.fn.tooltip.Constructor.prototype.hide = function () {
         var that = this
         , $tip = this.tip()
-        , e = $.Event('hide')
-
-        if (e.isDefaultPrevented()) return
 
         $tip.removeClass('in')
 

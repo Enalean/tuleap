@@ -24,5 +24,9 @@ codendi.locales['cardwall_field_validation'] = {
 };
 
 codendi.locales['cardwall'] = {
-    edit_card : 'Edit Card'
+    edit_card             : 'Edit Card',
+    go_to_fullscreen      : 'Fullscreen',
+    exit_fullscreen       : 'Exit fullscreen',
+    no_fullscreen_title   : 'Oooooooooops!',
+    no_fullscreen_content : 'Dear Internet Explorer user,<br/><br/>We inform you the fullscreen feature is not available on your browser.<br/><br/>Best regards,<br/>The Tuleap team'
 };

@@ -155,6 +155,13 @@ interface Planning_Milestone {
      * @return float
      */
     public function getCapacity();
+
+    /**
+     * Return remaining_effort
+     *
+     * @return float
+     */
+    public function getRemainingEffort();
 }
 
 ?>
