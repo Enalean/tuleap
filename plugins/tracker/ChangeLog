@@ -1,3 +1,6 @@
+Version 5.215 - Tuleap 6.9
+    * request #5736 - on follow-up comment pencil click, I am redirected to top of the page
+
 Version 5.214 - Tuleap 6.9
     * story #5649 - OPTIONS|PUT /cards/:id
 
