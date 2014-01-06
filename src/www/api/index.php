@@ -46,7 +46,7 @@ Defaults::$useUrlBasedVersioning = true;
 if (Config::get('DEBUG_MODE')) {
     $restler = new Restler(false, true);
 } else {
-    $restler = new Restler();
+    $restler = new Restler(true, true);
 }
 
 $restler->setAPIVersion(floor(file_get_contents(__DIR__ .'/VERSION')));
