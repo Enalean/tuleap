@@ -1,3 +1,6 @@
+Version 5.216 - Tuleap 6.9
+    * Fix for cannot submit artifact when in HTML edit mode with 'Required' flag set
+
 Version 5.215 - Tuleap 6.9
     * request #5736 - on follow-up comment pencil click, I am redirected to top of the page
 
