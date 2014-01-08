@@ -213,7 +213,11 @@ class BackendSVN extends Backend {
         }
 
         if ($project->canChangeSVNLog()) {
-            $this->enableCommitMessageUpdate($unix_group_name);
+            try {
+                $this->enableCommitMessageUpdate($unix_group_name);
+            } catch (BackendSVNFileForSimlinkAlreadyExistsException $exception) {
+                throw $exception;
+            }
         } else {
             $this->disableCommitMessageUpdate($unix_group_name);
         }
@@ -608,15 +612,46 @@ class BackendSVN extends Backend {
     }
 
     private function enableCommitMessageUpdate($unix_group_name) {
-        $this->enableHook($unix_group_name, 'pre-revprop-change', Config::get('codendi_bin_prefix').'/pre-revprop-change.php');
-        $this->enableHook($unix_group_name, 'post-revprop-change', Config::get('codendi_bin_prefix').'/post-revprop-change.php');
+        $hook_names = array('pre-revprop-change', 'post-revprop-change');
+        $hook_error = array();
+
+        foreach ($hook_names as $hook_name) {
+            if(! $this->enableHook($unix_group_name, $hook_name, Config::get('codendi_bin_prefix').'/'.$hook_name.'.php')) {
+                $hook_error[] = $this->getHookPath($unix_group_name, $hook_name);
+            }
+        }
+
+        if (! empty($hook_error)) {
+            $exception_message = $this->buildExceptionMessage($hook_error);
+            throw new BackendSVNFileForSimlinkAlreadyExistsException($exception_message);
+        }
+    }
+
+    private function buildExceptionMessage(array $hook_error) {
+        if (count($hook_error) > 1) {
+            $exception_message = 'Files '. implode(', ', $hook_error) .' already exist';
+        } else {
+             $exception_message = 'File ' . implode($hook_error) . ' already exists';
+        }
+
+        return $exception_message;
     }
 
     private function enableHook($unix_group_name, $hook_name, $source_tool) {
         $path = $this->getHookPath($unix_group_name, $hook_name);
+
+        if (file_exists($path)) {
+            $message = "file $path already exists";
+
+            $this->log($message, Backend::LOG_WARNING);
+            return false;
+        }
+
         if (! is_link($path)) {
             symlink($source_tool, $path);
         }
+
+        return true;
     }
 
     private function disableCommitMessageUpdate($unix_group_name) {
