@@ -79,8 +79,27 @@ tuleap.trackers.textarea.RTE = Class.create(codendi.RTE, {
     },
 
     toggle: function ($super, event, selectbox) {
-        var option = selectbox.options[selectbox.selectedIndex].value;
+        var option = selectbox.options[selectbox.selectedIndex].value,
+            id     = this.element.id;
+
+            if ($(id).hasAttribute("data-required") && option == 'text' && this.rte) {
+                $(id).removeAttribute("data-required");
+                $(id).writeAttribute("required", true);
+            };
+
         $super(event, option);
+    },
+
+    init_rte : function($super) {
+        var id = this.element.id;
+
+        $super();
+        (function recordRequiredAttribute() {
+            if ($(id).hasAttribute("required")) {
+                $(id).removeAttribute("required");
+                $(id).writeAttribute("data-required", true);
+            }
+        })();
     }
 });
 
