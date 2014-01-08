@@ -13,6 +13,7 @@ Version 6.9 (Not released yet)
 	* Fix request #5779: Fatal error when using getSvnStatsFiles SOAP method
 	* Fix request #5808: Package id in file download link is now correctly updated
 	* Fix request #4305 - Warnings when a plugin is installed
+	* Fix request #5805 : SVN_UPDATE_HOOKS returns more relevant information if simlink cannot be done
 
 	== API ==
 	* SOAP core: 6.4.1
