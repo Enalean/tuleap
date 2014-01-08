@@ -29,25 +29,41 @@ class CookieManager {
         // Make sure there isn't a port number in the default domain name
         // or the setcookie for the entire domain won't work
         if (isset($GLOBALS['sys_cookie_domain'])) {
-            $expl = explode(':',$GLOBALS['sys_cookie_domain']);
-            $host = $expl[0];
+            $host = $this->getHostNameWithoutPort($GLOBALS['sys_cookie_domain']);
         } else {
-            list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+            $host = $this->getHostNameWithoutPort($GLOBALS['sys_default_domain']);
         }
-        // If local machine, don't use a specific cookie host
-        $pos=strpos($host,".");
-        if ($pos === false) {
-            $cookie_host="";
-        } else if (browser_is_netscape4()) {
-            $cookie_host=$host;
+
+        if ($this->isIpAdress($host) || $this->isHostWithoutTLD($host)) {
+            $cookie_host = '';
         } else {
-            $cookie_host=".".$host;
+            $cookie_host = ".".$host;
         }
         $secure = (bool)Config::get('sys_force_ssl');
+        return $this->phpsetcookie($this->getInternalCookieName($name), $value, $expire, '/', $cookie_host, $secure);
+    }
+
+    private function getHostNameWithoutPort($domain) {
+        if (strpos($domain, ':') !== false) {
+            list($host,) = explode(':', $domain);
+            return $host;
+        }
+        return $domain;
+    }
+
+    private function isIpAdress($host) {
+        return preg_match('/[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+/', $host);
+    }
+
+    private function isHostWithoutTLD($host) {
+        return strpos($host, ".") === false;
+    }
+
+    protected function phpsetcookie($name, $value, $expire, $path, $domain, $secure) {
         if($this->isPhpHttpOnlyCompatible() == true) {
-            return setcookie($this->getInternalCookieName($name), $value, $expire, '/', $cookie_host, $secure, true);
+            return setcookie($name, $value, $expire, $path, $domain, $secure, true);
         } else { //This is a workaround to enable HttpOnly on cookie
-            return setcookie($this->getInternalCookieName($name), $value, $expire, '/', $cookie_host. '; HttpOnly', $secure);
+            return setcookie($name, $value, $expire, $path, $domain. '; HttpOnly', $secure);
         }
     }
     
