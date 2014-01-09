@@ -52,6 +52,8 @@ plugin_agiledashboard	report_criteria_label	In milestone
 
 plugin_agiledashboard	error_on_inconsistencies_solving	An error occurred while trying to solve inconsistencies.
 plugin_agiledashboard	successful_inconsistencies_solving	Inconsistencies successfully solved!
+plugin_agiledashboard	nothing_set_up_generic	Nothing has been setup yet. Please come again later!
+plugin_agiledashboard	nothing_set_up_admin	Nothing has been setup yet. <a href="$1">Get Started!</a>
 
 plugin_agiledashboard_contentpane	lab	This is a lab feature that is subjected to change in a near future. Please get in touch with us to <a href="mailto:tuleap-devel@tuleap.net">provide any feedback</a> about this work in progress, thanks!
 plugin_agiledashboard_contentpane	closed_items_title	Closed $1

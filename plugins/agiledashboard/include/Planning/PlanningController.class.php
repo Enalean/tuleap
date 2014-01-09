@@ -116,9 +116,17 @@ class Planning_Controller extends MVC2_PluginController {
         $presenter = new Planning_IndexPresenter(
             $plannings,
             $this->plugin_theme_path,
-            $project_id
+            $project_id,
+            $this->isUserAdmin()
         );
         return $this->renderToString('index', $presenter);
+    }
+
+    /**
+     * @return bool
+     */
+    private function isUserAdmin() {
+        return $this->request->getProject()->userIsAdmin($this->request->getCurrentUser());
     }
     
     public function new_() {
