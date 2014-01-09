@@ -25,7 +25,7 @@ function file_utils_header($params) {
                 .'<a href="/file/admin/?group_id='.$group_id.'">'.$Language->getText('file_file_utils','admin').'</a>';
             if (!isset($params['help'])) { $params['help'] = "frs.html";}
             echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
-            echo "</strong><p>";
+            echo "</strong>";
         }
     }
 }
@@ -327,7 +327,7 @@ function frs_display_package_form(&$package, $title, $url, $siblings) {
     $group_id = $package->getGroupId();
     file_utils_admin_header(array('title'=>$GLOBALS['Language']->getText('file_admin_editpackages','edit_package'), 'help' => 'frs.html#delivery-manager-administration'));
     echo '<h3>'. $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML) .'</h3>
-    <P>
+
     <form action="'. $url .'" method="post">
     <table>
     <tr><th>'.$GLOBALS['Language']->getText('file_admin_editpackages','p_name').':</th>  <td><input type="text" name="package[name]" CLASS="textfield_small" value="'. $hp->purify(util_unconvert_htmlspecialchars($package->getName()), CODENDI_PURIFIER_CONVERT_HTML) .'">';
@@ -436,7 +436,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     //set variables for news template 
     $relname = $GLOBALS['Language']->getText('file_admin_editreleases', 'relname');
     if (!$is_update) {
-        echo '<P>'.$GLOBALS['Language']->getText('file_admin_editreleases','contain_multiple_files');
+        echo '<p>'.$GLOBALS['Language']->getText('file_admin_editreleases','contain_multiple_files').'</p>';
     }
     ?>
     
