@@ -54,6 +54,14 @@ class Planning_ListPresenter {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_create');
     }
 
+    public function importTemplate() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'import_template');
+    }
+
+    public function exportTemplate() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'export_template');
+    }
+
     public function adminTitle() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin');
     }

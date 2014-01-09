@@ -1,0 +1,17 @@
+<h2>{{ adminTitle }}</h2>
+<div class="agiledashboard">
+    <h3>{{ importTemplateHeader }}</h3>
+    <form method="post" action="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=import-form">
+        <p>
+            {{{ importInstructions }}}
+        </p>
+        <p>
+            <br/>
+            <input type="file" name="template_file" id="template_file" />
+        </p>
+        <p>
+            <br />
+            <input type="submit" value="{{ btnSubmit }}" class="btn btn-primary"/>
+        </p>
+    </form>
+</div>

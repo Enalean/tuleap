@@ -97,6 +97,9 @@ class AgileDashboardRouter {
             case 'new':
                 $this->renderAction($controller, 'new_', $request);
                 break;
+            case 'import-form':
+                $this->renderAction($controller, 'importForm', $request);
+                break;
             case 'create':
                 $this->executeAction($controller, 'create');
                 break;
@@ -154,12 +157,13 @@ class AgileDashboardRouter {
      */
     private function getHeaderTitle($action_name) {
         $header_title = array(
-            'index' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
-            'admin' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin'),
-            'new_'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
-            'edit'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit'),
-            'show'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show'),
-            'showTop'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show')
+            'index'     => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
+            'admin'     => $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin'),
+            'new_'      => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
+            'importForm'=> $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
+            'edit'      => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit'),
+            'show'      => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show'),
+            'showTop'   => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show')
         );
 
         return $header_title[$action_name];

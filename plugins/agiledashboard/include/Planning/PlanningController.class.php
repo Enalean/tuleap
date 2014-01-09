@@ -135,7 +135,13 @@ class Planning_Controller extends MVC2_PluginController {
 
         return $this->renderToString('new', $presenter);
     }
-    
+
+    public function importForm() {
+        $presenter = new Planning_ImportTemplateFormPresenter($this->group_id);
+
+        return $this->renderToString('import', $presenter);
+    }
+
     public function create() {
         $this->checkUserIsAdmin();
         $validator = new Planning_RequestValidator($this->planning_factory);
