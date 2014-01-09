@@ -2,7 +2,7 @@
 .logo {
     max-width: @sidebar-width;
     width: @sidebar-width;
-    height: 52px;
+    height: @navbar-height;
     float: left;
     .logo-background;
 }
@@ -42,6 +42,7 @@
 .navbar {
     background: @orange;
     box-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
+    height: @navbar-height;
 }
 
 .is-at-top .navbar {
@@ -50,12 +51,13 @@
 
 .navbar .navbar-inner {
     font-family: 'SourceSansPro', Arial;
-    font-size: 1.3em;
+    font-size: 1.1em;
     background: @orange;
     filter: none;
     border-bottom: 1px solid @dark-orange;
     color: @white;
     padding: 0;
+    height: @navbar-height;
     .box-shadow(none);
 
     @media screen and (max-width: 1070px) {
@@ -74,17 +76,17 @@
     }
 
     .nav {
-        height: 52px;
+        height: @navbar-height;
 
         & > li {
-            height: 52px;
+            height: @navbar-height;
         }
 
         & > li > a {
             color: @white;
-            height: 52px - 15px - 5px;
+            height: @navbar-height - 12px - 5px + 1px;
             text-shadow: 0 1px 2px lighten(@dark-grey, 20%);
-            padding: 15px 25px 5px;
+            padding: 12px 25px 5px;
             text-align: center;
         }
 
@@ -121,7 +123,7 @@
         }
 
         ul.dropdown-menu {
-            top: 50px;
+            top: @navbar-height - 1px;
             background-color: @dark-grey;
             border-radius: 0;
             border: none;
@@ -148,21 +150,41 @@
                 border: 0;
             }
         }
+
+        .projects-nav ul.dropdown-menu {
+            max-height: 700px;
+            overflow: hidden;
+            width: 300px;
+
+            #filter-projects {
+                background: lighten(@dark-grey, 10%);
+                border-color: darken(@dark-grey, 3%);
+                color: @grey;
+                width: 85%;
+                margin: 10px auto;
+                display: block;
+
+                &:focus {
+                    box-shadow: none;
+                    background: lighten(@dark-grey, 15%);
+                }
+            }
+        }
     }
 
     .user-avatar {
         float: left;
         position: relative;
-        top: -9px;
+        top: -7px;
         margin: 0 10px 0 0;
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
-        box-shadow: 0 0 0 3px @white;
+        box-shadow: 0 0 0 2px @white;
     }
 
     .navbar-search {
-        margin: 11px 25px 0 0;
+        margin: 8px 25px 0 0;
 
         .dropdown-toggle .caret {
             margin: -2px 0 0 0;

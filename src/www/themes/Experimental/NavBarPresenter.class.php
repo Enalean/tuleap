@@ -137,6 +137,10 @@ class Experimental_NavBarPresenter {
         return $GLOBALS['Language']->getText('include_menu','bookmark_this_page');
     }
 
+    public function filter_project() {
+        return $GLOBALS['Language']->getText('include_menu','filter_project');
+    }
+
     public function nav_home_class() {
         $class = '';
 

@@ -187,6 +187,7 @@ include_menu	summary_page	Summary Page
 include_menu	logged_in	Logged In
 include_menu	logout	Logout
 include_menu	register_new_proj	Register New Project
+include_menu	filter_project	Project...
 include_menu	account_maintenance	Account Maintenance
 include_menu	my_perso_page	My Personal Page
 include_menu	bookmark_this_page	Bookmark This Page

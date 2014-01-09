@@ -38,6 +38,7 @@ class Experimental_Theme extends DivBasedTabbedLayout {
     function __construct($root) {
         parent::__construct($root);
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
+        $this->includeJavascriptFile('/themes/Experimental/js/navbar.js');
         $this->includeJavascriptFile('/themes/Experimental/js/sidebar.js');
         $this->includeJavascriptFile('/themes/Experimental/js/resize-window.js');
     }
@@ -105,8 +106,7 @@ class Experimental_Theme extends DivBasedTabbedLayout {
     private function navbar($params, PFUser $current_user, $selected_top_tab) {
         list($search_options, $hidden_fields) = $this->getSearchEntries();
         $search_form_presenter                = new Experimental_SearchFormPresenter($search_options, $hidden_fields);
-
-        $project_manager = ProjectManager::instance();
+        $project_manager                      = ProjectManager::instance();
 
         $this->render('navbar', new Experimental_NavBarPresenter(
                 $this->imgroot,
