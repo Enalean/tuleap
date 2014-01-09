@@ -44,6 +44,7 @@ class Combined {
             '/scripts/bootstrap/bootstrap-popover.js',
             '/scripts/bootstrap/bootstrap-select/bootstrap-select.js',
             '/scripts/AZHU/storage.js',
+            '/scripts/d3/d3.min.js',
             '/scripts/codendi/common.js',
             '/scripts/tuleap/systray.js',
             '/scripts/tuleap/load-systray.js',

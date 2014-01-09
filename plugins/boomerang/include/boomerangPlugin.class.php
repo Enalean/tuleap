@@ -39,7 +39,6 @@ class BoomerangPlugin extends Plugin {
         }
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
         $this->_addHook('cssfile');
-        $this->_addHook('javascript_file');
         return parent::getHooksAndCallbacks();
     }
 
@@ -48,13 +47,6 @@ class BoomerangPlugin extends Plugin {
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="css/barChart.css" />';
-        }
-    }
-
-    public function javascript_file($params) {
-        // Only load scripts if we're actually in the Boomerang plugin page.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<script src="js/d3.min.js"></script>'."\n";
         }
     }
 
