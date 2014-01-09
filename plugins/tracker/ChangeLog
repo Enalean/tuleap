@@ -1,3 +1,6 @@
+Version 5.217 - Tuleap 6.10
+    * Fix request #5856 - Tracker v5: Description of attachment not displayed
+
 Version 5.216 - Tuleap 6.9
     * Fix for cannot submit artifact when in HTML edit mode with 'Required' flag set
 
