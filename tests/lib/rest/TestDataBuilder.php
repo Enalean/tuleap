@@ -141,8 +141,11 @@ class TestDataBuilder {
         Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(6), $fields_data, $user, '');
 
         $fields_data = array(
-            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'name')->getId() => 'Sprint A',
-            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'status')->getId()  => '150'
+            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'name')->getId()       => 'Sprint A',
+            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'status')->getId()     => '150',
+            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'start_date')->getId() => '2014-1-9',
+            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'duration')->getId()   => '10',
+            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'capacity')->getId()   => '29',
         );
         Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(7), $fields_data, $user, '');
 
