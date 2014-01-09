@@ -14,6 +14,7 @@ Version 6.9 (Not released yet)
 	* Fix request #5808: Package id in file download link is now correctly updated
 	* Fix request #4305 - Warnings when a plugin is installed
 	* Fix request #5805 : SVN_UPDATE_HOOKS returns more relevant information if simlink cannot be done
+	* Fix request #5551: Wrong message when adding a file in a release (IE9)
 
 	== API ==
 	* SOAP core: 6.4.1
