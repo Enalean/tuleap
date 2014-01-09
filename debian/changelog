@@ -1,3 +1,10 @@
+tuleap (6.9) unstable; urgency=low
+
+  * Release of Tuleap 6.9
+  * Find Release note here: http://tuleap.com/sites/default/files/release/6.9/release-notes.html
+
+ -- Thomas Cottier (Thomas Cottier Enalean) <thomas.cottier@enalean.com>  Thu, 09 Jan 2014 11:12:17 +0100
+
 tuleap (6.8) unstable; urgency=low
 
   * Release of Tuleap 6.8
