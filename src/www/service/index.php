@@ -24,7 +24,7 @@ if ($project && $request->exist('id')) {
             }
             $title = $label .' - '. $project->getPublicName();
             site_project_header(array('title' => $title, 'group' => $request->get('group_id'), 'toptab' => $service['service_id']));
-            $GLOBALS['HTML']->iframe($service['link'], array('class' => 'iframe_service'));
+            $GLOBALS['HTML']->iframe($service['link'], array('class' => 'iframe_service', 'width' => '100%', 'height' => '650px'));
             site_project_footer(array());
         } else {
             $GLOBALS['Response']->redirect($service['link']);
