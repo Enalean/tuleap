@@ -11,6 +11,9 @@ require_once('www/news/news_utils.php');
 require_once('trove.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/wiki/lib/Wiki.class.php');
+require_once 'common/templating/TemplateRendererFactory.class.php';
+require_once 'common/mail/MassmailFormPresenter.class.php';
+require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 $hp =& Codendi_HTMLPurifier::instance();
 
@@ -28,8 +31,23 @@ site_project_header(array('title'=>$title,'group'=>$group_id,'toptab'=>'summary'
 
 
 if ($project->getStatus() == 'H') {
-	print '<P>'.$Language->getText('include_project_home','not_official_site',$GLOBALS['sys_name']);
+	print '<p>'.$Language->getText('include_project_home','not_official_site',$GLOBALS['sys_name']).'</p>';
 }
+
+$token     = new CSRFSynchronizerToken('');
+$presenter = new MassmailFormPresenter(
+    $group_id,
+    $token,
+    $GLOBALS['Language']->getText('contact_admins','title'),
+    '/include/massmail_to_project_admins.php'
+);
+$template_factory = TemplateRendererFactory::build();
+$renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
+
+echo '<a href="#massmail_'.$group_id.'" class="project_home_contact_admins" data-toggle="modal">'. $GLOBALS['Language']->getText('include_project_home', 'contact_admins') .'</a>';
+echo $renderer->renderToString('massmail', $presenter);
+echo '<br />';
+echo '<br />';
 
 $lm = new WidgetLayoutManager();
 $lm->displayLayout($project->getGroupId(), WidgetLayoutManager::OWNER_TYPE_GROUP);
