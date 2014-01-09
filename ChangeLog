@@ -2,6 +2,9 @@ Version 6.10 (Not released yet)
 	== Plugin ==
 	* tracker: 5.217
 
+	== Development ==
+	* Pull-out Vagrant and Chef in dedicated repositories
+
 Version 6.9 (Thursday, January 9th 2014)
 	== Plugins ==
 	* tracker: 5.216
