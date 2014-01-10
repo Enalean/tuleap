@@ -20,11 +20,11 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
+use \Tuleap\REST\ProjectAuthorization;
 use \Luracast\Restler\RestException;
 use \Tracker_REST_TrackerRestBuilder;
 use \Tracker_FormElementFactory;
 use \TrackerFactory;
-use \URLVerification;
 use \UserManager;
 use \Tuleap\REST\Header;
 
@@ -72,22 +72,15 @@ class TrackersResource {
     }
 
     private function getTrackerById(\PFUser $user, $id) {
-        try {
-            $tracker = TrackerFactory::instance()->getTrackerById($id);
-            if ($tracker) {
-                if ($tracker->userCanView($user)) {
-                    $url_verification = new URLVerification();
-                    $url_verification->userCanAccessProject($user, $tracker->getProject());
-                    return $tracker;
-                }
-                throw new RestException(403);
+        $tracker = TrackerFactory::instance()->getTrackerById($id);
+        if ($tracker) {
+            if ($tracker->userCanView($user)) {
+                ProjectAuthorization::userCanAccessProject($user, $tracker->getProject());
+                return $tracker;
             }
-            throw new RestException(404);
-        } catch (\Project_AccessProjectNotFoundException $exception) {
-            throw new RestException(404);
-        } catch (\Project_AccessException $exception) {
-            throw new RestException(403, $exception->getMessage());
+            throw new RestException(403);
         }
+        throw new RestException(404);
     }
 
     private function sendAllowHeaderForTracker() {

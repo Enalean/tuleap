@@ -19,6 +19,7 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use \Tuleap\REST\ProjectAuthorization;
 use \Tuleap\REST\Header;
 use \Luracast\Restler\RestException;
 use \PlanningFactory;
@@ -462,6 +463,8 @@ class MilestoneResource {
         if (! $milestone) {
             throw new RestException(404);
         }
+
+        ProjectAuthorization::userCanAccessProject($user, $milestone->getProject());
 
         if (! $milestone->getArtifact()->userCanView()) {
             throw new RestException(403);

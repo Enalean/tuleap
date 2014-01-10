@@ -23,10 +23,9 @@ use ProjectManager;
 use UserManager;
 use EventManager;
 use Event;
-use URLVerification;
-use \Luracast\Restler\RestException;
 use \Tuleap\Project\REST\ProjectRepresentation;
 use \Tuleap\REST\Header;
+use \Tuleap\REST\ProjectAuthorization;
 
 /**
  * Wrapper for project related REST methods
@@ -96,17 +95,10 @@ class ProjectResource {
      * @return Project
      */
     private function getProject($id) {
-        try {
-            $project          = ProjectManager::instance()->getProject($id);
-            $user             = UserManager::instance()->getCurrentUser();
-            $url_verification = new URLVerification();
-            $url_verification->userCanAccessProject($user, $project);
-            return $project;
-        } catch (\Project_AccessProjectNotFoundException $exception) {
-            throw new RestException(404);
-        } catch (\Project_AccessException $exception) {
-            throw new RestException(403, $exception->getMessage());
-        }
+        $project          = ProjectManager::instance()->getProject($id);
+        $user             = UserManager::instance()->getCurrentUser();
+        ProjectAuthorization::userCanAccessProject($user, $project);
+        return $project;
     }
 
     /**

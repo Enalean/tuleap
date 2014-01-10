@@ -60,7 +60,7 @@ class TestDataBuilder {
     }
 
     public function activateDebug() {
-	Config::set('DEBUG_MODE', true);
+	Config::set('DEBUG_MODE', 1);
         return $this;
     }
 
@@ -104,6 +104,8 @@ class TestDataBuilder {
         ));
         $this->project_manager->activate($project);
 
+        $this->addMembersToProject($project, $user);
+
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['cvs_prefix']);
         unset($GLOBALS['grpdir_prefix']);
@@ -114,6 +116,13 @@ class TestDataBuilder {
         unset($GLOBALS['sys_force_ssl']);
 
         return $this;
+    }
+
+    private function addMembersToProject($project, $user) {
+        include_once 'account.php';
+        account_add_user_to_group($project->getId(), $user->getUnixName());
+        UserManager::clearInstance();
+        $this->user_manager = UserManager::instance();
     }
 
     public function importAgileTemplate() {
