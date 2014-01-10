@@ -47,8 +47,8 @@ class MilestoneBurndownTest extends RestBase {
     public function testGetBurndown() {
         $response = $this->getResponse($this->client->get('milestones/'.TestDataBuilder::SPRINT_ARTIFACT_ID.'/burndown'));
         $burndown = $response->json();
-        $this->assertEquals(29, $burndown['duration']);
-        $this->assertEquals(10, $burndown['capacity']);
+        $this->assertEquals(10, $burndown['duration']);
+        $this->assertEquals(29, $burndown['capacity']);
         $this->assertCount(0, $burndown['points']);
     }
 }
