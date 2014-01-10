@@ -8,14 +8,14 @@
         </a>
     </li>
     <li>
-        <a href="" id="template_export">
+        <a href="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=export-to-file" id="template_export">
             <img border="0" alt="add" src="/themes/Tuleap/images/ic/add.png" style="vertical-align:middle">
             {{ exportTemplate }}
         </a>
     </li>
     {{#can_create_planning}}
         <li>
-            <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;action=new" id="planning_create">
+            <a href="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=new" id="planning_create">
                 <img border="0" alt="add" src="/themes/Tuleap/images/ic/add.png" style="vertical-align:middle">
                 {{createPlanning}}
             </a>

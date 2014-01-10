@@ -100,6 +100,22 @@ class ProjectManager {
     }
 
     /**
+     * @param $group_id int The id of the project to look for
+     * @return Project
+     *
+     * @throws Project_NotFoundException
+     */
+    public function getValidProject($group_id) {
+        $project = $this->getProject($group_id);
+
+        if ($project && ! $project->isError() && ! $project->isDeleted())  {
+            return $project;
+        }
+
+        throw new Project_NotFoundException();
+    }
+
+    /**
      * Instanciate a project based on a database row
      *
      * @param array $row
