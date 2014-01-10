@@ -19,7 +19,7 @@
 
 !function($) {
     var width_collapsed = '40px';
-    var width_expanded  = '260px';
+    var width_expanded  = '210px';
 
     function getSidebarUserPreference() {
         return localStorage.getItem('sidebar-size');

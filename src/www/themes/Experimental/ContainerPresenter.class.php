@@ -30,6 +30,12 @@ class Experimental_ContainerPresenter {
     private $project_name;
 
     /** @var string */
+    private $project_link;
+
+    /** @var boolean */
+    private $project_is_public;
+
+    /** @var string */
     private $project_tabs;
 
     /** @var Feedback */
@@ -42,16 +48,20 @@ class Experimental_ContainerPresenter {
         $breadcrumbs,
         $toolbar,
         $project_name,
+        $project_link,
+        $project_is_public,
         $project_tabs,
         $feedback,
         $feedback_content
     ) {
-        $this->breadcrumbs      = $breadcrumbs;
-        $this->toolbar          = $toolbar;
-        $this->project_name     = $project_name;
-        $this->project_tabs     = $project_tabs;
-        $this->feedback         = $feedback;
-        $this->feedback_content = $feedback_content;
+        $this->breadcrumbs       = $breadcrumbs;
+        $this->toolbar           = $toolbar;
+        $this->project_name      = $project_name;
+        $this->project_link      = $project_link;
+        $this->project_is_public = $project_is_public;
+        $this->project_tabs      = $project_tabs;
+        $this->feedback          = $feedback;
+        $this->feedback_content  = $feedback_content;
     }
 
     public function hasBreadcrumbs() {
@@ -81,6 +91,14 @@ class Experimental_ContainerPresenter {
     public function projectName() {
         $hp = Codendi_HTMLPurifier::instance();
         return $hp->purify($this->project_name);
+    }
+
+    public function projectLink() {
+        return $this->project_link;
+    }
+
+    public function projectIsPublic() {
+        return $this->project_is_public;
     }
 
     public function feedback() {

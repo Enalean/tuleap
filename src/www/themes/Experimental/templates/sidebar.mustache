@@ -1,11 +1,17 @@
 <div class="sidebar-nav">
-    <div class="project-title">
-        {{projectName}}
-    </div>
+    <a href="{{ projectLink }}" class="project-title">
+        {{#projectIsPublic}}
+            <i class="icon-unlock-alt"></i>
+        {{/projectIsPublic}}
+        {{^projectIsPublic}}
+            <i class="icon-lock"></i>
+        {{/projectIsPublic}}
+        {{ projectName }}
+    </a>
     <ul class="nav nav-list">
         {{#sidebar}}
             <li {{#enabled}}class="active"{{/enabled}}>
-                <a href="{{{link}}}" title="{{name}}"><i class="{{icon}}"></i> {{{label}}}</a>
+                <a href="{{{ link }}}" title="{{ name }}"><i class="{{ icon }}"></i> {{{ label }}}</a>
             </li>
         {{/sidebar}}
     </ul>

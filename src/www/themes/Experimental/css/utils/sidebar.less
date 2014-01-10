@@ -15,18 +15,29 @@
         padding: 157px 0 0 0;
     }
 
-    .project-title {
+    a.project-title {
         color: @white;
         text-align: center;
-        font-size: 1.8em;
+        font-size: 1.6em;
         line-height: 1.5em;
-        box-shadow: inset 0 -10px 30px -10px darken(@dark-grey, 10%);
+        box-shadow: inset 0 -7px 30px -10px darken(@dark-grey, 5%);
         margin: 0 0 20px 0;
-        padding: 20px 0;
+        padding: 10px 0;
+
+        &:hover {
+            text-decoration: none;
+            box-shadow: inset 0 -10px 30px -10px darken(@dark-grey, 7%);
+        }
+
+        i {
+            font-size: 0.7em;
+            color: @grey;
+            margin-right: 5px;
+        }
     }
 
     li > a {
-        font-size: 1.1em;
+        font-size: 1em;
         color: @grey;
         text-shadow: 0 1px 0 darken(@grey, 50%);
     }

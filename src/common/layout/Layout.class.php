@@ -2026,7 +2026,6 @@ class Layout extends Response {
             if (isset($service_data['icon'])) {
                 $icon = $service_data['icon'];
             }
-            
             $tabs[] = array('link'        => $link,
                             'icon'        => $icon,
                             'name'        => $name,
