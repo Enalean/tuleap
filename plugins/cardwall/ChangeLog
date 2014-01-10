@@ -1,3 +1,6 @@
+Version 1.13 - Tuleap 6.10
+    * story #5802 - have burndown in stand-up view
+
 Version 1.12 - Tuleap 6.9
     * story #5649 - OPTIONS|PUT /cards/:id
 
