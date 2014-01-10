@@ -80,6 +80,9 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
 
         element.update(milestone_remaining_effort);
         updateInitialEffortProgressBar(milestone_remaining_effort);
+        if (tuleap.agiledashboard.cardwall.burndown) {
+            tuleap.agiledashboard.cardwall.updateBurndown();
+        }
     }
 
     function updateInitialEffortProgressBar(milestone_remaining_effort) {
@@ -478,4 +481,131 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
         }
     }
 
+});
+
+tuleap.agiledashboard.cardwall.fetchBurndown = function() {
+    new Ajax.Request(
+        '/api/v1/milestones/' + $F('milestone_id') + '/burndown',
+    {
+        method : 'GET',
+        onSuccess: function (response) {
+            if (! tuleap.agiledashboard.cardwall.burndown) {
+                tuleap.agiledashboard.cardwall.burndown = new tuleap.agiledashboard.Burndown(d3, response.responseJSON);
+                tuleap.agiledashboard.cardwall.burndown.display();
+            } else {
+                tuleap.agiledashboard.cardwall.burndown.update(response.responseJSON);
+            }
+        }
+    });
+};
+
+tuleap.agiledashboard.cardwall.updateBurndown = function() {
+    new Ajax.Request(
+        '/api/v1/milestones/' + $F('milestone_id') + '/burndown',
+    {
+        method : 'GET',
+        onSuccess: function (response) {
+            tuleap.agiledashboard.cardwall.burndown.update(response.responseJSON);
+        }
+    });
+};
+
+tuleap.agiledashboard.Burndown = Class.create({
+
+    initialize : function (d3, data) {
+        this.d3          = d3;
+        this.data        = data;
+
+        this.width       = 300;
+        this.height      = 85;
+
+        this.ideal_data  = [ this.data.capacity, 0 ];
+    },
+
+    display: function() {
+        this.defineAbscissas();
+        this.defineOrdinates();
+        this.defineLineFunctions();
+        this.bootstrapTheChart();
+        this.paintTheIdealLine();
+        this.paintTheActualLine();
+        this.paintTheDots();
+    },
+
+    update: function(data) {
+        this.data = data;
+        this.repaintActual();
+        this.repaintDots();
+    },
+
+    getXCoordinateForAGivenBurndownPoint: function(d, index) {
+        return this.x(index) / this.data.duration;
+    },
+
+    defineAbscissas: function() {
+        this.x = this.d3.scale.linear().range([0, this.width]);
+        this.x.domain(this.d3.extent(this.ideal_data, function(d, index) { return index; }));
+    },
+
+    defineOrdinates: function() {
+        this.y = this.d3.scale.linear().range([this.height, 0]);
+        this.y.domain(this.d3.extent(this.data.points.concat(this.ideal_data)));
+    },
+
+    bootstrapTheChart: function() {
+        var svg = this.d3.select(".milestone-burndown").append("svg")
+            .attr("class", "chart")
+            .attr("width", this.width)
+            .attr("height", this.height);
+
+        this.chart = svg.append("g");
+    },
+
+    defineLineFunctions: function() {
+        this.ideal_line = this.d3.svg.line()
+            .x(function(d, index) { return this.x(index); }.bind(this))
+            .y(this.y);
+        this.actual_line = this.d3.svg.line()
+            .x(this.getXCoordinateForAGivenBurndownPoint.bind(this))
+            .y(this.y);
+    },
+
+    paintTheIdealLine: function() {
+        this.chart.append("path")
+            .datum(this.ideal_data)
+            .attr("class", "line ideal")
+            .attr("d", this.ideal_line);
+    },
+
+    paintTheActualLine: function() {
+        this.chart.append("path")
+            .datum(this.data.points)
+            .attr("class", "line actual")
+            .attr("d", this.actual_line);
+    },
+
+    paintTheDots: function() {
+        this.chart
+            .selectAll('circle')
+            .data(this.data.points)
+            .enter()
+                .append("circle")
+                .attr("class", "circle actual")
+                .attr("r", "4")
+                .attr("cx", this.getXCoordinateForAGivenBurndownPoint.bind(this))
+                .attr("cy", this.y)
+                .append("title")
+                .text(function (d) { return d; });
+    },
+
+    repaintActual: function() {
+        this.chart.select(".actual")
+            .datum(this.data.points)
+            .attr("d", this.actual_line);
+    },
+
+    repaintDots: function() {
+        this.chart.selectAll('circle').remove();
+        this.paintTheDots();
+    }
 });

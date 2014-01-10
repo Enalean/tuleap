@@ -106,6 +106,10 @@
             $('html, body').scrollTop(0);
         }
 
+        function fetchBurndown() {
+            tuleap.agiledashboard.cardwall.fetchBurndown();
+        }
+
         function exitFullScreen() {
             isFullScreen = false;
 
@@ -124,6 +128,7 @@
             defineFullscreenClasses();
             defineMilestoneInfoBlockSize();
             updateButtonLabel();
+            fetchBurndown();
         }
 
         function browserIsIE() {
