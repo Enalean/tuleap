@@ -38,7 +38,7 @@ $token     = new CSRFSynchronizerToken('');
 $presenter = new MassmailFormPresenter(
     $group_id,
     $token,
-    $GLOBALS['Language']->getText('contact_admins','title'),
+    $GLOBALS['Language']->getText('contact_admins','title', array($project->getPublicName())),
     '/include/massmail_to_project_admins.php'
 );
 $template_factory = TemplateRendererFactory::build();
