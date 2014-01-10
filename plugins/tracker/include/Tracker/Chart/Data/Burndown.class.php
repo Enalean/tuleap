@@ -114,6 +114,23 @@ class Tracker_Chart_Data_Burndown {
         return $this->ideal_effort;
     }
 
+    /**
+     * @return \Tuleap\Tracker\REST\Artifact\BurndownRepresentation
+     */
+    public function getRESTRepresentation() {
+        $classname = '\Tuleap\Tracker\REST\Artifact\BurndownRepresentation';
+        $burndown = new $classname;
+        return $burndown->build(
+            $this->getDuration(),
+            $this->capacity,
+            array_filter($this->getRemainingEffort(), array($this, 'isValueNotNull')) // 0 is a valid value
+        );
+    }
+
+    private function isValueNotNull($value) {
+        return $value !== null;
+    }
+
     private function getIdealEffortAtDay($i, $start_effort) {
         if ($start_effort !== null) {
             return floatval(($this->getDuration() - $i) * ($start_effort / $this->getDuration()));

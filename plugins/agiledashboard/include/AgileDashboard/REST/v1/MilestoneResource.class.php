@@ -19,6 +19,7 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use \Tuleap\REST\ProjectAuthorization;
 use \Tuleap\REST\Header;
 use \Luracast\Restler\RestException;
 use \PlanningFactory;
@@ -131,6 +132,7 @@ class MilestoneResource {
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,
             array(
+                'version'                  => 'v1',
                 'user'                     => $user,
                 'milestone'                => $milestone,
                 'milestone_representation' => &$milestone_representation,
@@ -412,12 +414,57 @@ class MilestoneResource {
         return $cardwall;
     }
 
+    /**
+     * Options Burdown data
+     *
+     * @url OPTIONS {id}/burndown
+     *
+     * @param int $id Id of the milestone
+     *
+     * @return \Tuleap\Tracker\REST\Artifact\BurndownRepresentation
+     */
+    protected function optionsBurndown($id) {
+        $this->event_manager->processEvent(
+            AGILEDASHBOARD_EVENT_REST_OPTIONS_BURNDOWN,
+            array(
+                'version'   => 'v1',
+                'user'      => $this->getCurrentUser(),
+                'milestone' => $this->getMilestoneById($this->getCurrentUser(), $id)
+            )
+        );
+    }
+
+    /**
+     * Get Burdown data
+     *
+     * @url GET {id}/burndown
+     * 
+     * @param int $id Id of the milestone
+     *
+     * @return \Tuleap\Tracker\REST\Artifact\BurndownRepresentation
+     */
+    protected function getBurndown($id) {
+        $burndown = null;
+        $this->event_manager->processEvent(
+            AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN,
+            array(
+                'version'   => 'v1',
+                'user'      => $this->getCurrentUser(),
+                'milestone' => $this->getMilestoneById($this->getCurrentUser(), $id),
+                'burndown'  => &$burndown
+            )
+        );
+        return $burndown;
+    }
+
     private function getMilestoneById(PFUser $user, $id) {
         $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($user, $id);
 
         if (! $milestone) {
             throw new RestException(404);
         }
+
+        ProjectAuthorization::userCanAccessProject($user, $milestone->getProject());
 
         if (! $milestone->getArtifact()->userCanView()) {
             throw new RestException(403);

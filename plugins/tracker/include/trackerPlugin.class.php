@@ -69,8 +69,13 @@ class trackerPlugin extends Plugin {
 
     public function getHooksAndCallbacks() {
         if (defined('AGILEDASHBOARD_BASE_DIR')) {
-            $this->_addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
-            $this->_addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_INFO_ON_MILESTONE);
+            $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
+            $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_INFO_ON_MILESTONE);
+
+            // REST Milestones
+            $this->addHook(AGILEDASHBOARD_EVENT_REST_GET_MILESTONE);
+            $this->addHook(AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN);
+            $this->addHook(AGILEDASHBOARD_EVENT_REST_OPTIONS_BURNDOWN);
         }
         return parent::getHooksAndCallbacks();
     }
@@ -675,6 +680,25 @@ class trackerPlugin extends Plugin {
 
     private function buildRightVersionOfProjectTrackersResource($version) {
         $class_with_right_namespace = '\\Tuleap\\Tracker\\REST\\'.$version.'\\ProjectTrackersResource';
+        return new $class_with_right_namespace;
+    }
+
+    public function agiledashboard_event_rest_get_milestone($params) {
+        if ($this->buildRightVersionOfMilestonesBurndownResource($params['version'])->hasBurndown($params['user'], $params['milestone'])) {
+            $params['milestone_representation']->enableBurndown();
+        }
+    }
+
+    public function agiledashboard_event_rest_options_burndown($params) {
+        $this->buildRightVersionOfMilestonesBurndownResource($params['version'])->options($params['user'], $params['milestone']);
+    }
+
+    public function agiledashboard_event_rest_get_burndown($params) {
+        $params['burndown'] = $this->buildRightVersionOfMilestonesBurndownResource($params['version'])->get($params['user'], $params['milestone']);
+    }
+
+     private function buildRightVersionOfMilestonesBurndownResource($version) {
+        $class_with_right_namespace = '\\Tuleap\\Tracker\\REST\\'.$version.'\\MilestonesBurndownResource';
         return new $class_with_right_namespace;
     }
 }
