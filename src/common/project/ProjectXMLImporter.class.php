@@ -26,15 +26,11 @@ class ProjectXMLImporter {
     /** @var EventManager */
     private $event_manager;
 
-    /** @var UserManager */
-    private $user_manager;
-
     /** @var $project_manager */
     private $project_manager;
 
-    public function __construct(EventManager $event_manager, UserManager $user_manager, ProjectManager $project_manager) {
+    public function __construct(EventManager $event_manager, ProjectManager $project_manager) {
         $this->event_manager   = $event_manager;
-        $this->user_manager    = $user_manager;
         $this->project_manager = $project_manager;
     }
 
@@ -45,10 +41,12 @@ class ProjectXMLImporter {
      *
      * @return SimpleXMLElement
      */
-    public function import($project_id, $user_name, $xml_file_path) {
+    public function import($project_id, $xml_file_path) {
+        $file_contents = file_get_contents($xml_file_path, 'r');
+        $this->checkFileIsValidXML($file_contents);
+
+        $xml_content = new SimpleXMLElement($file_contents);
         $project     = $this->getProject($project_id);
-        $user        = $this->getUser($user_name);
-        $xml_content = new SimpleXMLElement(file_get_contents($xml_file_path, "r"));
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT,
             array(
@@ -56,6 +54,17 @@ class ProjectXMLImporter {
                 'xml_content' => $xml_content
             )
         );
+    }
+
+    private function checkFileIsValidXML($file_contents) {
+        libxml_use_internal_errors(true);
+        $xml = new DOMDocument();
+        $xml->loadXML($file_contents);
+        $errors = libxml_get_errors();
+
+        if (! empty($errors)){
+            throw new RuntimeException($GLOBALS['Language']->getText('project_import', 'invalid_xml'));
+        }
     }
 
     /**
@@ -68,18 +77,6 @@ class ProjectXMLImporter {
             throw new RuntimeException('Invalid project_id '.$project_id);
         }
         return $project;
-    }
-
-    /**
-     * @throws RuntimeException
-     * @return PFUser
-     */
-    private function getUser($user_name) {
-        $user = $this->user_manager->forceLogin($user_name);
-        if (! $user->isSuperUser() || ! $user->isActive()) {
-            throw new RuntimeException('Invalid username '.$user_name.'. User must be site admin and active');
-        }
-        return $user;
     }
 }
 ?>

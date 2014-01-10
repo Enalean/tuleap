@@ -38,8 +38,10 @@ plugin_agiledashboard	backlog_destination_help	Utiliser la flèche droite d'un �
 plugin_agiledashboard	export_template	Exporter la configuration
 plugin_agiledashboard	import_template	Importer une configuration à partir d'un fichier
 plugin_agiledashboard	btn_import	Importer
-plugin_agiledashboard	import_instructions	Il est possible d'importer une configuration entière de l'Agile Dashboard à partir d'un fichier XML. Tuleap fournit une <a href="$1">confguration standard</a>. Il est également possible d'exporter la configuration d'un projet existantet de la réutiliser ici.
+plugin_agiledashboard	import_instructions	Il est possible d'importer une configuration entière de l'Agile Dashboard à partir d'un fichier XML. Tuleap fournit une <a href="$1">configuration standard</a>. Il est également possible d'exporter la configuration d'un projet existantet de la réutiliser ici.
 plugin_agiledashboard	export_failed	Impossible d'exporter la configuration
+plugin_agiledashboard	import_template_success	La configuration a été importée !
+plugin_agiledashboard	cannot_import	Impossible d'importer la configuration!
 
 plugin_agiledashboard	capacity	Capacité :
 plugin_agiledashboard	available	$1 disponible(s)

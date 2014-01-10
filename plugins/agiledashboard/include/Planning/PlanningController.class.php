@@ -140,6 +140,15 @@ class Planning_Controller extends MVC2_PluginController {
     private function isUserAdmin() {
         return $this->request->getProject()->userIsAdmin($this->request->getCurrentUser());
     }
+
+    /**
+     * Redirects a non-admin user to the agile dashboard home page
+     */
+    private function redirectNonAdmin() {
+        if (! $this->isUserAdmin()) {
+            $this->redirect(array('group_id'=>$this->group_id));
+        }
+    }
     
     public function new_() {
         $planning  = $this->planning_factory->buildNewPlanning($this->group_id);
@@ -148,10 +157,30 @@ class Planning_Controller extends MVC2_PluginController {
         return $this->renderToString('new', $presenter);
     }
 
-    public function importForm() {
-        $presenter = new Planning_ImportTemplateFormPresenter($this->group_id);
 
+    public function importForm() {
+        $this->redirectNonAdmin();
+
+        $template_file = new Valid_File('template_file');
+        $template_file->required();
+
+        if ($this->request->validFile($template_file)) {
+            $this->importConfiguration();
+        }
+
+        $presenter = new Planning_ImportTemplateFormPresenter($this->group_id);
         return $this->renderToString('import', $presenter);
+    }
+
+    private function importConfiguration() {
+        $xml_importer = new ProjectXMLImporter(EventManager::instance(), ProjectManager::instance());
+
+        try {
+            $xml_importer->import($this->group_id, $_FILES["template_file"]["tmp_name"]);
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_agiledashboard', 'import_template_success') );
+        } catch (Exception $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_agiledashboard', 'cannot_import') );
+        }
     }
 
     /**

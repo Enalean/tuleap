@@ -39,7 +39,8 @@ class TrackerXmlImportTest extends TuleapTestCase {
     private $tracker_factory;
 
     public function setUp() {
-
+        parent::setUp();
+        
     $this->xml_input =  new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <project>
               <empty_section />

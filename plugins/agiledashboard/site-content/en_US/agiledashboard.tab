@@ -40,6 +40,8 @@ plugin_agiledashboard	import_template	Import Configuration from Template
 plugin_agiledashboard	btn_import	Import
 plugin_agiledashboard	import_instructions	You can import a whole Agile Dashboard configuration from an XML template. Tuleap provides a <a href="$1">standard template</a>. Alternatively, you can export the configuration of an existing project and re-use it here.
 plugin_agiledashboard	export_failed	Unable to export the configuration
+plugin_agiledashboard	import_template_success	The configuration has been successfully imported!
+plugin_agiledashboard	cannot_import	Unable to import the configuration!
 
 plugin_agiledashboard	capacity	Capacity:
 plugin_agiledashboard	available	Available $1

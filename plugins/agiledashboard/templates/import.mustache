@@ -1,7 +1,7 @@
 <h2>{{ adminTitle }}</h2>
 <div class="agiledashboard">
     <h3>{{ importTemplateHeader }}</h3>
-    <form method="post" action="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=import-form">
+    <form method="post" action="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=import-form" enctype="multipart/form-data" >
         <p>
             {{{ importInstructions }}}
         </p>
