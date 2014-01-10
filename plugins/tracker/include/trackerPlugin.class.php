@@ -105,7 +105,11 @@ class trackerPlugin extends Plugin {
 
     public function service_classnames($params) {
         include_once 'ServiceTracker.class.php';
-        $params['classnames']['plugin_tracker'] = 'ServiceTracker';
+        $params['classnames'][$this->getServiceShortname()] = 'ServiceTracker';
+    }
+
+    public function getServiceShortname() {
+        return 'plugin_tracker';
     }
 
     public function combined_scripts($params) {
@@ -426,11 +430,11 @@ class trackerPlugin extends Plugin {
     public function build_reference($params) {
         $row = $params['row'];
         $params['ref'] = new Reference($params['ref_id'],$row['keyword'],$row['description'], $row['link'],
-                                    $row['scope'],'plugin_tracker', Tracker_Artifact::REFERENCE_NATURE, $row['is_active'],$row['group_id']);
+                                    $row['scope'],$this->getServiceShortname(), Tracker_Artifact::REFERENCE_NATURE, $row['is_active'],$row['group_id']);
     }
 
     public function ajax_reference_tooltip($params) {
-        if ($params['reference']->getServiceShortName() == 'plugin_tracker') {
+        if ($params['reference']->getServiceShortName() == $this->getServiceShortname()) {
             if ($params['reference']->getNature() == Tracker_Artifact::REFERENCE_NATURE) {
                 $user = UserManager::instance()->getCurrentUser();
                 $aid = $params['val'];
@@ -507,7 +511,7 @@ class trackerPlugin extends Plugin {
     }
 
     function service_public_areas($params) {
-        if ($params['project']->usesService('plugin_tracker')) {
+        if ($params['project']->usesService($this->getServiceShortname())) {
             $tf = TrackerFactory::instance();
 
             // Get the artfact type list

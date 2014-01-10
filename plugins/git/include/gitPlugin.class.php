@@ -116,6 +116,10 @@ class GitPlugin extends Plugin {
         $this->_addHook(Event::GET_PROJECTID_FROM_URL);
     }
 
+    public function getServiceShortname() {
+        return self::SERVICE_SHORTNAME;
+    }
+
     public function site_admin_option_hook() {
         $url  = $this->getPluginPath().'/admin/';
         $name = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');

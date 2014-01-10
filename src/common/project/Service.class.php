@@ -81,6 +81,10 @@ class Service {
         }
         return $url;
     }
+
+    public function getScope() {
+        return $this->data['scope'];
+    }
     
     /**
     * @see http://www.ietf.org/rfc/rfc2396.txt Annex B

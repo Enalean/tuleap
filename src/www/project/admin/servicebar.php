@@ -105,6 +105,7 @@ $group_id = $request->getValidated('group_id', 'uint', 0);
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
+$service_manager = ServiceManager::instance();
 $pm = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 
@@ -179,6 +180,10 @@ if (($func=='do_create')||($func=='do_update')) {
     
     if (($group_id==100)&&(!$short_name)) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','cant_make_s'));
+    }
+
+    if (! $service_manager->isServiceAllowedForProject($project, $short_name)) {
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','not_allowed'));
     }
 
     if (!$is_active) {
@@ -361,32 +366,24 @@ $title_arr[]=$Language->getText('project_admin_servicebar','del?');
 echo html_build_list_table_top($title_arr);
 
 
-$result = db_query("SELECT * FROM service WHERE group_id=$group_id ORDER BY rank");
-if (db_numrows($result) < 1) {
-	exit_no_group();
-}
+
+$allowed_services = $service_manager->getListOfAllowedServicesForProject($project);
 $row_num=0;
-while ($serv = db_fetch_array($result)) {
-    $classname = $project->getServiceClassName($serv['short_name']);
-    try {
-        $s = new $classname($project, $serv);
-        display_service_row(
-            $group_id,
-            $serv['service_id'],
-            $serv['label'],
-            $serv['short_name'],
-            $serv['description'],
-            $serv['is_active'],
-            $serv['is_used'],
-            $serv['scope'],
-            $serv['rank'],
-            $row_num,
-            $is_superuser,
-            $project->isTemplate()
-        );
-    } catch (ServiceNotAllowedForProjectException $e) {
-        //don't display the row for this servce
-    }
+foreach ($allowed_services as $service) {
+    display_service_row(
+        $group_id,
+        $service->getId(),
+        $service->getLabel(),
+        $service->getShortName(),
+        $service->getDescription(),
+        $service->isActive(),
+        $service->isUsed(),
+        $service->getScope(),
+        $service->getRank(),
+        $row_num,
+        $is_superuser,
+        $project->isTemplate()
+    );
 }
 
 
