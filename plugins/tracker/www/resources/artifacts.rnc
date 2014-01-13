@@ -1,0 +1,34 @@
+namespace xsd = "http://www.w3.org/2001/XMLSchema"
+
+grammar {
+    start = element artifacts {
+        element artifact {
+            attribute id { xsd:int },
+            element submitted_by { user_content },
+            element submitted_on { date_content },
+            element changeset {
+                element submitted_by { user_content },
+                element submitted_on { date_content },
+                element field_change {
+                    attribute field_name { xsd:string },
+                    element value { xsd:string }
+                }
+            }*
+        }*
+    }
+
+    date_content =
+        attribute format { "ISO8601" },
+        xsd:string
+
+    user_content =
+        (
+            (
+                attribute format { "username" | "ldap" | "id" }
+            ) | (
+                attribute format { "email" },
+                attribute is_anonymous { xsd:boolean }
+            )
+        ),
+        xsd:string
+}
