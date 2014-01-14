@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace ProFTPd\Xferlog;
+namespace Tuleap\ProFTPd\Xferlog;
 
 class Parser {
 
@@ -26,7 +26,7 @@ class Parser {
      *
      * @param string $line
      *
-     * @return \ProFTPd\Xferlog\Entry
+     * @return Entry
      */
     public function extract($line) {
         $pattern = '/^

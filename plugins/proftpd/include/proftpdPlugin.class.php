@@ -26,4 +26,19 @@ class proftpdPlugin extends Plugin {
         }
         return $this->pluginInfo;
     }
+
+    public function getHooksAndCallbacks() {
+        $this->addHook('logs_daily');
+        return parent::getHooksAndCallbacks();
+    }
+
+    public function logs_daily($params) {
+        $dao = new Tuleap\ProFTPd\Xferlog\Dao();
+
+        $params['logs'][] = array(
+            'sql'   => $dao->getLogQuery($params['group_id'], $params['logs_cond']),
+            'field' => $GLOBALS['Language']->getText('plugin_proftpd', 'log_filepath'),
+            'title' => $GLOBALS['Language']->getText('plugin_proftpd', 'log_title')
+        );
+    }
 }

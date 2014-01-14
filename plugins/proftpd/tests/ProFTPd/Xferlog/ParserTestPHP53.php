@@ -25,7 +25,7 @@ class ParserTest extends TuleapTestCase {
     public function itExtractAnEntryFromALine() {
         $line = "Tue Jan 14 05:05:49 2014 0 ::ffff:192.168.1.66 295 /.message a _ o a anon@localhost ftp 0 * c";
 
-        $parser = new \ProFTPd\Xferlog\Parser();
+        $parser = new \Tuleap\ProFTPd\Xferlog\Parser();
         $entry = $parser->extract($line);
 
         $this->assertEqual(strtotime("Tue Jan 14 05:05:49 2014"), $entry->current_time);
@@ -48,7 +48,7 @@ class ParserTest extends TuleapTestCase {
         $line = "invalid format";
         $this->expectException();
 
-        $parser = new \ProFTPd\Xferlog\Parser();
+        $parser = new \Tuleap\ProFTPd\Xferlog\Parser();
         $parser->extract($line);
     }
 }

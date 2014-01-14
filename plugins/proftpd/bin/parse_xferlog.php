@@ -1,3 +1,4 @@
+#!/bin/php
 <?php
 /**
  * Copyright (c) Enalean, 2014. All Rights Reserved.
@@ -18,13 +19,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\ProFTPd\Xferlog;
+require_once 'pre.php';
+require_once __DIR__.'/../include/autoload.php';
 
-use Exception;
+$file_importer = new Tuleap\ProFTPd\Xferlog\FileImporter(
+    new Tuleap\ProFTPd\Xferlog\Dao(),
+    new Tuleap\ProFTPd\Xferlog\Parser(),
+    UserManager::instance(),
+    ProjectManager::instance()
+);
 
-class InvalidEntryException extends Exception {
-
-    public function __construct($line) {
-        parent::__construct("Unable to parse the following entry: \"$line\"");
-    }
-}
+$file_importer->import($argv[1]);

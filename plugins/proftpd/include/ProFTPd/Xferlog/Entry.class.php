@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace ProFTPd\Xferlog;
+namespace Tuleap\ProFTPd\Xferlog;
 
 class Entry {
 
