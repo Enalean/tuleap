@@ -34,21 +34,6 @@ if ($project->getStatus() == 'H') {
 	print '<p>'.$Language->getText('include_project_home','not_official_site',$GLOBALS['sys_name']).'</p>';
 }
 
-$token     = new CSRFSynchronizerToken('');
-$presenter = new MassmailFormPresenter(
-    $group_id,
-    $token,
-    $GLOBALS['Language']->getText('contact_admins','title', array($project->getPublicName())),
-    '/include/massmail_to_project_admins.php'
-);
-$template_factory = TemplateRendererFactory::build();
-$renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
-
-echo '<a href="#massmail_'.$group_id.'" class="project_home_contact_admins" data-toggle="modal">'. $GLOBALS['Language']->getText('include_project_home', 'contact_admins') .'</a>';
-echo $renderer->renderToString('massmail', $presenter);
-echo '<br />';
-echo '<br />';
-
 $lm = new WidgetLayoutManager();
 $lm->displayLayout($project->getGroupId(), WidgetLayoutManager::OWNER_TYPE_GROUP);
 

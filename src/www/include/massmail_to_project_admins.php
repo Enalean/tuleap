@@ -40,6 +40,10 @@ $admins            = $project->getAdmins();
 $project_name      = $project->getPublicName();
 $project_unix_name = $project->getUnixName();
 
+$body_info         = $GLOBALS['Language']->getText('contact_admins','body_info');
+
+$body = $body_info . $body;
+
 if ($massmail_sender->sendMassmail($project, $user, $subject, $body, $admins)) {
     $GLOBALS['Response']->addFeedback(
         'info',
