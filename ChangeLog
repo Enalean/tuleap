@@ -1,6 +1,8 @@
 Version 6.10 (Not released yet)
-	== Plugin ==
+	== Plugins ==
 	* tracker: 5.217
+	* proftpd: 0.1
+
 
 	== Development ==
 	* Pull-out Vagrant and Chef in dedicated repositories
