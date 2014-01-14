@@ -35,6 +35,8 @@ class Experimental_Theme extends DivBasedTabbedLayout {
      */
     protected $renderer;
 
+    private $show_sidebar = false;
+
     function __construct($root) {
         parent::__construct($root);
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
@@ -137,6 +139,8 @@ class Experimental_Theme extends DivBasedTabbedLayout {
         $project_is_public = null;
 
         if (! empty($params['group'])) {
+            $this->show_sidebar = true;
+
             $project = ProjectManager::instance()->getProject($params['group']);
 
             $project_tabs      = $this->getProjectTabs($params, $project);
@@ -176,9 +180,28 @@ class Experimental_Theme extends DivBasedTabbedLayout {
     }
 
     public function footer($params) {
-        $this->render('footer', new Experimental_FooterPresenter($this));
+        if ($this->canShowFooter($params)) {
+            $this->render('footer', new Experimental_FooterPresenter($this));
+        }
 
         $this->endOfPage();
+    }
+
+    /**
+     * Only show the footer if the sidebar is not present. The sidebar is used
+     * for project navigation.
+     * Note: there is an ugly dependency on the page content being rendered first.
+     * Although this is the case, it's worth bearing in mind when refactoring.
+     *
+     * @param array $params
+     * @return boolean
+     */
+    private function canShowFooter($params) {
+        if (empty($params['group']) && ! $this->show_sidebar) {
+            return true;
+        }
+
+        return false;
     }
 
     private function endOfPage() {

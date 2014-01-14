@@ -133,6 +133,7 @@ class Service {
     
     public function displayFooter() {
         $params = array(
+            'group' => $this->project->group_id,
         );
         if ($pv = (int)HTTPRequest::instance()->get('pv')) {
             $params['pv'] = (int)$pv;
