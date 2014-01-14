@@ -417,6 +417,14 @@ Release: 1%{?dist}
 %description plugin-boomerang
 Allow performances evaluation in Tuleap.
 
+%package plugin-proftpd
+Summary: Proftpd plugin
+Group: Development/Tools
+Version: @@PLUGIN_PROFTPD_VERSION@@
+Release: 1%{?dist}
+%description plugin-proftpd
+Control and interfact with Proftpd as FTP server
+
 %if %{php_base} == php53
 
 %package plugin-mediawiki
@@ -1071,6 +1079,10 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/boomerang
 %dir %{APP_DATA_DIR}/boomerang
+
+%files plugin-proftpd
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/proftpd
 
 %if %{php_base} == php53
 

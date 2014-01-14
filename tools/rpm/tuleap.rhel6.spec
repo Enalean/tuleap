@@ -349,6 +349,14 @@ Requires: %{php_base}-openid
 %description plugin-openid
 Connect to Tuleap using an OpenId provider
 
+%package plugin-proftpd
+Summary: Proftpd plugin
+Group: Development/Tools
+Version: @@PLUGIN_PROFTPD_VERSION@@
+Release: 1%{?dist}
+%description plugin-proftpd
+Control and interfact with Proftpd as FTP server
+
 #
 ## Themes
 #
@@ -975,6 +983,10 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/openid
 %{APP_CACHE_DIR}/openid_consumer_store
+
+%files plugin-proftpd
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/proftpd
 
 #
 # Themes
