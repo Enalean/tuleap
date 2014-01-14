@@ -1,2 +1,3 @@
+plugin_proftpd	service_lbl_key	(S)FTP Browser
 plugin_proftpd	descriptor_description	Control and interfact with Proftpd as FTP server
 plugin_proftpd	descriptor_name	Proftpd

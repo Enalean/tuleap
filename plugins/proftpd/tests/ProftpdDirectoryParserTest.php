@@ -20,40 +20,40 @@
 
 require_once 'bootstrap.php';
 
-class ProftpdDirectoryParserTest extends TuleapTestCase {
+class Proftpd_Directory_DirectoryParserTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
 
-        $this->expected_item_01 = new ProftpdDirectoryItem(
+        $this->expected_item_01 = new Proftpd_Directory_DirectoryItem(
             '.',
             filetype(dirname(__FILE__).'/_fixtures/sftp_directory/.'),
             filesize(dirname(__FILE__).'/_fixtures/sftp_directory/.'),
             filemtime(dirname(__FILE__).'/_fixtures/sftp_directory/.')
         );
 
-        $this->expected_item_02 = new ProftpdDirectoryItem(
+        $this->expected_item_02 = new Proftpd_Directory_DirectoryItem(
             '..',
             filetype(dirname(__FILE__).'/_fixtures/sftp_directory/..'),
             filesize(dirname(__FILE__).'/_fixtures/sftp_directory/..'),
             filemtime(dirname(__FILE__).'/_fixtures/sftp_directory/..')
         );
 
-        $this->expected_item_03 = new ProftpdDirectoryItem(
+        $this->expected_item_03 = new Proftpd_Directory_DirectoryItem(
             'file01.txt',
             filetype(dirname(__FILE__).'/_fixtures/sftp_directory/file01.txt'),
             filesize(dirname(__FILE__).'/_fixtures/sftp_directory/file01.txt'),
             filemtime(dirname(__FILE__).'/_fixtures/sftp_directory/file01.txt')
         );
 
-        $this->expected_item_04 = new ProftpdDirectoryItem(
+        $this->expected_item_04 = new Proftpd_Directory_DirectoryItem(
             'folder01',
             filetype(dirname(__FILE__).'/_fixtures/sftp_directory/folder01'),
             filesize(dirname(__FILE__).'/_fixtures/sftp_directory/folder01'),
             filemtime(dirname(__FILE__).'/_fixtures/sftp_directory/folder01')
         );
 
-        $this->parser = new ProftpdDirectoryParser();
+        $this->parser = new Proftpd_Directory_DirectoryParser();
     }
 
     public function itReturnsContentOfDirectoryInformation() {

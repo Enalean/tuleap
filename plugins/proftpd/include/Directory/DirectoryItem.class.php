@@ -22,7 +22,7 @@
 /**
  * This class is a representation of an item into a SFTP directory
  */
-class ProftpdDirectoryItem {
+class Proftpd_Directory_DirectoryItem {
 
     /** @var String */
     private $name;

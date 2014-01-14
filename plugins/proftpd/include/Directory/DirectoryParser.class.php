@@ -19,14 +19,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class ProftpdDirectoryParser {
+class Proftpd_Directory_DirectoryParser {
 
     /**
      * Parse the content of a given directory
      *
      * @param  String $path The path to parse
      *
-     * @return ProftpdDirectoryItem[]
+     * @return Proftpd_Directory_DirectoryItem[]
      */
     public function parseDirectory($path) {
         $items                = array();
@@ -35,7 +35,7 @@ class ProftpdDirectoryParser {
         foreach ($directory_file_names as $file_name) {
             $full_file_name = $this->getFullFileName($path, $file_name);
 
-            $items[] = new ProftpdDirectoryItem(
+            $items[] = new Proftpd_Directory_DirectoryItem(
                 $file_name,
                 filetype($full_file_name),
                 filesize($full_file_name),

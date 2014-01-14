@@ -17,13 +17,42 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once 'constants.php';
 
 class proftpdPlugin extends Plugin {
 
     public function getPluginInfo() {
-        if (!is_a($this->pluginInfo, 'ProftpdPluginInfo')) {
+        if (! is_a($this->pluginInfo, 'ProftpdPluginInfo')) {
             $this->pluginInfo = new ProftpdPluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    /**
+     * Same as process() but adds the Forge header and footer
+     * @param HTTPRequest $request
+     */
+    public function processUiRequest(HTTPRequest $request) {
+        $this->displayHeader($request);
+        $this->process($request);
+        $this->displayFooter();
+    }
+
+    public function process(HTTPRequest $request) {
+        $router = new ProftpdRouter();
+        $router->route($request);
+    }
+
+    private function displayHeader($request) {
+        site_header(array(
+            'title'     => $GLOBALS['Language']->getText('plugin_proftpd', 'service_lbl_key'),
+            'pagename'  => $GLOBALS['Language']->getText('plugin_proftpd', 'service_lbl_key'),
+            'toptab'    => "proftpd",
+            'group'     => $request->get('group_id'),
+        ));
+    }
+
+    private function displayFooter() {
+        site_footer(array());
     }
 }
