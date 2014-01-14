@@ -1,0 +1,36 @@
+Proftpd plugin
+==============
+
+This plugin controls and interacts with Proftpd as FTP server
+
+Installation
+------------
+
+Please insert the following in the logrotate.d/vsftpd.log
+
+    prerotate
+        /usr/share/tuleap/plugins/proftpd/bin/parse_xferlog.php /var/log/xferlog
+    endscript
+
+If you do not have any ``logrotate.d/vsftpd.log`` please use the following:
+
+    /var/log/xferlog {
+        # ftpd doesn't handle SIGHUP properly
+        nocompress
+        missingok
+        daily
+
+        prerotate
+            /usr/share/tuleap/plugins/proftpd/bin/parse_xferlog.php /var/log/xferlog
+        endscript
+
+        postrotate
+            year=`date +%Y`
+            month=`date +%m`
+            day=`date +%d`
+            destdir="/var/log/@@PROJECT_NAME@@/$year/$month"
+            destfile="ftp_xferlog_$year$month$day.log"
+            mkdir -p $destdir
+            cp /var/log/xferlog.1 $destdir/$destfile
+        endscript
+    }
