@@ -64,6 +64,8 @@ class Layout extends Response {
         'Trackers' => 'ic/tracker20w.png'
         );
 
+    const DEFAULT_SERVICE_ICON = 'tuleap-services-angle-double-right';
+
     /**
      * Background for priorities
      */
@@ -1945,6 +1947,7 @@ class Layout extends Response {
         $pm = ProjectManager::instance();
         $tabs = array();
         $group_id = $project->getGroupId();
+
         reset($project->service_data_array);
          while (list($short_name,$service_data) = each($project->service_data_array)) {
                if ((string)$short_name == "admin") {
@@ -2022,7 +2025,7 @@ class Layout extends Response {
 
             $name = $hp->purify($service_data['label']);
 
-            $icon = 'icon-double-angle-right';
+            $icon = $this->getServiceIcon($short_name);
             if (isset($service_data['icon'])) {
                 $icon = $service_data['icon'];
             }
@@ -2034,6 +2037,10 @@ class Layout extends Response {
                             'description' => $hp->purify($service_data['description']));
         }
         return $tabs;
+    }
+
+    private function getServiceIcon($service_name) {
+        return self::DEFAULT_SERVICE_ICON . ' tuleap-services-' . $service_name;
     }
 
     protected function getSearchEntries() {

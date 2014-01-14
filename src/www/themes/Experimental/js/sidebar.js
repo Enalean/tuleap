@@ -18,8 +18,8 @@
  */
 
 !function($) {
-    var width_collapsed = '40px';
-    var width_expanded  = '210px';
+    var width_collapsed = '45px';
+    var width_expanded  = '200px';
 
     function getSidebarUserPreference() {
         return localStorage.getItem('sidebar-size');
@@ -49,7 +49,7 @@
                 display: 'none'
             });
             $('.nav-list').css({
-                marginTop: '45px'
+                marginTop: '70px'
             });
         } else {
             $('.project-title').css({
