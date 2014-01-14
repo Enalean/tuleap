@@ -1,6 +1,9 @@
 Version 6.10 (Not released yet)
 	== Plugins ==
-	* tracker: 5.217
+	* agiledashboard: 1.32
+	* boomerang: 0.2
+	* cardwall: 1.13
+	* tracker: 5.219
 	* proftpd: 0.1
 
 
