@@ -71,14 +71,14 @@ class Planning_Controller extends MVC2_PluginController {
     public function admin() {
         return $this->renderToString(
             'admin',
-            $this->getListPresenter(
+            $this->getAdminPresenter(
                 $this->getCurrentUser(),
                 $this->group_id
             )
         );
     }
 
-    private function getListPresenter(PFUser $user, $group_id) {
+    private function getAdminPresenter(PFUser $user, $group_id) {
         $can_create_planning         = true;
         $tracker_uri                 = '';
         $root_planning_name          = '';
@@ -91,7 +91,7 @@ class Planning_Controller extends MVC2_PluginController {
             $potential_planning_trackers = $this->planning_factory->getPotentialPlanningTrackers($user, $group_id);
         }
 
-        return new Planning_ListPresenter(
+        return new Planning_AdminPresenter(
             $this->getPlanningAdminPresenterList($user, $group_id, $root_planning_name),
             $group_id,
             $can_create_planning,

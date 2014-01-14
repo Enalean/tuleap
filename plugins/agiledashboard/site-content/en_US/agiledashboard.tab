@@ -43,6 +43,8 @@ plugin_agiledashboard	export_failed	Unable to export the configuration
 plugin_agiledashboard	import_template_success	The configuration has been successfully imported!
 plugin_agiledashboard	cannot_import	Unable to import the configuration!
 plugin_agiledashboard	import_notes	Note:<br>Importing a template will create new trackers. The import will not work if any existing tracker match those in the template
+plugin_agiledashboard	planning_section	Planning management
+plugin_agiledashboard	import_export_section	Import/ Export
 
 plugin_agiledashboard	capacity	Capacity:
 plugin_agiledashboard	available	Available $1

@@ -43,6 +43,8 @@ plugin_agiledashboard	export_failed	Impossible d'exporter la configuration
 plugin_agiledashboard	import_template_success	La configuration a été importée !
 plugin_agiledashboard	cannot_import	Impossible d'importer la configuration!
 plugin_agiledashboard	import_notes	Note:<br>Cette opération va créer des trackers. L'opération ne pourra aboutir si la configuration contient des trackers denommés identiquement à des trackers existants
+plugin_agiledashboard	planning_section	Gestion des plannings
+plugin_agiledashboard	import_export_section	Import/ Export
 
 plugin_agiledashboard	capacity	Capacité :
 plugin_agiledashboard	available	$1 disponible(s)
