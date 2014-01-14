@@ -18,26 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
-require_once __DIR__.'/../include/autoload.php';
+ini_set('display_errors', 'on');
+ini_set('max_execution_time', 0);
+ini_set('memory_limit', -1);
+date_default_timezone_set('Europe/Paris');
 
-$file_importer = new Tuleap\ProFTPd\Xferlog\FileImporter(
-    new Tuleap\ProFTPd\Xferlog\Dao(),
-    new Tuleap\ProFTPd\Xferlog\Parser(),
-    UserManager::instance(),
-    ProjectManager::instance()
-);
-
-$file_importer->import($argv[1]);
-
-echo "{$file_importer->getNbImportedLines()} lines imported".PHP_EOL;
-$errors    = $file_importer->getErrors();
-$nb_errors = count($errors);
-if ($nb_errors) {
-    $logger = new BackendLogger();
-    echo "$nb_errors errors".PHP_EOL;
-    foreach ($errors as $error) {
-        $logger->error('[Proftpd][xferlog parse] '.$error);
-        echo "*** ERROR: ".$error.PHP_EOL;
-    }
+if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
+    error_reporting(E_ALL & ~E_DEPRECATED);
+} else {
+    error_reporting(E_ALL);
 }
+
+$basedir      = realpath(dirname(__FILE__).'/..');
+$src_path     = $basedir.'/src';
+$include_path = $basedir.'/src/www/include';
+
+ini_set('include_path', ini_get('include_path').':'.$src_path.':'.$include_path);
+
+require_once 'src/common/autoload.php';

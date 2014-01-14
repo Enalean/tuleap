@@ -24,10 +24,20 @@ use DataAccessObject;
 
 class Dao extends DataAccessObject {
 
+    public function searchLatestEntryTimestamp() {
+        $sql = 'SELECT * FROM plugin_proftpd_xferlog ORDER BY id DESC LIMIT 1';
+        $dar =  $this->retrieve($sql);
+        if ($dar && $dar->rowCount() == 1) {
+            $row = $dar->getRow();
+            return $row['time'];
+        }
+        return 0;
+    }
+
     public function store(
         $user_id,
         $group_id,
-        Entry $entr
+        Entry $entry
     ) {
         $user_id                = $this->da->escapeInt($user_id);
         $group_id               = $this->da->escapeInt($group_id);
@@ -85,15 +95,15 @@ class Dao extends DataAccessObject {
                     $completion_status
                 )";
 
-        $this->update($sql);
+        return $this->update($sql);
     }
 
     public function getLogQuery($group_id, $where_conditions) {
         $group_id = $this->da->escapeInt($group_id);
 
-        $download = $this->da->quoteSmart($GLOBALS['Language']->getText('plugin_proftpd', 'log_download'));
-        $upload   = $this->da->quoteSmart($GLOBALS['Language']->getText('plugin_proftpd', 'log_upload'));
-        $deleted  = $this->da->quoteSmart($GLOBALS['Language']->getText('plugin_proftpd', 'log_deleted'));
+        $download = $this->da->quoteSmart("Download");
+        $upload   = $this->da->quoteSmart("Upload");
+        $deleted  = $this->da->quoteSmart("Deleted");
 
         $sql = "SELECT
                     log.time AS time,

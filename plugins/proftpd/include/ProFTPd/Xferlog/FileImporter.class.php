@@ -39,6 +39,13 @@ class FileImporter {
     /** @var ProjectManager */
     private $project_manager;
 
+    /** @var integer */
+    private $nb_lines_imported;
+
+    /** @var string[] */
+    private $errors;
+
+
     public function __construct(Dao $dao, Parser $parser, UserManager $user_manager, ProjectManager $project_manager) {
         $this->dao             = $dao;
         $this->parser          = $parser;
@@ -46,35 +53,56 @@ class FileImporter {
         $this->project_manager = $project_manager;
     }
 
+    public function getNbImportedLines() {
+        return $this->nb_lines_imported;
+    }
+
+    public function getErrors() {
+        return $this->errors;
+    }
+
     public function import($filepath) {
+        $latest_timestamp = $this->dao->searchLatestEntryTimestamp();
+        $this->parseFile($filepath, $latest_timestamp);
+    }
+
+    private function parseFile($filepath, $latest_timestamp) {
+        $this->nb_lines_imported = 0;
         $fd = fopen($filepath, 'r');
         if ($fd) {
             while (($line = fgets($fd)) !== false) {
-                $this->parseLine($line);
+                if ($this->parseLine($line, $latest_timestamp)) {
+                    $this->nb_lines_imported++;
+                }
             }
         }
         fclose($fd);
     }
 
-    private function parseLine($line) {
+    private function parseLine($line, $latest_timestamp) {
         try {
-            $entry      = $this->parser->extract(trim($line));
-            $user_id    = $this->getUserId($entry);
-            $project_id = $this->getProjectId($entry);
-            $this->dao->store($user_id, $project_id, $entry);
-        } catch (Exception $exception) {
+            $entry = $this->parser->extract(trim($line));
+            if ($entry->current_time >= $latest_timestamp) {
+                $user_id    = $this->getUserId($entry, $line);
+                $project_id = $this->getProjectId($entry, $line);
+                return $this->dao->store($user_id, $project_id, $entry);
+            }
+        } catch (InvalidEntryException $exception) {
+            $this->errors[] = $exception->getMessage();
         }
+        return false;
     }
 
-    private function getUserId(Entry $entry) {
+    private function getUserId(Entry $entry, $line) {
         $user = $this->user_manager->getUserByUserName($entry->username);
         if ($user) {
             return $user->getId();
         }
+        $this->errors[] = 'Unable to identify user in log line: '.$line;
         return 0;
     }
 
-    private function getProjectId(Entry $entry) {
+    private function getProjectId(Entry $entry, $line) {
         $matches = array();
         if (preg_match('%^/([^/]+)/.*%', $entry->filename, $matches)) {
             $project = $this->project_manager->getProjectByUnixName($matches[1]);
@@ -82,6 +110,7 @@ class FileImporter {
                 return $project->getId();
             }
         }
+        $this->errors[] = 'Unable to identify project in log line: '.$line;
         return 0;
     }
 }
