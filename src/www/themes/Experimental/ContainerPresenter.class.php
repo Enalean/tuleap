@@ -44,6 +44,8 @@ class Experimental_ContainerPresenter {
     /** @var string */
     private $feedback_content;
 
+    private $forge_version;
+
     function __construct(
         $breadcrumbs,
         $toolbar,
@@ -52,7 +54,8 @@ class Experimental_ContainerPresenter {
         $project_is_public,
         $project_tabs,
         $feedback,
-        $feedback_content
+        $feedback_content,
+        $forge_version
     ) {
         $this->breadcrumbs       = $breadcrumbs;
         $this->toolbar           = $toolbar;
@@ -62,6 +65,7 @@ class Experimental_ContainerPresenter {
         $this->project_tabs      = $project_tabs;
         $this->feedback          = $feedback;
         $this->feedback_content  = $feedback_content;
+        $this->forge_version     = $forge_version;
     }
 
     public function hasBreadcrumbs() {
@@ -86,6 +90,14 @@ class Experimental_ContainerPresenter {
 
     public function sidebar() {
         return $this->project_tabs;
+    }
+
+    public function powered_by() {
+        return $GLOBALS['Language']->getText('global','powered_by').' '.$this->forge_version;
+    }
+
+    public function copyright() {
+        return $GLOBALS['Language']->getText('global','copyright');
     }
 
     public function projectName() {

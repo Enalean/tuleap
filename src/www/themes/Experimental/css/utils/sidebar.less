@@ -66,4 +66,29 @@
         }
     }
 }
+
+.sidebar-about {
+    bottom: 20px;
+    position: fixed;
+    left: 20px;
+    padding-top: 55px;
+    background: url('../images/sidebar_tuleap.png') no-repeat center top;
+    text-align: center;
+
+    p {
+        font-size: 0.9em;
+        color: @medium-grey;
+        text-shadow: 0 1px 0 darken(@dark-grey, 10%);
+        margin: 0;
+
+        a {
+            color: @grey;
+
+            &:hover {
+                color: lighten(@grey, 10%);
+                text-decoration: none;
+            }
+        }
+    }
+}
 /* }}} */

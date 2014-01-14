@@ -191,6 +191,8 @@ include_menu	new_user	Nouveau compte
 include_menu	auth_prev_success	Dernière connexion:
 include_menu	auth_last_failure	Dernière tentative de connexion:
 include_menu	auth_nb_failure	Nombre de tentatives:
+include_menu	help	Aide
+include_menu	soap_api	API SOAP
 #
 #-----------------------------------------------
 # Script: SF/www/include/pre.php

@@ -63,11 +63,13 @@
 
     function updateSidebarServices(show_only_icon) {
         if (show_only_icon) {
+            $('.sidebar-about').hide();
             $('.sidebar-nav li a > span').hide();
             $('.sidebar-nav li a').tooltip('enable');
         } else {
             $('.sidebar-nav li a > span').show();
             $('.sidebar-nav li a').tooltip('disable');
+            $('.sidebar-about').show(150);
         }
     }
 

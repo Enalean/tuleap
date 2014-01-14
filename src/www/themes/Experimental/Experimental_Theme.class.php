@@ -157,8 +157,13 @@ class Experimental_Theme extends DivBasedTabbedLayout {
             $project_is_public,
             $project_tabs,
             $this->_feedback,
-            $this->_getFeedback()
+            $this->_getFeedback(),
+            $this->getForgeVersion()
         ));
+    }
+
+    private function getForgeVersion() {
+        return trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
     }
 
     /**
