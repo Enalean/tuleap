@@ -112,6 +112,28 @@ define('AGILEDASHBOARD_EVENT_REST_OPTIONS_CARDWALL', 'agiledashboard_event_rest_
 define('AGILEDASHBOARD_EVENT_REST_GET_CARDWALL', 'agiledashboard_event_rest_get_cardwall');
 
 /**
+ * RESt call for burndown GET
+ *
+ * Parameters:
+ * 'version'   => API version
+ * 'user'      => The user who resquest the burndown
+ * 'milestone' => Milestone on which burndown is requested
+ * 'burndown'  => OUT the \Tuleap\Tracker\REST\Artifact\BurndownRepresentation
+ */
+define('AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN', 'agiledashboard_event_rest_get_burndown');
+
+/**
+ * RESt call for burndown OPTIONS
+ *
+ * Parameters:
+ * 'version'   => API version
+ * 'user'      => The user who resquest the burndown
+ * 'milestone' => Milestone on which burndown is requested
+ */
+define('AGILEDASHBOARD_EVENT_REST_OPTIONS_BURNDOWN', 'agiledashboard_event_rest_options_burndown');
+
+
+/**
  * Allow plugins to modify the milestone requested by a RESt call
  *
  * Parameters:
@@ -120,5 +142,6 @@ define('AGILEDASHBOARD_EVENT_REST_GET_CARDWALL', 'agiledashboard_event_rest_get_
  * 'milestone_representation' => The RESt representation of the milestone
  */
 define('AGILEDASHBOARD_EVENT_REST_GET_MILESTONE', 'agiledashboard_event_rest_get_milestone');
+
 
 ?>

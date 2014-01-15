@@ -23,6 +23,8 @@ use \PlanningFactory;
 use \Luracast\Restler\RestException;
 use \Planning;
 use \Tuleap\REST\Header;
+use \Tuleap\REST\ProjectAuthorization;
+use \UserManager;
 
 class PlanningResource {
 
@@ -85,16 +87,11 @@ class PlanningResource {
      * @return Planning
      */
     private function getPlanning($id) {
-        try {
-            $planning = \PlanningFactory::build()->getPlanning($id);
-        } catch (\Project_AccessProjectNotFoundException $exception) {
-            throw new RestException(404);
-        } catch (\Project_AccessException $exception) {
-            throw new RestException(403, $exception->getMessage());
-        }
+        $planning = PlanningFactory::build()->getPlanning($id);
         if (! $planning) {
             throw new RestException(404, 'Planning not found');
         }
+        ProjectAuthorization::userCanAccessProject($this->getCurrentUser(), $planning->getPlanningTracker()->getProject());
 
         return $planning;
     }
@@ -104,7 +101,7 @@ class PlanningResource {
     }
 
     private function getCurrentUser() {
-        return \UserManager::instance()->getCurrentUser();
+        return UserManager::instance()->getCurrentUser();
     }
 
     private function getMilestonesByPlanning(Planning $planning, $limit, $offset) {

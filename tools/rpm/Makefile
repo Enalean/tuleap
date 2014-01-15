@@ -48,6 +48,7 @@ PLUGIN_FOAFPROFILES_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/foafprofiles/
 PLUGIN_MEDIAWIKI_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/mediawiki/VERSION)
 PLUGIN_BOOMERANG_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/boomerang/VERSION)
 PLUGIN_OPENID_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/openid/VERSION)
+PLUGIN_PROFTPD_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/proftpd/VERSION)
 
 THEME_DAWN_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Dawn/VERSION)
 THEME_SAVANNAH_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/savannah/VERSION)
@@ -151,6 +152,7 @@ $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-1.noarch.rpm: $(SPEC_FILE)
 		sed -e 's/@@PLUGIN_FOAFPROFILES_VERSION@@/$(PLUGIN_FOAFPROFILES_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_MEDIAWIKI_VERSION@@/$(PLUGIN_MEDIAWIKI_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_OPENID_VERSION@@/$(PLUGIN_OPENID_VERSION)/g' |\
+		sed -e 's/@@PLUGIN_PROFTPD_VERSION@@/$(PLUGIN_PROFTPD_VERSION)/g' |\
 		sed -e 's/@@THEME_DAWN_VERSION@@/$(THEME_DAWN_VERSION)/g' |\
 		sed -e 's/@@THEME_SAVANNAH_VERSION@@/$(THEME_SAVANNAH_VERSION)/g' |\
 		sed -e 's/@@THEME_STTAB_VERSION@@/$(THEME_STTAB_VERSION)/g' |\
