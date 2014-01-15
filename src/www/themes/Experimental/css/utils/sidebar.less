@@ -7,13 +7,13 @@
     width: @sidebar-width;
     max-width: @sidebar-width;
     overflow: hidden;
-    padding: 52px 0 0 0;
+    padding: (@navbar-height + 1) 0 80px 0;
 
     &.big-nav {
-        padding: 105px 0 0 0;
+        padding: 90px 0 80px 0;
     }
     &.huge-nav {
-        padding: 157px 0 0 0;
+        padding: 135px 0 80px 0;
     }
 
     a.project-title {
@@ -42,6 +42,7 @@
         color: @grey;
         text-shadow: 0 1px 0 darken(@grey, 50%);
         margin-bottom: 5px;
+        padding: 2px 15px;
     }
 
     .nav-list > .active > a, .nav-list > .active > a:hover, .nav-list > .active > a:focus {
@@ -59,8 +60,7 @@
         text-align: center;
         font-size: 1em;
         display: block;
-        padding: 10px 0;
-        margin: 20px 0 0 0;
+        padding: 20px 0 0;
         cursor: pointer;
 
         &:hover {
@@ -70,15 +70,17 @@
 }
 
 .sidebar-about {
-    bottom: 20px;
     position: fixed;
-    left: 20px;
-    padding-top: 55px;
-    background: url('../images/sidebar_tuleap.png') no-repeat center top;
+    bottom: 0;
+    left: 0;
+    width: @sidebar-width;
+    padding: 33px 0 20px 0;
+    height: 25px;
+    background: @dark-grey url('../images/sidebar_tuleap.png') no-repeat center top;
     text-align: center;
 
     p {
-        font-size: 0.9em;
+        font-size: 0.8em;
         color: @medium-grey;
         text-shadow: 0 1px 0 darken(@dark-grey, 10%);
         margin: 0;

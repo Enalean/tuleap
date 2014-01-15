@@ -35,13 +35,20 @@
     })()
 
     function filterProjects(value) {
-        $('.projects-nav .dropdown-menu > li.project:not(:caseInsensitiveContains(' + value + '))').hide();
-        $('.projects-nav .dropdown-menu > li.project:caseInsensitiveContains(' + value + ')').show();
+        $('.projects-nav .dropdown-menu li.project:not(:caseInsensitiveContains(' + value + '))').hide();
+        $('.projects-nav .dropdown-menu li.project:caseInsensitiveContains(' + value + ')').show();
     }
 
     function clearFilterProjects() {
         $('#filter-projects').val('');
         filterProjects('');
+    }
+
+    function initCustomScrollbar() {
+        $('.projects-nav .dropdown-menu').jScrollPane({
+            autoReinitialise: true,
+            verticalGutter: 0
+        });
     }
 
     $(document).ready(function() {
@@ -50,6 +57,7 @@
         $('.projects-nav').click(function(event) {
             if (! $(this).hasClass('open')) {
                 input_filter.focus();
+                initCustomScrollbar();
             } else {
                 clearFilterProjects();
             }

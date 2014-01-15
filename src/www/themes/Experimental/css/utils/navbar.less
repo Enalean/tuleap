@@ -7,10 +7,10 @@
     .logo-background;
 }
 .logo-background {
-    background: url('../images/organization_logo.png') no-repeat center center;
+    background: @orange url('../images/organization_logo.png') no-repeat center center;
 }
 .logo-background-small {
-    background: url('../images/organization_logo_small.png') no-repeat center center;
+    background: @orange url('../images/organization_logo_small.png') no-repeat center center;
 }
 
 @media screen and (max-width: 1320px) {
@@ -43,6 +43,12 @@
     background: @orange;
     box-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
     height: @navbar-height;
+}
+
+@media screen and (max-width: 870px) {
+    .navbar {
+        height: @navbar-height * 2;
+    }
 }
 
 .is-at-top .navbar {
@@ -128,21 +134,41 @@
             border-radius: 0;
             border: none;
             min-width: 100%;
+            padding: 0;
 
             &:before, &:after {
                 content: none;
+            }
+
+            li:first-child {
+                margin-top: 5px;
+            }
+
+            li:last-child {
+                margin-bottom: 5px;
             }
 
             li > a {
                 color: @white;
                 font-size: 0.9em;
                 line-height: 1.7em;
+                display: block;
+                padding: 3px 20px;
+                clear: both;
+                font-weight: normal;
+                line-height: @baseLineHeight;
+                white-space: nowrap;
+
+                &:hover a {
+                    text-decoration: none;
+                }
             }
 
             li > a:hover, li > a:focus, .dropdown-submenu:hover > a, .dropdown-submenu:focus > a {
                 background: lighten(@dark-grey, 10%);
                 background-image: none;
                 filter: none;
+                text-decoration: none;
             }
 
             .divider {
@@ -152,7 +178,7 @@
         }
 
         .projects-nav ul.dropdown-menu {
-            max-height: 700px;
+            max-height: 590px;
             overflow: hidden;
             width: 300px;
 
