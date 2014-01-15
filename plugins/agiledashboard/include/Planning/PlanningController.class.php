@@ -28,6 +28,8 @@ require_once 'common/mvc2/PluginController.class.php';
  */
 class Planning_Controller extends MVC2_PluginController {
 
+    const AGILE_DASHBOARD_TEMPLATE_NAME = 'agile_dashboard_template.xml';
+
     /** @var PlanningFactory */
     private $planning_factory;
 
@@ -37,14 +39,22 @@ class Planning_Controller extends MVC2_PluginController {
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
 
-    /** @var String*/
+    /** @var String */
     private $plugin_theme_path;
+
+    /** @var ProjectManager */
+    private $project_manager;
+
+    /** @var ProjectXMLExporter */
+    private $xml_exporter;
 
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
         Planning_ShortAccessFactory $planning_shortaccess_factory,
         Planning_MilestoneFactory $milestone_factory,
+        ProjectManager $project_manager,
+        ProjectXMLExporter $xml_exporter,
         $plugin_theme_path
     ) {
         parent::__construct('agiledashboard', $request);
@@ -53,20 +63,22 @@ class Planning_Controller extends MVC2_PluginController {
         $this->planning_factory             = $planning_factory;
         $this->planning_shortaccess_factory = $planning_shortaccess_factory;
         $this->milestone_factory            = $milestone_factory;
+        $this->project_manager              = $project_manager;
+        $this->xml_exporter                 = $xml_exporter;
         $this->plugin_theme_path            = $plugin_theme_path;
     }
     
     public function admin() {
         return $this->renderToString(
             'admin',
-            $this->getListPresenter(
+            $this->getAdminPresenter(
                 $this->getCurrentUser(),
                 $this->group_id
             )
         );
     }
 
-    private function getListPresenter(PFUser $user, $group_id) {
+    private function getAdminPresenter(PFUser $user, $group_id) {
         $can_create_planning         = true;
         $tracker_uri                 = '';
         $root_planning_name          = '';
@@ -79,7 +91,7 @@ class Planning_Controller extends MVC2_PluginController {
             $potential_planning_trackers = $this->planning_factory->getPotentialPlanningTrackers($user, $group_id);
         }
 
-        return new Planning_ListPresenter(
+        return new Planning_AdminPresenter(
             $this->getPlanningAdminPresenterList($user, $group_id, $root_planning_name),
             $group_id,
             $can_create_planning,
@@ -116,9 +128,26 @@ class Planning_Controller extends MVC2_PluginController {
         $presenter = new Planning_IndexPresenter(
             $plannings,
             $this->plugin_theme_path,
-            $project_id
+            $project_id,
+            $this->isUserAdmin()
         );
         return $this->renderToString('index', $presenter);
+    }
+
+    /**
+     * @return bool
+     */
+    private function isUserAdmin() {
+        return $this->request->getProject()->userIsAdmin($this->request->getCurrentUser());
+    }
+
+    /**
+     * Redirects a non-admin user to the agile dashboard home page
+     */
+    private function redirectNonAdmin() {
+        if (! $this->isUserAdmin()) {
+            $this->redirect(array('group_id'=>$this->group_id));
+        }
     }
     
     public function new_() {
@@ -127,7 +156,60 @@ class Planning_Controller extends MVC2_PluginController {
 
         return $this->renderToString('new', $presenter);
     }
-    
+
+
+    public function importForm() {
+        $this->redirectNonAdmin();
+
+        $template_file = new Valid_File('template_file');
+        $template_file->required();
+
+        if ($this->request->validFile($template_file)) {
+            $this->importConfiguration();
+        }
+
+        $presenter = new Planning_ImportTemplateFormPresenter($this->group_id);
+        return $this->renderToString('import', $presenter);
+    }
+
+    private function importConfiguration() {
+        $xml_importer = new ProjectXMLImporter(EventManager::instance(), ProjectManager::instance());
+
+        try {
+            $xml_importer->import($this->group_id, $_FILES["template_file"]["tmp_name"]);
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_agiledashboard', 'import_template_success') );
+        } catch (Exception $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_agiledashboard', 'cannot_import') );
+        }
+    }
+
+    /**
+     * Exports the agile dashboard configuration as an XML file
+     */
+    public function exportToFile() {
+        try {
+            $project = $this->getProjectFromRequest();
+            $xml = $this->getFullConfigurationAsXML($project);
+        } catch (Exception $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_agiledashboard', 'export_failed'));
+            $this->redirect(array('group_id'=>$this->group_id, 'action'=>'admin'));
+        }
+
+        $GLOBALS['Response']->sendXMLAttachementFile($xml, self::AGILE_DASHBOARD_TEMPLATE_NAME);
+    }
+
+    /**
+     * @return Project
+     * @throws Project_NotFoundException
+     */
+    private function getProjectFromRequest() {
+        return $this->project_manager->getValidProject($this->group_id);
+    }
+
+    private function getFullConfigurationAsXML(Project $project) {
+        return $this->xml_exporter->exportAsStandaloneXMLDocument($project);
+    }
+
     public function create() {
         $this->checkUserIsAdmin();
         $validator = new Planning_RequestValidator($this->planning_factory);

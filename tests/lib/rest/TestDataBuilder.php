@@ -130,7 +130,6 @@ class TestDataBuilder {
 
         $xml_importer = new ProjectXMLImporter(
             EventManager::instance(),
-            $this->user_manager,
             $this->project_manager
         );
         $xml_importer->import(101, 'admin', dirname(__FILE__).'/../../rest/_fixtures/tuleap_agiledashboard_template.xml');

@@ -2228,13 +2228,13 @@ EOS;
      * @param SimpleXMLElement $xmlElem The xml
      */
     protected function sendXML(SimpleXMLElement $xmlElem) {
-        //force file transfer
-        header('Content-Description: File Transfer');
-        header('Content-Disposition: attachment; filename="Tracker_'.$this->item_name.'.xml"');
-        header('Content-Type: text/xml');
         $dom = dom_import_simplexml($xmlElem)->ownerDocument;
         $dom->formatOutput = true;
-        echo $dom->saveXML();
+
+        $output_filename = 'Tracker_'.$this->item_name.'.xml';
+        $xml             = $dom->saveXML();
+
+        $GLOBALS['Response']->sendXMLAttachementFile($xml, $output_filename);
     }
 
     /**
