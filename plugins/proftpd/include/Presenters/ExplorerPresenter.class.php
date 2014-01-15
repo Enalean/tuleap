@@ -27,9 +27,9 @@ class Proftpd_Presenter_ExplorerPresenter {
     public $path_parts;
 
     /**
-     * @var Proftpd_Directory_DirectoryItem[]
+     * @var Proftpd_Directory_DirectoryItemCollection
      */
-    public $directory_items;
+    private $directory_items;
 
     private $group_id;
 
@@ -38,7 +38,7 @@ class Proftpd_Presenter_ExplorerPresenter {
     public function __construct(
         Proftpd_Directory_DirectoryPathCollection $path_parts,
         $path,
-        $directory_items,
+        Proftpd_Directory_DirectoryItemCollection $directory_items,
         Project $project
     ) {
         $this->path_parts      = $path_parts;
@@ -92,5 +92,12 @@ class Proftpd_Presenter_ExplorerPresenter {
         return $GLOBALS['Language']->getText('plugin_proftpd', 'date_added_column_name');
     }
 
+    public function folder_list() {
+        return $this->directory_items->getFolders();
+    }
+
+    public function file_list() {
+        return $this->directory_items->getFiles();
+    }
 }
 ?>

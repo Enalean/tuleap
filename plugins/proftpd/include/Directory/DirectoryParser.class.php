@@ -26,33 +26,50 @@ class Proftpd_Directory_DirectoryParser {
      *
      * @param  String $path The path to parse
      *
-     * @return Proftpd_Directory_DirectoryItem[]
+     * @return Proftpd_Directory_DirectoryItemCollection
      */
     public function parseDirectory($path) {
-        $items                = array();
-        $directory_file_names = scandir($path);
+        $items = array(
+            'folders' => array(),
+            'files'   => array(),
+        );
+        $directory_iterator   = new DirectoryIterator($path);
 
-        foreach ($directory_file_names as $file_name) {
-            $full_file_name = $this->getFullFileName($path, $file_name);
+        foreach ($directory_iterator as $file_info) {
+            if ($file_info->isDot()) {
+                continue;
+            }
 
-            $items[] = new Proftpd_Directory_DirectoryItem(
-                $file_name,
-                filetype($full_file_name),
-                filesize($full_file_name),
-                filemtime($full_file_name)
+            $current_item = new Proftpd_Directory_DirectoryItem(
+                $file_info->getFilename(),
+                $file_info->getType(),
+                $file_info->getSize(),
+                $file_info->getMTime()
             );
+
+            $items = $this->addItemInRightSection($items, $current_item, $file_info);
+        }
+
+        return $this->createNaturalAlphabeticallyItemsCollection($items);
+    }
+
+    private function addItemInRightSection(array $items, Proftpd_Directory_DirectoryItem $current_item, $file_info) {
+        if ($file_info->isDir()) {
+            $items['folders'][$file_info->getFilename()] = $current_item;
+        } else {
+            $items['files'][$file_info->getFilename()] = $current_item;
         }
 
         return $items;
     }
 
-    private function getFullFileName($path, $file_name) {
-        if (substr($path, -1) === '/') {
-            return $path.$file_name;
-        }
+    private function createNaturalAlphabeticallyItemsCollection(array $items) {
+        uksort($items['folders'],  "strnatcmp");
+        uksort($items['files'],  "strnatcmp");
 
-        return $path.'/'.$file_name;
+        $folders = array_values($items['folders']);
+        $files   = array_values($items['files']);
+
+        return new Proftpd_Directory_DirectoryItemCollection($folders, $files);
     }
 }
-
-?>

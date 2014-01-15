@@ -27,53 +27,115 @@ class Proftpd_Directory_DirectoryParserTest extends TuleapTestCase {
 
         $this->expected_item_01 = new Proftpd_Directory_DirectoryItem(
             '.',
-            filetype(dirname(__FILE__).'/_fixtures/sftp_directory/.'),
-            filesize(dirname(__FILE__).'/_fixtures/sftp_directory/.'),
-            filemtime(dirname(__FILE__).'/_fixtures/sftp_directory/.')
+            filetype(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/.')),
+            filesize(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/.')),
+            filemtime(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/.'))
         );
 
         $this->expected_item_02 = new Proftpd_Directory_DirectoryItem(
             '..',
-            filetype(dirname(__FILE__).'/_fixtures/sftp_directory/..'),
-            filesize(dirname(__FILE__).'/_fixtures/sftp_directory/..'),
-            filemtime(dirname(__FILE__).'/_fixtures/sftp_directory/..')
+            filetype(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/..')),
+            filesize(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/..')),
+            filemtime(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/..'))
         );
 
         $this->expected_item_03 = new Proftpd_Directory_DirectoryItem(
             'file01.txt',
-            filetype(dirname(__FILE__).'/_fixtures/sftp_directory/file01.txt'),
-            filesize(dirname(__FILE__).'/_fixtures/sftp_directory/file01.txt'),
-            filemtime(dirname(__FILE__).'/_fixtures/sftp_directory/file01.txt')
+            filetype(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/file01.txt')),
+            filesize(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/file01.txt')),
+            filemtime(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/file01.txt'))
         );
 
         $this->expected_item_04 = new Proftpd_Directory_DirectoryItem(
             'folder01',
-            filetype(dirname(__FILE__).'/_fixtures/sftp_directory/folder01'),
-            filesize(dirname(__FILE__).'/_fixtures/sftp_directory/folder01'),
-            filemtime(dirname(__FILE__).'/_fixtures/sftp_directory/folder01')
+            filetype(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder01')),
+            filesize(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder01')),
+            filemtime(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder01'))
+        );
+
+        $this->expected_item_05 = new Proftpd_Directory_DirectoryItem(
+            'folder9',
+            filetype(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder9')),
+            filesize(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder9')),
+            filemtime(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder9'))
+        );
+
+        $this->expected_item_06 = new Proftpd_Directory_DirectoryItem(
+            'folder10',
+            filetype(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder10')),
+            filesize(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder10')),
+            filemtime(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder10'))
         );
 
         $this->parser = new Proftpd_Directory_DirectoryParser();
     }
 
     public function itReturnsContentOfDirectoryInformation() {
-        $path   = dirname(__FILE__).'/_fixtures/sftp_directory';
+        $path   = realpath(dirname(__FILE__).'/_fixtures/sftp_directory');
         $items  = $this->parser->parseDirectory($path);
 
-        $this->assertEqual($items[0], $this->expected_item_01);
-        $this->assertEqual($items[1], $this->expected_item_02);
-        $this->assertEqual($items[2], $this->expected_item_03);
-        $this->assertEqual($items[3], $this->expected_item_04);
+        $folders = $items->getFolders();
+        $files   = $items->getFiles();
+
+        $this->assertCount($folders, 3);
+        $this->assertCount($files, 1);
+
+        $this->assertIsA($folders[0], 'Proftpd_Directory_DirectoryItem');
+        $this->assertIsA($folders[1], 'Proftpd_Directory_DirectoryItem');
+        $this->assertIsA($folders[2], 'Proftpd_Directory_DirectoryItem');
+        $this->assertIsA($files[0], 'Proftpd_Directory_DirectoryItem');
     }
 
     public function itReturnsContentOfDirectoryInformationIfPathEndsBySlash() {
-        $path   = dirname(__FILE__).'/_fixtures/sftp_directory/';
+        $path   = realpath(dirname(__FILE__).'/_fixtures/sftp_directory/');
         $items  = $this->parser->parseDirectory($path);
 
-        $this->assertEqual($items[0], $this->expected_item_01);
-        $this->assertEqual($items[1], $this->expected_item_02);
-        $this->assertEqual($items[2], $this->expected_item_03);
-        $this->assertEqual($items[3], $this->expected_item_04);
+        $folders = $items->getFolders();
+        $files   = $items->getFiles();
+
+        $this->assertCount($folders, 3);
+        $this->assertCount($files, 1);
+
+        $this->assertIsA($folders[0], 'Proftpd_Directory_DirectoryItem');
+        $this->assertIsA($files[0], 'Proftpd_Directory_DirectoryItem');
+    }
+
+    public function itDoesNotReturnDotFolders() {
+        $path   = realpath(dirname(__FILE__).'/_fixtures/sftp_directory');
+        $items  = $this->parser->parseDirectory($path);
+
+        foreach ($items->getFolders() as $folder) {
+            $this->assertFalse($folder->getName() == '..');
+            $this->assertFalse($folder->getName() == '.');
+        }
+    }
+
+    public function itReturnsFilesAndFoldersInANaturalOrder() {
+        $path   = realpath(dirname(__FILE__).'/_fixtures/sftp_directory');
+        $items  = $this->parser->parseDirectory($path);
+
+        $folders = $items->getFolders();
+
+        $folder1 = $folders[0];
+        $folder2 = $folders[1];
+        $folder3 = $folders[2];
+
+        $this->assertEqual('folder01', $folder1->getName());
+        $this->assertEqual('folder9',  $folder2->getName());
+        $this->assertEqual('folder10', $folder3->getName());
+    }
+
+    public function itReturnsContentOfSubDirectoryInformation() {
+        $path   = realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder01');
+        $items  = $this->parser->parseDirectory($path);
+
+        $folders = $items->getFolders();
+        $files   = $items->getFiles();
+
+        $this->assertCount($folders, 0);
+        $this->assertCount($files, 1);
+
+        $this->assertIsA($files[0], 'Proftpd_Directory_DirectoryItem');
     }
 
 }

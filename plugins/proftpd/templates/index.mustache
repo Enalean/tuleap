@@ -34,20 +34,24 @@
             </tr>
         </thead>
         <tbody>
-            {{# directory_items }}
+            {{# folder_list }}
                 <tr>
                     <td>
-                        {{# isDirectory }}
                         <i class="icon-folder-close"></i> <a href="{{ current_directory_url }}{{ getName }}">{{ getName }}</a>
-                        {{/ isDirectory }}
-                        {{^ isDirectory }}
-                            <i class="icon-file-text-alt"></i> {{ getName }}
-                        {{/ isDirectory }}
                     </td>
                     <td>{{ getSize }}</td>
                     <td>{{ getLastModifiedDate }}</td>
                 </tr>
-            {{/ directory_items }}
+            {{/ folder_list }}
+            {{# file_list }}
+                <tr>
+                    <td>
+                        <i class="icon-file-text-alt"></i> {{ getName }}
+                    </td>
+                    <td>{{ getSize }}</td>
+                    <td>{{ getLastModifiedDate }}</td>
+                </tr>
+            {{/ file_list }}
         </tbody>
     </table>
 </div>

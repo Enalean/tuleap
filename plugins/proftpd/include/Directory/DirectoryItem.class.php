@@ -58,10 +58,4 @@ class Proftpd_Directory_DirectoryItem {
     public function getLastModifiedDate() {
         return date('Y M d H:i', $this->last_modified_date);
     }
-
-    public function isDirectory() {
-        return $this->type === 'dir';
-    }
 }
-
-?>
