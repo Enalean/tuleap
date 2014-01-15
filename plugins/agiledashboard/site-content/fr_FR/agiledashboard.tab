@@ -84,9 +84,11 @@ plugin_agiledashboard_contentpane	inconsistent_items_intro	Voici les éléments 
 plugin_agiledashboard_contentpane	solve_inconsistencies	Importer dans le backlog
 
 plugin_agiledashboard_milestone_planning	help_intro	Cette section vous permet de faire votre planning de $1:
-plugin_agiledashboard_milestone_planning	help_left	Sur la gauche, le backlog de $2, avec tous les éléments ouverts, non encore plannifiés dans un $1
+plugin_agiledashboard_milestone_planning	help_left	Sur la gauche, le backlog de $2, avec tous les éléments ouverts, non encore planifiés dans un(e) $1
+plugin_agiledashboard_milestone_planning	help_left_top	Sur la gauche, le backlog complet, avec tous les éléments ouverts, non encore planifiés dans un(e) $1
 plugin_agiledashboard_milestone_planning	help_right	Sur la droite, la liste des $1 qui appartiennent à $2.
-plugin_agiledashboard_milestone_planning	help_dnd	Lorsque vous clickez sur un(e) $1, le backlog de ce(tte) $1 appartait. Vous pouvez faire un glissé-déposé des éléments de gauche à droite.
+plugin_agiledashboard_milestone_planning	help_right_top	Sur la droite, la liste de tous les $1.
+plugin_agiledashboard_milestone_planning	help_dnd	Lorsque vous cliquez sur un(e) $1, le backlog de ce(tte) $1 apparaît. Vous pouvez faire un glisser-déposer des éléments de gauche à droite.
 plugin_agiledashboard_milestone_planning	backlog_title	$1 backlog
 plugin_agiledashboard_milestone_planning	list_of_submilestone_title	Liste des $1 de $2
 plugin_agiledashboard_milestone_planning	list_of_milestone_title	Liste des $1
