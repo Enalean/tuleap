@@ -23,9 +23,20 @@
 !function($) {
     var esc_keycode = 27;
 
+    /**
+     * @see http://css-tricks.com/snippets/jquery/make-jquery-contains-case-insensitive/
+     */
+    (function addCaseInsensitiveContainsSelector(){
+        // NEW selector
+        $.expr[':'].caseInsensitiveContains = function(a, i, m) {
+          return $(a).text().toUpperCase()
+              .indexOf(m[3].toUpperCase()) >= 0;
+        };
+    })()
+
     function filterProjects(value) {
-        $('.projects-nav .dropdown-menu > li.project:not(:contains(' + value + '))').hide();
-        $('.projects-nav .dropdown-menu > li.project:contains(' + value + ')').show();
+        $('.projects-nav .dropdown-menu > li.project:not(:caseInsensitiveContains(' + value + '))').hide();
+        $('.projects-nav .dropdown-menu > li.project:caseInsensitiveContains(' + value + ')').show();
     }
 
     function clearFilterProjects() {
