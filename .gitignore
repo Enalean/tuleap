@@ -23,6 +23,7 @@ plugins/maillog
 !src/www/scripts/ckeditor/*.css
 !src/www/scripts/tiny_mce/*.css
 !src/www/scripts/bootstrap/bootstrap-select/*.css
+!src/www/scripts/jscrollpane/*.css
 !src/www/svn/repos-web/*.css
 !src/www/themes/common/css/bootstrap-2.3.0.min.css
 !src/www/themes/common/css/bootstrap-responsive-2.3.0.min.css

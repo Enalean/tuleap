@@ -96,6 +96,8 @@
     $(document).ready(function() {
         var current_size = getSidebarUserPreference();
 
+        $('.sidebar-nav').jScrollPane();
+
         if ($('.sidebar-nav').length > 0) {
             $('.sidebar-nav li a').tooltip({
                 placement: 'right',

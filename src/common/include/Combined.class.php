@@ -43,6 +43,8 @@ class Combined {
             '/scripts/bootstrap/bootstrap-tooltip-fix-prototypejs-conflict.js',
             '/scripts/bootstrap/bootstrap-popover.js',
             '/scripts/bootstrap/bootstrap-select/bootstrap-select.js',
+            '/scripts/jscrollpane/jquery.mousewheel.js',
+            '/scripts/jscrollpane/jquery.jscrollpane.min.js',
             '/scripts/AZHU/storage.js',
             '/scripts/codendi/common.js',
             '/scripts/tuleap/systray.js',
