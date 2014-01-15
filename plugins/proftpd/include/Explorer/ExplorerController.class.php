@@ -31,10 +31,53 @@ class Proftpd_ExplorerController {
     }
 
     public function index() {
-        $presenter = new Proftpd_Presenter_AdminPresenter();
-        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(PROFTPD_BASE_DIR).'/templates');
+        $path       = $this->getDirectoryPath();
+        $path_parts = $this->getPathParts($path);
 
-        echo $renderer->renderToString('index', $presenter);
+        $parser     = new Proftpd_Directory_DirectoryParser();
+        $items      = $parser->parseDirectory(proftpdPlugin::BASE_DIRECTORY.'/'.$path);
+        $project    = $this->request->getProject();
+
+        if (! $project) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_proftpd', 'cannot_open_project'));
+            return;
+        }
+
+        $presenter = new Proftpd_Presenter_ExplorerPresenter(
+            $path_parts,
+            $path,
+            $items,
+            $project
+        );
+
+        echo $this->getRenderer()->renderToString('index', $presenter);
+    }
+
+    private function getDirectoryPath() {
+        $path = $this->request->get('path');
+        if (! $path) {
+            return '';
+        }
+
+        return urldecode($path);
+    }
+
+    private function getPathParts($path) {
+        $path_parser = new Proftpd_Directory_DirectoryPathParser();
+        return $path_parser->getPathParts($path);
+    }
+
+    private function userCanAccess(Project $project) {
+        $user = $this->request->getCurrentUser();
+
+        if (! $project->isPublic() && ! $user->isMember($project->getID()) && ! $user->isSuperUser()) {
+            return false;
+        }
+        return true;
+    }
+
+    private function getRenderer() {
+        return TemplateRendererFactory::build()->getRenderer(dirname(PROFTPD_BASE_DIR).'/templates');
     }
 }
 ?>

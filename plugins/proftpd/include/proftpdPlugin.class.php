@@ -21,6 +21,13 @@ require_once 'constants.php';
 
 class proftpdPlugin extends Plugin {
 
+    const BASE_DIRECTORY = '/tmp';
+
+    public function __construct($id) {
+        parent::__construct($id);
+        $this->_addHook('cssfile', 'cssFile', false);
+    }
+
     public function getPluginInfo() {
         if (! is_a($this->pluginInfo, 'ProftpdPluginInfo')) {
             $this->pluginInfo = new ProftpdPluginInfo($this);
@@ -44,15 +51,28 @@ class proftpdPlugin extends Plugin {
     }
 
     private function displayHeader($request) {
-        site_header(array(
+        $params = array(
             'title'     => $GLOBALS['Language']->getText('plugin_proftpd', 'service_lbl_key'),
             'pagename'  => $GLOBALS['Language']->getText('plugin_proftpd', 'service_lbl_key'),
             'toptab'    => "proftpd",
-            'group'     => $request->get('group_id'),
-        ));
+        );
+
+        if ($request->get('group_id')) {
+            $params['group'] = $request->get('group_id');
+        }
+
+        site_header($params);
     }
 
     private function displayFooter() {
         site_footer(array());
+    }
+
+    public function cssFile($params) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
+        ) {
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
+        }
     }
 }

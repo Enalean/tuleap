@@ -1,1 +1,53 @@
-This is the listing of the sftp directory
+<div class="sftp_directory_listing">
+    <ul class="nav nav-pills">
+            <li class="{{^ is_in_subdirectory }}active{{/ is_in_subdirectory }}">
+                <a href="{{ nav_url }}">{{ project_name }}</a>
+                <i></i>
+            </li>
+        {{# parent_directories }}
+            <li>
+                <i class="icon-angle-right"></i>
+            </li>
+            <li>
+                <a href="{{ nav_url }}{{ path_to_part }}">{{ path_part_name }}</a>
+                <i></i>
+            </li>
+        {{/ parent_directories }}
+        {{# is_in_subdirectory }}
+            <li>
+                <i class="icon-angle-right"></i>
+            </li>
+            <li class="active">
+                <a href="">{{ current_directory }}</a>
+                <i></i>
+            </li>
+        {{/ is_in_subdirectory }}
+    </ul>
+
+    <h2>{{ current_directory }}</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>{{ file_column_name }}</td>
+                <td>{{ size_column_name }}</td>
+                <td>{{ date_added_column_name }}</td>
+            </tr>
+        </thead>
+        <tbody>
+            {{# directory_items }}
+                <tr>
+                    <td>
+                        {{# isDirectory }}
+                        <i class="icon-folder-close"></i> <a href="{{ current_directory_url }}{{ getName }}">{{ getName }}</a>
+                        {{/ isDirectory }}
+                        {{^ isDirectory }}
+                            <i class="icon-file-text-alt"></i> {{ getName }}
+                        {{/ isDirectory }}
+                    </td>
+                    <td>{{ getSize }}</td>
+                    <td>{{ getLastModifiedDate }}</td>
+                </tr>
+            {{/ directory_items }}
+        </tbody>
+    </table>
+</div>

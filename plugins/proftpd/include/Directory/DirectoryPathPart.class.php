@@ -22,46 +22,29 @@
 /**
  * This class is a representation of an item into a SFTP directory
  */
-class Proftpd_Directory_DirectoryItem {
+class Proftpd_Directory_DirectoryPathPart {
 
-    /** @var String */
-    private $name;
+    /**
+     * The directory or file name
+     *
+     * @var string
+     */
+    public $path_part_name;
 
-    /** @var String */
-    private $type;
+    /**
+     * The relative path to this file or directory
+     *
+     * @var string
+     */
+    public $path_to_part;
 
-    /** @var int */
-    private $size;
-
-    /** @var int */
-    private $last_modified_date;
-
-    public function __construct($name, $type, $size, $last_modified_date) {
-        $this->name               = $name;
-        $this->type               = $type;
-        $this->size               = $size;
-        $this->last_modified_date = $last_modified_date;
-    }
-
-    public function getName() {
-        return $this->name;
-    }
-
-    public function getSize() {
-        return $this->size;
-    }
-
-    public function getType() {
-        return $this->type;
-    }
-
-    public function getLastModifiedDate() {
-        return date('Y M d H:i', $this->last_modified_date);
-    }
-
-    public function isDirectory() {
-        return $this->type === 'dir';
+    /**
+     * @param string $path_part_name
+     * @param string $path_to_part
+     */
+    public function __construct($path_part_name, $path_to_part) {
+        $this->path_part_name = $path_part_name;
+        $this->path_to_part   = $path_to_part;
     }
 }
-
 ?>

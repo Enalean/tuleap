@@ -1,3 +1,9 @@
 plugin_proftpd	service_lbl_key	(S)FTP Browser
 plugin_proftpd	descriptor_description	Control and interfact with Proftpd as FTP server
 plugin_proftpd	descriptor_name	Proftpd
+
+plugin_proftpd	file_column_name	File
+plugin_proftpd	size_column_name	Size (KB)
+plugin_proftpd	date_added_column_name	Date Added
+
+plugin_proftpd	cannot_open_project	Cannot open project
