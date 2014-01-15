@@ -20,20 +20,23 @@
 define('IS_SCRIPT', true);
 
 require_once 'pre.php';
-
-if (! session_issecure() && ! Config::get('DEBUG_MODE') && ! isset($GLOBALS['DEBUG_MODE'])) {
-    header("HTTP/1.0 403 Forbidden");
-    $GLOBALS['Response']->sendJSON(array(
-        'error' => 'The API is only accessible over HTTPS.'
-    ));
-    die();
-}
-
 require_once '/usr/share/restler/vendor/restler.php';
 
+use Tuleap\REST\GateKeeper;
 use Luracast\Restler\Restler;
 use Luracast\Restler\Resources;
 use Luracast\Restler\Defaults;
+
+try {
+    $gate_keeper = new GateKeeper();
+    $gate_keeper->assertAccess(UserManager::instance()->getCurrentUser());
+} catch (Exception $exception) {
+    header("HTTP/1.0 403 Forbidden");
+    $GLOBALS['Response']->sendJSON(array(
+        'error' => $exception->getMessage()
+    ));
+    die();
+}
 
 // Do not put .json at the end of the resource
 Resources::$useFormatAsExtension = false;

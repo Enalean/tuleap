@@ -81,13 +81,15 @@
             if (isFullScreen) {
                 main.css('margin-left', 0);
                 $('.milestone-name').addClass('span3');
-                $('.milestone-days').removeClass('span5').addClass('span4');
+                $('.milestone-days').removeClass('span5').addClass('span3');
                 $('.milestone-capacity').removeClass('span5').addClass('span4');
+                $('.milestone-burndown').show();
 
             } else {
                 $('.milestone-name').removeClass('span3');
-                $('.milestone-days').removeClass('span4').addClass('span5');
+                $('.milestone-days').removeClass('span3').addClass('span5');
                 $('.milestone-capacity').removeClass('span4').addClass('span5');
+                $('.milestone-burndown').hide();
             }
         }
 
@@ -102,6 +104,10 @@
 
         function scrollToTop() {
             $('html, body').scrollTop(0);
+        }
+
+        function fetchBurndown() {
+            tuleap.agiledashboard.cardwall.fetchBurndown();
         }
 
         function exitFullScreen() {
@@ -122,6 +128,7 @@
             defineFullscreenClasses();
             defineMilestoneInfoBlockSize();
             updateButtonLabel();
+            fetchBurndown();
         }
 
         function browserIsIE() {

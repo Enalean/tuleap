@@ -1,0 +1,48 @@
+Proftpd plugin
+==============
+
+This plugin controls and interacts with Proftpd as FTP server
+
+Installation
+------------
+
+Activate EPEL repostitories and then:
+$> yum install proftpd
+
+If you already have vsftpd installed, you should uninstall it (yum remove vsftpd)
+
+Configure log rotation
+----------------------
+
+First, activate xferlog in proftpd config ``/etc/proftpd.conf``:
+
+    TransferLog                     /var/log/xferlog
+
+
+Then, in /etc/logrotate.d you should have ``proftpd`` but no ``vsftpd.log``.
+If the later exists, delete it.
+
+Edit /etc/logrotate.d/proftpd and remove reference to /var/log/xferlog, you should
+end with something like:
+
+    /var/log/proftpd/*.log {
+        compress
+        missingok
+        ...
+
+Create /etc/logrotate.d/xferlog and paste the following content:
+
+    /var/log/xferlog {
+        compress
+        missingok
+        notifempty
+        sharedscripts
+
+        prerotate
+                /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/plugins/proftpd/bin/parse_xferlog.php /var/log/xferlog
+        endscript
+
+        postrotate
+            test -f /var/lock/subsys/proftpd && /usr/bin/killall -HUP proftpd || :
+        endscript
+    }

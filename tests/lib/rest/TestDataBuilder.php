@@ -60,7 +60,7 @@ class TestDataBuilder {
     }
 
     public function activateDebug() {
-	Config::set('DEBUG_MODE', true);
+	Config::set('DEBUG_MODE', 1);
         return $this;
     }
 
@@ -104,6 +104,8 @@ class TestDataBuilder {
         ));
         $this->project_manager->activate($project);
 
+        $this->addMembersToProject($project, $user);
+
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['cvs_prefix']);
         unset($GLOBALS['grpdir_prefix']);
@@ -116,12 +118,18 @@ class TestDataBuilder {
         return $this;
     }
 
+    private function addMembersToProject($project, $user) {
+        include_once 'account.php';
+        account_add_user_to_group($project->getId(), $user->getUnixName());
+        UserManager::clearInstance();
+        $this->user_manager = UserManager::instance();
+    }
+
     public function importAgileTemplate() {
         echo "Create import XML\n";
 
         $xml_importer = new ProjectXMLImporter(
             EventManager::instance(),
-            $this->user_manager,
             $this->project_manager
         );
         $xml_importer->import(101, 'admin', dirname(__FILE__).'/../../rest/_fixtures/tuleap_agiledashboard_template.xml');
@@ -141,8 +149,11 @@ class TestDataBuilder {
         Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(6), $fields_data, $user, '');
 
         $fields_data = array(
-            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'name')->getId() => 'Sprint A',
-            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'status')->getId()  => '150'
+            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'name')->getId()       => 'Sprint A',
+            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'status')->getId()     => '150',
+            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'start_date')->getId() => '2014-1-9',
+            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'duration')->getId()   => '10',
+            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'capacity')->getId()   => '29',
         );
         Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(7), $fields_data, $user, '');
 

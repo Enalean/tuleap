@@ -116,6 +116,8 @@ class PlanningControllerTest_systrayTest extends PlanningControllerTest {
             $this->planning_factory,
             $this->planning_shortaccess_factory,
             $this->milestone_factory,
+            mock('ProjectManager'),
+            mock('ProjectXMLExporter'),
             $this->plugin_theme_path
         );
 

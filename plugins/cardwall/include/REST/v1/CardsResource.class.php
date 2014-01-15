@@ -19,6 +19,7 @@
  */
 namespace Tuleap\Cardwall\REST\v1;
 
+use \Tuleap\REST\ProjectAuthorization;
 use \Tuleap\REST\Header;
 use \Luracast\Restler\RestException;
 use \Cardwall_SingleCardBuilder;
@@ -144,6 +145,7 @@ class CardsResource {
             list($planning_id, $artifact_id) = explode('_', $id);
             $single_card = $this->single_card_builder->getSingleCard($user, $artifact_id, $planning_id);
             if ($single_card->getArtifact()->userCanView($user)) {
+                ProjectAuthorization::userCanAccessProject($user, $single_card->getArtifact()->getTracker()->getProject());
                 return $single_card;
             }
             throw new RestException(403);

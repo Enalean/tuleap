@@ -341,7 +341,9 @@ class AgileDashboardPlugin extends Plugin {
             $milestone_factory,
             $planning_factory,
             new Planning_ShortAccessFactory($planning_factory, $pane_info_factory),
-            $milestone_controller_factory
+            $milestone_controller_factory,
+            ProjectManager::instance(),
+            new ProjectXMLExporter(EventManager::instance())
         );
 
         $router->route($request);
@@ -529,8 +531,12 @@ class AgileDashboardPlugin extends Plugin {
      *
      */
     public function import_xml_project_cardwall_done($params) {
-        $params['action'] = 'import';
-        $request          = new Codendi_Request($params);
+        $request = new HTTPRequest($params);
+        $request->set('action', 'import');
+        $request->set('xml_content', $params['xml_content']);
+        $request->set('mapping', $params['mapping']);
+        $request->set('project_id', $params['project_id']);
+
         $this->process($request);
     }
 

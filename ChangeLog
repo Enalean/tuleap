@@ -1,3 +1,21 @@
+Version 6.10 (Not released yet)
+	== Plugins ==
+	* agiledashboard: 1.33
+	* boomerang: 0.2
+	* cardwall: 1.13
+	* tracker: 5.220
+	* proftpd: 0.2
+
+	* tests: 5.21
+
+	== Development ==
+	* Pull-out Vagrant and Chef in dedicated repositories
+	* agiledashboard: 1.32
+	* boomerang: 0.2
+	* cardwall: 1.13
+	* tracker: 5.218
+	* tracker: 5.219
+
 Version 6.9 (Thursday, January 9th 2014)
 	== Plugins ==
 	* tracker: 5.216

@@ -21,6 +21,7 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use \Tuleap\Project\REST\ProjectReference;
 use \Planning_Milestone;
 use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use \Tuleap\Tracker\REST\Artifact\BurndownRepresentation;
 use \Tuleap\REST\JsonCast;
 
 use \AgileDashboard_MilestonesCardwallRepresentation;
@@ -118,6 +119,11 @@ class MilestoneRepresentation {
     public $cardwall_uri = null;
 
     /**
+     * @var string
+     */
+    public $burndown_uri = null;
+
+    /**
      * @var string Date, when the last modification occurs
      */
     public $last_modified_date;
@@ -163,5 +169,9 @@ class MilestoneRepresentation {
 
     public function enableCardwall() {
         $this->cardwall_uri = $this->uri . '/'. AgileDashboard_MilestonesCardwallRepresentation::ROUTE;
+    }
+
+    public function enableBurndown() {
+        $this->burndown_uri = $this->uri . '/'. BurndownRepresentation::ROUTE;
     }
 }

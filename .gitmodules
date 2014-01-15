@@ -1,3 +1,0 @@
-[submodule "tools/vagrant/chef-solo/cookbooks/yum"]
-	path = tools/vagrant/chef-solo/cookbooks/yum
-	url = git://github.com/opscode-cookbooks/yum.git
