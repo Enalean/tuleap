@@ -4,8 +4,6 @@ grammar {
     start = element artifacts {
         element artifact {
             attribute id { xsd:int },
-            element submitted_by { user_content },
-            element submitted_on { date_content },
             element changeset {
                 element submitted_by { user_content },
                 element submitted_on { date_content },
