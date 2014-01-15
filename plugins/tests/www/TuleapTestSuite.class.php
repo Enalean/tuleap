@@ -25,8 +25,14 @@ class TuleapTestSuite extends TestSuite {
 class TuleapTestCollector extends SimpleCollector {
 
     public function collect($testSuite, $path) {
-        $rii = new FilterTestCase(new RecursiveIteratorIterator(new RecursiveCachingIterator(new RecursiveDirectoryIterator($path)),
-               RecursiveIteratorIterator::SELF_FIRST));
+        $rii = new FilterTestCase(
+            new RecursiveIteratorIterator(
+                new FilterDirectoryLikeASir(
+                    new RecursiveDirectoryIterator($path)
+                ),
+                RecursiveIteratorIterator::SELF_FIRST
+            )
+        );
         foreach ($rii as $file) {
             $this->_handle($testSuite, $file->getPathname());
         }
@@ -48,8 +54,23 @@ class FilterTestCase extends FilterIterator {
         );
     }
 
+
     private function phpVersionIsGreaterOrEqualThanPhp53() {
         return version_compare(phpversion(), '5.3', '>=');
+    }
+}
+
+class FilterDirectoryLikeASir extends RecursiveFilterIterator {
+    public function accept() {
+        $file = $this->getInnerIterator()->current();
+        if ($this->isForbiddenForSimpleTest($file)) {
+            return false;
+        }
+        return true;
+    }
+
+    private function isForbiddenForSimpleTest($file) {
+        return file_exists($file->getPathname() . '/.simpletest_skip');
     }
 }
 
