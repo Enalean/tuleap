@@ -55,7 +55,23 @@ class Tracker_Artifact_XMLImport {
     }
 
     private function importOneArtifact(Tracker $tracker, SimpleXMLElement $xml_artifact) {
-        $this->importInitialChangeset($tracker, $xml_artifact->changeset[0]);
+        if (count($xml_artifact->changeset) > 0) {
+            $changesets      = $this->getSortedBySubmittedOn($xml_artifact->changeset);
+            $first_changeset = array_shift($changesets);
+            $artifact        = $this->importInitialChangeset($tracker, $first_changeset);
+            if (count($changesets)) {
+                $this->importRemainingChangesets($tracker, $artifact, $changesets);
+            }
+        }
+    }
+
+    private function getSortedBySubmittedOn(SimpleXMLElement $changesets) {
+        $changeset_array = array();
+        foreach ($changesets as $changeset) {
+            $changeset_array[$this->getSubmittedOn($changeset)] = $changeset;
+        }
+        ksort($changeset_array, SORT_NUMERIC);
+        return $changeset_array;
     }
 
     private function importInitialChangeset(Tracker $tracker, SimpleXMLElement $xml_changeset) {
@@ -64,7 +80,7 @@ class Tracker_Artifact_XMLImport {
             $email              = '';
             $send_notifications = false;
 
-            $this->artifact_factory->createArtifactAt(
+            $artifact = $this->artifact_factory->createArtifactAt(
                 $tracker,
                 $fields_data,
                 $this->getSubmittedBy($xml_changeset),
@@ -72,9 +88,31 @@ class Tracker_Artifact_XMLImport {
                 $this->getSubmittedOn($xml_changeset),
                 $send_notifications
             );
+            if ($artifact) {
+                return $artifact;
+            } else {
+                throw new Tracker_Artifact_Exception_CannotCreateInitialChangeset();
+            }
         }
+        throw new Tracker_Artifact_Exception_EmptyChangesetException();
     }
 
+    private function importRemainingChangesets(Tracker $tracker, Tracker_Artifact $artifact, array $xml_changesets) {
+        foreach($xml_changesets as $xml_changeset) {
+            $comment           = '';
+            $send_notification = false;
+            $result = $artifact->createNewChangesetAt(
+                $this->getFieldsData($tracker, $xml_changeset->field_change),
+                $comment,
+                $this->getSubmittedBy($xml_changeset),
+                $this->getSubmittedOn($xml_changeset),
+                $send_notification
+            );
+            if (! $result) {
+                throw new Tracker_Artifact_Exception_CannotCreateNewChangeset();
+            }
+        }
+    }
 
     private function getFieldsData(Tracker $tracker, SimpleXMLElement $xml_field_change) {
         $data = array();

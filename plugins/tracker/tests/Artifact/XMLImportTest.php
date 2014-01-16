@@ -33,6 +33,8 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
     protected $john_doe;
     protected $formelement_factory;
     protected $user_manager;
+    protected $artifact;
+
 
     public function setUp() {
         parent::setUp();
@@ -51,6 +53,8 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
         stub($this->user_manager)->getUserByIdentifier('john_doe')->returns($this->john_doe);
         stub($this->user_manager)->getUserAnonymous()->returns(new PFUser(array('user_id' => 0)));
 
+        $this->artifact = mock('Tracker_Artifact');
+
         $this->importer = new Tracker_Artifact_XMLImport(
             mock('XML_RNGValidator'),
             $this->artifact_factory,
@@ -67,6 +71,8 @@ class Tracker_Artifact_XMLImport_HappyPathTest extends Tracker_Artifact_XMLImpor
 
     public function setUp() {
         parent::setUp();
+
+        stub($this->artifact_factory)->createArtifactAt()->returns(mock('Tracker_Artifact'));
 
         $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
             <artifacts>
@@ -144,8 +150,10 @@ class Tracker_Artifact_XMLImport_NoFieldTest extends Tracker_Artifact_XMLImportB
             </artifacts>');
     }
 
-    public function itSkipsWhenFieldDoesntExists() {
+    public function itThrowAnExceptionWhenFieldDoesntExist() {
         expect($this->artifact_factory)->createArtifactAt()->never();
+
+        $this->expectException('Tracker_Artifact_Exception_EmptyChangesetException');
 
         $this->importer->importFromXML($this->tracker, $this->xml_element);
     }
@@ -156,6 +164,8 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
 
     public function setUp() {
         parent::setUp();
+
+        stub($this->artifact_factory)->createArtifactAt()->returns(mock('Tracker_Artifact'));
 
         $this->user_manager = mock('UserManager');
         stub($this->user_manager)->getUserAnonymous()->returns(new PFUser(array('user_id' => 0)));
@@ -251,6 +261,145 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
         expect($this->artifact_factory)->createArtifactAt('*', '*', $this->john_doe, '*', '*', '*')->once();
 
         $this->importer->importFromXML($this->tracker, $xml_element);
+    }
+}
+
+class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $xml_element;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <field_change field_name="summary">
+                    <value>Ça marche</value>
+                  </field_change>
+                </changeset>
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T11:03:50+01:00</submitted_on>
+                  <field_change field_name="summary">
+                    <value>^Wit updates</value>
+                  </field_change>
+                </changeset>
+              </artifact>
+            </artifacts>');
+
+        stub($this->artifact_factory)->createArtifactAt()->returns($this->artifact);
+        stub($this->artifact)->createNewChangesetAt()->returns(true);
+    }
+
+    public function itCreatesTwoChangesets() {
+        expect($this->artifact_factory)->createArtifactAt()->once();
+        expect($this->artifact)->createNewChangesetAt()->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element);
+    }
+
+    public function itCreatesTheNewChangesetWithSummaryValue() {
+        $data = array(
+            $this->summary_field_id => '^Wit updates'
+        );
+        expect($this->artifact)->createNewChangesetAt($data, '*', '*', '*', '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element);
+    }
+
+    public function itCreatesTheNewChangesetWithSubmitter() {
+        expect($this->artifact)->createNewChangesetAt('*', '*', $this->john_doe, '*', '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element);
+    }
+
+    public function itCreatesTheNewChangesetWithoutNotification() {
+        expect($this->artifact)->createNewChangesetAt('*', '*', '*', '*', false)->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element);
+    }
+
+
+    public function itCreatesTheChangesetsAccordingToDates() {
+        expect($this->artifact_factory)->createArtifactAt('*', '*', '*', '*', strtotime('2014-01-15T10:38:06+01:00'), '*')->once();
+        
+        expect($this->artifact)->createNewChangesetAt('*', '*', '*', strtotime('2014-01-15T11:03:50+01:00'), '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element);
+    }
+
+    public function itCreatesTheChangesetsInAscendingDatesEvenWhenChangesetsAreMixedInXML() {
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T11:03:50+01:00</submitted_on>
+                  <field_change field_name="summary">
+                    <value>^Wit updates</value>
+                  </field_change>
+                </changeset>
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <field_change field_name="summary">
+                    <value>Ça marche</value>
+                  </field_change>
+                </changeset>
+              </artifact>
+            </artifacts>');
+
+        expect($this->artifact_factory)->createArtifactAt('*', '*', '*', '*', strtotime('2014-01-15T10:38:06+01:00'), '*')->once();
+
+        expect($this->artifact)->createNewChangesetAt('*', '*', '*', strtotime('2014-01-15T11:03:50+01:00'), '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element);
+    }
+}
+
+class Tracker_Artifact_XMLImport_SeveralArtifactsTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $xml_element;
+
+
+    public function setUp() {
+        parent::setUp();
+
+        stub($this->artifact_factory)->createArtifactAt()->returns($this->artifact);
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <field_change field_name="summary">
+                    <value>Ça marche</value>
+                  </field_change>
+                </changeset>
+              </artifact>
+              <artifact id="4913">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-16T11:38:06+01:00</submitted_on>
+                  <field_change field_name="summary">
+                    <value>Ça marche</value>
+                  </field_change>
+                </changeset>
+              </artifact>
+            </artifacts>');
+    }
+
+    public function itCreatesTwoArtifactsOnTracker() {
+        expect($this->artifact_factory)->createArtifactAt()->count(2);
+        expect($this->artifact_factory)->createArtifactAt('*', '*', '*', '*', strtotime('2014-01-15T10:38:06+01:00'), '*')->at(0);
+        expect($this->artifact_factory)->createArtifactAt('*', '*', '*', '*', strtotime('2014-01-16T11:38:06+01:00'), '*')->at(1);
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element);
     }
 }
 
