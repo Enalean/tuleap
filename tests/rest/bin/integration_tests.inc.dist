@@ -18,10 +18,14 @@ $sys_custompluginsroot = $sys_custom_dir . "/plugins/";
 
 $sys_password_lifetime = 10000000000000;
 $sys_default_domain = 'localhost:8089';
+$sys_name = 'Tuleap Tests';
+$sys_noreply = 'noreply@localhost';
 
 $sys_incdir = $codendi_dir . '/site-content';
 $sys_custom_incdir = '/tmp/run_tests';
 $sys_pluginsroot = $codendi_dir . '/plugins';
+$sys_pluginspath = '/plugins';
+$sys_custompluginspath = '/custom/plugins';
 
 $htmlpurifier_dir = '/usr/share/htmlpurifier';
 $jpgraph_dir = '/usr/share/jpgraph';
