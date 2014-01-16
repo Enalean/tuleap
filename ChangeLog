@@ -5,8 +5,10 @@ Version 6.10 (Not released yet)
 	* cardwall: 1.13
 	* tracker: 5.220
 	* proftpd: 0.2
-
 	* tests: 5.21
+
+	== Enhancement ==
+	* Story #5678: contact administrators of a project
 
 	== Development ==
 	* Pull-out Vagrant and Chef in dedicated repositories

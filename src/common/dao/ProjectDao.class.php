@@ -137,13 +137,20 @@ class ProjectDao extends DataAccessObject {
         $user_id = $this->da->escapeInt($user_id);
         $sql = "SELECT groups.*
             FROM groups
-              JOIN user_group ON (user_group.group_id = groups.group_id)
+              JOIN user_group USING (group_id)
             WHERE user_group.user_id = $user_id
               $where
               AND groups.status='A'
-            ORDER BY group_name";
+            ORDER BY groups.group_name ASC";
         return $this->retrieve($sql);
     }
+
+//    SELECT groups.group_id, groups.group_name, groups.unix_group_name, groups.status, groups.is_public, user_group.admin_flags".
+//                           " FROM groups".
+//                           " JOIN user_group USING (group_id)".
+//                           " WHERE user_group.user_id = ".$user->getId().
+//                           " AND groups.status = 'A'".
+//                           " ORDER BY $order"
 
     public function updateStatus($id, $status) {
         $sql = 'UPDATE groups'.
