@@ -560,8 +560,8 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
 
     function testCreateInitialChangeset() {
         $dao = new MockTracker_Artifact_ChangesetDao();
-        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null));
-        $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
+        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
+        $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
         $dao->expectCallCount('create', 1);
 
         $user = mock('PFUser');
@@ -620,7 +620,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $fields_data = array(
             102 => '123',
         );
-        $this->assertEqual($artifact->createInitialChangeset($fields_data, $user, $email), 1001);
+        $this->assertEqual($artifact->createInitialChangeset($fields_data, $user, $_SERVER['REQUEST_TIME']), 1001);
         $this->assertFalse(isset($fields_data[101]));
         $this->assertFalse(isset($fields_data[103]));
 
@@ -628,7 +628,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $fields_data = array(
             102 => '456',
         );
-        $this->assertNull($artifact->createInitialChangeset($fields_data, $user, $email));
+        $this->assertNull($artifact->createInitialChangeset($fields_data, $user, $_SERVER['REQUEST_TIME']));
         $this->assertFalse(isset($fields_data[101]));
         $this->assertFalse(isset($fields_data[103]));
     }
@@ -699,7 +699,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
             102 => '456'
         );
         stub($workflow)->checkGlobalRules($updated_fields_data_by_workflow, $factory)->once()->throws(new Tracker_Workflow_GlobalRulesViolationException());
-        $this->assertFalse($artifact->createInitialChangeset($fields_data, $user, $email));
+        $this->assertFalse($artifact->createInitialChangeset($fields_data, $user, $_SERVER['REQUEST_TIME']));
     }
 
     function testCreateInitialChangesetAnonymousNoEmail() {
@@ -752,18 +752,20 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $fields_data = array(
             102 => '123',
         );
-        $this->assertNull($artifact->createInitialChangeset($fields_data, $user, $email));
+        $this->assertNull($artifact->createInitialChangeset($fields_data, $user, $_SERVER['REQUEST_TIME']));
     }
 
     function testCreateInitialChangesetAnonymousWithEmail() {
+        $email = 'anonymous@nolog.org'; // anonymous user with email
+
         $dao = new MockTracker_Artifact_ChangesetDao();
-        $dao->setReturnValueAt(0, 'create', 1001, array(66, 0, 'anonymous@codendi.org'));
+        $dao->setReturnValueAt(0, 'create', 1001, array(66, 0, $email, $_SERVER['REQUEST_TIME']));
         $dao->expectCallCount('create', 1);
 
         $user = mock('PFUser');
         $user->setReturnValue('getId', 0);
         $user->setReturnValue('isAnonymous', true);
-        $email = 'anonymous@codendi.org'; // anonymous user with email
+        $user->setReturnValue('getEmail', $email);
 
         $tracker = new MockTracker();
         $factory = new MockTracker_FormElementFactory();
@@ -816,7 +818,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $fields_data = array(
             102 => '123',
         );
-        $this->assertEqual($artifact->createInitialChangeset($fields_data, $user, $email), 1001);
+        $this->assertEqual($artifact->createInitialChangeset($fields_data, $user, $_SERVER['REQUEST_TIME']), 1001);
         $this->assertFalse(isset($fields_data[101]));
         $this->assertFalse(isset($fields_data[103]));
     }
@@ -824,7 +826,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
     function testCreateInitialChangesetWithWorkflowAndNoPermsOnPostActionField() {
 
         $dao = new MockTracker_Artifact_ChangesetDao();
-        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null));
+        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
         $dao->expectCallCount('create', 1);
 
         $user = mock('PFUser');
@@ -877,7 +879,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
             101 => '123',
         );
 
-        $this->assertEqual($artifact->createInitialChangeset($fields_data, $user, $email), 1001);
+        $this->assertEqual($artifact->createInitialChangeset($fields_data, $user, $_SERVER['REQUEST_TIME']), 1001);
     }
 
     function testCreateNewChangesetWithWorkflowAndNoPermsOnPostActionField() {
@@ -888,8 +890,8 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $comment_dao->expectCallCount('createNewVersion', 1);
 
         $dao = new MockTracker_Artifact_ChangesetDao();
-        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null));
-        $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
+        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
+        $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
         $dao->expectCallCount('create', 1);
 
         $user = mock('PFUser');
@@ -996,8 +998,8 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $comment_dao->expectCallCount('createNewVersion', 1);
 
         $dao = new MockTracker_Artifact_ChangesetDao();
-        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null));
-        $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
+        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
+        $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
         $dao->expectCallCount('create', 1);
 
         $user = mock('PFUser');
@@ -1101,8 +1103,8 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $comment_dao->expectNever('createNewVersion');
 
         $dao = new MockTracker_Artifact_ChangesetDao();
-        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null));
-        $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
+        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
+        $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
         $dao->expectNever('create');
 
         $user = mock('PFUser');
@@ -1203,8 +1205,8 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $comment_dao->expectCallCount('createNewVersion', 1);
 
         $dao = new MockTracker_Artifact_ChangesetDao();
-        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null));
-        $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
+        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
+        $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
         $dao->expectCallCount('create', 1);
 
         $user = mock('PFUser');
@@ -1672,7 +1674,7 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->fields_data = array();
-        $this->submitter   = aUser()->build();
+        $this->submitter   = aUser()->withId(74)->build();
         $this->email       = 'toto@example.net';
 
         $this->changeset_dao  = mock('Tracker_Artifact_ChangesetDao');
@@ -1704,6 +1706,8 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         stub($this->artifact)->getChangesetCommentDao()->returns(mock('Tracker_Artifact_Changeset_CommentDao'));
         stub($this->artifact)->getReferenceManager()->returns(mock('ReferenceManager'));
 
+        $this->submitted_on = $_SERVER['REQUEST_TIME'];
+
     }
 
     public function itCallsTheAfterMethodOnWorkflowWhenCreateInitialChangeset() {
@@ -1711,14 +1715,14 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         stub($this->artifact_factory)->save()->returns(true);
         expect($this->workflow)->after($this->fields_data, new IsAExpectation('Tracker_Artifact_Changeset'), null)->once();
 
-        $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->email);
+        $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->submitted_on);
     }
 
     public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfInitialChangesetFails() {
         stub($this->changeset_dao)->create()->returns(false);
         expect($this->workflow)->after()->never();
 
-        $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->email);
+        $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->submitted_on);
     }
 
     public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFails() {
@@ -1726,7 +1730,7 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         stub($this->artifact_factory)->save()->returns(false);
         expect($this->workflow)->after()->never();
 
-        $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->email);
+        $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->submitted_on);
     }
 
     public function itCallsTheAfterMethodOnWorkflowWhenCreateNewChangeset() {

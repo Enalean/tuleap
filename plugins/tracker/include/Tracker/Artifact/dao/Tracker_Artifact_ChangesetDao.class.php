@@ -42,13 +42,13 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    public function create($artifact_id, $submitted_by, $email) {
+    public function create($artifact_id, $submitted_by, $email, $submitted_on) {
         $artifact_id  = $this->da->escapeInt($artifact_id);
         $submitted_by = $this->da->escapeInt($submitted_by);
         if (!$submitted_by) {
             $submitted_by = 'NULL';
         }
-        $submitted_on = $this->da->escapeInt($_SERVER['REQUEST_TIME']);
+        $submitted_on = $this->da->escapeInt($submitted_on);
         $email        = $email ? $this->da->quoteSmart($email) : 'NULL';
         $sql = "INSERT INTO $this->table_name (artifact_id, submitted_by, submitted_on, email)
                 VALUES ($artifact_id, $submitted_by, $submitted_on, $email)";

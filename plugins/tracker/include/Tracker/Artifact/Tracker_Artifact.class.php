@@ -766,18 +766,18 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Create the initial changeset of this artifact
      *
-     * @param array  $fields_data The artifact fields values
-     * @param PFUser   $submitter   The user who did the artifact submission
-     * @param string $email       The email of the person who subvmitted the artifact if submission is done in anonymous mode
+     * @param array   $fields_data The artifact fields values
+     * @param PFUser  $submitter   The user who did the artifact submission
+     * @param integer $submitted_on When the changeset is created
      *
      * @return int The Id of the initial changeset, or null if fields were not valid
      */
-    public function createInitialChangeset($fields_data, $submitter, $email) {
+    public function createInitialChangeset($fields_data, $submitter, $submitted_on) {
         $changeset_id = null;
         $is_submission = true;
         $bypass_perms  = true;
 
-        if ( ! $submitter->isAnonymous() || $email != null) {
+        if ( ! $submitter->isAnonymous() || $submitter->getEmail() != '' ) {
             if ($this->validateFields($fields_data, true)) {
 
                 // Initialize a fake Changeset to ensure List & Workflow works with an "initial" thus empty state
@@ -793,7 +793,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         return false;
                     }
                 }
-                if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
+                $email = null;
+                if ($submitter->isAnonymous()) {
+                    $email = $submitter->getEmail();
+                }
+                if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email, $submitted_on)) {
 
                     //Store the value(s) of the fields
                     $used_fields = $this->getFormElementFactory()->getUsedFields($this->getTracker());
@@ -902,7 +906,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
          *
          */
         $this->getWorkflow()->before($fields_data, $submitter, $this);
-        $changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email);
+        $changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email, $_SERVER['REQUEST_TIME']);
         if(! $changeset_id) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'unable_update'));
             return false;

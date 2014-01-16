@@ -21,12 +21,18 @@
 require_once 'pre.php';
 
 try {
-    $tracker = TrackerFactory::instance()->getTrackerById($argv[1]);
+    $user_manager = UserManager::instance();
+    $user_manager->forceLogin($argv[1]);
+
+    $tracker = TrackerFactory::instance()->getTrackerById($argv[2]);
     if ($tracker) {
         $xml_import = new Tracker_Artifact_XMLImport(
-            new XML_RNGValidator()
+            new XML_RNGValidator(),
+            Tracker_ArtifactFactory::instance(),
+            Tracker_FormElementFactory::instance(),
+            $user_manager
         );
-        $xml_import->importFromFile($tracker, $argv[2]);
+        $xml_import->importFromFile($tracker, $argv[3]);
     }
 } catch (XML_ParseException $exception) {
     echo $exception->getMessage().PHP_EOL;
