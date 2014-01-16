@@ -32,5 +32,6 @@ try {
     echo $exception->getMessage().PHP_EOL;
     echo $exception->getIndentedXml().PHP_EOL;
     echo implode(PHP_EOL, $exception->getErrors()).PHP_EOL;
+    exit(1);
 }
 
