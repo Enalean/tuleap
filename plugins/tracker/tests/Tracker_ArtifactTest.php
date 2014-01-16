@@ -982,7 +982,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
             102 => '456'
         );
 
-        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
+        $artifact->createNewChangeset($fields_data, $comment, $user);
     }
 }
 
@@ -1080,7 +1080,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
             102 => '123',
         );
 
-        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
+        $artifact->createNewChangeset($fields_data, $comment, $user);
 
         // Not valid
         $fields_data = array(
@@ -1089,7 +1089,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         
         $this->expectException('Tracker_Exception');
         
-        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
+        $artifact->createNewChangeset($fields_data, $comment, $user);
 
     }
 
@@ -1192,7 +1192,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         stub($workflow)->checkGlobalRules($updated_fields_data_by_workflow, $factory)->once()->throws(new Tracker_Workflow_GlobalRulesViolationException());
         
         $this->expectException('Tracker_Exception');
-        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
+        $artifact->createNewChangeset($fields_data, $comment, $user);
     }
 
     function testCreateNewChangesetWithoutNotification() {
@@ -1287,14 +1287,14 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
             102 => '123',
         );
 
-        $artifact->createNewChangeset($fields_data, $comment, $user, $email, false);
+        $artifact->createNewChangeset($fields_data, $comment, $user, false);
 
         // Not valid
         $fields_data = array(
             102 => '456',
         );
         $this->expectException('Tracker_Exception');
-        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
+        $artifact->createNewChangeset($fields_data, $comment, $user);
     }
 
     function testDontCreateNewChangesetIfNoCommentOrNoChanges() {
@@ -1362,7 +1362,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         // Valid
         $fields_data = array();
         $this->expectException('Tracker_NoChangeException');
-        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
+        $artifact->createNewChangeset($fields_data, $comment, $user);
     }
 
     function testGetCommentators() {
@@ -1675,7 +1675,6 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         parent::setUp();
         $this->fields_data = array();
         $this->submitter   = aUser()->withId(74)->build();
-        $this->email       = 'toto@example.net';
 
         $this->changeset_dao  = mock('Tracker_Artifact_ChangesetDao');
         $this->changesets  = array(new Tracker_Artifact_Changeset_Null());
@@ -1738,7 +1737,7 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         stub($this->artifact_factory)->save()->returns(true);
         expect($this->workflow)->after($this->fields_data, new IsAExpectation('Tracker_Artifact_Changeset'), end($this->changesets))->once();
 
-        $this->artifact->createNewChangeset($this->fields_data, '', $this->submitter, $this->email, false);
+        $this->artifact->createNewChangeset($this->fields_data, '', $this->submitter, false);
     }
 
     public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFailsOnNewChangeset() {
@@ -1746,7 +1745,7 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         stub($this->artifact_factory)->save()->returns(false);
         expect($this->workflow)->after()->never();
 
-        $this->artifact->createNewChangeset($this->fields_data, '', $this->submitter, $this->email, false);
+        $this->artifact->createNewChangeset($this->fields_data, '', $this->submitter, false);
     }
 }
 
