@@ -33,39 +33,11 @@ class proftpdPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
-    /**
-     * Same as process() but adds the Forge header and footer
-     * @param HTTPRequest $request
-     */
-    public function processUiRequest(HTTPRequest $request) {
-        $this->displayHeader($request);
-        $this->process($request);
-        $this->displayFooter();
-    }
-
     public function process(HTTPRequest $request) {
         $router = new ProftpdRouter();
 
         $request->set('proftpd_base_directory', $this->getPluginInfo()->getPropVal('proftpd_base_directory'));
         $router->route($request);
-    }
-
-    private function displayHeader($request) {
-        $params = array(
-            'title'     => $GLOBALS['Language']->getText('plugin_proftpd', 'service_lbl_key'),
-            'pagename'  => $GLOBALS['Language']->getText('plugin_proftpd', 'service_lbl_key'),
-            'toptab'    => "proftpd",
-        );
-
-        if ($request->get('group_id')) {
-            $params['group'] = $request->get('group_id');
-        }
-
-        site_header($params);
-    }
-
-    private function displayFooter() {
-        site_footer(array());
     }
 
     public function cssFile($params) {
