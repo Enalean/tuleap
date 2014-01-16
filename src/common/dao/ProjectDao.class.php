@@ -145,13 +145,6 @@ class ProjectDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-//    SELECT groups.group_id, groups.group_name, groups.unix_group_name, groups.status, groups.is_public, user_group.admin_flags".
-//                           " FROM groups".
-//                           " JOIN user_group USING (group_id)".
-//                           " WHERE user_group.user_id = ".$user->getId().
-//                           " AND groups.status = 'A'".
-//                           " ORDER BY $order"
-
     public function updateStatus($id, $status) {
         $sql = 'UPDATE groups'.
             ' SET status = '.$this->da->quoteSmart($status).
