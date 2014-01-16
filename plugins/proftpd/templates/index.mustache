@@ -2,7 +2,6 @@
     <ul class="nav nav-pills">
             <li class="{{^ is_in_subdirectory }}active{{/ is_in_subdirectory }}">
                 <a href="{{ nav_url }}">{{ project_name }}</a>
-                <i></i>
             </li>
         {{# parent_directories }}
             <li>
@@ -10,7 +9,6 @@
             </li>
             <li>
                 <a href="{{ nav_url }}{{ path_to_part }}">{{ path_part_name }}</a>
-                <i></i>
             </li>
         {{/ parent_directories }}
         {{# is_in_subdirectory }}
@@ -19,7 +17,6 @@
             </li>
             <li class="active">
                 <a href="">{{ current_directory }}</a>
-                <i></i>
             </li>
         {{/ is_in_subdirectory }}
     </ul>
