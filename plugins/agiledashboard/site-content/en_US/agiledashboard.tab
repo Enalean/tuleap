@@ -85,7 +85,9 @@ plugin_agiledashboard_contentpane	solve_inconsistencies	Add them to current back
 
 plugin_agiledashboard_milestone_planning	help_intro	This section allows to do $1 planning:
 plugin_agiledashboard_milestone_planning	help_left	On the left side, you have the $2 backlog with all open elements, not already scheduled for a $1.
+plugin_agiledashboard_milestone_planning	help_left_top	On the left side, you have the full backlog with all open elements, not already scheduled for a $1.
 plugin_agiledashboard_milestone_planning	help_right	On the right side, you have the list of $1 that belongs to $2.
+plugin_agiledashboard_milestone_planning	help_right_top	On the right side, you have the list of all $1.
 plugin_agiledashboard_milestone_planning	help_dnd	When you click on a $1, you see it's content and you can drag 'n' drop from $2 backlog to a $1 or from a $1 back to the backlog.
 plugin_agiledashboard_milestone_planning	backlog_title	$1 backlog
 plugin_agiledashboard_milestone_planning	list_of_submilestone_title	List of $1 in $2
