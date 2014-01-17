@@ -18,6 +18,7 @@ Version 6.10 (Not released yet)
 	* Fix request #5909: Fixing REST tests on project import from XML
 	* Fix request #5818: SSH keys with old username are removed
 	* Fix request #5895 - Export tracker structure do not keep default values for list fields
+	* Fix Request #5913: fix wrong service icon for Agile Dashboard plugin
 
 	== Development ==
 	* Pull-out Vagrant and Chef in dedicated repositories
