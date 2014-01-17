@@ -181,6 +181,7 @@ include_menu	summary_page	Sommaire
 include_menu	logged_in	Connecté
 include_menu	logout	Se déconnecter
 include_menu	register_new_proj	Enregistrer un projet
+include_menu	filter_project	Projet...
 include_menu	account_maintenance	Mon compte
 include_menu	my_perso_page	Ma page personnelle
 include_menu	bookmark_this_page	Cette page en favori
@@ -190,6 +191,8 @@ include_menu	new_user	Nouveau compte
 include_menu	auth_prev_success	Dernière connexion:
 include_menu	auth_last_failure	Dernière tentative de connexion:
 include_menu	auth_nb_failure	Nombre de tentatives:
+include_menu	help	Aide
+include_menu	soap_api	API SOAP
 #
 #-----------------------------------------------
 # Script: SF/www/include/pre.php

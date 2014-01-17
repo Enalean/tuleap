@@ -137,6 +137,26 @@ class Experimental_NavBarPresenter {
         return $GLOBALS['Language']->getText('include_menu','bookmark_this_page');
     }
 
+    public function filter_project() {
+        return $GLOBALS['Language']->getText('include_menu','filter_project');
+    }
+
+    public function documentation() {
+        return $GLOBALS['Language']->getText('include_project_home','doc');
+    }
+
+    public function help() {
+        return $GLOBALS['Language']->getText('include_menu','help');
+    }
+
+    public function contact_us() {
+        return $GLOBALS['Language']->getText('include_menu','contact_us');
+    }
+
+    public function soap_api() {
+        return $GLOBALS['Language']->getText('include_menu','soap_api');
+    }
+
     public function nav_home_class() {
         $class = '';
 
@@ -160,7 +180,7 @@ class Experimental_NavBarPresenter {
     }
 
     public function nav_help_class() {
-        return $this->getClassnameNavItemActive('/site/', 'site');
+        return $this->getClassnameNavItemActive(array('/site/', '/contact.php', '/soap/index.php'), 'site');
     }
 
     public function nav_user_class() {

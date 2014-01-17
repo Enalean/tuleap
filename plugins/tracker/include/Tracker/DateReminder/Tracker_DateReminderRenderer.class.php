@@ -62,18 +62,19 @@ class Tracker_DateReminderRenderer {
         $output = '<form action="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=new_reminder" method="post" id="date_field_reminder_form" class="form-inline"> ';
         $output .= '<input type="hidden" name="tracker_id" value="'.$this->tracker->id.'">';
         $output .= $this->dateReminderFactory->csrf->fetchHTMLInput();
-        $output .= '<label>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_send_to').':
-                     '.$this->getUgroupsAllowedForTracker().'</label>
-                    <label>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_when').':
-                    <input type="text" name="distance" size="3"> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_distance_label').'
-                    </label>
-                    <select name="notif_type">
+        $output .= '<table border="0" cellpadding="5"><tr>';
+        $output .= '<td><label>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_send_to').':</label></td>';
+        $output .= '<td colspan=3><label>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_when').':</label</td>';
+        $output .= '<td><label>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_field').':</label</td></tr>';
+        $output .= '<tr valign="top"><td>'.$this->getUgroupsAllowedForTracker().'</td>';
+        $output .= '<td><input type="text" name="distance" size="3" width="40" /></td>';
+        $output .= '<td style="padding-top: 7px;">'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_distance_label').'</td>';
+        $output .= '<td><select name="notif_type">
                         <option value="0"> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before').'
                         <option value="1"> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after').'
-                    </select>
-                    <label>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_field').':</label>'.
-                    $this->getTrackerDateFields();
-        $output .= ' <input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('global','add').'">';
+                    </select></td>';
+        $output .= '<td>'.$this->getTrackerDateFields().'</td></tr>';
+        $output .= '<tr><td colspan="6"><input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('global','add').'"></td></tr>';
         $output .= '</form>';
         return $output;
     }
@@ -106,27 +107,27 @@ class Tracker_DateReminderRenderer {
                 $disabled = "selected";
             }
             $output .= "<h3>".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_edit_title')."</h3>";
-            $output .= '<form action="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=update_reminder" method="post" name="update_date_field_reminder">';
+            $output .= '<form action="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=update_reminder" method="post" name="update_date_field_reminder" class="form-inline">';
             $output .= '<input type="hidden" name="reminder_id" value="'.$reminderId.'">
                         <input type="hidden" name="reminder_field_date" value="'.$reminder->getField()->getId().'">';
-            $output .= '<table border="0" width="700px"><tr height="30">';
+            $output .= '<table border="0" cellpadding="5"><tr>';
             $output .= $this->dateReminderFactory->csrf->fetchHTMLInput();
             $output .= '<td><label>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_send_to').':</label></td>
-                        <td colspan=2><label>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_when').':</label></td>
+                        <td colspan=3><label>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_when').':</label></td>
                         <td><label>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_field').':</label></td>
                         <td><label>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_status').':</label></td></tr>';
             $output .= '<tr valign="top"><td>'.$this->getUgroupsAllowedForTracker($reminderId).'</td>';
-            $output .= '<td> <input type="text" name="distance" value="'.$reminder->getDistance().'" size="3"> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_distance_label').'</td>';
-            $output .= '<td><select name="notif_type">
+            $output .= '<td><input type="text" name="distance" value="'.$reminder->getDistance().'" size="3" style="width: auto"></td><td style="padding-top: 7px;">'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_distance_label').'</td>';
+            $output .= '<td><select name="notif_type" class="input-small">
                             <option value="0" '.$before.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before').'
                             <option value="1" '.$after.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after').'
                             </select></td>';
-            $output .= '<td>'.$reminder->getField()->getLabel().'</td>';
-            $output .= '<td><select name="notif_status">
+            $output .= '<td style="white-space: nowrap; padding-top: 7px;">'.$reminder->getField()->getLabel().'</td>';
+            $output .= '<td><select name="notif_status" class="input-small">
                             <option value="0" '.$disabled.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_disabled').'
                             <option value="1" '.$enabled.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_enabled').'
                             </select></td>';
-            $output .= '</tr><tr height="35" valign="bottom"><td colspan=5><input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></td></tr>';
+            $output .= '</tr><tr height="35" valign="bottom"><td colspan=6><input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></td></tr>';
             $output .= '</table></form>';
         }
         return $output;

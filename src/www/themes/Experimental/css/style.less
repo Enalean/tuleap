@@ -32,7 +32,8 @@
 @medium-grey: #686868;
 @dark-grey: #303030;
 
-@sidebar-width: 260px;
+@sidebar-width: 200px;
+@navbar-height: 45px;
 /* }}} */
 
 @import 'utils/fonts.less';
@@ -76,6 +77,10 @@ input[type="file"] {
 }
 .tooltip-inner {
     background-color: @dark-grey;
+}
+legend {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 .modal {
     form {

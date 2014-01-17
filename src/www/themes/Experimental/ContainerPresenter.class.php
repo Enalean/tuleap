@@ -30,6 +30,12 @@ class Experimental_ContainerPresenter {
     private $project_name;
 
     /** @var string */
+    private $project_link;
+
+    /** @var boolean */
+    private $project_is_public;
+
+    /** @var string */
     private $project_tabs;
 
     /** @var Feedback */
@@ -38,20 +44,28 @@ class Experimental_ContainerPresenter {
     /** @var string */
     private $feedback_content;
 
+    private $forge_version;
+
     function __construct(
         $breadcrumbs,
         $toolbar,
         $project_name,
+        $project_link,
+        $project_is_public,
         $project_tabs,
         $feedback,
-        $feedback_content
+        $feedback_content,
+        $forge_version
     ) {
-        $this->breadcrumbs      = $breadcrumbs;
-        $this->toolbar          = $toolbar;
-        $this->project_name     = $project_name;
-        $this->project_tabs     = $project_tabs;
-        $this->feedback         = $feedback;
-        $this->feedback_content = $feedback_content;
+        $this->breadcrumbs       = $breadcrumbs;
+        $this->toolbar           = $toolbar;
+        $this->project_name      = $project_name;
+        $this->project_link      = $project_link;
+        $this->project_is_public = $project_is_public;
+        $this->project_tabs      = $project_tabs;
+        $this->feedback          = $feedback;
+        $this->feedback_content  = $feedback_content;
+        $this->forge_version     = $forge_version;
     }
 
     public function hasBreadcrumbs() {
@@ -78,9 +92,25 @@ class Experimental_ContainerPresenter {
         return $this->project_tabs;
     }
 
+    public function powered_by() {
+        return $GLOBALS['Language']->getText('global','powered_by').' '.$this->forge_version;
+    }
+
+    public function copyright() {
+        return $GLOBALS['Language']->getText('global','copyright');
+    }
+
     public function projectName() {
         $hp = Codendi_HTMLPurifier::instance();
         return $hp->purify($this->project_name);
+    }
+
+    public function projectLink() {
+        return $this->project_link;
+    }
+
+    public function projectIsPublic() {
+        return $this->project_is_public;
     }
 
     public function feedback() {

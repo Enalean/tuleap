@@ -1148,21 +1148,13 @@ class Tracker_FormElementFactory {
 
     protected function fetchFactoryButtons($klasses, $tracker) {
         $html = '';
-        $html .= '<table class="tracker-admin-palette-content"><tr>';
+        $html .= '<div class="tracker-admin-palette-content">';
         $i = 0;
         foreach($klasses as $type => $klass) {
-            if (!($i % 2) && $i != 0) {
-                $html .= '</tr><tr>';
-            }
-            $html .= '<td>';
             $html .= $this->getFactoryButton($klass, 'create-formElement['.  urlencode($type) .']', $tracker);
-            $html .= '</td>';
             ++$i;
         }
-        if ($i % 2) {
-            $html .= '<td></td>';
-        }
-        $html .= '</tr></table>';
+        $html .= '</div>';
         return $html;
     }
 
