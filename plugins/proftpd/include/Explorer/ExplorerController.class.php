@@ -37,15 +37,16 @@ class Proftpd_ExplorerController {
         $path        = $path_parser->getCleanPath($this->request->get('path'));
         $path_parts  = $path_parser->getPathParts($path);
 
-        $remove_parent_directory_listing = ($path == '') ? true : false;
+        $base_directory = $this->request->get('proftpd_base_directory');
+        $project        = $this->request->getProject();
 
-        $items       = $parser->parseDirectory(proftpdPlugin::BASE_DIRECTORY.'/'.$path, $remove_parent_directory_listing);
-        $project     = $this->request->getProject();
-
-        if (! $project) {
+        if (! $project || ! $base_directory) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_proftpd', 'cannot_open_project'));
             return;
         }
+
+        $remove_parent_directory_listing = ($path == '') ? true : false;
+        $items = $parser->parseDirectory($base_directory.'/'.$path, $remove_parent_directory_listing);
 
         $presenter = new Proftpd_Presenter_ExplorerPresenter(
             $path_parts,

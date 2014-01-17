@@ -21,8 +21,6 @@ require_once 'constants.php';
 
 class proftpdPlugin extends Plugin {
 
-    const BASE_DIRECTORY = '/tmp';
-
     public function __construct($id) {
         parent::__construct($id);
         $this->_addHook('cssfile', 'cssFile', false);
@@ -47,6 +45,8 @@ class proftpdPlugin extends Plugin {
 
     public function process(HTTPRequest $request) {
         $router = new ProftpdRouter();
+
+        $request->set('proftpd_base_directory', $this->getPluginInfo()->getPropVal('proftpd_base_directory'));
         $router->route($request);
     }
 
