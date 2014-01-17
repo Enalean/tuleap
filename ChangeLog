@@ -19,6 +19,7 @@ Version 6.10 (Not released yet)
 	* Fix request #5818: SSH keys with old username are removed
 	* Fix request #5895 - Export tracker structure do not keep default values for list fields
 	* Fix Request #5913: fix wrong service icon for Agile Dashboard plugin
+	* Fix request #5911: Adding options in setup.sh to install with exotic mysql servers
 
 	== Development ==
 	* Pull-out Vagrant and Chef in dedicated repositories
