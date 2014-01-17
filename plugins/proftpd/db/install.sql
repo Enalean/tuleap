@@ -20,3 +20,26 @@ CREATE TABLE IF NOT EXISTS  plugin_proftpd_xferlog (
     INDEX idx_user_id(user_id),
     INDEX idx_group_id(user_id)
 );
+
+-- This view gives access to
+CREATE VIEW ftpgroups AS
+(
+SELECT unix_group_name as groupname, group_id+1000 as gid, user_name as members
+FROM groups
+    JOIN user_group USING (group_id)
+    JOIN user USING (user_id)
+WHERE groups.status = 'A'
+    AND user.status IN ('A', 'R'))
+UNION
+(
+    SELECT user_name as groupname, unix_uid+20000 as gid, user_name
+    FROM user
+    WHERE status IN ('A', 'R')
+    AND user_id > 100
+);
+
+CREATE VIEW ftpusers AS
+SELECT user_name as username, user_pw as password, unix_uid+20000 as uid, unix_uid+20000 as gid, CONCAT("/home/users/", user_name) as home, shell
+FROM user
+WHERE status IN ('A', 'R')
+AND user_id > 100;
