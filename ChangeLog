@@ -3,7 +3,7 @@ Version 6.10 (Not released yet)
 	* agiledashboard: 1.33
 	* boomerang: 0.2
 	* cardwall: 1.14
-	* tracker: 5.221
+	* tracker: 5.222
 	* proftpd: 0.2
 	* tests: 5.21
 	* fusionforge_compat: 0.6
@@ -17,6 +17,7 @@ Version 6.10 (Not released yet)
 	== Bug Fix ==
 	* Fix request #5909: Fixing REST tests on project import from XML
 	* Fix request #5818: SSH keys with old username are removed
+	* Fix request #5895 - Export tracker structure do not keep default values for list fields
 
 	== Development ==
 	* Pull-out Vagrant and Chef in dedicated repositories
