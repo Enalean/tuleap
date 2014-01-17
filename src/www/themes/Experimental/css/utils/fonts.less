@@ -1,4 +1,3 @@
-/* {{{ FONTS */
 @font-face {
     font-family: 'SourceSansPro';
     src: url('../fonts/SourceSansPro-Regular.eot');
@@ -10,4 +9,48 @@
     src: url('../fonts/SourceSansPro-Light.ttf.woff') format('truetype');
     font-weight: 100;
 }
-/* }}} */
+
+
+@font-face {
+    font-family: 'tuleap-services';
+    src: url('../fonts/tuleap-services.eot'),
+         url('../fonts/tuleap-services.woff') format('woff'),
+         url('../fonts/tuleap-services.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+[class^="tuleap-services-"]:before, [class*=" tuleap-services-"]:before {
+    font-family: "tuleap-services";
+    font-style: normal;
+    font-weight: normal;
+    speak: none;
+    display: inline-block;
+    text-decoration: inherit;
+    width: 1em;
+    margin-right: .5em;
+    text-align: center;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1em;
+}
+.tuleap-services-angle-double-right:before { content: '\e80f'; }
+.tuleap-services-admin:before { content: '\e80b'; }
+.tuleap-services-wiki:before { content: '\e800'; }
+.tuleap-services-homepage:before { content: '\e808'; }
+.tuleap-services-forum:before { content: '\e806'; }
+.tuleap-services-mail:before,  { content: '\e807'; }
+.tuleap-services-news:before { content: '\e80a'; }
+.tuleap-services-svn:before { content: '\e802'; }
+.tuleap-services-cvs:before { content: '\e803'; }
+.tuleap-services-file:before { content: '\e810'; }
+.tuleap-services-tracker:before { content: '\e80d'; }
+.tuleap-services-survey:before { content: '\e805'; }
+
+/** PLUGINS ICONS : TO BE MOVED INTO PLUGIN'S CSS **/
+.tuleap-services-docman:before { content: '\e80c'; }
+.tuleap-services-plugin_tracker:before { content: '\e80d'; }
+.tuleap-services-IM:before { content: '\e809'; }
+.tuleap-services-plugin_git:before { content: '\e804'; }
+.tuleap-services-plugin_mediawiki:before { content: '\e801'; }
+.tuleap-services-hudson:before { content: '\e811'; }
+.tuleap-services-plugin_agiledashboard:before { content: '\e80e'; }

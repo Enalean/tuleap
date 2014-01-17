@@ -1034,3 +1034,6 @@ project_admin	generic_member_not_updated	Error while updating generic user setti
 project_admin	generic_member_not_changed	Generic user settings not changed
 project_admin	generic_member_leave_blank	Leave empty to keep the current password
 project_admin	edit_generic_user_settings	edit settings
+
+project_import	invalid_user	Invalid username $1 User must be project admin and active
+project_import	invalid_xml	Invalid XML

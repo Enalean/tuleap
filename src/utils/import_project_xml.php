@@ -32,14 +32,19 @@ EOT;
     exit(1);
 }
 
+$user_manager = UserManager::instance();
 $xml_importer = new ProjectXMLImporter(
     EventManager::instance(),
-    UserManager::instance(),
     ProjectManager::instance()
 );
 
 try {
-    $xml_importer->import($argv[1], $argv[2], $argv[3]);
+    $user = $user_manager->forceLogin($argv[2]);
+    if ((! $user->isSuperUser() && ! $user->isAdmin($project_id)) || ! $user->isActive()) {
+        throw new RuntimeException($GLOBALS['Language']->getText('project_import', 'invalid_user', array($user_name)));
+    }
+
+    $xml_importer->import($argv[1], $argv[3]);
 } catch (Exception $exception) {
     echo "*** ERROR: ".$exception->getMessage().PHP_EOL;
     exit(1);

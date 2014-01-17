@@ -77,7 +77,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends TuleapTestCase
         $email = '';
         $send_notification = true;
 
-        expect($this->parent)->createNewChangeset($fields_data, '*', new IsAWorkflowUserExpectation(), $email, $send_notification, Tracker_Artifact_Changeset_Comment::HTML_COMMENT)->once();
+        expect($this->parent)->createNewChangeset($fields_data, '*', new IsAWorkflowUserExpectation(), $send_notification, Tracker_Artifact_Changeset_Comment::HTML_COMMENT)->once();
 
         $this->rules_processor->process($this->artifact, $this->rule);
     }

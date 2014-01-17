@@ -1,24 +1,41 @@
 <h2>{{adminTitle}}</h2>
 
-{{#can_create_planning}}
-<p>
-    <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;action=new" id="planning_create">
-        <img border="0" alt="add" src="/themes/Tuleap/images/ic/add.png" style="vertical-align:middle"> 
-        {{createPlanning}}
-    </a>
-</p>
-{{/can_create_planning}}
-{{^can_create_planning}}
-<div class="alert alert-info">
-   {{cannot_create_planning}}
-   <ul>
-       <li>{{cannot_create_planning_no_trackers}}</li>
-       <li>{{cannot_create_planning_hierarchy}}</li>
-   </ul>
-   {{{cannot_create_planning_config}}}
-</div>
-{{/can_create_planning}}
-
+<h3>{{ importExportSection }}</h3>
+<ul class="unstyled">
+    <li>
+        <a href="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=import-form" id="template_import">
+            <i class="icon-upload-alt"></i>
+            {{ importTemplate }}
+        </a>
+    </li>
+    <li>
+        <a href="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=export-to-file" id="template_export">
+            <i class="icon-download-alt"></i>
+            {{ exportTemplate }}
+        </a>
+    </li>
+</ul>
+<h3 class="agiledashboard-admin-section">{{ planningSection }}</h3>
+<ul class="unstyled">
+    {{#can_create_planning}}
+        <li>
+            <a href="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=new" id="planning_create">
+                <img border="0" alt="add" src="/themes/Tuleap/images/ic/add.png" style="vertical-align:middle">
+                {{createPlanning}}
+            </a>
+        </li>
+    {{/can_create_planning}}
+    {{^can_create_planning}}
+        <div class="alert alert-info">
+           {{cannot_create_planning}}
+           <ul>
+               <li>{{cannot_create_planning_no_trackers}}</li>
+               <li>{{cannot_create_planning_hierarchy}}</li>
+           </ul>
+           {{{cannot_create_planning_config}}}
+        </div>
+    {{/can_create_planning}}
+</ul>
 {{#has_plannings}}
 <ul>
     {{#plannings}}

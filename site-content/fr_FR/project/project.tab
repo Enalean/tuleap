@@ -1030,3 +1030,6 @@ project_admin	generic_member_not_updated	Erreur pendant la mise à jour des para
 project_admin	generic_member_not_changed	Les parmètres de l'utilisateur générique n'ont pas été mis à jour
 project_admin	generic_member_leave_blank	Laisser vide si vous souhaitez conserver le mot de passe actuel
 project_admin	edit_generic_user_settings	éditer les paramètres
+
+project_import	invalid_user	L'utilisateur $1 n'est pas valide. Il doit être administrateur du projet et actif
+project_import	invalid_xml	La structure du fichier n'est pas du XML valide

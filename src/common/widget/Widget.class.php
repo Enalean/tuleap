@@ -211,6 +211,9 @@
             case 'projectimageviewer':
                 $o = new Widget_ProjectImageViewer();
                 break;
+            case 'projectcontacts' :
+                $o = new Widget_Contacts();
+                break;
             default:
                 $em = EventManager::instance();
                 $em->processEvent('widget_instance', array('widget' => $widget_name, 'instance' => &$o));
@@ -235,7 +238,7 @@
                 $widgets = array('projectdescription', 'projectmembers', 
                     'projectlatestfilereleases', 'projectlatestnews', 'projectpublicareas', //'projectwikipage' //not yet
                     'projectlatestsvncommits', 'projectlatestcvscommits', 'projecttwitterfollow', 
-                    'projectsvnstats', 'projectrss', 'projectimageviewer', 
+                    'projectsvnstats', 'projectrss', 'projectimageviewer', 'projectcontacts'
                 );
                 if ($GLOBALS['sys_use_trove'] != 0) {
                     $widgets[] = 'projectclassification';

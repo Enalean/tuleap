@@ -89,6 +89,8 @@ class GitPlugin extends Plugin {
         $this->_addHook('widget_instance',                                  'myPageBox',                                   false);
         $this->_addHook('widgets',                                          'widgets',                                     false);
 
+        $this->_addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
+
         // User Group membership modification
         $this->_addHook('project_admin_add_user');
         $this->_addHook('project_admin_ugroup_add_user');
@@ -215,6 +217,13 @@ class GitPlugin extends Plugin {
                     $this->getRepositoryFactory(),
                     $this->getGerritServerFactory(),
                     $this->getGerritDriver()
+                );
+                break;
+            case SystemEvent_GIT_USER_RENAME::NAME:
+                $params['class'] = 'SystemEvent_GIT_USER_RENAME';
+                $params['dependencies'] = array(
+                    $this->getGitoliteSSHKeyDumper(),
+                    UserManager::instance()
                 );
                 break;
             default:
@@ -1104,6 +1113,13 @@ class GitPlugin extends Plugin {
 
     private function addMissingGerritAccess($user) {
         $this->getGerritMembershipManager()->addUserToAllTheirGroups($user);
+    }
+
+    /**
+     * @see Event::USER_RENAME
+     */
+    public function systemevent_user_rename($params) {
+        $this->getGitSystemEventManager()->queueUserRenameUpdate($params['old_user_name'], $params['user']);
     }
 }
 ?>

@@ -48,4 +48,6 @@ widget_description_project_public_areas	description	Affiche tous les services di
 widget_description_project_latest_svn_commits	description	Affiche  la liste des derniers commits SVN du projet.
 widget_description_project_latest_cvs_commits	description	Affiche  la liste des derniers commits CVS du projet.
 widget_description_project_svn_stats	description	Affiche les statistiques svn du projet par semaine.Le résultat s'affiche sous forme d'histogramme empilé.
+widget_description_project_contacts	description	Vous permet de contacter les administrateurs de projet
 
+widget_project_contacts	title	Contacts

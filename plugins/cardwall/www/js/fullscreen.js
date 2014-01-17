@@ -45,7 +45,7 @@
 
         function getSidebarSize() {
             if (! localStorage.getItem('sidebar-size')) {
-                return '260px';
+                return '210px';
             }
 
             return localStorage.getItem('sidebar-size');

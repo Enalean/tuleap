@@ -1,0 +1,15 @@
+{
+    "artifact": {
+        "1": [
+            {
+                "artifact_id":  "123",
+                "summary":      "Le artifact without history",
+                "open_date":    "1234567890",
+                "submitted_by": "goofy"
+            }
+        ]
+    },
+    "artifact_history": {
+        "123": []
+    }
+}

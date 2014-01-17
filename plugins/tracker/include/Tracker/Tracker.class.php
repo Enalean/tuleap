@@ -1703,7 +1703,7 @@ EOS;
             }
 
             try {
-                $artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $comment_format);
+                $artifact->createNewChangeset($fields_data, $comment, $submitter, $send_notifications, $comment_format);
             } catch (Tracker_NoChangeException $e) {
                 $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
                 $not_updated_aids[] = $aid;
@@ -2228,13 +2228,13 @@ EOS;
      * @param SimpleXMLElement $xmlElem The xml
      */
     protected function sendXML(SimpleXMLElement $xmlElem) {
-        //force file transfer
-        header('Content-Description: File Transfer');
-        header('Content-Disposition: attachment; filename="Tracker_'.$this->item_name.'.xml"');
-        header('Content-Type: text/xml');
         $dom = dom_import_simplexml($xmlElem)->ownerDocument;
         $dom->formatOutput = true;
-        echo $dom->saveXML();
+
+        $output_filename = 'Tracker_'.$this->item_name.'.xml';
+        $xml             = $dom->saveXML();
+
+        $GLOBALS['Response']->sendXMLAttachementFile($xml, $output_filename);
     }
 
     /**
@@ -2641,7 +2641,7 @@ EOS;
                     if ($artifact) {
                         $followup_comment = '';
                         try {
-                            $artifact->createNewChangeset($fields_data, $followup_comment, $current_user, null, $send_notifications);
+                            $artifact->createNewChangeset($fields_data, $followup_comment, $current_user, $send_notifications);
                             $nb_artifact_update++;
                         } catch (Tracker_NoChangeException $e) {
                             $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);

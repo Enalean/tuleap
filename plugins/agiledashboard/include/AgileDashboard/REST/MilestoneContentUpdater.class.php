@@ -102,7 +102,7 @@ class MilestoneContentUpdater {
 
     private function unlinkAndLinkElements(Tracker_Artifact $artifact, array $fields_data, PFUser $current_user, array $linked_artifact_ids) {
         try {
-            $artifact->createNewChangeset($fields_data, '', $current_user, '');
+            $artifact->createNewChangeset($fields_data, '', $current_user);
         } catch (Tracker_NoChangeException $exception) {
             //Do nothing. Just need to reorder the items
         } catch (Exception $exception) {

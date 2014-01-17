@@ -35,9 +35,12 @@ class Experimental_Theme extends DivBasedTabbedLayout {
      */
     protected $renderer;
 
+    private $show_sidebar = false;
+
     function __construct($root) {
         parent::__construct($root);
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
+        $this->includeJavascriptFile('/themes/Experimental/js/navbar.js');
         $this->includeJavascriptFile('/themes/Experimental/js/sidebar.js');
         $this->includeJavascriptFile('/themes/Experimental/js/resize-window.js');
     }
@@ -81,6 +84,8 @@ class Experimental_Theme extends DivBasedTabbedLayout {
         }
 
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-select/bootstrap-select.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="/scripts/jscrollpane/jquery.jscrollpane.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="/scripts/jscrollpane/jquery.jscrollpane-tuleap.css" />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('style.css') .'" />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
     }
@@ -105,8 +110,7 @@ class Experimental_Theme extends DivBasedTabbedLayout {
     private function navbar($params, PFUser $current_user, $selected_top_tab) {
         list($search_options, $hidden_fields) = $this->getSearchEntries();
         $search_form_presenter                = new Experimental_SearchFormPresenter($search_options, $hidden_fields);
-
-        $project_manager = ProjectManager::instance();
+        $project_manager                      = ProjectManager::instance();
 
         $this->render('navbar', new Experimental_NavBarPresenter(
                 $this->imgroot,
@@ -131,28 +135,80 @@ class Experimental_Theme extends DivBasedTabbedLayout {
     }
 
     private function container(array $params, ProjectManager $project_manager, PFUser $current_user) {
-        $project_tabs = null;
-        $project_name = null;
+        $project_tabs      = null;
+        $project_name      = null;
+        $project_link      = null;
+        $project_is_public = null;
 
         if (! empty($params['group'])) {
-            $project_tabs = $this->_getProjectTabs($params['toptab'], ProjectManager::instance()->getProject($params['group']));
-            $project_name = ProjectManager::instance()->getProject($params['group'])->getPublicName();
+            $this->show_sidebar = true;
+
+            $project = ProjectManager::instance()->getProject($params['group']);
+
+            $project_tabs      = $this->getProjectTabs($params, $project);
+            $project_name      = $project->getPublicName();
+            $project_link      = $this->getProjectLink($project);
+            $project_is_public = $project->isPublic();
         }
 
         $this->render('container', new Experimental_ContainerPresenter(
             $this->breadcrumbs,
             $this->toolbar,
             $project_name,
+            $project_link,
+            $project_is_public,
             $project_tabs,
             $this->_feedback,
-            $this->_getFeedback()
+            $this->_getFeedback(),
+            $this->getForgeVersion()
         ));
     }
 
+    private function getForgeVersion() {
+        return trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
+    }
+
+    /**
+     * A "project tab" is a link towards a project service.
+     * The parent method getProjectTabs() generates an array of these links.
+     * However, the first element is a link to the forge homepage and we don't
+     * want it in this theme.
+     *
+     */
+    private function getProjectTabs($params, $project) {
+        $tabs = parent::_getProjectTabs($params['toptab'], $project);
+        array_shift($tabs);
+
+        return $tabs;
+    }
+
+    private function getProjectLink(Project $project) {
+        return '/projects/' . $project->getUnixName() . '/';
+    }
+
     public function footer($params) {
-        $this->render('footer', new Experimental_FooterPresenter($this));
+        if ($this->canShowFooter($params)) {
+            $this->render('footer', new Experimental_FooterPresenter($this));
+        }
 
         $this->endOfPage();
+    }
+
+    /**
+     * Only show the footer if the sidebar is not present. The sidebar is used
+     * for project navigation.
+     * Note: there is an ugly dependency on the page content being rendered first.
+     * Although this is the case, it's worth bearing in mind when refactoring.
+     *
+     * @param array $params
+     * @return boolean
+     */
+    private function canShowFooter($params) {
+        if (empty($params['group']) && ! $this->show_sidebar) {
+            return true;
+        }
+
+        return false;
     }
 
     private function endOfPage() {

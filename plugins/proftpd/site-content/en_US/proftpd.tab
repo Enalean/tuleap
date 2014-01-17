@@ -5,5 +5,10 @@ plugin_proftpd	descriptor_name	Proftpd
 plugin_proftpd	file_column_name	File
 plugin_proftpd	size_column_name	Size (KB)
 plugin_proftpd	date_added_column_name	Date Added
-
 plugin_proftpd	cannot_open_project	Cannot open project
+
+plugin_proftpd	log_title	FTP access
+plugin_proftpd	log_filepath	Filepath
+plugin_proftpd	log_download	Download
+plugin_proftpd	log_upload	Upload
+plugin_proftpd	log_deleted	Deleted

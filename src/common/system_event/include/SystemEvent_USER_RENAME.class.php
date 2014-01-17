@@ -68,6 +68,7 @@ class SystemEvent_USER_RENAME extends SystemEvent {
 
         $renameState = true;
         if (($user = $this->getUser($user_id))) {
+            $old_user_name = $user->getUserName();
             //Rename home/users directory
             $backendSystem = $this->getBackend('System');
             if ($backendSystem->userHomeExists($user->getUserName())) {
@@ -104,6 +105,12 @@ class SystemEvent_USER_RENAME extends SystemEvent {
        
             $backendSystem->setNeedRefreshGroupCache();
             $backendSystem->setNeedRefreshUserCache();
+
+            $params = array();
+            $params['old_user_name'] = $old_user_name;
+            $params['user']          = $user;
+
+            EventManager::instance()->processEvent(__CLASS__, $params);
         }
         
         if ($renameState) {

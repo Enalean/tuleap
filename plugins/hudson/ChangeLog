@@ -1,3 +1,6 @@
+Version 1.13 - Tuleap 6.10
+    * Story #5619: Have an enhanced experimental theme
+
 Version 1.12 - Tuleap 6.7
     * Dev: remove a bunch of explicit require_once
 

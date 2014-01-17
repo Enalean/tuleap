@@ -1,11 +1,24 @@
 Version 6.10 (Not released yet)
 	== Plugins ==
-	* agiledashboard: 1.32
+	* agiledashboard: 1.34
 	* boomerang: 0.2
-	* cardwall: 1.13
-	* tracker: 5.219
-	* proftpd: 0.1
+	* cardwall: 1.15
+	* tracker: 5.223
+	* proftpd: 0.2
+	* tests: 5.21
+	* fusionforge_compat: 0.6
+	* hudson: 1.13
+	* git: 3.64
 
+	== Enhancement ==
+	* Story #5678: contact administrators of a project
+	* Story #5619: Have an enhanced experimental theme
+
+	== Bug Fix ==
+	* Fix request #5909: Fixing REST tests on project import from XML
+	* Fix request #5818: SSH keys with old username are removed
+	* Fix request #5895 - Export tracker structure do not keep default values for list fields
+	* Fix Request #5913: fix wrong service icon for Agile Dashboard plugin
 
 	== Development ==
 	* Pull-out Vagrant and Chef in dedicated repositories

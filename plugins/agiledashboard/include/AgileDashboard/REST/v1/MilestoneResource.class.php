@@ -438,7 +438,7 @@ class MilestoneResource {
      * Get Burdown data
      *
      * @url GET {id}/burndown
-     * 
+     *
      * @param int $id Id of the milestone
      *
      * @return \Tuleap\Tracker\REST\Artifact\BurndownRepresentation

@@ -114,6 +114,15 @@ class Response {
         echo json_encode($content);
     }
 
+    public function sendXMLAttachementFile($xml, $output_filename) {
+        header ('Content-Description: File Transfer');
+        header ('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header ('Content-Disposition: attachment; filename="'.$output_filename.'"');
+        header ('Content-Type: application/xml');
+
+        echo $xml;
+    }
+
     /**
      * Send 401 Unauthorized and exit if the client asks for something else than text/html
      *
