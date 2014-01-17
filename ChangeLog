@@ -13,6 +13,9 @@ Version 6.10 (Not released yet)
 	* Story #5678: contact administrators of a project
 	* Story #5619: Have an enhanced experimental theme
 
+	== Bug Fix ==
+	* Fix request #5909: Fixing REST tests on project import from XML
+
 	== Development ==
 	* Pull-out Vagrant and Chef in dedicated repositories
 	* agiledashboard: 1.32
