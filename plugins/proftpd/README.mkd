@@ -11,15 +11,46 @@ $> yum install proftpd
 
 If you already have vsftpd installed, you should uninstall it (yum remove vsftpd)
 
-Configure log rotation
+Create the following directory: ``/var/lib/tuleap/secure_ftp``.
+
+Database configuration
 ----------------------
 
-First, activate xferlog in proftpd config ``/etc/proftpd.conf``:
+After having installed this plugin, you need to grant some database privileges:
 
+    GRANT SELECT on ftpgroups to 'dbauthuser'@'%';
+    GRANT SELECT on ftpusers to 'dbauthuser'@'%';
+    FLUSH PRIVILEGES;
+
+Proftpd configuration
+---------------------
+
+Everything is configured in ``/etc/proftpd.conf``, update or add:
+
+    AuthOrder                       mod_sql.c
+    AuthPAM                         off
     TransferLog                     /var/log/xferlog
 
+    LoadModule mod_sql.c
+    LoadModule mod_sql_passwd.c
+    LoadModule mod_sql_mysql.c
 
-Then, in /etc/logrotate.d you should have ``proftpd`` but no ``vsftpd.log``.
+    DefaultRoot                     /var/lib/tuleap/secure_ftp
+
+    SQLAuthenticate   users groups usersetfast groupsetfast
+    SQLBackend        mysql
+    SQLPasswordEngine on
+    SQLAuthTypes      MD5
+    SQLConnectInfo    <database_name>@<database_server> dbauthuser <dbautuser_password>
+    SQLDefaultHomedir /var/lib/tuleap/secure_ftp
+    SQLUserInfo       ftpusers user_name user_pw uid gid home shell
+    SQLGroupInfo      ftpgroups groupname gid members
+    SQLLogFile        /var/log/proftpd/sql.log
+
+Configure log rotation
+---------------------
+
+In /etc/logrotate.d you should have ``proftpd`` but no ``vsftpd.log``.
 If the later exists, delete it.
 
 Edit /etc/logrotate.d/proftpd and remove reference to /var/log/xferlog, you should
