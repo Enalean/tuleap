@@ -172,7 +172,7 @@ class SystemEventManager {
             break;
         case Event::USER_RENAME:
             $this->createEvent(SystemEvent::TYPE_USER_RENAME,
-                               $this->concatParameters($params, array('user_id', 'new_name')),
+                               $this->concatParameters($params, array('user_id', 'new_name', 'old_user')),
                                SystemEvent::PRIORITY_HIGH);
             break;
         case 'cvs_is_private':

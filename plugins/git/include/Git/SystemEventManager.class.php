@@ -108,6 +108,15 @@ class Git_SystemEventManager {
         );
     }
 
+    public function queueUserRenameUpdate($old_user_name, IHaveAnSSHKey $new_user) {
+        $this->system_event_manager->createEvent(
+            SystemEvent_GIT_USER_RENAME::NAME,
+            $old_user_name . SystemEvent::PARAMETER_SEPARATOR . $new_user->getId(),
+            SystemEvent::PRIORITY_HIGH,
+            SystemEvent::OWNER_APP
+        );
+    }
+
     public function isRepositoryMigrationToGerritOnGoing(GitRepository $repository) {
         return $this->system_event_manager->isThereAnEventAlreadyOnGoing(SystemEvent_GIT_GERRIT_MIGRATION::NAME, $repository->getId());
     }
