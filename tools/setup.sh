@@ -501,7 +501,9 @@ setup_mysql_cnf() {
 
 setup_mysql() {
 
-    setup_mysql_cnf
+    if [ "$mysql_my_cnf" = "y" ]; then
+        setup_mysql_cnf
+    fi
 
     echo "Creating the Tuleap database..."
 
@@ -811,6 +813,7 @@ Options:
   --disable-auto-passwd            Do not automaticaly generate random passwords
   --disable-httpd-restart          Do not restart httpd during the setup
   --disable-generate-ssl-certs     Do not generate a new ssl certificate
+  --disable-mysql-configuration    Do not modify my.cnf (not recommended)
 
   --sys-default-domain=<domain>	   Server Domain name
   --sys-org-name=<string>          Your Company short name
@@ -822,8 +825,10 @@ Options:
   --sys-fullname=<fqdn>            Server fully qualified machine name
   --sys-ip-address=<ip address>    Server IP address
 
+  Mysql local server configuration:
+  --mysql-server-package=<package> Name of mysql server package name. Default: mysql-server
 
-  Mysql configuration (if database on remote server):
+  Mysql remote server configuration:
   --mysql-host=<host>              Hostname (or IP) of mysql server
   --mysql-port=<integer>           Port if not default (3306)
   --mysql-root-password=<password> Mysql root user password on remote host
@@ -852,10 +857,12 @@ mysql_port=""
 mysql_default_port="3306"
 mysql_httpd_host="localhost"
 mysql_remote_server=""
+mysql_my_cnf="y"
+mysql_package_name="mysql-server"
 rt_passwd=""
 restart_httpd="y"
 
-options=`getopt -o h -l auto,disable-auto-passwd,enable-bind-config,mysql-host:,mysql-port:,mysql-root-password:,mysql-httpd-host:,sys-default-domain:,sys-fullname:,sys-ip-address:,sys-org-name:,sys-long-org-name:,enable-subdomains,disable-httpd-restart,disable-generate-ssl-certs -- "$@"`
+options=`getopt -o h -l auto,disable-auto-passwd,enable-bind-config,mysql-host:,mysql-port:,mysql-root-password:,mysql-httpd-host:,sys-default-domain:,sys-fullname:,sys-ip-address:,sys-org-name:,sys-long-org-name:,enable-subdomains,disable-httpd-restart,disable-generate-ssl-certs,mysql-server-package:,disable-mysql-configuration -- "$@"`
 
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; usage $0 ;exit 1 ; fi
 
@@ -886,8 +893,10 @@ do
 		disable_subdomains="n"; shift 1 ;;
 	--disable-httpd-restart)
 		restart_httpd="n"; shift 1 ;;
-        --disable-generate-ssl-certs)
+    --disable-generate-ssl-certs)
                 generate_ssl_certificate="n"; shift 1 ;;
+    --disable-mysql-configuration)
+        mysql_my_cnf="n"; shift 1 ;;
 	--sys-default-domain)
 		sys_default_domain="$2" ; shift 2 ;;
 	--sys-fullname)
@@ -914,6 +923,8 @@ do
 		;;
 	--mysql-httpd-host)
 		mysql_httpd_host="$2";shift 2 ;;
+    --mysql_package_name)
+        mysql_package_name="$2"; shift 2 ;;
 	-h|--help)
 		usage $0 ;;
         --)
@@ -933,8 +944,8 @@ fi
 if [ ! -z "$mysql_remote_server" ]; then
     test_mysql_host
 else
-    if ! has_package mysql-server; then
-	die "No --mysql-host nor local mysql server installed, exit. Please install 'mysql-server' package"
+    if ! has_package $mysql_package_name; then
+	die "No --mysql-host nor local mysql server installed, exit. Please install '$mysql_package_name' package"
     fi
 fi
 
