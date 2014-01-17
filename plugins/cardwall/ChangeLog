@@ -1,3 +1,6 @@
+Version 1.15 - Tuleap 6.10
+    * Adjustements to internal Tracker API changes introduced in tracker 5.223
+
 Version 1.14 - Tuleap 6.10
     * Story #5619: Have an enhanced experimental theme
 

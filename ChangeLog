@@ -1,9 +1,9 @@
 Version 6.10 (Not released yet)
 	== Plugins ==
-	* agiledashboard: 1.33
+	* agiledashboard: 1.34
 	* boomerang: 0.2
-	* cardwall: 1.14
-	* tracker: 5.222
+	* cardwall: 1.15
+	* tracker: 5.223
 	* proftpd: 0.2
 	* tests: 5.21
 	* fusionforge_compat: 0.6

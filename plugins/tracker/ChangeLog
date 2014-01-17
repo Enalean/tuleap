@@ -1,3 +1,6 @@
+Version 5.223 - Tuleap 6.10
+    * story #5828: Start import of data from old tracker engine (code name: TV3) to the new one (code name: TV5). As of today only the summary of the artifact (and its complete history) is exported/imported.
+
 Version 5.222 - Tuleap 6.10
     * Fix request #5895 - Export tracker structure do not keep default values for list fields
 
