@@ -35,6 +35,16 @@ plugin_agiledashboard	content_pane_title	Content
 plugin_agiledashboard	milestone_planning_pane_title	$1 Planning
 plugin_agiledashboard	access_to_planning	Access to planning
 plugin_agiledashboard	backlog_destination_help	Use right arrow on item to move it to current milestone or bottom/up arrow to rank items.
+plugin_agiledashboard	export_template	Export Configuration
+plugin_agiledashboard	import_template	Import Configuration from Template
+plugin_agiledashboard	btn_import	Import
+plugin_agiledashboard	import_instructions	You can import a whole Agile Dashboard configuration from an XML template. Tuleap provides a <a href="$1">standard template</a>. Alternatively, you can export the configuration of an existing project and re-use it here.
+plugin_agiledashboard	export_failed	Unable to export the configuration
+plugin_agiledashboard	import_template_success	The configuration has been successfully imported!
+plugin_agiledashboard	cannot_import	Unable to import the configuration!
+plugin_agiledashboard	import_notes	Note:<br>Importing a template will create new trackers. The import will not work if any existing tracker match those in the template
+plugin_agiledashboard	planning_section	Planning management
+plugin_agiledashboard	import_export_section	Import/ Export
 
 plugin_agiledashboard	capacity	Capacity:
 plugin_agiledashboard	available	Available $1
@@ -52,6 +62,8 @@ plugin_agiledashboard	report_criteria_label	In milestone
 
 plugin_agiledashboard	error_on_inconsistencies_solving	An error occurred while trying to solve inconsistencies.
 plugin_agiledashboard	successful_inconsistencies_solving	Inconsistencies successfully solved!
+plugin_agiledashboard	nothing_set_up_generic	Nothing has been setup yet. Please come again later!
+plugin_agiledashboard	nothing_set_up_admin	Nothing has been setup yet. <a href="$1">Get Started!</a>
 
 plugin_agiledashboard_contentpane	lab	This is a lab feature that is subjected to change in a near future. Please get in touch with us to <a href="mailto:tuleap-devel@tuleap.net">provide any feedback</a> about this work in progress, thanks!
 plugin_agiledashboard_contentpane	closed_items_title	Closed $1

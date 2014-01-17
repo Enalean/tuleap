@@ -25,73 +25,46 @@ class ProjectXMLImporterTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->event_manager   = mock('EventManager');
-        $this->user_manager    = mock('UserManager');
         $this->project_manager = mock('ProjectManager');
+        $this->project         = mock('Project');
 
         $this->xml_file_path   = dirname(__FILE__).'/_fixtures/fake_project.xml';
         $this->xml_content     = new SimpleXMLElement(file_get_contents($this->xml_file_path));
-
-        $this->super_user = mock('PFUser');
-        stub($this->super_user)->isSuperUser()->returns(true);
-        stub($this->super_user)->isActive()->returns(true);
-
-        $this->mere_user = mock('PFUser');
-        
-        $this->project       = mock('Project');
-
-        $this->xml_importer    = new ProjectXMLImporter($this->event_manager, $this->user_manager, $this->project_manager);
+        $this->xml_importer    = new ProjectXMLImporter($this->event_manager, $this->project_manager);
     }
 
     public function itAsksToPluginToImportInformationsFromTheGivenXml() {
-        stub($this->user_manager)->forceLogin()->returns($this->super_user);
         stub($this->project_manager)->getProject()->returns($this->project);
 
         expect($this->event_manager)->processEvent(Event::IMPORT_XML_PROJECT, array('project' => $this->project, 'xml_content' => $this->xml_content))->once();
 
-        $this->xml_importer->import(369, 'good_user', $this->xml_file_path);
+        $this->xml_importer->import(369, $this->xml_file_path);
     }
 
     public function itAsksProjectManagerForTheProject() {
         expect($this->project_manager)->getProject(122)->once();
         $this->expectException();
-        $this->xml_importer->import(122, 'user', $this->xml_file_path);
+        $this->xml_importer->import(122, $this->xml_file_path);
     }
-
-
-    public function itStopsIfGivenUserIsNotSiteAdmin() {
-        stub($this->project_manager)->getProject()->returns($this->project);
-
-        expect($this->user_manager)->forceLogin('bad user')->once();
-        stub($this->user_manager)->forceLogin()->returns($this->mere_user);
-
-        $this->expectException();
-        expect($this->event_manager)->processEvent()->never();
-        $this->xml_importer->import(mock('Project'), 'bad user', $this->xml_file_path);
-    }
-
 
     public function itStopsIfNoProjectIsFound() {
-        stub($this->user_manager)->forceLogin()->returns($this->super_user);
-
         $this->expectException();
 
-        $this->xml_importer->import(122, 'user', $this->xml_content);
+        $this->xml_importer->import(122, $this->xml_content);
     }
 
     public function itStopsIfProjectIsError() {
-        stub($this->user_manager)->forceLogin()->returns($this->super_user);
         stub($this->project_manager)->getProject()->returns(stub('Project')->isError()->returns(true));
         $this->expectException();
 
-        $this->xml_importer->import(122, 'user', $this->xml_file_path);
+        $this->xml_importer->import(122, $this->xml_file_path);
     }
 
     public function itStopsIfProjectIsDeleted() {
-        stub($this->user_manager)->forceLogin()->returns($this->super_user);
         stub($this->project_manager)->getProject()->returns(stub('Project')->isDeleted()->returns(true));
         $this->expectException();
 
-        $this->xml_importer->import(122, 'user', $this->xml_file_path);
+        $this->xml_importer->import(122, $this->xml_file_path);
     }
 }
 ?>

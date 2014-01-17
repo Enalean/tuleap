@@ -272,6 +272,12 @@ include_project_home	start_monitoring	Surveiller ce paquet
 include_project_home	stop_monitoring	Arrêter de surveiller ce paquet
 include_project_home	latest_svn_commit	Derniers commits SVN
 include_project_home	latest_cvs_commit	Derniers commits CVS
+include_project_home	contact_admins	Contacter les administrateurs de projet
+
+contact_admins	title	Contacter les administrateurs du projet $1
+contact_admins	mail_sent_admin	Email envoyé aux administrateurs du projet $1
+contact_admins	mail_not_sent_admin	Echec de l'envoi de mail aux administrateurs du projet $1
+contact_admins	body_info	(Cet email est envoyé à tous les administrateurs du projet)
 
 #
 #-----------------------------------------------

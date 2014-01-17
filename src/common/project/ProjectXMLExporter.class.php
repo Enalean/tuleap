@@ -42,5 +42,19 @@ class ProjectXMLExporter {
             )
         );
     }
+
+    /**
+     * @param Project $project
+     * @return string A full XML document string
+     */
+    public function exportAsStandaloneXMLDocument(Project $project) {
+        $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+                                             <project />');
+        $this->export($project, $xml_element);
+        $dom = dom_import_simplexml($xml_element)->ownerDocument;
+        $dom->formatOutput = true;
+
+        return $dom->saveXML();
+    }
 }
 ?>

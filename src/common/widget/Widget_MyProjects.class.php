@@ -193,9 +193,16 @@ class Widget_MyProjects extends Widget {
     }
 
     private function fetchMassMailForm($group_id, CSRFSynchronizerToken $token) {
-        $presenter          = new MassmailFormPresenter($group_id,$token);
-        $template_factory   = TemplateRendererFactory::build();
-        $renderer           = $template_factory->getRenderer($presenter->getTemplateDir());
+        $presenter = new MassmailFormPresenter(
+            $group_id,
+            $token,
+            $GLOBALS['Language']->getText('my_index','massmail_form_title'),
+            'massmail_to_project_members.php'
+        );
+
+        $template_factory = TemplateRendererFactory::build();
+        $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
+
         return $renderer->renderToString('massmail',$presenter);
     }
 }

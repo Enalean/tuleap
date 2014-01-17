@@ -139,21 +139,49 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     public function fetchBurndownImage(Tracker_Artifact $artifact, PFUser $user) {
         if ($this->userCanRead($user)) {
-            $start_date = $this->getBurndownStartDate($artifact, $user);
-            $duration   = $this->getBurndownDuration($artifact, $user);
-            $burndown   = $this->getBurndown($this->getBurndownData(
-                            $artifact,
-                            $user,
-                            $start_date,
-                            $duration
-                        ));
-
-            $burndown->display();
+            $this->getBurndown($this->buildBurndownData($user, $artifact))->display();
         } else {
             throw new Tracker_FormElement_Field_BurndownException('burndown_permission_denied');
         }
     }
 
+    public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation';
+
+        $artifact_field_value_representation = new $classname_with_namespace;
+        $artifact_field_value_representation->build(
+            $this->getId(),
+            $this->getLabel(),
+            $this->buildBurndownData($user, $changeset->getArtifact())->getRESTRepresentation()
+        );
+
+        return $artifact_field_value_representation;
+    }
+
+    /**
+     * @param PFUser $user
+     * @param Tracker_Artifact $artifact
+     * @return Tracker_Chart_Data_Burndown
+     */
+    private function buildBurndownData(PFUser $user, Tracker_Artifact $artifact) {
+        $start_date = $this->getBurndownStartDate($artifact, $user);
+        $duration   = $this->getBurndownDuration($artifact, $user);
+        return $this->getBurndownData(
+            $artifact,
+            $user,
+            $start_date,
+            $duration
+        );
+    }
+
+    /**
+     *
+     * @param Tracker_Artifact $artifact
+     * @param PFUser $user
+     * @param type $start_date
+     * @param type $duration
+     * @return Tracker_Chart_Data_Burndown
+     */
     public function getBurndownData(Tracker_Artifact $artifact, PFUser $user, $start_date, $duration) {
         $capacity = null;
         if ($this->doesCapacityFieldExist()) {
@@ -175,6 +203,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
         return $burndown_data;
     }
+
     /**
      * Fetch the element for the submit new artifact form
      *

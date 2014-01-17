@@ -20,13 +20,11 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
+use \Tuleap\REST\ProjectAuthorization;
 use \Tuleap\REST\Header;
 use \Luracast\Restler\RestException;
 use \Tracker_ArtifactFactory;
 use \Tracker_Artifact;
-use \Project_AccessProjectNotFoundException;
-use \Project_AccessException;
-use \URLVerification;
 use \UserManager;
 use \PFUser;
 use \Tracker_REST_Artifact_ArtifactRepresentationBuilder;
@@ -102,19 +100,12 @@ class ArtifactsResource {
      * @return Tracker_Artifact
      */
     private function getArtifactById(PFUser $user, $id) {
-        try {
-            $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
-            if ($artifact) {
-                $url_verification = new URLVerification();
-                $url_verification->userCanAccessProject($user, $artifact->getTracker()->getProject());
-                return $artifact;
-            }
-            throw new RestException(404);
-        } catch (Project_AccessProjectNotFoundException $exception) {
-            throw new RestException(404);
-        } catch (Project_AccessException $exception) {
-            throw new RestException(403, $exception->getMessage());
+        $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
+        if ($artifact) {
+            ProjectAuthorization::userCanAccessProject($user, $artifact->getTracker()->getProject());
+            return $artifact;
         }
+        throw new RestException(404);
     }
 
     private function sendAllowHeadersForArtifact(Tracker_Artifact $artifact) {

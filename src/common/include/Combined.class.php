@@ -46,6 +46,7 @@ class Combined {
             '/scripts/jscrollpane/jquery.mousewheel.js',
             '/scripts/jscrollpane/jquery.jscrollpane.min.js',
             '/scripts/AZHU/storage.js',
+            '/scripts/d3/d3.min.js',
             '/scripts/codendi/common.js',
             '/scripts/tuleap/systray.js',
             '/scripts/tuleap/load-systray.js',

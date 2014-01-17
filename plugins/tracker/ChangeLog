@@ -1,3 +1,12 @@
+Version 5.220 - Tuleap 6.10
+    * Import/Export a project's agile dashboard from UI
+
+Version 5.219 - Tuleap 6.10
+    * Edit button in Tracker read only view have the same format as other buttons
+
+Version 5.218 - Tuleap 6.10
+    * story #5802 - have burndown in stand-up view
+
 Version 5.217 - Tuleap 6.10
     * Fix request #5856 - Tracker v5: Description of attachment not displayed
 

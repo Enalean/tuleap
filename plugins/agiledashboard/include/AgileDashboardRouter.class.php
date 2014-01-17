@@ -60,18 +60,33 @@ class AgileDashboardRouter {
      */
     private $milestone_controller_factory;
 
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+
+    /**
+     * @var ProjectXMLExporter
+     */
+    private $xml_exporter;
+
+
     public function __construct(
         Plugin $plugin,
         Planning_MilestoneFactory $milestone_factory,
         PlanningFactory $planning_factory,
         Planning_ShortAccessFactory $planning_shortaccess_factory,
-        Planning_MilestoneControllerFactory $milestone_controller_factory
+        Planning_MilestoneControllerFactory $milestone_controller_factory,
+        ProjectManager $project_manager,
+        ProjectXMLExporter $xml_exporter
     ) {
         $this->plugin                        = $plugin;
         $this->milestone_factory             = $milestone_factory;
         $this->planning_factory              = $planning_factory;
         $this->planning_shortaccess_factory  = $planning_shortaccess_factory;
         $this->milestone_controller_factory  = $milestone_controller_factory;
+        $this->project_manager               = $project_manager;
+        $this->xml_exporter                  = $xml_exporter;
     }
 
     /**
@@ -96,6 +111,12 @@ class AgileDashboardRouter {
                 break;
             case 'new':
                 $this->renderAction($controller, 'new_', $request);
+                break;
+            case 'import-form':
+                $this->renderAction($controller, 'importForm', $request);
+                break;
+            case 'export-to-file':
+                $this->renderAction($controller, 'exportToFile', $request);
                 break;
             case 'create':
                 $this->executeAction($controller, 'create');
@@ -154,12 +175,14 @@ class AgileDashboardRouter {
      */
     private function getHeaderTitle($action_name) {
         $header_title = array(
-            'index' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
-            'admin' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin'),
-            'new_'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
-            'edit'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit'),
-            'show'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show'),
-            'showTop'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show')
+            'index'     => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
+            'exportToFile' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
+            'admin'     => $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin'),
+            'new_'      => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
+            'importForm'=> $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
+            'edit'      => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit'),
+            'show'      => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show'),
+            'showTop'   => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show')
         );
 
         return $header_title[$action_name];
@@ -241,6 +264,8 @@ class AgileDashboardRouter {
             $this->planning_factory,
             $this->planning_shortaccess_factory,
             $this->milestone_factory,
+            $this->project_manager,
+            $this->xml_exporter,
             $this->plugin->getThemePath()
         );
     }

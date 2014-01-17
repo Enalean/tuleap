@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,14 +29,16 @@ class MassmailFormPresenter {
     public $body_label;
     public $csrf_token;
     public $title;
+    public $action;
 
-    public function __construct($project_id, CSRFSynchronizerToken $token) {
+    public function __construct($project_id, CSRFSynchronizerToken $token, $title, $action) {
         $this->project_id       = $project_id;
         $this->submit_button    = $GLOBALS['Language']->getText('global','btn_submit');
         $this->close_button     = $GLOBALS['Language']->getText('global','btn_cancel');
         $this->subject_label    = $GLOBALS['Language']->getText('my_index','subject_label');
         $this->body_label       = $GLOBALS['Language']->getText('my_index','body_label');
-        $this->title            = $GLOBALS['Language']->getText('my_index','massmail_form_title');
+        $this->title            = $title;
+        $this->action           = $action;
 
         $this->csrf_token       = $token->fetchHTMLInput();
     }

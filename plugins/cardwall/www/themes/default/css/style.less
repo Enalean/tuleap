@@ -401,15 +401,24 @@ body.fullscreen {
     }
 }
 .cardwall_board-milestone-info {
+
+    @cardwall-points-color: #5AAF5A;
+    @cardwall-border-between-info-panes: 1px solid #ddd;
+
     margin: 30px 0;
 
     > div {
         padding: 10px 0 0 30px;
         height: 90px;
-        border-left: 1px solid #ddd;
+        border-left: @cardwall-border-between-info-panes;
     }
 
-    > div:first-child {
+    > .milestone-burndown {
+        padding-top: 0;
+    }
+
+    > div:first-child,
+    > .milestone-capacity {
         border-left: none;
     }
 
@@ -497,7 +506,7 @@ body.fullscreen {
         }
 
         .points {
-            color: #5AAF5A;
+            color: @cardwall-points-color;
         }
     }
 
@@ -514,11 +523,55 @@ body.fullscreen {
         margin-right: 10%;
     }
 
+    .milestone-burndown {
+        .chart {
+            border-left: 1px solid lightgrey;
+            border-bottom: 1px solid lightgrey;
+            padding-top: 5px;
+        }
+
+        .axis {
+            path,
+            line {
+                fill: none;
+                stroke: #000;
+                shape-rendering: crispEdges;
+            }
+        }
+
+        .line {
+            fill: none;
+
+            &.ideal {
+                stroke: lightgrey;
+                stroke-dasharray: 5, 5;
+                stroke-width: 2px;
+            }
+
+            &.actual {
+                stroke: @cardwall-points-color;
+                stroke-width: 4px;
+            }
+        }
+
+        .circle {
+            &.actual {
+                stroke: @cardwall-points-color;
+                stroke-width: 3px;
+                fill: white;
+            }
+        }
+    }
+
     &.mini {
         margin: 15px 0;
 
         > div {
             height: 60px;
+        }
+
+        > .milestone-capacity {
+            border-left: @cardwall-border-between-info-panes;
         }
 
         .milestone-name {
