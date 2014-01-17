@@ -2,13 +2,16 @@ Version 6.10 (Not released yet)
 	== Plugins ==
 	* agiledashboard: 1.33
 	* boomerang: 0.2
-	* cardwall: 1.13
-	* tracker: 5.220
+	* cardwall: 1.14
+	* tracker: 5.221
 	* proftpd: 0.2
 	* tests: 5.21
+	* fusionforge_compat: 0.6
+	* hudson: 1.13
 
 	== Enhancement ==
 	* Story #5678: contact administrators of a project
+	* Story #5619: Have an enhanced experimental theme
 
 	== Development ==
 	* Pull-out Vagrant and Chef in dedicated repositories
