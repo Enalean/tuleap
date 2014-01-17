@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <element name="artifacts">
+      <zeroOrMore>
+        <element name="artifact">
+          <attribute name="id">
+            <data type="int"/>
+          </attribute>
+          <zeroOrMore>
+            <element name="changeset">
+              <element name="submitted_by">
+                <ref name="user_content"/>
+              </element>
+              <element name="submitted_on">
+                <ref name="date_content"/>
+              </element>
+              <element name="field_change">
+                <attribute name="field_name">
+                  <data type="string"/>
+                </attribute>
+                <element name="value">
+                  <data type="string"/>
+                </element>
+              </element>
+            </element>
+          </zeroOrMore>
+        </element>
+      </zeroOrMore>
+    </element>
+  </start>
+  <define name="date_content">
+    <attribute name="format">
+      <value>ISO8601</value>
+    </attribute>
+    <data type="string"/>
+  </define>
+  <define name="user_content">
+    <choice>
+      <attribute name="format">
+        <choice>
+          <value>username</value>
+          <value>ldap</value>
+          <value>id</value>
+        </choice>
+      </attribute>
+      <group>
+        <attribute name="format">
+          <value>email</value>
+        </attribute>
+        <attribute name="is_anonymous">
+          <data type="boolean"/>
+        </attribute>
+      </group>
+    </choice>
+    <data type="string"/>
+  </define>
+</grammar>

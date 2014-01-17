@@ -1,0 +1,30 @@
+{
+    "artifact": {
+        "1": [
+            {
+                "artifact_id":  "123",
+                "summary":      "Le artifact with half history",
+                "open_date":    "1234567890",
+                "submitted_by": "goofy"
+            }
+        ]
+    },
+    "artifact_history": {
+        "123": [
+            {
+                "old_value":    "Le artifact",
+                "new_value":    "Le artifact with history",
+                "date":         "2234567890",
+                "submitted_by": "goofy",
+                "is_anonymous": "0"
+            },
+            {
+                "old_value":    "Le artifact with history",
+                "new_value":    "Le artifact with full history",
+                "date":         "3234567890",
+                "submitted_by": "goofy",
+                "is_anonymous": "0"
+            }
+        ]
+    }
+}

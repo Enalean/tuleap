@@ -32,7 +32,7 @@ class CardUpdater {
         $this->checkArtifact($user, $artifact);
         $cards_resource_validator = new CardValidator();
         $fields_data = $cards_resource_validator->getFieldsDataFromREST($user, $card, $label, $column_id, $values);
-        $artifact->createNewChangeset($fields_data, '', $user, '');
+        $artifact->createNewChangeset($fields_data, '', $user);
     }
 
     private function checkArtifact(PFUser $user, Tracker_Artifact $artifact) {

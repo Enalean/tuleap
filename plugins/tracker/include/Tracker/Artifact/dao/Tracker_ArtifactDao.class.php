@@ -304,10 +304,10 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function create($tracker_id, $submitted_by, $use_artifact_permissions) {
+    public function create($tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions) {
         $tracker_id               = $this->da->escapeInt($tracker_id);
         $use_artifact_permissions = $this->da->escapeInt($use_artifact_permissions);
-        $submitted_on             = $this->da->escapeInt($_SERVER['REQUEST_TIME']);
+        $submitted_on             = $this->da->escapeInt($submitted_on);
         $submitted_by             = $this->da->escapeInt($submitted_by);
         $this->startTransaction();
         $sql = "SELECT IFNULL(MAX(per_tracker_artifact_id), 0) + 1 as per_tracker_artifact_id

@@ -929,14 +929,14 @@ class TrackerFactory {
         require_once 'common/tracker/ArtifactType.class.php';
         $tv3 = new ArtifactType($project, $atid);
         if (!$tv3 || !is_object($tv3)) {
-            exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_at'));
+            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('tracker_index','not_create_at'));
         }
         if ($tv3->isError()) {
-            exit_error($Language->getText('global','error'),$tv3->getErrorMessage());
+            exit_error($GLOBALS['Language']->getText('global','error'),$tv3->getErrorMessage());
         }
         // Check if this tracker is valid (not deleted)
         if ( !$tv3->isValid() ) {
-            exit_error($Language->getText('global','error'),$Language->getText('tracker_add','invalid'));
+            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('tracker_add','invalid'));
         }
         //Check if the user can view the artifact
         if (!$tv3->userCanView()) {

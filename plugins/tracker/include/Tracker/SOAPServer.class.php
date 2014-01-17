@@ -467,7 +467,7 @@ class Tracker_SOAPServer {
 
             $fields_data = $this->getArtifactDataFromSoapRequest($artifact->getTracker(), $value, $artifact);
             try {
-                $artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format);
+                $artifact->createNewChangeset($fields_data, $comment, $user, true, $comment_format);
                 return $artifact_id;
             } catch (Tracker_NoChangeException $e) {
                 return $artifact_id;
