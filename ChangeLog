@@ -8,6 +8,7 @@ Version 6.10 (Not released yet)
 	* tests: 5.21
 	* fusionforge_compat: 0.6
 	* hudson: 1.13
+	* git: 3.64
 
 	== Enhancement ==
 	* Story #5678: contact administrators of a project
@@ -15,6 +16,7 @@ Version 6.10 (Not released yet)
 
 	== Bug Fix ==
 	* Fix request #5909: Fixing REST tests on project import from XML
+	* Fix request #5818: SSH keys with old username are removed
 
 	== Development ==
 	* Pull-out Vagrant and Chef in dedicated repositories

@@ -1,3 +1,6 @@
+Version 3.64 - Tuleap 6.10
+    * Fix request #5818: SSH keys with old username are removed
+
 Version 3.63 - Tuleap 6.9
     * Fix request #5803: Not able to define an http_port for gerrit servers
 
