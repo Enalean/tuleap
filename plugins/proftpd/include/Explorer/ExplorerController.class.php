@@ -31,12 +31,16 @@ class Proftpd_ExplorerController {
     }
 
     public function index() {
-        $path       = $this->getDirectoryPath();
-        $path_parts = $this->getPathParts($path);
+        $parser      = new Proftpd_Directory_DirectoryParser();
+        $path_parser = new Proftpd_Directory_DirectoryPathParser();
 
-        $parser     = new Proftpd_Directory_DirectoryParser();
-        $items      = $parser->parseDirectory(proftpdPlugin::BASE_DIRECTORY.'/'.$path);
-        $project    = $this->request->getProject();
+        $path        = $path_parser->getCleanPath($this->request->get('path'));
+        $path_parts  = $path_parser->getPathParts($path);
+
+        $remove_parent_directory_listing = ($path == '') ? true : false;
+
+        $items       = $parser->parseDirectory(proftpdPlugin::BASE_DIRECTORY.'/'.$path, $remove_parent_directory_listing);
+        $project     = $this->request->getProject();
 
         if (! $project) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_proftpd', 'cannot_open_project'));
@@ -51,29 +55,6 @@ class Proftpd_ExplorerController {
         );
 
         echo $this->getRenderer()->renderToString('index', $presenter);
-    }
-
-    private function getDirectoryPath() {
-        $path = $this->request->get('path');
-        if (! $path) {
-            return '';
-        }
-
-        return urldecode($path);
-    }
-
-    private function getPathParts($path) {
-        $path_parser = new Proftpd_Directory_DirectoryPathParser();
-        return $path_parser->getPathParts($path);
-    }
-
-    private function userCanAccess(Project $project) {
-        $user = $this->request->getCurrentUser();
-
-        if (! $project->isPublic() && ! $user->isMember($project->getID()) && ! $user->isSuperUser()) {
-            return false;
-        }
-        return true;
     }
 
     private function getRenderer() {

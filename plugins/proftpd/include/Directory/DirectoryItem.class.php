@@ -56,6 +56,9 @@ class Proftpd_Directory_DirectoryItem {
     }
 
     public function getLastModifiedDate() {
+        if (! $this->last_modified_date) {
+            return '';
+        }
         return date('Y M d H:i', $this->last_modified_date);
     }
 }

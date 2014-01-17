@@ -28,15 +28,23 @@ class Proftpd_Directory_DirectoryParser {
      *
      * @return Proftpd_Directory_DirectoryItemCollection
      */
-    public function parseDirectory($path) {
+    public function parseDirectory($path, $remove_parent_directory_listing) {
         $items = array(
             'folders' => array(),
             'files'   => array(),
         );
-        $directory_iterator   = new DirectoryIterator($path);
+        $directory_iterator = $this->getDirectoryOperator($path);
+
+        if ($directory_iterator == null) {
+            return $this->createForbiddenDirectoryContents();
+        }
 
         foreach ($directory_iterator as $file_info) {
-            if ($file_info->isDot()) {
+            if ($file_info->getFilename() === '.') {
+                continue;
+            }
+
+            if ($file_info->isDot() && $remove_parent_directory_listing) {
                 continue;
             }
 
@@ -64,12 +72,29 @@ class Proftpd_Directory_DirectoryParser {
     }
 
     private function createNaturalAlphabeticallyItemsCollection(array $items) {
-        uksort($items['folders'],  "strnatcmp");
+        uksort($items['folders'], "strnatcmp");
         uksort($items['files'],  "strnatcmp");
 
         $folders = array_values($items['folders']);
         $files   = array_values($items['files']);
 
         return new Proftpd_Directory_DirectoryItemCollection($folders, $files);
+    }
+
+    private function getDirectoryOperator($path) {
+        try {
+            return new DirectoryIterator($path);
+        } catch (UnexpectedValueException $e) {
+            return null;
+        }
+    }
+
+    private function createForbiddenDirectoryContents() {
+        $parent_item = new Proftpd_Directory_DirectoryItem('..', 'dir', null, null);
+
+        $directory_contents = new Proftpd_Directory_DirectoryItemCollection(array($parent_item), array());
+        $directory_contents->setAsForbidden();
+
+        return $directory_contents;
     }
 }

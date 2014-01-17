@@ -21,6 +21,8 @@
 
 class Proftpd_Directory_DirectoryPathParser {
 
+    const BASE_PATH = '';
+
     /**
      * @param string $path
      * @return Proftpd_Directory_DirectoryPathCollection
@@ -39,6 +41,45 @@ class Proftpd_Directory_DirectoryPathParser {
         }
 
         return $parts;
+    }
+
+    /**
+     * @param string $path_from_request
+     * @return string
+     */
+    public function getCleanPath($path_from_request) {
+        if (! $path_from_request) {
+            return self::BASE_PATH;
+        }
+
+        $path = urldecode($path_from_request);
+
+        if (! $this->shouldGoToParentDirectory($path)) {
+            return $path;
+        }
+
+        $safe_path = $this->getSafeParentDirectoryPath($path);
+
+        return $this->getParentDirectory($safe_path);
+    }
+
+    private function shouldGoToParentDirectory($path) {
+        return strstr($path, '..');
+    }
+
+    private function getSafeParentDirectoryPath($path) {
+        return strstr($path, '..', true);
+    }
+
+    private function getParentDirectory($safe_path) {
+        $clean_path = rtrim($safe_path, '/');
+
+        $path_last_slash_position = strrpos($clean_path, '/');
+        if ($path_last_slash_position) {
+            return substr($safe_path, 0, $path_last_slash_position);
+        } else {
+            return self::BASE_PATH;
+        }
     }
 }
 ?>

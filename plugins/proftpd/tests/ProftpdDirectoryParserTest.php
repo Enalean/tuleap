@@ -72,12 +72,12 @@ class Proftpd_Directory_DirectoryParserTest extends TuleapTestCase {
 
     public function itReturnsContentOfDirectoryInformation() {
         $path   = realpath(dirname(__FILE__).'/_fixtures/sftp_directory');
-        $items  = $this->parser->parseDirectory($path);
+        $items  = $this->parser->parseDirectory($path, false);
 
         $folders = $items->getFolders();
         $files   = $items->getFiles();
 
-        $this->assertCount($folders, 3);
+        $this->assertCount($folders, 4);
         $this->assertCount($files, 1);
 
         $this->assertIsA($folders[0], 'Proftpd_Directory_DirectoryItem');
@@ -88,21 +88,21 @@ class Proftpd_Directory_DirectoryParserTest extends TuleapTestCase {
 
     public function itReturnsContentOfDirectoryInformationIfPathEndsBySlash() {
         $path   = realpath(dirname(__FILE__).'/_fixtures/sftp_directory/');
-        $items  = $this->parser->parseDirectory($path);
+        $items  = $this->parser->parseDirectory($path, false);
 
         $folders = $items->getFolders();
         $files   = $items->getFiles();
 
-        $this->assertCount($folders, 3);
+        $this->assertCount($folders, 4);
         $this->assertCount($files, 1);
 
         $this->assertIsA($folders[0], 'Proftpd_Directory_DirectoryItem');
         $this->assertIsA($files[0], 'Proftpd_Directory_DirectoryItem');
     }
 
-    public function itDoesNotReturnDotFolders() {
+    public function itDoesNotReturnDotFoldersWhenAskedNotTo() {
         $path   = realpath(dirname(__FILE__).'/_fixtures/sftp_directory');
-        $items  = $this->parser->parseDirectory($path);
+        $items  = $this->parser->parseDirectory($path, true);
 
         foreach ($items->getFolders() as $folder) {
             $this->assertFalse($folder->getName() == '..');
@@ -110,29 +110,47 @@ class Proftpd_Directory_DirectoryParserTest extends TuleapTestCase {
         }
     }
 
+    public function itDoesReturnDotDotFolder() {
+        $path   = realpath(dirname(__FILE__).'/_fixtures/sftp_directory');
+        $items  = $this->parser->parseDirectory($path, false);
+
+        $dotdot_exists = false;
+        foreach ($items->getFolders() as $folder) {
+            if ($folder->getName() == '..') {
+                $dotdot_exists = true;
+            }
+
+            $this->assertFalse($folder->getName() == '.');
+        }
+
+        $this->assertTrue($dotdot_exists);
+    }
+
     public function itReturnsFilesAndFoldersInANaturalOrder() {
         $path   = realpath(dirname(__FILE__).'/_fixtures/sftp_directory');
-        $items  = $this->parser->parseDirectory($path);
+        $items  = $this->parser->parseDirectory($path, false);
 
         $folders = $items->getFolders();
 
-        $folder1 = $folders[0];
-        $folder2 = $folders[1];
-        $folder3 = $folders[2];
+        $folder0 = $folders[0];
+        $folder1 = $folders[1];
+        $folder2 = $folders[2];
+        $folder3 = $folders[3];
 
+        $this->assertEqual('..'      , $folder0->getName());
         $this->assertEqual('folder01', $folder1->getName());
-        $this->assertEqual('folder9',  $folder2->getName());
+        $this->assertEqual('folder9' ,  $folder2->getName());
         $this->assertEqual('folder10', $folder3->getName());
     }
 
     public function itReturnsContentOfSubDirectoryInformation() {
         $path   = realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder01');
-        $items  = $this->parser->parseDirectory($path);
+        $items  = $this->parser->parseDirectory($path, false);
 
         $folders = $items->getFolders();
         $files   = $items->getFiles();
 
-        $this->assertCount($folders, 0);
+        $this->assertCount($folders, 1);
         $this->assertCount($files, 1);
 
         $this->assertIsA($files[0], 'Proftpd_Directory_DirectoryItem');

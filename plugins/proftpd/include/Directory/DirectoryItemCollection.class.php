@@ -32,6 +32,12 @@ class Proftpd_Directory_DirectoryItemCollection {
     private $files;
 
     /**
+     * User has access to directory
+     * @var bool
+     */
+    private $is_forbidden = false;
+
+    /**
      * @param Proftpd_Directory_DirectoryItem[] $folders
      * @param Proftpd_Directory_DirectoryItem[] $files
      */
@@ -52,5 +58,13 @@ class Proftpd_Directory_DirectoryItemCollection {
      */
     public function getFiles() {
         return $this->files;
+    }
+
+    public function setAsForbidden() {
+        $this->is_forbidden = true;
+    }
+
+    public function isForbidden() {
+        return $this->is_forbidden;
     }
 }
