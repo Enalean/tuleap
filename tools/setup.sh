@@ -923,13 +923,13 @@ do
 		;;
 	--mysql-httpd-host)
 		mysql_httpd_host="$2";shift 2 ;;
-    --mysql_package_name)
+    --mysql-server-package)
         mysql_package_name="$2"; shift 2 ;;
 	-h|--help)
 		usage $0 ;;
-        --)
+    --)
 		shift 1; break ;;
-        *)
+    *)
 		break ;;
     esac
 done
