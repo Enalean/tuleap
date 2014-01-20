@@ -116,7 +116,7 @@ class AgileDashboardRouter {
                 $this->renderAction($controller, 'importForm', $request);
                 break;
             case 'export-to-file':
-                $this->renderAction($controller, 'exportToFile', $request);
+                $this->executeAction($controller, 'exportToFile');
                 break;
             case 'create':
                 $this->executeAction($controller, 'create');
