@@ -203,6 +203,10 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         return $this->fetchRecursiveArtifact('fetchArtifact', array($artifact, $submitted_values));
     }
 
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array()) {
+        return $this->fetchRecursiveArtifact('fetchArtifactForOverlay', array($artifact, $submitted_values));
+    }
+
     /**
      * Fetch the element for the update artifact form
      *
@@ -217,16 +221,17 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     protected function fetchRecursiveArtifact($method, $params = array()) {
         $html = '';
         $content = $this->getContainerContent($method, $params);
-        
+
         if (count($content)) {
             $html .= $this->fetchArtifactPrefix();
             $html .= $this->fetchArtifactContent($content);
             $html .= $this->fetchArtifactSuffix();
         }
+
         $this->has_been_displayed = true;
         return $html;
     }
-    
+
     protected function fetchRecursiveArtifactReadOnly($method, $params = array()) {
         $html = '';
         $content = $this->getContainerContent($method, $params);
