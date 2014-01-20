@@ -17,14 +17,35 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once 'constants.php';
 
 class proftpdPlugin extends Plugin {
 
+    public function __construct($id) {
+        parent::__construct($id);
+        $this->_addHook('cssfile', 'cssFile', false);
+    }
+
     public function getPluginInfo() {
-        if (!is_a($this->pluginInfo, 'ProftpdPluginInfo')) {
+        if (! is_a($this->pluginInfo, 'ProftpdPluginInfo')) {
             $this->pluginInfo = new ProftpdPluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    public function process(HTTPRequest $request) {
+        $router = new ProftpdRouter();
+
+        $request->set('proftpd_base_directory', $this->getPluginInfo()->getPropVal('proftpd_base_directory'));
+        $router->route($request);
+    }
+
+    public function cssFile($params) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
+        ) {
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
+        }
     }
 
     public function getHooksAndCallbacks() {

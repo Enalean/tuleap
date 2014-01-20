@@ -1,5 +1,11 @@
+plugin_proftpd	service_lbl_key	Navigateur (S)FTP
 plugin_proftpd	descriptor_description	Gestion de Proftpd en tant que server FTP
 plugin_proftpd	descriptor_name	Proftpd
+
+plugin_proftpd	file_column_name	Fichier
+plugin_proftpd	size_column_name	Taille (KB)
+plugin_proftpd	date_added_column_name	Date d'ajout
+plugin_proftpd	cannot_open_project	Impossible d'ouvrir le project
 
 plugin_proftpd	log_title	Accès FTP
 plugin_proftpd	log_filepath	Chemin

@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,10 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__) . '/../include/autoload.php');
-
-foreach (glob(dirname(__FILE__).'/builders/*.php') as $file) {
-    require_once $file;
-}
-
+define('PROFTPD_BASE_URL', '/plugins/proftpd');
+define('PROFTPD_BASE_DIR', dirname(__FILE__));
 ?>
