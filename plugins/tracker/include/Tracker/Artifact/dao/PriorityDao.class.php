@@ -40,6 +40,9 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
      * @return bool true if success
      */
     public function moveArtifactBefore($artifact_id, $successor_id) {
+        if ($artifact_id == $successor_id) {
+            throw new Tracker_Artifact_Exception_CannotRankWithMyself($artifact_id);
+        }
         $this->da->startTransaction();
         $predecessor_id = $this->searchPredecessor($successor_id);
         if ($predecessor_id !== false && $predecessor_id != $artifact_id && $this->removeAndInsert($predecessor_id, $artifact_id)) {
@@ -63,6 +66,9 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
      * @return bool true if success
      */
     public function moveArtifactAfter($artifact_id, $predecessor_id) {
+        if ($artifact_id == $predecessor_id) {
+            throw new Tracker_Artifact_Exception_CannotRankWithMyself($artifact_id);
+        }
         $this->da->startTransaction();
         if ($this->removeAndInsert($predecessor_id, $artifact_id)) {
             $this->da->commit();

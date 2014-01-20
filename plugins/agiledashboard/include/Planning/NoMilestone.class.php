@@ -136,5 +136,10 @@ class Planning_NoMilestone implements Planning_Milestone {
     public function getParent() {
         return null;
     }
+
+    public function milestoneCanBeSubmilestone(Planning_Milestone $potential_submilestone) {
+        return false;
+    }
+
 }
 ?>

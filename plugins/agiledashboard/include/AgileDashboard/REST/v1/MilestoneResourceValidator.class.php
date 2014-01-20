@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -105,6 +105,20 @@ class MilestoneResourceValidator {
         return count($artifacts) === count($ids);
     }
 
+    public function validateSubmilestonesFromBodyContent(array $ids, Planning_Milestone $milestone, PFUser $user) {
+        if (! $milestone->getArtifact()->userCanUpdate($user)){
+            throw new UserCannotUpdateMilestoneException($milestone->getArtifactId());
+        }
+
+        if (! $this->idsAreUnique($ids)) {
+            throw new IdsFromBodyAreNotUniqueException();
+        }
+
+        foreach($ids as $id) {
+            $this->checkSubMilestoneById($milestone, $user, $id);
+        }
+    }
+
     private function idsAreUnique(array $ids) {
         $ids_unique = array_unique($ids);
         return count($ids) == count($ids_unique);
@@ -190,5 +204,25 @@ class MilestoneResourceValidator {
         }
 
         return true;
+    }
+
+    private function checkSubMilestoneById(Planning_Milestone $milestone, PFUser $user, $sub_milesone_id) {
+        $sub_milestone = $this->milestone_factory->getBareMilestoneByArtifactId($user, $sub_milesone_id);
+
+        if (! $sub_milestone) {
+            throw new SubMilestoneDoesNotExistException($sub_milesone_id);
+        }
+
+        if (! $milestone->milestoneCanBeSubmilestone($sub_milestone)) {
+            throw new ElementCannotBeSubmilestoneException($milestone->getArtifactId(), $sub_milestone->getArtifactId());
+        }
+
+        if (! $sub_milestone->getArtifact()->userCanView()) {
+            throw new UserCannotReadSubMilestoneException($sub_milesone_id);
+        }
+
+        if($sub_milestone->getParent() && $sub_milestone->getParent()->getArtifactId() != $milestone->getArtifactId()) {
+            throw new SubMilestoneAlreadyHasAParentException($sub_milesone_id);
+        }
     }
 }

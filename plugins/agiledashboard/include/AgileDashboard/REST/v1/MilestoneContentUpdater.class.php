@@ -19,6 +19,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\AgileDashboard\REST\v1;
+
+use \Tracker_FormElementFactory;
+use \Tracker_FormElement_Field_ArtifactLink;
+use \Tracker_ArtifactFactory;
+use \Planning_Milestone;
+use \PFUser;
+
 class MilestoneContentUpdater {
 
     /** @var Tracker_FormElementFactory */
@@ -27,9 +35,13 @@ class MilestoneContentUpdater {
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    public function __construct(Tracker_FormElementFactory $form_element_factory) {
-        $this->form_element_factory = $form_element_factory;
-        $this->artifact_factory     = Tracker_ArtifactFactory::instance();
+    /** @var ArtifactLinkUpdater */
+    private $artifactlink_updater;
+
+    public function __construct(Tracker_FormElementFactory $form_element_factory, ArtifactLinkUpdater $artifactlink_updater) {
+        $this->form_element_factory     = $form_element_factory;
+        $this->artifact_factory         = Tracker_ArtifactFactory::instance();
+        $this->artifactlink_updater     = $artifactlink_updater;
     }
 
     /**
@@ -55,7 +67,7 @@ class MilestoneContentUpdater {
             $linked_artifact_ids
         );
 
-        $this->unlinkAndLinkElements($artifact, $fields_data, $current_user, $linked_artifact_ids);
+        $this->artifactlink_updater->unlinkAndLinkElements($artifact, $fields_data, $current_user, $linked_artifact_ids);
     }
 
     private function getFieldsDataForNewChangeset(
@@ -65,10 +77,7 @@ class MilestoneContentUpdater {
         array $linked_artifact_ids
     ) {
         $artifact                = $milestone->getArtifact();
-        $fields_data             = array();
-        $elements_already_linked = $this->getMilestoneContentItemsAlreadyLinked(
-            $artifact->getLinkedArtifacts($current_user)
-        );
+        $elements_already_linked = $this->artifactlink_updater->getElementsAlreadyLinkedToMilestone($artifact, $current_user);
 
         $unlinked_elements = $this->getMilestoneContentItemsToUnlink(
             $milestone,
@@ -76,56 +85,9 @@ class MilestoneContentUpdater {
             $linked_artifact_ids
         );
 
-        $linked_elements = array();
-        foreach($linked_artifact_ids as $linked_artifact_id) {
-            if (! in_array($linked_artifact_id, $elements_already_linked)) {
-                $linked_elements[] = $linked_artifact_id;
-            }
-        }
+        $linked_elements = $this->artifactlink_updater->getElementsToLink($elements_already_linked, $linked_artifact_ids);
 
-        $formated_linked_elements = $this->formatLinkedElementForNewChangeset($linked_elements);
-
-        $fields_data[$artlink_field->getId()]['removed_values'] = $unlinked_elements;
-        $fields_data[$artlink_field->getId()]['new_values']     = $formated_linked_elements;
-
-        return $fields_data;
-    }
-
-    private function getMilestoneContentItemsAlreadyLinked(array $artifacts) {
-        return array_map(
-            function (Tracker_Artifact $artifact) {
-                return $artifact->getId();
-            },
-            $artifacts
-        );
-    }
-
-    private function unlinkAndLinkElements(Tracker_Artifact $artifact, array $fields_data, PFUser $current_user, array $linked_artifact_ids) {
-        try {
-            $artifact->createNewChangeset($fields_data, '', $current_user);
-        } catch (Tracker_NoChangeException $exception) {
-            //Do nothing. Just need to reorder the items
-        } catch (Exception $exception) {
-            return false;
-        }
-
-        $this->setOrder($linked_artifact_ids);
-    }
-
-    public function setOrder(array $linked_artifact_ids) {
-        $dao         = new Tracker_Artifact_PriorityDao();
-        $predecessor = null;
-
-        foreach ($linked_artifact_ids as $linked_artifact_id) {
-            if (isset($predecessor)) {
-                $dao->moveArtifactAfter($linked_artifact_id, $predecessor);
-            }
-            $predecessor = $linked_artifact_id;
-        }
-    }
-
-    private function formatLinkedElementForNewChangeset(array $linked_elements) {
-        return implode(',', $linked_elements);
+        return $this->artifactlink_updater->formatFieldDatas($artlink_field, $linked_elements, $unlinked_elements);
     }
 
     /**
@@ -159,7 +121,7 @@ class MilestoneContentUpdater {
                         $content_trackers_ids
                     )
                 ) {
-                    $removed_values[$artifact_already_linked_id] = 1;
+                    $removed_values[] = $artifact_already_linked_id;
                 }
             }
         }

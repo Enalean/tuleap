@@ -30,7 +30,6 @@ use \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
 use \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use \AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
 use \AgileDashboard_BacklogItemDao;
-use \MilestoneContentUpdater;
 use \ArtifactIsNotInOpenAndUnassignedBacklogItemsException;
 use \IdsFromBodyAreNotUniqueException;
 use \Luracast\Restler\RestException;
@@ -50,6 +49,9 @@ class ProjectBacklogResource {
 
     /** @var \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $backlog_item_collection_factory;
+
+    /** @var ArtifactLinkUpdater */
+    private $artifactlink_updater;
 
     public function __construct() {
         $planning_factory             = PlanningFactory::build();
@@ -87,7 +89,8 @@ class ProjectBacklogResource {
             $this->backlog_item_collection_factory
         );
 
-        $this->milestone_content_updater = new MilestoneContentUpdater($tracker_form_element_factory);
+        $this->artifactlink_updater      = new ArtifactLinkUpdater();
+        $this->milestone_content_updater = new MilestoneContentUpdater($tracker_form_element_factory, $this->artifactlink_updater);
     }
 
     /**
@@ -133,7 +136,11 @@ class ProjectBacklogResource {
             throw new RestException(500, $exception->getMessage());
         }
 
-        $this->milestone_content_updater->setOrder($ids);
+        try {
+            $this->artifactlink_updater->setOrder($ids);
+        } catch (ItemListedTwiceException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
 
         $this->sendAllowHeaders();
     }
