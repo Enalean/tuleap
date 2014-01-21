@@ -42,6 +42,7 @@ require_once 'pre.php';
 require_once 'plugins_utils.php';
 require_once 'common/user/UserManager.class.php';
 require_once dirname(__FILE__) .'/../include/MediawikiDao.class.php';
+require_once dirname(__FILE__) .'/../include/MediawikiGroupsMapper.class.php';
 
 sysdebug_lazymode(true);
 
@@ -172,22 +173,22 @@ function TuleapMediawikiAuthentication($user, &$result) {
     session_set();
 
     if (session_loggedin()) {
-            $forge_user     = session_get_user();
+            $tuleap_user    = session_get_user();
             $group          = group_get_object_by_name($fusionforgeproject);
-            $madiawiki_name = ucfirst($forge_user->getUnixName()) ;
+            $madiawiki_name = ucfirst($tuleap_user->getUnixName()) ;
             $mediawiki_user = User::newFromName($madiawiki_name);
 
             if ($mediawiki_user->getID() == 0) {
                     $mediawiki_user->addToDatabase();
                     $mediawiki_user->setPassword(User::randomPassword());
-                    $mediawiki_user->setRealName($forge_user->getRealName());
+                    $mediawiki_user->setRealName($tuleap_user->getRealName());
                     $mediawiki_user->setToken();
                     $mediawiki_user->loadFromDatabase();
             }
 
             $user->mId = $mediawiki_user->getID();
             $user->loadFromId() ;
-            $user = defineUserMediawikiGroups($user, $group);
+            $user = manageMediawikiGroupsForUser($user, $tuleap_user, $group);
 
             $user->setCookies();
             $user->saveSettings();
@@ -200,36 +201,16 @@ function TuleapMediawikiAuthentication($user, &$result) {
     return true ;
 }
 
-function defineUserMediawikiGroups(User $mediawiki_user, Group $group) {
-    $user = UserManager::instance()->getCurrentUser();
+function manageMediawikiGroupsForUser(User $mediawiki_user, PFUser $tuleap_user, Group $group) {
+    $groups_mapper    = new MediawikiGroupsMapper(new MediawikiDao());
+    $mediawiki_groups = $groups_mapper->defineUserMediawikiGroups($tuleap_user, $group);
 
-    $mediawiki_user->removeGroup('ForgeRole');
-
-    if ($user->isMember($group->getID(), 'A')) {
-        $mediawiki_user->addGroup('bureaucrat');
-        $mediawiki_user->addGroup('sysop');
-
-    } else if (($group->isPublic() && ! $user->isAnonymous()) || $user->isMember($group->getID())) {
-        $mediawiki_user->addGroup('user');
-        $mediawiki_user->addGroup('autoconfirmed');
-        $mediawiki_user->addGroup('emailconfirmed');
-
-    } else {
-        $mediawiki_user->addGroup('*');
+    foreach ($mediawiki_groups['removed'] as $group_to_remove) {
+        $mediawiki_user->removeGroup($group_to_remove);
     }
 
-    $mediawiki_user = removeUnconsistantMediawikiGroups($mediawiki_user);
-
-    return $mediawiki_user;
-}
-
-function removeUnconsistantMediawikiGroups(User $mediawiki_user) {
-    $mediawiki_explicit_groups = $mediawiki_user->getGroups();
-
-    foreach ($mediawiki_explicit_groups as $current_mediawiki_group) {
-        if (preg_match('/^ForgeRole*/', $current_mediawiki_group)) {
-            $mediawiki_user->removeGroup($current_mediawiki_group);
-        }
+    foreach ($mediawiki_groups['added'] as $group_to_add) {
+        $mediawiki_user->addGroup($group_to_add);
     }
 
     return $mediawiki_user;

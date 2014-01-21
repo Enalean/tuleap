@@ -23,7 +23,7 @@ class MediawikiDao extends DataAccessObject {
 
     public function getMediawikiPagesNumberOfAProject(Project $project) {
         $database_name = self::getMediawikiDatabaseName($project);
-        $group_id      = $project->getID();
+        $group_id      = $this->da->escapeInt($project->getID());
 
         $sql = "SELECT $group_id AS group_id, COUNT(1) AS result
                 FROM $database_name.mwpage";
@@ -33,7 +33,7 @@ class MediawikiDao extends DataAccessObject {
 
     public function getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate(Project $project, $start_date, $end_date) {
         $database_name = self::getMediawikiDatabaseName($project);
-        $group_id      = $project->getID();
+        $group_id      = $this->da->escapeInt($project->getID());
 
         $start_date    = date("YmdHis", strtotime($start_date));
         $end_date      = date("YmdHis", strtotime($end_date));
@@ -51,7 +51,7 @@ class MediawikiDao extends DataAccessObject {
 
     public function getCreatedPagesNumberSinceStartDate(Project $project, $start_date) {
         $database_name = self::getMediawikiDatabaseName($project);
-        $group_id      = $project->getID();
+        $group_id      = $this->da->escapeInt($project->getID());
 
         $start_date    = date("YmdHis", strtotime($start_date));
 
@@ -64,6 +64,22 @@ class MediawikiDao extends DataAccessObject {
                ";
 
         return $this->retrieve($sql)->getRow();
+    }
+
+    public function getMediawikiGroupsForUser(PFUser $user, Project $project) {
+        $database_name = self::getMediawikiDatabaseName($project);
+        $user_name     = $this->da->quoteSmart($this->getMediawikiUserName($user));
+
+        $sql = "SELECT ug_group
+                FROM $database_name.mwuser_groups
+                    INNER JOIN $database_name.mwuser ON $database_name.mwuser.user_id = $database_name.mwuser_groups.ug_user
+                WHERE user_name = $user_name";
+
+        return $this->retrieve($sql)->getRow();
+    }
+
+    private function getMediawikiUserName(PFUser $user) {
+        return ucfirst($user->getUnixName());
     }
 
     public static function getMediawikiDatabaseName(Project $project) {

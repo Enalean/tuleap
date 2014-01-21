@@ -1,4 +1,4 @@
-AUTOLOAD_EXCLUDES=mediawiki|tests|template
+AUTOLOAD_EXCLUDES=tests|template
 
 default:
 	@echo "possible targets: 'doc' 'test' 'autoload' 'less' 'less-dev' 'api_test' 'api_test_group'"
