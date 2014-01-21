@@ -69,6 +69,7 @@ class Combined {
             '/scripts/codendi/RichTextEditor.js',
             '/scripts/codendi/Tracker.js',
             '/scripts/codendi/TreeNode.js',
+            '/scripts/tuleap/tuleap-modal.js',
         );
         EventManager::instance()->processEvent(Event::COMBINED_SCRIPTS, array('scripts' => &$arr));
         return $arr;
