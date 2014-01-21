@@ -78,6 +78,67 @@ class MediawikiDao extends DataAccessObject {
         return $this->retrieve($sql)->getRow();
     }
 
+    public function removeUser(PFUser $user, Project $project) {
+        $database_name   = self::getMediawikiDatabaseName($project);
+        $user_id         = $this->getMediawikiUserId($user, $project);
+        $escaped_user_id = $this->da->escapeInt($user_id);
+
+        if (! $user_id) {
+            return false;
+        }
+
+        $this->removeAllUserGroups($escaped_user_id, $database_name);
+
+        $sql = "DELETE
+                FROM $database_name.mwuser
+                WHERE user_id = $escaped_user_id";
+
+        return $this->update($sql);
+    }
+
+    private function removeAllUserGroups($escaped_user_id, $database_name) {
+        $sql = "DELETE
+                FROM $database_name.mwuser_groups
+                WHERE ug_user = $escaped_user_id";
+
+        return $this->update($sql);
+    }
+
+    public function removeAdminsGroupsForUser(PFUser $user, Project $project) {
+        $database_name   = self::getMediawikiDatabaseName($project);
+        $user_id         = $this->getMediawikiUserId($user, $project);
+        $escaped_user_id = $this->da->escapeInt($user_id);
+
+        if (! $user_id) {
+            return false;
+        }
+
+         $sql = "DELETE
+                 FROM $database_name.mwuser_groups
+                 WHERE ug_user = $escaped_user_id
+                   AND ug_group = 'bureaucrat'
+                   OR  ug_group = 'sysop'";
+
+        return $this->update($sql);
+    }
+
+    private function getMediawikiUserId(PFUser $user, Project $project) {
+        $database_name = self::getMediawikiDatabaseName($project);
+        $user_name     = $this->da->quoteSmart($this->getMediawikiUserName($user));
+
+        $sql = "SELECT user_id
+                FROM $database_name.mwuser
+                WHERE user_name = $user_name";
+
+        $data = $this->retrieve($sql)->getRow();
+
+        if (! $data) {
+            return false;
+        }
+
+        return $data['user_id'];
+    }
+
     private function getMediawikiUserName(PFUser $user) {
         return ucfirst($user->getUnixName());
     }

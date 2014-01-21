@@ -4,23 +4,23 @@
  *
  * Copyright 2000-2011, Fusionforge Team 
  * Copyright 2012, Franck Villaume - TrivialDev
- * http://fusionforge.org
+ * Copyright (c) Enalean SAS 2014. All Rights Reserved.
  *
- * This file is part of FusionForge.
+ * This file is a part of Tuleap.
  *
- * FusionForge is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * FusionForge is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 require_once 'common/plugin/Plugin.class.php';
@@ -52,6 +52,10 @@ class MediaWikiPlugin extends Plugin {
             $this->_addHook('register_project_creation');
 
             $this->_addHook(Event::SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK);
+
+            //User permissions
+            $this->_addHook('project_admin_remove_user');
+            $this->_addHook('project_admin_change_user_permissions');
 
             // Search
             $this->_addHook(Event::LAYOUT_SEARCH_ENTRY);
@@ -537,9 +541,43 @@ class MediaWikiPlugin extends Plugin {
         $params['csv_exporter']->buildDatas($number_of_page_between_two_dates, "Modified Mediawiki pages");
         $params['csv_exporter']->buildDatas($number_of_page_since_a_date, "Number of created Mediawiki pages since start date");
     }
-}
 
-// Local Variables:
-// mode: php
-// c-file-style: "bsd"
-// End:
+    public function project_admin_remove_user($params) {
+        $user    = $this->getUserFromParams($params);
+        $project = $this->getProjectFromParams($params);
+        $dao     = $this->getDao();
+
+        $dao->removeUser($user, $project);
+    }
+
+    public function project_admin_change_user_permissions($params) {
+        $user    = $this->getUserFromParams($params);
+        $project = $this->getProjectFromParams($params);
+        $dao     = $this->getDao();
+
+        if ($this->userWasPreviouslyProjectAdmin($params)) {
+            $dao->removeAdminsGroupsForUser($user, $project);
+        }
+    }
+
+    private function userWasPreviouslyProjectAdmin($params) {
+        return $params['user_permissions']['admin_flags'] === ''
+            && $params['previous_permissions']['admin_flags'] === 'A';
+    }
+
+    private function getUserFromParams($params) {
+        $user_id  = $params['user_id'];
+
+        return UserManager::instance()->getUserById($user_id);
+    }
+
+    private function getProjectFromParams($params) {
+        $group_id = $params['group_id'];
+
+        return ProjectManager::instance()->getProject($group_id);
+    }
+
+    private function getDao() {
+        return new MediawikiDao();
+    }
+}
