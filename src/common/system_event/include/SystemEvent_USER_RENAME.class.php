@@ -22,16 +22,16 @@ require_once 'common/system_event/SystemEvent.class.php';
 
 
 /**
- * Change User name 
+ * Change User name
  *
  */
 class SystemEvent_USER_RENAME extends SystemEvent {
 
     /**
      * Set multiple logs
-     *  
+     *
      * @param String $log Log string
-     * 
+     *
      * @return void
      */
     public function setLog($log) {
@@ -43,10 +43,10 @@ class SystemEvent_USER_RENAME extends SystemEvent {
     }
 
     /**
-     * Verbalize the parameters so they are readable and much user friendly in 
+     * Verbalize the parameters so they are readable and much user friendly in
      * notifications
-     * 
-     * @param bool $with_link true if you want links to entities. The returned 
+     *
+     * @param bool $with_link true if you want links to entities. The returned
      * string will be html instead of plain/text
      *
      * @return string
@@ -58,9 +58,9 @@ class SystemEvent_USER_RENAME extends SystemEvent {
         return $txt;
     }
 
-    /** 
+    /**
      * Process stored event
-     * 
+     *
      * @return Boolean
      */
     public function process() {
@@ -82,27 +82,27 @@ class SystemEvent_USER_RENAME extends SystemEvent {
                     $renameState = $renameState & false;
                 }
             }
-        
+
             // Update DB
             if (!$this->updateDB($user, $new_name)) {
                 $this->error('Could not update User (id:'.$user->getId().') from "'.$user->getUserName().'" to "'.$new_name.'"');
                 $renameState = $renameState & false;
             }
-            
+
             //Rename CVS files
             $backendCVS = $this->getBackend('CVS');
             if (!$backendCVS->updateCVSWritersForGivenMember($user)) {
                 $this->error('Could not update CVS writers for the user (id:'.$user->getId().')');
                 $renameState = $renameState & false;
             }
-            
+
             //Rename SVN files
             $backendSVN = $this->getBackend('SVN');
             if (!$backendSVN->updateSVNAccessForGivenMember($user)) {
                 $this->error('Could not update SVN access files for the user (id:'.$user->getId().')');
                 $renameState = $renameState & false;
             }
-       
+
             $backendSystem->setNeedRefreshGroupCache();
             $backendSystem->setNeedRefreshUserCache();
 
@@ -112,28 +112,28 @@ class SystemEvent_USER_RENAME extends SystemEvent {
 
             EventManager::instance()->processEvent(__CLASS__, $params);
         }
-        
+
         if ($renameState) {
             $this->done();
-        } 
+        }
         return $renameState;
     }
-    
-    
+
+
      /**
      * Update database
-     * 
+     *
      * @param PFUser    $user     User to update
      * @param String  $new_name New name
-     * 
+     *
      * @return Boolean
      */
     protected function updateDB($user, $new_name) {
         $um = UserManager::instance();
         return $um->renameUser($user, $new_name);
     }
-    
 
-    
+
+
 }
 ?>
