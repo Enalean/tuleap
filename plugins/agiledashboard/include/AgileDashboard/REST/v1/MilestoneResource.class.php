@@ -202,6 +202,8 @@ class MilestoneResource {
                         'user'                     => $user,
                         'milestone'                => $milestone,
                         'milestone_representation' => &$milestone_representation,
+                        'version'                  => 'v1'
+
                     )
                 );
 
