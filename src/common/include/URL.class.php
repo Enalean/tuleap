@@ -144,7 +144,7 @@ class URL {
             return $group_id;
         } else return null;
     }
-    
+
     function getProjectDao() {
         return new ProjectDao(CodendiDataAccess::instance());
     }

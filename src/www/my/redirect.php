@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2005. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2005
@@ -41,27 +42,10 @@ if ($request->valid($vPv) && $request->get('pv') == 2) {
 $vReturnTo = new Valid_String('return_to');
 $vReturnTo->required();
 if($request->valid($vReturnTo)) {
-    // if return_to URL start with a protocol name then take as is
-    // otherwise prepend the proper http protocol
-
     // Re-serialize feedback to display it on the 'return_to' page.
     $HTML->_serializeFeedback();
 
-    $return_to = trim($request->get('return_to'));
-
-    $use_ssl = session_issecure() || $GLOBALS['sys_force_ssl'];
-    
-    if ($use_ssl) {
-        $server_url = "https://".$GLOBALS['sys_https_host'];
-    } else {
-        $server_url = "http://".$GLOBALS['sys_default_domain'];
-    }
-    
-    if (preg_match("/^[A-Za-z]+:\/\//i", $return_to)) {
-        $return_url = $return_to;
-    } else {	
-        $return_url = $server_url.$return_to;		
-    }
+    $return_url = trim($request->get('return_to'));
     
     $redirect = $Language->getText('my_redirect', 'return_to', array($hp->purify($return_url, CODENDI_PURIFIER_CONVERT_HTML)));
     
@@ -84,6 +68,6 @@ else {
 
 <p><big><?= $redirect; ?></big></p>
 
-<?
+<?php
 ($pv == 2) ? $HTML->pv_footer(array()) : site_footer(array());
 ?>

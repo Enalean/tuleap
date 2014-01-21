@@ -567,10 +567,8 @@ class URLVerification {
      * @return void
      */
     function header($location) {
-
         header('Location: '.$location);
         exit;
-
     }
 
 }
