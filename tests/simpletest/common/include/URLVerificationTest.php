@@ -71,6 +71,14 @@ class URLVerificationTest extends TuleapTestCase {
 
     function setUp() {
         parent::setUp();
+
+        $GLOBALS['Response']           = mock('Layout');
+        $GLOBALS['sys_allow_anon']     = 1;
+        $GLOBALS['sys_default_domain'] = 'default';
+        $GLOBALS['sys_https_host']     = 'default';
+        $GLOBALS['sys_force_ssl']      = 0;
+        unset($GLOBALS['group_id']);
+
         $this->fixtures = dirname(__FILE__).'/_fixtures';
         $GLOBALS['Language'] = new MockBaseLanguage($this);
 
@@ -84,10 +92,11 @@ class URLVerificationTest extends TuleapTestCase {
     function tearDown() {
         UserManager::clearInstance();
         unset($GLOBALS['Language']);
-        $GLOBALS['sys_allow_anon'] = 1;
-        $GLOBALS['sys_default_domain'] = 1;
-        $GLOBALS['sys_force_ssl'] = 1;
-        $GLOBALS['sys_https_host'] = 1;
+        unset($GLOBALS['Response']);
+        unset($GLOBALS['sys_allow_anon']);
+        unset($GLOBALS['sys_default_domain']);
+        unset($GLOBALS['sys_force_ssl']);
+        unset($GLOBALS['sys_https_host']);
         unset($GLOBALS['group_id']);
         unset($_REQUEST['type_of_search']);
         parent::tearDown();

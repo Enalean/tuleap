@@ -54,7 +54,6 @@ class User_LoginPresenter {
     }
 
     public function toggle_ssl() {
-        return true;
         return $this->toggle_ssl;
     }
 

@@ -136,6 +136,9 @@ class HTTPRequest extends Codendi_Request {
         }
     }
 
+    public function isSSL() {
+        return isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on');
+    }
 }
 
 ?>

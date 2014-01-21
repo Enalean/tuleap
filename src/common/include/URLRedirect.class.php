@@ -51,6 +51,67 @@ class URLRedirect {
         $url = $this->buildReturnToLogin($_SERVER);
         $GLOBALS['HTML']->redirect($url);
     }
+
+    public function makeReturnToUrl(HTTPRequest $request, $url) {
+        $urlToken = parse_url($url);
+
+        $finaleUrl = '';
+
+        $server_url = '';
+        if(array_key_exists('host', $urlToken) && $urlToken['host']) {
+            $server_url = $urlToken['scheme'].'://'.$urlToken['host'];
+            if(array_key_exists('port', $urlToken) && $urlToken['port']) {
+                $server_url .= ':'.$urlToken['port'];
+            }
+        } else {
+            if ($request->isSSL() && $this->shouldRedirectToHTTP($request)) {
+                $server_url = 'http://'.$GLOBALS['sys_default_domain'];
+            }
+        }
+
+        $finaleUrl = $server_url;
+
+        if(array_key_exists('path', $urlToken) && $urlToken['path']) {
+            $finaleUrl .= $urlToken['path'];
+        }
+
+        if($request->existAndNonEmpty('return_to')) {
+            $rt = 'return_to='.urlencode($request->get('return_to'));
+
+            if(array_key_exists('query', $urlToken) && $urlToken['query']) {
+                $finaleUrl .= '?'.$urlToken['query'].'&amp;'.$rt;
+            }
+            else {
+                $finaleUrl .= '?'.$rt;
+            }
+            if (strstr($request->get('return_to'),'pv=2')) {
+                $finaleUrl .= '&pv=2';
+            }
+        }
+        else {
+            if(array_key_exists('query', $urlToken) && $urlToken['query']) {
+                $finaleUrl .= '?'.$urlToken['query'];
+            }
+        }
+
+        if(array_key_exists('fragment', $urlToken) && $urlToken['fragment']) {
+            $finaleUrl .= '#'.$urlToken['fragment'];
+        }
+
+        return $finaleUrl;
+    }
+
+    private function shouldRedirectToHTTP(HTTPRequest $request) {
+        return $this->SSLIsNotMandatory() && $this->userAskedForHTTP($request);
+    }
+
+    private function SSLIsNotMandatory() {
+        return ! $GLOBALS['sys_force_ssl'];
+    }
+
+    private function userAskedForHTTP(HTTPRequest $request) {
+        return ! $request->get('stay_in_ssl');
+    }
 }
 
 ?>
