@@ -219,9 +219,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
     public function getQueryFrom() {
     }
 
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value) {
-    }
-
     public function fetchCriteriaValue($criteria) {
     }
 

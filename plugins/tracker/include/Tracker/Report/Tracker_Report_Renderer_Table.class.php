@@ -1571,7 +1571,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $line[] = $row['id'];
                 foreach($fields as $field) {
                     if($field->isUsed() && $field->userCanRead() && ! is_a($field, 'Tracker_FormElement_Field_ArtifactId')) {
-                        $line[] = $field->fetchCSVChangesetValue($row['id'], $row['changeset_id'], $row[$field->name]);
+                        $value  = isset($row[$field->getName()]) ? $row[$field->getName()] : null;
+                        $line[] = $field->fetchCSVChangesetValue($row['id'], $row['changeset_id'], $value);
                     }
                 }
                 $lines[] = $line;
