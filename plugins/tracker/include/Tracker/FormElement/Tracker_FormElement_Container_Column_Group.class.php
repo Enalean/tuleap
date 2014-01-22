@@ -23,6 +23,10 @@ class Tracker_FormElement_Container_Column_Group {
     public function fetchArtifact($columns, Tracker_Artifact $artifact, $submitted_values = array()) {
         return $this->fetchGroup($columns, 'fetchArtifactInGroup', array($artifact, $submitted_values));
     }
+
+    public function fetchArtifactForOverlay($columns, Tracker_Artifact $artifact) {
+        return $this->fetchGroupNoColumns($columns, 'fetchArtifactInGroup', array($artifact));
+    }
     
     public function fetchArtifactReadOnly($columns, Tracker_Artifact $artifact) {
         return $this->fetchGroup($columns, 'fetchArtifactReadOnlyInGroup', array($artifact));
@@ -78,5 +82,23 @@ class Tracker_FormElement_Container_Column_Group {
         }
         return $output;
     }
+
+    private function fetchGroupNoColumns($columns, $method, $params) {
+        if (is_array($columns) && $columns) {
+            $rows = array();
+            foreach ($columns as $column) {
+                $content = call_user_func_array(array($column, $method), $params);
+                if ($content) {
+                    $rows[] = $content;
+                }
+            }
+
+            if ($rows) {
+                return implode(PHP_EOL, $rows);
+            }
+        }
+        return '';
+    }
+
 }
 ?>
