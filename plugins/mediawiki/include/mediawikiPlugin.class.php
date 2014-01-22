@@ -56,6 +56,7 @@ class MediaWikiPlugin extends Plugin {
             //User permissions
             $this->_addHook('project_admin_remove_user');
             $this->_addHook('project_admin_change_user_permissions');
+            $this->_addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
 
             // Search
             $this->_addHook(Event::LAYOUT_SEARCH_ENTRY);
@@ -563,6 +564,16 @@ class MediaWikiPlugin extends Plugin {
     private function userWasPreviouslyProjectAdmin($params) {
         return $params['user_permissions']['admin_flags'] === ''
             && $params['previous_permissions']['admin_flags'] === 'A';
+    }
+
+    public function systemevent_user_rename($params) {
+        $user            = $params['user'];
+        $projects        = ProjectManager::instance()->getAllProjectsButDeleted();
+        foreach ($projects as $project) {
+            if ($project->usesService(MediaWikiPlugin::SERVICE_SHORTNAME)) {
+                $this->getDao()->renameUser($project, $params['old_user_name'], $user->getUnixName());
+            }
+        }
     }
 
     private function getUserFromParams($params) {

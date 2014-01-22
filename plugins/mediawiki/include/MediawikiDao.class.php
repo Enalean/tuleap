@@ -68,12 +68,12 @@ class MediawikiDao extends DataAccessObject {
 
     public function getMediawikiGroupsForUser(PFUser $user, Project $project) {
         $database_name = self::getMediawikiDatabaseName($project);
-        $user_name     = $this->da->quoteSmart($this->getMediawikiUserName($user));
+        $user_name     = $this->da->quoteSmart($user->getUnixName());
 
         $sql = "SELECT ug_group
                 FROM $database_name.mwuser_groups
                     INNER JOIN $database_name.mwuser ON $database_name.mwuser.user_id = $database_name.mwuser_groups.ug_user
-                WHERE user_name = $user_name";
+                WHERE user_name LIKE $user_name";
 
         return $this->retrieve($sql)->getRow();
     }
@@ -122,13 +122,37 @@ class MediawikiDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    public function renameUser(Project $project, $old_user_name, $new_user_name) {
+        $database_name = self::getMediawikiDatabaseName($project);
+        $old_user_name = $this->da->quoteSmart($this->getMediawikiUserName($old_user_name));
+        $new_user_name = $this->da->quoteSmart($this->getMediawikiUserName($new_user_name));
+
+        $sql = "UPDATE $database_name.mwuser
+                SET user_name = $new_user_name
+                WHERE user_name = $old_user_name";
+
+        $this->update($sql);
+
+        $sql = "UPDATE $database_name.mwrecentchanges
+                SET rc_user_text = $new_user_name
+                WHERE rc_user_text = $old_user_name";
+
+        $this->update($sql);
+
+        $sql = "UPDATE $database_name.mwrevision
+                SET rev_user_text = $new_user_name
+                WHERE rev_user_text = $old_user_name";
+
+        return $this->update($sql);
+    }
+
     private function getMediawikiUserId(PFUser $user, Project $project) {
         $database_name = self::getMediawikiDatabaseName($project);
-        $user_name     = $this->da->quoteSmart($this->getMediawikiUserName($user));
+        $user_name     = $this->da->quoteSmart($user->getUnixName());
 
         $sql = "SELECT user_id
                 FROM $database_name.mwuser
-                WHERE user_name = $user_name";
+                WHERE user_name LIKE $user_name";
 
         $data = $this->retrieve($sql)->getRow();
 
@@ -139,8 +163,18 @@ class MediawikiDao extends DataAccessObject {
         return $data['user_id'];
     }
 
-    private function getMediawikiUserName(PFUser $user) {
-        return ucfirst($user->getUnixName());
+    /**
+     * Converts a Tuleap username into a Mediawiki username
+     * The mediawiki username has his first char uppercase
+     * and replace the underscore by a space
+     *
+     * This behaviour is define in LocalSettings.php with User::newFromName($username);
+     *
+     */
+    private function getMediawikiUserName($user_name) {
+        $user_name_with_first_char_uppercase = ucfirst($user_name);
+
+        return str_replace ('_', ' ', $user_name_with_first_char_uppercase);
     }
 
     public static function getMediawikiDatabaseName(Project $project) {
