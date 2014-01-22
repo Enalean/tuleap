@@ -613,6 +613,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer($this, $this->getEventManager());
                 $renderer->displayArtifactLinks($this->getLinkedArtifacts($current_user));
                 break;
+            case 'get-follow-ups':
+                $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer($this, $this->getEventManager());
+                $renderer->displayFollowUps($this, $this->getMustacheRenderer());
+                break;
             default:
                 if ($request->isAjax()) {
                     echo $this->fetchTooltip($current_user);
@@ -1192,9 +1196,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return new Tracker_Artifact_ChangesetFactory(
             $this->getChangesetDao(),
             new Tracker_Artifact_ChangesetJsonFormatter(
-                TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR).'/templates')
+                $this->getMustacheRenderer()
             )
         );
+    }
+
+    /**
+     * @return MustacheRenderer
+     */
+    private function getMustacheRenderer() {
+        return TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR).'/templates') ;
     }
 
     /**
