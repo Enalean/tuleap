@@ -34,22 +34,40 @@ CREATE TABLE IF NOT EXISTS  plugin_proftpd_xferlog (
 );
 
 -- This view gives access to
-CREATE VIEW ftpgroups AS
+CREATE OR REPLACE VIEW ftpgroups AS
 (
-SELECT unix_group_name as groupname, group_id+1000 as gid, user_name as members
-FROM groups
-    JOIN user_group USING (group_id)
-    JOIN user USING (user_id)
-WHERE groups.status = 'A'
-    AND user.status IN ('A', 'R'))
+    SELECT unix_group_name as groupname, group_id+1000 as gid, GROUP_CONCAT(user_name) as members
+    FROM groups
+        JOIN user_group USING (group_id)
+        JOIN user USING (user_id)
+    WHERE groups.status = 'A'
+        AND user.status IN ('A', 'R')
+        AND user_id > 100
+    GROUP BY gid
+)
+UNION
+(
+    SELECT LOWER(CONCAT(groups.unix_group_name, '-', ugroup.name)) as groupname, ugroup_id+10000 as gid, GROUP_CONCAT(user_name) as members
+    FROM ugroup
+        JOIN groups USING (group_id)
+        LEFT JOIN ugroup_user USING (ugroup_id)
+        LEFT JOIN user USING (user_id)
+    WHERE groups.status = 'A'
+    AND (
+        user.user_id IS NULL
+     OR user.status IN ('A', 'R') AND user_id > 100)
+    GROUP BY gid
+)
 UNION
 (
     SELECT user_name as groupname, unix_uid+20000 as gid, user_name
     FROM user
     WHERE status IN ('A', 'R')
-    AND user_id > 100
+        AND user_id > 100
+    GROUP BY gid
 );
 
+-- View for users
 CREATE VIEW ftpusers AS
 SELECT user_name as username, user_pw as password, unix_uid+20000 as uid, unix_uid+20000 as gid, CONCAT("/home/users/", user_name) as home, shell
 FROM user
