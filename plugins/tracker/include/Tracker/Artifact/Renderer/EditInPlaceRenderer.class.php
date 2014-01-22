@@ -69,6 +69,27 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer extends Tracker_Artifact_Edi
         $this->displayFooter();
     }
 
+    public function displayFollowUps(Tracker_Artifact $artifact, MustacheRenderer $renderer) {
+        $this->displayHeader();
+
+        $changesets = $this->getNonInitialChangesets($artifact);
+        $presenter  = new Tracker_Artifact_Presenter_FollowUpCommentsPresenter($changesets);
+
+        $renderer->renderToPage('follow-ups', $presenter);
+        $this->displayFooter();
+    }
+
+    /**
+     * @param Tracker_Artifact $artifact
+     * @return Tracker_Artifact_Changeset[]
+     */
+    private function getNonInitialChangesets(Tracker_Artifact $artifact) {
+        $changesets = $artifact->getChangesets();
+        array_shift($changesets);
+
+        return $changesets;
+    }
+
     protected function displayHeader() {
         $GLOBALS['HTML']->overlay_header();
     }

@@ -59,11 +59,9 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
     /**
      * fetch followup
      *
-     * @param Tracker_Artifact_Changeset $previous_changeset The previous changeset
-     *
      * @return string
      */
-    public function fetchFollowUp($previous_changeset) {
+    public function fetchFollowUp() {
         return '';
     }
 

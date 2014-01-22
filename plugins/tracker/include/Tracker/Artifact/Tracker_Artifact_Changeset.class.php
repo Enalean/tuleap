@@ -161,40 +161,19 @@ class Tracker_Artifact_Changeset {
 
 
     /**
-     * fetch followup
+     * Fetch followup
      *
-     * @param Tracker_Artifact_Changeset $previous_changeset The previous changeset
-     *
-     * @return string
+     * @return string html
      */
-    public function fetchFollowUp($previous_changeset) {
-        $html = '';
-
-        $html .= '<div class="tracker_artifact_followup_header">';
+    public function fetchFollowUp() {
+        $html = '<div class="tracker_artifact_followup_header">';
         $html .= '<div class="tracker_artifact_followup_title">';
         //The permalink
         $html .= '<a href="#followup_'. $this->id .'">';
-        $html .= $GLOBALS['HTML']->getImage(
-            'ic/comment.png', array(
-                                'border' => 0,
-                                'alt'   => 'permalink',
-                                'class' => 'tracker_artifact_followup_permalink',
-                                'style' => 'vertical-align:middle',
-                                'title' => 'Link to this followup - #'. (int)$this->id
-                              )
-        );
+        $html .= $this->getImage();
         $html .= '</a> ';
 
-        //The submitter
-        if ($this->submitted_by) {
-            $uh = UserHelper::instance();
-            $submitter = $uh->getLinkOnUserFromUserId($this->submitted_by);
-        } else {
-            $hp = Codendi_HTMLPurifier::instance();
-            $submitter = $hp->purify($this->email, CODENDI_PURIFIER_BASIC);
-        }
-        $html .= '<span class="tracker_artifact_followup_title_user">'. $submitter .'</span>';
-
+        $html .= '<span class="tracker_artifact_followup_title_user">'. $this->getSubmitterUrl() .'</span>';
         $html .= '</div>';
 
         //The date
@@ -205,15 +184,8 @@ class Tracker_Artifact_Changeset {
         $html .= '</div>';
         
         if (Config::get('sys_enable_avatars')) {
-            if ($this->submitted_by) {
-                $submitter = UserManager::instance()->getUserById($this->submitted_by);
-            } else {
-                $submitter = UserManager::instance()->getUserAnonymous();
-                $submitter->setEmail($this->email);
-            }
-            
             $html .= '<div class="tracker_artifact_followup_avatar">';
-            $html .= $submitter->fetchHtmlAvatar();
+            $html .= $this->getHTMLAvatar();
             $html .= '</div>';
         }
         // The content
@@ -228,22 +200,6 @@ class Tracker_Artifact_Changeset {
                     $html .= $GLOBALS['HTML']->getImage('ic/edit.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('plugin_tracker_fieldeditor', 'edit')));
                     $html .= '</a>';
                 }
-
-                //delete
-                //   We can't delete a snapshot since there is too many repercusion on subsequent changesets
-                //   If the deletion is for combatting spam, then edit and empty the comment
-                //   What would be nice is to make userCanDelete() return true only if the user has rights and the snapshot doesn't contain any changes
-                //if ($this->userCanDelete()) {
-                //    $html .= '<a href="?'. http_build_query(
-                //        array(
-                //            'aid'       => $this->artifact->id,
-                //            'func'      => 'artifact-delete-changeset',
-                //            'changeset' => $this->id,
-                //        )
-                //    ).'" class="tracker_artifact_followup_comment_controls_close">';
-                //    $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'del')));
-                //    $html .= '</a>';
-                //}
                 $html .= '</div>';
             }
 
@@ -263,6 +219,63 @@ class Tracker_Artifact_Changeset {
 
         $html .= '<div style="clear:both;"></div>';
         return $html;
+    }
+
+    public function getImage() {
+        return $GLOBALS['HTML']->getImage(
+            'ic/comment.png',
+            array(
+                'border' => 0,
+                'alt'   => 'permalink',
+                'class' => 'tracker_artifact_followup_permalink',
+                'style' => 'vertical-align:middle',
+                'title' => 'Link to this followup - #'. (int) $this->id
+            )
+        );
+    }
+
+    /**
+     * @return PFUser
+     */
+    public function getSubmitter() {
+        if ($this->submitted_by) {
+            return UserManager::instance()->getUserById($this->submitted_by);
+        } else {
+            $submitter = UserManager::instance()->getUserAnonymous();
+            $submitter->setEmail($this->email);
+
+            return $submitter;
+        }
+    }
+
+    /**
+     * @return string html
+     */
+    public function getSubmitterUrl() {
+        if ($this->submitted_by) {
+            $submitter = $this->getSubmitter();
+            $uh = UserHelper::instance();
+            $submitter_url = $uh->getLinkOnUser($submitter);
+        } else {
+            $hp = Codendi_HTMLPurifier::instance();
+            $submitter_url = $hp->purify($this->email, CODENDI_PURIFIER_BASIC);
+        }
+
+        return $submitter_url;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHTMLAvatar() {
+        return $this->getSubmitter()->fetchHtmlAvatar();
+    }
+
+    /**
+     * @return string html
+     */
+    public function getDateSubmittedOn() {
+        return DateHelper::timeAgoInWords($this->submitted_on, false, true);
     }
 
     /**

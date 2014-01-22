@@ -1,0 +1,39 @@
+<ul class="tracker_artifact_followups">
+    {{# changesets }}
+        <li id="followup_{{ id }}">
+            <div class="tracker_artifact_followup_header">
+                <div class="tracker_artifact_followup_title">
+                    <a href="#followup_{{ id }}">
+                        {{{ getImage }}}
+                    </a>
+                    <span class="tracker_artifact_followup_title_user">
+                        {{{ getSubmitterUrl }}}
+                    </span>
+                </div>
+                <div class="tracker_artifact_followup_date">
+                    {{{ getDateSubmittedOn }}}
+                </div>
+            </div>
+            {{# areAvatarsEnabled }}
+                <div class="tracker_artifact_followup_avatar">
+                    {{{ getHTMLAvatar }}}
+                </div>
+            {{/ areAvatarsEnabled }}
+            <div class="tracker_artifact_followup_content">
+                {{# getComment }}
+                    <div class="tracker_artifact_followup_comment">
+                        {{{ fetchFollowUp }}}
+                    </div>
+                {{/ getComment }}
+                {{# diffToPrevious }}
+                    <hr size="1" />
+                    <ul class="tracker_artifact_followup_changes">
+                        {{{ diffToPrevious }}}
+                    </ul>
+                {{/ diffToPrevious }}
+            </div>
+            <div style="clear:both;">
+            </div>
+        </li>
+    {{/ changesets }}
+</ul>
