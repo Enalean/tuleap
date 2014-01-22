@@ -131,9 +131,9 @@ class ProjectBacklogResource {
         try {
             $this->milestone_validator->validateArtifactIdsAreInOpenAndUnassignedTopBacklog($ids, $user, $project);
         } catch (ArtifactIsNotInOpenAndUnassignedBacklogItemsException $exception) {
-            throw new RestException(500, $exception->getMessage());
+            throw new RestException(409, $exception->getMessage());
         } catch (IdsFromBodyAreNotUniqueException $exception) {
-            throw new RestException(500, $exception->getMessage());
+            throw new RestException(409, $exception->getMessage());
         }
 
         try {

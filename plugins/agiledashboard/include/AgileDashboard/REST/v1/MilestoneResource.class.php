@@ -371,7 +371,8 @@ class MilestoneResource {
      * @param int $id    Id of the milestone
      * @param array $ids Ids of backlog items {@from body}
      *
-     * @throws 500
+     * @throws 400
+     * @throws 404
      */
     protected function putContent($id, array $ids) {
         $current_user = $this->getCurrentUser();
@@ -380,13 +381,13 @@ class MilestoneResource {
         try {
             $this->milestone_validator->validateArtifactsFromBodyContent($ids, $milestone, $current_user);
         } catch (ArtifactDoesNotExistException $exception) {
-            throw new RestException(500, $exception->getMessage());
+            throw new RestException(404, $exception->getMessage());
         } catch (ArtifactIsNotInBacklogTrackerException $exception) {
-            throw new RestException(500, $exception->getMessage());
+            throw new RestException(404, $exception->getMessage());
         } catch (ArtifactIsClosedOrAlreadyPlannedInAnotherMilestone $exception) {
-            throw new RestException(500, $exception->getMessage());
+            throw new RestException(400, $exception->getMessage());
         } catch (IdsFromBodyAreNotUniqueException $exception) {
-            throw new RestException(500, $exception->getMessage());
+            throw new RestException(400, $exception->getMessage());
         }
 
         try {
@@ -408,7 +409,8 @@ class MilestoneResource {
      * @param int $id    Id of the milestone
      * @param array $ids Ids of backlog items {@from body}
      *
-     * @throws 500
+     * @throw 400
+     * @throw 404
      */
     protected function putBacklog($id, array $ids) {
         $user      = $this->getCurrentUser();
@@ -417,9 +419,9 @@ class MilestoneResource {
         try {
             $this->milestone_validator->validateArtifactIdsAreInOpenAndUnplannedMilestone($ids, $milestone, $user);
         } catch (ArtifactIsNotInOpenAndUnplannedBacklogItemsException $exception) {
-            throw new RestException(500, $exception->getMessage());
+            throw new RestException(404, $exception->getMessage());
         } catch (IdsFromBodyAreNotUniqueException $exception) {
-            throw new RestException(500, $exception->getMessage());
+            throw new RestException(400, $exception->getMessage());
         }
 
         try {
