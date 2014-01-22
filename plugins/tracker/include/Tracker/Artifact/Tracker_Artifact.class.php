@@ -609,6 +609,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer($this, $this->getEventManager());
                 $renderer->display($request, $current_user);
                 break;
+            case 'get-artifact-links':
+                $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer($this, $this->getEventManager());
+                $renderer->displayArtifactLinks($this->getLinkedArtifacts($current_user));
+                break;
             default:
                 if ($request->isAjax()) {
                     echo $this->fetchTooltip($current_user);

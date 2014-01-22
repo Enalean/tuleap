@@ -51,6 +51,24 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer extends Tracker_Artifact_Edi
         </div>';
     }
 
+    public function displayArtifactLinks($linked_artifacts) {
+        $this->displayHeader();
+
+        foreach ($linked_artifacts as $artifact) {
+            /* @var $artifact Tracker_Artifact */
+            $tracker_name = $artifact->getTracker()->getItemName();
+            $group_id     = $artifact->getTracker()->getProject()->getID();
+            $artifact_id  = $artifact->getId();
+
+            echo '<a href="/goto?key='.$tracker_name.'&val='.$artifact_id.'&group_id='.$group_id.'" class="cross-reference">'
+                    .'#' . $artifact_id . ' ' .$artifact->getTitle()
+                    .'</a>';
+            echo '<br />';
+        }
+
+        $this->displayFooter();
+    }
+
     protected function displayHeader() {
         $GLOBALS['HTML']->overlay_header();
     }
