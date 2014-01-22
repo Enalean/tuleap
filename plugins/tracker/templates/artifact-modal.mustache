@@ -1,5 +1,6 @@
 <div class="tuleap-modal-background"></div>
 <div class="tuleap-modal">
+    {{{javascript_files}}}
     <div class="tuleap-modal-side-panel">
         <div class="tuleap-modal-side-panel-grip">
             <span>Artifact links</span>
@@ -9,6 +10,12 @@
                 <h3>Artifact links</h3>
             </div>
             <div class="tuleap-modal-side-panel-content-content">
+                {{# artifact_links }}
+                    <a href="/goto?key={{tracker_name}}&val={{artifact_id}}'&group_id={{group_id}}" class="cross-reference">
+                        # {{artifact_id}} {{title}}
+                    </a>
+                    <br />
+                {{/ artifact_links }}
             </div>
             <div class="tuleap-modal-side-panel-content-actions">
             </div>
@@ -21,9 +28,26 @@
             <h3>Artifact title</h3>
         </div>
         <div class="tuleap-modal-content">
+            <form action="{{ submit_url }}" method="POST" enctype="multipart/form-data">
+                <div>
+                    <table cellspacing="0" cellpadding="0" border="0">
+                        <tr valign="top">
+                            <td style="padding-right:1em;">
+                                {{{ form_elements }}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <input type="hidden" value="67108864" name="max_file_size" />
+                <input type="hidden" id="artifact_informations" 
+                       data-artifact-id="{{ artifact_id }}"
+                       data-changeset-id="{{ last_changeset_id }}"/>
+                <input type="hidden" name="from_overlay" value="1">
+            </form>
+            {{{ javascript_rules }}}
         </div>
         <div class="tuleap-modal-actions">
-            <a class="btn btn-primary">Submit</a>
+            <a id="tuleap-modal-submit" class="btn btn-primary">Submit</a>
             <a class="btn tuleap-modal-close">Cancel</a>
         </div>
     </div>
@@ -37,6 +61,7 @@
                 <h3>Followups</h3>
             </div>
             <div class="tuleap-modal-side-panel-content-content">
+                {{{ follow_ups }}}
             </div>
             <div class="tuleap-modal-side-panel-content-actions">
             </div>

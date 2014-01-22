@@ -89,14 +89,21 @@ class trackerPlugin extends Plugin {
     }
 
     public function javascript_file() {
+        echo $this->getJavascriptFiles();
+    }
+
+    public function getJavascriptFiles() {
+        $files = '';
         if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0) {
-            echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerSearchTreeView.js"></script>'."\n";
+            $files .= '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerSearchTreeView.js"></script>'."\n";
             // Cannot be moved in combined (it conflicts with same implementation in tracker v3)
-            echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerFieldDependencies.js"></script>'."\n";
-            echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerRichTextEditor.js"></script>'."\n";
-            echo '<script type="text/javascript" src="/plugins/tracker/scripts/artifactChildren.js"></script>'."\n";
-            echo '<script type="text/javascript" src="/plugins/tracker/scripts/load-artifactChildren.js"></script>'."\n";
+            $files .= '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerFieldDependencies.js"></script>'."\n";
+            $files .= '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerRichTextEditor.js"></script>'."\n";
+            $files .= '<script type="text/javascript" src="/plugins/tracker/scripts/artifactChildren.js"></script>'."\n";
+            $files .= '<script type="text/javascript" src="/plugins/tracker/scripts/load-artifactChildren.js"></script>'."\n";
         }
+
+        return $files;
     }
 
     public function cssFile($params) {

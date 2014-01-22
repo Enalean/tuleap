@@ -605,17 +605,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $renderer->display($request, $current_user);
                 }
                 break;
-            case 'edit-in-place':
-                $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer($this, $this->getEventManager());
-                $renderer->display($request, $current_user);
+            case 'get-edit-in-place':
+                $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer($this, $this->getMustacheRenderer());
+                $renderer->display($current_user, $this->getMustacheRenderer());
                 break;
-            case 'get-artifact-links':
-                $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer($this, $this->getEventManager());
-                $renderer->displayArtifactLinks($this->getLinkedArtifacts($current_user));
-                break;
-            case 'get-follow-ups':
-                $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer($this, $this->getEventManager());
-                $renderer->displayFollowUps($this, $this->getMustacheRenderer());
+            case 'update-in-place':
+                $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer($this, $this->getMustacheRenderer());
+                $renderer->updateArtifact($request, $current_user);
                 break;
             default:
                 if ($request->isAjax()) {

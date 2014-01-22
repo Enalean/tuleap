@@ -170,6 +170,10 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         $html .= $this->fetchSubmitValue();
         return $html;
     }
+
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact) {
+        return $this->fetchArtifactReadOnly($artifact);
+    }
         
     /**
      * Fetch the html code to display the field value in Mail

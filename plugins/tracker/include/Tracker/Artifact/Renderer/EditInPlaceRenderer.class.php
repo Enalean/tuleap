@@ -22,61 +22,64 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_Renderer_EditInPlaceRenderer extends Tracker_Artifact_EditAbstractRenderer {
+class Tracker_Artifact_Renderer_EditInPlaceRenderer{
 
-    protected function fetchFormContent(Codendi_Request $request, PFUser $current_user) {
-        $html  = parent::fetchFormContent($request, $current_user);
-        $html .= $this->fetchFields($this->artifact, $request->get('artifact'), false);
-        $html .= '<input type="hidden" name="from_overlay" value="1">';
+    /** @var Tracker_Artifact */
+    private $artifact;
 
-        return $html;
+    /** @var MustacheRenderer */
+    private $renderer;
+
+    public function __construct(Tracker_Artifact $artifact, MustacheRenderer $renderer) {
+        $this->renderer = $renderer;
+        $this->artifact = $artifact;
+    }
+
+    public function display(PFUser $current_user) {
+        $redirect         = new Tracker_Artifact_Redirect();
+        $redirect->query_parameters['func'] = 'update-in-place';
+
+        $plugin_manager   = PluginManager::instance();
+        $plugin           = $plugin_manager->getPluginByName('tracker');
+
+        $presenter = new Tracker_Artifact_Presenter_EditArtifactInPlacePresenter(
+            $this->fetchFollowUps(),
+            $this->fetchArtifactLinks($current_user),
+            $redirect->toUrl(),
+            $this->artifact->getTracker()->fetchFormElementsNoColumns($this->artifact, array(0 => null)),
+            $this->artifact,
+            $plugin->getJavascriptFiles()
+        );
+        $this->renderer->renderToPage('artifact-modal', $presenter);
     }
 
     /**
-     * Returns HTML code to display the artifact fields
-     *
-     * @param array $submitted_values array of submitted values
-     *
-     * @return string The HTML code for artifact fields
+     * @param PFUser $current_user
+     * @return Tracker_Artifact_Presenter_ArtifactLinkPresenter[]
      */
-    public function fetchFields(Tracker_Artifact $artifact, $submitted_values = array()) {
-        return '<div class="tabForStory1693" id="fieldsFetchedChangeMe">
-            <table cellspacing="0" cellpadding="0" border="0">
-                <tr valign="top">
-                    <td style="padding-right:1em;">'.
-                        $artifact->getTracker()->fetchFormElementsNoColumns($artifact, array($submitted_values)).
-                    '</td>
-                </tr>
-            </table>
-        </div>';
-    }
-
-    public function displayArtifactLinks($linked_artifacts) {
-        $this->displayHeader();
+    private function fetchArtifactLinks(PFUser $current_user) {
+        $linked_artifacts = $this->artifact->getLinkedArtifacts($current_user);
+        $links = array();
 
         foreach ($linked_artifacts as $artifact) {
-            /* @var $artifact Tracker_Artifact */
-            $tracker_name = $artifact->getTracker()->getItemName();
-            $group_id     = $artifact->getTracker()->getProject()->getID();
-            $artifact_id  = $artifact->getId();
+            $artifact_link = new Tracker_Artifact_Presenter_ArtifactLinkPresenter(
+                $artifact->getTracker()->getItemName(),
+                $artifact->getTracker()->getProject()->getID(),
+                $artifact->getId(),
+                $artifact->getTitle()
+            );
 
-            echo '<a href="/goto?key='.$tracker_name.'&val='.$artifact_id.'&group_id='.$group_id.'" class="cross-reference">'
-                    .'#' . $artifact_id . ' ' .$artifact->getTitle()
-                    .'</a>';
-            echo '<br />';
+            $links[] = $artifact_link;
         }
 
-        $this->displayFooter();
+        return $links;
     }
 
-    public function displayFollowUps(Tracker_Artifact $artifact, MustacheRenderer $renderer) {
-        $this->displayHeader();
-
-        $changesets = $this->getNonInitialChangesets($artifact);
+    private function fetchFollowUps() {
+        $changesets = $this->getNonInitialChangesets($this->artifact);
         $presenter  = new Tracker_Artifact_Presenter_FollowUpCommentsPresenter($changesets);
 
-        $renderer->renderToPage('follow-ups', $presenter);
-        $this->displayFooter();
+        return $this->renderer->renderToString('follow-ups', $presenter);
     }
 
     /**
@@ -90,14 +93,41 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer extends Tracker_Artifact_Edi
         return $changesets;
     }
 
-    protected function displayHeader() {
-        $GLOBALS['HTML']->overlay_header();
+    public function updateArtifact(Codendi_Request $request, PFUser $current_user) {
+        $comment_format = $this->artifact->validateCommentFormat($request, 'comment_formatnew');
+        $fields_data    =  $this->getAugmentedDataFromRequest($request);
+
+        try {
+            $this->artifact->createNewChangeset(
+                $fields_data,
+                $request->get('artifact_followup_comment'),
+                $current_user,
+                true,
+                $comment_format
+            );
+        } catch (Tracker_NoChangeException $e) {
+        } catch (Tracker_Exception $e) {
+            $this->sendErrorsAsJson($e->getMessage());
+        }
     }
 
-    protected function enhanceRedirect(Codendi_Request $request) {
-        // does nothing (there is no redirect, it's meant to be inline)
+    private function getAugmentedDataFromRequest(Codendi_Request $request) {
+        //this handles the 100 value on multi-select boxes
+        $fields_data = $request->get('artifact');
+        $fields_data['request_method_called'] = 'artifact-update';
+        $this->artifact->getTracker()->augmentDataFromRequest($fields_data);
+        unset($fields_data['request_method_called']);
+
+        return $fields_data;
     }
 
-    protected function displayFooter() {}
+    private function sendErrorsAsJson($exception_message) {
+        $feedback = array($exception_message);
+        if ($GLOBALS['Response']->feedbackHasErrors()) {
+            $feedback = array_merge($feedback, $GLOBALS['Response']->getFeedbackErrors());
+        }
+
+        $GLOBALS['Response']->send400JSONErrors($feedback);
+    }
 }
 ?>

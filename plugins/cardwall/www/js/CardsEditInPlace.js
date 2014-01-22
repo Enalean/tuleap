@@ -29,10 +29,10 @@ tuleap.cardwall = tuleap.cardwall || { };
     var specific_fields = ['assigned_to','remaining_effort'];
     var overlay_window;
 
-    function displayOverlay(event) {
+    function displayIframeOverlay(event, link) {
         event.preventDefault();
 
-        var artifact_id = $(this).attr('data-artifact-id');
+        var artifact_id = link.attr('data-artifact-id');
         var params = {
             aid  : artifact_id,
             func : 'show-in-overlay'
@@ -235,19 +235,66 @@ tuleap.cardwall = tuleap.cardwall || { };
     tuleap.cardwall.cardsEditInPlace = {
 
         init: function() {
-            if (isOnAgiledashboard()) {
-                $('div.cardwall_board div.card li > a.edit-card').each(function(){
-                    $(this).click(displayOverlay);
-                });
+            var self = this;
+            if (! isOnAgiledashboard()) {
+                return;
             }
+
+            $('div.cardwall_board div.card li > a.edit-card').click(function(event){
+                event.preventDefault();
+                var artifact_id = $(this).attr('data-artifact-id');
+
+                if (! self.isBrowserCompatible()) {
+                    displayIframeOverlay(event, $(this));
+                    return;
+               }
+
+                $.ajax({
+                    url: codendi.tracker.base_url + '?aid='+artifact_id+'&func=get-edit-in-place'
+                }).done(function( data ) {
+                    self.showArtifactEditForm(data, artifact_id)
+                }).fail(function() {
+                    displayIframeOverlay(event, $(self));
+                });
+            });
         },
 
         validateEdition: function(artifact_id) {
             var planning_id = getConcernedPlanningId();
             getNewCardData(artifact_id, planning_id);
             disableOverlay();
-        }
+        },
 
+        isBrowserCompatible : function() {
+            if (typeof(navigator) == 'undefined'
+                || typeof(navigator.appVersion) == 'undefined'
+                || navigator.appVersion.indexOf( "MSIE 7." ) != -1
+            ) {
+                return false;
+            }
+
+            return true;
+        },
+
+        showArtifactEditForm : function(form_html, artifact_id) {
+            $('body').append(form_html);
+            tuleap.modal.init();
+
+            $('#tuleap-modal-submit').click(function() {
+                $('.tuleap-modal-content form').first().ajaxSubmit({
+                    url: '/plugins/tracker/?aid='+artifact_id+'&func=update-in-place',
+                    type: 'post',
+                    success : function() {
+                        tuleap.modal.closeModal();
+                        window.location.reload();
+                    },
+                    error : function() {
+                        alert('fail');
+                    }
+                })
+                return false;
+            })
+        }
     };
 
     $(document).ready(function () {

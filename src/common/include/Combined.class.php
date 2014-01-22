@@ -70,6 +70,7 @@ class Combined {
             '/scripts/codendi/Tracker.js',
             '/scripts/codendi/TreeNode.js',
             '/scripts/tuleap/tuleap-modal.js',
+            '/scripts/jquery_ajax_submit/jquery.form.min.js',
         );
         EventManager::instance()->processEvent(Event::COMBINED_SCRIPTS, array('scripts' => &$arr));
         return $arr;

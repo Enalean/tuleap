@@ -77,6 +77,13 @@ class Response {
         return $this->_feedback->fetchAsPlainText();
     }
 
+    /**
+     * @return array of error messages
+     */
+    function getFeedbackErrors() {
+        return $this->_feedback->fetchErrors();
+    }
+
     public function clearFeedback() {
         $this->_feedback = new Feedback();
     }
@@ -138,6 +145,13 @@ class Response {
         if ($content_type != $default_content_type) {
             exit;
         }
+    }
+
+    public function send400JSONErrors($message) {
+        header('HTTP/1.0 400 Bad Request', true, 400);
+        header('Content-Type','application/json');
+        echo json_encode($message);
+        exit;
     }
 }
 ?>
