@@ -11,6 +11,7 @@
 	By Tim Perdue, Sourceforge, Jan 2000
 */
 
+$csrf = new CSRFSynchronizerToken('/snippet/');
 
 require_once('www/snippet/snippet_data.php');
 
@@ -52,6 +53,8 @@ function snippet_footer($params) {
 
 function snippet_show_package_snippets($version) {
   global $Language;
+
+        $version = (int)$version;
 	//show the latest version
 	$sql="SELECT snippet.snippet_id, snippet_package_item.snippet_version_id, snippet_version.version,snippet.name,user.user_name, snippet_version.filesize ".
 		"FROM snippet,snippet_version,snippet_package_item,user ".
@@ -115,6 +118,8 @@ function snippet_show_package_snippets($version) {
 function snippet_show_package_details($id) {
   global $Language;
 
+        $id = (int)$id;
+
 	$sql="SELECT * FROM snippet_package WHERE snippet_package_id='$id'";
 	$result=db_query($sql);
 
@@ -146,6 +151,8 @@ function snippet_show_package_details($id) {
 
 function snippet_show_snippet_details($id) {
   global $Language;
+
+        $id = (int)$id;
 
 	$sql="SELECT * FROM snippet WHERE snippet_id='$id'";
 	$result=db_query($sql);
@@ -179,13 +186,17 @@ function snippet_show_snippet_details($id) {
 }
 
 function snippet_edit_package_details($id) {
-  global $Language;
+  global $Language, $csrf;
+
+        $id = (int)$id;
+
 
 	$sql="SELECT * FROM snippet_package WHERE snippet_package_id='$id'";
 	$result=db_query($sql);
 
 	echo '
-	<FORM ACTION="" METHOD="POST" enctype="multipart/form-data">
+	<FORM ACTION="" METHOD="POST" enctype="multipart/form-data">'.
+        $csrf->fetchHTMLInput() .'
 	<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 	<P>
 	<TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">
@@ -222,13 +233,17 @@ function snippet_edit_package_details($id) {
 
 
 function snippet_edit_snippet_details($id) {
-  global $Language;
+  global $Language, $csrf;
+
+        $id = (int)$id;
+
 
 	$sql="SELECT * FROM snippet WHERE snippet_id='$id'";
 	$result=db_query($sql);
 
 	echo '
-	<FORM ACTION="" METHOD="POST" enctype="multipart/form-data">
+	<FORM ACTION="" METHOD="POST" enctype="multipart/form-data">'.
+        $csrf->fetchHTMLInput() .'
 	<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 	<P>
 	<TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">

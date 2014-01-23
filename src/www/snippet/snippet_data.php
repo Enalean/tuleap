@@ -17,6 +17,7 @@ function snippet_data_can_modify_snippet($snippet_id) {
     if (user_is_super_user()) {
         return true;
     } else {
+        $snippet_id = (int)$snippet_id;
         $sql="SELECT submitted_by FROM snippet_version WHERE  snippet_id='$snippet_id'";
         $result=db_query($sql);
         while($resrow = db_fetch_array($result)) {
@@ -35,6 +36,7 @@ function snippet_data_can_modify_snippet_package($snippet_package_id) {
     if (user_is_super_user()) {
         return true;
     } else {
+        $snippet_package_id = (int)$snippet_package_id;
         $sql="SELECT submitted_by FROM snippet_package_version WHERE snippet_package_id='$snippet_package_id'";
         $result=db_query($sql);
         while($resrow = db_fetch_array($result)) {
@@ -50,6 +52,7 @@ function snippet_data_can_modify_snippet_package($snippet_package_id) {
 
 // Return the language name when given the language Id
 function snippet_data_get_language_from_id($lang_id) {
+    $lang_id = (int)$lang_id;
     $sql="SELECT language_name FROM snippet_language WHERE language_id=$lang_id";
     $result = db_query ($sql);
     return db_result($result,0,0);
@@ -57,6 +60,7 @@ function snippet_data_get_language_from_id($lang_id) {
 
 // Return the category name when given the category Id
 function snippet_data_get_category_from_id($cat_id) {
+    $cat_id = (int)$cat_id;
     $sql="SELECT category_name FROM snippet_category WHERE category_id=$cat_id";
     $result = db_query ($sql);
     return db_result($result,0,0);
@@ -64,6 +68,7 @@ function snippet_data_get_category_from_id($cat_id) {
 
 // Return the type name when given the type Id
 function snippet_data_get_type_from_id($type_id) {
+    $type_id = (int)$type_id;
     $sql="SELECT type_name FROM snippet_type WHERE type_id=$type_id";
     $result = db_query ($sql);
     return db_result($result,0,0);
@@ -71,6 +76,7 @@ function snippet_data_get_type_from_id($type_id) {
 
 // Return the license name when given the license Id
 function snippet_data_get_license_from_id($license_id) {
+    $license_id = (int)$license_id;
     $sql="SELECT license_name FROM snippet_license WHERE license_id=$license_id";
     $result = db_query ($sql);
     return db_result($result,0,0);

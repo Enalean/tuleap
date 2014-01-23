@@ -19,6 +19,9 @@ require('../snippet/snippet_utils.php');
 if (user_isloggedin()) {
 	snippet_header(array('title'=>$Language->getText('snippet_delete','delete_s')));
 
+        $snippet_package_version_id = (int)$snippet_package_version_id;
+        $snippet_version_id         = (int)$snippet_version_id;
+
 	if ($type=='frompackage' && $snippet_version_id && $snippet_package_version_id) {
 		/*
 			Delete an item from a package

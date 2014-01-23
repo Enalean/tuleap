@@ -11,6 +11,9 @@ require('../snippet/snippet_utils.php');
 
 
 if (user_isloggedin()) {
+
+  $id = (int)$request->get('id');
+
   if ($type=='snippet') {
     /*
 			See if the snippet exists first
@@ -42,7 +45,7 @@ if (user_isloggedin()) {
 		      Create a new snippet entry, then create a new snippet version entry
       */
       if ($changes && $version && $code) {
-	
+	$snippet_id = (int)$request->get('snippet_id');
 	/*
 			  create the snippet version
 	*/
@@ -70,7 +73,8 @@ if (user_isloggedin()) {
     
     echo $Language->getText('snippet_addversion','post_s').'
 		<P>
-		<FORM ACTION="?" METHOD="POST" enctype="multipart/form-data">
+		<FORM ACTION="?" METHOD="POST" enctype="multipart/form-data">'.
+                $csrf->fetchHTMLInput() .'
         <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_upload.'">
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 		<INPUT TYPE="HIDDEN" NAME="type" VALUE="snippet">
@@ -121,6 +125,7 @@ if (user_isloggedin()) {
     }
 
     if ($post_changes) {
+        $snippet_package_id = (int)$snippet_package_id;
       /*
 				Create a new snippet entry, then create a new snippet version entry
       */
@@ -190,7 +195,8 @@ function show_add_snippet_box() {
     echo 
       $Language->getText('snippet_addversion','post_p').'
 		<P>
-		<FORM ACTION="?" METHOD="POST">
+		<FORM ACTION="?" METHOD="POST">'.
+                $csrf->fetchHTMLInput() .'
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 		<INPUT TYPE="HIDDEN" NAME="type" VALUE="package">
 		<INPUT TYPE="HIDDEN" NAME="snippet_package_id" VALUE="'.$id.'">

@@ -36,8 +36,11 @@ if (user_isloggedin()) {
 		echo '<H1>'.$Language->getText('snippet_add_snippet_to_package','error_v_id_missed').'</H1>';
 		handle_add_exit();
 	}
+        $snippet_package_version_id = (int)$snippet_package_version_id;
+        $snippet_version_id         = (int)$snippet_version_id;
 
 	if ($post_changes) {
+                $csrf->check();
 		/*
 			Create a new snippet entry, then create a new snippet version entry
 		*/
@@ -108,10 +111,11 @@ if (user_isloggedin()) {
 	<P>
 	'.$Language->getText('snippet_add_snippet_to_package','use_add_form').'
 	<P>
-	<FORM ACTION="?" METHOD="POST">
+	<FORM ACTION="?" METHOD="POST">'.
+        $csrf->fetchHTMLInput() .'
 	<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 	<INPUT TYPE="HIDDEN" NAME="snippet_package_version_id" VALUE="'.$snippet_package_version_id.'">
-	<INPUT TYPE="HIDDEN" NAME="suppress_nav" VALUE="'.$suppress_nav.'">
+	<INPUT TYPE="HIDDEN" NAME="suppress_nav" VALUE="'.(int)$suppress_nav.'">
 
 	<TABLE>
 	<TR><TD COLSPAN="2" ALIGN="center">
