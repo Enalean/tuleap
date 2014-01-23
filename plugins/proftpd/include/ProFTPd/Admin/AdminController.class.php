@@ -21,9 +21,8 @@
 namespace Tuleap\ProFTPd\Admin;
 
 use Tuleap\ProFTPd\ServiceProFTPd;
+use Tuleap\ProFTPd\Presenter\AdminPresenter;
 use HTTPRequest;
-use TemplateRendererFactory;
-use Proftpd_Presenter_AdminPresenter;
 use Project;
 use Feedback;
 
@@ -62,16 +61,12 @@ class AdminController {
     }
 
     private function getPresenter(Project $project) {
-        return new Proftpd_Presenter_AdminPresenter(
+        return new AdminPresenter(
             $project->getID(),
             $this->permissions_manager->getUGroups($project),
             $this->permissions_manager->getSelectUGroupFor($project, PermissionsManager::PERM_READ),
             $this->permissions_manager->getSelectUGroupFor($project, PermissionsManager::PERM_WRITE)
         );
-    }
-
-    private function getRenderer() {
-        return TemplateRendererFactory::build()->getRenderer(dirname(PROFTPD_BASE_DIR).'/templates');
     }
 
     public function save(ServiceProFTPd $service, HTTPRequest $request) {

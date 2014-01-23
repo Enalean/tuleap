@@ -59,7 +59,7 @@ class Parser {
             (?P<completion_status>.)
             $/x';
         if (! preg_match($pattern, $line, $matches)) {
-            throw new InvalidEntryException();
+            throw new InvalidEntryException($line);
         }
 
         return new Entry(

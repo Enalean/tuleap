@@ -39,7 +39,7 @@ class proftpdPlugin extends Plugin {
     }
 
     private function getRouter() {
-        return new ProftpdRouter(
+        return new Tuleap\ProFTPd\ProftpdRouter(
             array(
                 $this->getExplorerController(),
                 $this->getAdminController(),
@@ -48,8 +48,8 @@ class proftpdPlugin extends Plugin {
     }
 
     private function getExplorerController() {
-        return new Proftpd_ExplorerController(
-            new Proftpd_Directory_DirectoryParser($this->getPluginInfo()->getPropVal('proftpd_base_directory'))
+        return new Tuleap\ProFTPd\Explorer\ExplorerController(
+            new Tuleap\ProFTPd\Directory\DirectoryParser($this->getPluginInfo()->getPropVal('proftpd_base_directory'))
         );
     }
 

@@ -19,7 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Proftpd_Presenter_AdminPresenter {
+namespace Tuleap\ProFTPd\Presenter;
+
+use Tuleap\ProFTPd\Admin\PermissionsManager;
+use UGroup;
+
+class AdminPresenter {
     /** @var int */
     private $project_id;
 
@@ -57,14 +62,14 @@ class Proftpd_Presenter_AdminPresenter {
 
     public function readers_selector() {
         return array(
-            'name'    => 'permissions['.Tuleap\ProFTPd\Admin\PermissionsManager::PERM_READ.']',
+            'name'    => 'permissions['.PermissionsManager::PERM_READ.']',
             'options' => $this->getSelectorOptions($this->readers_ugroup_id)
         );
     }
 
     public function writers_selector() {
         return array(
-            'name'    => 'permissions['.Tuleap\ProFTPd\Admin\PermissionsManager::PERM_WRITE.']',
+            'name'    => 'permissions['.PermissionsManager::PERM_WRITE.']',
             'options' => $this->getSelectorOptions($this->writers_ugroup_id)
         );
     }

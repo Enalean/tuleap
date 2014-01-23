@@ -19,32 +19,46 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\ProFTPd\Directory;
+
 /**
- * This class is a representation of an item into a SFTP directory
+ * I represent a collection of DirectoryPathPart
  */
-class Proftpd_Directory_DirectoryPathPart {
+class DirectoryPathCollection {
+
+    private $collection = array();
 
     /**
-     * The directory or file name
-     *
-     * @var string
+     * @param DirectoryPathPart $path_part
      */
-    public $path_part_name;
+    public function add(DirectoryPathPart $path_part) {
+        $this->collection[] = $path_part;
+    }
+
+    public function count() {
+        return count($this->collection);
+    }
 
     /**
-     * The relative path to this file or directory
-     *
-     * @var string
+     * @return DirectoryPathPart | null
      */
-    public $path_to_part;
+    public function last() {
+        return end($this->collection);
+    }
 
     /**
-     * @param string $path_part_name
-     * @param string $path_to_part
+     * @return DirectoryPathPart[]
      */
-    public function __construct($path_part_name, $path_to_part) {
-        $this->path_part_name = $path_part_name;
-        $this->path_to_part   = $path_to_part;
+    public function parent_directory_parts() {
+        if (count($this->collection) > 1) {
+            $parent_directories = $this->collection;
+            array_pop($parent_directories);
+
+            return $parent_directories;
+        }
+
+        return array();
     }
 }
+
 ?>

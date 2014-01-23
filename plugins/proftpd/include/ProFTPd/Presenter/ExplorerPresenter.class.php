@@ -19,15 +19,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Proftpd_Presenter_ExplorerPresenter {
+namespace Tuleap\ProFTPd\Presenter;
+
+use Tuleap\ProFTPd\Directory\DirectoryPathCollection;
+use Tuleap\ProFTPd\Directory\DirectoryItemCollection;
+use Project;
+
+class ExplorerPresenter {
 
     /**
-     * @var Proftpd_Directory_DirectoryPathCollection
+     * @var DirectoryPathCollection
      */
     public $path_parts;
 
     /**
-     * @var Proftpd_Directory_DirectoryItemCollection
+     * @var DirectoryItemCollection
      */
     private $directory_items;
 
@@ -36,9 +42,9 @@ class Proftpd_Presenter_ExplorerPresenter {
     public $project_name;
 
     public function __construct(
-        Proftpd_Directory_DirectoryPathCollection $path_parts,
+        DirectoryPathCollection $path_parts,
         $path,
-        Proftpd_Directory_DirectoryItemCollection $directory_items,
+        DirectoryItemCollection $directory_items,
         Project $project
     ) {
         $this->path_parts      = $path_parts;

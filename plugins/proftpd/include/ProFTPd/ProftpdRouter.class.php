@@ -18,12 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+namespace Tuleap\ProFTPd;
+
+use HTTPRequest;
+
 class ProftpdRouter {
 
     const DEFAULT_CONTROLLER = 'explorer';
     const DEFAULT_ACTION     = 'index';
-
-    private $service;
 
     private $controllers = array();
 
@@ -78,11 +80,10 @@ class ProftpdRouter {
      *
      * @param HTTPRequest $request
      *
-     * @return \Tuleap\ProFTPd\ServiceProFTPd
+     * @return ServiceProFTPd
      */
     private function getService(HTTPRequest $request) {
-        $project = $request->getProject();
-        return $project->getService('plugin_proftpd');
+        return $request->getProject()->getService('plugin_proftpd');
     }
 }
 ?>

@@ -19,15 +19,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Tuleap\ProFTPd\ServiceProFTPd;
+namespace Tuleap\ProFTPd\Explorer;
 
-class Proftpd_ExplorerController {
+use Tuleap\ProFTPd\Directory\DirectoryParser;
+use Tuleap\ProFTPd\Directory\DirectoryPathParser;
+use Tuleap\ProFTPd\Presenter\ExplorerPresenter;
+use Tuleap\ProFTPd\ServiceProFTPd;
+use HTTPRequest;
+
+class ExplorerController {
     const NAME = 'explorer';
 
-    /** @var Proftpd_Directory_DirectoryParser */
+    /** @var DirectoryParser */
     private $parser;
 
-    public function __construct(Proftpd_Directory_DirectoryParser $parser) {
+    public function __construct(DirectoryParser $parser) {
         $this->parser  = $parser;
     }
 
@@ -36,7 +42,7 @@ class Proftpd_ExplorerController {
     }
 
     public function index(ServiceProFTPd $service, HTTPRequest $request) {
-        $path_parser = new Proftpd_Directory_DirectoryPathParser();
+        $path_parser = new DirectoryPathParser();
 
         $path        = $path_parser->getCleanPath($request->get('path'));
         $path_parts  = $path_parser->getPathParts($path);
@@ -50,7 +56,7 @@ class Proftpd_ExplorerController {
         $remove_parent_directory_listing = ($path == '') ? true : false;
         $items = $this->parser->parseDirectory($project->getUnixName() . DIRECTORY_SEPARATOR . $path, $remove_parent_directory_listing);
 
-        $presenter = new Proftpd_Presenter_ExplorerPresenter(
+        $presenter = new ExplorerPresenter(
             $path_parts,
             $path,
             $items,
