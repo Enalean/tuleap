@@ -47,10 +47,11 @@ CREATE OR REPLACE VIEW ftpgroups AS
 )
 UNION
 (
-    SELECT LOWER(CONCAT(groups.unix_group_name, '-', ugroup.name)) as groupname, ugroup_id+10000 as gid, GROUP_CONCAT(user_name) as members
+    SELECT LOWER(CONCAT(groups.unix_group_name, '-', ugroup.name)) as groupname, ugroup.ugroup_id+10000 as gid, GROUP_CONCAT(DISTINCT user_name) as members
     FROM ugroup
+        JOIN permissions ON (permission_type IN ('PLUGIN_PROFTPD_READ', 'PLUGIN_PROFTPD_WRITE') AND permissions.ugroup_id = ugroup.ugroup_id)
         JOIN groups USING (group_id)
-        LEFT JOIN ugroup_user USING (ugroup_id)
+        LEFT JOIN ugroup_user ON (ugroup_user.ugroup_id = ugroup.ugroup_id)
         LEFT JOIN user USING (user_id)
     WHERE groups.status = 'A'
     AND (

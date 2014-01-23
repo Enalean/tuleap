@@ -23,7 +23,8 @@ class proftpdPlugin extends Plugin {
 
     public function __construct($id) {
         parent::__construct($id);
-        $this->_addHook('cssfile', 'cssFile', false);
+        $this->addHook('cssfile');
+        $this->addHook(Event::SERVICE_CLASSNAMES);
     }
 
     public function getPluginInfo() {
@@ -40,7 +41,8 @@ class proftpdPlugin extends Plugin {
     private function getRouter() {
         return new ProftpdRouter(
             array(
-                $this->getExplorerController()
+                $this->getExplorerController(),
+                $this->getAdminController(),
             )
         );
     }
@@ -51,7 +53,20 @@ class proftpdPlugin extends Plugin {
         );
     }
 
-    public function cssFile($params) {
+    private function getAdminController() {
+        return new Tuleap\ProFTPd\Admin\AdminController(
+            new Tuleap\ProFTPd\Admin\PermissionsManager(
+                PermissionsManager::instance(),
+                new UGroupManager()
+            )
+        );
+    }
+
+    public function service_classnames(array $params) {
+        $params['classnames']['plugin_proftpd'] = 'Tuleap\ProFTPd\ServiceProFTPd';
+    }
+
+    public function cssfile($params) {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {

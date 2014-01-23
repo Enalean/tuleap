@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\ProFTPd\ServiceProFTPd;
+
 class Proftpd_ExplorerController {
     const NAME = 'explorer';
 
@@ -33,7 +35,7 @@ class Proftpd_ExplorerController {
         return self::NAME;
     }
 
-    public function index(HTTPRequest $request) {
+    public function index(ServiceProFTPd $service, HTTPRequest $request) {
         $path_parser = new Proftpd_Directory_DirectoryPathParser();
 
         $path        = $path_parser->getCleanPath($request->get('path'));
@@ -55,11 +57,14 @@ class Proftpd_ExplorerController {
             $project
         );
 
-        echo $this->getRenderer()->renderToString('index', $presenter);
+        $service->renderInPage(
+            $request, 
+            $project->getPublicName().' / '.$path,
+            'index',
+            $presenter
+        );
     }
 
-    private function getRenderer() {
-        return TemplateRendererFactory::build()->getRenderer(dirname(PROFTPD_BASE_DIR).'/templates');
-    }
+   
 }
 ?>
