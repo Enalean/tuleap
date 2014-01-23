@@ -20,33 +20,33 @@
  */
 
 class Proftpd_ExplorerController {
+    const NAME = 'explorer';
 
-    /**
-     * @var HTTPRequest
-     */
-    private $request;
+    /** @var Proftpd_Directory_DirectoryParser */
+    private $parser;
 
-    public function __construct(HTTPRequest $request) {
-        $this->request = $request;
+    public function __construct(Proftpd_Directory_DirectoryParser $parser) {
+        $this->parser  = $parser;
     }
 
-    public function index() {
-        $parser      = new Proftpd_Directory_DirectoryParser();
+    public function getName() {
+        return self::NAME;
+    }
+
+    public function index(HTTPRequest $request) {
         $path_parser = new Proftpd_Directory_DirectoryPathParser();
 
-        $path        = $path_parser->getCleanPath($this->request->get('path'));
+        $path        = $path_parser->getCleanPath($request->get('path'));
         $path_parts  = $path_parser->getPathParts($path);
 
-        $base_directory = $this->request->get('proftpd_base_directory');
-        $project        = $this->request->getProject();
-
-        if (! $project || ! $base_directory) {
+        $project        = $request->getProject();
+        if (! $project ) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_proftpd', 'cannot_open_project'));
             return;
         }
 
         $remove_parent_directory_listing = ($path == '') ? true : false;
-        $items = $parser->parseDirectory($base_directory.'/'.$path, $remove_parent_directory_listing);
+        $items = $this->parser->parseDirectory($project->getUnixName() . DIRECTORY_SEPARATOR . $path, $remove_parent_directory_listing);
 
         $presenter = new Proftpd_Presenter_ExplorerPresenter(
             $path_parts,

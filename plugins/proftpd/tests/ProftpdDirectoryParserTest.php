@@ -67,11 +67,11 @@ class Proftpd_Directory_DirectoryParserTest extends TuleapTestCase {
             filemtime(realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder10'))
         );
 
-        $this->parser = new Proftpd_Directory_DirectoryParser();
+        $this->parser = new Proftpd_Directory_DirectoryParser(realpath(dirname(__FILE__).'/_fixtures'));
     }
 
     public function itReturnsContentOfDirectoryInformation() {
-        $path   = realpath(dirname(__FILE__).'/_fixtures/sftp_directory');
+        $path   = 'sftp_directory';
         $items  = $this->parser->parseDirectory($path, false);
 
         $folders = $items->getFolders();
@@ -87,7 +87,7 @@ class Proftpd_Directory_DirectoryParserTest extends TuleapTestCase {
     }
 
     public function itReturnsContentOfDirectoryInformationIfPathEndsBySlash() {
-        $path   = realpath(dirname(__FILE__).'/_fixtures/sftp_directory/');
+        $path   = 'sftp_directory';
         $items  = $this->parser->parseDirectory($path, false);
 
         $folders = $items->getFolders();
@@ -101,7 +101,7 @@ class Proftpd_Directory_DirectoryParserTest extends TuleapTestCase {
     }
 
     public function itDoesNotReturnDotFoldersWhenAskedNotTo() {
-        $path   = realpath(dirname(__FILE__).'/_fixtures/sftp_directory');
+        $path   = 'sftp_directory';
         $items  = $this->parser->parseDirectory($path, true);
 
         foreach ($items->getFolders() as $folder) {
@@ -111,7 +111,7 @@ class Proftpd_Directory_DirectoryParserTest extends TuleapTestCase {
     }
 
     public function itDoesReturnDotDotFolder() {
-        $path   = realpath(dirname(__FILE__).'/_fixtures/sftp_directory');
+        $path   = 'sftp_directory';
         $items  = $this->parser->parseDirectory($path, false);
 
         $dotdot_exists = false;
@@ -127,7 +127,7 @@ class Proftpd_Directory_DirectoryParserTest extends TuleapTestCase {
     }
 
     public function itReturnsFilesAndFoldersInANaturalOrder() {
-        $path   = realpath(dirname(__FILE__).'/_fixtures/sftp_directory');
+        $path   = 'sftp_directory';
         $items  = $this->parser->parseDirectory($path, false);
 
         $folders = $items->getFolders();
@@ -144,7 +144,7 @@ class Proftpd_Directory_DirectoryParserTest extends TuleapTestCase {
     }
 
     public function itReturnsContentOfSubDirectoryInformation() {
-        $path   = realpath(dirname(__FILE__).'/_fixtures/sftp_directory/folder01');
+        $path   = 'sftp_directory/folder01';
         $items  = $this->parser->parseDirectory($path, false);
 
         $folders = $items->getFolders();

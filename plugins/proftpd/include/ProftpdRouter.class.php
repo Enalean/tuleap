@@ -20,10 +20,18 @@
 
 class ProftpdRouter {
 
-    const DEAFULT_CONTROLLER = 'Proftpd_ExplorerController';
-    const DEAFULT_ACTION     = 'index';
+    const DEFAULT_CONTROLLER = 'explorer';
+    const DEFAULT_ACTION     = 'index';
 
     private $service;
+
+    private $controllers = array();
+
+    public function __construct(array $controllers) {
+        foreach ($controllers as $controller) {
+            $this->controllers[$controller->getName()] = $controller;
+        }
+    }
 
     /**
      * Routes the request to the correct controller
@@ -51,27 +59,23 @@ class ProftpdRouter {
         $controller = $this->getControllerFromRequest($request);
         $action     = $request->get('action');
         if ($this->doesActionExist($controller, $action)) {
-            $controller->$action();
+            $controller->$action($request);
         } else {
             $this->useDefaultRoute($request);
         }
     }
 
     private function getControllerFromRequest(HTTPRequest $request) {
-        switch ($request->get('controller')) {
-            case 'explorer':
-                return new Proftpd_ExplorerController($request);
-            default:
-                $this->useDefaultRoute($request);
+        if (isset($this->controllers[$request->get('controller')])) {
+            return $this->controllers[$request->get('controller')];
+        } else {
+            return $this->controllers[self::DEFAULT_CONTROLLER];
         }
     }
 
     private function useDefaultRoute(HTTPRequest $request) {
-        $controller_name = self::DEAFULT_CONTROLLER;
-        $controller      = new $controller_name($request);
-        $action          = self::DEAFULT_ACTION;
-
-        $controller->$action();
+        $action = self::DEFAULT_ACTION;
+        $this->controllers[self::DEFAULT_CONTROLLER]->$action($request);
     }
 
     /**
@@ -111,7 +115,7 @@ class ProftpdRouter {
         if ($this->userIsAdmin($request)) {
             $toolbar[] = array(
                 'title' => $GLOBALS['Language']->getText('global', 'Admin'),
-                'url'   => AGILEDASHBOARD_BASE_URL .'/?'. http_build_query(array(
+                'url'   => PROFTPD_BASE_URL .'/?'. http_build_query(array(
                     'group_id' => $request->get('group_id'),
                     'action'   => 'admin',
                 ))

@@ -20,4 +20,3 @@
 
 define('PROFTPD_BASE_URL', '/plugins/proftpd');
 define('PROFTPD_BASE_DIR', dirname(__FILE__));
-?>

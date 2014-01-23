@@ -34,10 +34,21 @@ class proftpdPlugin extends Plugin {
     }
 
     public function process(HTTPRequest $request) {
-        $router = new ProftpdRouter();
+        $this->getRouter()->route($request);
+    }
 
-        $request->set('proftpd_base_directory', $this->getPluginInfo()->getPropVal('proftpd_base_directory'));
-        $router->route($request);
+    private function getRouter() {
+        return new ProftpdRouter(
+            array(
+                $this->getExplorerController()
+            )
+        );
+    }
+
+    private function getExplorerController() {
+        return new Proftpd_ExplorerController(
+            new Proftpd_Directory_DirectoryParser($this->getPluginInfo()->getPropVal('proftpd_base_directory'))
+        );
     }
 
     public function cssFile($params) {

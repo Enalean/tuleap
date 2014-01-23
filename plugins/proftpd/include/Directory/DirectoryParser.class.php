@@ -21,6 +21,12 @@
 
 class Proftpd_Directory_DirectoryParser {
 
+    private $base_dir;
+
+    public function __construct($base_dir) {
+        $this->base_dir = $base_dir;
+    }
+
     /**
      * Parse the content of a given directory
      *
@@ -33,7 +39,7 @@ class Proftpd_Directory_DirectoryParser {
             'folders' => array(),
             'files'   => array(),
         );
-        $directory_iterator = $this->getDirectoryOperator($path);
+        $directory_iterator = $this->getDirectoryOperator($this->base_dir . DIRECTORY_SEPARATOR . $path);
 
         if ($directory_iterator == null) {
             return $this->createForbiddenDirectoryContents();
