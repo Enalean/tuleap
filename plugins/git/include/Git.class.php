@@ -31,6 +31,7 @@ class Git extends PluginController {
     const PERM_WRITE = 'PLUGIN_GIT_WRITE';
     const PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
 
+    const PERM_ADMIN         = 'PLUGIN_GIT_ADMIN';
     const SPECIAL_PERM_ADMIN = 'PROJECT_ADMIN';
 
     const SCOPE_PERSONAL = 'personal';

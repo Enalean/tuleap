@@ -151,5 +151,17 @@ class GitPresenters_AdminPresenter {
     public function delete_label() {
         return $GLOBALS['Language']->getText('plugin_git', 'gerrit_template_delete');
     }
+
+    public function git_admins_section() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_git_admins');
+    }
+
+    public function git_admins_description() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_git_admins');
+    }
+
+    public function git_admins_selector() {
+        return permission_fetch_selection_field(Git::PERM_ADMIN, $this->project_id, $this->project_id);
+    }
 }
 ?>

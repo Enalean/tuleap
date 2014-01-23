@@ -267,7 +267,10 @@ plugin_git	view_admin_template_invalid_project	Invalid Project ID
 plugin_git	view_admin_template_invalid_template_id	Invalid Template ID
 plugin_git	view_admin_template_cannot_update	Unable to update template
 plugin_git	view_admin_template_cannot_create	Unable to create template
-plugin_git	view_admin_no_gerrit_server	There do not appear to be any <em><a href="$1">gerrit servers</a></em> set-up for this platform! Please contact your site administrator
+plugin_git	view_admin_no_gerrit_server	It does not appear to be any <em><a href="$1">gerrit server</a></em> set-up for this platform! Please contact your site administrator.
+
+plugin_git	view_admin_git_admins	Git administrators
+plugin_git	view_admin_git_admins_description	This section allows you to select Git service administrators, in addition to project administrators.
 
 plugin_git	gerrit_template_delete	Delete
 plugin_git	gerrit_template_delete_error	An error occured while trying to delete the template.
