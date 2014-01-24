@@ -161,7 +161,14 @@ class GitPresenters_AdminPresenter {
     }
 
     public function git_admins_selector() {
-        return permission_fetch_selection_field(Git::PERM_ADMIN, $this->project_id, $this->project_id);
+        return permission_fetch_selection_field(
+            Git::PERM_ADMIN,
+            $this->project_id,
+            $this->project_id,
+            'git_access',
+            false,
+            false
+        );
     }
 }
 ?>
