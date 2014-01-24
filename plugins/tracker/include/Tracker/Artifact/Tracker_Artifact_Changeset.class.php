@@ -507,38 +507,17 @@ class Tracker_Artifact_Changeset {
     
             // 1. Get the recipients list
             $recipients = $this->getRecipients($is_update);
-            
+
             // 2. Compute the body of the message + headers
             $messages = array();
-            $um = $this->getUserManager();
             foreach ($recipients as $recipient => $check_perms) {
-                $user = null;
-                if ( strpos($recipient, '@') !== false ) {
-                    //check for registered
-                    $user = $um->getUserByEmail($recipient);
-                    
-                    //user does not exist (not registered/mailing list) then it is considered as an anonymous
-                    if ( ! $user ) {
-                        // don't call $um->getUserAnonymous() as it will always return the same instance
-                        // we don't want to override previous emails
-                        // So create new anonymous instance by hand
-                        $user = $um->getUserInstanceFromRow(
-                            array(
-                                'user_id' => 0,
-                                'email'   => $recipient,
-                            )
-                        );
-                    }
-                } else {
-                    //is a login
-                    $user = $um->getUserByUserName($recipient);
-                }
+                $user = $this->getUserFromRecipientName($recipient);
                 if ($user) {
                     $ignore_perms = ! $check_perms;
                     $this->buildMessage($messages, $is_update, $user, $ignore_perms);
                 }
             }
-    
+
             // 3. Send the notification
             foreach ($messages as $m) {
                 $this->sendNotification(
@@ -550,6 +529,33 @@ class Tracker_Artifact_Changeset {
                 );
             }
         }
+    }
+
+    private function getUserFromRecipientName($recipient_name) {
+        $um   = $this->getUserManager();
+        $user = null;
+        if ( strpos($recipient_name, '@') !== false ) {
+            //check for registered
+            $user = $um->getUserByEmail($recipient_name);
+
+            //user does not exist (not registered/mailing list) then it is considered as an anonymous
+            if ( ! $user ) {
+                // don't call $um->getUserAnonymous() as it will always return the same instance
+                // we don't want to override previous emails
+                // So create new anonymous instance by hand
+                $user = $um->getUserInstanceFromRow(
+                    array(
+                        'user_id' => 0,
+                        'email'   => $recipient_name,
+                    )
+                );
+            }
+        } else {
+            //is a login
+            $user = $um->getUserByUserName($recipient_name);
+        }
+
+        return $user;
     }
 
     public function buildMessage(&$messages, $is_update, $user, $ignore_perms) {
@@ -624,18 +630,21 @@ class Tracker_Artifact_Changeset {
         $mail->send();
     }
 
-    public function cleanRecipients($recipients) {
-        $cleanRecipientsList = array();
+    public function removeRecipientsThatMayReceiveAnEmptyNotification(array &$recipients) {
+        if ( ! $this->getComment()->hasEmptyBody()) {
+            return;
+        }
+
         foreach ($recipients as $recipient => $check_perms) {
-            $user = $this->getUserManager()->getUserByUserName($recipient);
-            if (! $user) {
+            if ( ! $check_perms) {
                 continue;
             }
-            if (! $check_perms || $this->userCanReadAtLeastOneChangedField($user)) {
-                $cleanRecipientsList[$recipient] = $check_perms;
+
+            $user = $this->getUserFromRecipientName($recipient);
+            if ( ! $user || ! $this->userCanReadAtLeastOneChangedField($user)) {
+                unset($recipients[$recipient]);
             }
         }
-        return $cleanRecipientsList;
     }
 
     private function userCanReadAtLeastOneChangedField(PFUser $user) {
@@ -643,7 +652,9 @@ class Tracker_Artifact_Changeset {
 
         foreach ($this->getValues() as $field_id => $current_changeset_value) {
             $field = $factory->getFieldById($field_id);
-            if ($field && $field->userCanRead($user) && $current_changeset_value->hasChanged()) {
+            $field_is_readable = $field && $field->userCanRead($user);
+            $field_has_changed = $current_changeset_value && $current_changeset_value->hasChanged();
+            if ($field_is_readable && $field_has_changed) {
                 return true;
             }
         }
@@ -692,9 +703,8 @@ class Tracker_Artifact_Changeset {
             }
         }
 
-        if ($is_update && $this->getComment()->hasEmptyBody()) {
-            $tablo = $this->cleanRecipients($tablo);
-        }
+        $this->removeRecipientsThatMayReceiveAnEmptyNotification($tablo);
+
         return $tablo;
     }
 
