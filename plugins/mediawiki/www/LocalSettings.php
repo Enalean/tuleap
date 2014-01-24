@@ -218,6 +218,7 @@ function manageMediawikiGroupsForUser(User $mediawiki_user, PFUser $tuleap_user,
 
 function customizeMediawikiGroupsRights(array $wgGroupPermissions) {
     $wgGroupPermissions['bureaucrat']['userrights'] = false;
+    $wgGroupPermissions['*']['createaccount']       = false;
 
     return $wgGroupPermissions;
 }
