@@ -1,3 +1,6 @@
+Version 1.38 - Tuleap 6.10
+    * story #5912 - PUT /milestones/:id/milestones
+
 Version 1.37 - Tuleap 6.10
     * Fix REST route /milestones/:id
 
