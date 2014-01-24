@@ -165,5 +165,10 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
     public function getParent() {
         return null;
     }
+
+    public function milestoneCanBeSubmilestone(\Planning_Milestone $potential_submilestone) {
+        return false;
+    }
+
 }
 ?>

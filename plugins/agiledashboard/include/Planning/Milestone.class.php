@@ -162,6 +162,14 @@ interface Planning_Milestone {
      * @return float
      */
     public function getRemainingEffort();
+
+    /**
+     * Return If type of element is compatible.
+     *
+     * @param Planning_Milestone $potential_submilestone
+     * @return boolean
+     */
+    public function milestoneCanBeSubmilestone(Planning_Milestone $potential_submilestone);
 }
 
 ?>
