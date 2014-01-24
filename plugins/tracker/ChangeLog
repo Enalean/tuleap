@@ -1,3 +1,6 @@
+Version 5.225 - Tuleap 6.10
+    * Fix request #5950: Computed fields are not exported in csv
+
 Version 5.224 - Tuleap 6.10
     * Dev: throw exception when trying to rank an artifact with itself
 
