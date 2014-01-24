@@ -15,19 +15,21 @@
     @modal-padding: 15px;
     @modal-border: 1px solid #666;
     @modal-height: 400px;
-    @modal-width: 400px;
+    @modal-width: 430px;
     @grip-width: 30px;
     @grip-background-color: #ddd;
-    @content-width: 300px;
+    @side-content-width: 250px;
     @title-background-color: #FFFFFF;
     @content-background-color: #FFFFFF;
     @side-content-background-color: #F8F8F8;
+    @side-content-background-color: #FFFFFF;
     @action-background-color: #F5F5F5;
     @side-action-background-color: #F1F1F1;
 
-    position: absolute;
+    display: none;
+    position: fixed;
     z-index: 2001;
-    top: 100px;
+    top: 150px;
     left: 50%;
     margin: 0 0 0 -(@modal-width + 2 * @grip-width) / 2;
     padding: 0;
@@ -44,7 +46,7 @@
             display: none;
             *display: block;
             float: left;
-            width: @content-width;
+            width: @side-content-width;
             height: 100%;
             background: @content-background-color;
         }
@@ -85,9 +87,6 @@
         }
 
         &:first-child {
-            .tuleap-modal-side-panel-content {
-            }
-
             .tuleap-modal-side-panel-grip {
                 float: left;
                 border-top-right-radius: 0;
@@ -122,8 +121,11 @@
         padding: 7px @modal-padding;
 
         h3 {
-            padding: 0;
+            padding: 0 5px 0 0;
             margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         i {
@@ -141,7 +143,7 @@
 
     .tuleap-modal-content, .tuleap-modal-side-panel-content-content {
         background: @content-background-color;
-        padding: @modal-padding;
+        padding: 0;
         height: @modal-height;
         overflow-y: auto;
     }

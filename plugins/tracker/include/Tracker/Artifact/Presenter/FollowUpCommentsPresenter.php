@@ -32,5 +32,9 @@ class Tracker_Artifact_Presenter_FollowUpCommentsPresenter {
     public function areAvatarsEnabled() {
         return Config::get('sys_enable_avatars');
     }
+
+    public function no_comment() {
+        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'no_comment');
+    }
 }
 ?>

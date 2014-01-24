@@ -24,6 +24,7 @@
             var self = this;
 
             this.setSidePanelHeight();
+            codendi.Toggler.init(document.getElementsByClassName('tuleap-modal')[0]);
 
             $('.tuleap-modal-side-panel:first-child .tuleap-modal-side-panel-grip').click(function() {
                 self.toggleLeftSidePanel($(this));
@@ -54,9 +55,17 @@
         },
 
         setSidePanelHeight: function() {
-            $('.tuleap-modal').css('height', $('.tuleap-modal-main-panel').outerHeight());
-            $('.tuleap-modal-side-panel').css('height', $('.tuleap-modal-main-panel').outerHeight());
-            $('.tuleap-modal-side-panel-grip > span').css('width', $('.tuleap-modal-main-panel').outerHeight());
+            $('.tuleap-modal').show();
+
+            var computed_height = $('.tuleap-modal-main-panel').outerHeight();
+
+            $('.tuleap-modal').css({
+                height:    computed_height + 'px',
+                top:       '50%',
+                marginTop: '-' + (computed_height / 2) + 'px'
+            }).fadeIn(150);
+            $('.tuleap-modal-side-panel').css('height', computed_height);
+            $('.tuleap-modal-side-panel-grip > span').css('width', computed_height);
         },
 
         closeModal: function() {

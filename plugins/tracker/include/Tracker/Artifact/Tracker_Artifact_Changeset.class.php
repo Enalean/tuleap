@@ -272,6 +272,13 @@ class Tracker_Artifact_Changeset {
     }
 
     /**
+     * @return string
+     */
+    public function getAvatarUrl() {
+        return $this->getSubmitter()->getAvatarUrl();
+    }
+
+    /**
      * @return string html
      */
     public function getDateSubmittedOn() {

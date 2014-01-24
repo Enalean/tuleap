@@ -19,6 +19,10 @@
  */
 class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
 
+    public $artifact_title;
+
+    public $artifact_uri;
+
     public $follow_ups;
 
     public $artifact_links;
@@ -29,6 +33,10 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
 
     /** @var Tracker_Artifact */
     private $artifact;
+
+    public $artifact_id;
+
+    public $last_changeset_id;
 
     public $javascript_files;
 
@@ -41,20 +49,36 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
         $artifact,
         $javascript_files
     ) {
-        $this->follow_ups       = $follow_ups;
-        $this->artifact_links   = $artifact_links;
-        $this->submit_url       = $submit_url;
-        $this->form_elements    = $form_elements;
-        $this->artifact         = $artifact;
-        $this->javascript_files = $javascript_files;
+        $this->follow_ups        = $follow_ups;
+        $this->artifact_links    = $artifact_links;
+        $this->submit_url        = $submit_url;
+        $this->form_elements     = $form_elements;
+        $this->artifact          = $artifact;
+        $this->javascript_files  = $javascript_files;
+        $this->artifact_id       = $artifact->getId();
+        $this->artifact_title    = $artifact->getTitle();
+        $this->artifact_uri      = $artifact->getUri() . '&func=edit';
+        $this->last_changeset_id = $artifact->getLastChangeset()->getId();
+        $this->follow_ups        = $follow_ups;
+        $this->submit_url        = $submit_url;
+        $this->form_elements     = $form_elements;
+        $this->javascript_files  = $javascript_files;
     }
 
-    public function artifact_id() {
-        return $this->artifact->getId();
+    public function artifact_links_title() {
+        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'artifact_links_title');
     }
 
-    public function last_changeset_id() {
-        return $this->artifact->getLastChangeset()->getId();
+    public function artifact_links_readonly() {
+        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'artifact_links_readonly', array($this->artifact_uri));
+    }
+
+    public function no_artifact_links() {
+        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'no_artifact_links');
+    }
+
+    public function followups_title() {
+        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'followups_title');
     }
 
     public function javascript_rules() {

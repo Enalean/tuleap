@@ -1504,3 +1504,9 @@ plugin_tracker	missing_ugroups	Le patron sélectionné a des permissions sur des
 
 plugin_tracker	artifact_update_popup_title	$1 vient de mettre à jour l'artefact
 plugin_tracker	artifact_update_popup_got_it	OK, vu.
+
+plugin_tracker_modal_artifact	artifact_links_title	Liens entre artefacts
+plugin_tracker_modal_artifact	no_artifact_links	Aucun lien entre artefacts
+plugin_tracker_modal_artifact	artifact_links_readonly	Pour éditer les liens entre artefacts, veuillez <a href="$1">passer en mode édition complet</a>
+plugin_tracker_modal_artifact	followups_title	Commentaires
+plugin_tracker_modal_artifact	no_comment	Aucun commentaire
