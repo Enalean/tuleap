@@ -1318,7 +1318,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
                         data-user-id = "' . $user_id . '"
                     >';
 
-         $url = $this->getAvatarUrl();
+         $url = $this->getAvatarUrl($width);
 
          if ($url) {
              $html .= '<img src="'. $url .'" width="'. $width .'" />';
@@ -1332,7 +1332,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       * Return the user avatar url
       * @return string url
       */
-     public function getAvatarUrl() {
+     public function getAvatarUrl($width = 50) {
          $purifier = Codendi_HTMLPurifier::instance();
 
          if ($this->isAnonymous()) {
