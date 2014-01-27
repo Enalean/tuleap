@@ -614,7 +614,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @return int or array of int
      */
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
-        if (empty($value)) {
+        if (empty($value) || ! isset($value['use_artifact_permissions'])) {
             $value['use_artifact_permissions'] = 0;
             $value['u_groups'] = array();
         }
