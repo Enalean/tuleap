@@ -63,6 +63,9 @@ class GitActions extends PluginActions {
     /** @var ProjectManager */
     private $project_manager;
 
+    /** @var PermissionsManager */
+    private $permissions_manager;
+
     /**
      * Constructor
      *
@@ -81,7 +84,8 @@ class GitActions extends PluginActions {
         Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         Git_Driver_Gerrit_ProjectCreator $project_creator,
         Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
-        ProjectManager $project_manager
+        ProjectManager $project_manager,
+        PermissionsManager $permissions_manager
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager    = $system_event_manager;
@@ -93,6 +97,7 @@ class GitActions extends PluginActions {
         $this->project_creator       = $project_creator;
         $this->template_factory      = $template_factory;
         $this->project_manager       = $project_manager;
+        $this->permissions_manager   = $permissions_manager;
     }
 
     protected function getText($key, $params = array()) {
@@ -391,15 +396,7 @@ class GitActions extends PluginActions {
      * @return void
      */
     public function createTemplate(Project $project, PFUser $user, $template_content, $template_name) {
-        if ($project->isError()) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_invalid_project'));
-            return;
-        }
-
-        try {
-            $this->checkUserIsAdmin($project, $user);
-        } catch (GitUserNotAdminException $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_cannot_create'));
+        if (! $this->checkIfProjectIsValid($project) || ! $this->checkIfUserIsAdmin($user, $project)) {
             return;
         }
 
@@ -794,6 +791,75 @@ class GitActions extends PluginActions {
         if ($disconnect_option == GitViews_RepoManagement_Pane_Gerrit::OPTION_READONLY_GERRIT_PROJECT) {
             $this->git_system_event_manager->queueRemoteProjectReadOnly($repository, $this->driver);
         }
+    }
+
+    public function updateGitAdminGroups(Project $project, PFUser $user, array $select_project_ids) {
+        if (! $this->checkIfProjectIsValid($project) || ! $this->checkIfUserIsAdmin($user, $project)) {
+            return;
+        }
+
+        $groups = $this->getGroupsToAddAndGroupsToRemove($project, $select_project_ids);
+
+        $this->addGitAdminGroups($project, $groups['add']);
+        $this->removeGitAdminGroups($project, $groups['remove']);
+
+        $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_git', 'view_admin_git_admins_updated'));
+    }
+
+    private function getGroupsToAddAndGroupsToRemove(Project $project, array $select_project_ids) {
+        $results = $this->permissions_manager->getUgroupIdByObjectIdAndPermissionType(
+            $project->getID(),
+            Git::PERM_ADMIN
+        );
+
+        $groups['remove']                   = array();
+        $groups['add']                      = array();
+        $groups_already_admins_and_selected = array();
+
+        foreach ($results as $group_already_git_admin) {
+            $group_already_git_admin_id = $group_already_git_admin['ugroup_id'];
+            if (! in_array($group_already_git_admin_id, $select_project_ids) && $group_already_git_admin_id != UGroup::PROJECT_ADMIN) {
+                $groups['remove'][] = $group_already_git_admin_id;
+            } else {
+                $groups_already_admins_and_selected[] = $group_already_git_admin_id;
+            }
+        }
+
+        $groups['add'] = array_diff($select_project_ids, $groups_already_admins_and_selected);
+
+        return $groups;
+    }
+
+    private function addGitAdminGroups(Project $project, array $groups_to_add) {
+        foreach ($groups_to_add as $group_id_to_add) {
+            $this->permissions_manager->addPermission(Git::PERM_ADMIN, $project->getID(), $group_id_to_add);
+        }
+    }
+
+    private function removeGitAdminGroups(Project $project, array $groups_to_remove) {
+        foreach ($groups_to_remove as $group_id_to_remove) {
+            $this->permissions_manager->revokePermissionForUGroup(Git::PERM_ADMIN, $project->getID(), $group_id_to_remove);
+        }
+    }
+
+    private function checkIfProjectIsValid(Project $project) {
+        if ($project->isError()) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_invalid_project'));
+            return;
+        }
+
+        return true;
+    }
+
+    private function checkIfUserIsAdmin(PFUser $user, Project $project) {
+        try {
+            $this->checkUserIsAdmin($project, $user);
+        } catch (GitUserNotAdminException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_cannot_create'));
+            return;
+        }
+
+        return true;
     }
 }
 ?>

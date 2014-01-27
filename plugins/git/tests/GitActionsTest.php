@@ -61,7 +61,8 @@ class GitActionsTest extends TuleapTestCase {
                 mock('Git_Driver_Gerrit_UserAccountManager'),
                 mock('Git_Driver_Gerrit_ProjectCreator'),
                 mock('Git_Driver_Gerrit_Template_TemplateFactory'),
-                mock('ProjectManager')
+                mock('ProjectManager'),
+                mock('PermissionsManager')
             )
         );
     }
@@ -461,7 +462,8 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             mock('Git_Driver_Gerrit_UserAccountManager'),
             mock('Git_Driver_Gerrit_ProjectCreator'),
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
-            mock('ProjectManager')
+            mock('ProjectManager'),
+            mock('PermissionsManager')
         );
     }
 
@@ -508,7 +510,8 @@ class GitActions_ForkTests extends TuleapTestCase {
             mock('Git_Driver_Gerrit_UserAccountManager'),
             mock('Git_Driver_Gerrit_ProjectCreator'),
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
-            mock('ProjectManager')
+            mock('ProjectManager'),
+            mock('PermissionsManager')
         );
     }
 
@@ -630,7 +633,8 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
             mock('Git_Driver_Gerrit_UserAccountManager'),
             mock('Git_Driver_Gerrit_ProjectCreator'),
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
-            mock('ProjectManager')
+            mock('ProjectManager'),
+            mock('PermissionsManager')
         );
     }
 
@@ -688,7 +692,8 @@ class GitActions_disconnectFromGerritTest extends TuleapTestCase {
             mock('Git_Driver_Gerrit_UserAccountManager'),
             mock('Git_Driver_Gerrit_ProjectCreator'),
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
-            mock('ProjectManager')
+            mock('ProjectManager'),
+            mock('PermissionsManager')
         );
     }
 
@@ -762,7 +767,8 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
             mock('Git_Driver_Gerrit_UserAccountManager'),
             $this->project_creator,
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
-            mock('ProjectManager')
+            mock('ProjectManager'),
+            mock('PermissionsManager')
         );
 
     }
@@ -810,5 +816,142 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
     }
+}
+
+class GitActions_GitAdmins extends TuleapTestCase {
+
+    /** @var GitActions */
+    private $actions;
+
+    public function setUp() {
+        parent::setUp();
+
+        $git_controller              = mock('Git');
+        $git_system_event_manager    = mock('Git_SystemEventManager');
+        $git_repo_factory            = mock('GitRepositoryFactory');
+        $git_repo_manager            = mock('GitRepositoryManager');
+        $gerrit_server_factory       = mock('Git_RemoteServer_GerritServerFactory');
+        $git_driver_gerrit           = mock('Git_Driver_Gerrit');
+        $gerrit_usermanager          = mock('Git_Driver_Gerrit_UserAccountManager');
+        $git_gerrit_project_creator  = mock('Git_Driver_Gerrit_ProjectCreator');
+        $git_gerrit_template_factory = mock('Git_Driver_Gerrit_Template_TemplateFactory');
+        $project_manager             = mock('ProjectManager');
+        $this->permissions_manager   = mock('PermissionsManager');
+
+        $this->actions = new GitActions(
+            $git_controller,
+            $git_system_event_manager,
+            $git_repo_factory,
+            $git_repo_manager,
+            $gerrit_server_factory,
+            $git_driver_gerrit,
+            $gerrit_usermanager,
+            $git_gerrit_project_creator,
+            $git_gerrit_template_factory,
+            $project_manager,
+            $this->permissions_manager
+        );
+
+        $this->project = stub('Project')->getId()->returns(201);
+        $this->user    = mock('PFUser');
+    }
+
+    public function itAddsGroupsAsGitAdmins() {
+        $select_groups_ids  = array(2, 3, 102);
+
+        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->project->getID(), Git::PERM_ADMIN)->returns(
+            array(array('ugroup_id' => 3))
+        );
+
+        stub($this->user)->isAdmin(201)->returns(true);
+
+        expect($this->permissions_manager)->revokePermissionForUGroup()->never();
+        expect($this->permissions_manager)->addPermission(Git::PERM_ADMIN, 201, 2)->at(0);
+        expect($this->permissions_manager)->addPermission(Git::PERM_ADMIN, 201, 102)->at(1);
+
+        $this->actions->updateGitAdminGroups($this->project, $this->user, $select_groups_ids);
+    }
+
+    public function itRemovesGroupsAsGitAdminsIfTheyAreNoMoreSelected() {
+        $select_groups_ids  = array(3);
+
+        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->project->getID(), Git::PERM_ADMIN)->returns(
+            array(array('ugroup_id' => 2), array('ugroup_id' => 3), array('ugroup_id' =>102))
+        );
+
+        stub($this->user)->isAdmin(201)->returns(true);
+
+        expect($this->permissions_manager)->addPermission()->never();
+        expect($this->permissions_manager)->revokePermissionForUGroup(Git::PERM_ADMIN, 201, 2)->at(0);
+        expect($this->permissions_manager)->revokePermissionForUGroup(Git::PERM_ADMIN, 201, 102)->at(1);
+
+        $this->actions->updateGitAdminGroups($this->project, $this->user, $select_groups_ids);
+    }
+
+    public function itOnlyAddsTheNewGroupsSelectedAndRemovesOldGroupsNoMoreSelected() {
+        $select_groups_ids  = array(3, 4);
+
+        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->project->getID(), Git::PERM_ADMIN)->returns(
+            array(array('ugroup_id' => 2), array('ugroup_id' => 3), array('ugroup_id' =>102))
+        );
+
+        stub($this->user)->isAdmin(201)->returns(true);
+
+        expect($this->permissions_manager)->addPermission()->count(1);
+        expect($this->permissions_manager)->revokePermissionForUGroup()->count(2);
+
+        expect($this->permissions_manager)->addPermission(Git::PERM_ADMIN, 201, 4)->at(0);
+        expect($this->permissions_manager)->revokePermissionForUGroup(Git::PERM_ADMIN, 201, 2)->at(0);
+        expect($this->permissions_manager)->revokePermissionForUGroup(Git::PERM_ADMIN, 201, 102)->at(1);
+
+        $this->actions->updateGitAdminGroups($this->project, $this->user, $select_groups_ids);
+    }
+
+    public function itDoesNothingIfProjectIsInError() {
+        $select_groups_ids  = array(3, 4);
+
+        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->project->getID(), Git::PERM_ADMIN)->returns(
+            array(array('ugroup_id' => 2), array('ugroup_id' => 3), array('ugroup_id' =>102))
+        );
+
+        stub($this->project)->isError()->returns(true);
+
+        expect($this->permissions_manager)->addPermission()->never();
+        expect($this->permissions_manager)->revokePermissionForUGroup()->never();
+
+        $this->actions->updateGitAdminGroups($this->project, $this->user, $select_groups_ids);
+    }
+
+    public function itDoesNothingIfUserIsNotAdmin() {
+        $select_groups_ids  = array(3, 4);
+
+        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->project->getID(), Git::PERM_ADMIN)->returns(
+            array(array('ugroup_id' => 2), array('ugroup_id' => 3), array('ugroup_id' =>102))
+        );
+
+        stub($this->user)->isAdmin(201)->returns(false);
+
+        expect($this->permissions_manager)->addPermission()->never();
+        expect($this->permissions_manager)->revokePermissionForUGroup()->never();
+
+        $this->actions->updateGitAdminGroups($this->project, $this->user, $select_groups_ids);
+    }
+
+        public function itDoesNotRemoveProjectAdminGroupForGitAdmin() {
+        $select_groups_ids = array(2);
+
+        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->project->getID(), Git::PERM_ADMIN)->returns(
+            array(array('ugroup_id' => 2), array('ugroup_id' => UGroup::PROJECT_ADMIN), array('ugroup_id' =>102))
+        );
+
+        stub($this->user)->isAdmin(201)->returns(true);
+
+        expect($this->permissions_manager)->addPermission()->never();
+        expect($this->permissions_manager)->revokePermissionForUGroup()->count(1);
+        expect($this->permissions_manager)->revokePermissionForUGroup(Git::PERM_ADMIN, 201, 102)->at(1);
+
+        $this->actions->updateGitAdminGroups($this->project, $this->user, $select_groups_ids);
+    }
+
 }
 ?>

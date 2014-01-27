@@ -20,6 +20,8 @@
 
 class GitPresenters_AdminPresenter {
 
+    const GIT_ADMIN_SELECTBOX_NAME = 'git_admins';
+
     public $project_id;
 
     /**
@@ -35,8 +37,6 @@ class GitPresenters_AdminPresenter {
      * @var array
      */
     private $templates_list;
-
-    public $form_action;
 
     /**
      * List of templates belonging to the parent project hierarchy
@@ -56,8 +56,6 @@ class GitPresenters_AdminPresenter {
         $this->project_id                = $project_id;
         $this->parent_templates_list     = $parent_templates_list;
         $this->has_gerrit_servers_set_up = $has_gerrit_servers_set_up;
-
-        $this->form_action = '/plugins/git/?group_id='.$project_id.'&action=admin';
     }
 
     public function git_admin() {
@@ -94,6 +92,10 @@ class GitPresenters_AdminPresenter {
 
     public function parent_templates_option() {
         return $this->parent_templates_list;
+    }
+
+    public function templates_form_action() {
+        return '/plugins/git/?group_id='. $this->project_id .'&action=admin';
     }
 
     public function template_action_text() {
@@ -157,7 +159,15 @@ class GitPresenters_AdminPresenter {
     }
 
     public function git_admins_description() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_git_admins');
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_git_admins_description');
+    }
+
+    public function git_admins_submit_button() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_git_admins_submit_button');
+    }
+
+    public function git_admins_form_action() {
+        return '/plugins/git/?group_id='. $this->project_id .'&action=admin-permissions';
     }
 
     public function git_admins_selector() {
@@ -165,7 +175,7 @@ class GitPresenters_AdminPresenter {
             Git::PERM_ADMIN,
             $this->project_id,
             $this->project_id,
-            'git_access',
+            self::GIT_ADMIN_SELECTBOX_NAME,
             false,
             false
         );
