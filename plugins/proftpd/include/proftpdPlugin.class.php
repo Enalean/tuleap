@@ -20,11 +20,15 @@
 require_once 'constants.php';
 
 class proftpdPlugin extends Plugin {
+    const SERVICE_SHORTNAME = 'plugin_proftpd';
 
     public function __construct($id) {
         parent::__construct($id);
         $this->addHook('cssfile');
         $this->addHook(Event::SERVICE_CLASSNAMES);
+        $this->addHook('service_is_used');
+        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
+        $this->addHook(Event::SYSTEM_EVENT_GET_TYPES);
     }
 
     public function getPluginInfo() {
@@ -87,5 +91,43 @@ class proftpdPlugin extends Plugin {
             'field' => $GLOBALS['Language']->getText('plugin_proftpd', 'log_filepath'),
             'title' => $GLOBALS['Language']->getText('plugin_proftpd', 'log_title')
         );
+    }
+
+    public function service_is_used($params) {
+        if ($params['shortname'] == self::SERVICE_SHORTNAME && $params['is_used']) {
+            $group_id = $params['group_id'];
+            $project_manager = ProjectManager::instance();
+            $project = $project_manager->getProject($group_id);
+
+            $this->getProftpdSystemEventManager()->queueDirectoryCreate($project->getUnixName());
+        }
+    }
+
+    public function system_event_get_types($params) {
+        $params['types'] = array_merge($params['types'], $this->getProftpdSystemEventManager()->getTypes());
+    }
+
+    /**
+     * This callback make SystemEvent manager knows about proftpd plugin System Events
+     */
+    public function get_system_event_class($params) {
+        switch($params['type']) {
+            case \Tuleap\ProFTPd\SystemEvent\PROFTPD_DIRECTORY_CREATE::NAME:
+                $params['dependencies'] = array(
+                    $this->getBackend(),
+                    $this->getPluginInfo()->getPropVal('proftpd_base_directory')
+                );
+                break;
+            default:
+                break;
+        }
+    }
+
+    private function getProftpdSystemEventManager() {
+        return new \Tuleap\ProFTPd\SystemEventManager(SystemEventManager::instance());
+    }
+
+    private function getBackend() {
+        return Backend::instance();
     }
 }

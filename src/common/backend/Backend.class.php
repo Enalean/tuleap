@@ -567,6 +567,27 @@ class Backend {
     }
 
     /**
+     * Modifiy the acl for the specified file.
+     *
+     * @param String $entries
+     * @param String $path
+     */
+    public function setfacl($entries, $path) {
+        $this->exec("setfacl -m $entries $path");
+    }
+
+    private function exec($command) {
+        $output       = array();
+        $return_value = 1;
+        exec("$command 2>&1", $output, $return_value);
+        if ($return_value == 0) {
+            return $output;
+        } else {
+            throw new BackendCommandException($command, $output, $return_value);
+        }
+    }
+
+    /**
      * Check if given path is a repository or a file or a link
      * 
      * @param String $path
