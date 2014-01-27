@@ -253,6 +253,7 @@ tuleap.cardwall = tuleap.cardwall || { };
                     url: codendi.tracker.base_url + '?aid='+artifact_id+'&func=get-edit-in-place'
                 }).done(function( data ) {
                     self.showArtifactEditForm(data, artifact_id)
+                    codendi.tracker.runTrackerFieldDependencies();
                 }).fail(function() {
                     displayIframeOverlay(event, $(self));
                 });

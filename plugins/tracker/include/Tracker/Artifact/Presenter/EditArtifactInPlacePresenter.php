@@ -38,31 +38,22 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
 
     public $last_changeset_id;
 
-    public $javascript_files;
-
-
     public function __construct(
         $follow_ups,
         $artifact_links,
         $submit_url,
         $form_elements,
-        $artifact,
-        $javascript_files
+        $artifact
     ) {
         $this->follow_ups        = $follow_ups;
         $this->artifact_links    = $artifact_links;
         $this->submit_url        = $submit_url;
-        $this->form_elements     = $form_elements;
         $this->artifact          = $artifact;
-        $this->javascript_files  = $javascript_files;
         $this->artifact_id       = $artifact->getId();
         $this->artifact_title    = $artifact->getTitle();
         $this->artifact_uri      = $artifact->getUri() . '&func=edit';
         $this->last_changeset_id = $artifact->getLastChangeset()->getId();
-        $this->follow_ups        = $follow_ups;
-        $this->submit_url        = $submit_url;
         $this->form_elements     = $form_elements;
-        $this->javascript_files  = $javascript_files;
     }
 
     public function artifact_links_title() {

@@ -225,11 +225,11 @@ codendi.tracker.fields = {
     }
 };
 
-document.observe('dom:loaded', function() {
+codendi.tracker.runTrackerFieldDependencies = function() {
         //try {
     //Load rules definitions
     //Only if fields and values exist
-    
+
     codendi.tracker.rules_definitions.each(function (rule_definition) {
         if (rule_definition.source_field != rule_definition.target_field 
             && codendi.tracker.fields.get(rule_definition.source_field) 
@@ -252,7 +252,7 @@ document.observe('dom:loaded', function() {
     });
     
     //{{{ Look for HIGHLIGHT_STARTCOLOR in current css
-    var codendi_field_dependencies_highlight_change = getStyleClassProperty('codendi_field_dependencies_highlight_change', 'backgroundColor');
+    var codendi_field_dependencies_highlight_change = tuleap.getStyleClassProperty('codendi_field_dependencies_highlight_change', 'backgroundColor');
     if (codendi_field_dependencies_highlight_change && codendi_field_dependencies_highlight_change != '') {
         HIGHLIGHT_STARTCOLOR = codendi_field_dependencies_highlight_change;
     }
@@ -275,41 +275,9 @@ document.observe('dom:loaded', function() {
     //}}}
         //} catch (e){ console.log(e);}
 
-});
+}
 
-// Search for a class in loaded stylesheets
-function getStyleClass (className) {
-    var re = new RegExp("\\." + className + "$", "gi");
-    if (document.all) {
-        for (var s = 0; s < document.styleSheets.length; s++) {
-            for (var r = 0; r < document.styleSheets[s].rules.length; r++) {
-                if (document.styleSheets[s].rules[r].selectorText && document.styleSheets[s].rules[r].selectorText.search(re) != -1) {
-                    return document.styleSheets[s].rules[r].style;
-                }
-            }
-        }
-    } else if (document.getElementById) {
-        for (var s = 0; s < document.styleSheets.length; s++) {
-            for (var r = 0; r < document.styleSheets[s].cssRules.length; r++) {
-                if (document.styleSheets[s].cssRules[r].selectorText && document.styleSheets[s].cssRules[r].selectorText.search(re) != -1) {
-                    document.styleSheets[s].cssRules[r].sheetIndex = s;
-                    document.styleSheets[s].cssRules[r].ruleIndex = s;
-                    return document.styleSheets[s].cssRules[r].style;
-                }
-            }
-        }
-    } else if (document.layers) {
-        return document.classes[className].all;
-    }
-    return null;
-}
-// Search for a property for a class in loaded stylesheets
-function getStyleClassProperty (className, propertyName) {
-  var styleClass = getStyleClass(className);
-  if (styleClass)
-    return styleClass[propertyName];
-  else 
-    return null;
-}
+document.observe('dom:loaded', codendi.tracker.runTrackerFieldDependencies);
+
 //}}}
 

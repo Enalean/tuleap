@@ -39,16 +39,12 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
         $redirect         = new Tracker_Artifact_Redirect();
         $redirect->query_parameters['func'] = 'update-in-place';
 
-        $plugin_manager   = PluginManager::instance();
-        $plugin           = $plugin_manager->getPluginByName('tracker');
-
         $presenter = new Tracker_Artifact_Presenter_EditArtifactInPlacePresenter(
             $this->fetchFollowUps(),
             $this->fetchArtifactLinks($current_user),
             $redirect->toUrl(),
             $this->artifact->getTracker()->fetchFormElementsNoColumns($this->artifact, array(0 => null)),
-            $this->artifact,
-            $plugin->getJavascriptFiles()
+            $this->artifact
         );
         $this->renderer->renderToPage('artifact-modal', $presenter);
     }
