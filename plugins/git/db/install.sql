@@ -94,7 +94,14 @@ VALUES ('PLUGIN_GIT_READ', 2, 1),
        ('PLUGIN_GIT_WRITE', 4, 0),
        ('PLUGIN_GIT_WPLUS', 2, 0),
        ('PLUGIN_GIT_WPLUS', 3, 0),
-       ('PLUGIN_GIT_WPLUS', 4, 0);
+       ('PLUGIN_GIT_WPLUS', 4, 0),
+       ('PLUGIN_GIT_ADMIN', 1, 0),
+       ('PLUGIN_GIT_ADMIN', 2, 0),
+       ('PLUGIN_GIT_ADMIN', 3, 0),
+       ('PLUGIN_GIT_ADMIN', 4, 1);
+
+INSERT INTO permissions(permission_type, ugroup_id, object_id)
+VALUES ('PLUGIN_GIT_ADMIN', 4, 100);
 
 -- Enable git gc
 INSERT INTO plugin_git_housekeeping VALUES (1);
