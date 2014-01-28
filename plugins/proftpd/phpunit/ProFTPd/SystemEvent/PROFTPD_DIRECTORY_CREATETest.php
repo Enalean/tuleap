@@ -33,11 +33,14 @@ class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends PHPUnit_Framework_TestCas
     private $group_unix_name;
     /** @var String */
     private $ftp_directory;
+    private $backend;
+    private $acl_updater;
 
     public function setUp() {
         parent::setUp();
         $this->event   = $this->getMockBuilder('Tuleap\ProFTPd\SystemEvent\PROFTPD_DIRECTORY_CREATE')->setMethods(array('done'))->disableOriginalConstructor()->getMock();
         $this->backend = $this->getMockBuilder('Backend')->disableOriginalConstructor()->getMock();
+        $this->acl_updater = $this->getMockBuilder('Tuleap\ProFTPd\Admin\ACLUpdater')->disableOriginalConstructor()->getMock();
 
         $this->group_unix_name = "group_name";
         $this->ftp_directory = '/var/tmp';
@@ -46,7 +49,7 @@ class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends PHPUnit_Framework_TestCas
         $GLOBALS['sys_http_user'] = 'someuser';
 
         $this->event->setParameters($this->group_unix_name);
-        $this->event->injectDependencies($this->backend, $this->ftp_directory);
+        $this->event->injectDependencies($this->backend, $this->acl_updater, $this->ftp_directory);
     }
 
     public function tearDown() {
@@ -70,8 +73,7 @@ class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends PHPUnit_Framework_TestCas
     }
 
     public function testItSetsACLOnDirectory() {
-        $this->backend->expects($this->at(1))->method('setfacl')->with('d:u:'.$GLOBALS['sys_http_user'].':rx', $this->path);
-        $this->backend->expects($this->at(2))->method('setfacl')->with('u:'.$GLOBALS['sys_http_user'].':rx', $this->path);
+        $this->acl_updater->expects($this->once())->method('recursivelyApplyACL')->with($this->path, $GLOBALS['sys_http_user'], '', '');
 
         $this->event->process();
     }

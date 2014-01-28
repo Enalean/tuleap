@@ -35,7 +35,12 @@ class ProFTPd_SystemEventManagerTest extends PHPUnit_Framework_TestCase {
     public function setUp() {
         parent::setUp();
         $this->system_event_manager = $this->getMockBuilder('SystemEventManager')->disableOriginalConstructor()->getMock();
-        $this->proftpd_system_event_manager = new Tuleap\ProFTPd\SystemEventManager($this->system_event_manager);
+        $this->proftpd_system_event_manager = new Tuleap\ProFTPd\SystemEventManager(
+            $this->system_event_manager,
+            $this->getMockBuilder('Backend')->disableOriginalConstructor()->getMock(),
+            $this->getMockBuilder('Tuleap\ProFTPd\Admin\PermissionsManager')->disableOriginalConstructor()->getMock(),
+            $this->getMockBuilder('ProjectManager')->disableOriginalConstructor()->getMock(),
+            'path');
     }
 
     public function testItCreatesRepositoryCreateEvent() {
@@ -51,5 +56,20 @@ class ProFTPd_SystemEventManagerTest extends PHPUnit_Framework_TestCase {
                 );
 
         $this->proftpd_system_event_manager->queueDirectoryCreate($project_unix_name);
+    }
+
+    public function testItQueuesUpdateACLEvent() {
+        $project_unix_name = 'test';
+        $this->system_event_manager
+            ->expects($this->once())
+            ->method('createEvent')
+                ->with(
+                    Tuleap\ProFTPd\SystemEvent\PROFTPD_UPDATE_ACL::NAME,
+                    $project_unix_name,
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::OWNER_ROOT
+                );
+
+        $this->proftpd_system_event_manager->queueACLUpdate($project_unix_name);
     }
 }

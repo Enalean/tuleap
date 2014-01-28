@@ -21,6 +21,7 @@
 namespace Tuleap\ProFTPd\Admin;
 
 use Tuleap\ProFTPd\ServiceProFTPd;
+use Tuleap\ProFTPd\SystemEventManager;
 use Tuleap\ProFTPd\Presenter\AdminPresenter;
 use HTTPRequest;
 use Project;
@@ -32,8 +33,12 @@ class AdminController {
     /** @var PermissionsManager */
     private $permissions_manager;
 
-    public function __construct(PermissionsManager $permissions_manager) {
-        $this->permissions_manager = $permissions_manager;
+    /** @var SystemEventManager */
+    private $system_event_manager;
+
+    public function __construct(PermissionsManager $permissions_manager, SystemEventManager $system_event_manager) {
+        $this->permissions_manager  = $permissions_manager;
+        $this->system_event_manager = $system_event_manager;
     }
 
     public function getName() {
@@ -71,35 +76,48 @@ class AdminController {
 
     public function save(ServiceProFTPd $service, HTTPRequest $request) {
         if ($this->userIsAdmin($request)) {
-            $project = $request->getProject();
-            if ($project && ! $project->isError()) {
-                $this->permissions_manager->savePermission(
-                    $project,
-                    PermissionsManager::PERM_READ,
-                    $this->getUGroupsForPermission(
-                        $request,
-                        PermissionsManager::PERM_READ
-                    )
-                );
-                $this->permissions_manager->savePermission(
-                    $project,
-                    PermissionsManager::PERM_WRITE,
-                    $this->getUGroupsForPermission(
-                        $request,
-                        PermissionsManager::PERM_WRITE
-                    )
-                );
-
-                $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_proftpd', 'permissions_updated'));
-
-                $GLOBALS['Response']->redirect('?'.http_build_query(array(
-                    'group_id'   => $project->getID(),
-                    'controller' => self::NAME,
-                    'action'     => 'index',
-                )));
-            }
+            $this->saveForAdmin($request);
         }
         exit_error($GLOBALS['Language']->getText('global', 'error_perm_denied'), $GLOBALS['Language']->getText('plugin_proftpd', 'error_not_admin'));
+    }
+
+    private function saveForAdmin(HTTPRequest $request) {
+        $project = $request->getProject();
+        if ($project && ! $project->isError()) {
+            $this->saveForProject($project, $request);
+        }
+    }
+
+    private function saveForProject(Project $project, HTTPRequest $request) {
+        $this->savePermissions($project, $request);
+        $this->system_event_manager->queueACLUpdate($project->getUnixName());
+
+        $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_proftpd', 'permissions_updated'));
+
+        $GLOBALS['Response']->redirect('?'.http_build_query(array(
+            'group_id'   => $project->getID(),
+            'controller' => self::NAME,
+            'action'     => 'index',
+        )));
+    }
+
+    private function savePermissions(Project $project, HTTPRequest $request) {
+        $this->permissions_manager->savePermission(
+            $project,
+            PermissionsManager::PERM_READ,
+            $this->getUGroupsForPermission(
+                $request,
+                PermissionsManager::PERM_READ
+            )
+        );
+        $this->permissions_manager->savePermission(
+            $project,
+            PermissionsManager::PERM_WRITE,
+            $this->getUGroupsForPermission(
+                $request,
+                PermissionsManager::PERM_WRITE
+            )
+        );
     }
 
     private function getUGroupsForPermission(HTTPRequest $request, $permission) {

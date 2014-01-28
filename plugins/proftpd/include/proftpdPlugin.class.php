@@ -59,10 +59,15 @@ class proftpdPlugin extends Plugin {
 
     private function getAdminController() {
         return new Tuleap\ProFTPd\Admin\AdminController(
-            new Tuleap\ProFTPd\Admin\PermissionsManager(
-                PermissionsManager::instance(),
-                new UGroupManager()
-            )
+            $this->getPermissionsManager(),
+            $this->getProftpdSystemEventManager()
+        );
+    }
+
+    private function getPermissionsManager() {
+        return new Tuleap\ProFTPd\Admin\PermissionsManager(
+            PermissionsManager::instance(),
+            new UGroupManager()
         );
     }
 
@@ -111,23 +116,19 @@ class proftpdPlugin extends Plugin {
      * This callback make SystemEvent manager knows about proftpd plugin System Events
      */
     public function get_system_event_class($params) {
-        switch($params['type']) {
-            case \Tuleap\ProFTPd\SystemEvent\PROFTPD_DIRECTORY_CREATE::NAME:
-                $params['dependencies'] = array(
-                    $this->getBackend(),
-                    $this->getPluginInfo()->getPropVal('proftpd_base_directory')
-                );
-                break;
-            default:
-                break;
-        }
+        $this->getProftpdSystemEventManager()->instanciateEvents(
+            $params['type'],
+            $params['dependencies']
+        );
     }
 
     private function getProftpdSystemEventManager() {
-        return new \Tuleap\ProFTPd\SystemEventManager(SystemEventManager::instance());
-    }
-
-    private function getBackend() {
-        return Backend::instance();
+        return new \Tuleap\ProFTPd\SystemEventManager(
+            SystemEventManager::instance(),
+            Backend::instance(),
+            $this->getPermissionsManager(),
+            ProjectManager::instance(),
+            $this->getPluginInfo()->getPropVal('proftpd_base_directory')
+        );
     }
 }
