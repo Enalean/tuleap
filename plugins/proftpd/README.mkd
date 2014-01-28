@@ -73,7 +73,7 @@ Everything is configured in ``/etc/proftpd.conf``, update or add:
         SQLBackend        mysql
         SQLPasswordEngine on
         SQLAuthTypes      MD5
-        SQLConnectInfo    <database_name>@<database_server> <proftpd_user> <dbautuser_password>
+        SQLConnectInfo    <database_name>@<database_server> <proftpd_user> <proftpd_password>
         SQLDefaultHomedir /var/lib/tuleap/secure_ftp
         SQLGroupInfo      ftpgroups groupname gid members
         SQLUserInfo       custom:/get-user-by-name/get-user-by-id/get-user-names/get-all-users
