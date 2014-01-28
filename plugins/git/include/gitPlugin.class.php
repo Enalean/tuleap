@@ -110,6 +110,8 @@ class GitPlugin extends Plugin {
 
         //Gerrit user synch help
         $this->_addHook(Event::MANAGE_THIRD_PARTY_APPS, 'manage_third_party_apps');
+
+        $this->_addHook('register_project_creation');
     }
 
     public function site_admin_option_hook() {
@@ -1023,6 +1025,10 @@ class GitPlugin extends Plugin {
         );
     }
 
+    private function getPermissionsManager() {
+        return new PermissionsManager(new PermissionsDao());
+    }
+
     /**
      *
      * @return BackendLogger
@@ -1120,6 +1126,15 @@ class GitPlugin extends Plugin {
      */
     public function systemevent_user_rename($params) {
         $this->getGitSystemEventManager()->queueUserRenameUpdate($params['old_user_name'], $params['user']);
+    }
+
+    public function register_project_creation($params) {
+        $this->getPermissionsManager()->duplicateWithStaticMapping(
+                $params['template_id'],
+                $params['group_id'],
+                array(Git::PERM_ADMIN),
+                $params['ugroupsMapping']
+        );
     }
 }
 ?>
