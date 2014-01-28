@@ -254,10 +254,36 @@ tuleap.cardwall = tuleap.cardwall || { };
                 }).done(function( data ) {
                     self.showArtifactEditForm(data, artifact_id)
                     codendi.tracker.runTrackerFieldDependencies();
+
+                    $('.tuleap-modal-main-panel form textarea').each( function(){
+                        var element = $(this).get(0); //transform to prototype
+                        enableRichTextArea(element)
+                    });
                 }).fail(function() {
                     displayIframeOverlay(event, $(self));
                 });
             });
+
+            function enableRichTextArea(element) {
+                var html_id    = element.id,
+                    id         = html_id.match(/_(\d+)$/),
+                    htmlFormat = false,
+                    name;
+
+                if (id) {
+                    id   = id[1];
+                    name = 'artifact['+ id +'][format]';
+
+                    if (Element.readAttribute('artifact['+id+']_body_format', 'value') == 'html') {
+                        htmlFormat = true;
+                    }
+
+                    new tuleap.trackers.textarea.RTE(
+                        element,
+                        {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat, no_resize : true}
+                    );
+                }
+            }
         },
 
         validateEdition: function(artifact_id) {
@@ -283,6 +309,8 @@ tuleap.cardwall = tuleap.cardwall || { };
             tuleap.modal.init();
 
             $('#tuleap-modal-submit').click(function(event) {
+                self.updateRichTextAreas();
+
                 if (! self.isArtifactSubmittable(event)) {
                     return;
                 }
@@ -304,6 +332,12 @@ tuleap.cardwall = tuleap.cardwall || { };
 
         isArtifactSubmittable : function(event) {
             return tuleap.trackers.submissionKeeper.isArtifactSubmittable(event);
+        },
+
+        updateRichTextAreas : function() {
+            for (instance in CKEDITOR.instances) {
+                CKEDITOR.instances[instance].updateElement();
+            }
         }
     };
 

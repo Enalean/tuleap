@@ -78,7 +78,7 @@ codendi.RTE = Class.create(
 
             CKEDITOR.on('instanceReady', function (evt) {
                 if (evt.editor === this.rte) {
-                    if (this.element.getWidth() > 0) {
+                    if (this.element.getWidth() > 0 && (typeof(this.options.no_resize) == 'undefined' || ! this.options.no_resize)) {
                         evt.editor.resize(this.element.getWidth(), this.element.getHeight(), true);
                     }
                 }
