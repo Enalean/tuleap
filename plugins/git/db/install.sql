@@ -103,6 +103,11 @@ VALUES ('PLUGIN_GIT_READ', 2, 1),
 INSERT INTO permissions(permission_type, ugroup_id, object_id)
 VALUES ('PLUGIN_GIT_ADMIN', 4, 100);
 
+-- Grant project_admins as PLUGIN_GIT_ADMIN for project 100
+
+INSERT INTO permissions (permission_type, object_id, ugroup_id)
+VALUES ('PLUGIN_GIT_ADMIN', 100, 4);
+
 -- Enable git gc
 INSERT INTO plugin_git_housekeeping VALUES (1);
 
