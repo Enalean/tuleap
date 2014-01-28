@@ -47,6 +47,15 @@ class PermissionsManager {
         return UGroup::NONE;
     }
 
+    public function getUGroupSystemNameFor(Project $project, $permissions) {
+        $ugroup_id = $this->getSelectUGroupFor($project, $permissions);
+        if ($ugroup_id != UGroup::NONE) {
+            $ugroup = $this->ugroup_manager->getById($ugroup_id);
+            return $project->getUnixName() . '-' . $ugroup->getName();
+        }
+        return '';
+    }
+
     public function savePermission(Project $project, $permission, array $ugroups) {
         include_once 'www/project/admin/permissions.php';
 

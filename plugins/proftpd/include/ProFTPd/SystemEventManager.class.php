@@ -21,14 +21,37 @@
 
 namespace Tuleap\ProFTPd;
 
-use Tuleap\ProFTPd\SystemEvent;
+use Backend;
+use ProjectManager;
 
 class SystemEventManager {
     /** @var SystemEventManager */
     private $system_event_manager;
 
-    public function __construct(\SystemEventManager $system_event_manager) {
-        $this->system_event_manager = $system_event_manager;
+    /** @var Backend */
+    private $backend;
+
+    /** @var Admin\PermissionsManager */
+    private $permissions_manager;
+
+    /** @var ProjectManager */
+    private $project_manager;
+
+    /** @var string */
+    private $proftpd_base_directory;
+
+    public function __construct(
+            \SystemEventManager $system_event_manager,
+            Backend $backend,
+            Admin\PermissionsManager $permissions_manager,
+            ProjectManager $project_manager,
+            $proftpd_base_directory
+    ) {
+        $this->system_event_manager   = $system_event_manager;
+        $this->backend                = $backend;
+        $this->permissions_manager    = $permissions_manager;
+        $this->project_manager        = $project_manager;
+        $this->proftpd_base_directory = $proftpd_base_directory;
     }
 
     public function queueDirectoryCreate($project_name) {
@@ -40,9 +63,41 @@ class SystemEventManager {
         );
     }
 
+    public function queueACLUpdate($project_name) {
+        $this->system_event_manager->createEvent(
+            SystemEvent\PROFTPD_UPDATE_ACL::NAME,
+            $project_name,
+            \SystemEvent::PRIORITY_HIGH,
+            \SystemEvent::OWNER_ROOT
+        );
+    }
+
     public function getTypes() {
         return array(
             SystemEvent\PROFTPD_DIRECTORY_CREATE::NAME,
+            SystemEvent\PROFTPD_UPDATE_ACL::NAME,
         );
+    }
+
+    public function instanciateEvents($type, &$dependencies) {
+        switch($type) {
+            case \Tuleap\ProFTPd\SystemEvent\PROFTPD_DIRECTORY_CREATE::NAME:
+                $dependencies = array(
+                    $this->backend,
+                    new Admin\ACLUpdater($this->backend),
+                    $this->proftpd_base_directory
+                );
+                break;
+            case \Tuleap\ProFTPd\SystemEvent\PROFTPD_UPDATE_ACL::NAME:
+                $dependencies = array(
+                    new Admin\ACLUpdater($this->backend),
+                    $this->permissions_manager,
+                    $this->project_manager,
+                    $this->proftpd_base_directory
+                );
+                break;
+            default:
+                break;
+        }
     }
 }

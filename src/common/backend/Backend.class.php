@@ -572,8 +572,21 @@ class Backend {
      * @param String $entries
      * @param String $path
      */
-    public function setfacl($entries, $path) {
-        $this->exec("setfacl -m $entries $path");
+    public function modifyacl($entries, $path) {
+        $this->setfacl("-m $entries $path");
+    }
+
+    /**
+     * Remove all acl and default acl for specified path.
+     *
+     * @param String $path
+     */
+    public function resetacl($path) {
+        $this->setfacl("--remove-all --remove-default $path");
+    }
+
+    public function setfacl($command) {
+        $this->exec("setfacl $command");
     }
 
     private function exec($command) {

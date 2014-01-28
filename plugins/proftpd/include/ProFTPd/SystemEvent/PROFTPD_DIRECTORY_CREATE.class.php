@@ -21,8 +21,9 @@
 
 namespace Tuleap\ProFTPd\SystemEvent;
 
-use Backend;
+use Tuleap\ProFTPd\Admin\ACLUpdater;
 use RuntimeException;
+use Backend;
 
 class PROFTPD_DIRECTORY_CREATE extends \SystemEvent {
     const NAME = 'Tuleap\ProFTPd\SystemEvent\PROFTPD_DIRECTORY_CREATE';
@@ -30,11 +31,15 @@ class PROFTPD_DIRECTORY_CREATE extends \SystemEvent {
     /** @var Backend */
     private $backend;
 
+    /** @var ACLUpdater */
+    private $acl_updater;
+
     /** @var string */
     private $ftp_directory;
 
-    public function injectDependencies(Backend $backend, $ftp_directory) {
+    public function injectDependencies(Backend $backend, ACLUpdater $acl_updater, $ftp_directory) {
         $this->backend       = $backend;
+        $this->acl_updater   = $acl_updater;
         $this->ftp_directory = $ftp_directory;
     }
 
@@ -70,12 +75,10 @@ class PROFTPD_DIRECTORY_CREATE extends \SystemEvent {
     }
 
     private function setfacl($path) {
-        $this->backend->setfacl("d:u:".$GLOBALS['sys_http_user'].":rx", $path);
-        $this->backend->setfacl("u:".$GLOBALS['sys_http_user'].":rx", $path);
+        $this->acl_updater->recursivelyApplyACL($path, $GLOBALS['sys_http_user'], '', '');
     }
 
     public function verbalizeParameters($with_link) {
         return $this->parameters;
     }
 }
-
