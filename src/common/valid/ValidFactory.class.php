@@ -47,7 +47,7 @@ class Valid_UInt extends Valid_Int {
 class Valid_Numeric extends Valid {
 
     function validate($value) {
-        $this->addRule(new Rule_GreaterThan(0));
+        $this->addRule(new Rule_GreaterOrEqual(0));
         return parent::validate($value);
     }
 }

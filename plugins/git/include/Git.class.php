@@ -416,19 +416,24 @@ class Git extends PluginController {
                 break;
             case 'admin-permissions':
                 $valid = new Valid_Numeric(GitPresenters_AdminPresenter::GIT_ADMIN_SELECTBOX_NAME);
+                $project = $this->projectManager->getProject($this->groupId);
+
                 if ($this->request->validArray($valid)) {
                     $select_project_ids = $this->request->get(GitPresenters_AdminPresenter::GIT_ADMIN_SELECTBOX_NAME);
 
                     if ($select_project_ids) {
-                        $project = $this->projectManager->getProject($this->groupId);
 
                         $this->addAction('updateGitAdminGroups', array($project, $user, $select_project_ids));
-                        $this->addAction('generateGerritRepositoryAndTemplateList', array($project, $user));
-                        $this->addView('adminView');
+
                     } else {
                         $this->addError('Error');
                     }
+                } else {
+                    $this->addError('Error');
                 }
+
+                $this->addAction('generateGerritRepositoryAndTemplateList', array($project, $user));
+                $this->addView('adminView');
                 break;
             case 'admin':
                 $project = $this->projectManager->getProject($this->groupId);
@@ -717,8 +722,6 @@ class Git extends PluginController {
      * @return PluginActions
      */
     protected function instantiateAction($action) {
-        $permissions_manager = new PermissionsManager(new PermissionsDao());
-
         return new $action(
             $this,
             $this->git_system_event_manager,
@@ -729,8 +732,7 @@ class Git extends PluginController {
             $this->gerrit_usermanager,
             $this->project_creator,
             $this->template_factory,
-            $this->projectManager,
-            $permissions_manager
+            $this->projectManager
         );
     }
 

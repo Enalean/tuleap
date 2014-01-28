@@ -171,13 +171,11 @@ class GitPresenters_AdminPresenter {
     }
 
     public function git_admins_selector() {
-        return permission_fetch_selection_field(
+        return permission_fetch_selection_field_without_project_admins_and_nobody(
             Git::PERM_ADMIN,
             $this->project_id,
             $this->project_id,
-            self::GIT_ADMIN_SELECTBOX_NAME,
-            false,
-            false
+            self::GIT_ADMIN_SELECTBOX_NAME
         );
     }
 }

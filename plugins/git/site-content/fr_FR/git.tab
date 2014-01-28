@@ -268,7 +268,7 @@ plugin_git	view_admin_no_gerrit_server	Il n'y a pas de <em><a href="$1">serveur 
 plugin_git	view_admin_git_admins	Administrateurs Git
 plugin_git	view_admin_git_admins_description	Cette section permet de sélectionner les administrateurs du service Git, en plus des administrateurs du projet.
 plugin_git	view_admin_git_admins_submit_button	Valider
-plugin_git	view_admin_git_admins_updated	Les groupes administrateurs du service Git ont été mis à jour
+plugin_git	view_admin_git_admins_update_feedback	$1
 
 plugin_git	gerrit_template_delete	Supprimer
 plugin_git	gerrit_template_delete_error	Une erreur est survenue pendant la suppression du modèle.

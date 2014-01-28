@@ -63,16 +63,18 @@ class GitActions extends PluginActions {
     /** @var ProjectManager */
     private $project_manager;
 
-    /** @var PermissionsManager */
-    private $permissions_manager;
-
     /**
-     * Constructor
      *
-     * @param Git                  $controller         The controller
-     * @param Git_SystemEventManager   $system_event_manager The system manager
-     * @param GitRepositoryFactory $factory            The factory to manage repositories
-     * @param GitRepositoryManager $manager            The manager to create/delete repositories
+     * @param Git $controller
+     * @param Git_SystemEventManager $system_event_manager
+     * @param GitRepositoryFactory $factory
+     * @param GitRepositoryManager $manager
+     * @param Git_RemoteServer_GerritServerFactory $gerrit_server_factory
+     * @param Git_Driver_Gerrit $driver
+     * @param Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager
+     * @param Git_Driver_Gerrit_ProjectCreator $project_creator
+     * @param Git_Driver_Gerrit_Template_TemplateFactory $template_factory
+     * @param ProjectManager $project_manager
      */
     public function __construct(
         Git                $controller,
@@ -84,8 +86,7 @@ class GitActions extends PluginActions {
         Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         Git_Driver_Gerrit_ProjectCreator $project_creator,
         Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
-        ProjectManager $project_manager,
-        PermissionsManager $permissions_manager
+        ProjectManager $project_manager
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager    = $system_event_manager;
@@ -97,7 +98,6 @@ class GitActions extends PluginActions {
         $this->project_creator       = $project_creator;
         $this->template_factory      = $template_factory;
         $this->project_manager       = $project_manager;
-        $this->permissions_manager   = $permissions_manager;
     }
 
     protected function getText($key, $params = array()) {
@@ -793,53 +793,30 @@ class GitActions extends PluginActions {
         }
     }
 
-    public function updateGitAdminGroups(Project $project, PFUser $user, array $select_project_ids) {
+    public function updateGitAdminGroups(Project $project, PFUser $user, array $selected_group_ids) {
         if (! $this->checkIfProjectIsValid($project) || ! $this->checkIfUserIsAdmin($user, $project)) {
             return;
         }
 
-        $groups = $this->getGroupsToAddAndGroupsToRemove($project, $select_project_ids);
+        $selected_group_ids = $this->removeNobodyFromSelectGroups($selected_group_ids);
 
-        $this->addGitAdminGroups($project, $groups['add']);
-        $this->removeGitAdminGroups($project, $groups['remove']);
-
-        $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_git', 'view_admin_git_admins_updated'));
-    }
-
-    private function getGroupsToAddAndGroupsToRemove(Project $project, array $select_project_ids) {
-        $results = $this->permissions_manager->getUgroupIdByObjectIdAndPermissionType(
+        list ($return_code, $feedback) = permission_process_selection_form(
+            $project->getId(),
+            Git::PERM_ADMIN,
             $project->getID(),
-            Git::PERM_ADMIN
+            $selected_group_ids
         );
 
-        $groups['remove']                   = array();
-        $groups['add']                      = array();
-        $groups_already_admins_and_selected = array();
-
-        foreach ($results as $group_already_git_admin) {
-            $group_already_git_admin_id = $group_already_git_admin['ugroup_id'];
-            if (! in_array($group_already_git_admin_id, $select_project_ids) && $group_already_git_admin_id != UGroup::PROJECT_ADMIN) {
-                $groups['remove'][] = $group_already_git_admin_id;
-            } else {
-                $groups_already_admins_and_selected[] = $group_already_git_admin_id;
-            }
+        if (! $return_code) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_git_admins_update_feedback', $feedback));
+            return;
         }
 
-        $groups['add'] = array_diff($select_project_ids, $groups_already_admins_and_selected);
-
-        return $groups;
+        $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_git', 'view_admin_git_admins_update_feedback', $feedback));
     }
 
-    private function addGitAdminGroups(Project $project, array $groups_to_add) {
-        foreach ($groups_to_add as $group_id_to_add) {
-            $this->permissions_manager->addPermission(Git::PERM_ADMIN, $project->getID(), $group_id_to_add);
-        }
-    }
-
-    private function removeGitAdminGroups(Project $project, array $groups_to_remove) {
-        foreach ($groups_to_remove as $group_id_to_remove) {
-            $this->permissions_manager->revokePermissionForUGroup(Git::PERM_ADMIN, $project->getID(), $group_id_to_remove);
-        }
+    private function removeNobodyFromSelectGroups(array $select_group_ids) {
+        return array_diff($select_group_ids, array(UGroup::NONE));
     }
 
     private function checkIfProjectIsValid(Project $project) {

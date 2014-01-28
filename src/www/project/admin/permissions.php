@@ -605,13 +605,24 @@ function permission_fetch_selected_ugroups($permission_type, $object_id, $group_
     return $ugroups;
 }
 
+function permission_fetch_selection_field_without_project_admins_and_nobody(
+    $permission_type,
+    $object_id,
+    $group_id,
+    $htmlname = 'ugroups',
+    $disabled = false
+) {
+    return permission_fetch_selection_field($permission_type, $object_id, $group_id, $htmlname, $disabled, false, false);
+}
+
 function permission_fetch_selection_field(
         $permission_type,
         $object_id,
         $group_id,
         $htmlname = 'ugroups',
         $disabled = false,
-        $show_admins = true
+        $show_admins = true,
+        $show_nobody = true
 ) {
     $html = '';
 
@@ -669,7 +680,7 @@ function permission_fetch_selection_field(
                 $htmlname."[]",
                 ($nb_set ? util_result_column_to_array($res_ugroups) : $default_values),
                 8,
-                true,
+                $show_nobody,
                 util_translate_name_ugroup('ugroup_nobody_name_key'),
                 false,
                 '',

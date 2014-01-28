@@ -127,11 +127,12 @@
 
 <h3>{{ git_admins_section }}</h3>
 <div class="">
-    <div class="alert alert-info">
+    <div>
         <p> {{ git_admins_description }} </p>
     </div>
     <form method="POST" action="{{ git_admins_form_action }}">
         <input type="hidden" value="{{ project_id }}" name="group_id"/>
+        <input type="hidden" name="git_admins[]" value="4"/>
         {{{ git_admins_selector }}}
         <p>
             <input class="btn btn-primary" type="submit" value="{{ git_admins_submit_button }}" name="submit"/>
