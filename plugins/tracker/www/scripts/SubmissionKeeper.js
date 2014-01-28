@@ -30,30 +30,32 @@ var tuleap = tuleap || {};
 tuleap.trackers = tuleap.trackers || {};
 
 (function ($) {
+    var submit_buttons = "form p input[type='submit'], .tuleap-modal input[type='submit']",
+        infos_element  = 'input#artifact_informations',
+        last_viewed_changeset;
 
     tuleap.trackers.submissionKeeper = {
+        can_submit : true,
 
         init: function() {
+            var self = this;
+
             if (isOnArtifactEditionView()) {
                 $("form p input[type='submit']").each(function() {
-                    $(this).click(checkArtifactIsSubmittable);
+                    $(this).click(self.checkArtifactIsSubmittable);
                 });
             }
+        },
+
+        isArtifactSubmittable : function(event) {
+            processSubmitQuery(event);
+            return this.can_submit;
         }
     };
 
     $(document).ready(function () {
         tuleap.trackers.submissionKeeper.init();
     });
-
-    var last_viewed_changeset,
-        infos_element      = 'input#artifact_informations';
-
-    function checkArtifactIsSubmittable(event) {
-        var new_changesets;
-
-        processSubmitQuery(event);
-    }
 
     function processSubmitQuery(event) {
         var artifact_id       = getArtifactId(),
@@ -64,10 +66,14 @@ tuleap.trackers = tuleap.trackers || {};
             event.preventDefault();
             processNewChangesets(new_changesets);
             updateLastViewedChangeset(new_changesets);
+            tuleap.trackers.submissionKeeper.can_submit = false;
         }
     }
 
     function thereAreNotificationsPending() {
+        if (! $(".artifact-event-popup")) {
+            return false;
+        }
         return $(".artifact-event-popup").length > 0;
     }
 
@@ -84,14 +90,15 @@ tuleap.trackers = tuleap.trackers || {};
 
     function reenableSubmitButtonsIfNeeded() {
         if (! thereAreNotificationsPending()) {
-            $("form p input[type='submit']").each(function() {
+            $(submit_buttons).each(function() {
                 $(this).removeAttr('disabled');
+                tuleap.trackers.submissionKeeper.can_submit = true;
             });
         }
     }
 
     function disableSubmitButtons() {
-        $("form p input[type='submit']").each(function() {
+        $(submit_buttons).each(function() {
             $(this).attr('disabled','disabled');
         });
     }

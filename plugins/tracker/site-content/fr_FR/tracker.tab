@@ -1509,4 +1509,7 @@ plugin_tracker_modal_artifact	artifact_links_title	Liens entre artefacts
 plugin_tracker_modal_artifact	no_artifact_links	Aucun lien entre artefacts
 plugin_tracker_modal_artifact	artifact_links_readonly	Pour éditer les liens entre artefacts, veuillez <a href="$1">passer en mode édition complet</a>
 plugin_tracker_modal_artifact	followups_title	Commentaires
+plugin_tracker_modal_artifact	add_followup_placeholder	Ajouter un nouveau commentaire...
 plugin_tracker_modal_artifact	no_comment	Aucun commentaire
+plugin_tracker_modal_artifact	submit	Enregistrer
+plugin_tracker_modal_artifact	cancel	Annuler

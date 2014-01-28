@@ -30,12 +30,12 @@
     </div>
 
     <div class="tuleap-modal-main-panel">
-        <div class="tuleap-modal-title">
-            <i class="icon-remove tuleap-modal-close"></i>
-            <h3>{{ artifact_title }}</h3>
-        </div>
-        <div class="tuleap-modal-content">
-            <form action="{{ submit_url }}" method="POST" enctype="multipart/form-data">
+        <form enctype="multipart/form-data">
+            <div class="tuleap-modal-title">
+                <i class="icon-remove tuleap-modal-close"></i>
+                <h3>{{ artifact_title }}</h3>
+            </div>
+            <div class="tuleap-modal-content">
                 <div>
                     <table cellspacing="0" cellpadding="0" border="0">
                         <tr valign="top">
@@ -45,18 +45,20 @@
                         </tr>
                     </table>
                 </div>
-                <input type="hidden" value="67108864" name="max_file_size" />
-                <input type="hidden" id="artifact_informations" 
+                <input type="hidden" id="artifact_informations"
                        data-artifact-id="{{ artifact_id }}"
                        data-changeset-id="{{ last_changeset_id }}"/>
                 <input type="hidden" name="from_overlay" value="1">
-            </form>
             {{{ javascript_rules }}}
-        </div>
-        <div class="tuleap-modal-actions">
-            <a id="tuleap-modal-submit" class="btn btn-primary">Submit</a>
-            <a class="btn tuleap-modal-close">Cancel</a>
-        </div>
+            </div>
+            <div class="tuleap-modal-actions">
+                <textarea id="tracker_followup_comment_new" name="artifact_followup_comment" placeholder="{{ add_followup_placeholder }}"></textarea>
+                <div>
+                    <input type="submit" id="tuleap-modal-submit" class="btn btn-primary" value="{{ submit }}">
+                    <a class="btn tuleap-modal-close">{{ cancel }}</a>
+                </div>
+            </div>
+        </form>
     </div>
 
     <div class="tuleap-modal-side-panel">

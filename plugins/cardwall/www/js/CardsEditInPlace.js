@@ -278,11 +278,16 @@ tuleap.cardwall = tuleap.cardwall || { };
         },
 
         showArtifactEditForm : function(form_html, artifact_id) {
+            var self = this;
             $('body').append(form_html);
             tuleap.modal.init();
 
-            $('#tuleap-modal-submit').click(function() {
-                $('.tuleap-modal-content form').first().ajaxSubmit({
+            $('#tuleap-modal-submit').click(function(event) {
+                if (! self.isArtifactSubmittable(event)) {
+                    return;
+                }
+
+                $('.tuleap-modal-main-panel form').first().ajaxSubmit({
                     url: '/plugins/tracker/?aid='+artifact_id+'&func=update-in-place',
                     type: 'post',
                     success : function() {
@@ -295,6 +300,10 @@ tuleap.cardwall = tuleap.cardwall || { };
                 })
                 return false;
             })
+        },
+
+        isArtifactSubmittable : function(event) {
+            return tuleap.trackers.submissionKeeper.isArtifactSubmittable(event);
         }
     };
 

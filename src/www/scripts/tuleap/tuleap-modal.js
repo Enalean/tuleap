@@ -23,7 +23,7 @@
         init: function() {
             var self = this;
 
-            this.setSidePanelHeight();
+            this.setPanelHeight();
             codendi.Toggler.init(document.getElementsByClassName('tuleap-modal')[0]);
 
             $('.tuleap-modal-side-panel:first-child .tuleap-modal-side-panel-grip').click(function() {
@@ -54,7 +54,7 @@
             grip.siblings('.tuleap-modal-side-panel-content').toggle();
         },
 
-        setSidePanelHeight: function() {
+        setPanelHeight: function() {
             $('.tuleap-modal').show();
 
             var computed_height = $('.tuleap-modal-main-panel').outerHeight();
@@ -66,6 +66,8 @@
             }).fadeIn(150);
             $('.tuleap-modal-side-panel').css('height', computed_height);
             $('.tuleap-modal-side-panel-grip > span').css('width', computed_height);
+
+            $('.tuleap-modal-side-panel-content-actions').css('height', $('.tuleap-modal-actions').outerHeight());
         },
 
         closeModal: function() {

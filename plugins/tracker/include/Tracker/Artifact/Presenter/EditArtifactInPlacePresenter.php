@@ -27,8 +27,6 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
 
     public $artifact_links;
 
-    public $submit_url;
-
     public $form_elements;
 
     /** @var Tracker_Artifact */
@@ -41,13 +39,11 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
     public function __construct(
         $follow_ups,
         $artifact_links,
-        $submit_url,
         $form_elements,
         $artifact
     ) {
         $this->follow_ups        = $follow_ups;
         $this->artifact_links    = $artifact_links;
-        $this->submit_url        = $submit_url;
         $this->artifact          = $artifact;
         $this->artifact_id       = $artifact->getId();
         $this->artifact_title    = $artifact->getTitle();
@@ -68,12 +64,24 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
         return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'no_artifact_links');
     }
 
+    public function add_followup_placeholder() {
+        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'add_followup_placeholder');
+    }
+
     public function followups_title() {
         return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'followups_title');
     }
 
     public function javascript_rules() {
         return $this->artifact->getTracker()->displayRulesAsJavascript();
+    }
+
+    public function submit() {
+        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'submit');
+    }
+
+    public function cancel() {
+        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'cancel');
     }
 }
 ?>

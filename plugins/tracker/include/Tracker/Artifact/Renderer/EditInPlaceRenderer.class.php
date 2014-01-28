@@ -36,13 +36,9 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
     }
 
     public function display(PFUser $current_user) {
-        $redirect         = new Tracker_Artifact_Redirect();
-        $redirect->query_parameters['func'] = 'update-in-place';
-
         $presenter = new Tracker_Artifact_Presenter_EditArtifactInPlacePresenter(
             $this->fetchFollowUps(),
             $this->fetchArtifactLinks($current_user),
-            $redirect->toUrl(),
             $this->artifact->getTracker()->fetchFormElementsNoColumns($this->artifact, array(0 => null)),
             $this->artifact
         );
@@ -86,7 +82,7 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
         $changesets = $artifact->getChangesets();
         array_shift($changesets);
 
-        return $changesets;
+        return array_reverse($changesets);
     }
 
     public function updateArtifact(Codendi_Request $request, PFUser $current_user) {
