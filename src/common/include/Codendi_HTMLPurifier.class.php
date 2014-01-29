@@ -178,10 +178,7 @@ class Codendi_HTMLPurifier {
 	    // john.doe@yahoo.com => <a href="mailto:...">...</a>
         $data = preg_replace("/(([a-z0-9_]|\\-|\\.)+@([^[:space:]<&>]*)([[:alnum:]-]))/i", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $data);
 
-        if ($group_id) {
-            $reference_manager = $this->getReferenceManager();
-            $reference_manager->insertReferences($data,$group_id);
-        }
+        $this->insertReferences($data, $group_id);
 
         return $data;
     }
@@ -230,10 +227,7 @@ class Codendi_HTMLPurifier {
                 $clean = $html;
                 break;
             }
-            if ($groupId) {
-                $referenceManager = $this->getReferenceManager();
-                $referenceManager->insertReferences($html,$groupId);
-            }
+            $this->insertReferences($html, $groupId);
         case CODENDI_PURIFIER_STRIP_HTML:
         case CODENDI_PURIFIER_FULL:
             require_once('HTMLPurifier.auto.php');
@@ -277,7 +271,9 @@ class Codendi_HTMLPurifier {
      * @return String
      */
     public function purifyHTMLWithReferences($html, $group_id) {
-        return $this->makeLinks($this->purify($html, CODENDI_PURIFIER_FULL), $group_id);
+        $this->insertReferences($html, $group_id);
+
+        return $this->purify($html, CODENDI_PURIFIER_FULL);
     }
 
     public function purifyTextWithReferences($html, $group_id) {
@@ -297,6 +293,14 @@ class Codendi_HTMLPurifier {
         return ReferenceManager::instance();
     }
 
+    private function insertReferences(&$html, $group_id = 0) {
+        if (! $group_id) {
+            return;
+        }
+
+        $reference_manager = $this->getReferenceManager();
+        $reference_manager->insertReferences($html, $group_id);
+    }
 }
 
 ?>
