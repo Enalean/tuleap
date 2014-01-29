@@ -1004,7 +1004,7 @@ class ProjectLinksPlugin extends Plugin {
     function widgets($params) {
         include_once 'common/widget/WidgetLayoutManager.class.php';
         if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_GROUP) {
-            $params['Codendi_widgets'][] = 'projectlinkshomepage';
+            $params['codendi_widgets'][] = 'projectlinkshomepage';
         }
     }
 
