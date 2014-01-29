@@ -12,16 +12,20 @@
     "artifact_history": {
         "123": [
             {
+                "field_name":   "summary",
                 "old_value":    "Le artifact",
                 "new_value":    "Le artifact with history",
                 "date":         "2234567890",
+                "mod_by":       "115",
                 "submitted_by": "goofy",
                 "is_anonymous": "0"
             },
             {
+                "field_name":   "summary",
                 "old_value":    "Le artifact with history",
                 "new_value":    "Le artifact with full history",
                 "date":         "3234567890",
+                "mod_by":       "115",
                 "submitted_by": "goofy",
                 "is_anonymous": "0"
             }

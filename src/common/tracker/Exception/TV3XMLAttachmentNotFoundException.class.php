@@ -18,23 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
-
-require_once 'common/tracker/ArtifactXMLExporter.class.php';
-
-$atid = $argv[1];
-
-$xml      = new DOMDocument("1.0", "UTF8");
-$logger   = new Log_ConsoleLogger();
-$exporter = new ArtifactXMLExporter(new ArtifactXMLExporterDao(), $xml, $logger);
-$exporter->exportTrackerData($atid);
-
-$xsl = new DOMDocument();
-$xsl->load(dirname(__FILE__).'/xml/indent.xsl');
-
-$proc = new XSLTProcessor();
-$proc->importStyleSheet($xsl);
-
-echo $proc->transformToXML($xml);
-
-$logger->dump();
+class Exception_TV3XMLAttachmentNotFoundException extends Exception {
+    public function __construct($name) {
+        parent::__construct("$name not found (assume deleted)");
+    }
+}
