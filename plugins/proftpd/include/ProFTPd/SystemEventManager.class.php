@@ -55,12 +55,14 @@ class SystemEventManager {
     }
 
     public function queueDirectoryCreate($project_name) {
-        $this->system_event_manager->createEvent(
-            SystemEvent\PROFTPD_DIRECTORY_CREATE::NAME,
-            $project_name,
-            \SystemEvent::PRIORITY_HIGH,
-            \SystemEvent::OWNER_ROOT
-        );
+        if (! is_dir($this->proftpd_base_directory.DIRECTORY_SEPARATOR.$project_name)) {
+            $this->system_event_manager->createEvent(
+                SystemEvent\PROFTPD_DIRECTORY_CREATE::NAME,
+                $project_name,
+                \SystemEvent::PRIORITY_HIGH,
+                \SystemEvent::OWNER_ROOT
+            );
+        }
     }
 
     public function queueACLUpdate($project_name) {
