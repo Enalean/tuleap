@@ -12,7 +12,9 @@
         </div>
     </div>
 </div>
-
+<div class="row-fluid">
+    <input type="text" class="content-filter planning-backlog" placeholder="Backlog element…">
+</div>
 <div class="row-fluid">
     <div class="span6">
         <div class="agiledashboard-planning-backlog"
@@ -30,7 +32,7 @@
                         <th>{{header_status}}</th>
                     </tr>
                 </thead>
-                <tbody class="">
+                <tbody class="planning-backlog-content">
                     <tr class="empty-table-placeholder"><td colspan="6">{{empty_element_tip}}</td></tr>
                     {{#backlog_collection}}
                         <tr data-artifact-id="{{id}}" class="submilestone-element">
