@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2012. All rights reserved
+ * Copyright (c) Enalean, 2014. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,5 +20,5 @@
  */
 
 // Location of sftp directory
-$proftpd_base_directory = '/tmp';
+$proftpd_base_directory = '/var/lib/tuleap/secure_ftp';
 ?>
