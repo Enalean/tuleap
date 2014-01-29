@@ -317,17 +317,27 @@ tuleap.cardwall = tuleap.cardwall || { };
                     return;
                 }
 
-                $('.tuleap-modal-main-panel form').first().ajaxSubmit({
-                    url: '/plugins/tracker/?aid='+artifact_id+'&func=update-in-place',
-                    type: 'post',
-                    success : function() {
-                        tuleap.modal.closeModal();
-                        self.validateEdition(artifact_id);
-                    },
-                    error : function() {
-                        alert('fail');
-                    }
-                })
+                $('#artifact-form-errors').hide();
+
+                $.ajax({
+                    url     : '/plugins/tracker/?aid='+artifact_id+'&func=update-in-place',
+                    type    : 'post',
+                    data    : $('.tuleap-modal-main-panel form').serialize()
+                }).done( function() {
+                    var planning_id = getConcernedPlanningId();
+                    tuleap.modal.closeModal();
+                    getNewCardData(artifact_id, planning_id);
+                }).fail( function(response) {
+                    var data = JSON.parse(response.responseText);
+
+                    $('#artifact-form-errors h5').html(data.message);
+                    $.each(data.errors, function() {
+                      $('#artifact-form-errors ul').html('').append('<li>' + this + '</li>');
+                    });
+
+                    $('.tuleap-modal-main-panel .tuleap-modal-content').scrollTop(0);
+                    $('#artifact-form-errors').show();
+                });
                 return false;
             })
         },

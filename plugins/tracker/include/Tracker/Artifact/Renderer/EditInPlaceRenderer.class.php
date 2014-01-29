@@ -114,9 +114,11 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
     }
 
     private function sendErrorsAsJson($exception_message) {
-        $feedback = array($exception_message);
+        $feedback            = array();
+        $feedback['message'] = $exception_message;
+
         if ($GLOBALS['Response']->feedbackHasErrors()) {
-            $feedback = array_merge($feedback, $GLOBALS['Response']->getFeedbackErrors());
+            $feedback['errors'] = $GLOBALS['Response']->getFeedbackErrors();
         }
 
         $GLOBALS['Response']->send400JSONErrors($feedback);
