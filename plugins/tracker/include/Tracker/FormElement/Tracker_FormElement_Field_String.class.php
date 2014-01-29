@@ -249,10 +249,6 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
         return $this->getProperty('default_value');
     }
 
-    public function getFieldDataForCSVPreview($data_cell) {
-        return $data_cell;
-    }
-
     /**
      * Get data from CSV value in order to be saved in DB (create/update DB)
      *
