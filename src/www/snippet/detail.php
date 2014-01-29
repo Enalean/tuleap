@@ -10,6 +10,13 @@ require_once('pre.php');
 require('../snippet/snippet_utils.php');
 
 
+
+$id               = (int)$request->get('id');
+$snippet_category = (int)$request->get('snippet_category');
+$snippet_type     = (int)$request->get('snippet_type');
+$snippet_language = (int)$request->get('snippet_language');
+$snippet_license  = (int)$request->get('snippet_license');
+
 /*
 
 	Show a detail page for either a snippet or a package
@@ -17,8 +24,6 @@ require('../snippet/snippet_utils.php');
 
 */
 if ($type=='snippet') {
-
-
 
     // Snippet was updated?
     if (isset($post_changes) && $post_changes) {

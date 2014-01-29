@@ -31,6 +31,10 @@ if (user_isloggedin()) {
 	*/
         if ($name && $description && $language != 0 && $category != 0 && $type != 0 && 
             $language != 100 && $category != 100 && $type != 100 && $license != 100 && $version && $code) {
+                $category = (int)$category;
+                $type     = (int)$type;
+                $language = (int)$language;
+                $license  = (int)$license;
                 $sql="INSERT INTO snippet (category,created_by,name,description,type,language,license) ".
                     "VALUES ('$category','". user_getid() ."','". htmlspecialchars($name)."','".
                     htmlspecialchars($description)."','$type','$language','$license')";
@@ -83,7 +87,8 @@ if (user_isloggedin()) {
 	<P>
 	<span class="highlight"><B>'.$Language->getText('snippet_submit','note').'</B></span>'.$Language->getText('snippet_submit','submit_s_v').'
 	<P>
-	<FORM ACTION="?" METHOD="POST" enctype="multipart/form-data" class="add-snippet">
+	<FORM ACTION="?" METHOD="POST" enctype="multipart/form-data" class="add-snippet">'.
+        $csrf->fetchHTMLInput() .'
     <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_upload.'">
 	<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 	<INPUT TYPE="HIDDEN" NAME="changes" VALUE="'.$Language->getText('snippet_package','first_posted_v').'">
