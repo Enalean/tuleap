@@ -322,7 +322,7 @@ tuleap.cardwall = tuleap.cardwall || { };
                     type: 'post',
                     success : function() {
                         tuleap.modal.closeModal();
-                        window.location.reload();
+                        self.validateEdition(artifact_id);
                     },
                     error : function() {
                         alert('fail');
