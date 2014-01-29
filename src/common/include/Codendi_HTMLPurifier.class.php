@@ -281,7 +281,7 @@ class Codendi_HTMLPurifier {
     }
 
     public function purifyTextWithReferences($html, $group_id) {
-        return $this->makeLinks($this->purify($html, CODENDI_PURIFIER_BASIC), $group_id);
+        return $this->purify($html, CODENDI_PURIFIER_BASIC, $group_id);
     }
 
     function purifyMap($array, $level=0, $groupId=0) {
