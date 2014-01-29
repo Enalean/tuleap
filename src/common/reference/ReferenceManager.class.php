@@ -419,12 +419,13 @@ class ReferenceManager {
      * @return $exp the string which may the regexp 
      */
     function _getExpForRef() {
-        $exp = "`(\w+)       #reference
-                           \s          #separator
-                           \#          #dash (2 en 1)
-                           ([\w-_]+:)? #optional project name (followed by a colon)
-                           ((?:&amp;|\w|/|&)+) #any combination of &, &amp;, a word or a slash
-                          `xu";
+        $exp = "`
+            (?P<key>\w+)
+            \s          #blank separator
+            \#          #dash (2 en 1)
+            (?P<project_name>[\w-_]+:)? #optional project name (followed by a colon)
+            (?P<value>(?:&amp;|\w|/|&)+) #any combination of &, &amp;, a word or a slash
+        `xu";
         return $exp;
     }
 
@@ -579,11 +580,11 @@ class ReferenceManager {
         $matches = $this->_extractAllMatches($html);
         foreach ($matches as $match) {
             // Analyse match
-            $key=strtolower($match[1]);
-            if ($match[2]) {
+            $key=strtolower($match['key']);
+            if ($match['project_name']) {
                 // A target project name or ID was specified
                 // remove trailing colon
-                $target_project=substr($match[2],0,strlen($match[2])-1);
+                $target_project=substr($match['project_name'],0,strlen($match['project_name'])-1);
                 // id or name?
                 if (is_numeric($target_project)) {
                     $ref_gid = $target_project;
@@ -611,21 +612,25 @@ class ReferenceManager {
                 }
             }
 
-            $value=$match[3];
+            $value=$match['value'];
             if ($ref_gid=="") $ref_gid=100; // use system references only
             $num_args=substr_count($value,'/')+1; // Count number of arguments in detected reference
             $ref = $this->_getReferenceFromKeywordAndNumArgs($key,$ref_gid,$num_args);
 
             if ($ref) {
                 //Cross reference
-                $sqlkey='SELECT link, nature from reference r,reference_group rg where keyword="'.$match[1].'" AND r.id = rg.reference_id AND rg.group_id='.$source_gid;
+                $sqlkey='SELECT link, nature
+                    FROM reference r,reference_group rg
+                    WHERE keyword="'. db_es($key) .'"
+                        AND r.id = rg.reference_id
+                        AND rg.group_id='. db_ei($source_gid);
                 $reskey = db_query($sqlkey);
                 if ($reskey && db_numrows($reskey) > 0) {
                     $key_array = db_fetch_array($reskey);
 
                     $target_type = $key_array['nature'];
-                    $target_id = $match[3];
-                    $target_key = $match[1];    // keyword
+                    $target_id = $value;
+                    $target_key = $key;
                     $target_gid = $ref_gid;
                     if ($user_id==0){
                         $user_id=user_getid();
@@ -680,8 +685,9 @@ class ReferenceManager {
     function _insertRefCallback($match) {
         $desc='';
         $ref_instance=$this->_getReferenceInstanceFromMatch($match);
-        if (!$ref_instance) return $match[1]." #".$match[2].$match[3];
-        else {
+        if (! $ref_instance) {
+            return $match['key']." #".$match['project_name'].$match['value'];
+        } else {
             $ref = $ref_instance->getReference();
             if (strpos($ref->getDescription(),"_desc_key")!==false) {
                 if (preg_match('/(.*):(.*)/', $ref->getDescription(), $ref_matches)) {
@@ -733,18 +739,19 @@ class ReferenceManager {
 
     // Get a Reference object from a matching pattern
     // if it is not a reference (e.g. wrong keyword) return null;
-    function _getReferenceInstanceFromMatch($match) {
+    private function _getReferenceInstanceFromMatch($match) {
         // Analyse match
-        $key     = strtolower($match[1]);
+        $key   = strtolower($match['key']);
+        $value = $match['value'];
         
         if ($this->isAnArtifactKeyword($key)) {
-            $this->tmpGroupIdForCallbackFunction = $this->getGroupIdFromArtifactIdForCallbackFunction($match[3]);
+            $this->tmpGroupIdForCallbackFunction = $this->getGroupIdFromArtifactIdForCallbackFunction($value);
         }
         
-        if ($match[2]) {
+        if ($match['project_name']) {
             // A target project name or ID was specified
             // remove trailing colon
-            $target_project=substr($match[2],0,strlen($match[2])-1);
+            $target_project=substr($match['project_name'], 0, strlen($match['project_name']) - 1);
             // id or name?
             if (is_numeric($target_project)) {
                 $ref_gid = $target_project;
@@ -771,15 +778,16 @@ class ReferenceManager {
             }
         }
 
-        $value=$match[3];
-        if ($ref_gid=="") $ref_gid=100; // use system references only
+        if ($ref_gid == "") {
+            $ref_gid = 100; // use system references only
+        }
 
         $ref = $this->getReference($key, $value, $ref_gid);
 
         $refInstance = null;
         if ($ref) {
-            $refInstance= new ReferenceInstance($match[1]." #".$match[2].$match[3],$ref,$match[3]);
-            $refInstance->computeGotoLink($key,$match[3],$ref_gid);
+            $refInstance= new ReferenceInstance($key ." #". $match['project_name'] . $value, $ref, $value);
+            $refInstance->computeGotoLink($key, $value, $ref_gid);
           
         }
         return $refInstance;
