@@ -14,6 +14,7 @@ plugin_proftpd	log_upload	Téléversement
 plugin_proftpd	log_deleted	Suppression
 
 plugin_proftpd	error_not_admin	Vous devez être administrateur projet pour accéder à cette section
+plugin_proftpd	error_browse_rights	Vos droits ne sont pas suffisants pour naviguer dans le dépôt (S)FTP
 plugin_proftpd	admin_title	Administration (S)FTP
 plugin_proftpd	permissions_title	Permissions
 plugin_proftpd	readers_header	Lecteurs
