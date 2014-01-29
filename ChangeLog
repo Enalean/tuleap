@@ -9,6 +9,7 @@ Version 6.10 (Not released yet)
 	* fusionforge_compat: 0.6
 	* hudson: 1.13
 	* git: 3.64
+	* projectlinks: 2.5
 
 	== Enhancement ==
 	* Story #5678: contact administrators of a project
