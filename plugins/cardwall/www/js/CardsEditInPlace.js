@@ -32,11 +32,19 @@ tuleap.cardwall = tuleap.cardwall || { };
     function displayIframeOverlay(event, link) {
         event.preventDefault();
 
+        overlay_window = new lightwindow({
+            resizeSpeed: 10,
+            delay: 0,
+            finalAnimationDuration: 0,
+            finalAnimationDelay: 0
+        });
+
         var artifact_id = link.attr('data-artifact-id');
         var params = {
             aid  : artifact_id,
             func : 'show-in-overlay'
         };
+
 
         overlay_window.activateWindow({
                 href        : codendi.tracker.base_url + '?' + $.param(params),
@@ -242,12 +250,13 @@ tuleap.cardwall = tuleap.cardwall || { };
 
             $('div.cardwall_board div.card li > a.edit-card').click(function(event){
                 event.preventDefault();
+
                 var artifact_id = $(this).attr('data-artifact-id');
 
                 if (! self.isBrowserCompatible()) {
                     displayIframeOverlay(event, $(this));
                     return;
-               }
+                }
 
                 $.ajax({
                     url: codendi.tracker.base_url + '?aid='+artifact_id+'&func=get-edit-in-place'
@@ -293,14 +302,7 @@ tuleap.cardwall = tuleap.cardwall || { };
         },
 
         isBrowserCompatible : function() {
-            if (typeof(navigator) == 'undefined'
-                || typeof(navigator.appVersion) == 'undefined'
-                || navigator.appVersion.indexOf( "MSIE 7." ) != -1
-            ) {
-                return false;
-            }
-
-            return true;
+            return ! tuleap.browserCompatibility.isIE7();
         },
 
         showArtifactEditForm : function(form_html, artifact_id) {
@@ -343,11 +345,5 @@ tuleap.cardwall = tuleap.cardwall || { };
 
     $(document).ready(function () {
         tuleap.cardwall.cardsEditInPlace.init();
-        overlay_window = new lightwindow({
-            resizeSpeed: 10,
-            delay: 0,
-            finalAnimationDuration: 0,
-            finalAnimationDelay: 0
-        });
     });
 })(jQuery);

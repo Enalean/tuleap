@@ -22,6 +22,7 @@
 class Combined {
     protected function getCombinedScripts() {
         $arr = array(
+            '/scripts/tuleap/browser-compatibility.js',
             '/scripts/polyphills/json2.js',
             '/scripts/polyphills/storage.js',
             '/scripts/prototype/prototype.js',
@@ -46,7 +47,6 @@ class Combined {
             '/scripts/jscrollpane/jquery.mousewheel.js',
             '/scripts/jscrollpane/jquery.jscrollpane.min.js',
             '/scripts/AZHU/storage.js',
-            '/scripts/d3/d3.min.js',
             '/scripts/codendi/common.js',
             '/scripts/tuleap/systray.js',
             '/scripts/tuleap/load-systray.js',
@@ -72,6 +72,7 @@ class Combined {
             '/scripts/codendi/TreeNode.js',
             '/scripts/tuleap/tuleap-modal.js',
             '/scripts/jquery_ajax_submit/jquery.form.min.js',
+            '/scripts/d3/d3.min.js',//last as is incompatible with IE7
         );
         EventManager::instance()->processEvent(Event::COMBINED_SCRIPTS, array('scripts' => &$arr));
         return $arr;
