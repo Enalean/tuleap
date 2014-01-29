@@ -538,8 +538,11 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 # Plugin OpenId
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/openid_consumer_store
 
-#Plugin boomerang
+# Plugin boomerang
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/boomerang
+
+# Plugin proftpd
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/secure_ftp
 
 # Symlink for compatibility with older version
 %{__ln_s} %{APP_DIR} $RPM_BUILD_ROOT/%{OLD_APP_DIR}
@@ -987,6 +990,7 @@ fi
 %files plugin-proftpd
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/proftpd
+%dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/secure_ftp
 
 #
 # Themes
