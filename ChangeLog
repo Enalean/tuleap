@@ -21,6 +21,7 @@ Version 6.10 (Not released yet)
 	* Fix Request #5913: fix wrong service icon for Agile Dashboard plugin
 	* Fix request #5911: Adding options in setup.sh to install with exotic mysql servers
 	* Fix warning when displaying avatar for anonymous user
+	* Fix security issue on snippet service
 
 	== Development ==
 	* Pull-out Vagrant and Chef in dedicated repositories
