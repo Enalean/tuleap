@@ -266,7 +266,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
                 $output = $this->fetchArtifactValueReadOnly($artifact, $value);
                 break;
             default:
-                $output = $value->getText();
+                $output = $value->getContentAsText();
                 break;
         }
         return $output;
