@@ -684,7 +684,7 @@ class ReferenceManager {
     // callback function
     function _insertRefCallback($match) {
         $desc='';
-        $ref_instance=$this->_getReferenceInstanceFromMatch($match);
+        $ref_instance = $this->_getReferenceInstanceFromMatch($match);
         if (! $ref_instance) {
             return $match['key']." #".$match['project_name'].$match['value'];
         } else {
@@ -745,7 +745,7 @@ class ReferenceManager {
         $value = $match['value'];
         
         if ($this->isAnArtifactKeyword($key)) {
-            $this->tmpGroupIdForCallbackFunction = $this->getGroupIdFromArtifactIdForCallbackFunction($value);
+            $ref_gid = $this->getGroupIdFromArtifactIdForCallbackFunction($value);
         }
         
         if ($match['project_name']) {
