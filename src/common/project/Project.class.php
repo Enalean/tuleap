@@ -63,6 +63,16 @@ class Project extends Group implements PFO_Project {
      * The project is pending
      */
     const STATUS_PENDING = 'P';
+
+    /**
+     * The project is incomplete
+     */
+    const STATUS_INCOMPLETE = 'I';
+
+    /**
+     * The project is holding
+     */
+    const STATUS_HOLDING = 'H';
     
     /**
      * The project is public
