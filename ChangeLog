@@ -26,6 +26,9 @@ Version 6.10 (Not released yet)
 	* Fix warning when displaying avatar for anonymous user
 	* Fix security issue on snippet service
 
+	== Themes ==
+	* Experimental: 0.8
+
 	== Development ==
 	* Pull-out Vagrant and Chef in dedicated repositories
 
