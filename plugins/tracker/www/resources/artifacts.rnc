@@ -9,8 +9,15 @@ grammar {
                 element submitted_on { date_content },
                 element field_change {
                     attribute field_name { xsd:string },
-                    element value { xsd:string }
-                }
+                    element value { xsd:string }+ # We accept many values for the attachement field. We should disallow this for text fields in a future version.
+                }+
+            }*,
+            element file {
+                element id { xsd:string },
+                element filename { xsd:string },
+                element filesize { xsd:int },
+                element filetype { xsd:string },
+                element description { xsd:string }
             }*
         }*
     }

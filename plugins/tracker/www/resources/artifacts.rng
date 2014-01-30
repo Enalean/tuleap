@@ -15,13 +15,39 @@
               <element name="submitted_on">
                 <ref name="date_content"/>
               </element>
-              <element name="field_change">
-                <attribute name="field_name">
-                  <data type="string"/>
-                </attribute>
-                <element name="value">
-                  <data type="string"/>
+              <oneOrMore>
+                <element name="field_change">
+                  <group>
+                    <attribute name="field_name">
+                      <data type="string"/>
+                    </attribute>
+                    <oneOrMore>
+                      <element name="value">
+                        <data type="string"/>
+                      </element>
+                    </oneOrMore>
+                  </group>
+                  <!-- We accept many values for the attachement field. We should disallow this for text fields in a future version. -->
                 </element>
+              </oneOrMore>
+            </element>
+          </zeroOrMore>
+          <zeroOrMore>
+            <element name="file">
+              <element name="id">
+                <data type="string"/>
+              </element>
+              <element name="filename">
+                <data type="string"/>
+              </element>
+              <element name="filesize">
+                <data type="int"/>
+              </element>
+              <element name="filetype">
+                <data type="string"/>
+              </element>
+              <element name="description">
+                <data type="string"/>
               </element>
             </element>
           </zeroOrMore>
