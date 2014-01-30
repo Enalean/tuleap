@@ -10,8 +10,10 @@ Version 6.10 (Not released yet)
 	* hudson: 1.13
 	* git: 3.64
 	* projectlinks: 2.5
+	* mediawiki: 0.22
 
 	== Enhancement ==
+	* Story #5916: mapping between mediawiki and tuleap groups
 	* Story #5678: contact administrators of a project
 	* Story #5619: Have an enhanced experimental theme
 
