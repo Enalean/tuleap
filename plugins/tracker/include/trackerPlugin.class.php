@@ -128,7 +128,8 @@ class trackerPlugin extends Plugin {
                 '/plugins/tracker/scripts/TrackerFieldDependencies.js',
                 '/plugins/tracker/scripts/TrackerRichTextEditor.js',
                 '/plugins/tracker/scripts/artifactChildren.js',
-                '/plugins/tracker/scripts/load-artifactChildren.js'
+                '/plugins/tracker/scripts/load-artifactChildren.js',
+                '/plugins/tracker/scripts/edit-in-place.js'
             )
         );
     }

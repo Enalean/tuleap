@@ -15,10 +15,10 @@
             <tbody>
                 {{#done_collection}}
                     <tr data-artifact-id="{{id}}">
-                        <td><a href="{{url}}">{{id}}</a></td>
+                        <td><a href="{{url}}" class="backlog-item-link" data-artifact-id="{{id}}">{{id}}</a></td>
                         <td><span class="label">{{type}}</span></td>
                         <td class="milestone-element-title">{{title}}</td>
-                        <td class="milestone-element-parent"><a href="{{parent_url}}">{{parent_title}}</a></td>
+                        <td class="milestone-element-parent"><a href="{{parent_url}}" class="backlog-item-link" data-artifact-id="{{parent_id}}">{{parent_title}}</a></td>
                     </tr>
                 {{/done_collection}}
             </tbody>

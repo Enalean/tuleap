@@ -241,9 +241,7 @@ tuleap.cardwall = tuleap.cardwall || { };
     }
 
     tuleap.cardwall.cardsEditInPlace = {
-
         init: function() {
-            var self = this;
             if (! isOnAgiledashboard()) {
                 return;
             }
@@ -252,125 +250,26 @@ tuleap.cardwall = tuleap.cardwall || { };
                 event.preventDefault();
 
                 var artifact_id = $(this).attr('data-artifact-id');
+                var callback;
 
-                if (! self.isBrowserCompatible()) {
+                if (tuleap.browserCompatibility.isIE7()) {
                     displayIframeOverlay(event, $(this));
                     return;
                 }
 
-                $.ajax({
-                    url: codendi.tracker.base_url + '?aid='+artifact_id+'&func=get-edit-in-place'
-                }).done(function( data ) {
-                    self.showArtifactEditForm(data, artifact_id)
-                    codendi.tracker.runTrackerFieldDependencies();
-
-                    $('.tuleap-modal-main-panel form textarea').each( function(){
-                        var element = $(this).get(0); //transform to prototype
-                        enableRichTextArea(element)
-                    });
-                }).fail(function() {
-                    displayIframeOverlay(event, $(self));
-                });
-            });
-
-            function enableRichTextArea(element) {
-                var html_id    = element.id,
-                    id         = html_id.match(/_(\d+)$/),
-                    htmlFormat = false,
-                    name;
-
-                if (id) {
-                    id   = id[1];
-                    name = 'artifact['+ id +'][format]';
-
-                    if (Element.readAttribute('artifact['+id+']_body_format', 'value') == 'html') {
-                        htmlFormat = true;
-                    }
-
-                    new tuleap.trackers.textarea.RTE(
-                        element,
-                        {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat, no_resize : true}
-                    );
+                var callback = function() {
+                    var planning_id = getConcernedPlanningId();
+                    getNewCardData(artifact_id, planning_id);
                 }
-            }
+
+                tuleap.tracker.artifactEditInPlace.loadArtifactModal(artifact_id, callback);
+            });
         },
 
         validateEdition: function(artifact_id) {
             var planning_id = getConcernedPlanningId();
             getNewCardData(artifact_id, planning_id);
             disableOverlay();
-        },
-
-        isBrowserCompatible : function() {
-            return ! tuleap.browserCompatibility.isIE7();
-        },
-
-        showArtifactEditForm : function(form_html, artifact_id) {
-            var self = this;
-            $('body').append(form_html);
-            tuleap.modal.init();
-
-            $('#tuleap-modal-submit').click(function(event) {
-                self.updateRichTextAreas();
-
-                if (! self.isArtifactSubmittable(event)) {
-                    return;
-                }
-
-                $('#artifact-form-errors').hide();
-
-                $.ajax({
-                    url     : '/plugins/tracker/?aid='+artifact_id+'&func=update-in-place',
-                    type    : 'post',
-                    data    : $('.tuleap-modal-main-panel form').serialize()
-                }).done( function() {
-                    var planning_id = getConcernedPlanningId();
-
-                    self.destroyRichTextAreaInstances();
-                    tuleap.modal.closeModal();
-                    getNewCardData(artifact_id, planning_id);
-                }).fail( function(response) {
-                    var data = JSON.parse(response.responseText);
-
-                    $('#artifact-form-errors h5').html(data.message);
-                    $.each(data.errors, function() {
-                      $('#artifact-form-errors ul').html('').append('<li>' + this + '</li>');
-                    });
-
-                    $('.tuleap-modal-main-panel .tuleap-modal-content').scrollTop(0);
-                    $('#artifact-form-errors').show();
-                });
-                return false;
-            });
-
-            $('.tuleap-modal-close').off('click').on('click', function() {
-                /*
-                 * The order of thins here is important:
-                 * - off('click') removes any previously binded function to this click event
-                 * - destroyRichTextAreaInstances() is needed in IE9 to get rid of memory refs
-                 * - we then call tuleap.modal.closeModal() which destroys the
-                 * modal ; this needs to be done after the CKEDITOR instanvces have been removed
-                 */
-                self.destroyRichTextAreaInstances();
-                $('.artifact-event-popup').remove();
-                tuleap.modal.closeModal()
-            });
-        },
-
-        isArtifactSubmittable : function(event) {
-            return tuleap.trackers.submissionKeeper.isArtifactSubmittable(event);
-        },
-
-        updateRichTextAreas : function() {
-            for (instance in CKEDITOR.instances) {
-                CKEDITOR.instances[instance].updateElement();
-            }
-        },
-
-        destroyRichTextAreaInstances : function() {
-            for (instance in CKEDITOR.instances) {
-                CKEDITOR.instances[instance].destroy();
-            }
         }
     };
 

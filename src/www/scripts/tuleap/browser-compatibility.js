@@ -18,15 +18,17 @@
 var tuleap = tuleap || { };
 
 // Search for a class in loaded stylesheets
-tuleap.browserCompatibility = {
-    isIE7 : function() {
-        if (typeof(navigator) == 'undefined'
-            || typeof(navigator.appVersion) == 'undefined'
-            || navigator.appVersion.indexOf( "MSIE 7." ) != -1
-        ) {
-            return true;
-        }
+(function ($) {
+    tuleap.browserCompatibility = {
+        isIE7 : function() {
+            if (typeof(navigator) == 'undefined'
+                || typeof(navigator.appVersion) == 'undefined'
+                || navigator.appVersion.indexOf( "MSIE 7." ) != -1
+            ) {
+                return true;
+            }
 
-        return false;
-    }
-}
+            return false;
+        }
+    };
+})(jQuery);
