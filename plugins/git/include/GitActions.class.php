@@ -63,18 +63,22 @@ class GitActions extends PluginActions {
     /** @var ProjectManager */
     private $project_manager;
 
+    /** @var GitPermissionsManager */
+    private $git_permissions_manager;
+
     /**
      *
      * @param Git $controller
-     * @param Git_SystemEventManager $system_event_manager
-     * @param GitRepositoryFactory $factory
-     * @param GitRepositoryManager $manager
-     * @param Git_RemoteServer_GerritServerFactory $gerrit_server_factory
-     * @param Git_Driver_Gerrit $driver
-     * @param Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager
-     * @param Git_Driver_Gerrit_ProjectCreator $project_creator
+     * @param Git_SystemEventManager                     $system_event_manager
+     * @param GitRepositoryFactory                       $factory
+     * @param GitRepositoryManager                       $manager
+     * @param Git_RemoteServer_GerritServerFactory       $gerrit_server_factory
+     * @param Git_Driver_Gerrit                          $driver
+     * @param Git_Driver_Gerrit_UserAccountManager       $gerrit_usermanager
+     * @param Git_Driver_Gerrit_ProjectCreator           $project_creator
      * @param Git_Driver_Gerrit_Template_TemplateFactory $template_factory
-     * @param ProjectManager $project_manager
+     * @param ProjectManager                             $project_manager
+     * @param GitPermissionsManager                      $git_permissions_manager
      */
     public function __construct(
         Git                $controller,
@@ -86,18 +90,20 @@ class GitActions extends PluginActions {
         Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         Git_Driver_Gerrit_ProjectCreator $project_creator,
         Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
-        ProjectManager $project_manager
+        ProjectManager $project_manager,
+        GitPermissionsManager $git_permissions_manager
     ) {
         parent::__construct($controller);
-        $this->git_system_event_manager    = $system_event_manager;
-        $this->factory               = $factory;
-        $this->manager               = $manager;
-        $this->gerrit_server_factory = $gerrit_server_factory;
-        $this->driver                = $driver;
-        $this->gerrit_usermanager    = $gerrit_usermanager;
-        $this->project_creator       = $project_creator;
-        $this->template_factory      = $template_factory;
-        $this->project_manager       = $project_manager;
+        $this->git_system_event_manager = $system_event_manager;
+        $this->factory                  = $factory;
+        $this->manager                  = $manager;
+        $this->gerrit_server_factory    = $gerrit_server_factory;
+        $this->driver                   = $driver;
+        $this->gerrit_usermanager       = $gerrit_usermanager;
+        $this->project_creator          = $project_creator;
+        $this->template_factory         = $template_factory;
+        $this->project_manager          = $project_manager;
+        $this->git_permissions_manager  = $git_permissions_manager;
     }
 
     protected function getText($key, $params = array()) {
@@ -248,7 +254,7 @@ class GitActions extends PluginActions {
      * @param PFUser $user
      */
     public function deleteGerritTemplate($template_id, Project $project, PFUser $user) {
-        if (! $user->isAdmin($project->getID())) {
+        if (! $this->isUserAdmin($user, $project)) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'gerrit_template_delete_error'));
             return;
         }
@@ -315,12 +321,13 @@ class GitActions extends PluginActions {
     }
 
     /**
-     * @param Project $project
-     * @param PFUser $user
+     * @param  Project $project
+     * @param  PFUser  $user
+     *
      * @throws GitUserNotAdminException
      */
     private function checkUserIsAdmin(Project $project, PFUser $user) {
-        if(! $user->isAdmin($project->getID())) {
+        if(! $this->git_permissions_manager->userIsGitAdmin($user, $project)) {
              throw new GitUserNotAdminException('unable to get template', 401);
         }
 
@@ -396,7 +403,8 @@ class GitActions extends PluginActions {
      * @return void
      */
     public function createTemplate(Project $project, PFUser $user, $template_content, $template_name) {
-        if (! $this->checkIfProjectIsValid($project) || ! $this->checkIfUserIsAdmin($user, $project)) {
+        if (! $this->checkIfProjectIsValid($project) || ! $this->isUserAdmin($user, $project)) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_cannot_create'));
             return;
         }
 
@@ -794,7 +802,7 @@ class GitActions extends PluginActions {
     }
 
     public function updateGitAdminGroups(Project $project, PFUser $user, array $selected_group_ids) {
-        if (! $this->checkIfProjectIsValid($project) || ! $this->checkIfUserIsAdmin($user, $project)) {
+        if (! $this->checkIfProjectIsValid($project) || ! $this->isUserAdmin($user, $project)) {
             return;
         }
 
@@ -813,6 +821,15 @@ class GitActions extends PluginActions {
         }
 
         $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_git', 'view_admin_git_admins_update_feedback', $feedback));
+
+        $this->redirectToGitHomePageIfUserIsNoMoreGitAdmin($user, $project);
+    }
+
+    private function redirectToGitHomePageIfUserIsNoMoreGitAdmin(PFUser $user, Project $project) {
+        if (! $this->isUserAdmin($user, $project)) {
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_git','no_longer_access_to_admin'));
+            $GLOBALS['HTML']->redirect('/plugins/git/?action=index&group_id='. $project->getId());
+        }
     }
 
     private function removeNobodyFromSelectGroups(array $select_group_ids) {
@@ -828,11 +845,10 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    private function checkIfUserIsAdmin(PFUser $user, Project $project) {
+    private function isUserAdmin(PFUser $user, Project $project) {
         try {
             $this->checkUserIsAdmin($project, $user);
         } catch (GitUserNotAdminException $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'view_admin_template_cannot_create'));
             return;
         }
 

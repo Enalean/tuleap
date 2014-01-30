@@ -96,6 +96,9 @@ class Git extends PluginController {
     /** @var Git_Driver_Gerrit_ProjectCreator */
     private $project_creator;
 
+    /** @var GitPermissionsManager */
+    private $permissions_manager;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -109,7 +112,8 @@ class Git extends PluginController {
         PluginManager $plugin_manager,
         Codendi_Request $request,
         Git_Driver_Gerrit_ProjectCreator $project_creator,
-        Git_Driver_Gerrit_Template_TemplateFactory $template_factory
+        Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
+        GitPermissionsManager $permissions_manager
     ) {
         parent::__construct($user_manager, $request);
 
@@ -124,6 +128,7 @@ class Git extends PluginController {
         $this->plugin_manager           = $plugin_manager;
         $this->project_creator          = $project_creator;
         $this->template_factory         = $template_factory;
+        $this->permissions_manager  = $permissions_manager;
 
         $matches = array();
         if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
@@ -176,6 +181,10 @@ class Git extends PluginController {
 
         $this->permittedActions = array();
     }
+
+    public function setPermissionsManager(GitPermissionsManager $permissions_manager) {
+        $this->permissions_manager = $permissions_manager;
+    }
     
     public function setProjectManager($projectManager) {
         $this->projectManager = $projectManager;
@@ -217,7 +226,7 @@ class Git extends PluginController {
     }
 
     protected function definePermittedActions($repoId, $user) {
-        if ( $user->isMember($this->groupId, 'A') === true ) {
+        if ($this->permissions_manager->userIsGitAdmin($user, $this->projectManager->getProject($this->groupId))) {
             $this->permittedActions = array('index',
                                             'view' ,
                                             'edit',
@@ -285,7 +294,6 @@ class Git extends PluginController {
         }
 
         $user = $this->userManager->getCurrentUser();
-
         //define access permissions
         $this->definePermittedActions($repoId, $user);
 
@@ -423,13 +431,12 @@ class Git extends PluginController {
 
                     if ($select_project_ids) {
 
-                        $this->addAction('updateGitAdminGroups', array($project, $user, $select_project_ids));
-
+                            $this->addAction('updateGitAdminGroups', array($project, $user, $select_project_ids));
                     } else {
-                        $this->addError('Error');
+                        $this->addError($this->getText('no_data_retrieved'));
                     }
                 } else {
-                    $this->addError('Error');
+                    $this->addError($this->getText('not_valid_request'));
                 }
 
                 $this->addAction('generateGerritRepositoryAndTemplateList', array($project, $user));
@@ -456,11 +463,13 @@ class Git extends PluginController {
                     }
                 }
 
-                if($user->isAdmin($this->groupId)) {
+                if ($this->permissions_manager->userIsGitAdmin($user, $project)) {
                     $this->addAction('generateGerritRepositoryAndTemplateList', array($project, $user));
                     $this->addView('adminView');
                 } else {
                     $this->addError($this->getText('controller_access_denied'));
+                    $this->redirect('/plugins/git/?action=index&group_id='. $this->groupId);
+                    return false;
                 }
                 break;
             case 'fetch_git_config':
@@ -732,7 +741,8 @@ class Git extends PluginController {
             $this->gerrit_usermanager,
             $this->project_creator,
             $this->template_factory,
-            $this->projectManager
+            $this->projectManager,
+            $this->permissions_manager
         );
     }
 
@@ -749,7 +759,7 @@ class Git extends PluginController {
             }
         }
         $to_project_id   = $request->get('to_project');
-        if ($user->isMember($to_project_id, 'A')) {
+        if ($this->permissions_manager->userIsGitAdmin($user, $this->projectManager->getProject($to_project_id))){
             $to_project      = $this->projectManager->getProject($to_project_id);
             $repos_ids       = explode(',', $request->get('repos'));
             $repos           = $this->getRepositoriesFromIds($repos_ids);

@@ -281,3 +281,7 @@ plugin_git	gerrit_template_delete_success	Template successfully deleted.
 plugin_git	third_party_access_text	In order to make sure I have the correct access on Gerrit, it can be necessary to update my group and project membership
 plugin_git	third_party_synch_button	Update
 plugin_git	third_party_synch_warning	You may need to log into Gerrit first
+
+plugin_git	no_longer_access_to_admin	Further to an administration permissions update, you no-longer have access to the Git service administration.
+plugin_git	no_data_retrieved	No data retrieved from the request
+plugin_git	not_valid_request	The request is not valid.

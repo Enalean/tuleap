@@ -51,7 +51,7 @@ plugin_git	admin_save_submit	Enregistrer
 
 plugin_git	admin_mail	Notifications
 
-plugin_git	controller_access_denied	Vous n'êtes pas autorisé a accéder à cette page
+plugin_git	controller_access_denied	Vous n'êtes pas autorisé à accéder à cette page
 
 plugin_git	dao_delete_error	Impossible de supprimer le dépôt de la base de données
 plugin_git	dao_delete_params	Impossible de supprimer le dépôt de la base de données, paramètres invalides
@@ -178,11 +178,11 @@ plugin_git	perm_W	Ecriture
 plugin_git	perm_W+	Rewind
 
 plugin_git	fork_repositories	Forker des dépôts
-plugin_git	fork_personal_repositories_desc	<p>Vous pouvez créer des forks personnels à partir de différents dépôts parents. Par défault, ces forks seront placés dans votre espace personnel du projet (cf. colonne "apérçu").</p>
-plugin_git	fork_project_repositories_desc	<p>Vous avez la possibilité de créer ces forks dans un autre project. Dans ce cas, ils deviendront des dépôts de référence dans le project de destination.<br/>Dans ce cas, vous devez être administrateur du projet de destination et le service Git doit être actif.</p>
+plugin_git	fork_personal_repositories_desc	<p>Vous pouvez créer des forks personnels à partir de différents dépôts parents. Par défaut, ces forks seront placés dans votre espace personnel du projet (cf. colonne "aperçu").</p>
+plugin_git	fork_project_repositories_desc	<p>Vous avez la possibilité de créer ces forks dans un autre projet. Dans ce cas, ils deviendront des dépôts de référence dans le project de destination.<br/>Dans ce cas, vous devez être administrateur du projet de destination et le service Git doit être actif.</p>
 plugin_git	fork_repositories_select	Sélectionnez les dépôts à forker
 plugin_git	fork_repositories_path	Choisissez le chemin pour les forks
-plugin_git	fork_repositories_placeholder	Entrer un chemin ou laissez vide
+plugin_git	fork_repositories_placeholder	Entrer un chemin ou laisser vide
 plugin_git	fork_destination_project	Choisir un projet de destination
 plugin_git	fork_malformed_path	Le chemin ne peut pas contenir (..)
 plugin_git	fork_choose_destination_project	Copier vers un autre projet
@@ -209,12 +209,12 @@ plugin_git	missing_parameter_to_project	Aucun projet sélectionné pour le fork
 plugin_git	missing_parameter_repos	Aucun dépôt sélectionné pour le fork
 
 plugin_git	ci_trigger	Evénement Git
-plugin_git	ci_repo_id	dépot
-plugin_git	ci_field_description	Déclencher un build après un push Git dans le dépot 
-plugin_git	ci_trigger_not_saved	L'evénement Git n'a pas été sauvegardé
-plugin_git	ci_bad_repo_id	Id du dépot Git non valide
-plugin_git	ci_repository_not_in_project	Le dépot Git n'appartient pas au projet
-plugin_git	ci_trigger_not_deleted	L'evénement Git n'a pas été supprimé
+plugin_git	ci_repo_id	dépôt
+plugin_git	ci_field_description	Déclencher un build après un push Git dans le dépôt
+plugin_git	ci_trigger_not_saved	L'événement Git n'a pas été sauvegardé
+plugin_git	ci_bad_repo_id	Id du dépôt Git non valide
+plugin_git	ci_repository_not_in_project	Le dépôt Git n'appartient pas au projet
+plugin_git	ci_trigger_not_deleted	L'événement Git n'a pas été supprimé
 
 plugin_git	widget_user_pushes_title	Mes derniers push Git
 plugin_git	widget_project_pushes_title	Derniers push Git
@@ -277,3 +277,7 @@ plugin_git	gerrit_template_delete_success	Modèle supprimé avec succès.
 plugin_git	third_party_access_text	Pour avoir les bons droits sur Gerrit, il est parfois nécessaire de mettre à jour les groupes et les projets auxquels j'appartiens
 plugin_git	third_party_synch_button	Mis à jour
 plugin_git	third_party_synch_warning	Cela nécessite parfois une connexion à Gerrit au préalable
+
+plugin_git	no_longer_access_to_admin	Vous n'avez plus accès à l'administration du service Git suite à la mise à jour des permissions.
+plugin_git	no_data_retrieved	La requête ne contient aucune donnée.
+plugin_git	not_valid_request	La requête n'est pas valide.
