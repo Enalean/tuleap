@@ -23,7 +23,9 @@
         init: function() {
             var self = this;
 
+            $('.tuleap-modal').show();
             this.setPanelHeight();
+
             codendi.Toggler.init(document.getElementsByClassName('tuleap-modal')[0]);
 
             $('.tuleap-modal-side-panel:first-child .tuleap-modal-side-panel-grip').click(function() {
@@ -55,23 +57,50 @@
         },
 
         setPanelHeight: function() {
-            $('.tuleap-modal').show();
-
             var computed_height = $('.tuleap-modal-main-panel').outerHeight();
+            if (computed_height >= $(window).height()) {
+                computed_height = $(window).height();
+            }
 
-            $('.tuleap-modal').css({
-                height:    computed_height + 'px',
-                top:       '50%',
-                marginTop: '-' + (computed_height / 2) + 'px'
-            }).fadeIn(150);
+            this.resizeContentPanels(computed_height);
             $('.tuleap-modal-side-panel').css('height', computed_height);
             $('.tuleap-modal-side-panel-grip > span').css('width', computed_height);
 
             $('.tuleap-modal-side-panel-content-actions').css('height', $('.tuleap-modal-actions').outerHeight());
         },
 
+        resizeContentPanels: function(computed_height) {
+            if (computed_height < $(window).height()) {
+                $('.tuleap-modal').css({
+                    height:    computed_height + 'px',
+                    top:       '50%',
+                    marginTop: '-' + (computed_height / 2) + 'px'
+                });
+
+            } else {
+                var content_height = computed_height - $('.tuleap-modal-actions').outerHeight() - $('.tuleap-modal-title').outerHeight() - (2 * parseInt($('.tuleap-modal-actions').css('padding-left')));
+                $('.tuleap-modal-content, .tuleap-modal-side-panel-content-content').css({
+                    height: content_height + 'px'
+                });
+
+                $('.tuleap-modal').css({
+                    height:    computed_height + 'px',
+                    top:       '0',
+                    marginTop: '0'
+                });
+            }
+        },
+
         closeModal: function() {
             $('.tuleap-modal-background, .tuleap-modal').fadeOut(150).remove();
         }
     }
+
+    $(document).ready(function () {
+        $(window).resize(function() {
+            if ($('.tuleap-modal').length > 0) {
+                tuleap.modal.setPanelHeight();
+            }
+        });
+    });
 })(jQuery);
