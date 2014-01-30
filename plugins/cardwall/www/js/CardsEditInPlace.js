@@ -339,7 +339,11 @@ tuleap.cardwall = tuleap.cardwall || { };
                     $('#artifact-form-errors').show();
                 });
                 return false;
-            })
+            });
+
+            $('.tuleap-modal-close').click(function(event) {
+                $('.artifact-event-popup').remove();
+            });
         },
 
         isArtifactSubmittable : function(event) {
