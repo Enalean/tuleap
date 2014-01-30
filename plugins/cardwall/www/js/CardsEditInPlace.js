@@ -325,6 +325,8 @@ tuleap.cardwall = tuleap.cardwall || { };
                     data    : $('.tuleap-modal-main-panel form').serialize()
                 }).done( function() {
                     var planning_id = getConcernedPlanningId();
+
+                    self.destroyRichTextAreaInstances();
                     tuleap.modal.closeModal();
                     getNewCardData(artifact_id, planning_id);
                 }).fail( function(response) {
@@ -341,8 +343,17 @@ tuleap.cardwall = tuleap.cardwall || { };
                 return false;
             });
 
-            $('.tuleap-modal-close').click(function(event) {
+            $('.tuleap-modal-close').off('click').on('click', function() {
+                /*
+                 * The order of thins here is important:
+                 * - off('click') removes any previously binded function to this click event
+                 * - destroyRichTextAreaInstances() is needed in IE9 to get rid of memory refs
+                 * - we then call tuleap.modal.closeModal() which destroys the
+                 * modal ; this needs to be done after the CKEDITOR instanvces have been removed
+                 */
+                self.destroyRichTextAreaInstances();
                 $('.artifact-event-popup').remove();
+                tuleap.modal.closeModal()
             });
         },
 
@@ -353,6 +364,12 @@ tuleap.cardwall = tuleap.cardwall || { };
         updateRichTextAreas : function() {
             for (instance in CKEDITOR.instances) {
                 CKEDITOR.instances[instance].updateElement();
+            }
+        },
+
+        destroyRichTextAreaInstances : function() {
+            for (instance in CKEDITOR.instances) {
+                CKEDITOR.instances[instance].destroy();
             }
         }
     };
