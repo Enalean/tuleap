@@ -1,3 +1,6 @@
+Version 0.5 - Tuleap 6.10
+    * story #5813 - set permissions on file system to different groups
+
 Version 0.4 - Tuleap 6.10
     * Browse SFTP directory content
 
