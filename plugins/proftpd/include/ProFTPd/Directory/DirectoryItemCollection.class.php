@@ -19,15 +19,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Proftpd_Directory_DirectoryItemCollection {
+namespace Tuleap\ProFTPd\Directory;
+
+class DirectoryItemCollection {
 
     /**
-     * @var Proftpd_Directory_DirectoryItem[]
+     * @var DirectoryItem[]
      */
     private $folders;
 
     /**
-     * @var Proftpd_Directory_DirectoryItem[]
+     * @var DirectoryItem[]
      */
     private $files;
 
@@ -38,8 +40,8 @@ class Proftpd_Directory_DirectoryItemCollection {
     private $is_forbidden = false;
 
     /**
-     * @param Proftpd_Directory_DirectoryItem[] $folders
-     * @param Proftpd_Directory_DirectoryItem[] $files
+     * @param DirectoryItem[] $folders
+     * @param DirectoryItem[] $files
      */
     public function __construct($folders, $files) {
         $this->folders = $folders;
@@ -47,14 +49,14 @@ class Proftpd_Directory_DirectoryItemCollection {
     }
 
     /**
-     * @return Proftpd_Directory_DirectoryItem[]
+     * @return DirectoryItem[]
      */
     public function getFolders() {
         return $this->folders;
     }
 
     /**
-     * @return Proftpd_Directory_DirectoryItem[]
+     * @return DirectoryItem[]
      */
     public function getFiles() {
         return $this->files;

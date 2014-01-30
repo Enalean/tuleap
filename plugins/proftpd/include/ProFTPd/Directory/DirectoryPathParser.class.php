@@ -19,16 +19,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Proftpd_Directory_DirectoryPathParser {
+namespace Tuleap\ProFTPd\Directory;
+
+class DirectoryPathParser {
 
     const BASE_PATH = '';
 
     /**
      * @param string $path
-     * @return Proftpd_Directory_DirectoryPathCollection
+     * @return DirectoryPathCollection
      */
     public function getPathParts($path) {
-        $parts = new Proftpd_Directory_DirectoryPathCollection();
+        $parts = new DirectoryPathCollection();
 
         $path_to_part = '';
         foreach (array_filter(explode('/', $path)) as $part_name) {
@@ -37,7 +39,7 @@ class Proftpd_Directory_DirectoryPathParser {
             }
 
             $path_to_part.= $part_name;
-            $parts->add(new Proftpd_Directory_DirectoryPathPart($part_name, $path_to_part));
+            $parts->add(new DirectoryPathPart($part_name, $path_to_part));
         }
 
         return $parts;

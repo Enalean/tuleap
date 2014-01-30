@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2014. All rights reserved
  *
@@ -19,6 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-// Location of sftp directory
-$proftpd_base_directory = '/var/lib/tuleap/secure_ftp';
-?>
+namespace Tuleap\ProFTPd\Admin;
+
+/**
+ * Files should not have x (executable bit set)
+ */
+class ACLBuilderForFile extends ACLBuilder {
+
+    public function getACL($http_user, $writers, $readers) {
+        return $this->getEffectiveACL($http_user, $writers, $readers);
+    }
+
+    protected function getACLReaders($label) {
+        return "$label:r";
+    }
+
+    protected function getACLWriters($label) {
+        return "$label:rw";
+    }
+
+}

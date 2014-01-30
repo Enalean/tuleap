@@ -19,10 +19,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\ProFTPd\Directory;
+
 /**
  * This class is a representation of an item into a SFTP directory
  */
-class Proftpd_Directory_DirectoryItem {
+class DirectoryItem {
 
     /** @var String */
     private $name;

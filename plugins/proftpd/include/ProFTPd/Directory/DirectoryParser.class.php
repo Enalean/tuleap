@@ -19,21 +19,32 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Proftpd_Directory_DirectoryParser {
+namespace Tuleap\ProFTPd\Directory;
+
+use DirectoryIterator;
+use UnexpectedValueException;
+
+class DirectoryParser {
+
+    private $base_dir;
+
+    public function __construct($base_dir) {
+        $this->base_dir = $base_dir;
+    }
 
     /**
      * Parse the content of a given directory
      *
      * @param  String $path The path to parse
      *
-     * @return Proftpd_Directory_DirectoryItemCollection
+     * @return DirectoryItemCollection
      */
     public function parseDirectory($path, $remove_parent_directory_listing) {
         $items = array(
             'folders' => array(),
             'files'   => array(),
         );
-        $directory_iterator = $this->getDirectoryOperator($path);
+        $directory_iterator = $this->getDirectoryOperator($this->base_dir . DIRECTORY_SEPARATOR . $path);
 
         if ($directory_iterator == null) {
             return $this->createForbiddenDirectoryContents();
@@ -48,7 +59,7 @@ class Proftpd_Directory_DirectoryParser {
                 continue;
             }
 
-            $current_item = new Proftpd_Directory_DirectoryItem(
+            $current_item = new DirectoryItem(
                 $file_info->getFilename(),
                 $file_info->getType(),
                 $file_info->getSize(),
@@ -61,7 +72,7 @@ class Proftpd_Directory_DirectoryParser {
         return $this->createNaturalAlphabeticallyItemsCollection($items);
     }
 
-    private function addItemInRightSection(array $items, Proftpd_Directory_DirectoryItem $current_item, $file_info) {
+    private function addItemInRightSection(array $items, DirectoryItem $current_item, $file_info) {
         if ($file_info->isDir()) {
             $items['folders'][$file_info->getFilename()] = $current_item;
         } else {
@@ -78,7 +89,7 @@ class Proftpd_Directory_DirectoryParser {
         $folders = array_values($items['folders']);
         $files   = array_values($items['files']);
 
-        return new Proftpd_Directory_DirectoryItemCollection($folders, $files);
+        return new DirectoryItemCollection($folders, $files);
     }
 
     private function getDirectoryOperator($path) {
@@ -90,9 +101,9 @@ class Proftpd_Directory_DirectoryParser {
     }
 
     private function createForbiddenDirectoryContents() {
-        $parent_item = new Proftpd_Directory_DirectoryItem('..', 'dir', null, null);
+        $parent_item = new DirectoryItem('..', 'dir', null, null);
 
-        $directory_contents = new Proftpd_Directory_DirectoryItemCollection(array($parent_item), array());
+        $directory_contents = new DirectoryItemCollection(array($parent_item), array());
         $directory_contents->setAsForbidden();
 
         return $directory_contents;

@@ -35,4 +35,4 @@ $include_path = $basedir.'/src/www/include';
 
 ini_set('include_path', ini_get('include_path').':'.$src_path.':'.$include_path);
 
-require_once 'src/common/autoload.php';
+require_once 'common/autoload.php';

@@ -417,14 +417,6 @@ Release: 1%{?dist}
 %description plugin-boomerang
 Allow performances evaluation in Tuleap.
 
-%package plugin-proftpd
-Summary: Proftpd plugin
-Group: Development/Tools
-Version: @@PLUGIN_PROFTPD_VERSION@@
-Release: 1%{?dist}
-%description plugin-proftpd
-Control and interfact with Proftpd as FTP server
-
 %if %{php_base} == php53
 
 %package plugin-mediawiki
@@ -445,6 +437,14 @@ Release: 1%{?dist}
 Requires: php53-openid
 %description plugin-openid
 Connect to Tuleap using an OpenId provider
+
+%package plugin-proftpd
+Summary: Proftpd plugin
+Group: Development/Tools
+Version: @@PLUGIN_PROFTPD_VERSION@@
+Release: 1%{?dist}
+%description plugin-proftpd
+Control and interfact with Proftpd as FTP server
 
 %endif
 
@@ -626,6 +626,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 # OpenId
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/openid_consumer_store
 
+# Plugin proftpd
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/secure_ftp
+
 %else
 
 # Plugin mediawiki
@@ -637,6 +640,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/ChangeLog
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/.htaccess
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/index.php
+
+# Plugin proftpd
+rm -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/proftpd
 
 %endif
 
@@ -1080,10 +1086,6 @@ fi
 %{APP_DIR}/plugins/boomerang
 %dir %{APP_DATA_DIR}/boomerang
 
-%files plugin-proftpd
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/proftpd
-
 %if %{php_base} == php53
 
 %files plugin-mediawiki
@@ -1098,6 +1100,11 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/openid
 %{APP_CACHE_DIR}/openid_consumer_store
+
+%files plugin-proftpd
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/proftpd
+%dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/secure_ftp
 
 %endif
 
