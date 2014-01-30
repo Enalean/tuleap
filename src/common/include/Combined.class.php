@@ -71,8 +71,7 @@ class Combined {
             '/scripts/codendi/Tracker.js',
             '/scripts/codendi/TreeNode.js',
             '/scripts/tuleap/tuleap-modal.js',
-            '/scripts/jquery_ajax_submit/jquery.form.min.js',
-            '/scripts/d3/d3.min.js',//last as is incompatible with IE7
+            '/scripts/d3/d3.min.js',//last - incompatible with IE7
         );
         EventManager::instance()->processEvent(Event::COMBINED_SCRIPTS, array('scripts' => &$arr));
         return $arr;

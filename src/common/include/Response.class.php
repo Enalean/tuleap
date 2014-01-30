@@ -148,8 +148,8 @@ class Response {
     }
 
     public function send400JSONErrors($message) {
+        header('Content-Type: application/json', true);
         header('HTTP/1.0 400 Bad Request', true, 400);
-        header('Content-Type','application/json');
         echo json_encode($message);
         exit;
     }
