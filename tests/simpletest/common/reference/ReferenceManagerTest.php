@@ -135,20 +135,18 @@ class ReferenceManagerTest extends TuleapTestCase {
         $this->assertTrue(count($this->rm->_extractAllMatches("art #123:wikipage/2", 0)) == 1, "Wikipage revision number");
 
         # Projectname with - and _ See SR #1178
-        $refarray = array(0 => "art #abc-def:ghi", 1 => "art", 2 => "abc-def:", 3 => "ghi");
-        $this->assertTrue(in_array($refarray, $this->rm->_extractAllMatches("art #abc-def:ghi")), "group-Name:ObjName");
-        $refarray = array(0 => "art #abc-de_f:ghi", 1 => "art", 2 => "abc-de_f:", 3 => "ghi");
-        $this->assertTrue(in_array($refarray, $this->rm->_extractAllMatches("art #abc-de_f:ghi")), "group-Na_me:ObjName");
+        $matches = $this->rm->_extractAllMatches("art #abc-def:ghi");
+        $this->assertEqual($matches[0]['project_name'], 'abc-def:');
+        $this->assertEqual($matches[0]['value'], 'ghi');
+        $matches = $this->rm->_extractAllMatches("art #abc-de_f:ghi");
+        $this->assertEqual($matches[0]['project_name'], 'abc-de_f:');
+        $this->assertEqual($matches[0]['value'], 'ghi');
 
         # SR #2353 - Reference to wiki page name with "&" does not work
-        $this->assertEqual($this->rm->_extractAllMatches('wiki #project:page/subpage&amp;toto&tutu & co'), array(
-            array(
-                'wiki #project:page/subpage&amp;toto&tutu',
-                'wiki',
-                'project:',
-                'page/subpage&amp;toto&tutu'
-            )
-        ));
+        $matches = $this->rm->_extractAllMatches('wiki #project:page/subpage&amp;toto&tutu & co');
+        $this->assertEqual($matches[0]['key'], 'wiki');
+        $this->assertEqual($matches[0]['project_name'], 'project:');
+        $this->assertEqual($matches[0]['value'], 'page/subpage&amp;toto&tutu');
     }
 
     function test_updateProjectReferenceShortName() {

@@ -58,26 +58,14 @@ class Codendi_HTMLPurifierTestVersion extends Codendi_HTMLPurifier {
 
 class ReferenceManagerTestMakeLinks extends MockReferenceManager {
     function insertReferences(&$data) {
-        $data = 'link to art #1';
+        $data = preg_replace('/art #1/', '<a href="link-to-art-1">art #1</a>', $data);
     }
 }
 
 /**
  * Tests the class CodendiHTMLPurifier
  */
-class Codendi_HTMLPurifierTest extends UnitTestCase {
-
-    function UnitTestCase($name = 'Codendi_HTMLPurifier test') {
-        $this->UnitTestCase($name);
-    }
-
-    function setUp() {
-    }
-
-    function tearDown() {
-    }
-
-
+class Codendi_HTMLPurifierTest extends TuleapTestCase {
 
     function testPurifySimple() {
         $p =& Codendi_HTMLPurifier::instance();
@@ -188,13 +176,24 @@ class Codendi_HTMLPurifierTest extends UnitTestCase {
 
         $rm = new ReferenceManagerTestMakeLinks();
         $p->setReturnValue('getReferenceManager', $rm);
-        $this->assertEqual('link to art #1', $p->makeLinks('art #1', 1));
+        $this->assertPattern('/link-to-art-1/', $p->makeLinks('art #1', 1));
     }
 
     function testPurifierLight() {
         $p = Codendi_HTMLPurifier::instance();
         $this->assertEqual("foo\nbar", $p->purify("foo\nbar", CODENDI_PURIFIER_LIGHT));
         $this->assertEqual("foo\nbar", $p->purify("foo\r\nbar", CODENDI_PURIFIER_LIGHT));
+    }
+
+    public function itDoesNotDoubleEscapeLinks() {
+        $reference_manager = new ReferenceManagerTestMakeLinks();
+        $p = partial_mock('Codendi_HTMLPurifier', array('getReferenceManager'));
+        stub($p)->getReferenceManager()->returns($reference_manager);
+
+        $html = 'Text with <a href="http://tuleap.net/">link</a> and a reference to art #1';
+        $expected = 'Text with <a href="http://tuleap.net/">link</a> and a reference to <a href="link-to-art-1">art #1</a>';
+
+        $this->assertEqual($expected, $p->purifyHTMLWithReferences($html, 123));
     }
 }
 ?>
