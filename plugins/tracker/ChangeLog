@@ -1,3 +1,6 @@
+Version 5.227 - Tuleap 6.10
+    * request #5986 - URLs are corrupted by a double escape
+
 Version 5.226 - Tuleap 6.10
     * Fix request #6013: Text in HTML format is sent as HTML in plain/text mail notifications
 
