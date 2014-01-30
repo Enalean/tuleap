@@ -39,6 +39,14 @@
             });
         },
 
+        showLoad: function() {
+            $('body').append('<div class="tuleap-modal-loading"></div>');
+        },
+
+        hideLoad: function() {
+            $('.tuleap-modal-loading').remove();
+        },
+
         toggleLeftSidePanel: function(grip) {
             var panel_content = grip.siblings('.tuleap-modal-side-panel-content');
             panel_content.toggle();

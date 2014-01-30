@@ -10,6 +10,21 @@
     filter: alpha(opacity=50);
 }
 
+.tuleap-modal-loading {
+    @loading-size: 110px;
+
+    position: fixed;
+    z-index: 2000;
+    top: 50%;
+    left: 50%;
+    width: @loading-size;
+    height: @loading-size;
+    margin-top: -(@loading-size / 2);
+    margin-left: -(@loading-size / 2);
+    background: #303030 url('../images/tuleap-modal-spinner.gif') no-repeat center center;
+    border-radius: 50%;
+}
+
 .tuleap-modal {
     @modal-radius: 5px;
     @modal-padding: 15px;
