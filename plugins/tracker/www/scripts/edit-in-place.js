@@ -52,8 +52,11 @@ tuleap.tracker = tuleap.tracker || { };
             }
 
             $.ajax({
-                url: codendi.tracker.base_url + '?aid='+artifact_id+'&func=get-edit-in-place'
-            }).done(function( data ) {
+                url: codendi.tracker.base_url + '?aid='+artifact_id+'&func=get-edit-in-place',
+                beforeSend: tuleap.modal.showLoad
+
+            }).done(function(data) {
+                tuleap.modal.hideLoad();
                 self.showArtifactEditForm(data, artifact_id, update_callback)
                 codendi.tracker.runTrackerFieldDependencies();
 
