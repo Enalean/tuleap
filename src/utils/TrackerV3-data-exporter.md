@@ -11,8 +11,8 @@ In those cases, a fake changeset is created at the time of export for those valu
 Attachment
 ----------
 
-* Deleted attachments are not imported.
+* Deleted attachments are not exported.
   They will not appears in the history either.
 
 * If an artifact contains 2 attachments with the same name, export will not
-  be able to distinguish them and they will skip them.
+  be able to distinguish them and it will skip them.
