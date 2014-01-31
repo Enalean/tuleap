@@ -54,11 +54,12 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
         $links = array();
 
         foreach ($linked_artifacts as $artifact) {
-            $artifact_link = new Tracker_Artifact_Presenter_ArtifactLinkPresenter(
+            $artifact_title = $artifact->getTitle();
+            $artifact_link  = new Tracker_Artifact_Presenter_ArtifactLinkPresenter(
                 $artifact->getTracker()->getItemName(),
                 $artifact->getTracker()->getProject()->getID(),
                 $artifact->getId(),
-                $artifact->getTitle()
+                ($artifact_title) ? $artifact_title : ''
             );
 
             $links[] = $artifact_link;

@@ -58,6 +58,10 @@ codendi.tracker.rule_forest = {
         if (this.trees[field]) {
             delete this.trees[field];
         }
+    },
+    reset: function() {
+        this.nodes = {};
+        this.trees = {};
     }
 };
 
@@ -229,7 +233,7 @@ codendi.tracker.runTrackerFieldDependencies = function() {
         //try {
     //Load rules definitions
     //Only if fields and values exist
-
+    codendi.tracker.rule_forest.reset();
     codendi.tracker.rules_definitions.each(function (rule_definition) {
         if (rule_definition.source_field != rule_definition.target_field 
             && codendi.tracker.fields.get(rule_definition.source_field) 

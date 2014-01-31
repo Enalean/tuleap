@@ -109,6 +109,10 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return '<input type="text" name="criteria['. $this->id .']" value="'. $hp->purify($this->getCriteriaValue($criteria), CODENDI_PURIFIER_CONVERT_HTML) .'" />';
     }
 
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact) {
+        return $this->fetchArtifactReadOnly($artifact);
+    }
+
     /**
      * Fetch the value
      * @param mixed $value the value of the field
@@ -256,7 +260,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         $crossref_fact= new CrossReferenceFactory($artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
         $crossref_fact->fetchDatas();
         if ($crossref_fact->getNbReferences()) {
-            $html .= $crossref_fact->getHTMLDisplayCrossRefs();
+            $html .= $crossref_fact->getHTMLDisplayCrossRefs(true, true);
         } else {
             $html .= '<div>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'ref_list_empty') .'</div>';
         }
