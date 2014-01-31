@@ -19,6 +19,8 @@
 # along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 #
 
+set -e
+
 scriptdir=$(dirname $0)
 tuleap_base_dir="$scriptdir/../../.."
 phplauncher="$tuleap_base_dir/src/utils/php-launcher.sh"
@@ -33,23 +35,32 @@ cleanup() {
     rm -f $1
 }
 
+# Ensure produced files are only readable by owner
+umask 077
+
 TMPFILE=`mktemp -t tv3-export.XXXXXXXXXX` && {
-    # make sure that only root can read the file
-    # to not leak sensible data
-    chmod 600 $TMPFILE
+    # Keep tmpfile name by remove it
+    # We need a tmp file name but it should not exists 
+    # mktemp create a temp unique filename, so we just delete
+    # it to reuse the name.
+    rm $TMPFILE
 
     # Create structure
     tv5_id=$($phplauncher $tuleap_base_dir/plugins/tracker/bin/create_tracker_structure_from_tv3.php $user $project_id $tv3_id $name $description $itemname)
+
+    # Export data
+    $phplauncher $tuleap_base_dir/src/utils/TrackerV3-data-exporter.php $tv3_id $TMPFILE
     if [ $? -ne 0 ]; then
         cleanup $TMPFILE
         exit 1
     fi
 
-    # Export data
-    $phplauncher $tuleap_base_dir/src/utils/TrackerV3-data-exporter.php $tv3_id $TMPFILE
-
     # Import data
     $phplauncher $tuleap_base_dir/plugins/tracker/bin/import_artifacts_xml.php $user $tv5_id $TMPFILE
+    if [ $? -ne 0 ]; then
+        cleanup $TMPFILE
+        exit 1
+    fi
 
     cleanup $TMPFILE
 }
