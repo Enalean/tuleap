@@ -1,6 +1,6 @@
 Version 6.10 (Not released yet)
 	== Plugins ==
-	* agiledashboard: 1.38
+	* agiledashboard: 1.39
 	* boomerang: 0.2
 	* cardwall: 1.15
 	* tracker: 5.228
@@ -31,6 +31,7 @@ Version 6.10 (Not released yet)
 
 	== Development ==
 	* Pull-out Vagrant and Chef in dedicated repositories
+	* Refactoring javascript to extract a reusable filter object (listFilter).
 
 Version 6.9 (Thursday, January 9th 2014)
 	== Plugins ==
