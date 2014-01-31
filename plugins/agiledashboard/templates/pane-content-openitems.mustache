@@ -1,10 +1,10 @@
 {{#has_something}}
     {{#has_something_todo}}
         <h3>{{open_items_title}}</h3>
+        <p>{{open_items_intro}}</p>
         <div class="row-fluid">
             <input type="text" class="content-filter open" placeholder="Backlog element…">
         </div>
-        <p>{{open_items_intro}}</p>
         <div class="row-fluid">
         <table class="table table-striped table-hover table-bordered span8">
             <thead>
@@ -16,7 +16,7 @@
                     <th>{{parent}}</th>
                 </tr>
             </thead>
-            <tbody class="{{#can_prioritize}}milestone-content-open-rows{{/can_prioritize}}">
+            <tbody class="milestone-content-open {{#can_prioritize}}milestone-content-open-rows{{/can_prioritize}}">
                 {{#todo_collection}}
                     <tr data-artifact-id="{{id}}">
                         <td><a href="{{url}}" class="backlog-item-link" data-artifact-id="{{id}}">{{id}}</a></td>

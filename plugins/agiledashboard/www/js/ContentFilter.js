@@ -24,7 +24,7 @@
 (function($) {
     $(document).ready(function() {
         var input_filter  = $('.content-filter.open');
-        var list_selector = '.milestone-content-open-rows tr';
+        var list_selector = '.milestone-content-open tr';
         var filter        = new tuleap.core.listFilter();
 
         filter.init(input_filter, list_selector);
@@ -32,7 +32,7 @@
 
     $(document).ready(function() {
         var input_filter  = $('.content-filter.closed');
-        var list_selector = '.milestone-content-closed-rows tr';
+        var list_selector = '.milestone-content-closed tr';
         var filter        = new tuleap.core.listFilter();
 
         filter.init(input_filter, list_selector);
