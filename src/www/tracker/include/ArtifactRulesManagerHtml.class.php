@@ -62,7 +62,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                 if ($field->isMultiSelectBox() || $field->isSelectBox()) {
                     $values = $field->getFieldPredefinedValues($this->artifact_type->getID());
                     if (db_numrows($values) >= 1) {
-                        echo "codendi.tracker.fields.add('".(int)$field->getID()."', '".$field->getName()."', '". $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_JS_QUOTE) ."')";
+                        echo "codendi.trackerv3.fields.add('".(int)$field->getID()."', '".$field->getName()."', '". $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_JS_QUOTE) ."')";
                         $default_value = $field->getDefaultValue();
                         while ($row = db_fetch_array($values)) {
                             echo "\n\t.addOption('".  $hp->purify(SimpleSanitizer::unsanitize($row[1]), CODENDI_PURIFIER_JS_QUOTE)  ."'.escapeHTML(), '". (int)$row[0] ."', ". ($row[0]==$default_value?'true':'false') .")";
@@ -81,7 +81,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         if ($rules && count($rules) > 0) {
             foreach ($rules as $key => $nop) {
                 $html = new ArtifactRuleValueJavascript($rules[$key]);
-                echo 'codendi.tracker.rules_definitions.push(';
+                echo 'codendi.trackerv3.rules_definitions.push(';
                 $html->display();
                 echo ");\n";
             }

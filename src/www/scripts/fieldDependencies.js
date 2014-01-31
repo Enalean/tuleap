@@ -24,7 +24,7 @@
 
 // Define namespace to prevent clashes
 var codendi = codendi || { };
-codendi.tracker = codendi.tracker || { };
+codendi.trackerv3 = codendi.trackerv3 || { };
 
 //==============================================================================
 //==============================================================================
@@ -38,14 +38,14 @@ codendi.tracker = codendi.tracker || { };
 // The highlight color for the Yellow Fade Technique
 var HIGHLIGHT_STARTCOLOR = '#ffff99';
 
-codendi.tracker.rules_definitions = [];
+codendi.trackerv3.rules_definitions = [];
 
-codendi.tracker.rule_forest = {
+codendi.trackerv3.rule_forest = {
     nodes: {},
     trees: {},
     getNode: function(field, is_child) {
         if (!this.nodes[field]) {
-            this.nodes[field] = new codendi.tracker.RuleNode(field);
+            this.nodes[field] = new codendi.trackerv3.RuleNode(field);
             if (!is_child) {
                 this.trees[field] = this.nodes[field];
             }
@@ -65,13 +65,13 @@ codendi.tracker.rule_forest = {
 /**
  * A Rule
  */
-codendi.tracker.RuleNode = Class.create({
+codendi.trackerv3.RuleNode = Class.create({
     initialize:function(field) {
         this.field = field;
         this.targets = {};
         
         //Register event on the field
-        var f = codendi.tracker.fields.get(this.field);
+        var f = codendi.trackerv3.fields.get(this.field);
         if (f.element().nodeName != 'SPAN') {
             this.onchangeEvent = f.onchange.bind(f);
             f.element().observe('change', this.onchangeEvent);
@@ -84,12 +84,12 @@ codendi.tracker.RuleNode = Class.create({
     chainSourceAndTargetNodes: function(target_field) {
         if (!this.targets[target_field]) {
             this.targets[target_field] = {
-                field: codendi.tracker.rule_forest.getNode(target_field, true),
+                field: codendi.trackerv3.rule_forest.getNode(target_field, true),
                 values: {}
             }
         }
         // Once target is connected to source, it's no longer a tree root
-        codendi.tracker.rule_forest.removeNodeFromTrees(target_field);
+        codendi.trackerv3.rule_forest.removeNodeFromTrees(target_field);
     },
     appendTargetValue: function (source_value, target_field, target_value) {
         if (!this.targets[target_field].values[source_value]) {
@@ -99,7 +99,7 @@ codendi.tracker.RuleNode = Class.create({
     },
     process: function() {
         //retrieve selected source values
-        var el = codendi.tracker.fields.get(this.field).element();
+        var el = codendi.trackerv3.fields.get(this.field).element();
         if (el.nodeName == 'SPAN') {
             //in case of MB, the returned value is a list a value ids (i.e: v_id1,v_id2,...)
             var e = el.innerHTML;
@@ -117,8 +117,8 @@ codendi.tracker.RuleNode = Class.create({
         }
         
         //Store only if we are root (else already stored before we reach this field)
-        if (codendi.tracker.rule_forest.isTree(this.field)) {
-            codendi.tracker.fields.get(this.field).updateSelectedState(selected_sources);
+        if (codendi.trackerv3.rule_forest.isTree(this.field)) {
+            codendi.trackerv3.fields.get(this.field).updateSelectedState(selected_sources);
         }
         
         //for each targets of this field
@@ -127,7 +127,7 @@ codendi.tracker.RuleNode = Class.create({
             var transitions = target.value;
             
             //retrieve options of the target
-            var target_options = codendi.tracker.fields.get(target_field_id).options;
+            var target_options = codendi.trackerv3.fields.get(target_field_id).options;
             
             //Build the new options accordingly to the rules
             var new_target_options = {};
@@ -140,10 +140,10 @@ codendi.tracker.RuleNode = Class.create({
             });
             
             //Force field to new options
-            codendi.tracker.fields.get(target_field_id).force(new_target_options);
+            codendi.trackerv3.fields.get(target_field_id).force(new_target_options);
             
             //Chain the process
-            codendi.tracker.rule_forest.getNode(target_field_id).process();
+            codendi.trackerv3.rule_forest.getNode(target_field_id).process();
         });
     }
 });
@@ -151,7 +151,7 @@ codendi.tracker.RuleNode = Class.create({
 /**
  * Codendi field
  */
-codendi.tracker.Field = Class.create({
+codendi.trackerv3.Field = Class.create({
     initialize: function (id, name, label) {
         this.id              = id;
         this.name            = name;
@@ -222,14 +222,14 @@ codendi.tracker.Field = Class.create({
             this.options[el.options[i].value].selected = el.options[i].selected;
         }
         //Process rules
-        codendi.tracker.rule_forest.getNode(this.id).process();
+        codendi.trackerv3.rule_forest.getNode(this.id).process();
     }
 });
 
-codendi.tracker.fields = {
+codendi.trackerv3.fields = {
     fields: {},
     add: function(id, name, label) {
-        this.fields[id] = new codendi.tracker.Field(id, name, label);
+        this.fields[id] = new codendi.trackerv3.Field(id, name, label);
         return this.fields[id];
     },
     get: function(id) {
@@ -240,14 +240,14 @@ codendi.tracker.fields = {
 document.observe('dom:loaded', function() {
     //Load rules definitions
     //Only if fields and values exist
-    codendi.tracker.rules_definitions.each(function (rule_definition) {
+    codendi.trackerv3.rules_definitions.each(function (rule_definition) {
         if (rule_definition.source_field != rule_definition.target_field 
-            && codendi.tracker.fields.get(rule_definition.source_field) 
-            && codendi.tracker.fields.get(rule_definition.target_field)
-            && codendi.tracker.fields.get(rule_definition.source_field).element() 
-            && codendi.tracker.fields.get(rule_definition.target_field).element() 
+            && codendi.trackerv3.fields.get(rule_definition.source_field) 
+            && codendi.trackerv3.fields.get(rule_definition.target_field)
+            && codendi.trackerv3.fields.get(rule_definition.source_field).element() 
+            && codendi.trackerv3.fields.get(rule_definition.target_field).element() 
         ) {
-            codendi.tracker.rule_forest.getNode(rule_definition.source_field)
+            codendi.trackerv3.rule_forest.getNode(rule_definition.source_field)
                                        .addRule(rule_definition.source_value,
                                                 rule_definition.target_field,
                                                 rule_definition.target_value
@@ -256,12 +256,12 @@ document.observe('dom:loaded', function() {
     });
 
     //Apply the initial rules
-    $H(codendi.tracker.rule_forest.trees).each(function (rule_node) {
+    $H(codendi.trackerv3.rule_forest.trees).each(function (rule_node) {
         rule_node.value.process();
     });
     
     //{{{ Look for HIGHLIGHT_STARTCOLOR in current css
-    var codendi_field_dependencies_highlight_change = getStyleClassProperty('codendi_field_dependencies_highlight_change', 'backgroundColor');
+    var codendi_field_dependencies_highlight_change = tuleap.getStyleClassProperty('codendi_field_dependencies_highlight_change', 'backgroundColor');
     if (codendi_field_dependencies_highlight_change && codendi_field_dependencies_highlight_change != '') {
         HIGHLIGHT_STARTCOLOR = codendi_field_dependencies_highlight_change;
     }
@@ -285,40 +285,6 @@ document.observe('dom:loaded', function() {
 
 });
 
-// Search for a class in loaded stylesheets
-function getStyleClass (className) {
-    var re = new RegExp("\\." + className + "$", "gi");
-    if (document.all) {
-        for (var s = 0; s < document.styleSheets.length; s++) {
-            for (var r = 0; r < document.styleSheets[s].rules.length; r++) {
-                if (document.styleSheets[s].rules[r].selectorText && document.styleSheets[s].rules[r].selectorText.search(re) != -1) {
-                    return document.styleSheets[s].rules[r].style;
-                }
-            }
-        }
-    } else if (document.getElementById) {
-        for (var s = 0; s < document.styleSheets.length; s++) {
-            for (var r = 0; r < document.styleSheets[s].cssRules.length; r++) {
-                if (document.styleSheets[s].cssRules[r].selectorText && document.styleSheets[s].cssRules[r].selectorText.search(re) != -1) {
-                    document.styleSheets[s].cssRules[r].sheetIndex = s;
-                    document.styleSheets[s].cssRules[r].ruleIndex = s;
-                    return document.styleSheets[s].cssRules[r].style;
-                }
-            }
-        }
-    } else if (document.layers) {
-        return document.classes[className].all;
-    }
-    return null;
-}
-// Search for a property for a class in loaded stylesheets
-function getStyleClassProperty (className, propertyName) {
-  var styleClass = getStyleClass(className);
-  if (styleClass)
-    return styleClass[propertyName];
-  else 
-    return null;
-}
 //}}}
 
 //==============================================================================
@@ -440,7 +406,7 @@ function admin_checked(id) {
         Element.setStyle(checkbox.type+'_'+checkbox.source_field_id+'_'+checkbox.target_field_id+'_'+checkbox[checkbox.type+'_value_id']+'_arrow', {visibility:'hidden'});        
     }
     //Does a rule exist ?
-    var rule_exists = codendi.tracker.rules_definitions.find(function (definition) {
+    var rule_exists = codendi.trackerv3.rules_definitions.find(function (definition) {
         return definition.source_field == checkbox.source_field_id &&
                 definition.target_field == checkbox.target_field_id &&
                 definition.target_value == checkbox.target_value_id &&
@@ -459,7 +425,7 @@ function admin_checked(id) {
     //The user is leaving the edit mode
     if (admin_nb_diff === 0) {
         can_leave_edit_mode = true;
-        codendi.tracker.rules_definitions.each(function (rule_definition) {
+        codendi.trackerv3.rules_definitions.each(function (rule_definition) {
                     var checkbox_name = checkbox.type+'_'
                                         +rule_definition.source_field+'_'
                                         +rule_definition.target_field+'_'
@@ -504,7 +470,7 @@ function admin_forceTargetValue(source_field_id, target_field_id, target_value_i
     admin_selected_value = target_value_id;
     admin_selected_type  = 'target';
     
-    $H(codendi.tracker.fields.get(target_field_id).options).each(function (opt) {
+    $H(codendi.trackerv3.fields.get(target_field_id).options).each(function (opt) {
         Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_chk', {visibility:'hidden'});
         Element.removeClassName('target_'+source_field_id+'_'+target_field_id+'_'+opt.value.value, 'boxhighlight');
         Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_arrow', {visibility:'hidden'});
@@ -513,10 +479,10 @@ function admin_forceTargetValue(source_field_id, target_field_id, target_value_i
     Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+target_value_id+'_arrow', {visibility:'visible'});
     
     //Select sources
-    $H(codendi.tracker.fields.get(source_field_id).options).each(function (opt) {
+    $H(codendi.trackerv3.fields.get(source_field_id).options).each(function (opt) {
         Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_chk', {visibility:'visible'});
         //Does a rule exist ?
-        if (codendi.tracker.rules_definitions.find(function (definition) {
+        if (codendi.trackerv3.rules_definitions.find(function (definition) {
             return definition.source_field == source_field_id &&
                     definition.target_field == target_field_id &&
                     definition.target_value == target_value_id &&
@@ -555,7 +521,7 @@ function admin_forceSourceValue(source_field_id, target_field_id, source_value_i
     admin_selected_value = source_value_id;
     admin_selected_type  = 'source';
     
-    $H(codendi.tracker.fields.get(source_field_id).options).each(function (opt) {
+    $H(codendi.trackerv3.fields.get(source_field_id).options).each(function (opt) {
         Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_chk', {visibility:'hidden'});
         Element.removeClassName('source_'+source_field_id+'_'+target_field_id+'_'+opt.value.value, 'boxhighlight');
         Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_arrow', {visibility:'hidden'});
@@ -564,10 +530,10 @@ function admin_forceSourceValue(source_field_id, target_field_id, source_value_i
     Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+source_value_id+'_arrow', {visibility:'visible'});
     
     //Select targets
-    $H(codendi.tracker.fields.get(target_field_id).options).each(function (opt) {
+    $H(codendi.trackerv3.fields.get(target_field_id).options).each(function (opt) {
         Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_chk', {visibility:'visible'});
         //Does a rule exist ?
-        if (codendi.tracker.rules_definitions.find(function (definition) {
+        if (codendi.trackerv3.rules_definitions.find(function (definition) {
             return definition.source_field == source_field_id &&
                     definition.target_field == target_field_id &&
                     definition.source_value == source_value_id &&

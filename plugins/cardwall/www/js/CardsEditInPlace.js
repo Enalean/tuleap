@@ -29,14 +29,22 @@ tuleap.cardwall = tuleap.cardwall || { };
     var specific_fields = ['assigned_to','remaining_effort'];
     var overlay_window;
 
-    function displayOverlay(event) {
+    function displayIframeOverlay(event, link) {
         event.preventDefault();
 
-        var artifact_id = $(this).attr('data-artifact-id');
+        overlay_window = new lightwindow({
+            resizeSpeed: 10,
+            delay: 0,
+            finalAnimationDuration: 0,
+            finalAnimationDelay: 0
+        });
+
+        var artifact_id = link.attr('data-artifact-id');
         var params = {
             aid  : artifact_id,
             func : 'show-in-overlay'
         };
+
 
         overlay_window.activateWindow({
                 href        : codendi.tracker.base_url + '?' + $.param(params),
@@ -233,13 +241,29 @@ tuleap.cardwall = tuleap.cardwall || { };
     }
 
     tuleap.cardwall.cardsEditInPlace = {
-
         init: function() {
-            if (isOnAgiledashboard()) {
-                $('div.cardwall_board div.card li > a.edit-card').each(function(){
-                    $(this).click(displayOverlay);
-                });
+            if (! isOnAgiledashboard()) {
+                return;
             }
+
+            $('div.cardwall_board div.card li > a.edit-card').click(function(event){
+                event.preventDefault();
+
+                var artifact_id = $(this).attr('data-artifact-id');
+                var callback;
+
+                if (tuleap.browserCompatibility.isIE7()) {
+                    displayIframeOverlay(event, $(this));
+                    return;
+                }
+
+                var callback = function() {
+                    var planning_id = getConcernedPlanningId();
+                    getNewCardData(artifact_id, planning_id);
+                }
+
+                tuleap.tracker.artifactEditInPlace.loadArtifactModal(artifact_id, callback);
+            });
         },
 
         validateEdition: function(artifact_id) {
@@ -247,16 +271,9 @@ tuleap.cardwall = tuleap.cardwall || { };
             getNewCardData(artifact_id, planning_id);
             disableOverlay();
         }
-
     };
 
     $(document).ready(function () {
         tuleap.cardwall.cardsEditInPlace.init();
-        overlay_window = new lightwindow({
-            resizeSpeed: 10,
-            delay: 0,
-            finalAnimationDuration: 0,
-            finalAnimationDelay: 0
-        });
     });
 })(jQuery);

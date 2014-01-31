@@ -248,10 +248,26 @@ class Tracker implements Tracker_Dispatchable_Interface {
      *
      * @return string
      */
-    public function fetchFormElements($artifact, $submitted_values=array()) {
+    public function fetchFormElements($artifact, $submitted_values = array()) {
         $html = '';
         foreach($this->getFormElements() as $formElement) {
             $html .= $formElement->fetchArtifact($artifact, $submitted_values);
+        }
+        return $html;
+    }
+
+    /**
+     * Fetch FormElements in HTML without the container and column rendering
+     *
+     * @param Tracker_Artifact $artifact
+     * @param array $submitted_values the values already submitted
+     *
+     * @return string
+     */
+    public function fetchFormElementsNoColumns($artifact, $submitted_values = array()) {
+        $html = '';
+        foreach($this->getFormElements() as $formElement) {
+            $html .= $formElement->fetchArtifactForOverlay($artifact, $submitted_values);
         }
         return $html;
     }

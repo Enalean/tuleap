@@ -36,6 +36,7 @@ class Combined {
             '/scripts/jquery/jquery-1.9.1.min.js',
             '/scripts/jquery/jquery-ui.min.js',
             '/scripts/jquery/jquery-noconflict.js',
+            '/scripts/tuleap/browser-compatibility.js',
             '/scripts/bootstrap/bootstrap-dropdown.js',
             '/scripts/bootstrap/bootstrap-button.js',
             '/scripts/bootstrap/bootstrap-modal.js',
@@ -46,12 +47,12 @@ class Combined {
             '/scripts/jscrollpane/jquery.mousewheel.js',
             '/scripts/jscrollpane/jquery.jscrollpane.min.js',
             '/scripts/AZHU/storage.js',
-            '/scripts/d3/d3.min.js',
             '/scripts/codendi/common.js',
             '/scripts/tuleap/systray.js',
             '/scripts/tuleap/load-systray.js',
             '/scripts/tuleap/massmail_initialize_ckeditor.js',
             '/scripts/tuleap/is-at-top.js',
+            '/scripts/tuleap/get-style-class-property.js',
             '/scripts/tuleap/listFilter.js',
             '/scripts/codendi/feedback.js',
             '/scripts/codendi/CreateProject.js',
@@ -70,8 +71,12 @@ class Combined {
             '/scripts/codendi/RichTextEditor.js',
             '/scripts/codendi/Tracker.js',
             '/scripts/codendi/TreeNode.js',
+            '/scripts/tuleap/tuleap-modal.js',
         );
         EventManager::instance()->processEvent(Event::COMBINED_SCRIPTS, array('scripts' => &$arr));
+
+        $arr[] = '/scripts/d3/d3.min.js';//last - incompatible with IE7
+
         return $arr;
     }
     

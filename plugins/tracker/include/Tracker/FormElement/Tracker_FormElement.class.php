@@ -577,6 +577,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public abstract function fetchArtifact(Tracker_Artifact $artifact);
 
+    public abstract function fetchArtifactForOverlay(Tracker_Artifact $artifact);
+
     /**
      * Fetch the element for the artifact in read only
      *

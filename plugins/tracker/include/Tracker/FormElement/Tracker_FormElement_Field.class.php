@@ -329,6 +329,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $this->fetchArtifactReadOnly($artifact);
     }
 
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array()) {
+        return $this->fetchArtifact($artifact, $submitted_values);
+    }
+
     /**
      * Get the html code to display the field for the given artifact in read only mode
      *

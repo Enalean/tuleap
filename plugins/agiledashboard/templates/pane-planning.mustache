@@ -36,11 +36,11 @@
                     <tr class="empty-table-placeholder"><td colspan="6">{{empty_element_tip}}</td></tr>
                     {{#backlog_collection}}
                         <tr data-artifact-id="{{id}}" class="submilestone-element">
-                            <td><a href="{{url}}">{{id}}</a></td>
+                            <td><a href="{{url}}" class="backlog-item-link" data-artifact-id="{{id}}">{{id}}</a></td>
                             <td><span class="label">{{type}}</span></td>
                             <td class="submilestone-element-title">{{title}}</td>
                             <td class="submilestone-element-remaining-effort">{{points}}</td>
-                            <td class="submilestone-element-parent"><a href="{{parent_url}}">{{parent_title}}</a></td>
+                            <td class="submilestone-element-parent"><a href="{{parent_url}}" class="backlog-item-link" data-artifact-id="{{parent_id}}">{{parent_title}}</a></td>
                             <td>{{status}}</td>
                         </tr>
                     {{/backlog_collection}}
@@ -78,7 +78,7 @@
                                     {{#getQuickLinkIconList}} {{! do not repeat ourselves }}
                                         <a href="{{uri}}"><img title="{{title}}" src="{{icon}}"></a>
                                     {{/getQuickLinkIconList}}
-                                    <a href="{{edit_submilestone_url}}" title="edit" alt="edit"><i class="icon-edit"> edit</i></a>
+                                    <a href="{{edit_submilestone_url}}" title="edit" alt="edit" class="backlog-item-link" data-artifact-id="{{id}}"><i class="icon-edit"></i> edit</a>
                                 </div>
                                 <p>
                                     {{points}} <span class="submilestone-effort"></span>

@@ -1507,3 +1507,11 @@ plugin_tracker	missing_ugroups	The selected template set permissions on user gro
 plugin_tracker	artifact_update_popup_title	$1 has just updated the artifact
 plugin_tracker	artifact_update_popup_got_it	OK, got it!
 
+plugin_tracker_modal_artifact	artifact_links_title	Artifact links
+plugin_tracker_modal_artifact	no_artifact_links	No artifact links
+plugin_tracker_modal_artifact	artifact_links_readonly	In order to edit artifact links, please <a href="$1">switch to the full edit mode</a>.
+plugin_tracker_modal_artifact	followups_title	Follow-ups
+plugin_tracker_modal_artifact	add_followup_placeholder	Add a new comment...
+plugin_tracker_modal_artifact	no_comment	No comment
+plugin_tracker_modal_artifact	submit	Submit
+plugin_tracker_modal_artifact	cancel	Cancel

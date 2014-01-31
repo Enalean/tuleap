@@ -179,6 +179,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         return $this->getDataLikeWebUI($new_values, $removed_values);
     }
 
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact) {
+        return '';
+    }
+
     private function getArtifactLinkIdsOfLastChangeset(Tracker_Artifact $artifact = null) {
         if ($artifact) {
             return array_map(array($this, 'getArtifactLinkId'), $this->getChangesetValues($artifact->getLastChangeset()->getId()));
