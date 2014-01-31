@@ -1,3 +1,6 @@
+Version 5.229 - Tuleap 6.10
+    * edit artifact in place on agile dashboard
+
 Version 5.228 - Tuleap 6.10
     * Request #5941: Cannot import a field which is defined as Multi-Select
 
