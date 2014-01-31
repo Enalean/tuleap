@@ -1,3 +1,6 @@
+Version 5.228 - Tuleap 6.10
+    * Request #5941: Cannot import a field which is defined as Multi-Select
+
 Version 5.227 - Tuleap 6.10
     * request #5986 - URLs are corrupted by a double escape
 
