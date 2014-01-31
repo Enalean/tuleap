@@ -1,3 +1,6 @@
+Version 1.41 - Tuleap 6.10
+    * fix filter backlog content when not logged in (follow-up story #5899)
+
 Version 1.40 - Tuleap 6.10
     * edit artifact in place on agile dashboard
 
