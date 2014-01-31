@@ -1,3 +1,18 @@
+Version 5.228 - Tuleap 6.10
+    * Request #5941: Cannot import a field which is defined as Multi-Select
+
+Version 5.227 - Tuleap 6.10
+    * request #5986 - URLs are corrupted by a double escape
+
+Version 5.226 - Tuleap 6.10
+    * Fix request #6013: Text in HTML format is sent as HTML in plain/text mail notifications
+
+Version 5.225 - Tuleap 6.10
+    * Fix request #5950: Computed fields are not exported in csv
+
+Version 5.224 - Tuleap 6.10
+    * Dev: throw exception when trying to rank an artifact with itself
+
 Version 5.223 - Tuleap 6.10
     * story #5828: Start import of data from old tracker engine (code name: TV3) to the new one (code name: TV5). As of today only the summary of the artifact (and its complete history) is exported/imported.
 

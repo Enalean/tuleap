@@ -2529,7 +2529,7 @@ EOS;
                                   );
                         if ($line[$idx]!=''){
 
-                            $data[$field->getId()] = $hp->purify($field->getFieldDataFromCSVValue($line[$idx]), CODENDI_PURIFIER_CONVERT_HTML);
+                            $data[$field->getId()] = $field->getFieldDataFromCSVValue($line[$idx]);
                             
                             if ($data[$field->getId()] === null) {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_value', array($line[$idx], $field_name)));

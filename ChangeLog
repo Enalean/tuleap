@@ -1,16 +1,19 @@
 Version 6.10 (Not released yet)
 	== Plugins ==
-	* agiledashboard: 1.36
+	* agiledashboard: 1.39
 	* boomerang: 0.2
 	* cardwall: 1.15
-	* tracker: 5.223
-	* proftpd: 0.4
+	* tracker: 5.228
+	* proftpd: 0.5
 	* tests: 5.21
 	* fusionforge_compat: 0.6
 	* hudson: 1.13
 	* git: 3.64
+	* projectlinks: 2.5
+	* mediawiki: 0.22
 
 	== Enhancement ==
+	* Story #5916: mapping between mediawiki and tuleap groups
 	* Story #5678: contact administrators of a project
 	* Story #5619: Have an enhanced experimental theme
 
@@ -20,14 +23,15 @@ Version 6.10 (Not released yet)
 	* Fix request #5895 - Export tracker structure do not keep default values for list fields
 	* Fix Request #5913: fix wrong service icon for Agile Dashboard plugin
 	* Fix request #5911: Adding options in setup.sh to install with exotic mysql servers
+	* Fix warning when displaying avatar for anonymous user
+	* Fix security issue on snippet service
+
+	== Themes ==
+	* Experimental: 0.8
 
 	== Development ==
 	* Pull-out Vagrant and Chef in dedicated repositories
-	* agiledashboard: 1.32
-	* boomerang: 0.2
-	* cardwall: 1.13
-	* tracker: 5.218
-	* tracker: 5.219
+	* Refactoring javascript to extract a reusable filter object (listFilter).
 
 Version 6.9 (Thursday, January 9th 2014)
 	== Plugins ==

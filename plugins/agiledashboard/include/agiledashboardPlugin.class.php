@@ -293,6 +293,7 @@ class AgileDashboardPlugin extends Plugin {
                 $this->getPluginPath().'/js/OuterGlow.js',
                 $this->getPluginPath().'/js/expand-collapse.js',
                 $this->getPluginPath().'/js/planning-view.js',
+                $this->getPluginPath().'/js/ContentFilter.js',
             )
         );
     }

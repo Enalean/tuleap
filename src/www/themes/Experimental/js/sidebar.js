@@ -33,11 +33,13 @@
 
     function updateSidebarWidth(new_width, duration) {
         $('.sidebar-nav').animate({
-            width:           new_width,
-            maxnew_width:    new_width
+            width: new_width
         }, duration);
+        $('.sidebar-nav li a').css({
+            width: parseInt(new_width) - (parseInt($('.sidebar-nav li a').css('paddingLeft')) * 2) + 'px'
+        });
         $('.main').animate({
-            marginLeft:      new_width
+            marginLeft: new_width
         }, duration);
     }
 
@@ -73,7 +75,7 @@
         }
     }
 
-    function updateSidebarServices(show_only_icon) {
+    function updateSidebarServices(show_only_icon, duration) {
         if (show_only_icon) {
             $('.sidebar-about').hide();
             $('.sidebar-nav li a > span').hide();
@@ -81,7 +83,7 @@
         } else {
             $('.sidebar-nav li a > span').show();
             $('.sidebar-nav li a').tooltip('disable');
-            $('.sidebar-about').show(150);
+            $('.sidebar-about').show(duration);
         }
     }
 
@@ -102,7 +104,7 @@
         updateSidebarTitle(show_only_icon);
         updateSidebarWidth(new_size, duration);
         updateSidebarIcon(new_direction, show_only_icon);
-        updateSidebarServices(show_only_icon);
+        updateSidebarServices(show_only_icon, duration);
         updateCustomScrollbar();
     }
 
@@ -143,16 +145,16 @@
                 updateSidebarTitle(false);
                 updateSidebarWidth(width_expanded, 0);
                 updateSidebarIcon('left', false);
-                updateSidebarServices(false);
+                updateSidebarServices(false, 100);
             } else {
                 updateSidebarTitle(true);
                 updateSidebarWidth(width_collapsed, 0);
                 updateSidebarIcon('right', true);
-                updateSidebarServices(true);
+                updateSidebarServices(true, 100);
             }
 
             $('.sidebar-collapse').click(function() {
-                sidebarCollapseEvent(150);
+                sidebarCollapseEvent(100);
             });
         }
     });

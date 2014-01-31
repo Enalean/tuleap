@@ -22,6 +22,8 @@ namespace Tuleap\Token\REST\v1;
 use \Luracast\Restler\RestException;
 use \Tuleap\Token\REST\TokenRepresentation;
 use \Tuleap\REST\Header;
+use \User_InvalidPasswordWithUserException;
+use \Exception;
 use UserManager;
 use EventManager;
 use User_LoginManager;
@@ -45,6 +47,7 @@ class TokenResource {
      *
      * @url POST
      *
+     * @throws 400
      * @throws 500
      *
      * @param string $username The username of the user
@@ -66,9 +69,10 @@ class TokenResource {
             $token->build(
                 $this->getTokenManager()->generateTokenForUser($user)
             );
-
             return $token;
-        } catch(\Exception $exception) {
+        } catch(User_InvalidPasswordWithUserException $exception) {
+            throw new RestException(401, $exception->getMessage());
+        } catch(Exception $exception) {
             throw new RestException(500, $exception->getMessage());
         }
     }
@@ -93,7 +97,9 @@ class TokenResource {
                     $id
                 )
             );
-        } catch(\Exception $exception) {
+        } catch (Rest_Exception_InvalidTokenException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch(Exception $exception) {
             throw new RestException(500, $exception->getMessage());
         }
     }

@@ -266,7 +266,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
                 $output = $this->fetchArtifactValueReadOnly($artifact, $value);
                 break;
             default:
-                $output = $value->getText();
+                $output = $value->getContentAsText();
                 break;
         }
         return $output;
@@ -523,11 +523,6 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
             'format'  => Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
             'content' => $this->getProperty('default_value'),
         );
-    }
-
-    public function getFieldDataForCSVPreview($data_cell) {
-        $purifier = Codendi_HTMLPurifier::instance();
-        return $purifier->purify($data_cell, CODENDI_PURIFIER_FULL);
     }
 
     /**

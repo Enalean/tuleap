@@ -91,7 +91,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     public function getValue() {
         $hp = Codendi_HTMLPurifier::instance();
 
-        if ($this->getFormat() == self::HTML_CONTENT) {
+        if ($this->isInHTMLFormat()) {
             return $hp->purifyHTMLWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
         }
         return $hp->purifyTextWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
@@ -155,5 +155,17 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $string;
     }
 
+    public function getContentAsText() {
+        $hp = Codendi_HTMLPurifier::instance();
+        if ($this->isInHTMLFormat()) {
+            return $hp->purify($this->getText(), CODENDI_PURIFIER_STRIP_HTML);
+        }
+
+        return $this->getText();
+    }
+
+    private function isInHTMLFormat() {
+        return $this->getFormat() == self::HTML_CONTENT;
+    }
 }
 ?>

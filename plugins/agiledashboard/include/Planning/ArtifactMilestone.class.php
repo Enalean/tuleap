@@ -322,5 +322,12 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         return $this->duration;
     }
 
+    public function milestoneCanBeSubmilestone(Planning_Milestone $potential_submilestone) {
+        if ($potential_submilestone->getArtifact()->getTracker()->getParent()) {
+            return $potential_submilestone->getArtifact()->getTracker()->getParent()->getId() == $this->getArtifact()->getTracker()->getId();
+        }
+        return false;
+    }
+
 }
 ?>
