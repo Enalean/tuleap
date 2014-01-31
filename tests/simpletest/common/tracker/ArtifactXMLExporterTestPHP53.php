@@ -66,7 +66,7 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
         $file_path = $this->fixtures_dir . $fixture .'.json';
         $fixture_content = file_get_contents($file_path);
         if ($fixture_content == false) {
-            throw new Exception("Unable to load $file_path (miss typed?)");
+            throw new Exception("Unable to load $file_path (mis-typed?)");
         }
         $json = $this->decodeJson($fixture_content);
 
@@ -183,6 +183,16 @@ class ArtifactXMLExporter_SummaryTest extends ArtifactXMLExporter_BaseTest {
         $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change->value, 'Le artifact with half history');
         $this->assertEqual((string)$this->xml->artifact->changeset[3]->submitted_on, $this->toExpectedDate($_SERVER['REQUEST_TIME']));
     }
+
+    public function itDoesntMessPreviousArtifactWhenTryingToUpdateInitialChangeset() {
+        $this->exportTrackerDataFromFixture('two_artifacts');
+
+        $this->assertCount($this->xml->artifact, 2);
+
+        $this->assertEqual((string)$this->xml->artifact[0]->changeset[0]->field_change->value, 'Le artifact with full history');
+        $this->assertEqual((string)$this->xml->artifact[1]->changeset[0]->field_change->value, 'Le artifact');
+        $this->assertEqual((string)$this->xml->artifact[1]->changeset[1]->field_change->value, 'The second one');
+    }
 }
 
 class ArtifactXMLExporter_AttachmentTest extends ArtifactXMLExporter_BaseTest {
@@ -199,12 +209,12 @@ class ArtifactXMLExporter_AttachmentTest extends ArtifactXMLExporter_BaseTest {
 
         expect($this->archive)->addFile($this->fixtures_dir.'/'.ArtifactFile::ROOT_DIRNAME.'/1/30','data/ArtifactFile30.bin')->once();
 
-        $this->assertCount($this->xml->artifact->files, 1);
-        $this->assertEqual((string)$this->xml->artifact->files[0]->id, 'File30');
-        $this->assertEqual((string)$this->xml->artifact->files[0]->filename, 'A.png');
-        $this->assertEqual((int)   $this->xml->artifact->files[0]->filesize, 12323);
-        $this->assertEqual((string)$this->xml->artifact->files[0]->filetype, 'image/png');
-        $this->assertEqual((string)$this->xml->artifact->files[0]->description, 'The screenshot');
+        $this->assertCount($this->xml->artifact->file, 1);
+        $this->assertEqual((string)$this->xml->artifact->file[0]->id, 'File30');
+        $this->assertEqual((string)$this->xml->artifact->file[0]->filename, 'A.png');
+        $this->assertEqual((int)   $this->xml->artifact->file[0]->filesize, 12323);
+        $this->assertEqual((string)$this->xml->artifact->file[0]->filetype, 'image/png');
+        $this->assertEqual((string)$this->xml->artifact->file[0]->description, 'The screenshot');
     }
 
     public function itCreatesAChangesetWithTwoAttachmentsWithSameName() {
@@ -221,18 +231,18 @@ class ArtifactXMLExporter_AttachmentTest extends ArtifactXMLExporter_BaseTest {
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[1], 'File30');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(3234568000));
 
-        $this->assertCount($this->xml->artifact->files, 2);
-        $this->assertEqual((string)$this->xml->artifact->files[0]->id, 'File30');
-        $this->assertEqual((string)$this->xml->artifact->files[0]->filename, 'A.png');
-        $this->assertEqual((int)   $this->xml->artifact->files[0]->filesize, 12323);
-        $this->assertEqual((string)$this->xml->artifact->files[0]->filetype, 'image/png');
-        $this->assertEqual((string)$this->xml->artifact->files[0]->description, 'The screenshot');
+        $this->assertCount($this->xml->artifact->file, 2);
+        $this->assertEqual((string)$this->xml->artifact->file[0]->id, 'File30');
+        $this->assertEqual((string)$this->xml->artifact->file[0]->filename, 'A.png');
+        $this->assertEqual((int)   $this->xml->artifact->file[0]->filesize, 12323);
+        $this->assertEqual((string)$this->xml->artifact->file[0]->filetype, 'image/png');
+        $this->assertEqual((string)$this->xml->artifact->file[0]->description, 'The screenshot');
 
-        $this->assertEqual((string)$this->xml->artifact->files[1]->id, 'File31');
-        $this->assertEqual((string)$this->xml->artifact->files[1]->filename, 'A.png');
-        $this->assertEqual((int)   $this->xml->artifact->files[1]->filesize, 50);
-        $this->assertEqual((string)$this->xml->artifact->files[1]->filetype, 'image/png');
-        $this->assertEqual((string)$this->xml->artifact->files[1]->description, 'The screenshot v2');
+        $this->assertEqual((string)$this->xml->artifact->file[1]->id, 'File31');
+        $this->assertEqual((string)$this->xml->artifact->file[1]->filename, 'A.png');
+        $this->assertEqual((int)   $this->xml->artifact->file[1]->filesize, 50);
+        $this->assertEqual((string)$this->xml->artifact->file[1]->filetype, 'image/png');
+        $this->assertEqual((string)$this->xml->artifact->file[1]->description, 'The screenshot v2');
     }
 
     public function itCreatesAChangesetWithDeletedAttachments() {
@@ -245,9 +255,9 @@ class ArtifactXMLExporter_AttachmentTest extends ArtifactXMLExporter_BaseTest {
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0], 'File31');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234568000));
 
-        $this->assertCount($this->xml->artifact->files, 1);
-        $this->assertEqual((string)$this->xml->artifact->files[0]->id, 'File31');
-        $this->assertEqual((string)$this->xml->artifact->files[0]->filename, 'zzz.pdf');
+        $this->assertCount($this->xml->artifact->file, 1);
+        $this->assertEqual((string)$this->xml->artifact->file[0]->id, 'File31');
+        $this->assertEqual((string)$this->xml->artifact->file[0]->filename, 'zzz.pdf');
     }
 }
 
@@ -264,7 +274,7 @@ class ArtifactXMLExporter_AttachmentAndSummaryTest extends ArtifactXMLExporter_B
         $this->assertChangesItCreatesASingleChangesetWithSummaryAndAttachment($this->xml->artifact->changeset[0]->field_change[0]);
         $this->assertChangesItCreatesASingleChangesetWithSummaryAndAttachment($this->xml->artifact->changeset[0]->field_change[1]);
 
-        $this->assertCount($this->xml->artifact->files, 1);
+        $this->assertCount($this->xml->artifact->file, 1);
     }
 
     private function assertChangesItCreatesASingleChangesetWithSummaryAndAttachment(SimpleXMLElement $field_change) {
@@ -301,7 +311,7 @@ class ArtifactXMLExporter_AttachmentAndSummaryTest extends ArtifactXMLExporter_B
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['field_name'], 'summary');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value, 'Le artifact with updated summary');
 
-        $this->assertCount($this->xml->artifact->files, 1);
+        $this->assertCount($this->xml->artifact->file, 1);
     }
 
     public function itCreatesChangesetWithAttachmentAndSummaryWhenHistoryDiffersFromCurrentState() {
@@ -329,6 +339,6 @@ class ArtifactXMLExporter_AttachmentAndSummaryTest extends ArtifactXMLExporter_B
         $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change['field_name'], 'summary');
         $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change->value, 'Le artifact with half history');
 
-        $this->assertCount($this->xml->artifact->files, 1);
+        $this->assertCount($this->xml->artifact->file, 1);
     }
 }
