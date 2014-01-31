@@ -21,29 +21,6 @@
  * Handle navbar events
  */
 !function($) {
-    var esc_keycode = 27;
-
-    /**
-     * @see http://css-tricks.com/snippets/jquery/make-jquery-contains-case-insensitive/
-     */
-    (function addCaseInsensitiveContainsSelector(){
-        // NEW selector
-        $.expr[':'].caseInsensitiveContains = function(a, i, m) {
-          return $(a).text().toUpperCase()
-              .indexOf(m[3].toUpperCase()) >= 0;
-        };
-    })()
-
-    function filterProjects(value) {
-        $('.projects-nav .dropdown-menu li.project:not(:caseInsensitiveContains(' + value + '))').hide();
-        $('.projects-nav .dropdown-menu li.project:caseInsensitiveContains(' + value + ')').show();
-    }
-
-    function clearFilterProjects() {
-        $('#filter-projects').val('');
-        filterProjects('');
-    }
-
     function initCustomScrollbar() {
         $('.projects-nav .dropdown-menu').jScrollPane({
             autoReinitialise: true,
@@ -52,25 +29,16 @@
     }
 
     $(document).ready(function() {
-        var input_filter = $('#filter-projects');
+        var input_filter          = $('#filter-projects');
+        var list_element_selector = '.projects-nav .dropdown-menu li.project';
+        var filter                = new tuleap.core.listFilter();
+
+        filter.init(input_filter, list_element_selector);
 
         $('.projects-nav').click(function(event) {
             if (! $(this).hasClass('open')) {
                 input_filter.focus();
                 initCustomScrollbar();
-            } else {
-                clearFilterProjects();
-            }
-        });
-
-        input_filter.click(function(event) {
-            event.stopPropagation();
-        });
-        input_filter.keyup(function(event) {
-            if (event.keyCode == esc_keycode) {
-                clearFilterProjects();
-            } else {
-                filterProjects($(this).val());
             }
         });
     });
