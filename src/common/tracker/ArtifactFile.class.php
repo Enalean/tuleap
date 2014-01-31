@@ -145,11 +145,11 @@ class ArtifactFile extends Error {
         }
 
         public function getParentDirectory() {
-            return self::getParentDirectoryForArtifact($this->Artifact);
+            return self::getParentDirectoryForArtifact($this->Artifact->getArtifactType());
         }
 
-        public static function getParentDirectoryForArtifact(Artifact $artifact) {
-            return self::getParentDirectoryForArtifactTypeId($artifact->getArtifactType()->getID());
+        public static function getParentDirectoryForArtifact(ArtifactType $artifact_type) {
+            return self::getParentDirectoryForArtifactTypeId($artifact_type->getID());
         }
 
         public static function getParentDirectoryForArtifactTypeId($artifact_type_id) {
@@ -157,7 +157,11 @@ class ArtifactFile extends Error {
         }
 
         public static function getPathOnFilesystem(Artifact $artifact, $attachment_id) {
-            return self::getParentDirectoryForArtifact($artifact) . DIRECTORY_SEPARATOR . $attachment_id;
+            return self::getParentDirectoryForArtifact($artifact->getArtifactType()) . DIRECTORY_SEPARATOR . $attachment_id;
+        }
+        
+        public static function getPathOnFilesystemByArtifactTypeId($artifact_type_id, $attachment_id) {
+            return self::getParentDirectoryForArtifactTypeId($artifact_type_id) . DIRECTORY_SEPARATOR . $attachment_id;
         }
 
         /**

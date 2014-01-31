@@ -46,7 +46,7 @@ TMPFILE=`mktemp -t tv3-export.XXXXXXXXXX` && {
     fi
 
     # Export data
-    $phplauncher $tuleap_base_dir/src/utils/TrackerV3-data-exporter.php $tv3_id > $TMPFILE
+    $phplauncher $tuleap_base_dir/src/utils/TrackerV3-data-exporter.php $tv3_id $TMPFILE
 
     # Import data
     $phplauncher $tuleap_base_dir/plugins/tracker/bin/import_artifacts_xml.php $user $tv5_id $TMPFILE

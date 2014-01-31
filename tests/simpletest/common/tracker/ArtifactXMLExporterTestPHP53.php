@@ -33,16 +33,24 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
     protected $fixtures_dir;
     protected $open_date = 1234567890; // the same as in fixtures
     protected $expected_open_date;
+    protected $archive;
 
     public function setUp() {
         parent::setUp();
         $this->dao                = mock('ArtifactXMLExporterDao');
         $this->dom                = new DOMDocument("1.0", "UTF8");
-        $this->exporter           = new ArtifactXMLExporter($this->dao, $this->dom, mock('Logger'));
+        $this->archive            = mock('ZipArchive');
+        $this->exporter           = new ArtifactXMLExporter($this->dao, $this->archive, $this->dom, mock('Logger'));
         $this->fixtures_dir       = dirname(__FILE__) .'/_fixtures/';
         $this->expected_open_date = $this->toExpectedDate($this->open_date);
+        Config::store();
+        Config::set('sys_data_dir', dirname($this->fixtures_dir));
     }
 
+    public function tearDown() {
+        Config::restore();
+        parent::tearDown();
+    }
 
     protected function toExpectedDate($timestamp) {
         return date('c', $timestamp);
@@ -50,7 +58,7 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
 
     protected function exportTrackerDataFromFixture($fixture) {
         $this->loadFixtures($fixture);
-        $this->exporter->exportTrackerData($this->tracker_id, $this->dom);
+        $this->exporter->exportTrackerData($this->tracker_id);
         $this->xml = simplexml_import_dom($this->dom);
     }
 
@@ -183,9 +191,13 @@ class ArtifactXMLExporter_AttachmentTest extends ArtifactXMLExporter_BaseTest {
         $this->exportTrackerDataFromFixture('artifact_with_one_attachment');
         $this->assertCount($this->xml->artifact->changeset, 2);
 
+        expect($this->archive)->addEmptyDir('data')->once();
+
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'attachment');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0], 'File30');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567900));
+
+        expect($this->archive)->addFile($this->fixtures_dir.'/'.ArtifactFile::ROOT_DIRNAME.'/1/30','data/ArtifactFile30.bin')->once();
 
         $this->assertCount($this->xml->artifact->files, 1);
         $this->assertEqual((string)$this->xml->artifact->files[0]->id, 'File30');

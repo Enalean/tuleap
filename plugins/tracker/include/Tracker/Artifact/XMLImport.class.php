@@ -43,8 +43,8 @@ class Tracker_Artifact_XMLImport {
         $this->user_manager         = $user_manager;
     }
 
-    public function importFromFile(Tracker $tracker, $filepath) {
-        $this->importFromXML($tracker, simplexml_load_file($filepath));
+    public function importFromArchive(Tracker $tracker, ZipArchive $archive) {
+        $this->importFromXML($tracker, simplexml_load_string($archive->getFromName('artifacts.xml')));
     }
 
     public function importFromXML(Tracker $tracker, SimpleXMLElement $xml_element) {

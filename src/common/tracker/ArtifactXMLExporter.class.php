@@ -22,8 +22,15 @@ require_once 'ArtifactXMLExporterDao.class.php';
 
 class ArtifactXMLExporter {
 
+    const ARCHIVE_DATA_DIR = 'data';
+
+    const XML_FILE_PREFIX = 'File';
+
     /** @var ArtifactXMLExporterDao */
     private $dao;
+
+    /** @var ZipArchive */
+    private $archive;
 
     /** @var DomDocument */
     private $document;
@@ -40,10 +47,11 @@ class ArtifactXMLExporter {
     /** @var Array */
     private $last_history_recorded = array();
 
-    public function __construct(ArtifactXMLExporterDao $dao, DOMDocument $document, Logger $logger) {
+    public function __construct(ArtifactXMLExporterDao $dao, ZipArchive $archive, DOMDocument $document, Logger $logger) {
         $this->dao      = $dao;
         $this->document = $document;
         $this->logger   = $logger;
+        $this->archive  = $archive;
     }
 
     public function exportTrackerData($tracker_id) {
@@ -61,7 +69,7 @@ class ArtifactXMLExporter {
                 $row['submitted_by']
             );
 
-            $this->addFilesToArtifact($artifact_node, $artifact_id);
+            $this->addFilesToArtifact($artifact_node, $tracker_id, $artifact_id);
 
             $artifacts_node->appendChild($artifact_node);
         }
@@ -155,7 +163,7 @@ class ArtifactXMLExporter {
                 $row_file = $dar->current();
                 $field_node = $this->document->createElement('field_change');
                 $field_node->setAttribute('field_name', 'attachment');
-                $field_node->appendChild($this->getNodeWithValue('value', 'File'.$row_file['id']));
+                $field_node->appendChild($this->getNodeWithValue('value', self::XML_FILE_PREFIX.$row_file['id']));
                 $this->appendPreviousAttachements($field_node, $artifact_id, $submitted_on, $old_value);
                 $changeset_node->appendChild($field_node);
             } else {
@@ -228,16 +236,32 @@ class ArtifactXMLExporter {
         $xml->appendChild($submitted_on_node);
     }
 
-    private function addFilesToArtifact(DOMElement $artifact_node, $artifact_id) {
+    private function addFilesToArtifact(DOMElement $artifact_node, $artifact_type_id, $artifact_id) {
         $dar = $this->dao->searchFilesForArtifact($artifact_id);
+        if (count($dar)) {
+            $this->archive->addEmptyDir('data');
+        }
         foreach($dar as $row) {
+            $xml_file_id = self::XML_FILE_PREFIX.$row['id'];
+            $this->archive->addFile(
+                $this->getFilePathOnServer($artifact_type_id, $row['id']),
+                $this->getFilePathInArchive($xml_file_id)
+            );
             $file = $this->document->createElement('files');
-            $file->appendChild($this->getNodeWithValue('id', 'File'.$row['id']));
+            $file->appendChild($this->getNodeWithValue('id', $xml_file_id));
             $file->appendChild($this->getNodeWithValue('filename', $row['filename']));
             $file->appendChild($this->getNodeWithValue('filesize', $row['filesize']));
             $file->appendChild($this->getNodeWithValue('filetype', $row['filetype']));
             $file->appendChild($this->getNodeWithValue('description', $row['description']));
             $artifact_node->appendChild($file);
         }
+    }
+
+    private function getFilePathOnServer($artifact_type_id, $attachment_id) {
+        return ArtifactFile::getPathOnFilesystemByArtifactTypeId($artifact_type_id, $attachment_id);
+    }
+
+    private function getFilePathInArchive($xml_file_id) {
+        return self::ARCHIVE_DATA_DIR.DIRECTORY_SEPARATOR.'Artifact'.$xml_file_id;
     }
 }
