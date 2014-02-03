@@ -18,6 +18,7 @@ Version 6.10 (Not released yet)
 	* Story #5916: mapping between mediawiki and tuleap groups
 	* Story #5678: contact administrators of a project
 	* Story #5619: Have an enhanced experimental theme
+	* Story #5870: be able to assign Git Admin permissions to some users in the project
 
 	== Bug Fix ==
 	* Fix request #5909: Fixing REST tests on project import from XML
@@ -35,6 +36,7 @@ Version 6.10 (Not released yet)
 	* Pull-out Vagrant and Chef in dedicated repositories
 	* Refactoring javascript to extract a reusable filter object (listFilter).
 	* Fix request #5914: Lot of warning when running make api_test
+	* Removing commented-out code merged in Tuleap 6.9.99.8
 
 Version 6.9 (Thursday, January 9th 2014)
 	== Plugins ==
