@@ -11,6 +11,7 @@ Version 6.10 (Not released yet)
 	* git: 3.64
 	* projectlinks: 2.5
 	* mediawiki: 0.22
+	* fulltextsearch: 0.26
 
 	== Enhancement ==
 	* Story #5919: edit artifact in place on agile dashboard
