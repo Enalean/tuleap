@@ -1,3 +1,6 @@
+Version 3.65 - Tuleap 6.10
+    * Story #5870: be able to assign Git Admin permissions to some users in the project
+
 Version 3.64 - Tuleap 6.10
     * Fix request #5818: SSH keys with old username are removed
 
