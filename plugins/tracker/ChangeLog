@@ -1,3 +1,6 @@
+Version 5.231 - Tuleap 6.10
+    * fix request #5979 - Global notification not sent if only field change
+
 Version 5.230 - Tuleap 6.10
     * Add loading state on the modal submit button
 
