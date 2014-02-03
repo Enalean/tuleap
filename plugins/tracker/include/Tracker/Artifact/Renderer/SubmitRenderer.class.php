@@ -64,10 +64,11 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
 
         $html .= $this->fetchFormElements($request, $current_user);
 
-        $html .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+        $html .= '<input class="btn btn-primary" type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
         $html .= ' ';
-        $html .= '<input type="submit" name="submit_and_continue" value="'. $GLOBALS['Language']->getText('global', 'btn_submit_and_continue') .'" />';
-        $html .= '<input type="submit" name="submit_and_stay" value="'. $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') .'" />';
+        $html .= '<input class="btn" type="submit" name="submit_and_continue" value="'. $GLOBALS['Language']->getText('global', 'btn_submit_and_continue') .'" />';
+        $html .= ' ';
+        $html .= '<input class="btn" type="submit" name="submit_and_stay" value="'. $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') .'" />';
 
         return $html;
     }
