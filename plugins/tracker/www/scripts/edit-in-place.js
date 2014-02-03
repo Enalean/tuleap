@@ -89,6 +89,9 @@ tuleap.tracker = tuleap.tracker || { };
         },
 
         showArtifactEditForm : function(form_html, artifact_id, callback) {
+            var self = this,
+                modal;
+
             function beforeSubmit() {
                 $('#tuleap-modal-submit')
                     .val($('#tuleap-modal-submit').attr('data-loading-text'))
@@ -101,9 +104,14 @@ tuleap.tracker = tuleap.tracker || { };
                     .attr("disabled", false);
             }
 
-            var self = this;
             $('body').append(form_html);
-            tuleap.modal.init();
+
+            modal = tuleap.modal.init({
+                beforeClose : function() {
+                    self.destroyRichTextAreaInstances();
+                    $('.artifact-event-popup').remove();
+                }
+            });
 
             $('#tuleap-modal-submit').click(function(event) {
                 self.updateRichTextAreas();
@@ -122,7 +130,7 @@ tuleap.tracker = tuleap.tracker || { };
 
                 }).done( function() {
                     self.destroyRichTextAreaInstances();
-                    tuleap.modal.closeModal();
+                    modal.closeModal();
                     callback();
 
                 }).fail( function(response) {
@@ -140,19 +148,6 @@ tuleap.tracker = tuleap.tracker || { };
                 });
 
                 return false;
-            });
-
-            $('.tuleap-modal-close').off('click').on('click', function() {
-                /*
-                 * The order of thins here is important:
-                 * - off('click') removes any previously binded function to this click event
-                 * - destroyRichTextAreaInstances() is needed in IE9 to get rid of memory refs
-                 * - we then call tuleap.modal.closeModal() which destroys the
-                 * modal ; this needs to be done after the CKEDITOR instanvces have been removed
-                 */
-                self.destroyRichTextAreaInstances();
-                $('.artifact-event-popup').remove();
-                tuleap.modal.closeModal()
             });
         },
 

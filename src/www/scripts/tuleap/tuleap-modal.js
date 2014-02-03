@@ -20,8 +20,14 @@
  */
 (function ($) {
     tuleap.modal = {
-        init: function() {
+        settings : {
+            beforeClose : function(){}
+        },
+
+        init: function(settings) {
             var self = this;
+
+            Object.extend(this.settings, settings);
 
             $('.tuleap-modal').show();
             this.setPanelHeight();
@@ -37,6 +43,8 @@
             $('.tuleap-modal-close').click(function() {
                 self.closeModal();
             });
+
+            return this;
         },
 
         showLoad: function() {
@@ -100,6 +108,8 @@
         },
 
         closeModal: function() {
+            this.settings.beforeClose();
+
             $('.tuleap-modal-background, .tuleap-modal').fadeOut(150).remove();
         }
     }
