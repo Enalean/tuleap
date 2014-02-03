@@ -133,7 +133,12 @@
     <form method="POST" action="{{ git_admins_form_action }}">
         <input type="hidden" value="{{ project_id }}" name="group_id"/>
         <input type="hidden" name="git_admins[]" value="4"/>
-        {{{ git_admins_selector }}}
+
+        <select id="{{ git_admins_selectbox_id }}" size="8" multiple name="{{ git_admins_selectbox_name }}">
+            {{# git_admins_options }}
+                <option value="{{ value }}" {{# selected }} selected="selected" {{/ selected }}> {{ label }} </option>
+            {{/ git_admins_options }}
+        </select>
         <p>
             <input class="btn btn-primary" type="submit" value="{{ git_admins_submit_button }}" name="submit"/>
         </p>

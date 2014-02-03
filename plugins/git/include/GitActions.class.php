@@ -806,7 +806,7 @@ class GitActions extends PluginActions {
             return;
         }
 
-        $selected_group_ids = $this->removeNobodyFromSelectGroups($selected_group_ids);
+        $selected_group_ids = $this->removeUndesiredUgroupsFromRequest($selected_group_ids);
 
         list ($return_code, $feedback) = permission_process_selection_form(
             $project->getId(),
@@ -832,8 +832,24 @@ class GitActions extends PluginActions {
         }
     }
 
+    private function removeUndesiredUgroupsFromRequest(array $selected_group_ids) {
+        $selected_group_ids = $this->removeNobodyFromSelectGroups($selected_group_ids);
+        $selected_group_ids = $this->removeAnonymousFromSelectGroups($selected_group_ids);
+        $selected_group_ids = $this->removeRegisteredUsersFromSelectGroups($selected_group_ids);
+
+        return $selected_group_ids;
+    }
+
     private function removeNobodyFromSelectGroups(array $select_group_ids) {
         return array_diff($select_group_ids, array(UGroup::NONE));
+    }
+
+    private function removeAnonymousFromSelectGroups(array $select_group_ids) {
+        return array_diff($select_group_ids, array(Ugroup::ANONYMOUS));
+    }
+
+    private function removeRegisteredUsersFromSelectGroups(array $select_group_ids) {
+        return array_diff($select_group_ids, array(Ugroup::REGISTERED));
     }
 
     private function checkIfProjectIsValid(Project $project) {

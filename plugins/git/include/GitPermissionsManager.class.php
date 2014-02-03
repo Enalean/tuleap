@@ -24,6 +24,10 @@
  */
 class GitPermissionsManager {
 
+    public function __construct() {
+        $this->permissions_manager = PermissionsManager::instance();
+    }
+
     public function userIsGitAdmin(PFUser $user, Project $project) {
         $database_result = $this->getCurrentGitAdminPermissionsForProject($project);
 
@@ -49,6 +53,10 @@ class GitPermissionsManager {
 
     private function getDefaultGitAdminPermissions() {
         return permission_db_get_defaults(Git::PERM_ADMIN);
+    }
+
+    public function getCurrentGitAdminUgroups($project_id) {
+        return $this->permissions_manager->getAuthorizedUgroupIds($project_id, Git::PERM_ADMIN);
     }
 }
 

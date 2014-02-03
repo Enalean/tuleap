@@ -27,8 +27,14 @@ require_once 'common/include/CSRFSynchronizerToken.class.php';
  */
 class GitViews extends PluginViews {
 
+    /** @var Project */
+    private $project;
+
     /** @var GitPermissionsManager */
     private $git_permissions_manager;
+
+    /** @var UGroupManager */
+    private $ugroup_manager;
 
     public function __construct($controller) {
         parent::__construct($controller);
@@ -37,6 +43,7 @@ class GitViews extends PluginViews {
         $this->projectName             = $this->project->getUnixName();
         $this->userName                = $this->user->getName();
         $this->git_permissions_manager = new GitPermissionsManager();
+        $this->ugroup_manager          = new UGroupManager();
     }
 
     public function header() {
@@ -354,7 +361,9 @@ class GitViews extends PluginViews {
             $templates_list,
             $parent_templates_list,
             $this->groupId,
-            $params['has_gerrit_servers_set_up']
+            $params['has_gerrit_servers_set_up'],
+            $this->ugroup_manager->getStaticUGroups($this->project),
+            $this->git_permissions_manager->getCurrentGitAdminUgroups($this->project->getId())
         );
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
