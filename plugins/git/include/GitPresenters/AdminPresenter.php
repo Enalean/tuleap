@@ -20,6 +20,8 @@
 
 class GitPresenters_AdminPresenter {
 
+    const GIT_ADMIN_SELECTBOX_NAME = 'git_admins';
+
     public $project_id;
 
     /**
@@ -36,8 +38,6 @@ class GitPresenters_AdminPresenter {
      */
     private $templates_list;
 
-    public $form_action;
-
     /**
      * List of templates belonging to the parent project hierarchy
      *
@@ -45,19 +45,33 @@ class GitPresenters_AdminPresenter {
      */
     private $parent_templates_list;
 
+    /** @var Ugroup[] */
+    private $static_ugroups;
+
+    /** @var array */
+    private $selected_ugroups;
+
     /** @var bool */
     public $has_gerrit_servers_set_up;
 
     public $git_siteadmin_url = '/plugins/git/admin/';
 
-    public function __construct($repository_list, $templates_list, $parent_templates_list, $project_id, $has_gerrit_servers_set_up) {
+    public function __construct(
+        $repository_list,
+        $templates_list,
+        $parent_templates_list,
+        $project_id,
+        $has_gerrit_servers_set_up,
+        $static_ugroups,
+        $selected_ugroups
+    ) {
         $this->repository_list           = $repository_list;
         $this->templates_list            = $templates_list;
         $this->project_id                = $project_id;
         $this->parent_templates_list     = $parent_templates_list;
         $this->has_gerrit_servers_set_up = $has_gerrit_servers_set_up;
-
-        $this->form_action = '/plugins/git/?group_id='.$project_id.'&action=admin';
+        $this->static_ugroups            = $static_ugroups;
+        $this->selected_ugroups          = $selected_ugroups;
     }
 
     public function git_admin() {
@@ -94,6 +108,10 @@ class GitPresenters_AdminPresenter {
 
     public function parent_templates_option() {
         return $this->parent_templates_list;
+    }
+
+    public function templates_form_action() {
+        return '/plugins/git/?group_id='. $this->project_id .'&action=admin';
     }
 
     public function template_action_text() {
@@ -150,6 +168,54 @@ class GitPresenters_AdminPresenter {
 
     public function delete_label() {
         return $GLOBALS['Language']->getText('plugin_git', 'gerrit_template_delete');
+    }
+
+    public function git_admins_section() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_git_admins');
+    }
+
+    public function git_admins_description() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_git_admins_description');
+    }
+
+    public function git_admins_submit_button() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_git_admins_submit_button');
+    }
+
+    public function git_admins_form_action() {
+        return '/plugins/git/?group_id='. $this->project_id .'&action=admin-permissions';
+    }
+
+    public function git_admins_selectbox_name() {
+        return self::GIT_ADMIN_SELECTBOX_NAME . '[]';
+    }
+
+    public function git_admins_selectbox_id() {
+        return self::GIT_ADMIN_SELECTBOX_NAME;
+    }
+
+    public function git_admins_options() {
+        return $this->getSelectorOptions();
+    }
+
+    private function getSelectorOptions() {
+        $options = array($this->getProjectMembersOption());
+        foreach ($this->static_ugroups as $group) {
+            $options[] = array(
+                'value'    => $group->getId(),
+                'label'    => $group->getTranslatedName(),
+                'selected' => isset($this->selected_ugroups) ? in_array($group->getId(), $this->selected_ugroups) : false
+            );
+        }
+        return $options;
+    }
+
+    private function getProjectMembersOption() {
+        return array(
+            'value'    => UGroup::PROJECT_MEMBERS,
+            'label'    => $GLOBALS['Language']->getText('project_admin_editugroup', 'proj_members'),
+            'selected' => isset($this->selected_ugroups) ? in_array(UGroup::PROJECT_MEMBERS, $this->selected_ugroups) : false
+        );
     }
 }
 ?>

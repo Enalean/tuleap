@@ -57,12 +57,19 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
                                         'repos' => $repo_ids,
                                         'repo_access' => $forkPermissions));
 
-        $git = TestHelper::getPartialMock('Git', array('definePermittedActions', '_informAboutPendingEvents', 'addAction', 'addView', 'checkSynchronizerToken'));
+        $permissions_manager = stub('GitPermissionsManager')->userIsGitAdmin($user, $toProject)->returns(true);
+
+        $git = TestHelper::getPartialMock(
+            'Git',
+            array('definePermittedActions', '_informAboutPendingEvents', 'addAction', 'addView', 'checkSynchronizerToken')
+        );
+
         $git->setGroupId($groupId);
         $git->setRequest($request);
         $git->setUserManager($usermanager);
         $git->setProjectManager($projectManager);
         $git->setFactory($repositoryFactory);
+        $git->setPermissionsManager($permissions_manager);
 
         $git->expectCallCount('addAction', 2);
         $git->expectAt(0, 'addAction', array('fork', array($repos, $toProject, '', GitRepository::REPO_SCOPE_PROJECT, $user, $GLOBALS['HTML'], '/plugins/git/?group_id=100', $forkPermissions)));

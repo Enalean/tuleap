@@ -42,6 +42,17 @@ class Valid_UInt extends Valid_Int {
 }
 
 /**
+ * Check that value is a numeric greater than 0.
+ */
+class Valid_Numeric extends Valid {
+
+    function validate($value) {
+        $this->addRule(new Rule_GreaterOrEqual(0));
+        return parent::validate($value);
+    }
+}
+
+/**
  * Check that group_id variable is valid
  */
 class Valid_GroupId
