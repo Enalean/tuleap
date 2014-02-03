@@ -1,14 +1,17 @@
+0.9 - Tuleap 6.10
+    * Story #5919: Edit artifact in place on Agile Dashboard (tuleap-modal)
+
 0.8 - Tuleap 6.10
-     * Fix Request #5949: Experimental theme : service tooltip is not well positioned when the sidebar is collapsed
+    * Fix Request #5949: Experimental theme : service tooltip is not well positioned when the sidebar is collapsed
 
 0.7 - Tuleap 6.10
     * Story #5619: Have an enhanced Experimental theme
 
 0.5 - Tuleap 6.8
-	* Story #5285: The experimental theme is now usable: nice colors, collapsible sidebar, search box is working, support of different screen resolutions.
+    * Story #5285: The experimental theme is now usable: nice colors, collapsible sidebar, search box is working, support of different screen resolutions.
 
 0.4 - Tuleap 6.7
-	* Switch css stylesheets to less format
+    * Switch css stylesheets to less format
 
 0.3 - Tuleap 6.6
-	* Notification placeholder added
+    * Notification placeholder added
