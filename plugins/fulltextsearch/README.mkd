@@ -95,6 +95,7 @@ Create the index: (please note that the number of shards|replicas are for develo
       }'
 
 Define the attachment mapping for docman type:
+
     $ curl -u superuser:Adm1n -X PUT "localhost:9200/tuleap/docman/_mapping" -d '{
       "docman" : {
         "properties" : {
@@ -112,8 +113,10 @@ Define the attachment mapping for docman type:
         }
       }
      }'
+
 Define the attachment mapping for tracker type:
-    $curl -u superuser:Adm1n -X PUT "localhost:9200/tuleap/tracker/_mapping" -d '{
+
+    $ curl -u superuser:Adm1n -X PUT "localhost:9200/tuleap/tracker/_mapping" -d '{
       "tracker" : {
         "properties" : {
           "followup" : {
