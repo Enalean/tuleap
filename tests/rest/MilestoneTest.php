@@ -32,6 +32,11 @@ class MilestoneTest extends RestBase {
         );
     }
 
+    public function testOPTIONS() {
+        $response = $this->getResponse($this->client->options('milestones'));
+        $this->assertEquals(array('OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
     public function testOPTIONSBacklog() {
         $response = $this->getResponse($this->client->options('milestones/1/backlog'));
         $this->assertEquals(array('OPTIONS', 'GET', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
