@@ -1,0 +1,9 @@
+Markdown formatter
+==================
+
+Provide Markdown formatter to text elements
+
+Example of use:
+
+ - README of plugins
+ - Text fields or follow-up comments in Tracker

@@ -174,10 +174,15 @@ class PluginManager {
      */
     function fetchFormattedReadme($file) {
         if (is_file("$file.mkd")) {
-            $content = file_get_contents("$file.mkd");
-            if (@include_once "/usr/share/php-markdown/Michelf/Markdown.inc.php") {
-                return \Michelf\Markdown::defaultTransform($content);
+            $text_formatter     = new TextFormatter();
+            $content            = file_get_contents("$file.mkd");
+            $formatted_content  = $text_formatter->format($content);
+            $has_been_formatted = ($content != $formatted_content);
+
+            if ($has_been_formatted) {
+                return $formatted_content;
             }
+
             return $this->getEscapedReadme($content);
         }
         

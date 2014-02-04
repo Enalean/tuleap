@@ -729,5 +729,15 @@ class Event {
      *     'html' => string
      */
     const MANAGE_THIRD_PARTY_APPS = 'manage_third_party_apps';
+
+    /**
+     * Format text content
+     *
+     * Parameters:
+     *     'content'            => string
+     *     'formatted_content'  => string
+     *     'has_been_formatted' => bool
+     */
+    const FORMAT_TEXT = 'format_text';
 }
 ?>
