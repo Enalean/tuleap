@@ -143,7 +143,7 @@ document.observe('dom:loaded', function () {
             content    = comment_panel.down('.tracker_artifact_followup_comment_body').innerHTML;
             htmlFormat = true;
         } else {
-            content    = comment_panel.down('.tracker_artifact_followup_comment_body').innerHTML.stripTags();
+            content    = $('tracker_artifact_followup_comment_body_src_'+id).value;
             htmlFormat = false;
         }
 
