@@ -1,3 +1,6 @@
+Version 5.232 - Tuleap 6.10
+    * Bootstrapify submit buttons in new artifact form
+
 Version 5.231 - Tuleap 6.10
     * fix request #5979 - Global notification not sent if only field change
 
