@@ -21,9 +21,9 @@ A powerful tracking system with extensive configuration capabilities to manage a
 Screenshots
 -----------
 
-![Screenshot of an artifact](http://www.tuleap.com/sites/default/files/styles/x-large/public/artifacts-traceability.png)
+![Screenshot of an artifact](http://www.tuleap.org/sites/default/files/styles/screenshot_gallery_large/public/tuleap-requirements-artifact.png?itok=YhdbnxAN)
 
-![Screenshot of the admin interface](http://www.tuleap.com/sites/default/files/styles/x-large/public/easy-customizable-tracker.png)
+![Screenshot of the admin interface](http://www.tuleap.org/sites/default/files/styles/screenshot_gallery_large/public/tuleap-tracker-customization.jpg?itok=xlhaegGl)
 
 Installation
 ============

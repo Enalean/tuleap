@@ -94,6 +94,14 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         if ($this->isInHTMLFormat()) {
             return $hp->purifyHTMLWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
         }
+
+        if (@include_once "/usr/share/php-markdown/Michelf/Markdown.inc.php") {
+            return $hp->purifyHTMLWithReferences(
+                \Michelf\Markdown::defaultTransform($this->getText()),
+                $this->field->getTracker()->getProject()->getID()
+            );
+        }
+
         return $hp->purifyTextWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
     }
 

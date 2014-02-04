@@ -115,7 +115,20 @@ class Tracker_Artifact_Changeset_Comment {
      * @return string the cleaned body to be included in a text/html context
      */
     public function getPurifiedBodyForHTML() {
+        $hp    = Codendi_HTMLPurifier::instance();
         $level = self::$PURIFIER_LEVEL_IN_HTML[$this->bodyFormat];
+
+        if ($this->bodyFormat === self::HTML_COMMENT) {
+            return $this->purifyBody($level);
+        }
+
+        if (@include_once "/usr/share/php-markdown/Michelf/Markdown.inc.php") {
+           return $hp->purifyHTMLWithReferences(
+                \Michelf\Markdown::defaultTransform($this->body),
+                $this->changeset->artifact->getTracker()->group_id
+            );
+        }
+
         return $this->purifyBody($level);
     }
 
@@ -144,11 +157,18 @@ class Tracker_Artifact_Changeset_Comment {
         $html .= '</div>';
 
         if (!empty($this->body)) {
+            $hp = Codendi_HTMLPurifier::instance();
             $html .= '<input type="hidden"
                 id="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
                 name="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
                 value="'.$this->bodyFormat.'" />';
+
+            $html .= '<input type="hidden"
+                id="tracker_artifact_followup_comment_body_src_'.$this->changeset->getId().'"
+                value="'.$hp->purify($this->body, CODENDI_PURIFIER_CONVERT_HTML).'" />';
+
             $html .= '<div class="tracker_artifact_followup_comment_body">';
+
             if ($this->parent_id && !trim($this->body)) {
                 $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>';
             } else {
