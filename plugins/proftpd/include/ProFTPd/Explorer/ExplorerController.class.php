@@ -25,7 +25,10 @@ use Tuleap\ProFTPd\Directory\DirectoryParser;
 use Tuleap\ProFTPd\Directory\DirectoryPathParser;
 use Tuleap\ProFTPd\Presenter\ExplorerPresenter;
 use Tuleap\ProFTPd\ServiceProFTPd;
+use Tuleap\ProFTPd\Admin\PermissionsManager;
 use HTTPRequest;
+use PFUser;
+use Project;
 
 class ExplorerController {
     const NAME = 'explorer';
@@ -33,8 +36,12 @@ class ExplorerController {
     /** @var DirectoryParser */
     private $parser;
 
-    public function __construct(DirectoryParser $parser) {
-        $this->parser  = $parser;
+    /** @var PermissionsManager */
+    private $permissions_manager;
+
+    public function __construct(DirectoryParser $parser, PermissionsManager $permissions_manager) {
+        $this->parser              = $parser;
+        $this->permissions_manager = $permissions_manager;
     }
 
     public function getName() {
@@ -42,6 +49,21 @@ class ExplorerController {
     }
 
     public function index(ServiceProFTPd $service, HTTPRequest $request) {
+
+        if ($this->userHasPermissionToExploreSFTP($request->getCurrentUser(), $request->getProject())) {
+            $this->renderIndex($service, $request);
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_proftpd', 'error_browse_rights'));
+            $service->renderInPage(
+                $request,
+                '',
+                'index',
+                null
+            );
+        }
+    }
+
+    private function renderIndex(ServiceProFTPd $service, HTTPRequest $request) {
         $path_parser = new DirectoryPathParser();
 
         $path        = $path_parser->getCleanPath($request->get('path'));
@@ -71,6 +93,8 @@ class ExplorerController {
         );
     }
 
-   
+    private function userHasPermissionToExploreSFTP(PFUser $user, Project $project) {
+        return $this->permissions_manager->userCanBrowseSFTP($user, $project);
+    }
+
 }
-?>

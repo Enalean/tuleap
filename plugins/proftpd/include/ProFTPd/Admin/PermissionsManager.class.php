@@ -23,6 +23,7 @@ namespace Tuleap\ProFTPd\Admin;
 use Project;
 use UGroupManager;
 use UGroup;
+use PFUser;
 
 class PermissionsManager {
     const PERM_READ  = 'PLUGIN_PROFTPD_READ';
@@ -69,5 +70,25 @@ class PermissionsManager {
 
     public function getUGroups(Project $project) {
         return $this->ugroup_manager->getStaticUGroups($project);
+    }
+
+    public function userCanBrowseSFTP(PFUser $user, Project $project) {
+        return $this->userCanReadSFTP($user, $project) || $this->userCanWriteSFTP($user, $project) || $this->userIsAdmin($user, $project);
+    }
+
+    private function userCanReadSFTP(PFUser $user, Project $project) {
+        $ugroup_id = $this->getSelectUGroupFor($project, self::PERM_READ);
+
+        return $user->isMemberOfUGroup($ugroup_id, $project->getGroupId());
+    }
+
+    private function userCanWriteSFTP(PFUser $user, Project $project) {
+        $ugroup_id = $this->getSelectUGroupFor($project, self::PERM_WRITE);
+
+        return $user->isMemberOfUGroup($ugroup_id, $project->getGroupId());
+    }
+
+    private function userIsAdmin(PFUser $user, Project $project) {
+        return $user->isAdmin($project->getID()) || $user->isSuperUser();
     }
 }

@@ -14,6 +14,7 @@ plugin_proftpd	log_upload	Upload
 plugin_proftpd	log_deleted	Deleted
 
 plugin_proftpd	error_not_admin	You must be granted Project Administrator permission to access this
+plugin_proftpd	error_browse_rights	You're not granted sufficient rights to browse the (S)FTP repository
 plugin_proftpd	admin_title	(S)FTP administration
 plugin_proftpd	permissions_title	Permissions
 plugin_proftpd	readers_header	Readers
