@@ -381,6 +381,10 @@ class GitPlugin extends Plugin {
         $this->dump_ssh_keys_gerrit($params);
     }
 
+    private function isEventRootDaily(array $params) {
+        return count($params) == 0;
+    }
+
     /**
      * Called by backend to ensure that all ssh keys are in gitolite conf
      * 
@@ -393,7 +397,7 @@ class GitPlugin extends Plugin {
         $retVal = 0;
         $output = array();
         $mvCmd  = $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$GLOBALS['codendi_dir'].'/plugins/git/bin/gl-dump-sshkeys.php';
-        if (isset($params['user'])) {
+        if (! $this->isEventRootDaily($params) && isset($params['user'])) {
             $mvCmd .= ' '.$params['user']->getId();
         }
         $cmd    = 'su -l codendiadm -c "'.$mvCmd.' 2>&1"';
@@ -416,6 +420,9 @@ class GitPlugin extends Plugin {
      * @return void
      */
     protected function dump_ssh_keys_gerrit(array $params) {
+        if ($this->isEventRootDaily($params)) {
+            return true;
+        }
         if (! $user = $this->getUserFromParameters($params)) {
             return;
         }
