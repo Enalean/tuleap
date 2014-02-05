@@ -29,6 +29,10 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
     var milestone_id;
     var rest_route_url;
 
+    if (! thereIsMilestoneId()) {
+        return;
+    }
+
     artifacts_modifications.each( function ( artifact ) {
         updateArtifact( artifact );
     });
@@ -104,6 +108,10 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
             completion_bar.update(new_completion + '%');
             completion_bar.style.width = new_completion + '%';
         }
+    }
+
+    function thereIsMilestoneId() {
+        return $('milestone_id') != undefined;
     }
 };
 
