@@ -651,7 +651,7 @@ class Tracker_Artifact_Changeset {
     }
 
     public function removeRecipientsThatMayReceiveAnEmptyNotification(array &$recipients) {
-        if ( ! $this->getComment()->hasEmptyBody()) {
+        if ($this->getComment() && ! $this->getComment()->hasEmptyBody()) {
             return;
         }
 
