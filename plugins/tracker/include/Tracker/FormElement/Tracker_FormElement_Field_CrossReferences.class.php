@@ -110,7 +110,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     }
 
     public function fetchArtifactForOverlay(Tracker_Artifact $artifact) {
-        return $this->fetchArtifactReadOnly($artifact);
+        return '';
     }
 
     /**
@@ -260,7 +260,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         $crossref_fact= new CrossReferenceFactory($artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
         $crossref_fact->fetchDatas();
         if ($crossref_fact->getNbReferences()) {
-            $html .= $crossref_fact->getHTMLDisplayCrossRefs(true, true);
+            $html .= $crossref_fact->getHTMLDisplayCrossRefs();
         } else {
             $html .= '<div>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'ref_list_empty') .'</div>';
         }
