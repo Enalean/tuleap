@@ -1,3 +1,6 @@
+Version 5.233 - Tuleap 6.10
+    * Fixing request #6087. Fatal error when creating an artifact
+
 Version 5.232 - Tuleap 6.10
     * Bootstrapify submit buttons in new artifact form
 
