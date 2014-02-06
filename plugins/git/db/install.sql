@@ -6,7 +6,9 @@ CREATE TABLE IF NOT EXISTS plugin_git_remote_servers (
     login VARCHAR(255) NOT NULL,
     identity_file VARCHAR(255) NOT NULL,
     ssh_key TEXT NULL,
-PRIMARY KEY (id));
+    use_ssl boolean DEFAULT 0,
+    PRIMARY KEY (id)
+);
 
 CREATE TABLE IF NOT EXISTS `plugin_git` (
   `repository_id` int(10) unsigned NOT NULL auto_increment,
