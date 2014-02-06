@@ -8,7 +8,7 @@ Version 6.10 (Not released yet)
 	* tests: 5.21
 	* fusionforge_compat: 0.6
 	* hudson: 1.13
-	* git: 3.65
+	* git: 3.66
 	* projectlinks: 2.5
 	* mediawiki: 0.22
 	* fulltextsearch: 0.26
@@ -28,6 +28,7 @@ Version 6.10 (Not released yet)
 	* Fix request #5911: Adding options in setup.sh to install with exotic mysql servers
 	* Fix warning when displaying avatar for anonymous user
 	* Fix security issue on snippet service
+	* Fix request #6099: Error in syslog during DAILY system event
 
 	== Themes ==
 	* Experimental: 0.9.1
