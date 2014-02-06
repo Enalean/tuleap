@@ -1,3 +1,6 @@
+Version 0.23 - Tuleap 6.10
+    * Request #6089: Fatal error when removing user as project member (MW)
+
 Version 0.22 - Tuleap 6.10
     * mapping between mediawiki and tuleap groups
 
