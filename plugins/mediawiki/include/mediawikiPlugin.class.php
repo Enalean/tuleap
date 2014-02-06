@@ -548,7 +548,9 @@ class MediaWikiPlugin extends Plugin {
         $project = $this->getProjectFromParams($params);
         $dao     = $this->getDao();
 
-        $dao->removeUser($user, $project);
+        if ($project->usesService(MediaWikiPlugin::SERVICE_SHORTNAME)) {
+            $dao->removeUser($user, $project);
+        }
     }
 
     public function project_admin_change_user_permissions($params) {
