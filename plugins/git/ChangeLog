@@ -1,3 +1,6 @@
+Version 3.67 - Tuleap 6.10
+    * Fix request #6106: Cannot add a new gerrit server
+
 Version 3.66 - Tuleap 6.10
     * Fix request #6099 - Error in syslog during DAILY system event
 
