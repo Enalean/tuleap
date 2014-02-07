@@ -15,19 +15,14 @@
               <element name="submitted_on">
                 <ref name="date_content"/>
               </element>
+              <optional>
+                <element name="comment">
+                  <data type="string"/>
+                </element>
+              </optional>
               <oneOrMore>
                 <element name="field_change">
-                  <group>
-                    <attribute name="field_name">
-                      <data type="string"/>
-                    </attribute>
-                    <oneOrMore>
-                      <element name="value">
-                        <data type="string"/>
-                      </element>
-                    </oneOrMore>
-                  </group>
-                  <!-- We accept many values for the attachement field. We should disallow this for text fields in a future version. -->
+                  <ref name="field_content"/>
                 </element>
               </oneOrMore>
             </element>
@@ -80,5 +75,30 @@
       </group>
     </choice>
     <data type="string"/>
+  </define>
+  <define name="field_content">
+    <choice>
+      <group>
+        <attribute name="field_name">
+          <data type="string"/>
+        </attribute>
+        <oneOrMore>
+          <element name="value">
+            <data type="string"/>
+          </element>
+        </oneOrMore>
+      </group>
+      <!-- We accept many values for the attachement field. We should disallow this for text fields in a future version. -->
+      <group>
+        <attribute name="field_name">
+          <data type="string"/>
+        </attribute>
+        <oneOrMore>
+          <element name="value">
+            <ref name="user_content"/>
+          </element>
+        </oneOrMore>
+      </group>
+    </choice>
   </define>
 </grammar>

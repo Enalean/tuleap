@@ -109,4 +109,17 @@ class ArtifactXMLExporterDao extends DataAccessObject {
                   AND adddate < $date";
         return $this->retrieve($sql);
     }
+
+    public function searchCCAt($artifact_id, $user_id, $date) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $user_id     = $this->da->escapeInt($user_id);
+        $date        = $this->da->escapeInt($date);
+
+        $sql = "SELECT *
+                FROM artifact_cc
+                WHERE artifact_id = $artifact_id
+                  AND added_by = $user_id
+                  AND date < $date";
+        return $this->retrieve($sql);
+    }
 }

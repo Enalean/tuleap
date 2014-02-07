@@ -129,11 +129,19 @@ class ArtifactXMLExporterArtifact {
 
         $changeset_node = $this->createOrReuseChangeset($previous_changeset, $submitted_by, $is_anonymous, $submitted_on);
 
-        if ($field_name == 'summary') {
-            $this->last_history_recorded['summary'] = $new_value;
-            $this->setSummaryFieldChange($changeset_node, $new_value);
-        } else {
-            $this->setAttachmentFieldChange($changeset_node, $artifact_id, $mod_by, $submitted_on, $old_value, $new_value);
+        switch ($field_name) {
+            case 'summary':
+                $this->last_history_recorded['summary'] = $new_value;
+                $this->setSummaryFieldChange($changeset_node, $new_value);
+                break;
+
+            case 'attachment':
+                $this->setAttachmentFieldChange($changeset_node, $artifact_id, $mod_by, $submitted_on, $old_value, $new_value);
+                break;
+
+            case 'cc':
+                $this->setCCFieldChange($changeset_node, $artifact_id, $mod_by, $submitted_on, $old_value, $new_value);
+                break;
         }
 
         return $changeset_node;
@@ -205,6 +213,21 @@ class ArtifactXMLExporterArtifact {
         return '';
     }
 
+    private function setCCFieldChange(DOMElement $changeset_node, $artifact_id, $mod_by, $submitted_on, $old_value, $new_value) {
+        $values = array_filter(explode(',', $new_value));
+        $field_node = $this->document->createElement('field_change');
+        $field_node->setAttribute('field_name', 'cc');
+        foreach ($values as $value) {
+            $cc_value_node = $this->getNodeWithValue('value', $value);
+            $this->addUserFormatAttribute($cc_value_node, $this->isValueAnEmailAddress($value));
+            $field_node->appendChild($cc_value_node);
+        }
+        $changeset_node->appendChild($field_node);
+    }
+
+    private function isValueAnEmailAddress($value) {
+        return strpos($value, '@') !== false;
+    }
 
     private function getNodeWithValue($node_name, $value) {
         $node = $this->document->createElement($node_name);
@@ -215,11 +238,15 @@ class ArtifactXMLExporterArtifact {
 
     private function setSubmittedBy(DOMElement $xml, $submitted_by, $is_anonymous) {
         $submitted_by_node = $this->document->createElement('submitted_by', $submitted_by);
-        $submitted_by_node->setAttribute('format', $is_anonymous ? 'email' : 'username');
-        if ($is_anonymous) {
-            $submitted_by_node->setAttribute('is_anonymous', "1");
-        }
+        $this->addUserFormatAttribute($submitted_by_node, $is_anonymous);
         $xml->appendChild($submitted_by_node);
+    }
+
+    private function addUserFormatAttribute(DOMElement $node, $is_anonymous) {
+        $node->setAttribute('format', $is_anonymous ? 'email' : 'username');
+        if ($is_anonymous) {
+            $node->setAttribute('is_anonymous', "1");
+        }
     }
 
     private function setSubmittedOn(DOMElement $xml, $timestamp) {

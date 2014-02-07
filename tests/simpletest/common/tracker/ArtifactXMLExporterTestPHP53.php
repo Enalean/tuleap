@@ -99,6 +99,14 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
         } else {
             stub($this->dao)->searchFileBefore($artifact_id)->returnsEmptyDar();
         }
+        if (isset($json['search_cc_at'])) {
+            foreach ($json['search_cc_at'] as $artifact_cc) {
+                $params = $artifact_cc['parameters'];
+                stub($this->dao)->searchCCAt($params['artifact_id'], $params['submitted_by'], $params['date'])->returnsDarFromArray($artifact_cc['rows']);
+            }
+        } else {
+            stub($this->dao)->searchCCAt($artifact_id)->returnsEmptyDar();
+        }
     }
 
 
@@ -258,6 +266,58 @@ class ArtifactXMLExporter_AttachmentTest extends ArtifactXMLExporter_BaseTest {
         $this->assertCount($this->xml->artifact->file, 1);
         $this->assertEqual((string)$this->xml->artifact->file[0]->id, 'File31');
         $this->assertEqual((string)$this->xml->artifact->file[0]->filename, 'zzz.pdf');
+    }
+}
+
+class ArtifactXMLExporter_CCTest extends ArtifactXMLExporter_BaseTest {
+
+    public function itCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory() {
+        $this->exportTrackerDataFromFixture('artifact_cc_no_changes');
+
+        $this->assertCount($this->xml->artifact->changeset[0]->field_change, 2);
+        $this->assertChangesItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory($this->xml->artifact->changeset[0]->field_change[0]);
+        $this->assertChangesItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory($this->xml->artifact->changeset[0]->field_change[1]);
+    }
+
+    private function assertChangesItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory(SimpleXMLElement $field_change) {
+        switch($field_change['field_name']) {
+            case 'cc':
+                $this->assertEqual((string)$field_change->value[0], 'john@doe.org');
+                $this->assertEqual((string)$field_change->value[0]['format'], 'email');
+                $this->assertEqual((string)$field_change->value[1], 'jeanjean');
+                $this->assertEqual((string)$field_change->value[1]['format'], 'username');
+                break;
+            case 'summary':
+                // Ok but we don't care
+                break;
+            default:
+                throw new Exception('Unexpected field type: '.$field_change['field_name']);
+                break;
+        }
+    }
+
+    public function itCreatesTheTwoCCChangesChangeset() {
+        $this->exportTrackerDataFromFixture('artifact_cc_add_new');
+
+        $this->assertCount($this->xml->artifact->changeset, 3);
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, 'john@doe.org');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[0], 'john@doe.org');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[1], 'jeanjean');
+    }
+
+    public function itCreatesChangesWithDeletedCC() {
+        $this->exportTrackerDataFromFixture('artifact_cc_remove');
+
+        $this->assertCount($this->xml->artifact->changeset, 2);
+
+        $this->assertCount($this->xml->artifact->changeset[0]->field_change->value, 3);
+        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change->value[0], 'john@doe.org');
+        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change->value[1], 'jeanjean');
+        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change->value[2], 'bla@bla.org');
+
+        $this->assertCount($this->xml->artifact->changeset[1]->field_change->value, 1);
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, 'john@doe.org');
     }
 }
 
