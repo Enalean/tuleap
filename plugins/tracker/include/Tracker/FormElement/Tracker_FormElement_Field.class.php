@@ -333,6 +333,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $this->fetchArtifact($artifact, $submitted_values);
     }
 
+    public function fetchSubmitForOverlay() {
+        return $this->fetchSubmit();
+    }
+
     /**
      * Get the html code to display the field for the given artifact in read only mode
      *

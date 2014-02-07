@@ -273,6 +273,21 @@ class Tracker implements Tracker_Dispatchable_Interface {
     }
 
     /**
+     * Fetch Tracker submit form in HTML without the container and column rendering
+     *
+     * @return String
+     */
+    public function fetchSubmitNoColumns() {
+        $html='';
+
+        foreach($this->getFormElements() as $form_element) {
+            $html .= $form_element->fetchSubmitForOverlay();
+        }
+
+        return $html;
+    }
+
+    /**
      * fetch FormElements in read only mode
      *
      * @param Tracker_Artifact $artifact
@@ -344,6 +359,18 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
+
+            case 'get-create-in-place':
+                if ($this->userCanSubmitArtifact($current_user)) {
+                    $renderer = new Tracker_Artifact_Renderer_CreateInPlaceRenderer(
+                        $this,
+                        TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR).'/templates')
+                    );
+
+                    $renderer->display();
+                }
+            break;
+
             case 'new-artifact-link':
                 $link = $request->get('id');
                 if ($this->userCanSubmitArtifact($current_user)) {

@@ -114,6 +114,10 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
         return $this->fetchArtifact($artifact);
     }
 
+    public function fetchSubmitForOverlay() {
+        return $this->fetchSubmit();
+    }
+
     /**
      * Fetch the element for the artifact in read only mode
      *
