@@ -36,15 +36,20 @@ grammar {
         xsd:string
 
     field_content =
-        (
-           (
-                attribute field_name { xsd:string },
-                element value { xsd:string }+ # We accept many values for the attachement field. We should disallow this for text fields in a future version.
-           )
-           |
-           (
-                attribute field_name { xsd:string },
-                element value { user_content }+
-           )
-        )
+        attribute field_name { xsd:string },
+        (field_string | field_file | field_open_list_user)
+        
+
+    field_string = 
+        attribute type { "string" },
+        element value { xsd:string }
+
+    field_file =
+        attribute type { "file" },
+        element value { xsd:string }+
+
+    field_open_list_user =
+        attribute type { "open_list" },
+        attribute bind { "user" },
+        element value { user_content }+
 }

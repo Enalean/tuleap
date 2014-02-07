@@ -77,28 +77,44 @@
     <data type="string"/>
   </define>
   <define name="field_content">
+    <attribute name="field_name">
+      <data type="string"/>
+    </attribute>
     <choice>
-      <group>
-        <attribute name="field_name">
-          <data type="string"/>
-        </attribute>
-        <oneOrMore>
-          <element name="value">
-            <data type="string"/>
-          </element>
-        </oneOrMore>
-      </group>
-      <!-- We accept many values for the attachement field. We should disallow this for text fields in a future version. -->
-      <group>
-        <attribute name="field_name">
-          <data type="string"/>
-        </attribute>
-        <oneOrMore>
-          <element name="value">
-            <ref name="user_content"/>
-          </element>
-        </oneOrMore>
-      </group>
+      <ref name="field_string"/>
+      <ref name="field_file"/>
+      <ref name="field_open_list_user"/>
     </choice>
+  </define>
+  <define name="field_string">
+    <attribute name="type">
+      <value>string</value>
+    </attribute>
+    <element name="value">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="field_file">
+    <attribute name="type">
+      <value>file</value>
+    </attribute>
+    <oneOrMore>
+      <element name="value">
+        <data type="string"/>
+      </element>
+    </oneOrMore>
+  </define>
+  <define name="field_open_list_user">
+    <attribute name="type">
+      <value>open_list</value>
+    </attribute>
+    <attribute name="bind">
+      <value>user</value>
+    </attribute>
+    <oneOrMore>
+      <element name="value">
+        <ref name="user_content"/>
+      </element>
+    </oneOrMore>
   </define>
 </grammar>

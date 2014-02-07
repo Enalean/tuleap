@@ -166,6 +166,7 @@ class ArtifactXMLExporter_SummaryTest extends ArtifactXMLExporter_BaseTest {
         $this->exportTrackerDataFromFixture('artifact_without_any_history');
 
         $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change->value, 'Le artifact without history');
+        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change['type'], 'string');
         $this->assertEqual((string)$this->xml->artifact->changeset[0]->submitted_on, $this->expected_open_date);
     }
 
@@ -212,6 +213,7 @@ class ArtifactXMLExporter_AttachmentTest extends ArtifactXMLExporter_BaseTest {
         expect($this->archive)->addEmptyDir('data')->once();
 
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'attachment');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['type'], 'file');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0], 'File30');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567900));
 
@@ -282,6 +284,8 @@ class ArtifactXMLExporter_CCTest extends ArtifactXMLExporter_BaseTest {
     private function assertChangesItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory(SimpleXMLElement $field_change) {
         switch($field_change['field_name']) {
             case 'cc':
+                $this->assertEqual((string)$field_change['type'], 'open_list');
+                $this->assertEqual((string)$field_change['bind'], 'user');
                 $this->assertEqual((string)$field_change->value[0], 'john@doe.org');
                 $this->assertEqual((string)$field_change->value[0]['format'], 'email');
                 $this->assertEqual((string)$field_change->value[1], 'jeanjean');

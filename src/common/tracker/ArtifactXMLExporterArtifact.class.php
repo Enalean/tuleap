@@ -78,7 +78,7 @@ class ArtifactXMLExporterArtifact {
                 $node = $this->getChangeset($previous_changeset, $artifact_id, $row['field_name'], $row['mod_by'], $row['submitted_by'], $row['is_anonymous'], $row['date'], $row['old_value'], $row['new_value']);
                 $artifact_node->appendChild($node);
                 $previous_changeset = $node;
-            } catch (Exception_TV3XMLAttachmentNotFoundException $exception) {
+            } catch (Exception_TV3XMLException $exception) {
                 $this->logger->warn("Artifact $artifact_id: skip changeset (".$row['field_name'].", ".$row['submitted_by'].", ".date('c', $row['date'])."): ".$exception->getMessage());
             }
         }
@@ -142,6 +142,9 @@ class ArtifactXMLExporterArtifact {
             case 'cc':
                 $this->setCCFieldChange($changeset_node, $artifact_id, $mod_by, $submitted_on, $old_value, $new_value);
                 break;
+
+            default:
+                throw new Exception_TV3XMLUnknownFieldTypeException($field_name);
         }
 
         return $changeset_node;
@@ -150,6 +153,7 @@ class ArtifactXMLExporterArtifact {
     private function setSummaryFieldChange(DOMElement $changeset_node, $value) {
         $field_node = $this->document->createElement('field_change');
         $field_node->setAttribute('field_name', 'summary');
+        $field_node->setAttribute('type', 'string');
         $field_node->appendChild($this->getNodeWithValue('value', $value));
         $changeset_node->appendChild($field_node);
     }
@@ -162,6 +166,7 @@ class ArtifactXMLExporterArtifact {
                 $row_file = $dar->current();
                 $field_node = $this->document->createElement('field_change');
                 $field_node->setAttribute('field_name', 'attachment');
+                $field_node->setAttribute('type', 'file');
                 $field_node->appendChild($this->getNodeWithValue('value', self::XML_FILE_PREFIX.$row_file['id']));
                 $this->appendPreviousAttachements($field_node, $artifact_id, $submitted_on, $old_value);
                 $changeset_node->appendChild($field_node);
@@ -217,6 +222,8 @@ class ArtifactXMLExporterArtifact {
         $values = array_filter(explode(',', $new_value));
         $field_node = $this->document->createElement('field_change');
         $field_node->setAttribute('field_name', 'cc');
+        $field_node->setAttribute('type', 'open_list');
+        $field_node->setAttribute('bind', 'user');
         foreach ($values as $value) {
             $cc_value_node = $this->getNodeWithValue('value', $value);
             $this->addUserFormatAttribute($cc_value_node, $this->isValueAnEmailAddress($value));

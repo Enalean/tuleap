@@ -18,8 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Exception_TV3XMLAttachmentNotFoundException extends Exception_TV3XMLException {
-    public function __construct($name) {
-        parent::__construct("$name not found (assume deleted)");
-    }
+class Exception_TV3XMLException extends Exception {
 }
