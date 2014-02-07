@@ -19,6 +19,9 @@
  */
 
 class Tracker_Artifact_XMLImport {
+    const FIELDNAME_CHANGE_SUMMARY     = 'summary';
+    const FIELDNAME_CHANGE_ATTACHEMENT = 'attachment';
+
     /** @var XML_RNGValidator */
     private $rng_validator;
 
@@ -31,16 +34,21 @@ class Tracker_Artifact_XMLImport {
     /** @var UserManager */
     private $user_manager;
 
+    /** @var String */
+    private $extraction_path;
+
     public function __construct(
         XML_RNGValidator $rng_validator,
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_FormElementFactory $formelement_factory,
-        UserManager $user_manager) {
-
+        UserManager $user_manager,
+        $extraction_path
+    ) {
         $this->rng_validator        = $rng_validator;
         $this->artifact_factory     = $artifact_factory;
         $this->formelement_factory  = $formelement_factory;
         $this->user_manager         = $user_manager;
+        $this->extraction_path      = $extraction_path;
     }
 
     public function importFromArchive(Tracker $tracker, ZipArchive $archive) {
@@ -50,17 +58,18 @@ class Tracker_Artifact_XMLImport {
     public function importFromXML(Tracker $tracker, SimpleXMLElement $xml_element) {
         $this->rng_validator->validate($xml_element);
         foreach ($xml_element->artifact as $artifact) {
-            $this->importOneArtifact($tracker, $artifact);
+            $files_importer = new Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact($artifact);
+            $this->importOneArtifact($tracker, $artifact, $files_importer);
         }
     }
 
-    private function importOneArtifact(Tracker $tracker, SimpleXMLElement $xml_artifact) {
+    private function importOneArtifact(Tracker $tracker, SimpleXMLElement $xml_artifact, Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer) {
         if (count($xml_artifact->changeset) > 0) {
-            $changesets      = $this->getSortedBySubmittedOn($xml_artifact->changeset);
-            $first_changeset = array_shift($changesets);
-            $artifact        = $this->importInitialChangeset($tracker, $first_changeset);
+            $changesets                  = $this->getSortedBySubmittedOn($xml_artifact->changeset);
+            $first_changeset             = array_shift($changesets);
+            $artifact                    = $this->importInitialChangeset($tracker, $first_changeset, $files_importer);
             if (count($changesets)) {
-                $this->importRemainingChangesets($tracker, $artifact, $changesets);
+                $this->importRemainingChangesets($tracker, $artifact, $changesets, $files_importer);
             }
         }
     }
@@ -74,8 +83,8 @@ class Tracker_Artifact_XMLImport {
         return $changeset_array;
     }
 
-    private function importInitialChangeset(Tracker $tracker, SimpleXMLElement $xml_changeset) {
-        $fields_data        = $this->getFieldsData($tracker, $xml_changeset->field_change);
+    private function importInitialChangeset(Tracker $tracker, SimpleXMLElement $xml_changeset, Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer) {
+        $fields_data        = $this->getFieldsData($tracker, $xml_changeset->field_change, $files_importer);
         if (count($fields_data) > 0) {
             $email              = '';
             $send_notifications = false;
@@ -97,12 +106,12 @@ class Tracker_Artifact_XMLImport {
         throw new Tracker_Artifact_Exception_EmptyChangesetException();
     }
 
-    private function importRemainingChangesets(Tracker $tracker, Tracker_Artifact $artifact, array $xml_changesets) {
+    private function importRemainingChangesets(Tracker $tracker, Tracker_Artifact $artifact, array $xml_changesets, Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer) {
         foreach($xml_changesets as $xml_changeset) {
             $comment           = '';
             $send_notification = false;
             $result = $artifact->createNewChangesetAt(
-                $this->getFieldsData($tracker, $xml_changeset->field_change),
+                $this->getFieldsData($tracker, $xml_changeset->field_change, $files_importer),
                 $comment,
                 $this->getSubmittedBy($xml_changeset),
                 $this->getSubmittedOn($xml_changeset),
@@ -114,13 +123,30 @@ class Tracker_Artifact_XMLImport {
         }
     }
 
-    private function getFieldsData(Tracker $tracker, SimpleXMLElement $xml_field_change) {
+    private function getFieldsData(Tracker $tracker, SimpleXMLElement $xml_field_change, Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer) {
         $data = array();
-        $field = $this->formelement_factory->getFormElementByName($tracker->getId(), (string) $xml_field_change['field_name']);
-        if ($field) {
-            $data[$field->getId()] = (string) $xml_field_change->value;
+
+        foreach ($xml_field_change as $field_change) {
+            $field = $this->formelement_factory->getFormElementByName($tracker->getId(), (string) $field_change['field_name']);
+
+            if ($field) {
+                $data[$field->getId()] = $this->getFieldData($field_change, $files_importer);
+            }
         }
         return $data;
+    }
+
+    private function getFieldData(SimpleXMLElement $field_change, Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer) {
+        switch ($field_change['field_name']) {
+            case self::FIELDNAME_CHANGE_SUMMARY :
+                $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategySummary();
+                break;
+            case self::FIELDNAME_CHANGE_ATTACHEMENT :
+                $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment($this->extraction_path, $files_importer);
+                break;
+        }
+
+        return $strategy->getFieldData($field_change);
     }
 
     private function getSubmittedBy(SimpleXMLElement $xml_changeset) {

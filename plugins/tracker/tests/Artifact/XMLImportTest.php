@@ -21,6 +21,8 @@
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
+    protected $tracker_id;
+
     /** @var Tracker */
     protected $tracker;
 
@@ -34,17 +36,18 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
     protected $formelement_factory;
     protected $user_manager;
     protected $artifact;
+    protected $extraction_path;
 
 
     public function setUp() {
         parent::setUp();
-        $tracker_id = 12;
-        $this->tracker  = aTracker()->withId($tracker_id)->build();
+        $this->tracker_id = 12;
+        $this->tracker  = aTracker()->withId($this->tracker_id)->build();
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
 
         $this->summary_field_id = 50;
         $this->formelement_factory = mock('Tracker_FormElementFactory');
-        stub($this->formelement_factory)->getFormElementByName($tracker_id, 'summary')->returns(
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'summary')->returns(
             aStringField()->withId(50)->build()
         );
 
@@ -55,11 +58,14 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
 
         $this->artifact = mock('Tracker_Artifact');
 
+        $this->extraction_path = '/some/random/path';
+
         $this->importer = new Tracker_Artifact_XMLImport(
             mock('XML_RNGValidator'),
             $this->artifact_factory,
             $this->formelement_factory,
-            $this->user_manager
+            $this->user_manager,
+            $this->extraction_path
         );
     }
 }
@@ -174,7 +180,8 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
             mock('XML_RNGValidator'),
             $this->artifact_factory,
             $this->formelement_factory,
-            $this->user_manager
+            $this->user_manager,
+            $this->extraction_path
         );
     }
 
@@ -417,5 +424,241 @@ class isAnonymousUserWithEmailExpectation extends SimpleExpectation {
 
     public function testMessage($user) {
         return "An anonymous user with email `{$this->email}` expected, ($user) given";
+    }
+}
+
+class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $file_field_id = 51;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+                <artifact id="41646">
+                    <changeset>
+                        <submitted_by format="username">manuel</submitted_by>
+                        <submitted_on format="ISO8601">2014-01-29T10:39:44+01:00</submitted_on>
+                        <field_change field_name="attachment">
+                          <value>File33</value>
+                        </field_change>
+                        <field_change field_name="summary">
+                          <value>Newly submitted</value>
+                        </field_change>
+                    </changeset>
+                    <file>
+                        <id>File33</id>
+                        <filename>A.png</filename>
+                        <path>data/34_File33.png</path>
+                        <filesize>87947</filesize>
+                        <filetype>image/png</filetype>
+                        <description>None</description>
+                    </file>
+                </artifact>
+            </artifacts>
+        ');
+
+    }
+
+    public function itCreatesAChangesetWithSummaryWhenFileFormElementDoesNotExist() {
+        stub($this->artifact_factory)->createArtifactAt()->returns(mock('Tracker_Artifact'));
+        $data = array(
+            $this->summary_field_id => 'Newly submitted'
+        );
+        expect($this->artifact_factory)->createArtifactAt('*', $data, '*', '*', '*', '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element);
+    }
+
+    public function itCreatesAChangesetWithOneFileElement() {
+        stub($this->artifact_factory)->createArtifactAt()->returns(mock('Tracker_Artifact'));
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'attachment')->returns(
+            aFileField()->withId($this->file_field_id)->build()
+        );
+
+        $data = array(
+            $this->file_field_id    => array(
+                array(
+                    'name'        => 'A.png',
+                    'type'        => 'image/png',
+                    'description' => 'None',
+                    'size'        => 87947,
+                    'tmp_name'    => $this->extraction_path.'/data/34_File33.png',
+                    'error'       => UPLOAD_ERR_OK,
+               )
+            ),
+            $this->summary_field_id => 'Newly submitted'
+        );
+        expect($this->artifact_factory)->createArtifactAt('*', $data, '*', '*', '*', '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element);
+    }
+}
+
+class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $file_field_id = 51;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+                <artifact id="41646">
+                    <changeset>
+                        <submitted_by format="username">manuel</submitted_by>
+                        <submitted_on format="ISO8601">2014-01-29T10:39:44+01:00</submitted_on>
+                        <field_change field_name="attachment">
+                          <value>File33</value>
+                          <value>File34</value>
+                        </field_change>
+                        <field_change field_name="summary">
+                          <value>Newly submitted</value>
+                        </field_change>
+                    </changeset>
+                    <file>
+                        <id>File33</id>
+                        <filename>A.png</filename>
+                        <path>data/34_File33.png</path>
+                        <filesize>87947</filesize>
+                        <filetype>image/png</filetype>
+                        <description>None</description>
+                    </file>
+                    <file>
+                        <id>File34</id>
+                        <filename>B.pdf</filename>
+                        <path>data/34_File34.pdf</path>
+                        <filesize>84895</filesize>
+                        <filetype>application/x-download</filetype>
+                        <description>A Zuper File</description>
+                    </file>
+                </artifact>
+            </artifacts>
+        ');
+
+    }
+
+    public function itCreatesAChangesetWithTwoFileElements() {
+        stub($this->artifact_factory)->createArtifactAt()->returns(mock('Tracker_Artifact'));
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'attachment')->returns(
+            aFileField()->withId($this->file_field_id)->build()
+        );
+
+        $data = array(
+            $this->file_field_id    => array(
+                array(
+                    'name'        => 'A.png',
+                    'type'        => 'image/png',
+                    'description' => 'None',
+                    'size'        => 87947,
+                    'tmp_name'    => $this->extraction_path.'/data/34_File33.png',
+                    'error'       => UPLOAD_ERR_OK,
+                ),
+                array(
+                    'name'        => 'B.pdf',
+                    'type'        => 'application/x-download',
+                    'description' => 'A Zuper File',
+                    'size'        => 84895,
+                    'tmp_name'    => $this->extraction_path.'/data/34_File34.pdf',
+                    'error'       => UPLOAD_ERR_OK,
+                )
+            ),
+            $this->summary_field_id => 'Newly submitted'
+        );
+        expect($this->artifact_factory)->createArtifactAt('*', $data, '*', '*', '*', '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element);
+    }
+}
+
+class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangesetsTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $file_field_id = 51;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+                <artifact id="41646">
+                    <changeset>
+                        <submitted_by format="username">manuel</submitted_by>
+                        <submitted_on format="ISO8601">2014-01-29T10:39:44+01:00</submitted_on>
+                        <field_change field_name="attachment">
+                          <value>File33</value>
+                        </field_change>
+                        <field_change field_name="summary">
+                          <value>Newly submitted</value>
+                        </field_change>
+                    </changeset>
+                    <changeset>
+                        <submitted_by format="username">manuel</submitted_by>
+                        <submitted_on format="ISO8601">2014-01-30T10:39:44+01:00</submitted_on>
+                        <field_change field_name="attachment">
+                          <value>File33</value>
+                          <value>File34</value>
+                        </field_change>
+                    </changeset>
+                    <file>
+                        <id>File33</id>
+                        <filename>A.png</filename>
+                        <path>data/34_File33.png</path>
+                        <filesize>87947</filesize>
+                        <filetype>image/png</filetype>
+                        <description>None</description>
+                    </file>
+                    <file>
+                        <id>File34</id>
+                        <filename>B.pdf</filename>
+                        <path>data/34_File34.pdf</path>
+                        <filesize>84895</filesize>
+                        <filetype>application/x-download</filetype>
+                        <description>A Zuper File</description>
+                    </file>
+                </artifact>
+            </artifacts>
+        ');
+
+    }
+
+    public function itCreatesChangesetsThatOnlyReferenceConcernedFiles() {
+        $artifact = mock('Tracker_Artifact');
+        stub($artifact)->createNewChangesetAt()->returns(true);
+        stub($this->artifact_factory)->createArtifactAt()->returns($artifact);
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'attachment')->returns(
+            aFileField()->withId($this->file_field_id)->build()
+        );
+
+        $initial_changeset_data = array(
+            $this->file_field_id    => array(
+                array(
+                    'name'        => 'A.png',
+                    'type'        => 'image/png',
+                    'description' => 'None',
+                    'size'        => 87947,
+                    'tmp_name'    => $this->extraction_path.'/data/34_File33.png',
+                    'error'       => UPLOAD_ERR_OK,
+                )
+            ),
+            $this->summary_field_id => 'Newly submitted'
+        );
+
+        $second_changeset_data = array(
+            $this->file_field_id    => array(
+                array(
+                    'name'        => 'B.pdf',
+                    'type'        => 'application/x-download',
+                    'description' => 'A Zuper File',
+                    'size'        => 84895,
+                    'tmp_name'    => $this->extraction_path.'/data/34_File34.pdf',
+                    'error'       => UPLOAD_ERR_OK,
+                )
+            )
+        );
+        expect($this->artifact_factory)->createArtifactAt('*', $initial_changeset_data, '*', '*', '*', '*')->once();
+        expect($artifact)->createNewChangesetAt($second_changeset_data, '*', '*', '*', '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element);
     }
 }
