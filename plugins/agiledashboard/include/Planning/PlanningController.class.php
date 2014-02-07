@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -118,6 +118,14 @@ class Planning_Controller extends MVC2_PluginController {
     }
 
     public function index() {
+        if (! server_is_php_version_equal_or_greater_than_53()) {
+            return $this->showPHP51Home();
+        } else {
+            return $this->showPHP53Home();
+        }
+    }
+
+    private function showPHP51Home() {
         try {
             $project_id = $this->request->getProject()->getID();
             $plannings = $this->getPlanningsShortAccess($this->group_id);
@@ -125,13 +133,18 @@ class Planning_Controller extends MVC2_PluginController {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
             $plannings = array();
         }
-        $presenter = new Planning_IndexPresenter(
+        $presenter = new Planning_Presenter_PHP51HomePresenter(
             $plannings,
             $this->plugin_theme_path,
             $project_id,
             $this->isUserAdmin()
         );
-        return $this->renderToString('index', $presenter);
+        return $this->renderToString('home_php51', $presenter);
+    }
+
+    private function showPHP53Home() {
+        $presenter = new Planning_Presenter_HomePresenter();
+        return $this->renderToString('home', $presenter);
     }
 
     /**
