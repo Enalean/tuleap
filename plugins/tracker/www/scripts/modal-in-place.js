@@ -88,7 +88,7 @@ tuleap.tracker = tuleap.tracker || { };
 
             }).done(function(data) {
                 tuleap.modal.hideLoad();
-                self.showArtifactCreationForm(data, tracker_id, callback);
+                self.showArtifactCreationForm(data, tracker_id, artifact_link_id, callback);
                 codendi.tracker.runTrackerFieldDependencies();
 
                 $('.tuleap-modal-main-panel form textarea').each( function(){
@@ -135,7 +135,7 @@ tuleap.tracker = tuleap.tracker || { };
                 .attr("disabled", false);
         },
 
-        showArtifactCreationForm : function(form_html, tracker_id, callback) {
+        showArtifactCreationForm : function(form_html, tracker_id, artifact_link_id, callback) {
             var self = this,
                 modal;
 
@@ -146,6 +146,38 @@ tuleap.tracker = tuleap.tracker || { };
                     self.destroyRichTextAreaInstances();
                     $('.artifact-event-popup').remove();
                 }
+            });
+
+            $('#tuleap-modal-submit').click(function(event) {
+                self.updateRichTextAreas();
+                $('#artifact-form-errors').hide();
+
+                $.ajax({
+                    url       : '/plugins/tracker/?tracker='+tracker_id+'&artifact-link-id='+ artifact_link_id +'&func=submit-artifact-in-place',
+                    type      : 'post',
+                    data      : $('.tuleap-modal-main-panel form').serialize(),
+                    beforeSend: self.beforeSubmit
+
+                }).done( function() {
+                    self.destroyRichTextAreaInstances();
+                    modal.closeModal();
+                    callback();
+
+                }).fail( function(response) {
+                    var data = JSON.parse(response.responseText);
+
+                    self.afterSubmit();
+
+                    $('#artifact-form-errors h5').html(data.message);
+                    $.each(data.errors, function() {
+                      $('#artifact-form-errors ul').html('').append('<li>' + this + '</li>');
+                    });
+
+                    $('.tuleap-modal-main-panel .tuleap-modal-content').scrollTop(0);
+                    $('#artifact-form-errors').show();
+                });
+
+                return false;
             });
         },
 

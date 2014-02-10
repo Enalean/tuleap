@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2014. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -35,6 +35,9 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant extends A
     /** @var String */
     private $solve_inconsistencies_url;
 
+    /** @var int */
+    private $milestone_artifact_id;
+
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $todo,
         AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection $done,
@@ -44,9 +47,11 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant extends A
         $trackers,
         $can_prioritize,
         $trackers_without_initial_effort_defined,
-        $solve_inconsistencies_url
+        $solve_inconsistencies_url,
+        $milestone_artifact_id
     ) {
         parent::__construct($todo, $done, $inconsistent_collection, $backlog_item_type, $trackers_without_initial_effort_defined);
+        $this->milestone_artifact_id       = $milestone_artifact_id;
         $this->add_new_backlog_items_urls  = $add_new_backlog_items_urls;
         $this->trackers                    = $trackers;
         $this->can_prioritize              = $can_prioritize;
@@ -101,6 +106,8 @@ class AgileDashboard_Milestone_Pane_Content_ContentPresenterDescendant extends A
         return $this->solve_inconsistencies_url;
     }
 
-}
+    public function milestone_id() {
+        return (int) $this->milestone_artifact_id;
+    }
 
-?>
+}

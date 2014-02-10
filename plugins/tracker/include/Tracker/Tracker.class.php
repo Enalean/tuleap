@@ -630,6 +630,10 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 );
                 $action->process($layout, $request, $current_user);
                 break;
+            case 'submit-artifact-in-place':
+                $action = new Tracker_Action_CreateArtifactFromModal($request, $this, $this->getTrackerArtifactFactory());
+                $action->process($current_user);
+                break;
             case 'admin-hierarchy':
                 if ($this->userIsAdmin($current_user)) {
                     
