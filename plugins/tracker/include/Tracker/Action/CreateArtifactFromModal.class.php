@@ -74,7 +74,7 @@ class Tracker_Action_CreateArtifactFromModal {
 
     private function sendJSONErrors() {
         $feedback            = array();
-        $feedback['message'] = 'Errors';
+        $feedback['message'] = $GLOBALS['Language']->getText('plugin_tracker_modal_artifact','submit_error');
 
         if ($GLOBALS['Response']->feedbackHasErrors()) {
             $feedback['errors'] = $GLOBALS['Response']->getFeedbackErrors();

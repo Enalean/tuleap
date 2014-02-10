@@ -43,7 +43,11 @@ class Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter {
             return null;
         }
 
-        return $this->artifact_to_link->getTitle();
+        return $GLOBALS['Language']->getText(
+            'plugin_tracker_modal_artifact',
+            'artifact_to_link_title',
+            array($this->artifact_to_link->getTitle())
+        );
     }
 
     public function has_linked_artifact() {
