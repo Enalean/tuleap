@@ -30,6 +30,8 @@ use \Planning_MilestoneFactory;
 use \AgileDashboard_BacklogItemDao;
 use \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
 use \AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
+use \AgileDashboard_Milestone_MilestoneStatusCounter;
+use \Tracker_ArtifactDao;
 use \UserManager;
 use \Planning_Milestone;
 use \PFUser;
@@ -69,12 +71,17 @@ class MilestoneResource {
         $planning_factory             = PlanningFactory::build();
         $tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
         $tracker_form_element_factory = Tracker_FormElementFactory::instance();
+        $status_counter               = new AgileDashboard_Milestone_MilestoneStatusCounter(
+            new AgileDashboard_BacklogItemDao(),
+            new Tracker_ArtifactDao()
+        );
 
         $this->milestone_factory = new Planning_MilestoneFactory(
             $planning_factory,
             $tracker_artifact_factory,
             $tracker_form_element_factory,
-            TrackerFactory::instance()
+            TrackerFactory::instance(),
+            $status_counter
         );
 
         $this->backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
@@ -180,7 +187,7 @@ class MilestoneResource {
         $this->sendAllowHeadersForMilestone($milestone);
 
         $milestone_representation = new MilestoneRepresentation();
-        $milestone_representation->build($milestone);
+        $milestone_representation->build($milestone, $this->milestone_factory->getMilestoneStatusCount($milestone));
 
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,
@@ -243,11 +250,12 @@ class MilestoneResource {
         $milestone = $this->getMilestoneById($user, $id);
         $this->sendAllowHeaderForSubmilestones();
 
-        $event_manager = $this->event_manager;
+        $event_manager     = $this->event_manager;
+        $milestone_factory = $this->milestone_factory;
         return array_map(
-            function (Planning_Milestone $milestone) use ($user, $event_manager) {
+            function (Planning_Milestone $milestone) use ($user, $event_manager, $milestone_factory) {
                 $milestone_representation = new MilestoneRepresentation();
-                $milestone_representation->build($milestone);
+                $milestone_representation->build($milestone, $milestone_factory->getMilestoneStatusCount($milestone));
 
                 $event_manager->processEvent(
                     AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,

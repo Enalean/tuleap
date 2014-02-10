@@ -20,6 +20,7 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use \Tracker_ArtifactFactory;
+use \Tracker_ArtifactDao;
 use \Tracker_FormElementFactory;
 use \TrackerFactory;
 use \PlanningFactory;
@@ -28,6 +29,8 @@ use \PFUser;
 use \Project;
 use \Luracast\Restler\RestException;
 use \Tuleap\REST\Header;
+use \AgileDashboard_Milestone_MilestoneStatusCounter;
+use \AgileDashboard_BacklogItemDao;
 
 /**
  * Wrapper for milestone related REST methods
@@ -47,11 +50,28 @@ class ProjectMilestonesResource {
     /** @var TrackerFactory */
     private $tracker_factory;
 
+    /** @var AgileDashboard_Milestone_MilestoneStatusCounter */
+    private $status_counter;
+
+    /** @var Planning_MilestoneFactory */
+    private $milestone_factory;
+
     public function __construct() {
         $this->tracker_form_element_factory = Tracker_FormElementFactory::instance();
         $this->planning_factory             = PlanningFactory::build();
         $this->tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
         $this->tracker_factory              = TrackerFactory::instance();
+        $this->status_counter               = new AgileDashboard_Milestone_MilestoneStatusCounter(
+            new AgileDashboard_BacklogItemDao(),
+            new Tracker_ArtifactDao()
+        );
+        $this->milestone_factory = new Planning_MilestoneFactory(
+            $this->planning_factory,
+            $this->tracker_artifact_factory,
+            $this->tracker_form_element_factory,
+            $this->tracker_factory,
+            $this->status_counter
+        );
     }
 
     /**
@@ -69,7 +89,7 @@ class ProjectMilestonesResource {
 
         foreach($milestones as $milestone) {
             $milestone_representation = new MilestoneRepresentation();
-            $milestone_representation->build($milestone);
+            $milestone_representation->build($milestone, $this->milestone_factory->getMilestoneStatusCount($milestone));
             $milestone_representations[] = $milestone_representation;
         }
 
@@ -97,15 +117,9 @@ class ProjectMilestonesResource {
      * @return array Planning_ArtifactMilestone
      */
     private function getTopMilestones(PFUser $user, Project $project) {
-        $milestone_factory = new Planning_MilestoneFactory(
-            $this->planning_factory,
-            $this->tracker_artifact_factory,
-            $this->tracker_form_element_factory,
-            $this->tracker_factory
-        );
 
         $top_milestones = array();
-        $milestones     = $milestone_factory->getSubMilestones($user, $milestone_factory->getVirtualTopMilestone($user, $project));
+        $milestones     = $this->milestone_factory->getSubMilestones($user, $this->milestone_factory->getVirtualTopMilestone($user, $project));
 
         foreach ($milestones as $milestone) {
             $top_milestones[] = $milestone;
