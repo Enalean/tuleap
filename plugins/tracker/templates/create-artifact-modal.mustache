@@ -12,6 +12,13 @@
                     <h5></h5>
                     <ul></ul>
                 </div>
+
+                {{# has_linked_artifact }}
+                <div class="alert alert-info">
+                    {{ artifact_to_link_title }}
+                </div>
+                {{/ has_linked_artifact }}
+
                 <div>
                     <table cellspacing="0" cellpadding="0" border="0">
                         <tr valign="top">

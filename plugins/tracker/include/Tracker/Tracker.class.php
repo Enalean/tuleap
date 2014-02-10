@@ -275,10 +275,16 @@ class Tracker implements Tracker_Dispatchable_Interface {
     /**
      * Fetch Tracker submit form in HTML without the container and column rendering
      *
+     * @param Tracker_Artifact | null  $artifact_to_link  The artifact wich will be linked to the new artifact
+     *
      * @return String
      */
-    public function fetchSubmitNoColumns() {
+    public function fetchSubmitNoColumns($artifact_to_link) {
         $html='';
+
+        if ($artifact_to_link) {
+            $html .= '<input type="hidden" name="link-artifact-id" value="'. $artifact_to_link->getId() .'" />';
+        }
 
         foreach($this->getFormElements() as $form_element) {
             $html .= $form_element->fetchSubmitForOverlay();
@@ -362,12 +368,14 @@ class Tracker implements Tracker_Dispatchable_Interface {
 
             case 'get-create-in-place':
                 if ($this->userCanSubmitArtifact($current_user)) {
+                    $artifact_link_id = $request->get('artifact-link-id');
+
                     $renderer = new Tracker_Artifact_Renderer_CreateInPlaceRenderer(
                         $this,
                         TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR).'/templates')
                     );
 
-                    $renderer->display();
+                    $renderer->display($artifact_link_id);
                 }
             break;
 

@@ -30,13 +30,23 @@ class Tracker_Artifact_Renderer_CreateInPlaceRenderer{
     /** @var MustacheRenderer */
     private $renderer;
 
+    /** @var Tracker_ArtifactFactory */
+    private $tracker_artifact_factory;
+
     public function __construct(Tracker $tracker, MustacheRenderer $renderer) {
-        $this->tracker  = $tracker;
-        $this->renderer = $renderer;
+        $this->tracker                  = $tracker;
+        $this->renderer                 = $renderer;
+        $this->tracker_artifact_factory = Tracker_ArtifactFactory::instance();
     }
 
-    public function display() {
-        $presenter = new Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter($this->tracker);
+    public function display($artifact_link_id) {
+        $artifact_to_link = null;
+
+        if ($artifact_link_id) {
+            $artifact_to_link = $this->tracker_artifact_factory->getArtifactByid($artifact_link_id);
+        }
+
+        $presenter = new Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter($this->tracker, $artifact_to_link);
         $this->renderer->renderToPage('create-artifact-modal', $presenter);
     }
 }

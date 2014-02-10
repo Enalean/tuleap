@@ -73,7 +73,7 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                     self.updateSubmilestoneCapacities();
                     self.makeSubmilestonesSortable();
 
-                    tuleap.tracker.artifactEditInPlace.init();
+                    tuleap.tracker.artifactModalInPlace.init();
                 }
             });
          },

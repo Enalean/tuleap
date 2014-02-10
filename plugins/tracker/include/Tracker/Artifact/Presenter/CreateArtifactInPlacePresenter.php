@@ -22,8 +22,12 @@ class Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter {
     /** @var Tracker */
     private $tracker;
 
-    public function __construct(Tracker $tracker) {
-        $this->tracker = $tracker;
+    /** @var Tracker_Artifact | null */
+    private $artifact_to_link;
+
+    public function __construct(Tracker $tracker, $artifact_to_link) {
+        $this->tracker          = $tracker;
+        $this->artifact_to_link = $artifact_to_link;
     }
 
     public function tracker_title() {
@@ -31,7 +35,19 @@ class Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter {
     }
 
     public function form_elements() {
-       return $this->tracker->fetchSubmitNoColumns();
+       return $this->tracker->fetchSubmitNoColumns($this->artifact_to_link);
+    }
+
+    public function artifact_to_link_title() {
+        if (! $this->has_linked_artifact()) {
+            return null;
+        }
+
+        return $this->artifact_to_link->getTitle();
+    }
+
+    public function has_linked_artifact() {
+        return isset($this->artifact_to_link);
     }
 
     public function submit() {
