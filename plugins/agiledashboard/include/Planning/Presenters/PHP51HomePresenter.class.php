@@ -23,23 +23,20 @@ class Planning_Presenter_PHP51HomePresenter {
     /** @var string */
     public $plugin_theme_path;
 
+    /** @var int */
     public $project_id;
 
-    private $is_user_admin;
+    /** @var Planning_ShortAccess[] */
+    private $short_access;
 
-    public function __construct(array $short_access, $plugin_theme_path, $project_id, $is_user_admin) {
+    public function __construct(array $short_access, $plugin_theme_path, $project_id) {
         $this->short_access      = $short_access;
         $this->plugin_theme_path = $plugin_theme_path;
         $this->project_id        = $project_id;
-        $this->is_user_admin     = $is_user_admin;
     }
 
     public function getShortAccess() {
         return $this->short_access;
-    }
-
-    public function hasShortAccess() {
-        return count($this->short_access);
     }
 
     public function getLatestLeafMilestone() {
@@ -53,14 +50,6 @@ class Planning_Presenter_PHP51HomePresenter {
 
     public function top_planning() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'top_planning_link');
-    }
-
-    public function nothing_set_up() {
-        if (! $this->is_user_admin) {
-            return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_generic');
-        }
-
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_admin', array('/plugins/agiledashboard/?group_id='.$this->project_id.'&action=admin'));
     }
 }
 ?>

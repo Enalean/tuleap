@@ -170,6 +170,8 @@ interface Planning_Milestone {
      * @return boolean
      */
     public function milestoneCanBeSubmilestone(Planning_Milestone $potential_submilestone);
+
+    public function hasBurdownField(PFUser $user);
 }
 
 ?>

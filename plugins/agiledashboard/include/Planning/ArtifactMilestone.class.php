@@ -329,5 +329,15 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         return false;
     }
 
+    /**
+     * @param PFUser $user
+     * @return bool
+     */
+    public function hasBurdownField(PFUser $user) {
+        $burndown_field = $this->getArtifact()->getABurndownField($user);
+
+        return (bool) $burndown_field;
+    }
+
 }
 ?>

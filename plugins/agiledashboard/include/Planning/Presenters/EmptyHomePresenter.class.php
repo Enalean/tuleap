@@ -18,30 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning_Presenter_HomePresenter {
-
-    /** @var Planning_Presenter_MilestoneAccessPresenter[] */
-    public $milestone_presenters;
+class Planning_Presenter_EmptyHomePresenter {
 
     /** @var int */
     public $group_id;
 
-    /** @var string */
-    public $last_milestone_type;
-
-    /** @var Planning_Presenter_MilestoneSummaryPresenterAbstract[] */
-    public $milestone_summary_presenters;
+    /** @var bool */
+    public $is_user_admin;
 
     public function __construct(
-        $milestone_access_presenters,
         $group_id,
-        $last_milestone_type,
-        $milestone_summary_presenters
+        $is_user_admin
     ) {
-        $this->milestone_presenters         = $milestone_access_presenters;
-        $this->group_id                     = $group_id;
-        $this->last_milestone_type          = $last_milestone_type;
-        $this->milestone_summary_presenters = $milestone_summary_presenters;
+        $this->group_id      = $group_id;
+        $this->is_user_admin = $is_user_admin;
+    }
+
+    public function nothing_set_up() {
+        if (! $this->is_user_admin) {
+            return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_generic');
+        }
+
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_admin', array('/plugins/agiledashboard/?group_id='.$this->group_id.'&action=admin'));
     }
 }
 ?>

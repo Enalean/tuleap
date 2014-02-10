@@ -141,5 +141,9 @@ class Planning_NoMilestone implements Planning_Milestone {
         return false;
     }
 
+    public function hasBurdownField(PFUser $user) {
+        return false;
+    }
+
 }
 ?>

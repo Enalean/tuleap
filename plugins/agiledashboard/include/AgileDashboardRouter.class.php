@@ -266,7 +266,8 @@ class AgileDashboardRouter {
             $this->milestone_factory,
             $this->project_manager,
             $this->xml_exporter,
-            $this->plugin->getThemePath()
+            $this->plugin->getThemePath(),
+            $this->plugin->getPluginPath()
         );
     }
 

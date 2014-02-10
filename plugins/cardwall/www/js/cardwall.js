@@ -498,8 +498,10 @@ tuleap.agiledashboard.cardwall.fetchBurndown = function() {
         method : 'GET',
         onSuccess: function (response) {
             if (! tuleap.agiledashboard.cardwall.burndown) {
+                var append_element_selector = d3.select(".milestone-burndown");
+
                 tuleap.agiledashboard.cardwall.burndown = new tuleap.agiledashboard.Burndown(d3, response.responseJSON);
-                tuleap.agiledashboard.cardwall.burndown.display();
+                tuleap.agiledashboard.cardwall.burndown.display(append_element_selector);
             } else {
                 tuleap.agiledashboard.cardwall.burndown.update(response.responseJSON);
             }
@@ -530,11 +532,11 @@ tuleap.agiledashboard.Burndown = Class.create({
         this.ideal_data  = [ this.data.capacity, 0 ];
     },
 
-    display: function() {
+    display: function(append_element_selector) {
         this.defineAbscissas();
         this.defineOrdinates();
         this.defineLineFunctions();
-        this.bootstrapTheChart();
+        this.bootstrapTheChart(append_element_selector);
         this.paintTheIdealLine();
         this.paintTheActualLine();
         this.paintTheDots();
@@ -560,8 +562,8 @@ tuleap.agiledashboard.Burndown = Class.create({
         this.y.domain(this.d3.extent(this.data.points.concat(this.ideal_data)));
     },
 
-    bootstrapTheChart: function() {
-        var svg = this.d3.select(".milestone-burndown").append("svg")
+    bootstrapTheChart: function(append_element_selector) {
+        var svg = append_element_selector.append("svg")
             .attr("class", "chart")
             .attr("width", this.width)
             .attr("height", this.height);

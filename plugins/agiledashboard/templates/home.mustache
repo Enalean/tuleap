@@ -1,12 +1,47 @@
-{{# milestone_presenters }}
-    {{ milestone_type }}
-    <ul>
-        {{# milestones }}
-            <li>
-                {{ getArtifactTitle }}
-                - <a href="?group_id={{ group_id }}&planning_id={{ getPlanningId }}&action=show&aid={{ getArtifactId }}&pane=blcontent">{{ content }}</a>
-                - <a href="?group_id={{ group_id }}&planning_id={{ getPlanningId }}&action=show&aid={{ getArtifactId }}&pane=planning">{{ planning }}</a>
-            </li>
-        {{/ milestones }}
-    </ul>
-{{/ milestone_presenters }}
+<div style="float:left">
+    {{# milestone_presenters }}
+        {{ milestone_type }}
+        <ul>
+            {{# milestones }}
+                <li>
+                    {{ getArtifactTitle }}
+                    - <a href="?group_id={{ group_id }}&planning_id={{ getPlanningId }}&action=show&aid={{ getArtifactId }}&pane=blcontent">{{ content }}</a>
+                    - <a href="?group_id={{ group_id }}&planning_id={{ getPlanningId }}&action=show&aid={{ getArtifactId }}&pane=planning">{{ planning }}</a>
+                </li>
+            {{/ milestones }}
+        </ul>
+    {{/ milestone_presenters }}
+</div>
+<div style="float:left">
+    {{# milestone_summary_presenters }}
+        <table border="1">
+            <tr><td>
+                {{ milestone_title }}
+                {{# breadcrumbs }}
+                    {{# . }}
+                        {{ title }}
+                    {{/ . }}
+                {{/ breadcrumbs }}
+            </td></tr>
+            <tr><td>
+                {{# has_burndown }}
+                    <script type="application/json" class="data-burndown-json" data-for="burndown-placeholder-{{ artifact_id }}">
+                        {{{ burndown_data }}}
+                    </script>
+                    <div id="burndown-placeholder-{{ artifact_id }}">
+                    </div>
+                {{/ has_burndown }}
+                {{^ has_burndown }}
+                    {{ count_open_backlog_items }} {{ open }} |
+                    {{ count_closed_backlog_items }} {{ closed }}
+                {{/ has_burndown }}
+            </td></tr>
+            <tr><td>
+                <a href="?group_id={{ group_id }}&planning_id={{ planning_id }}&action=show&aid={{ artifact_id }}&pane=blcontent">{{ content }}</a>
+                {{# has_cardwall }}
+                <a href="?group_id={{ group_id }}&planning_id={{ planning_id }}&action=show&aid={{ artifact_id }}&pane=cardwall">{{ cardwall }}</a>
+                {{/ has_cardwall }}
+            </td></tr>
+        </table>
+    {{/ milestone_summary_presenters }}
+</div>

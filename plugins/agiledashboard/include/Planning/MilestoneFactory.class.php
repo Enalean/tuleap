@@ -491,6 +491,16 @@ class Planning_MilestoneFactory {
     }
 
     /**
+     * @return Planning_Milestone
+     */
+    public function addMilestoneAncestors(PFUser $user, Planning_Milestone $milestone) {
+        $ancestors = $this->getMilestoneAncestors($user, $milestone);
+        $milestone->setAncestors($ancestors);
+
+        return $milestone;
+    }
+
+    /**
      * Get all milestones that share the same parent than given milestone.
      *
      * @param PFUser $user

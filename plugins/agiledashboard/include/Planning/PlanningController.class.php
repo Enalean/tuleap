@@ -48,6 +48,9 @@ class Planning_Controller extends MVC2_PluginController {
     /** @var ProjectXMLExporter */
     private $xml_exporter;
 
+    /** @var string */
+    private $plugin_path;
+
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
@@ -55,7 +58,8 @@ class Planning_Controller extends MVC2_PluginController {
         Planning_MilestoneFactory $milestone_factory,
         ProjectManager $project_manager,
         ProjectXMLExporter $xml_exporter,
-        $plugin_theme_path
+        $plugin_theme_path,
+        $plugin_path
     ) {
         parent::__construct('agiledashboard', $request);
         
@@ -66,6 +70,7 @@ class Planning_Controller extends MVC2_PluginController {
         $this->project_manager              = $project_manager;
         $this->xml_exporter                 = $xml_exporter;
         $this->plugin_theme_path            = $plugin_theme_path;
+        $this->plugin_path                  = $plugin_path;
     }
     
     public function admin() {
@@ -132,11 +137,15 @@ class Planning_Controller extends MVC2_PluginController {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
             $plannings = array();
         }
+
+        if (empty($plannings)) {
+            return $this->showEmptyHome();
+        }
+
         $presenter = new Planning_Presenter_PHP51HomePresenter(
             $plannings,
             $this->plugin_theme_path,
-            $this->group_id,
-            $this->isUserAdmin()
+            $this->group_id
         );
         return $this->renderToString('home_php51', $presenter);
     }
@@ -149,10 +158,38 @@ class Planning_Controller extends MVC2_PluginController {
             $this->group_id
         );
 
+        if (empty($plannings)) {
+            return $this->showEmptyHome();
+        }
+        $last_planning = array_pop($plannings);
+
+        $presenter = new Planning_Presenter_HomePresenter(
+            $this->getMilestoneAccessPresenters($plannings, $user),
+            $this->group_id,
+            $last_planning->getPlanningTracker()->getName(),
+            $this->getMilestoneSummaryPresenters($last_planning, $user)
+        );
+        return $this->renderToString('home', $presenter);
+    }
+
+    /**
+     * Home page for when there is nothing set-up.
+     */
+    private function showEmptyHome() {
+        $presenter = new Planning_Presenter_EmptyHomePresenter(
+            $this->group_id,
+            $this->isUserAdmin()
+        );
+        return $this->renderToString('empty-home', $presenter);
+    }
+
+    /**
+     * @return Planning_Presenter_MilestoneAccessPresenter
+     */
+    private function getMilestoneAccessPresenters($plannings, PFUser $user) {
         $milestone_access_presenters = array();
         foreach ($plannings as $planning) {
-            $milestone_type = $planning->getPlanningTracker();
-
+            $milestone_type      = $planning->getPlanningTracker();
             $milestone_presenter = new Planning_Presenter_MilestoneAccessPresenter(
                 $this->milestone_factory->getAllCurrentMilestones($user, $planning->getId()),
                 $milestone_type->getName()
@@ -161,11 +198,46 @@ class Planning_Controller extends MVC2_PluginController {
             $milestone_access_presenters[] = $milestone_presenter;
         }
 
-        $presenter = new Planning_Presenter_HomePresenter(
-            $milestone_access_presenters,
-            $this->group_id
+        return $milestone_access_presenters;
+    }
+
+    /**
+     * @return Planning_Presenter_MilestoneSummaryPresenter
+     */
+    private function getMilestoneSummaryPresenters(Planning $last_planning, PFUser $user) {
+        $presenters = array();
+        $last_planning_current_milestones = $this->milestone_factory->getAllCurrentMilestones(
+            $user,
+            $last_planning->getId()
         );
-        return $this->renderToString('home', $presenter);
+
+        if (empty($last_planning_current_milestones)) {
+            return $presenters;
+        }
+
+        $a_milestone        = $last_planning_current_milestones[0];
+        $has_burndown_field = $a_milestone->hasBurdownField($user);
+        $has_cardwall       = $this->hasCardwall($last_planning);
+
+        foreach ($last_planning_current_milestones as $milestone) {
+            $this->milestone_factory->addMilestoneAncestors($user, $milestone);
+
+            if ($has_burndown_field) {
+                $presenters[] = new Planning_Presenter_MilestoneBurndownSummaryPresenter(
+                    $milestone,
+                    $this->plugin_path,
+                    $has_cardwall
+                );
+            } else {
+                $presenters[] = new Planning_Presenter_MilestoneSummaryPresenter(
+                    $milestone,
+                    $this->plugin_path,
+                    $has_cardwall
+                );
+            }
+        }
+
+        return $presenters;
     }
 
     /**
@@ -276,6 +348,10 @@ class Planning_Controller extends MVC2_PluginController {
         $available_planning_trackers[] = $planning->getPlanningTracker();
 
         return new Planning_FormPresenter($planning, $available_trackers, $available_planning_trackers, $cardwall_admin);
+    }
+
+    private function hasCardwall(Planning $planning) {
+        return (bool) $this->getCardwallConfiguration($planning);
     }
 
     private function getCardwallConfiguration(Planning $planning) {
