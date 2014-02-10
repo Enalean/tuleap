@@ -30,6 +30,10 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenterCollec
         $this->submilestone_tracker = $submilestone_tracker;
     }
 
+    public function getTracker() {
+        return $this->submilestone_tracker;
+    }
+
     public function getName() {
         return $this->submilestone_tracker->getName();
     }

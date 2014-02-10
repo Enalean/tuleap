@@ -88,6 +88,7 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
             if ($descendant_tracker->userCanSubmitArtifact($user)) {
                 $submit_urls[] = array(
                     'tracker_type' => $descendant_tracker->getName(),
+                    'tracker_id'   => $descendant_tracker->getId(),
                     'submit_url'   => $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($descendant_tracker).'&'.$redirect_to_self
                 );
             }
