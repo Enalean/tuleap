@@ -28,7 +28,7 @@ class Planning_MilestoneSelectorController extends MVC2_PluginController {
     }
 
     public function show() {
-        $milestone = $this->milestone_factory->getCurrentMilestone(
+        $milestone = $this->milestone_factory->getLastMilestoneCreated(
             $this->request->getCurrentUser(),
             $this->request->getValidated('planning_id', 'uint', 0)
         );

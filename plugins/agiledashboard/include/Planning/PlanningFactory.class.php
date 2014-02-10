@@ -168,6 +168,25 @@ class PlanningFactory {
     }
 
     /**
+     * Get a list of planning defined in a group_id
+     *
+     * @param PFUser $user     The user who will see the planning
+     * @param int  $group_id
+     *
+     * @return Planning[]
+     */
+    public function getOrderedPlannings(PFUser $user, $group_id) {
+        $plannings = $this->getPlannings($user, $group_id);
+
+        if ($plannings) {
+            $this->sortPlanningsAccordinglyToHierarchy($plannings);
+        }
+
+        return $plannings;
+    }
+
+
+    /**
      * Get a list of planning defined in a group_id with added backlog trackers
      *
      * @param PFUser $user     The user who will see the planning

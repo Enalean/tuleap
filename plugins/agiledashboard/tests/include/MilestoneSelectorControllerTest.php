@@ -34,7 +34,7 @@ class Planning_MilestoneSelectorControllerTest extends TuleapTestCase {
         $this->current_milestone_artifact_id = 444;
 
         $milestone = aMilestone()->withArtifact(anArtifact()->withId($this->current_milestone_artifact_id)->build())->build();
-        stub($this->milestone_factory)->getCurrentMilestone($this->user, $this->planning_id)->returns($milestone);
+        stub($this->milestone_factory)->getLastMilestoneCreated($this->user, $this->planning_id)->returns($milestone);
     }
 
     public function tearDown() {
@@ -65,7 +65,7 @@ class Planning_MilestoneSelectorControllerTest extends TuleapTestCase {
 
     function itDoesntRedirectIfNoMilestone() {
         $milestone_factory = mock('Planning_MilestoneFactory');
-        stub($milestone_factory)->getCurrentMilestone()->returns(mock('Planning_NoMilestone'));
+        stub($milestone_factory)->getLastMilestoneCreated()->returns(mock('Planning_NoMilestone'));
 
         $GLOBALS['Response']->expectNever('redirect');
         $controller = new Planning_MilestoneSelectorController($this->request, $milestone_factory);

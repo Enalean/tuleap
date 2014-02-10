@@ -20,5 +20,16 @@
 
 class Planning_Presenter_HomePresenter {
 
+    /**
+     * @var Planning_Presenter_MilestoneAccessPresenter[]
+     */
+    public $milestone_presenters;
+
+    public $group_id;
+
+    public function __construct($milestone_access_presenters, $group_id) {
+        $this->milestone_presenters = $milestone_access_presenters;
+        $this->group_id             = $group_id;
+    }
 }
 ?>

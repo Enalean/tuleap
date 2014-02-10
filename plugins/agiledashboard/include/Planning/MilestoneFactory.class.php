@@ -201,15 +201,15 @@ class Planning_MilestoneFactory {
      * @return Planning_Milestone
      */
     public function updateMilestoneContextualInfo(PFUser $user, Planning_Milestone $milestone) {
+        $artifact = $milestone->getArtifact();
         return $milestone
-            ->setStartDate($this->getTimestamp($user, $milestone, Planning_Milestone::START_DATE_FIELD_NAME))
-            ->setDuration($this->getComputedFieldValue($user, $milestone, Planning_Milestone::DURATION_FIELD_NAME))
-            ->setCapacity($this->getComputedFieldValue($user, $milestone, Planning_Milestone::CAPACITY_FIELD_NAME))
-            ->setRemainingEffort($this->getComputedFieldValue($user, $milestone, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME));
+            ->setStartDate($this->getTimestamp($user, $artifact, Planning_Milestone::START_DATE_FIELD_NAME))
+            ->setDuration($this->getComputedFieldValue($user, $artifact, Planning_Milestone::DURATION_FIELD_NAME))
+            ->setCapacity($this->getComputedFieldValue($user, $artifact, Planning_Milestone::CAPACITY_FIELD_NAME))
+            ->setRemainingEffort($this->getComputedFieldValue($user, $artifact, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME));
     }
 
-    private function getTimestamp(PFUser $user, Planning_Milestone $milestone, $field_name) {
-        $milestone_artifact = $milestone->getArtifact();
+    private function getTimestamp(PFUser $user, Tracker_Artifact $milestone_artifact, $field_name) {
         $field = $this->formelement_factory->getUsedFieldByNameForUser($milestone_artifact->getTracker()->getId(), $field_name, $user);
 
         if (! $field) {
@@ -224,8 +224,7 @@ class Planning_MilestoneFactory {
         return $value->getTimestamp();
     }
 
-    protected function getComputedFieldValue(PFUser $user, Planning_Milestone $milestone, $field_name) {
-        $milestone_artifact = $milestone->getArtifact();
+    protected function getComputedFieldValue(PFUser $user, Tracker_Artifact $milestone_artifact, $field_name) {
         $field = $this->formelement_factory->getComputableFieldByNameForUser(
             $milestone_artifact->getTracker()->getId(),
             $field_name,
@@ -522,7 +521,7 @@ class Planning_MilestoneFactory {
      *
      * @return Planning_Milestone
      */
-    public function getCurrentMilestone(PFUser $user, $planning_id) {
+    public function getLastMilestoneCreated(PFUser $user, $planning_id) {
         
         $planning  = $this->planning_factory->getPlanning($planning_id);
         $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
@@ -531,6 +530,78 @@ class Planning_MilestoneFactory {
         }
         return new Planning_NoMilestone($planning->getPlanningTracker()->getProject(), $planning);
     }
-}
 
+    /**
+     * @return Planning_Milestone[]
+     */
+    public function getAllCurrentMilestones(PFUser $user, $planning_id) {
+        $milestones = array();
+        $planning   = $this->planning_factory->getPlanning($planning_id);
+
+        if (! $this->canPlanningBeSetInTime($planning->getPlanningTracker())) {
+            return $milestones;
+        }
+
+        $artifacts = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        foreach ($artifacts as $artifact) {
+            if (! $this->isMilestoneCurrent($artifact, $user)) {
+                continue;
+            }
+            $milestones[] = $this->getMilestoneFromArtifact($artifact);
+        }
+
+        return $milestones;
+    }
+
+    /**
+     * Checks if the planning's tracker has the necssary fields to determine
+     * when the planning's milestone begin and end.
+     *
+     * @param Tracker $planning_tracker
+     * @return boolean
+     */
+    private function canPlanningBeSetInTime(Tracker $planning_tracker) {
+        $start_date_field = $this->getMilestoneTrackerStartDateField($planning_tracker);
+        $duration_field   = $this->getMilestoneTrackerDurationField($planning_tracker);
+
+        return ($start_date_field && $duration_field);
+    }
+
+    private function isMilestoneCurrent(Tracker_Artifact $milestone_artifact, PFUser $user) {
+        $start_date = new DateTime();
+        $now        = new DateTime();
+
+        $start_date->setTimestamp($this->getTimestamp($user, $milestone_artifact, Planning_Milestone::START_DATE_FIELD_NAME));
+        $now->setTimestamp($_SERVER['REQUEST_TIME']);
+
+        $duration         = $this->getComputedFieldValue($user, $milestone_artifact, Planning_Milestone::DURATION_FIELD_NAME);
+        $days_since_start = $start_date->diff($now)->days;
+
+        if ($start_date->getTimestamp() <= $now->getTimestamp() && $days_since_start <= $duration) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return Tracker_FormElement_Field | null
+     */
+    private function getMilestoneTrackerStartDateField(Tracker $planning_tracker) {
+        return $this->formelement_factory->getFormElementByName(
+            $planning_tracker->getId(),
+            Planning_Milestone::START_DATE_FIELD_NAME
+        );
+    }
+
+    /**
+     * @return Tracker_FormElement_Field | null
+     */
+    private function getMilestoneTrackerDurationField(Tracker $planning_tracker) {
+        return $this->formelement_factory->getFormElementByName(
+            $planning_tracker->getId(),
+            Planning_Milestone::DURATION_FIELD_NAME
+        );
+    }
+}
 ?>

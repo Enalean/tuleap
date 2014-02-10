@@ -127,7 +127,6 @@ class Planning_Controller extends MVC2_PluginController {
 
     private function showPHP51Home() {
         try {
-            $project_id = $this->request->getProject()->getID();
             $plannings = $this->getPlanningsShortAccess($this->group_id);
         } catch (Planning_InvalidConfigurationException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
@@ -136,14 +135,36 @@ class Planning_Controller extends MVC2_PluginController {
         $presenter = new Planning_Presenter_PHP51HomePresenter(
             $plannings,
             $this->plugin_theme_path,
-            $project_id,
+            $this->group_id,
             $this->isUserAdmin()
         );
         return $this->renderToString('home_php51', $presenter);
     }
 
     private function showPHP53Home() {
-        $presenter = new Planning_Presenter_HomePresenter();
+        $user = $this->request->getCurrentUser();
+
+        $plannings = $this->planning_factory->getOrderedPlannings(
+            $user,
+            $this->group_id
+        );
+
+        $milestone_access_presenters = array();
+        foreach ($plannings as $planning) {
+            $milestone_type = $planning->getPlanningTracker();
+
+            $milestone_presenter = new Planning_Presenter_MilestoneAccessPresenter(
+                $this->milestone_factory->getAllCurrentMilestones($user, $planning->getId()),
+                $milestone_type->getName()
+            );
+
+            $milestone_access_presenters[] = $milestone_presenter;
+        }
+
+        $presenter = new Planning_Presenter_HomePresenter(
+            $milestone_access_presenters,
+            $this->group_id
+        );
         return $this->renderToString('home', $presenter);
     }
 

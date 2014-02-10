@@ -1,0 +1,12 @@
+{{# milestone_presenters }}
+    {{ milestone_type }}
+    <ul>
+        {{# milestones }}
+            <li>
+                {{ getArtifactTitle }}
+                - <a href="?group_id={{ group_id }}&planning_id={{ getPlanningId }}&action=show&aid={{ getArtifactId }}&pane=blcontent">{{ content }}</a>
+                - <a href="?group_id={{ group_id }}&planning_id={{ getPlanningId }}&action=show&aid={{ getArtifactId }}&pane=planning">{{ planning }}</a>
+            </li>
+        {{/ milestones }}
+    </ul>
+{{/ milestone_presenters }}
