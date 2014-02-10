@@ -32,14 +32,16 @@
     @modal-height: 400px;
     @modal-width: 430px;
     @grip-width: 30px;
-    @grip-background-color: #ddd;
+    @grip-background-color: #303030;
+    @grip-color: #DDDDDD;
     @side-content-width: 250px;
     @title-background-color: #FFFFFF;
+    @title-color: #222222;
     @content-background-color: #FFFFFF;
     @side-content-background-color: #F8F8F8;
     @side-content-background-color: #FFFFFF;
     @action-background-color: #F5F5F5;
-    @side-action-background-color: #F1F1F1;
+    @side-action-background-color: #F5F5F5;
 
     display: none;
     position: fixed;
@@ -85,6 +87,10 @@
 
             span {
                 background-color: @grip-background-color;
+                color: @grip-color;
+                letter-spacing: 0.1em;
+                font-weight: normal;
+                line-height: 1.5em;
                 display: block;
                 text-align: center;
                 bottom: 0;
@@ -132,6 +138,7 @@
 
     .tuleap-modal-title, .tuleap-modal-side-panel-content-title {
         background-color: @title-background-color;
+        color: @title-color;
         border-bottom: 1px solid darken(@title-background-color, 10%);
         padding: 7px @modal-padding;
 
@@ -154,6 +161,13 @@
                 color: #888;
             }
         }
+    }
+    .tuleap-modal-title {
+        border-top-left-radius: @modal-radius;
+        border-top-right-radius: @modal-radius;
+    }
+    &.tuleap-modal-pimped .tuleap-modal-title {
+        border-radius: 0;
     }
 
     .tuleap-modal-content, .tuleap-modal-side-panel-content-content {
@@ -178,5 +192,12 @@
     }
     .tuleap-modal-side-panel-content-actions {
         background-color: @side-action-background-color;
+    }
+    .tuleap-modal-actions {
+        border-bottom-left-radius: @modal-radius;
+        border-bottom-right-radius: @modal-radius;
+    }
+    &.tuleap-modal-pimped .tuleap-modal-actions {
+        border-radius: 0;
     }
 }
