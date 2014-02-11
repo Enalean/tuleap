@@ -148,6 +148,9 @@ tuleap.tracker = tuleap.tracker || { };
                 }
             });
 
+            tuleap_modal = modal.getDOMElement();
+            codendi.Toggler.init(tuleap_modal);
+
             $('#tuleap-modal-submit').click(function(event) {
                 self.updateRichTextAreas();
                 $('#artifact-form-errors').hide();
@@ -193,6 +196,10 @@ tuleap.tracker = tuleap.tracker || { };
                     $('.artifact-event-popup').remove();
                 }
             });
+
+            tuleap_modal = modal.getDOMElement();
+            codendi.Tooltip.load(tuleap_modal, true);
+            codendi.Toggler.init(tuleap_modal);
 
             $('#tuleap-modal-submit').click(function(event) {
                 self.updateRichTextAreas();
