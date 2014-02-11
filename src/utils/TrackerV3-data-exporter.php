@@ -45,6 +45,9 @@ if ($archive->open($archive_path, ZipArchive::CREATE) !== true) {
 $exporter = new ArtifactXMLExporter(new ArtifactXMLExporterDao(), $archive, $xml, $logger);
 $exporter->exportTrackerData($atid);
 
+$validator = new XML_RNGValidator();
+$validator->validate(simplexml_import_dom($xml));
+
 $xsl = new DOMDocument();
 $xsl->load(dirname(__FILE__).'/xml/indent.xsl');
 
