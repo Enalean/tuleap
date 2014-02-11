@@ -42,7 +42,7 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
 
     new Ajax.Request(rest_route_url, {
         method : 'GET',
-        onComplete : updateRemainingEffortViewValue
+        onComplete : updateEffortViewValue
     });
 
     function updateArtifact( artifact ) {
@@ -51,7 +51,7 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
 
         $H( values ).each( function ( field ) {
             updateArtifactField( artifact_id, field );
-        })
+        });
     }
 
     function updateArtifactField( artifact_id, field ) {
@@ -60,7 +60,7 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
 
         $$( field_to_update_selector ).each( function ( element_to_update ) {
             updateFieldValue( element_to_update, field_value )
-        })
+        });
     }
 
     function updateFieldValue( element, value ) {
@@ -73,12 +73,38 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
         }
     }
 
-    function updateRemainingEffortViewValue(transport) {
-        var milestone_info;
+    function updateEffortViewValue(transport) {
+        var element = $('milestone_points_completion_bar');
+
+        switch(element.readAttribute('data-count-style')) {
+            case 'cards':
+                updateOpenClosedViewValue(transport.responseJSON);
+                break;
+            case 'effort':
+                updateRemainingEffortViewValue(transport.responseJSON);
+                break;
+        }
+    }
+
+    function updateOpenClosedViewValue(milestone_info) {
+        var nb_closed;
+        var nb_open;
+        var nb_total;
+        var element;
+
+        nb_open        = parseInt(milestone_info["status_count"]["open"]);
+        nb_closed      = parseInt(milestone_info["status_count"]["closed"]);
+        nb_total       = nb_open + nb_closed;
+        element        = $('milestone_remaining_effort');
+
+        element.update(nb_open+'/'+nb_total);
+        updateInitialEffortProgressBar(nb_open);
+    }
+
+    function updateRemainingEffortViewValue(milestone_info) {
         var milestone_remaining_effort;
         var element;
 
-        milestone_info             = transport.responseJSON;
         milestone_remaining_effort = parseFloat(milestone_info["remaining_effort"]);
         element                    = $('milestone_remaining_effort');
 

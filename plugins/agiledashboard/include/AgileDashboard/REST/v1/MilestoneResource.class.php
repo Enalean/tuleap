@@ -73,7 +73,8 @@ class MilestoneResource {
         $tracker_form_element_factory = Tracker_FormElementFactory::instance();
         $status_counter               = new AgileDashboard_Milestone_MilestoneStatusCounter(
             new AgileDashboard_BacklogItemDao(),
-            new Tracker_ArtifactDao()
+            new Tracker_ArtifactDao(),
+            $tracker_artifact_factory
         );
 
         $this->milestone_factory = new Planning_MilestoneFactory(
@@ -187,7 +188,7 @@ class MilestoneResource {
         $this->sendAllowHeadersForMilestone($milestone);
 
         $milestone_representation = new MilestoneRepresentation();
-        $milestone_representation->build($milestone, $this->milestone_factory->getMilestoneStatusCount($milestone));
+        $milestone_representation->build($milestone, $this->milestone_factory->getMilestoneStatusCount($user, $milestone));
 
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,
@@ -255,7 +256,7 @@ class MilestoneResource {
         return array_map(
             function (Planning_Milestone $milestone) use ($user, $event_manager, $milestone_factory) {
                 $milestone_representation = new MilestoneRepresentation();
-                $milestone_representation->build($milestone, $milestone_factory->getMilestoneStatusCount($milestone));
+                $milestone_representation->build($milestone, $milestone_factory->getMilestoneStatusCount($user, $milestone));
 
                 $event_manager->processEvent(
                     AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,

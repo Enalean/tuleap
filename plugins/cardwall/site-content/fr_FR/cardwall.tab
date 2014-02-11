@@ -57,5 +57,9 @@ plugin_cardwall	milestone_days_to_go	jours restants
 plugin_cardwall	milestone_day_to_go	jour restant
 plugin_cardwall	milestone_points_to_go	points restants
 plugin_cardwall	milestone_point_to_go	point restant
-plugin_cardwall	milestone_capacity	Capacité :
-plugin_cardwall	milestone_initial_effort	Effort initial :
+plugin_cardwall	milestone_capacity	Capacité : $1
+plugin_cardwall	milestone_initial_effort	Effort initial : $1
+plugin_cardwall	milestone_open_closed_initial_effort	Nombre total de cartes :
+plugin_cardwall	milestone_open_closed_open_items	cartes ouvertes
+plugin_cardwall	milestone_open_closed_progress_info	Certaines cartes peuvent être cachées
+plugin_cardwall	count_style_helper	Au moins un élément du backlog n'a pas d'effort initial. Plan B: comptage des cartes.
