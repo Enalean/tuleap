@@ -276,6 +276,7 @@ class ArtifactXMLExporterArtifact {
             $file = $this->document->createElement('file');
             $file->appendChild($this->getNodeWithValue('id', $xml_file_id));
             $file->appendChild($this->getNodeWithValue('filename', $row['filename']));
+            $file->appendChild($this->getNodeWithValue('path', $this->getFilePathInArchive($xml_file_id)));
             $file->appendChild($this->getNodeWithValue('filesize', $row['filesize']));
             $file->appendChild($this->getNodeWithValue('filetype', $row['filetype']));
             $file->appendChild($this->getNodeWithValue('description', $row['description']));

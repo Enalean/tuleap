@@ -13,6 +13,7 @@ grammar {
             element file {
                 element id { xsd:string },
                 element filename { xsd:string },
+                element path { xsd:string },
                 element filesize { xsd:int },
                 element filetype { xsd:string },
                 element description { xsd:string }

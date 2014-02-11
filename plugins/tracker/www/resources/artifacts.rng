@@ -35,6 +35,9 @@
               <element name="filename">
                 <data type="string"/>
               </element>
+              <element name="path">
+                <data type="string"/>
+              </element>
               <element name="filesize">
                 <data type="int"/>
               </element>
