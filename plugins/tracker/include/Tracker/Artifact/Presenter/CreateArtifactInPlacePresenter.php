@@ -54,6 +54,10 @@ class Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter {
         return isset($this->artifact_to_link);
     }
 
+    public function javascript_rules() {
+        return $this->tracker->displayRulesAsJavascript();
+    }
+
     public function submit() {
         return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'submit');
     }
