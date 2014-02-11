@@ -24,15 +24,9 @@ class User_LoginManagerTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        Config::store();
         $this->event_manager = mock('EventManager');
         $this->user_manager  = mock('UserManager');
-        $this->login_manager = new User_LoginManager($this->event_manager, $this->user_manager);
-    }
-
-    public function tearDown() {
-        Config::restore();
-        parent::tearDown();
+        $this->login_manager = new User_LoginManager($this->event_manager, $this->user_manager, mock('User_PasswordExpirationChecker'));
     }
 
     public function itDelegatesAuthenticationToPlugin() {
@@ -113,55 +107,20 @@ class User_LoginManagerTest extends TuleapTestCase {
             $user
         );
     }
-
-    public function itRaisesAnExceptionWhenPasswordExpired() {
-        $this->expectException('User_PasswordExpiredException');
-        Config::set('sys_password_lifetime', 10);
-        stub($this->user_manager)->getUserByUserName()->returns(
-            aUser()
-                ->withPassword('password')
-                ->withStatus(PFUser::STATUS_ACTIVE)
-                ->withLastPasswordUpdate(strtotime('15 days ago'))
-                ->build()
-        );
-        $this->login_manager->authenticate('john', 'password');
-    }
-
-    public function itThrowsAnExceptionWithUserWhenPasswordExpired() {
-        $exception_catched = false;
-        Config::set('sys_password_lifetime', 10);
-        $user = aUser()
-            ->withPassword('password')
-            ->withStatus(PFUser::STATUS_ACTIVE)
-            ->withLastPasswordUpdate(strtotime('15 days ago'))
-            ->build();
-        stub($this->user_manager)->getUserByUserName()->returns($user);
-        try {
-            $this->login_manager->authenticate('john', 'password');
-        } catch(User_PasswordExpiredException $exception) {
-            $this->assertEqual($exception->getUser(), $user);
-            $exception_catched = true;
-        }
-        $this->assertTrue($exception_catched);
-    }
 }
 
 class User_LoginManager_validateAndSetCurrentUserTest extends TuleapTestCase {
     private $event_manager;
     private $user_manager;
     private $login_manager;
+    private $password_expiration_checker;
 
     public function setUp() {
         parent::setUp();
-        Config::store();
         $this->event_manager = mock('EventManager');
         $this->user_manager  = mock('UserManager');
-        $this->login_manager = new User_LoginManager($this->event_manager, $this->user_manager);
-    }
-
-    public function tearDown() {
-        Config::restore();
-        parent::tearDown();
+        $this->password_expiration_checker = mock('User_PasswordExpirationChecker');
+        $this->login_manager = new User_LoginManager($this->event_manager, $this->user_manager, $this->password_expiration_checker);
     }
 
     public function itPersistsValidUser() {
@@ -180,6 +139,14 @@ class User_LoginManager_validateAndSetCurrentUserTest extends TuleapTestCase {
 
         $this->login_manager->validateAndSetCurrentUser($user);
     }
+
+    public function itVerifiesUserPasswordLifetime() {
+        $user = aUser()->withStatus(PFUser::STATUS_ACTIVE)->build();
+
+        expect($this->password_expiration_checker)->checkPasswordLifetime($user)->once();
+
+        $this->login_manager->validateAndSetCurrentUser($user);
+    }
 }
 
 class User_LoginManagerPluginsTest extends TuleapTestCase {
@@ -192,7 +159,7 @@ class User_LoginManagerPluginsTest extends TuleapTestCase {
         parent::setUp();
         $this->event_manager = new EventManager();
         $this->user_manager  = mock('UserManager');
-        $this->login_manager = new User_LoginManager($this->event_manager, $this->user_manager);
+        $this->login_manager = new User_LoginManager($this->event_manager, $this->user_manager, mock('User_PasswordExpirationChecker'));
     }
 
     public function authenticationSucceed(array $params) {

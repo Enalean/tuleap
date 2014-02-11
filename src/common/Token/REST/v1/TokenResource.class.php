@@ -27,6 +27,7 @@ use \Exception;
 use UserManager;
 use EventManager;
 use User_LoginManager;
+use \User_PasswordExpirationChecker;
 
 /**
  * Wrapper for token related REST methods
@@ -59,7 +60,8 @@ class TokenResource {
         try {
             $user_login = new User_LoginManager(
                 EventManager::instance(),
-                $this->user_manager
+                $this->user_manager,
+                new User_PasswordExpirationChecker()
             );
 
             $user  = $user_login->authenticate($username, $password);
