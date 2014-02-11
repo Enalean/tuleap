@@ -760,7 +760,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             if (!is_dir($path .'/thumbnails')) {
                 mkdir($path .'/thumbnails', 0777, true);
             }
-            $filename = $path .'/'. $attachment->getId();
+            $method   = 'move_uploaded_file';
+            $tmp_name = $file_info['tmp_name'];
 
             if(isset($file_info['id'])) {
                 $temporary = new Tracker_SOAP_TemporaryFile($this->getCurrentUser(), $file_info['id']);
@@ -770,9 +771,13 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                     return false;
                 }
 
-                return $this->moveAttachmentToFinalPlace($attachment, 'rename', $temporary->getPath());
+                $method   = 'rename';
+                $tmp_name = $temporary->getPath();
+            } else if (isset($file_info['is_migrated']) && $file_info['is_migrated']) {
+                $method   = 'rename';
             }
-            return $this->moveAttachmentToFinalPlace($attachment, 'move_uploaded_file', $file_info['tmp_name']);
+
+            return $this->moveAttachmentToFinalPlace($attachment, $method, $tmp_name);
         }
         return false;
     }

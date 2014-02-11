@@ -56,6 +56,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
 
     private function getFileInfoForAttachment(SimpleXMLElement $file_xml) {
         return array(
+            'is_migrated' => true,
             'name'        => (string) $file_xml->filename,
             'type'        => (string) $file_xml->filetype,
             'description' => (string) $file_xml->description,

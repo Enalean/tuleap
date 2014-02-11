@@ -511,6 +511,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_
         $data = array(
             $this->file_field_id    => array(
                 array(
+                    'is_migrated' => true,
                     'name'        => 'A.png',
                     'type'        => 'image/png',
                     'description' => 'None',
@@ -579,6 +580,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends
         $data = array(
             $this->file_field_id    => array(
                 array(
+                    'is_migrated' => true,
                     'name'        => 'A.png',
                     'type'        => 'image/png',
                     'description' => 'None',
@@ -587,6 +589,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends
                     'error'       => UPLOAD_ERR_OK,
                 ),
                 array(
+                    'is_migrated' => true,
                     'name'        => 'B.pdf',
                     'type'        => 'application/x-download',
                     'description' => 'A Zuper File',
@@ -664,6 +667,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
         $initial_changeset_data = array(
             $this->file_field_id    => array(
                 array(
+                    'is_migrated' => true,
                     'name'        => 'A.png',
                     'type'        => 'image/png',
                     'description' => 'None',
@@ -678,6 +682,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
         $second_changeset_data = array(
             $this->file_field_id    => array(
                 array(
+                    'is_migrated' => true,
                     'name'        => 'B.pdf',
                     'type'        => 'application/x-download',
                     'description' => 'A Zuper File',
