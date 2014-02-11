@@ -25,19 +25,29 @@ class User_LoginManager {
     /** @var UserManager */
     private $user_manager;
 
-    public function __construct(EventManager $event_manager, UserManager $user_manager) {
+    /** @var User_PasswordExpirationChecker */
+    private $password_expiration_checker;
+
+    public function __construct(EventManager $event_manager, UserManager $user_manager, User_PasswordExpirationChecker $password_expiration_checker) {
         $this->event_manager = $event_manager;
         $this->user_manager  = $user_manager;
+        $this->password_expiration_checker = $password_expiration_checker;
     }
 
     /**
      * Set user as a current if they are valid
      *
      * @param PFUser $user
+     * @throws User_StatusDeletedException
+     * @throws User_StatusSuspendedException
+     * @throws User_StatusInvalidException
+     * @throws User_StatusPendingException
+     * @throws User_PasswordExpiredException
      */
     public function validateAndSetCurrentUser(PFUser $user) {
         $status_manager = new User_UserStatusManager();
         $status_manager->checkStatus($user);
+        $this->password_expiration_checker->checkPasswordLifetime($user);
         $this->user_manager->setCurrentUser($user);
     }
 
@@ -84,7 +94,6 @@ class User_LoginManager {
         }
 
         if ($auth_success) {
-            $this->checkPasswordLifetime($user);
             return $user;
         } else {
             if ($user) {
@@ -93,40 +102,5 @@ class User_LoginManager {
                 throw new User_InvalidPasswordException();
             }
         }
-    }
-
-    /**
-     *
-     * @param PFUser $user
-     * @throws User_PasswordExpiredException
-     */
-    private function checkPasswordLifetime(PFUser $user) {
-        if ($this->userPasswordHasExpired($user)) {
-            throw new User_PasswordExpiredException($user);
-        }
-    }
-
-    private function userPasswordHasExpired(PFUser $user) {
-        $expiration_date = $this->getPasswordExpirationDate();
-        if ($expiration_date && $user->getLastPwdUpdate() < $expiration_date) {
-            return true;
-        }
-        return false;
-    }
-
-    private function getPasswordExpirationDate() {
-        $password_lifetime = $this->getPasswordLifetimeInSeconds();
-        if ($password_lifetime) {
-            return $_SERVER['REQUEST_TIME'] - $password_lifetime;
-        }
-        return false;
-    }
-
-    private function getPasswordLifetimeInSeconds() {
-        $password_lifetime_in_days = Config::get('sys_password_lifetime');
-        if ($password_lifetime_in_days) {
-            return DateHelper::SECONDS_IN_A_DAY * $password_lifetime_in_days;
-        }
-        return false;
     }
 }

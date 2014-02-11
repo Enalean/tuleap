@@ -25,6 +25,7 @@ use \Luracast\Restler\RestException;
 use EventManager;
 use UserManager;
 use User_LoginManager;
+use User_PasswordExpirationChecker;
 
 class TokenAuthentication implements iAuthenticate {
     /** @var UserManager */
@@ -58,8 +59,10 @@ class TokenAuthentication implements iAuthenticate {
      * We need it to browse the API as we are logged in through the Web UI
      */
     private function cookieBasedAuthentication() {
-        $current_user = $this->user_manager->getCurrentUser();
+        $current_user                = $this->user_manager->getCurrentUser();
         if (! $current_user->isAnonymous()) {
+            $password_expiration_checker = new User_PasswordExpirationChecker();
+            $password_expiration_checker->checkPasswordLifetime($current_user);
             return true;
         }
         return false;
@@ -68,7 +71,8 @@ class TokenAuthentication implements iAuthenticate {
     private function tokenBasedAuthentication() {
         $login_manager = new User_LoginManager(
             EventManager::instance(),
-            $this->user_manager
+            $this->user_manager,
+            new User_PasswordExpirationChecker()
         );
         $login_manager->validateAndSetCurrentUser(
             $this->getUserFromToken()
