@@ -1515,3 +1515,5 @@ plugin_tracker_modal_artifact	add_followup_placeholder	Add a new comment...
 plugin_tracker_modal_artifact	no_comment	No comment
 plugin_tracker_modal_artifact	submit	Submit
 plugin_tracker_modal_artifact	cancel	Cancel
+plugin_tracker_modal_artifact	artifact_to_link_title	The artifact will be linked to $1
+plugin_tracker_modal_artifact	submit_error	The artifact cannot be created because there are several errors:
