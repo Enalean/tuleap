@@ -3,6 +3,9 @@ Version 6.11 (Not released yet)
 	* git: 3.68
 	* docman: 2.26.28
 
+	== Development ==
+	* REST and phpunit tests can be run in Continuous Integration
+
 Version 6.10 (Thursday, February 6th 2014)
 	== Plugins ==
 	* agiledashboard: 1.41
