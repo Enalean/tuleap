@@ -2196,16 +2196,28 @@ class Layout extends Response {
         $this->searchBox();
     }
     
-    
+
+    /**
+     * @return string the message of the day
+     */
+    protected function getMOTD() {
+        $motd = $GLOBALS['Language']->getContent('others/motd');
+        if (! strpos($motd, "empty.txt")) { # empty.txt returned when no motd file found
+            ob_start();
+            include($motd);
+            return ob_get_clean();
+        }
+    }
+
     function getOsdnNavBar() {
         $output = '
         <!-- OSDN navbar -->
         <div class="osdnnavbar">
         ';
         
-        $motd = $GLOBALS['Language']->getContent('others/motd');
-        if (!strpos($motd,"empty.txt")) { # empty.txt returned when no motd file found
-            include($motd);
+        $motd = $this->getMOTD();
+        if ($motd) {
+            echo $motd;
         } else {
             // MN : Before displaying the osdn nav drop down, we verify that the osdn_sites array exists
             include($GLOBALS['Language']->getContent('layout/osdn_sites'));
