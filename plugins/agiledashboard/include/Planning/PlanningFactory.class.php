@@ -168,21 +168,58 @@ class PlanningFactory {
     }
 
     /**
-     * Get a list of planning defined in a group_id
-     *
-     * @param PFUser $user     The user who will see the planning
-     * @param int  $group_id
-     *
+     * Get all plannings that are children of other plannings but that
+     * are not parents themselves
      * @return Planning[]
      */
-    public function getOrderedPlannings(PFUser $user, $group_id) {
+    public function getLastLevelPlannings(PFUser $user, $group_id) {
         $plannings = $this->getPlannings($user, $group_id);
 
         if ($plannings) {
+            $last_level_tracker_ids = $this->getLastLevelPlanningTrackersIds($plannings);
+
+            foreach ($plannings as $key => $planning) {
+                if (! in_array($planning->getPlanningTrackerId(), $last_level_tracker_ids)) {
+                    unset($plannings[$key]);
+                }
+            }
+        }
+
+        return $plannings;
+    }
+
+    /**
+     * Get all plannings that are not bottom plannings
+     * @return Planning[]
+     */
+    public function getNonLastLevelPlannings(PFUser $user, $group_id) {
+        $plannings = $this->getPlannings($user, $group_id);
+
+        if ($plannings) {
+            $last_lavel_tracker_ids = $this->getLastLevelPlanningTrackersIds($plannings);
+
+            foreach ($plannings as $key => $planning) {
+                if (in_array($planning->getPlanningTrackerId(), $last_lavel_tracker_ids)) {
+                    unset($plannings[$key]);
+                }
+            }
+
             $this->sortPlanningsAccordinglyToHierarchy($plannings);
         }
 
         return $plannings;
+    }
+
+    /**
+     *
+     * @param Planning[] $plannings
+     * @return array
+     */
+    private function getLastLevelPlanningTrackersIds($plannings) {
+        $tracker_ids = array_map(array($this, 'getPlanningTrackerId'), $plannings);
+        $hierarchy   = $this->tracker_factory->getHierarchy($tracker_ids);
+
+        return $hierarchy->getLastLevelTrackerIds();
     }
 
 
@@ -201,14 +238,16 @@ class PlanningFactory {
         foreach ($plannings as $planning) {
             $planning->setBacklogTrackers($this->getBacklogTrackers($planning));
         }
-        if ($plannings) {
-            $this->sortPlanningsAccordinglyToHierarchy($plannings);
-        }
+
+        $this->sortPlanningsAccordinglyToHierarchy($plannings);
 
         return $plannings;
     }
 
     private function sortPlanningsAccordinglyToHierarchy(array &$plannings) {
+        if (! $plannings) {
+            return;
+        }
         $tracker_ids = array_map(array($this, 'getPlanningTrackerId'), $plannings);
         $hierarchy   = $this->tracker_factory->getHierarchy($tracker_ids);
         $this->tmp_tracker_ids_to_sort_plannings = $hierarchy->sortTrackerIds($tracker_ids);

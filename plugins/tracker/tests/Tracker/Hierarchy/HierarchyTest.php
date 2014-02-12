@@ -181,4 +181,36 @@ class Tracker_Hierarchy_SortTest extends TuleapTestCase {
     }
 }
 
+class Tracker_Hierarchy_GetLastLevelTest extends TuleapTestCase {
+    public function itReturnsAnEpmtyArrayIfNoRelationshipsExist() {
+        $hierarchy = new Tracker_Hierarchy();
+
+        $this->assertEqual(array(), $hierarchy->getLastLevelTrackerIds());
+    }
+
+    public function itReturnsLastlevelTrackerIds() {
+        $hierarchy = new Tracker_Hierarchy();
+
+        $grand_pa = 11;
+        $papa     = 222;
+        $child    = 3333;
+
+        $grand_uncle = 55;
+        $uncle       = 444;
+
+        $hierarchy->addRelationship($grand_pa, $papa);
+        $hierarchy->addRelationship($grand_pa, $uncle);
+        $hierarchy->addRelationship($papa, $child);
+        $hierarchy->addRelationship(null, $grand_uncle);
+
+        $expected = array($grand_uncle, $uncle, $child);
+        $result   = $hierarchy->getLastLevelTrackerIds();
+
+        sort($expected);
+        sort($result);
+
+        $this->assertEqual($expected, $result);
+    }
+}
+
 ?>

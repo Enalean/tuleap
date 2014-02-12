@@ -34,44 +34,46 @@
         </div>
 
         <div class="last-plannings span8">
-            <div class="last-planning">
-                <h3>{{ last_milestone_type }} :</h3>
-
-                {{# milestone_summary_presenters }}
-                <div class="milestone">
-                    <div class="header">
-                        <p class="title">{{ milestone_title }}</p>
-                        <p class="hierarchy">
-                        <i class="icon-angle-right"></i>
-                        {{# breadcrumbs }}
-                            {{# . }}
-                            <a href="{{ url }}">{{ title }}</a> <i class="icon-angle-right"></i>
-                            {{/ . }}
-                        {{/ breadcrumbs }}
-                        </p>
-                    </div>
-                    <div class="content">
-                        {{# has_burndown }}
-                            <script type="application/json" class="data-burndown-json" data-for="burndown-placeholder-{{ artifact_id }}">
-                                {{{ burndown_data }}}
-                            </script>
-                            <div id="burndown-placeholder-{{ artifact_id }}" class="milestone-burndown">
+            {{# last_level_milestone_presenters }}
+                <div class="last-planning">
+                    <h3>{{ milestone_type_name }} :</h3>
+                    {{# milestone_summary_presenters }}
+                        <div class="milestone">
+                            <div class="header">
+                                <p class="title">{{ milestone_title }}</p>
+                                <p class="hierarchy">
+                                <i class="icon-angle-right"></i>
+                                {{# breadcrumbs }}
+                                    {{# . }}
+                                    <a href="{{ url }}">{{ title }}</a> <i class="icon-angle-right"></i>
+                                    {{/ . }}
+                                {{/ breadcrumbs }}
+                                <p>
                             </div>
-                        {{/ has_burndown }}
-                        {{^ has_burndown }}
-                            {{ count_open_backlog_items }} {{ open }} |
-                            {{ count_closed_backlog_items }} {{ closed }}
-                        {{/ has_burndown }}
-                    </div>
-                    <div class="footer">
-                        <a href="?group_id={{ group_id }}&planning_id={{ planning_id }}&action=show&aid={{ artifact_id }}&pane=blcontent"><i class="icon-list-ul"></i> {{ content }}</a>
-                        {{# has_cardwall }}
-                            <a href="?group_id={{ group_id }}&planning_id={{ planning_id }}&action=show&aid={{ artifact_id }}&pane=cardwall"><i class="icon-th-large"></i> {{ cardwall }}</a>
-                        {{/ has_cardwall }}
-                    </div>
+                            <div class="content">
+                                {{# has_burndown }}
+                                    <script type="application/json" class="data-burndown-json" data-for="burndown-placeholder-{{ artifact_id }}">
+                                        {{{ burndown_data }}}
+                                    </script>
+                                    <div id="burndown-placeholder-{{ artifact_id }}" class="milestone-burndown">
+                                    </div>
+                                {{/ has_burndown }}
+                                {{^ has_burndown }}
+                                    {{ count_open_backlog_items }} {{ open }} |
+                                    {{ count_closed_backlog_items }} {{ closed }}
+                                {{/ has_burndown }}
+                            </div>
+                            <div class="footer">
+                                <a href="?group_id={{ group_id }}&planning_id={{ planning_id }}&action=show&aid={{ artifact_id }}&pane=blcontent"><i class="icon-list-ul"></i> {{ content }}</a>
+                                {{# has_cardwall }}
+                                    <a href="?group_id={{ group_id }}&planning_id={{ planning_id }}&action=show&aid={{ artifact_id }}&pane=cardwall"><i class="icon-th-large"></i> {{ cardwall }}</a>
+                                {{/ has_cardwall }}
+                            </div>
+                        </div>
+                    {{/ milestone_summary_presenters }}
+                    <div style="clear: both;"></div>
                 </div>
-                {{/ milestone_summary_presenters }}
-            </div>
+            {{/ last_level_milestone_presenters }}
         </div>
     </div>
 </div>

@@ -25,6 +25,12 @@ Mock::generate('PlanningDao');
 Mock::generate('Tracker');
 
 abstract class PlanningFactoryTest extends TuleapTestCase {
+
+    /**
+     * @var PFUser
+     */
+    protected $user;
+
     public function setUp() {
         parent::setUp();
 
@@ -391,6 +397,69 @@ class PlanningFactoryTest_getVirtualTopPlanningTest extends TuleapTestCase {
         $this->assertIsA($planning->getPlanningTracker(), 'Tracker');
         $backlog_trackers = $planning->getBacklogTrackers();
         $this->assertIsA($backlog_trackers[0], 'Tracker');
+    }
+}
+
+class PlanningFactory_getNonLastLevelPlanningsTest extends PlanningFactoryTest {
+
+    /**
+     * @var PlanningDao
+     */
+    private $planning_dao;
+
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->planning_dao    = mock('PlanningDao');
+        $this->tracker_factory = mock('TrackerFactory');
+
+    }
+
+    public function itReturnsAnEmptyArrayIfNoPlanningsExist() {
+        $factory = partial_mock('PlanningFactory', array('getPlannings'));
+        stub($factory)->getPlannings()->returns(array());
+
+        $plannings = $factory->getNonLastLevelPlannings($this->user, 14);
+
+        $this->assertCount($plannings, 0);
+    }
+
+    public function itDoesNotReturnLastLevelPlannings() {
+        $factory = partial_mock(
+            'PlanningFactory',
+            array('getPlannings'),
+            array($this->planning_dao, $this->tracker_factory)
+        );
+
+        $planning_1 = mock('Planning');
+        $planning_2 = mock('Planning');
+        $planning_3 = mock('Planning');
+
+        stub($planning_1)->getPlanningTrackerId()->returns(11);
+        stub($planning_2)->getPlanningTrackerId()->returns(22);
+        stub($planning_3)->getPlanningTrackerId()->returns(33);
+
+        stub($factory)->getPlannings()->returns(array($planning_3, $planning_2, $planning_1));
+
+        $hierarchy = mock('Tracker_Hierarchy');
+        stub($hierarchy)->getLastLevelTrackerIds()->returns(array(11));
+        stub($hierarchy)->sortTrackerIds(array(33, 22))->returns(array(22, 33));
+        stub($this->tracker_factory)->getHierarchy()->returns($hierarchy);
+
+        $plannings = $factory->getNonLastLevelPlannings($this->user, 14);
+
+        $this->assertCount($plannings, 2);
+
+        $first_planning  = $plannings[0];
+        $second_planning = $plannings[1];
+        
+        $this->assertEqual($first_planning->getPlanningTrackerId(), 22);
+        $this->assertEqual($second_planning->getPlanningTrackerId(), 33);
     }
 }
 

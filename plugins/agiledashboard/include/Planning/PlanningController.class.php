@@ -156,7 +156,7 @@ class Planning_Controller extends MVC2_PluginController {
     private function showPHP53Home() {
         $user = $this->request->getCurrentUser();
 
-        $plannings = $this->planning_factory->getOrderedPlannings(
+        $plannings = $this->planning_factory->getNonLastLevelPlannings(
             $user,
             $this->group_id
         );
@@ -164,13 +164,12 @@ class Planning_Controller extends MVC2_PluginController {
         if (empty($plannings)) {
             return $this->showEmptyHome();
         }
-        $last_planning = array_pop($plannings);
+        $last_plannings = $this->planning_factory->getLastLevelPlannings($user, $this->group_id);
 
         $presenter = new Planning_Presenter_HomePresenter(
             $this->getMilestoneAccessPresenters($plannings),
             $this->group_id,
-            $last_planning->getPlanningTracker()->getName(),
-            $this->getMilestoneSummaryPresenters($last_planning, $user),
+            $this->getLastLevelMilestonesPresenters($last_plannings, $user),
             $this->request->get('period'),
             $this->getProjectFromRequest()->getPublicName()
         );
@@ -207,7 +206,25 @@ class Planning_Controller extends MVC2_PluginController {
     }
 
     /**
-     * @return Planning_Presenter_MilestoneSummaryPresenter
+     * @param Planning[] $last_plannings
+     * @param PFUser $user
+     * @return Planning_Presenter_LastLevelMilestone[]
+     */
+    private function getLastLevelMilestonesPresenters($last_plannings, PFUser $user) {
+        $presenters = array();
+
+        foreach ($last_plannings as $last_planning) {
+            $presenters[] = new Planning_Presenter_LastLevelMilestone(
+                $this->getMilestoneSummaryPresenters($last_planning, $user),
+                $last_planning->getPlanningTracker()->getName()
+            );
+        }
+
+        return $presenters;
+    }
+
+    /**
+     * @return Planning_Presenter_MilestoneSummaryPresenter[]
      */
     private function getMilestoneSummaryPresenters(Planning $last_planning, PFUser $user) {
         $presenters = array();

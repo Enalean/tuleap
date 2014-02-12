@@ -26,11 +26,8 @@ class Planning_Presenter_HomePresenter {
     /** @var int */
     public $group_id;
 
-    /** @var string */
-    public $last_milestone_type;
-
-    /** @var Planning_Presenter_MilestoneSummaryPresenterAbstract[] */
-    public $milestone_summary_presenters;
+    /** @var Planning_Presenter_LastLevelMilestone[] */
+    public $last_level_milestone_presenters;
 
     /** @var string */
     private $period;
@@ -41,17 +38,15 @@ class Planning_Presenter_HomePresenter {
     public function __construct(
         $milestone_access_presenters,
         $group_id,
-        $last_milestone_type,
-        $milestone_summary_presenters,
+        $last_level_milestone_presenters,
         $period,
         $project_name
     ) {
-        $this->milestone_presenters         = $milestone_access_presenters;
-        $this->group_id                     = $group_id;
-        $this->last_milestone_type          = $last_milestone_type;
-        $this->milestone_summary_presenters = $milestone_summary_presenters;
-        $this->period                       = $period;
-        $this->project_name                 = $project_name;
+        $this->milestone_presenters            = $milestone_access_presenters;
+        $this->group_id                        = $group_id;
+        $this->last_level_milestone_presenters = $last_level_milestone_presenters;
+        $this->period                          = $period;
+        $this->project_name                    = $project_name;
     }
 
     public function past() {
