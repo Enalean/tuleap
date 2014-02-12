@@ -70,7 +70,7 @@ tuleap.tracker = tuleap.tracker || { };
 
                 new tuleap.trackers.textarea.RTE(
                     element,
-                    {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat, no_resize : true}
+                    {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat, no_resize : true, resize_enabled : false}
                 );
             }
         },

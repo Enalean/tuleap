@@ -37,7 +37,17 @@ codendi.RTE = Class.create(
                 this.init_rte();
             }
         },
+
+        can_be_resized : function () {
+            var resize_enabled = this.options.resize_enabled;
+            return (typeof(resize_enabled) == 'undefined' || resize_enabled);
+        },
+
         init_rte: function () {
+            var replace_options = {
+                resize_enabled : true
+            };
+
             if (CKEDITOR.instances && CKEDITOR.instances[this.element.id]) {
                 CKEDITOR.instances[this.element.id].destroy(true);
             }
@@ -68,12 +78,29 @@ codendi.RTE = Class.create(
                 var toolbar = 'Full'
             }
 
-            this.rte = CKEDITOR.replace(this.element.id, {toolbar: toolbar});
+            /*
+             This is done for IE
+             If we load the page and the RTE is displayed, IE will not
+             catch the instanceCreated event on load (it will catch it later if we change
+             the format between Text and HTML). So we have to set this option when loading
+             */
+
+            replace_options.toolbar = toolbar;
+            if (! this.can_be_resized()) {
+                replace_options.resize_enabled = false;
+            }
+
+            this.rte = CKEDITOR.replace(this.element.id, replace_options);
 
             CKEDITOR.on('instanceCreated', function (evt) {
                 if (evt.editor === this.rte) {
                     this.options.onLoad();
                 }
+
+                if (! this.can_be_resized()) {
+                      evt.editor.config.resize_enabled = false;
+                }
+
             }.bind(this));
 
             CKEDITOR.on('instanceReady', function (evt) {
