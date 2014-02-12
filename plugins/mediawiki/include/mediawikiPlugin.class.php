@@ -24,6 +24,7 @@
  */
 
 require_once 'common/plugin/Plugin.class.php';
+require_once 'constants.php';
 
 class MediaWikiPlugin extends Plugin {
 
@@ -64,6 +65,8 @@ class MediaWikiPlugin extends Plugin {
             $this->_addHook('plugins_powered_search', 'plugins_powered_search', false);
 
             $this->_addHook('plugin_statistics_service_usage');
+
+            $this->addHook(Event::SERVICE_CLASSNAMES);
     }
 
     /**
@@ -591,5 +594,10 @@ class MediaWikiPlugin extends Plugin {
 
     private function getDao() {
         return new MediawikiDao();
+    }
+
+    public function service_classnames(array $params) {
+        include_once 'ServiceMediawiki.class.php';
+        $params['classnames']['plugin_mediawiki'] = 'ServiceMediawiki';
     }
 }

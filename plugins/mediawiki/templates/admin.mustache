@@ -1,0 +1,30 @@
+<h1>{{title}}</h1>
+
+<p>{{help}}</p>
+
+<form name="admin_group_mediawiki" method="post" action="{{route}}">
+
+<div style="margin-left: 2em;">
+    {{#groups_permissions}}
+    <div class="row">
+        <div>
+            <div>{{tuleap_group_label}}</div>
+            {{#available_groups}}{{> selectbox}}{{/available_groups}}
+        </div>
+        <div>
+            <button class="forge_mw_remove_ugroup">&lt;</button>
+            <button class="forge_mw_add_ugroup">&gt;</button>
+        </div>
+        <div >
+            <div>{{mediawiki_group_label}}</div>
+            <input type="hidden" name="{{hidden_selected_groups_name}}" class="forge_mw_hidden_selected_groups" value=""/>
+            {{#selected_groups}}{{> selectbox}}{{/selected_groups}}
+        </div>
+    </div>
+    {{/groups_permissions}}
+</div>
+
+    <input type="submit" name="submit" value="{{submit_label}}" />
+    <input type="reset" name="reset" value="{{reset_label}}" />
+
+</form>

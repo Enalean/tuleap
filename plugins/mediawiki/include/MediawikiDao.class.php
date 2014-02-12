@@ -163,6 +163,36 @@ class MediawikiDao extends DataAccessObject {
         return $data['user_id'];
     }
 
+    public function getMediawikiUserGroupMapping(Project $project) {
+        $group_id = $this->da->escapeInt($project->getID());
+
+        $sql = "SELECT ugroup_id, mw_group_name
+                FROM plugin_mediawiki_ugroup_mapping
+                WHERE group_id = $group_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function addMediawikiUserGroupMapping(Project $project, $unchecked_mw_group_name, $unchecked_param_ugroup_id) {
+        $group_id = $this->da->escapeInt($project->getID());
+        $ugroup_id = $this->da->escapeInt($unchecked_param_ugroup_id);
+        $mw_group_name = $this->da->quoteSmart($unchecked_mw_group_name);
+
+        $sql = "INSERT INTO plugin_mediawiki_ugroup_mapping (group_id, mw_group_name, ugroup_id)
+                VALUES ($group_id, $mw_group_name, $ugroup_id)";
+        return $this->update($sql);
+    }
+
+    public function removeMediawikiUserGroupMapping(Project $project, $unchecked_mw_group_name, $unchecked_ugroup_id) {
+        $group_id = $this->da->quoteSmart($project->getID());
+        $ugroup_id = $this->da->escapeInt($unchecked_ugroup_id);
+        $mw_group_name = $this->da->quoteSmart($unchecked_mw_group_name);
+
+        $sql = "DELETE FROM plugin_mediawiki_ugroup_mapping
+                WHERE group_id = $group_id AND ugroup_id = $ugroup_id AND mw_group_name = $mw_group_name";
+        return $this->update($sql);
+    }
+
     /**
      * Converts a Tuleap username into a Mediawiki username
      * The mediawiki username has his first char uppercase
