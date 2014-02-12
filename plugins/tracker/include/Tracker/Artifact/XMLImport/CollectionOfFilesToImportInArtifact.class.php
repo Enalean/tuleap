@@ -37,7 +37,9 @@ class Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact {
         $files_xml = $artifact_xml->file;
 
         foreach ($files_xml as $file) {
-            $files[(string) $file->id] = $file;
+            $file_attributes = $file->attributes();
+            $file_id         = (string) $file_attributes['id'];
+            $files[$file_id] = $file;
         }
 
         return $files;

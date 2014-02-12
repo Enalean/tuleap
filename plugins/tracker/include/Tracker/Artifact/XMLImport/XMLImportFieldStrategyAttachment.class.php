@@ -44,11 +44,13 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
         $files_infos = array();
 
         foreach ($values as $value) {
-            $file = $this->files_importer->getFileXML((string) $value);
+            $attributes = $value->attributes();
+            $file_id    = (string) $attributes['ref'];
+            $file       = $this->files_importer->getFileXML($file_id);
 
-            if (! $this->files_importer->fileIsAlreadyImported((string) $file->id)) {
+            if (! $this->files_importer->fileIsAlreadyImported($file_id)) {
                 $files_infos[] = $this->getFileInfoForAttachment($file);
-                $this->files_importer->markAsImported((string) $file->id);
+                $this->files_importer->markAsImported($file_id);
             }
         }
         return $files_infos;

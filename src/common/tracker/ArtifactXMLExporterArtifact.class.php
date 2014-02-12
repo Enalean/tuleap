@@ -167,7 +167,7 @@ class ArtifactXMLExporterArtifact {
                 $field_node = $this->document->createElement('field_change');
                 $field_node->setAttribute('field_name', 'attachment');
                 $field_node->setAttribute('type', 'file');
-                $field_node->appendChild($this->getNodeWithValue('value', self::XML_FILE_PREFIX.$row_file['id']));
+                $field_node->appendChild($this->getNodeValueForFile($row_file['id']));
                 $this->appendPreviousAttachements($field_node, $artifact_id, $submitted_on, $old_value);
                 $changeset_node->appendChild($field_node);
             } else {
@@ -185,9 +185,16 @@ class ArtifactXMLExporterArtifact {
             $dar = $this->dao->searchFileBefore($artifact_id, $attachement, $submitted_on);
             if ($dar && $dar->rowCount() == 1) {
                 $row_file = $dar->current();
-                $field_node->appendChild($this->getNodeWithValue('value', 'File'.$row_file['id']));
+                $field_node->appendChild($this->getNodeValueForFile($row_file['id']));
             }
         }
+    }
+
+    private function getNodeValueForFile($file_id) {
+        $node = $this->document->createElement('value');
+        $node->setAttribute('ref', self::XML_FILE_PREFIX.$file_id);
+
+        return $node;
     }
 
     /**
@@ -274,7 +281,7 @@ class ArtifactXMLExporterArtifact {
                 $this->getFilePathInArchive($xml_file_id)
             );
             $file = $this->document->createElement('file');
-            $file->appendChild($this->getNodeWithValue('id', $xml_file_id));
+            $file->setAttribute('id', $xml_file_id);
             $file->appendChild($this->getNodeWithValue('filename', $row['filename']));
             $file->appendChild($this->getNodeWithValue('path', $this->getFilePathInArchive($xml_file_id)));
             $file->appendChild($this->getNodeWithValue('filesize', $row['filesize']));

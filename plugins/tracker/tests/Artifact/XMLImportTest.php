@@ -472,14 +472,13 @@ class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_
                         <submitted_by format="username">manuel</submitted_by>
                         <submitted_on format="ISO8601">2014-01-29T10:39:44+01:00</submitted_on>
                         <field_change field_name="attachment">
-                          <value>File33</value>
+                          <value ref="File33"/>
                         </field_change>
                         <field_change field_name="summary">
                           <value>Newly submitted</value>
                         </field_change>
                     </changeset>
-                    <file>
-                        <id>File33</id>
+                    <file id="File33">
                         <filename>A.png</filename>
                         <path>data/34_File33.png</path>
                         <filesize>87947</filesize>
@@ -542,23 +541,21 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends
                         <submitted_by format="username">manuel</submitted_by>
                         <submitted_on format="ISO8601">2014-01-29T10:39:44+01:00</submitted_on>
                         <field_change field_name="attachment">
-                          <value>File33</value>
-                          <value>File34</value>
+                          <value ref="File33"/>
+                          <value ref="File34"/>
                         </field_change>
                         <field_change field_name="summary">
                           <value>Newly submitted</value>
                         </field_change>
                     </changeset>
-                    <file>
-                        <id>File33</id>
+                    <file id="File33">
                         <filename>A.png</filename>
                         <path>data/34_File33.png</path>
                         <filesize>87947</filesize>
                         <filetype>image/png</filetype>
                         <description>None</description>
                     </file>
-                    <file>
-                        <id>File34</id>
+                    <file id="File34">
                         <filename>B.pdf</filename>
                         <path>data/34_File34.pdf</path>
                         <filesize>84895</filesize>
@@ -620,7 +617,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
                         <submitted_by format="username">manuel</submitted_by>
                         <submitted_on format="ISO8601">2014-01-29T10:39:44+01:00</submitted_on>
                         <field_change field_name="attachment">
-                          <value>File33</value>
+                          <value ref="File33"/>
                         </field_change>
                         <field_change field_name="summary">
                           <value>Newly submitted</value>
@@ -630,20 +627,18 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
                         <submitted_by format="username">manuel</submitted_by>
                         <submitted_on format="ISO8601">2014-01-30T10:39:44+01:00</submitted_on>
                         <field_change field_name="attachment">
-                          <value>File33</value>
-                          <value>File34</value>
+                          <value ref="File33"/>
+                          <value ref="File34"/>
                         </field_change>
                     </changeset>
-                    <file>
-                        <id>File33</id>
+                    <file id="File33">
                         <filename>A.png</filename>
                         <path>data/34_File33.png</path>
                         <filesize>87947</filesize>
                         <filetype>image/png</filetype>
                         <description>None</description>
                     </file>
-                    <file>
-                        <id>File34</id>
+                    <file id="File34">
                         <filename>B.pdf</filename>
                         <path>data/34_File34.pdf</path>
                         <filesize>84895</filesize>

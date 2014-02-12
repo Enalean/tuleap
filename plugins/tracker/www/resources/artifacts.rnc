@@ -11,7 +11,7 @@ grammar {
                 element field_change { field_content }+
             }*,
             element file {
-                element id { xsd:string },
+                attribute id { xsd:ID },
                 element filename { xsd:string },
                 element path { xsd:string },
                 element filesize { xsd:int },
@@ -47,7 +47,9 @@ grammar {
 
     field_file =
         attribute type { "file" },
-        element value { xsd:string }+
+        element value {
+            attribute ref { xsd:IDREF }
+        }+
 
     field_open_list_user =
         attribute type { "open_list" },

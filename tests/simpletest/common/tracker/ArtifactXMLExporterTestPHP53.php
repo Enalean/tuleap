@@ -214,13 +214,13 @@ class ArtifactXMLExporter_AttachmentTest extends ArtifactXMLExporter_BaseTest {
 
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'attachment');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['type'], 'file');
-        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0], 'File30');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0]['ref'], 'File30');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567900));
 
         expect($this->archive)->addFile($this->fixtures_dir.'/'.ArtifactFile::ROOT_DIRNAME.'/1/30','data/ArtifactFile30.bin')->once();
 
         $this->assertCount($this->xml->artifact->file, 1);
-        $this->assertEqual((string)$this->xml->artifact->file[0]->id, 'File30');
+        $this->assertEqual((string)$this->xml->artifact->file[0]['id'], 'File30');
         $this->assertEqual((string)$this->xml->artifact->file[0]->filename, 'A.png');
         $this->assertEqual((int)   $this->xml->artifact->file[0]->filesize, 12323);
         $this->assertEqual((string)$this->xml->artifact->file[0]->filetype, 'image/png');
@@ -233,22 +233,22 @@ class ArtifactXMLExporter_AttachmentTest extends ArtifactXMLExporter_BaseTest {
         $this->assertCount($this->xml->artifact->changeset, 3);
 
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'attachment');
-        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0], 'File30');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0]['ref'], 'File30');
 
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['field_name'], 'attachment');
         $this->assertCount($this->xml->artifact->changeset[2]->field_change->value, 2);
-        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[0], 'File31');
-        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[1], 'File30');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[0]['ref'], 'File31');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[1]['ref'], 'File30');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(3234568000));
 
         $this->assertCount($this->xml->artifact->file, 2);
-        $this->assertEqual((string)$this->xml->artifact->file[0]->id, 'File30');
+        $this->assertEqual((string)$this->xml->artifact->file[0]['id'], 'File30');
         $this->assertEqual((string)$this->xml->artifact->file[0]->filename, 'A.png');
         $this->assertEqual((int)   $this->xml->artifact->file[0]->filesize, 12323);
         $this->assertEqual((string)$this->xml->artifact->file[0]->filetype, 'image/png');
         $this->assertEqual((string)$this->xml->artifact->file[0]->description, 'The screenshot');
 
-        $this->assertEqual((string)$this->xml->artifact->file[1]->id, 'File31');
+        $this->assertEqual((string)$this->xml->artifact->file[1]['id'], 'File31');
         $this->assertEqual((string)$this->xml->artifact->file[1]->filename, 'A.png');
         $this->assertEqual((int)   $this->xml->artifact->file[1]->filesize, 50);
         $this->assertEqual((string)$this->xml->artifact->file[1]->filetype, 'image/png');
@@ -262,11 +262,11 @@ class ArtifactXMLExporter_AttachmentTest extends ArtifactXMLExporter_BaseTest {
 
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'attachment');
         $this->assertCount($this->xml->artifact->changeset[1]->field_change->value, 1);
-        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0], 'File31');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0]['ref'], 'File31');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234568000));
 
         $this->assertCount($this->xml->artifact->file, 1);
-        $this->assertEqual((string)$this->xml->artifact->file[0]->id, 'File31');
+        $this->assertEqual((string)$this->xml->artifact->file[0]['id'], 'File31');
         $this->assertEqual((string)$this->xml->artifact->file[0]->filename, 'zzz.pdf');
     }
 }
@@ -344,7 +344,7 @@ class ArtifactXMLExporter_AttachmentAndSummaryTest extends ArtifactXMLExporter_B
     private function assertChangesItCreatesASingleChangesetWithSummaryAndAttachment(SimpleXMLElement $field_change) {
         switch($field_change['field_name']) {
             case 'attachment':
-                $this->assertEqual($field_change->value[0], 'File30');
+                $this->assertEqual($field_change->value[0]['ref'], 'File30');
                 break;
             case 'summary':
                 $this->assertEqual($field_change->value, 'Le artifact with full history');
@@ -368,7 +368,7 @@ class ArtifactXMLExporter_AttachmentAndSummaryTest extends ArtifactXMLExporter_B
         // Changeset2: attachment
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(1234568000));
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'attachment');
-        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0], 'File30');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0]['ref'], 'File30');
 
         // Changeset3: new summary
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(1234569000));
@@ -396,7 +396,7 @@ class ArtifactXMLExporter_AttachmentAndSummaryTest extends ArtifactXMLExporter_B
         // Changeset3: attachment
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(1234569000));
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['field_name'], 'attachment');
-        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[0], 'File30');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[0]['ref'], 'File30');
 
         // Changeset4: last summary update
         $this->assertEqual((string)$this->xml->artifact->changeset[3]->submitted_on, $this->toExpectedDate($_SERVER['REQUEST_TIME']));

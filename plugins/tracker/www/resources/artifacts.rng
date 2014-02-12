@@ -29,9 +29,9 @@
           </zeroOrMore>
           <zeroOrMore>
             <element name="file">
-              <element name="id">
-                <data type="string"/>
-              </element>
+              <attribute name="id">
+                <data type="ID"/>
+              </attribute>
               <element name="filename">
                 <data type="string"/>
               </element>
@@ -103,7 +103,9 @@
     </attribute>
     <oneOrMore>
       <element name="value">
-        <data type="string"/>
+        <attribute name="ref">
+          <data type="IDREF"/>
+        </attribute>
       </element>
     </oneOrMore>
   </define>
