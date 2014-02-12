@@ -60,5 +60,104 @@ class TimePeriodWithoutWeekEndTest extends TuleapTestCase {
     public function itProvidesTheEndDate() {
         $this->assertEqual(date('D d', $this->time_period->getEndDate()), 'Tue 10');
     }
+
+    
+}
+
+class TimePeriodWithoutWeekEnd_getNumberOfDaysSinceStartTest extends TuleapTestCase {
+
+    public function itDoesNotCountTheStartDate() {
+        $start_date = mktime(0, 0, 0, 1, 31, 2014);
+        $time_period = partial_mock('TimePeriodWithoutWeekEnd', array('getToday'), array($start_date, 15));
+        stub($time_period)->getToday()->returns(date('Y-m-d', mktime(0, 0, 0, 1, 31, 2014)));
+        $this->assertEqual($time_period->getNumberOfDaysSinceStart(), 0);
+    }
+
+    public function itCountsTheNextDayAsOneDay() {
+        $start_date = mktime(0, 0, 0, 2, 3, 2014);
+        $time_period = partial_mock('TimePeriodWithoutWeekEnd', array('getToday'), array($start_date, 15));
+        stub($time_period)->getToday()->returns(date('Y-m-d', mktime(0, 0, 0, 2, 4, 2014)));
+        $this->assertEqual($time_period->getNumberOfDaysSinceStart(), 1);
+    }
+
+    public function itCountsAWeekAsFiveDays() {
+        $start_date = mktime(0, 0, 0, 2, 3, 2014);
+        $time_period = partial_mock('TimePeriodWithoutWeekEnd', array('getToday'), array($start_date, 15));
+        stub($time_period)->getToday()->returns(date('Y-m-d', mktime(0, 0, 0, 2, 10, 2014)));
+        $this->assertEqual($time_period->getNumberOfDaysSinceStart(), 5);
+    }
+
+    public function itCountsAWeekendAsNothing() {
+        $start_date = mktime(0, 0, 0, 2, 7, 2014);
+        $time_period = partial_mock('TimePeriodWithoutWeekEnd', array('getToday'), array($start_date, 15));
+        stub($time_period)->getToday()->returns(date('Y-m-d', mktime(0, 0, 0, 2, 10, 2014)));
+        $this->assertEqual($time_period->getNumberOfDaysSinceStart(), 1);
+    }
+
+    public function itExcludesAllTheWeekends() {
+        $start_date = mktime(0, 0, 0, 1, 31, 2014);
+        $time_period = partial_mock('TimePeriodWithoutWeekEnd', array('getToday'), array($start_date, 15));
+        stub($time_period)->getToday()->returns(date('Y-m-d', mktime(0, 0, 0, 2, 27, 2014)));
+        $this->assertEqual($time_period->getNumberOfDaysSinceStart(), 19);
+    }
+
+    public function itIgnoresFutureStartDates() {
+        $start_date = mktime(0, 0, 0, 1, 31, 2014);
+        $time_period = partial_mock('TimePeriodWithoutWeekEnd', array('getToday'), array($start_date, 15));
+        stub($time_period)->getToday()->returns(date('Y-m-d', mktime(0, 0, 0, 2, 27, 2013)));
+        $this->assertEqual($time_period->getNumberOfDaysSinceStart(), 0);
+    }
+}
+
+class TimePeriodWithoutWeekEnd_getNumberOfDurationDaysSinceStartTest extends TuleapTestCase {
+
+    public function itDoesNotReturnMoreDaysThanTheDuration() {
+        $start_date = mktime(0, 0, 0, 1, 31, 2014);
+        $time_period = partial_mock('TimePeriodWithoutWeekEnd', array('getToday'), array($start_date, 18));
+        stub($time_period)->getToday()->returns(date('Y-m-d', mktime(0, 0, 0, 2, 27, 2015)));
+        $this->assertEqual($time_period->getNumberOfDurationDaysSinceStart(), 18);
+    }
+
+    public function itDoesNotCountTheStartDate() {
+        $start_date = mktime(0, 0, 0, 1, 31, 2014);
+        $time_period = partial_mock('TimePeriodWithoutWeekEnd', array('getToday'), array($start_date, 8));
+        stub($time_period)->getToday()->returns(date('Y-m-d', mktime(0, 0, 0, 1, 31, 2014)));
+        $this->assertEqual($time_period->getNumberOfDurationDaysSinceStart(), 0);
+    }
+
+    public function itCountsTheNextDayAsOneDay() {
+        $start_date = mktime(0, 0, 0, 2, 3, 2014);
+        $time_period = partial_mock('TimePeriodWithoutWeekEnd', array('getToday'), array($start_date, 8));
+        stub($time_period)->getToday()->returns(date('Y-m-d', mktime(0, 0, 0, 2, 4, 2014)));
+        $this->assertEqual($time_period->getNumberOfDurationDaysSinceStart(), 1);
+    }
+
+    public function itCountsAWeekAsFiveDays() {
+        $start_date = mktime(0, 0, 0, 2, 3, 2014);
+        $time_period = partial_mock('TimePeriodWithoutWeekEnd', array('getToday'), array($start_date, 8));
+        stub($time_period)->getToday()->returns(date('Y-m-d', mktime(0, 0, 0, 2, 10, 2014)));
+        $this->assertEqual($time_period->getNumberOfDurationDaysSinceStart(), 5);
+    }
+
+    public function itCountsAWeekendAsNothing() {
+        $start_date = mktime(0, 0, 0, 2, 7, 2014);
+        $time_period = partial_mock('TimePeriodWithoutWeekEnd', array('getToday'), array($start_date, 8));
+        stub($time_period)->getToday()->returns(date('Y-m-d', mktime(0, 0, 0, 2, 10, 2014)));
+        $this->assertEqual($time_period->getNumberOfDurationDaysSinceStart(), 1);
+    }
+
+    public function itExcludesAllTheWeekends() {
+        $start_date = mktime(0, 0, 0, 1, 31, 2014);
+        $time_period = partial_mock('TimePeriodWithoutWeekEnd', array('getToday'), array($start_date, 8));
+        stub($time_period)->getToday()->returns(date('Y-m-d', mktime(0, 0, 0, 2, 27, 2014)));
+        $this->assertEqual($time_period->getNumberOfDurationDaysSinceStart(), 8);
+    }
+
+    public function itIgnoresFutureStartDates() {
+        $start_date = mktime(0, 0, 0, 1, 31, 2014);
+        $time_period = partial_mock('TimePeriodWithoutWeekEnd', array('getToday'), array($start_date, 15));
+        stub($time_period)->getToday()->returns(date('Y-m-d', mktime(0, 0, 0, 2, 27, 2013)));
+        $this->assertEqual($time_period->getNumberOfDurationDaysSinceStart(), 0);
+    }
 }
 ?>

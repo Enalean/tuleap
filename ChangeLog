@@ -1,3 +1,14 @@
+Version 6.11 (Not released yet)
+	== Plugins ==
+	* git: 3.68
+	* docman: 2.26.28
+
+	== Development ==
+	* REST and phpunit tests can be run in Continuous Integration
+	* Better detect theme change not to forget to increase version number
+	  in tools/utils/changelogs/generate.sh
+	* Add a common helper to compute dates without including week-ends
+
 Version 6.10 (Thursday, February 6th 2014)
 	== Plugins ==
 	* agiledashboard: 1.41
