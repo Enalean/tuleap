@@ -22,13 +22,16 @@
  */
 (function($) {
     $(document).ready(function() {
-        $(".data-burndown-json").each(function(){
+        $(".data-burndown-json").each(function() {
             var json = JSON.parse($(this).html()),
                 placeholder = $(this).attr("data-for"),
                 burndown;
 
-            burndown = new tuleap.agiledashboard.Burndown(d3, json);
+            burndown = new tuleap.agiledashboard.Burndown(d3, json, {
+                width: 320,
+                height: 140,
+            });
             burndown.display(d3.select("#" + placeholder));
-        })
-    })
+        });
+    });
 })(window.jQuery)

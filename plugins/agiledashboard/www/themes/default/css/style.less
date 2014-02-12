@@ -2,6 +2,8 @@
     @border-color: #DDD;
 
     width: 100%;
+    padding: 20px 0;
+
     .backlog a {
         position: relative;
         display: block;
@@ -142,25 +144,44 @@
                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@{start-color}', endColorstr='@{stop-color}',GradientType=0 );
                 border-bottom: 1px solid @border-color;
                 padding: 0;
-                min-height: 150px;
+                height: 150px;
+
+                .milestone-burndown {
+                    width: 100%;
+                    height: 100%;
+                    padding: 5px;
+                    -moz-box-sizing: border-box;
+                    box-sizing: border-box;
+
+                    .line.actual {
+                        stroke: #5AAF5A;
+                    }
+                    .circle.actual {
+                        stroke: #5AAF5A;
+                    }
+                }
             }
 
-            .footer a {
-                padding: 15px;
-                display: inline-block;
-                -moz-box-sizing: border-box;
-                box-sizing: border-box;
-                width: (@min-width - 1) / 2;
-                text-align: center;
-                margin: 0 auto;
+            .footer {
+                padding: 0;
 
-                &:only-child {
-                    width: 100%;
-                }
+                a {
+                    padding: 15px;
+                    display: inline-block;
+                    -moz-box-sizing: border-box;
+                    box-sizing: border-box;
+                    width: (@min-width - 1) / 2;
+                    text-align: center;
+                    margin: 0 auto;
 
-                &:hover {
-                    text-decoration: none;
-                    background: #F8F8F8;
+                    &:only-child {
+                        width: 100%;
+                    }
+
+                    &:hover {
+                        text-decoration: none;
+                        background: #F8F8F8;
+                    }
                 }
             }
         }
