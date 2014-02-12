@@ -589,15 +589,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
      * @return bool true if the value is considered ok
      */
     protected function validate(Tracker_Artifact $artifact, $value) {
-
-        
-        // TODO : implement
-        
-        
-        
         return true;
-        
-        
     }
     
     /**
@@ -612,34 +604,43 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         $this->has_errors = false;
         
         if (is_array($value)) {
-            //check required
-            if ($this->isRequired()) {
-                //check that there is at least one file uploaded
-                if ( ! $this->checkThatAtLeastOneFileIsUploaded($value)) {
-                    $this->has_errors = true;
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
-                }
-            }
-            
-            //check that all files have been successfully uploaded
-            if (!$this->has_errors) {
-                $r = new Rule_File();
-                foreach($value as $i => $attachment) {
-                    //is delete or no description and no file uploaded => ignore it
-                    if ( "$i" != 'delete' && ((!empty($attachment['error']) && $attachment['error'] != UPLOAD_ERR_NO_FILE) || trim($attachment['description']))) {
-                        if (!$r->isValid($attachment)) {
-                            $this->has_errors = true;
-                            $GLOBALS['Response']->addFeedback('error', $this->getLabel() .' #'. $i .' has error: '. $r->getErrorMessage());
-                        }
-                    }
-                }
-            }
-        } else {
-            //TODO: WTF?
+            $this->checkAllFilesHaveBeenSuccessfullyUploaded($value);
         }
+
         return !$this->has_errors;
     }
-    
+
+    private function checkAllFilesHaveBeenSuccessfullyUploaded($value) {
+        $r = new Rule_File();
+        foreach($value as $i => $attachment) {
+            //is delete or no description and no file uploaded => ignore it
+            if ( "$i" != 'delete' && ((!empty($attachment['error']) && $attachment['error'] != UPLOAD_ERR_NO_FILE) || trim($attachment['description']))) {
+                if (!$r->isValid($attachment)) {
+                    $this->has_errors = true;
+                    $GLOBALS['Response']->addFeedback('error', $this->getLabel() .' #'. $i .' has error: '. $r->getErrorMessage());
+                }
+            }
+        }
+    }
+
+    /**
+     * Validate a required field
+     *
+     * @param Tracker_Artifact                $artifact             The artifact to check
+     * @param mixed                           $value      The submitted value
+     *
+     * @return boolean true on success or false on failure
+     */
+    public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $value) {
+        $this->has_errors = false;
+
+        if (is_array($value) && $this->isRequired() && ! $this->checkThatAtLeastOneFileIsUploaded($value)) {
+            $this->addRequiredError();
+        }
+
+        return ! $this->has_errors;
+    }
+
     /**
      * Check that at least one file is sent
      *

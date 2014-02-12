@@ -65,6 +65,7 @@ Mock::generatePartial('Tracker_FormElement_Field', 'MockTracker_FormElement_Fiel
         'getLabel',
         'getName',
         'isValid',
+        'isValidRegardingRequiredProperty',
         'fetchCriteriaValue',
         'fetchChangesetValue',
         'fetchRawValue',
@@ -131,6 +132,8 @@ class Tracker_ArtifactTest extends TuleapTestCase {
         $this->response = $GLOBALS['Response'];
         $this->language = $GLOBALS['Language'];
 
+        $this->setText('fields not valid', array('plugin_tracker_artifact', 'fields_not_valid'));
+
         $tracker     = new MockTracker();
         $factory     = new MockTracker_FormElementFactory();
         $this->field = new MockTracker_FormElement_Field();
@@ -190,370 +193,6 @@ class Tracker_ArtifactTest extends TuleapTestCase {
 
         $this->assertEqual($artifact->getValue($field), $value);
     }
-
-    function testValidateFields_basicvalid() {
-        $tracker = new MockTracker();
-        $factory = new MockTracker_FormElementFactory();
-
-        $field1  = new MockTracker_FormElement_Field();
-        $field1->setReturnValue('getId', 101);
-        $field1->setReturnValue('isValid', true);
-        $field2  = new MockTracker_FormElement_Field();
-        $field2->setReturnValue('getId', 102);
-        $field2->setReturnValue('isValid', true);
-        $field3  = new MockTracker_FormElement_Field();
-        $field3->setReturnValue('getId', 103);
-        $field3->setReturnValue('isValid', true);
-        $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
-        $factory->setReturnValue('getAllFormElementsForTracker', array());
-        $workflow = new MockWorkflow();
-        $workflow->setReturnValue('validate', true);
-
-        $artifact = new Tracker_ArtifactTestVersion();
-        $artifact->setReturnReference('getFormElementFactory', $factory);
-        $artifact->setReturnReference('getTracker', $tracker);
-        $artifact->setReturnReference('getWorkflow', $workflow);
-
-        $fields_data = array();
-        $this->assertTrue($artifact->validateFields($fields_data));
-        $this->assertNotNull($fields_data);
-        $this->assertFalse(isset($fields_data[101]));
-        $this->assertFalse(isset($fields_data[102]));
-        $this->assertFalse(isset($fields_data[103]));
-    }
-
-    // ARTIFACT SUBMISSION
-    function testValidateSubmitFieldNotRequired() {
-
-        $this->field->setReturnValue('isValid', true);
-        $this->field->setReturnValue('userCanUpdate', true);
-        $this->field->setReturnValue('isRequired', false);
-
-        $fields_data = array('101' => 444);
-        $this->assertTrue($this->artifact->validateFields($fields_data));
-        $this->assertNotNull($fields_data[101]);
-        $this->assertEqual($fields_data[101], 444);
-    }
-
-    function testValidateSubmitFieldNotRequiredNotSubmittedDefaultValue() {
-        $this->field->setReturnValue('isValid', true);
-        $this->field->setReturnValue('userCanUpdate', true);
-        $this->field->setReturnValue('isRequired', false);
-        $this->field->setReturnValue('hasDefaultValue', true);
-        $this->field->setReturnValue('getDefaultValue', 'DefaultValue');
-
-        $fields_data = array();
-        $this->assertTrue($this->artifact->validateFields($fields_data));
-        $this->assertFalse(isset($fields_data[101]));
-    }
-
-    function testValidateSubmitFieldNotRequiredNotSubmittedNoDefaultValue() {
-        $this->field->setReturnValue('isValid', true);
-        $this->field->setReturnValue('userCanUpdate', true);
-        $this->field->setReturnValue('isRequired', false);
-        $this->field->setReturnValue('hasDefaultValue', false);
-
-        $fields_data = array();
-        $this->assertTrue($this->artifact->validateFields($fields_data));
-        $this->assertFalse(isset($fields_data[101]));
-    }
-
-    function testValidateSubmitFieldRequired() {
-        $this->field->setReturnValue('isValid', true);
-        $this->field->setReturnValue('userCanSubmit', true);
-        $this->field->setReturnValue('userCanUpdate', true);
-        $this->field->setReturnValue('isRequired', true);
-
-        $fields_data = array('101' => 666);
-        $this->assertTrue($this->artifact->validateFields($fields_data));
-        $this->assertNotNull($fields_data[101]);
-        $this->assertEqual($fields_data[101], 666);
-    }
-
-    function testValidateSubmitFieldRequiredNotSubmittedDefaultValue() {
-        $this->field->setReturnValue('isValid', true);
-        $this->field->setReturnValue('userCanSubmit', true);
-        $this->field->setReturnValue('userCanUpdate', true);
-        $this->field->setReturnValue('isRequired', true);
-        $this->field->setReturnValue('hasDefaultValue', true);
-        $this->field->setReturnValue('getDefaultValue', 'MyDefaultValue');
-
-        $GLOBALS['Language']->expectOnce('getText', array('plugin_tracker_common_artifact', 'err_required', $this->field->getLabel() .' ('. $this->field->getName() .')'));
-
-        $fields_data = array();
-        $this->assertFalse($this->artifact->validateFields($fields_data));
-        $this->assertFalse(isset($fields_data[101]));
-    }
-
-    function testValidateSubmitFieldRequiredNotSubmittedNoDefaultValue() {
-        $this->field->setReturnValue('isValid', false);
-        $this->field->setReturnValue('userCanSubmit', true);
-        $this->field->setReturnValue('userCanUpdate', true);
-        $this->field->setReturnValue('isRequired', true);
-        $this->field->setReturnValue('hasDefaultValue', false);
-
-        $GLOBALS['Language']->expectOnce('getText', array('plugin_tracker_common_artifact', 'err_required', $this->field->getLabel() .' ('. $this->field->getName() .')'));
-
-        $fields_data = array();
-        $this->assertFalse($this->artifact->validateFields($fields_data));
-    }
-
-    // ARTIFACT MODIFICATION
-    function testValidateUpdateFieldSubmitted() {
-        $this->field->setReturnValue('isValid', true);
-        $this->field->setReturnValue('userCanSubmit', true);
-        $this->field->setReturnValue('userCanUpdate', true);
-        $this->field->setReturnValue('isRequired', true);
-
-        $fields_data = array('101' => 666);
-        $this->assertTrue($this->artifact_update->validateFields($fields_data));
-        $this->assertNotNull($fields_data[101]);
-        $this->assertEqual($fields_data[101], 666);
-    }
-
-    function testValidateUpdateFieldNotSubmitted() {
-        $this->field->setReturnValue('isValid', true);
-        $this->field->setReturnValue('userCanSubmit', true);
-        $this->field->setReturnValue('userCanUpdate', true);
-        $this->field->setReturnValue('isRequired', true);
-        $this->changeset_value->setReturnValue('getValue', 999);
-
-        $GLOBALS['Language']->expectNever('getText', array('plugin_tracker_common_artifact', 'err_required', $this->field->getLabel() .' ('. $this->field->getName() .')'));
-
-        $fields_data = array();
-        $this->assertTrue($this->artifact_update->validateFields($fields_data));
-        $this->assertFalse(isset($fields_data[101]));
-    }
-
-
-
-    function testValidateFields_missing_fields_on_submission() {
-        $tracker = new MockTracker();
-        $factory = new MockTracker_FormElementFactory();
-
-        $field1  = new MockTracker_FormElement_Field();
-        $field1->setReturnValue('getId', 101);
-        $field1->setReturnValue('isValid', true);
-        $field1->setReturnValue('userCanSubmit', true);
-        $field1->setReturnValue('userCanUpdate', true);
-        $field1->setReturnValue('isRequired', false);
-        $field1->setReturnValue('hasDefaultValue', true);
-        $field1->setReturnValue('getDefaultValue', 'default_value_field1');
-        $field2  = new MockTracker_FormElement_Field();
-        $field2->setReturnValue('getId', 102);
-        $field2->setReturnValue('isValid', true);
-        $field2->setReturnValue('userCanSubmit', true);
-        $field2->setReturnValue('userCanUpdate', true);
-        $field2->setReturnValue('isRequired', false);
-        $field2->setReturnValue('hasDefaultValue', false);
-        $field3  = new MockTracker_FormElement_Field();
-        $field3->setReturnValue('getId', 103);
-        $field3->setReturnValue('isValid', true);
-        $field3->setReturnValue('isRequired', true);
-        $field3->setReturnValue('userCanSubmit', true);
-        $field3->setReturnValue('userCanUpdate', true);
-        $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
-        $factory->setReturnValue('getAllFormElementsForTracker', array());
-
-        $artifact = new Tracker_ArtifactTestVersion();
-        $artifact->setReturnReference('getFormElementFactory', $factory);
-        $artifact->setReturnReference('getTracker', $tracker);
-        $artifact->setReturnValue('getLastChangeset', false); // changeset => artifact submission
-
-        $workflow = new MockWorkflow();
-        $workflow->setReturnValue('validate', true);
-
-        $artifact->setReturnReference('getWorkflow', $workflow);
-        // field 101 and 102 are missing
-        // 101 has a default value
-        // 102 has no default value
-        $fields_data = array('103' => 444);
-        $this->assertTrue($artifact->validateFields($fields_data));
-        $this->assertFalse(isset($fields_data[101]));
-        $this->assertFalse(isset($fields_data[102]));
-        $this->assertNotNull($fields_data[103]);
-        $this->assertEqual($fields_data[103], 444);
-    }
-
-    function testValidateFields_missing_fields_on_update() {
-        $tracker = new MockTracker();
-        $factory = new MockTracker_FormElementFactory();
-
-        $field1  = new MockTracker_FormElement_Field();
-        $field1->setReturnValue('getId', 101);
-        $field1->setReturnValue('isValid', true);
-        $field1->setReturnValue('userCanSubmit', true);
-        $field1->setReturnValue('userCanUpdate', true);
-        $field2  = new MockTracker_FormElement_Field();
-        $field2->setReturnValue('getId', 102);
-        $field2->setReturnValue('isValid', true);
-        $field2->setReturnValue('userCanSubmit', true);
-        $field2->setReturnValue('userCanUpdate', true);
-        $field3  = new MockTracker_FormElement_Field();
-        $field3->setReturnValue('getId', 103);
-        $field3->setReturnValue('isValid', true);
-        $field3->setReturnValue('userCanSubmit', true);
-        $field3->setReturnValue('userCanUpdate', true);
-        $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
-        $factory->setReturnValue('getAllFormElementsForTracker', array());
-
-        $changeset = new MockTracker_Artifact_Changeset();
-        $changeset_value1 = new MockTracker_Artifact_ChangesetValue();
-        $changeset_value2 = new MockTracker_Artifact_ChangesetValue();
-        $changeset_value2->setReturnValue('getValue', 987);
-        $changeset_value3 = new MockTracker_Artifact_ChangesetValue();
-        $changeset->setReturnReference('getValue', $changeset_value1, array($field1));
-        $changeset->setReturnReference('getValue', $changeset_value2, array($field2));
-        $changeset->setReturnReference('getValue', $changeset_value3, array($field3));
-
-        $artifact = new Tracker_ArtifactTestVersion();
-        $artifact->setReturnReference('getFormElementFactory', $factory);
-        $artifact->setReturnReference('getTracker', $tracker);
-        $artifact->setReturnValue('getLastChangeset', $changeset); // changeset => artifact update
-
-        $workflow = new MockWorkflow();
-        $workflow->setReturnValue('validate', true);
-
-        $artifact->setReturnReference('getWorkflow', $workflow);
-
-        // field 102 is missing
-        $fields_data = array('101' => 'foo',
-                             '103' => 'bar');
-        $this->assertTrue($artifact->validateFields($fields_data));
-        $this->assertFalse(isset($fields_data[102]));
-    }
-
-    function testValidateFields_missing_fields_in_previous_changeset_on_update() {
-        $tracker = new MockTracker();
-        $factory = new MockTracker_FormElementFactory();
-
-        $field1  = new MockTracker_FormElement_Field();
-        $field1->setReturnValue('getId', 101);
-        $field1->setReturnValue('isValid', true);
-        $field1->setReturnValue('userCanSubmit', true);
-        $field1->setReturnValue('userCanUpdate', true);
-        $field2  = new MockTracker_FormElement_Field();
-        $field2->setReturnValue('getId', 102);
-        $field2->setReturnValue('isValid', true);
-        $field2->setReturnValue('userCanSubmit', true);
-        $field2->setReturnValue('userCanUpdate', true);
-        $field3  = new MockTracker_FormElement_Field();
-        $field3->setReturnValue('getId', 103);
-        $field3->setReturnValue('isValid', true);
-        $field3->setReturnValue('userCanSubmit', true);
-        $field3->setReturnValue('userCanUpdate', true);
-        $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
-        $factory->setReturnValue('getAllFormElementsForTracker', array());
-
-        $changeset = new MockTracker_Artifact_Changeset();
-        $changeset_value1 = new MockTracker_Artifact_ChangesetValue();
-        $changeset_value3 = new MockTracker_Artifact_ChangesetValue();
-        $changeset->setReturnReference('getValue', $changeset_value1, array($field1));
-        $changeset->setReturnValue('getValue', null, array($field2));
-        $changeset->setReturnReference('getValue', $changeset_value3, array($field3));
-
-        $artifact = new Tracker_ArtifactTestVersion();
-        $artifact->setReturnReference('getFormElementFactory', $factory);
-        $artifact->setReturnReference('getTracker', $tracker);
-        $artifact->setReturnValue('getLastChangeset', $changeset); // changeset => artifact update
-
-        $workflow = new MockWorkflow();
-        $workflow->setReturnValue('validate', true);
-
-        $artifact->setReturnReference('getWorkflow', $workflow);
-
-        // field 102 is missing
-        $fields_data = array('101' => 'foo',
-                             '103' => 'bar');
-        $this->assertTrue($artifact->validateFields($fields_data));
-        $this->assertFalse(isset($fields_data[102]));
-    }
-
-    function testValidateFields_basicnotvalid() {
-        $tracker = new MockTracker();
-        $factory = new MockTracker_FormElementFactory();
-
-        $field1  = new MockTracker_FormElement_Field();
-        $field1->setReturnValue('getId', 101);
-        $field1->setReturnValue('isValid', true);
-        $field1->setReturnValue('userCanSubmit', true);
-        $field1->setReturnValue('userCanUpdate', true);
-        $field2  = new MockTracker_FormElement_Field();
-        $field2->setReturnValue('getId', 102);
-        $field2->setReturnValue('isValid', false);
-        $field2->setReturnValue('isRequired', true);
-        $field2->setReturnValue('userCanSubmit', true);
-        $field2->setReturnValue('userCanUpdate', true);
-        $field3  = new MockTracker_FormElement_Field();
-        $field3->setReturnValue('getId', 103);
-        $field3->setReturnValue('isValid', true);
-        $field3->setReturnValue('userCanSubmit', true);
-        $field3->setReturnValue('userCanUpdate', true);
-        $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
-        $factory->setReturnValue('getAllFormElementsForTracker', array());
-
-        $artifact = new Tracker_ArtifactTestVersion();
-        $artifact->setReturnReference('getFormElementFactory', $factory);
-        $artifact->setReturnReference('getTracker', $tracker);
-
-        $workflow = new MockWorkflow();
-        $workflow->setReturnValue('validate', true);
-
-        $artifact->setReturnReference('getWorkflow', $workflow);
-
-        $fields_data = array();
-        $this->assertFalse($artifact->validateFields($fields_data));
-        $this->assertFalse(isset($fields_data[101]));
-        $this->assertFalse(isset($fields_data[102]));
-        $this->assertFalse(isset($fields_data[103]));
-    }
-
-    function testValidateFields_valid() {
-        $tracker = new MockTracker();
-        $factory = new MockTracker_FormElementFactory();
-
-        $field1  = new MockTracker_FormElement_Field();
-        $field1->setReturnValue('getId', 101);
-        $field1->setReturnValue('isValid', true);
-        $field1->setReturnValue('userCanSubmit', true);
-        $field1->setReturnValue('userCanUpdate', true);
-        $field2  = new MockTracker_FormElement_Field();
-        $field2->setReturnValue('getId', 102);
-        $field2->setReturnValue('userCanSubmit', true);
-        $field2->setReturnValue('userCanUpdate', true);
-        $field2->setReturnValue('isValid', true, array('*', '123'));
-        $field2->setReturnValue('isValid', false, array('*', '456'));
-        $field3  = new MockTracker_FormElement_Field();
-        $field3->setReturnValue('getId', 103);
-        $field3->setReturnValue('userCanSubmit', true);
-        $field3->setReturnValue('userCanUpdate', true);
-        $field3->setReturnValue('isValid', true);
-        $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
-        $factory->setReturnValue('getAllFormElementsForTracker', array());
-
-        $artifact = new Tracker_ArtifactTestVersion();
-        $artifact->setReturnReference('getFormElementFactory', $factory);
-        $artifact->setReturnReference('getTracker', $tracker);
-
-        $workflow = new MockWorkflow();
-        $workflow->setReturnValue('validate', true);
-
-        $artifact->setReturnReference('getWorkflow', $workflow);
-
-        $fields_data = array(
-            102 => '123',
-        );
-        $this->assertTrue($artifact->validateFields($fields_data));
-        $this->assertFalse(isset($fields_data[101]));
-        $this->assertFalse(isset($fields_data[103]));
-
-        $fields_data = array(
-            102 => '456',
-        );
-        $this->assertFalse($artifact->validateFields($fields_data));
-        $this->assertFalse(isset($fields_data[101]));
-        $this->assertFalse(isset($fields_data[103]));
-    }
 }
 
 class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
@@ -576,6 +215,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
         $field1->setReturnValue('isValid', true);
+        $field1->setReturnValue('isValidRegardingRequiredProperty', true);
         $field1->expectNever('saveNewChangeset');
         $field1->setReturnValue('userCanSubmit', true);
         $field1->setReturnValue('userCanUpdate', true);
@@ -583,12 +223,14 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $field2->setReturnValue('getId', 102);
         $field2->setReturnValue('isValid', true, array('*', '123'));
         $field2->setReturnValue('isValid', false, array('*', '456'));
+        $field2->setReturnValue('isValidRegardingRequiredProperty', true);
         $field2->setReturnValue('userCanSubmit', true);
         $field2->setReturnValue('userCanUpdate', true);
         $field2->expectOnce('saveNewChangeset');
         $field3  = new MockTracker_FormElement_Field();
         $field3->setReturnValue('getId', 103);
         $field3->setReturnValue('isValid', true);
+        $field3->setReturnValue('isValidRegardingRequiredProperty', true);
         $field3->setReturnValue('userCanSubmit', true);
         $field3->setReturnValue('userCanUpdate', true);
         $field3->expectNever('saveNewChangeset');
@@ -651,6 +293,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
         $field1->setReturnValue('isValid', true);
+        $field1->setReturnValue('isValidRegardingRequiredProperty', true);
         $field1->expectNever('saveNewChangeset');
         $field1->setReturnValue('userCanSubmit', true);
         $field1->setReturnValue('userCanUpdate', true);
@@ -658,12 +301,14 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $field2->setReturnValue('getId', 102);
         $field2->setReturnValue('isValid', true, array('*', '123'));
         $field2->setReturnValue('isValid', false, array('*', '456'));
+        $field2->setReturnValue('isValidRegardingRequiredProperty', true);
         $field2->setReturnValue('userCanSubmit', true);
         $field2->setReturnValue('userCanUpdate', true);
         $field2->expectNever('saveNewChangeset');
         $field3  = new MockTracker_FormElement_Field();
         $field3->setReturnValue('getId', 103);
         $field3->setReturnValue('isValid', true);
+        $field3->setReturnValue('isValidRegardingRequiredProperty', true);
         $field3->setReturnValue('userCanSubmit', true);
         $field3->setReturnValue('userCanUpdate', true);
         $field3->expectNever('saveNewChangeset');
@@ -718,6 +363,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
         $field1->setReturnValue('isValid', true);
+        $field1->setReturnValue('isValidRegardingRequiredProperty', true);
         $field1->expectNever('saveNewChangeset');
         $field1->setReturnValue('userCanSubmit', true);
         $field1->setReturnValue('userCanUpdate', true);
@@ -725,12 +371,14 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $field2->setReturnValue('getId', 102);
         $field2->setReturnValue('isValid', true, array('*', '123'));
         $field2->setReturnValue('isValid', false, array('*', '456'));
+        $field2->setReturnValue('isValidRegardingRequiredProperty', true);
         $field2->setReturnValue('userCanSubmit', true);
         $field2->setReturnValue('userCanUpdate', true);
         $field2->expectNever('saveNewChangeset');
         $field3  = new MockTracker_FormElement_Field();
         $field3->setReturnValue('getId', 103);
         $field3->setReturnValue('isValid', true);
+        $field3->setReturnValue('isValidRegardingRequiredProperty', true);
         $field3->setReturnValue('userCanSubmit', true);
         $field3->setReturnValue('userCanUpdate', true);
         $field3->expectNever('saveNewChangeset');
@@ -776,6 +424,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
         $field1->setReturnValue('isValid', true);
+        $field1->setReturnValue('isValidRegardingRequiredProperty', true);
         $field1->expectNever('saveNewChangeset');
         $field1->setReturnValue('userCanSubmit', true);
         $field1->setReturnValue('userCanUpdate', true);
@@ -783,12 +432,14 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $field2->setReturnValue('getId', 102);
         $field2->setReturnValue('isValid', true, array('*', '123'));
         $field2->setReturnValue('isValid', false, array('*', '456'));
+        $field2->setReturnValue('isValidRegardingRequiredProperty', true);
         $field2->setReturnValue('userCanSubmit', true);
         $field2->setReturnValue('userCanUpdate', true);
         $field2->expectOnce('saveNewChangeset');
         $field3  = new MockTracker_FormElement_Field();
         $field3->setReturnValue('getId', 103);
         $field3->setReturnValue('isValid', true);
+        $field3->setReturnValue('isValidRegardingRequiredProperty', true);
         $field3->setReturnValue('userCanSubmit', true);
         $field3->setReturnValue('userCanUpdate', true);
         $field3->expectNever('saveNewChangeset');
@@ -847,6 +498,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
         $field1->setReturnValue('isValid', true);
+        $field1->setReturnValue('isValidRegardingRequiredProperty', true);
         $workflow->setReturnValue('bypassPermissions', false, array($field1));
         $field1->expectOnce('saveNewChangeset');
         $field1->setReturnValue('userCanSubmit', true);
@@ -854,6 +506,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $field2  = new MockTracker_FormElement_Field();
         $field2->setReturnValue('getId', 102);
         $field2->setReturnValue('isValid', true);
+        $field2->setReturnValue('isValidRegardingRequiredProperty', true);
         $field2->setReturnValue('userCanSubmit', false);
         $workflow->setReturnValue('bypassPermissions', true, array($field2));
         $field2->expectOnce('saveNewChangeset', array('*', '*', '*', '*', $user, true, true));
@@ -881,6 +534,9 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
 
         $this->assertEqual($artifact->createInitialChangeset($fields_data, $user, $_SERVER['REQUEST_TIME']), 1001);
     }
+}
+
+class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactTest {
 
     function testCreateNewChangesetWithWorkflowAndNoPermsOnPostActionField() {
         $email   = null; //not anonymous user
@@ -918,7 +574,6 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
             'getUserManager',
             'getArtifactFactory',
             'getWorkflow',
-            'validateFields',
             )
         );
         $workflow = new MockWorkflow();
@@ -963,16 +618,9 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
 
         $art_factory = new MockTracker_ArtifactFactory();
 
-        $artifact->setReturnReference('getChangesetDao', $dao);
-        $artifact->setReturnReference('getChangesetCommentDao', $comment_dao);
-        $artifact->setReturnReference('getFormElementFactory', $factory);
         $artifact->setReturnReference('getTracker', $tracker);
         $artifact->setReturnValue('getId', 66);
-        $artifact->setReturnValue('validateFields', true);
         $artifact->setReturnReference('getLastChangeset', $changeset);
-        $artifact->setReturnReference('getChangeset', $new_changeset);
-        $artifact->setReturnReference('getReferenceManager', $reference_manager);
-        $artifact->setReturnReference('getArtifactFactory', $art_factory);
 
         $art_factory->expectOnce('save');
 
@@ -982,6 +630,96 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
             102 => '456'
         );
 
+        $submitted_on      = $_SERVER['REQUEST_TIME'];
+        $send_notification = false;
+        $comment_format    = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+
+        $fields_validator = mock('Tracker_Artifact_Changeset_NewChangesetFieldsValidator');
+        stub($fields_validator)->validate()->returns(true);
+
+        $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
+            $fields_validator,
+            $factory,
+            $dao,
+            $comment_dao,
+            $art_factory,
+            mock('EventManager'),
+            $reference_manager
+        );
+
+        $creator->create($artifact, $fields_data, $comment, $user, $submitted_on, $send_notification, $comment_format);
+    }
+
+    function testDontCreateNewChangesetIfNoCommentOrNoChanges() {
+        $this->language->setReturnValue('getText', 'no changes', array('plugin_tracker_artifact', 'no_changes', '*'));
+        $this->response->expectNever('addFeedback');
+
+        $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
+        $comment_dao->expectNever('createNewVersion');
+
+        $dao = new MockTracker_Artifact_ChangesetDao();
+        $dao->expectNever('create');
+
+        $user = mock('PFUser');
+        $user->setReturnValue('getId', 1234);
+        $user->setReturnValue('isAnonymous', false);
+
+        $tracker = new MockTracker();
+        $tracker->setReturnValue('getFormElements', array());
+        $factory = new MockTracker_FormElementFactory();
+
+        $field1  = new MockTracker_FormElement_Field();
+        $field1->setReturnValue('getId', 101);
+        $field1->setReturnValue('isValid', true);
+        $field1->setReturnValue('isValidRegardingRequiredProperty', true);
+        $field1->setReturnValue('userCanUpdate', true);
+        $field1->expectNever('saveNewChangeset');
+        $field2  = new MockTracker_FormElement_Field();
+        $field2->setReturnValue('getId', 102);
+        $field2->setReturnValue('isValid', true);
+        $field2->setReturnValue('isValidRegardingRequiredProperty', true);
+        $field2->setReturnValue('userCanUpdate', true);
+        $field2->expectNever('saveNewChangeset');
+        $field3  = new MockTracker_FormElement_Field();
+        $field3->setReturnValue('getId', 103);
+        $field3->setReturnValue('isValid', true);
+        $field3->setReturnValue('isValidRegardingRequiredProperty', true);
+        $field3->setReturnValue('userCanUpdate', true);
+        $field3->expectNever('saveNewChangeset');
+        $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
+
+        $changeset = new MockTracker_Artifact_Changeset();
+        $changeset->setReturnValue('hasChanges', false);
+        $changeset->setReturnValue('getValues', array());
+        $changeset_value1 = new MockTracker_Artifact_ChangesetValue();
+        $changeset_value2 = new MockTracker_Artifact_ChangesetValue();
+        $changeset_value3 = new MockTracker_Artifact_ChangesetValue();
+        $changeset->setReturnReference('getValue', $changeset_value1, array($field1));
+        $changeset->setReturnReference('getValue', $changeset_value2, array($field2));
+        $changeset->setReturnReference('getValue', $changeset_value3, array($field3));
+
+        $artifact = new Tracker_ArtifactTestVersion();
+        $artifact->setReturnReference('getChangesetDao', $dao);
+        $artifact->setReturnReference('getChangesetCommentDao', $comment_dao);
+        $artifact->setReturnReference('getFormElementFactory', $factory);
+        $artifact->setReturnReference('getArtifactFactory', mock('Tracker_ArtifactFactory'));
+        $artifact->setReturnReference('getReferenceManager', mock('ReferenceManager'));
+        $artifact->setReturnReference('getTracker', $tracker);
+        $artifact->setReturnValue('getId', 66);
+        $artifact->setReturnReference('getLastChangeset', $changeset);
+
+        $workflow = new MockWorkflow();
+        $workflow->expectNever('before');
+        $workflow->setReturnValue('validate', true);
+        $artifact->setReturnValue('getWorkflow', $workflow);
+
+        $email   = null; //not annonymous user
+        $comment = ''; //empty comment
+
+        // Valid
+        $fields_data = array();
+        $this->expectException('Tracker_NoChangeException');
         $artifact->createNewChangeset($fields_data, $comment, $user);
     }
 }
@@ -1016,17 +754,20 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
         $field1->setReturnValue('isValid', true);
+        $field1->setReturnValue('isValidRegardingRequiredProperty', true);
         $field1->setReturnValue('userCanUpdate', true);
         $field1->expectOnce('saveNewChangeset');
         $field2  = new MockTracker_FormElement_Field();
         $field2->setReturnValue('getId', 102);
         $field2->setReturnValue('isValid', true, array('*', '123'));
         $field2->setReturnValue('isValid', false, array('*', '456'));
+        $field2->setReturnValue('isValidRegardingRequiredProperty', true);
         $field2->setReturnValue('userCanUpdate', true);
         $field2->expectOnce('saveNewChangeset');
         $field3  = new MockTracker_FormElement_Field();
         $field3->setReturnValue('getId', 103);
         $field3->setReturnValue('isValid', true);
+        $field3->setReturnValue('isValidRegardingRequiredProperty', true);
         $field3->expectOnce('saveNewChangeset');
         $field3->setReturnValue('userCanUpdate', true);
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
@@ -1088,7 +829,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         );
         
         $this->expectException('Tracker_Exception');
-        
+
         $artifact->createNewChangeset($fields_data, $comment, $user);
 
     }
@@ -1121,17 +862,20 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
         $field1->setReturnValue('isValid', true);
+        $field1->setReturnValue('isValidRegardingRequiredProperty', true);
         $field1->setReturnValue('userCanUpdate', true);
         $field1->expectNever('saveNewChangeset');
         $field2  = new MockTracker_FormElement_Field();
         $field2->setReturnValue('getId', 102);
         $field2->setReturnValue('isValid', true, array('*', '123'));
         $field2->setReturnValue('isValid', false, array('*', '456'));
+        $field2->setReturnValue('isValidRegardingRequiredProperty', true);
         $field2->setReturnValue('userCanUpdate', true);
         $field2->expectNever('saveNewChangeset');
         $field3  = new MockTracker_FormElement_Field();
         $field3->setReturnValue('getId', 103);
         $field3->setReturnValue('isValid', true);
+        $field3->setReturnValue('isValidRegardingRequiredProperty', true);
         $field3->expectNever('saveNewChangeset');
         $field3->setReturnValue('userCanUpdate', true);
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
@@ -1223,17 +967,20 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
         $field1->setReturnValue('isValid', true);
+        $field1->setReturnValue('isValidRegardingRequiredProperty', true);
         $field1->setReturnValue('userCanUpdate', true);
         $field1->expectOnce('saveNewChangeset');
         $field2  = new MockTracker_FormElement_Field();
         $field2->setReturnValue('getId', 102);
         $field2->setReturnValue('isValid', true, array('*', '123'));
         $field2->setReturnValue('isValid', false, array('*', '456'));
+        $field2->setReturnValue('isValidRegardingRequiredProperty', true);
         $field2->setReturnValue('userCanUpdate', true);
         $field2->expectOnce('saveNewChangeset');
         $field3  = new MockTracker_FormElement_Field();
         $field3->setReturnValue('getId', 103);
         $field3->setReturnValue('isValid', true);
+        $field3->setReturnValue('isValidRegardingRequiredProperty', true);
         $field3->expectOnce('saveNewChangeset');
         $field3->setReturnValue('userCanUpdate', true);
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
@@ -1294,74 +1041,6 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
             102 => '456',
         );
         $this->expectException('Tracker_Exception');
-        $artifact->createNewChangeset($fields_data, $comment, $user);
-    }
-
-    function testDontCreateNewChangesetIfNoCommentOrNoChanges() {
-        $this->language->setReturnValue('getText', 'no changes', array('plugin_tracker_artifact', 'no_changes', '*'));
-        $this->response->expectNever('addFeedback');
-
-        $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
-        $comment_dao->expectNever('createNewVersion');
-
-        $dao = new MockTracker_Artifact_ChangesetDao();
-        $dao->expectNever('create');
-
-        $user = mock('PFUser');
-        $user->setReturnValue('getId', 1234);
-        $user->setReturnValue('isAnonymous', false);
-
-        $tracker = new MockTracker();
-        $tracker->setReturnValue('getFormElements', array());
-        $factory = new MockTracker_FormElementFactory();
-
-        $field1  = new MockTracker_FormElement_Field();
-        $field1->setReturnValue('getId', 101);
-        $field1->setReturnValue('isValid', true);
-        $field1->setReturnValue('userCanUpdate', true);
-        $field1->expectNever('saveNewChangeset');
-        $field2  = new MockTracker_FormElement_Field();
-        $field2->setReturnValue('getId', 102);
-        $field2->setReturnValue('isValid', true);
-        $field2->setReturnValue('userCanUpdate', true);
-        $field2->expectNever('saveNewChangeset');
-        $field3  = new MockTracker_FormElement_Field();
-        $field3->setReturnValue('getId', 103);
-        $field3->setReturnValue('isValid', true);
-        $field3->setReturnValue('userCanUpdate', true);
-        $field3->expectNever('saveNewChangeset');
-        $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
-        $factory->setReturnValue('getAllFormElementsForTracker', array());
-
-        $changeset = new MockTracker_Artifact_Changeset();
-        $changeset->setReturnValue('hasChanges', false);
-        $changeset->setReturnValue('getValues', array());
-        $changeset_value1 = new MockTracker_Artifact_ChangesetValue();
-        $changeset_value2 = new MockTracker_Artifact_ChangesetValue();
-        $changeset_value3 = new MockTracker_Artifact_ChangesetValue();
-        $changeset->setReturnReference('getValue', $changeset_value1, array($field1));
-        $changeset->setReturnReference('getValue', $changeset_value2, array($field2));
-        $changeset->setReturnReference('getValue', $changeset_value3, array($field3));
-
-        $artifact = new Tracker_ArtifactTestVersion();
-        $artifact->setReturnReference('getChangesetDao', $dao);
-        $artifact->setReturnReference('getChangesetCommentDao', $comment_dao);
-        $artifact->setReturnReference('getFormElementFactory', $factory);
-        $artifact->setReturnReference('getTracker', $tracker);
-        $artifact->setReturnValue('getId', 66);
-        $artifact->setReturnReference('getLastChangeset', $changeset);
-
-        $workflow = new MockWorkflow();
-        $workflow->expectNever('before');
-        $workflow->setReturnValue('validate', true);
-        $artifact->setReturnValue('getWorkflow', $workflow);
-
-        $email   = null; //not annonymous user
-        $comment = ''; //empty comment
-
-        // Valid
-        $fields_data = array();
-        $this->expectException('Tracker_NoChangeException');
         $artifact->createNewChangeset($fields_data, $comment, $user);
     }
 
@@ -1693,43 +1372,26 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
             ''
         ));
         $tracker        = stub('Tracker')->getWorkflow()->returns($this->workflow);
-        $this->artifact = partial_mock('Tracker_Artifact', array('validateFields','getChangesetDao','getChangesetCommentDao', 'getReferenceManager', 'getChangesetFactory'));
-        $this->artifact->setId(42);
-        $this->artifact->setTracker($tracker);
-        $this->artifact->setChangesets($this->changesets);
-        $this->artifact->setFormElementFactory($factory);
-        $this->artifact->setArtifactFactory($this->artifact_factory);
-        stub($this->artifact)->validateFields()->returns(true);
-        stub($this->artifact)->getChangesetDao()->returns($this->changeset_dao);
-        stub($this->artifact)->getChangesetFactory()->returns($this->changeset_factory);
-        stub($this->artifact)->getChangesetCommentDao()->returns(mock('Tracker_Artifact_Changeset_CommentDao'));
-        stub($this->artifact)->getReferenceManager()->returns(mock('ReferenceManager'));
+        $this->artifact = anArtifact()
+            ->withId(42)
+            ->withChangesets($this->changesets)
+            ->withTracker($tracker)
+            ->build();
 
         $this->submitted_on = $_SERVER['REQUEST_TIME'];
 
-    }
+        $fields_validator = mock('Tracker_Artifact_Changeset_NewChangesetFieldsValidator');
+        stub($fields_validator)->validate()->returns(true);
 
-    public function itCallsTheAfterMethodOnWorkflowWhenCreateInitialChangeset() {
-        stub($this->changeset_dao)->create()->returns(5667);
-        stub($this->artifact_factory)->save()->returns(true);
-        expect($this->workflow)->after($this->fields_data, new IsAExpectation('Tracker_Artifact_Changeset'), null)->once();
-
-        $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->submitted_on);
-    }
-
-    public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfInitialChangesetFails() {
-        stub($this->changeset_dao)->create()->returns(false);
-        expect($this->workflow)->after()->never();
-
-        $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->submitted_on);
-    }
-
-    public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFails() {
-        stub($this->changeset_dao)->create()->returns(true);
-        stub($this->artifact_factory)->save()->returns(false);
-        expect($this->workflow)->after()->never();
-
-        $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->submitted_on);
+        $this->creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
+            $fields_validator,
+            $factory,
+            $this->changeset_dao,
+            mock('Tracker_Artifact_Changeset_CommentDao'),
+            $this->artifact_factory,
+            mock('EventManager'),
+            mock('ReferenceManager')
+        );
     }
 
     public function itCallsTheAfterMethodOnWorkflowWhenCreateNewChangeset() {
@@ -1737,7 +1399,15 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         stub($this->artifact_factory)->save()->returns(true);
         expect($this->workflow)->after($this->fields_data, new IsAExpectation('Tracker_Artifact_Changeset'), end($this->changesets))->once();
 
-        $this->artifact->createNewChangeset($this->fields_data, '', $this->submitter, false);
+        $this->creator->create(
+            $this->artifact,
+            $this->fields_data,
+            '',
+            $this->submitter,
+            $this->submitted_on,
+            false,
+            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
+        );
     }
 
     public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFailsOnNewChangeset() {
@@ -1745,7 +1415,15 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         stub($this->artifact_factory)->save()->returns(false);
         expect($this->workflow)->after()->never();
 
-        $this->artifact->createNewChangeset($this->fields_data, '', $this->submitter, false);
+        $this->creator->create(
+            $this->artifact,
+            $this->fields_data,
+            '',
+            $this->submitter,
+            $this->submitted_on,
+            false,
+            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
+        );
     }
 }
 

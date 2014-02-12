@@ -1540,8 +1540,10 @@ class TrackerTest extends TuleapTestCase {
                  );
         $field1 = new MockTracker_FormElement_Field_String();
         $field2 = new MockTracker_FormElement_Field_String();
-        $field1->setReturnValue('isRequired', false);
-        $field2->setReturnValue('isRequired', false);
+        stub($this->formelement_factory)->getUsedFields()->returns(array($field1, $field2));
+
+        $field1->setReturnValue('validateFieldWithPermissionsAndRequiredStatus', true);
+        $field2->setReturnValue('validateFieldWithPermissionsAndRequiredStatus', true);
 
         $field1->setReturnValue('getId', 1);
         $field2->setReturnValue('getId', 2);
@@ -1560,7 +1562,6 @@ class TrackerTest extends TuleapTestCase {
         $af = new MockTracker_ArtifactFactory();
         $this->tracker->setReturnReference('getTrackerArtifactFactory', $af);
         $this->tracker->setReturnValue('aidExists', false, array('0'));
-        $artifact->setReturnValue('validateFields', true);
 
         $um = new MockUserManager();
         $u = mock('PFUser');

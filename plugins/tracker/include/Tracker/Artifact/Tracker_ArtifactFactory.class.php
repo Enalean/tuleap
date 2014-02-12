@@ -286,7 +286,7 @@ class Tracker_ArtifactFactory {
      *
      * @return Tracker_ArtifactDao
      */
-    protected function getDao() {
+    public function getDao() {
         if (!$this->dao) {
             $this->dao = new Tracker_ArtifactDao();
         }
@@ -305,55 +305,19 @@ class Tracker_ArtifactFactory {
      * @return Tracker_Artifact or false if an error occured
      */
     public function createArtifact(Tracker $tracker, $fields_data, PFUser $user, $email, $send_notification = true) {
-        return $this->createArtifactAt($tracker, $fields_data, $user, $email, $_SERVER['REQUEST_TIME'], $send_notification);
-    }
+        $formelement_factory = Tracker_FormElementFactory::instance();
+        $fields_validator    = new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator($formelement_factory);
 
-    /**
-     * Add an artefact in the tracker at a given date
-     *
-     * @param Tracker $tracker           The tracker this artifact belongs to
-     * @param array   $fields_data       The data of the artifact to create: array('field_id' => 'value')
-     * @param PFUser  $user              The user that want to create the artifact
-     * @param string  $email             The email if the user is anonymous (null if anonymous)
-     * @param int     $submitted_on      The date the artifact is created
-     * @param boolean $send_notification true if a notification must be sent, false otherwise
-     *
-     * @return Tracker_Artifact or false if an error occured
-     */
-    public function createArtifactAt(Tracker $tracker, $fields_data, PFUser $user, $email, $submitted_on, $send_notification = true) {
-        $artifact = $this->getInstanceFromRow(
-            array(
-                'id'                       => 0,
-                'tracker_id'               => $tracker->id,
-                'submitted_by'             => $user->getId(),
-                'submitted_on'             => $submitted_on,
-                'use_artifact_permissions' => 0,
-            )
+        $changeset_creator = new Tracker_Artifact_Changeset_InitialChangesetCreator(
+            $fields_validator,
+            $formelement_factory,
+            new Tracker_Artifact_ChangesetDao(),
+            $this
         );
+        $creator = new Tracker_ArtifactCreator($this, $fields_validator, $changeset_creator);
 
-        if ($user->isAnonymous()) {
-            $user->setEmail($email);
-        }
-
-        //validate the request
-        if ($ok = $artifact->validateFields($fields_data, true)) {
-            //If all is ok, save the artifact
-            $use_artifact_permissions = 0;
-            if ($id = $this->getDao()->create($tracker->id, $user->getId(), $submitted_on ,$use_artifact_permissions)) {
-                $artifact->setId($id);
-                //create the first changeset
-                if ($changeset_id = $artifact->createInitialChangeset($fields_data, $user, $submitted_on)) {
-                    $submitted_by = $artifact->getSubmittedBy();
-                    $submitted_on = $artifact->getSubmittedOn();
-                    $changeset     = new Tracker_Artifact_Changeset($changeset_id, $artifact, $submitted_by, $submitted_on, $email );
-                    if ($send_notification) {
-                        $changeset->notify();
-                    }
-                    return $artifact;
-                }
-            }
-        }
-        return false;
+        $submitted_on = $_SERVER['REQUEST_TIME'];
+        return $creator->create($tracker, $fields_data, $user, $email, $submitted_on, $send_notification);
     }
 
     public function save(Tracker_Artifact $artifact) {

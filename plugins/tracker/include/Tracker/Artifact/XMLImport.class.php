@@ -23,8 +23,11 @@ class Tracker_Artifact_XMLImport {
     /** @var XML_RNGValidator */
     private $rng_validator;
 
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
+    /** @var Tracker_ArtifactCreator */
+    private $artifact_creator;
+
+    /** @var Tracker_Artifact_Changeset_NewChangesetCreatorBase */
+    private $new_changeset_creator;
 
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
@@ -34,14 +37,17 @@ class Tracker_Artifact_XMLImport {
 
     public function __construct(
         XML_RNGValidator $rng_validator,
-        Tracker_ArtifactFactory $artifact_factory,
+        Tracker_ArtifactCreator $artifact_creator,
+        Tracker_Artifact_Changeset_NewChangesetCreatorBase $new_changeset_creator,
         Tracker_FormElementFactory $formelement_factory,
         UserManager $user_manager
     ) {
-        $this->rng_validator        = $rng_validator;
-        $this->artifact_factory     = $artifact_factory;
-        $this->formelement_factory  = $formelement_factory;
-        $this->user_manager         = $user_manager;
+
+        $this->rng_validator         = $rng_validator;
+        $this->artifact_creator      = $artifact_creator;
+        $this->new_changeset_creator = $new_changeset_creator;
+        $this->formelement_factory   = $formelement_factory;
+        $this->user_manager          = $user_manager;
     }
 
     public function importFromArchive(Tracker $tracker, Tracker_Artifact_XMLImport_XMLImportZipArchive $archive) {
@@ -100,8 +106,7 @@ class Tracker_Artifact_XMLImport {
         if (count($fields_data) > 0) {
             $email              = '';
             $send_notifications = false;
-
-            $artifact = $this->artifact_factory->createArtifactAt(
+            $artifact = $this->artifact_creator->create(
                 $tracker,
                 $fields_data,
                 $this->getSubmittedBy($xml_changeset),
@@ -126,12 +131,14 @@ class Tracker_Artifact_XMLImport {
         foreach($xml_changesets as $xml_changeset) {
             $comment           = '';
             $send_notification = false;
-            $result = $artifact->createNewChangesetAt(
+            $result = $this->new_changeset_creator->create(
+                $artifact,
                 $fields_data_builder->getFieldsData($xml_changeset->field_change),
                 $comment,
                 $this->getSubmittedBy($xml_changeset),
                 $this->getSubmittedOn($xml_changeset),
-                $send_notification
+                $send_notification,
+                Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
             );
             if (! $result) {
                 throw new Tracker_Artifact_Exception_CannotCreateNewChangeset();

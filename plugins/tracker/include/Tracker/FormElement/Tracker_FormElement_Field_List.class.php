@@ -1203,14 +1203,27 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @return bool true if the value is considered ok
      */
     public function isValid(Tracker_Artifact $artifact, $value) {
+        $this->has_errors = !$this->validate($artifact, $value);
 
-        if ($this->isNone($value) && $this->isRequired()) {
-            $this->has_errors = true;
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
-        } else {
-            $this->has_errors = !$this->validate($artifact, $value);
-        }
         return !$this->has_errors;
+    }
+
+    /**
+     * Validate a required field
+     *
+     * @param Tracker_Artifact                $artifact             The artifact to check
+     * @param mixed                           $value      The submitted value
+     *
+     * @return boolean true on success or false on failure
+     */
+    public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $value) {
+        $this->has_errors = false;
+
+        if ($this->isEmpty($value) && $this->isRequired()) {
+            $this->addRequiredError();
+        }
+
+        return ! $this->has_errors;
     }
 
     public function isEmpty($value) {

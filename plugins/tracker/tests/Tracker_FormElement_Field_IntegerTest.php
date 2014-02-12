@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('bootstrap.php');
-Mock::generatePartial('Tracker_FormElement_Field_Integer', 'Tracker_FormElement_Field_IntegerTestVersion', array('getValueDao', 'isRequired', 'getProperty'));
 
 Mock::generate('Tracker_Artifact_ChangesetValue_Integer');
 
@@ -34,6 +33,8 @@ Mock::generate('Response');
 
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
+
+Mock::generatePartial('Tracker_FormElement_Field_Integer', 'Tracker_FormElement_Field_IntegerTestVersion', array('getValueDao', 'isRequired', 'getProperty'));
 
 class Tracker_FormElement_Field_IntegerTestVersion_Expose_ProtectedMethod extends Tracker_FormElement_Field_IntegerTestVersion {
     public function buildMatchExpression($a, $b) { return parent::buildMatchExpression($a, $b); }
@@ -100,8 +101,8 @@ class Tracker_FormElement_Field_IntegerTest extends UnitTestCase {
         $this->assertFalse($f->isValid($a, 'toto'));
         $this->assertFalse($f->isValid($a, '12toto'));
         $this->assertFalse($f->isValid($a, 1.23));
-        $this->assertFalse($f->isValid($a, ''));
-        $this->assertFalse($f->isValid($a, null));
+        $this->assertFalse($f->isValidRegardingRequiredProperty($a, ''));
+        $this->assertFalse($f->isValidRegardingRequiredProperty($a, null));
     }
     
     function testIsValidNotRequiredField() {

@@ -2586,7 +2586,13 @@ EOS;
                 }
             }
             if ($artifact) {
-                if (! $ok = $artifact->validateFields($data)) {
+                $is_new_artifact = $artifact->getId() == 0;
+                if ($is_new_artifact) {
+                    $fields_validator = new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator($this->getFormElementFactory());
+                } else {
+                    $fields_validator = new Tracker_Artifact_Changeset_NewChangesetFieldsValidator($this->getFormElementFactory());
+                }
+                if (! $fields_validator->validate($artifact, $data)) {
                      $has_error = true;
                 }
             }
