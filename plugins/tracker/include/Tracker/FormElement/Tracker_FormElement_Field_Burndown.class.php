@@ -107,6 +107,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $html;
     }
 
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array()) {
+        $html = '';
+        $html .= '<img src="'.$this->getBurndownImageUrl($artifact).'" alt="'.$this->getLabel().'" width="390" height="400" />';
+        return $html;
+    }
+
     /**
      *
      * @param Tracker_IDisplayTrackerLayout $layout
