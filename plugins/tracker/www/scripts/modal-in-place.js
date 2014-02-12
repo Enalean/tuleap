@@ -123,6 +123,12 @@ tuleap.tracker = tuleap.tracker || { };
 
         },
 
+        initModalInteraction : function(modal) {
+            tuleap_modal = modal.getDOMElement();
+            codendi.Tooltip.load(tuleap_modal, true);
+            codendi.Toggler.init(tuleap_modal);
+        },
+
         beforeSubmit : function() {
                 $('#tuleap-modal-submit')
                     .val($('#tuleap-modal-submit').attr('data-loading-text'))
@@ -133,6 +139,15 @@ tuleap.tracker = tuleap.tracker || { };
             $('#tuleap-modal-submit')
                 .val($('#tuleap-modal-submit').attr('data-normal-text'))
                 .attr("disabled", false);
+        },
+
+        submitDone : function(modal, callback) {
+            this.destroyRichTextAreaInstances();
+            modal.closeModal();
+            if (callback == this.defaultCallback) {
+                modal.showLoad();
+            }
+            callback();
         },
 
         showArtifactCreationForm : function(form_html, tracker_id, artifact_link_id, callback) {
@@ -148,8 +163,7 @@ tuleap.tracker = tuleap.tracker || { };
                 }
             });
 
-            tuleap_modal = modal.getDOMElement();
-            codendi.Toggler.init(tuleap_modal);
+            self.initModalInteraction(modal);
 
             $('#tuleap-modal-submit').click(function(event) {
                 self.updateRichTextAreas();
@@ -162,9 +176,7 @@ tuleap.tracker = tuleap.tracker || { };
                     beforeSend: self.beforeSubmit
 
                 }).done( function() {
-                    self.destroyRichTextAreaInstances();
-                    modal.closeModal();
-                    callback();
+                   self.submitDone(modal, callback);
 
                 }).fail( function(response) {
                     var data = JSON.parse(response.responseText);
@@ -197,9 +209,7 @@ tuleap.tracker = tuleap.tracker || { };
                 }
             });
 
-            tuleap_modal = modal.getDOMElement();
-            codendi.Tooltip.load(tuleap_modal, true);
-            codendi.Toggler.init(tuleap_modal);
+            self.initModalInteraction(modal);
 
             $('#tuleap-modal-submit').click(function(event) {
                 self.updateRichTextAreas();
@@ -217,9 +227,7 @@ tuleap.tracker = tuleap.tracker || { };
                     beforeSend: self.beforeSubmit
 
                 }).done( function() {
-                    self.destroyRichTextAreaInstances();
-                    modal.closeModal();
-                    callback();
+                    self.submitDone(modal, callback);
 
                 }).fail( function(response) {
                     var data = JSON.parse(response.responseText);
