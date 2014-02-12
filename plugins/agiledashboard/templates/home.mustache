@@ -1,14 +1,16 @@
 <div id="home">
     <div class="row-fluid">
         <div class="backlog span12">
-            <a href="#">
-                <h1>Tuleap backlog</h1>
+            <a href="?action=show-top&group_id={{ group_id }}&pane=topblcontent">
+                <h1>{{ project_backlog }}</h1>
             </a>
         </div>
     </div>
 
     <div class="date-bar">
-        <a href="#">Passed</a><a href="#" class="active">What's hot</a><a href="#">What's next</a>
+        <a href="?group_id={{ group_id }}&period=past" class="{{ past_active }}">{{ past }}</a><!--
+        --><a href="?group_id={{ group_id }}&period=" class="{{ now_active }}">{{ now }}</a><!--
+        --><a href="?group_id={{ group_id }}&period=future" class="{{ future_active }}">{{ future }}</a>
     </div>
 
     <div class="row-fluid">
@@ -40,9 +42,10 @@
                     <div class="header">
                         <p class="title">{{ milestone_title }}</p>
                         <p class="hierarchy">
+                        <i class="icon-angle-right"></i>
                         {{# breadcrumbs }}
                             {{# . }}
-                                {{ title }} <i class="icon-angle-right"></i>
+                            <a href="{{ url }}">{{ title }}</a> <i class="icon-angle-right"></i>
                             {{/ . }}
                         {{/ breadcrumbs }}
                         <p>

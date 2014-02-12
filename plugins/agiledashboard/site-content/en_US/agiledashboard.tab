@@ -36,6 +36,10 @@ plugin_agiledashboard	planning	Planning
 plugin_agiledashboard	cardwall	Cardwall
 plugin_agiledashboard	open	open
 plugin_agiledashboard	closed	closed
+plugin_agiledashboard	project_backlog	$1 backlog
+plugin_agiledashboard	past	Passed
+plugin_agiledashboard	now	What's hot
+plugin_agiledashboard	future	What's next
 plugin_agiledashboard	milestone_planning_pane_title	$1 Planning
 plugin_agiledashboard	access_to_planning	Access to planning
 plugin_agiledashboard	backlog_destination_help	Use right arrow on item to move it to current milestone or bottom/up arrow to rank items.

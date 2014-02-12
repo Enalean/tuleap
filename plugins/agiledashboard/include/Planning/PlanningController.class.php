@@ -29,6 +29,9 @@ require_once 'common/mvc2/PluginController.class.php';
 class Planning_Controller extends MVC2_PluginController {
 
     const AGILE_DASHBOARD_TEMPLATE_NAME = 'agile_dashboard_template.xml';
+    const PAST_PERIOD   = 'past';
+    const FUTURE_PERIOD = 'future';
+    const NUMBER_PAST_MILESTONES_SHOWN = 10;
 
     /** @var PlanningFactory */
     private $planning_factory;
@@ -164,10 +167,12 @@ class Planning_Controller extends MVC2_PluginController {
         $last_planning = array_pop($plannings);
 
         $presenter = new Planning_Presenter_HomePresenter(
-            $this->getMilestoneAccessPresenters($plannings, $user),
+            $this->getMilestoneAccessPresenters($plannings),
             $this->group_id,
             $last_planning->getPlanningTracker()->getName(),
-            $this->getMilestoneSummaryPresenters($last_planning, $user)
+            $this->getMilestoneSummaryPresenters($last_planning, $user),
+            $this->request->get('period'),
+            $this->getProjectFromRequest()->getPublicName()
         );
         return $this->renderToString('home', $presenter);
     }
@@ -186,12 +191,12 @@ class Planning_Controller extends MVC2_PluginController {
     /**
      * @return Planning_Presenter_MilestoneAccessPresenter
      */
-    private function getMilestoneAccessPresenters($plannings, PFUser $user) {
+    private function getMilestoneAccessPresenters($plannings) {
         $milestone_access_presenters = array();
         foreach ($plannings as $planning) {
             $milestone_type      = $planning->getPlanningTracker();
             $milestone_presenter = new Planning_Presenter_MilestoneAccessPresenter(
-                $this->milestone_factory->getAllCurrentMilestones($user, $planning->getId()),
+                $this->getPlanningMilestonesForTimePeriod($planning),
                 $milestone_type->getName()
             );
 
@@ -206,10 +211,7 @@ class Planning_Controller extends MVC2_PluginController {
      */
     private function getMilestoneSummaryPresenters(Planning $last_planning, PFUser $user) {
         $presenters = array();
-        $last_planning_current_milestones = $this->milestone_factory->getAllCurrentMilestones(
-            $user,
-            $last_planning->getId()
-        );
+        $last_planning_current_milestones = $this->getPlanningMilestonesForTimePeriod($last_planning);
 
         if (empty($last_planning_current_milestones)) {
             return $presenters;
@@ -241,6 +243,30 @@ class Planning_Controller extends MVC2_PluginController {
     }
 
     /**
+     * @return Planning_Milestone[]
+     */
+    private function getPlanningMilestonesForTimePeriod(Planning $planning) {
+        switch ($this->request->get('period')) {
+            case self::PAST_PERIOD:
+                return $this->milestone_factory->getPastMilestones(
+                    $this->request->getCurrentUser(),
+                    $planning,
+                    self::NUMBER_PAST_MILESTONES_SHOWN
+                );
+            case self::FUTURE_PERIOD:
+                return $this->milestone_factory->getAllFutureMilestones(
+                    $this->request->getCurrentUser(),
+                    $planning
+                );
+            default:
+                return $this->milestone_factory->getAllCurrentMilestones(
+                    $this->request->getCurrentUser(),
+                    $planning
+                );
+        }
+    }
+
+    /**
      * @return bool
      */
     private function isUserAdmin() {
@@ -262,7 +288,6 @@ class Planning_Controller extends MVC2_PluginController {
 
         return $this->renderToString('new', $presenter);
     }
-
 
     public function importForm() {
         $this->redirectNonAdmin();

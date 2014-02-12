@@ -544,9 +544,8 @@ class Planning_MilestoneFactory {
     /**
      * @return Planning_Milestone[]
      */
-    public function getAllCurrentMilestones(PFUser $user, $planning_id) {
+    public function getAllCurrentMilestones(PFUser $user, Planning $planning) {
         $milestones = array();
-        $planning   = $this->planning_factory->getPlanning($planning_id);
 
         if (! $this->canPlanningBeSetInTime($planning->getPlanningTracker())) {
             return $milestones;
@@ -564,6 +563,61 @@ class Planning_MilestoneFactory {
     }
 
     /**
+     * @return Planning_Milestone[]
+     */
+    public function getAllFutureMilestones(PFUser $user, Planning $planning) {
+        $milestones = array();
+
+        if (! $this->canPlanningBeSetInTime($planning->getPlanningTracker())) {
+            return $milestones;
+        }
+
+        $artifacts = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        foreach ($artifacts as $artifact) {
+            if (! $this->isMilestoneFuture($artifact, $user)) {
+                continue;
+            }
+            $milestones[] = $this->getMilestoneFromArtifact($artifact);
+        }
+
+        return $milestones;
+    }
+
+    /**
+     * Returns the last $quantity milestones - ordered by oldest first
+     *
+     * @return Planning_Milestone[]
+     */
+    public function getPastMilestones(PFUser $user, Planning $planning, $quantity) {
+        $milestones = array();
+
+        if (! $this->canPlanningBeSetInTime($planning->getPlanningTracker())) {
+            return $milestones;
+        }
+
+        $artifacts = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        foreach ($artifacts as $artifact) {
+            if (! $this->isMilestonePast($artifact, $user)) {
+                continue;
+            }
+
+            $end_date = $this->getMilestoneEndDate($artifact, $user);
+            $milestones[$end_date] = $this->getMilestoneFromArtifact($artifact);
+        }
+
+        $count = count($milestones);
+        $start = ($quantity > $count) ? 0 : $count - $quantity;
+
+        return array_reverse(array_slice($milestones, $start));
+    }
+
+    private function getMilestoneEndDate(Tracker_Artifact $milestone_artifact, PFUser $user) {
+        return $this->getMilestoneTimePeriod($milestone_artifact, $user)
+            ->getEndDate();
+    }
+
+
+    /**
      * Checks if the planning's tracker has the necssary fields to determine
      * when the planning's milestone begin and end.
      *
@@ -578,20 +632,25 @@ class Planning_MilestoneFactory {
     }
 
     private function isMilestoneCurrent(Tracker_Artifact $milestone_artifact, PFUser $user) {
-        $start_date = new DateTime();
-        $now        = new DateTime();
+        return $this->getMilestoneTimePeriod($milestone_artifact, $user)
+            ->isTodayWithinTimePeriod();
+    }
 
-        $start_date->setTimestamp($this->getTimestamp($user, $milestone_artifact, Planning_Milestone::START_DATE_FIELD_NAME));
-        $now->setTimestamp($_SERVER['REQUEST_TIME']);
+    private function isMilestoneFuture(Tracker_Artifact $milestone_artifact, PFUser $user) {
+        return $this->getMilestoneTimePeriod($milestone_artifact, $user)
+            ->isTodayBeforeTimePeriod();
+    }
 
-        $duration         = $this->getComputedFieldValue($user, $milestone_artifact, Planning_Milestone::DURATION_FIELD_NAME);
-        $days_since_start = $start_date->diff($now)->days;
+    private function isMilestonePast(Tracker_Artifact $milestone_artifact, PFUser $user) {
+        return $this->getMilestoneTimePeriod($milestone_artifact, $user)
+            ->isTodayAfterTimePeriod();
+    }
 
-        if ($start_date->getTimestamp() <= $now->getTimestamp() && $days_since_start <= $duration) {
-            return true;
-        }
+    private function getMilestoneTimePeriod(Tracker_Artifact $milestone_artifact, PFUser $user) {
+        $start_date  = $this->getTimestamp($user, $milestone_artifact, Planning_Milestone::START_DATE_FIELD_NAME);
+        $duration    = $this->getComputedFieldValue($user, $milestone_artifact, Planning_Milestone::DURATION_FIELD_NAME);
 
-        return false;
+        return new TimePeriodWithoutWeekEnd($start_date, $duration);
     }
 
     /**

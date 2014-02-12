@@ -32,16 +32,66 @@ class Planning_Presenter_HomePresenter {
     /** @var Planning_Presenter_MilestoneSummaryPresenterAbstract[] */
     public $milestone_summary_presenters;
 
+    /** @var string */
+    private $period;
+
+    /** @var string */
+    private $project_name;
+
     public function __construct(
         $milestone_access_presenters,
         $group_id,
         $last_milestone_type,
-        $milestone_summary_presenters
+        $milestone_summary_presenters,
+        $period,
+        $project_name
     ) {
         $this->milestone_presenters         = $milestone_access_presenters;
         $this->group_id                     = $group_id;
         $this->last_milestone_type          = $last_milestone_type;
         $this->milestone_summary_presenters = $milestone_summary_presenters;
+        $this->period                       = $period;
+        $this->project_name                 = $project_name;
+    }
+
+    public function past() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','past');
+    }
+
+    public function now() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','now');
+    }
+
+    public function future() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','future');
+    }
+
+    public function past_active() {
+        if ($this->period == Planning_Controller::PAST_PERIOD) {
+            return 'active';
+        }
+
+        return '';
+    }
+
+    public function now_active() {
+        if (! $this->past_active() && !$this->future_active()) {
+            return 'active';
+        }
+
+        return '';
+    }
+
+    public function future_active() {
+        if ($this->period == Planning_Controller::FUTURE_PERIOD) {
+            return 'active';
+        }
+
+        return '';
+    }
+
+    public function project_backlog() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','project_backlog', array($this->project_name));
     }
 }
 ?>
