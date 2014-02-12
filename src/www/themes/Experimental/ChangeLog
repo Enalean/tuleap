@@ -1,3 +1,6 @@
+Version 0.9.2 - Tuleap 6.11
+    * story #6018: Display motd in Experimental theme
+
 0.9.1 - Tuleap 6.10
     * With the footer removed, the development information (if activated) were too intrusive into Tuleap
 
