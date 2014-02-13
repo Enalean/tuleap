@@ -101,6 +101,11 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
      */
      private $remaining_effort = null;
 
+     /**
+      * @var bool
+      */
+     private $has_useable_burndown_field;
+
     /**
      * @param Project $project
      * @param Planning $planning
@@ -339,5 +344,15 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         return (bool) $burndown_field;
     }
 
+    /**
+     * @param boolean $bool
+     */
+    public function setHasUsableBurndownField($bool) {
+        $this->has_useable_burndown_field = $bool;
+    }
+
+    public function hasUsableBurndownField() {
+        return (bool) $this->has_useable_burndown_field;
+    }
 }
 ?>

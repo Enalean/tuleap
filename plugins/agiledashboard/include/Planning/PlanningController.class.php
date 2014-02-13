@@ -227,21 +227,18 @@ class Planning_Controller extends MVC2_PluginController {
      * @return Planning_Presenter_MilestoneSummaryPresenter[]
      */
     private function getMilestoneSummaryPresenters(Planning $last_planning, PFUser $user) {
-        $presenters = array();
+        $presenters   = array();
+        $has_cardwall = $this->hasCardwall($last_planning);
         $last_planning_current_milestones = $this->getPlanningMilestonesForTimePeriod($last_planning);
 
         if (empty($last_planning_current_milestones)) {
             return $presenters;
         }
 
-        $a_milestone        = $last_planning_current_milestones[0];
-        $has_burndown_field = $a_milestone->hasBurdownField($user);
-        $has_cardwall       = $this->hasCardwall($last_planning);
-
         foreach ($last_planning_current_milestones as $milestone) {
             $this->milestone_factory->addMilestoneAncestors($user, $milestone);
 
-            if ($has_burndown_field) {
+            if ($milestone->hasUsableBurndownField()) {
                 $presenters[] = new Planning_Presenter_MilestoneBurndownSummaryPresenter(
                     $milestone,
                     $this->plugin_path,

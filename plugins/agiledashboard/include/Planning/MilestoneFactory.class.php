@@ -556,7 +556,8 @@ class Planning_MilestoneFactory {
             if (! $this->isMilestoneCurrent($artifact, $user)) {
                 continue;
             }
-            $milestones[] = $this->getMilestoneFromArtifact($artifact);
+
+            $milestones[] = $this->getMilestoneFromArtifactWithBurndownInfo($artifact, $user);
         }
 
         return $milestones;
@@ -577,7 +578,8 @@ class Planning_MilestoneFactory {
             if (! $this->isMilestoneFuture($artifact, $user)) {
                 continue;
             }
-            $milestones[] = $this->getMilestoneFromArtifact($artifact);
+
+            $milestones[] = $this->getMilestoneFromArtifactWithBurndownInfo($artifact, $user);
         }
 
         return $milestones;
@@ -602,13 +604,35 @@ class Planning_MilestoneFactory {
             }
 
             $end_date = $this->getMilestoneEndDate($artifact, $user);
-            $milestones[$end_date] = $this->getMilestoneFromArtifact($artifact);
+            $milestones[$end_date] = $this->getMilestoneFromArtifactWithBurndownInfo($artifact, $user);
         }
 
         $count = count($milestones);
         $start = ($quantity > $count) ? 0 : $count - $quantity;
 
         return array_reverse(array_slice($milestones, $start));
+    }
+
+    /**
+     * @return Planning_ArtifactMilestone
+     */
+    private function getMilestoneFromArtifactWithBurndownInfo(Tracker_Artifact $artifact, PFUser $user) {
+        $milestone = $this->getMilestoneFromArtifact($artifact);
+        $milestone->setHasUsableBurndownField($this->hasUsableBurndownField($user, $milestone));
+
+        return $milestone;
+    }
+
+    /**
+     * @return boolean
+     */
+    private function hasUsableBurndownField(PFUser $user, Planning_ArtifactMilestone $milestone) {
+        $tracker = $milestone->getArtifact()->getTracker();
+        $factory = $this->formelement_factory;
+
+        return $factory->getABurndownField($user, $tracker)
+            && AgileDashBoard_Semantic_InitialEffort::load($tracker)->getField()
+            && $factory->getFormElementByName($tracker->getId(), Planning_Milestone::DURATION_FIELD_NAME);
     }
 
     private function getMilestoneEndDate(Tracker_Artifact $milestone_artifact, PFUser $user) {
