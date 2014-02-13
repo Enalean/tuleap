@@ -35,6 +35,10 @@ class Tracker_FormElement_Container_Column_Group {
     public function fetchSubmit($columns, $submitted_values = array()) {
         return $this->fetchGroup($columns, 'fetchSubmitInGroup', array($submitted_values));
     }
+
+    public function fetchSubmitForOverlay($columns, $submitted_values = array()) {
+        return $this->fetchGroupNoColumns($columns, 'fetchSubmitInGroup', array($submitted_values));
+    }
     
     public function fetchSubmitMasschange($columns, $submitted_values = array()) {
         return $this->fetchGroup($columns, 'fetchSubmitMasschangeInGroup', array($submitted_values));

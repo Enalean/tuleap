@@ -262,7 +262,7 @@ tuleap.cardwall = tuleap.cardwall || { };
                     getNewCardData(artifact_id, planning_id);
                 }
 
-                tuleap.tracker.artifactEditInPlace.loadArtifactModal(artifact_id, callback);
+                tuleap.tracker.artifactModalInPlace.loadEditArtifactModal(artifact_id, callback);
             });
         },
 

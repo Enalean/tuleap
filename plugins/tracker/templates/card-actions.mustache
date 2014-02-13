@@ -6,11 +6,11 @@
             <li>
                 <a href="{{getEditUrl}}&{{planning_redirect_parameter}}" class="edit-card" data-artifact-id={{getArtifactId}}>{{getEditLabel}}</a>
             </li>
-            {{#allowedChildrenTypes}}
+            {{# allowedChildrenTypes }}
                 <li>
-                    <a href="/plugins/tracker/?tracker={{getId}}&func=new-artifact-link&id={{getArtifactId}}&immediate=1&{{planning_redirect_parameter}}">{{getAddNewLabel}}</a>
+                    <a href="/plugins/tracker/?tracker={{ getId }}&func=new-artifact-link&id={{ getArtifactId }}&immediate=1&{{ planning_redirect_parameter }}" class="create-item-link" data-tracker-id="{{ getId }}" data-link-id="{{ getArtifactId }}">{{ getAddNewLabel }}</a>
                 </li>
-            {{/allowedChildrenTypes}}
+            {{/ allowedChildrenTypes }}
         </ul>
     </div>
 </div>
