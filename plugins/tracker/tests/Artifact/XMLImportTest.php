@@ -693,3 +693,54 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
         $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
     }
 }
+
+class Tracker_Artifact_XMLImport_CCListTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $xml_element;
+
+    private $cc_field_id = 369;
+    private $open_list_field;
+
+    public function setUp() {
+        parent::setUp();
+
+        stub($this->artifact_factory)->createArtifactAt()->returns(mock('Tracker_Artifact'));
+
+        $this->open_list_field = stub('Tracker_FormElement_Field_OpenList')->getId()->returns($this->cc_field_id);
+
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'cc')->returns(
+            $this->open_list_field
+        );
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <field_change type="open_list" field_name="cc" bind="user">
+                    <value format="username">homer</value>
+                    <value format="username">jeanjean</value>
+                  </field_change>
+                </changeset>
+              </artifact>
+            </artifacts>');
+    }
+
+    public function itDelegatesOpenListComputationToField() {
+        expect($this->open_list_field)->getFieldData('homer,jeanjean')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+    }
+
+    public function itCreatesArtifactWithCCFieldData() {
+        stub($this->open_list_field)->getFieldData()->returns('!homer,!jeanjean');
+
+        $data = array(
+            $this->cc_field_id => '!homer,!jeanjean'
+        );
+        expect($this->artifact_factory)->createArtifactAt('*', $data, '*', '*', '*', '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+    }
+}

@@ -25,6 +25,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
 
     const FIELDNAME_CHANGE_SUMMARY     = 'summary';
     const FIELDNAME_CHANGE_ATTACHEMENT = 'attachment';
+    const FIELDNAME_CHANGE_CC          = 'cc';
 
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
@@ -69,14 +70,14 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
             );
 
             if ($field) {
-                $data[$field->getId()] = $this->getFieldData($field_change);
+                $data[$field->getId()] = $this->getFieldData($field, $field_change);
             }
         }
         return $data;
     }
 
-    private function getFieldData(SimpleXMLElement $field_change) {
-        switch ($field_change['field_name']) {
+    private function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
+        switch ((string)$field_change['field_name']) {
             case self::FIELDNAME_CHANGE_SUMMARY :
                 $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategySummary();
                 break;
@@ -84,6 +85,11 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
                 $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment(
                     $this->extraction_path,
                     $this->files_importer
+                );
+                break;
+            case self::FIELDNAME_CHANGE_CC:
+                $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList(
+                    $field
                 );
                 break;
         }
