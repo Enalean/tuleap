@@ -33,5 +33,9 @@ class Planning_Presenter_LastLevelMilestone {
         $this->milestone_summary_presenters = $milestone_summary_presenters;
         $this->milestone_type_name          = $tracker_name;
     }
+
+    public function no_milestone() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'no_milestone');
+    }
 }
 ?>

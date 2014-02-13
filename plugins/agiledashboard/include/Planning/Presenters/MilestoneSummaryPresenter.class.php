@@ -33,11 +33,11 @@ class Planning_Presenter_MilestoneSummaryPresenter extends Planning_Presenter_Mi
     }
 
     public function open() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','content_pane_title');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','open');
     }
 
     public function closed() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','content_pane_title');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','closed');
     }
 }
 ?>

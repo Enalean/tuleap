@@ -36,6 +36,7 @@ plugin_agiledashboard	planning	Planning
 plugin_agiledashboard	cardwall	Cardwall
 plugin_agiledashboard	open	open
 plugin_agiledashboard	closed	closed
+plugin_agiledashboard	no_milestone	There are no milestones for this period
 plugin_agiledashboard	project_backlog	$1 backlog
 plugin_agiledashboard	past	Passed
 plugin_agiledashboard	now	What's hot

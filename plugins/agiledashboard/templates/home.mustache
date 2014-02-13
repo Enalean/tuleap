@@ -17,7 +17,7 @@
         <div class="plannings span4">
         {{# milestone_presenters }}
             <div class="planning">
-                <h3>{{ milestone_type }} :</h3>
+                <h3>{{ milestone_type }}</h3>
                 <table class="table table-striped table-hover">
                     {{# milestones }}
                     <tr>
@@ -28,6 +28,9 @@
                         </td>
                     </tr>
                     {{/ milestones }}
+                    {{^ milestones }}
+                        <span class="no-milestone">{{ no_milestone }}</span>
+                    {{/ milestones }}
                 </table>
             </div>
         {{/ milestone_presenters }}
@@ -36,7 +39,7 @@
         <div class="last-plannings span8">
             {{# last_level_milestone_presenters }}
                 <div class="last-planning">
-                    <h3>{{ milestone_type_name }} :</h3>
+                    <h3>{{ milestone_type_name }}</h3>
                     {{# milestone_summary_presenters }}
                         <div class="milestone">
                             <div class="header">
@@ -59,8 +62,8 @@
                                     </div>
                                 {{/ has_burndown }}
                                 {{^ has_burndown }}
-                                    {{ count_open_backlog_items }} {{ open }} |
-                                    {{ count_closed_backlog_items }} {{ closed }}
+                                    <div class="open"><span class="number">{{ count_open_backlog_items }}</span>{{ open }}</div>
+                                    <div class="closed"><span class="number">{{ count_closed_backlog_items }}</span>{{ closed }}</div>
                                 {{/ has_burndown }}
                             </div>
                             <div class="footer">
@@ -70,6 +73,9 @@
                                 {{/ has_cardwall }}
                             </div>
                         </div>
+                    {{/ milestone_summary_presenters }}
+                    {{^ milestone_summary_presenters }}
+                        <span class="no-milestone">{{ no_milestone }}</span>
                     {{/ milestone_summary_presenters }}
                     <div style="clear: both;"></div>
                 </div>

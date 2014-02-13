@@ -47,5 +47,9 @@ class Planning_Presenter_MilestoneAccessPresenter {
     public function planning() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','planning');
     }
+
+    public function no_milestone() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'no_milestone');
+    }
 }
 ?>
