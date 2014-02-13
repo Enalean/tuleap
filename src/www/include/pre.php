@@ -162,6 +162,10 @@ require_once('session.php');
 require_once('user.php');
 $current_user = UserManager::instance()->getCurrentUser();
 
+//Pass username in order to be written in Apache access_log
+if(!IS_SCRIPT) {
+    apache_note('username', $current_user->getUnixName());
+}
 
 //library to set up context help
 require_once('help.php');
