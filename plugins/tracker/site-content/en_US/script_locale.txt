@@ -53,3 +53,6 @@ codendi.locales['tracker_trigger'] = {
     or: 'or',
     save_missing_data: 'Cannot save: missing data in form'
 };
+codendi.locales['tracker_modal_errors'] = {
+    bad_request: 'You are not able to perform this action'
+};

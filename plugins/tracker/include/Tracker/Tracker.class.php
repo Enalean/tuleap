@@ -376,6 +376,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     );
 
                     $renderer->display($artifact_link_id);
+                } else {
+                    $GLOBALS['Response']->send400JSONErrors();
                 }
             break;
 
