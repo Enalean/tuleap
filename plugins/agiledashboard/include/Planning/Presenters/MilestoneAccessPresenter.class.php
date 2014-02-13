@@ -51,5 +51,9 @@ class Planning_Presenter_MilestoneAccessPresenter {
     public function no_milestone() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'no_milestone');
     }
+
+    public function edit_base_link() {
+        return '/plugins/tracker/?func=edit&aid=';
+    }
 }
 ?>

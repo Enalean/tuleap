@@ -21,7 +21,7 @@
                 <table class="table table-striped table-hover">
                     {{# milestones }}
                     <tr>
-                        <td class="name">{{ getArtifactTitle }}</td>
+                        <td class="name">{{ getArtifactTitle }} <a href="{{ edit_base_link }}{{ getArtifactId }}" class="backlog-item-link" data-artifact-id="{{ getArtifactId }}"><i class="icon-edit"></i></a></td>
                         <td class="actions">
                             <a href="?group_id={{ group_id }}&planning_id={{ getPlanningId }}&action=show&aid={{ getArtifactId }}&pane=blcontent"><i class="icon-list-ul"></i> {{ content }}</a>
                             <a href="?group_id={{ group_id }}&planning_id={{ getPlanningId }}&action=show&aid={{ getArtifactId }}&pane=planning"><i class="icon-signin"></i> {{ planning }}</a>
@@ -43,7 +43,7 @@
                     {{# milestone_summary_presenters }}
                         <div class="milestone">
                             <div class="header">
-                                <p class="title">{{ milestone_title }}</p>
+                                <p class="title">{{ milestone_title }} <a href="{{ edit_base_link }}{{ artifact_id }}" class="backlog-item-link" data-artifact-id="{{ artifact_id }}"><i class="icon-edit"></i></a></p>
                                 <p class="hierarchy">
                                 <i class="icon-angle-right"></i>
                                 {{# breadcrumbs }}

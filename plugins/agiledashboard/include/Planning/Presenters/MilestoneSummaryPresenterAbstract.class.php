@@ -65,5 +65,9 @@ abstract class Planning_Presenter_MilestoneSummaryPresenterAbstract {
     public function artifact_id() {
         return $this->milestone->getArtifactId();
     }
+
+    public function edit_base_link() {
+        return '/plugins/tracker/?func=edit&aid=';
+    }
 }
 ?>

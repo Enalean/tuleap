@@ -78,7 +78,11 @@
                     border: none;
 
                     &.name {
-                            white-space: nowrap;
+                        white-space: nowrap;
+
+                        a:hover {
+                            text-decoration: none;
+                        }
                     }
 
                     &.actions {
@@ -119,10 +123,18 @@
                 .header {
                     border-bottom: 1px solid @border-color;
 
+                    a:hover {
+                        text-decoration: none;
+                    }
+
                     .title {
                         font-size: 1.2em;
                         padding: 10px 10px 0 10px;
                         margin: 0 0 5px 0;
+
+                        i {
+                            font-size: 0.8em;
+                        }
                     }
 
                 .hierarchy {
