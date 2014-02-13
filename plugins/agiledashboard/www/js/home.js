@@ -28,7 +28,7 @@
                 burndown;
 
             burndown = new tuleap.agiledashboard.Burndown(d3, json, {
-                width: 320,
+                width: 310,
                 height: 140,
             });
             burndown.display(d3.select("#" + placeholder));
