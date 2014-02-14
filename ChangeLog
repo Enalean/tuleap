@@ -11,8 +11,9 @@ Version 6.11 (Not released yet)
 	* Better detect theme change not to forget to increase version number
 	  in tools/utils/changelogs/generate.sh
 	* Add a common helper to compute dates without including week-ends
+	* Remove embedded Firebug
 
-    == Themes ==
+	== Themes ==
 	* Experimental: 0.9.5
 
 Version 6.10 (Thursday, February 6th 2014)
