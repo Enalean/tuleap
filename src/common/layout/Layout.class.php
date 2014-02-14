@@ -1173,9 +1173,6 @@ class Layout extends Response {
         if (Config::get('DEBUG_MODE') && (Config::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')) ) {
             echo '<script type="text/javascript" src="/scripts/codendi/debug_reserved_names.js"></script>';
         }
-        if (Config::get('DEBUG_MODE')) {
-            echo '<!--[if lt IE 8]><script type="text/javascript" src="http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js"></script><![endif]-->';
-        }
 
         $em =& EventManager::instance();
         $em->processEvent("javascript_file", null);
