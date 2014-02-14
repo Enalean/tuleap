@@ -549,6 +549,15 @@ class Planning_MilestoneFactory {
         return new Planning_NoMilestone($planning->getPlanningTracker()->getProject(), $planning);
     }
 
+    /**
+     * Returns a status array. E.g.
+     *  array(
+     *      Tracker_ArtifactDao::STATUS_OPEN   => no_of_opne,
+     *      Tracker_ArtifactDao::STATUS_CLOSED => no_of_closed,
+     *  )
+     *
+     * @return array
+     */
     public function getMilestoneStatusCount(PFUser $user, Planning_Milestone $milestone) {
         return $this->status_counter->getStatus($user, $milestone->getArtifactId());
     }
@@ -642,9 +651,14 @@ class Planning_MilestoneFactory {
         $tracker = $milestone->getArtifact()->getTracker();
         $factory = $this->formelement_factory;
 
+        $duration_field       = $factory->getFormElementByName($tracker->getId(), Planning_Milestone::DURATION_FIELD_NAME);
+        $initial_effort_field = AgileDashBoard_Semantic_InitialEffort::load($tracker)->getField();
+
         return $factory->getABurndownField($user, $tracker)
-            && AgileDashBoard_Semantic_InitialEffort::load($tracker)->getField()
-            && $factory->getFormElementByName($tracker->getId(), Planning_Milestone::DURATION_FIELD_NAME);
+            && $initial_effort_field
+            && $initial_effort_field->isUsed()
+            && $duration_field
+            && $duration_field->isUsed();
     }
 
     private function getMilestoneEndDate(Tracker_Artifact $milestone_artifact, PFUser $user) {

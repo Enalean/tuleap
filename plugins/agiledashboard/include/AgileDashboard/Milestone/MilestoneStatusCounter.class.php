@@ -33,7 +33,16 @@ class AgileDashboard_Milestone_MilestoneStatusCounter {
         $this->artifact_dao     = $artifact_dao;
         $this->artifact_factory = $artifact_factory;
     }
-    
+
+    /**
+     * Returns a status array. E.g.
+     *  array(
+     *      Tracker_ArtifactDao::STATUS_OPEN   => no_of_opne,
+     *      Tracker_ArtifactDao::STATUS_CLOSED => no_of_closed,
+     *  )
+     *
+     * @return array
+     */
     public function getStatus(PFUser $user, $milestone_artifact_id) {
         $status = array(
             Tracker_ArtifactDao::STATUS_OPEN   => 0,

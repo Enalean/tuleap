@@ -248,7 +248,8 @@ class Planning_Controller extends MVC2_PluginController {
                 $presenters[] = new Planning_Presenter_MilestoneSummaryPresenter(
                     $milestone,
                     $this->plugin_path,
-                    $has_cardwall
+                    $has_cardwall,
+                    $this->milestone_factory->getMilestoneStatusCount($user, $milestone)
                 );
             }
         }

@@ -20,16 +20,33 @@
 
 class Planning_Presenter_MilestoneSummaryPresenter extends Planning_Presenter_MilestoneSummaryPresenterAbstract {
 
+    /**
+     * A status array. E.g.
+     *  array(
+     *      Tracker_ArtifactDao::STATUS_OPEN   => no_of_opne,
+     *      Tracker_ArtifactDao::STATUS_CLOSED => no_of_closed,
+     *  )
+     *
+     * @var array
+     */
+    private $status_count;
+
+    public function __construct(Planning_Milestone $milestone, $plugin_path, $has_cardwall, $status_count) {
+        parent::__construct($milestone, $plugin_path, $has_cardwall);
+
+        $this->status_count = $status_count;
+    }
+
     public function has_burndown() {
         return false;
     }
 
     public function count_closed_backlog_items() {
-        return 26;
+        return $this->status_count[Tracker_ArtifactDao::STATUS_CLOSED];
     }
 
     public function count_open_backlog_items() {
-        return 4;
+        return $this->status_count[Tracker_ArtifactDao::STATUS_OPEN];
     }
 
     public function open() {
