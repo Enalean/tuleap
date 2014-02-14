@@ -3,28 +3,29 @@
 <p>{{help}}</p>
 
 <form name="admin_group_mediawiki" method="post" action="{{route}}">
-
-<div style="margin-left: 2em;">
-    {{#groups_permissions}}
-    <div class="row">
+    <div>
+        {{#groups_permissions}}
         <div>
-            <div>{{tuleap_group_label}}</div>
-            {{#available_groups}}{{> selectbox}}{{/available_groups}}
+            <div class="forge_mw_mapping_available">
+                <div>{{tuleap_group_label}}</div>
+                {{#available_groups}}{{> selectbox}}{{/available_groups}}
+            </div>
+            <div class="forge_mw_btn btn-group btn-group-vertical">
+                <button class="forge_mw_add_ugroup btn"><i class="icon-chevron-right"></i></button>
+                <button class="forge_mw_remove_ugroup btn"><i class="icon-chevron-left"></i></button>
+            </div>
+            <div class="forge_mw_mapping_selected">
+                <div>{{mediawiki_group_label}}</div>
+                <input type="hidden" name="{{hidden_selected_groups_name}}" class="forge_mw_hidden_selected_groups" value="{{hidden_selected_groups_value}}"/>
+                {{#selected_groups}}{{> selectbox}}{{/selected_groups}}
+            </div>
         </div>
-        <div>
-            <button class="forge_mw_remove_ugroup">&lt;</button>
-            <button class="forge_mw_add_ugroup">&gt;</button>
-        </div>
-        <div >
-            <div>{{mediawiki_group_label}}</div>
-            <input type="hidden" name="{{hidden_selected_groups_name}}" class="forge_mw_hidden_selected_groups" value="{{hidden_selected_groups_value}}"/>
-            {{#selected_groups}}{{> selectbox}}{{/selected_groups}}
-        </div>
+        <div class="forge_mw_mapping_spacer"></div>
+        {{/groups_permissions}}
     </div>
-    {{/groups_permissions}}
-</div>
 
-    <input type="submit" name="submit" value="{{submit_label}}" />
-    <input type="reset" name="reset" value="{{reset_label}}" />
-
+    <div>
+        <input type="submit" name="submit" value="{{submit_label}}" class="btn btn-primary"/>
+        <input type="reset" name="reset" value="{{reset_label}}" class="btn"/>
+    </div>
 </form>
