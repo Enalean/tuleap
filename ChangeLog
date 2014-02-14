@@ -2,10 +2,11 @@ Version 6.11 (Not released yet)
 	== Plugins ==
 	* git: 3.69
 	* docman: 2.26.28
-	* agiledashboard: 1.44
+	* agiledashboard: 1.45
 	* tracker: 5.236
 
 	== Development ==
+	* story #6009 have a beautiful Agile Dashboard homepage (v1)
 	* story #6058 Create artifacts in agile dashboard using modal
 	* REST and phpunit tests can be run in Continuous Integration
 	* Better detect theme change not to forget to increase version number
@@ -14,7 +15,7 @@ Version 6.11 (Not released yet)
 	* Remove embedded Firebug
 
 	== Themes ==
-	* Experimental: 0.9.5
+	* Experimental: 0.9.6
 
 Version 6.10 (Thursday, February 6th 2014)
 	== Plugins ==
