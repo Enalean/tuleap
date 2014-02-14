@@ -504,7 +504,7 @@ class MilestoneFactory_GetSiblingsMilestonesTest extends TuleapTestCase {
     }    
 }
 
-class MilestoneFactory_GetCurrentMilestonesTest extends TuleapTestCase {
+class MilestoneFactory_getLastMilestoneCreatedsTest extends TuleapTestCase {
     private $current_user;
     private $milestone_factory;
     private $sprint_1_artifact;
@@ -535,7 +535,7 @@ class MilestoneFactory_GetCurrentMilestonesTest extends TuleapTestCase {
     
     public function itReturnsEmptyMilestoneWhenNothingMatches() {
         stub($this->artifact_factory)->getOpenArtifactsByTrackerIdUserCanView()->returns(array());
-        $milestone = $this->milestone_factory->getCurrentMilestone($this->current_user, $this->planning_id);
+        $milestone = $this->milestone_factory->getLastMilestoneCreated($this->current_user, $this->planning_id);
         $this->assertIsA($milestone, 'Planning_NoMilestone');
     }
     
@@ -547,7 +547,7 @@ class MilestoneFactory_GetCurrentMilestonesTest extends TuleapTestCase {
         
         stub($this->milestone_factory)->getMilestoneFromArtifact($this->sprint_1_artifact)->returns($this->sprint_1_milestone);
         
-        $milestone = $this->milestone_factory->getCurrentMilestone($this->current_user, $this->planning_id);
+        $milestone = $this->milestone_factory->getLastMilestoneCreated($this->current_user, $this->planning_id);
         $this->assertEqual($milestone, $this->sprint_1_milestone);
     }
 }

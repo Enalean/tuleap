@@ -294,6 +294,7 @@ class AgileDashboardPlugin extends Plugin {
                 $this->getPluginPath().'/js/expand-collapse.js',
                 $this->getPluginPath().'/js/planning-view.js',
                 $this->getPluginPath().'/js/ContentFilter.js',
+                $this->getPluginPath().'/js/home.js',
             )
         );
     }

@@ -517,7 +517,7 @@ class MilestoneResource {
      *
      * @return \Tuleap\Tracker\REST\Artifact\BurndownRepresentation
      */
-    protected function getBurndown($id) {
+    public function getBurndown($id) {
         $burndown = null;
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN,

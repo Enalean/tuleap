@@ -123,7 +123,7 @@ class TimePeriodWithoutWeekEnd  implements TimePeriod {
         $day        = $this->start_date;
         $day_offset = -1;
 
-        if ($this->isToday($day) || $this->start_date > strtotime($this->getToday())) {
+        if ($this->isToday($day) || $this->start_date > $this->getTodayTimestamp()) {
             return 0;
         }
 
@@ -138,17 +138,54 @@ class TimePeriodWithoutWeekEnd  implements TimePeriod {
     }
 
     private function isToday($day) {
-        return $this->getToday() == date('Y-m-d', $day);
+        return $this->getTodayDate() == date('Y-m-d', $day);
     }
 
     /**
      * Set to protected because it makes testing possible.
      */
-    protected function getToday() {
+    protected function getTodayDate() {
         if ($_SERVER && isset($_SERVER['REQUEST_TIME'])) {
             return date('Y-m-d', $_SERVER['REQUEST_TIME']);
         }
         return date('Y-m-d');
+    }
+
+    /**
+     * @return int
+     */
+    private function getTodayTimestamp() {
+        return strtotime($this->getTodayDate());
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isTodayWithinTimePeriod() {
+        if ($this->start_date <= $this->getTodayTimestamp() &&
+            $this->getNumberOfDaysSinceStart() <= $this->duration
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isTodayBeforeTimePeriod() {
+        if ($this->start_date > $this->getTodayTimestamp()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isTodayAfterTimePeriod() {
+        if ($this->start_date < $this->getTodayTimestamp() &&
+            $this->getNumberOfDaysSinceStart() > $this->getDuration()) {
+            return true;
+        }
+
+        return false;
     }
 }
 

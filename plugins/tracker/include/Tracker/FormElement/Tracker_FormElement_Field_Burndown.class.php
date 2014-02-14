@@ -130,7 +130,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                     }
                     $this->fetchBurndownImage($artifact, $current_user);
                 } catch (Tracker_FormElement_Field_BurndownException $e) {
-                    $this->displayErrorImage($GLOBALS['Language']->getText('plugin_tracker', $e->getMessage()));
+                    $this->displayErrorImage($e->getMessage());
                 }
                 break;
             default:
@@ -142,23 +142,45 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * Render a burndown image based on $artifact artifact links
      *
      * @param Tracker_Artifact $artifact
+     *
+     * @throws Tracker_FormElement_Field_BurndownException
      */
     public function fetchBurndownImage(Tracker_Artifact $artifact, PFUser $user) {
         if ($this->userCanRead($user)) {
             $this->getBurndown($this->buildBurndownData($user, $artifact))->display();
         } else {
-            throw new Tracker_FormElement_Field_BurndownException('burndown_permission_denied');
+            throw new Tracker_FormElement_Field_BurndownException(
+                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_permission_denied')
+            );
         }
     }
 
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
         $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation';
+        $artifact = $changeset->getArtifact();
+
+        try{
+            $start_date = $this->getBurndownStartDate($artifact, $user);
+        } catch (Tracker_FormElement_Field_BurndownException $ex) {
+            $start_date = null;
+        }
+
+        try{
+            $duration = $this->getBurndownDuration($artifact, $user);
+        } catch (Tracker_FormElement_Field_BurndownException $ex) {
+            $duration = null;
+        }
 
         $artifact_field_value_representation = new $classname_with_namespace;
         $artifact_field_value_representation->build(
             $this->getId(),
             $this->getLabel(),
-            $this->buildBurndownData($user, $changeset->getArtifact())->getRESTRepresentation()
+            $this->getBurndownData(
+                $artifact,
+                $user,
+                $start_date,
+                $duration
+            )->getRESTRepresentation()
         );
 
         return $artifact_field_value_representation;
@@ -172,6 +194,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     private function buildBurndownData(PFUser $user, Tracker_Artifact $artifact) {
         $start_date = $this->getBurndownStartDate($artifact, $user);
         $duration   = $this->getBurndownDuration($artifact, $user);
+
         return $this->getBurndownData(
             $artifact,
             $user,
@@ -411,23 +434,34 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      *
      * @return Array of Tracker_Artifact
      *
-     * @throws Exception
+     * @throws Tracker_FormElement_Field_BurndownException
      */
     private function getLinkedArtifacts(Tracker_Artifact $artifact, PFUser $user) {
         $linked_artifacts = $artifact->getLinkedArtifacts($user);
         if (count($linked_artifacts)) {
             return $linked_artifacts;
         }
-        throw new Tracker_FormElement_Field_BurndownException('burndown_no_linked_artifacts');
+
+        throw new Tracker_FormElement_Field_BurndownException(
+            $GLOBALS['Language']->getText('plugin_tracker', 'burndown_no_linked_artifacts')
+        );
     }
 
+    /**
+     * @throws Tracker_FormElement_Field_BurndownException
+     */
     private function getBurndownStartDateField(Tracker_Artifact $artifact, PFUser $user) {
         $form_element_factory = $this->getFormElementFactory();
-        $start_date_field     = $form_element_factory->getUsedFieldByNameForUser($artifact->getTracker()->getId(),
-                                                                                 self::START_DATE_FIELD_NAME,
-                                                                                 $user);
+        $start_date_field     = $form_element_factory->getUsedFieldByNameForUser(
+            $artifact->getTracker()->getId(),
+            self::START_DATE_FIELD_NAME,
+            $user
+        );
+
         if (! $start_date_field) {
-            throw new Tracker_FormElement_Field_BurndownException('burndown_missing_start_date_warning');
+            throw new Tracker_FormElement_Field_BurndownException(
+                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_start_date_warning')
+            );
         }
 
         return $start_date_field;
@@ -439,23 +473,32 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @param Tracker_Artifact $artifact
      *
      * @return Integer
+     *
+     * @throws Tracker_FormElement_Field_BurndownException
      */
     private function getBurndownStartDate(Tracker_Artifact $artifact, PFUser $user) {
         $start_date_field = $this->getBurndownStartDateField($artifact, $user);
         $timestamp        = $artifact->getValue($start_date_field)->getTimestamp();
 
         if (! $timestamp) {
-            throw new Tracker_FormElement_Field_BurndownException('burndown_empty_start_date_warning');
+            throw new Tracker_FormElement_Field_BurndownException(
+                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_start_date_warning')
+            );
         }
 
         return $timestamp;
     }
-    
+
+    /**
+     * @throws Tracker_FormElement_Field_BurndownException
+     */
     private function getBurndownDurationField(Tracker_Artifact $artifact, PFUser $user) {
         $field = $this->getFormElementFactory()->getUsedFieldByNameForUser($artifact->getTracker()->getId(), self::DURATION_FIELD_NAME, $user);
 
         if (! $field) {
-            throw new Tracker_FormElement_Field_BurndownException('burndown_missing_duration_warning');
+            throw new Tracker_FormElement_Field_BurndownException(
+                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_duration_warning')
+            );
         }
 
         return $field;
@@ -493,13 +536,15 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @param Tracker_Artifact $artifact
      *
      * @return Integer
+     *
+     * @throws Tracker_FormElement_Field_BurndownException
      */
     private function getBurndownDuration(Tracker_Artifact $artifact, PFUser $user) {
         $field    = $this->getBurndownDurationField($artifact, $user);
         $duration = $artifact->getValue($field)->getValue();
 
         if (! $duration) {
-            throw new Tracker_FormElement_Field_BurndownException('burndown_empty_duration_warning');
+            throw new Tracker_FormElement_Field_BurndownException($GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_duration_warning'));
         }
 
         return $duration;

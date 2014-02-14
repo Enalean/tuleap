@@ -524,8 +524,10 @@ tuleap.agiledashboard.cardwall.fetchBurndown = function() {
         method : 'GET',
         onSuccess: function (response) {
             if (! tuleap.agiledashboard.cardwall.burndown) {
+                var append_element_selector = d3.select(".milestone-burndown");
+
                 tuleap.agiledashboard.cardwall.burndown = new tuleap.agiledashboard.Burndown(d3, response.responseJSON);
-                tuleap.agiledashboard.cardwall.burndown.display();
+                tuleap.agiledashboard.cardwall.burndown.display(append_element_selector);
             } else {
                 tuleap.agiledashboard.cardwall.burndown.update(response.responseJSON);
             }
@@ -546,21 +548,34 @@ tuleap.agiledashboard.cardwall.updateBurndown = function() {
 
 tuleap.agiledashboard.Burndown = Class.create({
 
-    initialize : function (d3, data) {
-        this.d3          = d3;
-        this.data        = data;
+    margin: { top: 7, right: 7, bottom: 7, left: 7 },
+    width : 300,
+    height: 85,
 
-        this.width       = 300;
-        this.height      = 85;
+    initialize : function (d3, data, options) {
+        this.d3   = d3;
+        this.data = data;
+
+        if (typeof(options) != 'undefined' && typeof(options.width) != 'undefined') {
+            this.width = options.width;
+        }
+        if (typeof(options) != 'undefined' && typeof(options.height) != 'undefined') {
+            this.height = options.height;
+        }
+
+        this.width = this.width - this.margin.left - this.margin.right;
+        this.height = this.height - this.margin.top - this.margin.bottom;
 
         this.ideal_data  = [ this.data.capacity, 0 ];
     },
 
-    display: function() {
+    display: function(append_element_selector) {
         this.defineAbscissas();
         this.defineOrdinates();
         this.defineLineFunctions();
-        this.bootstrapTheChart();
+        this.bootstrapTheChart(append_element_selector);
+        this.paintAbscissas();
+        this.paintOrdinates();
         this.paintTheIdealLine();
         this.paintTheActualLine();
         this.paintTheDots();
@@ -586,13 +601,13 @@ tuleap.agiledashboard.Burndown = Class.create({
         this.y.domain(this.d3.extent(this.data.points.concat(this.ideal_data)));
     },
 
-    bootstrapTheChart: function() {
-        var svg = this.d3.select(".milestone-burndown").append("svg")
+    bootstrapTheChart: function(append_element_selector) {
+        var svg = append_element_selector.append("svg")
             .attr("class", "chart")
-            .attr("width", this.width)
-            .attr("height", this.height);
+            .attr("width", this.width + this.margin.left + this.margin.right)
+            .attr("height", this.height + this.margin.top + this.margin.bottom);
 
-        this.chart = svg.append("g");
+        this.chart = svg.append("g").attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
     },
 
     defineLineFunctions: function() {
@@ -602,6 +617,24 @@ tuleap.agiledashboard.Burndown = Class.create({
         this.actual_line = this.d3.svg.line()
             .x(this.getXCoordinateForAGivenBurndownPoint.bind(this))
             .y(this.y);
+    },
+
+    paintAbscissas: function() {
+        this.chart.append("line")
+            .attr("class", "line ordinates")
+            .attr("x1", 0)
+            .attr("y1", this.height)
+            .attr("x2", this.width)
+            .attr("y2", this.height);
+    },
+
+    paintOrdinates: function() {
+        this.chart.append("line")
+            .attr("class", "line abscissas")
+            .attr("x1", 0)
+            .attr("y1", 0)
+            .attr("x2", 0)
+            .attr("y2", this.height);
     },
 
     paintTheIdealLine: function() {
