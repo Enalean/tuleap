@@ -93,10 +93,6 @@ class Git_Ci {
                 $selectBox .= '</select>';
 
                 $addForm  = '<p>
-                                 <div id="hudson_use_plugin_git_trigger_form">
-                                     <label for="hudson_use_plugin_git_trigger">'.$GLOBALS['Language']->getText('plugin_git', 'ci_repo_id').': </label>
-                                     '.$selectBox.'
-                                 </div>
                                  <div id="hudson_use_plugin_git_trigger_checkbox">
                                      <label class="checkbox">
                                      <input name="hudson_use_plugin_git_trigger_checkbox" type="hidden" value="0" />
@@ -104,10 +100,13 @@ class Git_Ci {
                                         Git
                                      </label>
                                  </div>
+                                 <div id="hudson_use_plugin_git_trigger_form">
+                                     <label for="hudson_use_plugin_git_trigger">'.$GLOBALS['Language']->getText('plugin_git', 'ci_repo_id').': </label>
+                                     '.$selectBox.'
+                                 </div>
                                  <script>
                                      function toggle_checkbox() {
                                          Effect.toggle(\'hudson_use_plugin_git_trigger_form\', \'slide\', { duration: 0.3 });
-                                         Effect.toggle(\'hudson_use_plugin_git_trigger_checkbox\', \'slide\', { duration: 0.3 });
                                      }
                                      Element.toggle(\'hudson_use_plugin_git_trigger_form\', \'slide\', { duration: 0.3 })
                                  </script>
