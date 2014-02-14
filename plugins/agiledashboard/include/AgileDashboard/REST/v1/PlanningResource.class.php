@@ -37,13 +37,15 @@ class PlanningResource {
 
 
     public function __construct() {
+        $artifact_factory = \Tracker_ArtifactFactory::instance();
         $status_counter = new AgileDashboard_Milestone_MilestoneStatusCounter(
             new AgileDashboard_BacklogItemDao(),
-            new Tracker_ArtifactDao()
+            new Tracker_ArtifactDao(),
+            $artifact_factory
         );
         $this->milestone_factory = new \Planning_MilestoneFactory(
             PlanningFactory::build(),
-            \Tracker_ArtifactFactory::instance(),
+            $artifact_factory,
             \Tracker_FormElementFactory::instance(),
             \TrackerFactory::instance(),
             $status_counter

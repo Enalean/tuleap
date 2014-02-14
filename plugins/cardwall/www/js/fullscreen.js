@@ -107,7 +107,10 @@
         }
 
         function fetchBurndown() {
-            tuleap.agiledashboard.cardwall.fetchBurndown();
+            var completion_bar = $('milestone_points_completion_bar');
+            if (completion_bar.readAttribute('data-count-style') == 'effort') {
+                tuleap.agiledashboard.cardwall.fetchBurndown();
+            }
         }
 
         function exitFullScreen() {

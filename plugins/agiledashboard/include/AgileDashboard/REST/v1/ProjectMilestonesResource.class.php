@@ -63,7 +63,8 @@ class ProjectMilestonesResource {
         $this->tracker_factory              = TrackerFactory::instance();
         $this->status_counter               = new AgileDashboard_Milestone_MilestoneStatusCounter(
             new AgileDashboard_BacklogItemDao(),
-            new Tracker_ArtifactDao()
+            new Tracker_ArtifactDao(),
+            $this->tracker_artifact_factory
         );
         $this->milestone_factory = new Planning_MilestoneFactory(
             $this->planning_factory,
@@ -89,7 +90,7 @@ class ProjectMilestonesResource {
 
         foreach($milestones as $milestone) {
             $milestone_representation = new MilestoneRepresentation();
-            $milestone_representation->build($milestone, $this->milestone_factory->getMilestoneStatusCount($milestone));
+            $milestone_representation->build($milestone, $this->milestone_factory->getMilestoneStatusCount($user, $milestone));
             $milestone_representations[] = $milestone_representation;
         }
 

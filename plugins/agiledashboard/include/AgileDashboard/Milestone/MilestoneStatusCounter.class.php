@@ -22,45 +22,71 @@ class AgileDashboard_Milestone_MilestoneStatusCounter {
 
     private $backlog_item_dao;
     private $artifact_dao;
+    private $artifact_factory;
 
-    public function __construct(AgileDashboard_BacklogItemDao $backlog_item_dao, Tracker_ArtifactDao $artifact_dao) {
+    public function __construct(
+        AgileDashboard_BacklogItemDao $backlog_item_dao,
+        Tracker_ArtifactDao $artifact_dao,
+        Tracker_ArtifactFactory $artifact_factory
+        ) {
         $this->backlog_item_dao = $backlog_item_dao;
         $this->artifact_dao     = $artifact_dao;
+        $this->artifact_factory = $artifact_factory;
     }
     
-    public function getStatus($milestone_artifact_id) {
+    public function getStatus(PFUser $user, $milestone_artifact_id) {
         $status = array(
             Tracker_ArtifactDao::STATUS_OPEN   => 0,
             Tracker_ArtifactDao::STATUS_CLOSED => 0,
         );
         if ($milestone_artifact_id) {
-            $this->getStatusForMilestoneArtifactId($milestone_artifact_id, $status);
+            $this->getStatusForMilestoneArtifactId($user, $milestone_artifact_id, $status);
         }
         return $status;
     }
 
-    private function getStatusForMilestoneArtifactId($milestone_artifact_id, array &$status) {
-        $first_level_result = $this->backlog_item_dao->getBacklogArtifacts($milestone_artifact_id);
-        $artifact_id_list   = $this->countStatus($first_level_result, $status);
+    private function getStatusForMilestoneArtifactId(PFUser $user, $milestone_artifact_id, array &$status) {
+        $artifact_id_list = $this->getBacklogArtifactsUserCanView($user, $milestone_artifact_id);
+        $this->countStatus($artifact_id_list, $status);
         if (count($artifact_id_list)) {
-            $sub_level_result = $this->artifact_dao->getChildrenForArtifacts($artifact_id_list);
-            $this->countStatus($sub_level_result, $status);
+            $this->countStatus(
+                $this->getChildrenUserCanView($user, $artifact_id_list),
+                $status
+            );
         }
     }
 
-    private function countStatus($result, array &$status) {
-        $artifact_id_list = array();
-        if (count($result)) {
-            foreach ($result as $row) {
-                $artifact_id_list[] = $row['id'];
-            }
-
+    private function countStatus(array $artifact_id_list, array &$status) {
+        if (count($artifact_id_list)) {
             $artifact_status = $this->artifact_dao->getArtifactsStatusByIds($artifact_id_list);
             foreach ($artifact_status as $row) {
                 $status[$row['status']]++;
             }
         }
-        return $artifact_id_list;
-        
+    }
+
+    private function getBacklogArtifactsUserCanView(PFUser $user, $milestone_artifact_id) {
+        return $this->getIdsUserCanView(
+            $user,
+            $this->backlog_item_dao->getBacklogArtifacts($milestone_artifact_id)
+        );
+    }
+
+    private function getChildrenUserCanView(PFUser $user, array $artifact_ids) {
+        return $this->getIdsUserCanView(
+            $user,
+            $this->artifact_dao->getChildrenForArtifacts($artifact_ids)
+        );
+    }
+
+    private function getIdsUserCanView(PFUser $user, DataAccessResult $dar) {
+        $artifact_ids = array();
+        foreach ($dar as $row) {
+            $artifact = $this->artifact_factory->getArtifactById($row['id']);
+            if ($artifact && $artifact->userCanView($user)) {
+                $artifact_ids[] = $row['id'];
+            }
+        }
+        return $artifact_ids;
     }
 }

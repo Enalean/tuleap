@@ -61,7 +61,8 @@ class ProjectBacklogResource {
         $tracker_form_element_factory = Tracker_FormElementFactory::instance();
         $status_counter               = new AgileDashboard_Milestone_MilestoneStatusCounter(
             new AgileDashboard_BacklogItemDao(),
-            new Tracker_ArtifactDao()
+            new Tracker_ArtifactDao(),
+            $tracker_artifact_factory
         );
 
         $this->milestone_factory = new Planning_MilestoneFactory(

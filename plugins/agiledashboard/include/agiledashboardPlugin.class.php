@@ -686,7 +686,8 @@ class AgileDashboardPlugin extends Plugin {
     private function getStatusCounter() {
         return new AgileDashboard_Milestone_MilestoneStatusCounter(
             new AgileDashboard_BacklogItemDao(),
-            new Tracker_ArtifactDao()
+            new Tracker_ArtifactDao(),
+            $this->getArtifactFactory()
         );
     }
 }

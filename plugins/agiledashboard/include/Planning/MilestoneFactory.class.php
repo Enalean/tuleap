@@ -540,8 +540,8 @@ class Planning_MilestoneFactory {
         return new Planning_NoMilestone($planning->getPlanningTracker()->getProject(), $planning);
     }
 
-    public function getMilestoneStatusCount(Planning_Milestone $milestone) {
-        return $this->status_counter->getStatus($milestone->getArtifactId());
+    public function getMilestoneStatusCount(PFUser $user, Planning_Milestone $milestone) {
+        return $this->status_counter->getStatus($user, $milestone->getArtifactId());
     }
 }
 
