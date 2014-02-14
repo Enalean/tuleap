@@ -625,8 +625,10 @@ class Planning_MilestoneFactory {
             }
 
             $end_date = $this->getMilestoneEndDate($artifact, $user);
-            $milestones[$end_date] = $this->getMilestoneFromArtifactWithBurndownInfo($artifact, $user);
+            $milestones[$end_date.'_'.$artifact->getId()] = $this->getMilestoneFromArtifactWithBurndownInfo($artifact, $user);
         }
+        ksort($milestones);
+        $milestones = array_values($milestones);
 
         $count = count($milestones);
         $start = ($quantity > $count) ? 0 : $count - $quantity;
