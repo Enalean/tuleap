@@ -261,21 +261,29 @@ class Planning_Controller extends MVC2_PluginController {
      * @return Planning_Milestone[]
      */
     private function getPlanningMilestonesForTimePeriod(Planning $planning) {
+        $user        = $this->request->getCurrentUser();
+        $set_in_time = $this->planning_factory
+            ->canPlanningBeSetInTime($planning->getPlanningTracker());
+
+        if (! $set_in_time) {
+            return $this->milestone_factory->getAllMilestones($user, $planning);
+        }
+
         switch ($this->request->get('period')) {
             case self::PAST_PERIOD:
                 return $this->milestone_factory->getPastMilestones(
-                    $this->request->getCurrentUser(),
+                    $user,
                     $planning,
                     self::NUMBER_PAST_MILESTONES_SHOWN
                 );
             case self::FUTURE_PERIOD:
                 return $this->milestone_factory->getAllFutureMilestones(
-                    $this->request->getCurrentUser(),
+                    $user,
                     $planning
                 );
             default:
                 return $this->milestone_factory->getAllCurrentMilestones(
-                    $this->request->getCurrentUser(),
+                    $user,
                     $planning
                 );
         }

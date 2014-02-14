@@ -32,16 +32,22 @@ class PlanningFactory {
      */
     private $tracker_factory;
 
-    public function __construct(PlanningDao $dao, TrackerFactory $tracker_factory) {
-        $this->dao             = $dao;
-        $this->tracker_factory = $tracker_factory;
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $form_element_factory;
+
+    public function __construct(PlanningDao $dao, TrackerFactory $tracker_factory, Tracker_FormElementFactory $form_element_factory) {
+        $this->dao                  = $dao;
+        $this->tracker_factory      = $tracker_factory;
+        $this->form_element_factory = $form_element_factory;
     }
 
     /**
      * @return PlanningFactory
      */
     public static function build() {
-        return new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
+        return new PlanningFactory(new PlanningDao(), TrackerFactory::instance(), Tracker_FormElementFactory::instance());
     }
 
     /**
@@ -222,6 +228,59 @@ class PlanningFactory {
         return $hierarchy->getLastLevelTrackerIds();
     }
 
+    /**
+     * Get a list of planning defined in a group_id
+     *
+     * @param PFUser $user     The user who will see the planning
+     * @param int  $group_id
+     * @param PlanningFactory $planning_factory
+     *
+     * @return Planning[]
+     */
+    public function getOrderedPlannings(PFUser $user, $group_id) {
+        $plannings = $this->getPlannings($user, $group_id);
+
+        $this->sortPlanningsAccordinglyToHierarchy($plannings);
+
+        return $plannings;
+    }
+
+    /**
+     * Checks if the planning's tracker has the necssary fields to determine
+     * when the planning's milestone begin and end.
+     *
+     * @param Tracker $planning_tracker
+     * @return boolean
+     */
+    public function canPlanningBeSetInTime(Tracker $planning_tracker) {
+        $start_date_field = $this->getPlanningTrackerStartDateField($planning_tracker);
+        $duration_field   = $this->getPlanningTrackerDurationField($planning_tracker);
+
+        return $start_date_field 
+            && $start_date_field->isUsed()
+            && $duration_field
+            && $duration_field->isUsed();
+    }
+
+    /**
+     * @return Tracker_FormElement_Field | null
+     */
+    private function getPlanningTrackerStartDateField(Tracker $planning_tracker) {
+        return $this->form_element_factory->getFormElementByName(
+            $planning_tracker->getId(),
+            Planning_Milestone::START_DATE_FIELD_NAME
+        );
+    }
+
+    /**
+     * @return Tracker_FormElement_Field | null
+     */
+    private function getPlanningTrackerDurationField(Tracker $planning_tracker) {
+        return $this->form_element_factory->getFormElementByName(
+            $planning_tracker->getId(),
+            Planning_Milestone::DURATION_FIELD_NAME
+        );
+    }
 
     /**
      * Get a list of planning defined in a group_id with added backlog trackers
