@@ -399,7 +399,18 @@ class Planning_Controller extends MVC2_PluginController {
     }
 
     private function hasCardwall(Planning $planning) {
-        return (bool) $this->getCardwallConfiguration($planning);
+        $tracker = $planning->getPlanningTracker();
+        $enabled = false;
+
+        EventManager::instance()->processEvent(
+            AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED,
+            array(
+                'tracker' => $tracker,
+                'enabled'    => &$enabled,
+            )
+        );
+
+        return $enabled;
     }
 
     private function getCardwallConfiguration(Planning $planning) {

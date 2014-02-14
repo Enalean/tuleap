@@ -143,5 +143,12 @@ define('AGILEDASHBOARD_EVENT_REST_OPTIONS_BURNDOWN', 'agiledashboard_event_rest_
  */
 define('AGILEDASHBOARD_EVENT_REST_GET_MILESTONE', 'agiledashboard_event_rest_get_milestone');
 
-
+/**
+ * Checks if cardwall is enabled
+ *
+ * Parameters:
+ * 'tracker' => The Planning Tracker of the planning that is being configured
+ * 'enabled' => boolean
+ */
+define('AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED', 'agiledashboard_event_is_cardwall_enabled');
 ?>

@@ -71,6 +71,7 @@ class cardwallPlugin extends Plugin {
                 $this->addHook(AGILEDASHBOARD_EVENT_REST_OPTIONS_CARDWALL);
                 $this->addHook(AGILEDASHBOARD_EVENT_REST_GET_CARDWALL);
                 $this->addHook(AGILEDASHBOARD_EVENT_REST_GET_MILESTONE);
+                $this->addHook(AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED);
             }
         }
         return parent::getHooksAndCallbacks();
@@ -451,6 +452,12 @@ class cardwallPlugin extends Plugin {
 
         $admin_view = new Cardwall_OnTop_Config_View_Admin();
         $params['view'] = $admin_view->displayAdminOnTop($config);
+    }
+
+    public function agiledashboard_event_is_cardwall_enabled($params) {
+        $tracker = $params['tracker'];
+        $params['enabled'] = $this->getConfigFactory()
+            ->isOnTopConfigEnabledForPlanning($tracker);
     }
 
     /**
