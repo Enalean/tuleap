@@ -29,7 +29,6 @@ class ServiceTracker extends Service {
      * @return void
      */
     public function displayHeader($title, $breadcrumbs, $toolbar) {
-        $GLOBALS['HTML']->includeCalendarScripts();
         parent::displayHeader($title, $breadcrumbs, $toolbar);
     }
     

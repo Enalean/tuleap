@@ -131,6 +131,7 @@ tuleap.tracker = tuleap.tracker || { };
             tuleap_modal = modal.getDOMElement();
             codendi.Tooltip.load(tuleap_modal, true);
             codendi.Toggler.init(tuleap_modal);
+            tuleap.tracker.dateTimePicker.init();
         },
 
         beforeSubmit : function() {
