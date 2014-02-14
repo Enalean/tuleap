@@ -3,3 +3,12 @@ plugin_mediawiki	service_desc_key	Mediawiki
 plugin_mediawiki	title	Mediawiki Plugin
 plugin_mediawiki	descriptor_description	Mediawiki integration in the forge
 plugin_mediawiki	descriptor_name	Plugin Mediawiki
+
+plugin_mediawiki	group_mapping_title	Mediawiki groups mapping
+plugin_mediawiki	group_mapping_help	help $1
+plugin_mediawiki	group_name_anonymous	Anonymous
+plugin_mediawiki	group_name_user	User / Autoconfirmed / Email confirmed
+plugin_mediawiki	group_name_bot	Bot
+plugin_mediawiki	group_name_sysop	Sysop
+plugin_mediawiki	group_name_bureaucrat	Bureaucrat
+plugin_mediawiki	group_tuleap	$1 groups

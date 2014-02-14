@@ -29,10 +29,14 @@ class MediawikiGroupPresenter {
     /** @var string */
     private $mediawiki_group_id;
 
-    public function __construct($mediawiki_group_id, $mediawiki_group_label, $available_ugroups) {
+    /** @var UGroup[] */
+    private $current_mapping;
+
+    public function __construct($mediawiki_group_id, $mediawiki_group_label, $available_ugroups, $mapping) {
         $this->mediawiki_group_id    = $mediawiki_group_id;
         $this->available_ugroups     = $available_ugroups;
         $this->mediawiki_group_label = $mediawiki_group_label;
+        $this->current_mapping       = $mapping;
     }
 
     public function tuleap_group_label() {
@@ -65,10 +69,27 @@ class MediawikiGroupPresenter {
             'class'   => 'forge_mw_selected_groups',
             'options' => array(),
         );
+
+        foreach ($this->current_mapping as $ugroup) {
+            $selector['options'][] = array(
+                'value'    => $ugroup->getId(),
+                'label'    => $ugroup->getTranslatedName(),
+                'selected' => false,
+            );
+        }
+
         return $selector;
     }
 
     public function hidden_selected_groups_name() {
         return 'hidden_selected_'.$this->mediawiki_group_id;
+    }
+
+    public function hidden_selected_groups_value() {
+        $ids = array();
+        foreach ($this->current_mapping as $ugroup) {
+            $ids[] = $ugroup->getId();
+        }
+        return implode(',', $ids);
     }
 }

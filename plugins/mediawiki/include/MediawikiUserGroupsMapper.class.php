@@ -52,8 +52,7 @@ class MediawikiUserGroupsMapper {
      * @param Project $project
      */
     public function saveMapping(array $new_mapping_list, Project $project) {
-        $result               = $this->dao->getMediawikiUserGroupMapping($project);
-        $current_mapping_list = $this->generateMappingListFromDataResult($result);
+        $current_mapping_list = $this->getCurrentUserGroupMapping($project);
         $mappings_to_remove   = $this->getUserGroupMappingsDiff($current_mapping_list, $new_mapping_list);
         $mappings_to_add      = $this->getUserGroupMappingsDiff($new_mapping_list, $current_mapping_list);
 
@@ -66,12 +65,12 @@ class MediawikiUserGroupsMapper {
     private function getUserGroupMappingsDiff($group_mapping1, $group_mapping2) {
         $list = array();
 
-        foreach(self::$MEDIAWIKI_GROUPS_NAME as $mw_group_name) {
-            if(!array_key_exists($mw_group_name, $group_mapping1)) {
+        foreach (self::$MEDIAWIKI_GROUPS_NAME as $mw_group_name) {
+            if (!array_key_exists($mw_group_name, $group_mapping1)) {
                 $group_mapping1[$mw_group_name] = array();
             }
 
-            if(!array_key_exists($mw_group_name, $group_mapping2)) {
+            if (!array_key_exists($mw_group_name, $group_mapping2)) {
                 $group_mapping2[$mw_group_name] = array();
             }
 
@@ -92,13 +91,14 @@ class MediawikiUserGroupsMapper {
         }
     }
 
-    private function generateMappingListFromDataResult($dataresult) {
+    public function getCurrentUserGroupMapping($project) {
         $list = array();
+        $data_result = $this->dao->getMediawikiUserGroupMapping($project);
 
-        foreach(self::$MEDIAWIKI_GROUPS_NAME as $mw_group_name) {
+        foreach (self::$MEDIAWIKI_GROUPS_NAME as $mw_group_name) {
             $list[$mw_group_name] = array();
-            foreach ($dataresult as $mapping) {
-                if($mapping['mw_group_name'] == $mw_group_name) {
+            foreach ($data_result as $mapping) {
+                if ($mapping['mw_group_name'] == $mw_group_name) {
                     $list[$mw_group_name][] = $mapping['ugroup_id'];
                 }
             }

@@ -23,37 +23,36 @@ require_once 'MediawikiGroupPresenter.class.php';
 class MediawikiAdminPresenter {
 
     private $project;
+    private $groups_permissions;
 
-    public function __construct(Project $project) {
+    public function __construct(Project $project, array $groups_permissions) {
         $this->project = $project;
+        $this->groups_permissions = $groups_permissions;
     }
 
     public function title() {
-        return 'Mediawiki groups mapping';
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_mapping_title');
     }
+
     public function help() {
-        return 'help';
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_mapping_help', 'url');
     }
+
     public function route() {
         return MEDIAWIKI_BASE_URL . '/forge_admin?' . http_build_query(array(
             'group_id' => $this->project->getID(),
             'action'   => 'save'
         ));
     }
+
     public function groups_permissions() {
-        $ugroup_manager = new UGroupManager();
-        $ugroups = $ugroup_manager->getUGroups($this->project, array_merge(UGroup::$legacy_ugroups, array(UGroup::NONE)));
-        return array(
-            new MediawikiGroupPresenter('anonymous', 'Anonymous', $ugroups),
-            new MediawikiGroupPresenter('user', 'User / Autoconfirmed / Email confirmed', $ugroups),
-            new MediawikiGroupPresenter('bot', 'Bot', $ugroups),
-            new MediawikiGroupPresenter('sysop', 'Sysop', $ugroups),
-            new MediawikiGroupPresenter('bureaucrat', 'Bureaucrat', $ugroups),
-        );
+        return $this->groups_permissions;
     }
+
     public function submit_label() {
         return $GLOBALS['Language']->getText('global', 'btn_update');
     }
+
     public function reset_label() {
         return $GLOBALS['Language']->getText('global', 'btn_cancel');
     }

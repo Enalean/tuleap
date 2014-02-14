@@ -23,29 +23,73 @@ require_once 'MediawikiUserGroupsMapper.class.php';
 
 class MediawikiAdminController {
 
-    /** @var MediawikiDao */
-    private $dao;
+    /** @var MediawikiUserGroupsMapper */
+    private $mapper;
 
     public function __construct() {
-        $this->dao = new MediawikiDao();
+        $this->mapper = new MediawikiUserGroupsMapper(
+            new MediawikiDao()
+        );
     }
 
     public function index(ServiceMediawiki $service, HTTPRequest $request) {
+        $project = $request->getProject();
+
         $GLOBALS['HTML']->includeFooterJavascriptFile(MEDIAWIKI_BASE_URL.'/forgejs/admin.js');
         $service->renderInPage(
             $request,
             '',
             'admin',
-            new MediawikiAdminPresenter($request->getProject())
+            new MediawikiAdminPresenter(
+                $project,
+                $this->getMappedGroupPresenter($project)
+            )
+        );
+    }
+
+    private function getMappedGroupPresenter(Project $project) {
+        $group_mapper_presenters = array();
+        $current_mapping = $this->mapper->getCurrentUserGroupMapping($project);
+        $all_ugroups     = $this->getIndexedUgroups($project);
+        foreach(MediawikiUserGroupsMapper::$MEDIAWIKI_GROUPS_NAME as $mw_group_name) {
+            $group_mapper_presenters[] = $this->getGroupPresenters($mw_group_name, $current_mapping, $all_ugroups);
+        }
+        return $group_mapper_presenters;
+    }
+
+    private function getIndexedUgroups(Project $project) {
+        $ugroups        = array();
+        $ugroup_manager = new UGroupManager();
+        $all_ugroups    = $ugroup_manager->getUGroups($project, array_merge(UGroup::$legacy_ugroups, array(UGroup::NONE)));
+        foreach ($all_ugroups as $ugroup) {
+            $ugroups[$ugroup->getId()] = $ugroup;
+        }
+        return $ugroups;
+    }
+
+    private function getGroupPresenters($mw_group_name, array $current_mapping, array $all_ugroups) {
+        $mapped_groups    = array();
+        $available_groups = array();
+        foreach ($all_ugroups as $ugroup_id => $ugroup) {
+            if (in_array($ugroup_id, $current_mapping[$mw_group_name])) {
+                $mapped_groups[] = $ugroup;
+            } else {
+                $available_groups[] = $ugroup;
+            }
+        }
+        return new MediawikiGroupPresenter(
+            $mw_group_name,
+            $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_'.$mw_group_name),
+            $available_groups,
+            $mapped_groups
         );
     }
 
     public function save(ServiceMediawiki $service, HTTPRequest $request) {
         if($request->isPost()) {
             $project          = $request->getProject();
-            $groups_mapper    = new MediawikiUserGroupsMapper($this->dao);
             $new_mapping_list = $this->getSelectedMappingsFromRequest($request);
-            $groups_mapper->saveMapping($new_mapping_list, $project);
+            $this->mapper->saveMapping($new_mapping_list, $project);
         }
 
         $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL .'/forge_admin?'. http_build_query(
