@@ -2,7 +2,7 @@ Version 6.11 (Not released yet)
 	== Plugins ==
 	* git: 3.68
 	* docman: 2.26.28
-	* agiledashboard: 1.42
+	* agiledashboard: 1.43
 
 	== Development ==
 	* story #6058 Create artifacts in agile dashboard using modal
