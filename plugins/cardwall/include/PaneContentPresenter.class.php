@@ -54,10 +54,6 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
      */
     public $progress_presenter;
 
-    const SATURDAY          = 5;
-    const SUNDAY            = 6;
-    const ONE_DAY_IN_SECOND = 86400;
-
     /**
      * @param Cardwall_Board     $board              The board
      * @param Cardwall_QrCode    $qrcode             QrCode to display. false if no qrcode (thus no typehinting)
@@ -137,12 +133,8 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
     }
 
     public function initial_time_completion() {
-        if ($this->milestone->getEndDate() < time() || $this->cannotBeDivided($this->milestone->getDuration())) {
-            return 100;
-        }
-
         $completion = ceil(
-            ($this->milestone->getDuration() - $this->getNumberOfDaysRemainingBetweenMilestoneStartDateAndNowExcludingWeekends())
+            ($this->milestone->getDuration() - $this->milestone_days_remaining())
             / $this->milestone->getDuration() * 100
         );
 
@@ -158,30 +150,7 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
     }
 
     public function milestone_days_remaining() {
-        if ($this->milestone->getEndDate() < time()) {
-            return 0;
-        }
-
-        return $this->getNumberOfDaysRemainingBetweenMilestoneStartDateAndNowExcludingWeekends();
-    }
-
-    private function getNumberOfDaysRemainingBetweenMilestoneStartDateAndNowExcludingWeekends() {
-        $current_day = time();
-
-        if (date('w', $current_day) == self::SATURDAY) {
-            $current_day = $current_day + 2 * self::ONE_DAY_IN_SECOND - ($current_day % self::ONE_DAY_IN_SECOND);
-        } elseif (date('w', $current_day) == self::SUNDAY) {
-            $current_day = $current_day + self::ONE_DAY_IN_SECOND - ($current_day % self::ONE_DAY_IN_SECOND);
-        }
-
-        $number_of_day_including_week_ends = $current_day - $this->milestone->getStartDate();
-        $number_of_day_excluding_week_ends = $number_of_day_including_week_ends - floor($number_of_day_including_week_ends / 7) * 2;
-
-        return floor($this->milestone->getDuration() - ($number_of_day_excluding_week_ends / self::ONE_DAY_IN_SECOND));
-    }
-
-    private function cannotBeDivided($number) {
-        return $number === 0;
+        return max($this->milestone->getDaysUntilEnd(), 0);
     }
 }
 
