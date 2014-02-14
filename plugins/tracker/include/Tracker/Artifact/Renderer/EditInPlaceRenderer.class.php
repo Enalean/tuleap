@@ -40,7 +40,8 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
             $this->fetchFollowUps(),
             $this->fetchArtifactLinks($current_user),
             $this->artifact->getTracker()->fetchFormElementsNoColumns($this->artifact, array(0 => null)),
-            $this->artifact
+            $this->artifact,
+            $current_user
         );
         $this->renderer->renderToPage('artifact-modal', $presenter);
     }
