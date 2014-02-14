@@ -58,7 +58,9 @@
             <div class="tuleap-modal-actions">
                 <textarea id="tracker_followup_comment_new" name="artifact_followup_comment" placeholder="{{ add_followup_placeholder }}"></textarea>
                 <div>
-                    <input type="submit" id="tuleap-modal-submit" class="btn btn-primary" data-normal-text="{{ submit }}" data-loading-text="{{ submit }}..." value="{{ submit }}">
+                    {{# user_is_logged_in }}
+                        <input type="submit" id="tuleap-modal-submit" class="btn btn-primary" data-normal-text="{{ submit }}" data-loading-text="{{ submit }}..." value="{{ submit }}">
+                    {{/ user_is_logged_in }}
                     <a class="btn tuleap-modal-close">{{ cancel }}</a>
                 </div>
             </div>

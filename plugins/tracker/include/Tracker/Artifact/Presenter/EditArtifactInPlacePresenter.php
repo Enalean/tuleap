@@ -36,11 +36,15 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
 
     public $last_changeset_id;
 
+    /** @var PFUser */
+    private $user;
+
     public function __construct(
         $follow_ups,
         $artifact_links,
         $form_elements,
-        $artifact
+        Tracker_Artifact $artifact,
+        PFUser $user
     ) {
         $this->follow_ups        = $follow_ups;
         $this->artifact_links    = $artifact_links;
@@ -50,6 +54,7 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
         $this->artifact_uri      = $artifact->getUri() . '&func=edit';
         $this->last_changeset_id = $artifact->getLastChangeset()->getId();
         $this->form_elements     = $form_elements;
+        $this->user              = $user;
     }
 
     public function artifact_links_title() {
@@ -82,6 +87,10 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
 
     public function cancel() {
         return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'cancel');
+    }
+
+    public function user_is_logged_in() {
+        return $this->user->isLoggedIn();
     }
 }
 ?>
