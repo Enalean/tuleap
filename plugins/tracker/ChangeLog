@@ -1,3 +1,6 @@
+Version 5.235 - Tuleap 6.11
+    * story #6058 Create stuff in agile dashboard using modal
+
 Version 5.234 - Tuleap 6.10
     * Fix req #6071. Cannot delete x-refs in artifact. Choosing to not show x-refs in modal view.
 

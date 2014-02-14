@@ -3,6 +3,7 @@ Version 6.11 (Not released yet)
 	* git: 3.68
 	* docman: 2.26.28
 	* agiledashboard: 1.44
+	* tracker: 5.235
 
 	== Development ==
 	* story #6058 Create artifacts in agile dashboard using modal
@@ -12,7 +13,7 @@ Version 6.11 (Not released yet)
 	* Add a common helper to compute dates without including week-ends
 
     == Themes ==
-	* Experimental: 0.9.3
+	* Experimental: 0.9.5
 
 Version 6.10 (Thursday, February 6th 2014)
 	== Plugins ==
