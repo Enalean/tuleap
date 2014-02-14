@@ -38,7 +38,7 @@ plugin_agiledashboard	open	open
 plugin_agiledashboard	closed	closed
 plugin_agiledashboard	no_milestone	There are no milestones for this period
 plugin_agiledashboard	project_backlog	$1 backlog
-plugin_agiledashboard	past	Passed
+plugin_agiledashboard	past	Done
 plugin_agiledashboard	now	What's hot
 plugin_agiledashboard	future	What's next
 plugin_agiledashboard	milestone_planning_pane_title	$1 Planning
