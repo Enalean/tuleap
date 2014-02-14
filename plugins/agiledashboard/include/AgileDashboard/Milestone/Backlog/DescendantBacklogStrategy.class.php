@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2014. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -88,6 +88,7 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
             if ($descendant_tracker->userCanSubmitArtifact($user)) {
                 $submit_urls[] = array(
                     'tracker_type' => $descendant_tracker->getName(),
+                    'tracker_id'   => $descendant_tracker->getId(),
                     'submit_url'   => $milestone->getArtifact()->getSubmitNewArtifactLinkedToMeUri($descendant_tracker).'&'.$redirect_to_self
                 );
             }
@@ -134,7 +135,8 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
             $this->descendant_trackers,
             $this->canUserPrioritizeBacklog($user),
             $this->getTrackersWithoutInitialEffort(),
-            $this->getSolveInconsistenciesUrl($milestone, $redirect_to_self)
+            $this->getSolveInconsistenciesUrl($milestone, $redirect_to_self),
+            $milestone->getArtifactId()
         );
     }
 

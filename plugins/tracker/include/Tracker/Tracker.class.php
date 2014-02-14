@@ -273,6 +273,27 @@ class Tracker implements Tracker_Dispatchable_Interface {
     }
 
     /**
+     * Fetch Tracker submit form in HTML without the container and column rendering
+     *
+     * @param Tracker_Artifact | null  $artifact_to_link  The artifact wich will be linked to the new artifact
+     *
+     * @return String
+     */
+    public function fetchSubmitNoColumns($artifact_to_link) {
+        $html='';
+
+        if ($artifact_to_link) {
+            $html .= '<input type="hidden" name="link-artifact-id" value="'. $artifact_to_link->getId() .'" />';
+        }
+
+        foreach($this->getFormElements() as $form_element) {
+            $html .= $form_element->fetchSubmitForOverlay();
+        }
+
+        return $html;
+    }
+
+    /**
      * fetch FormElements in read only mode
      *
      * @param Tracker_Artifact $artifact
@@ -344,6 +365,22 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
+
+            case 'get-create-in-place':
+                if ($this->userCanSubmitArtifact($current_user)) {
+                    $artifact_link_id = $request->get('artifact-link-id');
+
+                    $renderer = new Tracker_Artifact_Renderer_CreateInPlaceRenderer(
+                        $this,
+                        TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR).'/templates')
+                    );
+
+                    $renderer->display($artifact_link_id);
+                } else {
+                    $GLOBALS['Response']->send400JSONErrors();
+                }
+            break;
+
             case 'new-artifact-link':
                 $link = $request->get('id');
                 if ($this->userCanSubmitArtifact($current_user)) {
@@ -594,6 +631,10 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $this->getFormElementFactory()
                 );
                 $action->process($layout, $request, $current_user);
+                break;
+            case 'submit-artifact-in-place':
+                $action = new Tracker_Action_CreateArtifactFromModal($request, $this, $this->getTrackerArtifactFactory());
+                $action->process($current_user);
                 break;
             case 'admin-hierarchy':
                 if ($this->userIsAdmin($current_user)) {

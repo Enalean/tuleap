@@ -1513,3 +1513,5 @@ plugin_tracker_modal_artifact	add_followup_placeholder	Ajouter un nouveau commen
 plugin_tracker_modal_artifact	no_comment	Aucun commentaire
 plugin_tracker_modal_artifact	submit	Enregistrer
 plugin_tracker_modal_artifact	cancel	Annuler
+plugin_tracker_modal_artifact	artifact_to_link_title	L'artifact sera lié à $1
+plugin_tracker_modal_artifact	submit_error	L'artifact n'a pu être créé à cause des erreurs suivantes :

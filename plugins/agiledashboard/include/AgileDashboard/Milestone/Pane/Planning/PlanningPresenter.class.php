@@ -153,6 +153,10 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
         return $this->submilestone_collection;
     }
 
+    public function submilestone_tracker_id() {
+        return $this->submilestone_collection->getTracker()->getId();
+    }
+
     public function can_plan() {
         return ($this->can_plan) ? 'true' : 'false';
     }

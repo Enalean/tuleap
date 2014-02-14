@@ -2,12 +2,17 @@ Version 6.11 (Not released yet)
 	== Plugins ==
 	* git: 3.68
 	* docman: 2.26.28
+	* agiledashboard: 1.44
 
 	== Development ==
+	* story #6058 Create artifacts in agile dashboard using modal
 	* REST and phpunit tests can be run in Continuous Integration
 	* Better detect theme change not to forget to increase version number
 	  in tools/utils/changelogs/generate.sh
 	* Add a common helper to compute dates without including week-ends
+
+    == Themes ==
+	* Experimental: 0.9.3
 
 Version 6.10 (Thursday, February 6th 2014)
 	== Plugins ==

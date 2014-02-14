@@ -20,13 +20,16 @@
  */
 (function ($) {
     tuleap.modal = {
-        init: function() {
+        settings : {
+            beforeClose : function(){}
+        },
+
+        init: function(settings) {
             var self = this;
+            Object.extend(this.settings, settings);
 
             $('.tuleap-modal').show();
             this.setPanelHeight();
-
-            codendi.Toggler.init(document.getElementsByClassName('tuleap-modal')[0]);
 
             $('.tuleap-modal-side-panel:first-child .tuleap-modal-side-panel-grip').click(function() {
                 self.toggleLeftSidePanel($(this));
@@ -37,6 +40,12 @@
             $('.tuleap-modal-close').click(function() {
                 self.closeModal();
             });
+
+            return this;
+        },
+
+        getDOMElement: function() {
+            return $('.tuleap-modal')[0];
         },
 
         showLoad: function() {
@@ -100,6 +109,8 @@
         },
 
         closeModal: function() {
+            this.settings.beforeClose();
+
             $('.tuleap-modal-background, .tuleap-modal').fadeOut(150).remove();
         }
     }

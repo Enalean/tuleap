@@ -113,6 +113,10 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return '';
     }
 
+    public function fetchSubmitForOverlay() {
+        return '';
+    }
+
     /**
      * Fetch the value
      * @param mixed $value the value of the field

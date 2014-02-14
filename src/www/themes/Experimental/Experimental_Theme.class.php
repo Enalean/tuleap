@@ -43,6 +43,7 @@ class Experimental_Theme extends DivBasedTabbedLayout {
         $this->includeJavascriptFile('/themes/Experimental/js/navbar.js');
         $this->includeJavascriptFile('/themes/Experimental/js/sidebar.js');
         $this->includeJavascriptFile('/themes/Experimental/js/resize-window.js');
+        $this->includeJavascriptFile('/themes/Experimental/js/motd.js');
     }
 
     private function render($template_name, $presenter) {
@@ -121,7 +122,8 @@ class Experimental_Theme extends DivBasedTabbedLayout {
                 $params['title'],
                 $search_form_presenter,
                 $project_manager->getActiveProjectsForUser($current_user),
-                $this->displayNewAccount()
+                $this->displayNewAccount(),
+                $this->getMOTD()
             )
         );
 

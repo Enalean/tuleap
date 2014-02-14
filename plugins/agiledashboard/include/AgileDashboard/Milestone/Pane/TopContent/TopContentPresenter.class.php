@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2014. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -41,7 +41,8 @@ class AgileDashboard_Milestone_Pane_Content_TopContentPresenter extends AgileDas
             $trackers,
             $can_prioritize,
             $trackers_without_initial_effort_defined,
-            ''
+            '',
+            null
         );
     }
 

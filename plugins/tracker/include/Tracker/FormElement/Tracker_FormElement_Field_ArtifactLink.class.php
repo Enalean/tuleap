@@ -183,6 +183,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         return '';
     }
 
+    public function fetchSubmitForOverlay() {
+        return '';
+    }
+
     private function getArtifactLinkIdsOfLastChangeset(Tracker_Artifact $artifact = null) {
         if ($artifact) {
             return array_map(array($this, 'getArtifactLinkId'), $this->getChangesetValues($artifact->getLastChangeset()->getId()));

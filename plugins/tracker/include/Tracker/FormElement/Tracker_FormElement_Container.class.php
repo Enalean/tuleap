@@ -207,6 +207,10 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         return $this->fetchRecursiveArtifact('fetchArtifactForOverlay', array($artifact, $submitted_values));
     }
 
+    public function fetchSubmitForOverlay($submitted_values = array()) {
+        return $this->fetchRecursiveArtifact('fetchSubmitForOverlay', array($submitted_values));
+    }
+
     /**
      * Fetch the element for the update artifact form
      *

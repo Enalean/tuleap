@@ -1,3 +1,12 @@
+Version 1.44 - Tuleap 6.11
+    * story #5984 see open/closed cards percentage fallback
+
+Version 1.43 - Tuleap 6.11
+    * story #5984 Add open/close information in milestone resource
+
+Version 1.42 - Tuleap 6.11
+    * story #6058 Create artifacts in agile dashboard using modal
+
 Version 1.41 - Tuleap 6.10
     * fix filter backlog content when not logged in (follow-up story #5899)
 
