@@ -48,7 +48,12 @@
                                 <i class="icon-angle-right"></i>
                                 {{# breadcrumbs }}
                                     {{# . }}
-                                    <a href="{{ url }}">{{ title }}</a> <i class="icon-angle-right"></i>
+                                    {{# title }}
+                                        <a href="{{ url }}">{{ title }}</a> <i class="icon-angle-right"></i>
+                                    {{/ title }}
+                                    {{^ title }}
+                                        <a href="{{ url }}">{{ default_name }}</a> <i class="icon-angle-right"></i>
+                                    {{/ title }}
                                     {{/ . }}
                                 {{/ breadcrumbs }}
                                 <p>
