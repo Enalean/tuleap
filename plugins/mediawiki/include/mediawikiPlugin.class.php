@@ -513,8 +513,7 @@ class MediaWikiPlugin extends Plugin {
 
         include dirname(__FILE__) .'/MediawikiInstantiater.class.php';
 
-        $project_name = $project->getUnixName();
-        $mediawiki_instantiater = new MediaWikiInstantiater($project_name);
+        $mediawiki_instantiater = new MediaWikiInstantiater($project);
 
         $mediawiki_instantiater->instantiate();
     }

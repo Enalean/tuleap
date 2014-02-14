@@ -35,12 +35,16 @@ class MediaWikiInstantiater {
     /** @var string */
     private $project_name_dir;
 
+    /** @var project */
+    private $project;
+
     /**
-     * @param string $project_name
+     * @param string $project
      */
-    public function __construct($project_name) {
-        $this->logger = new BackendLogger();
-        $this->project_name = $project_name;
+    public function __construct(Project $project) {
+        $this->logger           = new BackendLogger();
+        $this->project          = $project;
+        $this->project_name     = $project->getUnixName();
         $this->project_name_dir = forge_get_config('projects_path', 'mediawiki') . '/' . $this->project_name;
     }
 
@@ -53,6 +57,7 @@ class MediaWikiInstantiater {
         } else {
             $this->createDirectory();
             $this->createDatabase();
+            $this->seedUGroupMapping();
         }
     }
 
@@ -106,6 +111,32 @@ class MediaWikiInstantiater {
         $this->logger->info('Using schema: codendi');
         $main_db = Config::get('sys_dbname');
         db_query('USE '.$main_db);
+    }
+
+    private function seedUGroupMapping() {
+        if ($this->project->isPublic()) {
+            db_query($this->seedPublicProjectUGroupMapping($this->project->getID()));
+        } else {
+            db_query($this->seedPrivateProjectUGroupMapping($this->project->getID()));
+        }
+    }
+
+    private function seedPublicProjectUGroupMapping($group_id) {
+        return "INSERT INTO plugin_mediawiki_ugroup_mapping(group_id, ugroup_id, mw_group_name)
+                VALUES
+                   ($group_id, 1, 'anonymous'),
+                   ($group_id, 2, 'user'),
+                   ($group_id, 3, 'user'),
+                   ($group_id, 4, 'sysop'),
+                   ($group_id, 4, 'bureaucrat')";
+    }
+
+    private function seedPrivateProjectUGroupMapping($group_id) {
+        return "INSERT INTO plugin_mediawiki_ugroup_mapping(group_id, ugroup_id, mw_group_name)
+                VALUES
+                   ($group_id, 3, 'user'),
+                   ($group_id, 4, 'sysop'),
+                   ($group_id, 4, 'bureaucrat')";
     }
 }
 
