@@ -394,7 +394,8 @@ class AgileDashboardPlugin extends Plugin {
             $this->getPlanningFactory(),
             $this->getArtifactFactory(),
             Tracker_FormElementFactory::instance(),
-            TrackerFactory::instance()
+            TrackerFactory::instance(),
+            $this->getStatusCounter()
         );
     }
 
@@ -680,6 +681,13 @@ class AgileDashboardPlugin extends Plugin {
     private function buildRightVersionOfProjectBacklogResource($version) {
         $class_with_right_namespace = '\\Tuleap\\AgileDashboard\\REST\\'.$version.'\\ProjectBacklogResource';
         return new $class_with_right_namespace;
+    }
+
+    private function getStatusCounter() {
+        return new AgileDashboard_Milestone_MilestoneStatusCounter(
+            new AgileDashboard_BacklogItemDao(),
+            new Tracker_ArtifactDao()
+        );
     }
 }
 

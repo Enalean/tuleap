@@ -20,6 +20,8 @@
 
 
 class Tracker_ArtifactDao extends DataAccessObject {
+    const STATUS_OPEN   = 'open';
+    const STATUS_CLOSED = 'closed';
 
     public function __construct() {
         parent::__construct();
@@ -538,6 +540,25 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id $exclude)
                 WHERE parent_art.id IN ($artifact_ids)";
 
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Return artifact status (open/closed)
+     *
+     * @param int[] $artifact_ids
+     * @return DataAccessResult
+     */
+    public function getArtifactsStatusByIds(array $artifact_ids) {
+        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
+        $sql = "SELECT A.id, IF(CVL.bindvalue_id IS NULL, '".self::STATUS_CLOSED."', '".self::STATUS_OPEN."') AS status
+                FROM tracker_artifact AS A
+                LEFT JOIN (
+                    tracker_changeset_value AS CV
+                    INNER JOIN tracker_semantic_status SS ON (CV.field_id = SS.field_id)
+                    INNER JOIN tracker_changeset_value_list CVL ON (CV.id = CVL.changeset_value_id AND CVL.bindvalue_id = SS.open_value_id)
+                ) ON (A.last_changeset_id = CV.changeset_id)
+                WHERE A.id IN ($artifact_ids)";
         return $this->retrieve($sql);
     }
 

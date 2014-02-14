@@ -128,7 +128,13 @@ class MilestoneRepresentation {
      */
     public $last_modified_date;
 
-    public function build(Planning_Milestone $milestone) {
+    /**
+     *
+     * @var array
+     */
+    public $status_count;
+
+    public function build(Planning_Milestone $milestone, array $status_count) {
         $this->id               = JsonCast::toInt($milestone->getArtifactId());
         $this->uri              = self::ROUTE . '/' . $this->id;
         $this->label            = $milestone->getArtifactTitle();
@@ -165,6 +171,9 @@ class MilestoneRepresentation {
         $this->backlog_uri        = $this->uri . '/'. BacklogItemRepresentation::BACKLOG_ROUTE;
         $this->content_uri        = $this->uri . '/'. BacklogItemRepresentation::CONTENT_ROUTE;
         $this->last_modified_date = JsonCast::toDate($milestone->getLastModifiedDate());
+        if($status_count) {
+            $this->status_count = $status_count;
+        }
     }
 
     public function enableCardwall() {

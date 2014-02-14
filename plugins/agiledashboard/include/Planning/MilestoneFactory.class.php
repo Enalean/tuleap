@@ -46,6 +46,12 @@ class Planning_MilestoneFactory {
     private $tracker_factory;
 
     /**
+     *
+     * @var AgileDashboard_Milestone_MilestoneStatusCounter
+     */
+    private $status_counter;
+
+    /**
      * Instanciates a new milestone factory.
      *
      * @param PlanningFactory            $planning_factory    The factory to delegate planning retrieval.
@@ -56,13 +62,15 @@ class Planning_MilestoneFactory {
         PlanningFactory $planning_factory,
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_FormElementFactory $formelement_factory,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
+        AgileDashboard_Milestone_MilestoneStatusCounter $status_counter
     ) {
 
         $this->planning_factory    = $planning_factory;
         $this->artifact_factory    = $artifact_factory;
         $this->formelement_factory = $formelement_factory;
         $this->tracker_factory     = $tracker_factory;
+        $this->status_counter      = $status_counter;
     }
 
     /**
@@ -530,6 +538,10 @@ class Planning_MilestoneFactory {
             return $this->getMilestoneFromArtifact(array_shift($artifacts));
         }
         return new Planning_NoMilestone($planning->getPlanningTracker()->getProject(), $planning);
+    }
+
+    public function getMilestoneStatusCount(Planning_Milestone $milestone) {
+        return $this->status_counter->getStatus($milestone->getArtifactId());
     }
 }
 

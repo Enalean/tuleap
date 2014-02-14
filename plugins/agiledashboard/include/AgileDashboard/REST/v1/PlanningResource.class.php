@@ -25,6 +25,9 @@ use \Planning;
 use \Tuleap\REST\Header;
 use \Tuleap\REST\ProjectAuthorization;
 use \UserManager;
+use \AgileDashboard_Milestone_MilestoneStatusCounter;
+use \AgileDashboard_BacklogItemDao;
+use \Tracker_ArtifactDao;
 
 class PlanningResource {
 
@@ -34,11 +37,16 @@ class PlanningResource {
 
 
     public function __construct() {
+        $status_counter = new AgileDashboard_Milestone_MilestoneStatusCounter(
+            new AgileDashboard_BacklogItemDao(),
+            new Tracker_ArtifactDao()
+        );
         $this->milestone_factory = new \Planning_MilestoneFactory(
             PlanningFactory::build(),
             \Tracker_ArtifactFactory::instance(),
             \Tracker_FormElementFactory::instance(),
-            \TrackerFactory::instance()
+            \TrackerFactory::instance(),
+            $status_counter
         );
     }
 
