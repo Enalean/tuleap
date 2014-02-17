@@ -1,3 +1,6 @@
+Version 5.239 - Tuleap 6.11
+    * Request #6197 : spinner stays if response is 500
+
 Version 5.238 - Tuleap 6.11
     * Story #6057 & #5992 - Export/Import Attachments and CC fields from TV3 to TV5
 
