@@ -15,6 +15,9 @@ Version 6.11 (Not released yet)
 	* Add a common helper to compute dates without including week-ends
 	* Remove embedded Firebug
 
+	== Enhancement ==
+	* request #5951 - Avoid hardcoded redirect on login when possible
+
 	== Themes ==
 	* Experimental: 0.9.6
 
