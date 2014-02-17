@@ -40,7 +40,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
      */
     public function getComputedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null, &$computed_artifact_ids = array()) {
         $sum = null;
-        foreach ($artifact->getLinkedArtifacts($user) as $linked_artifact) {
+        foreach ($artifact->getLinkedArtifactsAtTimestamp($user, $timestamp) as $linked_artifact) {
             $value = $this->getUniqueFieldValue($user, $linked_artifact, $timestamp, $computed_artifact_ids);
             $sum   = $this->sumIfNotNull($sum, $value);
         }
