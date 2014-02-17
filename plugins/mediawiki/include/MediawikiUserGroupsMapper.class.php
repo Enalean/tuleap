@@ -60,6 +60,8 @@ class MediawikiUserGroupsMapper {
             $this->removeMediawikiUserGroupMapping($project, $mappings_to_remove, $mw_group_name);
             $this->addMediawikiUserGroupMapping($project, $mappings_to_add, $mw_group_name);
         }
+
+        $this->dao->resetUserGroups($project);
     }
 
     private function getUserGroupMappingsDiff($group_mapping1, $group_mapping2) {

@@ -36,17 +36,17 @@ class MediawikiGroupsMapper {
         $mediawiki_groups            = array();
         $mediawiki_groups['removed'] = $this->getUnconsistantMediawikiGroups($user, $project);
 
-        if ($user->isMember($project->getID(), 'A')) {
-            $mediawiki_groups['added'][] = 'bureaucrat';
-            $mediawiki_groups['added'][] = 'sysop';
-
-        } else if (($project->isPublic() && ! $user->isAnonymous()) || $user->isMember($project->getID())) {
-            $mediawiki_groups['added'][] = 'user';
-            $mediawiki_groups['added'][] = 'autoconfirmed';
-            $mediawiki_groups['added'][] = 'emailconfirmed';
-
-        } else {
+        if ($user->isAnonymous()) {
             $mediawiki_groups['added'][] = '*';
+        } else {
+            $dar = $this->dao->getMediawikiGroupsMappedForUGroups($user, $project);
+            if (count($dar) > 0) {
+                foreach ($dar as $row) {
+                    $mediawiki_groups['added'][] = $row['real_name'];
+                }
+            } else {
+                $mediawiki_groups['added'][] = '*';
+            }
         }
 
         return $mediawiki_groups;

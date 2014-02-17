@@ -31,83 +31,53 @@ class MediawikiGroupsMapperTest extends TuleapTestCase {
         $this->mapper      = new MediawikiGroupsMapper($this->dao);
     }
 
-    public function itReturnsRightMediawikiGroupsForProjectAdmins() {
-        stub($this->tuleap_user)->isMember(202, 'A')->returns(true);
+    public function itReturnsRightMediawikiGroupsFromDatabase() {
         stub($this->dao)->getMediawikiGroupsForUser($this->tuleap_user, $this->project)->returns(array());
+        stub($this->dao)->getMediawikiGroupsMappedForUGroups($this->tuleap_user, $this->project)->returnsDar(
+            array('real_name' => 'sysop'),
+            array('real_name' => 'bureaucrat')
+        );
 
         $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
 
-        $this->assertTrue(in_array('sysop', $mediawiki_groups['added']));
-        $this->assertTrue(in_array('bureaucrat', $mediawiki_groups['added']));
-        $this->assertTrue(empty($mediawiki_groups['deleted']));
+        $this->assertEqual($mediawiki_groups, array(
+            'added' => array(
+                'sysop',
+                'bureaucrat'
+            ),
+            'removed' => array(
+            )
+        ));
     }
 
-    public function itReturnsRightMediawikiGroupsForProjectMembers() {
-        stub($this->dao)->getMediawikiGroupsForUser($this->tuleap_user, $this->project)->returns(array());
-        stub($this->project)->isPublic()->returns(true);
-
-        $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
-
-        $this->assertTrue(in_array('user', $mediawiki_groups['added']));
-        $this->assertTrue(in_array('autoconfirmed', $mediawiki_groups['added']));
-        $this->assertTrue(in_array('emailconfirmed', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('sysop', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('bureaucrat', $mediawiki_groups['added']));
-    }
-
-    public function itReturnsRightMediawikiGroupsForAnonymousUserInPublicProject() {
-        stub($this->dao)->getMediawikiGroupsForUser($this->tuleap_user, $this->project)->returns(array());
-        stub($this->project)->isPublic()->returns(true);
+    public function itSetAnonymousUsersAsAnonymous() {
         stub($this->tuleap_user)->isAnonymous()->returns(true);
-
-        $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
-
-        $this->assertTrue(in_array('*', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('user', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('autoconfirmed', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('emailconfirmed', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('sysop', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('bureaucrat', $mediawiki_groups['added']));
-    }
-
-    public function itReturnsRightMediawikiGroupsForAnonymousUserInPrivateProject() {
-        stub($this->dao)->getMediawikiGroupsForUser($this->tuleap_user, $this->project)->returns(array());
-        stub($this->tuleap_user)->isAnonymous()->returns(true);
-
-        $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
-
-        $this->assertTrue(in_array('*', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('user', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('autoconfirmed', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('emailconfirmed', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('sysop', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('bureaucrat', $mediawiki_groups['added']));
-    }
-
-    public function itReturnsRightMediawikiGroupsForRegisteredUsersInPublicProject() {
-        stub($this->dao)->getMediawikiGroupsForUser($this->tuleap_user, $this->project)->returns(array());
-        stub($this->project)->isPublic()->returns(true);
-
-        $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
-
-        $this->assertTrue(in_array('user', $mediawiki_groups['added']));
-        $this->assertTrue(in_array('autoconfirmed', $mediawiki_groups['added']));
-        $this->assertTrue(in_array('emailconfirmed', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('sysop', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('bureaucrat', $mediawiki_groups['added']));
-    }
-
-    public function itReturnsRightMediawikiGroupsForRegisteredUsersInPrivateProject() {
         stub($this->dao)->getMediawikiGroupsForUser($this->tuleap_user, $this->project)->returns(array());
 
         $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
 
-        $this->assertTrue(in_array('*', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('user', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('autoconfirmed', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('emailconfirmed', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('sysop', $mediawiki_groups['added']));
-        $this->assertFalse(in_array('bureaucrat', $mediawiki_groups['added']));
+        $this->assertEqual($mediawiki_groups, array(
+            'added' => array(
+                '*',
+            ),
+            'removed' => array(
+            )
+        ));
+    }
+
+    public function itSetAnonymousWhenNothingIsAvailable() {
+        stub($this->dao)->getMediawikiGroupsForUser($this->tuleap_user, $this->project)->returns(array());
+        stub($this->dao)->getMediawikiGroupsMappedForUGroups($this->tuleap_user, $this->project)->returnsEmptyDar();
+
+        $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
+
+        $this->assertEqual($mediawiki_groups, array(
+            'added' => array(
+                '*',
+            ),
+            'removed' => array(
+            )
+        ));
     }
 
     public function itReturnsUnconsistantMediawikiGroupsToBeDeleted() {
@@ -116,7 +86,7 @@ class MediawikiGroupsMapperTest extends TuleapTestCase {
 
         $mediawiki_groups = $this->mapper->defineUserMediawikiGroups($this->tuleap_user, $this->project);
 
-        $this->assertTrue(in_array('ForgeRole:forge_admin', $mediawiki_groups['removed']));
+        $this->assertEqual($mediawiki_groups['removed'], array('ForgeRole:forge_admin'));
     }
 
 }

@@ -120,3 +120,20 @@ CREATE TABLE IF NOT EXISTS plugin_mediawiki_ugroup_mapping (
     ugroup_id INT(11) NOT NULL,
     mw_group_name ENUM( 'anonymous', 'user', 'bot', 'sysop', 'bureaucrat' ) NOT NULL DEFAULT 'anonymous'
 );
+
+DROP TABLE IF EXISTS plugin_mediawiki_tuleap_mwgroups;
+CREATE TABLE plugin_mediawiki_tuleap_mwgroups (
+    mw_group_name ENUM( 'anonymous', 'user', 'bot', 'sysop', 'bureaucrat' ) NOT NULL DEFAULT 'anonymous',
+    real_name varbinary(32) NOT NULL DEFAULT '',
+    INDEX idx_mw_group_name (mw_group_name)
+);
+
+INSERT INTO plugin_mediawiki_tuleap_mwgroups(mw_group_name, real_name)
+VALUES
+    ('anonymous', '*'),
+    ('user', 'user'),
+    ('user', 'autoconfirmed'),
+    ('user', 'emailconfirmed'),
+    ('bot', 'bot'),
+    ('sysop', 'sysop'),
+    ('bureaucrat', 'bureaucrat');
