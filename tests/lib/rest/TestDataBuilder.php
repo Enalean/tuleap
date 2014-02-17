@@ -26,9 +26,6 @@ class TestDataBuilder {
     const TEST_USER_PASS   = 'welcome0';
     const ADMIN_PROJECT_ID = 100;
 
-    const TEST_PROJECT_LONG_NAME = 'Long name';
-    const TEST_PROJECT_SHORT_NAME = 'short-name';
-
     const RELEASE_ARTIFACT_ID = 1;
     const SPRINT_ARTIFACT_ID  = 2;
 
@@ -68,6 +65,7 @@ class TestDataBuilder {
         $user = new PFUser();
         $user->setUserName(self::TEST_USER_NAME);
         $user->setPassword(self::TEST_USER_PASS);
+        $user->setUserName(self::TEST_USER_NAME);
         $user->setLanguage($GLOBALS['Language']);
 
         $this->user_manager->createAccount($user);
@@ -85,10 +83,10 @@ class TestDataBuilder {
         $user = $this->user_manager->getUserByUserName(self::TEST_USER_NAME);
         $this->user_manager->setCurrentUser($user);
 
-        echo "Create project\n";
-
+        echo "Create projects\n";
         $projectCreator = new ProjectCreator($this->project_manager, new Rule_ProjectName(), new Rule_ProjectFullName());
-        $project = $projectCreator->create(self::TEST_PROJECT_SHORT_NAME, self::TEST_PROJECT_LONG_NAME, array(
+
+        $project_private_member = $projectCreator->create('private-member', 'Private member', array(
             'project' => array(
                 'form_license'           => 'xrx',
                 'form_license_other'     => '',
@@ -99,9 +97,48 @@ class TestDataBuilder {
                 'built_from_template'    => 100,
             )
         ));
-        $this->project_manager->activate($project);
+        $this->project_manager->activate($project_private_member);
+        $this->addMembersToProject($project_private_member, $user);
 
-        $this->addMembersToProject($project, $user);
+        $project_private = $projectCreator->create('private', 'Private', array(
+            'project' => array(
+                'form_license'           => 'xrx',
+                'form_license_other'     => '',
+                'form_short_description' => '',
+                'is_test'                => false,
+                'is_public'              => false,
+                'services'               => array(),
+                'built_from_template'    => 100,
+            )
+        ));
+        $this->project_manager->activate($project_private);
+
+        $project_public = $projectCreator->create('public', 'Public', array(
+            'project' => array(
+                'form_license'           => 'xrx',
+                'form_license_other'     => '',
+                'form_short_description' => '',
+                'is_test'                => false,
+                'is_public'              => true,
+                'services'               => array(),
+                'built_from_template'    => 100,
+            )
+        ));
+        $this->project_manager->activate($project_public);
+
+        $project_public_member = $projectCreator->create('public-member', 'Public member', array(
+            'project' => array(
+                'form_license'           => 'xrx',
+                'form_license_other'     => '',
+                'form_short_description' => '',
+                'is_test'                => false,
+                'is_public'              => true,
+                'services'               => array(),
+                'built_from_template'    => 100,
+            )
+        ));
+        $this->project_manager->activate($project_public_member);
+        $this->addMembersToProject($project_public_member, $user);
 
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['cvs_prefix']);
@@ -112,7 +149,7 @@ class TestDataBuilder {
         return $this;
     }
 
-    private function addMembersToProject($project, $user) {
+    private function addMembersToProject($project, PFUser $user) {
         include_once 'account.php';
         account_add_user_to_group($project->getId(), $user->getUnixName());
         UserManager::clearInstance();
@@ -138,19 +175,19 @@ class TestDataBuilder {
         $user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
 
         $fields_data = array(
-            Tracker_FormElementFactory::instance()->getFormElementByName(6, 'name')->getId() => 'Release 1.0',
-            Tracker_FormElementFactory::instance()->getFormElementByName(6, 'status')->getId()  => '126'
+            Tracker_FormElementFactory::instance()->getFormElementByName(2, 'name')->getId() => 'Release 1.0',
+            Tracker_FormElementFactory::instance()->getFormElementByName(2, 'status')->getId()  => '126'
         );
-        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(6), $fields_data, $user, '', false);
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(2), $fields_data, $user, '', false);
 
         $fields_data = array(
-            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'name')->getId()       => 'Sprint A',
-            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'status')->getId()     => '150',
-            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'start_date')->getId() => '2014-1-9',
-            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'duration')->getId()   => '10',
-            Tracker_FormElementFactory::instance()->getFormElementByName(7, 'capacity')->getId()   => '29',
+            Tracker_FormElementFactory::instance()->getFormElementByName(3, 'name')->getId()       => 'Sprint A',
+            Tracker_FormElementFactory::instance()->getFormElementByName(3, 'status')->getId()     => '150',
+            Tracker_FormElementFactory::instance()->getFormElementByName(3, 'start_date')->getId() => '2014-1-9',
+            Tracker_FormElementFactory::instance()->getFormElementByName(3, 'duration')->getId()   => '10',
+            Tracker_FormElementFactory::instance()->getFormElementByName(3, 'capacity')->getId()   => '29',
         );
-        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(7), $fields_data, $user, '', false);
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(3), $fields_data, $user, '', false);
 
         $release = Tracker_ArtifactFactory::instance()->getArtifactById(self::RELEASE_ARTIFACT_ID);
         $release->linkArtifact(self::SPRINT_ARTIFACT_ID, $user);
@@ -164,28 +201,28 @@ class TestDataBuilder {
         $user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
 
         $fields_data = array(
-            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'summary_11')->getId() => 'First epic',
-            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '101'
+            Tracker_FormElementFactory::instance()->getFormElementByName(1, 'summary_11')->getId() => 'First epic',
+            Tracker_FormElementFactory::instance()->getFormElementByName(1, 'status')->getId()  => '101'
         );
-        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '', false);
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(1), $fields_data, $user, '', false);
 
         $fields_data = array(
-            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'summary_11')->getId() => 'Second epic',
-            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '102'
+            Tracker_FormElementFactory::instance()->getFormElementByName(1, 'summary_11')->getId() => 'Second epic',
+            Tracker_FormElementFactory::instance()->getFormElementByName(1, 'status')->getId()  => '102'
         );
-        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '', false);
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(1), $fields_data, $user, '', false);
 
         $fields_data = array(
-            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'summary_11')->getId() => 'Third epic',
-            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '103'
+            Tracker_FormElementFactory::instance()->getFormElementByName(1, 'summary_11')->getId() => 'Third epic',
+            Tracker_FormElementFactory::instance()->getFormElementByName(1, 'status')->getId()  => '103'
         );
-        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '', false);
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(1), $fields_data, $user, '', false);
 
         $fields_data = array(
-            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'summary_11')->getId() => 'Fourth epic',
-            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '101'
+            Tracker_FormElementFactory::instance()->getFormElementByName(1, 'summary_11')->getId() => 'Fourth epic',
+            Tracker_FormElementFactory::instance()->getFormElementByName(1, 'status')->getId()  => '101'
         );
-        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '', false);
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(1), $fields_data, $user, '', false);
 
         $release = Tracker_ArtifactFactory::instance()->getArtifactById(self::RELEASE_ARTIFACT_ID);
         $release->linkArtifact(3, $user);
@@ -202,34 +239,34 @@ class TestDataBuilder {
         $user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
 
         $fields_data = array(
-            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'i_want_to')->getId() => 'Believe',
-            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'status')->getId()  => '206'
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'i_want_to')->getId() => 'Believe',
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '206'
         );
-        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(9), $fields_data, $user, '', false);
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '', false);
 
         $fields_data = array(
-            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'i_want_to')->getId() => 'Break Free',
-            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'status')->getId()  => '205'
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'i_want_to')->getId() => 'Break Free',
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '205'
         );
-        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(9), $fields_data, $user, '', false);
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '', false);
 
         $fields_data = array(
-            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'i_want_to')->getId() => 'Hughhhhhhh',
-            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'status')->getId()  => '205'
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'i_want_to')->getId() => 'Hughhhhhhh',
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '205'
         );
-        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(9), $fields_data, $user, '', false);
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '', false);
 
         $fields_data = array(
-            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'i_want_to')->getId() => 'Kill you',
-            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'status')->getId()  => '205'
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'i_want_to')->getId() => 'Kill you',
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '205'
         );
-        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(9), $fields_data, $user, '', false);
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '', false);
 
         $fields_data = array(
-            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'i_want_to')->getId() => 'Back',
-            Tracker_FormElementFactory::instance()->getFormElementByName(9, 'status')->getId()  => '205'
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'i_want_to')->getId() => 'Back',
+            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '205'
         );
-        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(9), $fields_data, $user, '', false);
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '', false);
 
         $release = Tracker_ArtifactFactory::instance()->getArtifactById(self::RELEASE_ARTIFACT_ID);
         $release->linkArtifact(7, $user);
@@ -251,22 +288,22 @@ class TestDataBuilder {
         $user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
 
         $fields_data = array(
-            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'summary_11')->getId() => 'Epic pic',
-            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '101'
+            Tracker_FormElementFactory::instance()->getFormElementByName(1, 'summary_11')->getId() => 'Epic pic',
+            Tracker_FormElementFactory::instance()->getFormElementByName(1, 'status')->getId()  => '101'
         );
-        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '', false);
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(1), $fields_data, $user, '', false);
 
         $fields_data = array(
-            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'summary_11')->getId() => "Epic c'est tout",
-            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '101'
+            Tracker_FormElementFactory::instance()->getFormElementByName(1, 'summary_11')->getId() => "Epic c'est tout",
+            Tracker_FormElementFactory::instance()->getFormElementByName(1, 'status')->getId()  => '101'
         );
-        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '', false);
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(1), $fields_data, $user, '', false);
 
         $fields_data = array(
-            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'summary_11')->getId() => 'Epic epoc',
-            Tracker_FormElementFactory::instance()->getFormElementByName(5, 'status')->getId()  => '101'
+            Tracker_FormElementFactory::instance()->getFormElementByName(1, 'summary_11')->getId() => 'Epic epoc',
+            Tracker_FormElementFactory::instance()->getFormElementByName(1, 'status')->getId()  => '101'
         );
-        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(5), $fields_data, $user, '', false);
+        Tracker_ArtifactFactory::instance()->createArtifact(TrackerFactory::instance()->getTrackerById(1), $fields_data, $user, '', false);
 
         return $this;
     }

@@ -21,10 +21,13 @@ namespace Tuleap\Project\REST\v1;
 
 use ProjectManager;
 use UserManager;
+use PFUser;
+use Project;
 use EventManager;
 use Event;
 use \Tuleap\Project\REST\ProjectRepresentation;
 use \Tuleap\REST\Header;
+use \Luracast\Restler\RestException;
 use \Tuleap\REST\ProjectAuthorization;
 
 /**
@@ -32,10 +35,97 @@ use \Tuleap\REST\ProjectAuthorization;
  */
 class ProjectResource {
 
+    const MAX_LIMIT = 50;
+
+    /** @var UserManager */
+    private $user_manager;
+
+    /** @var ProjectManager */
+    private $project_manager;
+
+    public function __construct() {
+        $this->user_manager = UserManager::instance();
+        $this->project_manager = ProjectManager::instance();
+    }
+
+    /**
+     * Get projects
+     *
+     * Get the projects list
+     *
+     * @url GET
+     *
+     * @param int $limit  Number of elements displayed per page
+     * @param int $offset Position of the first element to display
+     *
+     * @access protected
+     *
+     * @throws 403
+     * @throws 404
+     * @throws 406
+     *
+     * @return array {@type Tuleap\Project\REST\ProjectRepresentation}
+     */
+    public function get($limit = self::MAX_LIMIT, $offset = 0) {
+        $user = $this->user_manager->getCurrentUser();
+
+        if (! $user) {
+             throw new RestException(403, 'You don\'t have the permissions');
+        }
+        if (! $this->limitValueIsAcceptable($limit)) {
+             throw new RestException(406, 'Maximum value for limit exceeded');
+        }
+
+        $project_representations = array();
+        $projects                = $this->getMyAndPublicProjects($user, $offset, $limit);
+
+        foreach($projects as $project) {
+            $project_representations[] = $this->getProjectRepresentation($project);
+        }
+
+        $this->sendAllowHeadersForProject();
+        $this->sendPaginationHeaders($limit, $offset, $this->countMyAndPublicProjects($user));
+
+        return $project_representations;
+    }
+
+    /**
+     * @url OPTIONS
+     *
+     * @access protected
+     */
+    public function options() {
+        $this->sendAllowHeadersForProject();
+    }
+
+    /**
+     * Get projects which I am member of, public projects (if I'm not a member of
+     * a project but I'm in a static group of this project, this one will not be
+     * retrieve)
+     *
+     * @return Project[]
+     */
+    private function getMyAndPublicProjects(PFUser $user, $offset, $limit) {
+        return $this->project_manager->getMyAndPublicProjectsForREST($user, $offset, $limit);
+    }
+
+    /**
+     * Count projects which I am member of, public projects (if I'm not a member of
+     * a project but I'm in a static group of this project, this one will not be
+     * retrieve)
+     *
+     * @return int
+     */
+    private function countMyAndPublicProjects(PFUser $user) {
+        return $this->project_manager->countMyAndPublicProjectsForREST($user);
+    }
+
     /**
      * Get project
      *
      * Get the definition of a given project
+     *
+     * @url GET {id}
      *
      * @param int $id Id of the project
      *
@@ -46,24 +136,9 @@ class ProjectResource {
      *
      * @return Tuleap\Project\REST\ProjectRepresentation
      */
-    public function get($id) {
-        $project = $this->getProject($id);
-
-        $resources = array();
-        EventManager::instance()->processEvent(
-            Event::REST_PROJECT_RESOURCES,
-            array(
-                'version'   => 'v1',
-                'project'   => $project,
-                'resources' => &$resources
-            )
-        );
+    public function getId($id) {
         $this->sendAllowHeadersForProject();
-
-        $project_representation = new ProjectRepresentation();
-        $project_representation->build($project, $resources);
-
-        return $project_representation;
+        return $this->getProjectRepresentation($this->getProject($id));
     }
 
     /**
@@ -82,23 +157,40 @@ class ProjectResource {
     }
 
     /**
-     * @url OPTIONS
-     */
-    public function options() {
-        Header::allowOptions();
-    }
-
-    /**
      * @throws 403
      * @throws 404
      *
      * @return Project
      */
     private function getProject($id) {
-        $project          = ProjectManager::instance()->getProject($id);
-        $user             = UserManager::instance()->getCurrentUser();
+        $project = $this->project_manager->getProject($id);
+        $user    = $this->user_manager->getCurrentUser();
+
         ProjectAuthorization::userCanAccessProject($user, $project);
         return $project;
+    }
+
+    /**
+     * Get a ProjectRepresentation
+     *
+     * @param Project $project
+     * @return Tuleap\Project\REST\ProjectRepresentation
+     */
+    private function getProjectRepresentation(Project $project) {
+        $resources = array();
+        EventManager::instance()->processEvent(
+            Event::REST_PROJECT_RESOURCES,
+            array(
+                'version'   => 'v1',
+                'project'   => $project,
+                'resources' => &$resources
+            )
+        );
+
+        $project_representation = new ProjectRepresentation();
+        $project_representation->build($project, $resources);
+
+        return $project_representation;
     }
 
     /**
@@ -324,11 +416,19 @@ class ProjectResource {
         return $result;
     }
 
+    private function limitValueIsAcceptable($limit) {
+        return $limit <= self::MAX_LIMIT;
+    }
+
     private function sendAllowHeadersForProject() {
         Header::allowOptionsGet();
     }
 
     private function sendAllowHeadersForBacklog() {
         Header::allowOptionsGetPut();
+    }
+
+    private function sendPaginationHeaders($limit, $offset, $size) {
+        Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 }
