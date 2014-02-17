@@ -263,6 +263,8 @@ document.observe('dom:loaded', function () {
     });
 
     (function initTooltipForCompletionBarHelper() {
-        $('#milestone_points_completion_bar').tooltip();
+        if ($('#milestone_points_completion_bar')) {
+            $('#milestone_points_completion_bar').tooltip();
+        }
     })();
 });
