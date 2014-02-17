@@ -1,21 +1,44 @@
-Version 6.10 (Not released yet)
+Version 6.11 (Not released yet)
 	== Plugins ==
-	* agiledashboard: 1.38
+	* git: 3.69
+	* docman: 2.26.28
+	* agiledashboard: 1.45
+	* tracker: 5.237
+	* cardwall: 1.18
+
+	== Development ==
+	* story #6009 have a beautiful Agile Dashboard homepage (v1)
+	* story #6058 Create artifacts in agile dashboard using modal
+	* REST and phpunit tests can be run in Continuous Integration
+	* Better detect theme change not to forget to increase version number
+	  in tools/utils/changelogs/generate.sh
+	* Add a common helper to compute dates without including week-ends
+	* Remove embedded Firebug
+
+	== Themes ==
+	* Experimental: 0.9.6
+
+Version 6.10 (Thursday, February 6th 2014)
+	== Plugins ==
+	* agiledashboard: 1.41
 	* boomerang: 0.2
-	* cardwall: 1.15
-	* tracker: 5.226
-	* proftpd: 0.5
+	* cardwall: 1.17
+	* tracker: 5.234
+	* proftpd: 0.6
 	* tests: 5.21
 	* fusionforge_compat: 0.6
 	* hudson: 1.13
-	* git: 3.64
+	* git: 3.67
 	* projectlinks: 2.5
-	* mediawiki: 0.22
+	* mediawiki: 0.23
+	* fulltextsearch: 0.26
 
 	== Enhancement ==
+	* Story #5919: edit artifact in place on agile dashboard
 	* Story #5916: mapping between mediawiki and tuleap groups
 	* Story #5678: contact administrators of a project
 	* Story #5619: Have an enhanced experimental theme
+	* Story #5870: be able to assign Git Admin permissions to some users in the project
 
 	== Bug Fix ==
 	* Fix request #5909: Fixing REST tests on project import from XML
@@ -25,9 +48,16 @@ Version 6.10 (Not released yet)
 	* Fix request #5911: Adding options in setup.sh to install with exotic mysql servers
 	* Fix warning when displaying avatar for anonymous user
 	* Fix security issue on snippet service
+	* Fix request #6099: Error in syslog during DAILY system event
+
+	== Themes ==
+	* Experimental: 0.9.1
 
 	== Development ==
 	* Pull-out Vagrant and Chef in dedicated repositories
+	* Refactoring javascript to extract a reusable filter object (listFilter).
+	* Fix request #5914: Lot of warning when running make api_test
+	* Removing commented-out code merged in Tuleap 6.9.99.8
 
 Version 6.9 (Thursday, January 9th 2014)
 	== Plugins ==

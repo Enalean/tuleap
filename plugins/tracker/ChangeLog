@@ -1,3 +1,37 @@
+Version 5.237 - Tuleap 6.11
+    * Fix - Remove submit button in modal if the user is not logged in
+
+
+Version 5.236 - Tuleap 6.11
+    * Fix request #6162 - can see 3 number in artifact chunk input
+
+Version 5.235 - Tuleap 6.11
+    * story #6058 Create stuff in agile dashboard using modal
+
+Version 5.234 - Tuleap 6.10
+    * Fix req #6071. Cannot delete x-refs in artifact. Choosing to not show x-refs in modal view.
+
+Version 5.233 - Tuleap 6.10
+    * Fixing request #6087. Fatal error when creating an artifact
+
+Version 5.232 - Tuleap 6.10
+    * Bootstrapify submit buttons in new artifact form
+
+Version 5.231 - Tuleap 6.10
+    * fix request #5979 - Global notification not sent if only field change
+
+Version 5.230 - Tuleap 6.10
+    * Add loading state on the modal submit button
+
+Version 5.229 - Tuleap 6.10
+    * edit artifact in place on agile dashboard
+
+Version 5.228 - Tuleap 6.10
+    * Request #5941: Cannot import a field which is defined as Multi-Select
+
+Version 5.227 - Tuleap 6.10
+    * request #5986 - URLs are corrupted by a double escape
+
 Version 5.226 - Tuleap 6.10
     * Fix request #6013: Text in HTML format is sent as HTML in plain/text mail notifications
 

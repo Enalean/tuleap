@@ -99,6 +99,94 @@ class TimePeriodWithoutWeekEnd  implements TimePeriod {
     private function isNotWeekendDay($day) {
         return ! (date('D', $day) == 'Sat' || date('D', $day) == 'Sun');
     }
+
+    /**
+     * The number of days since the start.
+     * Will never return more than the duration of the time period.
+     *
+     * @return int
+     */
+    public function getNumberOfDurationDaysSinceStart() {
+        $days_since_start = $this->getNumberOfDaysSinceStart();
+
+        return min(array($days_since_start, $this->getDuration()));
+    }
+
+    /**
+     * The number of days since the start.
+     * Is not limited by the duration of the time period.
+     *
+     * @return int
+     */
+    public function getNumberOfDaysSinceStart() {
+        $real_number_of_days_after_start = 0;
+        $day        = $this->start_date;
+        $day_offset = -1;
+
+        if ($this->isToday($day) || $this->start_date > $this->getTodayTimestamp()) {
+            return 0;
+        }
+
+        while ($day >= $this->start_date && ! $this->isToday($day)) {
+            if ($this->isNotWeekendDay($day)) {
+                $day_offset++;
+            }
+            $day = $this->getNextDay($real_number_of_days_after_start, $this->start_date);
+            $real_number_of_days_after_start++;
+       }
+       return $day_offset;
+    }
+
+    private function isToday($day) {
+        return $this->getTodayDate() == date('Y-m-d', $day);
+    }
+
+    /**
+     * Set to protected because it makes testing possible.
+     */
+    protected function getTodayDate() {
+        if ($_SERVER && isset($_SERVER['REQUEST_TIME'])) {
+            return date('Y-m-d', $_SERVER['REQUEST_TIME']);
+        }
+        return date('Y-m-d');
+    }
+
+    /**
+     * @return int
+     */
+    private function getTodayTimestamp() {
+        return strtotime($this->getTodayDate());
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isTodayWithinTimePeriod() {
+        if ($this->start_date <= $this->getTodayTimestamp() &&
+            $this->getNumberOfDaysSinceStart() <= $this->duration
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isTodayBeforeTimePeriod() {
+        if ($this->start_date > $this->getTodayTimestamp()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isTodayAfterTimePeriod() {
+        if ($this->start_date < $this->getTodayTimestamp() &&
+            $this->getNumberOfDaysSinceStart() > $this->getDuration()) {
+            return true;
+        }
+
+        return false;
+    }
 }
 
 ?>

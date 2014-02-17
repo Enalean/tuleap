@@ -329,6 +329,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $this->fetchArtifactReadOnly($artifact);
     }
 
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array()) {
+        return $this->fetchArtifact($artifact, $submitted_values);
+    }
+
+    public function fetchSubmitForOverlay() {
+        return $this->fetchSubmit();
+    }
+
     /**
      * Get the html code to display the field for the given artifact in read only mode
      *
@@ -1126,7 +1134,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function getFieldDataForCSVPreview($csv_value) {
         // for most of atomic fields, the field data is the same value (int, float, string, text)
-        return $csv_value;
+        $purifier = Codendi_HTMLPurifier::instance();
+        return $purifier->purify($csv_value, CODENDI_PURIFIER_CONVERT_HTML);
     }
 
     /**

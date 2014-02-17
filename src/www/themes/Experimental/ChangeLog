@@ -1,11 +1,35 @@
+Version 0.9.6 - Tuleap 6.11
+    * story #6009 have a beautiful Agile Dashboard homepage (v1)
+
+Version 0.9.5 - Tuleap 6.11
+    * story #6058 Create stuff in agile dashboard using modal
+
+0.9.4 - Tuleap 6.11
+    * New datetime picker
+
+0.9.3 - Tuleap 6.11
+    * story #6058 Create artifacts in agile dashboard using modal
+
+0.9.2 - Tuleap 6.11
+    * story #6018: Display motd in Experimental theme
+
+0.9.1 - Tuleap 6.10
+    * With the footer removed, the development information (if activated) were too intrusive into Tuleap
+
+0.9 - Tuleap 6.10
+    * Story #5919: Edit artifact in place on Agile Dashboard (tuleap-modal)
+
+0.8 - Tuleap 6.10
+    * Fix Request #5949: Experimental theme : service tooltip is not well positioned when the sidebar is collapsed
+
 0.7 - Tuleap 6.10
     * Story #5619: Have an enhanced Experimental theme
 
 0.5 - Tuleap 6.8
-	* Story #5285: The experimental theme is now usable: nice colors, collapsible sidebar, search box is working, support of different screen resolutions.
+    * Story #5285: The experimental theme is now usable: nice colors, collapsible sidebar, search box is working, support of different screen resolutions.
 
 0.4 - Tuleap 6.7
-	* Switch css stylesheets to less format
+    * Switch css stylesheets to less format
 
 0.3 - Tuleap 6.6
-	* Notification placeholder added
+    * Notification placeholder added

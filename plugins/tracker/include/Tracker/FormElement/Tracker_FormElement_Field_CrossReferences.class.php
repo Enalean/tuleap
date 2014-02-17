@@ -109,6 +109,14 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return '<input type="text" name="criteria['. $this->id .']" value="'. $hp->purify($this->getCriteriaValue($criteria), CODENDI_PURIFIER_CONVERT_HTML) .'" />';
     }
 
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact) {
+        return '';
+    }
+
+    public function fetchSubmitForOverlay() {
+        return '';
+    }
+
     /**
      * Fetch the value
      * @param mixed $value the value of the field

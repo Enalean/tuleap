@@ -12,7 +12,9 @@
         </div>
     </div>
 </div>
-
+<div class="row-fluid">
+    <input type="text" class="content-filter planning-backlog" placeholder="Backlog element…">
+</div>
 <div class="row-fluid">
     <div class="span6">
         <div class="agiledashboard-planning-backlog"
@@ -30,15 +32,15 @@
                         <th>{{header_status}}</th>
                     </tr>
                 </thead>
-                <tbody class="">
+                <tbody class="planning-backlog-content">
                     <tr class="empty-table-placeholder"><td colspan="6">{{empty_element_tip}}</td></tr>
                     {{#backlog_collection}}
                         <tr data-artifact-id="{{id}}" class="submilestone-element">
-                            <td><a href="{{url}}">{{id}}</a></td>
+                            <td><a href="{{url}}" class="backlog-item-link" data-artifact-id="{{id}}">{{id}}</a></td>
                             <td><span class="label">{{type}}</span></td>
                             <td class="submilestone-element-title">{{title}}</td>
                             <td class="submilestone-element-remaining-effort">{{points}}</td>
-                            <td class="submilestone-element-parent"><a href="{{parent_url}}">{{parent_title}}</a></td>
+                            <td class="submilestone-element-parent"><a href="{{parent_url}}" class="backlog-item-link" data-artifact-id="{{parent_id}}">{{parent_title}}</a></td>
                             <td>{{status}}</td>
                         </tr>
                     {{/backlog_collection}}
@@ -50,11 +52,11 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>{{list_of_submilestone_title}}</th>
+                    <th>{{ list_of_submilestone_title }}</th>
                     <th class="agiledashboard-planning-submilestones-addnew">
-                        {{#can_add_submilestone}}
-                            <a href="{{add_new_submilestone_url}}" class="btn btn-small">{{add_new_submilestone}}</a>
-                        {{/can_add_submilestone}}
+                        {{# can_add_submilestone }}
+                            <a href="{{ add_new_submilestone_url }}" class="btn btn-small create-item-link" data-tracker-id="{{ submilestone_tracker_id }}" data-link-id="{{ milestone_id }}">{{ add_new_submilestone }}</a>
+                        {{/ can_add_submilestone }}
                     </th>
                 </tr>
             </thead>
@@ -76,7 +78,7 @@
                                     {{#getQuickLinkIconList}} {{! do not repeat ourselves }}
                                         <a href="{{uri}}"><img title="{{title}}" src="{{icon}}"></a>
                                     {{/getQuickLinkIconList}}
-                                    <a href="{{edit_submilestone_url}}" title="edit" alt="edit"><i class="icon-edit"> edit</i></a>
+                                    <a href="{{edit_submilestone_url}}" title="edit" alt="edit" class="backlog-item-link" data-artifact-id="{{id}}"><i class="icon-edit"></i> edit</a>
                                 </div>
                                 <p>
                                     {{points}} <span class="submilestone-effort"></span>

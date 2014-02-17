@@ -48,17 +48,6 @@ class FullTextSearchActions {
     }
 
     /**
-     * Index the new permissions of a document
-     *
-     * @param Integer the object Id
-     */
-    public function updatePermissions($id) {
-        $update_data = $this->client->initializeSetterData();
-        $update_data = $this->client->appendSetterData($update_data, 'permissions', $this->permissions);
-        $this->client->update($id, $update_data);
-    }
-
-    /**
      * Update title and description of a document
      *
      */

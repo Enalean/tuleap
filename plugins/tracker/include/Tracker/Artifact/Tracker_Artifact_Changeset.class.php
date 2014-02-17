@@ -161,40 +161,19 @@ class Tracker_Artifact_Changeset {
 
 
     /**
-     * fetch followup
+     * Fetch followup
      *
-     * @param Tracker_Artifact_Changeset $previous_changeset The previous changeset
-     *
-     * @return string
+     * @return string html
      */
-    public function fetchFollowUp($previous_changeset) {
-        $html = '';
-
-        $html .= '<div class="tracker_artifact_followup_header">';
+    public function fetchFollowUp() {
+        $html = '<div class="tracker_artifact_followup_header">';
         $html .= '<div class="tracker_artifact_followup_title">';
         //The permalink
         $html .= '<a href="#followup_'. $this->id .'">';
-        $html .= $GLOBALS['HTML']->getImage(
-            'ic/comment.png', array(
-                                'border' => 0,
-                                'alt'   => 'permalink',
-                                'class' => 'tracker_artifact_followup_permalink',
-                                'style' => 'vertical-align:middle',
-                                'title' => 'Link to this followup - #'. (int)$this->id
-                              )
-        );
+        $html .= $this->getImage();
         $html .= '</a> ';
 
-        //The submitter
-        if ($this->submitted_by) {
-            $uh = UserHelper::instance();
-            $submitter = $uh->getLinkOnUserFromUserId($this->submitted_by);
-        } else {
-            $hp = Codendi_HTMLPurifier::instance();
-            $submitter = $hp->purify($this->email, CODENDI_PURIFIER_BASIC);
-        }
-        $html .= '<span class="tracker_artifact_followup_title_user">'. $submitter .'</span>';
-
+        $html .= '<span class="tracker_artifact_followup_title_user">'. $this->getSubmitterUrl() .'</span>';
         $html .= '</div>';
 
         //The date
@@ -205,15 +184,8 @@ class Tracker_Artifact_Changeset {
         $html .= '</div>';
         
         if (Config::get('sys_enable_avatars')) {
-            if ($this->submitted_by) {
-                $submitter = UserManager::instance()->getUserById($this->submitted_by);
-            } else {
-                $submitter = UserManager::instance()->getUserAnonymous();
-                $submitter->setEmail($this->email);
-            }
-            
             $html .= '<div class="tracker_artifact_followup_avatar">';
-            $html .= $submitter->fetchHtmlAvatar();
+            $html .= $this->getHTMLAvatar();
             $html .= '</div>';
         }
         // The content
@@ -228,22 +200,6 @@ class Tracker_Artifact_Changeset {
                     $html .= $GLOBALS['HTML']->getImage('ic/edit.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('plugin_tracker_fieldeditor', 'edit')));
                     $html .= '</a>';
                 }
-
-                //delete
-                //   We can't delete a snapshot since there is too many repercusion on subsequent changesets
-                //   If the deletion is for combatting spam, then edit and empty the comment
-                //   What would be nice is to make userCanDelete() return true only if the user has rights and the snapshot doesn't contain any changes
-                //if ($this->userCanDelete()) {
-                //    $html .= '<a href="?'. http_build_query(
-                //        array(
-                //            'aid'       => $this->artifact->id,
-                //            'func'      => 'artifact-delete-changeset',
-                //            'changeset' => $this->id,
-                //        )
-                //    ).'" class="tracker_artifact_followup_comment_controls_close">';
-                //    $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'del')));
-                //    $html .= '</a>';
-                //}
                 $html .= '</div>';
             }
 
@@ -263,6 +219,70 @@ class Tracker_Artifact_Changeset {
 
         $html .= '<div style="clear:both;"></div>';
         return $html;
+    }
+
+    public function getImage() {
+        return $GLOBALS['HTML']->getImage(
+            'ic/comment.png',
+            array(
+                'border' => 0,
+                'alt'   => 'permalink',
+                'class' => 'tracker_artifact_followup_permalink',
+                'style' => 'vertical-align:middle',
+                'title' => 'Link to this followup - #'. (int) $this->id
+            )
+        );
+    }
+
+    /**
+     * @return PFUser
+     */
+    public function getSubmitter() {
+        if ($this->submitted_by) {
+            return UserManager::instance()->getUserById($this->submitted_by);
+        } else {
+            $submitter = UserManager::instance()->getUserAnonymous();
+            $submitter->setEmail($this->email);
+
+            return $submitter;
+        }
+    }
+
+    /**
+     * @return string html
+     */
+    public function getSubmitterUrl() {
+        if ($this->submitted_by) {
+            $submitter = $this->getSubmitter();
+            $uh = UserHelper::instance();
+            $submitter_url = $uh->getLinkOnUser($submitter);
+        } else {
+            $hp = Codendi_HTMLPurifier::instance();
+            $submitter_url = $hp->purify($this->email, CODENDI_PURIFIER_BASIC);
+        }
+
+        return $submitter_url;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHTMLAvatar() {
+        return $this->getSubmitter()->fetchHtmlAvatar();
+    }
+
+    /**
+     * @return string
+     */
+    public function getAvatarUrl() {
+        return $this->getSubmitter()->getAvatarUrl();
+    }
+
+    /**
+     * @return string html
+     */
+    public function getDateSubmittedOn() {
+        return DateHelper::timeAgoInWords($this->submitted_on, false, true);
     }
 
     /**
@@ -507,38 +527,17 @@ class Tracker_Artifact_Changeset {
     
             // 1. Get the recipients list
             $recipients = $this->getRecipients($is_update);
-            
+
             // 2. Compute the body of the message + headers
             $messages = array();
-            $um = $this->getUserManager();
             foreach ($recipients as $recipient => $check_perms) {
-                $user = null;
-                if ( strpos($recipient, '@') !== false ) {
-                    //check for registered
-                    $user = $um->getUserByEmail($recipient);
-                    
-                    //user does not exist (not registered/mailing list) then it is considered as an anonymous
-                    if ( ! $user ) {
-                        // don't call $um->getUserAnonymous() as it will always return the same instance
-                        // we don't want to override previous emails
-                        // So create new anonymous instance by hand
-                        $user = $um->getUserInstanceFromRow(
-                            array(
-                                'user_id' => 0,
-                                'email'   => $recipient,
-                            )
-                        );
-                    }
-                } else {
-                    //is a login
-                    $user = $um->getUserByUserName($recipient);
-                }
+                $user = $this->getUserFromRecipientName($recipient);
                 if ($user) {
                     $ignore_perms = ! $check_perms;
                     $this->buildMessage($messages, $is_update, $user, $ignore_perms);
                 }
             }
-    
+
             // 3. Send the notification
             foreach ($messages as $m) {
                 $this->sendNotification(
@@ -550,6 +549,33 @@ class Tracker_Artifact_Changeset {
                 );
             }
         }
+    }
+
+    private function getUserFromRecipientName($recipient_name) {
+        $um   = $this->getUserManager();
+        $user = null;
+        if ( strpos($recipient_name, '@') !== false ) {
+            //check for registered
+            $user = $um->getUserByEmail($recipient_name);
+
+            //user does not exist (not registered/mailing list) then it is considered as an anonymous
+            if ( ! $user ) {
+                // don't call $um->getUserAnonymous() as it will always return the same instance
+                // we don't want to override previous emails
+                // So create new anonymous instance by hand
+                $user = $um->getUserInstanceFromRow(
+                    array(
+                        'user_id' => 0,
+                        'email'   => $recipient_name,
+                    )
+                );
+            }
+        } else {
+            //is a login
+            $user = $um->getUserByUserName($recipient_name);
+        }
+
+        return $user;
     }
 
     public function buildMessage(&$messages, $is_update, $user, $ignore_perms) {
@@ -624,18 +650,21 @@ class Tracker_Artifact_Changeset {
         $mail->send();
     }
 
-    public function cleanRecipients($recipients) {
-        $cleanRecipientsList = array();
+    public function removeRecipientsThatMayReceiveAnEmptyNotification(array &$recipients) {
+        if ($this->getComment() && ! $this->getComment()->hasEmptyBody()) {
+            return;
+        }
+
         foreach ($recipients as $recipient => $check_perms) {
-            $user = $this->getUserManager()->getUserByUserName($recipient);
-            if (! $user) {
+            if ( ! $check_perms) {
                 continue;
             }
-            if (! $check_perms || $this->userCanReadAtLeastOneChangedField($user)) {
-                $cleanRecipientsList[$recipient] = $check_perms;
+
+            $user = $this->getUserFromRecipientName($recipient);
+            if ( ! $user || ! $this->userCanReadAtLeastOneChangedField($user)) {
+                unset($recipients[$recipient]);
             }
         }
-        return $cleanRecipientsList;
     }
 
     private function userCanReadAtLeastOneChangedField(PFUser $user) {
@@ -643,7 +672,9 @@ class Tracker_Artifact_Changeset {
 
         foreach ($this->getValues() as $field_id => $current_changeset_value) {
             $field = $factory->getFieldById($field_id);
-            if ($field && $field->userCanRead($user) && $current_changeset_value->hasChanged()) {
+            $field_is_readable = $field && $field->userCanRead($user);
+            $field_has_changed = $current_changeset_value && $current_changeset_value->hasChanged();
+            if ($field_is_readable && $field_has_changed) {
                 return true;
             }
         }
@@ -692,9 +723,8 @@ class Tracker_Artifact_Changeset {
             }
         }
 
-        if ($is_update && $this->getComment()->hasEmptyBody()) {
-            $tablo = $this->cleanRecipients($tablo);
-        }
+        $this->removeRecipientsThatMayReceiveAnEmptyNotification($tablo);
+
         return $tablo;
     }
 

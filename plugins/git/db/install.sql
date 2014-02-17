@@ -6,7 +6,9 @@ CREATE TABLE IF NOT EXISTS plugin_git_remote_servers (
     login VARCHAR(255) NOT NULL,
     identity_file VARCHAR(255) NOT NULL,
     ssh_key TEXT NULL,
-PRIMARY KEY (id));
+    use_ssl boolean DEFAULT 0,
+    PRIMARY KEY (id)
+);
 
 CREATE TABLE IF NOT EXISTS `plugin_git` (
   `repository_id` int(10) unsigned NOT NULL auto_increment,
@@ -94,7 +96,19 @@ VALUES ('PLUGIN_GIT_READ', 2, 1),
        ('PLUGIN_GIT_WRITE', 4, 0),
        ('PLUGIN_GIT_WPLUS', 2, 0),
        ('PLUGIN_GIT_WPLUS', 3, 0),
-       ('PLUGIN_GIT_WPLUS', 4, 0);
+       ('PLUGIN_GIT_WPLUS', 4, 0),
+       ('PLUGIN_GIT_ADMIN', 1, 0),
+       ('PLUGIN_GIT_ADMIN', 2, 0),
+       ('PLUGIN_GIT_ADMIN', 3, 0),
+       ('PLUGIN_GIT_ADMIN', 4, 1);
+
+INSERT INTO permissions(permission_type, ugroup_id, object_id)
+VALUES ('PLUGIN_GIT_ADMIN', 4, 100);
+
+-- Grant project_admins as PLUGIN_GIT_ADMIN for project 100
+
+INSERT INTO permissions (permission_type, object_id, ugroup_id)
+VALUES ('PLUGIN_GIT_ADMIN', 100, 4);
 
 -- Enable git gc
 INSERT INTO plugin_git_housekeeping VALUES (1);

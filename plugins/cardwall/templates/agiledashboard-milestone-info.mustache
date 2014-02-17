@@ -31,23 +31,25 @@
     </div>
 
     <div class="span5 milestone-capacity">
-        {{# milestone_has_initial_effort }}
-        <div class="points-info">
-           <span id="milestone_initial_effort_value">{{ milestone_initial_effort_label }} {{ milestone_initial_effort }}</span>
-           <span>{{ milestone_capacity_label }} {{ milestone_capacity }}</span>
-        </div>
-        <div class="progress-bar">
-            <div class="progress progress-success">
-                <div id ="milestone_points_completion_bar" class="bar" style="width: {{ initial_effort_completion }}%;" data-initial-effort="{{ milestone_initial_effort }}">{{ initial_effort_completion }}%</div>
+        {{# progress_presenter }}
+            {{# milestone_has_initial_effort }}
+            <div class="points-info">
+               <span id="milestone_initial_effort_value">{{ milestone_initial_effort_value }}</span>
+               <span>{{ milestone_capacity }}</span>
             </div>
-        </div>
-        {{/ milestone_has_initial_effort }}
-        {{^ milestone_has_initial_effort }}
-            <div class="line-break">&nbsp;</div>
-            <p class="no-data">{{ milestone_no_initial_effort_info }}</p>
-        {{/ milestone_has_initial_effort }}
-        <div class="to-go">
-            <span class="points" id="milestone_remaining_effort">{{ milestone_remaining_effort }}</span> <span>{{ milestone_points_to_go }}</span>
-        </div>
+            <div class="progress-bar">
+                <div class="progress progress-success">
+                    <div id="milestone_points_completion_bar" class="bar" style="width: {{ initial_effort_completion }}%;" data-initial-effort="{{ milestone_initial_effort }}" data-count-style="{{ milestone_count_style }}" title="{{ count_style_helper }}">{{ initial_effort_completion }}%</div>
+                </div>
+            </div>
+            {{/ milestone_has_initial_effort }}
+            {{^ milestone_has_initial_effort }}
+                <div class="line-break">&nbsp;</div>
+                <p class="no-data">{{ milestone_no_initial_effort_info }}</p>
+            {{/ milestone_has_initial_effort }}
+            <div class="to-go">
+                <span class="points" id="milestone_remaining_effort">{{ milestone_remaining_effort }}</span> <span>{{ milestone_points_to_go }}</span>
+            </div>
+        {{/ progress_presenter }}
     </div>
 </div>

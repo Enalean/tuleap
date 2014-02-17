@@ -66,6 +66,20 @@ class Feedback {
        }
        return $txt;
     }
+
+    /**
+     * @return array of error messages
+     */
+    function fetchErrors() {
+        $errors = array();
+        foreach ($this->logs as $log) {
+            if ($log['level'] == self::ERROR) {
+                $errors[] = $log['msg'];
+            }
+        }
+
+        return $errors;
+    }
     
     function display() {
         echo $this->htmlContent();

@@ -170,5 +170,9 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
         return false;
     }
 
+    public function hasBurdownField(PFUser $user) {
+        return false;
+    }
+
 }
 ?>

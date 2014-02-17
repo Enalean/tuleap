@@ -525,11 +525,6 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         );
     }
 
-    public function getFieldDataForCSVPreview($data_cell) {
-        $purifier = Codendi_HTMLPurifier::instance();
-        return $purifier->purify($data_cell, CODENDI_PURIFIER_FULL);
-    }
-
     /**
      * Get data from CSV value in order to be saved in DB (create/update DB)
      *

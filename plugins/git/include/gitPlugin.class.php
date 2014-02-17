@@ -110,6 +110,8 @@ class GitPlugin extends Plugin {
 
         //Gerrit user synch help
         $this->_addHook(Event::MANAGE_THIRD_PARTY_APPS, 'manage_third_party_apps');
+
+        $this->_addHook('register_project_creation');
     }
 
     public function site_admin_option_hook() {
@@ -379,6 +381,10 @@ class GitPlugin extends Plugin {
         $this->dump_ssh_keys_gerrit($params);
     }
 
+    private function isEventRootDaily(array $params) {
+        return count($params) == 0;
+    }
+
     /**
      * Called by backend to ensure that all ssh keys are in gitolite conf
      * 
@@ -391,7 +397,7 @@ class GitPlugin extends Plugin {
         $retVal = 0;
         $output = array();
         $mvCmd  = $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$GLOBALS['codendi_dir'].'/plugins/git/bin/gl-dump-sshkeys.php';
-        if (isset($params['user'])) {
+        if (! $this->isEventRootDaily($params) && isset($params['user'])) {
             $mvCmd .= ' '.$params['user']->getId();
         }
         $cmd    = 'su -l codendiadm -c "'.$mvCmd.' 2>&1"';
@@ -414,6 +420,9 @@ class GitPlugin extends Plugin {
      * @return void
      */
     protected function dump_ssh_keys_gerrit(array $params) {
+        if ($this->isEventRootDaily($params)) {
+            return true;
+        }
         if (! $user = $this->getUserFromParameters($params)) {
             return;
         }
@@ -618,10 +627,18 @@ class GitPlugin extends Plugin {
             }
         }
     }
+
     var $_cached_permission_user_allowed_to_change;
     function permission_user_allowed_to_change($params) {
         if (!$params['allowed']) {
-            if (!$this->_cached_permission_user_allowed_to_change) {
+            $user = UserManager::instance()->getCurrentUser();
+            $project = $this->getProjectManager()->getProject($params['group_id']);
+
+            if ($this->getGitPermissionsManager()->userIsGitAdmin($user, $project)) {
+                $this->_cached_permission_user_allowed_to_change = true;
+            }
+
+            if (! $this->_cached_permission_user_allowed_to_change) {
                 if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
                     $repository = new GitRepository();
                     $repository->setId($params['object_id']);
@@ -629,8 +646,7 @@ class GitPlugin extends Plugin {
                         $repository->load();
                         //Only project admin can update perms of project repositories
                         //Only repo owner can update perms of personal repositories
-                        $user = UserManager::instance()->getCurrentUser();
-                        $this->_cached_permission_user_allowed_to_change = $repository->belongsTo($user) || $user->isMember($repository->getProjectId(), 'A');
+                        $this->_cached_permission_user_allowed_to_change = $repository->belongsTo($user) || $this->getPermissionsManager()->userIsGitAdmin($user, $project);
                     } catch (Exception $e) {
                         // do nothing
                     }
@@ -992,7 +1008,8 @@ class GitPlugin extends Plugin {
             PluginManager::instance(),
             HTTPRequest::instance(),
             $this->getProjectCreator(),
-            new Git_Driver_Gerrit_Template_TemplateFactory(new Git_Driver_Gerrit_Template_TemplateDao())
+            new Git_Driver_Gerrit_Template_TemplateFactory(new Git_Driver_Gerrit_Template_TemplateDao()),
+            new GitPermissionsManager()
         );
     }
 
@@ -1021,6 +1038,14 @@ class GitPlugin extends Plugin {
             new Git_Driver_Gerrit_RemoteSSHCommand($this->getLogger()),
             $this->getLogger()
         );
+    }
+
+    private function getPermissionsManager() {
+        return PermissionsManager::instance();
+    }
+
+    private function getGitPermissionsManager() {
+        return new GitPermissionsManager();
     }
 
     /**
@@ -1120,6 +1145,15 @@ class GitPlugin extends Plugin {
      */
     public function systemevent_user_rename($params) {
         $this->getGitSystemEventManager()->queueUserRenameUpdate($params['old_user_name'], $params['user']);
+    }
+
+    public function register_project_creation($params) {
+        $this->getPermissionsManager()->duplicateWithStaticMapping(
+                $params['template_id'],
+                $params['group_id'],
+                array(Git::PERM_ADMIN),
+                $params['ugroupsMapping']
+        );
     }
 }
 ?>

@@ -31,7 +31,6 @@ class trackerPlugin extends Plugin {
         $this->setScope(self::SCOPE_PROJECT);
 
         $this->_addHook('cssfile',                             'cssFile',                           false);
-        $this->_addHook('javascript_file',                     'javascript_file',                   false);
         $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures',   false);
         $this->_addHook(Event::GET_ARTIFACT_REFERENCE_GROUP_ID,'get_artifact_reference_group_id',   false);
         $this->_addHook(Event::BUILD_REFERENCE,                'build_reference',                   false);
@@ -88,17 +87,6 @@ class trackerPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
-    public function javascript_file() {
-        if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0) {
-            echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerSearchTreeView.js"></script>'."\n";
-            // Cannot be moved in combined (it conflicts with same implementation in tracker v3)
-            echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerFieldDependencies.js"></script>'."\n";
-            echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerRichTextEditor.js"></script>'."\n";
-            echo '<script type="text/javascript" src="/plugins/tracker/scripts/artifactChildren.js"></script>'."\n";
-            echo '<script type="text/javascript" src="/plugins/tracker/scripts/load-artifactChildren.js"></script>'."\n";
-        }
-    }
-
     public function cssFile($params) {
         $include_tracker_css_file = false;
         EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, array('include_tracker_css_file' => &$include_tracker_css_file));
@@ -136,6 +124,13 @@ class trackerPlugin extends Plugin {
                 '/plugins/tracker/scripts/TrackerDateReminderForms.js',
                 '/plugins/tracker/scripts/TrackerTriggers.js',
                 '/plugins/tracker/scripts/SubmissionKeeper.js',
+                '/plugins/tracker/scripts/TrackerSearchTreeView.js',
+                '/plugins/tracker/scripts/TrackerFieldDependencies.js',
+                '/plugins/tracker/scripts/TrackerRichTextEditor.js',
+                '/plugins/tracker/scripts/artifactChildren.js',
+                '/plugins/tracker/scripts/load-artifactChildren.js',
+                '/plugins/tracker/scripts/modal-in-place.js',
+                '/plugins/tracker/scripts/datetimepicker.js'
             )
         );
     }

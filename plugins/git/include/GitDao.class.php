@@ -584,7 +584,11 @@ class GitDao extends DataAccessObject {
                 FROM plugin_git git
                   JOIN permissions ON (
                     permissions.object_id = CAST(git.repository_id as CHAR)
-                    AND permissions.permission_type LIKE 'PLUGIN_GIT_%')
+                    AND permissions.permission_type IN (".
+                        $this->da->quoteSmart(Git::PERM_READ) .", ".
+                        $this->da->quoteSmart(Git::PERM_WRITE) .", ".
+                        $this->da->quoteSmart(Git::PERM_WPLUS).")
+                    )
                 WHERE git.remote_server_id IS NOT NULL
                   AND git.project_id = $project_id
                   AND permissions.ugroup_id IN ($ugroup_ids)";
@@ -612,7 +616,12 @@ class GitDao extends DataAccessObject {
                 FROM plugin_git AS git
                   JOIN permissions ON (
                     permissions.object_id = CAST(git.repository_id as CHAR)
-                    AND permissions.permission_type LIKE 'PLUGIN_GIT_%')
+                    permissions.object_id = CAST(git.repository_id as CHAR)
+                    AND permissions.permission_type IN (".
+                        $this->da->quoteSmart(Git::PERM_READ) .", ".
+                        $this->da->quoteSmart(Git::PERM_WRITE) .", ".
+                        $this->da->quoteSmart(Git::PERM_WPLUS).")
+                    )
                 WHERE git.remote_server_id IS NOT NULL
                   AND permissions.ugroup_id IN ($ugroup_ids)";
 

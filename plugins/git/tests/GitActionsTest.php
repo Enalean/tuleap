@@ -61,7 +61,8 @@ class GitActionsTest extends TuleapTestCase {
                 mock('Git_Driver_Gerrit_UserAccountManager'),
                 mock('Git_Driver_Gerrit_ProjectCreator'),
                 mock('Git_Driver_Gerrit_Template_TemplateFactory'),
-                mock('ProjectManager')
+                mock('ProjectManager'),
+                mock('GitPermissionsManager')
             )
         );
     }
@@ -461,7 +462,8 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             mock('Git_Driver_Gerrit_UserAccountManager'),
             mock('Git_Driver_Gerrit_ProjectCreator'),
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
-            mock('ProjectManager')
+            mock('ProjectManager'),
+            mock('GitPermissionsManager')
         );
     }
 
@@ -508,7 +510,8 @@ class GitActions_ForkTests extends TuleapTestCase {
             mock('Git_Driver_Gerrit_UserAccountManager'),
             mock('Git_Driver_Gerrit_ProjectCreator'),
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
-            mock('ProjectManager')
+            mock('ProjectManager'),
+            mock('GitPermissionsManager')
         );
     }
 
@@ -630,7 +633,8 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
             mock('Git_Driver_Gerrit_UserAccountManager'),
             mock('Git_Driver_Gerrit_ProjectCreator'),
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
-            mock('ProjectManager')
+            mock('ProjectManager'),
+            mock('GitPermissionsManager')
         );
     }
 
@@ -688,7 +692,8 @@ class GitActions_disconnectFromGerritTest extends TuleapTestCase {
             mock('Git_Driver_Gerrit_UserAccountManager'),
             mock('Git_Driver_Gerrit_ProjectCreator'),
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
-            mock('ProjectManager')
+            mock('ProjectManager'),
+            mock('GitPermissionsManager')
         );
     }
 
@@ -749,6 +754,7 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
         $this->factory = stub('GitRepositoryFactory')->getRepositoryById(14)->returns($this->repo);
 
         $this->project_creator = mock('Git_Driver_Gerrit_ProjectCreator');
+        $this->git_permissions_manager = mock('GitPermissionsManager');
 
         stub($this->controller)->getRequest()->returns($this->request);
 
@@ -762,7 +768,8 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
             mock('Git_Driver_Gerrit_UserAccountManager'),
             $this->project_creator,
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
-            mock('ProjectManager')
+            mock('ProjectManager'),
+            $this->git_permissions_manager
         );
 
     }
@@ -803,7 +810,7 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
     }
 
     public function itReturnsAnErrorIfRepoIsGerritServerIsDown() {
-        stub($this->user)->isAdmin($this->project_id)->returns(true);
+        stub($this->git_permissions_manager)->userIsGitAdmin()->returns(true);
         stub($this->repo)->isMigratedToGerrit()->returns(true);
         stub($this->project_creator)->getGerritConfig()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure('', '', ''));
         $GLOBALS['Response']->expectOnce('sendStatusCode', array(500));

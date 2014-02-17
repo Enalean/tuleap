@@ -20,6 +20,16 @@ Copy the snippet in plugins/git/etc/httpd/git.conf.dist into
 
 -> restart apache (service httpd restart)
 
+Gitolite path
+-------------
+
+This procedure is adapted to gitolite install in /usr/com/gitolite.
+For more recent version (when install dir is /var/lib/gitolite), you need to
+adapt a few things:
+In apache config:
+SetEnv GITOLITE_HTTP_HOME /var/lib/gitolite
+SetEnv GIT_HTTP_BACKEND /usr/libexec/git-core/git-http-backend
+
 Tuleap configuration
 --------------------
 Add the following line to /etc/codendi/plugins/git/config.inc

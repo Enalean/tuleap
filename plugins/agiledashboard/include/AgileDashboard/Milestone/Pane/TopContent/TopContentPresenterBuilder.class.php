@@ -86,6 +86,7 @@ class AgileDashboard_Milestone_Pane_TopContent_TopContentPresenterBuilder {
             if ($item_tracker->userCanSubmitArtifact($user)) {
                 $submit_urls[] = array(
                     'tracker_type' => $item_tracker->getName(),
+                    'tracker_id'   => $item_tracker->getId(),
                     'submit_url'   => $item_tracker->getSubmitUrl().'&'.$redirect_to_self
                 );
             }

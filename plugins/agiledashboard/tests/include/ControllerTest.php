@@ -54,7 +54,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             mock('Planning_MilestoneFactory'),
             mock('ProjectManager'),
             mock('ProjectXMLExporter'),
-            '/path/to/theme'
+            '/path/to/theme',
+            '/path/to/plugin'
         );
 
         stub($this->planning_factory)->getPotentialPlanningTrackers()->returns(array());
@@ -155,7 +156,8 @@ class Planning_ControllerNewTest extends TuleapTestCase {
             mock('Planning_MilestoneFactory'),
             mock('ProjectManager'),
             mock('ProjectXMLExporter'),
-            '/path/to/theme'
+            '/path/to/theme',
+            '/path/to/plugin'
         );
         $GLOBALS['Language']    = new MockBaseLanguage_Planning_ControllerNewTest();
 
@@ -285,7 +287,8 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
                 mock('Planning_MilestoneFactory'),
                 mock('ProjectManager'),
                 mock('ProjectXMLExporter'),
-                '/path/to/theme'
+                '/path/to/theme',
+                '/path/to/plugin'
             )
         );
 

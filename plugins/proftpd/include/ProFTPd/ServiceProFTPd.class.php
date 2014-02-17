@@ -26,9 +26,13 @@ use TemplateRendererFactory;
 
 class ServiceProFTPd extends Service {
 
-    public function renderInPage(HTTPRequest $request, $title, $template, $presenter) {
+    public function renderInPage(HTTPRequest $request, $title, $template, $presenter = null) {
         $this->displayHeader($request, $title);
-        $this->getRenderer()->renderToPage($template, $presenter);
+
+        if ($presenter) {
+            $this->getRenderer()->renderToPage($template, $presenter);
+        }
+
         $this->displayFooter();
         exit;
     }

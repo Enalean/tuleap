@@ -1,10 +1,10 @@
-{{#hasShortAccess}}
 <center>
     <ul class="ad_index_plannings">
         <li class="ad_index_planning" style ="padding-left:10px;padding-right: 10px; height: auto">
             <h2>
                 <a href ="?action=show-top&group_id={{project_id}}&pane={{get_default_top_pane}}">
                     {{top_planning}}
+                    <div class="triangle"></div>
                 </a>
             </h2>
         </li>
@@ -19,7 +19,7 @@
             </a>
             <ul class="dropdown-menu">
                 <li>
-                    <a href="/plugins/tracker/?tracker={{planningTrackerId}}&func=new-artifact-link&id=0&immediate=1&{{planningRedirectToNew}}">
+                    <a href="/plugins/tracker/?tracker={{planningTrackerId}}&func=new-artifact-link&id=0&immediate=1&{{planningRedirectToNew}}" class="create-item-link" data-tracker-id="{{ planningTrackerId }}" data-link-id="0">
                         {{createNewItemToPlan}}
                     </a>
                 </li>
@@ -50,10 +50,3 @@
 {{#getLatestLeafMilestone}}
     {{{getContent}}}
 {{/getLatestLeafMilestone}}
-
-{{/hasShortAccess}}
-{{^hasShortAccess}}
-<p>
-    <em>{{{ nothing_set_up }}}</em>
-</p>
-{{/hasShortAccess}}

@@ -43,6 +43,7 @@ class Experimental_Theme extends DivBasedTabbedLayout {
         $this->includeJavascriptFile('/themes/Experimental/js/navbar.js');
         $this->includeJavascriptFile('/themes/Experimental/js/sidebar.js');
         $this->includeJavascriptFile('/themes/Experimental/js/resize-window.js');
+        $this->includeJavascriptFile('/themes/Experimental/js/motd.js');
     }
 
     private function render($template_name, $presenter) {
@@ -84,6 +85,7 @@ class Experimental_Theme extends DivBasedTabbedLayout {
         }
 
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-select/bootstrap-select.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/jscrollpane/jquery.jscrollpane.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/jscrollpane/jquery.jscrollpane-tuleap.css" />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('style.css') .'" />';
@@ -121,7 +123,8 @@ class Experimental_Theme extends DivBasedTabbedLayout {
                 $params['title'],
                 $search_form_presenter,
                 $project_manager->getActiveProjectsForUser($current_user),
-                $this->displayNewAccount()
+                $this->displayNewAccount(),
+                $this->getMOTD()
             )
         );
 

@@ -41,7 +41,13 @@ class Experimental_NavBarPresenter {
 
     private $display_new_account;
 
-    public function __construct($imgroot, PFUser $user, $request_uri, $selected_top_tab, HTTPRequest $request, $title, $search_form_presenter, $project_list, $display_new_account) {
+    /** @var string */
+    public $motd;
+
+    /** @var bool */
+    public $has_motd;
+
+    public function __construct($imgroot, PFUser $user, $request_uri, $selected_top_tab, HTTPRequest $request, $title, $search_form_presenter, $project_list, $display_new_account, $motd) {
         $this->imgroot               = $imgroot;
         $this->user                  = $user;
         $this->request_uri           = $request_uri;
@@ -51,6 +57,8 @@ class Experimental_NavBarPresenter {
         $this->search_form_presenter = $search_form_presenter;
         $this->project_list          = $project_list;
         $this->display_new_account   = $display_new_account;
+        $this->motd                  = $motd;
+        $this->has_motd              = ! empty($motd);
     }
 
     public function imgroot() {

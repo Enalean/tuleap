@@ -109,12 +109,13 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->user         = mock('PFUser');
-        $this->admin        = stub('PFUser')->isMember($this->group_id, 'A')->returns(true);
+        $this->admin        = mock('PFUser');
         $this->user_manager = mock('UserManager');
         $this->project_manager  = mock('ProjectManager');
         $this->plugin_manager   = mock('PluginManager');
         $this->project_creator  = mock('Git_Driver_Gerrit_ProjectCreator');
         $this->template_factory = mock('Git_Driver_Gerrit_Template_TemplateFactory');
+        $this->git_permissions_manager = mock('GitPermissionsManager');
 
         stub($this->template_factory)->getTemplatesAvailableForRepository()->returns(array());
 
@@ -125,8 +126,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
 
         stub($this->project_manager)->getProject()->returns($project);
         stub($this->plugin_manager)->isPluginAllowedForProject()->returns(true);
-
         stub($this->project_creator)->checkTemplateIsAvailableForProject()->returns(true);
+        stub($this->git_permissions_manager)->userIsGitAdmin($this->admin, $project)->returns(true);
 
         $_SERVER['REQUEST_URI'] = '/plugins/tests/';
     }
@@ -153,7 +154,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                     $this->plugin_manager,
                     aRequest()->with('group_id', $this->group_id)->build(),
                     $this->project_creator,
-                    $template_factory
+                    $template_factory,
+                    $this->git_permissions_manager
                 )
             );
         $git->setRequest($request);

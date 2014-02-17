@@ -39,18 +39,37 @@ class ACLUpdaterTest extends PHPUnit_Framework_TestCase {
         $this->readers     = 'gpig-ftp_readers';
     }
 
-    public function testRootDirectoryHaveDefaultAndEffectiveACL() {
-        $this->backend->expects($this->at(0))->method('resetacl');
-        $this->backend->expects($this->at(1))->method('modifyacl')->with('d:u:httpuser:rx,d:g:gpig-ftp_writers:rwx,d:g:gpig-ftp_readers:rx,u:httpuser:rx,g:gpig-ftp_writers:rwx,g:gpig-ftp_readers:rx', $this->path);
+    public function testAllDirectoriesHaveDefaultAndEffectiveACLAndAllFilesOnlyHaveEffectiveACL() {
+        $root_path = $this->path;
 
-        $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, $this->writers, $this->readers);
-    }
+        $this->backend->expects($this->any())->method('resetacl')->will($this->returnCallback( function ($path) use ($root_path) {
+            switch ($path) {
+                case $root_path:
+                case $root_path.'/SomeFile':
+                case $root_path.'/SomeDirectory':
+                case $root_path.'/SomeDirectory/AnotherFile':
+                    return true;
+                default:
+                    throw new Exception('invalid value for resetacl '.$path);
+            }
+        }));
 
-    public function testAllDirectoriesHaveDefaultAndEffectiveACL() {
-        $this->backend->expects($this->at(0))->method('resetacl')->with($this->path);
-        $this->backend->expects($this->at(1))->method('modifyacl')->with('d:u:httpuser:rx,d:g:gpig-ftp_writers:rwx,d:g:gpig-ftp_readers:rx,u:httpuser:rx,g:gpig-ftp_writers:rwx,g:gpig-ftp_readers:rx', $this->path);
-        $this->backend->expects($this->at(2))->method('resetacl')->with($this->path . '/SomeDirectory');
-        $this->backend->expects($this->at(3))->method('modifyacl')->with('d:u:httpuser:rx,d:g:gpig-ftp_writers:rwx,d:g:gpig-ftp_readers:rx,u:httpuser:rx,g:gpig-ftp_writers:rwx,g:gpig-ftp_readers:rx', $this->path . '/SomeDirectory');
+        $this->backend->expects($this->any())->method('modifyacl')->will($this->returnCallback( function ($acl, $path) use ($root_path) {
+            switch ($path) {
+                case $root_path:
+                case $root_path.'/SomeDirectory':
+                    if ($acl == 'd:u:httpuser:rx,d:g:gpig-ftp_writers:rwx,d:g:gpig-ftp_readers:rx,u:httpuser:rx,g:gpig-ftp_writers:rwx,g:gpig-ftp_readers:rx') {
+                        break;
+                    }
+                case $root_path.'/SomeFile':
+                case $root_path.'/SomeDirectory/AnotherFile':
+                    if ($acl == 'u:httpuser:r,g:gpig-ftp_writers:rw,g:gpig-ftp_readers:r') {
+                        break;
+                    }
+                default:
+                    throw new Exception('invalid value for modifyacl '.$path.' '.$acl);
+            }
+        }));
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, $this->writers, $this->readers);
     }
@@ -58,15 +77,6 @@ class ACLUpdaterTest extends PHPUnit_Framework_TestCase {
     public function testItSetsAclOn4Elements() {
         $this->backend->expects($this->exactly(4))->method('resetacl');
         $this->backend->expects($this->exactly(4))->method('modifyacl');
-        $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, $this->writers, $this->readers);
-    }
-
-    public function testAllFilesHaveOnlyEffectiveACL() {
-        $this->backend->expects($this->at(4))->method('resetacl')->with($this->path . '/SomeDirectory/AnotherFile');
-        $this->backend->expects($this->at(5))->method('modifyacl')->with('u:httpuser:r,g:gpig-ftp_writers:rw,g:gpig-ftp_readers:r', $this->path . '/SomeDirectory/AnotherFile');
-        $this->backend->expects($this->at(6))->method('resetacl')->with($this->path . '/SomeFile');
-        $this->backend->expects($this->at(7))->method('modifyacl')->with('u:httpuser:r,g:gpig-ftp_writers:rw,g:gpig-ftp_readers:r', $this->path . '/SomeFile');
-
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, $this->writers, $this->readers);
     }
 

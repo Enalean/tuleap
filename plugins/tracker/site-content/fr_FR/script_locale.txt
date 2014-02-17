@@ -53,3 +53,6 @@ codendi.locales['tracker_trigger'] = {
     or: 'ou',
     save_missing_data: 'Impossible de sauvegarder : formulaire incomplet'
 };
+codendi.locales['tracker_modal_errors'] = {
+    bad_request: 'Vous ne pouvez executer cette action'
+};

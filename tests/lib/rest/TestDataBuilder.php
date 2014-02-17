@@ -81,9 +81,6 @@ class TestDataBuilder {
         $GLOBALS['grpdir_prefix'] = '/tmp';
         $GLOBALS['ftp_frs_dir_prefix'] = '/tmp';
         $GLOBALS['ftp_anon_dir_prefix'] = '/tmp';
-        $GLOBALS['sys_default_domain'] = '';
-        $GLOBALS['sys_cookie_prefix'] = '';
-        $GLOBALS['sys_force_ssl'] = 0;
 
         $user = $this->user_manager->getUserByUserName(self::TEST_USER_NAME);
         $this->user_manager->setCurrentUser($user);
@@ -111,9 +108,6 @@ class TestDataBuilder {
         unset($GLOBALS['grpdir_prefix']);
         unset($GLOBALS['ftp_frs_dir_prefix']);
         unset($GLOBALS['ftp_anon_dir_prefix']);
-        unset($GLOBALS['sys_default_domain']);
-        unset($GLOBALS['sys_cookie_prefix']);
-        unset($GLOBALS['sys_force_ssl']);
 
         return $this;
     }
