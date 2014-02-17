@@ -14,6 +14,7 @@ Version 6.11 (Not released yet)
 	  in tools/utils/changelogs/generate.sh
 	* Add a common helper to compute dates without including week-ends
 	* Remove embedded Firebug
+	* Be consistent with forgeupgrade script: b201305161743_remove_unique_from_svn_checkins
 
 	== Enhancement ==
 	* request #5951 - Avoid hardcoded redirect on login when possible
