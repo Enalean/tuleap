@@ -2389,10 +2389,8 @@ CREATE TABLE cvs_branches (
 ); 
 
 # CREATE SVN support tables
-# XXX Note: UNIQUE is incorrect: sometimes there can 
-# be two (commitid,dirid,fileid) triplets with the same values
+# There can be two (commitid,dirid,fileid) triplets with the same values
 # e.g. when there is a delete and an add in the same commit.
-# Should UNIQUE be expanded to the 'type' column, or simply deleted, or the pb is in commit-email.pl?
 CREATE TABLE svn_checkins (
   id int(11) NOT NULL auto_increment,
   type enum('Change','Add','Delete'),
@@ -2402,7 +2400,7 @@ CREATE TABLE svn_checkins (
   addedlines int(11) DEFAULT '999' NOT NULL,
   removedlines int(11) DEFAULT '999' NOT NULL,
   PRIMARY KEY (id),
-  UNIQUE uniq_checkins_idx (commitid,dirid,fileid),
+  KEY checkins_idx (commitid,dirid,fileid),
   KEY dirid (dirid),
   KEY fileid (fileid)
 );
