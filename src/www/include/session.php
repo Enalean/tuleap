@@ -11,7 +11,7 @@
 $G_SESSION=array();
 
 function session_issecure() {
-	return (getenv('HTTPS') == 'on');
+    return HTTPRequest::instance()->isSSL();
 }
 
 function session_make_url($loc) {
