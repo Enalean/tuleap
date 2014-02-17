@@ -123,6 +123,9 @@ tuleap.tracker = tuleap.tracker || { };
                     var element = $(this).get(0); //transform to prototype
                     self.enableRichTextArea(element);
                 });
+            }).fail(function() {
+                tuleap.modal.hideLoad();
+                codendi.feedback.log('error', codendi.locales['tracker_modal_errors'].bad_request);
             });
 
         },

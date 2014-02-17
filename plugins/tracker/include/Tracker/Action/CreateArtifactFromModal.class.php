@@ -62,14 +62,10 @@ class Tracker_Action_CreateArtifactFromModal {
         $source_artifact  = $this->tracker_artifact_factory->getArtifactById($artifact_link_id);
 
         if (! $source_artifact) {
-            $GLOBALS['Language']->addFeedback(
-                Feedback::WARN,
-                $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'aid_does_not_exist', array($artifact_link_id))
-            );
             return;
         }
 
-        return $source_artifact->linkArtifact($new_artifact->getId(), $current_user);
+        $source_artifact->linkArtifact($new_artifact->getId(), $current_user);
     }
 
     private function sendJSONErrors() {
