@@ -7,10 +7,16 @@ grammar {
             element changeset {
                 element submitted_by { user_content },
                 element submitted_on { date_content },
-                element field_change {
-                    attribute field_name { xsd:string },
-                    element value { xsd:string }
-                }
+                element comment { xsd:string }?,
+                element field_change { field_content }+
+            }*,
+            element file {
+                attribute id { xsd:ID },
+                element filename { xsd:string },
+                element path { xsd:string },
+                element filesize { xsd:int },
+                element filetype { xsd:string },
+                element description { xsd:string }
             }*
         }*
     }
@@ -29,4 +35,24 @@ grammar {
             )
         ),
         xsd:string
+
+    field_content =
+        attribute field_name { xsd:string },
+        (field_string | field_file | field_open_list_user)
+        
+
+    field_string = 
+        attribute type { "string" },
+        element value { xsd:string }
+
+    field_file =
+        attribute type { "file" },
+        element value {
+            attribute ref { xsd:IDREF }
+        }+
+
+    field_open_list_user =
+        attribute type { "open_list" },
+        attribute bind { "user" },
+        element value { user_content }+
 }

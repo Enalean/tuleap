@@ -15,13 +15,37 @@
               <element name="submitted_on">
                 <ref name="date_content"/>
               </element>
-              <element name="field_change">
-                <attribute name="field_name">
-                  <data type="string"/>
-                </attribute>
-                <element name="value">
+              <optional>
+                <element name="comment">
                   <data type="string"/>
                 </element>
+              </optional>
+              <oneOrMore>
+                <element name="field_change">
+                  <ref name="field_content"/>
+                </element>
+              </oneOrMore>
+            </element>
+          </zeroOrMore>
+          <zeroOrMore>
+            <element name="file">
+              <attribute name="id">
+                <data type="ID"/>
+              </attribute>
+              <element name="filename">
+                <data type="string"/>
+              </element>
+              <element name="path">
+                <data type="string"/>
+              </element>
+              <element name="filesize">
+                <data type="int"/>
+              </element>
+              <element name="filetype">
+                <data type="string"/>
+              </element>
+              <element name="description">
+                <data type="string"/>
               </element>
             </element>
           </zeroOrMore>
@@ -54,5 +78,48 @@
       </group>
     </choice>
     <data type="string"/>
+  </define>
+  <define name="field_content">
+    <attribute name="field_name">
+      <data type="string"/>
+    </attribute>
+    <choice>
+      <ref name="field_string"/>
+      <ref name="field_file"/>
+      <ref name="field_open_list_user"/>
+    </choice>
+  </define>
+  <define name="field_string">
+    <attribute name="type">
+      <value>string</value>
+    </attribute>
+    <element name="value">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="field_file">
+    <attribute name="type">
+      <value>file</value>
+    </attribute>
+    <oneOrMore>
+      <element name="value">
+        <attribute name="ref">
+          <data type="IDREF"/>
+        </attribute>
+      </element>
+    </oneOrMore>
+  </define>
+  <define name="field_open_list_user">
+    <attribute name="type">
+      <value>open_list</value>
+    </attribute>
+    <attribute name="bind">
+      <value>user</value>
+    </attribute>
+    <oneOrMore>
+      <element name="value">
+        <ref name="user_content"/>
+      </element>
+    </oneOrMore>
   </define>
 </grammar>

@@ -22,10 +22,40 @@ require_once 'pre.php';
 
 require_once 'common/tracker/ArtifactXMLExporter.class.php';
 
-$atid = $argv[1];
+if ($argc != 3) {
+    echo 'Usage: '.basename($argv[0]).' tracker_id /path/to/archive.zip'.PHP_EOL;
+    exit(1);
+}
 
-$xml = new SimpleXMLElement('<artifacts />');
-$exporter = new ArtifactXMLExporter(new ArtifactXMLExporterDao());
-$exporter->exportTrackerData($atid, $xml);
+$atid         = $argv[1];
+$archive_path = $argv[2];
 
-echo $xml->asXML();
+if (file_exists($archive_path)) {
+    echo "*** ERROR: File $archive_path already exists.".PHP_EOL;
+    exit(1);
+}
+
+$xml      = new DOMDocument("1.0", "UTF8");
+$logger   = new Log_ConsoleLogger();
+$archive  = new ZipArchive();
+if ($archive->open($archive_path, ZipArchive::CREATE) !== true) {
+    echo '*** ERROR: Cannot create archive: '.$archive_path;
+    exit(1);
+}
+$exporter = new ArtifactXMLExporter(new ArtifactXMLExporterDao(), $archive, $xml, $logger);
+$exporter->exportTrackerData($atid);
+
+$validator = new XML_RNGValidator();
+$validator->validate(simplexml_import_dom($xml));
+
+$xsl = new DOMDocument();
+$xsl->load(dirname(__FILE__).'/xml/indent.xsl');
+
+$proc = new XSLTProcessor();
+$proc->importStyleSheet($xsl);
+
+$archive->addFromString('artifacts.xml', $proc->transformToXML($xml));
+
+$archive->close();
+
+$logger->dump();

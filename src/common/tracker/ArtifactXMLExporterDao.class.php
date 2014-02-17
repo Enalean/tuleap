@@ -32,18 +32,20 @@ class ArtifactXMLExporterDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchSummaryHistory($artifact_id) {
+    public function searchHistory($artifact_id) {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $old_value = $this->unconvertHtmlspecialchars('artifact_history.old_value', 'old_value');
 
-        $sql = "SELECT $old_value,
+        $sql = "SELECT field_name,
+                    $old_value,
                     new_value,
                     date,
+                    mod_by,
                     IFNULL(user.user_name, artifact_history.email) AS submitted_by,
                     IF(artifact_history.email, 1, 0) AS is_anonymous
                 FROM artifact_history
                      LEFT JOIN user ON (mod_by = user_id)
-                WHERE field_name = 'summary' AND artifact_id = $artifact_id";
+                WHERE artifact_id = $artifact_id";
 
         return $this->retrieve($sql);
     }
@@ -69,5 +71,55 @@ class ArtifactXMLExporterDao extends DataAccessObject {
                         ), '&lt;', '<'
                     ), '&amp;', '&'
                 ) AS $alias";
+    }
+
+    public function searchFilesForArtifact($artifact_id) {
+        $artifact_id  = $this->da->escapeInt($artifact_id);
+
+        $sql = "SELECT *
+                FROM artifact_file
+                WHERE artifact_id = $artifact_id";
+        return $this->retrieve($sql);
+    }
+
+    public function searchFile($artifact_id, $filename, $submitted_by, $date) {
+        $artifact_id  = $this->da->escapeInt($artifact_id);
+        $filename     = $this->da->quoteSmart($filename);
+        $submitted_by = $this->da->escapeInt($submitted_by);
+        $date         = $this->da->escapeInt($date);
+
+        $sql = "SELECT id
+                FROM artifact_file
+                WHERE artifact_id = $artifact_id
+                  AND filename = $filename
+                  AND submitted_by = $submitted_by
+                  AND adddate between $date-2 and $date+2";
+        return $this->retrieve($sql);
+    }
+
+    public function searchFileBefore($artifact_id, $filename, $date) {
+        $artifact_id  = $this->da->escapeInt($artifact_id);
+        $filename     = $this->da->quoteSmart($filename);
+        $date         = $this->da->escapeInt($date);
+
+        $sql = "SELECT id
+                FROM artifact_file
+                WHERE artifact_id = $artifact_id
+                  AND filename = $filename
+                  AND adddate < $date";
+        return $this->retrieve($sql);
+    }
+
+    public function searchCCAt($artifact_id, $user_id, $date) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $user_id     = $this->da->escapeInt($user_id);
+        $date        = $this->da->escapeInt($date);
+
+        $sql = "SELECT *
+                FROM artifact_cc
+                WHERE artifact_id = $artifact_id
+                  AND added_by = $user_id
+                  AND date < $date";
+        return $this->retrieve($sql);
     }
 }

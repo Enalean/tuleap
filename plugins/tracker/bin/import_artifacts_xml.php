@@ -32,7 +32,19 @@ try {
             Tracker_FormElementFactory::instance(),
             $user_manager
         );
-        $xml_import->importFromFile($tracker, $argv[3]);
+
+        $zip = new ZipArchive();
+        if ($zip->open($argv[3]) !== true) {
+            echo 'Impossible to open archive '.$argv[3].PHP_EOL;
+            exit(1);
+        }
+        $archive = new Tracker_Artifact_XMLImport_XMLImportZipArchive(
+            $tracker,
+            $zip,
+            Config::get('tmp_dir')
+        );
+
+        $xml_import->importFromArchive($tracker, $archive);
     }
 } catch (XML_ParseException $exception) {
     echo $exception->getMessage().PHP_EOL;
