@@ -107,8 +107,8 @@
         }
 
         function fetchBurndown() {
-            var completion_bar = $('milestone_points_completion_bar');
-            if (completion_bar.readAttribute('data-count-style') == 'effort') {
+            var completion_bar = $('#milestone_points_completion_bar');
+            if (completion_bar.attr('data-count-style') == 'effort') {
                 tuleap.agiledashboard.cardwall.fetchBurndown();
             }
         }
