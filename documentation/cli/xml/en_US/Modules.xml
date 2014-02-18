@@ -1134,18 +1134,18 @@ File retrieved successfully.
     <section id="FRSFunctions">
         <title>File Release System functions</title>
         <para>File release system can return standard error codes:
-	  <itemizedlist mark="bullet">
-	    <listitem>
-	      <para>'invalid_package_fault' (code '3017'): the package doesn't exist</para>
-	    </listitem>
-	    <listitem>
-	      <para>'invalid_release_fault' (code '3018'): the release doesn't exist</para>
-	    </listitem>
-	    <listitem>
-	      <para>'invalid_file_fault' (code '3019'): the file doesn't exist</para>
-	    </listitem>
-	  </itemizedlist>
-	</para>
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para>'invalid_package_fault' (code '3017'): the package doesn't exist</para>
+        </listitem>
+        <listitem>
+          <para>'invalid_release_fault' (code '3018'): the release doesn't exist</para>
+        </listitem>
+        <listitem>
+          <para>'invalid_file_fault' (code '3019'): the file doesn't exist</para>
+        </listitem>
+      </itemizedlist>
+    </para>
         <section id="FRSFunctionGetPackages">
             <title>getPackages</title>
             <para>getPackages: Display a list of available packages for a project
@@ -1188,10 +1188,10 @@ File retrieved successfully.
                         <para>--rank: rank of the new package that will be created. By default, set to 0.
                         </para>
                     </listitem>
-		    <listitem>
+            <listitem>
                         <para>--approve_license: whether the package should ask for a license approval on file download. By default, set to 1 (ask approval).
-			</para>
-		    </listitem>
+            </para>
+            </listitem>
                     <listitem>
                         <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
                         </para>
@@ -1329,7 +1329,7 @@ File retrieved successfully.
         
         <section id="FRSFunctionAddFile">
             <title>addFile</title>
-	    <para><emphasis role="bold">Big file support:</emphasis> CLI is able to upload files bigger than 2GB when both CLI and remote server are running on top of 64 bits machines. If you ever need to release a big file in another case (client machine or server in 32 bits) you should use FTP for file upload and --uploaded_file option.</para>
+        <para><emphasis role="bold">Big file support:</emphasis> CLI is able to upload files bigger than 2GB when both CLI and remote server are running on top of 64 bits machines. If you ever need to release a big file in another case (client machine or server in 32 bits) you should use FTP for file upload and --uploaded_file option.</para>
             <para>addFile: Add a file to the File Release System
                 <itemizedlist mark="bullet">
                     <listitem>
@@ -1360,6 +1360,10 @@ File retrieved successfully.
                         <para>--reference_md5: md5 of the file located in the incoming directory on the server.
                         </para>
                      </listitem>
+                    <listitem>
+                        <para>--comment: A comment for the new file
+                        </para>
+                    </listitem>
                     <listitem>
                         <para>--project: UNIX name of the project you want to add the file in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
                         </para>
@@ -1398,7 +1402,7 @@ File retrieved successfully.
         
         <section id="FRSFunctionGetFile">
             <title>getFile</title>
-	    <para><emphasis role="bold">Big file support:</emphasis> CLI is able to download files bigger than 2GB when both CLI and remote server are running on top of 64 bits machines.</para>
+        <para><emphasis role="bold">Big file support:</emphasis> CLI is able to download files bigger than 2GB when both CLI and remote server are running on top of 64 bits machines.</para>
             <para>getFile: Get the content of a file in the File Release System
                 <itemizedlist mark="bullet">
                     <listitem>
@@ -1434,7 +1438,7 @@ File retrieved successfully.
 File retrieved successfully.
                         </programlisting>
                     </example>
-		    <note>Note: no error returned, the file is downloaded successfully.</note>
+            <note>Note: no error returned, the file is downloaded successfully.</note>
                </para>
             </para>
         </section>
@@ -1498,7 +1502,7 @@ File retrieved successfully.
 +--------+
                         </programlisting>
                     </example>
-		    <note>Return code (1) means the deletion succeeded. Otherwise server throw an error.</note>
+            <note>Return code (1) means the deletion succeeded. Otherwise server throw an error.</note>
                </para>
             </para>
         </section>
@@ -1697,8 +1701,8 @@ File retrieved successfully.
                </para>
             </para>
         </section>
-		
-		    <section id="DocmanFunctionGetRoot">
+        
+            <section id="DocmanFunctionGetRoot">
             <title>getRoot</title>
             <para>getRoot: Returns the document object id that is at the top of the docman given a group object
                 <itemizedlist mark="bullet">
@@ -1732,7 +1736,7 @@ File retrieved successfully.
                         <para>--parent_id*: ID of the parent the file will be created in
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
                         <para>--project*:Name of the project the item belongs to. If you specified the name of
                             the working project when you logged in, this parameter is not needed.
                         </para>
@@ -1754,30 +1758,30 @@ File retrieved successfully.
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--perm_read*: Groups IDs that will have the permission READ separated with comma
-						</para>
-						</listitem>
+                        <para>--perm_read*: Groups IDs that will have the permission READ separated with comma
+                        </para>
+                        </listitem>
                     <listitem>
-					    <para>--perm_write*: Groups IDs that will have the permission WRITE separated with comma
-					    </para>
-					</listitem>
-                    <listitem>
-					        <para>--perm_manage*: Groups IDs that will have the permission MANAGE separated with comma
-					        </para>
-					</listitem>
-                    <listitem>
-					    <para>--perm_none*: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        <para>--perm_write*: Groups IDs that will have the permission WRITE separated with comma
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--properties*: File that contains the properties to apply to the item
+                            <para>--perm_manage*: Groups IDs that will have the permission MANAGE separated with comma
+                            </para>
+                    </listitem>
+                    <listitem>
+                        <para>--perm_none*: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--obsolescence_date*: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        <para>--properties*: File that contains the properties to apply to the item
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
+                        <para>--obsolescence_date*: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        </para>
+                    </listitem>
+                    <listitem>
                         <para>--ordering: place where the new document will be hosted. Available values are "begin" and "end"
                         </para>
                     </listitem>
@@ -1797,17 +1801,17 @@ File retrieved successfully.
                </para>
              </para>
         </section>
-		
-		<section id="DocmanFunctionCreateFile">
+        
+        <section id="DocmanFunctionCreateFile">
             <title>createFile</title>
-	    <para><emphasis role="bold">Big file support:</emphasis> CLI is able to upload files bigger than 2GB when both CLI and remote server are running on top of 64 bits machines.</para>
+        <para><emphasis role="bold">Big file support:</emphasis> CLI is able to upload files bigger than 2GB when both CLI and remote server are running on top of 64 bits machines.</para>
             <para>createFile: Add a document file to the document manager
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--parent_id*: ID of the parent the file will be created in
                         </para>
                     </listitem>
-		    <listitem>
+            <listitem>
                         <para>--project*:Name of the project the item belongs to. If you specified the name of
                             the working project when you logged in, this parameter is not needed.
                         </para>
@@ -1829,30 +1833,30 @@ File retrieved successfully.
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--perm_read*: Groups IDs that will have the permission READ separated with comma
-						</para>
-						</listitem>
+                        <para>--perm_read*: Groups IDs that will have the permission READ separated with comma
+                        </para>
+                        </listitem>
                     <listitem>
-					    <para>--perm_write*: Groups IDs that will have the permission WRITE separated with comma
-					    </para>
-					</listitem>
-                    <listitem>
-					        <para>--perm_manage*: Groups IDs that will have the permission MANAGE separated with comma
-					        </para>
-					</listitem>
-                    <listitem>
-					    <para>--perm_none*: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        <para>--perm_write*: Groups IDs that will have the permission WRITE separated with comma
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--properties*: File that contains the properties to apply to the item
+                            <para>--perm_manage*: Groups IDs that will have the permission MANAGE separated with comma
+                            </para>
+                    </listitem>
+                    <listitem>
+                        <para>--perm_none*: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--obsolescence_date*: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        <para>--properties*: File that contains the properties to apply to the item
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
+                        <para>--obsolescence_date*: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        </para>
+                    </listitem>
+                    <listitem>
                         <para>--ordering: place where the new document will be hosted. Available values are "begin" and "end"
                         </para>
                     </listitem>
@@ -1875,7 +1879,7 @@ File uploaded successfully
             </para>
         </section>
 
-		<section id="DocmanFunctionCreateEmptyDocument">
+        <section id="DocmanFunctionCreateEmptyDocument">
             <title>createEmptyDocument</title>
             <para>createEmptyDocument: Add an empty document to the document manager
                 <itemizedlist mark="bullet">
@@ -1883,7 +1887,7 @@ File uploaded successfully
                         <para>--parent_id*: ID of the parent the file will be created in
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
                         <para>--project:Name of the project the item belongs to. If you specified the name of
                             the working project when you logged in, this parameter is not needed.
                         </para>
@@ -1901,30 +1905,30 @@ File uploaded successfully
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--perm_read: Groups IDs that will have the permission READ separated with comma
-						</para>
-						</listitem>
+                        <para>--perm_read: Groups IDs that will have the permission READ separated with comma
+                        </para>
+                        </listitem>
                     <listitem>
-					    <para>--perm_write: Groups IDs that will have the permission WRITE separated with comma
-					    </para>
-					</listitem>
-                    <listitem>
-					        <para>--perm_manage: Groups IDs that will have the permission MANAGE separated with comma
-					        </para>
-					</listitem>
-                    <listitem>
-					    <para>--perm_none: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        <para>--perm_write: Groups IDs that will have the permission WRITE separated with comma
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--properties: File that contains the properties to apply to the item
+                            <para>--perm_manage: Groups IDs that will have the permission MANAGE separated with comma
+                            </para>
+                    </listitem>
+                    <listitem>
+                        <para>--perm_none: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--obsolescence_date: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        <para>--properties: File that contains the properties to apply to the item
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
+                        <para>--obsolescence_date: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        </para>
+                    </listitem>
+                    <listitem>
                         <para>--ordering: place where the new document will be hosted. Available values are "begin" and "end"
                         </para>
                     </listitem>
@@ -1944,7 +1948,7 @@ File uploaded successfully
                </para>
             </para>
         </section>
-        		<section id="DocmanFunctionCreateLink">
+                <section id="DocmanFunctionCreateLink">
             <title>createLink</title>
             <para>createLink: Add a document link to the document manager
                 <itemizedlist mark="bullet">
@@ -1952,7 +1956,7 @@ File uploaded successfully
                         <para>--parent_id*: ID of the parent the file will be created in
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
                         <para>--project*:Name of the project the item belongs to. If you specified the name of
                             the working project when you logged in, this parameter is not needed.
                         </para>
@@ -1961,7 +1965,7 @@ File uploaded successfully
                         <para>--title*: Title of the new document
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
                         <para>--content*: Url of the link
                         </para>
                     </listitem>
@@ -1974,30 +1978,30 @@ File uploaded successfully
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--perm_read: Groups IDs that will have the permission READ separated with comma
-						</para>
-						</listitem>
+                        <para>--perm_read: Groups IDs that will have the permission READ separated with comma
+                        </para>
+                        </listitem>
                     <listitem>
-					    <para>--perm_write: Groups IDs that will have the permission WRITE separated with comma
-					    </para>
-					</listitem>
-                    <listitem>
-					        <para>--perm_manage: Groups IDs that will have the permission MANAGE separated with comma
-					        </para>
-					</listitem>
-                    <listitem>
-					    <para>--perm_none: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        <para>--perm_write: Groups IDs that will have the permission WRITE separated with comma
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--properties: File that contains the properties to apply to the item
+                            <para>--perm_manage: Groups IDs that will have the permission MANAGE separated with comma
+                            </para>
+                    </listitem>
+                    <listitem>
+                        <para>--perm_none: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--obsolescence_date: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        <para>--properties: File that contains the properties to apply to the item
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
+                        <para>--obsolescence_date: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        </para>
+                    </listitem>
+                    <listitem>
                         <para>--ordering: place where the new document will be hosted. Available values are "begin" and "end"
                         </para>
                     </listitem>
@@ -2018,7 +2022,7 @@ File uploaded successfully
                </para>
             </para>
         </section>
-		<section id="DocmanFunctionCreateWikiPage">
+        <section id="DocmanFunctionCreateWikiPage">
             <title>createWikiPage</title>
             <para>createWikiPage: Add a wiki document to the document manager
                 <itemizedlist mark="bullet">
@@ -2026,15 +2030,15 @@ File uploaded successfully
                         <para>--parent_id*: ID of the parent the file will be created in
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
                         <para>--title*: Title of the new document
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
                         <para>--content*: Name of the wiki page
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
                         <para>--project:Name of the project the item belongs to. If you specified the name of
                             the working project when you logged in, this parameter is not needed.
                         </para>
@@ -2048,30 +2052,30 @@ File uploaded successfully
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--perm_read: Groups IDs that will have the permission READ separated with comma
-						</para>
-						</listitem>
+                        <para>--perm_read: Groups IDs that will have the permission READ separated with comma
+                        </para>
+                        </listitem>
                     <listitem>
-					    <para>--perm_write: Groups IDs that will have the permission WRITE separated with comma
-					    </para>
-					</listitem>
-                    <listitem>
-					        <para>--perm_manage: Groups IDs that will have the permission MANAGE separated with comma
-					        </para>
-					</listitem>
-                    <listitem>
-					    <para>--perm_none: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        <para>--perm_write: Groups IDs that will have the permission WRITE separated with comma
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--properties: File that contains the properties to apply to the item
+                            <para>--perm_manage: Groups IDs that will have the permission MANAGE separated with comma
+                            </para>
+                    </listitem>
+                    <listitem>
+                        <para>--perm_none: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--obsolescence_date: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        <para>--properties: File that contains the properties to apply to the item
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
+                        <para>--obsolescence_date: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        </para>
+                    </listitem>
+                    <listitem>
                         <para>--ordering: place where the new document will be hosted. Available values are "begin" and "end"
                         </para>
                     </listitem>
@@ -2116,28 +2120,28 @@ File uploaded successfully
                         <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
                         <para>--status: Status to apply to the item. Available status are "none", "draft", "approved", and "rejected"
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--perm_read: Groups IDs that will have the permission READ separated with comma
-						</para>
-						</listitem>
+                        <para>--perm_read: Groups IDs that will have the permission READ separated with comma
+                        </para>
+                        </listitem>
                     <listitem>
-					    <para>--perm_write: Groups IDs that will have the permission WRITE separated with comma
-					    </para>
-					</listitem>
-                    <listitem>
-					    <para>--perm_manage: Groups IDs that will have the permission MANAGE separated with comma
-					    </para>
-					</listitem>
-                    <listitem>
-					    <para>--perm_none: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        <para>--perm_write: Groups IDs that will have the permission WRITE separated with comma
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--properties: File that contains the properties to apply to the item
+                        <para>--perm_manage: Groups IDs that will have the permission MANAGE separated with comma
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--perm_none: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--properties: File that contains the properties to apply to the item
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -2164,7 +2168,7 @@ File uploaded successfully
                         <para>--id*: ID of the item to download
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
                         <para>--output: Name of the file to write the file to
                         </para>
                     </listitem>
