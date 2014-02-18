@@ -1,3 +1,6 @@
+Version 1.19 - Tuleap 6.11
+    * Dev fix: burndown no longer displayed after story #5984: open/closed fall back
+
 Version 1.18 - Tuleap 6.11
     * Fix request #6219. Js error  on non cardwall pages
 
