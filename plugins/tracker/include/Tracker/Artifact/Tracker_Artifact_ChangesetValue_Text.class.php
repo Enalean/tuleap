@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('common/include/Codendi_HTMLPurifier.class.php');
+require_once 'common/encoding/SupportedXmlCharEncoding.class.php';
 
 /**
  * Manage values in changeset for string fields
@@ -78,6 +79,16 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     public function getSoapValue() {
         return $this->encapsulateRawSoapValue($this->getText());
     }
+ 
+    /**
+     * By default, changeset values are returned as string in 'value' field
+     */
+    protected function encapsulateRawSoapValue($value) {
+        $value = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($value);
+
+        return array('value' => $value);
+    }
+
 
     public function getRESTValue() {
         return $this->getSimpleRESTRepresentation($this->getText());
