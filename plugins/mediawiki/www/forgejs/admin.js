@@ -43,7 +43,7 @@
         }
 
         $('.forge_mw_add_ugroup').click(function(event) {
-            var container         = $(event.target.parentNode.parentNode);
+            var container         = $(this).parent('.forge_mw_btn').parent();
             var selected_elements = container.find('.forge_mw_available_groups option:selected');
             add_selected_element_to_field(
                 container,
@@ -52,7 +52,7 @@
             return ! selected_elements.remove().appendTo(container.find('.forge_mw_selected_groups'));
         });
         $('.forge_mw_remove_ugroup').click(function(event) {
-            var container = $(event.target.parentNode.parentNode);
+            var container         = $(this).parent('.forge_mw_btn').parent();
             var selected_elements = container.find('.forge_mw_selected_groups option:selected');
             remove_selected_element_to_field(
                 container,
