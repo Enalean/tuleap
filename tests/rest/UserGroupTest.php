@@ -39,10 +39,10 @@ class UserGroupTest extends RestBase {
         $this->assertEquals(
             $response->json(),
             array(
-                'id'        => '101_101',
-                'uri'       => 'user_groups/101_101',
+                'id'        => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
+                'uri'       => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
                 'label'     => 'static_ugroup',
-                'users_uri' => 'user_groups/101_101/users'
+                'users_uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/users'
                 )
         );
         $this->assertEquals($response->getStatusCode(), 200);
@@ -52,7 +52,7 @@ class UserGroupTest extends RestBase {
         // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
-            $response = $this->getResponse($this->client->get('user_groups/104_101'));
+            $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID.'_'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID));
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 403);
             $exception = true;
@@ -65,7 +65,7 @@ class UserGroupTest extends RestBase {
         // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
-            $response = $this->getResponse($this->client->get('user_groups/102_101'));
+            $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PRIVATE_ID.'_'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID));
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 403);
             $exception = true;
@@ -78,7 +78,7 @@ class UserGroupTest extends RestBase {
         // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
-            $response = $this->getResponse($this->client->get('user_groups/102_999'));
+            $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PRIVATE_ID.'_999'));
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 404);
             $exception = true;
