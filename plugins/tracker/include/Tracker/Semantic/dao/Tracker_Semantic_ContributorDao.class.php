@@ -42,6 +42,12 @@ class Tracker_Semantic_ContributorDao extends DataAccessObject {
                 VALUES ($tracker_id, $field_id)";
         return $this->update($sql);
     }
-    
+
+    public function delete($tracker_id) {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+
+        $sql = "DELETE FROM $this->table_name WHERE tracker_id = $tracker_id";
+        return $this->update($sql);
+    }
 }
 ?>
