@@ -34,8 +34,16 @@ class MediawikiAdminPresenter {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_mapping_title');
     }
 
-    public function help() {
-        return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_mapping_help', 'url');
+    public function help_intro() {
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_mapping_help_intro', Config::get('sys_name'));
+    }
+
+    public function help_link() {
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_mapping_help_link', $this->getMWUrl('Special:ListGroupRights'));
+    }
+
+    private function getMWUrl($page) {
+        return MEDIAWIKI_BASE_URL . '/wiki/' . $this->project->getUnixName(). '/index.php/' . $page;
     }
 
     public function route() {

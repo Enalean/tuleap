@@ -21,7 +21,7 @@ class ServiceMediawiki extends Service {
         $toolbar = array();
         if ($this->userIsAdmin($request)) {
             $toolbar[] = array(
-                'title' => $GLOBALS['Language']->getText('global', 'Admin'),
+                'title' => $GLOBALS['Language']->getText('global', 'Administration'),
                 'url'   => MEDIAWIKI_BASE_URL .'/forge_admin?'. http_build_query(array(
                     'group_id'   => $request->get('group_id'),
                 ))

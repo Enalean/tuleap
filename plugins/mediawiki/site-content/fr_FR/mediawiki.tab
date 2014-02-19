@@ -5,7 +5,8 @@ plugin_mediawiki	descriptor_description	Plugin qui implémente le support de Med
 plugin_mediawiki	descriptor_name	Plugin Mediawiki
 
 plugin_mediawiki	group_mapping_title	Gestion des groupes Mediawiki
-plugin_mediawiki	group_mapping_help	Aide $1
+plugin_mediawiki	group_mapping_help_intro	Cette section permet de définir les associations entre les groupes $1 et MediaWiki
+plugin_mediawiki	group_mapping_help_link	Vous pouvez trouver plus de détail sur ce que les groupes MediaWiki peuvent faire ici: <a href="$1">Special:User groups rights</a>
 plugin_mediawiki	group_name_anonymous	Anonymous
 plugin_mediawiki	group_name_user	User / Autoconfirmed / Email confirmed
 plugin_mediawiki	group_name_bot	Bot

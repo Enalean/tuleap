@@ -38,7 +38,7 @@ class MediawikiAdminController {
         $GLOBALS['HTML']->includeFooterJavascriptFile(MEDIAWIKI_BASE_URL.'/forgejs/admin.js');
         $service->renderInPage(
             $request,
-            '',
+            $GLOBALS['Language']->getText('global', 'Administration'),
             'admin',
             new MediawikiAdminPresenter(
                 $project,
