@@ -182,5 +182,7 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
         return 0;
     }
 
+    public function getBurndownData(PFUser $user) {
+        return null;
+    }
 }
-?>

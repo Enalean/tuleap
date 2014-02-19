@@ -209,6 +209,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @param PFUser $user
      * @param type $start_date
      * @param type $duration
+     *
      * @return Tracker_Chart_Data_Burndown
      */
     public function getBurndownData(Tracker_Artifact $artifact, PFUser $user, $start_date, $duration) {
