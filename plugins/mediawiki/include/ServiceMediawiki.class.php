@@ -37,7 +37,7 @@ class ServiceMediawiki extends Service {
      * @param HTTPRequest $request
      * @return bool
      */
-    private function userIsAdmin(HTTPRequest $request) {
-        return $request->getProject()->userIsAdmin($request->getCurrentUser());
+    public function userIsAdmin(HTTPRequest $request) {
+        return $request->getCurrentUser()->isMember($request->getProject()->getID(), 'A');
     }
 }

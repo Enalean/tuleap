@@ -33,6 +33,7 @@ class MediawikiAdminController {
     }
 
     public function index(ServiceMediawiki $service, HTTPRequest $request) {
+        $this->assertUserIsProjectAdmin($service, $request);
         $project = $request->getProject();
 
         $GLOBALS['HTML']->includeFooterJavascriptFile(MEDIAWIKI_BASE_URL.'/forgejs/admin.js');
@@ -90,6 +91,7 @@ class MediawikiAdminController {
     }
 
     public function save(ServiceMediawiki $service, HTTPRequest $request) {
+        $this->assertUserIsProjectAdmin($service, $request);
         if($request->isPost()) {
             $project          = $request->getProject();
             $new_mapping_list = $this->getSelectedMappingsFromRequest($request);
@@ -109,5 +111,11 @@ class MediawikiAdminController {
             $list[$mw_group_name] = array_filter(explode(',', $request->get('hidden_selected_'.$mw_group_name)));
         }
         return $list;
+    }
+
+    private function assertUserIsProjectAdmin(ServiceMediawiki $service, HTTPRequest $request) {
+        if (! $service->userIsAdmin($request)) {
+            $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL.'/wiki/'.$request->getProject()->getUnixName());
+        }
     }
 }

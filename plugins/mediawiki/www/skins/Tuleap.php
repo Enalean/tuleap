@@ -96,7 +96,10 @@ class TuleapTemplate extends BaseTemplate {
 
 		echo "\n<!-- FUSIONFORGE BodyHeader BEGIN -->\n";
 		$GLOBALS['HTML']->header($this->params);
-                echo '<ul class="nav nav-pills toolbar"><li><a href="/plugins/mediawiki/forge_admin?group_id='.$GLOBALS['group']->getId().'">'.$GLOBALS['Language']->getText('global', 'Administration').'</a></li></ul>';
+                $pfuser = UserManager::instance()->getCurrentUser();
+                if ($pfuser->isMember($GLOBALS['group']->getId(), 'A')) {
+                    echo '<ul class="nav nav-pills toolbar"><li><a href="/plugins/mediawiki/forge_admin?group_id='.$GLOBALS['group']->getId().'">'.$GLOBALS['Language']->getText('global', 'Administration').'</a></li></ul>';
+                }
 		echo "<div id=\"ff-mw-wrapper\"><div style=\"font-size:x-small;\">\n";
 		echo "<!-- FUSIONFORGE BodyHeader END -->\n";
 
