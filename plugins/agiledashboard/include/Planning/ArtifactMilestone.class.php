@@ -271,9 +271,19 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
             return null;
         }
 
-        $time_period = new TimePeriodWithoutWeekEnd($this->start_date, $this->duration);
+        return $this->getTimePeriod()->getEndDate();
+    }
 
-        return $time_period->getEndDate();
+    private function getTimePeriod() {
+        return new TimePeriodWithoutWeekEnd($this->start_date, $this->duration);
+    }
+
+    public function getDaysSinceStart() {
+        return $this->getTimePeriod()->getNumberOfDaysSinceStart();
+    }
+
+    public function getDaysUntilEnd() {
+        return $this->getTimePeriod()->getNumberOfDaysUntilEnd();
     }
 
     public function getCapacity() {

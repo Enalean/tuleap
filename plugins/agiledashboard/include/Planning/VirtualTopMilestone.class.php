@@ -174,5 +174,13 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
         return false;
     }
 
+    public function getDaysSinceStart() {
+        return 0;
+    }
+
+    public function getDaysUntilEnd() {
+        return 0;
+    }
+
 }
 ?>

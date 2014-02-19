@@ -101,15 +101,36 @@ class TimePeriodWithoutWeekEnd  implements TimePeriod {
     }
 
     /**
-     * The number of days since the start.
-     * Will never return more than the duration of the time period.
+     * The number of days until the end of the period
      *
      * @return int
      */
-    public function getNumberOfDurationDaysSinceStart() {
-        $days_since_start = $this->getNumberOfDaysSinceStart();
+    public function getNumberOfDaysUntilEnd() {
+        if ($this->getTodayTimestamp() > $this->getEndDate()) {
+            return -$this->getNumberOfDaysWithoutWeekEnd($this->getEndDate(), $this->getTodayTimestamp());
+        } else {
+            return $this->getNumberOfDaysWithoutWeekEnd($this->getTodayTimestamp(), $this->getEndDate());
+        }
+    }
 
-        return min(array($days_since_start, $this->getDuration()));
+    private function getNumberOfDaysWithoutWeekEnd($start_date, $end_date) {
+        $real_number_of_days_after_start = 0;
+        $day        = $start_date;
+        if ($this->isNotWeekendDay($day)) {
+            $day_offset = -1;
+        } else {
+            $day_offset = 0;
+        }
+
+        do {
+            if ($this->isNotWeekendDay($day)) {
+                $day_offset++;
+            }
+            $day = $this->getNextDay($real_number_of_days_after_start, $start_date);
+            $real_number_of_days_after_start++;
+       } while ($day < $end_date);
+
+       return $day_offset;
     }
 
     /**
@@ -119,22 +140,11 @@ class TimePeriodWithoutWeekEnd  implements TimePeriod {
      * @return int
      */
     public function getNumberOfDaysSinceStart() {
-        $real_number_of_days_after_start = 0;
-        $day        = $this->start_date;
-        $day_offset = -1;
-
-        if ($this->isToday($day) || $this->start_date > $this->getTodayTimestamp()) {
+        if ($this->isToday($this->start_date) || $this->start_date > $this->getTodayTimestamp()) {
             return 0;
         }
 
-        while ($day >= $this->start_date && ! $this->isToday($day)) {
-            if ($this->isNotWeekendDay($day)) {
-                $day_offset++;
-            }
-            $day = $this->getNextDay($real_number_of_days_after_start, $this->start_date);
-            $real_number_of_days_after_start++;
-       }
-       return $day_offset;
+        return $this->getNumberOfDaysWithoutWeekEnd($this->start_date, $this->getTodayTimestamp());
     }
 
     private function isToday($day) {

@@ -74,6 +74,16 @@ class MilestoneRepresentation {
     public $end_date;
 
     /**
+     * @var int
+     */
+    public $number_days_since_start;
+
+    /**
+     * @var int
+     */
+    public $number_days_until_end;
+
+    /**
      * @var float
      */
     public $capacity;
@@ -152,12 +162,14 @@ class MilestoneRepresentation {
 
         $this->start_date = null;
         if ($milestone->getStartDate()) {
-            $this->start_date = JsonCast::toDate($milestone->getStartDate());
+            $this->start_date              = JsonCast::toDate($milestone->getStartDate());
+            $this->number_days_since_start = JsonCast::toInt($milestone->getDaysSinceStart());
         }
 
         $this->end_date = null;
         if ($milestone->getEndDate()) {
-            $this->end_date = JsonCast::toDate($milestone->getEndDate());
+            $this->end_date              = JsonCast::toDate($milestone->getEndDate());
+            $this->number_days_until_end = JsonCast::toInt($milestone->getDaysUntilEnd());
         }
 
         $this->parent = null;

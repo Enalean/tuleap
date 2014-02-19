@@ -135,6 +135,10 @@ interface Planning_Milestone {
      */
     public function getEndDate();
 
+    public function getDaysSinceStart();
+
+    public function getDaysUntilEnd();
+
     /**
      * Get the timestamp of the last modification of the milestone
      *
