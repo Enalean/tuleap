@@ -24,6 +24,9 @@ Version 6.11 (Not released yet)
 	== Themes ==
 	* Experimental: 0.9.6
 
+	== Bug fix ==
+	* request #5857: Fix error with SVN during a SYSTEM_CHECK
+
 Version 6.10 (Thursday, February 6th 2014)
 	== Plugins ==
 	* agiledashboard: 1.41
