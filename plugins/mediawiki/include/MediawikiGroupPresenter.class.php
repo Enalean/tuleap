@@ -49,9 +49,10 @@ class MediawikiGroupPresenter {
 
     public function available_groups() {
         $selector = array(
-            'name'    => 'available_'.$this->mediawiki_group_id.'[]',
-            'class'   => 'forge_mw_available_groups',
-            'options' => array()
+            'name'     => 'available_'.$this->mediawiki_group_id.'[]',
+            'class'    => 'forge_mw_available_groups',
+            'options'  => array(),
+            'disabled' => $this->getDisabled(),
         );
         foreach ($this->available_ugroups as $ugroup) {
             $selector['options'][] = array(
@@ -65,9 +66,10 @@ class MediawikiGroupPresenter {
 
     public function selected_groups() {
         $selector = array(
-            'name'    => 'selected_'.$this->mediawiki_group_id.'[]',
-            'class'   => 'forge_mw_selected_groups',
-            'options' => array(),
+            'name'     => 'selected_'.$this->mediawiki_group_id.'[]',
+            'class'    => 'forge_mw_selected_groups',
+            'options'  => array(),
+            'disabled' => $this->getDisabled(),
         );
 
         foreach ($this->current_mapping as $ugroup) {
@@ -79,6 +81,13 @@ class MediawikiGroupPresenter {
         }
 
         return $selector;
+    }
+
+    private function getDisabled() {
+        if ($this->mediawiki_group_id == MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS) {
+            return 'disabled';
+        }
+        return '';
     }
 
     public function hidden_selected_groups_name() {

@@ -39,6 +39,13 @@ class MediawikiUserGroupsMapper {
         self::MEDIAWIKI_GROUPS_BUREAUCRAT
     );
 
+    private static $MEDIAWIKI_MODIFIABLE_GROUP_NAMES = array(
+        self::MEDIAWIKI_GROUPS_USER,
+        self::MEDIAWIKI_GROUPS_BOT,
+        self::MEDIAWIKI_GROUPS_SYSOP,
+        self::MEDIAWIKI_GROUPS_BUREAUCRAT,
+    );
+
     /** @var MediawikiDao */
     private $dao;
 
@@ -56,7 +63,7 @@ class MediawikiUserGroupsMapper {
         $mappings_to_remove   = $this->getUserGroupMappingsDiff($current_mapping_list, $new_mapping_list);
         $mappings_to_add      = $this->getUserGroupMappingsDiff($new_mapping_list, $current_mapping_list);
 
-        foreach (self::$MEDIAWIKI_GROUPS_NAME as $mw_group_name) {
+        foreach (self::$MEDIAWIKI_MODIFIABLE_GROUP_NAMES as $mw_group_name) {
             $this->removeMediawikiUserGroupMapping($project, $mappings_to_remove, $mw_group_name);
             $this->addMediawikiUserGroupMapping($project, $mappings_to_add, $mw_group_name);
         }
@@ -67,7 +74,7 @@ class MediawikiUserGroupsMapper {
     private function getUserGroupMappingsDiff($group_mapping1, $group_mapping2) {
         $list = array();
 
-        foreach (self::$MEDIAWIKI_GROUPS_NAME as $mw_group_name) {
+        foreach (self::$MEDIAWIKI_MODIFIABLE_GROUP_NAMES as $mw_group_name) {
             if (!array_key_exists($mw_group_name, $group_mapping1)) {
                 $group_mapping1[$mw_group_name] = array();
             }
