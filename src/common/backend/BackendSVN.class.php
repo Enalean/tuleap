@@ -640,7 +640,7 @@ class BackendSVN extends Backend {
     private function enableHook($unix_group_name, $hook_name, $source_tool) {
         $path = $this->getHookPath($unix_group_name, $hook_name);
 
-        if (file_exists($path)) {
+        if (file_exists($path) && ! $this->isLinkToTool($source_tool, $path)) {
             $message = "file $path already exists";
 
             $this->log($message, Backend::LOG_WARNING);
@@ -652,6 +652,10 @@ class BackendSVN extends Backend {
         }
 
         return true;
+    }
+
+    private function isLinkToTool($tool_reference_path, $path) {
+        return is_link($path) && realpath($tool_reference_path) == realpath(readlink($path));
     }
 
     private function disableCommitMessageUpdate($unix_group_name) {
