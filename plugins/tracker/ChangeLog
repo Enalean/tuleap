@@ -1,3 +1,6 @@
+Version 5.241 - Tuleap 6.11
+    * Dev: refactoring of artifact creation and update to allow creation in past (XML import)
+
 Version 5.240 - Tuleap 6.11
     * Fix request #6243: unable to remove contributor semantic
 
