@@ -19,8 +19,9 @@
  */
 
 require_once('bootstrap.php');
+
 Mock::generatePartial(
-    'Tracker_FormElement_Field_Text', 
+    'Tracker_FormElement_Field_Text',
     'Tracker_FormElement_Field_TextTestVersion', 
     array('getValueDao', 'getRuleString', 'isRequired', 'getProperty')
 );
@@ -127,8 +128,8 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
         $f->isValid($a, 'This is a text');
         $f->isValid($a, '2009-08-45');
         $f->isValid($a, 25);
-        $this->assertFalse($f->isValid($a, ''));
-        $this->assertFalse($f->isValid($a, null));
+        $this->assertFalse($f->isValidRegardingRequiredProperty($a, ''));
+        $this->assertFalse($f->isValidRegardingRequiredProperty($a, null));
     }
     
     function testIsValidNotRequiredField() {

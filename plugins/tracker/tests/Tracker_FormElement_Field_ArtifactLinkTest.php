@@ -19,12 +19,13 @@
  */
 require_once('bootstrap.php');
 require_once 'common/language/BaseLanguage.class.php';
+
 Mock::generate('BaseLanguage');
 
 Mock::generate('Tracker_Artifact');
 
 Mock::generatePartial(
-    'Tracker_FormElement_Field_ArtifactLink', 
+    'Tracker_FormElement_Field_ArtifactLink',
     'Tracker_FormElement_Field_ArtifactLinkTestVersion', 
     array(
         'getValueDao', 
@@ -136,8 +137,8 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $this->assertTrue($f->isValid($a, array('new_values' => '123          ,   321, 999')));
         $this->assertTrue($f->isValid($a, array('new_values' => ''))); // existing values
         $this->assertFalse($f->isValid($a, array('new_values' => '123, toto')));
-        $this->assertTrue($f->isValid($a, null));  // existing values
-        $this->assertFalse($f->isValid($a, array('new_values' => '', 'removed_values'=> '123')));
+        $this->assertTrue($f->isValidRegardingRequiredProperty($a, null));  // existing values
+        $this->assertFalse($f->isValidRegardingRequiredProperty($a, array('new_values' => '', 'removed_values'=> '123')));
     }
     
     function testIsValidRequiredFieldWithoutExistingValues() {
@@ -165,9 +166,9 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $this->assertFalse($f->isValid($a, array('new_values' => '123, 666')));
         $this->assertFalse($f->isValid($a, array('new_values' => '123,666')));
         $this->assertTrue($f->isValid($a, array('new_values' => '123          ,   321, 999')));
-        $this->assertFalse($f->isValid($a, array('new_values' => '')));
+        $this->assertFalse($f->isValidRegardingRequiredProperty($a, array('new_values' => '')));
         $this->assertFalse($f->isValid($a, array('new_values' => '123, toto')));
-        $this->assertFalse($f->isValid($a, null));
+        $this->assertFalse($f->isValidRegardingRequiredProperty($a, null));
     }
     
     function testIsValidNotRequiredField() {
@@ -193,7 +194,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         
         $a = new MockTracker_Artifact();
         $a->setReturnValue('getLastChangeset', false);
-        $this->assertFalse($f->isValid($a, array('new_values' => '')));
+        $this->assertFalse($f->isValidRegardingRequiredProperty($a, array('new_values' => '')));
         $this->assertTrue($f->hasErrors());
 
     }
@@ -204,7 +205,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         
         $a = new MockTracker_Artifact();
         $a->setReturnValue('getLastChangeset', false);
-        $this->assertFalse($f->isValid($a, ''));
+        $this->assertFalse($f->isValidRegardingRequiredProperty($a, ''));
         $this->assertTrue($f->hasErrors());
     }
     

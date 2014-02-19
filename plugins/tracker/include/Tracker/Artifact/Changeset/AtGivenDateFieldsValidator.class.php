@@ -18,8 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_Exception_CannotCreateInitialChangeset extends Tracker_Artifact_Exception_CannotCreateChangeset {
-    public function __construct() {
-        parent::__construct('Initial');
+/**
+ * I validate fields for both initial and new changesets but in the past (thus no check on required or permissions)
+ */
+class Tracker_Artifact_Changeset_AtGivenDateFieldsValidator extends Tracker_Artifact_Changeset_FieldsValidator {
+
+    protected function canValidateField(
+        Tracker_Artifact $artifact,
+        Tracker_FormElement_Field $field
+    ) {
+        return true;
+    }
+
+    protected function validateField(
+        Tracker_Artifact $artifact,
+        Tracker_FormElement_Field $field,
+        $submitted_value
+    ) {
+        return $field->validateField($artifact, $submitted_value);
     }
 }

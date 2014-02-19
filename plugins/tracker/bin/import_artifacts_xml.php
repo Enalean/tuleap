@@ -26,9 +26,36 @@ try {
 
     $tracker = TrackerFactory::instance()->getTrackerById($argv[2]);
     if ($tracker) {
+        $artifact_factory      = Tracker_ArtifactFactory::instance();
+        $formelement_factory   = Tracker_FormElementFactory::instance();
+        $fields_validator      = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator($formelement_factory);
+        $changeset_dao         = new Tracker_Artifact_ChangesetDao();
+        $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
+
+        $artifact_creator = new Tracker_ArtifactCreator(
+            $artifact_factory,
+            new Tracker_Artifact_Changeset_InitialChangesetAtGivenDateCreator(
+                $fields_validator,
+                $formelement_factory,
+                $changeset_dao,
+                $artifact_factory
+            )
+        );
+
+        $new_changeset_creator = new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
+            $fields_validator,
+            $formelement_factory,
+            $changeset_dao,
+            $changeset_comment_dao,
+            $artifact_factory,
+            EventManager::instance(),
+            ReferenceManager::instance()
+        );
+
         $xml_import = new Tracker_Artifact_XMLImport(
             new XML_RNGValidator(),
-            Tracker_ArtifactFactory::instance(),
+            $artifact_creator,
+            $new_changeset_creator,
             Tracker_FormElementFactory::instance(),
             $user_manager
         );

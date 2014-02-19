@@ -247,7 +247,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      *
      * @return boolean true on success or false on failure
      */
-    public function validateField(Tracker_Artifact $artifact, $submitted_value, Tracker_Artifact_ChangesetValue $last_changeset_value = null) {
+    public function validateFieldWithPermissionsAndRequiredStatus(Tracker_Artifact $artifact, $submitted_value, Tracker_Artifact_ChangesetValue $last_changeset_value = null) {
         $is_valid = true;
         if ($last_changeset_value === null && $submitted_value === null && $this->isRequired()) {
             $is_valid = false;
