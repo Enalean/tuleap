@@ -539,6 +539,29 @@ class URLVerification {
     }
 
     /**
+     * Ensure given user can access given project and user is admin of the project
+     *
+     * @param PFUser  $user
+     * @param Project $project
+     * @return boolean
+     *
+     * @throws Project_AccessProjectNotFoundException
+     * @throws Project_AccessDeletedException
+     * @throws Project_AccessRestrictedException
+     * @throws Project_AccessPrivateException
+     * @throws Project_AccessNotAdminException
+     */
+    public function userCanAccessProjectAndIsProjectAdmin(PFUser $user, Project $project) {
+        if ($this->userCanAccessProject($user, $project)) {
+            if (! $user->isAdmin($project->getId())) {
+                throw new Project_AccessNotAdminException();
+            }
+            return true;
+        }
+    }
+
+
+    /**
      * Wrapper for tests
      *
      * @param String $title Title of the error message

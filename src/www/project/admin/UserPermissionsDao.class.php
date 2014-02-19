@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,21 +19,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\REST;
+class UserPermissionsDao extends DataAccessObject {
 
-use Luracast\Restler\Restler;
-use \Tuleap\Project\REST\ProjectRepresentation;
-use \Tuleap\Token\REST\TokenRepresentation;
-use \Tuleap\Project\REST\UserGroupRepresentation;
+    public function addUserAsProjectAdmin(Project $project, PFUser $user) {
+        $project_id = $this->da->escapeInt($project->getId());
+        $user_id    = $this->da->escapeInt($user->getId());
 
-/**
- * Inject core resources into restler
- */
-class ResourcesInjector {
+        $sql = "UPDATE user_group
+                SET admin_flags = 'A'
+                WHERE group_id = $project_id
+                  AND user_id = $user_id";
 
-    public function populate(Restler $restler) {
-        $restler->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource',   ProjectRepresentation::ROUTE);
-        $restler->addAPIClass('\\Tuleap\\Token\\REST\\TokenResource',       TokenRepresentation::ROUTE);
-        $restler->addAPIClass('\\Tuleap\\Project\\REST\\UserGroupResource', UserGroupRepresentation::ROUTE);
+        return $this->update($sql);
     }
+
 }
