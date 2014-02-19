@@ -116,8 +116,7 @@ class MediawikiDao extends DataAccessObject {
          $sql = "DELETE
                  FROM $database_name.mwuser_groups
                  WHERE ug_user = $escaped_user_id
-                   AND ug_group = 'bureaucrat'
-                   OR  ug_group = 'sysop'";
+                   AND ug_group IN ('bureaucrat', 'sysop')";
 
         return $this->update($sql);
     }
