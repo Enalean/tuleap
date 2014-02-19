@@ -1,3 +1,7 @@
+Version 5.240 - Tuleap 6.11
+    * Fix request #6243: unable to remove contributor semantic
+
+
 Version 5.239 - Tuleap 6.11
     * Request #6197 : spinner stays if response is 500
 
