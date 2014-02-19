@@ -46,6 +46,19 @@ class MediawikiUserGroupsMapper {
         self::MEDIAWIKI_GROUPS_BUREAUCRAT,
     );
 
+    public static $DEFAULT_MAPPING_PUBLIC_PROJECT = array (
+        self::MEDIAWIKI_GROUPS_ANONYMOUS  => array('1'),
+        self::MEDIAWIKI_GROUPS_USER       => array('2','3'),
+        self::MEDIAWIKI_GROUPS_SYSOP      => array('4'),
+        self::MEDIAWIKI_GROUPS_BUREAUCRAT => array('4')
+    );
+
+    public static $DEFAULT_MAPPING_PRIVATE_PROJECT = array (
+        self::MEDIAWIKI_GROUPS_USER       => array('3'),
+        self::MEDIAWIKI_GROUPS_SYSOP      => array('4'),
+        self::MEDIAWIKI_GROUPS_BUREAUCRAT => array('4')
+    );
+
     /** @var MediawikiDao */
     private $dao;
 
@@ -114,5 +127,31 @@ class MediawikiUserGroupsMapper {
         }
 
         return $list;
+    }
+
+    public function isDefaultMapping(Project $project) {
+        $current_mapping = $this->getCurrentUserGroupMapping($project);
+
+        if ($project->isPublic()) {
+            $default_mappings = self::$DEFAULT_MAPPING_PUBLIC_PROJECT;
+        } else {
+            $default_mappings = self::$DEFAULT_MAPPING_PRIVATE_PROJECT;
+        }
+
+        $added_groups   = $this->getUserGroupMappingsDiff($default_mappings, $current_mapping);
+        $removed_groups = $this->getUserGroupMappingsDiff($current_mapping, $default_mappings);
+
+        return $this->checkThereIsNoMappingsChanges($added_groups, $removed_groups);
+    }
+
+    private function checkThereIsNoMappingsChanges(array $added_groups, array $removed_groups) {
+
+        foreach (self::$MEDIAWIKI_GROUPS_NAME as $group_name) {
+            if (! (empty($added_groups[$group_name]) && empty($removed_groups[$group_name]))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

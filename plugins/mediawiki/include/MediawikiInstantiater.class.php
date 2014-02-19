@@ -23,6 +23,7 @@
 require_once 'www/env.inc.php';
 require_once 'pre.php';
 require_once 'common/backend/BackendLogger.class.php';
+require_once 'MediawikiUserGroupsMapper.class.php';
 
 class MediaWikiInstantiater {
 
@@ -115,29 +116,28 @@ class MediaWikiInstantiater {
 
     private function seedUGroupMapping() {
         if ($this->project->isPublic()) {
-            db_query($this->seedPublicProjectUGroupMapping($this->project->getID()));
+            db_query($this->seedProjectUGroupMappings($this->project->getID(), MediawikiUserGroupsMapper::$DEFAULT_MAPPING_PUBLIC_PROJECT));
         } else {
-            db_query($this->seedPrivateProjectUGroupMapping($this->project->getID()));
+            db_query($this->seedProjectUGroupMappings($this->project->getID(), MediawikiUserGroupsMapper::$DEFAULT_MAPPING_PRIVATE_PROJECT));
         }
     }
 
-    private function seedPublicProjectUGroupMapping($group_id) {
-        return "INSERT INTO plugin_mediawiki_ugroup_mapping(group_id, ugroup_id, mw_group_name)
-                VALUES
-                   ($group_id, 1, 'anonymous'),
-                   ($group_id, 2, 'user'),
-                   ($group_id, 3, 'user'),
-                   ($group_id, 4, 'sysop'),
-                   ($group_id, 4, 'bureaucrat')";
+    private function seedProjectUGroupMappings($group_id, array $mappings) {
+        $query  = "INSERT INTO plugin_mediawiki_ugroup_mapping(group_id, ugroup_id, mw_group_name) VALUES ";
+
+        return $query . implode(",", $this->getFormattedDefaultValues($group_id, $mappings));
     }
 
-    private function seedPrivateProjectUGroupMapping($group_id) {
-        return "INSERT INTO plugin_mediawiki_ugroup_mapping(group_id, ugroup_id, mw_group_name)
-                VALUES
-                   ($group_id, 3, 'user'),
-                   ($group_id, 4, 'sysop'),
-                   ($group_id, 4, 'bureaucrat')";
+    private function getFormattedDefaultValues($group_id, array $mappings) {
+        $values = array();
+
+        foreach ($mappings as $group_name => $mapping) {
+            foreach ($mapping as $ugroup_id) {
+                $values[] = "($group_id, $ugroup_id, '$group_name')";
+            }
+        }
+
+        return $values;
     }
 }
-
 ?>

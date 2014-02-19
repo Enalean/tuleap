@@ -25,9 +25,13 @@ class MediawikiAdminPresenter {
     private $project;
     private $groups_permissions;
 
-    public function __construct(Project $project, array $groups_permissions) {
-        $this->project = $project;
+    /** @var Boolean */
+    private $is_default_mapping;
+
+    public function __construct(Project $project, array $groups_permissions, $is_default_mapping) {
+        $this->project            = $project;
         $this->groups_permissions = $groups_permissions;
+        $this->is_default_mapping = $is_default_mapping;
     }
 
     public function title() {
@@ -64,4 +68,16 @@ class MediawikiAdminPresenter {
     public function reset_label() {
         return $GLOBALS['Language']->getText('global', 'btn_cancel');
     }
+
+    public function should_display_restore() {
+        return ! $this->is_default_mapping;
+    }
+
+    public function or_string() {
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'or_string');
+    }
+
+    public function restore_label() {
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'restore_defaults');
+   }
 }

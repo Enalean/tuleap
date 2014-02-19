@@ -13,3 +13,6 @@ plugin_mediawiki	group_name_bot	Bot
 plugin_mediawiki	group_name_sysop	Sysop
 plugin_mediawiki	group_name_bureaucrat	Bureaucrat
 plugin_mediawiki	group_tuleap	$1 groups
+
+plugin_mediawiki	or_string	or
+plugin_mediawiki	restore_defaults	Restore defaults

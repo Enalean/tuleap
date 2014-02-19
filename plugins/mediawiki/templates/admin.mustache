@@ -28,5 +28,9 @@
     <div>
         <input type="submit" name="submit" value="{{submit_label}}" class="btn btn-primary"/>
         <input type="reset" name="reset" value="{{reset_label}}" class="btn"/>
+        {{#should_display_restore}}
+            {{or_string}}
+            <input type="submit" name="restore" value="{{restore_label}}" class="btn btn-danger"/>
+        {{/should_display_restore}}
     </div>
 </form>

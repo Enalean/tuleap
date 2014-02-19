@@ -159,4 +159,128 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
         expect($this->dao)->addMediawikiUserGroupMapping($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT, '1')->at(6);
         $this->mapper->saveMapping($new_mapping, $this->project);
     }
+
+    public function itReturnsTrueIfCurrentMappingEqualsDefaultOneForPublicProject() {
+        $current_mapping = array (
+            array(
+                'group_id'      => 104,
+                'ugroup_id'     => 1,
+                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS
+            ),
+            array(
+                'group_id'      => 104,
+                'ugroup_id'     => 2,
+                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER
+            ),
+            array(
+                'group_id'      => 104,
+                'ugroup_id'     => 3,
+                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER
+            ),
+            array(
+                'group_id'      => 104,
+                'ugroup_id'     => 4,
+                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP
+            ),
+            array(
+                'group_id'      => 104,
+                'ugroup_id'     => 4,
+                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT
+            )
+        );
+
+        stub($this->dao)->getMediawikiUserGroupMapping()->returns($current_mapping);
+        stub($this->project)->isPublic()->returns(true);
+
+        $is_default = $this->mapper->isDefaultMapping($this->project);
+        $this->assertTrue($is_default);
+    }
+
+    public function itReturnsFalseIfCurrentMappingNotEqualsDefaultOneForPublicProject() {
+        $current_mapping = array (
+            array(
+                'group_id'      => 104,
+                'ugroup_id'     => 1,
+                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS
+            ),
+            array(
+                'group_id'      => 104,
+                'ugroup_id'     => 3,
+                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER
+            ),
+            array(
+                'group_id'      => 104,
+                'ugroup_id'     => 3,
+                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER
+            ),
+            array(
+                'group_id'      => 104,
+                'ugroup_id'     => 4,
+                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP
+            ),
+            array(
+                'group_id'      => 104,
+                'ugroup_id'     => 4,
+                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT
+            )
+        );
+
+        stub($this->dao)->getMediawikiUserGroupMapping()->returns($current_mapping);
+        stub($this->project)->isPublic()->returns(true);
+
+        $is_default = $this->mapper->isDefaultMapping($this->project);
+        $this->assertFalse($is_default);
+    }
+
+    public function itReturnsTrueIfCurrentMappingEqualsDefaultOneForPrivateProject() {
+        $current_mapping = array (
+            array(
+                'group_id'      => 104,
+                'ugroup_id'     => 3,
+                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER
+            ),
+            array(
+                'group_id'      => 104,
+                'ugroup_id'     => 4,
+                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP
+            ),
+            array(
+                'group_id'      => 104,
+                'ugroup_id'     => 4,
+                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT
+            )
+        );
+
+        stub($this->dao)->getMediawikiUserGroupMapping()->returns($current_mapping);
+        stub($this->project)->isPublic()->returns(false);
+
+        $is_default = $this->mapper->isDefaultMapping($this->project);
+        $this->assertTrue($is_default);
+    }
+
+    public function itReturnsFalseIfCurrentMappingNotEqualsDefaultOneForPrivateProject() {
+        $current_mapping = array (
+            array(
+                'group_id'      => 104,
+                'ugroup_id'     => 4,
+                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER
+            ),
+            array(
+                'group_id'      => 104,
+                'ugroup_id'     => 4,
+                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP
+            ),
+            array(
+                'group_id'      => 104,
+                'ugroup_id'     => 4,
+                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT
+            )
+        );
+
+        stub($this->dao)->getMediawikiUserGroupMapping()->returns($current_mapping);
+        stub($this->project)->isPublic()->returns(false);
+
+        $is_default = $this->mapper->isDefaultMapping($this->project);
+        $this->assertFalse($is_default);
+    }
 }

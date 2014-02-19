@@ -43,7 +43,8 @@ class MediawikiAdminController {
             'admin',
             new MediawikiAdminPresenter(
                 $project,
-                $this->getMappedGroupPresenter($project)
+                $this->getMappedGroupPresenter($project),
+                $this->mapper->isDefaultMapping($project)
             )
         );
     }
