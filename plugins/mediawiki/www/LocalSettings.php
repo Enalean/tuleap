@@ -220,6 +220,20 @@ function customizeMediawikiGroupsRights(array $wgGroupPermissions) {
     $wgGroupPermissions['bureaucrat']['userrights'] = false;
     $wgGroupPermissions['*']['createaccount']       = false;
 
+    // In Tuleap it makes no sense to allow anonymous to do anything but READ
+    // http://www.mediawiki.org/wiki/Manual:User_rights
+    $wgGroupPermissions['*']['edit'] = false;
+    $wgGroupPermissions['*']['createpage'] = false;
+    $wgGroupPermissions['*']['createtalk'] = false;
+    $wgGroupPermissions['*']['writeapi'] = false;
+    $wgGroupPermissions['*']['editmyusercss'] = false;
+    $wgGroupPermissions['*']['editmyuserjs'] = false;
+    $wgGroupPermissions['*']['viewmywatchlist'] = false;
+    $wgGroupPermissions['*']['editmywatchlist'] = false;
+    $wgGroupPermissions['*']['viewmyprivateinfo'] = false;
+    $wgGroupPermissions['*']['editmyprivateinfo'] = false;
+    $wgGroupPermissions['*']['editmyoptions'] = false;
+
     return $wgGroupPermissions;
 }
 
