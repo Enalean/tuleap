@@ -2,11 +2,12 @@ Version 6.11 (Not released yet)
 	== Plugins ==
 	* git: 3.69
 	* docman: 2.26.28
-	* agiledashboard: 1.45
+	* agiledashboard: 1.46
 	* tracker: 5.239
 	* cardwall: 1.19
 
 	== Development ==
+	* request #6023 - Days remaining off by one day in the Stand-Up View
 	* story #6009 have a beautiful Agile Dashboard homepage (v1)
 	* story #6058 Create artifacts in agile dashboard using modal
 	* REST and phpunit tests can be run in Continuous Integration
