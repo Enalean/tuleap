@@ -78,6 +78,11 @@ class TrackerRepresentation {
      */
     public $workflow;
 
+    /**
+     * @var array
+     */
+    public $resources;
+
     public function build(Tracker $tracker, array $tracker_fields, array $semantics, WorkflowRepresentation $workflow = null) {
         $this->id          = JsonCast::toInt($tracker->getId());
         $this->uri         = self::ROUTE . '/' . $this->id;
@@ -92,5 +97,11 @@ class TrackerRepresentation {
         $this->fields      = $tracker_fields;
         $this->semantics   = $semantics;
         $this->workflow    = $workflow;
+        $this->resources   = array(
+            array(
+                'type' => 'reports',
+                'uri'  => $this->uri .'/'. ReportRepresentation::ROUTE
+            )
+        );
     }
 }

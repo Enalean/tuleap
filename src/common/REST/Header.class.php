@@ -76,6 +76,12 @@ class Header {
         self::sendHeader(self::X_PAGINATION_LIMIT_MAX, $max_limit);
     }
 
+    public static function sendOptionsPaginationHeaders($limit, $offset, $max_limit) {
+        self::sendHeader(self::X_PAGINATION_LIMIT, $limit);
+        self::sendHeader(self::X_PAGINATION_OFFSET, $offset);
+        self::sendHeader(self::X_PAGINATION_LIMIT_MAX, $max_limit);
+    }
+
     private static function sendHeader($name, $value) {
         header($name .': '. $value);
     }
