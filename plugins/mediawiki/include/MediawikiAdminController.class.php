@@ -95,7 +95,7 @@ class MediawikiAdminController {
         $this->assertUserIsProjectAdmin($service, $request);
         if($request->isPost()) {
             $project          = $request->getProject();
-            $new_mapping_list = $this->getSelectedMappingsFromRequest($request);
+            $new_mapping_list = $this->getSelectedMappingsFromRequest($request, $project);
             $this->mapper->saveMapping($new_mapping_list, $project);
         }
 
@@ -106,12 +106,20 @@ class MediawikiAdminController {
         ));
     }
 
-    private function getSelectedMappingsFromRequest(HTTPRequest $request) {
+    private function getSelectedMappingsFromRequest(HTTPRequest $request, Project $project) {
+        if ($this->requestIsRestore($request)) {
+            return $this->mapper->getDefaultMappingsForProject($project);
+        }
+
         $list = array();
         foreach(MediawikiUserGroupsMapper::$MEDIAWIKI_GROUPS_NAME as $mw_group_name) {
             $list[$mw_group_name] = array_filter(explode(',', $request->get('hidden_selected_'.$mw_group_name)));
         }
         return $list;
+    }
+
+    private function requestIsRestore(HTTPRequest $request) {
+        return $request->get('restore') != null;
     }
 
     private function assertUserIsProjectAdmin(ServiceMediawiki $service, HTTPRequest $request) {
