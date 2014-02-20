@@ -53,7 +53,7 @@ class MediawikiAdminController {
         $group_mapper_presenters = array();
         $current_mapping = $this->mapper->getCurrentUserGroupMapping($project);
         $all_ugroups     = $this->getIndexedUgroups($project);
-        foreach(MediawikiUserGroupsMapper::$MEDIAWIKI_GROUPS_NAME as $mw_group_name) {
+        foreach(MediawikiUserGroupsMapper::$MEDIAWIKI_MODIFIABLE_GROUP_NAMES as $mw_group_name) {
             $group_mapper_presenters[] = $this->getGroupPresenters($mw_group_name, $current_mapping, $all_ugroups);
         }
         return $group_mapper_presenters;

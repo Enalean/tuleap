@@ -32,14 +32,6 @@ class MediawikiGroupPresenter {
     /** @var UGroup[] */
     private $current_mapping;
 
-    private $groups_editable = array(
-        MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS  => 'disabled',
-        MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER       => 'disabled',
-        MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT        => '',
-        MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP      => '',
-        MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT => '',
-    );
-
     public function __construct($mediawiki_group_id, $mediawiki_group_label, $available_ugroups, $mapping) {
         $this->mediawiki_group_id    = $mediawiki_group_id;
         $this->available_ugroups     = $available_ugroups;
@@ -59,8 +51,7 @@ class MediawikiGroupPresenter {
         $selector = array(
             'name'     => 'available_'.$this->mediawiki_group_id.'[]',
             'class'    => 'forge_mw_available_groups',
-            'options'  => array(),
-            'disabled' => $this->getDisabled(),
+            'options'  => array()
         );
         foreach ($this->available_ugroups as $ugroup) {
             $selector['options'][] = array(
@@ -76,8 +67,7 @@ class MediawikiGroupPresenter {
         $selector = array(
             'name'     => 'selected_'.$this->mediawiki_group_id.'[]',
             'class'    => 'forge_mw_selected_groups',
-            'options'  => array(),
-            'disabled' => $this->getDisabled(),
+            'options'  => array()
         );
 
         foreach ($this->current_mapping as $ugroup) {
@@ -89,12 +79,6 @@ class MediawikiGroupPresenter {
         }
 
         return $selector;
-    }
-
-    private function getDisabled() {
-        if (!in_array($this->mediawiki_group_id, MediawikiUserGroupsMapper::$MEDIAWIKI_MODIFIABLE_GROUP_NAMES)) {
-            return 'disabled';
-        }
     }
 
     public function hidden_selected_groups_name() {

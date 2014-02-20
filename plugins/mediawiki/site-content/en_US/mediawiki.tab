@@ -7,6 +7,8 @@ plugin_mediawiki	descriptor_name	Plugin Mediawiki
 plugin_mediawiki	group_mapping_title	Mediawiki groups mapping
 plugin_mediawiki	group_mapping_help_intro	Here you can map groups between $1 and MediaWiki
 plugin_mediawiki	group_mapping_help_link	You can find more informations on what MediaWiki groups can do here: <a href="$1">Special:User groups rights</a>
+plugin_mediawiki	group_mapping_help_project_public	The two MediaWiki groups "Anonymous" and "User" groups are hardcoded to "All users" and "Registered users". In this project (public) it means that all users will be able to browse the wiki content and all Registered users will be able to edit and create page (see the detailed list of permissions in the User Rights page).
+plugin_mediawiki	group_mapping_help_project_private	The two MediaWiki groups "Anonymous" and "User" groups are hardcoded to "Nobody" and "Registered users". In this project (private) it means that only project members can access the wiki and they will be able to edit and create pages (see the detailed list of permissions in the User Rights page).
 plugin_mediawiki	group_name_anonymous	Anonymous
 plugin_mediawiki	group_name_user	User / Autoconfirmed / Email confirmed
 plugin_mediawiki	group_name_bot	Bot
