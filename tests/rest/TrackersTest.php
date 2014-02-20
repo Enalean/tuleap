@@ -53,6 +53,13 @@ class TrackersTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
+    public function testOptionsReportsId() {
+        $response = $this->getResponse($this->client->options($this->getReportsUri()));
+
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
     public function testGetTrackersId() {
         $tracker_uri = $this->getReleaseTrackerUri();
         $response    = $this->getResponse($this->client->get($tracker_uri));
@@ -86,6 +93,18 @@ class TrackersTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
+    public function testGetReportsId() {
+        $response = $this->getResponse($this->client->get($this->getReportsUri()));
+
+        $report = $response->json();
+
+        $this->assertEquals(102, $report['id']);
+        $this->assertEquals('tracker_reports/102', $report['uri']);
+        $this->assertEquals('Default', $report['label']);
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
     private function getReleaseTrackerUri() {
         $response_plannings = $this->getResponse($this->client->get('projects/101/plannings'))->json();
         return $response_plannings[0]['milestone_tracker']['uri'];
@@ -100,4 +119,12 @@ class TrackersTest extends RestBase {
             }
         }
     }
+
+    private function getReportsUri() {
+        $reports_uri = $this->getReleaseTrackerReportsUri();
+        $response_reports = $this->getResponse($this->client->get($reports_uri))->json();
+
+        return $response_reports[0]['uri'];
+    }
+
 }

@@ -21,10 +21,10 @@
 namespace Tuleap\Tracker\REST;
 
 use \Tracker_Report;
-
 use Tuleap\REST\JsonCast;
 
 class ReportRepresentation {
+
     const ROUTE = 'tracker_reports';
 
     /** @var int */
