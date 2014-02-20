@@ -38,7 +38,8 @@ class UserGroupResource {
      * Get the definition of a given user_group
      *
      * @url GET {id}
-     * @param string $id    Id of the ugroup (format: projectId_ugroupId)
+     *
+     * @param string $id  Id of the ugroup (format: projectId_ugroupId)
      *
      * @access protected
      *
@@ -82,14 +83,16 @@ class UserGroupResource {
     /**
      * Checks if the given id is well formed (format: projectId_ugroupId)
      *
-     * @param int $id
+     * @param string $id Id of the ugroup (format: projectId_ugroupId)
      *
      * @return boolean
      *
      * @throws 400
      */
     private function checkIdIsWellFormed($id) {
-        if (strpos($id, '_') == false) {
+        $regexp = '/^[0-9]+_[0-9]+$/';
+
+        if (! preg_match($regexp, $id)) {
             throw new RestException(400, 'Invalid id format, format must be: projectId_ugroupId');
         }
 
