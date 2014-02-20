@@ -1105,9 +1105,10 @@ plugin_tracker_formelement_admin	add_new_file_file	Fichier :
 plugin_tracker_formelement_admin	add_new_values	Ajouter de nouvelles valeurs
 plugin_tracker_formelement_admin	select_default_value	Sélectionner la valeur par défaut
 plugin_tracker_formelement_admin	static_values	Valeurs statiques
-plugin_tracker_formelement_admin	switch_msb	Transformer en boîte de sélections multiples
-plugin_tracker_formelement_admin	switch_sb	Transformer en boîte de sélection simple
-plugin_tracker_formelement_admin	switch_cb	Transformer en ensemble de case à cocher
+plugin_tracker_formelement_admin	switch_to	Transformer en:
+plugin_tracker_formelement_admin	switch_msb	boîte de sélections multiples
+plugin_tracker_formelement_admin	switch_sb	boîte de sélection simple
+plugin_tracker_formelement_admin	switch_cb	cases à cocher
 plugin_tracker_formelement_admin	switch_type_confirm	Etes-vous certain de vouloir changer le type de ce champ ?
 plugin_tracker_formelement_admin	field_used_in_semantics	Impossible de supprimer ce champ (utilisé en sémantique)
 plugin_tracker_formelement_admin	field_used_in_workflow	Impossible de supprimer ce champ (utilisé pour le workflow)
