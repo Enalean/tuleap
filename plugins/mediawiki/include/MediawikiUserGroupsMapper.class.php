@@ -154,4 +154,13 @@ class MediawikiUserGroupsMapper {
 
         return true;
     }
+
+    public function getDefaultMappingsForProject(Project $project) {
+        if ($project->isPublic()) {
+            return self::$DEFAULT_MAPPING_PUBLIC_PROJECT;
+        } else {
+            return self::$DEFAULT_MAPPING_PRIVATE_PROJECT;
+        }
+    }
+
 }
