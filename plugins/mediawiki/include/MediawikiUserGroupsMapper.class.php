@@ -19,10 +19,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once 'MediawikiGroups.class.php';
+
 /**
  * This class do the mapping between Tuleap And Mediawiki groups
  */
-
 class MediawikiUserGroupsMapper {
 
     const MEDIAWIKI_GROUPS_ANONYMOUS  = 'anonymous';
@@ -162,4 +163,19 @@ class MediawikiUserGroupsMapper {
         }
     }
 
+    public function defineUserMediawikiGroups(PFUser $user, Group $project) {
+        $mediawiki_groups = new MediawikiGroups($this->dao->getMediawikiGroupsForUser($user, $project));
+        $this->addGroupsAccordingToMapping($mediawiki_groups, $user, $project);
+        return $mediawiki_groups->getAddedRemoved();
+    }
+
+    private function addGroupsAccordingToMapping(MediawikiGroups $mediawiki_groups, PFUser $user, Group $project) {
+        $mediawiki_groups->add('*');
+        if (! $user->isAnonymous()) {
+            $dar = $this->dao->getMediawikiGroupsMappedForUGroups($user, $project);
+            foreach ($dar as $row) {
+                $mediawiki_groups->add($row['real_name']);
+            }
+        }
+    }
 }
