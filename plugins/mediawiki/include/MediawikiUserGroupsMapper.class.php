@@ -39,24 +39,23 @@ class MediawikiUserGroupsMapper {
         self::MEDIAWIKI_GROUPS_BUREAUCRAT
     );
 
-    private static $MEDIAWIKI_MODIFIABLE_GROUP_NAMES = array(
-        self::MEDIAWIKI_GROUPS_USER,
+    public static $MEDIAWIKI_MODIFIABLE_GROUP_NAMES = array(
         self::MEDIAWIKI_GROUPS_BOT,
         self::MEDIAWIKI_GROUPS_SYSOP,
         self::MEDIAWIKI_GROUPS_BUREAUCRAT,
     );
 
     public static $DEFAULT_MAPPING_PUBLIC_PROJECT = array (
-        self::MEDIAWIKI_GROUPS_ANONYMOUS  => array('1'),
-        self::MEDIAWIKI_GROUPS_USER       => array('2','3'),
-        self::MEDIAWIKI_GROUPS_SYSOP      => array('4'),
-        self::MEDIAWIKI_GROUPS_BUREAUCRAT => array('4')
+        self::MEDIAWIKI_GROUPS_ANONYMOUS  => array(UGroup::ANONYMOUS),
+        self::MEDIAWIKI_GROUPS_USER       => array(UGroup::REGISTERED),
+        self::MEDIAWIKI_GROUPS_SYSOP      => array(UGroup::PROJECT_ADMIN),
+        self::MEDIAWIKI_GROUPS_BUREAUCRAT => array(UGroup::PROJECT_ADMIN)
     );
 
     public static $DEFAULT_MAPPING_PRIVATE_PROJECT = array (
-        self::MEDIAWIKI_GROUPS_USER       => array('3'),
-        self::MEDIAWIKI_GROUPS_SYSOP      => array('4'),
-        self::MEDIAWIKI_GROUPS_BUREAUCRAT => array('4')
+        self::MEDIAWIKI_GROUPS_USER       => array(UGroup::REGISTERED),
+        self::MEDIAWIKI_GROUPS_SYSOP      => array(UGroup::PROJECT_ADMIN),
+        self::MEDIAWIKI_GROUPS_BUREAUCRAT => array(UGroup::PROJECT_ADMIN)
     );
 
     /** @var MediawikiDao */

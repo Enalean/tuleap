@@ -19,10 +19,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once 'MediawikiGroups.class.php';
+
 /**
  * This class do the mapping between Tuleap And Mediawiki groups
  */
-
 class MediawikiGroupsMapper {
 
     /** @var MediawikiDao */
@@ -33,38 +34,18 @@ class MediawikiGroupsMapper {
     }
 
     public function defineUserMediawikiGroups(PFUser $user, Group $project) {
-        $mediawiki_groups            = array();
-        $mediawiki_groups['removed'] = $this->getUnconsistantMediawikiGroups($user, $project);
+        $mediawiki_groups = new MediawikiGroups($this->dao->getMediawikiGroupsForUser($user, $project));
+        $this->addGroupsAccordingToMapping($mediawiki_groups, $user, $project);
+        return $mediawiki_groups->getAddedRemoved();
+    }
 
-        if ($user->isAnonymous()) {
-            $mediawiki_groups['added'][] = '*';
-        } else {
+    private function addGroupsAccordingToMapping(MediawikiGroups $mediawiki_groups, PFUser $user, Group $project) {
+        $mediawiki_groups->add('*');
+        if (! $user->isAnonymous()) {
             $dar = $this->dao->getMediawikiGroupsMappedForUGroups($user, $project);
-            if (count($dar) > 0) {
-                foreach ($dar as $row) {
-                    $mediawiki_groups['added'][] = $row['real_name'];
-                }
-            } else {
-                $mediawiki_groups['added'][] = '*';
+            foreach ($dar as $row) {
+                $mediawiki_groups->add($row['real_name']);
             }
         }
-
-        return $mediawiki_groups;
     }
-
-    private function getUnconsistantMediawikiGroups(PFUser $user, Group $project) {
-        $unconsistant_mediwiki_groups = array();
-        $mediawiki_explicit_groups    = $this->dao->getMediawikiGroupsForUser($user, $project);
-
-        if ($mediawiki_explicit_groups) {
-            foreach ($mediawiki_explicit_groups as $current_mediawiki_group) {
-                if (preg_match('/^ForgeRole*/', $current_mediawiki_group)) {
-                    $unconsistant_mediwiki_groups[] = $current_mediawiki_group;
-                }
-            }
-        }
-
-        return $unconsistant_mediwiki_groups;
-    }
-
 }

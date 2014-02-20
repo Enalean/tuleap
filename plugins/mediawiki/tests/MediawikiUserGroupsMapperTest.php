@@ -41,7 +41,7 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
         $this->project     = mock('Project');
     }
 
-    public function itAddsProjectMembersAsUsers() {
+    public function itAddsProjectMembersAsBots() {
         stub($this->dao)->getMediawikiUserGroupMapping()->returnsDar(
             array('group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS)
         );
@@ -50,36 +50,39 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
             'anonymous'  => array(
                 '1',
             ),
-            'bot'        => array(),
-            'user'       => array(
+            'bot'        => array(
                 '3'
             ),
+            'user'       => array(),
             'sysop'      => array(),
             'bureaucrat' => array()
         );
 
-        expect($this->dao)->addMediawikiUserGroupMapping($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER, '3')->once();
+        expect($this->dao)->addMediawikiUserGroupMapping($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT, '3')->once();
         expect($this->dao)->removeMediawikiUserGroupMapping()->never();
         $this->mapper->saveMapping($new_mapping, $this->project);
     }
 
-    public function itRemovesRegisteredUsersFromUserStatus() {
+    public function itRemovesRegisteredUsersFromBot() {
         stub($this->dao)->getMediawikiUserGroupMapping()->returnsDar(
             array('group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS),
-            array('group_id' => '104', 'ugroup_id' => '2', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER)
+            array('group_id' => '104', 'ugroup_id' => '2', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER),
+            array('group_id' => '104', 'ugroup_id' => '3', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT)
         );
 
         $new_mapping = array(
             'anonymous'  => array(
                 '1'
             ),
+            'user'       => array(
+                '2'
+            ),
             'bot'        => array(),
-            'user'       => array(),
             'sysop'      => array(),
-            'bureaucrat' => array()
+            'bureaucrat' => array(),
         );
 
-        expect($this->dao)->removeMediawikiUserGroupMapping($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER, '2')->once();
+        expect($this->dao)->removeMediawikiUserGroupMapping($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT, '3')->once();
         expect($this->dao)->addMediawikiUserGroupMapping()->never();
         $this->mapper->saveMapping($new_mapping, $this->project);
     }
@@ -87,6 +90,25 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
     public function itIgnoresAnonymousModifications() {
         stub($this->dao)->getMediawikiUserGroupMapping()->returnsDar(
             array('group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS)
+        );
+
+        $new_mapping = array(
+            'anonymous'  => array(),
+            'bot'        => array(),
+            'user'       => array(),
+            'sysop'      => array(),
+            'bureaucrat' => array()
+        );
+
+        expect($this->dao)->removeMediawikiUserGroupMapping()->never();
+        expect($this->dao)->addMediawikiUserGroupMapping()->never();
+        $this->mapper->saveMapping($new_mapping, $this->project);
+    }
+
+    public function itIgnoresUserModifications() {
+        stub($this->dao)->getMediawikiUserGroupMapping()->returnsDar(
+            array('group_id' => '104', 'ugroup_id' => '1', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS),
+            array('group_id' => '104', 'ugroup_id' => '2', 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER)
         );
 
         $new_mapping = array(
@@ -116,11 +138,6 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
             ),
             array(
                 'group_id'      => 104,
-                'ugroup_id'     => 3,
-                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER
-            ),
-            array(
-                'group_id'      => 104,
                 'ugroup_id'     => 4,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP
             ),
@@ -132,19 +149,18 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
         );
 
         $new_mapping = array(
-            'anonymous' => array(
+            'anonymous'  => array(
                 '1'
             ),
-            'bot' => array(
+            'user'       => array(
+                '2',
+            ),
+            'bot'        => array(
                 '3',
                 '2',
                 '4'
             ),
-            'user' => array(
-                '2',
-                '4'
-            ),
-            'sysop' => array(
+            'sysop'      => array(
                 '1'
             ),
             'bureaucrat' => array(
@@ -152,11 +168,12 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
             )
         );
 
-        expect($this->dao)->removeMediawikiUserGroupMapping()->count(3);
-        expect($this->dao)->removeMediawikiUserGroupMapping($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT, '4')->at(3);
+        expect($this->dao)->removeMediawikiUserGroupMapping()->count(2);
+        expect($this->dao)->removeMediawikiUserGroupMapping($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP,      4)->at(0);
+        expect($this->dao)->removeMediawikiUserGroupMapping($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT, 4)->at(1);
 
-        expect($this->dao)->addMediawikiUserGroupMapping()->count(6);
-        expect($this->dao)->addMediawikiUserGroupMapping($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT, '1')->at(6);
+        expect($this->dao)->addMediawikiUserGroupMapping()->count(5);
+        expect($this->dao)->addMediawikiUserGroupMapping($this->project, MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT, '1')->at(4);
         $this->mapper->saveMapping($new_mapping, $this->project);
     }
 
@@ -205,18 +222,13 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
             ),
             array(
                 'group_id'      => 104,
-                'ugroup_id'     => 3,
-                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER
-            ),
-            array(
-                'group_id'      => 104,
-                'ugroup_id'     => 3,
+                'ugroup_id'     => 2,
                 'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER
             ),
             array(
                 'group_id'      => 104,
                 'ugroup_id'     => 4,
-                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP
+                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT
             ),
             array(
                 'group_id'      => 104,
@@ -263,12 +275,7 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
             array(
                 'group_id'      => 104,
                 'ugroup_id'     => 4,
-                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER
-            ),
-            array(
-                'group_id'      => 104,
-                'ugroup_id'     => 4,
-                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP
+                'mw_group_name' => MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT
             ),
             array(
                 'group_id'      => 104,

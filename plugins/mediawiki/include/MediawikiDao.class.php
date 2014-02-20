@@ -68,14 +68,14 @@ class MediawikiDao extends DataAccessObject {
 
     public function getMediawikiGroupsForUser(PFUser $user, Project $project) {
         $database_name = self::getMediawikiDatabaseName($project);
-        $user_name     = $this->da->quoteSmart($user->getUnixName());
+        $user_name     = $this->da->quoteSmart($this->getMediawikiUserName($user->getUnixName()));
 
         $sql = "SELECT ug_group
                 FROM $database_name.mwuser_groups
                     INNER JOIN $database_name.mwuser ON $database_name.mwuser.user_id = $database_name.mwuser_groups.ug_user
-                WHERE user_name LIKE $user_name";
+                WHERE user_name = $user_name";
 
-        return $this->retrieve($sql)->getRow();
+        return $this->retrieve($sql);
     }
 
     public function removeUser(PFUser $user, Project $project) {

@@ -32,6 +32,14 @@ class MediawikiGroupPresenter {
     /** @var UGroup[] */
     private $current_mapping;
 
+    private $groups_editable = array(
+        MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS  => 'disabled',
+        MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_USER       => 'disabled',
+        MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BOT        => '',
+        MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_SYSOP      => '',
+        MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_BUREAUCRAT => '',
+    );
+
     public function __construct($mediawiki_group_id, $mediawiki_group_label, $available_ugroups, $mapping) {
         $this->mediawiki_group_id    = $mediawiki_group_id;
         $this->available_ugroups     = $available_ugroups;
@@ -84,10 +92,9 @@ class MediawikiGroupPresenter {
     }
 
     private function getDisabled() {
-        if ($this->mediawiki_group_id == MediawikiUserGroupsMapper::MEDIAWIKI_GROUPS_ANONYMOUS) {
+        if (!in_array($this->mediawiki_group_id, MediawikiUserGroupsMapper::$MEDIAWIKI_MODIFIABLE_GROUP_NAMES)) {
             return 'disabled';
         }
-        return '';
     }
 
     public function hidden_selected_groups_name() {
