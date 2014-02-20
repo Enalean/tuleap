@@ -160,11 +160,11 @@ class Planning_Controller extends MVC2_PluginController {
             $user,
             $this->group_id
         );
+        $last_plannings = $this->planning_factory->getLastLevelPlannings($user, $this->group_id);
 
-        if (empty($plannings)) {
+        if (empty($plannings) && empty($last_plannings)) {
             return $this->showEmptyHome();
         }
-        $last_plannings = $this->planning_factory->getLastLevelPlannings($user, $this->group_id);
 
         $presenter = new Planning_Presenter_HomePresenter(
             $this->getMilestoneAccessPresenters($plannings),

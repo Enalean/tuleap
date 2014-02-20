@@ -223,9 +223,13 @@ class PlanningFactory {
      */
     private function getLastLevelPlanningTrackersIds($plannings) {
         $tracker_ids = array_map(array($this, 'getPlanningTrackerId'), $plannings);
-        $hierarchy   = $this->tracker_factory->getHierarchy($tracker_ids);
 
-        return $hierarchy->getLastLevelTrackerIds();
+        if (count($plannings) > 1) {
+            $hierarchy = $this->tracker_factory->getHierarchy($tracker_ids);
+            return $hierarchy->getLastLevelTrackerIds();
+        }
+
+        return $tracker_ids;
     }
 
     /**
