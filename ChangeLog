@@ -26,6 +26,7 @@ Version 6.11 (Not released yet)
 
 	== Bug fix ==
 	* request #5857: Fix error with SVN during a SYSTEM_CHECK
+	* Fix request #6247: Forum flat view displays same author for all messages (Contribution STMicroelectronics)
 
 Version 6.10 (Thursday, February 6th 2014)
 	== Plugins ==
