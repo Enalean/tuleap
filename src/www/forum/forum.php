@@ -35,7 +35,7 @@ function forum_show_a_nested_message ($result,$row=0) {
 	  $g_id = db_result($gr,0,'group_id');
 	}
 
-	$poster = UserManager::instance()->getUserByUserName(db_result($result, $i, 'user_name'));
+	$poster = UserManager::instance()->getUserByUserName(db_result($result, $row, 'user_name'));
 	$ret_val = '
 		<TABLE BORDER="0" WIDTH="100%">
 			<TR>                  
