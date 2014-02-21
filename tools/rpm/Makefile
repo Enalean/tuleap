@@ -58,6 +58,7 @@ THEME_STEERFORGE_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/SteerForg
 THEME_TULEAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Tuleap/VERSION)
 THEME_EXPERIMENTAL_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Experimental/VERSION)
 
+RELEASE=1
 PKG_NAME=tuleap
 
 ifeq ($(strip $(OS)),rhel6)
@@ -123,6 +124,7 @@ rpm: tarball $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-1.noarch.rpm
 $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-1.noarch.rpm: $(SPEC_FILE)
 	cat $(SPEC_FILE) |\
 		sed -e 's/@@VERSION@@/$(version)/g' |\
+		sed -e 's/@@RELEASE@@/$(RELEASE)/g' |\
 		sed -e 's/@@CORE_MAILMAN_VERSION@@/$(CORE_MAILMAN_VERSION)/g' |\
 		sed -e 's/@@CORE_SUBVERSION_VERSION@@/$(CORE_SUBVERSION_VERSION)/g' |\
 		sed -e 's/@@CORE_CVS_VERSION@@/$(CORE_CVS_VERSION)/g' |\
