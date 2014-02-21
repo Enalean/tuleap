@@ -5,6 +5,7 @@ Version 6.11 (Not released yet)
 	* agiledashboard: 1.46
 	* tracker: 5.243
 	* cardwall: 1.19
+	* mediawiki: 0.24
 
 	== Development ==
 	* request #6023 - Days remaining off by one day in the Stand-Up View
