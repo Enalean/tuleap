@@ -10,9 +10,9 @@ plugin_mediawiki	group_mapping_help_link	You can find more informations on what 
 plugin_mediawiki	group_mapping_help_project_public	The two MediaWiki groups "Anonymous" and "User" groups are hardcoded to "All users" and "Registered users". In this project (public) it means that all users will be able to browse the wiki content and all Registered users will be able to edit and create page (see the detailed list of permissions in the User Rights page).
 plugin_mediawiki	group_mapping_help_project_private	The two MediaWiki groups "Anonymous" and "User" groups are hardcoded to "Nobody" and "Registered users". In this project (private) it means that only project members can access the wiki and they will be able to edit and create pages (see the detailed list of permissions in the User Rights page).
 plugin_mediawiki	group_name_anonymous	Anonymous
-plugin_mediawiki	group_name_user	User / Autoconfirmed / Email confirmed
+plugin_mediawiki	group_name_user	User
 plugin_mediawiki	group_name_bot	Bot
-plugin_mediawiki	group_name_sysop	Sysop
+plugin_mediawiki	group_name_sysop	Administrator / sysop
 plugin_mediawiki	group_name_bureaucrat	Bureaucrat
 plugin_mediawiki	group_tuleap	$1 groups
 

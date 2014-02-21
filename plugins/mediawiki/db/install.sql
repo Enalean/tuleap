@@ -132,8 +132,6 @@ INSERT INTO plugin_mediawiki_tuleap_mwgroups(mw_group_name, real_name)
 VALUES
     ('anonymous', '*'),
     ('user', 'user'),
-    ('user', 'autoconfirmed'),
-    ('user', 'emailconfirmed'),
     ('bot', 'bot'),
     ('sysop', 'sysop'),
     ('bureaucrat', 'bureaucrat');
