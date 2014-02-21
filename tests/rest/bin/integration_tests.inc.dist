@@ -3,6 +3,7 @@ $db_config_file = dirname(__FILE__).'/dbtest.inc';
 
 // The location of your Tuleap sources
 $codendi_dir = '/usr/share/codendi';
+$codendi_log = "/var/log/codendi";
 
 $sys_cookie_prefix = 'TLP';
 $codendi_cache_dir = '/tmp/run_tests';

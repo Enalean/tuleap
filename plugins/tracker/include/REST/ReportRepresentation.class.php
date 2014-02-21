@@ -22,23 +22,41 @@ namespace Tuleap\Tracker\REST;
 
 use \Tracker_Report;
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 
 class ReportRepresentation {
 
     const ROUTE = 'tracker_reports';
 
-    /** @var int */
+    /**
+     * @var int
+     */
     public $id;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $uri;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $label;
 
+    /**
+     * @var array
+     */
+    public $resources;
+
     public function build(Tracker_Report $report) {
-        $this->id         = JsonCast::toInt($report->getId());
-        $this->uri        = self::ROUTE . '/' . $this->id;
-        $this->label      = $report->getName();
+        $this->id        = JsonCast::toInt($report->getId());
+        $this->uri       = self::ROUTE . '/' . $this->id;
+        $this->label     = $report->getName();
+        $this->resources = array(
+            array(
+                'type' => 'artifacts',
+                'uri'  => $this->uri .'/'. ArtifactRepresentation::ROUTE
+            )
+        );
     }
 }

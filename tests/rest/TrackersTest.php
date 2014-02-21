@@ -54,7 +54,14 @@ class TrackersTest extends RestBase {
     }
 
     public function testOptionsReportsId() {
-        $response = $this->getResponse($this->client->options($this->getReportsUri()));
+        $response = $this->getResponse($this->client->options($this->getReportUri()));
+
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testOptionsReportsArtifactsId() {
+        $response = $this->getResponse($this->client->options($this->getReportsArtifactsUri()));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
@@ -94,13 +101,25 @@ class TrackersTest extends RestBase {
     }
 
     public function testGetReportsId() {
-        $response = $this->getResponse($this->client->get($this->getReportsUri()));
+        $response = $this->getResponse($this->client->get($this->getReportUri()));
 
         $report = $response->json();
 
         $this->assertEquals(102, $report['id']);
         $this->assertEquals('tracker_reports/102', $report['uri']);
         $this->assertEquals('Default', $report['label']);
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testGetReportsArtifactsId() {
+        $response = $this->getResponse($this->client->get($this->getReportsArtifactsUri()));
+        var_dump($response->getBody(1));
+        $artifacts = $response->json();
+
+        $first_artifact_info = $artifacts[0];
+        $this->assertEquals(1, $first_artifact_info['id']);
+        $this->assertEquals('artifacts/1', $first_artifact_info['uri']);
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
@@ -120,11 +139,23 @@ class TrackersTest extends RestBase {
         }
     }
 
-    private function getReportsUri() {
+    private function getReportUri() {
         $reports_uri = $this->getReleaseTrackerReportsUri();
         $response_reports = $this->getResponse($this->client->get($reports_uri))->json();
 
         return $response_reports[0]['uri'];
+    }
+
+    private function getReportsArtifactsUri() {
+        $report_uri = $this->getReportUri();
+        $response_report = $this->getResponse($this->client->get($report_uri))->json();
+
+
+        foreach ($response_report['resources'] as $resource) {
+            if ($resource['type'] == 'artifacts') {
+                return $resource['uri'];
+            }
+        }
     }
 
 }

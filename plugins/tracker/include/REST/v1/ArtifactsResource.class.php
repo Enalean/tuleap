@@ -61,7 +61,7 @@ class ArtifactsResource {
         $artifact = $this->getArtifactById($user, $id);
         $this->sendAllowHeadersForArtifact($artifact);
 
-        return $this->builder->getArtifactRepresentation($user, $artifact);
+        return $this->builder->getArtifactRepresentationWithFieldValues($user, $artifact);
     }
 
     /**

@@ -102,7 +102,7 @@ class TrackersResource {
      * @param int $limit  Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
      *
-     * @return Tuleap\Tracker\REST\ReportRepresentation[]
+     * @return array {@type Tuleap\Tracker\REST\ReportRepresentation}
      */
     protected function getReports($id, $limit = self::DEFAULT_LIMIT, $offset = self::DEFAULT_OFFSET) {
         if (! $this->limitValueIsAcceptable($limit)) {
