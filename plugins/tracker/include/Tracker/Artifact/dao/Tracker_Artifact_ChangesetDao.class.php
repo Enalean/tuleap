@@ -113,6 +113,25 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
                 ORDER BY c_new.id ASC";
         return $this->retrieve($sql);
     }
+
+    /**
+     * @param Integer $artifact_id
+     * @param Integer $timestamp
+     *
+     * @return DataAccessResult
+     */
+    public function searchLastChangesetAtDate($artifact_id, $timestamp) {
+        $artifact_id  = $this->da->escapeInt($artifact_id);
+        $timestamp    = $this->da->escapeInt($timestamp);
+
+        $sql = "SELECT *
+                FROM tracker_changeset
+                WHERE artifact_id = $artifact_id
+                    AND submitted_on <= $timestamp
+                ORDER BY submitted_on DESC
+                LIMIT 1";
+        return $this->retrieve($sql);
+    }
 }
 
 ?>
