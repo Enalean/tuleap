@@ -1,3 +1,14 @@
+Version 6.10-2 (Friday, February 21st 2014)
+	request #6247 - Forum flat view displays same author for all messages
+	request #6244 - unable to remove contributor semantic
+	request #6163 - UI: in CI plugin, checkbox with Git is no longer displayed
+	request #6162 - UI: Artifacts renderer chunk size too short
+	request #6154 - Cannot change password upon expiration
+	request #6133 - Gitolite over http doesn't work out of the box
+	request #5951 - Avoid hardcoded redirect on login when possible
+	request #5857 - SYSTEM_CHECK : Error with SVN
+	request #5712 - Remaining Effort in Burn Down Chart does not reflect history
+
 Version 6.10 (Thursday, February 6th 2014)
 	== Plugins ==
 	* agiledashboard: 1.41
