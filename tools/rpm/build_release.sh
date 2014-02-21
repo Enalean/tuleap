@@ -22,22 +22,6 @@ rootdir=$(cd $bindir/../../; pwd)
 export CODENDI_LOCAL_INC=$rootdir/local.inc
 
 #
-# User Guide
-#
-echo "Generate User Guide"
-user_guide="$rootdir/documentation/user_guide"
-
-make -C $user_guide
-
-#
-# Programmer guide
-#
-echo "Generate Programmer Guide"
-programmer_guide="$rootdir/documentation/programmer_guide"
-
-make -C $programmer_guide
-
-#
 # CLI
 #
 echo "Generate CLI"

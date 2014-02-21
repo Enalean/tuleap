@@ -1,20 +1,6 @@
-ifeq ($(strip $(RPM_TMP)),)
-	RPM_TMP=$(HOME)/rpmbuild
-endif
-
-ifeq ($(strip $(PHP_BASE)),)
-	PHP_BASE=php
-endif
-
+RPM_TMP=$(HOME)/rpmbuild
+PHP_BASE=php
 BASE_DIR=$(shell cd ../..; pwd)
-
-ifeq (,$(shell echo "$$DOCBOOK_TOOLS_DIR"))
-DOCBOOK_TOOLS_DIR=$(BASE_DIR)/docbook
-else
-DOCBOOK_TOOLS_DIR=$(shell echo $$DOCBOOK_TOOLS_DIR)
-endif
-
-DOCBOOKTARBALL=https://tuleap.net/file/pub/tuleap/tools/docbook/docbook.tbz2
 
 version=$(shell LANG=C cat $(BASE_DIR)/VERSION)
 
@@ -58,7 +44,15 @@ THEME_STEERFORGE_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/SteerForg
 THEME_TULEAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Tuleap/VERSION)
 THEME_EXPERIMENTAL_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Experimental/VERSION)
 
+ifdef GIT_BRANCH
+TAG_RELEASE = $(subst -, ,$(GIT_BRANCH))
+RELEASE = $(word 2, $(TAG_RELEASE))
+endif
+
+ifeq ($(strip $(RELEASE)),)
 RELEASE=1
+endif
+
 PKG_NAME=tuleap
 
 ifeq ($(strip $(OS)),rhel6)
@@ -119,9 +113,9 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: less
 ## Build RPM
 ##
 
-rpm: tarball $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-1.noarch.rpm
+rpm: tarball $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-$(RELEASE).noarch.rpm
 
-$(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-1.noarch.rpm: $(SPEC_FILE)
+$(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-$(RELEASE).noarch.rpm: $(SPEC_FILE)
 	cat $(SPEC_FILE) |\
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@RELEASE@@/$(RELEASE)/g' |\
