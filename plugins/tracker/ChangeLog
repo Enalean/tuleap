@@ -1,3 +1,6 @@
+Version 5.243 - Tuleap 6.11
+    * Fix request #5712 - Remaining Effort in Burn Down Chart does not reflect history
+
 Version 5.242 - Tuleap 6.11
     * story #6237: Link factorisation (Contrib JTEKT)
 
