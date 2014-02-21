@@ -489,7 +489,10 @@ class MediaWikiPlugin extends Plugin {
 
     public function register_project_creation($params) {
         if ($this->serviceIsUsedInTemplate($params['template_id'])) {
-            $this->createWiki($params['group_id']);
+            $mediawiki_instantiater = $this->getInstantiater($params['group_id']);
+            if ($mediawiki_instantiater) {
+                $mediawiki_instantiater->instantiateFromTemplate($params['ugroupsMapping']);
+            }
         }
     }
 
@@ -502,11 +505,14 @@ class MediaWikiPlugin extends Plugin {
 
     public function service_is_used($params) {
         if ($params['shortname'] == 'plugin_mediawiki' && $params['is_used']) {
-            $this->createWiki($params['group_id']);
+            $mediawiki_instantiater = $this->getInstantiater($params['group_id']);
+            if ($mediawiki_instantiater) {
+                $mediawiki_instantiater->instantiate();
+            }
         }
     }
 
-    private function createWiki($group_id) {
+    private function getInstantiater($group_id) {
         $project_manager = ProjectManager::instance();
         $project = $project_manager->getProject($group_id);
         
@@ -516,9 +522,7 @@ class MediaWikiPlugin extends Plugin {
 
         include dirname(__FILE__) .'/MediawikiInstantiater.class.php';
 
-        $mediawiki_instantiater = new MediaWikiInstantiater($project);
-
-        $mediawiki_instantiater->instantiate();
+        return new MediaWikiInstantiater($project);
     }
 
     public function plugin_statistics_service_usage($params) {

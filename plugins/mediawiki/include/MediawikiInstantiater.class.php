@@ -53,12 +53,25 @@ class MediaWikiInstantiater {
      * Creates a mediawiki plugin instance for the project
      */
     public function instantiate() {
+        if ($this->initMediawiki()) {
+            $this->seedUGroupMapping();
+        }
+    }
+
+    public function instantiateFromTemplate(array $ugroup_mapping) {
+        if ($this->initMediawiki()) {
+            $this->seedUGroupMappingFromTemplate($ugroup_mapping);
+        }
+    }
+
+    private function initMediawiki() {
         if ($this->projectExists()) {
             $this->logger->info('Project dir ' . $this->project_name_dir . ' exists, so I assume the project already exists.');
+            return false;
         } else {
             $this->createDirectory();
             $this->createDatabase();
-            $this->seedUGroupMapping();
+            return true;
         }
     }
 
@@ -112,6 +125,23 @@ class MediaWikiInstantiater {
         $this->logger->info('Using schema: codendi');
         $main_db = Config::get('sys_dbname');
         db_query('USE '.$main_db);
+    }
+
+    private function seedUGroupMappingFromTemplate(array $ugroup_mapping) {
+        $template         = ProjectManager::instance()->getProject($this->project->getTemplate());
+        $mapper           = new MediawikiUserGroupsMapper(new MediawikiDao());
+        $template_mapping = $mapper->getCurrentUserGroupMapping($template);
+        $new_mapping      = array();
+        foreach ($template_mapping as $mw_group => $tuleap_groups) {
+            foreach ($tuleap_groups as $grp) {
+                if ($grp < UGroup::DYNAMIC_UPPER_BOUNDARY) {
+                    $new_mapping[$mw_group][] = $grp;
+                } elseif (isset($ugroup_mapping[$grp])) {
+                    $new_mapping[$mw_group][] = $ugroup_mapping[$grp];
+                }
+            }
+        }
+        db_query($this->seedProjectUGroupMappings($this->project->getID(), $new_mapping));
     }
 
     private function seedUGroupMapping() {
