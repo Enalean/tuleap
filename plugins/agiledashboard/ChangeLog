@@ -1,3 +1,6 @@
+Version 1.47 - Tuleap 6.11
+    * Follow-up to story #6009: API REST is no longer called directly in presenter for burndown
+
 Version 1.46 - Tuleap 6.11
     * request #6023 - Days remaining off by one day in the Stand-Up View
 
