@@ -160,6 +160,40 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
 
         $this->assertEqual($burndown_data->getIdealEffort(), array(5, 4, 3, 2, 1, 0));
     }
+
+    public function itReturnsBurndownDataInJson() {
+        $capacity = 7;
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
+        $burndown_data->addEffortAt(0, 5);
+        $burndown_data->addEffortAt(1, 4);
+        $burndown_data->addEffortAt(2, 3);
+        $burndown_data->addEffortAt(3, 1);
+
+        $results = json_decode($burndown_data->getJsonRepresentation());
+
+        $expected_points = array(5,4,3,1,1,1);
+
+        $this->assertEqual($results->duration, 5);
+        $this->assertEqual($results->capacity, 7);
+        $this->assertEqual($results->points, $expected_points);
+    }
+
+    public function itReturnsBurndownDataInJsonAndDealWithNullValues() {
+        $capacity = 7;
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
+        $burndown_data->addEffortAt(0, 5);
+        $burndown_data->addEffortAt(1, 4);
+        $burndown_data->addEffortAt(2, null);
+        $burndown_data->addEffortAt(3, null);
+
+        $results = json_decode($burndown_data->getJsonRepresentation());
+
+        $expected_points = array(5,4);
+
+        $this->assertEqual($results->duration, 5);
+        $this->assertEqual($results->capacity, 7);
+        $this->assertEqual($results->points, $expected_points);
+    }
 }
 
 class Tracker_Chart_Data_EmptyBurndownTest extends TuleapTestCase {

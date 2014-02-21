@@ -237,12 +237,16 @@ class Planning_Controller extends MVC2_PluginController {
 
         foreach ($last_planning_current_milestones as $milestone) {
             $this->milestone_factory->addMilestoneAncestors($user, $milestone);
+            $milestone = $this->milestone_factory->updateMilestoneContextualInfo($user, $milestone);
 
             if ($milestone->hasUsableBurndownField()) {
+                $burndown_data = $milestone->getBurndownData($user);
+
                 $presenters[] = new Planning_Presenter_MilestoneBurndownSummaryPresenter(
                     $milestone,
                     $this->plugin_path,
-                    $has_cardwall
+                    $has_cardwall,
+                    $burndown_data
                 );
             } else {
                 $presenters[] = new Planning_Presenter_MilestoneSummaryPresenter(
