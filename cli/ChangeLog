@@ -1,5 +1,6 @@
 1.5.4 - (Tuleap 6.11)
-	* fix documentation for docman geFile --version parameter
+	* fix documentation for docman geFile --version parameter (Contrib
+	STMicroelectronics)
 
 1.5.3 - SOAP api 4.2 (Tuleap 6)
    Respect PHP Strict Standards
