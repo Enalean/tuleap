@@ -2173,7 +2173,7 @@ File uploaded successfully
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--version_number: The version that we want to download, if not specified the current one
+                        <para>--version: The version number that we want to download, if not specified the current one
                         </para>
                     </listitem>
                     <listitem>
