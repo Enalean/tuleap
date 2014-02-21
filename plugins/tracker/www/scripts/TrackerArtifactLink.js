@@ -199,31 +199,43 @@ codendi.tracker.artifact.artifactLink = {
             artifact_link.select('h2').each(this.loadTab, this);
             
         },
+
+        showTrackerPanel: function(event, tracker_panel, element, h2) {
+            var ul = element.up('ul');
+            ul.childElements().invoke('removeClassName', 'tracker-form-element-artifactlink-list-nav-current');
+            element.up('li').addClassName('tracker-form-element-artifactlink-list-nav-current');
+
+            // hide all panels
+            tracker_panel.adjacent('div').invoke('hide');
+
+            //except the wanted one
+            tracker_panel.show();
+
+            if (! ul.up('div').hasClassName('read-only')) {
+                //change the current tracker for the selector
+                codendi.tracker.artifact.artifactLink.selector_url.tracker = h2.className.split('_')[1]; // class="tracker-form-element-artifactlink-tracker_974"
+            }
+
+            // stop the propagation of the event
+            if (event) {
+                Event.stop(event);
+            }
+        },
         
         loadTab: function (h2) {
+            var self = this;
             var tracker_panel = h2.up();
             codendi.tracker.artifact.artifactLink.load_nb_artifacts(tracker_panel);
             //add a new navigation element
             var li = new Element('li');
             var a = new Element('a', {
                 href: '#show-tab-' + h2.innerHTML
+
             }).observe('click', function (evt) {
-                a.up('ul').childElements().invoke('removeClassName', 'tracker-form-element-artifactlink-list-nav-current');
-                a.up('li').addClassName('tracker-form-element-artifactlink-list-nav-current');
-                
-                // hide all panels
-                this.tracker_panels.invoke('hide');
-                
-                //except the wanted one
-                tracker_panel.show();
-                
-                //change the current tracker for the selector
-                codendi.tracker.artifact.artifactLink.selector_url.tracker = h2.className.split('_')[1]; // class="tracker-form-element-artifactlink-tracker_974"
-                
-                // stop the propagation of the event
-                Event.stop(evt);
+                self.showTrackerPanel(evt, tracker_panel, a, h2);
+
             }.bind(this));
-            
+
             a.update(h2.innerHTML);
             
             li.appendChild(a);
@@ -232,10 +244,13 @@ codendi.tracker.artifact.artifactLink = {
             //hide this panel and its title unless is first
             if (this.tracker_panels.size() == 0) {
                 codendi.tracker.artifact.artifactLink.selector_url.tracker = h2.className.split('_')[1]; // class="tracker-form-element-artifactlink-tracker_974"
-                li.addClassName('tracker-form-element-artifactlink-list-nav-current');
-            } else {
-                tracker_panel.hide();
             }
+
+            if (li == this.ul.firstDescendant()) {
+                li.addClassName('tracker-form-element-artifactlink-list-nav-current');
+                this.showTrackerPanel(null, tracker_panel, a, h2);
+            }
+
             h2.hide();
             
             //add this panel to the store

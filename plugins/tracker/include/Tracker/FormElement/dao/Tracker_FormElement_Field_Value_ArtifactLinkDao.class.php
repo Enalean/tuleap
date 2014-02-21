@@ -38,7 +38,7 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
         return $this->retrieve($sql);
     }
 
-    public function searchArtifactIdReverseLinksById($artifact_id) {
+    public function searchReverseLinksById($artifact_id) {
         $artifact_id = $this->da->escapeInt($artifact_id);
 
         $sql = "SELECT DISTINCT(tracker_changeset.artifact_id),
