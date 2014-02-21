@@ -1,3 +1,6 @@
+Version 1.48 - Tuleap 6.11
+    * story #6204 : if only one planning, show the detailed view
+
 Version 1.47 - Tuleap 6.11
     * Follow-up to story #6009: API REST is no longer called directly in presenter for burndown
 
