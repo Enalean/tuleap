@@ -58,6 +58,9 @@ class MediaWikiPlugin extends Plugin {
             $this->_addHook('project_admin_remove_user');
             $this->_addHook('project_admin_change_user_permissions');
             $this->_addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
+            $this->_addHook('project_admin_ugroup_remove_user');
+            $this->_addHook('project_admin_remove_user_from_project_ugroups');
+            $this->_addHook('project_admin_ugroup_deletion');
 
             // Search
             $this->_addHook(Event::LAYOUT_SEARCH_ENTRY);
@@ -549,29 +552,40 @@ class MediaWikiPlugin extends Plugin {
         $params['csv_exporter']->buildDatas($number_of_page_since_a_date, "Number of created Mediawiki pages since start date");
     }
 
+    public function project_admin_ugroup_deletion($params) {
+        $project = $this->getProjectFromParams($params);
+        $dao     = $this->getDao();
+
+        if ($project->usesService(MediaWikiPlugin::SERVICE_SHORTNAME)) {
+            $dao->deleteUserGroup($project->getID(), $params['ugroup_id']);
+            $dao->resetUserGroups($project);
+        }
+    }
+
     public function project_admin_remove_user($params) {
+        $this->updateUserGroupMapping($params);
+    }
+
+    public function project_admin_ugroup_remove_user($params) {
+        $this->updateUserGroupMapping($params);
+    }
+
+    public function project_admin_change_user_permissions($params) {
+        $this->updateUserGroupMapping($params);
+    }
+
+    public function project_admin_remove_user_from_project_ugroups($params) {
+        $this->updateUserGroupMapping($params);
+    }
+
+    private function updateUserGroupMapping($params) {
         $user    = $this->getUserFromParams($params);
         $project = $this->getProjectFromParams($params);
         $dao     = $this->getDao();
 
         if ($project->usesService(MediaWikiPlugin::SERVICE_SHORTNAME)) {
-            $dao->removeUser($user, $project);
+            $dao->resetUserGroupsForUser($user, $project);
         }
-    }
-
-    public function project_admin_change_user_permissions($params) {
-        $user    = $this->getUserFromParams($params);
-        $project = $this->getProjectFromParams($params);
-        $dao     = $this->getDao();
-
-        if ($this->userWasPreviouslyProjectAdmin($params)) {
-            $dao->removeAdminsGroupsForUser($user, $project);
-        }
-    }
-
-    private function userWasPreviouslyProjectAdmin($params) {
-        return $params['user_permissions']['admin_flags'] === ''
-            && $params['previous_permissions']['admin_flags'] === 'A';
     }
 
     public function systemevent_user_rename($params) {

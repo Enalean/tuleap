@@ -204,6 +204,16 @@ class MediawikiDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function deleteUserGroup($group_id, $ugroup_id) {
+        $group_id  = $this->da->escapeInt($group_id);
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+
+        $sql = "DELETE FROM plugin_mediawiki_ugroup_mapping
+                WHERE group_id = $group_id
+                AND ugroup_id = $ugroup_id";
+        return $this->update($sql);
+    }
+
     /**
      * Reset all user permissions for a given database according to mapping
      *
@@ -215,62 +225,103 @@ class MediawikiDao extends DataAccessObject {
         $group_id      = $this->da->escapeInt($project->getID());
 
         $this->update("TRUNCATE TABLE $database_name.mwuser_groups");
+        return $this->feedMediawikiUserGroupsWithTuleapMapping($database_name, $group_id, 0);
+    }
 
+    public function resetUserGroupsForUser(PFUser $user, Project $project) {
+        $database_name  = self::getMediawikiDatabaseName($project);
+        $group_id       = $this->da->escapeInt($project->getID());
+        $forge_user_id  = $this->da->escapeInt($user->getId());
+        $user_name      = $this->da->quoteSmart($this->getMediawikiUserName($user->getUnixName()));
+
+        $this->deleteUserGroupsForUser($database_name, $user_name);
+        $this->feedMediawikiUserGroupsWithTuleapMapping($database_name, $group_id, $forge_user_id);
+    }
+
+    private function deleteUserGroupsForUser($database_name, $user_name) {
+        return $this->update("DELETE $database_name.mwuser_groups
+                              FROM $database_name.mwuser_groups as mwuser_groups, $database_name.mwuser as mwuser
+                              WHERE mwuser.user_id = mwuser_groups.ug_user
+                                AND mwuser.user_name = $user_name");
+    }
+
+    private function feedMediawikiUserGroupsWithTuleapMapping($database_name, $group_id, $forge_user_id) {
         $sql = "
             INSERT INTO $database_name.mwuser_groups(ug_user, ug_group)
-            (
-                -- All static ugroups
-                SELECT mwuser.user_id, tuleap_mwgroups.real_name AS ug_name
+                  (".$this->getSQLMediawikiGroupsThatMatchStaticGroups($database_name, $group_id, $forge_user_id).")
+            UNION (".$this->getSQLMediawikiGroupsThatMatchProjectAdmins($database_name, $group_id, $forge_user_id).")
+            UNION (".$this->getSQLMediawikiGroupsThatMatchProjectMembers($database_name, $group_id, $forge_user_id).")
+            UNION (".$this->getSQLMediawikiGroupsThatMatchRegisteredUsers($database_name, $group_id, $forge_user_id).")
+            UNION (".$this->getSQLMediawikiGroupsThatMatchAnonymousUsers($database_name, $group_id, $forge_user_id).")";
+        return $this->update($sql);
+    }
+
+    private function getSQLMediawikiGroupsThatMatchStaticGroups($database_name, $group_id, $forge_user_id) {
+        $sql = "SELECT mwuser.user_id, tuleap_mwgroups.real_name AS ug_name
                 FROM $database_name.mwuser
                     JOIN user ON (user.user_name = REPLACE(mwuser.user_name, ' ', '_'))
                     JOIN ugroup_user ON (ugroup_user.user_id = user.user_id)
                     JOIN ugroup ON (ugroup.ugroup_id = ugroup_user.ugroup_id AND ugroup.group_id = $group_id)
                     JOIN plugin_mediawiki_ugroup_mapping ugroup_mapping ON (ugroup_mapping.ugroup_id = ugroup_user.ugroup_id)
-                    JOIN plugin_mediawiki_tuleap_mwgroups tuleap_mwgroups ON (tuleap_mwgroups.mw_group_name = ugroup_mapping.mw_group_name)
-            )
-            UNION
-            (
-                -- Project admin (ugroup_id 4)
-                SELECT mwuser.user_id, tuleap_mwgroups.real_name AS ug_name
+                    JOIN plugin_mediawiki_tuleap_mwgroups tuleap_mwgroups ON (tuleap_mwgroups.mw_group_name = ugroup_mapping.mw_group_name)";
+        if ($forge_user_id != 0) {
+            $sql .= " WHERE user.user_id = .$forge_user_id";
+        }
+        return $sql;
+    }
+
+    private function getSQLMediawikiGroupsThatMatchProjectAdmins($database_name, $group_id, $forge_user_id) {
+        $sql = "SELECT mwuser.user_id, tuleap_mwgroups.real_name AS ug_name
                 FROM $database_name.mwuser
                     JOIN user ON (user.user_name = REPLACE(mwuser.user_name, ' ', '_'))
                     JOIN user_group ON (user_group.user_id = user.user_id and user_group.group_id = $group_id)
                     JOIN plugin_mediawiki_ugroup_mapping ugroup_mapping ON (ugroup_mapping.group_id = user_group.group_id AND ugroup_mapping.ugroup_id = 4 AND user_group.admin_flags='A')
-                    JOIN plugin_mediawiki_tuleap_mwgroups tuleap_mwgroups ON (tuleap_mwgroups.mw_group_name = ugroup_mapping.mw_group_name)
-            )
-            UNION
-            (
-                -- Project members (ugroup_id 3)
-                SELECT mwuser.user_id, tuleap_mwgroups.real_name AS ug_name
+                    JOIN plugin_mediawiki_tuleap_mwgroups tuleap_mwgroups ON (tuleap_mwgroups.mw_group_name = ugroup_mapping.mw_group_name)";
+        if ($forge_user_id != 0) {
+            $sql .= " WHERE user.user_id = .$forge_user_id";
+        }
+        return $sql;
+    }
+
+    private function getSQLMediawikiGroupsThatMatchProjectMembers($database_name, $group_id, $forge_user_id) {
+        $sql = "SELECT mwuser.user_id, tuleap_mwgroups.real_name AS ug_name
                 FROM $database_name.mwuser
                     JOIN user ON (user.user_name = REPLACE(mwuser.user_name, ' ', '_'))
                     JOIN user_group ON (user_group.user_id = user.user_id and user_group.group_id = $group_id)
                     JOIN plugin_mediawiki_ugroup_mapping ugroup_mapping ON (ugroup_mapping.group_id = user_group.group_id AND ugroup_mapping.ugroup_id = 3)
-                    JOIN plugin_mediawiki_tuleap_mwgroups tuleap_mwgroups ON (tuleap_mwgroups.mw_group_name = ugroup_mapping.mw_group_name)
-            )
-            UNION
-            (
-                -- Registered users (ugroup_id 2)
-                SELECT mwuser.user_id, tuleap_mwgroups.real_name AS ug_name
+                    JOIN plugin_mediawiki_tuleap_mwgroups tuleap_mwgroups ON (tuleap_mwgroups.mw_group_name = ugroup_mapping.mw_group_name)";
+        if ($forge_user_id != 0) {
+            $sql .= " WHERE user.user_id = .$forge_user_id";
+        }
+        return $sql;
+    }
+
+    private function getSQLMediawikiGroupsThatMatchRegisteredUsers($database_name, $group_id, $forge_user_id) {
+        $sql = "SELECT mwuser.user_id, tuleap_mwgroups.real_name AS ug_name
                 FROM $database_name.mwuser
                     JOIN user ON (user.user_name = REPLACE(mwuser.user_name, ' ', '_'))
                     LEFT JOIN user_group ON (user_group.user_id = user.user_id and user_group.group_id = $group_id)
                     JOIN plugin_mediawiki_ugroup_mapping ugroup_mapping ON (ugroup_mapping.group_id = $group_id AND ugroup_mapping.ugroup_id = 2)
                     JOIN plugin_mediawiki_tuleap_mwgroups tuleap_mwgroups ON (tuleap_mwgroups.mw_group_name = ugroup_mapping.mw_group_name)
-                WHERE user_group.user_id IS NULL
-            )
-            UNION
-            (
-                -- Anonymous / all_users (ugroup_id 1)
-                SELECT mwuser.user_id, tuleap_mwgroups.real_name AS ug_name
+                WHERE user_group.user_id IS NULL";
+        if ($forge_user_id != 0) {
+            $sql .= " AND user.user_id = .$forge_user_id";
+        }
+        return $sql;
+    }
+
+    private function getSQLMediawikiGroupsThatMatchAnonymousUsers($database_name, $group_id, $forge_user_id) {
+        $sql = "SELECT mwuser.user_id, tuleap_mwgroups.real_name AS ug_name
                 FROM $database_name.mwuser
                     JOIN user ON (user.user_name = REPLACE(mwuser.user_name, ' ', '_'))
                     LEFT JOIN user_group ON (user_group.user_id = user.user_id and user_group.group_id = $group_id)
                     JOIN plugin_mediawiki_ugroup_mapping ugroup_mapping ON (ugroup_mapping.group_id = $group_id AND ugroup_mapping.ugroup_id = 1)
                     JOIN plugin_mediawiki_tuleap_mwgroups tuleap_mwgroups ON (tuleap_mwgroups.mw_group_name = ugroup_mapping.mw_group_name)
-                WHERE user_group.user_id IS NULL
-            )";
-        return $this->update($sql);
+                WHERE user_group.user_id IS NULL";
+        if ($forge_user_id != 0) {
+            $sql .= " AND user.user_id = .$forge_user_id";
+        }
+        return $sql;
     }
 
     /**
