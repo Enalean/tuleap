@@ -30,7 +30,7 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
         ));
         $this->addParam(array(
             'name'           => 'version',
-            'description'    => '--version_number=<version>     (Optional) The version that we want to download, if not specified the current one'
+            'description'    => '--version=<version>     (Optional) The version that we want to download, if not specified the current one'
         ));
         $this->addParam(array(
             'name'           => 'output',
