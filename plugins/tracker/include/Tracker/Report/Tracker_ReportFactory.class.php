@@ -50,7 +50,7 @@ class Tracker_ReportFactory extends Error {
     
     /**
      * @param int $id the id of the report to retrieve
-     * @return Report identified by id (null if not found)
+     * @return Tracker_Report identified by id (null if not found)
      */
     public function getReportById($id, $user_id, $store_in_session = true) {
         $row = $this->getDao()
