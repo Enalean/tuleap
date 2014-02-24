@@ -994,6 +994,8 @@ plugin_tracker_artifact	formelement_artifactlink_create_new_parent	Create a new 
 plugin_tracker_artifact	formelement_artifactlink_choose_parent	Select $1 parent: 
 plugin_tracker_artifact	formelement_artifactlink_will_have_as_parent	Will have $1 as parent.
 plugin_tracker_artifact	formelement_artifactlink_open_parent	Open $1
+plugin_tracker_artifact	formelement_artifactlink_title	Artifact links
+plugin_tracker_artifact	formelement_artifactlink_reverse_title	Reverse artifact links
 
 plugin_tracker_artifact	unable_update	Unable to update the artifact
 plugin_tracker_artifact	no_changes	No changes for artifact $1

@@ -396,10 +396,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $prefill_removed_values,
         $prefill_parent,
         $read_only,
-        $from_aid = null
+        $from_aid = null,
+        $reverse_artifact_links = false
     ) {
 
-        $html = '';
+        $html = '<h3>'.$this->getWidgetTitle($reverse_artifact_links).'</h3>';
+
         $html_name_new = '';
         $html_name_del = '';
         if ($name) {
@@ -508,6 +510,19 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         }
         $html .= '</div>';
         return $html;
+    }
+
+    /**
+     *
+     * @param boolean $reverse_artifact_links
+     */
+    private function getWidgetTitle($reverse_artifact_links) {
+        if ($reverse_artifact_links) {
+            return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_reverse_title');
+        }
+
+        return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_title');
+
     }
     
     /**
@@ -732,6 +747,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             '',
             '',
             '',
+            true,
+            null,
             true
         );
     }
