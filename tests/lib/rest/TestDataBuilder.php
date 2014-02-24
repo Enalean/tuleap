@@ -23,11 +23,20 @@ require_once 'www/project/admin/UserPermissionsDao.class.php';
 
 class TestDataBuilder {
 
+    const ADMIN_ID         = 101;
     const ADMIN_USER_NAME  = 'admin';
     const ADMIN_USER_PASS  = 'siteadmin';
-
-    const TEST_USER_NAME   = 'rest_api_tester';
-    const TEST_USER_PASS   = 'welcome0';
+    const ADMIN_REAL_NAME  = 'Site Administrator';
+    const ADMIN_EMAIL      = 'codendi-admin@_DOMAIN_NAME_';
+    const TEST_USER_1_ID   = 102;
+    const TEST_USER_1_NAME = 'rest_api_tester_1';
+    const TEST_USER_1_PASS = 'welcome0';
+    const TEST_USER_2_ID   = 103;
+    const TEST_USER_2_NAME = 'rest_api_tester_2';
+    const TEST_USER_2_PASS = 'welcome0';
+    const TEST_USER_3_ID   = 104;
+    const TEST_USER_3_NAME = 'rest_api_tester_3';
+    const TEST_USER_3_PASS = 'welcome0';
 
     const ADMIN_PROJECT_ID          = 100;
     const PROJECT_PRIVATE_MEMBER_ID = 101;
@@ -39,6 +48,11 @@ class TestDataBuilder {
     const PROJECT_PRIVATE_SHORTNAME        = 'private';
     const PROJECT_PUBLIC_SHORTNAME         = 'public';
     const PROJECT_PUBLIC_MEMBER_SHORTNAME  = 'public-member';
+
+    const STATIC_UGROUP_1_ID    = 101;
+    const STATIC_UGROUP_1_LABEL = 'static_ugroup_1';
+    const STATIC_UGROUP_2_ID    = 102;
+    const STATIC_UGROUP_2_LABEL = 'static_ugroup_2';
 
     const EPICS_TRACKER_ID        = 1;
     const RELEASES_TRACKER_ID     = 2;
@@ -120,14 +134,24 @@ class TestDataBuilder {
         return $this;
     }
 
-    public function generateUser() {
-        $user = new PFUser();
-        $user->setUserName(self::TEST_USER_NAME);
-        $user->setPassword(self::TEST_USER_PASS);
-        $user->setUserName(self::TEST_USER_NAME);
-        $user->setLanguage($GLOBALS['Language']);
+    public function generateUsers() {
+        $user_1 = new PFUser();
+        $user_1->setUserName(self::TEST_USER_1_NAME);
+        $user_1->setPassword(self::TEST_USER_1_PASS);
+        $user_1->setLanguage($GLOBALS['Language']);
+        $this->user_manager->createAccount($user_1);
 
-        $this->user_manager->createAccount($user);
+        $user_2 = new PFUser();
+        $user_2->setUserName(self::TEST_USER_2_NAME);
+        $user_2->setPassword(self::TEST_USER_2_PASS);
+        $user_2->setLanguage($GLOBALS['Language']);
+        $this->user_manager->createAccount($user_2);
+
+        $user_3 = new PFUser();
+        $user_3->setUserName(self::TEST_USER_3_NAME);
+        $user_3->setPassword(self::TEST_USER_3_PASS);
+        $user_3->setLanguage($GLOBALS['Language']);
+        $this->user_manager->createAccount($user_3);
 
         return $this;
     }
@@ -139,19 +163,25 @@ class TestDataBuilder {
         $GLOBALS['ftp_frs_dir_prefix'] = '/tmp';
         $GLOBALS['ftp_anon_dir_prefix'] = '/tmp';
 
-        $user_test_rest = $this->user_manager->getUserByUserName(self::TEST_USER_NAME);
+        $user_test_rest_1 = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME);
+        $user_test_rest_2 = $this->user_manager->getUserByUserName(self::TEST_USER_2_NAME);
+        $user_test_rest_3 = $this->user_manager->getUserByUserName(self::TEST_USER_3_NAME);
 
         echo "Create projects\n";
 
-        $this->createProject(
+        $project_1 = $this->createProject(
             self::PROJECT_PRIVATE_MEMBER_SHORTNAME,
             'Private member',
             false,
-            array($user_test_rest),
-            array($user_test_rest)
+            array($user_test_rest_1, $user_test_rest_2, $user_test_rest_3),
+            array($user_test_rest_1)
         );
+        $this->addUserGroupsToProject($project_1);
+        $this->addUserToUserGroup($user_test_rest_1, $project_1, self::STATIC_UGROUP_1_ID);
+        $this->addUserToUserGroup($user_test_rest_1, $project_1, self::STATIC_UGROUP_2_ID);
+        $this->addUserToUserGroup($user_test_rest_2, $project_1, self::STATIC_UGROUP_2_ID);
 
-        $this->createProject(
+        $project_2 = $this->createProject(
             self::PROJECT_PRIVATE_SHORTNAME,
             'Private',
             false,
@@ -159,7 +189,7 @@ class TestDataBuilder {
             array()
         );
 
-        $this->createProject(
+        $project_3 = $this->createProject(
             self::PROJECT_PUBLIC_SHORTNAME,
             'Public',
             true,
@@ -167,11 +197,11 @@ class TestDataBuilder {
             array()
         );
 
-        $this->createProject(
+        $project_4 = $this->createProject(
             self::PROJECT_PUBLIC_MEMBER_SHORTNAME,
             'Public member',
             true,
-            array($user_test_rest),
+            array($user_test_rest_1),
             array()
         );
 
@@ -217,7 +247,6 @@ class TestDataBuilder {
         ));
 
         $this->project_manager->activate($project);
-        $this->addUserGroupsToProject($project);
 
         foreach ($project_members as $project_member) {
             $this->addMembersToProject($project, $project_member);
@@ -226,6 +255,8 @@ class TestDataBuilder {
         foreach ($project_admins as $project_admin) {
             $this->addAdminToProject($project, $project_admin);
         }
+
+        return $project;
     }
 
     private function addMembersToProject(Project $project, PFUser $user) {
@@ -239,7 +270,12 @@ class TestDataBuilder {
     }
 
     private function addUserGroupsToProject(Project $project) {
-        ugroup_create($project->getId(), 'static_ugroup', 'static_ugroup', '');
+        ugroup_create($project->getId(), 'static_ugroup_1', 'static_ugroup_1', '');
+        ugroup_create($project->getId(), 'static_ugroup_2', 'static_ugroup_2', '');
+    }
+
+    private function addUserToUserGroup($user, $project, $ugroup_id) {
+        ugroup_add_user_to_ugroup($project->getId(), $ugroup_id, $user->getId());
     }
 
     public function importAgileTemplate() {

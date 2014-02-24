@@ -238,6 +238,64 @@ class UGroup {
         return $dar->instanciateWith(array($this, 'newUser'));
     }
 
+    /**
+     * Return array of users members of the ugroup
+     *
+     * @return PFUser[]
+     */
+    public function getStaticOrDynamicMembersPaginated($project_id, $limit, $offset) {
+        if ($this->is_dynamic) {
+            return $this->getDynamicMembersPaginated($project_id, $limit, $offset);
+        }
+
+        return $this->getStaticMembersPaginated($limit, $offset);
+    }
+
+    /**
+     * Get the members of a dynamic group
+     *
+     * @return PFUser[]
+     */
+    private function getDynamicMembersPaginated($group_id, $limit, $offset) {
+        $dar = $this->getUGroupUserDao()->searchUsersByDynamicUGroupIdPaginated($this->id, $group_id, $limit, $offset);
+
+        if (! $dar) {
+            return array();
+        }
+
+        return $dar->instanciateWith(array($this, 'newUserFromIncompleteRow'));
+    }
+
+    /**
+     * Get the members of a static group
+     *
+     * @return PFUser[]
+     */
+    private function getStaticMembersPaginated($limit, $offset) {
+        return $this->getUGroupUserDao()
+                ->searchUsersByStaticUGroupIdPaginated($this->id, $limit, $offset)
+                ->instanciateWith(array($this, 'newUser'));
+    }
+
+    /**
+     * Count the number of users in a ugroup
+     *
+     * @return int
+     */
+    public function countStaticOrDynamicMembers($group_id) {
+        $count = 0;
+
+        if ($this->is_dynamic) {
+            $dar   = $this->getUGroupUserDao()->searchUserByDynamicUGroupId($this->id, $group_id);
+            $count = $dar->count();
+        } else {
+            $dar   = $this->getUGroupUserDao()->countUserByStaticUGroupId($this->id)->getRow();
+            $count = $dar['count_users'];
+        }
+
+        return $count;
+    }
+
     public function newUser($row) {
         return new PFUser($row);
     }

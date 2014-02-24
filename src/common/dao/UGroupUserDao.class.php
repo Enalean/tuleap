@@ -47,6 +47,52 @@ class UGroupUserDao extends DataAccessObject {
     }
 
     /**
+     * Searches UGroup members by UGroupId paginated
+     *
+     * Return all Active or Restricted ugroup members
+     * Only return active & restricted to keep it coherent with Group::getMembersUserNames
+     *
+     * @param Integer $ugroup_id Id of the ugroup
+     * @param Integer $limit
+     * @param Integer $offset
+     *
+     * @return DataAccessResult
+     */
+    public function searchUsersByStaticUGroupIdPaginated($ugroup_id, $limit, $offset) {
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+        $limit     = $this->da->escapeInt($limit);
+        $offset    = $this->da->escapeInt($offset);
+
+        $sql = "SELECT *
+                FROM ugroup_user INNER JOIN user USING(user_id)
+                WHERE ugroup_id = $ugroup_id
+                  AND user.status IN ('A', 'R')
+                ORDER BY user_name ASC
+                LIMIT $offset, $limit";
+
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Count UGroup members by UGroupId
+     *
+     * @param Integer $ugroup_id Id of the ugroup
+     *
+     * @return DataAccessResult
+     */
+    function countUserByStaticUGroupId($ugroup_id) {
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+
+        $sql = "SELECT count(*) AS count_users
+                FROM ugroup_user INNER JOIN user USING(user_id)
+                WHERE ugroup_id = $ugroup_id
+                  AND user.status IN ('A', 'R')
+                ORDER BY user_name";
+
+        return $this->retrieve($sql);
+    }
+
+    /**
      * Return project admins of given static group
      * 
      * @param Integer $groupId Id of the project
@@ -78,6 +124,33 @@ class UGroupUserDao extends DataAccessObject {
      */
     public function searchUserByDynamicUGroupId($ugroupId, $groupId) {
         $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId);
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Get uGroup members for both dynamic & sttic uGroups
+     *
+     * @param Integer $ugroupId Id of the uGroup
+     * @param Integer $groupId  Id of the project
+     * @param Integer $limit
+     * @param Integer $offset
+     *
+     * @return DataAccessResult | false
+     */
+    public function searchUsersByDynamicUGroupIdPaginated($ugroupId, $groupId, $limit, $offset) {
+        $ugroupId = $this->da->escapeInt($ugroupId);
+        $groupId  = $this->da->escapeInt($groupId);
+        $limit    = $this->da->escapeInt($limit);
+        $offset   = $this->da->escapeInt($offset);
+
+        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId);
+
+        if (! $sql) {
+            return false;
+        }
+
+        $sql .= " LIMIT $offset, $limit"; // Nicolas Terray approved :)
+
         return $this->retrieve($sql);
     }
 

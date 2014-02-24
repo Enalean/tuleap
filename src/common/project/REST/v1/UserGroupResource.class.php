@@ -21,8 +21,11 @@ namespace Tuleap\Project\REST\v1;
 
 use \ProjectManager;
 use \UserManager;
+use \UGroup;
+use \PFUser;
 use \UGroupManager;
 use \Tuleap\Project\REST\UserGroupRepresentation;
+use \Tuleap\Project\REST\UserRepresentation;
 use \Tuleap\REST\Header;
 use \Tuleap\REST\ProjectAuthorization;
 use \Luracast\Restler\RestException;
@@ -31,6 +34,8 @@ use \Luracast\Restler\RestException;
  * Wrapper for user_groups related REST methods
  */
 class UserGroupResource {
+
+    const MAX_LIMIT = 50;
 
     /**
      * Get a user_group
@@ -52,6 +57,7 @@ class UserGroupResource {
     protected function getId($id) {
         $this->checkIdIsWellFormed($id);
         list($project_id, $ugroup_id) = explode('_', $id);
+        $this->isGroupViewable($ugroup_id);
         $this->checkUserGroupIdExists($ugroup_id);
 
         $this->userCanSeeUserGroups($project_id);
@@ -78,6 +84,106 @@ class UserGroupResource {
 
         $this->userCanSeeUserGroups($project_id);
         $this->sendAllowHeadersForUserGroup();
+    }
+
+    /**
+     * Get users of a user_group
+     *
+     * Get the users of a given user_group
+     *
+     * @url GET {id}/users
+     *
+     * @param string $id Id of the ugroup (format: projectId_ugroupId)
+     * @param int $limit  Number of elements displayed per page
+     * @param int $offset Position of the first element to display
+     *
+     * @access protected
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404
+     * @throws 406
+     *
+     * @return Array {@type \Tuleap\Project\REST\UserRepresentation}
+     */
+    public function getUsers($id, $limit = self::MAX_LIMIT, $offset = 0) {
+        $this->checkLimitValueIsAcceptable($limit);
+        $this->checkIdIsWellFormed($id);
+
+        list($project_id, $ugroup_id) = explode('_', $id);
+
+        $this->isGroupViewable($ugroup_id);
+        $this->checkUserGroupIdExists($ugroup_id);
+        $this->userCanSeeUserGroups($project_id);
+
+        $user_group_manager     = new UGroupManager();
+        $user_group             = $user_group_manager->getById($ugroup_id);
+        $member_representations = array();
+        $members                = $this->getUserGroupMembers($user_group, $project_id, $limit, $offset);
+
+        foreach($members as $member) {
+            $member_representations[] = $this->getUserRepresentation($member);
+        }
+
+        $this->sendPaginationHeaders($limit, $offset, $this->countUserGroupMembers($user_group, $project_id));
+        $this->sendAllowHeadersForUserGroup();
+
+        return $member_representations;
+    }
+
+    /**
+     * @url OPTIONS {id}/users
+     *
+     * @param int $id Id of the ugroup (format: projectId_ugroupId)
+     *
+     * @access protected
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404
+     */
+    public function optionsUsers($id) {
+        $this->checkIdIsWellFormed($id);
+        list($project_id, $ugroup_id) = explode('_', $id);
+
+        $this->checkUserGroupIdExists($ugroup_id);
+        $this->userCanSeeUserGroups($project_id);
+
+        $this->sendAllowHeadersForUserGroup();
+    }
+
+    /**
+     * Get the members of a group
+     *
+     * @throws 404
+     *
+     * @return PFUser[]
+     */
+    private function getUserGroupMembers(UGroup $user_group, $project_id, $limit, $offset) {
+        return $user_group->getStaticOrDynamicMembersPaginated($project_id, $limit, $offset);
+    }
+
+    /**
+     * Count the members of a group
+     *
+     * @return int
+     */
+    private function countUserGroupMembers(UGroup $user_group, $project_id) {
+        return $user_group->countStaticOrDynamicMembers($project_id);
+    }
+
+    /**
+     * Get the UserRepresentation of a user
+     *
+     * @param PFUser $member
+     *
+     * @return \Tuleap\Project\REST\UserRepresentation
+     */
+    private function getUserRepresentation(PFUser $member) {
+        $user_representation = new UserRepresentation();
+        $user_representation->build($member);
+
+        return $user_representation;
     }
 
     /**
@@ -119,10 +225,6 @@ class UserGroupResource {
         return true;
     }
 
-    private function sendAllowHeadersForUserGroup() {
-        Header::allowOptionsGet();
-    }
-
     /**
      * @throws 403
      * @throws 404
@@ -138,4 +240,46 @@ class UserGroupResource {
         return true;
     }
 
+    /**
+     * @param int $ugroup_id
+     *
+     * @throws 404
+     *
+     * @return boolean
+     */
+    private function isGroupViewable($ugroup_id) {
+        $excluded_ugroups_ids = array(UGroup::NONE, UGroup::ANONYMOUS, Ugroup::REGISTERED);
+
+        if (in_array($ugroup_id, $excluded_ugroups_ids)) {
+            throw new RestException(404, 'Unable to list the users of this group');
+        }
+
+        return true;
+    }
+
+    private function sendAllowHeadersForUserGroup() {
+        Header::allowOptionsGet();
+    }
+
+    private function sendPaginationHeaders($limit, $offset, $size) {
+        Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
+    }
+
+    /**
+     * Checks if the limit provided by the request is valid
+     *
+     * @param int $limit Number of elements displayed per page
+     *
+     * @return boolean
+     *
+     * @throws 406
+     */
+
+    private function checkLimitValueIsAcceptable($limit) {
+        if ($limit > self::MAX_LIMIT || $limit <= 0) {
+             throw new RestException(406, 'limit value is not acceptable');
+        }
+
+        return true;
+    }
 }

@@ -27,7 +27,7 @@ class CardsTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_NAME),
+            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }

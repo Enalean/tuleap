@@ -27,7 +27,7 @@ class ProjectTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_NAME),
+            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
@@ -158,7 +158,7 @@ class ProjectTest extends RestBase {
     }
 
     public function testOPTIONSbyIdForProjectMember() {
-        $response = $this->getResponseByName(TestDataBuilder::TEST_USER_NAME, $this->client->options('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID));
+        $response = $this->getResponseByName(TestDataBuilder::TEST_USER_1_NAME, $this->client->options('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
@@ -168,7 +168,7 @@ class ProjectTest extends RestBase {
         // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
-            $this->getResponseByName(TestDataBuilder::TEST_USER_NAME, $this->client->get('projects/'.TestDataBuilder::ADMIN_PROJECT_ID));
+            $this->getResponseByName(TestDataBuilder::TEST_USER_1_NAME, $this->client->get('projects/'.TestDataBuilder::ADMIN_PROJECT_ID));
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 403);
             $exception = true;

@@ -28,22 +28,22 @@ class UserGroupTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_NAME),
+            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
 
-   public function testGETId() {
-        $response = $this->getResponse($this->client->get('user_groups/101_101'));
+    public function testGETId() {
+        $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID));
 
         $this->assertEquals(
             $response->json(),
             array(
-                'id'        => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
-                'uri'       => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
-                'label'     => 'static_ugroup',
-                'users_uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/users'
-                )
+                'id'        => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID,
+                'uri'       => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID,
+                'label'     => TestDataBuilder::STATIC_UGROUP_1_LABEL,
+                'users_uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID.'/users'
+            )
         );
         $this->assertEquals($response->getStatusCode(), 200);
     }
@@ -52,7 +52,7 @@ class UserGroupTest extends RestBase {
         // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
-            $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID.'_'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID));
+            $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID));
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 403);
             $exception = true;
@@ -65,7 +65,7 @@ class UserGroupTest extends RestBase {
         // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
-            $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PRIVATE_ID.'_'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID));
+            $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PRIVATE_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID));
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 403);
             $exception = true;
@@ -85,5 +85,93 @@ class UserGroupTest extends RestBase {
         }
 
         $this->assertTrue($exception);
+    }
+
+    public function testOptionsUsers() {
+        $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID.'/users'));
+
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testGetUsersFromADynamicGroup() {
+        $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_3/users'));
+        $this->assertEquals(
+            $response->json(),
+            array(
+                array(
+                    'id'        => TestDataBuilder::ADMIN_ID,
+                    'email'     => TestDataBuilder::ADMIN_EMAIL,
+                    'real_name' => TestDataBuilder::ADMIN_REAL_NAME,
+                    'username'  => TestDataBuilder::ADMIN_USER_NAME,
+                    'ldap_id'   => ''
+                ),
+                array(
+                    'id'        => TestDataBuilder::TEST_USER_1_ID,
+                    'email'     => '',
+                    'real_name' => '',
+                    'username'  => TestDataBuilder::TEST_USER_1_NAME,
+                    'ldap_id'   => ''
+                ),
+                array(
+                    'id'        => TestDataBuilder::TEST_USER_2_ID,
+                    'email'     => '',
+                    'real_name' => '',
+                    'username'  => TestDataBuilder::TEST_USER_2_NAME,
+                    'ldap_id'   => ''
+                ),
+                array(
+                    'id'        => TestDataBuilder::TEST_USER_3_ID,
+                    'email'     => '',
+                    'real_name' => '',
+                    'username'  => TestDataBuilder::TEST_USER_3_NAME,
+                    'ldap_id'   => ''
+                )
+            )
+        );
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testGetUsersFromAStaticGroup() {
+        $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID.'/users'));
+
+        $this->assertEquals(
+            $response->json(),
+            array(
+                array(
+                    'id'        => TestDataBuilder::TEST_USER_1_ID,
+                    'email'     => '',
+                    'real_name' => '',
+                    'username'  => TestDataBuilder::TEST_USER_1_NAME,
+                    'ldap_id'   => ''
+                )
+            )
+        );
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testGetMultipleUsersFromAStaticGroup() {
+        $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_2_ID.'/users'));
+
+        $this->assertEquals(
+            $response->json(),
+            array(
+                array(
+                    'id'        => TestDataBuilder::TEST_USER_1_ID,
+                    'email'     => '',
+                    'real_name' => '',
+                    'username'  => TestDataBuilder::TEST_USER_1_NAME,
+                    'ldap_id'   => ''
+                ),
+                array(
+                    'id'        => TestDataBuilder::TEST_USER_2_ID,
+                    'email'     => '',
+                    'real_name' => '',
+                    'username'  => TestDataBuilder::TEST_USER_2_NAME,
+                    'ldap_id'   => ''
+                )
+            )
+        );
+        $this->assertEquals($response->getStatusCode(), 200);
     }
 }
