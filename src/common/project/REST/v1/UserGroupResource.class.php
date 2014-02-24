@@ -44,7 +44,7 @@ class UserGroupResource {
      *
      * @url GET {id}
      *
-     * @param string $id  Id of the ugroup (format: projectId_ugroupId)
+     * @param string $id Id of the ugroup (format: projectId_ugroupId)
      *
      * @access protected
      *
@@ -71,10 +71,11 @@ class UserGroupResource {
     /**
      * @url OPTIONS {id}
      *
-     * @param int $id Id of the project
+     * @param string $id Id of the ugroup (format: projectId_ugroupId)
      *
      * @access protected
      *
+     * @throws 400
      * @throws 403
      * @throws 404
      */
