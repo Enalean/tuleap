@@ -1,3 +1,6 @@
+Version 5.245 - Tuleap 6.11
+    * story #6190: add rest api for tracker reports
+
 Version 5.244 - Tuleap 6.11
     * request #5817: SOAP function to add values to selectbox field (Contrib STMicroelectronics)
 
