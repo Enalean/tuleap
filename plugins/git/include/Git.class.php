@@ -131,28 +131,10 @@ class Git extends PluginController {
         $this->permissions_manager  = $permissions_manager;
 
         $matches = array();
-        if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
-            $this->request->set('group_id', $matches[1][0]);
-            $this->request->set('action', $matches[2][0]);
-            $repo_id = 0;            
-            //repository id is passed            
-            if ( preg_match('/^([0-9]+)$/', $matches[3][0]) === 1 ) {
-               $repo_id = $matches[3][0];
-            } else {
-            //get repository by name and group id to retrieve repo id
-               $repo = new GitRepository();
-               $repo->setName($matches[3][0]);
-               $repo->setProject( $this->projectManager->getProject($matches[1][0]) );
-               try {
-                   $repo->load();
-               } catch (Exception $e) {                   
-                   $this->addError('Bad request');
-                   $this->redirect('/');
-               }
-               $repo_id = $repo->getId();               
-            }
-            $this->request->set('repo_id', $repo_id);
-        }        
+
+        $this->routeUsingFriendlyURLs();
+        $this->routeUsingStandardURLs();
+
         $this->plugin      = $plugin;
         $valid = new Valid_GroupId('group_id');
         $valid->required();
@@ -167,12 +149,12 @@ class Git extends PluginController {
 
         if (  empty($this->action) ) {
             $this->action = 'index';
-        }                  
+        }
         if ( empty($this->groupId) ) {
             $this->addError('Bad request');
             $this->redirect('/');
         }
-      
+
         $this->projectName      = $this->projectManager->getProject($this->groupId)->getUnixName();
         if ( !$this->plugin_manager->isPluginAllowedForProject($this->plugin, $this->groupId) ) {
             $this->addError( $this->getText('project_service_not_available') );
@@ -180,6 +162,47 @@ class Git extends PluginController {
         }
 
         $this->permittedActions = array();
+    }
+
+    private function routeUsingFriendlyURLs() {
+        if ( preg_match('%^/plugins/git/(?P<project_name>[^/]*)/(?P<path>[^?]*)\?{0,1}(?P<parameters>.*)$%', $_SERVER['REQUEST_URI'], $matches) ) {
+            $repository = $this->factory->getByProjectNameAndPath($matches['project_name'], $matches['path'].'.git');
+
+            if ($repository) {
+                $this->request->set('action', 'view');
+                $this->request->set('group_id', $repository->getProjectId());
+                $this->request->set('repo_id', $repository->getId());
+                if (isset($matches['parameters'])) {
+                    parse_str($matches['parameters'], $_GET);
+                    parse_str($matches['parameters'], $_REQUEST);
+                }
+            }
+        }
+    }
+
+    private function routeUsingStandardURLs() {
+        if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
+            $this->request->set('group_id', $matches[1][0]);
+            $this->request->set('action', $matches[2][0]);
+            $repo_id = 0;
+            //repository id is passed
+            if ( preg_match('/^([0-9]+)$/', $matches[3][0]) === 1 ) {
+               $repo_id = $matches[3][0];
+            } else {
+            //get repository by name and group id to retrieve repo id
+               $repo = new GitRepository();
+               $repo->setName($matches[3][0]);
+               $repo->setProject( $this->projectManager->getProject($matches[1][0]) );
+               try {
+                   $repo->load();
+               } catch (Exception $e) {
+                   $this->addError('Bad request');
+                   $this->redirect('/');
+               }
+               $repo_id = $repo->getId();
+            }
+            $this->request->set('repo_id', $repo_id);
+        }
     }
 
     public function setPermissionsManager(GitPermissionsManager $permissions_manager) {
