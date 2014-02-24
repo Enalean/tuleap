@@ -279,7 +279,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
      *
      * @return String
      */
-    public function fetchSubmitNoColumns($artifact_to_link) {
+    public function fetchSubmitNoColumns($artifact_to_link, $submitted_values) {
         $html='';
 
         if ($artifact_to_link) {
@@ -287,7 +287,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         }
 
         foreach($this->getFormElements() as $form_element) {
-            $html .= $form_element->fetchSubmitForOverlay();
+            $html .= $form_element->fetchSubmitForOverlay($submitted_values);
         }
 
         return $html;
@@ -368,7 +368,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
 
             case 'get-create-in-place':
                 if ($this->userCanSubmitArtifact($current_user)) {
-                    $artifact_link_id = $request->get('artifact-link-id');
+                    $artifact_link_id            = $request->get('artifact-link-id');
 
                     $renderer = new Tracker_Artifact_Renderer_CreateInPlaceRenderer(
                         $this,
