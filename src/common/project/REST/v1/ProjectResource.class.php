@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,13 +19,16 @@
 
 namespace Tuleap\Project\REST\v1;
 
-use ProjectManager;
-use UserManager;
-use PFUser;
-use Project;
-use EventManager;
-use Event;
+use \ProjectManager;
+use \UserManager;
+use \PFUser;
+use \Project;
+use \EventManager;
+use \Event;
+use \UGroup;
+use \UGroupManager;
 use \Tuleap\Project\REST\ProjectRepresentation;
+use \Tuleap\Project\REST\UserGroupRepresentation;
 use \Tuleap\REST\Header;
 use \Luracast\Restler\RestException;
 use \Tuleap\REST\ProjectAuthorization;
@@ -33,6 +36,7 @@ use \Tuleap\REST\ProjectAuthorization;
 /**
  * Wrapper for project related REST methods
  */
+
 class ProjectResource {
 
     const MAX_LIMIT = 50;
@@ -43,9 +47,13 @@ class ProjectResource {
     /** @var ProjectManager */
     private $project_manager;
 
+    /** @var UGroupManager */
+    private $ugroup_manager;
+
     public function __construct() {
-        $this->user_manager = UserManager::instance();
+        $this->user_manager    = UserManager::instance();
         $this->project_manager = ProjectManager::instance();
+        $this->ugroup_manager  = new UGroupManager();
     }
 
     /**
@@ -418,6 +426,56 @@ class ProjectResource {
 
     private function limitValueIsAcceptable($limit) {
         return $limit <= self::MAX_LIMIT;
+    }
+
+    /**
+     * Get user_groups
+     *
+     * Get the user_groups of a given project
+     *
+     * @url GET {id}/user_groups
+     *
+     * @param int $id Id of the project
+     *
+     * @return array {@type Tuleap\Project\REST\v1\UserGroupRepresentation}
+     */
+    protected function getUserGroups($id) {
+        $project = $this->getProject($id);
+        $this->userCanSeeUserGroups($id);
+
+        $excluded_ugroups_ids = array(UGroup::NONE, UGroup::ANONYMOUS, Ugroup::REGISTERED);
+        $ugroups              = $this->ugroup_manager->getUGroups($project, $excluded_ugroups_ids);
+        $user_groups          = $this->getUserGroupsRepresentations($ugroups, $id);
+
+        $this->sendAllowHeadersForProject();
+
+        return $user_groups;
+    }
+
+    private function getUserGroupsRepresentations(array $ugroups, $project_id) {
+        $user_groups = array();
+
+        foreach ($ugroups as $ugroup) {
+            $representation = new UserGroupRepresentation();
+            $representation->build($project_id, $ugroup->getId());
+            $user_groups[] = $representation;
+        }
+
+        return $user_groups;
+    }
+
+    /**
+     * @throws 403
+     * @throws 404
+     *
+     * @return boolean
+     */
+    private function userCanSeeUserGroups($project_id) {
+        $project      = $this->project_manager->getProject($project_id);
+        $user         = $this->user_manager->getCurrentUser();
+        ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
+
+        return true;
     }
 
     private function sendAllowHeadersForProject() {
