@@ -404,13 +404,17 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
         $html_name_new = '';
         $html_name_del = '';
+
         if ($name) {
             $html_name_new = 'name="'. $name .'[new_values]"';
             $html_name_del = 'name="'. $name .'[removed_values]';
         }
-        $hp = Codendi_HTMLPurifier::instance();
-        $read_only_class = "";
-        if (!$read_only) {
+
+        $hp              = Codendi_HTMLPurifier::instance();
+        $read_only_class = 'read-only';
+
+        if (! $read_only) {
+            $read_only_class = '';
             $html .= '<div><span class="input-append" style="display:inline;"><input type="text"
                              '. $html_name_new .'
                              class="tracker-form-element-artifactlink-new"
@@ -425,8 +429,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $current_user = $this->getCurrentUser();
                 $html .= $this->fetchParentSelector($prefill_parent, $name, $parent_tracker, $current_user, $hp);
             }
-        } else {
-            $read_only_class = 'read-only';
         }
 
         $html .= '<div class="tracker-form-element-artifactlink-list '.$read_only_class.'">';
@@ -762,16 +764,34 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        $links_tab_read_only = $this->fetchLinksReadOnly($artifact, $value);
+        $reverse_links_tab   = $this->fetchReverseLinks($artifact);
+
+        return $links_tab_read_only . $reverse_links_tab;
+    }
+
+    private function fetchLinksReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $artifact_links = array();
+
         if ($value != null) {
             $artifact_links = $value->getValue();
         }
+
         $read_only              = true;
         $name                   = '';
         $prefill_new_values     = '';
         $prefill_removed_values = array();
         $prefill_parent         = '';
-        return $this->fetchHtmlWidget($artifact, $name, $artifact_links, $prefill_new_values, $prefill_removed_values, $prefill_parent, $read_only);
+
+        return $this->fetchHtmlWidget(
+            $artifact,
+            $name,
+            $artifact_links,
+            $prefill_new_values,
+            $prefill_removed_values,
+            $prefill_parent,
+            $read_only
+        );
     }
     
     /**
