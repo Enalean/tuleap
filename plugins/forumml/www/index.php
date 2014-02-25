@@ -54,7 +54,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 	} else {
 		$list_id = $request->get('list');
 		if (!user_isloggedin() || (!mail_is_list_public($list_id) && !user_ismember($group_id))) {
-			exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('include_exit','no_perm'));
+			exit_error($GLOBALS["Language"]->getText('include_exit','info'),$GLOBALS["Language"]->getText('include_exit','mail_list_no_perm'));
 		}
 		if (!mail_is_list_active($list_id)) {
 			exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('plugin_forumml','wrong_list'));
