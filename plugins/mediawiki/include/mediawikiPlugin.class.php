@@ -24,6 +24,7 @@
  */
 
 require_once 'common/plugin/Plugin.class.php';
+require_once 'constants.php';
 
 class MediaWikiPlugin extends Plugin {
 
@@ -57,6 +58,9 @@ class MediaWikiPlugin extends Plugin {
             $this->_addHook('project_admin_remove_user');
             $this->_addHook('project_admin_change_user_permissions');
             $this->_addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
+            $this->_addHook('project_admin_ugroup_remove_user');
+            $this->_addHook('project_admin_remove_user_from_project_ugroups');
+            $this->_addHook('project_admin_ugroup_deletion');
 
             // Search
             $this->_addHook(Event::LAYOUT_SEARCH_ENTRY);
@@ -64,6 +68,8 @@ class MediaWikiPlugin extends Plugin {
             $this->_addHook('plugins_powered_search', 'plugins_powered_search', false);
 
             $this->_addHook('plugin_statistics_service_usage');
+
+            $this->addHook(Event::SERVICE_CLASSNAMES);
     }
 
     /**
@@ -486,7 +492,10 @@ class MediaWikiPlugin extends Plugin {
 
     public function register_project_creation($params) {
         if ($this->serviceIsUsedInTemplate($params['template_id'])) {
-            $this->createWiki($params['group_id']);
+            $mediawiki_instantiater = $this->getInstantiater($params['group_id']);
+            if ($mediawiki_instantiater) {
+                $mediawiki_instantiater->instantiateFromTemplate($params['ugroupsMapping']);
+            }
         }
     }
 
@@ -499,11 +508,14 @@ class MediaWikiPlugin extends Plugin {
 
     public function service_is_used($params) {
         if ($params['shortname'] == 'plugin_mediawiki' && $params['is_used']) {
-            $this->createWiki($params['group_id']);
+            $mediawiki_instantiater = $this->getInstantiater($params['group_id']);
+            if ($mediawiki_instantiater) {
+                $mediawiki_instantiater->instantiate();
+            }
         }
     }
 
-    private function createWiki($group_id) {
+    private function getInstantiater($group_id) {
         $project_manager = ProjectManager::instance();
         $project = $project_manager->getProject($group_id);
         
@@ -513,10 +525,7 @@ class MediaWikiPlugin extends Plugin {
 
         include dirname(__FILE__) .'/MediawikiInstantiater.class.php';
 
-        $project_name = $project->getUnixName();
-        $mediawiki_instantiater = new MediaWikiInstantiater($project_name);
-
-        $mediawiki_instantiater->instantiate();
+        return new MediaWikiInstantiater($project);
     }
 
     public function plugin_statistics_service_usage($params) {
@@ -543,29 +552,40 @@ class MediaWikiPlugin extends Plugin {
         $params['csv_exporter']->buildDatas($number_of_page_since_a_date, "Number of created Mediawiki pages since start date");
     }
 
+    public function project_admin_ugroup_deletion($params) {
+        $project = $this->getProjectFromParams($params);
+        $dao     = $this->getDao();
+
+        if ($project->usesService(MediaWikiPlugin::SERVICE_SHORTNAME)) {
+            $dao->deleteUserGroup($project->getID(), $params['ugroup_id']);
+            $dao->resetUserGroups($project);
+        }
+    }
+
     public function project_admin_remove_user($params) {
+        $this->updateUserGroupMapping($params);
+    }
+
+    public function project_admin_ugroup_remove_user($params) {
+        $this->updateUserGroupMapping($params);
+    }
+
+    public function project_admin_change_user_permissions($params) {
+        $this->updateUserGroupMapping($params);
+    }
+
+    public function project_admin_remove_user_from_project_ugroups($params) {
+        $this->updateUserGroupMapping($params);
+    }
+
+    private function updateUserGroupMapping($params) {
         $user    = $this->getUserFromParams($params);
         $project = $this->getProjectFromParams($params);
         $dao     = $this->getDao();
 
         if ($project->usesService(MediaWikiPlugin::SERVICE_SHORTNAME)) {
-            $dao->removeUser($user, $project);
+            $dao->resetUserGroupsForUser($user, $project);
         }
-    }
-
-    public function project_admin_change_user_permissions($params) {
-        $user    = $this->getUserFromParams($params);
-        $project = $this->getProjectFromParams($params);
-        $dao     = $this->getDao();
-
-        if ($this->userWasPreviouslyProjectAdmin($params)) {
-            $dao->removeAdminsGroupsForUser($user, $project);
-        }
-    }
-
-    private function userWasPreviouslyProjectAdmin($params) {
-        return $params['user_permissions']['admin_flags'] === ''
-            && $params['previous_permissions']['admin_flags'] === 'A';
     }
 
     public function systemevent_user_rename($params) {
@@ -592,5 +612,10 @@ class MediaWikiPlugin extends Plugin {
 
     private function getDao() {
         return new MediawikiDao();
+    }
+
+    public function service_classnames(array $params) {
+        include_once 'ServiceMediawiki.class.php';
+        $params['classnames']['plugin_mediawiki'] = 'ServiceMediawiki';
     }
 }
