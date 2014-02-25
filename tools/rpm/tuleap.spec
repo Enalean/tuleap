@@ -45,6 +45,7 @@ AutoReqProv: no
 Requires: vixie-cron >= 4.1-9, tmpwatch
 # Php and web related stuff
 Requires: %{php_base}, %{php_base}-mysql, %{php_base}-xml, %{php_base}-mbstring, %{php_base}-gd, %{php_base}-soap, %{php_base}-pear, gd
+Requires: ckeditor >= 4.3.2
 %if %{php_base} == php53
 # contains posix* functions
 Requires: %{php_base}-process
@@ -590,6 +591,7 @@ done
 
 # Apache conf dir
 %{__install} -d $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/
+%{__install} src/etc/ckeditor.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/ckeditor.conf
 
 # plugin webdav
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
@@ -956,6 +958,7 @@ fi
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
 %dir %{APP_CACHE_DIR}
 %dir /etc/httpd/conf.d/tuleap-plugins
+%attr(04755,root,root) /etc/httpd/conf.d/tuleap-plugins/ckeditor.conf
 
 #
 # Install

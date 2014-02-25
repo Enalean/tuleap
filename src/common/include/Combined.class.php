@@ -67,7 +67,7 @@ class Combined {
             '/scripts/codendi/DropDownPanel.js',
             '/scripts/codendi/colorpicker.js',
             '/scripts/autocomplete.js',
-            '/scripts/ckeditor/ckeditor_basic.js',
+            '/usr/share/ckeditor/ckeditor.js',
             '/scripts/textboxlist/multiselect.js',
             '/scripts/tablekit/tablekit.js',
             '/scripts/lytebox/lytebox.js',
@@ -89,15 +89,18 @@ class Combined {
     }
     
     protected function getDestinationDir() {
-        return $GLOBALS['codendi_dir'] .'/src/www/scripts/combined/';
+        return $GLOBALS['codendi_dir'] .'/src/www/scripts/combined';
     }
     
     protected function getSourceDir($script) {
         $matches = array();
         if (preg_match('`/plugins/([^/]+)/(.*)`', $script, $matches)) {
-            return $GLOBALS['sys_pluginsroot']. $matches[1] . '/www/'. $matches[2];
+            return $GLOBALS['sys_pluginsroot'] .'/'. $matches[1] .'/www/'. $matches[2];
+        } if (is_file($GLOBALS['codendi_dir'] .'/src/www'. $script)) {
+            return $GLOBALS['codendi_dir'] .'/src/www'. $script;
         }
-        return $GLOBALS['codendi_dir'] .'/src/www'. $script;
+
+        return $script;
     }
     
     protected function onTheFly() {
@@ -135,14 +138,14 @@ class Combined {
     public function generate() {
         foreach($this->getCombinedScripts() as $script) {
             $file = $this->getSourceDir($script);
-            file_put_contents($this->getDestinationDir() . 'codendi-'. $_SERVER['REQUEST_TIME'] .'.js',
+            file_put_contents($this->getDestinationDir() . '/codendi-'. $_SERVER['REQUEST_TIME'] .'.js',
                               file_get_contents($file). PHP_EOL,
                               FILE_APPEND);
         }
     }
     
     protected function getLatestCombinedScript() {
-        $src = $this->getSourceDir('/scripts/combined/codendi-');
+        $src = $this->getDestinationDir() .'/codendi-';
         $files = glob($src .'*.js');
         if ( !empty($files) ) {
             rsort($files);

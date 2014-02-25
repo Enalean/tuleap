@@ -36,16 +36,26 @@ class WhiteBox_Combined extends Combined {
         return parent::getSourceDir($params);
     }
 }
-class CombinedTest extends UnitTestCase {
-    
+class CombinedTest extends TuleapTestCase {
+
+    private $fixtures_dir;
+    private $destination_dir;
     
     public function setUp() {
+        parent::setUp();
+
+        $this->fixtures_dir    = dirname(__FILE__). '/_fixtures/combined';
+        $this->destination_dir = $this->fixtures_dir .'/src/www/scripts/combined';
+
+        $GLOBALS['codendi_dir']     = $this->fixtures_dir;
+        $GLOBALS['sys_pluginsroot'] = $this->fixtures_dir .'/plugins';
+
         $class = new ReflectionClass('Combined');
         $this->_scripts = array(
-            dirname(__FILE__). '/_fixtures/scripts/prototype.js' => '',
-            dirname(__FILE__). '/_fixtures/plugins/docman/docman.js' => '',
-            dirname(__FILE__). '/_fixtures/scripts/calendar.js' => '',
-            dirname(__FILE__). '/_fixtures/in_the_future/in_the_future.js' => '',
+            $this->fixtures_dir. '/src/www/scripts/prototype.js'   => '',
+            $this->fixtures_dir. '/plugins/docman/www/docman.js'   => '',
+            $this->fixtures_dir. '/src/www/scripts/calendar.js'    => '',
+            $this->fixtures_dir. '/in_the_future/in_the_future.js' => '',
             $class->getFileName() => '',
         );
         
@@ -54,24 +64,24 @@ class CombinedTest extends UnitTestCase {
             touch($file, $_SERVER['REQUEST_TIME'] - 2 * 3600);
         }
         
-        file_put_contents(dirname(__FILE__). '/_fixtures/scripts/combined/codendi-1.js', "//Prototype file\n//Docman file\n");
+        file_put_contents($this->destination_dir .'/codendi-1.js', "//Prototype file\n//Docman file\n");
     }
     
     public function tearDown() {
         foreach($this->_scripts as $file => $original_filemtime) {
             touch($file, $original_filemtime);
         }
-        foreach(glob(dirname(__FILE__). '/_fixtures/scripts/combined/*.js') as $file) {
+        foreach(glob($this->destination_dir .'/*.js') as $file) {
             unlink($file);
         }
+        parent::tearDown();
     }
     
     public function testGetScripts() {
         $c = new CombinedTestVersion($this);
         //in this test, combined script is made of prototype+docman
         $c->setReturnValue('getCombinedScripts', array('/scripts/prototype.js', '/plugins/docman/docman.js'));
-        
-        $c->setReturnValue('getSourceDir', dirname(__FILE__). '/_fixtures/scripts/combined/codendi-', array('/scripts/combined/codendi-'));
+        $c->setReturnValue('getDestinationDir', $this->destination_dir);
         $c->setReturnValue('onTheFly', false);
         
         $expected_combined     = '<script type="text/javascript" src="/scripts/combined/codendi-1.js"></script>';
@@ -98,15 +108,15 @@ class CombinedTest extends UnitTestCase {
         $c = new CombinedTestVersion($this);
         //in this test, combined script is made of prototype+docman
         $c->setReturnValue('getCombinedScripts', array('/scripts/prototype.js', '/plugins/docman/docman.js'));
-        $c->setReturnValue('getSourceDir',       dirname(__FILE__). '/_fixtures/scripts/prototype.js', array('/scripts/prototype.js'));
-        $c->setReturnValue('getSourceDir',       dirname(__FILE__). '/_fixtures/in_the_future/in_the_future.js', array('/in_the_future/in_the_future.js'));
-        $c->setReturnValue('getSourceDir',       dirname(__FILE__). '/_fixtures/plugins/docman/docman.js', array('/plugins/docman/docman.js'));
-        $c->setReturnValue('getDestinationDir',  dirname(__FILE__). '/_fixtures/scripts/combined/');
+        $c->setReturnValue('getSourceDir',       $this->fixtures_dir. '/src/www/scripts/prototype.js', array('/scripts/prototype.js'));
+        $c->setReturnValue('getSourceDir',       $this->fixtures_dir. '/in_the_future/in_the_future.js', array('/in_the_future/in_the_future.js'));
+        $c->setReturnValue('getSourceDir',       $this->fixtures_dir. '/plugins/docman/www/docman.js', array('/plugins/docman/docman.js'));
+        $c->setReturnValue('getDestinationDir',  $this->fixtures_dir. '/src/www/scripts/combined/');
         $c->setReturnValue('onTheFly', false);
         
         $c->generate();
         
-        $expected_combined = dirname(__FILE__). '/_fixtures/scripts/combined/codendi-'. $_SERVER['REQUEST_TIME'] .'.js';
+        $expected_combined = $this->destination_dir. '/codendi-'. $_SERVER['REQUEST_TIME'] .'.js';
         $this->assertTrue(is_file($expected_combined));
         $generated_content = file_get_contents($expected_combined);
         $this->assertPattern('/Prototype/',  $generated_content);
@@ -117,7 +127,7 @@ class CombinedTest extends UnitTestCase {
     
     public function testGetSourceDir() {
         $c = new WhiteBox_Combined();
-        $this->assertEqual($c->getSourceDir_exposed('/plugins/docman/docman.js'), $GLOBALS['sys_pluginsroot']. 'docman/www/docman.js');
+        $this->assertEqual($c->getSourceDir_exposed('/plugins/docman/docman.js'), $GLOBALS['sys_pluginsroot']. '/docman/www/docman.js');
         $this->assertEqual($c->getSourceDir_exposed('/scripts/prototype.js'), $GLOBALS['codendi_dir']. '/src/www/scripts/prototype.js');
     }
     
@@ -127,16 +137,16 @@ class CombinedTest extends UnitTestCase {
         
         //in this test, combined script is made of prototype+docman
         $c->setReturnValue('getCombinedScripts', array('/scripts/prototype.js', '/plugins/docman/docman.js', '/in_the_future/in_the_future.js'));
-        $c->setReturnValue('getSourceDir',       dirname(__FILE__). '/_fixtures/scripts/prototype.js', array('/scripts/prototype.js'));
-        $c->setReturnValue('getSourceDir',       dirname(__FILE__). '/_fixtures/in_the_future/in_the_future.js', array('/in_the_future/in_the_future.js'));
-        $c->setReturnValue('getSourceDir',       dirname(__FILE__). '/_fixtures/plugins/docman/docman.js', array('/plugins/docman/docman.js'));
-        $c->setReturnValue('getSourceDir',       dirname(__FILE__). '/_fixtures/scripts/combined/codendi-', array('/scripts/combined/codendi-'));
-        $c->setReturnValue('getSourceDir',       dirname(__FILE__). '/_fixtures/scripts/combined/codendi-1.js', array('/scripts/combined/codendi-1.js'));
-        $c->setReturnValue('getDestinationDir',  dirname(__FILE__). '/_fixtures/scripts/combined/');
+        $c->setReturnValue('getSourceDir',       $this->fixtures_dir. '/src/www/scripts/prototype.js', array('/scripts/prototype.js'));
+        $c->setReturnValue('getSourceDir',       $this->fixtures_dir. '/in_the_future/in_the_future.js', array('/in_the_future/in_the_future.js'));
+        $c->setReturnValue('getSourceDir',       $this->fixtures_dir. '/plugins/docman/www/docman.js', array('/plugins/docman/docman.js'));
+        $c->setReturnValue('getSourceDir',       $this->destination_dir .'/codendi-', array('/scripts/combined/codendi-'));
+        $c->setReturnValue('getSourceDir',       $this->destination_dir .'/codendi-1.js', array('/scripts/combined/codendi-1.js'));
+        $c->setReturnValue('getDestinationDir',  $this->destination_dir);
         
         $c->autoGenerate();
         
-        $expected_combined = dirname(__FILE__). '/_fixtures/scripts/combined/codendi-1.js';
+        $expected_combined = $this->destination_dir .'/codendi-1.js';
         $this->assertTrue(is_file($expected_combined));
         $generated_content = file_get_contents($expected_combined);
         $this->assertPattern('/Prototype/',  $generated_content);
@@ -147,10 +157,10 @@ class CombinedTest extends UnitTestCase {
                                                                        //here to test updates (see below)
         
         //Now the site admin has just updated the server and in_the_future.js is like an updated script
-        touch(dirname(__FILE__). '/_fixtures/in_the_future/in_the_future.js', $_SERVER['REQUEST_TIME'] + 2 * 3600);
+        touch($this->fixtures_dir. '/in_the_future/in_the_future.js', $_SERVER['REQUEST_TIME'] + 2 * 3600);
         $c->autoGenerate();
         
-        $expected_combined = dirname(__FILE__). '/_fixtures/scripts/combined/codendi-'. $_SERVER['REQUEST_TIME'] .'.js';
+        $expected_combined = $this->destination_dir .'/codendi-'. $_SERVER['REQUEST_TIME'] .'.js';
         $this->assertTrue(is_file($expected_combined));
         $generated_content = file_get_contents($expected_combined);
         $this->assertPattern('/Prototype/',  $generated_content);

@@ -51,6 +51,7 @@ Requires: dejavu-lgc-sans-fonts, dejavu-lgc-sans-mono-fonts, dejavu-lgc-serif-fo
 
 Requires: jpgraph-%{PKG_NAME}
 Requires: htmlpurifier >= 4.5
+Requires: ckeditor >= 4.3.2
 
 Requires: %{php_base}-pecl-apc
 Requires: curl
@@ -503,6 +504,7 @@ done
 
 # Apache conf dir
 %{__install} -d $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/
+%{__install} src/etc/ckeditor.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/ckeditor.conf
 
 # plugin webdav
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
@@ -840,6 +842,7 @@ fi
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
 %dir %{APP_CACHE_DIR}
 %dir /etc/httpd/conf.d/tuleap-plugins
+%attr(04755,root,root) /etc/httpd/conf.d/tuleap-plugins/ckeditor.conf
 
 # Log dir
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}
