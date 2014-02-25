@@ -222,8 +222,11 @@ class TrackerFactory {
 
         // set semantics
         if (isset($xml->semantics)) {
-            foreach ($xml->semantics->semantic as $semantic) {
-                $tracker->semantics[] = $this->getSemanticFactory()->getInstanceFromXML($semantic, $xmlMapping, $tracker);
+            foreach ($xml->semantics->semantic as $xml_semantic) {
+                $semantic = $this->getSemanticFactory()->getInstanceFromXML($xml_semantic, $xmlMapping, $tracker);
+                if ($semantic) {
+                    $tracker->semantics[] = $semantic;
+                }
             }
         }
         
