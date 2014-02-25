@@ -165,6 +165,10 @@ class Git extends PluginController {
     }
 
     private function routeUsingFriendlyURLs() {
+        if (! $this->friendlyUrlsAreActivated()) {
+            return;
+        }
+
         if ( preg_match('%^/plugins/git/(?P<project_name>[^/]*)/(?P<path>[^?]*)\?{0,1}(?P<parameters>.*)$%', $_SERVER['REQUEST_URI'], $matches) ) {
             $repository = $this->factory->getByProjectNameAndPath($matches['project_name'], $matches['path'].'.git');
 
@@ -181,9 +185,11 @@ class Git extends PluginController {
     }
 
     private function routeUsingStandardURLs() {
-        if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
-            $this->request->set('group_id', $matches[1][0]);
-            $this->request->set('action', $matches[2][0]);
+        if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}(.*)/', $_SERVER['REQUEST_URI'], $matches) ) {
+            $group_id     = $matches[1][0];
+            $action       = $matches[2][0];
+            $request_args = $matches[4][0];
+
             $repo_id = 0;
             //repository id is passed
             if ( preg_match('/^([0-9]+)$/', $matches[3][0]) === 1 ) {
@@ -201,8 +207,35 @@ class Git extends PluginController {
                }
                $repo_id = $repo->getId();
             }
+
+            $this->redirectIfTryingToViewRepositoryAndUserFriendlyURLsActivated($group_id, $action, $repo_id, $request_args);
+
+            $this->request->set('group_id', $group_id);
+            $this->request->set('action', $action);
             $this->request->set('repo_id', $repo_id);
+
         }
+    }
+
+    private function redirectIfTryingToViewRepositoryAndUserFriendlyURLsActivated($group_id, $action, $repo_id, $request_args) {
+        if (! $action === 'view') {
+            return;
+        }
+
+        if (! $this->friendlyUrlsAreActivated()) {
+            return;
+        }
+
+        $project            = $this->projectManager->getProject($group_id);
+        $repo               = $this->factory->getRepositoryById($repo_id);
+        $request_parameters = $request_args ? '?'.$request_args : '';
+        $redirecting_url    = '/plugins/git/'.$project->getUnixName().'/'.$repo->getName().$request_parameters;
+
+        header("Location: $redirecting_url", TRUE, 301);
+    }
+
+    private function friendlyUrlsAreActivated() {
+        return true;
     }
 
     public function setPermissionsManager(GitPermissionsManager $permissions_manager) {
