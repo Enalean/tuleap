@@ -400,7 +400,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $reverse_artifact_links = false
     ) {
 
-        $html = '<h3>'.$this->getWidgetTitle($reverse_artifact_links).'</h3>';
+        $html = '<h5 class="artifack_link_subtitle">'.$this->getWidgetTitle($reverse_artifact_links).'</h5>';
 
         $html_name_new = '';
         $html_name_del = '';
