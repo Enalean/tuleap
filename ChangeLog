@@ -28,6 +28,7 @@ Version 6.11 (Not released yet)
 	== Bug fix ==
 	* request #5857: Fix error with SVN during a SYSTEM_CHECK
 	* Fix request #6247: Forum flat view displays same author for all messages (Contribution STMicroelectronics)
+	* request #6299: Add the possibility to display user unix name in access_log
 
 Version 6.10 (Thursday, February 6th 2014)
 	== Plugins ==
