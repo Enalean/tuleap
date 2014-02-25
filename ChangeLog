@@ -21,6 +21,7 @@ Version 6.11 (Not released yet)
 	== Enhancement ==
 	* request #5951 - Avoid hardcoded redirect on login when possible
 	* request #6154 - Cannot change password upon expiration
+	* story #6047 - update Rich Text Editor (better compatibility with IE10 and upper)
 
 	== Themes ==
 	* Experimental: 0.9.6
