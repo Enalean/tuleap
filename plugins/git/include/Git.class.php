@@ -117,25 +117,25 @@ class Git extends PluginController {
     ) {
         parent::__construct($user_manager, $request);
 
-        $this->userManager           = $user_manager;
-        $this->projectManager        = $project_manager;
-        $this->factory               = $git_repository_factory;
-        $this->gerrit_server_factory = $gerrit_server_factory;
-        $this->driver                = $driver;
-        $this->repository_manager    = $repository_manager;
+        $this->userManager              = $user_manager;
+        $this->projectManager           = $project_manager;
+        $this->factory                  = $git_repository_factory;
+        $this->gerrit_server_factory    = $gerrit_server_factory;
+        $this->driver                   = $driver;
+        $this->repository_manager       = $repository_manager;
         $this->git_system_event_manager = $system_event_manager;
         $this->gerrit_usermanager       = $gerrit_usermanager;
         $this->plugin_manager           = $plugin_manager;
         $this->project_creator          = $project_creator;
         $this->template_factory         = $template_factory;
-        $this->permissions_manager  = $permissions_manager;
+        $this->permissions_manager      = $permissions_manager;
+        $this->plugin                   = $plugin;
 
         $matches = array();
 
         $this->routeUsingFriendlyURLs();
         $this->routeUsingStandardURLs();
 
-        $this->plugin      = $plugin;
         $valid = new Valid_GroupId('group_id');
         $valid->required();
         if($this->request->valid($valid)) {
@@ -235,7 +235,7 @@ class Git extends PluginController {
     }
 
     private function friendlyUrlsAreActivated() {
-        return true;
+        return (bool) $this->getPlugin()->getConfigurationParameter('git_use_friendly_urls');
     }
 
     public function setPermissionsManager(GitPermissionsManager $permissions_manager) {
