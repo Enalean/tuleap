@@ -1306,66 +1306,10 @@ function util_translate_desc_ugroup($desc) {
     return util_translate($desc, "ugroup_", "_desc_key", "project_ugroup");
 }
 
-function util_make_return_to_url($url) {
-    $request = HTTPRequest::instance();
-
-    $urlToken = parse_url($url);
-
-    $finaleUrl = '';
-
-    if(array_key_exists('host', $urlToken) && $urlToken['host']) {
-        $server_url = $urlToken['scheme'].'://'.$urlToken['host'];
-        if(array_key_exists('port', $urlToken) && $urlToken['port']) {
-            $server_url .= ':'.$urlToken['port'];
-        }
-    }
-    else {
-        if (session_issecure()
-            && ($GLOBALS['sys_force_ssl']
-                || (isset($_REQUEST['stay_in_ssl']) && $_REQUEST['stay_in_ssl'])
-                )) {
-            $server_url = 'https://'.$GLOBALS['sys_https_host'];
-        }
-        else {
-            $server_url = 'http://'.$GLOBALS['sys_default_domain'];
-        }
-    }
-
-    $finaleUrl = $server_url;
-
-    if(array_key_exists('path', $urlToken) && $urlToken['path']) {
-        $finaleUrl .= $urlToken['path'];
-    }
-    
-    if($request->existAndNonEmpty('return_to')) {
-        $rt = 'return_to='.urlencode($request->get('return_to'));
-    
-        if(array_key_exists('query', $urlToken) && $urlToken['query']) {
-            $finaleUrl .= '?'.$urlToken['query'].'&amp;'.$rt;
-        }
-        else {
-            $finaleUrl .= '?'.$rt;
-        }
-	if (strstr($_REQUEST['return_to'],'pv=2')) {
-	    $finaleUrl .= '&pv=2';
-	}	
-    }
-    else {
-        if(array_key_exists('query', $urlToken) && $urlToken['query']) {
-            $finaleUrl .= '?'.$urlToken['query'];
-        }
-    }
-
-    if(array_key_exists('fragment', $urlToken) && $urlToken['fragment']) {
-        $finaleUrl .= '#'.$urlToken['fragment'];
-    }
-
-    return $finaleUrl;
-}
-
 function util_return_to($url) {
-    $finaleUrl = util_make_return_to_url($url);
-    $GLOBALS['Response']->redirect($finaleUrl);
+    $request      = HTTPRequest::instance();
+    $url_redirect = new URLRedirect();
+    $GLOBALS['Response']->redirect($url_redirect->makeReturnToUrl($request, $url));
     exit;
 }
 

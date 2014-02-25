@@ -99,6 +99,104 @@ class TimePeriodWithoutWeekEnd  implements TimePeriod {
     private function isNotWeekendDay($day) {
         return ! (date('D', $day) == 'Sat' || date('D', $day) == 'Sun');
     }
+
+    /**
+     * The number of days until the end of the period
+     *
+     * @return int
+     */
+    public function getNumberOfDaysUntilEnd() {
+        if ($this->getTodayTimestamp() > $this->getEndDate()) {
+            return -$this->getNumberOfDaysWithoutWeekEnd($this->getEndDate(), $this->getTodayTimestamp());
+        } else {
+            return $this->getNumberOfDaysWithoutWeekEnd($this->getTodayTimestamp(), $this->getEndDate());
+        }
+    }
+
+    private function getNumberOfDaysWithoutWeekEnd($start_date, $end_date) {
+        $real_number_of_days_after_start = 0;
+        $day        = $start_date;
+        if ($this->isNotWeekendDay($day)) {
+            $day_offset = -1;
+        } else {
+            $day_offset = 0;
+        }
+
+        do {
+            if ($this->isNotWeekendDay($day)) {
+                $day_offset++;
+            }
+            $day = $this->getNextDay($real_number_of_days_after_start, $start_date);
+            $real_number_of_days_after_start++;
+       } while ($day < $end_date);
+
+       return $day_offset;
+    }
+
+    /**
+     * The number of days since the start.
+     * Is not limited by the duration of the time period.
+     *
+     * @return int
+     */
+    public function getNumberOfDaysSinceStart() {
+        if ($this->isToday($this->start_date) || $this->start_date > $this->getTodayTimestamp()) {
+            return 0;
+        }
+
+        return $this->getNumberOfDaysWithoutWeekEnd($this->start_date, $this->getTodayTimestamp());
+    }
+
+    private function isToday($day) {
+        return $this->getTodayDate() == date('Y-m-d', $day);
+    }
+
+    /**
+     * Set to protected because it makes testing possible.
+     */
+    protected function getTodayDate() {
+        if ($_SERVER && isset($_SERVER['REQUEST_TIME'])) {
+            return date('Y-m-d', $_SERVER['REQUEST_TIME']);
+        }
+        return date('Y-m-d');
+    }
+
+    /**
+     * @return int
+     */
+    private function getTodayTimestamp() {
+        return strtotime($this->getTodayDate());
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isTodayWithinTimePeriod() {
+        if ($this->start_date <= $this->getTodayTimestamp() &&
+            $this->getNumberOfDaysSinceStart() <= $this->duration
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isTodayBeforeTimePeriod() {
+        if ($this->start_date > $this->getTodayTimestamp()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isTodayAfterTimePeriod() {
+        if ($this->start_date < $this->getTodayTimestamp() &&
+            $this->getNumberOfDaysSinceStart() > $this->getDuration()) {
+            return true;
+        }
+
+        return false;
+    }
 }
 
 ?>

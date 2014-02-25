@@ -151,6 +151,19 @@ class ProjectManager {
     }
 
     /**
+     * @return Project[]
+     */
+    public function getAllProjectsButDeleted() {
+
+        $projects_active     = $this->getProjectsByStatus(Project::STATUS_ACTIVE);
+        $projects_incomplete = $this->getProjectsByStatus(Project::STATUS_INCOMPLETE);
+        $projects_pending    = $this->getProjectsByStatus(Project::STATUS_PENDING);
+        $projects_holding    = $this->getProjectsByStatus(Project::STATUS_HOLDING);
+
+        return array_merge($projects_active, $projects_incomplete, $projects_pending, $projects_holding);
+    }
+
+    /**
      * Look for project with name like given one
      *
      * @param String  $name

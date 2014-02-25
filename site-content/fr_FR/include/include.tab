@@ -24,6 +24,7 @@ include_account	dns_error	Les noms de projet ne peuvent comporter de caractères
 include_account	used_by_svn	Ce nom n'est pas disponible : Un répertoire SVN existe déjà avec ce nom.   
 include_account	used_by_cvs	Ce nom n'est pas disponible : Un répertoire CVS existe déjà avec ce nom.
 include_account	used_by_sys	Ce nom n'est pas disponible : Un home projet  existe déjà avec ce nom.
+include_account	change_pwd_err	Merci de mettre à jour votre mot de passe d'abord
 
 #
 #-----------------------------------------------
@@ -181,6 +182,7 @@ include_menu	summary_page	Sommaire
 include_menu	logged_in	Connecté
 include_menu	logout	Se déconnecter
 include_menu	register_new_proj	Enregistrer un projet
+include_menu	filter_project	Projet...
 include_menu	account_maintenance	Mon compte
 include_menu	my_perso_page	Ma page personnelle
 include_menu	bookmark_this_page	Cette page en favori
@@ -190,6 +192,8 @@ include_menu	new_user	Nouveau compte
 include_menu	auth_prev_success	Dernière connexion:
 include_menu	auth_last_failure	Dernière tentative de connexion:
 include_menu	auth_nb_failure	Nombre de tentatives:
+include_menu	help	Aide
+include_menu	soap_api	API SOAP
 #
 #-----------------------------------------------
 # Script: SF/www/include/pre.php

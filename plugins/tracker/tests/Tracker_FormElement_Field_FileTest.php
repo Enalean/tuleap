@@ -440,11 +440,11 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         
         $required_file = new Tracker_FormElement_Field_FileTestVersion();
         $required_file->setReturnValue('isRequired', true);
-        $this->assertFalse($required_file->isValid($artifact, $value));
+        $this->assertFalse($required_file->isValidRegardingRequiredProperty($artifact, $value));
         
         $not_required_file = new Tracker_FormElement_Field_FileTestVersion();
         $not_required_file->setReturnValue('isRequired', false);
-        $this->assertTrue($not_required_file->isValid($artifact, $value));
+        $this->assertTrue($not_required_file->isValidRegardingRequiredProperty($artifact, $value));
     }
     
     function test_isValid_two_not_filled() {
@@ -470,11 +470,11 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         
         $required_file = new Tracker_FormElement_Field_FileTestVersion();
         $required_file->setReturnValue('isRequired', true);
-        $this->assertFalse($required_file->isValid($artifact, $value));
+        $this->assertFalse($required_file->isValidRegardingRequiredProperty($artifact, $value));
         
         $not_required_file = new Tracker_FormElement_Field_FileTestVersion();
         $not_required_file->setReturnValue('isRequired', false);
-        $this->assertTrue($not_required_file->isValid($artifact, $value));
+        $this->assertTrue($not_required_file->isValidRegardingRequiredProperty($artifact, $value));
     }
     
     function test_isValid_only_description_filled() {

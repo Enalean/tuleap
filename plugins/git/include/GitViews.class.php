@@ -27,12 +27,23 @@ require_once 'common/include/CSRFSynchronizerToken.class.php';
  */
 class GitViews extends PluginViews {
 
+    /** @var Project */
+    private $project;
+
+    /** @var GitPermissionsManager */
+    private $git_permissions_manager;
+
+    /** @var UGroupManager */
+    private $ugroup_manager;
+
     public function __construct($controller) {
         parent::__construct($controller);
-        $this->groupId     = (int)$this->request->get('group_id');
-        $this->project     = ProjectManager::instance()->getProject($this->groupId);
-        $this->projectName = $this->project->getUnixName();
-        $this->userName    = $this->user->getName();        
+        $this->groupId                 = (int)$this->request->get('group_id');
+        $this->project                 = ProjectManager::instance()->getProject($this->groupId);
+        $this->projectName             = $this->project->getUnixName();
+        $this->userName                = $this->user->getName();
+        $this->git_permissions_manager = new GitPermissionsManager();
+        $this->ugroup_manager          = new UGroupManager();
     }
 
     public function header() {
@@ -253,12 +264,12 @@ class GitViews extends PluginViews {
         echo ' | ';
 
         echo $this->linkTo( '<b>'.$this->getText('bread_crumb_help').'</b>', 'javascript:help_window(\'/doc/'.$this->user->getShortLocale().'/user-guide/git.html\')');
-        if($this->user->isAdmin($this->groupId)) {
+        if ($this->git_permissions_manager->userIsGitAdmin($this->user, $this->project)) {
             echo ' | ';
             echo $this->linkTo( '<b>'.$this->getText('bread_crumb_admin').'</b>', '/plugins/git/?group_id='.$this->groupId .'&action=admin', 'class=""');
         }
     }
-    
+
     /**
      * @todo several cases ssh, http ...
      * @param <type> $repositoryName
@@ -350,7 +361,9 @@ class GitViews extends PluginViews {
             $templates_list,
             $parent_templates_list,
             $this->groupId,
-            $params['has_gerrit_servers_set_up']
+            $params['has_gerrit_servers_set_up'],
+            $this->ugroup_manager->getStaticUGroups($this->project),
+            $this->git_permissions_manager->getCurrentGitAdminUgroups($this->project->getId())
         );
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');

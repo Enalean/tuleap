@@ -68,7 +68,6 @@ class Tracker_Workflow_Trigger_RulesProcessor {
                 $target->getFieldData(),
                 $comment,
                 $this->workflow_user,
-                '',
                 true,
                 Tracker_Artifact_Changeset_Comment::HTML_COMMENT
             );

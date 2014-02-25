@@ -13,6 +13,7 @@ require('../snippet/snippet_utils.php');
 if (user_isloggedin()) {
 
     if ($post_changes) {
+        $csrf->check();
         /*
 			Create a new snippet entry, then create a new snippet version entry
         */
@@ -22,6 +23,8 @@ if (user_isloggedin()) {
             } else if ($language==100) {
                 $feedback .= ' '.$Language->getText('snippet_details','select_lang').' ';
             } else {
+                $category = (int)$category;
+                $language = (int)$language;
                 /*
 				Create the new package
                 */
@@ -106,7 +109,8 @@ function show_add_snippet_box() {
 	<P>
 	'.$Language->getText('snippet_package','group_s_into_p').'
 	<P>
-	<FORM ACTION="?" METHOD="POST">
+	<FORM ACTION="?" METHOD="POST">'.
+        $csrf->fetchHTMLInput() .'
 	<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 	<INPUT TYPE="HIDDEN" NAME="changes" VALUE="'.$Language->getText('snippet_package','first_posted_v').'">
 

@@ -30,7 +30,8 @@ use \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
 use \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use \AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
 use \AgileDashboard_BacklogItemDao;
-use \MilestoneContentUpdater;
+use \AgileDashboard_Milestone_MilestoneStatusCounter;
+use \Tracker_ArtifactDao;
 use \ArtifactIsNotInOpenAndUnassignedBacklogItemsException;
 use \IdsFromBodyAreNotUniqueException;
 use \Luracast\Restler\RestException;
@@ -51,16 +52,25 @@ class ProjectBacklogResource {
     /** @var \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $backlog_item_collection_factory;
 
+    /** @var ArtifactLinkUpdater */
+    private $artifactlink_updater;
+
     public function __construct() {
         $planning_factory             = PlanningFactory::build();
         $tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
         $tracker_form_element_factory = Tracker_FormElementFactory::instance();
+        $status_counter               = new AgileDashboard_Milestone_MilestoneStatusCounter(
+            new AgileDashboard_BacklogItemDao(),
+            new Tracker_ArtifactDao(),
+            $tracker_artifact_factory
+        );
 
         $this->milestone_factory = new Planning_MilestoneFactory(
             PlanningFactory::build(),
             Tracker_ArtifactFactory::instance(),
             Tracker_FormElementFactory::instance(),
-            TrackerFactory::instance()
+            TrackerFactory::instance(),
+            $status_counter
         );
 
         $this->backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
@@ -87,7 +97,8 @@ class ProjectBacklogResource {
             $this->backlog_item_collection_factory
         );
 
-        $this->milestone_content_updater = new MilestoneContentUpdater($tracker_form_element_factory);
+        $this->artifactlink_updater      = new ArtifactLinkUpdater();
+        $this->milestone_content_updater = new MilestoneContentUpdater($tracker_form_element_factory, $this->artifactlink_updater);
     }
 
     /**
@@ -128,12 +139,16 @@ class ProjectBacklogResource {
         try {
             $this->milestone_validator->validateArtifactIdsAreInOpenAndUnassignedTopBacklog($ids, $user, $project);
         } catch (ArtifactIsNotInOpenAndUnassignedBacklogItemsException $exception) {
-            throw new RestException(500, $exception->getMessage());
+            throw new RestException(409, $exception->getMessage());
         } catch (IdsFromBodyAreNotUniqueException $exception) {
-            throw new RestException(500, $exception->getMessage());
+            throw new RestException(409, $exception->getMessage());
         }
 
-        $this->milestone_content_updater->setOrder($ids);
+        try {
+            $this->artifactlink_updater->setOrder($ids);
+        } catch (ItemListedTwiceException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
 
         $this->sendAllowHeaders();
     }

@@ -286,7 +286,7 @@ class Tracker_ArtifactFactory {
      *
      * @return Tracker_ArtifactDao
      */
-    protected function getDao() {
+    public function getDao() {
         if (!$this->dao) {
             $this->dao = new Tracker_ArtifactDao();
         }
@@ -305,37 +305,21 @@ class Tracker_ArtifactFactory {
      * @return Tracker_Artifact or false if an error occured
      */
     public function createArtifact(Tracker $tracker, $fields_data, PFUser $user, $email, $send_notification = true) {
-        $artifact = $this->getInstanceFromRow(
-            array(
-                'id'                       => 0, 
-                'tracker_id'               => $tracker->id, 
-                'submitted_by'             => $user->getId(), 
-                'submitted_on'             => $_SERVER['REQUEST_TIME'], 
-                'use_artifact_permissions' => 0,
-            )
+        $formelement_factory = Tracker_FormElementFactory::instance();
+        $fields_validator    = new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator($formelement_factory);
+
+        $changeset_creator = new Tracker_Artifact_Changeset_InitialChangesetCreator(
+            $fields_validator,
+            $formelement_factory,
+            new Tracker_Artifact_ChangesetDao(),
+            $this
         );
-        
-        //validate the request
-        if ($ok = $artifact->validateFields($fields_data, true)) {
-            //If all is ok, save the artifact
-            $use_artifact_permissions = 0;
-            if ($id = $this->getDao()->create($tracker->id, $user->getId(), $use_artifact_permissions)) {
-                $artifact->setId($id);                
-                //create the first changeset
-                if ($changeset_id = $artifact->createInitialChangeset($fields_data, $user, $email)) {                    
-                    $submitted_by = $artifact->getSubmittedBy();
-                    $submitted_on = $artifact->getSubmittedOn();
-                    $changeset     = new Tracker_Artifact_Changeset($changeset_id, $artifact, $submitted_by, $submitted_on, $email );
-                    if ($send_notification) {
-                        $changeset->notify();
-                    }
-                    return $artifact;
-                }
-            }
-        }
-        return false;
+        $creator = new Tracker_ArtifactCreator($this, $fields_validator, $changeset_creator);
+
+        $submitted_on = $_SERVER['REQUEST_TIME'];
+        return $creator->create($tracker, $fields_data, $user, $email, $submitted_on, $send_notification);
     }
-    
+
     public function save(Tracker_Artifact $artifact) {
         return $this->getDao()->save($artifact->getId(), $artifact->getTrackerId(), $artifact->useArtifactPermissions());
     }

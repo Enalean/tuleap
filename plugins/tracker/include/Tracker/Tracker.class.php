@@ -248,11 +248,48 @@ class Tracker implements Tracker_Dispatchable_Interface {
      *
      * @return string
      */
-    public function fetchFormElements($artifact, $submitted_values=array()) {
+    public function fetchFormElements($artifact, $submitted_values = array()) {
         $html = '';
         foreach($this->getFormElements() as $formElement) {
             $html .= $formElement->fetchArtifact($artifact, $submitted_values);
         }
+        return $html;
+    }
+
+    /**
+     * Fetch FormElements in HTML without the container and column rendering
+     *
+     * @param Tracker_Artifact $artifact
+     * @param array $submitted_values the values already submitted
+     *
+     * @return string
+     */
+    public function fetchFormElementsNoColumns($artifact, $submitted_values = array()) {
+        $html = '';
+        foreach($this->getFormElements() as $formElement) {
+            $html .= $formElement->fetchArtifactForOverlay($artifact, $submitted_values);
+        }
+        return $html;
+    }
+
+    /**
+     * Fetch Tracker submit form in HTML without the container and column rendering
+     *
+     * @param Tracker_Artifact | null  $artifact_to_link  The artifact wich will be linked to the new artifact
+     *
+     * @return String
+     */
+    public function fetchSubmitNoColumns($artifact_to_link) {
+        $html='';
+
+        if ($artifact_to_link) {
+            $html .= '<input type="hidden" name="link-artifact-id" value="'. $artifact_to_link->getId() .'" />';
+        }
+
+        foreach($this->getFormElements() as $form_element) {
+            $html .= $form_element->fetchSubmitForOverlay();
+        }
+
         return $html;
     }
 
@@ -328,6 +365,22 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
+
+            case 'get-create-in-place':
+                if ($this->userCanSubmitArtifact($current_user)) {
+                    $artifact_link_id = $request->get('artifact-link-id');
+
+                    $renderer = new Tracker_Artifact_Renderer_CreateInPlaceRenderer(
+                        $this,
+                        TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR).'/templates')
+                    );
+
+                    $renderer->display($artifact_link_id);
+                } else {
+                    $GLOBALS['Response']->send400JSONErrors();
+                }
+            break;
+
             case 'new-artifact-link':
                 $link = $request->get('id');
                 if ($this->userCanSubmitArtifact($current_user)) {
@@ -578,6 +631,10 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $this->getFormElementFactory()
                 );
                 $action->process($layout, $request, $current_user);
+                break;
+            case 'submit-artifact-in-place':
+                $action = new Tracker_Action_CreateArtifactFromModal($request, $this, $this->getTrackerArtifactFactory());
+                $action->process($current_user);
                 break;
             case 'admin-hierarchy':
                 if ($this->userIsAdmin($current_user)) {
@@ -1703,7 +1760,7 @@ EOS;
             }
 
             try {
-                $artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $comment_format);
+                $artifact->createNewChangeset($fields_data, $comment, $submitter, $send_notifications, $comment_format);
             } catch (Tracker_NoChangeException $e) {
                 $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
                 $not_updated_aids[] = $aid;
@@ -2513,7 +2570,7 @@ EOS;
                                   );
                         if ($line[$idx]!=''){
 
-                            $data[$field->getId()] = $hp->purify($field->getFieldDataFromCSVValue($line[$idx]), CODENDI_PURIFIER_CONVERT_HTML);
+                            $data[$field->getId()] = $field->getFieldDataFromCSVValue($line[$idx]);
                             
                             if ($data[$field->getId()] === null) {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_value', array($line[$idx], $field_name)));
@@ -2529,7 +2586,13 @@ EOS;
                 }
             }
             if ($artifact) {
-                if (! $ok = $artifact->validateFields($data)) {
+                $is_new_artifact = $artifact->getId() == 0;
+                if ($is_new_artifact) {
+                    $fields_validator = new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator($this->getFormElementFactory());
+                } else {
+                    $fields_validator = new Tracker_Artifact_Changeset_NewChangesetFieldsValidator($this->getFormElementFactory());
+                }
+                if (! $fields_validator->validate($artifact, $data)) {
                      $has_error = true;
                 }
             }
@@ -2641,7 +2704,7 @@ EOS;
                     if ($artifact) {
                         $followup_comment = '';
                         try {
-                            $artifact->createNewChangeset($fields_data, $followup_comment, $current_user, null, $send_notifications);
+                            $artifact->createNewChangeset($fields_data, $followup_comment, $current_user, $send_notifications);
                             $nb_artifact_update++;
                         } catch (Tracker_NoChangeException $e) {
                             $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);

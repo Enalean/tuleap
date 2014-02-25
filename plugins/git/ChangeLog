@@ -1,3 +1,21 @@
+Version 3.69 - Tuleap 6.11
+    * Fix request #6163: checkbox with Git stays after clicking on it
+
+Version 3.68 - Tuleap 6.11
+    * request #6133: Update gitolite over http for recent version of gitolite
+
+Version 3.67 - Tuleap 6.10
+    * Fix request #6106: Cannot add a new gerrit server
+
+Version 3.66 - Tuleap 6.10
+    * Fix request #6099 - Error in syslog during DAILY system event
+
+Version 3.65 - Tuleap 6.10
+    * Story #5870: be able to assign Git Admin permissions to some users in the project
+
+Version 3.64 - Tuleap 6.10
+    * Fix request #5818: SSH keys with old username are removed
+
 Version 3.63 - Tuleap 6.9
     * Fix request #5803: Not able to define an http_port for gerrit servers
 

@@ -45,7 +45,7 @@
 
         function getSidebarSize() {
             if (! localStorage.getItem('sidebar-size')) {
-                return '260px';
+                return '210px';
             }
 
             return localStorage.getItem('sidebar-size');
@@ -107,7 +107,10 @@
         }
 
         function fetchBurndown() {
-            tuleap.agiledashboard.cardwall.fetchBurndown();
+            var completion_bar = $('#milestone_points_completion_bar');
+            if (completion_bar.attr('data-count-style') == 'effort') {
+                tuleap.agiledashboard.cardwall.fetchBurndown();
+            }
         }
 
         function exitFullScreen() {

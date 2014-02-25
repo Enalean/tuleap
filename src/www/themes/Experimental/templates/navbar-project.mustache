@@ -1,4 +1,4 @@
-<li class="dropdown {{ nav_project_class }}">
+<li class="dropdown projects-nav {{ nav_project_class }}">
     {{# user_is_logged_in }}
         {{^ nav_project_anonymous }}
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -6,14 +6,6 @@
             <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-            {{# user_projects }}
-            <li>
-                <a href="/projects/{{ getUnixName }}/">
-                {{ getPublicName }}
-                </a>
-            </li>
-            {{/ user_projects }}
-            <li class="divider"></li>
             <li>
                 <a href="/softwaremap/">Browse all projects
                 </a>
@@ -25,6 +17,17 @@
                 </a>
             </li>
             {{/ project_registration }}
+            <li class="divider"></li>
+            <li>
+                <input type="text" id="filter-projects" placeholder="{{ filter_project }}" />
+            </li>
+            {{# user_projects }}
+            <li class="project">
+                <a href="/projects/{{ getUnixName }}/">
+                {{ getPublicName }}
+                </a>
+            </li>
+            {{/ user_projects }}
         </ul>
         {{/ nav_project_anonymous }}
         {{# nav_project_anonymous }}

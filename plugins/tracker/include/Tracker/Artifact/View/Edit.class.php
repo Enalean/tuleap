@@ -87,7 +87,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
                 $classnames  = html_get_alt_row_color($i++) .' tracker_artifact_followup ';
                 $classnames .= $changeset->getFollowUpClassnames();
                 $html .= '<li id="followup_'. $changeset->id .'" class="'. $classnames .'">';
-                $html .= $changeset->fetchFollowUp($previous_changeset);
+                $html .= $changeset->fetchFollowUp();
                 $html .= '</li>';
             }
             $previous_changeset = $changeset;

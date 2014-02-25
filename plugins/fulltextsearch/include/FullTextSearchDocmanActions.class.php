@@ -67,6 +67,17 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     }
 
     /**
+     * Index the new permissions of a document
+     *
+     * @param Docman_Item the document
+     */
+    public function updatePermissions(Docman_Item $item) {
+        $update_data = $this->client->initializeSetterData();
+        $update_data = $this->client->appendSetterData($update_data, 'permissions', $this->permissions_manager->exportPermissions($item));
+        $this->client->update($item->getid(), $update_data);
+    }
+
+    /**
      * Remove an indexed document
      *
      * @param Docman_Item $item The item to delete

@@ -734,8 +734,8 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             if ($this->default_values) {
                 $default_child = $root->addChild('default_values');
                 foreach ($this->default_values as $id => $nop) {
-                    if ($ref = array_search($id, $xmlMapping)) {
-                        $default_child->addChild('label')->addAttribute('REF', $ref);
+                    if ($ref = array_search($id, $xmlMapping['values'])) {
+                        $default_child->addChild('value')->addAttribute('REF', $ref);
                     }
                 }
             }

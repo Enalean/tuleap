@@ -74,7 +74,7 @@ if ($group_id) {
                         break;
                 }
                 if ($iframe_url) {
-                    $GLOBALS['HTML']->iframe($iframe_url, array('class' => 'iframe_service'));
+                    $GLOBALS['HTML']->iframe($iframe_url, array('class' => 'iframe_service', 'width' => '100%', 'height' => '650px'));
                 }
             }
         }

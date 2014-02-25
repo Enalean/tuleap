@@ -22,7 +22,8 @@
 require_once 'common/user/IHaveAnSSHKey.php';
 
 class Git_Gitolite_SSHKeyDumper {
-    const KEYDIR = 'keydir';
+    const KEYDIR       = 'keydir';
+    const FIRST_KEY_ID = 0;
 
     private $admin_path;
     private $git_exec;
@@ -94,6 +95,15 @@ class Git_Gitolite_SSHKeyDumper {
         return false;
     }
 
+    /**
+     * Remove all pub SSH keys previously associated to a user
+     *
+     * @param $user_name
+     */
+    public function removeAllExistingKeysForUserName($user_name) {
+        $this->removeUserExistingKeysFromAGivenKeyId($user_name, self::FIRST_KEY_ID);
+    }
+
     private function initUserKeys(IHaveAnSSHKey $user) {
         $this->dumpKeys($user);
     }
@@ -108,13 +118,15 @@ class Git_Gitolite_SSHKeyDumper {
     }
 
     private function dumpKeys(IHaveAnSSHKey $user) {
-        $i = 0;
+        $ssh_key_id = 0;
+        $user_name  = $user->getUserName();
+
         foreach ($user->getAuthorizedKeysArray() as $key) {
-            $filePath = $this->getKeyDirPath().'/'.$user->getUserName().'@'.$i.'.pub';
+            $filePath = $this->getKeyDirPath().'/'.$user_name.'@'.$ssh_key_id.'.pub';
             $this->writeKeyIfChanged($filePath, $key);
-            $i++;
+            $ssh_key_id++;
         }
-        $this->removeUserExistingKeys($user, $i);
+        $this->removeUserExistingKeysFromAGivenKeyId($user_name, $ssh_key_id);
     }
 
     private function writeKeyIfChanged($filePath, $key) {
@@ -134,10 +146,11 @@ class Git_Gitolite_SSHKeyDumper {
      * Remove all pub SSH keys previously associated to a user
      *
      * @param IHaveAnSSHKey $user
+     * @param int           $last_key_id
      */
-    private function removeUserExistingKeys(IHaveAnSSHKey $user, $last_key_id) {
+    private function removeUserExistingKeysFromAGivenKeyId($user_name, $last_key_id) {
         if (is_dir($this->getKeyDirPath())) {
-            $userbase = $user->getUserName().'@';
+            $userbase = $user_name.'@';
             foreach (glob($this->getKeyDirPath()."/$userbase*.pub") as $file) {
                 if ($this->getKeyNumber($userbase, $file) >= $last_key_id) {
                     $this->git_exec->rm($file);

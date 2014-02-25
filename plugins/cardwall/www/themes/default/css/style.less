@@ -369,6 +369,7 @@ body.fullscreen {
     background: -o-linear-gradient(top,  @cardwall-full-screen-top-color 0%,@cardwall-full-screen-bottom-color 20%,@cardwall-full-screen-bottom-color 100%);
     background: -ms-linear-gradient(top,  @cardwall-full-screen-top-color 0%,@cardwall-full-screen-bottom-color 20%,@cardwall-full-screen-bottom-color 100%);
     background: linear-gradient(to bottom,  @cardwall-full-screen-top-color 0%,@cardwall-full-screen-bottom-color 20%,@cardwall-full-screen-bottom-color 100%);
+    background-repeat: repeat-x;
 
     #header, #navigation, .systray, #feedback, footer, .sidebar-nav, .navbar, .breadcrumb, .toolbar, .agiledashboard > .dropdown, .agiledashboard > .nav, .agiledashboard > .release-date-info {
         display: none;
@@ -523,43 +524,12 @@ body.fullscreen {
     }
 
     .milestone-burndown {
-        .chart {
-            border-left: 1px solid lightgrey;
-            border-bottom: 1px solid lightgrey;
-            padding-top: 5px;
-        }
-
-        .axis {
-            path,
-            line {
-                fill: none;
-                stroke: #000;
-                shape-rendering: crispEdges;
-            }
-        }
-
-        .line {
-            fill: none;
-
-            &.ideal {
-                stroke: lightgrey;
-                stroke-dasharray: 5, 5;
-                stroke-width: 2px;
-            }
-
-            &.actual {
-                stroke: @cardwall-points-color;
-                stroke-width: 4px;
-            }
-        }
-
-        .circle {
-            &.actual {
-                stroke: @cardwall-points-color;
-                stroke-width: 3px;
-                fill: white;
-            }
-        }
+      .line.actual {
+          stroke: @cardwall-points-color;
+      }
+      .circle.actual {
+          stroke: @cardwall-points-color;
+      }
     }
 
     &.mini {

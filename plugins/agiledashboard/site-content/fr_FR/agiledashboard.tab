@@ -32,6 +32,15 @@ plugin_agiledashboard	add_subitem	Ajouter un(e) nouveau(lle) $1
 plugin_agiledashboard	backlog_add	Ajouter
 plugin_agiledashboard	planning_pane_title	Backlog/Planning
 plugin_agiledashboard	content_pane_title	Content
+plugin_agiledashboard	planning	Planning
+plugin_agiledashboard	cardwall	Cardwall
+plugin_agiledashboard	open	ouverts
+plugin_agiledashboard	closed	fermés
+plugin_agiledashboard	no_milestone	Il n'y a aucun jalon pour cette période
+plugin_agiledashboard	project_backlog	Backlog $1
+plugin_agiledashboard	past	Terminé
+plugin_agiledashboard	now	En cours
+plugin_agiledashboard	future	À venir
 plugin_agiledashboard	milestone_planning_pane_title	Planification de $1
 plugin_agiledashboard	access_to_planning	Accéder au planning
 plugin_agiledashboard	backlog_destination_help	Utiliser la flèche droite d'un élément pour le déplacer vers le milestone courant ou les flèches haut/bas pour prioriser les éléments entre eux.
@@ -84,9 +93,11 @@ plugin_agiledashboard_contentpane	inconsistent_items_intro	Voici les éléments 
 plugin_agiledashboard_contentpane	solve_inconsistencies	Importer dans le backlog
 
 plugin_agiledashboard_milestone_planning	help_intro	Cette section vous permet de faire votre planning de $1:
-plugin_agiledashboard_milestone_planning	help_left	Sur la gauche, le backlog de $2, avec tous les éléments ouverts, non encore plannifiés dans un $1
+plugin_agiledashboard_milestone_planning	help_left	Sur la gauche, le backlog de $2, avec tous les éléments ouverts, non encore planifiés dans un(e) $1
+plugin_agiledashboard_milestone_planning	help_left_top	Sur la gauche, le backlog complet, avec tous les éléments ouverts, non encore planifiés dans un(e) $1
 plugin_agiledashboard_milestone_planning	help_right	Sur la droite, la liste des $1 qui appartiennent à $2.
-plugin_agiledashboard_milestone_planning	help_dnd	Lorsque vous clickez sur un(e) $1, le backlog de ce(tte) $1 appartait. Vous pouvez faire un glissé-déposé des éléments de gauche à droite.
+plugin_agiledashboard_milestone_planning	help_right_top	Sur la droite, la liste de tous les $1.
+plugin_agiledashboard_milestone_planning	help_dnd	Lorsque vous cliquez sur un(e) $1, le backlog de ce(tte) $1 apparaît. Vous pouvez faire un glisser-déposer des éléments de gauche à droite.
 plugin_agiledashboard_milestone_planning	backlog_title	$1 backlog
 plugin_agiledashboard_milestone_planning	list_of_submilestone_title	Liste des $1 de $2
 plugin_agiledashboard_milestone_planning	list_of_milestone_title	Liste des $1

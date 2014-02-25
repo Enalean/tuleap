@@ -1,3 +1,83 @@
+Version 5.246 - Tuleap 6.11
+    * Fix request #6286: Fatal error when importing a tracker with cardwall semantics to a server w/o cardwall enabled
+
+Version 5.245 - Tuleap 6.11
+    * story #6190: add rest api for tracker reports
+
+Version 5.244 - Tuleap 6.11
+    * request #5817: SOAP function to add values to selectbox field (Contrib STMicroelectronics)
+
+Version 5.243 - Tuleap 6.11
+    * Fix request #5712 - Remaining Effort in Burn Down Chart does not reflect history
+
+Version 5.242 - Tuleap 6.11
+    * story #6237: Link factorisation (Contrib JTEKT)
+
+Version 5.241 - Tuleap 6.11
+    * Dev: refactoring of artifact creation and update to allow creation in past (XML import)
+
+Version 5.240 - Tuleap 6.11
+    * Fix request #6243: unable to remove contributor semantic
+
+
+Version 5.239 - Tuleap 6.11
+    * Request #6197 : spinner stays if response is 500
+
+Version 5.238 - Tuleap 6.11
+    * Story #6057 & #5992 - Export/Import Attachments and CC fields from TV3 to TV5
+
+Version 5.237 - Tuleap 6.11
+    * Fix - Remove submit button in modal if the user is not logged in
+
+
+Version 5.236 - Tuleap 6.11
+    * Fix request #6162 - can see 3 number in artifact chunk input
+
+Version 5.235 - Tuleap 6.11
+    * story #6058 Create stuff in agile dashboard using modal
+
+Version 5.234 - Tuleap 6.10
+    * Fix req #6071. Cannot delete x-refs in artifact. Choosing to not show x-refs in modal view.
+
+Version 5.233 - Tuleap 6.10
+    * Fixing request #6087. Fatal error when creating an artifact
+
+Version 5.232 - Tuleap 6.10
+    * Bootstrapify submit buttons in new artifact form
+
+Version 5.231 - Tuleap 6.10
+    * fix request #5979 - Global notification not sent if only field change
+
+Version 5.230 - Tuleap 6.10
+    * Add loading state on the modal submit button
+
+Version 5.229 - Tuleap 6.10
+    * edit artifact in place on agile dashboard
+
+Version 5.228 - Tuleap 6.10
+    * Request #5941: Cannot import a field which is defined as Multi-Select
+
+Version 5.227 - Tuleap 6.10
+    * request #5986 - URLs are corrupted by a double escape
+
+Version 5.226 - Tuleap 6.10
+    * Fix request #6013: Text in HTML format is sent as HTML in plain/text mail notifications
+
+Version 5.225 - Tuleap 6.10
+    * Fix request #5950: Computed fields are not exported in csv
+
+Version 5.224 - Tuleap 6.10
+    * Dev: throw exception when trying to rank an artifact with itself
+
+Version 5.223 - Tuleap 6.10
+    * story #5828: Start import of data from old tracker engine (code name: TV3) to the new one (code name: TV5). As of today only the summary of the artifact (and its complete history) is exported/imported.
+
+Version 5.222 - Tuleap 6.10
+    * Fix request #5895 - Export tracker structure do not keep default values for list fields
+
+Version 5.221 - Tuleap 6.10
+    * Story #5619: Have an enhanced experimental theme
+
 Version 5.220 - Tuleap 6.10
     * Import/Export a project's agile dashboard from UI
 

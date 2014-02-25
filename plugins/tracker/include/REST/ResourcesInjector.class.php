@@ -20,6 +20,7 @@
 
 use Tuleap\Tracker\REST\TrackerRepresentation;
 use Tuleap\Project\REST\ProjectResourceReference;
+use Tuleap\Tracker\REST\ReportRepresentation;
 
  /**
   * Inject resource into restler
@@ -29,6 +30,7 @@ class Tracker_REST_ResourcesInjector {
     public function populate(Luracast\Restler\Restler $restler) {
         $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\TrackersResource', 'trackers');
         $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\ArtifactsResource', 'artifacts');
+        $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\ReportsResource', ReportRepresentation::ROUTE);
     }
 
     public function declareProjectPlanningResource(array &$resources, Project $project) {

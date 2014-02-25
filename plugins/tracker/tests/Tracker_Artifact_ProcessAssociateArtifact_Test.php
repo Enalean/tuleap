@@ -55,9 +55,9 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
                 'removed_values' => array(987 => 1),
                 ),
             );
-        $no_comment = $no_email = '';
+        $no_comment = '';
 
-        stub($artifact)->createNewChangeset($expected_field_data, $no_comment, $this->user, $no_email)->once();      
+        stub($artifact)->createNewChangeset($expected_field_data, $no_comment, $this->user)->once();      
  
         $artifact->process(new MockTrackerManager(), $this->request, $this->user);
     }
@@ -79,9 +79,9 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
         stub($factory)->getUsedArtifactLinkFields()->returns(array($field));
 
         $expected_field_data = array($field->getId() => array('new_values' => 987));
-        $no_comment = $no_email = '';
+        $no_comment = '';
 
-        $artifact->expectOnce('createNewChangeset', array($expected_field_data, $no_comment, $this->user, $no_email));
+        $artifact->expectOnce('createNewChangeset', array($expected_field_data, $no_comment, $this->user));
 
         $artifact->process(new MockTrackerManager(), $this->request, $this->user);
     }

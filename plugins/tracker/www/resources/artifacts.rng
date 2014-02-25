@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <element name="artifacts">
+      <zeroOrMore>
+        <element name="artifact">
+          <attribute name="id">
+            <data type="int"/>
+          </attribute>
+          <zeroOrMore>
+            <element name="changeset">
+              <element name="submitted_by">
+                <ref name="user_content"/>
+              </element>
+              <element name="submitted_on">
+                <ref name="date_content"/>
+              </element>
+              <optional>
+                <element name="comment">
+                  <data type="string"/>
+                </element>
+              </optional>
+              <oneOrMore>
+                <element name="field_change">
+                  <ref name="field_content"/>
+                </element>
+              </oneOrMore>
+            </element>
+          </zeroOrMore>
+          <zeroOrMore>
+            <element name="file">
+              <attribute name="id">
+                <data type="ID"/>
+              </attribute>
+              <element name="filename">
+                <data type="string"/>
+              </element>
+              <element name="path">
+                <data type="string"/>
+              </element>
+              <element name="filesize">
+                <data type="int"/>
+              </element>
+              <element name="filetype">
+                <data type="string"/>
+              </element>
+              <element name="description">
+                <data type="string"/>
+              </element>
+            </element>
+          </zeroOrMore>
+        </element>
+      </zeroOrMore>
+    </element>
+  </start>
+  <define name="date_content">
+    <attribute name="format">
+      <value>ISO8601</value>
+    </attribute>
+    <data type="string"/>
+  </define>
+  <define name="user_content">
+    <choice>
+      <attribute name="format">
+        <choice>
+          <value>username</value>
+          <value>ldap</value>
+          <value>id</value>
+        </choice>
+      </attribute>
+      <group>
+        <attribute name="format">
+          <value>email</value>
+        </attribute>
+        <attribute name="is_anonymous">
+          <data type="boolean"/>
+        </attribute>
+      </group>
+    </choice>
+    <data type="string"/>
+  </define>
+  <define name="field_content">
+    <attribute name="field_name">
+      <data type="string"/>
+    </attribute>
+    <choice>
+      <ref name="field_string"/>
+      <ref name="field_file"/>
+      <ref name="field_open_list_user"/>
+    </choice>
+  </define>
+  <define name="field_string">
+    <attribute name="type">
+      <value>string</value>
+    </attribute>
+    <element name="value">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="field_file">
+    <attribute name="type">
+      <value>file</value>
+    </attribute>
+    <oneOrMore>
+      <element name="value">
+        <attribute name="ref">
+          <data type="IDREF"/>
+        </attribute>
+      </element>
+    </oneOrMore>
+  </define>
+  <define name="field_open_list_user">
+    <attribute name="type">
+      <value>open_list</value>
+    </attribute>
+    <attribute name="bind">
+      <value>user</value>
+    </attribute>
+    <oneOrMore>
+      <element name="value">
+        <ref name="user_content"/>
+      </element>
+    </oneOrMore>
+  </define>
+</grammar>

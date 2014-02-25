@@ -135,6 +135,10 @@ interface Planning_Milestone {
      */
     public function getEndDate();
 
+    public function getDaysSinceStart();
+
+    public function getDaysUntilEnd();
+
     /**
      * Get the timestamp of the last modification of the milestone
      *
@@ -162,6 +166,23 @@ interface Planning_Milestone {
      * @return float
      */
     public function getRemainingEffort();
-}
 
-?>
+    /**
+     * Return If type of element is compatible.
+     *
+     * @param Planning_Milestone $potential_submilestone
+     * @return boolean
+     */
+    public function milestoneCanBeSubmilestone(Planning_Milestone $potential_submilestone);
+
+    public function hasBurdownField(PFUser $user);
+
+    /**
+     * Get the Burndown data of the milestone
+     *
+     * @param PFUser $user
+     *
+     * @return mixed Tracker_Chart_Data_Burndown | null
+     */
+    public function getBurndownData(PFUser $user);
+}

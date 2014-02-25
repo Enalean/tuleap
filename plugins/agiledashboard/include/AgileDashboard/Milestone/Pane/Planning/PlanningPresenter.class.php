@@ -90,11 +90,19 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
     }
 
     public function help_left() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'help_left', array($this->submilestone_item_type, $this->milestone_item_type));
+        if ($this->milestone_item_type) {
+            return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'help_left', array($this->submilestone_item_type, $this->milestone_item_type));
+        }
+
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'help_left_top', array($this->submilestone_item_type));
     }
 
     public function help_right() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'help_right', array($this->submilestone_item_type, $this->milestone_item_type));
+        if ($this->milestone_item_type) {
+            return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'help_right', array($this->submilestone_item_type, $this->milestone_item_type));
+        }
+
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_milestone_planning', 'help_right_top', array($this->submilestone_item_type));
     }
 
     public function help_dnd() {
@@ -143,6 +151,10 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningPresenter {
 
     public function submilestone_collection() {
         return $this->submilestone_collection;
+    }
+
+    public function submilestone_tracker_id() {
+        return $this->submilestone_collection->getTracker()->getId();
     }
 
     public function can_plan() {

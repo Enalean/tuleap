@@ -19,6 +19,7 @@
  */
  
 require_once('bootstrap.php');
+
 Mock::generate('Tracker_Artifact');
 
 Mock::generate('Tracker');
@@ -28,7 +29,7 @@ Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_Artifact_Changeset');
 
 Mock::generatePartial(
-    'Tracker_FormElement_Field', 
+    'Tracker_FormElement_Field',
     'Tracker_FormElement_FieldTestVersion', 
     array(
         'fetchCriteriaValue', 
@@ -141,17 +142,17 @@ class Tracker_FormElement_FieldTest extends UnitTestCase {
             array(0, 0, 0, 1, '-', 0,   0),
             array(0, 0, 1, 0, '-', 0,   0),
             array(0, 0, 1, 1, 'R', 0,   0),
-                                        
+
             array(0, 1, 0, 0, 'P', 0,   0),
             array(0, 1, 0, 1, 'P', 0,   0),
             array(0, 1, 1, 0, 'V', 1,   1),
             array(0, 1, 1, 1, 'V', 1,   1),
-            
+
             array(1, 0, 0, 0, '-', 0, '-'),
             array(1, 0, 0, 1, '-', 0, '-'),
             array(1, 0, 1, 0, '-', 0, '-'),
             array(1, 0, 1, 1, '-', 0, '-'),
-            
+
             array(1, 1, 0, 0, 'P', 0, '-'),
             array(1, 1, 0, 1, 'P', 0, '-'),
             array(1, 1, 1, 0, 'V', 1,   1),
@@ -224,7 +225,7 @@ class Tracker_FormElement_FieldTest extends UnitTestCase {
                 break;
             }
             
-            $result = $field->validateField($artifact_update, $submitted_value, $last_changeset_value);
+            $result = $field->validateFieldWithPermissionsAndRequiredStatus($artifact_update, $submitted_value, $last_changeset_value);
             $this->assertEqual($result, $is_valid);
             $this->tearDown();
             unset($field);
@@ -250,9 +251,9 @@ class Tracker_FormElement_FieldTest extends UnitTestCase {
     }
     
     function testIsValid_required() {
-             
+
         $artifact = new MockTracker_Artifact();
-        $field = new Tracker_FormElement_FieldTestVersion();
+        $field    = new Tracker_FormElement_FieldTestVersion();
         $field->setReturnValue('getLabel', 'Status');
         $field->setReturnValue('getName', 'status');
         $field->setReturnValue('isRequired', true);
@@ -265,10 +266,10 @@ class Tracker_FormElement_FieldTest extends UnitTestCase {
         
         $this->assertFalse($field->hasErrors());
         
-        $this->assertFalse($field->isValid($artifact, ''));
+        $this->assertFalse($field->isValidRegardingRequiredProperty($artifact, ''));
         $this->assertTrue($field->hasErrors());
         
-        $this->assertFalse($field->isValid($artifact, null));
+        $this->assertFalse($field->isValidRegardingRequiredProperty($artifact, null));
         $this->assertTrue($field->hasErrors());
         
         $this->assertTrue($field->isValid($artifact, '123'));

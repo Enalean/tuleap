@@ -50,8 +50,10 @@ class Tracker_Action_UpdateArtifact {
         unset($fields_data['request_method_called']);
 
         try {
-
-            $this->artifact->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'), true, $comment_format);
+            if ($current_user->isAnonymous()) {
+                $current_user->setEmail($request->get('email'));
+            }
+            $this->artifact->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, true, $comment_format);
 
             $art_link = $this->artifact->fetchDirectLinkToArtifact();
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);

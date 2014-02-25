@@ -33,11 +33,28 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
      * @param Tracker_Artifact $artifact
      * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation
      */
-    public function getArtifactRepresentation(PFUser $user, Tracker_Artifact $artifact) {
+    public function getArtifactRepresentationWithFieldValues(PFUser $user, Tracker_Artifact $artifact) {
         $artifact_representation = new Tuleap\Tracker\REST\Artifact\ArtifactRepresentation();
         $artifact_representation->build(
             $artifact,
             $this->getFieldsValues($user, $artifact)
+        );
+
+        return $artifact_representation;
+    }
+
+    /**
+     * Return an artifact snapshot representation
+     *
+     * @param PFUser $user
+     * @param Tracker_Artifact $artifact
+     * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation
+     */
+    public function getArtifactRepresentation(Tracker_Artifact $artifact) {
+        $artifact_representation = new Tuleap\Tracker\REST\Artifact\ArtifactRepresentation();
+        $artifact_representation->build(
+            $artifact,
+            array()
         );
 
         return $artifact_representation;

@@ -56,7 +56,7 @@ Mock::generatePartial('BackendSVN', 'BackendSVNAccessTestVersion', array('update
                                                                          'getAllProjects',
                                                                          'getProjectManager',
                                                                         ));
-                                                                   
+
 class BackendSVNTest extends TuleapTestCase {
 
     function setUp() {
@@ -394,17 +394,57 @@ class BackendSVNTest extends TuleapTestCase {
        
             
     }
+}
+
+class BackendSVN_EnableLogChangeHooks_Test extends TuleapTestCase {
+
+    private $bin_dir;
+    private $fake_revprop;
+
+    public function setUp() {
+        parent::setUp();
+        $GLOBALS['svn_prefix'] = dirname(__FILE__) . '/_fixtures/svnroot';
+        mkdir($GLOBALS['svn_prefix'] . '/toto/hooks', 0777, true);
+        Config::store();
+        $this->bin_dir = dirname(__FILE__) . '/_fixtures';
+        $this->fake_revprop = $this->bin_dir.'/post-revprop-change.php';
+        Config::set('codendi_bin_prefix', $this->bin_dir);
+    }
+
+    public function tearDown() {
+        $this->recurseDeleteInDir($GLOBALS['svn_prefix'] . '/toto');
+        rmdir($GLOBALS['svn_prefix'] . '/toto');
+        unset($GLOBALS['svn_prefix']);
+        Config::restore();
+        parent::tearDown();
+    }
+
 
     public function testItThrowsAnExceptionIfFileForSimlinkAlreadyExists() {
-        $this->expectException('BackendSVNFileForSimlinkAlreadyExistsException');
-
         $project = stub('Project')->getUnixName()->returns('toto');
-        $backend = new BackendSVNTestVersion($this);
+        $backend = partial_mock('BackendSVN', array('log', 'chgrp', 'chown'));
         $path    = $GLOBALS['svn_prefix'] . '/toto/hooks';
-        $fp      = fopen($path.'/post-revprop-change', 'w');
+        touch($path.'/post-revprop-change');
 
         stub($project)->isSVNTracked()->returns(true);
         stub($project)->canChangeSVNLog()->returns(true);
+        expect($backend)->log()->once();
+
+        $this->expectException('BackendSVNFileForSimlinkAlreadyExistsException');
+        $backend->updateHooks($project);
+    }
+
+    public function testDoesntThrowAnExceptionIfTheHookIsALinkToOurImplementation() {
+        $project = stub('Project')->getUnixName()->returns('toto');
+        $backend = partial_mock('BackendSVN', array('log', 'chgrp', 'chown'));
+        $path    = $GLOBALS['svn_prefix'] . '/toto/hooks';
+
+        // Create link to fake post-revprop-change
+        symlink($this->fake_revprop, $path.'/post-revprop-change');
+
+        stub($project)->isSVNTracked()->returns(true);
+        stub($project)->canChangeSVNLog()->returns(true);
+        expect($backend)->log()->never();
 
         $backend->updateHooks($project);
     }

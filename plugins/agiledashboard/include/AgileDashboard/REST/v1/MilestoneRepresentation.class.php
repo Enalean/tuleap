@@ -74,6 +74,16 @@ class MilestoneRepresentation {
     public $end_date;
 
     /**
+     * @var int
+     */
+    public $number_days_since_start;
+
+    /**
+     * @var int
+     */
+    public $number_days_until_end;
+
+    /**
      * @var float
      */
     public $capacity;
@@ -128,7 +138,13 @@ class MilestoneRepresentation {
      */
     public $last_modified_date;
 
-    public function build(Planning_Milestone $milestone) {
+    /**
+     *
+     * @var array
+     */
+    public $status_count;
+
+    public function build(Planning_Milestone $milestone, array $status_count) {
         $this->id               = JsonCast::toInt($milestone->getArtifactId());
         $this->uri              = self::ROUTE . '/' . $this->id;
         $this->label            = $milestone->getArtifactTitle();
@@ -146,12 +162,14 @@ class MilestoneRepresentation {
 
         $this->start_date = null;
         if ($milestone->getStartDate()) {
-            $this->start_date = JsonCast::toDate($milestone->getStartDate());
+            $this->start_date              = JsonCast::toDate($milestone->getStartDate());
+            $this->number_days_since_start = JsonCast::toInt($milestone->getDaysSinceStart());
         }
 
         $this->end_date = null;
         if ($milestone->getEndDate()) {
-            $this->end_date = JsonCast::toDate($milestone->getEndDate());
+            $this->end_date              = JsonCast::toDate($milestone->getEndDate());
+            $this->number_days_until_end = JsonCast::toInt($milestone->getDaysUntilEnd());
         }
 
         $this->parent = null;
@@ -165,6 +183,9 @@ class MilestoneRepresentation {
         $this->backlog_uri        = $this->uri . '/'. BacklogItemRepresentation::BACKLOG_ROUTE;
         $this->content_uri        = $this->uri . '/'. BacklogItemRepresentation::CONTENT_ROUTE;
         $this->last_modified_date = JsonCast::toDate($milestone->getLastModifiedDate());
+        if($status_count) {
+            $this->status_count = $status_count;
+        }
     }
 
     public function enableCardwall() {

@@ -162,7 +162,27 @@ class OngoingIntelligentStub {
      * |2 |
      */
     public function returnsDar() {
-        return $this->returns(TestHelper::argListToDar(func_get_args()));
+        return $this->returnsDarFromArray(func_get_args());
+    }
+
+    /**
+     * Ease return of DatabaseAccessResult objects:
+     *
+     * Example:
+     *  stub('Dao')->getStuff()->returnsDarFromArray(
+     *      array(
+     *          array('id' => '1'),
+     *          array('id' => '2')
+     *      )
+     *  );
+     *
+     * Returns 2 rows out of the database:
+     * |Id|
+     * |1 |
+     * |2 |
+     */
+    public function returnsDarFromArray($array) {
+        return $this->returns(TestHelper::argListToDar($array));
     }
 
     /**

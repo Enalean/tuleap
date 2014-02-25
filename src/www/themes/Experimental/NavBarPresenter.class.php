@@ -41,7 +41,13 @@ class Experimental_NavBarPresenter {
 
     private $display_new_account;
 
-    public function __construct($imgroot, PFUser $user, $request_uri, $selected_top_tab, HTTPRequest $request, $title, $search_form_presenter, $project_list, $display_new_account) {
+    /** @var string */
+    public $motd;
+
+    /** @var bool */
+    public $has_motd;
+
+    public function __construct($imgroot, PFUser $user, $request_uri, $selected_top_tab, HTTPRequest $request, $title, $search_form_presenter, $project_list, $display_new_account, $motd) {
         $this->imgroot               = $imgroot;
         $this->user                  = $user;
         $this->request_uri           = $request_uri;
@@ -51,6 +57,8 @@ class Experimental_NavBarPresenter {
         $this->search_form_presenter = $search_form_presenter;
         $this->project_list          = $project_list;
         $this->display_new_account   = $display_new_account;
+        $this->motd                  = $motd;
+        $this->has_motd              = ! empty($motd);
     }
 
     public function imgroot() {
@@ -137,6 +145,26 @@ class Experimental_NavBarPresenter {
         return $GLOBALS['Language']->getText('include_menu','bookmark_this_page');
     }
 
+    public function filter_project() {
+        return $GLOBALS['Language']->getText('include_menu','filter_project');
+    }
+
+    public function documentation() {
+        return $GLOBALS['Language']->getText('include_project_home','doc');
+    }
+
+    public function help() {
+        return $GLOBALS['Language']->getText('include_menu','help');
+    }
+
+    public function contact_us() {
+        return $GLOBALS['Language']->getText('include_menu','contact_us');
+    }
+
+    public function soap_api() {
+        return $GLOBALS['Language']->getText('include_menu','soap_api');
+    }
+
     public function nav_home_class() {
         $class = '';
 
@@ -160,7 +188,7 @@ class Experimental_NavBarPresenter {
     }
 
     public function nav_help_class() {
-        return $this->getClassnameNavItemActive('/site/', 'site');
+        return $this->getClassnameNavItemActive(array('/site/', '/contact.php', '/soap/index.php'), 'site');
     }
 
     public function nav_user_class() {

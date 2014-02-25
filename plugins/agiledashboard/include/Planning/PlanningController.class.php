@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,6 +29,9 @@ require_once 'common/mvc2/PluginController.class.php';
 class Planning_Controller extends MVC2_PluginController {
 
     const AGILE_DASHBOARD_TEMPLATE_NAME = 'agile_dashboard_template.xml';
+    const PAST_PERIOD   = 'past';
+    const FUTURE_PERIOD = 'future';
+    const NUMBER_PAST_MILESTONES_SHOWN = 10;
 
     /** @var PlanningFactory */
     private $planning_factory;
@@ -48,6 +51,9 @@ class Planning_Controller extends MVC2_PluginController {
     /** @var ProjectXMLExporter */
     private $xml_exporter;
 
+    /** @var string */
+    private $plugin_path;
+
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
@@ -55,7 +61,8 @@ class Planning_Controller extends MVC2_PluginController {
         Planning_MilestoneFactory $milestone_factory,
         ProjectManager $project_manager,
         ProjectXMLExporter $xml_exporter,
-        $plugin_theme_path
+        $plugin_theme_path,
+        $plugin_path
     ) {
         parent::__construct('agiledashboard', $request);
         
@@ -66,6 +73,7 @@ class Planning_Controller extends MVC2_PluginController {
         $this->project_manager              = $project_manager;
         $this->xml_exporter                 = $xml_exporter;
         $this->plugin_theme_path            = $plugin_theme_path;
+        $this->plugin_path                  = $plugin_path;
     }
     
     public function admin() {
@@ -118,20 +126,171 @@ class Planning_Controller extends MVC2_PluginController {
     }
 
     public function index() {
+        if (! server_is_php_version_equal_or_greater_than_53()) {
+            return $this->showPHP51Home();
+        } else {
+            return $this->showPHP53Home();
+        }
+    }
+
+    private function showPHP51Home() {
         try {
-            $project_id = $this->request->getProject()->getID();
             $plannings = $this->getPlanningsShortAccess($this->group_id);
         } catch (Planning_InvalidConfigurationException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
             $plannings = array();
         }
-        $presenter = new Planning_IndexPresenter(
+
+        if (empty($plannings)) {
+            return $this->showEmptyHome();
+        }
+
+        $presenter = new Planning_Presenter_PHP51HomePresenter(
             $plannings,
             $this->plugin_theme_path,
-            $project_id,
+            $this->group_id
+        );
+        return $this->renderToString('home_php51', $presenter);
+    }
+
+    private function showPHP53Home() {
+        $user = $this->request->getCurrentUser();
+
+        $plannings = $this->planning_factory->getNonLastLevelPlannings(
+            $user,
+            $this->group_id
+        );
+        $last_plannings = $this->planning_factory->getLastLevelPlannings($user, $this->group_id);
+
+        if (empty($plannings) && empty($last_plannings)) {
+            return $this->showEmptyHome();
+        }
+
+        $presenter = new Planning_Presenter_HomePresenter(
+            $this->getMilestoneAccessPresenters($plannings),
+            $this->group_id,
+            $this->getLastLevelMilestonesPresenters($last_plannings, $user),
+            $this->request->get('period'),
+            $this->getProjectFromRequest()->getPublicName()
+        );
+        return $this->renderToString('home', $presenter);
+    }
+
+    /**
+     * Home page for when there is nothing set-up.
+     */
+    private function showEmptyHome() {
+        $presenter = new Planning_Presenter_EmptyHomePresenter(
+            $this->group_id,
             $this->isUserAdmin()
         );
-        return $this->renderToString('index', $presenter);
+        return $this->renderToString('empty-home', $presenter);
+    }
+
+    /**
+     * @return Planning_Presenter_MilestoneAccessPresenter
+     */
+    private function getMilestoneAccessPresenters($plannings) {
+        $milestone_access_presenters = array();
+        foreach ($plannings as $planning) {
+            $milestone_type      = $planning->getPlanningTracker();
+            $milestone_presenter = new Planning_Presenter_MilestoneAccessPresenter(
+                $this->getPlanningMilestonesForTimePeriod($planning),
+                $milestone_type->getName()
+            );
+
+            $milestone_access_presenters[] = $milestone_presenter;
+        }
+
+        return $milestone_access_presenters;
+    }
+
+    /**
+     * @param Planning[] $last_plannings
+     * @param PFUser $user
+     * @return Planning_Presenter_LastLevelMilestone[]
+     */
+    private function getLastLevelMilestonesPresenters($last_plannings, PFUser $user) {
+        $presenters = array();
+
+        foreach ($last_plannings as $last_planning) {
+            $presenters[] = new Planning_Presenter_LastLevelMilestone(
+                $this->getMilestoneSummaryPresenters($last_planning, $user),
+                $last_planning->getPlanningTracker()->getName()
+            );
+        }
+
+        return $presenters;
+    }
+
+    /**
+     * @return Planning_Presenter_MilestoneSummaryPresenter[]
+     */
+    private function getMilestoneSummaryPresenters(Planning $last_planning, PFUser $user) {
+        $presenters   = array();
+        $has_cardwall = $this->hasCardwall($last_planning);
+        $last_planning_current_milestones = $this->getPlanningMilestonesForTimePeriod($last_planning);
+
+        if (empty($last_planning_current_milestones)) {
+            return $presenters;
+        }
+
+        foreach ($last_planning_current_milestones as $milestone) {
+            $this->milestone_factory->addMilestoneAncestors($user, $milestone);
+            $milestone = $this->milestone_factory->updateMilestoneContextualInfo($user, $milestone);
+
+            if ($milestone->hasUsableBurndownField()) {
+                $burndown_data = $milestone->getBurndownData($user);
+
+                $presenters[] = new Planning_Presenter_MilestoneBurndownSummaryPresenter(
+                    $milestone,
+                    $this->plugin_path,
+                    $has_cardwall,
+                    $burndown_data
+                );
+            } else {
+                $presenters[] = new Planning_Presenter_MilestoneSummaryPresenter(
+                    $milestone,
+                    $this->plugin_path,
+                    $has_cardwall,
+                    $this->milestone_factory->getMilestoneStatusCount($user, $milestone)
+                );
+            }
+        }
+
+        return $presenters;
+    }
+
+    /**
+     * @return Planning_Milestone[]
+     */
+    private function getPlanningMilestonesForTimePeriod(Planning $planning) {
+        $user        = $this->request->getCurrentUser();
+        $set_in_time = $this->planning_factory
+            ->canPlanningBeSetInTime($planning->getPlanningTracker());
+
+        if (! $set_in_time) {
+            return $this->milestone_factory->getAllMilestones($user, $planning);
+        }
+
+        switch ($this->request->get('period')) {
+            case self::PAST_PERIOD:
+                return $this->milestone_factory->getPastMilestones(
+                    $user,
+                    $planning,
+                    self::NUMBER_PAST_MILESTONES_SHOWN
+                );
+            case self::FUTURE_PERIOD:
+                return $this->milestone_factory->getAllFutureMilestones(
+                    $user,
+                    $planning
+                );
+            default:
+                return $this->milestone_factory->getAllCurrentMilestones(
+                    $user,
+                    $planning
+                );
+        }
     }
 
     /**
@@ -156,7 +315,6 @@ class Planning_Controller extends MVC2_PluginController {
 
         return $this->renderToString('new', $presenter);
     }
-
 
     public function importForm() {
         $this->redirectNonAdmin();
@@ -242,6 +400,21 @@ class Planning_Controller extends MVC2_PluginController {
         $available_planning_trackers[] = $planning->getPlanningTracker();
 
         return new Planning_FormPresenter($planning, $available_trackers, $available_planning_trackers, $cardwall_admin);
+    }
+
+    private function hasCardwall(Planning $planning) {
+        $tracker = $planning->getPlanningTracker();
+        $enabled = false;
+
+        EventManager::instance()->processEvent(
+            AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED,
+            array(
+                'tracker' => $tracker,
+                'enabled'    => &$enabled,
+            )
+        );
+
+        return $enabled;
     }
 
     private function getCardwallConfiguration(Planning $planning) {

@@ -32,6 +32,7 @@ class BreadCrumb_Milestone implements BreadCrumb_BreadCrumbGenerator {
 
     public function getCrumbs() {
         $hp             = Codendi_HTMLPurifier::instance();
+        $tracker        = $this->milestone->getArtifact()->getTracker();
         $url_parameters = array(
             'planning_id' => $this->milestone->getPlanningId(),
             'action'      => 'show',
@@ -42,6 +43,7 @@ class BreadCrumb_Milestone implements BreadCrumb_BreadCrumbGenerator {
             array(
                 'url'   => $this->plugin_path .'/?'. http_build_query($url_parameters),
                 'title' => $hp->purify($this->milestone->getArtifactTitle()),
+                'default_name' => $hp->purify($tracker->getName().' #' . $this->milestone->getArtifactId()),
         ));
     }
 }

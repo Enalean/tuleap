@@ -1502,6 +1502,10 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $this->id;
     }
 
+    public function getName() {
+        return $this->name;
+    }
+
     private function getAdditionalCriteria() {
         $session_additional_criteria = null;
         if (isset($this->report_session)) {
@@ -1526,7 +1530,9 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             foreach ($additional_criteria_values as $key => $additional_criterion_value) {
                 $additional_criterion      = new Tracker_Report_AdditionalCriterion($key, $additional_criterion_value['value']);
                 $additional_criteria[$key] = $additional_criterion;
-                $this->report_session->storeAdditionalCriterion($additional_criterion);
+                if (isset($this->report_session)) {
+                    $this->report_session->storeAdditionalCriterion($additional_criterion);
+                }
             }
         }
 

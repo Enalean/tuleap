@@ -226,8 +226,9 @@ class Event {
      * User name changed
      *
      * Parameters:
-     *  'user_id' => User ID
+     *  'user_id'  => User ID
      *  'new_name' => The new user name
+     *  'old_user' => The old user
      *
      * No expected results
      */

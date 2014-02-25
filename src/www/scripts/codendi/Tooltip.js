@@ -42,7 +42,7 @@ codendi.Tooltip = Class.create({
         this.hideEvent = this.hide.bindAsEventListener(this);
         this.element.observe('mouseout', this.hideEvent);
     },
-    fetch: function () {
+    fetch: function (evt) {
         if (!this.fetching) {
             this.fetching = true;
             this.element.title = '';
@@ -53,7 +53,7 @@ codendi.Tooltip = Class.create({
                     if (transport.responseText) {
                         this.createTooltip(transport.responseText);
                         if (this.show_tooltip) {
-                            this.show();
+                            this.show(evt);
                         }
                     } else {
                         this.element.title = this.old_title;
@@ -76,24 +76,36 @@ codendi.Tooltip = Class.create({
     },
     show: function (evt) {
         this.show_tooltip = true;
+        var mouse_event = evt;
+
         if (this.timeout) {
             clearTimeout(this.timeout);
         }
         if (this.tooltip) {
-            var pos = this.element.cumulativeOffset();
-            Element.setStyle(this.tooltip, {
-                    top: (pos[1] + this.element.offsetHeight) + "px",
-                    left: pos[0] + "px"
-                }
-            );
-            this.tooltip.show();
+            if (this.options.atCursorPosition) {
+                var posX = mouse_event.pageX;
+                var posY = mouse_event.pageY;
+                Element.setStyle(this.tooltip, {
+                        top: posY + 10 + "px",
+                        left: posX + 10 + "px"
+                    }
+                );
+            } else {
+                var pos = this.element.cumulativeOffset();
+                Element.setStyle(this.tooltip, {
+                        top: (pos[1] + this.element.offsetHeight) + "px",
+                        left: pos[0] + "px"
+                    }
+                );
+            }
+            this.tooltip.show(evt);
             if (evt) {
                 //Event.stop(evt);
                 Event.extend(evt);
                 evt.preventDefault();
             }
         } else if (!this.fetched) {
-            this.fetch();
+            this.fetch(evt);
         }
     },
     hide: function () {
@@ -108,11 +120,18 @@ codendi.Tooltip = Class.create({
 
 codendi.Tooltip.selectors = ['a[class=cross-reference]'];
 
-codendi.Tooltip.load = function (element) {
+codendi.Tooltip.load = function (element, at_cursor_position) {
     var sparkline_hrefs = { };
+    var options = { };
+
+    if (typeof(at_cursor_position) != 'undefined' && at_cursor_position === true) {
+        options.atCursorPosition = true;
+    } else {
+        options.atCursorPosition = false;
+    }
     
     $(element).select.apply($(element), codendi.Tooltip.selectors).each(function (a) {
-        codendi.Tooltips.push(new codendi.Tooltip(a, a.href));
+        codendi.Tooltips.push(new codendi.Tooltip(a, a.href, options));
         //Create an array by hrefs : several 'a' for one href in order to reduce the requests
         if (sparkline_hrefs[a.href]) {
             sparkline_hrefs[a.href].push(a);

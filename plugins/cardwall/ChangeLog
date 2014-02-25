@@ -1,3 +1,21 @@
+Version 1.19 - Tuleap 6.11
+    * Dev fix: burndown no longer displayed after story #5984: open/closed fall back
+
+Version 1.18 - Tuleap 6.11
+    * Fix request #6219. Js error  on non cardwall pages
+
+Version 1.17 - Tuleap 6.10
+    * request #6102 - JS error on tagName on cardwall renderer
+
+Version 1.16 - Tuleap 6.10
+    * edit artifact in place on agile dashboard
+
+Version 1.15 - Tuleap 6.10
+    * Adjustements to internal Tracker API changes introduced in tracker 5.223
+
+Version 1.14 - Tuleap 6.10
+    * Story #5619: Have an enhanced experimental theme
+
 Version 1.13 - Tuleap 6.10
     * story #5802 - have burndown in stand-up view
 

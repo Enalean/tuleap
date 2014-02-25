@@ -445,7 +445,7 @@ class hudsonViews extends Views {
 
     function _display_iframe($url = '') {
         echo '<div id="hudson_iframe_div">';
-        $GLOBALS['HTML']->iframe($url, array('id' => 'hudson_iframe', 'class' => 'iframe_service'));
+        $GLOBALS['HTML']->iframe($url, array('id' => 'hudson_iframe', 'class' => 'iframe_service', 'width' => '100%', 'height' => '650px'));
         echo '</div>';
     }
     function _hide_iframe() {

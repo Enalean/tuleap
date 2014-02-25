@@ -92,3 +92,5 @@ global	error_synchronizertoken	Your request doesn't appear to be valid. Please r
 global	operation_not_allowed	Operation not allowed
 global	settings	Settings
 global	usage	Usage
+global	powered_by	Powered by <a href="http://tuleap.org/?utm_source=forge&utm_medium=forge&utm_campaign=forge" target="_blank">Tuleap&trade;</a>
+global	copyright	Copyright &copy; 2011-2014 <a href="http://www.enalean.com/?utm_source=forge&utm_medium=forge&utm_campaign=forge" target="_blank">Enalean</a>

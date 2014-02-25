@@ -148,6 +148,21 @@ class Tracker_Hierarchy {
         error_reporting($old_level);
         return $tracker_ids;
     }
+
+    /**
+     * Get all tracker ids at the last level of a hierarchy tree
+     */
+    public function getLastLevelTrackerIds() {
+        $tracker_ids = array();
+
+        foreach (array_keys($this->parents) as $child_id) {
+            if (! in_array($child_id, $this->parents)) {
+                $tracker_ids[] = $child_id;
+            }
+        }
+
+        return $tracker_ids;
+    }
     
     protected function sortByLevel($tracker1_id, $tracker2_id) {
         try {

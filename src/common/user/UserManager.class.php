@@ -396,11 +396,13 @@ class UserManager {
      */
     function login($name, $pwd, $allowpending = false) {
         try {
+            $password_expiration_checker = new User_PasswordExpirationChecker();
             $login_manager = new User_LoginManager(
                 EventManager::instance(),
-                $this
+                $this,
+                $password_expiration_checker
             );
-            $status_manager = new User_UserStatusManager();
+            $status_manager              = new User_UserStatusManager();
 
             $user = $login_manager->authenticate($name, $pwd);
             if ($allowpending) {
@@ -410,7 +412,8 @@ class UserManager {
             }
 
             $this->openWebSession($user);
-            $this->warnUserAboutPasswordExpiration($user);
+            $password_expiration_checker->checkPasswordLifetime($user);
+            $password_expiration_checker->warnUserAboutPasswordExpiration($user);
             $this->warnUserAboutAuthenticationAttempts($user);
 
             return $this->setCurrentUser($user);
@@ -483,21 +486,6 @@ class UserManager {
         // Display nothing if no previous record.
         if ($access_info['last_auth_success'] > 0) {
             $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_prev_success') . ' ' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $access_info['last_auth_success']));
-        }
-    }
-
-    private function warnUserAboutPasswordExpiration(PFUser $user) {
-        $password_lifetime = $this->_getPasswordLifetime();
-        if ($password_lifetime) {
-            $expiration_date = $_SERVER['REQUEST_TIME'] - DateHelper::SECONDS_IN_A_DAY * $password_lifetime;
-            $warning_date = $expiration_date + DateHelper::SECONDS_IN_A_DAY * 10; //Warns 10 days before
-            if ($user->getLastPwdUpdate() < $warning_date) {
-                $expiration_delay = ceil(($user->getLastPwdUpdate() - $expiration_date) / ( DateHelper::SECONDS_IN_A_DAY ));
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::WARN,
-                    $GLOBALS['Language']->getText('include_session', 'password_will_expire', $expiration_delay)
-                );
-            }
         }
     }
 

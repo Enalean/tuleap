@@ -42,13 +42,13 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    public function create($artifact_id, $submitted_by, $email) {
+    public function create($artifact_id, $submitted_by, $email, $submitted_on) {
         $artifact_id  = $this->da->escapeInt($artifact_id);
         $submitted_by = $this->da->escapeInt($submitted_by);
         if (!$submitted_by) {
             $submitted_by = 'NULL';
         }
-        $submitted_on = $this->da->escapeInt($_SERVER['REQUEST_TIME']);
+        $submitted_on = $this->da->escapeInt($submitted_on);
         $email        = $email ? $this->da->quoteSmart($email) : 'NULL';
         $sql = "INSERT INTO $this->table_name (artifact_id, submitted_by, submitted_on, email)
                 VALUES ($artifact_id, $submitted_by, $submitted_on, $email)";
@@ -111,6 +111,25 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
                     AND c_ref.artifact_id = $artifact_id
                     AND c_new.id > c_ref.id
                 ORDER BY c_new.id ASC";
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * @param Integer $artifact_id
+     * @param Integer $timestamp
+     *
+     * @return DataAccessResult
+     */
+    public function searchLastChangesetAtDate($artifact_id, $timestamp) {
+        $artifact_id  = $this->da->escapeInt($artifact_id);
+        $timestamp    = $this->da->escapeInt($timestamp);
+
+        $sql = "SELECT *
+                FROM tracker_changeset
+                WHERE artifact_id = $artifact_id
+                    AND submitted_on <= $timestamp
+                ORDER BY submitted_on DESC
+                LIMIT 1";
         return $this->retrieve($sql);
     }
 }

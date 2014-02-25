@@ -101,6 +101,11 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
      */
      private $remaining_effort = null;
 
+     /**
+      * @var bool
+      */
+     private $has_useable_burndown_field;
+
     /**
      * @param Project $project
      * @param Planning $planning
@@ -266,9 +271,19 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
             return null;
         }
 
-        $time_period = new TimePeriodWithoutWeekEnd($this->start_date, $this->duration);
+        return $this->getTimePeriod()->getEndDate();
+    }
 
-        return $time_period->getEndDate();
+    private function getTimePeriod() {
+        return new TimePeriodWithoutWeekEnd($this->start_date, $this->duration);
+    }
+
+    public function getDaysSinceStart() {
+        return $this->getTimePeriod()->getNumberOfDaysSinceStart();
+    }
+
+    public function getDaysUntilEnd() {
+        return $this->getTimePeriod()->getNumberOfDaysUntilEnd();
     }
 
     public function getCapacity() {
@@ -322,5 +337,46 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         return $this->duration;
     }
 
+    public function milestoneCanBeSubmilestone(Planning_Milestone $potential_submilestone) {
+        if ($potential_submilestone->getArtifact()->getTracker()->getParent()) {
+            return $potential_submilestone->getArtifact()->getTracker()->getParent()->getId() == $this->getArtifact()->getTracker()->getId();
+        }
+        return false;
+    }
+
+    /**
+     * @param PFUser $user
+     * @return bool
+     */
+    public function hasBurdownField(PFUser $user) {
+        $burndown_field = $this->getArtifact()->getABurndownField($user);
+
+        return (bool) $burndown_field;
+    }
+
+    /**
+     * @param boolean $bool
+     */
+    public function setHasUsableBurndownField($bool) {
+        $this->has_useable_burndown_field = $bool;
+    }
+
+    public function hasUsableBurndownField() {
+        return (bool) $this->has_useable_burndown_field;
+    }
+
+    public function getBurndownData(PFUser $user) {
+        if (! $this->hasBurdownField($user)) {
+            return;
+        }
+
+        $burndown_field = $this->getArtifact()->getABurndownField($user);
+
+        return $burndown_field->getBurndownData(
+            $this->getArtifact(),
+            $user,
+            $this->getStartDate(),
+            $this->getDuration()
+        );
+    }
 }
-?>

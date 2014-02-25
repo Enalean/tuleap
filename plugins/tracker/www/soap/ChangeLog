@@ -1,5 +1,8 @@
 All the documentation can be found at http://doc-en.tuleap.net/en/latest/soap/tracker.html
 
+2.1.2 - Tuleap 6.11
+    * story #5817: add new values in selectBox field (Contrib STMicroelectronics)
+
 2.1.1 - Tuleap 6.6
 	* Fix request #5184: Partial update of artifact via SOAP no longer working
 

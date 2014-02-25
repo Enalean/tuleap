@@ -144,8 +144,11 @@ if ($request->isPost()) {
                                 $user->setUserName($request->get('form_loginname'));
                                 break;
                             default:
-                                $em->processEvent(Event::USER_RENAME, array('user_id'  => $user->getId(),
-                                                                    'new_name' => $request->get('form_loginname')));
+                                $em->processEvent(Event::USER_RENAME, array(
+                                    'user_id'  => $user->getId(),
+                                    'new_name' => $request->get('form_loginname'),
+                                    'old_user' => $user)
+                                );
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_usergroup','rename_user_msg', array($user->getUserName(), $request->get('form_loginname'))));
                                 $GLOBALS['Response']->addFeedback('warning', $Language->getText('admin_usergroup','rename_user_warn'));
                         }

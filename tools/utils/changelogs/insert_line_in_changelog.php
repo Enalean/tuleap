@@ -21,32 +21,37 @@
 $plugin         = $argv[1];
 $version        = $argv[2];
 $tuleap_version = $argv[3];
+$item_type      = ucfirst($argv[4]);
 
 $reference_line_to_plugin = "\t* $plugin: $version";
 
-$changelog       = file('ChangeLog', FILE_IGNORE_NEW_LINES);
-$new_changelog   = array();
-$section_started = false;
-$in_plugins      = false;
-$section_stopped = false;
+$changelog               = file('ChangeLog', FILE_IGNORE_NEW_LINES);
+$new_changelog           = array();
+$current_version_started = false;
+$in_section              = false;
+$current_version_stopped = false;
 foreach ($changelog as $line) {
-    if (!$section_started) {
+    if (!$current_version_started) {
         if (preg_match('/^Version '. preg_quote($tuleap_version) .'/i', $line)) {
-            $section_started = true;
+            $current_version_started = true;
         }
-    } else if ($section_started && !$section_stopped) {
-        if (preg_match('/== Plugins ==/i', $line)) {
-            $in_plugins = true;
-        } else if (preg_match('/^Version /i', $line) || ($in_plugins && preg_match('/^\s*== /', $line))) {
+    } else if ($current_version_started && !$current_version_stopped) {
+        if (preg_match("/== $item_type ==/i", $line)) {
+            $in_section = true;
+        } else if (preg_match('/^Version /i', $line) || ($in_section && preg_match('/^\s*== /', $line))) {
             $last = count($new_changelog) - 1;
             if ($new_changelog[$last] == '') {
                 unset($new_changelog[$last]);
             }
-            $section_stopped = true;
+            $current_version_stopped = true;
+            if (! $in_section) {
+                $new_changelog[] = '';
+                $new_changelog[] = "    == $item_type ==";
+            }
             $new_changelog[] = $reference_line_to_plugin;
             $new_changelog[] = '';
-        } else if ($in_plugins && preg_match('/^\s*\* '. preg_quote($plugin) .':/i', $line)) {
-            $section_stopped = true;
+        } else if ($in_section && preg_match('/^\s*\* '. preg_quote($plugin) .':/i', $line)) {
+            $current_version_stopped = true;
             $line            = $reference_line_to_plugin;
         }
     }

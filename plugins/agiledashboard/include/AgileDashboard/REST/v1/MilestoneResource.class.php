@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,11 +30,13 @@ use \Planning_MilestoneFactory;
 use \AgileDashboard_BacklogItemDao;
 use \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
 use \AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
+use \AgileDashboard_Milestone_MilestoneStatusCounter;
+use \Tracker_ArtifactDao;
 use \UserManager;
 use \Planning_Milestone;
 use \PFUser;
 use \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
-use \MilestoneContentUpdater;
+use \Tracker_NoChangeException;
 use \EventManager;
 
 /**
@@ -59,16 +61,28 @@ class MilestoneResource {
     /** @var EventManager */
     private $event_manager;
 
+    /** @var MilestoneSubMilestonesUpdater */
+    private $milestone_submilestones_updater;
+
+    /** @var ArtifactLinkUpdater */
+    private $artifactlink_updater;
+
     public function __construct() {
         $planning_factory             = PlanningFactory::build();
         $tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
         $tracker_form_element_factory = Tracker_FormElementFactory::instance();
+        $status_counter               = new AgileDashboard_Milestone_MilestoneStatusCounter(
+            new AgileDashboard_BacklogItemDao(),
+            new Tracker_ArtifactDao(),
+            $tracker_artifact_factory
+        );
 
         $this->milestone_factory = new Planning_MilestoneFactory(
             $planning_factory,
             $tracker_artifact_factory,
             $tracker_form_element_factory,
-            TrackerFactory::instance()
+            TrackerFactory::instance(),
+            $status_counter
         );
 
         $this->backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
@@ -95,7 +109,9 @@ class MilestoneResource {
             $this->backlog_item_collection_factory
         );
 
-        $this->milestone_content_updater = new MilestoneContentUpdater($tracker_form_element_factory);
+        $this->artifactlink_updater            = new ArtifactLinkUpdater();
+        $this->milestone_content_updater       = new MilestoneContentUpdater($tracker_form_element_factory, $this->artifactlink_updater);
+        $this->milestone_submilestones_updater = new MilestoneSubMilestonesUpdater($tracker_form_element_factory, $this->milestone_factory, $this->artifactlink_updater);
 
         $this->event_manager = EventManager::instance();
     }
@@ -105,6 +121,51 @@ class MilestoneResource {
      */
     public function options() {
         Header::allowOptions();
+    }
+
+    /**
+     * Put children in a given milestone
+     *
+     * Put the new children of a given milestone.
+     *
+     * @url PUT {id}/milestones
+     *
+     * @param int $id    Id of the milestone
+     * @param array $ids Ids of the new milestones {@from body}
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404
+     */
+    protected function putSubmilestones($id, array $ids) {
+        $user      = $this->getCurrentUser();
+        $milestone = $this->getMilestoneById($user, $id);
+
+        try {
+            $this->milestone_validator->validateSubmilestonesFromBodyContent($ids, $milestone, $user);
+        } catch (IdsFromBodyAreNotUniqueException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (SubMilestoneAlreadyHasAParentException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (ElementCannotBeSubmilestoneException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (UserCannotReadSubMilestoneException $exception) {
+            throw new RestException(403, $exception->getMessage());
+        } catch (UserCannotReadSubMilestoneException $exception) {
+            throw new RestException(403, $exception->getMessage());
+        } catch (SubMilestoneDoesNotExistException $exception) {
+            throw new RestException(404, $exception->getMessage());
+        }
+
+        try {
+            $this->milestone_submilestones_updater->updateMilestoneSubMilestones($ids, $milestone, $user);
+        } catch (ItemListedTwiceException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Tracker_NoChangeException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+
+        $this->sendAllowHeaderForSubmilestones();
     }
 
     /**
@@ -127,7 +188,7 @@ class MilestoneResource {
         $this->sendAllowHeadersForMilestone($milestone);
 
         $milestone_representation = new MilestoneRepresentation();
-        $milestone_representation->build($milestone);
+        $milestone_representation->build($milestone, $this->milestone_factory->getMilestoneStatusCount($user, $milestone));
 
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,
@@ -190,11 +251,12 @@ class MilestoneResource {
         $milestone = $this->getMilestoneById($user, $id);
         $this->sendAllowHeaderForSubmilestones();
 
-        $event_manager = $this->event_manager;
+        $event_manager     = $this->event_manager;
+        $milestone_factory = $this->milestone_factory;
         return array_map(
-            function (Planning_Milestone $milestone) use ($user, $event_manager) {
+            function (Planning_Milestone $milestone) use ($user, $event_manager, $milestone_factory) {
                 $milestone_representation = new MilestoneRepresentation();
-                $milestone_representation->build($milestone);
+                $milestone_representation->build($milestone, $milestone_factory->getMilestoneStatusCount($user, $milestone));
 
                 $event_manager->processEvent(
                     AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,
@@ -202,6 +264,8 @@ class MilestoneResource {
                         'user'                     => $user,
                         'milestone'                => $milestone,
                         'milestone_representation' => &$milestone_representation,
+                        'version'                  => 'v1'
+
                     )
                 );
 
@@ -316,7 +380,8 @@ class MilestoneResource {
      * @param int $id    Id of the milestone
      * @param array $ids Ids of backlog items {@from body}
      *
-     * @throws 500
+     * @throws 400
+     * @throws 404
      */
     protected function putContent($id, array $ids) {
         $current_user = $this->getCurrentUser();
@@ -325,16 +390,20 @@ class MilestoneResource {
         try {
             $this->milestone_validator->validateArtifactsFromBodyContent($ids, $milestone, $current_user);
         } catch (ArtifactDoesNotExistException $exception) {
-            throw new RestException(500, $exception->getMessage());
+            throw new RestException(404, $exception->getMessage());
         } catch (ArtifactIsNotInBacklogTrackerException $exception) {
-            throw new RestException(500, $exception->getMessage());
+            throw new RestException(404, $exception->getMessage());
         } catch (ArtifactIsClosedOrAlreadyPlannedInAnotherMilestone $exception) {
-            throw new RestException(500, $exception->getMessage());
+            throw new RestException(400, $exception->getMessage());
         } catch (IdsFromBodyAreNotUniqueException $exception) {
-            throw new RestException(500, $exception->getMessage());
+            throw new RestException(400, $exception->getMessage());
         }
 
-        $this->milestone_content_updater->updateMilestoneContent($ids, $current_user, $milestone);
+        try {
+            $this->milestone_content_updater->updateMilestoneContent($ids, $current_user, $milestone);
+        } catch (Tracker_NoChangeException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
 
         $this->sendAllowHeaderForContent();
     }
@@ -349,7 +418,8 @@ class MilestoneResource {
      * @param int $id    Id of the milestone
      * @param array $ids Ids of backlog items {@from body}
      *
-     * @throws 500
+     * @throw 400
+     * @throw 404
      */
     protected function putBacklog($id, array $ids) {
         $user      = $this->getCurrentUser();
@@ -358,12 +428,16 @@ class MilestoneResource {
         try {
             $this->milestone_validator->validateArtifactIdsAreInOpenAndUnplannedMilestone($ids, $milestone, $user);
         } catch (ArtifactIsNotInOpenAndUnplannedBacklogItemsException $exception) {
-            throw new RestException(500, $exception->getMessage());
+            throw new RestException(404, $exception->getMessage());
         } catch (IdsFromBodyAreNotUniqueException $exception) {
-            throw new RestException(500, $exception->getMessage());
+            throw new RestException(400, $exception->getMessage());
         }
 
-        $this->milestone_content_updater->setOrder($ids);
+        try {
+            $this->artifactlink_updater->setOrder($ids);
+        } catch (ItemListedTwiceException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
 
         $this->sendAllowHeaderForContent();
     }
@@ -443,7 +517,7 @@ class MilestoneResource {
      *
      * @return \Tuleap\Tracker\REST\Artifact\BurndownRepresentation
      */
-    protected function getBurndown($id) {
+    public function getBurndown($id) {
         $burndown = null;
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN,
@@ -522,7 +596,7 @@ class MilestoneResource {
     }
 
     private function sendAllowHeaderForSubmilestones() {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPut();
     }
 
     private function sendAllowHeadersForMilestone($milestone) {

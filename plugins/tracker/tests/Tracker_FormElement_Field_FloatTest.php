@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('bootstrap.php');
+
 Mock::generatePartial('Tracker_FormElement_Field_Float', 'Tracker_FormElement_Field_FloatTestVersion', array('getValueDao', 'isRequired', 'getProperty'));
 
 Mock::generate('Tracker_Artifact_ChangesetValue_Float');
@@ -81,8 +82,8 @@ class Tracker_FormElement_Field_FloatTest extends TuleapTestCase {
         $this->assertTrue($f->isValid($a, '56.789'));
         $this->assertFalse($f->isValid($a, 'toto'));
         $this->assertFalse($f->isValid($a, '12toto'));
-        $this->assertFalse($f->isValid($a, ''));
-        $this->assertFalse($f->isValid($a, null));
+        $this->assertFalse($f->isValidRegardingRequiredProperty($a, ''));
+        $this->assertFalse($f->isValidRegardingRequiredProperty($a, null));
     }
     
     function testIsValidNotRequiredField() {

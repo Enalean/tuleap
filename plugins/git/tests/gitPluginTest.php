@@ -55,6 +55,14 @@ class GitPlugin_PropagateUserKeysToGerritTest extends TuleapTestCase {
         $this->user = mock('PFUser');
     }
 
+
+    public function testItDoesntSynchronizeSSHKeysOnRootDaily() {
+        $params = array();
+        expect($this->user_account_manager)->synchroniseSSHKeys()->never();
+
+        $this->plugin->dump_ssh_keys_gerrit($params);
+    }
+
     public function testItLogsAnErrorIfNoUserIsPassed() {
         $params = array(
             'original_keys' => '',

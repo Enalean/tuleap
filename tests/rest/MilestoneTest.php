@@ -32,6 +32,11 @@ class MilestoneTest extends RestBase {
         );
     }
 
+    public function testOPTIONS() {
+        $response = $this->getResponse($this->client->options('milestones'));
+        $this->assertEquals(array('OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
     public function testOPTIONSBacklog() {
         $response = $this->getResponse($this->client->options('milestones/1/backlog'));
         $this->assertEquals(array('OPTIONS', 'GET', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
@@ -229,5 +234,37 @@ class MilestoneTest extends RestBase {
         $first_swimlane_card_artifact_tracker_reference = $first_swimlane_card_artifact_reference['tracker'];
         $this->assertEquals(9, $first_swimlane_card_artifact_tracker_reference['id']);
         $this->assertEquals("trackers/9", $first_swimlane_card_artifact_tracker_reference['uri']);
+    }
+
+    public function testPUTRemoveSubMilestones() {
+        $this->client->put('milestones/1/milestones', null, '[2]');
+        $response_put = $this->getResponse($this->client->put('milestones/1/milestones', null, '[]'));
+        $this->assertEquals($response_put->getStatusCode(), 200);
+        $response_get = $this->getResponse($this->client->get('milestones/1/milestones', null));
+        $submilestones = $response_get->json();
+
+        $this->assertCount(0, $submilestones);
+    }
+
+    public function testPUTOnlyOneSubMilestone() {
+        $response_put = $this->getResponse($this->client->put('milestones/1/milestones', null, '[2]'));
+        $this->assertEquals($response_put->getStatusCode(), 200);
+        $response_get = $this->getResponse($this->client->get('milestones/1/milestones', null));
+        $submilestones = $response_get->json();
+
+        $this->assertCount(1, $submilestones);
+        $this->assertEquals(2,$submilestones[0]['id']);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPUTOnlyOneSubMilestoneTwice() {
+        $response_put = $this->getResponse($this->client->put('milestones/1/milestones', null, '[2,2]'));
+        $this->assertEquals($response_put->getStatusCode(), 400);
+        $response_get = $this->getResponse($this->client->get('milestones/1/milestones', null));
+        $submilestones = $response_get->json();
+
+        $this->assertCount(0, $submilestones);
     }
 }

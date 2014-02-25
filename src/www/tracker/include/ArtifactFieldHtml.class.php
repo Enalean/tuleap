@@ -128,7 +128,7 @@ class ArtifactFieldHtml extends ArtifactField {
             }
             if ($this->isJavascriptEnabled) {
                 $output .= '<script type="text/javascript">';
-                $output .= "\ncodendi.tracker.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE)."')";
+                $output .= "\ncodendi.trackerv3.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE)."')";
                 $output .= $this->_getValuesAsJavascript($array_values,$checked);
                 $output .= ";\n";
                 $output .= "</script>";
@@ -226,7 +226,7 @@ class ArtifactFieldHtml extends ArtifactField {
             }
             if ($this->isJavascriptEnabled) {
                 $output .= '<script type="text/javascript">';
-                $output .= "\ncodendi.tracker.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE)."')";
+                $output .= "\ncodendi.trackerv3.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE)."')";
                 $output .= $this->_getValuesAsJavascript($array_values,$checked, $text_unchanged);
                 $output .= ';';
                 $output .= "\n</script>";

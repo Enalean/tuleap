@@ -247,7 +247,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
                 if ($result) {
                     $result .= PHP_EOL;
                 }
-                $changes .= $added .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','added');
+                $result .= $added .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','added');
             }
             return $result;
         }

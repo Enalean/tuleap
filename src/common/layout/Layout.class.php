@@ -64,6 +64,8 @@ class Layout extends Response {
         'Trackers' => 'ic/tracker20w.png'
         );
 
+    const DEFAULT_SERVICE_ICON = 'tuleap-services-angle-double-right';
+
     /**
      * Background for priorities
      */
@@ -1171,9 +1173,6 @@ class Layout extends Response {
         if (Config::get('DEBUG_MODE') && (Config::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')) ) {
             echo '<script type="text/javascript" src="/scripts/codendi/debug_reserved_names.js"></script>';
         }
-        if (Config::get('DEBUG_MODE')) {
-            echo '<!--[if lt IE 8]><script type="text/javascript" src="http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js"></script><![endif]-->';
-        }
 
         $em =& EventManager::instance();
         $em->processEvent("javascript_file", null);
@@ -1297,6 +1296,7 @@ class Layout extends Response {
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('style.css') .'" />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-select/bootstrap-select.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />';
     }
 
     protected function displayFontAwesomeStylesheetElements() {
@@ -1426,165 +1426,175 @@ class Layout extends Response {
      */
     public static function showDebugInfo() {
         global $Language;
+
+        echo '<div id="footer_debug_separator"/>';
         echo '<div id="footer_debug">';
-        $debug_compute_tile = microtime(true) - $GLOBALS['debug_time_start'];
-        if (function_exists('xdebug_time_index')) {
-            $xdebug_time_index  = xdebug_time_index();
-        }
-        
-        $query_time = 0;
-        foreach($GLOBALS['DBSTORE'] as $d) {
-            foreach($d['trace'] as $trace) {
-                $query_time += $trace[2] - $trace[1];
-            }
-        }
-        
-        echo '<span class="debug">'.$Language->getText('include_layout','query_count').": ";
-        echo $GLOBALS['DEBUG_DAO_QUERY_COUNT'] ."</span>";
-        $percent     = (int) ($GLOBALS['DEBUG_TIME_IN_PRE'] * 100 / $debug_compute_tile);
-        $sql_percent = (int) ($query_time * 100 / $debug_compute_tile);
-        echo '<table border=1><thead><tr><th></th><th>Page generated in</th></tr></thead><tbody>';
-        echo '<tr><td>pre.php</td><td>'. number_format(1000 * $GLOBALS['DEBUG_TIME_IN_PRE'], 0, '.', "'") .' ms ('. $percent .'%)</td>';
-        echo '<tr><td>remaining</td><td>'. number_format(1000 * ($debug_compute_tile - $GLOBALS['DEBUG_TIME_IN_PRE']), 0, '.', "'") .' ms</td>';
-        echo '<tr><td><b>total</td><td><b>'. number_format(1000 * $debug_compute_tile, 0, '.', "'") .' ms</td>';
-        if (function_exists('xdebug_time_index')) {
-            echo '<tr><td>xdebug</td><td>'. number_format(1000 * $xdebug_time_index, 0, '.', "'") .' ms</tr>';
-        }
-        echo '<tr><td>sql</td><td>'. number_format(1000 * $query_time, 0, '.', "'") .' ms ('. $sql_percent .'%)</tr>';
-        echo '</tbody></table>';
-        if (function_exists('xdebug_get_profiler_filename')) {
-            if ($file = xdebug_get_profiler_filename()) {
-                echo '<div>Profiler info has been written in: '. $file .'</div>';
-            }
-        }
-        
-        $hook_params = array();
-        EventManager::instance()->processEvent('layout_footer_debug', $hook_params);
 
-        //Display the config
-        // Uncomment this only if you know what you are doing. This may lead to sensitive information leakage /!\
-        //echo '<fieldset><legend id="footer_debug_config" class="'. Toggler::getClassname('footer_debug_config') .'">Config:</legend>';
-        //echo '<pre>';
-        //Config::dump();
-        //echo '</pre>';
-        //echo '</fieldset>';
-        
-        // Display all queries used to generate the page
-        echo '<fieldset><legend id="footer_debug_allqueries" class="'. Toggler::getClassname('footer_debug_allqueries') .'">All queries:</legend>';
-        echo '<pre>';
-        $queries               = array();
-        $queries_by_time_taken = array();
-        $i                     = 0;
-        foreach($GLOBALS['QUERIES'] as $sql) {
-            $t = 0;
-            foreach($GLOBALS['DBSTORE'][md5($sql)]['trace'] as $trace) {
-                $t += $trace[2] - $trace[1];
+        echo '<div class="alert alert-info">
+                   <h4> Development useful information! </h4>
+                   The section above will show you some useful information about Tuleap for development purpose.
+              </div>';
+
+        echo '<div id="footer_debug_content">';
+            $debug_compute_tile = microtime(true) - $GLOBALS['debug_time_start'];
+            if (function_exists('xdebug_time_index')) {
+                $xdebug_time_index  = xdebug_time_index();
             }
-            $q = array(
-                'sql' => $sql,
-                'total time' => number_format(1000 * $t, 0, '.', "'") .' ms',
-            );
-            $queries[] = $q;
-            $queries_by_time_taken[] = array('n°' => $i++, 't' => $t) + $q;
-                
-        }
-        print_r($queries);
-        echo '</pre>';
-        echo '</fieldset>';
-        
-        // Display all queries used to generate the page ordered by time taken
-        usort($queries_by_time_taken, array(__CLASS__, 'sort_queries_by_time_taken'));
-        echo '<fieldset><legend id="footer_debug_allqueries_time_taken" class="'. Toggler::getClassname('footer_debug_allqueries_time_taken') .'">All queries by time taken:</legend>';
-        echo '<table border="1" style="border-collapse:collapse" cellpadding="2" cellspacing="0">';
-        echo '<thead><tr><th>n°</th><th style="white-space:nowrap;">time taken</th><th>sum</th><th>sql</th></tr></thead>';
-        $i   = 0;
-        $sum = 0;
-        foreach($queries_by_time_taken as $q) {
-            echo '<tr valign="top" class="'. html_get_alt_row_color($i++) .'">';
-            echo '<td>'. $q['n°'] .'</td>';
-            echo '<td style="white-space:nowrap;">'. $q['total time'] .'</td>';
-            echo '<td style="white-space:nowrap;">'. number_format(1000 * ($sum += $q['t']), 0, '.', "'") .' ms' .'</td>';
-            echo '<td><pre>'. $q['sql'] .'</pre></td>';
-            echo '</tr>';
-        }
-        echo '</table>';
-        echo '</fieldset>';
 
-        echo '<fieldset><legend id="footer_debug_queriespaths" class="'. Toggler::getClassname('footer_dubug_queriespaths') .'">Path of all queries:</legend>';
-        $max = 0;
-        foreach($GLOBALS['DBSTORE'] as $d) {
-            foreach($d['trace'] as $trace) {
-                $time_taken = 1000 * round($trace[2] - $trace[1], 3);
-                if ($max < $time_taken) {
-                    $max = $time_taken;
-
+            $query_time = 0;
+            foreach($GLOBALS['DBSTORE'] as $d) {
+                foreach($d['trace'] as $trace) {
+                    $query_time += $trace[2] - $trace[1];
                 }
             }
-        }
 
-        $paths = array();
-        $time = $GLOBALS['debug_time_start'];
-        foreach($GLOBALS['DBSTORE'] as $d) {
-            foreach($d['trace'] as $trace) {
-                $time_taken = 1000 * round($trace[2] - $trace[1], 3);
-                self::_debug_backtrace_rec($paths, array_reverse($trace[0]),
-                    '['. (1000*round($trace[1] - $GLOBALS['debug_time_start'], 3)) 
-                    .'/'. $time_taken .'] '.
-                    ($time_taken >= $max ? ' <span style="background:yellow; padding-left:4px; padding-right:4px; color:red;">top!</span> ' : '') . $d['sql']);
+            echo '<span class="debug">'.$Language->getText('include_layout','query_count').": ";
+            echo $GLOBALS['DEBUG_DAO_QUERY_COUNT'] ."</span>";
+            $percent     = (int) ($GLOBALS['DEBUG_TIME_IN_PRE'] * 100 / $debug_compute_tile);
+            $sql_percent = (int) ($query_time * 100 / $debug_compute_tile);
+            echo '<table border=1><thead><tr><th></th><th>Page generated in</th></tr></thead><tbody>';
+            echo '<tr><td>pre.php</td><td>'. number_format(1000 * $GLOBALS['DEBUG_TIME_IN_PRE'], 0, '.', "'") .' ms ('. $percent .'%)</td>';
+            echo '<tr><td>remaining</td><td>'. number_format(1000 * ($debug_compute_tile - $GLOBALS['DEBUG_TIME_IN_PRE']), 0, '.', "'") .' ms</td>';
+            echo '<tr><td><b>total</td><td><b>'. number_format(1000 * $debug_compute_tile, 0, '.', "'") .' ms</td>';
+            if (function_exists('xdebug_time_index')) {
+                echo '<tr><td>xdebug</td><td>'. number_format(1000 * $xdebug_time_index, 0, '.', "'") .' ms</tr>';
             }
-        }
-        echo '<table>';
-        self::_debug_display_paths($paths, false);
-        echo '</table>';
-        echo '</fieldset>';
-        //Print the backtrace of specific queries
-        /*
-        echo '<pre>';
-        $specific_queries = array(48,49);
-        $i = 0;
-        foreach($GLOBALS['DBSTORE'] as $d) {
-            //echo $i ."\t". $d['sql'] ."\n";
-            if (in_array($i++, $specific_queries)) {
-                $traces = $d['trace'][0];
-                foreach($traces as $trace) {
-                    echo '<code>'. $trace['file']. ' #'. $trace['line'] .' ('. (isset($trace['class']) ? $trace['class'] .'::' : '') . $trace['function'] ."</code>\n";
+            echo '<tr><td>sql</td><td>'. number_format(1000 * $query_time, 0, '.', "'") .' ms ('. $sql_percent .'%)</tr>';
+            echo '</tbody></table>';
+            if (function_exists('xdebug_get_profiler_filename')) {
+                if ($file = xdebug_get_profiler_filename()) {
+                    echo '<div>Profiler info has been written in: '. $file .'</div>';
                 }
-                echo "\n";
             }
-        }
-        echo '</pre>';
-        /**/
 
-        // Display queries executed more than once
-        $title_displayed = false;
-        foreach ($GLOBALS['DBSTORE'] as $key => $value) {
-            if ($GLOBALS['DBSTORE'][$key]['nb'] > 1) {
-                if (!$title_displayed) {
-                    echo '<fieldset><legend>Queries executed more than once :</legend>';
-                    $title_displayed = true;
+            $hook_params = array();
+            EventManager::instance()->processEvent('layout_footer_debug', $hook_params);
+
+            //Display the config
+            // Uncomment this only if you know what you are doing. This may lead to sensitive information leakage /!\
+            //echo '<fieldset><legend id="footer_debug_config" class="'. Toggler::getClassname('footer_debug_config') .'">Config:</legend>';
+            //echo '<pre>';
+            //Config::dump();
+            //echo '</pre>';
+            //echo '</fieldset>';
+
+            // Display all queries used to generate the page
+            echo '<fieldset><legend id="footer_debug_allqueries" class="'. Toggler::getClassname('footer_debug_allqueries') .'">All queries:</legend>';
+            echo '<pre>';
+            $queries               = array();
+            $queries_by_time_taken = array();
+            $i                     = 0;
+            foreach($GLOBALS['QUERIES'] as $sql) {
+                $t = 0;
+                foreach($GLOBALS['DBSTORE'][md5($sql)]['trace'] as $trace) {
+                    $t += $trace[2] - $trace[1];
                 }
-                echo "<fieldset>";
-                echo '<legend id="footer_debug_doublequery_'. $key .'" class="'. Toggler::getClassname('footer_debug_doublequery_'. $key) .'">';
-                echo '<b>Run '.$GLOBALS['DBSTORE'][$key]['nb']." times: </b>";
-                echo $GLOBALS['DBSTORE'][$key]['sql']."\n";
-                echo '</legend>';
-                self::_debug_backtraces($GLOBALS['DBSTORE'][$key]['trace']);
-                echo "</fieldset>";
+                $q = array(
+                    'sql' => $sql,
+                    'total time' => number_format(1000 * $t, 0, '.', "'") .' ms',
+                );
+                $queries[] = $q;
+                $queries_by_time_taken[] = array('n°' => $i++, 't' => $t) + $q;
+
             }
-        }
-        if ($title_displayed) {
+            print_r($queries);
+            echo '</pre>';
             echo '</fieldset>';
-        }
-        echo '<fieldset>';
-        echo '<legend id="footer_debug_session" class="'. Toggler::getClassname('footer_debug_session') .'">Session</legend>';
-        echo "<div>";
-        echo '<a href="#" onclick="new Ajax.Updater(\'footer_debug_session_data\', \'/include/debug_session.php?reload\');return false;">reload</a>';
-        echo '  |  ';
-        echo '<a href="#" onclick="new Ajax.Updater(\'footer_debug_session_data\', \'/include/debug_session.php?reset\');return false;">reset</a>';
-        echo '<pre id="footer_debug_session_data">'.print_r($_SESSION, 1).'</pre>';
-        echo "</div>";
-        echo '</fieldset>';
-        echo "</pre>\n";
+
+            // Display all queries used to generate the page ordered by time taken
+            usort($queries_by_time_taken, array(__CLASS__, 'sort_queries_by_time_taken'));
+            echo '<fieldset><legend id="footer_debug_allqueries_time_taken" class="'. Toggler::getClassname('footer_debug_allqueries_time_taken') .'">All queries by time taken:</legend>';
+            echo '<table border="1" style="border-collapse:collapse" cellpadding="2" cellspacing="0">';
+            echo '<thead><tr><th>n°</th><th style="white-space:nowrap;">time taken</th><th>sum</th><th>sql</th></tr></thead>';
+            $i   = 0;
+            $sum = 0;
+            foreach($queries_by_time_taken as $q) {
+                echo '<tr valign="top" class="'. html_get_alt_row_color($i++) .'">';
+                echo '<td>'. $q['n°'] .'</td>';
+                echo '<td style="white-space:nowrap;">'. $q['total time'] .'</td>';
+                echo '<td style="white-space:nowrap;">'. number_format(1000 * ($sum += $q['t']), 0, '.', "'") .' ms' .'</td>';
+                echo '<td><pre>'. $q['sql'] .'</pre></td>';
+                echo '</tr>';
+            }
+            echo '</table>';
+            echo '</fieldset>';
+
+            echo '<fieldset><legend id="footer_debug_queriespaths" class="'. Toggler::getClassname('footer_dubug_queriespaths') .'">Path of all queries:</legend>';
+            $max = 0;
+            foreach($GLOBALS['DBSTORE'] as $d) {
+                foreach($d['trace'] as $trace) {
+                    $time_taken = 1000 * round($trace[2] - $trace[1], 3);
+                    if ($max < $time_taken) {
+                        $max = $time_taken;
+
+                    }
+                }
+            }
+
+            $paths = array();
+            $time = $GLOBALS['debug_time_start'];
+            foreach($GLOBALS['DBSTORE'] as $d) {
+                foreach($d['trace'] as $trace) {
+                    $time_taken = 1000 * round($trace[2] - $trace[1], 3);
+                    self::_debug_backtrace_rec($paths, array_reverse($trace[0]),
+                        '['. (1000*round($trace[1] - $GLOBALS['debug_time_start'], 3))
+                        .'/'. $time_taken .'] '.
+                        ($time_taken >= $max ? ' <span style="background:yellow; padding-left:4px; padding-right:4px; color:red;">top!</span> ' : '') . $d['sql']);
+                }
+            }
+            echo '<table>';
+            self::_debug_display_paths($paths, false);
+            echo '</table>';
+            echo '</fieldset>';
+            //Print the backtrace of specific queries
+            /*
+            echo '<pre>';
+            $specific_queries = array(48,49);
+            $i = 0;
+            foreach($GLOBALS['DBSTORE'] as $d) {
+                //echo $i ."\t". $d['sql'] ."\n";
+                if (in_array($i++, $specific_queries)) {
+                    $traces = $d['trace'][0];
+                    foreach($traces as $trace) {
+                        echo '<code>'. $trace['file']. ' #'. $trace['line'] .' ('. (isset($trace['class']) ? $trace['class'] .'::' : '') . $trace['function'] ."</code>\n";
+                    }
+                    echo "\n";
+                }
+            }
+            echo '</pre>';
+            /**/
+
+            // Display queries executed more than once
+            $title_displayed = false;
+            foreach ($GLOBALS['DBSTORE'] as $key => $value) {
+                if ($GLOBALS['DBSTORE'][$key]['nb'] > 1) {
+                    if (!$title_displayed) {
+                        echo '<fieldset><legend>Queries executed more than once :</legend>';
+                        $title_displayed = true;
+                    }
+                    echo "<fieldset>";
+                    echo '<legend id="footer_debug_doublequery_'. $key .'" class="'. Toggler::getClassname('footer_debug_doublequery_'. $key) .'">';
+                    echo '<b>Run '.$GLOBALS['DBSTORE'][$key]['nb']." times: </b>";
+                    echo $GLOBALS['DBSTORE'][$key]['sql']."\n";
+                    echo '</legend>';
+                    self::_debug_backtraces($GLOBALS['DBSTORE'][$key]['trace']);
+                    echo "</fieldset>";
+                }
+            }
+            if ($title_displayed) {
+                echo '</fieldset>';
+            }
+            echo '<fieldset>';
+            echo '<legend id="footer_debug_session" class="'. Toggler::getClassname('footer_debug_session') .'">Session</legend>';
+            echo "<div>";
+            echo '<a href="#" onclick="new Ajax.Updater(\'footer_debug_session_data\', \'/include/debug_session.php?reload\');return false;">reload</a>';
+            echo '  |  ';
+            echo '<a href="#" onclick="new Ajax.Updater(\'footer_debug_session_data\', \'/include/debug_session.php?reset\');return false;">reset</a>';
+            echo '<pre id="footer_debug_session_data">'.print_r($_SESSION, 1).'</pre>';
+            echo "</div>";
+            echo '</fieldset>';
+            echo "</pre>\n";
+            echo '</div>';
         echo '</div>';
     }
     
@@ -1945,6 +1955,7 @@ class Layout extends Response {
         $pm = ProjectManager::instance();
         $tabs = array();
         $group_id = $project->getGroupId();
+
         reset($project->service_data_array);
          while (list($short_name,$service_data) = each($project->service_data_array)) {
                if ((string)$short_name == "admin") {
@@ -2022,11 +2033,10 @@ class Layout extends Response {
 
             $name = $hp->purify($service_data['label']);
 
-            $icon = 'icon-double-angle-right';
+            $icon = $this->getServiceIcon($short_name);
             if (isset($service_data['icon'])) {
                 $icon = $service_data['icon'];
             }
-            
             $tabs[] = array('link'        => $link,
                             'icon'        => $icon,
                             'name'        => $name,
@@ -2035,6 +2045,10 @@ class Layout extends Response {
                             'description' => $hp->purify($service_data['description']));
         }
         return $tabs;
+    }
+
+    private function getServiceIcon($service_name) {
+        return self::DEFAULT_SERVICE_ICON . ' tuleap-services-' . $service_name;
     }
 
     protected function getSearchEntries() {
@@ -2180,16 +2194,28 @@ class Layout extends Response {
         $this->searchBox();
     }
     
-    
+
+    /**
+     * @return string the message of the day
+     */
+    protected function getMOTD() {
+        $motd = $GLOBALS['Language']->getContent('others/motd');
+        if (! strpos($motd, "empty.txt")) { # empty.txt returned when no motd file found
+            ob_start();
+            include($motd);
+            return ob_get_clean();
+        }
+    }
+
     function getOsdnNavBar() {
         $output = '
         <!-- OSDN navbar -->
         <div class="osdnnavbar">
         ';
         
-        $motd = $GLOBALS['Language']->getContent('others/motd');
-        if (!strpos($motd,"empty.txt")) { # empty.txt returned when no motd file found
-            include($motd);
+        $motd = $this->getMOTD();
+        if ($motd) {
+            echo $motd;
         } else {
             // MN : Before displaying the osdn nav drop down, we verify that the osdn_sites array exists
             include($GLOBALS['Language']->getContent('layout/osdn_sites'));

@@ -165,5 +165,24 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
     public function getParent() {
         return null;
     }
+
+    public function milestoneCanBeSubmilestone(\Planning_Milestone $potential_submilestone) {
+        return false;
+    }
+
+    public function hasBurdownField(PFUser $user) {
+        return false;
+    }
+
+    public function getDaysSinceStart() {
+        return 0;
+    }
+
+    public function getDaysUntilEnd() {
+        return 0;
+    }
+
+    public function getBurndownData(PFUser $user) {
+        return null;
+    }
 }
-?>

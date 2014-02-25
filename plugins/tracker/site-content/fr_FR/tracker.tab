@@ -1105,9 +1105,10 @@ plugin_tracker_formelement_admin	add_new_file_file	Fichier :
 plugin_tracker_formelement_admin	add_new_values	Ajouter de nouvelles valeurs
 plugin_tracker_formelement_admin	select_default_value	Sélectionner la valeur par défaut
 plugin_tracker_formelement_admin	static_values	Valeurs statiques
-plugin_tracker_formelement_admin	switch_msb	Transformer en boîte de sélections multiples
-plugin_tracker_formelement_admin	switch_sb	Transformer en boîte de sélection simple
-plugin_tracker_formelement_admin	switch_cb	Transformer en ensemble de case à cocher
+plugin_tracker_formelement_admin	switch_to	Transformer en:
+plugin_tracker_formelement_admin	switch_msb	boîte de sélections multiples
+plugin_tracker_formelement_admin	switch_sb	boîte de sélection simple
+plugin_tracker_formelement_admin	switch_cb	cases à cocher
 plugin_tracker_formelement_admin	switch_type_confirm	Etes-vous certain de vouloir changer le type de ce champ ?
 plugin_tracker_formelement_admin	field_used_in_semantics	Impossible de supprimer ce champ (utilisé en sémantique)
 plugin_tracker_formelement_admin	field_used_in_workflow	Impossible de supprimer ce champ (utilisé pour le workflow)
@@ -1510,3 +1511,14 @@ plugin_tracker	missing_ugroups	Le patron sélectionné a des permissions sur des
 
 plugin_tracker	artifact_update_popup_title	$1 vient de mettre à jour l'artefact
 plugin_tracker	artifact_update_popup_got_it	OK, vu.
+
+plugin_tracker_modal_artifact	artifact_links_title	Liens entre artefacts
+plugin_tracker_modal_artifact	no_artifact_links	Aucun lien entre artefacts
+plugin_tracker_modal_artifact	artifact_links_readonly	Pour éditer les liens entre artefacts, veuillez <a href="$1">passer en mode édition complet</a>
+plugin_tracker_modal_artifact	followups_title	Commentaires
+plugin_tracker_modal_artifact	add_followup_placeholder	Ajouter un nouveau commentaire...
+plugin_tracker_modal_artifact	no_comment	Aucun commentaire
+plugin_tracker_modal_artifact	submit	Enregistrer
+plugin_tracker_modal_artifact	cancel	Annuler
+plugin_tracker_modal_artifact	artifact_to_link_title	L'artifact sera lié à $1
+plugin_tracker_modal_artifact	submit_error	L'artifact n'a pu être créé à cause des erreurs suivantes :

@@ -7,28 +7,42 @@
     width: @sidebar-width;
     max-width: @sidebar-width;
     overflow: hidden;
-    padding: 52px 0 0 0;
+    padding: (@navbar-height + 1) 0 80px 0;
+
     &.big-nav {
-        padding: 105px 0 0 0;
+        padding: 90px 0 80px 0;
     }
     &.huge-nav {
-        padding: 157px 0 0 0;
+        padding: 135px 0 80px 0;
     }
 
-    .project-title {
+    a.project-title {
         color: @white;
         text-align: center;
-        font-size: 1.8em;
+        font-size: 1.6em;
         line-height: 1.5em;
-        box-shadow: inset 0 -10px 30px -10px darken(@dark-grey, 10%);
+        box-shadow: inset 0 -7px 30px -10px darken(@dark-grey, 5%);
         margin: 0 0 20px 0;
-        padding: 20px 0;
+        padding: 10px 0;
+
+        &:hover {
+            text-decoration: none;
+            box-shadow: inset 0 -10px 30px -10px darken(@dark-grey, 7%);
+        }
+
+        i {
+            font-size: 0.7em;
+            color: @grey;
+            margin-right: 5px;
+        }
     }
 
     li > a {
-        font-size: 1.1em;
+        font-size: 1em;
         color: @grey;
         text-shadow: 0 1px 0 darken(@grey, 50%);
+        margin-bottom: 5px;
+        padding: 2px 15px;
     }
 
     .nav-list > .active > a, .nav-list > .active > a:hover, .nav-list > .active > a:focus {
@@ -46,12 +60,38 @@
         text-align: center;
         font-size: 1em;
         display: block;
-        padding: 10px 0;
-        margin: 20px 0 0 0;
+        padding: 20px 0 0;
         cursor: pointer;
 
         &:hover {
             color: @white;
+        }
+    }
+}
+
+.sidebar-about {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: @sidebar-width;
+    padding: 33px 0 20px 0;
+    height: 25px;
+    background: @dark-grey url('../images/sidebar_tuleap.png') no-repeat center top;
+    text-align: center;
+
+    p {
+        font-size: 0.8em;
+        color: @medium-grey;
+        text-shadow: 0 1px 0 darken(@dark-grey, 10%);
+        margin: 0;
+
+        a {
+            color: @grey;
+
+            &:hover {
+                color: lighten(@grey, 10%);
+                text-decoration: none;
+            }
         }
     }
 }

@@ -1,3 +1,15 @@
+INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
+       VALUES      ( 100, 'plugin_proftpd:service_lbl_key', 'plugin_proftpd:service_desc_key', 'plugin_proftpd', '/plugins/proftpd/?group_id=$group_id', 1, 0, 'system', 230 );
+
+-- Create service for all other projects (but disabled)
+INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
+  SELECT DISTINCT group_id, 'plugin_proftpd:service_lbl_key', 'plugin_proftpd:service_desc_key', 'plugin_proftpd', CONCAT('/plugins/proftpd/?group_id=', group_id), 1, 0, 'system', 230
+        FROM service
+        WHERE group_id NOT IN (SELECT group_id
+                               FROM service
+                               WHERE short_name
+                               LIKE 'plugin_proftpd');
+
 -- Designed after `man xferlog`
 CREATE TABLE IF NOT EXISTS  plugin_proftpd_xferlog (
     id  INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -20,3 +32,45 @@ CREATE TABLE IF NOT EXISTS  plugin_proftpd_xferlog (
     INDEX idx_user_id(user_id),
     INDEX idx_group_id(user_id)
 );
+
+-- This view gives access to
+CREATE OR REPLACE VIEW ftpgroups AS
+(
+    SELECT unix_group_name as groupname, group_id+1000 as gid, GROUP_CONCAT(user_name) as members
+    FROM groups
+        JOIN user_group USING (group_id)
+        JOIN user USING (user_id)
+    WHERE groups.status = 'A'
+        AND user.status IN ('A', 'R')
+        AND user_id > 100
+    GROUP BY gid
+)
+UNION
+(
+    SELECT LOWER(CONCAT(groups.unix_group_name, '-', ugroup.name)) as groupname, ugroup.ugroup_id+10000 as gid, GROUP_CONCAT(DISTINCT user_name) as members
+    FROM ugroup
+        JOIN permissions ON (permission_type IN ('PLUGIN_PROFTPD_READ', 'PLUGIN_PROFTPD_WRITE') AND permissions.ugroup_id = ugroup.ugroup_id)
+        JOIN groups USING (group_id)
+        LEFT JOIN ugroup_user ON (ugroup_user.ugroup_id = ugroup.ugroup_id)
+        LEFT JOIN user USING (user_id)
+    WHERE groups.status = 'A'
+    AND (
+        user.user_id IS NULL
+     OR user.status IN ('A', 'R') AND user_id > 100)
+    GROUP BY gid
+)
+UNION
+(
+    SELECT user_name as groupname, unix_uid+20000 as gid, user_name
+    FROM user
+    WHERE status IN ('A', 'R')
+        AND user_id > 100
+    GROUP BY gid
+);
+
+-- View for users
+CREATE VIEW ftpusers AS
+SELECT user_name as username, user_pw as password, unix_uid+20000 as uid, unix_uid+20000 as gid, CONCAT("/home/users/", user_name) as home, shell
+FROM user
+WHERE status IN ('A', 'R')
+AND user_id > 100;

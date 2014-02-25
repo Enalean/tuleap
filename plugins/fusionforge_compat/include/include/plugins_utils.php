@@ -34,7 +34,7 @@ function htmlRedirect($url) {
         $GLOBALS['HTML']->redirect($url);
 }
 function htmlIframe($url,$poub) {
-        $GLOBALS['HTML']->iframe($url,array('class' => 'iframe_service'));
+        $GLOBALS['HTML']->iframe($url,array('class' => 'iframe_service', 'width' => '100%', 'height' => '650px'));
 }
 
 

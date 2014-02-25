@@ -109,6 +109,14 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return '<input type="text" name="criteria['. $this->id .']" value="'. $hp->purify($this->getCriteriaValue($criteria), CODENDI_PURIFIER_CONVERT_HTML) .'" />';
     }
 
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact) {
+        return '';
+    }
+
+    public function fetchSubmitForOverlay() {
+        return '';
+    }
+
     /**
      * Fetch the value
      * @param mixed $value the value of the field
@@ -402,7 +410,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      *
      * @return boolean true on success or false on failure
      */
-    public function validateField(Tracker_Artifact $artifact, $submitted_value, Tracker_Artifact_ChangesetValue $last_changeset_value = null) {
+    public function validateFieldWithPermissionsAndRequiredStatus(Tracker_Artifact $artifact, $submitted_value, Tracker_Artifact_ChangesetValue $last_changeset_value = null) {
         return true;
     }
     

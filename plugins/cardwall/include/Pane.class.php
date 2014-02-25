@@ -156,9 +156,61 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             $display_preferences->shouldDisplayAvatars(),
             $planning,
             $this->milestone,
-            $this->getMilestoneContentItems()
+            $this->getProgressPresenter()
         );
     }
+
+    /**
+     * We display an effort based progress bar if and only if all backlog elements
+     * have an initial effort. Otherwise, you might ends with a progress bar at
+     * 100% done with cards "not done".
+     *
+     * @return Cardwall_EffortProgressPresenter
+     */
+    private function getProgressPresenter() {
+        try {
+            return new Cardwall_RemainingEffortProgressPresenter(
+                $this->getInitialEffort(),
+                $this->milestone->getCapacity(),
+                $this->milestone->getRemainingEffort()
+            );
+        } catch (InitialEffortNotDefinedException $exception) {
+            $status_count = $this->milestone_factory->getMilestoneStatusCount($this->user, $this->milestone);
+            return new Cardwall_OpenClosedEffortProgressPresenter(
+                $status_count[Tracker_ArtifactDao::STATUS_OPEN],
+                $status_count[Tracker_ArtifactDao::STATUS_CLOSED]
+            );
+        }
+    }
+
+    private function getInitialEffort() {
+        $milestone_initial_effort = 0;
+
+        foreach ($this->getMilestoneContentItems() as $content) {
+            $milestone_initial_effort = $this->addInitialEffort($milestone_initial_effort, $content->getInitialEffort());
+        }
+
+        return $milestone_initial_effort;
+    }
+
+    /**
+     * This method ensures that initial effort is correctly defined
+     * for all the milestone's backlog items
+     *
+     * @param type $milestone_initial_effort
+     * @param type $backlog_item_initial_effort
+     * @return float
+     *
+     * @throws InitialEffortNotDefinedException
+     */
+    private function addInitialEffort($milestone_initial_effort, $backlog_item_initial_effort) {
+        if (! is_null($backlog_item_initial_effort) && $backlog_item_initial_effort !== '' && $backlog_item_initial_effort >= 0) {
+            return $milestone_initial_effort + floatval($backlog_item_initial_effort);
+        }
+
+        throw new InitialEffortNotDefinedException();
+    }
+
 
     private function getMilestoneContentItems() {
         $backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(

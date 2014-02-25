@@ -86,4 +86,29 @@ class Tracker_Artifact_ChangesetValue_TextTest extends TuleapTestCase {
 
 }
 
-?>
+class Tracker_Artifact_ChangesetValue_Text_getContentAsTextTest extends TuleapTestCase {
+
+     public function itReturnsTheValueWhenFormatIsText() {
+        $field = aTextField()->withTracker(aTracker()->withProject(mock('Project'))->build())->build();
+        $text = new Tracker_Artifact_ChangesetValue_Text(
+            111,
+            $field,
+            false,
+            'Problems with my code: <b>example</b>',
+            Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
+        );
+        $this->assertEqual($text->getContentAsText(), 'Problems with my code: <b>example</b>');
+     }
+
+     public function itStripHTMLWhenFormatIsHTML() {
+        $field = aTextField()->withTracker(aTracker()->withProject(mock('Project'))->build())->build();
+        $text = new Tracker_Artifact_ChangesetValue_Text(
+            111,
+            $field,
+            false,
+            'Problems with my code: <b>example</b>',
+            Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT
+        );
+        $this->assertEqual($text->getContentAsText(), 'Problems with my code: example');
+     }
+}

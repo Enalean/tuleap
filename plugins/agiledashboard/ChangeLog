@@ -1,3 +1,48 @@
+Version 1.48 - Tuleap 6.11
+    * story #6204 : if only one planning, show the detailed view
+
+Version 1.47 - Tuleap 6.11
+    * Follow-up to story #6009: API REST is no longer called directly in presenter for burndown
+
+Version 1.46 - Tuleap 6.11
+    * request #6023 - Days remaining off by one day in the Stand-Up View
+
+Version 1.45 - Tuleap 6.11
+    * story #6009 have a beautiful Agile Dashboard homepage (v1)
+
+Version 1.44 - Tuleap 6.11
+    * story #5984 see open/closed cards percentage fallback
+
+Version 1.43 - Tuleap 6.11
+    * story #5984 Add open/close information in milestone resource
+
+Version 1.42 - Tuleap 6.11
+    * story #6058 Create artifacts in agile dashboard using modal
+
+Version 1.41 - Tuleap 6.10
+    * fix filter backlog content when not logged in (follow-up story #5899)
+
+Version 1.40 - Tuleap 6.10
+    * edit artifact in place on agile dashboard
+
+Version 1.39 - Tuleap 6.10
+    * story #5899 - be able to filter on information in the backlog
+
+Version 1.38 - Tuleap 6.10
+    * story #5912 - PUT /milestones/:id/milestones
+
+Version 1.37 - Tuleap 6.10
+    * Fix REST route /milestones/:id
+
+Version 1.36 - Tuleap 6.10
+    * XML exported does not contain UI source code anymore
+
+Version 1.35 - Tuleap 6.10
+    * Fix request #5807 - Incoherent names displayed in Agiledashboard planning pane
+
+Version 1.34 - Tuleap 6.10
+    * Adjustements to internal Tracker API changes introduced in tracker 5.223
+
 Version 1.33 - Tuleap 6.10
     * Import/Export a project's agile dashboard from UI
 

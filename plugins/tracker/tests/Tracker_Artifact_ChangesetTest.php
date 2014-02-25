@@ -377,6 +377,7 @@ BODY;
         $artifact           = new MockTracker_Artifact();
         $previous_changeset = new MockTracker_Artifact_Changeset();
         $um                 = new MockUserManager();
+        $comment            = new MockTracker_Artifact_Changeset_Comment();
 
         $current_changeset = new Tracker_Artifact_ChangesetTestVersion();
 
@@ -402,11 +403,14 @@ BODY;
         $value1_current->setReturnValue('hasChanged', true);
         $value1_current->setReturnValue('diff', 'has changed', array($value1_previous, '*'));
 
+        $comment->setReturnValue('hasEmptyBody', true);
+
         $current_changeset->setReturnValue('getId', 66);
         $current_changeset->setReturnReference('getValueDao', $dao);
         $current_changeset->setReturnReference('getFormElementFactory', $fact);
         $current_changeset->setReturnReference('getArtifact', $artifact);
         $current_changeset->setReturnReference('getUserManager', $um);
+        $current_changeset->setReturnReference('getComment', $comment);
 
         $recipients = array("recipient1" => true, "recipient2" => true, "recipient3" => true);
 
@@ -418,7 +422,8 @@ BODY;
         $um->setReturnReference('getUserByUserName', $user2);
         $um->setReturnReference('getUserByUserName', $user3);
 
-        $this->assertEqual($current_changeset->cleanRecipients($recipients), array());
+        $current_changeset->removeRecipientsThatMayReceiveAnEmptyNotification($recipients);
+        $this->assertEqual($recipients, array());
     }
 }
 

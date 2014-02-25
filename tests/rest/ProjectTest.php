@@ -64,6 +64,12 @@ class ProjectTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
+    public function testOPTIONSprojects() {
+        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects'));
+
+        $this->assertEquals(array('OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
     public function testOPTIONSbyIdForAdmin() {
         $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/101'));
 
@@ -75,9 +81,35 @@ class ProjectTest extends RestBase {
         // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
-            $this->getResponseByName(TestDataBuilder::TEST_USER_NAME, $this->client->options('projects/100'));
+            $this->getResponseByName(TestDataBuilder::TEST_USER_NAME, $this->client->get('projects/100'));
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 403);
+            $exception = true;
+        }
+
+        $this->assertTrue($exception);
+    }
+
+    public function testGETBadRequest() {
+        // Cannot use @expectedException as we want to check status code.
+        $exception = false;
+        try {
+            $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/abc'));
+        } catch (Guzzle\Http\Exception\BadResponseException $e) {
+            $this->assertEquals($e->getResponse()->getStatusCode(), 400);
+            $exception = true;
+        }
+
+        $this->assertTrue($exception);
+    }
+
+    public function testGETUnknownProject() {
+        // Cannot use @expectedException as we want to check status code.
+        $exception = false;
+        try {
+            $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/1234567890'));
+        } catch (Guzzle\Http\Exception\BadResponseException $e) {
+            $this->assertEquals($e->getResponse()->getStatusCode(), 404);
             $exception = true;
         }
 

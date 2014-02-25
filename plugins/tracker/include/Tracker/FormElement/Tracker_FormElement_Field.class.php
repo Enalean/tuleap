@@ -329,6 +329,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $this->fetchArtifactReadOnly($artifact);
     }
 
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array()) {
+        return $this->fetchArtifact($artifact, $submitted_values);
+    }
+
+    public function fetchSubmitForOverlay() {
+        return $this->fetchSubmit();
+    }
+
     /**
      * Get the html code to display the field for the given artifact in read only mode
      *
@@ -813,7 +821,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     }
 
     /**
-     * Validate a field
+     * Validate a field and check perms and if it has a value if it is required
      *
      * @param Tracker_Artifact                $artifact             The artifact to check
      * @param mixed                           $submitted_value      The submitted value
@@ -822,7 +830,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return boolean true on success or false on failure
      */
-    public function validateField(Tracker_Artifact $artifact, $submitted_value, Tracker_Artifact_ChangesetValue $last_changeset_value = null, $is_submission = null) {
+    public function validateFieldWithPermissionsAndRequiredStatus(Tracker_Artifact $artifact, $submitted_value, Tracker_Artifact_ChangesetValue $last_changeset_value = null, $is_submission = null) {
         $is_valid = true;
         $hasPermission = $this->userCanUpdate();
         if ($is_submission) {
@@ -838,8 +846,54 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $this->setHasErrors(true);
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'bad_field_permission_update', $this->getLabel()));
         } else if ($submitted_value !== null && $hasPermission) {
+            $is_valid = $this->isValidRegardingRequiredProperty($artifact, $submitted_value) && $this->validateField($artifact, $submitted_value);
+        }
+        return $is_valid;
+    }
+
+    /**
+     * Validate a required field
+     *
+     * @param Tracker_Artifact                $artifact             The artifact to check
+     * @param mixed                           $submitted_value      The submitted value
+     *
+     * @return boolean true on success or false on failure
+     */
+    public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $submitted_value) {
+        if (($submitted_value === null || $submitted_value === '') && $this->isRequired()) {
+            $this->addRequiredError();
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function addRequiredError() {
+        $this->has_errors = true;
+        $GLOBALS['Response']->addFeedback(
+            'error',
+            $GLOBALS['Language']->getText(
+                'plugin_tracker_common_artifact',
+                'err_required',
+                $this->getLabel(). ' ('. $this->getName() .')'
+            )
+        );
+    }
+
+    /**
+     * Validate a field
+     *
+     * @param Tracker_Artifact                $artifact             The artifact to check
+     * @param mixed                           $submitted_value      The submitted value
+     *
+     * @return boolean true on success or false on failure
+     */
+    public function validateField(Tracker_Artifact $artifact, $submitted_value) {
+        $is_valid = true;
+        if ($submitted_value !== null) {
             $is_valid = $this->isValid($artifact, $submitted_value);
         }
+
         return $is_valid;
     }
 
@@ -852,13 +906,9 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return bool true if the value is considered ok
      */
     public function isValid(Tracker_Artifact $artifact, $value) {
-        if (($value === null || $value === '') && $this->isRequired()) {
-            $this->has_errors = true;
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
-        } else {
-            $this->has_errors = !$this->validate($artifact, $value);
-        }
-        return !$this->has_errors;
+        $this->has_errors = ! ($this->validate($artifact, $value));
+
+        return (! $this->has_errors);
     }
 
     public function isEmpty($value) {
@@ -936,7 +986,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $save_new_value = true;
         }
 
-        if ($save_new_value && $this->isValid($artifact, $submitted_value)) {
+        if ($save_new_value) {
             //Save the new value
             if ($changeset_value_id = $dao->save($new_changeset_id, $this->id, 1)) {
                 $updated = $this->saveValue($artifact, $changeset_value_id, $submitted_value, $previous_changesetvalue);
@@ -1126,7 +1176,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function getFieldDataForCSVPreview($csv_value) {
         // for most of atomic fields, the field data is the same value (int, float, string, text)
-        return $csv_value;
+        $purifier = Codendi_HTMLPurifier::instance();
+        return $purifier->purify($csv_value, CODENDI_PURIFIER_CONVERT_HTML);
     }
 
     /**
@@ -1219,5 +1270,3 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     ) {
     }
 }
-
-?>

@@ -47,7 +47,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_BasicTest extends Tule
     }
 
     public function itBuildsTheBasicInfo() {
-        $representation = $this->builder->getArtifactRepresentation($this->user, $this->artifact);
+        $representation = $this->builder->getArtifactRepresentationWithFieldValues($this->user, $this->artifact);
 
         $this->assertEqual($representation->id, 12);
         $this->assertEqual($representation->uri, Tuleap\Tracker\REST\Artifact\ArtifactRepresentation::ROUTE . '/' . 12);
@@ -85,12 +85,12 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
     public function itGetsTheFieldsFromTheFactory() {
         expect($this->formelement_factory)->getUsedFieldsForSoap($this->tracker)->once();
         stub($this->formelement_factory)->getUsedFieldsForSoap()->returns(array());
-        $this->builder->getArtifactRepresentation($this->user, $this->artifact);
+        $this->builder->getArtifactRepresentationWithFieldValues($this->user, $this->artifact);
     }
 
     public function itHasNoValuesWhenThereAreNoFields() {
         stub($this->formelement_factory)->getUsedFieldsForSoap()->returns(array());
-        $representation = $this->builder->getArtifactRepresentation($this->user, $this->artifact);
+        $representation = $this->builder->getArtifactRepresentationWithFieldValues($this->user, $this->artifact);
 
         $this->assertEqual($representation->values, array());
     }
@@ -109,7 +109,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
 
         stub($this->formelement_factory)->getUsedFieldsForSoap($this->tracker)->returns(array($field1, $field2, $field3));
 
-        $this->builder->getArtifactRepresentation($this->user, $this->artifact);
+        $this->builder->getArtifactRepresentationWithFieldValues($this->user, $this->artifact);
     }
 
     public function itReturnsValuesOnlyForFieldsWithValues() {
@@ -121,7 +121,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
 
         stub($this->formelement_factory)->getUsedFieldsForSoap($this->tracker)->returns(array($field1, $field2, $field3));
 
-        $representation = $this->builder->getArtifactRepresentation($this->user, $this->artifact);
+        $representation = $this->builder->getArtifactRepresentationWithFieldValues($this->user, $this->artifact);
 
         $this->assertEqual($representation->values, array('whatever'));
     }

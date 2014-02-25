@@ -172,7 +172,7 @@ class SystemEventManager {
             break;
         case Event::USER_RENAME:
             $this->createEvent(SystemEvent::TYPE_USER_RENAME,
-                               $this->concatParameters($params, array('user_id', 'new_name')),
+                               $this->concatParameters($params, array('user_id', 'new_name', 'old_user')),
                                SystemEvent::PRIORITY_HIGH);
             break;
         case 'cvs_is_private':
@@ -257,21 +257,41 @@ class SystemEventManager {
      */
     public function createEvent($type, $parameters, $priority,$owner=SystemEvent::OWNER_ROOT) {
         if ($id = $this->dao->store($type, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'],$owner)) {
-            $klass = 'SystemEvent_'. $type;
-            $sysevent = new $klass($id, 
-                                   $type,
-                                   $owner,
-                                   $parameters,
-                                   $priority, 
-                                   SystemEvent::STATUS_NEW, 
-                                   $_SERVER['REQUEST_TIME'], 
-                                   null, 
-                                   null,
-                                   null);
+            $sysevent = $this->instanciateSystemEventOnCreate($id, $type, $owner, $parameters, $priority);
             $sysevent->notify();
         }
     }
-    
+
+    private function instanciateSystemEventOnCreate($id, $type, $owner, $parameters, $priority) {
+        return $this->instanciateSystemEventByType($id, $type, $owner, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'], null, null, null);
+    }
+
+    private function instanciateSystemEventByType($id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log) {
+        $system_event = $this->instanciateSystemEvent($type, $id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log);
+        if ($system_event === null) {
+            $system_event = $this->instanciateSystemEvent('SystemEvent_'.$type, $id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log);
+        }
+        return $system_event;
+    }
+
+    private function instanciateSystemEvent($klass, $id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log) {
+        if (class_exists($klass)) {
+            return new $klass(
+                $id,
+                $type,
+                $owner,
+                $parameters,
+                $priority,
+                $status,
+                $create_time,
+                $process_time,
+                $end_time,
+                $log
+            );
+        }
+        return null;
+    }
+
     /**
      * Concat parameters as $params['key1'] . SEPARATOR . $params['key3'] ...
      * @param array $params
@@ -329,20 +349,20 @@ class SystemEventManager {
             $em->processEvent(Event::GET_SYSTEM_EVENT_CLASS, array('type' => $row['type'], 'class' => &$klass, 'dependencies' => &$klass_params));
             break;
         }
-        if (class_exists($klass)) {
-            $sysevent = new $klass($row['id'],
-                                   $row['type'],
-                                   $row['owner'],
-                                   $row['parameters'],
-                                   $row['priority'],
-                                   $row['status'],
-                                   $row['create_date'],
-                                   $row['process_date'],
-                                   $row['end_date'],
-                                   $row['log']);
-            if (!empty($klass_params)) {
-                call_user_func_array(array($sysevent, 'injectDependencies'), $klass_params);
-            }
+        $sysevent = $this->instanciateSystemEventByType(
+            $row['id'],
+            class_exists($klass) ? $klass : $row['type'],
+            $row['owner'],
+            $row['parameters'],
+            $row['priority'],
+            $row['status'],
+            $row['create_date'],
+            $row['process_date'],
+            $row['end_date'],
+            $row['log']
+        );
+        if ($sysevent && !empty($klass_params)) {
+            call_user_func_array(array($sysevent, 'injectDependencies'), $klass_params);
         }
         return $sysevent;
     }

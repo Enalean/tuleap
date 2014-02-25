@@ -20,7 +20,9 @@
  
 
 class Tracker_Semantic_Contributor extends Tracker_Semantic {
-    
+
+    const NO_VALUE = '';
+
     /**
      * @var Tracker_FormElement_Field_List
      */
@@ -119,9 +121,8 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
             
             $html .= '<form method="POST" action="'. $this->geturl() .'">';
             $select = '<select name="list_field_id">';
-            if ( ! $this->getFieldId()) {
-                $select .= '<option value="-1" selected="selected">' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_a_field') . '</option>';
-            }
+            $select .= '<option value="'.self::NO_VALUE.'" selected="selected">' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_a_field') . '</option>';
+
             foreach ($list_fields as $list_field) {
                 if ($list_field->getId() == $this->getFieldId()) {
                     $selected = ' selected="selected" ';
@@ -169,6 +170,12 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','unable_save_contributor'));
                 }
+            } elseif ($request->get('list_field_id') == self::NO_VALUE) {
+                if ($this->delete()) {
+                    $GLOBALS['Response']->redirect($this->getUrl());
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','unable_save_contributor'));
+                }
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','bad_field_contributor'));
             }
@@ -184,6 +191,11 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
     public function save() {
         $dao = new Tracker_Semantic_ContributorDao();
         return $dao->save($this->tracker->getId(), $this->getFieldId());
+    }
+
+    public function delete() {
+        $dao = new Tracker_Semantic_ContributorDao();
+        return $dao->delete($this->tracker->getId());
     }
     
     /**

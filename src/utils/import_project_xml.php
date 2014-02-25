@@ -40,11 +40,11 @@ $xml_importer = new ProjectXMLImporter(
 
 try {
     $user = $user_manager->forceLogin($argv[2]);
-    $xml_importer->import($argv[1], $argv[3]);
-
     if ((! $user->isSuperUser() && ! $user->isAdmin($project_id)) || ! $user->isActive()) {
         throw new RuntimeException($GLOBALS['Language']->getText('project_import', 'invalid_user', array($user_name)));
     }
+
+    $xml_importer->import($argv[1], $argv[3]);
 } catch (Exception $exception) {
     echo "*** ERROR: ".$exception->getMessage().PHP_EOL;
     exit(1);

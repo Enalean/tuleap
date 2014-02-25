@@ -1,3 +1,12 @@
+Version 0.24 - Tuleap 6.11
+    * story #6049: MediaWiki: switch text from red to blue in the sidebar
+
+Version 0.23 - Tuleap 6.10
+    * Request #6089: Fatal error when removing user as project member (MW)
+
+Version 0.22 - Tuleap 6.10
+    * mapping between mediawiki and tuleap groups
+
 Version 0.21 - Tuleap 6.8
     * Right colors for internal mediawiki links.
 

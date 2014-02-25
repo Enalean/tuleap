@@ -117,6 +117,12 @@ class AgileDashboard_BacklogItemPresenter implements
         }
     }
 
+    public function parent_id() {
+        if ($this->parent) {
+            return $this->parent->getId();
+        }
+    }
+
     public function status() {
         return $this->status;
     }

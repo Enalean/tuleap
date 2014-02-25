@@ -43,7 +43,7 @@ $HTML->header(array('title'=>$title));
 
 if ($src) {
     echo '<h1>'. $title .'</h1>';
-    $HTML->iframe($src, array('class' => 'iframe_service'));
+    $HTML->iframe($src, array('class' => 'iframe_service', 'width' => '100%', 'height' => '650px'));
 }
 $HTML->footer(array());
 ?>

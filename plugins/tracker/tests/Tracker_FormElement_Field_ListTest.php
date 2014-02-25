@@ -18,10 +18,11 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('bootstrap.php');
+
 Mock::generate('Tracker_Artifact');
 
 Mock::generatePartial(
-    'Tracker_FormElement_Field_List', 
+    'Tracker_FormElement_Field_List',
     'Tracker_FormElement_Field_ListTestVersion', 
     array(
         'getBind',
@@ -433,9 +434,9 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $field_list->setReturnValue('isNone', true, array($value3));
         $field_list->setReturnValue('isNone', false, array($value4));
         
-        $this->assertFalse($field_list->isValid($artifact, $value1));
-        $this->assertFalse($field_list->isValid($artifact, $value2));
-        $this->assertFalse($field_list->isValid($artifact, $value3));
+        $this->assertFalse($field_list->isValidRegardingRequiredProperty($artifact, $value1));
+        $this->assertFalse($field_list->isValidRegardingRequiredProperty($artifact, $value2));
+        $this->assertFalse($field_list->isValidRegardingRequiredProperty($artifact, $value3));
         $this->assertTrue($field_list->isValid($artifact, $value4));
     }
 }

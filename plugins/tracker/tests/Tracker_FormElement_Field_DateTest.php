@@ -21,8 +21,8 @@ require_once('bootstrap.php');
 Mock::generate('Tracker_Artifact');
 
 Mock::generatePartial(
-    'Tracker_FormElement_Field_Date', 
-    'Tracker_FormElement_Field_DateTestVersion', 
+    'Tracker_FormElement_Field_Date',
+    'Tracker_FormElement_Field_DateTestVersion',
     array(
         'getValueDao', 
         'isRequired', 
@@ -32,8 +32,9 @@ Mock::generatePartial(
         'getDao',
         '_getUserCSVDateFormat'
     )
-);Mock::generatePartial(
-    'Tracker_FormElement_Field_Date', 
+);
+Mock::generatePartial(
+    'Tracker_FormElement_Field_Date',
     'Tracker_FormElement_Field_DateTestVersion_ForImport', 
     array(
         'getValueDao', 
@@ -115,8 +116,8 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $this->assertFalse($f->isValid($a, '06-12-2009'));
         $this->assertFalse($f->isValid($a, 'foobar'));
         $this->assertFalse($f->isValid($a, 06/12/2009));
-        $this->assertFalse($f->isValid($a, ''));
-        $this->assertFalse($f->isValid($a, null));
+        $this->assertFalse($f->isValidRegardingRequiredProperty($a, ''));
+        $this->assertFalse($f->isValidRegardingRequiredProperty($a, null));
     }
     
     function testIsValidNotRequiredField() {

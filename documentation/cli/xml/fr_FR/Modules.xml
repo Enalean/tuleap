@@ -2194,7 +2194,7 @@ File uploaded successfully
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--version_number: La version qu'on veut télécharger, si la version n'est pas  spécifiée la version sera la courrante
+                        <para>--version: Le numéro de la version qu'on veut télécharger. Si la version n'est pas  spécifiée, la version sera la courante.
                         </para>
                     </listitem>
                     <listitem>
