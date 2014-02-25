@@ -1,3 +1,6 @@
+Version 6.10-3 (Tuesday, February 25th 2014)
+	request #6286: Fatal error when importing a tracker with cardwall semantics to a server w/o cardwall enabled
+
 Version 6.10-2 (Friday, February 21st 2014)
 	request #6247 - Forum flat view displays same author for all messages
 	request #6244 - unable to remove contributor semantic
