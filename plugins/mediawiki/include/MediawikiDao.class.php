@@ -240,9 +240,9 @@ class MediawikiDao extends DataAccessObject {
 
     private function deleteUserGroupsForUser($database_name, $user_name) {
         return $this->update("DELETE $database_name.mwuser_groups
-                              FROM $database_name.mwuser_groups as mwuser_groups, $database_name.mwuser as mwuser
-                              WHERE mwuser.user_id = mwuser_groups.ug_user
-                                AND mwuser.user_name = $user_name");
+                              FROM $database_name.mwuser_groups
+                                JOIN $database_name.mwuser ON ($database_name.mwuser.user_id = $database_name.mwuser_groups.ug_user)
+                              WHERE $database_name.mwuser.user_name = $user_name");
     }
 
     private function feedMediawikiUserGroupsWithTuleapMapping($database_name, $group_id, $forge_user_id) {
