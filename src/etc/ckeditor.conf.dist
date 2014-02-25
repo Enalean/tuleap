@@ -1,4 +1,4 @@
-Alias /scripts/ckeditor "/usr/share/ckeditor"
+Alias /scripts/ckeditor-4.3.2 "/usr/share/ckeditor"
 <Directory "/usr/share/ckeditor">
     Options None
     AllowOverride None
