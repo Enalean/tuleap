@@ -425,7 +425,7 @@ class ReferenceManager {
             \#          #dash (2 en 1)
             (?P<project_name>[\w-_]+:)? #optional project name (followed by a colon)
             (?P<value>(?:&amp;|\w|/|&)+) #any combination of &, &amp;, a word or a slash
-        `xu";
+        `x";
         return $exp;
     }
 
