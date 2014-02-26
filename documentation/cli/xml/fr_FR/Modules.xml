@@ -1186,19 +1186,19 @@ File retrieved successfully.
 
         <section id="FRSFunctions">
         <title>Fonctions du système de gestion des fichiers</title>
-	<para>Les commandes ci-après peuvent retourner les codes d'erreur suivants:
-	  <itemizedlist mark="bullet">
-	    <listitem>
-	      <para>'invalid_package_fault' (code '3017'): le paquet n'existe pas</para>
-	    </listitem>
-	    <listitem>
-	      <para>'invalid_release_fault' (code '3018'): la version n'existe pas</para>
-	    </listitem>
-	    <listitem>
-	      <para>'invalid_file_fault' (code '3019'): le fichier n'existe pas</para>
-	    </listitem>
-	  </itemizedlist>
-	</para>
+    <para>Les commandes ci-après peuvent retourner les codes d'erreur suivants:
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para>'invalid_package_fault' (code '3017'): le paquet n'existe pas</para>
+        </listitem>
+        <listitem>
+          <para>'invalid_release_fault' (code '3018'): la version n'existe pas</para>
+        </listitem>
+        <listitem>
+          <para>'invalid_file_fault' (code '3019'): le fichier n'existe pas</para>
+        </listitem>
+      </itemizedlist>
+    </para>
         <section id="FRSFunctionGetPackages">
             <title>getPackages</title>
             <para>getPackages: Affiche une liste des paquets disponibles pour un projet
@@ -1241,10 +1241,10 @@ File retrieved successfully.
                         <para>--rank: ordre d'affichage du paquet. Par défaut (si non spécifié), le rang est 0.
                         </para>
                     </listitem>
-		    <listitem>
+            <listitem>
                         <para>--approve_license: Si positionné à '1', l'utilisateur final devra approuver une license avant de pouvoir télécharger les fichiers. Sinon, le téléchargement s'effectue directement. Par défaut, la valeur est 1.
-			</para>
-		    </listitem>
+            </para>
+            </listitem>
                     <listitem>
                         <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
                         </para>
@@ -1382,7 +1382,7 @@ File retrieved successfully.
         
         <section id="FRSFunctionAddFile">
             <title>addFile</title>
-	    <para><emphasis role="bold">Support des gros fichiers:</emphasis> CLI peut ajouter des fichiers supérieurs à 2Go lorsque que la machine cliente (qui exécute CLI) et le serveur sont des machines 64 bits. Dans les autres cas, pour ajouter des fichiers &gt; à 2Go, il faut utiliser FTP pour le transfert et l'option --uploaded_file.</para>
+        <para><emphasis role="bold">Support des gros fichiers:</emphasis> CLI peut ajouter des fichiers supérieurs à 2Go lorsque que la machine cliente (qui exécute CLI) et le serveur sont des machines 64 bits. Dans les autres cas, pour ajouter des fichiers &gt; à 2Go, il faut utiliser FTP pour le transfert et l'option --uploaded_file.</para>
             <para>addFile: Ajoute un fichier au système de gestion des fichiers
                 <itemizedlist mark="bullet">
                     <listitem>
@@ -1413,6 +1413,10 @@ File retrieved successfully.
                         <para>--reference_md5: Le md5 du fichier se trouvant dans le répertoire "incoming" du serveur.
                         </para>
                      </listitem>
+                    <listitem>
+                        <para>--comment: Un commentaire pour le nouveau fichier
+                        </para>
+                    </listitem>
                     <listitem>
                         <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
                         </para>
@@ -1451,7 +1455,7 @@ File retrieved successfully.
         
         <section id="FRSFunctionGetFile">
             <title>getFile</title>
-	    <para><emphasis role="bold">Support des gros fichiers:</emphasis> CLI peut télécharger des fichiers supérieurs à 2Go lorsque que la machine cliente (qui exécute CLI) et le serveur sont des machines 64 bits.</para>
+        <para><emphasis role="bold">Support des gros fichiers:</emphasis> CLI peut télécharger des fichiers supérieurs à 2Go lorsque que la machine cliente (qui exécute CLI) et le serveur sont des machines 64 bits.</para>
             <para>getFile: Retourne le contenu du fichier
                 <itemizedlist mark="bullet">
                     <listitem>
@@ -1487,7 +1491,7 @@ File retrieved successfully.
 File retrieved successfully.
                         </programlisting>
                     </example>
-		    <note>Note : si aucune erreur n'est retournée, le fichier est correctement téléchargé.</note>
+            <note>Note : si aucune erreur n'est retournée, le fichier est correctement téléchargé.</note>
                </para>
             </para>
         </section>
@@ -1551,7 +1555,7 @@ File retrieved successfully.
 +--------+
                         </programlisting>
                     </example>
-		    <note>Note : la valeur retournée 1 indique que la suppression a été effectuée. Dans tous les autres cas, une erreur est retournée.</note>
+            <note>Note : la valeur retournée 1 indique que la suppression a été effectuée. Dans tous les autres cas, une erreur est retournée.</note>
                </para>
             </para>
         </section>
@@ -1750,7 +1754,7 @@ File retrieved successfully.
                </para>
             </para>
         </section>
-	    <section id="DocmanFunctionGetRoot">
+        <section id="DocmanFunctionGetRoot">
             <title>getRoot</title>
             <para>getRoot: Retourne l'id de la racine du service Documents pour un projet donné
                 <itemizedlist mark="bullet">
@@ -1783,7 +1787,7 @@ File retrieved successfully.
                         <para>--parent_id*: identifiant du parent dans lequel le document sera créé
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
                         <para>--project*: Nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
                         </para>
                     </listitem>
@@ -1804,30 +1808,30 @@ File retrieved successfully.
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--perm_read: Les Groupes IDs qui vont avoir la permission de lecture, séparés par des virgules
-						</para>
-						</listitem>
+                        <para>--perm_read: Les Groupes IDs qui vont avoir la permission de lecture, séparés par des virgules
+                        </para>
+                        </listitem>
                     <listitem>
-					    <para>--perm_write: Les Groupes IDs qui vont avoir la permission d'écriture, séparés par des virgules
-					    </para>
-					</listitem>
-                    <listitem>
-					        <para>--perm_manage: Les Groups IDs qui vont avoir la permission de gestion, séparés par des virgules
-					        </para>
-					</listitem>
-                    <listitem>
-					    <para>--perm_none: Les Groups IDs qui n'auront pas de permission, séparés par des virgules(ces groupes ne vont pas hériter les permissions de l'item parent)
+                        <para>--perm_write: Les Groupes IDs qui vont avoir la permission d'écriture, séparés par des virgules
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--properties: Le fichier qui contient les propriétés qui seront appliquées sur l'item.
+                            <para>--perm_manage: Les Groups IDs qui vont avoir la permission de gestion, séparés par des virgules
+                            </para>
+                    </listitem>
+                    <listitem>
+                        <para>--perm_none: Les Groups IDs qui n'auront pas de permission, séparés par des virgules(ces groupes ne vont pas hériter les permissions de l'item parent)
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--obsolescence_date: Date à laquelle le  document sera obsolète (aa-mm-jj|aaaa-mm-jj)   
+                        <para>--properties: Le fichier qui contient les propriétés qui seront appliquées sur l'item.
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
+                        <para>--obsolescence_date: Date à laquelle le  document sera obsolète (aa-mm-jj|aaaa-mm-jj)   
+                        </para>
+                    </listitem>
+                    <listitem>
                         <para>--ordering: place du document dans le dossier parent. Les valeurs possibles sont "begin" et "end"
                         </para>
                     </listitem>
@@ -1847,17 +1851,17 @@ File retrieved successfully.
                </para>
              </para>
         </section>
-		
-		<section id="DocmanFunctionCreateFile">
+        
+        <section id="DocmanFunctionCreateFile">
             <title>createFile</title>
-	    <para><emphasis role="bold">Support des gros fichiers:</emphasis> CLI peut ajouter des fichiers supérieurs à 2Go lorsque que la machine cliente (qui exécute CLI) et le serveur sont des machines 64 bits.</para>
+        <para><emphasis role="bold">Support des gros fichiers:</emphasis> CLI peut ajouter des fichiers supérieurs à 2Go lorsque que la machine cliente (qui exécute CLI) et le serveur sont des machines 64 bits.</para>
             <para>createFile: Ajoute un fichier au gestionnaire de documents
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--parent_id*: identifiant du parent dans lequel le document sera créé
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
                         <para>--project*: Nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
                         </para>
                     </listitem>
@@ -1878,30 +1882,30 @@ File retrieved successfully.
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--perm_read: Les Groupes IDs qui vont avoir la permission de lecture, séparés par des virgules
-						</para>
-						</listitem>
+                        <para>--perm_read: Les Groupes IDs qui vont avoir la permission de lecture, séparés par des virgules
+                        </para>
+                        </listitem>
                     <listitem>
-					    <para>--perm_write: Les Groupes IDs qui vont avoir la permission d'écriture, séparés par des virgules
-					    </para>
-					</listitem>
-                    <listitem>
-					        <para>--perm_manage: Les Groups IDs qui vont avoir la permission de gestion, séparés par des virgules
-					        </para>
-					</listitem>
-                    <listitem>
-					    <para>--perm_none: Les Groups IDs qui n'auront pas de permission, séparés par des virgules(ces groupes ne vont pas hériter les permissions de l'item parent)
+                        <para>--perm_write: Les Groupes IDs qui vont avoir la permission d'écriture, séparés par des virgules
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--properties: Le fichier qui contient les propriétés qui seront appliquées sur l'item.
+                            <para>--perm_manage: Les Groups IDs qui vont avoir la permission de gestion, séparés par des virgules
+                            </para>
+                    </listitem>
+                    <listitem>
+                        <para>--perm_none: Les Groups IDs qui n'auront pas de permission, séparés par des virgules(ces groupes ne vont pas hériter les permissions de l'item parent)
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--obsolescence_date: Date à laquelle le  document sera obsolète (aa-mm-jj|aaaa-mm-jj)   
+                        <para>--properties: Le fichier qui contient les propriétés qui seront appliquées sur l'item.
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
+                        <para>--obsolescence_date: Date à laquelle le  document sera obsolète (aa-mm-jj|aaaa-mm-jj)   
+                        </para>
+                    </listitem>
+                    <listitem>
                         <para>--ordering: place du document dans le dossier parent. Les valeurs possibles sont "begin" et "end"
                         </para>
                     </listitem>
@@ -1923,7 +1927,7 @@ File uploaded successfully
                </para>
             </para>
         </section>
-		<section id="DocmanFunctionCreateEmptyDocument">
+        <section id="DocmanFunctionCreateEmptyDocument">
             <title>createEmptyDocument</title>
             <para>createEmptyDocument: Ajoute un document vide au gestionnaire de documents
                 <itemizedlist mark="bullet">
@@ -1931,7 +1935,7 @@ File uploaded successfully
                         <para>--parent_id*: identifiant du parent dans lequel le document sera créé
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
                         <para>--project*: Nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
                         </para>
                     </listitem>
@@ -1948,30 +1952,30 @@ File uploaded successfully
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--perm_read: Les Groupes IDs qui vont avoir la permission de lecture, séparés par des virgules
-						</para>
-						</listitem>
+                        <para>--perm_read: Les Groupes IDs qui vont avoir la permission de lecture, séparés par des virgules
+                        </para>
+                        </listitem>
                     <listitem>
-					    <para>--perm_write: Les Groupes IDs qui vont avoir la permission d'écriture, séparés par des virgules
-					    </para>
-					</listitem>
-                    <listitem>
-					    <para>--perm_manage: Les Groups IDs qui vont avoir la permission de gestion, séparés par des virgules
-					    </para>
-					</listitem>
-                    <listitem>
-					    <para>--perm_none: Les Groups IDs qui n'auront pas de permission, séparés par des virgules(ces groupes ne vont pas hériter les permissions de l'item parent)
+                        <para>--perm_write: Les Groupes IDs qui vont avoir la permission d'écriture, séparés par des virgules
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--properties: Le fichier qui contient les propriétés qui seront appliquées sur l'item.
+                        <para>--perm_manage: Les Groups IDs qui vont avoir la permission de gestion, séparés par des virgules
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--obsolescence_date: Date à laquelle le  document sera obsolète (aa-mm-jj|aaaa-mm-jj)   
+                        <para>--perm_none: Les Groups IDs qui n'auront pas de permission, séparés par des virgules(ces groupes ne vont pas hériter les permissions de l'item parent)
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
+                        <para>--properties: Le fichier qui contient les propriétés qui seront appliquées sur l'item.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--obsolescence_date: Date à laquelle le  document sera obsolète (aa-mm-jj|aaaa-mm-jj)   
+                        </para>
+                    </listitem>
+                    <listitem>
                         <para>--ordering: place du document dans le dossier parent. Les valeurs possibles sont "begin" et "end"
                         </para>
                     </listitem>
@@ -1991,7 +1995,7 @@ File uploaded successfully
                </para>
             </para>
         </section>
-        		<section id="DocmanFunctionCreateLink">
+                <section id="DocmanFunctionCreateLink">
             <title>createLink</title>
             <para>createLink: Ajoute un lien au gestionnaire de documents
                 <itemizedlist mark="bullet">
@@ -1999,7 +2003,7 @@ File uploaded successfully
                         <para>--parent_id*: identifiant du parent dans lequel le document sera créé
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
                         <para>--project*: Nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
                         </para>
                     </listitem>
@@ -2020,30 +2024,30 @@ File uploaded successfully
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--perm_read: Les Groupes IDs qui vont avoir la permission de lecture, séparés par des virgules
-						</para>
-						</listitem>
+                        <para>--perm_read: Les Groupes IDs qui vont avoir la permission de lecture, séparés par des virgules
+                        </para>
+                        </listitem>
                     <listitem>
-					    <para>--perm_write: Les Groupes IDs qui vont avoir la permission d'écriture, séparés par des virgules
-					    </para>
-					</listitem>
-                    <listitem>
-					    <para>--perm_manage: Les Groups IDs qui vont avoir la permission de gestion, séparés par des virgules
-					    </para>
-					</listitem>
-                    <listitem>
-					    <para>--perm_none: Les Groups IDs qui n'auront pas de permission, séparés par des virgules(ces groupes ne vont pas hériter les permissions de l'item parent)
+                        <para>--perm_write: Les Groupes IDs qui vont avoir la permission d'écriture, séparés par des virgules
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--properties: Le fichier qui contient les propriétés qui seront appliquées sur l'item.
+                        <para>--perm_manage: Les Groups IDs qui vont avoir la permission de gestion, séparés par des virgules
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--obsolescence_date: Date à laquelle le  document sera obsolète (aa-mm-jj|aaaa-mm-jj)   
+                        <para>--perm_none: Les Groups IDs qui n'auront pas de permission, séparés par des virgules(ces groupes ne vont pas hériter les permissions de l'item parent)
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
+                        <para>--properties: Le fichier qui contient les propriétés qui seront appliquées sur l'item.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--obsolescence_date: Date à laquelle le  document sera obsolète (aa-mm-jj|aaaa-mm-jj)   
+                        </para>
+                    </listitem>
+                    <listitem>
                         <para>--ordering: place du document dans le dossier parent. Les valeurs possibles sont "begin" et "end"
                         </para>
                     </listitem>
@@ -2064,7 +2068,7 @@ File uploaded successfully
                </para>
             </para>
         </section>
-		<section id="DocmanFunctionCreateWikiPage">
+        <section id="DocmanFunctionCreateWikiPage">
             <title>createWikiPage</title>
             <para>createWikiPage: Ajoute un wiki document au gestionnnaire de documents
                 <itemizedlist mark="bullet">
@@ -2072,7 +2076,7 @@ File uploaded successfully
                         <para>--parent_id*: identifiant du parent dans lequel le document sera créé
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
                         <para>--project*: Nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
                         </para>
                     </listitem>
@@ -2093,30 +2097,30 @@ File uploaded successfully
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--perm_read: Les Groupes IDs qui vont avoir la permission de lecture, séparés par des virgules
-						</para>
-						</listitem>
+                        <para>--perm_read: Les Groupes IDs qui vont avoir la permission de lecture, séparés par des virgules
+                        </para>
+                        </listitem>
                     <listitem>
-					    <para>--perm_write: Les Groupes IDs qui vont avoir la permission d'écriture, séparés par des virgules
-					    </para>
-					</listitem>
-                    <listitem>
-					    <para>--perm_manage: Les Groups IDs qui vont avoir la permission de gestion, séparés par des virgules
-					    </para>
-					</listitem>
-                    <listitem>
-					    <para>--perm_none: Les Groups IDs qui n'auront pas de permission, séparés par des virgules(ces groupes ne vont pas hériter les permissions de l'item parent)
+                        <para>--perm_write: Les Groupes IDs qui vont avoir la permission d'écriture, séparés par des virgules
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--properties: Le fichier qui contient les propriétés qui seront appliquées sur l'item.
+                        <para>--perm_manage: Les Groups IDs qui vont avoir la permission de gestion, séparés par des virgules
                         </para>
                     </listitem>
                     <listitem>
-					    <para>--obsolescence_date: Date à laquelle le document sera obsolète (aa-mm-jj|aaaa-mm-jj)   
+                        <para>--perm_none: Les Groups IDs qui n'auront pas de permission, séparés par des virgules(ces groupes ne vont pas hériter les permissions de l'item parent)
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
+                        <para>--properties: Le fichier qui contient les propriétés qui seront appliquées sur l'item.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--obsolescence_date: Date à laquelle le document sera obsolète (aa-mm-jj|aaaa-mm-jj)   
+                        </para>
+                    </listitem>
+                    <listitem>
                         <para>--ordering: place du document dans le dossier parent. Les valeurs possibles sont "begin" et "end"
                         </para>
                     </listitem>
@@ -2176,8 +2180,8 @@ File uploaded successfully
                </para>
             </para>
         </section>
-		
-		<section id="DocmanFunctionGetFile">
+        
+        <section id="DocmanFunctionGetFile">
             <title>getFile</title>
             <para>getFile: Download document (Fichier/Embedded fichier)
                 <itemizedlist mark="bullet">
@@ -2185,7 +2189,7 @@ File uploaded successfully
                         <para>--id*: L'ID de l'item à télécharger
                         </para>
                     </listitem>
-					<listitem>
+                    <listitem>
                         <para>--output: Nom du fichier 
                         </para>
                     </listitem>
