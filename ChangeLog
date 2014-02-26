@@ -6,6 +6,7 @@ Version 6.11 (Not released yet)
 	* tracker: 5.246
 	* cardwall: 1.19
 	* mediawiki: 0.25
+	* forumml: 2.6.17
 
 	== Development ==
 	* request #6023 - Days remaining off by one day in the Stand-Up View
@@ -25,7 +26,7 @@ Version 6.11 (Not released yet)
 	* story #6047 - update Rich Text Editor (better compatibility with IE10 and upper)
 
 	== Themes ==
-	* Experimental: 0.9.6
+	* Experimental: 0.9.7
 
 	== Bug fix ==
 	* request #5857: Fix error with SVN during a SYSTEM_CHECK
