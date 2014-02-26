@@ -1,3 +1,6 @@
+Version 5.248 - Tuleap 6.11
+    * request #6276: No longer possible to select the parent epic in new modal
+
 Version 5.247 - Tuleap 6.11
     * request #6216 : datepicker is reusable in tracker report
 
