@@ -1,3 +1,6 @@
+Version 5.247 - Tuleap 6.11
+    * request #6216 : datepicker is reusable in tracker report
+
 Version 5.246 - Tuleap 6.11
     * Fix request #6286: Fatal error when importing a tracker with cardwall semantics to a server w/o cardwall enabled
 
