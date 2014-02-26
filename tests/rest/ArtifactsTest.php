@@ -1,0 +1,82 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2013. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ */
+
+require_once dirname(__FILE__).'/../lib/autoload.php';
+
+/**
+ * @group ArtifactsTest
+ */
+class ArtifactsTest extends RestBase {
+
+    protected function getResponse($request) {
+        return $this->getResponseByToken(
+            $this->getTokenForUserName(TestDataBuilder::TEST_USER_NAME),
+            $request
+        );
+    }
+
+    public function testOptionsArtifactId() {
+        $response = $this->getResponse($this->client->options('artifacts/9'));
+        $this->assertEquals(array('OPTIONS', 'GET', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testPutArtifactId() {
+        $artifact_id = 9;
+        $field_label =  'I want to';
+        $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
+        $put_resource = json_encode(array(
+            'values' => array(
+                array(
+                    'field_id' => $field_id,
+                    'value'    => "Amazing test stuff",
+                ),
+            ),
+        ));
+
+        $response    = $this->getResponse($this->client->put('artifacts/'.$artifact_id, null, $put_resource));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertEquals("Amazing test stuff", $this->getFieldValueForFieldLabel($artifact_id, $field_label));
+    }
+
+    private function getFieldIdForFieldLabel($artifact_id, $field_label) {
+        $value = $this->getFieldByFieldLabel($artifact_id, $field_label);
+        return $value['field_id'];
+    }
+
+    private function getFieldValueForFieldLabel($artifact_id, $field_label) {
+        $value = $this->getFieldByFieldLabel($artifact_id, $field_label);
+        return $value['value'];
+    }
+
+    private function getFieldByFieldLabel($artifact_id, $field_label) {
+        $artifact = $this->getArtifact($artifact_id);
+        foreach ($artifact['values'] as $value) {
+            if ($value['label'] == $field_label) {
+                return $value;
+            }
+        }
+    }
+
+    private function getArtifact($artifact_id) {
+        $response = $this->getResponse($this->client->get('artifacts/'.$artifact_id));
+        return $response->json();
+    }
+}
