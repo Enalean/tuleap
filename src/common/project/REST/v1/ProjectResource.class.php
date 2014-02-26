@@ -32,6 +32,7 @@ use \Tuleap\Project\REST\UserGroupRepresentation;
 use \Tuleap\REST\Header;
 use \Luracast\Restler\RestException;
 use \Tuleap\REST\ProjectAuthorization;
+use \Tuleap\REST\ResourcesInjector;
 
 /**
  * Wrapper for project related REST methods
@@ -194,6 +195,9 @@ class ProjectResource {
                 'resources' => &$resources
             )
         );
+
+        $resources_injector = new ResourcesInjector();
+        $resources_injector->declareProjectUserGroupResource($resources, $project);
 
         $project_representation = new ProjectRepresentation();
         $project_representation->build($project, $resources);

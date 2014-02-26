@@ -54,6 +54,19 @@ class TestDataBuilder {
     const STATIC_UGROUP_2_ID    = 102;
     const STATIC_UGROUP_2_LABEL = 'static_ugroup_2';
 
+    const DYNAMIC_UGROUP_PROJECT_MEMBERS_ID    = 3;
+    const DYNAMIC_UGROUP_PROJECT_MEMBERS_LABEL = 'ugroup_project_members_name_key';
+    const DYNAMIC_UGROUP_PROJECT_ADMINS_ID     = 4;
+    const DYNAMIC_UGROUP_PROJECT_ADMINS_LABEL  = 'ugroup_project_admins_name_key';
+    const DYNAMIC_UGROUP_FILE_MANAGER_ID       = 11;
+    const DYNAMIC_UGROUP_FILE_MANAGER_LABEL    = 'ugroup_file_manager_admin_name_key';
+    const DYNAMIC_UGROUP_DOCUMENT_TECH_ID      = 12;
+    const DYNAMIC_UGROUP_DOCUMENT_TECH_LABEL   = 'ugroup_document_tech_name_key';
+    const DYNAMIC_UGROUP_DOCUMENT_ADMIN_ID     = 13;
+    const DYNAMIC_UGROUP_DOCUMENT_ADMIN_LABEL  = 'ugroup_document_admin_name_key';
+    const DYNAMIC_UGROUP_WIKI_ADMIN_ID         = 14;
+    const DYNAMIC_UGROUP_WIKI_ADMIN_LABEL      = 'ugroup_wiki_admin_name_key';
+
     const EPICS_TRACKER_ID        = 1;
     const RELEASES_TRACKER_ID     = 2;
     const SPRINTS_TRACKER_ID      = 3;

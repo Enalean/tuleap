@@ -59,6 +59,10 @@ class ProjectTest extends RestBase {
                             'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings',
                             'type' => 'plannings',
                         ),
+                        array(
+                            'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/user_groups',
+                            'type' => 'user_groups',
+                        ),
                     )
                 ),
                 array(
@@ -82,6 +86,10 @@ class ProjectTest extends RestBase {
                             'uri' => 'projects/'.TestDataBuilder::PROJECT_PUBLIC_ID.'/plannings',
                             'type' => 'plannings',
                         ),
+                        array(
+                            'uri' => 'projects/'.TestDataBuilder::PROJECT_PUBLIC_ID.'/user_groups',
+                            'type' => 'user_groups',
+                        ),
                     )
                 ),
                 array(
@@ -104,6 +112,10 @@ class ProjectTest extends RestBase {
                         array(
                             'uri' => 'projects/'.TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID.'/plannings',
                             'type' => 'plannings',
+                        ),
+                        array(
+                            'uri' => 'projects/'.TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID.'/user_groups',
+                            'type' => 'user_groups',
                         ),
                     )
                 )
@@ -137,6 +149,10 @@ class ProjectTest extends RestBase {
                     array(
                         'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings',
                         'type' => 'plannings',
+                    ),
+                    array(
+                        'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/user_groups',
+                        'type' => 'user_groups',
                     ),
                 )
             )
@@ -357,5 +373,62 @@ class ProjectTest extends RestBase {
         $this->assertEquals($third_backlog_item['status'], "Open");
         $this->assertEquals($third_backlog_item['artifact'], array('id' => TestDataBuilder::EPIC_7_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::EPIC_7_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::EPICS_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::EPICS_TRACKER_ID)));
     }
+
+   public function testGETUserGroupsContainingStaticUGroups() {
+        $response = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/user_groups'));
+
+        $expected_result = array(
+
+            0 => array(
+                'id' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID,
+                'uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID,
+                'label' => TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_LABEL,
+                'users_uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID.'/users'
+            ),
+            1 => array(
+                'id' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID,
+                'uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID,
+                'label' => TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_LABEL,
+                'users_uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID.'/users'
+            ),
+            2 => array(
+                'id' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID,
+                'uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID,
+                'label' => 'ugroup_file_manager_admin_name_key',
+                'users_uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID.'/users'
+            ),
+            3 => array(
+                'id' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_DOCUMENT_TECH_ID,
+                'uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_DOCUMENT_TECH_ID,
+                'label' => TestDataBuilder::DYNAMIC_UGROUP_DOCUMENT_TECH_LABEL,
+                'users_uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_DOCUMENT_TECH_ID.'/users'
+            ),
+            4 => array(
+                'id' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_DOCUMENT_ADMIN_ID,
+                'uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_DOCUMENT_ADMIN_ID,
+                'label' => TestDataBuilder::DYNAMIC_UGROUP_DOCUMENT_ADMIN_LABEL,
+                'users_uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_DOCUMENT_ADMIN_ID.'/users'
+            ),
+            5 => array(
+                'id' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID,
+                'uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID,
+                'label' => 'ugroup_wiki_admin_name_key',
+                'users_uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID.'/users'
+            ),
+            6 => array(
+                'id' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID,
+                'uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID,
+                'label' => TestDataBuilder::STATIC_UGROUP_1_LABEL,
+                'users_uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID.'/users'
+            ),
+            7 => array(
+                'id' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_2_ID,
+                'uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_2_ID,
+                'label' => TestDataBuilder::STATIC_UGROUP_2_LABEL,
+                'users_uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_2_ID.'/users'
+            )
+        );
+
+        $this->assertEquals($expected_result, $response->json());
+   }
 }
-?>
