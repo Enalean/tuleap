@@ -26,6 +26,12 @@ handle_upgrade() {
     # Remove existing combined js
     rm -f /usr/share/tuleap/src/www/scripts/combined/*.js
 
+    # Deploy ckeditor.conf
+    ckeditor_conf_file=/etc/apache2/conf.d/tuleap-plugins/ckeditor.conf
+    if [ ! -f "$ckeditor_conf_file" ]; then
+        cp /usr/share/tuleap/src/etc/ckeditor.conf.dist "$ckeditor_conf_file"
+    fi
+
     # Remove soap cache
     rm -f /tmp/wsdl-*
 }

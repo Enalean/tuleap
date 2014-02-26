@@ -67,7 +67,6 @@ class Combined {
             '/scripts/codendi/DropDownPanel.js',
             '/scripts/codendi/colorpicker.js',
             '/scripts/autocomplete.js',
-            '/usr/share/ckeditor/ckeditor.js',
             '/scripts/textboxlist/multiselect.js',
             '/scripts/tablekit/tablekit.js',
             '/scripts/lytebox/lytebox.js',
@@ -138,9 +137,13 @@ class Combined {
     public function generate() {
         foreach($this->getCombinedScripts() as $script) {
             $file = $this->getSourceDir($script);
-            file_put_contents($this->getDestinationDir() . '/codendi-'. $_SERVER['REQUEST_TIME'] .'.js',
-                              file_get_contents($file). PHP_EOL,
-                              FILE_APPEND);
+            if (is_file($file)) {
+                file_put_contents(
+                    $this->getDestinationDir() . '/codendi-'. $_SERVER['REQUEST_TIME'] .'.js',
+                    file_get_contents($file). PHP_EOL,
+                    FILE_APPEND
+                );
+            }
         }
     }
     
@@ -165,7 +168,7 @@ class Combined {
                 $auto_generate = false;
                 foreach($this->getCombinedScripts() as $script) {
                     $file = $this->getSourceDir($script);
-                    if (filemtime($file) > $date) {
+                    if ($file && filemtime($file) > $date) {
                         $auto_generate = true;
                         break;
                     }
