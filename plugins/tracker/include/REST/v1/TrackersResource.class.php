@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\REST\v1;
 
 use \Tuleap\REST\ProjectAuthorization;
+use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use \Luracast\Restler\RestException;
 use \Tracker_REST_TrackerRestBuilder;
 use \Tuleap\Tracker\REST\ReportRepresentation;
@@ -99,15 +100,13 @@ class TrackersResource {
      * @url GET {id}/tracker_reports
      *
      * @param int $id Id of the tracker
-     * @param int $limit  Number of elements displayed per page {@from path}
-     * @param int $offset Position of the first element to display {@from path}
+     * @param int $limit  Number of elements displayed per page {@from path}{@min 1}
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
      * @return array {@type Tuleap\Tracker\REST\ReportRepresentation}
      */
-    protected function getReports($id, $limit = self::DEFAULT_LIMIT, $offset = self::DEFAULT_OFFSET) {
-        if (! $this->limitValueIsAcceptable($limit)) {
-            throw new RestException(406, 'Maximum value for limit exceeded');
-        }
+    protected function getReports($id, $limit, $offset = self::DEFAULT_OFFSET) {
+        $this->checkLimitValue($limit);
 
         $user    = UserManager::instance()->getCurrentUser();
         $tracker = $this->getTrackerById($user, $id);
@@ -146,8 +145,10 @@ class TrackersResource {
         Header::allowOptionsGet();
     }
 
-    private function limitValueIsAcceptable($limit) {
-        return $limit <= self::MAX_LIMIT;
+    private function checkLimitValue($limit) {
+        if ($limit > self::MAX_LIMIT) {
+            throw new LimitOutOfBoundsException(self::MAX_LIMIT);
+        }
     }
 }
 
