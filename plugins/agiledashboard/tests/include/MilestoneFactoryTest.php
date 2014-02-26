@@ -316,6 +316,23 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
         $this->assertEqual($milestone, $milestones[0]);
     }
 
+    public function itReturnsMilestonesWithoutPlannedArtifacts() {
+        $artifact         = anArtifact()->withChangesets(array(10,11))->build();
+        $tracker_id       = 7777777;
+        stub($this->planning_tracker)->getId()->returns($tracker_id);
+        $planning         = aPlanning()->withPlanningTracker($this->planning_tracker)->build();
+        $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView($this->user, $tracker_id)->returns(array($artifact));
+        $planning_factory = mock('PlanningFactory');
+
+        $planned_artifacts= new ArtifactNode($artifact);
+        $factory          = $this->newMileStoneFactory($planning_factory, $artifact_factory);
+        stub($factory)->getPlannedArtifacts()->returns($planned_artifacts);
+
+        $milestone       = new Planning_ArtifactMilestone($this->project, $planning, $artifact, null);
+        $milestones      = $factory->getAllMilestonesWithoutPlannedElement($this->user, $planning);
+        $this->assertEqual($milestone, $milestones[0]);
+    }
+
     public function newMileStoneFactory($planning_factory, $artifact_factory) {
         $factory = TestHelper::getPartialMock('Planning_MilestoneFactory', array('getPlannedArtifacts'));
         $factory->__construct($planning_factory, $artifact_factory, mock('Tracker_FormElementFactory'), mock('TrackerFactory'), mock('AgileDashboard_Milestone_MilestoneStatusCounter'));

@@ -270,7 +270,7 @@ class Planning_Controller extends MVC2_PluginController {
             ->canPlanningBeSetInTime($planning->getPlanningTracker());
 
         if (! $set_in_time) {
-            return $this->milestone_factory->getAllMilestones($user, $planning);
+            return $this->milestone_factory->getAllMilestonesWithoutPlannedElement($user, $planning);
         }
 
         switch ($this->request->get('period')) {
