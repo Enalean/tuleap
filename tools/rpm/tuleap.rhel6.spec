@@ -51,7 +51,7 @@ Requires: dejavu-lgc-sans-fonts, dejavu-lgc-sans-mono-fonts, dejavu-lgc-serif-fo
 
 Requires: jpgraph-%{PKG_NAME}
 Requires: htmlpurifier >= 4.5
-Requires: ckeditor >= 4.3.2
+Requires: ckeditor >= 4.3.2
 
 Requires: %{php_base}-pecl-apc
 Requires: curl

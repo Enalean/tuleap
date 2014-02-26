@@ -78,7 +78,7 @@ document.observe('dom:loaded', function () {
     new ProtoCheck();
 });
 
-window.CKEDITOR_BASEPATH = '/scripts/ckeditor/';
+window.CKEDITOR_BASEPATH = '/scripts/ckeditor-4.3.2/';
 
 /**
  * Ajax.Request.abort
