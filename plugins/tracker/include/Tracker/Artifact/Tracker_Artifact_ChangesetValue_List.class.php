@@ -222,8 +222,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         return $artifact_field_value_list_representation;
     }
 
-    private function getRESTBindValue(Tracker_FormElement_Field_List_BindValue $value) {
-        return $value->getId();
+    protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
+        return intval($value->getId());
     }
 
     /**

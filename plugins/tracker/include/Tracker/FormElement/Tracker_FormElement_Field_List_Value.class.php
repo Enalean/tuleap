@@ -99,6 +99,10 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
         return $this->getLabel();
     }
 
+    public function getAPIValue() {
+        return $this->getSoapValue();
+    }
+
     public function getJsonValue() {
         return $this->getId();
     }

@@ -27,11 +27,18 @@ class Tracker_REST_Artifact_ArtifactUpdater {
         $this->artifact_validator = $artifact_validator;
     }
 
-    public function update(PFUser $user, Tracker_Artifact $artifact, array $values, Tuleap\Tracker\REST\ChangesetCommentRepresentation $comment) {
+    public function update(PFUser $user, Tracker_Artifact $artifact, array $values, Tuleap\Tracker\REST\ChangesetCommentRepresentation $comment = null) {
         $this->checkArtifact($user, $artifact);
         $fields_data = $this->artifact_validator->getFieldData($values, $artifact);
 
-        $artifact->createNewChangeset($fields_data, $comment->body, $user, true, $comment->format);
+        $comment_body   = '';
+        $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+        if ($comment) {
+            $comment_body   = $comment->body;
+            $comment_format = $comment->format;
+        }
+
+        $artifact->createNewChangeset($fields_data, $comment_body, $user, true, $comment_format);
     }
 
     private function checkArtifact(PFUser $user, Tracker_Artifact $artifact) {

@@ -100,7 +100,7 @@ class CardsResource {
      * Things to take into account:
      * <ol>
      *  <li>You will get an error (400) if there are no changes in submitted document</li>
-     *  <li>Some fields can be displayed but not modified (perm|tbl|file)</li>
+     *  <li>Please note that "file" fields cannot be modified yet</li>
      *  <li>You can re-use the same document provided by /milestones/:id/cardwall cards
      *      section. Even if it contains more data. The extra data/info will be ignored</li>
      *  <li>You don't need to set all 'values' of the card, you can restrict to the modified ones</li>

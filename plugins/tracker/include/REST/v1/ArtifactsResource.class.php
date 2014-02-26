@@ -115,7 +115,7 @@ class ArtifactsResource {
      * Things to take into account:
      * <ol>
      *  <li>You will get an error (400) if there are no changes in submitted document</li>
-     *  <li>Some fields can be displayed but not modified (perm|tbl|file)</li>
+     *  <li>Please note that "file" fields cannot be modified yet</li>
      *  <li>You can re-use the same document provided by /artifacts/:id route
      *      section. Even if it contains more data. The extra data/info will be ignored</li>
      *  <li>You don't need to set all 'values' of the artifact, you can restrict to the modified ones</li>
@@ -127,7 +127,7 @@ class ArtifactsResource {
      * @param ChangesetCommentRepresentation  $comment   Comment about update {body, format} {@from body}
      *
      */
-    protected function putId($id, array $values, ChangesetCommentRepresentation $comment) {
+    protected function putId($id, array $values, ChangesetCommentRepresentation $comment = null) {
         try {
             $user     = UserManager::instance()->getCurrentUser();
             $artifact = $this->getArtifactById($user, $id);
