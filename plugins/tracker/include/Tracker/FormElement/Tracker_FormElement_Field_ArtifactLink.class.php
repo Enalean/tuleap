@@ -399,8 +399,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $from_aid = null,
         $reverse_artifact_links = false
     ) {
+        $html = '';
 
-        $html = '<h5 class="artifack_link_subtitle">'.$this->getWidgetTitle($reverse_artifact_links).'</h5>';
+        if ($reverse_artifact_links) {
+            $html .= '<button class="btn" id="display-tracker-form-element-artifactlink-reverse">' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_display_reverse') . '</button>';
+            $html .= '<div id="tracker-form-element-artifactlink-reverse" style="display: none">';
+        }
+
+        $html .= '<h5 class="artifack_link_subtitle">'.$this->getWidgetTitle($reverse_artifact_links).'</h5>';
 
         $html_name_new = '';
         $html_name_del = '';
@@ -511,6 +517,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             }
         }
         $html .= '</div>';
+
+        if ($reverse_artifact_links) {
+            $html .= '</div>';
+        }
+
         return $html;
     }
 

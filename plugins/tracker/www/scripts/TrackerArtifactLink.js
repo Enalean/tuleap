@@ -79,7 +79,14 @@ codendi.tracker.artifact.artifactLink = {
             overlay_window.deactivate();
         }
     },
-    
+    showReverseArtifactLinks: function() {
+        $('display-tracker-form-element-artifactlink-reverse').observe('click', function(event) {
+            Event.stop(event);
+
+            this.adjacent('#tracker-form-element-artifactlink-reverse').invoke('show');
+            this.hide();
+        });
+    },
     addTemporaryArtifactLinks: function () {
         if (codendi.tracker.artifact.artifactLinker_currentField) {
         var ids = codendi.tracker.artifact.artifactLinker_currentField.down('input.tracker-form-element-artifactlink-new').value;
@@ -288,6 +295,8 @@ document.observe('dom:loaded', function () {
     });
     
     var artifact_links_values = { };
+
+    codendi.tracker.artifact.artifactLink.showReverseArtifactLinks();
     
     function load_behaviors_in_slow_ways_panel() {
         //links to artifacts load in a new browser tab/window

@@ -995,6 +995,7 @@ plugin_tracker_artifact	formelement_artifactlink_will_have_as_parent	Aura $1 com
 plugin_tracker_artifact	formelement_artifactlink_open_parent	$1 ouvert(es)
 plugin_tracker_artifact	formelement_artifactlink_title	Artefacts référencés par cet artefact
 plugin_tracker_artifact	formelement_artifactlink_reverse_title	Artefacts qui référencent cet artefact
+plugin_tracker_artifact	formelement_artifactlink_display_reverse	Afficher les artefacts qui référencent cet artefact
 
 plugin_tracker_artifact	unable_update	Impossible de mettre à jour l'artefact
 plugin_tracker_artifact	no_changes	Aucun changement pour l'artefact $1
