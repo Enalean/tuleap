@@ -38,7 +38,8 @@ Depends: ${misc:Depends}, ${perl:Depends},
  mysql-client,
  ttf-dejavu,
  openssl,
- curl, tmpreaper, cron
+ curl, tmpreaper, cron,
+ ckeditor
 Recommends: mysql-server
 Suggests: python
 Description: Web-based forge that address all the aspects of product development
