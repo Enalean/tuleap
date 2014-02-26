@@ -67,7 +67,6 @@ class Combined {
             '/scripts/codendi/DropDownPanel.js',
             '/scripts/codendi/colorpicker.js',
             '/scripts/autocomplete.js',
-            Config::get('ckeditor_dir') .'/ckeditor.js',
             '/scripts/textboxlist/multiselect.js',
             '/scripts/tablekit/tablekit.js',
             '/scripts/lytebox/lytebox.js',

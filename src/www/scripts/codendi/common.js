@@ -78,8 +78,6 @@ document.observe('dom:loaded', function () {
     new ProtoCheck();
 });
 
-window.CKEDITOR_BASEPATH = '/scripts/ckeditor-4.3.2/';
-
 /**
  * Ajax.Request.abort
  * extend the prototype.js Ajax.Request object so that it supports an abort method
