@@ -114,7 +114,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
         return $this->fetchArtifact($artifact);
     }
 
-    public function fetchSubmitForOverlay() {
+    public function fetchSubmitForOverlay($submitted_values) {
         return $this->fetchSubmit();
     }
 

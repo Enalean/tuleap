@@ -41,12 +41,34 @@ class Tracker_Artifact_Renderer_CreateInPlaceRenderer{
 
     public function display($artifact_link_id) {
         $artifact_to_link = null;
+        $submitted_values = array();
 
         if ($artifact_link_id) {
             $artifact_to_link = $this->tracker_artifact_factory->getArtifactByid($artifact_link_id);
         }
 
-        $presenter = new Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter($this->tracker, $artifact_to_link);
+        if ($artifact_to_link) {
+            if ($this->isArtifactInParentTracker($artifact_to_link)) {
+                $submitted_values['disable_artifact_link_field'] = true;
+            } else {
+                $submitted_values['disable_artifact_link_field'] = false;
+            }
+        }
+
+        $form_elements = $this->tracker->fetchSubmitNoColumns($artifact_to_link, $submitted_values);
+
+        $presenter = new Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter($this->tracker, $artifact_to_link, $form_elements);
         $this->renderer->renderToPage('create-artifact-modal', $presenter);
+    }
+
+    private function isArtifactInParentTracker(Tracker_Artifact $linked_artifact) {
+        $linked_artifact_tracker_id = $linked_artifact->getTrackerId();
+        $parent_tracker             = $this->tracker->getParent();
+
+        if ($parent_tracker) {
+            return $parent_tracker->getId() == $linked_artifact_tracker_id;
+        }
+
+        return false;
     }
 }

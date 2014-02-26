@@ -113,7 +113,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return '';
     }
 
-    public function fetchSubmitForOverlay() {
+    public function fetchSubmitForOverlay($submitted_values) {
         return '';
     }
 
