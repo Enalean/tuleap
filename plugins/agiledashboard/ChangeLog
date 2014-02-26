@@ -1,3 +1,6 @@
+Version 1.50 - Tuleap 6.11
+    * Fix JS bug on new AD HomePage
+
 Version 1.49 - Tuleap 6.11
     * story #6204 : Loading of AD homepage is faster
 
