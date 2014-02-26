@@ -55,6 +55,9 @@ class Git_GitoliteDriver {
     protected $confFilePath;
     protected $adminPath;
 
+    /** @var Git_GitRepositoryUrlManager */
+    private $url_manager;
+
     public static $permissions_types = array(
         Git::PERM_READ  => ' R  ',
         Git::PERM_WRITE => ' RW ',
@@ -71,7 +74,12 @@ class Git_GitoliteDriver {
      * @param string $adminPath The path to admin folder of gitolite. 
      *                          Default is $sys_data_dir . "/gitolite/admin"
      */
-    public function __construct($adminPath = null, Git_Exec $gitExec = null, GitRepositoryFactory $repository_factory = null) {
+    public function __construct(
+        Git_GitRepositoryUrlManager $url_manager,
+        $adminPath                               = null,
+        Git_Exec $gitExec                        = null,
+        GitRepositoryFactory $repository_factory = null
+    ) {
         if (!$adminPath) {
             $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
         }
@@ -81,6 +89,8 @@ class Git_GitoliteDriver {
             $this->getDao(),
             ProjectManager::instance()
         );
+
+        $this->url_manager = $url_manager;
     }
 
     public function repoFullName(GitRepository $repo, $unix_name) {
@@ -223,7 +233,9 @@ class Git_GitoliteDriver {
      */
     public function fetchMailHookConfig($project, $repository) {
         $conf  = '';
-        $conf .= ' config hooks.showrev = "'. $repository->getPostReceiveShowRev(). '"';
+        $conf .= ' config hooks.showrev = "';
+        $conf .= $repository->getPostReceiveShowRev($this->url_manager);
+        $conf .= '"';
         $conf .= PHP_EOL;
         if ($repository->getNotifiedMails() && count($repository->getNotifiedMails()) > 0) {
             $conf .= ' config hooks.mailinglist = "'. implode(', ', $repository->getNotifiedMails()). '"';

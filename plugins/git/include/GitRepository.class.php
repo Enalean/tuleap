@@ -209,13 +209,13 @@ class GitRepository implements DVCSRepository {
      */
     public function getBackend() {
         if ( empty($this->backend) ) {
+            $url_manager = new Git_GitRepositoryUrlManager(PluginManager::instance()->getPluginByName('git'));
             switch ($this->getBackendType()) {
                 case GitDao::BACKEND_GITOLITE:
-                    $this->backend = new Git_Backend_Gitolite(new Git_GitoliteDriver());
-                    
+                    $this->backend = new Git_Backend_Gitolite(new Git_GitoliteDriver($url_manager));
                     break;
                 default:
-                    $this->backend = Backend::instance('Git','GitBackend');
+                    $this->backend = Backend::instance('Git','GitBackend', array($url_manager));
             }
         }
         return $this->backend;
@@ -583,15 +583,14 @@ class GitRepository implements DVCSRepository {
     }
 
     /**
-     * Returns hooks.showrev string to be used in git confi
+     * Returns hooks.showrev string to be used in git config
      *
      * @return String
      */
-    public function getPostReceiveShowRev() {
-        $url = 'https://'.$GLOBALS['sys_https_host'].
-            '/plugins/git/index.php/'.$this->getProjectId().
-            '/view/'.$this->getId().
-            '/?p='.$this->getName().'.git&a=commitdiff&h=%%H';
+    public function getPostReceiveShowRev(Git_GitRepositoryUrlManager $url_manager) {
+        $url  = 'https://'.$GLOBALS['sys_https_host'];
+        $url .= $url_manager->getRepositoryBaseUrl($this);
+        $url .= '?p='.$this->getName().'.git&a=commitdiff&h=%%H';
 
         $format = 'format:URL:    '.$url.'%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b';
 
@@ -637,7 +636,7 @@ class GitRepository implements DVCSRepository {
      * @deprecated to be removed when we purge gitshell creation from the code  (SystemEvent_GIT_REPO_CREATE)
      * @see GitRepositoryManager::create
      */
-    public function create() {        
+    public function create() {
         $this->getBackend()->createReference($this);
     }
 
@@ -864,8 +863,8 @@ class GitRepository implements DVCSRepository {
     /**
      * @return string html <a href="/path/to/repo">repo/name</a>
      */
-    public function getHTMLLink() {
-        $href  = GIT_BASE_URL .'/index.php/'. $this->getProjectId() .'/view/'. $this->getId() .'/';
+    public function getHTMLLink(Git_GitRepositoryUrlManager $url_manager) {
+        $href  = $url_manager->getRepositoryBaseUrl($this);
         $label = $this->getName();
         return '<a href="'. $href .'">'. $label .'</a>';
     }
@@ -873,8 +872,8 @@ class GitRepository implements DVCSRepository {
     /**
      * @return string html <a href="/path/to/repo">name</a>
      */
-    public function getBasenameHTMLLink() {
-        $href  = GIT_BASE_URL .'/index.php/'. $this->getProjectId() .'/view/'. $this->getId() .'/';
+    public function getBasenameHTMLLink(Git_GitRepositoryUrlManager $url_manager) {
+        $href  = $url_manager->getRepositoryBaseUrl($this);
         $label = basename($this->getName());
         return '<a href="'. $href .'">'. $label .'</a>';
     }

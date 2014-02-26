@@ -101,6 +101,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
 
     public function itAddsTheDescriptionToTheConfFile() {
         $driver = new Git_GitoliteDriver(
+            $this->url_manager,
             $this->_glAdmDir,
             $this->gitExec,
             $this->repository_factory
@@ -144,6 +145,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
     
     public function itReplacesNewlinesBySpaces() {
         $driver = new Git_GitoliteDriver(
+            $this->url_manager,
             $this->_glAdmDir,
             $this->gitExec,
             $this->repository_factory
@@ -192,6 +194,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
     // 5 has pimped perms
     public function testDumpProjectRepoPermissions() {
         $driver = new Git_GitoliteDriver(
+            $this->url_manager,
             $this->_glAdmDir,
             $this->gitExec,
             $this->repository_factory
@@ -251,6 +254,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
 
     public function testRewindAccessRightsToGerritUserWhenRepoIsMigratedToGerrit() {
         $driver = new Git_GitoliteDriver(
+            $this->url_manager,
             $this->_glAdmDir,
             $this->gitExec,
             $this->repository_factory

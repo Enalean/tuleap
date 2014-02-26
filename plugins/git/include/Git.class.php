@@ -99,6 +99,9 @@ class Git extends PluginController {
     /** @var GitPermissionsManager */
     private $permissions_manager;
 
+    /** @var Git_GitRepositoryUrlManager */
+    private $url_manager;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -113,7 +116,8 @@ class Git extends PluginController {
         Codendi_Request $request,
         Git_Driver_Gerrit_ProjectCreator $project_creator,
         Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
-        GitPermissionsManager $permissions_manager
+        GitPermissionsManager $permissions_manager,
+        Git_GitRepositoryUrlManager $url_manager
     ) {
         parent::__construct($user_manager, $request);
 
@@ -130,6 +134,7 @@ class Git extends PluginController {
         $this->template_factory         = $template_factory;
         $this->permissions_manager      = $permissions_manager;
         $this->plugin                   = $plugin;
+        $this->url_manager              = $url_manager;
 
         $matches = array();
 
@@ -164,8 +169,12 @@ class Git extends PluginController {
         $this->permittedActions = array();
     }
 
+    protected function instantiateView() {
+        return new GitViews($this, new Git_GitRepositoryUrlManager($this->getPlugin()));
+    }
+
     private function routeUsingFriendlyURLs() {
-        if (! $this->friendlyUrlsAreActivated()) {
+        if (! $this->getPlugin()->areFriendlyUrlsActivated()) {
             return;
         }
 
@@ -222,20 +231,16 @@ class Git extends PluginController {
             return;
         }
 
-        if (! $this->friendlyUrlsAreActivated()) {
+        if (! $this->getPlugin()->areFriendlyUrlsActivated()) {
             return;
         }
 
         $project            = $this->projectManager->getProject($group_id);
         $repo               = $this->factory->getRepositoryById($repo_id);
         $request_parameters = $request_args ? '?'.$request_args : '';
-        $redirecting_url    = '/plugins/git/'.$project->getUnixName().'/'.$repo->getName().$request_parameters;
+        $redirecting_url    = '/plugins/git/'.$project->getUnixName().'/'.$repo->getFullName().$request_parameters;
 
         header("Location: $redirecting_url", TRUE, 301);
-    }
-
-    private function friendlyUrlsAreActivated() {
-        return (bool) $this->getPlugin()->getConfigurationParameter('git_use_friendly_urls');
     }
 
     public function setPermissionsManager(GitPermissionsManager $permissions_manager) {
@@ -798,7 +803,8 @@ class Git extends PluginController {
             $this->project_creator,
             $this->template_factory,
             $this->projectManager,
-            $this->permissions_manager
+            $this->permissions_manager,
+            $this->url_manager
         );
     }
 

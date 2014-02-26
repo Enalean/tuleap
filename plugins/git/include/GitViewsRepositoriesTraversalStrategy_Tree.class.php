@@ -27,15 +27,19 @@ require_once 'html.php';
 class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTraversalStrategy {
     private $view;
     private $lastPushes;
+
+    /** @var Git_GitRepositoryUrlManager */
+    private $url_manager;
     
     /**
      * Constructor
      *
      * @param GitViews $view The GitViews
      */
-    public function __construct($lastPushes) {
+    public function __construct($lastPushes, Git_GitRepositoryUrlManager $url_manager) {
         parent::__construct();
-        $this->lastPushes = $lastPushes;
+        $this->lastPushes  = $lastPushes;
+        $this->url_manager = $url_manager;
     }
     
     /**
@@ -144,8 +148,8 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
     
     protected function fetchGitRepositoryRow(GitRepository $repository, $name, $depth) {
         $trclass     = 'boxitem';
-        $label       = $repository->getBasenameHTMLLink();
 
+        $label       = $repository->getBasenameHTMLLink($this->url_manager);
         $description = $repository->getDescription();
         
         $lastPush    = '&nbsp;';

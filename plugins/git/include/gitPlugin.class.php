@@ -662,7 +662,7 @@ class GitPlugin extends Plugin {
             $params['logger'],
             $this->getGitoliteAdminPath()
         );
-        $gitolite_driver = new Git_GitoliteDriver();
+        $gitolite_driver = new Git_GitoliteDriver($this->getGitRepositoryUrlManager());
 
         $gitolite_driver->checkAuthorizedKeys();
         $gitgc->cleanUpGitoliteAdminWorkingCopy();
@@ -696,7 +696,7 @@ class GitPlugin extends Plugin {
         if (!empty($params['formatter'])) {
             include_once('GitBackend.class.php');
             $formatter  = $params['formatter'];
-            $gitBackend = Backend::instance('Git','GitBackend');
+            $gitBackend = Backend::instance('Git','GitBackend', array($this->getGitRepositoryUrlManager()));
             echo $gitBackend->getBackendStatistics($formatter);
         }
     }
@@ -1009,7 +1009,8 @@ class GitPlugin extends Plugin {
             HTTPRequest::instance(),
             $this->getProjectCreator(),
             new Git_Driver_Gerrit_Template_TemplateFactory(new Git_Driver_Gerrit_Template_TemplateDao()),
-            new GitPermissionsManager()
+            new GitPermissionsManager(),
+            $this->getGitRepositoryUrlManager()
         );
     }
 
@@ -1155,5 +1156,18 @@ class GitPlugin extends Plugin {
                 $params['ugroupsMapping']
         );
     }
+
+    /**
+     * @return boolean true if friendly URLs have been activated
+     */
+    public function areFriendlyUrlsActivated() {
+        return (bool) $this->getConfigurationParameter('git_use_friendly_urls');
+    }
+
+    /**
+     * @return Git_GitRepositoryUrlManager
+     */
+    private function getGitRepositoryUrlManager() {
+        return new Git_GitRepositoryUrlManager($this);
+    }
 }
-?>

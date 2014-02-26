@@ -57,7 +57,11 @@ class Git_GitoliteDriver_PermissionsTest extends TuleapTestCase {
         $this->repository_factory = mock('GitRepositoryFactory');
 
         mkdir($this->admin_dir);
-        $this->driver     = new Git_GitoliteDriver($this->admin_dir, mock('Git_Exec'), $this->repository_factory);
+
+        $git_plugin  = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
+        $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
+
+        $this->driver     = new Git_GitoliteDriver($url_manager, $this->admin_dir, mock('Git_Exec'), $this->repository_factory);
         
     }
 

@@ -66,6 +66,9 @@ class GitActions extends PluginActions {
     /** @var GitPermissionsManager */
     private $git_permissions_manager;
 
+    /** @var Git_GitRepositoryUrlManager */
+    private $url_manager;
+
     /**
      *
      * @param Git $controller
@@ -91,7 +94,8 @@ class GitActions extends PluginActions {
         Git_Driver_Gerrit_ProjectCreator $project_creator,
         Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
         ProjectManager $project_manager,
-        GitPermissionsManager $git_permissions_manager
+        GitPermissionsManager $git_permissions_manager,
+        Git_GitRepositoryUrlManager $url_manager
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager = $system_event_manager;
@@ -104,6 +108,7 @@ class GitActions extends PluginActions {
         $this->template_factory         = $template_factory;
         $this->project_manager          = $project_manager;
         $this->git_permissions_manager  = $git_permissions_manager;
+        $this->url_manager              = $url_manager;
     }
 
     protected function getText($key, $params = array()) {
@@ -131,7 +136,7 @@ class GitActions extends PluginActions {
                 $c->addInfo($this->getText('actions_delete_backup', array($repository->getFullName())).' : '.$c->getPlugin()->getConfigurationParameter('git_backup_dir'));
             } else {
                 $this->addError('backend_delete_haschild_error');
-                $this->redirectToRepo($projectId, $repositoryId);
+                $this->redirectToRepo($repository);
                 return false;
             }
         } else {
@@ -150,7 +155,7 @@ class GitActions extends PluginActions {
         $projectId  = intval( $projectId );
 
         try {
-            $backend    = new Git_Backend_Gitolite(new Git_GitoliteDriver());
+            $backend    = new Git_Backend_Gitolite(new Git_GitoliteDriver($this->url_manager));
             $repository = new GitRepository();
             $repository->setBackend($backend);
             $repository->setDescription(GitRepository::DEFAULT_DESCRIPTION);
@@ -159,7 +164,7 @@ class GitActions extends PluginActions {
             $repository->setName($repositoryName);
 
             $this->manager->create($repository, $backend);
-            $this->redirectToRepo($projectId, $repository->getId());
+            $this->redirectToRepo($repository);
         } catch (Exception $exception) {
             $controller->addError($exception->getMessage());
         }
@@ -612,7 +617,7 @@ class GitActions extends PluginActions {
         }
         if (empty($repoAccess) && empty($repoDescription)) {
             $this->addError('actions_params_error');
-            $this->redirectToRepo($projectId, $repoId);
+            $this->redirectToRepo($repository);
             return false;
         }
 
@@ -692,8 +697,8 @@ class GitActions extends PluginActions {
     }
 
     public static function isNameAvailable($newName, &$error) {
-        $b1 = new Git_Backend_Gitolite(new Git_GitoliteDriver());
-        $b2 = Backend::instance('Git','GitBackend');
+        $b1 = new Git_Backend_Gitolite(new Git_GitoliteDriver($this->url_manager));
+        $b2 = Backend::instance('Git','GitBackend', array($this->url_manager));
         if (!$b1->isNameAvailable($newName) && !$b2->isNameAvailable($newName)) {
             $error = $GLOBALS['Language']->getText('plugin_git', 'actions_name_not_available');
             return false;
@@ -778,8 +783,8 @@ class GitActions extends PluginActions {
         }
     }
 
-    private function redirectToRepo($projectId, $repoId) {
-        $this->getController()->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
+    private function redirectToRepo(GitRepository $repository) {
+        $this->getController()->redirect($this->url_manager->getRepositoryBaseUrl($repository));
     }
 
     private function addError($error_key) {

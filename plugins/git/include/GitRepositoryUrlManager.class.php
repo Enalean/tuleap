@@ -17,27 +17,27 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * Rename project in gitolite configuration
  */
- 
-require_once 'pre.php';
-require_once dirname(__FILE__).'/../include/Git_GitoliteDriver.class.php';
-require_once dirname(__FILE__).'/../include/Git_GitRepositoryUrlManager.class.php';
 
-if ($argc !== 3) {
-    echo "Usage: ".$argv[0]." oldname newname".PHP_EOL;
-    exit(1);
+class Git_GitRepositoryUrlManager {
+
+    /** @var GitPlugin  */
+    private $git_plugin;
+
+    public function __construct(GitPlugin $git_plugin) {
+        $this->git_plugin = $git_plugin;
+    }
+
+    /**
+     * @param GitRepository $repository
+     * @return string the base url to access the git repository regarding plugin configuration
+     */
+    public function getRepositoryBaseUrl(GitRepository $repository) {
+
+        if ($this->git_plugin->areFriendlyUrlsActivated()) {
+            return GIT_BASE_URL .'/'. $repository->getProject()->getUnixName() .'/'. $repository->getFullName();
+        } else {
+            return GIT_BASE_URL .'/index.php/'. $repository->getProjectId() .'/view/'. $repository->getId() .'/';
+        }
+    }
 }
-
-$url_manager = new Git_GitRepositoryUrlManager(PluginManager::instance()->getPluginByName('git'));
-$driver      = new Git_GitoliteDriver($url_manager);
-if ($driver->renameProject($argv[1], $argv[2])) {
-    echo "Rename done!\n";
-    exit(0);
-} else {
-    echo "*** ERROR: Fail to rename project ".$argv[1]." into ".$argv[2]." gitolite repositories".PHP_EOL;
-    exit(1);
-}
-
-?>

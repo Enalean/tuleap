@@ -139,6 +139,9 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
     protected function getGit($request, $factory, $template_factory = null) {
         $template_factory = $template_factory?$template_factory:$this->template_factory;
 
+        $git_plugin  = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
+        $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
+
         $git = partial_mock('Git',
                 array('_informAboutPendingEvents', 'addAction', 'addView', 'addError', 'checkSynchronizerToken', 'redirect'),
                 array(
@@ -155,7 +158,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                     aRequest()->with('group_id', $this->group_id)->build(),
                     $this->project_creator,
                     $template_factory,
-                    $this->git_permissions_manager
+                    $this->git_permissions_manager,
+                    $url_manager
                 )
             );
         $git->setRequest($request);

@@ -37,6 +37,9 @@ class GitBackendTest extends UnitTestCase {
     public function setUp() {
         $this->_globals = $GLOBALS;
         $this->fixturesPath = dirname(__FILE__).'/_fixtures';
+
+        $git_plugin        = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
+        $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin);
     }
 
     public function tearDown() {
@@ -100,6 +103,7 @@ class GitBackendTest extends UnitTestCase {
         $driver->expectOnce('setConfig', array('/var/lib/codendi/gitroot/prj/repo.git', 'hooks.showrev', "t=%s; git show --name-status --pretty='format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=repo.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' \$t"));
 
         $backend = new GitBackendTestVersion($this);
+        $backend->setUp($this->url_manager);
         $backend->setGitRootPath(Git_Backend_Interface::GIT_ROOT_PATH);
         $backend->setReturnValue('getDriver', $driver);
 
@@ -132,6 +136,7 @@ class GitBackendTest extends UnitTestCase {
         $driver->expectOnce('setConfig', array('/var/lib/codendi/gitroot/prj/repo.git', 'hooks.showrev', "t=%s; git show --name-status --pretty='format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=repo.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' \$t"));
 
         $backend = new GitBackend4SetUp($this);
+        $backend->setUp($this->url_manager);
         $backend->setGitRootPath(Git_Backend_Interface::GIT_ROOT_PATH);
         $backend->setReturnValue('getDriver', $driver);
         $backend->setReturnValue('getDao', $dao);
