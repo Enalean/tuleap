@@ -37,6 +37,13 @@ class UserGroupResource {
 
     const MAX_LIMIT = 50;
 
+    /** @var UGroupManager */
+    private $ugroup_manager;
+
+    public function __construct() {
+        $this->ugroup_manager = new UGroupManager();
+    }
+
     /**
      * Get a user_group
      *
@@ -56,13 +63,16 @@ class UserGroupResource {
      */
     protected function getId($id) {
         $this->checkIdIsWellFormed($id);
+
         list($project_id, $ugroup_id) = explode('_', $id);
+
         $this->isGroupViewable($ugroup_id);
         $this->checkUserGroupIdExists($ugroup_id);
-
         $this->userCanSeeUserGroups($project_id);
+
+        $ugroup                = $this->ugroup_manager->getById($ugroup_id);
         $ugroup_representation = new UserGroupRepresentation();
-        $ugroup_representation->build($project_id, $ugroup_id);
+        $ugroup_representation->build($project_id, $ugroup);
         $this->sendAllowHeadersForUserGroup();
 
         return $ugroup_representation;

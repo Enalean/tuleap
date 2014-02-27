@@ -461,7 +461,7 @@ class ProjectResource {
 
         foreach ($ugroups as $ugroup) {
             $representation = new UserGroupRepresentation();
-            $representation->build($project_id, $ugroup->getId());
+            $representation->build($project_id, $ugroup);
             $user_groups[] = $representation;
         }
 

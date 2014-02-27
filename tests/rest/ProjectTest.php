@@ -394,7 +394,7 @@ class ProjectTest extends RestBase {
             2 => array(
                 'id' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID,
                 'uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID,
-                'label' => 'ugroup_file_manager_admin_name_key',
+                'label' => TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_LABEL,
                 'users_uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID.'/users'
             ),
             3 => array(
@@ -412,7 +412,7 @@ class ProjectTest extends RestBase {
             5 => array(
                 'id' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID,
                 'uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID,
-                'label' => 'ugroup_wiki_admin_name_key',
+                'label' => TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_LABEL,
                 'users_uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID.'/users'
             ),
             6 => array(

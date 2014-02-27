@@ -18,9 +18,10 @@
  */
 
 namespace Tuleap\Project\REST;
-use \UGroupManager;
+use \UGroup;
 
 class UserGroupRepresentation {
+
     const ROUTE = 'user_groups';
     /**
      * @var int
@@ -43,15 +44,10 @@ class UserGroupRepresentation {
     public $users_uri;
 
 
-    public function build($project_id, $ugroup_id) {
-        $this->id        = $project_id . '_' . $ugroup_id;
+    public function build($project_id, UGroup $ugroup) {
+        $this->id        = $project_id . '_' . $ugroup->getId();
         $this->uri       = UserGroupRepresentation::ROUTE . '/' . $this->id ;
-        $this->label     = $this->getLabel($project_id, $ugroup_id);
+        $this->label     = $ugroup->getNormalizedName();
         $this->users_uri = self::ROUTE . '/'. $this->id .'/users';
-    }
-
-    private function getLabel($project_id, $ugroup_id) {
-        $ugroup_manager = new UGroupManager();
-        return $ugroup_manager->getLabel($project_id, $ugroup_id);
     }
 }
