@@ -116,6 +116,15 @@ class UGroupManager {
         return null;
     }
 
+    public function getLabel($group_id, $ugroup_id) {
+        $row = $this->getDao()->searchNameByGroupIdAndUGroupId($group_id, $ugroup_id)->getRow();
+        if (! $row) {
+            return '';
+        }
+
+        return $row['name'];
+    }
+
     /**
      * Return all UGroups the user belongs to
      *

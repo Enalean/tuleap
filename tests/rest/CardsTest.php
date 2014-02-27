@@ -27,7 +27,7 @@ class CardsTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_NAME),
+            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
@@ -38,7 +38,7 @@ class CardsTest extends RestBase {
     }
 
     public function testPUTCardsWithId() {
-        $card_id        = TestDataBuilder::SPRINT_ARTIFACT_ID .'_7';
+        $card_id        = TestDataBuilder::SPRINT_ARTIFACT_ID .'_'.TestDataBuilder::STORY_1_ARTIFACT_ID;
         $test_label     = "Ieatlaughingcow";
         $test_column_id = 2;
 
@@ -86,7 +86,7 @@ class CardsTest extends RestBase {
     }
 
     public function testOPTIONSCardsWithId() {
-        $response = $this->getResponse($this->client->options('cards/2_7'));
+        $response = $this->getResponse($this->client->options('cards/'.TestDataBuilder::SPRINT_ARTIFACT_ID .'_'.TestDataBuilder::STORY_1_ARTIFACT_ID));
         $this->assertEquals(array('OPTIONS', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
@@ -94,6 +94,6 @@ class CardsTest extends RestBase {
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testOPTIONSCardsOnArtifactNotOnACardwall() {
-        $this->getResponse($this->client->options('cards/1_10'));
+        $this->getResponse($this->client->options('cards/'.TestDataBuilder::RELEASE_ARTIFACT_ID .'_'.TestDataBuilder::STORY_4_ARTIFACT_ID));
     }
 }

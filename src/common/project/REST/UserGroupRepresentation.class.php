@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,23 +18,36 @@
  */
 
 namespace Tuleap\Project\REST;
+use \UGroup;
 
-use \Project;
+class UserGroupRepresentation {
 
-class ProjectResourceReference {
-
+    const ROUTE = 'user_groups';
     /**
-     * @var string The type of the resource
+     * @var int
      */
-    public $type;
+    public $id;
 
     /**
-     * @var string URI of the project resource
+     * @var String
      */
     public $uri;
 
-    public function build(Project $project, $resource_type) {
-        $this->type = $resource_type;
-        $this->uri  = ProjectRepresentation::ROUTE . '/' . $project->getId() . '/' . $resource_type;
+    /**
+     * @var String
+     */
+    public $label;
+
+    /**
+     * @var String
+     */
+    public $users_uri;
+
+
+    public function build($project_id, UGroup $ugroup) {
+        $this->id        = $project_id . '_' . $ugroup->getId();
+        $this->uri       = UserGroupRepresentation::ROUTE . '/' . $this->id ;
+        $this->label     = $ugroup->getNormalizedName();
+        $this->users_uri = self::ROUTE . '/'. $this->id .'/users';
     }
 }

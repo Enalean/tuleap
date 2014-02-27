@@ -19,6 +19,7 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use \Tuleap\REST\TokenAuthentication;
 use \Tuleap\REST\ProjectAuthorization;
 use \Tuleap\REST\Header;
 use \Luracast\Restler\RestException;
@@ -518,6 +519,9 @@ class MilestoneResource {
      * @return \Tuleap\Tracker\REST\Artifact\BurndownRepresentation
      */
     public function getBurndown($id) {
+        $auth = new TokenAuthentication();
+        $auth->__isAllowed();
+
         $burndown = null;
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN,

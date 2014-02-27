@@ -536,6 +536,28 @@ class ProjectManager {
     }
 
     /**
+     * @param PFUser $user
+     * @param int $offset
+     * @param int $limit
+     * @return Project[]
+     */
+    public function getMyAndPublicProjectsForREST(PFUser $user, $offset, $limit) {
+        return $this->_getDao()
+            ->getMyAndPublicProjectsForREST($user, $offset, $limit)
+            ->instanciateWith(array($this, 'getProjectFromDbRow'));
+    }
+
+    /**
+     * @param PFUser $user
+     * @return int
+     */
+    public function countMyAndPublicProjectsForREST(PFUser $user) {
+        $results = $this->_getDao()->countMyAndPublicProjectsForREST($user)->getRow();
+
+        return $results['count_projects'];
+    }
+
+    /**
      * @param int $group_id
      * @param int $parent_group_id
      * @return Boolean

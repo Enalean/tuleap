@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,9 @@ namespace Tuleap\REST;
 use Luracast\Restler\Restler;
 use \Tuleap\Project\REST\ProjectRepresentation;
 use \Tuleap\Token\REST\TokenRepresentation;
+use \Tuleap\Project\REST\UserGroupRepresentation;
+use \Tuleap\Project\REST\ProjectResourceReference;
+use \Project;
 
 /**
  * Inject core resources into restler
@@ -29,7 +32,15 @@ use \Tuleap\Token\REST\TokenRepresentation;
 class ResourcesInjector {
 
     public function populate(Restler $restler) {
-        $restler->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource', ProjectRepresentation::ROUTE);
-        $restler->addAPIClass('\\Tuleap\\Token\\REST\\TokenResource',     TokenRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource',   ProjectRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\Token\\REST\\TokenResource',       TokenRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\Project\\REST\\UserGroupResource', UserGroupRepresentation::ROUTE);
+    }
+
+    public function declareProjectUserGroupResource(array &$resources, Project $project) {
+        $resource_reference = new ProjectResourceReference();
+        $resource_reference->build($project, UserGroupRepresentation::ROUTE);
+
+        $resources[] = $resource_reference;
     }
 }

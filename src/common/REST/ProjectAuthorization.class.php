@@ -25,16 +25,31 @@ use \URLVerification;
 use \Luracast\Restler\RestException;
 use \Project_AccessProjectNotFoundException;
 use \Project_AccessException;
+use \Project_AccessNotAdminException;
 
 class ProjectAuthorization {
 
     public static function userCanAccessProject(PFUser $user, Project $project) {
-         try {
+        try {
             $url_verification = new URLVerification();
             $url_verification->userCanAccessProject($user, $project);
             return true;
         } catch (Project_AccessProjectNotFoundException $exception) {
             throw new RestException(404);
+        } catch (Project_AccessException $exception) {
+            throw new RestException(403, $exception->getMessage());
+        }
+    }
+
+    public static function userCanAccessProjectAndIsProjectAdmin(PFUser $user, Project $project) {
+        try {
+            $url_verification = new URLVerification();
+            $url_verification->userCanAccessProjectAndIsProjectAdmin($user, $project);
+            return true;
+        } catch (Project_AccessProjectNotFoundException $exception) {
+            throw new RestException(404);
+        } catch (Project_AccessNotAdminException $exception) {
+            throw new RestException(403, $exception->getMessage());
         } catch (Project_AccessException $exception) {
             throw new RestException(403, $exception->getMessage());
         }

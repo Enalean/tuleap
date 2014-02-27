@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -139,9 +139,7 @@ class CardsResource {
 
     private function getSingleCard(PFUser $user, $id) {
         try {
-            if (strpos($id, '_') == false) {
-                throw new RestException(400, 'Invalid id format, must be of form planningid_artifactid');
-            }
+            $this->checkIdIsWellFormed($id);
             list($planning_id, $artifact_id) = explode('_', $id);
             $single_card = $this->single_card_builder->getSingleCard($user, $artifact_id, $planning_id);
             if ($single_card->getArtifact()->userCanView($user)) {
@@ -157,5 +155,24 @@ class CardsResource {
             throw new RestException(404, $exception->getMessage());
         }
         throw new RestException(404);
+    }
+
+    /**
+     * Checks if the given id is well formed (format: planningid_artifactid)
+     *
+     * @param string $id Id of the card (format: planningId_artifactId)
+     *
+     * @return boolean
+     *
+     * @throws 400
+     */
+    private function checkIdIsWellFormed($id) {
+        $regexp = '/^[0-9]+_[0-9]+$/';
+
+        if (! preg_match($regexp, $id)) {
+            throw new RestException(400, 'Invalid id format, format must be: planningid_artifactid');
+        }
+
+        return true;
     }
 }

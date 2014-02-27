@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,23 +19,122 @@
 
 namespace Tuleap\Project\REST\v1;
 
-use ProjectManager;
-use UserManager;
-use EventManager;
-use Event;
+use \ProjectManager;
+use \UserManager;
+use \PFUser;
+use \Project;
+use \EventManager;
+use \Event;
+use \UGroup;
+use \UGroupManager;
 use \Tuleap\Project\REST\ProjectRepresentation;
+use \Tuleap\Project\REST\UserGroupRepresentation;
 use \Tuleap\REST\Header;
+use \Luracast\Restler\RestException;
 use \Tuleap\REST\ProjectAuthorization;
+use \Tuleap\REST\ResourcesInjector;
 
 /**
  * Wrapper for project related REST methods
  */
+
 class ProjectResource {
+
+    const MAX_LIMIT = 50;
+
+    /** @var UserManager */
+    private $user_manager;
+
+    /** @var ProjectManager */
+    private $project_manager;
+
+    /** @var UGroupManager */
+    private $ugroup_manager;
+
+    public function __construct() {
+        $this->user_manager    = UserManager::instance();
+        $this->project_manager = ProjectManager::instance();
+        $this->ugroup_manager  = new UGroupManager();
+    }
+
+    /**
+     * Get projects
+     *
+     * Get the projects list
+     *
+     * @url GET
+     *
+     * @param int $limit  Number of elements displayed per page
+     * @param int $offset Position of the first element to display
+     *
+     * @access protected
+     *
+     * @throws 403
+     * @throws 404
+     * @throws 406
+     *
+     * @return array {@type Tuleap\Project\REST\ProjectRepresentation}
+     */
+    public function get($limit = self::MAX_LIMIT, $offset = 0) {
+        $user = $this->user_manager->getCurrentUser();
+
+        if (! $user) {
+             throw new RestException(403, 'You don\'t have the permissions');
+        }
+        if (! $this->limitValueIsAcceptable($limit)) {
+             throw new RestException(406, 'Maximum value for limit exceeded');
+        }
+
+        $project_representations = array();
+        $projects                = $this->getMyAndPublicProjects($user, $offset, $limit);
+
+        foreach($projects as $project) {
+            $project_representations[] = $this->getProjectRepresentation($project);
+        }
+
+        $this->sendAllowHeadersForProject();
+        $this->sendPaginationHeaders($limit, $offset, $this->countMyAndPublicProjects($user));
+
+        return $project_representations;
+    }
+
+    /**
+     * @url OPTIONS
+     *
+     * @access protected
+     */
+    public function options() {
+        $this->sendAllowHeadersForProject();
+    }
+
+    /**
+     * Get projects which I am member of, public projects (if I'm not a member of
+     * a project but I'm in a static group of this project, this one will not be
+     * retrieve)
+     *
+     * @return Project[]
+     */
+    private function getMyAndPublicProjects(PFUser $user, $offset, $limit) {
+        return $this->project_manager->getMyAndPublicProjectsForREST($user, $offset, $limit);
+    }
+
+    /**
+     * Count projects which I am member of, public projects (if I'm not a member of
+     * a project but I'm in a static group of this project, this one will not be
+     * retrieve)
+     *
+     * @return int
+     */
+    private function countMyAndPublicProjects(PFUser $user) {
+        return $this->project_manager->countMyAndPublicProjectsForREST($user);
+    }
 
     /**
      * Get project
      *
      * Get the definition of a given project
+     *
+     * @url GET {id}
      *
      * @param int $id Id of the project
      *
@@ -46,24 +145,9 @@ class ProjectResource {
      *
      * @return Tuleap\Project\REST\ProjectRepresentation
      */
-    public function get($id) {
-        $project = $this->getProject($id);
-
-        $resources = array();
-        EventManager::instance()->processEvent(
-            Event::REST_PROJECT_RESOURCES,
-            array(
-                'version'   => 'v1',
-                'project'   => $project,
-                'resources' => &$resources
-            )
-        );
+    public function getId($id) {
         $this->sendAllowHeadersForProject();
-
-        $project_representation = new ProjectRepresentation();
-        $project_representation->build($project, $resources);
-
-        return $project_representation;
+        return $this->getProjectRepresentation($this->getProject($id));
     }
 
     /**
@@ -82,23 +166,43 @@ class ProjectResource {
     }
 
     /**
-     * @url OPTIONS
-     */
-    public function options() {
-        Header::allowOptions();
-    }
-
-    /**
      * @throws 403
      * @throws 404
      *
      * @return Project
      */
     private function getProject($id) {
-        $project          = ProjectManager::instance()->getProject($id);
-        $user             = UserManager::instance()->getCurrentUser();
+        $project = $this->project_manager->getProject($id);
+        $user    = $this->user_manager->getCurrentUser();
+
         ProjectAuthorization::userCanAccessProject($user, $project);
         return $project;
+    }
+
+    /**
+     * Get a ProjectRepresentation
+     *
+     * @param Project $project
+     * @return Tuleap\Project\REST\ProjectRepresentation
+     */
+    private function getProjectRepresentation(Project $project) {
+        $resources = array();
+        EventManager::instance()->processEvent(
+            Event::REST_PROJECT_RESOURCES,
+            array(
+                'version'   => 'v1',
+                'project'   => $project,
+                'resources' => &$resources
+            )
+        );
+
+        $resources_injector = new ResourcesInjector();
+        $resources_injector->declareProjectUserGroupResource($resources, $project);
+
+        $project_representation = new ProjectRepresentation();
+        $project_representation->build($project, $resources);
+
+        return $project_representation;
     }
 
     /**
@@ -324,11 +428,69 @@ class ProjectResource {
         return $result;
     }
 
+    private function limitValueIsAcceptable($limit) {
+        return $limit <= self::MAX_LIMIT;
+    }
+
+    /**
+     * Get user_groups
+     *
+     * Get the user_groups of a given project
+     *
+     * @url GET {id}/user_groups
+     *
+     * @param int $id Id of the project
+     *
+     * @return array {@type Tuleap\Project\REST\v1\UserGroupRepresentation}
+     */
+    protected function getUserGroups($id) {
+        $project = $this->getProject($id);
+        $this->userCanSeeUserGroups($id);
+
+        $excluded_ugroups_ids = array(UGroup::NONE, UGroup::ANONYMOUS, Ugroup::REGISTERED);
+        $ugroups              = $this->ugroup_manager->getUGroups($project, $excluded_ugroups_ids);
+        $user_groups          = $this->getUserGroupsRepresentations($ugroups, $id);
+
+        $this->sendAllowHeadersForProject();
+
+        return $user_groups;
+    }
+
+    private function getUserGroupsRepresentations(array $ugroups, $project_id) {
+        $user_groups = array();
+
+        foreach ($ugroups as $ugroup) {
+            $representation = new UserGroupRepresentation();
+            $representation->build($project_id, $ugroup);
+            $user_groups[] = $representation;
+        }
+
+        return $user_groups;
+    }
+
+    /**
+     * @throws 403
+     * @throws 404
+     *
+     * @return boolean
+     */
+    private function userCanSeeUserGroups($project_id) {
+        $project      = $this->project_manager->getProject($project_id);
+        $user         = $this->user_manager->getCurrentUser();
+        ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
+
+        return true;
+    }
+
     private function sendAllowHeadersForProject() {
         Header::allowOptionsGet();
     }
 
     private function sendAllowHeadersForBacklog() {
         Header::allowOptionsGetPut();
+    }
+
+    private function sendPaginationHeaders($limit, $offset, $size) {
+        Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 }

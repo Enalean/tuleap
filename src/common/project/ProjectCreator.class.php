@@ -90,7 +90,7 @@ class ProjectCreator {
     }
 
     protected function create_project($data) {
-        include 'www/project/create_project.php';
+        include_once 'www/project/create_project.php';
         return create_project($data, true);
     }
 

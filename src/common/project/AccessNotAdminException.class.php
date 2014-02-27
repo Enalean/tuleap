@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,24 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Project\REST;
-
-use \Project;
-
-class ProjectResourceReference {
-
-    /**
-     * @var string The type of the resource
-     */
-    public $type;
-
-    /**
-     * @var string URI of the project resource
-     */
-    public $uri;
-
-    public function build(Project $project, $resource_type) {
-        $this->type = $resource_type;
-        $this->uri  = ProjectRepresentation::ROUTE . '/' . $project->getId() . '/' . $resource_type;
+class Project_AccessNotAdminException extends Project_AccessException {
+    public function __construct() {
+        parent::__construct($GLOBALS['Language']->getText('include_exit', 'perm_denied'));
     }
 }

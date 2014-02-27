@@ -27,7 +27,7 @@ class TrackersTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_NAME),
+            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
@@ -77,8 +77,8 @@ class TrackersTest extends RestBase {
         $this->assertEquals($tracker_uri, $tracker['uri']);
         $this->assertEquals('Releases', $tracker['label']);
         $this->assertEquals('rel', $tracker['item_name']);
-        $this->assertEquals(101, $tracker['project']['id']);
-        $this->assertEquals('projects/101', $tracker['project']['uri']);
+        $this->assertEquals(TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, $tracker['project']['id']);
+        $this->assertEquals('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, $tracker['project']['uri']);
         $this->assertArrayHasKey('fields', $tracker);
         $this->assertArrayHasKey('semantics', $tracker);
         $this->assertArrayHasKey('workflow', $tracker);
@@ -125,7 +125,7 @@ class TrackersTest extends RestBase {
     }
 
     private function getReleaseTrackerUri() {
-        $response_plannings = $this->getResponse($this->client->get('projects/101/plannings'))->json();
+        $response_plannings = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings'))->json();
         return $response_plannings[0]['milestone_tracker']['uri'];
     }
 

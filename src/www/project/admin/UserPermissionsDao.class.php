@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,24 +19,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Project\REST;
+class UserPermissionsDao extends DataAccessObject {
 
-use \Project;
+    public function addUserAsProjectAdmin(Project $project, PFUser $user) {
+        $project_id = $this->da->escapeInt($project->getId());
+        $user_id    = $this->da->escapeInt($user->getId());
 
-class ProjectResourceReference {
+        $sql = "UPDATE user_group
+                SET admin_flags = 'A'
+                WHERE group_id = $project_id
+                  AND user_id = $user_id";
 
-    /**
-     * @var string The type of the resource
-     */
-    public $type;
-
-    /**
-     * @var string URI of the project resource
-     */
-    public $uri;
-
-    public function build(Project $project, $resource_type) {
-        $this->type = $resource_type;
-        $this->uri  = ProjectRepresentation::ROUTE . '/' . $project->getId() . '/' . $resource_type;
+        return $this->update($sql);
     }
+
 }

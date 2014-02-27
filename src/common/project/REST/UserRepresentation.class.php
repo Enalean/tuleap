@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,22 +19,41 @@
 
 namespace Tuleap\Project\REST;
 
-use \Project;
+use \PFUser;
+use \Tuleap\REST\JsonCast;
 
-class ProjectResourceReference {
+class UserRepresentation {
+    /**
+     * @var int
+     */
+    public $id;
 
     /**
-     * @var string The type of the resource
+     * @var String
      */
-    public $type;
+    public $email;
 
     /**
-     * @var string URI of the project resource
+     * @var String
      */
-    public $uri;
+    public $real_name;
 
-    public function build(Project $project, $resource_type) {
-        $this->type = $resource_type;
-        $this->uri  = ProjectRepresentation::ROUTE . '/' . $project->getId() . '/' . $resource_type;
+    /**
+     * @var String
+     */
+    public $username;
+
+    /**
+     * @var String
+     */
+    public $ldap_id;
+
+
+    public function build(PFUser $user) {
+        $this->id        = JsonCast::toInt($user->getId());
+        $this->email     = $user->getEmail();
+        $this->real_name = $user->getRealName();
+        $this->username  = $user->getUserName();
+        $this->ldap_id   = $user->getLdapId();
     }
 }
