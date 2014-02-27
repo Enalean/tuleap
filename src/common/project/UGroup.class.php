@@ -50,6 +50,18 @@ class UGroup {
 
     const DYNAMIC_UPPER_BOUNDARY = 100;
 
+    public static $legacy_ugroups = array(
+        self::FILE_MANAGER_ADMIN,
+        self::DOCUMENT_ADMIN,
+        self::DOCUMENT_TECH,
+        self::WIKI_ADMIN,
+        self::TRACKER_ADMIN,
+        self::FORUM_ADMIN,
+        self::NEWS_ADMIN,
+        self::NEWS_EDITOR,
+        self::SVN_ADMIN,
+    );
+
     private $normalized_names = array(
         self::NONE               => 'nobody',
         self::ANONYMOUS          => 'all_users',

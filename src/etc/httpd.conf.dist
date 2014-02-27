@@ -1014,6 +1014,9 @@ NameVirtualHost *:80
  Include conf.d/*.conf
 
  CustomLog logs/access_log common
+ #Uncomment the two following lines in order to display the username newt to the access url
+ #LogFormat "%h %l %{username}n %t \"%r\" %>s %b" common_with_tuleap_unix_username
+ #CustomLog logs/access_log_with_username common_with_tuleap_unix_username
 </VirtualHost>
 
 

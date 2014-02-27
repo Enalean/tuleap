@@ -1,3 +1,11 @@
+Version 0.25 - Tuleap 6.11
+    * story #6202 - define my own group mapping
+story #6039 - restore default permissions
+story #6174 - Duplicate mapping on project clone
+
+Version 0.24 - Tuleap 6.11
+    * story #6049: MediaWiki: switch text from red to blue in the sidebar
+
 Version 0.23 - Tuleap 6.10
     * Request #6089: Fatal error when removing user as project member (MW)
 

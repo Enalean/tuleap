@@ -41,6 +41,10 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
             'name'           => 'reference_md5',
             'description'    => '--reference_md5=<reference_md5> Md5 checksum of the file located in the incoming directory on the server.'
              ));
+        $this->addParam(array(
+            'name'           => 'comment',
+            'description'    => '--comment=<comment>    A comment/description of the uploaded file',
+        ));
     }
     function validate_package_id(&$package_id) {
         if (!$package_id) {
@@ -155,8 +159,8 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
         return true;
     }
     
-	function sort_parameters($p1, $p2) {
-        $order = array('group_id', 'package_id', 'release_id', 'filename', 'type_id', 'processor_id', 'reference_md5', 'is_upload');
+    function sort_parameters($p1, $p2) {
+        $order = array('group_id', 'package_id', 'release_id', 'filename', 'type_id', 'processor_id', 'reference_md5', 'comment', 'is_upload');
         $order_flip = array_flip($order);
         return $order_flip[$p1] > $order_flip[$p2];
     }

@@ -42,7 +42,7 @@ require_once 'pre.php';
 require_once 'plugins_utils.php';
 require_once 'common/user/UserManager.class.php';
 require_once dirname(__FILE__) .'/../include/MediawikiDao.class.php';
-require_once dirname(__FILE__) .'/../include/MediawikiGroupsMapper.class.php';
+require_once dirname(__FILE__) .'/../include/MediawikiUserGroupsMapper.class.php';
 
 sysdebug_lazymode(true);
 
@@ -202,7 +202,7 @@ function TuleapMediawikiAuthentication($user, &$result) {
 }
 
 function manageMediawikiGroupsForUser(User $mediawiki_user, PFUser $tuleap_user, Group $group) {
-    $groups_mapper    = new MediawikiGroupsMapper(new MediawikiDao());
+    $groups_mapper    = new MediawikiUserGroupsMapper(new MediawikiDao());
     $mediawiki_groups = $groups_mapper->defineUserMediawikiGroups($tuleap_user, $group);
 
     foreach ($mediawiki_groups['removed'] as $group_to_remove) {
@@ -219,6 +219,20 @@ function manageMediawikiGroupsForUser(User $mediawiki_user, PFUser $tuleap_user,
 function customizeMediawikiGroupsRights(array $wgGroupPermissions) {
     $wgGroupPermissions['bureaucrat']['userrights'] = false;
     $wgGroupPermissions['*']['createaccount']       = false;
+
+    // In Tuleap it makes no sense to allow anonymous to do anything but READ
+    // http://www.mediawiki.org/wiki/Manual:User_rights
+    $wgGroupPermissions['*']['edit'] = false;
+    $wgGroupPermissions['*']['createpage'] = false;
+    $wgGroupPermissions['*']['createtalk'] = false;
+    $wgGroupPermissions['*']['writeapi'] = false;
+    $wgGroupPermissions['*']['editmyusercss'] = false;
+    $wgGroupPermissions['*']['editmyuserjs'] = false;
+    $wgGroupPermissions['*']['viewmywatchlist'] = false;
+    $wgGroupPermissions['*']['editmywatchlist'] = false;
+    $wgGroupPermissions['*']['viewmyprivateinfo'] = false;
+    $wgGroupPermissions['*']['editmyprivateinfo'] = false;
+    $wgGroupPermissions['*']['editmyoptions'] = false;
 
     return $wgGroupPermissions;
 }

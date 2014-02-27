@@ -209,6 +209,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @param PFUser $user
      * @param type $start_date
      * @param type $duration
+     *
      * @return Tracker_Chart_Data_Burndown
      */
     public function getBurndownData(Tracker_Artifact $artifact, PFUser $user, $start_date, $duration) {
@@ -216,9 +217,26 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         if ($this->doesCapacityFieldExist()) {
             $capacity = $this->getCapacity($artifact);
         }
-        $field         = $this->getBurndownRemainingEffortField($artifact, $user);
         $time_period   = new TimePeriodWithoutWeekEnd($start_date, $duration);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
+
+        $this->addRemainingEffortData($burndown_data, $time_period, $artifact, $user, $start_date);
+
+        return $burndown_data;
+    }
+
+    private function addRemainingEffortData(
+        Tracker_Chart_Data_Burndown $burndown_data,
+        TimePeriod $time_period,
+        Tracker_Artifact $artifact,
+        PFUser $user,
+        $start_date
+    ) {
+        $field = $this->getBurndownRemainingEffortField($artifact, $user);
+        if (! $field) {
+            return;
+        }
+
         $tonight       = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
 
         foreach($time_period->getDayOffsets() as $day_offset) {
@@ -229,8 +247,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                 $burndown_data->addEffortAt($day_offset, $remaining_effort);
             }
         }
-
-        return $burndown_data;
     }
 
     /**

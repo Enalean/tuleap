@@ -32,7 +32,7 @@
 Summary: The Tuleap forge
 Name: %{PKG_NAME}
 Version: @@VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 BuildArch: noarch
 License: GPL
 Group: Development/Tools
@@ -51,6 +51,7 @@ Requires: dejavu-lgc-sans-fonts, dejavu-lgc-sans-mono-fonts, dejavu-lgc-serif-fo
 
 Requires: jpgraph-%{PKG_NAME}
 Requires: htmlpurifier >= 4.5
+Requires: ckeditor >= 4.3.2
 
 Requires: %{php_base}-pecl-apc
 Requires: curl
@@ -85,7 +86,7 @@ Tuleap is a web based application that address all the aspects of product develo
 Summary: Initial setup of the platform
 Group: Development/Tools
 Version: @@VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap, redhat-lsb
 %description install
 This package contains the setup script for the tuleap platform.
@@ -96,7 +97,7 @@ recommanded to uninstall it after.
 Summary: Mailman component for Tuleap
 Group: Development/Tools
 Version: @@CORE_MAILMAN_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap
 Requires: mailman-tuleap
 Provides: tuleap-core-mailman
@@ -107,7 +108,7 @@ Manage dependencies for Tuleap mailman integration
 Summary: Subversion component for Tuleap
 Group: Development/Tools
 Version: @@CORE_SUBVERSION_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap, subversion, mod_dav_svn, subversion-perl, highlight
 Requires: viewvc-tuleap
 %description core-subversion
@@ -117,7 +118,7 @@ Manage dependencies for Tuleap Subversion integration
 Summary: Subversion with mod_perl authentication
 Group: Development/Tools
 Version: 1.0
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap-core-subversion, mod_perl
 %description core-subversion-modperl
 Provides authentication for Subversion component based on mod_perl rather than
@@ -129,7 +130,7 @@ seems to have memory leak issues.
 Summary: CVS component for Tuleap
 Group: Development/Tools
 Version: @@CORE_CVS_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap, xinetd, rcs, cvsgraph, highlight, perl-CGI
 Requires: viewvc-tuleap
 Requires: cvs-tuleap
@@ -144,7 +145,7 @@ Manage dependencies for Tuleap CVS integration
 Summary: ForumML plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_FORUMML_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap, %{php_base}-pear-Mail-mimeDecode %{php_base}-pear-Mail-Mime %{php_base}-pear-Mail-Mbox %{php_base}-pear-Mail
 Requires: tuleap-core-mailman
 Provides: tuleap-plugin-forumml = %{version}
@@ -156,7 +157,7 @@ to send mails through the web interface. It can replace the forums.
 Summary: Git plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: %{name} >= %{version}, git > 1.7.4, %{php_base}-Smarty, gitolite = 2.3.1
 Requires: geshi
 Provides: tuleap-plugin-git = %{version}
@@ -168,7 +169,7 @@ with Tuleap
 Summary: Tuleap plugin for PDF watermarking
 Group: Development/Tools
 Version: @@PLUGIN_DOCMANWATERMARK_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap
 Provides: tuleap-plugin-docmanwatermark = %{version}
 %description plugin-docmanwatermark
@@ -179,7 +180,7 @@ PDF file uploaded in Docman
 Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
 Version: @@PLUGIN_LDAP_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap, %{php_base}-ldap, perl-LDAP, python-ldap
 Provides: tuleap-plugin-ldap = %{version}
 %description plugin-ldap
@@ -190,7 +191,7 @@ authentication, user and group management.
 Summary: Instant Messaging Plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_IM_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 AutoReqProv: no
 Requires: tuleap, openfire, openfire-tuleap-plugins
 #, zlib.i686
@@ -202,7 +203,7 @@ Provides instant messaging capabilities, based on a Jabber/XMPP server.
 Summary: Hudson plugin for Tuleap
 Group: Development/Tools/Building
 Version: @@PLUGIN_HUDSON_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap
 %description plugin-hudson
 Plugin to install the Tuleap Hudson plugin for continuous integration
@@ -211,7 +212,7 @@ Plugin to install the Tuleap Hudson plugin for continuous integration
 Summary: WebDAV plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_WEBDAV_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap
 Requires: %{php_base}-sabredav = 1.4.4
 %description plugin-webdav
@@ -221,7 +222,7 @@ Plugin to access to file releases & docman though WebDAV
 Summary: Insert Remedy tickets using Codex
 Group: Development/Tools
 Version: @@PLUGIN_REQUESTHELP_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap, %{php_base}-pecl-oci8 = 1.4.5
 %description plugin-requesthelp
 Plugin to insert Remedy tickets using Codex (used for ST only)
@@ -231,7 +232,7 @@ AutoReqProv: no
 Summary: Tracker v5 for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_TRACKER_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap, libxslt
 %description plugin-tracker
 New tracker generation for Tuleap.
@@ -240,7 +241,7 @@ New tracker generation for Tuleap.
 Summary: Graphs for Tracker v5
 Group: Development/Tools
 Version: @@PLUGIN_GRAPHONTRACKERS_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap-plugin-tracker >= 0.8.4
 %description plugin-graphontrackers
 Graphs for new tracker generation
@@ -249,7 +250,7 @@ Graphs for new tracker generation
 Summary: Graphs for Tracker v5
 Group: Development/Tools
 Version: @@PLUGIN_CARDWALL_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap-plugin-tracker
 %description plugin-cardwall
 Fancy cardwall output on top of Tracker v5
@@ -258,7 +259,7 @@ Fancy cardwall output on top of Tracker v5
 Summary: Agile dashboard
 Group: Development/Tools
 Version: @@PLUGIN_AGILEDASHBOARD_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap-plugin-tracker, tuleap-plugin-cardwall
 %description plugin-agiledashboard
 Agile Dashboard aims to provide an nice integration of Scrum/Kanban
@@ -268,7 +269,7 @@ tool on top of Tracker.
 Summary: Full-Text Search
 Group: Development/Tools
 Version: @@PLUGIN_FULLTEXTSEARCH_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap
 Requires: %{php_base}-elasticsearch
 %description plugin-fulltextsearch
@@ -278,7 +279,7 @@ Allows documents of the docman to be searched in a full-text manner.
 Summary: Archiving plugin
 Group: Development/Tools
 Version: @@PLUGIN_ARCHIVEDELETEDITEMS_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap
 %description plugin-archivedeleteditems
 Archive deleted items before purging them from filesystem
@@ -287,7 +288,7 @@ Archive deleted items before purging them from filesystem
 Summary: FusionForge Compatibility
 Group: Development/Tools
 Version: @@PLUGIN_FUSIONFORGE_COMPAT_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap
 %description plugin-fusionforge_compat
 Allows some fusionforge plugins to be installed in a Tuleap instance.
@@ -296,7 +297,7 @@ Allows some fusionforge plugins to be installed in a Tuleap instance.
 Summary: Doap
 Group: Development/Tools
 Version: @@PLUGIN_DOAPRDF_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap-plugin-fusionforge_compat
 %description plugin-doaprdf
 This plugin provides DOAP RDF documents for projects on /projects URLs with
@@ -306,7 +307,7 @@ content-negociation (application/rdf+xml).
 Summary: Foaf Profiles
 Group: Development/Tools
 Version: @@PLUGIN_FOAFPROFILES_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap-plugin-fusionforge_compat
 %description plugin-foafprofiles
 This plugin provides FOAFPROFILES for projects user (application/rdf+xml).
@@ -315,7 +316,7 @@ This plugin provides FOAFPROFILES for projects user (application/rdf+xml).
 Summary: Adms.sw
 Group: Development/Tools
 Version: @@PLUGIN_ADMSSW_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap-plugin-doaprdf
 Requires: %{php_base}-pear-HTTP
 %description plugin-admssw
@@ -326,7 +327,7 @@ This plugin provides ADMS.SW additions to the DOAP RDF documents for projects on
 Summary: Mediawiki plugin
 Group: Development/Tools
 Version: @@PLUGIN_MEDIAWIKI_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap-plugin-fusionforge_compat
 Requires: php-mediawiki-tuleap
 %description plugin-mediawiki
@@ -336,7 +337,7 @@ This plugin provides Mediawiki integration in Tuleap.
 Summary: Boomerang plugin
 Group: Development/Tools
 Version: @@PLUGIN_BOOMERANG_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 %description plugin-boomerang
 Allow performances evaluation in Tuleap.
 
@@ -344,7 +345,7 @@ Allow performances evaluation in Tuleap.
 Summary: OpenId consumer plugin
 Group: Development/Tools
 Version: @@PLUGIN_OPENID_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: %{php_base}-openid
 %description plugin-openid
 Connect to Tuleap using an OpenId provider
@@ -353,7 +354,7 @@ Connect to Tuleap using an OpenId provider
 Summary: Proftpd plugin
 Group: Development/Tools
 Version: @@PLUGIN_PROFTPD_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 %description plugin-proftpd
 Control and interfact with Proftpd as FTP server
 
@@ -365,7 +366,7 @@ Control and interfact with Proftpd as FTP server
 Summary: Dawn theme for Tuleap
 Group: Development/Tools
 Version: @@THEME_DAWN_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap
 %description theme-dawn
 Dawn theme for Tuleap
@@ -374,7 +375,7 @@ Dawn theme for Tuleap
 Summary: Savannah theme for Tuleap
 Group: Development/Tools
 Version: @@THEME_SAVANNAH_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap
 %description theme-savannah
 Savannah theme for Tuleap
@@ -383,7 +384,7 @@ Savannah theme for Tuleap
 Summary: STTab theme for Tuleap
 Group: Development/Tools
 Version: @@THEME_STTAB_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap
 %description theme-sttab
 STMicroelectronics theme for Tuleap
@@ -392,7 +393,7 @@ STMicroelectronics theme for Tuleap
 Summary: CodexSTN theme for Tuleap
 Group: Development/Tools
 Version: @@THEME_CODEXSTN_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap
 %description theme-codexstn
 ST-Ericsson theme for Tuleap
@@ -401,7 +402,7 @@ ST-Ericsson theme for Tuleap
 Summary: SteerForge theme for Tuleap
 Group: Development/Tools
 Version: @@THEME_STEERFORGE_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap
 %description theme-steerforge
 SteerForge theme for Tuleap
@@ -410,7 +411,7 @@ SteerForge theme for Tuleap
 Summary: Tuleap theme
 Group: Development/Tools
 Version: @@THEME_TULEAP_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap
 %description theme-tuleap
 Tuleap theme
@@ -419,7 +420,7 @@ Tuleap theme
 Summary: Experimental theme for Tuleap
 Group: Development/Tools
 Version: @@THEME_EXPERIMENTAL_VERSION@@
-Release: 1%{?dist}
+Release: @@RELEASE@@%{?dist}
 Requires: tuleap
 %description theme-experimental
 Experimental theme for Tuleap
@@ -503,6 +504,7 @@ done
 
 # Apache conf dir
 %{__install} -d $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/
+%{__install} src/etc/ckeditor.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/ckeditor.conf
 
 # plugin webdav
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
@@ -840,6 +842,7 @@ fi
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
 %dir %{APP_CACHE_DIR}
 %dir /etc/httpd/conf.d/tuleap-plugins
+%attr(04755,root,root) /etc/httpd/conf.d/tuleap-plugins/ckeditor.conf
 
 # Log dir
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}

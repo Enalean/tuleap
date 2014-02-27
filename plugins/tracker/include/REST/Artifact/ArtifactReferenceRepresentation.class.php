@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\REST\Artifact;
 
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\REST\JsonCast;
+use Exception;
 
 class ArtifactReferenceRepresentation {
     /**

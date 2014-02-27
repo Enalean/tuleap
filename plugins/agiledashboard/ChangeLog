@@ -1,3 +1,15 @@
+Version 1.50 - Tuleap 6.11
+    * Fix JS bug on new AD HomePage
+
+Version 1.49 - Tuleap 6.11
+    * story #6204 : Loading of AD homepage is faster
+
+Version 1.48 - Tuleap 6.11
+    * story #6204 : if only one planning, show the detailed view
+
+Version 1.47 - Tuleap 6.11
+    * Follow-up to story #6009: API REST is no longer called directly in presenter for burndown
+
 Version 1.46 - Tuleap 6.11
     * request #6023 - Days remaining off by one day in the Stand-Up View
 

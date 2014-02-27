@@ -20,13 +20,26 @@
 
 class Planning_Presenter_MilestoneBurndownSummaryPresenter extends Planning_Presenter_MilestoneSummaryPresenterAbstract{
 
+    /** @var Tracker_Chart_Data_Burndown */
+    private $burndown_data;
+
+    public function __construct(
+        Planning_Milestone $milestone,
+        $plugin_path,
+        $has_cardwall,
+        Tracker_Chart_Data_Burndown $burndown_data
+    ) {
+        parent::__construct($milestone, $plugin_path, $has_cardwall);
+
+        $this->burndown_data = $burndown_data;
+    }
+
     public function has_burndown() {
         return true;
     }
 
     public function burndown_data() {
-        $REST_resource = new Tuleap\AgileDashboard\REST\v1\MilestoneResource();
-        return json_encode($REST_resource->getBurndown($this->milestone->getArtifactId()));
+        return $this->burndown_data->getJsonRepresentation();
     }
 }
 ?>

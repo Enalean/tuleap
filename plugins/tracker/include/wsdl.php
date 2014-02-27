@@ -915,4 +915,19 @@ $GLOBALS['server']->register(
     'encoded',
     'Returns history (all changesets and comments) of an artifact.'
 );
+
+$GLOBALS['server']->register(
+    'addSelectBoxValues',
+    array('sessionKey'=>'xsd:string',
+    'tracker_id'=>'xsd:int',
+    'field_id'=>'xsd:int',
+    'values'=>'tns:ArrayOfString',
+    ),
+    array('return'=>'xsd:boolean'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#addSelectBoxValues',
+    'rpc',
+    'encoded',
+    'Add values to Tracker selectBox field'
+);
 ?>

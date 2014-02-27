@@ -395,10 +395,11 @@ class Planning_MilestoneFactory {
     }
 
     /**
-     * Return all open milestone without their content
+     * Returns all open milestone without their content
      *
-     * @param PFUser $user
+     * @param PFUser   $user
      * @param Planning $planning
+     *
      * @return Planning_ArtifactMilestone[]
      */
     public function getAllBareMilestones(PFUser $user, Planning $planning) {
@@ -414,11 +415,10 @@ class Planning_MilestoneFactory {
     /**
      * Loads all open milestones for the given project and planning
      *
-     * @param PFUser $user
-     * @param Project $project
+     * @param PFUser   $user
      * @param Planning $planning
      *
-     * @return Array of \Planning_Milestone
+     * @return Array of Planning_Milestone
      */
     public function getAllMilestones(PFUser $user, Planning $planning) {
         if (! isset($this->cache_all_milestone[$planning->getId()])) {
@@ -427,10 +427,32 @@ class Planning_MilestoneFactory {
         return $this->cache_all_milestone[$planning->getId()];
     }
 
-    private function getAllMilestonesWithoutCaching(PFUser $user, Planning $planning) {
-        $project = $planning->getPlanningTracker()->getProject();
-        $milestones = array();
+    /**
+     * Loads all milestones of a given planning without theirs planned elements
+     *
+     * @param PFUser   $user
+     * @param Planning $planning
+     *
+     * @return Array of Planning_Milestone
+     */
+    public function getAllMilestonesWithoutPlannedElement(PFUser $user, Planning $planning) {
+        $project    = $planning->getPlanningTracker()->getProject();
         $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        $milestones = array();
+
+        foreach ($artifacts as $artifact) {
+            if ($artifact->getLastChangeset()) {
+                $milestones[] = new Planning_ArtifactMilestone($project, $planning, $artifact, null);
+            }
+        }
+        return $milestones;
+    }
+
+    private function getAllMilestonesWithoutCaching(PFUser $user, Planning $planning) {
+        $project    = $planning->getPlanningTracker()->getProject();
+        $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        $milestones = array();
+
         foreach ($artifacts as $artifact) {
             /** @todo: this test is only here if we have crappy data in the db
              * ie. an artifact creation failure that leads to an incomplete artifact.

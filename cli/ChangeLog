@@ -1,3 +1,9 @@
+1.5.5 - (Tuleap 6.11)
+	* Fix request #6326: FRS addFile has now a new param for file comment (Contrib STMicroelectronics)
+
+1.5.4 - (Tuleap 6.11)
+	* fix documentation for docman geFile --version parameter (Contrib STMicroelectronics)
+
 1.5.3 - SOAP api 4.2 (Tuleap 6)
    Respect PHP Strict Standards
 

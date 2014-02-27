@@ -275,5 +275,18 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         }
         return null;
     }
+
+    /**
+     * Process the SOAP request
+     *
+     * @param SOAPRequest $request The data coming from the user
+     *
+     * @return void
+     */
+    public function processSoap($request){
+        if ($request->exist('bind')) {
+            $this->getBind()->process($request->get('bind'), $no_redirect = true);
+        }
+    }
 }
 ?>

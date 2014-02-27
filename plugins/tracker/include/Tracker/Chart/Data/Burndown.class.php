@@ -123,8 +123,26 @@ class Tracker_Chart_Data_Burndown {
         return $burndown->build(
             $this->getDuration(),
             $this->capacity,
-            array_filter($this->getRemainingEffort(), array($this, 'isValueNotNull')) // 0 is a valid value
+            $this->getRemainingEffortWithoutNullValues()
         );
+    }
+
+    public function getJsonRepresentation() {
+        $values = array(
+            'duration' => $this->getDuration(),
+            'capacity' => $this->getCapacityValueInJson(),
+            'points'   => $this->getRemainingEffortWithoutNullValues()
+        );
+
+        return json_encode($values);
+    }
+
+    private function getCapacityValueInJson() {
+        return isset($this->capacity) ? $this->capacity : 'null';
+    }
+
+    private function getRemainingEffortWithoutNullValues() {
+        return array_filter($this->getRemainingEffort(), array($this, 'isValueNotNull'));
     }
 
     private function isValueNotNull($value) {

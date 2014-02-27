@@ -1,3 +1,24 @@
+Version 5.248 - Tuleap 6.11
+    * request #6276: No longer possible to select the parent epic in new modal
+
+Version 5.247 - Tuleap 6.11
+    * request #6216 : datepicker is reusable in tracker report
+
+Version 5.246 - Tuleap 6.11
+    * Fix request #6286: Fatal error when importing a tracker with cardwall semantics to a server w/o cardwall enabled
+
+Version 5.245 - Tuleap 6.11
+    * story #6190: add rest api for tracker reports
+
+Version 5.244 - Tuleap 6.11
+    * request #5817: SOAP function to add values to selectbox field (Contrib STMicroelectronics)
+
+Version 5.243 - Tuleap 6.11
+    * Fix request #5712 - Remaining Effort in Burn Down Chart does not reflect history
+
+Version 5.242 - Tuleap 6.11
+    * story #6237: Link factorisation (Contrib JTEKT)
+
 Version 5.241 - Tuleap 6.11
     * Dev: refactoring of artifact creation and update to allow creation in past (XML import)
 

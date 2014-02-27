@@ -175,7 +175,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return $this->fetchArtifactReadOnly($artifact);
     }
 
-    public function fetchSubmitForOverlay() {
+    public function fetchSubmitForOverlay($submitted_values) {
         return '';
     }
         

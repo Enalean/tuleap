@@ -36,7 +36,7 @@ class Tracker_FormElement_Container_Column_Group {
         return $this->fetchGroup($columns, 'fetchSubmitInGroup', array($submitted_values));
     }
 
-    public function fetchSubmitForOverlay($columns, $submitted_values = array()) {
+    public function fetchSubmitForOverlay($columns, $submitted_values) {
         return $this->fetchGroupNoColumns($columns, 'fetchSubmitInGroup', array($submitted_values));
     }
     

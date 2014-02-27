@@ -160,11 +160,11 @@ class Planning_Controller extends MVC2_PluginController {
             $user,
             $this->group_id
         );
+        $last_plannings = $this->planning_factory->getLastLevelPlannings($user, $this->group_id);
 
-        if (empty($plannings)) {
+        if (empty($plannings) && empty($last_plannings)) {
             return $this->showEmptyHome();
         }
-        $last_plannings = $this->planning_factory->getLastLevelPlannings($user, $this->group_id);
 
         $presenter = new Planning_Presenter_HomePresenter(
             $this->getMilestoneAccessPresenters($plannings),
@@ -237,12 +237,16 @@ class Planning_Controller extends MVC2_PluginController {
 
         foreach ($last_planning_current_milestones as $milestone) {
             $this->milestone_factory->addMilestoneAncestors($user, $milestone);
+            $milestone = $this->milestone_factory->updateMilestoneContextualInfo($user, $milestone);
 
             if ($milestone->hasUsableBurndownField()) {
+                $burndown_data = $milestone->getBurndownData($user);
+
                 $presenters[] = new Planning_Presenter_MilestoneBurndownSummaryPresenter(
                     $milestone,
                     $this->plugin_path,
-                    $has_cardwall
+                    $has_cardwall,
+                    $burndown_data
                 );
             } else {
                 $presenters[] = new Planning_Presenter_MilestoneSummaryPresenter(
@@ -266,7 +270,7 @@ class Planning_Controller extends MVC2_PluginController {
             ->canPlanningBeSetInTime($planning->getPlanningTracker());
 
         if (! $set_in_time) {
-            return $this->milestone_factory->getAllMilestones($user, $planning);
+            return $this->milestone_factory->getAllMilestonesWithoutPlannedElement($user, $planning);
         }
 
         switch ($this->request->get('period')) {

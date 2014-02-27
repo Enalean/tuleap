@@ -88,5 +88,9 @@ class Planning_Presenter_HomePresenter {
     public function project_backlog() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','project_backlog', array($this->project_name));
     }
+
+    public function has_milestone_presenters() {
+        return ! empty($this->milestone_presenters);
+    }
 }
 ?>

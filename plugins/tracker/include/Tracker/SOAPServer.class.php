@@ -52,6 +52,8 @@ define('nb_max_temp_files', '3030');
 define('temp_file_invalid', '3031');
 define('uploaded_file_too_big', '3032');
 define('artifact_does_not_exist', '3033');
+define('add_selectbox_fields_fault', '3034');
+define('check_field_fault', '3035');
 
 class Tracker_SOAPServer {
     /**
@@ -654,6 +656,67 @@ class Tracker_SOAPServer {
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
+    }
+
+    /**
+     * Add values to tracker's selectBox field
+     *
+     * @param String $session_key
+     * @param int $tracker_id
+     * @param int $field_id
+     * @param ArrayOfString $values
+     */
+    public function addSelectBoxValues($session_key, $tracker_id, $field_id, $values) {
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $tracker      = $this->tracker_factory->getTrackerById($tracker_id);
+            if($tracker == null) {
+              throw new SoapFault(add_selectbox_fields_fault, "Invalid tracker Id", "addSelectBoxValues");
+            }
+
+            $this->checkUserCanAdminTracker($current_user, $tracker);
+            $field = $this->getStaticSelectBoxField($tracker, $field_id);
+
+            return $this->createSelectBoxValues($field, $values);
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
+    }
+
+    /**
+     * Get static selectbox field
+     *
+     * @param Tracker $tracker
+     * @param int $field_id
+     */
+    private function getStaticSelectBoxField(Tracker $tracker, $field_id){
+        $usedStaticFields = $this->formelement_factory->getUsedStaticSbFields($tracker);
+        foreach($usedStaticFields as $staticField){
+            if($staticField->getId() == $field_id){
+                return $staticField;
+            }
+        }
+        throw new SoapFault(check_field_fault, "Static selectbox Field not found", "getStaticSelectBoxField");
+    }
+
+    /**
+     * Create values in selectBox field
+     *
+     * @param Tracker_FormElement_Field_Selectbox $field
+     * @param Array $values
+     */
+    private function createSelectBoxValues(Tracker_FormElement_Field_Selectbox $field, $values) {
+        $request            = new SOAPRequest(array());
+        $concatenatedValues = implode("\n", $values);
+        $bindValues['add'] = $concatenatedValues;
+        $request->set('bind', $bindValues);
+
+        try {
+             $field->processSoap($request);
+        } catch (Exception $e) {
+             return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
+        return true;
     }
 
     private function getProjectById($group_id, $method_name) {

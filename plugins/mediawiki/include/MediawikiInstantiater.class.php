@@ -23,6 +23,7 @@
 require_once 'www/env.inc.php';
 require_once 'pre.php';
 require_once 'common/backend/BackendLogger.class.php';
+require_once 'MediawikiUserGroupsMapper.class.php';
 
 class MediaWikiInstantiater {
 
@@ -35,12 +36,16 @@ class MediaWikiInstantiater {
     /** @var string */
     private $project_name_dir;
 
+    /** @var project */
+    private $project;
+
     /**
-     * @param string $project_name
+     * @param string $project
      */
-    public function __construct($project_name) {
-        $this->logger = new BackendLogger();
-        $this->project_name = $project_name;
+    public function __construct(Project $project) {
+        $this->logger           = new BackendLogger();
+        $this->project          = $project;
+        $this->project_name     = $project->getUnixName();
         $this->project_name_dir = forge_get_config('projects_path', 'mediawiki') . '/' . $this->project_name;
     }
 
@@ -48,11 +53,25 @@ class MediaWikiInstantiater {
      * Creates a mediawiki plugin instance for the project
      */
     public function instantiate() {
+        if ($this->initMediawiki()) {
+            $this->seedUGroupMapping();
+        }
+    }
+
+    public function instantiateFromTemplate(array $ugroup_mapping) {
+        if ($this->initMediawiki()) {
+            $this->seedUGroupMappingFromTemplate($ugroup_mapping);
+        }
+    }
+
+    private function initMediawiki() {
         if ($this->projectExists()) {
             $this->logger->info('Project dir ' . $this->project_name_dir . ' exists, so I assume the project already exists.');
+            return false;
         } else {
             $this->createDirectory();
             $this->createDatabase();
+            return true;
         }
     }
 
@@ -107,6 +126,48 @@ class MediaWikiInstantiater {
         $main_db = Config::get('sys_dbname');
         db_query('USE '.$main_db);
     }
-}
 
+    private function seedUGroupMappingFromTemplate(array $ugroup_mapping) {
+        $template         = ProjectManager::instance()->getProject($this->project->getTemplate());
+        $mapper           = new MediawikiUserGroupsMapper(new MediawikiDao());
+        $template_mapping = $mapper->getCurrentUserGroupMapping($template);
+        $new_mapping      = array();
+        foreach ($template_mapping as $mw_group => $tuleap_groups) {
+            foreach ($tuleap_groups as $grp) {
+                if ($grp < UGroup::DYNAMIC_UPPER_BOUNDARY) {
+                    $new_mapping[$mw_group][] = $grp;
+                } elseif (isset($ugroup_mapping[$grp])) {
+                    $new_mapping[$mw_group][] = $ugroup_mapping[$grp];
+                }
+            }
+        }
+        db_query($this->seedProjectUGroupMappings($this->project->getID(), $new_mapping));
+    }
+
+    private function seedUGroupMapping() {
+        if ($this->project->isPublic()) {
+            db_query($this->seedProjectUGroupMappings($this->project->getID(), MediawikiUserGroupsMapper::$DEFAULT_MAPPING_PUBLIC_PROJECT));
+        } else {
+            db_query($this->seedProjectUGroupMappings($this->project->getID(), MediawikiUserGroupsMapper::$DEFAULT_MAPPING_PRIVATE_PROJECT));
+        }
+    }
+
+    private function seedProjectUGroupMappings($group_id, array $mappings) {
+        $query  = "INSERT INTO plugin_mediawiki_ugroup_mapping(group_id, ugroup_id, mw_group_name) VALUES ";
+
+        return $query . implode(",", $this->getFormattedDefaultValues($group_id, $mappings));
+    }
+
+    private function getFormattedDefaultValues($group_id, array $mappings) {
+        $values = array();
+
+        foreach ($mappings as $group_name => $mapping) {
+            foreach ($mapping as $ugroup_id) {
+                $values[] = "($group_id, $ugroup_id, '$group_name')";
+            }
+        }
+
+        return $values;
+    }
+}
 ?>
