@@ -136,10 +136,13 @@ class Git extends PluginController {
         $this->plugin                   = $plugin;
         $this->url_manager              = $url_manager;
 
-        $matches = array();
-
-        $this->routeUsingFriendlyURLs();
-        $this->routeUsingStandardURLs();
+        $url = new Git_URL(
+            $this->projectManager,
+            $this->factory,
+            $_SERVER['REQUEST_URI']
+        );
+        $this->routeUsingFriendlyURLs($url);
+        $this->routeUsingStandardURLs($url);
 
         $valid = new Valid_GroupId('group_id');
         $valid->required();
@@ -173,72 +176,60 @@ class Git extends PluginController {
         return new GitViews($this, new Git_GitRepositoryUrlManager($this->getPlugin()));
     }
 
-    private function routeUsingFriendlyURLs() {
+    private function routeUsingFriendlyURLs(Git_URL $url) {
         if (! $this->getPlugin()->areFriendlyUrlsActivated()) {
             return;
         }
 
-        if ( preg_match('%^/plugins/git/(?P<project_name>[^/]*)/(?P<path>[^?]*)\?{0,1}(?P<parameters>.*)$%', $_SERVER['REQUEST_URI'], $matches) ) {
-            $repository = $this->factory->getByProjectNameAndPath($matches['project_name'], $matches['path'].'.git');
-
-            if ($repository) {
-                $this->request->set('action', 'view');
-                $this->request->set('group_id', $repository->getProjectId());
-                $this->request->set('repo_id', $repository->getId());
-                if (isset($matches['parameters'])) {
-                    parse_str($matches['parameters'], $_GET);
-                    parse_str($matches['parameters'], $_REQUEST);
-                }
-            }
-        }
-    }
-
-    private function routeUsingStandardURLs() {
-        if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}(.*)/', $_SERVER['REQUEST_URI'], $matches) ) {
-            $group_id     = $matches[1][0];
-            $action       = $matches[2][0];
-            $request_args = $matches[4][0];
-
-            $repo_id = 0;
-            //repository id is passed
-            if ( preg_match('/^([0-9]+)$/', $matches[3][0]) === 1 ) {
-               $repo_id = $matches[3][0];
-            } else {
-            //get repository by name and group id to retrieve repo id
-               $repo = new GitRepository();
-               $repo->setName($matches[3][0]);
-               $repo->setProject( $this->projectManager->getProject($matches[1][0]) );
-               try {
-                   $repo->load();
-               } catch (Exception $e) {
-                   $this->addError('Bad request');
-                   $this->redirect('/');
-               }
-               $repo_id = $repo->getId();
-            }
-
-            $this->redirectIfTryingToViewRepositoryAndUserFriendlyURLsActivated($group_id, $action, $repo_id, $request_args);
-
-            $this->request->set('group_id', $group_id);
-            $this->request->set('action', $action);
-            $this->request->set('repo_id', $repo_id);
-
-        }
-    }
-
-    private function redirectIfTryingToViewRepositoryAndUserFriendlyURLsActivated($group_id, $action, $repo_id, $request_args) {
-        if (! $action === 'view') {
+        if (! $url->isFriendly()) {
             return;
         }
 
+        $repository = $url->getRepository();
+        if (! $repository) {
+            return;
+        }
+
+        $this->request->set('action', 'view');
+        $this->request->set('group_id', $repository->getProjectId());
+        $this->request->set('repo_id', $repository->getId());
+        if ($url->getParameters()) {
+            parse_str($url->getParameters(), $_GET);
+            parse_str($url->getParameters(), $_REQUEST);
+        }
+    }
+
+    private function routeUsingStandardURLs(Git_URL $url) {
+        if (! $url->isStandard()) {
+            return;
+        }
+
+        $repository = $url->getRepository();
+        if (! $repository) {
+            $this->addError('Bad request');
+            $this->redirect('/');
+            return;
+        }
+
+        $project = $url->getProject();
+        $this->redirectIfTryingToViewRepositoryAndUserFriendlyURLsActivated($project, $repository, $url->getParameters());
+
+        $this->request->set('group_id', $project->getId());
+        $this->request->set('action', 'view');
+        $this->request->set('repo_id', $repository->getId());
+    }
+
+    private function redirectIfTryingToViewRepositoryAndUserFriendlyURLsActivated(
+        Project $project,
+        GitRepository $repository,
+        $parameters
+    ) {
         if (! $this->getPlugin()->areFriendlyUrlsActivated()) {
             return;
         }
 
-        $project            = $this->projectManager->getProject($group_id);
-        $repo               = $this->factory->getRepositoryById($repo_id);
-        $request_parameters = $request_args ? '?'.$request_args : '';
-        $redirecting_url    = '/plugins/git/'.$project->getUnixName().'/'.$repo->getFullName().$request_parameters;
+        $request_parameters = $parameters ? '?'.$parameters : '';
+        $redirecting_url    = GIT_BASE_URL .'/'. $project->getUnixName() .'/'. $repository->getFullName() . $request_parameters;
 
         header("Location: $redirecting_url", TRUE, 301);
     }

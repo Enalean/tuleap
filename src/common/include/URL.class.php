@@ -140,6 +140,14 @@ class URL {
             $group_id     = $project_data['group_id'];
         }
 
+        EventManager::instance()->processEvent(
+            Event::GET_PROJECTID_FROM_URL,
+            array(
+                'url'        => $req_uri,
+                'project_id' => &$group_id
+            )
+        );
+
         if (isset($group_id)) {
             return $group_id;
         } else return null;

@@ -112,6 +112,7 @@ class GitPlugin extends Plugin {
         $this->_addHook(Event::MANAGE_THIRD_PARTY_APPS, 'manage_third_party_apps');
 
         $this->_addHook('register_project_creation');
+        $this->_addHook(Event::GET_PROJECTID_FROM_URL);
     }
 
     public function site_admin_option_hook() {
@@ -993,8 +994,6 @@ class GitPlugin extends Plugin {
     }
 
     private function getGitController() {
-        $project_manager = ProjectManager::instance();
-
         return new Git(
             $this,
             $this->getGerritServerFactory(),
@@ -1002,9 +1001,9 @@ class GitPlugin extends Plugin {
             $this->getRepositoryManager(),
             $this->getGitSystemEventManager(),
             new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory()),
-            new GitRepositoryFactory(new GitDao(), $project_manager),
+            $this->getRepositoryFactory(),
             UserManager::instance(),
-            $project_manager,
+            ProjectManager::instance(),
             PluginManager::instance(),
             HTTPRequest::instance(),
             $this->getProjectCreator(),
@@ -1155,6 +1154,22 @@ class GitPlugin extends Plugin {
                 array(Git::PERM_ADMIN),
                 $params['ugroupsMapping']
         );
+    }
+
+    /** @see Event::GET_PROJECTID_FROM_URL */
+    public function get_projectid_from_url($params) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $url = new Git_URL(
+                ProjectManager::instance(),
+                $this->getRepositoryFactory(),
+                $_SERVER['REQUEST_URI']
+            );
+            if ($url->isFriendly() && ! $this->areFriendlyUrlsActivated()) {
+                return;
+            }
+
+            $params['project_id'] = $url->getProject()->getId();
+        }
     }
 
     /**
