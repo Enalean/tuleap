@@ -3,7 +3,7 @@ Version 6.11 (Not released yet)
 	* git: 3.69
 	* docman: 2.26.28
 	* agiledashboard: 1.51
-	* tracker: 5.249
+	* tracker: 5.250
 	* cardwall: 1.20
 	* mediawiki: 0.25
 	* forumml: 2.6.17
@@ -20,6 +20,7 @@ Version 6.11 (Not released yet)
 	* Be consistent with forgeupgrade script: b201305161743_remove_unique_from_svn_checkins
 	* Clean-up package building (remove old documentation)
 	* story #6189: GET project & project users
+	* story #6083: see artifact link reverse links
 
 	== Enhancement ==
 	* request #5951 - Avoid hardcoded redirect on login when possible
