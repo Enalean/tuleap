@@ -122,8 +122,11 @@ codendi.tracker.artifact.artifactLink = {
                                 if (!renderer_table) {
                                     var list = codendi.tracker.artifact.artifactLinker_currentField.down('.tracker-form-element-artifactlink-list');
                                     list.insert(json.head[pair.key] + '<tbody>');
-                                    codendi.tracker.artifact.artifactLink.tabs[codendi.tracker.artifact.artifactLinker_currentField.identify()].loadTab(list.childElements().last().down('h2'));
+                                    codendi.tracker.artifact.artifactLink.tabs[codendi.tracker.artifact.artifactLinker_currentField.identify()].loadTab(list.childElements().last().down('h2'), $$('.tracker-form-element-artifactlink-list ul').first());
                                     renderer_table = $('tracker_report_table_' + pair.key);
+                                    console.log(renderer_table);
+                                    console.log(renderer_table.up('div'));
+                                    renderer_table.up('div').hide();
                                 }
                                 
                                 //make sure new rows are inserted before the aggregate function row
@@ -194,17 +197,20 @@ codendi.tracker.artifact.artifactLink = {
         tracker_panels: [],
         ul: null,
         initialize: function (artifact_link) {
+            var self = this;
+
             //build a nifty navigation list
             if (location.href.toQueryParams().func != 'new-artifact' && location.href.toQueryParams().func != 'submit-artifact') {
                 if (!location.href.toQueryParams().modal) {
                     this.ul = new Element('ul').addClassName('tracker-form-element-artifactlink-list-nav');
                 }
             }
-        
+
             artifact_link.insert({top: this.ul});
             //foreach tracker panels, fills the navigation list and put behaviors
-            artifact_link.select('h2').each(this.loadTab, this);
-            
+            artifact_link.select('h2').each(function(obj) {
+                self.loadTab(obj);
+            });
         },
 
         showTrackerPanel: function(event, tracker_panel, element, h2) {
@@ -229,7 +235,11 @@ codendi.tracker.artifact.artifactLink = {
             }
         },
         
-        loadTab: function (h2) {
+        loadTab: function (h2, tab_list) {
+            if (typeof tab_list === 'undefined') {
+                tab_list = this.ul;
+            }
+
             var self = this;
             var tracker_panel = h2.up();
             codendi.tracker.artifact.artifactLink.load_nb_artifacts(tracker_panel);
@@ -246,14 +256,14 @@ codendi.tracker.artifact.artifactLink = {
             a.update(h2.innerHTML);
             
             li.appendChild(a);
-            this.ul.appendChild(li);
+            tab_list.appendChild(li);
             
             //hide this panel and its title unless is first
             if (this.tracker_panels.size() == 0) {
                 codendi.tracker.artifact.artifactLink.selector_url.tracker = h2.className.split('_')[1]; // class="tracker-form-element-artifactlink-tracker_974"
             }
 
-            if (li == this.ul.firstDescendant()) {
+            if (li == tab_list.firstDescendant()) {
                 li.addClassName('tracker-form-element-artifactlink-list-nav-current');
                 this.showTrackerPanel(null, tracker_panel, a, h2);
             }
