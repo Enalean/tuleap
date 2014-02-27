@@ -27,7 +27,7 @@ class ArtifactsTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_NAME),
+            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
@@ -77,6 +77,61 @@ class ArtifactsTest extends RestBase {
 
     private function getArtifact($artifact_id) {
         $response = $this->getResponse($this->client->get('artifacts/'.$artifact_id));
+        return $response->json();
+    }
+
+    public function testPostArtifact() {
+        $summary_field_label = 'Summary';
+        $summary_field_value = "This is a new epic";
+        $post_resource = json_encode(array(
+            'tracker' => array(
+                'id'  => TestDataBuilder::EPICS_TRACKER_ID,
+                'uri' => 'whatever'
+            ),
+            'values' => array(
+               $this->getSubmitTextValue(TestDataBuilder::EPICS_TRACKER_ID, $summary_field_label, $summary_field_value),
+               $this->getSubmitListValue(TestDataBuilder::EPICS_TRACKER_ID, 'Status', 205)
+            ),
+        ));
+
+        $response = $this->getResponse($this->client->post('artifacts', null, $post_resource));
+        $this->assertEquals($response->getStatusCode(), 200);
+        $artifact_reference = $response->json();
+        $this->assertGreaterThan(0, $artifact_reference['id']);
+
+        $fetched_value = $this->getFieldValueForFieldLabel($artifact_reference['id'], $summary_field_label);
+        $this->assertEquals($summary_field_value, $fetched_value);
+    }
+
+    private function getSubmitTextValue($tracker_id, $field_label, $field_value) {
+        $field_def = $this->getFieldDefByFieldLabel($tracker_id, $field_label);
+        return array(
+            'field_id' => $field_def['field_id'],
+            'value'    => $field_value,
+        );
+    }
+
+    private function getSubmitListValue($tracker_id, $field_label, $field_value) {
+        $field_def = $this->getFieldDefByFieldLabel($tracker_id, $field_label);
+        return array(
+            'field_id'       => $field_def['field_id'],
+            'bind_value_ids' => array(
+                $field_value
+            ),
+        );
+    }
+
+    private function getFieldDefByFieldLabel($tracker_id, $field_label) {
+        $tracker = $this->getTracker($tracker_id);
+        foreach ($tracker['fields'] as $field) {
+            if ($field['label'] == $field_label) {
+                return $field;
+            }
+        }
+    }
+
+    private function getTracker($tracker_id) {
+        $response = $this->getResponse($this->client->get('trackers/'.$tracker_id));
         return $response->json();
     }
 }

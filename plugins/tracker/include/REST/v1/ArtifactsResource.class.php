@@ -51,7 +51,11 @@ class ArtifactsResource {
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
 
+    /** @var TrackerFactory */
+    private $tracker_factory;
+
     public function __construct() {
+        $this->tracker_factory     = TrackerFactory::instance();
         $this->formelement_factory = Tracker_FormElementFactory::instance();
         $this->artifact_factory    = Tracker_ArtifactFactory::instance();
         $this->builder             = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
@@ -151,6 +155,37 @@ class ArtifactsResource {
             throw new RestException(500, $exception->getMessage());
         }
         $this->sendAllowHeadersForArtifact($artifact);
+    }
+
+    /**
+     * Create artifact
+     *
+     * Things to take into account:
+     * <ol>
+     *  <li>Please note that "file" fields cannot be modified yet</li>
+     * </ol>
+     *
+     * @url POST
+     * @param TrackerReference $tracker   Id of the artifact {@from body}
+     * @param array  $values    Artifact fields values {@from body}
+     * @return ArtifactReference
+     */
+    protected function post(TrackerReference $tracker, array $values) {
+        try {
+            $user    = UserManager::instance()->getCurrentUser();
+            $updater = new Tracker_REST_Artifact_ArtifactCreator(
+                new Tracker_REST_Artifact_ArtifactValidator(
+                    $this->formelement_factory
+                ),
+                $this->artifact_factory,
+                $this->tracker_factory
+            );
+            return $updater->create($user, $tracker, $values);
+        } catch (Tracker_FormElement_InvalidFieldException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Tracker_FormElement_NotImplementedForRESTException $exception) {
+            throw new RestException(501, $exception->getMessage());
+        }
     }
 
     /**

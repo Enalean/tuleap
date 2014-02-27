@@ -27,8 +27,17 @@ class Tracker_REST_Artifact_ArtifactValidator {
         $this->formelement_factory = $formelement_factory;
     }
 
-    public function getFieldData(array $values, Tracker_Artifact $artifact) {
-        $indexed_fields = $this->getIndexedFields($artifact);
+    public function getFieldsDataOnCreate(array $values, Tracker $tracker) {
+        $indexed_fields = $this->getIndexedFields($tracker);
+        foreach ($values as $value) {
+            $field = $this->getField($indexed_fields, $value);
+            $new_values[$field->getId()] = $field->getFieldDataFromRESTValue($value);
+        }
+        return $new_values;
+    }
+
+    public function getFieldsDataOnUpdate(array $values, Tracker_Artifact $artifact) {
+        $indexed_fields = $this->getIndexedFields($artifact->getTracker());
         foreach ($values as $value) {
             $field = $this->getField($indexed_fields, $value);
             $new_values[$field->getId()] = $field->getFieldDataFromRESTValue($value, $artifact);
@@ -37,15 +46,18 @@ class Tracker_REST_Artifact_ArtifactValidator {
     }
 
     private function getField(array $indexed_fields, array $value) {
-        if (isset($indexed_fields[$value['field_id']])) {
-            return $indexed_fields[$value['field_id']];
+        if (! isset($value['field_id']) || (isset($value['field_id']) && ! is_int($value['field_id']))) {
+            throw new Tracker_FormElement_InvalidFieldException('No \'field_id\' or invalid id in submitted value');
         }
-        throw new Tracker_FormElement_InvalidFieldException('Unknow field '.$value['field_id']);
+        if (! isset($indexed_fields[$value['field_id']])) {
+            throw new Tracker_FormElement_InvalidFieldException('Unknow field '.$value['field_id']);
+        }
+        return $indexed_fields[$value['field_id']];
     }
 
-    private function getIndexedFields(Tracker_Artifact $artifact) {
+    private function getIndexedFields(Tracker $tracker) {
         $indexed_fields = array();
-        foreach ($this->formelement_factory->getUsedFields($artifact->getTracker()) as $field) {
+        foreach ($this->formelement_factory->getUsedFields($tracker) as $field) {
             $indexed_fields[$field->getId()] = $field;
         }
         return $indexed_fields;

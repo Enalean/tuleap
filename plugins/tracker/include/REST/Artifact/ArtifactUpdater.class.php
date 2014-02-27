@@ -29,7 +29,7 @@ class Tracker_REST_Artifact_ArtifactUpdater {
 
     public function update(PFUser $user, Tracker_Artifact $artifact, array $values, Tuleap\Tracker\REST\ChangesetCommentRepresentation $comment = null) {
         $this->checkArtifact($user, $artifact);
-        $fields_data = $this->artifact_validator->getFieldData($values, $artifact);
+        $fields_data = $this->artifact_validator->getFieldsDataOnUpdate($values, $artifact);
 
         $comment_body   = '';
         $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
@@ -43,10 +43,10 @@ class Tracker_REST_Artifact_ArtifactUpdater {
 
     private function checkArtifact(PFUser $user, Tracker_Artifact $artifact) {
         if (! $artifact) {
-            throw new RestException(404, 'Artifact not found');
+            throw new \Luracast\Restler\RestException(404, 'Artifact not found');
         }
         if (! $artifact->userCanUpdate($user)) {
-            throw new RestException(403, 'You have not the permission to update this card');
+            throw new \Luracast\Restler\RestException(403, 'You have not the permission to update this card');
         }
     }
 }
