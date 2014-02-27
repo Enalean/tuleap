@@ -1463,6 +1463,10 @@ plugin_tracker_date_reminder	tracker_date_reminder_add_title	Ajouter un rappel
 plugin_tracker_date_reminder	tracker_date_reminder_notification_distance_label	jour(s)
 plugin_tracker_date_reminder	tracker_date_reminder_notification_when	Quand
 plugin_tracker_date_reminder	tracker_date_reminder_send_to	Envoyer un email à
+plugin_tracker_date_reminder	tracker_date_reminder_send_to_and_or	Et/Ou
+plugin_tracker_date_reminder	role_SUBMITTER	Submitter
+plugin_tracker_date_reminder	role_ASSIGNEE	Assignee
+plugin_tracker_date_reminder	role_COMMENTER	Commenter
 plugin_tracker_date_reminder	tracker_date_reminder_field	Champs
 plugin_tracker_date_reminder	tracker_date_reminder_notification_details	$1 jour(s) $2
 plugin_tracker_date_reminder	tracker_date_reminder_edit_title	Modifier le rappel
@@ -1495,10 +1499,12 @@ project_admin_utils	tracker_date_reminder_invalid_notification_type	'$1' n'est p
 project_admin_utils	tracker_date_reminder_invalid_status	'$1' n'est pas un status valide
 project_admin_utils	tracker_date_reminder_invalid_reminder	'$1' n'est pas un rappel sur un champ de type date valide
 project_admin_utils	tracker_date_reminder_invalid_ugroup	'$1' n'est pas un ugroup valide
-project_admin_utils	tracker_date_reminder_empty_ugroup_param	Vous devez sélectionner au moins un ugroup valide
+project_admin_utils	tracker_date_reminder_invalid_role_param	Vous devez sélectionner un rôle de Tracker valide
+project_admin_utils	tracker_date_reminder_empty_people_param	Vous devez sélectionner au moins un ugroup valid ou un rôle de Tracker valide
 project_admin_utils	tracker_date_reminder_before_submittedOn	Impossible d'ajouter un rappel sur date de tracker avant le champ 'SubmittedOn'
-project_admin_utils	tracker_date_reminder_duplicated	Impossible de dupliquer un rappel sur date de tracker
-
+project_admin_utils	tracker_date_reminder_duplicated	Un rappel sur date avec les mêmes paramètres existe déjà, vous devez le mettre à jour
+project_admin_utils	tracker_date_reminder_optgroup_label_ugroup	Groupes d'utilisateurs
+project_admin_utils	tracker_date_reminder_optgroup_label_role	Rôles
 plugin_tracker	access_burndown	Accéder au burndown
 plugin_tracker	info_same_ugroups	Le patron sélectionné a des permissions sur des groupes d'utilisateurs qui semblent avoir leur équivalent dans votre projet : $1 Veuillez notez que seulement le nom des groupes est vérifié, les appartenances effectives peuvent être différentes.
 plugin_tracker	missing_ugroups	Le patron sélectionné a des permissions sur des groupes d'utilisateurs qui ne sont pas définis dans votre projet : $1 Sans ces groupes, des champs peuvent être inutilisables et des transitions pourraient ne pas fonctionner correctement. Si vous créez quand même l'outil de suivi, nous vous suggérons de vérifier après coup : <ul><li>Les permissions d'accès à l'outil de suivi,</li><li>Les permissions sur les champs,</li><li>Ainsi que les transitions du workflow.</li></ul>

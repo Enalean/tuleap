@@ -122,7 +122,7 @@ class Tracker_DateReminderManager {
     protected function sendReminderNotification(Tracker_DateReminder $reminder, Tracker_Artifact $artifact) {
         $tracker    = $this->getTracker();
         // 1. Get the recipients list
-        $recipients = $reminder->getRecipients();
+        $recipients = $reminder->getRecipients($artifact);
 
         // 2. Compute the body of the message + headers
         $messages   = array();
