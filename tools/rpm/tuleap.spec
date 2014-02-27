@@ -444,6 +444,7 @@ Summary: Proftpd plugin
 Group: Development/Tools
 Version: @@PLUGIN_PROFTPD_VERSION@@
 Release: @@RELEASE@@%{?dist}
+Requires: php53-pear-HTTP-Download >= 1.1.4-3
 %description plugin-proftpd
 Control and interfact with Proftpd as FTP server
 

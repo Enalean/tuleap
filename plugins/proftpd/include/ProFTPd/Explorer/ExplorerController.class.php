@@ -26,12 +26,16 @@ use Tuleap\ProFTPd\Directory\DirectoryPathParser;
 use Tuleap\ProFTPd\Presenter\ExplorerPresenter;
 use Tuleap\ProFTPd\ServiceProFTPd;
 use Tuleap\ProFTPd\Admin\PermissionsManager;
+use Tuleap\ProFTPd\Xferlog\Dao;
 use HTTPRequest;
 use PFUser;
 use Project;
+use HTTP_Download;
+use PEAR;
 
 class ExplorerController {
     const NAME = 'explorer';
+    const TRANSFERT_BUFFER_SIZE = 8192;
 
     /** @var DirectoryParser */
     private $parser;
@@ -39,9 +43,13 @@ class ExplorerController {
     /** @var PermissionsManager */
     private $permissions_manager;
 
-    public function __construct(DirectoryParser $parser, PermissionsManager $permissions_manager) {
+    /** @var Dao */
+    private $xferlog_dao;
+
+    public function __construct(DirectoryParser $parser, PermissionsManager $permissions_manager, Dao $xferlog_dao) {
         $this->parser              = $parser;
         $this->permissions_manager = $permissions_manager;
+        $this->xferlog_dao         = $xferlog_dao;
     }
 
     public function getName() {
@@ -49,7 +57,6 @@ class ExplorerController {
     }
 
     public function index(ServiceProFTPd $service, HTTPRequest $request) {
-
         if ($this->userHasPermissionToExploreSFTP($request->getCurrentUser(), $request->getProject())) {
             $this->renderIndex($service, $request);
         } else {
@@ -64,32 +71,48 @@ class ExplorerController {
     }
 
     private function renderIndex(ServiceProFTPd $service, HTTPRequest $request) {
-        $path_parser = new DirectoryPathParser();
-
-        $path        = $path_parser->getCleanPath($request->get('path'));
-        $path_parts  = $path_parser->getPathParts($path);
-
-        $project        = $request->getProject();
+        $project = $request->getProject();
         if (! $project ) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_proftpd', 'cannot_open_project'));
             return;
         }
 
+        $path_parser = new DirectoryPathParser();
+        $path = $path_parser->getCleanPath($request->get('path'));
+        if ($this->parser->isFile($project->getUnixName() . DIRECTORY_SEPARATOR . $path)) {
+            $this->renderFileContent($request, $project, $project->getUnixName() . DIRECTORY_SEPARATOR . $path);
+        } else {
+            $this->renderDirectoryContent($service, $request, $path_parser, $project, $path);
+        }
+    }
+
+    private function renderFileContent(HTTPRequest $request, Project $project, $project_path) {
+        include_once 'HTTP/Download.php';
+        $full_path = $this->parser->getFullPath($project_path);
+        $this->xferlog_dao->storeWebDownload($request->getCurrentUser()->getId(), $project->getID(), $_SERVER['REQUEST_TIME'], $project_path);
+        return ! PEAR::isError(HTTP_Download::staticSend(array(
+            'file'               => $full_path,
+            'cache'              => false,
+            'contentdisposition' => array(HTTP_DOWNLOAD_ATTACHMENT, basename($full_path)),
+            'buffersize'         => self::TRANSFERT_BUFFER_SIZE,
+            )
+        ));
+    }
+
+    private function renderDirectoryContent(ServiceProFTPd $service, HTTPRequest $request, DirectoryPathParser $path_parser, Project $project, $path) {
         $remove_parent_directory_listing = ($path == '') ? true : false;
         $items = $this->parser->parseDirectory($project->getUnixName() . DIRECTORY_SEPARATOR . $path, $remove_parent_directory_listing);
 
-        $presenter = new ExplorerPresenter(
-            $path_parts,
-            $path,
-            $items,
-            $project
-        );
-
         $service->renderInPage(
-            $request, 
+            $request,
             $project->getPublicName().' / '.$path,
             'index',
-            $presenter
+            new ExplorerPresenter(
+                $path_parser->getPathParts($path),
+                $path,
+                $items,
+                $project
+            )
         );
     }
 
