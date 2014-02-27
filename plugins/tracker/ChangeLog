@@ -1,3 +1,6 @@
+Version 5.249 - Tuleap 6.11
+    * request #5804: Add the possibility to remind Assignee/Submitter for tracker date (Contrib STMicroelectronics)
+
 Version 5.248 - Tuleap 6.11
     * request #6276: No longer possible to select the parent epic in new modal
 
