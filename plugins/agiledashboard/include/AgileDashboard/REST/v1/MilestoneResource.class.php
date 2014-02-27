@@ -163,7 +163,7 @@ class MilestoneResource {
         } catch (ItemListedTwiceException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
-            throw new RestException(400, $exception->getMessage());
+            //Do nothing
         }
 
         $this->sendAllowHeaderForSubmilestones();
@@ -406,7 +406,7 @@ class MilestoneResource {
         try {
             $this->milestone_content_updater->updateMilestoneContent($ids, $current_user, $milestone);
         } catch (Tracker_NoChangeException $exception) {
-            throw new RestException(400, $exception->getMessage());
+            //Do nothing
         }
 
         $this->sendAllowHeaderForContent();
