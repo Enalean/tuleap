@@ -79,7 +79,14 @@ codendi.tracker.artifact.artifactLink = {
             overlay_window.deactivate();
         }
     },
-    
+    showReverseArtifactLinks: function() {
+        $('display-tracker-form-element-artifactlink-reverse').observe('click', function(event) {
+            Event.stop(event);
+
+            this.adjacent('#tracker-form-element-artifactlink-reverse').invoke('show');
+            this.hide();
+        });
+    },
     addTemporaryArtifactLinks: function () {
         if (codendi.tracker.artifact.artifactLinker_currentField) {
         var ids = codendi.tracker.artifact.artifactLinker_currentField.down('input.tracker-form-element-artifactlink-new').value;
@@ -115,8 +122,11 @@ codendi.tracker.artifact.artifactLink = {
                                 if (!renderer_table) {
                                     var list = codendi.tracker.artifact.artifactLinker_currentField.down('.tracker-form-element-artifactlink-list');
                                     list.insert(json.head[pair.key] + '<tbody>');
-                                    codendi.tracker.artifact.artifactLink.tabs[codendi.tracker.artifact.artifactLinker_currentField.identify()].loadTab(list.childElements().last().down('h2'));
+                                    codendi.tracker.artifact.artifactLink.tabs[codendi.tracker.artifact.artifactLinker_currentField.identify()].loadTab(list.childElements().last().down('h2'), $$('.tracker-form-element-artifactlink-list ul').first());
                                     renderer_table = $('tracker_report_table_' + pair.key);
+                                    console.log(renderer_table);
+                                    console.log(renderer_table.up('div'));
+                                    renderer_table.up('div').hide();
                                 }
                                 
                                 //make sure new rows are inserted before the aggregate function row
@@ -187,55 +197,77 @@ codendi.tracker.artifact.artifactLink = {
         tracker_panels: [],
         ul: null,
         initialize: function (artifact_link) {
+            var self = this;
+
             //build a nifty navigation list
             if (location.href.toQueryParams().func != 'new-artifact' && location.href.toQueryParams().func != 'submit-artifact') {
                 if (!location.href.toQueryParams().modal) {
                     this.ul = new Element('ul').addClassName('tracker-form-element-artifactlink-list-nav');
                 }
             }
-        
+
             artifact_link.insert({top: this.ul});
             //foreach tracker panels, fills the navigation list and put behaviors
-            artifact_link.select('h2').each(this.loadTab, this);
-            
+            artifact_link.select('h2').each(function(obj) {
+                self.loadTab(obj);
+            });
+        },
+
+        showTrackerPanel: function(event, tracker_panel, element, h2) {
+            var ul = element.up('ul');
+            ul.childElements().invoke('removeClassName', 'tracker-form-element-artifactlink-list-nav-current');
+            element.up('li').addClassName('tracker-form-element-artifactlink-list-nav-current');
+
+            // hide all panels
+            tracker_panel.adjacent('div').invoke('hide');
+
+            //except the wanted one
+            tracker_panel.show();
+
+            if (! ul.up('div').hasClassName('read-only')) {
+                //change the current tracker for the selector
+                codendi.tracker.artifact.artifactLink.selector_url.tracker = h2.className.split('_')[1]; // class="tracker-form-element-artifactlink-tracker_974"
+            }
+
+            // stop the propagation of the event
+            if (event) {
+                Event.stop(event);
+            }
         },
         
-        loadTab: function (h2) {
+        loadTab: function (h2, tab_list) {
+            if (typeof tab_list === 'undefined') {
+                tab_list = this.ul;
+            }
+
+            var self = this;
             var tracker_panel = h2.up();
             codendi.tracker.artifact.artifactLink.load_nb_artifacts(tracker_panel);
             //add a new navigation element
             var li = new Element('li');
             var a = new Element('a', {
                 href: '#show-tab-' + h2.innerHTML
+
             }).observe('click', function (evt) {
-                a.up('ul').childElements().invoke('removeClassName', 'tracker-form-element-artifactlink-list-nav-current');
-                a.up('li').addClassName('tracker-form-element-artifactlink-list-nav-current');
-                
-                // hide all panels
-                this.tracker_panels.invoke('hide');
-                
-                //except the wanted one
-                tracker_panel.show();
-                
-                //change the current tracker for the selector
-                codendi.tracker.artifact.artifactLink.selector_url.tracker = h2.className.split('_')[1]; // class="tracker-form-element-artifactlink-tracker_974"
-                
-                // stop the propagation of the event
-                Event.stop(evt);
+                self.showTrackerPanel(evt, tracker_panel, a, h2);
+
             }.bind(this));
-            
+
             a.update(h2.innerHTML);
             
             li.appendChild(a);
-            this.ul.appendChild(li);
+            tab_list.appendChild(li);
             
             //hide this panel and its title unless is first
             if (this.tracker_panels.size() == 0) {
                 codendi.tracker.artifact.artifactLink.selector_url.tracker = h2.className.split('_')[1]; // class="tracker-form-element-artifactlink-tracker_974"
-                li.addClassName('tracker-form-element-artifactlink-list-nav-current');
-            } else {
-                tracker_panel.hide();
             }
+
+            if (li == tab_list.firstDescendant()) {
+                li.addClassName('tracker-form-element-artifactlink-list-nav-current');
+                this.showTrackerPanel(null, tracker_panel, a, h2);
+            }
+
             h2.hide();
             
             //add this panel to the store
@@ -273,6 +305,8 @@ document.observe('dom:loaded', function () {
     });
     
     var artifact_links_values = { };
+
+    codendi.tracker.artifact.artifactLink.showReverseArtifactLinks();
     
     function load_behaviors_in_slow_ways_panel() {
         //links to artifacts load in a new browser tab/window

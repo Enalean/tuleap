@@ -405,16 +405,39 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      *
      * @return string html
      */
-    protected function fetchHtmlWidget(Tracker_Artifact $artifact, $name, $artifact_links, $prefill_new_values, $prefill_removed_values, $prefill_parent, $read_only, $from_aid = null) {
+    protected function fetchHtmlWidget(
+        Tracker_Artifact $artifact,
+        $name,
+        $artifact_links,
+        $prefill_new_values,
+        $prefill_removed_values,
+        $prefill_parent,
+        $read_only,
+        $from_aid = null,
+        $reverse_artifact_links = false
+    ) {
         $html = '';
+
+        if ($reverse_artifact_links) {
+            $html .= '<button class="btn" id="display-tracker-form-element-artifactlink-reverse">' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_display_reverse') . '</button>';
+            $html .= '<div id="tracker-form-element-artifactlink-reverse" style="display: none">';
+        }
+
+        $html .= '<h5 class="artifack_link_subtitle">'.$this->getWidgetTitle($reverse_artifact_links).'</h5>';
+
         $html_name_new = '';
         $html_name_del = '';
+
         if ($name) {
             $html_name_new = 'name="'. $name .'[new_values]"';
             $html_name_del = 'name="'. $name .'[removed_values]';
         }
-        $hp = Codendi_HTMLPurifier::instance();
-        if (!$read_only) {
+
+        $hp              = Codendi_HTMLPurifier::instance();
+        $read_only_class = 'read-only';
+
+        if (! $read_only) {
+            $read_only_class = '';
             $html .= '<div><span class="input-append" style="display:inline;"><input type="text"
                              '. $html_name_new .'
                              class="tracker-form-element-artifactlink-new"
@@ -432,7 +455,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             }
         }
 
-        $html .= '<div class="tracker-form-element-artifactlink-list">';
+        $html .= '<div class="tracker-form-element-artifactlink-list '.$read_only_class.'">';
         if ($artifact_links) {
             $ids = array();
             // build an array of artifact_id / last_changeset_id for fetch renderer method
@@ -512,7 +535,25 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             }
         }
         $html .= '</div>';
+
+        if ($reverse_artifact_links) {
+            $html .= '</div>';
+        }
+
         return $html;
+    }
+
+    /**
+     *
+     * @param boolean $reverse_artifact_links
+     */
+    private function getWidgetTitle($reverse_artifact_links) {
+        if ($reverse_artifact_links) {
+            return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_reverse_title');
+        }
+
+        return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_title');
+
     }
     
     /**
@@ -684,33 +725,64 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @return string
      */
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+        $links_tab         = $this->fetchLinks($artifact, $value, $submitted_values);
+        $reverse_links_tab = $this->fetchReverseLinks($artifact);
+
+        return $links_tab . $reverse_links_tab;
+    }
+
+    private function fetchLinks(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $artifact_links = array();
         if ($value != null) {
             $artifact_links = $value->getValue();
         }
-        
+
         if (is_array($submitted_values[0])) {
             $submitted_value = $submitted_values[0][$this->getId()];
         }
-        
+
         $prefill_new_values = '';
         if (isset($submitted_value['new_values'])) {
             $prefill_new_values = $submitted_value['new_values'];
         }
-        
+
         $prefill_removed_values = array();
         if (isset($submitted_value['removed_values'])) {
             $prefill_removed_values = $submitted_value['removed_values'];
         }
-        
-        $read_only = false;
-        $name      = 'artifact['. $this->id .']';
-        $from_aid      = $artifact->getId();
+
+        $read_only      = false;
+        $name           = 'artifact['. $this->id .']';
+        $from_aid       = $artifact->getId();
         $prefill_parent = '';
-        
-        return $this->fetchHtmlWidget($artifact, $name, $artifact_links, $prefill_new_values, $prefill_removed_values, $read_only, $prefill_parent, $from_aid);
+
+        return $this->fetchHtmlWidget(
+            $artifact,
+            $name,
+            $artifact_links,
+            $prefill_new_values,
+            $prefill_removed_values,
+            $read_only,
+            $prefill_parent,
+            $from_aid
+        );
     }
-    
+
+    private function fetchReverseLinks(Tracker_Artifact $artifact) {
+        $reverse_links = $this->getReverseLinks($artifact->getId());
+
+        return $this->fetchHtmlWidget(
+            $artifact,
+            '',
+            $reverse_links,
+            '',
+            '',
+            '',
+            true,
+            null,
+            true
+        );
+    }
     
     /**
      * Fetch the html code to display the field value in artifact in read only mode
@@ -721,16 +793,34 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        $links_tab_read_only = $this->fetchLinksReadOnly($artifact, $value);
+        $reverse_links_tab   = $this->fetchReverseLinks($artifact);
+
+        return $links_tab_read_only . $reverse_links_tab;
+    }
+
+    private function fetchLinksReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $artifact_links = array();
+
         if ($value != null) {
             $artifact_links = $value->getValue();
         }
+
         $read_only              = true;
         $name                   = '';
         $prefill_new_values     = '';
         $prefill_removed_values = array();
         $prefill_parent         = '';
-        return $this->fetchHtmlWidget($artifact, $name, $artifact_links, $prefill_new_values, $prefill_removed_values, $prefill_parent, $read_only);
+
+        return $this->fetchHtmlWidget(
+            $artifact,
+            $name,
+            $artifact_links,
+            $prefill_new_values,
+            $prefill_removed_values,
+            $prefill_parent,
+            $read_only
+        );
     }
     
     /**
@@ -803,6 +893,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         return $html;
     }
 
+    /**
+     * @return Tracker_FormElement_Field_Value_ArtifactLinkDao
+     */
     protected function getValueDao() {
         return new Tracker_FormElement_Field_Value_ArtifactLinkDao();
     }   
@@ -875,13 +968,26 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
     public function getChangesetValue($changeset, $value_id, $has_changed) {
-        $changeset_value = null;
+        $rows            = $this->getValueDao()->searchById($value_id, $this->id);
+        $artifact_links  = $this->getArtifactLinkInfos($rows);
+
+        return new Tracker_Artifact_ChangesetValue_ArtifactLink($value_id, $this, $has_changed, $artifact_links);
+    }
+
+
+    private function getReverseLinks($artifact_id) {
+        $links_data = $this->getValueDao()->searchReverseLinksById($artifact_id);
+
+        return $this->getArtifactLinkInfos($links_data);
+    }
+
+    private function getArtifactLinkInfos($data) {
         $artifact_links = array();
-        $rows = $this->getValueDao()->searchById($value_id, $this->id);
-        while ($row = $rows->getRow()) {
+        while ($row = $data->getRow()) {
             $artifact_links[$row['artifact_id']] = new Tracker_ArtifactLinkInfo($row['artifact_id'], $row['keyword'], $row['group_id'], $row['tracker_id'], $row['last_changeset_id']);
         }
-        return new Tracker_Artifact_ChangesetValue_ArtifactLink($value_id, $this, $has_changed, $artifact_links);
+
+        return $artifact_links;
     }
     
     /**

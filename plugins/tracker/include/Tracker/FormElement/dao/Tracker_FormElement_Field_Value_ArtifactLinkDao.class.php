@@ -25,14 +25,37 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
         $this->table_name = 'tracker_changeset_value_artifactlink';
     }
     
-    function searchById($changeset_value_id) {
+    public function searchById($changeset_value_id) {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
+
         $sql = "SELECT cv.*, a.tracker_id, a.last_changeset_id
-                FROM $this->table_name AS cv
+                FROM tracker_changeset_value_artifactlink AS cv
                     INNER JOIN tracker_artifact AS a ON (a.id = cv.artifact_id)
                     INNER JOIN tracker_artifact_priority ON (tracker_artifact_priority.curr_id = a.id)
                 WHERE changeset_value_id = $changeset_value_id
                 ORDER BY tracker_artifact_priority.rank";
+
+        return $this->retrieve($sql);
+    }
+
+    public function searchReverseLinksById($artifact_id) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+
+        $sql = "SELECT DISTINCT(tracker_changeset.artifact_id),
+                       tracker_artifact.last_changeset_id,
+                       tracker.group_id,
+                       tracker.item_name AS keyword,
+                       tracker.id AS tracker_id
+
+                FROM tracker_changeset_value_artifactlink AS artlink
+                  JOIN tracker_changeset_value as value ON (artlink.changeset_value_id = value.id)
+                  JOIN tracker_changeset ON (tracker_changeset.id = value.changeset_id)
+                  JOIN tracker_artifact ON (tracker_artifact.id = tracker_changeset.artifact_id)
+                  JOIN tracker ON (tracker.id = tracker_artifact.tracker_id)
+
+                WHERE artlink.artifact_id = $artifact_id
+                  AND tracker_artifact.last_changeset_id = tracker_changeset.id";
+
         return $this->retrieve($sql);
     }
     
@@ -61,10 +84,7 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
         if ( $changeset_value_ids === false ) {
             return false;
         }
-        // $sql = " INSERT INTO $this->table_name(changeset_value_id, value)
-        //         VALUES
-        //          ( ".implode(' , NULL ),'."\n".' ( ', $changeset_value_ids).", NULL)";
-        //return $this->update($sql);
+
         return true;
     }
 
@@ -85,4 +105,3 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
         return $this->update($sql);
     }
 }
-?>
