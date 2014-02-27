@@ -67,6 +67,6 @@ class ChangesetRepresentation {
         $this->last_comment->build($last_comment);
 
         $this->values             = $values;
-        $this->last_modified_date = JsonCast::toDate($changeset->getComment()->getSubmittedOn());
+        $this->last_modified_date = JsonCast::toDate($last_comment->getSubmittedOn());
     }
 }

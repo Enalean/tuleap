@@ -158,6 +158,13 @@ class ArtifactsResource {
     }
 
     /**
+     * @url OPTIONS
+     */
+    public function options() {
+        Header::allowOptionsPost();
+    }
+
+    /**
      * Create artifact
      *
      * Things to take into account:
@@ -186,6 +193,7 @@ class ArtifactsResource {
         } catch (Tracker_FormElement_NotImplementedForRESTException $exception) {
             throw new RestException(501, $exception->getMessage());
         }
+        $this->options();
     }
 
     /**

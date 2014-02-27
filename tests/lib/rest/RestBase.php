@@ -74,7 +74,7 @@ class RestBase extends PHPUnit_Framework_TestCase {
      * @param PFUser $user
      * @return Rest_Token
      */
-    protected function generateToken($user) {
+    protected function generateToken(PFUser $user) {
         $dao             = new Rest_TokenDao();
         $generated_hash = 'gbgfb5gfb6bfdb6db5dbdbd6b5rd'.  rand(0, 152125415);
 

@@ -37,9 +37,43 @@ class ArtifactsTest extends RestBase {
         $this->assertEquals(array('OPTIONS', 'GET', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
+    public function testOptionsArtifacts() {
+        $response = $this->getResponse($this->client->options('artifacts'));
+        $this->assertEquals(array('OPTIONS', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testPostArtifact() {
+        $summary_field_label = 'Summary';
+        $summary_field_value = "This is a new epic";
+        $post_resource = json_encode(array(
+            'tracker' => array(
+                'id'  => TestDataBuilder::EPICS_TRACKER_ID,
+                'uri' => 'whatever'
+            ),
+            'values' => array(
+               $this->getSubmitTextValue(TestDataBuilder::EPICS_TRACKER_ID, $summary_field_label, $summary_field_value),
+               $this->getSubmitListValue(TestDataBuilder::EPICS_TRACKER_ID, 'Status', 205)
+            ),
+        ));
+
+        $response = $this->getResponse($this->client->post('artifacts', null, $post_resource));
+        $this->assertEquals($response->getStatusCode(), 200);
+        $artifact_reference = $response->json();
+        $this->assertGreaterThan(0, $artifact_reference['id']);
+
+        $fetched_value = $this->getFieldValueForFieldLabel($artifact_reference['id'], $summary_field_label);
+        $this->assertEquals($summary_field_value, $fetched_value);
+        return $artifact_reference['id'];
+    }
+
+
+    /**
+     * @depends testPostArtifact
+     */
     public function testPutArtifactId() {
-        $artifact_id = 9;
-        $field_label =  'I want to';
+        $test_post_return = func_get_args();
+        $artifact_id = $test_post_return[0];
+        $field_label =  'Summary';
         $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
         $put_resource = json_encode(array(
             'values' => array(
@@ -54,6 +88,31 @@ class ArtifactsTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
 
         $this->assertEquals("Amazing test stuff", $this->getFieldValueForFieldLabel($artifact_id, $field_label));
+        return $artifact_id;
+    }
+
+    /**
+     * @depends testPutArtifactId
+     */
+    public function testPutArtifactComment() {
+        $test_post_return = func_get_args();
+        $artifact_id = $test_post_return[0];
+
+        $put_resource = json_encode(array(
+            'values' => array(),
+            'comment' => array(
+                'format' => 'text',
+                'body'   => 'Please see my comment',
+            ),
+        ));
+
+        $response    = $this->getResponse($this->client->put('artifacts/'.$artifact_id, null, $put_resource));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $response   = $this->getResponse($this->client->get("artifacts/$artifact_id/changesets"));
+        $changesets = $response->json();
+        $this->assertEquals(3, count($changesets));
+        $this->assertEquals('Please see my comment', $changesets[2]['last_comment']['body']);
     }
 
     private function getFieldIdForFieldLabel($artifact_id, $field_label) {
@@ -78,29 +137,6 @@ class ArtifactsTest extends RestBase {
     private function getArtifact($artifact_id) {
         $response = $this->getResponse($this->client->get('artifacts/'.$artifact_id));
         return $response->json();
-    }
-
-    public function testPostArtifact() {
-        $summary_field_label = 'Summary';
-        $summary_field_value = "This is a new epic";
-        $post_resource = json_encode(array(
-            'tracker' => array(
-                'id'  => TestDataBuilder::EPICS_TRACKER_ID,
-                'uri' => 'whatever'
-            ),
-            'values' => array(
-               $this->getSubmitTextValue(TestDataBuilder::EPICS_TRACKER_ID, $summary_field_label, $summary_field_value),
-               $this->getSubmitListValue(TestDataBuilder::EPICS_TRACKER_ID, 'Status', 205)
-            ),
-        ));
-
-        $response = $this->getResponse($this->client->post('artifacts', null, $post_resource));
-        $this->assertEquals($response->getStatusCode(), 200);
-        $artifact_reference = $response->json();
-        $this->assertGreaterThan(0, $artifact_reference['id']);
-
-        $fetched_value = $this->getFieldValueForFieldLabel($artifact_reference['id'], $summary_field_label);
-        $this->assertEquals($summary_field_value, $fetched_value);
     }
 
     private function getSubmitTextValue($tracker_id, $field_label, $field_value) {

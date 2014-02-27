@@ -29,7 +29,7 @@ class Tracker_Artifact_Changeset_CommentNull extends Tracker_Artifact_Changeset_
             $changeset->getSubmittedBy(),
             $changeset->getSubmittedOn(),
             '',
-            Tracker_Artifact_Changeset_Comment::$PURIFIER_LEVEL_IN_TEXT,
+            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
             -1
         );
     }

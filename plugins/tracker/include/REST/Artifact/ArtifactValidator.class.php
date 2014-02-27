@@ -37,6 +37,7 @@ class Tracker_REST_Artifact_ArtifactValidator {
     }
 
     public function getFieldsDataOnUpdate(array $values, Tracker_Artifact $artifact) {
+        $new_values     = array();
         $indexed_fields = $this->getIndexedFields($artifact->getTracker());
         foreach ($values as $value) {
             $field = $this->getField($indexed_fields, $value);
