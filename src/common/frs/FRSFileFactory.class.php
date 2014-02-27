@@ -192,16 +192,45 @@ class FRSFileFactory extends Error {
         return $this->dao;
     }
 
-    function update($data_array) {
+    public function update($data_array) {
         $dao =& $this->_getFRSFileDao();
+        $old_file = $this->getFRSFileFromDb($data_array['file_id']);
+
         if ($dao->updateFromArray($data_array)) {
             $file = $this->getFRSFileFromDb($data_array['file_id']);
             $this->_getEventManager()->processEvent('frs_update_file',
-            array('group_id' => $file->getGroup()->getGroupId(),
-                                                         'item_id'    => $data_array['file_id']));
+            array(
+                'group_id' => $file->getGroup()->getGroupId(),
+                'item_id'    => $data_array['file_id'])
+            );
+
+            if ($old_file->getFilePath() != $file->getFilePath()) {
+                $release      = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseID());
+                $project_name = $release->getProject()->getUnixName(false);
+
+                $this->moveFileToPath($file, $old_file->getFilePath(), $project_name);
+            }
+
             return true;
         }
         return false;
+    }
+
+    private function moveFileToPath(FRSFile $file, $old_path, $project_name) {
+        $project_path = $GLOBALS['ftp_frs_dir_prefix'] . '/'. $project_name . '/';
+        $file_id      = $file->getFileID();
+
+        $manager = $this->_getSystemEventManager();
+        $manager->addSystemEvent(
+            SystemEvent_MOVE_FRS_FILE::NAME,
+            array(
+                'project_path' => $project_path,
+                'file_id'      => $file_id,
+                'old_path'     => $old_path
+            )
+        );
+
+        $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('file_admin_editreleases', 'move_event'));
     }
 
 
@@ -775,6 +804,15 @@ class FRSFileFactory extends Error {
         $em = EventManager::instance();
         FRSLog::instance();
         return $em;
+    }
+
+    /**
+     * Wrapper to get a SystemEventManager instance
+     *
+     * @return SystemEventManager
+     */
+    function _getSystemEventManager() {
+        return SystemEventManager::instance();
     }
 
     /**

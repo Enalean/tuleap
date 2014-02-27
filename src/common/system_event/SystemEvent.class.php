@@ -64,6 +64,7 @@ abstract class SystemEvent {
     const TYPE_ROOT_DAILY            = "ROOT_DAILY";
     const TYPE_COMPUTE_MD5SUM        = "COMPUTE_MD5SUM";
     const TYPE_SVN_UPDATE_HOOKS      = "SVN_UPDATE_HOOKS";
+    const TYPE_MOVE_FRS_FILE         = "MOVE_FRS_FILE";
 
     // Define status value (in sync with DB enum)
     const STATUS_NONE       = "NONE";

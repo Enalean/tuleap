@@ -130,6 +130,11 @@ class SystemEventManager {
                                $this->concatParameters($params, array('user_id', 'original_keys')),
                                SystemEvent::PRIORITY_MEDIUM);
             break;
+        case SystemEvent::TYPE_MOVE_FRS_FILE:
+            $this->createEvent(SystemEvent::TYPE_MOVE_FRS_FILE,
+                               $this->concatParameters($params, array('project_path', 'file_id', 'old_path' )),
+                               SystemEvent::PRIORITY_HIGH);
+            break;
         case Event::USER_EMAIL_CHANGED:
             $this->createEvent(SystemEvent::TYPE_USER_EMAIL_CHANGED,
                                $params['user_id'],
