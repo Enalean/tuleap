@@ -180,8 +180,22 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
 
     public function fetchArtifactForOverlay(Tracker_Artifact $artifact) {
-        return '';
+        $user_manager   = UserManager::instance();
+        $user           = $user_manager->getCurrentUser();
+        $parent_tracker = $this->getTracker()->getParent();
+
+        if ($artifact->getParent($user) || ! $parent_tracker) {
+            return '';
         }
+
+        $prefill_parent = '';
+        $name           = 'artifact['. $this->id .']';
+        $current_user   = $this->getCurrentUser();
+        $hp             = Codendi_HTMLPurifier::instance();
+        $can_create     = false;
+
+        return $this->fetchParentSelector($prefill_parent, $name, $parent_tracker, $current_user, $hp, $can_create);
+    }
 
     public function fetchSubmitForOverlay($submitted_values) {
         $prefill_parent = '';
@@ -737,7 +751,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $artifact_links = $value->getValue();
         }
 
-        if (is_array($submitted_values[0])) {
+        if (isset($submitted_values[0]) && is_array($submitted_values[0])) {
             $submitted_value = $submitted_values[0][$this->getId()];
         }
 
