@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/include/Codendi_HTMLPurifier.class.php');
-
 /**
  * Manage values in changeset for string fields
  */
@@ -37,6 +35,10 @@ class Tracker_Artifact_ChangesetValue_OpenList extends Tracker_Artifact_Changese
             $array[] = $value->getJsonId();
         }
         return $array;
+    }
+
+    protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
+        return $value->getAPIValue();
     }
 }
 ?>

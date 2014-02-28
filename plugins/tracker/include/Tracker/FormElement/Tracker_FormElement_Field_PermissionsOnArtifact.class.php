@@ -674,7 +674,10 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      }
 
      public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
-        throw new Tracker_FormElement_NotImplementedForRESTException($this);
+        if (isset($value['granted_groups'])) {
+            return $this->getFieldDataFromArray($value['granted_groups']);
+        }
+        throw new Tracker_FormElement_InvalidFieldValueException('Permission field values must be passed as an array of ugroup ids (int) in \'granted_ugroups\'');
     }
 
      /**
@@ -685,32 +688,25 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @return mixed the field data corresponding to the soap_value for artifact submision
      */
     public function getFieldData($soap_value) {
-        if (trim($soap_value) != '') {
-            $soap_values = explode(',', $soap_value);
-            //$available_ugroups = $this->getAvailableUGroups();
-            $ugroups_id = array();
-            foreach ($soap_values as $v) {
-                //$ugroup_id = $this->getUGroupIdByName($v);
-                if ($ugroup_id) {
-                    $ugroups_id[] = $ugroup_id;
-                } else {
-                    return null;
-                }
-            }
-            $return = array(
-                'uses_artifact_permissions' => 1,
-                'u_groups' => $ugroups_id
+        return $this->getFieldDataFromArray(explode(',', $soap_value));
+    }
+
+    private function getFieldDataFromArray(array $values) {
+        $ugroup_ids = array_filter(array_map('intval', $values));
+        if (count($ugroup_ids) == 0 || in_array(UGroup::ANONYMOUS, $ugroup_ids)) {
+            return array (
+                'use_artifact_permissions' => 0,
+                'u_groups'                 => array()
             );
-            return $return;
         } else {
-            $return = array(
-                'uses_artifact_permissions' => 0,
-                'u_groups' => array()
+            return array(
+                'use_artifact_permissions' => 1,
+                'u_groups'                 => $ugroup_ids
             );
-            return $return;
         }
     }
-     
+
+
     /**
      * @return bool
      */

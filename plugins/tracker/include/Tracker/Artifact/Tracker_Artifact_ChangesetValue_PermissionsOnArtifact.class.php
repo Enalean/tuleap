@@ -72,8 +72,14 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     }
 
     public function getRESTValue() {
-        // Not implemented yet
-        // Should reference a /groups/:id URI
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValuePermissionsOnArtifactRepresentation';
+        $representation = new $classname_with_namespace;
+        $representation->build(
+            $this->field->getId(),
+            $this->field->getLabel(),
+            $this->getPerms()
+        );
+        return $representation;
     }
 
     /**

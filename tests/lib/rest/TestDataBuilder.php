@@ -26,6 +26,7 @@ class TestDataBuilder {
     const ADMIN_ID         = 101;
     const ADMIN_USER_NAME  = 'admin';
     const ADMIN_USER_PASS  = 'siteadmin';
+
     const ADMIN_REAL_NAME  = 'Site Administrator';
     const ADMIN_EMAIL      = 'codendi-admin@_DOMAIN_NAME_';
     const TEST_USER_1_ID   = 102;

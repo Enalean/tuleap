@@ -18,29 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_Changeset_CommentNull extends Tracker_Artifact_Changeset_Comment {
+namespace Tuleap\Tracker\REST\Artifact;
 
-    public function __construct(Tracker_Artifact_Changeset $changeset) {
-        parent::__construct(
-            0,
-            $changeset,
-            0,
-            0,
-            $changeset->getSubmittedBy(),
-            $changeset->getSubmittedOn(),
-            '',
-            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
-            -1
-        );
-    }
+use Tuleap\REST\JsonCast;
 
-    public function getSoapValue() {
-        return array(
-            'submitted_by' => $this->submitted_by,
-            'submitted_on' => $this->submitted_on,
-            'format'       => $this->bodyFormat,
-            'body'         => $this->body
-        );
+class ArtifactFieldValuePermissionsOnArtifactRepresentation {
+    /**
+     * @var int ID of the field
+     */
+    public $field_id;
+
+    /**
+     * @var string Label of the field
+     */
+    public $label;
+
+    /**
+     * @var string[]
+     */
+    public $granted_groups = array();
+
+    public function build($id, $label, array $granted_groups) {
+        $this->field_id       = JsonCast::toInt($id);
+        $this->label          = $label;
+        $this->granted_groups = $granted_groups;
     }
 }
-?>
