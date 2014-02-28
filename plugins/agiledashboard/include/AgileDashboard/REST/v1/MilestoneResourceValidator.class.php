@@ -75,21 +75,21 @@ class MilestoneResourceValidator {
     }
 
     public function validateArtifactsFromBodyContent(array $ids, Planning_Milestone $milestone, PFUser $user) {
-        $strategy       = null;
         $open_unplanned = null;
 
         if (! $this->idsAreUnique($ids)) {
             throw new IdsFromBodyAreNotUniqueException();
         }
 
-        if ($milestone->getParent()) {
-            $strategy = $this->backlog_strategy_factory->getBacklogStrategy($milestone);
+        //We only want to use this strategy when editing the list of items in a milestone. (a descendant
+        //strategy would fetch all the children of the backlog items).
+        $strategy = $this->backlog_strategy_factory->getSelfBacklogStrategy($milestone);
 
+        if ($milestone->getParent()) {
             $open_unplanned = $this->backlog_item_collection_factory->getUnplannedOpenCollection($user, $milestone->getParent(), $this->backlog_strategy_factory->getBacklogStrategy($milestone->getParent()), false);
 
         } else {
             $top_milestone       = $this->milestone_factory->getVirtualTopMilestone($user, $milestone->getProject());
-            $strategy            = $this->backlog_strategy_factory->getSelfBacklogStrategy($milestone);
             $strategy_unassigned = $this->backlog_strategy_factory->getSelfBacklogStrategy($top_milestone);
 
             $open_unplanned = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $top_milestone, $strategy_unassigned, false);
