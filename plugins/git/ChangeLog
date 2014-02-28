@@ -1,3 +1,6 @@
+Version 3.70 - Tuleap 6.11
+    * story #6074 - see meaningful URLs for git repositories
+
 Version 3.69 - Tuleap 6.11
     * Fix request #6163: checkbox with Git stays after clicking on it
 
