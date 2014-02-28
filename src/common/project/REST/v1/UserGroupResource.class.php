@@ -117,7 +117,7 @@ class UserGroupResource {
      *
      * @return Array {@type \Tuleap\Project\REST\UserRepresentation}
      */
-    public function getUsers($id, $limit = self::MAX_LIMIT, $offset = 0) {
+    public function getUsers($id, $limit = 10, $offset = 0) {
         $this->checkLimitValueIsAcceptable($limit);
         $this->checkIdIsWellFormed($id);
 
@@ -287,7 +287,7 @@ class UserGroupResource {
      */
 
     private function checkLimitValueIsAcceptable($limit) {
-        if ($limit > self::MAX_LIMIT || $limit <= 0) {
+        if ($limit > self::MAX_LIMIT) {
              throw new RestException(406, 'limit value is not acceptable');
         }
 
