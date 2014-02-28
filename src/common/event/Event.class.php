@@ -729,5 +729,15 @@ class Event {
      *     'html' => string
      */
     const MANAGE_THIRD_PARTY_APPS = 'manage_third_party_apps';
+
+    /**
+     * Detect the project id in a url
+     *
+     * Parameters:
+     *  'url'        => string
+     *
+     * Expected result:
+     *  'project_id' => int
+     */
+    const GET_PROJECTID_FROM_URL = 'get_projectid_from_url';
 }
-?>

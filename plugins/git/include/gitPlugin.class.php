@@ -112,6 +112,7 @@ class GitPlugin extends Plugin {
         $this->_addHook(Event::MANAGE_THIRD_PARTY_APPS, 'manage_third_party_apps');
 
         $this->_addHook('register_project_creation');
+        $this->_addHook(Event::GET_PROJECTID_FROM_URL);
     }
 
     public function site_admin_option_hook() {
@@ -190,6 +191,7 @@ class GitPlugin extends Plugin {
                     $this->getGerritServerFactory(),
                     $this->getLogger(),
                     $this->getProjectCreator(),
+                    $this->getGitRepositoryUrlManager(),
                 );
                 break;
             case SystemEvent_GIT_REPO_FORK::NAME:
@@ -662,7 +664,7 @@ class GitPlugin extends Plugin {
             $params['logger'],
             $this->getGitoliteAdminPath()
         );
-        $gitolite_driver = new Git_GitoliteDriver();
+        $gitolite_driver = new Git_GitoliteDriver($this->getGitRepositoryUrlManager());
 
         $gitolite_driver->checkAuthorizedKeys();
         $gitgc->cleanUpGitoliteAdminWorkingCopy();
@@ -696,7 +698,7 @@ class GitPlugin extends Plugin {
         if (!empty($params['formatter'])) {
             include_once('GitBackend.class.php');
             $formatter  = $params['formatter'];
-            $gitBackend = Backend::instance('Git','GitBackend');
+            $gitBackend = Backend::instance('Git','GitBackend', array($this->getGitRepositoryUrlManager()));
             echo $gitBackend->getBackendStatistics($formatter);
         }
     }
@@ -993,8 +995,6 @@ class GitPlugin extends Plugin {
     }
 
     private function getGitController() {
-        $project_manager = ProjectManager::instance();
-
         return new Git(
             $this,
             $this->getGerritServerFactory(),
@@ -1002,14 +1002,15 @@ class GitPlugin extends Plugin {
             $this->getRepositoryManager(),
             $this->getGitSystemEventManager(),
             new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory()),
-            new GitRepositoryFactory(new GitDao(), $project_manager),
+            $this->getRepositoryFactory(),
             UserManager::instance(),
-            $project_manager,
+            ProjectManager::instance(),
             PluginManager::instance(),
             HTTPRequest::instance(),
             $this->getProjectCreator(),
             new Git_Driver_Gerrit_Template_TemplateFactory(new Git_Driver_Gerrit_Template_TemplateDao()),
-            new GitPermissionsManager()
+            new GitPermissionsManager(),
+            $this->getGitRepositoryUrlManager()
         );
     }
 
@@ -1155,5 +1156,37 @@ class GitPlugin extends Plugin {
                 $params['ugroupsMapping']
         );
     }
+
+    /** @see Event::GET_PROJECTID_FROM_URL */
+    public function get_projectid_from_url($params) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $url = new Git_URL(
+                ProjectManager::instance(),
+                $this->getRepositoryFactory(),
+                $_SERVER['REQUEST_URI']
+            );
+            if ($url->isFriendly() && ! $this->areFriendlyUrlsActivated()) {
+                return;
+            }
+
+            $project = $url->getProject();
+            if ($project && ! $project->isError()) {
+                $params['project_id'] = $url->getProject()->getId();
+            }
+        }
+    }
+
+    /**
+     * @return boolean true if friendly URLs have been activated
+     */
+    public function areFriendlyUrlsActivated() {
+        return (bool) $this->getConfigurationParameter('git_use_friendly_urls');
+    }
+
+    /**
+     * @return Git_GitRepositoryUrlManager
+     */
+    private function getGitRepositoryUrlManager() {
+        return new Git_GitRepositoryUrlManager($this);
+    }
 }
-?>

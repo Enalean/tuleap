@@ -40,6 +40,9 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
     /** @var Git_Driver_Gerrit_ProjectCreator */
     private $project_creator;
 
+    /** @var Git_GitRepositoryUrlManager */
+    private $url_manager;
+
     public function process() {
         $repo_id           = (int)$this->getParameter(0);
         $remote_server_id  = (int)$this->getParameter(1);
@@ -100,7 +103,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
             $hp = Codendi_HTMLPurifier::instance();
             $repo = $this->repository_factory->getRepositoryById($repo_id);
             if ($repo) {
-                $txt = '<a href="/plugins/git/index.php/'. $repo->getProjectId() .'/view/'. $repo_id .'/" title="'. $hp->purify($repo->getFullName()) .'">'. $txt .'</a>';
+                $txt = $repo->getHTMLLink($this->url_manager);
             }
         }
         return $txt;
@@ -109,7 +112,6 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
     private function verbalizeRemoteServerId($remote_server_id, $with_link) {
         $txt = '#'. $remote_server_id;
         if ($with_link) {
-            $hp = Codendi_HTMLPurifier::instance();
             $server = $this->server_factory->getServerById($remote_server_id);
             $txt = $server->getHost();
         }
@@ -121,13 +123,15 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
         GitRepositoryFactory $repository_factory,
         Git_RemoteServer_GerritServerFactory  $server_factory,
         Logger  $logger,
-        Git_Driver_Gerrit_ProjectCreator $project_creator
+        Git_Driver_Gerrit_ProjectCreator $project_creator,
+        Git_GitRepositoryUrlManager $url_manager
     ) {
         $this->dao                = $dao;
         $this->repository_factory = $repository_factory;
         $this->server_factory     = $server_factory;
         $this->logger             = $logger;
         $this->project_creator    = $project_creator;
+        $this->url_manager        = $url_manager;
     }
 }
 

@@ -51,20 +51,25 @@ class GitViews_ShowRepo {
      */
     private $gerrit_servers;
 
+    /** @var Git_GitRepositoryUrlManager */
+    private $url_manager;
+
     public function __construct(
             GitRepository $repository,
             Git $controller,
+            Git_GitRepositoryUrlManager $url_manager,
             Codendi_Request $request,
             Git_Driver_Gerrit $driver,
             Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
             array $gerrit_servers
     ) {
-        $this->repository     = $repository;
-        $this->controller     = $controller;
-        $this->request        = $request;
-        $this->driver         = $driver;
+        $this->repository         = $repository;
+        $this->controller         = $controller;
+        $this->request            = $request;
+        $this->driver             = $driver;
         $this->gerrit_usermanager = $gerrit_usermanager;
-        $this->gerrit_servers = $gerrit_servers;
+        $this->gerrit_servers     = $gerrit_servers;
+        $this->url_manager        = $url_manager;
     }
 
 
@@ -81,6 +86,7 @@ class GitViews_ShowRepo {
                 $git_php_viewer,
                 $this->request->getCurrentUser(),
                 $this->controller,
+                $this->url_manager,
                 $this->driver,
                 $this->gerrit_usermanager,
                 $this->gerrit_servers,

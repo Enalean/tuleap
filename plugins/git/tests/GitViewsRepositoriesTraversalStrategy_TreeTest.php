@@ -26,22 +26,31 @@ Mock::generate('PFUser');
 Mock::generate('GitRepository');
 
 class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositoriesTraversalStrategyTest {
-    
+
     public function __construct() {
         parent::__construct('GitViewsRepositoriesTraversalStrategy_Tree');
     }
+
+    /** @var Git_GitRepositoryUrlManager */
+    protected $url_manager;
+
+    public function setUp() {
+        parent::setUp();
+        $git_plugin         = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
+        $this->url_manager  = new Git_GitRepositoryUrlManager($git_plugin);
+    }
     
     public function testEmptyListShouldReturnEmptyString() {
-        $lastPushes = array();
-        $user = mock('PFUser');
+        $lastPushes   = array();
+        $user         = mock('PFUser');
         $repositories = array();
-        $strategy = new $this->classname($lastPushes);
+        $strategy     = new $this->classname($lastPushes, $this->url_manager);
         $this->assertIdentical('', $strategy->fetch($repositories, $user));
     }
     
     public function testInsertInTreeWithOneFolderShouldInsertInTheFirstLevel() {
         $lastPushes = array();
-        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($lastPushes);
+        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($lastPushes, $this->url_manager);
         
         $tree = array();
         $path = array('a');
@@ -53,7 +62,7 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     
     public function testInsertInTreeWithEmptyPathShouldDoNothing() {
         $lastPushes = array();
-        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($lastPushes);
+        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($lastPushes, $this->url_manager);
         
         $tree = array();
         $path = array();
@@ -65,7 +74,7 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     
     public function testInsertInTreeShouldInsertAtTheLeaf() {
         $lastPushes = array();
-        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($lastPushes);
+        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($lastPushes, $this->url_manager);
         
         $tree = array();
         $path = array('a', 'b', 'c');
@@ -77,7 +86,7 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     
     public function testInsertInTreeShouldInsertInSeveralBranches() {
         $lastPushes = array();
-        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($lastPushes);
+        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($lastPushes, $this->url_manager);
         $tree      = array();
         
         $path  = array('a', 'b', 'c');
@@ -98,10 +107,9 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     }
     
     public function testBuildTree() {
-        $view      = new MockGitViews();
         $lastPushes = array();
         $traversal = TestHelper::getPartialMock('GitViewsRepositoriesTraversalStrategy_Tree', array('getRepository'));
-        $traversal->__construct($view, $lastPushes);
+        $traversal->__construct($lastPushes, $this->url_manager);
         
         // Magic call that do stuff we want, yeah!
         $repositories = $this->getFlatTree($traversal);
@@ -127,7 +135,7 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
         $lastPushes = array();
         
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));
-        $strategy->__construct($lastPushes);
+        $strategy->__construct($lastPushes, $this->url_manager);
         
         $repositories = $this->getFlatTree($strategy);
         
@@ -150,7 +158,7 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
         $lastPushes = array();
 
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));
-        $strategy->__construct($lastPushes);
+        $strategy->__construct($lastPushes, $this->url_manager);
 
         $repositories = $this->getFlatTree($strategy);
 

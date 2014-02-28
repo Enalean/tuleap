@@ -175,9 +175,8 @@ class PluginController {
      * @TODO associate an action and a view in order to skip action call to provide data to a given view.(like Symfony framework component)
      * @return null
      */
-    function executeViews() {        
-        $className = get_class($this).'Views';
-        $wv        = new $className($this);
+    function executeViews() {
+        $wv = $this->instantiateView();
         //this allow to skip header
         if (! isset($_REQUEST['noheader']) && $this->default_page_rendering) {
             $wv->display('header', $this->views['header']);
@@ -191,6 +190,11 @@ class PluginController {
         if ($this->default_page_rendering) {
             $wv->display('footer', $this->views['footer']);
         }
+    }
+
+    protected function instantiateView()  {
+        $className = get_class($this).'Views';
+        return new $className($this);
     }
 
     /**

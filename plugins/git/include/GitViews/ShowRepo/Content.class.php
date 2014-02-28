@@ -59,11 +59,15 @@ class GitViews_ShowRepo_Content {
      */
     private $theme_path;
 
+    /** @var Git_GitRepositoryUrlManager */
+    private $url_manager;
+
     public function __construct(
         GitRepository $repository,
         GitViews_GitPhpViewer $gitphp_viewer,
         PFUser $current_user,
         Git $controller,
+        Git_GitRepositoryUrlManager $url_manager,
         Git_Driver_Gerrit $driver,
         Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         array $gerrit_servers,
@@ -77,6 +81,7 @@ class GitViews_ShowRepo_Content {
         $this->gerrit_usermanager = $gerrit_usermanager;
         $this->gerrit_servers = $gerrit_servers;
         $this->theme_path     = $theme_path;
+        $this->url_manager    = $url_manager;
     }
 
     public function display() {
@@ -114,7 +119,7 @@ class GitViews_ShowRepo_Content {
         $html .= '<h1>'.$accessType.$this->repository->getFullName().'</h1>';
         if ( !empty($parent) ) {
             $html .= '<div id="plugin_git_repo_parent">';
-            $html .= $GLOBALS['Language']->getText('plugin_git', 'view_repo_parent_'. $this->repository->getBackendType(), $parent->getHTMLLink());
+            $html .= $GLOBALS['Language']->getText('plugin_git', 'view_repo_parent_'. $this->repository->getBackendType(), $parent->getHTMLLink($this->url_manager));
             $html .= '</div>';
         }
         return $html;

@@ -99,6 +99,9 @@ class Git extends PluginController {
     /** @var GitPermissionsManager */
     private $permissions_manager;
 
+    /** @var Git_GitRepositoryUrlManager */
+    private $url_manager;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -113,47 +116,34 @@ class Git extends PluginController {
         Codendi_Request $request,
         Git_Driver_Gerrit_ProjectCreator $project_creator,
         Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
-        GitPermissionsManager $permissions_manager
+        GitPermissionsManager $permissions_manager,
+        Git_GitRepositoryUrlManager $url_manager
     ) {
         parent::__construct($user_manager, $request);
 
-        $this->userManager           = $user_manager;
-        $this->projectManager        = $project_manager;
-        $this->factory               = $git_repository_factory;
-        $this->gerrit_server_factory = $gerrit_server_factory;
-        $this->driver                = $driver;
-        $this->repository_manager    = $repository_manager;
+        $this->userManager              = $user_manager;
+        $this->projectManager           = $project_manager;
+        $this->factory                  = $git_repository_factory;
+        $this->gerrit_server_factory    = $gerrit_server_factory;
+        $this->driver                   = $driver;
+        $this->repository_manager       = $repository_manager;
         $this->git_system_event_manager = $system_event_manager;
         $this->gerrit_usermanager       = $gerrit_usermanager;
         $this->plugin_manager           = $plugin_manager;
         $this->project_creator          = $project_creator;
         $this->template_factory         = $template_factory;
-        $this->permissions_manager  = $permissions_manager;
+        $this->permissions_manager      = $permissions_manager;
+        $this->plugin                   = $plugin;
+        $this->url_manager              = $url_manager;
 
-        $matches = array();
-        if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
-            $this->request->set('group_id', $matches[1][0]);
-            $this->request->set('action', $matches[2][0]);
-            $repo_id = 0;            
-            //repository id is passed            
-            if ( preg_match('/^([0-9]+)$/', $matches[3][0]) === 1 ) {
-               $repo_id = $matches[3][0];
-            } else {
-            //get repository by name and group id to retrieve repo id
-               $repo = new GitRepository();
-               $repo->setName($matches[3][0]);
-               $repo->setProject( $this->projectManager->getProject($matches[1][0]) );
-               try {
-                   $repo->load();
-               } catch (Exception $e) {                   
-                   $this->addError('Bad request');
-                   $this->redirect('/');
-               }
-               $repo_id = $repo->getId();               
-            }
-            $this->request->set('repo_id', $repo_id);
-        }        
-        $this->plugin      = $plugin;
+        $url = new Git_URL(
+            $this->projectManager,
+            $this->factory,
+            $_SERVER['REQUEST_URI']
+        );
+        $this->routeUsingFriendlyURLs($url);
+        $this->routeUsingStandardURLs($url);
+
         $valid = new Valid_GroupId('group_id');
         $valid->required();
         if($this->request->valid($valid)) {
@@ -167,12 +157,12 @@ class Git extends PluginController {
 
         if (  empty($this->action) ) {
             $this->action = 'index';
-        }                  
+        }
         if ( empty($this->groupId) ) {
             $this->addError('Bad request');
             $this->redirect('/');
         }
-      
+
         $this->projectName      = $this->projectManager->getProject($this->groupId)->getUnixName();
         if ( !$this->plugin_manager->isPluginAllowedForProject($this->plugin, $this->groupId) ) {
             $this->addError( $this->getText('project_service_not_available') );
@@ -180,6 +170,68 @@ class Git extends PluginController {
         }
 
         $this->permittedActions = array();
+    }
+
+    protected function instantiateView() {
+        return new GitViews($this, new Git_GitRepositoryUrlManager($this->getPlugin()));
+    }
+
+    private function routeUsingFriendlyURLs(Git_URL $url) {
+        if (! $this->getPlugin()->areFriendlyUrlsActivated()) {
+            return;
+        }
+
+        if (! $url->isFriendly()) {
+            return;
+        }
+
+        $repository = $url->getRepository();
+        if (! $repository) {
+            return;
+        }
+
+        $this->request->set('action', 'view');
+        $this->request->set('group_id', $repository->getProjectId());
+        $this->request->set('repo_id', $repository->getId());
+        if ($url->getParameters()) {
+            parse_str($url->getParameters(), $_GET);
+            parse_str($url->getParameters(), $_REQUEST);
+        }
+    }
+
+    private function routeUsingStandardURLs(Git_URL $url) {
+        if (! $url->isStandard()) {
+            return;
+        }
+
+        $repository = $url->getRepository();
+        if (! $repository) {
+            $this->addError('Bad request');
+            $this->redirect('/');
+            return;
+        }
+
+        $project = $url->getProject();
+        $this->redirectIfTryingToViewRepositoryAndUserFriendlyURLsActivated($project, $repository, $url->getParameters());
+
+        $this->request->set('group_id', $project->getId());
+        $this->request->set('action', 'view');
+        $this->request->set('repo_id', $repository->getId());
+    }
+
+    private function redirectIfTryingToViewRepositoryAndUserFriendlyURLsActivated(
+        Project $project,
+        GitRepository $repository,
+        $parameters
+    ) {
+        if (! $this->getPlugin()->areFriendlyUrlsActivated()) {
+            return;
+        }
+
+        $request_parameters = $parameters ? '?'.$parameters : '';
+        $redirecting_url    = GIT_BASE_URL .'/'. $project->getUnixName() .'/'. $repository->getFullName() . $request_parameters;
+
+        header("Location: $redirecting_url", TRUE, 301);
     }
 
     public function setPermissionsManager(GitPermissionsManager $permissions_manager) {
@@ -742,7 +794,8 @@ class Git extends PluginController {
             $this->project_creator,
             $this->template_factory,
             $this->projectManager,
-            $this->permissions_manager
+            $this->permissions_manager,
+            $this->url_manager
         );
     }
 

@@ -48,6 +48,9 @@ class GitActionsTest extends TuleapTestCase {
         $GLOBALS['Language']->setReturnValue('getText', 'actions_no_repository_forked', array('plugin_git', 'actions_no_repository_forked', '*'));
         $GLOBALS['Language']->setReturnValue('getText', 'successfully_forked', array('plugin_git', 'successfully_forked', '*'));
 
+        $git_plugin        = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
+        $url_manager       = new Git_GitRepositoryUrlManager($git_plugin);
+
         $this->gitAction = partial_mock(
             'GitActions',
             array('getText', 'addData', 'getGitRepository', 'save'),
@@ -62,7 +65,8 @@ class GitActionsTest extends TuleapTestCase {
                 mock('Git_Driver_Gerrit_ProjectCreator'),
                 mock('Git_Driver_Gerrit_Template_TemplateFactory'),
                 mock('ProjectManager'),
-                mock('GitPermissionsManager')
+                mock('GitPermissionsManager'),
+                $url_manager
             )
         );
     }
@@ -452,6 +456,9 @@ class GitActions_Delete_Tests extends TuleapTestCase {
 
         stub($git_repository_factory)->getRepositoryById($this->repository_id)->returns($this->repository);
 
+        $git_plugin  = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
+        $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
+
         $this->git_actions = new GitActions(
             $controler,
             $this->git_system_event_manager,
@@ -463,7 +470,8 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             mock('Git_Driver_Gerrit_ProjectCreator'),
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
             mock('ProjectManager'),
-            mock('GitPermissionsManager')
+            mock('GitPermissionsManager'),
+            $url_manager
         );
     }
 
@@ -500,6 +508,10 @@ class GitActions_ForkTests extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->manager = mock('GitRepositoryManager');
+
+        $git_plugin  = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
+        $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
+
         $this->actions = new GitActions(
             mock('Git'),
             mock('Git_SystemEventManager'),
@@ -511,7 +523,8 @@ class GitActions_ForkTests extends TuleapTestCase {
             mock('Git_Driver_Gerrit_ProjectCreator'),
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
             mock('ProjectManager'),
-            mock('GitPermissionsManager')
+            mock('GitPermissionsManager'),
+            $url_manager
         );
     }
 
@@ -623,6 +636,10 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
         stub($this->gerrit_factory)->getServerById($this->unexsting_server_id)
             ->throws(new Git_RemoteServer_NotFoundException($this->unexsting_server_id));
 
+        $git_plugin  = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
+        $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
+
+
         $this->actions = new GitActions(
             mock('Git'),
             $this->git_system_event_manager,
@@ -634,7 +651,8 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
             mock('Git_Driver_Gerrit_ProjectCreator'),
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
             mock('ProjectManager'),
-            mock('GitPermissionsManager')
+            mock('GitPermissionsManager'),
+            $url_manager
         );
     }
 
@@ -682,6 +700,10 @@ class GitActions_disconnectFromGerritTest extends TuleapTestCase {
 
         stub($this->controller)->getRequest()->returns($this->request);
 
+        $git_plugin  = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
+        $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
+
+
         $this->actions = new GitActions(
             $this->controller,
             $this->system_event_manager,
@@ -693,7 +715,8 @@ class GitActions_disconnectFromGerritTest extends TuleapTestCase {
             mock('Git_Driver_Gerrit_ProjectCreator'),
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
             mock('ProjectManager'),
-            mock('GitPermissionsManager')
+            mock('GitPermissionsManager'),
+            $url_manager
         );
     }
 
@@ -758,6 +781,10 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
 
         stub($this->controller)->getRequest()->returns($this->request);
 
+        $git_plugin  = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
+        $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
+
+
         $this->actions = new GitActions(
             $this->controller,
             $this->system_event_manager,
@@ -769,7 +796,8 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
             $this->project_creator,
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
             mock('ProjectManager'),
-            $this->git_permissions_manager
+            $this->git_permissions_manager,
+            $url_manager
         );
 
     }

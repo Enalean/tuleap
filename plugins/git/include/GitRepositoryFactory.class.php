@@ -195,7 +195,7 @@ class GitRepositoryFactory {
      * 
      * @return GitRepository
      */
-    private function getByProjectNameAndPath($projectName, $path) {
+    public function getByProjectNameAndPath($projectName, $path) {
         $project = $this->projectManager->getProjectByUnixName($projectName);
         if ($project) {
             return $this->getRepositoryByPath($project->getID(), $projectName . '/' . $path);

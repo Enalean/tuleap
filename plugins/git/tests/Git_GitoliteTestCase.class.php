@@ -41,6 +41,9 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
     /** @var GitRepositoryFactory */
     protected $repository_factory;
 
+    /** @var Git_GitRepositoryUrlManager */
+    protected $url_manager;
+
     public function setUp() {
         parent::setUp();
         $this->cwd           = getcwd();
@@ -69,7 +72,10 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
 
         $this->repository_factory = mock('GitRepositoryFactory');
 
-        $this->driver = new Git_GitoliteDriver($this->_glAdmDir, $this->gitExec, $this->repository_factory);
+        $git_plugin        = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
+        $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin);
+
+        $this->driver = new Git_GitoliteDriver($this->url_manager, $this->_glAdmDir, $this->gitExec, $this->repository_factory);
     }
     
     public function tearDown() {

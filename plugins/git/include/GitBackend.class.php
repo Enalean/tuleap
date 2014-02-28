@@ -32,7 +32,10 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     //path MUST end with a '/'
     private $gitRootPath;
 
-    const DEFAULT_DIR_MODE = '770';    
+    /** @var Git_GitRepositoryUrlManager */
+    private $url_manager;
+
+    const DEFAULT_DIR_MODE = '770';
 
     protected function __construct() {
         $this->gitRootPath  = '';
@@ -42,7 +45,11 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         $this->dao          = new GitDao();
         //WARN : this is much safer to set it to an absolute path
         $this->gitRootPath  = Git_Backend_Interface::GIT_ROOT_PATH ;
-        $this->gitBackupDir = PluginManager::instance()->getPluginByName('git')->getPluginInfo()->getPropVal('git_backup_dir');        
+        $this->gitBackupDir = PluginManager::instance()->getPluginByName('git')->getPluginInfo()->getPropVal('git_backup_dir');
+    }
+
+    public function setUp(Git_GitRepositoryUrlManager $url_manager) {
+        $this->url_manager  = $url_manager;
     }
 
     public function setGitBackupDir($dir) {
@@ -84,7 +91,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
      * @return <type>
      * @todo move gitroopath creation to an install script
      */
-    public function createReference($repository) {        
+    public function createReference($repository) {
         if ( $repository->exists() ) {
              throw new GitBackendException('Repository already exists');
         }        
@@ -225,8 +232,9 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
      * @param GitRepository $repository
      */
     public function setUpMailingHook($repository) {
-        $path = $this->getGitRootPath().$repository->getPath();
-        $this->getDriver()->setConfig($path, 'hooks.showrev', $repository->getPostReceiveShowRev());
+        $path     = $this->getGitRootPath().$repository->getPath();
+        $show_rev = $repository->getPostReceiveShowRev($this->url_manager);
+        $this->getDriver()->setConfig($path, 'hooks.showrev', $show_rev);
     }
 
 

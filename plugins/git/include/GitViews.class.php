@@ -36,7 +36,10 @@ class GitViews extends PluginViews {
     /** @var UGroupManager */
     private $ugroup_manager;
 
-    public function __construct($controller) {
+    /** @var Git_GitRepositoryUrlManager */
+    private $url_manager;
+
+    public function __construct($controller, Git_GitRepositoryUrlManager $url_manager) {
         parent::__construct($controller);
         $this->groupId                 = (int)$this->request->get('group_id');
         $this->project                 = ProjectManager::instance()->getProject($this->groupId);
@@ -44,6 +47,7 @@ class GitViews extends PluginViews {
         $this->userName                = $this->user->getName();
         $this->git_permissions_manager = new GitPermissionsManager();
         $this->ugroup_manager          = new UGroupManager();
+        $this->url_manager             = $url_manager;
     }
 
     public function header() {
@@ -132,6 +136,7 @@ class GitViews extends PluginViews {
         $index_view = new GitViews_ShowRepo(
             $repository,
             $this->controller,
+            $this->url_manager,
             $this->controller->getRequest(),
             $params['driver'],
             $params['gerrit_usermanager'],
@@ -147,7 +152,7 @@ class GitViews extends PluginViews {
         $params = $this->getData();
         $repository   = $params['repository'];
         $this->_getBreadCrumb();
-        echo '<h2>'. $repository->getHTMLLink() .' - '. $GLOBALS['Language']->getText('global', 'Settings') .'</h2>';
+        echo '<h2>'. $repository->getHTMLLink($this->url_manager) .' - '. $GLOBALS['Language']->getText('global', 'Settings') .'</h2>';
         $repo_management_view = new GitViews_RepoManagement($repository, $this->controller->getRequest(), $params['driver'], $params['gerrit_servers'], $params['gerrit_templates']);
         $repo_management_view->display();
     }
@@ -162,7 +167,7 @@ class GitViews extends PluginViews {
         $initialized  = $repository->isInitialized();
         echo "<br/>";
         $this->_getBreadCrumb();
-        echo "<h1>". $repository->getHTMLLink() ."</h1>";
+        echo "<h1>". $repository->getHTMLLink($this->url_manager) ."</h1>";
         ?>
         <form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
         <input type="hidden" id="action" name="action" value="edit" />
@@ -221,7 +226,7 @@ class GitViews extends PluginViews {
     /**
      * TREE VIEW
      */
-    public function index() {        
+    public function index() {
         $params = $this->getData();
         $this->_getBreadCrumb();
         $this->_tree($params);
@@ -438,7 +443,7 @@ class GitViews extends PluginViews {
     /**
      * TREE SUBVIEW
      */
-    protected function _tree( $params=array() ) {
+    protected function _tree($params=array()) {
         if ( empty($params) ) {
             $params = $this->getData();
         }
@@ -478,7 +483,7 @@ class GitViews extends PluginViews {
                     $lastPushes[$id] = $dar->getRow();
                 }
             }
-            $strategy = new GitViewsRepositoriesTraversalStrategy_Tree($lastPushes);
+            $strategy = new GitViewsRepositoriesTraversalStrategy_Tree($lastPushes, $this->url_manager);
             echo $strategy->fetch($params['repository_list'], $this->user);
         }
         else {
