@@ -156,6 +156,13 @@ class MilestoneTest extends RestBase {
         $this->assertEquals($second_backlog_item['artifact'], array('id' => TestDataBuilder::EPIC_4_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::EPIC_4_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::EPICS_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::EPICS_TRACKER_ID)));
     }
 
+    public function testPUTContentWithSameValueAsPreviouslyReturns200() {
+        $response_put = $this->getResponse($this->client->put('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/content', null, '['.TestDataBuilder::EPIC_1_ARTIFACT_ID.','.TestDataBuilder::EPIC_4_ARTIFACT_ID.']'));
+
+        $this->assertEquals($response_put->getStatusCode(), 200);
+        $this->assertEquals($response_put->json(), array());
+    }
+
     public function testPUTContentOnlyOneElement() {
         $response_put = $this->getResponse($this->client->put('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/content', null, '['.TestDataBuilder::EPIC_4_ARTIFACT_ID.']'));
 
@@ -254,6 +261,12 @@ class MilestoneTest extends RestBase {
 
         $this->assertCount(1, $submilestones);
         $this->assertEquals(TestDataBuilder::SPRINT_ARTIFACT_ID, $submilestones[0]['id']);
+    }
+
+    public function testPUTOnlyOneSubMilestoneAlreadyAdded() {
+        $response_put = $this->getResponse($this->client->put('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/milestones', null, '['.TestDataBuilder::SPRINT_ARTIFACT_ID.']'));
+        $this->assertEquals($response_put->getStatusCode(), 200);
+        $this->assertEquals($response_put->json(), array());
     }
 
     /**

@@ -163,7 +163,7 @@ class MilestoneResource {
         } catch (ItemListedTwiceException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
-            throw new RestException(400, $exception->getMessage());
+            //Do nothing
         }
 
         $this->sendAllowHeaderForSubmilestones();
@@ -295,10 +295,8 @@ class MilestoneResource {
     protected function getContent($id, $limit = 10, $offset = 0) {
         $this->checkContentLimit($limit);
 
-        $milestone = $this->getMilestoneById($this->getCurrentUser(), $id);
-        $this->sendAllowHeaderForContent();
-
-        $backlog_items = $this->getMilestoneContentItems($milestone);
+        $milestone                     = $this->getMilestoneById($this->getCurrentUser(), $id);
+        $backlog_items                 = $this->getMilestoneContentItems($milestone);
         $backlog_items_representations = array();
 
         foreach ($backlog_items as $backlog_item) {
@@ -306,6 +304,9 @@ class MilestoneResource {
             $backlog_item_representation->build($backlog_item);
             $backlog_items_representations[] = $backlog_item_representation;
         }
+
+        $this->sendAllowHeaderForContent();
+        $this->sendPaginationHeaders($limit, $offset,  count($backlog_items_representations));
 
         return array_slice($backlog_items_representations, $offset, $limit);
     }
@@ -342,11 +343,10 @@ class MilestoneResource {
     protected function getBacklog($id, $limit = 10, $offset = 0) {
         $this->checkContentLimit($limit);
 
-        $user = $this->getCurrentUser();
-        $milestone = $this->getMilestoneById($user, $id);
-        $this->sendAllowHeaderForBacklog();
-
+        $user          = $this->getCurrentUser();
+        $milestone     = $this->getMilestoneById($user, $id);
         $backlog_items = $this->getMilestoneBacklogItems($user, $milestone);
+
         $backlog_items_representation = array();
 
         foreach ($backlog_items as $backlog_item) {
@@ -354,6 +354,9 @@ class MilestoneResource {
             $backlog_item_representation->build($backlog_item);
             $backlog_items_representation[] = $backlog_item_representation;
         }
+
+        $this->sendAllowHeaderForBacklog();
+        $this->sendPaginationHeaders($limit, $offset, count($backlog_items_representation));
 
         return array_slice($backlog_items_representation, $offset, $limit);
     }
@@ -403,7 +406,7 @@ class MilestoneResource {
         try {
             $this->milestone_content_updater->updateMilestoneContent($ids, $current_user, $milestone);
         } catch (Tracker_NoChangeException $exception) {
-            throw new RestException(400, $exception->getMessage());
+            //Do nothing
         }
 
         $this->sendAllowHeaderForContent();
@@ -593,6 +596,10 @@ class MilestoneResource {
 
     private function sendAllowHeaderForContent() {
         Header::allowOptionsGetPut();
+    }
+
+     private function sendPaginationHeaders($limit, $offset, $size) {
+        Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 
     private function sendAllowHeaderForBacklog() {
