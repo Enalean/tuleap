@@ -191,6 +191,7 @@ class GitPlugin extends Plugin {
                     $this->getGerritServerFactory(),
                     $this->getLogger(),
                     $this->getProjectCreator(),
+                    $this->getGitRepositoryUrlManager(),
                 );
                 break;
             case SystemEvent_GIT_REPO_FORK::NAME:
@@ -1168,7 +1169,10 @@ class GitPlugin extends Plugin {
                 return;
             }
 
-            $params['project_id'] = $url->getProject()->getId();
+            $project = $url->getProject();
+            if ($project && ! $project->isError()) {
+                $params['project_id'] = $url->getProject()->getId();
+            }
         }
     }
 
