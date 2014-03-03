@@ -136,7 +136,7 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
 
         $value1_previous->expectNever('hasChanged');
         $value1_current->setReturnValue('hasChanged', true);
-        $value1_current->setReturnValue('diff', 'has changed', array($value1_previous, '*'));
+        $value1_current->setReturnValue('diff', 'has changed', array($value1_previous, '*', null));
 
         $field2->setReturnValue('getId', 2);
         $field2->setReturnValue('getLabel', 'field2');

@@ -198,9 +198,11 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      * Return a string that will be use in SOAP API
      * as the value of this ChangesetValue_List 
      *
+     * @param PFUser $user
+     *
      * @return string The value of this artifact changeset value for Soap API
      */
-    public function getSoapValue() {
+    public function getSoapValue(PFUser $user) {
         return array('bind_value' => array_map(array($this, 'getSoapBindValue'), $this->getListValues()));
     }
 
@@ -211,7 +213,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         );
     }
 
-    public function getRESTValue() {
+    public function getRESTValue(PFUser $user) {
         $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueListRepresentation';
         $artifact_field_value_list_representation = new $classname_with_namespace;
         $artifact_field_value_list_representation->build(
@@ -230,10 +232,11 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      * Get the diff between this changeset value and the one passed in param
      *
      * @param Tracker_Artifact_ChangesetValue_List $changeset_value the changeset value to compare
+     * @param PFUser                          $user            The user or null
      *
      * @return string The difference between another $changeset_value, false if no differneces
      */
-    public function diff($changeset_value, $format = 'html') {
+    public function diff($changeset_value, $format = 'html', PFUser $user = null) {
         $previous = $changeset_value->getListValues();
         $next     = $this->getListValues();
         $changes = false;

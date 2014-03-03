@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,6 +35,11 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+
+        $project = mock('Project');
+        stub($project)->getID()->returns(120);
+        stub($project)->isPublic()->returns(true);
+
         $this->user_manager       = mock('UserManager');
         $this->permission_checker = new Tracker_Permission_PermissionChecker($this->user_manager);
 
@@ -46,35 +51,41 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
         $this->user->setReturnValue('getId', 120);
         $this->user->setReturnValue('isMemberOfUgroup',false);
         $this->user->setReturnValue('isSuperUser', false);
+        $this->user->setReturnValue('isMember', true, array(12));
 
         $this->assignee = mock('PFUser');
         $this->assignee->setReturnValue('getId', 121);
         $this->assignee->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
         $this->assignee->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $this->assignee->setReturnValue('isSuperUser', false);
+        $this->assignee->setReturnValue('isMember', true, array(12));
 
         $this->u_ass = mock('PFUser');
         $this->u_ass->setReturnValue('getId', 122);
         $this->u_ass->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
         $this->u_ass->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $this->u_ass->setReturnValue('isSuperUser', false);
+        $this->u_ass->setReturnValue('isMember', true, array(12));
 
         $this->submitter = mock('PFUser');
         $this->submitter->setReturnValue('getId', 123);
         $this->submitter->setReturnValue('isMemberOfUgroup', false, array(101, 222));
         $this->submitter->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $this->submitter->setReturnValue('isSuperUser', false);
+        $this->submitter->setReturnValue('isMember', true, array(12));
 
         $this->u_sub = mock('PFUser');
         $this->u_sub->setReturnValue('getId', 124);
         $this->u_sub->setReturnValue('isMemberOfUgroup', false, array(101, 222));
         $this->u_sub->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $this->u_sub->setReturnValue('isSuperUser', false);
+        $this->u_sub->setReturnValue('isMember', true, array(12));
 
         $this->other = mock('PFUser');
         $this->other->setReturnValue('getId', 125);
         $this->other->setReturnValue('isMemberOfUgroup', false);
         $this->other->setReturnValue('isSuperUser', false);
+        $this->other->setReturnValue('isMember', true, array(12));
 
         $this->user_manager->setReturnReference('getUserById', $this->user, array(120));
         $this->user_manager->setReturnReference('getUserById', $this->assignee, array(121));
@@ -86,6 +97,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
         $this->tracker = mock('Tracker');
         $this->tracker->setReturnValue('getId', 666);
         $this->tracker->setReturnValue('getGroupId', 222);
+        $this->tracker->setReturnValue('getProject', $project);
     }
 
     function testUserCanViewTrackerAccessSubmitter() {
@@ -257,21 +269,30 @@ abstract class Tracker_Permission_PermissionChecker_SubmitterOnlyBaseTest extend
 
     public function setUp() {
         parent::setUp();
+
+        $project = mock('Project');
+        stub($project)->getID()->returns(120);
+        stub($project)->isPublic()->returns(true);
+
         $this->user_manager       = mock('UserManager');
         $this->permission_checker = new Tracker_Permission_PermissionChecker($this->user_manager);
 
         $this->tracker = mock('Tracker');
         $this->tracker->setReturnValue('getId', 666);
         $this->tracker->setReturnValue('getGroupId', 222);
+        $this->tracker->setReturnValue('getProject',$project);
 
         $this->ugroup_id_submitter_only = 112;
 
         $this->user = mock('PFUser');
         stub($this->user)->getId()->returns(120);
+        $this->user->setReturnValue('isMember', true, array(12));
+
 
         $this->submitter = mock('PFUser');
         stub($this->submitter)->getId()->returns(250);
         stub($this->submitter)->isMemberOfUgroup($this->ugroup_id_submitter_only, 222)->returns(true);
+        $this->submitter->setReturnValue('isMember', true, array(12));
 
 
         stub($this->user_manager)->getUserById(120)->returns($this->user);
@@ -309,8 +330,9 @@ class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends Tracker_Per
 }
 
 class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends Tracker_Permission_PermissionChecker_SubmitterOnlyBaseTest {
-    protected $ugroup_id_maintainers = 111;
-    protected $ugroup_id_admin       = 4;
+    protected $ugroup_id_maintainers  = 111;
+    protected $ugroup_id_admin        = 4;
+    protected $ugroup_private_project = 114;
 
     protected $maintainer;
     protected $tracker_admin;
@@ -333,6 +355,21 @@ class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends Tra
             )
         );
 
+        $this->restricted_user = mock('PFUser');
+        $this->restricted_user->setReturnValue('getId', 249);
+        $this->restricted_user->setReturnValue('isMemberOfUgroup',true, array(114, 223));
+        $this->restricted_user->setReturnValue('isSuperUser', false);
+        $this->restricted_user->setReturnValue('isMember', true, array(223));
+        $this->restricted_user->setReturnValue('isMember', false, array(222));
+        $this->restricted_user->setReturnValue('isRestricted', true);
+
+        $this->not_member = mock('PFUser');
+        $this->not_member->setReturnValue('getId', 250);
+        $this->not_member->setReturnValue('isMemberOfUgroup',false);
+        $this->not_member->setReturnValue('isSuperUser', false);
+        $this->not_member->setReturnValue('isMember', false);
+        $this->not_member->setReturnValue('isRestricted', false);
+
         $this->maintainer = mock('PFUser');
         stub($this->maintainer)->getId()->returns(251);
         stub($this->maintainer)->isMemberOfUgroup($this->ugroup_id_maintainers, 222)->returns(true);
@@ -346,6 +383,21 @@ class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends Tra
         stub($this->project_admin)->isMember(222, 'A')->returns(true);
 
         stub($this->artifact)->getSubmittedBy()->returns(250);
+
+        $private_project            = stub('Project')->isPublic()->returns(false);
+        $tracker_in_private_project = stub('Tracker')->getProject()->returns($private_project);
+
+        stub($private_project)->getID()->returns(223);
+        stub($tracker_in_private_project)->getGroupId()->returns(223);
+        stub($tracker_in_private_project)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(
+                Tracker::PERMISSION_FULL => array(
+                    $this->ugroup_private_project
+                )
+            )
+        );
+
+        $this->artifact2 = stub('Tracker_Artifact')->getTracker()->returns($tracker_in_private_project);
     }
 
     public function itDoesntSeeArtifactSubmittedByOthers() {
@@ -366,5 +418,17 @@ class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest extends Tra
     
     public function itSeesArtifactBecauseHeIsProjectAdmin() {
         $this->assertTrue($this->permission_checker->userCanView($this->project_admin, $this->artifact));
+    }
+
+    public function itDoesNotSeeArtifactBecauseHeIsRestricted() {
+        $this->assertFalse($this->permission_checker->userCanView($this->restricted_user, $this->artifact));
+    }
+
+    public function itSeesTheArtifactBecauseHeIsRestrictedAndProjectMember() {
+        $this->assertTrue($this->permission_checker->userCanView($this->restricted_user, $this->artifact2));
+    }
+
+    public function itDoesNotSeeArtifactBecauseHeIsNotProjectMemberOfAPrivateProject() {
+        $this->assertFalse($this->permission_checker->userCanView($this->not_member, $this->artifact2));
     }
 }

@@ -38,6 +38,7 @@ Mock::generatePartial('Tracker',
                           'getWorkflowFactory',
                           'getWorkflowManager',
                           'getTrackerFactory',
+                          'getProject',
                           'getGroupId',
                           'getPermissionsByUgroupId',
                           'getFormELements',
@@ -93,7 +94,8 @@ Mock::generatePartial('Tracker',
                           'getGroupId',
                           'getPermissionsByUgroupId',
                           'getId',
-                          'getUserManager'
+                          'getUserManager',
+                          'getProject'
                       )
 );
 
@@ -153,6 +155,15 @@ class TrackerTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+
+        $this->project = mock('Project');
+        $this->project->setReturnValue('getID', 101);
+        $this->project->setReturnValue('isPublic', true);
+
+        $this->project_private = mock('Project');
+        $this->project_private->setReturnValue('getID', 102);
+        $this->project_private->setReturnValue('isPublic', false);
+
         $this->tracker = new TrackerTestVersion();
         $this->tracker1 = new TrackerTestVersion();
         $this->tracker2 = new TrackerTestVersion();
@@ -215,6 +226,7 @@ class TrackerTest extends TuleapTestCase {
         $this->project_admin_user = mock('PFUser');
         $this->project_admin_user->setReturnValue('getId', 123);
         $this->project_admin_user->setReturnValue('isMember', true, array($group_id, 'A'));
+        $this->project_admin_user->setReturnValue('isMember', false, array(102));
         $this->project_admin_user->setReturnValue('isSuperUser', false);
         $this->project_admin_user->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
         $this->project_admin_user->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
@@ -223,6 +235,7 @@ class TrackerTest extends TuleapTestCase {
         $this->all_trackers_admin_user = mock('PFUser');
         $this->all_trackers_admin_user->setReturnValue('getId', 222);
         $this->all_trackers_admin_user->setReturnValue('isMember', false, array($group_id, 'A'));
+        $this->all_trackers_admin_user->setReturnValue('isMember', false, array(102));
         $this->all_trackers_admin_user->setReturnValue('isSuperUser', false);
         $this->all_trackers_admin_user->setReturnValue('isMember', true, array($group_id, 0));
         $this->all_trackers_admin_user->setReturnValue('isMemberOfUGroup', true, array(1001, '*')); //1001 = ugroup who has ADMIN perm on tracker
@@ -232,6 +245,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker1_admin_user = mock('PFUser');
         $this->tracker1_admin_user->setReturnValue('getId', 333);
         $this->tracker1_admin_user->setReturnValue('isMember', false, array($group_id, 'A'));
+        $this->tracker1_admin_user->setReturnValue('isMember', false, array(102));
         $this->tracker1_admin_user->setReturnValue('isSuperUser', false);
         $this->tracker1_admin_user->setReturnValue('isMember', true, array($group_id, 0));
         $this->tracker1_admin_user->setReturnValue('isMemberOfUGroup', true, array(1001, '*'));
@@ -241,6 +255,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2_admin_user = mock('PFUser');
         $this->tracker2_admin_user->setReturnValue('getId', 444);
         $this->tracker2_admin_user->setReturnValue('isMember', false, array($group_id, 'A'));
+        $this->tracker2_admin_user->setReturnValue('isMember', false, array(102));
         $this->tracker2_admin_user->setReturnValue('isSuperUser', false);
         $this->tracker2_admin_user->setReturnValue('isMember', true, array($group_id, 0));
         $this->tracker2_admin_user->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
@@ -250,6 +265,7 @@ class TrackerTest extends TuleapTestCase {
         $this->project_member_user = mock('PFUser');
         $this->project_member_user->setReturnValue('getId', 555);
         $this->project_member_user->setReturnValue('isMember', false, array($group_id, 'A'));
+        $this->project_member_user->setReturnValue('isMember', false, array(102));
         $this->project_member_user->setReturnValue('isSuperUser', false);
         $this->project_member_user->setReturnValue('isMember', true, array($group_id, 0));
         $this->project_member_user->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
@@ -309,6 +325,7 @@ class TrackerTest extends TuleapTestCase {
         $this->project_member->setReturnValue('isMemberOfUGroup', false, array(196, '*'));
         $this->project_member->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
         $this->project_member->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
+        $this->project_member->setReturnValue('isMember', false, array(102));
 
         $this->project_admin = mock('PFUser');
         $this->project_admin->setReturnValue('isSuperUser', false);
@@ -321,6 +338,7 @@ class TrackerTest extends TuleapTestCase {
         $this->project_admin->setReturnValue('isMemberOfUGroup', false, array(196, '*'));
         $this->project_admin->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
         $this->project_admin->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
+        $this->project_admin->setReturnValue('isMember', false, array(102));
 
         $this->super_admin = mock('PFUser');
         $this->super_admin->setReturnValue('isSuperUser', true);
@@ -340,6 +358,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(196, '*'));
         $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
         $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
+        $this->tracker_submitter->setReturnValue('isMember', false, array(102));
 
         $this->tracker_assignee = mock('PFUser');
         $this->tracker_assignee->setReturnValue('isSuperUser', false);
@@ -352,6 +371,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker_assignee->setReturnValue('isMemberOfUGroup', true, array(196, '*'));
         $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
         $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
+        $this->tracker_assignee->setReturnValue('isMember', false, array(102));
 
         $this->tracker_submitterassignee = mock('PFUser');
         $this->tracker_submitterassignee->setReturnValue('isSuperUser', false);
@@ -364,6 +384,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', true, array(196, '*'));
         $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
         $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
+        $this->tracker_submitterassignee->setReturnValue('isMember', false, array(102));
 
         $this->tracker_admin = mock('PFUser');
         $this->tracker_admin->setReturnValue('isSuperUser', false);
@@ -376,6 +397,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker_admin->setReturnValue('isMemberOfUGroup', false, array(196, '*'));
         $this->tracker_admin->setReturnValue('isMemberOfUGroup', true, array(1001, '*'));
         $this->tracker_admin->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
+        $this->tracker_admin->setReturnValue('isMember', false, array(102));
 
         $this->workflow_factory = new MockWorkflowFactory();
         $this->tracker->setReturnReference('getWorkflowFactory', $this->workflow_factory);
@@ -1282,6 +1304,7 @@ class TrackerTest extends TuleapTestCase {
         $t_access_anonymous = new TrackerTestVersionForAccessPerms();
         $t_access_anonymous->setReturnValue('getId', 1);
         $t_access_anonymous->setReturnValue('getGroupId', 101);
+        $t_access_anonymous->setReturnValue('getProject', $this->project);
         $perms = array(
                 1 => array( 101 => 'PLUGIN_TRACKER_ACCESS_FULL'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
@@ -1303,6 +1326,7 @@ class TrackerTest extends TuleapTestCase {
         $t_access_registered = new TrackerTestVersion();
         $t_access_registered->setReturnValue('getId', 2);
         $t_access_registered->setReturnValue('getGroupId', 101);
+        $t_access_registered->setReturnValue('getProject', $this->project);
         $perms = array(
                 2 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
@@ -1324,6 +1348,7 @@ class TrackerTest extends TuleapTestCase {
         $t_access_members = new TrackerTestVersion();
         $t_access_members->setReturnValue('getId', 3);
         $t_access_members->setReturnValue('getGroupId', 101);
+        $t_access_members->setReturnValue('getProject', $this->project);
         $perms = array(
                 3 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
@@ -1345,6 +1370,7 @@ class TrackerTest extends TuleapTestCase {
         $t_access_admin = new TrackerTestVersion();
         $t_access_admin->setReturnValue('getId', 4);
         $t_access_admin->setReturnValue('getGroupId', 101);
+        $t_access_admin->setReturnValue('getProject', $this->project);
         $perms = array(
                 4 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
@@ -1366,6 +1392,7 @@ class TrackerTest extends TuleapTestCase {
         $t_access_submitter = new TrackerTestVersion();
         $t_access_submitter->setReturnValue('getId', 5);
         $t_access_submitter->setReturnValue('getGroupId', 101);
+        $t_access_submitter->setReturnValue('getProject', $this->project);
         $perms = array(
                 4   => array(101=>'PLUGIN_TRACKER_ACCESS_FULL'),
                 138 => array(101=>'PLUGIN_TRACKER_ACCESS_SUBMITTER'),
@@ -1388,6 +1415,7 @@ class TrackerTest extends TuleapTestCase {
         $t_access_assignee = new TrackerTestVersion();
         $t_access_assignee->setReturnValue('getId', 6);
         $t_access_assignee->setReturnValue('getGroupId', 101);
+        $t_access_assignee->setReturnValue('getProject', $this->project);
         $perms = array(
                 4   => array(101=>'PLUGIN_TRACKER_ACCESS_FULL'),
                 196 => array(101=>'PLUGIN_TRACKER_ACCESS_ASSIGNEE'),
@@ -1410,6 +1438,7 @@ class TrackerTest extends TuleapTestCase {
         $t_access_submitterassignee  = new TrackerTestVersion();
         $t_access_submitterassignee->setReturnValue('getId', 7);
         $t_access_submitterassignee->setReturnValue('getGroupId', 101);
+        $t_access_submitterassignee->setReturnValue('getProject', $this->project);
 
         $perms = array(
                 4   => array(101=>'PLUGIN_TRACKER_ACCESS_FULL'),
@@ -1428,6 +1457,31 @@ class TrackerTest extends TuleapTestCase {
         $this->assertTrue($t_access_submitterassignee->userCanView($this->tracker_assignee));
         $this->assertTrue($t_access_submitterassignee->userCanView($this->tracker_submitterassignee));
         $this->assertTrue($t_access_submitterassignee->userCanView($this->tracker_admin));
+    }
+
+    public function testAccessPermsPrivateProject() {
+        $t_access_registered  = new TrackerTestVersion();
+        $t_access_registered->setReturnValue('getId', 7);
+        $t_access_registered->setReturnValue('getGroupId', 102);
+        $t_access_registered->setReturnValue('getProject', $this->project_private);
+
+        $perms = array(
+               2    => array( 102 => 'PLUGIN_TRACKER_ACCESS_FULL'),
+               1003 => array( 102 => 'PLUGIN_TRACKER_ADMIN'),
+        );
+
+        $t_access_registered->setReturnReference('getPermissionsByUgroupId', $perms);
+
+        $this->assertFalse($t_access_registered->userCanView($this->anonymous));
+        $this->assertFalse($t_access_registered->userCanView($this->registered));
+        $this->assertFalse($t_access_registered->userCanView($this->project_member));
+        $this->assertFalse($t_access_registered->userCanView($this->project_admin));
+        $this->assertFalse($t_access_registered->userCanView($this->tracker_submitter));
+        $this->assertFalse($t_access_registered->userCanView($this->tracker_assignee));
+        $this->assertFalse($t_access_registered->userCanView($this->tracker_submitterassignee));
+        $this->assertFalse($t_access_registered->userCanView($this->tracker_admin));
+
+        $this->assertTrue($t_access_registered->userCanView($this->super_admin));
     }
 
     //

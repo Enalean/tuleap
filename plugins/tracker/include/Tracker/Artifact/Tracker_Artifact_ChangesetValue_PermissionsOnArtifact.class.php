@@ -65,13 +65,15 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     /**
      * Returns the soap value of this changeset value (the timestamp)
      *
+     * @param PFUser $user
+     *
      * @return string The value of this artifact changeset value for Soap API
      */
-    public function getSoapValue() {
+    public function getSoapValue(PFUser $user) {
         return $this->encapsulateRawSoapValue(implode(",", $this->getPerms()));
     }
 
-    public function getRESTValue() {
+    public function getRESTValue(PFUser $user) {
         $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValuePermissionsOnArtifactRepresentation';
         $representation = new $classname_with_namespace;
         $representation->build(
@@ -95,10 +97,11 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
      * Returns diff between current perms and perms in param
      *
      * @param Tracker_Artifact_ChangesetValue_PermissionsOnArtifact $changeset_value the changeset value to compare
+     * @param PFUser                          $user            The user or null
      *
      * @return string The difference between another $changeset_value, false if no differneces
      */
-    public function diff($changeset_value, $format = 'html') {
+    public function diff($changeset_value, $format = 'html', PFUser $user = null) {
         $previous = $changeset_value->getPerms();
         $next = $this->getPerms();
         $changes = false;

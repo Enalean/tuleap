@@ -162,11 +162,13 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     
     /**
      * Return a string that will be use in SOAP API
-     * as the value of this ChangesetValue_File 
+     * as the value of this ChangesetValue_File
+     *
+     * @param PFUser $user
      *
      * @return Array The value of this artifact changeset value for Soap API
      */
-    public function getSoapValue() {
+    public function getSoapValue(PFUser $user) {
         $soap_array = array();
         foreach ($this->getFiles() as $file_info) {
             $soap_array[] = $file_info->getSoapValue();
@@ -174,7 +176,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
         return array('file_info' => $soap_array);
     }
 
-    public function getRESTValue() {
+    public function getRESTValue(PFUser $user) {
         $values = array();
         foreach ($this->getFiles() as $file_info) {
             $values[] = $file_info->getRESTValue();
@@ -203,10 +205,11 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      * Returns a diff between this changeset value and the one passed in param
      *
      * @param Tracker_Artifact_ChangesetValue_File $changeset_value the changeset value to compare
+     * @param PFUser                          $user            The user or null
      *
      * @return string The difference between another $changeset_value, false if no differneces
      */
-    public function diff($changeset_value, $format = 'html') {
+    public function diff($changeset_value, $format = 'html', PFUser $user = null) {
         if ($this->files !== $changeset_value->getFiles()) {
             $result = '';
             $removed = array();

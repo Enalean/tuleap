@@ -395,12 +395,14 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
     }
     
     function testFieldDateShouldSendEmptyMailValueWhenValueIsEmpty() {
+        $user = mock('PFUser');
         $artifact = new MockTracker_Artifact();
         $date = new Tracker_FormElement_Field_DateTestVersion();
-        $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, null, null));
+        $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, $user, null, null));
     }
     
     function testFieldDateShouldSendAMailWithAReadableDate() {
+        $user     = mock('PFUser');
         $artifact = new MockTracker_Artifact();
         
         $date = new Tracker_FormElement_Field_DateTestVersion();
@@ -409,11 +411,12 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $value = new MockTracker_Artifact_ChangesetValue_Date();
         $value->setReturnValue('getTimestamp', 1322752769);
         
-        $this->assertEqual('2011-12-01', $date->fetchMailArtifactValue($artifact, $value, 'text'));
-        $this->assertEqual('2011-12-01', $date->fetchMailArtifactValue($artifact, $value, 'html'));
+        $this->assertEqual('2011-12-01', $date->fetchMailArtifactValue($artifact, $user, $value, 'text'));
+        $this->assertEqual('2011-12-01', $date->fetchMailArtifactValue($artifact, $user, $value, 'html'));
     }
     
     function testFieldDateShouldSendEmptyMailWhenThereIsNoDateDefined() {
+        $user     = mock('PFUser');
         $artifact = new MockTracker_Artifact();
         
         $date = new Tracker_FormElement_Field_DateTestVersion();
@@ -421,9 +424,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $value = new MockTracker_Artifact_ChangesetValue_Date();
         $value->setReturnValue('getTimestamp', 0);
         
-        $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, $value, 'text'));
-        $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, $value, 'html'));
+        $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, $user, $value, 'text'));
+        $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, $user, $value, 'html'));
     }
 }
-
-?>

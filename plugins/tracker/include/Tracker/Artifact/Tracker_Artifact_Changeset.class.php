@@ -458,7 +458,7 @@ class Tracker_Artifact_Changeset {
                     if ( ( $ignore_perms || $field->userCanRead($user) ) && $current_changeset_value) {
                         if ($current_changeset_value->hasChanged()) {
                             if ($previous_changeset_value = $previous_changeset->getValue($field)) {
-                                if ($diff = $current_changeset_value->diff($previous_changeset_value, $format)) {
+                                if ($diff = $current_changeset_value->diff($previous_changeset_value, $format, $user)) {
                                     $result .= $this->displayDiff($diff, $format, $field);
                                 }
                             } else {

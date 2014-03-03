@@ -76,13 +76,15 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
     /**
      * Returns the soap value of this changeset value (the timestamp)
      *
+     * @param PFUser $user
+     *
      * @return string The value of this artifact changeset value for Soap API
      */
-    public function getSoapValue() {
+    public function getSoapValue(PFUser $user) {
         return $this->encapsulateRawSoapValue($this->getTimestamp());
     }
 
-    public function getRESTValue() {
+    public function getRESTValue(PFUser $user) {
         $date = null;
         if ($this->getTimestamp()) {
             $date = date('c', $this->getTimestamp());
@@ -103,10 +105,11 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
      * Returns diff between current date and date in param
      *
      * @param Tracker_Artifact_ChangesetValue_Date $changeset_value the changeset value to compare
+     * @param PFUser                          $user            The user or null
      *
      * @return string The difference between another $changeset_value, false if no differneces
      */
-    public function diff($changeset_value, $format = 'html') {
+    public function diff($changeset_value, $format = 'html', PFUser $user = null) {
         $next_date     = $this->getDate();
         if ($changeset_value->getTimestamp() != 0) {
             $previous_date = $changeset_value->getDate();

@@ -60,13 +60,15 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
     /**
      * Get the SOAP value
      *
+     * @param PFUser $user
+     *
      * @return string The value of this artifact changeset value for SOAP
      */
-    public function getSoapValue() {
+    public function getSoapValue(PFUser $user) {
         return $this->encapsulateRawSoapValue($this->getFloat());
     }
 
-    public function getRESTValue() {
+    public function getRESTValue(PFUser $user) {
         return $this->getSimpleRESTRepresentation($this->getFloat());
     }
 

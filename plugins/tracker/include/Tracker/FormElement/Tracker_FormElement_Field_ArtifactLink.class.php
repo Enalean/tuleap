@@ -416,7 +416,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $from_aid = null,
         $reverse_artifact_links = false
     ) {
-        $html = '';
+        $current_user = $this->getCurrentUser();
+        $html         = '';
 
         if ($reverse_artifact_links) {
             $html .= '<button class="btn" id="display-tracker-form-element-artifactlink-reverse">' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_display_reverse') . '</button>';
@@ -449,7 +450,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $parent_tracker = $this->getTracker()->getParent();
             $is_submit      = $artifact->getId() == -1;
             if ($parent_tracker && $is_submit) {
-                $current_user = $this->getCurrentUser();
                 $can_create   = true;
                 $html .= $this->fetchParentSelector($prefill_parent, $name, $parent_tracker, $current_user, $hp, $can_create);
             }
@@ -460,7 +460,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $ids = array();
             // build an array of artifact_id / last_changeset_id for fetch renderer method
             foreach ($artifact_links as $artifact_link) {
-                if ($artifact_link->getTracker()->isActive() && $artifact_link->userCanView()) {
+                if ($artifact_link->getTracker()->isActive() && $artifact_link->userCanView($current_user)) {
                     if (!isset($ids[$artifact_link->getTrackerId()])) {
                         $ids[$artifact_link->getTrackerId()] = array(
                         'id'                => '',
@@ -586,6 +586,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                     $tracker_id = $matching_ids['tracker_id'];
                     $tracker = $this->getTrackerFactory()->getTrackerById($tracker_id);
                     $project = $tracker->getProject();
+
                     if ($tracker->userCanView()) {
                         $trf = Tracker_ReportFactory::instance();
                         $report = $trf->getDefaultReportsByTrackerId($tracker->getId());
@@ -904,12 +905,18 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * Fetch the html code to display the field value in artifact
      *
      * @param Tracker_Artifact                $artifact         The artifact
+     * @param PFUser                          $user             The user who will receive the email
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param array                           $submitted_values The value already submitted by the user
      *
      * @return string
      */
-    public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
+    public function fetchMailArtifactValue(
+        Tracker_Artifact $artifact,
+        PFUser $user,
+        Tracker_Artifact_ChangesetValue $value = null,
+        $format='text'
+    ) {
         if ( empty($value) || !$value->getValue()) {
             return '-';
         }
@@ -919,15 +926,19 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $artifactlink_infos = $value->getValue();
                 $url = array();
                 foreach ($artifactlink_infos as $artifactlink_info) {
-                    $url[] = $artifactlink_info->getUrl();
+                    if ($artifactlink_info->userCanView($user)) {
+                        $url[] = $artifactlink_info->getUrl();
+                    }
                 }
                 return implode(' , ', $url);
             default:
                 $output = PHP_EOL;
                 $artifactlink_infos = $value->getValue();
                 foreach ($artifactlink_infos as $artifactlink_info) {
-                    $output .= $artifactlink_info->getLabel();
-                    $output .= PHP_EOL;
+                    if ($artifactlink_info->userCanView($user)) {
+                        $output .= $artifactlink_info->getLabel();
+                        $output .= PHP_EOL;
+                    }
                 }
                 break;
         }

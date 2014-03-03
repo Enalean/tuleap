@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -49,9 +49,19 @@ class Tracker_Permission_PermissionChecker {
             return true;
         }
 
+        $project = $artifact->getTracker()->getProject();
+
+        if (($user->isRestricted() && ! $user->isMember($project->getID()))
+            || (! $user->isMember($project->getID()) && ! $project->isPublic())
+        ) {
+
+            return false;
+        }
+
         if ($this->userCanViewArtifact($user, $artifact)) {
             return $this->userCanViewTracker($user, $artifact);
         }
+
         return false;
     }
 

@@ -57,13 +57,15 @@ class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_Changeset
     /**
      * Returns the soap value of this changeset value
      *
+     * @param PFUser $user
+     *
      * @return string the soap value of this changeset value
      */
-    public function getSoapValue() {
+    public function getSoapValue(PFUser $user) {
         return $this->encapsulateRawSoapValue($this->getInteger());
     }
 
-    public function getRESTValue() {
+    public function getRESTValue(PFUser $user) {
         return $this->getSimpleRESTRepresentation($this->getInteger());
     }
 }

@@ -385,7 +385,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         }
 
         $value = $artifact->getLastChangeset()->getValue($this);
-        $mail_formatted_value = $this->fetchMailArtifactValue($artifact, $value, $format);
+        $mail_formatted_value = $this->fetchMailArtifactValue($artifact, $recipient, $value, $format);
 
         if ($format == 'text') {
             $output = ' * '.$this->getLabel().' : '.$mail_formatted_value;
@@ -1079,7 +1079,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             return array(
                 'field_name'  => $this->getName(),
                 'field_label' => $this->getLabel(),
-                'field_value' => $value ? $value->getSoapValue() : '',
+                'field_value' => $value ? $value->getSoapValue($user) : '',
             );
         }
         return null;
@@ -1096,7 +1096,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
         $value = $changeset->getValue($this);
         if ($value) {
-            return $value->getRESTValue();
+            return $value->getRESTValue($user);
         }
         return null;
     }

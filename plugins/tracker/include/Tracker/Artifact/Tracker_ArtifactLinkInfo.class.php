@@ -1,8 +1,9 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright Enalean (c) 2014. All rights reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
  * Codendi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -127,10 +128,10 @@ class Tracker_ArtifactLinkInfo {
      *
      * @return boolean
      */
-    public function userCanView() {
+    public function userCanView(PFUser $user) {
         $af = Tracker_ArtifactFactory::instance();
         $a  = $af->getArtifactById($this->artifact_id);
-        return $a->userCanView();
+        return $a->userCanView($user);
     }
     
     public function __toString() {

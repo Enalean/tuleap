@@ -29,12 +29,14 @@ require_once 'Tracker_Artifact_ChangesetValue_ListTest.php';
 
 class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_ChangesetValue_ListTest {
     
-    function __construct($name = 'Changeset Value Open List Test') {
+    public function __construct($name = 'Changeset Value Open List Test') {
         parent::__construct($name);
         $this->field_class          = 'MockTracker_FormElement_Field_OpenList';
         $this->changesetvalue_class = 'Tracker_Artifact_ChangesetValue_OpenList';
+        $this->user                 = mock('PFUser');
     }
-    function testLists() {
+
+    public function testLists() {
         $bind_value = new MockTracker_FormElement_Field_List_BindValue();
         $bind_value->setReturnValue('getSoapValue', 'Reopen');
         $bind_value->setReturnValue('getId', 106);
@@ -43,11 +45,11 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_Chan
         $value_list = new $this->changesetvalue_class(111, $field, false, array($bind_value));
         $this->assertEqual(count($value_list), 1);
         $this->assertEqual($value_list[0], $bind_value);
-        $this->assertEqual($value_list->getSoapValue(), array('bind_value' => array(array('bind_value_id' => 106, 'bind_value_label' => "Reopen"))));
+        $this->assertEqual($value_list->getSoapValue($this->user), array('bind_value' => array(array('bind_value_id' => 106, 'bind_value_label' => "Reopen"))));
         $this->assertEqual($value_list->getValue(), array('b106'));
     }
     
-    function testDiff_setto() {
+    public function testDiff_setto() {
         $bind_value_1 = new MockTracker_FormElement_Field_List_BindValue();
         $bind_value_1->setReturnValue('__toString', 'Sandra');
         $bind_value_1->setReturnValue('getLabel', 'Sandra');
@@ -62,7 +64,7 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_Chan
         $this->assertEqual($list_1->diff($list_2), ' set to Sandra, Manon');
     }
     
-    function testDiff_changedfrom() {
+    public function testDiff_changedfrom() {
         $bind_value_1 = new MockTracker_FormElement_Field_List_BindValue();
         $bind_value_1->setReturnValue('__toString', 'Sandra');
         $bind_value_1->setReturnValue('getLabel', 'Sandra');
@@ -79,7 +81,7 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_Chan
         $this->assertEqual($list_2->diff($list_1), ' changed from Sandra to Manon');
     }
     
-    function testDiff_added() {
+    public function testDiff_added() {
         $bind_value_1 = new MockTracker_FormElement_Field_List_BindValue();
         $bind_value_1->setReturnValue('__toString', 'Sandra');
         $bind_value_1->setReturnValue('getLabel', 'Sandra');
@@ -94,7 +96,7 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_Chan
         $this->assertEqual($list_1->diff($list_2), 'Manon added');
     }
     
-    function testDiff_removed() {
+    public function testDiff_removed() {
         $bind_value_1 = new MockTracker_FormElement_Field_List_BindValue();
         $bind_value_1->setReturnValue('__toString', 'Sandra');
         $bind_value_1->setReturnValue('getLabel', 'Sandra');
@@ -109,7 +111,7 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_Chan
         $this->assertEqual($list_1->diff($list_2), 'Manon removed');
     }
     
-    function testDiff_added_and_removed() {
+    public function testDiff_added_and_removed() {
         $bind_value_1 = new MockTracker_FormElement_Field_List_BindValue();
         $bind_value_1->setReturnValue('__toString', 'Sandra');
         $bind_value_1->setReturnValue('getLabel', 'Sandra');
@@ -132,5 +134,3 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_Chan
         $this->assertPattern('/Marc, Nicolas added/', $list_1->diff($list_2));
     }
 }
-
-?>

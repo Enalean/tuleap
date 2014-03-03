@@ -251,12 +251,13 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * Fetch data to display the field value in mail
      *
      * @param Tracker_Artifact                $artifact         The artifact
+     * @param PFUser                          $user             The user who will receive the email
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param string                          $format           output format
      *
      * @return string
      */
-    public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {        
+    public function fetchMailArtifactValue(Tracker_Artifact $artifact, PFUser $user, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
         if (empty($value) || $value->getText() == '') {
             return '-';
         }
