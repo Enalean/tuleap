@@ -75,7 +75,7 @@ class ProjectResource {
      *
      * @return array {@type Tuleap\Project\REST\ProjectRepresentation}
      */
-    public function get($limit = self::MAX_LIMIT, $offset = 0) {
+    public function get($limit = 10, $offset = 0) {
         $user = $this->user_manager->getCurrentUser();
 
         if (! $user) {

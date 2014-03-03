@@ -113,7 +113,7 @@ class TrackersTest extends RestBase {
     }
 
     public function testGetReportsArtifactsId() {
-        $response = $this->getResponse($this->client->get($this->getReportsArtifactsUri()));
+        $response  = $this->getResponse($this->client->get($this->getReportsArtifactsUri()));
         $artifacts = $response->json();
 
         $first_artifact_info = $artifacts[0];
