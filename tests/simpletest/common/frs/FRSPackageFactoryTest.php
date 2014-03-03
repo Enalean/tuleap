@@ -31,7 +31,7 @@ Mock::generate('UserManager');
 Mock::generate('PermissionsManager');
 Mock::generate('FRSPackage');
 
-class FRSPackageFactoryTest extends UnitTestCase {
+class FRSPackageFactoryTest extends TuleapTestCase {
     protected $group_id   = 12;
     protected $package_id = 34;
     protected $user_id    = 56;

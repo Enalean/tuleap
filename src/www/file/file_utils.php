@@ -1106,8 +1106,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                         'processor_id'  => $release_file_processor[$index],
                                         'file_id'       => $rel_file,
                                         'comment'       => $release_comment[$index],
-                                        'filename'      => 'p' . $release['package_id'] . '_r' . $release_id . '/' . $fname,
-                                        'filepath'      => 'p' . $release['package_id'] . '_r' . $release_id . '/' . $fname . '_' . $unix_release_time,
+                                        'filename'      => 'p' . $release['package_id'] . '_r' . $new_release_id[$index] . '/' . $fname,
+                                        'filepath'      => 'p' . $release['package_id'] . '_r' . $new_release_id[$index] . '/' . $fname . '_' . $unix_release_time,
                                     );
                                     if ($release_reference_md5[$index] && $release_reference_md5[$index] != '') {
                                         $array['reference_md5'] = $release_reference_md5[$index];
