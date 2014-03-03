@@ -1,3 +1,6 @@
+Version 1.53 - Tuleap 6.11
+    * Fixing request #5969: Error generated when moving a PBI from the Release Plan back to the Product Backlog
+
 Version 1.52 - Tuleap 6.11
     * request #6104 : PUT with no change returns 200
 
