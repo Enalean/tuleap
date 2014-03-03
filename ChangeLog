@@ -35,6 +35,7 @@ Version 6.11 (Not released yet)
 	* Fix request #6247: Forum flat view displays same author for all messages (Contribution STMicroelectronics)
 	* request #6299: Add the possibility to display user unix name in access_log
 	* request #6326: When we add a new FRS file with CODENDI CLI , the "comment" field is set to 1 (Contrib STMicroelectronics)
+	* request #6316: SVN tree not displayed, When I have non-utf-8 char in my commit history, I get a blank page content.
 
 Version 6.10 (Thursday, February 6th 2014)
 	== Plugins ==
