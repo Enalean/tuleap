@@ -122,11 +122,14 @@ codendi.tracker.artifact.artifactLink = {
                                 if (!renderer_table) {
                                     var list = codendi.tracker.artifact.artifactLinker_currentField.down('.tracker-form-element-artifactlink-list');
                                     list.insert(json.head[pair.key] + '<tbody>');
-                                    codendi.tracker.artifact.artifactLink.tabs[codendi.tracker.artifact.artifactLinker_currentField.identify()].loadTab(list.childElements().last().down('h2'), $$('.tracker-form-element-artifactlink-list ul').first());
+                                    var first_list = $$('.tracker-form-element-artifactlink-list ul').first();
+                                    codendi.tracker.artifact.artifactLink.tabs[codendi.tracker.artifact.artifactLinker_currentField.identify()].loadTab(list.childElements().last().down('h2'), first_list);
                                     renderer_table = $('tracker_report_table_' + pair.key);
-                                    console.log(renderer_table);
-                                    console.log(renderer_table.up('div'));
                                     renderer_table.up('div').hide();
+
+                                    var current_tab = first_list.down('li.tracker-form-element-artifactlink-list-nav-current');
+                                    var pos = current_tab.previousSiblings().length;
+                                    first_list.siblings()[pos].show();
                                 }
                                 
                                 //make sure new rows are inserted before the aggregate function row
