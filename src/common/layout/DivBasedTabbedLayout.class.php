@@ -114,8 +114,11 @@ NB: Original OsdnNavBar has been removed from first cell. <td align="center">'.$
 
 <body class="<?php echo $this->getClassnamesForBodyTag() ?>">
 <div id="wrapper">
-
 <?php
+    $deprecated = $this->getBrowserDeprecatedMessage();
+    if ($deprecated) {
+        echo '<div id="browser_deprecated">'.$deprecated.'</div>';
+    }
     echo $this->getMOTD();
 ?>
 

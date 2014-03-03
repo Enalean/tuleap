@@ -2219,12 +2219,17 @@ class Layout extends Response {
         }
     }
 
+    protected function getBrowserDeprecatedMessage() {
+        return HTTPRequest::instance()->getBrowser()->getDeprecatedMessage();
+    }
+
     function getOsdnNavBar() {
         $output = '
         <!-- OSDN navbar -->
         <div class="osdnnavbar">
         ';
-        
+
+        echo $this->getBrowserDeprecatedMessage();
         $motd = $this->getMOTD();
         if ($motd) {
             echo $motd;

@@ -136,6 +136,16 @@ class Experimental_Theme extends DivBasedTabbedLayout {
         $this->container($params, $project_manager, $current_user);
     }
 
+    protected function getMOTD() {
+        $motd       = parent::getMOTD();
+        $deprecated = $this->getBrowserDeprecatedMessage();
+        if ($motd && $deprecated) {
+            return $deprecated.'<br />'.$motd;
+        } else {
+            return $motd.$deprecated;
+        }
+    }
+
     private function displayNewAccount() {
         $display_new_user = true;
         EventManager::instance()->processEvent('display_newaccount', array('allow' => &$display_new_user));

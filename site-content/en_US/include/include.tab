@@ -471,3 +471,6 @@ include_common_template	test_project	Test Project
 # Script: SF/common/mvc/View.class.php
 #
 common_mvc_view	warn	** WARNING!! ** Please confirm you want to $1
+
+include_browser	ie7_deprecated	You are using Internet Explorer 7. This navigator is no longer supported. Please upgrade to a newer version or use an alternative (Firefox, Chrome, etc).
+include_browser	ie9_compatibility_deprecated	You are using Internet Explorer 9 in "IE7 compatibility mode". This mode can introduce rendering bugs and regressions, you should <a href="http://doc-en.tuleap.net/en/latest/user-guide/troubleshooting.html#configuring-internet-explorer">desactivate it</a>.

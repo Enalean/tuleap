@@ -7,13 +7,13 @@ Mock::generatePartial('Valid_File', 'Valid_FileTest', array('getKey', 'validate'
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * 
- * 
+ *
+ *
  *
  * Tests the class HTTPRequest
  */
 class HTTPRequestTest extends UnitTestCase {
-    
+
     function setUp() {
         $_REQUEST['exists'] = '1';
         $_REQUEST['exists_empty'] = '';
@@ -35,7 +35,7 @@ class HTTPRequestTest extends UnitTestCase {
         $_REQUEST['testkey_array_mixed3'] = array(1, 2, 'testvalue');
         $_FILES['file1'] = array('name' => 'Test file 1');
     }
-    
+
     function tearDown() {
         unset($_REQUEST['exists']);
         unset($_REQUEST['quote']);
@@ -51,13 +51,13 @@ class HTTPRequestTest extends UnitTestCase {
         unset($_REQUEST['testkey_array_mixed3']);
         unset($_FILES['file1']);
     }
-    
+
     function testGet() {
         $r =& new HTTPRequest();
         $this->assertEqual($r->get('exists'), '1');
         $this->assertFalse($r->get('does_not_exist'));
     }
-    
+
     function testExist() {
         $r =& new HTTPRequest();
         $this->assertTrue($r->exist('exists'));
@@ -93,7 +93,7 @@ class HTTPRequestTest extends UnitTestCase {
                 HTTPRequest::instance());
         $this->assertIsA(HTTPRequest::instance(), 'HTTPRequest');
     }
-    
+
     function testArray() {
         $r =& new HTTPRequest();
         $this->assertIdentical($r->get('array'), array('quote_1' => "l'avion", 'quote_2' => array('quote_3' => "l'oiseau")));
@@ -208,7 +208,7 @@ class HTTPRequestTest extends UnitTestCase {
         $v->setReturnValue('validate', false, array(null));
         $v->expectAtLeastOnce('validate', array(null));
         $r =& new HTTPRequest();
-        $this->assertFalse($r->validArray($v));    
+        $this->assertFalse($r->validArray($v));
     }
 
     function testValidArrayArgEmptyArrayNotRequired() {
@@ -219,17 +219,17 @@ class HTTPRequestTest extends UnitTestCase {
         $v->setReturnValue('validate', true, array(null));
         $v->expectAtLeastOnce('validate', array(null));
         $r =& new HTTPRequest();
-        $this->assertTrue($r->validArray($v));    
+        $this->assertTrue($r->validArray($v));
     }
 
     function testValidArrayArgNotEmptyArrayRequired() {
         $v =& new MockValid($this);
-        $v->expectAtLeastOnce('required');                
+        $v->expectAtLeastOnce('required');
         $v->required();
         $v->setReturnValue('getKey', 'testkey_array');
         $v->expectAtLeastOnce('getKey');
         $r =& new HTTPRequest();
-        $this->assertFalse($r->validArray($v));        
+        $this->assertFalse($r->validArray($v));
     }
 
     function testValidArrayFirstArgFalse() {
@@ -241,7 +241,7 @@ class HTTPRequestTest extends UnitTestCase {
         $v->setReturnValue('getKey', 'testkey_array_mixed1');
         $v->expectAtLeastOnce('getKey');
         $r =& new HTTPRequest();
-        $this->assertFalse($r->validArray($v)); 
+        $this->assertFalse($r->validArray($v));
     }
 
     function testValidArrayMiddleArgFalse() {
@@ -253,7 +253,7 @@ class HTTPRequestTest extends UnitTestCase {
         $v->setReturnValue('getKey', 'testkey_array_mixed2');
         $v->expectAtLeastOnce('getKey');
         $r =& new HTTPRequest();
-        $this->assertFalse($r->validArray($v)); 
+        $this->assertFalse($r->validArray($v));
     }
 
     function testValidArrayLastArgFalse() {
@@ -265,7 +265,7 @@ class HTTPRequestTest extends UnitTestCase {
         $v->setReturnValue('getKey', 'testkey_array_mixed3');
         $v->expectAtLeastOnce('getKey');
         $r =& new HTTPRequest();
-        $this->assertFalse($r->validArray($v)); 
+        $this->assertFalse($r->validArray($v));
     }
 
     function testValidInArray() {
@@ -291,24 +291,24 @@ class HTTPRequestTest extends UnitTestCase {
         $r =& new HTTPRequest();
         $r->validFile($v);
     }
-    
+
     function testGetValidated() {
         $v1 =& new MockValid($this);
         $v1->setReturnValue('getKey', 'testkey');
         $v1->setReturnValue('validate', true);
-        
+
         $v2 =& new MockValid($this);
         $v2->setReturnValue('getKey', 'testkey');
         $v2->setReturnValue('validate', false);
-        
+
         $v3 =& new MockValid($this);
         $v3->setReturnValue('getKey', 'does_not_exist');
         $v3->setReturnValue('validate', false);
-        
+
         $v4 =& new MockValid($this);
         $v4->setReturnValue('getKey', 'does_not_exist');
         $v4->setReturnValue('validate', true);
-        
+
         $r =& new HTTPRequest();
         //If valid, should return the submitted value...
         $this->assertEqual($r->getValidated('testkey', $v1), 'testvalue');
@@ -321,11 +321,83 @@ class HTTPRequestTest extends UnitTestCase {
         //If the variable is not submitted, there is no incidence, the result depends on the validator...
         $this->assertEqual($r->getValidated('does_not_exist', $v3, 'default value'), 'default value');
         $this->assertEqual($r->getValidated('does_not_exist', $v4, 'default value'), false);
-        
-        //Not really in the "unit" test spirit 
+
+        //Not really in the "unit" test spirit
         //(create dynamically a new instance of a validator inside the function. Should be mocked)
         $this->assertEqual($r->getValidated('testkey', 'string', 'default value'), 'testvalue');
         $this->assertEqual($r->getValidated('testkey', 'uint', 'default value'), 'default value');
     }
 }
+
+class HTTPRequest_BrowserTests extends TuleapTestCase {
+
+    private $user_agent;
+
+    public function setUp() {
+        parent::setUp();
+        $this->user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+        unset($_SERVER['HTTP_USER_AGENT']);
+        if ($this->user_agent) {
+            $_SERVER['HTTP_USER_AGENT'] = $this->user_agent;
+        }
+
+    }
+
+    public function testIE9CompatibilityModeIsDeprected() {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)';
+        $request = HTTPRequest::instance();
+        $browser = $request->getBrowser();
+
+        expect($GLOBALS['Language'])->getText('*', 'ie9_compatibility_deprecated')->once();
+
+        $browser->getDeprecatedMessage();
+    }
+
+    public function testIE9IsUnfortunatlyNotDeprecated() {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)';
+        $request = HTTPRequest::instance();
+        $browser = $request->getBrowser();
+
+        expect($GLOBALS['Language'])->getText()->never();
+
+        $browser->getDeprecatedMessage();
+    }
+
+    public function testFirefoxIsNotDeprecated() {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:27.0) Gecko/20100101 Firefox/27.0';
+        $request = HTTPRequest::instance();
+        $browser = $request->getBrowser();
+
+        expect($GLOBALS['Language'])->getText()->never();
+
+        $browser->getDeprecatedMessage();
+    }
+
+    public function __testIE7IsDeprecated() {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.0)';
+        $request = HTTPRequest::instance();
+        $browser = $request->getBrowser();
+
+        expect($GLOBALS['Language'])->getText('*', 'ie7_deprecated')->once();
+
+        $browser->getDeprecatedMessage();
+    }
+
+    public function testIE7IsDeprecatedButDoesntDisplayPermanentMessageYet() {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.0)';
+        $request = HTTPRequest::instance();
+        $browser = $request->getBrowser();
+
+        expect($GLOBALS['Language'])->getText('*', 'ie7_deprecated')->never();
+
+        $browser->getDeprecatedMessage();
+    }
+}
+
+
+
 ?>
