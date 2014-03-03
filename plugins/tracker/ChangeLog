@@ -1,3 +1,6 @@
+Version 5.255 - Tuleap 6.11
+    * request #6276: be able to add a parent in the edit modal if no parent set
+
 Version 5.254 - Tuleap 6.11
     * Fix request #6349. Filtering-out vertical spaces from artifacts text-areas
 
