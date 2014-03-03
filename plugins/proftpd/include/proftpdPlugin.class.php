@@ -54,7 +54,8 @@ class proftpdPlugin extends Plugin {
     private function getExplorerController() {
         return new Tuleap\ProFTPd\Explorer\ExplorerController(
             new Tuleap\ProFTPd\Directory\DirectoryParser($this->getPluginInfo()->getPropVal('proftpd_base_directory')),
-            $this->getPermissionsManager()
+            $this->getPermissionsManager(),
+            new Tuleap\ProFTPd\Xferlog\Dao()
         );
     }
 

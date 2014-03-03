@@ -15,26 +15,36 @@ Activate EPEL repostitories and then:
     $> chkconfig proftpd on
 
 
-Create the following directory: ``/var/lib/tuleap/secure_ftp``.
+Create the following directory: `/var/lib/tuleap/secure_ftp`.
 
 Database configuration
 ----------------------
 
-After having installed this plugin, you need to grant some database privileges:
-    GRANT SELECT ON <database_name>.ftpusers to '<proftpd_user>'@<ftp_server> identified by '<proftpd_password>';
-    GRANT SELECT ON <database_name>.ftpgroups to '<proftpd_user>'@'<ftp_server>';
-    GRANT SELECT ON <database_name>.ftpgroups to 'dbauthuser'@'<ftp_server>'; -- Needed for libnss
+You need to grant some database privileges **after having installed this plugin**:
+
+    GRANT SELECT ON tuleap.ftpusers to 'proftpd_user'@'localhost' identified by 'proftpd_password';
+    GRANT SELECT ON tuleap.ftpgroups to 'proftpd_user'@'localhost';
+    GRANT SELECT ON tuleap.ftpgroups to 'dbauthuser'@'localhost'; -- Needed for libnss
     FLUSH PRIVILEGES;
 
-In addition to that, you need to set variable in ``/etc/my.cnf`` section ``[mysqld]``:
+Please change the database (`tuleap`), the server (`localhost`), the user
+(`proftpd_user`) or the password (`proftpd_password`) to whatever may suit you.
+Apply the same changes in the proftpd configuration (see below).
+
+In addition to that, you need to set variable in `/etc/my.cnf` section `[mysqld]`:
 
     # Optimize the query execution by using GROUP_CONCAT
     # This is needed for the ftpgroups view
     group_concat_max_len = 134217728
 
+Then restart mysql:
+
+    $> service mysqld restart
 
 Libnss configuration
 --------------------
+
+Replace the following lines in `/etc/libnss-mysql.cfg`:
 
     getgrnam    SELECT groupname,'x',gid FROM ftpgroups WHERE groupname = '%1$s'
     getgrgid    SELECT groupname,'x',gid FROM ftpgroups WHERE gid = '%1$u'
@@ -45,7 +55,7 @@ Libnss configuration
 Proftpd configuration
 ---------------------
 
-Everything is configured in ``/etc/proftpd.conf``, update or add:
+Everything is configured in `/etc/proftpd.conf`, update or add:
 
     AuthOrder                       mod_sql.c
     AuthPAM                         off
@@ -73,7 +83,7 @@ Everything is configured in ``/etc/proftpd.conf``, update or add:
         SQLBackend        mysql
         SQLPasswordEngine on
         SQLAuthTypes      MD5
-        SQLConnectInfo    <database_name>@<database_server> <proftpd_user> <proftpd_password>
+        SQLConnectInfo    tuleap@localhost proftpd_user proftpd_password
         SQLDefaultHomedir /var/lib/tuleap/secure_ftp
         SQLGroupInfo      ftpgroups groupname gid members
         SQLUserInfo       custom:/get-user-by-name/get-user-by-id/get-user-names/get-all-users
@@ -85,13 +95,17 @@ Everything is configured in ``/etc/proftpd.conf``, update or add:
         #SQLLogFile        /var/log/proftpd/sql.log
     </Global>
 
+Then (re)start proftpd:
+
+    $> service proftpd restart
+
 Configure log rotation
 ---------------------
 
-In /etc/logrotate.d you should have ``proftpd`` but no ``vsftpd.log``.
+In `/etc/logrotate.d` you should have `proftpd` but no `vsftpd.log`.
 If the later exists, delete it.
 
-Edit /etc/logrotate.d/proftpd and remove reference to /var/log/xferlog, you should
+Edit `/etc/logrotate.d/proftpd` and remove reference to `/var/log/xferlog`, you should
 end with something like:
 
     /var/log/proftpd/*.log {
@@ -99,7 +113,7 @@ end with something like:
         missingok
         ...
 
-Create /etc/logrotate.d/xferlog and paste the following content:
+Create `/etc/logrotate.d/xferlog` and paste the following content:
 
     /var/log/xferlog {
         compress

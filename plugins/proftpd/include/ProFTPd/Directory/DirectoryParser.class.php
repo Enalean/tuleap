@@ -32,6 +32,14 @@ class DirectoryParser {
         $this->base_dir = $base_dir;
     }
 
+    public function isFile($path) {
+        return is_file($this->getFullPath($path));
+    }
+
+    public function getFullPath($path) {
+        return $this->base_dir . DIRECTORY_SEPARATOR . $path;
+    }
+
     /**
      * Parse the content of a given directory
      *

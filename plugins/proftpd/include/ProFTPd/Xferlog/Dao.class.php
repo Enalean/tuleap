@@ -23,15 +23,51 @@ namespace Tuleap\ProFTPd\Xferlog;
 use DataAccessObject;
 
 class Dao extends DataAccessObject {
+    const DIRECTION_UPLOAD  = 'i';
+    const DIRECTION_DOWNLOAD = 'o';
+    const DIRECTION_DELETE = 'd';
+
+    const SERVICE_HTTP = 'http';
+    const SERVICE_FTP  = 'ftp';
 
     public function searchLatestEntryTimestamp() {
-        $sql = 'SELECT * FROM plugin_proftpd_xferlog ORDER BY id DESC LIMIT 1';
+        $sql = 'SELECT * FROM plugin_proftpd_xferlog WHERE service_name = "'.self::SERVICE_FTP.'" ORDER BY id DESC LIMIT 1';
         $dar =  $this->retrieve($sql);
         if ($dar && $dar->rowCount() == 1) {
             $row = $dar->getRow();
             return $row['time'];
         }
         return 0;
+    }
+
+    public function storeWebDownload($user_id, $group_id, $current_time, $file_path) {
+        $user_id      = $this->da->escapeInt($user_id);
+        $group_id     = $this->da->escapeInt($group_id);
+        $time         = $this->da->escapeInt($current_time);
+        $file_name    = $this->da->quoteSmart($file_path);
+        $direction    = $this->da->quoteSmart(self::DIRECTION_DOWNLOAD);
+        $service_name = $this->da->quoteSmart(self::SERVICE_HTTP);
+
+        $sql = "INSERT INTO plugin_proftpd_xferlog
+                (
+                    user_id,
+                    group_id,
+                    time,
+                    file_name,
+                    direction,
+                    service_name
+                )
+                VALUES
+                (
+                    $user_id,
+                    $group_id,
+                    $time,
+                    $file_name,
+                    $direction,
+                    $service_name
+                )";
+
+        return $this->update($sql);
     }
 
     public function store(
@@ -108,9 +144,9 @@ class Dao extends DataAccessObject {
         $sql = "SELECT
                     log.time AS time,
                     CASE
-                        WHEN direction = 'o' THEN $download
-                        WHEN direction = 'i' THEN $upload
-                        WHEN direction = 'd' THEN $deleted
+                        WHEN direction = '".self::DIRECTION_DOWNLOAD."' THEN $download
+                        WHEN direction = '".self::DIRECTION_UPLOAD."' THEN $upload
+                        WHEN direction = '".self::DIRECTION_DELETE."' THEN $deleted
                     END as type,
                     user.user_name AS user_name,
                     user.realname AS realname,
