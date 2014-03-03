@@ -19,21 +19,25 @@
 var codendi = codendi || { };
 codendi.tracker = codendi.tracker || { };
 
-codendi.tracker.textboxlist = {};
+codendi.tracker.textboxlist = {
+    init: function () {
+        $$('.textboxlist-auto').each(function (textbox) {
+            if (textbox.id && textbox.id.match(/_\d+$/)) {
+                var id = textbox.id.match(/_(\d+)$/)[1];
+                if ($('tracker_field_' + id)) {
+                    codendi.tracker.textboxlist[id] = new ProtoMultiSelect('tracker_field_' + id, textbox.id, {
+                        fetchFile: codendi.tracker.base_url + '?formElement=' + id + '&func=textboxlist',
+                        loadOnInit: false,
+                        newValues: true,
+                        newValuePrefix: '!'
+                    });
+                }
+            }
+        });
+    }
+};
 
 document.observe('dom:loaded', function () {
-    $$('.textboxlist-auto').each(function (textbox) {
-        if (textbox.id && textbox.id.match(/_\d+$/)) {
-            var id = textbox.id.match(/_(\d+)$/)[1];
-            if ($('tracker_field_' + id)) {
-                codendi.tracker.textboxlist[id] = new ProtoMultiSelect('tracker_field_' + id, textbox.id, {
-                    fetchFile: codendi.tracker.base_url + '?formElement=' + id + '&func=textboxlist',
-                    loadOnInit: false,
-                    newValues: true,
-                    newValuePrefix: '!'
-                });
-            }
-        }
-    });
+    codendi.tracker.textboxlist.init();
 });
 
