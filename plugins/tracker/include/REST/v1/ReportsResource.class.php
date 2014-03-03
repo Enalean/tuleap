@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\REST\v1;
 
 use \Tuleap\REST\ProjectAuthorization;
+use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use \Luracast\Restler\RestException;
 use \Tuleap\Tracker\REST\ReportRepresentation;
 use \Tracker_ReportFactory;
@@ -124,9 +125,9 @@ class ReportsResource {
      * @url GET {id}/artifacts
      *
      * @param int    $id      Id of the report
-     * @param string $values  Which fields to include in the response. Default is no field values {@from path}
-     * @param int    $limit   Number of elements displayed per page {@from path}
-     * @param int    $offset  Position of the first element to display {@from path}
+     * @param string $values  Which fields to include in the response. Default is no field values {@from path}{@choice ,all}
+     * @param int    $limit   Number of elements displayed per page {@from path}{@min 1}
+     * @param int    $offset  Position of the first element to display {@from path}{@min 0}
      *
      * @return array {@type Tuleap\Tracker\REST\Artifact\ArtifactRepresentation}
      */
@@ -136,6 +137,8 @@ class ReportsResource {
         $limit  = self::DEFAULT_LIMIT,
         $offset = self::DEFAULT_OFFSET
     ) {
+        $this->checkLimitValue($limit);
+
         $user   = UserManager::instance()->getCurrentUser();
         $report = $this->getReportById($user, $id);
 
@@ -217,5 +220,11 @@ class ReportsResource {
         ProjectAuthorization::userCanAccessProject($user, $tracker->getProject());
 
         return $report;
+    }
+
+    private function checkLimitValue($limit) {
+        if ($limit > self::MAX_LIMIT) {
+            throw new LimitOutOfBoundsException(self::MAX_LIMIT);
+        }
     }
 }
