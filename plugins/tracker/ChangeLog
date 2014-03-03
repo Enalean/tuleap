@@ -1,3 +1,6 @@
+Version 5.254 - Tuleap 6.11
+    * Fix request #6349. Filtering-out vertical spaces from artifacts text-areas
+
 Version 5.253 - Tuleap 6.11
     * story #6190: Retrieve tracker reports (and their matching artifacts) through REST API
 
