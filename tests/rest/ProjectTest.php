@@ -33,95 +33,58 @@ class ProjectTest extends RestBase {
     }
 
     public function testGET() {
-        $response = $this->getResponse($this->client->get('projects'));
+        $response      = $this->getResponse($this->client->get('projects'));
+        $json_projects = $response->json();
 
         $this->assertEquals(
-            $response->json(),
             array(
-                array(
-                    'id'        => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
-                    'uri'       => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
-                    'label'     => 'Private member',
-                    'resources' => array(
-                        array(
-                            'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/trackers',
-                            'type' => 'trackers',
-                        ),
-                        array(
-                            'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/backlog',
-                            'type' => 'backlog',
-                        ),
-                        array(
-                            'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/milestones',
-                            'type' => 'milestones',
-                        ),
-                        array(
-                            'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings',
-                            'type' => 'plannings',
-                        ),
-                        array(
-                            'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/user_groups',
-                            'type' => 'user_groups',
-                        ),
-                    )
-                ),
-                array(
-                    'id'        => TestDataBuilder::PROJECT_PUBLIC_ID,
-                    'uri'       => 'projects/'.TestDataBuilder::PROJECT_PUBLIC_ID,
-                    'label'     => 'Public',
-                    'resources' => array(
-                        array(
-                            'uri' => 'projects/'.TestDataBuilder::PROJECT_PUBLIC_ID.'/trackers',
-                            'type' => 'trackers',
-                        ),
-                        array(
-                            'uri' => 'projects/'.TestDataBuilder::PROJECT_PUBLIC_ID.'/backlog',
-                            'type' => 'backlog',
-                        ),
-                        array(
-                            'uri' => 'projects/'.TestDataBuilder::PROJECT_PUBLIC_ID.'/milestones',
-                            'type' => 'milestones',
-                        ),
-                        array(
-                            'uri' => 'projects/'.TestDataBuilder::PROJECT_PUBLIC_ID.'/plannings',
-                            'type' => 'plannings',
-                        ),
-                        array(
-                            'uri' => 'projects/'.TestDataBuilder::PROJECT_PUBLIC_ID.'/user_groups',
-                            'type' => 'user_groups',
-                        ),
-                    )
-                ),
-                array(
-                    'id'        => TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID,
-                    'uri'       => 'projects/'.TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID,
-                    'label'     => 'Public member',
-                    'resources' => array(
-                        array(
-                            'uri' => 'projects/'.TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID.'/trackers',
-                            'type' => 'trackers',
-                        ),
-                        array(
-                            'uri' => 'projects/'.TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID.'/backlog',
-                            'type' => 'backlog',
-                        ),
-                        array(
-                            'uri' => 'projects/'.TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID.'/milestones',
-                            'type' => 'milestones',
-                        ),
-                        array(
-                            'uri' => 'projects/'.TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID.'/plannings',
-                            'type' => 'plannings',
-                        ),
-                        array(
-                            'uri' => 'projects/'.TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID.'/user_groups',
-                            'type' => 'user_groups',
-                        ),
-                    )
+                TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
+                TestDataBuilder::PROJECT_PUBLIC_ID,
+                TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID,
+                TestDataBuilder::PROJECT_PBI_ID,
+            ),
+            $this->getIds($json_projects)
+        );
+
+        $this->assertEquals(
+            $json_projects[0],
+            array(
+                'id'        => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
+                'uri'       => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
+                'label'     => 'Private member',
+                'resources' => array(
+                    array(
+                        'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/trackers',
+                        'type' => 'trackers',
+                    ),
+                    array(
+                        'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/backlog',
+                        'type' => 'backlog',
+                    ),
+                    array(
+                        'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/milestones',
+                        'type' => 'milestones',
+                    ),
+                    array(
+                        'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings',
+                        'type' => 'plannings',
+                    ),
+                    array(
+                        'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/user_groups',
+                        'type' => 'user_groups',
+                    ),
                 )
             )
         );
         $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    private function getIds(array $json_with_id) {
+        $ids = array();
+        foreach ($json_with_id as $json) {
+            $ids[] = $json['id'];
+        }
+        return $ids;
     }
 
     public function testGETbyIdForAdmin() {

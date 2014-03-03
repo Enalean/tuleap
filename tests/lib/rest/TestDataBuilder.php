@@ -44,11 +44,13 @@ class TestDataBuilder {
     const PROJECT_PRIVATE_ID        = 102;
     const PROJECT_PUBLIC_ID         = 103;
     const PROJECT_PUBLIC_MEMBER_ID  = 104;
+    const PROJECT_PBI_ID            = 105;
 
     const PROJECT_PRIVATE_MEMBER_SHORTNAME = 'private-member';
     const PROJECT_PRIVATE_SHORTNAME        = 'private';
     const PROJECT_PUBLIC_SHORTNAME         = 'public';
     const PROJECT_PUBLIC_MEMBER_SHORTNAME  = 'public-member';
+    const PROJECT_PBI_SHORTNAME            = 'pbi-6348';
 
     const STATIC_UGROUP_1_ID    = 101;
     const STATIC_UGROUP_1_LABEL = 'static_ugroup_1';
@@ -219,6 +221,14 @@ class TestDataBuilder {
             array()
         );
 
+        $this->createProject(
+            self::PROJECT_PBI_SHORTNAME,
+            'PBI',
+            true,
+            array($user_test_rest_1),
+            array()
+        );
+
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['cvs_prefix']);
         unset($GLOBALS['grpdir_prefix']);
@@ -295,14 +305,19 @@ class TestDataBuilder {
     public function importAgileTemplate() {
         echo "Create import XML\n";
 
+        $this->importTemplateInProject(self::PROJECT_PRIVATE_MEMBER_ID, 'tuleap_agiledashboard_template.xml');
+        $this->importTemplateInProject(self::PROJECT_PBI_ID, 'tuleap_agiledashboard_template_pbi_6348.xml');
+
+        return $this;
+    }
+
+    private function importTemplateInProject($project_id, $template) {
         $xml_importer = new ProjectXMLImporter(
             EventManager::instance(),
             $this->project_manager
         );
         $this->user_manager->forceLogin(self::ADMIN_USER_NAME);
-        $xml_importer->import(101, dirname(__FILE__).'/../../rest/_fixtures/tuleap_agiledashboard_template.xml');
-
-        return $this;
+        $xml_importer->import($project_id, dirname(__FILE__).'/../../rest/_fixtures/'.$template);
     }
 
     public function generateMilestones() {

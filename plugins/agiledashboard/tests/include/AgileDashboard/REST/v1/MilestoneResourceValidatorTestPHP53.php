@@ -45,7 +45,7 @@ class MilestoneResourceValidatorTest extends TuleapTestCase {
         $parent_milestone                     = stub('Planning_Milestone')->getArtifact()->returns(anArtifact()->withId(101)->build());
         $this->milestone                      = stub('Planning_Milestone')->getParent()->returns($parent_milestone);
         $this->user                           = mock('PFUser');
-        $strategy                             = mock('AgileDashboard_Milestone_Backlog_BacklogStrategy');
+        $strategy                             = mock('AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy');
         $planning                             = stub('Planning')->getId()->returns(3);
         $this->artifact1                      = anArtifact()->withId(102)->withTrackerId(555)->build();
         $this->artifact2                      = anArtifact()->withId(174)->withTrackerId(666)->build();
@@ -64,7 +64,7 @@ class MilestoneResourceValidatorTest extends TuleapTestCase {
         stub($this->unplanned_item)->getArtifact()->returns($this->artifact1);
         stub($this->todo_item)->getArtifact()->returns($this->artifact2);
         stub($this->milestone)->getPlanning()->returns($planning);
-        stub($backlog_strategy_factory)->getBacklogStrategy($this->milestone)->returns($strategy);
+        stub($backlog_strategy_factory)->getSelfBacklogStrategy($this->milestone)->returns($strategy);
         stub($backlog_row_collection_factory)->getDoneCollection()->returns($this->done_collection);
         stub($backlog_row_collection_factory)->getTodoCollection()->returns($this->todo_collection);
         stub($backlog_row_collection_factory)->getUnplannedOpenCollection()->returns($this->unplanned_collection);
