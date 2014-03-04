@@ -1,3 +1,6 @@
+Version 0.9.9 - Tuleap 6.11
+    * Follow-up request #6347: Open list is beautiful in artifact view and in modal
+
 Version 0.9.8 - Tuleap 6.11
     * request #6350: Add info message to warn about IE9 and IE7
 

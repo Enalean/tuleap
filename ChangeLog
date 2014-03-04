@@ -3,7 +3,7 @@ Version 6.11 (Not released yet)
 	* git: 3.70
 	* docman: 2.26.28
 	* agiledashboard: 1.53
-	* tracker: 5.256
+	* tracker: 5.257
 	* cardwall: 1.21
 	* mediawiki: 0.25
 	* forumml: 2.6.17
@@ -29,7 +29,7 @@ Version 6.11 (Not released yet)
 	* story #6047 - update Rich Text Editor (better compatibility with IE10 and upper). Keep internal CKEditor for IE7
 
 	== Themes ==
-	* Experimental: 0.9.8
+	* Experimental: 0.9.9
 	* Dawn: 1.9
 
 	== Bug fix ==
