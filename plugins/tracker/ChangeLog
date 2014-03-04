@@ -1,3 +1,6 @@
+Version 5.259 - Tuleap 6.11
+    * Cannot see links in Artifact link field if I'm not able to see them
+
 Version 5.258 - Tuleap 6.11
     * story #6083: fix JS error on IE
 
