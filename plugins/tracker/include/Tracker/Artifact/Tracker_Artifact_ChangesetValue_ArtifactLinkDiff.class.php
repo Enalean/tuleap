@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -80,6 +80,26 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff {
     }
 
     /**
+     * Returns all added artifact links user can see
+     *
+     * @param PFUser $user
+     *
+     * @return Tracker_ArtifactLinkInfo[]
+     */
+    public function getAddedUserCanSee(PFUser $user) {
+        $all_added_links          = $this->getAdded();
+        $added_links_user_can_see = array();
+
+        foreach ($all_added_links as $link) {
+            if ($link->userCanView($user)) {
+                $added_links_user_can_see[] = $link;
+            }
+        }
+
+        return $added_links_user_can_see;
+    }
+
+    /**
      * @return Tracker_ArtifactLinkInfo[]
      */
     public function getRemoved() {
@@ -87,19 +107,41 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff {
     }
 
     /**
-     * @param String $format
-     * @return String
+     * Returns all removed artifact links user can see
+     *
+     * @param PFUser $user
+     *
+     * @return Tracker_ArtifactLinkInfo[]
      */
-    public function getAddedFormatted($format) {
-        return $this->getFormatted($this->getAdded(), $format);
+    public function getRemovedUserCanSee(PFUser $user) {
+        $all_removed_links        = $this->getRemoved();
+        $added_links_user_can_see = array();
+
+        foreach ($all_removed_links as $link) {
+            if ($link->userCanView($user)) {
+                $added_links_user_can_see[] = $link;
+            }
+        }
+
+        return $added_links_user_can_see;
     }
 
     /**
+     * @param PFUser $user
      * @param String $format
      * @return String
      */
-    public function getRemovedFormatted($format) {
-        return $this->getFormatted($this->getRemoved(), $format);
+    public function getAddedFormatted(PFUser $user, $format) {
+        return $this->getFormatted($this->getAddedUserCanSee($user), $format);
+    }
+
+    /**
+     * @param PFUser $user
+     * @param String $format
+     * @return String
+     */
+    public function getRemovedFormatted(PFUser $user, $format) {
+        return $this->getFormatted($this->getRemovedUserCanSee($user), $format);
     }
 
     private function getFormatted(array $array, $format) {

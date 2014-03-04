@@ -105,7 +105,7 @@ class TrackersResource {
      *
      * @return array {@type Tuleap\Tracker\REST\ReportRepresentation}
      */
-    protected function getReports($id, $limit, $offset = self::DEFAULT_OFFSET) {
+    protected function getReports($id, $limit = 10, $offset = self::DEFAULT_OFFSET) {
         $this->checkLimitValue($limit);
 
         $user    = UserManager::instance()->getCurrentUser();

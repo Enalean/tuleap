@@ -25,25 +25,27 @@ Mock::generate('Tracker_FormElement_Field_Integer');
 class Tracker_Artifact_ChangesetValue_IntegerTest extends TuleapTestCase {
     
     function testIntegers() {
+        $user = mock('PFUser');
+
         $field = new MockTracker_FormElement_Field_Integer();
         $integer = new Tracker_Artifact_ChangesetValue_Integer(111, $field, false, 42);
         $this->assertEqual($integer->getInteger(), 42);
         $this->assertNotIdentical($integer->getInteger(), '42');
-        $this->assertEqual($integer->getSoapValue(), array('value' => '42'));
-        $this->assertIdentical($integer->getSoapValue(), array('value' => '42'));
+        $this->assertEqual($integer->getSoapValue($user), array('value' => '42'));
+        $this->assertIdentical($integer->getSoapValue($user), array('value' => '42'));
         $this->assertIdentical($integer->getValue(), 42);
         
         $string_int = new Tracker_Artifact_ChangesetValue_Integer(111, $field, false, '55');
         $this->assertEqual($string_int->getInteger(), 55);
         $this->assertEqual($string_int->getInteger(), '55');
         $this->assertNotIdentical($string_int->getInteger(), '55');
-        $this->assertIdentical($string_int->getSoapValue(), array('value' => '55'));
+        $this->assertIdentical($string_int->getSoapValue($user), array('value' => '55'));
         $this->assertIdentical($string_int->getValue(), 55);
         
         $null_int = new Tracker_Artifact_ChangesetValue_Integer(111, $field, false, null);
         $this->assertNull($null_int->getInteger());
-        $this->assertEqual($null_int->getSoapValue(), array('value' => ''));
-        $this->assertIdentical($null_int->getSoapValue(), array('value' => ''));
+        $this->assertEqual($null_int->getSoapValue($user), array('value' => ''));
+        $this->assertIdentical($null_int->getSoapValue($user), array('value' => ''));
         $this->assertNull($null_int->getValue());
     }
     

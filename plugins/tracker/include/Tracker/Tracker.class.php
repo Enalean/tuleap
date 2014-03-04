@@ -1963,6 +1963,12 @@ EOS;
             return true;
         }
 
+        if (($user->isRestricted() && ! $user->isMember($this->getProject()->getId()))
+            || (! $this->getProject()->isPublic() && ! $user->isMember($this->getGroupId()))
+        ) {
+            return false;
+        }
+
         foreach ($this->getPermissionsByUgroupId() as $ugroup_id => $permission_types) {
             if ($user->isMemberOfUGroup($ugroup_id, $this->getGroupId())) {
                 return true;

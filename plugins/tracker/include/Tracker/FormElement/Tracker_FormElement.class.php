@@ -620,12 +620,13 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      * Returns the value that will be displayed in a mail
      * @param Tracker_Artifact $artifact
+     * @param PFUser $user
      * @param Tracker_Artifact_ChangesetValue $value
      * @param String $format
      *
      * @return String
      */
-    public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
+    public function fetchMailArtifactValue(Tracker_Artifact $artifact, PFUser $user, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
         return '';
     }
 

@@ -76,24 +76,29 @@ abstract class Tracker_Artifact_ChangesetValue {
      *
      * @param Tracker_Artifact_ChangesetValue $changeset_value The changeset value to compare to this changeset value
      * @param string                          $format          The format of the diff (html, text, ...)
+     * @param PFUser                          $user            The user or null
      *
      * @return string The difference between another $changeset_value, false if no differences
      */
-    public abstract function diff($changeset_value, $format = 'html');
+    public abstract function diff($changeset_value, $format = 'html', PFUser $user = null);
     
     /**
      * Returns the SOAP value of this changeset value
      *
+     * @param PFUser $user
+     *
      * @return string The value of this artifact changeset value for Soap API
      */
-    public abstract function getSoapValue();
+    public abstract function getSoapValue(PFUser $user);
 
     /**
      * Return the REST value of this changeset value
      *
+     * @param PFUser $user
+     *
      * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
      */
-    public abstract function getRESTValue();
+    public abstract function getRESTValue(PFUser $user);
 
     /**
      * Returns the Json value of this changeset value

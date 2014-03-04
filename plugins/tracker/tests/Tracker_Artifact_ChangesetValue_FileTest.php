@@ -27,7 +27,12 @@ Mock::generate('Tracker_FileInfo');
 
 class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
 
-    function testFiles() {
+    public function setUp() {
+        parent::setUp();
+        $this->user = mock('PFUser');
+    }
+
+    public function testFiles() {
         $attachment_id = 12;
         $description   = 'struff';
         $submitted_by  = 112;
@@ -41,7 +46,7 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
         $this->assertEqual(count($value_file), 1);
         $this->assertEqual($value_file[0], $info);
         $this->assertEqual(
-            $value_file->getSoapValue(),
+            $value_file->getSoapValue($this->user),
             array(
                 'file_info' => array(
                     array(
@@ -58,7 +63,7 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
         );
     }
 
-    function testNoDiff() {
+    public function testNoDiff() {
         $info   = new MockTracker_FileInfo();
         $info->setReturnValue('getFilename', 'Screenshot.png');
         $field  = new MockTracker_FormElement_Field_File();
@@ -68,7 +73,7 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
         $this->assertFalse($file_2->diff($file_1));
     }
 
-    function testDiff() {
+    public function testDiff() {
         $info   = new MockTracker_FileInfo();
         $info->setReturnValue('__toString', '#1 Screenshot.png');
         $info->setReturnValue('getFilename', 'Screenshot.png');
@@ -82,7 +87,7 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
         $this->assertEqual($file_2->diff($file_1), 'Screenshot.png added');
     }
 
-    function testDiff_with_lot_of_files() {
+    public function testDiff_with_lot_of_files() {
         $info1   = new MockTracker_FileInfo();
         $info1->setReturnValue('__toString', '#1 Screenshot1.png');
         $info1->setReturnValue('getFilename', 'Screenshot1.png');
@@ -105,7 +110,7 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
         $this->assertEqual($file_2->diff($file_1), 'Screenshot3.png, Screenshot4.png removed'. PHP_EOL .'Screenshot2.png added');
     }
 
-    function testSoapValue_with_lot_of_files() {
+    public function testSoapValue_with_lot_of_files() {
         $description   = 'struff';
         $submitted_by  = 112;
         $filesize = 69874;
@@ -125,7 +130,7 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
 
         $value_file = new Tracker_Artifact_ChangesetValue_File(111, $field, false, array($info1, $info2, $info3));
         $this->assertEqual(
-            $value_file->getSoapValue(),
+            $value_file->getSoapValue($this->user),
             array(
                 'file_info' => array(
                     array(
@@ -161,4 +166,3 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
     }
 
 }
-?>

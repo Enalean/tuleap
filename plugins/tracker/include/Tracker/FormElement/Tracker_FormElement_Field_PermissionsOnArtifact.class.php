@@ -212,12 +212,13 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * Fetch the field value in artifact to be displayed in mail
      *
      * @param Tracker_Artifact                $artifact         The artifact
+     * @param PFUser                          $user             The user who will receive the email
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param string                          $format           mail format
      *
      * @return string
      */
-    public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
+    public function fetchMailArtifactValue(Tracker_Artifact $artifact, PFUser $user, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
         $is_read_only = true;
         $output = '';
         $separator = '&nbsp;';

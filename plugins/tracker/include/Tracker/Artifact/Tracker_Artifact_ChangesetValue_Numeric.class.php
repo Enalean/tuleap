@@ -62,10 +62,11 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
      * Get the diff between this numeric value and the one passed in param
      *
      * @param Tracker_Artifact_ChangesetValue_Numeric $changeset_value the changeset value to compare
+     * @param PFUser                          $user            The user or null
      *
      * @return string The difference between another $changeset_value, false if no differences
      */
-    public function diff($changeset_value, $format = 'html') {
+    public function diff($changeset_value, $format = 'html', PFUser $user = null) {
         $previous_numeric = $changeset_value->getValue();
         $next_numeric     = $this->getValue();
         if ($previous_numeric !== $next_numeric) {
