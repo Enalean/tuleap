@@ -29,7 +29,8 @@ Version 6.11 (Not released yet)
 	* story #6047 - update Rich Text Editor (better compatibility with IE10 and upper). Keep internal CKEditor for IE7
 
 	== Themes ==
-	* Experimental: 0.9.7
+	* Experimental: 0.9.8
+	* Dawn: 1.9
 
 	== Bug fix ==
 	* request #5857: Fix error with SVN during a SYSTEM_CHECK
@@ -38,6 +39,7 @@ Version 6.11 (Not released yet)
 	* request #6326: When we add a new FRS file with CODENDI CLI , the "comment" field is set to 1 (Contrib STMicroelectronics)
 	* request #6316: SVN tree not displayed, When I have non-utf-8 char in my commit history, I get a blank page content.
 	* request #6338: Bad file location when moving file between releases in frs
+	* request #6350: Add info message to warn about IE9 and IE7
 
 Version 6.10 (Thursday, February 6th 2014)
 	== Plugins ==
