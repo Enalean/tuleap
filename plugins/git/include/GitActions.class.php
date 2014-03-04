@@ -696,9 +696,9 @@ class GitActions extends PluginActions {
         return $r->renameProject($project, $newName);
     }
 
-    public static function isNameAvailable($newName, &$error) {
-        $b1 = new Git_Backend_Gitolite(new Git_GitoliteDriver($this->url_manager));
-        $b2 = Backend::instance('Git','GitBackend', array($this->url_manager));
+    public static function isNameAvailable($newName, &$error, $url_manager) {
+        $b1 = new Git_Backend_Gitolite(new Git_GitoliteDriver($url_manager));
+        $b2 = Backend::instance('Git','GitBackend', array($url_manager));
         if (!$b1->isNameAvailable($newName) && !$b2->isNameAvailable($newName)) {
             $error = $GLOBALS['Language']->getText('plugin_git', 'actions_name_not_available');
             return false;

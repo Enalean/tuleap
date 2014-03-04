@@ -293,7 +293,8 @@ class GitPlugin extends Plugin {
     }
 
     public function file_exists_in_data_dir($params) {
-        $params['result'] = GitActions::isNameAvailable($params['new_name'], $params['error']);
+        $url_manager = $this->getGitRepositoryUrlManager();
+        $params['result'] = GitActions::isNameAvailable($params['new_name'], $params['error'], $url_manager);
     }
 
     public function process() {
