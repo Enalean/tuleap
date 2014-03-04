@@ -1,3 +1,10 @@
+Version 6.10-4 (Tuesday, March 4th 2014)
+	request #6248 - Fix the Wrong ‘—version_number’ parameter in docman getFile in CLI documentation
+	request #6132 - Docman html files are not opened in browser
+	request #6338 - Bad file location when moving file between releases in frs
+	request #6316 - SVN tree not displayed
+	request #6349 - Filtering-out vertical spaces from artifacts text-areas
+
 Version 6.10-3 (Tuesday, February 25th 2014)
 	request #6286: Fatal error when importing a tracker with cardwall semantics to a server w/o cardwall enabled
 
