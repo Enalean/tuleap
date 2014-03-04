@@ -1,3 +1,6 @@
+Version 5.261 - Tuleap 6.11
+    * Fix request #6360 - Cross tracker search broken
+
 Version 5.260 - Tuleap 6.11
     * Fix request #6353 - 201312250950_add_reminder_roles_table doesn't work on php5.1
 
