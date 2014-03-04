@@ -68,6 +68,19 @@ class HTTPRequest extends Codendi_Request {
         return browser_is_netscape4();
     }
 
+    public function getBrowser() {
+        $is_deprecated = strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 7') !== false;
+        $is_ie9        = strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/5') !== false;
+
+        if ($is_deprecated && $is_ie9) {
+            return new BrowserIE9CompatibilityModeDeprecated();
+        } else if($is_deprecated) {
+            return new BrowserIE7Deprecated();
+        }
+
+        return new Browser();
+    }
+
     /**
      * Hold an instance of the class
      */
@@ -141,4 +154,3 @@ class HTTPRequest extends Codendi_Request {
     }
 }
 
-?>
