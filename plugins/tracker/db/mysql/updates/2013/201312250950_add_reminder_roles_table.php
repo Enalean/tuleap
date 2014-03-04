@@ -56,6 +56,7 @@ class b201312250950_add_reminder_roles_table extends ForgeUpgrade_Bucket {
         }
         $row = $res->fetch();
         $index = $row['CONSTRAINT_NAME'];
+        $res->closeCursor();
         $sql = "ALTER TABLE `tracker_reminder` DROP INDEX ".$index.";";
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
