@@ -72,6 +72,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     const PREFERENCE_RECENT_ELEMENTS = 'recent_elements';
 
     /**
+     * Should we disable the ie7 warning?
+     */
+    const PREFERENCE_DISABLE_IE7_WARNING = 'disable_ie7_warning';
+
+    /**
      * Seperator for ssh key concatenation
      */
     const SSH_KEY_SEPARATOR = '###';
