@@ -333,24 +333,43 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
 
     private $user_agent;
 
+    /** @var HTTPRequest */
+    private $request;
+
+    /** @var PFUser */
+    private $user;
+
+    private $msg_ie7_deprecated        = 'ie7 warning message';
+    private $msg_ie7_deprecated_button = 'disable ie7 warning';
+
     public function setUp() {
         parent::setUp();
         $this->user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
+
+        $this->setText($this->msg_ie7_deprecated, array('*', 'ie7_deprecated'));
+        $this->setText($this->msg_ie7_deprecated_button, array('*', 'ie7_deprecated_button'));
+
+        $this->user   = mock('PFUser');
+        $user_manager = stub('UserManager')->getCurrentUser()->returns($this->user);
+        UserManager::setInstance($user_manager);
+
+        $this->request = new HTTPRequest();
+        $this->request->setCurrentUser($this->user);
     }
 
     public function tearDown() {
-        parent::tearDown();
         unset($_SERVER['HTTP_USER_AGENT']);
         if ($this->user_agent) {
             $_SERVER['HTTP_USER_AGENT'] = $this->user_agent;
         }
 
+        UserManager::clearInstance();
+        parent::tearDown();
     }
 
     public function testIE9CompatibilityModeIsDeprected() {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)';
-        $request = HTTPRequest::instance();
-        $browser = $request->getBrowser();
+        $browser = $this->request->getBrowser();
 
         expect($GLOBALS['Language'])->getText('*', 'ie9_compatibility_deprecated')->once();
 
@@ -359,8 +378,7 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
 
     public function testIE9IsUnfortunatlyNotDeprecated() {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)';
-        $request = HTTPRequest::instance();
-        $browser = $request->getBrowser();
+        $browser = $this->request->getBrowser();
 
         expect($GLOBALS['Language'])->getText()->never();
 
@@ -369,35 +387,44 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
 
     public function testFirefoxIsNotDeprecated() {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:27.0) Gecko/20100101 Firefox/27.0';
-        $request = HTTPRequest::instance();
-        $browser = $request->getBrowser();
+        $browser = $this->request->getBrowser();
 
         expect($GLOBALS['Language'])->getText()->never();
 
         $browser->getDeprecatedMessage();
     }
 
-    public function __testIE7IsDeprecated() {
+    public function testIE7IsDeprecated() {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.0)';
-        $request = HTTPRequest::instance();
-        $browser = $request->getBrowser();
+        $browser = $this->request->getBrowser();
 
-        expect($GLOBALS['Language'])->getText('*', 'ie7_deprecated')->once();
-
-        $browser->getDeprecatedMessage();
+        $this->assertPattern("/$this->msg_ie7_deprecated/", $browser->getDeprecatedMessage());
     }
 
-    public function testIE7IsDeprecatedButDoesntDisplayPermanentMessageYet() {
+    public function testIE7IsDeprecatedButUserChoseToNotDisplayTheWarning() {
+        stub($this->user)->getPreference(PFUser::PREFERENCE_DISABLE_IE7_WARNING)->returns(1);
+
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.0)';
-        $request = HTTPRequest::instance();
-        $browser = $request->getBrowser();
+        $browser = $this->request->getBrowser();
 
-        expect($GLOBALS['Language'])->getText('*', 'ie7_deprecated')->never();
+        $this->assertNoPattern("/$this->msg_ie7_deprecated/", $browser->getDeprecatedMessage());
+    }
 
-        $browser->getDeprecatedMessage();
+    public function itDisplaysOkButtonToDisableIE7Warning() {
+        stub($this->user)->isAnonymous()->returns(false);
+
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.0)';
+        $browser = $this->request->getBrowser();
+
+        $this->assertPattern("/$this->msg_ie7_deprecated_button/", $browser->getDeprecatedMessage());
+    }
+
+    public function itDoesNotDisplayOkButtonForAnonymousUser() {
+        stub($this->user)->isAnonymous()->returns(true);
+
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.0)';
+        $browser = $this->request->getBrowser();
+
+        $this->assertNoPattern("/$this->msg_ie7_deprecated_button/", $browser->getDeprecatedMessage());
     }
 }
-
-
-
-?>

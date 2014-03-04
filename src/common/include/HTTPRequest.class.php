@@ -75,7 +75,7 @@ class HTTPRequest extends Codendi_Request {
         if ($is_deprecated && $is_ie9) {
             return new BrowserIE9CompatibilityModeDeprecated();
         } else if($is_deprecated) {
-            return new BrowserIE7Deprecated();
+            return new BrowserIE7Deprecated($this->getCurrentUser());
         }
 
         return new Browser();
