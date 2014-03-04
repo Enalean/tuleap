@@ -80,12 +80,16 @@ codendi.tracker.artifact.artifactLink = {
         }
     },
     showReverseArtifactLinks: function() {
-        $('display-tracker-form-element-artifactlink-reverse').observe('click', function(event) {
-            Event.stop(event);
+        var show_reverse_artifact_button = $('display-tracker-form-element-artifactlink-reverse');
 
-            this.adjacent('#tracker-form-element-artifactlink-reverse').invoke('show');
-            this.hide();
-        });
+        if (show_reverse_artifact_button) {
+            show_reverse_artifact_button.observe('click', function(event) {
+                Event.stop(event);
+
+                this.adjacent('#tracker-form-element-artifactlink-reverse').invoke('show');
+                this.hide();
+            });
+        }
     },
     addTemporaryArtifactLinks: function () {
         if (codendi.tracker.artifact.artifactLinker_currentField) {
