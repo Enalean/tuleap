@@ -68,6 +68,7 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
             $this->graph->SetScale("datlin");
             $this->graph->title->Set($this->title);
             $this->graph->xaxis->SetTickLabels($dates);
+            $this->graph->yaxis->scale->SetAutoMin(0);
 
             if (is_null($this->description)) {
                 $this->description = "";

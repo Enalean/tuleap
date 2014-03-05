@@ -97,7 +97,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
                 $result[$timestamp] = $this->switchArrayKeys($tmpResult[$timestamp]);
             }
         }
-        return $result;
+        return $this->filterEmptyLines($result);;
     }
 
     protected function isValidObservedField($observed_field, $type) {
@@ -178,5 +178,23 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
         return $result;
     }
 
+    /**
+     * Filter empty lines from chart data
+     * protected for testing purpose
+     * @param  array $array array to filter
+     *                      array structure must be: $array[timestamp][bind_value]= count
+     * @return array        filtered array
+     */
+     protected function filterEmptyLines(array $array) {
+        $lines_with_values = array();
+        foreach ($array as $entry) {
+            $lines_with_values += array_filter($entry);
+        }
+        array_walk($array, array($this, 'keepLinesWithValues'), $lines_with_values);
+        return $array;
+    }
+    private function keepLinesWithValues(&$entry, $key, $lines_with_values) {
+        $entry = array_intersect_key($entry, $lines_with_values);
+    }
 }
 ?>
