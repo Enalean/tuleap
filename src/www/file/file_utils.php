@@ -1074,16 +1074,19 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 foreach ($release_files as $rel_file) {
                               
                     if (!$release_files_to_delete || !in_array($rel_file, $release_files_to_delete) ) {
+                        $package_id = $release['package_id'];
                         $fname = $files[$index]->getFileName();
                         $list  = split('/', $fname);
                         $fname = $list[sizeof($list) - 1];
                         if ($new_release_id[$index] != $release_id) {
                             //changing to a different release for this file
                             //see if the new release is valid for this project
-                            $res2 = & $frsrf->getFRSReleaseFromDb($new_release_id[$index], $group_id);
+                            $res2 = $frsrf->getFRSReleaseFromDb($new_release_id[$index], $group_id);
                             if (!$res2 || count($res2) < 1) {
                                 //release not found for this project
                                 $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_not_yours', $fname));
+                            } else {
+                                $package_id = $res2->getPackageID();
                             }
                         } 
                          if($new_release_id[$index] == $release_id || $res2) {
@@ -1106,8 +1109,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                         'processor_id'  => $release_file_processor[$index],
                                         'file_id'       => $rel_file,
                                         'comment'       => $release_comment[$index],
-                                        'filename'      => 'p' . $release['package_id'] . '_r' . $new_release_id[$index] . '/' . $fname,
-                                        'filepath'      => 'p' . $release['package_id'] . '_r' . $new_release_id[$index] . '/' . $fname . '_' . $unix_release_time,
+                                        'filename'      => 'p' . $package_id . '_r' . $new_release_id[$index] . '/' . $fname,
+                                        'filepath'      => 'p' . $package_id . '_r' . $new_release_id[$index] . '/' . $fname . '_' . $unix_release_time,
                                     );
                                     if ($release_reference_md5[$index] && $release_reference_md5[$index] != '') {
                                         $array['reference_md5'] = $release_reference_md5[$index];
