@@ -1,3 +1,6 @@
+Version 6.10-5 (Wed, March 5th 2014)
+	Follow-up request #6338: keep package id coherent
+
 Version 6.10-4 (Tuesday, March 4th 2014)
 	request #6248 - Fix the Wrong ‘—version_number’ parameter in docman getFile in CLI documentation
 	request #6132 - Docman html files are not opened in browser
