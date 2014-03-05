@@ -29,7 +29,7 @@ Version 6.11 (Not released yet)
 	* story #6047 - update Rich Text Editor (better compatibility with IE10 and upper). Keep internal CKEditor for IE7
 
 	== Themes ==
-	* Experimental: 0.9.9
+	* Experimental: 0.9.10
 	* Dawn: 1.9
 
 	== Bug fix ==
