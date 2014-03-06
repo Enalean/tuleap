@@ -153,7 +153,7 @@ class ReportsResource {
         $with_all_field_values = $values == self::ALL_VALUES;
 
         Header::allowOptionsGet();
-        Header::sendPaginationHeaders(self::DEFAULT_LIMIT, self::DEFAULT_OFFSET, $nb_matching, self::MAX_LIMIT);
+        Header::sendPaginationHeaders($limit, $offset, $nb_matching, self::MAX_LIMIT);
 
         return $this->getListOfArtifactRepresentation(
             $user,
