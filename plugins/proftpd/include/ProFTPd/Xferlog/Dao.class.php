@@ -28,10 +28,9 @@ class Dao extends DataAccessObject {
     const DIRECTION_DELETE = 'd';
 
     const SERVICE_HTTP = 'http';
-    const SERVICE_FTP  = 'ftp';
 
     public function searchLatestEntryTimestamp() {
-        $sql = 'SELECT * FROM plugin_proftpd_xferlog WHERE service_name = "'.self::SERVICE_FTP.'" ORDER BY id DESC LIMIT 1';
+        $sql = 'SELECT * FROM plugin_proftpd_xferlog WHERE service_name != "'.self::SERVICE_HTTP.'" ORDER BY id DESC LIMIT 1';
         $dar =  $this->retrieve($sql);
         if ($dar && $dar->rowCount() == 1) {
             $row = $dar->getRow();

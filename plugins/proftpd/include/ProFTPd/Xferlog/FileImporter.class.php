@@ -45,12 +45,15 @@ class FileImporter {
     /** @var string[] */
     private $errors;
 
+    /** @var string */
+    private $base_dir;
 
-    public function __construct(Dao $dao, Parser $parser, UserManager $user_manager, ProjectManager $project_manager) {
+    public function __construct(Dao $dao, Parser $parser, UserManager $user_manager, ProjectManager $project_manager, $base_dir) {
         $this->dao             = $dao;
         $this->parser          = $parser;
         $this->user_manager    = $user_manager;
         $this->project_manager = $project_manager;
+        $this->base_dir        = $base_dir;
     }
 
     public function getNbImportedLines() {
@@ -103,14 +106,25 @@ class FileImporter {
     }
 
     private function getProjectId(Entry $entry, $line) {
-        $matches = array();
-        if (preg_match('%^/([^/]+)/.*%', $entry->filename, $matches)) {
-            $project = $this->project_manager->getProjectByUnixName($matches[1]);
+        $project_name = $this->getProjectUnixName($entry);
+        if ($project_name) {
+            $project = $this->project_manager->getProjectByUnixName($project_name);
             if ($project && !$project->isError()) {
                 return $project->getId();
             }
         }
         $this->errors[] = 'Unable to identify project in log line: '.$line;
         return 0;
+    }
+
+    private function getProjectUnixName(Entry $entry) {
+        if (strpos($entry->filename, $this->base_dir) === 0) {
+            $entry->filename = substr($entry->filename, strlen($this->base_dir));
+
+        }
+        $matches = array();
+        if (preg_match('%^/([^/]+)/.*%', $entry->filename, $matches)) {
+            return $matches[1];
+        }
     }
 }
