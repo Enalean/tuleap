@@ -154,6 +154,7 @@ $wUser->setContent('
   '.$user_validated.'
   <li><a href="/people/admin">'.$Language->getText('admin_main', 'skills').'</a></li>
   <li><a href="register_admin.php?page=admin_creation">'.$Language->getText('admin_main', 'new_user').'</a></li>
+  <li><a href="permission_delegation.php">'.$Language->getText('admin_main', 'permission_delegation').'</a></li>
 </ul>');
 
 

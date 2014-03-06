@@ -1,0 +1,71 @@
+#permission-delegation {
+    .tabbable {
+        margin: 40px 0 0 0;
+
+        .nav {
+            min-width: 140px;
+
+            li:last-child {
+                text-align: center;
+                padding: 20px 0;
+            }
+        }
+
+        .tab-content {
+            max-width: 1100px;
+
+            h2 {
+                margin: 0;
+                line-height: 20px;
+            }
+
+            h3 {
+                margin: 30px 0 0 0;
+                line-height: 20px;
+            }
+
+            .description {
+                margin: 20px 0 0 0;
+                font-size: 0.9em;
+            }
+
+            .no-permission, .no-user {
+                text-align: center;
+                font-style: italic;
+                color: #BBB;
+                font-size: 0.9em;
+                margin: 30px 0;
+            }
+
+            .table {
+                th:first-child, td:first-child {
+                    width: 30px;
+                }
+            }
+
+            .table-actions {
+                .left-actions {
+                    float: left;
+                    text-align: left;
+
+                    input[type="text"] {
+                        width: 180px;
+                    }
+                    @media screen and (max-width: 1150px) {
+                        input[type="text"] {
+                            width: 110px;
+                        }
+                    }
+                }
+                .right-actions {
+                    float: right;
+                    text-align: right;
+                }
+            }
+        }
+    }
+
+    .no-group {
+        margin: 30px 0 0 0;
+    }
+}

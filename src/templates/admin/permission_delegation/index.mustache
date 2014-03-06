@@ -1,0 +1,47 @@
+<div id="permission-delegation">
+    <h1>{{ page_title }}</h1>
+    <p>{{ page_description }}</p>
+
+    {{# has_groups }}
+        <div class="tabbable tabs-left">
+            <ul class="nav nav-tabs">
+                {{# groups }}
+                    <li {{# is_current }}class="active"{{/ is_current }}>
+                        <a href="#">{{ title }}</a>
+                    </li>
+                {{/ groups }}
+
+                <li>
+                    <button class="btn"><i class="icon-plus"></i> {{ group_action_add }}</button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                {{# current_group }}
+                <div class="row-fluid">
+                    <div class="span12">
+                        <h2>
+                            {{ title }}
+                            <button class="btn btn-small"><i class="icon-pencil"></i> {{ group_action_edit }}</button>
+                            <button class="btn btn-small btn-danger"><i class="icon-trash"></i> {{ group_action_delete }}</button>
+                        </h2>
+                        {{# has_description }}
+                            <p class="description">{{ description }}</p>
+                        {{/ has_description }}
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    {{# current_group }}
+                        {{> permissions_list }}
+
+                        {{> users_list }}
+                    {{/ current_group }}
+                </div>
+                {{/ current_group }}
+            </div>
+        </div>
+    {{/ has_groups }}
+    {{^ has_groups }}
+        <p class="no-group">{{ no_group }} <button class="btn btn-primary"><i class="icon-plus"></i> {{ add_group }}</button></p>
+    {{/ has_groups }}
+</div>

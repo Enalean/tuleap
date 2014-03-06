@@ -52,6 +52,7 @@ admin_main	trove_cat_list	Liste des catégories
 admin_main	trove_cat_add	Ajout des catégories
 admin_main	skills	Compétences utilisateurs
 admin_main	new_user	Nouvel utilisateur
+admin_main	permission_delegation	Délégation de permission
 admin_main	active_users	Utilisateurs actifs
 admin_main	lastday_users	Les dernières 24 heures
 admin_main	lastweek_users	La semaine dernière
@@ -461,3 +462,20 @@ admin_generic_user	back	« Retour
 admin_generic_user	set_by_project	Configurable au niveau de chaque projet (chaque administrateur peut définir sa propre valeur dans les pages d'administration du projet)
 admin_generic_user	email	Email
 admin_generic_user	password	Mot de passe
+
+admin_permission_delegation	page_title	Délegation de permission
+admin_permission_delegation	page_description	Ici vous pouvez assigner des permissions à des groupes portants sur l'ensemble de la plateforme.
+admin_permission_delegation	group_action_add	Ajouter un groupe
+admin_permission_delegation	group_action_edit	Editer
+admin_permission_delegation	group_action_delete	Supprimer
+admin_permission_delegation	no_group	Il n'y a pas encore de groupe. Vous pouvez commencer par en ajouter un :
+admin_permission_delegation	permissions_title	Permissions
+admin_permission_delegation	no_permission	Il n'y a aucune permission associée à ce groupe
+admin_permission_delegation	users_title	Utilisateurs
+admin_permission_delegation	no_user	Il n'y a aucun utilisateur associé à ce groupe
+admin_permission_delegation	permissions_list_title	Permission
+admin_permission_delegation	users_list_title	Utilisateur
+admin_permission_delegation	permissions_action_add	Ajouter des permissions
+admin_permission_delegation	permissions_action_delete	Supprimer les permissions sélectionnées
+admin_permission_delegation	users_action_add	Ajouter un utilisateur
+admin_permission_delegation	users_action_delete	Supprimer les utilisateurs sélectionnés

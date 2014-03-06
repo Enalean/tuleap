@@ -1,0 +1,40 @@
+<div class="span6">
+    <h3>{{ users_title }}</h3>
+
+    {{# has_users }}
+    <table class="table table-hover table-bordered table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th>{{ users_list_title }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{# users }}
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+            {{/ users }}
+        </tbody>
+    </table>
+    {{/ has_users }}
+    {{^ has_users }}
+        <p class="no-user">{{ no_user }}</p>
+    {{/ has_users }}
+
+    <div class="table-actions">
+        <div class="left-actions">
+            <div class="input-append">
+                <input type="text">
+                <button class="btn"><i class="icon-plus"></i> {{ users_action_add }}</button>
+            </div>
+        </div>
+        <div class="right-actions">
+            {{# has_users }}
+                <button class="btn btn-danger"><i class="icon-trash"></i> {{ users_action_delete }}</button>
+            {{/ has_users }}
+        </div>
+        <div style="clear: both"></div>
+    </div>
+</div>

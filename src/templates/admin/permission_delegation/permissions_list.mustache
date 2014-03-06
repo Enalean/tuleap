@@ -1,0 +1,37 @@
+<div class="span6">
+    <h3>{{ permissions_title }}</h3>
+
+    {{# has_permissions }}
+    <table class="table table-hover table-bordered table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th>{{ permissions_list_title }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{# permissions }}
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+            {{/ permissions }}
+        </tbody>
+    </table>
+    {{/ has_permissions }}
+    {{^ has_permissions }}
+        <p class="no-permission">{{ no_permission }}</p>
+    {{/ has_permissions }}
+
+    <div class="table-actions">
+        <div class="left-actions">
+            <button class="btn"><i class="icon-plus"></i> {{ permissions_action_add }}</button>
+        </div>
+        <div class="right-actions">
+            {{# has_permissions }}
+                <button class="btn btn-danger"><i class="icon-trash"></i> {{ permissions_action_delete }}</button>
+            {{/ has_permissions }}
+        </div>
+        <div style="clear: both"></div>
+    </div>
+</div>
