@@ -99,9 +99,23 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
 
         $host  = $this->tmpdir;
         $login = $this->gerrit_admin_instance;
-        $id = $ssh_port = $http_port = $identity_file = $replication_key = $use_ssl = 0;
-        $this->server = partial_mock('Git_RemoteServer_GerritServer', array('getCloneSSHUrl'), 
-                array($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key, $use_ssl));
+        $id = $ssh_port = $http_port = $identity_file = $replication_key = $use_ssl = $gerrit_version = $http_password = 0;
+        $this->server = partial_mock(
+            'Git_RemoteServer_GerritServer',
+            array('getCloneSSHUrl'),
+            array(
+                $id,
+                $host,
+                $ssh_port,
+                $http_port,
+                $login,
+                $identity_file,
+                $replication_key,
+                $use_ssl,
+                $gerrit_version,
+                $http_password
+            )
+        );
 
         $this->gerrit_git_url = "$host/$this->gerrit_project";
         stub($this->server)->getCloneSSHUrl($this->gerrit_project)->returns($this->gerrit_git_url);

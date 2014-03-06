@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -81,7 +81,7 @@ class Git_Admin {
         $id    = (int)$server->getId();
         $title = 'Add new gerrit server';
         if ($id) {
-            $title = $server->getHost();;
+            $title = $server->getHost();
         }
 
         $html  = '';
@@ -97,16 +97,26 @@ class Git_Admin {
         );
 
         foreach ($fields as $field) {
-            $html .= '<tr valign="top"><td>'. $field[0].'</td><td><input type="text" name="gerrit_servers['. $id .']['.$field[1].']" value="'. $hp->purify($field[2]) .'" /></td></tr>';
+            $html .= '<tr valign="top">
+                        <td>'. $field[0].'</td>
+                        <td>
+                            <input type="text"
+                                   name="gerrit_servers['. $id .']['.$field[1].']"
+                                   value="'. $hp->purify($field[2]) .'"
+                            />
+                        </td>
+                      </tr>';
         }
         $html .= '<tr valign="top">
-            <td>Replication SSH Key (SSH key of the user who runs gerrit server)</td>
-            <td><textarea
-                type="checkbox"
-                name="gerrit_servers['. $id .'][replication_key]"
-                cols="30"
-                rows="5">'.$server->getReplicationKey().'</textarea>
-            </td></tr>';
+                    <td>Replication SSH Key (SSH key of the user who runs gerrit server)</td>
+                    <td>
+                        <textarea
+                            type="checkbox"
+                            name="gerrit_servers['. $id .'][replication_key]"
+                            cols="30"
+                            rows="5">'.$server->getReplicationKey().'</textarea>
+                    </td>
+                  </tr>';
 
         $checked = '';
         if ($server->usesSSL()) {
@@ -116,6 +126,39 @@ class Git_Admin {
         $html .= '<tr>
                     <td> <label> Use SSL </label> </td>
                     <td> <input type="checkbox" name="gerrit_servers['. $id .'][use_ssl]" '.$checked.'/> </td>
+                  </tr>';
+
+        $html .= '<tr>
+                    <td> <label> '. $GLOBALS['Language']->getText('plugin_git', 'admin_gerrit_version_label') .' </label> </td>
+                    <td>
+                        <label class="radio">
+                            <input type="radio"
+                                   name="gerrit_servers['. $id .'][gerrit_version]"
+                                   id="gerritVersion25"
+                                   value="2.5"
+                                   '. ($server->getGerritVersion() === Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION ? 'checked' : '') .'
+                            />
+                            '. $GLOBALS['Language']->getText('plugin_git', 'admin_gerrit_v2_5') .'
+                        </label>
+                        <label class="radio">
+                            <input type="radio" 
+                                   name="gerrit_servers['. $id .'][gerrit_version]"
+                                   id="gerritVersion28"
+                                   value="2.8+"
+                                   '. ($server->getGerritVersion() !== Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION ? 'checked' : '') .'
+                            />
+                            '. $GLOBALS['Language']->getText('plugin_git', 'admin_gerrit_v2_8plus') .'
+                        </label>
+                    </td>
+                  </tr>';
+        $html .= '<tr>
+                    <td> <label> '. $GLOBALS['Language']->getText('plugin_git', 'admin_gerrit_http_password_label') .' </label> </td>
+                    <td>
+                        <input type="text" 
+                               name="gerrit_servers['. $id .'][http_password]"
+                               value="'.$hp->purify($server->getHTTPPassword()).'"
+                        />
+                    </td>
                   </tr>';
 
         if ($id && ! $this->gerrit_server_factory->isServerUsed($server)) {
@@ -133,7 +176,7 @@ class Git_Admin {
             $this->servers = $this->gerrit_server_factory->getServers();
         }
  
-        $this->servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', '', false);
+        $this->servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', '', false, Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION, '');
     }
 
     private function updateServers(array $request_gerrit_servers) {
@@ -156,15 +199,19 @@ class Git_Admin {
             $identity_file          = isset($settings['identity_file'])     ? $settings['identity_file']    : '';
             $replication_ssh_key    = isset($settings['replication_key'])   ? $settings['replication_key']  : '';
             $use_ssl                = isset($settings['use_ssl'])                                               ;
+            $gerrit_version         = isset($settings['gerrit_version'])    ? $settings['gerrit_version']   : '';
+            $http_password          = isset($settings['http_password'] )    ? $settings['http_password']    : '';
 
-            if ($host &&
-                $host != $server->getHost() ||
+            if ($host !== '' &&
+                ($host != $server->getHost() ||
                 $ssh_port != $server->getSSHPort() ||
                 $http_port != $server->getHTTPPort() ||
                 $login != $server->getLogin() ||
                 $identity_file != $server->getIdentityFile() ||
                 $replication_ssh_key != $server->getReplicationKey() ||
-                $use_ssl != $server->usesSSL()
+                $use_ssl != $server->usesSSL() ||
+                $gerrit_version != $server->getGerritVersion() ||
+                $http_password != $server->getHTTPPassword())
             ) {
                 $server
                     ->setHost($host)
@@ -173,11 +220,12 @@ class Git_Admin {
                     ->setLogin($login)
                     ->setIdentityFile($identity_file)
                     ->setReplicationKey($replication_ssh_key)
-                    ->setUseSSL($use_ssl);
+                    ->setUseSSL($use_ssl)
+                    ->setGerritVersion($gerrit_version)
+                    ->setHTTPPassword($http_password);
                 $this->gerrit_server_factory->save($server);
                 $this->servers[$server->getId()] = $server;
             }
         }
     }
 }
-?>

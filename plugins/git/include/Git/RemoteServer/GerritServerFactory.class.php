@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 
 class Git_RemoteServer_GerritServerFactory {
 
@@ -119,7 +117,9 @@ class Git_RemoteServer_GerritServerFactory {
             $server->getLogin(),
             $server->getIdentityFile(),
             $server->getReplicationKey(),
-            $server->usesSSL()
+            $server->usesSSL(),
+            $server->getGerritVersion(),
+            $server->getHTTPPassword()
         );
         if ($server->getId() == 0) {
             $server->setId($id);
@@ -150,7 +150,7 @@ class Git_RemoteServer_GerritServerFactory {
     /**
      *
      * @param PFUser $user
-     * @return \Git_RemoteServer_GerritServer[]
+     * @return Git_RemoteServer_GerritServer[]
      */
     public function getRemoteServersForUser(PFUser $user) {
         return $this->dao->searchAllRemoteServersForUserId($user->getId())
@@ -160,7 +160,7 @@ class Git_RemoteServer_GerritServerFactory {
     /**
      *
      * @param array $row
-     * @return \Git_RemoteServer_GerritServer
+     * @return Git_RemoteServer_GerritServer
      */
     public function instantiateFromRow(array $row) {
         return new Git_RemoteServer_GerritServer(
@@ -171,7 +171,9 @@ class Git_RemoteServer_GerritServerFactory {
             $row['login'],
             $row['identity_file'],
             $row['ssh_key'],
-            $row['use_ssl']
+            $row['use_ssl'],
+            $row['gerrit_version'],
+            $row['http_password']
         );
     }
 
@@ -183,4 +185,3 @@ class Git_RemoteServer_GerritServerFactory {
         return $this->dao->searchAll()->count() > 0;
     }
 }
-?>
