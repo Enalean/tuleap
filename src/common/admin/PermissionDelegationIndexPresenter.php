@@ -23,7 +23,7 @@ class Admin_PermissionDelegationIndexPresenter {
     /**
      * @var Admin_PermissionDelegationGroupPresenter[]
      */
-    private $groups;
+    private $groups = array();
 
     /**
      * @var Admin_PermissionDelegationGroupPresenter
@@ -31,12 +31,22 @@ class Admin_PermissionDelegationIndexPresenter {
     private $current_group;
 
 
-    public function __construct() {
-        $this->groups = array(
-            new Admin_PermissionDelegationGroupPresenter('My group', null, false, array(), array()),
-            new Admin_PermissionDelegationGroupPresenter('My second group', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo, eveniet, accusantium, quos doloremque tempora voluptas veniam recusandae.', true, array(), array())
-        );
-        $this->current_group = $this->groups[1];
+    public function __construct(array $groups, $current_id = null) {
+
+        foreach ($groups as $group) {
+
+            $group_presenter = new Admin_PermissionDelegationGroupPresenter($group);
+            $this->groups[]  = $group_presenter;
+
+            if (! $this->current_group || $group->getId() == $current_id) {
+                if ($this->current_group) {
+                    $this->current_group->setIsCurrent(false);
+                }
+
+                $this->current_group = $group_presenter;
+                $this->current_group->setIsCurrent(true);
+            }
+        }
     }
 
     public function page_title() {

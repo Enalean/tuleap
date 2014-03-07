@@ -21,6 +21,11 @@
 class Admin_PermissionDelegationGroupPresenter {
 
     /**
+     * @var int
+     */
+    private $id;
+
+    /**
      * @var string
      */
     private $title;
@@ -46,12 +51,21 @@ class Admin_PermissionDelegationGroupPresenter {
     private $users;
 
 
-    public function __construct($title, $description, $is_current, $permissions, $users) {
-        $this->title       = $title;
-        $this->description = $description;
-        $this->is_current  = $is_current;
-        $this->permissions = $permissions;
-        $this->users       = $users;
+    public function __construct(User_ForgeUGroup $group) {
+        $this->id          = $group->getId();
+        $this->title       = $group->getName();
+        $this->description = $group->getDescription();
+        $this->is_current  = false;
+        $this->permissions = array();
+        $this->users       = array();
+    }
+
+    public function setIsCurrent($is_current) {
+        $this->is_current = $is_current;
+    }
+
+    public function id() {
+        return $this->id;
     }
 
     public function title() {

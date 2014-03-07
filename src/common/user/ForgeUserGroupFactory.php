@@ -31,7 +31,7 @@ class User_ForgeUserGroupFactory {
 
     /**
      * @return User_ForgeUGroup
-     * @throws User_UserGroupNameAlreadyExistsException
+     * @throws User_UserGroupNameInvalidException
      */
     public function createForgeUGroup($name, $description) {
         $user_group_id = $this->dao->createForgeUGroup($name, $description);
@@ -74,7 +74,6 @@ class User_ForgeUserGroupFactory {
     }
 
     /**
-
      * @return User_ForgeUGroup
      */
     private function instantiateFromRow($row) {

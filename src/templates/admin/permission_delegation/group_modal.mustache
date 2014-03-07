@@ -1,0 +1,31 @@
+<div id="add-group-modal" class="modal hide fade">
+    <form action="permission_delegation.php?action=update-group" method="post">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal"><i class="icon-remove"></i></a>
+            <h3>{{ group_title }}</h3>
+        </div>
+
+        <div class="modal-body">
+            <div class="control-group">
+                <label class="control-label" for="group-name">{{ group_name_label }}</label>
+                <div class="controls">
+                    <input type="text" id="group-name" name="group-name" placeholder="{{ group_name_label }}" value="{{ group_name }}" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="group-description">{{ group_description_label }}</label>
+                <div class="controls">
+                    <textarea id="group-description" name="group-description" placeholder="{{ group_description_label }}">{{ group_description }}</textarea>
+                </div>
+            </div>
+            {{^ is_new }}
+                <input type="hidden" name="group-id" value="{{ group_id }}" />
+            {{/ is_new }}
+        </div>
+
+        <div class="modal-footer">
+            <a class="btn" data-dismiss="modal">{{ group_cancel }}</a>
+            <input type="submit" class="btn btn-primary" value="{{ group_submit }}" />
+        </div>
+    </form>
+</div>

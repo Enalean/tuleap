@@ -489,3 +489,16 @@ admin_permission_delegation	permissions_action_add	Add permissions
 admin_permission_delegation	permissions_action_delete	Delete selected permissions
 admin_permission_delegation	users_action_add	Add user
 admin_permission_delegation	users_action_delete	Delete selected users
+admin_permission_delegation	group_title_create	Create a new group
+admin_permission_delegation	group_title_edit	Edit the group "$1"
+admin_permission_delegation	group_name	Name
+admin_permission_delegation	group_description	Description
+admin_permission_delegation	group_submit_create	Create
+admin_permission_delegation	group_submit_edit	Save changes
+admin_permission_delegation	group_cancel	Cancel
+admin_permission_delegation	group_title_delete	Delete the group "$1"
+admin_permission_delegation	group_delete_confirmation	You are about to delete the group "<b>$1</b>". This action is action is irreversible. Do you confirm this deletion?
+admin_permission_delegation	group_submit_delete	Yes, delete it
+admin_permission_delegation	group_cancel_delete	Cancel
+admin_permission_delegation	user_group_already_exists	The user group name is invalid (empty or already exists)
+admin_permission_delegation	ugroup_not_found	User group does not exist

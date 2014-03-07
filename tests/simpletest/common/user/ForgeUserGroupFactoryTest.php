@@ -138,12 +138,12 @@ class User_ForgeUserGroupFactory_cCeateForgeUGroupTest extends User_ForgeUserGro
     }
 
     public function itThrowsExceptionIfUGroupNameExists() {
-        $this->expectException('User_UserGroupNameAlreadyExistsException');
+        $this->expectException('User_UserGroupNameInvalidException');
 
         $name        = 'my group';
         $description = 'my desc';
 
-        stub($this->dao)->createForgeUGroup($name, $description)->throws(new User_UserGroupNameAlreadyExistsException());
+        stub($this->dao)->createForgeUGroup($name, $description)->throws(new User_UserGroupNameInvalidException());
 
         $this->factory->createForgeUGroup($name, $description);
     }

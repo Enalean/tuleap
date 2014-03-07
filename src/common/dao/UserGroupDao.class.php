@@ -135,7 +135,7 @@ class UserGroupDao extends DataAccessObject {
     }
 
     public function getAllForgeUGroups() {
-        $sql = "SELECT ugroup.*
+        $sql = "SELECT ugroup.* FROM ugroup
                 WHERE ugroup.group_id IS NULL";
 
         return $this->retrieve($sql);
@@ -144,7 +144,7 @@ class UserGroupDao extends DataAccessObject {
     public function getForgeUGroup($user_group_id) {
         $user_group_id = $this->da->escapeInt($user_group_id);
 
-        $sql = "SELECT ugroup.*
+        $sql = "SELECT ugroup.* FROM ugroup
                 WHERE ugroup.ugroup_id = $user_group_id
                 AND ugroup.group_id IS NULL";
 
@@ -153,7 +153,7 @@ class UserGroupDao extends DataAccessObject {
 
     /**
     * @return bool
-    * @throws User_UserGroupNameAlreadyExistsException
+    * @throws User_UserGroupNameInvalidException
     */
     public function updateForgeUGroup($user_group_id, $name, $description) {
         $user_group_id = $this->da->escapeInt($user_group_id);
@@ -161,12 +161,12 @@ class UserGroupDao extends DataAccessObject {
         $description = $this->da->quoteSmart($description);
 
         if (! $this->isUserGroupNameValid($name, $user_group_id)) {
-            throw new User_UserGroupNameAlreadyExistsException($name);
+            throw new User_UserGroupNameInvalidException($name);
         }
 
         $sql = "UPDATE ugroup
             SET name = $name,
-            description = $description,
+            description = $description
             WHERE ugroup_id = $user_group_id
             AND ugroup.group_id IS NULL";
 
@@ -175,15 +175,15 @@ class UserGroupDao extends DataAccessObject {
 
     /**
      * @return int
-     * @throws User_UserGroupNameAlreadyExistsException
+     * @throws User_UserGroupNameInvalidException
      */
     public function createForgeUGroup($name, $description) {
+        if (! $this->isUserGroupNameValid($name, null)) {
+            throw new User_UserGroupNameInvalidException($name);
+        }
+
         $name        = $this->da->quoteSmart($name);
         $description = $this->da->quoteSmart($description);
-
-        if (! $this->isUserGroupNameValid($name, null)) {
-            throw new User_UserGroupNameAlreadyExistsException($name);
-        }
 
         $sql = "INSERT INTO ugroup
                     (name, description, group_id)
@@ -194,9 +194,11 @@ class UserGroupDao extends DataAccessObject {
     }
 
     private function isUserGroupNameValid($name, $user_group_id) {
-        $name = $this->da->quoteSmart($name);
-        $sql = "SELECT ugroup.ugroup_id FROM ugroup WHERE name='$name'";
+        if (! $name) {
+            return false;
+        }
 
+        $sql = "SELECT ugroup.ugroup_id FROM ugroup WHERE name LIKE $name";
         $row = $this->retrieveFirstRow($sql);
 
         if (! $row) {

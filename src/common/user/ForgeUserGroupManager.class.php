@@ -39,7 +39,7 @@ class User_ForgeUserGroupManager {
     /**
      * @return boolean
      * @throws User_UserGroupNotFoundException
-     * @throws User_UserGroupNameAlreadyExistsException
+     * @throws User_UserGroupNameInvalidException
      */
     public function updateUserGroup(User_ForgeUgroup $user_group) {
         $row = $this->dao->getForgeUGroup($user_group->getId());

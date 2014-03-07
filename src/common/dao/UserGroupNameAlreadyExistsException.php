@@ -18,5 +18,5 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class User_UserGroupNameAlreadyExistsException extends Exception {}
+class User_UserGroupNameInvalidException extends Exception {}
 ?>

@@ -77,7 +77,7 @@ class User_ForgeUserGroupFactory_UpdateUserGroupTest extends User_ForgeUserGroup
     }
 
     public function itThrowsAnExceptionIfUGroupNameAlreadyExists() {
-        $this->expectException('User_UserGroupNameAlreadyExistsException');
+        $this->expectException('User_UserGroupNameInvalidException');
         $ugroup = new User_ForgeUgroup(45, 'people', 'to eat');
 
         stub($this->dao)->getForgeUGroup(45)->returns(array(
@@ -86,7 +86,7 @@ class User_ForgeUserGroupFactory_UpdateUserGroupTest extends User_ForgeUserGroup
             'description' => 'to talk to'
         ));
 
-        stub($this->dao)->updateForgeUGroup(45, 'people', 'to eat')->once()->throws(new User_UserGroupNameAlreadyExistsException());
+        stub($this->dao)->updateForgeUGroup(45, 'people', 'to eat')->once()->throws(new User_UserGroupNameInvalidException());
 
         $update = $this->manager->updateUserGroup($ugroup);
         $this->assertTrue($update);

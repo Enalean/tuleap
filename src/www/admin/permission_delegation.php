@@ -22,11 +22,7 @@ require_once 'pre.php';
 
 session_require(array('group'=>'1', 'admin_flags'=>'A'));
 
-$HTML->header(array('title' => $Language->getText('admin_permission_delegation', 'page_title')));
-
 $controller = new Admin_PermissionDelegationController($request);
 $controller->process();
-
-$HTML->footer(array());
 
 ?>
