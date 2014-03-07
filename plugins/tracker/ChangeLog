@@ -1,3 +1,9 @@
+Version 5.263 - Tuleap 6.12
+    * Fix request #6401: PUT /artifacts/:id issue with artifact links
+    * Fix request #6400 - REST route /tracker_reports/:id/artifacts has problems with pagination
+    * Fix request #6371 - OPTIONS returns 404 for /artifacts/:id/changesets
+    * Fix request #6343 - "fields" should be a JSON Array in GET /trackers/:id and GET /projects/:id/trackers
+
 Version 5.262 - Tuleap 6.11
     * Fix request #6352: Status field missing in JSON for GET /trackers/:id
 
