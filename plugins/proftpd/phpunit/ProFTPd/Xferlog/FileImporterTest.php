@@ -35,7 +35,7 @@ class FileImporterTest extends PHPUnit_Framework_TestCase {
         $this->user_manager->expects($this->any())->method('getUserByUserName')->will($this->returnValue($user));
         $this->project_manager->expects($this->any())->method('getProjectId')->will($this->returnValue($project));
 
-        $this->file_importer = new Tuleap\ProFTPd\Xferlog\FileImporter($this->dao, $this->parser, $this->user_manager, $this->project_manager);
+        $this->file_importer = new Tuleap\ProFTPd\Xferlog\FileImporter($this->dao, $this->parser, $this->user_manager, $this->project_manager, '/bla');
     }
 
     public function testParseAndImportLines() {
@@ -61,7 +61,7 @@ class FileImporterTest extends PHPUnit_Framework_TestCase {
             ->expects($this->exactly(3))
             ->method('store');
 
-        $file_importer = new Tuleap\ProFTPd\Xferlog\FileImporter($this->dao, new Tuleap\ProFTPd\Xferlog\Parser(), $this->user_manager, $this->project_manager);
+        $file_importer = new Tuleap\ProFTPd\Xferlog\FileImporter($this->dao, new Tuleap\ProFTPd\Xferlog\Parser(), $this->user_manager, $this->project_manager, '/bla');
         $file_importer->import(__DIR__.'/_fixtures/xferlog');
     }
 }
